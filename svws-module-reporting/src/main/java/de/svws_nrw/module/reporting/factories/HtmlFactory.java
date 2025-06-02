@@ -21,6 +21,7 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.html.HtmlBuilder;
 import de.svws_nrw.module.reporting.html.HtmlTemplateDefinition;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContext;
+import de.svws_nrw.module.reporting.html.contexts.HtmlContextGostLaufbahnplanungAbiturjahrgangFachwahlstatistiken;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextGostKlausurplanungKlausurplan;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextGostKursplanungBlockungsergebnis;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextKlassen;
@@ -140,6 +141,10 @@ public class HtmlFactory {
 				// GOSt-Klausurplanung-Klausurplan-Context ist Hauptdatenquelle
 				initContextGostKlausurplanung();
 				break;
+			case "GOST_LAUFBAHNPLANUNG_ABITURJAHRGANG":
+				// GOSt-Laufbahnplanung-Abiturjahrgang-Fachwahlstatistiken-Context ist Hauptdatenquelle
+				initContextGostLaufbahnplanungAbiturjahrgangFachwahlstatistiken();
+				break;
 			case "STUNDENPLANUNG":
 				// Stundenplan-Context ist Hauptdatenquelle
 				initContextStundenplanung();
@@ -215,6 +220,23 @@ public class HtmlFactory {
 						.formatted(reportingParameter.idsHauptdaten.size(), htmlTemplateDefinition.name()));
 		final HtmlContextLehrer htmlContextLehrer = new HtmlContextLehrer(reportingRepository);
 		mapHtmlContexts.put("Lehrer", htmlContextLehrer);
+	}
+
+	/**
+	 * Initialisiert den Context für die GOSt-Laufbahnplanung die Fachwahlstatistiken eines Abiturjahrgangs.
+	 *
+	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 */
+	public void initContextGostLaufbahnplanungAbiturjahrgangFachwahlstatistiken() throws ApiOperationException {
+		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für einen Gost-Laufbahnplan eines Abiturjahrgangs und dessen "
+				+ "Fachwahlstatistiken für die html-Generierung.");
+		ReportingValidierung.validiereDatenFuerGostLaufbahnplanungAbiturjahrgangFachwahlstatistiken(reportingRepository);
+		reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
+				"Erzeuge Datenkontext Gost-Laufbahnplan-Abiturjahrgang-Fachwahlstatistiken für die html-Generierung mit Template %s."
+						.formatted(htmlTemplateDefinition.name()));
+		final HtmlContextGostLaufbahnplanungAbiturjahrgangFachwahlstatistiken htmlContextGostLaufbahnplanungAbiturjahrgangFachwahlstatistiken =
+				new HtmlContextGostLaufbahnplanungAbiturjahrgangFachwahlstatistiken(reportingRepository);
+		mapHtmlContexts.put("GostLaufbahnplanungAbiturjahrgangFachwahlStatistiken", htmlContextGostLaufbahnplanungAbiturjahrgangFachwahlstatistiken);
 	}
 
 	/**
@@ -388,152 +410,178 @@ public class HtmlFactory {
 			htmlBuilders.add(new HtmlBuilder(htmlTemplateCode, mapHtmlContexts.values().stream().toList(), dateiname));
 		} else if (reportingParameter.einzelausgabeHauptdaten) {
 			// Die Hauptdatenquelle soll in einzelne Kontexte für Einzeldateien zerlegt werden.
-			if (htmlTemplateDefinition.name().startsWith("SCHUELER_v_")) {
-				// Zerlege den Gesamt-Schüler-Context in einzelne Contexts mit jeweils einen Schüler
-				reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Erzeuge einzelne Haupt-Kontexte für jeden Schüler, da einzelne Dateien angefordert "
-						+ "wurden.");
-				final List<HtmlContextSchueler> schuelerContexts = ((HtmlContextSchueler) mapHtmlContexts.get("Schueler")).getEinzelContexts();
-
-				reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
-						"Verarbeite Template (%s) und Daten aus den einzelnen Kontexten zu finalen html-Dateiinhalten.".formatted(
-								htmlTemplateDefinition.name()));
-				for (final HtmlContextSchueler schuelerContext : schuelerContexts) {
-					mapHtmlContexts.put("Schueler", schuelerContext);
-
-					// Dateiname der Dateien aus den Daten erzeugen.
-					final String dateiname = getDateiname(mapHtmlContexts);
-
-					// html-Builder erstellen und damit das html mit Daten für die html-Datei erzeugen
-					htmlBuilders.add(new HtmlBuilder(htmlTemplateCode, mapHtmlContexts.values().stream().toList(), dateiname));
-				}
-			}
+			erzeugeHauptEinzelContexts(htmlBuilders, htmlTemplateCode);
 		} else {
-			// Die Detaildatenquelle soll in einzelne Kontexte für Einzeldateien zerlegt werden. Die Hauptdatenquelle ist dabei für alle Einzelkontexte gleich.
-			if (htmlTemplateDefinition.name().startsWith("GOST_KLAUSURPLANUNG_v_SCHUELER_")) {
-				// Zerlege den Klausurplan-Context gemäß der anzuzeigenden Schüler in einzelne Contexts mit jeweils einen Schüler. Die Plandaten sind bei allen SuS gleich.
-				reportingRepository.logger().logLn(
-						LogLevel.DEBUG, 4, "Erzeuge einzelne Detail-Kontexte des Klausurplans für jeden Schüler, da einzelne Dateien angefordert wurden.");
-				final List<HtmlContextGostKlausurplanungKlausurplan> klausurplanSchuelerContexts =
-						((HtmlContextGostKlausurplanungKlausurplan) mapHtmlContexts.get("GostKlausurplan")).getEinzelSchuelerContexts();
-
-				reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
-						"Verarbeite Template (%s) und Daten aus den einzelnen Kontexten zu finalen html-Dateiinhalten.".formatted(
-								htmlTemplateDefinition.name()));
-				for (final HtmlContextGostKlausurplanungKlausurplan klausurplanSchuelerContext : klausurplanSchuelerContexts) {
-					mapHtmlContexts.put("GostKlausurplan", klausurplanSchuelerContext);
-
-					// Dateiname der Dateien aus den Daten erzeugen.
-					final String dateiname = getDateiname(mapHtmlContexts);
-
-					// html-Builder erstellen und damit das html mit Daten für die html-Datei erzeugen
-					htmlBuilders.add(new HtmlBuilder(htmlTemplateCode, mapHtmlContexts.values().stream().toList(), dateiname));
-				}
-			}
-			if (htmlTemplateDefinition == HtmlTemplateDefinition.STUNDENPLANUNG_v_FACH_STUNDENPLAN) {
-				// Zerlege den Context des Fächerstundenplans gemäß der anzuzeigenden Fächer in einzelne Contexts mit jeweils einem Fach.
-				reportingRepository.logger().logLn(
-						LogLevel.DEBUG, 4, "Erzeuge einzelne Detail-Kontexte der Fachstundenpläne für jedes Fach, da einzelne Dateien angefordert wurden.");
-				final List<HtmlContextStundenplanungFachStundenplan> fachStundenplanContexts =
-						((HtmlContextStundenplanungFachStundenplan) mapHtmlContexts.get("FaecherStundenplaene")).getEinzelContexts();
-
-				reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
-						"Verarbeite Template (%s) und Daten aus den einzelnen Kontexten zu finalen html-Dateiinhalten.".formatted(
-								htmlTemplateDefinition.name()));
-				for (final HtmlContextStundenplanungFachStundenplan fachStundenplanContext : fachStundenplanContexts) {
-					mapHtmlContexts.put("FaecherStundenplaene", fachStundenplanContext);
-
-					// Dateiname der Dateien aus den Daten erzeugen.
-					final String dateiname = getDateiname(mapHtmlContexts);
-
-					// html-Builder erstellen und damit das html mit Daten für die html-Datei erzeugen
-					htmlBuilders.add(new HtmlBuilder(htmlTemplateCode, mapHtmlContexts.values().stream().toList(), dateiname));
-				}
-			}
-			if (htmlTemplateDefinition == HtmlTemplateDefinition.STUNDENPLANUNG_v_KLASSEN_STUNDENPLAN) {
-				// Zerlege den Context des Lehrerstundenplans gemäß der anzuzeigenden Lehrer in einzelne Contexts mit jeweils einen Lehrer.
-				reportingRepository.logger().logLn(
-						LogLevel.DEBUG, 4, "Erzeuge einzelne Detail-Kontexte der Klassenstundenpläne für jede Klasse, da einzelne Dateien angefordert wurden.");
-				final List<HtmlContextStundenplanungKlassenStundenplan> klassenStundenplanContexts =
-						((HtmlContextStundenplanungKlassenStundenplan) mapHtmlContexts.get("KlassenStundenplaene")).getEinzelContexts();
-
-				reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
-						"Verarbeite Template (%s) und Daten aus den einzelnen Kontexten zu finalen html-Dateiinhalten.".formatted(
-								htmlTemplateDefinition.name()));
-				for (final HtmlContextStundenplanungKlassenStundenplan klassenStundenplanContext : klassenStundenplanContexts) {
-					mapHtmlContexts.put("KlassenStundenplaene", klassenStundenplanContext);
-
-					// Dateiname der Dateien aus den Daten erzeugen.
-					final String dateiname = getDateiname(mapHtmlContexts);
-
-					// html-Builder erstellen und damit das html mit Daten für die html-Datei erzeugen
-					htmlBuilders.add(new HtmlBuilder(htmlTemplateCode, mapHtmlContexts.values().stream().toList(), dateiname));
-				}
-			}
-			if (htmlTemplateDefinition == HtmlTemplateDefinition.STUNDENPLANUNG_v_LEHRER_STUNDENPLAN) {
-				// Zerlege den Context des Lehrerstundenplans gemäß der anzuzeigenden Lehrer in einzelne Contexts mit jeweils einen Lehrer.
-				reportingRepository.logger().logLn(
-						LogLevel.DEBUG, 4, "Erzeuge einzelne Detail-Kontexte der Lehrerstundenpläne für jeden Lehrer, da einzelne Dateien angefordert wurden.");
-				final List<HtmlContextStundenplanungLehrerStundenplan> lehrerStundenplanContexts =
-						((HtmlContextStundenplanungLehrerStundenplan) mapHtmlContexts.get("LehrerStundenplaene")).getEinzelContexts();
-
-				reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
-						"Verarbeite Template (%s) und Daten aus den einzelnen Kontexten zu finalen html-Dateiinhalten.".formatted(
-								htmlTemplateDefinition.name()));
-				for (final HtmlContextStundenplanungLehrerStundenplan lehrerStundenplanContext : lehrerStundenplanContexts) {
-					mapHtmlContexts.put("LehrerStundenplaene", lehrerStundenplanContext);
-
-					// Dateiname der Dateien aus den Daten erzeugen.
-					final String dateiname = getDateiname(mapHtmlContexts);
-
-					// html-Builder erstellen und damit das html mit Daten für die html-Datei erzeugen
-					htmlBuilders.add(new HtmlBuilder(htmlTemplateCode, mapHtmlContexts.values().stream().toList(), dateiname));
-				}
-			}
-			if (htmlTemplateDefinition == HtmlTemplateDefinition.STUNDENPLANUNG_v_RAUM_STUNDENPLAN) {
-				// Zerlege den Context des Raumstundenplans gemäß der anzuzeigenden Räume in einzelne Contexts mit jeweils einen Raum.
-				reportingRepository.logger().logLn(
-						LogLevel.DEBUG, 4, "Erzeuge einzelne Detail-Kontexte der Raumstundenpläne für jede Klasse, da einzelne Dateien angefordert wurden.");
-				final List<HtmlContextStundenplanungRaumStundenplan> raumStundenplanContexts =
-						((HtmlContextStundenplanungRaumStundenplan) mapHtmlContexts.get("RaeumeStundenplaene")).getEinzelContexts();
-
-				reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
-						"Verarbeite Template (%s) und Daten aus den einzelnen Kontexten zu finalen html-Dateiinhalten.".formatted(
-								htmlTemplateDefinition.name()));
-				for (final HtmlContextStundenplanungRaumStundenplan raumStundenplanContext : raumStundenplanContexts) {
-					mapHtmlContexts.put("RaeumeStundenplaene", raumStundenplanContext);
-
-					// Dateiname der Dateien aus den Daten erzeugen.
-					final String dateiname = getDateiname(mapHtmlContexts);
-
-					// html-Builder erstellen und damit das html mit Daten für die html-Datei erzeugen
-					htmlBuilders.add(new HtmlBuilder(htmlTemplateCode, mapHtmlContexts.values().stream().toList(), dateiname));
-				}
-			}
-			if (htmlTemplateDefinition == HtmlTemplateDefinition.STUNDENPLANUNG_v_SCHUELER_STUNDENPLAN) {
-				// Zerlege den Context des Lehrerstundenplans gemäß der anzuzeigenden Lehrer in einzelne Contexts mit jeweils einen Lehrer.
-				reportingRepository.logger().logLn(
-						LogLevel.DEBUG, 4,
-						"Erzeuge einzelne Detail-Kontexte der Schülerstundenpläne für jeden Schüler, da einzelne Dateien angefordert wurden.");
-				final List<HtmlContextStundenplanungSchuelerStundenplan> schuelerStundenplanContexts =
-						((HtmlContextStundenplanungSchuelerStundenplan) mapHtmlContexts.get("SchuelerStundenplaene")).getEinzelContexts();
-
-				reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
-						"Verarbeite Template (%s) und Daten aus den einzelnen Kontexten zu finalen html-Dateiinhalten.".formatted(
-								htmlTemplateDefinition.name()));
-				for (final HtmlContextStundenplanungSchuelerStundenplan schuelerStundenplanContext : schuelerStundenplanContexts) {
-					mapHtmlContexts.put("SchuelerStundenplaene", schuelerStundenplanContext);
-
-					// Dateiname der Dateien aus den Daten erzeugen.
-					final String dateiname = getDateiname(mapHtmlContexts);
-
-					// html-Builder erstellen und damit das html mit Daten für die html-Datei erzeugen
-					htmlBuilders.add(new HtmlBuilder(htmlTemplateCode, mapHtmlContexts.values().stream().toList(), dateiname));
-				}
-			}
+			erzeugeDetailEinzelContexts(htmlBuilders, htmlTemplateCode);
 		}
 
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 0, "<<< Ende der Erzeugung der html-Builder.");
 		return htmlBuilders;
+	}
+
+	/**
+	 * Erstellt einzelne Haupt-Kontexte auf Basis der gegebenen Hauptdatenquelle, um separate HTML-Dateien zu generieren.
+	 *
+	 * @param htmlBuilders     Eine Liste von {@code HtmlBuilder}-Objekten, in die die erzeugten HTML-Inhalte gespeichert werden.
+	 * @param htmlTemplateCode Der HTML-Template-Code, der beim Generieren der HTML-Inhalte verwendet wird.
+	 *
+	 * @throws ApiOperationException Falls ein Fehler bei der Verarbeitung der Kontexte oder bei der Generierung der HTML-Inhalte auftritt.
+	 */
+	private void erzeugeHauptEinzelContexts(final List<HtmlBuilder> htmlBuilders, final String htmlTemplateCode) throws ApiOperationException {
+		if (htmlTemplateDefinition.name().startsWith("SCHUELER_v_")) {
+			// Zerlege den Gesamt-Schüler-Context in einzelne Contexts mit jeweils einen Schüler
+			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Erzeuge einzelne Haupt-Kontexte für jeden Schüler, da einzelne Dateien angefordert "
+					+ "wurden.");
+			final List<HtmlContextSchueler> schuelerContexts = ((HtmlContextSchueler) mapHtmlContexts.get("Schueler")).getEinzelContexts();
+
+			reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
+					"Verarbeite Template (%s) und Daten aus den einzelnen Kontexten zu finalen html-Dateiinhalten.".formatted(
+							htmlTemplateDefinition.name()));
+			for (final HtmlContextSchueler schuelerContext : schuelerContexts) {
+				mapHtmlContexts.put("Schueler", schuelerContext);
+
+				// Dateiname der Dateien aus den Daten erzeugen.
+				final String dateiname = getDateiname(mapHtmlContexts);
+
+				// html-Builder erstellen und damit das html mit Daten für die html-Datei erzeugen
+				htmlBuilders.add(new HtmlBuilder(htmlTemplateCode, mapHtmlContexts.values().stream().toList(), dateiname));
+			}
+		}
+	}
+
+	/**
+	 * Erstellt einzelne Detail-Kontexte auf Basis der gegebenen Hauptdatenquelle, um separate HTML-Dateien zu generieren.
+	 * Die Methode verarbeitet spezifische Arten von Datenkontexten (z. B. Klausurplan, Stundenplan) und erstellt
+	 * entsprechend der Kontexte individuelle Dateien basierend auf dem bereitgestellten HTML-Template-Code.
+	 *
+	 * @param htmlBuilders       Liste von {@code HtmlBuilder}-Objekten, in welche die erzeugten HTML-Dateien eingetragen werden.
+	 * @param htmlTemplateCode   Template-Code, der für die Erstellung der HTML-Dateien verwendet wird.
+	 *
+	 * @throws ApiOperationException Falls ein Fehler während der Verarbeitung der Kontexte auftritt.
+	 */
+	private void erzeugeDetailEinzelContexts(final List<HtmlBuilder> htmlBuilders, final String htmlTemplateCode) throws ApiOperationException {
+		// Die Detaildatenquelle soll in einzelne Kontexte für Einzeldateien zerlegt werden. Die Hauptdatenquelle ist dabei für alle Einzelkontexte gleich.
+		if (htmlTemplateDefinition.name().startsWith("GOST_KLAUSURPLANUNG_v_SCHUELER_")) {
+			// Zerlege den Klausurplan-Context gemäß den anzuzeigenden Schülern in einzelne Contexts mit jeweils einem Schüler. Die Plandaten sind bei allen SuS gleich.
+			reportingRepository.logger().logLn(
+					LogLevel.DEBUG, 4, "Erzeuge einzelne Detail-Kontexte des Klausurplans für jeden Schüler, da einzelne Dateien angefordert wurden.");
+			final List<HtmlContextGostKlausurplanungKlausurplan> klausurplanSchuelerContexts =
+					((HtmlContextGostKlausurplanungKlausurplan) mapHtmlContexts.get("GostKlausurplan")).getEinzelSchuelerContexts();
+
+			reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
+					"Verarbeite Template (%s) und Daten aus den einzelnen Kontexten zu finalen html-Dateiinhalten.".formatted(
+							htmlTemplateDefinition.name()));
+			for (final HtmlContextGostKlausurplanungKlausurplan klausurplanSchuelerContext : klausurplanSchuelerContexts) {
+				mapHtmlContexts.put("GostKlausurplan", klausurplanSchuelerContext);
+
+				// Dateiname der Dateien aus den Daten erzeugen.
+				final String dateiname = getDateiname(mapHtmlContexts);
+
+				// html-Builder erstellen und damit das html mit Daten für die html-Datei erzeugen
+				htmlBuilders.add(new HtmlBuilder(htmlTemplateCode, mapHtmlContexts.values().stream().toList(), dateiname));
+			}
+		}
+		if (htmlTemplateDefinition == HtmlTemplateDefinition.STUNDENPLANUNG_v_FACH_STUNDENPLAN) {
+			// Zerlege den Context des Fächerstundenplans gemäß den anzuzeigenden Fächern in einzelne Contexts mit jeweils einem Fach.
+			reportingRepository.logger().logLn(
+					LogLevel.DEBUG, 4, "Erzeuge einzelne Detail-Kontexte der Fachstundenpläne für jedes Fach, da einzelne Dateien angefordert wurden.");
+			final List<HtmlContextStundenplanungFachStundenplan> fachStundenplanContexts =
+					((HtmlContextStundenplanungFachStundenplan) mapHtmlContexts.get("FaecherStundenplaene")).getEinzelContexts();
+
+			reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
+					"Verarbeite Template (%s) und Daten aus den einzelnen Kontexten zu finalen html-Dateiinhalten.".formatted(
+							htmlTemplateDefinition.name()));
+			for (final HtmlContextStundenplanungFachStundenplan fachStundenplanContext : fachStundenplanContexts) {
+				mapHtmlContexts.put("FaecherStundenplaene", fachStundenplanContext);
+
+				// Dateiname der Dateien aus den Daten erzeugen.
+				final String dateiname = getDateiname(mapHtmlContexts);
+
+				// html-Builder erstellen und damit das html mit Daten für die html-Datei erzeugen
+				htmlBuilders.add(new HtmlBuilder(htmlTemplateCode, mapHtmlContexts.values().stream().toList(), dateiname));
+			}
+		}
+		if (htmlTemplateDefinition == HtmlTemplateDefinition.STUNDENPLANUNG_v_KLASSEN_STUNDENPLAN) {
+			// Zerlege den Context des Lehrerstundenplans gemäß den anzuzeigenden Lehrern in einzelne Contexts mit jeweils einer Klasse.
+			reportingRepository.logger().logLn(
+					LogLevel.DEBUG, 4, "Erzeuge einzelne Detail-Kontexte der Klassenstundenpläne für jede Klasse, da einzelne Dateien angefordert wurden.");
+			final List<HtmlContextStundenplanungKlassenStundenplan> klassenStundenplanContexts =
+					((HtmlContextStundenplanungKlassenStundenplan) mapHtmlContexts.get("KlassenStundenplaene")).getEinzelContexts();
+
+			reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
+					"Verarbeite Template (%s) und Daten aus den einzelnen Kontexten zu finalen html-Dateiinhalten.".formatted(
+							htmlTemplateDefinition.name()));
+			for (final HtmlContextStundenplanungKlassenStundenplan klassenStundenplanContext : klassenStundenplanContexts) {
+				mapHtmlContexts.put("KlassenStundenplaene", klassenStundenplanContext);
+
+				// Dateiname der Dateien aus den Daten erzeugen.
+				final String dateiname = getDateiname(mapHtmlContexts);
+
+				// html-Builder erstellen und damit das html mit Daten für die html-Datei erzeugen
+				htmlBuilders.add(new HtmlBuilder(htmlTemplateCode, mapHtmlContexts.values().stream().toList(), dateiname));
+			}
+		}
+		if (htmlTemplateDefinition == HtmlTemplateDefinition.STUNDENPLANUNG_v_LEHRER_STUNDENPLAN) {
+			// Zerlege den Context des Lehrerstundenplans gemäß den anzuzeigenden Lehrern in einzelne Contexts mit jeweils einem Lehrer.
+			reportingRepository.logger().logLn(
+					LogLevel.DEBUG, 4, "Erzeuge einzelne Detail-Kontexte der Lehrerstundenpläne für jeden Lehrer, da einzelne Dateien angefordert wurden.");
+			final List<HtmlContextStundenplanungLehrerStundenplan> lehrerStundenplanContexts =
+					((HtmlContextStundenplanungLehrerStundenplan) mapHtmlContexts.get("LehrerStundenplaene")).getEinzelContexts();
+
+			reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
+					"Verarbeite Template (%s) und Daten aus den einzelnen Kontexten zu finalen html-Dateiinhalten.".formatted(
+							htmlTemplateDefinition.name()));
+			for (final HtmlContextStundenplanungLehrerStundenplan lehrerStundenplanContext : lehrerStundenplanContexts) {
+				mapHtmlContexts.put("LehrerStundenplaene", lehrerStundenplanContext);
+
+				// Dateiname der Dateien aus den Daten erzeugen.
+				final String dateiname = getDateiname(mapHtmlContexts);
+
+				// html-Builder erstellen und damit das html mit Daten für die html-Datei erzeugen
+				htmlBuilders.add(new HtmlBuilder(htmlTemplateCode, mapHtmlContexts.values().stream().toList(), dateiname));
+			}
+		}
+		if (htmlTemplateDefinition == HtmlTemplateDefinition.STUNDENPLANUNG_v_RAUM_STUNDENPLAN) {
+			// Zerlege den Context des Raumstundenplans gemäß den anzuzeigenden Räumen in einzelne Contexts mit jeweils einem Raum.
+			reportingRepository.logger().logLn(
+					LogLevel.DEBUG, 4, "Erzeuge einzelne Detail-Kontexte der Raumstundenpläne für jede Klasse, da einzelne Dateien angefordert wurden.");
+			final List<HtmlContextStundenplanungRaumStundenplan> raumStundenplanContexts =
+					((HtmlContextStundenplanungRaumStundenplan) mapHtmlContexts.get("RaeumeStundenplaene")).getEinzelContexts();
+
+			reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
+					"Verarbeite Template (%s) und Daten aus den einzelnen Kontexten zu finalen html-Dateiinhalten.".formatted(
+							htmlTemplateDefinition.name()));
+			for (final HtmlContextStundenplanungRaumStundenplan raumStundenplanContext : raumStundenplanContexts) {
+				mapHtmlContexts.put("RaeumeStundenplaene", raumStundenplanContext);
+
+				// Dateiname der Dateien aus den Daten erzeugen.
+				final String dateiname = getDateiname(mapHtmlContexts);
+
+				// html-Builder erstellen und damit das html mit Daten für die html-Datei erzeugen
+				htmlBuilders.add(new HtmlBuilder(htmlTemplateCode, mapHtmlContexts.values().stream().toList(), dateiname));
+			}
+		}
+		if (htmlTemplateDefinition == HtmlTemplateDefinition.STUNDENPLANUNG_v_SCHUELER_STUNDENPLAN) {
+			// Zerlege den Context des Lehrerstundenplans gemäß den anzuzeigenden Lehrern in einzelne Contexts mit jeweils einem Schüler.
+			reportingRepository.logger().logLn(
+					LogLevel.DEBUG, 4,
+					"Erzeuge einzelne Detail-Kontexte der Schülerstundenpläne für jeden Schüler, da einzelne Dateien angefordert wurden.");
+			final List<HtmlContextStundenplanungSchuelerStundenplan> schuelerStundenplanContexts =
+					((HtmlContextStundenplanungSchuelerStundenplan) mapHtmlContexts.get("SchuelerStundenplaene")).getEinzelContexts();
+
+			reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
+					"Verarbeite Template (%s) und Daten aus den einzelnen Kontexten zu finalen html-Dateiinhalten.".formatted(
+							htmlTemplateDefinition.name()));
+			for (final HtmlContextStundenplanungSchuelerStundenplan schuelerStundenplanContext : schuelerStundenplanContexts) {
+				mapHtmlContexts.put("SchuelerStundenplaene", schuelerStundenplanContext);
+
+				// Dateiname der Dateien aus den Daten erzeugen.
+				final String dateiname = getDateiname(mapHtmlContexts);
+
+				// html-Builder erstellen und damit das html mit Daten für die html-Datei erzeugen
+				htmlBuilders.add(new HtmlBuilder(htmlTemplateCode, mapHtmlContexts.values().stream().toList(), dateiname));
+			}
+		}
 	}
 
 

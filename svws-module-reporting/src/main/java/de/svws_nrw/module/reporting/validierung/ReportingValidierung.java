@@ -13,6 +13,7 @@ import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostLaufbahnplanungBeratungsdaten;
 import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.core.logger.LogLevel;
+import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.data.gost.DBUtilsGost;
 import de.svws_nrw.data.gost.DBUtilsGostLaufbahn;
 import de.svws_nrw.data.gost.DataGostAbiturdaten;
@@ -23,6 +24,7 @@ import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.data.kurse.DataKurse;
 import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.proxytypes.kurs.ProxyReportingKurs;
@@ -354,17 +356,66 @@ public final class ReportingValidierung {
 					selection.add(new Pair<>(Math.toIntExact(parameterDaten.get(i)), Math.toIntExact(parameterDaten.get(i + 1))));
 				}
 
+				// Lese die Abiturjahrgänge aus der DB zum Abgleich.
+				final List<DTOGostJahrgangsdaten> abiturjahrgaenge = reportingRepository.conn().queryAll(DTOGostJahrgangsdaten.class);
+
 				// Prüfe die Parameter in den Listen auf plausible bzw. zugelassene Werte.
 				for (final Pair<Integer, Integer> wert : selection) {
-					if ((wert.a < 1900) || (wert.a > 10000))
+					if ((wert.a < 1900) || abiturjahrgaenge.stream().noneMatch(aj -> aj.Abi_Jahrgang == wert.a))
 						throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "FEHLER: Ein Abiturjahr liegt außerhalb des Wertebereichs.");
-					if ((wert.b < 0) || (wert.b > 5))
+					if (GostHalbjahr.fromID(wert.b) == null)
 						throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "FEHLER: Ein GOSt-Halbjahr liegt außerhalb des Wertebereichs.");
 				}
 			} catch (final Exception e) {
 				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e,
 						"FEHLER: Die Parameter für Abiturjahrgang und GOSt-Halbjahr konnten nicht gelesen werden oder sind außerhalb des Wertebereichs.");
 			}
+		}
+	}
+
+
+	/**
+	 * Validiert von der API übergebene Daten für die Fachwahlstatistiken eines Abiturjahrgangs in der GOSt-Laufbahnplanung. Bei fehlenden oder unstimmigen Daten wird eine ApiOperationException geworfen.
+	 *
+	 * @param reportingRepository		Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung.
+	 *
+	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 */
+	public static void validiereDatenFuerGostLaufbahnplanungAbiturjahrgangFachwahlstatistiken(final ReportingRepository reportingRepository)
+			throws ApiOperationException {
+
+		// Für die GOSt-Laufbahnplanung muss die Schule eine Schule mit GOSt sein.
+		try {
+			DBUtilsGost.pruefeSchuleMitGOSt(reportingRepository.conn());
+		} catch (final ApiOperationException e) {
+			throw new ApiOperationException(Status.NOT_FOUND, e, "FEHLER: Keine Schule oder Schule ohne GOSt gefunden.");
+		}
+
+		// Erwartete Datenstruktur in idsHauptdaten der Reporting-Parameter: Abiturjahr - GostHalbjahrID (0-5) - GostHalbjahrID (0-5) - usw.
+		// Die Liste muss immer das Abiturjahr enthalten. Sind keine GostHalbjahre angegeben, werden später alle Halbjahre betrachtet.
+		final List<Long> parameterDaten = reportingRepository.reportingParameter().idsHauptdaten.stream().filter(Objects::nonNull).toList();
+
+		// Wenn die Liste der Stufen nicht leer ist, deren Werte prüfen.
+		if (!parameterDaten.isEmpty()) {
+			try {
+				// Speichere das eingetragene Abiturjahr.
+				final int abiturjahrgang = Math.toIntExact(parameterDaten.getFirst());
+
+				// Lese die Abiturjahrgänge aus der DB zum Abgleich.
+				if ((abiturjahrgang < 1900) || (reportingRepository.conn().queryByKey(DTOGostJahrgangsdaten.class, abiturjahrgang) == null))
+					throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Das Abiturjahr ist ungültig.");
+
+				// Lese die Parameter im Wechsel aus.
+				for (int i = 1; i < parameterDaten.size(); i++) {
+					if (GostHalbjahr.fromID(Math.toIntExact(parameterDaten.get(i))) == null)
+						throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "FEHLER: Ein GOSt-Halbjahr liegt außerhalb des Wertebereichs.");
+				}
+			} catch (final Exception e) {
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e,
+						"FEHLER: Die Parameter für Abiturjahrgang und GOSt-Halbjahr konnten nicht gelesen werden oder sind außerhalb des Wertebereichs.");
+			}
+		} else {
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "FEHLER: Die Parameter für Abiturjahrgang und GOSt-Halbjahr wurden nicht übergeben.");
 		}
 	}
 

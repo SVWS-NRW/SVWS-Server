@@ -17,6 +17,7 @@ import de.svws_nrw.data.gost.DataGostAbiturjahrgangFachwahlen;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.proxytypes.gost.ProxyReportingGostFachwahlstatistikHalbjahr;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import de.svws_nrw.module.reporting.proxytypes.lehrer.ProxyReportingLehrer;
 import de.svws_nrw.module.reporting.proxytypes.schueler.ProxyReportingSchueler;
@@ -260,7 +261,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 									Collectors.toMap(
 											f -> f.id,
 											f -> (ReportingGostKursplanungFachwahlstatistik) new ProxyReportingGostKursplanungFachwahlstatistik(
-													this.reportingRepository, this.gostHalbjahr(), f, this.ergebnisManager))));
+													new ProxyReportingGostFachwahlstatistikHalbjahr(this.reportingRepository, this.gostHalbjahr(), f), this.ergebnisManager))));
 				}
 			} catch (final ApiOperationException e) {
 				ReportingExceptionUtils.putStacktraceInLog(
