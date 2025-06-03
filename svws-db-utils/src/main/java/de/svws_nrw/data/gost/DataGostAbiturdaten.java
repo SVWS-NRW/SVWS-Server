@@ -55,7 +55,7 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 	 */
 	public DataGostAbiturdaten(final DBEntityManager conn, final Integer abiturjahr) {
 		super(conn);
-		setAttributesNotPatchable("schuelerID", "abiturjahr", "schuljahrAbitur", "bewertetesHalbjahr", "fachbelegungen", "sprachendaten", "bilingualeSprache");
+		setAttributesNotPatchable("schuelerID", "abiturjahr", "schuljahrAbitur", "bewertetesHalbjahr", "sprachendaten", "bilingualeSprache");
 		// Bestimme den Schuljahresabschnitt für das Abiturjahr, sofern eines angegeben ist
 		this.schuljahresabschnitt = (abiturjahr == null) ? null : conn.getUser().schuleGetAbschnittBySchuljahrUndHalbjahr(abiturjahr - 1, 2);
 	}
@@ -70,12 +70,15 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 		// Abiturjahr wurde nicht angegeben - ggf. auswählen
 		if (schuljahresabschnitt == null) {
 			DTOSchuelerAbitur current = null;
+			Schuljahresabschnitt currentSja = null;
 			for (final DTOSchuelerAbitur dtoSchuelerAbitur : dtosSchuelerAbitur) {
 				final Schuljahresabschnitt dtoSja = (dtoSchuelerAbitur.Schuljahresabschnitts_ID) == null ? null
 						: conn.getUser().schuleGetAbschnittById(dtoSchuelerAbitur.Schuljahresabschnitts_ID);
-				if ((current == null) || ((dtoSja != null) && ((dtoSja.schuljahr > schuljahresabschnitt.schuljahr)
-						|| ((dtoSja.schuljahr == schuljahresabschnitt.schuljahr) && (dtoSja.abschnitt > schuljahresabschnitt.abschnitt)))))
+				if ((currentSja == null) || ((dtoSja != null) && ((dtoSja.schuljahr > currentSja.schuljahr)
+						|| ((dtoSja.schuljahr == currentSja.schuljahr) && (dtoSja.abschnitt > currentSja.abschnitt))))) {
 					current = dtoSchuelerAbitur;
+					currentSja = dtoSja;
+				}
 			}
 			return current;
 		}
