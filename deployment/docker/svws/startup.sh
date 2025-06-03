@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Konfigurationsdatei generieren
-if [[ ! -f /opt/app/svws/svwsconfig.json ]]; then
+if [[ ! -s /opt/app/svws/svwsconfig.json ]]; then
     echo "Konfigurationsdatei nicht vorhanden. Erstelle Konfigurationsdatei..."
 	envsubst < /etc/app/svws/conf/svwsconfig-template.json > /opt/app/svws/svwsconfig.json
 else
