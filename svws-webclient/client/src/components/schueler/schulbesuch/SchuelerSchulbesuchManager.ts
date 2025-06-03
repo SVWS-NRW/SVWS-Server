@@ -161,13 +161,17 @@ export class SchuelerSchulbesuchManager extends StateManager<ManagerStateDataSch
 	}
 
 	/** Gibt die Einschulungsart des ausgewählten Schülers zurück */
-	public getEinschulungsart() : Einschulungsart | undefined {
-		return Einschulungsart.values().find(v => v.daten.id === this.daten.grundschuleEinschulungsartID);
+	public getEinschulungsart() : Einschulungsart | null {
+		if (this.daten.grundschuleEinschulungsartID === null)
+			return null;
+		return Einschulungsart.data().getWertByID(this.daten.grundschuleEinschulungsartID);
 	}
 
 	/** Gibt die PrimarstufeSchuleingangsphaseBesuchsjahre des ausgewählten Schülers zurück */
 	public getEPJahre() : PrimarstufeSchuleingangsphaseBesuchsjahre | null {
-		return PrimarstufeSchuleingangsphaseBesuchsjahre.data().getWertBySchluessel(this.daten.grundschuleJahreEingangsphase?.toString() ?? '')
+		if (this.daten.idGrundschuleJahreEingangsphase === null)
+			return null;
+		return PrimarstufeSchuleingangsphaseBesuchsjahre.data().getWertByID(this.daten.idGrundschuleJahreEingangsphase)
 	}
 
 	/** Gibt die Übergangsempfehlung des ausgewählten Schülers zurück */

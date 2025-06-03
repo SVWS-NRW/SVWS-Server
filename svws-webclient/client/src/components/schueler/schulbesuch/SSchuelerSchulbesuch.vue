@@ -69,10 +69,12 @@
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-input-number class="contentFocusField" placeholder="Einschulung" :model-value="manager().daten.grundschuleEinschulungsjahr"
 					@change="grundschuleEinschulungsjahr => manager().doPatch({ grundschuleEinschulungsjahr })" :min="1900" :max="2100" statistics />
-				<svws-ui-select disabled title="Einschulungsart" :items="Einschulungsart.values()" :model-value="manager().getEinschulungsart()" statistics
-					@update:model-value="v => manager().doPatch({ grundschuleEinschulungsartID : v?.daten.id ?? null })" :item-text="textEinschulungsart" />
-				<svws-ui-select title="EP-Jahre" :items="PrimarstufeSchuleingangsphaseBesuchsjahre.values()" removable :item-text="textEPJahre" :model-value="manager().getEPJahre()"
-					@update:model-value="v => manager().doPatch({grundschuleJahreEingangsphase : Number(v?.daten(manager().schuljahr)?.schluessel ?? null)})" />
+				<svws-ui-select title="Einschulungsart" :items="Einschulungsart.values()" :model-value="manager().getEinschulungsart()" statistics removable
+					@update:model-value="v => manager().doPatch({ grundschuleEinschulungsartID : v?.daten(manager().schuljahr).id ?? null })"
+					:item-text="textEinschulungsart" />
+				<svws-ui-select title="EP-Jahre" :items="PrimarstufeSchuleingangsphaseBesuchsjahre.values()" removable :item-text="textEPJahre"
+					@update:model-value="v => manager().doPatch({ idGrundschuleJahreEingangsphase : v?.daten(manager().schuljahr)?.id ?? null })"
+					:model-value="manager().getEPJahre()" />
 				<svws-ui-select title="Übergangsempfehlung Jg. 5" :items="Uebergangsempfehlung.values()" :item-text="textUebergangsempfehlung" removable
 					@update:model-value="v => manager().doPatch({kuerzelGrundschuleUebergangsempfehlung : v?.daten(manager().schuljahr)?.kuerzel ?? null})"
 					:model-value="manager().getUebergangsempfehlung()" statistics />
@@ -443,7 +445,7 @@
 	}
 
 	function textEinschulungsart(e : Einschulungsart) {
-		return e.daten.kuerzel + ' - '+ e.daten.beschreibung;
+		return e.daten(props.manager().schuljahr)?.text + ' - '+ e.daten(props.manager().schuljahr)?.beschreibung;
 	}
 
 	function textEPJahre(p : PrimarstufeSchuleingangsphaseBesuchsjahre) {

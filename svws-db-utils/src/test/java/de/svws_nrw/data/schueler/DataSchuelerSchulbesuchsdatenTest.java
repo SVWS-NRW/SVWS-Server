@@ -487,10 +487,10 @@ class DataSchuelerSchulbesuchsdatenTest {
 	@DisplayName("mapAttribute | grundschuleJahreEingangsphase | Erfolg")
 	void mapAttributeTest_grundschuleJahreEingangsphase() throws ApiOperationException {
 		final var dtoSchueler = new DTOSchueler(1L, "1", true);
-		final var key = PrimarstufeSchuleingangsphaseBesuchsjahre.E2.daten(2025).schluessel;
-		schulbesuchsdaten.mapAttribute(dtoSchueler, "grundschuleJahreEingangsphase", Integer.valueOf(key), null);
+		final var key = PrimarstufeSchuleingangsphaseBesuchsjahre.E2.daten(2025);
+		schulbesuchsdaten.mapAttribute(dtoSchueler, "idGrundschuleJahreEingangsphase", key.id, null);
 
-		assertThat(dtoSchueler.EPJahre).isEqualTo(Integer.valueOf(key));
+		assertThat(dtoSchueler.EPJahre).isEqualTo(Integer.valueOf(key.schluessel));
 	}
 
 	@Test
@@ -499,7 +499,7 @@ class DataSchuelerSchulbesuchsdatenTest {
 		final var dtoSchueler = new DTOSchueler(1L, "1", true);
 		dtoSchueler.EPJahre = 10;
 
-		this.schulbesuchsdaten.mapAttribute(dtoSchueler, "grundschuleJahreEingangsphase", null, null);
+		this.schulbesuchsdaten.mapAttribute(dtoSchueler, "idGrundschuleJahreEingangsphase", null, null);
 
 		assertThat(dtoSchueler.EPJahre).isNull();
 	}
@@ -509,11 +509,11 @@ class DataSchuelerSchulbesuchsdatenTest {
 	void mapAttributeTest_grundschuleJahreEingangsphase_exception() {
 		final var dtoSchueler = new DTOSchueler(1L, "1", true);
 
-		final var throwable = catchThrowable(() -> this.schulbesuchsdaten.mapAttribute(dtoSchueler, "grundschuleJahreEingangsphase", 15, null));
+		final var throwable = catchThrowable(() -> this.schulbesuchsdaten.mapAttribute(dtoSchueler, "idGrundschuleJahreEingangsphase", 15, null));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Keine Eingangsphase mit dem Schlüssel 15 vorhanden.")
+				.hasMessage("Keine Eingangsphase mit der ID 15 vorhanden.")
 				.hasFieldOrPropertyWithValue(STATUS, Response.Status.NOT_FOUND);
 	}
 

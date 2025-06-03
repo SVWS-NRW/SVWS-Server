@@ -27892,9 +27892,9 @@ SchuelerSchulbesuchsdaten {
   "entlassungJahrgang": null,
   "grundschuleEinschulungsartID": 51,
   "grundschuleEinschulungsjahr": 2009,
-  "grundschuleJahreEingangsphase": 2,
   "id": 1199,
   "idAufnehmendeSchule": null,
+  "idGrundschuleJahreEingangsphase": 2000,
   "idVorherigeSchule": 51,
   "kuerzelGrundschuleUebergangsempfehlung": null,
   "merkmale": ArrayList {

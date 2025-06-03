@@ -98,9 +98,9 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 	public grundschuleEinschulungsartID : number | null = null;
 
 	/**
-	 * Die Anzahl der Jahre in der Schuleingangsphase der Grundschule.
+	 * Die ID der Schuleingangsphase der Grundschule.
 	 */
-	public grundschuleJahreEingangsphase : number | null = null;
+	public idGrundschuleJahreEingangsphase : number | null = null;
 
 	/**
 	 * Das Kürzel für die Übergangsempfehlung der Grundschule in die Sekundarstufe I
@@ -173,7 +173,7 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 		result.aufnehmendBestaetigt = (obj.aufnehmendBestaetigt === undefined) ? null : obj.aufnehmendBestaetigt === null ? null : obj.aufnehmendBestaetigt;
 		result.grundschuleEinschulungsjahr = (obj.grundschuleEinschulungsjahr === undefined) ? null : obj.grundschuleEinschulungsjahr === null ? null : obj.grundschuleEinschulungsjahr;
 		result.grundschuleEinschulungsartID = (obj.grundschuleEinschulungsartID === undefined) ? null : obj.grundschuleEinschulungsartID === null ? null : obj.grundschuleEinschulungsartID;
-		result.grundschuleJahreEingangsphase = (obj.grundschuleJahreEingangsphase === undefined) ? null : obj.grundschuleJahreEingangsphase === null ? null : obj.grundschuleJahreEingangsphase;
+		result.idGrundschuleJahreEingangsphase = (obj.idGrundschuleJahreEingangsphase === undefined) ? null : obj.idGrundschuleJahreEingangsphase === null ? null : obj.idGrundschuleJahreEingangsphase;
 		result.kuerzelGrundschuleUebergangsempfehlung = (obj.kuerzelGrundschuleUebergangsempfehlung === undefined) ? null : obj.kuerzelGrundschuleUebergangsempfehlung === null ? null : obj.kuerzelGrundschuleUebergangsempfehlung;
 		result.sekIWechsel = (obj.sekIWechsel === undefined) ? null : obj.sekIWechsel === null ? null : obj.sekIWechsel;
 		result.sekIErsteSchulform = (obj.sekIErsteSchulform === undefined) ? null : obj.sekIErsteSchulform === null ? null : obj.sekIErsteSchulform;
@@ -211,7 +211,7 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 		result += '"aufnehmendBestaetigt" : ' + ((obj.aufnehmendBestaetigt === null) ? 'null' : obj.aufnehmendBestaetigt.toString()) + ',';
 		result += '"grundschuleEinschulungsjahr" : ' + ((obj.grundschuleEinschulungsjahr === null) ? 'null' : obj.grundschuleEinschulungsjahr.toString()) + ',';
 		result += '"grundschuleEinschulungsartID" : ' + ((obj.grundschuleEinschulungsartID === null) ? 'null' : obj.grundschuleEinschulungsartID.toString()) + ',';
-		result += '"grundschuleJahreEingangsphase" : ' + ((obj.grundschuleJahreEingangsphase === null) ? 'null' : obj.grundschuleJahreEingangsphase.toString()) + ',';
+		result += '"idGrundschuleJahreEingangsphase" : ' + ((obj.idGrundschuleJahreEingangsphase === null) ? 'null' : obj.idGrundschuleJahreEingangsphase.toString()) + ',';
 		result += '"kuerzelGrundschuleUebergangsempfehlung" : ' + ((obj.kuerzelGrundschuleUebergangsempfehlung === null) ? 'null' : JSON.stringify(obj.kuerzelGrundschuleUebergangsempfehlung)) + ',';
 		result += '"sekIWechsel" : ' + ((obj.sekIWechsel === null) ? 'null' : obj.sekIWechsel.toString()) + ',';
 		result += '"sekIErsteSchulform" : ' + ((obj.sekIErsteSchulform === null) ? 'null' : JSON.stringify(obj.sekIErsteSchulform)) + ',';
@@ -293,8 +293,8 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 		if (obj.grundschuleEinschulungsartID !== undefined) {
 			result += '"grundschuleEinschulungsartID" : ' + ((obj.grundschuleEinschulungsartID === null) ? 'null' : obj.grundschuleEinschulungsartID.toString()) + ',';
 		}
-		if (obj.grundschuleJahreEingangsphase !== undefined) {
-			result += '"grundschuleJahreEingangsphase" : ' + ((obj.grundschuleJahreEingangsphase === null) ? 'null' : obj.grundschuleJahreEingangsphase.toString()) + ',';
+		if (obj.idGrundschuleJahreEingangsphase !== undefined) {
+			result += '"idGrundschuleJahreEingangsphase" : ' + ((obj.idGrundschuleJahreEingangsphase === null) ? 'null' : obj.idGrundschuleJahreEingangsphase.toString()) + ',';
 		}
 		if (obj.kuerzelGrundschuleUebergangsempfehlung !== undefined) {
 			result += '"kuerzelGrundschuleUebergangsempfehlung" : ' + ((obj.kuerzelGrundschuleUebergangsempfehlung === null) ? 'null' : JSON.stringify(obj.kuerzelGrundschuleUebergangsempfehlung)) + ',';

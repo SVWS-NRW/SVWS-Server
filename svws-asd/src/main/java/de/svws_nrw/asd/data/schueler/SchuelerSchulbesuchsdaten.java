@@ -104,9 +104,9 @@ public class SchuelerSchulbesuchsdaten {
 	@Schema(description = "die ID der Einschulungsart in die Grundschule", example = "51")
 	public Long grundschuleEinschulungsartID;
 
-	/** Die Anzahl der Jahre in der Schuleingangsphase der Grundschule. */
-	@Schema(description = "die Anzahl der Jahre in der Schuleingangsphase der Grundschule", example = "2")
-	public Integer grundschuleJahreEingangsphase;
+	/** Die ID der Schuleingangsphase der Grundschule. */
+	@Schema(description = "die ID der Schuleingangsphase der Grundschule", example = "2")
+	public Long idGrundschuleJahreEingangsphase;
 
 	/** Das Kürzel für die Übergangsempfehlung der Grundschule in die Sekundarstufe I */
 	@Schema(description = "das Kürzel für die Übergangsempfehlung der Grundschule in die Sekundarstufe I", example = "GY")
