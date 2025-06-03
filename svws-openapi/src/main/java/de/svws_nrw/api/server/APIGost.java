@@ -1189,7 +1189,7 @@ public class APIGost {
 			@RequestBody(description = "Der Patch für die Abiturdaten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					schema = @Schema(implementation = Abiturdaten.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> (new DataGostAbiturdaten(conn, null)).patchAsResponse(id, is),
+		return DBBenutzerUtils.runWithTransaction(conn -> (new DataGostAbiturdaten(conn, null)).patchAbiturdatenAsResponse(id, is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.ABITUR_AENDERN_ALLGEMEIN,
 				BenutzerKompetenz.ABITUR_AENDERN_FUNKTIONSBEZOGEN);

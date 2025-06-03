@@ -188,6 +188,26 @@ public final class JSONMapper {
 
 
 	/**
+	 * Wandelt das übergebene in eine Liste von Maps für deren Objekte um.
+	 *
+	 * @param value   der Wert, der in eine Liste umgewandelt werden soll
+	 *
+	 * @return die Liste
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public static List<Map<String, Object>> toListOfMaps(final Object value) throws ApiOperationException {
+		if (value == null)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Fehler beim Parsen des JSON-Strings. Ein Array mit Objekten wurde erwartet.");
+		if (!(value instanceof List))
+			throw new ApiOperationException(Status.BAD_REQUEST, "Fehler beim Parsen des JSON-Strings. Ein Array mit Objekten wurde erwartet.");
+		@SuppressWarnings("unchecked")
+		final List<Map<String, Object>> list = (List<Map<String, Object>>) value;
+		return list;
+	}
+
+
+	/**
 	 * Liest die Daten aus dem InputStream ein und gibt das JSON als String zurück.
 	 *
 	 * @param in   der Input-Stream
