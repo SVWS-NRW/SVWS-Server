@@ -40,6 +40,7 @@ import { routeSchuleDatenaustauschWenom } from "./schule/datenaustausch/RouteSch
 import { routeSchuleStammdaten } from "./schule/RouteSchuleStammdaten";
 import { routeSchuleReporting } from "./schule/reporting/RouteSchuleReporting";
 import { routeAbteilungen } from "~/router/apps/schule/abteilungen/RouteAbteilungen";
+import { routeEntlassgruende } from "~/router/apps/schule/entlassgruende/RouteEntlassgruende";
 import SApp from "~/components/SApp.vue";
 
 
@@ -111,6 +112,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeAbteilungen,
 			routeSchuleBetriebe,
 			routeKatalogEinwilligungsarten,
+			routeEntlassgruende,
 			routeSchuleFaecher,
 			routeKatalogFoerderschwerpunkte,
 			routeSchuleJahrgaenge,
