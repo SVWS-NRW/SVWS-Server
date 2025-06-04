@@ -1,4 +1,4 @@
-import type {RouteLocationNormalized, RouteLocationRaw } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 import type { EntlassgruendeGruppenprozesseProps } from "~/components/schule/kataloge/entlassgruende/gruppenprozesse/SEntlassgruendeGruppenprozesseProps";
 import type { RouteEntlassgruende } from "~/router/apps/schule/entlassgruende/RouteEntlassgruende";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
@@ -30,7 +30,8 @@ export class RouteEntlassgruendeGruppenprozesse extends RouteNode<any, RouteEntl
 		return {
 			serverMode: api.mode,
 			schulform: api.schulform,
-			benutzerkompetenzen: api.benutzerKompetenzen,
+			benutzerKompetenzen: api.benutzerKompetenzen,
+			deleteEntlassgruende: routeEntlassgruende.data.delete,
 			manager: () => routeEntlassgruende.data.manager,
 		}
 	}

@@ -42,14 +42,12 @@ export class RouteDataEntlassgruende extends RouteDataAuswahl<EntlassgruendeList
 		await api.server.patchEntlassgrund(data, api.schema, id);
 	}
 
-	protected doDelete(ids: List<number>): Promise<List<SimpleOperationResponse>> {
-		// TODO: implement
-		throw new Error("Method not implemented.");
+	protected async doDelete(ids: List<number>): Promise<List<SimpleOperationResponse>> {
+		return await api.server.deleteEntlassgruende(ids, api.schema);
 	}
 
-	protected deleteMessage(id: number, eintrag: any): string {
-		// TODO: implement
-		throw new Error("Method not implemented.");
+	protected deleteMessage(id: number, entlassgrund: KatalogEntlassgrund | null): string {
+		return `Entlassgrund ${entlassgrund?.bezeichnung ?? '???'} (ID: ${id}) wurde erfolgreich gelöscht.`;
 	}
 
 }

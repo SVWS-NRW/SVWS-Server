@@ -1,8 +1,9 @@
-import type { BenutzerKompetenz, EntlassgruendeListeManager, Schulform, ServerMode } from "@core";
+import type { BenutzerKompetenz, EntlassgruendeListeManager, List, Schulform, ServerMode } from "@core";
 
 export interface EntlassgruendeGruppenprozesseProps {
 	serverMode: ServerMode;
 	schulform: Schulform;
-	benutzerkompetenzen: Set<BenutzerKompetenz>;
+	benutzerKompetenzen: Set<BenutzerKompetenz>;
 	manager: () => EntlassgruendeListeManager;
+	deleteEntlassgruende: () => Promise<[boolean, List<string | null>]>;
 }
