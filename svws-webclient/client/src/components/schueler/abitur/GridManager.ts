@@ -3,6 +3,7 @@ import { type ComponentPublicInstance } from "vue";
 import type { GridInput } from "./GridInput";
 import { GridInputAbiturNotenpunkte } from "./GridInputAbiturNotenpunkte";
 import { GridInputAbiturPruefungsreihenfolge } from "./GridInputAbiturPruefungsreihenfolge";
+import { GridInputToggle } from "./GridInputToggle";
 
 export class GridManager<KEY> {
 
@@ -133,6 +134,30 @@ export class GridManager<KEY> {
 		}
 		// Im anderen Fall wird der Element aktuell noch nicht unterstützt
 		throw new DeveloperNotificationException("GridInputElementManager unterstützt aktuell ComponentPublicInstance nicht als Element");
+	}
+
+	/**
+	 * Fügt oder entfernt ein HTML-Element für den übergebenen Schlüssel hinzu
+	 *
+	 * @param key      der Schlüssel, welcher den Input-Manager identifiziert
+	 * @param col      die Nummer der Spalte im Grid
+	 * @param row      die Nummer der Zeile im Grid
+	 * @param elem     das HTML-Element, welches zum Manager hinzugefügt werden soll, oder null, falls es entfernt werden soll
+	 * @param getter   ein Getter für den Zugriff auf die Daten des Input-Managers
+	 * @param setter   ein Setter für das Speichern der Daten des Input-Managers
+	 */
+	public applyInputToggle(key: KEY, col: number, row: number, elem: Element | ComponentPublicInstance<unknown> | null, getter : () => boolean, setter : (value: boolean) => void) {
+		// Wenn elem null ist, dann entferne das Element
+		if (elem === null) {
+			this.unregister(key);
+			return;
+		}
+		// Registriere das HTMLElement, sofern nicht bereits ein Grid-Input mit dem gleichen Schlüssel registriert ist
+		if (!(elem instanceof HTMLElement))
+			throw new DeveloperNotificationException("Der Grid-Input für einen Toggle erfordert ein HTMLElement");
+		if (this.mapInputs.has(key))
+			return;
+		this.register(new GridInputToggle(this, key, col, row, elem, getter, setter));
 	}
 
 	/**

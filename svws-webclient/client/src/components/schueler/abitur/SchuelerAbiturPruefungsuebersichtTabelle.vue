@@ -86,7 +86,7 @@
 							</div>
 						</td>
 						<td class="svws-ui-td text-center" role="cell" :class="{ 'bg-ui-75': belegung.abiturFach >= 4 }">
-							<div class="w-full">
+							<div v-if="belegung.abiturFach < 4" :ref="inputFreiwilligePruefung(belegung)" class="w-full h-full">
 								<span v-if="belegung.block2MuendlichePruefungFreiwillig === true" class="icon-sm i-ri-check-line" />
 							</div>
 						</td>
@@ -255,6 +255,10 @@
 		console.log("Update: ", belegung.abiturFach, value);
 	}
 
+	function updateFreiwilligePruefung(belegung: AbiturFachbelegung, value: boolean) : void {
+		console.log("Update freiwillige Prüfung: ", belegung.abiturFach, value);
+	}
+
 	function updatePruefungsreihenfolge(belegung: AbiturFachbelegung, value: string | null) : void {
 		console.log("Update Reihenfolge: ", belegung.abiturFach, value);
 	}
@@ -269,6 +273,15 @@
 		const setter = (value : string | null) => updateNotenpunkte(belegung, value);
 		return (element : Element | ComponentPublicInstance<unknown> | null) => {
 			return gridInputManager.applyInputAbiturNotenpunkte(key, 1, belegung.abiturFach!, element, getter, setter);
+		};
+	}
+
+	function inputFreiwilligePruefung(belegung: AbiturFachbelegung) {
+		const key = 'FreiwilligePrüfungAbiFach' + belegung.abiturFach;
+		const getter = () => belegung.block2MuendlichePruefungFreiwillig ?? false;
+		const setter = (value : boolean) => updateFreiwilligePruefung(belegung, value);
+		return (element : Element | ComponentPublicInstance<unknown> | null) => {
+			gridInputManager.applyInputToggle(key, 2, belegung.abiturFach!, element, getter, setter);
 		};
 	}
 
