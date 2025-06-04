@@ -17,7 +17,8 @@
 				</template>
 				<td class="svws-ui-td" role="columnheader">
 					<svws-ui-tooltip :hover="false" :show-arrow="false" position="top" class="h-full w-full">
-						<span class="icon" :class="[...colsVisible.values()].some(c => c === false) ? 'i-ri-layout-column-fill' : 'i-ri-layout-column-line'" /><span class="icon i-ri-arrow-down-s-line" />
+						<span class="icon" :class="[...colsVisible.values()].some(c => c === false) ? 'i-ri-layout-column-fill' : 'i-ri-layout-column-line'" />
+						<span class="icon i-ri-arrow-down-s-line" />
 						<template #content>
 							<ul class="min-w-[10rem] flex flex-col gap-0.5 pt-1">
 								<template v-for="col of cols" :key="col.name">
@@ -35,7 +36,7 @@
 		</thead>
 		<tbody class="svws-ui-tbody h-full" role="rowgroup" aria-label="Tabelleninhalt">
 			<template v-for="pair of auswahlmanager.liste" :key="pair">
-				<tr class="svws-ui-tr h-10" role="row" :class="{ 'svws-clicked': auswahlmanager.auswahl === pair }"
+				<tr class="svws-ui-tr h-10" role="row" :class="{ 'svws-clicked': (auswahlmanager.auswahl === pair) }"
 					@click="setAuswahlLeistung(pair)"
 					@keydown.tab="handleTabEvent($event, pair)" :ref="el => rowRefs.set(pair, el as HTMLElement)">
 					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Klasse') ?? true">
@@ -56,13 +57,13 @@
 					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Lehrer') ?? true">
 						{{ manager.lerngruppeGetFachlehrerOrNull(pair.a.lerngruppenID) }}
 					</td>
-					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Quartal') ?? true" :class="{ 'bg-ui-selected': currentColumn === colsFocussable.indexOf('Quartal') }">
-						<input v-if="auswahlmanager.auswahl === pair && manager.lerngruppeIstFachlehrer(pair.a.lerngruppenID)"
+					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Quartal') ?? true" :class="{ 'bg-ui-selected': (currentColumn === colsFocussable.indexOf('Quartal')) }">
+						<input v-if="manager.lerngruppeIstFachlehrer(pair.a.lerngruppenID)"
 							type="text"
 							class="w-full column-focussable"
 							v-model="pair.a.noteQuartal"
 							@focusin="tabToUnselectedLeistung(pair, $event.target)"
-							:class="{ contentFocusField: (auswahlmanager.auswahl === pair && (currentColumn === colsFocussable.indexOf('Quartal')) || currentColumn === -1)}"
+							:class="{ contentFocusField: ((auswahlmanager.auswahl === pair) && (currentColumn === colsFocussable.indexOf('Quartal')) || (currentColumn === -1))}"
 							@change="() => doPatchLeistungNote(pair.a, Note.fromKuerzel(pair.a.noteQuartal).daten(props.manager.schuljahr)?.kuerzel,{ noteQuartal: (Note.fromKuerzel(pair.a.noteQuartal).daten(props.manager.schuljahr)?.kuerzel ?? null) })">
 						<div v-else class="column-focussable w-full h-full contentFocusField"
 							tabindex="0"
@@ -70,11 +71,11 @@
 							{{ pair.a.noteQuartal ?? "-" }}
 						</div>
 					</td>
-					<td v-if="colsVisible.get('Note') ?? true" :class="{ 'bg-ui-selected': currentColumn === colsFocussable.indexOf('Note') }" class="svws-ui-td" role="cell">
-						<input v-if="auswahlmanager.auswahl === pair && manager.lerngruppeIstFachlehrer(pair.a.lerngruppenID)"
+					<td v-if="colsVisible.get('Note') ?? true" :class="{ 'bg-ui-selected': (currentColumn === colsFocussable.indexOf('Note')) }" class="svws-ui-td" role="cell">
+						<input v-if="manager.lerngruppeIstFachlehrer(pair.a.lerngruppenID)"
 							type="text"
 							class="w-full column-focussable"
-							:class="{ contentFocusField: auswahlmanager.auswahl === pair && currentColumn === colsFocussable.indexOf('Note') }"
+							:class="{ contentFocusField: (auswahlmanager.auswahl === pair) && (currentColumn === colsFocussable.indexOf('Note')) }"
 							v-model="pair.a.note" @focusin="tabToUnselectedLeistung(pair, $event.target)"
 							@change="() => doPatchLeistungNote(pair.a, Note.fromKuerzel(pair.a.note).daten(props.manager.schuljahr)?.kuerzel,{ note: (Note.fromKuerzel(pair.a.note).daten(props.manager.schuljahr)?.kuerzel ?? null) })">
 						<div v-else class="column-focussable w-full h-full"
@@ -83,7 +84,7 @@
 							{{ pair.a.note ?? "-" }}
 						</div>
 					</td>
-					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Mahnung') ?? true" :class="{ 'bg-ui-selected': currentColumn === colsFocussable.indexOf('Mahnung') }">
+					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Mahnung') ?? true" :class="{ 'bg-ui-selected': (currentColumn === colsFocussable.indexOf('Mahnung')) }">
 						<template v-if="manager.lerngruppeIstFachlehrer(pair.a.lerngruppenID)">
 							<input type="checkbox" class="accent-ui-danger" :class="{'column-focussable': pair.a.mahndatum === null, contentFocusField: (auswahlmanager.auswahl === pair) && (currentColumn === colsFocussable.indexOf('Mahnung'))}" tabindex="0"
 								:disabled="pair.a.mahndatum !== null" v-model="pair.a.istGemahnt" @change="() => doPatchLeistung(pair.a, { istGemahnt: pair.a.istGemahnt })" @focusin="tabToUnselectedLeistung(pair, $event.target)">
@@ -92,14 +93,14 @@
 					</td>
 					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('FS') ?? true" :class="{ 'bg-ui-selected': currentColumn === colsFocussable.indexOf('FS') }">
 						<input v-if="manager.fehlstundenFachbezogen(pair.b)" v-model="pair.a.fehlstundenFach" class="column-focussable w-full"
-							:class="{ contentFocusField: auswahlmanager.auswahl === pair && currentColumn === colsFocussable.indexOf('FS') }"
+							:class="{ contentFocusField: (auswahlmanager.auswahl === pair) && (currentColumn === colsFocussable.indexOf('FS')) }"
 							@focusin="tabToUnselectedLeistung(pair, $event.target)"
 							@change="doPatchLeistung(pair.a, { fehlstundenFach: (isNaN(Number(pair.a.fehlstundenFach)) ? 0 : Number(pair.a.fehlstundenFach)) })">
 						<span v-else class="w-full column-focussable" tabindex="0">—</span>
 					</td>
-					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('FSU') ?? true" :class="{ 'bg-ui-selected': currentColumn === colsFocussable.indexOf('FSU') }">
+					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('FSU') ?? true" :class="{ 'bg-ui-selected': (currentColumn === colsFocussable.indexOf('FSU')) }">
 						<input v-if="manager.fehlstundenFachbezogen(pair.b)" v-model="pair.a.fehlstundenUnentschuldigtFach" class="column-focussable w-full"
-							:class="{ contentFocusField: auswahlmanager.auswahl === pair && currentColumn === colsFocussable.indexOf('FSU') }"
+							:class="{ contentFocusField: (auswahlmanager.auswahl === pair) && (currentColumn === colsFocussable.indexOf('FSU')) }"
 							@focusin="tabToUnselectedLeistung(pair, $event.target)"
 							@change="doPatchLeistung(pair.a, { fehlstundenUnentschuldigtFach: (isNaN(Number(pair.a.fehlstundenUnentschuldigtFach)) ? 0 : Number(pair.a.fehlstundenUnentschuldigtFach)) })">
 						<span v-else class="w-full column-focussable" tabindex="0">—</span>
@@ -119,7 +120,7 @@
 
 <script setup lang="ts">
 
-	import { computed, onMounted, nextTick, ref, watch } from 'vue';
+	import { computed, onMounted, ref, watch } from 'vue';
 	import type { EnmLeistungenProps } from './EnmLeistungenProps';
 	import type { ENMLeistung } from '@core/core/data/enm/ENMLeistung';
 	import type { PairNN } from '@core/asd/adt/PairNN';
@@ -198,7 +199,7 @@
 	}
 
 	async function doPatchLeistungNote(leistung: ENMLeistung, newValue: string | null | undefined, patchObject: Partial<ENMLeistung>) {
-		if (newValue === null || newValue === undefined || newValue === "")
+		if ((newValue === null) || (newValue === undefined) || (newValue === ""))
 			return;
 		else
 			await doPatchLeistung(leistung, patchObject);
@@ -247,13 +248,11 @@
 	watch(
 		() => props.auswahlmanager.auswahl,
 		async () => {
-			if (currentColumn.value !== -1) {
-				await nextTick(() => columnsComputed.value[currentColumn.value].focus())
-			}
+			if (currentColumn.value !== -1)
+				columnsComputed.value[currentColumn.value].focus();
 		}
 	)
-
-	onMounted(() => currentColumn.value = -1)
+	onMounted(() => currentColumn.value = -1);
 
 </script>
 
