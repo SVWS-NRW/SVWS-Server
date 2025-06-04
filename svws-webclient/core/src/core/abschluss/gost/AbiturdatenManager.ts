@@ -2429,11 +2429,156 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return die Notenpunkte oder null
 	 */
 	public getNotenpunkteFromKuerzel(kuerzel : string | null) : number | null {
+		return AbiturdatenManager.getNotenpunkteFromKuerzelInternal(kuerzel, this.getSchuljahr());
+	}
+
+	/**
+	 * Wandelt das übergebene Noten-Kürzel in die zugehörigen Notepunkte um.
+	 *
+	 * @param kuerzel     das Notenkürzel
+	 * @param schuljahr   das Schuljahr, in welchem die Abiturprüfung stattfindet
+	 *
+	 * @return die Notenpunkte oder null
+	 */
+	private static getNotenpunkteFromKuerzelInternal(kuerzel : string | null, schuljahr : number) : number | null {
 		const tmpNote : Note | null = Note.fromKuerzel(kuerzel);
-		if (!tmpNote.istNote(this.getSchuljahr()))
+		if (!tmpNote.istNote(schuljahr))
 			return null;
-		const nke : NoteKatalogEintrag | null = tmpNote.daten(this.getSchuljahr());
+		const nke : NoteKatalogEintrag | null = tmpNote.daten(schuljahr);
 		return (nke === null) ? null : nke.notenpunkte;
+	}
+
+	/**
+	 * Diese Methode berechnet das Prüfungsergebnis für Block II und das Gesamtergebnis,
+	 * sofern die Daten vollständig vorliegen. Ist dies nicht der Fall, so wird das Ergebnis soweit
+	 * wie möglich berechnet. Diese Methode setzt die vorherige Berechnung der Zulassung voraus.
+	 *
+	 * @param abidaten   die Abiturdaten, welche zur Berechnung verwendet werden
+	 *
+	 * @return true, wenn die Berechnung vollständig durchgeführt werden konnte
+	 */
+	public static berechnePruefungsergebnis(abidaten : Abiturdaten) : boolean {
+		const abiBelegungen : List<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
+		for (const fachbelegung of abidaten.fachbelegungen)
+			if (fachbelegung.abiturFach !== null)
+				abiBelegungen.add(fachbelegung);
+		const hatBLL : boolean = !JavaObject.equalsTranspiler("K", (abidaten.besondereLernleistung));
+		const faktor : number = hatBLL ? 4 : 5;
+		let summe : number = 0;
+		let defizite : number = 0;
+		let defiziteLK : number = 0;
+		let fehlendeNoten : number = 0;
+		for (const abibelegung of abiBelegungen) {
+			const npPruefung : number | null = AbiturdatenManager.getNotenpunkteFromKuerzelInternal(abibelegung.block2NotenKuerzelPruefung, abidaten.schuljahrAbitur);
+			if (npPruefung === null) {
+				abibelegung.block2PunkteZwischenstand = null;
+				abibelegung.block2Punkte = null;
+				abibelegung.block2MuendlichePruefungAbweichung = null;
+				fehlendeNoten++;
+			} else {
+				abibelegung.block2PunkteZwischenstand = faktor * npPruefung;
+				abibelegung.block2Punkte = abibelegung.block2PunkteZwischenstand;
+				abibelegung.block2MuendlichePruefungAbweichung = (abidaten.abiturjahr <= 2019) && (abibelegung.block1NotenpunkteDurchschnitt !== null) && (Math.abs(abibelegung.block1NotenpunkteDurchschnitt - npPruefung) >= 4.0);
+				summe += abibelegung.block2PunkteZwischenstand;
+				if (npPruefung < 5) {
+					defizite++;
+					if ((abibelegung.abiturFach === 1) || (abibelegung.abiturFach === 2))
+						defiziteLK++;
+				}
+			}
+		}
+		if (hatBLL) {
+			const npPruefung : number | null = AbiturdatenManager.getNotenpunkteFromKuerzelInternal(abidaten.besondereLernleistungNotenKuerzel, abidaten.schuljahrAbitur);
+			if (npPruefung === null) {
+				fehlendeNoten++;
+			} else {
+				if (npPruefung < 5)
+					defizite++;
+				summe += faktor * npPruefung;
+			}
+		}
+		const hatPflichtPruefungen : boolean = (fehlendeNoten === 0) && ((defizite > (2 + (hatBLL ? 1 : 0))) || (defiziteLK > 1) || (summe < 100));
+		const hatNotenPruefung : boolean = (fehlendeNoten !== 0);
+		let fehlendeNotenMdlPflicht : number = 0;
+		let fehlendeNotenMdlFreiwillig : number = 0;
+		for (const abibelegung of abiBelegungen) {
+			const npPruefung : number | null = AbiturdatenManager.getNotenpunkteFromKuerzelInternal(abibelegung.block2NotenKuerzelPruefung, abidaten.schuljahrAbitur);
+			if (npPruefung === null) {
+				abibelegung.block2MuendlichePruefungBestehen = null;
+				abibelegung.block2MuendlichePruefungFreiwillig = null;
+				abibelegung.block2MuendlichePruefungNotenKuerzel = null;
+				abibelegung.block2Punkte = null;
+				continue;
+			}
+			abibelegung.block2MuendlichePruefungBestehen = (hatPflichtPruefungen && (abibelegung.abiturFach !== null) && (abibelegung.abiturFach <= 3));
+			const hatMdlAbweichung : boolean = (abibelegung.block2MuendlichePruefungAbweichung !== null) && abibelegung.block2MuendlichePruefungAbweichung;
+			const hatMdlBestehen : boolean = abibelegung.block2MuendlichePruefungBestehen.valueOf();
+			const hatMdlFreiwillig : boolean = (abibelegung.block2MuendlichePruefungFreiwillig !== null) && abibelegung.block2MuendlichePruefungFreiwillig;
+			const npPruefungMdl : number | null = AbiturdatenManager.getNotenpunkteFromKuerzelInternal(abibelegung.block2MuendlichePruefungNotenKuerzel, abidaten.schuljahrAbitur);
+			if (npPruefungMdl === null) {
+				if (hatMdlBestehen || hatMdlAbweichung || hatMdlFreiwillig) {
+					fehlendeNoten++;
+					if (hatMdlBestehen || hatMdlAbweichung)
+						fehlendeNotenMdlPflicht++;
+					if (hatMdlFreiwillig)
+						fehlendeNotenMdlFreiwillig++;
+				}
+			} else {
+				if ((!hatMdlAbweichung) && (!hatMdlBestehen) && (!hatMdlFreiwillig)) {
+					abibelegung.block2MuendlichePruefungNotenKuerzel = null;
+					abibelegung.block2Punkte = null;
+				} else {
+					const punkte : number = Math.round((npPruefung * 2 + npPruefungMdl) * faktor / 3.0) as number;
+					abibelegung.block2Punkte = punkte;
+					const punkteVorher : number = (abibelegung.block2PunkteZwischenstand === null) ? 0 : abibelegung.block2PunkteZwischenstand;
+					const punkteNachher : number = abibelegung.block2Punkte.valueOf();
+					summe += (punkteNachher - punkteVorher);
+					if ((punkteVorher < 5 * faktor) && (punkteNachher >= 5 * faktor)) {
+						defizite--;
+						if ((abibelegung.abiturFach === 1) || (abibelegung.abiturFach === 2))
+							defiziteLK--;
+					}
+				}
+			}
+		}
+		abidaten.block2DefiziteGesamt = defizite;
+		abidaten.block2DefiziteLK = defiziteLK;
+		abidaten.block2PunktSumme = summe;
+		abidaten.gesamtPunkte = ((abidaten.block1PunktSummeNormiert === null) ? null : abidaten.block1PunktSummeNormiert + summe);
+		if (abidaten.gesamtPunkte === null) {
+			abidaten.note = null;
+			abidaten.gesamtPunkteVerbesserung = null;
+			abidaten.gesamtPunkteVerschlechterung = null;
+		} else {
+			const note : number = Math.ceil((5.0 + (2.0 / 3.0) - abidaten.gesamtPunkte / 180.0) * 10.0) / 10.0;
+			const strNote : string = "" + note;
+			abidaten.note = (strNote.length <= 3) ? strNote : strNote.substring(0, 3);
+			if (note === 1.0) {
+				abidaten.gesamtPunkteVerbesserung = null;
+			} else {
+				const punkteBesser : number = (Math.round((5.0 + (2.0 / 3.0) - note) * 180.0) + 1) as number;
+				abidaten.gesamtPunkteVerbesserung = punkteBesser;
+			}
+			if (note === 4.0) {
+				abidaten.gesamtPunkteVerschlechterung = null;
+			} else {
+				const punkteSchlechter : number = (Math.round((5.0 + (2.0 / 3.0) - (note - 0.1)) * 180.0) + 1) as number;
+				abidaten.gesamtPunkteVerschlechterung = punkteSchlechter;
+			}
+		}
+		if (hatNotenPruefung && (fehlendeNotenMdlFreiwillig === 0)) {
+			const hatBestanden : boolean = (defizite <= (2 + (hatBLL ? 1 : 0))) && (defiziteLK <= 1) && (summe >= 100);
+			if (hatBestanden)
+				abidaten.pruefungBestanden = true;
+			else
+				if (fehlendeNotenMdlPflicht > 0)
+					abidaten.pruefungBestanden = null;
+				else
+					abidaten.pruefungBestanden = false;
+		} else {
+			abidaten.pruefungBestanden = null;
+		}
+		return true;
 	}
 
 	transpilerCanonicalName(): string {
