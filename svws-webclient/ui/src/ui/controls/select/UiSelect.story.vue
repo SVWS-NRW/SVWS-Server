@@ -117,6 +117,56 @@
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 		</Variant>
+		<Variant title="Sortierung">
+			<svws-ui-content-card class="p-5">
+				<svws-ui-input-wrapper>
+					<ui-select label="Sortiertes Select" :manager="sortableCoreTypeSelectManager()" :searchable="true" :disabled="state.disabled"
+						:statistics="state.statistics" :removable="state.removable" :headless="state.headless" :min-options="state.minOptions"
+						:max-options="state.maxOptions" :class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
+				</svws-ui-input-wrapper>
+			</svws-ui-content-card>
+			<template #controls>
+				<HstCheckbox v-model="state.searchable" title="Searchable" />
+				<HstCheckbox v-model="state.required" title="Required" />
+				<HstCheckbox v-model="state.disabled" title="Disabled" />
+				<HstCheckbox v-model="state.statistics" title="Statistik" />
+				<HstCheckbox v-model="state.removable" title="Removable" />
+				<HstCheckbox v-model="state.headless" title="Headless" />
+				<HstNumber v-model="state.minOptions" title="minOptions" />
+				<HstNumber v-model="state.maxOptions" title="maxOptions" />
+				<HstRadio v-model="state.sort" title="Sortierung" :options="[
+					{ label: 'keine', value: 'unsorted' },
+					{ label: 'ID', value: 'id' },
+					{ label: 'Kürzel', value: 'kuerzel' },
+					{ label: 'Text', value: 'text' },
+				]" />
+				<span class="text-headline-md">Farben</span>
+				<HstRadio v-model="state.bgColor" title="Hintergrund" :options="[
+					{ label: 'keine', value: '' },
+					{ label: 'bg-ui-brand', value: 'bg-ui-brand' },
+					{ label: 'bg-ui-success', value: 'bg-ui-success' },
+					{ label: 'bg-ui-danger', value: 'bg-ui-danger' },
+				]" />
+				<HstRadio v-model="state.textColor" title="Text" :options="[
+					{ label: 'keine', value: '' },
+					{ label: 'text-ui-onbrand', value: 'text-ui-onbrand' },
+					{ label: 'text-ui-onsuccess', value: 'text-ui-onsuccess' },
+					{ label: 'text-ui-ondanger', value: 'text-ui-ondanger' },
+				]" />
+				<HstRadio v-model="state.iconColor" title="Icon" :options="[
+					{ label: 'keine', value: '' },
+					{ label: 'icon-ui-onbrand', value: 'icon-ui-onbrand' },
+					{ label: 'icon-ui-onsuccess', value: 'icon-ui-onsuccess' },
+					{ label: 'icon-ui-ondanger', value: 'icon-ui-ondanger' },
+				]" />
+				<HstRadio v-model="state.borderColor" title="Border" :options="[
+					{ label: 'keine', value: '' },
+					{ label: 'border-ui-onbrand', value: 'border-ui-onbrand' },
+					{ label: 'border-ui-onsuccess', value: 'border-ui-onsuccess' },
+					{ label: 'border-ui-ondanger', value: 'border-ui-ondanger' },
+				]" />
+			</template>
+		</Variant>
 		<template #controls>
 			<HstCheckbox v-model="state.searchable" title="Searchable" />
 			<HstCheckbox v-model="state.required" title="Required" />
@@ -181,6 +231,7 @@
 		textColor: "",
 		iconColor: "",
 		borderColor: "",
+		sort: "unsorted" as "unsorted" | "id" | "kuerzel" | "text",
 	});
 
 	// Filter lassen sich wegen der structuredClone() Methode von histoire nicht als computed umsetzen, daher dieser Workaround. Andernfalls tauchen entsprechende
@@ -223,7 +274,8 @@
 		"Kirsche", "Kiwi", "Lemon", "Litschi", "Melone", "Orange", "Papaya", "Pfirsich", "Pflaume", "Rote Johannisbeere", "Zitronenmelisse",
 	];
 	const numberItems: number[] = [ 1990, 1991, 1992, 1993, 1994, 2000, 2001, 2002, 2003, 2004, 2010, 2011, 2012, 2013, 2014, 2020, 2021, 2022, 2023, 2024 ];
-	const carItems: { marke: string, color: string, baujahr: number }[] = [{ marke: "BMW", color: "blue", baujahr: 2006 }, { marke: "Audi", color: "red", baujahr: 2008}];
+	const carItems: { marke: string, color: string, baujahr: number }[] = [{ marke: "BMW", color: "blue", baujahr: 2006 },
+		{ marke: "Audi", color: "red", baujahr: 2008}, { marke: "Opel", color: "schwarz", baujahr: 2004 }];
 
 
 
@@ -286,16 +338,54 @@
 	};
 
 	const mCoreTypeSelectManager = () => {
-		const manager = new CoreTypeSelectManager(true, LehrerRechtsverhaeltnis.class, 2018, Schulform.GY, 'text', 'kuerzelText');
+		const manager = new CoreTypeSelectManager(true, LehrerRechtsverhaeltnis.class, 2018, Schulform.GY, 'kuerzelText', 'kuerzelText');
 		manager.removable = state.removable;
+		manager.sort = (a: LehrerRechtsverhaeltnis, b: LehrerRechtsverhaeltnis) => {
+			if (a.daten(2018)!.kuerzel < b.daten(2018)!.kuerzel) return -1;
+			if (a.daten(2018)!.kuerzel > b.daten(2018)!.kuerzel) return 1;
+			return 0;
+		};
 		return manager;
 	};
 
 	const mObjectSelectManager = () => {
 		const manager = new ObjectSelectManager(true, carItems,
-			(option: { marke: string, color: string }) => option.marke,
-			(option: { marke: string, color: string }) => `${option.marke} - ${option.color}`);
+			(option: { marke: string, color: string, baujahr: number }) => option.marke,
+			(option: { marke: string, color: string, baujahr: number }) => `${option.marke} - ${option.color}`);
 		manager.removable = state.removable;
+		manager.sort = (a: { marke: string, color: string, baujahr: number }, b: { marke: string, color: string, baujahr: number }) => {
+			if (a.baujahr < b.baujahr) return -1;
+			if (a.baujahr > b.baujahr) return 1;
+			return 0;
+		};
+		return manager;
+	};
+
+	const sortableCoreTypeSelectManager = () => {
+		const manager = new CoreTypeSelectManager(true, LehrerRechtsverhaeltnis.class, 2018, Schulform.GY, 'kuerzelText', (a) => `${a.id} - ${a.kuerzel} - ${a.text}`);
+		manager.removable = state.removable;
+		manager.sort = (a: LehrerRechtsverhaeltnis, b: LehrerRechtsverhaeltnis) => {
+			if (state.sort === "unsorted") return 0;
+			if (state.sort === "id") {
+				if (a.daten(2018)!.id < b.daten(2018)!.id)
+					return -1;
+				if (a.daten(2018)!.id > b.daten(2018)!.id)
+					return 1;
+			}
+			if (state.sort === "kuerzel") {
+				if (a.daten(2018)!.kuerzel < b.daten(2018)!.kuerzel)
+					return -1;
+				if (a.daten(2018)!.kuerzel > b.daten(2018)!.kuerzel)
+					return 1;
+			}
+			if (state.sort === "text") {
+				if (a.daten(2018)!.text < b.daten(2018)!.text)
+					return -1;
+				if (a.daten(2018)!.text > b.daten(2018)!.text)
+					return 1;
+			}
+			return 0;
+		};
 		return manager;
 	};
 
@@ -309,6 +399,7 @@
 		${state.required ? 'required' : ''}
         ${state.removable ? '' : ':removable="false"'}
         ${state.headless ? 'headless' : ''}
+		${state.sort !== 'unsorted' ? ':sort="(a, b) => ..."' : '' }
 		${multi ? (state.minOptions !== undefined ? `:min-options="${state.minOptions}"` : '') : ''}
 		${multi ? (state.maxOptions !== undefined ? `:max-options="${state.maxOptions}"` : '') : ''}
 />

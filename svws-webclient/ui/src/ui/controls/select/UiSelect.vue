@@ -151,7 +151,7 @@
 			</li>
 			<li v-else :id="`uiSelectOption_${optionIndex}_${instanceId}`" v-for="(option, optionIndex) in manager.filtered"
 				:key="manager.getOptionText(option)" role="option" :aria-selected="manager.isSelected(option)"
-				class="cursor-pointer p-2 hover:bg-ui-hover hover:inset-ring-2 hover:inset-ring-ui-neutral rounded-lg"
+				class="cursor-pointer m-1 p-1 hover:bg-ui-hover hover:inset-ring-2 hover:inset-ring-ui-neutral rounded-lg"
 				:class="[(manager.isSelected(option)) ? 'bg-ui-selected text-ui-onselected font-medium border border-ui-selected' : 'text-ui',
 					{'bg-ui-hover inset-ring-2 inset-ring-ui-neutral ': (highlightedIndex === optionIndex)}]"
 				@click="toggleSelection($event, option)">

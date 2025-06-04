@@ -133,7 +133,7 @@ SelectManager leiten alle von der abstrakten Klasse `BaseSelectManager` ab. Es s
 
 **Konstruktor**
 - **multi (boolean)**: Gibt an, ob es sich um eine Multiselektion handelt
-- **options (Iterable<T>)**: Alle Optionen, die das Dropdown beinhaltet
+- **options (Iterable<T>)**: Alle Optionen, die das Dropdown beinhaltet. Eine Sortierung kann mit dem Setter für `sort` vorgegeben werden.
 - **selected (any, optional)**: Definiert die bereits selektierten Einträge. Bei einer Multi-Selektion muss es ein Iterable sein, andernfalls eine einzelne Option
 
 ### SimpleSelectManager
@@ -141,7 +141,7 @@ Dieser Manager kann mit einfachen Optionen-Datentypen bestehend aus Numbers oder
 
 **Konstruktor**
 - **multi (boolean)**: Gibt an, ob es sich um eine Multiselektion handelt
-- **options (Iterable<string | number>)**: Alle Optionen, die das Dropdown beinhaltet
+- **options (Iterable<string | number>)**: Alle Optionen, die das Dropdown beinhaltet. Eine Sortierung kann mit dem Setter für `sort` vorgegeben werden.
 - **selected (any, optional)**: Definiert die bereits selektierten Einträge. Bei einer Multi-Selektion muss es ein Iterable sein, andernfalls eine einzelne Option
 
 ### ObjectSelectManager
@@ -149,13 +149,13 @@ Dieser Manager ist ein einfacher, allgemeiner Manager, der mit allen Objekten um
 
 **Konstruktor**
 - **multi (boolean)**: Gibt an, ob es sich um eine Multiselektion handelt
-- **options (Iterable<any>)**: Alle Optionen, die das Dropdown beinhaltet
+- **options (Iterable<any>)**: Alle Optionen, die das Dropdown beinhaltet. Eine Sortierung kann mit dem Setter für `sort` vorgegeben werden.
 - **selectionDisplayText ((option: any) => string)**: Eine Funktion, die den Text für die Selektion generiert zum Beispiel: ``(option) => `${option.id}: ${option.text}` ``
 - **optionDisplayText ((option: any) => string)**: Eine Funktion, die den Text für die Optionen im Dropdown generiert zum Beispiel: ``(option) => `${option.id}: ${option.text}` ``
 - **selected (any, optional)**: Definiert die bereits selektierten Einträge. Bei einer Multi-Selektion muss es ein Iterable sein, andernfalls eine einzelne Option
 
 ### CoreTypeSelectManager
-Dieser Manager akzeptiert einfach CoreTypes als Optionen und definiert, wie diese in der Liste angezeigt werden. Er filtert die Einträge nach Schuljahr und Schulform und kann zusätzlich noch nach Suchtexten filtern
+Dieser Manager akzeptiert einfach CoreTypes als Optionen und definiert, wie diese in der Liste angezeigt werden. Er filtert die Einträge nach Schuljahr und Schulform und kann zusätzlich noch nach Suchtexten filtern. Eine Sortierung kann mit dem Setter für `sort` vorgegeben werden.
 
 **Konstruktor**
 - **multi (boolean)**: Gibt an, ob es sich um eine Multiselektion handelt

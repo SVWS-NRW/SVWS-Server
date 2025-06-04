@@ -4,6 +4,7 @@ import { ArrayList } from "../../../../../../core/src/java/util/ArrayList";
 import { DeveloperNotificationException } from "../../../../../../core/src/core/exceptions/DeveloperNotificationException";
 import type { SelectFilter } from "../filter/SelectFilter";
 import { SearchSelectFilter } from "../filter/SearchSelectFilter";
+import type { Comparator } from "../../../../../../core/src/java/util/Comparator";
 
 /**
  * Abstrakte Manager Klasse zur Verwendung in einer Select-Komponente (UiSelect.vue). SelectManager übernehmen die Logik der Select-Komponente.
@@ -31,6 +32,9 @@ export abstract class BaseSelectManager<T> {
 
 	// Definiert, ob die Selektion geleert werden kann
 	protected _removable = ref<boolean>(true);
+
+	// Definiert eine Sortierfunktion für die Optionen
+	protected _sort: Comparator<T> | null = null;
 
 	// Definiert, wie die aktuelle Selektion im Inputfeld dargestellt wird
 	protected abstract _selectionDisplayText: string | ((option: any) => string);
@@ -62,12 +66,16 @@ export abstract class BaseSelectManager<T> {
 	}
 
 	/**
-	 * Setter für alle (ungefilterten) Optionen der Komponente.
+	 * Setter für alle (ungefilterten) Optionen der Komponente. Falls eine Sortierung definiert ist, wird diese auf die
+	 * neue Liste angewendet.
 	 *
 	 * @param value   neue Optionenliste (ungefiltert)
 	 */
 	public set options(value: Iterable<T>) {
-		this._options.value = this.getListFromIterable(value);
+		const optionList = this.getListFromIterable(value);
+		if (this.sort !== null)
+			optionList.sort(this.sort);
+		this._options.value = optionList;
 	}
 
 	/**
@@ -202,7 +210,8 @@ export abstract class BaseSelectManager<T> {
 	}
 
 	/**
-	 * Aktualisiert die Liste der gefilterten Optionen basierend auf den aktuell aktiven Filtern.
+	 * Aktualisiert die Liste der gefilterten Optionen basierend auf den aktuell aktiven Filtern. Falls eine Sortierung
+	 * definierte ist, wird diese auf die gefilterte Liste angewendet.
 	 */
 	private updateFiltered() {
 		let result: List<T> = new ArrayList();
@@ -215,6 +224,8 @@ export abstract class BaseSelectManager<T> {
 			else
 				result = this.intersect(result, filteredOptions);
 
+		if (this.sort !== null)
+			result.sort(this.sort);
 		this.filtered = result;
 	}
 
@@ -340,6 +351,46 @@ export abstract class BaseSelectManager<T> {
 	public set optionDisplayText(value: string | ((option: any) => string)) {
 		this._optionDisplayText = value;
 	}
+
+	/**
+	 * Getter für den Sortier-Comparator der Optionen.
+	 *
+	 * @return Comparator für die Sortierung
+	 */
+	public get sort(): Comparator<T> | null {
+		return this._sort;
+	}
+
+	/**
+	 * Setter für den Sortier-Comparator der Optionen.
+	 *
+	 * @param value neuer Comparator für die Optionensortierung
+	 */
+	public set sort(value: Comparator<T> | ((a: T, b: T) => number) | null) {
+		let comparator: Comparator<T> | null = null;
+
+		if (value && typeof value === 'object' && typeof value.compare === 'function') {
+			comparator = value;
+		} else if (typeof value === 'function') {
+			comparator = {
+				compare: value,
+			};
+		}
+		this._sort = comparator;
+		this.updateSort();
+	}
+
+	/**
+	 * Aktualisiert die Sortierung der Optionen, der gefilterten Liste und der Selektion, falls eine Sortierfunktion definiert ist.
+	 */
+	protected updateSort() {
+		if (this.options.size() > 0 && this.sort !== null) {
+			this.options.sort(this.sort);
+			this.filtered.sort(this.sort);
+		}
+	}
+
+
 
 	/**
 	 * Toggelt den Select-Zustand der übergebenen Option.
