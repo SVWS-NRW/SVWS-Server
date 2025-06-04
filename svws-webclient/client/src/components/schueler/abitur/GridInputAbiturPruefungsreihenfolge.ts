@@ -24,7 +24,7 @@ export class GridInputAbiturPruefungsreihenfolge<KEY> extends GridInputInnerText
 	 */
 	constructor(gridManager: GridManager<KEY>, key: KEY, col: number, row: number, elem: HTMLElement, getter : () => string | null, setter : (value: string | null) => void) {
 		super(gridManager, key, col, row, elem, getter, setter);
-		elem.innerText = this._value.value ?? "";
+		elem.innerText = (this._value.value === null) ? "" : this._value.value + ".";
 	}
 
 	/**

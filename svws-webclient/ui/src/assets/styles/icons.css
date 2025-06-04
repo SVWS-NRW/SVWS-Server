@@ -307,6 +307,27 @@
 	mask-position: center;
 }
 
+@utility i-ri-checkbox-blank-line {
+	mask-image: url(@icons/System/checkbox-blank-line.svg);
+	-webkit-mask-image: url(@icons/System/checkbox-blank-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-checkbox-fill {
+	mask-image: url(@icons/System/checkbox-fill.svg);
+	-webkit-mask-image: url(@icons/System/checkbox-fill.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-checkbox-line {
+	mask-image: url(@icons/System/checkbox-line.svg);
+	-webkit-mask-image: url(@icons/System/checkbox-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
 @utility i-ri-checkbox-blank-circle-line {
 	mask-image: url(@icons/System/checkbox-blank-circle-line.svg);
 	-webkit-mask-image: url(@icons/System/checkbox-blank-circle-line.svg);

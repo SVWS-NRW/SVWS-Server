@@ -81,13 +81,16 @@
 							</div>
 						</td>
 						<td class="svws-ui-td text-center" role="cell" :class="{ 'bg-ui-75': belegung.abiturFach >= 4 }">
-							<div class="w-full">
+							<div v-if="belegung.abiturFach < 4" class="w-full">
 								<span v-if="belegung.block2MuendlichePruefungBestehen === true" class="icon-sm i-ri-check-line" />
 							</div>
 						</td>
 						<td class="svws-ui-td text-center" role="cell" :class="{ 'bg-ui-75': belegung.abiturFach >= 4 }">
 							<div v-if="belegung.abiturFach < 4" :ref="inputFreiwilligePruefung(belegung)" class="w-full h-full">
-								<span v-if="belegung.block2MuendlichePruefungFreiwillig === true" class="icon-sm i-ri-check-line" />
+								<span class="icon-sm" :class="{
+									'i-ri-checkbox-line': belegung.block2MuendlichePruefungFreiwillig === true,
+									'i-ri-checkbox-blank-line': !(belegung.block2MuendlichePruefungFreiwillig === true)
+								}" />
 							</div>
 						</td>
 						<td class="svws-ui-td text-center" role="cell" :class="{ 'bg-ui-75': belegung.abiturFach >= 4 }">
