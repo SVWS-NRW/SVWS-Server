@@ -50,5 +50,12 @@ export class RouteDataEntlassgruende extends RouteDataAuswahl<EntlassgruendeList
 		return `Entlassgrund ${entlassgrund?.bezeichnung ?? '???'} (ID: ${id}) wurde erfolgreich gelöscht.`;
 	}
 
+	addEntlassgrund = async (data: Partial<KatalogEntlassgrund>) : Promise<void> => {
+		const entlassgrund = await api.server.addEntlassgrund(data, api.schema);
+		this.manager.liste.add(entlassgrund);
+		this.commit();
+		await this.gotoDefaultView(entlassgrund.id);
+	}
+
 }
 

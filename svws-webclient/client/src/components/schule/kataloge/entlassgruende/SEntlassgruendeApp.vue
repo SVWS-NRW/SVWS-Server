@@ -15,7 +15,7 @@
 						</h2>
 					</template>
 					<template v-else-if="activeViewType === ViewType.HINZUFUEGEN">
-						<h2 class="svws-headline">Anlegen einer neuen Abteilung</h2>
+						<h2 class="svws-headline">Anlegen eines neuen Entlassgrundes</h2>
 					</template>
 					<template v-else-if="activeViewType === ViewType.GRUPPENPROZESSE">
 						<h2 class="svws-headline">Gruppenprozesse</h2>

@@ -1952,6 +1952,33 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode addEntlassgrund für den Zugriff auf die URL https://{hostname}/db/{schema}/create
+	 *
+	 * Erstellt neue Entlassgründe, insofern die notwendigen Berechtigungen vorliegen
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die Entlassgründe wurden erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: KatalogEntlassgrund
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Entlassgründe anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<KatalogEntlassgrund>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Entlassgründe wurden erfolgreich hinzugefügt.
+	 */
+	public async addEntlassgrund(data : Partial<KatalogEntlassgrund>, schema : string) : Promise<KatalogEntlassgrund> {
+		const path = "/db/{schema}/create"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = KatalogEntlassgrund.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return KatalogEntlassgrund.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode importKurs42Raeume für den Zugriff auf die URL https://{hostname}/db/{schema}/datenaustausch/gost/kurs42/import/raeume
 	 *
 	 * Importiert die Räume aus Kurs 42 in das Schema mit dem angegebenen Namen.
