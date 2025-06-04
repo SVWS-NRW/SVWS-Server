@@ -91,7 +91,7 @@
 							</div>
 						</td>
 						<td class="svws-ui-td text-center" role="cell" :class="{ 'bg-ui-75': belegung.abiturFach >= 4 }">
-							<div class="w-full">{{ belegung.block2MuendlichePruefungReihenfolge ?? '' }}</div>
+							<div v-if="belegung.abiturFach < 4" :ref="inputPruefungsreihenfolge(belegung)" class="w-full h-full focus:ring-2" />
 						</td>
 						<td class="svws-ui-td svws-divider text-center" role="cell" :class="{ 'bg-ui-75': belegung.abiturFach >= 4 }">
 							<div v-if="belegung.abiturFach < 4" :ref="inputPruefungsnoteMdl(belegung)" class="w-full h-full focus:ring-2" :class="{
@@ -255,6 +255,10 @@
 		console.log("Update: ", belegung.abiturFach, value);
 	}
 
+	function updatePruefungsreihenfolge(belegung: AbiturFachbelegung, value: string | null) : void {
+		console.log("Update Reihenfolge: ", belegung.abiturFach, value);
+	}
+
 	function updateNotenpunkteMdl(belegung: AbiturFachbelegung, value: string | null) : void {
 		console.log("Update Mdl: ", belegung.abiturFach, value);
 	}
@@ -265,6 +269,15 @@
 		const setter = (value : string | null) => updateNotenpunkte(belegung, value);
 		return (element : Element | ComponentPublicInstance<unknown> | null) => {
 			return gridInputManager.applyInputAbiturNotenpunkte(key, 1, belegung.abiturFach!, element, getter, setter);
+		};
+	}
+
+	function inputPruefungsreihenfolge(belegung: AbiturFachbelegung) {
+		const key = 'PrüfungsreihenfolgeAbiFach' + belegung.abiturFach;
+		const getter = () => (belegung.block2MuendlichePruefungReihenfolge === null) ? null : "" + belegung.block2MuendlichePruefungReihenfolge;
+		const setter = (value : string | null) => updatePruefungsreihenfolge(belegung, value);
+		return (element : Element | ComponentPublicInstance<unknown> | null) => {
+			gridInputManager.applyInputAbiturPruefungsreihenfolge(key, 3, belegung.abiturFach!, element, getter, setter);
 		};
 	}
 

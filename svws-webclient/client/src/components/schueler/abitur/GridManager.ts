@@ -2,6 +2,7 @@ import { DeveloperNotificationException } from "@core";
 import { type ComponentPublicInstance } from "vue";
 import type { GridInput } from "./GridInput";
 import { GridInputAbiturNotenpunkte } from "./GridInputAbiturNotenpunkte";
+import { GridInputAbiturPruefungsreihenfolge } from "./GridInputAbiturPruefungsreihenfolge";
 
 export class GridManager<KEY> {
 
@@ -156,6 +157,30 @@ export class GridManager<KEY> {
 		if (this.mapInputs.has(key))
 			return;
 		this.register(new GridInputAbiturNotenpunkte(this, key, col, row, elem, getter, setter));
+	}
+
+	/**
+	 * Fügt oder entfernt ein HTML-Element für den übergebenen Schlüssel hinzu
+	 *
+	 * @param key      der Schlüssel, welcher den Input-Manager identifiziert
+	 * @param col      die Nummer der Spalte im Grid
+	 * @param row      die Nummer der Zeile im Grid
+	 * @param elem     das HTML-Element, welches zum Manager hinzugefügt werden soll, oder null, falls es entfernt werden soll
+	 * @param getter   ein Getter für den Zugriff auf die Daten des Input-Managers
+	 * @param setter   ein Setter für das Speichern der Daten des Input-Managers
+	 */
+	public applyInputAbiturPruefungsreihenfolge(key: KEY, col: number, row: number, elem: Element | ComponentPublicInstance<unknown> | null, getter : () => string | null, setter : (value: string | null) => void) {
+		// Wenn elem null ist, dann entferne das Element
+		if (elem === null) {
+			this.unregister(key);
+			return;
+		}
+		// Registriere das HTMLElement, sofern nicht bereits ein Grid-Input mit dem gleichen Schlüssel registriert ist
+		if (!(elem instanceof HTMLElement))
+			throw new DeveloperNotificationException("Der Grid-Input für die Prüfungsreihenfolge der mündlichen Abiturprüfungen erfordert ein HTMLElement");
+		if (this.mapInputs.has(key))
+			return;
+		this.register(new GridInputAbiturPruefungsreihenfolge(this, key, col, row, elem, getter, setter));
 	}
 
 }
