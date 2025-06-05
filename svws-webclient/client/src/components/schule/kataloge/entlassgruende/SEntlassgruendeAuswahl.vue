@@ -1,7 +1,7 @@
 <template>
 	<div class="h-full flex flex-col">
 		<div class="secondary-menu--headline">
-			<h1>Abteilungen</h1>
+			<h1>Entlassgründe</h1>
 		</div>
 		<div class="secondary-menu--header" />
 		<div class="secondary-menu--content">
