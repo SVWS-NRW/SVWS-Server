@@ -21,6 +21,7 @@ import { HashMap } from "@core/java/util/HashMap";
 import { HashSet } from "@core/java/util/HashSet";
 import { PairNN } from "@core/asd/adt/PairNN";
 import { HashMap2D } from "@core/core/adt/map/HashMap2D";
+import { Note } from "@core/asd/types/Note";
 import type { ListIterator } from "@core/java/util/ListIterator";
 
 /**
@@ -684,6 +685,35 @@ export class EnmManager {
 		// if ((jahrgang.stufe === 'SII-1') || (jahrgang.stufe === 'SII-2') || (jahrgang.stufe === 'SII-3'))
 		// 	return this._daten.value.fehlstundenSIIFachbezogen;
 		// return true;
+	}
+
+	public getKuerzelNote(input: string | null): string | undefined {
+		return Note.fromKuerzel(input).daten(this.schuljahr)?.kuerzel;
+	}
+
+	public isValidQuartal(leistung: ENMLeistung) {
+		const kuerzelNote = this.getKuerzelNote(leistung.noteQuartal);
+		return ((kuerzelNote !== undefined) && (kuerzelNote !== ""));
+	}
+
+	public isValidNote(leistung: ENMLeistung): boolean {
+		const kuerzelNote = this.getKuerzelNote(leistung.note);
+		return ((kuerzelNote !== undefined) && (kuerzelNote !== ""));
+	}
+
+	public isValidFehlstunden(leistung: ENMLeistung) {
+		return (!isNaN(Number(leistung.fehlstundenFach)))
+				&& (Number(leistung.fehlstundenFach) <= 999)
+				&& (Number(leistung.fehlstundenFach) >= 0)
+				&& ((isNaN(Number(leistung.fehlstundenUnentschuldigtFach))) || (Number(leistung.fehlstundenFach) >= Number(leistung.fehlstundenUnentschuldigtFach)));
+	}
+
+	public isValidFehlstundenUnentschuldigt(leistung: ENMLeistung) {
+		return (!isNaN(Number(leistung.fehlstundenUnentschuldigtFach)))
+				&& (Number(leistung.fehlstundenUnentschuldigtFach) <= 999)
+				&& (Number(leistung.fehlstundenUnentschuldigtFach) >= 0)
+				&& (!isNaN(Number(leistung.fehlstundenFach)))
+				&& (Number(leistung.fehlstundenUnentschuldigtFach) <= Number(leistung.fehlstundenFach));
 	}
 
 }
