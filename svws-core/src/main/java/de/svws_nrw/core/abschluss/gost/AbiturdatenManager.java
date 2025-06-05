@@ -2701,7 +2701,7 @@ public class AbiturdatenManager {
 		// Prüfe, ob Bestehensprüfungen im 1. - 3. Fach nötig sind.
 		final boolean hatPflichtPruefungen = (fehlendeNoten == 0)
 				&& ((defizite > (2 + (hatBLL ? 1 : 0))) || (defiziteLK > 1) || (summe < 100));
-		final boolean hatNotenPruefung = (fehlendeNoten != 0);
+		final boolean hatNotenPruefung = (fehlendeNoten == 0);
 
 		// Bestimme die Prüfungsergebnisse in den Abiturfächern (zweiter Durchgang ggf. mit mdl. Prüfungen im 1.-3. Fach)
 		int fehlendeNotenMdlPflicht = 0;

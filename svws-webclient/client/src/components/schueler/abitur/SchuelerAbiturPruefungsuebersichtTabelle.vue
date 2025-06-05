@@ -25,7 +25,7 @@
 				<td class="svws-ui-td text-center" role="columnheader"> <div class="w-full">Freiw.</div> </td>
 				<td class="svws-ui-td text-center" role="columnheader"> <div class="w-full">RF</div> </td>
 				<td class="svws-ui-td text-center svws-divider" role="columnheader"> <div class="w-full">Punkte</div> </td>
-				<td class="svws-ui-td text-center svws-divider" role="columnheader"> <div class="w-full">Punkte</div> </td>
+				<td class="svws-ui-td text-center svws-divider" role="columnheader"> <div class="w-full">Summe</div> </td>
 				<td class="svws-ui-td text-center" role="columnheader" :class="{
 					'text-ui-onsuccess bg-ui-success': istBestanden === true,
 					'text-ui-ondanger bg-ui-danger': istBestanden === false,

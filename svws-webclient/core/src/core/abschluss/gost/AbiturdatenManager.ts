@@ -2498,7 +2498,7 @@ export class AbiturdatenManager extends JavaObject {
 			}
 		}
 		const hatPflichtPruefungen : boolean = (fehlendeNoten === 0) && ((defizite > (2 + (hatBLL ? 1 : 0))) || (defiziteLK > 1) || (summe < 100));
-		const hatNotenPruefung : boolean = (fehlendeNoten !== 0);
+		const hatNotenPruefung : boolean = (fehlendeNoten === 0);
 		let fehlendeNotenMdlPflicht : number = 0;
 		let fehlendeNotenMdlFreiwillig : number = 0;
 		for (const abibelegung of abiBelegungen) {
