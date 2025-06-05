@@ -649,7 +649,30 @@ public class LupoMDB {
 						logger.modifyIndent(-2);
 						continue;
 					}
-					final int restjahre = dtoJahrgang.AnzahlRestabschnitte / schule.AnzahlAbschnitte;
+					final int tmpRestjahre = dtoJahrgang.AnzahlRestabschnitte / schule.AnzahlAbschnitte;
+					int restjahre = switch (dtoJahrgang.ASDJahrgang) {
+						case "Q2" -> 1;
+						case "Q1" -> 2;
+						case "EF" -> 3;
+						case "10" -> (tmpRestjahre >= 2) ? tmpRestjahre : 4;
+						case "09" -> (tmpRestjahre >= 3) ? tmpRestjahre : (("GY8".equals(dtoAktAbschnitt.Schulgliederung) || "Y8".equals(dtoAktAbschnitt.Schulgliederung)) ? 4 : 5);
+						case "08" -> (tmpRestjahre >= 4) ? tmpRestjahre : (("GY8".equals(dtoAktAbschnitt.Schulgliederung) || "Y8".equals(dtoAktAbschnitt.Schulgliederung)) ? 5 : 6);
+						case "07" -> (tmpRestjahre >= 5) ? tmpRestjahre : (("GY8".equals(dtoAktAbschnitt.Schulgliederung) || "Y8".equals(dtoAktAbschnitt.Schulgliederung)) ? 6 : 7);
+						case "06" -> (tmpRestjahre >= 6) ? tmpRestjahre : (("GY8".equals(dtoAktAbschnitt.Schulgliederung) || "Y8".equals(dtoAktAbschnitt.Schulgliederung)) ? 7 : 8);
+						case "05" -> (tmpRestjahre >= 7) ? tmpRestjahre : (("GY8".equals(dtoAktAbschnitt.Schulgliederung) || "Y8".equals(dtoAktAbschnitt.Schulgliederung)) ? 8 : 9);
+						case "04" -> (tmpRestjahre >= 8) ? tmpRestjahre : (("GY8".equals(dtoAktAbschnitt.Schulgliederung) || "Y8".equals(dtoAktAbschnitt.Schulgliederung)) ? 9 : 10);
+						case "03" -> (tmpRestjahre >= 9) ? tmpRestjahre : (("GY8".equals(dtoAktAbschnitt.Schulgliederung) || "Y8".equals(dtoAktAbschnitt.Schulgliederung)) ? 10 : 11);
+						case "02" -> (tmpRestjahre >= 10) ? tmpRestjahre : (("GY8".equals(dtoAktAbschnitt.Schulgliederung) || "Y8".equals(dtoAktAbschnitt.Schulgliederung)) ? 11 : 12);
+						case "01" -> (tmpRestjahre >= 11) ? tmpRestjahre : (("GY8".equals(dtoAktAbschnitt.Schulgliederung) || "Y8".equals(dtoAktAbschnitt.Schulgliederung)) ? 12 : 13);
+						default -> Integer.MIN_VALUE;
+					};
+					if (restjahre == Integer.MIN_VALUE) {
+						logger.logLn("Fehler beim Ermitteln der Restjahre - ASDJahrgang kann aus der Jahrgangstabelle nicht bestimmt werden. Überspringe diesen Schüler!");
+						logger.modifyIndent(-2);
+						continue;
+					}
+					if (("GY8".equals(dtoAktAbschnitt.Schulgliederung) || "Y8".equals(dtoAktAbschnitt.Schulgliederung)))
+						restjahre--;
 					final int abiJahrgang = dtoAbschnittSchueler.Jahr + restjahre;
 					logger.logLn(0, "" + abiJahrgang);
 					logger.log("- Prüfe, ob der aktuelle Abiturjahrgang oder ein anderer Abiturjahrgang bereits vorgekommen ist: ");
