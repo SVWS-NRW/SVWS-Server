@@ -1,6 +1,6 @@
 {
 	"index": 10,
-	"version": 3,
+	"version": 4,
 	"fachklassen": [
 		{
 			"schluessel": "101",
@@ -302,9 +302,9 @@
 				"ebene1": "TN",
 				"ebene2": null,
 				"ebene3": "A2",
-				"bezeichnung": "Ausbaufacharbeiter/-in - Fliesen-/Platten-/Mosaikarbeiten",
-				"bezeichnungM": "Ausbaufacharbeiter - Fliesen-/Platten-/Mosaikarbeiten",
-				"bezeichnungW": "Ausbaufacharbeiterin - Fliesen-/Platten-/Mosaikarbeiten",
+				"bezeichnung": "Ausbaufacharbeiter/-in - Fliesen-, Platten- und Mosaikarbeiten",
+				"bezeichnungM": "Ausbaufacharbeiter - Fliesen-, Platten- und Mosaikarbeiten",
+				"bezeichnungW": "Ausbaufacharbeiterin - Fliesen-, Platten- und Mosaikarbeiten",
 				"gueltigVon": 2013,
 				"gueltigBis": null
 			} ]
@@ -353,9 +353,9 @@
 				"ebene1": "TN",
 				"ebene2": null,
 				"ebene3": "A2",
-				"bezeichnung": "Ausbaufacharbeiter/-in- Wärme-/Kälte-/Schallschutzarbeiten",
-				"bezeichnungM": "Ausbaufacharbeiter - Wärme-/Kälte-/Schallschutzarbeiten",
-				"bezeichnungW": "Ausbaufacharbeiterin - Wärme-/Kälte-/Schallschutzarbeiten",
+				"bezeichnung": "Ausbaufacharbeiter/-in - Wärme-, Kälte- und Schallschutzarbeiten",
+				"bezeichnungM": "Ausbaufacharbeiter - Wärme-, Kälte- und Schallschutzarbeiten",
+				"bezeichnungW": "Ausbaufacharbeiterin - Wärme-, Kälte- und Schallschutzarbeiten",
 				"gueltigVon": 2013,
 				"gueltigBis": null
 			} ]
@@ -2452,9 +2452,9 @@
 				"ebene1": "TN",
 				"ebene2": null,
 				"ebene3": "A4",
-				"bezeichnung": "Elektroniker/-in - FR Automatisierungstechnik",
-				"bezeichnungM": "Elektroniker - FR Automatisierungstechnik",
-				"bezeichnungW": "Elektronikerin - FR Automatisierungstechnik",
+				"bezeichnung": "Elektroniker/-in - Automatisierungstechnik",
+				"bezeichnungM": "Elektroniker - Automatisierungstechnik",
+				"bezeichnungW": "Elektronikerin - Automatisierungstechnik",
 				"gueltigVon": 2014,
 				"gueltigBis": 2023
 			} ]
@@ -2486,9 +2486,9 @@
 				"ebene1": "TN",
 				"ebene2": null,
 				"ebene3": "A4",
-				"bezeichnung": "Elektroniker/-in FR Automatisierungs- und Systemtechnik",
-				"bezeichnungM": "Elektroniker  FR Automatisierungs- und Systemtechnik",
-				"bezeichnungW": "Elektronikerin  FR Automatisierungs- und Systemtechnik",
+				"bezeichnung": "Elektroniker/-in - Automatisierungs- und Systemtechnik",
+				"bezeichnungM": "Elektroniker - Automatisierungs- und Systemtechnik",
+				"bezeichnungW": "Elektronikerin - Automatisierungs- und Systemtechnik",
 				"gueltigVon": 2021,
 				"gueltigBis": null
 			} ]
@@ -4758,9 +4758,9 @@
 				"ebene1": "TN",
 				"ebene2": null,
 				"ebene3": "A2",
-				"bezeichnung": "Hochbaufacharbeiter/-in - Feuerung und Schornsteinarbeiten",
-				"bezeichnungM": "Hochbaufacharbeiter - Feuerung und Schornsteinarbeiten",
-				"bezeichnungW": "Hochbaufacharbeiterin - Feuerung und Schornsteinarbeiten",
+				"bezeichnung": "Hochbaufacharbeiter/-in - Feuerungs- und Schornsteinarbeiten",
+				"bezeichnungM": "Hochbaufacharbeiter - Feuerungs- und Schornsteinarbeiten",
+				"bezeichnungW": "Hochbaufacharbeiterin - Feuerungs- und Schornsteinarbeiten",
 				"gueltigVon": 2013,
 				"gueltigBis": null
 			} ]
@@ -5588,9 +5588,9 @@
 				"ebene1": "TN",
 				"ebene2": null,
 				"ebene3": "A3",
-				"bezeichnung": "Informations- und Telekommunikationssystem - Elektroniker/-in",
-				"bezeichnungM": "Informations- und Telekommunikationssystem - Elektroniker",
-				"bezeichnungW": "Informations- und Telekommunikationssystem - Elektronikerin",
+				"bezeichnung": "Informations- und Telekommunikationssystem-Elektroniker/-in",
+				"bezeichnungM": "Informations- und Telekommunikationssystem-Elektroniker",
+				"bezeichnungW": "Informations- und Telekommunikationssystem-Elektronikerin",
 				"gueltigVon": null,
 				"gueltigBis": 2021
 			} ]
@@ -5605,9 +5605,9 @@
 				"ebene1": "WV",
 				"ebene2": null,
 				"ebene3": "A3",
-				"bezeichnung": "Informations- und Telekommunikationssystem - Kaufmann/-frau",
-				"bezeichnungM": "Informations- und Telekommunikationssystem - Kaufmann",
-				"bezeichnungW": "Informations- und Telekommunikationssystem - Kauffrau",
+				"bezeichnung": "Informations- und Telekommunikationssystem-Kaufmann/-frau",
+				"bezeichnungM": "Informations- und Telekommunikationssystem-Kaufmann",
+				"bezeichnungW": "Informations- und Telekommunikationssystem-Kauffrau",
 				"gueltigVon": null,
 				"gueltigBis": 2021
 			} ]
@@ -14202,7 +14202,7 @@
 				"ebene3": "A3",
 				"bezeichnung": "Verfahrenstechnologe/-in für Mühlen- u. Futtermittelwirtschaft",
 				"bezeichnungM": "Verfahrenstechnologe für Mühlen- u. Futtermittelwirtschaft",
-				"bezeichnungW": "Verfahrenstechnologe für Mühlen- u. Futtermittelwirtschaft",
+				"bezeichnungW": "Verfahrenstechnologin für Mühlen- u. Futtermittelwirtschaft",
 				"gueltigVon": 2006,
 				"gueltigBis": 2012
 				},
@@ -14214,9 +14214,9 @@
 				"ebene1": "OZ",
 				"ebene2": null,
 				"ebene3": "A3",
-				"bezeichnung": "Müller/-in (Verfahrenstechn. für Mühlen- und Futtermittelwirtschaft)",
-				"bezeichnungM": "Müller (Verfahrenstechn. für Mühlen- und Futtermittelwirtschaft)",
-				"bezeichnungW": "Müllerin (Verfahrenstechn. für Mühlen- und Futtermittelwirtschaft)",
+				"bezeichnung": "Müller/-in (Verfahrenstechnologe/-in für Mühlen- und Futtermittelwirtschaft)",
+				"bezeichnungM": "Müller (Verfahrenstechnologe für Mühlen- und Futtermittelwirtschaft)",
+				"bezeichnungW": "Müllerin (Verfahrenstechnologin für Mühlen- und Futtermittelwirtschaft)",
 				"gueltigVon": 2013,
 				"gueltigBis": 2021
 			} ]
@@ -15472,7 +15472,7 @@
 				"ebene1": "TN",
 				"ebene2": null,
 				"ebene3": "A4",
-				"bezeichnung": "Verfahrenstechnolog(e/in) Metall - Eisen- und Stahlmetallurgie",
+				"bezeichnung": "Verfahrenstechnologe/-technologin Metall - Eisen- und Stahlmetallurgie",
 				"bezeichnungM": "Verfahrenstechnologe Metall - Eisen- und Stahlmetallurgie",
 				"bezeichnungW": "Verfahrenstechnologin Metall - Eisen- und Stahlmetallurgie",
 				"gueltigVon": 2018,
@@ -15489,7 +15489,7 @@
 				"ebene1": "TN",
 				"ebene2": null,
 				"ebene3": "A4",
-				"bezeichnung": "Verfahrenstechnolog(e/in) Metall - Stahlumformung",
+				"bezeichnung": "Verfahrenstechnologe/-technologin Metall - Stahlumformung",
 				"bezeichnungM": "Verfahrenstechnologe Metall - Stahlumformung",
 				"bezeichnungW": "Verfahrenstechnologin Metall - Stahlumformung",
 				"gueltigVon": 2018,
@@ -15506,7 +15506,7 @@
 				"ebene1": "TN",
 				"ebene2": null,
 				"ebene3": "A4",
-				"bezeichnung": "Verfahrenstechnolog(e/in) Metall - Nichteisenmetallurgie",
+				"bezeichnung": "Verfahrenstechnologe/-technologin Metall - Nichteisenmetallurgie",
 				"bezeichnungM": "Verfahrenstechnologe Metall - Nichteisenmetallurgie",
 				"bezeichnungW": "Verfahrenstechnologin Metall - Nichteisenmetallurgie",
 				"gueltigVon": 2018,
@@ -15523,7 +15523,7 @@
 				"ebene1": "TN",
 				"ebene2": null,
 				"ebene3": "A4",
-				"bezeichnung": "Verfahrenstechnolog(e/in) Metall - Nichteisenmetallumformung",
+				"bezeichnung": "Verfahrenstechnologe/-technologin Metall - Nichteisenmetallumformung",
 				"bezeichnungM": "Verfahrenstechnologe Metall - Nichteisenmetallumformung",
 				"bezeichnungW": "Verfahrenstechnologin Metall - Nichteisenmetallumformung",
 				"gueltigVon": 2018,
@@ -15914,7 +15914,7 @@
 				"ebene1": "TN",
 				"ebene2": "null",
 				"ebene3": "A3",
-				"bezeichnungW": "Umwelttechnologe/Umwelttechnologin für Kreislauf- und Abfallwirtschaft",
+				"bezeichnung": "Umwelttechnologe/Umwelttechnologin für Kreislauf- und Abfallwirtschaft",
 				"bezeichnungM": "Umwelttechnologe für Kreislauf- und Abfallwirtschaft",
 				"bezeichnungW": "Umwelttechnologin für Kreislauf- und Abfallwirtschaft",
 				"gueltigVon": 2024,
@@ -17002,7 +17002,7 @@
 				"ebene1": "TN",
 				"ebene2": null,
 				"ebene3": "MB",
-				"bezeichnung": "Werkzeugmaschinenwerker/-in- Bohren",
+				"bezeichnung": "Werkzeugmaschinenwerker/-in - Bohren",
 				"bezeichnungM": "Werkzeugmaschinenwerker - Bohren",
 				"bezeichnungW": "Werkzeugmaschinenwerkerin - Bohren",
 				"gueltigVon": null,
@@ -17019,7 +17019,7 @@
 				"ebene1": "TN",
 				"ebene2": null,
 				"ebene3": "MB",
-				"bezeichnung": "Werkzeugmaschinenwerker/-in- Drehen",
+				"bezeichnung": "Werkzeugmaschinenwerker/-in - Drehen",
 				"bezeichnungM": "Werkzeugmaschinenwerker - Drehen",
 				"bezeichnungW": "Werkzeugmaschinenwerkerin - Drehen",
 				"gueltigVon": null,
@@ -17036,7 +17036,7 @@
 				"ebene1": "TN",
 				"ebene2": null,
 				"ebene3": "MB",
-				"bezeichnung": "Werkzeugmaschinenwerker/-in- Fräsen",
+				"bezeichnung": "Werkzeugmaschinenwerker/-in - Fräsen",
 				"bezeichnungM": "Werkzeugmaschinenwerker - Fräsen",
 				"bezeichnungW": "Werkzeugmaschinenwerkerin - Fräsen",
 				"gueltigVon": null,

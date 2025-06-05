@@ -131,6 +131,27 @@ public enum Schulgliederung implements @NotNull CoreType<SchulgliederungKatalogE
 	A16,
 
 	/**
+	 * Schulgliederung A17:
+	 *   Anlage A (Fachklassen duales System und Ausbildungsvorbereitung),
+	 *   Typ 17 (Internationale Förderklasse)
+	 */
+	A17,
+
+	/**
+	 * Schulgliederung A18:
+	 *   Anlage A (Fachklassen duales System und Ausbildungsvorbereitung),
+	 *   Typ 18 (Fit für mehr)
+	 */
+	A18,
+
+	/**
+	 * Schulgliederung A19:
+	 *   Anlage A (Fachklassen duales System und Ausbildungsvorbereitung),
+	 *   Typ 19 (Förderzentrum)
+	 */
+	A19,
+
+	/**
 	 * Schulgliederung AB:
 	 *   Schule für Kranke: Allgemeinbildend
 	 */

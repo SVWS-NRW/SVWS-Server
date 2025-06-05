@@ -1,6 +1,6 @@
 {
 	"index": 100,
-	"version": 2,
+	"version": 3,
 	"fachklassen": [
 		{
 			"schluessel": "101",
@@ -727,9 +727,9 @@
 				"ebene1": null,
 				"ebene2": null,
 				"ebene3": null,
-				"bezeichnung": "Wirtschaftassistent/-in (kaufmännischer Assistent/-in)",
-				"bezeichnungM": "Wirtschaftassistent (kaufmännischer Assistent)",
-				"bezeichnungW": "Wirtschaftassistentin (kaufmännischer Assistentin)",
+				"bezeichnung": "Wirtschaftsassistent/-in (kaufmännischer Assistent/-in)",
+				"bezeichnungM": "Wirtschaftsassistent (kaufmännischer Assistent)",
+				"bezeichnungW": "Wirtschaftsassistentin (kaufmännische Assistentin)",
 				"gueltigVon": null,
 				"gueltigBis": 2003
 			} ]

@@ -1,0 +1,24 @@
+{
+	"index": 67,
+	"version": 1,
+	"fachklassen": [
+		{
+			"schluessel": "500",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 6750000000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "OZ",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Förderzentrum",
+				"bezeichnungM": "Förderzentrum",
+				"bezeichnungW": "Förderzentrum",
+				"gueltigVon": 2025,
+				"gueltigBis": null
+			} ]
+		}
+	]
+}

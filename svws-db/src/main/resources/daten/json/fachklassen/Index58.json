@@ -1,6 +1,6 @@
 {
 	"index": 58,
-	"version": 2,
+	"version": 3,
 	"fachklassen": [
 		{
 			"schluessel": "101",
@@ -693,9 +693,9 @@
 				"ebene1": "GE",
 				"ebene2": "KP",
 				"ebene3": "OA",
-				"bezeichnung": "Schüler/-innen ohne Arbeitsverhältnis -Körperpflege",
+				"bezeichnung": "Schüler/-innen ohne Arbeitsverhältnis - Körperpflege",
 				"bezeichnungM": "Schüler ohne Arbeitsverhältnis - Körperpflege",
-				"bezeichnungW": "Schülerinnen ohne Arbeitsverhältnis -Körperpflege",
+				"bezeichnungW": "Schülerinnen ohne Arbeitsverhältnis - Körperpflege",
 				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
@@ -1176,7 +1176,7 @@
 				"gueltigBis": 2022
 			}, {
 				"id": 1848001,
-				"istAusgelaufen": false,
+				"istAusgelaufen": true,
 				"berufsfeldGruppe": null,
 				"berufsfeld": null,
 				"ebene1": "OZ",
@@ -1186,7 +1186,7 @@
 				"bezeichnungM": "Berufsvorbereitende Maßnahmen der BA (z.B. Förderzentrum für Flüchtlinge)",
 				"bezeichnungW": "Berufsvorbereitende Maßnahmen der BA (z.B. Förderzentrum für Flüchtlinge)",
 				"gueltigVon": 2023,
-				"gueltigBis": null
+				"gueltigBis": 2024
 			} ]
 		}, {
 			"schluessel": "601",

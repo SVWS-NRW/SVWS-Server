@@ -1,6 +1,6 @@
 {
 	"index": 200,
-	"version": 2,
+	"version": 3,
 	"fachklassen": [
 		{
 			"schluessel": "101",
@@ -13,9 +13,9 @@
 				"ebene1": "AB",
 				"ebene2": null,
 				"ebene3": null,
-				"bezeichnung": "Agrarwirtschaft, Bio und Umwelttechnologie",
-				"bezeichnungM": "Agrarwirtschaft, Bio und Umwelttechnologie",
-				"bezeichnungW": "Agrarwirtschaft, Bio und Umwelttechnologie",
+				"bezeichnung": "Agrarwirtschaft, Bio- und Umwelttechnologie",
+				"bezeichnungM": "Agrarwirtschaft, Bio- und Umwelttechnologie",
+				"bezeichnungW": "Agrarwirtschaft, Bio- und Umwelttechnologie",
 				"gueltigVon": null,
 				"gueltigBis": null
 			} ]

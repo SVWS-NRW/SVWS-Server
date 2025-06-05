@@ -1,0 +1,24 @@
+{
+	"index": 65,
+	"version": 1,
+	"fachklassen": [
+		{
+			"schluessel": "109",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 6510900000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "OZ",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Internationale Förderklasse",
+				"bezeichnungM": "Internationale Förderklasse",
+				"bezeichnungW": "Internationale Förderklasse",
+				"gueltigVon": 2025,
+				"gueltigBis": null
+			} ]
+		}
+	]
+}
