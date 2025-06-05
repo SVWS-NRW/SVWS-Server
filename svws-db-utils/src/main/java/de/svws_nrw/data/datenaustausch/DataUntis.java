@@ -112,6 +112,7 @@ import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtKla
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtLehrer;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtRaum;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtSchiene;
+import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanZeitraster;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
@@ -346,11 +347,23 @@ public final class DataUntis {
 		}
 		// Passe ggf. das Wochentyp-Modell an, falls Unterrichte mit einem Wochentyp eingelesen wurden.
 		if (maxWochentyp != 0) {
-			logger.logLn("-> Setze das Wochentyp-Modell auf %d.".formatted(maxWochentyp));
-			dtoStundenplan.WochentypModell = maxWochentyp;
+			final int wtModell = (maxWochentyp == 1) ? 0 : maxWochentyp;
+			logger.logLn("-> Setze das Wochentyp-Modell auf %d.".formatted(wtModell));
+			dtoStundenplan.WochentypModell = wtModell;
 			conn.transactionPersist(dtoStundenplan);
 			conn.transactionFlush();
-			// TODO Fasse alle erzeugten Unterrichte als WT 0 zusammen, die bis auf den Wochentyp identisch sind und alle Wochentypen abdecken.
+			// Fasse alle erzeugten Unterrichte als WT 0 zusammen, die bis auf den Wochentyp identisch sind und alle Wochentypen abdecken.
+			final List<Long> idsZeitraster =
+					conn.queryList(DTOStundenplanZeitraster.QUERY_BY_STUNDENPLAN_ID, DTOStundenplanZeitraster.class, dtoStundenplan.ID)
+							.stream().map(z -> z.ID).toList();
+			if (!idsZeitraster.isEmpty()) {
+				if (maxWochentyp == 1) {
+					// Es müssen einfach alle Unterrichte auf Wochentyp 0 umgestellt werden
+					conn.transactionExecuteUpdate("UPDATE DTOStundenplanUnterricht SET Wochentyp = 0 WHERE Wochentyp = 1");
+				} else {
+					// TODO Fasse alle erzeugten Unterrichte als WT 0 zusammen, die bis auf den Wochentyp identisch sind und alle Wochentypen abdecken.
+				}
+			}
 		}
 	}
 
