@@ -7,92 +7,92 @@
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-select title="Schule" :items="manager().schulenById.values()" :item-text="textSchule" autocomplete :item-filter="filterSchulenEintraege"
 					:model-value="manager().getVorherigeSchule()" @update:model-value="v => manager().patchSchule(v, 'idVorherigeSchule')" removable
-					statistics />
+					statistics :readonly />
 				<svws-ui-button type="transparent" @click="goToSchule(manager().daten.idVorherigeSchule ?? -1)">
 					<span class="icon i-ri-link" />Zur Schule
 				</svws-ui-button>
 				<svws-ui-text-input placeholder="allgemeine Herkunft" :model-value="manager().getVorigeAllgHerkunft()" readonly statistics />
 				<svws-ui-text-input v-autofocus placeholder="Statistik-Schulnummer" :statistics="true" readonly
 					:model-value="manager().getVorherigeSchule()?.schulnummerStatistik ?? ' - '" />
-				<svws-ui-text-input placeholder="Entlassen am" type="date" :model-value="manager().daten.vorigeEntlassdatum" statistics
+				<svws-ui-text-input placeholder="Entlassen am" type="date" :model-value="manager().daten.vorigeEntlassdatum" statistics :readonly
 					@change="vorigeEntlassdatum => manager().doPatch({ vorigeEntlassdatum })" />
 				<svws-ui-select title="Entlassjahrgang" :items="manager().getJahrgaengeBySchulform(manager().getVorigeSchulform())" :item-text="textJahrgang"
 					:model-value="manager().getEntlassjahrgang('vorigeEntlassjahrgang')" :disabled="manager().getVorherigeSchule() === undefined"
-					@update:model-value="v => manager().patchEntlassjahrgang(v, 'vorigeEntlassjahrgang')" removable statistics />
+					@update:model-value="v => manager().patchEntlassjahrgang(v, 'vorigeEntlassjahrgang')" removable statistics :readonly />
 				<svws-ui-text-input placeholder="Bemerkung" span="full" :model-value="manager().daten.vorigeBemerkung" :max-len="255"
-					@change="v => { if ((v ?? '').length <= 255) manager().doPatch({ vorigeBemerkung : v }) } " />
+					@change="v => { if ((v ?? '').length <= 255) manager().doPatch({ vorigeBemerkung : v }) } " :readonly />
 				<svws-ui-spacing />
 				<svws-ui-select title="Entlassgrund" :items="manager().entlassgruendeById" :item-text="v => v.bezeichnung" removable
-					:model-value="manager().getEntlassgrund('vorigeEntlassgrundID')"
+					:model-value="manager().getEntlassgrund('vorigeEntlassgrundID')" :readonly
 					@update:model-value="v => manager().patchEntlassgrund(v, 'vorigeEntlassgrundID')" />
-				<svws-ui-text-input placeholder="höchster Abschluss, der von der anderen Schule mitgebracht wurde" disabled statistics
+				<svws-ui-text-input placeholder="höchster Abschluss, der von der anderen Schule mitgebracht wurde" disabled statistics :readonly
 					@change="vorigeAbschlussartID => manager().doPatch({ vorigeAbschlussartID })" :model-value="manager().daten.vorigeAbschlussartID" />
-				<svws-ui-select class="col-span-full" title="Versetzung" :items="manager().getHerkunftsarten()" :item-text="textHerkunftsarten" removable
+				<svws-ui-select class="col-span-full" title="Versetzung" :items="manager().getHerkunftsarten()" :item-text="textHerkunftsarten" removable :readonly
 					:model-value="manager().getVorigeArtLetzteVersetzung()" @update:model-value="v => manager().patchVorigeArtLetzteVersetzung(v)" statistics />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Entlassung von eigener Schule">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input class="contentFocusField" placeholder="Entlassen am" type="date" :model-value="manager().daten.entlassungDatum"
-					@change="entlassungDatum => manager().doPatch({ entlassungDatum })" statistics />
+					@change="entlassungDatum => manager().doPatch({ entlassungDatum })" statistics :readonly />
 				<svws-ui-select title="Entlassjahrgang" :items="manager().getJahrgaengeBySchulform(props.schulform)"
-					:model-value="manager().getEntlassjahrgang('entlassungJahrgang')"
+					:model-value="manager().getEntlassjahrgang('entlassungJahrgang')" :readonly
 					@update:model-value="v => manager().patchEntlassjahrgang(v, 'entlassungJahrgang')" :item-text="textJahrgang" removable />
 				<svws-ui-select title="Entlassgrund" :items="manager().entlassgruendeById" :item-text="v => v.bezeichnung" removable
-					:model-value="manager().getEntlassgrund('entlassungGrundID')"
+					:model-value="manager().getEntlassgrund('entlassungGrundID')" :readonly
 					@update:model-value="v => manager().patchEntlassgrund(v, 'entlassungGrundID')" />
 				<svws-ui-spacing />
 				<svws-ui-text-input placeholder="Art des Abschlusses" span="full" :model-value="manager().daten.entlassungAbschlussartID" disabled
-					@change="entlassungAbschlussartID => manager().doPatch({ entlassungAbschlussartID })" statistics />
+					@change="entlassungAbschlussartID => manager().doPatch({ entlassungAbschlussartID })" statistics :readonly />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Wechsel zu aufnehmender Schule">
 			<template #actions>
 				<svws-ui-checkbox :model-value="manager().daten.aufnehmendBestaetigt === true" :indeterminate="manager().daten.aufnehmendBestaetigt === null"
-					@update:model-value="aufnehmendBestaetigt => manager().doPatch({ aufnehmendBestaetigt })" focus-class-content>
+					@update:model-value="aufnehmendBestaetigt => manager().doPatch({ aufnehmendBestaetigt })" focus-class-content :readonly>
 					Aufnahme bestätigt
 				</svws-ui-checkbox>
 			</template>
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-select title="Schule" :items="manager().schulenById.values()" :item-text="textSchule" autocomplete
+				<svws-ui-select title="Schule" :items="manager().schulenById.values()" :item-text="textSchule" autocomplete :readonly
 					:model-value="manager().schulenById.get(manager().daten.idAufnehmendeSchule ?? -1)" :item-filter="filterSchulenEintraege" removable
 					@update:model-value="v => manager().patchSchule(v, 'idAufnehmendeSchule')" />
-				<svws-ui-button type="transparent" @click="goToSchule(manager().daten.idAufnehmendeSchule ?? -1)">
+				<svws-ui-button type="transparent" @click="goToSchule(manager().daten.idAufnehmendeSchule ?? -1)" :readonly>
 					<span class="icon i-ri-link" />Zur Schule
 				</svws-ui-button>
 
-				<svws-ui-text-input placeholder="Wechseldatum" :model-value="manager().daten.aufnehmendWechseldatum"
+				<svws-ui-text-input placeholder="Wechseldatum" :model-value="manager().daten.aufnehmendWechseldatum" :readonly
 					@change="aufnehmendWechseldatum => manager().doPatch({ aufnehmendWechseldatum })" type="date" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Grundschulbesuch">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-input-number class="contentFocusField" placeholder="Einschulung" :model-value="manager().daten.grundschuleEinschulungsjahr"
+				<svws-ui-input-number class="contentFocusField" placeholder="Einschulung" :model-value="manager().daten.grundschuleEinschulungsjahr" :readonly
 					@change="grundschuleEinschulungsjahr => manager().doPatch({ grundschuleEinschulungsjahr })" :min="1900" :max="2100" statistics />
 				<svws-ui-select title="Einschulungsart" :items="Einschulungsart.values()" :model-value="manager().getEinschulungsart()" statistics removable
 					@update:model-value="v => manager().doPatch({ grundschuleEinschulungsartID : v?.daten(manager().schuljahr).id ?? null })"
-					:item-text="textEinschulungsart" />
+					:item-text="textEinschulungsart" :readonly />
 				<svws-ui-select title="EP-Jahre" :items="PrimarstufeSchuleingangsphaseBesuchsjahre.values()" removable :item-text="textEPJahre"
 					@update:model-value="v => manager().doPatch({ idGrundschuleJahreEingangsphase : v?.daten(manager().schuljahr)?.id ?? null })"
-					:model-value="manager().getEPJahre()" />
+					:model-value="manager().getEPJahre()" :readonly />
 				<svws-ui-select title="Übergangsempfehlung Jg. 5" :items="Uebergangsempfehlung.values()" :item-text="textUebergangsempfehlung" removable
 					@update:model-value="v => manager().doPatch({kuerzelGrundschuleUebergangsempfehlung : v?.daten(manager().schuljahr)?.kuerzel ?? null})"
-					:model-value="manager().getUebergangsempfehlung()" statistics />
+					:model-value="manager().getUebergangsempfehlung()" statistics :readonly />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Sekundarstufe I">
 			<svws-ui-input-wrapper>
-				<svws-ui-input-number class="contentFocusField" placeholder="Jahr Wechsel Sek I" :model-value="manager().daten.sekIWechsel"
+				<svws-ui-input-number class="contentFocusField" placeholder="Jahr Wechsel Sek I" :model-value="manager().daten.sekIWechsel" :readonly
 					@change="sekIWechsel => manager().doPatch({ sekIWechsel })" :min="1900" :max="2100" statistics />
 				<svws-ui-select title="Erste Schulform Sek I" :items="Schulform.values()" :item-text="textSchulformSek1" :model-value="manager().getSchulformSek1()"
-					@update:model-value="v => manager().doPatch({ sekIErsteSchulform : v?.daten(manager().schuljahr)?.kuerzel ?? null })" />
-				<svws-ui-input-number placeholder="Jahr Wechsel Sek II" :model-value="manager().daten.sekIIWechsel"
+					@update:model-value="v => manager().doPatch({ sekIErsteSchulform : v?.daten(manager().schuljahr)?.kuerzel ?? null })" :readonly />
+				<svws-ui-input-number placeholder="Jahr Wechsel Sek II" :model-value="manager().daten.sekIIWechsel" :readonly
 					@change="sekIIWechsel => manager().doPatch({ sekIIWechsel })" :min="1900" :max="2100" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Besondere Merkmale für die Statistik">
-			<svws-ui-table clickable @update:clicked="v => patchMerkmal(v)" :columns="columnsMerkmale" :items="merkmale"
-				v-model="auswahlMerkmale" :selectable="hatUpdateKompetenz">
+			<svws-ui-table clickable @update:clicked="v => patchMerkmal(v)" :columns="columnsMerkmale" :items="merkmale" :readonly
+				v-model="auswahlMerkmale" :selectable="hatKompetenzUpdate">
 				<template #cell(merkmal)="{ rowData: s }">
 					<span>{{ manager().merkmaleById.get(s.idMerkmal ?? -1)?.bezeichnung ?? " - " }}</span>
 				</template>
@@ -102,9 +102,11 @@
 				<template #cell(datumBis)="{ rowData: s }">
 					<span>{{ formatDate(s.datumBis) }}</span>
 				</template>
-				<template #actions v-if="hatUpdateKompetenz">
-					<svws-ui-button @click="deleteAuswahlMerkmale" type="trash" :disabled="auswahlMerkmale.length === 0" />
-					<svws-ui-button @click="addMerkmal" type="icon" title="Merkmal hinzufügen"> <span class="icon i-ri-add-line" /> </svws-ui-button>
+				<template #actions v-if="hatKompetenzUpdate">
+					<svws-ui-button @click="deleteAuswahlMerkmale" type="trash" :disabled="(auswahlMerkmale.length === 0) || hatKompetenzUpdate" />
+					<svws-ui-button @click="addMerkmal" :disabled="!hatKompetenzUpdate" type="icon" title="Merkmal hinzufügen">
+						<span class="icon i-ri-add-line" />
+					</svws-ui-button>
 				</template>
 			</svws-ui-table>
 			<!-- Modal zum Erzeugen und Patchen eines Eintrags der besonderen Merkmale für die Statistik -->
@@ -112,15 +114,19 @@
 				<template #modalTitle>Merkmal hinzufügen</template>
 				<template #modalContent>
 					<svws-ui-select title="Merkmal" class="pb-4" :items="merkmaleFilteredNotCreated" :item-text="textMerkmal" removable required
-						@update:model-value="v => newEntryMerkmal.idMerkmal = v?.id ?? null" statistics
+						@update:model-value="v => newEntryMerkmal.idMerkmal = v?.id ?? null" statistics :readonly
 						:model-value="manager().merkmaleById.get(newEntryMerkmal.idMerkmal ?? -1)" />
 					<svws-ui-input-wrapper :grid="2" style="text-align: left">
-						<svws-ui-text-input placeholder="Von" type="date" :max-date="newEntryMerkmal.datumBis ?? undefined" v-model="newEntryMerkmal.datumVon" />
-						<svws-ui-text-input placeholder="Bis" type="date" :min-date="newEntryMerkmal.datumVon ?? undefined" v-model="newEntryMerkmal.datumBis" />
+						<svws-ui-text-input placeholder="Von" type="date" :max-date="newEntryMerkmal.datumBis ?? undefined" v-model="newEntryMerkmal.datumVon"
+							:readonly />
+						<svws-ui-text-input placeholder="Bis" type="date" :min-date="newEntryMerkmal.datumVon ?? undefined" v-model="newEntryMerkmal.datumBis"
+							:readonly />
 					</svws-ui-input-wrapper>
 					<div class="mt-7 flex flex-row gap-4 justify end">
 						<svws-ui-button type="secondary" @click="closeModalMerkmal">Abbrechen</svws-ui-button>
-						<svws-ui-button @click="sendRequestMerkmal(currentMode)" :disabled="!newEntryMerkmal.idMerkmal">Speichern</svws-ui-button>
+						<svws-ui-button @click="sendRequestMerkmal(currentMode)" :disabled="!newEntryMerkmal.idMerkmal || !hatKompetenzUpdate">
+							Speichern
+						</svws-ui-button>
 					</div>
 				</template>
 			</svws-ui-modal>
@@ -128,7 +134,7 @@
 		<svws-ui-content-card title="Alle bisher besuchten Schulen" class="col-span-full">
 			<!-- Tabelle der bisher besuchten Schulen -->
 			<svws-ui-table clickable @update:clicked="v => patchBisherigeSchule(v)" :columns="columnsBisherigeSchulen" :items="bisherigeSchulen"
-				v-model="auswahlBisherigeSchulen" :selectable="hatUpdateKompetenz">
+				v-model="auswahlBisherigeSchulen" :selectable="hatKompetenzUpdate" :readonly>
 				<template #cell(schulform)="{ rowData }">
 					<span>{{ Schulform.data().getEintragByID(manager().schulenById.get(rowData.idSchule ?? -1)?.idSchulform ?? -1)?.kuerzel ?? ' - ' }}</span>
 				</template>
@@ -154,9 +160,11 @@
 				<template #cell(entlassart)="{ rowData }">
 					<span>{{ manager().entlassgruendeById.get(rowData.entlassgrundID ?? -1)?.bezeichnung ?? '-' }}</span>
 				</template>
-				<template #actions v-if="hatUpdateKompetenz">
-					<svws-ui-button @click="deleteAuswahlBisherigeSchulen" type="trash" :disabled="auswahlBisherigeSchulen.length === 0" />
-					<svws-ui-button @click="addBisherigeSchule" type="icon" title="Schuleintrag hinzufügen"> <span class="icon i-ri-add-line" /> </svws-ui-button>
+				<template #actions v-if="hatKompetenzUpdate">
+					<svws-ui-button @click="deleteAuswahlBisherigeSchulen" type="trash" :disabled="(auswahlBisherigeSchulen.length === 0) || !hatKompetenzUpdate" />
+					<svws-ui-button @click="addBisherigeSchule" :disabled="!hatKompetenzUpdate" type="icon" title="Schuleintrag hinzufügen">
+						<span class="icon i-ri-add-line" />
+					</svws-ui-button>
 				</template>
 			</svws-ui-table>
 			<!-- Modal zum Erzeugen und Patchen eines Eintrags der bisher besuchten Schulen -->
@@ -164,7 +172,7 @@
 				<template #modalTitle>Schule hinzufügen</template>
 				<template #modalContent>
 					<svws-ui-input-wrapper :grid="2" style="text-align: left">
-						<svws-ui-select class="col-span-full" title="Schule" :items="manager().schulenById.values()" autocomplete removable
+						<svws-ui-select class="col-span-full" title="Schule" :items="manager().schulenById.values()" autocomplete removable :readonly
 							:item-filter="filterSchulenEintraege" @update:model-value="v => newEntryBisherigeSchule.idSchule = v?.id ?? null"
 							:model-value="manager().schulenById.get(newEntryBisherigeSchule.idSchule ?? -1)" :item-text="textSchule" />
 						<svws-ui-text-input span="full" placeholder="Adresse" readonly :model-value="adresseBisherigeSchule" />
@@ -173,10 +181,10 @@
 						<svws-ui-text-input placeholder="Schulform" readonly :model-value="selectedSchulformBisherigeSchule?.text" />
 						<svws-ui-spacing />
 						<svws-ui-text-input placeholder="Start des Schulbesuchs" type="date" :max-date="newEntryBisherigeSchuleDatumBis ?? undefined"
-							v-model="newEntryBisherigeSchule.datumVon" />
+							v-model="newEntryBisherigeSchule.datumVon" :readonly />
 						<svws-ui-text-input placeholder="Ende des Schulbesuchs" type="date" :min-date="newEntryBisherigeSchule.datumVon ?? undefined"
-							v-model="newEntryBisherigeSchuleDatumBis" />
-						<svws-ui-select class="col-span-full" title="Schulgliederung" :items="schulgliederungenBisherigeSchule"
+							v-model="newEntryBisherigeSchuleDatumBis" :readonly />
+						<svws-ui-select class="col-span-full" title="Schulgliederung" :items="schulgliederungenBisherigeSchule" :readonly
 							:disabled="(!newEntryBisherigeSchule.datumBis || !selectedSchulformBisherigeSchule)" autocomplete
 							:item-filter="coreTypeDataFilter" v-model="schulgliederungBisherigeSchule"
 							:item-text="v => (v as SchulgliederungKatalogEintrag).text" />
@@ -186,7 +194,9 @@
 					</svws-ui-input-wrapper>
 					<div class="mt-7 flex flex-row gap-4 justify end">
 						<svws-ui-button type="secondary" @click="closeModalBisherigeSchule">Abbrechen</svws-ui-button>
-						<svws-ui-button @click="sendRequestBisherigeSchule(currentMode)" :disabled="!newEntryBisherigeSchule.idSchule">Speichern</svws-ui-button>
+						<svws-ui-button @click="sendRequestBisherigeSchule(currentMode)" :disabled="(!newEntryBisherigeSchule.idSchule) || !hatKompetenzUpdate">
+							Speichern
+						</svws-ui-button>
 					</div>
 				</template>
 			</svws-ui-modal>
@@ -205,7 +215,8 @@
 	import { ref, computed, watch } from "vue";
 
 	const props = defineProps<SchuelerSchulbesuchProps>();
-	const hatUpdateKompetenz = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
+	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
+	const readonly = computed(() => !hatKompetenzUpdate.value);
 	function enterDefaultMode() {
 		setMode(Mode.DEFAULT);
 		resetBisherigeSchule();

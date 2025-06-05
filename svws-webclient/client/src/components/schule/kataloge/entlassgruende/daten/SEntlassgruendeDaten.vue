@@ -3,12 +3,11 @@
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input class="contentFocusField" placeholder="Bezeichnung" :model-value="manager().daten().bezeichnung"
-					:readonly="!hatKompetenzUpdate" :max-len="30" :min-len="1" @change="v => patch({ bezeichnung: v ?? undefined })" />
-				<svws-ui-input-number placeholder="Sortierung" :model-value="manager().daten().sortierung" :readonly="!hatKompetenzUpdate"
+					:readonly :max-len="30" :min-len="1" @change="v => patch({ bezeichnung: v ?? undefined })" />
+				<svws-ui-input-number placeholder="Sortierung" :model-value="manager().daten().sortierung" :readonly
 					@change="value => patch({ sortierung: value === null ? 32000 : value })" />
 				<svws-ui-spacing />
-				<svws-ui-checkbox :model-value="manager().daten().istSichtbar" @update:model-value="istSichtbar => patch({ istSichtbar })"
-					:readonly="!hatKompetenzUpdate">
+				<svws-ui-checkbox :model-value="manager().daten().istSichtbar" @update:model-value="istSichtbar => patch({ istSichtbar })" :readonly>
 					Sichtbar
 				</svws-ui-checkbox>
 			</svws-ui-input-wrapper>
@@ -24,5 +23,6 @@
 
 	const props = defineProps<EntlassgruendeDatenProps>()
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
+	const readonly = computed<boolean>(() => !hatKompetenzUpdate.value);
 
 </script>

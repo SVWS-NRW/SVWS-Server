@@ -1,14 +1,13 @@
 import type { RouteLocationNormalized, RouteParamsRawGeneric } from "vue-router";
-
+import type { LehrerNeuProps } from "~/components/lehrer/SLehrerNeuProps";
+import type { RouteLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import { RouteManager } from "~/router/RouteManager";
-import type { LehrerNeuProps } from "~/components/lehrer/SLehrerNeuProps";
-import type { RouteLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { routeApp } from "~/router/apps/RouteApp";
+import { api } from "~/router/Api";
 
 const SLehrerNeu = () => import("~/components/lehrer/SLehrerNeu.vue");
 
@@ -35,7 +34,8 @@ export class RouteLehrerNeu extends RouteNode<any, RouteLehrer> {
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
 			mapOrte: routeApp.data.mapOrte,
-			mapOrtsteile: routeApp.data.mapOrtsteile
+			mapOrtsteile: routeApp.data.mapOrtsteile,
+			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 

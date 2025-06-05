@@ -2,24 +2,25 @@
 	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input placeholder="Bezeichnung" :min-len="1" :max-len="50" v-model="data.bezeichnung" required :valid="fieldIsValid('bezeichnung')" />
-				<svws-ui-text-input placeholder="Raum" :max-len="20" v-model="data.raum" :valid="fieldIsValid('raum')" />
-				<svws-ui-text-input placeholder="Email" type="email" :max-len="100" v-model="data.email" :valid="fieldIsValid('email')" />
-				<svws-ui-text-input placeholder="Durchwahl" type="tel" :max-len="20" v-model="data.durchwahl" :valid="fieldIsValid('durchwahl')" />
+				<svws-ui-text-input placeholder="Bezeichnung" :min-len="1" :max-len="50" v-model="data.bezeichnung" required :disabled
+					:valid="fieldIsValid('bezeichnung')" />
+				<svws-ui-text-input placeholder="Raum" :max-len="20" v-model="data.raum" :valid="fieldIsValid('raum')" :disabled />
+				<svws-ui-text-input placeholder="Email" type="email" :max-len="100" v-model="data.email" :valid="fieldIsValid('email')" :disabled />
+				<svws-ui-text-input placeholder="Durchwahl" type="tel" :max-len="20" v-model="data.durchwahl" :valid="fieldIsValid('durchwahl')" :disabled />
 				<svws-ui-spacing />
-				<ui-select label="Lehrer" v-model="idLehrer" :manager="lehrerSelectManager" />
+				<ui-select label="Lehrer" v-model="idLehrer" :manager="lehrerSelectManager" :disabled />
 				<svws-ui-button :disabled="data.idAbteilungsleiter === null" type="transparent"
 					@click="goToLehrer(data.idAbteilungsleiter ?? -1)">
 					<span class="icon i-ri-link" /> Zum Lehrer
 				</svws-ui-button>
 				<div class="mt-7 flex flex-row gap-4 justify end">
 					<svws-ui-button type="secondary" @click="cancel">Abbrechen</svws-ui-button>
-					<svws-ui-button @click="add" :disabled="!formIsValid">Speichern</svws-ui-button>
+					<svws-ui-button @click="add" :disabled="!formIsValid || !hatKompetenzAdd">Speichern</svws-ui-button>
 				</div>
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Klassen zuordnen">
-			<svws-ui-table :items="manager().getKlassen().values()" :columns selectable v-model="klassenToBeAdded" scroll />
+			<svws-ui-table :items="manager().getKlassen().values()" :columns selectable v-model="klassenToBeAdded" scroll :disabled />
 		</svws-ui-content-card>
 		<svws-ui-checkpoint-modal :checkpoint :continue-routing="props.continueRoutingAfterCheckpoint" />
 	</div>
@@ -27,14 +28,17 @@
 
 <script setup lang="ts">
 
-	import { computed, ref, watch } from "vue";
 	import type { AbteilungenNeuProps } from "~/components/schule/kataloge/abteilungen/SAbteilungenNeuProps";
-	import type { KlassenDaten, LehrerListeEintrag, List } from "@core";
 	import type { DataTableColumn } from "@ui";
+	import type { KlassenDaten, LehrerListeEintrag, List } from "@core";
+	import { computed, ref, watch } from "vue";
+	import { BenutzerKompetenz } from "@core";
 	import { Abteilung, AbteilungKlassenzuordnung, ArrayList, JavaString } from "@core";
 	import { ObjectSelectManager } from "../../../../../../ui/src/ui/controls/select/selectManager/ObjectSelectManager";
 
 	const props = defineProps<AbteilungenNeuProps>();
+	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
+	const disabled = computed(() => !hatKompetenzAdd.value);
 	const data = ref<Abteilung>(new Abteilung());
 	const isLoading = ref<boolean>(false);
 	const klassenToBeAdded = ref<KlassenDaten[]>([])

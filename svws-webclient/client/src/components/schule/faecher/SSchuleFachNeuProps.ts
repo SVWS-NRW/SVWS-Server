@@ -1,4 +1,4 @@
-import type { FachDaten, FachListeManager } from "@core";
+import type { BenutzerKompetenz, FachDaten, FachListeManager } from "@core";
 import type { Checkpoint } from "@ui";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 
@@ -8,4 +8,5 @@ export interface SchuleFachNeuProps {
 	gotoDefaultView: (eintragId?: number | null) => Promise<void>;
 	checkpoint: Checkpoint;
 	continueRoutingAfterCheckpoint: () => Promise<RoutingStatus>;
+	benutzerKompetenzen: Set<BenutzerKompetenz>;
 }

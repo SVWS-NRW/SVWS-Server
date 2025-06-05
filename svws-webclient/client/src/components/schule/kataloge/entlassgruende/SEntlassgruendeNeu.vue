@@ -2,11 +2,11 @@
 	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Entlassgrund anlegen">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input placeholder="Bezeichnung" :min-len="1" :max-len="30" v-model="data.bezeichnung" required :readonly="!hatKompetenzAdd"
+				<svws-ui-text-input placeholder="Bezeichnung" :min-len="1" :max-len="30" v-model="data.bezeichnung" required :disabled
 					:valid="fieldIsValid('bezeichnung')" />
-				<svws-ui-input-number placeholder="Sortierung" v-model="data.sortierung" :readonly="!hatKompetenzAdd" :disabled />
+				<svws-ui-input-number placeholder="Sortierung" v-model="data.sortierung" :disabled="!bezeichnungIsValid || !hatKompetenzAdd" />
 				<svws-ui-spacing />
-				<svws-ui-checkbox v-model="data.istSichtbar" :readonly="!hatKompetenzAdd" :valid="fieldIsValid('sortierung')" :disabled>
+				<svws-ui-checkbox v-model="data.istSichtbar" :valid="fieldIsValid('sortierung')" :disabled="!bezeichnungIsValid || !hatKompetenzAdd">
 					Sichtbar
 				</svws-ui-checkbox>
 				<div class="mt-7 flex flex-row gap-4 justify end">
@@ -29,7 +29,7 @@
 	const data = ref<KatalogEntlassgrund>(new KatalogEntlassgrund());
 	const isLoading = ref<boolean>(false);
 	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
-	const disabled = computed(() => !bezeichnungIsValid());
+	const disabled = computed(() => !hatKompetenzAdd.value);
 
 	function fieldIsValid(field: keyof KatalogEntlassgrund | null) : (v: string | null) => boolean {
 		return (v: string | null) => {

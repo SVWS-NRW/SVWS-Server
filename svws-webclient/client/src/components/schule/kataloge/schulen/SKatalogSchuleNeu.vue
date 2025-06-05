@@ -2,8 +2,8 @@
 	<div class="page page-grid-cards">
 		<svws-ui-input-wrapper :grid="1">
 			<div class="pb-4">
-				<svws-ui-radio-option v-model="isInternal" :value="true" label=" Schule aus NRW erstellen " />
-				<svws-ui-radio-option class="pb-4" v-model="isInternal" :value="false" label=" Externe Schule erstellen " />
+				<svws-ui-radio-option v-model="isInternal" :value="true" label=" Schule aus NRW erstellen " :disabled />
+				<svws-ui-radio-option class="pb-4" v-model="isInternal" :value="false" label=" Externe Schule erstellen " :disabled />
 			</div>
 			<svws-ui-tooltip v-if="!isInternal" color="primary" :show-arrow="false" :indicator="false">
 				<template #content>
@@ -11,34 +11,34 @@
 				</template>
 				<svws-ui-select class="pb-4 w-full" title="Schulen außerhalb von NRW und Privatschulen" :items="Herkunftsschulnummern.all_values_by_name.values()"
 					:model-value="externalSchulnummer" @update:model-value="v => data.schulnummerStatistik = v?.daten.schulnummer.toString() ?? ''"
-					:item-text=" v => v.daten.bezeichnung" />
+					:item-text=" v => v.daten.bezeichnung" :disabled />
 			</svws-ui-tooltip>
-			<svws-ui-select v-if="isInternal" class="pb-4" title="Schulen innerhalb NRW" removable :items="schulenKatalogEintraege" autocomplete :disabled="isLoading"
+			<svws-ui-select v-if="isInternal" class="pb-4" title="Schulen innerhalb NRW" removable :items="schulenKatalogEintraege" autocomplete :disabled="isLoading || !hatKompetenzAdd"
 				:model-value="selectedSchule" :item-filter="filterSchulenKatalogEintraege" @update:model-value="updateData" :item-text="schulenKatalogEintragText" />
 			<div v-if="!schuleAlreadyCreated">
 				<svws-ui-content-card title="Schulangaben" />
 				<svws-ui-input-wrapper :grid="2">
-					<svws-ui-checkbox v-model="data.istSichtbar" :disabled="schuleAlreadyCreated">Ist Sichtbar</svws-ui-checkbox>
-					<svws-ui-input-number placeholder="Sortierung" v-model="data.sortierung" :disabled="schuleAlreadyCreated" />
+					<svws-ui-checkbox v-model="data.istSichtbar" :disabled="schuleAlreadyCreated || !hatKompetenzAdd">Ist Sichtbar</svws-ui-checkbox>
+					<svws-ui-input-number placeholder="Sortierung" v-model="data.sortierung" :disabled="schuleAlreadyCreated || hatKompetenzAdd" />
 					<svws-ui-select title="Schulform" :items="Schulform.values()" :item-text="i => i.daten(schuljahr)?.text?? '_'" removable
 						v-model="selectedSchulform" />
 					<svws-ui-text-input placeholder="Statistik-Schulnummer" required :valid="fieldIsValid('schulnummerStatistik')" readonly
-						:model-value="data.schulnummerStatistik" />
-					<svws-ui-text-input placeholder="Kürzel" :max-len="10" :valid="fieldIsValid('kuerzel')" v-model="data.kuerzel" />
-					<svws-ui-text-input placeholder="Schulname" required :max-len="120" :valid="fieldIsValid('name')" v-model="data.name" />
-					<svws-ui-text-input placeholder="Kurzbezeichnung" required :max-len="40" :valid="fieldIsValid('kurzbezeichnung')"
+						:model-value="data.schulnummerStatistik" :disabled />
+					<svws-ui-text-input placeholder="Kürzel" :max-len="10" :valid="fieldIsValid('kuerzel')" v-model="data.kuerzel" :disabled />
+					<svws-ui-text-input placeholder="Schulname" required :max-len="120" :valid="fieldIsValid('name')" v-model="data.name" :disabled />
+					<svws-ui-text-input placeholder="Kurzbezeichnung" required :max-len="40" :valid="fieldIsValid('kurzbezeichnung')" :disabled
 						v-model="data.kurzbezeichnung" />
-					<svws-ui-text-input placeholder="Schulleitung" :max-len="40" :valid="fieldIsValid('schulleiter')" v-model="data.schulleiter" />
-					<svws-ui-text-input placeholder="Straße" :max-len="55" :valid="fieldIsValid('strassenname')" v-model="adresse" />
-					<svws-ui-text-input placeholder="PLZ" :max-len="10" :valid="fieldIsValid('plz')" v-model="data.plz" />
-					<svws-ui-text-input placeholder="Ort" :max-len="50" :valid="fieldIsValid('ort')" v-model="data.ort" />
-					<svws-ui-text-input placeholder="Telefon" :max-len="20" :valid="fieldIsValid('telefon')" v-model="data.telefon" type="tel" />
-					<svws-ui-text-input placeholder="Fax" :max-len="20" :valid="fieldIsValid('fax')" type="tel" v-model="data.fax" />
-					<svws-ui-text-input placeholder="E-Mail-Adresse" :max-len="40" :valid="fieldIsValid('email')" type="email" v-model="data.email" />
+					<svws-ui-text-input placeholder="Schulleitung" :max-len="40" :valid="fieldIsValid('schulleiter')" v-model="data.schulleiter" :disabled />
+					<svws-ui-text-input placeholder="Straße" :max-len="55" :valid="fieldIsValid('strassenname')" v-model="adresse" :disabled />
+					<svws-ui-text-input placeholder="PLZ" :max-len="10" :valid="fieldIsValid('plz')" v-model="data.plz" :disabled />
+					<svws-ui-text-input placeholder="Ort" :max-len="50" :valid="fieldIsValid('ort')" v-model="data.ort" :disabled />
+					<svws-ui-text-input placeholder="Telefon" :max-len="20" :valid="fieldIsValid('telefon')" v-model="data.telefon" type="tel" :disabled />
+					<svws-ui-text-input placeholder="Fax" :max-len="20" :valid="fieldIsValid('fax')" type="tel" v-model="data.fax" :disabled />
+					<svws-ui-text-input placeholder="E-Mail-Adresse" :max-len="40" :valid="fieldIsValid('email')" type="email" v-model="data.email" :disabled />
 				</svws-ui-input-wrapper>
 				<div class="mt-7 flex flex-row gap-4 justify end">
 					<svws-ui-button type="secondary" @click="cancel">Abbrechen</svws-ui-button>
-					<svws-ui-button @click="addSchule" :disabled="!formIsValid">Speichern</svws-ui-button>
+					<svws-ui-button @click="addSchule" :disabled="!formIsValid || !hatKompetenzAdd">Speichern</svws-ui-button>
 				</div>
 			</div>
 			<div v-else-if="schuleAlreadyCreated">
@@ -53,12 +53,14 @@
 <script setup lang="ts">
 
 	import { computed, ref, watch } from "vue";
-	import { JavaObject, JavaString, SchulEintrag, Schulform, AdressenUtils, Herkunftsschulnummern } from "@core";
+	import { JavaObject, JavaString, SchulEintrag, Schulform, AdressenUtils, Herkunftsschulnummern, BenutzerKompetenz } from "@core";
 	import type { SchulenKatalogEintrag, List } from "@core"
 	import type { KatalogSchuleNeuProps } from "./SKatalogSchuleNeuProps";
 	import { filterSchulenKatalogEintraege } from "~/utils/helfer";
 
 	const props = defineProps<KatalogSchuleNeuProps>();
+	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const disabled = computed(() => !hatKompetenzAdd.value);
 	const isInternal = ref<boolean>(true);
 	const data = ref<SchulEintrag>(Object.assign(new SchulEintrag(), {istSichtbar: true}));
 	const schulenKatalogEintraege= computed<List<SchulenKatalogEintrag>>(() => props.schuleListeManager().getSchulenKatalogEintraege());

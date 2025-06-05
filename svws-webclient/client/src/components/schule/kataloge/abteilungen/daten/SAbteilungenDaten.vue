@@ -3,17 +3,15 @@
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input class="contentFocusField" placeholder="Bezeichnung" :model-value="manager().daten().bezeichnung"
-					@change="v => patch({ bezeichnung: v ?? undefined })" :max-len="50" :min-len="1"
-					:readonly="!hatKompetenzUpdate" />
-				<svws-ui-text-input placeholder="Raum" :max-len="20" :model-value="manager().daten().raum"
-					@change="raum => patch({ raum })" :readonly="!hatKompetenzUpdate" />
-				<svws-ui-text-input placeholder="Email" type="email" :max-len="100" :model-value="manager().daten().email"
-					@change="email => patch({ email })" :readonly="!hatKompetenzUpdate" />
-				<svws-ui-text-input placeholder="Durchwahl" type="tel" :max-len="20" :model-value="manager().daten().durchwahl"
-					@change="durchwahl => patch({ durchwahl })" :readonly="!hatKompetenzUpdate" />
+					@change="v => patch({ bezeichnung: v ?? undefined })" :max-len="50" :min-len="1" :readonly />
+				<svws-ui-text-input placeholder="Raum" :max-len="20" :model-value="manager().daten().raum" @change="raum => patch({ raum })" :readonly />
+				<svws-ui-text-input placeholder="Email" type="email" :max-len="100" :model-value="manager().daten().email" :readonly
+					@change="email => patch({ email })" />
+				<svws-ui-text-input placeholder="Durchwahl" type="tel" :max-len="20" :model-value="manager().daten().durchwahl" :readonly
+					@change="durchwahl => patch({ durchwahl })" />
 				<svws-ui-spacing />
 				<ui-select label="Lehrer" :manager="selectManager" :model-value="manager().getLehrer().get(manager().daten().idAbteilungsleiter)"
-					:readonly="!hatKompetenzUpdate" @update:model-value="v => patch({ idAbteilungsleiter: v?.id ?? null })" />
+					:readonly @update:model-value="v => patch({ idAbteilungsleiter: v?.id ?? null })" />
 				<svws-ui-button :disabled="manager().daten().idAbteilungsleiter === null" type="transparent"
 					@click="goToLehrer(manager().daten().idAbteilungsleiter ?? -1)">
 					<span class="icon i-ri-link" /> Zum Lehrer
@@ -52,15 +50,16 @@
 
 <script setup lang="ts">
 
-	import { computed, ref } from "vue";
 	import type { AbteilungenDatenProps } from "~/components/schule/kataloge/abteilungen/daten/SAbteilungenDatenProps";
 	import type { DataTableColumn } from "@ui";
 	import type { KlassenDaten, List } from "@core";
+	import { computed, ref } from "vue";
 	import { AbteilungKlassenzuordnung, ArrayList, BenutzerKompetenz, HashMap } from "@core";
 	import { ObjectSelectManager } from "../../../../../../../ui/src/ui/controls/select/selectManager/ObjectSelectManager";
 
 	const props = defineProps<AbteilungenDatenProps>();
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
+	const readonly = computed<boolean>(() => !hatKompetenzUpdate.value);
 	const klassenToBeDeleted = ref<KlassenDaten[]>([]);
 	const klassenToBeAdded = ref<KlassenDaten[]>([]);
 	const lehrer = computed(() => props.manager().getLehrer().values());
