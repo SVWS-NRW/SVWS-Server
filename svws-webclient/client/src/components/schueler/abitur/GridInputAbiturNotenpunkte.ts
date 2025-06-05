@@ -1,6 +1,7 @@
 import { shallowRef } from "vue";
 import type { GridManager } from "./GridManager";
 import { GridInputInnerText } from "./GridInputInnerText";
+import { Note, NoteKatalogEintrag } from "@core";
 
 /**
  * Ein Grid-Input für die Schnelleingabe der Notenpunkte im Abiturbereich.
@@ -21,9 +22,23 @@ export class GridInputAbiturNotenpunkte<KEY> extends GridInputInnerText<KEY> {
 	 * @param elem          das HTML-Element, welches dem Grid-Input und damit der Zelle des Grid zugeordnet ist
 	 * @param getter        der Getter zum Holen der Daten für das Grid-Input
 	 * @param setter        der Setter zum Schreiben der Daten des Grid-Input
+	 * @param schuljahr     das Schuljahr, in dem das Abitur stattfindet
 	 */
-	constructor(gridManager: GridManager<KEY>, key: KEY, col: number, row: number, elem: HTMLElement, getter : () => string | null, setter : (value: string | null) => void) {
-		super(gridManager, key, col, row, elem, getter, setter);
+	constructor(gridManager: GridManager<KEY>, key: KEY, col: number, row: number, elem: HTMLElement,
+		getter: () => string | null, setter: (value: string | null) => void, schuljahr: number) {
+		super(gridManager, key, col, row, elem, (): string | null => {
+			const notenkuerzel = getter();
+			if (notenkuerzel === null)
+				return null;
+			const nke : NoteKatalogEintrag | null = Note.fromKuerzel(notenkuerzel).daten(schuljahr);
+			if ((nke === null) || (nke.notenpunkte === null))
+				return null;
+			return ((nke.notenpunkte < 10) ? "0" : "") + nke.notenpunkte;
+		}, (value: string | null) => {
+			const note = Note.fromNotenpunkteString(value);
+			const eintrag = note.daten(schuljahr);
+			setter((eintrag === null) ? null : eintrag.kuerzel);
+		});
 		elem.innerText = this._value.value ?? "";
 	}
 

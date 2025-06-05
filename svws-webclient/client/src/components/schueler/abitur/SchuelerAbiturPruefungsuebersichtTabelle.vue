@@ -272,10 +272,11 @@
 
 	function inputPruefungsnote(belegung: AbiturFachbelegung) {
 		const key = 'PrüfungsnoteAbiFach' + belegung.abiturFach;
-		const getter = () => getNotenpunkteStringFromKuerzel(belegung.block2NotenKuerzelPruefung);
+		const getter = () => belegung.block2NotenKuerzelPruefung;
 		const setter = (value : string | null) => updateNotenpunkte(belegung, value);
 		return (element : Element | ComponentPublicInstance<unknown> | null) => {
-			return gridInputManager.applyInputAbiturNotenpunkte(key, 1, belegung.abiturFach!, element, getter, setter);
+			return gridInputManager.applyInputAbiturNotenpunkte(key, 1, belegung.abiturFach!, element, getter, setter,
+				props.manager().daten().schuljahrAbitur);
 		};
 	}
 
@@ -299,10 +300,11 @@
 
 	function inputPruefungsnoteMdl(belegung: AbiturFachbelegung) {
 		const key = 'PrüfungsnoteMdlAbiFach' + belegung.abiturFach;
-		const getter = () => getNotenpunkteStringFromKuerzel(belegung.block2MuendlichePruefungNotenKuerzel);
+		const getter = () => belegung.block2MuendlichePruefungNotenKuerzel;
 		const setter = (value : string | null) => updateNotenpunkteMdl(belegung, value);
 		return (element : Element | ComponentPublicInstance<unknown> | null) => {
-			gridInputManager.applyInputAbiturNotenpunkte(key, 4, belegung.abiturFach!, element, getter, setter);
+			gridInputManager.applyInputAbiturNotenpunkte(key, 4, belegung.abiturFach!, element, getter, setter,
+				props.manager().daten().schuljahrAbitur);
 		};
 	}
 

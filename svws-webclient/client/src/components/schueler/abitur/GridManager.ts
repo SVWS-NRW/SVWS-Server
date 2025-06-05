@@ -111,41 +111,6 @@ export class GridManager<KEY> {
 	 * @param getter   ein Getter für den Zugriff auf die Daten des Input-Managers
 	 * @param setter   ein Setter für das Speichern der Daten des Input-Managers
 	 */
-	public applyInput(key: KEY, col: number, row: number, elem: Element | ComponentPublicInstance<unknown> | null, type: 'notenpunkte' | undefined, getter : () => string | null, setter : (value: string | null) => void) {
-		// Wenn elem null ist, dann entferne das Element
-		if (elem === null) {
-			this.unregister(key);
-			return;
-		}
-		// Wenn elem ein Element ist, dann entferne das Element, sofern der Typ bekannt ist
-		if (elem instanceof Element) {
-			// Prüfe, ob der Input-Manager bereits vorhanden ist
-			if (this.mapInputs.has(key))
-				return;
-
-			// Erzeuge ggf. einen neuen Manager
-			if ((type === 'notenpunkte') && (elem instanceof HTMLElement)) {
-				this.register(new GridInputAbiturNotenpunkte(this, key, col, row, elem, getter, setter));
-				return;
-			}
-
-			// Im anderen Fall wird der Element aktuell noch nicht unterstützt
-			throw new DeveloperNotificationException("GridInputElementManager unterstützt diese Element nicht bei dem Typ " + type);
-		}
-		// Im anderen Fall wird der Element aktuell noch nicht unterstützt
-		throw new DeveloperNotificationException("GridInputElementManager unterstützt aktuell ComponentPublicInstance nicht als Element");
-	}
-
-	/**
-	 * Fügt oder entfernt ein HTML-Element für den übergebenen Schlüssel hinzu
-	 *
-	 * @param key      der Schlüssel, welcher den Input-Manager identifiziert
-	 * @param col      die Nummer der Spalte im Grid
-	 * @param row      die Nummer der Zeile im Grid
-	 * @param elem     das HTML-Element, welches zum Manager hinzugefügt werden soll, oder null, falls es entfernt werden soll
-	 * @param getter   ein Getter für den Zugriff auf die Daten des Input-Managers
-	 * @param setter   ein Setter für das Speichern der Daten des Input-Managers
-	 */
 	public applyInputToggle(key: KEY, col: number, row: number, elem: Element | ComponentPublicInstance<unknown> | null, getter : () => boolean, setter : (value: boolean) => void) {
 		// Wenn elem null ist, dann entferne das Element
 		if (elem === null) {
@@ -163,14 +128,16 @@ export class GridManager<KEY> {
 	/**
 	 * Fügt oder entfernt ein HTML-Element für den übergebenen Schlüssel hinzu
 	 *
-	 * @param key      der Schlüssel, welcher den Input-Manager identifiziert
-	 * @param col      die Nummer der Spalte im Grid
-	 * @param row      die Nummer der Zeile im Grid
-	 * @param elem     das HTML-Element, welches zum Manager hinzugefügt werden soll, oder null, falls es entfernt werden soll
-	 * @param getter   ein Getter für den Zugriff auf die Daten des Input-Managers
-	 * @param setter   ein Setter für das Speichern der Daten des Input-Managers
+	 * @param key         der Schlüssel, welcher den Input-Manager identifiziert
+	 * @param col         die Nummer der Spalte im Grid
+	 * @param row         die Nummer der Zeile im Grid
+	 * @param elem        das HTML-Element, welches zum Manager hinzugefügt werden soll, oder null, falls es entfernt werden soll
+	 * @param getter      ein Getter für den Zugriff auf die Daten des Input-Managers
+	 * @param setter      ein Setter für das Speichern der Daten des Input-Managers
+	 * @param schuljahr   das Schuljahr, in dem das Abitur stattfindet
 	 */
-	public applyInputAbiturNotenpunkte(key: KEY, col: number, row: number, elem: Element | ComponentPublicInstance<unknown> | null, getter : () => string | null, setter : (value: string | null) => void) {
+	public applyInputAbiturNotenpunkte(key: KEY, col: number, row: number, elem: Element | ComponentPublicInstance<unknown> | null,
+		getter : () => string | null, setter : (value: string | null) => void, schuljahr: number) {
 		// Wenn elem null ist, dann entferne das Element
 		if (elem === null) {
 			this.unregister(key);
@@ -181,7 +148,7 @@ export class GridManager<KEY> {
 			throw new DeveloperNotificationException("Der Grid-Input für Abitur-Notenpunkte erfordert ein HTMLElement");
 		if (this.mapInputs.has(key))
 			return;
-		this.register(new GridInputAbiturNotenpunkte(this, key, col, row, elem, getter, setter));
+		this.register(new GridInputAbiturNotenpunkte(this, key, col, row, elem, getter, setter, schuljahr));
 	}
 
 	/**
