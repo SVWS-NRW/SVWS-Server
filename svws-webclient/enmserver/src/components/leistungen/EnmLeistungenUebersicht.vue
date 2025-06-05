@@ -86,7 +86,7 @@
 							'bg-ui-selected': (currentColumn === colsFocussable.indexOf('Quartal')) && (manager.isValidQuartal(pair.a) || !pair.a.noteQuartal),
 							'bg-ui-danger-secondary': (currentColumn === colsFocussable.indexOf('Quartal')) && !manager.isValidQuartal(pair.a)
 						}">
-						<input v-if="(auswahlmanager.auswahl === pair) && manager.lerngruppeIstFachlehrer(pair.a.lerngruppenID)"
+						<input v-if="manager.lerngruppeIstFachlehrer(pair.a.lerngruppenID)"
 							type="text"
 							class="w-full column-focussable"
 							v-model="pair.a.noteQuartal"
@@ -104,7 +104,7 @@
 							'bg-ui-selected': (currentColumn === colsFocussable.indexOf('Note')) && (manager.isValidNote(pair.a) || !pair.a.note),
 							'bg-ui-danger-secondary': (currentColumn === colsFocussable.indexOf('Note')) && !manager.isValidNote(pair.a)
 						}">
-						<input v-if="(auswahlmanager.auswahl === pair) && (manager.lerngruppeIstFachlehrer(pair.a.lerngruppenID))"
+						<input v-if="manager.lerngruppeIstFachlehrer(pair.a.lerngruppenID)"
 							type="text"
 							class="w-full column-focussable"
 							:class="{ contentFocusField: (auswahlmanager.auswahl === pair) && (currentColumn === colsFocussable.indexOf('Note')) }"
