@@ -3,7 +3,7 @@
 		<!-- Header Section -->
 		<component :is="collapsible ? 'button' : 'div'" :type="collapsible ? 'button' : 'text'" tabindex="0"
 			:class="[{ 'ui-card--active': isActive }, headerBackgroundColor, headerTextColor, borderColor]"
-			class="ui-card--header relative z-100 focus:ring-2 focus:ring-ui focus:!rounded outline-none"
+			class="ui-card--header relative z-50 focus:ring-2 focus:ring-ui focus:!rounded outline-none"
 			@click="collapsible ? setActive() : null" :aria-expanded="ariaExpanded" :aria-controls="collapsible ? 'cardBody' + instanceId : undefined">
 			<!-- Left Collapse Icon -->
 			<div v-if="showCollapseIconLeft" class="ui-card--header--collapse-icon">
@@ -111,7 +111,6 @@
 
 <script lang="ts" setup>
 
-	import type { SetupContext } from 'vue';
 	import { ref, onMounted, computed, useSlots, watch, useId, toRaw } from 'vue';
 	import type { ButtonType } from '../../types';
 	import { ValidatorFehlerart } from '../../../../core/src/asd/validate/ValidatorFehlerart';
@@ -200,7 +199,7 @@
 	/**
 	 * Berechnungen, wann welches Element angezeigt wird.
 	 */
-	const slots: SetupContext['slots'] = useSlots();
+	const slots = useSlots();
 	const showCollapseIconLeft = computed(() => !slots.collapseLeft && props.collapsible && (props.collapseIconPosition === 'left'));
 	const showCollapseIconRight = computed(() => !slots.collapseRight && props.collapsible && (props.collapseIconPosition === 'right'));
 	const showIcon = computed(() => !slots.icon && (props.icon !== undefined) && (props.icon.length !== 0));

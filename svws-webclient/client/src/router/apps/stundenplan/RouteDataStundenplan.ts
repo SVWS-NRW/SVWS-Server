@@ -209,6 +209,7 @@ export class RouteDataStundenplan extends RouteDataAuswahl<StundenplanListeManag
 		}
 		api.status.stop();
 	}
+
 	patchKalenderwochenzuordnungen = async (data: List<StundenplanKalenderwochenzuordnung>) => {
 		if (!this.manager.hasDaten())
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
@@ -279,19 +280,42 @@ export class RouteDataStundenplan extends RouteDataAuswahl<StundenplanListeManag
 		api.status.stop();
 	}
 
-	importRaeume = async (raeume: Partial<StundenplanRaum>[]) => {
-		if (!this.manager.hasDaten())
-			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
-		api.status.start();
-		const list = new ArrayList<Partial<StundenplanRaum>>()
-		for (const item of raeume) {
-			delete item.id;
-			list.add(item);
+	raeumeSyncToVorlage = async (raeume: Iterable<StundenplanRaum>) => {
+		const neu = new ArrayList<Partial<Raum>>();
+		outer: for (const r of raeume) {
+			const { id, ...partial} = r;
+			for (const kr of this.listRaeume)
+				if (kr.kuerzel === r.kuerzel) {
+					await api.server.patchRaum({ beschreibung: partial.beschreibung, groesse: partial.groesse }, api.schema, kr.id);
+					Object.assign(kr, partial);
+					break outer;
+				}
+			neu.add(partial);
 		}
-		const res = await api.server.addStundenplanRaeume(list, api.schema, this.manager.auswahl().id);
-		this.manager.daten().raumAddAll(res);
+		const liste = await api.server.addRaeume(neu, api.schema);
+		this.listRaeume.addAll(liste);
 		this.commit();
-		api.status.stop();
+	}
+
+	raeumeSyncToStundenplan = async (raeume: Iterable<Raum>) => {
+		const stundenplanId = this.manager.auswahlID();
+		if (stundenplanId === null)
+			return;
+		const neu = new ArrayList<Partial<Raum>>();
+		for (const r of raeume) {
+			const { id, ...partial} = r;
+			const kr = this.manager.daten().raumGetByKuerzelOrNull(r.kuerzel);
+			if (kr !== null) {
+				await api.server.patchStundenplanRaum({ beschreibung: partial.beschreibung, groesse: partial.groesse }, api.schema, kr.id);
+				Object.assign(kr, partial);
+				this.manager.daten().raumPatchAttributes(kr);
+				break;
+			}
+			neu.add(partial);
+		}
+		const liste = await api.server.addStundenplanRaeume(neu, api.schema, stundenplanId);
+		this.manager.daten().raumAddAll(liste);
+		this.commit();
 	}
 
 	addPausenzeiten = async (pausenzeiten: Iterable<Partial<StundenplanPausenzeit>>) => {
@@ -339,20 +363,25 @@ export class RouteDataStundenplan extends RouteDataAuswahl<StundenplanListeManag
 		api.status.stop();
 	}
 
-	importPausenzeiten = async (pausenzeiten: Iterable<Partial<StundenplanPausenzeit>>) => {
-		if (!this.manager.hasDaten())
-			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
-		api.status.start();
-		const list = new ArrayList<Partial<StundenplanPausenzeit>>();
-		for (const item of pausenzeiten) {
-			delete item.id;
-			delete item.klassen;
-			list.add(item);
-		}
-		const res = await api.server.addStundenplanPausenzeiten(list, api.schema, this.manager.auswahl().id);
-		this.manager.daten().pausenzeitAddAll(res);
+	pausenzeitenSyncToVorlage = async (pausenzeiten: Iterable<StundenplanPausenzeit>) => {
+		const neu = new ArrayList<Partial<StundenplanPausenzeit>>();
+		for (const { id, ...partial } of pausenzeiten)
+			neu.add(partial);
+		const liste = await api.server.addPausenzeiten(neu, api.schema);
+		this.listPausenzeiten.addAll(liste);
 		this.commit();
-		api.status.stop();
+	}
+
+	pausenzeitenSyncToStundenplan = async (pausenzeiten: Iterable<StundenplanPausenzeit>) => {
+		const stundenplanId = this.manager.auswahlID();
+		if (stundenplanId === null)
+			return;
+		const neu = new ArrayList<Partial<StundenplanPausenzeit>>();
+		for (const { id, ...partial} of pausenzeiten)
+			neu.add(partial);
+		const liste = await api.server.addStundenplanPausenzeiten(neu, api.schema, stundenplanId);
+		this.manager.daten().pausenzeitAddAll(liste);
+		this.commit();
 	}
 
 	updateAufsichtBereich = async (update: StundenplanPausenaufsichtBereichUpdate, idPausenzeit?: number, idLehrer?: number) => {
@@ -465,19 +494,42 @@ export class RouteDataStundenplan extends RouteDataAuswahl<StundenplanListeManag
 		api.status.stop();
 	}
 
-	importAufsichtsbereiche = async (aufsichtsbereiche: Iterable<Partial<StundenplanAufsichtsbereich>>) => {
-		if (!this.manager.hasDaten())
-			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
-		api.status.start();
-		const list = new ArrayList<Partial<StundenplanAufsichtsbereich>>()
-		for (const item of aufsichtsbereiche) {
-			delete item.id;
-			list.add(item);
+	aufsichtsbereicheSyncToVorlage = async (aufsichtsbereiche: Iterable<StundenplanAufsichtsbereich>) => {
+		const neu = new ArrayList<Partial<StundenplanAufsichtsbereich>>();
+		outer: for (const a of aufsichtsbereiche) {
+			const { id, ...partial} = a;
+			for (const ka of this.listAufsichtsbereiche)
+				if (ka.kuerzel === a.kuerzel) {
+					await api.server.patchAufsichtsbereich({ beschreibung: partial.beschreibung }, api.schema, ka.id);
+					Object.assign(ka, partial);
+					break outer;
+				}
+			neu.add(partial);
 		}
-		const bereich = await api.server.addStundenplanAufsichtsbereiche(list, api.schema, this.manager.auswahl().id);
-		this.manager.daten().aufsichtsbereichAddAll(bereich);
+		const liste = await api.server.addAufsichtsbereiche(neu, api.schema);
+		this.listAufsichtsbereiche.addAll(liste);
 		this.commit();
-		api.status.stop();
+	}
+
+	aufsichtsbereicheSyncToStundenplan = async (aufsichtsbereiche: Iterable<StundenplanAufsichtsbereich>) => {
+		const stundenplanId = this.manager.auswahlID();
+		if (stundenplanId === null)
+			return;
+		const neu = new ArrayList<Partial<StundenplanAufsichtsbereich>>();
+		for (const a of aufsichtsbereiche) {
+			const { id, ...partial} = a;
+			const ka = this.manager.daten().aufsichtsbereichGetByKuerzelOrNull(a.kuerzel);
+			if (ka !== null) {
+				await api.server.patchStundenplanAufsichtsbereich({ beschreibung: partial.beschreibung }, api.schema, ka.id);
+				Object.assign(ka, partial);
+				this.manager.daten().aufsichtsbereichPatchAttributes(ka);
+				break;
+			}
+			neu.add(partial);
+		}
+		const liste = await api.server.addStundenplanAufsichtsbereiche(neu, api.schema, stundenplanId);
+		this.manager.daten().aufsichtsbereichAddAll(liste);
+		this.commit();
 	}
 
 	addZeitraster = async (zeitraster: Iterable<Partial<StundenplanZeitraster>>) => {
