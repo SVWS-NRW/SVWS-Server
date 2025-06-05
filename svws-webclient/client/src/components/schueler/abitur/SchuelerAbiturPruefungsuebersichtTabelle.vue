@@ -209,13 +209,6 @@
 		return (np !== null) && (np < 5);
 	}
 
-	function getNotenpunkteStringFromKuerzel(notenkuerzel: string | null) : string {
-		const np = getNotenpunkteFromKuerzel(notenkuerzel);
-		if (np === null)
-			return "";
-		return ((np < 10) ? "0" : "") + np;
-	}
-
 	function getPunktSummePruefungen() {
 		let summe = 0;
 		for (let i = 1; i <= 5; i++) {
@@ -255,19 +248,19 @@
 	}
 
 	function updateNotenpunkte(belegung: AbiturFachbelegung, value: string | null) : void {
-		console.log("Update: ", belegung.abiturFach, value);
+		void props.updateAbiturpruefungsdaten(props.manager, { fachID: belegung.fachID, block2NotenKuerzelPruefung: value });
 	}
 
 	function updateFreiwilligePruefung(belegung: AbiturFachbelegung, value: boolean) : void {
-		console.log("Update freiwillige Prüfung: ", belegung.abiturFach, value);
+		void props.updateAbiturpruefungsdaten(props.manager, { fachID: belegung.fachID, block2MuendlichePruefungFreiwillig: value });
 	}
 
-	function updatePruefungsreihenfolge(belegung: AbiturFachbelegung, value: string | null) : void {
-		console.log("Update Reihenfolge: ", belegung.abiturFach, value);
+	function updatePruefungsreihenfolge(belegung: AbiturFachbelegung, value: number | null) : void {
+		void props.updateAbiturpruefungsdaten(props.manager, { fachID: belegung.fachID, block2MuendlichePruefungReihenfolge: value });
 	}
 
 	function updateNotenpunkteMdl(belegung: AbiturFachbelegung, value: string | null) : void {
-		console.log("Update Mdl: ", belegung.abiturFach, value);
+		void props.updateAbiturpruefungsdaten(props.manager, { fachID: belegung.fachID, block2MuendlichePruefungNotenKuerzel: value });
 	}
 
 	function inputPruefungsnote(belegung: AbiturFachbelegung) {
@@ -291,8 +284,8 @@
 
 	function inputPruefungsreihenfolge(belegung: AbiturFachbelegung) {
 		const key = 'PrüfungsreihenfolgeAbiFach' + belegung.abiturFach;
-		const getter = () => (belegung.block2MuendlichePruefungReihenfolge === null) ? null : "" + belegung.block2MuendlichePruefungReihenfolge;
-		const setter = (value : string | null) => updatePruefungsreihenfolge(belegung, value);
+		const getter = () => belegung.block2MuendlichePruefungReihenfolge;
+		const setter = (value : number | null) => updatePruefungsreihenfolge(belegung, value);
 		return (element : Element | ComponentPublicInstance<unknown> | null) => {
 			gridInputManager.applyInputAbiturPruefungsreihenfolge(key, 3, belegung.abiturFach!, element, getter, setter);
 		};

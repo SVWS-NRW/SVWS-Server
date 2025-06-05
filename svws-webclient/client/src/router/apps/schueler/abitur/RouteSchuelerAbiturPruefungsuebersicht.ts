@@ -34,6 +34,7 @@ export class RouteSchuelerAbiturPruefungsuebersicht extends RouteNode<any, Route
 			serverMode: api.mode,
 			schule: api.schuleStammdaten,
 			manager: () => routeSchuelerAbitur.data.managerAbitur,
+			updateAbiturpruefungsdaten: routeSchuelerAbitur.data.updateAbiturpruefungsdaten,
 		};
 	}
 

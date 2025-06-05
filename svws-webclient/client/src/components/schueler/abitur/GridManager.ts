@@ -161,7 +161,8 @@ export class GridManager<KEY> {
 	 * @param getter   ein Getter für den Zugriff auf die Daten des Input-Managers
 	 * @param setter   ein Setter für das Speichern der Daten des Input-Managers
 	 */
-	public applyInputAbiturPruefungsreihenfolge(key: KEY, col: number, row: number, elem: Element | ComponentPublicInstance<unknown> | null, getter : () => string | null, setter : (value: string | null) => void) {
+	public applyInputAbiturPruefungsreihenfolge(key: KEY, col: number, row: number, elem: Element | ComponentPublicInstance<unknown> | null,
+		getter : () => number | null, setter : (value: number | null) => void) {
 		// Wenn elem null ist, dann entferne das Element
 		if (elem === null) {
 			this.unregister(key);

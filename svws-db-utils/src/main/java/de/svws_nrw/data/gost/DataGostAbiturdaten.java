@@ -270,7 +270,7 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 
 			case "gesamtPunkte" -> dto.AbiturGesamtPunktzahl = JSONMapper.convertToIntegerInRange(value, true, 0, 901);
 			case "gesamtPunkteVerbesserung" -> dto.VerbesserungAbPunktzahl = JSONMapper.convertToIntegerInRange(value, true, 0, 901);
-			case "pruefungBestanden" -> dto.Pruefung_hatBestanden = JSONMapper.convertToBoolean(value, false);
+			case "pruefungBestanden" -> dto.Pruefung_hatBestanden = JSONMapper.convertToBoolean(value, true);
 			case "note" -> {
 				final String strNote = JSONMapper.convertToString(value, true, false, 3);
 				if (strNote != null) {

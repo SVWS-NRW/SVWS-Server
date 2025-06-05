@@ -1,6 +1,7 @@
 import { shallowRef } from "vue";
 import type { GridManager } from "./GridManager";
 import { GridInputInnerText } from "./GridInputInnerText";
+import { DeveloperNotificationException } from "@core";
 
 /**
  * Ein Grid-Input für die Schnelleingabe der Reihenfolge der mündlichen Prüfungen im Abiturbereich.
@@ -22,8 +23,21 @@ export class GridInputAbiturPruefungsreihenfolge<KEY> extends GridInputInnerText
 	 * @param getter        der Getter zum Holen der Daten für das Grid-Input
 	 * @param setter        der Setter zum Schreiben der Daten des Grid-Input
 	 */
-	constructor(gridManager: GridManager<KEY>, key: KEY, col: number, row: number, elem: HTMLElement, getter : () => string | null, setter : (value: string | null) => void) {
-		super(gridManager, key, col, row, elem, getter, setter);
+	constructor(gridManager: GridManager<KEY>, key: KEY, col: number, row: number, elem: HTMLElement,
+		getter : () => number | null, setter : (value: number | null) => void) {
+		super(gridManager, key, col, row, elem, () => {
+			const value = getter();
+			return (value === null) ? null : "" + value;
+		}, (value: string | null) => {
+			if (value === null) {
+				setter(null);
+				return;
+			}
+			const tmp = parseInt(value);
+			if (isNaN(tmp))
+				throw new DeveloperNotificationException("Der Wert für die Reihenfolge muss null oder ein gültiger Zahlenwert sein.");
+			setter(tmp);
+		});
 		elem.innerText = (this._value.value === null) ? "" : this._value.value + ".";
 	}
 

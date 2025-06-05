@@ -1,5 +1,5 @@
-import type { GostBelegpruefungErgebnis, SchuelerListeEintrag} from "@core";
-import { AbiturdatenManager, DeveloperNotificationException, GostBelegpruefungsArt, GostFaecherManager, UserNotificationException } from "@core";
+import { AbiturFachbelegung, GostBelegpruefungErgebnis, SchuelerListeEintrag} from "@core";
+import { Abiturdaten, AbiturdatenManager, DeveloperNotificationException, GostBelegpruefungsArt, GostFaecherManager, UserNotificationException } from "@core";
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { routeSchuelerAbiturZulassung } from "~/router/apps/schueler/abitur/RouteSchuelerAbiturZulassung";
@@ -108,6 +108,36 @@ export class RouteDataSchuelerAbitur extends RouteData<RouteStateDataSchuelerAbi
 		newState.managerAbitur = new AbiturdatenManager(api.mode, abiturdaten, this.managerLaufbahnplanung.jahrgangsdaten(),
 			this.managerLaufbahnplanung.faecher(), GostBelegpruefungsArt.GESAMT);
 		this.setPatchedState(newState)
+	}
+
+	updateAbiturpruefungsdaten = async (manager: () => AbiturdatenManager, belegung: Partial<AbiturFachbelegung>) => {
+		if (belegung.fachID === undefined)
+			throw new DeveloperNotificationException("Die FachID muss bei der Abitur-Fachbelegung gesetzt sein, damit ein Patchen möglich ist.");
+		// Erstelle eine Kopie der Abiturdaten, wo die Fachbelegung aus dem Patch angepasst wurde.
+		const orig = manager().daten();
+		const clone = Abiturdaten.transpilerFromJSON(Abiturdaten.transpilerToJSON(orig));
+		let found = false;
+		for (const tmpBelegung of clone.fachbelegungen) {
+			if (tmpBelegung.fachID === belegung.fachID) {
+				Object.assign(tmpBelegung, belegung);
+				found = true;
+				break;
+			}
+		}
+		if (!found)
+			throw new DeveloperNotificationException("Die FachID ist in den Abiturdaten nicht als Belegung vorhanden.");
+		// Berechnen des Prüfungsergebnisses und Senden an den Server
+		AbiturdatenManager.berechnePruefungsergebnis(clone);
+		await api.server.patchGostSchuelerAbiturdaten(clone, api.schema, clone.schuelerID);
+		// Patchen der Originaldaten und dortige Berechnung des Prüfungsergebnisses nach erfolgreichem Senden an den Server
+		for (const tmpBelegung of orig.fachbelegungen) {
+			if (tmpBelegung.fachID === belegung.fachID) {
+				Object.assign(tmpBelegung, belegung);
+				break;
+			}
+		}
+		AbiturdatenManager.berechnePruefungsergebnis(orig);
+		this.commit();
 	}
 
 }
