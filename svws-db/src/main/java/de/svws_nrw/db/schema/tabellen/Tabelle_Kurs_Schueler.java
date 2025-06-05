@@ -78,7 +78,7 @@ public class Tabelle_Kurs_Schueler extends SchemaTabelle {
 			    END IF;
 			END
 			""",
-			Schema.tab_Schueler, Schema.tab_SchuelerLernabschnittsdaten)
+			Schema.tab_Schueler, Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_SchuelerLeistungsdaten, Schema.tab_Kurs_Schueler)
 			.setRevision(SchemaRevisionen.REV_2)
 			.setVeraltet(SchemaRevisionen.REV_34);
 
@@ -97,7 +97,7 @@ public class Tabelle_Kurs_Schueler extends SchemaTabelle {
 			    END IF;
 			END
 			""",
-			Schema.tab_Schueler, Schema.tab_SchuelerLernabschnittsdaten)
+			Schema.tab_Schueler, Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_SchuelerLeistungsdaten, Schema.tab_Kurs_Schueler)
 			.setRevision(SchemaRevisionen.REV_34);
 
 	/** Trigger t_UPDATE_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER_VERALTET_REV_34 */
@@ -127,7 +127,7 @@ public class Tabelle_Kurs_Schueler extends SchemaTabelle {
 			    END IF;
 			END
 			""",
-			Schema.tab_Schueler, Schema.tab_SchuelerLernabschnittsdaten)
+			Schema.tab_Schueler, Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_SchuelerLeistungsdaten, Schema.tab_Kurs_Schueler)
 			.setRevision(SchemaRevisionen.REV_2)
 			.setVeraltet(SchemaRevisionen.REV_34);
 
@@ -158,7 +158,7 @@ public class Tabelle_Kurs_Schueler extends SchemaTabelle {
 			    END IF;
 			END
 			""",
-			Schema.tab_Schueler, Schema.tab_SchuelerLernabschnittsdaten)
+			Schema.tab_Schueler, Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_SchuelerLeistungsdaten, Schema.tab_Kurs_Schueler)
 			.setRevision(SchemaRevisionen.REV_34);
 
 	/** Trigger t_DELETE_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER_VERALTET_REV_34 */
@@ -176,9 +176,27 @@ public class Tabelle_Kurs_Schueler extends SchemaTabelle {
 			    END IF;
 			END
 			""",
-			Schema.tab_Schueler, Schema.tab_SchuelerLernabschnittsdaten)
+			Schema.tab_Schueler, Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_SchuelerLeistungsdaten, Schema.tab_Kurs_Schueler)
 			.setRevision(SchemaRevisionen.REV_2)
 			.setVeraltet(SchemaRevisionen.REV_34);
+
+	/** Trigger t_UPDATE_SCHUELERLERNABSCHNITTSDATEN_KURS_SCHUELER */
+	public SchemaTabelleTrigger trigger_MariaDB_UPDATE_SCHUELERLERNABSCHNITTSDATEN_KURS_SCHUELER = addTrigger(
+			"t_UPDATE_SCHUELERLERNABSCHNITTSDATEN_KURS_SCHUELER",
+			DBDriver.MARIA_DB,
+			"""
+			AFTER UPDATE ON SchuelerLernabschnittsdaten FOR EACH ROW
+			BEGIN
+			    IF NEW.WechselNr IS NOT NULL AND OLD.WechselNr IS NOT NULL AND NEW.WechselNr <> OLD.WechselNr THEN
+			        UPDATE Kurs_Schueler SET LernabschnittWechselNr = NEW.WechselNr
+			            WHERE Schueler_ID = NEW.Schueler_ID AND LernabschnittWechselNr = OLD.WechselNr AND (Kurs_ID, Leistung_ID) IN (
+			                SELECT Kurs_ID, ID AS Leistung_ID FROM SchuelerLeistungsdaten WHERE Abschnitt_ID = NEW.ID AND Kurs_ID IS NOT NULL
+			            );
+			    END IF;
+			END
+			""",
+			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_SchuelerLeistungsdaten, Schema.tab_Kurs_Schueler)
+			.setRevision(SchemaRevisionen.REV_42);
 
 	/** Trigger t_INSERT_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER_VERALTET_REV_34 */
 	public SchemaTabelleTrigger trigger_SQLite_INSERT_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER_VERALTET_REV_34 = addTrigger(
