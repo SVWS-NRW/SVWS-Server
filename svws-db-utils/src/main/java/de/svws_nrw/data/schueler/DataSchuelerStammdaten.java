@@ -354,6 +354,8 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 			case "dauerKindergartenbesuch" -> dto.DauerKindergartenbesuch = JSONMapper.convertToString(value, true, false,
 					Schema.tab_Schueler.col_DauerKindergartenbesuch.datenlaenge(), "dauerKindergartenbesuch");
 			case "kindergartenID" -> mapKindergartenID(dto, value);
+			case "verpflichtungSprachfoerderkurs" -> dto.VerpflichtungSprachfoerderkurs = JSONMapper.convertToBoolean(value, false, "verpflichtungSprachfoerderkurs");
+			case "teilnahmeSprachfoerderkurs" -> dto.TeilnahmeSprachfoerderkurs = JSONMapper.convertToBoolean(value, false, "teilnahmeSprachfoerderkurs");
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Das Patchen des Attributes %s ist nicht implementiert.".formatted(name));
 		}
 	}
@@ -509,10 +511,12 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 	// TODO -> verschieben nach DataSchuelerSchulbesuchsdaten bzw. SchuelerSchulbesuchdaten
 	private static void mapEinschulungsartID(final DTOSchueler dto, final Object value) throws ApiOperationException {
 		final Long id = JSONMapper.convertToLongInRange(value, true, 0L, null, "einschulungsartID");
+		if (id == null) {
+			dto.EinschulungsartASD = null;
+			return;
+		}
 		final EinschulungsartKatalogEintrag eintrag = Einschulungsart.data().getEintragByID(id);
-		if (eintrag == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Die ID %d der Einschulungsart ist ungültig.".formatted(id));
-		dto.EinschulungsartASD = eintrag.schluessel;
+		dto.EinschulungsartASD = (eintrag == null) ? null : eintrag.schluessel;
 	}
 
 	// TODO -> verschieben nach DataSchuelerSchulbesuchsdaten bzw. SchuelerSchulbesuchdaten

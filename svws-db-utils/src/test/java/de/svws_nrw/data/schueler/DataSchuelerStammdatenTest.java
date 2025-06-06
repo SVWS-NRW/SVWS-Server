@@ -755,6 +755,8 @@ class DataSchuelerStammdatenTest {
 		dto.MasernImpfnachweis = true;
 		dto.Bafoeg = true;
 		dto.MeisterBafoeg = true;
+		dto.VerpflichtungSprachfoerderkurs = false;
+		dto.TeilnahmeSprachfoerderkurs = false;
 
 		return dto;
 	}

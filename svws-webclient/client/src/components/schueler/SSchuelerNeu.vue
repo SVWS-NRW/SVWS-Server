@@ -1,5 +1,24 @@
 <template>
-	<div class="page page-grid-cards">
+	<div class="page page-grid-cards" v-if="data.id === 0">
+		<svws-ui-content-card title="Persönliche Daten">
+			<svws-ui-input-wrapper :grid="4">
+				<svws-ui-text-input placeholder="Name" required v-model="data.nachname" :valid="fieldIsValid('nachname')" />
+				<svws-ui-text-input placeholder="Vorname" required v-model="data.vorname" :valid="fieldIsValid('vorname')" />
+				<svws-ui-text-input placeholder="Weitere Vornamen" v-model="data.alleVornamen" :valid="fieldIsValid('alleVornamen')" />
+				<svws-ui-select title="Geschlecht" required :items="Geschlecht.values()" :item-text="i => i.text"
+					:model-value="Geschlecht.fromValue(data.geschlecht)" @update:model-value="v => data.geschlecht = v?.id ?? -1" />
+				<svws-ui-text-input placeholder="Geburtsdatum" required type="date" v-model="data.geburtsdatum" :valid="fieldIsValid('geburtsdatum')" />
+				<svws-ui-select title="Status" :items="SchuelerStatus.values()" :item-text="i => i.name().toLowerCase()?? '—'"
+					:model-value="SchuelerStatus.data().getWertByKuerzel('' + data.status)"
+					@update:model-value="v => data.status = v?.ordinal() ?? -1" :disabled="true" />
+			</svws-ui-input-wrapper>
+			<div class="mt-7 flex flex-row gap-4 justify-end">
+				<svws-ui-button type="secondary" @click="cancel">Abbrechen</svws-ui-button>
+				<svws-ui-button @click="addSchuelerStammdaten" :disabled="(!formIsValid)">Speichern</svws-ui-button>
+			</div>
+		</svws-ui-content-card>
+	</div>
+	<div class="page page-grid-cards" v-if="data.id !== 0">
 		<svws-ui-content-card title="Anmeldedaten">
 			<svws-ui-input-wrapper :grid="4">
 				<svws-ui-select title="Status" :items="SchuelerStatus.values()" :item-text="i => i.name().toLowerCase()?? '—'"
@@ -11,107 +30,144 @@
 				<svws-ui-text-input placeholder="Klasse" type="text" :disabled="true" />
 				<svws-ui-spacing />
 				<!--TODO Map für Einschullungsart erstellen-->
-				<svws-ui-text-input placeholder="Einschulungsart" type="text" :disabled="true" />
+				<svws-ui-select title="Einschulungsart" :items="mapEinschulungsarten" :item-text="i => i.text ?? ''" :model-value="mapEinschulungsarten.get(data.einschulungsartID ?? -1)"
+					@update:model-value="v => data.einschulungsartID = v?.id ?? null" removable v-if="schulenMitPrimaerstufe" />
 				<!--TODO Anmeldedatum darf nicht in der Zukunft liegen-->
 				<svws-ui-text-input placeholder="Anmeldedatum" type="date" v-model="data.anmeldedatum" />
 				<!--TODO Aufnahmedatum darf nicht vor dem Anmeldedatum liegen-->
 				<svws-ui-text-input placeholder="Aufnahmedatum" type="date" v-model="data.aufnahmedatum" />
-				<!--TODO Customize Toolbar… darf nicht vor dem Aufnahmedatum liegen-->
+				<!--TODO Beginn Bildungsgang darf nicht vor dem Aufnahmedatum liegen-->
 				<svws-ui-text-input placeholder="Beginn Bildungsgang" type="date" v-model="data.beginnBildungsgang" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Persönliche Daten">
 			<svws-ui-input-wrapper :grid="4">
-				<svws-ui-text-input placeholder="Name" required v-model="data.nachname" :valid="fieldIsValid('nachname')" />
-				<svws-ui-text-input placeholder="Vorname" required v-model="data.vorname" :valid="fieldIsValid('vorname')" />
-				<svws-ui-text-input placeholder="Weitere Vornamen" v-model="data.alleVornamen" :valid="fieldIsValid('alleVornamen')" />
-				<svws-ui-select title="Geschlecht" required :items="Geschlecht.values()" :item-text="i => i.text"
-					:model-value="Geschlecht.fromValue(data.geschlecht)" @update:model-value="v => data.geschlecht = v?.id ?? -1" />
+				<!--TODO Leere Inputfelder unterbinden-->
+				<svws-ui-text-input placeholder="Name" required :model-value="data.nachname"
+					@change="nachname => patch({ nachname: nachname ?? undefined }, data.id)" />
+				<svws-ui-text-input placeholder="Vorname" required :model-value="data.vorname"
+					@change="vorname => patch({ vorname: vorname ?? undefined }, data.id)" :valid="fieldIsValid('vorname')" />
+				<svws-ui-text-input placeholder="Weitere Vornamen" :model-value="data.alleVornamen"
+					@change="alleVornamen => patch({ alleVornamen: alleVornamen ?? undefined }, data.id)" :valid="fieldIsValid('alleVornamen')" />
+				<svws-ui-select title="Geschlecht" required :items="Geschlecht.values()" :item-text="i => i.text" v-model="geschlecht" />
 				<svws-ui-spacing />
-				<svws-ui-text-input placeholder="Straße" type="text" v-model="adresse" :valid="fieldIsValid('strassenname')" />
+				<svws-ui-text-input placeholder="Straße" type="text" :model-value="strasse" @change="patchStrasse" :valid="fieldIsValid('strassenname')" />
 				<svws-ui-select title="Wohnort" :items="mapOrte" :item-filter="orte_filter" :item-sort="orte_sort" :item-text="i => `${i.plz} ${i.ortsname}`"
-					:model-value="mapOrte.get(data.wohnortID?? -1)" @update:model-value="v => data.wohnortID = v?.id ?? null"
-					:valid="fieldIsValid('wohnortID')" removable />
+					v-model="wohnortID" :valid="fieldIsValid('wohnortID')" removable />
 				<svws-ui-spacing />
 				<svws-ui-select title="Ortsteil" :items="ortsteile" :item-sort="ortsteilSort" :item-text="i => i.ortsteil ?? ''"
-					:model-value="mapOrtsteile.get(data.ortsteilID?? -1)" @update:model-value="v => data.ortsteilID = v?.id ?? null"
-					:disabled="data.wohnortID === null" :valid="fieldIsValid('ortsteilID')" removable />
-				<svws-ui-text-input placeholder="Geburtsdatum" required type="date" v-model="data.geburtsdatum" :valid="fieldIsValid('geburtsdatum')" />
-				<svws-ui-text-input placeholder="Geburtsort" v-model="data.geburtsort" />
+					v-model="ortsteilID" :valid="fieldIsValid('ortsteilID')" removable />
+				<svws-ui-text-input placeholder="Geburtsdatum" required type="date" :model-value="data.geburtsdatum"
+					@change="geburtsdatum => geburtsdatum && patch({geburtsdatum}, data.id)" :valid="fieldIsValid('geburtsdatum')" />
+				<svws-ui-text-input placeholder="Geburtsort" :model-value="data.geburtsort" @change="geburtsort => patch({ geburtsort }, data.id)" />
 				<svws-ui-spacing />
-				<svws-ui-text-input placeholder="Telefon" type="tel" v-model="data.telefon" :valid="fieldIsValid('telefon')" :max-len="20" />
-				<svws-ui-text-input placeholder="Mobil/Fax" type="tel" v-model="data.telefonMobil" :valid="fieldIsValid('telefonMobil')" :max-len="20" />
-				<svws-ui-text-input placeholder="E-Mail" type="email" v-model="data.emailPrivat" :valid="fieldIsValid('emailPrivat')" />
+				<svws-ui-text-input placeholder="Telefon" type="tel" :model-value="data.telefon" @change="telefon => patch({ telefon }, data.id)"
+					:valid="fieldIsValid('telefon')" :max-len="20" />
+				<svws-ui-text-input placeholder="Mobil/Fax" type="tel" :model-value="data.telefonMobil"
+					@change="telefonMobil => patch({ telefonMobil }, data.id)" :valid="fieldIsValid('telefonMobil')" :max-len="20" />
+				<svws-ui-text-input placeholder="E-Mail" type="email" :model-value="data.emailPrivat"
+					@change="emailPrivat => patch({ emailPrivat }, data.id)" :valid="fieldIsValid('emailPrivat')" />
 				<svws-ui-spacing />
 				<svws-ui-select title="1. Staatsangehörigkeit" :items="Nationalitaeten.values()" :item-text="i => i.historie().getLast().staatsangehoerigkeit"
-					:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter"
-					:model-value="Nationalitaeten.getByISO3(data.staatsangehoerigkeitID)" :valid="fieldIsValid('staatsangehoerigkeitID')"
-					@update:model-value="v => data.staatsangehoerigkeitID = v?.historie().getLast().iso3 ?? null" removable />
+					:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter" v-model="staatsangehoerigkeit"
+					:valid="fieldIsValid('staatsangehoerigkeitID')" removable />
 				<svws-ui-select title="2. Staatsangehörigkeit" :items="Nationalitaeten.values()" :item-text="i => i.historie().getLast().staatsangehoerigkeit"
-					:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter"
-					:model-value="Nationalitaeten.getByISO3(data.staatsangehoerigkeit2ID)" :valid="fieldIsValid('staatsangehoerigkeit2ID')"
-					@update:model-value="v => data.staatsangehoerigkeit2ID = v?.historie().getLast().iso3 ?? null" removable />
-				<svws-ui-select title="Konfession" type="text" :items="mapReligionen" :item-text="i => i.bezeichnungZeugnis ?? ''"
-					:model-value="mapReligionen.get(data.religionID?? -1)" @update:model-value="v => data.religionID = v?.id ?? -1" removable />
+					:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter" v-model="staatsangehoerigkeit2"
+					:valid="fieldIsValid('staatsangehoerigkeit2ID')" removable />
+				<svws-ui-select title="Konfession" type="text" :items="mapReligionen" :item-text="i => i.bezeichnungZeugnis ?? ''" v-model="religion" removable />
 				<svws-ui-spacing />
+				<svws-ui-checkbox :model-value="data.hatMigrationshintergrund" @update:model-value="hatMigrationshintergrund => {
+					data.hatMigrationshintergrund = hatMigrationshintergrund; patch({ hatMigrationshintergrund }, data.id) }"
+					type="checkbox" title="Migrationshintergrund">
+					Migrationshintergrund vorhanden
+				</svws-ui-checkbox>
+				<svws-ui-input-number placeholder="Zuzugsjahr" :model-value="data.zuzugsjahr" @change="zuzugsjahr => patch({ zuzugsjahr }, data.id)"
+					:disabled="!data.hatMigrationshintergrund" />
 				<svws-ui-select title="Geburtsland" :items="Nationalitaeten.values()" :item-text="i => `${i.historie().getLast().bezeichnung} (${i.historie().getLast().iso3})`"
-					:item-sort="nationalitaetenKatalogEintragSort" :item-filter="nationalitaetenKatalogEintragFilter" :model-value="Nationalitaeten.getByISO3(data.geburtsland)"
-					:valid="fieldIsValid('geburtsland')" @update:model-value="v => data.geburtsland = v?.historie().getLast().iso3 ?? null" removable />
+					:item-sort="nationalitaetenKatalogEintragSort" :item-filter="nationalitaetenKatalogEintragFilter" v-model="geburtsland"
+					:valid="fieldIsValid('geburtsland')" :disabled="!data.hatMigrationshintergrund" removable />
+				<svws-ui-spacing />
 				<svws-ui-select title="Geburtsland Mutter" :items="Nationalitaeten.values()" :item-text="i => `${i.historie().getLast().bezeichnung} (${i.historie().getLast().iso3})`"
-					:item-sort="nationalitaetenKatalogEintragSort" :item-filter="nationalitaetenKatalogEintragFilter" :model-value="Nationalitaeten.getByISO3(data.geburtslandMutter)"
-					:valid="fieldIsValid('geburtslandMutter')" @update:model-value="v => data.geburtslandMutter = v?.historie().getLast().iso3 ?? null" removable />
+					:item-sort="nationalitaetenKatalogEintragSort" :item-filter="nationalitaetenKatalogEintragFilter" v-model="geburtslandMutter"
+					:valid="fieldIsValid('geburtslandMutter')" :disabled="!data.hatMigrationshintergrund" removable />
 				<svws-ui-select title="Geburtsland Vater" :items="Nationalitaeten.values()" :item-text="i => `${i.historie().getLast().bezeichnung} (${i.historie().getLast().iso3})`"
-					:item-sort="nationalitaetenKatalogEintragSort" :item-filter="nationalitaetenKatalogEintragFilter" :model-value="Nationalitaeten.getByISO3(data.geburtslandVater)"
-					:valid="fieldIsValid('geburtslandVater')" @update:model-value="v => data.geburtslandVater = v?.historie().getLast().iso3 ?? null" removable />
-				<svws-ui-spacing />
+					:item-sort="nationalitaetenKatalogEintragSort" :item-filter="nationalitaetenKatalogEintragFilter" v-model="geburtslandVater"
+					:valid="fieldIsValid('geburtslandVater')" :disabled="!data.hatMigrationshintergrund" removable />
 				<svws-ui-select title="Verkehrssprache" :items="Verkehrssprache.values()" :item-text="i => `${i.historie().getLast().text} (${i.historie().getLast().iso3})`"
-					:model-value="Verkehrssprache.getByIsoKuerzel(data.verkehrspracheFamilie) " :item-sort="verkehrsspracheKatalogEintragSort"
-					:item-filter="verkehrsspracheKatalogEintragFilter" @update:model-value="v => data.verkehrspracheFamilie = v?.historie().getLast().iso3 ?? null" removable />
-				<svws-ui-input-number placeholder="Zuzugsjahr" v-model="data.zuzugsjahr" />
-				<svws-ui-text-input placeholder="Migrationshintergrund" :disabled="true" />
-				<svws-ui-select title="Fahrschüler" :items="mapFahrschuelerarten" :item-text="i => i.text ?? ''" :model-value="mapFahrschuelerarten.get(data.fahrschuelerArtID?? -1)"
-					@update:model-value="v => data.fahrschuelerArtID = v?.id ?? -1" removable />
-				<svws-ui-select title="Haltestelle" :items="mapHaltestellen" :item-text="i => i.text ?? ''" :model-value="mapHaltestellen.get(data.haltestelleID?? -1)"
-					@update:model-value="v => data.haltestelleID = v?.id ?? -1" removable />
-				<svws-ui-text-input placeholder="Abmeldung vom Religionsunterricht" v-model="data.religionabmeldung" type="date" />
+					v-model="verkehrsprache" :item-sort="verkehrsspracheKatalogEintragSort" :item-filter="verkehrsspracheKatalogEintragFilter"
+					:disabled="!data.hatMigrationshintergrund" removable />
 				<svws-ui-spacing />
-				<svws-ui-text-input placeholder="Ext. ID-Nr." type="text" v-model="data.externeSchulNr" />
+				<svws-ui-select title="Fahrschüler" :items="mapFahrschuelerarten" :item-text="i => i.text ?? ''" v-model="fahrschuelerart" removable />
+				<svws-ui-select title="Haltestelle" :items="mapHaltestellen" :item-text="i => i.text ?? ''" v-model="haltestelle" removable />
+				<svws-ui-text-input placeholder="Abmeldung vom Religionsunterricht" :model-value="data.religionabmeldung"
+					@change="religionabmeldung => patch({ religionabmeldung }, data.id)" type="date" />
+				<svws-ui-spacing />
+				<svws-ui-select title="Ext. ID-Nr." v-model="externeSchulNr" :items="mapSchulen.values()"
+					:item-text="i => i.kuerzel ?? i.schulnummerStatistik ?? i.kurzbezeichnung ?? i.name" removable />
 				<!--TODO Ausweisnummer, Schwerbehindertenausweis, Bemerkumng zu SchuelerStammdaten hinzufügen-->
 				<svws-ui-text-input placeholder="NR. Schülerausweis" :disabled="true" />
 				<svws-ui-text-input placeholder="Schwerbehindertenausweis" type="text" :disabled="true" />
-				<svws-ui-text-input placeholder="Zust. Foto" type="text" :disabled="true" />
 				<svws-ui-spacing />
 				<svws-ui-text-input placeholder="Bemerkung" type="text" :disabled="true" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
-		<svws-ui-content-card title="Vorschulentwicklung">
+		<!-- TODO Aus SchuelerSchulbesuchsdaten patchen-->
+		<svws-ui-content-card title="Vorschulentwicklung" v-if="schulenMitPrimaerstufe">
 			<svws-ui-input-wrapper :grid="2">
-				<!--TODO Validierungslogik für Kindergartendauer implementieren-->
-				<svws-ui-text-input placeholder="Dauer des Kindergartenbesuchs" type="text" v-model="data.dauerKindergartenbesuch" :disabled="true" />
-				<!--TODO Map für die Kindergarten erstellen-->
-				<svws-ui-text-input placeholder="Name des Kindergartens" type="text" :disabled="true" />
+				<svws-ui-select title="Dauer des Kindergartenbesuchs" :items="Kindergartenbesuch.values()" :item-text="i => i.daten(schuljahr)?.schluessel ?? '-'"
+					v-model="dauerKindergarten" removable />
+				<svws-ui-select title="Name des Kindergartens" :items="mapKindergaerten" :item-text="i => i.bezeichnung" :model-value="mapKindergaerten.get(data.kindergartenID?? -1)"
+					@update:model-value="v => data.kindergartenID = v?.id ?? null" removable />
 				<svws-ui-spacing />
+				<svws-ui-checkbox v-model="data.verpflichtungSprachfoerderkurs" type="checkbox" title="Verpflichtung f. Sprachförderkurs">
+					Verpflichtung f. Sprachförderkurs
+				</svws-ui-checkbox>
+				<svws-ui-checkbox v-model="data.teilnahmeSprachfoerderkurs" type="checkbox" title="Teilnahme an Sprachförderkurs">
+					Teilnahme an Sprachförderkurs
+				</svws-ui-checkbox>
 			</svws-ui-input-wrapper>
 			<div class="mt-7 flex flex-row gap-4 justify-end">
 				<svws-ui-button type="secondary" @click="cancel">Abbrechen</svws-ui-button>
-				<svws-ui-button @click="addSchuelerStammdaten" :disabled="!formIsValid">Speichern</svws-ui-button>
+				<svws-ui-button @click="addSchuelerStammdaten" :disabled="((!formIsValid) || (data.id !== 0))">Speichern</svws-ui-button>
 			</div>
 		</svws-ui-content-card>
-		<svws-ui-checkpoint-modal :checkpoint :continue-routing="props.continueRoutingAfterCheckpoint" />
 	</div>
+	<svws-ui-checkpoint-modal :checkpoint :continue-routing="props.continueRoutingAfterCheckpoint" />
 </template>
 
 <script setup lang="ts">
 
 	import type { SchuelerNeuProps } from "~/components/schueler/SSchuelerNeuProps";
-	import { computed, ref } from "vue";
-	import { AdressenUtils, Geschlecht, JavaString, Nationalitaeten, type OrtsteilKatalogEintrag, SchuelerStammdaten, SchuelerStatus, Verkehrssprache } from "@core";
+	import {computed, ref, watch} from "vue";
+	import { AdressenUtils, Geschlecht, JavaString, type KatalogEintrag, Kindergartenbesuch, Nationalitaeten, type OrtKatalogEintrag, type OrtsteilKatalogEintrag, type ReligionEintrag, SchuelerStammdaten, SchuelerStatus, type SchulEintrag, Schulform, Verkehrssprache } from "@core";
 	import { nationalitaetenKatalogEintragFilter, nationalitaetenKatalogEintragSort, orte_filter, orte_sort, ortsteilSort, staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort, verkehrsspracheKatalogEintragFilter, verkehrsspracheKatalogEintragSort } from "~/utils/helfer";
 
 	const props = defineProps<SchuelerNeuProps>();
 
+	const schuljahr = computed<number>(() => props.aktAbschnitt.schuljahr);
+
 	const data = ref(new SchuelerStammdaten());
 	const isLoading = ref<boolean>(false);
+
+	watch(() => data.value, async() => {
+		if (isLoading.value)
+			return;
+		props.checkpoint.active = true;
+	}, {immediate: false, deep: true});
+
+	//TODO Schulform.GY aus dem Array entfernen
+	const schulenMitPrimaerstufe = computed(() => {
+		const erlaubteSchulformen = [ Schulform.G, Schulform.FW, Schulform.WF, Schulform.GM, Schulform.KS, Schulform.S, Schulform.GE, Schulform.V, Schulform.GY];
+		return erlaubteSchulformen.includes(props.schulform);
+	});
+
+	const wohnortID = computed<OrtKatalogEintrag | undefined>({
+		get: () => {
+			const id = data.value.wohnortID;
+			return id === null ? undefined : props.mapOrte.get(id)
+		},
+		set: (value) => void props.patch({ wohnortID: value === undefined ? null : value.id }, data.value.id),
+	});
 
 	const ortsteile = computed<Array<OrtsteilKatalogEintrag>>(() => {
 		const result : Array<OrtsteilKatalogEintrag> = [];
@@ -121,13 +177,93 @@
 		return result;
 	});
 
-	const adresse = computed({
-		get: () => AdressenUtils.combineStrasse(data.value.strassenname, data.value.hausnummer, data.value.hausnummerZusatz),
-		set: (adresse : string) => {
-			const vals = AdressenUtils.splitStrasse(adresse);
-			data.value.strassenname = vals[0];
-			data.value.hausnummer = vals[1];
-			data.value.hausnummerZusatz = vals[2];
+	const ortsteilID = computed<OrtsteilKatalogEintrag | undefined>({
+		get: () => {
+			const id = data.value.ortsteilID;
+			return id === null ? undefined : props.mapOrtsteile.get(id)
+		},
+		set: (value) => void props.patch({ ortsteilID: value === undefined ? null : value.id }, data.value.id),
+	});
+
+	const geschlecht = computed<Geschlecht>({
+		get: () => Geschlecht.fromValue(data.value.geschlecht) ?? Geschlecht.X,
+		set: (value) => void props.patch({ geschlecht: value.id }, data.value.id),
+	});
+
+	const strasse = computed(() => AdressenUtils.combineStrasse(data.value.strassenname ?? "", data.value.hausnummer ?? "", data.value.hausnummerZusatz ?? ""))
+
+	function patchStrasse(value: string | null) {
+		if (value !== null) {
+			const vals = AdressenUtils.splitStrasse(value);
+			void props.patch({ strassenname: vals[0], hausnummer: vals[1], hausnummerZusatz: vals[2] }, data.value.id);
+		}
+	}
+
+	const staatsangehoerigkeit = computed<Nationalitaeten>({
+		get: () => Nationalitaeten.getByISO3(data.value.staatsangehoerigkeitID) || Nationalitaeten.getDEU(),
+		set: (value) => void props.patch({ staatsangehoerigkeitID: value.historie().getLast().iso3 }, data.value.id),
+	});
+
+	const staatsangehoerigkeit2 = computed<Nationalitaeten | null>({
+		get: () => Nationalitaeten.getByISO3(data.value.staatsangehoerigkeit2ID),
+		set: (value) => void props.patch({ staatsangehoerigkeit2ID: value?.historie().getLast().iso3 ?? null }, data.value.id),
+	});
+
+	const religion = computed<ReligionEintrag | undefined>({
+		get: () => {
+			const id = data.value.religionID;
+			return id === null ? undefined : props.mapReligionen.get(id)
+		},
+		set: (value) => void props.patch({ religionID: value === undefined ? null : value.id }, data.value.id),
+	});
+
+	const geburtsland = computed<Nationalitaeten>({
+		get: () => Nationalitaeten.getByISO3(data.value.geburtsland) || Nationalitaeten.getDEU(),
+		set: (value) => void props.patch({ geburtsland: value.historie().getLast().iso3 }, data.value.id),
+	});
+
+	const geburtslandMutter = computed<Nationalitaeten>({
+		get: () => Nationalitaeten.getByISO3(data.value.geburtslandMutter) || Nationalitaeten.getDEU(),
+		set: (value) => void props.patch({ geburtslandMutter: value.historie().getLast().iso3 }, data.value.id),
+	});
+
+	const geburtslandVater = computed<Nationalitaeten>({
+		get: () => Nationalitaeten.getByISO3(data.value.geburtslandVater) || Nationalitaeten.getDEU(),
+		set: (value) => void props.patch({ geburtslandVater: value.historie().getLast().iso3 }, data.value.id),
+	});
+
+	const verkehrsprache = computed<Verkehrssprache>({
+		get: () => Verkehrssprache.getByIsoKuerzel(data.value.verkehrspracheFamilie) || Verkehrssprache.data().getWertBySchluesselOrException("de"),
+		set: (value) => void props.patch({ verkehrspracheFamilie: value.historie().getLast().iso3 }, data.value.id),
+	});
+
+	const externeSchulNr = computed<SchulEintrag | undefined>({
+		get: () => (data.value.externeSchulNr === null) ? undefined : (props.mapSchulen.get(data.value.externeSchulNr) || undefined),
+		set: (value) => void props.patch({ externeSchulNr: value === undefined ? null : value.schulnummerStatistik }, data.value.id),
+	});
+
+	const fahrschuelerart = computed<KatalogEintrag | undefined>({
+		get: () => {
+			const id = data.value.fahrschuelerArtID;
+			return id === null ? undefined : props.mapFahrschuelerarten.get(id)
+		},
+		set: (value) => void props.patch({ fahrschuelerArtID: value === undefined ? null : value.id }, data.value.id),
+	});
+
+	const haltestelle = computed<KatalogEintrag | undefined>({
+		get: () => {
+			const id = data.value.haltestelleID;
+			return id === null ? undefined : props.mapHaltestellen.get(id)
+		},
+		set: (value) => void props.patch({ haltestelleID: value === undefined ? null : value.id }, data.value.id),
+	});
+
+	const dauerKindergarten = computed<Kindergartenbesuch | undefined>({
+		get(): Kindergartenbesuch | undefined {
+			return Kindergartenbesuch.values().find(i => i.daten(schuljahr.value)?.schluessel === data.value.dauerKindergartenbesuch);
+		},
+		set(v: Kindergartenbesuch | undefined) {
+			data.value.dauerKindergartenbesuch = v?.daten(schuljahr.value)?.schluessel ?? null;
 		},
 	});
 
@@ -207,8 +343,10 @@
 		isLoading.value = true;
 		props.checkpoint.active = false;
 		const { id, ...partialData } = data.value;
-		await props.addSchueler(partialData);
+
+		const result = await props.addSchueler(partialData);
 		isLoading.value = false;
+		data.value.id = result.id;
 	}
 
 	function cancel() {
