@@ -51,6 +51,16 @@
 						Ist Prüfungsordnungs-Relevant (z.B. bei Belegprüfungen)
 					</svws-ui-checkbox>
 				</template>
+				<svws-ui-checkbox :model-value="manager().daten().istFremdsprache" :readonly
+					@update:model-value="value => patch({ istFremdsprache: value })">
+					Ist eine Fremdsprache
+				</svws-ui-checkbox>
+				<template v-if="manager().schulform().daten(schuljahr)?.hatGymOb ?? false">
+					<svws-ui-checkbox :model-value="manager().daten().istMoeglichAlsNeueFremdspracheInSekII" :readonly
+						@update:model-value="value => patch({ istMoeglichAlsNeueFremdspracheInSekII: value })">
+						Ist in der Oberstufe eine neu einsetzende Fremdsprache
+					</svws-ui-checkbox>
+				</template>
 				<svws-ui-checkbox v-if="manager().schulform() !== Schulform.G" :model-value="manager().daten().istNachpruefungErlaubt"
 					@update:model-value="value => patch({ istNachpruefungErlaubt: value })" :readonly>
 					Nachprüfung erlaubt

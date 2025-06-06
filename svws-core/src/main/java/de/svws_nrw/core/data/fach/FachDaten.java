@@ -38,10 +38,18 @@ public class FachDaten {
 	@Schema(description = "gibt an, ob es sich um ein Fach der Oberstufe handelt oder nicht", example = "true")
 	public boolean istOberstufenFach = false;
 
-	/** Gibt an, ob es sich um ein Fach handelt, welches relevant für die Pürfungsordnung ist oder nicht (z.B. bei Belegprüfungen). */
-	@Schema(description = "gibt an, ob es sich um ein Fach handelt, welches relevant für die Pürfungsordnung ist oder nicht (z.B. bei Belegprüfungen).",
+	/** Gibt an, ob es sich um ein Fach handelt, welches relevant für die Prüfungsordnung ist oder nicht (z.B. bei Belegprüfungen). */
+	@Schema(description = "gibt an, ob es sich um ein Fach handelt, welches relevant für die Prüfungsordnung ist oder nicht (z.B. bei Belegprüfungen).",
 			example = "true")
 	public boolean istPruefungsordnungsRelevant = false;
+
+	/** Gibt an, ob es sich um ein Fremdsprachen-Fach handelt */
+	@Schema(description = "gibt an, ob es sich um ein Fremdsprachen-Fach handelt", example = "true")
+	public boolean istFremdsprache = false;
+
+	/** Gibt an, ob es sich um ein Fremdsprachen-Fach handelt, welches in der Sekundarstufe II neu einsetzen ist. */
+	@Schema(description = "gibt an, ob es sich um ein Fremdsprachen-Fach handelt, welches in der Sekundarstufe II neu einsetzen ist", example = "true")
+	public boolean istMoeglichAlsNeueFremdspracheInSekII = false;
 
 	/** Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. */
 	@Schema(description = "gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht", example = "true")

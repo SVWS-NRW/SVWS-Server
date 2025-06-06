@@ -3282,7 +3282,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die Daten des Faches
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: FaecherListeEintrag
+	 *     - Rückgabe-Typ: FachDaten
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Fächerdaten anzusehen.
 	 *   Code 404: Kein Fach-Eintrag mit der angegebenen ID gefunden
 	 *
@@ -3291,13 +3291,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Daten des Faches
 	 */
-	public async getFach(schema : string, id : number) : Promise<FaecherListeEintrag> {
+	public async getFach(schema : string, id : number) : Promise<FachDaten> {
 		const path = "/db/{schema}/faecher/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
-		return FaecherListeEintrag.transpilerFromJSON(text);
+		return FachDaten.transpilerFromJSON(text);
 	}
 
 

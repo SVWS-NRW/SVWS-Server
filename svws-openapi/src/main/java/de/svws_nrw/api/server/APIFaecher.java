@@ -100,7 +100,7 @@ public class APIFaecher {
 					+ "besitzt.")
 	@ApiResponse(responseCode = "200", description = "Die Daten des Faches",
 			content = @Content(mediaType = "application/json",
-					schema = @Schema(implementation = FaecherListeEintrag.class)))
+					schema = @Schema(implementation = FachDaten.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Fächerdaten anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Kein Fach-Eintrag mit der angegebenen ID gefunden")
 	public Response getFach(@PathParam("schema") final String schema, @PathParam("id") final long id,
