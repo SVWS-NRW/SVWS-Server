@@ -1878,7 +1878,7 @@ public final class DataUntis {
 			throw new ApiOperationException(Status.BAD_REQUEST, e, "Die übergebene GPU002 konnte nicht gelesen werden. Überprüfen Sie das Dateiformat.");
 		}
 		final HashMap2D<String, String, List<UntisGPU002>> mapUnterrichte = getMapUntisGPU002ByKlasseAndFach(inputUnterrichte);
-		long idUnterrichtStart = inputUnterrichte.stream().map(u -> u.idUnterricht).max(Long::compare).orElse(1L);
+		long idUnterrichtStart = inputUnterrichte.stream().map(u -> u.idUnterricht).max(Long::compare).orElse(0L) + 1;
 		// Iteriere durch die übergebenen Blockungsergebnisse und erzeuge die jeweiligen Datensätze für die GPUs
 		final List<UntisGPU002> neueUnterrichte = new ArrayList<>();
 		final List<UntisGPU015> gpu015 = new ArrayList<>();
