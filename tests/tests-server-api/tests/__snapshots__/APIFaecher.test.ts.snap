@@ -11,6 +11,8 @@ FaecherListeEintrag {
   "holeAusAltenLernabschnitten": true,
   "id": 16,
   "istFHRFach": true,
+  "istFremdsprache": false,
+  "istMoeglichAlsNeueFremdspracheInSekII": false,
   "istNachpruefungErlaubt": true,
   "istOberstufenFach": true,
   "istPruefungsordnungsRelevant": true,
