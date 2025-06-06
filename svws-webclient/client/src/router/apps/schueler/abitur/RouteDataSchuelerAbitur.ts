@@ -1,4 +1,4 @@
-import { AbiturFachbelegung, GostBelegpruefungErgebnis, SchuelerListeEintrag} from "@core";
+import type { AbiturFachbelegung, GostBelegpruefungErgebnis, SchuelerListeEintrag} from "@core";
 import { Abiturdaten, AbiturdatenManager, DeveloperNotificationException, GostBelegpruefungsArt, GostFaecherManager, UserNotificationException } from "@core";
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";

@@ -876,7 +876,7 @@ public class APISchule {
 	public Response getVermerkarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataVermerkarten(conn).getAllAsResponse(),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+				BenutzerKompetenz.KEINE);
 	}
 
 
@@ -1075,7 +1075,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
 	public Response getEinwilligungsarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogEinwilligungsarten(conn).getAllAsResponse(),
-				request, ServerMode.DEV, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+				request, ServerMode.DEV, BenutzerKompetenz.KEINE);
 	}
 
 	/**
@@ -1101,7 +1101,7 @@ public class APISchule {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogEinwilligungsarten(conn).getByIdAsResponse(id),
 				request, ServerMode.DEV,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+				BenutzerKompetenz.KEINE);
 	}
 
 	/**
@@ -1540,7 +1540,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
 	public Response getKindergaerten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogKindergaerten(conn).getAllAsResponse(),
-				request, ServerMode.DEV, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+				request, ServerMode.DEV, BenutzerKompetenz.KEINE);
 	}
 
 	/**
@@ -1670,7 +1670,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "404", description = "Keine Raum-Einträge gefunden.")
 	public Response getRaeume(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogRaeume(conn).getList(),
-				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
 	}
 
 
@@ -1695,7 +1695,7 @@ public class APISchule {
 	public Response getRaum(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogRaeume(conn).get(id),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+				BenutzerKompetenz.KEINE);
 	}
 
 
@@ -1868,7 +1868,7 @@ public class APISchule {
 	public Response getAufsichtsbereiche(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogAufsichtsbereiche(conn).getList(),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+				BenutzerKompetenz.KEINE);
 	}
 
 
@@ -1894,7 +1894,7 @@ public class APISchule {
 	public Response getAufsichtsbereich(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogAufsichtsbereiche(conn).get(id),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+				BenutzerKompetenz.KEINE);
 	}
 
 
@@ -2069,7 +2069,7 @@ public class APISchule {
 	public Response getPausenzeiten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogPausenzeiten(conn).getList(),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+				BenutzerKompetenz.KEINE);
 	}
 
 
@@ -2096,7 +2096,7 @@ public class APISchule {
 	public Response getPausenzeit(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogPausenzeiten(conn).get(id),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+				BenutzerKompetenz.KEINE);
 	}
 
 
@@ -2272,7 +2272,7 @@ public class APISchule {
 	public Response getZeitraster(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogZeitraster(conn).getList(),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+				BenutzerKompetenz.KEINE);
 	}
 
 
@@ -2298,7 +2298,7 @@ public class APISchule {
 	public Response getZeitrasterEintrag(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogZeitraster(conn).get(id),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+				BenutzerKompetenz.KEINE);
 	}
 
 
@@ -2531,7 +2531,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
 	public Response getSchulenMitKuerzel(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchulen(conn).getListAsResponse(), request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+				BenutzerKompetenz.KEINE);
 	}
 
 
@@ -2558,7 +2558,7 @@ public class APISchule {
 	public Response getSchuleAusKatalog(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchulen(conn).getByIdAsResponse(id),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+				BenutzerKompetenz.KEINE);
 	}
 
 
@@ -2897,7 +2897,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
 	public Response getLernplattformen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogLernplattformen(conn).getAllAsResponse(),
-				request, ServerMode.DEV, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+				request, ServerMode.DEV, BenutzerKompetenz.KEINE);
 	}
 
 	/**
@@ -2921,7 +2921,7 @@ public class APISchule {
 	public Response getLernplattform(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogLernplattformen(conn).getByIdAsResponse(id),
 				request, ServerMode.DEV,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+				BenutzerKompetenz.KEINE);
 	}
 
 	/**
@@ -3061,7 +3061,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
 	public Response getTelefonarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogTelefonArten(conn).getAllAsResponse(),
-				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
 	}
 
 	/**
@@ -3085,7 +3085,7 @@ public class APISchule {
 	public Response getTelefonart(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogTelefonArten(conn).getByIdAsResponse(id),
 				request, ServerMode.DEV,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+				BenutzerKompetenz.KEINE);
 	}
 
 	/**
