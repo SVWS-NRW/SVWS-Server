@@ -99,7 +99,27 @@ export class GridInputToggle<KEY> extends GridInput<KEY> {
 			this.commit();
 			return true;
 		}
+		if (event.key === "Enter") {
+			this._value.value = !this._value.value;
+			this.commit();
+			this.navigateDown();
+			return true;
+		}
 		return false;
+	}
+
+	/**
+	 * Eine Methode, welche überschrieben werden kann, um darauf zu reagieren, wenn das
+	 * HTML-Element eine Maus-Eingabe bekommt.
+	 *
+	 * @param event   das Mausereignis
+	 *
+	 * @returns true   es hat aufgrund des Klickereignisses eine Änderung am Zustand des Inputs stattgefunden
+	 */
+	public onClick(event : MouseEvent) : boolean {
+		this._value.value = !this._value.value;
+		this.commit();
+		return true;
 	}
 
 }

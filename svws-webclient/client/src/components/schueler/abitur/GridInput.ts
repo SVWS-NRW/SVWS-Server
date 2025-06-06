@@ -51,6 +51,7 @@ export abstract class GridInput<KEY> {
 		elem.addEventListener("focus", () => this.handleFocus());
 		elem.addEventListener("blur", () => this.handleBlur());
 		elem.addEventListener("keydown", (event) => this.handleKeyDown(event));
+		elem.addEventListener("click", (event: MouseEvent) => this.handleClick(event));
 	}
 
 	/**
@@ -137,6 +138,29 @@ export abstract class GridInput<KEY> {
 	 * @returns true   es hat aufgrund des Tastaturereignisses eine Änderung am Zustand des Inputs stattgefunden
 	 */
 	public onKeyDown(event : KeyboardEvent) : boolean {
+		// override method in subclass if necessary
+		return false;
+	}
+
+	/**
+	 * Interne Methode zur Handhabung, wenn das HTML-Element angeklickt wird.
+	 *
+	 * @param event   das Mausereignis
+	 */
+	private handleClick(event : MouseEvent) : void {
+		if (this.onClick(event))
+			this._isNewFocus.value = false;
+	}
+
+	/**
+	 * Eine Methode, welche überschrieben werden kann, um darauf zu reagieren, wenn das
+	 * HTML-Element eine Maus-Eingabe bekommt.
+	 *
+	 * @param event   das Mausereignis
+	 *
+	 * @returns true   es hat aufgrund des Klickereignisses eine Änderung am Zustand des Inputs stattgefunden
+	 */
+	public onClick(event : MouseEvent) : boolean {
 		// override method in subclass if necessary
 		return false;
 	}
