@@ -1,5 +1,5 @@
 <template>
-	<table class="svws-ui-table h-full max-w-fit overflow-hidden" aria-label="Tabelle">
+	<table class="svws-ui-table h-full max-w-fit overflow-hidden select-none" aria-label="Tabelle">
 		<thead class="svws-ui-thead" aria-label="Tabellenkopf">
 			<tr class="svws-ui-tr grid-cols-[24rem_24rem_8rem_16rem_4rem_8rem]">
 				<th class="svws-ui-td text-left svws-divider"> <div class="w-full ml-4 text-ui-50">{{ schueler.vorname }} {{ schueler.nachname }}</div> </th>
@@ -69,7 +69,7 @@
 							<div class="w-full">{{ formatNotenpunkteDurchschnitt(belegung.block1NotenpunkteDurchschnitt) }}</div>
 						</td>
 						<td class="svws-ui-td text-center">
-							<div :ref="inputPruefungsnote(belegung)" class="w-full h-full focus:ring-2" :class="{
+							<div :ref="inputPruefungsnote(belegung)" class="w-full h-full focus:ring-2 underline decoration-dotted cursor-text" :class="{
 								'font-bold text-ui-danger': istDefizit(belegung.block2NotenKuerzelPruefung)
 							}" />
 						</td>
@@ -86,7 +86,7 @@
 							</div>
 						</td>
 						<td class="svws-ui-td text-center" :class="{ 'bg-ui-75': belegung.abiturFach >= 4 }">
-							<div v-if="belegung.abiturFach < 4" :ref="inputFreiwilligePruefung(belegung)" class="w-full h-full">
+							<div v-if="belegung.abiturFach < 4" :ref="inputFreiwilligePruefung(belegung)" class="w-full h-full cursor-pointer">
 								<span class="icon-sm" :class="{
 									'i-ri-checkbox-line': belegung.block2MuendlichePruefungFreiwillig === true,
 									'i-ri-checkbox-blank-line': !(belegung.block2MuendlichePruefungFreiwillig === true)
@@ -94,10 +94,10 @@
 							</div>
 						</td>
 						<td class="svws-ui-td text-center" :class="{ 'bg-ui-75': belegung.abiturFach >= 4 }">
-							<div v-if="belegung.abiturFach < 4" :ref="inputPruefungsreihenfolge(belegung)" class="w-full h-full focus:ring-2" />
+							<div v-if="belegung.abiturFach < 4" :ref="inputPruefungsreihenfolge(belegung)" class="w-full h-full focus:ring-2 underline decoration-dotted cursor-text" />
 						</td>
 						<td class="svws-ui-td svws-divider text-center" :class="{ 'bg-ui-75': belegung.abiturFach >= 4 }">
-							<div v-if="belegung.abiturFach < 4" :ref="inputPruefungsnoteMdl(belegung)" class="w-full h-full focus:ring-2" :class="{
+							<div v-if="belegung.abiturFach < 4" :ref="inputPruefungsnoteMdl(belegung)" class="w-full h-full focus:ring-2 underline decoration-dotted cursor-text" :class="{
 								'font-bold text-ui-danger': istDefizit(belegung.block2MuendlichePruefungNotenKuerzel)
 							}" />
 						</td>
