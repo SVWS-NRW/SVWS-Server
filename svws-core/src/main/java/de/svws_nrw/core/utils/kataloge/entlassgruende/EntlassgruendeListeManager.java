@@ -47,13 +47,11 @@ public final class EntlassgruendeListeManager extends AuswahlManager<Long, Katal
 
 	@Override
 	protected boolean checkFilter(final KatalogEntlassgrund eintrag) {
-		// TODO: implement
 		return true;
 	}
 
 	@Override
-	protected int compareAuswahl(final KatalogEntlassgrund a, final KatalogEntlassgrund b) {
-		// TODO: implement
-		return 0;
+	protected int compareAuswahl(final @NotNull KatalogEntlassgrund a, final @NotNull KatalogEntlassgrund b) {
+		return comparator.compare(a, b);
 	}
 }

@@ -8,6 +8,7 @@ import de.svws_nrw.core.data.kataloge.KatalogEintragStrassen;
 import de.svws_nrw.core.data.kataloge.KatalogEntlassgrund;
 import de.svws_nrw.core.data.kataloge.OrtKatalogEintrag;
 import de.svws_nrw.core.data.kataloge.OrtsteilKatalogEintrag;
+import de.svws_nrw.core.data.schule.Merkmal;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.JSONMapper;
@@ -19,6 +20,7 @@ import de.svws_nrw.data.kataloge.DataKatalogOrtsteile;
 import de.svws_nrw.data.kataloge.DataOrte;
 import de.svws_nrw.data.kataloge.DataOrtsteile;
 import de.svws_nrw.data.kataloge.DataStrassen;
+import de.svws_nrw.data.schule.DataMerkmale;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -210,9 +212,9 @@ public class APIKataloge {
 	 */
 	@GET
 	@Path("/entlassgruende")
-	@Operation(summary = "Gibt eine Übersicht der Entlassgruende im Katalog zurück.",
+	@Operation(summary = "Gibt eine Übersicht der Entlassgründe im Katalog zurück.",
 			description = "Gibt die Entlassgründe zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.")
-	@ApiResponse(responseCode = "200", description = "Eine Liste von Entlassgründen.",
+	@ApiResponse(responseCode = "200", description = "Eine Liste der Entlassgründe.",
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KatalogEntlassgrund.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
@@ -232,7 +234,7 @@ public class APIKataloge {
 	 * @return das Ergebnis der Patch-Operation
 	 */
 	@PATCH
-	@Path("/{id : \\d+}")
+	@Path("/entlassgruende/{id : \\d+}")
 	@Operation(summary = "Patched den Entlassgrund mit der angegebenen ID.",
 			description = "Patched den Entlassgrund mit der angegebenen ID, insofern die notwendigen Berechtigungen vorliegen.")
 	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.")
@@ -261,15 +263,15 @@ public class APIKataloge {
 	 * @return die HTTP-Antwort mit den erstellen Entlassgründe
 	 */
 	@POST
-	@Path("/create")
-	@Operation(summary = "Erstellt neue Entlassgründe und gibt das erstellte Objekt zurück.",
-			description = "Erstellt neue Entlassgründe, insofern die notwendigen Berechtigungen vorliegen")
-	@ApiResponse(responseCode = "201", description = "Die Entlassgründe wurden erfolgreich hinzugefügt.",
+	@Path("/entlassgruende/create")
+	@Operation(summary = "Erstellt einen neuen Entlassgrund und gibt das erstellte Objekt zurück.",
+			description = "Erstellt einen neuen Entlassgrund, insofern die notwendigen Berechtigungen vorliegen")
+	@ApiResponse(responseCode = "201", description = "Der Entlassgrund wurde erfolgreich hinzugefügt.",
 			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = KatalogEntlassgrund.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Entlassgründe anzulegen.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response addEntlassgrund(@PathParam("schema") final String schema,
-			@RequestBody(description = "Die Daten der zu erstellenden Entlassgründe ohne ID, da diese automatisch generiert wird", required = true,
+			@RequestBody(description = "Die Daten des zu erstellenden Entlassgrundes ohne ID, da diese automatisch generiert wird", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = KatalogEntlassgrund.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
@@ -286,7 +288,7 @@ public class APIKataloge {
 	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
 	 */
 	@DELETE
-	@Path("/delete/multiple")
+	@Path("/entlassgruende/delete/multiple")
 	@Operation(summary = "Entfernt mehrere Entlassgründe.", description = "Entfernt mehrere Entlassgründe, insofern die notwendigen Berechtigungen vorhanden sind.")
 	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt.",
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
@@ -297,6 +299,107 @@ public class APIKataloge {
 					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
 				conn -> new DataKatalogEntlassgruende(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Merkmale.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste der Merkmale
+	 */
+	@GET
+	@Path("/merkmale")
+	@Operation(summary = "Gibt eine Übersicht der Merkmale im Katalog zurück.",
+			description = "Gibt die Merkmale zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste von Merkmalen.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Merkmal.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Merkmale gefunden")
+	public Response getMerkmale(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataMerkmale(conn).getAllAsResponse(),
+				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Patchen eines Merkmals.
+	 *
+	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param id        die Datenbank-ID zur Identifikation des Merkmals
+	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/merkmale/{id : \\d+}")
+	@Operation(summary = "Patched das Merkmal mit der angegebenen ID.",
+			description = "Patched das Merkmal mit der angegebenen ID, insofern die notwendigen Berechtigungen vorliegen.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Eintrag mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
+			+ " (z.B. eine negative ID)")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z. B. beim Datenbankzugriff)")
+	public Response patchMerkmal(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@RequestBody(description = "Der Patch eines Merkmals", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Merkmal.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> new DataMerkmale(conn).patchAsResponse(id, is), request, ServerMode.DEV,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Hinzufügen eines Merkmals.
+	 *
+	 * @param schema       das Datenbankschema
+	 * @param is           der Input-Stream mit den Daten des Merkmals
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem erstellten Merkmal
+	 */
+	@POST
+	@Path("/merkmale/create")
+	@Operation(summary = "Erstellt ein neues Merkmal und gibt das erstellte Objekt zurück.",
+			description = "Erstellt ein neues Merkmal, insofern die notwendigen Berechtigungen vorliegen")
+	@ApiResponse(responseCode = "201", description = "Das Merkmal wurden erfolgreich hinzugefügt.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Merkmal.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Merkmale anzulegen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response addMerkmal(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die Daten des zu erstellenden Merkmals ohne ID, da diese automatisch generiert wird", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Merkmal.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> new DataMerkmale(conn).addAsResponse(is), request, ServerMode.DEV, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Entfernen mehrerer Merkmale.
+	 *
+	 * @param schema    das Datenbankschema
+	 * @param is        der InputStream, mit der Liste der zu löschenden IDs
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
+	 */
+	@DELETE
+	@Path("/merkmale/delete/multiple")
+	@Operation(summary = "Entfernt mehrere Merkmale.", description = "Entfernt mehrere Merkmale, insofern die notwendigen Berechtigungen vorhanden sind.")
+	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Merkmale zu entfernen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteMerkmale(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der zu löschenden Merkmale",
+			required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+			array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
+				conn -> new DataMerkmale(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}

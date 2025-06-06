@@ -325,32 +325,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der PATCH-Methode patchEntlassgrund für den Zugriff auf die URL https://{hostname}/db/{schema}/{id : \d+}
-	 *
-	 * Patched den Entlassgrund mit der angegebenen ID, insofern die notwendigen Berechtigungen vorliegen.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Patch wurde erfolgreich integriert.
-	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
-	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
-	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
-	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
-	 *
-	 * @param {Partial<KatalogEntlassgrund>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 */
-	public async patchEntlassgrund(data : Partial<KatalogEntlassgrund>, schema : string, id : number) : Promise<void> {
-		const path = "/db/{schema}/{id : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = KatalogEntlassgrund.transpilerToJSONPatch(data);
-		return super.patchJSON(path, body);
-	}
-
-
-	/**
 	 * Implementierung der GET-Methode getKatalogOrte für den Zugriff auf die URL https://{hostname}/db/{schema}/allgemein/orte
 	 *
 	 * Erstellt eine Liste aller in dem Katalog vorhandenen Orte. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
@@ -1952,33 +1926,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode addEntlassgrund für den Zugriff auf die URL https://{hostname}/db/{schema}/create
-	 *
-	 * Erstellt neue Entlassgründe, insofern die notwendigen Berechtigungen vorliegen
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 201: Die Entlassgründe wurden erfolgreich hinzugefügt.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: KatalogEntlassgrund
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Entlassgründe anzulegen.
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {Partial<KatalogEntlassgrund>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Die Entlassgründe wurden erfolgreich hinzugefügt.
-	 */
-	public async addEntlassgrund(data : Partial<KatalogEntlassgrund>, schema : string) : Promise<KatalogEntlassgrund> {
-		const path = "/db/{schema}/create"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = KatalogEntlassgrund.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
-		const text = result;
-		return KatalogEntlassgrund.transpilerFromJSON(text);
-	}
-
-
-	/**
 	 * Implementierung der POST-Methode importKurs42Raeume für den Zugriff auf die URL https://{hostname}/db/{schema}/datenaustausch/gost/kurs42/import/raeume
 	 *
 	 * Importiert die Räume aus Kurs 42 in das Schema mit dem angegebenen Namen.
@@ -2440,35 +2387,6 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.postMultipart(path, data);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der DELETE-Methode deleteEntlassgruende für den Zugriff auf die URL https://{hostname}/db/{schema}/delete/multiple
-	 *
-	 * Entfernt mehrere Entlassgründe, insofern die notwendigen Berechtigungen vorhanden sind.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Lösch-Operationen wurden ausgeführt.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Entlassgründe zu entfernen.
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Die Lösch-Operationen wurden ausgeführt.
-	 */
-	public async deleteEntlassgruende(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
-		const path = "/db/{schema}/delete/multiple"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
-		return ret;
 	}
 
 
@@ -3096,7 +3014,7 @@ export class ApiServer extends BaseApi {
 	 * Gibt die Entlassgründe zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Eine Liste von Entlassgründen.
+	 *   Code 200: Eine Liste der Entlassgründe.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: List<KatalogEntlassgrund>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
@@ -3104,7 +3022,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
-	 * @returns Eine Liste von Entlassgründen.
+	 * @returns Eine Liste der Entlassgründe.
 	 */
 	public async getEntlassgruende(schema : string) : Promise<List<KatalogEntlassgrund>> {
 		const path = "/db/{schema}/entlassgruende"
@@ -3113,6 +3031,88 @@ export class ApiServer extends BaseApi {
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<KatalogEntlassgrund>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KatalogEntlassgrund.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchEntlassgrund für den Zugriff auf die URL https://{hostname}/db/{schema}/entlassgruende/{id : \d+}
+	 *
+	 * Patched den Entlassgrund mit der angegebenen ID, insofern die notwendigen Berechtigungen vorliegen.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<KatalogEntlassgrund>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchEntlassgrund(data : Partial<KatalogEntlassgrund>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/entlassgruende/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = KatalogEntlassgrund.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addEntlassgrund für den Zugriff auf die URL https://{hostname}/db/{schema}/entlassgruende/create
+	 *
+	 * Erstellt einen neuen Entlassgrund, insofern die notwendigen Berechtigungen vorliegen
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Der Entlassgrund wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: KatalogEntlassgrund
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Entlassgründe anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<KatalogEntlassgrund>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Entlassgrund wurde erfolgreich hinzugefügt.
+	 */
+	public async addEntlassgrund(data : Partial<KatalogEntlassgrund>, schema : string) : Promise<KatalogEntlassgrund> {
+		const path = "/db/{schema}/entlassgruende/create"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = KatalogEntlassgrund.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return KatalogEntlassgrund.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteEntlassgruende für den Zugriff auf die URL https://{hostname}/db/{schema}/entlassgruende/delete/multiple
+	 *
+	 * Entfernt mehrere Entlassgründe, insofern die notwendigen Berechtigungen vorhanden sind.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Lösch-Operationen wurden ausgeführt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Entlassgründe zu entfernen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Lösch-Operationen wurden ausgeführt.
+	 */
+	public async deleteEntlassgruende(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+		const path = "/db/{schema}/entlassgruende/delete/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -9194,6 +9194,115 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getMerkmale für den Zugriff auf die URL https://{hostname}/db/{schema}/merkmale
+	 *
+	 * Gibt die Merkmale zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Eine Liste von Merkmalen.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Merkmal>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Merkmale gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Eine Liste von Merkmalen.
+	 */
+	public async getMerkmale(schema : string) : Promise<List<Merkmal>> {
+		const path = "/db/{schema}/merkmale"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<Merkmal>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Merkmal.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchMerkmal für den Zugriff auf die URL https://{hostname}/db/{schema}/merkmale/{id : \d+}
+	 *
+	 * Patched das Merkmal mit der angegebenen ID, insofern die notwendigen Berechtigungen vorliegen.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<Merkmal>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchMerkmal(data : Partial<Merkmal>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/merkmale/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = Merkmal.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addMerkmal für den Zugriff auf die URL https://{hostname}/db/{schema}/merkmale/create
+	 *
+	 * Erstellt ein neues Merkmal, insofern die notwendigen Berechtigungen vorliegen
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Das Merkmal wurden erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Merkmal
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Merkmale anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<Merkmal>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Das Merkmal wurden erfolgreich hinzugefügt.
+	 */
+	public async addMerkmal(data : Partial<Merkmal>, schema : string) : Promise<Merkmal> {
+		const path = "/db/{schema}/merkmale/create"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = Merkmal.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return Merkmal.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteMerkmale für den Zugriff auf die URL https://{hostname}/db/{schema}/merkmale/delete/multiple
+	 *
+	 * Entfernt mehrere Merkmale, insofern die notwendigen Berechtigungen vorhanden sind.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Lösch-Operationen wurden ausgeführt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Merkmale zu entfernen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Lösch-Operationen wurden ausgeführt.
+	 */
+	public async deleteMerkmale(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+		const path = "/db/{schema}/merkmale/delete/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode migrateMariaDB für den Zugriff auf die URL https://{hostname}/db/{schema}/migrate/mariadb
 	 *
 	 * Migriert die übergebene Datenbank in das Schema mit dem angegebenen Namen. Die Daten in diesem Schema werden ersetzt.
@@ -13610,33 +13719,6 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = JSON.stringify(data);
 		return super.putJSON(path, body);
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getMerkmale für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/merkmale
-	 *
-	 * Gibt die Merkmale zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Eine Liste von Merkmalen.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<Merkmal>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
-	 *   Code 404: Keine Merkmale gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Eine Liste von Merkmalen.
-	 */
-	public async getMerkmale(schema : string) : Promise<List<Merkmal>> {
-		const path = "/db/{schema}/schule/merkmale"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<Merkmal>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Merkmal.transpilerFromJSON(text)); });
-		return ret;
 	}
 
 

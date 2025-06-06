@@ -22,7 +22,7 @@
 	import { computed } from "vue";
 
 	const props = defineProps<EntlassgruendeDatenProps>()
-	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
+	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const readonly = computed<boolean>(() => !hatKompetenzUpdate.value);
 
 </script>

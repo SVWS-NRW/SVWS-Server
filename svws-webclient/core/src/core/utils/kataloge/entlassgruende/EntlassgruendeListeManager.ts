@@ -48,8 +48,8 @@ export class EntlassgruendeListeManager extends AuswahlManager<number, KatalogEn
 		return true;
 	}
 
-	protected compareAuswahl(a : KatalogEntlassgrund | null, b : KatalogEntlassgrund | null) : number {
-		return 0;
+	protected compareAuswahl(a : KatalogEntlassgrund, b : KatalogEntlassgrund) : number {
+		return EntlassgruendeListeManager.comparator.compare(a, b);
 	}
 
 	transpilerCanonicalName(): string {

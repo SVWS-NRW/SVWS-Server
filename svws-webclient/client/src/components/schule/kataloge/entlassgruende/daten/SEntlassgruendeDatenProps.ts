@@ -3,5 +3,5 @@ import type { BenutzerKompetenz, EntlassgruendeListeManager, KatalogEntlassgrund
 export interface EntlassgruendeDatenProps {
 	manager: () => EntlassgruendeListeManager;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
-	patch: (data : Partial<KatalogEntlassgrund>) => Promise<void>;
+	patch: (data: Partial<KatalogEntlassgrund>) => Promise<void>;
 }

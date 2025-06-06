@@ -41,6 +41,7 @@ import { routeSchuleStammdaten } from "./schule/RouteSchuleStammdaten";
 import { routeSchuleReporting } from "./schule/reporting/RouteSchuleReporting";
 import { routeAbteilungen } from "~/router/apps/schule/abteilungen/RouteAbteilungen";
 import { routeEntlassgruende } from "~/router/apps/schule/entlassgruende/RouteEntlassgruende";
+import { routeMerkmale } from "~/router/apps/schule/merkmale/RouteMerkmale";
 import SApp from "~/components/SApp.vue";
 
 
@@ -116,6 +117,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeSchuleFaecher,
 			routeKatalogFoerderschwerpunkte,
 			routeSchuleJahrgaenge,
+			routeMerkmale,
 			routeKatalogVermerkarten,
 			routeKatalogLernplattformen,
 			// Allgemein
