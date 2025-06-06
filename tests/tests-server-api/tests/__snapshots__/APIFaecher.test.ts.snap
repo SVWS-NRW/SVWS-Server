@@ -1,7 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`Feacher Tests > gegen { schema: 'GymAbi01' } > getFach 1`] = `
-FaecherListeEintrag {
+FachDaten {
   "aufZeugnis": true,
   "aufgabenfeld": "1",
   "bezeichnung": "Deutsch",
