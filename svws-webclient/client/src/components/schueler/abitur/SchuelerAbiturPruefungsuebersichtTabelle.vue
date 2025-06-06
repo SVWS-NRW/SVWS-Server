@@ -1,32 +1,32 @@
 <template>
-	<table class="svws-ui-table h-full max-w-fit overflow-hidden" role="table" aria-label="Tabelle">
-		<thead class="svws-ui-thead" role="rowgroup" aria-label="Tabellenkopf">
-			<tr class="svws-ui-tr grid-cols-[24rem_24rem_8rem_16rem_4rem_8rem]" role="row">
-				<td class="svws-ui-td text-center svws-divider" role="columnheader" />
-				<td class="svws-ui-td text-center svws-divider" role="columnheader"> <div class="w-full">Zulassung</div> </td>
-				<td class="svws-ui-td text-center" role="columnheader"> <div class="w-full">Prüfung</div> </td>
-				<td class="svws-ui-td text-center" role="columnheader"> <div class="w-full">mündliche Prüfung</div> </td>
-				<td class="svws-ui-td text-center svws-divider" role="columnheader" />
-				<td class="svws-ui-td text-center" role="columnheader"> <div class="w-full">Abitur</div> </td>
+	<table class="svws-ui-table h-full max-w-fit overflow-hidden" aria-label="Tabelle">
+		<thead class="svws-ui-thead" aria-label="Tabellenkopf">
+			<tr class="svws-ui-tr grid-cols-[24rem_24rem_8rem_16rem_4rem_8rem]">
+				<th class="svws-ui-td text-center svws-divider" />
+				<th class="svws-ui-td text-center svws-divider"> <div class="w-full">Zulassung</div> </th>
+				<th class="svws-ui-td text-center"> <div class="w-full">Prüfung</div> </th>
+				<th class="svws-ui-td text-center"> <div class="w-full">mündliche Prüfung</div> </th>
+				<th class="svws-ui-td text-center svws-divider" />
+				<th class="svws-ui-td text-center"> <div class="w-full">Abitur</div> </th>
 			</tr>
-			<tr class="svws-ui-tr grid-cols-[4rem_4rem_16rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_8rem]" role="row">
-				<td class="svws-ui-td text-center" role="columnheader"> <div class="w-full">Abi</div> </td>
-				<td class="svws-ui-td text-center" role="columnheader"> <div class="w-full">Kürzel</div> </td>
-				<td class="svws-ui-td svws-divider" role="columnheader"> Fach </td>
-				<td class="svws-ui-td text-center" role="columnheader"> <div class="w-full">Q1.1</div> </td>
-				<td class="svws-ui-td text-center" role="columnheader"> <div class="w-full">Q1.2</div> </td>
-				<td class="svws-ui-td text-center" role="columnheader"> <div class="w-full">Q2.1</div> </td>
-				<td class="svws-ui-td text-center" role="columnheader"> <div class="w-full">Q2.2</div> </td>
-				<td class="svws-ui-td text-center" role="columnheader"> <div class="w-full">Summe</div> </td>
-				<td class="svws-ui-td text-center svws-divider" role="columnheader"> <div class="w-full">⌀</div> </td>
-				<td class="svws-ui-td text-center" role="columnheader"> <div class="w-full">Punkte</div> </td>
-				<td class="svws-ui-td text-center svws-divider" role="columnheader"> <div class="w-full">Summe</div> </td>
-				<td class="svws-ui-td text-center" role="columnheader"> <div class="w-full">Pflicht</div> </td>
-				<td class="svws-ui-td text-center" role="columnheader"> <div class="w-full">Freiw.</div> </td>
-				<td class="svws-ui-td text-center" role="columnheader"> <div class="w-full">RF</div> </td>
-				<td class="svws-ui-td text-center svws-divider" role="columnheader"> <div class="w-full">Punkte</div> </td>
-				<td class="svws-ui-td text-center svws-divider" role="columnheader"> <div class="w-full">Summe</div> </td>
-				<td class="svws-ui-td text-center" role="columnheader" :class="{
+			<tr class="svws-ui-tr grid-cols-[4rem_4rem_16rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_8rem]">
+				<th class="svws-ui-td text-center"> <div class="w-full">Abi</div> </th>
+				<th class="svws-ui-td text-center"> <div class="w-full">Kürzel</div> </th>
+				<th class="svws-ui-td svws-divider"> Fach </th>
+				<th class="svws-ui-td text-center"> <div class="w-full">Q1.1</div> </th>
+				<th class="svws-ui-td text-center"> <div class="w-full">Q1.2</div> </th>
+				<th class="svws-ui-td text-center"> <div class="w-full">Q2.1</div> </th>
+				<th class="svws-ui-td text-center"> <div class="w-full">Q2.2</div> </th>
+				<th class="svws-ui-td text-center"> <div class="w-full">Summe</div> </th>
+				<th class="svws-ui-td text-center svws-divider"> <div class="w-full">⌀</div> </th>
+				<th class="svws-ui-td text-center"> <div class="w-full">Punkte</div> </th>
+				<th class="svws-ui-td text-center svws-divider"> <div class="w-full">Summe</div> </th>
+				<th class="svws-ui-td text-center"> <div class="w-full">Pflicht</div> </th>
+				<th class="svws-ui-td text-center"> <div class="w-full">Freiw.</div> </th>
+				<th class="svws-ui-td text-center"> <div class="w-full">RF</div> </th>
+				<th class="svws-ui-td text-center svws-divider"> <div class="w-full">Punkte</div> </th>
+				<th class="svws-ui-td text-center svws-divider"> <div class="w-full">Summe</div> </th>
+				<th class="svws-ui-td text-center" :class="{
 					'text-ui-onsuccess bg-ui-success': istBestanden === true,
 					'text-ui-ondanger bg-ui-danger': istBestanden === false,
 				}">
@@ -39,53 +39,53 @@
 					<template v-else>
 						<div class="w-full">???</div>
 					</template>
-				</td>
+				</th>
 			</tr>
 		</thead>
-		<tbody class="svws-ui-tbody h-full overflow-y-auto" role="rowgroup" aria-label="Tabelleninhalt">
+		<tbody class="svws-ui-tbody h-full overflow-y-auto" aria-label="Tabelleninhalt">
 			<template v-for="belegung in abiBelegungen.values()" :key="`${manager().daten().schuelerID}_${belegung.abiturFach}`">
 				<template v-if="belegung.abiturFach !== null">
-					<tr class="svws-ui-tr grid-cols-[4rem_4rem_16rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_8rem] text-ui-static" role="row">
-						<td class="svws-ui-td text-center" role="cell">
+					<tr class="svws-ui-tr grid-cols-[4rem_4rem_16rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_8rem] text-ui-static">
+						<td class="svws-ui-td text-center">
 							<div class="w-full">{{ belegung.abiturFach }}.</div>
 						</td>
-						<td class="svws-ui-td text-center" :style="{ 'background-color': getFachfarbe(belegung) }" role="cell">
+						<td class="svws-ui-td text-center" :style="{ 'background-color': getFachfarbe(belegung) }">
 							<div class="w-full">{{ manager().faecher().get(belegung.fachID)?.kuerzelAnzeige ?? "???" }}</div>
 						</td>
-						<td class="svws-ui-td" :style="{ 'background-color': getFachfarbe(belegung) }" role="cell">
+						<td class="svws-ui-td" :style="{ 'background-color': getFachfarbe(belegung) }">
 							{{ manager().faecher().get(belegung.fachID)?.bezeichnung ?? "???" }}
 						</td>
 						<template v-for="hj in GostHalbjahr.getQualifikationsphase()" :key="hj.id">
-							<td class="svws-ui-td text-center" :class="{ 'svws-divider': (hj === GostHalbjahr.Q22) }" role="cell">
+							<td class="svws-ui-td text-center" :class="{ 'svws-divider': (hj === GostHalbjahr.Q22) }">
 								<div class="w-full">
 									{{ getNotenpunkteString(belegung, hj) }}
 								</div>
 							</td>
 						</template>
-						<td class="svws-ui-td svws-divider text-center" role="cell">
+						<td class="svws-ui-td svws-divider text-center">
 							<div class="w-full">{{ belegung.block1PunktSumme ?? 0 }}</div>
 						</td>
-						<td class="svws-ui-td svws-divider text-center" role="cell">
+						<td class="svws-ui-td svws-divider text-center">
 							<div class="w-full">{{ formatNotenpunkteDurchschnitt(belegung.block1NotenpunkteDurchschnitt) }}</div>
 						</td>
-						<td class="svws-ui-td text-center" role="cell">
+						<td class="svws-ui-td text-center">
 							<div :ref="inputPruefungsnote(belegung)" class="w-full h-full focus:ring-2" :class="{
 								'font-bold text-ui-danger': istDefizit(belegung.block2NotenKuerzelPruefung)
 							}" />
 						</td>
-						<td class="svws-ui-td svws-divider text-center" role="cell">
+						<td class="svws-ui-td svws-divider text-center">
 							<div class="w-full" :class="{
 								'font-bold text-ui-danger': istWertungDefizit(belegung.block2PunkteZwischenstand)
 							}">
 								{{ belegung.block2PunkteZwischenstand ?? '' }}
 							</div>
 						</td>
-						<td class="svws-ui-td text-center" role="cell" :class="{ 'bg-ui-75': belegung.abiturFach >= 4 }">
+						<td class="svws-ui-td text-center" :class="{ 'bg-ui-75': belegung.abiturFach >= 4 }">
 							<div v-if="belegung.abiturFach < 4" class="w-full">
 								<span v-if="belegung.block2MuendlichePruefungBestehen === true" class="icon-sm i-ri-check-line" />
 							</div>
 						</td>
-						<td class="svws-ui-td text-center" role="cell" :class="{ 'bg-ui-75': belegung.abiturFach >= 4 }">
+						<td class="svws-ui-td text-center" :class="{ 'bg-ui-75': belegung.abiturFach >= 4 }">
 							<div v-if="belegung.abiturFach < 4" :ref="inputFreiwilligePruefung(belegung)" class="w-full h-full">
 								<span class="icon-sm" :class="{
 									'i-ri-checkbox-line': belegung.block2MuendlichePruefungFreiwillig === true,
@@ -93,52 +93,54 @@
 								}" />
 							</div>
 						</td>
-						<td class="svws-ui-td text-center" role="cell" :class="{ 'bg-ui-75': belegung.abiturFach >= 4 }">
+						<td class="svws-ui-td text-center" :class="{ 'bg-ui-75': belegung.abiturFach >= 4 }">
 							<div v-if="belegung.abiturFach < 4" :ref="inputPruefungsreihenfolge(belegung)" class="w-full h-full focus:ring-2" />
 						</td>
-						<td class="svws-ui-td svws-divider text-center" role="cell" :class="{ 'bg-ui-75': belegung.abiturFach >= 4 }">
+						<td class="svws-ui-td svws-divider text-center" :class="{ 'bg-ui-75': belegung.abiturFach >= 4 }">
 							<div v-if="belegung.abiturFach < 4" :ref="inputPruefungsnoteMdl(belegung)" class="w-full h-full focus:ring-2" :class="{
 								'font-bold text-ui-danger': istDefizit(belegung.block2MuendlichePruefungNotenKuerzel)
 							}" />
 						</td>
-						<td class="svws-ui-td svws-divider text-center" role="cell">
+						<td class="svws-ui-td svws-divider text-center">
 							<div class="w-full" :class="{
 								'font-bold text-ui-danger': istWertungDefizit(belegung.block2Punkte)
 							}">
 								{{ belegung.block2Punkte ?? '' }}
 							</div>
 						</td>
-						<td class="svws-ui-td text-center" role="cell" />
+						<td class="svws-ui-td text-center" />
 					</tr>
 				</template>
 			</template>
-			<tr class="svws-ui-tr grid-cols-[24rem_16rem_4rem_4rem_4rem_4rem_16rem_4rem_4rem_4rem] text-ui-static" role="row">
-				<td class="svws-ui-td svws-divider" role="cell" />
-				<td class="svws-ui-td text-right" role="cell">
+		</tbody>
+		<tfoot>
+			<tr class="svws-ui-tr grid-cols-[24rem_16rem_4rem_4rem_4rem_4rem_16rem_4rem_4rem_4rem] text-ui-static">
+				<td class="svws-ui-td svws-divider" />
+				<td class="svws-ui-td text-right">
 					<div class="w-full"> Gesamt (normiert): </div>
 				</td>
-				<td class="svws-ui-td text-center" role="cell">
+				<td class="svws-ui-td text-center">
 					<div class="w-full font-bold"> {{ manager().daten().block1PunktSummeNormiert }} </div>
 				</td>
-				<td class="svws-ui-td svws-divider text-center" role="cell" />
-				<td class="svws-ui-td text-center" role="cell" />
-				<td class="svws-ui-td svws-divider text-center" role="cell">
+				<td class="svws-ui-td svws-divider text-center" />
+				<td class="svws-ui-td text-center" />
+				<td class="svws-ui-td svws-divider text-center">
 					<div class="w-full">
 						{{ getPunktSummePruefungen() }}
 					</div>
 				</td>
-				<td class="svws-ui-td svws-divider text-center" role="cell" />
-				<td class="svws-ui-td svws-divider text-center" role="cell">
+				<td class="svws-ui-td svws-divider text-center" />
+				<td class="svws-ui-td svws-divider text-center">
 					<div class="w-full font-bold">{{ manager().daten().block2PunktSumme }}</div>
 				</td>
-				<td class="svws-ui-td text-center" role="cell">
+				<td class="svws-ui-td text-center">
 					<div class="w-full font-bold">{{ manager().daten().gesamtPunkte }}</div>
 				</td>
-				<td class="svws-ui-td text-center bg-ui-brand-secondary" role="cell">
+				<td class="svws-ui-td text-center bg-ui-brand-secondary">
 					<div class="w-full font-bold">{{ manager().daten().note }}</div>
 				</td>
 			</tr>
-		</tbody>
+		</tfoot>
 	</table>
 </template>
 
