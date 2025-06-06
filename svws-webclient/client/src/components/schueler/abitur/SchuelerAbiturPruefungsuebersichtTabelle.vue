@@ -2,7 +2,7 @@
 	<table class="svws-ui-table h-full max-w-fit overflow-hidden" aria-label="Tabelle">
 		<thead class="svws-ui-thead" aria-label="Tabellenkopf">
 			<tr class="svws-ui-tr grid-cols-[24rem_24rem_8rem_16rem_4rem_8rem]">
-				<th class="svws-ui-td text-center svws-divider" />
+				<th class="svws-ui-td text-left svws-divider"> <div class="w-full ml-4 text-ui-50">{{ schueler.vorname }} {{ schueler.nachname }}</div> </th>
 				<th class="svws-ui-td text-center svws-divider"> <div class="w-full">Zulassung</div> </th>
 				<th class="svws-ui-td text-center"> <div class="w-full">Prüfung</div> </th>
 				<th class="svws-ui-td text-center"> <div class="w-full">mündliche Prüfung</div> </th>

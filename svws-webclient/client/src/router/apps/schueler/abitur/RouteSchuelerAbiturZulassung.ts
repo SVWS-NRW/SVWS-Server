@@ -8,6 +8,7 @@ import { routeSchuelerAbitur, type RouteSchuelerAbitur } from "~/router/apps/sch
 import type { SchuelerAbiturZulassungProps } from "~/components/schueler/abitur/SchuelerAbiturZulassungProps";
 import { api } from "~/router/Api";
 import { schulformenGymOb } from "~/router/RouteHelper";
+import { routeSchueler } from "../RouteSchueler";
 
 const SchuelerAbiturZulassung = () => import("~/components/schueler/abitur/SchuelerAbiturZulassung.vue");
 
@@ -33,6 +34,7 @@ export class RouteSchuelerAbiturZulassung extends RouteNode<any, RouteSchuelerAb
 		return {
 			serverMode: api.mode,
 			schule: api.schuleStammdaten,
+			schueler: routeSchueler.data.manager.auswahl(),
 			managerLaufbahnplanung: () => routeSchuelerAbitur.data.managerLaufbahnplanung,
 			ergebnisBelegpruefung: () => routeSchuelerAbitur.data.ergebnisBelegpruefung,
 			managerAbitur: () => routeSchuelerAbitur.data.managerAbitur,
