@@ -137,7 +137,7 @@ allprojects {
 subprojects {
 
 	checkstyle {
-		toolVersion = "10.21.1"
+		toolVersion = "10.25.0"
 	}
 
 	// Publishing-Plugin für alle Module aktivieren (mit Ausnahme des Moduls 'gradle-build-src')
