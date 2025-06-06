@@ -65,7 +65,9 @@
 						<td class="svws-ui-td svws-divider text-center">
 							<div class="w-full">{{ belegung.block1PunktSumme ?? 0 }}</div>
 						</td>
-						<td class="svws-ui-td svws-divider text-center">
+						<td class="svws-ui-td svws-divider text-center" :class="{
+							'font-bold text-ui-danger': istAbweichungspruefung(belegung)
+						}">
 							<div class="w-full">{{ formatNotenpunkteDurchschnitt(belegung.block1NotenpunkteDurchschnitt) }}</div>
 						</td>
 						<td class="svws-ui-td text-center">
@@ -82,7 +84,7 @@
 						</td>
 						<td class="svws-ui-td text-center" :class="{ 'bg-ui-75': belegung.abiturFach >= 4 }">
 							<div v-if="belegung.abiturFach < 4" class="w-full">
-								<span v-if="belegung.block2MuendlichePruefungBestehen === true" class="icon-sm i-ri-check-line" />
+								<span v-if="(belegung.block2MuendlichePruefungBestehen === true) || istAbweichungspruefung(belegung)" class="icon-sm i-ri-check-line" />
 							</div>
 						</td>
 						<td class="svws-ui-td text-center" :class="{ 'bg-ui-75': belegung.abiturFach >= 4 }">
@@ -236,6 +238,10 @@
 		const gruppe = getFachgruppe(belegung);
 		const farbe : RGBFarbe = (gruppe === null) ? new RGBFarbe() : gruppe.getFarbe(schuljahr.value);
 		return "rgb(" + farbe.red + "," + farbe.green + "," + farbe.blue + ")";
+	}
+
+	function istAbweichungspruefung(belegung: AbiturFachbelegung): boolean {
+		return (props.manager().daten().abiturjahr <= 2019) && (belegung.block2MuendlichePruefungAbweichung === true);
 	}
 
 	function formatNotenpunkteDurchschnitt(avg: number | null): string {

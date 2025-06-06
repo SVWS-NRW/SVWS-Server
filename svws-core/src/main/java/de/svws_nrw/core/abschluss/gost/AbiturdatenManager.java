@@ -2728,12 +2728,15 @@ public class AbiturdatenManager {
 						fehlendeNotenMdlPflicht++;
 					if (hatMdlFreiwillig)
 						fehlendeNotenMdlFreiwillig++;
+				} else {
+					abibelegung.block2MuendlichePruefungNotenKuerzel = null;
+					abibelegung.block2Punkte = abibelegung.block2PunkteZwischenstand;
 				}
 			} else {
 				// Ist überhaupt eine Prüfung angesetzt?
 				if ((!hatMdlAbweichung) && (!hatMdlBestehen) && (!hatMdlFreiwillig)) {
 					abibelegung.block2MuendlichePruefungNotenKuerzel = null;
-					abibelegung.block2Punkte = null;
+					abibelegung.block2Punkte = abibelegung.block2PunkteZwischenstand;
 				} else {
 					final int punkte = (int) Math.round((npPruefung * 2 + npPruefungMdl) * faktor / 3.0);
 					abibelegung.block2Punkte = punkte;

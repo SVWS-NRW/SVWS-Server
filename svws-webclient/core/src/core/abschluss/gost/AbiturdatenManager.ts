@@ -2522,11 +2522,14 @@ export class AbiturdatenManager extends JavaObject {
 						fehlendeNotenMdlPflicht++;
 					if (hatMdlFreiwillig)
 						fehlendeNotenMdlFreiwillig++;
+				} else {
+					abibelegung.block2MuendlichePruefungNotenKuerzel = null;
+					abibelegung.block2Punkte = abibelegung.block2PunkteZwischenstand;
 				}
 			} else {
 				if ((!hatMdlAbweichung) && (!hatMdlBestehen) && (!hatMdlFreiwillig)) {
 					abibelegung.block2MuendlichePruefungNotenKuerzel = null;
-					abibelegung.block2Punkte = null;
+					abibelegung.block2Punkte = abibelegung.block2PunkteZwischenstand;
 				} else {
 					const punkte : number = Math.round((npPruefung * 2 + npPruefungMdl) * faktor / 3.0) as number;
 					abibelegung.block2Punkte = punkte;
