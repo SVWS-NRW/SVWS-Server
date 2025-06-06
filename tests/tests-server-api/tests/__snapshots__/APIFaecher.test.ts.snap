@@ -22,7 +22,6 @@ FaecherListeEintrag {
   "kuerzel": "D",
   "kuerzelStatistik": "D",
   "maxZeichenInFachbemerkungen": 2147483647,
-  "referenziertInAnderenTabellen": null,
   "sortierung": 10,
 }
 `;
