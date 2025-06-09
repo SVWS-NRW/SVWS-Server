@@ -124,7 +124,22 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 		final Map<Integer, GostFaecherManager> mapGostFaecherManager = new HashMap<>();
 
 		// gib die Abiturdaten zurück.
-		return erzeugeAbiturdaten(dtoSchuelerAbitur, abidatenVergleich, sprachenfolge, faecher, mapGostFaecherManager);
+		final Abiturdaten abidaten = erzeugeAbiturdaten(dtoSchuelerAbitur, abidatenVergleich, sprachenfolge, faecher, mapGostFaecherManager);
+		if (abidaten == null)
+			throw new ApiOperationException(Status.NOT_FOUND,
+					"Es konnten keine Abiturdaten für den Schüler mit der ID %d aus der Datenbank zusammengestellt werden, da der zugehörige Schuljahresabschnitt in der Datenbank (noch) nicht angelegt ist.".formatted(id));
+		return abidaten;
+	}
+
+
+	@Override
+	public List<Abiturdaten> getList() throws ApiOperationException {
+		if (schuljahresabschnitt == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Abiturjahrgang angegeben oder dieser wurde nicht in der Datenbank gefunden.");
+		final List<DTOSchueler> schuelerListe = DBUtilsGostLaufbahn.getSchuelerOfAbiturjahrgang(conn, schuljahresabschnitt.schuljahr + 1);
+		if (schuelerListe.isEmpty())
+			return new ArrayList<>();
+		return getAbiturdatenFromIDs(schuelerListe.stream().map(s -> s.ID).toList());
 	}
 
 
@@ -364,7 +379,7 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Map<Long, Abiturdaten> getAbiturdatenFromIDs(final List<Long> idsSchueler) throws ApiOperationException {
+	public List<Abiturdaten> getAbiturdatenFromIDs(final List<Long> idsSchueler) throws ApiOperationException {
 		// Prüfe zunächst die Schüler auf Existenz.
 		if (idsSchueler == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
@@ -391,8 +406,8 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 				conn.queryList(DTOSchuelerSprachenfolge.QUERY_LIST_BY_SCHUELER_ID, DTOSchuelerSprachenfolge.class, idsSchuelerNonNull)
 						.stream().collect(Collectors.groupingBy(sf -> sf.Schueler_ID));
 
-		// Erstelle die Map, in der die Rückgabe Werte gesammelt werden.
-		final Map<Long, Abiturdaten> mapAbiturdaten = new HashMap<>();
+		// Erstelle die Liste, in der die Rückgabe Werte gesammelt werden.
+		final List<Abiturdaten> listAbiturdaten = new ArrayList<>();
 
 		// Map erstellen, um Fächer-Manager zu sammeln und nicht für jeden Schüler anlegen zu müssen.
 		final Map<Integer, GostFaecherManager> mapGostFaecherManager = new HashMap<>();
@@ -400,7 +415,7 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 		for (final Long idSchueler : idsSchuelerNonNull) {
 			// Hole die Abiturdaten zur Schüler-ID aus der Map. Wenn diese nicht existieren, gibt es keine Abiturdaten zum Schüler.
 			if ((mapDTOsSchuelerAbitur.get(idSchueler) == null) || mapDTOsSchuelerAbitur.get(idSchueler).isEmpty())
-				throw new ApiOperationException(Status.NOT_FOUND);
+				continue;
 			// TODO: Hier wird der erste Eintrag verwendet. Hier müsste bei mehreren Einträgen der neuste Eintrag bestimmt werden.
 			final DTOSchuelerAbitur dtoSchuelerAbitur = mapDTOsSchuelerAbitur.get(idSchueler).getFirst();
 
@@ -420,11 +435,26 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 			if (abidatenVergleich == null)
 				throw new ApiOperationException(Status.NOT_FOUND);
 
-			mapAbiturdaten.put(idSchueler, erzeugeAbiturdaten(dtoSchuelerAbitur, abidatenVergleich, sprachenfolge, faecher, mapGostFaecherManager));
+			final Abiturdaten abidaten = erzeugeAbiturdaten(dtoSchuelerAbitur, abidatenVergleich, sprachenfolge, faecher, mapGostFaecherManager);
+			if (abidaten != null)
+				listAbiturdaten.add(abidaten);
 		}
 
-		// Gibt die Abiturdaten zurück.
-		return mapAbiturdaten;
+		// Gibt die Liste der Abiturdaten zurück.
+		return listAbiturdaten;
+	}
+
+	/**
+	 * Ermittelt die für das Abitur relevanten Daten für die Schüler mit den angegebenen IDs aus den in der Datenbank gespeicherten Abiturtabellen.
+	 *
+	 * @param idsSchueler die IDs der Schüler
+	 *
+	 * @return die für das Abitur relevanten Daten der Schüler als Map zur Schüler-ID.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public Map<Long, Abiturdaten> getMapAbiturdatenFromIDs(final List<Long> idsSchueler) throws ApiOperationException {
+		return getAbiturdatenFromIDs(idsSchueler).stream().collect(Collectors.toMap(a -> a.schuelerID, a -> a));
 	}
 
 
@@ -436,8 +466,7 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 				? conn.getUser().schuleGetAbschnittById(dtoSchuelerAbitur.Schuljahresabschnitts_ID)
 				: conn.getUser().schuleGetAbschnittBySchuljahrUndHalbjahr(abidatenVergleich.schuljahrAbitur, 2);
 		if (schuljahresabschnittPruefung == null)
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"Der Schuljahresabschnitt für das Abiturjahr %d ist noch nicht angelegt.".formatted(abidatenVergleich.schuljahrAbitur));
+			return null;
 
 		// Bestimme zunächst das Abiturjahr
 		Integer abiturjahr = null;

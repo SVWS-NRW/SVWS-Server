@@ -98,7 +98,7 @@ public final class ReportingValidierung {
 			final Map<Long, Abiturdaten> mapGostSchuelerAbiturdaten;
 
 			try {
-				mapGostSchuelerAbiturdaten = new HashMap<>(new DataGostAbiturdaten(conn, null).getAbiturdatenFromIDs(idsNonNull));
+				mapGostSchuelerAbiturdaten = new HashMap<>(new DataGostAbiturdaten(conn, null).getMapAbiturdatenFromIDs(idsNonNull));
 			} catch (final ApiOperationException aoe) {
 				reportingRepository.logger().logLn(LogLevel.ERROR, 4,
 						"FEHLER: Es wurden Schüler-IDs übergeben, für die keine Abiturdaten in der GOSt existieren.");

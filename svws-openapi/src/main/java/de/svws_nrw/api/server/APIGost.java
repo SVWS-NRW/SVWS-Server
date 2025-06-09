@@ -1134,6 +1134,38 @@ public class APIGost {
 
 
 	/**
+	 * Liest die Abiturdaten aus den Abiturtabellen für alle Schülers des angegebenen Abiturjahrgangs ID und liefert
+	 * diese in einer Liste zurück.
+	 * Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Abiturdaten besitzt.
+	 *
+	 * @param schema       das Schema aus dem die Abiturdaten kommen sollen
+	 * @param abiturjahr   das Abiturjahr der Schüler zu dem die Abiturdaten geliefert werden sollen
+	 *
+	 * @param request  die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Abiturdaten in der gymnasialen Oberstufe für alle Schüler des angegebenen Abiturjahrs
+	 */
+	@GET
+	@Path("/abiturjahrgang/{abiturjahr : -?\\d+}/abiturdaten")
+	@Operation(summary = "Liefert zu dem Abiturjahrgang die zugehörigen Abiturdaten aus den entsprechenden Abiturtabellen der SVWS-DB.",
+			description = "Liefert zu dem Abiturjahrgang die zugehörigen Abiturdaten aus den Abiturtabellen und liefert diese zurück. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Abiturdaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Abiturdaten des Schülers",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Abiturdaten.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Abiturdaten anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Kein Abiturjahrgang gefunden",
+			content = @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class)))
+	public Response getGostAbiturjahrgangAbiturdaten(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> (new DataGostAbiturdaten(conn, abiturjahr)).getListAsResponse(),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN,
+				BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN);
+	}
+
+
+	/**
 	 * Die OpenAPI-Methode für das Übertragen der Abitur-relevanten Daten aus den Leistungsdaten in den
 	 * Abiturbereich.
 	 *

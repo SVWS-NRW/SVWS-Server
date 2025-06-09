@@ -91,12 +91,10 @@ export class RouteDataGostAbitur extends RouteData<RouteStateDataGostAbitur> {
 			// do nothing
 		}
 		try {
-			// TODO API-Endpunkt zum Auslesen aller Abiturdaten des Jahrgangs ergänzen und hier verwenden
 			// TODO hole Abiturdaten für das spezielle Abiturjahr
-			for (const schueler of schuelerListe) {
-				const abiturdaten = await api.server.getGostSchuelerAbiturdaten(api.schema, schueler.id);
-				newState.managerAbiturMap.put(schueler.id, new AbiturdatenManager(api.mode, abiturdaten, gostJahrgangsdaten, faecherManager, GostBelegpruefungsArt.GESAMT));
-			}
+			const abiturdatenListe = await api.server.getGostAbiturjahrgangAbiturdaten(api.schema, abiJahrgang.abiturjahr);
+			for (const abiturdaten of abiturdatenListe)
+				newState.managerAbiturMap.put(abiturdaten.schuelerID, new AbiturdatenManager(api.mode, abiturdaten, gostJahrgangsdaten, faecherManager, GostBelegpruefungsArt.GESAMT));
 		} catch (e) {
 			// do nothing
 		}

@@ -3895,6 +3895,37 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getGostAbiturjahrgangAbiturdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}/abiturdaten
+	 *
+	 * Liefert zu dem Abiturjahrgang die zugehörigen Abiturdaten aus den Abiturtabellen und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Abiturdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Abiturdaten des Schülers
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Abiturdaten>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Abiturdaten anzusehen.
+	 *   Code 404: Kein Abiturjahrgang gefunden
+	 *     - Mime-Type: text/plain
+	 *     - Rückgabe-Typ: String
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
+	 *
+	 * @returns Die Abiturdaten des Schülers
+	 */
+	public async getGostAbiturjahrgangAbiturdaten(schema : string, abiturjahr : number) : Promise<List<Abiturdaten>> {
+		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/abiturdaten"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<Abiturdaten>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Abiturdaten.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getGostAbiturjahrgangBelegpruefungsergebnisseEF1 für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}/belegpruefung/EF1
 	 *
 	 * Gibt die (Fehler-)Rückmeldungen der EF1-Belegprüfung zu den Schüler-Laufbahnen eines Abitur-Jahrganges der gymnasialen Oberstufe zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung dazu hat.
