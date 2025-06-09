@@ -432,7 +432,12 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 			final List<DTOSchuelerSprachenfolge> sprachenfolge, final List<DTOSchuelerAbiturFach> faecher,
 			final Map<Integer, GostFaecherManager> mapGostFaecherManager)
 			throws ApiOperationException {
-		final Schuljahresabschnitt schuljahresabschnittPruefung = conn.getUser().schuleGetAbschnittById(dtoSchuelerAbitur.Schuljahresabschnitts_ID);
+		final Schuljahresabschnitt schuljahresabschnittPruefung = (dtoSchuelerAbitur.Schuljahresabschnitts_ID != null)
+				? conn.getUser().schuleGetAbschnittById(dtoSchuelerAbitur.Schuljahresabschnitts_ID)
+				: conn.getUser().schuleGetAbschnittBySchuljahrUndHalbjahr(abidatenVergleich.schuljahrAbitur, 2);
+		if (schuljahresabschnittPruefung == null)
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					"Der Schuljahresabschnitt für das Abiturjahr %d ist noch nicht angelegt.".formatted(abidatenVergleich.schuljahrAbitur));
 
 		// Bestimme zunächst das Abiturjahr
 		Integer abiturjahr = null;
