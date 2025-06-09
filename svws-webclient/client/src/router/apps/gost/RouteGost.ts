@@ -14,6 +14,7 @@ import { routeGostBeratung } from "~/router/apps/gost/beratung/RouteGostBeratung
 import { routeGostKlausurplanung } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanung";
 import { routeGostKursplanung } from "~/router/apps/gost/kursplanung/RouteGostKursplanung";
 import { routeGostLaufbahnfehler } from "~/router/apps/gost/laufbahnfehler/RouteGostLaufbahnfehler";
+import { routeGostAbitur } from "~/router/apps/gost/abitur/RouteGostAbitur";
 
 import { RouteDataGost } from "~/router/apps/gost/RouteDataGost";
 
@@ -55,6 +56,7 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 			routeGostFachwahlen,
 			routeGostKursplanung,
 			routeGostKlausurplanung,
+			routeGostAbitur,
 			routeGostAbiturjahrNeu,
 			routeGostGruppenprozesse,
 		];

@@ -2494,7 +2494,7 @@ public class AbiturdatenManager {
 	public boolean applyErgebnisMarkierungsalgorithmus() {
 		// Wenn der Algorithmus nicht erfolgreich gelaufen ist, dann sollte er auch nicht angewendet werden...
 		if (!this.markierungsErgebnis.erfolgreich) {
-			abidaten.block1Zulassung = false;
+			abidaten.block1Zulassung = null;
 			return false;
 		}
 		// Gehe die einzelnen Markierungs-Einträge durch und wende diese die Abiturdaten an

@@ -2314,7 +2314,7 @@ export class AbiturdatenManager extends JavaObject {
 	 */
 	public applyErgebnisMarkierungsalgorithmus() : boolean {
 		if (!this.markierungsErgebnis.erfolgreich) {
-			this.abidaten.block1Zulassung = false;
+			this.abidaten.block1Zulassung = null;
 			return false;
 		}
 		for (const markierung of this.markierungsErgebnis.markierungen) {
