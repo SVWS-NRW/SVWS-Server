@@ -7,13 +7,10 @@ import { GridInput } from "./GridInput";
  * darstellen und wo die Darstellung im inneren des HTML-Elements gehandhabt wird,
  * aber nicht von dieser Klasse.
  */
-export class GridInputToggle<KEY> extends GridInput<KEY> {
+export class GridInputToggle<KEY> extends GridInput<KEY, boolean> {
 
 	// Der zwischengespeicherte Wert des Input-Elements
 	protected _value = shallowRef<boolean>(false);
-
-	// Der Getter zum Holen des darzustellenden Zellwertes
-	protected _getter: () => boolean;
 
 	// Der Setter zum Setzen des Zellwertes
 	protected _setter: (value: boolean) => void;
@@ -26,15 +23,11 @@ export class GridInputToggle<KEY> extends GridInput<KEY> {
 	 * @param col           die Spalte, in welcher sich das Input befindet
 	 * @param row           die Zeile, in welcher sich das Input befindet
 	 * @param elem          das HTML-Element, welches dem Grid-Input und damit der Zelle des Grid zugeordnet ist
-	 * @param getter        der Getter zum Holen der Daten für das Grid-Input
 	 * @param setter        der Setter zum Schreiben der Daten des Grid-Input
 	 */
-	constructor(gridManager: GridManager<KEY>, key: KEY, col: number, row: number, elem : HTMLElement,
-		getter : () => boolean, setter : (value: boolean) => void) {
+	constructor(gridManager: GridManager<KEY>, key: KEY, col: number, row: number, elem : HTMLElement, setter : (value: boolean) => void) {
 		super(gridManager, key, col, row, elem);
-		this._getter = getter;
 		this._setter = setter;
-		this.init();
 	}
 
 	/**
@@ -47,8 +40,8 @@ export class GridInputToggle<KEY> extends GridInput<KEY> {
 	/**
 	 * Initialisiert den internen Zustand dieses Elements mithilfe des Getters
 	 */
-	public init() : void {
-		this._value.value = this._getter();
+	public update(value: boolean) : void {
+		this._value.value = value;
 	}
 
 	/**

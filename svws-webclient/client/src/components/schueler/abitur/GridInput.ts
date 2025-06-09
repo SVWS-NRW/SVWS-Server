@@ -9,7 +9,7 @@ import type { GridManager } from "./GridManager";
  * Diese Methode erstellt dann auch die konkrete Instanz des abgeleiteten
  * Grid-Inputs.
  */
-export abstract class GridInput<KEY> {
+export abstract class GridInput<KEY, DATA> {
 
 	// Der Grid-Manager, der dieses Grid-Input verwaltet
 	protected _gridManager: GridManager<KEY>;
@@ -87,6 +87,15 @@ export abstract class GridInput<KEY> {
 	 */
 	public get element() : HTMLElement {
 		return this._elem;
+	}
+
+	/**
+	 * Aktualisiert die übergebenen Daten mithilfe des übergebenen Wertes
+	 *
+	 * @param value   die neuen Daten
+	 */
+	public update(value: DATA) {
+		// override method in subclass if necessary
 	}
 
 	/**

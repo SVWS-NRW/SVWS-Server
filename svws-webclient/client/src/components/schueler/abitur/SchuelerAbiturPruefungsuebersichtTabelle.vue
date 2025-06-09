@@ -148,7 +148,7 @@
 
 <script setup lang="ts">
 
-	import { computed, type ComponentPublicInstance } from "vue";
+	import { computed, watchEffect, type ComponentPublicInstance } from "vue";
 	import type { AbiturFachbelegung, Comparator, Fachgruppe, JavaMap, NoteKatalogEintrag } from "@core";
 	import { ArrayList, Fach, GostBesondereLernleistung, HashMap, Note, RGBFarbe } from "@core";
 	import { DeveloperNotificationException, GostHalbjahr } from "@core";
@@ -273,39 +273,41 @@
 
 	function inputPruefungsnote(belegung: AbiturFachbelegung) {
 		const key = 'PrüfungsnoteAbiFach' + belegung.abiturFach;
-		const getter = () => belegung.block2NotenKuerzelPruefung;
 		const setter = (value : string | null) => updateNotenpunkte(belegung, value);
 		return (element : Element | ComponentPublicInstance<unknown> | null) => {
-			return gridInputManager.applyInputAbiturNotenpunkte(key, 1, belegung.abiturFach!, element, getter, setter,
-				props.manager().daten().schuljahrAbitur);
+			gridInputManager.applyInputAbiturNotenpunkte(key, 1, belegung.abiturFach!, element, setter, props.manager().daten().schuljahrAbitur);
+			if (element !== null)
+				watchEffect(() => gridInputManager.update(key, belegung.block2NotenKuerzelPruefung));
 		};
 	}
 
 	function inputFreiwilligePruefung(belegung: AbiturFachbelegung) {
 		const key = 'FreiwilligePrüfungAbiFach' + belegung.abiturFach;
-		const getter = () => belegung.block2MuendlichePruefungFreiwillig ?? false;
 		const setter = (value : boolean) => updateFreiwilligePruefung(belegung, value);
 		return (element : Element | ComponentPublicInstance<unknown> | null) => {
-			gridInputManager.applyInputToggle(key, 2, belegung.abiturFach!, element, getter, setter);
+			gridInputManager.applyInputToggle(key, 2, belegung.abiturFach!, element, setter);
+			if (element !== null)
+				watchEffect(() => gridInputManager.update(key, belegung.block2MuendlichePruefungFreiwillig ?? false));
 		};
 	}
 
 	function inputPruefungsreihenfolge(belegung: AbiturFachbelegung) {
 		const key = 'PrüfungsreihenfolgeAbiFach' + belegung.abiturFach;
-		const getter = () => belegung.block2MuendlichePruefungReihenfolge;
 		const setter = (value : number | null) => updatePruefungsreihenfolge(belegung, value);
 		return (element : Element | ComponentPublicInstance<unknown> | null) => {
-			gridInputManager.applyInputAbiturPruefungsreihenfolge(key, 3, belegung.abiturFach!, element, getter, setter);
+			gridInputManager.applyInputAbiturPruefungsreihenfolge(key, 3, belegung.abiturFach!, element, setter);
+			if (element !== null)
+				watchEffect(() => gridInputManager.update(key, belegung.block2MuendlichePruefungReihenfolge));
 		};
 	}
 
 	function inputPruefungsnoteMdl(belegung: AbiturFachbelegung) {
 		const key = 'PrüfungsnoteMdlAbiFach' + belegung.abiturFach;
-		const getter = () => belegung.block2MuendlichePruefungNotenKuerzel;
 		const setter = (value : string | null) => updateNotenpunkteMdl(belegung, value);
 		return (element : Element | ComponentPublicInstance<unknown> | null) => {
-			gridInputManager.applyInputAbiturNotenpunkte(key, 4, belegung.abiturFach!, element, getter, setter,
-				props.manager().daten().schuljahrAbitur);
+			gridInputManager.applyInputAbiturNotenpunkte(key, 4, belegung.abiturFach!, element, setter, props.manager().daten().schuljahrAbitur);
+			if (element !== null)
+				watchEffect(() => gridInputManager.update(key, belegung.block2MuendlichePruefungNotenKuerzel));
 		};
 	}
 

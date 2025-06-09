@@ -1,15 +1,16 @@
-import { shallowRef } from "vue";
 import type { GridManager } from "./GridManager";
 import { GridInputInnerText } from "./GridInputInnerText";
-import { DeveloperNotificationException } from "@core";
 
 /**
  * Ein Grid-Input für die Schnelleingabe der Reihenfolge der mündlichen Prüfungen im Abiturbereich.
  */
-export class GridInputAbiturPruefungsreihenfolge<KEY> extends GridInputInnerText<KEY> {
+export class GridInputAbiturPruefungsreihenfolge<KEY> extends GridInputInnerText<KEY, number | null> {
+
+	// Der Setter zum Schreiben der Daten
+	protected _setter : (value: number | null) => void;
 
 	// Der zwischengespeicherte Wert des Input-Elements als Reihenfolge von 1 bis 3 oder null
-	protected reihenfolge = shallowRef<number | null>(null);
+	protected _reihenfolge : number | null = null;
 
 	/**
 	 * Erzeugt ein neues Grid-Input für ein HTMLElement, welches die Notepunkte im Abitur in dem innerText
@@ -20,59 +21,29 @@ export class GridInputAbiturPruefungsreihenfolge<KEY> extends GridInputInnerText
 	 * @param col           die Spalte, in welcher sich das Input befindet
 	 * @param row           die Zeile, in welcher sich das Input befindet
 	 * @param elem          das HTML-Element, welches dem Grid-Input und damit der Zelle des Grid zugeordnet ist
-	 * @param getter        der Getter zum Holen der Daten für das Grid-Input
 	 * @param setter        der Setter zum Schreiben der Daten des Grid-Input
 	 */
-	constructor(gridManager: GridManager<KEY>, key: KEY, col: number, row: number, elem: HTMLElement,
-		getter : () => number | null, setter : (value: number | null) => void) {
-		super(gridManager, key, col, row, elem, () => {
-			const value = getter();
-			return (value === null) ? null : "" + value;
-		}, (value: string | null) => {
-			if (value === null) {
-				setter(null);
-				return;
-			}
-			const tmp = parseInt(value);
-			if (isNaN(tmp))
-				throw new DeveloperNotificationException("Der Wert für die Reihenfolge muss null oder ein gültiger Zahlenwert sein.");
-			setter(tmp);
-		});
-		elem.innerText = (this._value.value === null) ? "" : this._value.value + ".";
+	constructor(gridManager: GridManager<KEY>, key: KEY, col: number, row: number, elem: HTMLElement, setter : (value: number | null) => void) {
+		super(gridManager, key, col, row, elem);
+		this._setter = setter;
+		super.updateText(null);
 	}
 
 	/**
-	 * Initialisiert das Input-Element mithilfe des Getters
+	 * Initialisiert das Input-Element mithilfe des übergebenen Wertes
+	 *
+	 * @param value   der Wert
 	 */
-	public init() {
-		super.init();
-		const rf = (this._value.value === null) ? NaN : parseInt(this._value.value);
-		this.reihenfolge = shallowRef(isNaN(rf) ? null : rf);
-	}
-
-	/**
-	 * Setzt das Input-Element auf leer (null)
-	 */
-	public clear() {
-		super.clear();
-		this.reihenfolge.value = null;
+	public update(value: number | null) {
+		this._reihenfolge = value;
+		super.updateText((value === null) ? null : "" + value + ".");
 	}
 
 	/**
 	 * Schreibt die internen Daten dieses Inputs mithilfe des Setters.
 	 */
 	public commit() : void {
-		this._setter("" + this.reihenfolge.value);
-	}
-
-	/**
-	 * Setzt den Wert des Input-Element auf die Reihenfolge, die aktuell lokal gespeichert ist.
-	 */
-	public setValue() {
-		if (this.reihenfolge.value === null)
-			super.clear();
-		else
-			super.setValue("" + this.reihenfolge.value + ".");
+		this._setter(this._reihenfolge);
 	}
 
 	/**
@@ -83,10 +54,9 @@ export class GridInputAbiturPruefungsreihenfolge<KEY> extends GridInputInnerText
 	 * @returns true, falls die Ziffer zulässig war und sonst false
 	 */
 	public check(ziffer : number): boolean {
-		if ((this.reihenfolge.value !== null) || (ziffer < 0) || (ziffer > 3))
+		if ((this._reihenfolge !== null) || (ziffer < 0) || (ziffer > 3))
 			return false;
-		this.reihenfolge.value = ziffer;
-		this.setValue();
+		this.update(ziffer);
 		return true;
 	}
 
@@ -101,7 +71,7 @@ export class GridInputAbiturPruefungsreihenfolge<KEY> extends GridInputInnerText
 		super.onKeyDown(event);
 		// Lösche ggf. den aktuellen Wert
 		if ((event.key === "Delete") || (event.key === "Backspace")) {
-			this.clear();
+			this.update(null);
 			return true;
 		}
 		// Speicher den aktuellen Wert im Input
@@ -116,7 +86,7 @@ export class GridInputAbiturPruefungsreihenfolge<KEY> extends GridInputInnerText
 			return false; // Keine erfolgreiche Eingabe...
 		// Wenn es sich um eine neue Fokussierung handelt, dann ersetze den Wert bei einer Eingabe (sonst anhängen)
 		if (this._isNewFocus.value)
-			this.clear();
+			this.update(null);
 		return this.check(ziffer);
 	}
 
