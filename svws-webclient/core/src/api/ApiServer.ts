@@ -4380,6 +4380,37 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getGostAbiturjahrgangLaufbahndaten für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}/laufbahndaten
+	 *
+	 * Liefert zu dem Abiturjahrgang die zugehörigen Abiturdaten aus den Laufbahndaten und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Laufbahndaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Laufbahndaten des Schülers
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Abiturdaten>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Laufbahndaten anzusehen.
+	 *   Code 404: Kein Abiturjahrgang gefunden
+	 *     - Mime-Type: text/plain
+	 *     - Rückgabe-Typ: String
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
+	 *
+	 * @returns Die Laufbahndaten des Schülers
+	 */
+	public async getGostAbiturjahrgangLaufbahndaten(schema : string, abiturjahr : number) : Promise<List<Abiturdaten>> {
+		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/laufbahndaten"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<Abiturdaten>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Abiturdaten.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getGostAbiturjahrgangLaufbahnplanung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}/laufbahnplanung
 	 *
 	 * Liest die Laufbahnplanungsdaten für die gymnasiale Oberstufe zu dem Abiturjahrgang aus der Datenbank aus und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Laufbahnplanungsdaten besitzt.

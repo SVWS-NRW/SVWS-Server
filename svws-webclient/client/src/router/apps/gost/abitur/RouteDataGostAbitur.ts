@@ -79,12 +79,12 @@ export class RouteDataGostAbitur extends RouteData<RouteStateDataGostAbitur> {
 			ergebnisBelegpruefungMap: new HashMap<number, GostBelegpruefungErgebnis>(),
 			managerAbiturMap: new HashMap<number, AbiturdatenManager>(), view: this._state.value.view };
 		try {
-			// TODO API-Endpunkt zum Auslesen aller Laufbahnplanungsdaten des Jahrgangs ergänzen und hier verwenden
-			for (const schueler of schuelerListe) {
-				const abiturdaten = await api.server.getGostSchuelerLaufbahnplanung(api.schema, schueler.id);
+			// TODO API-Endpunkt zum Auslesen aller Laufbahnplanungsdaten des Jahrgangs ergänzen und hier verwenden - getGostAbiturjahrgangLaufbahndaten
+			const abiturdatenListe = await api.server.getGostAbiturjahrgangLaufbahndaten(api.schema, abiJahrgang.abiturjahr);
+			for (const abiturdaten of abiturdatenListe) {
 				const manager = new AbiturdatenManager(api.mode, abiturdaten, gostJahrgangsdaten, faecherManager, GostBelegpruefungsArt.GESAMT);
-				newState.managerLaufbahnplanungMap.put(schueler.id, manager);
-				newState.ergebnisBelegpruefungMap.put(schueler.id, manager.getBelegpruefungErgebnis());
+				newState.managerLaufbahnplanungMap.put(abiturdaten.schuelerID, manager);
+				newState.ergebnisBelegpruefungMap.put(abiturdaten.schuelerID, manager.getBelegpruefungErgebnis());
 				manager.applyErgebnisMarkierungsalgorithmus();
 			}
 		} catch (e) {

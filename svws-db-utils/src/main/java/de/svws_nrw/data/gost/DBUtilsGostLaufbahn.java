@@ -303,12 +303,11 @@ public final class DBUtilsGostLaufbahn {
 	 * @param conn                   die Datenbank-Verbindung
 	 * @param idsSchueler            die IDs der Schüler
 	 *
-	 * @return die für das Abitur relevanten Daten für den Schüler mit der angegebenen ID
+	 * @return die für das Abitur relevanten Daten für die Schüler mit den angegebenen IDs
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static Map<Long, Abiturdaten> getFromIDs(final DBEntityManager conn, final List<Long> idsSchueler)
-			throws ApiOperationException {
+	public static List<Abiturdaten> getFromIDs(final DBEntityManager conn, final List<Long> idsSchueler) throws ApiOperationException {
 		// Prüfe zunächst die Schüler auf Existenz.
 		if (idsSchueler == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
@@ -344,8 +343,8 @@ public final class DBUtilsGostLaufbahn {
 		// Map für die GostFaecherManager
 		final Map<Integer, GostFaecherManager> mapGostFaecherManager = new HashMap<>();
 
-		// Map für die zurückzugebenden Abiturdaten.
-		final Map<Long, Abiturdaten> mapAbiturdaten = new HashMap<>();
+		// Die Lister für die zurückzugebenden Abiturdaten.
+		final List<Abiturdaten> listAbiturdaten = new ArrayList<>();
 
 		// Durchlaufe die Schüler und bestimme die Abiturdaten.
 		for (final Long idSchueler : idsSchuelerNonNull) {
@@ -534,10 +533,27 @@ public final class DBUtilsGostLaufbahn {
 					setFachbelegung(fach, GostHalbjahr.Q22, belegungPlanung.Q22_Kursart, fachKursart, gostFach.wochenstundenQualifikationsphase,
 							belegungPlanung.Markiert_Q4);
 			}
-			mapAbiturdaten.put(idSchueler, abidaten);
+			listAbiturdaten.add(abidaten);
 		}
 		// Gib die Abiturdaten zurück.
-		return mapAbiturdaten;
+		return listAbiturdaten;
+	}
+
+
+	/**
+	 * Ermittelt die für die Laufbahnplanung der gymnasialen Oberstufe relevanten Daten für die Schüler mit den angegebenen IDs
+	 * aus den in der Datenbank gespeicherten Laufbahnplanungstabellen und ggf. den Abiturtabellen
+	 * auf Basis des bei den Schülern aktuell angegebenen Schuljahresabschnitts.
+	 *
+	 * @param conn                   die Datenbank-Verbindung
+	 * @param idsSchueler            die IDs der Schüler
+	 *
+	 * @return die für das Abitur relevanten Daten für den Schüler mit der angegebenen ID, als map in Bezug auf die Schüler-ID
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public static Map<Long, Abiturdaten> getMapFromIDs(final DBEntityManager conn, final List<Long> idsSchueler) throws ApiOperationException {
+		return getFromIDs(conn, idsSchueler).stream().collect(Collectors.toMap(a -> a.schuelerID, a -> a));
 	}
 
 

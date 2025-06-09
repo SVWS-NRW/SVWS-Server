@@ -836,7 +836,7 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public Response copyAbiturdatenAusLeistungsdaten(final long id) throws ApiOperationException {
-		final Abiturdaten abidaten = (new DataGostSchuelerLaufbahnplanung(conn)).getById(id);
+		final Abiturdaten abidaten = (new DataGostSchuelerLaufbahnplanung(conn, null)).getById(id);
 		if ((!abidaten.bewertetesHalbjahr[GostHalbjahr.Q11.id]) || (!abidaten.bewertetesHalbjahr[GostHalbjahr.Q12.id])
 				|| (!abidaten.bewertetesHalbjahr[GostHalbjahr.Q21.id]) || (!abidaten.bewertetesHalbjahr[GostHalbjahr.Q22.id]))
 			throw new ApiOperationException(Status.BAD_REQUEST, "Es liegen noch nicht alle Leistungen für die Qualifikationsphase vor.");

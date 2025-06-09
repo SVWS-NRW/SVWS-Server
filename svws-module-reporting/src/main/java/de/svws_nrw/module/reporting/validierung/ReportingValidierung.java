@@ -131,7 +131,7 @@ public final class ReportingValidierung {
 			// Lade Abiturdaten für die Gost-Laufbahnplanung zwecks Prüfung.
 			final Map<Long, Abiturdaten> mapGostBeratungsdatenAbiturdaten;
 			try {
-				mapGostBeratungsdatenAbiturdaten = new HashMap<>(DBUtilsGostLaufbahn.getFromIDs(conn, idsNonNull));
+				mapGostBeratungsdatenAbiturdaten = new HashMap<>(DBUtilsGostLaufbahn.getMapFromIDs(conn, idsNonNull));
 			} catch (final ApiOperationException aoe) {
 				reportingRepository.logger().logLn(LogLevel.ERROR, 4,
 						"FEHLER: Es wurden Schüler-IDs übergeben, für die keine Abiturdaten in der GOSt-Laufbahnplanung existieren.");
