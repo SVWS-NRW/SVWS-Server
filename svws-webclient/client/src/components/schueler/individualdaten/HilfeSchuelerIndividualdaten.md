@@ -8,7 +8,7 @@ Dies umfasst die **Individualdaten**, in denen die personenbezogenen Daten wie N
 
 Oben links lässt sich ein Foto setzen.
 
-In weiteren Tabs werden unter **Sonstiges** von der Schule zu definierende **Vermerke** und gegebene Einwilligungen** eingetragen. 
+In weiteren Tabs werden unter **Sonstiges** von der Schule zu definierende **Vermerke** und gegebene **Einwilligungen** eingetragen. 
 
 Weitere Daten zu Erziehenden und Kontaktpersonen können unter **Erziehungsberechtigte** aufgenommen werden.
 
