@@ -1,6 +1,6 @@
 import { computed } from "vue";
 import type { RouteLocationRaw } from "vue-router";
-import { Schuljahresabschnitt, type Kindergarten, type EinschulungsartKatalogEintrag, type OrtKatalogEintrag, type OrtsteilKatalogEintrag, type ReligionEintrag, type KatalogEintrag, type SchulEintrag, type SchulformKatalogEintrag, Schulform, } from "@core";
+import { Schuljahresabschnitt, type Kindergarten, type EinschulungsartKatalogEintrag, type OrtKatalogEintrag, type OrtsteilKatalogEintrag, type ReligionEintrag, type KatalogEintrag, type SchulEintrag, type SchulformKatalogEintrag, Schulform, type TelefonArt, } from "@core";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { api } from "~/router/Api";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
@@ -17,6 +17,7 @@ interface RouteStateApp extends RouteStateInterface {
 	mapHaltestellen: Map<number, KatalogEintrag>;
 	mapKindergaerten: Map<number, Kindergarten>;
 	mapEinschulungsarten: Map<number, EinschulungsartKatalogEintrag>;
+	mapTelefonArten: Map<number, TelefonArt>;
 }
 
 const defaultState = <RouteStateApp>{
@@ -29,6 +30,7 @@ const defaultState = <RouteStateApp>{
 	mapHaltestellen: new Map(),
 	mapKindergaerten: new Map(),
 	mapEinschulungsarten: new Map(),
+	mapTelefonArten: new Map(),
 	view: routeSchueler,
 };
 
@@ -74,6 +76,11 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 		const mapEinschulungsarten = new Map();
 		for (const e of einschulungsarten)
 			mapEinschulungsarten.set(e.id, e);
+		// Lade den Katalog der TelefonArten
+		const telefonArten = await api.server.getTelefonarten(api.schema);
+		const mapTelefonArten = new Map();
+		for (const ta of telefonArten)
+			mapTelefonArten.set(ta.id, ta);
 		// Ermittle den Katalog der Schulen, welche ein Kürzel haben und als Stammschulen für Schüler in Frage kommen
 		const schulen = await api.server.getSchulen(api.schema);
 		const mapSchulen = new Map<string, SchulEintrag>();
@@ -86,7 +93,7 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 				mapSchulen.set(schule.schulnummerStatistik, schule);
 		}
 		// Und aktualisiere den internen State
-		this.setPatchedDefaultStateKeepView({ mapOrte, mapOrtsteile, mapReligionen, mapFahrschuelerarten, mapHaltestellen, mapKindergaerten, mapEinschulungsarten, mapSchulen });
+		this.setPatchedDefaultStateKeepView({ mapOrte, mapOrtsteile, mapReligionen, mapFahrschuelerarten, mapHaltestellen, mapKindergaerten, mapEinschulungsarten, mapSchulen, mapTelefonArten });
 	}
 
 	public async leave() {
@@ -162,6 +169,10 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 
 	get mapEinschulungsarten(): Map<number, EinschulungsartKatalogEintrag> {
 		return this._state.value.mapEinschulungsarten;
+	}
+
+	get mapTelefonArten(): Map<number, TelefonArt> {
+		return this._state.value.mapTelefonArten;
 	}
 
 	public get idSchuljahresabschnitt() {

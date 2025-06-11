@@ -111,6 +111,65 @@
 				<svws-ui-text-input placeholder="Bemerkung" type="text" :disabled="true" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
+		<svws-ui-content-card title="Weitere Telefonnummern">
+			<svws-ui-table clickable
+				@update:clicked="v => patchTelefonnummer(v)"
+				:items="getListSchuelerTelefoneintraege()"
+				:columns
+				:selectable="true"
+				v-model="selected">
+				<template #cell(idTelefonArt)="{ value }">
+					{{ getBezeichnungTelefonart(value) }}
+				</template>
+				<template #cell(telefonnummer)="{ value }">
+					{{ value }}
+				</template>
+				<template #cell(bemerkung)="{ value }">
+					{{ value }}
+				</template>
+				<template #cell(istGesperrt)="{ value }">
+					{{ value ? 'Gesperrt' : 'Nicht gesperrt' }}
+				</template>
+				<template #actions>
+					<div class="inline-flex gap-4">
+						<svws-ui-button @click="deleteTelefonnummern" type="trash" :disabled="selected.length === 0" />
+						<svws-ui-button @click="addTelefonnummer" type="icon" title="Telefonnummer hinzufügen">
+							<span class="icon i-ri-add-line" />
+						</svws-ui-button>
+					</div>
+				</template>
+			</svws-ui-table>
+
+			<svws-ui-modal :show="showModalTelefonnummer" @update:show="closeModalTelefonnummer">
+				<template #modalTitle>Telefonnummer hinzufügen</template>
+				<template #modalContent>
+					<svws-ui-input-wrapper :grid="2" class="text-left">
+						<svws-ui-select title="Telefonart" :items="mapTelefonArten.values()" v-model="selectedTelefonArt" :item-text="i => i.bezeichnung" />
+						<svws-ui-text-input v-model="newEntryTelefonnummer.telefonnummer" type="text" placeholder="Telefonnummer" :max-len="20" />
+						<svws-ui-tooltip class="col-span-full">
+							<svws-ui-text-input v-model="newEntryTelefonnummer.bemerkung" type="text" placeholder="Bemerkung" />
+							<template #content>
+								{{ newEntryTelefonnummer.bemerkung ?? 'Bemerkung' }}
+							</template>
+						</svws-ui-tooltip>
+						<svws-ui-spacing />
+						<svws-ui-checkbox v-model="newEntryTelefonnummer.istGesperrt" type="checkbox" title="Für Weitergabe gesperrt" class="col-span-full">
+							Für Weitergabe gesperrt
+						</svws-ui-checkbox>
+					</svws-ui-input-wrapper>
+					<svws-ui-notification type="warning" v-if="mapTelefonArten.size === 0">
+						Die Liste der Telefonarten ist leer, es sollte mindestens eine Telefonart unter Schule/Kataloge angelegt werden, damit zusätzliche Telefonnummern eine gültige Zuordnung haben.
+					</svws-ui-notification>
+					<div class="mt-7 flex flex-row gap-4 justify-end">
+						<svws-ui-button type="secondary" @click="closeModalTelefonnummer">Abbrechen</svws-ui-button>
+						<svws-ui-button @click="sendRequestTelefonnummer"
+							:disabled="(selectedTelefonArt === null) || (mapTelefonArten.size === 0) || (newEntryTelefonnummer.telefonnummer === null) || (newEntryTelefonnummer.telefonnummer.length === 0)">
+							Speichern
+						</svws-ui-button>
+					</div>
+				</template>
+			</svws-ui-modal>
+		</svws-ui-content-card>
 		<!-- TODO Aus SchuelerSchulbesuchsdaten patchen-->
 		<svws-ui-content-card title="Vorschulentwicklung" v-if="schulenMitPrimaerstufe">
 			<svws-ui-input-wrapper :grid="2">
@@ -138,9 +197,10 @@
 <script setup lang="ts">
 
 	import type { SchuelerNeuProps } from "~/components/schueler/SSchuelerNeuProps";
-	import {computed, ref, watch} from "vue";
-	import { AdressenUtils, Geschlecht, JavaString, type KatalogEintrag, Kindergartenbesuch, Nationalitaeten, type OrtKatalogEintrag, type OrtsteilKatalogEintrag, type ReligionEintrag, SchuelerStammdaten, SchuelerStatus, type SchulEintrag, Schulform, Verkehrssprache } from "@core";
+	import { computed, ref, watch } from "vue";
+	import { AdressenUtils, ArrayList, Geschlecht, JavaString, type KatalogEintrag, Kindergartenbesuch, Nationalitaeten, type OrtKatalogEintrag, type OrtsteilKatalogEintrag, type ReligionEintrag, SchuelerStammdaten, SchuelerStatus, SchuelerTelefon, type SchulEintrag, Schulform, Verkehrssprache, type TelefonArt } from "@core";
 	import { nationalitaetenKatalogEintragFilter, nationalitaetenKatalogEintragSort, orte_filter, orte_sort, ortsteilSort, staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort, verkehrsspracheKatalogEintragFilter, verkehrsspracheKatalogEintragSort } from "~/utils/helfer";
+	import type { DataTableColumn } from "@ui";
 
 	const props = defineProps<SchuelerNeuProps>();
 
@@ -334,6 +394,96 @@
 		if (mandatory)
 			return (input !== null) && (!JavaString.isBlank(input)) && (input.length <= maxLength);
 		return (input === null) || (input.length <= maxLength);
+	}
+
+	const selected = ref<SchuelerTelefon[]>([]);
+	const newEntryTelefonnummer = ref<SchuelerTelefon>(new SchuelerTelefon());
+
+	const columns: DataTableColumn[] = [
+		{ key: "idTelefonArt", label: "Ansprechpartner" },
+		{ key: "telefonnummer", label: "Telefonnummern" },
+		{ key: "bemerkung", label: "Bemerkung", span: 2 },
+		{ key: "istGesperrt", label: "Gesperrt", span: 1, align: "right" },
+	]
+
+	const selectedTelefonArt = computed<TelefonArt | null>({
+		get: () => props.mapTelefonArten.get(newEntryTelefonnummer.value.idTelefonArt) ?? null,
+		set: (telefonArt) => newEntryTelefonnummer.value.idTelefonArt = (telefonArt !== null) ? telefonArt.id : 0,
+	});
+
+	enum Mode { ADD, PATCH, DEFAULT }
+	const currentMode = ref<Mode>(Mode.DEFAULT);
+	const showModalTelefonnummer = ref<boolean>(false);
+
+	function addTelefonnummer() {
+		resetTelefonnummer();
+		setMode(Mode.ADD);
+		openModalTelefonnummer();
+	}
+
+	async function sendRequestTelefonnummer() {
+		const { id, idSchueler, ...partialDataWithoutId } = newEntryTelefonnummer.value;
+		const schuelerId = data.value.id;
+		if (currentMode.value === Mode.ADD) {
+			await props.addSchuelerTelefoneintrag(partialDataWithoutId, schuelerId);
+		}
+		if (currentMode.value === Mode.PATCH) {
+			await props.patchSchuelerTelefoneintrag(partialDataWithoutId, newEntryTelefonnummer.value.id);
+		}
+		enterDefaultMode();
+	}
+
+	function patchTelefonnummer(telefonEintrag: SchuelerTelefon) {
+		resetTelefonnummer();
+		setMode(Mode.PATCH);
+		newEntryTelefonnummer.value.id = telefonEintrag.id;
+		newEntryTelefonnummer.value.idTelefonArt = telefonEintrag.idTelefonArt;
+		newEntryTelefonnummer.value.telefonnummer = telefonEintrag.telefonnummer;
+		newEntryTelefonnummer.value.bemerkung = telefonEintrag.bemerkung;
+		newEntryTelefonnummer.value.istGesperrt = telefonEintrag.istGesperrt;
+		openModalTelefonnummer();
+	}
+
+	async function deleteTelefonnummern() {
+		if (selected.value.length === 0)
+			return;
+		const ids = new ArrayList<number>();
+		for (const s of selected.value)
+			ids.add(s.id);
+		await props.deleteSchuelerTelefoneintrage(ids);
+		selected.value = [];
+	}
+
+	function openModalTelefonnummer() {
+		showModalTelefonnummer.value = true;
+	}
+
+	function closeModalTelefonnummer() {
+		resetTelefonnummer();
+		setMode(Mode.DEFAULT);
+		showModalTelefonnummer.value = false;
+	}
+
+	function setMode(newMode: Mode) {
+		return currentMode.value = newMode;
+	}
+
+	function resetTelefonnummer() {
+		const defaultTelefon = new SchuelerTelefon();
+		defaultTelefon.telefonnummer = '+49';
+		const ersteTelefonArt = props.mapTelefonArten.values().next().value;
+		defaultTelefon.idTelefonArt = ersteTelefonArt?.id ?? 0;
+		newEntryTelefonnummer.value = defaultTelefon;
+	}
+
+	function enterDefaultMode() {
+		setMode(Mode.DEFAULT);
+		resetTelefonnummer();
+		closeModalTelefonnummer();
+	}
+
+	function getBezeichnungTelefonart(idTelefonArt: number): string {
+		return props.mapTelefonArten.get(idTelefonArt)?.bezeichnung ?? "";
 	}
 
 	async function addSchuelerStammdaten() {
