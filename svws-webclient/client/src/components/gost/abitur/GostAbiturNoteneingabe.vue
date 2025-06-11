@@ -1,6 +1,14 @@
 <template>
 	<div class="page page-flex-col pt-0">
-		<ui-table-grid name="Übersicht über die Prüfungsergebnisse" :header-count="2" :footer-count="0" :data="schuelerInPruefung"
+		<div class="flex flex-row">
+			<div class="min-w-64">
+				<ui-select label="Kurs" v-model="auswahlKurs" :manager="kursSelectManager()" removable />
+			</div>
+			<div class="min-w-64">
+				<ui-select label="Prüfer" v-model="auswahlPruefer" :manager="prueferSelectManager()" removable />
+			</div>
+		</div>
+		<ui-table-grid name="Übersicht über die Prüfungsergebnisse" :header-count="2" :footer-count="0" :data="auswahlBelegungen"
 			:cell-format="cellFormat" :get-key="(sb: SchuelerAbiturbelegung) => '`${sb.schueler.id}_${sb.belegung.abiturFach}`'">
 			<template #header="params">
 				<template v-if="params.i === 1">
@@ -97,10 +105,10 @@
 
 <script setup lang="ts">
 
-	import { computed, watchEffect, type ComponentPublicInstance } from "vue";
-	import type { List, AbiturFachbelegung, Comparator, Fachgruppe, NoteKatalogEintrag, SchuelerListeEintrag, AbiturdatenManager , KursDaten, LehrerListeEintrag } from "@core";
-	import { GostHalbjahr, ArrayList, Fach, GostBesondereLernleistung, Note, RGBFarbe, DeveloperNotificationException } from "@core";
-	import { GridManager } from "@ui";
+	import { computed, ref, watchEffect, type ComponentPublicInstance } from "vue";
+	import type { List, AbiturFachbelegung, Comparator, Fachgruppe, NoteKatalogEintrag, SchuelerListeEintrag, AbiturdatenManager , KursDaten, LehrerListeEintrag, JavaMap } from "@core";
+	import { GostHalbjahr, ArrayList, Fach, GostBesondereLernleistung, Note, RGBFarbe, DeveloperNotificationException, HashMap } from "@core";
+	import { GridManager, ObjectSelectManager } from "@ui";
 
 	import type { GostAbiturNoteneingabeProps } from "./GostAbiturNoteneingabeProps";
 
@@ -119,6 +127,68 @@
 		belegung: AbiturFachbelegung;
 		hatAbiFach5: boolean;
 	};
+
+	const auswahlBelegungen = computed<List<SchuelerAbiturbelegung>>(() => {
+		const auswahl = new ArrayList<SchuelerAbiturbelegung>();
+		const kurs = auswahlKurs.value;
+		const kursBelegungen = alleKurse.value.get(kurs);
+		if (kursBelegungen !== null) {
+			auswahl.addAll(kursBelegungen);
+			return auswahl;
+		}
+		const pruefer = auswahlPruefer.value;
+		const prueferBelegungen = allePruefer.value.get(pruefer);
+		if (prueferBelegungen !== null) {
+			auswahl.addAll(prueferBelegungen);
+			return auswahl;
+		}
+		auswahl.addAll(schuelerInPruefung.value);
+		return auswahl;
+	});
+
+	const auswahlKurs = ref<KursDaten | null>(null);
+	const kursSelectManager = () => {
+		const manager = new ObjectSelectManager(false, alleKurse.value.keySet(), k => k.kuerzel, k => k.kuerzel);
+		manager.removable = true;
+		return manager;
+	};
+
+	const auswahlPruefer = ref<LehrerListeEintrag | null>(null);
+	const prueferSelectManager = () => {
+		const manager = new ObjectSelectManager(false, allePruefer.value.keySet(), l => l.kuerzel, l => l.kuerzel);
+		manager.removable = true;
+		return manager;
+	};
+
+	const alleKurse = computed<JavaMap<KursDaten, List<SchuelerAbiturbelegung>>>(() => {
+		const result = new HashMap<KursDaten, List<SchuelerAbiturbelegung>>();
+		for (const row of schuelerInPruefung.value) {
+			const idKurs = row.belegung.belegungen[GostHalbjahr.Q22.id]?.idKurs ?? null;
+			const kurs = (idKurs === null) ? null : props.mapKurse.get(idKurs);
+			if (kurs === null)
+				continue;
+			const list = result.computeIfAbsent(kurs, { apply : (k: KursDaten) => new ArrayList<SchuelerAbiturbelegung>() });
+			if (list === null)
+				continue;
+			list.add(row);
+		}
+		return result;
+	});
+
+	const allePruefer = computed<JavaMap<LehrerListeEintrag, List<SchuelerAbiturbelegung>>>(() => {
+		const result = new HashMap<LehrerListeEintrag, List<SchuelerAbiturbelegung>>();
+		for (const row of schuelerInPruefung.value) {
+			const idLehrer = row.belegung.block2Pruefer;
+			const lehrer = (idLehrer === null) ? null : props.mapLehrer.get(idLehrer);
+			if (lehrer === null)
+				continue;
+			const list = result.computeIfAbsent(lehrer, { apply : (l: LehrerListeEintrag) => new ArrayList<SchuelerAbiturbelegung>() });
+			if (list === null)
+				continue;
+			list.add(row);
+		}
+		return result;
+	});
 
 	const schuelerInPruefung = computed<List<SchuelerAbiturbelegung>>(() => {
 		const result = new ArrayList<SchuelerAbiturbelegung>();
