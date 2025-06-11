@@ -1,29 +1,58 @@
 <template>
 	<div class="page page-flex-col pt-0">
-		<div v-for="schueler in schuelerListe" :key="schueler.id" class="flex flex-col w-full h-min-fit">
-			<!-- Darstellung der Prüfungsergebnisse aus dem persistierten Abiturbereich - Die Zulassung wird hier nur kurz Zusammengefasst -->
-			<template v-if="managerMap().get(schueler.id) !== null">
-				<template v-if="managerMap().get(schueler.id)?.daten().block1Zulassung ?? false">
-					<schueler-abitur-pruefungsuebersicht-tabelle :server-mode :schule :schueler :manager="() => managerMap().get(schueler.id)!" :update-abiturpruefungsdaten />
-				</template>
-				<template v-else>
-					<div class="text-ui-danger font-bold">{{ schueler.nachname }}, {{ schueler.vorname }} hat die Zulassung zum Abitur nicht erreicht.</div>
-				</template>
-			</template>
-			<template v-else>
-				<svws-ui-todo>
-					{{ schueler.nachname }}, {{ schueler.vorname }}: Es wurde noch keine Berechnung zur Abitur-Zulassung
-					in der Datenbank gespeichert. Führen Sie diese zunächst unter dem Reiter <i>Zulassung</i> aus.
-				</svws-ui-todo>
-			</template>
+		<!-- Die Auflistung der Schüler, wo noch keine Zulassungsberechung vorliegt. -->
+		<div v-if="!schuelerOhneZulassungsberechnung.isEmpty()" class="flex flex-col w-full h-min-fit">
+			<div class="text-ui-danger font-bold">Für die folgenden Schüler liegt noch keine Berechnung der Zulassung vor: </div>
+			<div v-for="schueler in schuelerOhneZulassungsberechnung" :key="schueler.id">
+				{{ schueler.nachname }}, {{ schueler.vorname }}
+			</div>
+		</div>
+
+		<!-- Die Auflistung der Schüler, welche keine Zulassung zur Abiturprüfung erhalten haben. -->
+		<div v-if="!schuelerOhneZulassung.isEmpty()" class="flex flex-col w-full h-min-fit">
+			<div class="text-ui-danger font-bold">Die folgenden Schüler haben keine Zulassung zum Abitur erhalten: </div>
+			<div v-for="schueler in schuelerOhneZulassung" :key="schueler.id">
+				{{ schueler.nachname }}, {{ schueler.vorname }}
+			</div>
+		</div>
+
+		<div v-for="schueler in schuelerInPruefung" :key="schueler.id" class="flex flex-col w-full h-min-fit">
+			<schueler-abitur-pruefungsuebersicht-tabelle :server-mode :schule :schueler :manager="() => managerMap().get(schueler.id)!" :update-abiturpruefungsdaten />
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
 
+	import { computed } from "vue";
+	import { ArrayList, type SchuelerListeEintrag } from "@core";
+	import type { List } from "@core";
 	import type { GostAbiturPruefungsuebersichtProps } from "./GostAbiturPruefungsuebersichtProps";
 
 	const props = defineProps<GostAbiturPruefungsuebersichtProps>();
+
+	const schuelerInPruefung = computed<List<SchuelerListeEintrag>>(() => {
+		const result = new ArrayList<SchuelerListeEintrag>();
+		for (const schueler of props.schuelerListe)
+			if ((props.managerMap().get(schueler.id) !== null) && (props.managerMap().get(schueler.id)?.daten().block1Zulassung === true))
+				result.add(schueler);
+		return result;
+	});
+
+	const schuelerOhneZulassung = computed<List<SchuelerListeEintrag>>(() => {
+		const result = new ArrayList<SchuelerListeEintrag>();
+		for (const schueler of props.schuelerListe)
+			if ((props.managerMap().get(schueler.id) !== null) && (props.managerMap().get(schueler.id)?.daten().block1Zulassung !== true))
+				result.add(schueler);
+		return result;
+	});
+
+	const schuelerOhneZulassungsberechnung = computed<List<SchuelerListeEintrag>>(() => {
+		const result = new ArrayList<SchuelerListeEintrag>();
+		for (const schueler of props.schuelerListe)
+			if (props.managerMap().get(schueler.id) === null)
+				result.add(schueler);
+		return result;
+	});
 
 </script>
