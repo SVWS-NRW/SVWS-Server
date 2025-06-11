@@ -114,6 +114,12 @@
 				<template #cell(telefonnummer)="{ value }">
 					{{ value }}
 				</template>
+				<template #cell(bemerkung)="{ value }">
+					{{ value }}
+				</template>
+				<template #cell(istGesperrt)="{ value }">
+					{{ value ? 'Gesperrt' : 'Nicht gesperrt' }}
+				</template>
 				<template #actions>
 					<div class="inline-flex gap-4">
 						<svws-ui-button @click="deleteTelefonnummern" type="trash" :disabled="selected.length === 0" />
@@ -127,6 +133,16 @@
 					<svws-ui-input-wrapper :grid="2" class="text-left">
 						<svws-ui-select title="Telefonart" :items="mapTelefonArten.values()" v-model="selectedTelefonArt" :item-text="i => i.bezeichnung" />
 						<svws-ui-text-input v-model="newEntryTelefonnummer.telefonnummer" type="text" placeholder="Telefonnummer" :max-len="20" />
+						<svws-ui-tooltip class="col-span-full">
+							<svws-ui-text-input v-model="newEntryTelefonnummer.bemerkung" type="text" placeholder="Bemerkung" />
+							<template #content>
+								{{ newEntryTelefonnummer.bemerkung ?? 'Bemerkung' }}
+							</template>
+						</svws-ui-tooltip>
+						<svws-ui-spacing />
+						<svws-ui-checkbox v-model="newEntryTelefonnummer.istGesperrt" type="checkbox" title="Für Weitergabe gesperrt" class="col-span-full">
+							Für Weitergabe gesperrt
+						</svws-ui-checkbox>
 					</svws-ui-input-wrapper>
 					<svws-ui-notification type="warning" v-if="mapTelefonArten.size === 0">Die Liste der Telefonarten ist leer, es sollte mindestens eine Telefonart unter Schule/Kataloge angelegt werden, damit zusätzliche Telefonnummern eine gültige Zuordnung haben. </svws-ui-notification>
 					<div class="mt-7 flex flex-row gap-4 justify end">
@@ -196,6 +212,8 @@
 	const columns: DataTableColumn[] = [
 		{ key: "idTelefonArt", label: "Ansprechpartner" },
 		{ key: "telefonnummer", label: "Telefonnummern" },
+		{ key: "bemerkung", label: "Bemerkung", span: 2 },
+		{ key: "istGesperrt", label: "Gesperrt", span: 1, align: "right" },
 	]
 
 	function getBezeichnungTelefonart(idTelefonArt: number): string {
@@ -232,6 +250,8 @@
 		newEntryTelefonnummer.value.id = telefonnummer.id;
 		newEntryTelefonnummer.value.idTelefonArt = telefonnummer.idTelefonArt;
 		newEntryTelefonnummer.value.telefonnummer = telefonnummer.telefonnummer;
+		newEntryTelefonnummer.value.bemerkung = telefonnummer.bemerkung;
+		newEntryTelefonnummer.value.istGesperrt = telefonnummer.istGesperrt;
 		openModalTelefonnummer();
 	}
 
