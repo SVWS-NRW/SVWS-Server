@@ -1,7 +1,7 @@
-import { Einschulungsart, Herkunftsarten, Jahrgaenge, PrimarstufeSchuleingangsphaseBesuchsjahre, Schulform, Schulgliederung, Uebergangsempfehlung,
-	SchuelerSchulbesuchsdaten, SchuelerListeEintrag } from "@core";
-import type { KatalogEntlassgrund, Merkmal, SchulEintrag, SchuelerSchulbesuchSchule, SchuelerSchulbesuchMerkmal } from "@core";
+import type { KatalogEntlassgrund, Merkmal, SchulEintrag, SchuelerSchulbesuchSchule, SchuelerSchulbesuchMerkmal, Kindergarten } from "@core";
 import type { Schuljahresabschnitt, List } from "@core";
+import { Einschulungsart, Herkunftsarten, Jahrgaenge, PrimarstufeSchuleingangsphaseBesuchsjahre, Schulform, Uebergangsempfehlung, Kindergartenbesuch,
+	SchuelerSchulbesuchsdaten, SchuelerListeEintrag } from "@core";
 import { StateManager } from "~/router/StateManager";
 
 
@@ -30,6 +30,9 @@ export class SchuelerSchulbesuchManager extends StateManager<ManagerStateDataSch
 	/** Eine Map der Entlassgruende gemappt nach id */
 	protected _entlassgruendeById: Map<number, KatalogEntlassgrund> = new Map();
 
+	/** Eine Map der Kindergärten gemappt nach id */
+	protected _kindergaertenById: Map<number, Kindergarten> = new Map();
+
 	/** Das Schuljahr vom Schuljahresabschnitts des aktuell ausgewählten Schülers */
 	protected _schuljahr : number;
 
@@ -46,10 +49,12 @@ export class SchuelerSchulbesuchManager extends StateManager<ManagerStateDataSch
 	 * @param schulen				   eine Liste der Schulen
 	 * @param merkmale				   eine Liste der Merkmale
 	 * @param entlassgruende		   eine Liste der Entlassgruende
+	 * @param kindergaerten			   eine Liste der Kindergärten
 	 * @param patch					   die PatchMethode der SchuelerSchulbesuchsdaten
 	 */
-	public constructor(daten: SchuelerSchulbesuchsdaten, auswahl : SchuelerListeEintrag, schuljahresabschnitte : List<Schuljahresabschnitt>,
-		schulen : List<SchulEintrag>, merkmale : List<Merkmal>, entlassgruende : List<KatalogEntlassgrund>, patch: (data : Partial<SchuelerSchulbesuchsdaten>) => Promise<void>) {
+	public constructor(daten: SchuelerSchulbesuchsdaten, auswahl: SchuelerListeEintrag, schuljahresabschnitte: List<Schuljahresabschnitt>,
+		schulen: List<SchulEintrag>, merkmale: List<Merkmal>, entlassgruende: List<KatalogEntlassgrund>, kindergaerten: List<Kindergarten>,
+		patch: (data: Partial<SchuelerSchulbesuchsdaten>) => Promise<void>) {
 		super(defaultState)
 		this._state.value.daten = daten;
 		this._state.value.auswahl = auswahl;
@@ -58,7 +63,13 @@ export class SchuelerSchulbesuchManager extends StateManager<ManagerStateDataSch
 		this.mapSchulen(schulen);
 		this.mapMerkmale(merkmale);
 		this.mapEntlassgruende(entlassgruende);
+		this.mapKindergaerten(kindergaerten);
 		this._schuljahr = this.calcSchuljahr();
+	}
+
+	private mapKindergaerten(kindergaerten: List<Kindergarten>) {
+		for (const kindergarten of kindergaerten)
+			this._kindergaertenById.set(kindergarten.id, kindergarten);
 	}
 
 	private mapSchuljahresabschnitte(schuljahresabschnitte: List<Schuljahresabschnitt>) {
@@ -99,6 +110,11 @@ export class SchuelerSchulbesuchManager extends StateManager<ManagerStateDataSch
 	/** Gibt die aktuell im Manager gespeicherten Entlassgründe zurück */
 	public get entlassgruendeById() : Map<number, KatalogEntlassgrund> {
 		return this._entlassgruendeById;
+	}
+
+	/** Gibt die aktuell im Manager gespeicherten Kindergärten zurück */
+	public get kindergaertenById() : Map<number, Kindergarten> {
+		return this._kindergaertenById;
 	}
 
 	/** Gibt das Schuljahr vom Schuljahresabschnitts des aktuell ausgewählten Schülers zurück */
@@ -182,6 +198,13 @@ export class SchuelerSchulbesuchManager extends StateManager<ManagerStateDataSch
 	/** Gibt die Sek1 Schulform des ausgewählten Schülers zurück */
 	public getSchulformSek1() : Schulform | null {
 		return Schulform.data().getWertByKuerzel(this.daten.sekIErsteSchulform?? '');
+	}
+
+	/** Gibt die Dauer des Kindergartenbesuchs zurück */
+	public getDauerKindergartenbesuch() : Kindergartenbesuch | null {
+		if (this.daten.idDauerKindergartenbesuch === null)
+			return null;
+		return Kindergartenbesuch.data().getWertByID(this.daten.idDauerKindergartenbesuch);
 	}
 
 	// --- patch ---

@@ -270,15 +270,14 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 		daten.beginnBildungsgang = dto.BeginnBildungsgang; // Schulform BK und SB
 		// TODO DauerBildungsgang // Schulform BK und SB
 
-		// TODO Die nachfolgenden Daten gehören in SchuelerSchulbesuchsdaten und nicht in SchuelerStammdaten
+		// TODO Entfernen -> sind jetzt in den SchuelerSchulbesuchsdaten
 		final Einschulungsart einschulungsart = Einschulungsart.data().getWertBySchluessel(dto.EinschulungsartASD);
 		daten.einschulungsartID = (einschulungsart == null) ? null : einschulungsart.getLetzterEintrag().id;
 		daten.dauerKindergartenbesuch = dto.DauerKindergartenbesuch;
 		daten.kindergartenID = dto.Kindergarten_ID;
-
-		// TODO klären, ob dies zu SchuelerSchulbesuchsdaten oder SchuelerStammdaten gehört
 		daten.verpflichtungSprachfoerderkurs = (dto.VerpflichtungSprachfoerderkurs != null) && dto.VerpflichtungSprachfoerderkurs;
 		daten.teilnahmeSprachfoerderkurs = (dto.TeilnahmeSprachfoerderkurs != null) && dto.TeilnahmeSprachfoerderkurs;
+
 		return daten;
 	}
 

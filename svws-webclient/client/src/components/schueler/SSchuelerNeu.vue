@@ -197,9 +197,12 @@
 <script setup lang="ts">
 
 	import type { SchuelerNeuProps } from "~/components/schueler/SSchuelerNeuProps";
+	import type { KatalogEintrag, OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, SchulEintrag, TelefonArt } from "@core";
+	import { AdressenUtils, ArrayList, Geschlecht, JavaString, Kindergartenbesuch, Nationalitaeten, SchuelerStammdaten, SchuelerStatus, SchuelerTelefon,
+		Schulform, Verkehrssprache } from "@core";
+	import { nationalitaetenKatalogEintragFilter, nationalitaetenKatalogEintragSort, orte_filter, orte_sort, ortsteilSort, verkehrsspracheKatalogEintragSort,
+		staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort, verkehrsspracheKatalogEintragFilter } from "~/utils/helfer";
 	import { computed, ref, watch } from "vue";
-	import { AdressenUtils, ArrayList, Geschlecht, JavaString, type KatalogEintrag, Kindergartenbesuch, Nationalitaeten, type OrtKatalogEintrag, type OrtsteilKatalogEintrag, type ReligionEintrag, SchuelerStammdaten, SchuelerStatus, SchuelerTelefon, type SchulEintrag, Schulform, Verkehrssprache, type TelefonArt } from "@core";
-	import { nationalitaetenKatalogEintragFilter, nationalitaetenKatalogEintragSort, orte_filter, orte_sort, ortsteilSort, staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort, verkehrsspracheKatalogEintragFilter, verkehrsspracheKatalogEintragSort } from "~/utils/helfer";
 	import type { DataTableColumn } from "@ui";
 
 	const props = defineProps<SchuelerNeuProps>();

@@ -123,6 +123,26 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 	public sekIIWechsel : number | null = null;
 
 	/**
+	 * Die ID der Dauer des Kindergartenbesuchs eines Schülers.
+	 */
+	public idDauerKindergartenbesuch : number | null = null;
+
+	/**
+	 * Die ID des Kindergartens.
+	 */
+	public idKindergarten : number | null = null;
+
+	/**
+	 * Schüler wurde zu einem Sprachförderkurs verpflichtet (Ja/Nein).
+	 */
+	public verpflichtungSprachfoerderkurs : boolean = false;
+
+	/**
+	 * Teilnahme des Schülers an einem Sprachförderkurs (Ja/Nein).
+	 */
+	public teilnahmeSprachfoerderkurs : boolean = false;
+
+	/**
 	 * Die Informationen zu den besonderen Merkmalen für die Statistik.
 	 */
 	public merkmale : List<SchuelerSchulbesuchMerkmal> = new ArrayList<SchuelerSchulbesuchMerkmal>();

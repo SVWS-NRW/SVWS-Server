@@ -127,6 +127,22 @@ public class SchuelerSchulbesuchsdaten {
 	@Schema(description = "das Jahr des Wechsels in die Sekundarstufe II", example = "2017")
 	public Integer sekIIWechsel;
 
+	/** Die ID der Dauer des Kindergartenbesuchs eines Schülers. */
+	@Schema(description = "Die ID der Dauer des Kindergartenbesuchs eines Schülers", example = "1")
+	public Long idDauerKindergartenbesuch;
+
+	/** Die ID des Kindergartens. */
+	@Schema(description = "die ID des Kindergartens", example = "2")
+	public Long idKindergarten;
+
+	/** Schüler wurde zu einem Sprachförderkurs verpflichtet (Ja/Nein). */
+	@Schema(description = "gibt an, ob der Schüler zu einem Sprachförderkurs verpflichtet wurde", example = "false")
+	public boolean verpflichtungSprachfoerderkurs;
+
+	/** Teilnahme des Schülers an einem Sprachförderkurs (Ja/Nein). */
+	@Schema(description = "gibt an, ob der Schüler an einem Sprachförderkurs teilgenommen hat", example = "false")
+	public boolean teilnahmeSprachfoerderkurs;
+
 
 	// **** Informationen zu besonderen Merkmalen für die Statistik
 

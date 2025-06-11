@@ -22,7 +22,7 @@
 				<svws-ui-text-input placeholder="Bemerkung" span="full" :model-value="manager().daten.vorigeBemerkung" :max-len="255"
 					@change="v => { if ((v ?? '').length <= 255) manager().doPatch({ vorigeBemerkung : v }) } " :readonly />
 				<svws-ui-spacing />
-				<svws-ui-select title="Entlassgrund" :items="manager().entlassgruendeById" :item-text="v => v.bezeichnung" removable
+				<svws-ui-select title="Entlassgrund" :items="manager().entlassgruendeById.values()" :item-text="v => v.bezeichnung" removable
 					:model-value="manager().getEntlassgrund('vorigeEntlassgrundID')" :readonly
 					@update:model-value="v => manager().patchEntlassgrund(v, 'vorigeEntlassgrundID')" />
 				<svws-ui-text-input placeholder="höchster Abschluss, der von der anderen Schule mitgebracht wurde" disabled statistics :readonly
@@ -38,12 +38,31 @@
 				<svws-ui-select title="Entlassjahrgang" :items="manager().getJahrgaengeBySchulform(props.schulform)"
 					:model-value="manager().getEntlassjahrgang('entlassungJahrgang')" :readonly
 					@update:model-value="v => manager().patchEntlassjahrgang(v, 'entlassungJahrgang')" :item-text="textJahrgang" removable />
-				<svws-ui-select title="Entlassgrund" :items="manager().entlassgruendeById" :item-text="v => v.bezeichnung" removable
+				<svws-ui-select title="Entlassgrund" :items="manager().entlassgruendeById.values()" :item-text="v => v.bezeichnung" removable
 					:model-value="manager().getEntlassgrund('entlassungGrundID')" :readonly
 					@update:model-value="v => manager().patchEntlassgrund(v, 'entlassungGrundID')" />
 				<svws-ui-spacing />
 				<svws-ui-text-input placeholder="Art des Abschlusses" span="full" :model-value="manager().daten.entlassungAbschlussartID" disabled
 					@change="entlassungAbschlussartID => manager().doPatch({ entlassungAbschlussartID })" statistics :readonly />
+			</svws-ui-input-wrapper>
+		</svws-ui-content-card>
+		<svws-ui-content-card title="Kindergartenbesuch" v-if="schuleHatPrimarstufe">
+			<svws-ui-input-wrapper :grid="2">
+				<svws-ui-select title="Name des Kindergartens" :items="manager().kindergaertenById.values()" :item-text="i => i.bezeichnung"
+					:model-value="manager().kindergaertenById.get(manager().daten.idKindergarten?? -1)"
+					@update:model-value="v => manager().doPatch({ idKindergarten: v?.id ?? null})" removable />
+				<svws-ui-select title="Dauer des Kindergartenbesuchs" :items="Kindergartenbesuch.values()" :item-text="textDauerKindergartenbesuch" :readonly
+					:model-value="manager().getDauerKindergartenbesuch()" removeable
+					@update:model-value="v => manager().doPatch({ idDauerKindergartenbesuch: v?.daten(manager().schuljahr)?.id ?? null })" />
+				<svws-ui-spacing />
+				<svws-ui-checkbox title="Verpflichtung f. Sprachförderkurs" :model-value="manager().daten.verpflichtungSprachfoerderkurs"
+					@update:model-value="verpflichtungSprachfoerderkurs => manager().doPatch({ verpflichtungSprachfoerderkurs })">
+					Verpflichtung für Sprachförderkurs
+				</svws-ui-checkbox>
+				<svws-ui-checkbox title="Teilnahme an Sprachförderkurs" :model-value="manager().daten.teilnahmeSprachfoerderkurs"
+					@update:model-value="teilnahmeSprachfoerderkurs => manager().doPatch({ teilnahmeSprachfoerderkurs })">
+					Teilnahme an Sprachförderkurs
+				</svws-ui-checkbox>
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Wechsel zu aufnehmender Schule">
@@ -70,7 +89,7 @@
 				<svws-ui-input-number class="contentFocusField" placeholder="Einschulung" :model-value="manager().daten.grundschuleEinschulungsjahr" :readonly
 					@change="grundschuleEinschulungsjahr => manager().doPatch({ grundschuleEinschulungsjahr })" :min="1900" :max="2100" statistics />
 				<svws-ui-select title="Einschulungsart" :items="Einschulungsart.values()" :model-value="manager().getEinschulungsart()" statistics removable
-					@update:model-value="v => manager().doPatch({ grundschuleEinschulungsartID : v?.daten(manager().schuljahr).id ?? null })"
+					@update:model-value="v => manager().doPatch({ grundschuleEinschulungsartID : v?.daten(manager().schuljahr)?.id ?? null })"
 					:item-text="textEinschulungsart" :readonly />
 				<svws-ui-select title="EP-Jahre" :items="PrimarstufeSchuleingangsphaseBesuchsjahre.values()" removable :item-text="textEPJahre"
 					@update:model-value="v => manager().doPatch({ idGrundschuleJahreEingangsphase : v?.daten(manager().schuljahr)?.id ?? null })"
@@ -207,7 +226,7 @@
 <script setup lang="ts">
 
 	import { BenutzerKompetenz, Einschulungsart, PrimarstufeSchuleingangsphaseBesuchsjahre, SchuelerSchulbesuchSchule, Schulform, Schulgliederung,
-		Uebergangsempfehlung, SchulEintrag, AdressenUtils, ArrayList, SchuelerSchulbesuchMerkmal } from "@core";
+		Uebergangsempfehlung, SchulEintrag, AdressenUtils, ArrayList, SchuelerSchulbesuchMerkmal, Kindergartenbesuch } from "@core";
 	import type { Herkunftsarten, SchulformKatalogEintrag, SchulgliederungKatalogEintrag, Merkmal, Jahrgaenge } from "@core";
 	import type { SchuelerSchulbesuchProps } from './SSchuelerSchulbesuchProps';
 	import type { DataTableColumn } from "@ui";
@@ -333,7 +352,7 @@
 	}
 
 	function setMode(newMode: Mode) {
-		return currentMode.value = newMode;
+		currentMode.value = newMode;
 	}
 
 	function openModalBisherigeSchule() {
@@ -437,6 +456,16 @@
 	}
 
 	// --- allgemeiner Abschnitt ---
+	// ToDo: Schulform.GY entfernen
+	const schuleHatPrimarstufe = computed(() => {
+		const erlaubteSchulformen = [ Schulform.G, Schulform.FW, Schulform.WF, Schulform.GM, Schulform.KS, Schulform.S, Schulform.GE, Schulform.V, Schulform.GY ];
+		return erlaubteSchulformen.includes(props.schulform);
+	});
+
+	function textDauerKindergartenbesuch(k: Kindergartenbesuch) {
+		return k.daten(props.manager().schuljahr)?.text ?? '-';
+	}
+
 	function textHerkunftsarten(h: Herkunftsarten) {
 		return h.getBezeichnung(props.manager().schuljahr, props.manager().getVorigeSchulform() || Schulform.G) + ' (' + h.daten.kuerzel + ')';
 	}

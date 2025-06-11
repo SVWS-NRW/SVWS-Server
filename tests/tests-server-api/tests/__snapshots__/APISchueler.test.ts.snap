@@ -27894,7 +27894,9 @@ SchuelerSchulbesuchsdaten {
   "grundschuleEinschulungsjahr": 2009,
   "id": 1199,
   "idAufnehmendeSchule": null,
+  "idDauerKindergartenbesuch": null,
   "idGrundschuleJahreEingangsphase": 2000,
+  "idKindergarten": null,
   "idVorherigeSchule": 51,
   "kuerzelGrundschuleUebergangsempfehlung": null,
   "merkmale": ArrayList {
@@ -27910,6 +27912,8 @@ SchuelerSchulbesuchsdaten {
   "sekIErsteSchulform": "GY",
   "sekIIWechsel": 2018,
   "sekIWechsel": 2013,
+  "teilnahmeSprachfoerderkurs": false,
+  "verpflichtungSprachfoerderkurs": false,
   "vorigeAbschlussartID": null,
   "vorigeAllgHerkunft": "G",
   "vorigeArtLetzteVersetzung": "11001",
