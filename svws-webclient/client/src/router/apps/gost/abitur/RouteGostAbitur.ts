@@ -14,6 +14,7 @@ import type { GostAbiturProps } from "~/components/gost/abitur/GostAbiturProps";
 import type { TabData } from "@ui";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { api } from "~/router/Api";
+import { routeGostAbiturNoteneingabe } from "./RouteGostAbiturNoteneingabe";
 
 const GostAbitur = () => import("~/components/gost/abitur/GostAbitur.vue");
 
@@ -33,6 +34,7 @@ export class RouteGostAbitur extends RouteNode<RouteDataGostAbitur, RouteGost> {
 		}
 		super.children = [
 			routeGostAbiturZulassung,
+			routeGostAbiturNoteneingabe,
 			routeGostAbiturPruefungsuebersicht,
 		];
 		super.defaultChild = routeGostAbiturZulassung;

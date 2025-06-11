@@ -1,0 +1,276 @@
+<template>
+	<div class="page page-flex-col pt-0">
+		<ui-table-grid name="Übersicht über die Prüfungsergebnisse" :header-count="2" :footer-count="0" :data="schuelerInPruefung"
+			:cell-format="cellFormat" :get-key="(sb: SchuelerAbiturbelegung) => '`${sb.schueler.id}_${sb.belegung.abiturFach}`'">
+			<template #header="params">
+				<template v-if="params.i === 1">
+					<th class="ui-divider text-ui-50 text-left col-span-4" />
+					<th class="ui-divider">Vornote</th>
+					<th class="col-span-2">Prüfung</th>
+					<th class="col-span-4">mündliche Prüfung</th>
+					<th class="ui-divider" />
+					<th class="col-span-5">Gesamt</th>
+				</template>
+				<template v-else>
+					<th>Abi</th>
+					<th>Kürzel</th>
+					<th class="ui-divider text-left"> Fach </th>
+					<th class="ui-divider text-left"> Schüler </th>
+					<th class="ui-divider">⌀</th>
+					<th>Punkte</th>
+					<th class="ui-divider">Summe</th>
+					<th>Pflicht</th>
+					<th>Freiw.</th>
+					<th>RF</th>
+					<th class="ui-divider">Punkte</th>
+					<th class="ui-divider">Summe</th>
+					<th>Block I</th>
+					<th>Block II</th>
+					<th>Gesamt</th>
+					<th>Best.</th>
+					<th>Note</th>
+				</template>
+			</template>
+			<template #default="{ row }">
+				<template v-if="row.belegung.abiturFach !== null">
+					<td>{{ row.belegung.abiturFach }}.</td>
+					<td :style="{ 'background-color': getFachfarbe(row) }">
+						{{ row.manager.faecher().get(row.belegung.fachID)?.kuerzelAnzeige ?? "???" }}
+					</td>
+					<td class="text-left ui-divider" :style="{ 'background-color': getFachfarbe(row) }">
+						{{ row.manager.faecher().get(row.belegung.fachID)?.bezeichnung ?? "???" }}
+					</td>
+					<td class="text-left ui-divider">
+						{{ row.schueler.nachname }}, {{ row.schueler.vorname }}
+					</td>
+					<td class="ui-divider" :class="{ 'font-bold text-ui-danger': istAbweichungspruefung(row) }">
+						{{ formatNotenpunkteDurchschnitt(row.belegung.block1NotenpunkteDurchschnitt) }}
+					</td>
+					<td :ref="inputPruefungsnote(row)" class="ui-table-grid-input" :class="{
+						'font-bold text-ui-danger': istDefizit(row)
+					}" />
+					<td class="ui-divider" :class="{ 'font-bold text-ui-danger': istWertungDefizit(row) }">
+						{{ row.belegung.block2PunkteZwischenstand ?? '' }}
+					</td>
+					<template v-if="row.belegung.abiturFach < 4">
+						<td>
+							<span v-if="(row.belegung.block2MuendlichePruefungBestehen === true) || istAbweichungspruefung(row)" class="icon-sm align-middle i-ri-check-line" />
+						</td>
+						<td :ref="inputFreiwilligePruefung(row)" class="ui-table-grid-button">
+							<span class="icon-sm align-middle" :class="{
+								'i-ri-checkbox-line': row.belegung.block2MuendlichePruefungFreiwillig === true,
+								'i-ri-checkbox-blank-line': !(row.belegung.block2MuendlichePruefungFreiwillig === true)
+							}" />
+						</td>
+						<td :ref="inputPruefungsreihenfolge(row)" class="ui-table-grid-input" />
+						<td :ref="inputPruefungsnoteMdl(row)" class="ui-table-grid-input ui-divider" :class="{
+							'font-bold text-ui-danger': istDefizit(row)
+						}" />
+					</template>
+					<td v-else class="col-span-4 ui-divider bg-ui-75" />
+					<td class="ui-divider" :class="{ 'font-bold text-ui-danger': istWertungDefizit(row) }">
+						{{ row.belegung.block2Punkte ?? '' }}
+					</td>
+					<td>{{ row.manager.daten().block1PunktSummeNormiert }}</td>
+					<td>{{ row.manager.daten().block2PunktSumme }}</td>
+					<td>{{ row.manager.daten().gesamtPunkte }}</td>
+					<td :class="{
+						'text-ui-onsuccess bg-ui-success': row.manager.daten().pruefungBestanden === true,
+						'text-ui-ondanger bg-ui-danger': row.manager.daten().pruefungBestanden === false,
+					}">
+						{{ (row.manager.daten().pruefungBestanden === true) ? 'Ja' : ((row.manager.daten().pruefungBestanden === false) ? 'Nein' : '???') }}
+					</td>
+					<td>{{ row.manager.daten().note }}</td>
+				</template>
+			</template>
+			<!-- <template #footer>
+				<td class="col-span-3 ui-divider" />
+				<td class="col-span-4 text-right">Gesamt (normiert):</td>
+				<td class="font-bold">{{ row.manager.daten().block1PunktSummeNormiert }}</td>
+				<td class="ui-divider" />
+				<td />
+				<td class="ui-divider">{{ getPunktSummePruefungen() }}</td>
+				<td class="col-span-4 ui-divider" />
+				<td class="font-bold ui-divider">{{ row.manager.daten().block2PunktSumme }}</td>
+				<td class="font-bold">{{ row.manager.daten().gesamtPunkte }}</td>
+				<td class="bg-ui-brand-secondary font-bold">{{ row.manager.daten().note }}</td>
+			</template> -->
+		</ui-table-grid>
+	</div>
+</template>
+
+<script setup lang="ts">
+
+	import { computed, watchEffect, type ComponentPublicInstance } from "vue";
+	import type { List, AbiturFachbelegung, Comparator, Fachgruppe, NoteKatalogEintrag, SchuelerListeEintrag, AbiturdatenManager , GostHalbjahr } from "@core";
+	import { ArrayList, Fach, GostBesondereLernleistung, Note, RGBFarbe, DeveloperNotificationException } from "@core";
+	import { GridManager } from "@ui";
+
+	import type { GostAbiturNoteneingabeProps } from "./GostAbiturNoteneingabeProps";
+
+	const props = defineProps<GostAbiturNoteneingabeProps>();
+
+	interface SchuelerAbiturbelegung {
+		index: number,
+		manager: AbiturdatenManager,
+		abiturfach: number;
+		schueler: SchuelerListeEintrag;
+		belegung: AbiturFachbelegung;
+		hatAbiFach5: boolean;
+	};
+
+	const schuelerInPruefung = computed<List<SchuelerAbiturbelegung>>(() => {
+		const result = new ArrayList<SchuelerAbiturbelegung>();
+		let counter = 1;
+		for (const schueler of props.schuelerListe) {
+			const manager = props.managerMap().get(schueler.id);
+			if ((manager !== null) && (manager.daten().block1Zulassung === true)) {
+				const tmp = new ArrayList<AbiturFachbelegung>();
+				const abiFaecher = new Set<number>();
+				for (const belegung of manager.daten().fachbelegungen) {
+					if ((belegung.abiturFach === null) || (belegung.abiturFach < 1) || (belegung.abiturFach > 5))
+						continue;
+					if (abiFaecher.has(belegung.abiturFach))
+						throw new DeveloperNotificationException("Ein Abiturfach darf nur einmal gesetzt sein. Dies muss an dieser Stelle sichergestellt werden.");
+					abiFaecher.add(belegung.abiturFach);
+					tmp.add(belegung);
+				}
+				tmp.sort(<Comparator<AbiturFachbelegung>>{ compare(a, b) { return a.abiturFach! - b.abiturFach!; } });
+				for (const belegung of tmp) {
+					if (belegung.abiturFach === null)
+						continue;
+					result.add({
+						index: counter++,
+						manager,
+						abiturfach: belegung.abiturFach,
+						schueler,
+						belegung,
+						hatAbiFach5: abiFaecher.has(5) || (GostBesondereLernleistung.fromKuerzel(manager.daten().besondereLernleistung) !== GostBesondereLernleistung.KEINE),
+					});
+				}
+			}
+		}
+		return result;
+	});
+
+	const gridManager = new GridManager<string>();
+	const cellFormat = {
+		widths: ['4rem', '4rem','16rem','16rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem'],
+	};
+
+	function istWertungDefizit(row: SchuelerAbiturbelegung): boolean {
+		if (row.belegung.block2PunkteZwischenstand === null)
+			return false;
+		return row.belegung.block2PunkteZwischenstand < (row.hatAbiFach5 ? 20 : 25);
+	}
+
+	function getNotenpunkteString(row: SchuelerAbiturbelegung, hj: GostHalbjahr) : string {
+		const np = row.manager.getNotenpunkteByFachIDAndHalbjahr(row.belegung.fachID, hj);
+		if (np === null)
+			return "";
+		return ((np < 10) ? "0" : "") + np;
+	}
+
+	function getNotenpunkteFromKuerzel(notenkuerzel: string | null, schuljahr: number) : number | null {
+		if (notenkuerzel === null)
+			return null;
+		const nke : NoteKatalogEintrag | null = Note.fromKuerzel(notenkuerzel).daten(schuljahr);
+		if ((nke === null) || (nke.notenpunkte === null))
+			return null;
+		return nke.notenpunkte;
+	}
+
+	function istDefizit(row: SchuelerAbiturbelegung) : boolean {
+		const np = getNotenpunkteFromKuerzel(row.belegung.block2NotenKuerzelPruefung, row.manager.getSchuljahr());
+		return (np !== null) && (np < 5);
+	}
+
+	function getFachgruppe(row: SchuelerAbiturbelegung): Fachgruppe | null {
+		const fach = row.manager.faecher().get(row.belegung.fachID);
+		if (fach === null)
+			return null;
+		const f = Fach.getBySchluesselOrDefault(fach.kuerzel);
+		// TODO ggf. für Abi29ff zusätzlich check...
+		// if ((isAbi29ff) && ((f === Fach.IN) || (f === Fach.VO)))
+		// 	return null;
+		return f.getFachgruppe(row.manager.getSchuljahr()) ?? null;
+	}
+
+	function getFachfarbe(row: SchuelerAbiturbelegung): string {
+		const gruppe = getFachgruppe(row);
+		const farbe : RGBFarbe = (gruppe === null) ? new RGBFarbe() : gruppe.getFarbe(row.manager.getSchuljahr());
+		return "rgb(" + farbe.red + "," + farbe.green + "," + farbe.blue + ")";
+	}
+
+	function istAbweichungspruefung(row: SchuelerAbiturbelegung): boolean {
+		return (row.manager.daten().abiturjahr <= 2019) && (row.belegung.block2MuendlichePruefungAbweichung === true);
+	}
+
+	function formatNotenpunkteDurchschnitt(avg: number | null): string {
+		if (avg === null)
+			return "";
+		let tmp = ((avg < 10) ? "0" : "") + avg;
+		if (tmp.length === 2)
+			tmp += ".";
+		while (tmp.length < 5)
+			tmp += "0";
+		return tmp;
+	}
+
+	function updateNotenpunkte(row: SchuelerAbiturbelegung, value: string | null) : void {
+		void props.updateAbiturpruefungsdaten(() => row.manager, { fachID: row.belegung.fachID, block2NotenKuerzelPruefung: value });
+	}
+
+	function updateFreiwilligePruefung(row: SchuelerAbiturbelegung, value: boolean) : void {
+		void props.updateAbiturpruefungsdaten(() => row.manager, { fachID: row.belegung.fachID, block2MuendlichePruefungFreiwillig: value });
+	}
+
+	function updatePruefungsreihenfolge(row: SchuelerAbiturbelegung, value: number | null) : void {
+		void props.updateAbiturpruefungsdaten(() => row.manager, { fachID: row.belegung.fachID, block2MuendlichePruefungReihenfolge: value });
+	}
+
+	function updateNotenpunkteMdl(row: SchuelerAbiturbelegung, value: string | null) : void {
+		void props.updateAbiturpruefungsdaten(() => row.manager, { fachID: row.belegung.fachID, block2MuendlichePruefungNotenKuerzel: value });
+	}
+
+	function inputPruefungsnote(row: SchuelerAbiturbelegung) {
+		const key = 'PrüfungsnoteAbiFach_' + row.schueler.id + '_' + row.abiturfach;
+		const setter = (value : string | null) => updateNotenpunkte(row, value);
+		return (element : Element | ComponentPublicInstance<unknown> | null) => {
+			gridManager.applyInputAbiturNotenpunkte(key, 1, row.index, element, setter, row.manager.daten().schuljahrAbitur);
+			if (element !== null)
+				watchEffect(() => gridManager.update(key, row.belegung.block2NotenKuerzelPruefung));
+		};
+	}
+
+	function inputFreiwilligePruefung(row: SchuelerAbiturbelegung) {
+		const key = 'FreiwilligePrüfungAbiFach_' + row.schueler.id + '_' + row.abiturfach;
+		const setter = (value : boolean) => updateFreiwilligePruefung(row, value);
+		return (element : Element | ComponentPublicInstance<unknown> | null) => {
+			gridManager.applyInputToggle(key, 2, row.index, element, setter);
+			if (element !== null)
+				watchEffect(() => gridManager.update(key, row.belegung.block2MuendlichePruefungFreiwillig ?? false));
+		};
+	}
+
+	function inputPruefungsreihenfolge(row: SchuelerAbiturbelegung) {
+		const key = 'PrüfungsreihenfolgeAbiFach_' + row.schueler.id + '_' + row.abiturfach;
+		const setter = (value : number | null) => updatePruefungsreihenfolge(row, value);
+		return (element : Element | ComponentPublicInstance<unknown> | null) => {
+			gridManager.applyInputAbiturPruefungsreihenfolge(key, 3, row.index, element, setter);
+			if (element !== null)
+				watchEffect(() => gridManager.update(key, row.belegung.block2MuendlichePruefungReihenfolge));
+		};
+	}
+
+	function inputPruefungsnoteMdl(row: SchuelerAbiturbelegung) {
+		const key = 'PrüfungsnoteMdlAbiFach_' + row.schueler.id + '_' + row.abiturfach;
+		const setter = (value : string | null) => updateNotenpunkteMdl(row, value);
+		return (element : Element | ComponentPublicInstance<unknown> | null) => {
+			gridManager.applyInputAbiturNotenpunkte(key, 4, row.index, element, setter, row.manager.daten().schuljahrAbitur);
+			if (element !== null)
+				watchEffect(() => gridManager.update(key, row.belegung.block2MuendlichePruefungNotenKuerzel));
+		};
+	}
+
+</script>

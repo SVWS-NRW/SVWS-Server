@@ -69,18 +69,22 @@ export class GridInputToggle<KEY> extends GridInput<KEY, boolean> {
 	public onKeyDown(event : KeyboardEvent) : boolean {
 		if (event.key === "ArrowDown") {
 			this.navigateDown();
+			event.preventDefault();
 			return false;
 		}
 		if (event.key === "ArrowUp") {
 			this.navigateUp();
+			event.preventDefault();
 			return false;
 		}
 		if (event.key === "ArrowLeft") {
 			this.navigateLeft();
+			event.preventDefault();
 			return false;
 		}
 		if (event.key === "ArrowRight") {
 			this.navigateRight();
+			event.preventDefault();
 			return false;
 		}
 		if ((event.key === "Delete") || (event.key === "Backspace")) {

@@ -41,7 +41,7 @@
 				<td :style="{ 'background-color': getFachfarbe(belegung) }">
 					{{ manager().faecher().get(belegung.fachID)?.kuerzelAnzeige ?? "???" }}
 				</td>
-				<td class="text-left" :style="{ 'background-color': getFachfarbe(belegung) }">
+				<td class="text-left ui-divider" :style="{ 'background-color': getFachfarbe(belegung) }">
 					{{ manager().faecher().get(belegung.fachID)?.bezeichnung ?? "???" }}
 				</td>
 				<template v-for="hj in GostHalbjahr.getQualifikationsphase()" :key="hj.id">
@@ -112,7 +112,7 @@
 
 	const gridManager = new GridManager<string>();
 	const cellFormat = {
-		widths: ['4rem', '4rem','16rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem']
+		widths: ['4rem', '4rem','16rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem'],
 	};
 
 	const schuljahr = computed<number>(() => props.manager().getAbiturjahr() - 1);

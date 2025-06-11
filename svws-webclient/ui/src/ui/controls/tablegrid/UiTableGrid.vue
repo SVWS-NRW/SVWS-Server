@@ -27,14 +27,15 @@
 <script setup lang="ts" generic="T">
 
 	import { computed } from 'vue';
-	import type { Collection } from '../../../../../core/src';
+	import type { Collection } from '../../../../../core/src/java/util/Collection';
+	import type { List } from '../../../../../core/src/java/util/List';
 
 	export interface CellFormat {
 		widths: string[];
 	}
 
 	const props = withDefaults(defineProps<{
-		data: Collection<T>,
+		data: Collection<T> | List<T>,
 		cellFormat: CellFormat,
 		headerCount?: number,
 		footerCount?: number,

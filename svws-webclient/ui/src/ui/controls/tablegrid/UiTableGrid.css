@@ -85,10 +85,7 @@
 			border-top: 1px solid transparent;
 		}
 
-		& > thead > tr > th:last-child,
-		& > thead > tr > td:last-child,
-		& > tfoot > tr > th:last-child,
-		& > tfoot > tr > td:last-child {
+		& > tfoot > tr:last-child > td {
 			border-bottom: 0px;
 		}
 		
