@@ -88,6 +88,12 @@ export { TabManager } from "./ui/nav/TabManager";
 export { Checkpoint } from "./ui/modal/Checkpoint";
 export { Color } from "./ui/Color";
 export { LaufbahnplanungUiManager } from "./components/gost/laufbahnplanung/LaufbahnplanungUiManager";
+export { GridManager } from "./ui/controls/tablegrid/GridManager";
+export { GridInput } from "./ui/controls/tablegrid/GridInput";
+export { GridInputInnerText } from "./ui/controls/tablegrid/GridInputInnerText";
+export { GridInputAbiturNotenpunkte } from "./ui/controls/tablegrid/GridInputAbiturNotenpunkte";
+export { GridInputAbiturPruefungsreihenfolge } from "./ui/controls/tablegrid/GridInputAbiturPruefungsreihenfolge";
+export { GridInputToggle } from "./ui/controls/tablegrid/GridInputToggle";
 
 // Enums
 export { AppMenuGroup } from "./ui/nav/AppMenuGroup";

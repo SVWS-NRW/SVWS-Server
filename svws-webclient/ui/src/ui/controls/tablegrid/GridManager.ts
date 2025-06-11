@@ -1,9 +1,9 @@
-import { DeveloperNotificationException } from "@core";
 import { type ComponentPublicInstance } from "vue";
 import type { GridInput } from "./GridInput";
 import { GridInputAbiturNotenpunkte } from "./GridInputAbiturNotenpunkte";
 import { GridInputAbiturPruefungsreihenfolge } from "./GridInputAbiturPruefungsreihenfolge";
 import { GridInputToggle } from "./GridInputToggle";
+import { DeveloperNotificationException } from "../../../../../core/src/core/exceptions/DeveloperNotificationException";
 
 export class GridManager<KEY> {
 

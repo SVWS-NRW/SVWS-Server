@@ -1,0 +1,97 @@
+@layer components {
+
+	.ui-table-grid-input {
+		@apply underline;
+		@apply decoration-dotted;
+		@apply cursor-text;
+		@apply focus:ring-2;
+		@apply focus:ring-inset;
+		@apply focus:ring-ui;
+	}
+
+	.ui-table-grid-button {
+		@apply cursor-pointer;
+		@apply focus:ring-2;
+		@apply focus:ring-inset;
+		@apply focus:ring-ui;
+	}
+
+	table.ui-table-grid {
+		user-select: none;
+		overflow: hidden;
+		min-width: fit-content;
+		max-width: fit-content;
+		height: fit-content;
+		max-height: 100%;
+
+		thead,
+		tfoot {
+			@apply bg-ui text-ui border-ui;
+			position: sticky;
+			min-width: fit-content;
+			max-width: fit-content;
+			z-index: 20;
+			top: 0rem;
+		}
+
+		tbody {
+			height: fit-content;
+			max-height: 100%;
+			overflow-y: auto;
+		}
+
+		& > thead > tr,
+		& > tbody > tr,
+		& > tfoot > tr {
+			@apply text-base;
+			display: grid;
+		}
+
+		& > thead > tr > th,
+		& > thead > tr > td,
+		& > tbody > tr > th,
+		& > tbody > tr > td,
+		& > tfoot > tr > th,
+		& > tfoot > tr > td {
+			@apply flex flex-col;
+			@apply overflow-hidden;
+			@apply px-1 pb-0.5;
+			display: table-cell;
+			text-align: center;
+			width: 100%;
+			height: 100%;
+			border-color: var(--color-border-ui);
+			border-bottom: 1px solid var(--color-border-ui);
+		}
+
+		& > thead > tr > th,
+		& > thead > tr > td {
+			@apply py-2;
+			@apply text-button;
+		}
+
+		& > thead > tr > th.ui-divider,
+		& > thead > tr > td.ui-divider,
+		& > tbody > tr > th.ui-divider,
+		& > tbody > tr > td.ui-divider,
+		& > tfoot > tr > th.ui-divider,
+		& > tfoot > tr > td.ui-divider {
+			border-right: 1px solid var(--color-border-ui-25);
+		}
+
+		& > thead > tr:not(:last-child) > th,
+		& > thead > tr:not(:last-child) > td {
+			border-bottom: 1px solid var(--color-border-ui);
+			border-top: 1px solid transparent;
+		}
+
+		& > thead > tr > th:last-child,
+		& > thead > tr > td:last-child,
+		& > tfoot > tr > th:last-child,
+		& > tfoot > tr > td:last-child {
+			border-bottom: 0px;
+		}
+		
+	}
+
+}

@@ -1,8 +1,8 @@
 import { shallowRef } from "vue";
 import type { GridManager } from "./GridManager";
 import { GridInputInnerText } from "./GridInputInnerText";
-import type { NoteKatalogEintrag } from "@core";
-import { Note } from "@core";
+import type { NoteKatalogEintrag } from "../../../../../core/src/asd/data/NoteKatalogEintrag";
+import { Note } from "../../../../../core/src/asd/types/Note";
 
 /**
  * Ein Grid-Input für die Schnelleingabe der Notenpunkte im Abiturbereich.
