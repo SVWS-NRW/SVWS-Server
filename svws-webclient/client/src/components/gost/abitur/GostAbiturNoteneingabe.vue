@@ -105,7 +105,7 @@
 
 <script setup lang="ts">
 
-	import { computed, ref, watchEffect, type ComponentPublicInstance } from "vue";
+	import { computed, ref, shallowRef, watchEffect, type ComponentPublicInstance } from "vue";
 	import type { List, AbiturFachbelegung, Comparator, Fachgruppe, NoteKatalogEintrag, SchuelerListeEintrag, AbiturdatenManager , KursDaten, LehrerListeEintrag, JavaMap } from "@core";
 	import { GostHalbjahr, ArrayList, Fach, GostBesondereLernleistung, Note, RGBFarbe, DeveloperNotificationException, HashMap } from "@core";
 	import { GridManager, ObjectSelectManager } from "@ui";
@@ -146,14 +146,14 @@
 		return auswahl;
 	});
 
-	const auswahlKurs = ref<KursDaten | null>(null);
+	const auswahlKurs = shallowRef<KursDaten | null>(null);
 	const kursSelectManager = () => {
 		const manager = new ObjectSelectManager(false, alleKurse.value.keySet(), k => k.kuerzel, k => k.kuerzel);
 		manager.removable = true;
 		return manager;
 	};
 
-	const auswahlPruefer = ref<LehrerListeEintrag | null>(null);
+	const auswahlPruefer = shallowRef<LehrerListeEintrag | null>(null);
 	const prueferSelectManager = () => {
 		const manager = new ObjectSelectManager(false, allePruefer.value.keySet(), l => l.kuerzel, l => l.kuerzel);
 		manager.removable = true;
