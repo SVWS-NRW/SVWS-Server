@@ -27,19 +27,24 @@ public class GostKlausurenCollectionSkrsKrsData {
 	@ArraySchema(schema = @Schema(implementation = GostKlausurraumstunde.class, description = "Ein Array mit den Klausurraumstunden, die durch die Veränderung gelöscht wurden."))
 	public @NotNull List<GostKlausurraumstunde> raumstundenGeloescht = new ArrayList<>();
 
-	/** Ein Array mit den IDs der Schülerklausurtermine, bei denen Daten geändert wurden. */
-	@ArraySchema(schema = @Schema(implementation = Long.class, description = "Ein Array mit den IDs der Schülerklausurtermine, bei denen Daten geändert wurden."))
-	public @NotNull List<Long> idsSchuelerklausurtermine = new ArrayList<>();
-
-	/** Die gepatchte Kursklausur. */
-	@Schema(implementation = GostKursklausur.class,
-			description = "Die gepatchte Kursklausur.")
-	public GostKursklausur kursKlausurPatched = null;
+	/** Ein Array mit den Schülerklausurterminraumstunden, die durch die Veränderung gelöscht wurden. */
+	@ArraySchema(schema = @Schema(implementation = GostSchuelerklausurterminraumstunde.class, description = "Ein Array mit den Schülerklausurterminraumstunden, die durch die Veränderung gelöscht wurden."))
+	public @NotNull List<GostSchuelerklausurterminraumstunde> schuelerklausurterminraumstundenGeloescht = new ArrayList<>();
 
 	/**
 	 * Default-Konstruktor
 	 */
 	public GostKlausurenCollectionSkrsKrsData() {
 		super();
+	}
+
+	/**
+	 * Fügt die Daten der übergebenen Instanz zu den aktuellen Daten hinzu.
+	 * @param data die zu hinzuzufügenden Daten
+	 */
+	public void addAll(final @NotNull GostKlausurenCollectionSkrsKrsData data) {
+		raumdata.addAll(data.raumdata);
+		raumstundenGeloescht.addAll(data.raumstundenGeloescht);
+		schuelerklausurterminraumstundenGeloescht.addAll(data.schuelerklausurterminraumstundenGeloescht);
 	}
 }

@@ -10,7 +10,6 @@ import java.util.stream.Stream;
 
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionData;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionSkrsKrsData;
-import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumRich;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungDaten;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungErgebnis;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungErgebnisTermin;
@@ -123,10 +122,7 @@ public final class DataGostKlausurenKursklausur extends DataManagerRevised<Long,
 				final Long newTermin = JSONMapper.convertToLong(value, true);
 				if (!Objects.equals(newTermin, dto.Termin_ID)) {
 					dto.Startzeit = null;
-					final GostKlausurraumRich krRich = new GostKlausurraumRich();
-					krRich.id = -1;
-					krRich.schuelerklausurterminIDs = getSchuelerklausurIDs(dto);
-					raumDataChanged = new DataGostKlausurenSchuelerklausurraumstunde(conn).loescheRaumZuSchuelerklausurenTransaction(ListUtils.create1(krRich)); // Auch alle Raumzuweisungen werden gelöscht
+					raumDataChanged = new DataGostKlausurenSchuelerklausurraumstunde(conn).loescheRaumZuSchuelerklausurenTransaction(getSchuelerklausurtermine(dto)); // Auch alle Raumzuweisungen werden gelöscht
 				}
 				if (newTermin != null) {
 					final DTOGostKlausurenTermine termin = conn.queryByKey(DTOGostKlausurenTermine.class, newTermin);
@@ -141,10 +137,7 @@ public final class DataGostKlausurenKursklausur extends DataManagerRevised<Long,
 				if (((startzeitNeu == null) && (dto.Startzeit != null)) || ((startzeitNeu != null) && !startzeitNeu.equals(dto.Startzeit))) {
 					dto.Startzeit = startzeitNeu;
 					conn.transactionPersist(dto);
-					final GostKlausurraumRich krRich = new GostKlausurraumRich();
-					krRich.id = -1;
-					krRich.schuelerklausurterminIDs = getSchuelerklausurIDs(dto);
-					raumDataChanged = new DataGostKlausurenSchuelerklausurraumstunde(conn).transactionSetzeRaumZuSchuelerklausuren(ListUtils.create1(krRich));
+					raumDataChanged = new DataGostKlausurenSchuelerklausurraumstunde(conn).updateRaeumeZuSchuelerklausurterminen(getSchuelerklausurtermine(dto));
 				}
 			}
 			case "bemerkung" -> dto.Bemerkungen =
@@ -153,16 +146,14 @@ public final class DataGostKlausurenKursklausur extends DataManagerRevised<Long,
 		}
 	}
 
-	private List<Long> getSchuelerklausurIDs(final DTOGostKlausurenKursklausuren dto) throws ApiOperationException {
+	private List<GostSchuelerklausurTermin> getSchuelerklausurtermine(final DTOGostKlausurenKursklausuren dto) throws ApiOperationException {
 		final List<GostSchuelerklausur> sks = new DataGostKlausurenSchuelerklausur(conn).getSchuelerKlausurenZuKursklausuren(ListUtils.create1(map(dto)));
-		final List<GostSchuelerklausurTermin> skts = new DataGostKlausurenSchuelerklausurTermin(conn).getSchuelerklausurtermineZuSchuelerklausuren(sks);
-		return skts.stream().map(skt -> skt.id).toList();
+		return new DataGostKlausurenSchuelerklausurTermin(conn).getSchuelerklausurtermineZuSchuelerklausuren(sks);
 	}
 
 	@Override
 	public Response patchAsResponse(final Long id, final InputStream is) throws ApiOperationException {
-		final GostKursklausur patched = patchFromStream(id, is);
-		raumDataChanged.kursKlausurPatched = patched;
+		patchFromStream(id, is);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(raumDataChanged).build();
 	}
 

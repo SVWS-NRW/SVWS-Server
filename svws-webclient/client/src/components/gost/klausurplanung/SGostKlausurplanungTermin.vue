@@ -183,7 +183,7 @@
 		showKlausurenSelbesDatum?: boolean;
 		hideButtonRaeumePlanen?: boolean;
 		createSchuelerklausurTermin?: (id: number) => Promise<void>;
-		patchKlausur?: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<GostKlausurenCollectionSkrsKrsData>;
+		patchKlausur?: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<void>;
 		patchKlausurtermin: (id: number, termin: Partial<GostKlausurtermin>) => Promise<void>;
 		inTooltip?: boolean;
 		gotoKalenderdatum: (datum: string | undefined, termin: GostKlausurtermin | undefined) => Promise<void>;

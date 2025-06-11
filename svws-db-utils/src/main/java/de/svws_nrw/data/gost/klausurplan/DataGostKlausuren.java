@@ -94,7 +94,7 @@ public final class DataGostKlausuren {
 				jg.kurse.addAll(DataKurse.getKursListenFuerAbschnitt(conn, sja.id, true));
 			}
 			jg.raumdata =
-					new DataGostKlausurenSchuelerklausurraumstunde(conn).getSchuelerklausurraumstundenByTerminids(jg.data.termine.stream().map(t -> t.id).toList());
+					new DataGostKlausurenSchuelerklausurraumstunde(conn).getRaumDataByTerminids(jg.data.termine.stream().map(t -> t.id).toList());
 			data.datacontained.add(jg);
 		}
 

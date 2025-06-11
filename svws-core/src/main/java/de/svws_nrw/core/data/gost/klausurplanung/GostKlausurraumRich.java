@@ -19,9 +19,9 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @TranspilerDTO
 public class GostKlausurraumRich {
 
-	/** Die ID des Klausurraums. */
-	@Schema(description = "die ID des Klausurraums", example = "815")
-	public long id = -1;
+	/** Die ID des Klausurtermins. */
+	@Schema(description = "die ID des Klausurtermins", example = "2242")
+	public @NotNull GostKlausurraum klausurraum = new GostKlausurraum();
 
 	/** Die Grösse des Raumes an Arbeitsplätzen für Schüler. */
 	@Schema(description = "die Grösse des Raumes an Arbeitsplätzen für Schüler", example = "30")
@@ -39,7 +39,7 @@ public class GostKlausurraumRich {
 	 *
 	 */
 	public GostKlausurraumRich(final @NotNull GostKlausurraum klausurraum, final StundenplanRaum stundenplanraum) {
-		id = klausurraum.id;
+		this.klausurraum = klausurraum;
 		if (stundenplanraum != null) {
 			groesse = stundenplanraum.groesse;
 		}
@@ -59,7 +59,7 @@ public class GostKlausurraumRich {
 	 */
 	@Override
 	public boolean equals(final Object another) {
-		return (another != null) && (another instanceof GostKlausurraumRich) && (this.id == ((GostKlausurraumRich) another).id);
+		return (another != null) && (another instanceof GostKlausurraumRich) && (this.klausurraum.equals(((GostKlausurraumRich) another).klausurraum));
 	}
 
 	/**
@@ -69,7 +69,7 @@ public class GostKlausurraumRich {
 	 */
 	@Override
 	public int hashCode() {
-		return Long.hashCode(id);
+		return klausurraum.hashCode();
 	}
 
 }

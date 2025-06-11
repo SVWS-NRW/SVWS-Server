@@ -1,6 +1,7 @@
 package de.svws_nrw.data.gost.klausurplan;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -91,7 +92,7 @@ public final class DataGostKlausurenRaumstunde extends DataManagerRevised<Long, 
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public List<GostKlausurraumstunde> getKlausurraumstundenZuTermin(final Long idTermin) throws ApiOperationException {
-		final List<GostKlausurraum> listRaeume = new DataGostKlausurenRaum(conn).getKlausurraeumeZuTerminen(ListUtils.create1(idTermin));
+		final List<GostKlausurraum> listRaeume = new DataGostKlausurenRaum(conn).getKlausurraeumeZuTerminIDs(ListUtils.create1(idTermin));
 		if (listRaeume.isEmpty())
 			return new ArrayList<>();
 		return getKlausurraumstundenZuRaeumen(listRaeume);
@@ -105,7 +106,7 @@ public final class DataGostKlausurenRaumstunde extends DataManagerRevised<Long, 
 	 * @return die Liste der Klausurraumstunden
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public List<GostKlausurraumstunde> getKlausurraumstundenZuRaeumen(final List<GostKlausurraum> listRaeume) throws ApiOperationException {
+	public List<GostKlausurraumstunde> getKlausurraumstundenZuRaeumen(final Collection<GostKlausurraum> listRaeume) throws ApiOperationException {
 		if (listRaeume.isEmpty())
 			return new ArrayList<>();
 		final List<DTOGostKlausurenRaumstunden> stunden = conn.queryList(DTOGostKlausurenRaumstunden.QUERY_LIST_BY_KLAUSURRAUM_ID,
@@ -135,7 +136,7 @@ public final class DataGostKlausurenRaumstunde extends DataManagerRevised<Long, 
 	 * @return die Liste der zugehörigen Klausurraumstunden-Objekte
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public List<GostKlausurraumstunde> getKlausurraumstundenZuSchuelerklausurterminraumstunden(final List<GostSchuelerklausurterminraumstunde> listSktrs) throws ApiOperationException {
+	public List<GostKlausurraumstunde> getKlausurraumstundenZuSchuelerklausurterminraumstunden(final Collection<GostSchuelerklausurterminraumstunde> listSktrs) throws ApiOperationException {
 		if (listSktrs.isEmpty())
 			return new ArrayList<>();
 		final List<DTOGostKlausurenRaumstunden> sks = conn.queryByKeyList(DTOGostKlausurenRaumstunden.class,

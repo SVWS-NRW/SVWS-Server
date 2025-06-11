@@ -153,6 +153,23 @@ class TestListMap2DLongKeys {
 			{null}, 5, 5
 		""";
 
+	private static final String TEST_REMOVE_VALUE_OR_EXCEPTION = """
+		    1, 2, 1, A, {null}
+		    1, 1, 2, B, {null}
+		    1, 3, 3, D, {null}
+		""";
+
+	private static final String TEST_REMOVE_SINGLE_OR_EXCEPTION = """
+		    1, 1, 2, B
+		    1, 3, 3, D
+		""";
+
+	private static final String TEST_REMOVE_ALL_BY_KEY1 = """
+		    2, 1
+		    1, 1
+		""";
+
+
 	/**
 	 * Initialisiert die Grunddaten.
 	 */
@@ -514,5 +531,75 @@ class TestListMap2DLongKeys {
 				assertEquals(result, map.get12OrException(key1, key2).size());
 			});
 	}
+
+	/**
+	 * Test der 'removeValueOrException' Methode.
+	 *
+	 * @param sizeVorher      Die Listengröße vorher.
+	 * @param key1            Der 1. Schlüssel.
+	 * @param key2            Der 2. Schlüssel.
+	 * @param value           Der zu entfernende Wert.
+	 * @param resultErwartet  Der nach dem Entfernen erwartete Wert ({null} falls leer).
+	 */
+	@DisplayName("Test der 'removeValueOrException' Methode.")
+	@ParameterizedTest
+	@CsvSource(textBlock = TEST_REMOVE_VALUE_OR_EXCEPTION, nullValues = "{null}")
+	void test_removeValueOrException(final int sizeVorher, final int key1, final int key2, final String value, final String resultErwartet) {
+	    assertEquals(sizeVorher, map.get12(key1, key2).size());
+	    map.removeValueOrException(key1, key2, value);
+	    if (resultErwartet == null)
+	        assertEquals(0, map.get12(key1, key2).size());
+	    else
+	        assertEquals(resultErwartet, map.get12(key1, key2).getFirst());
+	}
+
+	/**
+	 * Test der 'removeSingleOrException' Methode.
+	 *
+	 * @param sizeVorher      Die Listengröße vorher.
+	 * @param key1            Der 1. Schlüssel.
+	 * @param key2            Der 2. Schlüssel.
+	 * @param value           Der einzig verbleibende Wert.
+	 */
+	@DisplayName("Test der 'removeSingleOrException' Methode.")
+	@ParameterizedTest
+	@CsvSource(textBlock = TEST_REMOVE_SINGLE_OR_EXCEPTION, nullValues = "{null}")
+	void test_removeSingleOrException(final int sizeVorher, final int key1, final int key2, final String value) {
+	    assertEquals(sizeVorher, map.get12(key1, key2).size());
+	    assertEquals(value, map.removeSingleOrException(key1, key2));
+	    assertEquals(0, map.get12(key1, key2).size());
+	}
+
+	/**
+	 * Test der 'removeAllByKey1' Methode.
+	 *
+	 * @param key1   Der 1. Schlüssel, dessen Zuordnungen entfernt werden.
+	 */
+	@DisplayName("Test der 'removeAllByKey1' Methode.")
+	@ParameterizedTest
+	@CsvSource(textBlock = TEST_REMOVE_ALL_BY_KEY1)
+	void test_removeAllByKey1(final int key1) {
+	    map.removeAllByKey1(key1);
+	    // Prüfe, dass zu diesem key1 keine Zuordnung mehr existiert
+	    for (int k2 = 1; k2 <= 4; k2++)
+	        assertEquals(0, map.get12(key1, k2).size());
+	}
+
+	/**
+	 * Test der 'getAllValues' Methode.
+	 */
+	@DisplayName("Test der 'getAllValues' Methode.")
+	@org.junit.jupiter.api.Test
+	void test_getAllValues() {
+	    // Nach Setup: "A", "B", "C", "D"
+	    assertEquals(4, map.getAllValues().size());
+	    assert (map.getAllValues().containsAll(java.util.List.of("A", "B", "C", "D")));
+	    // Nach Entfernen aller mit key1=1: nur "A", "D" bleiben übrig
+	    map.removeAllByKey1(1);
+	    assertEquals(2, map.getAllValues().size());
+	    assert (map.getAllValues().containsAll(java.util.List.of("A", "D")));
+	}
+
+
 
 }

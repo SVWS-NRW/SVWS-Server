@@ -63,7 +63,7 @@
 		kursklausur: GostKursklausur;
 		termin?: GostKlausurtermin;
 		createSchuelerklausurTermin?: (id: number) => Promise<void>;
-		patchKlausur?: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<GostKlausurenCollectionSkrsKrsData>;
+		patchKlausur?: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<void>;
 		benutzerKompetenzen: Set<BenutzerKompetenz>,
 	}>(), {
 		termin: undefined,

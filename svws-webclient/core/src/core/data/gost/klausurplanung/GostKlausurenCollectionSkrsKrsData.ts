@@ -1,6 +1,6 @@
 import { JavaObject } from '../../../../java/lang/JavaObject';
 import { GostKlausurenCollectionRaumData } from '../../../../core/data/gost/klausurplanung/GostKlausurenCollectionRaumData';
-import { GostKursklausur } from '../../../../core/data/gost/klausurplanung/GostKursklausur';
+import { GostSchuelerklausurterminraumstunde } from '../../../../core/data/gost/klausurplanung/GostSchuelerklausurterminraumstunde';
 import { ArrayList } from '../../../../java/util/ArrayList';
 import type { List } from '../../../../java/util/List';
 import { Class } from '../../../../java/lang/Class';
@@ -19,14 +19,9 @@ export class GostKlausurenCollectionSkrsKrsData extends JavaObject {
 	public raumstundenGeloescht : List<GostKlausurraumstunde> = new ArrayList<GostKlausurraumstunde>();
 
 	/**
-	 * Ein Array mit den IDs der Schülerklausurtermine, bei denen Daten geändert wurden.
+	 * Ein Array mit den Schülerklausurterminraumstunden, die durch die Veränderung gelöscht wurden.
 	 */
-	public idsSchuelerklausurtermine : List<number> = new ArrayList<number>();
-
-	/**
-	 * Die gepatchte Kursklausur.
-	 */
-	public kursKlausurPatched : GostKursklausur | null = null;
+	public schuelerklausurterminraumstundenGeloescht : List<GostSchuelerklausurterminraumstunde> = new ArrayList<GostSchuelerklausurterminraumstunde>();
 
 
 	/**
@@ -34,6 +29,16 @@ export class GostKlausurenCollectionSkrsKrsData extends JavaObject {
 	 */
 	public constructor() {
 		super();
+	}
+
+	/**
+	 * Fügt die Daten der übergebenen Instanz zu den aktuellen Daten hinzu.
+	 * @param data die zu hinzuzufügenden Daten
+	 */
+	public addAll(data : GostKlausurenCollectionSkrsKrsData) : void {
+		this.raumdata.addAll(data.raumdata);
+		this.raumstundenGeloescht.addAll(data.raumstundenGeloescht);
+		this.schuelerklausurterminraumstundenGeloescht.addAll(data.schuelerklausurterminraumstundenGeloescht);
 	}
 
 	transpilerCanonicalName(): string {
@@ -57,12 +62,11 @@ export class GostKlausurenCollectionSkrsKrsData extends JavaObject {
 				result.raumstundenGeloescht.add(GostKlausurraumstunde.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (obj.idsSchuelerklausurtermine !== undefined) {
-			for (const elem of obj.idsSchuelerklausurtermine) {
-				result.idsSchuelerklausurtermine.add(elem);
+		if (obj.schuelerklausurterminraumstundenGeloescht !== undefined) {
+			for (const elem of obj.schuelerklausurterminraumstundenGeloescht) {
+				result.schuelerklausurterminraumstundenGeloescht.add(GostSchuelerklausurterminraumstunde.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		result.kursKlausurPatched = ((obj.kursKlausurPatched === undefined) || (obj.kursKlausurPatched === null)) ? null : GostKursklausur.transpilerFromJSON(JSON.stringify(obj.kursKlausurPatched));
 		return result;
 	}
 
@@ -77,15 +81,14 @@ export class GostKlausurenCollectionSkrsKrsData extends JavaObject {
 				result += ',';
 		}
 		result += ' ]' + ',';
-		result += '"idsSchuelerklausurtermine" : [ ';
-		for (let i = 0; i < obj.idsSchuelerklausurtermine.size(); i++) {
-			const elem = obj.idsSchuelerklausurtermine.get(i);
-			result += elem.toString();
-			if (i < obj.idsSchuelerklausurtermine.size() - 1)
+		result += '"schuelerklausurterminraumstundenGeloescht" : [ ';
+		for (let i = 0; i < obj.schuelerklausurterminraumstundenGeloescht.size(); i++) {
+			const elem = obj.schuelerklausurterminraumstundenGeloescht.get(i);
+			result += GostSchuelerklausurterminraumstunde.transpilerToJSON(elem);
+			if (i < obj.schuelerklausurterminraumstundenGeloescht.size() - 1)
 				result += ',';
 		}
 		result += ' ]' + ',';
-		result += '"kursKlausurPatched" : ' + ((obj.kursKlausurPatched === null) ? 'null' : GostKursklausur.transpilerToJSON(obj.kursKlausurPatched)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -106,18 +109,15 @@ export class GostKlausurenCollectionSkrsKrsData extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (obj.idsSchuelerklausurtermine !== undefined) {
-			result += '"idsSchuelerklausurtermine" : [ ';
-			for (let i = 0; i < obj.idsSchuelerklausurtermine.size(); i++) {
-				const elem = obj.idsSchuelerklausurtermine.get(i);
-				result += elem.toString();
-				if (i < obj.idsSchuelerklausurtermine.size() - 1)
+		if (obj.schuelerklausurterminraumstundenGeloescht !== undefined) {
+			result += '"schuelerklausurterminraumstundenGeloescht" : [ ';
+			for (let i = 0; i < obj.schuelerklausurterminraumstundenGeloescht.size(); i++) {
+				const elem = obj.schuelerklausurterminraumstundenGeloescht.get(i);
+				result += GostSchuelerklausurterminraumstunde.transpilerToJSON(elem);
+				if (i < obj.schuelerklausurterminraumstundenGeloescht.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';
-		}
-		if (obj.kursKlausurPatched !== undefined) {
-			result += '"kursKlausurPatched" : ' + ((obj.kursKlausurPatched === null) ? 'null' : GostKursklausur.transpilerToJSON(obj.kursKlausurPatched)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

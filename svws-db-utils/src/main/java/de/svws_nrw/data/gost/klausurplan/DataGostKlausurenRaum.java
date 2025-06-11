@@ -1,10 +1,13 @@
 package de.svws_nrw.data.gost.klausurplan;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumstunde;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
@@ -106,19 +109,51 @@ public final class DataGostKlausurenRaum extends DataManagerRevised<Long, DTOGos
 	}
 
 	/**
-	 * Gibt die Liste der Klausurvorgaben einer Jahrgangsstufe im übergebenen
-	 * Gost-Halbjahr zurück.
+	 * Gibt die Liste der {@link GostKlausurraum}e zu den übergebenen IDs der {@link GostKlausurtermin}e zurück
 	 *
-	 * @param terminIds die IDs dee Klausurtermine
+	 * @param terminIds die IDs der {@link GostKlausurtermin}e
 	 *
-	 * @return die Liste der Klausurräume
+	 * @return die Liste der {@link GostKlausurraum}e
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public List<GostKlausurraum> getKlausurraeumeZuTerminen(final List<Long> terminIds) throws ApiOperationException {
+	public List<GostKlausurraum> getKlausurraeumeZuTerminIDs(final List<Long> terminIds) throws ApiOperationException {
 		if (terminIds.isEmpty())
 			return new ArrayList<>();
 		final List<DTOGostKlausurenRaeume> raeume = conn.queryList(DTOGostKlausurenRaeume.QUERY_LIST_BY_TERMIN_ID, DTOGostKlausurenRaeume.class, terminIds);
+		final List<GostKlausurraum> daten = new ArrayList<>();
+		for (final DTOGostKlausurenRaeume r : raeume)
+			daten.add(map(r));
+		return daten;
+	}
+
+	/**
+	 * Gibt die Liste der {@link GostKlausurraum}e zu den übergebenen {@link GostKlausurtermin}en zurück
+	 *
+	 * @param termine die {@link GostKlausurtermin}e
+	 *
+	 * @return die Liste der {@link GostKlausurraum}e
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public List<GostKlausurraum> getKlausurraeumeZuTerminen(final Collection<GostKlausurtermin> termine) throws ApiOperationException {
+		return getKlausurraeumeZuTerminIDs(termine.stream().map(t -> t.id).toList());
+	}
+
+	/**
+	 * Gibt die Liste der {@link GostKlausurraum}e zu den übergebenen {@link GostKlausurtermin}en zurück
+	 *
+	 * @param stunden die {@link GostKlausurtermin}e
+	 *
+	 * @return die Liste der {@link GostKlausurraum}e
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public List<GostKlausurraum> getKlausurraeumeZuRaumstunden(final Collection<GostKlausurraumstunde> stunden) throws ApiOperationException {
+		if (stunden.isEmpty())
+			return new ArrayList<>();
+		final List<DTOGostKlausurenRaeume> raeume = conn.queryByKeyList(DTOGostKlausurenRaeume.class, stunden.stream().map(s -> s.idRaum).toList());
+//		final List<DTOGostKlausurenRaeume> raeume = conn.queryList(DTOGostKlausurenRaeume.QUERY_LIST_BY_ID, DTOGostKlausurenRaeume.class, stunden.stream().map(s -> s.idRaum).toList());
 		final List<GostKlausurraum> daten = new ArrayList<>();
 		for (final DTOGostKlausurenRaeume r : raeume)
 			daten.add(map(r));

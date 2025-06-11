@@ -64,7 +64,7 @@
 		onDrag: (event: DragEvent, data: GostKlausurplanungDragData) => void;
 		onDrop: (event: DragEvent | undefined, zone: GostKlausurplanungDropZone) => Promise<void>;
 		draggable: (data: GostKlausurplanungDragData) => boolean;
-		patchKlausur: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<GostKlausurenCollectionSkrsKrsData>;
+		patchKlausur: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<void>;
 		createSchuelerklausurTermin: (id: number) => Promise<void>;
 		terminSelected?: boolean;
 		showSchuelerklausuren?: boolean;

@@ -106,7 +106,7 @@
 		kMan: () => GostKlausurplanManager;
 		patchKlausurraum: (id: number, raum: Partial<GostKlausurraum>) => Promise<boolean>;
 		loescheKlausurraum: (id: number) => Promise<boolean>;
-		patchKlausur: (klausur: GostKursklausur, patch: Partial<GostKursklausur>) => Promise<GostKlausurenCollectionSkrsKrsData>;
+		patchKlausur: (klausur: GostKursklausur, patch: Partial<GostKursklausur>) => Promise<void>;
 		dragData: () => GostKlausurplanungDragData;
 		onDrag: (event: DragEvent, data: GostKlausurplanungDragData) => void;
 		onDrop: (zone: GostKlausurplanungDropZone) => void;
@@ -169,8 +169,7 @@
 			return;
 		try {
 			const startzeit = event.trim().length > 0 ? DateUtils.gibMinutenOfZeitAsString(event) : null;
-			const result = await props.patchKlausur(klausur, {startzeit});
-			props.kMan().setzeRaumZuSchuelerklausuren(result);
+			await props.patchKlausur(klausur, {startzeit});
 		} catch(e) {
 			// Do nothing
 		}

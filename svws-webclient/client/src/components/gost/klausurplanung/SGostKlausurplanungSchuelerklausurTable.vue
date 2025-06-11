@@ -63,7 +63,7 @@
 		draggable?: (data: GostKlausurplanungDragData, termin: GostKlausurtermin) => boolean;
 		onDrop?: (zone: GostKlausurplanungDropZone) => void;
 		selectedItems?: JavaSet<GostSchuelerklausurTermin>;
-		patchKlausur?: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<GostKlausurenCollectionSkrsKrsData>;
+		patchKlausur?: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<void>;
 		klausurCssClasses?: (klausur: GostKlausurplanungDragData, termin: GostKlausurtermin | undefined) => void;
 	}>(), {
 		termin: undefined,

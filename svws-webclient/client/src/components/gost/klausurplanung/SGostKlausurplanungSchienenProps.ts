@@ -19,7 +19,7 @@ export interface GostKlausurplanungSchienenProps {
 	halbjahr: GostHalbjahr;
 	kMan: () => GostKlausurplanManager;
 	terminSelected: WritableComputedRef<GostKlausurtermin | undefined>;
-	patchKlausur: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<GostKlausurenCollectionSkrsKrsData>;
+	patchKlausur: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<void>;
 	createSchuelerklausurTermin: (id: number) => Promise<void>;
 	erzeugeKlausurtermin: (quartal: number, istHaupttermin: boolean) => Promise<GostKlausurtermin>;
 	loescheKlausurtermine: (termine: List<GostKlausurtermin>) => Promise<void>;

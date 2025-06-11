@@ -6390,33 +6390,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode loescheGostSchuelerklausurenAusRaum für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/ausraum
-	 *
-	 * Löscht die Raumzuweisungen für alle in den GostKlausurraumRich-Objekten übergebene GostSchuelerklausurTermin-IDsDabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen einer Raumzuweisung besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Raumzuweisungen wurde erfolgreich gelöscht.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: GostKlausurenCollectionSkrsKrsData
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Raumzuweisungen zu löschen.
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {List<GostKlausurraumRich>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Die Raumzuweisungen wurde erfolgreich gelöscht.
-	 */
-	public async loescheGostSchuelerklausurenAusRaum(data : List<GostKlausurraumRich>, schema : string) : Promise<GostKlausurenCollectionSkrsKrsData> {
-		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/ausraum"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<GostKlausurraumRich>).map(d => GostKlausurraumRich.transpilerToJSON(d)).join() + "]";
-		const result : string = await super.postJSON(path, body);
-		const text = result;
-		return GostKlausurenCollectionSkrsKrsData.transpilerFromJSON(text);
-	}
-
-
-	/**
 	 * Implementierung der DELETE-Methode deleteGostKlausurenSchuelerklausuren für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/delete
 	 *
 	 * Löscht mehrere GostSchuelerklausuren.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen einer GostSchuelerklausur besitzt.
@@ -6474,12 +6447,14 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der PATCH-Methode patchGostKlausurenSchuelerklausurtermin für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/termine/{id : \d+}
+	 * Implementierung der POST-Methode patchGostKlausurenSchuelerklausurtermin für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/termine/{id : \d+}
 	 *
 	 * Patcht einen GostSchuelerklausurTermin.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen eines GostSchuelerklausurTermin besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Patch wurde erfolgreich in den GostSchuelerklausurTermin integriert.
+	 *   Code 201: Der Patch wurde erfolgreich in den GostKlausurtermin integriert.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostKlausurenCollectionSkrsKrsData
 	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um GostSchuelerklausurTermine zu ändern.
 	 *   Code 404: Kein GostSchuelerklausurTermin-Eintrag mit der angegebenen ID gefunden
@@ -6489,13 +6464,17 @@ export class ApiServer extends BaseApi {
 	 * @param {Partial<GostSchuelerklausurTermin>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Patch wurde erfolgreich in den GostKlausurtermin integriert.
 	 */
-	public async patchGostKlausurenSchuelerklausurtermin(data : Partial<GostSchuelerklausurTermin>, schema : string, id : number) : Promise<void> {
+	public async patchGostKlausurenSchuelerklausurtermin(data : Partial<GostSchuelerklausurTermin>, schema : string, id : number) : Promise<GostKlausurenCollectionSkrsKrsData> {
 		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/termine/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = GostSchuelerklausurTermin.transpilerToJSONPatch(data);
-		return super.patchJSON(path, body);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return GostKlausurenCollectionSkrsKrsData.transpilerFromJSON(text);
 	}
 
 
@@ -6554,6 +6533,33 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode loescheGostSchuelerklausurtermineAusRaum für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/termine/loescheraum
+	 *
+	 * Löscht die Raumzuweisungen für alle in den GostKlausurraumRich-Objekten übergebene GostSchuelerklausurTermin-IDsDabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen einer Raumzuweisung besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Raumzuweisungen wurde erfolgreich gelöscht.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostKlausurenCollectionSkrsKrsData
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Raumzuweisungen zu löschen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Raumzuweisungen wurde erfolgreich gelöscht.
+	 */
+	public async loescheGostSchuelerklausurtermineAusRaum(data : List<number>, schema : string) : Promise<GostKlausurenCollectionSkrsKrsData> {
+		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/termine/loescheraum"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return GostKlausurenCollectionSkrsKrsData.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode createGostKlausurenSchuelerklausurtermin für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/termine/new/{id : \d+}
 	 *
 	 * Erstellt einen neuen GostSchuelerklausurTermin für die als ID übergebene GostSchuelerklausur und gibt ihn zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines GostSchuelerklausurTermins besitzt.
@@ -6582,7 +6588,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode setzeGostSchuelerklausurenZuRaum für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/zuraum
+	 * Implementierung der POST-Methode setzeGostSchuelerklausurtermineZuRaum für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/termine/zuraum
 	 *
 	 * Weist die in den GostKlausurraumRich-Objekten übergebenen IDs der GostSchuelerklausurTermine dem jeweiligen GostKlausurraum zu.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Zuweisen eines Klausurraums besitzt.
 	 *
@@ -6598,8 +6604,8 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Raumzuweisungen wurden erfolgreich übernommen.
 	 */
-	public async setzeGostSchuelerklausurenZuRaum(data : List<GostKlausurraumRich>, schema : string) : Promise<GostKlausurenCollectionSkrsKrsData> {
-		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/zuraum"
+	public async setzeGostSchuelerklausurtermineZuRaum(data : List<GostKlausurraumRich>, schema : string) : Promise<GostKlausurenCollectionSkrsKrsData> {
+		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/termine/zuraum"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<GostKlausurraumRich>).map(d => GostKlausurraumRich.transpilerToJSON(d)).join() + "]";
 		const result : string = await super.postJSON(path, body);

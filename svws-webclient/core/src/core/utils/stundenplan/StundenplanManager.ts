@@ -7145,6 +7145,17 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert das zur ID zugehörige {@link StundenplanZeitraster}-Objekt.
+	 *
+	 * @param idZeitraster  Die Datenbank-ID des Zeitrasters.
+	 *
+	 * @return das zur ID zugehörige {@link StundenplanZeitraster}-Objekt.
+	 */
+	public zeitrasterGetByIdOrNull(idZeitraster : number) : StundenplanZeitraster | null {
+		return this._zeitraster_by_id.get(idZeitraster);
+	}
+
+	/**
 	 * Liefert die Beginn-Uhrzeit des {@link StundenplanZeitraster} oder den leeren String, falls diese NULL ist.
 	 * <br>Beispiel: "09:30" oder ""
 	 * <br>Laufzeit: O(1)
