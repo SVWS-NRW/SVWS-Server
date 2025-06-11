@@ -58,6 +58,8 @@ export class RouteGostAbiturNoteneingabe extends RouteNode<any, RouteGostAbitur>
 			serverMode: api.mode,
 			schule: api.schuleStammdaten,
 			schuelerListe: routeGostAbitur.data.schuelerListe,
+			mapLehrer: routeGostAbitur.data.mapLehrer,
+			mapKurse: routeGostAbitur.data.mapKurse,
 			managerMap: () => routeGostAbitur.data.managerAbiturMap,
 			updateAbiturpruefungsdaten: routeGostAbitur.data.updateAbiturpruefungsdaten,
 		};

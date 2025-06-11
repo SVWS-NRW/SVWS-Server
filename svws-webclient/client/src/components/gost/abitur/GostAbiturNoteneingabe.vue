@@ -4,7 +4,7 @@
 			:cell-format="cellFormat" :get-key="(sb: SchuelerAbiturbelegung) => '`${sb.schueler.id}_${sb.belegung.abiturFach}`'">
 			<template #header="params">
 				<template v-if="params.i === 1">
-					<th class="ui-divider text-ui-50 text-left col-span-4" />
+					<th class="ui-divider text-ui-50 text-left col-span-6" />
 					<th class="ui-divider">Vornote</th>
 					<th class="col-span-2">Prüfung</th>
 					<th class="col-span-4">mündliche Prüfung</th>
@@ -16,6 +16,8 @@
 					<th>Kürzel</th>
 					<th class="ui-divider text-left"> Fach </th>
 					<th class="ui-divider text-left"> Schüler </th>
+					<th class="ui-divider text-left"> Kurs </th>
+					<th class="ui-divider text-left"> Prüfer </th>
 					<th class="ui-divider">⌀</th>
 					<th>Punkte</th>
 					<th class="ui-divider">Summe</th>
@@ -42,6 +44,12 @@
 					</td>
 					<td class="text-left ui-divider">
 						{{ row.schueler.nachname }}, {{ row.schueler.vorname }}
+					</td>
+					<td class="text-left ui-divider">
+						{{ getQ22Kurs(row)?.kuerzel ?? "-" }}
+					</td>
+					<td class="text-left ui-divider">
+						{{ getPruefer(row)?.kuerzel }}
 					</td>
 					<td class="ui-divider" :class="{ 'font-bold text-ui-danger': istAbweichungspruefung(row) }">
 						{{ formatNotenpunkteDurchschnitt(row.belegung.block1NotenpunkteDurchschnitt) }}
@@ -83,18 +91,6 @@
 					<td>{{ row.manager.daten().note }}</td>
 				</template>
 			</template>
-			<!-- <template #footer>
-				<td class="col-span-3 ui-divider" />
-				<td class="col-span-4 text-right">Gesamt (normiert):</td>
-				<td class="font-bold">{{ row.manager.daten().block1PunktSummeNormiert }}</td>
-				<td class="ui-divider" />
-				<td />
-				<td class="ui-divider">{{ getPunktSummePruefungen() }}</td>
-				<td class="col-span-4 ui-divider" />
-				<td class="font-bold ui-divider">{{ row.manager.daten().block2PunktSumme }}</td>
-				<td class="font-bold">{{ row.manager.daten().gesamtPunkte }}</td>
-				<td class="bg-ui-brand-secondary font-bold">{{ row.manager.daten().note }}</td>
-			</template> -->
 		</ui-table-grid>
 	</div>
 </template>
@@ -102,13 +98,18 @@
 <script setup lang="ts">
 
 	import { computed, watchEffect, type ComponentPublicInstance } from "vue";
-	import type { List, AbiturFachbelegung, Comparator, Fachgruppe, NoteKatalogEintrag, SchuelerListeEintrag, AbiturdatenManager , GostHalbjahr } from "@core";
-	import { ArrayList, Fach, GostBesondereLernleistung, Note, RGBFarbe, DeveloperNotificationException } from "@core";
+	import type { List, AbiturFachbelegung, Comparator, Fachgruppe, NoteKatalogEintrag, SchuelerListeEintrag, AbiturdatenManager , KursDaten, LehrerListeEintrag } from "@core";
+	import { GostHalbjahr, ArrayList, Fach, GostBesondereLernleistung, Note, RGBFarbe, DeveloperNotificationException } from "@core";
 	import { GridManager } from "@ui";
 
 	import type { GostAbiturNoteneingabeProps } from "./GostAbiturNoteneingabeProps";
 
 	const props = defineProps<GostAbiturNoteneingabeProps>();
+
+	const gridManager = new GridManager<string>();
+	const cellFormat = {
+		widths: ['4rem', '4rem','16rem','16rem','6rem','6rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem'],
+	};
 
 	interface SchuelerAbiturbelegung {
 		index: number,
@@ -153,22 +154,23 @@
 		return result;
 	});
 
-	const gridManager = new GridManager<string>();
-	const cellFormat = {
-		widths: ['4rem', '4rem','16rem','16rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem'],
-	};
+	function getPruefer(row: SchuelerAbiturbelegung): LehrerListeEintrag | null {
+		if (row.belegung.block2Pruefer === null)
+			return null;
+		return props.mapLehrer.get(row.belegung.block2Pruefer);
+	}
+
+	function getQ22Kurs(row: SchuelerAbiturbelegung): KursDaten | null {
+		const belegungQ22 = row.belegung.belegungen[GostHalbjahr.Q22.id];
+		if (belegungQ22 === null)
+			return null;
+		return props.mapKurse.get(belegungQ22.idKurs);
+	}
 
 	function istWertungDefizit(row: SchuelerAbiturbelegung): boolean {
 		if (row.belegung.block2PunkteZwischenstand === null)
 			return false;
 		return row.belegung.block2PunkteZwischenstand < (row.hatAbiFach5 ? 20 : 25);
-	}
-
-	function getNotenpunkteString(row: SchuelerAbiturbelegung, hj: GostHalbjahr) : string {
-		const np = row.manager.getNotenpunkteByFachIDAndHalbjahr(row.belegung.fachID, hj);
-		if (np === null)
-			return "";
-		return ((np < 10) ? "0" : "") + np;
 	}
 
 	function getNotenpunkteFromKuerzel(notenkuerzel: string | null, schuljahr: number) : number | null {

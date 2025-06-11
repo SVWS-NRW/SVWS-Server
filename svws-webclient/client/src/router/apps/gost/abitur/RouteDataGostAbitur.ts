@@ -1,4 +1,4 @@
-import type { AbiturFachbelegung, GostBelegpruefungErgebnis, GostJahrgang, JavaMap, List, SchuelerListeEintrag } from "@core";
+import type { AbiturFachbelegung, GostBelegpruefungErgebnis, GostJahrgang, JavaMap, KursDaten, LehrerListeEintrag, List, SchuelerListeEintrag } from "@core";
 import { Abiturdaten, AbiturdatenManager, ArrayList, HashMap, DeveloperNotificationException, GostBelegpruefungsArt, GostFaecherManager, UserNotificationException } from "@core";
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -8,6 +8,8 @@ interface RouteStateDataGostAbitur extends RouteStateInterface {
 	// Daten, die in Abhängigkeit des ausgewählten Schülers geladen werden
 	abiJahrgang: GostJahrgang | null;
 	schuelerListe: List<SchuelerListeEintrag>;
+	mapLehrer: JavaMap<number, LehrerListeEintrag>;
+	mapKurse: JavaMap<number, KursDaten>;
 	managerLaufbahnplanungMap: JavaMap<number, AbiturdatenManager>;
 	ergebnisBelegpruefungMap: JavaMap<number, GostBelegpruefungErgebnis>;
 	managerAbiturMap: JavaMap<number, AbiturdatenManager>;
@@ -16,6 +18,8 @@ interface RouteStateDataGostAbitur extends RouteStateInterface {
 const defaultState = <RouteStateDataGostAbitur> {
 	abiJahrgang: null,
 	schuelerListe: new ArrayList<SchuelerListeEintrag>(),
+	mapLehrer: new HashMap<number, LehrerListeEintrag>(),
+	mapKurse: new HashMap<number, KursDaten>(),
 	view: routeGostAbiturZulassung,
 	managerLaufbahnplanungMap: new HashMap<number, AbiturdatenManager>(),
 	ergebnisBelegpruefungMap: new HashMap<number, GostBelegpruefungErgebnis>(),
@@ -31,6 +35,14 @@ export class RouteDataGostAbitur extends RouteData<RouteStateDataGostAbitur> {
 
 	get schuelerListe(): List<SchuelerListeEintrag> {
 		return this._state.value.schuelerListe;
+	}
+
+	get mapLehrer(): JavaMap<number, LehrerListeEintrag> {
+		return this._state.value.mapLehrer;
+	}
+
+	get mapKurse(): JavaMap<number, KursDaten> {
+		return this._state.value.mapKurse;
 	}
 
 	get managerLaufbahnplanungMap() : JavaMap<number, AbiturdatenManager> {
@@ -58,13 +70,29 @@ export class RouteDataGostAbitur extends RouteData<RouteStateDataGostAbitur> {
 		if (abiJahrgang.abiturjahr < 0)
 			throw new DeveloperNotificationException("Für den Schüler konnte kein Abiturjahrgang ermittelt werden.");
 
+		const mapKurse = new HashMap<number, KursDaten>();
+		try {
+			const schuljahresabschnitt = api.getAbschnittBySchuljahrUndHalbjahr(abiJahrgang.abiturjahr - 1, 2);
+			if (schuljahresabschnitt !== undefined) {
+				const listKurse = await api.server.getKurseFuerAbschnitt(api.schema, schuljahresabschnitt.id);
+				for (const kurs of listKurse)
+					mapKurse.put(kurs.id, kurs);
+			}
+		} catch(error) {
+			// Das Laden der Kurse kann fehlschlagen, wenn der Schuljahresabschnitt für die Q2.2 noch nicht existiert
+		}
+
 		let schuelerListe = undefined;
+		const mapLehrer = new HashMap<number, LehrerListeEintrag>();
 		let gostJahrgangsdaten = undefined;
 		let listGostFaecher = undefined;
 		let faecherManager = undefined;
 		let listFachkombinationen = undefined;
 		try {
 			schuelerListe = await api.server.getGostAbiturjahrgangSchueler(api.schema, abiJahrgang.abiturjahr);
+			const listLehrer = await api.server.getLehrer(api.schema);
+			for (const lehrer of listLehrer)
+				mapLehrer.put(lehrer.id, lehrer);
 			gostJahrgangsdaten = await api.server.getGostAbiturjahrgang(api.schema, abiJahrgang.abiturjahr);
 			listGostFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, abiJahrgang.abiturjahr);
 			faecherManager = new GostFaecherManager(abiJahrgang.abiturjahr - 1, listGostFaecher);
@@ -74,7 +102,7 @@ export class RouteDataGostAbitur extends RouteData<RouteStateDataGostAbitur> {
 			throw new UserNotificationException("Die Informationen zum Abiturjahrgang " + abiJahrgang.abiturjahr +
 				", dessen Schüler und dessen Fächer konnten nicht vollständig ermittelt werden. Überpfüfen Sie diese Infromationen.");
 		}
-		const newState = <RouteStateDataGostAbitur>{ abiJahrgang, schuelerListe,
+		const newState = <RouteStateDataGostAbitur>{ abiJahrgang, schuelerListe, mapLehrer, mapKurse,
 			managerLaufbahnplanungMap: new HashMap<number, AbiturdatenManager>(),
 			ergebnisBelegpruefungMap: new HashMap<number, GostBelegpruefungErgebnis>(),
 			managerAbiturMap: new HashMap<number, AbiturdatenManager>(), view: this._state.value.view };
