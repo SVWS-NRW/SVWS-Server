@@ -198,6 +198,14 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 		result.sekIWechsel = (obj.sekIWechsel === undefined) ? null : obj.sekIWechsel === null ? null : obj.sekIWechsel;
 		result.sekIErsteSchulform = (obj.sekIErsteSchulform === undefined) ? null : obj.sekIErsteSchulform === null ? null : obj.sekIErsteSchulform;
 		result.sekIIWechsel = (obj.sekIIWechsel === undefined) ? null : obj.sekIIWechsel === null ? null : obj.sekIIWechsel;
+		result.idDauerKindergartenbesuch = (obj.idDauerKindergartenbesuch === undefined) ? null : obj.idDauerKindergartenbesuch === null ? null : obj.idDauerKindergartenbesuch;
+		result.idKindergarten = (obj.idKindergarten === undefined) ? null : obj.idKindergarten === null ? null : obj.idKindergarten;
+		if (obj.verpflichtungSprachfoerderkurs === undefined)
+			throw new Error('invalid json format, missing attribute verpflichtungSprachfoerderkurs');
+		result.verpflichtungSprachfoerderkurs = obj.verpflichtungSprachfoerderkurs;
+		if (obj.teilnahmeSprachfoerderkurs === undefined)
+			throw new Error('invalid json format, missing attribute teilnahmeSprachfoerderkurs');
+		result.teilnahmeSprachfoerderkurs = obj.teilnahmeSprachfoerderkurs;
 		if (obj.merkmale !== undefined) {
 			for (const elem of obj.merkmale) {
 				result.merkmale.add(SchuelerSchulbesuchMerkmal.transpilerFromJSON(JSON.stringify(elem)));
@@ -236,6 +244,10 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 		result += '"sekIWechsel" : ' + ((obj.sekIWechsel === null) ? 'null' : obj.sekIWechsel.toString()) + ',';
 		result += '"sekIErsteSchulform" : ' + ((obj.sekIErsteSchulform === null) ? 'null' : JSON.stringify(obj.sekIErsteSchulform)) + ',';
 		result += '"sekIIWechsel" : ' + ((obj.sekIIWechsel === null) ? 'null' : obj.sekIIWechsel.toString()) + ',';
+		result += '"idDauerKindergartenbesuch" : ' + ((obj.idDauerKindergartenbesuch === null) ? 'null' : obj.idDauerKindergartenbesuch.toString()) + ',';
+		result += '"idKindergarten" : ' + ((obj.idKindergarten === null) ? 'null' : obj.idKindergarten.toString()) + ',';
+		result += '"verpflichtungSprachfoerderkurs" : ' + obj.verpflichtungSprachfoerderkurs.toString() + ',';
+		result += '"teilnahmeSprachfoerderkurs" : ' + obj.teilnahmeSprachfoerderkurs.toString() + ',';
 		result += '"merkmale" : [ ';
 		for (let i = 0; i < obj.merkmale.size(); i++) {
 			const elem = obj.merkmale.get(i);
@@ -327,6 +339,18 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 		}
 		if (obj.sekIIWechsel !== undefined) {
 			result += '"sekIIWechsel" : ' + ((obj.sekIIWechsel === null) ? 'null' : obj.sekIIWechsel.toString()) + ',';
+		}
+		if (obj.idDauerKindergartenbesuch !== undefined) {
+			result += '"idDauerKindergartenbesuch" : ' + ((obj.idDauerKindergartenbesuch === null) ? 'null' : obj.idDauerKindergartenbesuch.toString()) + ',';
+		}
+		if (obj.idKindergarten !== undefined) {
+			result += '"idKindergarten" : ' + ((obj.idKindergarten === null) ? 'null' : obj.idKindergarten.toString()) + ',';
+		}
+		if (obj.verpflichtungSprachfoerderkurs !== undefined) {
+			result += '"verpflichtungSprachfoerderkurs" : ' + obj.verpflichtungSprachfoerderkurs.toString() + ',';
+		}
+		if (obj.teilnahmeSprachfoerderkurs !== undefined) {
+			result += '"teilnahmeSprachfoerderkurs" : ' + obj.teilnahmeSprachfoerderkurs.toString() + ',';
 		}
 		if (obj.merkmale !== undefined) {
 			result += '"merkmale" : [ ';
