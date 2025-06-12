@@ -160,6 +160,7 @@ public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOG
 
 	@Override
 	protected void saveDatabaseDTO(final DTOGostKlausurenTermine dto) throws ApiOperationException {
+		super.saveDatabaseDTO(dto);
 		if (raumDataChanged != null)
 			raumDataChanged.addAll(new DataGostKlausurenSchuelerklausurraumstunde(conn).updateRaeumeZuKlausurtermin(map(dto)));
 	}

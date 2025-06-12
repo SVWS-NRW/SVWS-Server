@@ -2,7 +2,10 @@ package de.svws_nrw.core.adt.map;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -167,6 +170,11 @@ class TestListMap2DLongKeys {
 	private static final String TEST_REMOVE_ALL_BY_KEY1 = """
 		    2, 1
 		    1, 1
+		""";
+
+	private static final String TEST_REMOVE_AND_GET_EMPTY_OR_MISSING = """
+		    2, 1, "A", remove, true, 0
+		    99, 77, {null}, remove, false, 0
 		""";
 
 
@@ -599,6 +607,37 @@ class TestListMap2DLongKeys {
 	    assertEquals(2, map.getAllValues().size());
 	    assert (map.getAllValues().containsAll(java.util.List.of("A", "D")));
 	}
+
+	@DisplayName("Test remove auf leerer oder nie existenter Liste: Caches korrekt, get12 liefert leere Liste")
+	@ParameterizedTest
+	@CsvSource(
+	    textBlock = TEST_REMOVE_AND_GET_EMPTY_OR_MISSING,
+	    nullValues = "{null}"
+	)
+	void test_remove_on_empty_or_missing_path(final int key1, final int key2, final String addValue, final String action, final boolean existedBefore, final int expectedAfter) {
+	    // 1. Falls addValue gesetzt ist, Wert hinzufügen
+	    if (addValue != null && !"remove".equals(addValue)) {
+	        map.add(key1, key2, addValue.replace("\"", ""));
+	    }
+	    // 2. Vorher: existiert der Pfad?
+	    boolean existed = map.containsKey12(key1, key2);
+	    assertEquals(existedBefore, existed);
+
+	    // 3. remove auf Pfad (auch wenn schon leer oder nie da)
+	    map.remove(key1, key2);
+
+	    // 4. Danach: get12 ist niemals null, sondern eine (neue) leere Liste
+	    List<String> afterList = map.get12(key1, key2);
+	    assertNotNull(afterList);
+	    assertEquals(expectedAfter, afterList.size());
+
+	    // 5. Nach erneutem add sind Werte sofort wieder sichtbar
+	    map.add(key1, key2, "Z");
+	    List<String> newList = map.get12(key1, key2);
+	    assertEquals(1, newList.size());
+	    assertEquals("Z", newList.getFirst());
+	}
+
 
 
 

@@ -244,7 +244,7 @@
 			</template>
 			<template #subtitle>
 				<div class="flex">
-					<span>{{ klausurenProKwWarning().size() }} Probleme bei Schülern mit {{ kwWarnLimit }}&nbsp;</span>
+					<span>{{ klausurenProKwWarning().size() === 0 ? 'Keine' : klausurenProKwWarning().size() }} Schüler mit {{ kwWarnLimit }}&nbsp;</span>
 					<span v-if="kwErrorLimit - 1 > kwWarnLimit">bis {{ kwErrorLimit - 1 }}&nbsp;</span>
 					<span>Klausuren in einer Woche gefunden.</span>
 				</div>
@@ -270,7 +270,7 @@
 			</svws-ui-table>
 		</ui-card>
 		<ui-card icon="i-ri-alert-fill" :collapsible="!klausurenProKwError().isEmpty()" :fehler="ValidatorFehlerart.MUSS"
-			:subtitle="klausurenProKwError().size() + ' Fehler bei Schülern mit ' + kwErrorLimit + ' oder mehr Klausuren in einer Woche gefunden.'"
+			:subtitle="(klausurenProKwError().size() === 0 ? 'Keine' : klausurenProKwError().size()) + ' Schüler mit ' + kwErrorLimit + ' oder mehr Klausuren in einer Woche gefunden.'"
 			:is-open="!klausurenProKwError().isEmpty() && currentAction === 'konflikt_vier_wochenklausuren'" @update:is-open="(isOpen) => setCurrentAction('konflikt_vier_wochenklausuren', isOpen)">
 			<template #title>
 				<div class="ui-card--header--title flex items-center gap-3">
