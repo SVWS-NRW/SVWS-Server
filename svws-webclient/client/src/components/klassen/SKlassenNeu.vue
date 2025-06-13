@@ -40,6 +40,7 @@
 </template>
 
 <script setup lang="ts">
+
 	import { ref, computed, onMounted, watch } from "vue";
 	import type { KlassenNeuProps } from "~/components/klassen/SKlassenNeuProps";
 	import type { KlassenDaten, JahrgangsDaten, List } from '@core';
@@ -55,13 +56,16 @@
 	const data = ref<Partial<KlassenDaten>>({});
 
 	onMounted(() => {
+		const schulgliederung = Schulgliederung.getBySchuljahrAndSchulform(props.manager().getSchuljahr(), props.schulform).getFirst();
+		const idSchulgliederung = schulgliederung.daten(props.manager().getSchuljahr())?.id ?? -1;
+		const idKlassenart = Klassenart.getDefault(props.schulform).daten(props.manager().getSchuljahr())?.id ?? Klassenart.UNDEFINIERT.daten(props.manager().getSchuljahr())?.id;
 		data.value = {
 			kuerzel: "",
 			beschreibung: "",
 			idJahrgang: null,
 			parallelitaet: null,
-			idSchulgliederung: Schulgliederung.getDefault(props.schulform)?.daten(props.manager().getSchuljahr())?.id ?? -1,
-			idKlassenart: Klassenart.getDefault(props.schulform).daten(props.manager().getSchuljahr())?.id ?? Klassenart.UNDEFINIERT.daten(props.manager().getSchuljahr())?.id,
+			idSchulgliederung,
+			idKlassenart,
 			idAllgemeinbildendOrganisationsform: AllgemeinbildendOrganisationsformen.GANZTAG.daten(props.manager().getSchuljahr())?.id ?? null,
 		}
 
