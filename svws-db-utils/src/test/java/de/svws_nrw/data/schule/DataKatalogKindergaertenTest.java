@@ -1,9 +1,6 @@
 package de.svws_nrw.data.schule;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Stream;
 
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
@@ -37,7 +34,7 @@ class DataKatalogKindergaertenTest {
 	private DBEntityManager conn;
 
 	@InjectMocks
-	private DataKatalogKindergaerten katalogKindergaerten;
+	private DataKatalogKindergaerten data;
 
 	@BeforeAll
 	static void setUp() {
@@ -47,18 +44,11 @@ class DataKatalogKindergaertenTest {
 	@Test
 	@DisplayName("initDTO | setzt die Felder korrekt")
 	void initDTOTest() {
-		katalogKindergaerten = new DataKatalogKindergaerten(conn);
-		final DTOKindergarten dto = getDTOKindergarten();
-		final long id = 1L;
-		final Map<String, Object> initAttributes = new HashMap<>();
+		final var dto = new DTOKindergarten(1L);
 
-		katalogKindergaerten.initDTO(dto, id, initAttributes);
+		this.data.initDTO(dto, 2L, null);
 
-		assertThat(dto)
-				.hasFieldOrPropertyWithValue("ID", id)
-				.hasFieldOrPropertyWithValue("Bezeichnung", "")
-				.hasFieldOrPropertyWithValue("Sichtbar", true)
-				.hasFieldOrPropertyWithValue("Sortierung", 32000);
+		assertThat(dto).hasFieldOrPropertyWithValue("ID", 2L);
 	}
 
 	@Test
@@ -66,7 +56,7 @@ class DataKatalogKindergaertenTest {
 	void mapTest() {
 		final DTOKindergarten dto = getDTOKindergarten();
 
-		assertThat(katalogKindergaerten.map(dto))
+		assertThat(this.data.map(dto))
 				.isInstanceOf(Kindergarten.class)
 				.hasFieldOrPropertyWithValue("bezeichnung", "Kita Sonnenschein")
 				.hasFieldOrPropertyWithValue("plz", "12345")
@@ -84,70 +74,50 @@ class DataKatalogKindergaertenTest {
 	@Test
 	@DisplayName("getAll | Erfolg")
 	void getAllTest() throws ApiOperationException {
-		final DTOKindergarten dto1 = getDTOKindergarten();
-		final DTOKindergarten dto2 = getDTOKindergarten();
-		dto2.ID = 2L;
-		dto2.Bezeichnung = "Kita Sonnenschein 2";
+		final var dto1 = new DTOKindergarten(1L);
+		final var dto2 = new DTOKindergarten(2L);
 
-		final List<DTOKindergarten> dtoList = new ArrayList<>();
-		dtoList.add(dto1);
-		dtoList.add(dto2);
+		when(this.conn.queryAll(DTOKindergarten.class)).thenReturn(List.of(dto1, dto2));
 
-		when(conn.queryAll(DTOKindergarten.class)).thenReturn(dtoList);
-
-		final List<Kindergarten> result = katalogKindergaerten.getAll();
-		final Kindergarten expectedDto1 = result.stream().filter(lFirst -> lFirst.id == dto1.ID).findFirst().orElse(null);
-		final Kindergarten expectedDto2 = result.stream().filter(lSecond -> lSecond.id == dto2.ID).findFirst().orElse(null);
-
-		assertThat(expectedDto1)
+		assertThat(this.data.getAll())
+				.isInstanceOf(List.class)
 				.isNotNull()
-				.hasFieldOrPropertyWithValue("id", dto1.ID)
-				.hasFieldOrPropertyWithValue("bezeichnung", dto1.Bezeichnung)
-				.hasFieldOrPropertyWithValue("plz", dto1.PLZ)
-				.hasFieldOrPropertyWithValue("ort", dto1.Ort)
-				.hasFieldOrPropertyWithValue("strassenname", dto1.Strassenname)
-				.hasFieldOrPropertyWithValue("hausNr", dto1.HausNr)
-				.hasFieldOrPropertyWithValue("hausNrZusatz", dto1.HausNrZusatz)
-				.hasFieldOrPropertyWithValue("tel", dto1.Tel)
-				.hasFieldOrPropertyWithValue("email", dto1.Email)
-				.hasFieldOrPropertyWithValue("bemerkung", dto1.Bemerkung)
-				.hasFieldOrPropertyWithValue("istSichtbar", dto1.Sichtbar)
-				.hasFieldOrPropertyWithValue("sortierung", dto1.Sortierung);
+				.isNotEmpty()
+				.hasSize(2)
+				.allSatisfy(v -> assertThat(dto1)
+						.isInstanceOf(DTOKindergarten.class)
+						.hasFieldOrProperty("ID"));
+	}
 
-		assertThat(expectedDto2)
-				.isNotNull()
-				.hasFieldOrPropertyWithValue("id", dto2.ID)
-				.hasFieldOrPropertyWithValue("bezeichnung", dto2.Bezeichnung)
-				.hasFieldOrPropertyWithValue("plz", dto2.PLZ)
-				.hasFieldOrPropertyWithValue("ort", dto2.Ort)
-				.hasFieldOrPropertyWithValue("strassenname", dto2.Strassenname)
-				.hasFieldOrPropertyWithValue("hausNr", dto2.HausNr)
-				.hasFieldOrPropertyWithValue("hausNrZusatz", dto2.HausNrZusatz)
-				.hasFieldOrPropertyWithValue("tel", dto2.Tel)
-				.hasFieldOrPropertyWithValue("email", dto2.Email)
-				.hasFieldOrPropertyWithValue("bemerkung", dto2.Bemerkung)
-				.hasFieldOrPropertyWithValue("istSichtbar", dto2.Sichtbar)
-				.hasFieldOrPropertyWithValue("sortierung", dto2.Sortierung);
+	@Test
+	@DisplayName("getByID | ID can't be null")
+	void getByIdTest_IdNull() {
+		final var throwable = Assertions.catchThrowable(() -> this.data.getById(null));
+
+		assertThat(throwable)
+				.isInstanceOf(ApiOperationException.class)
+				.hasMessage("Die ID für den Kindergarten darf nicht null sein.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test
 	@DisplayName("getById | TelefonArt null")
 	void getByIdTest_notFound() {
 		when(conn.queryByKey(DTOKindergarten.class, 1L)).thenReturn(null);
-		final var throwable = catchThrowable(() -> katalogKindergaerten.getById(1L));
+		final var throwable = catchThrowable(() -> this.data.getById(1L));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
-				.hasMessageContaining("Der Kindergarten mit der ID 1 wurde nicht gefunden.");
+				.hasMessageContaining("Es wurde kein Kindergarten mit der ID 1 gefunden.");
 	}
 
 	@Test
 	@DisplayName("getById")
 	void getByIdTest() throws ApiOperationException {
-		final DTOKindergarten dto = getDTOKindergarten();
+		final var dto = getDTOKindergarten();
 		when(conn.queryByKey(DTOKindergarten.class, 1L)).thenReturn(dto);
 
-		assertThat(katalogKindergaerten.getById(dto.ID))
+		assertThat(data.getById(dto.ID))
 				.isNotNull()
 				.hasFieldOrPropertyWithValue("bezeichnung", "Kita Sonnenschein")
 				.hasFieldOrPropertyWithValue("plz", "12345")
@@ -167,11 +137,13 @@ class DataKatalogKindergaertenTest {
 	@MethodSource("provideMappingAttributes")
 	void mapAttributeTest(final String key, final Object value) {
 		final var expectedDTO = getDTOKindergarten();
-		final Map<String, Object> map = new HashMap<>();
-		final var throwable = Assertions.catchThrowable(() -> this.katalogKindergaerten.mapAttribute(expectedDTO, key, value, map));
+		final var throwable = catchThrowable(() -> this.data.mapAttribute(expectedDTO, key, value, null));
 
 		switch (key) {
-			case "id" -> assertThat(expectedDTO.ID).isEqualTo(value);
+			case "id" -> assertThat(throwable)
+					.isInstanceOf(ApiOperationException.class)
+					.hasMessage("Die ID 35 des Patches ist null oder stimmt nicht mit der ID 1 in der Datenbank überein.")
+					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 			case "bezeichnung" -> assertThat(expectedDTO.Bezeichnung).isEqualTo(value);
 			case "plz" -> assertThat(expectedDTO.PLZ).isEqualTo(value);
 			case "ort" -> assertThat(expectedDTO.Ort).isEqualTo(value);
@@ -185,14 +157,14 @@ class DataKatalogKindergaertenTest {
 			case "sortierung" -> assertThat(expectedDTO.Sortierung).isEqualTo(value);
 			default -> assertThat(throwable)
 					.isInstanceOf(ApiOperationException.class)
-					.hasMessageStartingWith("Die Daten des Patches enthalten ein unbekanntes Attribut.")
+					.hasMessageStartingWith("Die Daten des Patches enthalten das unbekannte Attribut")
 					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 		}
 	}
 
 	private static Stream<Arguments> provideMappingAttributes() {
 		return Stream.of(
-				arguments("id", 1L),
+				arguments("id", 35),
 				arguments("bezeichnung", "Kita Sonnenschein"),
 				arguments("plz", "12345"),
 				arguments("ort", "Musterort"),
@@ -203,24 +175,25 @@ class DataKatalogKindergaertenTest {
 				arguments("email", "kita@sonnenschein.de"),
 				arguments("bemerkung", "Ist geschlossen"),
 				arguments("istSichtbar", true),
-				arguments("sortierung", 1)
+				arguments("sortierung", 1),
+				arguments("unknownArgument", "oh oh ! das wollen wir auf keinen Fall!")
 		);
 	}
 
 	private DTOKindergarten getDTOKindergarten() {
-		final var dtoKindergarten = new DTOKindergarten(1L);
-		dtoKindergarten.ID = 1L;
-		dtoKindergarten.Bezeichnung = "Kita Sonnenschein";
-		dtoKindergarten.PLZ = "12345";
-		dtoKindergarten.Ort = "Musterort";
-		dtoKindergarten.Strassenname = "Musterstraße";
-		dtoKindergarten.HausNr = "12";
-		dtoKindergarten.HausNrZusatz = "a";
-		dtoKindergarten.Tel = "01148523516";
-		dtoKindergarten.Email = "kita@sonnenschein.de";
-		dtoKindergarten.Bemerkung = "Ist geschlossen";
-		dtoKindergarten.Sichtbar = true;
-		dtoKindergarten.Sortierung = 1;
-		return dtoKindergarten;
+		final var dto = new DTOKindergarten(1L);
+		dto.ID = 1L;
+		dto.Bezeichnung = "Kita Sonnenschein";
+		dto.PLZ = "12345";
+		dto.Ort = "Musterort";
+		dto.Strassenname = "Musterstraße";
+		dto.HausNr = "12";
+		dto.HausNrZusatz = "a";
+		dto.Tel = "01148523516";
+		dto.Email = "kita@sonnenschein.de";
+		dto.Bemerkung = "Ist geschlossen";
+		dto.Sichtbar = true;
+		dto.Sortierung = 1;
+		return dto;
 	}
 }

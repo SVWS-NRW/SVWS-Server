@@ -15,11 +15,11 @@
 						</h2>
 					</template>
 					<template v-else-if="activeViewType === ViewType.HINZUFUEGEN">
-						<h2 class="svws-headline">Anlegen eines neuen Merkmals</h2>
+						<h2 class="svws-headline">Anlegen eines neuen Kindergartens</h2>
 					</template>
 					<template v-else-if="activeViewType === ViewType.GRUPPENPROZESSE">
 						<h2 class="svws-headline">Gruppenprozesse</h2>
-						<span class="svws-subline">{{ merkmaleSubline }}</span>
+						<span class="svws-subline">{{ kindergaertenSubline }}</span>
 					</template>
 				</div>
 			</div>
@@ -36,19 +36,19 @@
 
 <script setup lang="ts">
 
-	import type { MerkmaleAppProps } from "~/components/schule/kataloge/merkmale/MerkmaleAppProps";
 	import { ViewType } from "@ui";
 	import { computed } from "vue";
 	import { useRegionSwitch } from "~/components/useRegionSwitch";
+	import type { KindergaertenAppProps } from "~/components/schule/kataloge/kindergaerten/SKindergaertenAppProps";
 
-	const props = defineProps<MerkmaleAppProps>();
+	const props = defineProps<KindergaertenAppProps>();
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
-	const merkmaleSubline = computed(() => {
+	const kindergaertenSubline = computed(() => {
 		const list = props.manager().liste.auswahlSorted();
 		if (list.size() > 5)
-			return `${list.size()} Merkmal ausgewählt`;
+			return `${list.size()} Kindergarten ausgewählt`;
 		return [...list].map(k => k.bezeichnung).join(', ');
 	});
 

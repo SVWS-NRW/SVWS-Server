@@ -774,6 +774,7 @@ export { JahrgangListeManager } from './core/utils/jahrgang/JahrgangListeManager
 export { JahrgangsUtils } from './core/utils/jahrgang/JahrgangsUtils';
 export { AbteilungenListeManager } from './core/utils/kataloge/abteilungen/AbteilungenListeManager';
 export { EntlassgruendeListeManager } from './core/utils/kataloge/entlassgruende/EntlassgruendeListeManager';
+export { KindergaertenListeManager } from './core/utils/kataloge/kindergaerten/KindergaertenListeManager';
 export { MerkmaleListeManager } from './core/utils/kataloge/merkmale/MerkmaleListeManager';
 export { VermerkartenListeManager } from './core/utils/kataloge/vermerkart/VermerkartenListeManager';
 export { KlassenListeManager } from './core/utils/klassen/KlassenListeManager';
