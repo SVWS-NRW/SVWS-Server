@@ -1,5 +1,8 @@
 <template>
 	<Story title="Table" id="svws-ui-table" icon="ri:table-line" :layout="{ type: 'single', iframe: false }" auto-props-disabled>
+		<template #docs>
+			<SvwsUiTableStory />
+		</template>
 		<Variant title="Default">
 			<div class="px-3">
 				<svws-ui-content-card>

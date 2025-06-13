@@ -200,7 +200,7 @@
 
 	.svws-ui-tr {
 		.svws-ui-table.svws-has-background & {
-			background-color: var(background-color);
+			background-color: var(--background-color);
 		}
 	}
 

@@ -20,6 +20,5 @@
 	"exclude": [
 		"**/*.story.vue",
 		"**/*.test.ts",
-		"src/histoire.setup.ts"
 	]
 }

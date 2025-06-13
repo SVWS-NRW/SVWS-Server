@@ -61,7 +61,7 @@
 </template>
 
 <script setup lang="ts">
-	import { logEvent } from 'histoire/client';
+	import { logEvent } from '~/stories/helper';
 	import { ref } from 'vue';
 
 	const modelValue = ref("This is a filled textarea component");

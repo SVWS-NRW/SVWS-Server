@@ -5,7 +5,7 @@
 	"license": "BSD-3-Clause",
 	"version": "1.0.9-SNAPSHOT",
 	"scripts": {
-		"dev": "histoire dev",
+		"dev": "vite dev --config vite.config.story.ts",
 		"lint": "eslint 'src/**/*.{ts,vue}' --cache",
 		"lint-tsc": "vue-tsc --noEmit",
 		"test": "vitest",
@@ -13,8 +13,8 @@
 		"build": "npm run build-lib && npm run build-dts",
 		"build-lib": "vite build",
 		"build-dts": "vue-tsc --declaration --emitDeclarationOnly -p tsconfig.build.json",
-		"story:build": "histoire build",
-		"story:preview": "histoire preview"
+		"story:build": "vite build --config vite.config.story.ts",
+		"story:preview": "vite preview --config vite.config.story.ts"
 	},
 	"files": [
 		"dist"

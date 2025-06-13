@@ -1,22 +1,20 @@
 <template>
 	<Story title="Select New" id="ui-select" icon="ri:expand-up-down-line" auto-props-disabled :layout="{ type: 'grid', width: '45%'}" :source="getSourceString()">
 		<Variant title="Single Selection">
-			<svws-ui-content-card class="p-5">
-				<svws-ui-input-wrapper>
-					<ui-select label="SimpleSelectManager mit String" :manager="sStringSelectManager()" :searchable="state.searchable"
-						:disabled="state.disabled" :statistics="state.statistics" :removable="state.removable" :headless="state.headless"
-						:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
-					<ui-select label="SimpleSelectManager mit Number" :manager="sNumberSelectManager()" :searchable="state.searchable"
-						:disabled="state.disabled" :statistics="state.statistics" :removable="state.removable" :headless="state.headless"
-						:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
-					<ui-select label="CoreTypeSelectManager" :manager="sCoreTypeSelectManager()" :searchable="state.searchable" :disabled="state.disabled"
-						:statistics="state.statistics" :removable="state.removable" :headless="state.headless"
-						:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
-					<ui-select label="ObjectSelectManager" :manager="sObjectSelectManager()" :searchable="state.searchable"
-						:disabled="state.disabled" :statistics="state.statistics" :removable="state.removable" :headless="state.headless"
-						:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
-				</svws-ui-input-wrapper>
-			</svws-ui-content-card>
+			<svws-ui-input-wrapper>
+				<ui-select label="SimpleSelectManager mit String" :manager="sStringSelectManager()" :searchable="state.searchable"
+					:disabled="state.disabled" :statistics="state.statistics" :removable="state.removable" :headless="state.headless"
+					:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
+				<ui-select label="SimpleSelectManager mit Number" :manager="sNumberSelectManager()" :searchable="state.searchable"
+					:disabled="state.disabled" :statistics="state.statistics" :removable="state.removable" :headless="state.headless"
+					:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
+				<ui-select label="CoreTypeSelectManager" :manager="sCoreTypeSelectManager()" :searchable="state.searchable" :disabled="state.disabled"
+					:statistics="state.statistics" :removable="state.removable" :headless="state.headless"
+					:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
+				<ui-select label="ObjectSelectManager" :manager="sObjectSelectManager()" :searchable="state.searchable"
+					:disabled="state.disabled" :statistics="state.statistics" :removable="state.removable" :headless="state.headless"
+					:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
+			</svws-ui-input-wrapper>
 			<template #controls>
 				<HstCheckbox v-model="state.searchable" title="Searchable" />
 				<HstCheckbox v-model="state.required" title="Required" />
@@ -52,79 +50,71 @@
 			</template>
 		</Variant>
 		<Variant title="Multi Selection" :source="getSourceString(true)">
-			<svws-ui-content-card class="p-5">
-				<svws-ui-input-wrapper>
-					<ui-select label="SimpleSelectManager mit String" :manager="mStringSelectManager()" :searchable="state.searchable"
-						:disabled="state.disabled" :statistics="state.statistics" :removable="state.removable" :headless="state.headless"
-						:min-options="state.minOptions" :max-options="state.maxOptions" :required="state.required"
-						:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" />
-					<ui-select label="SimpleSelectManager mit Number" :manager="mNumberSelectManager()" :searchable="state.searchable"
-						:disabled="state.disabled" :statistics="state.statistics" :removable="state.removable" :headless="state.headless" :required="state.required"
-						:min-options="state.minOptions" :max-options="state.maxOptions" :class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" />
-					<ui-select label="CoreTypeSelectManager" :manager="mCoreTypeSelectManager()" :searchable="state.searchable" :disabled="state.disabled"
-						:statistics="state.statistics" :removable="state.removable" :headless="state.headless" :min-options="state.minOptions"
-						:max-options="state.maxOptions" :class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
-					<ui-select label="ObjectSelectManager" :manager="mObjectSelectManager()" :searchable="state.searchable" :disabled="state.disabled"
-						:statistics="state.statistics" :removable="state.removable" :headless="state.headless" :min-options="state.minOptions"
-						:max-options="state.maxOptions" :class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
-				</svws-ui-input-wrapper>
-			</svws-ui-content-card>
+			<svws-ui-input-wrapper>
+				<ui-select label="SimpleSelectManager mit String" :manager="mStringSelectManager()" :searchable="state.searchable"
+					:disabled="state.disabled" :statistics="state.statistics" :removable="state.removable" :headless="state.headless"
+					:min-options="state.minOptions" :max-options="state.maxOptions" :required="state.required"
+					:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" />
+				<ui-select label="SimpleSelectManager mit Number" :manager="mNumberSelectManager()" :searchable="state.searchable"
+					:disabled="state.disabled" :statistics="state.statistics" :removable="state.removable" :headless="state.headless" :required="state.required"
+					:min-options="state.minOptions" :max-options="state.maxOptions" :class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" />
+				<ui-select label="CoreTypeSelectManager" :manager="mCoreTypeSelectManager()" :searchable="state.searchable" :disabled="state.disabled"
+					:statistics="state.statistics" :removable="state.removable" :headless="state.headless" :min-options="state.minOptions"
+					:max-options="state.maxOptions" :class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
+				<ui-select label="ObjectSelectManager" :manager="mObjectSelectManager()" :searchable="state.searchable" :disabled="state.disabled"
+					:statistics="state.statistics" :removable="state.removable" :headless="state.headless" :min-options="state.minOptions"
+					:max-options="state.maxOptions" :class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
+			</svws-ui-input-wrapper>
 		</Variant>
 		<Variant title="Filter">
-			<svws-ui-content-card class="p-5">
-				<svws-ui-input-wrapper>
-					In diesem Beispiel werden zwei Filter an das Select übergeben. Jeder Filter hat 2 Fachgruppen, die ausgewählt werden können. Solange kein
-					Filter gesetzt ist, werden alle Optionen angezeigt. Sobald ein Filter gesetzt wird, werden nur noch dazu passende Optionen zur Verfügung
-					gestellt. Gesetzte Fachgruppen in einem Filter ergänzen sich dabei. Wird jedoch in beiden Filtern eine Fachruppe gesetzt, dann werden nur
-					Optionen angezeigt, die zu beiden Fachgruppen passen.
-					<strong>Filter 1</strong>
-					<svws-ui-checkbox v-model="filterState1.fremdsprache">
-						Fremdsprachen
-					</svws-ui-checkbox>
-					<svws-ui-checkbox v-model="filterState1.musikUndKunst">
-						Musik und Kunst
-					</svws-ui-checkbox>
-					<strong>Filter 2</strong>
-					<svws-ui-checkbox v-model="filterState2.deutsch">
-						Deustch
-					</svws-ui-checkbox>
-					<svws-ui-checkbox v-model="filterState2.musikUndKunst">
-						Musik und Kunst
-					</svws-ui-checkbox>
-					<ui-select label="CoreTypeSelectManager Fach abhängig von Fachgruppe" :manager="sFachSelectManager()" :searchable="state.searchable"
-						:disabled="state.disabled" :statistics="state.statistics" :removable="state.removable" :headless="state.headless"
-						:min-options="state.minOptions" :max-options="state.maxOptions" :required="state.required"
-						:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" />
-				</svws-ui-input-wrapper>
-			</svws-ui-content-card>
+			<svws-ui-input-wrapper>
+				In diesem Beispiel werden zwei Filter an das Select übergeben. Jeder Filter hat 2 Fachgruppen, die ausgewählt werden können. Solange kein
+				Filter gesetzt ist, werden alle Optionen angezeigt. Sobald ein Filter gesetzt wird, werden nur noch dazu passende Optionen zur Verfügung
+				gestellt. Gesetzte Fachgruppen in einem Filter ergänzen sich dabei. Wird jedoch in beiden Filtern eine Fachruppe gesetzt, dann werden nur
+				Optionen angezeigt, die zu beiden Fachgruppen passen.
+				<strong>Filter 1</strong>
+				<svws-ui-checkbox v-model="filterState1.fremdsprache">
+					Fremdsprachen
+				</svws-ui-checkbox>
+				<svws-ui-checkbox v-model="filterState1.musikUndKunst">
+					Musik und Kunst
+				</svws-ui-checkbox>
+				<strong>Filter 2</strong>
+				<svws-ui-checkbox v-model="filterState2.deutsch">
+					Deustch
+				</svws-ui-checkbox>
+				<svws-ui-checkbox v-model="filterState2.musikUndKunst">
+					Musik und Kunst
+				</svws-ui-checkbox>
+				<ui-select label="CoreTypeSelectManager Fach abhängig von Fachgruppe" :manager="sFachSelectManager()" :searchable="state.searchable"
+					:disabled="state.disabled" :statistics="state.statistics" :removable="state.removable" :headless="state.headless"
+					:min-options="state.minOptions" :max-options="state.maxOptions" :required="state.required"
+					:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" />
+			</svws-ui-input-wrapper>
 		</Variant>
 		<Variant title="Deep Search">
-			<svws-ui-content-card class="p-5">
-				<svws-ui-input-wrapper>
-					Das folgende Select verwendet Deep Search und lässt auch die Suche nach Attributen zu, die nicht im Optiontext dargestellt werden. So ergibt
-					die Suche nach "2006" oder "2008" ebenfalls jeweils ein Auto, da die Optionen folgende sind:
-					<pre class="bg-ui-neutral border border-ui-neutral rounded w-fit whitespace-normal p-2">
-						<code>
-							[<br>
-								{ marke: "BMW", color: "blue", baujahr: 2006 },<br>
-								{ marke: "Audi", color: "red", baujahr: 2008 }<br>
-							]
-						</code>
-					</pre>
-					<ui-select label="Deep Search ObjectSelectManager" :manager="deepSearchObjectSelectManager()" :searchable="true" :disabled="state.disabled"
-						:statistics="state.statistics" :removable="state.removable" :headless="state.headless" :min-options="state.minOptions"
-						:max-options="state.maxOptions" :class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
-				</svws-ui-input-wrapper>
-			</svws-ui-content-card>
+			<svws-ui-input-wrapper>
+				Das folgende Select verwendet Deep Search und lässt auch die Suche nach Attributen zu, die nicht im Optiontext dargestellt werden. So ergibt
+				die Suche nach "2006" oder "2008" ebenfalls jeweils ein Auto, da die Optionen folgende sind:
+				<pre class="bg-ui-neutral border border-ui-neutral rounded w-fit whitespace-normal p-2">
+					<code>
+						[<br>
+							{ marke: "BMW", color: "blue", baujahr: 2006 },<br>
+							{ marke: "Audi", color: "red", baujahr: 2008 }<br>
+						]
+					</code>
+				</pre>
+				<ui-select label="Deep Search ObjectSelectManager" :manager="deepSearchObjectSelectManager()" :searchable="true" :disabled="state.disabled"
+					:statistics="state.statistics" :removable="state.removable" :headless="state.headless" :min-options="state.minOptions"
+					:max-options="state.maxOptions" :class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
+			</svws-ui-input-wrapper>
 		</Variant>
 		<Variant title="Sortierung">
-			<svws-ui-content-card class="p-5">
-				<svws-ui-input-wrapper>
-					<ui-select label="Sortiertes Select" :manager="sortableCoreTypeSelectManager()" :searchable="true" :disabled="state.disabled"
-						:statistics="state.statistics" :removable="state.removable" :headless="state.headless" :min-options="state.minOptions"
-						:max-options="state.maxOptions" :class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
-				</svws-ui-input-wrapper>
-			</svws-ui-content-card>
+			<svws-ui-input-wrapper>
+				<ui-select label="Sortiertes Select" :manager="sortableCoreTypeSelectManager()" :searchable="true" :disabled="state.disabled"
+					:statistics="state.statistics" :removable="state.removable" :headless="state.headless" :min-options="state.minOptions"
+					:max-options="state.maxOptions" :class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
+			</svws-ui-input-wrapper>
 			<template #controls>
 				<HstCheckbox v-model="state.searchable" title="Searchable" />
 				<HstCheckbox v-model="state.required" title="Required" />

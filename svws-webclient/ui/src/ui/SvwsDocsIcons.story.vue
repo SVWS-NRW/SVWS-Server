@@ -11,7 +11,7 @@
 				</tbody>
 			</table>
 			<!-- Generate all icon sizes: icon-xxs icon-xs icon-sm icon icon-lg icon-xl icon-xxl -->
-			<div class="htw-prose dark:htw-prose-invert mt-12">
+			<div class="prose mt-12">
 				<div class="flex gap-1 flex-wrap -mb-3">
 					<template v-for="color in iconColors" :key="color">
 						<span class="icon-xl i-ri-palette-line" :class="`icon-${color}`" />

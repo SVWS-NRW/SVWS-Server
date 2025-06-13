@@ -37,7 +37,7 @@
 				} : {}"
 				@click.stop="stepper(halbjahr)" :title="getTooltipHalbjahr(halbjahr)"
 				:tabindex="manager.istMoeglich(fach, halbjahr) ? 0 : -1" @keydown.enter.prevent="handleKeyboardStep($event, halbjahr)" @keydown.space.prevent="handleKeyboardStep($event, halbjahr)"
-				@keydown.delete.prevent="deleteFachwahlPlaceholder(halbjahr)" :ref="el => halbjahrRefs.set(halbjahr.id, el as HTMLElement)" @focus="() => emit('update:focus', fach.id, halbjahr.id)">
+				@keydown.delete.prevent="deleteFachwahlPlaceholder(halbjahr)" :ref="el => el && halbjahrRefs.set(halbjahr.id, el as HTMLElement)" @focus="() => emit('update:focus', fach.id, halbjahr.id)">
 				<span class="relative">
 					<template v-if="wahlen[halbjahr.id] !== '' && wahlen[halbjahr.id] === '6'">0</template>
 					<template v-else>{{ wahlen[halbjahr.id] }}&#8203;</template>
@@ -106,7 +106,7 @@
 				'svws-disabled-soft': istBewertet(GostHalbjahr.Q22) && manager.istMoeglichAbi(fach),
 			} : {}"
 			@click.stop="stepperAbi()" :tabindex="manager.istMoeglichAbi(fach) ? 0 : -1" @keydown.enter.prevent="stepperAbi()" @keydown.space.prevent="stepperAbi()" @keydown.delete.prevent="deleteFachwahlAbiturPlaceholder()"
-			:ref="el => halbjahrRefs.set(GostHalbjahr.values().length, el as HTMLElement)" @focus="() => emit('update:focus', fach.id, GostHalbjahr.values().length)">
+			:ref="el => el && halbjahrRefs.set(GostHalbjahr.values().length, el as HTMLElement)" @focus="() => emit('update:focus', fach.id, GostHalbjahr.values().length)">
 			<template v-if="abi_wahl">
 				<span class="relative">{{ abi_wahl }}</span>
 				<span v-if="abi_wahl && !manager.istMoeglichAbi(fach) && hatUpdateKompetenz" class="absolute right-3">
@@ -373,26 +373,6 @@
 		&:focus {
 			outline: none;
 			box-shadow: inset 0 0 0 2px;
-		}
-	}
-
-	.data-table__tr {
-		background-color: #ffffff;
-
-		.data-table__td {
-			background-color: var(background-color);
-		}
-
-		&.svws-background-on-hover {
-			.data-table__td {
-				background-color: transparent;
-			}
-
-			&:hover {
-				.data-table__td {
-					background-color: var(background-color);
-				}
-			}
 		}
 	}
 

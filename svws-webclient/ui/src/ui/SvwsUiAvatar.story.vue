@@ -11,5 +11,5 @@
 </template>
 
 <script setup lang="ts">
-	import { logEvent } from 'histoire/client';
+	import { logEvent } from '~/stories/helper';
 </script>

@@ -13,12 +13,12 @@
 	},
 	"include": [
 		"env.d.ts",
-		"vite.config.ts",
+		"vite.config*.ts",
 		"src/**/*.ts",
 		"src/**/*.vue",
+		"src/**/*.md",
 		"components.d.ts",
 		"../core/src/**/*.ts",
-		"histoire.*.ts",
 		],
 	"exclude": [
 		"../core/src/index.ts",

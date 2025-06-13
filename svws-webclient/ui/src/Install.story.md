@@ -30,7 +30,7 @@ Komponenten können anschließend einzeln importiert werden:
 Stories werden mit Hilfe von Histoire erstellt:
 
 ```shell
-npm run story:dev
+npm run dev
 ```
 
 ```shell
