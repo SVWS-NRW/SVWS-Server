@@ -650,7 +650,7 @@ public class LupoMDB {
 						continue;
 					}
 					final int tmpRestjahre = dtoJahrgang.AnzahlRestabschnitte / schule.AnzahlAbschnitte;
-					int restjahre = switch (dtoJahrgang.ASDJahrgang) {
+					final int restjahre = switch (dtoJahrgang.ASDJahrgang) {
 						case "Q2" -> 1;
 						case "Q1" -> 2;
 						case "EF" -> 3;
@@ -671,8 +671,6 @@ public class LupoMDB {
 						logger.modifyIndent(-2);
 						continue;
 					}
-					if (("GY8".equals(dtoAktAbschnitt.Schulgliederung) || "Y8".equals(dtoAktAbschnitt.Schulgliederung)))
-						restjahre--;
 					final int abiJahrgang = dtoAbschnittSchueler.Jahr + restjahre;
 					logger.logLn(0, "" + abiJahrgang);
 					logger.log("- Prüfe, ob der aktuelle Abiturjahrgang oder ein anderer Abiturjahrgang bereits vorgekommen ist: ");
