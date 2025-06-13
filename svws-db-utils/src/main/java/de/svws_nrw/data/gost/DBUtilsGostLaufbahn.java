@@ -73,7 +73,7 @@ public final class DBUtilsGostLaufbahn {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static DTOGostSchueler getSchuelerOrInit(final DBEntityManager conn, final long idSchueler, final int abijahr) throws ApiOperationException {
+	private static DTOGostSchueler getSchuelerOrInit(final DBEntityManager conn, final long idSchueler, final int abijahr) throws ApiOperationException {
 		final boolean needTransaction = !conn.hasActiveTransaction();
 		try {
 			if (needTransaction)

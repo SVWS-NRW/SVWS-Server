@@ -261,11 +261,20 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 		dtoKlassen.ID = newId;
 		dtoKlassen.Sortierung = 0;
 		dtoKlassen.AdrMerkmal = teilstandort.AdrMerkmal;
-		final OrganisationsformKatalogEintrag orgformEintrag = AllgemeinbildendOrganisationsformen.NICHT_ZUGEORDNET.daten(schuljahresabschnitt.schuljahr);
+		OrganisationsformKatalogEintrag orgformEintrag = null;
+		if (schulform.istAllgemeinbildend())
+			orgformEintrag = AllgemeinbildendOrganisationsformen.NICHT_ZUGEORDNET.daten(schuljahresabschnitt.schuljahr);
+		else if (schulform.istBerufsbildend())
+			orgformEintrag = BerufskollegOrganisationsformen.VOLLZEIT.daten(schuljahresabschnitt.schuljahr);
+		else if (schulform.istWeiterbildung())
+			orgformEintrag = WeiterbildungskollegOrganisationsformen.VOLLZEIT.daten(schuljahresabschnitt.schuljahr);
 		if (orgformEintrag == null)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Fehler beim Anlegen des Default-Wertes für die Organisationsform.");
 		dtoKlassen.OrgFormKrz = orgformEintrag.kuerzel;
-		final SchulgliederungKatalogEintrag schulgliederungEintrag = Schulgliederung.getDefault(schulform).daten(schuljahresabschnitt.schuljahr);
+		Schulgliederung schulgliederung = Schulgliederung.getDefault(schulform);
+		if (schulgliederung == null)
+			schulgliederung = Schulgliederung.getBySchuljahrAndSchulform(schuljahresabschnitt.schuljahr, schulform).getFirst();
+		final SchulgliederungKatalogEintrag schulgliederungEintrag = schulgliederung.daten(schuljahresabschnitt.schuljahr);
 		if (schulgliederungEintrag == null)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Fehler beim Anlegen des Default-Wertes für die Schulgliederung.");
 		dtoKlassen.ASDSchulformNr = schulgliederungEintrag.kuerzel;

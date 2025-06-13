@@ -23,8 +23,10 @@
 
 					<svws-ui-select title="Schulgliederung" v-model="schulgliederung" :items="schulgliederungen" :item-text="getSelectText" />
 					<svws-ui-text-input placeholder="Prüfungsordnung" v-model="data.pruefungsordnung" type="text" disabled />
-					<svws-ui-select title="Klassenart" v-model="klassenart" :items="klassenarten" :item-text="getSelectText" />
-					<svws-ui-select title="Organisationsform" v-model="organisationsform" :items="organisationsformen" :item-text="getSelectText" />
+					<svws-ui-select v-if="schulform.istAllgemeinbildend()" title="Klassenart" v-model="klassenart" :items="klassenarten" :item-text="getSelectText" />
+					<svws-ui-select v-if="schulform.istAllgemeinbildend()" title="Organisationsform" v-model="organisationsformAllgemeinbildend" :items="organisationsformenAllgemeinbildend" :item-text="getSelectText" />
+					<svws-ui-select v-if="schulform.istBerufsbildend()" title="Organisationsform" v-model="organisationsformBerufsbildend" :items="organisationsformenBerufsbildend" :item-text="getSelectText" />
+					<svws-ui-select v-if="schulform.istWeiterbildung()" title="Organisationsform" v-model="organisationsformWeiterbildend" :items="organisationsformenWeiterbildend" :item-text="getSelectText" />
 				</svws-ui-input-wrapper>
 
 				<div class="mt-7 flex flex-row gap-4 justify-end">
@@ -44,7 +46,7 @@
 	import { ref, computed, onMounted, watch } from "vue";
 	import type { KlassenNeuProps } from "~/components/klassen/SKlassenNeuProps";
 	import type { KlassenDaten, JahrgangsDaten, List } from '@core';
-	import { AllgemeinbildendOrganisationsformen, Klassenart, Schulgliederung, ArrayList } from "@core";
+	import { AllgemeinbildendOrganisationsformen, Klassenart, Schulgliederung, ArrayList, Schulform, BerufskollegOrganisationsformen, WeiterbildungskollegOrganisationsformen } from "@core";
 
 	const props = defineProps<KlassenNeuProps>();
 
@@ -56,17 +58,39 @@
 	const data = ref<Partial<KlassenDaten>>({});
 
 	onMounted(() => {
-		const schulgliederung = Schulgliederung.getBySchuljahrAndSchulform(props.manager().getSchuljahr(), props.schulform).getFirst();
+		const schulgliederungDefault = Schulgliederung.getDefault(props.schulform);
+		const schulgliederung = (schulgliederungDefault !== null) ? schulgliederungDefault
+			: Schulgliederung.getBySchuljahrAndSchulform(props.manager().getSchuljahr(), props.schulform).getFirst();
 		const idSchulgliederung = schulgliederung.daten(props.manager().getSchuljahr())?.id ?? -1;
 		const idKlassenart = Klassenart.getDefault(props.schulform).daten(props.manager().getSchuljahr())?.id ?? Klassenart.UNDEFINIERT.daten(props.manager().getSchuljahr())?.id;
-		data.value = {
-			kuerzel: "",
-			beschreibung: "",
-			idJahrgang: null,
-			parallelitaet: null,
-			idSchulgliederung,
-			idKlassenart,
-			idAllgemeinbildendOrganisationsform: AllgemeinbildendOrganisationsformen.GANZTAG.daten(props.manager().getSchuljahr())?.id ?? null,
+		if (props.schulform.istAllgemeinbildend()) {
+			data.value = {
+				kuerzel: "",
+				beschreibung: "",
+				idJahrgang: null,
+				parallelitaet: null,
+				idSchulgliederung,
+				idKlassenart,
+				idAllgemeinbildendOrganisationsform: AllgemeinbildendOrganisationsformen.GANZTAG.daten(props.manager().getSchuljahr())?.id ?? null,
+			}
+		} else if (props.schulform.istBerufsbildend()) {
+			data.value = {
+				kuerzel: "",
+				beschreibung: "",
+				idJahrgang: null,
+				parallelitaet: null,
+				idSchulgliederung,
+				idBerufsbildendOrganisationsform: BerufskollegOrganisationsformen.VOLLZEIT.daten(props.manager().getSchuljahr())?.id ?? null,
+			}
+		} else if (props.schulform.istWeiterbildung()) {
+			data.value = {
+				kuerzel: "",
+				beschreibung: "",
+				idJahrgang: null,
+				parallelitaet: null,
+				idSchulgliederung,
+				idWeiterbildungOrganisationsform: WeiterbildungskollegOrganisationsformen.VOLLZEIT.daten(props.manager().getSchuljahr())?.id ?? null,
+			}
 		}
 
 		watch(() => data.value, async () => {
@@ -96,7 +120,7 @@
 	});
 	const klassenarten = computed(() => Klassenart.getBySchuljahrAndSchulform(schuljahr.value, schulform.value));
 
-	const organisationsform = computed<AllgemeinbildendOrganisationsformen | null>({
+	const organisationsformAllgemeinbildend = computed<AllgemeinbildendOrganisationsformen | null>({
 		get: () => {
 			const id = data.value.idAllgemeinbildendOrganisationsform;
 			if ((id === null) || (id === undefined))
@@ -105,7 +129,29 @@
 		},
 		set: (value) => data.value.idAllgemeinbildendOrganisationsform = value?.daten(schuljahr.value)?.id,
 	});
-	const organisationsformen = computed(() => AllgemeinbildendOrganisationsformen.values());
+	const organisationsformenAllgemeinbildend = computed(() => AllgemeinbildendOrganisationsformen.values());
+
+	const organisationsformBerufsbildend = computed<BerufskollegOrganisationsformen | null>({
+		get: () => {
+			const id = data.value.idBerufsbildendOrganisationsform;
+			if ((id === null) || (id === undefined))
+				return null;
+			return BerufskollegOrganisationsformen.data().getWertByID(id);
+		},
+		set: (value) => data.value.idBerufsbildendOrganisationsform = value?.daten(schuljahr.value)?.id,
+	});
+	const organisationsformenBerufsbildend = computed(() => BerufskollegOrganisationsformen.values());
+
+	const organisationsformWeiterbildend = computed<WeiterbildungskollegOrganisationsformen | null>({
+		get: () => {
+			const id = data.value.idWeiterbildungOrganisationsform;
+			if ((id === null) || (id === undefined))
+				return null;
+			return WeiterbildungskollegOrganisationsformen.data().getWertByID(id);
+		},
+		set: (value) => data.value.idWeiterbildungOrganisationsform = value?.daten(schuljahr.value)?.id,
+	});
+	const organisationsformenWeiterbildend = computed(() => WeiterbildungskollegOrganisationsformen.values());
 
 	const jahrgang = computed<JahrgangsDaten | null>({
 		get: () => {
@@ -168,7 +214,7 @@
 
 	const validateAll = () => isValid.value = (data.value.kuerzel !== undefined) && validateKuerzel(data.value.kuerzel) && (data.value.beschreibung !== undefined) && validateBeschreibung(data.value.beschreibung);
 
-	function getSelectText(value: Klassenart | Schulgliederung | AllgemeinbildendOrganisationsformen) {
+	function getSelectText(value: Klassenart | Schulgliederung | AllgemeinbildendOrganisationsformen | BerufskollegOrganisationsformen | WeiterbildungskollegOrganisationsformen) {
 		return value.daten(schuljahr.value)?.kuerzel + ' - ' + value.daten(schuljahr.value)?.text;
 	}
 
