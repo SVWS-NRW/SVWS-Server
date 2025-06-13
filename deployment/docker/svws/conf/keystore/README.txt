@@ -1,1 +1,0 @@
-keystore-Datei in diesem Verzeichnis ablegen, falls SSL im Jetty des SVWS terminiert werden soll

@@ -11,8 +11,8 @@
   "TLSKeyAlias" : "${SVWS_TLS_KEY_ALIAS}",
   "TLSKeystorePath" : "${SVWS_TLS_KEYSTORE_PATH}",
   "TLSKeystorePassword" : "${SVWS_TLS_KEYSTORE_PASSWORD}",
-  "ClientPath" : "./client",
-  "AdminClientPath" : "./adminclient",
+  "ClientPath" : "../client",
+  "AdminClientPath" : "../adminclient",
   "LoggingEnabled" : true,
   "LoggingPath" : "logs",
   "ServerMode" : "stable",
@@ -20,12 +20,7 @@
   "DBKonfiguration" : {
     "dbms" : "MARIA_DB",
     "location" : "${MARIADB_HOST}",
-    "defaultschema" : "${MARIADB_DATABASE}",
-    "SchemaKonfiguration" : [ {
-      "name" : "${MARIADB_DATABASE}",
-      "svwslogin" : false,
-      "username" : "${MARIADB_USER}",
-      "password" : "${MARIADB_PASSWORD}"
-    } ]
+    "defaultschema" : null,
+    "SchemaKonfiguration" : []
   }
 }
