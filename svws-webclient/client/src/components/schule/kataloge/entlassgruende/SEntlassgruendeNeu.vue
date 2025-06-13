@@ -6,7 +6,7 @@
 					:valid="fieldIsValid('bezeichnung')" />
 				<svws-ui-input-number placeholder="Sortierung" v-model="data.sortierung" :disabled="!bezeichnungIsValid || !hatKompetenzAdd" />
 				<svws-ui-spacing />
-				<svws-ui-checkbox v-model="data.istSichtbar" :valid="fieldIsValid('sortierung')" :disabled="!bezeichnungIsValid || !hatKompetenzAdd">
+				<svws-ui-checkbox v-model="data.istSichtbar" :disabled="!bezeichnungIsValid || !hatKompetenzAdd">
 					Sichtbar
 				</svws-ui-checkbox>
 				<div class="mt-7 flex flex-row gap-4 justify end">
@@ -22,7 +22,7 @@
 <script setup lang="ts">
 
 	import type { EntlassgruendeNeuProps } from "~/components/schule/kataloge/entlassgruende/SEntlassgruendeNeuProps";
-	import { BenutzerKompetenz, JavaInteger, JavaString, KatalogEntlassgrund} from "@core";
+	import { BenutzerKompetenz, JavaString, KatalogEntlassgrund} from "@core";
 	import { ref, computed, watch } from "vue";
 
 	const props = defineProps<EntlassgruendeNeuProps>();
@@ -36,8 +36,6 @@
 			switch (field) {
 				case 'bezeichnung':
 					return bezeichnungIsValid();
-				case 'sortierung':
-					return sortierungIsValid();
 				default:
 					return true;
 			}
@@ -46,10 +44,6 @@
 
 	function bezeichnungIsValid() {
 		return (!JavaString.isBlank(data.value.bezeichnung)) && (data.value.bezeichnung.length <= 30);
-	}
-
-	function sortierungIsValid() {
-		return (data.value.sortierung > 0) && (data.value.sortierung < JavaInteger.MAX_VALUE);
 	}
 
 	const formIsValid = computed(() => {

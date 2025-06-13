@@ -48,6 +48,11 @@ public final class DataKatalogKindergaerten extends DataManagerRevised<Long, DTO
 	}
 
 	@Override
+	protected long getLongId(final DTOKindergarten dto) {
+		return dto.ID;
+	}
+
+	@Override
 	public List<Kindergarten> getAll() throws ApiOperationException {
 		final List<DTOKindergarten> kindergaerten = conn.queryAll(DTOKindergarten.class);
 		return kindergaerten.stream().map(this::map).toList();
