@@ -29,9 +29,10 @@
 				<svws-ui-text-input placeholder="Jahrgang" type="text" :disabled="true" />
 				<svws-ui-text-input placeholder="Klasse" type="text" :disabled="true" />
 				<svws-ui-spacing />
-				<!--TODO Map für Einschullungsart erstellen-->
-				<svws-ui-select title="Einschulungsart" :items="mapEinschulungsarten" :item-text="i => i.text ?? ''" :model-value="mapEinschulungsarten.get(data.einschulungsartID ?? -1)"
-					@update:model-value="v => data.einschulungsartID = v?.id ?? null" removable v-if="schulenMitPrimaerstufe" />
+				<svws-ui-select title="Einschulungsart" :items="mapEinschulungsarten" :item-text="i => i.text ?? ''"
+					:model-value="mapEinschulungsarten.get(dataSchulbesuchsdaten.grundschuleEinschulungsartID ?? -1)"
+					@update:model-value="v => patchSchuelerKindergarten({grundschuleEinschulungsartID: v?.id ?? null}, data.id)"
+					removable v-if="schulenMitPrimaerstufe" />
 				<!--TODO Anmeldedatum darf nicht in der Zukunft liegen-->
 				<svws-ui-text-input placeholder="Anmeldedatum" type="date" v-model="data.anmeldedatum" />
 				<!--TODO Aufnahmedatum darf nicht vor dem Anmeldedatum liegen-->
@@ -170,18 +171,20 @@
 				</template>
 			</svws-ui-modal>
 		</svws-ui-content-card>
-		<!-- TODO Aus SchuelerSchulbesuchsdaten patchen-->
 		<svws-ui-content-card title="Vorschulentwicklung" v-if="schulenMitPrimaerstufe">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-select title="Dauer des Kindergartenbesuchs" :items="Kindergartenbesuch.values()" :item-text="i => i.daten(schuljahr)?.schluessel ?? '-'"
+				<svws-ui-select title="Name des Kindergartens" :items="mapKindergaerten" :item-text="i => i.bezeichnung" :model-value="mapKindergaerten.get(dataSchulbesuchsdaten.idKindergarten ?? -1)"
+					@update:model-value="v => patchSchuelerKindergarten({ idKindergarten: v?.id ?? null }, data.id)"
+					removable />
+				<svws-ui-select title="Dauer des Kindergartenbesuchs" :items="Kindergartenbesuch.values()" :item-text="i => i.daten(schuljahr)?.text ?? '-'"
 					v-model="dauerKindergarten" removable />
-				<svws-ui-select title="Name des Kindergartens" :items="mapKindergaerten" :item-text="i => i.bezeichnung" :model-value="mapKindergaerten.get(data.kindergartenID?? -1)"
-					@update:model-value="v => data.kindergartenID = v?.id ?? null" removable />
 				<svws-ui-spacing />
-				<svws-ui-checkbox v-model="data.verpflichtungSprachfoerderkurs" type="checkbox" title="Verpflichtung f. Sprachförderkurs">
+				<svws-ui-checkbox title="Verpflichtung f. Sprachförderkurss" :model-value="dataSchulbesuchsdaten.verpflichtungSprachfoerderkurs"
+					@update:model-value="verpflichtungSprachfoerderkurs => patchSchuelerKindergarten({ verpflichtungSprachfoerderkurs }, data.id)">
 					Verpflichtung f. Sprachförderkurs
 				</svws-ui-checkbox>
-				<svws-ui-checkbox v-model="data.teilnahmeSprachfoerderkurs" type="checkbox" title="Teilnahme an Sprachförderkurs">
+				<svws-ui-checkbox title="Teilnahme an Sprachförderkurs" :model-value="dataSchulbesuchsdaten.teilnahmeSprachfoerderkurs"
+					@update:model-value="teilnahmeSprachfoerderkurs => patchSchuelerKindergarten({ teilnahmeSprachfoerderkurs }, data.id)">
 					Teilnahme an Sprachförderkurs
 				</svws-ui-checkbox>
 			</svws-ui-input-wrapper>
@@ -199,7 +202,7 @@
 	import type { SchuelerNeuProps } from "~/components/schueler/SSchuelerNeuProps";
 	import type { KatalogEintrag, OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, SchulEintrag, TelefonArt } from "@core";
 	import { AdressenUtils, ArrayList, Geschlecht, JavaString, Kindergartenbesuch, Nationalitaeten, SchuelerStammdaten, SchuelerStatus, SchuelerTelefon,
-		Schulform, Verkehrssprache } from "@core";
+		Schulform, Verkehrssprache, SchuelerSchulbesuchsdaten } from "@core";
 	import { nationalitaetenKatalogEintragFilter, nationalitaetenKatalogEintragSort, orte_filter, orte_sort, ortsteilSort, verkehrsspracheKatalogEintragSort,
 		staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort, verkehrsspracheKatalogEintragFilter } from "~/utils/helfer";
 	import { computed, ref, watch } from "vue";
@@ -210,6 +213,7 @@
 	const schuljahr = computed<number>(() => props.aktAbschnitt.schuljahr);
 
 	const data = ref(new SchuelerStammdaten());
+	const dataSchulbesuchsdaten = ref(new SchuelerSchulbesuchsdaten());
 	const isLoading = ref<boolean>(false);
 
 	watch(() => data.value, async() => {
@@ -321,13 +325,14 @@
 		set: (value) => void props.patch({ haltestelleID: value === undefined ? null : value.id }, data.value.id),
 	});
 
-	const dauerKindergarten = computed<Kindergartenbesuch | undefined>({
-		get(): Kindergartenbesuch | undefined {
-			return Kindergartenbesuch.values().find(i => i.daten(schuljahr.value)?.schluessel === data.value.dauerKindergartenbesuch);
+	const dauerKindergarten = computed<Kindergartenbesuch | null>({
+		get(): Kindergartenbesuch | null {
+			if (dataSchulbesuchsdaten.value.idDauerKindergartenbesuch === null)
+				return null;
+			return Kindergartenbesuch.data().getWertByID(dataSchulbesuchsdaten.value.idDauerKindergartenbesuch);
 		},
-		set(v: Kindergartenbesuch | undefined) {
-			data.value.dauerKindergartenbesuch = v?.daten(schuljahr.value)?.schluessel ?? null;
-		},
+		set: (value) => void props.patchSchuelerKindergarten({ idDauerKindergartenbesuch: value?.daten(schuljahr.value)?.id ?? null }, data.value.id),
+
 	});
 
 	//validation logic

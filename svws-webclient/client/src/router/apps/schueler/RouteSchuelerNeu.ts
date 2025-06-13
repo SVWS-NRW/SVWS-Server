@@ -47,6 +47,7 @@ export class RouteSchuelerNeu extends RouteNode<any, RouteSchueler> {
 			addSchuelerTelefoneintrag: routeSchueler.data.addSchuelerTelefoneintrag,
 			patchSchuelerTelefoneintrag: routeSchueler.data.patchSchuelerTelefoneintrag,
 			deleteSchuelerTelefoneintrage: routeSchueler.data.deleteSchuelerTelefoneintrage,
+			patchSchuelerKindergarten: routeSchueler.data.patchSchuelerKindergarten,
 			aktAbschnitt: routeApp.data.aktAbschnitt.value,
 			schulform: api.schulform,
 			checkpoint: this.checkpoint,

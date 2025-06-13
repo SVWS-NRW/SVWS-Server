@@ -8,19 +8,16 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import de.svws_nrw.asd.data.schueler.EinschulungsartKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.asd.data.schueler.SchuelerStatusKatalogEintrag;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.Geschlecht;
-import de.svws_nrw.asd.types.schueler.Einschulungsart;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.asd.types.schule.Verkehrssprache;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.dto.current.schild.grundschule.DTOKindergarten;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOFahrschuelerart;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOHaltestellen;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKonfession;
@@ -208,11 +205,6 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 		dto.MeisterBafoeg = false;
 
 		dto.BeginnBildungsgang = null;
-		dto.EinschulungsartASD = null;
-		dto.DauerKindergartenbesuch = null;
-		dto.Kindergarten_ID = null;
-		dto.VerpflichtungSprachfoerderkurs = null;
-		dto.TeilnahmeSprachfoerderkurs = null;
 	}
 
 	@Override
@@ -269,15 +261,6 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 		daten.erhaeltMeisterBAFOEG = dto.MeisterBafoeg;
 		daten.beginnBildungsgang = dto.BeginnBildungsgang; // Schulform BK und SB
 		// TODO DauerBildungsgang // Schulform BK und SB
-
-		// TODO Entfernen -> sind jetzt in den SchuelerSchulbesuchsdaten
-		final Einschulungsart einschulungsart = Einschulungsart.data().getWertBySchluessel(dto.EinschulungsartASD);
-		daten.einschulungsartID = (einschulungsart == null) ? null : einschulungsart.getLetzterEintrag().id;
-		daten.dauerKindergartenbesuch = dto.DauerKindergartenbesuch;
-		daten.kindergartenID = dto.Kindergarten_ID;
-		daten.verpflichtungSprachfoerderkurs = (dto.VerpflichtungSprachfoerderkurs != null) && dto.VerpflichtungSprachfoerderkurs;
-		daten.teilnahmeSprachfoerderkurs = (dto.TeilnahmeSprachfoerderkurs != null) && dto.TeilnahmeSprachfoerderkurs;
-
 		return daten;
 	}
 
@@ -349,12 +332,6 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 
 			case "beginnBildungsgang" -> dto.BeginnBildungsgang = JSONMapper.convertToString(value, true, false, Schema.tab_Schueler.col_BeginnBildungsgang.datenlaenge(),
 					"beginnBildungsgang");
-			case "einschulungsartID" -> mapEinschulungsartID(dto, value);
-			case "dauerKindergartenbesuch" -> dto.DauerKindergartenbesuch = JSONMapper.convertToString(value, true, false,
-					Schema.tab_Schueler.col_DauerKindergartenbesuch.datenlaenge(), "dauerKindergartenbesuch");
-			case "kindergartenID" -> mapKindergartenID(dto, value);
-			case "verpflichtungSprachfoerderkurs" -> dto.VerpflichtungSprachfoerderkurs = JSONMapper.convertToBoolean(value, false, "verpflichtungSprachfoerderkurs");
-			case "teilnahmeSprachfoerderkurs" -> dto.TeilnahmeSprachfoerderkurs = JSONMapper.convertToBoolean(value, false, "teilnahmeSprachfoerderkurs");
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Das Patchen des Attributes %s ist nicht implementiert.".formatted(name));
 		}
 	}
@@ -505,28 +482,6 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 				throw new ApiOperationException(Status.NOT_FOUND);
 		}
 		dto.Haltestelle_ID = haltestelleId;
-	}
-
-	// TODO -> verschieben nach DataSchuelerSchulbesuchsdaten bzw. SchuelerSchulbesuchdaten
-	private static void mapEinschulungsartID(final DTOSchueler dto, final Object value) throws ApiOperationException {
-		final Long id = JSONMapper.convertToLongInRange(value, true, 0L, null, "einschulungsartID");
-		if (id == null) {
-			dto.EinschulungsartASD = null;
-			return;
-		}
-		final EinschulungsartKatalogEintrag eintrag = Einschulungsart.data().getEintragByID(id);
-		dto.EinschulungsartASD = (eintrag == null) ? null : eintrag.schluessel;
-	}
-
-	// TODO -> verschieben nach DataSchuelerSchulbesuchsdaten bzw. SchuelerSchulbesuchdaten
-	private void mapKindergartenID(final DTOSchueler dto, final Object value) throws ApiOperationException {
-		final Long kindergartenId = JSONMapper.convertToLongInRange(value, true, 0L, null, "kindergartenID");
-		if (kindergartenId != null) {
-			final DTOKindergarten kindergartenDTO = conn.queryByKey(DTOKindergarten.class, kindergartenId);
-			if (kindergartenDTO == null)
-				throw new ApiOperationException(Status.NOT_FOUND);
-		}
-		dto.Kindergarten_ID = kindergartenId;
 	}
 
 	/**

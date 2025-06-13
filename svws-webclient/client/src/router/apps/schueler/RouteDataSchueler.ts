@@ -1,4 +1,5 @@
-import type { ApiFile, List, ReportingParameter, SchuelerListeEintrag, SchuelerStammdaten, SimpleOperationResponse, StundenplanListeEintrag , SchuelerTelefon } from "@core";
+import type { ApiFile, List, ReportingParameter, SchuelerListeEintrag, SchuelerStammdaten, SimpleOperationResponse, StundenplanListeEintrag, SchuelerTelefon, SchuelerSchulbesuchsdaten, } from "@core";
+
 import { BenutzerKompetenz, ArrayList, SchuelerListe, SchuelerListeManager, SchuelerStatus, DeveloperNotificationException } from "@core";
 
 import { api } from "~/router/Api";
@@ -138,6 +139,10 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 		}
 		this.setPatchedState({ listSchuelerTelefoneintraege: <List<SchuelerTelefon>>this.listSchuelerTelefoneintraege.clone() });
 		api.status.stop();
+	}
+
+	patchSchuelerKindergarten = async (data : Partial<SchuelerSchulbesuchsdaten>, id: number) : Promise<void> => {
+		await api.server.patchSchuelerSchulbesuch(data, api.schema, id);
 	}
 
 	protected async doPatch(data : Partial<SchuelerStammdaten>, id: number) : Promise<void> {

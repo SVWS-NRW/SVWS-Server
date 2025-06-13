@@ -210,26 +210,6 @@ public class SchuelerStammdaten {
 	@Schema(description = "der Beginn des Bildungsgangs eines Schülers", example = "null")
 	public String beginnBildungsgang;
 
-	/** Die ID einer Einschulungsart. */
-	@Schema(description = "die ID einer Einschulungsart", example = "2")
-	public Long einschulungsartID;
-
-	/** Die Dauer des Kindergartenbesuchs eines Schülers. */
-	@Schema(description = "die Dauer des Kindergartenbesuchs eines Schülers", example = "null")
-	public String dauerKindergartenbesuch;
-
-	/** Die ID des Kindergartens. */
-	@Schema(description = "die ID des Kindergartens", example = "2")
-	public Long kindergartenID;
-
-	/** Schüler wurde zu einem Sprachförderkurs verpflichtet (Ja/Nein). */
-	@Schema(description = "gibt an, ob der Schüler zu einem Sprachförderkurs verpflichtet wurde oder nicht", example = "false")
-	public boolean verpflichtungSprachfoerderkurs;
-
-	/** Teilnahme des Schülers an einem Sprachförderkurs (Ja/Nein). */
-	@Schema(description = "gibt an, ob der Schüler an einem Sprachförderkurs teilgenommen hat oder nicht", example = "false")
-	public boolean teilnahmeSprachfoerderkurs;
-
 	/**
 	 * Leerer Standardkonstruktor.
 	 */

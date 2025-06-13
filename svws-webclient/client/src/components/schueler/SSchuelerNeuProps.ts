@@ -1,6 +1,6 @@
 import type { Checkpoint } from "@ui";
 import type { RoutingStatus } from "~/router/RoutingStatus";
-import type { SchuelerStammdaten, SchuelerListeManager, OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, KatalogEintrag, Kindergarten, EinschulungsartKatalogEintrag, Schuljahresabschnitt, Schulform, SchulEintrag, TelefonArt, List, SchuelerTelefon, } from "@core";
+import type { SchuelerStammdaten, SchuelerListeManager, OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, KatalogEintrag, Kindergarten, EinschulungsartKatalogEintrag, Schuljahresabschnitt, Schulform, SchulEintrag, TelefonArt, List, SchuelerTelefon, SchuelerSchulbesuchsdaten, } from "@core";
 
 export interface SchuelerNeuProps {
 	schuelerListeManager: () => SchuelerListeManager;
@@ -20,6 +20,7 @@ export interface SchuelerNeuProps {
 	addSchuelerTelefoneintrag: (data: Partial<SchuelerTelefon>, idSchueler: number) => Promise<void>;
 	patchSchuelerTelefoneintrag: (data: Partial<SchuelerTelefon>, idEintrag: number) => Promise<void>;
 	deleteSchuelerTelefoneintrage: (idsEintraege: List<number>) => Promise<void>;
+	patchSchuelerKindergarten: (data: Partial<SchuelerSchulbesuchsdaten>, idSchueler: number) => Promise<void>;
 	aktAbschnitt: Schuljahresabschnitt;
 	schulform: Schulform,
 	checkpoint: Checkpoint;
