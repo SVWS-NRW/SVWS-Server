@@ -1,1 +1,0 @@
-import{d as e,c as a,l as n,n as o,o as i}from"./index-Ypxb2S-y.js";const c=e({__name:"SvwsUiSpacing",props:{size:{default:1}},setup(r){return(s,p)=>(i(),a("div",{class:o(["svws-ui-spacing",{"svws-ui-spacing--2":s.size===2}])},[n(s.$slots,"default")],2))}});export{c as _};

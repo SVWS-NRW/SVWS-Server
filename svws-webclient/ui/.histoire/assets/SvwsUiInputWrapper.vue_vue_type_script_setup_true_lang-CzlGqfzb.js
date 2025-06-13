@@ -1,1 +1,0 @@
-import{d as r,c as p,l as a,n,o as t}from"./index-Ypxb2S-y.js";const i=r({__name:"SvwsUiInputWrapper",props:{grid:{default:1},center:{type:Boolean,default:!1}},setup(s){return(e,o)=>(t(),p("div",{class:n(["input-wrapper",{"input-wrapper--2":e.grid===2,"input-wrapper--4":e.grid===4,"input-wrapper--center":e.center}])},[a(e.$slots,"default")],2))}});export{i as _};
