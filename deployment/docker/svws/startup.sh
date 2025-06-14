@@ -20,7 +20,8 @@ fi
 # Keystore erzeugen, wenn nicht vorhanden
 if [[ ! -s ${SVWS_TLS_KEYSTORE_PATH}/keystore ]]; then
 	echo "Keystore '${SVWS_TLS_KEYSTORE_PATH}/keystore' nicht vorhanden. Erstelle Keystore..."
-	keytool -genkey -noprompt -alias ${SVWS_TLS_KEY_ALIAS} -dname "CN=test, OU=test, O=test, L=test, S=test, C=test" -keystore ${SVWS_TLS_KEYSTORE_PATH}/keystore -storepass ${SVWS_TLS_KEYSTORE_PASSWORD} -keypass ${SVWS_TLS_KEYSTORE_PASSWORD} -keyalg RSA
+	echo "dname CN=$SVWS_TLS_CERT_CN, OU=$SVWS_TLS_CERT_OU, O=$SVWS_TLS_CERT_O, L=$SVWS_TLS_CERT_L, S=$SVWS_TLS_CERT_S, C=$SVWS_TLS_CERT_C"
+	keytool -genkey -noprompt -alias ${SVWS_TLS_KEY_ALIAS} -dname "CN=$SVWS_TLS_CERT_CN, OU=$SVWS_TLS_CERT_OU, O=$SVWS_TLS_CERT_O, L=$SVWS_TLS_CERT_L, S=$SVWS_TLS_CERT_S, C=$SVWS_TLS_CERT_C" -keystore ${SVWS_TLS_KEYSTORE_PATH}/keystore -storepass ${SVWS_TLS_KEYSTORE_PASSWORD} -keypass ${SVWS_TLS_KEYSTORE_PASSWORD} -keyalg RSA
 else
 	echo "Keystore vorhanden."
 fi
