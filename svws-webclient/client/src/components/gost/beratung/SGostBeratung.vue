@@ -54,7 +54,7 @@
 	const props = defineProps<GostBeratungProps>();
 
 	const manager = computed<LaufbahnplanungUiManager>(() =>
-		new LaufbahnplanungUiManager(props.serverMode, props.abiturdatenManager, props.config, props.jahrgangsdaten, props.setWahl, true));
+		new LaufbahnplanungUiManager(props.serverMode, props.abiturdatenManager, props.config, props.jahrgangsdaten, props.setWahl, { faecherZeigen: "app.gost.beratung.faecher.anzeigen", modus: "app.gost.beratung.modus" }, true));
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 

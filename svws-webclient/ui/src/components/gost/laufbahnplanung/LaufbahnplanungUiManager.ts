@@ -71,6 +71,9 @@ export class LaufbahnplanungUiManager {
 	/** Der Eingabemodus */
 	public _modus = ref<'manuell' | 'normal' | 'hochschreiben'>('normal');
 
+	/** Der Pfad zum Speichern der Configdaten */
+	private _configPfade: { faecherZeigen: string, modus: string };
+
 
 	/**
 	 * Erstellt einen neuen UI-Manager auf Basis des übergebenen Abiturdaten-Managers,
@@ -83,7 +86,7 @@ export class LaufbahnplanungUiManager {
 	 * @param belegungHatImmerNoten    gibt an, ob bei den einzelnen Fachbelegungen immer Noten bei den Leistungsdaten angenommen werden sollen
 	 */
 	public constructor(serverMode: ServerMode, manager: () => AbiturdatenManager, config: () => Config, jahrgang: () => GostJahrgangsdaten,
-		setWahl: (fachID: number, wahl: GostSchuelerFachwahl) => Promise<void>, ignoriereSprachenfolge : boolean = false,
+		setWahl: (fachID: number, wahl: GostSchuelerFachwahl) => Promise<void>, configPfade: { faecherZeigen: string, modus: string }, ignoriereSprachenfolge : boolean = false,
 		belegungHatImmerNoten : boolean = false) {
 		this.serverMode = serverMode;
 		this.manager = manager;
@@ -92,20 +95,21 @@ export class LaufbahnplanungUiManager {
 		this.setWahl = setWahl;
 		this._ignoriereSprachenfolge = ignoriereSprachenfolge;
 		this._belegungHatImmerNoten = belegungHatImmerNoten;
+		this._configPfade = configPfade;
 		// Lese aus der Konfiguration aus, ob alle Fächer oder nur ein Teil angezeigt werden soll
-		const wert = this.config().getValue("app.schueler.laufbahnplanung.faecher.anzeigen");
+		const wert = this.config().getValue(configPfade.faecherZeigen);
 		if ((wert === 'alle') || (wert === 'nur_waehlbare') || (wert === 'nur_gewaehlt')) {
 			this._faecherAnzeigen.value = wert;
 		} else {
-			void this.config().setValue("app.schueler.laufbahnplanung.faecher.anzeigen", 'alle');
+			void this.config().setValue(configPfade.faecherZeigen, 'alle');
 			this._faecherAnzeigen.value = 'alle';
 		}
 		// Lese den Eingabemodus aus der Konfiguration aus
-		const modus = this.config().getValue("app.schueler.laufbahnplanung.modus");
+		const modus = this.config().getValue(configPfade.modus);
 		if ((modus === 'manuell') || (modus === 'normal') || (modus === 'hochschreiben')) {
 			this._modus.value = modus;
 		} else {
-			void this.config().setValue("app.schueler.laufbahnplanung.modus", 'normal');
+			void this.config().setValue(configPfade.modus, 'normal');
 			this._modus.value = 'normal';
 		}
 	}

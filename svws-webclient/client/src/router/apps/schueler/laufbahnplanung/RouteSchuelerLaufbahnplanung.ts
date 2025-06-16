@@ -1,7 +1,8 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { SchuelerLaufbahnplanungProps } from "@ui";
 
-import { BenutzerKompetenz, DeveloperNotificationException, ServerMode } from "@core";
+import type { DeveloperNotificationException } from "@core";
+import { BenutzerKompetenz, ServerMode } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
@@ -9,8 +10,7 @@ import { routeError } from "~/router/error/RouteError";
 import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { RouteDataSchuelerLaufbahnplanung } from "~/router/apps/schueler/laufbahnplanung/RouteDataSchuelerLaufbahnplanung";
 
-import { ConfigElement } from "../../../../../../ui/src/utils/Config";
-import { SSchuelerLaufbahnplanung } from "@ui";
+import { ConfigElement, SSchuelerLaufbahnplanung } from "@ui";
 import { schulformenGymOb } from "~/router/RouteHelper";
 
 export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLaufbahnplanung, RouteSchueler> {

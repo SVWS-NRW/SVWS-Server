@@ -45,7 +45,7 @@
 
 	const props = defineProps<SchuelerLaufbahnplanungProps>();
 
-	const manager = computed<LaufbahnplanungUiManager>(() => new LaufbahnplanungUiManager(props.serverMode, props.abiturdatenManager, props.config, () => props.gostJahrgangsdaten, props.setWahl));
+	const manager = computed<LaufbahnplanungUiManager>(() => new LaufbahnplanungUiManager(props.serverMode, props.abiturdatenManager, props.config, () => props.gostJahrgangsdaten, props.setWahl, { faecherZeigen: "app.schueler.laufbahnplanung.faecher.anzeigen", modus: "app.schueler.laufbahnplanung.modus" }));
 
 	const hatUpdateKompetenz = computed<boolean>(() => {
 		if ((props.benutzerKompetenzen === undefined) || (props.benutzerKompetenzenAbiturjahrgaenge === undefined) || (props.schueler.abiturjahrgang === null))

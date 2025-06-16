@@ -10,6 +10,7 @@ import { RouteDataGostBeratung } from "~/router/apps/gost/beratung/RouteDataGost
 import { routeError } from "~/router/error/RouteError";
 import { api } from "~/router/Api";
 import { schulformenGymOb } from "~/router/RouteHelper";
+import { ConfigElement } from "@ui";
 
 const SGostBeratung = () => import("~/components/gost/beratung/SGostBeratung.vue");
 
@@ -23,6 +24,8 @@ export class RouteGostBeratung extends RouteNode<RouteDataGostBeratung, RouteGos
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Beratung";
+		api.config.addElements([new ConfigElement("app.gost.beratung.modus", "user", "normal")]);
+		api.config.addElements([new ConfigElement("app.gost.beratung.faecher.anzeigen", "user", "alle")]);
 	}
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
