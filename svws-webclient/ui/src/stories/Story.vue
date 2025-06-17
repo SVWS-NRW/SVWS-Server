@@ -1,8 +1,6 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-	<div class="overflow-auto grid-cols-2 grid gap-4 size-full pr-4">
-		<slot />
-	</div>
+	<slot />
 	<Teleport to="#source" v-if="source.length > 0">
 		<div class="text-2xl">Source</div>
 		{{ source }}
@@ -39,7 +37,7 @@
 		responsiveDisabled?: boolean;
 	}>(), {
 		title: '',
-		id: '',
+		id: () => useId(),
 		size: '',
 		icon: '',
 		source: '',
@@ -49,9 +47,7 @@
 		responsiveDisabled: false,
 	});
 
-	const uid = useId();
-
-	onBeforeMount(() => storyManager.setStory({id: uid}));
+	onBeforeMount(() => storyManager.setStory(props));
 
 	document.addEventListener("log", (event) => {
 		const ce = event as CustomEvent<string>;

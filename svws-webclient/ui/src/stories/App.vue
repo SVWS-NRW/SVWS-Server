@@ -7,7 +7,11 @@
 					<div class="ml-auto flex-none flex" />
 				</div>
 				<div class="histoire-story-list overflow-y-auto flex-1">
-					<svws-ui-table clickable v-model:clicked="clicked" :items="router.getRoutes()" scroll-into-view scroll :columns @update:clicked="routeTo" />
+					<svws-ui-table clickable v-model:clicked="clicked" :items="router.getRoutes()" scroll-into-view scroll :columns @update:clicked="routeTo">
+						<template #cell(path)="{ rowData }">
+							{{ rowData.path.split('/').join(' → ') }}
+						</template>
+					</svws-ui-table>
 				</div>
 			</div>
 		</div>
@@ -18,10 +22,20 @@
 						<div class="text-ui-caution font-bold">
 							Zur alten Histoire-Version der Doku geht es hier: <a href="https://eloquent-baklava-d6aa9d.netlify.app/">Link</a>
 						</div>
-						<ui-select label="Hintergrundfarbe" v-model="color" :manager="colorSelectManager" :searchable="true" removable class="w-60" />
+						<div><SvwsUiButton type="transparent" @click="gridView = (gridView === 'single') ? 'grid':'single'">{{ gridView === 'single' ? 'Grid':'Single' }}</SvwsUiButton></div>
+						<div class="w-60">
+							<ui-select label="Hintergrundfarbe" v-model="color" :manager="colorSelectManager" searchable removable headless />
+						</div>
 					</div>
-					<div class="histoire-story-responsive-preview px-8 w-full h-full flex-1 rounded-lg relative overflow-auto histoire-story-variant-single-preview-native">
-						<RouterView />
+					<div class="histoire-story-responsive-preview pr-8 size-full flex gap-4 rounded-lg relative overflow-hidden histoire-story-variant-single-preview-native">
+						<template v-if="gridView === 'single'">
+							<div class="relative top-0 left-0 h-full w-96 border-r border-ui-25 bg-ui-75 overflow-auto">
+								<svws-ui-table clickable :clicked="storyManager.variant" :items="storyManager.story?.mapVariants?.values()" scroll-into-view scroll :columns="columnsVariant" @update:clicked="storyManager.setVariant($event)" />
+							</div>
+						</template>
+						<div class="bottom-0 right-0 overflow-auto size-full pr-4" :class="{' pl-4 grid-cols-2 grid gap-4 ': gridView === 'grid'}">
+							<RouterView />
+						</div>
 					</div>
 					<!-- <div class="dragger absolute z-100 hover:bg-ui-brand-hover transition-colors duration-150 delay-150 top-0 bottom-0 cursor-ew-resize w-4" /> -->
 				</div>
@@ -69,15 +83,16 @@
 
 <script setup lang="ts">
 
-	import { computed, onUnmounted, ref } from 'vue';
+	import { computed, onUnmounted, ref, watchEffect } from 'vue';
 	import type { RouteRecord } from 'vue-router';
-	import type { ColorPreset } from './StoryManager';
+	import type { ColorPreset, Variant } from './StoryManager';
 	import storyManager from './StoryManager';
 	import { ObjectSelectManager } from '~/ui/controls/select/selectManager/ObjectSelectManager';
 	import router from '../router';
 
 	const clicked = ref<RouteRecord>(router.getRoutes()[0]);
 	const columns = [ {key: 'path', label: 'Komponente'} ];
+	const columnsVariant = [ {key: 'title', label: 'Variant'} ];
 
 	async function routeTo(option: RouteRecord) {
 		await router.push({ path: option.path });
@@ -88,7 +103,12 @@
 	const color = computed({
 		get: () => storyManager.color,
 		set: (value) => storyManager.color = value,
-	})
+	});
+
+	const gridView = computed({
+		get: () => storyManager.gridView,
+		set: (value) => storyManager.gridView = value,
+	});
 
 	const currentSplit = ref(80);
 
@@ -138,7 +158,6 @@
 	}
 
 	onUnmounted(() => removeDragListeners());
-
 
 	const	backgroundPresets: ColorPreset[] = [
 		{label:'Transparent',color:'transparent',contrastColor:'var(--text-color-ui)'},

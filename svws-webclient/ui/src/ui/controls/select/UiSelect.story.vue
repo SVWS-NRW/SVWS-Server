@@ -197,7 +197,7 @@
 
 <script setup lang="ts">
 
-	import { reactive, ref, computed, watch } from "vue";
+	import { reactive, watch } from "vue";
 	import { SimpleSelectManager } from "./selectManager/SimpleSelectManager";
 	import { CoreTypeSelectManager } from "./selectManager/CoreTypeSelectManager";
 	import { FachSelectFilter } from "./filter/FachSelectFilter";
