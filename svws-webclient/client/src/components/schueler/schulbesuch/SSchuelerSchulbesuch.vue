@@ -122,7 +122,7 @@
 					<span>{{ formatDate(s.datumBis) }}</span>
 				</template>
 				<template #actions v-if="hatKompetenzUpdate">
-					<svws-ui-button @click="deleteAuswahlMerkmale" type="trash" :disabled="(auswahlMerkmale.length === 0) || hatKompetenzUpdate" />
+					<svws-ui-button @click="deleteAuswahlMerkmale" type="trash" :disabled="(auswahlMerkmale.length === 0) || !hatKompetenzUpdate" />
 					<svws-ui-button @click="addMerkmal" :disabled="!hatKompetenzUpdate" type="icon" title="Merkmal hinzufügen">
 						<span class="icon i-ri-add-line" />
 					</svws-ui-button>
