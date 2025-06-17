@@ -1,5 +1,5 @@
 <template>
-	<div class="page page-flex-col pt-0">
+	<div class="page page-flex-col pt-0 overflow-hidden">
 		<div class="flex flex-row">
 			<div class="min-w-64">
 				<ui-select label="Kurs" v-model="auswahlKurs" :manager="kursSelectManager" removable />
@@ -116,7 +116,7 @@
 
 	const gridManager = new GridManager<string>();
 	const cellFormat = {
-		widths: ['4rem', '4rem','16rem','16rem','6rem','6rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem'],
+		widths: ['4rem', '4rem','16rem','16rem','6rem','6rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem', '1.25rem'],
 	};
 
 	interface SchuelerAbiturbelegung {

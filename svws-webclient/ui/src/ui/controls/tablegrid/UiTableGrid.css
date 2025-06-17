@@ -17,26 +17,24 @@
 	}
 
 	table.ui-table-grid {
+		display: flex;
+		flex-direction: column;
 		user-select: none;
-		overflow: hidden;
-		min-width: fit-content;
+		overflow-x: auto;
+		overflow-y: hidden;
 		max-width: fit-content;
-		height: fit-content;
 		max-height: 100%;
 
 		thead,
 		tfoot {
 			@apply bg-ui text-ui border-ui;
-			position: sticky;
-			min-width: fit-content;
-			max-width: fit-content;
-			z-index: 20;
-			top: 0rem;
+			display: block;
 		}
 
 		tbody {
-			height: fit-content;
+			display: block;
 			max-height: 100%;
+			min-width: fit-content;
 			overflow-y: auto;
 		}
 
@@ -54,9 +52,9 @@
 		& > tfoot > tr > th,
 		& > tfoot > tr > td {
 			@apply flex flex-col;
-			@apply overflow-hidden;
 			@apply px-1 pb-0.5;
-			display: table-cell;
+			overflow: hidden;
+			display: block;
 			text-align: center;
 			width: 100%;
 			height: 100%;
