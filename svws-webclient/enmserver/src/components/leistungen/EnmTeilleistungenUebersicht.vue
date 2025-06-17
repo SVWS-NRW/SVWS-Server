@@ -67,10 +67,10 @@
 						<td class="svws-ui-td" role="cell">
 							<template v-for="teilleistung of manager.mapLeistungTeilleistungsartTeilleistung.getOrNull(pair.a.id, art) !== null ? [manager.mapLeistungTeilleistungsartTeilleistung.getOrNull(pair.a.id, art)!] : []" :key="teilleistung">
 								<input id="teilleistung.id"
-									v-if="(auswahlmanager.auswahl === pair) && manager.lerngruppeIstFachlehrer(pair.a.lerngruppenID)"
+									v-if="manager.lerngruppeIstFachlehrer(pair.a.lerngruppenID)"
 									class="w-full column-focussable"
 									v-model="teilleistung.note"
-									:class="{ contentFocusField: (auswahlmanager.auswahl === pair) && art === 5 }"
+									:class="{ contentFocusField: (auswahlmanager.auswahl === pair) && (art === 5) }"
 									@focusin="tabToUnselectedLeistung(pair, $event.target)"
 									@change="doPatchLeistungNote(teilleistung, Note.fromKuerzel(teilleistung.note).daten(props.manager.schuljahr)?.kuerzel,{ note: (Note.fromKuerzel(teilleistung.note).daten(props.manager.schuljahr)?.kuerzel ?? null) })">
 								<div v-else class="grade-field column-focussable"
@@ -82,7 +82,7 @@
 						</td>
 					</template>
 					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Quartal') ?? true">
-						<input v-if="(auswahlmanager.auswahl === pair) && manager.lerngruppeIstFachlehrer(pair.a.lerngruppenID)"
+						<input v-if="manager.lerngruppeIstFachlehrer(pair.a.lerngruppenID)"
 							class="w-full column-focussable"
 							v-model="pair.a.noteQuartal"
 							@focusin="tabToUnselectedLeistung(pair, $event.target)"
@@ -95,7 +95,7 @@
 						</div>
 					</td>
 					<td v-if="colsVisible.get('Note') ?? true" class="svws-ui-td" role="cell">
-						<input v-if="(auswahlmanager.auswahl === pair) && manager.lerngruppeIstFachlehrer(pair.a.lerngruppenID)"
+						<input v-if="manager.lerngruppeIstFachlehrer(pair.a.lerngruppenID)"
 							class="w-full column-focussable"
 							:class="{ contentFocusField: auswahlmanager.auswahl === pair }"
 							v-model="pair.a.note" @focusin="tabToUnselectedLeistung(pair, $event.target)"
@@ -115,7 +115,7 @@
 
 <script setup lang="ts">
 
-	import { computed, nextTick, onMounted, ref, watch } from 'vue';
+	import { computed, onMounted, ref, watch } from 'vue';
 	import type { EnmTeilleistungenProps } from './EnmTeilleistungenProps';
 	import type { ENMLeistung } from '@core/core/data/enm/ENMLeistung';
 	import type { PairNN } from '@core/asd/adt/PairNN';
@@ -245,7 +245,7 @@
 		if (set === null)
 			return new HashSet<number>();
 		return set;
-	})
+	});
 
 	const gridTemplateColumnsComputed = computed<string>(() => {
 		let frs = " ";
@@ -254,9 +254,14 @@
 		return cols.filter(c => colsVisible.value.get(c.kuerzel) ?? true).map(c => c.width).join(" ") + frs + " 5em";
 	});
 
-	watch(() => props.auswahlmanager.auswahl, async () => await nextTick(() => columnsComputed.value[currentColumn.value].focus()));
-
-	onMounted(() => currentColumn.value = 0);
+	watch(
+		() => props.auswahlmanager.auswahl,
+		async () => {
+			if (currentColumn.value !== -1)
+				columnsComputed.value[currentColumn.value].focus();
+		}
+	);
+	onMounted(() => currentColumn.value = -1);
 
 </script>
 
