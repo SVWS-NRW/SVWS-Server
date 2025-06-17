@@ -283,10 +283,10 @@
 	}
 
 	async function patchNote(leistung: ENMLeistung) {
-		if (!props.manager.isValidNote(leistung))
-			return;
-		else
-			await doPatchLeistung(leistung, { note: Note.fromKuerzel(leistung.note).daten(props.manager.schuljahr)?.kuerzel });
+		if (leistung.note === '')
+			leistung.note = null;
+		if ((leistung.note === null) || (props.manager.isValidNote(leistung)))
+			await doPatchLeistung(leistung, { note: Note.fromKuerzel(leistung.note).daten(props.manager.schuljahr)?.kuerzel ?? null });
 	}
 
 	async function patchFehlstunden(leistung: ENMLeistung) {

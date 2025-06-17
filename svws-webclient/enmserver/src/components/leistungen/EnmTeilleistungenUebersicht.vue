@@ -72,7 +72,7 @@
 									v-model="teilleistung.note"
 									:class="{ contentFocusField: (auswahlmanager.auswahl === pair) && (art === 5) }"
 									@focusin="tabToUnselectedLeistung(pair, $event.target)"
-									@change="doPatchLeistungNote(teilleistung, Note.fromKuerzel(teilleistung.note).daten(props.manager.schuljahr)?.kuerzel,{ note: (Note.fromKuerzel(teilleistung.note).daten(props.manager.schuljahr)?.kuerzel ?? null) })">
+									@change="doPatchLeistungNote(teilleistung, { note: (Note.fromKuerzel(teilleistung.note).daten(props.manager.schuljahr)?.kuerzel ?? null), id: teilleistung.id })">
 								<div v-else class="grade-field column-focussable"
 									tabindex="0"
 									@focusin="tabToUnselectedLeistung(pair, $event.target)">
@@ -87,7 +87,7 @@
 							v-model="pair.a.noteQuartal"
 							@focusin="tabToUnselectedLeistung(pair, $event.target)"
 							:class="{ contentFocusField: auswahlmanager.auswahl === pair}"
-							@change="() => doPatchLeistungNote(pair.a, Note.fromKuerzel(pair.a.noteQuartal).daten(props.manager.schuljahr)?.kuerzel,{ noteQuartal: (Note.fromKuerzel(pair.a.noteQuartal).daten(props.manager.schuljahr)?.kuerzel ?? null) })">
+							@change="() => doPatchLeistungNote(pair.a, { noteQuartal: (Note.fromKuerzel(pair.a.noteQuartal).daten(props.manager.schuljahr)?.kuerzel ?? null), id: pair.a.id })">
 						<div v-else class="column-focussable w-full h-full contentFocusField"
 							tabindex="0"
 							@focusin="tabToUnselectedLeistung(pair, $event.target)">
@@ -99,7 +99,7 @@
 							class="w-full column-focussable"
 							:class="{ contentFocusField: auswahlmanager.auswahl === pair }"
 							v-model="pair.a.note" @focusin="tabToUnselectedLeistung(pair, $event.target)"
-							@change="() => doPatchLeistungNote(pair.a, Note.fromKuerzel(pair.a.note).daten(props.manager.schuljahr)?.kuerzel,{ note: (Note.fromKuerzel(pair.a.note).daten(props.manager.schuljahr)?.kuerzel ?? null) })">
+							@change="() => doPatchLeistungNote(pair.a, { note: (Note.fromKuerzel(pair.a.note).daten(props.manager.schuljahr)?.kuerzel ?? null), id: pair.a.id })">
 						<div v-else class="column-focussable w-full h-full"
 							tabindex="0"
 							@focusin="tabToUnselectedLeistung(pair, $event.target)">
@@ -179,29 +179,14 @@
 		columnsComputed.value[currentColumn.value].focus();
 	}
 
-	async function doPatchLeistungNote(leistung: ENMLeistung | ENMTeilleistung | null, newValue: string | null | undefined, patchObject: Partial<ENMLeistung> | Partial<ENMTeilleistung>) {
-		if (leistung === null || newValue === null || newValue === undefined || newValue === "")
-			return;
-		else {
-			if (leistung instanceof ENMTeilleistung)
-				await doPatchTeilleistung(leistung, patchObject);
-			else
-				await doPatchLeistung(leistung, patchObject);
-		}
-	}
-
-	async function doPatchLeistung(leistung: ENMLeistung, patch: Partial<ENMLeistung>) {
-		patch.id = leistung.id;
-		const success = await props.patchLeistung(patch);
+	async function doPatchLeistungNote(leistung: ENMLeistung | ENMTeilleistung, patchObject: Partial<ENMLeistung> | Partial<ENMTeilleistung>) {
+		let success = false;
+		if (leistung instanceof ENMTeilleistung)
+			success = await props.patchTeilleistung(patchObject);
+		else
+			success = await props.patchLeistung(patchObject);
 		if (success)
-			Object.assign(leistung, patch);
-	}
-
-	async function doPatchTeilleistung(teilleistung: ENMTeilleistung, patch: Partial<ENMTeilleistung>) {
-		patch.id = teilleistung.id;
-		const success = await props.patchTeilleistung(patch);
-		if (success)
-			Object.assign(teilleistung, patch);
+			Object.assign(leistung, patchObject);
 	}
 
 	function tabToUnselectedLeistung(leistung: PairNN<ENMLeistung, ENMSchueler>, ele: EventTarget | null) {
