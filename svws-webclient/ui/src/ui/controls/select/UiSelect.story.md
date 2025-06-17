@@ -160,8 +160,8 @@ Dieser Manager akzeptiert einfach CoreTypes als Optionen und definiert, wie dies
 **Konstruktor**
 - **multi (boolean)**: Gibt an, ob es sich um eine Multiselektion handelt
 - **clazz (class)**: Die Klasse des CoreTypes
-- **schuljahr (number)**: Das Schuljahr, nach dem gefiltert wid
-- **schulform (Schulform)**: Die Schulform, nach der gefiltert wird
+- **schuljahr (number | null)**: Das Schuljahr, nach dem gefiltert wird. Bei null erhält die Komponente nur eine leere Liste an Optionen.
+- **schulform (Schulform | Schulform[] | null)**: Die Schulformen, nach denen gefiltert wird. Sie beinhaltet alle Daten, die in mindestens einer der Schulformen vorkommt. Bei null werden alle Daten unabhägig der Schulform geladen.
 - **selectionDisplayText (string | Funktion)**: Gibt an, wie die Selektion dargestellt werden soll. Es kann zwischen `text`, `kuerzel` und `kuerzelText` gewählt werden, falls vordefinierte Einstellungen gewünscht sind. Wenn eigene Definitionen verwendet werden sollen, dann können diese zum Beispiel wie folgt angegeben werden: ``(option) => `${option.id}: ${option.text}` ``
 - **optionDisplayText (string | Funktion)**: Gibt an, wie die Optionen in der Dropdownliste dargestellt werden sollen. Es kann zwischen `text`, `kuerzel` und `kuezerlText` gewählt werden, falls vordefinierte Einstellungen gewünscht sind. Wenn eigene Definitionen verwendet werden sollen, dann können diese zum Beispiel wie folgt angegeben werden: ``(option) => `${option.id}: ${option.text}` ``
 - **selected (any, optional)**: Definiert die bereits selektierten Einträge. Bei einer Multi-Selektion muss es ein Iterable sein, andernfalls eine einzelne Option

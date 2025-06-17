@@ -18,7 +18,7 @@
 						<div class="text-ui-caution font-bold">
 							Zur alten Histoire-Version der Doku geht es hier: <a href="https://eloquent-baklava-d6aa9d.netlify.app/">Link</a>
 						</div>
-						<ui-select label="Hintergrundfarbe" v-model="color" :manager="colorSelectManager()" :searchable="true" removable />
+						<ui-select label="Hintergrundfarbe" v-model="color" :manager="colorSelectManager" :searchable="true" removable class="w-60" />
 					</div>
 					<div class="histoire-story-responsive-preview px-8 w-full h-full flex-1 rounded-lg relative overflow-auto histoire-story-variant-single-preview-native">
 						<RouterView />
@@ -84,13 +84,6 @@
 	}
 
 	const visible = ref<'events'|'docs'|'controls'>('controls');
-
-	const colorSelectManager = () => {
-		const manager = new ObjectSelectManager(false, backgroundPresets, (option: ColorPreset) => option.label, (option: ColorPreset) => option.label);
-		manager.setDeepSearchAttributes(['label']);
-		manager.removable = true;
-		return manager;
-	};
 
 	const color = computed({
 		get: () => storyManager.color,
@@ -189,5 +182,10 @@
 		{label:'bg-uistatic-75',color:'var(--background-color-uistatic-75)',contrastColor:'var(--text-color-ui-75)'},
 		{label:'bg-uistatic-100',color:'var(--background-color-uistatic-100)',contrastColor:'var(--text-color-ui-100)'},
 	];
+
+	const colorSelectManager = new ObjectSelectManager(false, backgroundPresets, (option: ColorPreset) => option.label, (option: ColorPreset) => option.label);
+	colorSelectManager.setDeepSearchAttributes(['label']);
+	colorSelectManager.removable = true;
+
 
 </script>
