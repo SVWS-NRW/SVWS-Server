@@ -2247,6 +2247,25 @@ export class AbiturdatenManager extends JavaObject {
 	}
 
 	/**
+	 * Prüft, ob bei de Fachbelegung in allen Halbjahren der Qualifikationsphase eine Belegung vorliegt und
+	 * der Kurs jeweils als angerechnet markiert ist.
+	 *
+	 * @param belegung   die Fachbelegung
+	 *
+	 * @return true, falls alle Kurse der Fachbelegung in der Qualifikationsphase als angerechnet markiert sind, und ansonsten false
+	 */
+	public hatMarkierungQualifikationsphase(belegung : AbiturFachbelegung | null) : boolean {
+		if (belegung === null)
+			return false;
+		for (const halbjahr of GostHalbjahr.getQualifikationsphase()) {
+			const belegungHalbjahr : AbiturFachbelegungHalbjahr | null = belegung.belegungen[halbjahr.id];
+			if ((belegungHalbjahr === null) || (!belegungHalbjahr.block1gewertet))
+				return false;
+		}
+		return true;
+	}
+
+	/**
 	 * Ermittelt die Informationen zu markierten Kursen in dem angegeben Halbjahr und gibt diese in einem Array
 	 * zurück. Diese sind:
 	 * - Notenpunktsumme mit doppelter Wertung der LKs (Index 0)

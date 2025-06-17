@@ -836,6 +836,8 @@ public final class TranspilerUnit {
 			return ExpressionClassType.getExpressionSuperClassType();
 		if (type instanceof ExpressionPackageType)
 			return type;
+		if (type instanceof ExpressionPrimitiveType)
+			return type;
 		if (!(type instanceof ExpressionClassType))
 			throw new TranspilerException("Transpiler Error: Expression Type " + type.getKind() + " not supported for the member select expression");
 		final ExpressionClassType typeOfClass = (ExpressionClassType) type;

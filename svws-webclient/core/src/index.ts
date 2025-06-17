@@ -296,6 +296,8 @@ export { GostAbiturMarkierungsalgorithmus } from './core/abschluss/gost/GostAbit
 export { GostAbiturMarkierungsalgorithmusBelegung } from './core/abschluss/gost/GostAbiturMarkierungsalgorithmusBelegung';
 export { GostAbiturMarkierungsalgorithmusErgebnis } from './core/abschluss/gost/GostAbiturMarkierungsalgorithmusErgebnis';
 export { GostAbiturMarkierungsalgorithmusMarkierung } from './core/abschluss/gost/GostAbiturMarkierungsalgorithmusMarkierung';
+export { GostAbiturMarkierungspruefung } from './core/abschluss/gost/GostAbiturMarkierungspruefung';
+export { GostAbiturMarkierungspruefungErgebnis } from './core/abschluss/gost/GostAbiturMarkierungspruefungErgebnis';
 export { GostBelegpruefung } from './core/abschluss/gost/GostBelegpruefung';
 export { GostBelegpruefungErgebnis } from './core/abschluss/gost/GostBelegpruefungErgebnis';
 export { GostBelegpruefungErgebnisFehler } from './core/abschluss/gost/GostBelegpruefungErgebnisFehler';
