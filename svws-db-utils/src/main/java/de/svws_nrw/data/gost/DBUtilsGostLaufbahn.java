@@ -997,6 +997,12 @@ public final class DBUtilsGostLaufbahn {
 			final DTOJahrgang jahrgang = mapJahrgaenge.get(lernabschnitt.Jahrgang_ID);
 			if (jahrgang == null)
 				continue;
+			// Filtere Schüler, die vor der Oberstufe die Schule verlassen haben
+			final @NotNull SchuelerStatus status = SchuelerStatus.data().getWertByID(schueler.idStatus);
+			if ((schuljahresabschnitt.Jahr < conn.getUser().schuleGetSchuljahresabschnitt().schuljahr)
+					&& !"EF".equals(jahrgang.ASDJahrgang) && !"Q1".equals(jahrgang.ASDJahrgang) && !"Q2".equals(jahrgang.ASDJahrgang)
+					&& ((status == SchuelerStatus.ABGANG) || (status == SchuelerStatus.ABSCHLUSS) || (status == SchuelerStatus.EHEMALIGE) || (status == SchuelerStatus.WARTELISTE)))
+				continue;
 			// Bestimme die Restjahre in Bezug auf den Abiturjahrgang und den Schuljahresabschnitt
 			final int restjahreNachAbiturjahr = abijahrgang - schuljahresabschnitt.Jahr;
 			final Integer restjahreNachJahrgang =

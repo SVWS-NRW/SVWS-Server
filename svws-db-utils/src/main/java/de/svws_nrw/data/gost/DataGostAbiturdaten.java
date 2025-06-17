@@ -421,7 +421,7 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 
 			// Hole die Abiturfächer zur Schüler-ID aus der Map. Wenn diese nicht existieren, gibt es keine Abiturdaten zum Schüler.
 			if ((mapSchuelerAbiturFaecher.get(idSchueler) == null) || mapSchuelerAbiturFaecher.get(idSchueler).isEmpty())
-				throw new ApiOperationException(Status.NOT_FOUND);
+				continue;
 			final List<DTOSchuelerAbiturFach> faecher = mapSchuelerAbiturFaecher.get(idSchueler);
 
 			// Hole die Sprachenfolge zur Schüler-ID aus der Map.
@@ -433,7 +433,7 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 			// TODO: Hier müsste auch die folgende Methode mehrere IDs umgestellt und aus der for-Schleife gezogen werden.
 			final Abiturdaten abidatenVergleich = DBUtilsGostLaufbahn.get(conn, idSchueler);
 			if (abidatenVergleich == null)
-				throw new ApiOperationException(Status.NOT_FOUND);
+				continue;
 
 			final Abiturdaten abidaten = erzeugeAbiturdaten(dtoSchuelerAbitur, abidatenVergleich, sprachenfolge, faecher, mapGostFaecherManager);
 			if (abidaten != null)
