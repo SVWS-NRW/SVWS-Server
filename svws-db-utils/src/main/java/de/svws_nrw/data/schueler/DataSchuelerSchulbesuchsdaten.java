@@ -58,6 +58,7 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 	 */
 	public DataSchuelerSchulbesuchsdaten(final DBEntityManager conn) {
 		super(conn);
+		setAttributesNotPatchable("id");
 		this.entlassartenByBezeichnung = conn.queryAll(DTOEntlassarten.class).stream().collect(Collectors.toMap(e -> e.Bezeichnung, e -> e));
 		this.merkmaleByKurztext = conn.queryAll(DTOMerkmale.class).stream().collect(Collectors.toMap(m -> m.Kurztext, m -> m));
 		this.schulenBySchulnummer = conn.queryAll(DTOSchuleNRW.class).stream().collect(Collectors.toMap(s -> s.SchulNr, s -> s));
@@ -171,7 +172,8 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 			case "id" -> {
 				final Long idPatch = JSONMapper.convertToLong(value, true, "idPatch");
 				if (!Objects.equals(idPatch, getLongId(dtoSchueler)))
-					throw new ApiOperationException(Status.BAD_REQUEST, "IdPatch %d ist ungleich idSchueler %d.".formatted(idPatch, getLongId(dtoSchueler)));
+					throw new ApiOperationException(Status.BAD_REQUEST,
+							"Die ID %d des Patches ist null oder stimmt nicht mit der ID %d in der Datenbank überein.".formatted(idPatch, getLongId(dtoSchueler)));
 			}
 			// Informationen zu der Schule, die vor der Aufnahme besucht wurde
 			case "idVorherigeSchule" -> mapSchulnummer(value, "idVorherigeSchule", v -> dtoSchueler.LSSchulNr = v);
@@ -253,7 +255,7 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 		}
 		final EinschulungsartKatalogEintrag eintrag = Einschulungsart.data().getEintragByID(id);
 		if (eintrag == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Keine Einschlungsart mit der ID %d gefunden.".formatted(id));
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine Einschulungsart mit der ID %d gefunden.".formatted(id));
 
 		dtoSchueler.EinschulungsartASD = eintrag.schluessel;
 	}
