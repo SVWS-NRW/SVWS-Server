@@ -1,3 +1,5 @@
+import org.codehaus.groovy.runtime.GStringImpl
+
 // Initialisierung der Plugins
 plugins {
 	id 'svws.gradle.node.plugin'
@@ -9,7 +11,6 @@ apply from: ('../subproject-plugin.gradle')
 // Erzeuge eine unique JobId welche in den Tasks, temporären Dateien und Container verwendet wird.
 def jobId = UUID.randomUUID().toString().substring(0, 8)
 
-
 /**
  * Konfiguration für das Subpackage bzw. die Tests
  */
@@ -17,10 +18,10 @@ ext {
 	SVWS_SERVERMODE = "dev"
 
 	// Docker Konfiguration
-	APP_CONTAINER_NAME = "app-vite-api-tests--" + jobId
-	DB_CONTAINER_NAME = "database-vite-api-tests--" + jobId
-	DB_SERVICE_NAME = "mariadb--" + jobId
-	APP_IMAGE_NAME = "svws-app--" + jobId
+	APP_CONTAINER_NAME = "app-vite-api-tests--${jobId}" as GStringImpl
+	DB_CONTAINER_NAME = "database-vite-api-tests--${jobId}" as GStringImpl
+	DB_SERVICE_NAME = "mariadb--${jobId}" as GStringImpl
+	APP_IMAGE_NAME = "svws-app--${jobId}" as GStringImpl
 
 	// Auch für Docker. Forwarded Ports, werden nur bei lokal genutzten Container verwendet
 	FORWARDED_DB_PORT = 3317
@@ -34,7 +35,7 @@ ext {
 /**
  * Starten der Integrationstests gegen die Docker Umgebung
  */
-task testAgainstDockerEnv(type: NpmRun) {
+tasks.register('testAgainstDockerEnv', NpmRun) {
 	description = 'Startet die Integrationstests gegen die Docker Umgebung'
 	group = 'verification'
 	dependsOn ':svws-webclient:core:assemble'
@@ -67,7 +68,7 @@ task testAgainstDockerEnv(type: NpmRun) {
 /**
  * Starten der Tests gegen die lokale Applikation. Hier wird kein Docker gestartet.
  */
-task no_auto_docker_test_APIServer(type: NpmRun) {
+tasks.register('no_auto_docker_test_APIServer', NpmRun) {
 	group = 'verification'
 	dependsOn ':tests:checkIfLokalApplikationIsRunning'
 	dependsOn ':tests:checkIfLokalDataBaseIsRunning'
