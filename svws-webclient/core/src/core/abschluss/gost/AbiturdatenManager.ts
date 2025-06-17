@@ -2572,7 +2572,9 @@ export class AbiturdatenManager extends JavaObject {
 			abidaten.gesamtPunkteVerbesserung = null;
 			abidaten.gesamtPunkteVerschlechterung = null;
 		} else {
-			const note : number = Math.ceil((5.0 + (2.0 / 3.0) - abidaten.gesamtPunkte / 180.0) * 10.0) / 10.0;
+			let note : number = Math.floor((5.0 + (2.0 / 3.0) - abidaten.gesamtPunkte / 180.0) * 10.0) / 10.0;
+			if (note < 1.0)
+				note = 1.0;
 			const strNote : string = "" + note;
 			abidaten.note = (strNote.length <= 3) ? strNote : strNote.substring(0, 3);
 			if (note === 1.0) {

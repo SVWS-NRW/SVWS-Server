@@ -2783,7 +2783,9 @@ public class AbiturdatenManager {
 			abidaten.gesamtPunkteVerbesserung = null;
 			abidaten.gesamtPunkteVerschlechterung = null;
 		} else {
-			final double note = Math.ceil((5.0 + (2.0 / 3.0) - abidaten.gesamtPunkte / 180.0) * 10.0) / 10.0;
+			double note = Math.floor((5.0 + (2.0 / 3.0) - abidaten.gesamtPunkte / 180.0) * 10.0) / 10.0;
+			if (note < 1.0)
+				note = 1.0;
 			final @NotNull String strNote = "" + note;
 			abidaten.note = (strNote.length() <= 3) ? strNote : strNote.substring(0, 3);
 			if (note == 1.0) {
