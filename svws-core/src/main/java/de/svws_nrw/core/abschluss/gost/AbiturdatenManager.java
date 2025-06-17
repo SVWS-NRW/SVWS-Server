@@ -2750,12 +2750,14 @@ public class AbiturdatenManager {
 						fehlendeNotenMdlFreiwillig++;
 				} else {
 					abibelegung.block2MuendlichePruefungNotenKuerzel = null;
+					abibelegung.block2MuendlichePruefungReihenfolge = null;
 					abibelegung.block2Punkte = abibelegung.block2PunkteZwischenstand;
 				}
 			} else {
 				// Ist überhaupt eine Prüfung angesetzt?
 				if ((!hatMdlAbweichung) && (!hatMdlBestehen) && (!hatMdlFreiwillig)) {
 					abibelegung.block2MuendlichePruefungNotenKuerzel = null;
+					abibelegung.block2MuendlichePruefungReihenfolge = null;
 					abibelegung.block2Punkte = abibelegung.block2PunkteZwischenstand;
 				} else {
 					final int punkte = (int) Math.round((npPruefung * 2 + npPruefungMdl) * faktor / 3.0);

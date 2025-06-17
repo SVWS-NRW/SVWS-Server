@@ -2543,11 +2543,13 @@ export class AbiturdatenManager extends JavaObject {
 						fehlendeNotenMdlFreiwillig++;
 				} else {
 					abibelegung.block2MuendlichePruefungNotenKuerzel = null;
+					abibelegung.block2MuendlichePruefungReihenfolge = null;
 					abibelegung.block2Punkte = abibelegung.block2PunkteZwischenstand;
 				}
 			} else {
 				if ((!hatMdlAbweichung) && (!hatMdlBestehen) && (!hatMdlFreiwillig)) {
 					abibelegung.block2MuendlichePruefungNotenKuerzel = null;
+					abibelegung.block2MuendlichePruefungReihenfolge = null;
 					abibelegung.block2Punkte = abibelegung.block2PunkteZwischenstand;
 				} else {
 					const punkte : number = Math.round((npPruefung * 2 + npPruefungMdl) * faktor / 3.0) as number;
