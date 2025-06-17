@@ -36,4 +36,7 @@ export default defineConfig({
 			output: { globals: { vue: "Vue" } },
 		},
 	},
+	define: {
+		__VUE_OPTIONS_API__: false,
+	},
 });

@@ -6,9 +6,9 @@
 			<slot />
 		</div>
 	</div>
-	<template v-if="active">
+	<template v-if="active && $slots.controls">
 		<Teleport to="#controls" defer>
-			<div class="text-2xl">Controls</div>
+			<div class="text-2xl">Controls/Variant</div>
 			<slot name="controls" />
 		</Teleport>
 	</template>

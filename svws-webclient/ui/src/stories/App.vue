@@ -14,10 +14,11 @@
 		<div class="relative bottom-0 right-0" style="width: 85%;">
 			<div class="histoire-story-view histoire-with-story h-full flex isolate" ref="el">
 				<div class="flex flex-col relative top-0 left-0 z-20 border-r border-ui-25 h-full bg-ui-100" :style="leftStyle">
-					<div class="flex-none flex justify-end h-10 mx-8 items-center">
-						<div>
-							<ui-select label="Hintergrundfarbe" v-model="color" :manager="colorSelectManager()" :searchable="true" removable />
+					<div class="flex-none flex justify-end h-10 mx-8 items-center gap-4">
+						<div class="text-ui-caution font-bold">
+							Zur alten Histoire-Version der Doku geht es hier: <a href="https://eloquent-baklava-d6aa9d.netlify.app/">Link</a>
 						</div>
+						<ui-select label="Hintergrundfarbe" v-model="color" :manager="colorSelectManager()" :searchable="true" removable />
 					</div>
 					<div class="histoire-story-responsive-preview px-8 w-full h-full flex-1 rounded-lg relative overflow-auto histoire-story-variant-single-preview-native">
 						<RouterView />

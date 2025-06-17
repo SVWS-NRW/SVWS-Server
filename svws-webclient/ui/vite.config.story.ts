@@ -22,4 +22,7 @@ export default defineConfig({
 	build: {
 		outDir: './.histoire/dist',
 	},
+	define: {
+		__VUE_OPTIONS_API__: false,
+	},
 });
