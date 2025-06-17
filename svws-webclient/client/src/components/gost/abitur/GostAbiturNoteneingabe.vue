@@ -2,10 +2,10 @@
 	<div class="page page-flex-col pt-0">
 		<div class="flex flex-row">
 			<div class="min-w-64">
-				<ui-select label="Kurs" v-model="auswahlKurs" :manager="kursSelectManager()" removable />
+				<ui-select label="Kurs" v-model="auswahlKurs" :manager="kursSelectManager" removable />
 			</div>
 			<div class="min-w-64">
-				<ui-select label="Prüfer" v-model="auswahlPruefer" :manager="prueferSelectManager()" removable />
+				<ui-select label="Prüfer" v-model="auswahlPruefer" :manager="prueferSelectManager" removable />
 			</div>
 		</div>
 		<ui-table-grid name="Übersicht über die Prüfungsergebnisse" :header-count="2" :footer-count="0" :data="auswahlBelegungen"
@@ -147,18 +147,18 @@
 	});
 
 	const auswahlKurs = shallowRef<KursDaten | null>(null);
-	const kursSelectManager = () => {
+	const kursSelectManager = computed<ObjectSelectManager>(() => {
 		const manager = new ObjectSelectManager(false, alleKurse.value.keySet(), k => k.kuerzel, k => k.kuerzel);
 		manager.removable = true;
 		return manager;
-	};
+	});
 
 	const auswahlPruefer = shallowRef<LehrerListeEintrag | null>(null);
-	const prueferSelectManager = () => {
+	const prueferSelectManager = computed<ObjectSelectManager>(() => {
 		const manager = new ObjectSelectManager(false, allePruefer.value.keySet(), l => l.kuerzel, l => l.kuerzel);
 		manager.removable = true;
 		return manager;
-	};
+	});
 
 	const alleKurse = computed<JavaMap<KursDaten, List<SchuelerAbiturbelegung>>>(() => {
 		const result = new HashMap<KursDaten, List<SchuelerAbiturbelegung>>();
