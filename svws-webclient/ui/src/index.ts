@@ -98,6 +98,8 @@ export { GridInputInnerText } from "./ui/controls/tablegrid/GridInputInnerText";
 export { GridInputAbiturNotenpunkte } from "./ui/controls/tablegrid/GridInputAbiturNotenpunkte";
 export { GridInputAbiturPruefungsreihenfolge } from "./ui/controls/tablegrid/GridInputAbiturPruefungsreihenfolge";
 export { GridInputToggle } from "./ui/controls/tablegrid/GridInputToggle";
+export { PendingStateManager } from "./ui/wrapper/PendingStateManager";
+export { StateManager } from "./ui/StateManager";
 
 // Enums
 export { AppMenuGroup } from "./ui/nav/AppMenuGroup";

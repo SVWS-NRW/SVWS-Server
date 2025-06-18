@@ -46,7 +46,6 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 	 */
 	public DataSchuelerStammdaten(final DBEntityManager conn) {
 		super(conn);
-		setAttributesNotPatchable("id");
 		this.idSchuljahresabschnitt = 0L;
 	}
 
@@ -151,6 +150,7 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 		return dto.ID;
 	}
 
+
 	@Override
 	protected void initDTO(final DTOSchueler dto, final Long id, final Map<String, Object> initAttributes) {
 		// Basisdaten
@@ -206,6 +206,13 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 
 		dto.BeginnBildungsgang = null;
 	}
+
+
+	@Override
+	protected Long getID(final Map<String, Object> attributes) throws ApiOperationException {
+		return JSONMapper.convertToLong(attributes.get("id"), false);
+	}
+
 
 	@Override
 	protected SchuelerStammdaten map(final DTOSchueler dto) throws ApiOperationException {
@@ -336,8 +343,9 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 		}
 	}
 
+
 	private static void mapID(final DTOSchueler dto, final Object value) throws ApiOperationException {
-		final Long id = JSONMapper.convertToLong(value, true);
+		final Long id = JSONMapper.convertToLong(value, true, "id");
 		if ((id == null) || (id != dto.ID))
 			throw new ApiOperationException(Status.BAD_REQUEST);
 	}

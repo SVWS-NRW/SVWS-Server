@@ -211,13 +211,13 @@ public class APISchueler {
 	 *
 	 * @return die Stammdaten der Schüler
 	 */
-	@GET
+	@POST
 	@Path("/stammdaten")
 	@Operation(summary = "Liefert zu den Schüler IDs die zugehörigen Stammdaten.",
 			description = "Liest die Stammdaten der Schüler zu der angegebenen IDs aus der Datenbank und liefert diese zurück. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.")
 	@ApiResponse(responseCode = "200", description = "Die Stammdaten des Schülers",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchuelerStammdaten.class)))
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchuelerStammdaten.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schülerdaten anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
 	public Response getSchuelerStammdatenMultiple(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der Schüler", required = true,

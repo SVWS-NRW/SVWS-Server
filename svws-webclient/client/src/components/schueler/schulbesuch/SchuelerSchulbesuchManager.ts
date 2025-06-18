@@ -2,7 +2,7 @@ import type { KatalogEntlassgrund, Merkmal, SchulEintrag, SchuelerSchulbesuchSch
 import type { Schuljahresabschnitt, List } from "@core";
 import { Einschulungsart, Herkunftsarten, Jahrgaenge, PrimarstufeSchuleingangsphaseBesuchsjahre, Schulform, Uebergangsempfehlung, Kindergartenbesuch,
 	SchuelerSchulbesuchsdaten, SchuelerListeEintrag } from "@core";
-import { StateManager } from "~/router/StateManager";
+import { StateManager } from "@ui";
 
 
 interface ManagerStateDataSchuelerSchulbesuch {

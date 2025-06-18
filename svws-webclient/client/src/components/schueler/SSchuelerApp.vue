@@ -1,9 +1,11 @@
 <template>
-	<div v-if="(manager().hasDaten() && (activeViewType === ViewType.DEFAULT)) || (activeViewType !== ViewType.DEFAULT)" class="flex flex-col w-full h-full overflow-hidden">
+	<div v-if="(manager().hasDaten() && (activeViewType === ViewType.DEFAULT)) || (activeViewType !== ViewType.DEFAULT)"
+		class="flex flex-col w-full h-full overflow-hidden">
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
 				<template v-if="activeViewType === ViewType.DEFAULT">
-					<svws-ui-avatar :src="foto ? `data:image/png;base64, ${foto}` : undefined" :alt="foto !== null ? `Foto von ${vorname} ${nachname}` : ''" upload capture @image:base64="foto => patch({ foto })" />
+					<svws-ui-avatar :src="foto ? `data:image/png;base64, ${foto}` : undefined" :alt="foto !== null ? `Foto von ${vorname} ${nachname}` : ''"
+						upload capture @image:base64="f => patch({ f })" />
 					<div v-if="manager().hasDaten()" class="svws-headline-wrapper">
 						<h2 class="svws-headline">
 							<span>{{ vorname }} {{ nachname }}</span>
@@ -17,7 +19,9 @@
 									{{ manager().lehrer.get(l)?.kuerzel ?? '—' }}&nbsp;
 								</template>
 							</svws-ui-badge>
-							<svws-ui-badge v-if="epJahre !== null" type="light" title="EP-Jahre" class="font-mono ml-2" size="small">{{ epJahre }} </svws-ui-badge>
+							<svws-ui-badge v-if="epJahre !== null" type="light" title="EP-Jahre" class="font-mono ml-2" size="small">
+								{{ epJahre }}
+							</svws-ui-badge>
 						</span>
 					</div>
 					<div v-if="manager().daten().keineAuskunftAnDritte" class="svws-headline-wrapper">
@@ -37,8 +41,10 @@
 				<template v-else-if="activeViewType === ViewType.GRUPPENPROZESSE">
 					<div class="svws-headline-wrapper">
 						<div class="flex flex-row gap-3">
-							<h2 class="svws-headline">Mehrfachauswahl</h2>
-							<svws-ui-button size="normal" type="danger" @click="() => gotoDefaultView(manager().getVorherigeAuswahl()?.id)">Auswahl aufheben</svws-ui-button>
+							<h2 class="svws-headline text-ui-brand">Mehrfachauswahl</h2>
+							<svws-ui-button v-if="manager().liste.auswahlExists()" size="normal" type="danger" @click="resetSelection">
+								Auswahl aufheben
+							</svws-ui-button>
 						</div>
 						<span class="svws-subline">{{ schuelerSubline }}</span>
 					</div>
@@ -82,10 +88,12 @@
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const schuelerSubline = computed(() => {
-		const auswahlKlassenList = props.manager().liste.auswahlSorted();
-		if (auswahlKlassenList.size() > 3)
-			return `${auswahlKlassenList.size()} Schüler ausgewählt`;
-		return [...auswahlKlassenList].map(k => `${k.vorname} ${k.nachname}`).join(', ');
+		const auswahlSchuelerList = props.manager().liste.auswahlSorted();
+		if (auswahlSchuelerList.isEmpty())
+			return 'Keine Schüler ausgewählt';
+		if (auswahlSchuelerList.size() > 3)
+			return `${auswahlSchuelerList.size()} Schüler ausgewählt`;
+		return [...auswahlSchuelerList].map(k => `${k.vorname} ${k.nachname}`).join(', ');
 	})
 
 	const foto = computed<string | null>(() => {
@@ -105,5 +113,9 @@
 			return null;
 		return props.manager().klassen.get(props.manager().auswahl().idKlasse);
 	});
+
+	async function resetSelection() {
+		await props.gotoDefaultView(props.manager().getVorherigeAuswahl()?.id);
+	}
 
 </script>

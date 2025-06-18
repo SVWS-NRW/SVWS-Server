@@ -10,6 +10,7 @@ import type { AbschnittAuswahlDaten } from "@ui";
 import { routeApp } from "./apps/RouteApp";
 import { routeError } from "./error/RouteError";
 import { ConfigElement } from "../../../ui/src/utils/Config";
+import type { PendingStateManagerRegistry } from "~/router/PendingStateManagerRegistry";
 
 /**
  * Das Interface für die Properties in Bezug auf das Handling des Listenbereichs, welcher der Komponente,
@@ -25,6 +26,7 @@ export interface RouteAuswahlListProps<TAuswahlManager extends AuswahlManager<an
 	gotoDefaultView: (id?: number | null) => Promise<void>;
 	gotoHinzufuegenView: (navigate: boolean) => Promise<void>;
 	gotoGruppenprozessView: (navigate: boolean) => Promise<void>;
+	pendingStateManagerRegistry: () => PendingStateManagerRegistry;
 }
 
 
@@ -35,6 +37,7 @@ export interface RouteAuswahlListProps<TAuswahlManager extends AuswahlManager<an
 export interface RouteAuswahlProps<TAuswahlManager extends AuswahlManager<number, TAuswahl, TDaten>, TAuswahl = any, TDaten = any> extends RouteTabProps {
 	manager: () => TAuswahlManager;
 	patch: (data: Partial<TDaten>) => Promise<void>;
+	pendingStateManagerRegistry: () => PendingStateManagerRegistry;
 }
 
 
@@ -59,6 +62,7 @@ export abstract class RouteAuswahlNode<TAuswahlManager extends AuswahlManager<nu
 	private _updateIfTarget: ((to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams,
 		isEntering: boolean, redirected: RouteNode<any, any> | undefined) => Promise<void | Error | RouteLocationRaw>) | undefined = undefined;
 
+
 	/**
 	 * Erstellt einen neuen Knoten für das Routing, welcher die Navigation mit einem Tab-Manager unterstützt.
 	 *
@@ -69,12 +73,13 @@ export abstract class RouteAuswahlNode<TAuswahlManager extends AuswahlManager<nu
 	 * @param component     die vue-Komponente für die Darstellung der Informationen der gewählten Route
 	 * @param componentList die vue-Komponente für die Darstellung der Auswahlliste der gewählten Route
 	 * @param data          die dem Knoten zugeordneten Daten
+	 * @param idParam       der Routingparameter für die ID
 	 */
 	public constructor(schulformen: Iterable<Schulform>, kompetenzen: Iterable<BenutzerKompetenz>, name: string, path: string, component: RouteComponent,
 		componentList: RouteComponent, data: TRouteData, idParam: string = "id") {
 		super(schulformen, kompetenzen, name, path, component, data);
 		this._idParam = idParam;
-		super.setView("liste", componentList, (route) => this._getAuswahlListProps({
+		super.setView("liste", componentList, (_route) => this._getAuswahlListProps({
 			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(true),
 			manager: () => this.data.manager,
 			setFilter: this.data.setFilter,
@@ -84,6 +89,7 @@ export abstract class RouteAuswahlNode<TAuswahlManager extends AuswahlManager<nu
 			gotoDefaultView: this.data.gotoDefaultView,
 			gotoHinzufuegenView: this.data.gotoHinzufuegenView,
 			gotoGruppenprozessView: this.data.gotoGruppenprozessView,
+			pendingStateManagerRegistry: () => this.data.pendingStateManagerRegistry,
 		}));
 		api.nonPersistentConfig.addElements([
 			new ConfigElement(`${this.name}.auswahl.id`, "user", ""),
@@ -158,7 +164,7 @@ export abstract class RouteAuswahlNode<TAuswahlManager extends AuswahlManager<nu
 	 *
 	 * @returns die Routing-Parameter mit der ID.
 	 */
-	public addRouteParamsFromState() : RouteParamsRawGeneric {
+	public addRouteParamsFromState(): RouteParamsRawGeneric {
 		const params = {};
 		if (!this.data.hasManager)
 			return params;
@@ -200,6 +206,7 @@ export abstract class RouteAuswahlNode<TAuswahlManager extends AuswahlManager<nu
 			...props,
 			manager: () => this.data.manager,
 			patch: this.data.patch,
+			pendingStateManagerRegistry: () => this.data.pendingStateManagerRegistry,
 		});
 	}
 

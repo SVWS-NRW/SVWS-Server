@@ -1,11 +1,12 @@
-import type { List, SimpleOperationResponse} from "@core";
-import { ArrayList, DeveloperNotificationException, type AuswahlManager } from "@core";
+import type { JavaMap, List, SimpleOperationResponse, AuswahlManager } from "@core";
+import { ArrayList, DeveloperNotificationException, HashMap } from "@core";
 import { RouteData, type RouteStateInterface } from "./RouteData";
 import type { RouteParamsRawGeneric } from "vue-router";
 import { RouteManager } from "./RouteManager";
 import { RoutingStatus } from "./RoutingStatus";
 import { ViewType } from "@ui";
 import type { RouteNode } from "./RouteNode";
+import { PendingStateManagerRegistry } from "~/router/PendingStateManagerRegistry";
 
 /**
  * Die Definition von gemeinsamen Attributen des States von Routen.
@@ -26,23 +27,37 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 
 
 	/** Die Route für Gruppenprozesse */
-	private routeGruppenprozesse: RouteNode<any,any> | undefined;
+	private readonly _routeGruppenprozesse: RouteNode<any, any> | undefined;
 
 	/** Die Route für das Hinzufügen */
-	private routeHinzufuegen: RouteNode<any,any>;
+	private readonly _routeHinzufuegen: RouteNode<any, any>;
 
-
+	private _pendingStateManagerRegistry: PendingStateManagerRegistry;
 	/**
 	 * Erzeugt ein neues Route-Daten-Objekt mit dem übergebenen Default-State.
 	 * Optional können noch gültige Sichten/Child Routes übergeben werden, sofern diese
 	 * hier genutzt werden.
 	 *
 	 * @param defaultState   der Default-State
+	 * @param routeGruppenprozesse Route für Gruppenprozesse
+	 * @param routeHinzufuegen Route für Hinzufügen
 	 */
-	protected constructor(defaultState : RouteState, routeGruppenprozesse: RouteNode<any,any> | undefined, routeHinzufuegen: RouteNode<any,any>) {
+	protected constructor(defaultState: RouteState, routeGruppenprozesse: RouteNode<any, any> | undefined, routeHinzufuegen: RouteNode<any, any>) {
 		super(defaultState);
-		this.routeGruppenprozesse = routeGruppenprozesse;
-		this.routeHinzufuegen = routeHinzufuegen;
+		this._routeGruppenprozesse = routeGruppenprozesse;
+		this._routeHinzufuegen = routeHinzufuegen;
+		this._pendingStateManagerRegistry = new PendingStateManagerRegistry();
+	}
+
+	/**
+	 * Gibt den Pending State Manager Registry zurück.
+	 * Falls dieser noch nicht initialisiert wurde, wird eine DeveloperNotificationException geworfen.
+	 *
+	 * @throws DeveloperNotificationException falls der Zugriff vor der Initialisierung erfolgt.
+	 * @returns der Pending State Manager Registry
+	 */
+	get pendingStateManagerRegistry(): PendingStateManagerRegistry {
+		return this._pendingStateManagerRegistry;
 	}
 
 	/**
@@ -81,15 +96,16 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	 *
 	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
 	 */
-	protected abstract createManager(idSchuljahresabschnitt : number) : Promise<Partial<RouteState>>;
+	protected abstract createManager(idSchuljahresabschnitt: number): Promise<Partial<RouteState>>;
 
 
 	/**
 	 * Setzt die Daten zum ausgewählten Schuljahresabschnitt und triggert damit das Laden der Defaults für diesen Abschnitt
 	 *
 	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
+	 * @param isEntering Gibt an, ob die zugehörige Route initial betreten wird
 	 */
-	public async setSchuljahresabschnitt(idSchuljahresabschnitt : number, isEntering: boolean) : Promise<number | null> {
+	public async setSchuljahresabschnitt(idSchuljahresabschnitt: number, isEntering: boolean): Promise<number | null> {
 		// Wenn die ID des Schuljahresabschnittes bereits gesetzt ist, dann muss der Manager für den Schuljahresabschnitt nicht neu initialisiert werden
 		if (!isEntering && (idSchuljahresabschnitt === this._state.value.idSchuljahresabschnitt))
 			return null;
@@ -106,7 +122,7 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	 * @param managerAlt   der alte Manager
 	 * @param daten        die neuen Daten
 	 */
-	protected async updateManager(manager: TAuswahlManager, managerAlt: TAuswahlManager, daten: TDaten) : Promise<void> {
+	protected async updateManager(manager: TAuswahlManager, managerAlt: TAuswahlManager, daten: TDaten): Promise<void> {
 		// nichts zu tun
 	}
 
@@ -115,7 +131,7 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	 *
 	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
 	 */
-	private async ladeSchuljahresabschnitt(idSchuljahresabschnitt : number) : Promise<number | null> {
+	private async ladeSchuljahresabschnitt(idSchuljahresabschnitt: number): Promise<number | null> {
 		const newState = await this.createManager(idSchuljahresabschnitt);
 		const manager = newState.manager;
 		if (manager === undefined)
@@ -151,7 +167,7 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	 * @param param   die Parameter
 	 * @param id      die ID
 	 */
-	public abstract addID(param: RouteParamsRawGeneric, id: number) : void;
+	public abstract addID(param: RouteParamsRawGeneric, id: number): void;
 
 
 	/**
@@ -163,7 +179,7 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	 *
 	 * @returns der Eintrag
 	 */
-	public getEintragOrDefault(id: number) : TAuswahl | null {
+	public getEintragOrDefault(id: number): TAuswahl | null {
 		if (this.manager.liste.has(id))
 			return this.manager.liste.get(id);
 		return this.manager.filtered().isEmpty() ? null : this.manager.filtered().get(0);
@@ -179,7 +195,22 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	 *
 	 * @returns die geladenen Daten oder null
 	 */
-	public abstract ladeDaten(auswahl: TAuswahl | null, state: Partial<RouteState>) : Promise<TDaten | null>;
+	public abstract ladeDaten(auswahl: TAuswahl | null, state: Partial<RouteState>): Promise<TDaten | null>;
+
+
+	/**
+	 * Die Methode kann überschrieben werden und kümmert sich um das Nachladen von Daten, wenn in der
+	 * Auswahl mehrere Eintrag gleichzeitig ausgewählt werden.
+	 *
+	 * @param auswahlList   die neu Auswahl oder null
+	 * @param state     der State, bei welchem die Daten angepasst werden
+	 *
+	 * @returns die geladenen Daten oder null
+	 * @throws DeveloperNotificationException wenn Methode aufgerufen aber nicht überschrieben wurde
+	 */
+	public async ladeDatenMultiple(auswahlList: List<TAuswahl> | null, state: Partial<RouteState>): Promise<List<TDaten> | null> {
+		throw new DeveloperNotificationException("Die Methode ladeDatenMultiple() ist nicht implementiert.")
+	}
 
 
 	/**
@@ -221,7 +252,7 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	/**
 	 * Setzt den Filter neu und lädt den ersten Eintrag aus der gefilterten Liste
 	 */
-	setFilter = async () : Promise<void> => {
+	setFilter = async (): Promise<void> => {
 		if (!this.manager.hasDaten() && (this.activeViewType === ViewType.DEFAULT)) {
 			const listFiltered = this.manager.filtered();
 			if (!listFiltered.isEmpty()) {
@@ -240,14 +271,14 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	 * @param data   die Daten für den Patch
 	 * @param id     die ID der zu patchenden Daten
 	 */
-	protected abstract doPatch(data : Partial<TDaten>, id: number) : Promise<void>;
+	protected abstract doPatch(data: Partial<TDaten>, id: number): Promise<void>;
 
 	/**
 	 * Führt einen Patch auf den aktuellen Eintrag mit den übergebenen Daten aus.
 	 *
 	 * @param data   die Daten für den Patch
 	 */
-	patch = async (data : Partial<TDaten>) => {
+	patch = async (data: Partial<TDaten>) => {
 		if (!this.manager.hasDaten())
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		const id = this.manager.getIdByEintrag(this.manager.auswahl());
@@ -261,7 +292,7 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 
 	protected abstract doDelete(ids: List<number>): Promise<List<SimpleOperationResponse>>;
 
-	protected abstract deleteMessage(id: number, eintrag: TAuswahl | null) : string;
+	protected abstract deleteMessage(id: number, eintrag: TAuswahl | null): string;
 
 	/**
 	 * Diese Methode kann von einer abgeleiteten Klasse überschrieben werden, um die
@@ -322,7 +353,7 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	 *
 	 * @param id   die zu setzende ID oder null
 	 */
-	gotoDefaultView = async (id?: number | null) : Promise<void> => {
+	gotoDefaultView = async (id?: number | null): Promise<void> => {
 		const params = {};
 		if ((id !== null) && (id !== undefined) && this.manager.liste.has(id)) {
 			this.addID(params, id);
@@ -361,6 +392,32 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	 * @param navigate   gibt an, ob ein Routing durchgeführt werden soll oder nur die View im State gesetzt werden soll
 	 */
 	gotoGruppenprozessView = async (navigate: boolean) => {
+		const currentSelection: JavaMap<number, TDaten> = this.manager.getListeDaten();
+		const newSelection: JavaMap<number, TDaten> = new HashMap();
+		const deltaSelection: List<TAuswahl> = new ArrayList();
+		for (const eintrag of this.manager.liste.auswahl()) {
+			const id = this.manager.getIdByEintrag(eintrag);
+			const daten = currentSelection.get(id);
+			if (daten === null) {
+				deltaSelection.add(eintrag);
+			} else {
+				newSelection.put(id, daten);
+			}
+		}
+
+		if (deltaSelection.size() > 0) {
+			const deltaDaten = await this.ladeDatenMultiple(deltaSelection, this._state.value);
+			if (deltaDaten === null)
+				throw new DeveloperNotificationException("Fehler beim Laden der Daten. Es konnten keine Daten zu den ausgewählten Einträgen geladen werden.");
+
+			for (const datenObj of deltaDaten) {
+				newSelection.put(this.manager.getIdByDaten(datenObj), datenObj);
+			}
+		}
+
+		currentSelection.clear();
+		currentSelection.putAll(newSelection);
+
 		if (this.activeViewType === ViewType.GRUPPENPROZESSE) {
 			this.commit();
 			return;
@@ -373,9 +430,9 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 			if (this._defaultState.gruppenprozesseView !== undefined) {
 				await RouteManager.doRoute(this.defaultGruppenprozesseView.getRoute());
 				this._state.value.view = (this._state.value.view?.name === this.view.name) ? this.view : this.defaultGruppenprozesseView;
-			} else if (this.routeGruppenprozesse !== undefined) {
-				await RouteManager.doRoute(this.routeGruppenprozesse.getRoute());
-				this._state.value.view = this.routeGruppenprozesse
+			} else if (this._routeGruppenprozesse !== undefined) {
+				await RouteManager.doRoute(this._routeGruppenprozesse.getRoute());
+				this._state.value.view = this._routeGruppenprozesse
 			} else {
 				throw new DeveloperNotificationException('Es wurde keine Standard Route für Gruppenprozesse festgelegt!');
 			}
@@ -399,12 +456,12 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 		this.activeViewType = ViewType.HINZUFUEGEN;
 
 		if (navigate) {
-			const result = await RouteManager.doRoute(this.routeHinzufuegen.getRoute());
+			const result = await RouteManager.doRoute(this._routeHinzufuegen.getRoute());
 			if (result === RoutingStatus.SUCCESS)
 				this.manager.liste.auswahlClear();
 		}
 
-		this._state.value.view = this.routeHinzufuegen;
+		this._state.value.view = this._routeHinzufuegen;
 		this.manager.setDaten(null);
 		this.commit();
 	}

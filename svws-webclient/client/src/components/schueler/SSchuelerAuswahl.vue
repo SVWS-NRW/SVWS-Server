@@ -8,7 +8,8 @@
 			<slot name="header" />
 		</div>
 		<div class="secondary-menu--content">
-			<svws-ui-table :clickable="!manager().liste.auswahlExists()" :clicked="clickedEintrag" @update:clicked="schueler => gotoDefaultView(schueler.id)"
+			<svws-ui-table :lock-selectable="pendingStateManagerRegistry().pendingStateExists()" :clickable="!manager().liste.auswahlExists()"
+				:clicked="clickedEintrag" @update:clicked="schueler => gotoDefaultView(schueler.id)"
 				:items="rowsFiltered" :model-value="[...manager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)"
 				:columns="cols" selectable count :filter-open="true" :filtered="filterChanged()" :filterReset="filterReset" scroll-into-view scroll
 				v-model:sort-by-and-order="sortByAndOrder" :sort-by-multi="sortByMulti" allow-arrow-key-selection :focus-switching-enabled :focus-help-visible>
@@ -21,29 +22,31 @@
 					<div v-else class="col-span-full flex flex-wrap gap-x-5">
 						<svws-ui-checkbox type="toggle" v-model="filterNurMitLernabschitt">nur mit Lernabschnitt</svws-ui-checkbox>
 					</div>
-					<svws-ui-multi-select v-model="filterKlassen" title="Klasse" :items="manager().klassen.list()" :item-text="klasse => klasse.kuerzel ?? ''" :item-filter="find" />
-					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="manager().jahrgaenge.list()" :item-text="jahrgang => jahrgang.kuerzel ?? ''" :item-filter="find" />
+					<svws-ui-multi-select v-model="filterKlassen" title="Klasse" :items="manager().klassen.list()" :item-text="klasse => klasse.kuerzel ?? ''"
+						:item-filter="find" />
+					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="manager().jahrgaenge.list()"
+						:item-text="jahrgang => jahrgang.kuerzel ?? ''" :item-filter="find" />
 					<svws-ui-multi-select v-model="filterKurse" title="Kurs" :items="manager().kurse.list()" :item-text="textKurs" :item-filter="findKurs" />
-					<svws-ui-multi-select v-model="filterSchulgliederung" title="Schulgliederung" :items="manager().schulgliederungen.list()" :item-text="textSchulgliederung" />
-					<!--					<svws-ui-button type="transparent" class="justify-center">
-						<span class="icon i-ri-filter-line" />
-						Erweiterte Filter
-					</svws-ui-button>-->
+					<svws-ui-multi-select v-model="filterSchulgliederung" title="Schulgliederung" :items="manager().schulgliederungen.list()"
+						:item-text="textSchulgliederung" />
 				</template>
 				<template #cell(idKlasse)="{ rowData, value }">
 					{{ value === null ? "–" : (manager().klasseGetOrNull(value)?.kuerzel) ?? "–" }}
 					<svws-ui-tooltip v-if="!manager().schuelerIstImSchuljahresabschnitt(rowData.id)" autosize>
-						<span v-if="schuljahresabschnittsauswahl().aktuell === schuljahresabschnittsauswahl().schule" class="icon icon-ui-danger i-ri-alert-line" />
+						<span v-if="schuljahresabschnittsauswahl().aktuell === schuljahresabschnittsauswahl().schule"
+							class="icon icon-ui-danger i-ri-alert-line" />
 						<span v-else class="icon icon-ui-brand i-ri-information-line" />
 						<template #content>
-							Der Schüler befindet sich nicht in dem ausgewählten Schuljahrsabschnitt, sondern in {{ manager().schuelerSchuljahresabschnittAsString(rowData.id) }}
+							Der Schüler befindet sich nicht in dem ausgewählten Schuljahrsabschnitt, sondern in
+							{{ manager().schuelerSchuljahresabschnittAsString(rowData.id) }}
 						</template>
 					</svws-ui-tooltip>
 				</template>
 				<!-- <template v-if="primarstufe" #cell(epJahre)="{ rowData }"> {{ rowData.jahrgang }} </template> -->
 				<template #actions>
 					<svws-ui-tooltip position="bottom" v-if="ServerMode.DEV.checkServerMode(serverMode) && hatKompetenzAendern">
-						<svws-ui-button :disabled="activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="startCreationMode" :has-focus="rowsFiltered.length === 0">
+						<svws-ui-button :disabled="activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="startCreationMode"
+							:has-focus="rowsFiltered.length === 0">
 							<span class="icon i-ri-add-line" />
 						</svws-ui-button>
 						<template #content>
@@ -61,7 +64,7 @@
 
 		<template #modalContent>
 			<div class="opacity-50 mb-4">
-				{{ [ ... selectedItems ].splice(0,10).map(schueler => schueler.vorname + ' ' + schueler.nachname).join(', ') }}
+				{{ [...selectedItems].splice(0, 10).map(schueler => schueler.vorname + ' ' + schueler.nachname).join(', ') }}
 				{{ selectedItems.length > 10 ? ' und ' + (selectedItems.length - 10) + ' weitere' : '' }}
 			</div>
 			<svws-ui-input-wrapper :grid="4">
@@ -79,7 +82,7 @@
 
 	import { computed, ref, shallowRef, watch } from "vue";
 	import type { SchuelerListeEintrag, JahrgangsDaten, KlassenDaten, Schulgliederung, KursDaten } from "@core";
-	import { ServerMode, SchuelerStatus, BenutzerKompetenz, PrimarstufeSchuleingangsphaseBesuchsjahre, Schulform } from "@core";
+	import { ServerMode, SchuelerStatus, BenutzerKompetenz } from "@core";
 	import type { SortByAndOrder } from "@ui";
 	import { ViewType } from "@ui";
 	import type { SchuelerAuswahlProps } from "./SSchuelerAuswahlProps";
@@ -108,7 +111,7 @@
 	const search = ref<string>("");
 
 	async function startCreationMode(): Promise<void> {
-		await props.gotoHinzufuegenView(true)
+		await props.gotoHinzufuegenView(true);
 	}
 
 	const sortByMulti = computed<Map<string, boolean>>(() => {
@@ -125,8 +128,8 @@
 			if (list.isEmpty())
 				return undefined;
 			else {
-				const { a: key, b: order} = list.get(0);
-				return {key: key === 'klassen' ? 'idKlasse' : key, order};
+				const { a: key, b: order } = list.get(0);
+				return { key: key === 'klassen' ? 'idKlasse' : key, order };
 			}
 		},
 		set: (value) => {
@@ -252,7 +255,7 @@
 			if (jg === null)
 				continue;
 			jahrgaenge += jg.kuerzel;
-			if (index < kurs.idJahrgaenge.size()-1)
+			if (index < kurs.idJahrgaenge.size() - 1)
 				jahrgaenge += ', ';
 			index++;
 		}
@@ -281,7 +284,7 @@
 
 	const selectedItems = shallowRef<SchuelerListeEintrag[]>([]);
 
-	async function setAuswahl(schuelerEintraege : SchuelerListeEintrag[]) {
+	async function setAuswahl(schuelerEintraege: SchuelerListeEintrag[]) {
 		props.manager().liste.auswahlClear();
 		for (const schueler of schuelerEintraege)
 			if (props.manager().liste.hasValue(schueler))
