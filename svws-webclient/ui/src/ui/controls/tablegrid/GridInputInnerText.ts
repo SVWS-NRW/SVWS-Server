@@ -53,35 +53,4 @@ export class GridInputInnerText<KEY, DATA> extends GridInput<KEY, DATA> {
 		}
 	}
 
-	/**
-	 * Diese Methode reagiert auf Tastatur-Eingaben bei dem Input.
-	 *
-	 * @param event   das Tastaturereignis
-	 *
-	 * @returns true   es hat aufgrund des Tastaturereignisses eine Änderung am Zustand des Inputs stattgefunden
-	 */
-	public onKeyDown(event : KeyboardEvent) : boolean {
-		if (event.key === "ArrowDown") {
-			this.navigateDown();
-			event.preventDefault();
-			return false;
-		}
-		if (event.key === "ArrowUp") {
-			this.navigateUp();
-			event.preventDefault();
-			return false;
-		}
-		if (event.key === "ArrowLeft") {
-			this.navigateLeft();
-			event.preventDefault();
-			return false;
-		}
-		if (event.key === "ArrowRight") {
-			this.navigateRight();
-			event.preventDefault();
-			return false;
-		}
-		return false;
-	}
-
 }

@@ -175,6 +175,58 @@ export abstract class GridInput<KEY, DATA> {
 	}
 
 	/**
+	 * Diese Methode reagiert auf Tastatur-Eingaben bei dem Input mit einem Standard-Verhalten bezüglich
+	 * der Navigation.
+	 *
+	 * @param event   das Tastaturereignis
+	 *
+	 * @returns true   wenn aufgrund des Tastaturereignisses eine Navigation stattgefunden hat.
+	 */
+	public onKeyDownNavigation(event : KeyboardEvent) : boolean {
+		if (event.key === "ArrowDown") {
+			this.navigateDown();
+			event.preventDefault();
+			return true;
+		}
+		if (event.key === "ArrowUp") {
+			this.navigateUp();
+			event.preventDefault();
+			return true;
+		}
+		if (event.key === "ArrowLeft") {
+			this.navigateLeft();
+			event.preventDefault();
+			return true;
+		}
+		if (event.key === "ArrowRight") {
+			this.navigateRight();
+			event.preventDefault();
+			return true;
+		}
+		if (event.key === "PageDown") {
+			this.navigatePageDown();
+			event.preventDefault();
+			return true;
+		}
+		if (event.key === "PageUp") {
+			this.navigatePageUp();
+			event.preventDefault();
+			return true;
+		}
+		if (event.key === "Home") {
+			this.navigateTop();
+			event.preventDefault();
+			return true;
+		}
+		if (event.key === "End") {
+			this.navigateBottom();
+			event.preventDefault();
+			return true;
+		}
+		return false;
+	}
+
+	/**
 	 * Es soll das Grid-Input oberhalb von diesem Grid-Input fokussiert werden.
 	 */
 	public navigateUp() : void {
@@ -200,6 +252,34 @@ export abstract class GridInput<KEY, DATA> {
 	 */
 	public navigateRight() : void {
 		this._gridManager.focusNextColElement(this);
+	}
+
+	/**
+	 * Es soll das Grid-Input eine Seite im Body oberhalb von diesem Grid-Input fokussiert werden.
+	 */
+	public navigatePageUp() : void {
+		this._gridManager.focusPrevRowElementPageUp(this);
+	}
+
+	/**
+	 * Es soll das Grid-Input eine Seite im Body unterhalb von diesem Grid-Input fokussiert werden.
+	 */
+	public navigatePageDown() : void {
+		this._gridManager.focusNextRowElementPageDown(this);
+	}
+
+	/**
+	 * Es soll das Grid-Input ganz oben im Body fokussiert werden.
+	 */
+	public navigateTop() : void {
+		this._gridManager.focusTopElement(this);
+	}
+
+	/**
+	 * Es soll das Grid-Input ganz unten im Body fokussiert werden.
+	 */
+	public navigateBottom() : void {
+		this._gridManager.focusBottomElement(this);
 	}
 
 }

@@ -62,20 +62,95 @@ export class GridManager<KEY> {
 		}
 	}
 
-	public focusPrevRowElement(manager: GridInput<KEY, any>) {
-		this.sortRows(manager.col);
-		const index = this.gridInputsCols[manager.col].rows.indexOf(manager);
+	public focusPrevRowElement(input: GridInput<KEY, any>) {
+		this.sortRows(input.col);
+		const index = this.gridInputsCols[input.col].rows.indexOf(input);
 		if (index < 1)
 			return;
-		this.gridInputsCols[manager.col].rows[index - 1].element.focus();
+		this.gridInputsCols[input.col].rows[index - 1].element.focus();
 	}
 
-	public focusNextRowElement(manager: GridInput<KEY, any>) {
-		this.sortRows(manager.col);
-		const index = this.gridInputsCols[manager.col].rows.indexOf(manager);
-		if ((index < 0) || (index >= this.gridInputsCols[manager.col].rows.length - 1))
+	public focusNextRowElement(input: GridInput<KEY, any>) {
+		this.sortRows(input.col);
+		const index = this.gridInputsCols[input.col].rows.indexOf(input);
+		if ((index < 0) || (index >= this.gridInputsCols[input.col].rows.length - 1))
 			return;
-		this.gridInputsCols[manager.col].rows[index + 1].element.focus();
+		this.gridInputsCols[input.col].rows[index + 1].element.focus();
+	}
+
+	private getTBody(input: GridInput<KEY, any>): HTMLElement {
+		let cur : HTMLElement | null = input.element;
+		while (cur.parentElement !== null) {
+			cur = cur.parentElement;
+			const computedStyle = window.getComputedStyle(cur);
+			if ((cur.tagName === 'TBODY') && ((computedStyle.overflowY === 'auto') || (computedStyle.overflowY === 'scroll')))
+				return cur;
+		}
+		throw new DeveloperNotificationException("Konnte den Body der Tabelle nicht bestimmen.");
+	}
+
+	private isOverflowTop(input: GridInput<KEY, any>, tbody: HTMLElement) : boolean {
+		const scrollBound = tbody.getBoundingClientRect();
+		const elemBound = input.element.getBoundingClientRect();
+		return (elemBound.top < scrollBound.top);
+	}
+
+	private getPrevOverflowTopInput(input: GridInput<KEY, any>, tbody: HTMLElement) : GridInput<KEY, any> {
+		let index = this.gridInputsCols[input.col].rows.indexOf(input);
+		if (index > this.gridInputsCols[input.col].rows.length - 1)
+			return this.gridInputsCols[input.col].rows[this.gridInputsCols[input.col].rows.length - 1] ?? null;
+		let cur = input;
+		while (!this.isOverflowTop(cur, tbody)) {
+			if (index <= 0)
+				return this.gridInputsCols[input.col].rows[0] ?? null;
+			index--;
+			cur = this.gridInputsCols[input.col].rows[index];
+		}
+		return cur;
+	}
+
+	public focusPrevRowElementPageUp(input: GridInput<KEY, any>) {
+		const tbody = this.getTBody(input);
+		this.sortRows(input.col);
+		this.getPrevOverflowTopInput(input, tbody).element.focus();
+	}
+
+	private isOverflowBottom(input: GridInput<KEY, any>, tbody: HTMLElement) : boolean {
+		const scrollBound = tbody.getBoundingClientRect();
+		const elemBound = input.element.getBoundingClientRect();
+		return (elemBound.bottom > scrollBound.bottom);
+	}
+
+	private getNextOverflowBottomInput(input: GridInput<KEY, any>, tbody: HTMLElement) : GridInput<KEY, any> {
+		let index = this.gridInputsCols[input.col].rows.indexOf(input);
+		if (index < 0)
+			return this.gridInputsCols[input.col].rows[0];
+		let cur = input;
+		while (!this.isOverflowBottom(cur, tbody)) {
+			if (index >= this.gridInputsCols[input.col].rows.length - 1)
+				return this.gridInputsCols[input.col].rows[this.gridInputsCols[input.col].rows.length - 1];
+			index++;
+			cur = this.gridInputsCols[input.col].rows[index];
+		}
+		return cur;
+	}
+
+	public focusNextRowElementPageDown(input: GridInput<KEY, any>) {
+		const tbody = this.getTBody(input);
+		this.sortRows(input.col);
+		this.getNextOverflowBottomInput(input, tbody).element.focus();
+	}
+
+
+	public focusTopElement(input: GridInput<KEY, any>) {
+		this.sortRows(input.col);
+		this.gridInputsCols[input.col].rows[0].element.focus();
+	}
+
+
+	public focusBottomElement(input: GridInput<KEY, any>) {
+		this.sortRows(input.col);
+		this.gridInputsCols[input.col].rows[this.gridInputsCols[input.col].rows.length - 1].element.focus();
 	}
 
 	private sortCols(row: number) {
@@ -87,20 +162,20 @@ export class GridManager<KEY> {
 		}
 	}
 
-	public focusPrevColElement(manager: GridInput<KEY, any>) {
-		this.sortCols(manager.row);
-		const index = this.gridInputsRows[manager.row].cols.indexOf(manager);
+	public focusPrevColElement(input: GridInput<KEY, any>) {
+		this.sortCols(input.row);
+		const index = this.gridInputsRows[input.row].cols.indexOf(input);
 		if (index < 1)
 			return;
-		this.gridInputsRows[manager.row].cols[index - 1].element.focus();
+		this.gridInputsRows[input.row].cols[index - 1].element.focus();
 	}
 
-	public focusNextColElement(manager: GridInput<KEY, any>) {
-		this.sortCols(manager.row);
-		const index = this.gridInputsRows[manager.row].cols.indexOf(manager);
-		if ((index < 0) || (index >= this.gridInputsRows[manager.row].cols.length - 1))
+	public focusNextColElement(input: GridInput<KEY, any>) {
+		this.sortCols(input.row);
+		const index = this.gridInputsRows[input.row].cols.indexOf(input);
+		if ((index < 0) || (index >= this.gridInputsRows[input.row].cols.length - 1))
 			return;
-		this.gridInputsRows[manager.row].cols[index + 1].element.focus();
+		this.gridInputsRows[input.row].cols[index + 1].element.focus();
 	}
 
 	public update(key: KEY, data: unknown) {

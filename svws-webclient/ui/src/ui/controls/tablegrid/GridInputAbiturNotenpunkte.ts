@@ -110,7 +110,8 @@ export class GridInputAbiturNotenpunkte<KEY> extends GridInputInnerText<KEY, str
 	 * @returns true   es hat aufgrund des Tastaturereignisses eine Änderung am Zustand des Inputs stattgefunden
 	 */
 	public onKeyDown(event : KeyboardEvent) : boolean {
-		super.onKeyDown(event);
+		if (super.onKeyDownNavigation(event))
+			return false;
 		// Lösche ggf. den aktuellen Wert
 		if (event.key === "Delete") {
 			this.update(null);
