@@ -3199,33 +3199,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getErzieherArten für den Zugriff auf die URL https://{hostname}/db/{schema}/erzieher/arten
-	 *
-	 * Erstellt eine Liste aller in der Datenbank vorhandenen Erzieherarten unter Angabe der ID, der Beschreibung, Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogdaten besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Eine Liste von Erzieherarten
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<Erzieherart>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalogdaten anzusehen.
-	 *   Code 404: Keine Erzieherart-Einträge gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Eine Liste von Erzieherarten
-	 */
-	public async getErzieherArten(schema : string) : Promise<List<Erzieherart>> {
-		const path = "/db/{schema}/erzieher/arten"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<Erzieherart>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Erzieherart.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
 	 * Implementierung der GET-Methode exportSQLite für den Zugriff auf die URL https://{hostname}/db/{schema}/export/sqlite
 	 *
 	 * Exportiert das aktuelle Schema in eine neu erstellte SQLite-Datenbank. Der Aufruf erfordert administrative Rechte.
@@ -13296,6 +13269,145 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return Einwilligungsart.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getErzieherart für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/erzieherart/{id : \d+}
+	 *
+	 * Liest die Daten der Erzieherart zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Daten der Erzieherart
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Erzieherart
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalogdaten anzusehen.
+	 *   Code 404: Keine Erzieherart mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Daten der Erzieherart
+	 */
+	public async getErzieherart(schema : string, id : number) : Promise<Erzieherart> {
+		const path = "/db/{schema}/schule/erzieherart/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return Erzieherart.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchErzieherart für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/erzieherart/{id : \d+}
+	 *
+	 * Passt die Erzieherart-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern der Daten der Erzieherart besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich in die Erzieherart-Daten integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Erzieherart-Daten zu ändern.
+	 *   Code 404: Keine Erzieherart mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<Erzieherart>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchErzieherart(data : Partial<Erzieherart>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/schule/erzieherart/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = Erzieherart.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addErzieherart für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/erzieherart/new
+	 *
+	 * Erstellt eine neue Erzieherart und gibt sie zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Erzieherart besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Telefonart wurde erfolgreich angelegt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Erzieherart
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Erzieherart anzulegen.
+	 *   Code 409: Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<Erzieherart>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Telefonart wurde erfolgreich angelegt.
+	 */
+	public async addErzieherart(data : Partial<Erzieherart>, schema : string) : Promise<Erzieherart> {
+		const path = "/db/{schema}/schule/erzieherart/new"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = Erzieherart.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return Erzieherart.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getErzieherArten für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/erzieherarten
+	 *
+	 * Erstellt eine Liste aller in der Datenbank vorhandenen Erzieherarten unter Angabe der ID, der Beschreibung, Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Eine Liste von Erzieherarten
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Erzieherart>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalogdaten anzusehen.
+	 *   Code 404: Keine Erzieherart-Einträge gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Eine Liste von Erzieherarten
+	 */
+	public async getErzieherArten(schema : string) : Promise<List<Erzieherart>> {
+		const path = "/db/{schema}/schule/erzieherarten"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<Erzieherart>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Erzieherart.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteErzieherarten für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/erzieherarten/delete/multiple
+	 *
+	 * Entfernt mehrere Erzieherarten der Schule.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Erzieherarten wurden erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.
+	 *   Code 404: Erzieherarten nicht vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Erzieherarten wurden erfolgreich entfernt.
+	 */
+	public async deleteErzieherarten(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+		const path = "/db/{schema}/schule/erzieherarten/delete/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 

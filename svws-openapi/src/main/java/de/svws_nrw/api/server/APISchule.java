@@ -1,7 +1,9 @@
 package de.svws_nrw.api.server;
 
+import de.svws_nrw.core.data.erzieher.Erzieherart;
 import de.svws_nrw.core.data.schule.Lernplattform;
 import de.svws_nrw.core.data.schule.TelefonArt;
+import de.svws_nrw.data.erzieher.DataErzieherarten;
 import de.svws_nrw.data.schule.DataKatalogLernplattformen;
 import de.svws_nrw.data.schule.DataKatalogTelefonArten;
 import java.io.InputStream;
@@ -3065,5 +3067,137 @@ public class APISchule {
 					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogTelefonArten(conn).deleteMultipleAsResponse(JSONMapper.toListOfLong(is)),
 				request, ServerMode.DEV, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Liste aller Erzieherarten.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste mit den einzelnen Erzieherarten
+	 */
+	@GET
+	@Path("/erzieherarten")
+	@Operation(summary = "Gibt eine Übersicht von allen Erzieherarten zurück.",
+			description = "Erstellt eine Liste aller in der Datenbank vorhandenen Erzieherarten unter Angabe der ID, der Beschreibung, "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogdaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste von Erzieherarten",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Erzieherart.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalogdaten anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Erzieherart-Einträge gefunden")
+	public Response getErzieherArten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataErzieherarten(conn).getAllAsResponse(),
+				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage einer Erzieherart.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param id        die Datenbank-ID zur Identifikation der Erzieherart
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Daten zur Erzieherart
+	 */
+	@GET
+	@Path("/erzieherart/{id : \\d+}")
+	@Operation(summary = "Liefert zu der ID der Erzieherart die zugehörigen Daten.",
+			description = "Liest die Daten der Erzieherart zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogdaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Daten der Erzieherart",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Erzieherart.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalogdaten anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Erzieherart mit der angegebenen ID gefunden")
+	public Response getErzieherart(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataErzieherarten(conn).getByIdAsResponse(id),
+				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Erstellen einer neuen Erzieherart.
+	 *
+	 * @param schema       das Datenbankschema, in welchem die Erzieherart erstellt wird
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 * @param is           das JSON-Objekt
+	 *
+	 * @return die HTTP-Antwort mit der neuen Erzieherart
+	 */
+	@POST
+	@Path("/erzieherart/new")
+	@Operation(summary = "Erstellt eine neue Erzieherart und gibt sie zurück.",
+			description = "Erstellt eine neue Erzieherart und gibt sie zurück."
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Erzieherart besitzt.")
+	@ApiResponse(responseCode = "201", description = "Telefonart wurde erfolgreich angelegt.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Erzieherart.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Erzieherart anzulegen.")
+	@ApiResponse(responseCode = "409", description = "Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response addErzieherart(@PathParam("schema") final String schema,
+			@RequestBody(description = "Der initiale Patch für die neue Erzieherart", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Erzieherart.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataErzieherarten(conn).addAsResponse(is),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Patchen einer Erzieherart im angegebenen Schema
+	 *
+	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param id        die Datenbank-ID zur Identifikation der Erzieherart
+	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/erzieherart/{id : \\d+}")
+	@Operation(summary = "Passt die zu der ID der Erzieherart zugehörigen Stammdaten an.",
+			description = "Passt die Erzieherart-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern der Daten der Erzieherart besitzt.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Erzieherart-Daten integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Erzieherart-Daten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Keine Erzieherart mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
+			+ " (z.B. eine negative ID)")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response patchErzieherart(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@RequestBody(description = "Der Patch für die Erzieherart", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = Erzieherart.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataErzieherarten(conn).patchAsResponse(id, is),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Entfernen mehrerer Erzieherarten der Schule.
+	 *
+	 * @param schema       das Datenbankschema
+	 * @param is           die IDs der Erzieherarten
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
+	 */
+	@DELETE
+	@Path("/erzieherarten/delete/multiple")
+	@Operation(summary = "Entfernt mehrere Erzieherarten der Schule.",
+			description = "Entfernt mehrere Erzieherarten der Schule."
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.")
+	@ApiResponse(responseCode = "200", description = "Die Erzieherarten wurden erfolgreich entfernt.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.")
+	@ApiResponse(responseCode = "404", description = "Erzieherarten nicht vorhanden")
+	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteErzieherarten(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die IDs der zu löschenden Erzieherarten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataErzieherarten(conn).deleteMultipleAsResponse(JSONMapper.toListOfLong(is)),
+				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
 }

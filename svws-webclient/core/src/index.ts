@@ -736,6 +736,7 @@ export { BenutzergruppenManager } from './core/utils/benutzer/BenutzergruppenMan
 export { BKGymFaecherManager } from './core/utils/bk/BKGymFaecherManager';
 export { EinwilligungsartenListeManager } from './core/utils/einwilligungsart/EinwilligungsartenListeManager';
 export { ENMDatenManager } from './core/utils/enm/ENMDatenManager';
+export { ErzieherartListeManager } from './core/utils/erzieherart/ErzieherartListeManager';
 export { FachListeManager } from './core/utils/fach/FachListeManager';
 export { GostAbiturjahrUtils } from './core/utils/gost/GostAbiturjahrUtils';
 export { GostBlockungsdatenManager } from './core/utils/gost/GostBlockungsdatenManager';

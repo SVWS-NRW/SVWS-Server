@@ -297,7 +297,7 @@ public class ReportingRepository {
 			this.katalogReligionen = new DataReligionen(this.conn).getAll().stream().collect(Collectors.toMap(r -> r.id, r -> r));
 			this.logger.logLn(LogLevel.DEBUG, 8, "Katalog Religionen geladen.");
 
-			this.mapErzieherarten = new DataErzieherarten(this.conn).getListErzieherarten().stream().collect(Collectors.toMap(a -> a.id,
+			this.mapErzieherarten = new DataErzieherarten(this.conn).getAll().stream().collect(Collectors.toMap(a -> a.id,
 					a -> new ProxyReportingErzieherArt(this, a)));
 			this.logger.logLn(LogLevel.DEBUG, 8, "Liste der Erzieherarten geladen.");
 		} catch (final Exception e) {
