@@ -3,7 +3,7 @@
 	<template v-if="((storyManager.gridView === 'single') && active) || (storyManager.gridView === 'grid')">
 		<div class="">
 			<div class="border-l border-t border-r pr-3 pl-3 rounded-t-md text-lg w-fit" :class="active ? 'bg-ui-brand text-ui-onbrand' : 'bg-ui-brand-secondary text-ui-50'">{{ title }}</div>
-			<div @click="storyManager.setVariant({id, title})" class="border rounded-r-lg rounded-b-lg border-ui-50 p-4" :class="color?.label">
+			<div @click="storyManager.setVariantById(id)" class="border rounded-r-lg rounded-b-lg border-ui-50 p-4" :class="color?.label">
 				<slot />
 			</div>
 		</div>
@@ -41,9 +41,9 @@
 		responsiveDisabled: false,
 	});
 
-	onBeforeMount(() => storyManager.registerVariant(props));
+	onBeforeMount(() => storyManager.registerVariant(props.id, props.title));
 
-	const active = computed(() => storyManager.variant?.id === props.id);
+	const active = computed(() => storyManager.variant.id === props.id);
 
 	const color = computed(() => storyManager.color);
 

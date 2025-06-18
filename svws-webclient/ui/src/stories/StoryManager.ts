@@ -1,88 +1,114 @@
-import type { RouteRecord } from "vue-router";
-import { StateManager } from "./StateManager";
-import router from "~/router";
+import { StateManager } from "../ui/StateManager";
 
 export interface ColorPreset { label: string, color: string, contrastColor: string };
 export type GridView = 'grid'|'single';
 
-export interface Variant {
-	id: string;
-	title: string;
-};
 
-export interface Story {
-	id: string,
-	mapVariants?: Map<string, Variant>;
-	variant?: Variant;
-	color?: ColorPreset;
-};
+
+export class Variant {
+	readonly id: string;
+	readonly title: string;
+
+	constructor(id: string = 'default', title: string = 'default') {
+		this.id = id;
+		this.title = title;
+	}
+
+}
+
+export class Story {
+	readonly id: string;
+	readonly mapVariants: Map<string, Variant> = new Map();
+	protected _variant: Variant = new Variant();
+	protected _color: ColorPreset|undefined;
+	protected _events: string[] = [];
+
+	constructor(id: string = 'default') {
+		this.id = id;
+	}
+
+	get variant() {
+		return this._variant;
+	}
+	setVariantById(id: string) {
+		const variant = this.mapVariants.get(id);
+		if (variant !== undefined)
+			this._variant = variant;
+	}
+
+	registerVariant(variant: Variant) {
+		if (!this.mapVariants.has(variant.id))
+			this.mapVariants.set(variant.id, variant);
+	}
+
+	get color() {
+		return this._color;
+	}
+	set color(value) {
+		this._color = value;
+	}
+
+	get events() {
+		return this._events;
+	}
+	set events(value) {
+		this._events = value;
+	}
+}
+
 
 interface Stories {
 	mapStories: Map<string, Story>;
-	story?: Story;
-	gridView?: GridView;
+	story: Story;
+	gridView: GridView;
 }
 
-const defaultState = <Stories> {
+const defaultState = <Stories>{
 	mapStories: new Map(),
-	story: undefined,
+	story: new Story(),
 	gridView: 'grid',
+	events: [],
 };
 
 export class StoryManager extends StateManager<Stories> {
-	public constructor(routes: RouteRecord[]) {
+
+	readonly mapStories: Map<string, Story> = new Map();
+
+	public constructor() {
 		super(defaultState);
 	}
 
 	get story() {
 		return this._state.value.story;
 	}
-	setStory(props: Story) {
-		const mapStories = this._state.value.mapStories;
-		if (!mapStories.has(props.id))
-			mapStories.set(props.id, {id: props.id, mapVariants: new Map()});
-		this.setPatchedState({ story: mapStories.get(props.id), mapStories });
-	}
 
-	get variant() {
-		if (this._state.value.story === undefined)
-			throw new Error("Keine Story gesetzt");
-		return this._state.value.story.variant;
-	}
-	setVariant(props: Variant) {
-		const story = this.story;
-		if (story === undefined)
-			throw new Error("Keine Story gesetzt");
-		const mapVariants = story.mapVariants;
-		if (mapVariants === undefined)
-			throw new Error("mapVariants fehlt!")
-		if (!mapVariants.has(props.id))
-			mapVariants.set(props.id, props);
-		story.variant = mapVariants.get(props.id);
+	setStoryByID(id: string) {
+		if (!this.mapStories.has(id))
+			this.mapStories.set(id, new Story(id));
+		const story = this.mapStories.get(id);
 		this.setPatchedState({ story });
 	}
 
-	registerVariant(props: Variant) {
+	get variant() {
+		return this._state.value.story.variant;
+	}
+	setVariantById(id: string) {
 		const story = this.story;
-		if (story === undefined)
-			throw new Error("Keine Story gesetzt");
-		if (story.mapVariants === undefined)
-			throw new Error("mapVariants fehlt!");
-		if (story.mapVariants.has(props.id))
-			return;
-		story.mapVariants.set(props.id, props);
-		if (story.mapVariants.size === 1)
-			story.variant = props;
+		story.setVariantById(id);
+		this.setPatchedState({ story });
+	}
+
+	registerVariant(id: string, title: string) {
+		const story = this.story;
+		story.registerVariant(new Variant(id, title));
 		this.setPatchedState({ story });
 	}
 
 	get color() {
-		return this._state.value.story?.color;
+		return this._state.value.story.color;
 	}
 	set color(color) {
 		const story = this._state.value.story;
-		if (story === undefined)
-			return;
 		story.color = color;
 		this.setPatchedState({ story });
 	}
@@ -91,11 +117,19 @@ export class StoryManager extends StateManager<Stories> {
 		return this._state.value.gridView;
 	}
 	set gridView(gridView) {
-		this._state.value.gridView = gridView;
 		this.setPatchedState({ gridView });
+	}
+
+	get events() {
+		return this._state.value.story.events;
+	}
+	set events(events) {
+		const story =	this.story;
+		story.events = events;
+		this.setPatchedState({ story });
 	}
 }
 
-const storyManager = new StoryManager(router.getRoutes());
+const storyManager = new StoryManager();
 
 export default storyManager;

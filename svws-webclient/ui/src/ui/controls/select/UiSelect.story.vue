@@ -1,5 +1,6 @@
 <template>
 	<Story title="Select New" id="ui-select" icon="ri:expand-up-down-line" auto-props-disabled :layout="{ type: 'grid', width: '45%'}" :source="getSourceString()">
+		<template #docs><Docs /></template>
 		<Variant title="Single Selection">
 			<svws-ui-input-wrapper>
 				<ui-select label="SimpleSelectManager mit String" :manager="sStringSelectManager" :searchable="state.searchable"
@@ -207,6 +208,7 @@
 	import { LehrerRechtsverhaeltnis } from "../../../../../core/src/asd/types/lehrer/LehrerRechtsverhaeltnis";
 	import { Schulform } from "../../../../../core/src/asd/types/schule/Schulform";
 	import { ObjectSelectManager } from "./selectManager/ObjectSelectManager";
+	import Docs from "./UiSelect.story.md"
 
 	const state = reactive({
 		searchable: false,

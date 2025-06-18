@@ -6,7 +6,7 @@
 					<div class="py-3 sm:py-4 flex-1 h-full flex items-center pr-2"><img src="/src/assets/img/histoire-svws.svg" width="50%"></div>
 					<div class="ml-auto flex-none flex" />
 				</div>
-				<div class="histoire-story-list overflow-y-auto flex-1">
+				<div class="histoire-story-list overflow-y-auto flex-1 pl-2">
 					<svws-ui-table clickable v-model:clicked="clicked" :items="router.getRoutes()" scroll-into-view scroll :columns @update:clicked="routeTo">
 						<template #cell(path)="{ rowData }">
 							{{ rowData.path.split('/').join(' → ') }}
@@ -22,18 +22,18 @@
 						<div class="text-ui-caution font-bold">
 							Zur alten Histoire-Version der Doku geht es hier: <a href="https://eloquent-baklava-d6aa9d.netlify.app/">Link</a>
 						</div>
-						<div><SvwsUiButton type="transparent" @click="gridView = (gridView === 'single') ? 'grid':'single'">{{ gridView === 'single' ? 'Grid':'Single' }}</SvwsUiButton></div>
+						<div class="w-60"><SvwsUiButton type="transparent" @click="gridView = (gridView === 'single') ? 'grid':'single'">{{ gridView === 'single' ? 'Single':'Grid' }} aktiviert</SvwsUiButton></div>
 						<div class="w-60">
 							<ui-select label="Hintergrundfarbe" v-model="color" :manager="colorSelectManager" searchable removable headless />
 						</div>
 					</div>
-					<div class="histoire-story-responsive-preview pr-8 size-full flex gap-4 rounded-lg relative overflow-hidden histoire-story-variant-single-preview-native">
-						<template v-if="gridView === 'single'">
-							<div class="relative top-0 left-0 h-full w-96 border-r border-ui-25 bg-ui-75 overflow-auto">
-								<svws-ui-table clickable :clicked="storyManager.variant" :items="storyManager.story?.mapVariants?.values()" scroll-into-view scroll :columns="columnsVariant" @update:clicked="storyManager.setVariant($event)" />
+					<div class="histoire-story-responsive-preview pr-8 size-full flex gap-4 relative overflow-hidden histoire-story-variant-single-preview-native">
+						<template v-if="gridView === 'single' && storyManager.story !== undefined">
+							<div class="relative top-0 left-0 h-full w-96 border-r border-ui-25 bg-ui-75 overflow-auto pt-4 pl-2 border-t">
+								<svws-ui-table clickable :clicked="storyManager.variant" :items="storyManager.story.mapVariants.values()" scroll-into-view scroll :columns="columnsVariant" @update:clicked="storyManager.setVariantById($event.id)" />
 							</div>
 						</template>
-						<div class="bottom-0 right-0 overflow-auto size-full pr-4" :class="{' pl-4 grid-cols-2 grid gap-4 ': gridView === 'grid'}">
+						<div class="bottom-0 right-0 overflow-auto size-full pr-4" :class="{' pl-4 grid-cols-2 grid gap-4 ': (gridView === 'grid') && (storyManager.story.mapVariants.size > 1) }">
 							<RouterView />
 						</div>
 					</div>
@@ -44,21 +44,21 @@
 					<div class="relative top-0 left-0 z-20" style="height: 50%;">
 						<div class="flex flex-col h-full">
 							<div class="histoire-base-overflow-menu flex overflow-hidden relative histoire-pane-tabs h-10 flex-none border-b border-ui-25">
-								<div @click="visible = 'controls'" class="px-4 h-full inline-flex items-center relative histoire-base-tab"
+								<div @click="visible = 'controls'" class="px-4 h-full inline-flex items-center relative histoire-base-tab cursor-pointer"
 									:class="visible === 'controls' ? 'bg-ui-brand text-ui-onbrand':'text-ui-brand hover:text-ui-onbrand-hover hover:bg-ui-brand-hover bg-ui-brand-secondary'">
 									Controls
 								</div>
-								<div @click="visible = 'docs'" class="px-4 h-full inline-flex items-center hover:bg-ui-brand-hover relative text-ui-10 histoire-base-tab"
+								<div @click="visible = 'docs'" class="px-4 h-full inline-flex items-center hover:bg-ui-brand-hover relative text-ui-10 histoire-base-tab cursor-pointer"
 									:class="visible === 'docs' ? 'bg-ui-brand text-ui-onbrand':'text-ui-brand hover:text-ui-onbrand-hover hover:bg-ui-brand-hover bg-ui-brand-secondary'">
 									Docs
 								</div>
-								<div @click="visible = 'events'" class="px-4 h-full inline-flex items-center hover:bg-ui-brand-hover relative text-ui-10 histoire-base-tab"
+								<div @click="visible = 'events'" class="px-4 h-full inline-flex items-center hover:bg-ui-brand-hover relative text-ui-10 histoire-base-tab cursor-pointer"
 									:class="visible === 'events' ? 'bg-ui-brand text-ui-onbrand':'text-ui-brand hover:text-ui-onbrand-hover hover:bg-ui-brand-hover bg-ui-brand-secondary'">
-									Events
+									Events <SvwsUiBadge v-if="eventCounter > 0" type="primary" class="ml-3"> {{ eventCounter > 0 ? eventCounter : '' }}</SvwsUiBadge>
 								</div>
 							</div>
-							<div data-test-id="story-controls" class="histoire-story-controls flex flex-col divide-y divide-gray-100 dark:divide-gray-750 h-full overflow-auto">
-								<div class="h-9 flex-none px-2 flex items-center" />
+							<div data-test-id="story-controls" class="histoire-story-controls flex flex-col divide-y divide-gray-100 dark:divide-gray-750 h-full overflow-auto p-2">
+								<div class="h-9 flex-none px-2 flex items-center relative" />
 								<div class="histoire-generic-render-story flex-none">
 									<div id="controls" :class="visible === 'controls' ? 'visible':'hidden'" />
 									<div id="docs" :class="visible === 'docs' ? 'visible':'hidden'" />
@@ -85,7 +85,7 @@
 
 	import { computed, onUnmounted, ref, watchEffect } from 'vue';
 	import type { RouteRecord } from 'vue-router';
-	import type { ColorPreset, Variant } from './StoryManager';
+	import type { ColorPreset } from './StoryManager';
 	import storyManager from './StoryManager';
 	import { ObjectSelectManager } from '~/ui/controls/select/selectManager/ObjectSelectManager';
 	import router from '../router';
@@ -99,6 +99,20 @@
 	}
 
 	const visible = ref<'events'|'docs'|'controls'>('controls');
+
+	watchEffect(() => {
+		if ((visible.value === 'events') && (storyManager.events.length > 0))
+			initialEventCounter.value = storyManager.events.length;
+	});
+
+	const initialEventCounter = ref(storyManager.events.length);
+
+	const eventCounter = computed(() => {
+		if (visible.value !== 'events')
+			return storyManager.events.length - initialEventCounter.value;
+		else
+			return 0;
+	});
 
 	const color = computed({
 		get: () => storyManager.color,

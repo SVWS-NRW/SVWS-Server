@@ -132,39 +132,39 @@ Der SelectManager beinhaltet die Logik der Komponente basierend auf dem Datentyp
 SelectManager leiten alle von der abstrakten Klasse `BaseSelectManager` ab. Es stehen bereits einige einfache SelectManager zur Verfügung, die für simple Anwendungsfälle ausreichen. Für komplexere Fälle müssen eigene Manager geschrieben werden.
 
 **Konstruktor**
-- **multi (boolean)**: Gibt an, ob es sich um eine Multiselektion handelt
-- **options (Iterable<T>)**: Alle Optionen, die das Dropdown beinhaltet. Eine Sortierung kann mit dem Setter für `sort` vorgegeben werden.
-- **selected (any, optional)**: Definiert die bereits selektierten Einträge. Bei einer Multi-Selektion muss es ein Iterable sein, andernfalls eine einzelne Option
+- **multi (`boolean`)**: Gibt an, ob es sich um eine Multiselektion handelt
+- **options (`Iterable<T>`)**: Alle Optionen, die das Dropdown beinhaltet. Eine Sortierung kann mit dem Setter für `sort` vorgegeben werden.
+- **selected (`any`, optional)**: Definiert die bereits selektierten Einträge. Bei einer Multi-Selektion muss es ein Iterable sein, andernfalls eine einzelne Option
 
 ### SimpleSelectManager
 Dieser Manager kann mit einfachen Optionen-Datentypen bestehend aus Numbers oder Strings umgehen.
 
 **Konstruktor**
-- **multi (boolean)**: Gibt an, ob es sich um eine Multiselektion handelt
-- **options (Iterable<string | number>)**: Alle Optionen, die das Dropdown beinhaltet. Eine Sortierung kann mit dem Setter für `sort` vorgegeben werden.
-- **selected (any, optional)**: Definiert die bereits selektierten Einträge. Bei einer Multi-Selektion muss es ein Iterable sein, andernfalls eine einzelne Option
+- **multi (`boolean`)**: Gibt an, ob es sich um eine Multiselektion handelt
+- **options (`Iterable<string | number>`)**: Alle Optionen, die das Dropdown beinhaltet. Eine Sortierung kann mit dem Setter für `sort` vorgegeben werden.
+- **selected (`any`, optional)**: Definiert die bereits selektierten Einträge. Bei einer Multi-Selektion muss es ein Iterable sein, andernfalls eine einzelne Option
 
 ### ObjectSelectManager
 Dieser Manager ist ein einfacher, allgemeiner Manager, der mit allen Objekten umgehen kann. Dafür muss angegeben werden, wie die Texter der Selektionen und die Texte der Optionen generiert werden sollen.
 
 **Konstruktor**
-- **multi (boolean)**: Gibt an, ob es sich um eine Multiselektion handelt
-- **options (Iterable<any>)**: Alle Optionen, die das Dropdown beinhaltet. Eine Sortierung kann mit dem Setter für `sort` vorgegeben werden.
-- **selectionDisplayText ((option: any) => string)**: Eine Funktion, die den Text für die Selektion generiert zum Beispiel: ``(option) => `${option.id}: ${option.text}` ``
-- **optionDisplayText ((option: any) => string)**: Eine Funktion, die den Text für die Optionen im Dropdown generiert zum Beispiel: ``(option) => `${option.id}: ${option.text}` ``
-- **selected (any, optional)**: Definiert die bereits selektierten Einträge. Bei einer Multi-Selektion muss es ein Iterable sein, andernfalls eine einzelne Option
+- **multi (`boolean`)**: Gibt an, ob es sich um eine Multiselektion handelt
+- **options (`Iterable<any>`)**: Alle Optionen, die das Dropdown beinhaltet. Eine Sortierung kann mit dem Setter für `sort` vorgegeben werden.
+- **selectionDisplayText (`(option: any) => string`)**: Eine Funktion, die den Text für die Selektion generiert zum Beispiel: ``(option) => `${option.id}: ${option.text}` ``
+- **optionDisplayText (`(option: any) => string`)**: Eine Funktion, die den Text für die Optionen im Dropdown generiert zum Beispiel: ``(option) => `${option.id}: ${option.text}` ``
+- **selected (`any`, optional)**: Definiert die bereits selektierten Einträge. Bei einer Multi-Selektion muss es ein Iterable sein, andernfalls eine einzelne Option
 
 ### CoreTypeSelectManager
 Dieser Manager akzeptiert einfach CoreTypes als Optionen und definiert, wie diese in der Liste angezeigt werden. Er filtert die Einträge nach Schuljahr und Schulform und kann zusätzlich noch nach Suchtexten filtern. Eine Sortierung kann mit dem Setter für `sort` vorgegeben werden.
 
 **Konstruktor**
-- **multi (boolean)**: Gibt an, ob es sich um eine Multiselektion handelt
-- **clazz (class)**: Die Klasse des CoreTypes
-- **schuljahr (number | null)**: Das Schuljahr, nach dem gefiltert wird. Bei null erhält die Komponente nur eine leere Liste an Optionen.
-- **schulform (Schulform | Schulform[] | null)**: Die Schulformen, nach denen gefiltert wird. Sie beinhaltet alle Daten, die in mindestens einer der Schulformen vorkommt. Bei null werden alle Daten unabhägig der Schulform geladen.
-- **selectionDisplayText (string | Funktion)**: Gibt an, wie die Selektion dargestellt werden soll. Es kann zwischen `text`, `kuerzel` und `kuerzelText` gewählt werden, falls vordefinierte Einstellungen gewünscht sind. Wenn eigene Definitionen verwendet werden sollen, dann können diese zum Beispiel wie folgt angegeben werden: ``(option) => `${option.id}: ${option.text}` ``
-- **optionDisplayText (string | Funktion)**: Gibt an, wie die Optionen in der Dropdownliste dargestellt werden sollen. Es kann zwischen `text`, `kuerzel` und `kuezerlText` gewählt werden, falls vordefinierte Einstellungen gewünscht sind. Wenn eigene Definitionen verwendet werden sollen, dann können diese zum Beispiel wie folgt angegeben werden: ``(option) => `${option.id}: ${option.text}` ``
-- **selected (any, optional)**: Definiert die bereits selektierten Einträge. Bei einer Multi-Selektion muss es ein Iterable sein, andernfalls eine einzelne Option
+- **multi (`boolean`)**: Gibt an, ob es sich um eine Multiselektion handelt
+- **clazz (`class`)**: Die Klasse des CoreTypes
+- **schuljahr (`number | null`)**: Das Schuljahr, nach dem gefiltert wird. Bei null erhält die Komponente nur eine leere Liste an Optionen.
+- **schulform (`Schulform | Schulform[] | null`)**: Die Schulformen, nach denen gefiltert wird. Sie beinhaltet alle Daten, die in mindestens einer der Schulformen vorkommt. Bei null werden alle Daten unabhägig der Schulform geladen.
+- **selectionDisplayText (`string | Funktion`)**: Gibt an, wie die Selektion dargestellt werden soll. Es kann zwischen `text`, `kuerzel` und `kuerzelText` gewählt werden, falls vordefinierte Einstellungen gewünscht sind. Wenn eigene Definitionen verwendet werden sollen, dann können diese zum Beispiel wie folgt angegeben werden: ``(option) => `${option.id}: ${option.text}` ``
+- **optionDisplayText (`strin | Funktion`)**: Gibt an, wie die Optionen in der Dropdownliste dargestellt werden sollen. Es kann zwischen `text`, `kuerzel` und `kuezerlText` gewählt werden, falls vordefinierte Einstellungen gewünscht sind. Wenn eigene Definitionen verwendet werden sollen, dann können diese zum Beispiel wie folgt angegeben werden: ``(option) => `${option.id}: ${option.text}` ``
+- **selected (`any`, optional)**: Definiert die bereits selektierten Einträge. Bei einer Multi-Selektion muss es ein Iterable sein, andernfalls eine einzelne Option
 
 ## Filter
 Optionen im einem UiSelect können gefiltert werden. Damit mehrere Filter kombiniert werden können, existiert das Interface `SelectFilter`, auf dem basierend die Filter definiert werden. Diese Filter können anschließend an den SelectManager übergeben werden. \
@@ -179,14 +179,14 @@ die zusätzlich durchsucht werden sollen. Alternativ klnnen die Attribute auch d
 übergeben wird.
 
 **Konstruktor**
-- **key (string)**: Ein eindeutiger Key zur Identifikation des Filters. Der Key muss nur innerhalb des SelectManagers eindeutig sein.
-- **search (string)**: Der Suchbegriff, nach dem gefiltert werden soll. Es werden nur exakte Übereinstimmungen gefiltert (Groß- und Kleinschreibung irrelevant). Wildcards sind nicht erlaubt.
-- **getText ((option: T) => string)**: Eine Funktion, die verwendet wird, um den Text der Optionen zu generieren. Dieser Text wird zum Vergleich mit dem Suchbegriff verwendet
+- **key (`string`)**: Ein eindeutiger Key zur Identifikation des Filters. Der Key muss nur innerhalb des SelectManagers eindeutig sein.
+- **search (`string`)**: Der Suchbegriff, nach dem gefiltert werden soll. Es werden nur exakte Übereinstimmungen gefiltert (Groß- und Kleinschreibung irrelevant). Wildcards sind nicht erlaubt.
+- **getText (`(option: T) => string`)**: Eine Funktion, die verwendet wird, um den Text der Optionen zu generieren. Dieser Text wird zum Vergleich mit dem Suchbegriff verwendet
 
 ### FachSelectFilter
 Ein spezieller Filter, der Optionen vom Typ `Fach` nach `Fachgruppen` filtert. Es können mehrere Fachgruppen angegeben werden. Der Filter gibt dann alle Fächer zurück, die mit min. einer Fachgruppe übereinstimmen.
 
 **Konstruktor**
-- **key (string)**: Ein eindeutiger Key zur Identifikation des Filters. Der Key muss nur innerhalb des SelectManagers eindeutig sein.
-- **fachgruppen (List<Fachgruppe>)**: Eine Liste der Fachgruppen, nach denen gefiltert wird.
-- **schuljahr (number)**: Das dafür verwendet Schuljahr.
+- **key (`string`)**: Ein eindeutiger Key zur Identifikation des Filters. Der Key muss nur innerhalb des SelectManagers eindeutig sein.
+- **fachgruppen (`List<Fachgruppe>`)**: Eine Liste der Fachgruppen, nach denen gefiltert wird.
+- **schuljahr (`number`)**: Das dafür verwendet Schuljahr.

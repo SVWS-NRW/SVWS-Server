@@ -1,6 +1,6 @@
 <template>
 	<Story title="Icons" id="icons" group="top" icon="ri:landscape-line" :responsive-disabled="true" :layout="{type: 'grid', width: '45%'}">
-		<Variant title="Größen und Farben" source=" ">
+		<Variant title="Größen und Farben">
 			<table class="svws-docs-icon-table">
 				<tbody>
 					<tr v-for="size in ['xxs', 'xs', 'sm', 'default', 'lg', 'xl', 'xxl']" :key="size" style="grid-template-columns: 1fr 1fr 2fr;" :class="size === 'default' ? 'bg-ui-selected text-ui-onselected' : ''">
@@ -20,7 +20,7 @@
 				<p>Übersicht aller Varianten: <a href="/story/farben?variantId=tokens-icon">Farben (Design Tokens)</a>.</p>
 			</div>
 		</Variant>
-		<Variant title="App Icons" source=" ">
+		<Variant title="App Icons">
 			<table class="svws-docs-icon-table">
 				<tbody>
 					<tr>
@@ -85,7 +85,7 @@
 				</tbody>
 			</table>
 		</Variant>
-		<Variant title="Häufig verwendet" source=" ">
+		<Variant title="Häufig verwendet">
 			<table class="svws-docs-icon-table">
 				<tbody>
 					<tr>
@@ -145,7 +145,7 @@
 				</tbody>
 			</table>
 		</Variant>
-		<Variant title="Weitere Icons" source=" ">
+		<Variant title="Weitere Icons">
 			<table class="svws-docs-icon-table">
 				<tbody>
 					<tr>
@@ -201,7 +201,7 @@
 				</tbody>
 			</table>
 		</Variant>
-		<Variant title="Oberstufe" source=" ">
+		<Variant title="Oberstufe">
 			<table class="svws-docs-icon-table">
 				<tbody>
 					<tr>
@@ -250,7 +250,7 @@
 				</tbody>
 			</table>
 		</Variant>
-		<Variant title="Input Fields und Interaktion" source=" ">
+		<Variant title="Input Fields und Interaktion">
 			<table class="svws-docs-icon-table">
 				<tbody>
 					<tr>

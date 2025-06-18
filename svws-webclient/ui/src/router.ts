@@ -24,6 +24,7 @@ const routes = [
 	{ path: '/controls/MultiSelect-alt', component: () => import('./ui/controls/SvwsUiMultiSelect.story.vue') },
 	{ path: '/controls/Select-alt', component: () => import('./ui/controls/SvwsUiSelect.story.vue') },
 	{ path: '/controls/Radio', component: () => import('./ui/controls/SvwsUiRadioOption.story.vue') },
+	{ path: '/controls/TableGrid', component: () => import('./ui/controls/tablegrid/UiTableGrid.story.md') },
 	{ path: '/layout/AppLayout', component: () => import('./ui/layout/SvwsUiAppLayout.story.vue') },
 	{ path: '/layout/ContentCard', component: () => import('./ui/layout/SvwsUiContentCard.story.vue') },
 	{ path: '/layout/DashboardTile', component: () => import('./ui/layout/SvwsUiDashboardTile.story.vue') },
@@ -35,6 +36,7 @@ const routes = [
 	{ path: '/navigation/MenuItem', component: () => import('./ui/nav/SvwsUiMenuItem.story.vue') },
 	{ path: '/navigation/TabBar', component: () => import('./ui/nav/SvwsUiTabBar.story.vue') },
 	{ path: '/navigation/AppLayout', component: () => import('./ui/nav/SvwsUiMenu.story.vue') },
+	{ path: '/gost/laufbahnplanung/Infos', component: () => import('./components/gost/laufbahnplanung/SLaufbahnplanungInformationen.story.vue') },
 ]
 
 const router = createRouter({ history: createWebHistory(), routes });
