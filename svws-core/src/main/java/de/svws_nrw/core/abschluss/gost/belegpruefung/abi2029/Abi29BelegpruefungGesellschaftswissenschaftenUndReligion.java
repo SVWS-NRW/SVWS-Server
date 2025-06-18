@@ -187,6 +187,10 @@ public final class Abi29BelegpruefungGesellschaftswissenschaftenUndReligion exte
 			return;
 		if (manager.pruefeBelegungExistiertDurchgehendSchriftlich(religion))
 			return;
+		// Behandlung des Spezialfalles bei Philosophie, wenn diese die einzige Gesellschaftswissenschaft ist, aber in der EF nicht belegt
+		if (manager.pruefeBelegung(philosophie, GostHalbjahr.getQualifikationsphase())
+				&& manager.pruefeBelegungMitSchriftlichkeit(philosophie, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21))
+			return;
 		addFehler(GostBelegungsfehler.GW_12);
 	}
 

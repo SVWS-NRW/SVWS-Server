@@ -130,6 +130,8 @@ export class Abi29BelegpruefungGesellschaftswissenschaftenUndReligion extends Go
 			return;
 		if (this.manager.pruefeBelegungExistiertDurchgehendSchriftlich(this.religion))
 			return;
+		if (this.manager.pruefeBelegung(this.philosophie, ...GostHalbjahr.getQualifikationsphase()) && this.manager.pruefeBelegungMitSchriftlichkeit(this.philosophie, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21))
+			return;
 		this.addFehler(GostBelegungsfehler.GW_12);
 	}
 
