@@ -3,7 +3,7 @@
 		<svws-ui-content-card title="Merkmal anlegen">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input placeholder="Bezeichnung" :max-len="100" v-model="data.bezeichnung" :disabled :valid="fieldIsValid('bezeichnung')" />
-				<svws-ui-text-input placeholder="Kürzel" :max-len="10" v-model="data.kuerzel" :disabled :valid="fieldIsValid('kuerzel')" />
+				<svws-ui-text-input placeholder="Kürzel" :max-len="10" :min-len="1" v-model="data.kuerzel" :disabled :valid="fieldIsValid('kuerzel')" required />
 				<svws-ui-spacing />
 				<svws-ui-checkbox v-model="data.istSchuelermerkmal" :disabled>Schülermerkmal</svws-ui-checkbox>
 				<div />
@@ -21,7 +21,7 @@
 <script setup lang="ts">
 
 	import type { MerkmaleNeuProps } from "~/components/schule/kataloge/merkmale/SMerkmaleNeuProps";
-	import { BenutzerKompetenz, Merkmal } from "@core";
+	import { BenutzerKompetenz, JavaString, Merkmal } from "@core";
 	import { ref, computed, watch } from "vue";
 
 	const props = defineProps<MerkmaleNeuProps>();
@@ -34,19 +34,29 @@
 		return (v: string | null) => {
 			switch (field) {
 				case 'bezeichnung':
-					return inputIsValid(data.value.bezeichnung, 100);
-				case 'sortierung':
-					return inputIsValid(data.value.kuerzel, 10);
+					return bezeichnungIsValid(data.value.bezeichnung);
+				case 'kuerzel':
+					return kuerzelIsValid(data.value.kuerzel);
 				default:
 					return true;
 			}
 		}
 	}
 
-	function inputIsValid(input: string | null, maxLength: number) {
+	function bezeichnungIsValid(input: string | null) {
 		if (input === null)
 			return true;
-		return input.length <= maxLength;
+		return input.length <= 100;
+	}
+
+	function kuerzelIsValid(input: string | null) {
+		if ((input === null) || JavaString.isBlank(input) || (input.length > 10))
+			return false;
+		for (const merkmal of props.manager().liste.list()) {
+			if (JavaString.equalsIgnoreCase(input, merkmal.kuerzel))
+				return false;
+		}
+		return true;
 	}
 
 	const formIsValid = computed(() => {
