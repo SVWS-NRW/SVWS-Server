@@ -149,7 +149,7 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 					Status.NOT_FOUND, "Kein Kindergartenbesuch mit dem Schlüssel %s gefunden.".formatted(dtoSchueler.DauerKindergartenbesuch));
 
 		try {
-			return kindergartenbesuch.getManager().getHistorieByWert(kindergartenbesuch).getLast().id;
+			return kindergartenbesuch.historie().getLast().id;
 		} catch (final CoreTypeException | NoSuchElementException e) {
 			throw new ApiOperationException(
 					Status.NOT_FOUND, "Kein Historien-Eintrag für den Bezeichner %s gefunden".formatted(kindergartenbesuch.name()));

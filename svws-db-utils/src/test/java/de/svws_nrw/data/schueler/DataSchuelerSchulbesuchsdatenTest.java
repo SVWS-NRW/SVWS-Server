@@ -1,6 +1,5 @@
 package de.svws_nrw.data.schueler;
 
-import de.svws_nrw.asd.data.CoreTypeException;
 import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchsdaten;
 import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.asd.types.jahrgang.PrimarstufeSchuleingangsphaseBesuchsjahre;
@@ -9,7 +8,6 @@ import de.svws_nrw.asd.types.schueler.Uebergangsempfehlung;
 import de.svws_nrw.asd.types.schule.Kindergartenbesuch;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
-import de.svws_nrw.asd.utils.CoreTypeDataManager;
 import de.svws_nrw.core.types.schueler.Herkunftsarten;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
@@ -35,8 +33,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -46,6 +42,7 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 @DisplayName("Diese Klasse testet die Klasse DataSchuelerSchulbesuchsdaten")
@@ -72,7 +69,7 @@ class DataSchuelerSchulbesuchsdatenTest {
 		final var dto = new DTOSchueler(1L, "123", false);
 		when(this.conn.queryByKey(DTOSchueler.class, 1L)).thenReturn(dto);
 
-		try (var mapperMock = Mockito.mockStatic(JSONMapper.class)) {
+		try (var mapperMock = mockStatic(JSONMapper.class)) {
 			mapperMock.when(() -> JSONMapper.toMap(any(InputStream.class))).thenReturn(Map.of("id", 99L));
 
 			final var throwable = ThrowableAssert.catchThrowable(() -> this.schulbesuchsdaten.patchAsResponse(1L, mock(InputStream.class)));
@@ -359,29 +356,6 @@ class DataSchuelerSchulbesuchsdatenTest {
 	}
 
 	@Test
-	@DisplayName("map | idDauerKindergartenbesuch | CoreTypeException")
-	void mapTest_idDauerKindergartenbesuch_coreTypeException() {
-		final var dto = new DTOSchueler(1L, "2", false);
-		final var kindergartenbesuch = Kindergartenbesuch.values()[0].historie().getFirst();
-		dto.DauerKindergartenbesuch = kindergartenbesuch.schluessel;
-		final var mockBesuch = Mockito.mock(Kindergartenbesuch.class);
-		final var mockManager = Mockito.mock(CoreTypeDataManager.class);
-		try (MockedStatic<Kindergartenbesuch> mockedStatic = Mockito.mockStatic(Kindergartenbesuch.class)) {
-			mockedStatic.when(Kindergartenbesuch::data).thenReturn(Mockito.mock(CoreTypeDataManager.class));
-			Mockito.when(Kindergartenbesuch.data().getWertBySchluessel(kindergartenbesuch.schluessel)).thenReturn(mockBesuch);
-			Mockito.when(mockBesuch.getManager()).thenReturn(mockManager);
-			Mockito.when(mockManager.getHistorieByWert(any())).thenThrow(new CoreTypeException());
-
-			final var throwable = catchThrowable(() -> this.schulbesuchsdaten.map(dto));
-
-			assertThat(throwable)
-					.isInstanceOf(ApiOperationException.class)
-					.hasMessageStartingWith("Kein Historien-Eintrag für den Bezeichner")
-					.hasFieldOrPropertyWithValue("status", Response.Status.NOT_FOUND);
-		}
-	}
-
-	@Test
 	@DisplayName("map | idGrundschuleJahreEingangsphase | Erfolg")
 	void mapTest_idGrundschuleJahreEingangsphase_Erfolg() throws ApiOperationException {
 		final var primarstufe = PrimarstufeSchuleingangsphaseBesuchsjahre.values()[0].historie().getLast();
@@ -393,7 +367,6 @@ class DataSchuelerSchulbesuchsdatenTest {
 
 		assertThat(result).hasFieldOrPropertyWithValue("idGrundschuleJahreEingangsphase", primarstufe.id);
 	}
-
 
 	@Test
 	@DisplayName("map | idGrundschuleJahreEingangsphase | EPJahre is null")
@@ -815,7 +788,7 @@ class DataSchuelerSchulbesuchsdatenTest {
 
 	@Test
 	@DisplayName("mapAttribute | grundschuleEinschulungsjahr | value is smaller then min")
-	void mapAttributeTest_grundschuleEinschulungsjahr_smallerThenMin() throws ApiOperationException {
+	void mapAttributeTest_grundschuleEinschulungsjahr_smallerThenMin() {
 		final var dtoSchueler = new DTOSchueler(1L, "1", true);
 
 		final var throwable = catchThrowable(() ->  this.schulbesuchsdaten.mapAttribute(dtoSchueler, "grundschuleEinschulungsjahr", 1899, null));
@@ -828,7 +801,7 @@ class DataSchuelerSchulbesuchsdatenTest {
 
 	@Test
 	@DisplayName("mapAttribute | grundschuleEinschulungsjahr | value is bigger then max")
-	void mapAttributeTest_grundschuleEinschulungsjahr_biggerThenMax() throws ApiOperationException {
+	void mapAttributeTest_grundschuleEinschulungsjahr_biggerThenMax() {
 		final var dtoSchueler = new DTOSchueler(1L, "1", true);
 
 		final var throwable = catchThrowable(() ->  this.schulbesuchsdaten.mapAttribute(dtoSchueler, "grundschuleEinschulungsjahr", 2101, null));
@@ -862,7 +835,7 @@ class DataSchuelerSchulbesuchsdatenTest {
 
 	@Test
 	@DisplayName("mapAttribute | sekIWechsel | value is smaller then min")
-	void mapAttributeTest_sekIWechsel_smallerThenMin() throws ApiOperationException {
+	void mapAttributeTest_sekIWechsel_smallerThenMin() {
 		final var dtoSchueler = new DTOSchueler(1L, "1", true);
 
 		final var throwable = catchThrowable(() ->  this.schulbesuchsdaten.mapAttribute(dtoSchueler, "sekIWechsel", 1899, null));
@@ -875,7 +848,7 @@ class DataSchuelerSchulbesuchsdatenTest {
 
 	@Test
 	@DisplayName("mapAttribute | sekIWechsel | value is bigger then max")
-	void mapAttributeTest_sekIWechsel_biggerThenMax() throws ApiOperationException {
+	void mapAttributeTest_sekIWechsel_biggerThenMax() {
 		final var dtoSchueler = new DTOSchueler(1L, "1", true);
 
 		final var throwable = catchThrowable(() ->  this.schulbesuchsdaten.mapAttribute(dtoSchueler, "sekIWechsel", 2101, null));
@@ -909,7 +882,7 @@ class DataSchuelerSchulbesuchsdatenTest {
 
 	@Test
 	@DisplayName("mapAttribute | sekIIWechsel | value is smaller then min")
-	void mapAttributeTest_sekIIWechsel_smallerThenMin() throws ApiOperationException {
+	void mapAttributeTest_sekIIWechsel_smallerThenMin() {
 		final var dtoSchueler = new DTOSchueler(1L, "1", true);
 
 		final var throwable = catchThrowable(() ->  this.schulbesuchsdaten.mapAttribute(dtoSchueler, "sekIIWechsel", 1899, null));
@@ -922,7 +895,7 @@ class DataSchuelerSchulbesuchsdatenTest {
 
 	@Test
 	@DisplayName("mapAttribute | sekIIWechsel | value is bigger then max")
-	void mapAttributeTest_sekIIWechsel_biggerThenMax() throws ApiOperationException {
+	void mapAttributeTest_sekIIWechsel_biggerThenMax() {
 		final var dtoSchueler = new DTOSchueler(1L, "1", true);
 
 		final var throwable = catchThrowable(() ->  this.schulbesuchsdaten.mapAttribute(dtoSchueler, "sekIIWechsel", 2101, null));
