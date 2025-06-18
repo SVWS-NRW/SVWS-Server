@@ -9,7 +9,7 @@
 			</div>
 		</div>
 		<ui-table-grid name="Übersicht über die Prüfungsergebnisse" :header-count="2" :footer-count="0" :data="auswahlBelegungen"
-			:cell-format="cellFormat" :get-key="(sb: SchuelerAbiturbelegung) => '`${sb.schueler.id}_${sb.belegung.abiturFach}`'">
+			:cell-format="cellFormat" :get-key="(sb: SchuelerAbiturbelegung) => `${sb.schueler.id}_${sb.belegung.abiturFach}`">
 			<template #header="params">
 				<template v-if="params.i === 1">
 					<th class="ui-divider text-ui-50 text-left col-span-6" />
