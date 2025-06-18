@@ -639,7 +639,7 @@
 		interaction: ['', 'hover'],
 	}
 
-	// Eine Inline-Komponente, die pro Theme verwendet wird. Das Uaslagern in diese Komponente verhindert, dass im Template mehrmals Funktionen für Kontraste
+	// Eine Inline-Komponente, die pro Theme verwendet wird. Das Auslagern in diese Komponente verhindert, dass im Template mehrmals Funktionen für Kontraste
 	// und Hintergrundfarben aufgerufen werden müssen.
 	const Theme = defineComponent({
 		props: {
@@ -665,7 +665,7 @@
 		background: '',
 		dark: false,
 		contrast: 'N/A',
-		contrastLevels: [] as string[],
+		contrastLevels: <string[]>[],
 	});
 
 	/**
@@ -678,7 +678,7 @@
 		colorPreview.color = color;
 		colorPreview.background = getBackgroundColor(color);
 		colorPreview.dark = dark;
-		const { contrastRatio: contrast, contrastLevel: score} = getContrast(color, dark);
+		const { contrastRatio: contrast, contrastLevel: score } = getContrast(color, dark);
 		colorPreview.contrast = contrast;
 		colorPreview.contrastLevels = generateContrastLevels(score);
 	}
@@ -1018,3 +1018,7 @@
 	}
 
 </script>
+
+<style scoped>
+
+</style>

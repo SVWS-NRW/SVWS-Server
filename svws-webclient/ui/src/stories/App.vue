@@ -18,10 +18,11 @@
 		<div class="relative bottom-0 right-0" style="width: 85%;">
 			<div class="histoire-story-view histoire-with-story h-full flex isolate" ref="el">
 				<div class="flex flex-col relative top-0 left-0 z-20 border-r border-ui-25 h-full bg-ui-100" :style="leftStyle">
-					<div class="flex-none flex justify-end h-10 mx-8 items-center gap-4">
+					<div class="flex-none flex justify-around h-10 mx-8 items-center gap-4">
 						<div class="text-ui-caution font-bold">
 							Zur alten Histoire-Version der Doku geht es hier: <a href="https://eloquent-baklava-d6aa9d.netlify.app/">Link</a>
 						</div>
+						<div class="w-60"><SvwsUiButton type="icon" @click="updateTheme(themeRef === 'dark' ? 'light':'dark')"><span class="icon" :class="themeRef === 'light' ? 'i-ri-sun-line':'i-ri-moon-line'" /> </SvwsUiButton></div>
 						<div class="w-60"><SvwsUiButton type="transparent" @click="gridView = (gridView === 'single') ? 'grid':'single'">{{ gridView === 'single' ? 'Single':'Grid' }} aktiviert</SvwsUiButton></div>
 						<div class="w-60">
 							<ui-select label="Hintergrundfarbe" v-model="color" :manager="colorSelectManager" searchable removable headless />
@@ -221,4 +222,17 @@
 	colorSelectManager.removable = true;
 
 
+	const themeRef = ref<'light'|'dark'|'auto'>('light');
+
+	const updateTheme = (theme: ('light'|'dark'|'auto') | null) => {
+		if (theme === null)
+			return;
+		document.documentElement.classList.remove('light', 'dark');
+		if (theme !== 'auto')
+			document.documentElement.classList.add(theme);
+		localStorage.setItem('theme', theme);
+		themeRef.value = theme;
+	};
+
+	updateTheme(<'light'|'dark'|'auto'>localStorage.getItem('theme'));
 </script>
