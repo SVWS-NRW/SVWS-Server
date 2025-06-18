@@ -1,9 +1,10 @@
 @layer components {
 
-		/* color-scheme: light; */
-		color-scheme: light dark; 
+	:root {
+		color-scheme: light dark;
+	}
 
-		.dark {
-			color-scheme: dark;
+	.dark {
+		color-scheme: dark;
 	}
 }
