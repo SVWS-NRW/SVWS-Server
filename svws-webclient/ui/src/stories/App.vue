@@ -34,7 +34,7 @@
 								<svws-ui-table clickable :clicked="storyManager.variant" :items="storyManager.story.mapVariants.values()" scroll-into-view scroll :columns="columnsVariant" @update:clicked="storyManager.setVariantById($event.id)" />
 							</div>
 						</template>
-						<div class="bottom-0 right-0 overflow-auto size-full pr-4" :class="{' pl-4 grid-cols-2 grid gap-4 ': (gridView === 'grid') && (storyManager.story.mapVariants.size > 1) }">
+						<div class="bottom-0 right-0 overflow-auto size-full pr-4 pl-4" :class="{'  grid-cols-2 grid gap-4 ': (gridView === 'grid') && (storyManager.story.mapVariants.size > 1) }">
 							<RouterView />
 						</div>
 					</div>
@@ -91,7 +91,7 @@
 	import { ObjectSelectManager } from '~/ui/controls/select/selectManager/ObjectSelectManager';
 	import router from '../router';
 
-	const clicked = ref<RouteRecord>(router.getRoutes()[0]);
+	const clicked = ref<RouteRecord>(router.getRoutes().find(r => r.path === router.currentRoute.value.path) || router.getRoutes()[0]);
 	const columns = [ {key: 'path', label: 'Komponente'} ];
 	const columnsVariant = [ {key: 'title', label: 'Variant'} ];
 

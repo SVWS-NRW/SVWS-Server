@@ -40,4 +40,8 @@ const routes = [
 ]
 
 const router = createRouter({ history: createWebHistory(), routes });
+// await router.isReady()
+// console.log(router.currentRoute.value)
+// if (router.currentRoute.value.path === '/')
+// 	await router.push("/README");
 export default router;

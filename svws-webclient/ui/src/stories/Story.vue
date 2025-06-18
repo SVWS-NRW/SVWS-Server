@@ -1,21 +1,21 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
 	<slot />
-	<Teleport to="#source" v-if="source.length > 0">
+	<Teleport to="#source" v-if="($slots.source || (source.length > 0)) && !storyManager.variant.hasSource" defer>
 		<div class="text-2xl">Source</div>
-		{{ source }}
+		<slot name="source">{{ source }}</slot>
 	</Teleport>
-	<Teleport to="#docs" v-if="$slots.docs">
+	<Teleport to="#docs" v-if="$slots.docs" defer>
 		<slot name="docs" />
 	</Teleport>
-	<Teleport to="#events">
+	<Teleport to="#events" defer>
 		<div class="text-2xl flex items-center align-middle gap-12">
 			<span>Events</span>
 			<SvwsUiButton type="trash" @click="storyManager.events = []" title="Entferne alle Events aus dem Log" />
 		</div>
 		<div v-for="l, i of storyManager.events" :key="i">{{ l }}</div>
 	</Teleport>
-	<template v-if="$slots.controls">
+	<template v-if="$slots.controls && !storyManager.variant.hasSlot('controls')">
 		<Teleport to="#controls" defer>
 			<div class="text-2xl">Controls/Story</div>
 			<slot name="controls" />

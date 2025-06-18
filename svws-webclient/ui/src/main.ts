@@ -9,6 +9,11 @@ import "./main.css"
 const reader = new JsonCoreTypeReaderStatic();
 reader.readAll();
 
-createApp(App)
-	.use(router)
-	.mount('#app');
+const app = createApp(App);
+app.use(router);
+
+await router.isReady();
+if (router.currentRoute.value.path === '/')
+	await router.push("/README");
+
+app.mount('#app');

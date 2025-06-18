@@ -1,19 +1,31 @@
+import type { Slots } from "vue";
 import { StateManager } from "../ui/StateManager";
 
 export interface ColorPreset { label: string, color: string, contrastColor: string };
 export type GridView = 'grid'|'single';
-
+export interface VariantProps { id: string, title: string, source?: string }
 
 
 export class Variant {
 	readonly id: string;
 	readonly title: string;
+	readonly source?: string;
+	readonly slots: Readonly<Slots>;
 
-	constructor(id: string = 'default', title: string = 'default') {
-		this.id = id;
-		this.title = title;
+	constructor(props: VariantProps = { id: 'default', title: 'Default' }, slots: Readonly<Slots> = {}) {
+		this.id = props.id;
+		this.title = props.title;
+		this.source = props.source;
+		this.slots = slots;
 	}
 
+	hasSlot(name: string) {
+		return name in this.slots;
+	}
+
+	get hasSource() {
+		return this.hasSlot('source') || (this.source !== undefined);
+	}
 }
 
 export class Story {
@@ -34,6 +46,8 @@ export class Story {
 		const variant = this.mapVariants.get(id);
 		if (variant !== undefined)
 			this._variant = variant;
+		else
+			this._variant = new Variant();
 	}
 
 	registerVariant(variant: Variant) {
@@ -98,9 +112,9 @@ export class StoryManager extends StateManager<Stories> {
 		this.setPatchedState({ story });
 	}
 
-	registerVariant(id: string, title: string) {
+	registerVariant(props: VariantProps, slots: Readonly<Slots>) {
 		const story = this.story;
-		story.registerVariant(new Variant(id, title));
+		story.registerVariant(new Variant(props, slots));
 		this.setPatchedState({ story });
 	}
 

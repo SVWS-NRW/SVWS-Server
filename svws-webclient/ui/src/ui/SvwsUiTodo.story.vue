@@ -19,6 +19,9 @@
 				<HstCheckbox v-model="state.hideIcon" title="hideIcon" />
 			</template>
 		</Variant>
+		<template #source>
+			dsfsf
+		</template>
 	</Story>
 </template>
 
