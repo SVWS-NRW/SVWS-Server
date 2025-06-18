@@ -5,10 +5,13 @@ import java.util.List;
 import de.svws_nrw.core.abschluss.gost.belegpruefung.AbiFaecher;
 import de.svws_nrw.core.abschluss.gost.belegpruefung.Projektkurse;
 import de.svws_nrw.core.data.gost.AbiturFachbelegung;
+import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.gost.GostAbiturFach;
 import de.svws_nrw.core.types.gost.GostFachbereich;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
+import de.svws_nrw.core.utils.gost.GostFachUtils;
+import de.svws_nrw.core.utils.schueler.SprachendatenUtils;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -34,6 +37,12 @@ public final class GostAbiturMarkierungspruefung {
 
 	/** Die Belegungen der vier Abiturfächer */
 	final @NotNull AbiturFachbelegung[] abi = new AbiturFachbelegung[4];
+
+	/** Die Belegung einer (ersten) vollständig markierten Fremdsprache (keine Bili-Sachfach!) */
+	AbiturFachbelegung fremdsprache = null;
+
+	/** Gibt an, ob eine weitere Fremdsprache neben der ersten gefunden wurde (Bili-Sachfach ist möglich) */
+	boolean hatWeitereFremdsprache = false;
 
 
 	/**
@@ -92,29 +101,59 @@ public final class GostAbiturMarkierungspruefung {
 	 * @return true, falls die Prüfung erfolgreich war, und ansonsten false
 	 */
 	private boolean pruefung() {
-		boolean success = true;
+		this.fremdsprache = null;
 
 		// Schritt 1: Leistungskurs-Defizite prüfen
-		success = pruefeLeistungskursDefizite();
-		if (!success)
-			return success;
+		boolean success = pruefeLeistungskursDefizite();
 
 		// Schritt 2: Prüfe den Abiturbereich auf 0-Punkte-Belegungen
-		success = pruefeAbiturfachNullPunkte();
-		if (!success)
-			return success;
+		success = success && pruefeAbiturfachNullPunkte();
 
 		// Schritt 3: Prüfe auf Markierung aller Abiturfächer
-		success = pruefeAbiturfachMarkierung();
+		success = success && pruefeAbiturfachMarkierung();
+
+		// Schritt 4: Prüfe auf Markierung von Deutsch
+		success = success && pruefeDeutschMarkierung();
+
+		// Schritt 5: Prüfe auf Markierung einer Fremdsprache (diese wird zwischengespeichert)
+		success = success && pruefeFremdsprachenMarkierung();
+
+		// evtl. die Prüfung schon beenden
 		if (!success)
 			return success;
 
-		// Schritt 4: Prüfe auf Markierung von Deutsch
-		success = pruefeDeutschMarkierung();
+		// Schritt 6: Prüfe, ob eine weitere Fremdsprache oder ein Bili-Sachfach markiert wurde
+		pruefeAufWeitereFremdsprache();
+
+		// Schritt 7: Prüfe ggf. auf zwei Kurse einer neu einsetzenden Fremdsprache, wenn keine zweite Fremdsprache in der Sek I belegt wurde
+		success = pruefeNeuEinsetzendeFremdsprache();
+
+		// Schritt 8: Prüfe, ob mindestes 2 Kurse in Kunst, Musik oder einem Ersatzfach markiert sind
+		success = success && pruefeKunstMusikOderErsatzMarkierung();
+
+		// Schritt 9: Prüfe, ob bei einem Ersatzfach für Kunst oder Musik maximal 2 Kurse markiert sind
+		success = success && pruefeKunstMusikErsatzAnzahlMarkierung();
+
+		// Schritt 10: Prüfe die Anzahl der Markierungen von Musik je nach ob Musik LK-Abiturfach, GK-Abiturfach oder kein Abiturfach ist
+		success = success && pruefeMusikAnzahlMarkierung();
+
+		// Schritt 11: Prüfe auf mind. zwei markierte Kurse in Geschichte
+		success = success && pruefeAnzahlMarkierungen(GostFachbereich.GESCHICHTE, 2, "Es müssen mindestens zwei Kurse in Geschichte markiert werden.");
+
+		// Schritt 12: Prüfe auf mind. zwei markierte Kurse in Geschichte
+		success = success && pruefeAnzahlMarkierungen(GostFachbereich.SOZIALWISSENSCHAFTEN, 2,
+				"Es müssen mindestens zwei Kurse in Sozialwissenschaften markiert werden.");
+
+		// Schritt 13: Prüfe, ob eine Gesellschaftswissenschaft mit Markierungen in allen Halbjahren der QPhase existiert
+		success = success && pruefeExistiertMitAnzahlMarkierungen(GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH, 4,
+				"Es muss ein gesellschaftswissenschaftliches Fach durchgängig markiert sein.");
+
+		// evtl. die Prüfung schon beenden
 		if (!success)
 			return success;
 
 		// TODO
+		success = false;
 
 		return success;
 	}
@@ -220,12 +259,272 @@ public final class GostAbiturMarkierungspruefung {
 								.formatted(halbjahr.kuerzel));
 				return false;
 			}
-			if (!manager.hatMarkierungQualifikationsphase(belegung)) {
+			if (!manager.hatMarkierungHalbjahr(belegung, halbjahr)) {
 				ergebnis.log.add("Deutsch muss durchgehend markiert sein.");
 				return false;
 			}
 		}
 		return true;
+	}
+
+
+	private boolean pruefeFremdsprachenMarkierung() {
+		final @NotNull List<AbiturFachbelegung> belegungen = manager.getFachbelegungen(GostFachbereich.FREMDSPRACHE);
+		if (belegungen.isEmpty()) {
+			ergebnis.log.add("Es muss mindestens eine Fremdsprache belegt sein, damit eine Abiturzulassung möglich ist.");
+			return false;
+		}
+		for (final @NotNull AbiturFachbelegung belegung : belegungen) {
+			boolean found = true;
+			for (final GostHalbjahr halbjahr : GostHalbjahr.getQualifikationsphase()) {
+				// Alle Halbjahre müssen belegt sein
+				if (belegung.belegungen[halbjahr.id] == null) {
+					found = false;
+					break;
+				}
+				// Es darf keine 0-Punkte-Belegung markiert werden
+				final Integer np = manager.getNotenpunkteOfFachbelegungHalbjahr(belegung.belegungen[halbjahr.id]);
+				if ((np == null) || (np == 0)) {
+					found = false;
+					break;
+				}
+				// und es muss eine Markierung vorliegen
+				if (!manager.hatMarkierungHalbjahr(belegung, halbjahr)) {
+					found = false;
+					break;
+				}
+			}
+			if (found) {
+				this.fremdsprache = belegung;
+				return true;
+			}
+		}
+		ergebnis.log.add("Es muss mindestens eine Fremdsprache durchgängig markiert sein, damit eine Abiturzulassung möglich ist.");
+		return false;
+	}
+
+
+	private void pruefeAufWeitereFremdsprache() {
+		this.hatWeitereFremdsprache = false;
+		// Prüfe zunächst die normalen Fremdsprachen
+		@NotNull List<AbiturFachbelegung> belegungen = manager.getFachbelegungen(GostFachbereich.FREMDSPRACHE);
+		for (final @NotNull AbiturFachbelegung belegung : belegungen) {
+			// Aber nicht die Fremdsprache, die als erstes gefunden wurde
+			if (belegung == this.fremdsprache)
+				continue;
+			boolean found = true;
+			for (final GostHalbjahr halbjahr : GostHalbjahr.getQualifikationsphase()) {
+				// Alle Halbjahre müssen belegt sein
+				if (belegung.belegungen[halbjahr.id] == null) {
+					found = false;
+					break;
+				}
+				// Es darf keine 0-Punkte-Belegung markiert werden
+				final Integer np = manager.getNotenpunkteOfFachbelegungHalbjahr(belegung.belegungen[halbjahr.id]);
+				if ((np == null) || (np == 0)) {
+					found = false;
+					break;
+				}
+				// und es muss eine Markierung vorliegen
+				if (!manager.hatMarkierungHalbjahr(belegung, halbjahr)) {
+					found = false;
+					break;
+				}
+			}
+			if (found) {
+				this.hatWeitereFremdsprache = true;
+				return;
+			}
+		}
+		// Prüfe dann auf Bili-Sachfächer, deren Unterrichtssprache nicht im ersten Schritt markiert wurde
+		belegungen = manager.getFachbelegungenBilingual();
+		if (!belegungen.isEmpty()) {
+			// Bestimme das Sprachkürzel der ersten Fremdsprache
+			final GostFach tmpFach = manager.getFach(this.fremdsprache);
+			final String fs = (tmpFach == null) ? "" : GostFachUtils.getFremdsprache(tmpFach);
+			for (final @NotNull AbiturFachbelegung belegung : belegungen) {
+				// Aber kein bilinguales Sachfach, welches als Sprache die erste Fremdsprache hat
+				final GostFach sachfach = manager.getFach(this.fremdsprache);
+				if ((sachfach == null) || (sachfach.biliSprache == null) || (sachfach.biliSprache.isBlank()) || (sachfach.biliSprache.equals(fs)))
+					continue;
+				boolean found = true;
+				for (final GostHalbjahr halbjahr : GostHalbjahr.getQualifikationsphase()) {
+					// Alle Halbjahre müssen belegt sein
+					if (belegung.belegungen[halbjahr.id] == null) {
+						found = false;
+						break;
+					}
+					// Es darf keine 0-Punkte-Belegung markiert werden
+					final Integer np = manager.getNotenpunkteOfFachbelegungHalbjahr(belegung.belegungen[halbjahr.id]);
+					if ((np == null) || (np == 0)) {
+						found = false;
+						break;
+					}
+					// und es muss eine Markierung vorliegen
+					if (!manager.hatMarkierungHalbjahr(belegung, halbjahr)) {
+						found = false;
+						break;
+					}
+				}
+				if (found) {
+					this.hatWeitereFremdsprache = true;
+					return;
+				}
+			}
+		}
+	}
+
+
+	private boolean pruefeNeuEinsetzendeFremdsprache() {
+		// Prüfe, ob eine zweite Fremdsprache in der Sek I vorhanden ist
+		final String fs2 = SprachendatenUtils.getZweiteSpracheInSekI(manager.getSprachendaten());
+		if (fs2 != null)
+			return true;
+		// Prüfe, ob eine neu einsetzende Fremdsprachenbelegung in Q2.1 und Q2.2 markiert wurde
+		final @NotNull List<AbiturFachbelegung> belegungen =
+				manager.filterFremdspracheNeuEinsetzend(manager.getFachbelegungen(GostFachbereich.FREMDSPRACHE));
+		for (final @NotNull AbiturFachbelegung belegung : belegungen) {
+			// Aber nicht die Fremdsprache, die als erstes gefunden wurde
+			if (belegung == this.fremdsprache)
+				continue;
+			boolean found = true;
+			for (final GostHalbjahr halbjahr : GostHalbjahr.getQualifikationsphase()) {
+				// Alle Halbjahre müssen belegt sein
+				if (belegung.belegungen[halbjahr.id] == null) {
+					found = false;
+					break;
+				}
+				// Es darf keine 0-Punkte-Belegung markiert werden
+				final Integer np = manager.getNotenpunkteOfFachbelegungHalbjahr(belegung.belegungen[halbjahr.id]);
+				if ((np == null) || (np == 0)) {
+					found = false;
+					break;
+				}
+				// und es muss eine Markierung vorliegen
+				if (((halbjahr == GostHalbjahr.Q21) || (halbjahr == GostHalbjahr.Q22)) && (!manager.hatMarkierungHalbjahr(belegung, halbjahr))) {
+					found = false;
+					break;
+				}
+			}
+			if (found)
+				return true;
+		}
+		ergebnis.log.add("Es muss eine neu einsetzende Fremdsprache in der Q2.1 und Q2.2 markiert sein, damit eine Abiturzulassung möglich ist.");
+		return false;
+	}
+
+
+	private boolean pruefeKunstMusikOderErsatzMarkierung() {
+		final @NotNull List<AbiturFachbelegung> belegungen = manager.getFachbelegungen(GostFachbereich.LITERARISCH_KUENSTLERISCH);
+		if (belegungen.isEmpty()) {
+			ergebnis.log.add("Es muss mindestens Kunst, Musik oder ein Ersatzfach belegt sein, damit eine Abiturzulassung möglich ist.");
+			return false;
+		}
+		for (final @NotNull AbiturFachbelegung belegung : belegungen) {
+			int kurseMarkiert = 0;
+			for (final GostHalbjahr halbjahr : GostHalbjahr.getQualifikationsphase()) {
+				// Alle Halbjahre müssen belegt sein
+				if (belegung.belegungen[halbjahr.id] == null)
+					continue;
+				// Es darf keine 0-Punkte-Belegung markiert werden
+				final Integer np = manager.getNotenpunkteOfFachbelegungHalbjahr(belegung.belegungen[halbjahr.id]);
+				if ((np == null) || (np == 0))
+					continue;
+				// und es muss eine Markierung vorliegen
+				if (manager.hatMarkierungHalbjahr(belegung, halbjahr))
+					kurseMarkiert++;
+			}
+			if (kurseMarkiert >= 2)
+				return true;
+		}
+		ergebnis.log.add("Es müssen mindestens 2 Kurse in Kunst, Musik oder einem Ersatzfach markiert sein, damit eine Abiturzulassung möglich ist.");
+		return false;
+	}
+
+
+	private boolean pruefeKunstMusikErsatzAnzahlMarkierung() {
+		final @NotNull List<AbiturFachbelegung> belegungen = manager.getFachbelegungen(GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ);
+		int faecherMarkiert = 0;
+		for (final @NotNull AbiturFachbelegung belegung : belegungen) {
+			int kurseMarkiert = 0;
+			for (final GostHalbjahr halbjahr : GostHalbjahr.getQualifikationsphase()) {
+				// Alle Halbjahre müssen belegt sein
+				if (belegung.belegungen[halbjahr.id] == null)
+					continue;
+				// Es darf keine 0-Punkte-Belegung markiert werden
+				final Integer np = manager.getNotenpunkteOfFachbelegungHalbjahr(belegung.belegungen[halbjahr.id]);
+				if ((np == null) || (np == 0))
+					continue;
+				// und es muss eine Markierung vorliegen
+				if (manager.hatMarkierungHalbjahr(belegung, halbjahr))
+					kurseMarkiert++;
+			}
+			if (kurseMarkiert > 0)
+				faecherMarkiert++;
+			if (kurseMarkiert > 2) {
+				ergebnis.log.add("Es dürfen maximal 2 Kurse in einem Ersatzfach markiert sein.");
+				return false;
+			}
+		}
+		if (faecherMarkiert > 2) {
+			ergebnis.log.add("Es dürfen nur Kurse in einem Ersatzfach markiert sein.");
+			return false;
+		}
+		return true;
+	}
+
+
+	private boolean pruefeMusikAnzahlMarkierung() {
+		final AbiturFachbelegung belMU = manager.getFachbelegungByKuerzel("MU");
+		final AbiturFachbelegung belVP = manager.getFachbelegungByKuerzel("VP");
+		final AbiturFachbelegung belIN = manager.getFachbelegungByKuerzel("IN");
+		final boolean istAbiLK = (abi[0] == belMU) || (abi[1] == belMU);
+		final boolean istAbiGK = (abi[2] == belMU) || (abi[3] == belMU);
+		final int anzahl = manager.zaehleMarkierungenQualifikationsphase(belMU)
+				+ manager.zaehleMarkierungenQualifikationsphase(belVP)
+				+ manager.zaehleMarkierungenQualifikationsphase(belIN);
+		if (istAbiLK) {
+			if (anzahl > 4) {
+				ergebnis.log.add("Wenn Musik als Leistungskurs belegt ist, dann dürfen keine weiteren Kurse in MU,VP und IN markiert werden.");
+				return false;
+			}
+			return true;
+		}
+		if (istAbiGK) {
+			if (anzahl > 6) {
+				ergebnis.log.add("Wenn Musik als Grundkurs im Abitur belegt ist, dann dürfen maximal sechs Kurse in MU,VP und IN markiert werden.");
+				return false;
+			}
+			return true;
+		}
+		if (anzahl > 6) {
+			ergebnis.log.add("Es dürfen maximal fünf Kurse in MU,VP und IN markiert werden.");
+			return false;
+		}
+		return true;
+	}
+
+
+	private boolean pruefeAnzahlMarkierungen(final @NotNull GostFachbereich fb, final int min, final @NotNull String fehler) {
+		final @NotNull List<AbiturFachbelegung> belegungen = manager.getFachbelegungen(fb);
+		int anzahl = 0;
+		for (final @NotNull AbiturFachbelegung belegung : belegungen)
+			anzahl += manager.zaehleMarkierungenQualifikationsphase(belegung);
+		if (anzahl < min) {
+			ergebnis.log.add(fehler);
+			return false;
+		}
+		return true;
+	}
+
+
+	private boolean pruefeExistiertMitAnzahlMarkierungen(final @NotNull GostFachbereich fb, final int min, final @NotNull String fehler) {
+		final @NotNull List<AbiturFachbelegung> belegungen = manager.getFachbelegungen(fb);
+		for (final @NotNull AbiturFachbelegung belegung : belegungen)
+			if (manager.zaehleMarkierungenQualifikationsphase(belegung) >= min)
+				return true;
+		ergebnis.log.add(fehler);
+		return false;
 	}
 
 }

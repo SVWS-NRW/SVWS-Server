@@ -2424,7 +2424,7 @@ public class AbiturdatenManager {
 
 
 	/**
-	 * Prüft, ob bei de Fachbelegung in allen Halbjahren der Qualifikationsphase eine Belegung vorliegt und
+	 * Prüft, ob bei der Fachbelegung in allen Halbjahren der Qualifikationsphase eine Belegung vorliegt und
 	 * der Kurs jeweils als angerechnet markiert ist.
 	 *
 	 * @param belegung   die Fachbelegung
@@ -2436,9 +2436,50 @@ public class AbiturdatenManager {
 			return false;
 		for (final @NotNull GostHalbjahr halbjahr : GostHalbjahr.getQualifikationsphase()) {
 			final AbiturFachbelegungHalbjahr belegungHalbjahr = belegung.belegungen[halbjahr.id];
-			if ((belegungHalbjahr == null) || (!belegungHalbjahr.block1gewertet))
+			if ((belegungHalbjahr == null) || (belegungHalbjahr.block1gewertet == null) || (!belegungHalbjahr.block1gewertet))
 				return false;
 		}
+		return true;
+	}
+
+
+	/**
+	 * Zählt die Anzahl der Markierungen bei der Fachbelegung in allen Halbjahren der Qualifikationsphase.
+	 * Ist belegung null, so wird 0 zurückgegeben.
+	 *
+	 * @param belegung   die Fachbelegung
+	 *
+	 * @return die Anzahl der Markierungen bei der Fachbelegung
+	 */
+	public int zaehleMarkierungenQualifikationsphase(final AbiturFachbelegung belegung) {
+		if (belegung == null)
+			return 0;
+		int count = 0;
+		for (final @NotNull GostHalbjahr halbjahr : GostHalbjahr.getQualifikationsphase()) {
+			final AbiturFachbelegungHalbjahr belegungHalbjahr = belegung.belegungen[halbjahr.id];
+			if ((belegungHalbjahr == null) || (belegungHalbjahr.block1gewertet == null) || (!belegungHalbjahr.block1gewertet))
+				continue;
+			count++;
+		}
+		return count;
+	}
+
+
+	/**
+	 * Prüft, ob bei der Fachbelegung in dem angegebenen Halbjahr der Qualifikationsphase eine Belegung vorliegt und
+	 * der Kurs jeweils als angerechnet markiert ist.
+	 *
+	 * @param belegung   die Fachbelegung
+	 * @param halbjahr   das Halbjahr
+	 *
+	 * @return true, falls alle Kurse der Fachbelegung in der Qualifikationsphase als angerechnet markiert sind, und ansonsten false
+	 */
+	public boolean hatMarkierungHalbjahr(final AbiturFachbelegung belegung, final @NotNull GostHalbjahr halbjahr) {
+		if (belegung == null)
+			return false;
+		final AbiturFachbelegungHalbjahr belegungHalbjahr = belegung.belegungen[halbjahr.id];
+		if ((belegungHalbjahr == null) || (belegungHalbjahr.block1gewertet == null) || (!belegungHalbjahr.block1gewertet))
+			return false;
 		return true;
 	}
 

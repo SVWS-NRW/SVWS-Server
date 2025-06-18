@@ -2247,7 +2247,7 @@ export class AbiturdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Prüft, ob bei de Fachbelegung in allen Halbjahren der Qualifikationsphase eine Belegung vorliegt und
+	 * Prüft, ob bei der Fachbelegung in allen Halbjahren der Qualifikationsphase eine Belegung vorliegt und
 	 * der Kurs jeweils als angerechnet markiert ist.
 	 *
 	 * @param belegung   die Fachbelegung
@@ -2259,9 +2259,48 @@ export class AbiturdatenManager extends JavaObject {
 			return false;
 		for (const halbjahr of GostHalbjahr.getQualifikationsphase()) {
 			const belegungHalbjahr : AbiturFachbelegungHalbjahr | null = belegung.belegungen[halbjahr.id];
-			if ((belegungHalbjahr === null) || (!belegungHalbjahr.block1gewertet))
+			if ((belegungHalbjahr === null) || (belegungHalbjahr.block1gewertet === null) || (!belegungHalbjahr.block1gewertet))
 				return false;
 		}
+		return true;
+	}
+
+	/**
+	 * Zählt die Anzahl der Markierungen bei der Fachbelegung in allen Halbjahren der Qualifikationsphase.
+	 * Ist belegung null, so wird 0 zurückgegeben.
+	 *
+	 * @param belegung   die Fachbelegung
+	 *
+	 * @return die Anzahl der Markierungen bei der Fachbelegung
+	 */
+	public zaehleMarkierungenQualifikationsphase(belegung : AbiturFachbelegung | null) : number {
+		if (belegung === null)
+			return 0;
+		let count : number = 0;
+		for (const halbjahr of GostHalbjahr.getQualifikationsphase()) {
+			const belegungHalbjahr : AbiturFachbelegungHalbjahr | null = belegung.belegungen[halbjahr.id];
+			if ((belegungHalbjahr === null) || (belegungHalbjahr.block1gewertet === null) || (!belegungHalbjahr.block1gewertet))
+				continue;
+			count++;
+		}
+		return count;
+	}
+
+	/**
+	 * Prüft, ob bei der Fachbelegung in dem angegebenen Halbjahr der Qualifikationsphase eine Belegung vorliegt und
+	 * der Kurs jeweils als angerechnet markiert ist.
+	 *
+	 * @param belegung   die Fachbelegung
+	 * @param halbjahr   das Halbjahr
+	 *
+	 * @return true, falls alle Kurse der Fachbelegung in der Qualifikationsphase als angerechnet markiert sind, und ansonsten false
+	 */
+	public hatMarkierungHalbjahr(belegung : AbiturFachbelegung | null, halbjahr : GostHalbjahr) : boolean {
+		if (belegung === null)
+			return false;
+		const belegungHalbjahr : AbiturFachbelegungHalbjahr | null = belegung.belegungen[halbjahr.id];
+		if ((belegungHalbjahr === null) || (belegungHalbjahr.block1gewertet === null) || (!belegungHalbjahr.block1gewertet))
+			return false;
 		return true;
 	}
 
