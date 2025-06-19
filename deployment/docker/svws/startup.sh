@@ -36,17 +36,16 @@ if [ "$IMPORT_TEST_DATA" = "true" ]; then
 	echo "Lade Testdatenbanken herunter ..."
 	wget https://github.com/SVWS-NRW/SVWS-TestMDBs/archive/refs/heads/main.zip -O $CURRENT_DIR/databases.zip -o /dev/null
 
-	# Access-Datenbanken aus den heruntergeladenen zip-File extrahieren
-	echo "Extrahiere Access-Datenbanken ..."
-	unzip -q $CURRENT_DIR/databases.zip -d $CURRENT_DIR/databases "*.mdb"
+	# SQLITE-Datenbanken aus den heruntergeladenen zip-File extrahieren
+	echo "Extrahiere SQLITE-Datenbanken ..."
+	unzip -q $CURRENT_DIR/databases.zip -d $CURRENT_DIR/databases "*.sqlite"
 	rm -rf $CURRENT_DIR/databases.zip
 
 	# Import (MigrateDB) der Access-Datenbank(en) durchführen ...
-	MDBFILE="$CURRENT_DIR/databases/SVWS-TestMDBs-main/GOST_Abitur/Abi-Test-Daten-01/GymAbi.mdb"
-	echo "Importiere Datenbank: ${MDBFILE} ..."
-	java -cp "../svws-server-app-*.jar:../*:../lib/*" de.svws_nrw.db.utils.app.MigrateDB -j -r -1 -sd "MDB" \
-   		-sl "${MDBFILE}" \
-   		-td "MARIA_DB" \
+	SQLITEFILE="$CURRENT_DIR/databases/SVWS-TestMDBs-main/GOST_Abitur/Abi-Test-Daten-01/GymAbi.sqlite"
+	echo "Importiere Datenbank: ${SQLITEFILE} ..."
+	java -cp "../svws-server-app-*.jar:../*:../lib/*" de.svws_nrw.db.utils.app.ImportDB -j -r -1 -td "MARIA_DB" \
+   		-f ${SQLITEFILE} \
    		-tl ${MARIADB_HOST} \
    		-ts ${MARIADB_DATABASE} \
    		-tu ${MARIADB_USER} \
