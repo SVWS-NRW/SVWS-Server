@@ -9213,7 +9213,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der POST-Methode addLehrerPersonalabschnittsdatenLehrerfunktionen für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personalabschnittsdaten/lehrerfunktionen/add
 	 *
-	 * Erstellt einen neuen Datensatz für Lehrerfunktion und gibt das zugehörige Objekt zurück.. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen neuer Lehrerfunktion besitzt.
+	 * Erstellt einen neuen Datensatz für eine Lehrerfunktion und gibt das zugehörige Objekt zurück.. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen neuer Lehrerfunktion besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 201: Die Lehrerfunktion wurde erfolgreich hinzugefügt.
