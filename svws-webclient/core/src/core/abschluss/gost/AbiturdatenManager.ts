@@ -31,6 +31,7 @@ import { LiterarischKuenstlerisch } from '../../../core/abschluss/gost/belegprue
 import { Abi29BelegpruefungProjektkurse } from '../../../core/abschluss/gost/belegpruefung/abi2029/Abi29BelegpruefungProjektkurse';
 import { GostAbiturFach } from '../../../core/types/gost/GostAbiturFach';
 import { ArrayMap } from '../../../core/adt/map/ArrayMap';
+import { GostAbiturMarkierungspruefung } from '../../../core/abschluss/gost/GostAbiturMarkierungspruefung';
 import { Deutsch } from '../../../core/abschluss/gost/belegpruefung/Deutsch';
 import { Fachkombinationen } from '../../../core/abschluss/gost/belegpruefung/Fachkombinationen';
 import { Abi29BelegpruefungMathematik } from '../../../core/abschluss/gost/belegpruefung/abi2029/Abi29BelegpruefungMathematik';
@@ -51,6 +52,7 @@ import { GostBesondereLernleistung } from '../../../core/types/gost/GostBesonder
 import { GostSchuelerFachwahl } from '../../../core/data/gost/GostSchuelerFachwahl';
 import { Abi29BelegpruefungAbiFaecher } from '../../../core/abschluss/gost/belegpruefung/abi2029/Abi29BelegpruefungAbiFaecher';
 import { GostJahrgangsdaten } from '../../../core/data/gost/GostJahrgangsdaten';
+import { GostAbiturMarkierungspruefungErgebnis } from '../../../core/abschluss/gost/GostAbiturMarkierungspruefungErgebnis';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { GostHalbjahr } from '../../../core/types/gost/GostHalbjahr';
 import { GostSchriftlichkeit } from '../../../core/types/gost/GostSchriftlichkeit';
@@ -73,6 +75,7 @@ import { NoteKatalogEintrag } from '../../../asd/data/NoteKatalogEintrag';
 import { GostAbiturMarkierungsalgorithmusErgebnis } from '../../../core/abschluss/gost/GostAbiturMarkierungsalgorithmusErgebnis';
 import { GostBelegpruefungErgebnisFehler } from '../../../core/abschluss/gost/GostBelegpruefungErgebnisFehler';
 import { Mathematik } from '../../../core/abschluss/gost/belegpruefung/Mathematik';
+import { Abi29GostAbiturMarkierungspruefung } from '../../../core/abschluss/gost/Abi29GostAbiturMarkierungspruefung';
 
 export class AbiturdatenManager extends JavaObject {
 
@@ -160,6 +163,11 @@ export class AbiturdatenManager extends JavaObject {
 	 * Das Ergebnis des Markierungsalgorithmus
 	 */
 	private markierungsErgebnis : GostAbiturMarkierungsalgorithmusErgebnis = new GostAbiturMarkierungsalgorithmusErgebnis();
+
+	/**
+	 * Das Ergebnis des Markierprüfungsalgorithmus
+	 */
+	private markierpruefungsergebnis : GostAbiturMarkierungspruefungErgebnis = new GostAbiturMarkierungspruefungErgebnis();
 
 
 	/**
@@ -280,6 +288,7 @@ export class AbiturdatenManager extends JavaObject {
 				this.markierungsErgebnis = GostAbiturMarkierungsalgorithmus.berechne(this, this.belegpruefungen);
 			}
 		}
+		this.pruefeMarkierungen();
 	}
 
 	/**
@@ -548,6 +557,82 @@ export class AbiturdatenManager extends JavaObject {
 		if (belegung === null)
 			return null;
 		return this.faecherManager.get(belegung.fachID);
+	}
+
+	/**
+	 * Prüft, ob die Fachbelegung in einem der übergebenen Fachbereiche liegt.
+	 *
+	 * @param belegung   die Belegung
+	 * @param bereiche   die Fachbereiche
+	 *
+	 * @return true, wenn die Fachbelegung in einem der Bereiche liegt und ansonsten false
+	 */
+	public hatFachbereich(belegung : AbiturFachbelegung | null, ...bereiche : Array<GostFachbereich>) : boolean {
+		if ((belegung === null) || (bereiche.length === 0))
+			return false;
+		const fach : GostFach | null = this.getFach(belegung);
+		if (fach === null)
+			return false;
+		for (const bereich of bereiche)
+			if (bereich.hat(fach))
+				return true;
+		return false;
+	}
+
+	/**
+	 * Prüft, ob eine Belegung der Abiturfächer in einem der übergebenen Fachbereiche liegt.
+	 *
+	 * @param bereiche   die Fachbereiche
+	 *
+	 * @return true, wenn eine der Fachbelegungen in einem der Fachbereiche liegt und ansonsten false
+	 */
+	public hatFachbereichInAbiturfaechern(...bereiche : Array<GostFachbereich>) : boolean {
+		for (const belegung of this.abidaten.fachbelegungen) {
+			const abiturFach : GostAbiturFach | null = GostAbiturFach.fromID(belegung.abiturFach);
+			if ((abiturFach !== null) && this.hatFachbereich(belegung, ...bereiche))
+				return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Prüft, ob eine Belegung der Leistungskurse in einem der übergebenen Fachbereiche liegt.
+	 *
+	 * @param bereiche   die Fachbereiche
+	 *
+	 * @return true, wenn eine Belegung der Leistungskurse in einem der Fachbereiche liegt und ansonsten false
+	 */
+	public hatFachbereichInLKAbiturfaechern(...bereiche : Array<GostFachbereich>) : boolean {
+		for (const belegung of this.abidaten.fachbelegungen) {
+			const abiturFach : GostAbiturFach | null = GostAbiturFach.fromID(belegung.abiturFach);
+			if (abiturFach !== null)
+				continue;
+			if ((abiturFach as unknown !== GostAbiturFach.LK1 as unknown) && (abiturFach as unknown !== GostAbiturFach.LK2 as unknown))
+				continue;
+			if (this.hatFachbereich(belegung, ...bereiche))
+				return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Prüft, ob eine Belegung der Abitur-Grundkurse in einem der übergebenen Fachbereiche liegt.
+	 *
+	 * @param bereiche   die Fachbereiche
+	 *
+	 * @return true, wenn eine Belegung der Abitur-Grundkurse in einem der Fachbereiche liegt und ansonsten false
+	 */
+	public hatFachbereichInGKAbiturfaechern(...bereiche : Array<GostFachbereich>) : boolean {
+		for (const belegung of this.abidaten.fachbelegungen) {
+			const abiturFach : GostAbiturFach | null = GostAbiturFach.fromID(belegung.abiturFach);
+			if (abiturFach !== null)
+				continue;
+			if ((abiturFach as unknown === GostAbiturFach.LK1 as unknown) || (abiturFach as unknown === GostAbiturFach.LK2 as unknown))
+				continue;
+			if (this.hatFachbereich(belegung, ...bereiche))
+				return true;
+		}
+		return false;
 	}
 
 	/**
@@ -2287,6 +2372,132 @@ export class AbiturdatenManager extends JavaObject {
 	}
 
 	/**
+	 * Zähle die Anzahl der Markierungen bei den Fachbelegungen in allen Halbjahren der Qualifikationsphase.
+	 *
+	 * @param belegungen   die Fachbelegungen
+	 *
+	 * @return die Anzahl der Markierungen bei den Fachbelegungen
+	 */
+	public zaehleAlleMarkierungenQualifikationsphase(belegungen : List<AbiturFachbelegung>) : number {
+		if (belegungen.isEmpty())
+			return 0;
+		let count : number = 0;
+		for (const belegung of belegungen) {
+			for (const halbjahr of GostHalbjahr.getQualifikationsphase()) {
+				const belegungHalbjahr : AbiturFachbelegungHalbjahr | null = belegung.belegungen[halbjahr.id];
+				if ((belegungHalbjahr === null) || (belegungHalbjahr.block1gewertet === null) || (!belegungHalbjahr.block1gewertet))
+					continue;
+				count++;
+			}
+		}
+		return count;
+	}
+
+	/**
+	 * Zähle die Anzahl der markierten Fachbelegungen ohne Wertung oder mit 0 Punkten in allen Halbjahren der Qualifikationsphase.
+	 *
+	 * @param belegungen   die Fachbelegungen
+	 *
+	 * @return die Anzahl der markierten Fachbelegungen ohne Wertung oder mit 0 Punkten bei den Fachbelegungen
+	 */
+	public zaehleMarkierungenOhneWertungOderMitNullPunkten(belegungen : List<AbiturFachbelegung>) : number {
+		if (belegungen.isEmpty())
+			return 0;
+		let count : number = 0;
+		for (const belegung of belegungen) {
+			for (const halbjahr of GostHalbjahr.getQualifikationsphase()) {
+				const belegungHalbjahr : AbiturFachbelegungHalbjahr | null = belegung.belegungen[halbjahr.id];
+				if ((belegungHalbjahr === null) || (belegungHalbjahr.block1gewertet === null) || (!belegungHalbjahr.block1gewertet))
+					continue;
+				const np : number | null = this.getNotenpunkteOfFachbelegungHalbjahr(belegungHalbjahr);
+				if ((np === null) || (np === 5))
+					count++;
+			}
+		}
+		return count;
+	}
+
+	/**
+	 * Zähle die Anzahl der markierten Defizite bei den Fachbelegungen in allen Halbjahren der Qualifikationsphase.
+	 *
+	 * @param belegungen   die Fachbelegungen
+	 *
+	 * @return die Anzahl der Markierungen mit Defiziten bei den Fachbelegungen
+	 */
+	public zaehleMarkierungenMitDefiziten(belegungen : List<AbiturFachbelegung>) : number {
+		if (belegungen.isEmpty())
+			return 0;
+		let count : number = 0;
+		for (const belegung of belegungen) {
+			for (const halbjahr of GostHalbjahr.getQualifikationsphase()) {
+				const belegungHalbjahr : AbiturFachbelegungHalbjahr | null = belegung.belegungen[halbjahr.id];
+				if ((belegungHalbjahr === null) || (belegungHalbjahr.block1gewertet === null) || (!belegungHalbjahr.block1gewertet))
+					continue;
+				const np : number | null = this.getNotenpunkteOfFachbelegungHalbjahr(belegungHalbjahr);
+				if ((np !== null) && (np < 5))
+					count++;
+			}
+		}
+		return count;
+	}
+
+	/**
+	 * Zähle die Anzahl der nicht markierten Kurse ohne Defizite bei den Fachbelegungen in allen Halbjahren der Qualifikationsphase.
+	 *
+	 * @param belegungen   die Fachbelegungen
+	 *
+	 * @return die Anzahl der nicht markierten Kurse ohne Defiziten bei den Fachbelegungen
+	 */
+	public zaehleOhneMarkierungenUndOhneDefizite(belegungen : List<AbiturFachbelegung>) : number {
+		if (belegungen.isEmpty())
+			return 0;
+		let count : number = 0;
+		for (const belegung of belegungen) {
+			for (const halbjahr of GostHalbjahr.getQualifikationsphase()) {
+				const belegungHalbjahr : AbiturFachbelegungHalbjahr | null = belegung.belegungen[halbjahr.id];
+				if ((belegungHalbjahr === null) || (belegungHalbjahr.block1gewertet === null) || (!belegungHalbjahr.block1gewertet))
+					continue;
+				const np : number | null = this.getNotenpunkteOfFachbelegungHalbjahr(belegungHalbjahr);
+				if ((np !== null) && (np >= 5))
+					count++;
+			}
+		}
+		return count;
+	}
+
+	/**
+	 * Berechnet den Durchschnitte der Notenpunkte aller markierten Kurse.
+	 * Dabei fließen die Notenpunkte der Leistungskurse doppelt ein.
+	 *
+	 * @return der Durchschnitte der Notenpunkte aller markierten Kurse
+	 */
+	public berechneMarkierungenDurchschnittspunkte() : number {
+		let summe : number = 0.0;
+		let count : number = 0;
+		for (const belegung of this.abidaten.fachbelegungen) {
+			const kursart : GostKursart | null = GostKursart.fromKuerzel(belegung.letzteKursart);
+			if (kursart === null)
+				continue;
+			for (const halbjahr of GostHalbjahr.getQualifikationsphase()) {
+				const belegungHalbjahr : AbiturFachbelegungHalbjahr | null = belegung.belegungen[halbjahr.id];
+				if ((belegungHalbjahr === null) || (belegungHalbjahr.block1gewertet === null) || (!belegungHalbjahr.block1gewertet))
+					continue;
+				const np : number | null = this.getNotenpunkteOfFachbelegungHalbjahr(belegungHalbjahr);
+				if ((np === null) || (np === 0))
+					continue;
+				if (kursart as unknown === GostKursart.LK as unknown) {
+					summe += 2.0 * np;
+					count += 2;
+				} else {
+					summe += np;
+					count++;
+				}
+			}
+		}
+		return summe / count;
+	}
+
+	/**
 	 * Prüft, ob bei der Fachbelegung in dem angegebenen Halbjahr der Qualifikationsphase eine Belegung vorliegt und
 	 * der Kurs jeweils als angerechnet markiert ist.
 	 *
@@ -2356,10 +2567,37 @@ export class AbiturdatenManager extends JavaObject {
 	}
 
 	/**
+	 * Gibt das Ergebnis des Markierprüfungsalgorithmus zurück. Dieses enthält, ob der Algorithmus erfolgreich gewesen ist
+	 * und im Fehlerfall den Log des Prüfungsergebnisses.
+	 *
+	 * @return das Ergebnis der Markierprüfungsalgorithmus
+	 */
+	public getErgebnisMarkierpruefung() : GostAbiturMarkierungspruefungErgebnis {
+		return this.markierpruefungsergebnis;
+	}
+
+	/**
+	 * Führt eine Prüfung der aktuellen Markierungen der Kurse durch.
+	 */
+	public pruefeMarkierungen() : void {
+		if (!this.istBewertetQualifikationsPhase()) {
+			this.markierpruefungsergebnis.erfolgreich = false;
+			this.markierpruefungsergebnis.log.clear();
+			this.markierpruefungsergebnis.log.add("Es liegen noch nicht Bewertungen für alle Halbjahre des Qualifikationsphase vor.");
+			return;
+		}
+		if ((this.abidaten.abiturjahr >= 2029) && (this.servermode as unknown === ServerMode.DEV as unknown)) {
+			this.markierpruefungsergebnis = Abi29GostAbiturMarkierungspruefung.pruefe(this, this.belegpruefungen);
+		} else {
+			this.markierpruefungsergebnis = GostAbiturMarkierungspruefung.pruefe(this, this.belegpruefungen);
+		}
+	}
+
+	/**
 	 * Gibt das Ergebnis des Markierungsalgorithmus zurück. Dieses enthält, ob der Algorithmus erfolgreich gewesen ist
 	 * und im Erfolgsfall ein Liste für die einzelnen Belegungen der Qualifikationsphase, ob diese markiert wurden.
 	 *
-	 * @return das Ergebnis der Belegprüfung
+	 * @return das Ergebnis des Markierungsalgorithmus
 	 */
 	public getErgebnisMarkierungsalgorithmus() : GostAbiturMarkierungsalgorithmusErgebnis {
 		return this.markierungsErgebnis;
@@ -2427,6 +2665,7 @@ export class AbiturdatenManager extends JavaObject {
 		this.abidaten.block1PunktSummeNormiert = Math.round((40.0 * summeNotenpunkte) / anzahlKurse) as number;
 		this.abidaten.block1NotenpunkteDurchschnitt = Math.round((summeNotenpunkte / anzahlKurse) * 100.0) / 100.0;
 		this.abidaten.block1Zulassung = (this.abidaten.block1PunktSummeNormiert >= 200) && (((this.abidaten.block1AnzahlKurse >= 35) && (this.abidaten.block1AnzahlKurse <= 37) && (this.abidaten.block1DefiziteGesamt <= 7)) || ((this.abidaten.block1AnzahlKurse >= 38) && (this.abidaten.block1DefiziteGesamt <= 8)));
+		this.pruefeMarkierungen();
 		return true;
 	}
 

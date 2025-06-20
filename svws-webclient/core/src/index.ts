@@ -291,6 +291,7 @@ export { ServiceAbschlussMSA } from './core/abschluss/ge/ServiceAbschlussMSA';
 export { ServiceBerechtigungMSAQ } from './core/abschluss/ge/ServiceBerechtigungMSAQ';
 export { ServicePrognose } from './core/abschluss/ge/ServicePrognose';
 export { Abi29GostAbiturMarkierungsalgorithmus } from './core/abschluss/gost/Abi29GostAbiturMarkierungsalgorithmus';
+export { Abi29GostAbiturMarkierungspruefung } from './core/abschluss/gost/Abi29GostAbiturMarkierungspruefung';
 export { AbiturdatenManager } from './core/abschluss/gost/AbiturdatenManager';
 export { GostAbiturMarkierungsalgorithmus } from './core/abschluss/gost/GostAbiturMarkierungsalgorithmus';
 export { GostAbiturMarkierungsalgorithmusBelegung } from './core/abschluss/gost/GostAbiturMarkierungsalgorithmusBelegung';

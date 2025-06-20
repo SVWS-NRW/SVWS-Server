@@ -1,13 +1,17 @@
 package de.svws_nrw.core.abschluss.gost;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import de.svws_nrw.core.abschluss.gost.belegpruefung.AbiFaecher;
 import de.svws_nrw.core.abschluss.gost.belegpruefung.Projektkurse;
 import de.svws_nrw.core.data.gost.AbiturFachbelegung;
+import de.svws_nrw.core.data.gost.AbiturFachbelegungHalbjahr;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.gost.GostAbiturFach;
+import de.svws_nrw.core.types.gost.GostBesondereLernleistung;
 import de.svws_nrw.core.types.gost.GostFachbereich;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.utils.gost.GostFachUtils;
@@ -43,6 +47,12 @@ public final class GostAbiturMarkierungspruefung {
 
 	/** Gibt an, ob eine weitere Fremdsprache neben der ersten gefunden wurde (Bili-Sachfach ist möglich) */
 	boolean hatWeitereFremdsprache = false;
+
+	/** Die Belegung einer vollständig markierten klassischen Naturwissenschaft */
+	AbiturFachbelegung naturwissenschaft = null;
+
+	/** Gibt an, ob eine weitere Naturwissenschaft neben der ersten gefunden wurde */
+	boolean hatWeitereNaturwissenschaft = false;
 
 
 	/**
@@ -148,14 +158,40 @@ public final class GostAbiturMarkierungspruefung {
 		success = success && pruefeExistiertMitAnzahlMarkierungen(GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH, 4,
 				"Es muss ein gesellschaftswissenschaftliches Fach durchgängig markiert sein.");
 
+		// Schritt 14/15: Prüfe, ob Religion oder ein Ersatzfach mit zwei Markierungen berücksichtigt wurde
+		success = success && pruefeReligionsOderErsatzMarkierungen();
+
+		// Schritt 16: auf Markierung von Mathematik
+		success = success && pruefeAnzahlMarkierungen(GostFachbereich.MATHEMATIK, 4, "Mathematik muss durchgehend markiert sein.");
+
+		// Schritt 17: Prüfe auf Markierung einer klassischen Naturwissenschaft (diese wird zwischengespeichert)
+		success = success && pruefeNaturwissenschaftMarkierung();
+
 		// evtl. die Prüfung schon beenden
 		if (!success)
 			return success;
 
-		// TODO
-		success = false;
+		// Schritt 18: Prüfe, ob eine weitere Naturwissenschaft markiert wurde
+		pruefeAufWeitereNaturwissenschaft();
 
-		return success;
+		// Schritt 19: Prüfe, ob ein mind. eine Schwerpunktbedingung für Fremdsprachen oder Naturwissenschaften existiert
+		success = pruefeSchwerpunkt();
+
+		// Schritt 20: Prüfe die Markierung von Projektkursbelegungen
+		success = success && pruefeProjektkurs();
+
+		// Schritte 21-26: Prüfe Anzahl der markierten Kurse und Anzahl der markierten Defizite
+		success = success && pruefeAnzahlUndDefizite();
+
+		// Schritt 29: Prüfe, ob ein Projektkurs als besondere Lernleistung eingebracht werden soll, dieser aber markiert wurde
+		success = success && pruefeProjektkursBesondereLernleistung();
+
+		// evtl. die Prüfung schon beenden
+		if (!success)
+			return success;
+
+		// Schritt 27/28: Prüfe, ob noch Kurse markiert werden können, welche die Durchschnittsnote verbessern würden
+		return pruefeOptimierung();
 	}
 
 
@@ -525,6 +561,274 @@ public final class GostAbiturMarkierungspruefung {
 				return true;
 		ergebnis.log.add(fehler);
 		return false;
+	}
+
+
+	private boolean pruefeReligionsOderErsatzMarkierungen() {
+		final boolean hatAbiRE = manager.hatFachbereichInAbiturfaechern(GostFachbereich.RELIGION);
+		final boolean hatAbiPL = manager.hatFachbereichInAbiturfaechern(GostFachbereich.PHILOSOPHIE);
+		final @NotNull List<AbiturFachbelegung> belRE = manager.getFachbelegungen(GostFachbereich.RELIGION);
+		final int countRE = manager.zaehleAlleMarkierungenQualifikationsphase(belRE);
+		final int countPL = manager.zaehleAlleMarkierungenQualifikationsphase(manager.getFachbelegungen(GostFachbereich.PHILOSOPHIE));
+		if (!hatAbiRE && !hatAbiPL && ((countRE + countPL) < 2)) {
+			ergebnis.log.add("Es müssen mindestens zwei Kurse aus der Fächergruppe Religionslehre und Philosophie markiert werden.");
+			return false;
+		}
+		final int countGW = manager.zaehleAlleMarkierungenQualifikationsphase(
+				manager.getFachbelegungen(GostFachbereich.GESCHICHTE, GostFachbereich.SOZIALWISSENSCHAFTEN,
+						GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH_SONSTIGE));
+		final boolean hatAbiGW = manager.hatFachbereichInAbiturfaechern(GostFachbereich.GESCHICHTE, GostFachbereich.SOZIALWISSENSCHAFTEN,
+				GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH_SONSTIGE);
+		if (!(!hatAbiRE && hatAbiPL && !hatAbiGW))
+			return true;
+		// Wurden zwei Kurse Religionslehre in Q2.1 bis Q2.2 markiert?
+		if (countRE >= 2)
+			return true;
+		if (manager.pruefeBelegungExistiert(belRE, GostHalbjahr.Q11, GostHalbjahr.Q12)) {
+			ergebnis.log.add("Es müssen mindestens zwei Kurse aus der Fächergruppe Religionslehre markiert werden.");
+			return false;
+		}
+		// Wurden ein Kurs Religionslehre in Q1.1 bis Q2.2 und wurden mindestens 9 Kurse aller gesellschaftswissenschaftlichen Fächer (auch Zusatzkurse) in Q1.1 bis Q2.2 markiert?
+		if ((countRE == 1) && (countGW >= 9))
+			return true;
+		if (manager.pruefeBelegungExistiert(belRE, GostHalbjahr.Q11) || manager.pruefeBelegungExistiert(belRE, GostHalbjahr.Q11)) {
+			ergebnis.log.add("Es müssen zwei Kurse Religionslehre oder ein Kurs Religionslehre und ein Kurs des Ersatzfaches markiert werden.");
+			return false;
+		}
+		// Wurden mindestens 10 Kurse aller gesellschaftswissenschaftlichen Fächer (auch Zusatzkurse) markiert?
+		if (countGW >= 10)
+			return true;
+		ergebnis.log.add(
+				"Es müssen zwei Kurse Religionslehre oder ein Kurs Religionslehre und ein Kurs des Ersatzfaches oder zwei Kurse des Ersatzfaches markiert werden.");
+		return false;
+	}
+
+
+	private boolean pruefeNaturwissenschaftMarkierung() {
+		final @NotNull List<AbiturFachbelegung> belegungen = manager.getFachbelegungen(GostFachbereich.NATURWISSENSCHAFTLICH_KLASSISCH);
+		if (belegungen.isEmpty()) {
+			ergebnis.log.add("Es muss mindestens eine klassische Naturwissenschaft belegt sein, damit eine Abiturzulassung möglich ist.");
+			return false;
+		}
+		for (final @NotNull AbiturFachbelegung belegung : belegungen) {
+			boolean found = true;
+			for (final GostHalbjahr halbjahr : GostHalbjahr.getQualifikationsphase()) {
+				// Alle Halbjahre müssen belegt sein
+				if (belegung.belegungen[halbjahr.id] == null) {
+					found = false;
+					break;
+				}
+				// Es darf keine 0-Punkte-Belegung markiert werden
+				final Integer np = manager.getNotenpunkteOfFachbelegungHalbjahr(belegung.belegungen[halbjahr.id]);
+				if ((np == null) || (np == 0)) {
+					found = false;
+					break;
+				}
+				// und es muss eine Markierung vorliegen
+				if (!manager.hatMarkierungHalbjahr(belegung, halbjahr)) {
+					found = false;
+					break;
+				}
+			}
+			if (found) {
+				this.naturwissenschaft = belegung;
+				return true;
+			}
+		}
+		ergebnis.log.add("Es muss mindestens eine klassische Naturwissenschaft durchgängig markiert sein, damit eine Abiturzulassung möglich ist.");
+		return false;
+	}
+
+
+	private void pruefeAufWeitereNaturwissenschaft() {
+		this.hatWeitereNaturwissenschaft = false;
+		final @NotNull List<AbiturFachbelegung> belegungen = manager.getFachbelegungen(GostFachbereich.NATURWISSENSCHAFTLICH);
+		for (final @NotNull AbiturFachbelegung belegung : belegungen) {
+			// Aber nicht die Naturwissenschaft, die als erstes gefunden wurde
+			if (belegung == this.naturwissenschaft)
+				continue;
+			boolean found = true;
+			for (final GostHalbjahr halbjahr : GostHalbjahr.getQualifikationsphase()) {
+				// Alle Halbjahre müssen belegt sein
+				if (belegung.belegungen[halbjahr.id] == null) {
+					found = false;
+					break;
+				}
+				// Es darf keine 0-Punkte-Belegung markiert werden
+				final Integer np = manager.getNotenpunkteOfFachbelegungHalbjahr(belegung.belegungen[halbjahr.id]);
+				if ((np == null) || (np == 0)) {
+					found = false;
+					break;
+				}
+				// und es muss eine Markierung vorliegen
+				if (!manager.hatMarkierungHalbjahr(belegung, halbjahr)) {
+					found = false;
+					break;
+				}
+			}
+			if (found) {
+				this.hatWeitereNaturwissenschaft = true;
+				return;
+			}
+		}
+	}
+
+
+	private boolean pruefeSchwerpunkt() {
+		if (this.hatWeitereFremdsprache || this.hatWeitereNaturwissenschaft)
+			return true;
+		ergebnis.log
+				.add("Es müssen zwei Kurse einer Naturwissenschaft oder einer schriftlich belegten weiteren Fremdsprache in Q2.1 und Q2.2 markiert werden.");
+		return false;
+	}
+
+
+	private boolean pruefeProjektkurs() {
+		final int count = manager.zaehleMarkierungenQualifikationsphase(belegpruefungProjektkurse.getProjektkurs());
+		if (count != 1)
+			return true;
+		ergebnis.log.add("Es müssen immer beide Halbjahre des Projektkurses markiert werden.");
+		return false;
+	}
+
+
+	private boolean pruefeAnzahlUndDefizite() {
+		// Prüfe, ob Kurse ohne Wertung oder mit 0 Punkten markiert wurden
+		if (manager.zaehleMarkierungenOhneWertungOderMitNullPunkten(manager.daten().fachbelegungen) > 0) {
+			ergebnis.log.add(
+					"Es wurden Kurse markiert, welche mit 0 Punkten bewertet wurden. Diese gelten aber als nicht belegt und dürfen nicht markiert werden.");
+			return false;
+		}
+		// Prüfe die Anzahl der Kurse
+		final int count = manager.zaehleAlleMarkierungenQualifikationsphase(manager.daten().fachbelegungen);
+		if ((count < 35) || (count > 40)) {
+			if (count < 35)
+				ergebnis.log.add("Es müssen mindestens 35 markiert werden.");
+			else
+				ergebnis.log.add("Es dürfen höchstens 40 Kurse markiert werden.");
+			return false;
+		}
+		// Prüfe die Gesamtzahl der Defizite in Abhängigkeit der Anzahl der markierten Kurse
+		final int countDefizite = manager.zaehleMarkierungenMitDefiziten(manager.daten().fachbelegungen);
+		if (countDefizite > 8) {
+			ergebnis.log.add("Keine Zulassung zum Abitur. Es wurden zu viele Kurse mit Defizit markiert.");
+			return false;
+		}
+		if ((count < 38) && (countDefizite == 8)) {
+			final int countVerfuegbar = manager.zaehleOhneMarkierungenUndOhneDefizite(manager.daten().fachbelegungen);
+			if (countVerfuegbar > 0)
+				ergebnis.log.add("Bei acht markierten Defiziten muss ein weiterer Kurs ohne Defizit markiert werden.");
+			else
+				ergebnis.log.add("Keine Zulassung zum Abitur. Es wurden zu viele Kurse mit Defizit markiert.");
+			return false;
+		}
+		return true;
+	}
+
+
+	private boolean pruefeProjektkursBesondereLernleistung() {
+		if (!GostBesondereLernleistung.PROJEKTKURS.kuerzel.equals(manager.daten().besondereLernleistung))
+			return true;
+		final int count = manager.zaehleMarkierungenQualifikationsphase(belegpruefungProjektkurse.getProjektkurs());
+		if (count <= 0)
+			return true;
+		ergebnis.log
+				.add("Wenn der Projektkurs als besondere Lernleistung in das Abitur eingebracht werden soll, so darf er nicht für Block I markiert werden.");
+		return false;
+	}
+
+
+	private boolean pruefeOptimierung() {
+		// Prüfe die Anzahl der Kurse
+		final int count = manager.zaehleAlleMarkierungenQualifikationsphase(manager.daten().fachbelegungen);
+		if (count >= 40)
+			return true;
+		// Berechne die Durchschnittspunkte aller markierten Kurse. Zähle LK-Kurse und LK-Punkte dabei doppelt.
+		final double durchschnitt = manager.berechneMarkierungenDurchschnittspunkte();
+
+		// Erstelle eine absteigend nach Notepunkten sortierte Restmenge der nicht markierten Kurse
+		// Ein Projektkurs fließt nur ein, wenn dieser nicht als besondere Lernleistung eingebracht wird
+		final boolean hatPjkBLL = GostBesondereLernleistung.PROJEKTKURS.kuerzel.equals(manager.daten().besondereLernleistung);
+		final @NotNull List<GostAbiturMarkierungsalgorithmusBelegung> auswahlliste = new ArrayList<>();
+		for (final @NotNull AbiturFachbelegung belegung : manager.daten().fachbelegungen) {
+			// Prüfe das Fach, Projektkurse fließen nur ein, falls dieser nicht als BLL eingebracht wird
+			final GostFach fach = manager.getFach(belegung);
+			if ((fach == null) || (hatPjkBLL && "PX".equals(fach.kuerzel)))
+				continue;
+			for (final @NotNull GostHalbjahr hj : GostHalbjahr.getQualifikationsphase()) {
+				final AbiturFachbelegungHalbjahr belHj = belegung.belegungen[hj.id];
+				if ((belHj == null) || ((belHj.block1gewertet != null) && belHj.block1gewertet))
+					continue;
+				final Integer np = manager.getNotenpunkteOfFachbelegungHalbjahr(belHj);
+				if ((np == null) || (np == 0))
+					continue;
+				auswahlliste.add(new GostAbiturMarkierungsalgorithmusBelegung(belegung, belHj, np));
+			}
+		}
+		if (auswahlliste.isEmpty())
+			return true;
+
+		// Bestimme zunächst die Markierungen bei Musik und den Ersatzfächern
+		final AbiturFachbelegung belMU = manager.getFachbelegungByKuerzel("MU");
+		final AbiturFachbelegung belVP = manager.getFachbelegungByKuerzel("VP");
+		final AbiturFachbelegung belIN = manager.getFachbelegungByKuerzel("IN");
+		final AbiturFachbelegung belLI = manager.getFachbelegungByKuerzel("LI");
+		final boolean istMusikAbiLK = (abi[0] == belMU) || (abi[1] == belMU);
+		final boolean istMusikAbiGK = (abi[2] == belMU) || (abi[3] == belMU);
+		final int countMU = manager.zaehleMarkierungenQualifikationsphase(belMU);
+		final int countVP = manager.zaehleMarkierungenQualifikationsphase(belVP);
+		final int countIN = manager.zaehleMarkierungenQualifikationsphase(belIN);
+		final int countLI = manager.zaehleMarkierungenQualifikationsphase(belLI);
+		final int countMoeglichErsatz = 2 - (countLI + countVP + countIN);
+		int maxMU = 5;
+		if (istMusikAbiLK)
+			maxMU--;
+		else if (istMusikAbiGK)
+			maxMU++;
+		final int countMoeglichMusik = maxMU - (countMU + countVP + countIN);
+
+		// Sortiere die Auswahlliste und bestimme ggf. den ersten geeigneten Eintrag in der Liste
+		sort(auswahlliste);
+		while (!auswahlliste.isEmpty()) {
+			final @NotNull GostAbiturMarkierungsalgorithmusBelegung bel = auswahlliste.getFirst();
+			auswahlliste.removeFirst();
+			if (bel.notenpunkte <= durchschnitt)
+				break;
+			final GostFach fach = manager.getFach(bel.belegung);
+			if ((fach == null)
+					|| ("LI".equals(fach.kuerzel) && (countMoeglichErsatz <= 0))
+					|| ("MU".equals(fach.kuerzel) && (countMoeglichMusik <= 0))
+					|| (("VP".equals(fach.kuerzel) || "IN".equals(fach.kuerzel)) && ((countMoeglichErsatz <= 0) || (countMoeglichMusik <= 0))))
+				continue;
+			ergebnis.log.add("Es existieren nicht markierte Kurse, die durch Markierung den Abiturdurchschnitt verbessern können.");
+			return false;
+		}
+		return true;
+	}
+
+
+	private void sort(final @NotNull List<GostAbiturMarkierungsalgorithmusBelegung> auswahlliste) {
+		final @NotNull Comparator<GostAbiturMarkierungsalgorithmusBelegung> comparatorBelegungen =
+				(final @NotNull GostAbiturMarkierungsalgorithmusBelegung a, final @NotNull GostAbiturMarkierungsalgorithmusBelegung b) -> {
+					int tmp = b.notenpunkte - a.notenpunkte;
+					if (tmp != 0)
+						return tmp;
+					// Ansonsten gilt die Sortierung des Faches ...
+					final GostFach aFach = manager.getFach(a.belegung);
+					final GostFach bFach = manager.getFach(b.belegung);
+					if ((aFach == null) || (bFach == null)) // Kann hier nicht auftreten - nur für den Compiler...
+						return -1;
+					tmp = GostFachbereich.compareGostFach(aFach, bFach);
+					if (tmp != 0)
+						return tmp;
+					// Ansonsten die des Halbjahres
+					final GostHalbjahr hjA = GostHalbjahr.fromKuerzel(a.belegungHalbjahr.halbjahrKuerzel);
+					final GostHalbjahr hjB = GostHalbjahr.fromKuerzel(b.belegungHalbjahr.halbjahrKuerzel);
+					if ((hjA == null) || (hjB == null)) // Kann hier nicht auftreten - nur für den Compiler...
+						return -1;
+					return hjB.id - hjA.id;
+				};
+		auswahlliste.sort(comparatorBelegungen);
 	}
 
 }

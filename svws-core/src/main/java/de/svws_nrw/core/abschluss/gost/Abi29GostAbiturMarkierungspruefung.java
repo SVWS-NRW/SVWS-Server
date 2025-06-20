@@ -15,13 +15,14 @@ import jakarta.validation.constraints.NotNull;
  * Es handelt sich also um experimentellen Code, der keine Rückschlüsse auf Details einer zukünftigen APO-GOSt
  * erlaubt.
  *
- * Diese Klasse führt eine automatische Markierung von Halbjahresbelegungen von
- * anrechenbaren Kursen für die Abiturberechnung durch.
+ * Diese Klasse prüft eine Markierung von Halbjahresbelegungen von anrechenbaren Kursen
+ * für die Abiturberechnung.
  */
-public final class Abi29GostAbiturMarkierungsalgorithmus {
+public final class Abi29GostAbiturMarkierungspruefung {
 
-	/** Das Ergebnis des Algorithmus */
-	private final @NotNull GostAbiturMarkierungsalgorithmusErgebnis ergebnis = new GostAbiturMarkierungsalgorithmusErgebnis();
+	/** Das Ergebnis der Prüfung */
+	private final @NotNull GostAbiturMarkierungspruefungErgebnis ergebnis = new GostAbiturMarkierungspruefungErgebnis();
+
 
 	/**
 	 * Erstellt eine neue Instanz des Markierungsalgorithmus unter Verwendung des übergebenen Abiturdaten-Manager und den zuvor
@@ -30,26 +31,27 @@ public final class Abi29GostAbiturMarkierungsalgorithmus {
 	 * @param manager            der Abiturdaten-Manager
 	 * @param belegpruefungen    die durchgeführten Belegprüfungen
 	 */
-	private Abi29GostAbiturMarkierungsalgorithmus(final @NotNull AbiturdatenManager manager, final @NotNull List<GostBelegpruefung> belegpruefungen) {
+	private Abi29GostAbiturMarkierungspruefung(final @NotNull AbiturdatenManager manager, final @NotNull List<GostBelegpruefung> belegpruefungen) {
 		// TODO implementation required
 		throw new UnsupportedOperationException();
 	}
 
+
 	/**
-	 * Führt eine automatische Markierung von Halbjahresbelegungen zur Verwendung in Block II
+	 * Führt eine Prüfung der Markierung von Halbjahresbelegungen zur Verwendung in Block II
 	 * von anrechenbaren Kursen für die Abiturberechnung durch. Vorraussetzung hierfür ist, dass
 	 * alle anrechenbare Kurse ein gültige Note zugeordnet haben.
 	 *
 	 * @param manager           der Manager zur Verwaltung der Abiturdaten.
 	 * @param belegpruefungen   die zuvor durchgeführten Belegprüfung der Laufbahnplanung
 	 *
-	 * @return das Ergebnis der Berechnung
+	 * @return das Ergebnis der Prüfung
 	 */
-	public static @NotNull GostAbiturMarkierungsalgorithmusErgebnis berechne(final @NotNull AbiturdatenManager manager,
+	public static @NotNull GostAbiturMarkierungspruefungErgebnis pruefe(final @NotNull AbiturdatenManager manager,
 			final @NotNull List<GostBelegpruefung> belegpruefungen) {
-		final @NotNull Abi29GostAbiturMarkierungsalgorithmus initialState = new Abi29GostAbiturMarkierungsalgorithmus(manager, belegpruefungen);
+		final @NotNull Abi29GostAbiturMarkierungspruefung pruefung = new Abi29GostAbiturMarkierungspruefung(manager, belegpruefungen);
 		// TODO implementation required
-		return initialState.ergebnis;
+		return pruefung.ergebnis;
 	}
 
 }
