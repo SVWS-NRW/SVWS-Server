@@ -22,6 +22,7 @@ import de.svws_nrw.core.data.lehrer.LehrerLernplattform;
 import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdaten;
 import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdatenAnrechnungsstunden;
+import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdatenLehrerfunktion;
 import de.svws_nrw.asd.data.lehrer.LehrerPersonaldaten;
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.data.lehrer.LehrerEinwilligung;
@@ -48,6 +49,7 @@ import de.svws_nrw.data.lehrer.DataLehrerEinwilligungen;
 import de.svws_nrw.data.lehrer.DataLehrerLernplattformen;
 import de.svws_nrw.data.lehrer.DataLehrerPersonalabschnittsdaten;
 import de.svws_nrw.data.lehrer.DataLehrerPersonalabschnittsdatenAnrechungen;
+import de.svws_nrw.data.lehrer.DataLehrerPersonalabschnittsdatenLehrerfunktionen;
 import de.svws_nrw.data.lehrer.DataLehrerPersonalabschnittsdatenMehrleistungen;
 import de.svws_nrw.data.lehrer.DataLehrerPersonalabschnittsdatenMinderleistungen;
 import de.svws_nrw.data.lehrer.DataLehrerPersonaldaten;
@@ -693,6 +695,118 @@ public class APILehrer {
 				BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN);
 	}
 
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Funktionen in den Personalabschnittdaten eines Lehrers.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param id        die Datenbank-ID zur Identifikation der Abschnittsdaten
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Lehrerfunktion aus den Personalabschnittsdaten eines Lehrers
+	 */
+	@GET
+	@Path("/personalabschnittsdaten/lehrerfunktionen/{id : \\d+}")
+	@Operation(summary = "Liefert zu der ID die zugehörige Lehrerfunktion.",
+			description = "Liest die Lehrerfunktion zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerpersonaldaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Funktion", content = @Content(mediaType = "application/json",
+			schema = @Schema(implementation = LehrerPersonalabschnittsdatenLehrerfunktion.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrer-Personaldaten anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Lehrerfunktion mit der angegebenen ID gefunden")
+	public Response getLehrerPersonalabschnittsdatenLehrerfunktionen(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerPersonalabschnittsdatenLehrerfunktionen(conn).getByIdAsResponse(id),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.LEHRER_PERSONALDATEN_ANSEHEN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Hinzufügen einer Lehrerfunktion zu den Personalabschnittsdaten eines Lehrers.
+	 *
+	 * @param schema       das Datenbankschema
+	 * @param is           der Input-Stream mit den Daten der Lehrefunktion
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit der neuen Lehrerfunktion
+	 */
+	@POST
+	@Path("/personalabschnittsdaten/lehrerfunktionen/add")
+	@Operation(summary = "Erstellt einen neuen Datensatz für eine Lehrerfunktion und gibt das zugehörige Objekt zurück.",
+			description = "Erstellt einen neuen Datensatz für eine Lehrerfunktion und gibt das zugehörige Objekt zurück.. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen neuer Lehrerfunktion besitzt.")
+	@ApiResponse(responseCode = "201", description = "Die Lehrerfunktion wurde erfolgreich hinzugefügt.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = LehrerPersonalabschnittsdatenLehrerfunktion.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Lehrerfunktion anzulegen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response addLehrerPersonalabschnittsdatenLehrerfunktionen(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die Daten des zu erstellenden Lehrerfunktion ohne ID, welche automatisch generiert wird", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = LehrerPersonalabschnittsdatenLehrerfunktion.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(
+			    conn -> new DataLehrerPersonalabschnittsdatenLehrerfunktionen(conn).addAsResponse(is),
+			    request,
+			    ServerMode.STABLE,
+			    BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN
+			);
+
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Patchen einer Lehrerfunktion in den Personalabschnittsdaten eines Lehrers.
+	 *
+	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param id        die Datenbank-ID zur Identifikation einer Lehrerfunktion
+	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/personalabschnittsdaten/lehrerfunktionen/{id : \\d+}")
+	@Operation(summary = "Passt die Lehrerfunktion zu der angegebenen ID an. ",
+			description = "Passt die Lehrerfunktion zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personalabschnittsdaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Lehrerfunktion integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrer-Personaldaten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Keine Lehrerfunktion mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
+			+ " (z.B. eine negative ID)")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response patchLehrerPersonalabschnittsdatenLehrerfunktionen(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@RequestBody(description = "Der Patch für die Lehrerfunktion", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = LehrerPersonalabschnittsdatenLehrerfunktion.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerPersonalabschnittsdatenLehrerfunktionen(conn).patchAsResponse(id, is),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Entfernen einer Lehrerfunktion in den Personalabschnittsdaten eines Lehrers.
+	 *
+	 * @param schema       das Datenbankschema
+	 * @param id           die Datenbank-ID zur Identifikation der Lehrefunktion
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status und ggf. der gelöschten Lehrerfunktion
+	 */
+	@DELETE
+	@Path("/personalabschnittsdaten/lehrerfunktionen/{id : \\d+}")
+	@Operation(summary = "Entfernt die Lehrerfunktion zu der angegebenen ID an.",
+			description = "Entfernt die Lehrerfunktion zu der angegebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen einer Lehrerfunktion hat.")
+	@ApiResponse(responseCode = "200", description = "Die Lehrerfunktion wurde erfolgreich entfernt.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = LehrerPersonalabschnittsdatenLehrerfunktion.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Lehrerfunktion zu löschen.")
+	@ApiResponse(responseCode = "404", description = "Keine Lehrerfunktion mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteLehrerPersonalabschnittsdatenLehrerfunktionen(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> new DataLehrerPersonalabschnittsdatenLehrerfunktionen(conn).deleteAsResponse(id), request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_LOESCHEN);
+	}
 
 	/**
 	 * Die OpenAPI-Methode für die Abfrage des Kataloges für der Lehrer-Leitungsfunktionen.
