@@ -41,7 +41,7 @@ if [ "$IMPORT_TEST_DATA" = "true" ]; then
 	unzip -q $CURRENT_DIR/databases.zip -d $CURRENT_DIR/databases "*.sqlite"
 	rm -rf $CURRENT_DIR/databases.zip
 
-	# Import (MigrateDB) der Access-Datenbank(en) durchführen ...
+	# Import (MigrateDB) der SQLite-Datenbank durchführen ...
 	SQLITEFILE="$CURRENT_DIR/databases/SVWS-TestMDBs-main/GOST_Abitur/Abi-Test-Daten-01/GymAbi.sqlite"
 	echo "Importiere Datenbank: ${SQLITEFILE} ..."
 	java -cp "../svws-server-app-*.jar:../*:../lib/*" de.svws_nrw.db.utils.app.ImportDB -j -r -1 -td "MARIA_DB" \
