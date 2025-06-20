@@ -8,9 +8,9 @@
 			</template>
 		</thead>
 		<tbody>
-			<template v-for="row in data" :key="getKey(row)">
+			<template v-for="(row, index) in data" :key="getKey(row)">
 				<tr>
-					<slot :row="row" />
+					<slot :row="row" :index="index" />
 				</tr>
 			</template>
 		</tbody>

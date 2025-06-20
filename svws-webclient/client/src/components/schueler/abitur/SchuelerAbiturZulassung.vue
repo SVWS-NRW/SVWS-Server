@@ -19,7 +19,7 @@
 
 			<!-- Übersicht über die Fachbelegungen in der Q-Phase / Block I -->
 			<div class="h-fit w-fit">
-				<schueler-abitur-zulassung-tabelle :server-mode :schule :manager="managerLaufbahnplanung" />
+				<schueler-abitur-zulassung-tabelle :server-mode :schule :manager="managerLaufbahnplanung" :update-abiturpruefungsdaten="null" />
 			</div>
 
 			<div class="w-64">
@@ -38,10 +38,10 @@
 			</div>
 
 			<!-- Übersicht über die Fachbelegungen in der Q-Phase / Block I -->
-			<schueler-abitur-zulassung-tabelle :server-mode :schule :manager="managerLaufbahnplanung" />
+			<schueler-abitur-zulassung-tabelle :server-mode :schule :manager="managerLaufbahnplanung" :update-abiturpruefungsdaten="null" />
 
 			<!-- Übersicht über die Fachbelegungen in der Q-Phase / Block I -->
-			<schueler-abitur-zulassung-tabelle :server-mode :schule :manager="() => managerAbitur()!" />
+			<schueler-abitur-zulassung-tabelle :server-mode :schule :manager="() => managerAbitur()!" :update-abiturpruefungsdaten />
 		</template>
 	</div>
 </template>

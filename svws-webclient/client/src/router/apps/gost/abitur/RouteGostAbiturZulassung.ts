@@ -38,6 +38,7 @@ export class RouteGostAbiturZulassung extends RouteNode<any, RouteGostAbitur> {
 			ergebnisBelegpruefungMap: () => routeGostAbitur.data.ergebnisBelegpruefungMap,
 			managerAbiturMap: () => routeGostAbitur.data.managerAbiturMap,
 			copyAbiturdatenAusLeistungsdaten: routeGostAbitur.data.copyAbiturdatenAusLeistungsdaten,
+			updateAbiturpruefungsdaten: routeGostAbitur.data.updateAbiturpruefungsdaten,
 		};
 	}
 

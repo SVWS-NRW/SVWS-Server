@@ -1,191 +1,126 @@
 <template>
-	<table class="svws-ui-table h-full max-w-fit overflow-hidden" role="table" aria-label="Tabelle">
-		<thead class="svws-ui-thead" role="rowgroup" aria-label="Tabellenkopf">
-			<tr class="svws-ui-tr grid-cols-[24rem_20rem_8rem] text-ui-static" role="row" :class="{
-				'bg-ui-success text-ui-onsuccess' : hatZulassung,
-				'bg-ui-danger text-ui-ondanger' : !hatZulassung
-			}">
-				<td class="svws-ui-td text-center svws-divider" role="cell">
-					<div class="font-bold text-base leading-0">Zulassung:</div>
-					<div class="font-bold text-base leading-0"> {{ hatZulassung ? "Ja" : "Nein" }} </div>
+	<ui-table-grid name="Übersicht über die Prüfungsergebnisse" :footer-count="5" :data="faecherBelegtInQPhase"
+		:cell-format="cellFormat" :get-key="(fach: GostFach) => `${fach.id}`" class="h-full">
+		<template #header>
+			<th>Kürzel</th>
+			<th class="text-left"> Fach </th>
+			<th>Kursart</th>
+			<th>Q1.1</th>
+			<th>Q1.2</th>
+			<th>Q2.1</th>
+			<th>Q2.2</th>
+			<th>Summe</th>
+			<th>Abi</th>
+			<th>⌀</th>
+		</template>
+		<template #default="{ row: fach, index }">
+			<td :style="{ 'background-color': getFachfarbe(fach) }">{{ fach.kuerzelAnzeige }}</td>
+			<td class="text-left" :style="{ 'background-color': getFachfarbe(fach) }">{{ fach.bezeichnung }}</td>
+			<td class="ui-divider" :style="{ 'background-color': getFachfarbe(fach) }">{{ getKursart(fach) }}</td>
+			<template v-for="hj in GostHalbjahr.getQualifikationsphase()" :key="hj.id">
+				<td :ref="(updateAbiturpruefungsdaten === null) || !hatBelegung(fach, hj) ? undefined : inputMarkierungToggle(fach, index, hj)" :class="{
+					'ui-table-grid-button': hatBelegung(fach, hj) && (updateAbiturpruefungsdaten !== null),
+					'ui-divider': (hj === GostHalbjahr.Q22),
+					'bg-ui-brand-secondary font-bold': istGewertet(fach, hj),
+					'text-ui-danger': istDefizit(fach, hj),
+					'underline': istSchriftlich(fach, hj)
+				}">
+					{{ getNotenpunkteString(fach, hj) }}
 				</td>
-				<td class="svws-ui-td text-left" role="cell">
-					<div class="font-bold text-base">normierte Punktsumme:</div>
-					<div class="w-16 font-bold text-base">{{ manager().daten().block1PunktSummeNormiert }}</div>
-				</td>
-				<td class="svws-ui-td text-center" role="cell" />
-			</tr>
-			<tr class="svws-ui-tr grid-cols-[4rem_16rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem]" role="row">
-				<td class="svws-ui-td text-center" role="columnheader"> <div class="w-full">Kürzel</div> </td>
-				<td class="svws-ui-td" role="columnheader"> Fach </td>
-				<td class="svws-ui-td text-center" role="columnheader"> <div class="w-full">Kursart</div> </td>
-				<td class="svws-ui-td text-center" role="columnheader"> <div class="w-full">Q1.1</div> </td>
-				<td class="svws-ui-td text-center" role="columnheader"> <div class="w-full">Q1.2</div> </td>
-				<td class="svws-ui-td text-center" role="columnheader"> <div class="w-full">Q2.1</div> </td>
-				<td class="svws-ui-td text-center" role="columnheader"> <div class="w-full">Q2.2</div> </td>
-				<td class="svws-ui-td text-center" role="columnheader"> <div class="w-full">Summe</div> </td>
-				<td class="svws-ui-td text-center" role="columnheader"> <div class="w-full">Abi</div> </td>
-				<td class="svws-ui-td text-center" role="columnheader"> <div class="w-full">⌀</div> </td>
-			</tr>
-		</thead>
-		<tbody class="svws-ui-tbody h-full overflow-y-auto" role="rowgroup" aria-label="Tabelleninhalt">
-			<template v-for="fach in faecherBelegtInQPhase" :key="fach.id">
-				<tr class="svws-ui-tr grid-cols-[4rem_16rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem] text-ui-static" role="row">
-					<td class="svws-ui-td text-center" :style="{ 'background-color': getFachfarbe(fach) }" role="cell">
-						<div class="w-full">{{ fach.kuerzelAnzeige }}</div>
-					</td>
-					<td class="svws-ui-td" :style="{ 'background-color': getFachfarbe(fach) }" role="cell">
-						{{ fach.bezeichnung }}
-					</td>
-					<td class="svws-ui-td svws-divider text-center" :style="{ 'background-color': getFachfarbe(fach) }" role="cell">
-						<div class="w-full">{{ getKursart(fach) }}</div>
-					</td>
-					<template v-for="hj in GostHalbjahr.getQualifikationsphase()" :key="hj.id">
-						<td class="svws-ui-td text-center" :class="{
-							'svws-disabled': !hatBelegung(fach, hj),
-							'svws-divider': (hj === GostHalbjahr.Q22),
-							'bg-ui-brand-secondary font-bold': istGewertet(fach, hj),
-							'text-ui-danger': istDefizit(fach, hj),
-							'underline': istSchriftlich(fach, hj)
-						}" role="cell">
-							<div class="w-full">
-								{{ getNotenpunkteString(fach, hj) }}
-							</div>
-						</td>
-					</template>
-					<td class="svws-ui-td svws-divider text-center" role="cell">
-						<div class="w-full">{{ getFachSummeBlockI(fach) }}</div>
-					</td>
-					<td class="svws-ui-td text-center" role="cell">
-						<div class="w-full">{{ getAbiFach(fach) }}</div>
-					</td>
-					<td class="svws-ui-td text-center" role="cell">
-						<div class="w-full">{{ getDurchschnittAbiFach(fach) }}</div>
-					</td>
-				</tr>
 			</template>
-			<tr class="svws-ui-tr grid-cols-[24rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem] text-ui-static" role="row">
-				<td class="svws-ui-td svws-divider" role="cell">
-					<div class="w-full">Punktsumme der gewerteten Kurse</div>
+			<td class="ui-divider">{{ getFachSummeBlockI(fach) }}</td>
+			<td>{{ getAbiFach(fach) }}</td>
+			<td>{{ getDurchschnittAbiFach(fach) }}</td>
+		</template>
+		<template #footer="params">
+			<template v-if="params.i === 1">
+				<td class="col-span-3 ui-divider text-left">Punktsumme der gewerteten Kurse</td>
+				<td>{{ kursinfoQ11[0] }}</td>
+				<td>{{ kursinfoQ12[0] }}</td>
+				<td>{{ kursinfoQ21[0] }}</td>
+				<td class="ui-divider">{{ kursinfoQ22[0] }}</td>
+				<td class="ui-divider font-bold">{{ (manager().daten().block1PunktSummeGK ?? 0) + (manager().daten().block1PunktSummeLK ?? 0) }}</td>
+				<td class="col-span-2" />
+			</template>
+			<template v-else-if="params.i === 2">
+				<td class="col-span-3 ui-divider text-left">Anzahl der gewerteten Kurse</td>
+				<td>{{ kursinfoQ11[1] }}</td>
+				<td>{{ kursinfoQ12[1] }}</td>
+				<td>{{ kursinfoQ21[1] }}</td>
+				<td class="ui-divider">{{ kursinfoQ22[1] }}</td>
+				<td class="ui-divider font-bold">{{ anzahlKurse }}</td>
+				<td class="col-span-2" />
+			</template>
+			<template v-else-if="params.i === 3">
+				<td class="col-span-3 ui-divider text-left">Anzahl der gewerteten Defizite (GK/LK)</td>
+				<td>
+					<span :class="{ 'font-bold': kursinfoQ11[4] > 0 }">{{ kursinfoQ11[4] === 0 ? '-' : kursinfoQ11[4] }}</span>
+					/
+					<span :class="{ 'font-bold': kursinfoQ11[3] > 0 }">{{ kursinfoQ11[3] === 0 ? '-' : kursinfoQ11[3] }}</span>
 				</td>
-				<td class="svws-ui-td text-center" role="cell">
-					<div class="w-full">{{ kursinfoQ11[0] }}</div>
+				<td>
+					<span :class="{ 'font-bold': kursinfoQ12[4] > 0 }">{{ kursinfoQ12[4] === 0 ? '-' : kursinfoQ12[4] }}</span>
+					/
+					<span :class="{ 'font-bold': kursinfoQ12[3] > 0 }">{{ kursinfoQ12[3] === 0 ? '-' : kursinfoQ12[3] }}</span>
 				</td>
-				<td class="svws-ui-td text-center" role="cell">
-					<div class="w-full">{{ kursinfoQ12[0] }}</div>
+				<td>
+					<span :class="{ 'font-bold': kursinfoQ21[4] > 0 }">{{ kursinfoQ21[4] === 0 ? '-' : kursinfoQ21[4] }}</span>
+					/
+					<span :class="{ 'font-bold': kursinfoQ21[3] > 0 }">{{ kursinfoQ21[3] === 0 ? '-' : kursinfoQ21[3] }}</span>
 				</td>
-				<td class="svws-ui-td text-center" role="cell">
-					<div class="w-full">{{ kursinfoQ21[0] }}</div>
+				<td class="ui-divider">
+					<span :class="{ 'font-bold': kursinfoQ22[4] > 0 }">{{ kursinfoQ22[4] === 0 ? '-' : kursinfoQ22[4] }}</span>
+					/
+					<span :class="{ 'font-bold': kursinfoQ22[3] > 0 }">{{ kursinfoQ22[3] === 0 ? '-' : kursinfoQ22[3] }}</span>
 				</td>
-				<td class="svws-ui-td text-center svws-divider" role="cell">
-					<div class="w-full">{{ kursinfoQ22[0] }}</div>
+				<td class="ui-divider font-bold" :class="{ 'text-ui-danger': defiziteGesZuViele }">
+					<span :class="{ 'font-bold': defiziteGK > 0 }">{{ defiziteGK === 0 ? '-' : defiziteGK }}</span>
+					/
+					<span :class="{ 'font-bold': defiziteLK > 0 }">{{ defiziteLK === 0 ? '-' : defiziteLK }}</span>
 				</td>
-				<td class="svws-ui-td text-center svws-divider" role="cell">
-					<div class="w-full font-bold">{{ (manager().daten().block1PunktSummeGK ?? 0) + (manager().daten().block1PunktSummeLK ?? 0) }}</div>
+				<td class="col-span-2" />
+			</template>
+			<template v-else-if="params.i === 4">
+				<td class="col-span-3 ui-divider text-left">Durchschnitt der Notenpunkte</td>
+				<td>{{ getNotenpunkteDurchschnittOfHalbjahr(GostHalbjahr.Q11) }}</td>
+				<td>{{ getNotenpunkteDurchschnittOfHalbjahr(GostHalbjahr.Q12) }}</td>
+				<td>{{ getNotenpunkteDurchschnittOfHalbjahr(GostHalbjahr.Q21) }}</td>
+				<td class="ui-divider">{{ getNotenpunkteDurchschnittOfHalbjahr(GostHalbjahr.Q22) }}</td>
+				<td class="ui-divider font-bold">{{ formatNotenpunkteDurchschnitt(manager().daten().block1NotenpunkteDurchschnitt) }}</td>
+				<td class="col-span-2" />
+			</template>
+			<template v-else-if="params.i === 5">
+				<td class="ui-divider col-span-3 text-left font-bold" :class="{
+					'bg-ui-success text-ui-onsuccess' : hatZulassung,
+					'bg-ui-danger text-ui-ondanger' : !hatZulassung
+				}">
+					Zulassung: {{ hatZulassung ? "Ja" : "Nein" }}
 				</td>
-				<td class="svws-ui-td text-center" role="cell" />
-				<td class="svws-ui-td text-center" role="cell" />
-			</tr>
-			<tr class="svws-ui-tr grid-cols-[24rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem] text-ui-static" role="row">
-				<td class="svws-ui-td svws-divider" role="cell">
-					<div class="w-full">Anzahl der gewerteten Kurse</div>
-				</td>
-				<td class="svws-ui-td text-center" role="cell">
-					<div class="w-full">{{ kursinfoQ11[1] }}</div>
-				</td>
-				<td class="svws-ui-td text-center" role="cell">
-					<div class="w-full">{{ kursinfoQ12[1] }}</div>
-				</td>
-				<td class="svws-ui-td text-center" role="cell">
-					<div class="w-full">{{ kursinfoQ21[1] }}</div>
-				</td>
-				<td class="svws-ui-td text-center svws-divider" role="cell">
-					<div class="w-full">{{ kursinfoQ22[1] }}</div>
-				</td>
-				<td class="svws-ui-td text-center svws-divider" role="cell">
-					<div class="w-full font-bold">{{ anzahlKurse }}</div>
-				</td>
-				<td class="svws-ui-td text-center" role="cell" />
-				<td class="svws-ui-td text-center" role="cell" />
-			</tr>
-			<tr class="svws-ui-tr grid-cols-[24rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem] text-ui-static" role="row">
-				<td class="svws-ui-td svws-divider" role="cell">
-					<div class="w-full">Anzahl der gewerteten Defizite (GK/LK) </div>
-				</td>
-				<td class="svws-ui-td text-center" role="cell">
-					<div class="w-full">
-						<span :class="{ 'font-bold': kursinfoQ11[4] > 0 }">{{ kursinfoQ11[4] === 0 ? '-' : kursinfoQ11[4] }}</span>
-						/
-						<span :class="{ 'font-bold': kursinfoQ11[3] > 0 }">{{ kursinfoQ11[3] === 0 ? '-' : kursinfoQ11[3] }}</span>
-					</div>
-				</td>
-				<td class="svws-ui-td text-center" role="cell">
-					<div class="w-full">
-						<span :class="{ 'font-bold': kursinfoQ12[4] > 0 }">{{ kursinfoQ12[4] === 0 ? '-' : kursinfoQ12[4] }}</span>
-						/
-						<span :class="{ 'font-bold': kursinfoQ12[3] > 0 }">{{ kursinfoQ12[3] === 0 ? '-' : kursinfoQ12[3] }}</span>
-					</div>
-				</td>
-				<td class="svws-ui-td text-center" role="cell">
-					<div class="w-full">
-						<span :class="{ 'font-bold': kursinfoQ21[4] > 0 }">{{ kursinfoQ21[4] === 0 ? '-' : kursinfoQ21[4] }}</span>
-						/
-						<span :class="{ 'font-bold': kursinfoQ21[3] > 0 }">{{ kursinfoQ21[3] === 0 ? '-' : kursinfoQ21[3] }}</span>
-					</div>
-				</td>
-				<td class="svws-ui-td text-center svws-divider" role="cell">
-					<div class="w-full">
-						<span :class="{ 'font-bold': kursinfoQ22[4] > 0 }">{{ kursinfoQ22[4] === 0 ? '-' : kursinfoQ22[4] }}</span>
-						/
-						<span :class="{ 'font-bold': kursinfoQ22[3] > 0 }">{{ kursinfoQ22[3] === 0 ? '-' : kursinfoQ22[3] }}</span>
-					</div>
-				</td>
-				<td class="svws-ui-td text-center svws-divider" role="cell">
-					<div class="w-full font-bold" :class="{ 'text-ui-danger': defiziteGesZuViele }">
-						<span :class="{ 'font-bold': defiziteGK > 0 }">{{ defiziteGK === 0 ? '-' : defiziteGK }}</span>
-						/
-						<span :class="{ 'font-bold': defiziteLK > 0 }">{{ defiziteLK === 0 ? '-' : defiziteLK }}</span>
-					</div>
-				</td>
-				<td class="svws-ui-td text-center" role="cell" />
-				<td class="svws-ui-td text-center" role="cell" />
-			</tr>
-			<tr class="svws-ui-tr grid-cols-[24rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem] text-ui-static" role="row">
-				<td class="svws-ui-td svws-divider" role="cell">
-					<div class="w-full">Durchschnitt der Notenpunkte</div>
-				</td>
-				<td class="svws-ui-td text-center" role="cell">
-					<div class="w-full">{{ getNotenpunkteDurchschnittOfHalbjahr(GostHalbjahr.Q11) }}</div>
-				</td>
-				<td class="svws-ui-td text-center" role="cell">
-					<div class="w-full">{{ getNotenpunkteDurchschnittOfHalbjahr(GostHalbjahr.Q12) }}</div>
-				</td>
-				<td class="svws-ui-td text-center" role="cell">
-					<div class="w-full">{{ getNotenpunkteDurchschnittOfHalbjahr(GostHalbjahr.Q21) }}</div>
-				</td>
-				<td class="svws-ui-td text-center svws-divider" role="cell">
-					<div class="w-full">{{ getNotenpunkteDurchschnittOfHalbjahr(GostHalbjahr.Q22) }}</div>
-				</td>
-				<td class="svws-ui-td text-center svws-divider" role="cell">
-					<div class="w-full font-bold">{{ formatNotenpunkteDurchschnitt(manager().daten().block1NotenpunkteDurchschnitt) }}</div>
-				</td>
-				<td class="svws-ui-td text-center" role="cell" />
-				<td class="svws-ui-td text-center" role="cell" />
-			</tr>
-		</tbody>
-	</table>
+				<td class="ui-divider col-span-4 text-right font-bold"> normierte Punktsumme: </td>
+				<td class="ui-divider font-bold"> {{ manager().daten().block1PunktSummeNormiert }} </td>
+				<td class="col-span-2" />
+			</template>
+		</template>
+	</ui-table-grid>
 </template>
 
 <script setup lang="ts">
 
-	import { computed } from "vue";
-	import type { AbiturFachbelegungHalbjahr, Fachgruppe, GostFach, List} from "@core";
+	import type { ComponentPublicInstance} from "vue";
+	import { computed, watchEffect } from "vue";
+	import type { AbiturFachbelegung, AbiturFachbelegungHalbjahr, Fachgruppe, GostFach, List} from "@core";
 	import { Fach, RGBFarbe } from "@core";
 	import { ArrayList, GostHalbjahr } from "@core";
+	import { GridManager } from "@ui";
 
 	import type { SchuelerAbiturZulassungTabelleProps } from "./SchuelerAbiturZulassungTabelleProps";
 
 	const props = defineProps<SchuelerAbiturZulassungTabelleProps>();
+
+	const gridManager = new GridManager<string>();
+	const cellFormat = {
+		widths: ['4rem','16rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','1.25rem'],
+	};
 
 	const schuljahr = computed<number>(() => props.manager().getAbiturjahr() - 1);
 
@@ -321,6 +256,32 @@
 		const kursinfo = getKursInfo(halbjahr);
 		const avg = (kursinfo[2] === 0) ? null : Math.round((kursinfo[0] / kursinfo[2]) * 100.0) / 100.0;
 		return formatNotenpunkteDurchschnitt(avg);
+	}
+
+	function updateMarkierung(fach: GostFach, hj: GostHalbjahr, value: boolean) : void {
+		const fachbelegung = props.manager().getFachbelegungByID(fach.id);
+		if (fachbelegung === null)
+			return;
+		const partial = <Partial<AbiturFachbelegung>>{ fachID: fach.id, belegungen: fachbelegung.belegungen };
+		if (partial.belegungen === undefined)
+			return;
+		const belegungHalbjahr = partial.belegungen[hj.id];
+		if (belegungHalbjahr === null)
+			return;
+		belegungHalbjahr.block1gewertet = value;
+		if (props.updateAbiturpruefungsdaten !== null)
+			void props.updateAbiturpruefungsdaten(props.manager, partial);
+	}
+
+	function inputMarkierungToggle(fach: GostFach, index: number, hj: GostHalbjahr) {
+		const key = 'Markierung_' + fach.id + '_' + index + '_' + hj.id;
+		const setter = (value : boolean) => updateMarkierung(fach, hj, value);
+		const belegungHalbjahr = props.manager().getFachbelegungByID(fach.id)?.belegungen[hj.id] ?? null;
+		return (element : Element | ComponentPublicInstance<unknown> | null) => {
+			gridManager.applyInputToggle(key, hj.id, index, element, setter);
+			if (element !== null)
+				watchEffect(() => gridManager.update(key, belegungHalbjahr?.block1gewertet ?? false));
+		};
 	}
 
 </script>

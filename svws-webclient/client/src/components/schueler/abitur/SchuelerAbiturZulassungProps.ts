@@ -1,4 +1,4 @@
-import type { AbiturdatenManager, GostBelegpruefungErgebnis, SchuelerListeEintrag, SchuleStammdaten, ServerMode } from "@core";
+import type { AbiturdatenManager, AbiturFachbelegung, GostBelegpruefungErgebnis, SchuelerListeEintrag, SchuleStammdaten, ServerMode } from "@core";
 
 export interface SchuelerAbiturZulassungProps {
 	serverMode: ServerMode;
@@ -8,4 +8,5 @@ export interface SchuelerAbiturZulassungProps {
 	ergebnisBelegpruefung: () => GostBelegpruefungErgebnis;
 	managerAbitur: () => AbiturdatenManager | null;
 	copyAbiturdatenAusLeistungsdaten: (idSchueler: number) => Promise<void>;
+	updateAbiturpruefungsdaten: (manager: () => AbiturdatenManager, belegung: Partial<AbiturFachbelegung>) => Promise<void>;
 }

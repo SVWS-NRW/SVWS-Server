@@ -105,7 +105,7 @@
 
 <script setup lang="ts">
 
-	import { computed, ref, shallowRef, watchEffect, type ComponentPublicInstance } from "vue";
+	import { computed, shallowRef, watchEffect, type ComponentPublicInstance } from "vue";
 	import type { List, AbiturFachbelegung, Comparator, Fachgruppe, NoteKatalogEintrag, SchuelerListeEintrag, AbiturdatenManager , KursDaten, LehrerListeEintrag, JavaMap } from "@core";
 	import { GostHalbjahr, ArrayList, Fach, GostBesondereLernleistung, Note, RGBFarbe, DeveloperNotificationException, HashMap } from "@core";
 	import { GridManager, ObjectSelectManager } from "@ui";
