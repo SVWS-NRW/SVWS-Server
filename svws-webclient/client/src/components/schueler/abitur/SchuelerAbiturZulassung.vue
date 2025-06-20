@@ -38,10 +38,30 @@
 			</div>
 
 			<!-- Übersicht über die Fachbelegungen in der Q-Phase / Block I -->
-			<schueler-abitur-zulassung-tabelle :server-mode :schule :manager="managerLaufbahnplanung" :update-abiturpruefungsdaten="null" />
+			<div class="flex flex-row">
+				<div class="min-w-fit">
+					<schueler-abitur-zulassung-tabelle :server-mode :schule :manager="managerLaufbahnplanung" :update-abiturpruefungsdaten="null" />
+				</div>
+				<div class="flex flex-col" v-if="!managerLaufbahnplanung().getErgebnisMarkierpruefung().erfolgreich">
+					<div class="font-bold">Hinweise:</div>
+					<template v-for="logentry in managerLaufbahnplanung().getErgebnisMarkierpruefung().log" :key="logentry">
+						{{ logentry }}
+					</template>
+				</div>
+			</div>
 
 			<!-- Übersicht über die Fachbelegungen in der Q-Phase / Block I -->
-			<schueler-abitur-zulassung-tabelle :server-mode :schule :manager="() => managerAbitur()!" :update-abiturpruefungsdaten />
+			<div class="flex flex-row">
+				<div class="min-w-fit">
+					<schueler-abitur-zulassung-tabelle :server-mode :schule :manager="() => managerAbitur()!" :update-abiturpruefungsdaten />
+				</div>
+				<div class="flex flex-col" v-if="!managerAbitur()!.getErgebnisMarkierpruefung().erfolgreich">
+					<div class="font-bold">Hinweise:</div>
+					<template v-for="logentry in managerAbitur()!.getErgebnisMarkierpruefung().log" :key="logentry">
+						{{ logentry }}
+					</template>
+				</div>
+			</div>
 		</template>
 	</div>
 </template>

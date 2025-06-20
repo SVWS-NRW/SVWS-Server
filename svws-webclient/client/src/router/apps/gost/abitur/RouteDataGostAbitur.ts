@@ -167,6 +167,7 @@ export class RouteDataGostAbitur extends RouteData<RouteStateDataGostAbitur> {
 				break;
 			}
 		}
+		manager().pruefeZulassung();
 		AbiturdatenManager.berechnePruefungsergebnis(orig);
 		this.commit();
 	}

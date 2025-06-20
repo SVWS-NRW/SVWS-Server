@@ -1,6 +1,5 @@
 <template>
-	<ui-table-grid name="Übersicht über die Prüfungsergebnisse" :footer-count="5" :data="faecherBelegtInQPhase"
-		:cell-format="cellFormat" :get-key="(fach: GostFach) => `${fach.id}`" class="h-full">
+	<ui-table-grid name="Übersicht über die Prüfungsergebnisse" :footer-count="5" :data="faecherBelegtInQPhase" :cell-format="cellFormat" :get-key="getKey">
 		<template #header>
 			<th>Kürzel</th>
 			<th class="text-left"> Fach </th>
@@ -121,6 +120,15 @@
 	const cellFormat = {
 		widths: ['4rem','16rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','1.25rem'],
 	};
+	function getKey(fach: GostFach): string {
+		let result = props.manager().daten().schuelerID + "_" + fach.id;
+		const fachbelegung = props.manager().getFachbelegungByID(fach.id);
+		if (fachbelegung === null)
+			return result;
+		for (const halbjahr of GostHalbjahr.getQualifikationsphase())
+			result += "_" + (fachbelegung.belegungen[halbjahr.id]?.block1gewertet ?? "");
+		return result;
+	}
 
 	const schuljahr = computed<number>(() => props.manager().getAbiturjahr() - 1);
 

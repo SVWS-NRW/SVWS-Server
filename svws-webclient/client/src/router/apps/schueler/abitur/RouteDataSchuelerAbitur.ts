@@ -136,6 +136,7 @@ export class RouteDataSchuelerAbitur extends RouteData<RouteStateDataSchuelerAbi
 				break;
 			}
 		}
+		manager().pruefeZulassung();
 		AbiturdatenManager.berechnePruefungsergebnis(orig);
 		this.commit();
 	}

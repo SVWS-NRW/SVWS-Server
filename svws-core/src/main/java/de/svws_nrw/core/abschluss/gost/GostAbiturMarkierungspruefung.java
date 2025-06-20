@@ -155,8 +155,7 @@ public final class GostAbiturMarkierungspruefung {
 				"Es müssen mindestens zwei Kurse in Sozialwissenschaften markiert werden.");
 
 		// Schritt 13: Prüfe, ob eine Gesellschaftswissenschaft mit Markierungen in allen Halbjahren der QPhase existiert
-		success = success && pruefeExistiertMitAnzahlMarkierungen(GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH, 4,
-				"Es muss ein gesellschaftswissenschaftliches Fach durchgängig markiert sein.");
+		success = success && pruefeGesellschaftswissenschaftMarkierung();
 
 		// Schritt 14/15: Prüfe, ob Religion oder ein Ersatzfach mit zwei Markierungen berücksichtigt wurde
 		success = success && pruefeReligionsOderErsatzMarkierungen();
@@ -358,11 +357,14 @@ public final class GostAbiturMarkierungspruefung {
 				// Es darf keine 0-Punkte-Belegung markiert werden
 				final Integer np = manager.getNotenpunkteOfFachbelegungHalbjahr(belegung.belegungen[halbjahr.id]);
 				if ((np == null) || (np == 0)) {
-					found = false;
-					break;
+					if (((halbjahr == GostHalbjahr.Q21) || (halbjahr == GostHalbjahr.Q22)) || manager.hatMarkierungHalbjahr(belegung, halbjahr)) {
+						found = false;
+						break;
+					}
+					continue;
 				}
 				// und es muss eine Markierung vorliegen
-				if (!manager.hatMarkierungHalbjahr(belegung, halbjahr)) {
+				if (((halbjahr == GostHalbjahr.Q21) || (halbjahr == GostHalbjahr.Q22)) && !manager.hatMarkierungHalbjahr(belegung, halbjahr)) {
 					found = false;
 					break;
 				}
@@ -380,7 +382,7 @@ public final class GostAbiturMarkierungspruefung {
 			final String fs = (tmpFach == null) ? "" : GostFachUtils.getFremdsprache(tmpFach);
 			for (final @NotNull AbiturFachbelegung belegung : belegungen) {
 				// Aber kein bilinguales Sachfach, welches als Sprache die erste Fremdsprache hat
-				final GostFach sachfach = manager.getFach(this.fremdsprache);
+				final GostFach sachfach = manager.getFach(belegung);
 				if ((sachfach == null) || (sachfach.biliSprache == null) || (sachfach.biliSprache.isBlank()) || (sachfach.biliSprache.equals(fs)))
 					continue;
 				boolean found = true;
@@ -393,11 +395,14 @@ public final class GostAbiturMarkierungspruefung {
 					// Es darf keine 0-Punkte-Belegung markiert werden
 					final Integer np = manager.getNotenpunkteOfFachbelegungHalbjahr(belegung.belegungen[halbjahr.id]);
 					if ((np == null) || (np == 0)) {
-						found = false;
-						break;
+						if (((halbjahr == GostHalbjahr.Q21) || (halbjahr == GostHalbjahr.Q22)) || manager.hatMarkierungHalbjahr(belegung, halbjahr)) {
+							found = false;
+							break;
+						}
+						continue;
 					}
 					// und es muss eine Markierung vorliegen
-					if (!manager.hatMarkierungHalbjahr(belegung, halbjahr)) {
+					if (((halbjahr == GostHalbjahr.Q21) || (halbjahr == GostHalbjahr.Q22)) && !manager.hatMarkierungHalbjahr(belegung, halbjahr)) {
 						found = false;
 						break;
 					}
@@ -420,9 +425,6 @@ public final class GostAbiturMarkierungspruefung {
 		final @NotNull List<AbiturFachbelegung> belegungen =
 				manager.filterFremdspracheNeuEinsetzend(manager.getFachbelegungen(GostFachbereich.FREMDSPRACHE));
 		for (final @NotNull AbiturFachbelegung belegung : belegungen) {
-			// Aber nicht die Fremdsprache, die als erstes gefunden wurde
-			if (belegung == this.fremdsprache)
-				continue;
 			boolean found = true;
 			for (final GostHalbjahr halbjahr : GostHalbjahr.getQualifikationsphase()) {
 				// Alle Halbjahre müssen belegt sein
@@ -554,12 +556,15 @@ public final class GostAbiturMarkierungspruefung {
 	}
 
 
-	private boolean pruefeExistiertMitAnzahlMarkierungen(final @NotNull GostFachbereich fb, final int min, final @NotNull String fehler) {
-		final @NotNull List<AbiturFachbelegung> belegungen = manager.getFachbelegungen(fb);
-		for (final @NotNull AbiturFachbelegung belegung : belegungen)
-			if (manager.zaehleMarkierungenQualifikationsphase(belegung) >= min)
-				return true;
-		ergebnis.log.add(fehler);
+	private boolean pruefeGesellschaftswissenschaftMarkierung() {
+		final @NotNull List<AbiturFachbelegung> belegungen = manager.getFachbelegungen(GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH);
+		if (belegungen.isEmpty()) {
+			ergebnis.log.add("Es muss mindestens eine Gesellschaftswissenschaft belegt sein, damit eine Abiturzulassung möglich ist.");
+			return false;
+		}
+		if (manager.pruefeMarkierungExistiertDurchgaengig(belegungen) != null)
+			return true;
+		ergebnis.log.add("Es muss mindestens eine Gesellschaftswissenschaft durchgängig markiert sein, damit eine Abiturzulassung möglich ist.");
 		return false;
 	}
 
@@ -589,14 +594,14 @@ public final class GostAbiturMarkierungspruefung {
 			return false;
 		}
 		// Wurden ein Kurs Religionslehre in Q1.1 bis Q2.2 und wurden mindestens 9 Kurse aller gesellschaftswissenschaftlichen Fächer (auch Zusatzkurse) in Q1.1 bis Q2.2 markiert?
-		if ((countRE == 1) && (countGW >= 9))
+		if ((countRE == 1) && (countGW + countPL >= 9))
 			return true;
 		if (manager.pruefeBelegungExistiert(belRE, GostHalbjahr.Q11) || manager.pruefeBelegungExistiert(belRE, GostHalbjahr.Q11)) {
 			ergebnis.log.add("Es müssen zwei Kurse Religionslehre oder ein Kurs Religionslehre und ein Kurs des Ersatzfaches markiert werden.");
 			return false;
 		}
 		// Wurden mindestens 10 Kurse aller gesellschaftswissenschaftlichen Fächer (auch Zusatzkurse) markiert?
-		if (countGW >= 10)
+		if (countGW + countPL >= 10)
 			return true;
 		ergebnis.log.add(
 				"Es müssen zwei Kurse Religionslehre oder ein Kurs Religionslehre und ein Kurs des Ersatzfaches oder zwei Kurse des Ersatzfaches markiert werden.");
@@ -610,31 +615,9 @@ public final class GostAbiturMarkierungspruefung {
 			ergebnis.log.add("Es muss mindestens eine klassische Naturwissenschaft belegt sein, damit eine Abiturzulassung möglich ist.");
 			return false;
 		}
-		for (final @NotNull AbiturFachbelegung belegung : belegungen) {
-			boolean found = true;
-			for (final GostHalbjahr halbjahr : GostHalbjahr.getQualifikationsphase()) {
-				// Alle Halbjahre müssen belegt sein
-				if (belegung.belegungen[halbjahr.id] == null) {
-					found = false;
-					break;
-				}
-				// Es darf keine 0-Punkte-Belegung markiert werden
-				final Integer np = manager.getNotenpunkteOfFachbelegungHalbjahr(belegung.belegungen[halbjahr.id]);
-				if ((np == null) || (np == 0)) {
-					found = false;
-					break;
-				}
-				// und es muss eine Markierung vorliegen
-				if (!manager.hatMarkierungHalbjahr(belegung, halbjahr)) {
-					found = false;
-					break;
-				}
-			}
-			if (found) {
-				this.naturwissenschaft = belegung;
-				return true;
-			}
-		}
+		this.naturwissenschaft = manager.pruefeMarkierungExistiertDurchgaengig(belegungen);
+		if (this.naturwissenschaft != null)
+			return true;
 		ergebnis.log.add("Es muss mindestens eine klassische Naturwissenschaft durchgängig markiert sein, damit eine Abiturzulassung möglich ist.");
 		return false;
 	}
@@ -645,7 +628,8 @@ public final class GostAbiturMarkierungspruefung {
 		final @NotNull List<AbiturFachbelegung> belegungen = manager.getFachbelegungen(GostFachbereich.NATURWISSENSCHAFTLICH);
 		for (final @NotNull AbiturFachbelegung belegung : belegungen) {
 			// Aber nicht die Naturwissenschaft, die als erstes gefunden wurde
-			if (belegung == this.naturwissenschaft)
+			// (Prüfe die ID, da es sich evtl. auch um ein bilinguales Sachfach handeln kann, welches verlassen wurde)
+			if (belegung.fachID == this.naturwissenschaft.fachID)
 				continue;
 			boolean found = true;
 			for (final GostHalbjahr halbjahr : GostHalbjahr.getQualifikationsphase()) {
@@ -657,11 +641,14 @@ public final class GostAbiturMarkierungspruefung {
 				// Es darf keine 0-Punkte-Belegung markiert werden
 				final Integer np = manager.getNotenpunkteOfFachbelegungHalbjahr(belegung.belegungen[halbjahr.id]);
 				if ((np == null) || (np == 0)) {
-					found = false;
-					break;
+					if (((halbjahr == GostHalbjahr.Q21) || (halbjahr == GostHalbjahr.Q22)) || manager.hatMarkierungHalbjahr(belegung, halbjahr)) {
+						found = false;
+						break;
+					}
+					continue;
 				}
 				// und es muss eine Markierung vorliegen
-				if (!manager.hatMarkierungHalbjahr(belegung, halbjahr)) {
+				if (((halbjahr == GostHalbjahr.Q21) || (halbjahr == GostHalbjahr.Q22)) && !manager.hatMarkierungHalbjahr(belegung, halbjahr)) {
 					found = false;
 					break;
 				}

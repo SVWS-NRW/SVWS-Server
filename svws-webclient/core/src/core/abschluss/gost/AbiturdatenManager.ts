@@ -2351,6 +2351,51 @@ export class AbiturdatenManager extends JavaObject {
 	}
 
 	/**
+	 * Prüft, ob eine Belegung eines der angegebenen Fächer mit den angegebenen Halbjahren existiert,
+	 * bei dem alle Halbjahre der Qualifikationsphase markiert sind und keine 0-Punkte Kurse beinhalten.
+	 * Die erste gefundene Belegung wird dann zurückgegeben.
+	 * Ist keine solche Fachbelegung gegeben, so schlägt die Prüfung fehl und es wird null zurückgegeben.
+	 * In dieser Methode wird ggf. auch geprüft, ob weitere Fachbelegungen existieren, welche das gleiche
+	 * Statistik-Kürzel haben und Ersatzweise eine Halbjahres-Belegung ersetzen können. Dies ist z.B. bei bilingualen
+	 * Fächern nötig oder bei der Unterscheidung von Sport-Profilen. In einem solchen Fall wird
+	 * die erste Belegung für das Fach zurückgegeben, welches evtl. nicht alle Belegungen beinhaltet
+	 *
+	 * @param fachbelegungen    die zu prüfenden Fachbelegungen
+	 *
+	 * @return eine Fachbelegung mit den Markierung in den Halbjahren der Qualifikationsphase und ansonsten null
+	 */
+	public pruefeMarkierungExistiertDurchgaengig(fachbelegungen : List<AbiturFachbelegung> | null) : AbiturFachbelegung | null {
+		if (fachbelegungen === null)
+			return null;
+		for (const fachbelegung of fachbelegungen) {
+			const fach : GostFach | null = this.faecherManager.get(fachbelegung.fachID);
+			if (fach === null)
+				continue;
+			const alleBelegungen : List<AbiturFachbelegung> | null = this.getFachbelegungByFachkuerzel(fach.kuerzel);
+			if ((alleBelegungen === null) || (alleBelegungen.isEmpty()))
+				continue;
+			let hatBelegung : boolean = true;
+			for (const halbjahr of GostHalbjahr.getQualifikationsphase()) {
+				let hatHalbjahresBelegung : boolean = false;
+				for (const aktFachbelegung of alleBelegungen) {
+					const belegungHalbjahr : AbiturFachbelegungHalbjahr | null = aktFachbelegung.belegungen[halbjahr.id];
+					if ((belegungHalbjahr !== null) && (!AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr)) && (belegungHalbjahr.block1gewertet !== null) && (belegungHalbjahr.block1gewertet)) {
+						hatHalbjahresBelegung = true;
+						break;
+					}
+				}
+				if (!hatHalbjahresBelegung) {
+					hatBelegung = false;
+					break;
+				}
+			}
+			if (hatBelegung)
+				return fachbelegung;
+		}
+		return null;
+	}
+
+	/**
 	 * Zählt die Anzahl der Markierungen bei der Fachbelegung in allen Halbjahren der Qualifikationsphase.
 	 * Ist belegung null, so wird 0 zurückgegeben.
 	 *
@@ -2410,7 +2455,7 @@ export class AbiturdatenManager extends JavaObject {
 				if ((belegungHalbjahr === null) || (belegungHalbjahr.block1gewertet === null) || (!belegungHalbjahr.block1gewertet))
 					continue;
 				const np : number | null = this.getNotenpunkteOfFachbelegungHalbjahr(belegungHalbjahr);
-				if ((np === null) || (np === 5))
+				if ((np === null) || (np === 0))
 					count++;
 			}
 		}
@@ -2604,27 +2649,9 @@ export class AbiturdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Wendet das Ergebnis des Markierungsergebnis auf diese Belegung an.
-	 *
-	 * @return true, wenn es erfolgreich angewendet wurde, und ansonsten false
+	 * Führt die Berechnung der Zulassung und Nutzung der zuvor markierten Kurse durch.
 	 */
-	public applyErgebnisMarkierungsalgorithmus() : boolean {
-		if (!this.markierungsErgebnis.erfolgreich) {
-			this.abidaten.block1Zulassung = null;
-			return false;
-		}
-		for (const markierung of this.markierungsErgebnis.markierungen) {
-			const belegung : AbiturFachbelegung | null = this.getFachbelegungByID(markierung.idFach);
-			if (belegung === null)
-				return false;
-			const halbjahr : GostHalbjahr | null = GostHalbjahr.fromID(markierung.idHalbjahr);
-			if (halbjahr === null)
-				return false;
-			const belegungHalbjahr : AbiturFachbelegungHalbjahr | null = belegung.belegungen[markierung.idHalbjahr];
-			if (belegungHalbjahr === null)
-				return false;
-			belegungHalbjahr.block1gewertet = markierung.markiert;
-		}
+	public pruefeZulassung() : void {
 		this.abidaten.block1AnzahlKurse = 0;
 		this.abidaten.block1DefiziteGesamt = 0;
 		this.abidaten.block1DefiziteLK = 0;
@@ -2666,6 +2693,33 @@ export class AbiturdatenManager extends JavaObject {
 		this.abidaten.block1NotenpunkteDurchschnitt = Math.round((summeNotenpunkte / anzahlKurse) * 100.0) / 100.0;
 		this.abidaten.block1Zulassung = (this.abidaten.block1PunktSummeNormiert >= 200) && (((this.abidaten.block1AnzahlKurse >= 35) && (this.abidaten.block1AnzahlKurse <= 37) && (this.abidaten.block1DefiziteGesamt <= 7)) || ((this.abidaten.block1AnzahlKurse >= 38) && (this.abidaten.block1DefiziteGesamt <= 8)));
 		this.pruefeMarkierungen();
+		if (!this.markierpruefungsergebnis.erfolgreich)
+			this.abidaten.block1Zulassung = false;
+	}
+
+	/**
+	 * Wendet das Ergebnis des Markierungsergebnis auf diese Belegung an.
+	 *
+	 * @return true, wenn es erfolgreich angewendet wurde, und ansonsten false
+	 */
+	public applyErgebnisMarkierungsalgorithmus() : boolean {
+		if (!this.markierungsErgebnis.erfolgreich) {
+			this.abidaten.block1Zulassung = null;
+			return false;
+		}
+		for (const markierung of this.markierungsErgebnis.markierungen) {
+			const belegung : AbiturFachbelegung | null = this.getFachbelegungByID(markierung.idFach);
+			if (belegung === null)
+				return false;
+			const halbjahr : GostHalbjahr | null = GostHalbjahr.fromID(markierung.idHalbjahr);
+			if (halbjahr === null)
+				return false;
+			const belegungHalbjahr : AbiturFachbelegungHalbjahr | null = belegung.belegungen[markierung.idHalbjahr];
+			if (belegungHalbjahr === null)
+				return false;
+			belegungHalbjahr.block1gewertet = markierung.markiert;
+		}
+		this.pruefeZulassung();
 		return true;
 	}
 
