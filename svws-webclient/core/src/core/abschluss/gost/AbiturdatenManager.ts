@@ -357,7 +357,7 @@ export class AbiturdatenManager extends JavaObject {
 				continue;
 			let ziel : AbiturFachbelegung | null = null;
 			let letztes : GostHalbjahr = GostHalbjahr.EF2;
-			for (const belegung of this.abidaten.fachbelegungen) {
+			for (const belegung of belegungen) {
 				let halbjahr : GostHalbjahr | null = letztes.next();
 				while (halbjahr !== null) {
 					const belegungHalbjahr : AbiturFachbelegungHalbjahr | null = belegung.belegungen[halbjahr.id];
@@ -370,7 +370,7 @@ export class AbiturdatenManager extends JavaObject {
 			}
 			if (ziel === null)
 				continue;
-			for (const belegung of this.abidaten.fachbelegungen) {
+			for (const belegung of belegungen) {
 				if (belegung as unknown === ziel as unknown)
 					continue;
 				for (const halbjahr of GostHalbjahr.values()) {

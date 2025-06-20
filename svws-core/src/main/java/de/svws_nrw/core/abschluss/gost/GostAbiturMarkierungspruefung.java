@@ -624,6 +624,8 @@ public final class GostAbiturMarkierungspruefung {
 
 
 	private void pruefeAufWeitereNaturwissenschaft() {
+		if (this.naturwissenschaft == null)
+			return;
 		this.hatWeitereNaturwissenschaft = false;
 		final @NotNull List<AbiturFachbelegung> belegungen = manager.getFachbelegungen(GostFachbereich.NATURWISSENSCHAFTLICH);
 		for (final @NotNull AbiturFachbelegung belegung : belegungen) {

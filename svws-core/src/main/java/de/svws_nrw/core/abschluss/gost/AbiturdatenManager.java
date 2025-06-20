@@ -351,7 +351,7 @@ public class AbiturdatenManager {
 			// Bestimme die Fachbelegung, welche die letzte Belegung hat und die anderen Halbjahresbelegungen "aufnehmen" soll
 			AbiturFachbelegung ziel = null;
 			@NotNull GostHalbjahr letztes = GostHalbjahr.EF2;
-			for (final @NotNull AbiturFachbelegung belegung : abidaten.fachbelegungen) {
+			for (final @NotNull AbiturFachbelegung belegung : belegungen) {
 				GostHalbjahr halbjahr = letztes.next();
 				while (halbjahr != null) {
 					final AbiturFachbelegungHalbjahr belegungHalbjahr = belegung.belegungen[halbjahr.id];
@@ -367,7 +367,7 @@ public class AbiturdatenManager {
 			if (ziel == null)
 				continue;
 			// Kopiere die Halbjahresbelegungen, sofern diese keine gültige Halbjahresbelegung der Zielbelegung überschreiben würden
-			for (final @NotNull AbiturFachbelegung belegung : abidaten.fachbelegungen) {
+			for (final @NotNull AbiturFachbelegung belegung : belegungen) {
 				if (belegung == ziel)
 					continue;
 				for (final @NotNull GostHalbjahr halbjahr : GostHalbjahr.values()) {

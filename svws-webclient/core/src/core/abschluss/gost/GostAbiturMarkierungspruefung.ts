@@ -531,10 +531,12 @@ export class GostAbiturMarkierungspruefung extends JavaObject {
 	}
 
 	private pruefeAufWeitereNaturwissenschaft() : void {
+		if (this.naturwissenschaft === null)
+			return;
 		this.hatWeitereNaturwissenschaft = false;
 		const belegungen : List<AbiturFachbelegung> = this.manager.getFachbelegungen(GostFachbereich.NATURWISSENSCHAFTLICH);
 		for (const belegung of belegungen) {
-			if (belegung as unknown === this.naturwissenschaft as unknown)
+			if (belegung.fachID === this.naturwissenschaft.fachID)
 				continue;
 			let found : boolean = true;
 			for (const halbjahr of GostHalbjahr.getQualifikationsphase()) {
