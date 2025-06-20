@@ -1,6 +1,6 @@
 {
 	"index": 170,
-	"version": 3,
+	"version": 4,
 	"fachklassen": [
 		{
 			"schluessel": "101",
@@ -396,12 +396,8 @@
 				"bezeichnungM": "Allgemeine Hochschulreife / Ingenieurwissenschaften",
 				"bezeichnungW": "Allgemeine Hochschulreife / Ingenieurwissenschaften",
 				"gueltigVon": 2014,
-				"gueltigBis": null
-			} ]
-		}, {
-			"schluessel": "121",
-			"schluessel2": "00",
-			"historie": [ {
+				"gueltigBis": 2024
+			}, {
 				"id": 1701210000,
 				"istAusgelaufen": false,
 				"berufsfeldGruppe": "T",
