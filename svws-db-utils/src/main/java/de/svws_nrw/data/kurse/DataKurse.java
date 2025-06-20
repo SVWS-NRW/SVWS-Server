@@ -1,5 +1,6 @@
 package de.svws_nrw.data.kurse;
 
+import de.svws_nrw.db.schema.Schema;
 import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
@@ -105,8 +106,9 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 	@Override
 	protected void mapAttribute(final DTOKurs dto, final String name, final Object value, final Map<String, Object> map) throws ApiOperationException {
 		switch (name) {
+			case "idSchuljahresabschnitt" -> dto.Schuljahresabschnitts_ID = JSONMapper.convertToLong(value, false, "idSchuljahresabschnitt");
 			case "idFach" -> {
-				final Long idFach = JSONMapper.convertToLong(value, true);
+				final Long idFach = JSONMapper.convertToLong(value, true, "idFach");
 				if (idFach == null)
 					throw new ApiOperationException(Status.BAD_REQUEST, "Die ID des Faches darf nicht null sein.");
 				final DTOFach fach = conn.queryByKey(DTOFach.class, idFach);
@@ -115,33 +117,36 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 				dto.Fach_ID = idFach;
 			}
 			case "lehrer" -> {
-				dto.Lehrer_ID = JSONMapper.convertToLong(value, true);
+				dto.Lehrer_ID = JSONMapper.convertToLong(value, true, "lehrer");
 				if (dto.Lehrer_ID != null) {
 					final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, dto.Lehrer_ID);
 					if (lehrer == null)
 						throw new ApiOperationException(Status.NOT_FOUND, "Es konnte kein Lehrer mit der angegebenen ID gefunden werden.");
 				}
 			}
-			case "kuerzel" -> dto.KurzBez = JSONMapper.convertToString(value, false, false, 21);
+			case "kuerzel" -> dto.KurzBez =
+					JSONMapper.convertToString(value, false, false, Schema.tab_Kurse.col_KurzBez.datenlaenge(), "kuerzel");
 			case "kursartAllg" -> {
-				dto.KursartAllg = JSONMapper.convertToString(value, false, true, 11);
+				dto.KursartAllg = JSONMapper.convertToString(value, false, true, Schema.tab_Kurse.col_KursartAllg.datenlaenge(), "kursartAllg");
 				// TODO Prüfe Kursart
 			}
-			case "sortierung" -> dto.Sortierung = JSONMapper.convertToIntegerInRange(value, false, 0, Integer.MAX_VALUE);
-			case "istSichtbar" -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false);
-			case "wochenstunden" -> dto.WochenStd = JSONMapper.convertToIntegerInRange(value, false, 0, 40);
+			case "sortierung" -> dto.Sortierung = JSONMapper.convertToIntegerInRange(value, false, 0, Integer.MAX_VALUE, "sortierung");
+			case "istSichtbar" -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false, "istSichtbar");
+			case "wochenstunden" -> dto.WochenStd = JSONMapper.convertToIntegerInRange(value, false, 0, 40, "wochenstunden");
 			case "wochenstundenLehrer" -> {
-				dto.WochenstdKL = JSONMapper.convertToDouble(value, true);
+				dto.WochenstdKL = JSONMapper.convertToDouble(value, true, "wochenstundenLehrer");
 				if (dto.WochenstdKL == null)
 					dto.WochenstdKL = 0.0;
 			}
-			case "idKursFortschreibungsart" -> dto.Fortschreibungsart = KursFortschreibungsart.fromID(JSONMapper.convertToIntegerInRange(value, false, 0, 4));
+			case "idKursFortschreibungsart" -> dto.Fortschreibungsart =
+					KursFortschreibungsart.fromID(JSONMapper.convertToIntegerInRange(value, false, 0, 4, "idKursFortschreibungsart"));
 			case "schulnummer" -> {
-				dto.SchulNr = JSONMapper.convertToIntegerInRange(value, true, 100000, 999999);
+				dto.SchulNr = JSONMapper.convertToIntegerInRange(value, true, 100000, 999999, "schulnummer");
 				// TODO Prüfe die Schulnummer anhand des Katalogs
 			}
-			case "istEpochalunterricht" -> dto.EpochU = JSONMapper.convertToBoolean(value, false);
-			case "bezeichnungZeugnis" -> dto.ZeugnisBez = JSONMapper.convertToString(value, true, true, 131);
+			case "istEpochalunterricht" -> dto.EpochU = JSONMapper.convertToBoolean(value, false, "istEpochalunterricht");
+			case "bezeichnungZeugnis" -> dto.ZeugnisBez =
+					JSONMapper.convertToString(value, true, true, Schema.tab_Kurse.col_ZeugnisBez.datenlaenge(), "bezeichnungZeugnis");
 			case "schienen" -> {
 				final List<Integer> neu = JSONMapper.convertToListOfInteger(value, false);
 				final List<Integer> vorher = convertSchienenStrToList(dto.Schienen);

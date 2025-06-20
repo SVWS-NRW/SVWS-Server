@@ -86,10 +86,8 @@
 
 	const jahrgangsListe = computed<List<JahrgangsDaten>>(() => {
 		const result = new ArrayList<JahrgangsDaten>();
-		for (const jg of props.manager().jahrgaenge.list()) {
-			if (jg.kuerzel !== "E3") // Das dritte Jahr der Schuleingangsphase sollte nicht für einen Jahrgang einer Klasse verwendet werden, da es Schüler-spezifisch ist
-				result.add(jg);
-		}
+		for (const jg of props.manager().jahrgaenge.list())
+			result.add(jg);
 		return result;
 	});
 

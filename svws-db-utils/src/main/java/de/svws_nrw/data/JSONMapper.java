@@ -297,30 +297,47 @@ public final class JSONMapper {
 	 *
 	 * @param obj   das zu konvertierende Objekt
 	 * @param nullable   gibt an, ob das Ergebnis auch null sein darf oder nicht
+	 * @param attrName   der Name des Attributes oder null
+	 *
+	 * @return das konvertierte Double-Objekt
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public static Double convertToDouble(final Object obj, final boolean nullable, final String attrName) throws ApiOperationException {
+		if ((obj == null) && nullable)
+			return null;
+		return switch (obj) {
+			case final Float f -> f.doubleValue();
+			case final Double d -> d;
+			case final Byte b -> b.doubleValue();
+			case final Short s -> s.doubleValue();
+			case final Integer i -> i.doubleValue();
+			case final Long l -> l.doubleValue();
+			case final String s -> {
+				try {
+					yield Double.valueOf(s);
+				} catch (final NumberFormatException e) {
+					throw new ApiOperationException(Status.BAD_REQUEST, formatMessage("Der Wert kann nicht in einen Double umgewandelt werden", attrName));
+				}
+			}
+			case null -> throw new ApiOperationException(Status.BAD_REQUEST, formatMessage("Der Wert null ist nicht erlaubt", attrName));
+			default -> throw new ApiOperationException(Status.BAD_REQUEST, formatMessage("Fehler beim Konvertieren zu Long", attrName));
+		};
+	}
+
+	/**
+	 * Konvertiert das übergebene Objekt in einen Double-Wert, sofern es sich um ein
+	 * Number-Objekt handelt.
+	 *
+	 * @param obj   das zu konvertierende Objekt
+	 * @param nullable   gibt an, ob das Ergebnis auch null sein darf oder nicht
 	 *
 	 * @return das konvertierte Double-Objekt
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static Double convertToDouble(final Object obj, final boolean nullable) throws ApiOperationException {
-		if (obj == null) {
-			if (nullable)
-				return null;
-			throw new ApiOperationException(Status.BAD_REQUEST, "Der Wert null ist nicht erlaubt.");
-		}
-		if (obj instanceof final Float f)
-			return f.doubleValue();
-		if (obj instanceof final Double d)
-			return d.doubleValue();
-		if (obj instanceof final Byte b)
-			return b.doubleValue();
-		if (obj instanceof final Short s)
-			return s.doubleValue();
-		if (obj instanceof final Integer i)
-			return i.doubleValue();
-		if (obj instanceof final Long l)
-			return l.doubleValue();
-		throw new ApiOperationException(Status.BAD_REQUEST, "Fehler beim Konvertieren zu Long");
+		return convertToDouble(obj, nullable, null);
 	}
 
 	/**

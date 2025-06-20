@@ -33,6 +33,8 @@ export class RouteKurseNeu extends RouteNode<any, RouteKurse> {
 			gotoDefaultView: routeKurse.data.gotoDefaultView,
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
+			goToDefaultView: routeKurse.data.gotoDefaultView,
+			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 }
