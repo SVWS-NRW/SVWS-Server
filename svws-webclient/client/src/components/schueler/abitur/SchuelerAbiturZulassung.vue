@@ -52,35 +52,43 @@
 
 		<!-- Darstellung der Laufbahninformationen aus dem persistierten Abiturbereich -->
 		<template v-else>
-			<div><span class="icon i-ri-information-line icon-ui-danger" />Es liegen bereits Daten zum Abitur vor.</div>
+			<div class="text-lg font-bold">Abitur-Zulassung</div>
 
-			<div v-if="serverMode === ServerMode.DEV" class="w-64">
-				<svws-ui-button @click="copyMarkierungsergebnisToClipboard">Kopiere Markierungsergebnis</svws-ui-button>
-			</div>
-
-			<!-- Übersicht über die Fachbelegungen in der Q-Phase / Block I -->
-			<div class="flex flex-row">
-				<div class="min-w-fit">
-					<schueler-abitur-zulassung-tabelle :server-mode :schule :manager="managerLaufbahnplanung" :update-abiturpruefungsdaten="null" />
-				</div>
-				<div class="flex flex-col" v-if="!managerLaufbahnplanung().getErgebnisMarkierpruefung().erfolgreich">
-					<div class="font-bold">Hinweise:</div>
-					<template v-for="logentry in managerLaufbahnplanung().getErgebnisMarkierpruefung().log" :key="logentry">
-						{{ logentry }}
-					</template>
-				</div>
-			</div>
-
-			<!-- Übersicht über die Fachbelegungen in der Q-Phase / Block I -->
-			<div class="flex flex-row">
+			<!-- Übersicht über die Fachbelegungen in der Q-Phase / Block I aus dem Abiturbereich -->
+			<div class="flex flex-row gap-4">
 				<div class="min-w-fit">
 					<schueler-abitur-zulassung-tabelle :server-mode :schule :manager="() => managerAbitur()!" :update-abiturpruefungsdaten />
 				</div>
-				<div class="flex flex-col" v-if="!managerAbitur()!.getErgebnisMarkierpruefung().erfolgreich">
-					<div class="font-bold">Hinweise:</div>
-					<template v-for="logentry in managerAbitur()!.getErgebnisMarkierpruefung().log" :key="logentry">
-						{{ logentry }}
-					</template>
+				<div class="flex flex-col gap-4">
+					<div v-if="!managerAbitur()!.getErgebnisMarkierpruefung().erfolgreich">
+						<div class="font-bold">Hinweise:</div>
+						<template v-for="logentry in managerAbitur()!.getErgebnisMarkierpruefung().log" :key="logentry">
+							{{ logentry }}
+						</template>
+					</div>
+
+					<div v-if="serverMode === ServerMode.DEV" class="bg-ui-warning">
+						<div class="flex flex-col gap-4 bg-ui m-1 p-2">
+							<div class="text-lg font-bold">Entwickler-Ansicht (dev-Mode): Vergleich mit den Leistungsdaten</div>
+
+							<div class="ml-4 w-64">
+								<svws-ui-button @click="copyMarkierungsergebnisToClipboard">Kopiere Markierungsergebnis</svws-ui-button>
+							</div>
+
+							<!-- Übersicht über die Fachbelegungen in der Q-Phase / Block I -->
+							<div class="flex flex-row">
+								<div class="min-w-fit">
+									<schueler-abitur-zulassung-tabelle :server-mode :schule :manager="managerLaufbahnplanung" :update-abiturpruefungsdaten="null" />
+								</div>
+								<div class="flex flex-col" v-if="!managerLaufbahnplanung().getErgebnisMarkierpruefung().erfolgreich">
+									<div class="font-bold">Hinweise:</div>
+									<template v-for="logentry in managerLaufbahnplanung().getErgebnisMarkierpruefung().log" :key="logentry">
+										{{ logentry }}
+									</template>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</template>
