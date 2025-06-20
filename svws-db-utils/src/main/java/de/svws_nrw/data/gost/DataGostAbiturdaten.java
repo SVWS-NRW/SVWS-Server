@@ -299,7 +299,7 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 						final char note2 = strNote.charAt(2);
 						if ((note2 != '0') && (note2 != '1') && (note2 != '2') && (note2 != '3') && (note2 != '4') && (note2 != '5') && (note2 != '6')
 								&& (note2 != '7') && (note2 != '8') && (note2 != '9'))
-							throw new ApiOperationException(Status.BAD_REQUEST, "Für die Nachkommstellen sind nur Ziffern von 0-9 zulässig.");
+							throw new ApiOperationException(Status.BAD_REQUEST, "Für die Nachkommastellen sind nur Ziffern von 0-9 zulässig.");
 						if ((note0 == '4') && (note2 != '0'))
 							throw new ApiOperationException(Status.BAD_REQUEST, "Bei einer Note 4 ist eine Nachkommstellen ungleich 0 nicht zulässig.");
 					}

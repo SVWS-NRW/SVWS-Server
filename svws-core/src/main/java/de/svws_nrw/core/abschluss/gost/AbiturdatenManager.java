@@ -3134,19 +3134,25 @@ public class AbiturdatenManager {
 			double note = Math.floor((5.0 + (2.0 / 3.0) - abidaten.gesamtPunkte / 180.0) * 10.0) / 10.0;
 			if (note < 1.0)
 				note = 1.0;
-			final @NotNull String strNote = "" + note;
-			abidaten.note = (strNote.length() <= 3) ? strNote : strNote.substring(0, 3);
-			if (note == 1.0) {
+			if (note <= 4.0) {
+				final @NotNull String strNote = "" + note;
+				abidaten.note = (strNote.length() <= 3) ? strNote : strNote.substring(0, 3);
+				if (note == 1.0) {
+					abidaten.gesamtPunkteVerbesserung = null;
+				} else {
+					final int punkteBesser = (int) (Math.round((5.0 + (2.0 / 3.0) - note) * 180.0) + 1);
+					abidaten.gesamtPunkteVerbesserung = punkteBesser;
+				}
+				if (note == 4.0) {
+					abidaten.gesamtPunkteVerschlechterung = null;
+				} else {
+					final int punkteSchlechter = (int) (Math.round((5.0 + (2.0 / 3.0) - (note - 0.1)) * 180.0) + 1);
+					abidaten.gesamtPunkteVerschlechterung = punkteSchlechter;
+				}
+			} else {
+				abidaten.note = null;
 				abidaten.gesamtPunkteVerbesserung = null;
-			} else {
-				final int punkteBesser = (int) (Math.round((5.0 + (2.0 / 3.0) - note) * 180.0) + 1);
-				abidaten.gesamtPunkteVerbesserung = punkteBesser;
-			}
-			if (note == 4.0) {
 				abidaten.gesamtPunkteVerschlechterung = null;
-			} else {
-				final int punkteSchlechter = (int) (Math.round((5.0 + (2.0 / 3.0) - (note - 0.1)) * 180.0) + 1);
-				abidaten.gesamtPunkteVerschlechterung = punkteSchlechter;
 			}
 		}
 
