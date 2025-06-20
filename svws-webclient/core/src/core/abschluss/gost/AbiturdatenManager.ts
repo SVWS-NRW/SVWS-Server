@@ -2909,19 +2909,25 @@ export class AbiturdatenManager extends JavaObject {
 			let note : number = Math.floor((5.0 + (2.0 / 3.0) - abidaten.gesamtPunkte / 180.0) * 10.0) / 10.0;
 			if (note < 1.0)
 				note = 1.0;
-			const strNote : string = "" + note;
-			abidaten.note = (strNote.length <= 3) ? strNote : strNote.substring(0, 3);
-			if (note === 1.0) {
+			if (note <= 4.0) {
+				const strNote : string = "" + note;
+				abidaten.note = (strNote.length <= 3) ? strNote : strNote.substring(0, 3);
+				if (note === 1.0) {
+					abidaten.gesamtPunkteVerbesserung = null;
+				} else {
+					const punkteBesser : number = (Math.round((5.0 + (2.0 / 3.0) - note) * 180.0) + 1) as number;
+					abidaten.gesamtPunkteVerbesserung = punkteBesser;
+				}
+				if (note === 4.0) {
+					abidaten.gesamtPunkteVerschlechterung = null;
+				} else {
+					const punkteSchlechter : number = (Math.round((5.0 + (2.0 / 3.0) - (note - 0.1)) * 180.0) + 1) as number;
+					abidaten.gesamtPunkteVerschlechterung = punkteSchlechter;
+				}
+			} else {
+				abidaten.note = null;
 				abidaten.gesamtPunkteVerbesserung = null;
-			} else {
-				const punkteBesser : number = (Math.round((5.0 + (2.0 / 3.0) - note) * 180.0) + 1) as number;
-				abidaten.gesamtPunkteVerbesserung = punkteBesser;
-			}
-			if (note === 4.0) {
 				abidaten.gesamtPunkteVerschlechterung = null;
-			} else {
-				const punkteSchlechter : number = (Math.round((5.0 + (2.0 / 3.0) - (note - 0.1)) * 180.0) + 1) as number;
-				abidaten.gesamtPunkteVerschlechterung = punkteSchlechter;
 			}
 		}
 		if (hatNotenPruefung && (fehlendeNotenMdlFreiwillig === 0)) {
