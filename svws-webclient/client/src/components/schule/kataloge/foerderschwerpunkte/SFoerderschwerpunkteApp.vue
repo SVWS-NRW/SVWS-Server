@@ -22,8 +22,8 @@
 
 <script setup lang="ts">
 
+	import { useRegionSwitch } from "@ui";
 	import type { FoerderschwerpunkteAppProps } from "./SFoerderschwerpunkteAppProps";
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<FoerderschwerpunkteAppProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();

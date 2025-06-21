@@ -160,10 +160,10 @@
 
 	import { computed, onMounted, ref, watch } from 'vue';
 	import type { EnmLeistungenProps } from './EnmLeistungenProps';
-	import type { ENMLeistung } from '@core/core/data/enm/ENMLeistung';
-	import type { PairNN } from '@core/asd/adt/PairNN';
-	import type { ENMSchueler } from '@core/core/data/enm/ENMSchueler';
-	import { Note } from '@core/asd/types/Note';
+	import type { ENMLeistung } from '../../../../core/src/core/data/enm/ENMLeistung';
+	import type { PairNN } from '../../../../core/src/asd/adt/PairNN';
+	import type { ENMSchueler } from '../../../../core/src/core/data/enm/ENMSchueler';
+	import { Note } from '../../../../core/src/asd/types/Note';
 
 	const props = defineProps<EnmLeistungenProps>();
 	const rowRefs = ref(new Map<PairNN<ENMLeistung, ENMSchueler>, HTMLElement>());

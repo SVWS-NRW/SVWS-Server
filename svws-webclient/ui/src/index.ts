@@ -77,6 +77,9 @@ export { default as SvwsUiTodo } from "./ui/SvwsUiTodo.vue";
 export { default as SvwsUiToggle } from "./ui/controls/SvwsUiToggle.vue";
 export { default as SvwsUiTooltip } from "./ui/SvwsUiTooltip.vue";
 
+// Use exports
+export { useRegionSwitch } from "./ui/useRegionSwitch";
+
 // Type exorts
 export type { DataTableColumn, SortByAndOrder } from "./types";
 export type { TabData } from "./ui/nav/TabData";

@@ -165,13 +165,12 @@
 <script setup lang="ts">
 
 	import { computed, ref, shallowRef, toRaw, watch } from "vue";
-	import type { DataTableColumn } from "@ui";
+	import { useRegionSwitch, type DataTableColumn } from "@ui";
 	import type { StundenplanAnsichtDragData, StundenplanAnsichtDropZone } from "@ui";
 	import type { StundenplanKlasseProps } from "./SStundenplanKlasseProps";
 	import type { List, StundenplanRaum } from "@core";
 	import { StundenplanKlasse } from "@core";
 	import { ArrayList, StundenplanKurs, StundenplanKlassenunterricht, Fach, StundenplanUnterricht, StundenplanZeitraster, HashSet, StundenplanSchiene, BenutzerKompetenz, ListUtils, Wochentag } from "@core";
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<StundenplanKlasseProps>();
 

@@ -48,8 +48,7 @@
 	import { BenutzerKompetenz, BenutzerTyp, type GostBeratungslehrer, type LehrerListeEintrag } from "@core";
 	import { computed, ref } from "vue";
 	import { lehrer_filter } from '~/utils/helfer';
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
-	import { LaufbahnplanungUiManager } from "@ui";
+	import { LaufbahnplanungUiManager, useRegionSwitch } from "@ui";
 
 	const props = defineProps<GostBeratungProps>();
 

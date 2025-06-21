@@ -77,8 +77,8 @@
 	import { computed, nextTick, ref, watch } from 'vue';
 	import type { EnmKlassenleitungProps } from './EnmKlassenleitungProps';
 	import type { BemerkungenHauptgruppe } from './EnmManager';
-	import type { ENMLernabschnitt } from '@core/core/data/enm/ENMLernabschnitt';
-	import type { ENMSchueler } from "@core/core/data/enm/ENMSchueler";
+	import type { ENMLernabschnitt } from '../../../../core/src/core/data/enm/ENMLernabschnitt';
+	import type { ENMSchueler } from "../../../../core/src/core/data/enm/ENMSchueler";
 
 	const props = defineProps<EnmKlassenleitungProps>();
 	const rowRefs = ref(new Map<ENMSchueler, HTMLElement>());

@@ -4,13 +4,13 @@ import { ApiStatus } from "~/components/ApiStatus";
 import { version } from '../../version';
 import { githash } from "../../githash";
 import type { ApiEnmServer } from "~/ApiEnmServer";
-import type { EnmManager } from "~/components/leistungen/EnmManager";
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import type { ENMDaten } from "@core/core/data/enm/ENMDaten";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import type { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import type { ServerMode } from "@core/core/types/ServerMode";
 import type { Config } from "~/components/Config";
+import { EnmManager } from "@ui/components/enm/EnmManager";
 
 /**
  * Diese Klasse regelt den Zugriff auf die API eines ENM-Servers bezüglich

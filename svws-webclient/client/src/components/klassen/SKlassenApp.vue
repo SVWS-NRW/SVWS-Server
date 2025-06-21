@@ -41,8 +41,7 @@
 
 	import type { KlassenAppProps } from "./SKlassenAppProps";
 	import { computed } from "vue";
-	import { ViewType } from "@ui";
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
+	import { useRegionSwitch, ViewType } from "@ui";
 
 	const props = defineProps<KlassenAppProps>();
 

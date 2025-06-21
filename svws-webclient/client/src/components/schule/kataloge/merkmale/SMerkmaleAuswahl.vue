@@ -30,9 +30,8 @@
 	import type { DataTableColumn } from "@ui";
 	import type { Merkmal} from "@core";
 	import { BenutzerKompetenz, ServerMode } from "@core";
-	import { ViewType } from "@ui";
+	import { useRegionSwitch, ViewType } from "@ui";
 	import { computed } from "vue";
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 	const props = defineProps<MerkmaleAuswahlProps>();

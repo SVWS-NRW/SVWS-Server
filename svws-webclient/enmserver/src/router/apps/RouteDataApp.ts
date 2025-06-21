@@ -8,7 +8,7 @@ import type { ENMTeilleistung } from "@core/core/data/enm/ENMTeilleistung";
 import type { PairNN } from "@core/asd/adt/PairNN";
 import type { ENMSchueler } from "@core/core/data/enm/ENMSchueler";
 import type { ENMKlasse } from "@core/index";
-import { EnmAuswahlManager, type EnmLerngruppenAuswahlEintrag } from "~/components/leistungen/EnmManager";
+import { EnmAuswahlManager, type EnmLerngruppenAuswahlEintrag } from "@ui/components/enm/EnmManager";
 
 
 const defaultState = <RouteStateInterface>{

@@ -38,7 +38,7 @@
 
 	import { computed } from "vue";
 	import type { GostAppProps } from "./SGostAppProps";
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
+	import { useRegionSwitch } from "@ui";
 
 	const props = defineProps<GostAppProps>();
 

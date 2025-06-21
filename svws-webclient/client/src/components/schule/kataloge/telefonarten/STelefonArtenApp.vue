@@ -37,8 +37,7 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import { ViewType } from "@ui";
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
+	import { useRegionSwitch, ViewType } from "@ui";
 	import type { TelefonArtenAppProps } from "~/components/schule/kataloge/telefonarten/STelefonArtenAppProps";
 
 	const props = defineProps<TelefonArtenAppProps>();
@@ -51,4 +50,5 @@
 			return `${list.size()} Telefonart ausgewählt`;
 		return [...list].map(k => k.bezeichnung).join(', ');
 	})
+
 </script>

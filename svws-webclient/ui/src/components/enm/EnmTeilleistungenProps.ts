@@ -1,8 +1,8 @@
-import type { ENMLeistung } from "@core/core/data/enm/ENMLeistung";
+import type { ENMLeistung } from "../../../../core/src/core/data/enm/ENMLeistung";
 import type { EnmAuswahlManager, EnmLerngruppenAuswahlEintrag, EnmManager } from "./EnmManager";
-import type { ENMTeilleistung } from "@core/core/data/enm/ENMTeilleistung";
-import type { PairNN } from "@core/asd/adt/PairNN";
-import type { ENMSchueler } from "@core/core/data/enm/ENMSchueler";
+import type { ENMTeilleistung } from "../../../../core/src/core/data/enm/ENMTeilleistung";
+import type { PairNN } from "../../../../core/src/asd/adt/PairNN";
+import type { ENMSchueler } from "../../../../core/src/core/data/enm/ENMSchueler";
 
 export interface EnmTeilleistungenProps {
 	manager: EnmManager;

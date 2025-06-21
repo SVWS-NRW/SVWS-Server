@@ -37,9 +37,8 @@
 <script setup lang="ts">
 
 	import type { MerkmaleAppProps } from "~/components/schule/kataloge/merkmale/MerkmaleAppProps";
-	import { ViewType } from "@ui";
+	import { useRegionSwitch, ViewType } from "@ui";
 	import { computed } from "vue";
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<MerkmaleAppProps>();
 

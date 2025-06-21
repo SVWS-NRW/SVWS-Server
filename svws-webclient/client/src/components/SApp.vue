@@ -133,14 +133,13 @@
 <script setup lang="ts">
 
 	import { computed, onMounted, onUnmounted, ref, onErrorCaptured, watch } from "vue";
-	import type { TabData } from "@ui";
+	import { useRegionSwitch, type TabData } from "@ui";
 	import type { AppProps } from './SAppProps';
 	import type { SimpleOperationResponse } from '@core';
 	import { DeveloperNotificationException, OpenApiError, UserNotificationException } from '@core';
 	import { githash } from '../../githash';
 	import { version } from '../../version';
 	import { api } from '~/router/Api';
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<AppProps>();
 

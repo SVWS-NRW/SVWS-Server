@@ -1,8 +1,8 @@
-import type { ENMKlasse } from "@core/core/data/enm/ENMKlasse";
+import type { ENMKlasse } from "../../../../core/src/core/data/enm/ENMKlasse";
 import type { EnmAuswahlManager, EnmManager } from "./EnmManager";
-import type { ENMLeistungBemerkungen } from "@core/core/data/enm/ENMLeistungBemerkungen";
-import type { ENMLernabschnitt } from "@core/core/data/enm/ENMLernabschnitt";
-import type { ENMSchueler } from "@core/core/data/enm/ENMSchueler";
+import type { ENMLeistungBemerkungen } from "../../../../core/src/core/data/enm/ENMLeistungBemerkungen";
+import type { ENMLernabschnitt } from "../../../../core/src/core/data/enm/ENMLernabschnitt";
+import type { ENMSchueler } from "../../../../core/src/core/data/enm/ENMSchueler";
 
 export interface EnmKlassenleitungProps {
 	manager: EnmManager;

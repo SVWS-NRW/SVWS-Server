@@ -35,9 +35,8 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import { ViewType } from "@ui";
+	import { useRegionSwitch, ViewType } from "@ui";
 	import type { KatalogReligionenAppProps } from "./SReligionenAppProps";
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<KatalogReligionenAppProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();

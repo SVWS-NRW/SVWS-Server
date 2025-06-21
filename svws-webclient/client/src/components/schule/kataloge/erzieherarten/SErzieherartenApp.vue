@@ -37,8 +37,7 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import { ViewType } from "@ui";
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
+	import { useRegionSwitch, ViewType } from "@ui";
 	import type { ErzieherartenAppProps } from "~/components/schule/kataloge/erzieherarten/SErzieherartenAppProps";
 
 	const props = defineProps<ErzieherartenAppProps>();

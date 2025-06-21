@@ -4,11 +4,11 @@ import { api } from "../Api";
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { ServerMode } from "@core/core/types/ServerMode";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
-import type { EnmTeilleistungenProps } from "../../components/leistungen/EnmTeilleistungenProps";
 import { ConfigElement } from "~/components/Config";
+import type { EnmTeilleistungenProps } from "@ui/components/enm/EnmTeilleistungenProps";
 
-const EnmTeilleistungenAuswahl = () => import("~/components/leistungen/EnmTeilleistungenAuswahl.vue")
-const EnmTeilleistungen = () => import("~/components/leistungen/EnmTeilleistungen.vue")
+const EnmTeilleistungenAuswahl = () => import("@ui/components/enm/EnmTeilleistungenAuswahl.vue")
+const EnmTeilleistungen = () => import("@ui/components/enm/EnmTeilleistungen.vue")
 
 export class RouteTeilleistungen extends RouteNode<any, RouteApp> {
 

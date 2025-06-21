@@ -35,10 +35,10 @@
 </template>
 
 <script setup lang="ts">
+
 	import type { EntlassgruendeAppProps } from "~/components/schule/kataloge/entlassgruende/SEntlassgruendeAppProps";
-	import { ViewType } from "@ui";
+	import { useRegionSwitch, ViewType } from "@ui";
 	import { computed } from "vue";
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<EntlassgruendeAppProps>();
 

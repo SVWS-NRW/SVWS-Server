@@ -39,8 +39,7 @@
 	import type { Lernplattform } from "@core";
 	import { BenutzerKompetenz } from "@core";
 	import type { DataTableColumn } from "@ui";
-	import { ViewType} from "@ui";
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
+	import { useRegionSwitch, ViewType } from "@ui";
 	import type { LernplattformenAuswahlProps } from "~/components/schule/kataloge/lernplattformen/SLernplattformenAuswahlProps";
 
 	const props = defineProps<LernplattformenAuswahlProps>();

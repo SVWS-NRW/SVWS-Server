@@ -13,8 +13,8 @@
 
 <script setup lang="ts">
 
+	import { useRegionSwitch } from '../../ui/useRegionSwitch';
 	import type { EnmLeistungenProps } from './EnmLeistungenProps';
-	import { useRegionSwitch } from "~/components/useRegionSwitchEnm";
 
 	const props = defineProps<EnmLeistungenProps>();
 

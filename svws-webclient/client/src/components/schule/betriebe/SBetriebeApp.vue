@@ -18,8 +18,8 @@
 </template>
 <script setup lang="ts">
 
+	import { useRegionSwitch } from '@ui';
 	import type { BetriebeAppProps } from './SBetriebeAppProps';
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<BetriebeAppProps>();
 

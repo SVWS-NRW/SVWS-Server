@@ -28,9 +28,8 @@
 
 	import { computed } from 'vue';
 	import type { SchulenAuswahlProps } from './SSchulenAuswahlProps';
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
 	import { BenutzerKompetenz, type SchulEintrag, ServerMode } from "@core";
-	import { ViewType } from "@ui";
+	import { useRegionSwitch, ViewType } from "@ui";
 
 	const props = defineProps<SchulenAuswahlProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();

@@ -34,10 +34,10 @@
 <script setup lang="ts">
 
 	import { computed, shallowRef } from "vue";
-	import type { StundenplanRaumProps } from "./SStundenplanRaumProps";
 	import type { List, StundenplanRaum } from "@core";
 	import { ArrayList } from "@core";
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
+	import { useRegionSwitch } from "@ui";
+	import type { StundenplanRaumProps } from "./SStundenplanRaumProps";
 
 	const props = defineProps<StundenplanRaumProps>();
 

@@ -2,10 +2,10 @@ import { ENMDaten } from "@core/core/data/enm/ENMDaten";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { UserNotificationException } from "@core/core/exceptions/UserNotificationException";
 import { ServerMode } from "@core/core/types/ServerMode";
+import { EnmManager } from "@ui/components/enm/EnmManager";
 import { ref, shallowRef } from "vue";
 import { ApiEnmServer } from "~/ApiEnmServer";
 import { Config } from "~/components/Config";
-import { EnmManager } from "~/components/leistungen/EnmManager";
 
 export class ApiConnection {
 

@@ -1,14 +1,14 @@
 import { RouteNode } from "~/router/RouteNode";
 import { routeApp, type RouteApp } from "~/router/apps/RouteApp";
 import { api } from "../Api";
-import type { EnmLeistungenProps } from "~/components/leistungen/EnmLeistungenProps";
+import type { EnmLeistungenProps } from "@ui/components/enm/EnmLeistungenProps";
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { ServerMode } from "@core/core/types/ServerMode";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ConfigElement } from "~/components/Config";
 
-const EnmLeistungenAuswahl = () => import("~/components/leistungen/EnmLeistungenAuswahl.vue")
-const EnmLeistungen = () => import("~/components/leistungen/EnmLeistungen.vue")
+const EnmLeistungenAuswahl = () => import("@ui/components/enm/EnmLeistungenAuswahl.vue")
+const EnmLeistungen = () => import("@ui/components/enm/EnmLeistungen.vue")
 
 export class RouteLeistungen extends RouteNode<any, RouteApp> {
 

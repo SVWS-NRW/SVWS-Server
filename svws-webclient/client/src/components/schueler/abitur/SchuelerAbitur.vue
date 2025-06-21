@@ -10,8 +10,8 @@
 
 <script setup lang="ts">
 
+	import { useRegionSwitch } from "@ui";
 	import type { SchuelerAbiturProps } from "./SchuelerAbiturProps";
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<SchuelerAbiturProps>();
 

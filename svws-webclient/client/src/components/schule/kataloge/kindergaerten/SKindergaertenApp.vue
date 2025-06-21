@@ -36,9 +36,8 @@
 
 <script setup lang="ts">
 
-	import { ViewType } from "@ui";
+	import { useRegionSwitch, ViewType } from "@ui";
 	import { computed } from "vue";
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
 	import type { KindergaertenAppProps } from "~/components/schule/kataloge/kindergaerten/SKindergaertenAppProps";
 
 	const props = defineProps<KindergaertenAppProps>();

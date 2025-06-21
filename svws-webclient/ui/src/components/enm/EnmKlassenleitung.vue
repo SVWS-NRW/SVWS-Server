@@ -21,7 +21,7 @@
 
 	import { computed, ref } from 'vue';
 	import type { EnmKlassenleitungProps } from './EnmKlassenleitungProps';
-	import type { ENMLeistungBemerkungen } from '@core/core/data/enm/ENMLeistungBemerkungen';
+	import type { ENMLeistungBemerkungen } from '../../../../core/src/core/data/enm/ENMLeistungBemerkungen';
 	import type { BemerkungenHauptgruppe } from './EnmManager';
 
 	const props = defineProps<EnmKlassenleitungProps>();

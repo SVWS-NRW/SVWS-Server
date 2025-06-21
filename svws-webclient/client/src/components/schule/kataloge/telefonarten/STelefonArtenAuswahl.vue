@@ -42,8 +42,7 @@
 	import type { TelefonArt } from "@core";
 	import { BenutzerKompetenz } from "@core";
 	import type { DataTableColumn } from "@ui";
-	import { ViewType } from "@ui";
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
+	import { useRegionSwitch, ViewType } from "@ui";
 	import type { TelefonArtenAuswahlProps } from "~/components/schule/kataloge/telefonarten/STelefonArtenAuswahlProps";
 
 	const props = defineProps<TelefonArtenAuswahlProps>();

@@ -43,10 +43,9 @@
 
 	import { ref, computed } from "vue";
 	import type { KurseAuswahlProps } from "./SKurseAuswahlProps";
-	import { ViewType, type DataTableColumn, type SortByAndOrder } from "@ui";
+	import { useRegionSwitch, ViewType, type DataTableColumn, type SortByAndOrder } from "@ui";
 	import type { FachDaten, FaecherListeEintrag, JahrgangsDaten, KursDaten, LehrerListeEintrag, List, SchuelerListeEintrag, Schulgliederung } from "@core";
 	import { ServerMode, BenutzerKompetenz } from "@core";
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<KurseAuswahlProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();

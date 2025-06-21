@@ -106,10 +106,9 @@
 
 	import { computed, ref, shallowRef } from 'vue';
 	import type { GostLaufbahnfehlerProps } from "./SGostLaufbahnfehlerProps";
-	import type { DataTableColumn, SortByAndOrder } from '@ui';
+	import { useRegionSwitch, type DataTableColumn, type SortByAndOrder } from '@ui';
 	import type { List, GostBelegpruefungErgebnisFehler } from '@core';
 	import { ArrayList, GostBelegpruefungsArt, GostBelegungsfehlerArt, SchuelerStatus, GostBelegpruefungsErgebnisse, BenutzerKompetenz } from '@core';
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<GostLaufbahnfehlerProps>();
 

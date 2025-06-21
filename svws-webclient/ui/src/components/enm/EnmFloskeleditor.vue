@@ -55,14 +55,14 @@
 <script setup lang="ts">
 
 	import { computed, ref, watch } from 'vue';
-	import type { ENMFloskel } from '@core/core/data/enm/ENMFloskel';
-	import type { ENMFloskelgruppe } from '@core/core/data/enm/ENMFloskelgruppe';
+	import type { ENMFloskel } from '../../../../core/src/core/data/enm/ENMFloskel';
+	import type { ENMFloskelgruppe } from '../../../../core/src/core/data/enm/ENMFloskelgruppe';
 	import type { EnmManager, BemerkungenHauptgruppe, EnmAuswahlManager, EnmLerngruppenAuswahlEintrag } from './EnmManager';
-	import { ArrayList } from '@core/java/util/ArrayList';
-	import { ENMSchueler } from '@core/core/data/enm/ENMSchueler';
-	import { PairNN } from '@core/asd/adt/PairNN';
-	import type { ENMLeistung } from '@core/core/data/enm/ENMLeistung';
-	import type { ENMKlasse } from '@core/core/data/enm/ENMKlasse';
+	import { ArrayList } from '../../../../core/src/java/util/ArrayList';
+	import { ENMSchueler } from '../../../../core/src/core/data/enm/ENMSchueler';
+	import { PairNN } from '../../../../core/src/asd/adt/PairNN';
+	import type { ENMLeistung } from '../../../../core/src/core/data/enm/ENMLeistung';
+	import type { ENMKlasse } from '../../../../core/src/core/data/enm/ENMKlasse';
 
 
 	const props = defineProps<{

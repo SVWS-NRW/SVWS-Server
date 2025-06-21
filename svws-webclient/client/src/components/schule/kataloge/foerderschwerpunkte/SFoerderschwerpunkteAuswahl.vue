@@ -16,8 +16,8 @@
 
 <script setup lang="ts">
 
+	import { useRegionSwitch } from "@ui";
 	import type { FoerderschwerpunkteAuswahlProps } from "./SFoerderschwerpunkteAuswahlProps";
-	import {useRegionSwitch} from "~/components/useRegionSwitch";
 
 	const props = defineProps<FoerderschwerpunkteAuswahlProps>();
 
@@ -27,4 +27,5 @@
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: 'asc' },
 		{ key: "text", label: "Bezeichnung", sortable: true }
 	];
+
 </script>

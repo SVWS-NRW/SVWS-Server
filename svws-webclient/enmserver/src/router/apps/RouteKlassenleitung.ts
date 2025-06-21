@@ -1,4 +1,4 @@
-import type { EnmKlassenleitungProps } from "~/components/leistungen/EnmKlassenleitungProps";
+import type { EnmKlassenleitungProps } from "@ui/components/enm/EnmKlassenleitungProps";
 import { RouteNode } from "~/router/RouteNode";
 import { routeApp, type RouteApp } from "~/router/apps/RouteApp";
 import { api } from "../Api";
@@ -7,8 +7,8 @@ import { ServerMode } from "@core/core/types/ServerMode";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ConfigElement } from "~/components/Config";
 
-const EnmKlassenleitungAuswahl = () => import("~/components/leistungen/EnmKlassenleitungAuswahl.vue")
-const EnmKlassenleitung = () => import("~/components/leistungen/EnmKlassenleitung.vue")
+const EnmKlassenleitungAuswahl = () => import("@ui/components/enm/EnmKlassenleitungAuswahl.vue")
+const EnmKlassenleitung = () => import("@ui/components/enm/EnmKlassenleitung.vue")
 
 export class RouteKlassenleitung extends RouteNode<any, RouteApp> {
 

@@ -39,11 +39,10 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import type { VermerkeAuswahlProps } from "./SVermerkartenAuswahlProps";
 	import { BenutzerKompetenz, type VermerkartEintrag } from "@core";
 	import type { DataTableColumn} from "@ui";
-	import { ViewType } from "@ui";
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
+	import { useRegionSwitch, ViewType } from "@ui";
+	import type { VermerkeAuswahlProps } from "./SVermerkartenAuswahlProps";
 
 	const props = defineProps<VermerkeAuswahlProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();

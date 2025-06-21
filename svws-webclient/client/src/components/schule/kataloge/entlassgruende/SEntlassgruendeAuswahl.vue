@@ -25,13 +25,13 @@
 </template>
 
 <script setup lang="ts">
+
 	import type { EntlassgruendeAuswahlProps } from "~/components/schule/kataloge/entlassgruende/SEntlassgruendeAuswahlProps";
 	import type { DataTableColumn } from "@ui";
 	import type { KatalogEntlassgrund} from "@core";
 	import { BenutzerKompetenz, ServerMode } from "@core";
-	import { ViewType } from "@ui";
+	import { useRegionSwitch, ViewType } from "@ui";
 	import { computed } from "vue";
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 	const props = defineProps<EntlassgruendeAuswahlProps>();

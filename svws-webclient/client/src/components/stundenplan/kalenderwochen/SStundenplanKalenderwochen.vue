@@ -24,10 +24,10 @@
 <script setup lang="ts">
 
 	import { ref, computed } from "vue";
-	import type { StundenplanKalenderwochenProps } from "./SStundenplanKalenderwochenProps";
 	import type { StundenplanKalenderwochenzuordnung } from "@core";
 	import { ArrayList, BenutzerKompetenz, DateUtils } from "@core";
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
+	import { useRegionSwitch } from "@ui";
+	import type { StundenplanKalenderwochenProps } from "./SStundenplanKalenderwochenProps";
 
 	const props = defineProps<StundenplanKalenderwochenProps>();
 

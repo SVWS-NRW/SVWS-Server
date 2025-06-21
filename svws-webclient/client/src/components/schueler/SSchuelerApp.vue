@@ -67,11 +67,12 @@
 
 	import { computed } from "vue";
 	import type { SchuelerAppProps } from "./SSchuelerAppProps";
-	import { ViewType } from "@ui";
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
+	import { useRegionSwitch, ViewType } from "@ui";
 	import { PrimarstufeSchuleingangsphaseBesuchsjahre, Schulform, type KlassenDaten } from "@core";
 
 	const props = defineProps<SchuelerAppProps>();
+
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const primarschulformen = new Set([Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.PS, Schulform.S, Schulform.KS, Schulform.V]);
 	const primarstufe = computed(() => primarschulformen.has(props.schulform));
@@ -84,8 +85,6 @@
 		const schuljahr = props.manager().getSchuljahr();
 		return PrimarstufeSchuleingangsphaseBesuchsjahre.data().getWertBySchluesselOrException(ep).daten(schuljahr)?.kuerzel ?? null;
 	});
-
-	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const schuelerSubline = computed(() => {
 		const auswahlSchuelerList = props.manager().liste.auswahlSorted();

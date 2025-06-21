@@ -125,7 +125,7 @@
 	import type { GostKursplanungProps } from "./SGostKursplanungProps";
 	import type { DownloadPDFTypen } from "./DownloadPDFTypen";
 	import { BenutzerKompetenz, GostHalbjahr, HashSet, SetUtils } from "@core";
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
+	import { useRegionSwitch } from "@ui";
 
 	const props = defineProps<GostKursplanungProps>();
 

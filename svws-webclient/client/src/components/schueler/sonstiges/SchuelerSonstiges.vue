@@ -13,8 +13,8 @@
 
 <script setup lang="ts">
 
+	import { useRegionSwitch } from "@ui";
 	import type { SchuelerSonstigesProps } from "./SchuelerSonstigesProps";
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<SchuelerSonstigesProps>();
 

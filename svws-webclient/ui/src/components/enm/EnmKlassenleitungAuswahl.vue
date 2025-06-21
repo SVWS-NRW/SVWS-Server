@@ -13,8 +13,8 @@
 
 <script setup lang="ts">
 
+	import { useRegionSwitch } from '../../ui/useRegionSwitch';
 	import type { EnmKlassenleitungProps } from './EnmKlassenleitungProps';
-	import { useRegionSwitch } from "~/components/useRegionSwitchEnm";
 
 	const props = defineProps<EnmKlassenleitungProps>();
 

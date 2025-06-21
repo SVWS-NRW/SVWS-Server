@@ -26,7 +26,7 @@
 	import type { DownloadPDFTypen } from "./DownloadPDFTypen";
 	import type { GostKlausurplanungProps } from "./SGostKlausurplanungProps";
 	import { computed, onMounted, ref } from "vue";
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
+	import { useRegionSwitch } from "@ui";
 
 	const props = defineProps<GostKlausurplanungProps>();
 

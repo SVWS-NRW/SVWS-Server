@@ -10,8 +10,8 @@
 
 <script setup lang="ts">
 
+	import { useRegionSwitch } from "@ui";
 	import type { GostAbiturProps } from "./GostAbiturProps";
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<GostAbiturProps>();
 

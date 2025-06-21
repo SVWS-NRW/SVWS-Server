@@ -84,11 +84,12 @@
 	import type { SchuelerListeEintrag, JahrgangsDaten, KlassenDaten, Schulgliederung, KursDaten } from "@core";
 	import { ServerMode, SchuelerStatus, BenutzerKompetenz } from "@core";
 	import type { SortByAndOrder } from "@ui";
-	import { ViewType } from "@ui";
+	import { useRegionSwitch, ViewType } from "@ui";
 	import type { SchuelerAuswahlProps } from "./SSchuelerAuswahlProps";
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<SchuelerAuswahlProps>();
+
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	// const primarschulformen = new Set([Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.PS, Schulform.S, Schulform.KS, Schulform.V]);
 	// const primarstufe = computed(() => primarschulformen.has(props.schulform));
@@ -99,8 +100,6 @@
 	// 	const schuljahr = props.manager().getSchuljahr();
 	// 	return PrimarstufeSchuleingangsphaseBesuchsjahre.data().getWertBySchluesselOrException(ep.toString()).daten(schuljahr)?.kuerzel ?? null;
 	// }
-
-	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
 
