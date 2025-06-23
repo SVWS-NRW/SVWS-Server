@@ -164,7 +164,7 @@
 				<ui-gruppenprozesse-wrapper :pending-state-manager="pendingStateManager" attribute-name="zuzugsjahr" :nullable="hatMigrationshintergrund">
 					<svws-ui-input-number placeholder="Zuzugsjahr" :model-value="zuzugsjahr" @update:model-value="setZuzugsjahr"
 						:disabled="!hatMigrationshintergrund" statistics hide-stepper :readonly="hatMigrationshintergrund && !hatKompetenzUpdate"
-						:min="new Date().getFullYear() + 1 - 100" :max="new Date().getFullYear() + 1" />
+						:min="minZuzugsjahr" :max="maxZuzugsjahr" />
 				</ui-gruppenprozesse-wrapper>
 
 				<ui-gruppenprozesse-wrapper :pending-state-manager="pendingStateManager" attribute-name="geburtsland" :nullable="hatMigrationshintergrund">
@@ -272,7 +272,16 @@
 
 	const setAufnahmedatum = (value: string | null) => {if (value !== null)	aufnahmedatum.value = value;};
 
-	const setZuzugsjahr = (value: number | null) => {if (value !== null) zuzugsjahr.value = value;};
+
+	const minZuzugsjahr = new Date().getFullYear() + 1 - 100;
+	const maxZuzugsjahr = new Date().getFullYear() + 1;
+
+	const setZuzugsjahr = (value: number | null) => {
+		if ((value !== null) && (value >= minZuzugsjahr) && (value <= maxZuzugsjahr))
+			zuzugsjahr.value = value;
+		else
+			props.pendingStateManager().removePendingState("zuzugsjahr");
+	};
 
 	async function continueRoutingAfterCheckpointCustom() {
 		props.pendingStateManager().resetPendingState();
