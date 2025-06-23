@@ -129,354 +129,359 @@ export class BenutzerKompetenz extends JavaEnum<BenutzerKompetenz> {
 	public static readonly IMPORT_EXPORT_SCHULBEWERBUNG_DE : BenutzerKompetenz = new BenutzerKompetenz("IMPORT_EXPORT_SCHULBEWERBUNG_DE", 21, new BenutzerKompetenzKatalogEintrag(47, BenutzerKompetenzGruppe.IMPORT_EXPORT, "Datenaustausch mit Schulbewerbung.de", null, "Bietet die Möglichkeit zum Datenaustausch mit Schulbewerbung.de."));
 
 	/**
+	 * Es werden Rechte zum Import und Export über die Lernplattform-Schnittstelle benötigt.
+	 */
+	public static readonly IMPORT_EXPORT_LERNPLATTFORM : BenutzerKompetenz = new BenutzerKompetenz("IMPORT_EXPORT_LERNPLATTFORM", 22, new BenutzerKompetenzKatalogEintrag(48, BenutzerKompetenzGruppe.IMPORT_EXPORT, "Datenaustausch mit Lernplattformen", null, "Bietet die Möglichkeit zum Datenaustausch mit Lernplattformen."));
+
+	/**
 	 * Es werden Rechte zum Ansehen der Schulbezogenen Daten benötigt.
 	 */
-	public static readonly SCHULBEZOGENE_DATEN_ANSEHEN : BenutzerKompetenz = new BenutzerKompetenz("SCHULBEZOGENE_DATEN_ANSEHEN", 22, new BenutzerKompetenzKatalogEintrag(61, BenutzerKompetenzGruppe.SCHULBEZOGENE_DATEN, "Ansehen", null, "Ermöglicht das Anzeigen der schulbezogenen Daten wie Schuladresse, Telefonnummer und weitere Informationen."));
+	public static readonly SCHULBEZOGENE_DATEN_ANSEHEN : BenutzerKompetenz = new BenutzerKompetenz("SCHULBEZOGENE_DATEN_ANSEHEN", 23, new BenutzerKompetenzKatalogEintrag(61, BenutzerKompetenzGruppe.SCHULBEZOGENE_DATEN, "Ansehen", null, "Ermöglicht das Anzeigen der schulbezogenen Daten wie Schuladresse, Telefonnummer und weitere Informationen."));
 
 	/**
 	 * Es werden Rechte zum Ändern der Schulbezogenen Daten benötigt.
 	 */
-	public static readonly SCHULBEZOGENE_DATEN_AENDERN : BenutzerKompetenz = new BenutzerKompetenz("SCHULBEZOGENE_DATEN_AENDERN", 23, new BenutzerKompetenzKatalogEintrag(62, BenutzerKompetenzGruppe.SCHULBEZOGENE_DATEN, "Ändern", null, "Erlaubt das Bearbeiten der schulbezogenen Daten, z. B. zur Aktualisierung von Kontaktdaten oder Adressen."));
+	public static readonly SCHULBEZOGENE_DATEN_AENDERN : BenutzerKompetenz = new BenutzerKompetenz("SCHULBEZOGENE_DATEN_AENDERN", 24, new BenutzerKompetenzKatalogEintrag(62, BenutzerKompetenzGruppe.SCHULBEZOGENE_DATEN, "Ändern", null, "Erlaubt das Bearbeiten der schulbezogenen Daten, z. B. zur Aktualisierung von Kontaktdaten oder Adressen."));
 
 	/**
 	 * Es werden Rechte benötigt um ein Backup durchzuführen.
 	 */
-	public static readonly EXTRAS_BACKUP_DURCHFUEHREN : BenutzerKompetenz = new BenutzerKompetenz("EXTRAS_BACKUP_DURCHFUEHREN", 24, new BenutzerKompetenzKatalogEintrag(71, BenutzerKompetenzGruppe.EXTRAS, "Backup durchführen", null, "Erlaubt die Möglichkeit, ein vollständiges Backup der aktuellen Daten zu erstellen."));
+	public static readonly EXTRAS_BACKUP_DURCHFUEHREN : BenutzerKompetenz = new BenutzerKompetenz("EXTRAS_BACKUP_DURCHFUEHREN", 25, new BenutzerKompetenzKatalogEintrag(71, BenutzerKompetenzGruppe.EXTRAS, "Backup durchführen", null, "Erlaubt die Möglichkeit, ein vollständiges Backup der aktuellen Daten zu erstellen."));
 
 	/**
 	 * Es werden Rechte zum Wiederherstellen von gelöschten Schülerdaten benötigt.
 	 */
-	public static readonly EXTRAS_GELOESCHTE_DATEN_ZURUECKHOLEN : BenutzerKompetenz = new BenutzerKompetenz("EXTRAS_GELOESCHTE_DATEN_ZURUECKHOLEN", 25, new BenutzerKompetenzKatalogEintrag(72, BenutzerKompetenzGruppe.EXTRAS, "Gelöschte Daten zurückholen", null, "Ermöglicht das Wiederherstellen versehentlich gelöschter Daten."));
+	public static readonly EXTRAS_GELOESCHTE_DATEN_ZURUECKHOLEN : BenutzerKompetenz = new BenutzerKompetenz("EXTRAS_GELOESCHTE_DATEN_ZURUECKHOLEN", 26, new BenutzerKompetenzKatalogEintrag(72, BenutzerKompetenzGruppe.EXTRAS, "Gelöschte Daten zurückholen", null, "Ermöglicht das Wiederherstellen versehentlich gelöschter Daten."));
 
 	/**
 	 * Es werden Rechte zum Ändern der Farben für Fachgruppen benötigt.
 	 */
-	public static readonly EXTRAS_FARBEN_FUER_FACHGRUPPEN_AENDERN : BenutzerKompetenz = new BenutzerKompetenz("EXTRAS_FARBEN_FUER_FACHGRUPPEN_AENDERN", 26, new BenutzerKompetenzKatalogEintrag(73, BenutzerKompetenzGruppe.EXTRAS, "Farben für Fachgruppen ändern", null, "Erlaubt das Anpassen der Farben für die verschiedenen Fachgruppen in der Benutzeroberfläche."));
+	public static readonly EXTRAS_FARBEN_FUER_FACHGRUPPEN_AENDERN : BenutzerKompetenz = new BenutzerKompetenz("EXTRAS_FARBEN_FUER_FACHGRUPPEN_AENDERN", 27, new BenutzerKompetenzKatalogEintrag(73, BenutzerKompetenzGruppe.EXTRAS, "Farben für Fachgruppen ändern", null, "Erlaubt das Anpassen der Farben für die verschiedenen Fachgruppen in der Benutzeroberfläche."));
 
 	/**
 	 * Es werden Rechte Import von Daten aus Kurs42 benötigt.
 	 */
-	public static readonly EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN : BenutzerKompetenz = new BenutzerKompetenz("EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN", 27, new BenutzerKompetenzKatalogEintrag(74, BenutzerKompetenzGruppe.EXTRAS, "Daten aus Kurs42 importieren", BenutzerKompetenz.getSchulformenGymOb(), "Ermöglicht das Importieren von Daten aus dem Kurs42-System in die aktuelle Plattform."));
+	public static readonly EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN : BenutzerKompetenz = new BenutzerKompetenz("EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN", 28, new BenutzerKompetenzKatalogEintrag(74, BenutzerKompetenzGruppe.EXTRAS, "Daten aus Kurs42 importieren", BenutzerKompetenz.getSchulformenGymOb(), "Ermöglicht das Importieren von Daten aus dem Kurs42-System in die aktuelle Plattform."));
 
 	/**
 	 * Es werden Rechte zum Bearbeiten von Personengruppen benötigt.
 	 */
-	public static readonly EXTRAS_DATEN_PERSONENGRUPPEN_BEARBEITEN : BenutzerKompetenz = new BenutzerKompetenz("EXTRAS_DATEN_PERSONENGRUPPEN_BEARBEITEN", 28, new BenutzerKompetenzKatalogEintrag(75, BenutzerKompetenzGruppe.EXTRAS, "Personengruppen bearbeiten", null, "Bietet die Möglichkeit, Personengruppen aus Lehrkräften, Schülern, Erziehungsberechtigten oder außerschulischen Kontaktpersonen zu erstellen."));
+	public static readonly EXTRAS_DATEN_PERSONENGRUPPEN_BEARBEITEN : BenutzerKompetenz = new BenutzerKompetenz("EXTRAS_DATEN_PERSONENGRUPPEN_BEARBEITEN", 29, new BenutzerKompetenzKatalogEintrag(75, BenutzerKompetenzGruppe.EXTRAS, "Personengruppen bearbeiten", null, "Bietet die Möglichkeit, Personengruppen aus Lehrkräften, Schülern, Erziehungsberechtigten oder außerschulischen Kontaktpersonen zu erstellen."));
 
 	/**
 	 * Es werden Rechte zum Ansehen von Katalogen benötigt.
 	 */
-	public static readonly KATALOG_EINTRAEGE_ANSEHEN : BenutzerKompetenz = new BenutzerKompetenz("KATALOG_EINTRAEGE_ANSEHEN", 29, new BenutzerKompetenzKatalogEintrag(81, BenutzerKompetenzGruppe.KATALOG_EINTRAEGE, "Ansehen", null, "Ermöglicht das Anzeigen von aktuellen Katalogeinträgen unter dem Menüpunkt 'Schule' an."));
+	public static readonly KATALOG_EINTRAEGE_ANSEHEN : BenutzerKompetenz = new BenutzerKompetenz("KATALOG_EINTRAEGE_ANSEHEN", 30, new BenutzerKompetenzKatalogEintrag(81, BenutzerKompetenzGruppe.KATALOG_EINTRAEGE, "Ansehen", null, "Ermöglicht das Anzeigen von aktuellen Katalogeinträgen unter dem Menüpunkt 'Schule' an."));
 
 	/**
 	 * Es werden Rechte zum Ändern von Katalogen benötigt.
 	 */
-	public static readonly KATALOG_EINTRAEGE_AENDERN : BenutzerKompetenz = new BenutzerKompetenz("KATALOG_EINTRAEGE_AENDERN", 30, new BenutzerKompetenzKatalogEintrag(82, BenutzerKompetenzGruppe.KATALOG_EINTRAEGE, "Ändern", null, "Erlaubt das Bearbeiten von Katalogeinträgen zur Aktualisierung der Inhalte unter dem Menüpunkt 'Schule'."));
+	public static readonly KATALOG_EINTRAEGE_AENDERN : BenutzerKompetenz = new BenutzerKompetenz("KATALOG_EINTRAEGE_AENDERN", 31, new BenutzerKompetenzKatalogEintrag(82, BenutzerKompetenzGruppe.KATALOG_EINTRAEGE, "Ändern", null, "Erlaubt das Bearbeiten von Katalogeinträgen zur Aktualisierung der Inhalte unter dem Menüpunkt 'Schule'."));
 
 	/**
 	 * Es werden Rechte zum Löschen von Katalogen benötigt.
 	 */
-	public static readonly KATALOG_EINTRAEGE_LOESCHEN : BenutzerKompetenz = new BenutzerKompetenz("KATALOG_EINTRAEGE_LOESCHEN", 31, new BenutzerKompetenzKatalogEintrag(83, BenutzerKompetenzGruppe.KATALOG_EINTRAEGE, "Löschen", null, "Ermöglicht das dauerhafte Entfernen von Katalogeinträgen, die nicht mehr benötigt werden."));
+	public static readonly KATALOG_EINTRAEGE_LOESCHEN : BenutzerKompetenz = new BenutzerKompetenz("KATALOG_EINTRAEGE_LOESCHEN", 32, new BenutzerKompetenzKatalogEintrag(83, BenutzerKompetenzGruppe.KATALOG_EINTRAEGE, "Löschen", null, "Ermöglicht das dauerhafte Entfernen von Katalogeinträgen, die nicht mehr benötigt werden."));
 
 	/**
 	 * Es werden Rechte zum Ansehen von Lehrerdaten benötigt.
 	 */
-	public static readonly LEHRERDATEN_ANSEHEN : BenutzerKompetenz = new BenutzerKompetenz("LEHRERDATEN_ANSEHEN", 32, new BenutzerKompetenzKatalogEintrag(91, BenutzerKompetenzGruppe.LEHRERDATEN, "Ansehen", null, "Zeigt unter dem Menüpunkt Lehrkräfte den Reiter 'Individualdaten' mit den Informationen wie Name, Geburtsdatum und Kontaktinformationen an."));
+	public static readonly LEHRERDATEN_ANSEHEN : BenutzerKompetenz = new BenutzerKompetenz("LEHRERDATEN_ANSEHEN", 33, new BenutzerKompetenzKatalogEintrag(91, BenutzerKompetenzGruppe.LEHRERDATEN, "Ansehen", null, "Zeigt unter dem Menüpunkt Lehrkräfte den Reiter 'Individualdaten' mit den Informationen wie Name, Geburtsdatum und Kontaktinformationen an."));
 
 	/**
 	 * Es werden Rechte zum Ändern von Lehrerdaten benötigt.
 	 */
-	public static readonly LEHRERDATEN_AENDERN : BenutzerKompetenz = new BenutzerKompetenz("LEHRERDATEN_AENDERN", 33, new BenutzerKompetenzKatalogEintrag(92, BenutzerKompetenzGruppe.LEHRERDATEN, "Ändern", null, "Erlaubt das Bearbeiten von Lehrkraftdaten unter dem Menüpunkt 'Lehrkräfte', Reiter 'Individualdaten"));
+	public static readonly LEHRERDATEN_AENDERN : BenutzerKompetenz = new BenutzerKompetenz("LEHRERDATEN_AENDERN", 34, new BenutzerKompetenzKatalogEintrag(92, BenutzerKompetenzGruppe.LEHRERDATEN, "Ändern", null, "Erlaubt das Bearbeiten von Lehrkraftdaten unter dem Menüpunkt 'Lehrkräfte', Reiter 'Individualdaten"));
 
 	/**
 	 * Es werden Rechte zum Löschen von Lehrerdaten benötigt.
 	 */
-	public static readonly LEHRERDATEN_LOESCHEN : BenutzerKompetenz = new BenutzerKompetenz("LEHRERDATEN_LOESCHEN", 34, new BenutzerKompetenzKatalogEintrag(93, BenutzerKompetenzGruppe.LEHRERDATEN, "Löschen", null, "Ermöglicht das dauerhafte Entfernen von Lehrkraftdaten aus dem System."));
+	public static readonly LEHRERDATEN_LOESCHEN : BenutzerKompetenz = new BenutzerKompetenz("LEHRERDATEN_LOESCHEN", 35, new BenutzerKompetenzKatalogEintrag(93, BenutzerKompetenzGruppe.LEHRERDATEN, "Löschen", null, "Ermöglicht das dauerhafte Entfernen von Lehrkraftdaten aus dem System."));
 
 	/**
 	 * Es werden Rechte zum Ansehen von Lehrerdetaildaten benötigt.
 	 */
-	public static readonly LEHRER_PERSONALDATEN_ANSEHEN : BenutzerKompetenz = new BenutzerKompetenz("LEHRER_PERSONALDATEN_ANSEHEN", 35, new BenutzerKompetenzKatalogEintrag(94, BenutzerKompetenzGruppe.LEHRERDATEN, "Personaldaten ansehen", null, "Ermöglicht das Anzeigen von 'Personaldaten' wie Lehrbefähigung, Beschäftigungsverhältnis und Anrechnungsstunden."));
+	public static readonly LEHRER_PERSONALDATEN_ANSEHEN : BenutzerKompetenz = new BenutzerKompetenz("LEHRER_PERSONALDATEN_ANSEHEN", 36, new BenutzerKompetenzKatalogEintrag(94, BenutzerKompetenzGruppe.LEHRERDATEN, "Personaldaten ansehen", null, "Ermöglicht das Anzeigen von 'Personaldaten' wie Lehrbefähigung, Beschäftigungsverhältnis und Anrechnungsstunden."));
 
 	/**
 	 * Es werden Rechte zum Ändern von Lehrerdetaildaten benötigt.
 	 */
-	public static readonly LEHRER_PERSONALDATEN_AENDERN : BenutzerKompetenz = new BenutzerKompetenz("LEHRER_PERSONALDATEN_AENDERN", 36, new BenutzerKompetenzKatalogEintrag(95, BenutzerKompetenzGruppe.LEHRERDATEN, "Personaldaten ändern", null, "Erlaubt das Bearbeiten der Personaldaten von Lehrkräften."));
+	public static readonly LEHRER_PERSONALDATEN_AENDERN : BenutzerKompetenz = new BenutzerKompetenz("LEHRER_PERSONALDATEN_AENDERN", 37, new BenutzerKompetenzKatalogEintrag(95, BenutzerKompetenzGruppe.LEHRERDATEN, "Personaldaten ändern", null, "Erlaubt das Bearbeiten der Personaldaten von Lehrkräften."));
 
 	/**
 	 * Es werden Rechte zum Ansehen von Daten des Verfahrens Schulpflichtverletzung benötigt.
 	 */
-	public static readonly SCHULPFLICHTVERLETZUNG_ANSEHEN : BenutzerKompetenz = new BenutzerKompetenz("SCHULPFLICHTVERLETZUNG_ANSEHEN", 37, new BenutzerKompetenzKatalogEintrag(101, BenutzerKompetenzGruppe.SCHULPFLICHTVERLETZUNG, "Ansehen", null, "Zeigt die aktuellen Verfahren bei Schulpflichtverletzungen an."));
+	public static readonly SCHULPFLICHTVERLETZUNG_ANSEHEN : BenutzerKompetenz = new BenutzerKompetenz("SCHULPFLICHTVERLETZUNG_ANSEHEN", 38, new BenutzerKompetenzKatalogEintrag(101, BenutzerKompetenzGruppe.SCHULPFLICHTVERLETZUNG, "Ansehen", null, "Zeigt die aktuellen Verfahren bei Schulpflichtverletzungen an."));
 
 	/**
 	 * Es werden Rechte zum Ändern von Daten des Verfahrens Schulpflichtverletzung benötigt.
 	 */
-	public static readonly SCHULPFLICHTVERLETZUNG_AENDERN : BenutzerKompetenz = new BenutzerKompetenz("SCHULPFLICHTVERLETZUNG_AENDERN", 38, new BenutzerKompetenzKatalogEintrag(102, BenutzerKompetenzGruppe.SCHULPFLICHTVERLETZUNG, "Ändern", null, "Erlaubt das Bearbeiten der Verfahren bei Schulpflichtverletzungen, um aktuelle Entwicklungen zu dokumentieren."));
+	public static readonly SCHULPFLICHTVERLETZUNG_AENDERN : BenutzerKompetenz = new BenutzerKompetenz("SCHULPFLICHTVERLETZUNG_AENDERN", 39, new BenutzerKompetenzKatalogEintrag(102, BenutzerKompetenzGruppe.SCHULPFLICHTVERLETZUNG, "Ändern", null, "Erlaubt das Bearbeiten der Verfahren bei Schulpflichtverletzungen, um aktuelle Entwicklungen zu dokumentieren."));
 
 	/**
 	 * Es werden Rechte zum Löschen von Daten des Verfahrens Schulpflichtverletzung benötigt.
 	 */
-	public static readonly SCHULPFLICHTVERLETZUNG_LOESCHEN : BenutzerKompetenz = new BenutzerKompetenz("SCHULPFLICHTVERLETZUNG_LOESCHEN", 39, new BenutzerKompetenzKatalogEintrag(103, BenutzerKompetenzGruppe.SCHULPFLICHTVERLETZUNG, "Löschen", null, "Ermöglicht das dauerhafte Entfernen von Verfahrensdokumenten aus dem System."));
+	public static readonly SCHULPFLICHTVERLETZUNG_LOESCHEN : BenutzerKompetenz = new BenutzerKompetenz("SCHULPFLICHTVERLETZUNG_LOESCHEN", 40, new BenutzerKompetenzKatalogEintrag(103, BenutzerKompetenzGruppe.SCHULPFLICHTVERLETZUNG, "Löschen", null, "Ermöglicht das dauerhafte Entfernen von Verfahrensdokumenten aus dem System."));
 
 	/**
 	 * Es werden Rechte zum Ansehen der Unterrichtsverteilung bis zum aktuellen Schuljahresabschnitt benötigt.
 	 */
-	public static readonly UNTERRICHTSVERTEILUNG_ANSEHEN : BenutzerKompetenz = new BenutzerKompetenz("UNTERRICHTSVERTEILUNG_ANSEHEN", 40, new BenutzerKompetenzKatalogEintrag(105, BenutzerKompetenzGruppe.UNTERRICHTSVERTEILUNG, "Unterrichtsverteilung ansehen", null, "Zeigt die aktuelle Unterrichtsverteilung im System an."));
+	public static readonly UNTERRICHTSVERTEILUNG_ANSEHEN : BenutzerKompetenz = new BenutzerKompetenz("UNTERRICHTSVERTEILUNG_ANSEHEN", 41, new BenutzerKompetenzKatalogEintrag(105, BenutzerKompetenzGruppe.UNTERRICHTSVERTEILUNG, "Unterrichtsverteilung ansehen", null, "Zeigt die aktuelle Unterrichtsverteilung im System an."));
 
 	/**
 	 * Es werden Rechte zum Ansehen der Unterrichtsverteilung auch nach dem aktuellen Schuljahresabschnitt benötigt.
 	 */
-	public static readonly UNTERRICHTSVERTEILUNG_PLANUNG_ANSEHEN : BenutzerKompetenz = new BenutzerKompetenz("UNTERRICHTSVERTEILUNG_PLANUNG_ANSEHEN", 41, new BenutzerKompetenzKatalogEintrag(106, BenutzerKompetenzGruppe.UNTERRICHTSVERTEILUNG, "Planung der Unterrichtsverteilung ansehen", null, "Ermöglicht das Anzeigen der Planungsdaten zur Unterrichtsverteilung."));
+	public static readonly UNTERRICHTSVERTEILUNG_PLANUNG_ANSEHEN : BenutzerKompetenz = new BenutzerKompetenz("UNTERRICHTSVERTEILUNG_PLANUNG_ANSEHEN", 42, new BenutzerKompetenzKatalogEintrag(106, BenutzerKompetenzGruppe.UNTERRICHTSVERTEILUNG, "Planung der Unterrichtsverteilung ansehen", null, "Ermöglicht das Anzeigen der Planungsdaten zur Unterrichtsverteilung."));
 
 	/**
 	 * Es werden Rechte zum Ändern der Unterrichtsverteilung (allgemein) benötigt.
 	 */
-	public static readonly UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN : BenutzerKompetenz = new BenutzerKompetenz("UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN", 42, new BenutzerKompetenzKatalogEintrag(107, BenutzerKompetenzGruppe.UNTERRICHTSVERTEILUNG, "Unterrichtsverteilung ändern (allgemein)", null, "Erlaubt das Bearbeiten der allgemeinen Unterrichtsverteilung für alle Klassen."));
+	public static readonly UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN : BenutzerKompetenz = new BenutzerKompetenz("UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN", 43, new BenutzerKompetenzKatalogEintrag(107, BenutzerKompetenzGruppe.UNTERRICHTSVERTEILUNG, "Unterrichtsverteilung ändern (allgemein)", null, "Erlaubt das Bearbeiten der allgemeinen Unterrichtsverteilung für alle Klassen."));
 
 	/**
 	 * Es werden Rechte zum Ändern der Unterrichtsverteilung (funktionsbezogen) benötigt.
 	 */
-	public static readonly UNTERRICHTSVERTEILUNG_FUNKTIONSBEZOGEN_AENDERN : BenutzerKompetenz = new BenutzerKompetenz("UNTERRICHTSVERTEILUNG_FUNKTIONSBEZOGEN_AENDERN", 43, new BenutzerKompetenzKatalogEintrag(108, BenutzerKompetenzGruppe.UNTERRICHTSVERTEILUNG, "Unterrichtsverteilung ändern (funktionsbezogen)", null, "Ermöglicht die funktionsbezogene Anpassung der Unterrichtsverteilung für Abteilungs-, Stufen- oder Klassenleitungen."));
+	public static readonly UNTERRICHTSVERTEILUNG_FUNKTIONSBEZOGEN_AENDERN : BenutzerKompetenz = new BenutzerKompetenz("UNTERRICHTSVERTEILUNG_FUNKTIONSBEZOGEN_AENDERN", 44, new BenutzerKompetenzKatalogEintrag(108, BenutzerKompetenzGruppe.UNTERRICHTSVERTEILUNG, "Unterrichtsverteilung ändern (funktionsbezogen)", null, "Ermöglicht die funktionsbezogene Anpassung der Unterrichtsverteilung für Abteilungs-, Stufen- oder Klassenleitungen."));
 
 	/**
 	 * Es werden Rechte zum Ansehen von Stundenplänen (allgemein) benötigt.
 	 */
-	public static readonly STUNDENPLAN_ALLGEMEIN_ANSEHEN : BenutzerKompetenz = new BenutzerKompetenz("STUNDENPLAN_ALLGEMEIN_ANSEHEN", 44, new BenutzerKompetenzKatalogEintrag(111, BenutzerKompetenzGruppe.STUNDENPLANUNG, "Stundenplan ansehen (allgemein)", null, "Zeigt den allgemeinen Stundenplan einer Klasse, einer Stufe oder einer Lehrkraft."));
+	public static readonly STUNDENPLAN_ALLGEMEIN_ANSEHEN : BenutzerKompetenz = new BenutzerKompetenz("STUNDENPLAN_ALLGEMEIN_ANSEHEN", 45, new BenutzerKompetenzKatalogEintrag(111, BenutzerKompetenzGruppe.STUNDENPLANUNG, "Stundenplan ansehen (allgemein)", null, "Zeigt den allgemeinen Stundenplan einer Klasse, einer Stufe oder einer Lehrkraft."));
 
 	/**
 	 * Es werden Rechte zum Ansehen von Stundenplänen (funktionsbezogen) benötigt.
 	 */
-	public static readonly STUNDENPLAN_FUNKTIONSBEZOGEN_ANSEHEN : BenutzerKompetenz = new BenutzerKompetenz("STUNDENPLAN_FUNKTIONSBEZOGEN_ANSEHEN", 45, new BenutzerKompetenzKatalogEintrag(112, BenutzerKompetenzGruppe.STUNDENPLANUNG, "Stundenplan ansehen (funktionsbezogen)", null, "Ermöglicht das Anzeigen des Stundenplans nur für Abteilungs-, Stufen- oder Klassenleitungen."));
+	public static readonly STUNDENPLAN_FUNKTIONSBEZOGEN_ANSEHEN : BenutzerKompetenz = new BenutzerKompetenz("STUNDENPLAN_FUNKTIONSBEZOGEN_ANSEHEN", 46, new BenutzerKompetenzKatalogEintrag(112, BenutzerKompetenzGruppe.STUNDENPLANUNG, "Stundenplan ansehen (funktionsbezogen)", null, "Ermöglicht das Anzeigen des Stundenplans nur für Abteilungs-, Stufen- oder Klassenleitungen."));
 
 	/**
 	 * Es werden Rechte zum Importieren von Stundenplänen benötigt.
 	 */
-	public static readonly STUNDENPLAN_IMPORT : BenutzerKompetenz = new BenutzerKompetenz("STUNDENPLAN_IMPORT", 46, new BenutzerKompetenzKatalogEintrag(113, BenutzerKompetenzGruppe.STUNDENPLANUNG, "Stundenpläne importieren", null, "Bietet die Möglichkeit, Stundenpläne aus externen Quellen zu importieren."));
+	public static readonly STUNDENPLAN_IMPORT : BenutzerKompetenz = new BenutzerKompetenz("STUNDENPLAN_IMPORT", 47, new BenutzerKompetenzKatalogEintrag(113, BenutzerKompetenzGruppe.STUNDENPLANUNG, "Stundenpläne importieren", null, "Bietet die Möglichkeit, Stundenpläne aus externen Quellen zu importieren."));
 
 	/**
 	 * Es werden Rechte zum Exportieren von Stundenplänen benötigt.
 	 */
-	public static readonly STUNDENPLAN_EXPORT : BenutzerKompetenz = new BenutzerKompetenz("STUNDENPLAN_EXPORT", 47, new BenutzerKompetenzKatalogEintrag(114, BenutzerKompetenzGruppe.STUNDENPLANUNG, "Stundenpläne exportieren", null, "Ermöglicht das Exportieren von Stundenplänen in verschiedene Formate."));
+	public static readonly STUNDENPLAN_EXPORT : BenutzerKompetenz = new BenutzerKompetenz("STUNDENPLAN_EXPORT", 48, new BenutzerKompetenzKatalogEintrag(114, BenutzerKompetenzGruppe.STUNDENPLANUNG, "Stundenpläne exportieren", null, "Ermöglicht das Exportieren von Stundenplänen in verschiedene Formate."));
 
 	/**
 	 * Es werden Rechte zum Erstellen von Stundenplänen benötigt.
 	 */
-	public static readonly STUNDENPLAN_AENDERN : BenutzerKompetenz = new BenutzerKompetenz("STUNDENPLAN_AENDERN", 48, new BenutzerKompetenzKatalogEintrag(115, BenutzerKompetenzGruppe.STUNDENPLANUNG, "Stundenpläne ändern", null, "Erlaubt das Bearbeiten und Anpassen der bestehenden Stundenpläne."));
+	public static readonly STUNDENPLAN_AENDERN : BenutzerKompetenz = new BenutzerKompetenz("STUNDENPLAN_AENDERN", 49, new BenutzerKompetenzKatalogEintrag(115, BenutzerKompetenzGruppe.STUNDENPLANUNG, "Stundenpläne ändern", null, "Erlaubt das Bearbeiten und Anpassen der bestehenden Stundenpläne."));
 
 	/**
 	 * Es werden Rechte zum Aktivieren von Stundenplänen benötigt.
 	 */
-	public static readonly STUNDENPLAN_AKTIVIEREN : BenutzerKompetenz = new BenutzerKompetenz("STUNDENPLAN_AKTIVIEREN", 49, new BenutzerKompetenzKatalogEintrag(116, BenutzerKompetenzGruppe.STUNDENPLANUNG, "Stundenpläne aktivieren", null, "Bietet die Möglichkeit, Stundenpläne zu aktivieren, damit sie in Kraft treten."));
+	public static readonly STUNDENPLAN_AKTIVIEREN : BenutzerKompetenz = new BenutzerKompetenz("STUNDENPLAN_AKTIVIEREN", 50, new BenutzerKompetenzKatalogEintrag(116, BenutzerKompetenzGruppe.STUNDENPLANUNG, "Stundenpläne aktivieren", null, "Bietet die Möglichkeit, Stundenpläne zu aktivieren, damit sie in Kraft treten."));
 
 	/**
 	 * Es werden Rechte zur Administration des Notenmoduls benötigt.
 	 */
-	public static readonly NOTENMODUL_ADMINISTRATION : BenutzerKompetenz = new BenutzerKompetenz("NOTENMODUL_ADMINISTRATION", 50, new BenutzerKompetenzKatalogEintrag(131, BenutzerKompetenzGruppe.NOTENMODUL, "Administration Notenmodul", null, "Ermöglicht die Verwaltung des Notenmoduls für alle Klassen und Fächer."));
+	public static readonly NOTENMODUL_ADMINISTRATION : BenutzerKompetenz = new BenutzerKompetenz("NOTENMODUL_ADMINISTRATION", 51, new BenutzerKompetenzKatalogEintrag(131, BenutzerKompetenzGruppe.NOTENMODUL, "Administration Notenmodul", null, "Ermöglicht die Verwaltung des Notenmoduls für alle Klassen und Fächer."));
 
 	/**
 	 * Es werden Rechte zur Änderung von Noten im Notenmodul (allgemein) benötigt.
 	 */
-	public static readonly NOTENMODUL_NOTEN_AENDERN_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("NOTENMODUL_NOTEN_AENDERN_ALLGEMEIN", 51, new BenutzerKompetenzKatalogEintrag(132, BenutzerKompetenzGruppe.NOTENMODUL, "Noten ändern (allgemein)", null, "Erlaubt das Bearbeiten und Anpassen von allgemeinen Noten der Schüler."));
+	public static readonly NOTENMODUL_NOTEN_AENDERN_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("NOTENMODUL_NOTEN_AENDERN_ALLGEMEIN", 52, new BenutzerKompetenzKatalogEintrag(132, BenutzerKompetenzGruppe.NOTENMODUL, "Noten ändern (allgemein)", null, "Erlaubt das Bearbeiten und Anpassen von allgemeinen Noten der Schüler."));
 
 	/**
 	 * Es werden Rechte zur Änderung von Noten im Notenmodul (funktionsbezogen) benötigt.
 	 */
-	public static readonly NOTENMODUL_NOTEN_AENDERN_FUNKTION : BenutzerKompetenz = new BenutzerKompetenz("NOTENMODUL_NOTEN_AENDERN_FUNKTION", 52, new BenutzerKompetenzKatalogEintrag(133, BenutzerKompetenzGruppe.NOTENMODUL, "Noten ändern (funktionsbezogen)", null, "Bietet die Möglichkeit, Noten als Abteilungs-, Stufen- oder Klassenleitung zu ändern."));
+	public static readonly NOTENMODUL_NOTEN_AENDERN_FUNKTION : BenutzerKompetenz = new BenutzerKompetenz("NOTENMODUL_NOTEN_AENDERN_FUNKTION", 53, new BenutzerKompetenzKatalogEintrag(133, BenutzerKompetenzGruppe.NOTENMODUL, "Noten ändern (funktionsbezogen)", null, "Bietet die Möglichkeit, Noten als Abteilungs-, Stufen- oder Klassenleitung zu ändern."));
 
 	/**
 	 * Es werden Rechte zum Ansehen von Noten im Notenmodul (allgemein) benötigt.
 	 */
-	public static readonly NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN", 53, new BenutzerKompetenzKatalogEintrag(134, BenutzerKompetenzGruppe.NOTENMODUL, "Noten ansehen (allgemein)", null, "Ermöglicht das Anzeigen aller Noten eines Schülers in allen Fächern."));
+	public static readonly NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN", 54, new BenutzerKompetenzKatalogEintrag(134, BenutzerKompetenzGruppe.NOTENMODUL, "Noten ansehen (allgemein)", null, "Ermöglicht das Anzeigen aller Noten eines Schülers in allen Fächern."));
 
 	/**
 	 * Es werden Rechte zum Ansehen von Noten im Notenmodul (funktionsbezogen) benötigt.
 	 */
-	public static readonly NOTENMODUL_NOTEN_ANSEHEN_FUNKTION : BenutzerKompetenz = new BenutzerKompetenz("NOTENMODUL_NOTEN_ANSEHEN_FUNKTION", 54, new BenutzerKompetenzKatalogEintrag(135, BenutzerKompetenzGruppe.NOTENMODUL, "Noten ansehen (funktionsbezogen)", null, "Ermöglicht das Anzeigen aller Noten eines Schülers nur für Abteilungs-, Stufen- oder Klassenleitungen."));
+	public static readonly NOTENMODUL_NOTEN_ANSEHEN_FUNKTION : BenutzerKompetenz = new BenutzerKompetenz("NOTENMODUL_NOTEN_ANSEHEN_FUNKTION", 55, new BenutzerKompetenzKatalogEintrag(135, BenutzerKompetenzGruppe.NOTENMODUL, "Noten ansehen (funktionsbezogen)", null, "Ermöglicht das Anzeigen aller Noten eines Schülers nur für Abteilungs-, Stufen- oder Klassenleitungen."));
 
 	/**
 	 * Es werden Rechte zur Administration der Datenbank (Schema erstellen/migrieren) benötigt.
 	 */
-	public static readonly DATENBANK_SCHEMA_ERSTELLEN : BenutzerKompetenz = new BenutzerKompetenz("DATENBANK_SCHEMA_ERSTELLEN", 55, new BenutzerKompetenzKatalogEintrag(141, BenutzerKompetenzGruppe.DATENBANK, "Schema erstellen und migrieren", null, "Bietet die Möglichkeit, ein neues Datenbankschema zu erstellen oder bestehende zu migrieren."));
+	public static readonly DATENBANK_SCHEMA_ERSTELLEN : BenutzerKompetenz = new BenutzerKompetenz("DATENBANK_SCHEMA_ERSTELLEN", 56, new BenutzerKompetenzKatalogEintrag(141, BenutzerKompetenzGruppe.DATENBANK, "Schema erstellen und migrieren", null, "Bietet die Möglichkeit, ein neues Datenbankschema zu erstellen oder bestehende zu migrieren."));
 
 	/**
 	 * Es werden Rechte zum Import von SQLite-Backups benötigt.
 	 */
-	public static readonly DATENBANK_SQLITE_IMPORT : BenutzerKompetenz = new BenutzerKompetenz("DATENBANK_SQLITE_IMPORT", 56, new BenutzerKompetenzKatalogEintrag(142, BenutzerKompetenzGruppe.DATENBANK, "SQLite importieren (Backup einspielen)", null, "Ermöglicht das Importieren eines SQLite-Backups zur Wiederherstellung von Daten."));
+	public static readonly DATENBANK_SQLITE_IMPORT : BenutzerKompetenz = new BenutzerKompetenz("DATENBANK_SQLITE_IMPORT", 57, new BenutzerKompetenzKatalogEintrag(142, BenutzerKompetenzGruppe.DATENBANK, "SQLite importieren (Backup einspielen)", null, "Ermöglicht das Importieren eines SQLite-Backups zur Wiederherstellung von Daten."));
 
 	/**
 	 * Es werden Rechte zum Export von SQLite-Backups benötigt.
 	 */
-	public static readonly DATENBANK_SQLITE_EXPORT : BenutzerKompetenz = new BenutzerKompetenz("DATENBANK_SQLITE_EXPORT", 57, new BenutzerKompetenzKatalogEintrag(143, BenutzerKompetenzGruppe.DATENBANK, "SQLite exportieren (Backup erstellen)", null, "Erlaubt das Erstellen eines Backups im SQLite-Format zur Datensicherung."));
+	public static readonly DATENBANK_SQLITE_EXPORT : BenutzerKompetenz = new BenutzerKompetenz("DATENBANK_SQLITE_EXPORT", 58, new BenutzerKompetenzKatalogEintrag(143, BenutzerKompetenzGruppe.DATENBANK, "SQLite exportieren (Backup erstellen)", null, "Erlaubt das Erstellen eines Backups im SQLite-Format zur Datensicherung."));
 
 	/**
 	 * Es werden Rechte zur Durchführung der Laufbahnplanung (allgemein) benötigt.
 	 */
-	public static readonly OBERSTUFE_ABITURJAHRGAENGE_VERWALTEN : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_ABITURJAHRGAENGE_VERWALTEN", 58, new BenutzerKompetenzKatalogEintrag(160, BenutzerKompetenzGruppe.OBERSTUFE, "Abiturjahrgänge anlegen und löschen", BenutzerKompetenz.getSchulformenGymOb(), "Ermöglicht das Anlegen und Löschen von Abiturjahrgängen unter dem Menüpunkt 'Oberstufe'."));
+	public static readonly OBERSTUFE_ABITURJAHRGAENGE_VERWALTEN : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_ABITURJAHRGAENGE_VERWALTEN", 59, new BenutzerKompetenzKatalogEintrag(160, BenutzerKompetenzGruppe.OBERSTUFE, "Abiturjahrgänge anlegen und löschen", BenutzerKompetenz.getSchulformenGymOb(), "Ermöglicht das Anlegen und Löschen von Abiturjahrgängen unter dem Menüpunkt 'Oberstufe'."));
 
 	/**
 	 * Es werden Rechte zur Durchführung der Laufbahnplanung (allgemein) benötigt.
 	 */
-	public static readonly OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN", 59, new BenutzerKompetenzKatalogEintrag(161, BenutzerKompetenzGruppe.OBERSTUFE, "Laufbahnplanung (allgemein)", BenutzerKompetenz.getSchulformenGymOb(), "Bietet die Möglichkeit, die allgemeine Laufbahnplanung für Schüler in der Oberstufe zu verwalten."));
+	public static readonly OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN", 60, new BenutzerKompetenzKatalogEintrag(161, BenutzerKompetenzGruppe.OBERSTUFE, "Laufbahnplanung (allgemein)", BenutzerKompetenz.getSchulformenGymOb(), "Bietet die Möglichkeit, die allgemeine Laufbahnplanung für Schüler in der Oberstufe zu verwalten."));
 
 	/**
 	 * Es werden Rechte zur Durchführung der Laufbahnplanung (stufenbezogen) benötigt.
 	 */
-	public static readonly OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN", 60, new BenutzerKompetenzKatalogEintrag(162, BenutzerKompetenzGruppe.OBERSTUFE, "Laufbahnplanung (funktionsbezogen)", BenutzerKompetenz.getSchulformenGymOb(), "Erlaubt das Bearbeiten der Laufbahnplanung für Schüler nur für Abteilungs- und Stufenleitungen."));
+	public static readonly OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN", 61, new BenutzerKompetenzKatalogEintrag(162, BenutzerKompetenzGruppe.OBERSTUFE, "Laufbahnplanung (funktionsbezogen)", BenutzerKompetenz.getSchulformenGymOb(), "Erlaubt das Bearbeiten der Laufbahnplanung für Schüler nur für Abteilungs- und Stufenleitungen."));
 
 	/**
 	 * Es werden Rechte zum Import von Laufbahnpdaten aus LuPO benötigt.
 	 */
-	public static readonly OBERSTUFE_LUPO_IMPORT : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_LUPO_IMPORT", 61, new BenutzerKompetenzKatalogEintrag(163, BenutzerKompetenzGruppe.OBERSTUFE, "Laufbahnplanung aus LuPO importieren", BenutzerKompetenz.getSchulformenGymOb(), "Ermöglicht den Import von Laufbahndaten aus dem LuPO-System."));
+	public static readonly OBERSTUFE_LUPO_IMPORT : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_LUPO_IMPORT", 62, new BenutzerKompetenzKatalogEintrag(163, BenutzerKompetenzGruppe.OBERSTUFE, "Laufbahnplanung aus LuPO importieren", BenutzerKompetenz.getSchulformenGymOb(), "Ermöglicht den Import von Laufbahndaten aus dem LuPO-System."));
 
 	/**
 	 * Es werden Rechte zur Kursverwaltung - Blocken (allgemein) benötigt.
 	 */
-	public static readonly OBERSTUFE_KURSPLANUNG_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_KURSPLANUNG_ALLGEMEIN", 62, new BenutzerKompetenzKatalogEintrag(171, BenutzerKompetenzGruppe.OBERSTUFE, "Kursplanung - Blocken (allgemein)", BenutzerKompetenz.getSchulformenGymOb(), "Bietet die Möglichkeit, für einen Abiturjahrgang eine Blockung anzulegen oder aus bestehenden Daten wieder herzustellen."));
+	public static readonly OBERSTUFE_KURSPLANUNG_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_KURSPLANUNG_ALLGEMEIN", 63, new BenutzerKompetenzKatalogEintrag(171, BenutzerKompetenzGruppe.OBERSTUFE, "Kursplanung - Blocken (allgemein)", BenutzerKompetenz.getSchulformenGymOb(), "Bietet die Möglichkeit, für einen Abiturjahrgang eine Blockung anzulegen oder aus bestehenden Daten wieder herzustellen."));
 
 	/**
 	 * Es werden Rechte zur Kursverwaltung - Blocken (stufenbezogen) benötigt.
 	 */
-	public static readonly OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN", 63, new BenutzerKompetenzKatalogEintrag(172, BenutzerKompetenzGruppe.OBERSTUFE, "Kursplanung - Blocken (funktionsbezogen)", BenutzerKompetenz.getSchulformenGymOb(), "Ermöglicht das Anlegen oder die Wiederherstellung von Blockungen nur für Abteilungs- und Stufenleitungen."));
+	public static readonly OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN", 64, new BenutzerKompetenzKatalogEintrag(172, BenutzerKompetenzGruppe.OBERSTUFE, "Kursplanung - Blocken (funktionsbezogen)", BenutzerKompetenz.getSchulformenGymOb(), "Ermöglicht das Anlegen oder die Wiederherstellung von Blockungen nur für Abteilungs- und Stufenleitungen."));
 
 	/**
 	 * Es werden Rechte zur Aktivierung einer Blockung benötigt.
 	 */
-	public static readonly OBERSTUFE_KURSPLANUNG_BLOCKUNG_AKTIVIEREN : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_KURSPLANUNG_BLOCKUNG_AKTIVIEREN", 64, new BenutzerKompetenzKatalogEintrag(173, BenutzerKompetenzGruppe.OBERSTUFE, "Kursplanung - Blockung aktivieren", BenutzerKompetenz.getSchulformenGymOb(), "Erlaubt das Aktivieren der Kursblockung, um die Planung zu finalisieren und in die Leistungsdaten zu übernehmen."));
+	public static readonly OBERSTUFE_KURSPLANUNG_BLOCKUNG_AKTIVIEREN : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_KURSPLANUNG_BLOCKUNG_AKTIVIEREN", 65, new BenutzerKompetenzKatalogEintrag(173, BenutzerKompetenzGruppe.OBERSTUFE, "Kursplanung - Blockung aktivieren", BenutzerKompetenz.getSchulformenGymOb(), "Erlaubt das Aktivieren der Kursblockung, um die Planung zu finalisieren und in die Leistungsdaten zu übernehmen."));
 
 	/**
 	 * Es werden Rechte zur Bearbeitung einer Klausurplanung benötigt.
 	 */
-	public static readonly OBERSTUFE_KLAUSURPLANUNG_AENDERN : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_KLAUSURPLANUNG_AENDERN", 65, new BenutzerKompetenzKatalogEintrag(181, BenutzerKompetenzGruppe.OBERSTUFE, "Klausurplanung ändern", BenutzerKompetenz.getSchulformenGymOb(), "Bietet die Möglichkeit, eine Klausurplanung im Menübereich Oberstufe, Reiter 'Klausurplanung' zu ändern."));
+	public static readonly OBERSTUFE_KLAUSURPLANUNG_AENDERN : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_KLAUSURPLANUNG_AENDERN", 66, new BenutzerKompetenzKatalogEintrag(181, BenutzerKompetenzGruppe.OBERSTUFE, "Klausurplanung ändern", BenutzerKompetenz.getSchulformenGymOb(), "Bietet die Möglichkeit, eine Klausurplanung im Menübereich Oberstufe, Reiter 'Klausurplanung' zu ändern."));
 
 	/**
 	 * Es werden Rechte zum Ansehen einer Klausurplanung (allgemein) benötigt.
 	 */
-	public static readonly OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN", 66, new BenutzerKompetenzKatalogEintrag(182, BenutzerKompetenzGruppe.OBERSTUFE, "Klausurplanung ansehen (allgemein)", BenutzerKompetenz.getSchulformenGymOb(), "Erlaubt das Anzeigen der Klausurplanung eines Abiturjahrgangs in einem Halbjahr."));
+	public static readonly OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN", 67, new BenutzerKompetenzKatalogEintrag(182, BenutzerKompetenzGruppe.OBERSTUFE, "Klausurplanung ansehen (allgemein)", BenutzerKompetenz.getSchulformenGymOb(), "Erlaubt das Anzeigen der Klausurplanung eines Abiturjahrgangs in einem Halbjahr."));
 
 	/**
 	 * Es werden Rechte zum Ansehen einer Klausurplanung (funktionsbezogen) benötigt.
 	 */
-	public static readonly OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION", 67, new BenutzerKompetenzKatalogEintrag(183, BenutzerKompetenzGruppe.OBERSTUFE, "Klausurplanung ansehen (funktionsbezogen)", BenutzerKompetenz.getSchulformenGymOb(), "Erlaubt das Anzeigen der Klausurplanung eines Abiturjahrgangs in einem Halbjahr nur für Abteilungs- oder Stufenleitungen."));
+	public static readonly OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION", 68, new BenutzerKompetenzKatalogEintrag(183, BenutzerKompetenzGruppe.OBERSTUFE, "Klausurplanung ansehen (funktionsbezogen)", BenutzerKompetenz.getSchulformenGymOb(), "Erlaubt das Anzeigen der Klausurplanung eines Abiturjahrgangs in einem Halbjahr nur für Abteilungs- oder Stufenleitungen."));
 
 	/**
 	 * Berechtigung zum Ansehen von Abiturdaten der Oberstufe (allgemein).
 	 */
-	public static readonly ABITUR_ANSEHEN_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("ABITUR_ANSEHEN_ALLGEMEIN", 68, new BenutzerKompetenzKatalogEintrag(191, BenutzerKompetenzGruppe.OBERSTUFE, "Abiturdaten ansehen (allgemein)", BenutzerKompetenz.getSchulformenGymOb(), "Erlaubt das Anzeigen der Abiturdaten eines Jahrgangs."));
+	public static readonly ABITUR_ANSEHEN_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("ABITUR_ANSEHEN_ALLGEMEIN", 69, new BenutzerKompetenzKatalogEintrag(191, BenutzerKompetenzGruppe.OBERSTUFE, "Abiturdaten ansehen (allgemein)", BenutzerKompetenz.getSchulformenGymOb(), "Erlaubt das Anzeigen der Abiturdaten eines Jahrgangs."));
 
 	/**
 	 * Berechtigung zum Ansehen von Abiturdaten der Oberstufe (funktionsbezogen).
 	 */
-	public static readonly ABITUR_ANSEHEN_FUNKTIONSBEZOGEN : BenutzerKompetenz = new BenutzerKompetenz("ABITUR_ANSEHEN_FUNKTIONSBEZOGEN", 69, new BenutzerKompetenzKatalogEintrag(192, BenutzerKompetenzGruppe.OBERSTUFE, "Abiturdaten ansehen (funktionsbezogen)", BenutzerKompetenz.getSchulformenGymOb(), "Erlaubt das Anzeigen der Abiturdaten eines Jahrgangs nur für Abteilungs- oder Stufenleitungen."));
+	public static readonly ABITUR_ANSEHEN_FUNKTIONSBEZOGEN : BenutzerKompetenz = new BenutzerKompetenz("ABITUR_ANSEHEN_FUNKTIONSBEZOGEN", 70, new BenutzerKompetenzKatalogEintrag(192, BenutzerKompetenzGruppe.OBERSTUFE, "Abiturdaten ansehen (funktionsbezogen)", BenutzerKompetenz.getSchulformenGymOb(), "Erlaubt das Anzeigen der Abiturdaten eines Jahrgangs nur für Abteilungs- oder Stufenleitungen."));
 
 	/**
 	 * Berechtigung zum Ändern aller Daten zum Abitur (allgemein).
 	 */
-	public static readonly ABITUR_AENDERN_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("ABITUR_AENDERN_ALLGEMEIN", 70, new BenutzerKompetenzKatalogEintrag(193, BenutzerKompetenzGruppe.OBERSTUFE, "Abiturdaten ändern (allgemein)", BenutzerKompetenz.getSchulformenGymOb(), "Erlaubt das Bearbeiten der Abiturdaten wie Noteneintragungen oder Gesamtberechnungen."));
+	public static readonly ABITUR_AENDERN_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("ABITUR_AENDERN_ALLGEMEIN", 71, new BenutzerKompetenzKatalogEintrag(193, BenutzerKompetenzGruppe.OBERSTUFE, "Abiturdaten ändern (allgemein)", BenutzerKompetenz.getSchulformenGymOb(), "Erlaubt das Bearbeiten der Abiturdaten wie Noteneintragungen oder Gesamtberechnungen."));
 
 	/**
 	 * Berechtigung zum Ändern aller Daten zum Abitur (funktionsbezogen).
 	 */
-	public static readonly ABITUR_AENDERN_FUNKTIONSBEZOGEN : BenutzerKompetenz = new BenutzerKompetenz("ABITUR_AENDERN_FUNKTIONSBEZOGEN", 71, new BenutzerKompetenzKatalogEintrag(194, BenutzerKompetenzGruppe.OBERSTUFE, "Abiturdaten ändern (funktionsbezogen)", BenutzerKompetenz.getSchulformenGymOb(), "Erlaubt das Bearbeiten der Abiturdaten wie Noteneintragungen oder Gesamtberechnungen nur für Abteilungs- oder Stufenleitungen."));
+	public static readonly ABITUR_AENDERN_FUNKTIONSBEZOGEN : BenutzerKompetenz = new BenutzerKompetenz("ABITUR_AENDERN_FUNKTIONSBEZOGEN", 72, new BenutzerKompetenzKatalogEintrag(194, BenutzerKompetenzGruppe.OBERSTUFE, "Abiturdaten ändern (funktionsbezogen)", BenutzerKompetenz.getSchulformenGymOb(), "Erlaubt das Bearbeiten der Abiturdaten wie Noteneintragungen oder Gesamtberechnungen nur für Abteilungs- oder Stufenleitungen."));
 
 	/**
 	 * Berechtigung zum Eingeben von Prüfungsergebnissen (allgemein).
 	 */
-	public static readonly ABITUR_EINGABE_ERGEBNISSE_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("ABITUR_EINGABE_ERGEBNISSE_ALLGEMEIN", 72, new BenutzerKompetenzKatalogEintrag(195, BenutzerKompetenzGruppe.OBERSTUFE, "Prüfungsergebnisse eingeben (allgemein)", BenutzerKompetenz.getSchulformenGymOb(), "Ermöglicht das Eingeben der Prüfungsergebnisse eines Schülers."));
+	public static readonly ABITUR_EINGABE_ERGEBNISSE_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("ABITUR_EINGABE_ERGEBNISSE_ALLGEMEIN", 73, new BenutzerKompetenzKatalogEintrag(195, BenutzerKompetenzGruppe.OBERSTUFE, "Prüfungsergebnisse eingeben (allgemein)", BenutzerKompetenz.getSchulformenGymOb(), "Ermöglicht das Eingeben der Prüfungsergebnisse eines Schülers."));
 
 	/**
 	 * Berechtigung zum Eingeben von Prüfungsergebnissen (funktionsbezogen).
 	 */
-	public static readonly ABITUR_EINGABE_ERGEBNISSE_FUNKTIONSBEZOGEN : BenutzerKompetenz = new BenutzerKompetenz("ABITUR_EINGABE_ERGEBNISSE_FUNKTIONSBEZOGEN", 73, new BenutzerKompetenzKatalogEintrag(196, BenutzerKompetenzGruppe.OBERSTUFE, "Prüfungsergebnisse eingeben (funktionsbezogen)", BenutzerKompetenz.getSchulformenGymOb(), "Ermöglicht das Eingeben der Prüfungsergebnisse eines Schülers nur für Abteilungs- oder Stufenleitungen."));
+	public static readonly ABITUR_EINGABE_ERGEBNISSE_FUNKTIONSBEZOGEN : BenutzerKompetenz = new BenutzerKompetenz("ABITUR_EINGABE_ERGEBNISSE_FUNKTIONSBEZOGEN", 74, new BenutzerKompetenzKatalogEintrag(196, BenutzerKompetenzGruppe.OBERSTUFE, "Prüfungsergebnisse eingeben (funktionsbezogen)", BenutzerKompetenz.getSchulformenGymOb(), "Ermöglicht das Eingeben der Prüfungsergebnisse eines Schülers nur für Abteilungs- oder Stufenleitungen."));
 
 	/**
 	 * Allgemeine Berechtigung zum Verwenden der CardDav API für Addressdaten
 	 */
-	public static readonly CARDDAV_NUTZEN : BenutzerKompetenz = new BenutzerKompetenz("CARDDAV_NUTZEN", 74, new BenutzerKompetenzKatalogEintrag(201, BenutzerKompetenzGruppe.CARDDAV, "Addressbuch (CardDAV) nutzen", null, "Ermöglicht die Nutzung des Adressbuchs über CardDAV zur Verwaltung von Kontakten."));
+	public static readonly CARDDAV_NUTZEN : BenutzerKompetenz = new BenutzerKompetenz("CARDDAV_NUTZEN", 75, new BenutzerKompetenzKatalogEintrag(201, BenutzerKompetenzGruppe.CARDDAV, "Addressbuch (CardDAV) nutzen", null, "Ermöglicht die Nutzung des Adressbuchs über CardDAV zur Verwaltung von Kontakten."));
 
 	/**
 	 * Es werden Rechte zum Ansehen der Adressdaten eines von Erziehungsberechtigten benötigt
 	 */
-	public static readonly CARDDAV_ERZIEHER_ANSEHEN : BenutzerKompetenz = new BenutzerKompetenz("CARDDAV_ERZIEHER_ANSEHEN", 75, new BenutzerKompetenzKatalogEintrag(202, BenutzerKompetenzGruppe.CARDDAV, "Erzieherdaten im Addressbuch anzeigen", null, "Zeigt die Erzieherdaten im Adressbuch an."));
+	public static readonly CARDDAV_ERZIEHER_ANSEHEN : BenutzerKompetenz = new BenutzerKompetenz("CARDDAV_ERZIEHER_ANSEHEN", 76, new BenutzerKompetenzKatalogEintrag(202, BenutzerKompetenzGruppe.CARDDAV, "Erzieherdaten im Addressbuch anzeigen", null, "Zeigt die Erzieherdaten im Adressbuch an."));
 
 	/**
 	 * Allgemeine Berechtigung zum Verwenden der CalDav API für Kalenderdaten
 	 */
-	public static readonly CALDAV_NUTZEN : BenutzerKompetenz = new BenutzerKompetenz("CALDAV_NUTZEN", 76, new BenutzerKompetenzKatalogEintrag(301, BenutzerKompetenzGruppe.CALDAV, "Kalender (CalDAV) nutzen", null, "Ermöglicht die Nutzung des Kalenders über CalDAV zur Verwaltung von Terminen."));
+	public static readonly CALDAV_NUTZEN : BenutzerKompetenz = new BenutzerKompetenz("CALDAV_NUTZEN", 77, new BenutzerKompetenzKatalogEintrag(301, BenutzerKompetenzGruppe.CALDAV, "Kalender (CalDAV) nutzen", null, "Ermöglicht die Nutzung des Kalenders über CalDAV zur Verwaltung von Terminen."));
 
 	/**
 	 * Berechtigung für den Besitz und das Bearbeiten eines eigenen Kalenders über die CalDav API.
 	 */
-	public static readonly CALDAV_EIGENER_KALENDER : BenutzerKompetenz = new BenutzerKompetenz("CALDAV_EIGENER_KALENDER", 77, new BenutzerKompetenzKatalogEintrag(302, BenutzerKompetenzGruppe.CALDAV, "Eigener Kalender", null, "Bietet die Möglichkeit, den persönlichen Kalender zu verwalten und anzupassen."));
+	public static readonly CALDAV_EIGENER_KALENDER : BenutzerKompetenz = new BenutzerKompetenz("CALDAV_EIGENER_KALENDER", 78, new BenutzerKompetenzKatalogEintrag(302, BenutzerKompetenzGruppe.CALDAV, "Eigener Kalender", null, "Bietet die Möglichkeit, den persönlichen Kalender zu verwalten und anzupassen."));
 
 	/**
 	 * Allgemeine Berechtigung zum Ansehen der generierten Kalenderdaten
 	 */
-	public static readonly CALDAV_KALENDER_ANSEHEN_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("CALDAV_KALENDER_ANSEHEN_ALLGEMEIN", 78, new BenutzerKompetenzKatalogEintrag(303, BenutzerKompetenzGruppe.CALDAV, "Kalender Ansehen (Allgemein)", null, "Erlaubt das Ansehen des Kalender zur Terminübersicht."));
+	public static readonly CALDAV_KALENDER_ANSEHEN_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("CALDAV_KALENDER_ANSEHEN_ALLGEMEIN", 79, new BenutzerKompetenzKatalogEintrag(303, BenutzerKompetenzGruppe.CALDAV, "Kalender Ansehen (Allgemein)", null, "Erlaubt das Ansehen des Kalender zur Terminübersicht."));
 
 	/**
 	 * Funktionsbezogene Berechtigung zum Ansehen generierter Kalender
 	 */
-	public static readonly CALDAV_KALENDER_ANSEHEN_FUNKTIONSBEZOGEN : BenutzerKompetenz = new BenutzerKompetenz("CALDAV_KALENDER_ANSEHEN_FUNKTIONSBEZOGEN", 79, new BenutzerKompetenzKatalogEintrag(304, BenutzerKompetenzGruppe.CALDAV, "Kalender Ansehen (Funktionsbezogen)", null, "Ermöglicht das Anzeigen des Kalenders nur für spezifische Nutzergruppen."));
+	public static readonly CALDAV_KALENDER_ANSEHEN_FUNKTIONSBEZOGEN : BenutzerKompetenz = new BenutzerKompetenz("CALDAV_KALENDER_ANSEHEN_FUNKTIONSBEZOGEN", 80, new BenutzerKompetenzKatalogEintrag(304, BenutzerKompetenzGruppe.CALDAV, "Kalender Ansehen (Funktionsbezogen)", null, "Ermöglicht das Anzeigen des Kalenders nur für spezifische Nutzergruppen."));
 
 	/**
 	 * Berechtigung zum Ansehen von Abschlussdaten der Sekundarstufe I (allgemein).
 	 */
-	public static readonly ABSCHLUSS_SEKI_ANSEHEN_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("ABSCHLUSS_SEKI_ANSEHEN_ALLGEMEIN", 80, new BenutzerKompetenzKatalogEintrag(401, BenutzerKompetenzGruppe.ABSCHLUSS_SEKI, "Abschlussdaten ansehen (allgemein)", null, "Ermöglicht das Anzeigen von Abschlussdaten der Sekundarstufe I."));
+	public static readonly ABSCHLUSS_SEKI_ANSEHEN_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("ABSCHLUSS_SEKI_ANSEHEN_ALLGEMEIN", 81, new BenutzerKompetenzKatalogEintrag(401, BenutzerKompetenzGruppe.ABSCHLUSS_SEKI, "Abschlussdaten ansehen (allgemein)", null, "Ermöglicht das Anzeigen von Abschlussdaten der Sekundarstufe I."));
 
 	/**
 	 * Berechtigung zum Ansehen von Abschlussdaten der Sekundarstufe I (funktionsbezogen).
 	 */
-	public static readonly ABSCHLUSS_SEKI_ANSEHEN_FUNKTIONSBEZOGEN : BenutzerKompetenz = new BenutzerKompetenz("ABSCHLUSS_SEKI_ANSEHEN_FUNKTIONSBEZOGEN", 81, new BenutzerKompetenzKatalogEintrag(402, BenutzerKompetenzGruppe.ABSCHLUSS_SEKI, "Abschlussdaten ansehen (funktionsbezogen)", null, "Ermöglicht das Anzeigen von Abschlussdaten der Sekundarstufe I nur für Abteilungs-,  Stufen- oder Klassenleitungen."));
+	public static readonly ABSCHLUSS_SEKI_ANSEHEN_FUNKTIONSBEZOGEN : BenutzerKompetenz = new BenutzerKompetenz("ABSCHLUSS_SEKI_ANSEHEN_FUNKTIONSBEZOGEN", 82, new BenutzerKompetenzKatalogEintrag(402, BenutzerKompetenzGruppe.ABSCHLUSS_SEKI, "Abschlussdaten ansehen (funktionsbezogen)", null, "Ermöglicht das Anzeigen von Abschlussdaten der Sekundarstufe I nur für Abteilungs-,  Stufen- oder Klassenleitungen."));
 
 	/**
 	 * Berechtigung zum Ändern aller Abschlussdaten der Sekundarstufe I (allgemein).
 	 */
-	public static readonly ABSCHLUSS_SEKI_AENDERN_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("ABSCHLUSS_SEKI_AENDERN_ALLGEMEIN", 82, new BenutzerKompetenzKatalogEintrag(403, BenutzerKompetenzGruppe.ABSCHLUSS_SEKI, "Abschlussdaten ändern (allgemein)", null, "Erlaubt das Bearbeiten der Abschlussdaten in der Sekundarstufe I."));
+	public static readonly ABSCHLUSS_SEKI_AENDERN_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("ABSCHLUSS_SEKI_AENDERN_ALLGEMEIN", 83, new BenutzerKompetenzKatalogEintrag(403, BenutzerKompetenzGruppe.ABSCHLUSS_SEKI, "Abschlussdaten ändern (allgemein)", null, "Erlaubt das Bearbeiten der Abschlussdaten in der Sekundarstufe I."));
 
 	/**
 	 * Berechtigung zum Ändern aller Abschlussdaten der Sekundarstufe I (funktionsbezogen).
 	 */
-	public static readonly ABSCHLUSS_SEKI_AENDERN_FUNKTIONSBEZOGEN : BenutzerKompetenz = new BenutzerKompetenz("ABSCHLUSS_SEKI_AENDERN_FUNKTIONSBEZOGEN", 83, new BenutzerKompetenzKatalogEintrag(404, BenutzerKompetenzGruppe.ABSCHLUSS_SEKI, "Abschlussdaten ändern (funktionsbezogen)", null, "Erlaubt die Bearbeitung von Abschlussdaten der Sekundarstufe I nur für Abteilungs-,  Stufen- oder Klassenleitungen."));
+	public static readonly ABSCHLUSS_SEKI_AENDERN_FUNKTIONSBEZOGEN : BenutzerKompetenz = new BenutzerKompetenz("ABSCHLUSS_SEKI_AENDERN_FUNKTIONSBEZOGEN", 84, new BenutzerKompetenzKatalogEintrag(404, BenutzerKompetenzGruppe.ABSCHLUSS_SEKI, "Abschlussdaten ändern (funktionsbezogen)", null, "Erlaubt die Bearbeitung von Abschlussdaten der Sekundarstufe I nur für Abteilungs-,  Stufen- oder Klassenleitungen."));
 
 	/**
 	 * Berechtigung zum Eingeben von Prüfungsergebnissen (allgemein).
 	 */
-	public static readonly ABSCHLUSS_SEKI_EINGABE_ERGEBNISSE_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("ABSCHLUSS_SEKI_EINGABE_ERGEBNISSE_ALLGEMEIN", 84, new BenutzerKompetenzKatalogEintrag(405, BenutzerKompetenzGruppe.ABSCHLUSS_SEKI, "Prüfungsergebnisse eingeben (allgemein)", null, "Ermöglicht das Eingeben der Prüfungsergebnisse in der Sekundarstufe I."));
+	public static readonly ABSCHLUSS_SEKI_EINGABE_ERGEBNISSE_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("ABSCHLUSS_SEKI_EINGABE_ERGEBNISSE_ALLGEMEIN", 85, new BenutzerKompetenzKatalogEintrag(405, BenutzerKompetenzGruppe.ABSCHLUSS_SEKI, "Prüfungsergebnisse eingeben (allgemein)", null, "Ermöglicht das Eingeben der Prüfungsergebnisse in der Sekundarstufe I."));
 
 	/**
 	 * Berechtigung zum Eingeben von Prüfungsergebnissen (funktionsbezogen).
 	 */
-	public static readonly ABSCHLUSS_SEKI_EINGABE_ERGEBNISSE_FUNKTIONSBEZOGEN : BenutzerKompetenz = new BenutzerKompetenz("ABSCHLUSS_SEKI_EINGABE_ERGEBNISSE_FUNKTIONSBEZOGEN", 85, new BenutzerKompetenzKatalogEintrag(406, BenutzerKompetenzGruppe.ABSCHLUSS_SEKI, "Prüfungsergebnisse eingeben (funktionsbezogen)", null, "Ermöglicht das Eingeben der Prüfungsergebnisse in der Sekundarstufe I nur für Abteilungs-,  Stufen- oder Klassenleitungen."));
+	public static readonly ABSCHLUSS_SEKI_EINGABE_ERGEBNISSE_FUNKTIONSBEZOGEN : BenutzerKompetenz = new BenutzerKompetenz("ABSCHLUSS_SEKI_EINGABE_ERGEBNISSE_FUNKTIONSBEZOGEN", 86, new BenutzerKompetenzKatalogEintrag(406, BenutzerKompetenzGruppe.ABSCHLUSS_SEKI, "Prüfungsergebnisse eingeben (funktionsbezogen)", null, "Ermöglicht das Eingeben der Prüfungsergebnisse in der Sekundarstufe I nur für Abteilungs-,  Stufen- oder Klassenleitungen."));
 
 	/**
 	 * Berechtigung zum Ansehen von Abschlussdaten an einer berufsbildenden Schule (allgemein).
 	 */
-	public static readonly ABSCHLUSS_BK_ANSEHEN_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("ABSCHLUSS_BK_ANSEHEN_ALLGEMEIN", 86, new BenutzerKompetenzKatalogEintrag(501, BenutzerKompetenzGruppe.ABSCHLUSS_BK, "Abschlussdaten ansehen (allgemein)", Arrays.asList(Schulform.BK, Schulform.SB), "Erlaubt das Anzeigen der Abschlussdaten an berufsbildenden Schulen."));
+	public static readonly ABSCHLUSS_BK_ANSEHEN_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("ABSCHLUSS_BK_ANSEHEN_ALLGEMEIN", 87, new BenutzerKompetenzKatalogEintrag(501, BenutzerKompetenzGruppe.ABSCHLUSS_BK, "Abschlussdaten ansehen (allgemein)", Arrays.asList(Schulform.BK, Schulform.SB), "Erlaubt das Anzeigen der Abschlussdaten an berufsbildenden Schulen."));
 
 	/**
 	 * Berechtigung zum Ansehen von Abschlussdaten an einer berufsbildenden Schule (funktionsbezogen).
 	 */
-	public static readonly ABSCHLUSS_BK_ANSEHEN_FUNKTIONSBEZOGEN : BenutzerKompetenz = new BenutzerKompetenz("ABSCHLUSS_BK_ANSEHEN_FUNKTIONSBEZOGEN", 87, new BenutzerKompetenzKatalogEintrag(502, BenutzerKompetenzGruppe.ABSCHLUSS_BK, "Abschlussdaten ansehen (funktionsbezogen)", Arrays.asList(Schulform.BK, Schulform.SB), "Erlaubt das Anzeigen der Abschlussdaten an berufsbildenden Schulen eines Jahrgangs nur für Abteilungs- oder Stufenleitungen."));
+	public static readonly ABSCHLUSS_BK_ANSEHEN_FUNKTIONSBEZOGEN : BenutzerKompetenz = new BenutzerKompetenz("ABSCHLUSS_BK_ANSEHEN_FUNKTIONSBEZOGEN", 88, new BenutzerKompetenzKatalogEintrag(502, BenutzerKompetenzGruppe.ABSCHLUSS_BK, "Abschlussdaten ansehen (funktionsbezogen)", Arrays.asList(Schulform.BK, Schulform.SB), "Erlaubt das Anzeigen der Abschlussdaten an berufsbildenden Schulen eines Jahrgangs nur für Abteilungs- oder Stufenleitungen."));
 
 	/**
 	 * Berechtigung zum Ändern aller Abschlussdaten an einer berufsbildenden Schule (allgemein).
 	 */
-	public static readonly ABSCHLUSS_BK_AENDERN_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("ABSCHLUSS_BK_AENDERN_ALLGEMEIN", 88, new BenutzerKompetenzKatalogEintrag(503, BenutzerKompetenzGruppe.ABSCHLUSS_BK, "Abschlussdaten ändern (allgemein)", Arrays.asList(Schulform.BK, Schulform.SB), "Erlaubt das Bearbeiten der Abschlussdaten an berufsbildenden Schulen wie Noteneintragungen oder Gesamtberechnungen."));
+	public static readonly ABSCHLUSS_BK_AENDERN_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("ABSCHLUSS_BK_AENDERN_ALLGEMEIN", 89, new BenutzerKompetenzKatalogEintrag(503, BenutzerKompetenzGruppe.ABSCHLUSS_BK, "Abschlussdaten ändern (allgemein)", Arrays.asList(Schulform.BK, Schulform.SB), "Erlaubt das Bearbeiten der Abschlussdaten an berufsbildenden Schulen wie Noteneintragungen oder Gesamtberechnungen."));
 
 	/**
 	 * Berechtigung zum Ändern aller Abschlussdaten an einer berufsbildenden Schule (funktionsbezogen).
 	 */
-	public static readonly ABSCHLUSS_BK_AENDERN_FUNKTIONSBEZOGEN : BenutzerKompetenz = new BenutzerKompetenz("ABSCHLUSS_BK_AENDERN_FUNKTIONSBEZOGEN", 89, new BenutzerKompetenzKatalogEintrag(504, BenutzerKompetenzGruppe.ABSCHLUSS_BK, "Abschlussdaten ändern (funktionsbezogen)", Arrays.asList(Schulform.BK, Schulform.SB), "Erlaubt das Bearbeiten der Abschlussdaten an berufsbildenden Schulen wie Noteneintragungen oder Gesamtberechnungen nur für Abteilungs- oder Stufenleitungen."));
+	public static readonly ABSCHLUSS_BK_AENDERN_FUNKTIONSBEZOGEN : BenutzerKompetenz = new BenutzerKompetenz("ABSCHLUSS_BK_AENDERN_FUNKTIONSBEZOGEN", 90, new BenutzerKompetenzKatalogEintrag(504, BenutzerKompetenzGruppe.ABSCHLUSS_BK, "Abschlussdaten ändern (funktionsbezogen)", Arrays.asList(Schulform.BK, Schulform.SB), "Erlaubt das Bearbeiten der Abschlussdaten an berufsbildenden Schulen wie Noteneintragungen oder Gesamtberechnungen nur für Abteilungs- oder Stufenleitungen."));
 
 	/**
 	 * Berechtigung zum Eingeben von Prüfungsergebnissen (allgemein).
 	 */
-	public static readonly ABSCHLUSS_BK_EINGABE_ERGEBNISSE_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("ABSCHLUSS_BK_EINGABE_ERGEBNISSE_ALLGEMEIN", 90, new BenutzerKompetenzKatalogEintrag(505, BenutzerKompetenzGruppe.ABSCHLUSS_BK, "Prüfungsergebnisse eingeben (allgemein)", Arrays.asList(Schulform.BK, Schulform.SB), "Ermöglicht das Eingeben der Prüfungsergebnisse eines Schülers an berufsbildenden Schulen."));
+	public static readonly ABSCHLUSS_BK_EINGABE_ERGEBNISSE_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("ABSCHLUSS_BK_EINGABE_ERGEBNISSE_ALLGEMEIN", 91, new BenutzerKompetenzKatalogEintrag(505, BenutzerKompetenzGruppe.ABSCHLUSS_BK, "Prüfungsergebnisse eingeben (allgemein)", Arrays.asList(Schulform.BK, Schulform.SB), "Ermöglicht das Eingeben der Prüfungsergebnisse eines Schülers an berufsbildenden Schulen."));
 
 	/**
 	 * Berechtigung zum Eingeben von Prüfungsergebnissen (funktionsbezogen).
 	 */
-	public static readonly ABSCHLUSS_BK_EINGABE_ERGEBNISSE_FUNKTIONSBEZOGEN : BenutzerKompetenz = new BenutzerKompetenz("ABSCHLUSS_BK_EINGABE_ERGEBNISSE_FUNKTIONSBEZOGEN", 91, new BenutzerKompetenzKatalogEintrag(506, BenutzerKompetenzGruppe.ABSCHLUSS_BK, "Prüfungsergebnisse eingeben (funktionsbezogen)", Arrays.asList(Schulform.BK, Schulform.SB), "Ermöglicht das Eingeben der Prüfungsergebnisse eines Schülers an berufsbildenden Schulen nur für Abteilungs- oder Stufenleitungen."));
+	public static readonly ABSCHLUSS_BK_EINGABE_ERGEBNISSE_FUNKTIONSBEZOGEN : BenutzerKompetenz = new BenutzerKompetenz("ABSCHLUSS_BK_EINGABE_ERGEBNISSE_FUNKTIONSBEZOGEN", 92, new BenutzerKompetenzKatalogEintrag(506, BenutzerKompetenzGruppe.ABSCHLUSS_BK, "Prüfungsergebnisse eingeben (funktionsbezogen)", Arrays.asList(Schulform.BK, Schulform.SB), "Ermöglicht das Eingeben der Prüfungsergebnisse eines Schülers an berufsbildenden Schulen nur für Abteilungs- oder Stufenleitungen."));
 
 	/**
 	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.

@@ -534,6 +534,14 @@ export { SchuelerblockungOutputFachwahlZuKurs } from './core/data/kursblockung/S
 export { LehrerEinwilligung } from './core/data/lehrer/LehrerEinwilligung';
 export { LehrerLernplattform } from './core/data/lehrer/LehrerLernplattform';
 export { LehrerListeEintrag } from './core/data/lehrer/LehrerListeEintrag';
+export { LernplattformV1Export } from './core/data/lernplattform/v1/LernplattformV1Export';
+export { LernplattformV1Fach } from './core/data/lernplattform/v1/LernplattformV1Fach';
+export { LernplattformV1Jahrgang } from './core/data/lernplattform/v1/LernplattformV1Jahrgang';
+export { LernplattformV1Klasse } from './core/data/lernplattform/v1/LernplattformV1Klasse';
+export { LernplattformV1Lehrer } from './core/data/lernplattform/v1/LernplattformV1Lehrer';
+export { LernplattformV1Lerngruppe } from './core/data/lernplattform/v1/LernplattformV1Lerngruppe';
+export { LernplattformV1Login } from './core/data/lernplattform/v1/LernplattformV1Login';
+export { LernplattformV1Schueler } from './core/data/lernplattform/v1/LernplattformV1Schueler';
 export { OAuth2ClientConnection } from './core/data/oauth2/OAuth2ClientConnection';
 export { ReportingParameter } from './core/data/reporting/ReportingParameter';
 export { DatenbankVerbindungsdaten } from './core/data/schema/DatenbankVerbindungsdaten';
