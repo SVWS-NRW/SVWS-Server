@@ -33,6 +33,7 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	private readonly _routeHinzufuegen: RouteNode<any, any>;
 
 	private _pendingStateManagerRegistry: PendingStateManagerRegistry;
+
 	/**
 	 * Erzeugt ein neues Route-Daten-Objekt mit dem übergebenen Default-State.
 	 * Optional können noch gültige Sichten/Child Routes übergeben werden, sofern diese
@@ -65,7 +66,7 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	 *
 	 * @returns der Dummy-Manager
 	 */
-	protected getDummyManager() : TAuswahlManager | undefined {
+	protected getDummyManager(): TAuswahlManager | undefined {
 		return undefined;
 	}
 
@@ -392,31 +393,34 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	 * @param navigate   gibt an, ob ein Routing durchgeführt werden soll oder nur die View im State gesetzt werden soll
 	 */
 	gotoGruppenprozessView = async (navigate: boolean) => {
-		const currentSelection: JavaMap<number, TDaten> = this.manager.getListeDaten();
-		const newSelection: JavaMap<number, TDaten> = new HashMap();
-		const deltaSelection: List<TAuswahl> = new ArrayList();
-		for (const eintrag of this.manager.liste.auswahl()) {
-			const id = this.manager.getIdByEintrag(eintrag);
-			const daten = currentSelection.get(id);
-			if (daten === null) {
-				deltaSelection.add(eintrag);
-			} else {
-				newSelection.put(id, daten);
+		// Hier werden nur Daten geladen, wenn eine "neue" Gruppenprozess Route betreten wird
+		// TODO: Sobald alle Routen auf die "neue" Gruppenprozesslogik umgestellt wurden kann das if weg
+		if (this._defaultState.gruppenprozesseView !== undefined) {
+			const currentSelection: JavaMap<number, TDaten> = this.manager.getListeDaten();
+			const newSelection: JavaMap<number, TDaten> = new HashMap();
+			const deltaSelection: List<TAuswahl> = new ArrayList();
+			for (const eintrag of this.manager.liste.auswahl()) {
+				const id = this.manager.getIdByEintrag(eintrag);
+				const daten = currentSelection.get(id);
+				if (daten === null)
+					deltaSelection.add(eintrag);
+				else
+					newSelection.put(id, daten);
 			}
-		}
 
-		if (deltaSelection.size() > 0) {
-			const deltaDaten = await this.ladeDatenMultiple(deltaSelection, this._state.value);
-			if (deltaDaten === null)
-				throw new DeveloperNotificationException("Fehler beim Laden der Daten. Es konnten keine Daten zu den ausgewählten Einträgen geladen werden.");
+			if (deltaSelection.size() > 0) {
+				const deltaDaten = await this.ladeDatenMultiple(deltaSelection, this._state.value);
+				if (deltaDaten === null)
+					throw new DeveloperNotificationException("Fehler beim Laden der Daten. Es konnten keine Daten zu den ausgewählten Einträgen geladen werden.");
 
-			for (const datenObj of deltaDaten) {
-				newSelection.put(this.manager.getIdByDaten(datenObj), datenObj);
+				for (const datenObj of deltaDaten) {
+					newSelection.put(this.manager.getIdByDaten(datenObj), datenObj);
+				}
 			}
-		}
 
-		currentSelection.clear();
-		currentSelection.putAll(newSelection);
+			currentSelection.clear();
+			currentSelection.putAll(newSelection);
+		}
 
 		if (this.activeViewType === ViewType.GRUPPENPROZESSE) {
 			this.commit();
@@ -426,16 +430,15 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 		this.activeViewType = ViewType.GRUPPENPROZESSE;
 
 		if (navigate) {
-			// TODO: Sobald alle Routen auf die neue Gruppenprozesslogik umgestellt wurden kann dieses If weg!
+			// TODO: Sobald alle Routen auf die "neue" Gruppenprozesslogik umgestellt wurden kann das if weg
 			if (this._defaultState.gruppenprozesseView !== undefined) {
 				await RouteManager.doRoute(this.defaultGruppenprozesseView.getRoute());
 				this._state.value.view = (this._state.value.view?.name === this.view.name) ? this.view : this.defaultGruppenprozesseView;
 			} else if (this._routeGruppenprozesse !== undefined) {
 				await RouteManager.doRoute(this._routeGruppenprozesse.getRoute());
 				this._state.value.view = this._routeGruppenprozesse
-			} else {
+			} else
 				throw new DeveloperNotificationException('Es wurde keine Standard Route für Gruppenprozesse festgelegt!');
-			}
 		}
 
 		this.manager.setDaten(null);
@@ -448,7 +451,7 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	 * @param navigate   gibt an, ob ein Routing durchgeführt werden soll oder nur die View im State gesetzt werden soll
 	 */
 	gotoHinzufuegenView = async (navigate: boolean) => {
-		if ((this.activeViewType === ViewType.HINZUFUEGEN) || (this._state.value.view === this.routeHinzufuegen)) {
+		if ((this.activeViewType === ViewType.HINZUFUEGEN) || (this._state.value.view === this._routeHinzufuegen)) {
 			this.commit();
 			return;
 		}
