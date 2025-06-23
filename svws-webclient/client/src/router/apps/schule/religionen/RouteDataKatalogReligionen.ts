@@ -18,7 +18,7 @@ const defaultState: RouteStateKatalogeReligionen = {
 export class RouteDataKatalogReligionen extends RouteDataAuswahl<ReligionListeManager, RouteStateKatalogeReligionen> {
 
 	public constructor() {
-		super(defaultState, routeKatalogReligionGruppenprozesse, routeKatalogReligionNeu);
+		super(defaultState, { gruppenprozesse: routeKatalogReligionGruppenprozesse, hinzufuegen: routeKatalogReligionNeu });
 	}
 
 	public addID(param: RouteParamsRawGeneric, id: number): void {

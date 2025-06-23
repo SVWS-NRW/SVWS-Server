@@ -20,7 +20,7 @@ const defaultState = {
 export class RouteDataKindergaerten extends RouteDataAuswahl<KindergaertenListeManager, RouteStateAuswahlInterface<KindergaertenListeManager>> {
 
 	public constructor() {
-		super(defaultState, routeKindergaertenGruppenprozesse, routeKindergaertenNeu);
+		super(defaultState, { gruppenprozesse: routeKindergaertenGruppenprozesse, hinzufuegen: routeKindergaertenNeu });
 	}
 
 	protected async createManager(_: number): Promise<Partial<RouteStateAuswahlInterface<KindergaertenListeManager>>> {

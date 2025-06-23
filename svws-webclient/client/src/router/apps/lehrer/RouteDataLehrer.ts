@@ -25,7 +25,7 @@ const defaultState = <RouteStateLehrer>{
 export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteStateLehrer> {
 
 	public constructor() {
-		super(defaultState, routeLehrerGruppenprozesse, routeLehrerNeu);
+		super(defaultState, { gruppenprozesse: routeLehrerGruppenprozesse, hinzufuegen: routeLehrerNeu });
 	}
 
 	get filterNurSichtbar(): boolean {

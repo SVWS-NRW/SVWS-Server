@@ -22,7 +22,7 @@ const defaultState = {
 export class RouteDataAbteilungen extends RouteDataAuswahl<AbteilungenListeManager, RouteStateAuswahlInterface<AbteilungenListeManager>> {
 
 	public constructor() {
-		super(defaultState, routeAbteilungenGruppenprozesse, routeAbteilungenNeu);
+		super(defaultState, { gruppenprozesse: routeAbteilungenGruppenprozesse, hinzufuegen: routeAbteilungenNeu });
 	}
 
 	public addID(param: RouteParamsRawGeneric, id: number) {

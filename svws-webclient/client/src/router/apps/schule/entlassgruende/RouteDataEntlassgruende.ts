@@ -20,7 +20,7 @@ const defaultState = {
 export class RouteDataEntlassgruende extends RouteDataAuswahl<EntlassgruendeListeManager, RouteStateAuswahlInterface<EntlassgruendeListeManager>> {
 
 	public constructor() {
-		super(defaultState, routeEntlassgruendeGruppenprozesse, routeEntlassgruendeNeu);
+		super(defaultState, { gruppenprozesse: routeEntlassgruendeGruppenprozesse, hinzufuegen: routeEntlassgruendeNeu });
 	}
 
 	protected async createManager(_: number): Promise<Partial<RouteStateAuswahlInterface<EntlassgruendeListeManager>>> {

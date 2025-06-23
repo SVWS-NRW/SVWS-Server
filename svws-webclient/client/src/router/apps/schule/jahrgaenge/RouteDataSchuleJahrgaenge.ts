@@ -21,7 +21,7 @@ const defaultState = {
 export class RouteDataSchuleJahrgaenge extends RouteDataAuswahl<JahrgangListeManager, RouteStateAuswahlInterface<JahrgangListeManager>> {
 
 	public constructor() {
-		super(defaultState, routeSchuleJahrgangGruppenprozesse, routeSchuleJahrgangNeu);
+		super(defaultState, { gruppenprozesse: routeSchuleJahrgangGruppenprozesse, hinzufuegen: routeSchuleJahrgangNeu });
 	}
 
 	public addID(param: RouteParamsRawGeneric, id: number): void {

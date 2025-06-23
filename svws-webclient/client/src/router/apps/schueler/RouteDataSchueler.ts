@@ -31,7 +31,7 @@ const defaultState = <RouteStateSchueler> {
 export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, RouteStateSchueler> {
 
 	public constructor() {
-		super(defaultState, undefined, routeSchuelerNeu);
+		super(defaultState, { hinzufuegen: routeSchuelerNeu });
 	}
 
 	public addID(param: RouteParamsRawGeneric, id: number): void {

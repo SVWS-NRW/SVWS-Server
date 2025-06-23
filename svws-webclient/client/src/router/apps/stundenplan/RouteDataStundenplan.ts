@@ -48,6 +48,10 @@ const defaultState: RouteStateStundenplan = {
 
 export class RouteDataStundenplan extends RouteDataAuswahl<StundenplanListeManager, RouteStateStundenplan> {
 
+	public constructor() {
+		super(defaultState, { gruppenprozesse: routeStundenplanGruppenprozesse, hinzufuegen: routeStundenplanNeu });
+	}
+
 	protected async createManager(idSchuljahresabschnitt: number): Promise<Partial<RouteStateStundenplan>> {
 		const schuljahresabschnitt = api.mapAbschnitte.value.get(idSchuljahresabschnitt);
 		if (schuljahresabschnitt === undefined)
@@ -139,10 +143,6 @@ export class RouteDataStundenplan extends RouteDataAuswahl<StundenplanListeManag
 	}
 	protected deleteMessage(id: number, stundenplan: StundenplanListeEintrag): string {
 		return `Stundenplan ${stundenplan.bezeichnung} (ID: ${id}) wurde erfolgreich gelöscht.`;
-	}
-
-	public constructor() {
-		super(defaultState, routeStundenplanGruppenprozesse, routeStundenplanNeu);
 	}
 
 	get stundenplanUnterrichtListeManager(): StundenplanUnterrichtListeManager {

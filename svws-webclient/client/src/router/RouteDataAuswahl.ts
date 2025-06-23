@@ -30,7 +30,7 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	private readonly _routeGruppenprozesse: RouteNode<any, any> | undefined;
 
 	/** Die Route für das Hinzufügen */
-	private readonly _routeHinzufuegen: RouteNode<any, any>;
+	private readonly _routeHinzufuegen: RouteNode<any, any> | undefined;
 
 	private _pendingStateManagerRegistry: PendingStateManagerRegistry;
 
@@ -43,10 +43,10 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	 * @param routeGruppenprozesse Route für Gruppenprozesse
 	 * @param routeHinzufuegen Route für Hinzufügen
 	 */
-	protected constructor(defaultState: RouteState, routeGruppenprozesse: RouteNode<any, any> | undefined, routeHinzufuegen: RouteNode<any, any>) {
+	protected constructor(defaultState: RouteState, routes: { gruppenprozesse?: RouteNode<any, any>, hinzufuegen?: RouteNode<any, any> }) {
 		super(defaultState);
-		this._routeGruppenprozesse = routeGruppenprozesse;
-		this._routeHinzufuegen = routeHinzufuegen;
+		this._routeGruppenprozesse = routes.gruppenprozesse;
+		this._routeHinzufuegen = routes.hinzufuegen;
 		this._pendingStateManagerRegistry = new PendingStateManagerRegistry();
 	}
 
@@ -451,13 +451,15 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	 * @param navigate   gibt an, ob ein Routing durchgeführt werden soll oder nur die View im State gesetzt werden soll
 	 */
 	gotoHinzufuegenView = async (navigate: boolean) => {
+		if (this._routeHinzufuegen === undefined)
+			throw new DeveloperNotificationException("Es wurde keine Route definiert, um Daten in der Auswahlliste zu ergänzen.");
+
 		if ((this.activeViewType === ViewType.HINZUFUEGEN) || (this._state.value.view === this._routeHinzufuegen)) {
 			this.commit();
 			return;
 		}
 
 		this.activeViewType = ViewType.HINZUFUEGEN;
-
 		if (navigate) {
 			const result = await RouteManager.doRoute(this._routeHinzufuegen.getRoute());
 			if (result === RoutingStatus.SUCCESS)

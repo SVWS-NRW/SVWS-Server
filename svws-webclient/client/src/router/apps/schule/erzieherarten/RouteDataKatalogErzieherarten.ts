@@ -20,7 +20,7 @@ const defaultState = {
 export class RouteDataKatalogErzieherarten extends RouteDataAuswahl<ErzieherartListeManager, RouteStateAuswahlInterface<ErzieherartListeManager>> {
 
 	public constructor() {
-		super(defaultState, routeKatalogErzieherartenGruppenprozesse, routeKatalogErzieherartenNeu);
+		super(defaultState, { gruppenprozesse: routeKatalogErzieherartenGruppenprozesse, hinzufuegen: routeKatalogErzieherartenNeu });
 	}
 
 	public addID(param: RouteParamsRawGeneric, id: number): void {

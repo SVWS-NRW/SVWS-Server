@@ -21,7 +21,7 @@ const defaultState = {
 export class RouteDataMerkmale extends RouteDataAuswahl<MerkmaleListeManager, RouteStateAuswahlInterface<MerkmaleListeManager>> {
 
 	public constructor() {
-		super(defaultState, routeMerkmaleGruppenprozesse, routeMerkmaleNeu);
+		super(defaultState, { gruppenprozesse: routeMerkmaleGruppenprozesse, hinzufuegen: routeMerkmaleNeu });
 	}
 
 	protected async createManager(_: number): Promise<Partial<RouteStateAuswahlInterface<MerkmaleListeManager>>> {

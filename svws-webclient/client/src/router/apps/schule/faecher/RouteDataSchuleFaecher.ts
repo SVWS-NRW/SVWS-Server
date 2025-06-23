@@ -28,7 +28,7 @@ const defaultState: RouteStateFaecher = {
 export class RouteDataSchuleFaecher extends RouteDataAuswahl<FachListeManager, RouteStateFaecher> {
 
 	public constructor() {
-		super(defaultState, routeSchuleFachGruppenprozesse, routeSchuleFachNeu);
+		super(defaultState, { gruppenprozesse: routeSchuleFachGruppenprozesse, hinzufuegen: routeSchuleFachNeu });
 	}
 
 	public addID(param: RouteParamsRawGeneric, id: number): void {

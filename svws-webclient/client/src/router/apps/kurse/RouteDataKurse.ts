@@ -24,7 +24,7 @@ const defaultState: RouteStateKurse = {
 export class RouteDataKurse extends RouteDataAuswahl<KursListeManager, RouteStateKurse> {
 
 	public constructor() {
-		super(defaultState, routeKurseGruppenprozesse, routeKurseNeu);
+		super(defaultState, { gruppenprozesse: routeKurseGruppenprozesse, hinzufuegen: routeKurseNeu });
 	}
 
 	public addID(param: RouteParamsRawGeneric, id: number): void {
