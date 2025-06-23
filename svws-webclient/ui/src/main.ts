@@ -11,9 +11,4 @@ reader.readAll();
 
 const app = createApp(App);
 app.use(router);
-
-await router.isReady();
-if (router.currentRoute.value.path === '/')
-	await router.push("/README");
-
 app.mount('#app');
