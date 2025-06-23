@@ -113,6 +113,7 @@ export class StoryManager extends StateManager<Stories> {
 	}
 
 	registerVariant(props: VariantProps, slots: Readonly<Slots>) {
+		// console.log(props.id)
 		const story = this.story;
 		story.registerVariant(new Variant(props, slots));
 		this.setPatchedState({ story });

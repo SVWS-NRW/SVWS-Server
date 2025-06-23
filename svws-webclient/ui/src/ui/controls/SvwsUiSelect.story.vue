@@ -1,6 +1,6 @@
 <template>
 	<Story title="Select" id="svws-ui-select" icon="ri:expand-up-down-line" :layout="{ type: 'single', iframe: false }" auto-props-disabled>
-		<Variant title="Default">
+		<Variant title="Default" id="default">
 			<svws-ui-content-card class="p-5">
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-select v-model="modelValue"

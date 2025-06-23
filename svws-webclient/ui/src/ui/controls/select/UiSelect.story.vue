@@ -1,7 +1,7 @@
 <template>
 	<Story title="Select New" id="ui-select" icon="ri:expand-up-down-line" auto-props-disabled :layout="{ type: 'grid', width: '45%'}" :source="getSourceString()">
 		<template #docs><Docs /></template>
-		<Variant title="Single Selection">
+		<Variant title="Single Selection" id="single">
 			<svws-ui-input-wrapper>
 				<ui-select label="SimpleSelectManager mit String" :manager="sStringSelectManager" :searchable="state.searchable"
 					:disabled="state.disabled" :statistics="state.statistics" :removable="state.removable" :headless="state.headless"
@@ -50,7 +50,7 @@
 				]" />
 			</template>
 		</Variant>
-		<Variant title="Multi Selection" :source="getSourceString(true)">
+		<Variant title="Multi Selection" :source="getSourceString(true)" id="multi">
 			<svws-ui-input-wrapper>
 				<ui-select label="SimpleSelectManager mit String" :manager="mStringSelectManager" :searchable="state.searchable"
 					:disabled="state.disabled" :statistics="state.statistics" :removable="state.removable" :headless="state.headless"
@@ -67,7 +67,7 @@
 					:max-options="state.maxOptions" :class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
 			</svws-ui-input-wrapper>
 		</Variant>
-		<Variant title="Filter">
+		<Variant title="Filter" id="filter">
 			<svws-ui-input-wrapper>
 				In diesem Beispiel werden zwei Filter an das Select übergeben. Jeder Filter hat 2 Fachgruppen, die ausgewählt werden können. Solange kein
 				Filter gesetzt ist, werden alle Optionen angezeigt. Sobald ein Filter gesetzt wird, werden nur noch dazu passende Optionen zur Verfügung
@@ -93,7 +93,7 @@
 					:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" />
 			</svws-ui-input-wrapper>
 		</Variant>
-		<Variant title="Deep Search">
+		<Variant title="Deep Search" id="search">
 			<svws-ui-input-wrapper>
 				Das folgende Select verwendet Deep Search und lässt auch die Suche nach Attributen zu, die nicht im Optiontext dargestellt werden. So ergibt
 				die Suche nach "2006" oder "2008" ebenfalls jeweils ein Auto, da die Optionen folgende sind:
@@ -110,7 +110,7 @@
 					:max-options="state.maxOptions" :class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
 			</svws-ui-input-wrapper>
 		</Variant>
-		<Variant title="Sortierung">
+		<Variant title="Sortierung" id="sortierung">
 			<svws-ui-input-wrapper>
 				<ui-select label="Sortiertes Select" :manager="sortableCoreTypeSelectManager" :searchable="true" :disabled="state.disabled"
 					:statistics="state.statistics" :removable="state.removable" :headless="state.headless" :min-options="state.minOptions"

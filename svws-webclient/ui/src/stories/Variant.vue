@@ -25,19 +25,17 @@
 
 <script setup lang="ts">
 
-	import { computed, onBeforeMount, useId, useSlots } from 'vue';
+	import { computed, onBeforeMount, useSlots } from 'vue';
 	import storyManager from './StoryManager';
 
 	const props = withDefaults(defineProps<{
-		title?: string;
-		id?: string;
+		title: string;
+		id: string;
 		layout?: {type?: 'grid'|'iframe'; width?: string};
 		icon?: string;
 		source?: string;
 		responsiveDisabled?: boolean;
 	}>(), {
-		title: '',
-		id: () => useId(),
 		size: '',
 		icon: '',
 		source: undefined,

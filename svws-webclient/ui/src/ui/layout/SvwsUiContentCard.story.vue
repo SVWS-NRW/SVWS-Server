@@ -1,6 +1,6 @@
 <template>
 	<Story title="Content Card" id="svws-ui-content-card" group="app" :layout="{type: 'grid', width: '90%'}" icon="ri:profile-line">
-		<Variant title="Default">
+		<Variant title="Default" id="default">
 			<svws-ui-content-card title="Title">
 				<template #actions>
 					<svws-ui-button type="secondary">Button</svws-ui-button>

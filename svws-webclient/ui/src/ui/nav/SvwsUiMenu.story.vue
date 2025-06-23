@@ -1,6 +1,6 @@
 <template>
 	<Story title="Sidebar/Menu" id="svws-ui-menu" :layout="{ type: 'single', iframe: false }" group="app">
-		<Variant title="Default">
+		<Variant title="Default" id="default">
 			<svws-ui-menu>
 				<template #header>
 					<svws-ui-menu-header>SVWS-NRW</svws-ui-menu-header>

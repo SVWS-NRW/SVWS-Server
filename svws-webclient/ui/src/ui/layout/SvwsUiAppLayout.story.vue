@@ -1,6 +1,6 @@
 <template>
 	<Story title="Layout" id="svws-ui-app-layout" group="app" icon="ri:computer-line" :layout="{type: 'grid', width: '90%'}">
-		<Variant title="Default">
+		<Variant title="Default" id="default">
 			<svws-ui-app-layout>
 				<template #sidebar>
 					<svws-ui-menu v-if="false">

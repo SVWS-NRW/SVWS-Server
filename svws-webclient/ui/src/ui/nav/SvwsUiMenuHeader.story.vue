@@ -1,7 +1,7 @@
 
 <template>
 	<Story title="Sidebar/Menu Header" id="svws-ui-menu-header" :layout="{ type: 'single', iframe: false }" group="app">
-		<Variant title="Default">
+		<Variant title="Default" id="default">
 			<svws-ui-menu-header @click="onClick">Menu Header</svws-ui-menu-header>
 		</Variant>
 	</Story>
