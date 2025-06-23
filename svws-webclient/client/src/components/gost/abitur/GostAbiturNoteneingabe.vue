@@ -2,10 +2,10 @@
 	<div class="page page-flex-col pt-0 overflow-hidden">
 		<div class="flex flex-row">
 			<div class="min-w-64">
-				<ui-select label="Kurs" v-model="auswahlKurs" :manager="kursSelectManager" removable />
+				<ui-select label="Kurs" v-model="auswahlKurs" :manager="kursSelectManager" />
 			</div>
 			<div class="min-w-64">
-				<ui-select label="Prüfer" v-model="auswahlPruefer" :manager="prueferSelectManager" removable />
+				<ui-select label="Prüfer" v-model="auswahlPruefer" :manager="prueferSelectManager" />
 			</div>
 		</div>
 		<ui-table-grid name="Übersicht über die Prüfungsergebnisse" :header-count="2" :footer-count="0" :data="auswahlBelegungen"
@@ -108,7 +108,7 @@
 	import { computed, shallowRef, watchEffect, type ComponentPublicInstance } from "vue";
 	import type { List, AbiturFachbelegung, Comparator, Fachgruppe, NoteKatalogEintrag, SchuelerListeEintrag, AbiturdatenManager , KursDaten, LehrerListeEintrag, JavaMap } from "@core";
 	import { GostHalbjahr, ArrayList, Fach, GostBesondereLernleistung, Note, RGBFarbe, DeveloperNotificationException, HashMap } from "@core";
-	import { GridManager, ObjectSelectManager } from "@ui";
+	import { GridManager, BaseSelectManager } from "@ui";
 
 	import type { GostAbiturNoteneingabeProps } from "./GostAbiturNoteneingabeProps";
 
@@ -147,18 +147,12 @@
 	});
 
 	const auswahlKurs = shallowRef<KursDaten | null>(null);
-	const kursSelectManager = computed<ObjectSelectManager>(() => {
-		const manager = new ObjectSelectManager(false, alleKurse.value.keySet(), k => k.kuerzel, k => k.kuerzel);
-		manager.removable = true;
-		return manager;
-	});
+	const kursSelectManager = computed<BaseSelectManager<KursDaten>>(() => new BaseSelectManager({ options: alleKurse.value.keySet(),
+		optionDisplayText: k => k.kuerzel, selectionDisplayText: k => k.kuerzel	}));
 
 	const auswahlPruefer = shallowRef<LehrerListeEintrag | null>(null);
-	const prueferSelectManager = computed<ObjectSelectManager>(() => {
-		const manager = new ObjectSelectManager(false, allePruefer.value.keySet(), l => l.kuerzel, l => l.kuerzel);
-		manager.removable = true;
-		return manager;
-	});
+	const prueferSelectManager = computed<BaseSelectManager<LehrerListeEintrag>>(() => new BaseSelectManager({ options: allePruefer.value.keySet(),
+		optionDisplayText: l => l.kuerzel, selectionDisplayText: l => l.kuerzel	}));
 
 	const alleKurse = computed<JavaMap<KursDaten, List<SchuelerAbiturbelegung>>>(() => {
 		const result = new HashMap<KursDaten, List<SchuelerAbiturbelegung>>();

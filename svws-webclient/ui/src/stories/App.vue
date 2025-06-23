@@ -25,7 +25,7 @@
 						<div class="w-60"><SvwsUiButton type="icon" @click="updateTheme(themeRef === 'dark' ? 'light':'dark')"><span class="icon" :class="themeRef === 'light' ? 'i-ri-sun-line':'i-ri-moon-line'" /> </SvwsUiButton></div>
 						<div class="w-60"><SvwsUiButton type="transparent" @click="gridView = (gridView === 'single') ? 'grid':'single'">{{ gridView === 'single' ? 'Single':'Grid' }} aktiviert</SvwsUiButton></div>
 						<div class="w-60">
-							<ui-select label="Hintergrundfarbe" v-model="color" :manager="colorSelectManager" searchable removable headless />
+							<ui-select label="Hintergrundfarbe" v-model="color" :manager="colorSelectManager" searchable headless />
 						</div>
 					</div>
 					<div class="histoire-story-responsive-preview pr-8 size-full flex gap-4 relative overflow-hidden histoire-story-variant-single-preview-native">
@@ -88,7 +88,7 @@
 	import type { RouteRecord } from 'vue-router';
 	import type { ColorPreset } from './StoryManager';
 	import storyManager from './StoryManager';
-	import { ObjectSelectManager } from '~/ui/controls/select/selectManager/ObjectSelectManager';
+	import { BaseSelectManager } from '~/ui/controls/select/selectManager/BaseSelectManager';
 	import router from '../router';
 
 	const clicked = ref<RouteRecord>(router.getRoutes().find(r => r.path === router.currentRoute.value.path) || router.getRoutes()[0]);
@@ -217,9 +217,9 @@
 		{label:'bg-uistatic-100',color:'var(--background-color-uistatic-100)',contrastColor:'var(--text-color-ui-100)'},
 	];
 
-	const colorSelectManager = new ObjectSelectManager(false, backgroundPresets, (option: ColorPreset) => option.label, (option: ColorPreset) => option.label);
-	colorSelectManager.setDeepSearchAttributes(['label']);
-	colorSelectManager.removable = true;
+	const colorSelectManager = new BaseSelectManager({
+		options: backgroundPresets, optionDisplayText: (option: ColorPreset) => option.label,	selectionDisplayText: (option: ColorPreset) => option.label,
+	});
 
 
 	const themeRef = ref<'light'|'dark'|'auto'>('light');

@@ -13,19 +13,22 @@ export class SearchSelectFilter<T> implements SelectFilter<T> {
 	private _getText: (option: T) => string;
 	// Attribute, die für die Tiefensuche verwendet werden sollen. Die Tiefensuche geht über den generierten Text aus getText() hinaus und durchsucht auch
 	// angegebene Attribute der Optionen.
-	private _deepSearchAttributes: string[] = [];
+	private _deepSearchAttributes: string[];
 
 	/**
 	 * Konstruktor für den SearchSelectFilter
 	 *
-	 * @param key       Eindeutiger Key des Filters.
-	 * @param search    Suchbegriff
-	 * @param getText   Methode zur Generierung des Optionentextes.
+	 * @param key       						 Eindeutiger Key des Filters.
+	 * @param search    						 Suchbegriff
+	 * @param getText   			       Methode zur Generierung des Optionentextes.
+	 * @param deepSearchAttributes   Attribute der Option, die bei einer Suche ebenfalls durchsucht werden sollen, auch wenn sie nicht im Optionentext im Dropdown
+	 * 															 stehen
 	 */
-	constructor(key: string, search: string, getText: (option: T) => string) {
+	constructor(key: string, search: string, getText: (option: T) => string, deepSearchAttributes: string[] = []) {
 		this.key = key;
 		this._search = search;
 		this._getText = getText;
+		this._deepSearchAttributes = deepSearchAttributes;
 	}
 
 	/**

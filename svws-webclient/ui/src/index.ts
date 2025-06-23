@@ -92,8 +92,6 @@ export { Checkpoint } from "./ui/modal/Checkpoint";
 export { Color } from "./ui/Color";
 export { LaufbahnplanungUiManager } from "./components/gost/laufbahnplanung/LaufbahnplanungUiManager";
 export { BaseSelectManager } from "./ui/controls/select/selectManager/BaseSelectManager";
-export { SimpleSelectManager } from "./ui/controls/select/selectManager/SimpleSelectManager";
-export { ObjectSelectManager } from "./ui/controls/select/selectManager/ObjectSelectManager";
 export { CoreTypeSelectManager } from "./ui/controls/select/selectManager/CoreTypeSelectManager";
 export { GridManager } from "./ui/controls/tablegrid/GridManager";
 export { GridInput } from "./ui/controls/tablegrid/GridInput";

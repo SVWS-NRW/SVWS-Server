@@ -14,7 +14,7 @@
 				<!-- Expand-Icon + Clear-Button headless -->
 				<div v-if="headless" class="flex items-center">
 					<span class="icon-sm i-ri-expand-up-down-line cursor-pointer" :class="[ disabled ? 'icon-ui-disabled' : iconColorClass]" />
-					<button v-if="removable" type="button" :disabled aria-label="Auswahl löschen" @click="clearSelection" @keydown.enter="clearSelection"
+					<button v-if="manager.removable" type="button" :disabled aria-label="Auswahl löschen" @click="clearSelection" @keydown.enter="clearSelection"
 						class="hover:bg-ui-hover flex focus:ring-2 ring-ui-neutral outline-none rounded-sm">
 						<span class="icon-sm i-ri-close-line" :class="[ disabled ? 'icon-ui-disabled' : iconColorClass]" />
 					</button>
@@ -23,8 +23,8 @@
 				<label v-if="label && ((headless && !moveLabel) || !headless)" :id="`uiSelectLabel_${instanceId}`"
 					class="absolute transition-all duration-100 ease-in-out pointer-events-none rounded left-2 whitespace-nowrap  max-w-fit flex gap-1 px-1 -translate-y-1/2"
 					:class="[ moveLabel ? 'absolute -top-0.5 text-xs' : 'absolute top-1/2 font-normal',
-						removable ? (moveLabel ? 'right-2' : 'right-11') : (moveLabel ? 'right-2' : 'right-6'),
-						headless ? (removable ? 'left-10' : 'left-6') : '', backgroundColorClass, textColorClass]">
+						manager.removable ? (moveLabel ? 'right-2' : 'right-11') : (moveLabel ? 'right-2' : 'right-6'),
+						headless ? (manager.removable ? 'left-10' : 'left-6') : '', backgroundColorClass, textColorClass]">
 					<span v-if="statistics" class="cursor-pointer flex">
 						<svws-ui-tooltip position="right">
 							<span class="icon i-ri-bar-chart-2-line pointer-events-auto" :class="[disabled ? 'icon-ui-disabled' : 'icon-ui-statistic']" />
@@ -85,8 +85,8 @@
 					<template v-if="manager.multi">
 						<span v-for="item in manager.selected" :key="manager.getSelectionText(item)" tabindex="0"
 							:aria-label="`Auswahl ${props.manager.getSelectionText(item)}`"
-							class="px-2 rounded-md text-sm flex items-center overflow-hidden max-w-30 shrink-0 border border-ui-brand mt-1"
-							:class="[ disabled ? 'bg-ui-disabled text-ui-ondisabled' : 'bg-ui-selected text-ui-onselected']">
+							class="px-2 rounded-md text-sm flex items-center overflow-hidden max-w-30 shrink-0 border mt-1"
+							:class="[ disabled ? 'bg-ui-disabled text-ui-ondisabled border-ui-disabled' : 'bg-ui-selected text-ui-onselected border-ui-selected']">
 
 							<svws-ui-tooltip position="top" :indicator="false" class="truncate">
 								<template #content>
@@ -96,7 +96,7 @@
 									<span class="truncate">
 										{{ manager.getSelectionText(item) }}
 									</span>
-									<button v-if="props.removable || manager.selected.size() > 1" @click="deselect($event, item)"
+									<button v-if="manager.removable || manager.selected.size() > 1" @click="deselect($event, item)"
 										class="hover:bg-ui rounded-sm flex ml-1 flex-shrink-0" @keydown.enter="deselect($event, item)"
 										:aria-label="`Auswahl ${props.manager.getSelectionText(item)} löschen`">
 										<span class="icon-sm i-ri-close-line" :class="[ disabled ? 'icon-ui-disabled' : 'icon-ui-onselected']" />
@@ -133,7 +133,7 @@
 
 			<!-- Expand-Icon + Clear-Button -->
 			<div v-if="!headless" class="ml-auto flex items-center h-fit">
-				<button v-if="removable" type="button" :disabled aria-label="Auswahl löschen" @click="clearSelection" @keydown.enter="clearSelection"
+				<button v-if="manager.removable" type="button" :disabled aria-label="Auswahl löschen" @click="clearSelection" @keydown.enter="clearSelection"
 					class="hover:bg-ui-hover flex focus:ring-2 ring-ui-neutral outline-none rounded-sm">
 					<span class="icon-sm i-ri-close-line" :class="[ disabled ? 'icon-ui-disabled' : iconColorClass]" />
 				</button>
@@ -165,17 +165,16 @@
 
 	import { computed, nextTick, onBeforeUnmount, onMounted, ref, useAttrs, watch } from 'vue';
 	import { useElementBounding, useWindowSize } from '@vueuse/core';
-	import type { BaseSelectManager } from './selectManager/BaseSelectManager';
+	import { BaseSelectManager } from './selectManager/BaseSelectManager';
 	import type { Validator } from '../../../../../core/src';
 	import { ValidatorFehlerart } from '../../../../../core/src';
 	import { SearchSelectFilter } from './filter/SearchSelectFilter';
 
 	const props = withDefaults(defineProps<{
 		label?: string;
-		manager: BaseSelectManager<T>;
+		manager?: BaseSelectManager<T>;
 		searchable?: boolean;
 		required?: boolean;
-		removable?: boolean;
 		disabled?: boolean;
 		statistics?: boolean;
 		headless?: boolean;
@@ -185,9 +184,9 @@
 		doValidate?: (validator: V, value: string | null) => boolean;
 	}>(), {
 		label: '',
+		manager: () => new BaseSelectManager<T>(),
 		searchable: false,
 		required: false,
-		removable: true,
 		disabled: false,
 		statistics: false,
 		headless: false,
@@ -402,18 +401,15 @@
 		return (min !== null) ? `min. ${min}` : `max. ${max}`;
 	});
 
-	let searchFilter: SearchSelectFilter<T> | undefined = undefined;
 	onMounted(() => {
 		// Wenn das Select durchsuchbar ist, wird ein SearchSelectFilter hinzugefügt. Sollte bereits einer existieren, wird nur der neue Suchbegriff gesetzt.
 		if (props.searchable) {
 			const tmpSearchFilter = props.manager.getFilterByKey("search") as SearchSelectFilter<T> | null;
 			if (tmpSearchFilter !== null) {
 				tmpSearchFilter.search = search.value;
-				searchFilter = tmpSearchFilter;
-			}
-			else {
-				searchFilter = new SearchSelectFilter("search", search.value, (item: T) => props.manager.getOptionText(item));
-				props.manager.addFilter(searchFilter);
+				props.manager.updateFilteredOptions(tmpSearchFilter);
+			}	else {
+				props.manager.addFilter(new SearchSelectFilter("search", search.value, (item: T) => props.manager.getOptionText(item)));
 			}
 		}
 
@@ -431,8 +427,6 @@
 
 		if (props.manager.hasSelection() === false)
 			props.manager.selected = model.value;
-
-		props.manager.removable = props.removable;
 
 	});
 
@@ -471,14 +465,7 @@
 			props.manager.selected = newSelection;
 		},
 		{ deep: true }
-	)
-
-	watch(
-		() => props.removable,
-		(newValue) => {
-			props.manager.removable = newValue;
-		}
-	)
+	);
 
 	/**
 	 * Teilt den Text in Teile auf, die mit der Suchanfrage übereinstimmen. Dies wird dazu verwendet, die übereinstimmenden Teile farblich hervorzuheben.
@@ -543,10 +530,13 @@
 	function updateSearchFilter() {
 		if (!props.searchable)
 			return;
-		if (searchFilter !== undefined)
-			searchFilter.search = search.value;
-		else
+		let searchFilter = props.manager.getFilterByKey("search") as SearchSelectFilter<T> | null;
+		if (searchFilter === null)
 			searchFilter = new SearchSelectFilter("search", search.value, (item: T) => props.manager.getOptionText(item));
+		else {
+			searchFilter = props.manager.getFilterByKey("search") as SearchSelectFilter<T>;
+			searchFilter.search = search.value;
+		}
 		props.manager.updateFilteredOptions(searchFilter);
 	}
 
@@ -823,6 +813,8 @@
 	 * Setzt die Eingabe im Suchfeld zurück und aktualisiert die gefilterte Liste.
 	 */
 	function resetSearch() {
+		if (search.value === "")
+			return;
 		search.value = "";
 		updateSearchFilter();
 	}

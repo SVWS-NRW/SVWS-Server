@@ -34,7 +34,7 @@
 	import { computed, ref, watch } from "vue";
 	import { BenutzerKompetenz } from "@core";
 	import { Abteilung, AbteilungKlassenzuordnung, ArrayList, JavaString } from "@core";
-	import { ObjectSelectManager } from "../../../../../../ui/src/ui/controls/select/selectManager/ObjectSelectManager";
+	import { BaseSelectManager } from "../../../../../../ui/src/ui/controls/select/selectManager/BaseSelectManager";
 
 	const props = defineProps<AbteilungenNeuProps>();
 	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
@@ -48,8 +48,17 @@
 		set: (v: LehrerListeEintrag | null) => data.value.idAbteilungsleiter = v?.id ?? null,
 	});
 	const lehrerListe = computed(() => props.manager().getLehrer().values());
-	const lehrerSelectManager = new ObjectSelectManager(false, lehrerListe.value, v => v.vorname + ' ' + v.nachname,
-		v => v.vorname + ' ' + v.nachname);
+
+	watch(
+		() => lehrerListe.value,
+		(newValue) => {
+			lehrerSelectManager.options = newValue;
+		}
+	);
+
+	const lehrerSelectManager = new BaseSelectManager({	options: lehrerListe.value, optionDisplayText: v => v.vorname + ' ' + v.nachname,
+		selectionDisplayText: v => v.vorname + ' ' + v.nachname,
+	});
 
 	function fieldIsValid(field: keyof Abteilung | null) : (v: string | null) => boolean {
 		return (v: string | null) => {

@@ -22,14 +22,14 @@
 		<svws-ui-content-card title="Beschäftigungsdaten">
 			<svws-ui-input-wrapper :grid="2">
 				<ui-select label="Rechtsverhältnis" :disabled="!hatUpdateKompetenz" v-model="rechtsverhaeltnis" :manager="rechtsverhaeltnisSelectManager" statistics
-					:validator="() => validatorPersonalabschnittsDaten" :do-validate="validatePersonalabschnittDaten" required :removable="false" focus-class-content />
+					:validator="() => validatorPersonalabschnittsDaten" :do-validate="validatePersonalabschnittDaten" required focus-class-content />
 				<ui-select label="Beschäftigungsart" :disabled="!hatUpdateKompetenz" v-model="beschaeftigungsart" :manager="beschaeftigungsartSelectManager" statistics
-					required :removable="false" focus-class-content />
+					required focus-class-content />
 				<svws-ui-input-number placeholder="Pflichtstundensoll" :disabled="!hatUpdateKompetenz" statistics
 					:model-value="personalabschnittsdaten()?.pflichtstundensoll ?? 0.0"
 					@change="pflichtstundensoll => patchAbschnittsdaten({ pflichtstundensoll: pflichtstundensoll }, personalabschnittsdaten()?.id ?? -1)" />
 				<ui-select label="Einsatzstatus" :disabled="!hatUpdateKompetenz" v-model="einsatzstatus" statistics
-					:manager="einsatzstatusSelectManager" required :removable="false" focus-class-content />
+					:manager="einsatzstatusSelectManager" required focus-class-content />
 				<svws-ui-text-input placeholder="Stammschule" :disabled="!hatUpdateKompetenz" :model-value="personalabschnittsdaten()?.stammschulnummer"
 					@change="stammschulnummer => patchAbschnittsdaten({ stammschulnummer }, personalabschnittsdaten()?.id ?? -1)" statistics />
 			</svws-ui-input-wrapper>
@@ -65,7 +65,7 @@
 
 <script setup lang="ts">
 
-	import { computed } from "vue";
+	import { computed, watch } from "vue";
 	import type { LehrerPersonaldatenProps } from './SLehrerPersonaldatenProps';
 	import type { Validator} from "@core";
 	import { DeveloperNotificationException, ValidatorLehrerPersonalabschnittsdaten} from "@core";
@@ -77,14 +77,40 @@
 
 	const schuljahr = computed<number>(() => props.aktAbschnitt.schuljahr);
 
+	watch(
+		() => schuljahr.value,
+		(newValue) => {
+			rechtsverhaeltnisSelectManager.schuljahr = newValue;
+			beschaeftigungsartSelectManager.schuljahr = newValue;
+			einsatzstatusSelectManager.schuljahr = newValue;
+		}
+	);
+
+	watch(
+		() => props.schulform,
+		(newValue) => {
+			rechtsverhaeltnisSelectManager.schulformen = newValue;
+			beschaeftigungsartSelectManager.schulformen = newValue;
+			einsatzstatusSelectManager.schulformen = newValue;
+		}
+	);
+
 	const hatUpdateKompetenz = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN));
 
 	const personaldaten = () => props.lehrerListeManager().personalDaten();
 	const personalabschnittsdaten = () => props.lehrerListeManager().getAbschnittBySchuljahresabschnittsId(props.aktAbschnitt.id);
 
-	const rechtsverhaeltnisSelectManager = new CoreTypeSelectManager(false, LehrerRechtsverhaeltnis.class, schuljahr.value, props.schulform, "text", "text");
-	const beschaeftigungsartSelectManager = new CoreTypeSelectManager(false, LehrerBeschaeftigungsart.class, schuljahr.value, props.schulform, "text" , "text");
-	const einsatzstatusSelectManager = new CoreTypeSelectManager(false, LehrerEinsatzstatus.class, schuljahr.value, props.schulform, "text" , "text");
+	const rechtsverhaeltnisSelectManager = new CoreTypeSelectManager({ clazz: LehrerRechtsverhaeltnis.class, schuljahr: schuljahr.value, removable: false,
+		schulformen: props.schulform, optionDisplayText: "text", selectionDisplayText: "text",
+	});
+
+	const beschaeftigungsartSelectManager = new CoreTypeSelectManager({ clazz: LehrerBeschaeftigungsart.class, schuljahr: schuljahr.value,
+		schulformen: props.schulform, removable: false, optionDisplayText: "text", selectionDisplayText: "text",
+	});
+
+	const einsatzstatusSelectManager = new CoreTypeSelectManager({ clazz: LehrerEinsatzstatus.class, schuljahr: schuljahr.value, schulformen: props.schulform,
+		removable: false, optionDisplayText: "text", selectionDisplayText: "text",
+	});
 
 	const rechtsverhaeltnis = computed<LehrerRechtsverhaeltnis | undefined>({
 		get(): LehrerRechtsverhaeltnis | undefined {

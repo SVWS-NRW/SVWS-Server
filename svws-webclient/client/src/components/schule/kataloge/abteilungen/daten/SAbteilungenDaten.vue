@@ -53,9 +53,9 @@
 	import type { AbteilungenDatenProps } from "~/components/schule/kataloge/abteilungen/daten/SAbteilungenDatenProps";
 	import type { DataTableColumn } from "@ui";
 	import type { KlassenDaten, List } from "@core";
-	import { computed, ref } from "vue";
+	import { computed, ref, watch } from "vue";
 	import { AbteilungKlassenzuordnung, ArrayList, BenutzerKompetenz, HashMap } from "@core";
-	import { ObjectSelectManager } from "../../../../../../../ui/src/ui/controls/select/selectManager/ObjectSelectManager";
+	import { BaseSelectManager } from "../../../../../../../ui/src/ui/controls/select/selectManager/BaseSelectManager";
 
 	const props = defineProps<AbteilungenDatenProps>();
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
@@ -63,8 +63,18 @@
 	const klassenToBeDeleted = ref<KlassenDaten[]>([]);
 	const klassenToBeAdded = ref<KlassenDaten[]>([]);
 	const lehrer = computed(() => props.manager().getLehrer().values());
-	const selectManager = new ObjectSelectManager(false, lehrer.value, v => v.vorname + ' ' + v.nachname,
-		v => v.vorname + ' ' + v.nachname);
+
+	watch(
+		() => lehrer.value,
+		(newValue) => {
+			selectManager.options = newValue;
+		}
+	);
+
+	const selectManager = new BaseSelectManager({
+		options: lehrer.value, optionDisplayText: v => v.vorname + ' ' + v.nachname,
+		selectionDisplayText: v => v.vorname + ' ' + v.nachname,
+	});
 	const columns: DataTableColumn[] = [ { key: "kuerzel", label: "Klasse"} ];
 
 	const klassenzuordnungenByIdKlasse = computed(() => {

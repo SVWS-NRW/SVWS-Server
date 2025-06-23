@@ -3,17 +3,14 @@
 		<template #docs><Docs /></template>
 		<Variant title="Single Selection" id="single">
 			<svws-ui-input-wrapper>
-				<ui-select label="SimpleSelectManager mit String" :manager="sStringSelectManager" :searchable="state.searchable"
-					:disabled="state.disabled" :statistics="state.statistics" :removable="state.removable" :headless="state.headless"
+				<ui-select label="BaseSelectManager mit String" :manager="sStringSelectManager" :searchable="state.searchable"
+					:disabled="state.disabled" :statistics="state.statistics" :headless="state.headless"
 					:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
-				<ui-select label="SimpleSelectManager mit Number" :manager="sNumberSelectManager" :searchable="state.searchable"
-					:disabled="state.disabled" :statistics="state.statistics" :removable="state.removable" :headless="state.headless"
+				<ui-select label="BaseSelectManager mit Custom-Objekten" :manager="sObjectSelectManager" :searchable="state.searchable"
+					:disabled="state.disabled" :statistics="state.statistics" :headless="state.headless"
 					:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
 				<ui-select label="CoreTypeSelectManager" :manager="sCoreTypeSelectManager" :searchable="state.searchable" :disabled="state.disabled"
-					:statistics="state.statistics" :removable="state.removable" :headless="state.headless"
-					:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
-				<ui-select label="ObjectSelectManager" :manager="sObjectSelectManager" :searchable="state.searchable"
-					:disabled="state.disabled" :statistics="state.statistics" :removable="state.removable" :headless="state.headless"
+					:statistics="state.statistics" :headless="state.headless"
 					:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
 			</svws-ui-input-wrapper>
 			<template #controls>
@@ -52,18 +49,15 @@
 		</Variant>
 		<Variant title="Multi Selection" :source="getSourceString(true)" id="multi">
 			<svws-ui-input-wrapper>
-				<ui-select label="SimpleSelectManager mit String" :manager="mStringSelectManager" :searchable="state.searchable"
-					:disabled="state.disabled" :statistics="state.statistics" :removable="state.removable" :headless="state.headless"
+				<ui-select label="BaseSelectManager mit String" :manager="mStringSelectManager" :searchable="state.searchable"
+					:disabled="state.disabled" :statistics="state.statistics" :headless="state.headless"
 					:min-options="state.minOptions" :max-options="state.maxOptions" :required="state.required"
 					:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" />
-				<ui-select label="SimpleSelectManager mit Number" :manager="mNumberSelectManager" :searchable="state.searchable"
-					:disabled="state.disabled" :statistics="state.statistics" :removable="state.removable" :headless="state.headless" :required="state.required"
-					:min-options="state.minOptions" :max-options="state.maxOptions" :class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" />
-				<ui-select label="CoreTypeSelectManager" :manager="mCoreTypeSelectManager" :searchable="state.searchable" :disabled="state.disabled"
-					:statistics="state.statistics" :removable="state.removable" :headless="state.headless" :min-options="state.minOptions"
+				<ui-select label="BaseSelectManager mit Custom-Objekten" :manager="mObjectSelectManager" :searchable="state.searchable" :disabled="state.disabled"
+					:statistics="state.statistics" :headless="state.headless" :min-options="state.minOptions"
 					:max-options="state.maxOptions" :class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
-				<ui-select label="ObjectSelectManager" :manager="mObjectSelectManager" :searchable="state.searchable" :disabled="state.disabled"
-					:statistics="state.statistics" :removable="state.removable" :headless="state.headless" :min-options="state.minOptions"
+				<ui-select label="CoreTypeSelectManager" :manager="mCoreTypeSelectManager" :searchable="state.searchable" :disabled="state.disabled"
+					:statistics="state.statistics" :headless="state.headless" :min-options="state.minOptions"
 					:max-options="state.maxOptions" :class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
 			</svws-ui-input-wrapper>
 		</Variant>
@@ -88,7 +82,7 @@
 					Musik und Kunst
 				</svws-ui-checkbox>
 				<ui-select label="CoreTypeSelectManager Fach abhängig von Fachgruppe" :manager="sFachSelectManager" :searchable="state.searchable"
-					:disabled="state.disabled" :statistics="state.statistics" :removable="state.removable" :headless="state.headless"
+					:disabled="state.disabled" :statistics="state.statistics" :headless="state.headless"
 					:min-options="state.minOptions" :max-options="state.maxOptions" :required="state.required"
 					:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" />
 			</svws-ui-input-wrapper>
@@ -102,18 +96,19 @@
 						[<br>
 							{ marke: "BMW", color: "blue", baujahr: 2006 },<br>
 							{ marke: "Audi", color: "red", baujahr: 2008 }<br>
+							{ marke: "Opel", color: "schwarz", baujahr: 2006 }<br>
 						]
 					</code>
 				</pre>
-				<ui-select label="Deep Search ObjectSelectManager" :manager="deepSearchObjectSelectManager" :searchable="true" :disabled="state.disabled"
-					:statistics="state.statistics" :removable="state.removable" :headless="state.headless" :min-options="state.minOptions"
+				<ui-select label="Deep Search BaseSelectManager" :manager="deepSearchBaseSelectManager" :searchable="true" :disabled="state.disabled"
+					:statistics="state.statistics" :headless="state.headless" :min-options="state.minOptions"
 					:max-options="state.maxOptions" :class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
 			</svws-ui-input-wrapper>
 		</Variant>
 		<Variant title="Sortierung" id="sortierung">
 			<svws-ui-input-wrapper>
 				<ui-select label="Sortiertes Select" :manager="sortableCoreTypeSelectManager" :searchable="true" :disabled="state.disabled"
-					:statistics="state.statistics" :removable="state.removable" :headless="state.headless" :min-options="state.minOptions"
+					:statistics="state.statistics" :headless="state.headless" :min-options="state.minOptions"
 					:max-options="state.maxOptions" :class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
 			</svws-ui-input-wrapper>
 			<template #controls>
@@ -199,7 +194,7 @@
 <script setup lang="ts">
 
 	import { reactive, watch } from "vue";
-	import { SimpleSelectManager } from "./selectManager/SimpleSelectManager";
+	import { BaseSelectManager } from "./selectManager/BaseSelectManager";
 	import { CoreTypeSelectManager } from "./selectManager/CoreTypeSelectManager";
 	import { FachSelectFilter } from "./filter/FachSelectFilter";
 	import { ArrayList } from "../../../../../core/src/java/util/ArrayList";
@@ -207,7 +202,6 @@
 	import { Fachgruppe } from "../../../../../core/src/asd/types/fach/Fachgruppe";
 	import { LehrerRechtsverhaeltnis } from "../../../../../core/src/asd/types/lehrer/LehrerRechtsverhaeltnis";
 	import { Schulform } from "../../../../../core/src/asd/types/schule/Schulform";
-	import { ObjectSelectManager } from "./selectManager/ObjectSelectManager";
 	import Docs from "./UiSelect.story.md"
 
 	const state = reactive({
@@ -241,35 +235,33 @@
 		"Ich will gleich den ganzen Obstkorb haben und am liebsten alles doppelt und dreifach, nur damit dieses Item einen langen Text zur Vorschau hat.",
 		"Kirsche", "Kiwi", "Lemon", "Litschi", "Melone", "Orange", "Papaya", "Pfirsich", "Pflaume", "Rote Johannisbeere", "Zitronenmelisse",
 	];
-	const numberItems: number[] = [ 1990, 1991, 1992, 1993, 1994, 2000, 2001, 2002, 2003, 2004, 2010, 2011, 2012, 2013, 2014, 2020, 2021, 2022, 2023, 2024 ];
 	const carItems: { marke: string, color: string, baujahr: number }[] = [{ marke: "BMW", color: "blue", baujahr: 2006 },
-		{ marke: "Audi", color: "red", baujahr: 2008}, { marke: "Opel", color: "schwarz", baujahr: 2004 }];
+		{ marke: "Audi", color: "red", baujahr: 2008}, { marke: "Opel", color: "schwarz", baujahr: 2006 }];
 
 
-	const sStringSelectManager = new SimpleSelectManager(false, stringItems);
-	sStringSelectManager.removable = state.removable;
+	const sStringSelectManager = new BaseSelectManager({options: stringItems, removable: state.removable});
 
-	const sNumberSelectManager = new SimpleSelectManager(false, numberItems);
-	sNumberSelectManager.removable = state.removable;
+	const sCoreTypeSelectManager = new CoreTypeSelectManager({
+		clazz: LehrerRechtsverhaeltnis.class, schuljahr: 2018, schulformen: Schulform.GY,
+		selectionDisplayText: 'text', optionDisplayText: 'kuerzelText', removable: state.removable,
+	});
 
-	const sCoreTypeSelectManager = new CoreTypeSelectManager(false, LehrerRechtsverhaeltnis.class, 2018, Schulform.GY, 'text', 'kuerzelText');
-	sCoreTypeSelectManager.removable = state.removable;
+	const sObjectSelectManager = new BaseSelectManager({
+		options: carItems, removable: state.removable,
+		selectionDisplayText: (option: { marke: string, color: string; }) => option.marke,
+		optionDisplayText: (option: { marke: string, color: string; }) => `${option.marke} - ${option.color}`,
+	});
 
-	const sObjectSelectManager = new ObjectSelectManager(false, carItems,
-		(option: { marke: string, color: string }) => option.marke,
-		(option: { marke: string, color: string }) => `${option.marke} - ${option.color}`);
-	sObjectSelectManager.removable = state.removable;
+	const deepSearchBaseSelectManager = new BaseSelectManager({
+		options: carItems, removable: state.removable, deepSearchAttributes: ["marke", "color", "baujahr"],
+		selectionDisplayText: (option: { marke: string, color: string, baujahr: number; }) => option.marke,
+		optionDisplayText: (option: { marke: string, color: string, baujahr: number; }) => `${option.marke} - ${option.color}`,
+	});
 
-	const deepSearchObjectSelectManager = new ObjectSelectManager(false, carItems,
-		(option: { marke: string, color: string, baujahr: number }) => option.marke,
-		(option: { marke: string, color: string, baujahr: number }) => `${option.marke} - ${option.color}`);
-	deepSearchObjectSelectManager.setDeepSearchAttributes(["marke", "color", "baujahr"]);
-	deepSearchObjectSelectManager.removable = state.removable;
-
-	const sFachSelectManager = new CoreTypeSelectManager(false, Fach.class, 2020, Schulform.GY, 'text', 'kuerzelText');
-	sFachSelectManager.addFilter(new FachSelectFilter("fachgruppe1", [], 2020));
-	sFachSelectManager.addFilter(new FachSelectFilter("fachgruppe2", [], 2020));
-	sFachSelectManager.removable = state.removable;
+	const sFachSelectManager = new CoreTypeSelectManager({
+		clazz: Fach.class, schuljahr: 2020, schulformen: Schulform.GY, optionDisplayText: 'kuerzelText', removable: state.removable,
+		selectionDisplayText: 'text', filters: [new FachSelectFilter("fachgruppe1", [], 2020), new FachSelectFilter("fachgruppe2", [], 2020)],
+	});
 
 	watch(filterState1, () => {
 		const list = new ArrayList<Fachgruppe>();
@@ -289,57 +281,62 @@
 		sFachSelectManager.updateFilteredOptions(new FachSelectFilter("fachgruppe2", [ ...list ], 2020));
 	});
 
-
-	const mStringSelectManager = new SimpleSelectManager(true, stringItems);
-	mStringSelectManager.removable = state.removable;
-
-
-	const mNumberSelectManager = new SimpleSelectManager(true, numberItems);
-	mNumberSelectManager.removable = state.removable;
-
-	const mCoreTypeSelectManager = new CoreTypeSelectManager(true, LehrerRechtsverhaeltnis.class, 2018, Schulform.GY, 'kuerzelText', 'kuerzelText');
-	mCoreTypeSelectManager.removable = state.removable;
-	mCoreTypeSelectManager.sort = (a: LehrerRechtsverhaeltnis, b: LehrerRechtsverhaeltnis) => {
-		if (a.daten(2018)!.kuerzel < b.daten(2018)!.kuerzel) return -1;
-		if (a.daten(2018)!.kuerzel > b.daten(2018)!.kuerzel) return 1;
-		return 0;
-	};
-
-	const mObjectSelectManager = new ObjectSelectManager(true, carItems,
-		(option: { marke: string, color: string, baujahr: number }) => option.marke,
-		(option: { marke: string, color: string, baujahr: number }) => `${option.marke} - ${option.color}`);
-	mObjectSelectManager.removable = state.removable;
-	mObjectSelectManager.sort = (a: { marke: string, color: string, baujahr: number }, b: { marke: string, color: string, baujahr: number }) => {
-		if (a.baujahr < b.baujahr) return -1;
-		if (a.baujahr > b.baujahr) return 1;
-		return 0;
-	};
+	watch(() => state.removable, (newVal) => {
+		sStringSelectManager.removable = newVal;
+		sCoreTypeSelectManager.removable = newVal;
+		sObjectSelectManager.removable = newVal;
+		mStringSelectManager.removable = newVal;
+		mCoreTypeSelectManager.removable = newVal;
+		mObjectSelectManager.removable = newVal;
+		deepSearchBaseSelectManager.removable = newVal;
+		sFachSelectManager.removable = newVal;
+		sortableCoreTypeSelectManager.removable = newVal;
+	});
 
 
-	const sortableCoreTypeSelectManager = new CoreTypeSelectManager(true, LehrerRechtsverhaeltnis.class, 2018, Schulform.GY, 'kuerzelText', (a) => `${a.id} - ${a.kuerzel} - ${a.text}`);
-	sortableCoreTypeSelectManager.removable = state.removable;
-	sortableCoreTypeSelectManager.sort = (a: LehrerRechtsverhaeltnis, b: LehrerRechtsverhaeltnis) => {
-		if (state.sort === "unsorted") return 0;
-		if (state.sort === "id") {
-			if (a.daten(2018)!.id < b.daten(2018)!.id)
-				return -1;
-			if (a.daten(2018)!.id > b.daten(2018)!.id)
-				return 1;
-		}
-		if (state.sort === "kuerzel") {
-			if (a.daten(2018)!.kuerzel < b.daten(2018)!.kuerzel)
-				return -1;
-			if (a.daten(2018)!.kuerzel > b.daten(2018)!.kuerzel)
-				return 1;
-		}
-		if (state.sort === "text") {
-			if (a.daten(2018)!.text < b.daten(2018)!.text)
-				return -1;
-			if (a.daten(2018)!.text > b.daten(2018)!.text)
-				return 1;
-		}
-		return 0;
-	};
+	const mStringSelectManager = new BaseSelectManager({options: stringItems, multi: true, removable: state.removable});
+
+	const mCoreTypeSelectManager = new CoreTypeSelectManager({
+		clazz: LehrerRechtsverhaeltnis.class, schuljahr: 2018, schulformen: Schulform.GY, multi: true,
+		removable: state.removable, optionDisplayText: 'kuerzelText', selectionDisplayText: 'kuerzelText',
+	});
+
+	const mObjectSelectManager = new BaseSelectManager({
+		options: carItems, multi: true, removable: state.removable,
+		selectionDisplayText: (option: { marke: string, color: string, baujahr: number; }) => option.marke,
+		optionDisplayText: (option: { marke: string, color: string, baujahr: number; }) => `${option.marke} - ${option.color}`,
+	});
+
+	watch(() => state.sort, (newVal) => {
+		sortableCoreTypeSelectManager.updateSort();
+	});
+
+	const sortableCoreTypeSelectManager = new CoreTypeSelectManager({
+		clazz: LehrerRechtsverhaeltnis.class, schuljahr: 2018, schulformen: Schulform.GY, multi: true, removable: state.removable,
+		optionDisplayText: (a) => `${a.id} - ${a.kuerzel} - ${a.text}`, selectionDisplayText: 'kuerzelText',
+		sort: (a: LehrerRechtsverhaeltnis, b: LehrerRechtsverhaeltnis) => {
+			if (state.sort === "unsorted") return 0;
+			if (state.sort === "id") {
+				if (a.daten(2018)!.id < b.daten(2018)!.id)
+					return -1;
+				if (a.daten(2018)!.id > b.daten(2018)!.id)
+					return 1;
+			}
+			if (state.sort === "kuerzel") {
+				if (a.daten(2018)!.kuerzel < b.daten(2018)!.kuerzel)
+					return -1;
+				if (a.daten(2018)!.kuerzel > b.daten(2018)!.kuerzel)
+					return 1;
+			}
+			if (state.sort === "text") {
+				if (a.daten(2018)!.text < b.daten(2018)!.text)
+					return -1;
+				if (a.daten(2018)!.text > b.daten(2018)!.text)
+					return 1;
+			}
+			return 0;
+		},
+	});
 
 	function getSourceString (multi = false) {
 		return `<ui-select
@@ -349,7 +346,6 @@
         ${state.disabled ? 'disabled' : ''}
         ${state.statistics ? 'statistics' : ''}
 		${state.required ? 'required' : ''}
-        ${state.removable ? '' : ':removable="false"'}
         ${state.headless ? 'headless' : ''}
 		${state.sort !== 'unsorted' ? ':sort="(a, b) => ..."' : '' }
 		${multi ? (state.minOptions !== undefined ? `:min-options="${state.minOptions}"` : '') : ''}

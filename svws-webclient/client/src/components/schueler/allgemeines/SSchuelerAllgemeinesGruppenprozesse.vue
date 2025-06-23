@@ -4,7 +4,7 @@
 			<ui-card v-if="hatKompetenzDrucken && (mapStundenplaene.size > 0)" icon="i-ri-printer-line" title="Stundenplan drucken" subtitle="Drucke die Stundenpläne der ausgewählten Schüler."
 				:is-open="currentAction === 'print'" @update:is-open="isOpen => setCurrentAction('print', isOpen)">
 				<div class="w-full flex flex-col gap-6">
-					<ui-select class="bg-white" :disabled="!schuelerListeManager().liste.auswahlExists()" label="Stundenplan" v-model="stundenplanAuswahl" :removable="false"
+					<ui-select :disabled="!schuelerListeManager().liste.auswahlExists()" label="Stundenplan" v-model="stundenplanAuswahl"
 						:manager="stundenplanSelectManager" />
 					<div class="w-full flex gap-6">
 						<div class="grow">
@@ -58,11 +58,11 @@
 
 <script setup lang="ts">
 
-	import { ref, computed } from "vue";
+	import { ref, computed, watch } from "vue";
 	import type { SSchuelerAllgemeinesGruppenprozesseProps } from "./SSchuelerAllgemeinesGruppenprozesseProps";
 	import { type StundenplanListeEintrag, type List, BenutzerKompetenz } from "@core";
 	import { DateUtils, ReportingParameter, ReportingReportvorlage } from "@core";
-	import { ObjectSelectManager } from "@ui";
+	import { BaseSelectManager } from "@ui";
 
 	type Action = 'print' | 'delete' | '';
 
@@ -88,8 +88,17 @@
 			+ toKW(eintrag.gueltigBis) + ')'
 	}
 
+
 	const stundenplaene = computed<Array<StundenplanListeEintrag>>(() => [...props.mapStundenplaene.values()])
-	const stundenplanSelectManager = new ObjectSelectManager(false, stundenplaene.value, stundenplanDisplayText, stundenplanDisplayText)
+	watch(
+		() => stundenplaene.value,
+		(newValue) => {
+			stundenplanSelectManager.options = newValue;
+		}
+	);
+	const stundenplanSelectManager = new BaseSelectManager({
+		options: stundenplaene.value, optionDisplayText: stundenplanDisplayText, selectionDisplayText: stundenplanDisplayText,
+	})
 
 	async function entferneSchueler() {
 		loading.value = true;
