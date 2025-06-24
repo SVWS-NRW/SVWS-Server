@@ -10986,7 +10986,7 @@ export class ApiServer extends BaseApi {
 	 * Passt die Schüler-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerdaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Patch wurde erfolgreich in die Schülerstammdaten integriert.
+	 *   Code 204: Der Patch wurde erfolgreich in die Schülerstammdaten integriert.
 	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schülerdaten zu ändern.
 	 *   Code 404: Kein Schüler-Eintrag mit der angegebenen ID gefunden
@@ -11767,7 +11767,7 @@ export class ApiServer extends BaseApi {
 	 * Passt die Schülerlernabschnittsdaten mit der angebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerlernabschnittsdaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *   Code 204: Der Patch wurde erfolgreich integriert.
 	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
 	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
@@ -11932,7 +11932,7 @@ export class ApiServer extends BaseApi {
 	 * Passt die Schüler-Stammdaten zu den angegebenen IDs an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerdaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Patch wurde erfolgreich in die Schülerstammdaten integriert.
+	 *   Code 204: Der Patch wurde erfolgreich in die Schülerstammdaten integriert.
 	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schülerdaten zu ändern.
 	 *   Code 404: Ein Schüler-Eintrag mit den angegebenen IDs wurde nicht gefunden

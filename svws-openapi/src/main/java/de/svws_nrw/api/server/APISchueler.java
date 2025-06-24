@@ -271,7 +271,7 @@ public class APISchueler {
 	@Operation(summary = "Patch für eines Schüler Stammdaten Objektes.",
 			description = "Passt die Schüler-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerdaten besitzt.")
-	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Schülerstammdaten integriert.")
+	@ApiResponse(responseCode = "204", description = "Der Patch wurde erfolgreich in die Schülerstammdaten integriert.")
 	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schülerdaten zu ändern.")
 	@ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
@@ -300,7 +300,7 @@ public class APISchueler {
 	@Operation(summary = "Patch für mehrere Schüler Stammdaten Objekte.",
 			description = "Passt die Schüler-Stammdaten zu den angegebenen IDs an und speichert das Ergebnis in der Datenbank. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerdaten besitzt.")
-	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Schülerstammdaten integriert.")
+	@ApiResponse(responseCode = "204", description = "Der Patch wurde erfolgreich in die Schülerstammdaten integriert.")
 	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schülerdaten zu ändern.")
 	@ApiResponse(responseCode = "404", description = "Ein Schüler-Eintrag mit den angegebenen IDs wurde nicht gefunden")
@@ -715,7 +715,7 @@ public class APISchueler {
 	@Operation(summary = "Passt die Schülerlernabschnittsdaten mit der angebenen ID an.",
 			description = "Passt die Schülerlernabschnittsdaten mit der angebenen ID an. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerlernabschnittsdaten besitzt.")
-	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.")
+	@ApiResponse(responseCode = "204", description = "Der Patch wurde erfolgreich integriert.")
 	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
 	@ApiResponse(responseCode = "404", description = "Kein Eintrag mit der angegebenen ID gefunden")
