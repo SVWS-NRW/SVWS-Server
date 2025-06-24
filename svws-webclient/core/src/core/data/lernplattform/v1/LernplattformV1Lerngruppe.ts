@@ -13,17 +13,17 @@ export class LernplattformV1Lerngruppe extends JavaObject {
 	/**
 	 * Die ID der Lerngruppe in der SVWS-DB (Die ID des Kurses oder die ID der Klasse in der Versetzungstabelle, siehe kursartID).
 	 */
-	public kId : number = 0;
+	public idIntern : number = 0;
 
 	/**
 	 * Die ID des Faches der Lerngruppe.
 	 */
-	public fachId : number = 0;
+	public idFach : number = 0;
 
 	/**
 	 * Gibt die ID der Kursart an. Ist dieser Wert null, so handelt es sich um Klassenunterricht.
 	 */
-	public kursartId : number | null = null;
+	public idKursart : number | null = null;
 
 	/**
 	 * Die Bezeichnung der Lerngruppe (z.B. D-GK4)
@@ -43,7 +43,7 @@ export class LernplattformV1Lerngruppe extends JavaObject {
 	/**
 	 * Die IDs der Lehrer, die der Lerngruppe zugeordnet sind.
 	 */
-	public lehrerIds : List<number> = new ArrayList<number>();
+	public idsLehrer : List<number> = new ArrayList<number>();
 
 	/**
 	 * Die Anzahl der Wochenstunden, falls es sich um einen Kurs handelt.
@@ -74,19 +74,19 @@ export class LernplattformV1Lerngruppe extends JavaObject {
 		if (obj.id === undefined)
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (obj.kId === undefined)
-			throw new Error('invalid json format, missing attribute kId');
-		result.kId = obj.kId;
-		if (obj.fachId === undefined)
-			throw new Error('invalid json format, missing attribute fachId');
-		result.fachId = obj.fachId;
-		result.kursartId = (obj.kursartId === undefined) ? null : obj.kursartId === null ? null : obj.kursartId;
+		if (obj.idIntern === undefined)
+			throw new Error('invalid json format, missing attribute idIntern');
+		result.idIntern = obj.idIntern;
+		if (obj.idFach === undefined)
+			throw new Error('invalid json format, missing attribute idFach');
+		result.idFach = obj.idFach;
+		result.idKursart = (obj.idKursart === undefined) ? null : obj.idKursart === null ? null : obj.idKursart;
 		result.bezeichnung = (obj.bezeichnung === undefined) ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
 		result.kursartKuerzel = (obj.kursartKuerzel === undefined) ? null : obj.kursartKuerzel === null ? null : obj.kursartKuerzel;
 		result.bilingualeSprache = (obj.bilingualeSprache === undefined) ? null : obj.bilingualeSprache === null ? null : obj.bilingualeSprache;
-		if (obj.lehrerIds !== undefined) {
-			for (const elem of obj.lehrerIds) {
-				result.lehrerIds.add(elem);
+		if (obj.idsLehrer !== undefined) {
+			for (const elem of obj.idsLehrer) {
+				result.idsLehrer.add(elem);
 			}
 		}
 		result.wochenstunden = (obj.wochenstunden === undefined) ? null : obj.wochenstunden === null ? null : obj.wochenstunden;
@@ -96,17 +96,17 @@ export class LernplattformV1Lerngruppe extends JavaObject {
 	public static transpilerToJSON(obj : LernplattformV1Lerngruppe) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
-		result += '"kId" : ' + obj.kId.toString() + ',';
-		result += '"fachId" : ' + obj.fachId.toString() + ',';
-		result += '"kursartId" : ' + ((obj.kursartId === null) ? 'null' : obj.kursartId.toString()) + ',';
+		result += '"idIntern" : ' + obj.idIntern.toString() + ',';
+		result += '"idFach" : ' + obj.idFach.toString() + ',';
+		result += '"idKursart" : ' + ((obj.idKursart === null) ? 'null' : obj.idKursart.toString()) + ',';
 		result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		result += '"kursartKuerzel" : ' + ((obj.kursartKuerzel === null) ? 'null' : JSON.stringify(obj.kursartKuerzel)) + ',';
 		result += '"bilingualeSprache" : ' + ((obj.bilingualeSprache === null) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
-		result += '"lehrerIds" : [ ';
-		for (let i = 0; i < obj.lehrerIds.size(); i++) {
-			const elem = obj.lehrerIds.get(i);
+		result += '"idsLehrer" : [ ';
+		for (let i = 0; i < obj.idsLehrer.size(); i++) {
+			const elem = obj.idsLehrer.get(i);
 			result += elem.toString();
-			if (i < obj.lehrerIds.size() - 1)
+			if (i < obj.idsLehrer.size() - 1)
 				result += ',';
 		}
 		result += ' ]' + ',';
@@ -121,14 +121,14 @@ export class LernplattformV1Lerngruppe extends JavaObject {
 		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
-		if (obj.kId !== undefined) {
-			result += '"kId" : ' + obj.kId.toString() + ',';
+		if (obj.idIntern !== undefined) {
+			result += '"idIntern" : ' + obj.idIntern.toString() + ',';
 		}
-		if (obj.fachId !== undefined) {
-			result += '"fachId" : ' + obj.fachId.toString() + ',';
+		if (obj.idFach !== undefined) {
+			result += '"idFach" : ' + obj.idFach.toString() + ',';
 		}
-		if (obj.kursartId !== undefined) {
-			result += '"kursartId" : ' + ((obj.kursartId === null) ? 'null' : obj.kursartId.toString()) + ',';
+		if (obj.idKursart !== undefined) {
+			result += '"idKursart" : ' + ((obj.idKursart === null) ? 'null' : obj.idKursart.toString()) + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
@@ -139,12 +139,12 @@ export class LernplattformV1Lerngruppe extends JavaObject {
 		if (obj.bilingualeSprache !== undefined) {
 			result += '"bilingualeSprache" : ' + ((obj.bilingualeSprache === null) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
 		}
-		if (obj.lehrerIds !== undefined) {
-			result += '"lehrerIds" : [ ';
-			for (let i = 0; i < obj.lehrerIds.size(); i++) {
-				const elem = obj.lehrerIds.get(i);
+		if (obj.idsLehrer !== undefined) {
+			result += '"idsLehrer" : [ ';
+			for (let i = 0; i < obj.idsLehrer.size(); i++) {
+				const elem = obj.idsLehrer.get(i);
 				result += elem.toString();
-				if (i < obj.lehrerIds.size() - 1)
+				if (i < obj.idsLehrer.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';

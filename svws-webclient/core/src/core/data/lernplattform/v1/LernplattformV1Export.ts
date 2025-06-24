@@ -20,7 +20,7 @@ export class LernplattformV1Export extends JavaObject {
 	/**
 	 * Gibt die ID der Lernplattform an.
 	 */
-	public lernplattformId : number | null = null;
+	public idLernplattform : number | null = null;
 
 	/**
 	 * Enthält die Bezeichnung der Lernplattform.
@@ -63,9 +63,9 @@ export class LernplattformV1Export extends JavaObject {
 	public schuljahr : number = 0;
 
 	/**
-	 * Gibt an, für welchen Abschnitt innerhalb des Schuljahres die Lernplattform-Daten generiert wurde.
+	 * Gibt die ID des Schuljahresabschnitts an, für welchen die Lernplattform-Daten generiert wurden.
 	 */
-	public schuljahresabschnitt : number = 0;
+	public idSchuljahresabschnitt : number = 0;
 
 	/**
 	 * Gibt an, für welchen Abschnitt innerhalb des Schuljahres die Lernplattform-Daten generiert wurden.
@@ -131,7 +131,7 @@ export class LernplattformV1Export extends JavaObject {
 		if (obj.revision === undefined)
 			throw new Error('invalid json format, missing attribute revision');
 		result.revision = obj.revision;
-		result.lernplattformId = (obj.lernplattformId === undefined) ? null : obj.lernplattformId === null ? null : obj.lernplattformId;
+		result.idLernplattform = (obj.idLernplattform === undefined) ? null : obj.idLernplattform === null ? null : obj.idLernplattform;
 		result.lernplattformBezeichnung = (obj.lernplattformBezeichnung === undefined) ? null : obj.lernplattformBezeichnung === null ? null : obj.lernplattformBezeichnung;
 		result.titel = (obj.titel === undefined) ? null : obj.titel === null ? null : obj.titel;
 		result.beschreibung = (obj.beschreibung === undefined) ? null : obj.beschreibung === null ? null : obj.beschreibung;
@@ -144,9 +144,9 @@ export class LernplattformV1Export extends JavaObject {
 		if (obj.schuljahr === undefined)
 			throw new Error('invalid json format, missing attribute schuljahr');
 		result.schuljahr = obj.schuljahr;
-		if (obj.schuljahresabschnitt === undefined)
-			throw new Error('invalid json format, missing attribute schuljahresabschnitt');
-		result.schuljahresabschnitt = obj.schuljahresabschnitt;
+		if (obj.idSchuljahresabschnitt === undefined)
+			throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
+		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
 		result.schulbezeichnung = (obj.schulbezeichnung === undefined) ? null : obj.schulbezeichnung === null ? null : obj.schulbezeichnung;
 		result.mailadresse = (obj.mailadresse === undefined) ? null : obj.mailadresse === null ? null : obj.mailadresse;
 		if (obj.jahrgaenge !== undefined) {
@@ -185,7 +185,7 @@ export class LernplattformV1Export extends JavaObject {
 	public static transpilerToJSON(obj : LernplattformV1Export) : string {
 		let result = '{';
 		result += '"revision" : ' + obj.revision.toString() + ',';
-		result += '"lernplattformId" : ' + ((obj.lernplattformId === null) ? 'null' : obj.lernplattformId.toString()) + ',';
+		result += '"idLernplattform" : ' + ((obj.idLernplattform === null) ? 'null' : obj.idLernplattform.toString()) + ',';
 		result += '"lernplattformBezeichnung" : ' + ((obj.lernplattformBezeichnung === null) ? 'null' : JSON.stringify(obj.lernplattformBezeichnung)) + ',';
 		result += '"titel" : ' + ((obj.titel === null) ? 'null' : JSON.stringify(obj.titel)) + ',';
 		result += '"beschreibung" : ' + ((obj.beschreibung === null) ? 'null' : JSON.stringify(obj.beschreibung)) + ',';
@@ -194,7 +194,7 @@ export class LernplattformV1Export extends JavaObject {
 		result += '"antwortZeitpunkt" : ' + ((obj.antwortZeitpunkt === null) ? 'null' : JSON.stringify(obj.antwortZeitpunkt)) + ',';
 		result += '"schulnummer" : ' + obj.schulnummer.toString() + ',';
 		result += '"schuljahr" : ' + obj.schuljahr.toString() + ',';
-		result += '"schuljahresabschnitt" : ' + obj.schuljahresabschnitt.toString() + ',';
+		result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt.toString() + ',';
 		result += '"schulbezeichnung" : ' + ((obj.schulbezeichnung === null) ? 'null' : JSON.stringify(obj.schulbezeichnung)) + ',';
 		result += '"mailadresse" : ' + ((obj.mailadresse === null) ? 'null' : JSON.stringify(obj.mailadresse)) + ',';
 		result += '"jahrgaenge" : [ ';
@@ -255,8 +255,8 @@ export class LernplattformV1Export extends JavaObject {
 		if (obj.revision !== undefined) {
 			result += '"revision" : ' + obj.revision.toString() + ',';
 		}
-		if (obj.lernplattformId !== undefined) {
-			result += '"lernplattformId" : ' + ((obj.lernplattformId === null) ? 'null' : obj.lernplattformId.toString()) + ',';
+		if (obj.idLernplattform !== undefined) {
+			result += '"idLernplattform" : ' + ((obj.idLernplattform === null) ? 'null' : obj.idLernplattform.toString()) + ',';
 		}
 		if (obj.lernplattformBezeichnung !== undefined) {
 			result += '"lernplattformBezeichnung" : ' + ((obj.lernplattformBezeichnung === null) ? 'null' : JSON.stringify(obj.lernplattformBezeichnung)) + ',';
@@ -282,8 +282,8 @@ export class LernplattformV1Export extends JavaObject {
 		if (obj.schuljahr !== undefined) {
 			result += '"schuljahr" : ' + obj.schuljahr.toString() + ',';
 		}
-		if (obj.schuljahresabschnitt !== undefined) {
-			result += '"schuljahresabschnitt" : ' + obj.schuljahresabschnitt.toString() + ',';
+		if (obj.idSchuljahresabschnitt !== undefined) {
+			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt.toString() + ',';
 		}
 		if (obj.schulbezeichnung !== undefined) {
 			result += '"schulbezeichnung" : ' + ((obj.schulbezeichnung === null) ? 'null' : JSON.stringify(obj.schulbezeichnung)) + ',';

@@ -24,7 +24,7 @@ public class LernplattformV1Export {
 
 	/** Gibt die ID der Lernplattform an. */
 	@Schema(description = "Enthält die ID der Lernplattform.", example = "1")
-	public Long lernplattformId;
+	public Long idLernplattform;
 
 	/** Enthält die Bezeichnung der Lernplattform. */
 	@Schema(description = "Enthält die Bezeichnung der Lernplattform.", example = "Iserv")
@@ -58,9 +58,9 @@ public class LernplattformV1Export {
 	@Schema(description = "Schuljahr", example = "2025")
 	public int schuljahr;
 
-	/** Gibt an, für welchen Abschnitt innerhalb des Schuljahres die Lernplattform-Daten generiert wurde. */
-	@Schema(description = "Abschnitt des Schuljahres", example = "2")
-	public int schuljahresabschnitt;
+	/** Gibt die ID des Schuljahresabschnitts an, für welchen die Lernplattform-Daten generiert wurden. */
+	@Schema(description = "ID des Schuljahresabschnitts", example = "2")
+	public long idSchuljahresabschnitt;
 
 	/** Gibt an, für welchen Abschnitt innerhalb des Schuljahres die Lernplattform-Daten generiert wurden. */
 	@Schema(description = "Vollständiger Name der Schule",

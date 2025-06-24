@@ -23,11 +23,11 @@ public class LernplattformV1Schueler {
 
 	/** Die ID des aktuellen Jahrgangs, in dem sich der Schüler befindet. */
 	@Schema(description = "Die ID des aktuellen Jahrgangs, in dem sich der Schüler befindet.", example = "13")
-	public long jahrgangId;
+	public long idJahrgang;
 
 	/** Die ID der aktuellen Klasse, in der sich der Schüler befindet. */
 	@Schema(description = "Die ID der aktuellen Klasse, in der sich der Schüler befindet.", example = "42")
-	public long klasseId;
+	public long idKlasse;
 
 	/** Der Nachname des Schülers (z.B. Mustermann) */
 	@Schema(description = "Der Nachname des Schülers", example = "Mustermann")
@@ -48,7 +48,7 @@ public class LernplattformV1Schueler {
 	/** Die IDs der Lerngruppen des Schülers in dem Lernabschnitt. */
 	@ArraySchema(schema = @Schema(implementation = Long.class, description = "Ein Array mit IDs der "
 			+ "Lerngruppen des Schülers in dem Lernabschnitt"))
-	public @NotNull List<Long> lerngruppenIds = new ArrayList<>();
+	public @NotNull List<Long> idsLerngruppen = new ArrayList<>();
 
 	/**
 	 * Leerer Standardkonstruktor.

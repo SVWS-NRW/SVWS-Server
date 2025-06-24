@@ -22,17 +22,17 @@ public class LernplattformV1Lerngruppe {
 	public long id;
 
 	/** Die ID der Lerngruppe in der SVWS-DB (Die ID des Kurses oder die ID der Klasse in der Versetzungstabelle, siehe kursartID). */
-	@Schema(description = "Die ID der Lerngruppe in der SVWS-DB (Die ID des Kurses oder die ID der Klasse in der "
-			+ "Versetzungstabelle, siehe kursartID).", example = "1234")
-	public long kId;
+	@Schema(description = "Die ID der Lerngruppe in der SVWS-DB (Die ID des Kurses oder die ID der Klasse in der Versetzungstabelle, siehe kursartID).",
+			example = "1234")
+	public long idIntern;
 
 	/** Die ID des Faches der Lerngruppe. */
 	@Schema(description = "Die ID des Faches der Lerngruppe.", example = "123")
-	public long fachId;
+	public long idFach;
 
 	/** Gibt die ID der Kursart an. Ist dieser Wert null, so handelt es sich um Klassenunterricht. */
 	@Schema(description = "Gibt die ID der Kursart an. Ist dieser Wert null, so handelt es sich um Klassenunterricht.", example = "PUT")
-	public Integer kursartId;
+	public Integer idKursart;
 
 	/** Die Bezeichnung der Lerngruppe (z.B. D-GK4) */
 	@Schema(description = "Die Bezeichnung der Lerngruppe.", example = "D-GK4")
@@ -49,7 +49,7 @@ public class LernplattformV1Lerngruppe {
 
 	/** Die IDs der Lehrer, die der Lerngruppe zugeordnet sind. */
 	@ArraySchema(schema = @Schema(implementation = Long.class, description = "Ein Array mit den IDs der Lehrer, die der Lerngruppe zugeordnet sind."))
-	public @NotNull List<Long> lehrerIds = new ArrayList<>();
+	public @NotNull List<Long> idsLehrer = new ArrayList<>();
 
 	/** Die Anzahl der Wochenstunden, falls es sich um einen Kurs handelt. */
 	@Schema(description = "Die Anzahl der Wochenstunden, falls es sich um einen Kurs handelt.", example = "3")

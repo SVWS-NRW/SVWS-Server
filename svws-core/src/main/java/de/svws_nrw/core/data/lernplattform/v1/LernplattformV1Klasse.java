@@ -31,11 +31,11 @@ public class LernplattformV1Klasse {
 	/** Die ID des Jahrgangs aus der SVWS-DB zu der die Klasse gehört. Bei einer jahrgangsübergreifenden Klasse ist der Wert null. */
 	@Schema(description = "Die ID des Jahrgangs aus der SVWS-DB zu der die Klasse gehört. Bei einer jahrgangsübergreifenden Klasse ist der Wert null.",
 			example = "11")
-	public Long jahrgangId;
+	public Long idJahrgang;
 
 	/** Die IDs der zugeordneten Klassenlehrer. */
 	@ArraySchema(schema = @Schema(implementation = Long.class, description = "Ein Array mit IDs der zugeordneten Klassenlehrer."))
-	public @NotNull List<Long> klassenlehrer = new ArrayList<>();
+	public @NotNull List<Long> idsKlassenlehrer = new ArrayList<>();
 
 	/**
 	 * Leerer Standardkonstruktor.

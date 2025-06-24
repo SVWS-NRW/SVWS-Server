@@ -14,12 +14,12 @@ export class LernplattformV1Schueler extends JavaObject {
 	/**
 	 * Die ID des aktuellen Jahrgangs, in dem sich der Schüler befindet.
 	 */
-	public jahrgangId : number = 0;
+	public idJahrgang : number = 0;
 
 	/**
 	 * Die ID der aktuellen Klasse, in der sich der Schüler befindet.
 	 */
-	public klasseId : number = 0;
+	public idKlasse : number = 0;
 
 	/**
 	 * Der Nachname des Schülers (z.B. Mustermann)
@@ -44,7 +44,7 @@ export class LernplattformV1Schueler extends JavaObject {
 	/**
 	 * Die IDs der Lerngruppen des Schülers in dem Lernabschnitt.
 	 */
-	public lerngruppenIds : List<number> = new ArrayList<number>();
+	public idsLerngruppen : List<number> = new ArrayList<number>();
 
 
 	/**
@@ -70,21 +70,21 @@ export class LernplattformV1Schueler extends JavaObject {
 		if (obj.id === undefined)
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (obj.jahrgangId === undefined)
-			throw new Error('invalid json format, missing attribute jahrgangId');
-		result.jahrgangId = obj.jahrgangId;
-		if (obj.klasseId === undefined)
-			throw new Error('invalid json format, missing attribute klasseId');
-		result.klasseId = obj.klasseId;
+		if (obj.idJahrgang === undefined)
+			throw new Error('invalid json format, missing attribute idJahrgang');
+		result.idJahrgang = obj.idJahrgang;
+		if (obj.idKlasse === undefined)
+			throw new Error('invalid json format, missing attribute idKlasse');
+		result.idKlasse = obj.idKlasse;
 		result.nachname = (obj.nachname === undefined) ? null : obj.nachname === null ? null : obj.nachname;
 		result.vorname = (obj.vorname === undefined) ? null : obj.vorname === null ? null : obj.vorname;
 		result.geschlecht = (obj.geschlecht === undefined) ? null : obj.geschlecht === null ? null : obj.geschlecht;
 		if (obj.lernplattformlogin === undefined)
 			throw new Error('invalid json format, missing attribute lernplattformlogin');
 		result.lernplattformlogin = LernplattformV1Login.transpilerFromJSON(JSON.stringify(obj.lernplattformlogin));
-		if (obj.lerngruppenIds !== undefined) {
-			for (const elem of obj.lerngruppenIds) {
-				result.lerngruppenIds.add(elem);
+		if (obj.idsLerngruppen !== undefined) {
+			for (const elem of obj.idsLerngruppen) {
+				result.idsLerngruppen.add(elem);
 			}
 		}
 		return result;
@@ -93,17 +93,17 @@ export class LernplattformV1Schueler extends JavaObject {
 	public static transpilerToJSON(obj : LernplattformV1Schueler) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
-		result += '"jahrgangId" : ' + obj.jahrgangId.toString() + ',';
-		result += '"klasseId" : ' + obj.klasseId.toString() + ',';
+		result += '"idJahrgang" : ' + obj.idJahrgang.toString() + ',';
+		result += '"idKlasse" : ' + obj.idKlasse.toString() + ',';
 		result += '"nachname" : ' + ((obj.nachname === null) ? 'null' : JSON.stringify(obj.nachname)) + ',';
 		result += '"vorname" : ' + ((obj.vorname === null) ? 'null' : JSON.stringify(obj.vorname)) + ',';
 		result += '"geschlecht" : ' + ((obj.geschlecht === null) ? 'null' : JSON.stringify(obj.geschlecht)) + ',';
 		result += '"lernplattformlogin" : ' + LernplattformV1Login.transpilerToJSON(obj.lernplattformlogin) + ',';
-		result += '"lerngruppenIds" : [ ';
-		for (let i = 0; i < obj.lerngruppenIds.size(); i++) {
-			const elem = obj.lerngruppenIds.get(i);
+		result += '"idsLerngruppen" : [ ';
+		for (let i = 0; i < obj.idsLerngruppen.size(); i++) {
+			const elem = obj.idsLerngruppen.get(i);
 			result += elem.toString();
-			if (i < obj.lerngruppenIds.size() - 1)
+			if (i < obj.idsLerngruppen.size() - 1)
 				result += ',';
 		}
 		result += ' ]' + ',';
@@ -117,11 +117,11 @@ export class LernplattformV1Schueler extends JavaObject {
 		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
-		if (obj.jahrgangId !== undefined) {
-			result += '"jahrgangId" : ' + obj.jahrgangId.toString() + ',';
+		if (obj.idJahrgang !== undefined) {
+			result += '"idJahrgang" : ' + obj.idJahrgang.toString() + ',';
 		}
-		if (obj.klasseId !== undefined) {
-			result += '"klasseId" : ' + obj.klasseId.toString() + ',';
+		if (obj.idKlasse !== undefined) {
+			result += '"idKlasse" : ' + obj.idKlasse.toString() + ',';
 		}
 		if (obj.nachname !== undefined) {
 			result += '"nachname" : ' + ((obj.nachname === null) ? 'null' : JSON.stringify(obj.nachname)) + ',';
@@ -135,12 +135,12 @@ export class LernplattformV1Schueler extends JavaObject {
 		if (obj.lernplattformlogin !== undefined) {
 			result += '"lernplattformlogin" : ' + LernplattformV1Login.transpilerToJSON(obj.lernplattformlogin) + ',';
 		}
-		if (obj.lerngruppenIds !== undefined) {
-			result += '"lerngruppenIds" : [ ';
-			for (let i = 0; i < obj.lerngruppenIds.size(); i++) {
-				const elem = obj.lerngruppenIds.get(i);
+		if (obj.idsLerngruppen !== undefined) {
+			result += '"idsLerngruppen" : [ ';
+			for (let i = 0; i < obj.idsLerngruppen.size(); i++) {
+				const elem = obj.idsLerngruppen.get(i);
 				result += elem.toString();
-				if (i < obj.lerngruppenIds.size() - 1)
+				if (i < obj.idsLerngruppen.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';

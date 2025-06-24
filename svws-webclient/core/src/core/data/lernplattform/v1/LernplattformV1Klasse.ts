@@ -23,12 +23,12 @@ export class LernplattformV1Klasse extends JavaObject {
 	/**
 	 * Die ID des Jahrgangs aus der SVWS-DB zu der die Klasse gehört. Bei einer jahrgangsübergreifenden Klasse ist der Wert null.
 	 */
-	public jahrgangId : number | null = null;
+	public idJahrgang : number | null = null;
 
 	/**
 	 * Die IDs der zugeordneten Klassenlehrer.
 	 */
-	public klassenlehrer : List<number> = new ArrayList<number>();
+	public idsKlassenlehrer : List<number> = new ArrayList<number>();
 
 
 	/**
@@ -56,10 +56,10 @@ export class LernplattformV1Klasse extends JavaObject {
 		result.id = obj.id;
 		result.kuerzel = (obj.kuerzel === undefined) ? null : obj.kuerzel === null ? null : obj.kuerzel;
 		result.kuerzelAnzeige = (obj.kuerzelAnzeige === undefined) ? null : obj.kuerzelAnzeige === null ? null : obj.kuerzelAnzeige;
-		result.jahrgangId = (obj.jahrgangId === undefined) ? null : obj.jahrgangId === null ? null : obj.jahrgangId;
-		if (obj.klassenlehrer !== undefined) {
-			for (const elem of obj.klassenlehrer) {
-				result.klassenlehrer.add(elem);
+		result.idJahrgang = (obj.idJahrgang === undefined) ? null : obj.idJahrgang === null ? null : obj.idJahrgang;
+		if (obj.idsKlassenlehrer !== undefined) {
+			for (const elem of obj.idsKlassenlehrer) {
+				result.idsKlassenlehrer.add(elem);
 			}
 		}
 		return result;
@@ -70,12 +70,12 @@ export class LernplattformV1Klasse extends JavaObject {
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		result += '"kuerzelAnzeige" : ' + ((obj.kuerzelAnzeige === null) ? 'null' : JSON.stringify(obj.kuerzelAnzeige)) + ',';
-		result += '"jahrgangId" : ' + ((obj.jahrgangId === null) ? 'null' : obj.jahrgangId.toString()) + ',';
-		result += '"klassenlehrer" : [ ';
-		for (let i = 0; i < obj.klassenlehrer.size(); i++) {
-			const elem = obj.klassenlehrer.get(i);
+		result += '"idJahrgang" : ' + ((obj.idJahrgang === null) ? 'null' : obj.idJahrgang.toString()) + ',';
+		result += '"idsKlassenlehrer" : [ ';
+		for (let i = 0; i < obj.idsKlassenlehrer.size(); i++) {
+			const elem = obj.idsKlassenlehrer.get(i);
 			result += elem.toString();
-			if (i < obj.klassenlehrer.size() - 1)
+			if (i < obj.idsKlassenlehrer.size() - 1)
 				result += ',';
 		}
 		result += ' ]' + ',';
@@ -95,15 +95,15 @@ export class LernplattformV1Klasse extends JavaObject {
 		if (obj.kuerzelAnzeige !== undefined) {
 			result += '"kuerzelAnzeige" : ' + ((obj.kuerzelAnzeige === null) ? 'null' : JSON.stringify(obj.kuerzelAnzeige)) + ',';
 		}
-		if (obj.jahrgangId !== undefined) {
-			result += '"jahrgangId" : ' + ((obj.jahrgangId === null) ? 'null' : obj.jahrgangId.toString()) + ',';
+		if (obj.idJahrgang !== undefined) {
+			result += '"idJahrgang" : ' + ((obj.idJahrgang === null) ? 'null' : obj.idJahrgang.toString()) + ',';
 		}
-		if (obj.klassenlehrer !== undefined) {
-			result += '"klassenlehrer" : [ ';
-			for (let i = 0; i < obj.klassenlehrer.size(); i++) {
-				const elem = obj.klassenlehrer.get(i);
+		if (obj.idsKlassenlehrer !== undefined) {
+			result += '"idsKlassenlehrer" : [ ';
+			for (let i = 0; i < obj.idsKlassenlehrer.size(); i++) {
+				const elem = obj.idsKlassenlehrer.get(i);
 				result += elem.toString();
-				if (i < obj.klassenlehrer.size() - 1)
+				if (i < obj.idsKlassenlehrer.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';
