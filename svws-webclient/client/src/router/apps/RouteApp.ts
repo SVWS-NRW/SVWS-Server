@@ -38,6 +38,7 @@ import { routeSchuleDatenaustauschENM } from "./schule/datenaustausch/RouteSchul
 import { routeSchuleDatenaustauschLaufbahnplanung } from "./schule/datenaustausch/RouteSchuleDatenaustauschLupo";
 import { routeSchuleDatenaustauschSchulbewerbung } from "./schule/datenaustausch/RouteSchuleDatenaustauschSchulbewerbung";
 import { routeSchuleDatenaustauschWenom } from "./schule/datenaustausch/RouteSchuleDatenaustauschWenom";
+import { routeSchuleDatenaustauschLernplattformen } from "~/router/apps/schule/datenaustausch/lernplattformen/RouteSchuleDatenaustauschLernplattformen";
 import { routeSchuleStammdaten } from "./schule/RouteSchuleStammdaten";
 import { routeSchuleReporting } from "./schule/reporting/RouteSchuleReporting";
 import { routeAbteilungen } from "~/router/apps/schule/abteilungen/RouteAbteilungen";
@@ -135,6 +136,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeSchuleDatenaustauschLaufbahnplanung,
 			routeSchuleDatenaustauschKurs42,
 			routeSchuleDatenaustauschUntis,
+			routeSchuleDatenaustauschLernplattformen,
 			// Reporting
 			routeSchuleReporting,
 		];
