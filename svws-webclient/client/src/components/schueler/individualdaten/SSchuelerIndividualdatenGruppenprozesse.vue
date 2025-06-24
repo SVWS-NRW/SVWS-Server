@@ -4,7 +4,7 @@
 			<template #content>
 				Änderungen übernehmen
 			</template>
-			<svws-ui-button :disabled="!props.pendingStateManager().pendingStateExists()" @click="patchPendingStates" type="primary" size="big">
+			<svws-ui-button :disabled="!props.pendingStateManager().pendingStateExists() || disableSave" @click="patchPendingStates" type="primary" size="big">
 				Speichern
 				<svws-ui-spinner :spinning="loading" />
 			</svws-ui-button>
@@ -31,6 +31,7 @@
 				</ui-gruppenprozesse-wrapper>
 			</template>
 
+			<h1>{{disableSave}}</h1>
 			<svws-ui-input-wrapper :grid="2">
 				<ui-gruppenprozesse-wrapper :pending-state-manager="pendingStateManager" attribute-name="status" :nullable="false">
 					<ui-select v-model="status" label="Status" :manager="statusSelectManager" statistics />
@@ -198,7 +199,6 @@
 	import { computed, ref, watch, toRefs } from "vue";
 	import { CoreTypeSelectManager } from "@ui";
 	import { BaseSelectManager } from "@ui";
-	import { schulformenGymOb } from "~/router/RouteHelper";
 
 	const props = defineProps<SchuelerIndividualdatenGruppenprozesseProps>();
 
@@ -330,12 +330,15 @@
 
 	const setAufnahmedatum = (value: string | null) => {if (value !== null)	aufnahmedatum.value = value;};
 
-
 	const minZuzugsjahr = new Date().getFullYear() + 1 - 100;
 	const maxZuzugsjahr = new Date().getFullYear() + 1;
 
+	const disableSave = ref<boolean>(false);
+
 	const setZuzugsjahr = (value: number | null) => {
-		if ((value !== null) && (value >= minZuzugsjahr) && (value <= maxZuzugsjahr))
+		disableSave.value = ((value !== null) && ((value < Number(minZuzugsjahr)) || (value > Number(maxZuzugsjahr))));
+
+		if ((value !== null) && !disableSave.value)
 			zuzugsjahr.value = value;
 		else
 			props.pendingStateManager().removePendingState("zuzugsjahr");
