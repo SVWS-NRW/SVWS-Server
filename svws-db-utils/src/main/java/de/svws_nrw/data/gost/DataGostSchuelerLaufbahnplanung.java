@@ -49,7 +49,6 @@ import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
-import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.types.gost.GostFachbereich;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
@@ -386,7 +385,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 				}
 				case "abiturFach" -> {
 					// experimenteller Code für das 5. Abiturfach
-					final int maxAbifach = ((abiturjahr >= 2029) && (ServerMode.DEV.checkServerMode(SVWSKonfiguration.get().getServerMode())))
+					final int maxAbifach = AbiturdatenManager.nutzeExperimentellenCode(SVWSKonfiguration.get().getServerMode(), abiturjahr)
 							? 5 : 4;
 					fachbelegung.AbiturFach = JSONMapper.convertToIntegerInRange(value, true, 1, maxAbifach + 1);
 				}

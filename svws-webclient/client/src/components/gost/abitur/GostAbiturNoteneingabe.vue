@@ -256,8 +256,8 @@
 		if (fach === null)
 			return null;
 		const f = Fach.getBySchluesselOrDefault(fach.kuerzel);
-		// TODO ggf. für Abi29ff zusätzlich check...
-		// if ((isAbi29ff) && ((f === Fach.IN) || (f === Fach.VO)))
+		// TODO ggf. für Abi30ff zusätzlich check...
+		// if ((isAbi30ff) && ((f === Fach.IN) || (f === Fach.VO)))
 		// 	return null;
 		return f.getFachgruppe(row.manager.getSchuljahr()) ?? null;
 	}
