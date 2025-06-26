@@ -166,12 +166,11 @@
 				<template #cell(datumBis)="{ rowData }">
 					<span>{{ formatDate(rowData.datumBis) }}</span>
 				</template>
-				<!-- Todo: JahrgangVon und JahrgangBis Siehe Issue #2214 -->
-				<template #cell(jahrgangVon)>
-					<span>-</span>
+				<template #cell(jahrgangVon)="{ rowData }">
+					<span>{{ rowData.jahrgangVon }}</span>
 				</template>
-				<template #cell(jahrgangBis)>
-					<span>-</span>
+				<template #cell(jahrgangBis)="{ rowData }">
+					<span>{{ rowData.jahrgangBis }}</span>
 				</template>
 				<template #cell(schulgliederung)="{ rowData }">
 					<span>{{ textSchulgliederung(rowData.schulgliederung) }}</span>
@@ -197,19 +196,24 @@
 						<svws-ui-text-input span="full" placeholder="Adresse" readonly :model-value="adresseBisherigeSchule" />
 						<svws-ui-text-input placeholder="Schulnummer" statistics readonly
 							:model-value="manager().schulenById.get(newEntryBisherigeSchule.idSchule ?? -1)?.schulnummerStatistik ?? '-'" />
-						<svws-ui-text-input placeholder="Schulform" readonly :model-value="selectedSchulformBisherigeSchule?.text" />
+						<svws-ui-text-input placeholder="Schulform" readonly :model-value="schulformEintragSelectedSchuleNewEntryBisherigeSchule?.text" />
 						<svws-ui-spacing />
 						<svws-ui-text-input placeholder="Start des Schulbesuchs" type="date" :max-date="newEntryBisherigeSchuleDatumBis ?? undefined"
 							v-model="newEntryBisherigeSchule.datumVon" :readonly />
 						<svws-ui-text-input placeholder="Ende des Schulbesuchs" type="date" :min-date="newEntryBisherigeSchule.datumVon ?? undefined"
 							v-model="newEntryBisherigeSchuleDatumBis" :readonly />
+						<ui-select label="Jahrgang von" :manager="jahrgangVonManager"
+							:model-value="Jahrgaenge.data().getWertBySchluessel(newEntryBisherigeSchule.jahrgangVon ?? '') ?? null"
+							@update:model-value="(v : Jahrgaenge) => newEntryBisherigeSchule.jahrgangVon = v?.daten(schuljahrNewEntryBisherigeSchuleDatumVon)?.schluessel ?? null"
+							:disabled="!selectedSchuleForNewEntryBisherigeSchule || !newEntryBisherigeSchule.datumVon" />
+						<ui-select label="Jahrgang Bis" :manager="jahrgangBisManager"
+							:model-value="Jahrgaenge.data().getWertBySchluessel(newEntryBisherigeSchule.jahrgangBis ?? '') ?? null"
+							@update:model-value="(v : Jahrgaenge) => newEntryBisherigeSchule.jahrgangBis = v?.daten(schuljahrNewEntryBisherigeSchuleDatumBis)?.schluessel ?? null"
+							:disabled="!selectedSchuleForNewEntryBisherigeSchule || !newEntryBisherigeSchule.datumBis" />
 						<svws-ui-select class="col-span-full" title="Schulgliederung" :items="schulgliederungenBisherigeSchule" :readonly
-							:disabled="(!newEntryBisherigeSchule.datumBis || !selectedSchulformBisherigeSchule)" autocomplete
+							:disabled="(!newEntryBisherigeSchule.datumBis || !schulformEintragSelectedSchuleNewEntryBisherigeSchule)" autocomplete
 							:item-filter="coreTypeDataFilter" v-model="schulgliederungBisherigeSchule"
 							:item-text="v => (v as SchulgliederungKatalogEintrag).text" />
-						<!-- Todo: JahrgangVon und JahrgangBis Siehe Issue #2214 -->
-						<svws-ui-text-input placeholder="JahrgangVon" disabled />
-						<svws-ui-text-input placeholder="JahrgangBis" disabled />
 					</svws-ui-input-wrapper>
 					<div class="mt-7 flex flex-row gap-4 justify end">
 						<svws-ui-button type="secondary" @click="closeModalBisherigeSchule">Abbrechen</svws-ui-button>
@@ -226,9 +230,10 @@
 <script setup lang="ts">
 
 	import { BenutzerKompetenz, Einschulungsart, PrimarstufeSchuleingangsphaseBesuchsjahre, SchuelerSchulbesuchSchule, Schulform, Schulgliederung,
-		Uebergangsempfehlung, SchulEintrag, AdressenUtils, ArrayList, SchuelerSchulbesuchMerkmal, Kindergartenbesuch } from "@core";
-	import type { Herkunftsarten, SchulformKatalogEintrag, SchulgliederungKatalogEintrag, Merkmal, Jahrgaenge } from "@core";
+		Uebergangsempfehlung, SchulEintrag, AdressenUtils, ArrayList, SchuelerSchulbesuchMerkmal, Kindergartenbesuch, Jahrgaenge } from "@core";
+	import type { Herkunftsarten, SchulformKatalogEintrag, SchulgliederungKatalogEintrag, Merkmal } from "@core";
 	import type { SchuelerSchulbesuchProps } from './SSchuelerSchulbesuchProps';
+	import { CoreTypeSelectManager } from "@ui";
 	import type { DataTableColumn } from "@ui";
 	import { coreTypeDataFilter, filterSchulenEintraege, formatDate } from "~/utils/helfer";
 	import { ref, computed, watch } from "vue";
@@ -376,24 +381,60 @@
 		return (schule === undefined) ? new SchulEintrag() : schule;
 	});
 
-	const selectedSchulformBisherigeSchule = computed<SchulformKatalogEintrag | null>(() => {
+	const schulformEintragSelectedSchuleNewEntryBisherigeSchule = computed<SchulformKatalogEintrag | null>(() => {
 		if (selectedSchuleForNewEntryBisherigeSchule.value.idSchulform === null)
 			return null;
 		return Schulform.data().getEintragByID(selectedSchuleForNewEntryBisherigeSchule.value.idSchulform);
 	});
 
+	const schulformSelectedSchuleNEwEntryBisherigeSchule = computed<Schulform | null>(() => {
+		if (selectedSchuleForNewEntryBisherigeSchule.value.idSchulform === null)
+			return null;
+		return Schulform.data().getWertByID(selectedSchuleForNewEntryBisherigeSchule.value.idSchulform);
+	})
+
 	const schulgliederungenBisherigeSchule = computed<SchulgliederungKatalogEintrag[]>(() => {
-		if ((!selectedSchulformBisherigeSchule.value) || (newEntryBisherigeSchule.value.datumBis === null))
+		if ((!schulformEintragSelectedSchuleNewEntryBisherigeSchule.value) || (newEntryBisherigeSchule.value.datumBis === null))
 			return [];
-		const jahr = Number(newEntryBisherigeSchule.value.datumBis.toString().substring(0, 4));
-		const gliederungenByJahr = Schulgliederung.data().getEintraegeBySchuljahr(jahr);
+		const gliederungenByJahr = Schulgliederung.data().getEintraegeBySchuljahr(schuljahrNewEntryBisherigeSchuleDatumBis.value);
 		const result = [];
 		for (const g of gliederungenByJahr) {
-			if (g.schulformen.contains(selectedSchulformBisherigeSchule.value.kuerzel))
+			if (g.schulformen.contains(schulformEintragSelectedSchuleNewEntryBisherigeSchule.value.kuerzel))
 				result.push(g);
 		}
 		return result;
 	});
+
+	const schuljahrNewEntryBisherigeSchuleDatumVon = computed<number>(() => {
+		if (newEntryBisherigeSchule.value.datumVon === null)
+			return -1;
+		return Number(newEntryBisherigeSchule.value.datumVon.toString().substring(0, 4));
+	});
+
+	const schuljahrNewEntryBisherigeSchuleDatumBis = computed<number>(() => {
+		if (newEntryBisherigeSchule.value.datumBis === null)
+			return -1;
+		return Number(newEntryBisherigeSchule.value.datumBis.toString().substring(0, 4));
+	});
+
+	const jahrgangVonManager = new CoreTypeSelectManager({ clazz: Jahrgaenge.class, schuljahr: schuljahrNewEntryBisherigeSchuleDatumVon.value,
+		schulformen: schulformSelectedSchuleNEwEntryBisherigeSchule.value, selectionDisplayText: "text", optionDisplayText: "text" })
+
+	const jahrgangBisManager = new CoreTypeSelectManager({ clazz: Jahrgaenge.class, schuljahr: schuljahrNewEntryBisherigeSchuleDatumBis.value,
+		schulformen: schulformSelectedSchuleNEwEntryBisherigeSchule.value, selectionDisplayText: "text", optionDisplayText: "text" })
+
+	watch(schuljahrNewEntryBisherigeSchuleDatumVon, () => {
+		jahrgangVonManager.schuljahr = schuljahrNewEntryBisherigeSchuleDatumVon.value;
+	})
+
+	watch(schuljahrNewEntryBisherigeSchuleDatumBis, () => {
+		jahrgangBisManager.schuljahr = schuljahrNewEntryBisherigeSchuleDatumBis.value;
+	})
+
+	watch(schulformSelectedSchuleNEwEntryBisherigeSchule, () => {
+		jahrgangVonManager.schulformen = schulformSelectedSchuleNEwEntryBisherigeSchule.value;
+		jahrgangBisManager.schulformen = schulformSelectedSchuleNEwEntryBisherigeSchule.value;
+	})
 
 	const schulgliederungBisherigeSchule = computed({
 		get: () => newEntryBisherigeSchule.value.schulgliederung === "" ? schulgliederungenBisherigeSchule.value[0] : findGliederung(),
