@@ -3071,6 +3071,7 @@ public class AbiturdatenManager {
 
 		// Bestimme die Prüfungsergebnisse in den Abiturfächern (zweiter Durchgang ggf. mit mdl. Prüfungen im 1.-3. Fach)
 		int fehlendeNotenMdlPflicht = 0;
+		int fehlendeNotenMdlPflichtLK = 0;
 		int fehlendeNotenMdlFreiwillig = 0;
 		for (final @NotNull AbiturFachbelegung abibelegung : abiBelegungen) {
 			final Integer npPruefung = getNotenpunkteFromKuerzelInternal(abibelegung.block2NotenKuerzelPruefung, abidaten.schuljahrAbitur);
@@ -3090,8 +3091,11 @@ public class AbiturdatenManager {
 			if (npPruefungMdl == null) {
 				if (hatMdlBestehen || hatMdlAbweichung || hatMdlFreiwillig) {
 					fehlendeNoten++;
-					if (hatMdlBestehen || hatMdlAbweichung)
+					if (hatMdlBestehen || hatMdlAbweichung) {
 						fehlendeNotenMdlPflicht++;
+						if ((abibelegung.abiturFach == 1) || (abibelegung.abiturFach == 2))
+							fehlendeNotenMdlPflichtLK++;
+					}
 					if (hatMdlFreiwillig)
 						fehlendeNotenMdlFreiwillig++;
 				} else {
@@ -3116,6 +3120,11 @@ public class AbiturdatenManager {
 						defizite--;
 						if ((abibelegung.abiturFach == 1) || (abibelegung.abiturFach == 2))
 							defiziteLK--;
+					}
+					if ((punkteVorher >= 5 * faktor) && (punkteNachher < 5 * faktor)) {
+						defizite++;
+						if ((abibelegung.abiturFach == 1) || (abibelegung.abiturFach == 2))
+							defiziteLK++;
 					}
 				}
 			}
@@ -3161,7 +3170,7 @@ public class AbiturdatenManager {
 			final boolean hatBestanden = (defizite <= (2 + (hatBLL ? 1 : 0))) && (defiziteLK <= 1) && (summe >= 100);
 			if (hatBestanden)
 				abidaten.pruefungBestanden = true;
-			else if (fehlendeNotenMdlPflicht > 0)
+			else if ((fehlendeNotenMdlPflicht > 0) && ((fehlendeNotenMdlPflichtLK != 0) || (defiziteLK < 2)))
 				abidaten.pruefungBestanden = null;
 			else
 				abidaten.pruefungBestanden = false;

@@ -2851,6 +2851,7 @@ export class AbiturdatenManager extends JavaObject {
 		const hatPflichtPruefungen : boolean = (fehlendeNoten === 0) && ((defizite > (2 + (hatBLL ? 1 : 0))) || (defiziteLK > 1) || (summe < 100));
 		const hatNotenPruefung : boolean = (fehlendeNoten === 0);
 		let fehlendeNotenMdlPflicht : number = 0;
+		let fehlendeNotenMdlPflichtLK : number = 0;
 		let fehlendeNotenMdlFreiwillig : number = 0;
 		for (const abibelegung of abiBelegungen) {
 			const npPruefung : number | null = AbiturdatenManager.getNotenpunkteFromKuerzelInternal(abibelegung.block2NotenKuerzelPruefung, abidaten.schuljahrAbitur);
@@ -2869,8 +2870,11 @@ export class AbiturdatenManager extends JavaObject {
 			if (npPruefungMdl === null) {
 				if (hatMdlBestehen || hatMdlAbweichung || hatMdlFreiwillig) {
 					fehlendeNoten++;
-					if (hatMdlBestehen || hatMdlAbweichung)
+					if (hatMdlBestehen || hatMdlAbweichung) {
 						fehlendeNotenMdlPflicht++;
+						if ((abibelegung.abiturFach === 1) || (abibelegung.abiturFach === 2))
+							fehlendeNotenMdlPflichtLK++;
+					}
 					if (hatMdlFreiwillig)
 						fehlendeNotenMdlFreiwillig++;
 				} else {
@@ -2893,6 +2897,11 @@ export class AbiturdatenManager extends JavaObject {
 						defizite--;
 						if ((abibelegung.abiturFach === 1) || (abibelegung.abiturFach === 2))
 							defiziteLK--;
+					}
+					if ((punkteVorher >= 5 * faktor) && (punkteNachher < 5 * faktor)) {
+						defizite++;
+						if ((abibelegung.abiturFach === 1) || (abibelegung.abiturFach === 2))
+							defiziteLK++;
 					}
 				}
 			}
@@ -2935,7 +2944,7 @@ export class AbiturdatenManager extends JavaObject {
 			if (hatBestanden)
 				abidaten.pruefungBestanden = true;
 			else
-				if (fehlendeNotenMdlPflicht > 0)
+				if ((fehlendeNotenMdlPflicht > 0) && ((fehlendeNotenMdlPflichtLK !== 0) || (defiziteLK < 2)))
 					abidaten.pruefungBestanden = null;
 				else
 					abidaten.pruefungBestanden = false;
