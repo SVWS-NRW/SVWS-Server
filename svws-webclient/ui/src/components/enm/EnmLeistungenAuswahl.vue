@@ -15,7 +15,7 @@
 <script setup lang="ts">
 
 	import { onBeforeMount } from 'vue';
-	import { useRegionSwitch } from '../../ui/useRegionSwitch';
+	import { useRegionSwitch } from '../../ui/composables/useRegionSwitch';
 	import type { EnmLeistungenAuswahlProps } from './EnmLeistungenAuswahlProps';
 	import type { EnmLerngruppenAuswahlEintrag } from './EnmManager';
 

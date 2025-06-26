@@ -37,11 +37,9 @@ const routes = [
 	{ path: '/navigation/TabBar', component: () => import('./ui/nav/SvwsUiTabBar.story.vue') },
 	{ path: '/navigation/AppLayout', component: () => import('./ui/nav/SvwsUiMenu.story.vue') },
 	{ path: '/gost/laufbahnplanung/Infos', component: () => import('./components/gost/laufbahnplanung/SLaufbahnplanungInformationen.story.vue') },
+	{ path: '/composables/usePaneSplitter', component: () => import('./ui/composables/usePaneSplitter.story.vue') },
 ]
 
 const router = createRouter({ history: createWebHistory(), routes });
-// await router.isReady()
-// console.log(router.currentRoute.value)
-// if (router.currentRoute.value.path === '/')
-// 	await router.push("/README");
+
 export default router;

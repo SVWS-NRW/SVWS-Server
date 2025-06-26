@@ -25,8 +25,10 @@
 
 <script setup lang="ts">
 
-	import { computed, onBeforeMount, useSlots } from 'vue';
+	import { computed, onBeforeMount, onUnmounted, useSlots } from 'vue';
 	import storyManager from './StoryManager';
+	import type { PaneSplitterConfig} from '~/ui/composables/usePaneSplitter';
+	import { usePaneSplitter } from '~/ui/composables/usePaneSplitter';
 
 	const props = withDefaults(defineProps<{
 		title: string;
@@ -55,5 +57,12 @@
 		if (!active.value)
 			storyManager.setVariantById(props.id);
 	}
+
+	const configV = <PaneSplitterConfig>({minSplit: 20, maxSplit: 80, mode: 'vertical', defaultSplit: 50});
+	const configH = <PaneSplitterConfig>({minSplit: 20, maxSplit: 80, mode: 'horizontal', defaultSplit: 50});
+
+	const { removeDragListeners, dragStart: dragStart1, thisStyle: leftStyle1, thatStyle: rightStyle1, dragger: dragger1 } = usePaneSplitter(configV);
+	const { dragStart: dragStart2, thisStyle: upperStyle1, thatStyle: lowerStyle1, dragger: dragger2 } = usePaneSplitter(configH);
+	onUnmounted(removeDragListeners);
 
 </script>

@@ -16,7 +16,7 @@
 
 	import { onBeforeMount } from 'vue';
 	import type { ENMKlasse } from '../../../../core/src/core/data/enm/ENMKlasse';
-	import { useRegionSwitch } from '../../ui/useRegionSwitch';
+	import { useRegionSwitch } from '../../ui/composables/useRegionSwitch';
 	import type { EnmKlassenleitungAuswahlProps } from './EnmKlassenleitungAuswahlProps';
 
 	const props = defineProps<EnmKlassenleitungAuswahlProps>();

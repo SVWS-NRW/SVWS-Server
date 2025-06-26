@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import router from './router'
-import App from './stories/App.vue'
+import Stories from './stories/Stories.vue'
 import { JsonCoreTypeReaderStatic } from "./../../core/src/asd/utils/JsonCoreTypeReaderStatic"
 
 import "./assets/styles/index.css";
@@ -9,6 +9,6 @@ import "./main.css"
 const reader = new JsonCoreTypeReaderStatic();
 reader.readAll();
 
-const app = createApp(App);
+const app = createApp(Stories);
 app.use(router);
 app.mount('#app');

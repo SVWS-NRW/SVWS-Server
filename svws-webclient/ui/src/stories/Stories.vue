@@ -1,12 +1,13 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
-	<div class="histoire-base-split-pane flex isolate overflow-auto h-screen bg-ui-100">
+	<div class="flex isolate overflow-auto h-screen bg-ui-100">
 		<div class="relative top-0 left-0 z-20 border-r border-ui-25" style="width: 15%;">
 			<div class="flex flex-col h-full bg-ui-75">
-				<div class="histoire-app-header px-4 h-16 flex items-center gap-2 flex-none">
+				<div class="px-4 h-16 flex items-center gap-2 flex-none">
 					<div class="py-3 sm:py-4 flex-1 h-full flex items-center pr-2"><img src="/src/assets/img/histoire-svws.svg" width="50%"></div>
 					<div class="ml-auto flex-none flex" />
 				</div>
-				<div class="histoire-story-list overflow-y-auto flex-1 pl-2">
+				<div class="overflow-y-auto flex-1 pl-2">
 					<svws-ui-table clickable v-model:clicked="clicked" :items="router.getRoutes()" scroll-into-view scroll :columns @update:clicked="routeTo">
 						<template #cell(path)="{ rowData }">
 							{{ rowData.path.split('/').join(' → ') }}
@@ -16,8 +17,8 @@
 			</div>
 		</div>
 		<div class="relative bottom-0 right-0" style="width: 85%;">
-			<div class="histoire-story-view histoire-with-story h-full flex isolate" ref="el">
-				<div class="flex flex-col relative top-0 left-0 z-20 border-r border-ui-25 h-full bg-ui-100" :style="leftStyle">
+			<div class="h-full flex isolate" ref="dragger1">
+				<div class="flex flex-col relative top-0 left-0 z-20 border-r border-ui-25 h-full bg-ui-100" :style="leftStyle1">
 					<div class="flex-none flex justify-around h-10 mx-8 items-center gap-4">
 						<div class="text-ui-caution font-bold">
 							Zur alten Histoire-Version der Doku geht es hier: <a href="https://eloquent-baklava-d6aa9d.netlify.app/">Link</a>
@@ -28,51 +29,51 @@
 							<ui-select label="Hintergrundfarbe" v-model="color" :manager="colorSelectManager" searchable headless />
 						</div>
 					</div>
-					<div class="histoire-story-responsive-preview pr-8 size-full flex gap-4 relative overflow-hidden histoire-story-variant-single-preview-native">
+					<div class="pr-8 size-full flex gap-4 relative overflow-hidden">
 						<template v-if="gridView === 'single' && storyManager.story !== undefined">
 							<div class="relative top-0 left-0 h-full w-96 border-r border-ui-25 bg-ui-75 overflow-auto pt-4 pl-2 border-t">
 								<svws-ui-table clickable :clicked="storyManager.variant" :items="storyManager.story.mapVariants.values()" scroll-into-view scroll :columns="columnsVariant" @update:clicked="storyManager.setVariantById($event.id)" />
 							</div>
 						</template>
-						<div class="bottom-0 right-0 overflow-auto size-full pr-4 pl-4" :class="{'  grid-cols-2 grid gap-4 ': (gridView === 'grid') && (storyManager.story.mapVariants.size > 1) }">
+						<div class="bottom-0 right-0 overflow-auto size-full pr-4 pl-4" :class="{' grid-cols-2 grid gap-4 ': (gridView === 'grid') && (storyManager.story.mapVariants.size > 1) }">
 							<RouterView />
 						</div>
 					</div>
-					<!-- <div class="dragger absolute z-100 hover:bg-ui-brand-hover transition-colors duration-150 delay-150 top-0 bottom-0 cursor-ew-resize w-4" /> -->
+					<!-- <div class="dragger absolute z-100 hover:bg-ui-brand-hover transition-colors duration-150 delay-150 top-0 bottom-0 cursor-ew-resize w-4" @mousedown.prevent="dragStart2" /> -->
 				</div>
-				<div class="relative bottom-0 right-0 histoire-base-split-pane flex isolate overflow-auto flex-col portrait histoire-story-side-panel histoire-loaded h-full" :style="rightStyle">
-					<div class="dragger absolute z-100 hover:bg-ui-selected-hover transition-colors duration-150 delay-150 top-0 bottom-0 cursor-ew-resize w-3" @mousedown.prevent="dragStart" />
-					<div class="relative top-0 left-0 z-20" style="height: 50%;">
+				<div class="relative bottom-0 right-0 flex isolate overflow-auto flex-col portrait h-full" :style="rightStyle1" ref="dragger2">
+					<div class="dragger absolute z-100 top-0 bottom-0 cursor-ew-resize w-1.5" @mousedown.prevent="dragStart1" />
+					<div class="relative top-0 left-0 z-20" :style="upperStyle1">
 						<div class="flex flex-col h-full">
-							<div class="histoire-base-overflow-menu flex overflow-hidden relative histoire-pane-tabs h-10 flex-none border-b border-ui-25">
-								<div @click="visible = 'controls'" class="px-4 h-full inline-flex items-center relative histoire-base-tab cursor-pointer"
+							<div class="flex overflow-hidden relative h-10 flex-none border-b border-ui-25">
+								<div @click="visible = 'controls'" class="px-4 h-full inline-flex items-center relative cursor-pointer"
 									:class="visible === 'controls' ? 'bg-ui-brand text-ui-onbrand':'text-ui-brand hover:text-ui-onbrand-hover hover:bg-ui-brand-hover bg-ui-brand-secondary'">
 									Controls
 								</div>
-								<div @click="visible = 'docs'" class="px-4 h-full inline-flex items-center hover:bg-ui-brand-hover relative text-ui-10 histoire-base-tab cursor-pointer"
+								<div @click="visible = 'docs'" class="px-4 h-full inline-flex items-center hover:bg-ui-brand-hover relative text-ui-10 cursor-pointer"
 									:class="visible === 'docs' ? 'bg-ui-brand text-ui-onbrand':'text-ui-brand hover:text-ui-onbrand-hover hover:bg-ui-brand-hover bg-ui-brand-secondary'">
 									Docs
 								</div>
-								<div @click="visible = 'events'" class="px-4 h-full inline-flex items-center hover:bg-ui-brand-hover relative text-ui-10 histoire-base-tab cursor-pointer"
+								<div @click="visible = 'events'" class="px-4 h-full inline-flex items-center hover:bg-ui-brand-hover relative text-ui-10 cursor-pointer"
 									:class="visible === 'events' ? 'bg-ui-brand text-ui-onbrand':'text-ui-brand hover:text-ui-onbrand-hover hover:bg-ui-brand-hover bg-ui-brand-secondary'">
 									Events <SvwsUiBadge v-if="eventCounter > 0" type="primary" class="ml-3"> {{ eventCounter > 0 ? eventCounter : '' }}</SvwsUiBadge>
 								</div>
 							</div>
-							<div data-test-id="story-controls" class="histoire-story-controls flex flex-col divide-y divide-gray-100 dark:divide-gray-750 h-full overflow-auto p-2">
+							<div data-test-id="story-controls" class="flex flex-col divide-y divide-gray-100 dark:divide-gray-750 h-full overflow-auto p-2">
 								<div class="h-9 flex-none px-2 flex items-center relative" />
-								<div class="histoire-generic-render-story flex-none">
-									<div id="controls" :class="visible === 'controls' ? 'visible':'hidden'" />
-									<div id="docs" :class="visible === 'docs' ? 'visible':'hidden'" />
-									<div id="events" :class="visible === 'events' ? 'visible':'hidden'" />
+								<div class="flex-none">
+									<div id="controls" class="size-full" :class="visible === 'controls' ? 'visible':'hidden'" />
+									<div id="docs" class="size-full" :class="visible === 'docs' ? 'visible':'hidden'" />
+									<div id="events" class="size-full" :class="visible === 'events' ? 'visible':'hidden'" />
 								</div>
 							</div>
 						</div>
-						<!-- <div class="dragger absolute z-100 hover:bg-ui-brand-hover transition-colors duration-150 delay-150 left-0 right-0 cursor-ns-resize h-4" /> -->
+						<div class="dragger absolute z-100 left-0 right-0 cursor-ns-resize h-1.5" @mousedown.prevent="dragStart2" />
 					</div>
-					<div class="relative bottom-0 right-0 border-t border-ui-25" style="height: 50%;">
-						<div class="histoire-story-source-code bg-ui-100 overflow-hidden flex flex-col h-full">
-							<div class="w-full h-full overflow-auto">
-								<div class="p-4 w-fit" id="source" />
+					<div class="relative bottom-0 right-0 border-t border-ui-25" :style="lowerStyle1">
+						<div class="bg-ui-100 overflow-hidden flex flex-col h-full">
+							<div class="size-full overflow-auto">
+								<div class="p-4 size-full whitespace-pre block font-mono" id="source" />
 							</div>
 						</div>
 					</div>
@@ -84,12 +85,14 @@
 
 <script setup lang="ts">
 
-	import { computed, onUnmounted, ref, watchEffect } from 'vue';
+	import { computed, onUnmounted, reactive, ref, watchEffect } from 'vue';
 	import type { RouteRecord } from 'vue-router';
 	import type { ColorPreset } from './StoryManager';
 	import storyManager from './StoryManager';
 	import { BaseSelectManager } from '~/ui/controls/select/selectManager/BaseSelectManager';
 	import router from '../router';
+	import type { PaneSplitterConfig} from './../ui/composables/usePaneSplitter';
+	import { usePaneSplitter } from './../ui/composables/usePaneSplitter';
 
 	const clicked = ref<RouteRecord>(router.getRoutes().find(r => r.path === router.currentRoute.value.path) || router.getRoutes()[0]);
 	const columns = [ {key: 'path', label: 'Komponente'} ];
@@ -124,55 +127,6 @@
 		get: () => storyManager.gridView,
 		set: (value) => storyManager.gridView = value,
 	});
-
-	const currentSplit = ref(80);
-
-	const boundSplit = computed(() => {
-		if (currentSplit.value < 20)
-			return 20;
-		else if (currentSplit.value > 80)
-			return 80;
-		else
-			return currentSplit.value;
-	});
-
-	const leftStyle = computed(() => `width: ${boundSplit.value}%`);
-	const rightStyle = computed(() => `width: ${100 - boundSplit.value}%`);
-
-	const dragging = ref(false)
-	let startPosition = 0;
-	let startSplit = 0;
-
-	const el = ref<HTMLDivElement|null>(null);
-
-	function dragStart(e: MouseEvent) {
-		dragging.value = true;
-		startPosition = e.pageX;
-		startSplit = boundSplit.value;
-		window.addEventListener('mousemove', dragMove);
-		window.addEventListener('mouseup', dragEnd);
-	}
-
-	function dragMove(e: MouseEvent) {
-		if (dragging.value && (el.value !== null)) {
-			const position = e.pageX;
-			const totalSize = el.value.offsetWidth;
-			const dPosition = position - startPosition;
-			currentSplit.value = startSplit + (~~(dPosition / totalSize * 200) / 2);
-		}
-	}
-
-	function dragEnd() {
-		dragging.value = false;
-		removeDragListeners();
-	}
-
-	function removeDragListeners() {
-		window.removeEventListener('mousemove', dragMove);
-		window.removeEventListener('mouseup', dragEnd);
-	}
-
-	onUnmounted(() => removeDragListeners());
 
 	const	backgroundPresets: ColorPreset[] = [
 		{label:'Transparent',color:'transparent',contrastColor:'var(--text-color-ui)'},
@@ -218,9 +172,8 @@
 	];
 
 	const colorSelectManager = new BaseSelectManager({
-		options: backgroundPresets, optionDisplayText: (option: ColorPreset) => option.label,	selectionDisplayText: (option: ColorPreset) => option.label,
+		options: backgroundPresets, optionDisplayText: option => option.label,	selectionDisplayText: option => option.label,
 	});
-
 
 	const themeRef = ref<'light'|'dark'|'auto'>('light');
 
@@ -235,4 +188,13 @@
 	};
 
 	updateTheme(<'light'|'dark'|'auto'>localStorage.getItem('theme'));
+
+	const configV = reactive<PaneSplitterConfig>({minSplit: 20, maxSplit: 80, mode: 'vertical', defaultSplit: 50});
+	const configH = reactive<PaneSplitterConfig>({minSplit: 20, maxSplit: 80, mode: 'horizontal', defaultSplit: 50});
+
+	const { removeDragListeners, dragStart: dragStart1, thisStyle: leftStyle1, thatStyle: rightStyle1, dragger: dragger1 } = usePaneSplitter(configV);
+	const { dragStart: dragStart2, thisStyle: upperStyle1, thatStyle: lowerStyle1, dragger: dragger2 } = usePaneSplitter(configH);
+
+	onUnmounted(removeDragListeners);
+
 </script>

@@ -84,7 +84,8 @@ export { default as SvwsUiToggle } from "./ui/controls/SvwsUiToggle.vue";
 export { default as SvwsUiTooltip } from "./ui/SvwsUiTooltip.vue";
 
 // Use exports
-export { useRegionSwitch } from "./ui/useRegionSwitch";
+export { useRegionSwitch } from "./ui/composables/useRegionSwitch";
+export { usePaneSplitter } from "./ui/composables/usePaneSplitter";
 
 // Type exorts
 export type { DataTableColumn, SortByAndOrder } from "./types";

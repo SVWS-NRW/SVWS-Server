@@ -123,11 +123,11 @@
 	import { githash } from '../../githash';
 	import { version } from '../../version';
 	import { api } from '~/router/Api';
-	import type { TabData } from "@ui/ui/nav/TabData";
-	import { useRegionSwitch } from "@ui/ui/useRegionSwitch";
 	import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 	import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 	import { UserNotificationException } from "@core/core/exceptions/UserNotificationException";
+	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
+	import type { TabData } from "@ui/ui/nav/TabData";
 	import { OpenApiError } from "@core/api/OpenApiError";
 
 	const props = defineProps<AppProps>();
