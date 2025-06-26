@@ -95,7 +95,7 @@ export class GridManager<KEY> {
 	private register<T extends GridInput<KEY, any>>(input: T) : T {
 		this._stateUpToDate = false;
 		// Entferne ggf. ein Input, der zuvor dem Schlüssel zugewiesen war
-		if (this.mapInputs.get(input.key) === undefined)
+		if (this.mapInputs.get(input.key) !== undefined)
 			this.unregister(input.key);
 		// Setze die Position des Inputs
 		this.addInputPosition(input);
