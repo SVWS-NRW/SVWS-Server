@@ -2,7 +2,7 @@
 	<div class="page page-flex-row">
 		<div class="flex flex-row h-full w-full overflow-hidden" @dragover="dragOver">
 			<div class="grow w-full h-full overflow-hidden">
-				<enm-leistungen-uebersicht :manager :patch-leistung :columns-visible :set-columns-visible :floskel-editor-visible :set-floskel-editor-visible :auswahlmanager />
+				<enm-leistungen-uebersicht ref="gridRef" :enm-manager :patch-leistung :columns-visible :set-columns-visible :floskel-editor-visible :focus-floskel-editor :auswahl />
 			</div>
 			<template v-if="columnsVisible().get('Bemerkung')">
 				<div class="h-full content-center text-center cursor-col-resize min-w-8 max-w-8 lg:min-w-12 lg:max-w-12 bg-ui hover:bg-ui-hover" draggable="true" @dragstart="dragStart" @dragend="dragEnd">
@@ -10,7 +10,7 @@
 					<span class="icon i-ri-arrow-right-s-line" />
 				</div>
 				<div class="h-full overflow-hidden" :style="{ 'min-width': floskelEditorVisible ? posDivider + 'rem' : '4rem', 'max-width': floskelEditorVisible ? posDivider + 'rem' : '4rem' }">
-					<enm-floskeleditor :manager :patch="doPatchLeistung" erlaubte-hauptgruppe="FACH" :floskel-editor-visible :set-floskel-editor-visible :auswahlmanager />
+					<enm-floskeleditor :enm-manager :patch="doPatchLeistung" erlaubte-hauptgruppe="FACH" :floskel-editor-visible :set-floskel-editor-visible :auswahl="() => auswahlZelle" />
 				</div>
 			</template>
 		</div>
@@ -19,8 +19,11 @@
 
 <script setup lang="ts">
 
-	import { ref } from 'vue';
+	import { ref, shallowRef, triggerRef } from 'vue';
 	import type { EnmLeistungenProps } from './EnmLeistungenProps';
+	import type { ENMSchueler } from '../../../../core/src/core/data/enm/ENMSchueler';
+	import type { ENMLeistung } from '../../../../core/src/core/data/enm/ENMLeistung';
+	import type { ENMKlasse } from '../../../../core/src';
 
 	const props = defineProps<EnmLeistungenProps>();
 
@@ -28,12 +31,32 @@
 	const img = document.createElement('img');
 	img.src = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
 
+	const auswahlZelle = shallowRef<{ klasse: ENMKlasse | null, schueler: ENMSchueler | null, leistung: ENMLeistung | null }>({ klasse: null, schueler: null, leistung: null });
+
+	const gridRef = shallowRef(null);
+	// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+	const focusGrid = () => { if (gridRef.value !== null) (gridRef.value as { focusGrid: () => void }).focusGrid(); };
+
+	async function focusFloskelEditor(schueler: ENMSchueler | null, leistung: ENMLeistung | null, doFocus: boolean) {
+		if (doFocus) {
+			await props.setFloskelEditorVisible(true).then(() => {
+				auswahlZelle.value.schueler = schueler;
+				auswahlZelle.value.leistung = leistung;
+				triggerRef(auswahlZelle);
+				(document.getElementsByClassName("floskel-input")[0] as HTMLElement).focus();
+			});
+			return;
+		}
+		auswahlZelle.value.schueler = schueler;
+		auswahlZelle.value.leistung = leistung;
+		triggerRef(auswahlZelle);
+	}
+
 	async function doPatchLeistung(fachbezogeneBemerkungen: string|null) {
-		const id = props.auswahlmanager.auswahl.a.id
-		const patch = { id, fachbezogeneBemerkungen };
-		const success = await props.patchLeistung(patch);
-		if (success)
-			Object.assign(props.auswahlmanager.auswahl.a, patch);
+		if ((auswahlZelle.value.schueler === null) || (auswahlZelle.value.leistung === null))
+			return;
+		await props.patchLeistung(auswahlZelle.value.leistung, { fachbezogeneBemerkungen });
+		focusGrid();
 	}
 
 	// Default-Breite von 49 rem für den Floskel-Editor

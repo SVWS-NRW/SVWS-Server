@@ -3,7 +3,7 @@
 		<div @click="setFloskelEditorVisible(!floskelEditorVisible)" class="">
 			<span v-if="floskelEditorVisible" class="icon i-ri-menu-unfold-line cursor-pointer" />
 			<span v-else class="icon i-ri-menu-fold-line cursor-pointer" />
-			<div v-if="floskelEditorVisible" class="text-headline-md flex justify-between pb-2"><span>{{ schueler.nachname }}, {{ schueler.vorname }}</span><span>{{ hauptgruppenBezeichnung[erlaubteHauptgruppe] }}</span></div>
+			<div v-if="floskelEditorVisible && (schueler !== null)" class="text-headline-md flex justify-between pb-2"><span>{{ schueler.nachname }}, {{ schueler.vorname }}</span><span>{{ hauptgruppenBezeichnung[erlaubteHauptgruppe] }}</span></div>
 		</div>
 		<div v-if="floskelEditorVisible" class="h-full overflow-y-auto">
 			<div class="flex flex-auto flex-col gap-4">
@@ -57,17 +57,16 @@
 	import { computed, ref, watch } from 'vue';
 	import type { ENMFloskel } from '../../../../core/src/core/data/enm/ENMFloskel';
 	import type { ENMFloskelgruppe } from '../../../../core/src/core/data/enm/ENMFloskelgruppe';
-	import type { EnmManager, BemerkungenHauptgruppe, EnmAuswahlManager, EnmLerngruppenAuswahlEintrag } from './EnmManager';
+	import type { EnmManager, BemerkungenHauptgruppe } from './EnmManager';
 	import { ArrayList } from '../../../../core/src/java/util/ArrayList';
-	import { ENMSchueler } from '../../../../core/src/core/data/enm/ENMSchueler';
-	import { PairNN } from '../../../../core/src/asd/adt/PairNN';
+	import type { ENMSchueler } from '../../../../core/src/core/data/enm/ENMSchueler';
 	import type { ENMLeistung } from '../../../../core/src/core/data/enm/ENMLeistung';
 	import type { ENMKlasse } from '../../../../core/src/core/data/enm/ENMKlasse';
 
 
 	const props = defineProps<{
-		manager: EnmManager;
-		auswahlmanager: EnmAuswahlManager<EnmLerngruppenAuswahlEintrag[], PairNN<ENMLeistung, ENMSchueler>>|EnmAuswahlManager<ENMKlasse, ENMSchueler>;
+		enmManager: () => EnmManager;
+		auswahl: () => { klasse: ENMKlasse | null, schueler: ENMSchueler | null, leistung: ENMLeistung | null };
 		patch: (value: string|null) => Promise<void>;
 		erlaubteHauptgruppe: BemerkungenHauptgruppe;
 		floskelEditorVisible: boolean;
@@ -90,27 +89,28 @@
 	const text = ref<string|null>(null);
 
 	const bemerkung = computed<string|null>(() => {
-		if (props.auswahlmanager.auswahl instanceof PairNN)
-			return props.auswahlmanager.auswahl.a.fachbezogeneBemerkungen;
+		const auswahl = props.auswahl();
+		if (auswahl.schueler === null)
+			return null;
+		if (auswahl.leistung !== null)
+			return auswahl.leistung.fachbezogeneBemerkungen;
 		switch (props.erlaubteHauptgruppe) {
 			case 'ASV':
-				return props.auswahlmanager.auswahl.bemerkungen.ASV;
+				return auswahl.schueler.bemerkungen.ASV;
 			case 'AUE':
-				return props.auswahlmanager.auswahl.bemerkungen.AUE;
+				return auswahl.schueler.bemerkungen.AUE;
 			case 'ZB':
-				return props.auswahlmanager.auswahl.bemerkungen.ZB;
+				return auswahl.schueler.bemerkungen.ZB;
 			default:
 				return null;
 		}
 	});
 
-	watch([bemerkung, () => props.auswahlmanager.auswahl, () => props.auswahlmanager.auswahl, () => props.erlaubteHauptgruppe],
+	watch([bemerkung, () => props.auswahl(), () => props.auswahl(), () => props.erlaubteHauptgruppe],
 		([neuBemerkung]) => text.value = neuBemerkung);
 
-	const schueler = computed<ENMSchueler>(() => {
-		if (props.auswahlmanager.auswahl instanceof PairNN)
-			return props.auswahlmanager.auswahl.b;
-		return props.auswahlmanager.auswahl;
+	const schueler = computed<ENMSchueler | null>(() => {
+		return props.auswahl().schueler;
 	})
 
 	const clean = computed(() => (text.value === null) || !templateRegex.exec(text.value));
@@ -123,16 +123,16 @@
 
 	const gruppenMap = computed(() => {
 		const map = new Map<ENMFloskelgruppe, ArrayList<ENMFloskel>>();
-		if (props.auswahlmanager.auswahl instanceof ENMSchueler)
+		const auswahl = props.auswahl();
+		if ((auswahl.schueler === null) || (auswahl.leistung === null))
 			return map;
-		for (const gruppe of props.manager.listFloskelgruppen) {
+		for (const gruppe of props.enmManager().listFloskelgruppen) {
 			if ((gruppe.hauptgruppe !== props.erlaubteHauptgruppe) && (gruppe.hauptgruppe !== 'ALLG'))
 				continue;
 			const floskeln = new ArrayList<ENMFloskel>();
 			for (const floskel of gruppe.floskeln)
-				if ((floskel.fachID === null)
-					|| ((props.manager.lerngruppeByIDOrException(props.auswahlmanager.auswahl.a.lerngruppenID).fachID === floskel.fachID)
-						&& ((floskel.jahrgangID === null) || (floskel.jahrgangID === schueler.value.jahrgangID))))
+				if ((floskel.fachID === null) || ((props.enmManager().lerngruppeByIDOrException(auswahl.leistung.lerngruppenID).fachID === floskel.fachID)
+					&& ((floskel.jahrgangID === null) || (floskel.jahrgangID === auswahl.schueler.jahrgangID))))
 					floskeln.add(floskel);
 			if (!floskeln.isEmpty())
 				map.set(gruppe, floskeln);
@@ -159,8 +159,8 @@
 	const templateRegexGlobal = new RegExp(query, 'gi');
 	const templateRegex = new RegExp(query, 'i');
 	const every = ref(3);
-	const kleinPronomenMap = computed(() => new Map([['m', 'er'], ['w', 'sie'], ['d', schueler.value.vorname ?? '???'], ['x', schueler.value.vorname ?? '???']]));
-	const grossPronomenMap = computed(() => new Map([['m', 'Er'], ['w', 'Sie'], ['d', schueler.value.vorname ?? '???'], ['x', schueler.value.vorname ?? '???']]));
+	const kleinPronomenMap = computed(() => new Map([['m', 'er'], ['w', 'sie'], ['d', props.auswahl().schueler?.vorname ?? '???'], ['x', props.auswahl().schueler?.vorname ?? '???']]));
+	const grossPronomenMap = computed(() => new Map([['m', 'Er'], ['w', 'Sie'], ['d', props.auswahl().schueler?.vorname ?? '???'], ['x', props.auswahl().schueler?.vorname ?? '???']]));
 	const anredeMap = computed(() => new Map([['m', 'Herr'], ['w', 'Frau']]));
 
 	function ergaenzeFloskel(floskel: ENMFloskel) {
@@ -176,28 +176,31 @@
 	function ersetzeTemplates() {
 		if (text.value === null)
 			return;
+		const schueler = props.auswahl().schueler;
+		if (schueler === null)
+			return;
 		let counter = -1;
 		let tmp = text.value;
 		tmp = tmp.replaceAll(templateRegexGlobal, (match, vorname, nachname, weibl, ein, anrede, mwdx, kuerzel, _offset, fullString: string, _groups) => {
 			if (vorname !== undefined) {
 				counter++;
 				if ((counter % every.value) === 0)
-					return schueler.value.vorname ?? '???';
+					return schueler.vorname ?? '???';
 				return fullString.slice(0, _offset).trimEnd().endsWith('.')
-					? grossPronomenMap.value.get(schueler.value.geschlecht ?? 'x') ?? schueler.value.vorname ?? '???'
-					: kleinPronomenMap.value.get(schueler.value.geschlecht ?? 'x') ?? schueler.value.vorname ?? '???';
+					? grossPronomenMap.value.get(schueler.geschlecht ?? 'x') ?? schueler.vorname ?? '???'
+					: kleinPronomenMap.value.get(schueler.geschlecht ?? 'x') ?? schueler.vorname ?? '???';
 			} else if (nachname !== undefined) {
-				return schueler.value.nachname ?? '???';
+				return schueler.nachname ?? '???';
 			} else if (weibl !== undefined) {
-				return schueler.value.geschlecht === 'w' ? 'in':'';
+				return schueler.geschlecht === 'w' ? 'in':'';
 			} else if (ein !== undefined) {
-				return schueler.value.geschlecht === 'w' ? 'in':'e';
+				return schueler.geschlecht === 'w' ? 'in':'e';
 			} else if (anrede !== undefined) {
-				return anredeMap.value.get(schueler.value.geschlecht ?? 'm') ?? '';
+				return anredeMap.value.get(schueler.geschlecht ?? 'm') ?? '';
 			} else if (mwdx !== undefined) {
 				const arr = match.slice(1, -1).split('%')
 				const mwdxMap = new Map([['m', arr[0] ?? ''], ['w', arr[1] ?? ''], ['d', arr[2] ?? ''], ['x', arr[3] ?? '']]);
-				return mwdxMap.get((schueler.value.geschlecht ?? 'x') as 'm'|'w'|'d'|'x')!;
+				return mwdxMap.get((schueler.geschlecht ?? 'x') as 'm'|'w'|'d'|'x')!;
 			} else if (kuerzel !== undefined) {
 				return floskelMap.value.get(kuerzel.toLocaleLowerCase())?.text ?? '???';
 			}
@@ -207,7 +210,7 @@
 	}
 
 	// eslint-disable-next-line vue/no-setup-props-reactivity-loss
-	const collapsed = ref(new Map<ENMFloskelgruppe, boolean>([...props.manager.listFloskelgruppen].map(g => g.hauptgruppe === 'ALLG' ? [g, true] : [g, false])));
+	const collapsed = ref(new Map<ENMFloskelgruppe, boolean>([...props.enmManager().listFloskelgruppen].map(g => g.hauptgruppe === 'ALLG' ? [g, true] : [g, false])));
 
 	async function doPatchLeistung() {
 		if (!clean.value)

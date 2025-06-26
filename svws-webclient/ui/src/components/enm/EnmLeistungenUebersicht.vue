@@ -1,328 +1,270 @@
 <template>
-	<table class="svws-ui-table svws-clickable overflow-y-auto" role="table" aria-label="Tabelle"
-		@keydown.down.prevent.stop="auswahlmanager.linkedListNext"
-		@keydown.up.prevent.stop="auswahlmanager.linkedListPrevious"
-		@keydown.right.prevent="nextColumn"
-		@keydown.left.prevent="prevColumn">
-		<thead class="svws-ui-thead cursor-pointer" role="rowgroup" aria-label="Tabellenkopf">
-			<tr class="svws-ui-tr" role="row">
-				<template v-for="col of cols" :key="col.name">
-					<td class="svws-ui-td" role="columnheader" v-if="colsVisible.get(col.kuerzel) ?? true">
-						<svws-ui-tooltip v-if="col.kuerzel !== col.name">
-							{{ col.kuerzel }}
-							<template #content>{{ col.name }}</template>
-						</svws-ui-tooltip>
-						<span v-else>{{ col.kuerzel }}</span>
-						<span v-if="colsValidationTooltip.includes(col.kuerzel)">
-							<svws-ui-tooltip>
-								<span class="icon i-ri-question-line" />
-								<template #content>
-									<template v-if="(col.kuerzel === 'Quartal') || (col.kuerzel === 'Note')">
-										<ul>
-											<li v-for="n in notenKuerzel" :key="n"> {{ n }} </li>
-										</ul>
-									</template>
-									<template v-else-if="col.kuerzel === 'FS'">
-										<ul>
-											<li>Keine negativen Werte</li>
-											<li>Maximal 999</li>
-											<li>Größer/gleich FSU</li>
-										</ul>
-									</template>
-									<template v-else-if="col.kuerzel === 'FSU'">
+	<ui-table-grid name="Leistungsdaten" :header-count="1" :footer-count="0" :data="daten"
+		:cell-format="cellFormat" :get-key="(row: PairNN<ENMLeistung, ENMSchueler>) => `${row.a.id}_${row.b.id}`"
+		:row-selected="gridManager.focusRow" @row-clicked="(_row: any, rowIndex: number) => gridManager.doFocusRowIfNotFocussed(rowIndex)">
+		<template #header>
+			<template v-for="col of cols" :key="col.name">
+				<th v-if="columnsVisible().get(col.kuerzel) ?? true">
+					<svws-ui-tooltip v-if="col.kuerzel !== col.name">
+						{{ col.kuerzel }}
+						<template #content>{{ col.name }}</template>
+					</svws-ui-tooltip>
+					<span v-else>{{ col.kuerzel }}</span>
+					<span v-if="colsValidationTooltip.includes(col.kuerzel)">
+						<svws-ui-tooltip>
+							<span class="icon i-ri-question-line" />
+							<template #content>
+								<div class="font-bold">{{ col.name }}</div>
+								<template v-if="(col.kuerzel === 'Quartal') || (col.kuerzel === 'Note')">
+									<ul>
+										<li v-for="n in notenKuerzel" :key="n"> {{ n }} </li>
+									</ul>
+								</template>
+								<template v-else-if="col.kuerzel === 'FS'">
+									<ul>
+										<li>Keine negativen Werte</li>
+										<li>Maximal 999</li>
+										<li>Größer/gleich FSU</li>
+									</ul>
+								</template>
+								<template v-else-if="col.kuerzel === 'FSU'">
+									<ul>
 										<li>Keine negativen Werte</li>
 										<li>Maximal 999</li>
 										<li>Kleiner/gleich FS</li>
-									</template>
+									</ul>
 								</template>
-							</svws-ui-tooltip>
-						</span>
+							</template>
+						</svws-ui-tooltip>
+					</span>
+				</th>
+			</template>
+			<th>
+				<svws-ui-tooltip :hover="false" :show-arrow="false" position="top" class="h-full w-full">
+					<span class="icon" :class="[...columnsVisible().values()].some(c => c === false) ? 'i-ri-layout-column-fill' : 'i-ri-layout-column-line'" />
+					<span class="icon i-ri-arrow-down-s-line" />
+					<template #content>
+						<ul class="min-w-[10rem] flex flex-col gap-0.5 pt-1">
+							<template v-for="col of cols" :key="col.name">
+								<li v-if="columnsVisible().get(col.kuerzel) !== null">
+									<svws-ui-checkbox :model-value="columnsVisible().get(col.kuerzel) ?? false" @update:model-value="value => setColumnsVisible(columnsVisible().set(col.kuerzel, value))">
+										{{ col.kuerzel }}
+									</svws-ui-checkbox>
+								</li>
+							</template>
+						</ul>
+					</template>
+				</svws-ui-tooltip>
+			</th>
+		</template>
+		<template #default="{ row: pair, index }">
+			<td v-if="columnsVisible().get('Klasse') ?? true">
+				{{ enmManager().mapKlassen.get(pair.b.klasseID)?.kuerzelAnzeige ?? '—' }}
+			</td>
+			<td v-if="columnsVisible().get('Name') ?? true" class="text-left">
+				{{ pair.b.nachname }}, {{ pair.b.vorname }} ({{ pair.b.geschlecht }})
+			</td>
+			<td v-if="columnsVisible().get('Fach') ?? true">
+				{{ enmManager().lerngruppeGetFachkuerzel(pair.a.lerngruppenID) }}
+			</td>
+			<td v-if="columnsVisible().get('Kurs') ?? true">
+				{{ enmManager().lerngruppeGetKursbezeichnung(pair.a.lerngruppenID) }}
+			</td>
+			<td v-if="columnsVisible().get('Kursart') ?? true">
+				{{ enmManager().leistungGetKursartAsString(pair.a) }}
+			</td>
+			<td v-if="columnsVisible().get('Lehrer') ?? true">
+				{{ enmManager().lerngruppeGetFachlehrerOrNull(pair.a.lerngruppenID) }}
+			</td>
+			<template v-if="columnsVisible().get('Quartal') ?? true">
+				<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID)" :ref="inputNoteQuartal(pair, 1, index)" class="ui-table-grid-input"
+					:class="{
+						'bg-ui-selected': (gridManager.focusColumn === 1),
+						'text-ui-danger': Note.fromKuerzel(pair.a.noteQuartal).istDefizitSekII(),
+					}" />
+				<td v-else :class="{ 'text-ui-danger': Note.fromKuerzel(pair.a.noteQuartal).istDefizitSekII() }">{{ pair.a.noteQuartal ?? "-" }}</td>
+			</template>
+			<template v-if="columnsVisible().get('Note') ?? true">
+				<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID)" :ref="inputNote(pair, 2, index)" class="ui-table-grid-input"
+					:class="{
+						'bg-ui-selected': (gridManager.focusColumn === 2),
+						'text-ui-danger': Note.fromKuerzel(pair.a.note).istDefizitSekII(),
+					}" />
+				<td v-else :class="{ 'text-ui-danger': Note.fromKuerzel(pair.a.note).istDefizitSekII() }">{{ pair.a.note ?? "-" }}</td>
+			</template>
+			<template v-if="columnsVisible().get('Mahnung') ?? true">
+				<template v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID)">
+					<td :ref="inputMahnung(pair, 3, index)" class="ui-table-grid-button"
+						:class="{ 'bg-ui-selected': (gridManager.focusColumn === 3) }">
+						<span v-if="pair.a.mahndatum !== null" class="icon-sm align-middle i-ri-checkbox-line bg-ui-50" />
+						<span v-else-if="pair.a.istGemahnt === true" class="icon-sm align-middle i-ri-checkbox-line bg-ui-danger" />
+						<span v-else class="icon-sm align-middle i-ri-checkbox-blank-line" />
 					</td>
 				</template>
-				<td class="svws-ui-td" role="columnheader">
-					<svws-ui-tooltip :hover="false" :show-arrow="false" position="top" class="h-full w-full">
-						<span class="icon" :class="[...colsVisible.values()].some(c => c === false) ? 'i-ri-layout-column-fill' : 'i-ri-layout-column-line'" />
-						<span class="icon i-ri-arrow-down-s-line" />
-						<template #content>
-							<ul class="min-w-[10rem] flex flex-col gap-0.5 pt-1">
-								<template v-for="col of cols" :key="col.name">
-									<li v-if="colsVisible.get(col.kuerzel) !== null">
-										<svws-ui-checkbox :model-value="colsVisible.get(col.kuerzel) ?? false" @update:model-value="value => setColumnsVisible(colsVisible.set(col.kuerzel, value))">
-											{{ col.kuerzel }}
-										</svws-ui-checkbox>
-									</li>
-								</template>
-							</ul>
-						</template>
-					</svws-ui-tooltip>
-				</td>
-			</tr>
-		</thead>
-		<tbody class="svws-ui-tbody h-full" role="rowgroup" aria-label="Tabelleninhalt">
-			<template v-for="pair of auswahlmanager.liste" :key="pair">
-				<tr class="svws-ui-tr h-10" role="row" :class="{ 'svws-clicked': (auswahlmanager.auswahl === pair) }"
-					@click="setAuswahlLeistung(pair)"
-					@keydown.tab="handleTabEvent($event, pair)" :ref="el => rowRefs.set(pair, el as HTMLElement)">
-					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Klasse') ?? true">
-						{{ manager.mapKlassen.get(pair.b.klasseID)?.kuerzelAnzeige ?? '—' }}
+				<template v-else>
+					<td>
+						<span v-if="pair.a.mahndatum !== null" class="icon-sm align-middle i-ri-checkbox-line bg-ui-50" />
+						<span v-else-if="pair.a.istGemahnt === true" class="icon-sm align-middle i-ri-checkbox-line bg-ui-danger" />
+						<span v-else class="icon-sm align-middle i-ri-checkbox-blank-line" />
 					</td>
-					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Name') ?? true">
-						{{ pair.b.nachname }}, {{ pair.b.vorname }} ({{ pair.b.geschlecht }})
-					</td>
-					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Fach') ?? true">
-						{{ manager.lerngruppeGetFachkuerzel(pair.a.lerngruppenID) }}
-					</td>
-					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Kurs') ?? true">
-						{{ manager.lerngruppeGetKursbezeichnung(pair.a.lerngruppenID) }}
-					</td>
-					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Kursart') ?? true">
-						{{ manager.leistungGetKursartAsString(pair.a) }}
-					</td>
-					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Lehrer') ?? true">
-						{{ manager.lerngruppeGetFachlehrerOrNull(pair.a.lerngruppenID) }}
-					</td>
-					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Quartal') ?? true"
-						:class="{
-							'bg-ui-selected': (currentColumn === colsFocussable.indexOf('Quartal')) && (manager.isValidQuartal(pair.a) || !pair.a.noteQuartal),
-							'bg-ui-danger-secondary': (currentColumn === colsFocussable.indexOf('Quartal')) && !manager.isValidQuartal(pair.a)
-						}">
-						<input v-if="manager.lerngruppeIstFachlehrer(pair.a.lerngruppenID)"
-							type="text"
-							class="w-full column-focussable"
-							v-model="pair.a.noteQuartal"
-							@focusin="tabToUnselectedLeistung(pair, $event.target)"
-							:class="{ contentFocusField: ((auswahlmanager.auswahl === pair) && (currentColumn === colsFocussable.indexOf('Quartal'))) || (currentColumn === -1) }"
-							@change="() => patchQuartal(pair.a)">
-						<div v-else class="column-focussable w-full h-full contentFocusField"
-							tabindex="0"
-							@focusin="tabToUnselectedLeistung(pair, $event.target)">
-							{{ pair.a.noteQuartal ?? "-" }}
-						</div>
-					</td>
-					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Note') ?? true"
-						:class="{
-							'bg-ui-selected': (currentColumn === colsFocussable.indexOf('Note')) && (manager.isValidNote(pair.a) || !pair.a.note),
-							'bg-ui-danger-secondary': (currentColumn === colsFocussable.indexOf('Note')) && !manager.isValidNote(pair.a)
-						}">
-						<input v-if="manager.lerngruppeIstFachlehrer(pair.a.lerngruppenID)"
-							type="text"
-							class="w-full column-focussable"
-							:class="{ contentFocusField: (auswahlmanager.auswahl === pair) && (currentColumn === colsFocussable.indexOf('Note')) }"
-							v-model="pair.a.note" @focusin="tabToUnselectedLeistung(pair, $event.target)"
-							@change="() => patchNote(pair.a)">
-						<div v-else class="column-focussable w-full h-full"
-							tabindex="0"
-							@focusin="tabToUnselectedLeistung(pair, $event.target)">
-							{{ pair.a.note ?? "-" }}
-						</div>
-					</td>
-					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Mahnung') ?? true" :class="{ 'bg-ui-selected': (currentColumn === colsFocussable.indexOf('Mahnung')) }">
-						<template v-if="manager.lerngruppeIstFachlehrer(pair.a.lerngruppenID)">
-							<input type="checkbox" class="accent-ui-danger" :class="{'column-focussable': pair.a.mahndatum === null, contentFocusField: (auswahlmanager.auswahl === pair) && (currentColumn === colsFocussable.indexOf('Mahnung'))}" tabindex="0"
-								:disabled="pair.a.mahndatum !== null" v-model="pair.a.istGemahnt" @change="() => doPatchLeistung(pair.a, { istGemahnt: pair.a.istGemahnt })" @focusin="tabToUnselectedLeistung(pair, $event.target)">
-							<span v-if="pair.a.mahndatum !== null" class="column-focussable" tabindex="0"> {{ pair.a.mahndatum }} </span>
-						</template>
-					</td>
-					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('FS') ?? true"
-						:class="{
-							'bg-ui-selected': (currentColumn === colsFocussable.indexOf('FS')) && ((manager.isValidFehlstunden(pair.a) || !pair.a.fehlstundenFach)),
-							'bg-ui-danger-secondary': (currentColumn === colsFocussable.indexOf('FS')) && !manager.isValidFehlstunden(pair.a)
-						}">
-						<input v-if="manager.fehlstundenFachbezogen(pair.b)" v-model="pair.a.fehlstundenFach" class="column-focussable w-full"
-							:class="{ contentFocusField: (auswahlmanager.auswahl === pair) && (currentColumn === colsFocussable.indexOf('FS')) }"
-							@focusin="tabToUnselectedLeistung(pair, $event.target)"
-							@change="patchFehlstunden(pair.a)">
-						<span v-else class="w-full column-focussable" tabindex="0">—</span>
-					</td>
-					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('FSU') ?? true" :class="{
-						'bg-ui-selected': (currentColumn === colsFocussable.indexOf('FSU')) && (manager.isValidFehlstundenUnentschuldigt(pair.a) || !pair.a.fehlstundenUnentschuldigtFach),
-						'bg-ui-danger-secondary': (currentColumn === colsFocussable.indexOf('FSU')) && !manager.isValidFehlstundenUnentschuldigt(pair.a) }">
-						<input v-if="manager.fehlstundenFachbezogen(pair.b)" v-model="pair.a.fehlstundenUnentschuldigtFach" class="column-focussable w-full"
-							:class="{ contentFocusField: (auswahlmanager.auswahl === pair) && (currentColumn === colsFocussable.indexOf('FSU')) }"
-							@focusin="tabToUnselectedLeistung(pair, $event.target)"
-							@change="patchFehlstundenUnentschuldigt(pair.a)">
-						<span v-else class="w-full column-focussable" tabindex="0">—</span>
-					</td>
-					<td class="svws-ui-td" role="cell" v-if="colsVisible.get('Bemerkung') ?? true"
-						:class="{ 'bg-ui-selected-secondary text-ui-onselected-secondary': floskelEditorVisible && (auswahlmanager.auswahl === pair), 'bg-ui-selected': currentColumn === colsFocussable.indexOf('Bemerkung') }">
-						<span class="text-ellipsis overflow-hidden whitespace-nowrap column-focussable w-full" tabindex="0" @keydown.enter.prevent="focusFloskelEditor"
-							:class="{ contentFocusField: (auswahlmanager.auswahl === pair) && (currentColumn === colsFocussable.indexOf('Bemerkung')) }"
-							@focusin="tabToUnselectedLeistung(pair, $event.target)">{{ pair.a.fachbezogeneBemerkungen ?? "-" }}</span>
-					</td>
-					<td class="svws-ui-td" role="cell" />
-				</tr>
+				</template>
 			</template>
-		</tbody>
-	</table>
+			<template v-if="columnsVisible().get('FS') ?? true">
+				<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID)"
+					:ref="inputFehlstunden(pair, 4, index)" class="ui-table-grid-input"
+					:class="{ 'bg-ui-selected': (gridManager.focusColumn === 4) }" />
+				<td v-else>{{ pair.a.fehlstundenFach ?? "—" }}</td>
+			</template>
+			<template v-if="columnsVisible().get('FSU') ?? true">
+				<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID)"
+					:ref="inputFehlstundenUnendschuldigt(pair, 5, index)" class="ui-table-grid-input"
+					:class="{ 'bg-ui-selected': (gridManager.focusColumn === 5) }" />
+				<td v-else>{{ pair.a.fehlstundenUnentschuldigtFach ?? "-" }}</td>
+			</template>
+			<template v-if="columnsVisible().get('Bemerkung') ?? true">
+				<td :ref="inputBemerkung(pair, 6, index)" class="ui-table-grid-button"
+					:class="{
+						'bg-ui-selected': (gridManager.focusColumn === 6),
+						'bg-ui-selected text-ui-onselected': floskelEditorVisible && ((gridManager.focusColumnLast === 6) && (gridManager.focusRowLast === index)),
+					}">
+					<span class="text-ellipsis overflow-hidden whitespace-nowrap w-full">{{ pair.a.fachbezogeneBemerkungen ?? "-" }}</span>
+				</td>
+			</template>
+			<td />
+		</template>
+	</ui-table-grid>
 </template>
 
 <script setup lang="ts">
 
-	import { computed, onMounted, ref, watch } from 'vue';
-	import type { EnmLeistungenProps } from './EnmLeistungenProps';
+	import type { ComponentPublicInstance} from 'vue';
+	import { computed, watchEffect } from 'vue';
+	import type { EnmLeistungenUebersichtProps } from './EnmLeistungenUebersichtProps';
 	import type { ENMLeistung } from '../../../../core/src/core/data/enm/ENMLeistung';
 	import type { PairNN } from '../../../../core/src/asd/adt/PairNN';
 	import type { ENMSchueler } from '../../../../core/src/core/data/enm/ENMSchueler';
 	import { Note } from '../../../../core/src/asd/types/Note';
+	import type { List } from '../../../../core/src/java/util/List';
+	import type { CellFormat } from '../../ui/controls/tablegrid/UiTableGrid.vue';
+	import { ArrayList } from '../../../../core/src/java/util/ArrayList';
+	import { GridManager } from '../../ui/controls/tablegrid/GridManager';
+	import type { GridInput } from '../../ui/controls/tablegrid/GridInput';
 
-	const props = defineProps<EnmLeistungenProps>();
-	const rowRefs = ref(new Map<PairNN<ENMLeistung, ENMSchueler>, HTMLElement>());
-	const currentColumn = ref(-1);
+	const props = defineProps<EnmLeistungenUebersichtProps>();
+	defineExpose({ focusGrid });
 
 	const cols = [
-		{ kuerzel: "Klasse", name: "Klasse", width: "1fr" },
-		{ kuerzel: "Name", name: "Name, Vorname", width: "3fr" },
-		{ kuerzel: "Fach", name: "Fach", width: "1fr" },
-		{ kuerzel: "Kurs", name: "Kurs", width: "1fr" },
-		{ kuerzel: "Kursart", name: "Kursart", width: "1fr" },
-		{ kuerzel: "Lehrer", name: "Fachlehrer", width: "1fr" },
-		{ kuerzel: "Quartal", name: "Quartalsnote", width: "1fr" },
-		{ kuerzel: "Note", name: "Note", width: "1fr" },
-		{ kuerzel: "Mahnung", name: "Mahnung", width: "1fr" },
-		{ kuerzel: "FS", name: "Fehlstunden", width: "1fr" },
-		{ kuerzel: "FSU", name: "Fehlstunden (unentschuldigt)", width: "1fr" },
-		{ kuerzel: "Bemerkung", name: "Fachbezogene Bemerkungen", width: "3fr" },
+		{ kuerzel: "Klasse", name: "Klasse", width: "4rem" },
+		{ kuerzel: "Name", name: "Name, Vorname", width: "16rem" },
+		{ kuerzel: "Fach", name: "Fach", width: "4rem" },
+		{ kuerzel: "Kurs", name: "Kurs", width: "6rem" },
+		{ kuerzel: "Kursart", name: "Kursart", width: "4rem" },
+		{ kuerzel: "Lehrer", name: "Fachlehrer", width: "4rem" },
+		{ kuerzel: "Quartal", name: "Quartalsnote", width: "6rem" },
+		{ kuerzel: "Note", name: "Note", width: "6rem" },
+		{ kuerzel: "Mahnung", name: "Mahnung", width: "5rem" },
+		{ kuerzel: "FS", name: "Fehlstunden", width: "4rem" },
+		{ kuerzel: "FSU", name: "Fehlstunden (unentschuldigt)", width: "4rem" },
+		{ kuerzel: "Bemerkung", name: "Fachbezogene Bemerkungen", width: "16rem" },
 	];
 
-	const colsFocussable = ["Quartal", "Note", "Mahnung", "FS", "FSU", "Bemerkung"];
 	const colsValidationTooltip = ["Quartal", "Note", "FS", "FSU"];
 
-	const notenKuerzel = computed(() => Note.values().map(e => e.daten(props.manager.schuljahr)?.kuerzel).filter(e => e !== ""));
-
-	const colsVisible = computed<Map<string, boolean|null>>({
-		get: () => props.columnsVisible(),
-		set: (value) => void props.setColumnsVisible(value),
-	});
-
-	const columnsComputed = computed<HTMLElement[]>(() => {
-		const htmlElement = rowRefs.value.get(props.auswahlmanager.auswahl);
-		if (htmlElement !== undefined)
-			return Array.from(htmlElement.querySelectorAll(".column-focussable"));
-		return [];
-	});
-
-	function setAuswahlLeistung(value: PairNN<ENMLeistung, ENMSchueler>) {
-		if (currentColumn.value === -1)
-			currentColumn.value = 0;
-		props.auswahlmanager.auswahl = value;
-	}
-
-	function selectInputContent(ele: EventTarget) {
-		if (ele instanceof HTMLInputElement)
-			ele.select();
-	}
-
-	function nextColumn() {
-		if (currentColumn.value === columnsComputed.value.length - 1)
-			currentColumn.value = 0;
-		else
-			currentColumn.value += 1;
-		columnsComputed.value[currentColumn.value].focus();
-	}
-
-	function prevColumn() {
-		if (currentColumn.value === 0)
-			currentColumn.value = columnsComputed.value.length - 1;
-		else
-			currentColumn.value -= 1;
-		columnsComputed.value[currentColumn.value].focus();
-	}
-
-	async function focusFloskelEditor() {
-		await props.setFloskelEditorVisible(true).then(() => (document.getElementsByClassName("floskel-input")[0] as HTMLElement).focus());
-	}
-
-	function tabToUnselectedLeistung(leistung: PairNN<ENMLeistung, ENMSchueler>, ele: EventTarget | null) {
-		const newRowHtml = rowRefs.value.get(leistung);
-		if (newRowHtml === undefined)
+	const gridManager = new GridManager<string>();
+	gridManager.onFocusInput = (input: GridInput<any, any> | null) => {
+		if ((input === null) || (input.row >= daten.value.size()))
 			return;
-		const newRowArray = Array.from(newRowHtml.querySelectorAll(".column-focussable"));
-		const columnIndex = newRowArray.indexOf(ele as HTMLElement);
-		if (columnIndex !== -1)
-			currentColumn.value = columnIndex;
-		if (!props.manager.compareAuswahlLeistung(leistung, props.auswahlmanager.auswahl))
-			setAuswahlLeistung(leistung);
-		if(ele)
-			selectInputContent(ele);
+		const pair = daten.value.get(input.row);
+		void props.focusFloskelEditor(pair.b, pair.a, false);
 	}
-
-	function handleTabEvent(eve: KeyboardEvent, pair: PairNN<ENMLeistung, ENMSchueler>) {
-		if (eve.shiftKey) {
-			if (currentColumn.value === 0) {
-				eve.preventDefault();
-				props.auswahlmanager.linkedListPrevious();
-				currentColumn.value = columnsComputed.value.length - 1;
-				columnsComputed.value[currentColumn.value].focus();
-			} else
-				currentColumn.value -= 1;
-		} else {
-			if (currentColumn.value === columnsComputed.value.length - 1) {
-				if (!props.auswahlmanager.linkedListHasNext())
-					return;
-				eve.preventDefault();
-				props.auswahlmanager.linkedListNext();
-				currentColumn.value = 0;
-				columnsComputed.value[currentColumn.value].focus();
-			} else
-				currentColumn.value += 1;
+	function focusGrid() {
+		gridManager.doFocus(true);
+	}
+	const cellFormat = computed<CellFormat>(() => {
+		const result = <CellFormat>{ widths: [] };
+		for (const col of cols) {
+			const visible = props.columnsVisible().get(col.kuerzel) ?? true;
+			if (visible)
+				result.widths.push(col.width);
 		}
-	}
-
-	async function doPatchLeistung(leistung: ENMLeistung, patch: Partial<ENMLeistung>) {
-		patch.id = leistung.id;
-		const success = await props.patchLeistung(patch);
-		if (success)
-			Object.assign(leistung, patch);
-	}
-
-	async function patchQuartal(leistung: ENMLeistung) {
-		if (!props.manager.isValidQuartal(leistung))
-			return;
-		else
-			await doPatchLeistung(leistung, { noteQuartal: Note.fromKuerzel(leistung.noteQuartal).daten(props.manager.schuljahr)?.kuerzel });
-	}
-
-	async function patchNote(leistung: ENMLeistung) {
-		if (leistung.note === '')
-			leistung.note = null;
-		if ((leistung.note === null) || (props.manager.isValidNote(leistung)))
-			await doPatchLeistung(leistung, { note: Note.fromKuerzel(leistung.note).daten(props.manager.schuljahr)?.kuerzel ?? null });
-	}
-
-	async function patchFehlstunden(leistung: ENMLeistung) {
-		if (!props.manager.isValidFehlstunden(leistung))
-			return;
-		else
-			await doPatchLeistung(leistung, { fehlstundenFach: Number(leistung.fehlstundenFach) });
-	}
-
-	async function patchFehlstundenUnentschuldigt(leistung: ENMLeistung) {
-		if (!props.manager.isValidFehlstundenUnentschuldigt(leistung))
-			return;
-		else
-			await doPatchLeistung(leistung, { fehlstundenUnentschuldigtFach: (isNaN(Number(leistung.fehlstundenUnentschuldigtFach)) ? 0 : Number(leistung.fehlstundenUnentschuldigtFach)) });
-	}
-
-	const gridTemplateColumnsComputed = computed<string>(() => {
-		return cols.filter(c => colsVisible.value.get(c.kuerzel) ?? true).map(c => c.width).join(" ") + " 3.5em";
+		result.widths.push('3.5rem');
+		return result;
 	});
 
-	watch(
-		() => props.auswahlmanager.auswahl,
-		async () => {
-			if (currentColumn.value !== -1)
-				columnsComputed.value[currentColumn.value].focus();
+	const daten = computed<List<PairNN<ENMLeistung, ENMSchueler>>>(() => {
+		const result = new ArrayList<PairNN<ENMLeistung, ENMSchueler>>();
+		for (const lerngruppenAuswahl of props.auswahl()) {
+			const leistungen = props.enmManager().mapLerngruppeLeistungen.get(lerngruppenAuswahl.id);
+			if ((leistungen === null))
+				continue;
+			result.addAll(leistungen);
 		}
-	)
-	onMounted(() => currentColumn.value = -1);
+		return result;
+	});
+
+	const notenKuerzel = computed(() => Note.values().map(e => e.daten(props.enmManager().schuljahr)?.kuerzel).filter(e => e !== ""));
+
+	function inputNoteQuartal(pair: PairNN<ENMLeistung, ENMSchueler>, col: number, index: number) {
+		const key = 'Quartalsnote_' + pair.a.id + "_" + pair.b.id;
+		const setter = (value : string | null) => void props.patchLeistung(pair.a, { noteQuartal: value });
+		return (element : Element | ComponentPublicInstance<unknown> | null) => {
+			const input = gridManager.applyInputNote(key, col, index, element, setter, props.enmManager().schuljahr);
+			if (input !== null)
+				watchEffect(() => gridManager.update(key, pair.a.noteQuartal));
+		};
+	}
+
+	function inputNote(pair: PairNN<ENMLeistung, ENMSchueler>, col: number, index: number) {
+		const key = 'Note_' + pair.a.id + "_" + pair.b.id;
+		const setter = (value : string | null) => void props.patchLeistung(pair.a, { note: value });
+		return (element : Element | ComponentPublicInstance<unknown> | null) => {
+			const input = gridManager.applyInputNote(key, col, index, element, setter, props.enmManager().schuljahr);
+			if (input !== null)
+				watchEffect(() => gridManager.update(key, pair.a.note));
+		};
+	}
+
+	function inputMahnung(pair: PairNN<ENMLeistung, ENMSchueler>, col: number, index: number) {
+		const key = 'Mahnung_' + pair.a.id + "_" + pair.b.id;
+		const setter = (value : boolean) => void props.patchLeistung(pair.a, { istGemahnt: value });
+		return (element : Element | ComponentPublicInstance<unknown> | null) => {
+			const input = gridManager.applyInputToggle(key, col, index, element, setter);
+			if (input !== null)
+				watchEffect(() => gridManager.update(key, pair.a.istGemahnt ?? false));
+		};
+	}
+
+	function inputFehlstunden(pair: PairNN<ENMLeistung, ENMSchueler>, col: number, index: number) {
+		const key = 'Fehlstunden_' + pair.a.id + "_" + pair.b.id;
+		const setter = (value : number | null) => void props.patchLeistung(pair.a, { fehlstundenFach: value });
+		return (element : Element | ComponentPublicInstance<unknown> | null) => {
+			const input = gridManager.applyInputIntegerDiv(key, col, index, element, 999, setter);
+			if (input !== null)
+				watchEffect(() => gridManager.update(key, pair.a.fehlstundenFach));
+		};
+	}
+
+	function inputFehlstundenUnendschuldigt(pair: PairNN<ENMLeistung, ENMSchueler>, col: number, index: number) {
+		const key = 'FehlstundenUnendschuldigt_' + pair.a.id + "_" + pair.b.id;
+		const setter = (value : number | null) => void props.patchLeistung(pair.a, { fehlstundenUnentschuldigtFach: value });
+		return (element : Element | ComponentPublicInstance<unknown> | null) => {
+			const input = gridManager.applyInputIntegerDiv(key, col, index, element, 999, setter);
+			if (input !== null)
+				watchEffect(() => gridManager.update(key, pair.a.fehlstundenUnentschuldigtFach));
+		};
+	}
+
+
+	function inputBemerkung(pair: PairNN<ENMLeistung, ENMSchueler>, col: number, index: number) {
+		const key = 'Bemerkung_' + pair.a.id + "_" + pair.b.id;
+		const setter = (value : boolean) => void props.focusFloskelEditor(pair.b, pair.a, true);
+		return (element : Element | ComponentPublicInstance<unknown> | null) => {
+			const input = gridManager.applyInputToggle(key, col, index, element, setter);
+			if (input !== null) {
+				gridManager.update(key, false);
+				gridManager.setNavigationOnEnter(key, null);
+			}
+		};
+	}
 
 </script>
-
-<style scoped>
-
-	.svws-ui-tr {
-		grid-template-columns: v-bind(gridTemplateColumnsComputed);
-		min-height: auto;
-	}
-
-</style>

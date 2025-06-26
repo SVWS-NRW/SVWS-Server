@@ -1013,3 +1013,10 @@
 	mask-repeat: no-repeat;
 	mask-position: center;
 }
+
+@utility i-ri-music-2-fill {
+	mask-image: url(@icons/Media/music-2-line.svg);
+	-webkit-mask-image: url(@icons/Media/music-2-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}

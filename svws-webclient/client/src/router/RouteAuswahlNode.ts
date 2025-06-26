@@ -147,7 +147,7 @@ export abstract class RouteAuswahlNode<TAuswahlManager extends AuswahlManager<nu
 		}
 	}
 
-	public async leave(from: RouteNode<any, any>, from_params: RouteParams) : Promise<void> {
+	public async leave(from: RouteNode<any, any>, from_params: RouteParams, to: RouteNode<any, any>, to_params: RouteParams) : Promise<void> {
 		// Wenn eine Route mit ViewType != Default verlassen wird, soll bei der Rückkehr zu dieser Route kein Child Node mehr selektiert sein.
 		// Es soll dann die Default View angezeigt werden.
 		if (this.data.activeViewType !== ViewType.DEFAULT)

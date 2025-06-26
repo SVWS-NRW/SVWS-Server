@@ -2,7 +2,7 @@
 	<div class="page page-flex-row">
 		<div class="flex flex-row h-full w-full overflow-hidden" @dragover="dragOver">
 			<div class="grow w-full h-full overflow-hidden">
-				<enm-klassenleitung-uebersicht :manager :patch-bemerkungen :patch-lernabschnitt :columns-visible :set-columns-visible @hauptgruppe="erlaubteHauptgruppe = $event" :floskel-editor-visible :set-floskel-editor-visible :auswahlmanager />
+				<enm-klassenleitung-uebersicht ref="gridRef" :enm-manager :patch-bemerkungen :patch-lernabschnitt :columns-visible :set-columns-visible :floskel-editor-visible :focus-floskel-editor :auswahl />
 			</div>
 			<template v-if="floskelColumnsVisible">
 				<div class="h-full content-center text-center cursor-col-resize min-w-8 max-w-8 lg:min-w-12 lg:max-w-12 bg-ui hover:bg-ui-hover" draggable="true" @dragstart="dragStart" @dragend="dragEnd">
@@ -10,7 +10,7 @@
 					<span class="icon i-ri-arrow-right-s-line" />
 				</div>
 				<div class="h-full overflow-hidden" :style="{ 'min-width': floskelEditorVisible ? posDivider + 'rem' : '4rem', 'max-width': floskelEditorVisible ? posDivider + 'rem' : '4rem' }">
-					<enm-floskeleditor :manager :patch="doPatchBemerkungen" :erlaubte-hauptgruppe :floskel-editor-visible :set-floskel-editor-visible :auswahlmanager />
+					<enm-floskeleditor :enm-manager :patch="doPatchBemerkungen" :erlaubte-hauptgruppe :floskel-editor-visible :set-floskel-editor-visible :auswahl="() => auswahlZelle" />
 				</div>
 			</template>
 		</div>
@@ -19,10 +19,13 @@
 
 <script setup lang="ts">
 
-	import { computed, ref } from 'vue';
+	import { computed, ref, shallowRef, triggerRef } from 'vue';
 	import type { EnmKlassenleitungProps } from './EnmKlassenleitungProps';
 	import type { ENMLeistungBemerkungen } from '../../../../core/src/core/data/enm/ENMLeistungBemerkungen';
 	import type { BemerkungenHauptgruppe } from './EnmManager';
+	import type { ENMKlasse } from '../../../../core/src/core/data/enm/ENMKlasse';
+	import type { ENMSchueler } from '../../../../core/src/core/data/enm/ENMSchueler';
+	import type { ENMLeistung } from '../../../../core/src/core/data/enm/ENMLeistung';
 
 	const props = defineProps<EnmKlassenleitungProps>();
 
@@ -30,7 +33,29 @@
 	const img = document.createElement('img');
 	img.src = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
 
-	const erlaubteHauptgruppe = ref<BemerkungenHauptgruppe>('ZB');
+	const auswahlZelle = shallowRef<{ klasse: ENMKlasse | null, schueler: ENMSchueler | null, leistung: ENMLeistung | null }>({ klasse: null, schueler: null, leistung: null });
+	const erlaubteHauptgruppe = shallowRef<BemerkungenHauptgruppe>('ZB');
+
+	const gridRef = shallowRef(null);
+	// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+	const focusGrid = () => { if (gridRef.value !== null) (gridRef.value as { focusGrid: () => void }).focusGrid(); };
+
+	async function focusFloskelEditor(hauptgruppe: BemerkungenHauptgruppe | null, schueler: ENMSchueler | null, klasse: ENMKlasse | null, doFocus: boolean) {
+		if (hauptgruppe !== null)
+			erlaubteHauptgruppe.value = hauptgruppe;
+		if (doFocus) {
+			await props.setFloskelEditorVisible(true).then(() => {
+				auswahlZelle.value.schueler = schueler;
+				auswahlZelle.value.klasse = klasse;
+				triggerRef(auswahlZelle);
+				(document.getElementsByClassName("floskel-input")[0] as HTMLElement).focus();
+			});
+			return;
+		}
+		auswahlZelle.value.schueler = schueler;
+		auswahlZelle.value.klasse = klasse;
+		triggerRef(auswahlZelle);
+	}
 
 	const floskelColumnsVisible = computed(() => {
 		const cols = props.columnsVisible();
@@ -39,7 +64,9 @@
 			|| (cols.get('ZB') ?? false);
 	})
 
-	async function doPatchBemerkungen(bemerkung: string|null) {
+	async function doPatchBemerkungen(bemerkung: string | null) {
+		if ((auswahlZelle.value.schueler === null) || (auswahlZelle.value.klasse === null))
+			return;
 		const patch = <Partial<ENMLeistungBemerkungen>>{};
 		switch (erlaubteHauptgruppe.value) {
 			case 'ASV':
@@ -54,9 +81,8 @@
 			default:
 				return;
 		}
-		const success = await props.patchBemerkungen(props.auswahlmanager.auswahl.id, patch);
-		if (success)
-			Object.assign(props.auswahlmanager.auswahl.bemerkungen, patch);
+		await props.patchBemerkungen(auswahlZelle.value.schueler.id, auswahlZelle.value.schueler.bemerkungen, patch);
+		focusGrid();
 	}
 
 	// Default-Breite von 49 rem für den Floskel-Editor

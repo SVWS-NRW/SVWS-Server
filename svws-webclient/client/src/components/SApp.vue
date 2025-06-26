@@ -67,7 +67,9 @@
 					<div class="secondary-menu--header" />
 					<div class="secondary-menu--content">
 						<p v-if="focusSwitchingEnabled" v-show="focusHelpVisible" class="region-enumeration">2</p>
-						<svws-ui-secondary-menu-navigation class="focus-region" :class="{'highlighted': focusHelpVisible}" :tab-manager="(menu.current.name.startsWith('schule') ? tabManagerSchule : tabManagerEinstellungen)" />
+						<svws-ui-secondary-menu-navigation class="focus-region" :class="{'highlighted': focusHelpVisible}"
+							:tab-manager="(menu.current.name.startsWith('schule') ? tabManagerSchule :
+								(menu.current.name.startsWith('notenmodul') ? tabManagerNotenmodul : tabManagerEinstellungen))" />
 					</div>
 				</div>
 			</template>
@@ -170,6 +172,7 @@
 			case "i-ri-briefcase-line":
 			case "i-ri-team-line":
 			case "i-ri-book-2-line":
+			case "i-ri-music-2-fill":
 			case "i-ri-graduation-cap-line":
 			case "i-ri-bar-chart-2-line":
 			case "i-ri-calendar-event-line":

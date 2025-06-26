@@ -1,14 +1,13 @@
-import type { ENMKlasse } from "../../../../core/src/core/data/enm/ENMKlasse";
-import type { EnmAuswahlManager, EnmManager } from "./EnmManager";
+import type { EnmManager } from "./EnmManager";
 import type { ENMLeistungBemerkungen } from "../../../../core/src/core/data/enm/ENMLeistungBemerkungen";
 import type { ENMLernabschnitt } from "../../../../core/src/core/data/enm/ENMLernabschnitt";
-import type { ENMSchueler } from "../../../../core/src/core/data/enm/ENMSchueler";
+import type { ENMKlasse } from "../../../../core/src";
 
 export interface EnmKlassenleitungProps {
-	manager: EnmManager;
-	auswahlmanager: EnmAuswahlManager<ENMKlasse, ENMSchueler>;
-	patchBemerkungen: (id: number, patch: Partial<ENMLeistungBemerkungen>) => Promise<boolean>;
-	patchLernabschnitt: (patch: Partial<ENMLernabschnitt>) => Promise<boolean>;
+	enmManager: () => EnmManager;
+	auswahl: () => Array<ENMKlasse>;
+	patchBemerkungen: (id: number, data: ENMLeistungBemerkungen, patch: Partial<ENMLeistungBemerkungen>) => Promise<void>;
+	patchLernabschnitt: (data: ENMLernabschnitt, patch: Partial<ENMLernabschnitt>) => Promise<void>;
 	columnsVisible: () => Map<string, boolean|null>;
 	setColumnsVisible: (columns: Map<string, boolean|null>) => Promise<void>;
 	floskelEditorVisible: boolean;

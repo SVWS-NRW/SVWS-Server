@@ -83,7 +83,10 @@ export class GridInputToggle<KEY> extends GridInput<KEY, boolean> {
 		if (event.key === "Enter") {
 			this._value.value = !this._value.value;
 			this.commit();
-			this.navigateDown();
+			if (this.navigateOnEnter === "DOWN")
+				this.navigateDown();
+			else if (this.navigateOnEnter === "RIGHT")
+				this.navigateRight();
 			event.preventDefault();
 			return true;
 		}

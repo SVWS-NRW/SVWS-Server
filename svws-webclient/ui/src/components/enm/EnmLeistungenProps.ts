@@ -1,12 +1,10 @@
 import type { ENMLeistung } from "../../../../core/src/core/data/enm/ENMLeistung";
-import type { EnmAuswahlManager, EnmLerngruppenAuswahlEintrag, EnmManager } from "./EnmManager";
-import type { PairNN } from "../../../../core/src/asd/adt/PairNN";
-import type { ENMSchueler } from "../../../../core/src/core/data/enm/ENMSchueler";
+import type { EnmLerngruppenAuswahlEintrag, EnmManager } from "./EnmManager";
 
 export interface EnmLeistungenProps {
-	manager: EnmManager;
-	auswahlmanager: EnmAuswahlManager<EnmLerngruppenAuswahlEintrag[],PairNN<ENMLeistung, ENMSchueler>>;
-	patchLeistung: (patch: Partial<ENMLeistung>) => Promise<boolean>;
+	enmManager: () => EnmManager;
+	auswahl: () => Array<EnmLerngruppenAuswahlEintrag>;
+	patchLeistung: (data: ENMLeistung, patch: Partial<ENMLeistung>) => Promise<void>;
 	columnsVisible: () => Map<string, boolean|null>;
 	setColumnsVisible: (columns: Map<string, boolean|null>) => Promise<void>;
 	floskelEditorVisible: boolean;

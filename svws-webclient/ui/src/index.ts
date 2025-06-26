@@ -39,6 +39,12 @@ export { default as StundenplanRaum } from "./components/stundenplan/Stundenplan
 export { default as StundenplanSchueler } from "./components/stundenplan/StundenplanSchueler.vue";
 export { default as StundenplanZeitrasterEinstellungen } from "./components/stundenplan/StundenplanZeitrasterEinstellungen.vue";
 export { default as StundenplanZeitrasterJsonImportModal } from "./components/stundenplan/StundenplanZeitrasterJsonImportModal.vue";
+export { default as EnmLeistungen } from "./components/enm/EnmLeistungen.vue";
+export { default as EnmLeistungenAuswahl } from "./components/enm/EnmLeistungenAuswahl.vue";
+export { default as EnmKlassenleitung } from "./components/enm/EnmKlassenleitung.vue";
+export { default as EnmKlassenleitungAuswahl } from "./components/enm/EnmKlassenleitungAuswahl.vue";
+export { default as EnmTeilleistungen } from "./components/enm/EnmTeilleistungen.vue";
+export { default as EnmTeilleistungenAuswahl } from "./components/enm/EnmTeilleistungenAuswahl.vue";
 export { default as SvwsUiAppLayout } from "./ui/layout/SvwsUiAppLayout.vue";
 export { default as SvwsUiAvatar } from "./ui/SvwsUiAvatar.vue";
 export { default as SvwsUiBadge } from "./ui/SvwsUiBadge.vue";
@@ -101,6 +107,14 @@ export { GridInputAbiturPruefungsreihenfolge } from "./ui/controls/tablegrid/Gri
 export { GridInputToggle } from "./ui/controls/tablegrid/GridInputToggle";
 export { PendingStateManager } from "./ui/wrapper/PendingStateManager";
 export { StateManager } from "./ui/StateManager";
+export { EnmManager } from "./components/enm/EnmManager";
+export { EnmLerngruppenAuswahlListeManager } from "./components/enm/EnmLerngruppenAuswahlListeManager";
+export { EnmKlassenleitungAuswahlListeManager } from "./components/enm/EnmKlassenleitungAuswahlListeManager";
+export type { EnmLerngruppenAuswahlEintrag } from "./components/enm/EnmManager";
+export type { EnmLeistungenProps } from "./components/enm/EnmLeistungenProps";
+export type { EnmLeistungenAuswahlProps } from "./components/enm/EnmLeistungenAuswahlProps";
+export type { EnmTeilleistungenProps } from "./components/enm/EnmTeilleistungenProps";
+export type { EnmKlassenleitungProps } from "./components/enm/EnmKlassenleitungProps";
 
 // Enums
 export { AppMenuGroup } from "./ui/nav/AppMenuGroup";

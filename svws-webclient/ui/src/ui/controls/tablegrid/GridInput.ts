@@ -1,5 +1,6 @@
 import { shallowRef } from "vue";
 import type { GridManager } from "./GridManager";
+import { DeveloperNotificationException } from "../../../../../core/src";
 
 /**
  * Diese Klasse ist eine abtrakte Basisklasse für Inputs, welche zur Verwaltung
@@ -28,6 +29,9 @@ export abstract class GridInput<KEY, DATA> {
 
 	// Gibt an, ob das Input-Element neu fokussiert wurde oder ggf. schon Anpassungen seitdem stattgefunden haben
 	protected _isNewFocus = shallowRef<boolean>(true);
+
+	// Gibt eine Richtung an, in die navigiert wird, falls eine Eingabe mit ENTER bestätigt wird
+	public navigateOnEnter : null | 'DOWN' | 'RIGHT' = 'DOWN';
 
 
 	/**
@@ -83,6 +87,26 @@ export abstract class GridInput<KEY, DATA> {
 	}
 
 	/**
+	 * Setzte die Spalte, in welcher sich das Input befindet.
+	 * Wichtig: Diese Methode darf nur vom zugehörigen Grid-Manager aufgerufen werden.
+	 */
+	public setCol(value : number) {
+		if (value < 0)
+			throw new DeveloperNotificationException("Eine Spaltennummer kleiner 0 ist unzulässig.");
+		this._col = value;
+	}
+
+	/**
+	 * Setzte die Zeile, in welcher sich das Input befindet.
+	 * Wichtig: Diese Methode darf nur vom zugehörigen Grid-Manager aufgerufen werden.
+	 */
+	public setRow(value : number) {
+		if (value < 0)
+			throw new DeveloperNotificationException("Eine Zeilennummer kleiner 0 ist unzulässig.");
+		this._row = value;
+	}
+
+	/**
 	 * Gibt das HTML-Element des Inputs zurück.
 	 */
 	public get element() : HTMLElement {
@@ -102,6 +126,7 @@ export abstract class GridInput<KEY, DATA> {
 	 * Interne Methode zur Handhabung, wenn das HTML-Element den Fokus erhält
 	 */
 	private handleFocus() : void {
+		this.gridManager.focusInput = this;
 		this._isNewFocus.value = true;
 		this.onFocus();
 	}
@@ -117,6 +142,7 @@ export abstract class GridInput<KEY, DATA> {
 	 * Interne Methode zur Handhabung, wenn das HTML-Element den Fokus verliert
 	 */
 	private handleBlur() : void {
+		this.gridManager.focusInput = null;
 		this.onBlur();
 		this._isNewFocus.value = true;
 	}

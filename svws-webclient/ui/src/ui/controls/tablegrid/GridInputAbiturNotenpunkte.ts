@@ -125,7 +125,10 @@ export class GridInputAbiturNotenpunkte<KEY> extends GridInputInnerText<KEY, str
 		// Speicher den aktuellen Wert im Input
 		if (event.key === "Enter") {
 			this.commit();
-			this.navigateDown();
+			if (this.navigateOnEnter === "DOWN")
+				this.navigateDown();
+			else if (this.navigateOnEnter === "RIGHT")
+				this.navigateRight();
 			return true;
 		}
 		// Prüfe, ob eine Ziffer eingegeben wurde

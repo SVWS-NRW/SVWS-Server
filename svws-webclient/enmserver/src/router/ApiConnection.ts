@@ -1,11 +1,9 @@
-import { ENMDaten } from "@core/core/data/enm/ENMDaten";
+import type { Schulform } from "@core/asd/types/schule/Schulform";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { UserNotificationException } from "@core/core/exceptions/UserNotificationException";
 import { ServerMode } from "@core/core/types/ServerMode";
-import { EnmManager } from "@ui/components/enm/EnmManager";
 import { ref, shallowRef } from "vue";
 import { ApiEnmServer } from "~/ApiEnmServer";
-import { Config } from "~/components/Config";
 
 export class ApiConnection {
 
@@ -27,28 +25,12 @@ export class ApiConnection {
 	// Der Modus, in welchem der Server betrieben wird
 	protected _serverMode = shallowRef<ServerMode>(ServerMode.STABLE);
 
+	// Die Schulform, für welche der Server Daten hat
+	protected _schulform = shallowRef<Schulform | null>(null);
+
 	// Die Api selbst
 	protected _api: ApiEnmServer | undefined;
 
-	// Die ENM-Daten, welche für den angemeldeten Lehrer-Benutzer über die API geladen werden
-	protected _daten: ENMDaten | undefined = undefined;
-
-	// Der Manager für die ENM-Daten, welche für den angemeldeten Lehrer-Benutzer über die API geladen werden
-	protected _manager: EnmManager | undefined = undefined;
-
-	// Die aktuelle Konfiguration der Schule, sofern ein Login stattgefunden hat
-	protected _config = ref<Config | undefined>(undefined);
-
-	// Die aktuelle temporäre, nicht in der DB festgehaltene Konfiguration der Schule
-	protected _nonPersistentConfig = ref<Config>(new Config(async (_,__) => {}, async (_,__) => { }));
-
-
-	/**
-	 * Erstellt ein neues Objekt für die Verwaltung der API-Verbindung.
-	 */
-	public constructor() {
-		this._config.value = new Config(this.setConfigGlobal, this.setConfigUser);
-	}
 
 	// Gibt die Server-API zurück.
 	get api(): ApiEnmServer {
@@ -149,45 +131,18 @@ export class ApiConnection {
 			this._username = username;
 			this._password = password;
 			this._api = new ApiEnmServer(this._url, this._username, this._password);
-			// Prüfe, ob die Anmeldedaten korrekt sind, indem der Server-Modus abgefragt wird
+			// Prüfe, ob die Anmeldedaten korrekt sind, indem der Server-Modus und Schulform abgefragt werden
 			this._serverMode.value = await this._api.getServerMode();
-			// Lade auch die ENM-Daten vom Server...
-			const file = await this._api.getLehrerENMDaten();
-			const blob = await new Response(file.data.stream().pipeThrough(new DecompressionStream("gzip"))).blob();
-			this._daten = ENMDaten.transpilerFromJSON(await blob.text());
-			this._manager = new EnmManager(this._daten, this._daten.lehrerID ?? -1);
+			this._schulform.value = await this._api.getSchulform();
 			this._authenticated.value = true;
-			await this.initConfig();
 		} catch (error) {
 			// TODO Anmelde-Fehler wird nur in der App angezeigt. Der konkreten Fehler könnte ggf. geloggt werden...
-			this._authenticated.value = false;
-			this._daten = undefined;
-			this._manager = undefined;
 			this._serverMode.value = ServerMode.STABLE;
+			this._schulform.value = null;
+			this._authenticated.value = false;
 			throw error;
 		}
 		return this._authenticated.value;
-	}
-
-	/**
-	 * Liest die Client-Konfiguration vom Server und erstellt das zugehörige
-	 * TypeScript-Objekt.
-	 *
-	 * @returns das Konfigurationsobjekt
-	 */
-	protected async initConfig(): Promise<void> {
-		const cfg = await this.api.getClientConfig();
-		const mapUser = new Map<string, string>();
-		for (const c of cfg.user)
-			mapUser.set(c.key, c.value);
-		const mapGlobal = new Map<string, string>();
-		for (const c of cfg.global)
-			mapGlobal.set(c.key, c.value);
-		this.config.mapGlobal = mapGlobal;
-		this.config.mapUser = mapUser;
-		// nicht-persistente Config ebenfalls anlegen
-		this.nonPersistentConfig.mapGlobal = new Map<string, string>();
-		this.nonPersistentConfig.mapUser = new Map<string, string>();
 	}
 
 	/**
@@ -207,9 +162,8 @@ export class ApiConnection {
 		this._username = "";
 		this._password = "";
 		this._api = undefined;
-		this._daten = undefined;
-		this._manager = undefined;
 		this._serverMode.value = ServerMode.STABLE;
+		this._schulform.value = null;
 	}
 
 	// Gibt den Modus zurück, in welchem der Server betrieben wird.
@@ -217,51 +171,13 @@ export class ApiConnection {
 		return this._serverMode.value;
 	}
 
-	// Gibt die ENM-Daten zurück
-	get daten(): ENMDaten {
-		if (this._daten === undefined)
-			throw new DeveloperNotificationException("Es wurden noch keine ENM-Daten geladen - Ein Zugriff auf diese Methode darf daher zu diesem Zeitpunkt nicht erfolgen")
-		return this._daten;
-	}
-
-	// Gibt den Manager für die ENM-Daten des angemeldeten Benutzers zurück
-	get manager(): EnmManager {
-		if (this._manager === undefined)
-			throw new DeveloperNotificationException("Es wurden noch keine ENM-Daten geladen - Ein Zugriff auf diese Methode darf daher zu diesem Zeitpunkt nicht erfolgen")
-		return this._manager;
-	}
-
-	// Gibt die Konfiguration für den angemeldeten Benutzer zurück, sofern ein Login stattgefunden hat
-	get config(): Config {
-		if (this._config.value === undefined)
-			throw new DeveloperNotificationException("Eine Konfiguration ist nicht vorhanden.");
-		return this._config.value as Config;
-	}
-
-	// Gibt die nicht perisstente Konfiguration zurück
-	get nonPersistentConfig(): Config {
-		return this._nonPersistentConfig.value as Config;
-	}
-
 	/**
-	 * Setzt den Benutzer-spezifischen Konfigurationseintrag
+	 * Gibt die Schulform zurück, deren Daten auf dem ENM-Server gespeichert sind.
 	 *
-	 * @param key    der Schlüssel des Konfigurationseintrags
-	 * @param value  der Wert des Konfigurationseintrags
+	 * @returns die Schulform oder null
 	 */
-	protected setConfigUser = async (key: string, value: string): Promise<void> => {
-		await this.api.setClientConfigUserKey(value, key);
-	}
-
-	/**
-	 * Setzt den globalen Konfigurationseintrag
-	 *
-	 * @param key    der Schlüssel des Konfigurationseintrags
-	 * @param value  der Wert des Konfigurationseintrags
-	 */
-	protected setConfigGlobal = async (key: string, value: string): Promise<void> => {
-		throw new DeveloperNotificationException("Die Anwendung unterstützt kein Schreiben der globalen Konfiguration.");
+	get schulform(): Schulform | null {
+		return this._schulform.value;
 	}
 
 }
-

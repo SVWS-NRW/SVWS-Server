@@ -9,7 +9,7 @@
 		</thead>
 		<tbody>
 			<template v-for="(row, index) in data" :key="getKey(row)">
-				<tr>
+				<tr :class="{ 'bg-ui-selected': rowSelected === index }" @click="emit('rowClicked', row, index)">
 					<slot :row="row" :index="index" />
 				</tr>
 			</template>
@@ -34,14 +34,20 @@
 		widths: string[];
 	}
 
+	const emit = defineEmits<{
+		(e: 'rowClicked', row: T, index: number): void,
+	}>()
+
 	const props = withDefaults(defineProps<{
 		data: Collection<T> | List<T>,
 		cellFormat: CellFormat,
+		rowSelected?: number | null,
 		headerCount?: number,
 		footerCount?: number,
 		name?: string | undefined,
 		getKey: (row: T) => string,
 	}>(), {
+		rowSelected: null,
 		headerCount: 1,
 		footerCount: 1,
 		name: undefined,

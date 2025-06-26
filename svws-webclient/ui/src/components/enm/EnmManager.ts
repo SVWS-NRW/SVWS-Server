@@ -1,4 +1,3 @@
-import type { ShallowRef } from "vue";
 import type { ENMDaten } from "../../../../core/src/core/data/enm/ENMDaten";
 import type { ENMFach } from "../../../../core/src/core/data/enm/ENMFach";
 import type { ENMFloskelgruppe } from "../../../../core/src/core/data/enm/ENMFloskelgruppe";
@@ -14,7 +13,6 @@ import type { Comparator } from "../../../../core/src/java/util/Comparator";
 import type { JavaMap } from "../../../../core/src/java/util/JavaMap";
 import type { JavaSet } from "../../../../core/src/java/util/JavaSet";
 import type { List } from "../../../../core/src/java/util/List";
-import { shallowRef } from "vue";
 import { DeveloperNotificationException } from "../../../../core/src/core/exceptions/DeveloperNotificationException";
 import { ArrayList } from "../../../../core/src/java/util/ArrayList";
 import { HashMap } from "../../../../core/src/java/util/HashMap";
@@ -22,7 +20,6 @@ import { HashSet } from "../../../../core/src/java/util/HashSet";
 import { PairNN } from "../../../../core/src/asd/adt/PairNN";
 import { HashMap2D } from "../../../../core/src/core/adt/map/HashMap2D";
 import { Note } from "../../../../core/src/asd/types/Note";
-import type { ListIterator } from "../../../../core/src/java/util/ListIterator";
 
 /**
  * Das Interface für die Einträge der Auswahlliste für die Lerngruppen
@@ -46,124 +43,16 @@ export interface EnmLerngruppenAuswahlEintrag {
 export type BemerkungenHauptgruppe = 'ASV'|'AUE'|'FACH'|'FÖRD'|'FSP'|'VERM'|'VERS'|'ZB';
 
 
-export class EnmAuswahlManager<TAuswahl extends ({id: number}|{id: number}[]), TEintrag> {
-	/** Der Filter für die Gruppenauswahl (Lerngruppe, Klasse) */
-	protected _filter: ShallowRef<TAuswahl|undefined>;
-	/** die Map mit den Listen der Einträge */
-	protected _mapGruppeListe: JavaMap<number, List<TEintrag>>;
-	/** Die Liste der anzuzeigenden Leistungen oder Schüler */
-	protected _liste: ShallowRef<List<TEintrag>>;
-	/** Die aktuelle Auswahl aus der Liste der Leistungen oder Schüler */
-	protected _auswahl: ShallowRef<TEintrag>;
-	/** Die Linked List der Liste */
-	protected _linkedList: ListIterator<TEintrag>;
-
-	/**
-	 * Erstellt einen Auswahlmanager für die übergebenen Daten
-	 *
-	 * @param filter ein Filter entweder als Array oder einzelnes Objekt mit mindestens einem id-Attribut
-	 * @param map eine Map mit Einträgen, die über die Filterobjekte und deren ID gefunden werden können
-	 */
-	public constructor(filter: TAuswahl, map: JavaMap<number, List<TEintrag>>) {
-		this._liste = shallowRef(new ArrayList());
-		this._mapGruppeListe = map;
-		this._filter = shallowRef();
-		this.filter = filter;
-		this._linkedList = this._liste.value.listIterator();
-		this._auswahl = shallowRef(this._linkedList.next());
-	}
-
-	/** der Getter für den Filter */
-	public get filter(): TAuswahl {
-		if (this._filter.value === undefined)
-			throw new DeveloperNotificationException("Es ist kein Filter gesetzt");
-		return this._filter.value;
-	}
-	/** Der Setter für den Filter, erstellt automatisch auch die Liste der Ergebnisse */
-	public set filter(value: TAuswahl) {
-		let tmpFilter = [];
-		if (Array.isArray(value))
-			if (value.length === 0)
-				for (const e of this._mapGruppeListe.keySet())
-					tmpFilter.push(e);
-			else
-				tmpFilter = value.map(e => e.id);
-		else
-			tmpFilter.push(value.id);
-		this._filter.value = value;
-		const tmpList = new ArrayList<TEintrag>();
-		for (const f of tmpFilter) {
-			const l = this._mapGruppeListe.get(f);
-			if (l !== null)
-				tmpList.addAll(l)
-		}
-		this.liste = tmpList;
-	}
-
-	/** Die Liste der Einträge */
-	public get liste(): List<TEintrag> {
-		return this._liste.value;
-	}
-	/** Der Setter für die Liste der Einträge, erstellt auch die Linked List */
-	protected set liste(value: List<TEintrag>) {
-		this._liste.value = value;
-		this._linkedList = this._liste.value.listIterator();
-	}
-
-	/** Die aktuelle Auswahl aus den Einträgen */
-	public get auswahl(): TEintrag {
-		return this._auswahl.value;
-	}
-	/** Setzt die Auswahl eines Eintrags und positioniert den Cursor der Linked List */
-	public set auswahl(value: TEintrag) {
-		if (value === this._auswahl.value)
-			return;
-		this._auswahl.value = value;
-		let weiter = true;
-		while (weiter) {
-			if (this._linkedList.hasNext()) {
-				const eintrag = this._linkedList.next();
-				if (eintrag === value)
-					weiter = false;
-			} else
-				this._linkedList = this._liste.value.listIterator();
-		}
-	}
-
-	/** geht ein Element weiter in der Linked-Liste */
-	public linkedListNext() {
-		if (this._linkedList.hasNext()) {
-			const eintrag = this._linkedList.next();
-			this._auswahl.value = (eintrag === this._auswahl.value && this._linkedList.hasNext())
-				? this._linkedList.next()
-				: eintrag;
-		}
-	}
-
-	/** geht ein Element zurück in der Linked-Liste */
-	public linkedListPrevious() {
-		if (this._linkedList.hasPrevious()) {
-			const pair = this._linkedList.previous();
-			this._auswahl.value = (pair === this._auswahl.value && this._linkedList.hasPrevious())
-				? this._linkedList.previous()
-				: pair;
-		}
-	}
-
-	/** prüft, ob es ein nächstes Element gibt in der Linked Liste */
-	public linkedListHasNext() {
-		return this._linkedList.hasNext();
-	}
-}
-
-
 /**
  * Ein Manager für die Verwaltung den ENM-Daten.
  */
 export class EnmManager {
 
+	/** Die ENM-Daten, welche diesem Manager zugrunde liegen */
+	readonly daten: ENMDaten;
+
 	/** Eine Referenz auf die ID des Lehrers, für welchen die ENM-Daten in diesem Manager verwaltet werden */
-	readonly idLehrer: number;
+	readonly idLehrer: number | null;
 
 	/** Gibt das Schuljahr der ENM-Daten zurück. */
 	readonly schuljahr: number;
@@ -216,7 +105,7 @@ export class EnmManager {
 	readonly setLerngruppenLehrer: JavaSet<number> = new HashSet<number>();
 
 	/** Die Auswahlliste für die Lerngruppen */
-	readonly listLerngruppenAuswahlliste: List<EnmLerngruppenAuswahlEintrag> = new ArrayList<EnmLerngruppenAuswahlEintrag>();
+	readonly mapLerngruppenAuswahl: JavaMap<number, EnmLerngruppenAuswahlEintrag> = new HashMap<number, EnmLerngruppenAuswahlEintrag>();
 
 	/** Die Liste aller Klassen eines Klassenlehrers, sortiert nach Jahrgängen */
 	readonly listKlassenKlassenlehrer: List<ENMKlasse> = new ArrayList<ENMKlasse>();
@@ -227,7 +116,8 @@ export class EnmManager {
 	 * @param daten      die ENM-Daten
 	 * @param idLehrer   die ID des Lehrers, für welchen die ENM-Daten verwaltet werden
 	 */
-	public constructor(daten: ENMDaten, idLehrer: number) {
+	public constructor(daten: ENMDaten, idLehrer: number | null) {
+		this.daten = daten;
 		this.idLehrer = idLehrer;
 		this.schuljahr = daten.schuljahr;
 		this.halbjahr = daten.aktuellerAbschnitt;
@@ -236,7 +126,7 @@ export class EnmManager {
 		for (const k of daten.klassen) {
 			this.mapKlassen.put(k.id, k);
 			this.mapKlassenSchueler.put(k.id, new ArrayList());
-			if (k.klassenlehrer.contains(this.idLehrer))
+			if ((this.idLehrer === null) || k.klassenlehrer.contains(this.idLehrer))
 				this.listKlassenKlassenlehrer.add(k);
 		}
 		this.listKlassenKlassenlehrer.sort(this.comparatorKlassen);
@@ -295,9 +185,9 @@ export class EnmManager {
 			}
 			listKlassen.sort(this.comparatorKlassen);
 			this.mapLerngruppeKlassen.put(l.id, listKlassen);
-			if (l.lehrerID.contains(this.idLehrer)) {
+			if ((this.idLehrer === null) || l.lehrerID.contains(this.idLehrer)) {
 				this.setLerngruppenLehrer.add(l.id);
-				this.listLerngruppenAuswahlliste.add(<EnmLerngruppenAuswahlEintrag>{
+				this.mapLerngruppenAuswahl.put(l.id, <EnmLerngruppenAuswahlEintrag>{
 					id: l.id,
 					bezeichnung: this.lerngruppeGetBezeichnung(l.id),
 					klassen: this.lerngruppeGetKlassenAsString(l.id),
@@ -477,17 +367,6 @@ export class EnmManager {
 	 *
 	 * @param id   die ID der Lerngruppe
 	 *
-	 * @returns die Lerngruppe oder null
-	 */
-	// public lerngruppeByIDOrNull(id: number) : ENMLerngruppe | null {
-	// 	return this.mapLerngruppen.get(id);
-	// }
-
-	/**
-	 * Bestimmt die Lerngruppe anhand der übergebenen ID
-	 *
-	 * @param id   die ID der Lerngruppe
-	 *
 	 * @returns die Lerngruppe
 	 * @throws DeveloperNotificationException wenn die Lerngruppe nicht in den ENM-Daten existiert
 	 */
@@ -571,22 +450,6 @@ export class EnmManager {
 		const list = this.lerngruppeGetFachlehrer(id);
 		return [...list].map(l => l.kuerzel).join(",");
 	}
-
-	/**
-	 * Gibt die Kursart der Lerngruppe mit der übergebene ID zurück.
-	 *
-	 * @param id   die ID der Lerngruppe
-	 *
-	 * @returns die Kursart als String
-	 */
-	// public lerngruppeGetKursartAsString(id: number) : string {
-	// 	const lerngruppe = this.mapLerngruppen.get(id);
-	// 	if (lerngruppe === null)
-	// 		return '';
-	// 	if (lerngruppe.kursartID === null)
-	// 		return '';
-	// 	return lerngruppe.kursartKuerzel ?? '';
-	// }
 
 	/**
 	 * Gibt die Kursart der Leistung zurück.
