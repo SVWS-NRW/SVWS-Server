@@ -286,8 +286,8 @@
 		const setter = (value : boolean) => updateMarkierung(fach, hj, value);
 		const belegungHalbjahr = props.manager().getFachbelegungByID(fach.id)?.belegungen[hj.id] ?? null;
 		return (element : Element | ComponentPublicInstance<unknown> | null) => {
-			gridManager.applyInputToggle(key, hj.id, index, element, setter);
-			if (element !== null)
+			const input = gridManager.applyInputToggle(key, hj.id, index, element, setter);
+			if (input !== null)
 				watchEffect(() => gridManager.update(key, belegungHalbjahr?.block1gewertet ?? false));
 		};
 	}

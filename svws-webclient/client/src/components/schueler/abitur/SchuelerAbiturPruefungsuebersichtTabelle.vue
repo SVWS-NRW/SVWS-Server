@@ -230,8 +230,8 @@
 		const key = 'PrüfungsnoteAbiFach' + belegung.abiturFach;
 		const setter = (value : string | null) => updateNotenpunkte(belegung, value);
 		return (element : Element | ComponentPublicInstance<unknown> | null) => {
-			gridManager.applyInputAbiturNotenpunkte(key, 1, belegung.abiturFach!, element, setter, props.manager().daten().schuljahrAbitur);
-			if (element !== null)
+			const input = gridManager.applyInputAbiturNotenpunkte(key, 1, belegung.abiturFach!, element, setter, props.manager().daten().schuljahrAbitur);
+			if (input !== null)
 				watchEffect(() => gridManager.update(key, belegung.block2NotenKuerzelPruefung));
 		};
 	}
@@ -240,8 +240,8 @@
 		const key = 'FreiwilligePrüfungAbiFach' + belegung.abiturFach;
 		const setter = (value : boolean) => updateFreiwilligePruefung(belegung, value);
 		return (element : Element | ComponentPublicInstance<unknown> | null) => {
-			gridManager.applyInputToggle(key, 2, belegung.abiturFach!, element, setter);
-			if (element !== null)
+			const input = gridManager.applyInputToggle(key, 2, belegung.abiturFach!, element, setter);
+			if (input !== null)
 				watchEffect(() => gridManager.update(key, belegung.block2MuendlichePruefungFreiwillig ?? false));
 		};
 	}
@@ -250,8 +250,8 @@
 		const key = 'PrüfungsreihenfolgeAbiFach' + belegung.abiturFach;
 		const setter = (value : number | null) => updatePruefungsreihenfolge(belegung, value);
 		return (element : Element | ComponentPublicInstance<unknown> | null) => {
-			gridManager.applyInputAbiturPruefungsreihenfolge(key, 3, belegung.abiturFach!, element, setter);
-			if (element !== null)
+			const input = gridManager.applyInputAbiturPruefungsreihenfolge(key, 3, belegung.abiturFach!, element, setter);
+			if (input !== null)
 				watchEffect(() => gridManager.update(key, belegung.block2MuendlichePruefungReihenfolge));
 		};
 	}
@@ -260,8 +260,8 @@
 		const key = 'PrüfungsnoteMdlAbiFach' + belegung.abiturFach;
 		const setter = (value : string | null) => updateNotenpunkteMdl(belegung, value);
 		return (element : Element | ComponentPublicInstance<unknown> | null) => {
-			gridManager.applyInputAbiturNotenpunkte(key, 4, belegung.abiturFach!, element, setter, props.manager().daten().schuljahrAbitur);
-			if (element !== null)
+			const input = gridManager.applyInputAbiturNotenpunkte(key, 4, belegung.abiturFach!, element, setter, props.manager().daten().schuljahrAbitur);
+			if (input !== null)
 				watchEffect(() => gridManager.update(key, belegung.block2MuendlichePruefungNotenKuerzel));
 		};
 	}
