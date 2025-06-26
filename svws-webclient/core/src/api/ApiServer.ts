@@ -335,7 +335,7 @@ export class ApiServer extends BaseApi {
 	 *   Code 200: Der Patch wurde erfolgreich integriert.
 	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Förderschwerpunkte zu ändern.
-	 *   Code 404: KeinFörderschwerpunkt mit der angegebenen ID gefunden
+	 *   Code 404: Kein Förderschwerpunkt mit der angegebenen ID gefunden
 	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
