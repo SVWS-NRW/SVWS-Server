@@ -68,13 +68,22 @@
 				case 'raum':
 					return optionalInputIsValid(data.value.raum, 20);
 				case 'email':
-					return optionalInputIsValid(data.value.email, 100);
+					return emailIsValid(data.value.email);
 				case 'durchwahl':
 					return optionalInputIsValid(data.value.durchwahl, 20);
 				default:
 					return true;
 			}
 		}
+	}
+
+	function emailIsValid(value: string | null) {
+		if ((value === null) || JavaString.isBlank(value))
+			return true;
+		if (value.length > 100)
+			return false;
+		return /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))[^@]?$/.test(value) ||
+			/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(value);
 	}
 
 	function bezeichnungIsValid() {

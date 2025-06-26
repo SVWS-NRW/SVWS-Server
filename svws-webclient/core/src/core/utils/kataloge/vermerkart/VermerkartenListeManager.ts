@@ -55,10 +55,12 @@ export class VermerkartenListeManager extends AuswahlManager<number, VermerkartE
 		let cmp : number = a.sortierung - b.sortierung;
 		if (cmp !== 0)
 			return cmp;
-		if ((a.bezeichnung === null) || (b.bezeichnung === null))
-			return JavaLong.compare(a.id, b.id);
-		cmp = JavaString.compareTo(a.bezeichnung, b.bezeichnung);
-		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
+		if ((a.bezeichnung !== null) && (b.bezeichnung !== null)) {
+			cmp = JavaString.compareTo(a.bezeichnung, b.bezeichnung);
+			if (cmp !== 0)
+				return cmp;
+		}
+		return JavaLong.compare(a.id, b.id);
 	} };
 
 

@@ -22,7 +22,6 @@ import { routeSchuleJahrgaenge } from "~/router/apps/schule/jahrgaenge/RouteSchu
 import { routeSchuleFaecher } from "~/router/apps/schule/faecher/RouteSchuleFaecher";
 import { routeSchuleBetriebe } from "./schule/betriebe/RouteSchuleBetriebe";
 import { routeKatalogEinwilligungsarten } from "./schule/einwilligungsarten/RouteKatalogEinwilligungsarten";
-import { routeKatalogFoerderschwerpunkte } from "./schule/foerderschwerpunkte/RouteKatalogFoerderschwerpunkte";
 import { routeKatalogReligionen } from "./schule/religionen/RouteKatalogReligionen";
 import { routeKatalogSchulen } from "./schule/schulen/RouteKatalogSchulen";
 import { routeKatalogTelefonArten } from "~/router/apps/schule/telefonarten/RouteKatalogTelefonArten";
@@ -45,6 +44,7 @@ import { routeAbteilungen } from "~/router/apps/schule/abteilungen/RouteAbteilun
 import { routeEntlassgruende } from "~/router/apps/schule/entlassgruende/RouteEntlassgruende";
 import { routeMerkmale } from "~/router/apps/schule/merkmale/RouteMerkmale";
 import { routeKindergaerten } from "~/router/apps/schule/kindergaerten/RouteKindergaerten";
+import { routeFoerderschwerpunkte } from "~/router/apps/schule/foerderschwerpunkte/RouteFoerderschwerpunkte";
 import SApp from "~/components/SApp.vue";
 import { routeNotenmodul } from "./notenmodul/RouteNotenmodul";
 import { routeNotenmodulLeistungen } from "./notenmodul/RouteNotenmodulLeistungen";
@@ -139,7 +139,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeKatalogEinwilligungsarten,
 			routeEntlassgruende,
 			routeSchuleFaecher,
-			routeKatalogFoerderschwerpunkte,
+			routeFoerderschwerpunkte,
 			routeSchuleJahrgaenge,
 			routeMerkmale,
 			routeKatalogVermerkarten,

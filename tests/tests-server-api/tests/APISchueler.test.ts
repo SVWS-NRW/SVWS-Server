@@ -36,7 +36,7 @@ describe("Schueler Tests ", () => {
 		});
 
 		test("getSchuelerFoerderschwerpunkte", async () => {
-			const result = await api.getSchuelerFoerderschwerpunkte(schema);
+			const result = await api.getKatalogFoerderschwerpunkte(schema);
 			expect(result).toMatchSnapshot();
 		});
 	})

@@ -1,9 +1,4 @@
-import type { FoerderschwerpunktEintrag } from "@core";
-import type { AbschnittAuswahlDaten } from "@ui";
+import type { RouteAuswahlListProps } from "~/router/RouteAuswahlNode";
+import type { FoerderschwerpunkteListeManager } from "@core";
 
-export interface FoerderschwerpunkteAuswahlProps {
-	auswahl: FoerderschwerpunktEintrag | undefined;
-	mapKatalogeintraege: Map<number, FoerderschwerpunktEintrag>;
-	gotoEintrag: (eintrag: FoerderschwerpunktEintrag) => Promise<void>;
-	schuljahresabschnittsauswahl: () => AbschnittAuswahlDaten;
-}
+export type FoerderschwerpunkteAuswahlProps = RouteAuswahlListProps<FoerderschwerpunkteListeManager>

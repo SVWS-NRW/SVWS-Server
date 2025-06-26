@@ -212,7 +212,7 @@ public class APILehrer {
 	 */
 	@PATCH
 	@Path("/{id : \\d+}/stammdaten")
-	@Operation(summary = "Liefert zu der ID des Lehrers die zugehörigen Stammdaten.",
+	@Operation(summary = "Patched Lehrer Stammdaten.",
 			description = "Passt die Lehrer-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrerdaten besitzt.")
 	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Lehrer-Stammdaten integriert.")

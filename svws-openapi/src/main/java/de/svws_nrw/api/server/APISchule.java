@@ -23,7 +23,6 @@ import de.svws_nrw.asd.data.schule.BerufskollegAnlageKatalogEintrag;
 import de.svws_nrw.core.data.schule.BerufskollegBerufsebeneKatalogEintrag;
 import de.svws_nrw.core.data.schule.BerufskollegFachklassenKatalog;
 import de.svws_nrw.core.data.schule.Einwilligungsart;
-import de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag;
 import de.svws_nrw.asd.data.schule.FoerderschwerpunktKatalogEintrag;
 import de.svws_nrw.core.data.schule.HerkunftsschulnummerKatalogEintrag;
 import de.svws_nrw.asd.data.schule.KindergartenbesuchKatalogEintrag;
@@ -54,7 +53,6 @@ import de.svws_nrw.data.kataloge.DataKatalogAufsichtsbereiche;
 import de.svws_nrw.data.kataloge.DataKatalogPausenzeiten;
 import de.svws_nrw.data.kataloge.DataKatalogRaeume;
 import de.svws_nrw.data.kataloge.DataKatalogZeitraster;
-import de.svws_nrw.data.schueler.DataKatalogSchuelerFoerderschwerpunkte;
 import de.svws_nrw.data.schueler.DataSchuelerEinwilligungsartenZusammenfassung;
 import de.svws_nrw.data.schueler.DataSchuelerVermerkartenZusammenfassung;
 import de.svws_nrw.data.schule.DataKatalogAbgangsartenAllgemeinbildend;
@@ -608,59 +606,6 @@ public class APISchule {
 				ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);
 	}
-
-
-	/**
-	 * Die OpenAPI-Methode für die Abfrage des Kataloges für die Förderschwerpunkte.
-	 *
-	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param request   die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die Liste mit dem Katalog der Förderschwerpunkte
-	 */
-	@GET
-	@Path("/foerderschwerpunkte")
-	@Operation(summary = "Gibt den Katalog der Förderschwerpunkte zurück.",
-			description = "Erstellt eine Liste aller in dem Katalog vorhanden Förderschwerpunkte unter Angabe der ID, eines Kürzels und der Bezeichnung. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
-	@ApiResponse(responseCode = "200", description = "Eine Liste von Förderschwerpunkte-Katalog-Einträgen",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = FoerderschwerpunktEintrag.class))))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Keine Förderschwerpunkt-Katalog-Einträge gefunden")
-	public Response getSchuelerFoerderschwerpunkte(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogSchuelerFoerderschwerpunkte(conn).getList(),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KEINE);
-	}
-
-
-	/**
-	 * Die OpenAPI-Methode für die Abfrage eines Förderschwerpunktes.
-	 *
-	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param id        die Datenbank-ID zur Identifikation des Förderschwerpunktes
-	 * @param request   die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die Daten zum Förderschwerpunkt
-	 */
-	@GET
-	@Path("/foerderschwerpunkt/{id : \\d+}")
-	@Operation(summary = "Liefert zu der ID des Förderschwerpunktes die zugehörigen Daten.",
-			description = "Liest die Daten des Förderschwerpunktes zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogdaten besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die Daten des Förderschwerpunktes",
-			content = @Content(mediaType = "application/json",
-					schema = @Schema(implementation = FoerderschwerpunktEintrag.class)))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalogdaten anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Kein Förderschwerpunkt-Eintrag mit der angegebenen ID gefunden")
-	public Response getSchuelerFoerderschwerpunkt(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogSchuelerFoerderschwerpunkte(conn).get(id),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KEINE);
-	}
-
-
 
 	/**
 	 * Die OpenAPI-Methode für die Abfrage des Kataloges für die Relgionen bzw. Konfessionen,

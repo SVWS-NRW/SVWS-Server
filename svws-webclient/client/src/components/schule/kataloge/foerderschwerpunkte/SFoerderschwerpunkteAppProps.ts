@@ -1,7 +1,4 @@
-import type { FoerderschwerpunktEintrag } from "@core";
-import type { TabManager } from "@ui";
+import type { RouteAuswahlProps } from "~/router/RouteAuswahlNode";
+import type { FoerderschwerpunkteListeManager } from "@core";
 
-export interface FoerderschwerpunkteAppProps {
-	auswahl: FoerderschwerpunktEintrag | undefined;
-	tabManager: () => TabManager;
-}
+export type FoerderschwerpunkteAppProps = RouteAuswahlProps<FoerderschwerpunkteListeManager>

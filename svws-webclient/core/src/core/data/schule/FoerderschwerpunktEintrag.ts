@@ -28,6 +28,11 @@ export class FoerderschwerpunktEintrag extends JavaObject {
 	 */
 	public istSichtbar : boolean = false;
 
+	/**
+	 * Die Sortierreihenfolge des Förderschwerpunkt-Eintrags.
+	 */
+	public sortierung : number = 0;
+
 
 	/**
 	 * Leerer Standardkonstruktor.
@@ -64,6 +69,9 @@ export class FoerderschwerpunktEintrag extends JavaObject {
 		if (obj.istSichtbar === undefined)
 			throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
+		if (obj.sortierung === undefined)
+			throw new Error('invalid json format, missing attribute sortierung');
+		result.sortierung = obj.sortierung;
 		return result;
 	}
 
@@ -74,6 +82,7 @@ export class FoerderschwerpunktEintrag extends JavaObject {
 		result += '"text" : ' + JSON.stringify(obj.text) + ',';
 		result += '"kuerzelStatistik" : ' + JSON.stringify(obj.kuerzelStatistik) + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
+		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -95,6 +104,9 @@ export class FoerderschwerpunktEintrag extends JavaObject {
 		}
 		if (obj.istSichtbar !== undefined) {
 			result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
+		}
+		if (obj.sortierung !== undefined) {
+			result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

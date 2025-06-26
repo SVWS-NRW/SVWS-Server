@@ -72,7 +72,7 @@ export class RouteDataSchuelerIndividualdaten extends RouteData<RouteStateDataSc
 		for (const fa of fahrschuelerarten)
 			mapFahrschuelerarten.set(fa.id, fa);
 		// Lade den Katalog der Förderschwerpunkte
-		const foerderschwerpunkte = await api.server.getSchuelerFoerderschwerpunkte(api.schema);
+		const foerderschwerpunkte = await api.server.getKatalogFoerderschwerpunkte(api.schema);
 		const mapFoerderschwerpunkte = new Map();
 		for (const fs of foerderschwerpunkte)
 			mapFoerderschwerpunkte.set(fs.id, fs);
