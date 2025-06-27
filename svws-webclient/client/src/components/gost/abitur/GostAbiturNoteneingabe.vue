@@ -69,9 +69,13 @@
 						{{ row.belegung.block2PunkteZwischenstand ?? '' }}
 					</td>
 					<template v-if="row.belegung.abiturFach < 4">
-						<td>
-							<span v-if="(row.belegung.block2MuendlichePruefungBestehen === true) || istAbweichungspruefung(row)" class="icon-sm align-middle i-ri-check-line" />
+						<td v-if="!istAbweichungspruefung(row)" :ref="inputPflichtPruefung(row)" class="ui-table-grid-button">
+							<span class="icon-sm align-middle" :class="{
+								'i-ri-checkbox-line': (row.belegung.block2MuendlichePruefungBestehen === true) || (row.belegung.block2MuendlichePruefungAbweichung === true),
+								'i-ri-checkbox-blank-line': !((row.belegung.block2MuendlichePruefungBestehen === true) || (row.belegung.block2MuendlichePruefungAbweichung === true))
+							}" />
 						</td>
+						<td v-else><span class="icon-sm align-middle i-ri-check-line" /></td>
 						<td :ref="inputFreiwilligePruefung(row)" class="ui-table-grid-button">
 							<span class="icon-sm align-middle" :class="{
 								'i-ri-checkbox-line': row.belegung.block2MuendlichePruefungFreiwillig === true,
@@ -287,6 +291,10 @@
 		void props.updateAbiturpruefungsdaten(() => row.manager, { fachID: row.belegung.fachID, block2NotenKuerzelPruefung: value }, true);
 	}
 
+	function updatePflichtPruefung(row: SchuelerAbiturbelegung, value: boolean) : void {
+		void props.updateAbiturpruefungsdaten(() => row.manager, { fachID: row.belegung.fachID, block2MuendlichePruefungBestehen: value }, false);
+	}
+
 	function updateFreiwilligePruefung(row: SchuelerAbiturbelegung, value: boolean) : void {
 		void props.updateAbiturpruefungsdaten(() => row.manager, { fachID: row.belegung.fachID, block2MuendlichePruefungFreiwillig: value }, false);
 	}
@@ -309,11 +317,21 @@
 		};
 	}
 
+	function inputPflichtPruefung(row: SchuelerAbiturbelegung) {
+		const key = 'PflichtPrüfungAbiFach_' + row.schueler.id + '_' + row.abiturfach;
+		const setter = (value : boolean) => updatePflichtPruefung(row, value);
+		return (element : Element | ComponentPublicInstance<unknown> | null) => {
+			const input = gridManager.applyInputToggle(key, 2, row.index, element, setter);
+			if (input !== null)
+				watchEffect(() => gridManager.update(key, (row.belegung.block2MuendlichePruefungBestehen === true) || (row.belegung.block2MuendlichePruefungAbweichung === true)));
+		};
+	}
+
 	function inputFreiwilligePruefung(row: SchuelerAbiturbelegung) {
 		const key = 'FreiwilligePrüfungAbiFach_' + row.schueler.id + '_' + row.abiturfach;
 		const setter = (value : boolean) => updateFreiwilligePruefung(row, value);
 		return (element : Element | ComponentPublicInstance<unknown> | null) => {
-			const input = gridManager.applyInputToggle(key, 2, row.index, element, setter);
+			const input = gridManager.applyInputToggle(key, 3, row.index, element, setter);
 			if (input !== null)
 				watchEffect(() => gridManager.update(key, row.belegung.block2MuendlichePruefungFreiwillig ?? false));
 		};
@@ -323,7 +341,7 @@
 		const key = 'PrüfungsreihenfolgeAbiFach_' + row.schueler.id + '_' + row.abiturfach;
 		const setter = (value : number | null) => updatePruefungsreihenfolge(row, value);
 		return (element : Element | ComponentPublicInstance<unknown> | null) => {
-			const input = gridManager.applyInputAbiturPruefungsreihenfolge(key, 3, row.index, element, setter);
+			const input = gridManager.applyInputAbiturPruefungsreihenfolge(key, 4, row.index, element, setter);
 			if (input !== null)
 				watchEffect(() => gridManager.update(key, row.belegung.block2MuendlichePruefungReihenfolge));
 		};
@@ -333,7 +351,7 @@
 		const key = 'PrüfungsnoteMdlAbiFach_' + row.schueler.id + '_' + row.abiturfach;
 		const setter = (value : string | null) => updateNotenpunkteMdl(row, value);
 		return (element : Element | ComponentPublicInstance<unknown> | null) => {
-			const input = gridManager.applyInputAbiturNotenpunkte(key, 4, row.index, element, setter, row.manager.daten().schuljahrAbitur);
+			const input = gridManager.applyInputAbiturNotenpunkte(key, 5, row.index, element, setter, row.manager.daten().schuljahrAbitur);
 			if (input !== null)
 				watchEffect(() => gridManager.update(key, row.belegung.block2MuendlichePruefungNotenKuerzel));
 		};
