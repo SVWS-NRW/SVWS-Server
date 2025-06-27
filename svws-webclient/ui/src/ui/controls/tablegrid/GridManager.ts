@@ -35,6 +35,16 @@ export class GridManager<KEY> {
 	/** Ein Handler, der jedes mal aufgerufen wird, wenn ein input ausgewählt wird */
 	private _onFocusInputHandler : ((input: GridInput<any, any> | null) => void) | null = null;
 
+	/**
+	 * Gibt das Input für den übergebenen Key zurück.
+	 *
+	 * @param key   der Key
+	 *
+	 * @returns das INput für den Key oder null, falls der Key ungültig ist
+	 */
+	public getInputByKey(key: KEY) : GridInput<KEY, any> | null {
+		return this.mapInputs.get(key) ?? null;
+	}
 
 	/**
 	 * Fügt das Input mit seiner Position ein.

@@ -47,6 +47,15 @@ export class GridInputIntegerDiv<KEY> extends GridInputInnerText<KEY, string | n
 	}
 
 	/**
+	 * Setzt das Maximum, welches als Grenze für die Eingabe verwendet wird.
+	 *
+	 * @param value   das neue Maximum
+	 */
+	public set max(value: number) {
+		this._max = value;
+	}
+
+	/**
 	 * Schreibt die internen Daten dieses Inputs mithilfe des Setters.
 	 */
 	public commit() : void {
@@ -116,6 +125,9 @@ export class GridInputIntegerDiv<KEY> extends GridInputInnerText<KEY, string | n
 		const ziffer = parseInt(event.key);
 		if (isNaN(ziffer))
 			return false; // Keine erfolgreiche Eingabe...
+		// Wenn es sich um eine neue Fokussierung handelt, dann darf die Ziffer aber nicht größer als das vorgegebene Maximum sein (falls dieses einstellig ist)
+		if ((this._isNewFocus.value) && ((this._max !== null) && (ziffer > this._max)))
+			return false;
 		// Wenn es sich um eine neue Fokussierung handelt, dann ersetze den Wert bei einer Eingabe (sonst anhängen)
 		if (this._isNewFocus.value)
 			this.update(null);

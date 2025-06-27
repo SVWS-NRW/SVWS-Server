@@ -149,6 +149,7 @@
 	import { ArrayList } from '../../../../core/src/java/util/ArrayList';
 	import { GridManager } from '../../ui/controls/tablegrid/GridManager';
 	import type { GridInput } from '../../ui/controls/tablegrid/GridInput';
+	import type { GridInputIntegerDiv } from '../../ui/controls/tablegrid/GridInputIntegerDiv';
 
 	const props = defineProps<EnmLeistungenUebersichtProps>();
 	defineExpose({ focusGrid });
@@ -236,7 +237,17 @@
 
 	function inputFehlstunden(pair: PairNN<ENMLeistung, ENMSchueler>, col: number, index: number) {
 		const key = 'Fehlstunden_' + pair.a.id + "_" + pair.b.id;
-		const setter = (value : number | null) => void props.patchLeistung(pair.a, { fehlstundenFach: value });
+		const setter = (value : number | null) => {
+			const patch = <Partial<ENMLeistung>>{ fehlstundenFach: value };
+			const inputFSU = gridManager.getInputByKey('FehlstundenUnendschuldigt_' + pair.a.id + "_" + pair.b.id);
+			if (inputFSU !== null) {
+				const inputFSUTyped = inputFSU as GridInputIntegerDiv<string>;
+				inputFSUTyped.max = value ?? 0;
+				if ((patch.fehlstundenUnentschuldigtFach ?? 0) > (value ?? 0))
+					patch.fehlstundenUnentschuldigtFach = (value ?? 0);
+			}
+			void props.patchLeistung(pair.a, { fehlstundenFach: value });
+		};
 		return (element : Element | ComponentPublicInstance<unknown> | null) => {
 			const input = gridManager.applyInputIntegerDiv(key, col, index, element, 999, setter);
 			if (input !== null)
@@ -248,7 +259,7 @@
 		const key = 'FehlstundenUnendschuldigt_' + pair.a.id + "_" + pair.b.id;
 		const setter = (value : number | null) => void props.patchLeistung(pair.a, { fehlstundenUnentschuldigtFach: value });
 		return (element : Element | ComponentPublicInstance<unknown> | null) => {
-			const input = gridManager.applyInputIntegerDiv(key, col, index, element, 999, setter);
+			const input = gridManager.applyInputIntegerDiv(key, col, index, element, pair.a.fehlstundenFach ?? 0, setter);
 			if (input !== null)
 				watchEffect(() => gridManager.update(key, pair.a.fehlstundenUnentschuldigtFach));
 		};
