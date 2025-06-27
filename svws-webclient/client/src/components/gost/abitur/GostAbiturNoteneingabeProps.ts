@@ -7,5 +7,5 @@ export interface GostAbiturNoteneingabeProps {
 	mapLehrer: JavaMap<number, LehrerListeEintrag>;
 	mapKurse: JavaMap<number, KursDaten>;
 	managerMap: () => JavaMap<number, AbiturdatenManager>;
-	updateAbiturpruefungsdaten: (manager: () => AbiturdatenManager, belegung: Partial<AbiturFachbelegung>) => Promise<void>;
+	updateAbiturpruefungsdaten: (manager: () => AbiturdatenManager, belegung: Partial<AbiturFachbelegung>, berechnePflichtpruefungenNeu: boolean) => Promise<void>;
 }

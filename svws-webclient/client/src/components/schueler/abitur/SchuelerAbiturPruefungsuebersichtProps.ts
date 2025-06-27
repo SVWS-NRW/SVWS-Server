@@ -5,5 +5,5 @@ export interface SchuelerAbiturPruefungsuebersichtProps {
 	schule: SchuleStammdaten;
 	schueler: SchuelerListeEintrag;
 	manager: () => AbiturdatenManager | null;
-	updateAbiturpruefungsdaten: (manager: () => AbiturdatenManager, belegung: Partial<AbiturFachbelegung>) => Promise<void>;
+	updateAbiturpruefungsdaten: (manager: () => AbiturdatenManager, belegung: Partial<AbiturFachbelegung>, berechnePflichtpruefungenNeu: boolean) => Promise<void>;
 }

@@ -2817,11 +2817,12 @@ export class AbiturdatenManager extends JavaObject {
 	 * sofern die Daten vollständig vorliegen. Ist dies nicht der Fall, so wird das Ergebnis soweit
 	 * wie möglich berechnet. Diese Methode setzt die vorherige Berechnung der Zulassung voraus.
 	 *
-	 * @param abidaten   die Abiturdaten, welche zur Berechnung verwendet werden
+	 * @param abidaten                       die Abiturdaten, welche zur Berechnung verwendet werden
+	 * @param berechnePflichtpruefungenNeu   gibt an, ob die Pflichtprüfungen neu berechnet/gesetzt werden sollen oder nicht
 	 *
 	 * @return true, wenn die Berechnung vollständig durchgeführt werden konnte
 	 */
-	public static berechnePruefungsergebnis(abidaten : Abiturdaten) : boolean {
+	public static berechnePruefungsergebnis(abidaten : Abiturdaten, berechnePflichtpruefungenNeu : boolean) : boolean {
 		const abiBelegungen : List<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 		for (const fachbelegung of abidaten.fachbelegungen)
 			if (fachbelegung.abiturFach !== null)
@@ -2837,12 +2838,14 @@ export class AbiturdatenManager extends JavaObject {
 			if (npPruefung === null) {
 				abibelegung.block2PunkteZwischenstand = null;
 				abibelegung.block2Punkte = null;
-				abibelegung.block2MuendlichePruefungAbweichung = null;
+				if (berechnePflichtpruefungenNeu)
+					abibelegung.block2MuendlichePruefungAbweichung = null;
 				fehlendeNoten++;
 			} else {
 				abibelegung.block2PunkteZwischenstand = faktor * npPruefung;
 				abibelegung.block2Punkte = abibelegung.block2PunkteZwischenstand;
-				abibelegung.block2MuendlichePruefungAbweichung = (abidaten.abiturjahr <= 2019) && (abibelegung.block1NotenpunkteDurchschnitt !== null) && (Math.abs(abibelegung.block1NotenpunkteDurchschnitt - npPruefung) >= 4.0);
+				if (berechnePflichtpruefungenNeu)
+					abibelegung.block2MuendlichePruefungAbweichung = (abidaten.abiturjahr <= 2019) && (abibelegung.block1NotenpunkteDurchschnitt !== null) && (Math.abs(abibelegung.block1NotenpunkteDurchschnitt - npPruefung) >= 4.0);
 				summe += abibelegung.block2PunkteZwischenstand;
 				if (npPruefung < 5) {
 					defizite++;
@@ -2869,15 +2872,18 @@ export class AbiturdatenManager extends JavaObject {
 		for (const abibelegung of abiBelegungen) {
 			const npPruefung : number | null = AbiturdatenManager.getNotenpunkteFromKuerzelInternal(abibelegung.block2NotenKuerzelPruefung, abidaten.schuljahrAbitur);
 			if (npPruefung === null) {
-				abibelegung.block2MuendlichePruefungBestehen = null;
-				abibelegung.block2MuendlichePruefungFreiwillig = null;
-				abibelegung.block2MuendlichePruefungNotenKuerzel = null;
+				if (berechnePflichtpruefungenNeu) {
+					abibelegung.block2MuendlichePruefungBestehen = null;
+					abibelegung.block2MuendlichePruefungFreiwillig = null;
+					abibelegung.block2MuendlichePruefungNotenKuerzel = null;
+				}
 				abibelegung.block2Punkte = null;
 				continue;
 			}
-			abibelegung.block2MuendlichePruefungBestehen = (hatPflichtPruefungen && (abibelegung.abiturFach !== null) && (abibelegung.abiturFach <= 3));
+			if (berechnePflichtpruefungenNeu)
+				abibelegung.block2MuendlichePruefungBestehen = (hatPflichtPruefungen && (abibelegung.abiturFach !== null) && (abibelegung.abiturFach <= 3));
 			const hatMdlAbweichung : boolean = (abibelegung.block2MuendlichePruefungAbweichung !== null) && abibelegung.block2MuendlichePruefungAbweichung;
-			const hatMdlBestehen : boolean = abibelegung.block2MuendlichePruefungBestehen.valueOf();
+			const hatMdlBestehen : boolean = (abibelegung.block2MuendlichePruefungBestehen !== null) && abibelegung.block2MuendlichePruefungBestehen;
 			const hatMdlFreiwillig : boolean = (abibelegung.block2MuendlichePruefungFreiwillig !== null) && abibelegung.block2MuendlichePruefungFreiwillig;
 			const npPruefungMdl : number | null = AbiturdatenManager.getNotenpunkteFromKuerzelInternal(abibelegung.block2MuendlichePruefungNotenKuerzel, abidaten.schuljahrAbitur);
 			if (npPruefungMdl === null) {
@@ -2891,14 +2897,18 @@ export class AbiturdatenManager extends JavaObject {
 					if (hatMdlFreiwillig)
 						fehlendeNotenMdlFreiwillig++;
 				} else {
-					abibelegung.block2MuendlichePruefungNotenKuerzel = null;
-					abibelegung.block2MuendlichePruefungReihenfolge = null;
+					if (berechnePflichtpruefungenNeu) {
+						abibelegung.block2MuendlichePruefungNotenKuerzel = null;
+						abibelegung.block2MuendlichePruefungReihenfolge = null;
+					}
 					abibelegung.block2Punkte = abibelegung.block2PunkteZwischenstand;
 				}
 			} else {
 				if ((!hatMdlAbweichung) && (!hatMdlBestehen) && (!hatMdlFreiwillig)) {
-					abibelegung.block2MuendlichePruefungNotenKuerzel = null;
-					abibelegung.block2MuendlichePruefungReihenfolge = null;
+					if (berechnePflichtpruefungenNeu) {
+						abibelegung.block2MuendlichePruefungNotenKuerzel = null;
+						abibelegung.block2MuendlichePruefungReihenfolge = null;
+					}
 					abibelegung.block2Punkte = abibelegung.block2PunkteZwischenstand;
 				} else {
 					const punkte : number = Math.round((npPruefung * 2 + npPruefungMdl) * faktor / 3.0) as number;

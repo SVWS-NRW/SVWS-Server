@@ -4,5 +4,5 @@ export interface SchuelerAbiturZulassungTabelleProps {
 	serverMode: ServerMode;
 	schule: SchuleStammdaten;
 	manager: () => AbiturdatenManager;
-	updateAbiturpruefungsdaten: ((manager: () => AbiturdatenManager, belegung: Partial<AbiturFachbelegung>) => Promise<void>) | null;
+	updateAbiturpruefungsdaten: ((manager: () => AbiturdatenManager, belegung: Partial<AbiturFachbelegung>, berechnePflichtpruefungenNeu: boolean) => Promise<void>) | null;
 }

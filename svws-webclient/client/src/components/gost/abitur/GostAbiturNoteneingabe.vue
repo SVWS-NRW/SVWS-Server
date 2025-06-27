@@ -284,19 +284,19 @@
 	}
 
 	function updateNotenpunkte(row: SchuelerAbiturbelegung, value: string | null) : void {
-		void props.updateAbiturpruefungsdaten(() => row.manager, { fachID: row.belegung.fachID, block2NotenKuerzelPruefung: value });
+		void props.updateAbiturpruefungsdaten(() => row.manager, { fachID: row.belegung.fachID, block2NotenKuerzelPruefung: value }, true);
 	}
 
 	function updateFreiwilligePruefung(row: SchuelerAbiturbelegung, value: boolean) : void {
-		void props.updateAbiturpruefungsdaten(() => row.manager, { fachID: row.belegung.fachID, block2MuendlichePruefungFreiwillig: value });
+		void props.updateAbiturpruefungsdaten(() => row.manager, { fachID: row.belegung.fachID, block2MuendlichePruefungFreiwillig: value }, false);
 	}
 
 	function updatePruefungsreihenfolge(row: SchuelerAbiturbelegung, value: number | null) : void {
-		void props.updateAbiturpruefungsdaten(() => row.manager, { fachID: row.belegung.fachID, block2MuendlichePruefungReihenfolge: value });
+		void props.updateAbiturpruefungsdaten(() => row.manager, { fachID: row.belegung.fachID, block2MuendlichePruefungReihenfolge: value }, false);
 	}
 
 	function updateNotenpunkteMdl(row: SchuelerAbiturbelegung, value: string | null) : void {
-		void props.updateAbiturpruefungsdaten(() => row.manager, { fachID: row.belegung.fachID, block2MuendlichePruefungNotenKuerzel: value });
+		void props.updateAbiturpruefungsdaten(() => row.manager, { fachID: row.belegung.fachID, block2MuendlichePruefungNotenKuerzel: value }, false);
 	}
 
 	function inputPruefungsnote(row: SchuelerAbiturbelegung) {

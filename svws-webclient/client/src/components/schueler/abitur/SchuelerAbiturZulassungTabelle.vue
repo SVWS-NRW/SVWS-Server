@@ -278,7 +278,7 @@
 			return;
 		belegungHalbjahr.block1gewertet = value;
 		if (props.updateAbiturpruefungsdaten !== null)
-			void props.updateAbiturpruefungsdaten(props.manager, partial);
+			void props.updateAbiturpruefungsdaten(props.manager, partial, true);
 	}
 
 	function inputMarkierungToggle(fach: GostFach, index: number, hj: GostHalbjahr) {

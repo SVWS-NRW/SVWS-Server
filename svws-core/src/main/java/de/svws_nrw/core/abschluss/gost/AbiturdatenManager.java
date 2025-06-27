@@ -3023,11 +3023,12 @@ public class AbiturdatenManager {
 	 * sofern die Daten vollständig vorliegen. Ist dies nicht der Fall, so wird das Ergebnis soweit
 	 * wie möglich berechnet. Diese Methode setzt die vorherige Berechnung der Zulassung voraus.
 	 *
-	 * @param abidaten   die Abiturdaten, welche zur Berechnung verwendet werden
+	 * @param abidaten                       die Abiturdaten, welche zur Berechnung verwendet werden
+	 * @param berechnePflichtpruefungenNeu   gibt an, ob die Pflichtprüfungen neu berechnet/gesetzt werden sollen oder nicht
 	 *
 	 * @return true, wenn die Berechnung vollständig durchgeführt werden konnte
 	 */
-	public static boolean berechnePruefungsergebnis(final @NotNull Abiturdaten abidaten) {
+	public static boolean berechnePruefungsergebnis(final @NotNull Abiturdaten abidaten, final boolean berechnePflichtpruefungenNeu) {
 		// Bestimme die Fachbelegungen der Abiturfächer und sortiere diese
 		final @NotNull List<AbiturFachbelegung> abiBelegungen = new ArrayList<>();
 		for (final @NotNull AbiturFachbelegung fachbelegung : abidaten.fachbelegungen)
@@ -3048,15 +3049,17 @@ public class AbiturdatenManager {
 			if (npPruefung == null) {
 				abibelegung.block2PunkteZwischenstand = null;
 				abibelegung.block2Punkte = null;
-				abibelegung.block2MuendlichePruefungAbweichung = null;
+				if (berechnePflichtpruefungenNeu)
+					abibelegung.block2MuendlichePruefungAbweichung = null;
 				fehlendeNoten++;
 			} else {
 				abibelegung.block2PunkteZwischenstand = faktor * npPruefung;
 				abibelegung.block2Punkte = abibelegung.block2PunkteZwischenstand;
 				// nur bis Abiturjahrgang 2019, ab 2020 gibt es keine Abweichungsprüfungen mehr
-				abibelegung.block2MuendlichePruefungAbweichung = (abidaten.abiturjahr <= 2019)
-						&& (abibelegung.block1NotenpunkteDurchschnitt != null)
-						&& (Math.abs(abibelegung.block1NotenpunkteDurchschnitt - npPruefung) >= 4.0);
+				if (berechnePflichtpruefungenNeu)
+					abibelegung.block2MuendlichePruefungAbweichung = (abidaten.abiturjahr <= 2019)
+							&& (abibelegung.block1NotenpunkteDurchschnitt != null)
+							&& (Math.abs(abibelegung.block1NotenpunkteDurchschnitt - npPruefung) >= 4.0);
 				summe += abibelegung.block2PunkteZwischenstand;
 				if (npPruefung < 5) {
 					defizite++;
@@ -3091,15 +3094,18 @@ public class AbiturdatenManager {
 			final Integer npPruefung = getNotenpunkteFromKuerzelInternal(abibelegung.block2NotenKuerzelPruefung, abidaten.schuljahrAbitur);
 			// Wenn noch keine Note gesetzt ist, dann kann auch noch keine weitere Information gesetzt sein...
 			if (npPruefung == null) {
-				abibelegung.block2MuendlichePruefungBestehen = null;
-				abibelegung.block2MuendlichePruefungFreiwillig = null;
-				abibelegung.block2MuendlichePruefungNotenKuerzel = null;
+				if (berechnePflichtpruefungenNeu) {
+					abibelegung.block2MuendlichePruefungBestehen = null;
+					abibelegung.block2MuendlichePruefungFreiwillig = null;
+					abibelegung.block2MuendlichePruefungNotenKuerzel = null;
+				}
 				abibelegung.block2Punkte = null;
 				continue;
 			}
-			abibelegung.block2MuendlichePruefungBestehen = (hatPflichtPruefungen && (abibelegung.abiturFach != null) && (abibelegung.abiturFach <= 3));
+			if (berechnePflichtpruefungenNeu)
+				abibelegung.block2MuendlichePruefungBestehen = (hatPflichtPruefungen && (abibelegung.abiturFach != null) && (abibelegung.abiturFach <= 3));
 			final boolean hatMdlAbweichung = (abibelegung.block2MuendlichePruefungAbweichung != null) && abibelegung.block2MuendlichePruefungAbweichung;
-			final boolean hatMdlBestehen = abibelegung.block2MuendlichePruefungBestehen;
+			final boolean hatMdlBestehen = (abibelegung.block2MuendlichePruefungBestehen != null) && abibelegung.block2MuendlichePruefungBestehen;
 			final boolean hatMdlFreiwillig = (abibelegung.block2MuendlichePruefungFreiwillig != null) && abibelegung.block2MuendlichePruefungFreiwillig;
 			final Integer npPruefungMdl = getNotenpunkteFromKuerzelInternal(abibelegung.block2MuendlichePruefungNotenKuerzel, abidaten.schuljahrAbitur);
 			if (npPruefungMdl == null) {
@@ -3113,15 +3119,19 @@ public class AbiturdatenManager {
 					if (hatMdlFreiwillig)
 						fehlendeNotenMdlFreiwillig++;
 				} else {
-					abibelegung.block2MuendlichePruefungNotenKuerzel = null;
-					abibelegung.block2MuendlichePruefungReihenfolge = null;
+					if (berechnePflichtpruefungenNeu) {
+						abibelegung.block2MuendlichePruefungNotenKuerzel = null;
+						abibelegung.block2MuendlichePruefungReihenfolge = null;
+					}
 					abibelegung.block2Punkte = abibelegung.block2PunkteZwischenstand;
 				}
 			} else {
 				// Ist überhaupt eine Prüfung angesetzt?
 				if ((!hatMdlAbweichung) && (!hatMdlBestehen) && (!hatMdlFreiwillig)) {
-					abibelegung.block2MuendlichePruefungNotenKuerzel = null;
-					abibelegung.block2MuendlichePruefungReihenfolge = null;
+					if (berechnePflichtpruefungenNeu) {
+						abibelegung.block2MuendlichePruefungNotenKuerzel = null;
+						abibelegung.block2MuendlichePruefungReihenfolge = null;
+					}
 					abibelegung.block2Punkte = abibelegung.block2PunkteZwischenstand;
 				} else {
 					final int punkte = (int) Math.round((npPruefung * 2 + npPruefungMdl) * faktor / 3.0);

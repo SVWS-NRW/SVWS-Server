@@ -5,5 +5,5 @@ export interface GostAbiturPruefungsuebersichtProps {
 	schule: SchuleStammdaten;
 	schuelerListe: List<SchuelerListeEintrag>;
 	managerMap: () => JavaMap<number, AbiturdatenManager>;
-	updateAbiturpruefungsdaten: (manager: () => AbiturdatenManager, belegung: Partial<AbiturFachbelegung>) => Promise<void>;
+	updateAbiturpruefungsdaten: (manager: () => AbiturdatenManager, belegung: Partial<AbiturFachbelegung>, berechnePflichtpruefungenNeu: boolean) => Promise<void>;
 }

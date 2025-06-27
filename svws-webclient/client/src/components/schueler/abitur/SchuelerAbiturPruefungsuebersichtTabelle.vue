@@ -211,19 +211,19 @@
 	}
 
 	function updateNotenpunkte(belegung: AbiturFachbelegung, value: string | null) : void {
-		void props.updateAbiturpruefungsdaten(props.manager, { fachID: belegung.fachID, block2NotenKuerzelPruefung: value });
+		void props.updateAbiturpruefungsdaten(props.manager, { fachID: belegung.fachID, block2NotenKuerzelPruefung: value }, true);
 	}
 
 	function updateFreiwilligePruefung(belegung: AbiturFachbelegung, value: boolean) : void {
-		void props.updateAbiturpruefungsdaten(props.manager, { fachID: belegung.fachID, block2MuendlichePruefungFreiwillig: value });
+		void props.updateAbiturpruefungsdaten(props.manager, { fachID: belegung.fachID, block2MuendlichePruefungFreiwillig: value }, false);
 	}
 
 	function updatePruefungsreihenfolge(belegung: AbiturFachbelegung, value: number | null) : void {
-		void props.updateAbiturpruefungsdaten(props.manager, { fachID: belegung.fachID, block2MuendlichePruefungReihenfolge: value });
+		void props.updateAbiturpruefungsdaten(props.manager, { fachID: belegung.fachID, block2MuendlichePruefungReihenfolge: value }, false);
 	}
 
 	function updateNotenpunkteMdl(belegung: AbiturFachbelegung, value: string | null) : void {
-		void props.updateAbiturpruefungsdaten(props.manager, { fachID: belegung.fachID, block2MuendlichePruefungNotenKuerzel: value });
+		void props.updateAbiturpruefungsdaten(props.manager, { fachID: belegung.fachID, block2MuendlichePruefungNotenKuerzel: value }, false);
 	}
 
 	function inputPruefungsnote(belegung: AbiturFachbelegung) {
