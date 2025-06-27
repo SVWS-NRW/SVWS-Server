@@ -2,7 +2,7 @@
 	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input class="contentFocusField" placeholder="Bezeichnung" :model-value="manager().daten().text" readonly />
+				<svws-ui-text-input class="contentFocusField" span="full" placeholder="Bezeichnung" :model-value="manager().daten().text" readonly />
 				<svws-ui-text-input placeholder="Kürzel" :model-value="manager().daten().kuerzel" :readonly
 					@change="kuerzel => patch({ kuerzel })" :max-len="50" :valid="kuerzelIsValid" />
 				<svws-ui-input-number placeholder="Sortierung" :model-value="manager().daten().sortierung" :readonly :min="0" :max="32000"
