@@ -7,6 +7,9 @@
 			<div class="min-w-64">
 				<ui-select label="Prüfer" v-model="auswahlPruefer" :manager="prueferSelectManager" />
 			</div>
+			<div class="min-w-64">
+				<ui-select label="Abiturfach" v-model="auswahlAbiturfach" :manager="abiturfachSelectManager" />
+			</div>
 		</div>
 		<ui-table-grid name="Übersicht über die Prüfungsergebnisse" :header-count="2" :footer-count="0" :data="auswahlBelegungen"
 			:cell-format="cellFormat" :get-key="(sb: SchuelerAbiturbelegung) => `${sb.schueler.id}_${sb.belegung.abiturFach}`">
@@ -28,7 +31,7 @@
 					<th class="ui-divider text-left"> Prüfer </th>
 					<th class="ui-divider">⌀</th>
 					<th>Punkte</th>
-					<th class="ui-divider">Summe</th>
+					<th class="ui-divider">Wert</th>
 					<th>Pflicht</th>
 					<th>Freiw.</th>
 					<th>RF</th>
@@ -110,8 +113,9 @@
 <script setup lang="ts">
 
 	import { computed, shallowRef, watchEffect, type ComponentPublicInstance } from "vue";
-	import type { List, AbiturFachbelegung, Comparator, Fachgruppe, NoteKatalogEintrag, SchuelerListeEintrag, AbiturdatenManager , KursDaten, LehrerListeEintrag, JavaMap } from "@core";
-	import { GostHalbjahr, ArrayList, Fach, GostBesondereLernleistung, Note, RGBFarbe, DeveloperNotificationException, HashMap } from "@core";
+	import type { List, AbiturFachbelegung, Comparator, Fachgruppe, NoteKatalogEintrag, SchuelerListeEintrag, KursDaten, LehrerListeEintrag, JavaMap } from "@core";
+	import { AbiturdatenManager } from "@core";
+	import { GostHalbjahr, ArrayList, Fach, GostBesondereLernleistung, Note, RGBFarbe, DeveloperNotificationException, HashMap, GostAbiturFach } from "@core";
 	import { GridManager, BaseSelectManager } from "@ui";
 
 	import type { GostAbiturNoteneingabeProps } from "./GostAbiturNoteneingabeProps";
@@ -134,18 +138,29 @@
 
 	const auswahlBelegungen = computed<List<SchuelerAbiturbelegung>>(() => {
 		const auswahl = new ArrayList<SchuelerAbiturbelegung>();
+		// Wenn ein Kurs-Filter gesetzt ist, dann filtere die Abiturfachbelegungen nach dem Kurs
 		const kurs = auswahlKurs.value;
 		const kursBelegungen = alleKurse.value.get(kurs);
 		if (kursBelegungen !== null) {
 			auswahl.addAll(kursBelegungen);
 			return auswahl;
 		}
+		// Wenn ein Prüfer gesetzt ist, dann filtere die Abiturfachbelegungen anhand des Prüfers
 		const pruefer = auswahlPruefer.value;
 		const prueferBelegungen = allePruefer.value.get(pruefer);
 		if (prueferBelegungen !== null) {
 			auswahl.addAll(prueferBelegungen);
 			return auswahl;
 		}
+		// Wenn ein Abiturfach gesetzt ist, dann filtere die Abiturfachbelegungen anhand des Abiturfaches
+		const abiturfach = auswahlAbiturfach.value;
+		if (abiturfach !== null) {
+			for (const belegung of schuelerInPruefung.value)
+				if (GostAbiturFach.fromID(belegung.abiturfach) === abiturfach)
+					auswahl.add(belegung);
+			return auswahl;
+		}
+		// Ansonsten nehme alle Abiturfachbelegungen
 		auswahl.addAll(schuelerInPruefung.value);
 		return auswahl;
 	});
@@ -157,6 +172,15 @@
 	const auswahlPruefer = shallowRef<LehrerListeEintrag | null>(null);
 	const prueferSelectManager = computed<BaseSelectManager<LehrerListeEintrag>>(() => new BaseSelectManager({ options: allePruefer.value.keySet(),
 		optionDisplayText: l => l.kuerzel, selectionDisplayText: l => l.kuerzel	}));
+
+	const auswahlAbiturfach = shallowRef<GostAbiturFach | null>(null);
+	const abiturfachSelectManager = computed<BaseSelectManager<GostAbiturFach>>(() => {
+		const abiManager = props.managerMap().isEmpty() ? null : props.managerMap().values().iterator().next();
+		const values = [ GostAbiturFach.LK1, GostAbiturFach.LK2, GostAbiturFach.AB3, GostAbiturFach.AB4 ];
+		if ((abiManager !== null) && AbiturdatenManager.nutzeExperimentellenCode(props.serverMode, abiManager.daten().abiturjahr))
+			values.push(GostAbiturFach.AB5);
+		return new BaseSelectManager({ options: values, optionDisplayText: f => f.kuerzel, selectionDisplayText: f => f.kuerzel	});
+	});
 
 	const alleKurse = computed<JavaMap<KursDaten, List<SchuelerAbiturbelegung>>>(() => {
 		const result = new HashMap<KursDaten, List<SchuelerAbiturbelegung>>();

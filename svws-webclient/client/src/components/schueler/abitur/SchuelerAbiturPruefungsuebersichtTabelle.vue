@@ -21,7 +21,7 @@
 				<th>Summe</th>
 				<th class="ui-divider">⌀</th>
 				<th>Punkte</th>
-				<th class="ui-divider">Summe</th>
+				<th class="ui-divider">Wert</th>
 				<th>Pflicht</th>
 				<th>Freiw.</th>
 				<th>RF</th>
