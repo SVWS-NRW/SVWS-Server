@@ -1,9 +1,5 @@
 <template>
-	{{ gridManager.focusColumnLast }}
-	{{ gridManager.focusRowLast }}
-	<ui-table-grid name="Klassenleitung" :header-count="1" :footer-count="0" :data="daten"
-		:cell-format="cellFormat" :get-key="(row: PairNN<ENMKlasse, ENMSchueler>) => `${row.a.id}_${row.b.id}`"
-		:row-selected="gridManager.focusRow" @row-clicked="(_row: any, rowIndex: number) => gridManager.doFocusRowIfNotFocussed(rowIndex)">
+	<ui-table-grid name="Klassenleitung" :header-count="1" :footer-count="0" :manager="() => gridManager" :data="daten" :cell-format="cellFormat">
 		<template #header>
 			<template v-for="col of cols" :key="col.name">
 				<th v-if="columnsVisible().get(col.kuerzel) ?? true">
@@ -112,7 +108,23 @@
 		set: (value) => void props.setColumnsVisible(value),
 	});
 
-	const gridManager = new GridManager<string>();
+	const daten = computed<List<PairNN<ENMKlasse, ENMSchueler>>>(() => {
+		const result = new ArrayList<PairNN<ENMKlasse, ENMSchueler>>();
+		for (const klasse of props.auswahl()) {
+			const listSchueler = props.enmManager().mapKlassenSchueler.get(klasse.id);
+			if ((listSchueler === null))
+				continue;
+			for (const schueler of listSchueler)
+				result.add(new PairNN<ENMKlasse, ENMSchueler>(klasse, schueler));
+		}
+		return result;
+	});
+
+	const gridManager = new GridManager<string, PairNN<ENMKlasse, ENMSchueler>, List<PairNN<ENMKlasse, ENMSchueler>>>({
+		daten: daten,
+		getRowKey: row => `${row.a.id}_${row.b.id}`,
+	});
+
 	gridManager.onFocusInput = (input: GridInput<any, any> | null) => {
 		if ((input === null) || (input.row >= daten.value.size()))
 			return;
@@ -130,18 +142,6 @@
 				result.widths.push(col.width);
 		}
 		result.widths.push('3.5rem');
-		return result;
-	});
-
-	const daten = computed<List<PairNN<ENMKlasse, ENMSchueler>>>(() => {
-		const result = new ArrayList<PairNN<ENMKlasse, ENMSchueler>>();
-		for (const klasse of props.auswahl()) {
-			const listSchueler = props.enmManager().mapKlassenSchueler.get(klasse.id);
-			if ((listSchueler === null))
-				continue;
-			for (const schueler of listSchueler)
-				result.add(new PairNN<ENMKlasse, ENMSchueler>(klasse, schueler));
-		}
 		return result;
 	});
 

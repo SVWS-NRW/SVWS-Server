@@ -1,6 +1,5 @@
 <template>
-	<ui-table-grid name="Übersicht über die Prüfungsergebnisse" :header-count="2" :data="abiBelegungen.values()"
-		:cell-format="cellFormat" :get-key="(belegung: AbiturFachbelegung) => '`${manager().daten().schuelerID}_${belegung.abiturFach}`'">
+	<ui-table-grid name="Übersicht über die Prüfungsergebnisse" :header-count="2" :manager="() => gridManager" :cell-format="cellFormat">
 		<template #header="params">
 			<template v-if="params.i === 1">
 				<th class="ui-divider text-ui-50 text-left col-span-3">{{ schueler.nachname }}, {{ schueler.vorname }}</th>
@@ -35,7 +34,7 @@
 				</th>
 			</template>
 		</template>
-		<template #default="{ row: belegung }">
+		<template #default="{ row: belegung, index: rowIndex }">
 			<template v-if="belegung.abiturFach !== null">
 				<td>{{ belegung.abiturFach }}.</td>
 				<td :style="{ 'background-color': getFachfarbe(belegung) }">
@@ -55,28 +54,28 @@
 				<td class="ui-divider" :class="{ 'font-bold text-ui-danger': istAbweichungspruefung(belegung) }">
 					{{ formatNotenpunkteDurchschnitt(belegung.block1NotenpunkteDurchschnitt) }}
 				</td>
-				<td :ref="inputPruefungsnote(belegung)" class="ui-table-grid-input" :class="{
+				<td :ref="inputPruefungsnote(belegung, rowIndex)" class="ui-table-grid-input" :class="{
 					'font-bold text-ui-danger': istDefizit(belegung.block2NotenKuerzelPruefung)
 				}" />
 				<td class="ui-divider" :class="{ 'font-bold text-ui-danger': istWertungDefizit(belegung.block2PunkteZwischenstand) }">
 					{{ belegung.block2PunkteZwischenstand ?? '' }}
 				</td>
 				<template v-if="belegung.abiturFach < 4">
-					<td v-if="!istAbweichungspruefung(belegung)" :ref="inputPflichtPruefung(belegung)" class="ui-table-grid-button">
+					<td v-if="!istAbweichungspruefung(belegung)" :ref="inputPflichtPruefung(belegung, rowIndex)" class="ui-table-grid-button">
 						<span class="icon-sm align-middle" :class="{
 							'i-ri-checkbox-line': (belegung.block2MuendlichePruefungBestehen === true) || (belegung.block2MuendlichePruefungAbweichung === true),
 							'i-ri-checkbox-blank-line': !((belegung.block2MuendlichePruefungBestehen === true) || (belegung.block2MuendlichePruefungAbweichung === true))
 						}" />
 					</td>
 					<td v-else><span class="icon-sm align-middle i-ri-check-line" /></td>
-					<td :ref="inputFreiwilligePruefung(belegung)" class="ui-table-grid-button">
+					<td :ref="inputFreiwilligePruefung(belegung, rowIndex)" class="ui-table-grid-button">
 						<span class="icon-sm align-middle" :class="{
 							'i-ri-checkbox-line': belegung.block2MuendlichePruefungFreiwillig === true,
 							'i-ri-checkbox-blank-line': !(belegung.block2MuendlichePruefungFreiwillig === true)
 						}" />
 					</td>
-					<td :ref="inputPruefungsreihenfolge(belegung)" class="ui-table-grid-input" />
-					<td :ref="inputPruefungsnoteMdl(belegung)" class="ui-table-grid-input ui-divider" :class="{
+					<td :ref="inputPruefungsreihenfolge(belegung, rowIndex)" class="ui-table-grid-input" />
+					<td :ref="inputPruefungsnoteMdl(belegung, rowIndex)" class="ui-table-grid-input ui-divider" :class="{
 						'font-bold text-ui-danger': istDefizit(belegung.block2MuendlichePruefungNotenKuerzel)
 					}" />
 				</template>
@@ -105,7 +104,7 @@
 <script setup lang="ts">
 
 	import { computed, watchEffect, type ComponentPublicInstance } from "vue";
-	import type { AbiturFachbelegung, Comparator, Fachgruppe, JavaMap, NoteKatalogEintrag } from "@core";
+	import type { AbiturFachbelegung, Collection, Comparator, Fachgruppe, JavaMap, NoteKatalogEintrag } from "@core";
 	import { ArrayList, Fach, GostBesondereLernleistung, HashMap, Note, RGBFarbe } from "@core";
 	import { DeveloperNotificationException, GostHalbjahr } from "@core";
 	import { GridManager } from "@ui";
@@ -113,13 +112,6 @@
 	import type { SchuelerAbiturPruefungsuebersichtTabelleProps } from "./SchuelerAbiturPruefungsuebersichtTabelleProps";
 
 	const props = defineProps<SchuelerAbiturPruefungsuebersichtTabelleProps>();
-
-	const gridManager = new GridManager<string>();
-	const cellFormat = {
-		widths: ['4rem', '4rem','16rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem'],
-	};
-
-	const schuljahr = computed<number>(() => props.manager().getAbiturjahr() - 1);
 
 	const abiBelegungen = computed<JavaMap<number, AbiturFachbelegung>>(() => {
 		const tmp = new ArrayList<AbiturFachbelegung>();
@@ -139,6 +131,16 @@
 		}
 		return result;
 	});
+
+	const gridManager = new GridManager<string, AbiturFachbelegung, Collection<AbiturFachbelegung>>({
+		daten: computed<Collection<AbiturFachbelegung>>(() => abiBelegungen.value.values()),
+		getRowKey: row => `${props.manager().daten().schuelerID}_${row.abiturFach}`,
+	});
+	const cellFormat = {
+		widths: ['4rem', '4rem','16rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem'],
+	};
+
+	const schuljahr = computed<number>(() => props.manager().getAbiturjahr() - 1);
 
 	const hatBLL = computed<boolean>(() => GostBesondereLernleistung.fromKuerzel(props.manager().daten().besondereLernleistung) !== GostBesondereLernleistung.KEINE);
 	const hatAbiFach5 = computed<boolean>(() => abiBelegungen.value.containsKey(5) || hatBLL.value);
@@ -234,51 +236,51 @@
 		void props.updateAbiturpruefungsdaten(props.manager, { fachID: belegung.fachID, block2MuendlichePruefungNotenKuerzel: value }, false);
 	}
 
-	function inputPruefungsnote(belegung: AbiturFachbelegung) {
+	function inputPruefungsnote(belegung: AbiturFachbelegung, rowIndex: number) {
 		const key = 'PrüfungsnoteAbiFach' + belegung.abiturFach;
 		const setter = (value : string | null) => updateNotenpunkte(belegung, value);
 		return (element : Element | ComponentPublicInstance<unknown> | null) => {
-			const input = gridManager.applyInputAbiturNotenpunkte(key, 1, belegung.abiturFach!, element, setter, props.manager().daten().schuljahrAbitur);
+			const input = gridManager.applyInputAbiturNotenpunkte(key, 1, rowIndex, element, setter, props.manager().daten().schuljahrAbitur);
 			if (input !== null)
 				watchEffect(() => gridManager.update(key, belegung.block2NotenKuerzelPruefung));
 		};
 	}
 
-	function inputPflichtPruefung(belegung: AbiturFachbelegung) {
+	function inputPflichtPruefung(belegung: AbiturFachbelegung, rowIndex: number) {
 		const key = 'PflichtPrüfungAbiFach' + belegung.abiturFach;
 		const setter = (value : boolean) => updatePflichtPruefung(belegung, value);
 		return (element : Element | ComponentPublicInstance<unknown> | null) => {
-			const input = gridManager.applyInputToggle(key, 2, belegung.abiturFach!, element, setter);
+			const input = gridManager.applyInputToggle(key, 2, rowIndex, element, setter);
 			if (input !== null)
 				watchEffect(() => gridManager.update(key, (belegung.block2MuendlichePruefungBestehen === true) || (belegung.block2MuendlichePruefungAbweichung === true)));
 		};
 	}
 
-	function inputFreiwilligePruefung(belegung: AbiturFachbelegung) {
+	function inputFreiwilligePruefung(belegung: AbiturFachbelegung, rowIndex: number) {
 		const key = 'FreiwilligePrüfungAbiFach' + belegung.abiturFach;
 		const setter = (value : boolean) => updateFreiwilligePruefung(belegung, value);
 		return (element : Element | ComponentPublicInstance<unknown> | null) => {
-			const input = gridManager.applyInputToggle(key, 3, belegung.abiturFach!, element, setter);
+			const input = gridManager.applyInputToggle(key, 3, rowIndex, element, setter);
 			if (input !== null)
 				watchEffect(() => gridManager.update(key, belegung.block2MuendlichePruefungFreiwillig ?? false));
 		};
 	}
 
-	function inputPruefungsreihenfolge(belegung: AbiturFachbelegung) {
+	function inputPruefungsreihenfolge(belegung: AbiturFachbelegung, rowIndex: number) {
 		const key = 'PrüfungsreihenfolgeAbiFach' + belegung.abiturFach;
 		const setter = (value : number | null) => updatePruefungsreihenfolge(belegung, value);
 		return (element : Element | ComponentPublicInstance<unknown> | null) => {
-			const input = gridManager.applyInputAbiturPruefungsreihenfolge(key, 4, belegung.abiturFach!, element, setter);
+			const input = gridManager.applyInputAbiturPruefungsreihenfolge(key, 4, rowIndex, element, setter);
 			if (input !== null)
 				watchEffect(() => gridManager.update(key, belegung.block2MuendlichePruefungReihenfolge));
 		};
 	}
 
-	function inputPruefungsnoteMdl(belegung: AbiturFachbelegung) {
+	function inputPruefungsnoteMdl(belegung: AbiturFachbelegung, rowIndex: number) {
 		const key = 'PrüfungsnoteMdlAbiFach' + belegung.abiturFach;
 		const setter = (value : string | null) => updateNotenpunkteMdl(belegung, value);
 		return (element : Element | ComponentPublicInstance<unknown> | null) => {
-			const input = gridManager.applyInputAbiturNotenpunkte(key, 5, belegung.abiturFach!, element, setter, props.manager().daten().schuljahrAbitur);
+			const input = gridManager.applyInputAbiturNotenpunkte(key, 5, rowIndex, element, setter, props.manager().daten().schuljahrAbitur);
 			if (input !== null)
 				watchEffect(() => gridManager.update(key, belegung.block2MuendlichePruefungNotenKuerzel));
 		};

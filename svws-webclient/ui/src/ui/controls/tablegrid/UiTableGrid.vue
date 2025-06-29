@@ -8,8 +8,8 @@
 			</template>
 		</thead>
 		<tbody>
-			<template v-for="(row, index) in data" :key="getKey(row)">
-				<tr :class="{ 'bg-ui-selected': rowSelected === index }" @click="emit('rowClicked', row, index)">
+			<template v-for="(row, index) in manager().daten" :key="manager().getRowKey(row)">
+				<tr :class="{ 'bg-ui-selected': !hideSelection && (manager().focusRow === index) }" @click="rowClicked(row, index)">
 					<slot :row="row" :index="index" />
 				</tr>
 			</template>
@@ -24,33 +24,33 @@
 	</table>
 </template>
 
-<script setup lang="ts" generic="T">
+<script setup lang="ts" generic="T,U">
 
 	import { computed } from 'vue';
 	import type { Collection } from '../../../../../core/src/java/util/Collection';
 	import type { List } from '../../../../../core/src/java/util/List';
+	import type { GridManager } from './GridManager';
 
 	export interface CellFormat {
 		widths: string[];
 	}
 
-	const emit = defineEmits<{
-		(e: 'rowClicked', row: T, index: number): void,
-	}>()
+	function rowClicked(row: T, index: number) {
+		props.manager().doFocusRowIfNotFocussed(index);
+	}
 
 	const props = withDefaults(defineProps<{
-		data: Collection<T> | List<T>,
 		cellFormat: CellFormat,
-		rowSelected?: number | null,
 		headerCount?: number,
 		footerCount?: number,
 		name?: string | undefined,
-		getKey: (row: T) => string,
+		manager: () => GridManager<U, T, Collection<T> | List<T>>,
+		hideSelection?: boolean,
 	}>(), {
-		rowSelected: null,
 		headerCount: 1,
 		footerCount: 1,
 		name: undefined,
+		hideSelection: false,
 	});
 
 	const gridTemplateColumnsComputed = computed<string>(() => props.cellFormat.widths.join(" "));

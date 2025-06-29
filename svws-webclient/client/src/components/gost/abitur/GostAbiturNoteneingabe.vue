@@ -11,8 +11,7 @@
 				<ui-select label="Abiturfach" v-model="auswahlAbiturfach" :manager="abiturfachSelectManager" />
 			</div>
 		</div>
-		<ui-table-grid name="Übersicht über die Prüfungsergebnisse" :header-count="2" :footer-count="0" :data="auswahlBelegungen"
-			:cell-format="cellFormat" :get-key="(sb: SchuelerAbiturbelegung) => `${sb.schueler.id}_${sb.belegung.abiturFach}`">
+		<ui-table-grid name="Übersicht über die Prüfungsergebnisse" :header-count="2" :footer-count="0" :manager="() => gridManager" :cell-format="cellFormat">
 			<template #header="params">
 				<template v-if="params.i === 1">
 					<th class="ui-divider text-ui-50 text-left col-span-6" />
@@ -122,20 +121,6 @@
 
 	const props = defineProps<GostAbiturNoteneingabeProps>();
 
-	const gridManager = new GridManager<string>();
-	const cellFormat = {
-		widths: ['4rem', '4rem','16rem','16rem','6rem','6rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem', '1.25rem'],
-	};
-
-	interface SchuelerAbiturbelegung {
-		index: number,
-		manager: AbiturdatenManager,
-		abiturfach: number;
-		schueler: SchuelerListeEintrag;
-		belegung: AbiturFachbelegung;
-		hatAbiFach5: boolean;
-	};
-
 	const auswahlBelegungen = computed<List<SchuelerAbiturbelegung>>(() => {
 		const auswahl = new ArrayList<SchuelerAbiturbelegung>();
 		// Wenn ein Kurs-Filter gesetzt ist, dann filtere die Abiturfachbelegungen nach dem Kurs
@@ -164,6 +149,23 @@
 		auswahl.addAll(schuelerInPruefung.value);
 		return auswahl;
 	});
+
+	const gridManager = new GridManager<string, SchuelerAbiturbelegung, List<SchuelerAbiturbelegung>>({
+		daten: auswahlBelegungen,
+		getRowKey: row => `${row.schueler.id}_${row.belegung.abiturFach}`,
+	});
+	const cellFormat = {
+		widths: ['4rem', '4rem','16rem','16rem','6rem','6rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem', '1.25rem'],
+	};
+
+	interface SchuelerAbiturbelegung {
+		index: number,
+		manager: AbiturdatenManager,
+		abiturfach: number;
+		schueler: SchuelerListeEintrag;
+		belegung: AbiturFachbelegung;
+		hatAbiFach5: boolean;
+	};
 
 	const auswahlKurs = shallowRef<KursDaten | null>(null);
 	const kursSelectManager = computed<BaseSelectManager<KursDaten>>(() => new BaseSelectManager({ options: alleKurse.value.keySet(),
@@ -214,7 +216,7 @@
 
 	const schuelerInPruefung = computed<List<SchuelerAbiturbelegung>>(() => {
 		const result = new ArrayList<SchuelerAbiturbelegung>();
-		let counter = 1;
+		let counter = 0;
 		for (const schueler of props.schuelerListe) {
 			const manager = props.managerMap().get(schueler.id);
 			if ((manager !== null) && (manager.daten().block1Zulassung === true)) {

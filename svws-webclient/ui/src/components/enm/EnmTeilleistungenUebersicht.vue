@@ -1,7 +1,5 @@
 <template>
-	<ui-table-grid name="Leistungsdaten" :header-count="1" :footer-count="0" :data="daten"
-		:cell-format="cellFormat" :get-key="(row: PairNN<ENMLeistung, ENMSchueler>) => `${row.a.id}_${row.b.id}`"
-		:row-selected="gridManager.focusRow" @row-clicked="(_row: any, rowIndex: number) => gridManager.doFocusRowIfNotFocussed(rowIndex)">
+	<ui-table-grid name="Leistungsdaten" :header-count="1" :footer-count="0" :manager="() => gridManager" :cell-format="cellFormat">
 		<template #header>
 			<template v-for="col of cols" :key="col.name">
 				<th v-if="colsVisible.get(col.kuerzel) ?? true">
@@ -135,17 +133,6 @@
 		set: (value) => void props.setColumnsVisible(value),
 	});
 
-	const gridManager = new GridManager<string>();
-	const cellFormat = computed<CellFormat>(() => {
-		const result = <CellFormat>{ widths: [] };
-		for (const col of cols.value) {
-			const visible = props.columnsVisible().get(col.kuerzel) ?? true;
-			if (visible)
-				result.widths.push(col.width);
-		}
-		result.widths.push('3.5rem');
-		return result;
-	});
 
 	const daten = computed<List<PairNN<ENMLeistung, ENMSchueler>>>(() => {
 		const result = new ArrayList<PairNN<ENMLeistung, ENMSchueler>>();
@@ -155,6 +142,22 @@
 				continue;
 			result.addAll(leistungen);
 		}
+		return result;
+	});
+
+	const gridManager = new GridManager<string, PairNN<ENMLeistung, ENMSchueler>, List<PairNN<ENMLeistung, ENMSchueler>>>({
+		daten: daten,
+		getRowKey: row => `${row.a.id}_${row.b.id}`,
+	});
+
+	const cellFormat = computed<CellFormat>(() => {
+		const result = <CellFormat>{ widths: [] };
+		for (const col of cols.value) {
+			const visible = props.columnsVisible().get(col.kuerzel) ?? true;
+			if (visible)
+				result.widths.push(col.width);
+		}
+		result.widths.push('3.5rem');
 		return result;
 	});
 

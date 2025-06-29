@@ -3,6 +3,8 @@ import type { GridManager } from "./GridManager";
 import { GridInputInnerText } from "./GridInputInnerText";
 import type { NoteKatalogEintrag } from "../../../../../core/src/asd/data/NoteKatalogEintrag";
 import { Note } from "../../../../../core/src/asd/types/Note";
+import type { Collection } from "../../../../../core/src/java/util/Collection";
+import type { List } from "../../../../../core/src/java/util/List";
 
 /**
  * Ein Grid-Input für die Schnelleingabe der Notenpunkte im Abiturbereich.
@@ -30,7 +32,7 @@ export class GridInputAbiturNotenpunkte<KEY> extends GridInputInnerText<KEY, str
 	 * @param setter        der Setter zum Schreiben der Daten des Grid-Input
 	 * @param schuljahr     das Schuljahr, in dem das Abitur stattfindet
 	 */
-	constructor(gridManager: GridManager<KEY>, key: KEY, col: number, row: number, elem: HTMLElement,
+	constructor(gridManager: GridManager<KEY, any, Collection<any> | List<any>>, key: KEY, col: number, row: number, elem: HTMLElement,
 		setter: (value: string | null) => void, schuljahr: number) {
 		super(gridManager, key, col, row, elem);
 		this._setter = setter;

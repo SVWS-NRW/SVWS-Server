@@ -1,5 +1,5 @@
 <template>
-	<ui-table-grid name="Übersicht über die Prüfungsergebnisse" :footer-count="5" :data="faecherBelegtInQPhase" :cell-format="cellFormat" :get-key="getKey">
+	<ui-table-grid name="Übersicht über die Prüfungsergebnisse" :footer-count="5" :manager="() => gridManager" :cell-format="cellFormat" hide-selection>
 		<template #header>
 			<th>Kürzel</th>
 			<th class="text-left"> Fach </th>
@@ -116,22 +116,6 @@
 
 	const props = defineProps<SchuelerAbiturZulassungTabelleProps>();
 
-	const gridManager = new GridManager<string>();
-	const cellFormat = {
-		widths: ['4rem','16rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','1.25rem'],
-	};
-	function getKey(fach: GostFach): string {
-		let result = props.manager().daten().schuelerID + "_" + fach.id;
-		const fachbelegung = props.manager().getFachbelegungByID(fach.id);
-		if (fachbelegung === null)
-			return result;
-		for (const halbjahr of GostHalbjahr.getQualifikationsphase())
-			result += "_" + (fachbelegung.belegungen[halbjahr.id]?.block1gewertet ?? "");
-		return result;
-	}
-
-	const schuljahr = computed<number>(() => props.manager().getAbiturjahr() - 1);
-
 	const faecherBelegtInQPhase = computed<List<GostFach>>(() => {
 		const result = new ArrayList<GostFach>();
 		for (const fach of props.manager().faecher().faecher()) {
@@ -148,6 +132,26 @@
 		}
 		return result;
 	});
+
+	function getKey(fach: GostFach): string {
+		let result = props.manager().daten().schuelerID + "_" + fach.id;
+		const fachbelegung = props.manager().getFachbelegungByID(fach.id);
+		if (fachbelegung === null)
+			return result;
+		for (const halbjahr of GostHalbjahr.getQualifikationsphase())
+			result += "_" + (fachbelegung.belegungen[halbjahr.id]?.block1gewertet ?? "");
+		return result;
+	}
+
+	const gridManager = new GridManager<string, GostFach, List<GostFach>>({
+		daten: faecherBelegtInQPhase,
+		getRowKey: row => getKey(row),
+	});
+	const cellFormat = {
+		widths: ['4rem','16rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','1.25rem'],
+	};
+
+	const schuljahr = computed<number>(() => props.manager().getAbiturjahr() - 1);
 
 	const hatZulassung = computed<boolean>(() => props.manager().daten().block1Zulassung ?? false);
 

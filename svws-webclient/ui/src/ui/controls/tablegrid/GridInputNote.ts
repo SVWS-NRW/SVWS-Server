@@ -2,6 +2,8 @@ import { shallowRef } from "vue";
 import type { GridManager } from "./GridManager";
 import { GridInputInnerText } from "./GridInputInnerText";
 import { Note } from "../../../../../core/src/asd/types/Note";
+import type { List } from "../../../../../core/src/java/util/List";
+import type { Collection } from "../../../../../core/src/java/util/Collection";
 
 /**
  * Ein Grid-Input für die Schnelleingabe einer Note
@@ -35,7 +37,7 @@ export class GridInputNote<KEY> extends GridInputInnerText<KEY, string | null> {
 	 * @param setter        der Setter zum Schreiben der Daten des Grid-Input
 	 * @param schuljahr     das Schuljahr, in dem das Abitur stattfindet
 	 */
-	constructor(gridManager: GridManager<KEY>, key: KEY, col: number, row: number, elem: HTMLElement,
+	constructor(gridManager: GridManager<KEY, any, Collection<any> | List<any>>, key: KEY, col: number, row: number, elem: HTMLElement,
 		setter: (value: string | null) => void, schuljahr: number) {
 		super(gridManager, key, col, row, elem);
 		this._setter = setter;

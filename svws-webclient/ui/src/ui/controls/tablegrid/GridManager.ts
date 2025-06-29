@@ -1,3 +1,4 @@
+import type { Ref} from "vue";
 import { shallowRef, type ComponentPublicInstance } from "vue";
 import type { GridInput } from "./GridInput";
 import { GridInputAbiturNotenpunkte } from "./GridInputAbiturNotenpunkte";
@@ -6,8 +7,10 @@ import { GridInputToggle } from "./GridInputToggle";
 import { DeveloperNotificationException } from "../../../../../core/src/core/exceptions/DeveloperNotificationException";
 import { GridInputNote } from "./GridInputNote";
 import { GridInputIntegerDiv } from "./GridInputIntegerDiv";
+import type { Collection } from "../../../../../core/src/java/util/Collection";
+import type { List } from "../../../../../core/src/java/util/List";
 
-export class GridManager<KEY> {
+export class GridManager<KEY, DATA, LIST extends Collection<DATA> | List<DATA>> {
 
 	/** Gibt an, ob die Informationen zum State aktuell sind oder nicht. */
 	private _stateUpToDate: boolean = false;
@@ -32,8 +35,49 @@ export class GridManager<KEY> {
 	/** Der Spalte des zuletzt fokussierten Inputs im Grid. (berechnet und evtl. null, da das Input evtl. nicht mehr im Grid vorhanden ist) */
 	private _focusLastRow = shallowRef<number | null>(null);
 
+	/** Eine vue-Ref, welche verwendet wird, um auf die aktuellen Daten zuzugreifen. */
+	private _daten: Ref<LIST>;
+
+	/** Die Methode, zum Bestimmen des Schlüssels zu einer Datenzeile */
+	private _getRowKey: (row: DATA) => KEY;
+
 	/** Ein Handler, der jedes mal aufgerufen wird, wenn ein input ausgewählt wird */
 	private _onFocusInputHandler : ((input: GridInput<any, any> | null) => void) | null = null;
+
+
+	/**
+	 * Erstellt einen neuen Grid-Manager.
+	 *
+	 * @param getRowKey   der Handler, welcher zu einer Daten-Zeile den Schlüssel der Datenzeile liefert.
+	 */
+	constructor(config: { daten: Ref<LIST>, getRowKey: (row: DATA) => KEY }) {
+		this._daten = config.daten;
+		this._getRowKey = config.getRowKey;
+	}
+
+
+	/**
+	 * Gibt die Daten zurück, die von diesem Manager verwaltet werden.
+	 *
+	 * @returns die Daten
+	 */
+	public get daten() : LIST {
+		return this._daten.value;
+	}
+
+
+	/**
+	 * Gibt den eindeutigen Key für die Daten einer Zeile zurück. Dieser Key wird für
+	 * das v-for für die einzelnen Datenzeilen verwendet.
+	 *
+	 * @param row   die Datenzeile
+	 *
+	 * @returns der Key für die Datenzeile
+	 */
+	public getRowKey(row: DATA) : KEY {
+		return this._getRowKey(row);
+	}
+
 
 	/**
 	 * Gibt das Input für den übergebenen Key zurück.

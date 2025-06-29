@@ -1,6 +1,8 @@
 import { shallowRef } from "vue";
 import type { GridManager } from "./GridManager";
-import { DeveloperNotificationException } from "../../../../../core/src";
+import type { List } from "../../../../../core/src/java/util/List";
+import type { Collection } from "../../../../../core/src/java/util/Collection";
+import { DeveloperNotificationException } from "../../../../../core/src/core/exceptions/DeveloperNotificationException";
 
 /**
  * Diese Klasse ist eine abtrakte Basisklasse für Inputs, welche zur Verwaltung
@@ -13,7 +15,7 @@ import { DeveloperNotificationException } from "../../../../../core/src";
 export abstract class GridInput<KEY, DATA> {
 
 	// Der Grid-Manager, der dieses Grid-Input verwaltet
-	protected _gridManager: GridManager<KEY>;
+	protected _gridManager: GridManager<KEY, any, Collection<any> | List<any>>;
 
 	// Der Schlüsselwert zur eindeutigen Identifikation der Zelle, in welchem sich das Grid-input befindet
 	protected _key: KEY;
@@ -43,7 +45,7 @@ export abstract class GridInput<KEY, DATA> {
 	 * @param row           die Zeile, in welcher sich das Input befindet
 	 * @param elem          das HTML-Element, welches dem Grid-Input und damit der Zelle des Grid zugeordnet ist
 	 */
-	constructor(gridManager: GridManager<KEY>, key: KEY, col: number, row: number, elem : HTMLElement) {
+	constructor(gridManager: GridManager<KEY, any, Collection<any> | List<any>>, key: KEY, col: number, row: number, elem : HTMLElement) {
 		this._gridManager = gridManager;
 		this._key = key;
 		this._col = col;
@@ -61,7 +63,7 @@ export abstract class GridInput<KEY, DATA> {
 	/**
 	 * Gibt den Grid-Manager zurück, welcher dieses Grid-Input verwaltet
 	 */
-	public get gridManager() : GridManager<KEY> {
+	public get gridManager() : GridManager<KEY, any, Collection<any> | List<any>> {
 		return this._gridManager;
 	}
 

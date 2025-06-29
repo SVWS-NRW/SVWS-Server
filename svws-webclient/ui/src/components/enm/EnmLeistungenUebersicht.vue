@@ -1,7 +1,5 @@
 <template>
-	<ui-table-grid name="Leistungsdaten" :header-count="1" :footer-count="0" :data="daten"
-		:cell-format="cellFormat" :get-key="(row: PairNN<ENMLeistung, ENMSchueler>) => `${row.a.id}_${row.b.id}`"
-		:row-selected="gridManager.focusRow" @row-clicked="(_row: any, rowIndex: number) => gridManager.doFocusRowIfNotFocussed(rowIndex)">
+	<ui-table-grid name="Leistungsdaten" :header-count="1" :footer-count="0" :manager="() => gridManager" :cell-format="cellFormat">
 		<template #header>
 			<template v-for="col of cols" :key="col.name">
 				<th v-if="columnsVisible().get(col.kuerzel) ?? true">
@@ -147,9 +145,9 @@
 	import type { List } from '../../../../core/src/java/util/List';
 	import type { CellFormat } from '../../ui/controls/tablegrid/UiTableGrid.vue';
 	import { ArrayList } from '../../../../core/src/java/util/ArrayList';
-	import { GridManager } from '../../ui/controls/tablegrid/GridManager';
 	import type { GridInput } from '../../ui/controls/tablegrid/GridInput';
 	import type { GridInputIntegerDiv } from '../../ui/controls/tablegrid/GridInputIntegerDiv';
+	import { GridManager } from '../../ui/controls/tablegrid/GridManager';
 
 	const props = defineProps<EnmLeistungenUebersichtProps>();
 	defineExpose({ focusGrid });
@@ -171,13 +169,28 @@
 
 	const colsValidationTooltip = ["Quartal", "Note", "FS", "FSU"];
 
-	const gridManager = new GridManager<string>();
+	const daten = computed<List<PairNN<ENMLeistung, ENMSchueler>>>(() => {
+		const result = new ArrayList<PairNN<ENMLeistung, ENMSchueler>>();
+		for (const lerngruppenAuswahl of props.auswahl()) {
+			const leistungen = props.enmManager().mapLerngruppeLeistungen.get(lerngruppenAuswahl.id);
+			if ((leistungen === null))
+				continue;
+			result.addAll(leistungen);
+		}
+		return result;
+	});
+
+	const gridManager = new GridManager<string, PairNN<ENMLeistung, ENMSchueler>, List<PairNN<ENMLeistung, ENMSchueler>>>({
+		daten: daten,
+		getRowKey: row => `${row.a.id}_${row.b.id}`,
+	});
 	gridManager.onFocusInput = (input: GridInput<any, any> | null) => {
 		if ((input === null) || (input.row >= daten.value.size()))
 			return;
 		const pair = daten.value.get(input.row);
 		void props.focusFloskelEditor(pair.b, pair.a, false);
 	}
+
 	function focusGrid() {
 		gridManager.doFocus(true);
 	}
@@ -189,17 +202,6 @@
 				result.widths.push(col.width);
 		}
 		result.widths.push('3.5rem');
-		return result;
-	});
-
-	const daten = computed<List<PairNN<ENMLeistung, ENMSchueler>>>(() => {
-		const result = new ArrayList<PairNN<ENMLeistung, ENMSchueler>>();
-		for (const lerngruppenAuswahl of props.auswahl()) {
-			const leistungen = props.enmManager().mapLerngruppeLeistungen.get(lerngruppenAuswahl.id);
-			if ((leistungen === null))
-				continue;
-			result.addAll(leistungen);
-		}
 		return result;
 	});
 
