@@ -1,11 +1,13 @@
-import { computed, ref } from 'vue';
+import { computed, ref, type Ref } from 'vue';
 
 export interface PaneSplitterConfig {
 	defaultSplit?: number;
 	minSplit?: number;
 	maxSplit?: number;
+	snap?: number;
 	unit?: string;
 	mode?: 'vertical' | 'horizontal';
+	dragger?: Ref<HTMLElement | null>;
 }
 
 /**
@@ -13,27 +15,27 @@ export interface PaneSplitterConfig {
  * Dazu werden ein paar Config-Daten übergeben, z.B. die Ausgangsbreite des Panels, die Mindest- und Maximalgröße eines Panels.
  * Dazu, ob es ein horizontaler oder ein vertikaler Split sein soll. Unis werden aktuell nicht berücksichtigt.
  */
-export function usePaneSplitter({ defaultSplit= 80, minSplit= 20, maxSplit= 80, unit= '%', mode= 'vertical' }: PaneSplitterConfig = {}) {
+export function usePaneSplitter({ defaultSplit= 80, minSplit= 20, maxSplit= 80, snap= 100, unit= '%', mode= 'vertical', dragger= ref(null) }: PaneSplitterConfig= {}) {
 
 	const currentSplit = ref(defaultSplit);
 
 	const boundSplit = computed(() => {
 		if (currentSplit.value < minSplit)
-			return 20;
+			return minSplit;
 		else if (currentSplit.value > maxSplit)
-			return 80;
+			return maxSplit;
+		else if (currentSplit.value >= (maxSplit * (snap / 100)))
+			return maxSplit;
 		else
 			return currentSplit.value;
 	});
 
-	const thisStyle = computed(() => `${mode === 'vertical' ? 'width':'height'}: ${boundSplit.value}%`);
-	const thatStyle = computed(() => `${mode === 'vertical' ? 'width':'height'}: ${100 - boundSplit.value}%`);
+	const thisStyle = computed(() => `${mode === 'vertical' ? 'width':'height'}: ${boundSplit.value}%;`);
+	const thatStyle = computed(() => `${mode === 'vertical' ? 'width':'height'}: ${100 - boundSplit.value}%;`);
 
 	const dragging = ref(false)
 	let startPosition = 0;
 	let startSplit = 0;
-
-	const dragger = ref<HTMLElement|null>(null);
 
 	function dragStart(e: MouseEvent) {
 		dragging.value = true;

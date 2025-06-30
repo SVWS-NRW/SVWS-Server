@@ -45,15 +45,11 @@
 </template>
 
 <script setup lang="ts">
-	import { onUnmounted, reactive } from 'vue';
-	import type { PaneSplitterConfig } from './usePaneSplitter';
+	import { onUnmounted } from 'vue';
 	import { usePaneSplitter } from './usePaneSplitter';
 
-	const configV = reactive<PaneSplitterConfig>({minSplit: 20, maxSplit: 80, mode: 'vertical', defaultSplit: 50});
-	const configH = reactive<PaneSplitterConfig>({minSplit: 20, maxSplit: 80, mode: 'horizontal', defaultSplit: 50});
-
-	const { removeDragListeners, dragStart: dragStart1, thisStyle: leftStyle1, thatStyle: rightStyle1, dragger: dragger1 } = usePaneSplitter(configV);
-	const { dragStart: dragStart2, thisStyle: upperStyle1, thatStyle: lowerStyle1, dragger: dragger2 } = usePaneSplitter(configH);
+	const { removeDragListeners, dragStart: dragStart1, thisStyle: leftStyle1, thatStyle: rightStyle1, dragger: dragger1 } = usePaneSplitter();
+	const { dragStart: dragStart2, thisStyle: upperStyle1, thatStyle: lowerStyle1, dragger: dragger2 } = usePaneSplitter({ mode: 'horizontal' });
 
 	onUnmounted(removeDragListeners);
 

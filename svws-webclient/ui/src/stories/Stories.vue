@@ -4,15 +4,21 @@
 		<div class="relative top-0 left-0 z-20 border-r border-ui-25" style="width: 15%;">
 			<div class="flex flex-col h-full bg-ui-75">
 				<div class="px-4 h-16 flex items-center gap-2 flex-none">
-					<div class="py-3 sm:py-4 flex-1 h-full flex items-center pr-2"><img src="/src/assets/img/histoire-svws.svg" width="50%"></div>
+					<div class="py-3 sm:py-4 flex-1 h-full flex items-center pr-2 cursor-pointer" @click="router.push({path: '/'})"><img src="/src/assets/img/histoire-svws.svg" width="50%"></div>
 					<div class="ml-auto flex-none flex" />
 				</div>
 				<div class="overflow-y-auto flex-1 pl-2">
-					<svws-ui-table clickable v-model:clicked="clicked" :items="router.getRoutes()" scroll-into-view scroll :columns @update:clicked="routeTo">
-						<template #cell(path)="{ rowData }">
-							{{ rowData.path.split('/').join(' → ') }}
-						</template>
-					</svws-ui-table>
+					<ul>
+						<li v-for="[key, items] of groups" :key="key" class="">
+							<div class="text-2xl font-bold capitalize text-ui-100 pl-2 sticky top-0 bg-ui-50">{{ key }}</div>
+							<ul>
+								<li v-for="item of items.sort(cmp)" :key="item.path" class="text-xl pl-10 hover:bg-ui-brand-secondary cursor-pointer mr-2"
+									:class="{'bg-ui-selected': clicked.path === item.path}" @click="routeTo(item)">
+									{{ item.path.split('/').pop() }}
+								</li>
+							</ul>
+						</li>
+					</ul>
 				</div>
 			</div>
 		</div>
@@ -30,7 +36,7 @@
 						</div>
 					</div>
 					<div class="pr-8 size-full flex gap-4 relative overflow-hidden">
-						<template v-if="gridView === 'single' && storyManager.story !== undefined">
+						<template v-if="(gridView === 'single') && (storyManager.story !== undefined) && (storyManager.story.mapVariants.size > 1)">
 							<div class="relative top-0 left-0 h-full w-96 border-r border-ui-25 bg-ui-75 overflow-auto pt-4 pl-2 border-t">
 								<svws-ui-table clickable :clicked="storyManager.variant" :items="storyManager.story.mapVariants.values()" scroll-into-view scroll :columns="columnsVariant" @update:clicked="storyManager.setVariantById($event.id)" />
 							</div>
@@ -90,15 +96,38 @@
 	import type { ColorPreset } from './StoryManager';
 	import storyManager from './StoryManager';
 	import { BaseSelectManager } from '~/ui/controls/select/selectManager/BaseSelectManager';
-	import router from '../router';
+	import router from './router';
 	import type { PaneSplitterConfig} from './../ui/composables/usePaneSplitter';
 	import { usePaneSplitter } from './../ui/composables/usePaneSplitter';
 
+	const groups = new Map<string, RouteRecord[]>([['default', []]]);
+	for (const route of router.getRoutes()) {
+		const split = route.path.split('/');
+		split.shift();
+		const key = split.shift();
+		if (key === undefined)
+			continue;
+		if ((split.length === 0))
+			groups.get('default')?.push(route);
+		else
+			if (groups.has(key))
+				groups.get(key)?.push(route);
+			else
+				groups.set(key, [route]);
+	}
+
+	function cmp(a: RouteRecord, b: RouteRecord) {
+		if (a.path < b.path)
+			return -1;
+		else if (a.path > b.path)
+			return 1;
+		return 0;
+	}
 	const clicked = ref<RouteRecord>(router.getRoutes().find(r => r.path === router.currentRoute.value.path) || router.getRoutes()[0]);
-	const columns = [ {key: 'path', label: 'Komponente'} ];
 	const columnsVariant = [ {key: 'title', label: 'Variant'} ];
 
 	async function routeTo(option: RouteRecord) {
+		clicked.value = option;
 		await router.push({ path: option.path });
 	}
 
@@ -189,11 +218,10 @@
 
 	updateTheme(<'light'|'dark'|'auto'>localStorage.getItem('theme'));
 
-	const configV = reactive<PaneSplitterConfig>({minSplit: 20, maxSplit: 80, mode: 'vertical', defaultSplit: 50});
 	const configH = reactive<PaneSplitterConfig>({minSplit: 20, maxSplit: 80, mode: 'horizontal', defaultSplit: 50});
 
-	const { removeDragListeners, dragStart: dragStart1, thisStyle: leftStyle1, thatStyle: rightStyle1, dragger: dragger1 } = usePaneSplitter(configV);
-	const { dragStart: dragStart2, thisStyle: upperStyle1, thatStyle: lowerStyle1, dragger: dragger2 } = usePaneSplitter(configH);
+	const { removeDragListeners, dragStart: dragStart1, thisStyle: leftStyle1, thatStyle: rightStyle1, dragger: dragger1 } = usePaneSplitter();
+	const { dragStart: dragStart2, thisStyle: upperStyle1, thatStyle: lowerStyle1, dragger: dragger2 } = usePaneSplitter({ mode: 'horizontal' });
 
 	onUnmounted(removeDragListeners);
 

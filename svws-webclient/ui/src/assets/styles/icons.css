@@ -125,6 +125,13 @@
 	mask-position: center;
 }
 
+@utility i-ri-arrow-right-down-line {
+	mask-image: url(@icons/Arrows/arrow-right-down-line.svg);
+	-webkit-mask-image: url(@icons/Arrows/arrow-right-down-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
 @utility i-ri-arrow-down-line {
 	mask-image: url(@icons/Arrows/arrow-down-line.svg);
 	-webkit-mask-image: url(@icons/Arrows/arrow-down-line.svg);
