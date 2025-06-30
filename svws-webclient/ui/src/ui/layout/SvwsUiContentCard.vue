@@ -1,5 +1,5 @@
 <template>
-	<div :id class="content-card" :class="{'h-full': overflowScroll, 'svws-has-background': hasBackground}">
+	<div :id="idComponent" class="content-card" :class="{'h-full': overflowScroll, 'svws-has-background': hasBackground}">
 		<div v-if="title || $slots.actions || $slots.title" class="content-card--header" :class="{ 'content-card--header--has-actions': $slots.actions }">
 			<slot name="title">
 				<h3 v-if="title" class="content-card--headline" :class="{'content-card--headline--large': largeTitle}" :title>
@@ -33,6 +33,6 @@
 	});
 
 	defineSlots();
-	const id = useId();
+	const idComponent = useId();
 
 </script>
