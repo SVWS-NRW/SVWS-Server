@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.kurse.ZulaessigeKursartKatalogEintrag;
@@ -45,6 +46,7 @@ import de.svws_nrw.core.data.enm.ENMTeilleistung;
 import de.svws_nrw.core.data.enm.ENMTeilleistungsart;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
+import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.types.oauth2.OAuth2ServerTyp;
 import de.svws_nrw.core.utils.enm.ENMDatenManager;
 import de.svws_nrw.data.DataManager;
@@ -75,6 +77,7 @@ import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerAnkreuzko
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerTeilleistungen;
+import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.ext.jbcrypt.BCrypt;
 import jakarta.ws.rs.core.MediaType;
@@ -483,6 +486,98 @@ public final class DataENMDaten extends DataManager<Long> {
 	@Override
 	public Response patch(final Long id, final InputStream is) {
 		throw new UnsupportedOperationException();
+	}
+
+
+	/**
+	 * Prüft, ob ein Patchen der Leistungsdaten durch den aktuell angemeldeten Benutzer erlaubt ist
+	 * und passt die Leistungsdaten eines Schüler dann ggf. an.
+	 *
+	 * @param is   der {@link InputStream} mit dem JSON-Patch
+	 *
+	 * @return Die HTTP-Response der Patch-Operation
+	 *
+	 * @throws ApiOperationException im Fehlerfall
+	 */
+	public Response patchENMLeistung(final InputStream is) throws ApiOperationException {
+		final Map<String, Object> patch = JSONMapper.toMap(is);
+		if (patch.isEmpty())
+			throw new ApiOperationException(Status.BAD_REQUEST, "In dem Patch sind keine Daten enthalten.");
+
+		// Bestimme die Leistungsdaten anhand der ID des Patches
+		if (!patch.containsKey("id"))
+			throw new ApiOperationException(Status.BAD_REQUEST, "Der Patch muss eine ID enthalten.");
+		final Long id = JSONMapper.convertToLong(patch.get("id"), false, "id");
+		final DTOSchuelerLeistungsdaten leistung = conn.queryByKey(DTOSchuelerLeistungsdaten.class, id);
+		if (leistung == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Für die ID %d konnten keine Leistungsdaten gefunden werden.");
+		final DTOSchuelerLernabschnittsdaten lernabschnitt = conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, leistung.Abschnitt_ID);
+		if (lernabschnitt == null) // Sollte nicht vorkommen, da eine Foreign-Key-Constraint besteht
+			throw new ApiOperationException(Status.NOT_FOUND, "Es konnte kein zugehöriger Lernabschnitt gefunden werden.");
+
+		// Prüfe, ob der Lernabschnitt im aktuellen Schuljahresabschnitt der Schule liegt
+		if (conn.getUser().schuleGetSchuljahresabschnitt().id != lernabschnitt.Schuljahresabschnitts_ID)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die Leistungsdaten sind nicht dem aktuellen Schuljahresabschnitt der Schule zugeordnet.");
+
+		// Prüfe, ob der angemeldete Benutzer die nötige Berechtigung hat, um die Leistungsdaten anzupassen
+		final boolean zugriffAllgemein =
+				conn.getUser().istAdmin() || conn.getUser().hatVerwendeteKompetenz(BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_ALLGEMEIN);
+		boolean zugriffFunktionFachlehrer = false;
+		boolean zugriffFunktionAbteilungOderKlassenlehrer = false;
+		if (!zugriffAllgemein) {
+			final Long idLehrer = conn.getUser().getIdLehrer();
+			if (idLehrer == null)
+				throw new ApiOperationException(Status.FORBIDDEN, "Ein funktionsbezogener Zugriff ist nur für Lehrer-Benutzer möglich.");
+			// Wenn der angemeldete Lehrer kein Fachlehrer ist, dann muss noch geprüft werden, ob der Lehrer als Klassenlehrer
+			// oder Abteilungsleiter die nötigen Rechte besitzt.
+			zugriffFunktionFachlehrer = (leistung.Fachlehrer_ID != null) && (leistung.Fachlehrer_ID.longValue() == idLehrer.longValue());
+			if (!zugriffFunktionFachlehrer) {
+				if (!conn.getUser().getKlassenIDs().contains(lernabschnitt.Klassen_ID))
+					throw new ApiOperationException(Status.FORBIDDEN, "Der Lehrer hat keinen funktionsbezogenen Zugriff auf die ENM-Daten.");
+				zugriffFunktionAbteilungOderKlassenlehrer = true;
+			}
+		}
+
+		// TODO Prüfe, ob die aktuelle Notenmodul-Konfiguration die Änderung der Note zulässt
+		// Die Umsetzung der Notenmodul-Konfiguration ist noch nicht erfolgt.
+
+		// Durchführen des Patches
+		for (final Entry<String, Object> p : patch.entrySet()) {
+			switch (p.getKey()) {
+				case "id" -> { /* do nothing */ }
+				case "noteQuartal" -> {
+					final String kuerzel = JSONMapper.convertToString(p.getValue(), true, false, null, "noteQuartal");
+					if ((kuerzel != null) && (Note.fromKuerzel(kuerzel) == Note.KEINE))
+						throw new ApiOperationException(Status.BAD_REQUEST, "Die Zeichenkette '%s' ist keine gültige Note.".formatted(kuerzel));
+					leistung.NotenKrzQuartal = kuerzel;
+				}
+				case "note" -> {
+					final String kuerzel = JSONMapper.convertToString(p.getValue(), true, false, null, "note");
+					if ((kuerzel != null) && (Note.fromKuerzel(kuerzel) == Note.KEINE))
+						throw new ApiOperationException(Status.BAD_REQUEST, "Die Zeichenkette '%s' ist keine gültige Note.".formatted(kuerzel));
+					leistung.NotenKrz = kuerzel;
+				}
+				case "fehlstundenFach" ->
+					leistung.FehlStd = JSONMapper.convertToIntegerInRange(p.getValue(), true, 0, 1000, "fehlstundenFach");
+				case "fehlstundenUnentschuldigtFach" ->
+					leistung.uFehlStd = JSONMapper.convertToIntegerInRange(p.getValue(), true, 0, 1000, "fehlstundenUnentschuldigtFach");
+				case "fachbezogeneBemerkungen" ->
+					leistung.Lernentw = JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLeistungsdaten.col_Lernentw.datenlaenge(),
+							"fachbezogeneBemerkungen");
+				default ->
+					throw new ApiOperationException(Status.BAD_REQUEST, "Das Attribut %s darf nicht im Patch enthalten sein.".formatted(p.getKey()));
+			}
+		}
+		// Prüfen, ob die Werte für die Fehlstunden so zulässig sind.
+		final int fs = (leistung.FehlStd == null) ? 0 : leistung.FehlStd;
+		final int fsu = (leistung.uFehlStd == null) ? 0 : leistung.uFehlStd;
+		if (fsu > fs)
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					"Die nicht entschuldigten Fehlstunden (%d) dürfen nicht mehr sein, als die gesamte Anzahl der Fehlstunden (%d) in dem Fach"
+							.formatted(fsu, fs));
+		conn.transactionPersist(leistung);
+		conn.transactionFlush();
+		return Response.status(Status.NO_CONTENT).build();
 	}
 
 

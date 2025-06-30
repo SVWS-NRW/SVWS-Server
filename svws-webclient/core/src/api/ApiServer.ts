@@ -32,6 +32,7 @@ import { Einwilligungsart } from '../core/data/schule/Einwilligungsart';
 import { ENMConfigResponse } from '../core/data/enm/ENMConfigResponse';
 import { ENMDaten } from '../core/data/enm/ENMDaten';
 import { ENMLehrerInitialKennwort } from '../core/data/enm/ENMLehrerInitialKennwort';
+import { ENMLeistung } from '../core/data/enm/ENMLeistung';
 import { ENMServerConfigElement } from '../core/data/enm/ENMServerConfigElement';
 import { Erzieherart } from '../core/data/erzieher/Erzieherart';
 import { ErzieherListeEintrag } from '../core/data/erzieher/ErzieherListeEintrag';
@@ -2850,6 +2851,30 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return ENMDaten.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchENMLeistung für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/leistungen
+	 *
+	 * Passt die Leistungsdaten eines Schüler anhand der ENM-Daten an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung im Rahmen der Notemodul-Konfiguration besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die daten zu ändern.
+	 *   Code 404: Kein Eintrag mit der, im Patch angegebenen, ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<ENMLeistung>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 */
+	public async patchENMLeistung(data : Partial<ENMLeistung>, schema : string) : Promise<void> {
+		const path = "/db/{schema}/enm/leistungen"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = ENMLeistung.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
 	}
 
 

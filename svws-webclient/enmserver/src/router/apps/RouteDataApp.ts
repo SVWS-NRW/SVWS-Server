@@ -459,4 +459,3 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	}
 
 }
-

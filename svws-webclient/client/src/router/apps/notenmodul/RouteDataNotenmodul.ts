@@ -200,8 +200,11 @@ export class RouteDataNotenmodul extends RouteData<RouteStateNotenmodul> {
 	 *
 	 * @returns true im Erfolgsfall und ansonsten false
 	 */
-	patchLeistung = async (patch: Partial<ENMLeistung>): Promise<boolean> => {
-		return false;
+	public patchLeistung = async (data: ENMLeistung, patch: Partial<ENMLeistung>): Promise<void> => {
+		patch.id = data.id;
+		await api.server.patchENMLeistung(patch, api.schema);
+		Object.assign(data, patch);
+		this.commit();
 	}
 
 	/**
@@ -211,8 +214,11 @@ export class RouteDataNotenmodul extends RouteData<RouteStateNotenmodul> {
 	 *
 	 * @returns true im Erfolgsfall und ansonsten false
 	 */
-	patchTeilleistung = async (patch: Partial<ENMTeilleistung>) : Promise<boolean> => {
-		return false;
+	public patchTeilleistung = async (data: ENMTeilleistung, patch: Partial<ENMTeilleistung>): Promise<void> => {
+		patch.id = data.id;
+		// TODO await api.server.patchENMTeilleistung(patch, api.schema);
+		Object.assign(data, patch);
+		this.commit();
 	}
 
 	/**
@@ -222,8 +228,10 @@ export class RouteDataNotenmodul extends RouteData<RouteStateNotenmodul> {
 	 *
 	 * @returns true im Erfolgsfall und ansonsten false
 	 */
-	patchBemerkungen = async (id: number, patch: Partial<ENMLeistungBemerkungen>) : Promise<boolean> => {
-		return false;
+	public patchBemerkungen = async (id: number, data: ENMLeistungBemerkungen, patch: Partial<ENMLeistungBemerkungen>): Promise<void> => {
+		// TODO await api.server.patchENMSchuelerBemerkungen(id, patch, api.schema);
+		Object.assign(data, patch);
+		this.commit();
 	}
 
 	/**
@@ -233,8 +241,11 @@ export class RouteDataNotenmodul extends RouteData<RouteStateNotenmodul> {
 	 *
 	 * @returns true im Erfolgsfall und ansonsten false
 	 */
-	patchLernabschnitt = async (patch: Partial<ENMLernabschnitt>) : Promise<boolean> => {
-		return false;
+	public patchLernabschnitt = async (data: ENMLernabschnitt, patch: Partial<ENMLernabschnitt>): Promise<void> => {
+		patch.id = data.id;
+		// TODO await api.server.patchENMSchuelerLernabschnitt(patch, api.schema);
+		Object.assign(data, patch);
+		this.commit();
 	}
 
 }
