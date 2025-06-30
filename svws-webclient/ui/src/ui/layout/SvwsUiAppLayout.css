@@ -276,7 +276,7 @@ html {
 .secondary-menu--content .text-headline,
 .app--sidebar .svws-ui-table-filter,
 .app--second-sidebar .svws-ui-table-filter {
-	@apply px-7;
+	@apply px-2;
 }
 
 .app--content-container:not(.fullwidth-content) {
@@ -293,7 +293,7 @@ html {
 	.secondary-menu--content .text-headline,
 	.app--sidebar .svws-ui-table-filter,
 	.app--second-sidebar .svws-ui-table-filter {
-		@apply px-8;
+		@apply px-2;
 	}
 
 	.secondary-menu--content .secondary-menu--navigation {

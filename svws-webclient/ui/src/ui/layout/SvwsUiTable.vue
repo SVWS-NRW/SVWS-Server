@@ -1,7 +1,7 @@
 <template>
 	<p v-if="focusSwitchingEnabled && ($slots.search || $slots.filter || $slots.filterAdvanced || toggleColumns)" v-show="focusHelpVisible" class="region-enumeration">3</p>
 	<div v-if="$slots.search || $slots.filter || $slots.filterAdvanced || toggleColumns" class="svws-ui-table-filter focus-region" :class="{'svws-open': $slots.filter && isFilterOpen, 'highlighted': focusHelpVisible}">
-		<div class="flex gap-2 p-0.5 w-full overflow-hidden">
+		<div class="flex gap-2 w-full overflow-hidden">
 			<div class="grow" v-if="$slots.search">
 				<slot name="search" />
 			</div>

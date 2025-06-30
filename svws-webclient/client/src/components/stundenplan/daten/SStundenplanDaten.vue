@@ -3,7 +3,7 @@
 		<div class="h-full overflow-y-auto w-full xl:w-1/2 flex flex-col gap-8 pr-4">
 			<div class="content-card" v-if="manager().hasDaten()">
 				<div class="content-card--header content-card--headline">Allgemein</div>
-				<div class="content-card--content content-card--content--with-title input-wrapper grid-cols-2">
+				<div class="content-card--content input-wrapper grid-cols-2">
 					<div class="flex gap-1"><svws-ui-checkbox type="toggle" :disabled="(!manager().auswahl().aktiv && !manager().istKonfliktfreiZuAktivenStundenplaenen(gueltigData.gueltigAb, gueltigData.gueltigBis))" :model-value="manager().daten().isAktiv()" @update:model-value="handleChangeAktiv" />Stundenplan aktiv</div>
 					<svws-ui-text-input class="contentFocusField" :disabled="!hatUpdateKompetenz" placeholder="Bezeichnung" :model-value="manager().daten().getBezeichnungStundenplan()" :valid="StundenplanListeManager.validateBezeichnung" @change="bezeichnungStundenplan=> bezeichnungStundenplan && patch({ bezeichnungStundenplan })" />
 					<div v-if="hatUpdateKompetenz" :class="{'flex gap-2': showExtraWTM}">
