@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 
-	import { computed, ref, shallowRef, triggerRef } from 'vue';
+	import { computed, ref, shallowRef, triggerRef, useTemplateRef } from 'vue';
 	import type { EnmKlassenleitungProps } from './EnmKlassenleitungProps';
 	import type { ENMLeistungBemerkungen } from '../../../../core/src/core/data/enm/ENMLeistungBemerkungen';
 	import type { BemerkungenHauptgruppe } from './EnmManager';
@@ -36,9 +36,8 @@
 	const auswahlZelle = shallowRef<{ klasse: ENMKlasse | null, schueler: ENMSchueler | null, leistung: ENMLeistung | null }>({ klasse: null, schueler: null, leistung: null });
 	const erlaubteHauptgruppe = shallowRef<BemerkungenHauptgruppe>('ZB');
 
-	const gridRef = shallowRef(null);
-	// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-	const focusGrid = () => { if (gridRef.value !== null) (gridRef.value as { focusGrid: () => void }).focusGrid(); };
+	const gridRef = useTemplateRef('gridRef');
+	const focusGrid = () => { if (gridRef.value !== null) gridRef.value.gridManager.doFocus(true); };
 
 	async function focusFloskelEditor(hauptgruppe: BemerkungenHauptgruppe | null, schueler: ENMSchueler | null, klasse: ENMKlasse | null, doFocus: boolean) {
 		if (hauptgruppe !== null)

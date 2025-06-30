@@ -153,7 +153,6 @@
 	import { GridManager } from '../../ui/controls/tablegrid/GridManager';
 
 	const props = defineProps<EnmLeistungenUebersichtProps>();
-	defineExpose({ focusGrid });
 
 	const colsValidationTooltip = ["Quartal", "Note", "FS", "FSU"];
 
@@ -195,10 +194,7 @@
 		const pair = gridManager.daten.get(input.row);
 		void props.focusFloskelEditor(pair.b, pair.a, false);
 	}
-
-	function focusGrid() {
-		gridManager.doFocus(true);
-	}
+	defineExpose({ gridManager });
 
 	const notenKuerzel = computed(() => Note.values().map(e => e.daten(props.enmManager().schuljahr)?.kuerzel).filter(e => e !== ""));
 

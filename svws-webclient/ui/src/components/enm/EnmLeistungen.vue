@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 
-	import { ref, shallowRef, triggerRef } from 'vue';
+	import { ref, shallowRef, triggerRef, useTemplateRef } from 'vue';
 	import type { EnmLeistungenProps } from './EnmLeistungenProps';
 	import type { ENMSchueler } from '../../../../core/src/core/data/enm/ENMSchueler';
 	import type { ENMLeistung } from '../../../../core/src/core/data/enm/ENMLeistung';
@@ -33,9 +33,8 @@
 
 	const auswahlZelle = shallowRef<{ klasse: ENMKlasse | null, schueler: ENMSchueler | null, leistung: ENMLeistung | null }>({ klasse: null, schueler: null, leistung: null });
 
-	const gridRef = shallowRef(null);
-	// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-	const focusGrid = () => { if (gridRef.value !== null) (gridRef.value as { focusGrid: () => void }).focusGrid(); };
+	const gridRef = useTemplateRef('gridRef');
+	const focusGrid = () => { if (gridRef.value !== null) gridRef.value.gridManager.doFocus(true); };
 
 	async function focusFloskelEditor(schueler: ENMSchueler | null, leistung: ENMLeistung | null, doFocus: boolean) {
 		if (doFocus) {

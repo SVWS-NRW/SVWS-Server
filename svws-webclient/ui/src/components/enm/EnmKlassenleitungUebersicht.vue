@@ -95,7 +95,6 @@
 	import type { GridInputIntegerDiv } from '../../ui/controls/tablegrid/GridInputIntegerDiv';
 
 	const props = defineProps<EnmKlassenleitungUebersichtProps>();
-	defineExpose({ focusGrid });
 
 	const gridManager = new GridManager<string, PairNN<ENMKlasse, ENMSchueler>, List<PairNN<ENMKlasse, ENMSchueler>>>({
 		daten: computed<List<PairNN<ENMKlasse, ENMSchueler>>>(() => {
@@ -131,10 +130,7 @@
 		const pair = gridManager.daten.get(input.row);
 		void props.focusFloskelEditor(null, pair.b, pair.a, false);
 	}
-	function focusGrid() {
-		gridManager.doFocus(true);
-	}
-
+	defineExpose({ gridManager });
 
 	function inputFehlstunden(pair: PairNN<ENMKlasse, ENMSchueler>, col: number, index: number) {
 		const key = 'Fehlstunden_' + pair.a.id + "_" + pair.b.id;
