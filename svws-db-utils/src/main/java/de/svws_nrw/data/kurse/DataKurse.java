@@ -1,10 +1,12 @@
 package de.svws_nrw.data.kurse;
 
+import de.svws_nrw.db.dto.current.schild.katalog.DTOSchuleNRW;
 import de.svws_nrw.db.schema.Schema;
 import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.kurse.KursDaten;
@@ -61,8 +63,18 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 	}
 
 	@Override
-	protected long getLongId(final DTOKurs kurs) throws ApiOperationException {
+	protected long getLongId(final DTOKurs kurs) {
 		return kurs.ID;
+	}
+
+	@Override
+	protected void initDTO(final DTOKurs dto, final Long newId, final Map<String, Object> initAttributes) {
+		dto.ID = newId;
+		dto.Sichtbar = true;
+		dto.Sortierung = 32000;
+		dto.WochenStd = 3;
+		dto.Fortschreibungsart = KursFortschreibungsart.KEINE;
+		dto.EpochU = false;
 	}
 
 	@Override
@@ -90,13 +102,13 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 		daten.lehrer = dto.Lehrer_ID;
 		daten.kursartAllg = (dto.KursartAllg == null) ? "" : dto.KursartAllg;
 		daten.sortierung = (dto.Sortierung == null) ? 32000 : dto.Sortierung;
-		daten.istSichtbar = dto.Sichtbar;
+		daten.istSichtbar = (dto.Sichtbar == null) || dto.Sichtbar;
 		daten.schienen.addAll(convertSchienenStrToList(dto.Schienen));
 		daten.wochenstunden = (dto.WochenStd == null) ? 0 : dto.WochenStd;
 		daten.wochenstundenLehrer = (dto.WochenstdKL == null) ? daten.wochenstunden : dto.WochenstdKL;
-		daten.idKursFortschreibungsart = dto.Fortschreibungsart.id;
+		daten.idKursFortschreibungsart =  (dto.Fortschreibungsart == null) ? KursFortschreibungsart.KEINE.id : dto.Fortschreibungsart.id;
 		daten.schulnummer = dto.SchulNr;
-		daten.istEpochalunterricht = dto.EpochU;
+		daten.istEpochalunterricht = (dto.EpochU != null) && dto.EpochU;
 		daten.bezeichnungZeugnis = dto.ZeugnisBez;
 		if ((daten.bezeichnungZeugnis != null) && daten.bezeichnungZeugnis.isBlank())
 			daten.bezeichnungZeugnis = null;
@@ -106,106 +118,113 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 	@Override
 	protected void mapAttribute(final DTOKurs dto, final String name, final Object value, final Map<String, Object> map) throws ApiOperationException {
 		switch (name) {
-			case "idSchuljahresabschnitt" -> dto.Schuljahresabschnitts_ID = JSONMapper.convertToLong(value, false, "idSchuljahresabschnitt");
-			case "idFach" -> {
-				final Long idFach = JSONMapper.convertToLong(value, true, "idFach");
-				if (idFach == null)
-					throw new ApiOperationException(Status.BAD_REQUEST, "Die ID des Faches darf nicht null sein.");
-				final DTOFach fach = conn.queryByKey(DTOFach.class, idFach);
-				if (fach == null)
-					throw new ApiOperationException(Status.NOT_FOUND, "Es konnte kein Fach mit der angegebenen ID gefunden werden.");
-				dto.Fach_ID = idFach;
-			}
-			case "lehrer" -> {
-				dto.Lehrer_ID = JSONMapper.convertToLong(value, true, "lehrer");
-				if (dto.Lehrer_ID != null) {
-					final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, dto.Lehrer_ID);
-					if (lehrer == null)
-						throw new ApiOperationException(Status.NOT_FOUND, "Es konnte kein Lehrer mit der angegebenen ID gefunden werden.");
-				}
-			}
+			case "idSchuljahresabschnitt" -> dto.Schuljahresabschnitts_ID = JSONMapper.convertToLong(value, false, name);
+			case "idFach" -> mapIdFach(dto, name, value);
+			case "lehrer" -> mapLehrer(dto, name, value);
 			case "kuerzel" -> dto.KurzBez =
-					JSONMapper.convertToString(value, false, false, Schema.tab_Kurse.col_KurzBez.datenlaenge(), "kuerzel");
-			case "kursartAllg" -> {
-				dto.KursartAllg = JSONMapper.convertToString(value, false, true, Schema.tab_Kurse.col_KursartAllg.datenlaenge(), "kursartAllg");
-				// TODO Prüfe Kursart
-			}
-			case "sortierung" -> dto.Sortierung = JSONMapper.convertToIntegerInRange(value, false, 0, Integer.MAX_VALUE, "sortierung");
-			case "istSichtbar" -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false, "istSichtbar");
-			case "wochenstunden" -> dto.WochenStd = JSONMapper.convertToIntegerInRange(value, false, 0, 40, "wochenstunden");
-			case "wochenstundenLehrer" -> {
-				dto.WochenstdKL = JSONMapper.convertToDouble(value, true, "wochenstundenLehrer");
-				if (dto.WochenstdKL == null)
-					dto.WochenstdKL = 0.0;
-			}
+					JSONMapper.convertToString(value, false, false, Schema.tab_Kurse.col_KurzBez.datenlaenge(), name);
+			case "kursartAllg" -> // TODO Prüfe Kursart
+					dto.KursartAllg = JSONMapper.convertToString(value, false, true, Schema.tab_Kurse.col_KursartAllg.datenlaenge(), name);
+			case "sortierung" -> dto.Sortierung = JSONMapper.convertToIntegerInRange(value, false, 0, 32000, name);
+			case "istSichtbar" -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false, name);
+			case "wochenstunden" -> dto.WochenStd = JSONMapper.convertToIntegerInRange(value, false, 0, 40, name);
+			case "wochenstundenLehrer" -> dto.WochenstdKL = Optional.ofNullable(JSONMapper.convertToDouble(value, true, name)).orElse(0.0);
 			case "idKursFortschreibungsart" -> dto.Fortschreibungsart =
-					KursFortschreibungsart.fromID(JSONMapper.convertToIntegerInRange(value, false, 0, 4, "idKursFortschreibungsart"));
-			case "schulnummer" -> {
-				dto.SchulNr = JSONMapper.convertToIntegerInRange(value, true, 100000, 999999, "schulnummer");
-				// TODO Prüfe die Schulnummer anhand des Katalogs
-			}
-			case "istEpochalunterricht" -> dto.EpochU = JSONMapper.convertToBoolean(value, false, "istEpochalunterricht");
+					KursFortschreibungsart.fromID(JSONMapper.convertToIntegerInRange(value, false, 0, 4, name));
+			case "schulnummer" -> mapSchulnummer(dto, name, value);
+			case "istEpochalunterricht" -> dto.EpochU = JSONMapper.convertToBoolean(value, false, name);
 			case "bezeichnungZeugnis" -> dto.ZeugnisBez =
-					JSONMapper.convertToString(value, true, true, Schema.tab_Kurse.col_ZeugnisBez.datenlaenge(), "bezeichnungZeugnis");
-			case "schienen" -> {
-				final List<Integer> neu = JSONMapper.convertToListOfInteger(value, false);
-				final List<Integer> vorher = convertSchienenStrToList(dto.Schienen);
-				boolean changed = (neu.size() != vorher.size());
-				for (final int n : neu) {
-					if (n < 0)
-						throw new ApiOperationException(Status.BAD_REQUEST, "Eine Schienen-Nummer kleiner als 0 ist nicht zulässig.");
-					if (!vorher.contains(n))
-						changed = true;
-				}
-				if (changed) {
-					dto.Schienen = neu.stream().map(Object::toString).collect(Collectors.joining(","));
-				}
-			}
-			case "idJahrgaenge" -> {
-				final List<Long> neu = JSONMapper.convertToListOfLong(value, false);
-				final List<Long> vorher = convertJahrgaenge(dto);
-				boolean changed = (neu.size() != vorher.size());
-				for (final long n : neu) {
-					if (!vorher.contains(n)) {
-						changed = true;
-						break;
-					}
-				}
-				if (!changed)
-					return;
-				if (neu.isEmpty()) {
-					dto.ASDJahrgang = null;
-					dto.Jahrgang_ID = null;
-					dto.Jahrgaenge = null;
-				} else {
-					final List<DTOJahrgang> dtoJahrgaenge = conn.queryByKeyList(DTOJahrgang.class, neu);
-					if (dtoJahrgaenge.size() != neu.size())
-						throw new ApiOperationException(Status.BAD_REQUEST,
-								"Mindestens einer der angegebenen Jahrgang-IDs existiert nicht in der SVWS-Datenbank");
-					if (neu.size() > 1) {
-						dto.ASDJahrgang = null;
-						dto.Jahrgang_ID = null;
-						dto.Jahrgaenge = neu.stream().map(Object::toString).collect(Collectors.joining(","));
-					} else {
-						dto.Jahrgang_ID = neu.get(0);
-						dto.ASDJahrgang = dtoJahrgaenge.get(0).ASDJahrgang;
-						dto.Jahrgaenge = null;
-					}
-				}
-			}
+					JSONMapper.convertToString(value, true, true, Schema.tab_Kurse.col_ZeugnisBez.datenlaenge(), name);
+			case "schienen" -> mapSchienen(dto, name, value);
+			case "idJahrgaenge" -> mapIdJahrgaenge(dto, name, value);
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Das Patchen des Attributes %s wird nicht unterstützt.".formatted(name));
 		}
 	}
 
+	private void mapIdJahrgaenge(final DTOKurs dto, final String name, final Object value) throws ApiOperationException {
+		final List<Long> neu = JSONMapper.convertToListOfLong(value, false, name);
+		final List<Long> vorher = convertJahrgaenge(dto);
+		boolean changed = (neu.size() != vorher.size());
+		for (final long n : neu) {
+			if (!vorher.contains(n)) {
+				changed = true;
+				break;
+			}
+		}
+		if (!changed)
+			return;
+		if (neu.isEmpty()) {
+			dto.ASDJahrgang = null;
+			dto.Jahrgang_ID = null;
+			dto.Jahrgaenge = null;
+		} else {
+			final List<DTOJahrgang> dtoJahrgaenge = conn.queryByKeyList(DTOJahrgang.class, neu);
+			if (dtoJahrgaenge.size() != neu.size())
+				throw new ApiOperationException(Status.BAD_REQUEST,
+						"Mindestens einer der angegebenen Jahrgang-IDs existiert nicht in der SVWS-Datenbank");
+			if (neu.size() > 1) {
+				dto.ASDJahrgang = null;
+				dto.Jahrgang_ID = null;
+				dto.Jahrgaenge = neu.stream().map(Object::toString).collect(Collectors.joining(","));
+			} else {
+				dto.Jahrgang_ID = neu.getFirst();
+				dto.ASDJahrgang = dtoJahrgaenge.getFirst().ASDJahrgang;
+				dto.Jahrgaenge = null;
+			}
+		}
+	}
 
-	@Override
-	protected void initDTO(final DTOKurs dto, final Long newId, final Map<String, Object> initAttributes) throws ApiOperationException {
-		dto.ID = newId;
-		dto.Sichtbar = true;
-		dto.Sortierung = 32000;
-		dto.WochenStd = 3;
-		dto.Fortschreibungsart = KursFortschreibungsart.KEINE;
-		dto.EpochU = false;
+	private void mapSchienen(final DTOKurs dto, final String name, final Object value) throws ApiOperationException {
+		final List<Integer> neu = JSONMapper.convertToListOfInteger(value, false, name);
+		final List<Integer> vorher = convertSchienenStrToList(dto.Schienen);
+		boolean changed = (neu.size() != vorher.size());
+		for (final int n : neu) {
+			if (n < 0)
+				throw new ApiOperationException(Status.BAD_REQUEST, "Eine Schienen-Nummer kleiner als 0 ist nicht zulässig.");
+			if (!vorher.contains(n))
+				changed = true;
+		}
+		if (changed) {
+			dto.Schienen = neu.stream().map(Object::toString).collect(Collectors.joining(","));
+		}
+	}
+
+	private void mapSchulnummer(final DTOKurs dto, final String name, final Object value) throws ApiOperationException {
+		final Integer schulnummer = JSONMapper.convertToIntegerInRange(value, true, 100000, 999999, name);
+		if (schulnummer == null) {
+			dto.SchulNr = null;
+			return;
+		}
+		final List<DTOSchuleNRW> schulen = this.conn.queryList(DTOSchuleNRW.QUERY_BY_SCHULNR, DTOSchuleNRW.class, schulnummer);
+		if (schulen.isEmpty())
+			throw new ApiOperationException(Status.NOT_FOUND, "Für die Schulnummer %d konnte keine passende Schule gefunden werden.".formatted(schulnummer));
+
+		dto.SchulNr = schulnummer;
+	}
+
+	private void mapLehrer(final DTOKurs dto, final String name, final Object value) throws ApiOperationException {
+		final Long id = JSONMapper.convertToLong(value, true, name);
+		if (id == null) {
+			dto.Lehrer_ID = null;
+			return;
+		}
+		final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, id);
+		if (lehrer == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Es konnte kein Lehrer mit der angegebenen ID %d gefunden werden.".formatted(id));
+
+		dto.Lehrer_ID = id;
+	}
+
+	private void mapIdFach(final DTOKurs dto, final String name, final Object value) throws ApiOperationException {
+		final Long idFach = JSONMapper.convertToLong(value, true, name);
+		if (idFach == null)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID des Faches darf nicht null sein.");
+
+		final DTOFach fach = conn.queryByKey(DTOFach.class, idFach);
+		if (fach == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Es konnte kein Fach mit der angegebenen ID gefunden werden.");
+
+		dto.Fach_ID = idFach;
 	}
 
 
@@ -275,7 +294,7 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 	 */
 	public static KursDaten getKursdaten(final DBEntityManager conn, final Long id) throws ApiOperationException {
 		if (id == null)
-			throw new ApiOperationException(Status.NOT_FOUND);
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID des Kurses darf nicht null sein.");
 		final DTOKurs kurs = conn.queryByKey(DTOKurs.class, id);
 		if (kurs == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
@@ -300,12 +319,11 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 		final List<Integer> result = new ArrayList<>();
 		if ((strSchienen != null) && (!strSchienen.isBlank())) {
 			for (final String strSchiene : strSchienen.split(",")) {
-				if ("".equals(strSchiene.trim()))
+				if (strSchiene.trim().isEmpty())
 					continue;
 				try {
 					result.add(Integer.parseInt(strSchiene.trim()));
-				} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
-					// ignore exception
+				} catch (final NumberFormatException ignored) {
 				}
 			}
 		}
@@ -402,8 +420,7 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 	 *
 	 * @return die Liste der Kurse
 	 */
-	public static @NotNull List<KursDaten> getKursListenFuerAbschnitt(final DBEntityManager conn,
-			final Long idSchuljahresabschnitt, final boolean mitSchuelerListe) {
+	public static @NotNull List<KursDaten> getKursListenFuerAbschnitt(final DBEntityManager conn, final Long idSchuljahresabschnitt, final boolean mitSchuelerListe) {
 		final @NotNull List<DTOKurs> kurse = (idSchuljahresabschnitt == null)
 				? conn.queryAll(DTOKurs.class)
 				: conn.queryList(DTOKurs.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKurs.class, idSchuljahresabschnitt);

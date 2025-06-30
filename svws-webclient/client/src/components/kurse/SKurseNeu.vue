@@ -15,7 +15,7 @@
 					:item-text="k => k + ' (' + (kursarten.get(k) ?? '???') + ')'" />
 				<svws-ui-input-number placeholder="Wochenstunden" :disabled statistics v-model="data.wochenstunden" />
 				<svws-ui-multi-select title="Jahrgänge" :disabled statistics :item-text="jg => jg?.kuerzel ?? ''" v-model="auswahlJahrgaenge" :items="jahrgaenge" />
-				<svws-ui-input-number placeholder="Sortierung" v-model="data.sortierung" :disabled />
+				<svws-ui-input-number placeholder="Sortierung" v-model="data.sortierung" :disabled :min="0" :max="32000" />
 				<svws-ui-text-input placeholder="Zeugnisbezeichnung" :disabled v-model="data.bezeichnungZeugnis" :max-len="130"
 					:valid="fieldIsValid('bezeichnungZeugnis')" />
 				<svws-ui-select title="Fortschreibungsart" :disabled :items="KursFortschreibungsart.values()" v-model="idKursFortschreibungsart" removable

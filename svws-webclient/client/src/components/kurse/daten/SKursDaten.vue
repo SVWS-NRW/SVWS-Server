@@ -17,7 +17,8 @@
 						@change="wstd => patch({ wochenstunden: wstd ?? 0 })" />
 					<svws-ui-multi-select title="Jahrgänge" :disabled="!hatKompetenzUpdate" v-model="jahrgaenge" :items="jahrgangsListe"
 						:item-text="jg => jg?.kuerzel ?? ''" statistics />
-					<svws-ui-input-number placeholder="Sortierung" :disabled="!hatKompetenzUpdate" :model-value="data().sortierung" @change="sortierung=> sortierung && patch({ sortierung })" />
+					<svws-ui-input-number placeholder="Sortierung" :disabled="!hatKompetenzUpdate" :model-value="data().sortierung" :min="0" :max="32000"
+						@change="sortierung=> sortierung && patch({ sortierung })" />
 					<svws-ui-text-input placeholder="Zeugnisbezeichnung" :disabled="!hatKompetenzUpdate" :model-value="data().bezeichnungZeugnis" @change="b => patch({ bezeichnungZeugnis : b })" type="text" />
 					<svws-ui-select title="Fortschreibungsart" :disabled="!hatKompetenzUpdate" :model-value="KursFortschreibungsart.fromID(data().idKursFortschreibungsart)"
 						@update:model-value="value => patch({ idKursFortschreibungsart: value?.id ?? 0 })"

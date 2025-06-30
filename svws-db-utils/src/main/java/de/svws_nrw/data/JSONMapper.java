@@ -741,26 +741,42 @@ public final class JSONMapper {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static List<Long> convertToListOfLong(final Object listObj, final boolean nullable) throws ApiOperationException {
+		return convertToListOfLong(listObj, nullable, null);
+	}
+
+	/**
+	 * Konvertiert das übergebene Objekt in eine Liste von Long-Werten, sofern es sich beim Inhalt um ein
+	 * Number-Objekt handelt, welches keinen float oder double-Wert repräsentiert.
+	 *
+	 * @param listObj    das zu konvertierende ListenObjekt
+	 * @param nullable   falls null für das Listen-Objekt gültig ist
+	 * @param attrName   der Name des Attributes oder null
+	 *
+	 * @return das konvertierte Listen-Objekt
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public static List<Long> convertToListOfLong(final Object listObj, final boolean nullable, final String attrName) throws ApiOperationException {
 		if (listObj == null) {
 			if (nullable)
 				return null;
-			throw new ApiOperationException(Status.BAD_REQUEST, "Der Wert null ist nicht erlaubt.");
+			throw new ApiOperationException(Status.BAD_REQUEST, formatMessage("Der Wert null ist nicht erlaubt.", attrName));
 		}
 		final List<Long> result = new ArrayList<>();
 		if (listObj instanceof final List<?> liste) {
 			for (final Object obj : liste) {
 				if (obj == null)
-					throw new ApiOperationException(Status.BAD_REQUEST, "Der Wert null ist innerhalb der Liste nicht erlaubt.");
+					throw new ApiOperationException(Status.BAD_REQUEST, formatMessage("Der Wert null ist innerhalb der Liste nicht erlaubt.", attrName));
 				switch (obj) {
 					case final Byte b -> result.add(b.longValue());
 					case final Short s -> result.add(s.longValue());
 					case final Integer i -> result.add(i.longValue());
 					case final Long l -> result.add(l);
-					default -> throw new ApiOperationException(Status.BAD_REQUEST, "Fehler beim Konvertieren zu Long");
+					default -> throw new ApiOperationException(Status.BAD_REQUEST, formatMessage("Fehler beim Konvertieren zu Long", attrName));
 				}
 			}
 		} else
-			throw new ApiOperationException(Status.BAD_REQUEST, "Es wird eine Array von Long-Werten erwartet.");
+			throw new ApiOperationException(Status.BAD_REQUEST, formatMessage("Es wird eine Array von Long-Werten erwartet.", attrName));
 		return result;
 	}
 
@@ -777,25 +793,42 @@ public final class JSONMapper {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static List<Integer> convertToListOfInteger(final Object listObj, final boolean nullable) throws ApiOperationException {
+		return convertToListOfInteger(listObj, nullable, null);
+	}
+
+	/**
+	 * Konvertiert das übergebene Objekt in eine Liste von Integer-Werten, sofern es sich beim Inhalt um ein
+	 * Number-Objekt handelt, welches keinen long, float oder double-Wert repräsentiert.
+	 *
+	 * @param listObj    das zu konvertierende ListenObjekt
+	 * @param nullable   falls null für das Listen-Objekt gültig ist
+	 * @param attrName   der Name des Attributes oder null
+	 *
+	 * @return das konvertierte Listen-Objekt
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+
+	public static List<Integer> convertToListOfInteger(final Object listObj, final boolean nullable, final String attrName) throws ApiOperationException {
 		if (listObj == null) {
 			if (nullable)
 				return null;
-			throw new ApiOperationException(Status.BAD_REQUEST, "Der Wert null ist nicht erlaubt.");
+			throw new ApiOperationException(Status.BAD_REQUEST, formatMessage("Der Wert null ist nicht erlaubt.", attrName));
 		}
 		final List<Integer> result = new ArrayList<>();
 		if (listObj instanceof final List<?> liste) {
 			for (final Object obj : liste) {
 				if (obj == null)
-					throw new ApiOperationException(Status.BAD_REQUEST, "Der Wert null ist innerhalb der Liste nicht erlaubt.");
+					throw new ApiOperationException(Status.BAD_REQUEST, formatMessage("Der Wert null ist innerhalb der Liste nicht erlaubt.", attrName));
 				switch (obj) {
 					case final Byte b -> result.add(b.intValue());
 					case final Short s -> result.add(s.intValue());
 					case final Integer i -> result.add(i);
-					default -> throw new ApiOperationException(Status.BAD_REQUEST, "Fehler beim Konvertieren zu Integer");
+					default -> throw new ApiOperationException(Status.BAD_REQUEST, formatMessage("Fehler beim Konvertieren zu Integer", attrName));
 				}
 			}
 		} else
-			throw new ApiOperationException(Status.BAD_REQUEST, "Es wird eine Array von Integer-Werten erwartet.");
+			throw new ApiOperationException(Status.BAD_REQUEST, formatMessage("Es wird eine Array von Integer-Werten erwartet.", attrName));
 		return result;
 	}
 
