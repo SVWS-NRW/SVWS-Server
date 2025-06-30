@@ -1,5 +1,5 @@
 <template>
-	<ui-table-grid name="Übersicht über die Prüfungsergebnisse" :header-count="2" :manager="() => gridManager" :cell-format="cellFormat">
+	<ui-table-grid name="Übersicht über die Prüfungsergebnisse" :header-count="2" :manager="() => gridManager">
 		<template #header="params">
 			<template v-if="params.i === 1">
 				<th class="ui-divider text-ui-50 text-left col-span-3">{{ schueler.nachname }}, {{ schueler.vorname }}</th>
@@ -135,10 +135,28 @@
 	const gridManager = new GridManager<string, AbiturFachbelegung, Collection<AbiturFachbelegung>>({
 		daten: computed<Collection<AbiturFachbelegung>>(() => abiBelegungen.value.values()),
 		getRowKey: row => `${props.manager().daten().schuelerID}_${row.abiturFach}`,
+		columns: [
+			{ kuerzel: "Abi", name: "Abiturfach", width: "4rem", hideable: false },
+			{ kuerzel: "Kürzel", name: "Fachkürzel", width: "4rem", hideable: false },
+			{ kuerzel: "Fach", name: "Fach", width: "16rem", hideable: false },
+			{ kuerzel: "Q1.1", name: "Notenpunkte in der Q1.1", width: "4rem", hideable: false },
+			{ kuerzel: "Q1.2", name: "Notenpunkte in der Q1.2", width: "4rem", hideable: false },
+			{ kuerzel: "Q2.1", name: "Notenpunkte in der Q2.1", width: "4rem", hideable: false },
+			{ kuerzel: "Q2.2", name: "Notenpunkte in der Q2.2", width: "4rem", hideable: false },
+			{ kuerzel: "QSumme", name: "Summe aus der Qualifikationsphase", width: "4rem", hideable: false },
+			{ kuerzel: "⌀", name: "Vornote (Notendurchschnitt)", width: "4rem", hideable: false },
+			{ kuerzel: "Punkte", name: "Notenpunkte", width: "4rem", hideable: false },
+			{ kuerzel: "Wert", name: "Wertung (5-Fach bei vier Abiturfächern und 4-Fach, wenn BLL als 5. Fach vorhanden ist)", width: "4rem", hideable: false },
+			{ kuerzel: "Pflicht", name: "mündliche Pflichtprüfung im 1.-3. Abiturfach", width: "4rem", hideable: false },
+			{ kuerzel: "Freiw.", name: "mündliche freiwillige Prüfung im 1.-3. Abiturfach", width: "4rem", hideable: false },
+			{ kuerzel: "RF", name: "Reihenfolge bei den mündlichen Prüfungen im 1.-3. Abiturfach", width: "4rem", hideable: false },
+			{ kuerzel: "Punkte (mdl.)", name: "Notenpunkte der mündlichen Prüfung im 1.-3. Abiturfach", width: "4rem", hideable: false },
+			{ kuerzel: "Summe", name: "Summe aus der Abiturprüfung und der mündlichen Prüfung im 1.-3. Abiturfach", width: "4rem", hideable: false },
+			{ kuerzel: "Gesamt", name: "die erreichte Gesamtpunktzahl in der Abiturprüfung", width: "4rem", hideable: false },
+			{ kuerzel: "Note", name: "Die Abiturnote, welche sich aus der Gesamtpunktzahl ergibt.", width: "4rem", hideable: false },
+			{ kuerzel: "", name: "", width: "1.25rem", hideable: false },
+		],
 	});
-	const cellFormat = {
-		widths: ['4rem', '4rem','16rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem'],
-	};
 
 	const schuljahr = computed<number>(() => props.manager().getAbiturjahr() - 1);
 

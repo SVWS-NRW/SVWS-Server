@@ -1,80 +1,84 @@
 <template>
-	<ui-table-grid name="Leistungsdaten" :header-count="1" :footer-count="0" :manager="() => gridManager" :cell-format="cellFormat">
+	<ui-table-grid name="Leistungsdaten" :header-count="1" :footer-count="0" :manager="() => gridManager">
 		<template #header>
-			<template v-for="col of cols" :key="col.name">
-				<th v-if="columnsVisible().get(col.kuerzel) ?? true">
-					<svws-ui-tooltip v-if="col.kuerzel !== col.name">
-						{{ col.kuerzel }}
-						<template #content>{{ col.name }}</template>
-					</svws-ui-tooltip>
-					<span v-else>{{ col.kuerzel }}</span>
-					<span v-if="colsValidationTooltip.includes(col.kuerzel)">
-						<svws-ui-tooltip>
-							<span class="icon i-ri-question-line" />
+			<template v-for="col of gridManager.cols.values()" :key="col.name">
+				<template v-if="col.kuerzel !== ''">
+					<th v-if="gridManager.isColVisible(col.kuerzel) ?? true">
+						<svws-ui-tooltip v-if="col.kuerzel !== col.name">
+							{{ col.kuerzel }}
+							<template #content>{{ col.name }}</template>
+						</svws-ui-tooltip>
+						<span v-else>{{ col.kuerzel }}</span>
+						<span v-if="colsValidationTooltip.includes(col.kuerzel)">
+							<svws-ui-tooltip>
+								<span class="icon i-ri-question-line" />
+								<template #content>
+									<div class="font-bold">{{ col.name }}</div>
+									<template v-if="(col.kuerzel === 'Quartal') || (col.kuerzel === 'Note')">
+										<ul>
+											<li v-for="n in notenKuerzel" :key="n"> {{ n }} </li>
+										</ul>
+									</template>
+									<template v-else-if="col.kuerzel === 'FS'">
+										<ul>
+											<li>Keine negativen Werte</li>
+											<li>Maximal 999</li>
+											<li>Größer/gleich FSU</li>
+										</ul>
+									</template>
+									<template v-else-if="col.kuerzel === 'FSU'">
+										<ul>
+											<li>Keine negativen Werte</li>
+											<li>Maximal 999</li>
+											<li>Kleiner/gleich FS</li>
+										</ul>
+									</template>
+								</template>
+							</svws-ui-tooltip>
+						</span>
+					</th>
+				</template>
+				<template v-else>
+					<th>
+						<svws-ui-tooltip :hover="false" :show-arrow="false" position="top" class="h-full w-full">
+							<span class="icon" :class="gridManager.hasHiddenColumn ? 'i-ri-layout-column-fill' : 'i-ri-layout-column-line'" />
+							<span class="icon i-ri-arrow-down-s-line" />
 							<template #content>
-								<div class="font-bold">{{ col.name }}</div>
-								<template v-if="(col.kuerzel === 'Quartal') || (col.kuerzel === 'Note')">
-									<ul>
-										<li v-for="n in notenKuerzel" :key="n"> {{ n }} </li>
-									</ul>
-								</template>
-								<template v-else-if="col.kuerzel === 'FS'">
-									<ul>
-										<li>Keine negativen Werte</li>
-										<li>Maximal 999</li>
-										<li>Größer/gleich FSU</li>
-									</ul>
-								</template>
-								<template v-else-if="col.kuerzel === 'FSU'">
-									<ul>
-										<li>Keine negativen Werte</li>
-										<li>Maximal 999</li>
-										<li>Kleiner/gleich FS</li>
-									</ul>
-								</template>
+								<ul class="min-w-[10rem] flex flex-col gap-0.5 pt-1">
+									<template v-for="hideable of gridManager.hideableColumns" :key="hideable.name">
+										<li>
+											<svws-ui-checkbox :model-value="gridManager.isColVisible(hideable.kuerzel)" @update:model-value="value => gridManager.setColVisibility(hideable.kuerzel, value)">
+												{{ hideable.kuerzel }}
+											</svws-ui-checkbox>
+										</li>
+									</template>
+								</ul>
 							</template>
 						</svws-ui-tooltip>
-					</span>
-				</th>
+					</th>
+				</template>
 			</template>
-			<th>
-				<svws-ui-tooltip :hover="false" :show-arrow="false" position="top" class="h-full w-full">
-					<span class="icon" :class="[...columnsVisible().values()].some(c => c === false) ? 'i-ri-layout-column-fill' : 'i-ri-layout-column-line'" />
-					<span class="icon i-ri-arrow-down-s-line" />
-					<template #content>
-						<ul class="min-w-[10rem] flex flex-col gap-0.5 pt-1">
-							<template v-for="col of cols" :key="col.name">
-								<li v-if="columnsVisible().get(col.kuerzel) !== null">
-									<svws-ui-checkbox :model-value="columnsVisible().get(col.kuerzel) ?? false" @update:model-value="value => setColumnsVisible(columnsVisible().set(col.kuerzel, value))">
-										{{ col.kuerzel }}
-									</svws-ui-checkbox>
-								</li>
-							</template>
-						</ul>
-					</template>
-				</svws-ui-tooltip>
-			</th>
 		</template>
 		<template #default="{ row: pair, index }">
-			<td v-if="columnsVisible().get('Klasse') ?? true">
+			<td v-if="gridManager.isColVisible('Klasse') ?? true">
 				{{ enmManager().mapKlassen.get(pair.b.klasseID)?.kuerzelAnzeige ?? '—' }}
 			</td>
-			<td v-if="columnsVisible().get('Name') ?? true" class="text-left">
+			<td v-if="gridManager.isColVisible('Name') ?? true" class="text-left">
 				{{ pair.b.nachname }}, {{ pair.b.vorname }} ({{ pair.b.geschlecht }})
 			</td>
-			<td v-if="columnsVisible().get('Fach') ?? true">
+			<td v-if="gridManager.isColVisible('Fach') ?? true">
 				{{ enmManager().lerngruppeGetFachkuerzel(pair.a.lerngruppenID) }}
 			</td>
-			<td v-if="columnsVisible().get('Kurs') ?? true">
+			<td v-if="gridManager.isColVisible('Kurs') ?? true">
 				{{ enmManager().lerngruppeGetKursbezeichnung(pair.a.lerngruppenID) }}
 			</td>
-			<td v-if="columnsVisible().get('Kursart') ?? true">
+			<td v-if="gridManager.isColVisible('Kursart') ?? true">
 				{{ enmManager().leistungGetKursartAsString(pair.a) }}
 			</td>
-			<td v-if="columnsVisible().get('Lehrer') ?? true">
+			<td v-if="gridManager.isColVisible('Lehrer') ?? true">
 				{{ enmManager().lerngruppeGetFachlehrerOrNull(pair.a.lerngruppenID) }}
 			</td>
-			<template v-if="columnsVisible().get('Quartal') ?? true">
+			<template v-if="gridManager.isColVisible('Quartal') ?? true">
 				<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID)" :ref="inputNoteQuartal(pair, 1, index)" class="ui-table-grid-input"
 					:class="{
 						'bg-ui-selected': (gridManager.focusColumn === 1),
@@ -82,7 +86,7 @@
 					}" />
 				<td v-else :class="{ 'text-ui-danger': Note.fromKuerzel(pair.a.noteQuartal).istDefizitSekII() }">{{ pair.a.noteQuartal ?? "-" }}</td>
 			</template>
-			<template v-if="columnsVisible().get('Note') ?? true">
+			<template v-if="gridManager.isColVisible('Note') ?? true">
 				<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID)" :ref="inputNote(pair, 2, index)" class="ui-table-grid-input"
 					:class="{
 						'bg-ui-selected': (gridManager.focusColumn === 2),
@@ -90,7 +94,7 @@
 					}" />
 				<td v-else :class="{ 'text-ui-danger': Note.fromKuerzel(pair.a.note).istDefizitSekII() }">{{ pair.a.note ?? "-" }}</td>
 			</template>
-			<template v-if="columnsVisible().get('Mahnung') ?? true">
+			<template v-if="gridManager.isColVisible('Mahnung') ?? true">
 				<template v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID)">
 					<td :ref="inputMahnung(pair, 3, index)" class="ui-table-grid-button"
 						:class="{ 'bg-ui-selected': (gridManager.focusColumn === 3) }">
@@ -107,19 +111,19 @@
 					</td>
 				</template>
 			</template>
-			<template v-if="columnsVisible().get('FS') ?? true">
+			<template v-if="gridManager.isColVisible('FS') ?? true">
 				<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID)"
 					:ref="inputFehlstunden(pair, 4, index)" class="ui-table-grid-input"
 					:class="{ 'bg-ui-selected': (gridManager.focusColumn === 4) }" />
 				<td v-else>{{ pair.a.fehlstundenFach ?? "—" }}</td>
 			</template>
-			<template v-if="columnsVisible().get('FSU') ?? true">
+			<template v-if="gridManager.isColVisible('FSU') ?? true">
 				<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID)"
 					:ref="inputFehlstundenUnendschuldigt(pair, 5, index)" class="ui-table-grid-input"
 					:class="{ 'bg-ui-selected': (gridManager.focusColumn === 5) }" />
 				<td v-else>{{ pair.a.fehlstundenUnentschuldigtFach ?? "-" }}</td>
 			</template>
-			<template v-if="columnsVisible().get('Bemerkung') ?? true">
+			<template v-if="gridManager.isColVisible('Bemerkung') ?? true">
 				<td :ref="inputBemerkung(pair, 6, index)" class="ui-table-grid-button"
 					:class="{
 						'bg-ui-selected': (gridManager.focusColumn === 6),
@@ -143,7 +147,6 @@
 	import type { ENMSchueler } from '../../../../core/src/core/data/enm/ENMSchueler';
 	import { Note } from '../../../../core/src/asd/types/Note';
 	import type { List } from '../../../../core/src/java/util/List';
-	import type { CellFormat } from '../../ui/controls/tablegrid/UiTableGrid.vue';
 	import { ArrayList } from '../../../../core/src/java/util/ArrayList';
 	import type { GridInput } from '../../ui/controls/tablegrid/GridInput';
 	import type { GridInputIntegerDiv } from '../../ui/controls/tablegrid/GridInputIntegerDiv';
@@ -152,58 +155,50 @@
 	const props = defineProps<EnmLeistungenUebersichtProps>();
 	defineExpose({ focusGrid });
 
-	const cols = [
-		{ kuerzel: "Klasse", name: "Klasse", width: "4rem" },
-		{ kuerzel: "Name", name: "Name, Vorname", width: "16rem" },
-		{ kuerzel: "Fach", name: "Fach", width: "4rem" },
-		{ kuerzel: "Kurs", name: "Kurs", width: "6rem" },
-		{ kuerzel: "Kursart", name: "Kursart", width: "4rem" },
-		{ kuerzel: "Lehrer", name: "Fachlehrer", width: "4rem" },
-		{ kuerzel: "Quartal", name: "Quartalsnote", width: "6rem" },
-		{ kuerzel: "Note", name: "Note", width: "6rem" },
-		{ kuerzel: "Mahnung", name: "Mahnung", width: "5rem" },
-		{ kuerzel: "FS", name: "Fehlstunden", width: "4rem" },
-		{ kuerzel: "FSU", name: "Fehlstunden (unentschuldigt)", width: "4rem" },
-		{ kuerzel: "Bemerkung", name: "Fachbezogene Bemerkungen", width: "16rem" },
-	];
-
 	const colsValidationTooltip = ["Quartal", "Note", "FS", "FSU"];
 
-	const daten = computed<List<PairNN<ENMLeistung, ENMSchueler>>>(() => {
-		const result = new ArrayList<PairNN<ENMLeistung, ENMSchueler>>();
-		for (const lerngruppenAuswahl of props.auswahl()) {
-			const leistungen = props.enmManager().mapLerngruppeLeistungen.get(lerngruppenAuswahl.id);
-			if ((leistungen === null))
-				continue;
-			result.addAll(leistungen);
-		}
-		return result;
-	});
-
 	const gridManager = new GridManager<string, PairNN<ENMLeistung, ENMSchueler>, List<PairNN<ENMLeistung, ENMSchueler>>>({
-		daten: daten,
+		daten: computed<List<PairNN<ENMLeistung, ENMSchueler>>>(() => {
+			const result = new ArrayList<PairNN<ENMLeistung, ENMSchueler>>();
+			for (const lerngruppenAuswahl of props.auswahl()) {
+				const leistungen = props.enmManager().mapLerngruppeLeistungen.get(lerngruppenAuswahl.id);
+				if ((leistungen === null))
+					continue;
+				result.addAll(leistungen);
+			}
+			return result;
+		}),
 		getRowKey: row => `${row.a.id}_${row.b.id}`,
+		columns: [
+			{ kuerzel: "Klasse", name: "Klasse", width: "4rem", hideable: false },
+			{ kuerzel: "Name", name: "Name, Vorname", width: "16rem", hideable: false },
+			{ kuerzel: "Fach", name: "Fach", width: "4rem", hideable: false },
+			{ kuerzel: "Kurs", name: "Kurs", width: "6rem", hideable: true },
+			{ kuerzel: "Kursart", name: "Kursart", width: "4rem", hideable: true },
+			{ kuerzel: "Lehrer", name: "Fachlehrer", width: "4rem", hideable: true },
+			{ kuerzel: "Quartal", name: "Quartalsnote", width: "6rem", hideable: true },
+			{ kuerzel: "Note", name: "Note", width: "6rem", hideable: true },
+			{ kuerzel: "Mahnung", name: "Mahnung", width: "5rem", hideable: true },
+			{ kuerzel: "FS", name: "Fehlstunden", width: "4rem", hideable: true },
+			{ kuerzel: "FSU", name: "Fehlstunden (unentschuldigt)", width: "4rem", hideable: true },
+			{ kuerzel: "Bemerkung", name: "Fachbezogene Bemerkungen", width: "16rem", hideable: true },
+			{ kuerzel: "", name: "", width: "3.25rem", hideable: false },
+		],
+		colsVisible: computed<Map<string, boolean|null>>({
+			get: () => props.columnsVisible(),
+			set: (value) => void props.setColumnsVisible(value),
+		}),
 	});
 	gridManager.onFocusInput = (input: GridInput<any, any> | null) => {
-		if ((input === null) || (input.row >= daten.value.size()))
+		if ((input === null) || (input.row >= gridManager.daten.size()))
 			return;
-		const pair = daten.value.get(input.row);
+		const pair = gridManager.daten.get(input.row);
 		void props.focusFloskelEditor(pair.b, pair.a, false);
 	}
 
 	function focusGrid() {
 		gridManager.doFocus(true);
 	}
-	const cellFormat = computed<CellFormat>(() => {
-		const result = <CellFormat>{ widths: [] };
-		for (const col of cols) {
-			const visible = props.columnsVisible().get(col.kuerzel) ?? true;
-			if (visible)
-				result.widths.push(col.width);
-		}
-		result.widths.push('3.5rem');
-		return result;
-	});
 
 	const notenKuerzel = computed(() => Note.values().map(e => e.daten(props.enmManager().schuljahr)?.kuerzel).filter(e => e !== ""));
 

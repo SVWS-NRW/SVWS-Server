@@ -1,48 +1,53 @@
 <template>
-	<ui-table-grid name="Klassenleitung" :header-count="1" :footer-count="0" :manager="() => gridManager" :data="daten" :cell-format="cellFormat">
+	<ui-table-grid name="Klassenleitung" :header-count="1" :footer-count="0" :manager="() => gridManager">
 		<template #header>
-			<template v-for="col of cols" :key="col.name">
-				<th v-if="columnsVisible().get(col.kuerzel) ?? true">
-					<svws-ui-tooltip v-if="col.kuerzel !== col.name">
-						{{ col.kuerzel }}
-						<template #content>{{ col.name }}</template>
-					</svws-ui-tooltip>
-					<span v-else>{{ col.kuerzel }}</span>
-				</th>
-			</template>
-			<td class="svws-ui-td" role="columnheader">
-				<svws-ui-tooltip :hover="false" :show-arrow="false" position="top" class="h-full w-full">
-					<span class="icon" :class="[...colsVisible.values()].some(c => c === false) ? 'i-ri-layout-column-fill' : 'i-ri-layout-column-line'" /><span class="icon i-ri-arrow-down-s-line" />
-					<template #content>
-						<ul class="min-w-[10rem] flex flex-col gap-0.5 pt-1">
-							<template v-for="col of cols" :key="col.name">
-								<li v-if="colsVisible.get(col.kuerzel) !== null">
-									<svws-ui-checkbox :model-value="colsVisible.get(col.kuerzel) ?? false" @update:model-value="value => setColumnsVisible(colsVisible.set(col.kuerzel, value))">
-										{{ col.kuerzel }}
-									</svws-ui-checkbox>
-								</li>
+			<template v-for="col of gridManager.cols.values()" :key="col.name">
+				<template v-if="col.kuerzel !== ''">
+					<th v-if="gridManager.isColVisible(col.kuerzel) ?? true">
+						<svws-ui-tooltip v-if="col.kuerzel !== col.name">
+							{{ col.kuerzel }}
+							<template #content>{{ col.name }}</template>
+						</svws-ui-tooltip>
+						<span v-else>{{ col.kuerzel }}</span>
+					</th>
+				</template>
+				<template v-else>
+					<th role="columnheader">
+						<svws-ui-tooltip :hover="false" :show-arrow="false" position="top" class="h-full w-full">
+							<span class="icon" :class="gridManager.hasHiddenColumn ? 'i-ri-layout-column-fill' : 'i-ri-layout-column-line'" />
+							<span class="icon i-ri-arrow-down-s-line" />
+							<template #content>
+								<ul class="min-w-[10rem] flex flex-col gap-0.5 pt-1">
+									<template v-for="hideable of gridManager.hideableColumns" :key="hideable.name">
+										<li>
+											<svws-ui-checkbox :model-value="gridManager.isColVisible(hideable.kuerzel)" @update:model-value="value => gridManager.setColVisibility(hideable.kuerzel, value)">
+												{{ hideable.kuerzel }}
+											</svws-ui-checkbox>
+										</li>
+									</template>
+								</ul>
 							</template>
-						</ul>
-					</template>
-				</svws-ui-tooltip>
-			</td>
+						</svws-ui-tooltip>
+					</th>
+				</template>
+			</template>
 		</template>
 		<template #default="{ row: pair, index }">
-			<td v-if="colsVisible.get('Klasse') ?? true">
+			<td v-if="gridManager.isColVisible('Klasse') ?? true">
 				{{ pair.a.kuerzelAnzeige }}
 			</td>
-			<td v-if="colsVisible.get('Name') ?? true" class="text-left">
+			<td v-if="gridManager.isColVisible('Name') ?? true" class="text-left">
 				{{ pair.b.nachname }}, {{ pair.b.vorname }} ({{ pair.b.geschlecht }})
 			</td>
-			<template v-if="columnsVisible().get('FS') ?? true">
+			<template v-if="gridManager.isColVisible('FS') ?? true">
 				<td :ref="inputFehlstunden(pair, 1, index)" class="ui-table-grid-input"
 					:class="{ 'bg-ui-selected': (gridManager.focusColumn === 1) }" />
 			</template>
-			<template v-if="columnsVisible().get('FSU') ?? true">
+			<template v-if="gridManager.isColVisible('FSU') ?? true">
 				<td :ref="inputFehlstundenUnendschuldigt(pair, 2, index)" class="ui-table-grid-input"
 					:class="{ 'bg-ui-selected': (gridManager.focusColumn === 2) }" />
 			</template>
-			<template v-if="columnsVisible().get('ASV') ?? true">
+			<template v-if="gridManager.isColVisible('ASV') ?? true">
 				<td :ref="inputASV(pair, 3, index)" class="ui-table-grid-button"
 					:class="{
 						'bg-ui-selected': (gridManager.focusColumn === 3),
@@ -51,7 +56,7 @@
 					<span class="text-ellipsis overflow-hidden whitespace-nowrap w-full">{{ pair.b.bemerkungen.ASV ?? "-" }}</span>
 				</td>
 			</template>
-			<template v-if="columnsVisible().get('AUE') ?? true">
+			<template v-if="gridManager.isColVisible('AUE') ?? true">
 				<td :ref="inputAUE(pair, 4, index)" class="ui-table-grid-button"
 					:class="{
 						'bg-ui-selected': (gridManager.focusColumn === 4),
@@ -60,7 +65,7 @@
 					<span class="text-ellipsis overflow-hidden whitespace-nowrap w-full">{{ pair.b.bemerkungen.AUE ?? "-" }}</span>
 				</td>
 			</template>
-			<template v-if="columnsVisible().get('ZB') ?? true">
+			<template v-if="gridManager.isColVisible('ZB') ?? true">
 				<td :ref="inputZB(pair, 5, index)" class="ui-table-grid-button"
 					:class="{
 						'bg-ui-selected': (gridManager.focusColumn === 5),
@@ -82,7 +87,6 @@
 	import type { EnmKlassenleitungUebersichtProps } from './EnmKlassenleitungUebersichtProps';
 	import { PairNN } from '../../../../core/src/asd/adt/PairNN';
 	import { GridManager } from '../../ui/controls/tablegrid/GridManager';
-	import type { CellFormat } from '../../ui/controls/tablegrid/UiTableGrid.vue';
 	import type { List } from '../../../../core/src/java/util/List';
 	import { ArrayList } from '../../../../core/src/java/util/ArrayList';
 	import type { ENMKlasse } from '../../../../core/src/core/data/enm/ENMKlasse';
@@ -93,57 +97,43 @@
 	const props = defineProps<EnmKlassenleitungUebersichtProps>();
 	defineExpose({ focusGrid });
 
-	const cols = [
-		{ kuerzel: "Klasse", name: "Klasse", width: "4rem" },
-		{ kuerzel: "Name", name: "Name, Vorname", width: "16rem" },
-		{ kuerzel: "FS", name: "Fehlstunden", width: "4rem" },
-		{ kuerzel: "FSU", name: "Fehlstunden (unentschuldigt)", width: "4rem" },
-		{ kuerzel: "ASV", name: "Arbeits- und Sozialverhalten", width: "16rem" },
-		{ kuerzel: "AUE", name: "Außerunterrichtliches Engagement", width: "16rem" },
-		{ kuerzel: "ZB", name: "Zeugnisbemerkung", width: "16rem" },
-	];
-
-	const colsVisible = computed<Map<string, boolean|null>>({
-		get: () => props.columnsVisible(),
-		set: (value) => void props.setColumnsVisible(value),
-	});
-
-	const daten = computed<List<PairNN<ENMKlasse, ENMSchueler>>>(() => {
-		const result = new ArrayList<PairNN<ENMKlasse, ENMSchueler>>();
-		for (const klasse of props.auswahl()) {
-			const listSchueler = props.enmManager().mapKlassenSchueler.get(klasse.id);
-			if ((listSchueler === null))
-				continue;
-			for (const schueler of listSchueler)
-				result.add(new PairNN<ENMKlasse, ENMSchueler>(klasse, schueler));
-		}
-		return result;
-	});
-
 	const gridManager = new GridManager<string, PairNN<ENMKlasse, ENMSchueler>, List<PairNN<ENMKlasse, ENMSchueler>>>({
-		daten: daten,
+		daten: computed<List<PairNN<ENMKlasse, ENMSchueler>>>(() => {
+			const result = new ArrayList<PairNN<ENMKlasse, ENMSchueler>>();
+			for (const klasse of props.auswahl()) {
+				const listSchueler = props.enmManager().mapKlassenSchueler.get(klasse.id);
+				if ((listSchueler === null))
+					continue;
+				for (const schueler of listSchueler)
+					result.add(new PairNN<ENMKlasse, ENMSchueler>(klasse, schueler));
+			}
+			return result;
+		}),
 		getRowKey: row => `${row.a.id}_${row.b.id}`,
+		columns: [
+			{ kuerzel: "Klasse", name: "Klasse", width: "4rem", hideable: false },
+			{ kuerzel: "Name", name: "Name, Vorname", width: "16rem", hideable: false },
+			{ kuerzel: "FS", name: "Fehlstunden", width: "4rem", hideable: true },
+			{ kuerzel: "FSU", name: "Fehlstunden (unentschuldigt)", width: "4rem", hideable: true },
+			{ kuerzel: "ASV", name: "Arbeits- und Sozialverhalten", width: "16rem", hideable: true },
+			{ kuerzel: "AUE", name: "Außerunterrichtliches Engagement", width: "16rem", hideable: true },
+			{ kuerzel: "ZB", name: "Zeugnisbemerkung", width: "16rem", hideable: true },
+			{ kuerzel: "", name: "", width: "3.25rem", hideable: false },
+		],
+		colsVisible: computed<Map<string, boolean|null>>({
+			get: () => props.columnsVisible(),
+			set: (value) => void props.setColumnsVisible(value),
+		}),
 	});
-
 	gridManager.onFocusInput = (input: GridInput<any, any> | null) => {
-		if ((input === null) || (input.row >= daten.value.size()))
+		if ((input === null) || (input.row >= gridManager.daten.size()))
 			return;
-		const pair = daten.value.get(input.row);
+		const pair = gridManager.daten.get(input.row);
 		void props.focusFloskelEditor(null, pair.b, pair.a, false);
 	}
 	function focusGrid() {
 		gridManager.doFocus(true);
 	}
-	const cellFormat = computed<CellFormat>(() => {
-		const result = <CellFormat>{ widths: [] };
-		for (const col of cols) {
-			const visible = props.columnsVisible().get(col.kuerzel) ?? true;
-			if (visible)
-				result.widths.push(col.width);
-		}
-		result.widths.push('3.5rem');
-		return result;
-	});
 
 
 	function inputFehlstunden(pair: PairNN<ENMKlasse, ENMSchueler>, col: number, index: number) {

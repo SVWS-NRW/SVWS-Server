@@ -1,5 +1,5 @@
 <template>
-	<ui-table-grid name="Übersicht über die Prüfungsergebnisse" :footer-count="5" :manager="() => gridManager" :cell-format="cellFormat" hide-selection>
+	<ui-table-grid name="Übersicht über die Prüfungsergebnisse" :footer-count="5" :manager="() => gridManager" hide-selection>
 		<template #header>
 			<th>Kürzel</th>
 			<th class="text-left"> Fach </th>
@@ -116,40 +116,46 @@
 
 	const props = defineProps<SchuelerAbiturZulassungTabelleProps>();
 
-	const faecherBelegtInQPhase = computed<List<GostFach>>(() => {
-		const result = new ArrayList<GostFach>();
-		for (const fach of props.manager().faecher().faecher()) {
-			const fb = props.manager().getFachbelegungByID(fach.id);
-			if (fb === null)
-				continue;
-			for (const halbjahr of GostHalbjahr.getQualifikationsphase()) {
-				const fbh : AbiturFachbelegungHalbjahr | null = fb.belegungen[halbjahr.id];
-				if ((fbh !== null)) {
-					result.add(fach);
-					break;
+	const gridManager = new GridManager<string, GostFach, List<GostFach>>({
+		daten: computed<List<GostFach>>(() => {
+			const result = new ArrayList<GostFach>();
+			for (const fach of props.manager().faecher().faecher()) {
+				const fb = props.manager().getFachbelegungByID(fach.id);
+				if (fb === null)
+					continue;
+				for (const halbjahr of GostHalbjahr.getQualifikationsphase()) {
+					const fbh : AbiturFachbelegungHalbjahr | null = fb.belegungen[halbjahr.id];
+					if ((fbh !== null)) {
+						result.add(fach);
+						break;
+					}
 				}
 			}
-		}
-		return result;
-	});
-
-	function getKey(fach: GostFach): string {
-		let result = props.manager().daten().schuelerID + "_" + fach.id;
-		const fachbelegung = props.manager().getFachbelegungByID(fach.id);
-		if (fachbelegung === null)
 			return result;
-		for (const halbjahr of GostHalbjahr.getQualifikationsphase())
-			result += "_" + (fachbelegung.belegungen[halbjahr.id]?.block1gewertet ?? "");
-		return result;
-	}
-
-	const gridManager = new GridManager<string, GostFach, List<GostFach>>({
-		daten: faecherBelegtInQPhase,
-		getRowKey: row => getKey(row),
+		}),
+		getRowKey: fach => {
+			let result = props.manager().daten().schuelerID + "_" + fach.id;
+			const fachbelegung = props.manager().getFachbelegungByID(fach.id);
+			if (fachbelegung === null)
+				return result;
+			for (const halbjahr of GostHalbjahr.getQualifikationsphase())
+				result += "_" + (fachbelegung.belegungen[halbjahr.id]?.block1gewertet ?? "");
+			return result;
+		},
+		columns: [
+			{ kuerzel: "Kürzel", name: "Fachkürzel", width: "4rem", hideable: false },
+			{ kuerzel: "Fach", name: "Fach", width: "16rem", hideable: false },
+			{ kuerzel: "Kursart", name: "Kursart", width: "4rem", hideable: false },
+			{ kuerzel: "Q1.1", name: "Notenpunkte in der Q1.1", width: "4rem", hideable: false },
+			{ kuerzel: "Q1.2", name: "Notenpunkte in der Q1.2", width: "4rem", hideable: false },
+			{ kuerzel: "Q2.1", name: "Notenpunkte in der Q2.1", width: "4rem", hideable: false },
+			{ kuerzel: "Q2.2", name: "Notenpunkte in der Q2.2", width: "4rem", hideable: false },
+			{ kuerzel: "Summe", name: "Summe der Notenpunkte aus der Qualifikationsphase", width: "4rem", hideable: false },
+			{ kuerzel: "Abi", name: "Abiturfach", width: "4rem", hideable: false },
+			{ kuerzel: "⌀", name: "Vornote (Notendurchschnitt)", width: "4rem", hideable: false },
+			{ kuerzel: "", name: "", width: "1.25rem", hideable: false },
+		],
 	});
-	const cellFormat = {
-		widths: ['4rem','16rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','1.25rem'],
-	};
 
 	const schuljahr = computed<number>(() => props.manager().getAbiturjahr() - 1);
 

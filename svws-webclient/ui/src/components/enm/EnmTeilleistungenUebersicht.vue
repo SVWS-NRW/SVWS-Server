@@ -1,55 +1,59 @@
 <template>
-	<ui-table-grid name="Leistungsdaten" :header-count="1" :footer-count="0" :manager="() => gridManager" :cell-format="cellFormat">
+	<ui-table-grid name="Leistungsdaten" :header-count="1" :footer-count="0" :manager="() => gridManager">
 		<template #header>
-			<template v-for="col of cols" :key="col.name">
-				<th v-if="colsVisible.get(col.kuerzel) ?? true">
-					<svws-ui-tooltip v-if="col.kuerzel !== col.name">
-						{{ col.kuerzel }}
-						<template #content>{{ col.name }}</template>
-					</svws-ui-tooltip>
-					<span v-else>{{ col.kuerzel }}</span>
-				</th>
-			</template>
-			<th>
-				<svws-ui-tooltip :hover="false" :show-arrow="false" position="top" class="h-full w-full">
-					<span class="icon" :class="[...colsVisible.values()].some(c => c === false) ? 'i-ri-layout-column-fill' : 'i-ri-layout-column-line'" />
-					<span class="icon i-ri-arrow-down-s-line" />
-					<template #content>
-						<ul class="min-w-[10rem] flex flex-col gap-0.5 pt-1">
-							<template v-for="col of cols" :key="col.name">
-								<li v-if="colsVisible.get(col.kuerzel) !== null">
-									<svws-ui-checkbox :model-value="colsVisible.get(col.kuerzel) ?? false" @update:model-value="value => setColumnsVisible(colsVisible.set(col.kuerzel, value))">
-										{{ col.kuerzel }}
-									</svws-ui-checkbox>
-								</li>
+			<template v-for="col of gridManager.cols.values()" :key="col.name">
+				<template v-if="col.kuerzel !== ''">
+					<th v-if="gridManager.isColVisible(col.kuerzel)">
+						<svws-ui-tooltip v-if="col.kuerzel !== col.name">
+							{{ col.kuerzel }}
+							<template #content>{{ col.name }}</template>
+						</svws-ui-tooltip>
+						<span v-else>{{ col.kuerzel }}</span>
+					</th>
+				</template>
+				<template v-else>
+					<th>
+						<svws-ui-tooltip :hover="false" :show-arrow="false" position="top" class="h-full w-full">
+							<span class="icon" :class="gridManager.hasHiddenColumn ? 'i-ri-layout-column-fill' : 'i-ri-layout-column-line'" />
+							<span class="icon i-ri-arrow-down-s-line" />
+							<template #content>
+								<ul class="min-w-[10rem] flex flex-col gap-0.5 pt-1">
+									<template v-for="hideable of gridManager.hideableColumns" :key="hideable.name">
+										<li>
+											<svws-ui-checkbox :model-value="gridManager.isColVisible(hideable.kuerzel)" @update:model-value="value => gridManager.setColVisibility(hideable.kuerzel, value)">
+												{{ hideable.kuerzel }}
+											</svws-ui-checkbox>
+										</li>
+									</template>
+								</ul>
 							</template>
-						</ul>
-					</template>
-				</svws-ui-tooltip>
-			</th>
+						</svws-ui-tooltip>
+					</th>
+				</template>
+			</template>
 		</template>
 		<template #default="{ row: pair, index }">
-			<td v-if="colsVisible.get('Klasse') ?? true">
+			<td v-if="gridManager.isColVisible('Klasse') ?? true">
 				{{ enmManager().mapKlassen.get(pair.b.klasseID)?.kuerzelAnzeige ?? '—' }}
 			</td>
-			<td v-if="colsVisible.get('Name') ?? true" class="text-left">
+			<td v-if="gridManager.isColVisible('Name') ?? true" class="text-left">
 				{{ pair.b.nachname }}, {{ pair.b.vorname }} ({{ pair.b.geschlecht }})
 			</td>
-			<td v-if="colsVisible.get('Fach') ?? true">
+			<td v-if="gridManager.isColVisible('Fach') ?? true">
 				{{ enmManager().lerngruppeGetFachkuerzel(pair.a.lerngruppenID) }}
 			</td>
-			<td v-if="colsVisible.get('Kurs') ?? true">
+			<td v-if="gridManager.isColVisible('Kurs') ?? true">
 				{{ enmManager().lerngruppeGetKursbezeichnung(pair.a.lerngruppenID) }}
 			</td>
-			<td v-if="colsVisible.get('Kursart') ?? true">
+			<td v-if="gridManager.isColVisible('Kursart') ?? true">
 				{{ enmManager().leistungGetKursartAsString(pair.a) }}
 			</td>
-			<td v-if="colsVisible.get('Lehrer') ?? true">
+			<td v-if="gridManager.isColVisible('Lehrer') ?? true">
 				{{ enmManager().lerngruppeGetFachlehrerOrNull(pair.a.lerngruppenID) }}
 			</td>
 			<template v-for="(idArt, indexArt) of setTeilleistungsarten" :key="idArt">
 				<template v-for="teilleistung of enmManager().mapLeistungTeilleistungsartTeilleistung.getOrNull(pair.a.id, idArt) !== null ? [enmManager().mapLeistungTeilleistungsartTeilleistung.getOrNull(pair.a.id, idArt)!] : []" :key="teilleistung">
-					<template v-if="colsVisible.get(props.enmManager().mapTeilleistungsarten.get(idArt)?.bezeichnung ?? '???') ?? true">
+					<template v-if="gridManager.isColVisible(props.enmManager().mapTeilleistungsarten.get(idArt)?.bezeichnung ?? '???') ?? true">
 						<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID)" :ref="inputNoteTeilleistung(pair, teilleistung, indexArt + 1, index)" class="ui-table-grid-input"
 							:class="{
 								'bg-ui-selected': (gridManager.focusColumn === indexArt + 1),
@@ -59,7 +63,7 @@
 					</template>
 				</template>
 			</template>
-			<template v-if="colsVisible.get('Quartal') ?? true">
+			<template v-if="gridManager.isColVisible('Quartal') ?? true">
 				<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID)" :ref="inputNoteQuartal(pair, setTeilleistungsarten.size() + 1, index)" class="ui-table-grid-input"
 					:class="{
 						'bg-ui-selected': (gridManager.focusColumn === setTeilleistungsarten.size() + 1),
@@ -67,7 +71,7 @@
 					}" />
 				<td v-else :class="{ 'text-ui-danger': Note.fromKuerzel(pair.a.noteQuartal).istDefizitSekII() }">{{ pair.a.noteQuartal ?? "-" }}</td>
 			</template>
-			<template v-if="colsVisible.get('Note') ?? true">
+			<template v-if="gridManager.isColVisible('Note') ?? true">
 				<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID)" :ref="inputNote(pair, setTeilleistungsarten.size() + 2, index)" class="ui-table-grid-input"
 					:class="{
 						'bg-ui-selected': (gridManager.focusColumn === setTeilleistungsarten.size() + 2),
@@ -83,7 +87,7 @@
 <script setup lang="ts">
 
 	import type { ComponentPublicInstance} from 'vue';
-	import { computed, watchEffect } from 'vue';
+	import { computed, watch, watchEffect } from 'vue';
 	import type { EnmTeilleistungenProps } from './EnmTeilleistungenProps';
 	import type { ENMLeistung } from '../../../../core/src/core/data/enm/ENMLeistung';
 	import type { PairNN } from '../../../../core/src/asd/adt/PairNN';
@@ -91,7 +95,6 @@
 	import type { ENMTeilleistung } from '../../../../core/src/core/data/enm/ENMTeilleistung';
 	import { HashSet } from '../../../../core/src/java/util/HashSet';
 	import { GridManager } from '../../ui/controls/tablegrid/GridManager';
-	import type { CellFormat } from '../../ui/controls/tablegrid/UiTableGrid.vue';
 	import type { List } from '../../../../core/src/java/util/List';
 	import { ArrayList } from '../../../../core/src/java/util/ArrayList';
 	import { Note } from '../../../../core/src/asd/types/Note';
@@ -108,58 +111,43 @@
 		return result;
 	});
 
-	const cols = computed(() => {
-		const result = [
-			{ kuerzel: "Klasse", name: "Klasse", width: "4rem" },
-			{ kuerzel: "Name", name: "Name, Vorname", width: "16rem" },
-			{ kuerzel: "Fach", name: "Fach", width: "4rem" },
-			{ kuerzel: "Kurs", name: "Kurs", width: "6rem" },
-			{ kuerzel: "Kursart", name: "Kursart", width: "4rem" },
-			{ kuerzel: "Lehrer", name: "Fachlehrer", width: "4rem" },
+	const gridManager = new GridManager<string, PairNN<ENMLeistung, ENMSchueler>, List<PairNN<ENMLeistung, ENMSchueler>>>({
+		daten: computed<List<PairNN<ENMLeistung, ENMSchueler>>>(() => {
+			const result = new ArrayList<PairNN<ENMLeistung, ENMSchueler>>();
+			for (const lerngruppenAuswahl of props.auswahl()) {
+				const leistungen = props.enmManager().mapLerngruppeLeistungen.get(lerngruppenAuswahl.id);
+				if ((leistungen === null))
+					continue;
+				result.addAll(leistungen);
+			}
+			return result;
+		}),
+		getRowKey: row => `${row.a.id}_${row.b.id}`,
+		colsVisible: computed<Map<string, boolean|null>>({
+			get: () => props.columnsVisible(),
+			set: (value) => void props.setColumnsVisible(value),
+		}),
+	});
+	watch(setTeilleistungsarten, (teilleistungsarten) => {
+		const cols = [
+			{ kuerzel: "Klasse", name: "Klasse", width: "4rem", hideable: false },
+			{ kuerzel: "Name", name: "Name, Vorname", width: "16rem", hideable: false },
+			{ kuerzel: "Fach", name: "Fach", width: "4rem", hideable: false },
+			{ kuerzel: "Kurs", name: "Kurs", width: "6rem", hideable: true },
+			{ kuerzel: "Kursart", name: "Kursart", width: "4rem", hideable: true },
+			{ kuerzel: "Lehrer", name: "Fachlehrer", width: "4rem", hideable: true },
 		];
-		for (const idArt of setTeilleistungsarten.value) {
+		for (const idArt of teilleistungsarten) {
 			const art = props.enmManager().mapTeilleistungsarten.get(idArt);
 			if (art === null)
 				continue;
-			result.push({ kuerzel: art.bezeichnung ?? "???", name: "Teilleistung: " + (art.bezeichnung ?? "???"), width: "4rem" });
+			cols.push({ kuerzel: art.bezeichnung ?? "???", name: "Teilleistung: " + (art.bezeichnung ?? "???"), width: "4rem", hideable: true });
 		}
-		result.push({ kuerzel: "Quartal", name: "Quartalsnote", width: "6rem" });
-		result.push({ kuerzel: "Note", name: "Note", width: "6rem" });
-		return result;
-	});
-
-	const colsVisible = computed<Map<string, boolean|null>>({
-		get: () => props.columnsVisible(),
-		set: (value) => void props.setColumnsVisible(value),
-	});
-
-
-	const daten = computed<List<PairNN<ENMLeistung, ENMSchueler>>>(() => {
-		const result = new ArrayList<PairNN<ENMLeistung, ENMSchueler>>();
-		for (const lerngruppenAuswahl of props.auswahl()) {
-			const leistungen = props.enmManager().mapLerngruppeLeistungen.get(lerngruppenAuswahl.id);
-			if ((leistungen === null))
-				continue;
-			result.addAll(leistungen);
-		}
-		return result;
-	});
-
-	const gridManager = new GridManager<string, PairNN<ENMLeistung, ENMSchueler>, List<PairNN<ENMLeistung, ENMSchueler>>>({
-		daten: daten,
-		getRowKey: row => `${row.a.id}_${row.b.id}`,
-	});
-
-	const cellFormat = computed<CellFormat>(() => {
-		const result = <CellFormat>{ widths: [] };
-		for (const col of cols.value) {
-			const visible = props.columnsVisible().get(col.kuerzel) ?? true;
-			if (visible)
-				result.widths.push(col.width);
-		}
-		result.widths.push('3.5rem');
-		return result;
-	});
+		cols.push({ kuerzel: "Quartal", name: "Quartalsnote", width: "6rem", hideable: true });
+		cols.push({ kuerzel: "Note", name: "Note", width: "6rem", hideable: true });
+		cols.push({ kuerzel: "", name: "", width: "3.25rem", hideable: false });
+		gridManager.setColumns(cols);
+	}, { immediate: true });
 
 
 	function inputNoteTeilleistung(pair: PairNN<ENMLeistung, ENMSchueler>, teilleistung: ENMTeilleistung, col: number, index: number) {

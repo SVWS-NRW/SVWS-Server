@@ -11,7 +11,7 @@
 				<ui-select label="Abiturfach" v-model="auswahlAbiturfach" :manager="abiturfachSelectManager" />
 			</div>
 		</div>
-		<ui-table-grid name="Übersicht über die Prüfungsergebnisse" :header-count="2" :footer-count="0" :manager="() => gridManager" :cell-format="cellFormat">
+		<ui-table-grid name="Übersicht über die Prüfungsergebnisse" :header-count="2" :footer-count="0" :manager="() => gridManager">
 			<template #header="params">
 				<template v-if="params.i === 1">
 					<th class="ui-divider text-ui-50 text-left col-span-6" />
@@ -121,42 +121,59 @@
 
 	const props = defineProps<GostAbiturNoteneingabeProps>();
 
-	const auswahlBelegungen = computed<List<SchuelerAbiturbelegung>>(() => {
-		const auswahl = new ArrayList<SchuelerAbiturbelegung>();
-		// Wenn ein Kurs-Filter gesetzt ist, dann filtere die Abiturfachbelegungen nach dem Kurs
-		const kurs = auswahlKurs.value;
-		const kursBelegungen = alleKurse.value.get(kurs);
-		if (kursBelegungen !== null) {
-			auswahl.addAll(kursBelegungen);
-			return auswahl;
-		}
-		// Wenn ein Prüfer gesetzt ist, dann filtere die Abiturfachbelegungen anhand des Prüfers
-		const pruefer = auswahlPruefer.value;
-		const prueferBelegungen = allePruefer.value.get(pruefer);
-		if (prueferBelegungen !== null) {
-			auswahl.addAll(prueferBelegungen);
-			return auswahl;
-		}
-		// Wenn ein Abiturfach gesetzt ist, dann filtere die Abiturfachbelegungen anhand des Abiturfaches
-		const abiturfach = auswahlAbiturfach.value;
-		if (abiturfach !== null) {
-			for (const belegung of schuelerInPruefung.value)
-				if (GostAbiturFach.fromID(belegung.abiturfach) === abiturfach)
-					auswahl.add(belegung);
-			return auswahl;
-		}
-		// Ansonsten nehme alle Abiturfachbelegungen
-		auswahl.addAll(schuelerInPruefung.value);
-		return auswahl;
-	});
-
 	const gridManager = new GridManager<string, SchuelerAbiturbelegung, List<SchuelerAbiturbelegung>>({
-		daten: auswahlBelegungen,
+		daten: computed<List<SchuelerAbiturbelegung>>(() => {
+			const auswahl = new ArrayList<SchuelerAbiturbelegung>();
+			// Wenn ein Kurs-Filter gesetzt ist, dann filtere die Abiturfachbelegungen nach dem Kurs
+			const kurs = auswahlKurs.value;
+			const kursBelegungen = alleKurse.value.get(kurs);
+			if (kursBelegungen !== null) {
+				auswahl.addAll(kursBelegungen);
+				return auswahl;
+			}
+			// Wenn ein Prüfer gesetzt ist, dann filtere die Abiturfachbelegungen anhand des Prüfers
+			const pruefer = auswahlPruefer.value;
+			const prueferBelegungen = allePruefer.value.get(pruefer);
+			if (prueferBelegungen !== null) {
+				auswahl.addAll(prueferBelegungen);
+				return auswahl;
+			}
+			// Wenn ein Abiturfach gesetzt ist, dann filtere die Abiturfachbelegungen anhand des Abiturfaches
+			const abiturfach = auswahlAbiturfach.value;
+			if (abiturfach !== null) {
+				for (const belegung of schuelerInPruefung.value)
+					if (GostAbiturFach.fromID(belegung.abiturfach) === abiturfach)
+						auswahl.add(belegung);
+				return auswahl;
+			}
+			// Ansonsten nehme alle Abiturfachbelegungen
+			auswahl.addAll(schuelerInPruefung.value);
+			return auswahl;
+		}),
 		getRowKey: row => `${row.schueler.id}_${row.belegung.abiturFach}`,
+		columns: [
+			{ kuerzel: "Abi", name: "Abiturfach", width: "4rem", hideable: false },
+			{ kuerzel: "Kürzel", name: "Fachkürzel", width: "4rem", hideable: false },
+			{ kuerzel: "Fach", name: "Fach", width: "16rem", hideable: false },
+			{ kuerzel: "Schüler", name: "Schüler", width: "16rem", hideable: false },
+			{ kuerzel: "Kurs", name: "Kurs in der Q2.2", width: "6rem", hideable: false },
+			{ kuerzel: "Prüfer", name: "Fachrprüfer", width: "6rem", hideable: false },
+			{ kuerzel: "⌀", name: "Vornote (Notendurchschnitt)", width: "4rem", hideable: false },
+			{ kuerzel: "Punkte", name: "Notenpunkte", width: "4rem", hideable: false },
+			{ kuerzel: "Wert", name: "Wertung (5-Fach bei vier Abiturfächern und 4-Fach, wenn BLL als 5. Fach vorhanden ist)", width: "4rem", hideable: false },
+			{ kuerzel: "Pflicht", name: "mündliche Pflichtprüfung im 1.-3. Abiturfach", width: "4rem", hideable: false },
+			{ kuerzel: "Freiw.", name: "mündliche freiwillige Prüfung im 1.-3. Abiturfach", width: "4rem", hideable: false },
+			{ kuerzel: "RF", name: "Reihenfolge bei den mündlichen Prüfungen im 1.-3. Abiturfach", width: "4rem", hideable: false },
+			{ kuerzel: "Punkte (mdl.)", name: "Notenpunkte der mündlichen Prüfung im 1.-3. Abiturfach", width: "4rem", hideable: false },
+			{ kuerzel: "Summe", name: "Summe aus der Abiturprüfung und der mündlichen Prüfung im 1.-3. Abiturfach", width: "4rem", hideable: false },
+			{ kuerzel: "Block I", name: "die normierte Punktzahl in Block I", width: "4rem", hideable: false },
+			{ kuerzel: "Block II", name: "die erreichte Punktzahl in Block II", width: "4rem", hideable: false },
+			{ kuerzel: "Gesamt", name: "die erreichte Gesamtpunktzahl in der Abiturprüfung", width: "4rem", hideable: false },
+			{ kuerzel: "Best.", name: "Gibt an, ob die Abiturprüfung bestanden wurde oder nicht.", width: "4rem", hideable: false },
+			{ kuerzel: "Note", name: "Die Abiturnote, welche sich aus der Gesamtpunktzahl ergibt.", width: "4rem", hideable: false },
+			{ kuerzel: "", name: "", width: "1.25rem", hideable: false },
+		],
 	});
-	const cellFormat = {
-		widths: ['4rem', '4rem','16rem','16rem','6rem','6rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem','4rem', '1.25rem'],
-	};
 
 	interface SchuelerAbiturbelegung {
 		index: number,

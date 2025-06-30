@@ -40,7 +40,6 @@
 	}
 
 	const props = withDefaults(defineProps<{
-		cellFormat: CellFormat,
 		headerCount?: number,
 		footerCount?: number,
 		name?: string | undefined,
@@ -53,7 +52,7 @@
 		hideSelection: false,
 	});
 
-	const gridTemplateColumnsComputed = computed<string>(() => props.cellFormat.widths.join(" "));
+	const gridTemplateColumnsComputed = computed<string>(() => props.manager().getGridTemplateColumns());
 
 </script>
 

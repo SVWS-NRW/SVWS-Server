@@ -1,5 +1,5 @@
-import type { Ref} from "vue";
-import { shallowRef, type ComponentPublicInstance } from "vue";
+import type { Ref, ShallowRef, WritableComputedRef} from "vue";
+import { ref, shallowRef, triggerRef, type ComponentPublicInstance } from "vue";
 import type { GridInput } from "./GridInput";
 import { GridInputAbiturNotenpunkte } from "./GridInputAbiturNotenpunkte";
 import { GridInputAbiturPruefungsreihenfolge } from "./GridInputAbiturPruefungsreihenfolge";
@@ -9,7 +9,50 @@ import { GridInputNote } from "./GridInputNote";
 import { GridInputIntegerDiv } from "./GridInputIntegerDiv";
 import type { Collection } from "../../../../../core/src/java/util/Collection";
 import type { List } from "../../../../../core/src/java/util/List";
+import type { JavaMap } from "../../../../../core/src/java/util/JavaMap";
+import { HashMap } from "../../../../../core/src/java/util/HashMap";
+import { ArrayList } from "../../../../../core/src/java/util/ArrayList";
 
+
+/**
+ * Die Definition und der aktuelle Zustand einer Spalte im Grid
+ */
+export interface GridColumn<DATA> {
+	/** Das eindeutige Kürzel der Spalte. Wird zur Anzeige genutzt und muss eindeutig sein. */
+	kuerzel: string,
+	/** Der längere Name der Spalte. Wird, sofern gesetzt und abweichend als Erläuterung zu dem Kurztext des Kürzels in einem Tooltip genutzt */
+	name: string,
+	/** Der Name des Attributes in einer Zeile, sofern die Spalte direkt mit einem Attribut verknüpft ist */
+	attribute?: keyof DATA,
+	/** Die Breite der Spalte. Ist diese nicht gesetzt, so wird ein Default-Wert von 4rem genutzt. */
+	width?: string,
+	/** Gibt an, on die Spalte auch versteckt werden darf oder nicht. Der Default-Wert ist false */
+	hideable?: boolean,
+}
+
+
+/**
+ * Das Konfigurationsobjekt für die initiale Konfiguration eines Grid-Managers.
+ */
+export interface GridManagerConfig<KEY, DATA, LIST extends Collection<DATA> | List<DATA>> {
+
+	/** Die Daten für die Zeilen, die mit dem Grid-Manager verwaltet werden */
+	daten: Ref<LIST>,
+
+	/** Die Methode, um den eindeutigen Key für eine Datenzeile zu bestimmen. */
+	getRowKey: (row: DATA) => KEY,
+
+	/** Die Spaltendefinition für das Grid, sofern diese über den Konstruktor vorgenommen werden soll */
+	columns?: Array<GridColumn<DATA>>,
+
+	/** Eine beschreibbare Referenz auf eine Map, um ggf. die Sichtbarkeit der Spalten außerhalb des Managers zu verwalten. */
+	colsVisible?: WritableComputedRef<Map<string, boolean | null>>,
+}
+
+
+/**
+ * Ein Manager, um die Daten und die Inputs in einem UiTableGrid zu Verwalten.
+ */
 export class GridManager<KEY, DATA, LIST extends Collection<DATA> | List<DATA>> {
 
 	/** Gibt an, ob die Informationen zum State aktuell sind oder nicht. */
@@ -38,6 +81,15 @@ export class GridManager<KEY, DATA, LIST extends Collection<DATA> | List<DATA>> 
 	/** Eine vue-Ref, welche verwendet wird, um auf die aktuellen Daten zuzugreifen. */
 	private _daten: Ref<LIST>;
 
+	/** Die Liste der Spalten-Definitionen im Grid. */
+	private _cols: ShallowRef<JavaMap<string, GridColumn<DATA>>>;
+
+	/** Eine Map, um ggf. die Sichtbarkeit der Spalten zu verwalten. */
+	private _colsVisible: Ref<Map<string, boolean | null>>;
+
+	/** Gibt an, ob in dem Grid eine Spalte existiert, die ausblendbar ist. */
+	private _hideableColumns = shallowRef<List<GridColumn<DATA>>>(new ArrayList<GridColumn<DATA>>);
+
 	/** Die Methode, zum Bestimmen des Schlüssels zu einer Datenzeile */
 	private _getRowKey: (row: DATA) => KEY;
 
@@ -50,9 +102,138 @@ export class GridManager<KEY, DATA, LIST extends Collection<DATA> | List<DATA>> 
 	 *
 	 * @param getRowKey   der Handler, welcher zu einer Daten-Zeile den Schlüssel der Datenzeile liefert.
 	 */
-	constructor(config: { daten: Ref<LIST>, getRowKey: (row: DATA) => KEY }) {
+	constructor(config: GridManagerConfig<KEY, DATA, LIST>) {
 		this._daten = config.daten;
 		this._getRowKey = config.getRowKey;
+		this._cols = shallowRef(new HashMap<string, GridColumn<DATA>>());
+		if (config.columns !== undefined)
+			this.setColumns(config.columns);
+		if (config.colsVisible === undefined)
+			this._colsVisible = ref(new Map<string, boolean | null>());
+		else
+			this._colsVisible = config.colsVisible;
+	}
+
+
+	/**
+	 * Gibt die Map mit den Spaltendefinitionen in Abhängigkeit des Kürzels zurück.
+	 *
+	 * @returns die Map mit den Spaltendefinitionen
+	 */
+	public get cols() : JavaMap<string, GridColumn<DATA>> {
+		return this._cols.value;
+	}
+
+
+	/**
+	 * Setzt die Informationen zu allen Spalten im Grid.
+	 *
+	 * @param columns   die Spaltendefinition für das Grid
+	 */
+	public setColumns(columns: Array<GridColumn<DATA>> | null) {
+		this._cols.value.clear();
+		const hideableColumns = new ArrayList<GridColumn<DATA>>;
+		if (columns !== null) {
+			for (const col of columns) {
+				if (col.hideable === undefined)
+					col.hideable = false;
+				if (col.hideable)
+					hideableColumns.add(col);
+				if (col.width === undefined)
+					col.width = '4rem';
+				this._cols.value.put(col.kuerzel, col);
+			}
+		}
+		triggerRef(this._cols);
+		this._hideableColumns.value = hideableColumns;
+	}
+
+
+	/**
+	 * Gibt die Sichtbarkeit der Spalte zurück. Ist diese bisher nicht festgelegt, so ist
+	 * die Spalte als Default sichtbar.
+	 *
+	 * @param kuerzel   das Kürzel der Spalte
+	 *
+	 * @returns true, falls die Spalte sichtbar ist und ansonsten falsee
+	 */
+	public isColVisible(kuerzel: string) {
+		return this._colsVisible.value.get(kuerzel) ?? true;
+	}
+
+
+	/**
+	 * Gibt zurück, ob in dem Grid eine Spalte existiert, welche ausblendbar ist.
+	 *
+	 * @return true, wenn eine Spalte ausblendbar ist, und ansonsten false
+	 */
+	public get hasHideableColumn(): boolean {
+		return !this._hideableColumns.value.isEmpty();
+	}
+
+
+	/**
+	 * Gibt zurück, ob eine Spalte existiert, die derzeit ausgeblendet ist.
+	 *
+	 * @return true, wenn aktuell eine Spalte ausgeblendet ist, und ansonsten false
+	 */
+	public get hasHiddenColumn(): boolean {
+		for (const visible of this._colsVisible.value.values())
+			if (visible === false)
+				return true;
+		return false;
+	}
+
+
+	/**
+	 * Gibt die Liste der ausblendbaren Spalten zurück.
+	 *
+	 * @returns die Liste der ausblendbaren Spalten
+	 */
+	public get hideableColumns(): List<GridColumn<DATA>> {
+		return this._hideableColumns.value;
+	}
+
+
+	/**
+	 * Setzt die Sichtbarkeit der Spalte mit dem übergebenen Kürzel auf den übergebenen Wert. Existiert
+	 * keine Spalte mit dem Kürzel oder ist die Spalte nicht auf hideable gesetzt, so wird eine
+	 * DeveloperNotificationException generiert.
+	 *
+	 * @param kuerzel   das Kürzel der Spalte
+	 * @param value     true, wenn die Spalte sichtbar sein soll, und ansonsten false
+	 */
+	public setColVisibility(kuerzel: string, value: boolean) {
+		const col = this._cols.value.get(kuerzel);
+		if ((col === null) || (col.hideable !== true))
+			throw new DeveloperNotificationException("Die Spalte mit dem Kürzel '" + kuerzel + "' ist in der Spalten-Definition nicht auf hideable gesetzt.");
+		if (value === this.isColVisible(kuerzel))
+			return;
+		this._colsVisible.value.set(kuerzel, value);
+		triggerRef(this._colsVisible);
+	}
+
+
+	/**
+	 * Gibt die Spaltenbreiten für das CSS-Grid, welches mit diesem Manager verwaltet wird, anhand der
+	 * definierten Spalten zurück.
+	 *
+	 * @returns die Spaltenbreiten für das CSS-Grid
+	 */
+	public getGridTemplateColumns(): string {
+		const cols = this._cols.value.values();
+		let isFirst = true;
+		let result = "";
+		for (const col of cols) {
+			if (!this.isColVisible(col.kuerzel))
+				continue;
+			if (isFirst)
+				isFirst = false;
+			else
+				result += " ";
+			result += col.width;
+		}
+		return result;
 	}
 
 
