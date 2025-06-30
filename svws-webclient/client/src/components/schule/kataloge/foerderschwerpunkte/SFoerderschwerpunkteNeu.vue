@@ -1,20 +1,23 @@
 <template>
 	<div class="page page-grid-cards">
-		<svws-ui-content-card title="Förderschwerpunkt anlegen">
-			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-select label="Förderschwerpunkt" :items="props.manager().getAvailableFoerderschwerpunkte()" v-model="selectedFoerderschwerpunkt"
-					:valid="fieldIsValid('kuerzelStatistik')" :item-text="v => v.daten(props.manager().getSchuljahr())?.text?? ''" />
-				<svws-ui-text-input placeholder="Kürzel" :min-len="1" :max-len="50" v-model="data.kuerzel" :disabled
-					:valid="fieldIsValid('kuerzel')" />
-				<svws-ui-input-number placeholder="Sortierung" v-model="data.sortierung" :disabled :min="0" :max="32000" />
-				<svws-ui-spacing />
-				<svws-ui-checkbox v-model="data.istSichtbar" :disabled>
-					Sichtbar
-				</svws-ui-checkbox>
-				<div class="mt-7 flex flex-row gap-4 justify end">
-					<svws-ui-button type="secondary" @click="cancel">Abbrechen</svws-ui-button>
-					<svws-ui-button @click="add" :disabled="!formIsValid || !hatKompetenzAdd">Speichern</svws-ui-button>
-				</div>
+		<svws-ui-content-card title="Allgemein">
+			<svws-ui-input-wrapper :grid="1">
+				<svws-ui-select label="ASD-Bezeichnung" span="full" :items="props.manager().getAvailableFoerderschwerpunkte()" v-model="selectedFoerderschwerpunkt"
+					:valid="fieldIsValid('kuerzelStatistik')" :item-text="v => v.daten(props.manager().getSchuljahr())?.text?? ''" statistics />
+				<svws-ui-input-wrapper :grid="2">
+					<svws-ui-text-input placeholder="Kürzel" :min-len="1" :max-len="50" v-model="data.kuerzel" :disabled :model-value="data.kuerzelStatistik"
+						:valid="fieldIsValid('kuerzel')" />
+					<svws-ui-text-input placeholder="Statistik-Kürzel" readonly :model-value="data.kuerzelStatistik" statistics />
+					<svws-ui-input-number placeholder="Sortierung" v-model="data.sortierung" :disabled :min="0" :max="32000" />
+					<svws-ui-spacing />
+					<svws-ui-checkbox v-model="data.istSichtbar" :disabled>
+						Sichtbar
+					</svws-ui-checkbox>
+					<div class="mt-7 flex flex-row gap-4 justify end">
+						<svws-ui-button type="secondary" @click="cancel">Abbrechen</svws-ui-button>
+						<svws-ui-button @click="add" :disabled="!formIsValid || !hatKompetenzAdd">Speichern</svws-ui-button>
+					</div>
+				</svws-ui-input-wrapper>
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-checkpoint-modal :checkpoint :continue-routing="props.continueRoutingAfterCheckpoint" />
