@@ -243,7 +243,7 @@ export class RouteDataNotenmodul extends RouteData<RouteStateNotenmodul> {
 	 */
 	public patchLernabschnitt = async (data: ENMLernabschnitt, patch: Partial<ENMLernabschnitt>): Promise<void> => {
 		patch.id = data.id;
-		// TODO await api.server.patchENMSchuelerLernabschnitt(patch, api.schema);
+		await api.server.patchENMSchuelerLernabschnitt(patch, api.schema);
 		Object.assign(data, patch);
 		this.commit();
 	}

@@ -615,6 +615,11 @@ public final class DataENMDaten extends DataManager<Long> {
 				case "fachbezogeneBemerkungen" ->
 					leistung.Lernentw = JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLeistungsdaten.col_Lernentw.datenlaenge(),
 							"fachbezogeneBemerkungen");
+				case "istGemahnt" -> {
+					if ((leistung.Warndatum != null) && (!"".equals(leistung.Warndatum.trim())))
+						throw new ApiOperationException(Status.BAD_REQUEST, "Patchen, ob gemahnt wurde, ist nicht erlaubt, da bereits ein Warndatum gesetzt ist.");
+					leistung.Warnung = JSONMapper.convertToBoolean(p.getValue(), true, p.getKey());
+				}
 				default ->
 					throw new ApiOperationException(Status.BAD_REQUEST, "Das Attribut %s darf nicht im Patch enthalten sein.".formatted(p.getKey()));
 			}
@@ -624,7 +629,7 @@ public final class DataENMDaten extends DataManager<Long> {
 		final int fsu = (leistung.uFehlStd == null) ? 0 : leistung.uFehlStd;
 		if (fsu > fs)
 			throw new ApiOperationException(Status.BAD_REQUEST,
-					"Die nicht entschuldigten Fehlstunden (%d) dürfen nicht mehr sein, als die gesamte Anzahl der Fehlstunden (%d) in dem Fach"
+					"Die nicht entschuldigten Fehlstunden (%d) dürfen nicht mehr sein, als die Anzahl der Fehlstunden (%d) in dem Fach"
 							.formatted(fsu, fs));
 		conn.transactionPersist(leistung);
 		conn.transactionFlush();
@@ -761,21 +766,78 @@ public final class DataENMDaten extends DataManager<Long> {
 		// Die Umsetzung der Notenmodul-Konfiguration ist noch nicht erfolgt.
 		for (final Entry<String, Object> p : patch.entrySet()) {
 			switch (p.getKey()) {
-				case "id" -> {
-					/* do nothing */ }
 				case "ASV" -> sb.ASV = JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLD_PSFachBem.col_ASV.datenlaenge(), p.getKey());
 				case "AUE" -> sb.AUE = JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLD_PSFachBem.col_AUE.datenlaenge(), p.getKey());
-				case "ZB" -> sla.ZeugnisBem = JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLernabschnittsdaten.col_ZeugnisBem.datenlaenge(), p.getKey());
-				case "LELS" -> sb.LELS = JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLD_PSFachBem.col_LELS.datenlaenge(), p.getKey());
-				case "schulformEmpf" -> sb.ESF = JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLD_PSFachBem.col_ESF.datenlaenge(), p.getKey());
-				case "individuelleVersetzungsbemerkungen" -> sb.BemerkungVersetzung = JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLD_PSFachBem.col_BemerkungVersetzung.datenlaenge(), p.getKey());
-				case "foerderbemerkungen" -> sb.BemerkungFSP = JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLD_PSFachBem.col_BemerkungFSP.datenlaenge(), p.getKey());
+				case "ZB" -> sla.ZeugnisBem =
+						JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLernabschnittsdaten.col_ZeugnisBem.datenlaenge(), p.getKey());
+				case "LELS" ->
+					sb.LELS = JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLD_PSFachBem.col_LELS.datenlaenge(), p.getKey());
+				case "schulformEmpf" ->
+					sb.ESF = JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLD_PSFachBem.col_ESF.datenlaenge(), p.getKey());
+				case "individuelleVersetzungsbemerkungen" -> sb.BemerkungVersetzung =
+						JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLD_PSFachBem.col_BemerkungVersetzung.datenlaenge(), p.getKey());
+				case "foerderbemerkungen" -> sb.BemerkungFSP =
+						JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLD_PSFachBem.col_BemerkungFSP.datenlaenge(), p.getKey());
 				default ->
 					throw new ApiOperationException(Status.BAD_REQUEST, "Das Attribut %s darf nicht im Patch enthalten sein.".formatted(p.getKey()));
 			}
 		}
 		conn.transactionPersist(sla);
 		conn.transactionPersist(sb);
+		conn.transactionFlush();
+		return Response.status(Status.NO_CONTENT).build();
+	}
+
+
+	/**
+	 * Prüft, ob ein Patchen eines Schüler-Lernabschnittes durch den aktuell angemeldeten
+	 * Benutzer erlaubt ist und passt diesen dann ggf. an.
+	 *
+	 * @param is   der {@link InputStream} mit dem JSON-Patch
+	 *
+	 * @return Die HTTP-Response der Patch-Operation
+	 *
+	 * @throws ApiOperationException im Fehlerfall
+	 */
+	public Response patchENMSchuelerlernabschnitt(final InputStream is) throws ApiOperationException {
+		final Map<String, Object> patch = JSONMapper.toMap(is);
+		if (patch.isEmpty())
+			throw new ApiOperationException(Status.BAD_REQUEST, "In dem Patch sind keine Daten enthalten.");
+
+		// Bestimme den Lernabschnitt des Schülers im aktuellen Schuljahresabschnitt der Schule.
+		if (!patch.containsKey("id"))
+			throw new ApiOperationException(Status.BAD_REQUEST, "Der Patch muss eine ID enthalten.");
+		final Long id = JSONMapper.convertToLong(patch.get("id"), false, "id");
+		final DTOSchuelerLernabschnittsdaten sla = conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, id);
+		if (sla == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Für die ID %d konnte kein Lernabschnitt gefunden werden.".formatted(id));
+
+		// Prüfe die Berechtigung für das Patchen der Bemerkungen anhand des Lernabschnittes des Schülers
+		final int berechtigung = pruefeBerechtigungPatchLernabschnitt(sla);
+
+		// Durchführen des Patches
+		// TODO Prüfe, ob die aktuelle Notenmodul-Konfiguration die jeweilige Änderungen zulässt
+		// Die Umsetzung der Notenmodul-Konfiguration ist noch nicht erfolgt.
+		for (final Entry<String, Object> p : patch.entrySet()) {
+			switch (p.getKey()) {
+				case "id" -> {
+					/* do nothing */ }
+				case "fehlstundenGesamt" ->
+					sla.SumFehlStd = JSONMapper.convertToIntegerInRange(p.getValue(), true, 0, 1000, "fehlstundenGesamt");
+				case "fehlstundenGesamtUnentschuldigt" ->
+					sla.SumFehlStdU = JSONMapper.convertToIntegerInRange(p.getValue(), true, 0, 1000, "fehlstundenGesamtUnentschuldigt");
+				default ->
+					throw new ApiOperationException(Status.BAD_REQUEST, "Das Attribut %s darf nicht im Patch enthalten sein.".formatted(p.getKey()));
+			}
+		}
+		// Prüfen, ob die Werte für die Fehlstunden so zulässig sind.
+		final int fs = (sla.SumFehlStd == null) ? 0 : sla.SumFehlStd;
+		final int fsu = (sla.SumFehlStdU == null) ? 0 : sla.SumFehlStdU;
+		if (fsu > fs)
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					"Die nicht entschuldigten Fehlstunden (%d) dürfen nicht mehr sein, als die Anzahl der Fehlstunden (%d) in dem Fach"
+							.formatted(fsu, fs));
+		conn.transactionPersist(sla);
 		conn.transactionFlush();
 		return Response.status(Status.NO_CONTENT).build();
 	}
