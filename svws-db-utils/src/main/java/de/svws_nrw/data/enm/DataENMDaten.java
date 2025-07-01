@@ -531,6 +531,37 @@ public final class DataENMDaten extends DataManager<Long> {
 	}
 
 
+	/**
+	 * Prüft, ob der angemeldete Benutzer eine Berechtigung zum Patchen von Lernabschnittsdaten hat oder nicht.
+	 *
+	 * @param lernabschnitt   die Lernabschnittsdaten.
+	 *
+	 * @return der Grund für die Berechtigung (0 - allgemeine Kompetenz, 2 - funktionsbezogen als Klassenlehrer oder Abteilungsleiter)
+	 *
+	 * @throws ApiOperationException für den Fall, dass keine Berechtigung für das Anpassen der Lernabschnittsdaten vorliegt
+	 */
+	private int pruefeBerechtigungPatchLernabschnitt(final DTOSchuelerLernabschnittsdaten lernabschnitt) throws ApiOperationException {
+		// Prüfe, ob der Lernabschnitt im aktuellen Schuljahresabschnitt der Schule liegt
+		if (conn.getUser().schuleGetSchuljahresabschnitt().id != lernabschnitt.Schuljahresabschnitts_ID)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die Lernabschnittsdaten sind nicht dem aktuellen Schuljahresabschnitt der Schule zugeordnet.");
+
+		// Prüfe, ob der angemeldete Benutzer eine allgemeine Berechtigung hat, um die Leistungsdaten anzupassen
+		if (conn.getUser().istAdmin() || conn.getUser().hatVerwendeteKompetenz(BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_ALLGEMEIN))
+			return 0;
+
+		// Prüfe, ob der angemeldete Benutzer eine funktionsbezogene Berechtigung hat, um die Leistungsdaten anzupassen
+		final Long idLehrer = conn.getUser().getIdLehrer();
+		if (idLehrer == null)
+			throw new ApiOperationException(Status.FORBIDDEN, "Ein funktionsbezogener Zugriff ist nur für Lehrer-Benutzer möglich.");
+
+		// Prüfe, ob der angemeldete Lehrer als Klassenlehrer oder Abteilungsleiter die nötigen Rechte besitzt.
+		if (conn.getUser().getKlassenIDs().contains(lernabschnitt.Klassen_ID))
+			return 2;
+
+		// ... ansonsten ist kein funktionsbezogener Zugriff erlaubt.
+		throw new ApiOperationException(Status.FORBIDDEN, "Der Lehrer hat keinen funktionsbezogenen Zugriff auf die ENM-Daten.");
+	}
+
 
 	/**
 	 * Prüft, ob ein Patchen der Leistungsdaten durch den aktuell angemeldeten Benutzer erlaubt ist
@@ -651,6 +682,100 @@ public final class DataENMDaten extends DataManager<Long> {
 			}
 		}
 		conn.transactionPersist(teilleistung);
+		conn.transactionFlush();
+		return Response.status(Status.NO_CONTENT).build();
+	}
+
+
+	/**
+	 * Ermittelt für die übergebene Schüler-ID die Lernabschnittsdaten des aktuellen
+	 * Schuljahresabschnittes der Schule.
+	 *
+	 * @param id   die ID des Schülers
+	 *
+	 * @return die Lernabschnittsdaten
+	 *
+	 * @throws ApiOperationException falls die Lernabschnittsdaten nicht erfolgreich bestimmt werden können
+	 */
+	private DTOSchuelerLernabschnittsdaten getLernabschnitt(final Long id) throws ApiOperationException {
+		// Bestimme zunächst den zugehörigen Schüler id der Datenbank
+		if (id == null)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Bei der Anfrage muss eine Schüler-ID angegeben werden.");
+		final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, id);
+		if (schueler == null)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Es existiert kein Schüler mit der ID %d.".formatted(id));
+
+		// Bestimme den Lernabschnitt mit der Wechsel-Nr 0 des Schülers in dem aktuellen Schuljahresabschnitt der Schule
+		final Schuljahresabschnitt sja = conn.getUser().schuleGetSchuljahresabschnitt();
+		final List<DTOSchuelerLernabschnittsdaten> slas = conn.queryList(
+				"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 AND e.Schuljahresabschnitts_ID = ?2 AND e.WechselNr = 0",
+				DTOSchuelerLernabschnittsdaten.class, schueler.ID, sja.id);
+		if (slas.isEmpty())
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					"Es existiert kein Lernabschnitt im aktuellen Schuljahresabschnitt der Schule für den Schüler mit der ID %d.".formatted(id));
+		if (slas.size() > 1)
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					"Es gibt mehrere Lernabschnitte im aktuellen Schuljahresabschnitt der Schule für den Schüler mit der ID %d und der WechselNr 0."
+							.formatted(id));
+		return slas.getFirst();
+	}
+
+
+	/**
+	 * Prüft, ob ein Patchen der Bemerkungen zu einem Schüler-Lernabschnitt durch den aktuell angemeldeten
+	 * Benutzer erlaubt ist und passt die Bemerkungen dann ggf. an.
+	 *
+	 * @param id   die ID des Schülers, dessen Bemerkungen angepasst werden sollen
+	 * @param is   der {@link InputStream} mit dem JSON-Patch
+	 *
+	 * @return Die HTTP-Response der Patch-Operation
+	 *
+	 * @throws ApiOperationException im Fehlerfall
+	 */
+	public Response patchENMSchuelerBemerkungen(final Long id, final InputStream is) throws ApiOperationException {
+		final Map<String, Object> patch = JSONMapper.toMap(is);
+		if (patch.isEmpty())
+			throw new ApiOperationException(Status.BAD_REQUEST, "In dem Patch sind keine Daten enthalten.");
+
+		// Bestimme den Lernabschnitt des Schülers im aktuellen Schuljahresabschnitt der Schule.
+		final DTOSchuelerLernabschnittsdaten sla = getLernabschnitt(id);
+
+		// Prüfe die Berechtigung für das Patchen der Bemerkungen anhand des Lernabschnittes des Schülers
+		final int berechtigung = pruefeBerechtigungPatchLernabschnitt(sla);
+
+		// Bestimme die Bemerkungen, welche dem Schüler zugeordnet sind.
+		final List<DTOSchuelerPSFachBemerkungen> sbs =
+				conn.queryList(DTOSchuelerPSFachBemerkungen.QUERY_BY_ABSCHNITT_ID, DTOSchuelerPSFachBemerkungen.class, sla.ID);
+		if (sbs.size() > 1)
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+					"Es gibt mehrere Einträge für Fachbemekungen zu dem Lernabschnitt mit der ID %d.".formatted(sla.ID));
+		final DTOSchuelerPSFachBemerkungen sb;
+		if (sbs.isEmpty()) {
+			sb = new DTOSchuelerPSFachBemerkungen(conn.transactionGetNextID(DTOSchuelerPSFachBemerkungen.class), sla.ID);
+		} else {
+			sb = sbs.getFirst();
+		}
+
+		// Durchführen des Patches
+		// TODO Prüfe, ob die aktuelle Notenmodul-Konfiguration die jeweilige Änderungen zulässt
+		// Die Umsetzung der Notenmodul-Konfiguration ist noch nicht erfolgt.
+		for (final Entry<String, Object> p : patch.entrySet()) {
+			switch (p.getKey()) {
+				case "id" -> {
+					/* do nothing */ }
+				case "ASV" -> sb.ASV = JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLD_PSFachBem.col_ASV.datenlaenge(), p.getKey());
+				case "AUE" -> sb.AUE = JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLD_PSFachBem.col_AUE.datenlaenge(), p.getKey());
+				case "ZB" -> sla.ZeugnisBem = JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLernabschnittsdaten.col_ZeugnisBem.datenlaenge(), p.getKey());
+				case "LELS" -> sb.LELS = JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLD_PSFachBem.col_LELS.datenlaenge(), p.getKey());
+				case "schulformEmpf" -> sb.ESF = JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLD_PSFachBem.col_ESF.datenlaenge(), p.getKey());
+				case "individuelleVersetzungsbemerkungen" -> sb.BemerkungVersetzung = JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLD_PSFachBem.col_BemerkungVersetzung.datenlaenge(), p.getKey());
+				case "foerderbemerkungen" -> sb.BemerkungFSP = JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLD_PSFachBem.col_BemerkungFSP.datenlaenge(), p.getKey());
+				default ->
+					throw new ApiOperationException(Status.BAD_REQUEST, "Das Attribut %s darf nicht im Patch enthalten sein.".formatted(p.getKey()));
+			}
+		}
+		conn.transactionPersist(sla);
+		conn.transactionPersist(sb);
 		conn.transactionFlush();
 		return Response.status(Status.NO_CONTENT).build();
 	}

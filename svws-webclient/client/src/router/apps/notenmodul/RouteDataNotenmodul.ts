@@ -229,7 +229,7 @@ export class RouteDataNotenmodul extends RouteData<RouteStateNotenmodul> {
 	 * @returns true im Erfolgsfall und ansonsten false
 	 */
 	public patchBemerkungen = async (id: number, data: ENMLeistungBemerkungen, patch: Partial<ENMLeistungBemerkungen>): Promise<void> => {
-		// TODO await api.server.patchENMSchuelerBemerkungen(id, patch, api.schema);
+		await api.server.patchENMSchuelerBemerkungen(patch, api.schema, id);
 		Object.assign(data, patch);
 		this.commit();
 	}

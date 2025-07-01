@@ -33,6 +33,7 @@ import { ENMConfigResponse } from '../core/data/enm/ENMConfigResponse';
 import { ENMDaten } from '../core/data/enm/ENMDaten';
 import { ENMLehrerInitialKennwort } from '../core/data/enm/ENMLehrerInitialKennwort';
 import { ENMLeistung } from '../core/data/enm/ENMLeistung';
+import { ENMLeistungBemerkungen } from '../core/data/enm/ENMLeistungBemerkungen';
 import { ENMServerConfigElement } from '../core/data/enm/ENMServerConfigElement';
 import { ENMTeilleistung } from '../core/data/enm/ENMTeilleistung';
 import { Erzieherart } from '../core/data/erzieher/Erzieherart';
@@ -2543,6 +2544,32 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der PATCH-Methode patchENMSchuelerBemerkungen für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/bemerkungen/{id : \d+}
+	 *
+	 * Passt die Bemerkungen eines Schülers anhand der ENM-Daten an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung im Rahmen der Notenmodul-Konfiguration besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die daten zu ändern.
+	 *   Code 404: Kein Eintrag mit der, im Patch angegebenen, ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<ENMLeistungBemerkungen>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchENMSchuelerBemerkungen(data : Partial<ENMLeistungBemerkungen>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/enm/bemerkungen/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = ENMLeistungBemerkungen.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode checkENMServer für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/check
 	 *
 	 * Prüft, ob der ENM-Server mit den hinterlegten Verbindungsdaten erreichbar ist.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Notendaten besitzt.
@@ -2856,9 +2883,9 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der PATCH-Methode patchENMLeistung für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/leistungen
+	 * Implementierung der PATCH-Methode patchENMLeistung für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/leistung
 	 *
-	 * Passt die Leistungsdaten eines Schüler anhand der ENM-Daten an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung im Rahmen der Notemodul-Konfiguration besitzt.
+	 * Passt die Leistungsdaten eines Schüler anhand der ENM-Daten an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung im Rahmen der Notenmodul-Konfiguration besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 204: Der Patch wurde erfolgreich integriert.
@@ -2872,7 +2899,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
 	public async patchENMLeistung(data : Partial<ENMLeistung>, schema : string) : Promise<void> {
-		const path = "/db/{schema}/enm/leistungen"
+		const path = "/db/{schema}/enm/leistung"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = ENMLeistung.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
@@ -2991,9 +3018,9 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der PATCH-Methode patchENMTeilleistung für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/teilleistungen
+	 * Implementierung der PATCH-Methode patchENMTeilleistung für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/teilleistung
 	 *
-	 * Passt die Teilleistungsdaten eines Schüler anhand der ENM-Daten an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung im Rahmen der Notemodul-Konfiguration besitzt.
+	 * Passt die Teilleistungsdaten eines Schüler anhand der ENM-Daten an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung im Rahmen der Notenmodul-Konfiguration besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 204: Der Patch wurde erfolgreich integriert.
@@ -3007,7 +3034,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
 	public async patchENMTeilleistung(data : Partial<ENMTeilleistung>, schema : string) : Promise<void> {
-		const path = "/db/{schema}/enm/teilleistungen"
+		const path = "/db/{schema}/enm/teilleistung"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = ENMTeilleistung.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
