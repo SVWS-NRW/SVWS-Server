@@ -489,6 +489,49 @@ public final class DataENMDaten extends DataManager<Long> {
 	}
 
 
+
+	/**
+	 * Prüft, ob der angemeldete Benutzer eine Berechtigung zum Patchen von Leistungsdaten hat oder nicht.
+	 *
+	 * @param leistung   die Leistungsdaten.
+	 *
+	 * @return der Grund für die Berechtigung (0 - allgemeine Kompetenz, 1 - funktionsbezogen als Fachlehrer,
+	 *         2 - funktionsbezogen als Klassenlehrer oder Abteilungsleiter)
+	 *
+	 * @throws ApiOperationException für den Fall, dass keine Berechtigung für das Anpassen der Leistungsdaten vorliegt
+	 */
+	private int pruefeBerechtigungPatchLeistung(final DTOSchuelerLeistungsdaten leistung) throws ApiOperationException {
+		final DTOSchuelerLernabschnittsdaten lernabschnitt = conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, leistung.Abschnitt_ID);
+		if (lernabschnitt == null) // Sollte nicht vorkommen, da eine Foreign-Key-Constraint besteht
+			throw new ApiOperationException(Status.NOT_FOUND, "Es konnte kein zugehöriger Lernabschnitt gefunden werden.");
+
+		// Prüfe, ob der Lernabschnitt im aktuellen Schuljahresabschnitt der Schule liegt
+		if (conn.getUser().schuleGetSchuljahresabschnitt().id != lernabschnitt.Schuljahresabschnitts_ID)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die Leistungsdaten sind nicht dem aktuellen Schuljahresabschnitt der Schule zugeordnet.");
+
+		// Prüfe, ob der angemeldete Benutzer eine allgemeine Berechtigung hat, um die Leistungsdaten anzupassen
+		if (conn.getUser().istAdmin() || conn.getUser().hatVerwendeteKompetenz(BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_ALLGEMEIN))
+			return 0;
+
+		// Prüfe, ob der angemeldete Benutzer eine funktionsbezogene Berechtigung hat, um die Leistungsdaten anzupassen
+		final Long idLehrer = conn.getUser().getIdLehrer();
+		if (idLehrer == null)
+			throw new ApiOperationException(Status.FORBIDDEN, "Ein funktionsbezogener Zugriff ist nur für Lehrer-Benutzer möglich.");
+
+		// Prüfe, ob er diese als Fachlehrer besitzt
+		if ((leistung.Fachlehrer_ID != null) && (leistung.Fachlehrer_ID.longValue() == idLehrer.longValue()))
+			return 1;
+
+		// Prüfe, ob der angemeldete Lehrer als Klassenlehrer oder Abteilungsleiter die nötigen Rechte besitzt.
+		if (conn.getUser().getKlassenIDs().contains(lernabschnitt.Klassen_ID))
+			return 2;
+
+		// ... ansonsten ist kein funktionsbezogener Zugriff erlaubt.
+		throw new ApiOperationException(Status.FORBIDDEN, "Der Lehrer hat keinen funktionsbezogenen Zugriff auf die ENM-Daten.");
+	}
+
+
+
 	/**
 	 * Prüft, ob ein Patchen der Leistungsdaten durch den aktuell angemeldeten Benutzer erlaubt ist
 	 * und passt die Leistungsdaten eines Schüler dann ggf. an.
@@ -510,41 +553,18 @@ public final class DataENMDaten extends DataManager<Long> {
 		final Long id = JSONMapper.convertToLong(patch.get("id"), false, "id");
 		final DTOSchuelerLeistungsdaten leistung = conn.queryByKey(DTOSchuelerLeistungsdaten.class, id);
 		if (leistung == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Für die ID %d konnten keine Leistungsdaten gefunden werden.");
-		final DTOSchuelerLernabschnittsdaten lernabschnitt = conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, leistung.Abschnitt_ID);
-		if (lernabschnitt == null) // Sollte nicht vorkommen, da eine Foreign-Key-Constraint besteht
-			throw new ApiOperationException(Status.NOT_FOUND, "Es konnte kein zugehöriger Lernabschnitt gefunden werden.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Für die ID %d konnten keine Leistungsdaten gefunden werden.".formatted(id));
 
-		// Prüfe, ob der Lernabschnitt im aktuellen Schuljahresabschnitt der Schule liegt
-		if (conn.getUser().schuleGetSchuljahresabschnitt().id != lernabschnitt.Schuljahresabschnitts_ID)
-			throw new ApiOperationException(Status.BAD_REQUEST, "Die Leistungsdaten sind nicht dem aktuellen Schuljahresabschnitt der Schule zugeordnet.");
-
-		// Prüfe, ob der angemeldete Benutzer die nötige Berechtigung hat, um die Leistungsdaten anzupassen
-		final boolean zugriffAllgemein =
-				conn.getUser().istAdmin() || conn.getUser().hatVerwendeteKompetenz(BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_ALLGEMEIN);
-		boolean zugriffFunktionFachlehrer = false;
-		boolean zugriffFunktionAbteilungOderKlassenlehrer = false;
-		if (!zugriffAllgemein) {
-			final Long idLehrer = conn.getUser().getIdLehrer();
-			if (idLehrer == null)
-				throw new ApiOperationException(Status.FORBIDDEN, "Ein funktionsbezogener Zugriff ist nur für Lehrer-Benutzer möglich.");
-			// Wenn der angemeldete Lehrer kein Fachlehrer ist, dann muss noch geprüft werden, ob der Lehrer als Klassenlehrer
-			// oder Abteilungsleiter die nötigen Rechte besitzt.
-			zugriffFunktionFachlehrer = (leistung.Fachlehrer_ID != null) && (leistung.Fachlehrer_ID.longValue() == idLehrer.longValue());
-			if (!zugriffFunktionFachlehrer) {
-				if (!conn.getUser().getKlassenIDs().contains(lernabschnitt.Klassen_ID))
-					throw new ApiOperationException(Status.FORBIDDEN, "Der Lehrer hat keinen funktionsbezogenen Zugriff auf die ENM-Daten.");
-				zugriffFunktionAbteilungOderKlassenlehrer = true;
-			}
-		}
-
-		// TODO Prüfe, ob die aktuelle Notenmodul-Konfiguration die Änderung der Note zulässt
-		// Die Umsetzung der Notenmodul-Konfiguration ist noch nicht erfolgt.
+		// Prüfe die Berechtigung für das Patchen der Leistungsdaten
+		final int berechtigung = pruefeBerechtigungPatchLeistung(leistung);
 
 		// Durchführen des Patches
+		// TODO Prüfe, ob die aktuelle Notenmodul-Konfiguration die jeweilige Änderung zulässt
+		// Die Umsetzung der Notenmodul-Konfiguration ist noch nicht erfolgt.
 		for (final Entry<String, Object> p : patch.entrySet()) {
 			switch (p.getKey()) {
-				case "id" -> { /* do nothing */ }
+				case "id" -> {
+					/* do nothing */ }
 				case "noteQuartal" -> {
 					final String kuerzel = JSONMapper.convertToString(p.getValue(), true, false, null, "noteQuartal");
 					if ((kuerzel != null) && (Note.fromKuerzel(kuerzel) == Note.KEINE))
@@ -576,6 +596,61 @@ public final class DataENMDaten extends DataManager<Long> {
 					"Die nicht entschuldigten Fehlstunden (%d) dürfen nicht mehr sein, als die gesamte Anzahl der Fehlstunden (%d) in dem Fach"
 							.formatted(fsu, fs));
 		conn.transactionPersist(leistung);
+		conn.transactionFlush();
+		return Response.status(Status.NO_CONTENT).build();
+	}
+
+
+	/**
+	 * Prüft, ob ein Patchen der Teilleistungen durch den aktuell angemeldeten Benutzer erlaubt ist
+	 * und passt die Teilleistung eines Schüler dann ggf. an.
+	 *
+	 * @param is   der {@link InputStream} mit dem JSON-Patch
+	 *
+	 * @return Die HTTP-Response der Patch-Operation
+	 *
+	 * @throws ApiOperationException im Fehlerfall
+	 */
+	public Response patchENMTeilleistung(final InputStream is) throws ApiOperationException {
+		final Map<String, Object> patch = JSONMapper.toMap(is);
+		if (patch.isEmpty())
+			throw new ApiOperationException(Status.BAD_REQUEST, "In dem Patch sind keine Daten enthalten.");
+
+		// Bestimme die Teilleistung anhand der ID des Patches und die Leistungsdaten anhand der Teilleistung
+		if (!patch.containsKey("id"))
+			throw new ApiOperationException(Status.BAD_REQUEST, "Der Patch muss eine ID enthalten.");
+		final Long id = JSONMapper.convertToLong(patch.get("id"), false, "id");
+		final DTOSchuelerTeilleistung teilleistung = conn.queryByKey(DTOSchuelerTeilleistung.class, id);
+		if (teilleistung == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Für die ID %d konnten keine Teilleistungsdaten gefunden werden.".formatted(id));
+
+		// Bestimme die zugehörigen Leistungsdaten anhand der ID aus den Daten der Teilleistung
+		final DTOSchuelerLeistungsdaten leistung = conn.queryByKey(DTOSchuelerLeistungsdaten.class, teilleistung.Leistung_ID);
+		if (leistung == null)
+			throw new ApiOperationException(Status.NOT_FOUND,
+					"Für die ID %d konnten keine Leistungsdaten gefunden werden.".formatted(teilleistung.Leistung_ID));
+
+		// Prüfe die Berechtigung für das Patchen der Teilleistungsdaten anhand der zugehörigen Leistungsdaten
+		final int berechtigung = pruefeBerechtigungPatchLeistung(leistung);
+
+		// Durchführen des Patches
+		// TODO Prüfe, ob die aktuelle Notenmodul-Konfiguration die jeweilige Änderungen zulässt
+		// Die Umsetzung der Notenmodul-Konfiguration ist noch nicht erfolgt.
+		for (final Entry<String, Object> p : patch.entrySet()) {
+			switch (p.getKey()) {
+				case "id" -> {
+					/* do nothing */ }
+				case "note" -> {
+					final String kuerzel = JSONMapper.convertToString(p.getValue(), true, false, null, "note");
+					if ((kuerzel != null) && (Note.fromKuerzel(kuerzel) == Note.KEINE))
+						throw new ApiOperationException(Status.BAD_REQUEST, "Die Zeichenkette '%s' ist keine gültige Note.".formatted(kuerzel));
+					teilleistung.NotenKrz = kuerzel;
+				}
+				default ->
+					throw new ApiOperationException(Status.BAD_REQUEST, "Das Attribut %s darf nicht im Patch enthalten sein.".formatted(p.getKey()));
+			}
+		}
+		conn.transactionPersist(teilleistung);
 		conn.transactionFlush();
 		return Response.status(Status.NO_CONTENT).build();
 	}

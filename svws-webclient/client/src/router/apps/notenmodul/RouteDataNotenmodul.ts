@@ -216,7 +216,7 @@ export class RouteDataNotenmodul extends RouteData<RouteStateNotenmodul> {
 	 */
 	public patchTeilleistung = async (data: ENMTeilleistung, patch: Partial<ENMTeilleistung>): Promise<void> => {
 		patch.id = data.id;
-		// TODO await api.server.patchENMTeilleistung(patch, api.schema);
+		await api.server.patchENMTeilleistung(patch, api.schema);
 		Object.assign(data, patch);
 		this.commit();
 	}
