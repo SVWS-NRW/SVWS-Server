@@ -110,7 +110,7 @@ export class RouteDataSchuelerAbitur extends RouteData<RouteStateDataSchuelerAbi
 		this.setPatchedState(newState)
 	}
 
-	updateAbiturpruefungsdaten = async (manager: () => AbiturdatenManager, belegung: Partial<AbiturFachbelegung>) => {
+	updateAbiturpruefungsdaten = async (manager: () => AbiturdatenManager, belegung: Partial<AbiturFachbelegung>, berechnePflichtpruefungenNeu: boolean) => {
 		if (belegung.fachID === undefined)
 			throw new DeveloperNotificationException("Die FachID muss bei der Abitur-Fachbelegung gesetzt sein, damit ein Patchen möglich ist.");
 		// Erstelle eine Kopie der Abiturdaten, wo die Fachbelegung aus dem Patch angepasst wurde.
@@ -127,7 +127,7 @@ export class RouteDataSchuelerAbitur extends RouteData<RouteStateDataSchuelerAbi
 		if (!found)
 			throw new DeveloperNotificationException("Die FachID ist in den Abiturdaten nicht als Belegung vorhanden.");
 		// Berechnen des Prüfungsergebnisses und Senden an den Server
-		AbiturdatenManager.berechnePruefungsergebnis(clone);
+		AbiturdatenManager.berechnePruefungsergebnis(clone, berechnePflichtpruefungenNeu);
 		await api.server.patchGostSchuelerAbiturdaten(clone, api.schema, clone.schuelerID);
 		// Patchen der Originaldaten und dortige Berechnung des Prüfungsergebnisses nach erfolgreichem Senden an den Server
 		for (const tmpBelegung of orig.fachbelegungen) {
@@ -137,7 +137,7 @@ export class RouteDataSchuelerAbitur extends RouteData<RouteStateDataSchuelerAbi
 			}
 		}
 		manager().pruefeZulassung();
-		AbiturdatenManager.berechnePruefungsergebnis(orig);
+		AbiturdatenManager.berechnePruefungsergebnis(orig, berechnePflichtpruefungenNeu);
 		this.commit();
 	}
 
