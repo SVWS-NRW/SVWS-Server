@@ -435,9 +435,24 @@ public class DBBackupManager {
 
 			// Lese alle Datensätze aus der Quell-Tabelle
 			logger.log("- Lese Datensätze: ");
-			final String sql = tab.getSpalten(rev).stream()
-					.map(t -> t.name())
-					.collect(Collectors.joining(", ", "SELECT ", " FROM " + tab.name()));
+			final String sql;
+			// Prüfe auf Spezialfall für Backups basierend auf frühen Migrationenn vor Implementierung von DB-Revision 43 im SVWS-Server
+			if ((rev < 43) && (this.schemaManager.getConnection().getDBDriver() == DBDriver.SQLITE)
+					&& (("LehrerLehramtFachr".equals(tab.name())) || ("LehrerLehramtLehrbef".equals(tab.name())))
+					&& !this.schemaManager.getSchemaStatus().hasColumn(tab.name(), "LehramtKrz")) {
+				sql = tab.getSpalten(rev).stream()
+						.map(t -> {
+							if ("LehramtKrz".equals(t.name()))
+								return "'' AS " + t.name();
+							return t.name();
+						})
+						.collect(Collectors.joining(", ", "SELECT ", " FROM " + tab.name()));
+			} else {
+				// Normaler Fall
+				sql = tab.getSpalten(rev).stream()
+						.map(t -> t.name())
+						.collect(Collectors.joining(", ", "SELECT ", " FROM " + tab.name()));
+			}
 			final List<Object[]> entities = srcConn.query(sql);
 			if (entities == null) {
 				logger.logLn(LogLevel.ERROR, 0, "[FEHLER] - Kann die Datensätze nicht einlesen - Überspringe die Tabelle");

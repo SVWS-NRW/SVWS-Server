@@ -1428,16 +1428,19 @@ LehrerPersonaldaten {
       LehrerLehrbefaehigungEintrag {
         "id": 76,
         "idAnerkennungsgrund": 1,
+        "idLehramt": -1,
         "idLehrbefaehigung": 203,
       },
       LehrerLehrbefaehigungEintrag {
         "id": 76,
         "idAnerkennungsgrund": 1,
+        "idLehramt": -1,
         "idLehrbefaehigung": 216,
       },
       LehrerLehrbefaehigungEintrag {
         "id": 76,
         "idAnerkennungsgrund": 1,
+        "idLehramt": -1,
         "idLehrbefaehigung": 226,
       },
     ],

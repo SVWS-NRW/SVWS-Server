@@ -3,6 +3,9 @@
 		<template #cell(fachrichtung)="{ rowData }">
 			{{ getFachrichtung(rowData).daten(schuljahr)?.text ?? '—' }}
 		</template>
+		<template #cell(lehramt)="{ rowData }">
+			{{ getLehramt(rowData).daten(schuljahr)?.text ?? '—' }}
+		</template>
 		<template #cell(anerkennung)="{ rowData }">
 			<svws-ui-select title="Anerkennungsgrund Fachrichtung" v-if="hatUpdateKompetenz" :model-value="getFachrichtungAnerkennung(rowData)"
 				@update:model-value="anerkennung => patchFachrichtungAnerkennung(rowData, anerkennung ?? null)"
@@ -22,8 +25,8 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { List, LehrerFachrichtungEintrag, LehrerListeManager, LehrerPersonaldaten} from "@core";
-	import { LehrerFachrichtung, LehrerFachrichtungAnerkennung, Arrays } from "@core";
+	import type { List, LehrerFachrichtungEintrag, LehrerListeManager, LehrerPersonaldaten, LehrerLehramtEintrag} from "@core";
+	import { LehrerFachrichtung, LehrerFachrichtungAnerkennung, Arrays, LehrerLehramt } from "@core";
 
 	const props = defineProps<{
 		hatUpdateKompetenz: boolean;
@@ -42,12 +45,17 @@
 
 	const columns = [
 		{key: 'fachrichtung', label: 'Fachrichtung', span: 1, statistic: true },
+		{key: 'lehramt', label: 'Lehramt', span: 1 },
 		{key: 'anerkennung', label: 'Anerkennungsgrund', span: 1 },
 	]
 
 	function getFachrichtung(eintrag: LehrerFachrichtungEintrag) : LehrerFachrichtung {
 		const fachrichtung = LehrerFachrichtung.data().getWertByID(eintrag.idFachrichtung);
 		return fachrichtung;
+	}
+
+	function getLehramt(eintrag: LehrerLehramtEintrag) : LehrerLehramt {
+		return LehrerLehramt.data().getWertByID(eintrag.idLehramt);
 	}
 
 	function getFachrichtungAnerkennung(eintrag: LehrerFachrichtungEintrag) : LehrerFachrichtungAnerkennung | null {

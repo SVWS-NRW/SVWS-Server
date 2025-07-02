@@ -19,6 +19,10 @@ public class Tabelle_LehrerLehramtFachr extends SchemaTabelle {
 			.setNotNull()
 			.setJavaComment("LehrerID zu der die Fachrichtung gehört");
 
+	/** Die Definition der Tabellenspalte LehramtKrz */
+	public SchemaTabelleSpalte col_LehramtKrz = add("LehramtKrz", SchemaDatentypen.VARCHAR, true).setDatenlaenge(10)
+			.setJavaComment("Lehramtskürzel");
+
 	/** Die Definition der Tabellenspalte FachrKrz */
 	public SchemaTabelleSpalte col_FachrKrz = add("FachrKrz", SchemaDatentypen.VARCHAR, true).setDatenlaenge(10)
 			.setJavaComment("Fachrichtungskürzel");

@@ -15,6 +15,9 @@ public final class DTOLehrerLehramtFachrichtungPK implements Serializable {
 	/** LehrerID zu der die Fachrichtung gehört */
 	public long Lehrer_ID;
 
+	/** Lehramtskürzel */
+	public String LehramtKrz;
+
 	/** Fachrichtungskürzel */
 	public String FachrKrz;
 
@@ -28,10 +31,15 @@ public final class DTOLehrerLehramtFachrichtungPK implements Serializable {
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOLehrerLehramtFachrichtungPK.
 	 * @param Lehrer_ID   der Wert für das Attribut Lehrer_ID
+	 * @param LehramtKrz   der Wert für das Attribut LehramtKrz
 	 * @param FachrKrz   der Wert für das Attribut FachrKrz
 	 */
-	public DTOLehrerLehramtFachrichtungPK(final long Lehrer_ID, final String FachrKrz) {
+	public DTOLehrerLehramtFachrichtungPK(final long Lehrer_ID, final String LehramtKrz, final String FachrKrz) {
 		this.Lehrer_ID = Lehrer_ID;
+		if (LehramtKrz == null) {
+			throw new NullPointerException("LehramtKrz must not be null");
+		}
+		this.LehramtKrz = LehramtKrz;
 		if (FachrKrz == null) {
 			throw new NullPointerException("FachrKrz must not be null");
 		}
@@ -50,6 +58,11 @@ public final class DTOLehrerLehramtFachrichtungPK implements Serializable {
 		DTOLehrerLehramtFachrichtungPK other = (DTOLehrerLehramtFachrichtungPK) obj;
 		if (Lehrer_ID != other.Lehrer_ID)
 			return false;
+		if (LehramtKrz == null) {
+			if (other.LehramtKrz != null)
+				return false;
+		} else if (!LehramtKrz.equals(other.LehramtKrz))
+			return false;
 		if (FachrKrz == null) {
 			if (other.FachrKrz != null)
 				return false;
@@ -63,6 +76,8 @@ public final class DTOLehrerLehramtFachrichtungPK implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + Long.hashCode(Lehrer_ID);
+
+		result = prime * result + ((LehramtKrz == null) ? 0 : LehramtKrz.hashCode());
 
 		result = prime * result + ((FachrKrz == null) ? 0 : FachrKrz.hashCode());
 		return result;

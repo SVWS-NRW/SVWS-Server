@@ -20,23 +20,29 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @IdClass(DTOLehrerLehramtBefaehigungPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "LehrerLehramtLehrbef")
-@JsonPropertyOrder({"Lehrer_ID", "LehrbefKrz", "LehrbefAnerkennungKrz"})
+@JsonPropertyOrder({"Lehrer_ID", "LehramtKrz", "LehrbefKrz", "LehrbefAnerkennungKrz"})
 public final class DTOLehrerLehramtBefaehigung {
 
 	/** Die Datenbankabfrage für alle DTOs */
 	public static final String QUERY_ALL = "SELECT e FROM DTOLehrerLehramtBefaehigung e";
 
 	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
-	public static final String QUERY_PK = "SELECT e FROM DTOLehrerLehramtBefaehigung e WHERE e.Lehrer_ID = ?1 AND e.LehrbefKrz = ?2";
+	public static final String QUERY_PK = "SELECT e FROM DTOLehrerLehramtBefaehigung e WHERE e.Lehrer_ID = ?1 AND e.LehramtKrz = ?2 AND e.LehrbefKrz = ?3";
 
 	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
-	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOLehrerLehramtBefaehigung e WHERE e.Lehrer_ID IS NOT NULL AND e.LehrbefKrz IS NOT NULL";
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOLehrerLehramtBefaehigung e WHERE e.Lehrer_ID IS NOT NULL AND e.LehramtKrz IS NOT NULL AND e.LehrbefKrz IS NOT NULL";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Lehrer_ID */
 	public static final String QUERY_BY_LEHRER_ID = "SELECT e FROM DTOLehrerLehramtBefaehigung e WHERE e.Lehrer_ID = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Lehrer_ID */
 	public static final String QUERY_LIST_BY_LEHRER_ID = "SELECT e FROM DTOLehrerLehramtBefaehigung e WHERE e.Lehrer_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes LehramtKrz */
+	public static final String QUERY_BY_LEHRAMTKRZ = "SELECT e FROM DTOLehrerLehramtBefaehigung e WHERE e.LehramtKrz = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes LehramtKrz */
+	public static final String QUERY_LIST_BY_LEHRAMTKRZ = "SELECT e FROM DTOLehrerLehramtBefaehigung e WHERE e.LehramtKrz IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes LehrbefKrz */
 	public static final String QUERY_BY_LEHRBEFKRZ = "SELECT e FROM DTOLehrerLehramtBefaehigung e WHERE e.LehrbefKrz = ?1";
@@ -55,6 +61,12 @@ public final class DTOLehrerLehramtBefaehigung {
 	@Column(name = "Lehrer_ID")
 	@JsonProperty
 	public long Lehrer_ID;
+
+	/** Lehramtskürzel */
+	@Id
+	@Column(name = "LehramtKrz")
+	@JsonProperty
+	public String LehramtKrz;
 
 	/** Kürzel der Lehrbefähigung */
 	@Id
@@ -94,6 +106,11 @@ public final class DTOLehrerLehramtBefaehigung {
 		DTOLehrerLehramtBefaehigung other = (DTOLehrerLehramtBefaehigung) obj;
 		if (Lehrer_ID != other.Lehrer_ID)
 			return false;
+		if (LehramtKrz == null) {
+			if (other.LehramtKrz != null)
+				return false;
+		} else if (!LehramtKrz.equals(other.LehramtKrz))
+			return false;
 		if (LehrbefKrz == null) {
 			if (other.LehrbefKrz != null)
 				return false;
@@ -108,6 +125,8 @@ public final class DTOLehrerLehramtBefaehigung {
 		int result = 1;
 		result = prime * result + Long.hashCode(Lehrer_ID);
 
+		result = prime * result + ((LehramtKrz == null) ? 0 : LehramtKrz.hashCode());
+
 		result = prime * result + ((LehrbefKrz == null) ? 0 : LehrbefKrz.hashCode());
 		return result;
 	}
@@ -120,7 +139,7 @@ public final class DTOLehrerLehramtBefaehigung {
 	 */
 	@Override
 	public String toString() {
-		return "DTOLehrerLehramtBefaehigung(Lehrer_ID=" + this.Lehrer_ID + ", LehrbefKrz=" + this.LehrbefKrz + ", LehrbefAnerkennungKrz=" + this.LehrbefAnerkennungKrz + ")";
+		return "DTOLehrerLehramtBefaehigung(Lehrer_ID=" + this.Lehrer_ID + ", LehramtKrz=" + this.LehramtKrz + ", LehrbefKrz=" + this.LehrbefKrz + ", LehrbefAnerkennungKrz=" + this.LehrbefAnerkennungKrz + ")";
 	}
 
 }

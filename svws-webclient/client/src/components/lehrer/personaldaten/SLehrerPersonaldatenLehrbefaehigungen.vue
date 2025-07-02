@@ -3,6 +3,9 @@
 		<template #cell(lehrbefaehigung)="{ rowData }">
 			{{ getLehrbefaehigung(rowData).daten(schuljahr)?.text ?? '—' }}
 		</template>
+		<template #cell(lehramt)="{ rowData }">
+			{{ getLehramt(rowData).daten(schuljahr)?.text ?? '—' }}
+		</template>
 		<template #cell(anerkennung)="{ rowData }">
 			<svws-ui-select title="Anerkennungsgrund Lehrbefähigung" v-if="hatUpdateKompetenz" :model-value="getLehrbefaehigungAnerkennung(rowData)"
 				@update:model-value="anerkennung => patchLehrbefaehigungAnerkennung(rowData, anerkennung ?? null)"
@@ -22,7 +25,7 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { List, LehrerLehrbefaehigungEintrag, LehrerListeManager, LehrerPersonaldaten} from "@core";
+	import { List, LehrerLehrbefaehigungEintrag, LehrerListeManager, LehrerPersonaldaten, LehrerLehramt, LehrerLehramtEintrag} from "@core";
 	import { LehrerLehrbefaehigung, LehrerLehrbefaehigungAnerkennung, Arrays } from "@core";
 
 	const props = defineProps<{
@@ -42,12 +45,17 @@
 
 	const columns = [
 		{key: 'lehrbefaehigung', label: 'Lehrbefähigung', span: 1, statistic: true },
+		{key: 'lehramt', label: 'Lehramt', span: 1 },
 		{key: 'anerkennung', label: 'Anerkennungsgrund', span: 1 },
 	]
 
 	function getLehrbefaehigung(eintrag: LehrerLehrbefaehigungEintrag) : LehrerLehrbefaehigung {
 		const lehrbefaehigung = LehrerLehrbefaehigung.data().getWertByID(eintrag.idLehrbefaehigung);
 		return lehrbefaehigung;
+	}
+
+	function getLehramt(eintrag: LehrerLehramtEintrag) : LehrerLehramt {
+		return LehrerLehramt.data().getWertByID(eintrag.idLehramt);
 	}
 
 	function getLehrbefaehigungAnerkennung(eintrag: LehrerLehrbefaehigungEintrag) : LehrerLehrbefaehigungAnerkennung | null {
