@@ -4,7 +4,6 @@
 		"outDir": "./dist",
 		"baseUrl": ".",
 		"paths": {
-			"~/*": ["src/*"],
 			"@json/*": ["../../svws-asd/src/main/resources/de/svws_nrw/asd/types/*"],
 		},
 		"types": [ "vite/client" ],

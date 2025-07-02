@@ -133,7 +133,6 @@
 		props.manager().schulgliederungen.auswahlClear();
 		props.manager().lehrer.auswahlClear();
 		props.manager().jahrgaenge.auswahlClear();
-		props.manager().setFilterNurSichtbar(false);
 		await props.setFilter();
 	}
 

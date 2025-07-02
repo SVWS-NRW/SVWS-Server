@@ -61,12 +61,14 @@
 </template>
 
 <script setup lang="ts">
-	import { logEvent } from '~/stories/helper';
+
 	import { ref } from 'vue';
+	import { logEvent } from '../../stories/helper';
 
 	const modelValue = ref("This is a filled textarea component");
 
 	function onInput(value: string | null) {
 		logEvent('input', value);
 	}
+
 </script>

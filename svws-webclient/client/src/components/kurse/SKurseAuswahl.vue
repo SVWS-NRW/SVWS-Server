@@ -87,11 +87,11 @@
 		},
 	})
 
-	function text(eintrag: LehrerListeEintrag | JahrgangsDaten | FachDaten): string {
+	function text(eintrag: LehrerListeEintrag | JahrgangsDaten | FaecherListeEintrag): string {
 		return eintrag.kuerzel ?? "";
 	}
 
-	function find(items: Iterable<LehrerListeEintrag | JahrgangsDaten | FachDaten>, search: string) {
+	function find(items: Iterable<LehrerListeEintrag | JahrgangsDaten | FaecherListeEintrag>, search: string) {
 		const list = [];
 		for (const i of items)
 			if ((i.kuerzel !== null) && i.kuerzel.toLocaleLowerCase().includes(search.toLocaleLowerCase()))

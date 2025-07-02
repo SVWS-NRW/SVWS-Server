@@ -1,8 +1,8 @@
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
-import type { List, SimpleOperationResponse } from "@core";
+import type { List, SimpleOperationResponse , FoerderschwerpunktEintrag } from "@core";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
-import { ArrayList, FoerderschwerpunktEintrag, FoerderschwerpunkteListeManager } from "@core";
+import { ArrayList, FoerderschwerpunkteListeManager } from "@core";
 import { ViewType } from "@ui";
 import { api } from "~/router/Api";
 import { routeFoerderschwerpunkteDaten } from "~/router/apps/schule/foerderschwerpunkte/RouteFoerderschwerpunkteDaten";

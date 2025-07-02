@@ -27,7 +27,6 @@ export class RouteStundenplanZeitrasterPausenzeit extends RouteNode<any, RouteSt
 			listLehrer: routeStundenplan.data.listLehrer,
 			patchPausenzeit: routeStundenplan.data.patchPausenzeit,
 			removePausenzeiten: routeStundenplan.data.removePausenzeiten,
-			importPausenzeiten: routeStundenplan.data.importPausenzeiten,
 			patchZeitraster: routeStundenplan.data.patchZeitraster,
 			addZeitraster: routeStundenplan.data.addZeitraster,
 			removeZeitraster: routeStundenplan.data.removeZeitraster,

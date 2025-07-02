@@ -35,7 +35,7 @@
 </template>
 
 <script setup lang="ts">
-	import { logEvent } from '~/stories/helper';
+	import { logEvent } from '../../stories/helper';
 
 	const dropdownActions = [
 		{ key: 1, text: "Button 1", action: () => logEvent("Button 1 clicked") },

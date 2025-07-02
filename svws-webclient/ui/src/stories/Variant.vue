@@ -30,8 +30,8 @@
 
 	import { computed, onBeforeMount, onUnmounted, ref, useSlots } from 'vue';
 	import storyManager from './StoryManager';
-	import type { PaneSplitterConfig} from '~/ui/composables/usePaneSplitter';
-	import { usePaneSplitter } from '~/ui/composables/usePaneSplitter';
+	import type { PaneSplitterConfig } from './../ui/composables/usePaneSplitter';
+	import { usePaneSplitter } from './../ui/composables/usePaneSplitter';
 
 	const props = withDefaults(defineProps<{
 		title: string;

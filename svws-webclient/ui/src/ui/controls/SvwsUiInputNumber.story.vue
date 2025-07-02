@@ -55,7 +55,7 @@
 <script setup lang="ts">
 
 	import { ref } from "vue";
-	import { logEvent } from '~/stories/helper';
+	import { logEvent } from '../../stories/helper';
 
 	const value1 = ref<number | null>(1);
 	const value2 = ref<number | null>(null);

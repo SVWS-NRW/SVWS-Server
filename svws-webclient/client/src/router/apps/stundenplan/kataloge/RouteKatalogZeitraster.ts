@@ -43,7 +43,6 @@ export class RouteKatalogZeitraster extends RouteNode<any, RouteStundenplan> {
 			listLehrer: new ArrayList<LehrerListeEintrag>(),
 			patchPausenzeit: async () => {}, // this.data.patchPausenzeit,
 			removePausenzeiten: async () => {}, // this.data.removePausenzeiten,
-			importPausenzeiten: async () => {}, // this.data.importPausenzeiten,
 			patchZeitraster: this.data.patchZeitraster,
 			addZeitraster: this.data.addZeitraster,
 			removeZeitraster: this.data.removeZeitraster,

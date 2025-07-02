@@ -37,8 +37,8 @@
 		"unplugin-vue-markdown": "^29.1.0",
 		"vite": "npm:rolldown-vite@latest",
 		"vitest": "^3.0.1",
-		"vue-component-type-helpers": "^2.2.0",
-		"vue-tsc": "^2.2.0"
+		"vue-component-type-helpers": "^3.0.0",
+		"vue-tsc": "^3.0.0"
 	},
 	"peerDependencies": {
 		"vue": "^3.4.13"

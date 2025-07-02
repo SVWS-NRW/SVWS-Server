@@ -58,8 +58,9 @@
 </template>
 
 <script setup lang="ts">
-	import { logEvent } from '~/stories/helper';
+
 	import { ref, reactive } from "vue";
+	import { logEvent } from '../../stories/helper';
 
 	const state = reactive({
 		label: 'Label für die Komponente',
@@ -87,4 +88,5 @@
 	function onInput(event: Event) {
 		logEvent("input", event);
 	}
+
 </script>

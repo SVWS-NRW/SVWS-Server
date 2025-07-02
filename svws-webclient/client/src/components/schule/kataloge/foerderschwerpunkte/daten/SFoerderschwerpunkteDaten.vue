@@ -4,7 +4,7 @@
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input class="contentFocusField" span="full" placeholder="ASD-Bezeichnung" :model-value="manager().daten().text" readonly statistics />
 				<svws-ui-text-input placeholder="Kürzel" :model-value="manager().daten().kuerzel" :readonly
-					@change="kuerzel => patch({ kuerzel })" :max-len="50" :valid="kuerzelIsValid" />
+					@change="kuerzel => patch({ kuerzel: kuerzel ?? '' })" :max-len="50" :valid="kuerzelIsValid" />
 				<svws-ui-text-input placeholder="Statistik-Kürzel" readonly :model-value="manager().daten().kuerzelStatistik" statistics />
 				<svws-ui-input-number placeholder="Sortierung" :model-value="manager().daten().sortierung" :readonly :min="0" :max="32000"
 					@change="value => patch({ sortierung: value === null ? 32000 : value })" />
@@ -28,7 +28,7 @@
 	const readonly = computed<boolean>(() => !hatKompetenzUpdate.value);
 
 	function kuerzelIsValid(input: string | null) {
-		if ((input === null) || JavaString.isBlank(input) || (input > 50))
+		if ((input === null) || JavaString.isBlank(input) || (input.length > 50))
 			return false;
 
 		for (const eintrag of props.manager().liste.list())

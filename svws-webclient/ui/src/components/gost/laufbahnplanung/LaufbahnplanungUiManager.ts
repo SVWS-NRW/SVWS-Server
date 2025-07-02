@@ -1,9 +1,29 @@
 import { computed, ref } from "vue";
-import { AbiturFachbelegungHalbjahr, GostJahrgangsdaten, GostSchuelerFachwahl, JavaMap, Sprachbelegung, AbiturdatenManager,
-	GostFach, List, Sprachpruefung } from "../../../../../core/src";
-import { ServerMode, GostAbiturFach, GostFachbereich, GostFachUtils, GostKursart, Note, Fach, Fachgruppe, HashMap2D, SprachendatenUtils,
-	ArrayList, GostHalbjahr, HashMap, RGBFarbe } from "../../../../../core/src";
-import type { Config } from "~/utils/Config";
+import type { AbiturFachbelegungHalbjahr } from "../../../../../core/src/core/data/gost/AbiturFachbelegungHalbjahr";
+import type { GostFach } from "../../../../../core/src/core/data/gost/GostFach";
+import type { GostJahrgangsdaten } from "../../../../../core/src/core/data/gost/GostJahrgangsdaten";
+import type { GostSchuelerFachwahl } from "../../../../../core/src/core/data/gost/GostSchuelerFachwahl";
+import type { JavaMap } from "../../../../../core/src/java/util/JavaMap";
+import type { List } from "../../../../../core/src/java/util/List";
+import type { ServerMode } from "../../../../../core/src/core/types/ServerMode";
+import type { Sprachpruefung } from "../../../../../core/src/asd/data/schueler/Sprachpruefung";
+import type { Sprachbelegung } from "../../../../../core/src/asd/data/schueler/Sprachbelegung";
+import { AbiturdatenManager } from "../../../../../core/src/core/abschluss/gost/AbiturdatenManager";
+import { ArrayList } from "../../../../../core/src/java/util/ArrayList";
+import { Fachgruppe } from "../../../../../core/src/asd/types/fach/Fachgruppe";
+import { Fach } from "../../../../../core/src/asd/types/fach/Fach";
+import { GostAbiturFach } from "../../../../../core/src/core/types/gost/GostAbiturFach";
+import { GostFachbereich } from "../../../../../core/src/core/types/gost/GostFachbereich";
+import { GostFachUtils } from "../../../../../core/src/core/utils/gost/GostFachUtils";
+import { GostHalbjahr } from "../../../../../core/src/core/types/gost/GostHalbjahr";
+import { GostKursart } from "../../../../../core/src/core/types/gost/GostKursart";
+import { HashMap } from "../../../../../core/src/java/util/HashMap";
+import { HashMap2D } from "../../../../../core/src/core/adt/map/HashMap2D";
+import { Note } from "../../../../../core/src/asd/types/Note";
+import { RGBFarbe } from "../../../../../core/src/asd/data/RGBFarbe";
+import { SprachendatenUtils } from "../../../../../core/src/core/utils/schueler/SprachendatenUtils";
+import type { Config } from "../../../utils/Config"
+
 
 /*
  * Die Implementierung enthält Teile von experimentellem Code. Für diesen gilt folgendes:

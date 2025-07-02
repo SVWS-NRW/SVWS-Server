@@ -61,7 +61,7 @@
 								<template
 									v-if="(validator !== undefined) && (!validator().getFehler().isEmpty()) && (validator().getFehlerart() !== ValidatorFehlerart.UNGENUTZT)">
 									<div class="text-headline-sm text-center pt-1"> Validatorfehler </div>
-									<div v-for="fehler in validator().getFehler()" :key="fehler.hashCode" class="pt-2 pb-2">
+									<div v-for="fehler in validator().getFehler()" :key="fehler.hashCode()" class="pt-2 pb-2">
 										<div class="rounded-sm pl-2" :class="{
 											'bg-ui-danger': (validator().getFehlerart() === ValidatorFehlerart.MUSS),
 											'bg-ui-caution': (validator().getFehlerart() === ValidatorFehlerart.KANN),

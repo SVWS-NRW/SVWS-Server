@@ -95,10 +95,10 @@
 	import type { RouteRecord } from 'vue-router';
 	import type { ColorPreset } from './StoryManager';
 	import storyManager from './StoryManager';
-	import { BaseSelectManager } from '~/ui/controls/select/selectManager/BaseSelectManager';
 	import router from './router';
 	import type { PaneSplitterConfig} from './../ui/composables/usePaneSplitter';
 	import { usePaneSplitter } from './../ui/composables/usePaneSplitter';
+	import { BaseSelectManager } from './../ui/controls/select/selectManager/BaseSelectManager';
 
 	const groups = new Map<string, RouteRecord[]>([['default', []]]);
 	for (const route of router.getRoutes()) {

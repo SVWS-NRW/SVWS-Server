@@ -5,8 +5,7 @@
 				<svws-ui-select label="ASD-Bezeichnung" span="full" :items="props.manager().getAvailableFoerderschwerpunkte()" v-model="selectedFoerderschwerpunkt"
 					:valid="fieldIsValid('kuerzelStatistik')" :item-text="v => v.daten(props.manager().getSchuljahr())?.text?? ''" statistics />
 				<svws-ui-input-wrapper :grid="2">
-					<svws-ui-text-input placeholder="Kürzel" :min-len="1" :max-len="50" v-model="data.kuerzel" :disabled :model-value="data.kuerzelStatistik"
-						:valid="fieldIsValid('kuerzel')" />
+					<svws-ui-text-input placeholder="Kürzel" :min-len="1" :max-len="50" v-model="data.kuerzel" :disabled :valid="fieldIsValid('kuerzel')" />
 					<svws-ui-text-input placeholder="Statistik-Kürzel" readonly :model-value="data.kuerzelStatistik" statistics />
 					<svws-ui-input-number placeholder="Sortierung" v-model="data.sortierung" :disabled :min="0" :max="32000" />
 					<svws-ui-spacing />
@@ -26,12 +25,12 @@
 
 <script setup lang="ts">
 
-	import type { FoerderschwerpunkteNeuProps } from "~/components/schule/kataloge/foerderschwerpunkte/SFoerderschwerpunkteNeuProps";
 	import { computed, ref, watch} from "vue";
+	import type { FoerderschwerpunkteNeuProps } from "~/components/schule/kataloge/foerderschwerpunkte/SFoerderschwerpunkteNeuProps";
 	import { BenutzerKompetenz, Foerderschwerpunkt, FoerderschwerpunktEintrag, JavaString } from "@core";
 
 	const props = defineProps<FoerderschwerpunkteNeuProps>();
-	const data = ref<FoerderschwerpunktEintrag>(Object.assign( new FoerderschwerpunktEintrag(), {istSichtbar: true}));
+	const data = ref<FoerderschwerpunktEintrag>(Object.assign( new FoerderschwerpunktEintrag(), { istSichtbar: true }));
 	const isLoading = ref<boolean>(false);
 	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const disabled = computed(() => !hatKompetenzAdd.value);
