@@ -9,7 +9,7 @@ AllgAdr;Adresse_ID;Name1;S;;;AllgAdrName1;SELECT AllgAdrName1 FROM K_AllgAdresse
 AllgAdr;Adresse_ID;Name2;S;;;AllgAdrName2;SELECT AllgAdrName2 FROM K_AllgAdresse WHERE ID=%;ALLE
 AllgAdr;Adresse_ID;Ortsname;S;;;Bezeichnung;SELECT O.Bezeichnung FROM K_Ort O, K_AllgAdresse AA WHERE O.ID=AA.AllgAdrOrt_ID AND AA.ID=%;ALLE
 AllgAdr;Adresse_ID;Postleitzahl;S;;;AllgAdrPLZ;SELECT O.PLZ FROM K_Ort O, K_AllgAdresse AA WHERE O.ID=AA.AllgAdrOrt_ID AND AA.ID=%;ALLE
-AllgAdr;Adresse_ID;Straße;S;;;AllgAdrStrasse;SELECT CONCAT(AllgAdrStrassenname, ' ', AllgAdrHausNr) AS AllgAdrStrasse  FROM K_AllgAdresse WHERE ID=%;ALLE
+AllgAdr;Adresse_ID;Straße;S;;;AllgAdrStrasse;SELECT CONCAT(IFNULL(AllgAdrStrassenname,''), ' ', IFNULL(AllgAdrHausNr,'')) AS AllgAdrStrasse  FROM K_AllgAdresse WHERE ID=%;ALLE
 AllgAdr;Adresse_ID;Telefon-Nr. 1;S;;;AllgAdrTelefon1;SELECT AllgAdrTelefon1 FROM K_AllgAdresse WHERE ID=%;ALLE
 AllgAdr;Adresse_ID;Telefon-Nr. 2;S;;;AllgAdrTelefon2;SELECT AllgAdrTelefon2 FROM K_AllgAdresse WHERE ID=%;ALLE
 AllgAdr;Adresse_ID;Zusatz1;S;;;AllgAdrZusatz1;SELECT AllgAdrZusatz1 FROM K_AllgAdresse WHERE ID=%;ALLE
@@ -30,7 +30,7 @@ ErzAdr;ErzEMail;1. Person: E-Mail;S;;;;;ALLE
 ErzAdr;ErzEMail2;2. Person: E-Mail;S;;;;;ALLE
 ErzAdr;ErzOrt_ID;Ortsname;S;;;Bezeichnung;SELECT Bezeichnung FROM K_Ort WHERE ID=%;ALLE
 ErzAdr;ErzOrt_ID;Postleitzahl;S;;;PLZ;SELECT PLZ FROM K_Ort WHERE ID=%;ALLE
-ErzAdr;ErzStrasse;Straße;S;;;;SELECT CONCAT(ErzStrassenname, ' ', ErzHausNr,ErzHausnrZusatz) AS ErzStrasse  FROM SchuelerErzAdr WHERE Schueler_ID=%;ALLE
+ErzAdr;ErzStrasse;Straße;S;;;;SELECT CONCAT(IFNULL(ErzStrassenname,''), ' ', IFNULL(ErzHausNr,''),IFNULL(ErzHausnrZusatz,'')) AS ErzStrasse  FROM SchuelerErzAdr WHERE Schueler_ID=%;ALLE
 ErzAdr;Name1;1. Person: Nachname;S;;;;;ALLE
 ErzAdr;Name2;2. Person: Nachname;S;;;;;ALLE
 ErzAdr;Schueler_ID;Schüler-Jahrgang;S;;;InternKrz;SELECT J.InternKrz FROM EigeneSchule_Jahrgaenge J WHERE J.ID=(SELECT A.Jahrgang_ID from SchuelerLernabschnittsdaten A, Schueler S WHERE S.ID=% and A.Schueler_ID=S.ID AND A.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID AND A.WechselNr=0);ALLE
@@ -58,7 +58,7 @@ Lehrer;PANr;Personalnummer;S;;;;;ALLE
 Lehrer;Ort_ID;Ortsname;S;;;Bezeichnung;SELECT Bezeichnung FROM K_Ort WHERE ID=%;ALLE
 Lehrer;Ort_ID;Postleitzahl;S;;;PLZ;SELECT PLZ FROM K_Ort WHERE ID=%;ALLE
 Lehrer;Sichtbar;Sichtbar?;S;;;;;ALLE
-Lehrer;ID;Straße;S;;;Strasse;SELECT CONCAT(Strassenname, ' ', HausNr) AS Strasse FROM K_Lehrer WHERE ID>0;ALLE
+Lehrer;ID;Straße;S;;;Strasse;SELECT CONCAT(IFNULL(Strassenname,''), ' ',IFNULL(HausNr,'')) AS Strasse FROM K_Lehrer WHERE ID>0;ALLE
 Lehrer;Tel;Telefon (Festnetz);S;;;;;ALLE
 Lehrer;Titel;Titel;S;;;;;ALLE
 Lehrer;Vorname;Vorname;S;;;;;ALLE
@@ -76,7 +76,7 @@ Lehrer;ID;schulinterne Funktion;S;;;Bezeichnung;SELECT F.Bezeichnung FROM K_Schu
 Lehrer;ID;Initialkennwort für Notenmodul;S;;;Initialkennwort;SELECT Initialkennwort FROM LehrerNotenmodulCredentials WHERE Lehrer_ID=%;ALLE
 Schueler;***;Schul-Nummer;S;;;SchulNr;SELECT SchulNr FROM EigeneSchule;ALLE
 Schueler;***;Schulform;S;;;SchulformKrz;SELECT SchulformKrz FROM EigeneSchule;ALLE
-Schueler;Schueler_ID;Schulgliederung;S;;;ASDSchulgliederung;SELECT A.ASDSchulgliederung from SchuelerLernabschnittsdaten A, Schueler S WHERE S.ID=% and A.Schueler_ID=S.ID AND A.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID AND A.WechselNr=0;ALLE
+Schueler;ID;Schulgliederung;S;;;ASDSchulgliederung;SELECT A.ASDSchulgliederung from SchuelerLernabschnittsdaten A, Schueler S WHERE S.ID=% and A.Schueler_ID=S.ID AND A.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID AND A.WechselNr=0;ALLE
 Schueler;AbschlussDatum;vorauss. Abschlussdatum;S;;;;;ALLE
 Schueler;Schuljahresabschnitts_ID;Aktueller Abschnitt;I;;;Abschnitt;SELECT SJA.Abschnitt from Schuljahresabschnitte SJA where SJA.ID=%;ALLE
 Schueler;Aufnahmedatum;Aufnahmedatum;D;;;;;ALLE
@@ -139,7 +139,7 @@ Schueler;ID;Allg. Adresse: Name2;S;;;AllgAdrName2;SELECT A.AllgAdrName2, SA.ID F
 Schueler;ID;Allg. Adresse: Ort;S;;;Bezeichnung;SELECT O.Bezeichnung, A.AllgAdrName1, SA.ID FROM K_Ort O, K_AllgAdresse A, Schueler_AllgAdr SA WHERE SA.Schueler_ID=% AND A.ID=SA.Adresse_ID AND O.ID=A.AllgAdrOrt_ID ORDER BY SA.Sortierung DESC;ALLE
 Schueler;ID;Allg. Adresse: PLZ;S;;;PLZ;SELECT O.PLZ, A.AllgAdrName1, SA.ID FROM K_Ort O, K_AllgAdresse A, Schueler_AllgAdr SA WHERE SA.Schueler_ID=% AND A.ID=SA.Adresse_ID AND O.ID=A.AllgAdrOrt_ID ORDER BY SA.Sortierung DESC;ALLE
 Schueler;ID;Allg. Adresse: Sonstige Betreuer;S;;;Ausbilder;SELECT Ausbilder FROM Schueler_AllgAdr WHERE Schueler_ID=% ORDER BY Sortierung DESC;ALLE
-Schueler;ID;Allg. Adresse: Straße;S;;;AllgAdrStrasse;SELECT CONCAT(A.AllgAdrStrassenname,' ', A.AllgAdrHausNr) as AllgAdrStrasse, SA.ID FROM K_AllgAdresse A, Schueler_AllgAdr SA WHERE SA.Schueler_ID=% AND A.ID=SA.Adresse_ID ORDER BY SA.Sortierung DESC;ALLE
+Schueler;ID;Allg. Adresse: Straße;S;;;AllgAdrStrasse;SELECT CONCAT(IFNULL(A.AllgAdrStrassenname,''),' ', IFNULL(A.AllgAdrHausNr,'')) as AllgAdrStrasse, SA.ID FROM K_AllgAdresse A, Schueler_AllgAdr SA WHERE SA.Schueler_ID=% AND A.ID=SA.Adresse_ID ORDER BY SA.Sortierung DESC;ALLE
 Schueler;ID;Allg. Adresse: Vertragsbeginn;D;;;Vertragsbeginn;SELECT Vertragsbeginn FROM Schueler_AllgAdr WHERE Schueler_ID=% ORDER BY Sortierung DESC;ALLE
 Schueler;ID;Allg. Adresse: Vertragsende;D;;;Vertragsende;SELECT Vertragsende FROM Schueler_AllgAdr WHERE Schueler_ID=% ORDER BY Sortierung DESC;ALLE
 Schueler;ID;Allg. Adresse: Zusatz1;S;;;AllgAdrZusatz1;SELECT A.AllgAdrZusatz1, SA.ID FROM K_AllgAdresse A, Schueler_AllgAdr SA WHERE SA.Schueler_ID=% AND A.ID=SA.Adresse_ID ORDER BY SA.Sortierung DESC;ALLE
@@ -161,7 +161,7 @@ Schueler;ID;Erzieher: Erhält Anschreiben;B;;;ErzAnschreiben;SELECT ErzAnschreib
 Schueler;ID;Erzieher: Ort;S;;;Bezeichnung;SELECT O.Bezeichnung, SchuelerErzAdr.ID FROM K_Ort O, SchuelerErzAdr WHERE O.ID=SchuelerErzAdr.ErzOrt_ID AND SchuelerErzAdr.Schueler_ID=% ORDER BY SchuelerErzAdr.Sortierung;ALLE
 Schueler;ID;Erzieher: Ortsteil;S;;;Bezeichnung;SELECT K_Ortsteil.Bezeichnung, SchuelerErzAdr.ID FROM K_Ortsteil, SchuelerErzAdr WHERE K_Ortsteil.ID=SchuelerErzAdr.ErzOrtsteil_ID AND SchuelerErzAdr.Schueler_ID=% ORDER BY SchuelerErzAdr.Sortierung;ALLE
 Schueler;ID;Erzieher: Postleitzahl;S;;;PLZ;SELECT O.PLZ, SchuelerErzAdr.ID FROM K_Ort O, SchuelerErzAdr WHERE O.ID=SchuelerErzAdr.ErzOrt_ID AND SchuelerErzAdr.Schueler_ID=% ORDER BY SchuelerErzAdr.Sortierung;ALLE
-Schueler;ID;Erzieher: Straße;S;;;ErzStrasse;SELECT CONCAT(ErzStrassenname,' ',ErzHausNr,ErzHausNrZusatz) as ErzStrasse FROM SchuelerErzAdr WHERE Schueler_ID=% ORDER BY Sortierung;ALLE
+Schueler;ID;Erzieher: Straße;S;;;ErzStrasse;SELECT CONCAT(IFNULL(ErzStrassenname,''),' ',IFNULL(ErzHausNr,''),IFNULL(ErzHausNrZusatz,'')) as ErzStrasse FROM SchuelerErzAdr WHERE Schueler_ID=% ORDER BY Sortierung;ALLE
 Schueler;ID;Interne ID-Nummer;I;;;;;ALLE
 Schueler;ID;Telefon-Nummern: Anschluss-Art;S;;;Bezeichnung;SELECT T.Bezeichnung FROM K_Telefonart T, SchuelerTelefone ST WHERE T.ID=ST.Telefonart_ID and ST.Schueler_ID=% ORDER BY ST.Sortierung;ALLE
 Schueler;ID;Telefon-Nummern: Bemerkung;S;;;Bemerkung;SELECT Bemerkung FROM SchuelerTelefone WHERE Schueler_ID=% ORDER BY Sortierung;ALLE
@@ -178,7 +178,7 @@ Schueler;LSSchulNr;Letzte Schule: Name;S;;;Name;SELECT Name from K_Schule where 
 Schueler;LSSchulNr;Letzte Schule: Ort;S;;;Ort;SELECT Ort from K_Schule where SchulNr=%;ALLE
 Schueler;LSSchulNr;Letzte Schule: PLZ;S;;;PLZ;SELECT PLZ from K_Schule where SchulNr=%;ALLE
 Schueler;LSSchulNr;Letzte Schule: Schulnr.;S;;;;;ALLE
-Schueler;LSSchulNr;Letzte Schule: Straße;S;;;Strasse;SELECT CONCAT(Strassenname,' ',HausNr) as Strasse from K_Schule where SchulNr=%;ALLE
+Schueler;LSSchulNr;Letzte Schule: Straße;S;;;Strasse;SELECT CONCAT(IFNULL(Strassenname,''),' ', IFNULL(HausNr,'')) as Strasse from K_Schule where SchulNr=%;ALLE
 Schueler;LSSchulentlassDatum;Letzte Schule: Entlassdatum;D;;;;;ALLE
 Schueler;LSSchulform;Letzte Schule: Schulform;S;;;;;ALLE
 Schueler;LSSchulformSIM;Letzte Schule: allgemeine Herkunft;S;;;;;ALLE
@@ -199,14 +199,14 @@ Schueler;SchulwechselNr;Aufnehmende Schule: Name;S;;;Name;SELECT Name from K_Sch
 Schueler;SchulwechselNr;Aufnehmende Schule: Ort;S;;;Ort;SELECT Ort from K_Schule where SchulNr=%;ALLE
 Schueler;SchulwechselNr;Aufnehmende Schule: PLZ;S;;;PLZ;SELECT PLZ from K_Schule where SchulNr=%;ALLE
 Schueler;SchulwechselNr;Aufnehmende Schule: Schulnr.;S;;;;;ALLE
-Schueler;SchulwechselNr;Aufnehmende Schule: Straße;S;;;Strasse;SELECT CONCAT(Strassenname,' ',HausNr) as Strasse from K_Schule where SchulNr=%;ALLE
+Schueler;SchulwechselNr;Aufnehmende Schule: Straße;S;;;Strasse;SELECT CONCAT(IFNULL(Strassenname,''),' ',IFNULL(HausNr,'')) as Strasse from K_Schule where SchulNr=%;ALLE
 Schueler;Schwerbehinderung;Schwerstbehinderung;B;;;;;ALLE
 Schueler;Sportbefreiung_ID;Sportbefreiung;S;;;Bezeichnung;SELECT Bezeichnung FROM K_Sportbefreiung WHERE ID=%;ALLE
 Schueler;StaatKrz;Staatsangehörigkeit (Klartext);S;;;mtblStaat.bezeichnung;codeDEStatis=%;ALLE
 Schueler;StaatKrz;Staatsangehörigkeit (Klartext, Adjektiv);S;;;mtblStaat.staatsangehoerigkeit;codeDEStatis=%;ALLE
 Schueler;StaatKrz;Staatsangehörigkeit (Schlüssel);S;;;;;ALLE
 Schueler;Status;Status;I;;;;;ALLE
-Schueler;ID;Straße;S;;;Strasse;SELECT CONCAT(Strassenname, ' ', HausNr,HausNrZusatz) AS Strasse FROM Schueler WHERE ID=%;ALLE
+Schueler;ID;Straße;S;;;Strasse;SELECT CONCAT(IFNULL(Strassenname,''), ' ', IFNULL(HausNr,''),IFNULL(HausNrZusatz,'')) AS Strasse FROM Schueler WHERE ID=%;ALLE
 Schueler;Telefon;Telefon-Nr.;S;;;;;ALLE
 Schueler;Uebergangsempfehlung_JG5;Übergangsempfehlung;S;;;;;ALLE
 Schueler;VerkehrsspracheFamilie;Verkehrssprache in der Familie;S;;;mtblVerkehrssprachen.bezeichnung;kuerzel=%;ALLE
