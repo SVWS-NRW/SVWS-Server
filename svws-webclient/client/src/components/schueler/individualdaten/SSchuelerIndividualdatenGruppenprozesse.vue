@@ -31,7 +31,6 @@
 				</ui-gruppenprozesse-wrapper>
 			</template>
 
-			<h1>{{disableSave}}</h1>
 			<svws-ui-input-wrapper :grid="2">
 				<ui-gruppenprozesse-wrapper :pending-state-manager="pendingStateManager" attribute-name="status" :nullable="false">
 					<ui-select v-model="status" label="Status" :manager="statusSelectManager" statistics />
@@ -300,35 +299,66 @@
 		}
 	);
 
-	const ersteStaatsAngehoerigkeitSelectManager = new CoreTypeSelectManager({clazz: Nationalitaeten.class, schuljahr: schuljahr.value,
-		schulformen: schulform.value, removable: false});
-	const zweiteStaatsAngehoerigkeitSelectManager = new CoreTypeSelectManager({clazz: Nationalitaeten.class, schuljahr: schuljahr.value,
-		schulformen: schulform.value, removable: false});
-	const statusSelectManager = new CoreTypeSelectManager({clazz: SchuelerStatus.class, schuljahr: schuljahr.value,	schulformen: schulform.value,
-		removable: false});
-	const konfessionSelectManager = new BaseSelectManager({ options: religionen.value, removable: false,
-		optionDisplayText: selected => selected.bezeichnung ?? '', selectionDisplayText: selected => selected.bezeichnung ?? ''	});
-	const fahrschuelerSelectManager = new BaseSelectManager({ options: fahrschuelerArten.value, removable: false,
-		optionDisplayText: selected => selected.text ?? '', selectionDisplayText: selected => selected.text ?? ''	});
-	const haltestelleSelectManager = new BaseSelectManager({ options: haltestellen.value, removable: false, optionDisplayText: selected => selected.text ?? '',
-		selectionDisplayText: selected => selected.text ?? ''	});
-	const stammschuleSelectManager = new BaseSelectManager({ options: schulen.value,
+	const ersteStaatsAngehoerigkeitSelectManager = new CoreTypeSelectManager({
+		clazz: Nationalitaeten.class, schuljahr: schuljahr.value,
+		schulformen: schulform.value, removable: false,
+	});
+	const zweiteStaatsAngehoerigkeitSelectManager = new CoreTypeSelectManager({
+		clazz: Nationalitaeten.class, schuljahr: schuljahr.value,
+		schulformen: schulform.value, removable: false,
+	});
+	const statusSelectManager = new CoreTypeSelectManager({
+		clazz: SchuelerStatus.class, schuljahr: schuljahr.value, schulformen: schulform.value,
+		removable: false,
+	});
+	const konfessionSelectManager = new BaseSelectManager({
+		options: religionen.value, removable: false,
+		optionDisplayText: selected => selected.bezeichnung ?? '', selectionDisplayText: selected => selected.bezeichnung ?? '',
+	});
+	const fahrschuelerSelectManager = new BaseSelectManager({
+		options: fahrschuelerArten.value, removable: false,
+		optionDisplayText: selected => selected.text ?? '', selectionDisplayText: selected => selected.text ?? '',
+	});
+	const haltestelleSelectManager = new BaseSelectManager({
+		options: haltestellen.value, removable: false, optionDisplayText: selected => selected.text ?? '',
+		selectionDisplayText: selected => selected.text ?? '',
+	});
+	const stammschuleSelectManager = new BaseSelectManager({
+		options: schulen.value,
 		optionDisplayText: selected => selected.kuerzel ?? selected.schulnummerStatistik ?? selected.kurzbezeichnung ?? selected.name,
-		selectionDisplayText: selected => selected.kuerzel ?? selected.schulnummerStatistik ?? selected.kurzbezeichnung ?? selected.name });
-	const geburtslandSelectManager = new CoreTypeSelectManager({ clazz: Nationalitaeten.class, schuljahr: schuljahr.value, schulformen: schulform.value,
-		removable: false });
-	const geburtslandMutterSelectManager = new CoreTypeSelectManager({ clazz: Nationalitaeten.class, schuljahr: schuljahr.value, schulformen: schulform.value,
-		removable: false });
-	const geburtslandVaterSelectManager = new CoreTypeSelectManager({ clazz: Nationalitaeten.class, schuljahr: schuljahr.value, schulformen: schulform.value,
-		removable: false });
-	const verkehrsspracheSelectManager = new CoreTypeSelectManager({ clazz: Verkehrssprache.class, schuljahr: schuljahr.value, schulformen: schulform.value,
-		removable: false });
+		selectionDisplayText: selected => selected.kuerzel ?? selected.schulnummerStatistik ?? selected.kurzbezeichnung ?? selected.name,
+	});
+	const geburtslandSelectManager = new CoreTypeSelectManager({
+		clazz: Nationalitaeten.class, schuljahr: schuljahr.value, schulformen: schulform.value,
+		removable: false,
+	});
+	const geburtslandMutterSelectManager = new CoreTypeSelectManager({
+		clazz: Nationalitaeten.class, schuljahr: schuljahr.value, schulformen: schulform.value,
+		removable: false,
+	});
+	const geburtslandVaterSelectManager = new CoreTypeSelectManager({
+		clazz: Nationalitaeten.class, schuljahr: schuljahr.value, schulformen: schulform.value,
+		removable: false,
+	});
+	const verkehrsspracheSelectManager = new CoreTypeSelectManager({
+		clazz: Verkehrssprache.class, schuljahr: schuljahr.value, schulformen: schulform.value,
+		removable: false,
+	});
 
-	const setReligionabmeldung = (value: string | null) => {if(value !== null) religionabmeldung.value = value;};
+	function setReligionabmeldung(value: string | null) {
+		if (value !== null)
+			religionabmeldung.value = value;
+	}
 
-	const setReligionanmeldung = (value: string | null) => {if (value !== null)	religionanmeldung.value = value;};
+	function setReligionanmeldung(value: string | null) {
+		if (value !== null)
+			religionanmeldung.value = value;
+	}
 
-	const setAufnahmedatum = (value: string | null) => {if (value !== null)	aufnahmedatum.value = value;};
+	function setAufnahmedatum(value: string | null) {
+		if (value !== null)
+			aufnahmedatum.value = value;
+	}
 
 	const minZuzugsjahr = new Date().getFullYear() + 1 - 100;
 	const maxZuzugsjahr = new Date().getFullYear() + 1;
