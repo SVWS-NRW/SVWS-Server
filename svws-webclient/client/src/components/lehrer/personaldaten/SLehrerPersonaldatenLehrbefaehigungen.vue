@@ -4,11 +4,14 @@
 			{{ getLehrbefaehigung(rowData).daten(schuljahr)?.text ?? '—' }}
 		</template>
 		<template #cell(lehramt)="{ rowData }">
-			{{ getLehramt(rowData).daten(schuljahr)?.text ?? '—' }}
+			<svws-ui-select title="Lehrbefähigung durch Lehramt" v-if="hatUpdateKompetenz" :model-value="getLehramt(rowData)"
+				@update:model-value="lehramt => patchLehrbefaehigung(rowData, { idLehramt: lehramt?.daten(schuljahr)?.id ?? -1 })"
+				:items="getLehraemter()" :item-text="i => i.daten(schuljahr)?.text ?? '—'" headless />
+			<div v-else> {{ getLehramt(rowData)?.daten(schuljahr)?.text ?? '—' }} </div>
 		</template>
 		<template #cell(anerkennung)="{ rowData }">
 			<svws-ui-select title="Anerkennungsgrund Lehrbefähigung" v-if="hatUpdateKompetenz" :model-value="getLehrbefaehigungAnerkennung(rowData)"
-				@update:model-value="anerkennung => patchLehrbefaehigungAnerkennung(rowData, anerkennung ?? null)"
+				@update:model-value="anerkennung => patchLehrbefaehigung(rowData, { idAnerkennungsgrund: anerkennung?.daten(schuljahr)?.id ?? null })"
 				:items="LehrerLehrbefaehigungAnerkennung.values()" :item-text="i => i.daten(schuljahr)?.text ?? '—'" headless />
 			<div v-else> {{ getLehrbefaehigungAnerkennung(rowData)?.daten(schuljahr)?.text ?? '—' }} </div>
 		</template>
@@ -25,13 +28,14 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import { List, LehrerLehrbefaehigungEintrag, LehrerListeManager, LehrerPersonaldaten, LehrerLehramt, LehrerLehramtEintrag} from "@core";
+	import type { List, LehrerLehrbefaehigungEintrag, LehrerListeManager, LehrerPersonaldaten } from "@core";
+	import { ArrayList, LehrerLehramt} from "@core";
 	import { LehrerLehrbefaehigung, LehrerLehrbefaehigungAnerkennung, Arrays } from "@core";
 
 	const props = defineProps<{
 		hatUpdateKompetenz: boolean;
 		lehrerListeManager: () => LehrerListeManager;
-		patchLehrbefaehigungAnerkennung: (eintrag: LehrerLehrbefaehigungEintrag, anerkennung : LehrerLehrbefaehigungAnerkennung | null) => Promise<void>;
+		patchLehrbefaehigung: (eintrag: LehrerLehrbefaehigungEintrag, patch: Partial<LehrerLehrbefaehigungEintrag>) => Promise<void>;
 		addLehrbefaehigung: (eintrag: LehrerLehrbefaehigungEintrag) => Promise<void>;
 		removeLehrbefaehigungen: (eintraege: List<LehrerLehrbefaehigungEintrag>) => Promise<void>;
 		schuljahr: number;
@@ -54,8 +58,16 @@
 		return lehrbefaehigung;
 	}
 
-	function getLehramt(eintrag: LehrerLehramtEintrag) : LehrerLehramt {
-		return LehrerLehramt.data().getWertByID(eintrag.idLehramt);
+	function getLehraemter() : List<LehrerLehramt> {
+		const result = new ArrayList<LehrerLehramt>();
+		for (const l of personaldaten.value.lehraemter)
+			if (l.idLehramt >= 0)
+				result.add(LehrerLehramt.data().getWertByID(l.idLehramt));
+		return result;
+	}
+
+	function getLehramt(eintrag: LehrerLehrbefaehigungEintrag) : LehrerLehramt | null {
+		return (eintrag.idLehramt < 0) ? null : LehrerLehramt.data().getWertByID(eintrag.idLehramt);
 	}
 
 	function getLehrbefaehigungAnerkennung(eintrag: LehrerLehrbefaehigungEintrag) : LehrerLehrbefaehigungAnerkennung | null {

@@ -36,12 +36,12 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Lehrämter">
 			<svws-ui-input-wrapper>
-				<s-lehrer-personaldaten-lehraemter :hat-update-kompetenz :lehrer-liste-manager :patch-lehramt-anerkennung
+				<s-lehrer-personaldaten-lehraemter :hat-update-kompetenz :lehrer-liste-manager :patch-lehramt
 					:add-lehramt :remove-lehraemter :schuljahr />
 				<s-lehrer-personaldaten-lehrbefaehigungen :hat-update-kompetenz :lehrer-liste-manager
-					:patch-lehrbefaehigung-anerkennung :add-lehrbefaehigung :remove-lehrbefaehigungen :schuljahr />
+					:patch-lehrbefaehigung :add-lehrbefaehigung :remove-lehrbefaehigungen :schuljahr />
 				<s-lehrer-personaldaten-fachrichtungen :hat-update-kompetenz :lehrer-liste-manager
-					:patch-fachrichtung-anerkennung :add-fachrichtung :remove-fachrichtungen="removeFachrichtungen"
+					:patch-fachrichtung :add-fachrichtung :remove-fachrichtungen="removeFachrichtungen"
 					:schuljahr />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>

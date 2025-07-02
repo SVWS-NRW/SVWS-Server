@@ -169,12 +169,13 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 		this.commit();
 	}
 
-	patchLehramtAnerkennung = async (eintrag: LehrerLehramtEintrag, anerkennung: LehrerLehramtAnerkennung | null) => {
+	patchLehramt = async (eintrag: LehrerLehramtEintrag, patch: Partial<LehrerLehramtEintrag>) => {
 		if (!this.manager.hasPersonalDaten())
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		// TODO API-Aufruf mit idAnerkennungsgrund ...
+		// TODO API-Aufruf mit id (Lehrer) und idLehramt
+		// await api.server.patchLehrerLehramt();
 		console.log("Anpassen von Lehrämtern noch nicht implementiert");
-		Object.assign(eintrag, { idAnerkennungsgrund: anerkennung?.daten(this.manager.getSchuljahr())?.id ?? null });
+		Object.assign(eintrag, patch);
 		this.commit();
 	}
 
@@ -196,12 +197,13 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 		this.commit();
 	}
 
-	patchLehrbefaehigungAnerkennung = async (eintrag: LehrerLehrbefaehigungEintrag, anerkennung: LehrerLehrbefaehigungAnerkennung | null) => {
+	patchLehrbefaehigung = async (eintrag: LehrerLehrbefaehigungEintrag, patch: Partial<LehrerLehrbefaehigungEintrag>) => {
 		if (!this.manager.hasPersonalDaten())
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		// TODO API-Aufruf mit idAnerkennungsgrund ...
+		// await api.server.patchLehrerLehrbefaehigung();
 		console.log("Anpassen von Lehrbefähigungen noch nicht implementiert");
-		Object.assign(eintrag, { idAnerkennungsgrund: anerkennung?.daten(this.manager.getSchuljahr())?.id ?? null });
+		Object.assign(eintrag, patch);
 		this.commit();
 	}
 
@@ -223,12 +225,13 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 		this.commit();
 	}
 
-	patchFachrichtungAnerkennung = async (eintrag: LehrerFachrichtungEintrag, anerkennung: LehrerFachrichtungAnerkennung | null) => {
+	patchFachrichtung = async (eintrag: LehrerFachrichtungEintrag, patch : Partial<LehrerFachrichtungEintrag>) => {
 		if (!this.manager.hasPersonalDaten())
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		// TODO API-Aufruf mit idAnerkennungsgrund ...
+		// await api.server.patchLehrerFachrichtung();
 		console.log("Anpassen von Fachrichtungen noch nicht implementiert");
-		Object.assign(eintrag, { idAnerkennungsgrund: anerkennung?.daten(this.manager.getSchuljahr())?.id ?? null });
+		Object.assign(eintrag, patch);
 		this.commit();
 	}
 
