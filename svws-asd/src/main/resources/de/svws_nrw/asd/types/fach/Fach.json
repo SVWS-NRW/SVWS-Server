@@ -1,5 +1,5 @@
 {
-	"version": 8,
+	"version": 9,
 	"daten": [ {
 		"bezeichner": "AB",
 		"idStatistik": "1",
@@ -7835,7 +7835,7 @@
 			"text": "Wirtschaft-Politik",
 			"kuerzel": "WP",
 			"aufgabenfeld": null,
-			"fachgruppe": null,
+			"fachgruppe": "FG_GS",
 			"abJahrgang": null,
 			"istFremdsprache": false,
 			"istHKFS": false,
