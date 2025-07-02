@@ -247,11 +247,11 @@ public final class DataSchuelerliste extends DataManager<Long> {
 
 
 	/**
-	 * Erstellt eine Liste der nicht gelöschten Schüler für den angegebenen Abschnitt.
+	 * Erstellt eine Liste aller nicht gelöschten Schüler mit Daten in Bezug für den angegebenen Schuljahresabschnitt.
 	 *
 	 * @param conn        die Datenbankverbindung
-	 * @param abschnitt   die ID des Schuljahresabschnitts, der eingelesen werden soll
-	 * @param nurAktive   gibt an, dass nur aktive Schüler zurückgegeben werden sollen
+	 * @param abschnitt   die ID des Schuljahresabschnitts, dessen Daten eingelesen werden soll.
+	 * @param nurAktive   gibt an, dass nur aktive Schüler des aktuellen Schuljahrabschnitts der Schule zurückgegeben werden sollen.
 	 *
 	 * @return die Schülerliste
 	 *

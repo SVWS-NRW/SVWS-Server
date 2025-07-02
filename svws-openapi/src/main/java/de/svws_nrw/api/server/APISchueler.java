@@ -119,20 +119,20 @@ public class APISchueler {
 
 
 	/**
-	 * Die OpenAPI-Methode für die Abfrage der Liste aller Schüler.
+	 * Die OpenAPI-Methode für die Abfrage der Liste aller Schüler mit Daten in Bezug auf den angegebenen Schuljahresabschnitt.
 	 *
-	 * @param schema      das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param abschnitt   die ID des Schuljahresabschnitts dessen Schüler zurückgegeben werden sollen
+	 * @param schema      das Datenbankschema, auf welchem die Abfrage ausgeführt wird.
+	 * @param abschnitt   die ID des Schuljahresabschnitts, dessen Daten zurückgegeben werden.
 	 * @param request     die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die Liste mit den einzelnen Schülern
 	 */
 	@GET
 	@Path("/abschnitt/{abschnitt : \\d+}")
-	@Operation(summary = "Gibt eine sortierte Übersicht von allen Schülern des angegebenen Schuljahresabschnitts zurück.",
-			description = "Erstellt eine Liste aller Schüler des angegebenen Schuljahresabschnitts unter Angabe der ID, des Vor- und Nachnamens, "
-					+ "der Klasse, des Jahrgangs, sein Status (z.B. aktiv), einer Sortierreihenfolge, ob sie in der Anwendung "
-					+ "sichtbar bzw. änderbar sein sollen. Die schüler sind anhand der Klasse, des Nchnamens und des Vornamens sortiert."
+	@Operation(summary = "Gibt eine sortierte Übersicht von allen Schülern zurück, zusammen mit deren Daten zum angegebenen Schuljahresabschnitt.",
+			description = "Erstellt eine Liste aller Schüler mit deren Daten zum angegebenen Schuljahresabschnitt u. a. unter Angabe der ID, des Vor- und "
+					+ "Nachnamens, der Klasse, des Jahrgangs, sein Status (z.B. aktiv), einer Sortierreihenfolge, ob sie in der Anwendung "
+					+ "sichtbar bzw. änderbar sein sollen. Die schüler sind anhand der Klasse, des Nachnamens und des Vornamens sortiert."
 					+ "Es wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.")
 	@ApiResponse(responseCode = "200", description = "Eine Liste von Schüler-Listen-Einträgen",
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchuelerListeEintrag.class))))
