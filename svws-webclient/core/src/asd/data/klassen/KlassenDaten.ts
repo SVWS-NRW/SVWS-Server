@@ -37,11 +37,6 @@ export class KlassenDaten extends JavaObject {
 	public sortierung : number = 0;
 
 	/**
-	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.
-	 */
-	public istSichtbar : boolean = false;
-
-	/**
 	 * Die Liste der IDs der Klassenleitungen der Klasse.
 	 */
 	public klassenLeitungen : List<number> = new ArrayList<number>();
@@ -164,9 +159,6 @@ export class KlassenDaten extends JavaObject {
 		if (obj.sortierung === undefined)
 			throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
-		if (obj.istSichtbar === undefined)
-			throw new Error('invalid json format, missing attribute istSichtbar');
-		result.istSichtbar = obj.istSichtbar;
 		if (obj.klassenLeitungen !== undefined) {
 			for (const elem of obj.klassenLeitungen) {
 				result.klassenLeitungen.add(elem);
@@ -218,7 +210,6 @@ export class KlassenDaten extends JavaObject {
 		result += '"idJahrgang" : ' + ((obj.idJahrgang === null) ? 'null' : obj.idJahrgang.toString()) + ',';
 		result += '"parallelitaet" : ' + ((obj.parallelitaet === null) ? 'null' : JSON.stringify(obj.parallelitaet)) + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
-		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		result += '"klassenLeitungen" : [ ';
 		for (let i = 0; i < obj.klassenLeitungen.size(); i++) {
 			const elem = obj.klassenLeitungen.get(i);
@@ -275,9 +266,6 @@ export class KlassenDaten extends JavaObject {
 		}
 		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung.toString() + ',';
-		}
-		if (obj.istSichtbar !== undefined) {
-			result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		}
 		if (obj.klassenLeitungen !== undefined) {
 			result += '"klassenLeitungen" : [ ';

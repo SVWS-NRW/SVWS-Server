@@ -1,5 +1,5 @@
 <template>
-	<Story title="Multiselect" id="svws-ui-multi-select" icon="ri:dropdown-list" auto-props-disabled>
+	<Story title="Multiselect" id="svws-ui-multi-select" icon="ri:dropdown-list" :layout="{ type: 'single', iframe: false }" auto-props-disabled>
 		<Variant title="Default">
 			<svws-ui-content-card class="p-5">
 				<svws-ui-input-wrapper :grid="2" class="items-start">

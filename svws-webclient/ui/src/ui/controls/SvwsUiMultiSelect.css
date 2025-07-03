@@ -1,12 +1,22 @@
 .svws-ui-select.svws-ui-multiselect {
-	@apply flex-none;
+	@apply inline-flex m-[0.2em] w-[calc(100%-0.4rem)];
+
+		&:not(.svws-headless) {
+			@apply mt-[0.8em];
+		}
 	&:focus-visible,
 	&:focus-within {
-		@apply ring-3 ring-ui-neutral;
+		@apply ring-2 ring-ui-neutral;
 	}
+
+
 	.svws-dropdown-icon {
 		@apply top-[0.175rem] right-[0.19rem];
 
+	}
+
+	.text-input-component {
+		@apply !m-0;
 	}
 	.text-input-component .text-input--control:focus-visible {
 		@apply ring-0;

@@ -83,15 +83,13 @@
 
 <script setup lang="ts">
 
+	import { computed, ref } from "vue";
 	import type { DataTableColumn } from "@ui";
 	import type { GostFachwahlenFachProps } from "./SGostFachwahlenFachProps";
-	import type { ComputedRef} from "vue";
-	import { computed, ref } from "vue";
 	import { Fach, type GostStatistikFachwahl, type SchuelerListeEintrag, type List, ArrayList, GostHalbjahr } from "@core";
 
 	const props = defineProps<GostFachwahlenFachProps>();
 
-	/*const aktuell = ref<GostHalbjahr | undefined>(GostHalbjahr.EF1);*/
 	const aktuell = ref<GostHalbjahr | undefined>(undefined);
 
 	const istZKMoeglich = computed<boolean>(() => {
@@ -106,7 +104,7 @@
 		aktuell.value = (aktuell.value?.id === halbjahr.id) ? undefined : halbjahr;
 	}
 
-	const fws: ComputedRef<GostStatistikFachwahl | undefined> = computed(() => {
+	const fws = computed<GostStatistikFachwahl | undefined>(() => {
 		for (const f of props.fachwahlstatistik)
 			if (f.id === props.fachID)
 				return f;

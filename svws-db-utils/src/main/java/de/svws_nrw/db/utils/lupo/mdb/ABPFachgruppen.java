@@ -7,13 +7,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.healthmarketscience.jackcess.ColumnBuilder;
-import com.healthmarketscience.jackcess.DataType;
-import com.healthmarketscience.jackcess.Database;
-import com.healthmarketscience.jackcess.PropertyMap;
-import com.healthmarketscience.jackcess.Row;
-import com.healthmarketscience.jackcess.Table;
-import com.healthmarketscience.jackcess.TableBuilder;
+import io.github.spannm.jackcess.ColumnBuilder;
+import io.github.spannm.jackcess.DataType;
+import io.github.spannm.jackcess.Database;
+import io.github.spannm.jackcess.PropertyMap;
+import io.github.spannm.jackcess.Row;
+import io.github.spannm.jackcess.Table;
+import io.github.spannm.jackcess.TableBuilder;
 
 import de.svws_nrw.asd.types.fach.Fach;
 
@@ -96,11 +96,11 @@ public final class ABPFachgruppen {
 	public static void write(final Database db, final Map<String, ABPFachgruppen> zuordnung) {
 		try {
 			final Table table = new TableBuilder("ABP_Fachgruppen")
-					.addColumn(new ColumnBuilder(fieldFach, DataType.TEXT).setLengthInUnits(2))
-					.addColumn(new ColumnBuilder(fieldBezeichnung, DataType.TEXT).setLengthInUnits(80))
-					.addColumn(new ColumnBuilder(fieldFachgruppeKrz, DataType.TEXT).setLengthInUnits(2))
-					.addColumn(new ColumnBuilder(fieldAufgabenfeld, DataType.LONG).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "0"))
-					.addColumn(new ColumnBuilder(fieldSortierung, DataType.LONG).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "0"))
+					.addColumn(new ColumnBuilder(fieldFach, DataType.TEXT).withLengthInUnits(2))
+					.addColumn(new ColumnBuilder(fieldBezeichnung, DataType.TEXT).withLengthInUnits(80))
+					.addColumn(new ColumnBuilder(fieldFachgruppeKrz, DataType.TEXT).withLengthInUnits(2))
+					.addColumn(new ColumnBuilder(fieldAufgabenfeld, DataType.LONG).withProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "0"))
+					.addColumn(new ColumnBuilder(fieldSortierung, DataType.LONG).withProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "0"))
 					.toTable(db);
 			for (final ABPFachgruppen fach : zuordnung.values().stream().sorted((fg1, fg2) -> fg1.FachKuerzel.compareToIgnoreCase(fg2.FachKuerzel)).toList()) {
 				table.addRow(

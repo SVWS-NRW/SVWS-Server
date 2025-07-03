@@ -4,7 +4,7 @@ test.use({
 	ignoreHTTPSErrors: true,
 });
 
-const targetHost = process.env.VITE_targetHost ?? "http://localhost:3000"
+const targetHost = process.env.VITE_targetHost ?? "https://localhost"
 test.setTimeout(60_000); // globalen Playwright Timeout auf 60 Sekunden setzen
 
 test('Selektion von zwei Schülern öffnet die Individualdaten View für Schüler Gruppenprozesse', async ({page}) => {

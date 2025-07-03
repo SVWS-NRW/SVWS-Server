@@ -1,6 +1,6 @@
 .svws-ui-checkbox,
 input[type="checkbox"] {
-	@apply text-inherit accent-ui p-1;
+	@apply text-inherit accent-ui p-1 m-[0.2em];
 
 	&[color="success"] {
 		@apply accent-ui-success text-ui-success;
@@ -14,14 +14,13 @@ input[type="checkbox"] {
 		@apply accent-ui-warning text-ui-warning;
 	}
 
-	&.svws-statistik,
-	&.svws-statistik input[type="checkbox"] {
-		@apply text-ui-statistic accent-ui-statistic;
-	}
-
 	&.svws-bw,
 	&.svws-bw input[type="checkbox"] {
 		@apply accent-ui-neutral;
+	}
+
+	&.svws-headless {
+		@apply p-0;
 	}
 
 	.svws-loading &,
@@ -38,6 +37,11 @@ input[type="checkbox"] {
 
 .svws-ui-checkbox {
 	@apply inline-flex items-start text-base leading-tight my-0.5;
+
+	.svws-ui-checkbox--statistic-icon {
+			@apply icon-ui-statistic;
+			@apply pointer-events-auto mr-1;
+	}
 
 	.router-tab-bar--subnav & {
 		@apply text-sm font-bold my-0;
@@ -58,7 +62,7 @@ input[type="checkbox"] {
 
 	&:focus,
 	&:focus-visible {
-		@apply ring ring-ui;
+		@apply ring-2 ring-ui;
 	}
 
 	&:focus-visible {
@@ -75,10 +79,6 @@ input[type="checkbox"] {
 			@apply ring-ui-warning;
 		}
 
-		&.svws-statistik,
-		.svws-statistik & {
-			@apply ring-ui-statistic;
-		}
 	}
 
 	& ~ .svws-ui-checkbox--label {
@@ -93,7 +93,12 @@ input[type="checkbox"] {
 		& ~ .svws-ui-toggle--icon {
 			@apply text-ui-disabled;
 			@apply cursor-default;
+			.svws-ui-checkbox--statistic-icon {
+				@apply icon-ui-disabled;
+			}
 		}
+
+		
 	}
 
 	&.svws-headless {
@@ -166,7 +171,7 @@ input[type="checkbox"] {
 		@apply mr-0 !opacity-0;
 
 		&:focus-visible ~ .svws-ui-toggle--icon {
-			@apply ring-3 ring-offset-1 ring-ui-brand;
+			@apply ring-2 ring-offset-1 ring-ui-brand;
 		}
 
 		&:checked ~ .svws-ui-toggle--icon {
@@ -195,21 +200,7 @@ input[type="checkbox"] {
 		}
 	}
 
-	&.svws-statistik {
-		input[type="checkbox"] {
-			&:focus-visible ~ .svws-ui-toggle--icon {
-				@apply ring-ui-statistic;
-			}
-
-			&:checked ~ .svws-ui-toggle--icon {
-				@apply bg-ui-statistic border-ui-statistic;
-			}
-
-			&:checked:focus-visible ~ .svws-ui-toggle--icon {
-				@apply bg-ui-statistic-hover;
-			}
-		}
-	}
+	
 
 	&.svws-bw {
 		input[type="checkbox"] {

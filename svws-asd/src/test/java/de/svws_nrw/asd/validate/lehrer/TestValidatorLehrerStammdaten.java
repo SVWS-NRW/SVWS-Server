@@ -38,7 +38,9 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
 @DisplayName("Tests zur Validierung der LehrerStammdaten")
 class TestValidatorLehrerStammdaten {
 
+	/** Stammdaten der Schule */
 	static final SchuleStammdaten schuleTestdaten_001 = JsonReader.fromResource("de/svws_nrw/asd/validate/schule/Testdaten_001_SchuleStammdaten.json", SchuleStammdaten.class);
+	/** Stammdaten des Lehrers */
 	static final LehrerStammdaten lehrerTestdaten_001 = JsonReader.fromResource("de/svws_nrw/asd/validate/lehrer/Testdaten_001_LehrerStammdaten.json", LehrerStammdaten.class);
 
 	/**

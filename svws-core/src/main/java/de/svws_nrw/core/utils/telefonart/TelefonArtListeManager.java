@@ -100,4 +100,7 @@ public final class TelefonArtListeManager extends AuswahlManager<Long, TelefonAr
 	protected boolean checkFilter(final @NotNull TelefonArt eintrag) {
 		return true;
 	}
+
+	// public void useFilter(final @NotNull StundenplanListeManager srcManager) {}
+
 }

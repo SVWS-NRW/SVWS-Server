@@ -1,5 +1,5 @@
 <template>
-	<div class="page page-flex-row max-w-480">
+	<div class="page page-flex-row max-w-480" v-if="stundenplanManager().stundenplanGetID() !== -1">
 		<div class="max-w-240 h-full overflow-y-auto w-full flex flex-col gap-4">
 			<div class="text-headline-sm">Übersicht aller Unterrichte im Zeitraster</div>
 			<svws-ui-table :items="[]" :no-data="false" has-background :filterReset :filter-open="true" :filtered scroll>
@@ -14,7 +14,7 @@
 				</template>
 				<template #header>
 					<div role="row" class="svws-ui-tr select-none" :style="`grid-template-columns: 3rem repeat(${stundenplanManager().zeitrasterGetWochentageAlsEnumRange().length}, 1fr);`">
-						<div class="svws-ui-td svws-divider svws-align-center cursor-pointer" role="columnheader" @click="filterReset(false)"><span class="icon-sm i-ri-arrow-go-back-line inline-block w-full" /></div>
+						<div class="svws-ui-td svws-divider svws-align-center cursor-pointer" role="columnheader" @click="filterReset(false)"><span class="icon-sm i-ri-arrow-go-back-line w-full" /></div>
 						<template v-for="wochentag in stundenplanManager().zeitrasterGetWochentageAlsEnumRange()" :key="wochentag.id">
 							<div class="svws-ui-td cursor-pointer svws-divider svws-align-center" role="columnheader"
 								@click="filterWochentag(wochentag)" :class="{ 'svws-selected bg-ui-success/20': (stundenplanUnterrichtListeManager().wochentage.auswahlHas(wochentag)) }">

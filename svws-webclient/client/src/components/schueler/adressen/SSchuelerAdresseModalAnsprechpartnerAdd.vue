@@ -9,7 +9,7 @@
 				<svws-ui-text-input placeholder="Titel" v-model="ansprechpartner.titel" type="text" />
 				<svws-ui-spacing />
 				<svws-ui-text-input placeholder="Abteilung" v-model="ansprechpartner.abteilung" type="text" span="full" />
-				<svws-ui-text-input placeholder="Telefon" v-model="ansprechpartner.telefon" type="tel" span="full" />
+				<svws-ui-text-input placeholder="Telefon" v-model="ansprechpartner.telefon" type="tel" span="full" :max-len="20" />
 				<svws-ui-text-input placeholder="E-Mail" v-model="ansprechpartner.email" type="email" verify-email span="full" />
 			</svws-ui-input-wrapper>
 		</template>

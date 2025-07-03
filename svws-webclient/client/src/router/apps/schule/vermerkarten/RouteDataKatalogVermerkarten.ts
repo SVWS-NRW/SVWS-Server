@@ -30,6 +30,10 @@ export class RouteDataKatalogVermerkarten extends RouteDataAuswahl<VermerkartenL
 	protected async createManager(_ : number) : Promise<Partial<RouteStateAuswahlInterface<VermerkartenListeManager>>> {
 		const vermerkarten = await api.server.getVermerkarten(api.schema);
 		const manager = new VermerkartenListeManager(api.abschnitt.id, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte, api.schulform, vermerkarten, new ArrayList());
+		if (this._state.value.manager === undefined)
+			manager.setFilterNurSichtbar(true);
+		else
+			manager.useFilter(this._state.value.manager);
 		return { manager };
 	}
 

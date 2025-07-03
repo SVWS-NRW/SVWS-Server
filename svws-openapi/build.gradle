@@ -17,12 +17,12 @@ dependencies {
 	implementation project(':svws-db-utils')
 	implementation project(':svws-module-reporting')
     implementation project(':svws-module-dav-api')
-    
+
     api fileTree(dir: "$projectDir/src/main/java", includes: ['**/svws_nrw/api/server/*.java', '**/svws_nrw/api/privileged/API*.java'])
 }
 
 task cleanTranspiled(type: Delete) {
-	group "build"
+	group = "build"
 	delete fileTree(dir: "$buildDir/tsapi"), fileTree(dir: "$buildDir/tmp/transpiler/tsapi", includes: ["**/*.class"])
 }
 
@@ -30,14 +30,14 @@ task prepareTranspile {
 	doLast {
 		file("$buildDir/transpiler-api-files.txt").text = configurations.api.files.toString().replace("[", "").replace("]", "").trim()
 	}
-	group "build"
+	group = "build"
 	dependsOn compileJava
 	inputs.files configurations.api
 	outputs.files "$buildDir/transpiler-api-files.txt"
 }
 
 task transpile(type: JavaExec) {
-	group "build"
+	group = "build"
 	dependsOn project(':svws-transpile').tasks.assemble
 	dependsOn project(":svws-schulen").tasks.assemble
 	dependsOn project(":svws-asd").tasks.assemble
@@ -60,7 +60,7 @@ task transpile(type: JavaExec) {
 }
 
 task assembleTranspiled(type: Copy) {
-	group "build"
+	group = "build"
 	dependsOn transpile
 	inputs.dir "$rootDir/svws-schulen/build/ts"
 	inputs.dir "$rootDir/svws-asd/build/ts"
@@ -78,7 +78,7 @@ task assembleTranspiled(type: Copy) {
 	include "**/*.ts"
 	exclude "index.ts"
 	doLast {
-		(new File("$rootDir/svws-webclient/core/src/index.ts")).text = "export { JsonCoreTypeReader } from './asd/utils/JsonCoreTypeReader';\n" + 
+		(new File("$rootDir/svws-webclient/core/src/index.ts")).text = "export { JsonCoreTypeReader } from './asd/utils/JsonCoreTypeReader';\n" +
 			file("$rootDir/svws-schulen/build/ts/index.ts").getText() + file("$rootDir/svws-asd/build/ts/index.ts").getText() +
 			file("$rootDir/svws-core/build/ts/index.ts").getText() + file("$buildDir/tsapi/index.ts").getText()
 	}
@@ -100,7 +100,7 @@ task createVersionProperties() {
 	inputs.files "$rootDir/buildconfig.json"
     outputs.files "$projectDir/src/main/resources/config/version.properties"
     doLast {
-        file("src/main/resources/config/version.properties").text = 
+        file("src/main/resources/config/version.properties").text =
         	"svws.version=" + project.version.toString() + "\n" +
         	"schild.version=" + project.ext.schildMinVersion.toString() + "\n"
     }

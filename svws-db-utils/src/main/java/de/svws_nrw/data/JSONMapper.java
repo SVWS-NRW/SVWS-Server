@@ -351,6 +351,59 @@ public final class JSONMapper {
 		return convertToLong(obj, nullable, null);
 	}
 
+	/**
+	 * Konvertiert das übergebene Objekt in einen Long-Wert, sofern es sich um ein
+	 * Number-Objekt handelt, welches keinen float oder double-Wert repräsentiert.
+	 * Dabei wird geprüft, ob der wert innerhalb des übergebenen Intervalls [lower, upper[ liegt
+	 *
+	 * @param obj        das zu konvertierende Objekt
+	 * @param nullable   gibt an, ob das Ergebnis auch null sein darf oder nicht
+	 * @param lower      die untere Intervallgrenze (einschließlich)
+	 * @param upper      die obere Intervallgrenze (ausschließlich) oder null, wenn es keine
+	 *                   obere Grenze gibt
+	 *
+	 * @return das konvertierte Integer-Objekt
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public static Long convertToLongInRange(final Object obj, final boolean nullable, final Long lower, final Long upper) throws ApiOperationException {
+		return convertToLongInRange(obj, nullable, lower, upper, null);
+	}
+
+	/**
+	 * Konvertiert das übergebene Objekt in einen Long-Wert, sofern es sich um ein
+	 * Number-Objekt handelt, welches keinen float oder double-Wert repräsentiert.
+	 * Dabei wird geprüft, ob der wert innerhalb des übergebenen Intervalls [lower, upper[ liegt
+	 *
+	 * @param obj        das zu konvertierende Objekt
+	 * @param nullable   gibt an, ob das Ergebnis auch null sein darf oder nicht
+	 * @param lower      die untere Intervallgrenze (einschließlich)
+	 * @param upper      die obere Intervallgrenze (ausschließlich) oder null, wenn es keine
+	 *                   obere Grenze gibt
+	 * @param attrName   der Name des Attributes oder null
+	 *
+	 * @return das konvertierte Integer-Objekt
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public static Long convertToLongInRange(final Object obj, final boolean nullable, final Long lower, final Long upper, final String attrName) throws ApiOperationException {
+		if (obj == null) {
+			if (nullable)
+				return null;
+			throw new ApiOperationException(Status.BAD_REQUEST, formatMessage("Der Wert null ist nicht erlaubt.", attrName));
+		}
+		if (obj instanceof final Number n) {
+			if ((obj instanceof Float) || (obj instanceof Double))
+				throw new ApiOperationException(Status.BAD_REQUEST, formatMessage("Fehler beim Konvertieren zu Long:"
+						+ " Es handelt sich um einen Fließkommawert, obwohl eine Ganzzahl erwartet wird.", attrName));
+			final long value = n.longValue();
+			if (((lower == null) || (value >= lower)) && ((upper == null) || (value < upper)))
+				return value;
+			throw new ApiOperationException(Status.BAD_REQUEST, formatMessage(
+					"Fehler beim Konvertieren: Der Zahlwert liegt außerhalb des geforderten Bereichs.", attrName));
+		}
+		throw new ApiOperationException(Status.BAD_REQUEST, formatMessage("Fehler beim Konvertieren zu Long: Das Objekt ist keine Zahl.", attrName));
+	}
 
 	/**
 	 * Konvertiert das übergebene Objekt in einen Integer-Wert, sofern es sich um ein

@@ -125,7 +125,7 @@ public final class KursListeManager extends AuswahlManager<Long, KursDaten, Kurs
 				new AttributMitAuswahl<>(Arrays.asList(SchuelerStatus.values()), _schuelerstatusToId, _comparatorSchuelerStatus, _eventHandlerFilterChanged);
 		this.schueler = new AttributMitAuswahl<>(schueler, _schuelerToId, SchuelerUtils.comparator, _eventHandlerFilterChanged);
 		this.jahrgaenge = new AttributMitAuswahl<>(jahrgaenge, _jahrgangToId, JahrgangsUtils.comparator, _eventHandlerFilterChanged);
-		this.lehrer = new AttributMitAuswahl<>(lehrer, _lehrerToId, LehrerUtils.comparator, _eventHandlerFilterChanged);
+		this.lehrer = new AttributMitAuswahl<>(lehrer, _lehrerToId, LehrerUtils.comparatorKuerzel, _eventHandlerFilterChanged);
 		this.faecher = new AttributMitAuswahl<>(faecher, _fachToId, comparatorFaecherListe, _eventHandlerFilterChanged);
 		final @NotNull List<Schulgliederung> gliederungen =
 				(schulform == null) ? Arrays.asList(Schulgliederung.values()) : Schulgliederung.getBySchuljahrAndSchulform(getSchuljahr(), schulform);
@@ -375,6 +375,20 @@ public final class KursListeManager extends AuswahlManager<Long, KursDaten, Kurs
 	 */
 	public KursDaten getByKuerzelAndJahrgangOrNull(final @NotNull String kuerzel, final long idJahrgang) {
 		return this._mapKursByKuerzelAndJahrgang.getOrNull(kuerzel, idJahrgang);
+	}
+
+	/**
+	 * Methode übernimmt Filterinformationen aus dem übergebenen {@link KursListeManager}
+	 *
+	 * @param srcManager Manager, aus dem die Filterinformationen übernommen werden
+	 */
+	public void useFilter(final @NotNull KursListeManager srcManager) {
+		this.jahrgaenge.setAuswahl(srcManager.jahrgaenge);
+		this.lehrer.setAuswahl(srcManager.lehrer);
+		this.schulgliederungen.setAuswahl(srcManager.schulgliederungen);
+		this.faecher.setAuswahl(srcManager.faecher);
+		this.schueler.setAuswahl(srcManager.schueler);
+		this.setFilterNurSichtbar(srcManager._filterNurSichtbar);
 	}
 
 }

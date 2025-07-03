@@ -168,6 +168,15 @@ export class ReligionListeManager extends AuswahlManager<number, ReligionEintrag
 		return this._mapReligionEintragByKuerzel.get(kuerzel);
 	}
 
+	/**
+	 * Methode übernimmt Filterinformationen aus dem übergebenen {@link AuswahlManager}
+	 *
+	 * @param srcManager Manager, aus dem die Filterinformationen übernommen werden
+	 */
+	public useFilter(srcManager : ReligionListeManager) : void {
+		this.setFilterNurSichtbar(srcManager.filterNurSichtbar());
+	}
+
 	transpilerCanonicalName(): string {
 		return 'de.svws_nrw.core.utils.religion.ReligionListeManager';
 	}

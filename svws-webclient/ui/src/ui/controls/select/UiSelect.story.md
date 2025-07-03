@@ -19,6 +19,11 @@ UiSelect ist eien Combobox, die zur Auswahl von vorgegebenen Option verwendet we
 ### Props
 Folgende Props können gesetzt werden, um die Komponente zu konfigurieren.
 
+**modelValue**
+- **Typ**: `any` (einzelne Option bei Single-Selektion, Iterable bei Multi-Selektion)
+- **Default**: `null`
+- Enthält die aktuelle Selektion
+
 **label**
 - **Typ**: `string`   
 - **Default**: `""`   
@@ -47,6 +52,11 @@ Folgende Props können gesetzt werden, um die Komponente zu konfigurieren.
 - **Typ**: `boolean`   
 - **Default**: `false`   
 - Definiert, ob die Komponente für die Statistik relevant ist
+
+**headless**
+- **Typ**: `boolean`   
+- **Default**: `false`   
+- Definiert, ob das Select headless (ohne Rahmen und Hintergrund) dargestellt werden soll. Wird zum Beispiel für Tabellen benötigt.
 
 **minOptions**
 - **Typ**: `number`   
@@ -124,7 +134,7 @@ SelectManager leiten alle von der abstrakten Klasse `BaseSelectManager` ab. Es s
 **Konstruktor**
 - **multi (boolean)**: Gibt an, ob es sich um eine Multiselektion handelt
 - **options (Iterable<T>)**: Alle Optionen, die das Dropdown beinhaltet
-- **selected (Iterable<T>, optional)**: Definiert die bereits selektierten Einträge
+- **selected (any, optional)**: Definiert die bereits selektierten Einträge. Bei einer Multi-Selektion muss es ein Iterable sein, andernfalls eine einzelne Option
 
 ### SimpleSelectManager
 Dieser Manager kann mit einfachen Optionen-Datentypen bestehend aus Numbers oder Strings umgehen.
@@ -132,7 +142,7 @@ Dieser Manager kann mit einfachen Optionen-Datentypen bestehend aus Numbers oder
 **Konstruktor**
 - **multi (boolean)**: Gibt an, ob es sich um eine Multiselektion handelt
 - **options (Iterable<string | number>)**: Alle Optionen, die das Dropdown beinhaltet
-- **selected (Iterable<string | number>, optional)**: Definiert die bereits selektierten Einträge
+- **selected (any, optional)**: Definiert die bereits selektierten Einträge. Bei einer Multi-Selektion muss es ein Iterable sein, andernfalls eine einzelne Option
 
 ### ObjectSelectManager
 Dieser Manager ist ein einfacher, allgemeiner Manager, der mit allen Objekten umgehen kann. Dafür muss angegeben werden, wie die Texter der Selektionen und die Texte der Optionen generiert werden sollen.
@@ -142,7 +152,7 @@ Dieser Manager ist ein einfacher, allgemeiner Manager, der mit allen Objekten um
 - **options (Iterable<any>)**: Alle Optionen, die das Dropdown beinhaltet
 - **selectionDisplayText ((option: any) => string)**: Eine Funktion, die den Text für die Selektion generiert zum Beispiel: ``(option) => `${option.id}: ${option.text}` ``
 - **optionDisplayText ((option: any) => string)**: Eine Funktion, die den Text für die Optionen im Dropdown generiert zum Beispiel: ``(option) => `${option.id}: ${option.text}` ``
-- **selected (Iterable<any>, optional)**: Definiert die bereits selektierten Einträge
+- **selected (any, optional)**: Definiert die bereits selektierten Einträge. Bei einer Multi-Selektion muss es ein Iterable sein, andernfalls eine einzelne Option
 
 ### CoreTypeSelectManager
 Dieser Manager akzeptiert einfach CoreTypes als Optionen und definiert, wie diese in der Liste angezeigt werden. Er filtert die Einträge nach Schuljahr und Schulform und kann zusätzlich noch nach Suchtexten filtern
@@ -154,6 +164,7 @@ Dieser Manager akzeptiert einfach CoreTypes als Optionen und definiert, wie dies
 - **schulform (Schulform)**: Die Schulform, nach der gefiltert wird
 - **selectionDisplayText (string | Funktion)**: Gibt an, wie die Selektion dargestellt werden soll. Es kann zwischen `text`, `kuerzel` und `kuerzelText` gewählt werden, falls vordefinierte Einstellungen gewünscht sind. Wenn eigene Definitionen verwendet werden sollen, dann können diese zum Beispiel wie folgt angegeben werden: ``(option) => `${option.id}: ${option.text}` ``
 - **optionDisplayText (string | Funktion)**: Gibt an, wie die Optionen in der Dropdownliste dargestellt werden sollen. Es kann zwischen `text`, `kuerzel` und `kuezerlText` gewählt werden, falls vordefinierte Einstellungen gewünscht sind. Wenn eigene Definitionen verwendet werden sollen, dann können diese zum Beispiel wie folgt angegeben werden: ``(option) => `${option.id}: ${option.text}` ``
+- **selected (any, optional)**: Definiert die bereits selektierten Einträge. Bei einer Multi-Selektion muss es ein Iterable sein, andernfalls eine einzelne Option
 
 ## Filter
 Optionen im einem UiSelect können gefiltert werden. Damit mehrere Filter kombiniert werden können, existiert das Interface `SelectFilter`, auf dem basierend die Filter definiert werden. Diese Filter können anschließend an den SelectManager übergeben werden. \
@@ -161,7 +172,11 @@ Bei Änderungen an einem Filter wie beispielsweise an darin befindlichen Attribu
 Die angezeigten Optionen im Dropdown des Selects sind ausschließlich Optionen, die für alle angewendeten Filter valide sind.
 
 ### SearchSelectFilter
-Ein spezieller Filter, der für die Filterung nach Suchbegriffen verwendet wird. Wird im UiSelect die prop `searchable = true` gesetzt, dann wird dieser Filter automatisch verwendet. Er kann aber auch mit anderen Suchbegriffen kombiniert werden.
+Ein spezieller Filter, der für die Filterung nach Suchbegriffen verwendet wird. Wird im UiSelect die prop `searchable = true` gesetzt, dann wird dieser Filter automatisch verwendet. 
+Es ist außerdem eine Tiefensuche möglich. Dabei wird der Suchbegriff nicht nur mit dem Optiontext verglichen, sondern auch mit den Inhalten von angegebenene Attributen.
+Diese Suche wird aktiviert, indem auf dem SelectManager `setDeepSearchAttributes(['attributeName'])` aufgerufen wird. Dabei werden alle Attributnamen übergeben, 
+die zusätzlich durchsucht werden sollen. Alternativ klnnen die Attribute auch direkt im `SearchSelectFilter` gesetzt werden, falls dieser selbst an den SelectManager
+übergeben wird.
 
 **Konstruktor**
 - **key (string)**: Ein eindeutiger Key zur Identifikation des Filters. Der Key muss nur innerhalb des SelectManagers eindeutig sein.

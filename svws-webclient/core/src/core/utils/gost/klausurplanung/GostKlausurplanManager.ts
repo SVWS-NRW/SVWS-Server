@@ -701,7 +701,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @param stundenplanManager der {@link StundenplanManager}
 	 */
 	public stundenplanManagerAddByAbschnittAndDatum(idSchuljahresabschnitt : number, datum : string, stundenplanManager : StundenplanManager) : void {
-		this._stundenplanmanager_by_schuljahresabschnitt_and_datum.put(idSchuljahresabschnitt, datum, stundenplanManager);
+		DeveloperNotificationException.ifMap2DPutOverwrites(this._stundenplanmanager_by_schuljahresabschnitt_and_datum, idSchuljahresabschnitt, datum, stundenplanManager);
 	}
 
 	/**
@@ -844,14 +844,14 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @return den {@link StundenplanManager}, zu den übergebenen Parametern, sonst wird eine {@link DeveloperNotificationException} geworfen.
 	 */
 	public stundenplanManagerGetByTerminOrException(termin : GostKlausurtermin) : StundenplanManager {
-		return DeveloperNotificationException.ifNull(JavaString.format("Kein Stundenplanmanager zu Termin %d gefunden.", termin.id), this.stundenplanManagerGetByTerminOrNull(termin));
+		return DeveloperNotificationException.ifNull(JavaString.format("Kein Stundenplan zu Termin %d (%s) gefunden.", termin.id, termin.datum), this.stundenplanManagerGetByTerminOrNull(termin));
 	}
 
 	private stundenplanManagerGetByDatumLinearSearch(datum : string) : StundenplanManager {
 		for (const stundenplanManager of this._stundenplanmanager_by_schuljahresabschnitt_and_datum.getNonNullValuesAsList())
 			if (stundenplanManager !== null && JavaString.compareTo(stundenplanManager.getGueltigAb(), datum) <= 0 && JavaString.compareTo(stundenplanManager.getGueltigBis(), datum) >= 0)
 				return stundenplanManager;
-		throw new DeveloperNotificationException(JavaString.format("Kein Stundenplanmanager zu Datum %s gefunden.", datum))
+		throw new DeveloperNotificationException(JavaString.format("Kein Stundenplan zu Datum %s gefunden.", datum))
 	}
 
 	/**
@@ -1484,6 +1484,7 @@ export class GostKlausurplanManager extends JavaObject {
 	}
 
 	private kursklausurRemoveOhneUpdateById(idKursklausur : number) : void {
+		this.schuelerklausurRemoveAllOhneUpdate(this._schuelerklausur_by_idKursklausur_and_idSchueler.get1(idKursklausur));
 		DeveloperNotificationException.ifMapRemoveFailes(this._kursklausur_by_id, idKursklausur);
 	}
 
@@ -1661,9 +1662,8 @@ export class GostKlausurplanManager extends JavaObject {
 	private terminRemoveOhneUpdateById(idTermin : number) : void {
 		DeveloperNotificationException.ifMapRemoveFailes(this._termin_by_id, idTermin);
 		const kursklausurenZuTermin : List<GostKursklausur> | null = this._kursklausurmenge_by_abijahr_and_halbjahr_and_idTermin_and_quartal.get3(idTermin);
-		if (kursklausurenZuTermin !== null)
-			for (const k of kursklausurenZuTermin)
-				k.idTermin = null;
+		for (const k of kursklausurenZuTermin)
+			k.idTermin = null;
 		const schuelerklausurtermineZuTermin : List<GostSchuelerklausurTermin> | null = this._schuelerklausurterminmenge_by_idTermin.get(idTermin);
 		if (schuelerklausurtermineZuTermin !== null)
 			for (const skt of schuelerklausurtermineZuTermin)
@@ -1774,29 +1774,39 @@ export class GostKlausurplanManager extends JavaObject {
 
 	private schuelerklausurRemoveOhneUpdateById(idSchuelerklausur : number) : void {
 		const removed : GostSchuelerklausur | null = DeveloperNotificationException.ifMapRemoveFailes(this._schuelerklausur_by_id, idSchuelerklausur);
-		this.schuelerklausurterminRemoveAll(this.schuelerklausurterminGetMengeBySchuelerklausur(removed));
+		this.schuelerklausurterminRemoveAllOhneUpdate(this.schuelerklausurterminGetMengeBySchuelerklausur(removed));
 		this.schuelerklausurfehlendRemoveOhneUpdate(removed);
 	}
 
 	/**
 	 * Entfernt ein existierendes {@link GostKursklausur}-Objekt.
 	 *
-	 * @param idKursklausur Die ID des {@link GostKursklausur}-Objekts.
+	 * @param idSchuelerklausur Die ID des {@link GostSchuelerklausur}-Objekts.
 	 */
-	public schuelerklausurRemoveById(idKursklausur : number) : void {
-		this.schuelerklausurRemoveOhneUpdateById(idKursklausur);
+	public schuelerklausurRemoveById(idSchuelerklausur : number) : void {
+		this.schuelerklausurRemoveOhneUpdateById(idSchuelerklausur);
 		this.update_all();
 	}
 
 	/**
-	 * Entfernt alle {@link GostKursklausur}-Objekte.
+	 * Entfernt alle {@link GostSchuelerklausur}-Objekte.
 	 *
 	 * @param listSchuelerklausuren Die Liste der zu entfernenden
-	 *                          {@link GostKursklausur}-Objekte.
+	 *                          {@link GostSchuelerklausur}-Objekte.
 	 */
-	public schuelerklausurRemoveAll(listSchuelerklausuren : List<GostSchuelerklausur>) : void {
+	private schuelerklausurRemoveAllOhneUpdate(listSchuelerklausuren : List<GostSchuelerklausur>) : void {
 		for (const schuelerklausur of listSchuelerklausuren)
 			this.schuelerklausurRemoveOhneUpdateById(schuelerklausur.id);
+	}
+
+	/**
+	 * Entfernt alle {@link GostSchuelerklausur}-Objekte.
+	 *
+	 * @param listSchuelerklausuren Die Liste der zu entfernenden
+	 *                          {@link GostSchuelerklausur}-Objekte.
+	 */
+	public schuelerklausurRemoveAll(listSchuelerklausuren : List<GostSchuelerklausur>) : void {
+		this.schuelerklausurRemoveAllOhneUpdate(listSchuelerklausuren);
 		this.update_all();
 	}
 
@@ -1984,9 +1994,19 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @param listSchuelerklausurtermine die Liste der zu entfernenden
 	 *                                   {@link GostSchuelerklausurTermin}-Objekte.
 	 */
-	public schuelerklausurterminRemoveAll(listSchuelerklausurtermine : List<GostSchuelerklausurTermin>) : void {
+	public schuelerklausurterminRemoveAllOhneUpdate(listSchuelerklausurtermine : List<GostSchuelerklausurTermin>) : void {
 		for (const schuelerklausurtermin of listSchuelerklausurtermine)
 			this.schuelerklausurterminRemoveOhneUpdateById(schuelerklausurtermin.id);
+	}
+
+	/**
+	 * Entfernt alle {@link GostSchuelerklausurTermin}-Objekte.
+	 *
+	 * @param listSchuelerklausurtermine die Liste der zu entfernenden
+	 *                                   {@link GostSchuelerklausurTermin}-Objekte.
+	 */
+	public schuelerklausurterminRemoveAll(listSchuelerklausurtermine : List<GostSchuelerklausurTermin>) : void {
+		this.schuelerklausurterminRemoveAllOhneUpdate(listSchuelerklausurtermine);
 		this.update_all();
 	}
 
@@ -2564,8 +2584,7 @@ export class GostKlausurplanManager extends JavaObject {
 	}
 
 	private kursklausurGetMengeByTerminid(idTermin : number | null) : List<GostKursklausur> {
-		const klausuren : List<GostKursklausur> | null = this._kursklausurmenge_by_abijahr_and_halbjahr_and_idTermin_and_quartal.get3((idTermin !== null) ? idTermin : -1);
-		return (klausuren !== null) ? klausuren : new ArrayList();
+		return this._kursklausurmenge_by_abijahr_and_halbjahr_and_idTermin_and_quartal.get3((idTermin !== null) ? idTermin : -1);
 	}
 
 	/**
@@ -3688,7 +3707,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 * denen ein {@link GostKlausurtermin} zugewiesen wurde.
 	 */
 	public schuelerklausurterminNtAktuellMitTerminGetMengeByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number) : List<GostSchuelerklausurTermin> {
-		let ergebnis : List<GostSchuelerklausurTermin> = new ArrayList<GostSchuelerklausurTermin>();
+		let ergebnis : List<GostSchuelerklausurTermin>;
 		if (quartal > 0) {
 			ergebnis = this._schuelerklausurterminntaktuellmenge_by_abijahr_and_halbjahr_and_quartal_and_idTermin.get123(abiJahrgang, halbjahr.id, quartal);
 			let iterator : JavaIterator<GostSchuelerklausurTermin> | null = ergebnis.iterator();
@@ -4614,7 +4633,8 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @return der zugehörige {@link StundenplanRaum}
 	 */
 	public stundenplanraumGetByKlausurraum(raum : GostKlausurraum) : StundenplanRaum {
-		return this.stundenplanManagerGetByTerminOrException(this.terminGetByIdOrException(raum.idTermin)).raumGetByIdOrException(DeveloperNotificationException.ifNull("StundenplanRaum darf nicht NULL sein", raum.idStundenplanRaum));
+		const spm : StundenplanManager = this.stundenplanManagerGetByTerminOrException(this.terminGetByIdOrException(raum.idTermin));
+		return DeveloperNotificationException.ifNull(JavaString.format("Stundenplan %d enthält keinen Raum zur ID %d", spm.stundenplanGetID(), raum.idStundenplanRaum), spm.raumGetByIdOrNull(DeveloperNotificationException.ifNull("StundenplanRaum darf nicht NULL sein", raum.idStundenplanRaum)));
 	}
 
 	/**

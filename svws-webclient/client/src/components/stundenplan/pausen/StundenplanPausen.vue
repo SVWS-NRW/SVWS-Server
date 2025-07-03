@@ -16,7 +16,7 @@
 					<div v-for="lehrer in stundenplanManager().lehrerGetMengeAsList()" :key="lehrer.id" class="svws-ui-tr w-full" :class="dragLehrer ? 'cursor-grabbing' : 'cursor-grab'">
 						<div class="svws-ui-td border-0!">
 							<div class="svws-ui-badge select-none group flex place-items-center w-full" @dragstart="onDrag(lehrer)" @dragend="dragEnd" draggable="true">
-								<span class="icon i-ri-draggable inline-block icon-ui-75 opacity-60 group-hover:opacity-100 group-hover:icon-ui-75 rounded-xs" />
+								<span class="icon i-ri-draggable icon-ui-75 opacity-60 group-hover:opacity-100 group-hover:icon-ui-75 rounded-xs" />
 								<span class="truncate grow p-1"> {{ lehrer.kuerzel }} ({{ lehrer.vorname[0] }}. {{ lehrer.nachname }})</span>
 								<span class="rounded-lg bg-ui-brand text-ui-onbrand px-1 py-0.5 text-sm break-normal" v-if="mapLehrerPausenaufsichten.get(lehrer.id)?.size()">
 									<svws-ui-tooltip>
@@ -70,7 +70,7 @@
 									<div v-for="lehrer in stundenplanManager().lehrerGetMengeByPausenzeitIdAndAufsichtsbereichIdAndWochentypAndInklusive(pause.id, aufsichtsbereich.id, typ, false)"
 										:key="lehrer.id" class="rounded-md group flex place-items-center" :class="{'cursor-grab': !dragLehrer && hatUpdateKompetenz, 'hover:bg-ui-25 hover:text-ui-75': hatUpdateKompetenz}"
 										@dragstart.stop="onDrag(lehrer, {pauseID: pause.id, aufsichtsbereichID: aufsichtsbereich.id, typ})" :draggable="hatUpdateKompetenz" @dragend="dragEnd">
-										<span v-if="hatUpdateKompetenz" class="icon i-ri-draggable inline-block icon-ui-75 opacity-60 group-hover:opacity-100 group-hover:icon-ui-75 rounded-xs"
+										<span v-if="hatUpdateKompetenz" class="icon i-ri-draggable icon-ui-75 opacity-60 group-hover:opacity-100 group-hover:icon-ui-75 rounded-xs"
 											:class="{'icon-ui-onsuccess': isDraggingOver(pause.id, aufsichtsbereich.id).value || bereichGesperrt(pause.id, aufsichtsbereich.id).value}" />
 										<span>{{ lehrer.kuerzel }}</span>
 									</div>

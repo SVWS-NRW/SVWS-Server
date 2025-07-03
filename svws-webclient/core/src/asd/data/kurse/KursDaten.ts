@@ -1,5 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { Schueler } from '../../../asd/data/schueler/Schueler';
+import { KursLehrer } from '../../../asd/data/kurse/KursLehrer';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
@@ -50,6 +51,11 @@ export class KursDaten extends JavaObject {
 	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.
 	 */
 	public istSichtbar : boolean = false;
+
+	/**
+	 * Die Liste der zusätzlichen Lehrkräft eines Kurses.
+	 */
+	public weitereLehrer : List<KursLehrer> = new ArrayList<KursLehrer>();
 
 	/**
 	 * Die Schüler des Kurses.
@@ -139,6 +145,11 @@ export class KursDaten extends JavaObject {
 		if (obj.istSichtbar === undefined)
 			throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
+		if (obj.weitereLehrer !== undefined) {
+			for (const elem of obj.weitereLehrer) {
+				result.weitereLehrer.add(KursLehrer.transpilerFromJSON(JSON.stringify(elem)));
+			}
+		}
 		if (obj.schueler !== undefined) {
 			for (const elem of obj.schueler) {
 				result.schueler.add(Schueler.transpilerFromJSON(JSON.stringify(elem)));
@@ -184,6 +195,14 @@ export class KursDaten extends JavaObject {
 		result += '"kursartAllg" : ' + JSON.stringify(obj.kursartAllg) + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
+		result += '"weitereLehrer" : [ ';
+		for (let i = 0; i < obj.weitereLehrer.size(); i++) {
+			const elem = obj.weitereLehrer.get(i);
+			result += KursLehrer.transpilerToJSON(elem);
+			if (i < obj.weitereLehrer.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
 		result += '"schueler" : [ ';
 		for (let i = 0; i < obj.schueler.size(); i++) {
 			const elem = obj.schueler.get(i);
@@ -246,6 +265,16 @@ export class KursDaten extends JavaObject {
 		}
 		if (obj.istSichtbar !== undefined) {
 			result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
+		}
+		if (obj.weitereLehrer !== undefined) {
+			result += '"weitereLehrer" : [ ';
+			for (let i = 0; i < obj.weitereLehrer.size(); i++) {
+				const elem = obj.weitereLehrer.get(i);
+				result += KursLehrer.transpilerToJSON(elem);
+				if (i < obj.weitereLehrer.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
 		}
 		if (obj.schueler !== undefined) {
 			result += '"schueler" : [ ';

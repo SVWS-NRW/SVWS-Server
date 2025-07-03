@@ -364,6 +364,33 @@ export class GostHalbjahr extends JavaEnum<GostHalbjahr> {
 	}
 
 	/**
+	 * Gibt das Halbjahr zurück, welches zu dem übergebenen Berufskolleg-Jahrgang und Halbjahr gehört.
+	 *
+	 * @param jahrgang     der Jahrgang am Berufskolleg
+	 * @param halbjahr     die Nummer des Halbjahres
+	 *
+	 * @return das Halbjahr oder null, falls es kein gültiges Halbjahr mit den Angaben gibt.
+	 */
+	public static fromBkJahrgangUndHalbjahr(jahrgang : string | null, halbjahr : number) : GostHalbjahr | null {
+		if ((halbjahr !== 1) && (halbjahr !== 2))
+			return null;
+		switch (jahrgang) {
+			case "01": {
+				return (halbjahr === 1) ? GostHalbjahr.EF1 : GostHalbjahr.EF2;
+			}
+			case "02": {
+				return (halbjahr === 1) ? GostHalbjahr.Q11 : GostHalbjahr.Q12;
+			}
+			case "03": {
+				return (halbjahr === 1) ? GostHalbjahr.Q21 : GostHalbjahr.Q22;
+			}
+			default: {
+				return null;
+			}
+		}
+	}
+
+	/**
 	 * Ermittelt das Halbjahr der gymnasialen Oberstufe anhand des angegebenen Abiturjahres und
 	 * dem aktuellen Schuljahr und Halbjahr
 	 *

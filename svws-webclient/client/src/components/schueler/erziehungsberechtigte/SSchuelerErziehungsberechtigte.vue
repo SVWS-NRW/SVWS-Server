@@ -1,4 +1,7 @@
 <template>
+	<Teleport to=".svws-ui-header--actions" defer>
+		<svws-ui-modal-hilfe> <hilfe-schueler-erziehungsberechtigte /> </svws-ui-modal-hilfe>
+	</Teleport>
 	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Erziehungsberechtigte" class="col-span-full">
 			<svws-ui-table class="contentFocusField" :items="data()" :columns :no-data="data().size() === 0" clickable :clicked="erzieher" @update:clicked="value => erzieher = value" focus-first-element>
@@ -17,7 +20,7 @@
 					{{ rowData.vorname }} {{ rowData.nachname }}
 				</template>
 				<template #cell(email)="{ value: eMail }">
-					{{ eMail ? eMail : '–' }}
+					{{ eMail ? eMail : '—' }}
 				</template>
 				<template #cell(adresse)="{ rowData }">
 					{{ strasse(rowData) }}{{ rowData.wohnortID && mapOrte?.get(rowData.wohnortID) ? `, ${mapOrte.get(rowData.wohnortID)?.plz} ${mapOrte?.get(rowData.wohnortID)?.ortsname}` : '' }}

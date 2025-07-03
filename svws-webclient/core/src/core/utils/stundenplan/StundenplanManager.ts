@@ -522,9 +522,13 @@ export class StundenplanManager extends JavaObject {
 
 	private readonly _stundenplanGueltigBis : string;
 
+	private readonly _aktiv : boolean;
+
 	private readonly _stundenplanBezeichnung : string;
 
 	private _stundenplanKonfig : StundenplanKonfiguration = new StundenplanKonfiguration();
+
+	private _stundenplanWarnungen : List<string> = new ArrayList<string>();
 
 
 	/**
@@ -564,6 +568,7 @@ export class StundenplanManager extends JavaObject {
 			this._stundenplanAbschnitt = daten.abschnitt;
 			this._stundenplanGueltigAb = daten.gueltigAb;
 			this._stundenplanGueltigBis = StundenplanManager.init_gueltig_bis(daten.gueltigAb, daten.gueltigBis);
+			this._aktiv = daten.aktiv;
 			this._stundenplanBezeichnung = daten.bezeichnungStundenplan;
 			let uv : StundenplanUnterrichtsverteilung | null = unterrichtsverteilung;
 			if (uv === null) {
@@ -584,6 +589,7 @@ export class StundenplanManager extends JavaObject {
 			this._stundenplanAbschnitt = stundenplanKomplett.daten.abschnitt;
 			this._stundenplanGueltigAb = stundenplanKomplett.daten.gueltigAb;
 			this._stundenplanGueltigBis = StundenplanManager.init_gueltig_bis(stundenplanKomplett.daten.gueltigAb, stundenplanKomplett.daten.gueltigBis);
+			this._aktiv = stundenplanKomplett.daten.aktiv;
 			this._stundenplanBezeichnung = stundenplanKomplett.daten.bezeichnungStundenplan;
 			DeveloperNotificationException.ifTrue("Die ID des Stundenplans passt nicht zur ID der StundenplanUnterrichtsverteilung.", stundenplanKomplett.daten.id !== stundenplanKomplett.unterrichtsverteilung.id);
 			this.initAll(stundenplanKomplett.daten.kalenderwochenZuordnung, stundenplanKomplett.unterrichtsverteilung.faecher, stundenplanKomplett.daten.jahrgaenge, stundenplanKomplett.daten.zeitraster, stundenplanKomplett.daten.raeume, stundenplanKomplett.daten.pausenzeiten, stundenplanKomplett.daten.aufsichtsbereiche, stundenplanKomplett.unterrichtsverteilung.lehrer, stundenplanKomplett.unterrichtsverteilung.schueler, stundenplanKomplett.daten.schienen, stundenplanKomplett.unterrichtsverteilung.klassen, stundenplanKomplett.unterrichtsverteilung.klassenunterricht, stundenplanKomplett.pausenaufsichten, stundenplanKomplett.unterrichtsverteilung.kurse, stundenplanKomplett.unterrichte);
@@ -2874,6 +2880,9 @@ export class StundenplanManager extends JavaObject {
 		DeveloperNotificationException.ifMapNotContains("_fach_by_id", this._fach_by_id, klassenunterricht.idFach);
 		for (const idSchiene of klassenunterricht.schienen)
 			DeveloperNotificationException.ifMapNotContains("_schiene_by_id", this._schiene_by_id, idSchiene);
+		for (const idLehrkraft of klassenunterricht.lehrer)
+			if (!this._lehrer_by_id.containsKey(idLehrkraft))
+				this.lehrerAddPseudoLehrkraftOhneUpdate(idLehrkraft, "Klasseunterricht " + this.klassenunterrichtGetBeschreibungKlasseAndFach(klassenunterricht) + " hat ungültige Lehrerreferenz.");
 	}
 
 	private klassenunterrichtCreateComparator() : Comparator<StundenplanKlassenunterricht> {
@@ -2910,6 +2919,19 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public klassenunterrichtGetByKlasseIdAndFachIdOrException(idKlasse : number, idFach : number) : StundenplanKlassenunterricht {
 		return this._klassenunterricht_by_idKlasse_and_idFach.getOrException(idKlasse, idFach);
+	}
+
+	/**
+	 * Liefert eine String-Repräsentation {@link StundenplanKlassenunterricht}-Objekts.
+	 *
+	 * @param klassenunterricht    Das Objekt, welches dargestellt werden soll.
+	 *
+	 * @return eine String-Repräsentation {@link StundenplanKlassenunterricht}-Objekts.
+	 */
+	public klassenunterrichtGetBeschreibungKlasseAndFach(klassenunterricht : StundenplanKlassenunterricht) : string | null {
+		const kl : StundenplanKlasse | null = this._klasse_by_id.get(klassenunterricht.idKlasse);
+		const fa : StundenplanFach | null = this._fach_by_id.get(klassenunterricht.idFach);
+		return (kl === null ? "Klasse ???" : kl.bezeichnung) + " " + (fa === null ? "Fach ???" : fa.bezeichnung);
 	}
 
 	/**
@@ -3237,7 +3259,8 @@ export class StundenplanManager extends JavaObject {
 		for (const idSchuelerDesKurses of kurs.schueler)
 			DeveloperNotificationException.ifMapNotContains("_schueler_by_id", this._schueler_by_id, idSchuelerDesKurses);
 		for (const idLehrerDesKurses of kurs.lehrer)
-			DeveloperNotificationException.ifMapNotContains("_lehrer_by_id", this._lehrer_by_id, idLehrerDesKurses);
+			if (!this._lehrer_by_id.containsKey(idLehrerDesKurses))
+				this.lehrerAddPseudoLehrkraftOhneUpdate(idLehrerDesKurses, "StundenplanKurs " + kurs.bezeichnung + " hat ungültige Lehrerreferenz.");
 	}
 
 	/**
@@ -3556,6 +3579,21 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Erzeugt eine Pseudo-Lehrkraft, falls dies aufgrund ungültiger Referenzen nötig ist.
+	 * @param idLehrkraft   Die Datenbank-ID der Lehrkraft, zu der es keine Referenz mehr gibt.
+	 * @param warnung       Die warnung für den User, welche von der GUI angezeigt werden soll.
+	 */
+	private lehrerAddPseudoLehrkraftOhneUpdate(idLehrkraft : number, warnung : string) : void {
+		this._stundenplanWarnungen.add(warnung);
+		const le : StundenplanLehrer = new StundenplanLehrer();
+		le.id = idLehrkraft;
+		le.kuerzel = "???";
+		le.nachname = "???";
+		le.vorname = "???";
+		DeveloperNotificationException.ifMapPutOverwrites(this._lehrer_by_id, idLehrkraft, le);
+	}
+
+	/**
 	 * Fügt ein {@link StundenplanLehrer}-Objekt hinzu.
 	 *
 	 * @param lehrer  Das {@link StundenplanLehrer}-Objekt, welches hinzugefügt werden soll.
@@ -3806,6 +3844,8 @@ export class StundenplanManager extends JavaObject {
 		DeveloperNotificationException.ifMapNotContains("_map_idPausenzeit_zu_pausenzeit", this._pausenzeit_by_id, pausenaufsicht.idPausenzeit);
 		for (const aufsichtsbereich of pausenaufsicht.bereiche)
 			this.pausenaufsichtbereichCheckAttributes(aufsichtsbereich);
+		if (!this._lehrer_by_id.containsKey(pausenaufsicht.idLehrer))
+			this.lehrerAddPseudoLehrkraftOhneUpdate(pausenaufsicht.idLehrer, "Pausenaufsicht mit ID " + pausenaufsicht.id + " hat ungültige Lehrerreferenz.");
 	}
 
 	/**
@@ -4771,6 +4811,18 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert das zur ID zugehörige {@link StundenplanRaum}-Objekt oder null, falls der Raum zur ID nicht existiert.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param idRaum Die ID des angefragten-Objektes.
+	 *
+	 * @return das zur ID zugehörige {@link StundenplanRaum}-Objekt oder null, falls der Raum zur ID nicht existiert.
+	 */
+	public raumGetByIdOrNull(idRaum : number) : StundenplanRaum | null {
+		return this._raum_by_id.get(idRaum);
+	}
+
+	/**
 	 * Liefert eine Beschreibung des {@link StundenplanRaum}-Objekts in der Form "042".
 	 * <br>Hinweis: Diese Methode liefert niemals eine Exception, stattdessen enthält der String eine Fehlermeldung.
 	 *
@@ -5395,6 +5447,15 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert die Information, ob der Stundenplan aktiv ist.
+	 *
+	 * @return true, wenn der Stundenplan aktiv ist, sonst false.
+	 */
+	public isAktiv() : boolean {
+		return this._aktiv;
+	}
+
+	/**
 	 * Liefert die textuelle Beschreibung des Stundenplans.
 	 *
 	 * @return die textuelle Beschreibung des Stundenplans.
@@ -5704,6 +5765,15 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert alle Warnungen, die dem User angezeigt werden sollen.
+	 *
+	 * @return alle Warnungen, die dem User angezeigt werden sollen.
+	 */
+	public stundenplanGetWarnungen() : List<string> {
+		return this._stundenplanWarnungen;
+	}
+
+	/**
 	 * Fügt ein {@link StundenplanUnterricht}-Objekt hinzu.
 	 *
 	 * @param unterricht  Das {@link StundenplanUnterricht}-Objekt, welches hinzugefügt werden soll.
@@ -5741,8 +5811,9 @@ export class StundenplanManager extends JavaObject {
 		DeveloperNotificationException.ifTrue("u.wochentyp < 0", u.wochentyp < 0);
 		DeveloperNotificationException.ifTrue("(u.idKurs == null) && (u.klassen.size() != 1)", (u.idKurs === null) && (u.klassen.size() !== 1));
 		DeveloperNotificationException.ifMapNotContains("_fach_by_id", this._fach_by_id, u.idFach);
-		for (const idLehrkraftDesUnterrichts of u.lehrer)
-			DeveloperNotificationException.ifMapNotContains("_lehrer_by_id", this._lehrer_by_id, idLehrkraftDesUnterrichts);
+		for (const idLehrkraft of u.lehrer)
+			if (!this._lehrer_by_id.containsKey(idLehrkraft))
+				this.lehrerAddPseudoLehrkraftOhneUpdate(idLehrkraft, "StundenplanUnterricht " + this.unterrichtGetBeschreibungKurz(u) + " hat ungültige Lehrerreferenz.");
 		for (const idKlasseDesUnterrichts of u.klassen)
 			DeveloperNotificationException.ifMapNotContains("_klasse_by_id", this._klasse_by_id, idKlasseDesUnterrichts);
 		for (const idRaumDesUnterrichts of u.raeume)
@@ -5812,6 +5883,22 @@ export class StundenplanManager extends JavaObject {
 			return JavaLong.compare(a.id, b.id);
 		} };
 		return comp;
+	}
+
+	private unterrichtGetBeschreibungKurz(u : StundenplanUnterricht) : string | null {
+		if (u.idKurs === null) {
+			let s : string = "";
+			const fach : StundenplanFach | null = this._fach_by_id.get(u.idFach);
+			s += (fach === null) ? "Fach ???" : fach.kuerzel;
+			s += " ";
+			for (const idKlasse of u.klassen) {
+				const klasse : StundenplanKlasse | null = this._klasse_by_id.get(idKlasse);
+				s += (klasse === null) ? "Klasse ???" : klasse.kuerzel;
+			}
+			return s;
+		}
+		const kurs : StundenplanKurs | null = this._kurs_by_id.get(u.idKurs);
+		return (kurs === null) ? "Kurs ???" : kurs.bezeichnung;
 	}
 
 	/**
@@ -6377,7 +6464,9 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine String-Repräsentation des Faches/Kurses eines {@link StundenplanUnterricht}-Objektes.
 	 */
 	public unterrichtGetByIDStringOfFachOderKurs(idUnterricht : number, klassenunterrichtDetailliert : boolean) : string {
-		const unterricht : StundenplanUnterricht = DeveloperNotificationException.ifMapGetIsNull(this._unterricht_by_id, idUnterricht);
+		const unterricht : StundenplanUnterricht | null = this._unterricht_by_id.get(idUnterricht);
+		if (unterricht === null)
+			return "Unterricht ???";
 		if (unterricht.idKurs === null) {
 			const fach : StundenplanFach = DeveloperNotificationException.ifMapGetIsNull(this._fach_by_id, unterricht.idFach);
 			return klassenunterrichtDetailliert ? fach.bezeichnung : fach.kuerzel;

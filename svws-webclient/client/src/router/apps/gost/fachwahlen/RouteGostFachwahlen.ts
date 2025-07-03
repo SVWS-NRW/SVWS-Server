@@ -23,6 +23,8 @@ import { routeSchuelerLaufbahnplanung } from "../../schueler/laufbahnplanung/Rou
 import { routeApp } from "../../RouteApp";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { routeError } from "~/router/error/RouteError";
+import { routeGostFachwahlenZKFach } from "./RouteGostFachwahlenZKFach";
+import { routeGostFachwahlenLKFach } from "./RouteGostFachwahlenLKFach";
 
 
 const SGostFachwahlen = () => import("~/components/gost/fachwahlen/SGostFachwahlen.vue");
@@ -36,7 +38,7 @@ export class RouteGostFachwahlen extends RouteNode<RouteDataGostFachwahlen, Rout
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
 			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
 		], "gost.fachwahlen", "fachwahlen", SGostFachwahlen, new RouteDataGostFachwahlen());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
@@ -53,6 +55,8 @@ export class RouteGostFachwahlen extends RouteNode<RouteDataGostFachwahlen, Rout
 			routeGostFachwahlenHalbjahr,
 			routeGostFachwahlenLeistungskurse,
 			routeGostFachwahlenZusatzkurse,
+			routeGostFachwahlenZKFach,
+			routeGostFachwahlenLKFach,
 		];
 		super.defaultChild = routeGostFachwahlenAllgemein;
 	}

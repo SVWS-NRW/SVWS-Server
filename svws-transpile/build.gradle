@@ -6,7 +6,7 @@ configurations {
 	implementation.extendsFrom(validation, resteasy)
 	testImplementation.extendsFrom(jetty, resteasy, swagger, validation)
 }
- 
+
 dependencies {
 	implementation 'org.codehaus.plexus:plexus-utils:4.0.1'
 }
@@ -19,7 +19,7 @@ test {
 }
 
 task testTranspilerCore(type: NpmRun) {
-	group "verification"
+	group = "verification"
 	dependsOn rootProject.npmPrepare, test
 	mustRunAfter test
 	workingDir file("$projectDir/src/test/ts")

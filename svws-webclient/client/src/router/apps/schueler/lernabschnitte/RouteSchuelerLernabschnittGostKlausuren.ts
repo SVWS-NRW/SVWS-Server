@@ -37,9 +37,9 @@ export class RouteSchuelerLernabschnittGostKlausuren extends RouteNode<any, Rout
 			const { id, abschnitt, wechselNr } = (to_params !== undefined) ? RouteNode.getIntParams(to_params, ["id", "abschnitt", "wechselNr"]) : {id: undefined, abschnitt: undefined, wechselNr: undefined};
 			if ((id === undefined) || (abschnitt === undefined) || (wechselNr === undefined))
 				throw new DeveloperNotificationException("Fehler: Die Parameter der Route sind nicht gültig gesetzt.");
-			if (routeSchueler.data.schuelerListeManager.hasDaten()) {
-				const abiturjahr = routeSchueler.data.schuelerListeManager.auswahl().abiturjahrgang;
-				if (((abiturjahr !== null) && routeSchueler.data.schuelerListeManager.abiturjahrgaenge.get(abiturjahr))
+			if (routeSchueler.data.manager.hasDaten()) {
+				const abiturjahr = routeSchueler.data.manager.auswahl().abiturjahrgang;
+				if (((abiturjahr !== null) && routeSchueler.data.manager.abiturjahrgaenge.get(abiturjahr))
 				&& (api.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN)
 					|| (api.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION) && api.benutzerKompetenzenAbiturjahrgaenge.has(abiturjahr)))) {
 					if (routeSchuelerLernabschnitte.data.hatGymOb)

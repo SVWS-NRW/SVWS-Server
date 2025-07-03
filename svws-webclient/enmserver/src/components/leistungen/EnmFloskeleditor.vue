@@ -88,7 +88,7 @@
 	const bemerkung = computed<string|null>(() => {
 		switch (props.erlaubteHauptgruppe) {
 			case 'FACH':
-				return props.manager.auswahlLeistung.leistung?.fachbezogeneBemerkungen ?? null;
+				return props.manager.auswahlLeistung?.a.fachbezogeneBemerkungen ?? null;
 			case 'ASV':
 				return props.manager.auswahlSchueler?.bemerkungen.ASV ?? null;
 			case 'AUE':
@@ -100,16 +100,10 @@
 		}
 	});
 
-	watch([bemerkung, () => props.manager.auswahlLeistung.leistung, () => props.manager.auswahlSchueler, () => props.erlaubteHauptgruppe],
+	watch([bemerkung, () => props.manager.auswahlLeistung, () => props.manager.auswahlSchueler, () => props.erlaubteHauptgruppe],
 		([neuBemerkung]) => text.value = neuBemerkung);
 
-	const schueler = computed<ENMSchueler>(() => {
-		const index = props.manager.auswahlLeistung.indexSchueler;
-		if (props.erlaubteHauptgruppe === 'FACH')
-			return props.manager.lerngruppenAuswahlGetSchueler().get(index);
-		else
-			return props.manager.auswahlSchueler ?? new ENMSchueler();
-	})
+	const schueler = computed<ENMSchueler>(() => ((props.erlaubteHauptgruppe === 'FACH') ? props.manager.auswahlLeistung?.b : props.manager.auswahlSchueler) ?? new ENMSchueler());
 
 	const clean = computed(() => (text.value === null) || !templateRegex.exec(text.value));
 
@@ -121,13 +115,15 @@
 
 	const gruppenMap = computed(() => {
 		const liste = new Map<ENMFloskelgruppe, ArrayList<ENMFloskel>>();
-		for (const gruppe of props.manager.daten.floskelgruppen) {
+		if (props.manager.auswahlLeistung === null)
+			return liste
+		for (const gruppe of props.manager.listFloskelgruppen) {
 			if ((gruppe.hauptgruppe !== props.erlaubteHauptgruppe) && (gruppe.hauptgruppe !== 'ALLG'))
 				continue;
 			const floskeln = new ArrayList<ENMFloskel>();
 			for (const floskel of gruppe.floskeln)
 				if ((floskel.fachID === null)
-					|| ((props.manager.lerngruppeByIDOrException(props.manager.auswahlLeistung.leistung?.lerngruppenID ?? 0).fachID === floskel.fachID)
+					|| ((props.manager.lerngruppeByIDOrException(props.manager.auswahlLeistung.a.lerngruppenID).fachID === floskel.fachID)
 						&& ((floskel.jahrgangID === null) || (floskel.jahrgangID === schueler.value.jahrgangID))))
 					floskeln.add(floskel);
 			if (!floskeln.isEmpty())
@@ -203,14 +199,15 @@
 	}
 
 	// eslint-disable-next-line vue/no-setup-props-reactivity-loss
-	const collapsed = ref(new Map<ENMFloskelgruppe, boolean>([...props.manager.daten.floskelgruppen].map(g => g.hauptgruppe === 'ALLG' ? [g, true] : [g, false])));
+	const collapsed = ref(new Map<ENMFloskelgruppe, boolean>([...props.manager.listFloskelgruppen].map(g => g.hauptgruppe === 'ALLG' ? [g, true] : [g, false])));
 
 	async function doPatchLeistung() {
-		if (props.manager.auswahlLeistung.leistung === null)
+		if ((props.manager.auswahlLeistung === null) && (props.manager.auswahlSchueler === null))
 			return;
 		if (!clean.value)
 			return ersetzeTemplates();
 		await props.patch(text.value);
+		props.manager.update();
 	}
 
 </script>

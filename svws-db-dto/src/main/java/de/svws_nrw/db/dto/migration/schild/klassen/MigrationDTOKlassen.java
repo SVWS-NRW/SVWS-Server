@@ -225,7 +225,7 @@ public final class MigrationDTOKlassen {
 	@JsonProperty
 	public String PruefOrdnung;
 
-	/** Gibt an ob eine Klasse sichtbar ist */
+	/** DEPRECATED: Gibt an ob eine Klasse sichtbar ist */
 	@Column(name = "Sichtbar")
 	@JsonProperty
 	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)

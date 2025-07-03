@@ -8,7 +8,6 @@
 @import "./screens.css";
 @import "./icons.css";
 
-@import "../../ui/SvwsDocsUiColors.css";
 @import "../../ui/SvwsUiAvatar.css";
 @import "../../ui/SvwsUiBadge.css";
 @import "../../ui/SvwsUiNotification.css";
@@ -35,6 +34,7 @@
 @import "../../ui/layout/SvwsUiTable.css";
 @import "../../ui/layout/UiPage.css";
 @import "../../ui/modal/SvwsUiModal.css";
+@import "../../ui/modal/SvwsUiModalHilfe.css";
 @import "../../ui/nav/SvwsUiMenu.css";
 @import "../../ui/nav/SvwsUiMenuHeader.css";
 @import "../../ui/nav/SvwsUiMenuItem.css";
@@ -111,10 +111,6 @@
 		@apply rounded-sm border border-ui-10 font-medium text-ui-100 line-clamp-1 break-all inline-flex leading-none;
 		padding: 0.05rem 0.25rem;
 		margin: -0.125rem auto -0.125rem -0.125rem;
-	}
-
-	.icon {
-		@apply inline-block;
 	}
 
 }

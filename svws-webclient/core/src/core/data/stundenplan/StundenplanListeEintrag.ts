@@ -39,6 +39,11 @@ export class StundenplanListeEintrag extends JavaObject {
 	public gueltigBis : string = "";
 
 	/**
+	 * Gibt an, ob der Stundenplan aktiv ist. An einem Datum kann immer nur ein Stundenplan aktiv sein.
+	 */
+	public aktiv : boolean = false;
+
+	/**
 	 * Das Modell für die Wochen des Stundenplans, d.h. ob es sich um einen Stundenplan für jede Woche handelt (0) oder ob es sich um einen unterschiedliche Stundenpläne in Abhängigkeit des Wochentyps handelt - z.B. A-/B-Wochen (2) handelt. Hier wird dann die maximale Anzahl der unterschiedlichen Wochentypen festgelegt. Der Wert 1 ist ungültig!
 	 */
 	public wochenTypModell : number = 0;
@@ -85,6 +90,9 @@ export class StundenplanListeEintrag extends JavaObject {
 		if (obj.gueltigBis === undefined)
 			throw new Error('invalid json format, missing attribute gueltigBis');
 		result.gueltigBis = obj.gueltigBis;
+		if (obj.aktiv === undefined)
+			throw new Error('invalid json format, missing attribute aktiv');
+		result.aktiv = obj.aktiv;
 		if (obj.wochenTypModell === undefined)
 			throw new Error('invalid json format, missing attribute wochenTypModell');
 		result.wochenTypModell = obj.wochenTypModell;
@@ -100,6 +108,7 @@ export class StundenplanListeEintrag extends JavaObject {
 		result += '"abschnitt" : ' + obj.abschnitt.toString() + ',';
 		result += '"gueltigAb" : ' + JSON.stringify(obj.gueltigAb) + ',';
 		result += '"gueltigBis" : ' + JSON.stringify(obj.gueltigBis) + ',';
+		result += '"aktiv" : ' + obj.aktiv.toString() + ',';
 		result += '"wochenTypModell" : ' + obj.wochenTypModell.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -128,6 +137,9 @@ export class StundenplanListeEintrag extends JavaObject {
 		}
 		if (obj.gueltigBis !== undefined) {
 			result += '"gueltigBis" : ' + JSON.stringify(obj.gueltigBis) + ',';
+		}
+		if (obj.aktiv !== undefined) {
+			result += '"aktiv" : ' + obj.aktiv.toString() + ',';
 		}
 		if (obj.wochenTypModell !== undefined) {
 			result += '"wochenTypModell" : ' + obj.wochenTypModell.toString() + ',';

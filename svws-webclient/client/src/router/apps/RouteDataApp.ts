@@ -1,6 +1,6 @@
 import { computed } from "vue";
 import type { RouteLocationRaw } from "vue-router";
-import { Schuljahresabschnitt, type OrtKatalogEintrag, type OrtsteilKatalogEintrag } from "@core";
+import { Schuljahresabschnitt, type OrtKatalogEintrag, type OrtsteilKatalogEintrag, type ReligionEintrag } from "@core";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { api } from "~/router/Api";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
@@ -12,12 +12,14 @@ interface RouteStateApp extends RouteStateInterface {
 	idSchuljahresabschnitt: number,
 	mapOrte: Map<number, OrtKatalogEintrag>;
 	mapOrtsteile: Map<number, OrtsteilKatalogEintrag>;
+	mapReligionen: Map<number, ReligionEintrag>;
 }
 
 const defaultState = <RouteStateApp>{
 	idSchuljahresabschnitt: -1,
 	mapOrte: new Map(),
 	mapOrtsteile: new Map(),
+	mapReligionen: new Map(),
 	view: routeSchueler
 };
 
@@ -38,8 +40,13 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 		const mapOrtsteile = new Map();
 		for (const o of ortsteile)
 			mapOrtsteile.set(o.id, o);
+		// Lade den Katalog der Religionen
+		const religionen = await api.server.getReligionen(api.schema)
+		const mapReligionen = new Map();
+		for (const r of religionen)
+			mapReligionen.set(r.id, r);
 		// Und aktualisiere den internen State
-		this.setPatchedDefaultStateKeepView({ mapOrte, mapOrtsteile });
+		this.setPatchedDefaultStateKeepView({ mapOrte, mapOrtsteile, mapReligionen });
 	}
 
 	public async leave() {
@@ -91,6 +98,10 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 
 	public get mapOrtsteile() {
 		return this._state.value.mapOrtsteile;
+	}
+
+	get mapReligionen(): Map<number, ReligionEintrag> {
+		return this._state.value.mapReligionen;
 	}
 
 	public get idSchuljahresabschnitt() {

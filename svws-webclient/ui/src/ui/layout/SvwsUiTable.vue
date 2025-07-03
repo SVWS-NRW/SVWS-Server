@@ -82,6 +82,8 @@
 								'svws-divider': column.divider,
 							}]" :tabindex="column.sortable ? 0 : -1">
 						<slot :name="`header(${column.key})`" :column="column">
+							<span v-if="column.statistic" class="icon i-ri-bar-chart-2-line"
+								:class="{'icon-ui-disabled' : noDataCalculated, 'icon-ui-statistic' : !noDataCalculated }" />
 							<svws-ui-tooltip v-if="column.tooltip">
 								<span class="line-clamp-1 break-all leading-tight">{{ column.label }}</span>
 								<template #content>
@@ -119,7 +121,7 @@
 									<div v-if="row.selectable" class="svws-ui-td svws-align-center" role="cell" :key="`selectable__${row}_${index}`">
 										<input type="checkbox" :checked="isRowSelected(row)" @input="toggleRowSelection(row)" @click.stop :ref="el => selectionRefs.set(index, el)" @keydown.down.prevent.stop="switchElement($event, selectionRefs, index, false)" @keydown.up.prevent.stop="switchElement($event, selectionRefs, index, true)">
 									</div>
-									<div v-else class="w-6" />
+									<div v-else class="w-6 border-b border-ui" />
 								</template>
 								<slot name="rowSelectable" :row="row.source">
 									<div class="svws-ui-td" role="cell" v-for="cell in row.cells" :key="`table-cell_${cell.column.key + cell.rowIndex}`"
@@ -159,9 +161,9 @@
 						<svws-ui-checkbox :model-value="allRowsSelected" :indeterminate="someNotAllRowsSelected" @update:model-value="toggleBulkSelection" :disabled="typeof noData !== 'undefined' ? noData : noDataCalculated" />
 					</div>
 					<div v-if="count" class="text-sm svws-ui-td font-medium" role="cell">
-						<template v-if="allRowsSelected && modelValue">Alle {{ modelValue.length - selectedItemsNotListed.length }} ausgewählt<template v-if="selectedItemsNotListed.length > 0">, <svws-ui-button class="m-0.5" type="transparent" size="small" title="Weitere ausgewählte Einträge, die nicht angezeigt werden. Klicken entfernt aus der Liste." @click="unselectAllNotListedRows"><span class="icon-sm i-ri-close-line" />{{ selectedItemsNotListed.length }} Weitere nicht angezeigt</svws-ui-button>, <svws-ui-button type="transparent" size="small" title="Alle ausgwählten Einträge. Klicken, um alle aus der Auswahl zu entfernen." @click="unselectAllRows"><span class="icon-sm i-ri-close-line" />{{ modelValue.length }}</svws-ui-button> insgesamt</template></template>
-						<template v-else-if="someNotAllRowsSelected && modelValue">{{ modelValue.length - selectedItemsNotListed.length }}/<span class="text-ui-secondary">{{ sortedRows.length }}</span> ausgewählt<template v-if="selectedItemsNotListed.length > 0"><svws-ui-button class="m-0.5" type="transparent" size="small" title="Weitere ausgewählte Einträge, die nicht angezeigt werden. Klicken entfernt aus der Liste." @click="unselectAllNotListedRows"><span class="icon-sm i-ri-close-line" />{{ selectedItemsNotListed.length }} Weitere</svws-ui-button><svws-ui-button type="transparent" size="small" title="Alle ausgwählten Einträge. Klicken, um alle aus der Auswahl zu entfernen." @click="unselectAllRows"><span class="icon-sm i-ri-close-line" />{{ modelValue.length }} insgesamt</svws-ui-button></template></template>
-						<template v-else><span class="text-ui-secondary">{{ sortedRows.length === 1 ? '1 Eintrag': `${sortedRows.length} Einträge` }}</span><template v-if="selectedItemsNotListed.length > 0">, <svws-ui-button class="m-0.5" type="transparent" size="small" @click="unselectAllNotListedRows"><span class="icon-sm i-ri-close-line" />{{ selectedItemsNotListed.length }} Ausgewählte nicht angezeigt</svws-ui-button></template></template>
+						<template v-if="allRowsSelected && modelValue">Alle {{ modelValue.length - selectedItemsNotListed.length - unselectable.size }} ausgewählt<template v-if="selectedItemsNotListed.length > 0">, <svws-ui-button class="m-0.5" type="transparent" size="small" title="Weitere ausgewählte Einträge, die nicht angezeigt werden. Klicken entfernt aus der Liste." @click="unselectAllNotListedRows"><span class="icon-sm i-ri-close-line" />{{ selectedItemsNotListed.length }} Weitere nicht angezeigt</svws-ui-button>, <svws-ui-button type="transparent" size="small" title="Alle ausgwählten Einträge. Klicken, um alle aus der Auswahl zu entfernen." @click="unselectAllRows"><span class="icon-sm i-ri-close-line" />{{ modelValue.length - unselectable.size }}</svws-ui-button> insgesamt</template></template>
+						<template v-else-if="someNotAllRowsSelected && modelValue">{{ modelValue.length - selectedItemsNotListed.length }}/<span class="text-ui-secondary">{{ sortedRows.length - unselectable.size }}</span> ausgewählt<template v-if="selectedItemsNotListed.length > 0"><svws-ui-button class="m-0.5" type="transparent" size="small" title="Weitere ausgewählte Einträge, die nicht angezeigt werden. Klicken entfernt aus der Liste." @click="unselectAllNotListedRows"><span class="icon-sm i-ri-close-line" />{{ selectedItemsNotListed.length }} Weitere</svws-ui-button><svws-ui-button type="transparent" size="small" title="Alle ausgwählten Einträge. Klicken, um alle aus der Auswahl zu entfernen." @click="unselectAllRows"><span class="icon-sm i-ri-close-line" />{{ modelValue.length - unselectable.size }} insgesamt</svws-ui-button></template></template>
+						<template v-else><span class="text-ui-secondary">{{ (sortedRows.length - unselectable.size) === 1 ? '1 Eintrag': `${sortedRows.length - unselectable.size} Einträge` }}</span><template v-if="selectedItemsNotListed.length > 0">, <svws-ui-button class="m-0.5" type="transparent" size="small" @click="unselectAllNotListedRows"><span class="icon-sm i-ri-close-line" />{{ selectedItemsNotListed.length }} Ausgewählte nicht angezeigt</svws-ui-button></template></template>
 					</div>
 					<div v-if="$slots.actions" class="grow justify-end svws-ui-td" role="cell">
 						<slot name="actions" />
@@ -341,6 +343,7 @@
 			divider: input.divider ?? false,
 			toggle: input.toggle ?? false,
 			toggleInvisible: input.toggleInvisible ?? false,
+			statistic: input.statistic ?? false,
 		}
 	}
 
@@ -356,7 +359,7 @@
 
 	const gridTemplateColumnsComputed = computed(() => gridTemplateColumns.value.length > 0 ? gridTemplateColumns.value : 'repeat(auto-fit, minmax(0, 1fr))');
 
-	const getGridTemplateColumns = computed(() => `grid-template-columns: ${props.selectable ? 'auto': ''} ${gridTemplateColumnsComputed.value}`);
+	const getGridTemplateColumns = computed(() => `grid-template-columns: ${props.selectable ? '2rem': ''} ${gridTemplateColumnsComputed.value}`);
 
 	const rowsComputed = computed<DataTableRow[]>(() => [...props.items].map((source, index) =>
 		({ selectable: !props.unselectable.has(toRaw(source)), initialIndex: index, source: toRaw(source), cells:

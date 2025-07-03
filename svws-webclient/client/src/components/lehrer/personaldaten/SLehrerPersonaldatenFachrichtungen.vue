@@ -41,7 +41,7 @@
 	const selected = ref<LehrerFachrichtungEintrag[]>([]);
 
 	const columns = [
-		{key: 'fachrichtung', label: 'Fachrichtung', span: 1 },
+		{key: 'fachrichtung', label: 'Fachrichtung', span: 1, statistic: true },
 		{key: 'anerkennung', label: 'Anerkennungsgrund', span: 1 },
 	]
 

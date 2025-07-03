@@ -5,6 +5,7 @@ import java.util.List;
 
 import de.svws_nrw.asd.data.schueler.Schueler;
 import de.svws_nrw.transpiler.TranspilerDTO;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -39,7 +40,7 @@ public class KursDaten {
 	public long idFach;
 
 	/** Die ID des Kurslehrers. */
-	@Schema(description = "die ID des Kurslehrers", example = "42")
+	@Schema(description = "die ID des Kurslehrers", example = "42", nullable = true)
 	public Long lehrer;
 
 	/** Die allgemeine Kursart, welche zur Filterung der speziellen Kursarten verwendet wird. */
@@ -54,10 +55,16 @@ public class KursDaten {
 	@Schema(description = "gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht", example = "true")
 	public boolean istSichtbar;
 
+	/** Die Liste der zusätzlichen Lehrkräft eines Kurses. */
+	@ArraySchema(schema = @Schema(implementation = KursLehrer.class))
+	public @NotNull List<KursLehrer> weitereLehrer = new ArrayList<>();
+
 	/** Die Schüler des Kurses. */
+	@ArraySchema(schema = @Schema(implementation = Schueler.class))
 	public @NotNull List<Schueler> schueler = new ArrayList<>();
 
 	/** Die Nummern der Kurs-Schienen, in welchen sich der Kurs befindet - sofern eine Schiene zugeordnet wurde */
+	@ArraySchema(schema = @Schema(implementation = Integer.class))
 	public @NotNull List<Integer> schienen = new ArrayList<>();
 
 
@@ -75,7 +82,7 @@ public class KursDaten {
 
 	/** Die Schulnummer des Kurses, falls der Kurs an einer anderes Schule stattfindet (z.B. im Rahmen einer Kooperation). */
 	@Schema(description = "die Schulnummer des Kurses, falls der Kurs an einer anderes Schule stattfindet (z.B. im Rahmen einer Kooperation)",
-			example = "100001")
+			example = "100001", nullable = true)
 	public Integer schulnummer = null;
 
 	/** Gibt an, ob der Kurs epochal unterrichtet wird. */
@@ -83,7 +90,7 @@ public class KursDaten {
 	public boolean istEpochalunterricht = false;
 
 	/** Ggf. die Zeugnisbezeichnung des Kurses */
-	@Schema(description = "ggf. die die Zeugnisbezeichnung des Kurses", example = "false")
+	@Schema(description = "ggf. die die Zeugnisbezeichnung des Kurses", example = "false", nullable = true)
 	public String bezeichnungZeugnis = null;
 
 	/**

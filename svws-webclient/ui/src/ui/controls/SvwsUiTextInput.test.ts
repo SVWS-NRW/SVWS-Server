@@ -47,7 +47,6 @@ describe.concurrent("PropHandhabung läuft korrekt", () => {
 
 	test('Prop required wird an das Input Feld übergeben', () => {
 		const wrapper = mount(SvwsUiTextInput, { props: { required: true } });
-		console.log(wrapper.html())
 		expect(wrapper.find('input').attributes('required')).toBe("");
 	});
 

@@ -3,9 +3,9 @@
 		:class="{
 			'text-input--filled': (`${data}`.length > 0 && data !== null) || type === 'date',
 			'text-input--invalid': (isValid === false),
-			'text-input--statistic-muss': ((validator !== undefined) && (!validator().getFehler().isEmpty()) && (validator().getFehlerart() === ValidatorFehlerart.MUSS)),
-			'text-input--statistic-kann': ((validator !== undefined) && (!validator().getFehler().isEmpty()) && (validator().getFehlerart() === ValidatorFehlerart.KANN)),
-			'text-input--statistic-hinweis': ((validator !== undefined) && (!validator().getFehler().isEmpty()) && (validator().getFehlerart() === ValidatorFehlerart.HINWEIS)),
+			'text-input--statistic-muss': (((validator !== undefined) && (!validator().getFehler().isEmpty()) && (validator().getFehlerart() === ValidatorFehlerart.MUSS)) || ((isValid === false) && (fehlerart === ValidatorFehlerart.MUSS))),
+			'text-input--statistic-kann': (((validator !== undefined) && (!validator().getFehler().isEmpty()) && (validator().getFehlerart() === ValidatorFehlerart.KANN)) || ((isValid === false) && (fehlerart === ValidatorFehlerart.KANN))),
+			'text-input--statistic-hinweis': (((validator !== undefined) && (!validator().getFehler().isEmpty()) && (validator().getFehlerart() === ValidatorFehlerart.HINWEIS)) || ((isValid === false) && (fehlerart === ValidatorFehlerart.HINWEIS))),
 			'text-input--disabled': disabled,
 			'text-input--readonly': readonly,
 			'text-input--select': isSelectInput,
@@ -37,32 +37,43 @@
 			@input="onInput"
 			@keyup.enter="onKeyEnter"
 			@blur="onBlur">
-		<span v-if="placeholder && !headless && (type !== 'search')" :id="labelId" class="text-input--placeholder"
+		<span v-if="placeholder && !headless && (type !== 'search')" :id="labelId" class="text-input--placeholder gap-1"
 			:class="{ 'text-input--placeholder--prefix': url }">
+			<span v-if="statistics" class="cursor-pointer">
+				<svws-ui-tooltip position="right">
+					<span class="inline-flex items-center">
+						<span class="icon i-ri-bar-chart-2-line text-input--statistic-icon" />
+					</span>
+					<template #content>
+						Relevant für die Statistik
+					</template>
+				</svws-ui-tooltip>
+			</span>
 			<span>{{ placeholder }}</span>
-			<span v-if="(isValid === false && !required)" class="icon-sm i-ri-alert-line ml-1 inline-block -mt-0.5" />
-			<span v-if="(maxLen !== undefined) || (minLen !== undefined)" class="inline-flex ml-1 gap-1" :class="{'text-ui-danger': !maxLenValid || !minLenValid, 'opacity-50': maxLenValid && minLenValid}">
+			<span v-if="(maxLen !== undefined) || (minLen !== undefined)" class="inline-flex gap-1" :class="{'text-ui-danger': !maxLenValid || !minLenValid, 'opacity-50': maxLenValid && minLenValid}">
 				{{ (maxLen !== undefined) && (minLen === undefined) ? ` (max. ${maxLen} Zeichen)` : '' }}
 				{{ (minLen !== undefined) && (maxLen === undefined) ? ` (mind. ${minLen} Zeichen)` : '' }}
 				{{ (minLen !== undefined) && (maxLen !== undefined) && (minLen !== maxLen) ? ` (zwischen ${minLen} und ${maxLen} Zeichen)` : '' }}
 				{{ (minLen !== undefined) && (maxLen !== undefined) && (minLen === maxLen) ? ` (genau ${maxLen} Zeichen)` : '' }}
 			</span>
+			<span v-if="required" class="icon-xs i-ri-asterisk text-input--placeholder--required text-input--state-icon" aria-hidden />
+			<span v-if="required" class="sr-only">erforderlich</span>
+			<span v-if="(isValid === false && !required)" class="icon-sm i-ri-alert-line text-input--muss-icon" />
 			<span v-if="statistics" class="cursor-pointer inline-block -my-1">
 				<svws-ui-tooltip position="right">
-					<span class="inline-flex items-center ml-1 -mb-2 mt-0.5 pointer-events-auto">
-						<span class="icon i-ri-bar-chart-2-line icon-ui-statistic" />
+					<span class="inline-flex items-center -mb-2 mt-0.5 pointer-events-auto">
 						<template v-if="(validator === undefined) || (validator().getFehlerart() === ValidatorFehlerart.UNGENUTZT)">
-							<span class="icon i-ri-alert-fill icon-ui-danger" v-if="required && ((data === '') || (data === null) || (data === undefined))" />
+							<span class="icon i-ri-alert-fill  text-input--state-icon" v-if="required && ((data === '') || (data === null) || (data === undefined))" />
 						</template>
 						<template v-else-if="!validator().getFehler().isEmpty()">
-							<span class="icon i-ri-alert-fill icon-ui-danger" v-if="validator().getFehlerart() === ValidatorFehlerart.MUSS" />
-							<span class="icon i-ri-error-warning-fill icon-ui-caution" v-if="validator().getFehlerart() === ValidatorFehlerart.KANN" />
-							<span class="icon i-ri-question-fill icon-ui-warning" v-if="validator().getFehlerart() === ValidatorFehlerart.HINWEIS" />
+							<span class="icon i-ri-alert-fill  text-input--state-icon" v-if="validator().getFehlerart() === ValidatorFehlerart.MUSS" />
+							<span class="icon i-ri-error-warning-fill  text-input--state-icon" v-if="validator().getFehlerart() === ValidatorFehlerart.KANN" />
+							<span class="icon i-ri-question-fill  text-input--state-icon" v-if="validator().getFehlerart() === ValidatorFehlerart.HINWEIS" />
 						</template>
 					</span>
 					<template #content>
 						<template v-if="(validator !== undefined) && (!validator().getFehler().isEmpty()) && (validator().getFehlerart() !== ValidatorFehlerart.UNGENUTZT)">
-							<div class="text-ui-statistic text-headline-sm text-center pt-1"> Relevant für die Statistik </div>
+							<div class="text-headline-sm text-center pt-1"> Relevant für die Statistik </div>
 							<div v-for="fehler in validator().getFehler()" :key="fehler.hashCode" class="pt-2 pb-2">
 								<div class="rounded-sm pl-2" :class="{
 									'bg-ui-danger': (validator().getFehlerart() === ValidatorFehlerart.MUSS),
@@ -74,13 +85,12 @@
 							</div>
 						</template>
 						<template v-else>
-							<div class="text-ui-statistic text-headline-sm text-center"> Relevant für die Statistik </div>
+							<div class="text-headline-sm text-center"> Relevant für die Statistik </div>
 						</template>
 					</template>
 				</svws-ui-tooltip>
 			</span>
-			<span v-if="required" class="icon-xs i-ri-asterisk ml-1 inline-block " :class="{ 'icon-ui-statistic': statistics }" />
-			<span v-if="readonly && !isSelectInput" class="icon-xs i-ri-lock-line inline-block ml-1" :class="{ 'icon-ui-statistic': statistics }" />
+			<span v-if="readonly && !isSelectInput" class="icon-xs i-ri-lock-line ml-1" :class="{ 'icon-ui-statistic': statistics }" />
 		</span>
 		<span v-if="removable && (type === 'date') && (!readonly)" @keydown.enter="updateData('')" @click.stop="updateData('')" class="svws-icon--remove icon i-ri-close-line" tabindex="0" />
 		<span v-if="(type === 'date') && !firefox()" class="svws-icon icon i-ri-calendar-2-line" />
@@ -128,6 +138,8 @@
 		minLen?: number;
 		span?: 'full' | '2';
 		removable?: boolean;
+		/* Validatoren */
+		fehlerart?: ValidatorFehlerart;
 	}>(), {
 		type: "text",
 		minDate: undefined,
@@ -151,6 +163,8 @@
 		minLen: undefined,
 		span: undefined,
 		removable: false,
+		/* Validatoren */
+		fehlerart: () => ValidatorFehlerart.UNGENUTZT,
 	});
 
 	const emit = defineEmits<{

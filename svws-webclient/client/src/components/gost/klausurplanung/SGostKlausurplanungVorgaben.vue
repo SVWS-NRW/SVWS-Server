@@ -53,7 +53,7 @@
 				</template>
 			</div>
 			<template v-if="activeVorgabe.idVorgabe < 0">
-				<span class="opacity-50">Zum Bearbeiten eine Vorgabe in der Tabelle auswählen oder mit <span class="icon i-ri-add-line inline-block text-button -my-0.5" /> eine neue erstellen.</span>
+				<span class="opacity-50">Zum Bearbeiten eine Vorgabe in der Tabelle auswählen oder mit <span class="icon i-ri-add-line text-button -my-0.5" /> eine neue erstellen.</span>
 			</template>
 			<template v-else>
 				<div class="flex flex-col gap-4">
@@ -73,7 +73,7 @@
 							<label class="sr-only" for="rbgMdlPruefung">Mündliche Prüfung: </label>
 							<svws-ui-radio-group id="rbgMdlPruefung" :row="true">
 								<svws-ui-radio-option v-for="value in formJaNein" :class="value.name === 'Ja' ? 'order-1' : 'order-0'" :key="value.name" :value="value.name" name="formMdlPruefung" :label="value.name === 'Ja' ? 'Mündliche Prüfung' : 'Schriftlich'" :model-value="activeVorgabe.istMdlPruefung ? 'Ja' : 'Nein'" @click="activeVorgabe.idVorgabe !== 0 ? patchKlausurvorgabe({istMdlPruefung: value.key}, activeVorgabe.idVorgabe) : activeVorgabe.istMdlPruefung = value.key" :disabled="activeVorgabe.idVorgabe < 0">
-									<span class="icon i-ri-chat-1-line inline-block -my-1 -mx-0.5" v-if="value.name === 'Ja'" />
+									<span class="icon i-ri-chat-1-line -my-1 -mx-0.5" v-if="value.name === 'Ja'" />
 								</svws-ui-radio-option>
 							</svws-ui-radio-group>
 						</div>
@@ -81,7 +81,7 @@
 							<label class="sr-only" for="rbgAudioNotwendig">Audio notwendig: </label>
 							<svws-ui-radio-group id="rbgAudioNotwendig" :row="true">
 								<svws-ui-radio-option v-for="value in formJaNein" :class="value.name === 'Ja' ? 'order-1' : 'order-0'" :key="value.name" :value="value.name" name="formAudioNotwendig" :label="value.name === 'Ja' ? 'Mit Audioteil' : 'Ohne Audio'" :model-value="activeVorgabe.istAudioNotwendig ? 'Ja' : 'Nein'" @click="activeVorgabe.idVorgabe !== 0 ? patchKlausurvorgabe({istAudioNotwendig: value.key}, activeVorgabe.idVorgabe) : activeVorgabe.istAudioNotwendig = value.key" :disabled="activeVorgabe.idVorgabe < 0">
-									<span class="icon i-ri-headphone-line inline-block -my-1 -mx-0.5" v-if="value.name === 'Ja'" />
+									<span class="icon i-ri-headphone-line -my-1 -mx-0.5" v-if="value.name === 'Ja'" />
 								</svws-ui-radio-option>
 							</svws-ui-radio-group>
 						</div>
@@ -89,7 +89,7 @@
 							<label class="sr-only" for="rbgVideoNotwendig">Video notwendig: </label>
 							<svws-ui-radio-group id="rbgVideoNotwendig" :row="true">
 								<svws-ui-radio-option v-for="value in formJaNein" :class="value.name === 'Ja' ? 'order-1' : 'order-0'" :key="value.name" :value="value.name" name="formVideoNotwendig" :label="value.name === 'Ja' ? 'Mit Videoteil' : 'Ohne Video'" :model-value="activeVorgabe.istVideoNotwendig ? 'Ja' : 'Nein'" @click="activeVorgabe.idVorgabe !== 0 ? patchKlausurvorgabe({istVideoNotwendig: value.key}, activeVorgabe.idVorgabe) : activeVorgabe.istVideoNotwendig = value.key" :disabled="activeVorgabe.idVorgabe < 0">
-									<span class="icon i-ri-vidicon-line inline-block -my-1 -mx-0.5" v-if="value.name === 'Ja'" />
+									<span class="icon i-ri-vidicon-line -my-1 -mx-0.5" v-if="value.name === 'Ja'" />
 								</svws-ui-radio-option>
 							</svws-ui-radio-group>
 						</div>

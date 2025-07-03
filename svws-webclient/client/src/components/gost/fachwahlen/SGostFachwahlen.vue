@@ -69,7 +69,7 @@
 
 	import { onMounted, ref, computed } from "vue";
 	import type { GostFachwahlenProps } from "./SGostFachwahlenProps";
-	import type { GostStatistikFachwahl } from "@core";
+	import type { GostStatistikFachwahl, GostStatistikFachwahlHalbjahr } from "@core";
 	import { Fach, GostHalbjahr } from "@core";
 
 	const props = defineProps<GostFachwahlenProps>();
@@ -132,12 +132,14 @@
 			return true;
 		if (bereich === "Abitur")
 			return (row.wahlenAB3 !== 0) || (row.wahlenAB4 !== 0);
-		if ((bereich === "ZK") || (bereich === "LK"))
-			return false; // Evtl. für weitere Ansichten: return getData(row, group, "") !== "";
+		if (bereich === "ZK")
+			return getData(row, "ZK", "") !== "";
+		if (bereich === "LK")
+			return getData(row, "LK", "") !== "";
 		const hj = GostHalbjahr.fromKuerzel(bereich);
 		if (hj === null)
 			return false;
-		const fw = row.fachwahlen[hj.id];
+		const fw = <GostStatistikFachwahlHalbjahr | null>row.fachwahlen[hj.id];
 		if (fw === null)
 			return false;
 		return (fw.wahlenGK !== 0);
@@ -149,9 +151,9 @@
 		if ((bereich === "Fach") && (item === "Fach"))
 			return row.bezeichnung ?? "???";
 		if ((bereich === "Abitur") && (item === "3"))
-			return row.wahlenAB3 || "";
+			return row.wahlenAB3 > 0 ? row.wahlenAB3 : "";
 		if ((bereich === "Abitur") && (item === "4"))
-			return row.wahlenAB4 || "";
+			return row.wahlenAB4 > 0 ? row.wahlenAB4 : "";
 		if ((bereich === "ZK") && (item === "")) {
 			const maxZK = Math.max(row.fachwahlen[2].wahlenZK, row.fachwahlen[3].wahlenZK, row.fachwahlen[4].wahlenZK, row.fachwahlen[5].wahlenZK);
 			return maxZK === 0 ? "" : maxZK;
@@ -163,7 +165,7 @@
 		const hj = GostHalbjahr.fromKuerzel(bereich);
 		if (hj === null)
 			return "";
-		const fw = row.fachwahlen[hj.id];
+		const fw = <GostStatistikFachwahlHalbjahr | null>row.fachwahlen[hj.id];
 		if (fw === null)
 			return "";
 		switch (item) {

@@ -262,13 +262,6 @@ describe("Server", () => {
 		const res = await server.getGostSchuelerAbiturdaten(schema, 1199);
 		expect(res).matchSnapshot();
 	});
-	test.todo("getGostSchuelerAbiturdatenAusLeistungsdaten", async () => {
-		const res = await server.getGostSchuelerAbiturdatenAusLeistungsdaten(
-			schema,
-			1199
-		);
-		expect(res).matchSnapshot();
-	});
 	test.skip("getGostSchuelerLaufbahnplanung", async () => {
 		const res = await server.getGostSchuelerLaufbahnplanung(schema, 1199);
 		expect(res).matchSnapshot();

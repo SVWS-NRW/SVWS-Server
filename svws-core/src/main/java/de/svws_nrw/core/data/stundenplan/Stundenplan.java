@@ -41,6 +41,11 @@ public class Stundenplan {
 	@Schema(description = "das Datum, bis wann der Stundenplan gültig ist", example = "31.7.3218")
 	public @NotNull String gueltigBis = "";
 
+	/** Gibt an, ob der Stundenplan aktiv ist. An einem Datum kann immer nur ein Stundenplan aktiv sein. */
+	@Schema(description = "gibt an, ob der Stundenplan aktiv ist. An einem Datum kann immer nur ein Stundenplan aktiv sein.",
+			example = "true")
+	public boolean aktiv = false;
+
 	/** Die textuelle Beschreibung des Stundenplans. */
 	@Schema(description = "die textuelle Beschreibung des Stundenplans", example = "Stundenplan zum Schuljahresanfang")
 	public @NotNull String bezeichnungStundenplan = "";

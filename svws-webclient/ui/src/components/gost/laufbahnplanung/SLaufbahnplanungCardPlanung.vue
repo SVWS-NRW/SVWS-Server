@@ -48,7 +48,7 @@
 					<div class="svws-ui-td svws-align-center svws-divider svws-no-padding items-center">
 						{{ halbjahr.kuerzel }}
 						<svws-ui-tooltip v-if="gostJahrgangsdaten.anzahlKursblockungen[halbjahr.id] > 0">
-							<span @click.stop="gotoKursblockung(halbjahr)" class="cursor-pointer"><span class="icon-sm i-ri-link inline-block" /></span>
+							<span @click.stop="gotoKursblockung(halbjahr)" class="cursor-pointer"><span class="icon-sm i-ri-link" /></span>
 							<template #content>
 								Zur {{ halbjahr.kuerzel }}-Kursblockung
 							</template>

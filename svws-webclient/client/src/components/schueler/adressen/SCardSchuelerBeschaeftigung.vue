@@ -40,8 +40,8 @@
 	const columns: DataTableColumn[] = [
 		{ key: "Betrieb", label: "Betrieb"},
 		{ key: "Beschäftigungsart", label: "Beschäftigungsart"},
-		{ key: "Beginn", label: "Beginn", span: 0.5},
-		{ key: "Ende", label: "Ende", span: 0.5},
+		{ key: "Beginn", label: "Beginn", span: 0.5, statistic: true },
+		{ key: "Ende", label: "Ende", span: 0.5, statistic: true },
 		{ key: "Praktikum", label: "Praktikum", span: 0.25, tooltip: 'Praktikum', align: "center"},
 		{ key: "Betreuungslehrer", label: "Betreuungslehrer"},
 		{ key: "Ansprechpartner", label: "Ansprechpartner"},

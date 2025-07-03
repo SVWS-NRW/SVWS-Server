@@ -30,7 +30,7 @@
 	<div class="page page-flex-row">
 		<div class="min-w-fit max-w-fit flex flex-col gap-2" @drop="onDrop(undefined)" @dragover="$event.preventDefault()" :class="[(dragData !== undefined && dragData instanceof GostKursklausur && dragData.idTermin !== null) ? 'ring-offset-8 ring-4 ring-ui-danger/20 rounded-xl' : '' ]">
 			<h3 class="text-headline-md" title="In Planung">In Planung</h3>
-			<svws-ui-table :items="props.kMan().kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value)" :columns="cols">
+			<svws-ui-table selectable v-model="selected" :items="props.kMan().kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value)" :columns="cols">
 				<template #noData>
 					<div class="leading-tight flex flex-col gap-0.5">
 						<span>Aktuell keine Klausuren zu planen.</span>
@@ -49,44 +49,52 @@
 						<template #content>Dauer in Minuten</template>
 					</svws-ui-tooltip>
 				</template>
-				<template #body>
-					<template v-for="klausur in props.kMan().kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value)" :key="klausur.id">
-						<div class="svws-ui-tr cursor-grab active:cursor-grabbing" role="row" :class="klausurCssClasses(klausur, undefined)" :style="tableRowStyle"
-							:data="klausur" :draggable="draggable(klausur)" @dragstart="onDrag(klausur)" @dragend="onDrag(undefined)">
-							<div class="svws-ui-td">
-								<span v-if="hatKompetenzUpdate" class="icon i-ri-draggable" />
-								<svws-ui-tooltip :hover="false" :indicator="false">
-									<template #content>
-										<s-gost-klausurplanung-kursliste :k-man :kursklausur="klausur" :patch-klausur :create-schuelerklausur-termin :benutzer-kompetenzen />
-									</template>
-									<span class="svws-ui-badge hover:opacity-75" :style="`color: var(--color-text-uistatic); background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
-									<svws-ui-tooltip>
-										<template #content>
-											<div v-if="kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe !== null && kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe!.trim().length > 0">
-												<h3 class="border-b text-headline-md">Bemerkung zur Vorgabe</h3>
-												<p>{{ kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe }}</p>
-											</div>
-											<div v-if="klausur.bemerkung !== null && klausur.bemerkung.trim().length > 0">
-												<h3 class="border-b text-headline-md">Bemerkung zur Kursklausur</h3>
-												<p>{{ klausur.bemerkung }}</p>
-											</div>
-										</template>
-										<span class="icon i-ri-edit-2-line icon-ui-brand" v-if="(klausur.bemerkung !== null && klausur.bemerkung.trim().length > 0) || (kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe !== null && kMan().vorgabeByKursklausur(klausur).bemerkungVorgabe!.trim().length > 0)" />
-									</svws-ui-tooltip>
-								</svws-ui-tooltip>
-
-
-								<!-- <span class="svws-ui-badge" :style="`background-color: ${kMan().fachHTMLFarbeRgbaByKursklausur(klausur)};`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span> -->
-							</div>
-							<div class="svws-ui-td">{{ kMan().kursLehrerKuerzelByKursklausur(klausur) }}</div>
-							<div class="svws-ui-td svws-align-right">{{ kMan().schuelerklausurGetMengeByKursklausur(klausur).size() + "/" + kMan().kursAnzahlSchuelerGesamtByKursklausur(klausur) }}</div>
-							<div class="svws-ui-td svws-align-right">{{ kMan().vorgabeByKursklausur(klausur).dauer }}</div>
-							<div class="svws-ui-td svws-align-right"><span class="opacity-50">{{ kMan().kursSchieneByKursklausur(klausur).isEmpty() ? "-" : kMan().kursSchieneByKursklausur(klausur).get(0) }}</span></div>
-							<div class="svws-ui-td svws-align-right -mr-0.5" v-if="!quartalsauswahl.value"><span class="opacity-50">{{ kMan().vorgabeByKursklausur(klausur).quartal }}.</span></div>
-						</div>
-					</template>
+				<!-- { key: "kurs", label: "Kurs", minWidth: 6.25 },
+			{ key: "kuerzel", label: "Lehrkraft" },
+			{ key: "schriftlich", label: "Schriftlich", span: 0.5, align: "center", minWidth: 3.25 },
+			{ key: "dauer", label: "Dauer", tooltip: "Dauer in Minuten", span: 0.5, align: "right", minWidth: 3.25 },
+			{ key: "kursSchiene", label: "S", tooltip: "Schiene", span: 0.25, align: "right", minWidth: 2.75 }, -->
+				<template #cell(kurs)="{ rowData }">
+					<div class="-ml-2" :data="rowData" :draggable="draggable(rowData)" @dragstart="onDrag(rowData)" @dragend="onDrag(undefined)">
+						<span v-if="hatKompetenzUpdate" class="icon i-ri-draggable" />
+						<svws-ui-tooltip :hover="false" :indicator="false">
+							<template #content>
+								<s-gost-klausurplanung-kursliste :k-man :kursklausur="rowData" :patch-klausur :create-schuelerklausur-termin :benutzer-kompetenzen />
+							</template>
+							<span class="svws-ui-badge hover:opacity-75" :style="`color: var(--color-text-uistatic); background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(rowData) };`">{{ kMan().kursKurzbezeichnungByKursklausur(rowData) }}</span>
+							<svws-ui-tooltip>
+								<template #content>
+									<div v-if="kMan().vorgabeByKursklausur(rowData).bemerkungVorgabe !== null && kMan().vorgabeByKursklausur(rowData).bemerkungVorgabe!.trim().length > 0">
+										<h3 class="border-b text-headline-md">Bemerkung zur Vorgabe</h3>
+										<p>{{ kMan().vorgabeByKursklausur(rowData).bemerkungVorgabe }}</p>
+									</div>
+									<div v-if="rowData.bemerkung !== null && rowData.bemerkung.trim().length > 0">
+										<h3 class="border-b text-headline-md">Bemerkung zur Kursklausur</h3>
+										<p>{{ rowData.bemerkung }}</p>
+									</div>
+								</template>
+								<span class="icon i-ri-edit-2-line icon-ui-brand" v-if="(rowData.bemerkung !== null && rowData.bemerkung.trim().length > 0) || (kMan().vorgabeByKursklausur(rowData).bemerkungVorgabe !== null && kMan().vorgabeByKursklausur(rowData).bemerkungVorgabe!.trim().length > 0)" />
+							</svws-ui-tooltip>
+						</svws-ui-tooltip>
+					</div>
+				</template>
+				<template #cell(kuerzel)="{ rowData }">
+					{{ kMan().kursLehrerKuerzelByKursklausur(rowData) }}
+				</template>
+				<template #cell(schriftlich)="{ rowData }">
+					{{ kMan().schuelerklausurGetMengeByKursklausur(rowData).size() + "/" + kMan().kursAnzahlSchuelerGesamtByKursklausur(rowData) }}
+				</template>
+				<template #cell(dauer)="{ rowData }">
+					{{ kMan().vorgabeByKursklausur(rowData).dauer }}
+				</template>
+				<template #cell(kursSchiene)="{ rowData }">
+					<span class="opacity-50">{{ kMan().kursSchieneByKursklausur(rowData).isEmpty() ? "-" : kMan().kursSchieneByKursklausur(rowData).get(0) }}</span>
+				</template>
+				<template v-if="!quartalsauswahl.value" #cell(quartal)="{ rowData }">
+					{{ kMan().vorgabeByKursklausur(rowData).quartal }}
 				</template>
 				<template #actions>
+					<svws-ui-button type="trash" :disabled="selected.length===0" @click="loescheKursklausuren(selected);selected = []" />
 					<svws-ui-button :disabled="!hatKompetenzUpdate" class="-mr-3" type="transparent" @click="erzeugeKursklausurenAusVorgabenOrModal" title="Erstelle Klausuren aus den Vorgaben"><span class="icon i-ri-upload-2-line" />Aus Vorgaben erstellen</svws-ui-button>
 				</template>
 			</svws-ui-table>
@@ -178,7 +186,7 @@
 	import type { GostSchuelerklausurTermin, JavaMapEntry, JavaSet, List} from "@core";
 	import { BenutzerKompetenz } from "@core";
 	import {GostKursklausur, GostKlausurtermin, HashSet, KlausurterminblockungAlgorithmen, GostKlausurterminblockungDaten, KlausurterminblockungModusKursarten, KlausurterminblockungModusQuartale, DateUtils } from "@core";
-	import { computed, ref, onMounted, onUnmounted } from 'vue';
+	import { computed, ref, onMounted, onUnmounted, shallowRef } from 'vue';
 	import type { GostKlausurplanungSchienenProps } from './SGostKlausurplanungSchienenProps';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import type {DataTableColumn} from "@ui";
@@ -192,6 +200,7 @@
 	const loading = ref<boolean>(false);
 
 	const dragData = ref<GostKlausurplanungDragData>(undefined);
+	const selected = shallowRef<GostKursklausur[]>([]);
 
 	const onDrag = (data: GostKlausurplanungDragData) => {
 		props.terminSelected.value = undefined;

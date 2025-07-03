@@ -25,10 +25,10 @@ export class RouteSchuelerKAoA extends RouteNode<RouteDataSchuelerKAoA, RouteSch
 	protected checkHidden(params: RouteParams = {}) {
 		try {
 			const { id } = RouteNode.getIntParams(params, ["id"]);
-			const schuljahr = routeSchueler.data.schuelerListeManager.getSchuljahr();
-			if (!routeSchueler.data.schuelerListeManager.hasDaten()
-				|| (routeSchueler.data.schuelerListeManager.auswahl().status === SchuelerStatus.EXTERN.daten(schuljahr)?.id)
-				|| (routeSchueler.data.schuelerListeManager.auswahl().status === SchuelerStatus.EHEMALIGE.daten(schuljahr)?.id))
+			const schuljahr = routeSchueler.data.manager.getSchuljahr();
+			if (!routeSchueler.data.manager.hasDaten()
+				|| (routeSchueler.data.manager.auswahl().status === SchuelerStatus.EXTERN.daten(schuljahr)?.id)
+				|| (routeSchueler.data.manager.auswahl().status === SchuelerStatus.EHEMALIGE.daten(schuljahr)?.id))
 				return routeSchueler.getRouteDefaultChild({ id });
 			return false;
 		} catch (e) {
@@ -45,7 +45,7 @@ export class RouteSchuelerKAoA extends RouteNode<RouteDataSchuelerKAoA, RouteSch
 				await this.data.ladeDaten(null);
 			} else {
 				try {
-					await this.data.ladeDaten(routeSchueler.data.schuelerListeManager.liste.get(id));
+					await this.data.ladeDaten(routeSchueler.data.manager.liste.get(id));
 				} catch(error) {
 					// TODO: Routing zum Schüler zurück führt zu einer Endlosschleife... return routeSchueler.getRoute({ id });
 				}

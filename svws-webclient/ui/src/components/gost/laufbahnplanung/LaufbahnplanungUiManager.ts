@@ -689,7 +689,7 @@ export class LaufbahnplanungUiManager {
 		}
 		const sprachpruefung = this._mapSprachpruefungen.value.get(fach);
 		if (sprachpruefung !== null)
-			return fach.istFremdSpracheNeuEinsetzend || sprachpruefung.kannBelegungAlsFortgefuehrteSpracheErlauben;
+			return fach.istFremdSpracheNeuEinsetzend || SprachendatenUtils.istFeststellungspruefungEESAMSABestanden(sprachpruefung);
 		return false;
 	}
 
@@ -948,10 +948,10 @@ export class LaufbahnplanungUiManager {
 				default:
 					if (GostFachUtils.istWaehlbarLeistungskurs1(fach) && !this.manager().hatAbiFach(GostAbiturFach.LK1))
 						wahl.abiturFach = 1;
-					wahl.abiturFach = 2;
+					else
+						wahl.abiturFach = 2;
 					break;
 			}
-			return;
 		}
 		// Die mögliche Kursart im Abitur ist GK (Grundkurs)
 		if (abiMoeglicheKursart === GostKursart.GK) {
@@ -1046,10 +1046,10 @@ export class LaufbahnplanungUiManager {
 				default:
 					if (GostFachUtils.istWaehlbarLeistungskurs1(fach) && !this.manager().hatAbiFach(GostAbiturFach.LK1))
 						wahl.abiturFach = 1;
-					wahl.abiturFach = 2;
+					else
+						wahl.abiturFach = 2;
 					break;
 			}
-			return;
 		}
 		// Die mögliche Kursart im Abitur ist GK (Grundkurs)
 		if (abiMoeglicheKursart === GostKursart.GK) {

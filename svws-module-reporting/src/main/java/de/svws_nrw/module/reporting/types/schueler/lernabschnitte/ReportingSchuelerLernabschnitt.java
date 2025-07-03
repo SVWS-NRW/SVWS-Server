@@ -27,9 +27,6 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	/** Der erreichte berufsbezogene Abschluss am Berufskolleg */
 	protected String abschlussBerufsbildend;
 
-	/** Die Anzahl der Schulbesuchsjahre */
-	protected Integer anzahlSchulbesuchsjahre;
-
 	/** Die Sprache des bilingualen Zweigs, falls der Schüler im bilingualen Zweig unterrichtet wird */
 	protected String bilingualerZweig;
 
@@ -211,7 +208,6 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @param abschluss Der erreichte allgemeinbildende Abschluss
 	 * @param abschlussart Die Art des Abschlusses (siehe Katalog)
 	 * @param abschlussBerufsbildend Der erreichte berufsbezogene Abschluss am Berufskolleg
-	 * @param anzahlSchulbesuchsjahre Die Anzahl der Schulbesuchsjahre
 	 * @param bilingualerZweig Die Sprache des bilingualen Zweigs, falls der Schüler im bilingualen Zweig unterrichtet wird
 	 * @param datumAnfang Das Datum, wann der Lernabschnitt beginnt
 	 * @param datumEnde Das Datum, wann der Lernabschnitt endet
@@ -271,7 +267,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @param zeugnisLELSText Der Text für Zeugnisbemerkungen zur Lernentwicklung in Grundschulen.
 	 */
 	public ReportingSchuelerLernabschnitt(final String abschluss, final Integer abschlussart, final String abschlussBerufsbildend,
-			final Integer anzahlSchulbesuchsjahre, final String bilingualerZweig, final String datumAnfang, final String datumEnde, final String datumKonferenz,
+			final String bilingualerZweig, final String datumAnfang, final String datumEnde, final String datumKonferenz,
 			final String datumZeugnis, final int fehlstundenGesamt, final Integer fehlstundenGrenzwert, final int fehlstundenUnentschuldigt,
 			final FoerderschwerpunktEintrag foerderschwerpunkt1, final FoerderschwerpunktEintrag foerderschwerpunkt2, final String foerderschwerpunktText,
 			final ReportingKlasse folgeklasse, final boolean hatAOSF, final boolean hatAutismus, final boolean hatSchwerbehinderungsNachweis,
@@ -289,7 +285,6 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 		this.abschluss = abschluss;
 		this.abschlussart = abschlussart;
 		this.abschlussBerufsbildend = abschlussBerufsbildend;
-		this.anzahlSchulbesuchsjahre = anzahlSchulbesuchsjahre;
 		this.bilingualerZweig = bilingualerZweig;
 		this.datumAnfang = datumAnfang;
 		this.datumEnde = datumEnde;
@@ -357,6 +352,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * Hashcode der Klasse
 	 * @return Hashcode der Klasse
 	 */
+	@Override
 	public int hashCode() {
 		return 31 + Long.hashCode(id);
 	}
@@ -366,6 +362,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @param obj Das Vergleichsobjekt
 	 * @return	true, falls es das gleiche Objekt ist, andernfalls false.
 	 */
+	@Override
 	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
@@ -420,15 +417,6 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 */
 	public String abschlussBerufsbildend() {
 		return abschlussBerufsbildend;
-	}
-
-	/**
-	 * Die Anzahl der Schulbesuchsjahre
-	 *
-	 * @return Inhalt des Feldes anzahlSchulbesuchsjahre
-	 */
-	public Integer anzahlSchulbesuchsjahre() {
-		return anzahlSchulbesuchsjahre;
 	}
 
 	/**

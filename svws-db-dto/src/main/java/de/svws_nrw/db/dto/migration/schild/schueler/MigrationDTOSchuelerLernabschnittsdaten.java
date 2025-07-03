@@ -515,7 +515,7 @@ public final class MigrationDTOSchuelerLernabschnittsdaten {
 	@JsonProperty
 	public Integer WechselNr;
 
-	/** Schulbesuchsjahre für den Lernabschnitt */
+	/** DEPRECATED: Schulbesuchsjahre für den Lernabschnitt */
 	@Column(name = "Schulbesuchsjahre")
 	@JsonProperty
 	public Integer Schulbesuchsjahre;

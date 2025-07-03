@@ -21,11 +21,15 @@
 			</div>
 		</Variant>
 
-		<Variant title="Invalid" id="Invalid">
-			<div class="p-4">
+		<Variant title="Invalid/Required" id="Invalid">
+			<div class="p-4 flex flex-col gap-10">
 				<svws-ui-input-wrapper>
-					<svws-ui-textarea-input v-model="modelValue" :valid="v=>false" placeholder="Invalid Textarea" resizeable="vertical" @input="onInput" />
+					<svws-ui-textarea-input placeholder="Invalid Input" :valid="(v)=>false" resizeable="vertical" @input="onInput" />
 					<svws-ui-textarea-input v-model="modelValue" placeholder="Required Length Textarea" resizeable="vertical" @input="onInput" :max-len="10" />
+				</svws-ui-input-wrapper>
+				<svws-ui-input-wrapper>
+					<svws-ui-textarea-input model-value="" placeholder="Required" resizeable="vertical" @input="onInput" required />
+					<svws-ui-textarea-input model-value="Required Value" placeholder="Required Value" resizeable="vertical" @input="onInput" required />
 				</svws-ui-input-wrapper>
 			</div>
 		</Variant>
@@ -36,16 +40,6 @@
 			</div>
 		</Variant>
 
-		<Variant title="Statistics" id="Statistics">
-			<div class="p-4">
-				<svws-ui-textarea-input v-model="modelValue" statistics placeholder="Textarea Input Placeholder" resizeable="vertical" @input="onInput" />
-			</div>
-		</Variant>
-		<Variant title="Statistics" id="Statistics">
-			<div class="p-4">
-				<svws-ui-textarea-input v-model="modelValue" statistics placeholder="Textarea Input Placeholder" resizeable="vertical" @input="onInput" />
-			</div>
-		</Variant>
 		<Variant title="Statistics" id="Statistics">
 			<div class="p-4">
 				<svws-ui-textarea-input v-model="modelValue" statistics placeholder="Textarea Input Placeholder" resizeable="vertical" @input="onInput" />

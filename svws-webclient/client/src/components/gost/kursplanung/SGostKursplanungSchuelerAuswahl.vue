@@ -10,7 +10,7 @@
 			<template #filterAdvanced>
 				<div class="radio radio--row flex flex-row">
 					<svws-ui-radio-option v-model="schuelerFilter().alle_toggle.value" value="alle" name="Alle" label="&ZeroWidthSpace;">
-						<span class="icon ml-0.5 -mt-0.5 inline-block i-ri-filter-off-line" />
+						<span class="icon ml-0.5 -mt-0.5 i-ri-filter-off-line" />
 					</svws-ui-radio-option>
 					<svws-ui-radio-option v-model="schuelerFilter().fach_toggle.value" value="fach" name="Fach" label="Fachfilter" :icon="false" />
 					<svws-ui-radio-option v-model="schuelerFilter().kurs_toggle.value" value="kurs" name="Kurs" label="Kursfilter" :icon="false" />
@@ -33,7 +33,7 @@
 					<svws-ui-radio-option v-model="schuelerFilter().radio_filter" value="alle" name="Alle" label="Alle" :icon="false" />
 					<svws-ui-tooltip>
 						<svws-ui-radio-option v-model="schuelerFilter().radio_filter" value="kollisionen" name="Kollisionen" label="K">
-							<span class="icon-sm inline-block i-ri-alert-line" />
+							<span class="icon-sm i-ri-alert-line" />
 						</svws-ui-radio-option>
 						<template #content>
 							Kollision
@@ -41,7 +41,7 @@
 					</svws-ui-tooltip>
 					<svws-ui-tooltip>
 						<svws-ui-radio-option v-model="schuelerFilter().radio_filter" value="nichtwahlen" name="Nichtwahlen" label="NV">
-							<span class="icon-sm inline-block i-ri-spam-3-line" />
+							<span class="icon-sm i-ri-spam-3-line" />
 						</svws-ui-radio-option>
 						<template #content>
 							Nichtverteilt
@@ -49,7 +49,7 @@
 					</svws-ui-tooltip>
 					<svws-ui-tooltip>
 						<svws-ui-radio-option v-model="schuelerFilter().radio_filter" value="kollisionen_nichtwahlen" name="Kollisionen_Nichtwahlen" label="K/NV">
-							<span class="icon-sm inline-block i-ri-error-warning-fill" />
+							<span class="icon-sm i-ri-error-warning-fill" />
 						</svws-ui-radio-option>
 						<template #content>
 							Kollision und Nichtverteilt
@@ -149,9 +149,9 @@
 						</div>
 						<div v-if="fach !== undefined || schuelerFilter().kurs !== undefined" role="cell" class="svws-ui-td svws-align-center">
 							<span>
-								<span v-if="istSchriftlich(s.id) === 's'" class="icon inline-block i-ri-draft-line -my-0.5" />
-								<span v-else-if="istSchriftlich(s.id) === 'm'" class="icon inline-block i-ri-chat-1-line -my-0.5 opacity-75" />
-								<span v-else class="icon inline-block i-ri-question-mark -my-0.5 opacity-75" />
+								<span v-if="istSchriftlich(s.id) === 's'" class="icon i-ri-draft-line -my-0.5" />
+								<span v-else-if="istSchriftlich(s.id) === 'm'" class="icon i-ri-chat-1-line -my-0.5 opacity-75" />
+								<span v-else class="icon i-ri-question-mark -my-0.5 opacity-75" />
 							</span>
 						</div>
 					</div>

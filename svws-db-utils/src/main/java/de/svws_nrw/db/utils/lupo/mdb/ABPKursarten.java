@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.ArrayList;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.healthmarketscience.jackcess.ColumnBuilder;
-import com.healthmarketscience.jackcess.DataType;
-import com.healthmarketscience.jackcess.Database;
-import com.healthmarketscience.jackcess.PropertyMap;
-import com.healthmarketscience.jackcess.Row;
-import com.healthmarketscience.jackcess.Table;
-import com.healthmarketscience.jackcess.TableBuilder;
+import io.github.spannm.jackcess.ColumnBuilder;
+import io.github.spannm.jackcess.DataType;
+import io.github.spannm.jackcess.Database;
+import io.github.spannm.jackcess.PropertyMap;
+import io.github.spannm.jackcess.Row;
+import io.github.spannm.jackcess.Table;
+import io.github.spannm.jackcess.TableBuilder;
 
 /**
  * Diese Klasse wird für den Import der Tabelle ABP_Kursarten aus einer LuPO-Datenbank
@@ -108,14 +108,14 @@ public final class ABPKursarten {
 	public static void write(final Database db, final List<ABPKursarten> list) {
 		try {
 			final Table table = new TableBuilder("ABP_Kursarten")
-					.addColumn(new ColumnBuilder(fieldKursart, DataType.TEXT).setLengthInUnits(5))
-					.addColumn(new ColumnBuilder(fieldKlartext, DataType.TEXT).setLengthInUnits(50))
-					.addColumn(new ColumnBuilder(fieldE1, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
-					.addColumn(new ColumnBuilder(fieldE2, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
-					.addColumn(new ColumnBuilder(fieldQ1, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
-					.addColumn(new ColumnBuilder(fieldQ2, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
-					.addColumn(new ColumnBuilder(fieldQ3, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
-					.addColumn(new ColumnBuilder("Q4", DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
+					.addColumn(new ColumnBuilder(fieldKursart, DataType.TEXT).withLengthInUnits(5))
+					.addColumn(new ColumnBuilder(fieldKlartext, DataType.TEXT).withLengthInUnits(50))
+					.addColumn(new ColumnBuilder(fieldE1, DataType.TEXT).withLengthInUnits(1).withProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
+					.addColumn(new ColumnBuilder(fieldE2, DataType.TEXT).withLengthInUnits(1).withProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
+					.addColumn(new ColumnBuilder(fieldQ1, DataType.TEXT).withLengthInUnits(1).withProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
+					.addColumn(new ColumnBuilder(fieldQ2, DataType.TEXT).withLengthInUnits(1).withProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
+					.addColumn(new ColumnBuilder(fieldQ3, DataType.TEXT).withLengthInUnits(1).withProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
+					.addColumn(new ColumnBuilder("Q4", DataType.TEXT).withLengthInUnits(1).withProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
 					.addColumn(new ColumnBuilder(fieldSortierung, DataType.LONG))
 					.toTable(db);
 			for (final ABPKursarten zuordnung : list) {

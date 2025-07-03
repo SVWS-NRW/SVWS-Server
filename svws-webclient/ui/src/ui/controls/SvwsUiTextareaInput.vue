@@ -14,23 +14,28 @@
 			'grow': span === 'grow'
 		}">
 		<textarea ref="textarea" v-model="dataOrEmpty" @input="onInput" @blur="onBlur" class="textarea-input--control" :disabled :required :rows v-bind="{ ...$attrs }" :class="{ 'contentFocusField': isContentFocusField }" />
-		<span :id="idPlaceholder" v-if="placeholder.length > 0" class="textarea-input--placeholder" :class="{ 'textarea-input--placeholder--required': required }">
-			<span>{{ placeholder }}</span>
-			<span class="icon i-ri-alert-line ml-0.5 -my-0.5 icon-ui-danger" v-if="isValid === false" />
-			<span v-if="(maxLen > 0) && (data !== null)" class="inline-flex ml-1 gap-1" :class="maxLenValid ? 'opacity-50' : 'text-ui-danger'">
-				{{ `(${(data.toLocaleString().length > 0) ? data.toLocaleString().length + '/' : 'maximal '}${maxLen} Zeichen)` }}
-			</span>
+		<span :id="idPlaceholder" v-if="placeholder.length > 0" class="textarea-input--placeholder">
 			<span :id="idStatistics" v-if="statistics" class="cursor-pointer">
 				<svws-ui-tooltip position="right">
 					<span class="inline-flex items-center">
-						<span class="icon i-ri-bar-chart-2-line icon-ui-statistic pointer-events-auto ml-0.5" />
-						<span class="icon i-ri-alert-fill icon-ui-danger" v-if="(data === '') || (data === null)" />
+						<span class="icon i-ri-bar-chart-2-line textarea-input--statistic-icon" />
 					</span>
 					<template #content>
 						Relevant für die Statistik
 					</template>
 				</svws-ui-tooltip>
 			</span>
+			<span>{{ placeholder }}</span>
+			<span v-if="(maxLen > 0) && (data !== null)" class="inline-flex gap-1" :class="maxLenValid ? 'opacity-50' : 'text-ui-danger'">
+				{{ `(${(data.toLocaleString().length > 0) ? data.toLocaleString().length + '/' : 'maximal '}${maxLen} Zeichen)` }}
+			</span>
+			<span v-if="required" class="icon-xs i-ri-asterisk textarea-input--placeholder--required textarea-input--state-icon" aria-hidden />
+			<span v-if="required" class="sr-only">erforderlich</span>
+			<span class="icon i-ri-alert-line textarea-input--state-icon" v-if="(isValid === false && !required)" />
+			<span :id="idStatistics" v-if="statistics" class="cursor-pointer">
+				<span class="icon i-ri-alert-fill textarea-input--state-icon" v-if="required && (data === '') || (data === null)" />
+			</span>
+
 		</span>
 	</label>
 </template>
@@ -98,11 +103,11 @@
 
 	const isValid = computed(() => {
 		let tmpIsValid = true;
-		if ((props.required === true) && (data.value === null))
+		if (props.required && ((data.value === null) || (data.value === '')))
 			return false;
 		if (!maxLenValid.value)
 			tmpIsValid = false;
-		if (tmpIsValid && (data.value !== null) && (data.value !== ''))
+		if (tmpIsValid)
 			tmpIsValid = props.valid(data.value);
 		return tmpIsValid;
 	})

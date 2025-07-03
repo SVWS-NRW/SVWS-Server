@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.healthmarketscience.jackcess.DataType;
-import com.healthmarketscience.jackcess.Database;
-import com.healthmarketscience.jackcess.DatabaseBuilder;
-import com.healthmarketscience.jackcess.DateTimeType;
+import io.github.spannm.jackcess.DataType;
+import io.github.spannm.jackcess.Database;
+import io.github.spannm.jackcess.DatabaseBuilder;
+import io.github.spannm.jackcess.DateTimeType;
 
 import de.svws_nrw.core.data.gost.AbiturFachbelegung;
 import de.svws_nrw.core.data.gost.AbiturFachbelegungHalbjahr;
@@ -158,8 +158,8 @@ public class LupoMDB {
 	public void exportTo() throws IOException {
 		logger.logLn("Schreibe LuPO-Daten in die Datei " + filename);
 		logger.modifyIndent(2);
-		try (Database db = new DatabaseBuilder(new File(filename))
-				.setFileFormat(Database.FileFormat.V2000)
+		try (Database db = DatabaseBuilder.newDatabase(new File(filename))
+				.withFileFormat(Database.FileFormat.V2000)
 				.putSummaryProperty("Title", DataType.TEXT, "db1")
 				.putSummaryProperty("Author", DataType.TEXT, "SVWS-Server-Team")
 				.putSummaryProperty("Company", DataType.TEXT, "NRW")

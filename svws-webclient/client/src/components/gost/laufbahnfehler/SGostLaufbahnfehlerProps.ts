@@ -15,7 +15,7 @@ export interface GostLaufbahnfehlerProps {
 	importLaufbahnplanung: (data: FormData) => Promise<void>;
 	exportLaufbahnplanung: (schueler: List<number>) => Promise<ApiFile>;
 	getPdfLaufbahnplanung: (title: string, list: List<number>, detaillevel: number, einzelpdfs: boolean) => Promise<ApiFile>;
-	resetFachwahlenAlle: () => Promise<void>;
+	resetFachwahlenAlle: (ergebnisse: Iterable<GostBelegpruefungsErgebnisse>) => Promise<void>;
 	jahrgangsdaten: () => GostJahrgangsdaten;
 	apiStatus: ApiStatus;
 	filterFehler: () => boolean;
@@ -24,4 +24,7 @@ export interface GostLaufbahnfehlerProps {
 	setFilterExterne: (value: boolean) => Promise<void>;
 	filterNurMitFachwahlen: () => boolean;
 	setFilterNurMitFachwahlen: (value: boolean) => Promise<void>;
+	filterNeuaufnahmen: () => boolean;
+	setFilterNeuaufnahmen: (value: boolean) => Promise<void>;
+	loeschenFachwahlenSelected: (value: Iterable<GostBelegpruefungsErgebnisse>) => Promise<void>;
 }

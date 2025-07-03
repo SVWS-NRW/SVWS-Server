@@ -59,9 +59,6 @@ public class ReportingKlasse extends ReportingBaseType {
 	/** Die ID für die Organisationsform der Klasse im Weiterbildungsbereich */
 	protected Long idWeiterbildungOrganisationsform;
 
-	/** Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. */
-	protected boolean istSichtbar;
-
 	/** Der Jahrgang, dem die Klasse zugeordnet ist. */
 	protected ReportingJahrgang jahrgang;
 
@@ -120,7 +117,6 @@ public class ReportingKlasse extends ReportingBaseType {
 	 * @param idSchulgliederung Die ID für die Schulgliederung der Klasse
 	 * @param idVorgaengerklasse Die ID der Vorgängerklasse, sofern im vorigen Schuljahresabschnitt definiert - ansonsten null
 	 * @param idWeiterbildungOrganisationsform Die ID für die Organisationsform der Klasse im Weiterbildungsbereich
-	 * @param istSichtbar Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.
 	 * @param jahrgang Der Jahrgang, dem die Klasse zugeordnet ist.
 	 * @param klassenleitungen Die Liste der Klassenleitungen der Klasse.
 	 * @param kuerzel Das Kürzel der Klasse.
@@ -138,7 +134,7 @@ public class ReportingKlasse extends ReportingBaseType {
 	public ReportingKlasse(final boolean beginnSommersemester, final String beschreibung, final ReportingKlasse folgeklasse, final long id,
 			final Long idAllgemeinbildendOrganisationsform, final Long idBerufsbildendOrganisationsform, final Long idFachklasse, final Long idFolgeklasse,
 			final Long idJahrgang, final long idKlassenart, final List<Long> idsKlassenleitungen, final List<Long> idsSchueler, final long idSchulgliederung,
-			final Long idVorgaengerklasse, final Long idWeiterbildungOrganisationsform, final boolean istSichtbar, final ReportingJahrgang jahrgang,
+			final Long idVorgaengerklasse, final Long idWeiterbildungOrganisationsform, final ReportingJahrgang jahrgang,
 			final List<ReportingLehrer> klassenleitungen, final String kuerzel, final String kuerzelFolgeklasse, final String kuerzelVorgaengerklasse,
 			final String parallelitaet, final String pruefungsordnung, final List<ReportingSchueler> schueler,
 			final ReportingSchuljahresabschnitt schuljahresabschnitt, final int sortierung, final String teilstandort,
@@ -158,7 +154,6 @@ public class ReportingKlasse extends ReportingBaseType {
 		this.idSchulgliederung = idSchulgliederung;
 		this.idVorgaengerklasse = idVorgaengerklasse;
 		this.idWeiterbildungOrganisationsform = idWeiterbildungOrganisationsform;
-		this.istSichtbar = istSichtbar;
 		this.jahrgang = jahrgang;
 		this.klassenleitungen = klassenleitungen;
 		this.kuerzel = kuerzel;
@@ -180,6 +175,7 @@ public class ReportingKlasse extends ReportingBaseType {
 	 * Hashcode der Klasse
 	 * @return Hashcode der Klasse
 	 */
+	@Override
 	public int hashCode() {
 		return 31 + Long.hashCode(id);
 	}
@@ -189,6 +185,7 @@ public class ReportingKlasse extends ReportingBaseType {
 	 * @param obj Das Vergleichsobjekt
 	 * @return	true, falls es das gleiche Objekt ist, andernfalls false.
 	 */
+	@Override
 	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
@@ -349,15 +346,6 @@ public class ReportingKlasse extends ReportingBaseType {
 	 */
 	public Long idWeiterbildungOrganisationsform() {
 		return idWeiterbildungOrganisationsform;
-	}
-
-	/**
-	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.
-	 *
-	 * @return Inhalt des Feldes istSichtbar
-	 */
-	public boolean istSichtbar() {
-		return istSichtbar;
 	}
 
 	/**

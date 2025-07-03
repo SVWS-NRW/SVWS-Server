@@ -11,8 +11,8 @@
 				<svws-ui-checkbox v-model="schuelerBetriebsdaten.praktikum"> Praktikum </svws-ui-checkbox>
 			</svws-ui-input-wrapper>
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input placeholder="Vertragsbeginn" v-model="schuelerBetriebsdaten.vertragsbeginn" type="date" />
-				<svws-ui-text-input placeholder="Vertragsende" v-model="schuelerBetriebsdaten.vertragsende" type="date" />
+				<svws-ui-text-input placeholder="Vertragsbeginn" v-model="schuelerBetriebsdaten.vertragsbeginn" type="date" statistics />
+				<svws-ui-text-input placeholder="Vertragsende" v-model="schuelerBetriebsdaten.vertragsende" type="date" statistics />
 				<svws-ui-select title="Betreuungslehrer" v-model="betreuungslehrer" :items="mapLehrer" :item-text="(i: LehrerListeEintrag) => i.nachname" />
 				<svws-ui-select title="Ansprechpartner" removable :disabled="betrieb === undefined" v-model="ansprechpartner" :items="listAnpsrechpartner" :item-text="(i: BetriebAnsprechpartner) => i.name ?? ''" />
 				<svws-ui-checkbox v-model="schuelerBetriebsdaten.allgadranschreiben"> Erhält Anschreiben </svws-ui-checkbox>

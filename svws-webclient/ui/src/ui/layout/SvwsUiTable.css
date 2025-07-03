@@ -59,7 +59,7 @@
 	}
 
 	input[type="checkbox"] {
-		@apply ring-offset-0;
+		@apply ring-offset-0 m-0;
 	}
 }
 
@@ -191,16 +191,7 @@
 	}
 
 	.button {
-		@apply -my-1 h-[1.4rem];
-	}
-
-	.tooltip-trigger {
-		margin-top: -0.1rem;
-		margin-bottom: -0.1rem;
-
-		.button {
-		@apply -my-0.5;
-		}
+		@apply h-[1.4rem];
 	}
 
 	.svws-ui-checkbox {
@@ -532,7 +523,7 @@
 }
 
 .svws-ui-table-filter--advanced {
-	@apply grid grid-cols-1 gap-2 pt-5 sm:grid-cols-2;
+	@apply grid grid-cols-1 pt-2 sm:grid-cols-2;
 }
 
 .svws-fachwahlen--has-selection .svws-ui-tbody .svws-ui-td:not(.svws-selected) {

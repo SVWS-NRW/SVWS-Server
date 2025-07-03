@@ -1,4 +1,7 @@
 <template>
+	<Teleport to=".svws-ui-header--actions" defer>
+		<svws-ui-modal-hilfe> <hilfe-lehrer-lernplattformen /> </svws-ui-modal-hilfe>
+	</Teleport>
 	<div class="page page-grid-cards">
 		<svws-ui-content-card class="col-span-full">
 			<svws-ui-table :items="props.lehrerLernplattformen()" :columns>

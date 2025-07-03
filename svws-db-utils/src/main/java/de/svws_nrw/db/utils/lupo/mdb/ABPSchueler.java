@@ -8,14 +8,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
 
-import com.healthmarketscience.jackcess.ColumnBuilder;
-import com.healthmarketscience.jackcess.DataType;
-import com.healthmarketscience.jackcess.Database;
-import com.healthmarketscience.jackcess.IndexBuilder;
-import com.healthmarketscience.jackcess.PropertyMap;
-import com.healthmarketscience.jackcess.Row;
-import com.healthmarketscience.jackcess.Table;
-import com.healthmarketscience.jackcess.TableBuilder;
+import io.github.spannm.jackcess.ColumnBuilder;
+import io.github.spannm.jackcess.DataType;
+import io.github.spannm.jackcess.Database;
+import io.github.spannm.jackcess.IndexBuilder;
+import io.github.spannm.jackcess.PropertyMap;
+import io.github.spannm.jackcess.Row;
+import io.github.spannm.jackcess.Table;
+import io.github.spannm.jackcess.TableBuilder;
 
 import de.svws_nrw.core.data.gost.GostLeistungen;
 import de.svws_nrw.asd.types.Geschlecht;
@@ -287,22 +287,22 @@ public final class ABPSchueler {
 			final Table table = new TableBuilder("ABP_Schueler")
 					.addColumn(new ColumnBuilder(fieldID, DataType.LONG))
 					.addColumn(new ColumnBuilder(fieldSchild_ID, DataType.LONG))
-					.addColumn(new ColumnBuilder(fieldGU_ID, DataType.TEXT).setLengthInUnits(40))
-					.addColumn(new ColumnBuilder(fieldName, DataType.TEXT).setLengthInUnits(50))
-					.addColumn(new ColumnBuilder(fieldVorname, DataType.TEXT).setLengthInUnits(50))
+					.addColumn(new ColumnBuilder(fieldGU_ID, DataType.TEXT).withLengthInUnits(40))
+					.addColumn(new ColumnBuilder(fieldName, DataType.TEXT).withLengthInUnits(50))
+					.addColumn(new ColumnBuilder(fieldVorname, DataType.TEXT).withLengthInUnits(50))
 					.addColumn(new ColumnBuilder(fieldGeburtsdatum, DataType.SHORT_DATE_TIME))
-					.addColumn(new ColumnBuilder(fieldGeschlecht, DataType.INT).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "4"))
+					.addColumn(new ColumnBuilder(fieldGeschlecht, DataType.INT).withProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "4"))
 					.addColumn(new ColumnBuilder(fieldDatumBeratung, DataType.SHORT_DATE_TIME))
 					.addColumn(new ColumnBuilder(fieldDatumRuecklauf, DataType.SHORT_DATE_TIME))
-					.addColumn(new ColumnBuilder(fieldKlasse, DataType.TEXT).setLengthInUnits(15))
-					.addColumn(new ColumnBuilder(fieldSPP, DataType.TEXT).setLengthInUnits(1))
-					.addColumn(new ColumnBuilder(fieldBilingual, DataType.TEXT).setLengthInUnits(1))
-					.addColumn(new ColumnBuilder(fieldLatein, DataType.TEXT).setLengthInUnits(1))
-					.addColumn(new ColumnBuilder(fieldSportattest, DataType.TEXT).setLengthInUnits(1))
-					.addColumn(new ColumnBuilder(fieldKommentar, DataType.MEMO).setLengthInUnits(16777216))
-					.addColumn(new ColumnBuilder(fieldPruefOrdnung, DataType.TEXT).setLengthInUnits(20))
-					.addColumn(new ColumnBuilder(fieldEmail, DataType.TEXT).setLengthInUnits(100))
-					.addColumn(new ColumnBuilder(fieldBeratungslehrer, DataType.TEXT).setLengthInUnits(50))
+					.addColumn(new ColumnBuilder(fieldKlasse, DataType.TEXT).withLengthInUnits(15))
+					.addColumn(new ColumnBuilder(fieldSPP, DataType.TEXT).withLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldBilingual, DataType.TEXT).withLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldLatein, DataType.TEXT).withLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldSportattest, DataType.TEXT).withLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldKommentar, DataType.MEMO).withLengthInUnits(16777216))
+					.addColumn(new ColumnBuilder(fieldPruefOrdnung, DataType.TEXT).withLengthInUnits(20))
+					.addColumn(new ColumnBuilder(fieldEmail, DataType.TEXT).withLengthInUnits(100))
+					.addColumn(new ColumnBuilder(fieldBeratungslehrer, DataType.TEXT).withLengthInUnits(50))
 					.addColumn(new ColumnBuilder(fieldAnzK_E1, DataType.LONG))
 					.addColumn(new ColumnBuilder(fieldAnzK_E2, DataType.LONG))
 					.addColumn(new ColumnBuilder(fieldAnzK_Q1, DataType.LONG))
@@ -315,18 +315,18 @@ public final class ABPSchueler {
 					.addColumn(new ColumnBuilder(fieldAnzS_Q2, DataType.LONG))
 					.addColumn(new ColumnBuilder(fieldAnzS_Q3, DataType.LONG))
 					.addColumn(new ColumnBuilder(fieldAnzS_Q4, DataType.LONG))
-					.addColumn(new ColumnBuilder(fieldAnzS_Summe, DataType.TEXT).setLengthInUnits(5))
-					.addColumn(new ColumnBuilder(fieldAnzK_Summe, DataType.TEXT).setLengthInUnits(5))
-					.addColumn(new ColumnBuilder(fieldPruefPhase, DataType.TEXT).setLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldAnzS_Summe, DataType.TEXT).withLengthInUnits(5))
+					.addColumn(new ColumnBuilder(fieldAnzK_Summe, DataType.TEXT).withLengthInUnits(5))
+					.addColumn(new ColumnBuilder(fieldPruefPhase, DataType.TEXT).withLengthInUnits(1))
 					.addColumn(new ColumnBuilder(fieldZeitstempel, DataType.SHORT_DATE_TIME))
-					.addColumn(new ColumnBuilder(fieldGliederung, DataType.TEXT).setLengthInUnits(3))
-					.addColumn(new ColumnBuilder(fieldKonfession, DataType.TEXT).setLengthInUnits(2))
-					.addColumn(new ColumnBuilder(fieldEinsprachler_S1, DataType.TEXT).setLengthInUnits(1))
-					.addColumn(new ColumnBuilder(fieldBLL_Art, DataType.TEXT).setLengthInUnits(1))
-					.addColumn(new ColumnBuilder(fieldZulassung, DataType.TEXT).setLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldGliederung, DataType.TEXT).withLengthInUnits(3))
+					.addColumn(new ColumnBuilder(fieldKonfession, DataType.TEXT).withLengthInUnits(2))
+					.addColumn(new ColumnBuilder(fieldEinsprachler_S1, DataType.TEXT).withLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldBLL_Art, DataType.TEXT).withLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldZulassung, DataType.TEXT).withLengthInUnits(1))
 					.addColumn(new ColumnBuilder(fieldBLL_Punkte, DataType.LONG))
-					.addColumn(new ColumnBuilder(fieldFS2_SekI_manuell, DataType.TEXT).setLengthInUnits(1))
-					.addIndex(new IndexBuilder(IndexBuilder.PRIMARY_KEY_NAME).addColumns(fieldID).setPrimaryKey())
+					.addColumn(new ColumnBuilder(fieldFS2_SekI_manuell, DataType.TEXT).withLengthInUnits(1))
+					.addIndex(new IndexBuilder(IndexBuilder.PRIMARY_KEY_NAME).withColumns(fieldID).withPrimaryKey())
 					.toTable(db);
 			for (final ABPSchueler schueler : list) {
 				table.addRow(

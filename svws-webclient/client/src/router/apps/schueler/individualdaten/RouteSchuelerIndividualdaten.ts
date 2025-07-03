@@ -30,7 +30,7 @@ export class RouteSchuelerIndividualdaten extends RouteNode<RouteDataSchuelerInd
 	public getProps(to: RouteLocationNormalized): SchuelerIndividualdatenProps {
 		return {
 			patch: routeSchueler.data.patch,
-			schuelerListeManager: () => routeSchueler.data.schuelerListeManager,
+			schuelerListeManager: () => routeSchueler.data.manager,
 			mapOrte: routeApp.data.mapOrte,
 			mapOrtsteile: routeApp.data.mapOrtsteile,
 			mapFahrschuelerarten: this.data.mapFahrschuelerarten,
@@ -38,6 +38,10 @@ export class RouteSchuelerIndividualdaten extends RouteNode<RouteDataSchuelerInd
 			mapHaltestellen: this.data.mapHaltestellen,
 			mapReligionen: this.data.mapReligionen,
 			mapTelefonArten: this.data.mapTelefonArten,
+			getListSchuelerTelefoneintraege: () => routeSchueler.data.listSchuelerTelefoneintraege,
+			addSchuelerTelefoneintrag: routeSchueler.data.addSchuelerTelefoneintrag,
+			patchSchuelerTelefoneintrag: routeSchueler.data.patchSchuelerTelefoneintrag,
+			deleteSchuelerTelefoneintrage: routeSchueler.data.deleteSchuelerTelefoneintrage,
 			mapSchulen: this.data.mapSchulen,
 			schulform: api.schulform,
 			serverMode: api.mode,

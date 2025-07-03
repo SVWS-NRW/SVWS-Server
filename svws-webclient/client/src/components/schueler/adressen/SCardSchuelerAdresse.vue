@@ -12,11 +12,11 @@
 			<svws-ui-text-input placeholder="Namensergänzung" :model-value="betriebsStammdaten.name2" @change="name2=>patchBetrieb({name2: name2 ?? undefined}, props.betriebsStammdaten.id)" type="text" />
 			<svws-ui-text-input placeholder="Branche" :model-value="betriebsStammdaten.branche" @change="branche=>patchBetrieb({branche: branche ?? undefined}, props.betriebsStammdaten.id)" title="Branche" type="text" />
 			<svws-ui-text-input placeholder="Straße und Hausnummer" :model-value="betriebsStammdaten.strassenname" @change="strassenname=>patchBetrieb({strassenname: strassenname ?? undefined}, props.betriebsStammdaten.id)" type="text" />
-			<svws-ui-select title="Wohnort" v-model="inputWohnortID" :items="mapOrte" :item-filter="orte_filter"
+			<svws-ui-select title="Wohnort" v-model="inputWohnortID" :items="mapOrte" :item-filter="orte_filter" statistics
 				:item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
-			<svws-ui-text-input placeholder="Telefon" :model-value="betriebsStammdaten.telefon1" @change="telefon1=>patchBetrieb({telefon1: telefon1 ?? undefined}, props.betriebsStammdaten.id)" type="text" />
-			<svws-ui-text-input placeholder="2. Telefon" :model-value="betriebsStammdaten.telefon2" @change="telefon2=>patchBetrieb({telefon2: telefon2 ?? undefined}, props.betriebsStammdaten.id)" type="text" />
-			<svws-ui-text-input placeholder="Fax" :model-value="betriebsStammdaten.fax" @change="fax=>patchBetrieb({fax: fax ?? undefined}, props.betriebsStammdaten.id)" type="text" />
+			<svws-ui-text-input placeholder="Telefon" :model-value="betriebsStammdaten.telefon1" @change="telefon1=>patchBetrieb({telefon1: telefon1 ?? undefined}, props.betriebsStammdaten.id)" type="text" :max-len="20" />
+			<svws-ui-text-input placeholder="2. Telefon" :model-value="betriebsStammdaten.telefon2" @change="telefon2=>patchBetrieb({telefon2: telefon2 ?? undefined}, props.betriebsStammdaten.id)" type="text" :max-len="20" />
+			<svws-ui-text-input placeholder="Fax" :model-value="betriebsStammdaten.fax" @change="fax=>patchBetrieb({fax: fax ?? undefined}, props.betriebsStammdaten.id)" type="text" :max-len="20" />
 			<svws-ui-text-input placeholder="E-Mail" :model-value="betriebsStammdaten.email" @change="email=>patchBetrieb({email: email ?? undefined}, props.betriebsStammdaten.id)" type="email" verify-email />
 			<svws-ui-spacing />
 			<svws-ui-select title="Betreuende Lehrkraft" v-model="inputBetreuungslehrer" :items="mapLehrer" :item-text="(i:LehrerListeEintrag) => i.nachname" removable />

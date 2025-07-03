@@ -79,7 +79,6 @@ export class RouteDataKlassen extends RouteDataAuswahl<KlassenListeManager, Rout
 			api.schulform, listKlassen, listSchueler, listJahrgaenge, listLehrer);
 		if (this._state.value.manager === undefined) {
 			manager.setFilterAuswahlPermitted(true);
-			manager.setFilterNurSichtbar(false);
 		} else {
 			manager.useFilter(this._state.value.manager);
 		}

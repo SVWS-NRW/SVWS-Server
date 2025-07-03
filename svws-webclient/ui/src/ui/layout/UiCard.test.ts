@@ -3,6 +3,7 @@ import { mount } from "@vue/test-utils";
 import UiCard from "./UiCard.vue";
 import SvwsUiButton from "../controls/SvwsUiButton.vue";
 import { fail } from "assert";
+import { ValidatorFehlerart } from '../../../../core/src/asd/validate/ValidatorFehlerart';
 
 beforeEach(() => {
 	const el = document.createElement("body");
@@ -56,6 +57,7 @@ describe.concurrent("PropHandhabung läuft korrekt", () => {
 		expect(props.saveButtonDisabledReason === undefined).toBeTruthy();
 		expect(props.deleteButtonDisabledReason === undefined).toBeTruthy();
 		expect(props.cancelButtonDisabledReason === undefined).toBeTruthy();
+		expect(props.fehler === ValidatorFehlerart.UNGENUTZT).toBeTruthy();
 
 		// Prüfer Rendering der Card
 		// Header
@@ -176,6 +178,122 @@ describe.concurrent("PropHandhabung läuft korrekt", () => {
 	test("Mit Prop 'footer = Some Footer' wird der Footer gesetzt ", () => {
 		const wrapper = mount(UiCard, { props: { footer: 'Some Footer' } });
 		expect(wrapper.find(".ui-card--footer--main").text()).toBe("Some Footer");
+	});
+
+	test("Mit Prop 'fehler = ValidatorFehlerart.UNGENUTZT' werden die Defaultfarben in der Komponente genutzt (geschlossene Card)", async () => {
+		const wrapper = mount(UiCard, { props: { fehler: ValidatorFehlerart.UNGENUTZT, icon: 'i-ri-add-line' } });
+		const headerClasses = wrapper.find(".ui-card--header").classes();
+		expect(headerClasses).toContain("bg-ui-brand-secondary");
+		expect(headerClasses).toContain("border-ui-brand");
+		expect(headerClasses).toContain("text-ui");
+		expect(wrapper.find(".ui-card--header--collapse-icon span").classes()).toContain("!icon-ui");
+		expect(wrapper.find(".ui-card--header--icon span").classes()).toContain("!icon-ui");
+		expect( await wrapper.findComponent({ name: "UiCard" }).vm.headerBackgroundColor).toBe("bg-ui-brand-secondary");
+		expect( await wrapper.findComponent({ name: "UiCard" }).vm.borderColor).toBe("border-ui-brand");
+		expect( await wrapper.findComponent({ name: "UiCard" }).vm.headerTextColor).toBe("text-ui");
+		expect( await wrapper.findComponent({ name: "UiCard" }).vm.headerIconColor).toBe("!icon-ui");
+	});
+
+	test("Mit Prop 'fehler = ValidatorFehlerart.UNGENUTZT' werden die Defaultfarben in der Komponente genutzt (offene Card)", async () => {
+		const wrapper = mount(UiCard, { props: { fehler: ValidatorFehlerart.UNGENUTZT, isOpen: true, icon: 'i-ri-add-line' } });
+		await wrapper.findComponent({ name: "UiCard" }).vm.$nextTick();
+		const headerClasses = wrapper.find(".ui-card--header").classes();
+		expect(headerClasses).toContain("bg-ui-brand");
+		expect(headerClasses).toContain("border-ui-brand");
+		expect(headerClasses).toContain("text-ui-onbrand");
+		expect(wrapper.find(".ui-card--header--collapse-icon span").classes()).toContain("!icon-ui-onbrand");
+		expect(wrapper.find(".ui-card--header--icon span").classes()).toContain("!icon-ui-onbrand");
+		expect( await wrapper.findComponent({ name: "UiCard" }).vm.headerBackgroundColor).toBe("bg-ui-brand");
+		expect( await wrapper.findComponent({ name: "UiCard" }).vm.borderColor).toBe("border-ui-brand");
+		expect( await wrapper.findComponent({ name: "UiCard" }).vm.headerTextColor).toBe("text-ui-onbrand");
+		expect( await wrapper.findComponent({ name: "UiCard" }).vm.headerIconColor).toBe("!icon-ui-onbrand");
+	});
+
+	test("Mit Prop 'fehler = ValidatorFehlerart.HINWEIS' werden die Warningfarben in der Komponente genutzt (geschlossene Card)", async () => {
+		const wrapper = mount(UiCard, { props: { fehler: ValidatorFehlerart.HINWEIS, icon: 'i-ri-add-line' } });
+		const headerClasses = wrapper.find(".ui-card--header").classes();
+		expect(headerClasses).toContain("bg-ui-warning-secondary");
+		expect(headerClasses).toContain("border-ui-warning");
+		expect(headerClasses).toContain("text-ui");
+		expect(wrapper.find(".ui-card--header--collapse-icon span").classes()).toContain("!icon-ui");
+		expect(wrapper.find(".ui-card--header--icon span").classes()).toContain("!icon-ui");
+		expect( await wrapper.findComponent({ name: "UiCard" }).vm.headerBackgroundColor).toBe("bg-ui-warning-secondary");
+		expect( await wrapper.findComponent({ name: "UiCard" }).vm.borderColor).toBe("border-ui-warning");
+		expect( await wrapper.findComponent({ name: "UiCard" }).vm.headerTextColor).toBe("text-ui");
+		expect( await wrapper.findComponent({ name: "UiCard" }).vm.headerIconColor).toBe("!icon-ui");
+	});
+
+	test("Mit Prop 'fehler = ValidatorFehlerart.HINWEIS' werden die Warningfarben in der Komponente genutzt (offene Card)", async () => {
+		const wrapper = mount(UiCard, { props: { fehler: ValidatorFehlerart.HINWEIS, isOpen: true, icon: 'i-ri-add-line' } });
+		await wrapper.findComponent({ name: "UiCard" }).vm.$nextTick();
+		const headerClasses = wrapper.find(".ui-card--header").classes();
+		expect(headerClasses).toContain("bg-ui-warning");
+		expect(headerClasses).toContain("border-ui-warning");
+		expect(headerClasses).toContain("text-ui-onwarning");
+		expect(wrapper.find(".ui-card--header--collapse-icon span").classes()).toContain("!icon-ui-onwarning");
+		expect(wrapper.find(".ui-card--header--icon span").classes()).toContain("!icon-ui-onwarning");
+		expect( await wrapper.findComponent({ name: "UiCard" }).vm.headerBackgroundColor).toBe("bg-ui-warning");
+		expect( await wrapper.findComponent({ name: "UiCard" }).vm.borderColor).toBe("border-ui-warning");
+		expect( await wrapper.findComponent({ name: "UiCard" }).vm.headerTextColor).toBe("text-ui-onwarning");
+		expect( await wrapper.findComponent({ name: "UiCard" }).vm.headerIconColor).toBe("!icon-ui-onwarning");
+	});
+
+	test("Mit Prop 'fehler = ValidatorFehlerart.KANN' werden die Cautionfarben in der Komponente genutzt (geschlossene Card)", async () => {
+		const wrapper = mount(UiCard, { props: { fehler: ValidatorFehlerart.KANN, icon: 'i-ri-add-line' } });
+		const headerClasses = wrapper.find(".ui-card--header").classes();
+		expect(headerClasses).toContain("bg-ui-caution-secondary");
+		expect(headerClasses).toContain("border-ui-caution");
+		expect(headerClasses).toContain("text-ui");
+		expect(wrapper.find(".ui-card--header--collapse-icon span").classes()).toContain("!icon-ui");
+		expect(wrapper.find(".ui-card--header--icon span").classes()).toContain("!icon-ui");
+		expect( await wrapper.findComponent({ name: "UiCard" }).vm.headerBackgroundColor).toBe("bg-ui-caution-secondary");
+		expect( await wrapper.findComponent({ name: "UiCard" }).vm.borderColor).toBe("border-ui-caution");
+		expect( await wrapper.findComponent({ name: "UiCard" }).vm.headerTextColor).toBe("text-ui");
+		expect( await wrapper.findComponent({ name: "UiCard" }).vm.headerIconColor).toBe("!icon-ui");
+	});
+
+	test("Mit Prop 'fehler = ValidatorFehlerart.KANN' werden die Cautionfarben in der Komponente genutzt (offene Card)", async () => {
+		const wrapper = mount(UiCard, { props: { fehler: ValidatorFehlerart.KANN, isOpen: true, icon: 'i-ri-add-line' } });
+		await wrapper.findComponent({ name: "UiCard" }).vm.$nextTick();
+		const headerClasses = wrapper.find(".ui-card--header").classes();
+		expect(headerClasses).toContain("bg-ui-caution");
+		expect(headerClasses).toContain("border-ui-caution");
+		expect(headerClasses).toContain("text-ui-oncaution");
+		expect(wrapper.find(".ui-card--header--collapse-icon span").classes()).toContain("!icon-ui-oncaution");
+		expect(wrapper.find(".ui-card--header--icon span").classes()).toContain("!icon-ui-oncaution");
+		expect( await wrapper.findComponent({ name: "UiCard" }).vm.headerBackgroundColor).toBe("bg-ui-caution");
+		expect( await wrapper.findComponent({ name: "UiCard" }).vm.borderColor).toBe("border-ui-caution");
+		expect( await wrapper.findComponent({ name: "UiCard" }).vm.headerTextColor).toBe("text-ui-oncaution");
+		expect( await wrapper.findComponent({ name: "UiCard" }).vm.headerIconColor).toBe("!icon-ui-oncaution");
+	});
+
+	test("Mit Prop 'fehler = ValidatorFehlerart.MUSS' werden die Dangerfarben in der Komponente genutzt (geschlossene Card)", async () => {
+		const wrapper = mount(UiCard, { props: { fehler: ValidatorFehlerart.MUSS, icon: 'i-ri-add-line' } });
+		const headerClasses = wrapper.find(".ui-card--header").classes();
+		expect(headerClasses).toContain("bg-ui-danger-secondary");
+		expect(headerClasses).toContain("border-ui-danger");
+		expect(headerClasses).toContain("text-ui");
+		expect(wrapper.find(".ui-card--header--collapse-icon span").classes()).toContain("!icon-ui");
+		expect(wrapper.find(".ui-card--header--icon span").classes()).toContain("!icon-ui");
+		expect( await wrapper.findComponent({ name: "UiCard" }).vm.headerBackgroundColor).toBe("bg-ui-danger-secondary");
+		expect( await wrapper.findComponent({ name: "UiCard" }).vm.borderColor).toBe("border-ui-danger");
+		expect( await wrapper.findComponent({ name: "UiCard" }).vm.headerTextColor).toBe("text-ui");
+		expect( await wrapper.findComponent({ name: "UiCard" }).vm.headerIconColor).toBe("!icon-ui");
+	});
+
+	test("Mit Prop 'fehler = ValidatorFehlerart.MUSS' werden die Dangerfarben in der Komponente genutzt (offene Card)", async () => {
+		const wrapper = mount(UiCard, { props: { fehler: ValidatorFehlerart.MUSS, isOpen: true, icon: 'i-ri-add-line' } });
+		await wrapper.findComponent({ name: "UiCard" }).vm.$nextTick();
+		const headerClasses = wrapper.find(".ui-card--header").classes();
+		expect(headerClasses).toContain("bg-ui-danger");
+		expect(headerClasses).toContain("border-ui-danger");
+		expect(headerClasses).toContain("text-ui-ondanger");
+		expect(wrapper.find(".ui-card--header--collapse-icon span").classes()).toContain("!icon-ui-ondanger");
+		expect(wrapper.find(".ui-card--header--icon span").classes()).toContain("!icon-ui-ondanger");
+		expect( await wrapper.findComponent({ name: "UiCard" }).vm.headerBackgroundColor).toBe("bg-ui-danger");
+		expect( await wrapper.findComponent({ name: "UiCard" }).vm.borderColor).toBe("border-ui-danger");
+		expect( await wrapper.findComponent({ name: "UiCard" }).vm.headerTextColor).toBe("text-ui-ondanger");
+		expect( await wrapper.findComponent({ name: "UiCard" }).vm.headerIconColor).toBe("!icon-ui-ondanger");
 	});
 
 });

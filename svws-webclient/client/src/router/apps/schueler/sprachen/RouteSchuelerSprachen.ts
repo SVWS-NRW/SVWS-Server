@@ -28,7 +28,7 @@ export class RouteSchuelerSprachen extends RouteNode<RouteDataSchuelerSprachen, 
 			if (id === undefined)
 				return await this.data.auswahlSchueler(null);
 			try {
-				await this.data.auswahlSchueler(routeSchueler.data.schuelerListeManager.liste.get(id));
+				await this.data.auswahlSchueler(routeSchueler.data.manager.liste.get(id));
 			} catch(error) {
 				return routeSchueler.getRouteDefaultChild({ id });
 			}
@@ -51,7 +51,7 @@ export class RouteSchuelerSprachen extends RouteNode<RouteDataSchuelerSprachen, 
 			patchSprachpruefung: this.data.patchSprachpruefung,
 			addSprachpruefung: this.data.addSprachpruefung,
 			removeSprachpruefung: this.data.removeSprachpruefung,
-			schuelerListeManager: () => routeSchueler.data.schuelerListeManager,
+			schuelerListeManager: () => routeSchueler.data.manager,
 			schulform: api.schulform,
 			schulgliederungen: api.schulgliederungen,
 			serverMode: api.mode,

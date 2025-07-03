@@ -30,7 +30,7 @@ export class RouteSchuelerAllgemeinesGruppenprozesse extends RouteNode<any, Rout
 			getPDF: routeSchueler.data.getPDF,
 			mapStundenplaene: routeSchueler.data.mapStundenplaene,
 			benutzerKompetenzen: api.benutzerKompetenzen,
-			schuelerListeManager: () => routeSchueler.data.schuelerListeManager,
+			schuelerListeManager: () => routeSchueler.data.manager,
 			deleteSchueler: routeSchueler.data.delete,
 			deleteSchuelerCheck: routeSchueler.data.deleteSchuelerCheck,
 		};

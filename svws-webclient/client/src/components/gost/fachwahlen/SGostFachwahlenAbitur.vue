@@ -55,8 +55,8 @@
 
 <script setup lang="ts">
 
-	import type { GostFachwahlenAbiturProps } from "./SGostFachwahlenAbiturProps";
 	import { computed, ref } from "vue";
+	import type { GostFachwahlenAbiturProps } from "./SGostFachwahlenAbiturProps";
 	import { GostAbiturFach, Fach, type GostStatistikFachwahl, type SchuelerListeEintrag, type List, ArrayList } from "@core";
 
 	const props = defineProps<GostFachwahlenAbiturProps>();

@@ -1,6 +1,7 @@
 package de.svws_nrw.server.jetty;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.List;
 
 import de.svws_nrw.api.ResourceFileManager;
@@ -9,10 +10,12 @@ import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.config.LogConsumerLogfile;
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.data.db.DBSchemaListeEintrag;
+import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
+import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.db.utils.schema.DBSchemaManager;
@@ -94,42 +97,85 @@ public class Main {
 	}
 
 
+	/**
+	 * Prüft das Default-Charset und die Default-Collation und gibt ggf. Fehlemeldungen über den Logger
+	 * aus.
+	 *
+	 * @param dbConn   die Datenbankverbindung
+	 * @param logger   der Logger
+	 */
+	private static void pruefeCharsetAndCollation(final DBEntityManager dbConn, final Logger logger) {
+		if (dbConn.getDBDriver() == DBDriver.MARIA_DB) {
+			final List<?> result = dbConn
+					.getNativeQuery("SELECT DEFAULT_CHARACTER_SET_NAME, DEFAULT_COLLATION_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME=?")
+					.setParameter(1, dbConn.getDBSchema())
+					.getResultList();
+			if ((result == null) || result.isEmpty()) {
+				logger.logLn("Konnte das Default-Charset und die Default-Collation des Schemas nicht bestimmen.");
+			} else {
+				final Object[] tmp = (Object[]) result.get(0);
+				final String charset = (String) tmp[0];
+				final String collation = (String) tmp[1];
+				if (!"utf8mb4".equals(charset))
+					logger.logLn("Warnung: Das Datenbank-Schema hat nicht 'utf8mb4' als Default-Charset. Dies kann zu Kompatibilitätsproblemen führen.");
+				if (!"utf8mb4_bin".equals(collation))
+					logger.logLn("Warnung: Das Datenbank-Schema hat nicht 'utf8mb4_bin' als Default-Collation. Dies kann zu Kompatibilitätsproblemen führen.");
+			}
+		}
+	}
+
 
 	/**
 	 * Prüft das übergebene Schema und führt ggf. Updates durch.
 	 *
-	 * @param schema   das Schema
-	 * @param logger   der Logger
+	 * @param schema     das Schema
+	 * @param logger     der Logger
+	 * @param doUpdate   gibt an, ob Updates auf das Schema ausgeführt werden sollen oder nicht
+	 * @param versuch    die Nummer des Versuchs, das Schema zu prüfen
+	 *
+	 * @return true, wenn eine Verbindung aufgebaut wurde und eine Prüfung stattgefunden hat, und ansonsten false
 	 */
-	private static void pruefeSchema(final DBSchemaListeEintrag schema, final Logger logger) {
+	private static boolean pruefeSchema(final DBSchemaListeEintrag schema, final Logger logger, final boolean doUpdate, final int versuch) {
 		final SVWSKonfiguration svwsconfig = SVWSKonfiguration.get();
 		final boolean devMode = (svwsconfig.getServerMode() != ServerMode.STABLE);
 
-		logger.logLn("-> zu Schema " + schema.name);
+		logger.logLn("Schema " + schema.name + ": Prüfung der Datenbankverbindung" + (versuch > 1 ? " (" + versuch + ". Versuch) " : " ") + "... ");
 		logger.modifyIndent(2);
 		final DBConfig dbconfig = svwsconfig.getDBConfig(schema.name);
 		boolean schemaOK = true;
+		boolean connected = false;
 		final Benutzer dbUser = Benutzer.create(dbconfig);
 		if (dbUser != null) {
 			try (DBEntityManager dbConn = dbUser.getEntityManager()) {
 				if (dbConn == null) {
 					logger.logLn("Verbindung zu dem Schema " + schema.name + " nicht möglich!");
-					return;
+					logger.modifyIndent(-2);
+					return connected;
 				}
-				final DBSchemaManager dbManager = DBSchemaManager.create(dbConn, true, logger);
-				if (!dbManager.updater.isUptodate(-1, devMode) && !updateSchema(dbManager, logger))
-					schemaOK = false;
-				if (!dbManager.updater.coreTypes.isUptodate() && !updateSchemaCoreTypes(dbManager, logger))
-					schemaOK = false;
+				connected = true;
+				pruefeCharsetAndCollation(dbConn, logger);
+				if (doUpdate) {
+					final DBSchemaManager dbManager = DBSchemaManager.create(dbConn, true, logger);
+					if (!dbManager.updater.isUptodate(-1, devMode) && !updateSchema(dbManager, logger))
+						schemaOK = false;
+					if (!dbManager.updater.coreTypes.isUptodate() && !updateSchemaCoreTypes(dbManager, logger))
+						schemaOK = false;
+				} else {
+					logger.logLn("Die Automatische Schema-Aktualisierung wurde in der Server-Konfiguration deaktiviert.");
+				}
 			} catch (@SuppressWarnings("unused") final Exception e) {
 				schemaOK = false;
 			}
 		}
-		if (!schemaOK) {
+		if (schemaOK) {
+			svwsconfig.activateSchema(schema.name);
+			logger.logLn("Prüfung von " + schema.name + " erfolgreich. Schema ist aktiv.");
+		} else {
 			svwsconfig.deactivateSchema(schema.name);
-			logger.logLn("Fehler: Schema kann nicht aktualisiert werden. Das Schema wird deaktiviert.");
+			logger.logLn("Fehler: Schema " + schema.name + " kann nicht aktualisiert werden. Das Schema wird deaktiviert.");
 		}
 		logger.modifyIndent(-2);
+		return connected;
 	}
 
 
@@ -143,10 +189,8 @@ public class Main {
 	 * OpenAPI-Schnittstellen-Web-Applikation gestartet.
 	 *
 	 * @param args   die Kommandozeilenargumente zum Starten des Servers.
-	 *
-	 * @throws Exception   gibt in einem unerwarteten Fehlerfall eine Exception zurück.
 	 */
-	public static void main(final String[] args) throws Exception {
+	public static void main(final String[] args) {
 		// Setze das Default-Encoding auf UTF-8
 		System.setProperty("file.encoding", "UTF-8");
 		System.setProperty("stdout.encoding", "UTF-8");
@@ -174,20 +218,43 @@ public class Main {
 		ResourceFileManager.client();
 		ResourceFileManager.admin();
 
-		// Prüfe alle Datenbankverbindungen beim Server-Start
-		if (svwsconfig.isAutoUpdatesDisabled()) {
-			logger.logLn("Überspringe Prüfung der Datenbankverbindungen! Automatische Aktualisierung wurde in der Server-Konfiguration deaktiviert.");
-		} else {
-			final List<DBSchemaListeEintrag> schemata = svwsconfig.getSchemaList();
-			logger.logLn("Prüfe Datenbankverbindungen (" + schemata.size() + ")...");
-			logger.modifyIndent(2);
-			for (final DBSchemaListeEintrag schema : schemata)
-				pruefeSchema(schema, logger);
-			logger.modifyIndent(-2);
+		// Sperre zunächst alle konfigurierten Datenbank-Verbindungen und aktiviere diese erste nachdem die Prüfung erfolgreich war
+		final List<DBSchemaListeEintrag> schemata = svwsconfig.getSchemaList();
+		for (final DBSchemaListeEintrag schema : schemata)
+			svwsconfig.deactivateSchema(schema.name);
+
+		// Starte den SVWS-HTTP-Server (v1.1 or v2 in Abhängigkeit von der SVWS-Konfiguration) in einem eigenen Task
+		Thread.ofPlatform().start(() -> {
+			try {
+				server.start();
+			} catch (final Exception e) {
+				logger.logLn("Fehler beim Starten des Servers: " + e.getMessage());
+				e.printStackTrace();
+			}
+		});
+
+		// Prüfe die einzelen Schemata in eigenen Threads und aktiviere diese nachdem die Prüfung erfolgreich war
+		for (final DBSchemaListeEintrag schema : schemata) {
+			Thread.ofPlatform().start(() -> {
+				final Logger threadLogger = new Logger();
+				final LogConsumerList logConsumer = new LogConsumerList();
+				threadLogger.addConsumer(logConsumer);
+				for (int i = 1; i <= 5; i++) {
+					final boolean geprueft = pruefeSchema(schema, threadLogger, !svwsconfig.isAutoUpdatesDisabled(), i);
+					for (final String str : logConsumer.getStrings())
+						logger.logLn(str);
+					if (geprueft)
+						break;
+					try {
+						Thread.sleep(Duration.ofSeconds(30));
+					} catch (final InterruptedException e) {
+						e.printStackTrace();
+						Thread.currentThread().interrupt();
+					}
+				}
+			});
 		}
 
-		// Starte den SVWS-HTTP-Server (v1.1 or v2 in Abhängigkeit von der SVWS-Konfiguration)
-		server.start();
 	}
 
 }

@@ -65,4 +65,4 @@ exports[`APIENM Tests > gegen { schema: 'GymAbi01' } > getLehrerENMDaten 9`] = `
 
 exports[`APIENM Tests > gegen { schema: 'GymAbi01' } > getLehrerENMDaten 10`] = `3`;
 
-exports[`APIENM Tests > gegen { schema: 'GymAbi01' } > getLehrerENMDaten 11`] = `166`;
+exports[`APIENM Tests > gegen { schema: 'GymAbi01' } > getLehrerENMDaten 11`] = `170`;

@@ -28,7 +28,12 @@ export class RouteDataKatalogReligionen extends RouteDataAuswahl<ReligionListeMa
 	protected async createManager(idSchuljahresabschnitt : number) : Promise<Partial<RouteStateKatalogeReligionen>> {
 		const listeReligionen = await api.server.getReligionen(api.schema);
 		const manager = new ReligionListeManager(idSchuljahresabschnitt, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte, api.schulform, listeReligionen);
-		manager.setFilterAuswahlPermitted(true);
+		if (this._state.value.manager === undefined) {
+			manager.setFilterAuswahlPermitted(true);
+			manager.setFilterNurSichtbar(false);
+		} else {
+			manager.useFilter(this._state.value.manager);
+		}
 		return { manager };
 	}
 

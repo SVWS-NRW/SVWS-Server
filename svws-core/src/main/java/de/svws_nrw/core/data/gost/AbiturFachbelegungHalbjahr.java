@@ -32,6 +32,9 @@ public class AbiturFachbelegungHalbjahr {
 	/** Das einstellige Kürzel der bilingualen Sprache, sofern das Fach bilingual unterrichtet wurde. */
 	public String biliSprache = null;
 
+	/** Die ID des Kurses */
+	public Long idKurs;
+
 	/** Die ID des unterrichtenden Lehrers, welcher die Note erteilt. */
 	public Long lehrer;
 

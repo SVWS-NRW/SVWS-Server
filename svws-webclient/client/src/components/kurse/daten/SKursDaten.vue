@@ -1,25 +1,34 @@
 <template>
 	<div v-if="manager().hasDaten()" class="page page-grid-cards">
-		<svws-ui-content-card title="Allgemein">
-			<template #actions>
-				<svws-ui-checkbox v-model="istSichtbar" :disabled="!hatKompetenzUpdate" focus-class-content> Ist sichtbar </svws-ui-checkbox>
-			</template>
-			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input placeholder="Kürzel" :disabled="!hatKompetenzUpdate" :model-value="data().kuerzel" @change="kuerzel => patch({ kuerzel: kuerzel ?? '' })" type="text" />
-				<svws-ui-select title="Lehrer" :disabled="!hatKompetenzUpdate" v-model="lehrer" :items="manager().lehrer.list()" :item-text="l => l.kuerzel" :empty-text="() => '---'" removable />
-				<svws-ui-select title="Fach" :disabled="!hatKompetenzUpdate" v-model="fach" :items="manager().faecher.list()" :item-text="f => f.kuerzel + ' (' + f.bezeichnung + ')'" />
-				<svws-ui-select title="Kursart" :disabled="!hatKompetenzUpdate" :items="kursarten.keys()" :item-text="k => k + ' (' + (kursarten.get(k) ?? '???') + ')'"
-					:model-value="data().kursartAllg" @update:model-value="value => patch({ kursartAllg: value ?? '' })" />
-				<svws-ui-input-number placeholder="Wochenstunden" :disabled="!hatKompetenzUpdate" :model-value="data().wochenstunden" @change="wstd => patch({ wochenstunden: wstd ?? 0 })" />
-				<svws-ui-multi-select title="Jahrgänge" :disabled="!hatKompetenzUpdate" v-model="jahrgaenge" :items="jahrgangsListe" :item-text="jg => jg?.kuerzel ?? ''" />
-				<svws-ui-input-number placeholder="Sortierung" :disabled="!hatKompetenzUpdate" :model-value="data().sortierung" @change="sortierung=> sortierung && patch({ sortierung })" />
-				<svws-ui-text-input placeholder="Zeugnisbezeichnung" :disabled="!hatKompetenzUpdate" :model-value="data().bezeichnungZeugnis" @change="b => patch({ bezeichnungZeugnis : b })" type="text" />
-				<svws-ui-select title="Fortschreibungsart" :disabled="!hatKompetenzUpdate" :model-value="KursFortschreibungsart.fromID(data().idKursFortschreibungsart)"
-					@update:model-value="value => patch({ idKursFortschreibungsart: value?.id ?? 0 })"
-					:items="KursFortschreibungsart.values()" :item-text="f => f.beschreibung" />
-				<svws-ui-multi-select title="Schienen" :disabled="!hatKompetenzUpdate" v-model="schienen" :items="Array.from({length: 40}, (_, i) => i + 1)" :item-text="s => 'Schiene ' + s" />
-			</svws-ui-input-wrapper>
-		</svws-ui-content-card>
+		<div class="flex flex-col gap-y-16 lg:gap-y-20">
+			<svws-ui-content-card title="Allgemein">
+				<template #actions>
+					<svws-ui-checkbox v-model="istSichtbar" :disabled="!hatKompetenzUpdate" focus-class-content> Ist sichtbar </svws-ui-checkbox>
+				</template>
+				<svws-ui-input-wrapper :grid="2">
+					<svws-ui-text-input placeholder="Kürzel" :disabled="!hatKompetenzUpdate" :model-value="data().kuerzel" @change="kuerzel => patch({ kuerzel: kuerzel ?? '' })" type="text" />
+					<svws-ui-select title="Lehrer" :disabled="!hatKompetenzUpdate" v-model="lehrer" :items="manager().lehrer.list()" :item-text="l => l.kuerzel"
+						:empty-text="() => '---'" removable statistics />
+					<svws-ui-select title="Fach" :disabled="!hatKompetenzUpdate" v-model="fach" :items="manager().faecher.list()"
+						:item-text="f => f.kuerzel + ' (' + f.bezeichnung + ')'" statistics />
+					<svws-ui-select title="Kursart" :disabled="!hatKompetenzUpdate" :items="kursarten.keys()" :item-text="k => k + ' (' + (kursarten.get(k) ?? '???') + ')'"
+						:model-value="data().kursartAllg" @update:model-value="value => patch({ kursartAllg: value ?? '' })" statistics />
+					<svws-ui-input-number placeholder="Wochenstunden" :disabled="!hatKompetenzUpdate" :model-value="data().wochenstunden" statistics
+						@change="wstd => patch({ wochenstunden: wstd ?? 0 })" />
+					<svws-ui-multi-select title="Jahrgänge" :disabled="!hatKompetenzUpdate" v-model="jahrgaenge" :items="jahrgangsListe"
+						:item-text="jg => jg?.kuerzel ?? ''" statistics />
+					<svws-ui-input-number placeholder="Sortierung" :disabled="!hatKompetenzUpdate" :model-value="data().sortierung" @change="sortierung=> sortierung && patch({ sortierung })" />
+					<svws-ui-text-input placeholder="Zeugnisbezeichnung" :disabled="!hatKompetenzUpdate" :model-value="data().bezeichnungZeugnis" @change="b => patch({ bezeichnungZeugnis : b })" type="text" />
+					<svws-ui-select title="Fortschreibungsart" :disabled="!hatKompetenzUpdate" :model-value="KursFortschreibungsart.fromID(data().idKursFortschreibungsart)"
+						@update:model-value="value => patch({ idKursFortschreibungsart: value?.id ?? 0 })"
+						:items="KursFortschreibungsart.values()" :item-text="f => f.beschreibung" />
+					<svws-ui-multi-select title="Schienen" :disabled="!hatKompetenzUpdate" v-model="schienen" :items="Array.from({length: 40}, (_, i) => i + 1)" :item-text="s => 'Schiene ' + s" />
+				</svws-ui-input-wrapper>
+			</svws-ui-content-card>
+			<svws-ui-content-card title="zusätzliche Lehrkräfte" v-if="serverMode === ServerMode.DEV">
+				<svws-ui-todo>Hier wird zukünftig die Verwaltung der Zusatzkräfte des Kurses erfolgen. </svws-ui-todo>
+			</svws-ui-content-card>
+		</div>
 		<svws-ui-content-card title="Kursliste">
 			<svws-ui-multi-select v-model="filterSchuelerStatus" title="Status" :items="manager().schuelerstatus.list()" :item-text="status => status.daten(schuljahr)?.text ?? '—'" class="col-span-full" />
 			<svws-ui-table :columns="colsSchueler" :items="manager().getSchuelerListe()">
@@ -48,7 +57,7 @@
 	import type { DataTableColumn } from "@ui";
 	import type { KursDatenProps } from "./SKursDatenProps";
 	import type { JahrgangsDaten, LehrerListeEintrag, List } from "@core";
-	import { FachDaten, SchuelerStatus, ZulaessigeKursart, KursFortschreibungsart, ArrayList, BenutzerKompetenz } from "@core";
+	import { FachDaten, SchuelerStatus, ZulaessigeKursart, KursFortschreibungsart, ArrayList, BenutzerKompetenz, ServerMode } from "@core";
 
 	const props = defineProps<KursDatenProps>();
 

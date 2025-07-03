@@ -23,6 +23,7 @@ import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
+import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.MultipleBinaryMultipartBody;
 import de.svws_nrw.data.SimpleBinaryMultipartBody;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
@@ -921,7 +922,7 @@ public class APIGost {
 			description = "Liest für die gymnasiale Oberstufe die Fachwahlen zu einem Fach von dem angegebenen Schüler aus. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Fachwahlen besitzt.")
 	@ApiResponse(responseCode = "200", description = "Die Fachwahlen der gymnasialen Oberstufe für das angegebene Fach und den angegebenen Schüler",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Abiturdaten.class)))
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostSchuelerFachwahl.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Fachwahlen der Gymnasialen Oberstufe eines Schülers "
 			+ "auszulesen.")
 	@ApiResponse(responseCode = "404", description = "Kein Eintrag für einen Schüler mit Laufbahnplanungsdaten der gymnasialen Oberstufe für die angegebene "
@@ -1018,11 +1019,44 @@ public class APIGost {
 	@ApiResponse(responseCode = "203", description = "Die Fachwahlen wurden erfolgreich gelöscht.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Fachwahlen zu löschen.")
 	@ApiResponse(responseCode = "404", description = "Der Schüler bzw. der zugehörige Abiturjahrgang wurde nicht gefunden.")
-	@ApiResponse(responseCode = "409", description = "Es liegen bereits bewertete Abschnitt vor, so dass die Fachwahlen nicht vollständig entfernt werden können.")
+	@ApiResponse(responseCode = "409",
+			description = "Es liegen bereits bewertete Abschnitt vor, so dass die Fachwahlen nicht vollständig entfernt werden können.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteGostSchuelerFachwahlen(@PathParam("schema") final String schema, @PathParam("schuelerid") final long schuelerid,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn).delete(schuelerid),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
+				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Komplette Entfernen von Fachwahlen bei mehreren Schülern.
+	 * Sollten bereits bewertete Halbjahre vorliegen, so werden nur die Fachwahlen der nachfolgenden
+	 * Halbjahre zurückgesetzt.
+	 *
+	 * @param schema       das Datenbankschema
+	 * @param is           der InputStream, mit der Liste von zu löschenden IDs
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort
+	 */
+	@POST
+	@Path("/schueler/fachwahlen/deleteMultiple")
+	@Operation(summary = "Löscht die Fachwahlen der Schüler mit den angegebenen IDs.",
+			description = "Löscht die Fachwahlen der Schüler mit den angegebenen IDs."
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen der Fachwahlen besitzt.")
+	@ApiResponse(responseCode = "203", description = "Die Fachwahlen wurden erfolgreich gelöscht.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Fachwahlen zu löschen.")
+	@ApiResponse(responseCode = "404", description = "Ein Schüler bzw. der zugehörige Abiturjahrgang wurde nicht gefunden.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteGostSchuelerFachwahlenMultiple(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die IDs der Schüler mit den zu löschenden Fachwahlen", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn).deleteMultiple(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
 				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN);
@@ -1064,43 +1098,6 @@ public class APIGost {
 
 
 	/**
-	 * Liest die Abiturdaten aus den Leistungsdaten der gymnasialen Oberstufe des Schülers mit der angegebene ID aus der Datenbank und liefert diese zurück.
-	 * Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Leistungsdaten besitzt.
-	 *
-	 * @param schema   das Schema aus dem die Abiturdaten des Schülers kommen sollen
-	 * @param id       die ID des Schülers zu dem die Abiturdaten geliefert werden sollen
-	 *
-	 * @param request  die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die Abiturdaten in der gymnasialen Oberstufe für den Schüler mit der
-	 *         angegebenen ID und die Berechtigung des Datenbank-Users
-	 */
-	@GET
-	@Path("/schueler/{id : \\d+}/abiturdatenAusLeistungsdaten")
-	@Operation(summary = "Liefert zu der ID des Schülers die zugehörigen Abiturdaten, die aus den Leistungsdaten der Oberstufe gewonnen werden können.",
-			description = "Liest die Abiturdaten aus den Leistungsdaten der gymnasiale Oberstufe des Schülers mit der angegebene ID aus der "
-					+ "Datenbank und liefert diese zurück. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Leistungsdaten besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die Abiturdaten des Schülers",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Abiturdaten.class)))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Leistungsdaten anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
-	public Response getGostSchuelerAbiturdatenAusLeistungsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(
-				conn -> Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(DBUtilsGostAbitur.getAbiturdatenAusLeistungsdaten(conn, id)).build(),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
-				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
-				BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN,
-				BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN);
-	}
-
-
-
-	/**
 	 * Liest die Abiturdaten aus den Abiturtabellen des Schülers mit der angegebene ID und liefert diese zurück.
 	 * Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Leistungsdaten besitzt.
 	 *
@@ -1120,7 +1117,8 @@ public class APIGost {
 	@ApiResponse(responseCode = "200", description = "Die Abiturdaten des Schülers",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Abiturdaten.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Leistungsdaten anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden",
+			content = @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class)))
 	public Response getGostSchuelerAbiturdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
@@ -1135,6 +1133,34 @@ public class APIGost {
 	}
 
 
+	/**
+	 * Die OpenAPI-Methode für das Übertragen der Abitur-relevanten Daten aus den Leistungsdaten in den
+	 * Abiturbereich.
+	 *
+	 * @param schema    das Datenbankschema
+	 * @param id        die ID des Schülers, bei dem der Übertrag stattfinden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort
+	 */
+	@POST
+	@Path("/schueler/{id : \\d+}/abiturdaten/uebertragen")
+	@Operation(summary = "Überträgt die Abitur-relevanten Daten aus den Leistungsdaten in den Abiturbereich.",
+			description = "Überträgt die Abitur-relevanten Daten aus den Leistungsdaten in den Abiturbereich."
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung hat.")
+	@ApiResponse(responseCode = "204", description = "Die Abiturdaten wurden erfolgreich übertragen")
+	@ApiResponse(responseCode = "400", description = "Der Schüler hat aktuell nicht alle Leistungen für die Qualifikationsphase")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Leistungsdaten in den Abiturbereich zu übertragen")
+	@ApiResponse(responseCode = "404", description = "Es wurden keine Leistungsdaten für die Übertragung gefunden")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response copyGostSchuelerAbiturdatenAusLeistungsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> DBUtilsGostAbitur.copyAbiturdatenAusLeistungsdaten(conn, id),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.ABITUR_AENDERN_ALLGEMEIN,
+				BenutzerKompetenz.ABITUR_AENDERN_FUNKTIONSBEZOGEN);
+	}
 
 	/**
 	 * Die OpenAPI-Methode für die Prüfung der Belegprüfung der Abiturdaten.

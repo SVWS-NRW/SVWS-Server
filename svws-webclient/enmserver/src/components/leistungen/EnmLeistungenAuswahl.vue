@@ -5,7 +5,7 @@
 		</div>
 		<div class="secondary-menu--header" />
 		<div class="secondary-menu--content">
-			<svws-ui-table :items="manager.lerngruppenAuswahlliste" :model-value="manager.filterLerngruppen" @update:model-value="items => manager.filterLerngruppen = items"
+			<svws-ui-table :items="manager.listLerngruppenAuswahlliste" :model-value="manager.filterLerngruppen" @update:model-value="items => manager.filterLerngruppen = items"
 				:columns :filter-open="false" selectable count scroll-into-view scroll allow-arrow-key-selection :focus-help-visible :focus-switching-enabled multi-select-focus-enabled />
 		</div>
 	</div>

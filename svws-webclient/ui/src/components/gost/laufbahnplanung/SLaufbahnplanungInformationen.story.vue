@@ -1,18 +1,17 @@
 <template>
-	<Story title="Laufbahnplanungsinformationen">
+	<Story title="Laufbahnplanungsinformationen" :layout="{ type: 'single', iframe: false }">
 		<Variant title="Fehlermeldungen">
-			<s-laufbahnplanung-informationen :fehlerliste="()=>fehlerliste" />
+			<s-laufbahnplanung-informationen :fehlerliste="() => fehlerliste" />
 		</Variant>
 	</Story>
 </template>
 
 <script setup lang="ts">
+
 	import { GostBelegpruefungErgebnisFehler } from '../../../../../core/src/core/abschluss/gost/GostBelegpruefungErgebnisFehler';
 	import { GostBelegungsfehlerArt } from '../../../../../core/src/core/abschluss/gost/GostBelegungsfehlerArt';
 	import { ArrayList } from '../../../../../core/src/java/util/ArrayList';
 	import type { List } from '../../../../../core/src/java/util/List';
-
-
 
 	const fehlerliste: List<GostBelegpruefungErgebnisFehler> = new ArrayList()
 	const f1 = new GostBelegpruefungErgebnisFehler();

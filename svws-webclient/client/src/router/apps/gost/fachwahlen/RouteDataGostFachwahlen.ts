@@ -14,6 +14,8 @@ import { routeGostFachwahlenFachHalbjahr } from "./RouteGostFachwahlenFachHalbja
 import { routeGostFachwahlenHalbjahr } from "./RouteGostFachwahlenHalbjahr";
 import { routeGostFachwahlenLeistungskurse } from "./RouteGostFachwahlenLeistungskurse";
 import { routeGostFachwahlenZusatzkurse } from "./RouteGostFachwahlenZusatzkurse";
+import { routeGostFachwahlenZKFach } from "./RouteGostFachwahlenZKFach";
+import { routeGostFachwahlenLKFach } from "./RouteGostFachwahlenLKFach";
 
 interface RouteStateDataGostFachwahlen extends RouteStateInterface {
 	abiturjahr: number;
@@ -28,7 +30,7 @@ const defaultState = <RouteStateDataGostFachwahlen> {
 	fachwahlstatistik: new ArrayList<GostStatistikFachwahl>(),
 	fachwahlenManager: new GostJahrgangsFachwahlenManager(new GostJahrgangFachwahlen()),
 	mapSchueler: new Map<number, SchuelerListeEintrag>(),
-	auswahl: { bereich: 'Fach' }
+	auswahl: { bereich: 'Fach' },
 };
 
 export class RouteDataGostFachwahlen extends RouteData<RouteStateDataGostFachwahlen> {
@@ -105,6 +107,10 @@ export class RouteDataGostFachwahlen extends RouteData<RouteStateDataGostFachwah
 				route = routeGostFachwahlenFach.getRoute({ idFach });
 			else if ((bereich === "Halbjahr") && (halbjahr !== undefined))
 				route = routeGostFachwahlenFachHalbjahr.getRoute({ idFach, idHalbjahr: halbjahr.id });
+			else if (bereich === "ZK")
+				route = routeGostFachwahlenZKFach.getRoute({ idFach });
+			else if (bereich === "LK")
+				route = routeGostFachwahlenLKFach.getRoute({ idFach });
 			else if (bereich === "Abi")
 				route = routeGostFachwahlenAbiturFach.getRoute({ idFach });
 		}

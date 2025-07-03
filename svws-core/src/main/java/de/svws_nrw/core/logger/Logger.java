@@ -97,6 +97,17 @@ public class Logger {
 
 
 	/**
+	 * Gibt die Anzahl der Leerzeichen zurück, die für die Einrückung bei einer Ausgabe von
+	 * neuen Log-Informationen genutzt wird.
+	 *
+	 * @return die Anzahl der Leerzeichen
+	 */
+	public int getIndent() {
+		return indent;
+	}
+
+
+	/**
 	 * Setzt die Anzahl der Leerzeichen, die für die Einrückung bei einer Ausgabe von
 	 * neuen Log-Informationen genutzt wird.
 	 *

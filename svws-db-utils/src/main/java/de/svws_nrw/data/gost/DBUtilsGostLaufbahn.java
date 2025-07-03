@@ -199,6 +199,7 @@ public final class DBUtilsGostLaufbahn {
 				}
 				belegung.schriftlich = leistungenBelegung.istSchriftlich;
 				belegung.biliSprache = leistungenBelegung.bilingualeSprache;
+				belegung.idKurs = leistungenBelegung.idKurs;
 				belegung.lehrer = leistungenBelegung.lehrer;
 				belegung.wochenstunden = leistungenBelegung.wochenstunden;
 				belegung.fehlstundenGesamt = leistungenBelegung.fehlstundenGesamt;
@@ -443,6 +444,7 @@ public final class DBUtilsGostLaufbahn {
 					}
 					belegung.schriftlich = leistungenBelegung.istSchriftlich;
 					belegung.biliSprache = leistungenBelegung.bilingualeSprache;
+					belegung.idKurs = leistungenBelegung.idKurs;
 					belegung.lehrer = leistungenBelegung.lehrer;
 					belegung.wochenstunden = leistungenBelegung.wochenstunden;
 					belegung.fehlstundenGesamt = leistungenBelegung.fehlstundenGesamt;
@@ -632,9 +634,18 @@ public final class DBUtilsGostLaufbahn {
 		belegung.schriftlich = (belegungPlanungKursart == null) ? false : ("LK".equals(belegungPlanungKursart) || "S".equals(belegungPlanungKursart));
 		belegung.wochenstunden = "LK".equals(belegungPlanungKursart) ? 5 : wochenstunden;
 		belegung.block1gewertet = istInAbiwertung;
+		belegung.block1kursAufZeugnis = true;
 		belegung.notenkuerzel = null;
 		fach.belegungen[halbjahr.id] = belegung;
-		fach.letzteKursart = belegung.kursartKuerzel;
+		boolean isLetzte = true;
+		for (GostHalbjahr hj = halbjahr.next(); hj != null; hj = hj.next()) {
+			if (fach.belegungen[hj.id] != null) {
+				isLetzte = false;
+				break;
+			}
+		}
+		if (isLetzte)
+			fach.letzteKursart = belegung.kursartKuerzel;
 	}
 
 
@@ -819,6 +830,7 @@ public final class DBUtilsGostLaufbahn {
 					}
 					belegung.schriftlich = leistungenBelegung.istSchriftlich;
 					belegung.biliSprache = leistungenBelegung.bilingualeSprache;
+					belegung.idKurs = leistungenBelegung.idKurs;
 					belegung.lehrer = leistungenBelegung.lehrer;
 					belegung.wochenstunden = leistungenBelegung.wochenstunden;
 					belegung.fehlstundenGesamt = leistungenBelegung.fehlstundenGesamt;

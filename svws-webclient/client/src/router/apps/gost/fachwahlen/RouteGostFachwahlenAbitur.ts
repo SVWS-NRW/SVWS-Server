@@ -25,7 +25,7 @@ export class RouteGostFachwahlenAbitur extends RouteNode<any, RouteGost> {
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
 			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
 		], "gost.fachwahlen.abitur", "abitur", SGostFachwahlenAbitur);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
@@ -39,7 +39,7 @@ export class RouteGostFachwahlenAbitur extends RouteNode<any, RouteGost> {
 		try {
 			const { abiturjahr } = params ? RouteNode.getIntParams(params, ["abiturjahr"]) : { abiturjahr: null };
 			if ((abiturjahr === null) || (abiturjahr === -1))
-				return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: abiturjahr }};
+				return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr }};
 			return false;
 		} catch (e) {
 			return routeError.getErrorRoute(e as DeveloperNotificationException);

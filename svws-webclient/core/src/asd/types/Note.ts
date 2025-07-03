@@ -192,29 +192,24 @@ export class Note extends JavaEnum<Note> implements CoreType<NoteKatalogEintrag,
 	public static fromNoteSekI(noteSekI : number | null) : Note | null {
 		if (noteSekI === null)
 			return null;
-		switch (noteSekI) {
-			case 1: {
-				return Note.SEHR_GUT;
-			}
-			case 2: {
-				return Note.GUT;
-			}
-			case 3: {
-				return Note.BEFRIEDIGEND;
-			}
-			case 4: {
-				return Note.AUSREICHEND;
-			}
-			case 5: {
-				return Note.MANGELHAFT;
-			}
-			case 6: {
-				return Note.UNGENUEGEND;
-			}
-			default: {
-				return null;
-			}
+		let _sevar_928693309 : any;
+		const _seexpr_928693309 = (noteSekI);
+		if (_seexpr_928693309 === 1) {
+			_sevar_928693309 = Note.SEHR_GUT;
+		} else if (_seexpr_928693309 === 2) {
+			_sevar_928693309 = Note.GUT;
+		} else if (_seexpr_928693309 === 3) {
+			_sevar_928693309 = Note.BEFRIEDIGEND;
+		} else if (_seexpr_928693309 === 4) {
+			_sevar_928693309 = Note.AUSREICHEND;
+		} else if (_seexpr_928693309 === 5) {
+			_sevar_928693309 = Note.MANGELHAFT;
+		} else if (_seexpr_928693309 === 6) {
+			_sevar_928693309 = Note.UNGENUEGEND;
+		} else {
+			_sevar_928693309 = null;
 		}
+		return _sevar_928693309;
 	}
 
 	/**
@@ -227,59 +222,78 @@ export class Note extends JavaEnum<Note> implements CoreType<NoteKatalogEintrag,
 	public static fromNotenpunkte(notenpunkte : number | null) : Note {
 		if (notenpunkte === null)
 			return Note.KEINE;
-		switch (notenpunkte) {
-			case 0: {
-				return Note.UNGENUEGEND;
-			}
-			case 1: {
-				return Note.MANGELHAFT_MINUS;
-			}
-			case 2: {
-				return Note.MANGELHAFT;
-			}
-			case 3: {
-				return Note.MANGELHAFT_PLUS;
-			}
-			case 4: {
-				return Note.AUSREICHEND_MINUS;
-			}
-			case 5: {
-				return Note.AUSREICHEND;
-			}
-			case 6: {
-				return Note.AUSREICHEND_PLUS;
-			}
-			case 7: {
-				return Note.BEFRIEDIGEND_MINUS;
-			}
-			case 8: {
-				return Note.BEFRIEDIGEND;
-			}
-			case 9: {
-				return Note.BEFRIEDIGEND_PLUS;
-			}
-			case 10: {
-				return Note.GUT_MINUS;
-			}
-			case 11: {
-				return Note.GUT;
-			}
-			case 12: {
-				return Note.GUT_PLUS;
-			}
-			case 13: {
-				return Note.SEHR_GUT_MINUS;
-			}
-			case 14: {
-				return Note.SEHR_GUT;
-			}
-			case 15: {
-				return Note.SEHR_GUT_PLUS;
-			}
-			default: {
-				return Note.KEINE;
-			}
+		let _sevar_1649314226 : any;
+		const _seexpr_1649314226 = (notenpunkte);
+		if (_seexpr_1649314226 === 0) {
+			_sevar_1649314226 = Note.UNGENUEGEND;
+		} else if (_seexpr_1649314226 === 1) {
+			_sevar_1649314226 = Note.MANGELHAFT_MINUS;
+		} else if (_seexpr_1649314226 === 2) {
+			_sevar_1649314226 = Note.MANGELHAFT;
+		} else if (_seexpr_1649314226 === 3) {
+			_sevar_1649314226 = Note.MANGELHAFT_PLUS;
+		} else if (_seexpr_1649314226 === 4) {
+			_sevar_1649314226 = Note.AUSREICHEND_MINUS;
+		} else if (_seexpr_1649314226 === 5) {
+			_sevar_1649314226 = Note.AUSREICHEND;
+		} else if (_seexpr_1649314226 === 6) {
+			_sevar_1649314226 = Note.AUSREICHEND_PLUS;
+		} else if (_seexpr_1649314226 === 7) {
+			_sevar_1649314226 = Note.BEFRIEDIGEND_MINUS;
+		} else if (_seexpr_1649314226 === 8) {
+			_sevar_1649314226 = Note.BEFRIEDIGEND;
+		} else if (_seexpr_1649314226 === 9) {
+			_sevar_1649314226 = Note.BEFRIEDIGEND_PLUS;
+		} else if (_seexpr_1649314226 === 10) {
+			_sevar_1649314226 = Note.GUT_MINUS;
+		} else if (_seexpr_1649314226 === 11) {
+			_sevar_1649314226 = Note.GUT;
+		} else if (_seexpr_1649314226 === 12) {
+			_sevar_1649314226 = Note.GUT_PLUS;
+		} else if (_seexpr_1649314226 === 13) {
+			_sevar_1649314226 = Note.SEHR_GUT_MINUS;
+		} else if (_seexpr_1649314226 === 14) {
+			_sevar_1649314226 = Note.SEHR_GUT;
+		} else if (_seexpr_1649314226 === 15) {
+			_sevar_1649314226 = Note.SEHR_GUT_PLUS;
+		} else {
+			_sevar_1649314226 = Note.KEINE;
 		}
+		return _sevar_1649314226;
+	}
+
+	/**
+	 * Gibt die Pseudonote anhand des angegebenen Kürzels zurück.
+	 *
+	 * @param kuerzel   das Kürzel anhand derer die Pseudonote ermittelt wird
+	 *
+	 * @return die Note aus dieser Aufzählung oder Note.KEINE im Fehlerfall
+	 */
+	private static pseudoNoteFromKuerzel(kuerzel : string) : Note {
+		let _sevar_709055086 : any;
+		const _seexpr_709055086 = (kuerzel);
+		if (_seexpr_709055086 === "E1") {
+			_sevar_709055086 = Note.E1_MIT_BESONDEREM_ERFOLG_TEILGENOMMEN;
+		} else if (_seexpr_709055086 === "E2") {
+			_sevar_709055086 = Note.E2_MIT_ERFOLG_TEILGENOMMEN;
+		} else if (_seexpr_709055086 === "E3") {
+			_sevar_709055086 = Note.E3_TEILGENOMMEN;
+		} else if (_seexpr_709055086 === "AT") {
+			_sevar_709055086 = Note.ATTEST;
+		} else if (_seexpr_709055086 === "AM") {
+			_sevar_709055086 = Note.ABGEMELDET;
+		} else if (_seexpr_709055086 === "NB") {
+			_sevar_709055086 = Note.NICHT_BEURTEILT;
+		} else if (_seexpr_709055086 === "NT") {
+			_sevar_709055086 = Note.NICHT_TEILGENOMMEN;
+		} else if (_seexpr_709055086 === "NE") {
+			_sevar_709055086 = Note.NICHT_ERTEILT;
+		} else if (_seexpr_709055086 === "LM") {
+			_sevar_709055086 = Note.LEHRERMANGEL;
+		} else {
+			_sevar_709055086 = Note.KEINE;
+		}
+		return _sevar_709055086;
 	}
 
 	/**
@@ -293,91 +307,49 @@ export class Note extends JavaEnum<Note> implements CoreType<NoteKatalogEintrag,
 		if (kuerzel === null)
 			return Note.KEINE;
 		const kuerzelUppercase : string | null = kuerzel.toUpperCase();
-		switch (kuerzelUppercase) {
-			case "6": {
-				return Note.UNGENUEGEND;
-			}
-			case "5-": {
-				return Note.MANGELHAFT_MINUS;
-			}
-			case "5": {
-				return Note.MANGELHAFT;
-			}
-			case "5+": {
-				return Note.MANGELHAFT_PLUS;
-			}
-			case "4-": {
-				return Note.AUSREICHEND_MINUS;
-			}
-			case "4": {
-				return Note.AUSREICHEND;
-			}
-			case "4+": {
-				return Note.AUSREICHEND_PLUS;
-			}
-			case "3-": {
-				return Note.BEFRIEDIGEND_MINUS;
-			}
-			case "3": {
-				return Note.BEFRIEDIGEND;
-			}
-			case "3+": {
-				return Note.BEFRIEDIGEND_PLUS;
-			}
-			case "2-": {
-				return Note.GUT_MINUS;
-			}
-			case "2": {
-				return Note.GUT;
-			}
-			case "2+": {
-				return Note.GUT_PLUS;
-			}
-			case "1-": {
-				return Note.SEHR_GUT_MINUS;
-			}
-			case "1": {
-				return Note.SEHR_GUT;
-			}
-			case "1+": {
-				return Note.SEHR_GUT_PLUS;
-			}
-			case "E1": {
-				return Note.E1_MIT_BESONDEREM_ERFOLG_TEILGENOMMEN;
-			}
-			case "E2": {
-				return Note.E2_MIT_ERFOLG_TEILGENOMMEN;
-			}
-			case "E3": {
-				return Note.E3_TEILGENOMMEN;
-			}
-			case "AT": {
-				return Note.ATTEST;
-			}
-			case "AM": {
-				return Note.ABGEMELDET;
-			}
-			case "NB": {
-				return Note.NICHT_BEURTEILT;
-			}
-			case "NT": {
-				return Note.NICHT_TEILGENOMMEN;
-			}
-			case "NE": {
-				return Note.NICHT_ERTEILT;
-			}
-			case "LM": {
-				return Note.LEHRERMANGEL;
-			}
-			default: {
-				return Note.KEINE;
-			}
+		let _sevar_1799037231 : any;
+		const _seexpr_1799037231 = (kuerzelUppercase);
+		if (_seexpr_1799037231 === "6") {
+			_sevar_1799037231 = Note.UNGENUEGEND;
+		} else if (_seexpr_1799037231 === "5-") {
+			_sevar_1799037231 = Note.MANGELHAFT_MINUS;
+		} else if (_seexpr_1799037231 === "5") {
+			_sevar_1799037231 = Note.MANGELHAFT;
+		} else if (_seexpr_1799037231 === "5+") {
+			_sevar_1799037231 = Note.MANGELHAFT_PLUS;
+		} else if (_seexpr_1799037231 === "4-") {
+			_sevar_1799037231 = Note.AUSREICHEND_MINUS;
+		} else if (_seexpr_1799037231 === "4") {
+			_sevar_1799037231 = Note.AUSREICHEND;
+		} else if (_seexpr_1799037231 === "4+") {
+			_sevar_1799037231 = Note.AUSREICHEND_PLUS;
+		} else if (_seexpr_1799037231 === "3-") {
+			_sevar_1799037231 = Note.BEFRIEDIGEND_MINUS;
+		} else if (_seexpr_1799037231 === "3") {
+			_sevar_1799037231 = Note.BEFRIEDIGEND;
+		} else if (_seexpr_1799037231 === "3+") {
+			_sevar_1799037231 = Note.BEFRIEDIGEND_PLUS;
+		} else if (_seexpr_1799037231 === "2-") {
+			_sevar_1799037231 = Note.GUT_MINUS;
+		} else if (_seexpr_1799037231 === "2") {
+			_sevar_1799037231 = Note.GUT;
+		} else if (_seexpr_1799037231 === "2+") {
+			_sevar_1799037231 = Note.GUT_PLUS;
+		} else if (_seexpr_1799037231 === "1-") {
+			_sevar_1799037231 = Note.SEHR_GUT_MINUS;
+		} else if (_seexpr_1799037231 === "1") {
+			_sevar_1799037231 = Note.SEHR_GUT;
+		} else if (_seexpr_1799037231 === "1+") {
+			_sevar_1799037231 = Note.SEHR_GUT_PLUS;
+		} else {
+			_sevar_1799037231 = Note.pseudoNoteFromKuerzel(kuerzelUppercase);
 		}
+		return _sevar_1799037231;
 	}
 
 	/**
 	 * Gibt die Note anhand der angegebenen Notenpunkte zurück, welche als String
-	 * übergeben werden.
+	 * übergeben werden. Bei Pseudonoten wird die Note anhand des Kürzels ermittelt
 	 *
 	 * @param notenpunkte   die Notenpunkte anhand derer die Note ermittelt wird als String
 	 *
@@ -386,59 +358,64 @@ export class Note extends JavaEnum<Note> implements CoreType<NoteKatalogEintrag,
 	public static fromNotenpunkteString(notenpunkte : string | null) : Note {
 		if (notenpunkte === null)
 			return Note.KEINE;
-		switch (notenpunkte) {
-			case "0": {
-				return Note.UNGENUEGEND;
-			}
-			case "1": {
-				return Note.MANGELHAFT_MINUS;
-			}
-			case "2": {
-				return Note.MANGELHAFT;
-			}
-			case "3": {
-				return Note.MANGELHAFT_PLUS;
-			}
-			case "4": {
-				return Note.AUSREICHEND_MINUS;
-			}
-			case "5": {
-				return Note.AUSREICHEND;
-			}
-			case "6": {
-				return Note.AUSREICHEND_PLUS;
-			}
-			case "7": {
-				return Note.BEFRIEDIGEND_MINUS;
-			}
-			case "8": {
-				return Note.BEFRIEDIGEND;
-			}
-			case "9": {
-				return Note.BEFRIEDIGEND_PLUS;
-			}
-			case "10": {
-				return Note.GUT_MINUS;
-			}
-			case "11": {
-				return Note.GUT;
-			}
-			case "12": {
-				return Note.GUT_PLUS;
-			}
-			case "13": {
-				return Note.SEHR_GUT_MINUS;
-			}
-			case "14": {
-				return Note.SEHR_GUT;
-			}
-			case "15": {
-				return Note.SEHR_GUT_PLUS;
-			}
-			default: {
-				return Note.KEINE;
-			}
+		let _sevar_397605981 : any;
+		const _seexpr_397605981 = (notenpunkte);
+		if (_seexpr_397605981 === "0") {
+			_sevar_397605981 = Note.UNGENUEGEND;
+		} else if (_seexpr_397605981 === "00") {
+			_sevar_397605981 = Note.UNGENUEGEND;
+		} else if (_seexpr_397605981 === "1") {
+			_sevar_397605981 = Note.MANGELHAFT_MINUS;
+		} else if (_seexpr_397605981 === "01") {
+			_sevar_397605981 = Note.MANGELHAFT_MINUS;
+		} else if (_seexpr_397605981 === "2") {
+			_sevar_397605981 = Note.MANGELHAFT;
+		} else if (_seexpr_397605981 === "02") {
+			_sevar_397605981 = Note.MANGELHAFT;
+		} else if (_seexpr_397605981 === "3") {
+			_sevar_397605981 = Note.MANGELHAFT_PLUS;
+		} else if (_seexpr_397605981 === "03") {
+			_sevar_397605981 = Note.MANGELHAFT_PLUS;
+		} else if (_seexpr_397605981 === "4") {
+			_sevar_397605981 = Note.AUSREICHEND_MINUS;
+		} else if (_seexpr_397605981 === "04") {
+			_sevar_397605981 = Note.AUSREICHEND_MINUS;
+		} else if (_seexpr_397605981 === "5") {
+			_sevar_397605981 = Note.AUSREICHEND;
+		} else if (_seexpr_397605981 === "05") {
+			_sevar_397605981 = Note.AUSREICHEND;
+		} else if (_seexpr_397605981 === "6") {
+			_sevar_397605981 = Note.AUSREICHEND_PLUS;
+		} else if (_seexpr_397605981 === "06") {
+			_sevar_397605981 = Note.AUSREICHEND_PLUS;
+		} else if (_seexpr_397605981 === "7") {
+			_sevar_397605981 = Note.BEFRIEDIGEND_MINUS;
+		} else if (_seexpr_397605981 === "07") {
+			_sevar_397605981 = Note.BEFRIEDIGEND_MINUS;
+		} else if (_seexpr_397605981 === "8") {
+			_sevar_397605981 = Note.BEFRIEDIGEND;
+		} else if (_seexpr_397605981 === "08") {
+			_sevar_397605981 = Note.BEFRIEDIGEND;
+		} else if (_seexpr_397605981 === "9") {
+			_sevar_397605981 = Note.BEFRIEDIGEND_PLUS;
+		} else if (_seexpr_397605981 === "09") {
+			_sevar_397605981 = Note.BEFRIEDIGEND_PLUS;
+		} else if (_seexpr_397605981 === "10") {
+			_sevar_397605981 = Note.GUT_MINUS;
+		} else if (_seexpr_397605981 === "11") {
+			_sevar_397605981 = Note.GUT;
+		} else if (_seexpr_397605981 === "12") {
+			_sevar_397605981 = Note.GUT_PLUS;
+		} else if (_seexpr_397605981 === "13") {
+			_sevar_397605981 = Note.SEHR_GUT_MINUS;
+		} else if (_seexpr_397605981 === "14") {
+			_sevar_397605981 = Note.SEHR_GUT;
+		} else if (_seexpr_397605981 === "15") {
+			_sevar_397605981 = Note.SEHR_GUT_PLUS;
+		} else {
+			_sevar_397605981 = Note.pseudoNoteFromKuerzel(notenpunkte);
 		}
+		return _sevar_397605981;
 	}
 
 	/**
@@ -474,39 +451,45 @@ export class Note extends JavaEnum<Note> implements CoreType<NoteKatalogEintrag,
 		const nke : NoteKatalogEintrag | null = this.daten(schuljahr);
 		if (nke === null || nke.notenpunkte === null)
 			return Note.KEINE;
-		switch (nke.notenpunkte) {
-			case 0: {
-				return Note.UNGENUEGEND;
-			}
-			case 1:
-			case 2:
-			case 3: {
-				return Note.MANGELHAFT;
-			}
-			case 4:
-			case 5:
-			case 6: {
-				return Note.AUSREICHEND;
-			}
-			case 7:
-			case 8:
-			case 9: {
-				return Note.BEFRIEDIGEND;
-			}
-			case 10:
-			case 11:
-			case 12: {
-				return Note.GUT;
-			}
-			case 13:
-			case 14:
-			case 15: {
-				return Note.SEHR_GUT;
-			}
-			default: {
-				return Note.KEINE;
-			}
+		const np : number | null = nke.notenpunkte;
+		let _sevar_240724349 : any;
+		const _seexpr_240724349 = (np);
+		if (_seexpr_240724349 === 0) {
+			_sevar_240724349 = Note.UNGENUEGEND;
+		} else if (_seexpr_240724349 === 1) {
+			_sevar_240724349 = Note.MANGELHAFT;
+		} else if (_seexpr_240724349 === 2) {
+			_sevar_240724349 = Note.MANGELHAFT;
+		} else if (_seexpr_240724349 === 3) {
+			_sevar_240724349 = Note.MANGELHAFT;
+		} else if (_seexpr_240724349 === 4) {
+			_sevar_240724349 = Note.AUSREICHEND;
+		} else if (_seexpr_240724349 === 5) {
+			_sevar_240724349 = Note.AUSREICHEND;
+		} else if (_seexpr_240724349 === 6) {
+			_sevar_240724349 = Note.AUSREICHEND;
+		} else if (_seexpr_240724349 === 7) {
+			_sevar_240724349 = Note.BEFRIEDIGEND;
+		} else if (_seexpr_240724349 === 8) {
+			_sevar_240724349 = Note.BEFRIEDIGEND;
+		} else if (_seexpr_240724349 === 9) {
+			_sevar_240724349 = Note.BEFRIEDIGEND;
+		} else if (_seexpr_240724349 === 10) {
+			_sevar_240724349 = Note.GUT;
+		} else if (_seexpr_240724349 === 11) {
+			_sevar_240724349 = Note.GUT;
+		} else if (_seexpr_240724349 === 12) {
+			_sevar_240724349 = Note.GUT;
+		} else if (_seexpr_240724349 === 13) {
+			_sevar_240724349 = Note.SEHR_GUT;
+		} else if (_seexpr_240724349 === 14) {
+			_sevar_240724349 = Note.SEHR_GUT;
+		} else if (_seexpr_240724349 === 15) {
+			_sevar_240724349 = Note.SEHR_GUT;
+		} else {
+			_sevar_240724349 = Note.KEINE;
 		}
+		return _sevar_240724349;
 	}
 
 	/**
@@ -559,42 +542,47 @@ export class Note extends JavaEnum<Note> implements CoreType<NoteKatalogEintrag,
 	 */
 	public getNoteSekI(schuljahr : number) : number | null {
 		const nke : NoteKatalogEintrag | null = this.daten(schuljahr);
-		if (nke !== null) {
-			switch (nke.notenpunkte) {
-				case 15:
-				case 14:
-				case 13: {
-					return 1;
-				}
-				case 12:
-				case 11:
-				case 10: {
-					return 2;
-				}
-				case 9:
-				case 8:
-				case 7: {
-					return 3;
-				}
-				case 6:
-				case 5:
-				case 4: {
-					return 4;
-				}
-				case 3:
-				case 2:
-				case 1: {
-					return 5;
-				}
-				case 0: {
-					return 6;
-				}
-				default: {
-					return null;
-				}
-			}
+		if (nke === null)
+			return null;
+		const np : number | null = nke.notenpunkte;
+		let _sevar_606963213 : any;
+		const _seexpr_606963213 = (np);
+		if (_seexpr_606963213 === 15) {
+			_sevar_606963213 = 1;
+		} else if (_seexpr_606963213 === 14) {
+			_sevar_606963213 = 1;
+		} else if (_seexpr_606963213 === 13) {
+			_sevar_606963213 = 1;
+		} else if (_seexpr_606963213 === 12) {
+			_sevar_606963213 = 2;
+		} else if (_seexpr_606963213 === 11) {
+			_sevar_606963213 = 2;
+		} else if (_seexpr_606963213 === 10) {
+			_sevar_606963213 = 2;
+		} else if (_seexpr_606963213 === 9) {
+			_sevar_606963213 = 3;
+		} else if (_seexpr_606963213 === 8) {
+			_sevar_606963213 = 3;
+		} else if (_seexpr_606963213 === 7) {
+			_sevar_606963213 = 3;
+		} else if (_seexpr_606963213 === 6) {
+			_sevar_606963213 = 4;
+		} else if (_seexpr_606963213 === 5) {
+			_sevar_606963213 = 4;
+		} else if (_seexpr_606963213 === 4) {
+			_sevar_606963213 = 4;
+		} else if (_seexpr_606963213 === 3) {
+			_sevar_606963213 = 5;
+		} else if (_seexpr_606963213 === 2) {
+			_sevar_606963213 = 5;
+		} else if (_seexpr_606963213 === 1) {
+			_sevar_606963213 = 5;
+		} else if (_seexpr_606963213 === 0) {
+			_sevar_606963213 = 6;
+		} else {
+			_sevar_606963213 = null;
 		}
-		return null;
+		return _sevar_606963213;
 	}
 
 	/**

@@ -13,6 +13,12 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class Schwerpunkt extends GostBelegpruefung {
 
+	/// Gibt an, ob ein ein fremdsprachlicher Schwerpunkt vorliegt oder nicht
+	private boolean _hatSchwerpunktFremdsprachen;
+
+	/// Gibt an, ob ein ein naturwissenschaftlicher Schwerpunkt vorliegt oder nicht
+	private boolean _hatSchwerpunktNaturwissenschaften;
+
 	/**
 	 * Erstellt eine neue Belegprüfung für den Schwerpunkt.
 	 *
@@ -40,20 +46,23 @@ public final class Schwerpunkt extends GostBelegpruefung {
 		final @NotNull Fremdsprachen pruefung_sprachen = ((@NotNull Fremdsprachen) pruefungen_vorher[0]);
 		final @NotNull Naturwissenschaften pruefung_nawi = ((@NotNull Naturwissenschaften) pruefungen_vorher[1]);
 
+		this._hatSchwerpunktFremdsprachen = (pruefung_sprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2);
+		this._hatSchwerpunktNaturwissenschaften =
+				(pruefung_nawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendSchritflichBelegt() >= 1);
+
 		// Prüfe, ob insgesamt so viele Fremdsprachen und Naturwissenschaften gewählt wurden, dass zunächst kein Schwerpunkt vorliegt.
 		// Dann liegt kein Belegungsfehler vor.
-		if ((pruefung_sprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2)
-				&& (pruefung_nawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendSchritflichBelegt() >= 1))
+		if (_hatSchwerpunktFremdsprachen && (_hatSchwerpunktNaturwissenschaften))
 			return;
 
 		// Prüfe, ob ein sprachlicher Schwerpunkt vorliegt
-		if (pruefung_sprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2) {
+		if (_hatSchwerpunktFremdsprachen) {
 			addFehler(GostBelegungsfehler.NW_FS_12_INFO);
 			return;
 		}
 
 		// Prüfe, ob ein naturwissenschaftlicher Schwerpunkt vorliegt
-		if ((pruefung_nawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendSchritflichBelegt() >= 1)) {
+		if (_hatSchwerpunktNaturwissenschaften) {
 			addFehler(GostBelegungsfehler.NW_FS_13_INFO);
 			return;
 		}
@@ -70,26 +79,49 @@ public final class Schwerpunkt extends GostBelegpruefung {
 		final @NotNull Fremdsprachen pruefung_sprachen = ((@NotNull Fremdsprachen) pruefungen_vorher[0]);
 		final @NotNull Naturwissenschaften pruefung_nawi = ((@NotNull Naturwissenschaften) pruefungen_vorher[1]);
 
+		this._hatSchwerpunktFremdsprachen = (pruefung_sprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2);
+		this._hatSchwerpunktNaturwissenschaften =
+				(pruefung_nawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendSchritflichBelegt() >= 1);
+
 		// Prüfe, ob insgesamt so viele Fremdsprachen und Naturwissenschaften gewählt wurden, dass zunächst kein Schwerpunkt vorliegt.
 		// Dann liegt kein Belegungsfehler vor.
-		if ((pruefung_sprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2)
-				&& (pruefung_nawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendSchritflichBelegt() >= 1))
+		if (_hatSchwerpunktFremdsprachen && _hatSchwerpunktNaturwissenschaften)
 			return;
 
 		// Prüfe, ob ein sprachlicher Schwerpunkt vorliegt
-		if (pruefung_sprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2) {
+		if (_hatSchwerpunktFremdsprachen) {
 			addFehler(GostBelegungsfehler.NW_FS_12_INFO);
 			return;
 		}
 
 		// Prüfe, ob ein naturwissenschaftlicher Schwerpunkt vorliegt
-		if ((pruefung_nawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendSchritflichBelegt() >= 1)) {
+		if (_hatSchwerpunktNaturwissenschaften) {
 			addFehler(GostBelegungsfehler.NW_FS_13_INFO);
 			return;
 		}
 
 		// Es wurden zu wenig Fremdsprachen und Naturwissenschaften belegt -> Belegungsfehler
 		addFehler(GostBelegungsfehler.NW_FS_10);
+	}
+
+
+	/**
+	 * Gibt an, ob ein fremsprachlicher Schwerpunkt vorliegt oder nicht.
+	 *
+	 * @return true, wenn ein fremdsprachlicher Schwerpunkt vorliegt
+	 */
+	public boolean hatSchwerpunktFremdsprachen() {
+		return this._hatSchwerpunktFremdsprachen;
+	}
+
+
+	/**
+	 * Gibt an, ob ein naturwissenschaftlicher Schwerpunkt vorliegt oder nicht.
+	 *
+	 * @return true, wenn ein naturwissenschaftlicher Schwerpunkt vorliegt
+	 */
+	public boolean hatSchwerpunktNaturwissenschaften() {
+		return this._hatSchwerpunktNaturwissenschaften;
 	}
 
 }

@@ -1,5 +1,5 @@
 <template>
-	<Story title="Button mit Auswahl" id="svws-ui-button-select" icon="ri:cursor-line" auto-props-disabled>
+	<Story title="Button mit Auswahl" id="svws-ui-button-select" icon="ri:cursor-line" :layout="{ type: 'single', iframe: false }" auto-props-disabled>
 		<Variant title="Default">
 			<svws-ui-input-wrapper class="p-2">
 				<svws-ui-button-select @click="() => console.log('Default Button clicked')" :dropdown-actions="dropdownActions" />

@@ -2,8 +2,6 @@ package de.svws_nrw.config.app;
 
 import java.io.IOException;
 
-import org.apache.commons.lang3.math.NumberUtils;
-
 import de.svws_nrw.base.shell.CommandLineOption;
 import de.svws_nrw.base.shell.CommandLineParser;
 import de.svws_nrw.config.SVWSKonfiguration;
@@ -65,7 +63,12 @@ public class SVWSConfigFileWriter {
 			final DBDriver dbms = DBDriver.fromString(cmdLine.getValue("d", ""));
 			final String dbLocation = cmdLine.getValue("h", "localhost");
 			final String dbPortStr = cmdLine.getValue("j");
-			final int dbPort = NumberUtils.toInt(dbPortStr, ((dbms != null) && dbms.equals(DBDriver.MSSQL)) ? 1433 : 3306);
+			int dbPort = -1;
+			try {
+				dbPort = Integer.parseInt(dbPortStr);
+			} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
+				dbPort = ((dbms != null) && dbms.equals(DBDriver.MSSQL)) ? 1433 : 3306;
+			}
 			final boolean noSchema = cmdLine.isSet("n");
 			final String schema = cmdLine.getValue("s");
 			final String schemaUser = cmdLine.getValue("u");

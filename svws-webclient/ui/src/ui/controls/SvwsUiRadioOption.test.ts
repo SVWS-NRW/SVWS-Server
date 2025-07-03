@@ -125,7 +125,6 @@ describe("Tests für die CSS-Props", () => {
 				break;
 		}
 		// Testen
-		console.log(wrapper.html());
 		switch (x) {
 			case "disable":
 			case "statistics":
@@ -219,8 +218,7 @@ describe("Bedingtes Rendern der HTML-Elemenete", () => {
 		// Vorbereiten
 		await wrapper.setProps({ statistics: true });
 		//Testen
-		expect(wrapper.find(idLabel).find("span.icon.i-ri-bar-chart-2-line.icon-ui-statistic.inline-block").exists()).toBeTruthy();
-		expect(wrapper.find(idLabel).find("span").classes()).toContain("-my-0.5");
+		expect(wrapper.find(idLabel).find("span.icon.i-ri-bar-chart-2-line.radio--statistic-icon").exists()).toBeTruthy();
 	});
 });
 

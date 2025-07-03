@@ -2,15 +2,23 @@
 	@apply text-ui-secondary;
 }
 
+.input-number--statistic-icon {
+	@apply icon-ui-statistic pointer-events-auto mt-0.5
+}
+
 .placeholder--visible .input-number-component input::placeholder {
 	@apply text-ui;
 }
 
 .input-number-component {
-	@apply flex;
+	@apply inline-flex;
 	@apply relative;
-	@apply w-full min-w-16;
+	@apply w-[calc(100%-0.4rem)] min-w-16 m-[0.2em];
 	@apply overflow-hidden whitespace-nowrap text-base;
+
+		&:not(.input-number-component--headless) {
+			@apply mt-[0.8em];
+		}
 
 	&:focus {
 		@apply outline-hidden;
@@ -29,7 +37,16 @@
 	input {
 		@apply pr-14;
 		appearance: textfield;
+
 	}
+
+	/* Chrome, Safari, Edge, Opera */
+	input::-webkit-outer-spin-button,
+	input::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+
 
 	.svws-input-stepper {
 		@apply absolute top-1 right-1.5 bottom-1 flex justify-center items-center gap-1;
@@ -44,7 +61,7 @@
 			}
 
 			&:focus-visible {
-				@apply ring-3 ring-ui;
+				@apply ring-2 ring-ui;
 			}
 
 			&.svws-disabled {
@@ -53,6 +70,7 @@
 				span.icon {
 					@apply opacity-50;
 				}
+
 			}
 
 			.icon {
@@ -91,25 +109,15 @@
 }
 
 .input-number-component:focus-within .input-number--control {
-	@apply ring-3 ring-ui-neutral;
+	@apply ring-2 ring-ui-neutral;
 }
 
 .input-number--filled:not(:focus-within):not(:hover) .input-number--control {
 	@apply border-ui;
 }
 
-.input-number--statistics.input-number--filled:not(:focus-within):not(:hover) .input-number--control,
-.input-number--statistics:not(:focus-within):not(:hover) .input-number--control {
-	@apply border-ui-statistic;
-}
-
 .input-number--invalid.input-number--filled:not(:focus-within):not(:hover) .input-number--control {
 	@apply border-ui-danger;
-}
-
-.input-number--statistics.input-number--filled:not(:focus-within):hover .input-number--control,
-.input-number--statistics:not(:focus-within):hover .input-number--control {
-	@apply border-ui-statistic;
 }
 
 .input-number--invalid.input-number--filled:not(:focus-within):hover .input-number--control {
@@ -118,11 +126,6 @@
 
 .input-number--filled:not(:focus-within):hover .input-number--control {
 	@apply border-ui;
-}
-
-.input-number--statistics.input-number-component:focus-within .input-number--control,
-.input-number--statistics.input-number--filled .input-number--control {
-	@apply border-ui-statistic;
 }
 
 .input-number--readonly:hover .input-number--control {
@@ -135,12 +138,6 @@
 
 .input-number--control--multiselect-tags {
 	@apply border-b-0 rounded-b-none pt-1 pb-0;
-}
-
-.input-number--statistics {
-	.tooltip-trigger--triggered svg {
-		@apply text-ui-statistic;
-	}
 }
 
 &.input-number--filled {
@@ -198,14 +195,7 @@ input {
 	left: 0.7em;
 	font-size: 0.78rem;
 
-	&:after {
-		content: "";
-	}
-}
 
-.input-number--statistics .input-number--placeholder {
-	@apply text-ui-statistic;
-	@apply font-bold;
 }
 
 .input-number--invalid .input-number--placeholder,
@@ -213,11 +203,24 @@ input {
 	@apply text-ui-danger;
 }
 
+.input-number--invalid input {
+	@apply border-ui-danger;
+}
+
+.input-number--invalid .input-number--state-icon {
+	@apply icon-ui-danger;
+}
+
 .input-number--disabled {
 	@apply cursor-default pointer-events-none;
 
 	.input-number--placeholder {
 		@apply text-ui-disabled;
+	}
+
+	.input-number--statistic-icon,
+	.input-number--state-icon {
+		@apply icon-ui-disabled;
 	}
 }
 
@@ -231,14 +234,9 @@ input {
 	@apply overflow-visible;
 }
 
-.input-number--placeholder--required:after {
-	@apply text-ui-danger;
+.input-number--placeholder--required {
 	@apply inline-block font-normal relative;
-	content: "*";
-	font-size: 1.2em;
-	margin-bottom: -0.2em;
-	top: -0.1em;
-	left: 0.1em;
+	top: -0.2em;
 }
 
 .input-number--headless,

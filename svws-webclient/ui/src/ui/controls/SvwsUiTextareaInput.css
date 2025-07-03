@@ -1,6 +1,11 @@
 .textarea-input {
 	@apply flex;
 	@apply relative;
+	@apply m-[0.2em];
+
+		&:not(.textarea-input--headless) {
+			@apply mt-[0.8em];
+		}
 
 	textarea::placeholder {
 		@apply text-ui-secondary;
@@ -42,16 +47,8 @@ span.textarea-input--control {
 	@apply border-ui;
 }
 
-.textarea-input--invalid:not(:focus-within) .textarea-input--control {
+.textarea-input--invalid:not(.textarea-input--disabled) .textarea-input--control{
 	@apply border-ui-danger;
-}
-
-.textarea-input--statistics .textarea-input--control {
-	@apply border-ui-statistic;
-}
-
-.textarea-input--statistics:not(.textarea-input--filled) .textarea-input--control {
-	@apply border-ui-statistic;
 }
 
 .textarea-input--resize-none .textarea-input--control {
@@ -71,7 +68,7 @@ span.textarea-input--control {
 }
 
 .textarea-input--placeholder {
-	@apply absolute;
+	@apply absolute gap-1;
 	@apply pointer-events-none;
 	@apply opacity-60;
 	@apply transform;
@@ -90,19 +87,17 @@ span.textarea-input--control {
 	@apply opacity-80;
 }
 
-.textarea-input--statistics.textarea-input--invalid .textarea-input--control {
+.textarea-input--statistics.textarea-input--invalid:not(.textarea-input--disabled) .textarea-input--control {
 	@apply border-ui-danger;
 }
 
-.textarea-input--statistics .textarea-input--placeholder {
-	@apply text-ui-statistic;
-}
-
-.textarea-input--statistics.textarea-input--invalid .textarea-input--placeholder {
-	@apply text-ui-statistic;
+.textarea-input--placeholder--required {
+	@apply inline-block font-normal relative;
+	top: -0.2em;
 }
 
 .textarea-input--focus:not(.textarea-input--headless) .textarea-input--placeholder,
+.textarea-input:focus-within .textarea-input--placeholder,
 .textarea-input--filled:not(.textarea-input--headless) .textarea-input--placeholder {
 	@apply bg-ui opacity-100;
 	@apply -translate-y-1/2;
@@ -112,10 +107,6 @@ span.textarea-input--control {
 	top: 0;
 	left: 0.7em;
 	font-size: 0.78rem;
-
-	&:after {
-		content: "";
-	}
 }
 
 .textarea-input--headless.textarea-input--filled .textarea-input--placeholder {
@@ -123,18 +114,29 @@ span.textarea-input--control {
 }
 
 .textarea-input--invalid .textarea-input--placeholder,
-.textarea-input--invalid:not(:focus-within) .textarea-input--control {
+.textarea-input--invalid:not(:focus-within):not(.textarea-input--disabled) .textarea-input--control {
 	@apply text-ui-danger;
 }
 
-.textarea-input--placeholder--required:after {
-	@apply text-ui-danger;
-	content: " *";
+.textarea-input--invalid .textarea-input--state-icon {
+	@apply icon-ui-danger
 }
 
-.textarea-input--disabled .textarea-input--control {
-	@apply bg-ui text-ui-disabled border-ui-disabled;
-	@apply pointer-events-none resize-none;
+.textarea-input--statistic-icon {
+	@apply icon-ui-statistic;
+	@apply pointer-events-auto mt-0.5;
+}
+
+.textarea-input--disabled {
+	.textarea-input--control {
+		@apply bg-ui text-ui-disabled border-ui-disabled;
+		@apply pointer-events-none resize-none;
+	}
+
+	.textarea-input--statistic-icon,
+	.textarea-input--state-icon {
+		@apply icon-ui-disabled;
+	}
 }
 
 .textarea-input--disabled .textarea-input--placeholder {

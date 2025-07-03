@@ -7,9 +7,8 @@ import { routeError } from "~/router/error/RouteError";
 import { routeLadeDaten } from "./RouteLadeDaten";
 
 import LaufbahnplanungOberstufe from "~/components/LaufbahnplanungOberstufe.vue";
-import { type LaufbahnplanungOberstufeProps } from "~/components/LaufbahnplanungOberstufeProps";
+import type { LaufbahnplanungOberstufeProps } from "~/components/LaufbahnplanungOberstufeProps";
 import { GostLaufbahnplanungDaten } from "@core/core/data/gost/GostLaufbahnplanungDaten";
-import { ServerMode } from "@core/core/types/ServerMode";
 
 
 export class RouteLaufbahnplanung extends RouteNode<unknown, RouteApp> {
@@ -28,6 +27,7 @@ export class RouteLaufbahnplanung extends RouteNode<unknown, RouteApp> {
 	}
 
 	public async leave(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void> {
+		routeApp.data.reset();
 	}
 
 	public getRoute() : RouteLocationRaw {
@@ -52,6 +52,8 @@ export class RouteLaufbahnplanung extends RouteNode<unknown, RouteApp> {
 			saveLaufbahnplanung: routeApp.data.saveLaufbahnplanung,
 			restoreLaufbahnplanung: routeApp.data.restoreLaufbahnplanung,
 			resetFachwahlen: routeApp.data.resetFachwahlen,
+			exitLaufbahnplanung: routeApp.data.exitLaufbahnplanung,
+			dirty: () => routeApp.data.dirty,
 		};
 	}
 

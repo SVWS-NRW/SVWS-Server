@@ -11,7 +11,12 @@
 				</div>
 			</template>
 			<template #modalDescription>
-				<slot>Für diesen Bereich wurde noch kein Text geschrieben.</slot>
+				<div class="markdown">
+					<slot>Für diesen Bereich wurde noch kein Text geschrieben.</slot>
+				</div>
+				<template v-if="!disabledFooter">
+					<hr class="border-2 my-4">Nutzen Sie für weitere Informationen und Anleitungen die <a class="text-ui-brand" href="https://doku.svws-nrw.de">ausführliche Dokumentation</a>.
+				</template>
 			</template>
 		</svws-ui-modal>
 	</div>
@@ -20,6 +25,10 @@
 <script setup lang="ts">
 
 	import { ref } from 'vue';
+
+	const props = defineProps<{
+		disabledFooter?: boolean;
+	}>();
 
 	const show = ref<boolean>(false);
 

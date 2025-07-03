@@ -20,19 +20,19 @@ import jakarta.ws.rs.core.Response.Status;
 public final class DataAbteilungen extends DataManagerRevised<Long, DTOAbteilungen, Abteilung> {
 
 	/** Die ID des Schuljahresabschnittes */
-	private final Long idSchuljahresabschnitts;
+	private final Long idSchuljahresabschnitt;
 
 	/**
 	 * Erstellt einen neuen {@link DataManagerRevised} für den Core-DTO {@link Abteilung}.
 	 *
 	 * @param conn                     die Datenbankverbindung
-	 * @param idSchuljahresabschnitts   die ID des Schuljahresabschnittes, auf den sich die Anfragen beziehen
+	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnittes, auf den sich die Anfragen beziehen
 	 */
-	public DataAbteilungen(final DBEntityManager conn, final Long idSchuljahresabschnitts) {
+	public DataAbteilungen(final DBEntityManager conn, final Long idSchuljahresabschnitt) {
 		super(conn);
-		this.idSchuljahresabschnitts = idSchuljahresabschnitts;
-		setAttributesNotPatchable("id", "idSchuljahresabschnitts");
-		setAttributesRequiredOnCreation("bezeichnung", "klassen", "idSchuljahresabschnitts");
+		this.idSchuljahresabschnitt = idSchuljahresabschnitt;
+		setAttributesNotPatchable("id", "idSchuljahresabschnitt");
+		setAttributesRequiredOnCreation("bezeichnung", "idSchuljahresabschnitt");
 	}
 
 	/**
@@ -47,8 +47,13 @@ public final class DataAbteilungen extends DataManagerRevised<Long, DTOAbteilung
 	@Override
 	protected void initDTO(final DTOAbteilungen dtoAbteilungen, final Long newId, final Map<String, Object> initAttributes) throws ApiOperationException {
 		dtoAbteilungen.ID = newId;
-		dtoAbteilungen.Schuljahresabschnitts_ID = JSONMapper.convertToLong(initAttributes.get("idSchuljahresabschnitts"), false, "idSchuljahresabschnitts");
+		dtoAbteilungen.Schuljahresabschnitts_ID = JSONMapper.convertToLong(initAttributes.get("idSchuljahresabschnitt"), false, "idSchuljahresabschnitt");
 		dtoAbteilungen.Sichtbar = true;
+	}
+
+	@Override
+	protected long getLongId(final DTOAbteilungen abteilung) {
+		return abteilung.ID;
 	}
 
 	@Override
@@ -57,7 +62,7 @@ public final class DataAbteilungen extends DataManagerRevised<Long, DTOAbteilung
 
 		abteilung.id = dtoAbteilungen.ID;
 		abteilung.bezeichnung =  (dtoAbteilungen.Bezeichnung == null) ? "" : dtoAbteilungen.Bezeichnung;
-		abteilung.idSchuljahresabschnitts = dtoAbteilungen.Schuljahresabschnitts_ID;
+		abteilung.idSchuljahresabschnitt = dtoAbteilungen.Schuljahresabschnitts_ID;
 		abteilung.idAbteilungsleiter = dtoAbteilungen.AbteilungsLeiter_ID;
 		abteilung.raum = dtoAbteilungen.Raum;
 		abteilung.email = dtoAbteilungen.Email;
@@ -77,6 +82,7 @@ public final class DataAbteilungen extends DataManagerRevised<Long, DTOAbteilung
 					throw new ApiOperationException(Status.BAD_REQUEST,
 							"Id %d der PatchMap ist ungleich der id %d vom Dto".formatted(id, dtoAbteilungen.ID));
 			}
+			case "idSchuljahresabschnitt" -> dtoAbteilungen.Schuljahresabschnitts_ID = JSONMapper.convertToLong(value, false, "idSchuljahresabschnitt");
 			case "bezeichnung" -> dtoAbteilungen.Bezeichnung = JSONMapper.convertToString(value, false, false, 50, "bezeichnung");
 			case "idAbteilungsleiter" -> dtoAbteilungen.AbteilungsLeiter_ID = JSONMapper.convertToLong(value, true, "idAbteilungsleiter");
 			case "raum" -> dtoAbteilungen.Raum = JSONMapper.convertToString(value, true, false, 20, "raum");
@@ -108,8 +114,8 @@ public final class DataAbteilungen extends DataManagerRevised<Long, DTOAbteilung
 	}
 
 	private List<DTOAbteilungen> getAbteilungen() {
-		return (idSchuljahresabschnitts == null) ? conn.queryAll(DTOAbteilungen.class)
-				: conn.queryList(DTOAbteilungen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOAbteilungen.class, idSchuljahresabschnitts);
+		return (idSchuljahresabschnitt == null) ? conn.queryAll(DTOAbteilungen.class)
+				: conn.queryList(DTOAbteilungen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOAbteilungen.class, idSchuljahresabschnitt);
 	}
 
 	@Override

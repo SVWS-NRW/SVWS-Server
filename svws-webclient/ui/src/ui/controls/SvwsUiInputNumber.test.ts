@@ -144,12 +144,13 @@ describe("HTML Tests SvwsUiInputNumber", () => {
 		expect(wrapper.find(".i-ri-bar-chart-2-line").exists()).toBe(true);
 	});
 
-	test("Gibt ein Warnsymbol aus, wenn die Daten null oder undefiniert sind und die Statistik true ist", () => {
+	test("Gibt ein Warnsymbol aus, wenn die Daten null oder undefiniert sind und die Statistik und Required true ist", () => {
 		const wrapper = mount(SvwsUiInputNumber, {
 			props: {
 				modelValue: null,
 				placeholder: "Enter number",
 				statistics: true,
+				required: true,
 				headless: false,
 			},
 		});

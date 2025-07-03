@@ -44,8 +44,6 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 	/**
 	 * Zusätzliche Maps, welche zum schnellen Zugriff auf Teilmengen der Liste verwendet werden können
 	 */
-	private readonly _mapKlasseIstSichtbar : HashMap2D<boolean, number, KlassenDaten> = new HashMap2D<boolean, number, KlassenDaten>();
-
 	private readonly _mapKlasseInJahrgang : HashMap2D<number, number, KlassenDaten> = new HashMap2D<number, number, KlassenDaten>();
 
 	private readonly _mapKlasseHatSchueler : HashMap2D<number, number, KlassenDaten> = new HashMap2D<number, number, KlassenDaten>();
@@ -118,11 +116,6 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 	private static readonly _comparatorSchuelerStatus : Comparator<SchuelerStatus> = { compare : (a: SchuelerStatus, b: SchuelerStatus) => a.ordinal() - b.ordinal() };
 
 	/**
-	 * Das Filter-Attribut auf nur sichtbare Klassen
-	 */
-	private _filterNurSichtbar : boolean = false;
-
-	/**
 	 *  Trigger, wenn eine Checkbox zum Hinzufügen von Schülern zu einer Klasse verwendet wird.
 	 */
 	protected readonly _eventSchuelerAuswahlChanged : Runnable = { run : () => {
@@ -160,7 +153,6 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 
 	private initKlassen() : void {
 		for (const k of this.liste.list()) {
-			this._mapKlasseIstSichtbar.put(k.istSichtbar, k.id, k);
 			if (k.idJahrgang !== null) {
 				this._mapKlasseInJahrgang.put(k.idJahrgang, k.id, k);
 				const j : JahrgangsDaten | null = this.jahrgaenge.getOrException(k.idJahrgang);
@@ -206,25 +198,6 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 	}
 
 	/**
-	 * Gibt die aktuelle Filtereinstellung auf nur sichtbare Klassen zurück.
-	 *
-	 * @return true, wenn nur nichtbare Klassen angezeigt werden und ansonsten false
-	 */
-	public filterNurSichtbar() : boolean {
-		return this._filterNurSichtbar;
-	}
-
-	/**
-	 * Setzt die Filtereinstellung auf nur sichtbare Klassen.
-	 *
-	 * @param value   true, wenn der Filter aktiviert werden soll und ansonsten false
-	 */
-	public setFilterNurSichtbar(value : boolean) : void {
-		this._filterNurSichtbar = value;
-		this._eventHandlerFilterChanged.run();
-	}
-
-	/**
 	 * Vergleicht zwei Klassenlisteneinträge anhand der spezifizierten Ordnung.
 	 *
 	 * @param a   der erste Eintrag
@@ -260,8 +233,6 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 
 	protected checkFilter(eintrag : KlassenDaten) : boolean {
 		this._filteredSchuelerListe = null;
-		if (this._filterNurSichtbar && !eintrag.istSichtbar)
-			return false;
 		if (this.jahrgaenge.auswahlExists() && ((eintrag.idJahrgang === null) || (!this.jahrgaenge.auswahlHasKey(eintrag.idJahrgang))))
 			return false;
 		if (this.lehrer.auswahlExists()) {

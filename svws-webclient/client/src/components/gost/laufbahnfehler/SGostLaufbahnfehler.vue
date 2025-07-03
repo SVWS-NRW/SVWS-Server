@@ -1,11 +1,12 @@
 <template>
-	<div class="page page-flex-row max-w-400">
+	<div class="page page-flex-row max-w-440">
 		<Teleport to=".svws-sub-nav-target" v-if="hatUpdateKompetenz" defer>
 			<svws-ui-sub-nav :focus-switching-enabled :focus-help-visible>
 				<svws-ui-button :disabled="apiStatus.pending" type="transparent" title="Planung importieren" @click="showModalImport = true"><span class="icon i-ri-download-2-line" /> Importieren…</svws-ui-button>
 				<s-laufbahnplanung-import-modal v-model:show="showModalImport" multiple :import-laufbahnplanung />
 				<svws-ui-button :disabled="apiStatus.pending" type="transparent" title="Planung exportieren" @click="export_laufbahnplanung"><span class="icon i-ri-upload-2-line" />Exportiere {{ auswahl.length > 0 ? 'Auswahl':'alle' }}</svws-ui-button>
-				<s-modal-laufbahnplanung-alle-fachwahlen-loeschen :gost-jahrgangsdaten="jahrgangsdaten" :reset-fachwahlen="resetFachwahlenAlle" />
+				<s-modal-laufbahnplanung-alle-fachwahlen-zuruecksetzen :gost-jahrgangsdaten="jahrgangsdaten" :reset-fachwahlen="resetFachwahlenAlle" :selected="auswahl" />
+				<s-modal-laufbahnplanung-alle-fachwahlen-loeschen :reset-auswahl :loeschen-fachwahlen-selected :selected="auswahl" />
 			</svws-ui-sub-nav>
 		</Teleport>
 		<Teleport to=".svws-ui-header--actions" defer>
@@ -13,12 +14,13 @@
 				<template #icon> <svws-ui-spinner spinning v-if="apiStatus.pending" /> <span class="icon i-ri-printer-line" v-else /> </template>
 			</svws-ui-button-select>
 		</Teleport>
-		<div class="min-w-120 h-full flex flex-col gap-y-6">
+		<div class="min-w-160 h-full flex flex-col gap-y-6">
 			<div class="flex flex-row items-center justify-between">
 				<div class="flex flex-col gap-y-1">
 					<svws-ui-checkbox type="toggle" :model-value="filterFehler()" @update:model-value="setFilterFehler">Nur Fehler</svws-ui-checkbox>
 					<svws-ui-checkbox type="toggle" :model-value="filterExterne()" @update:model-value="setFilterExterne">Externe ausblenden</svws-ui-checkbox>
 					<svws-ui-checkbox type="toggle" :model-value="filterNurMitFachwahlen()" @update:model-value="setFilterNurMitFachwahlen">Nur mit Fachwahlen</svws-ui-checkbox>
+					<svws-ui-checkbox type="toggle" :model-value="filterNeuaufnahmen()" @update:model-value="setFilterNeuaufnahmen">Neuaufnahmen</svws-ui-checkbox>
 				</div>
 				<svws-ui-radio-group class="radio--row">
 					<svws-ui-radio-option v-model="art" value="ef1" name="ef1" label="EF.1" />
@@ -45,9 +47,15 @@
 				</template>
 				<template #cell(name)="{rowData}">
 					<span class="line-clamp-1 leading-tight -my-0.5 break-all">{{ rowData.schueler.nachname }}, {{ rowData.schueler.vorname }}</span>
-					<span v-if="rowData.schueler.status !== 2" class="svws-ui-badge text-sm font-bold mt-0 ml-1 bg-ui-25">
-						{{ SchuelerStatus.data().getWertByKuerzel("" + rowData.schueler.status)?.daten(schuljahr)?.text ?? '—' }}
+					<span v-if="rowData.schueler.status !== 2" class="svws-ui-badge text-sm font-bold mt-0 ml-1 bg-ui-50 text-ui-100">
+						{{ SchuelerStatus.data().getEintragByID(rowData.schueler.status)?.text ?? '—' }}
 					</span>
+				</template>
+				<template #cell(beratung)="{rowData}">
+					{{ (rowData.beratungsDatum === null) ? '—' : new Date(rowData.beratungsDatum).toLocaleDateString("de-DE", {year: "numeric", month: "2-digit", day: "2-digit",}) }}
+				</template>
+				<template #cell(ruecklauf)="{rowData}">
+					{{ (rowData.ruecklaufDatum === null) ? '—' : new Date(rowData.ruecklaufDatum).toLocaleDateString("de-DE", {year: "numeric", month: "2-digit", day: "2-digit",}) }}
 				</template>
 				<template #cell(hinweise)="cell">
 					<span v-if="counterAnzahlOderWochenstunden(cell.rowData.ergebnis.fehlercodes) > 0" class="opacity-75 -my-0.5"><span class="icon i-ri-information-line" /></span>
@@ -99,7 +107,7 @@
 	import { computed, ref, shallowRef } from 'vue';
 	import type { GostLaufbahnfehlerProps } from "./SGostLaufbahnfehlerProps";
 	import type { DataTableColumn } from '@ui';
-	import type { List, GostBelegpruefungErgebnisFehler, GostBelegpruefungErgebnis} from '@core';
+	import type { List, GostBelegpruefungErgebnisFehler } from '@core';
 	import { ArrayList, GostBelegpruefungsArt, GostBelegungsfehlerArt, SchuelerStatus, GostBelegpruefungsErgebnisse, BenutzerKompetenz } from '@core';
 	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
@@ -118,26 +126,30 @@
 	const columns: DataTableColumn[] = [
 		{key: "linkToSchueler", label: " ", fixedWidth: 1.75, align: "center"},
 		{key: 'name', label: 'Name, Vorname', span: 2},
+		{key: 'beratung', labe: 'Beratung', fixedWidth: 5.5, align: "center"},
+		{key: 'ruecklauf', labe: 'Rücklauf', fixedWidth: 5.5, align: "center"},
 		{key: 'hinweise', label: 'K/WS', tooltip: 'Gibt an, ob Hinweise zu der Anzahl von Kursen oder Wochenstunden vorliegen', fixedWidth: 3.5, align: 'center'},
 		{key: 'ergebnis', label: 'Fehler', tooltip: 'Anzahl der Fehler insgesamt', fixedWidth: 3.5, align: 'right', sortable: true},
 	];
 
 	const showModalImport = ref<boolean>(false);
 
-	const hasFilter = computed<boolean>(() => props.filterFehler() || props.filterExterne() || props.filterNurMitFachwahlen());
-
 	const filtered = computed<List<GostBelegpruefungsErgebnisse>>(() => {
-		if (!hasFilter.value)
+		if (!props.filterFehler() && !props.filterExterne() && !props.filterNurMitFachwahlen() && !props.filterNeuaufnahmen())
 			return props.listBelegpruefungsErgebnisse();
 		const a: List<GostBelegpruefungsErgebnisse> = new ArrayList();
 		for (const e of props.listBelegpruefungsErgebnisse()) {
+			let erlaubt = true;
 			if (props.filterFehler() && e.ergebnis.erfolgreich)
-				continue;
-			if ((props.filterExterne()) && (SchuelerStatus.data().getWertByKuerzel("" + e.schueler.status) === SchuelerStatus.EXTERN))
-				continue;
-			if ((props.filterNurMitFachwahlen() && !e.hatFachwahlen))
-				continue;
-			a.add(e);
+				erlaubt = false;
+			if ((props.filterExterne()) && (SchuelerStatus.data().getWertByID(e.schueler.status) === SchuelerStatus.EXTERN))
+				erlaubt = false;
+			if (props.filterNurMitFachwahlen() && !e.hatFachwahlen)
+				erlaubt = false;
+			if (props.filterNeuaufnahmen() && (SchuelerStatus.data().getWertByID(e.schueler.status) !== SchuelerStatus.NEUAUFNAHME))
+				erlaubt = false;
+			if(erlaubt)
+				a.add(e);
 		}
 		return a;
 	})
@@ -157,6 +169,10 @@
 				ids.value.add(s.schueler.id);
 		},
 	})
+
+	function resetAuswahl() {
+		auswahl.value = [];
+	}
 
 	const schueler_state = shallowRef<GostBelegpruefungsErgebnisse>();
 	const schueler = computed<GostBelegpruefungsErgebnisse>({

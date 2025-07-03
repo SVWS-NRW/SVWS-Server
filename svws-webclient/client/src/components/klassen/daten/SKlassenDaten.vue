@@ -1,18 +1,19 @@
 <template>
+	<Teleport to=".svws-ui-header--actions" defer>
+		<svws-ui-modal-hilfe> <hilfe-klassen-daten /> </svws-ui-modal-hilfe>
+	</Teleport>
 	<div class="page page-grid-cards">
 		<div class="flex flex-col gap-y-16 lg:gap-y-20">
 			<svws-ui-content-card title="Allgemein">
-				<template #actions>
-					<svws-ui-checkbox :model-value="data.istSichtbar" :disabled="!hatKompetenzUpdate" @update:model-value="istSichtbar => patchPartial({ istSichtbar })" focus-class-content> Ist sichtbar </svws-ui-checkbox>
-				</template>
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-text-input placeholder="Kürzel" :disabled="!hatKompetenzUpdate" :required="true" :max-len="15" :valid="validateKuerzel" :model-value="data.kuerzel"
 						@change="kuerzel => patchPartial({ kuerzel }, validateKuerzel(kuerzel))" type="text" focus />
 					<svws-ui-text-input placeholder="Beschreibung" :disabled="!hatKompetenzUpdate" :max-len="150" :valid="validateBeschreibung" :model-value="data.beschreibung"
 						@change="beschreibung => patchPartial({ beschreibung: beschreibung ?? undefined }, validateBeschreibung(beschreibung))" type="text" />
 					<svws-ui-spacing />
-					<svws-ui-select title="Klassen-Jahrgang" :disabled="!hatKompetenzUpdate" v-model="jahrgang" :items="jahrgaenge" :item-text="textJahrgang" :empty-text="() => 'JU - Jahrgangsübergreifend'" removable />
-					<svws-ui-select title="Parallelität" :disabled="!hatKompetenzUpdate" :model-value="data.parallelitaet ?? '---'"
+					<svws-ui-select title="Klassen-Jahrgang" :disabled="!hatKompetenzUpdate" v-model="jahrgang" :items="jahrgaenge" :item-text="textJahrgang"
+						:empty-text="() => 'JU - Jahrgangsübergreifend'" removable statistics />
+					<svws-ui-select title="Parallelität" :disabled="!hatKompetenzUpdate" :model-value="data.parallelitaet ?? '---'" statistics
 						@update:model-value="value => patchPartial({ parallelitaet: value === '---' ? null : value })"
 						:items="['---','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']" :item-text="p => p" />
 					<!-- TODO Select mit der Liste der Teilstandorte für diese Schule (:disabled="!hatKompetenzUpdate" ) -->
@@ -32,15 +33,15 @@
 					<svws-ui-text-input v-else placeholder="Folgeklasse" :model-value="data.kuerzelFolgeklasse === null ? '&nbsp;' : data.kuerzelFolgeklasse" type="text" disabled />
 					<svws-ui-spacing />
 					<svws-ui-select title="Schulgliederung" :disabled="!hatKompetenzUpdate" :model-value="(data.idSchulgliederung < 0) ? undefined : Schulgliederung.data().getWertByID(data.idSchulgliederung)"
-						@update:model-value="value => patchPartial({ idSchulgliederung: value?.daten(schuljahr)?.id ?? -1 })"
+						@update:model-value="value => patchPartial({ idSchulgliederung: value?.daten(schuljahr)?.id ?? -1 })" statistics
 						:items="schulgliederungen" :item-text="f => (f.daten(schuljahr)?.kuerzel ?? '—') + ' - ' + (f.daten(schuljahr)?.text ?? '—')" />
 					<!-- TODO Auswahl der Prüfungsordnungen und :disabled="!hatKompetenzUpdate" -->
 					<svws-ui-text-input placeholder="Prüfungsordnung" disabled :model-value="data.pruefungsordnung" type="text" />
 					<svws-ui-select title="Klassenart" :disabled="!hatKompetenzUpdate" :model-value="Klassenart.data().getWertByID(data.idKlassenart)"
-						@update:model-value="value => patchPartial({ idKlassenart: value?.daten(schuljahr)?.id ?? -1 })"
+						@update:model-value="value => patchPartial({ idKlassenart: value?.daten(schuljahr)?.id ?? -1 })" statistics
 						:items="Klassenart.data().getWerteBySchuljahr(schuljahr)" :item-text="f => (f.daten(schuljahr)?.kuerzel ?? '—') + ' - ' + (f.daten(schuljahr)?.text ?? '—')" />
 					<svws-ui-select v-if="data.idAllgemeinbildendOrganisationsform !== null" title="Organisationsform" :disabled="!hatKompetenzUpdate" :model-value="AllgemeinbildendOrganisationsformen.data().getWertByID(data.idAllgemeinbildendOrganisationsform)"
-						@update:model-value="value => patchPartial({ idAllgemeinbildendOrganisationsform: value?.daten(schuljahr)?.id ?? -1 })"
+						@update:model-value="value => patchPartial({ idAllgemeinbildendOrganisationsform: value?.daten(schuljahr)?.id ?? -1 })" statistics
 						:items="AllgemeinbildendOrganisationsformen.values()" :item-text="f => (f.daten(schuljahr)?.kuerzel ?? '—') + ' - ' + (f.daten(schuljahr)?.text ?? '—')" />
 					<svws-ui-select v-if="data.idBerufsbildendOrganisationsform !== null" title="Organisationsform" :disabled="!hatKompetenzUpdate" :model-value="BerufskollegOrganisationsformen.data().getWertByID(data.idBerufsbildendOrganisationsform)"
 						@update:model-value="value => patchPartial({ idBerufsbildendOrganisationsform: value?.daten(schuljahr)?.id ?? -1 })"
@@ -341,7 +342,7 @@
 	const columnsKlassenleitungen = computed<Array<DataTableColumn>>(() => {
 		const result = new Array<DataTableColumn>();
 		result.push({ key: "linkToLehrer", label: " ", fixedWidth: 1.75, align: "center" });
-		result.push({ key: "kuerzel", label: "Kürzel", span: 1, sortable: false });
+		result.push({ key: "kuerzel", label: "Kürzel", span: 1, sortable: false, statistic: true });
 		result.push({ key: "nachname", label: "Nachname", span: 2, sortable: false });
 		result.push({ key: "vorname", label: "Vorname", span: 2, sortable: false });
 		if (hatKompetenzUpdate.value)
@@ -354,7 +355,7 @@
 		{ key: "linkToSchueler", label: " ", fixedWidth: 1.75, align: "center" },
 		{ key: "nachname", label: "Nachname", span: 1, sortable: true },
 		{ key: "vorname", label: "Vorname", span: 1, sortable: true },
-		{ key: "status", label: "Status", sortable: true, span: 0.5 }
+		{ key: "status", label: "Status", sortable: true, span: 0.5 },
 	];
 
 	const validateKuerzel = (kuerzel: string | null): boolean => props.manager().validateKuerzel(kuerzel);

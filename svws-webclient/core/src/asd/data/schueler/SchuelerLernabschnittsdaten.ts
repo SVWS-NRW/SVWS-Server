@@ -49,11 +49,6 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 	public datumZeugnis : string | null = null;
 
 	/**
-	 * Die Anzahl der Schulbesuchsjahre
-	 */
-	public anzahlSchulbesuchsjahre : number | null = null;
-
-	/**
 	 * Gibt an, ob es sich um einen gewerteten Abschnitt handelt oder nicht
 	 */
 	public istGewertet : boolean = true;
@@ -280,7 +275,6 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 		result.datumEnde = (obj.datumEnde === undefined) ? null : obj.datumEnde === null ? null : obj.datumEnde;
 		result.datumKonferenz = (obj.datumKonferenz === undefined) ? null : obj.datumKonferenz === null ? null : obj.datumKonferenz;
 		result.datumZeugnis = (obj.datumZeugnis === undefined) ? null : obj.datumZeugnis === null ? null : obj.datumZeugnis;
-		result.anzahlSchulbesuchsjahre = (obj.anzahlSchulbesuchsjahre === undefined) ? null : obj.anzahlSchulbesuchsjahre === null ? null : obj.anzahlSchulbesuchsjahre;
 		if (obj.istGewertet === undefined)
 			throw new Error('invalid json format, missing attribute istGewertet');
 		result.istGewertet = obj.istGewertet;
@@ -360,7 +354,6 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 		result += '"datumEnde" : ' + ((obj.datumEnde === null) ? 'null' : JSON.stringify(obj.datumEnde)) + ',';
 		result += '"datumKonferenz" : ' + ((obj.datumKonferenz === null) ? 'null' : JSON.stringify(obj.datumKonferenz)) + ',';
 		result += '"datumZeugnis" : ' + ((obj.datumZeugnis === null) ? 'null' : JSON.stringify(obj.datumZeugnis)) + ',';
-		result += '"anzahlSchulbesuchsjahre" : ' + ((obj.anzahlSchulbesuchsjahre === null) ? 'null' : obj.anzahlSchulbesuchsjahre.toString()) + ',';
 		result += '"istGewertet" : ' + obj.istGewertet.toString() + ',';
 		result += '"istWiederholung" : ' + obj.istWiederholung.toString() + ',';
 		result += '"pruefungsOrdnung" : ' + JSON.stringify(obj.pruefungsOrdnung) + ',';
@@ -436,9 +429,6 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 		}
 		if (obj.datumZeugnis !== undefined) {
 			result += '"datumZeugnis" : ' + ((obj.datumZeugnis === null) ? 'null' : JSON.stringify(obj.datumZeugnis)) + ',';
-		}
-		if (obj.anzahlSchulbesuchsjahre !== undefined) {
-			result += '"anzahlSchulbesuchsjahre" : ' + ((obj.anzahlSchulbesuchsjahre === null) ? 'null' : obj.anzahlSchulbesuchsjahre.toString()) + ',';
 		}
 		if (obj.istGewertet !== undefined) {
 			result += '"istGewertet" : ' + obj.istGewertet.toString() + ',';

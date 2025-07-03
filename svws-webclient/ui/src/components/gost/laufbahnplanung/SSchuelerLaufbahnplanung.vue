@@ -1,4 +1,7 @@
 <template>
+	<Teleport to=".svws-ui-header--actions" defer>
+		<svws-ui-modal-hilfe> <hilfe-schueler-laufbahnplanung /> </svws-ui-modal-hilfe>
+	</Teleport>
 	<div class="page page-flex-row max-w-480">
 		<Teleport v-if="hatUpdateKompetenz" defer to=".svws-sub-nav-target">
 			<svws-ui-sub-nav>
@@ -23,7 +26,7 @@
 		<div class="grow overflow-y-auto overflow-x-hidden min-w-fit">
 			<s-laufbahnplanung-card-planung v-if="visible" :manager :abiturdaten-manager :gost-jahrgangsdaten :set-wahl :goto-kursblockung />
 		</div>
-		<div class="w-2/5 3xl:w-1/2 min-w-144 overflow-y-auto overflow-x-hidden">
+		<div class="w-2/5 3xl:w-1/2 min-w-144 overflow-y-auto overflow-x-hidden pr-4">
 			<div class="flex flex-col gap-y-16 lg:gap-y-20">
 				<s-laufbahnplanung-card-beratung v-if="visible && hatUpdateKompetenz" :gost-laufbahn-beratungsdaten :patch-beratungsdaten="doPatchBeratungsdaten" :list-lehrer :id :schueler :updated />
 				<s-laufbahnplanung-card-status v-if="visible" :abiturdaten-manager :fehlerliste="() => gostBelegpruefungErgebnis().fehlercodes" :gost-belegpruefungs-art :set-gost-belegpruefungs-art />

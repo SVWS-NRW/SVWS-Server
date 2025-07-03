@@ -1,8 +1,9 @@
-import { ref, shallowRef, triggerRef } from "vue";
+import { ref, shallowRef, toRaw, triggerRef } from "vue";
 import type { List } from "../../../../../../core/src/java/util/List";
 import { ArrayList } from "../../../../../../core/src/java/util/ArrayList";
-import { DeveloperNotificationException } from "../../../../../../core/src";
+import { DeveloperNotificationException } from "../../../../../../core/src/core/exceptions/DeveloperNotificationException";
 import type { SelectFilter } from "../filter/SelectFilter";
+import { SearchSelectFilter } from "../filter/SearchSelectFilter";
 
 /**
  * Abstrakte Manager Klasse zur Verwendung in einer Select-Komponente (UiSelect.vue). SelectManager übernehmen die Logik der Select-Komponente.
@@ -41,23 +42,10 @@ export abstract class BaseSelectManager<T> {
 	 * @param options    die Liste aller Optionen der Komponente (ungefiltert)
 	 * @param selected   optional. Die Liste der aktuell selektierten Optionen. Bei einer Singe-Select-Komponente darf maximal ein Objekt in dieser Liste sein.
 	 */
-	protected constructor(multi: boolean, options: Iterable<T>, selected?: Iterable<T>) {
+	protected constructor(multi: boolean, options: Iterable<T>, selected?: any) {
 		this.multi = multi;
-
-		const optionsTmp = new ArrayList<T>();
-		for (const i of options)
-			optionsTmp.add(i);
-		this.options = optionsTmp;
-
-		const selectedTmp = new ArrayList<T>();
-		if (selected !== undefined) {
-			for (const i of selected)
-				selectedTmp.add(i);
-			if (!multi && (selectedTmp.size() > 1))
-				throw new DeveloperNotificationException("In einer Single-Select-Komponente können nicht mehrere Optionen selektiert sein. "
-					+ "Dem Konstruktor wurden jedoch mehrere übergeben.");
-			this.selected = selectedTmp;
-		}
+		this.options = options;
+		this.selected = selected;
 		this.updateFiltered();
 	}
 
@@ -75,36 +63,60 @@ export abstract class BaseSelectManager<T> {
 	 *
 	 * @param value   neue Optionenliste (ungefiltert)
 	 */
-	public set options(value: List<T>) {
-		this._options.value = value;
+	public set options(value: Iterable<T>) {
+		this._options.value = this.getListFromIterable(value);
+	}
+
+	/**
+	 * Generiert eine ArrayList aus einem Iterable
+	 *
+	 * @param iterable   das Itereable, das umgerechnetw erden soll.
+	 * @returns eine ArrayList, die die Elemente des Iterables enthält.
+	 */
+	private getListFromIterable<U>(iterable: Iterable<U>): ArrayList<U> {
+		const tmpList = new ArrayList<U>()
+		for (const item of iterable)
+			tmpList.add(toRaw(item))
+		return tmpList
 	}
 
 	/**
 	 * Getter für alle selektierten Optionen der Komponente.
 	 *
-	 * @return Aktuelle Selektion
+	 * @return Aktuelle Selektion. Bei Single-Selektion ein einzelnes Objekt, bei Multi-Selektion eine Liste.
 	 */
-	public get selected(): List<T> {
-		return this._selected.value;
+	public get selected(): any {
+		if (this.multi)
+			return this._selected.value;
+		else
+			return (this._selected.value.isEmpty()) ? null : this._selected.value.getFirst();
 	}
 
 	/**
 	 * Setter für alle selektierten Optionen der Komponente.
 	 *
-	 * @param value   neue Selektion
+	 * @param value   neue Selektion. Bei Single-Selektion nur ein einzelnes Element, bei Muli-Selektion eine Liste.
 	 *
-	 * @throws DeveloperNotificationException   wenn die neue Liste mehrere Optionen enthält, aber nur Single-Selektionen erlaubt sind
+	 * @throws DeveloperNotificationException   wenn nur Single-Selektion erlaubt ist, aber eine Liste übergeben wird.
 	 */
 	public set selected(value: any) {
-		const newSelection = new ArrayList<T>();
+		let newSelection = new ArrayList<T>();
 		if (value !== undefined && value !== null) {
-			if ((typeof value[Symbol.iterator] === 'function') && (typeof value !== "string"))
-				newSelection.addAll(value);
-			else
-				newSelection.add(value);
+			if ((typeof value[Symbol.iterator] === 'function') && (typeof value !== "string")) {
+				if (!this.multi)
+					throw new DeveloperNotificationException(`In einer Single-Select-Komponente darf nur ein einzelnes Objekt als Selektion übergeben werden!
+					Übergeben wurde jedoch ${value}`);
+				newSelection = this.getListFromIterable(value);
+			}
+			else {
+				if (this.multi)
+					throw new DeveloperNotificationException(`In einer Multi-Select-Komponente darf nur eine Liste von Objekten als Selektion übergeben werden!
+					Übergeben wurde jedoch "${value}"`);
+				newSelection.add(toRaw(value));
+			}
 		}
 
-		if (!this._multi.value && newSelection.size() > 1)
+		if (!this.multi && newSelection.size() > 1)
 			throw new DeveloperNotificationException("In einer Single-Select-Komponente können nicht mehrere Optionen selektiert sein. "
 				+ "Dem selected Setter wurden jedoch mehrere übergeben.");
 
@@ -126,23 +138,25 @@ export abstract class BaseSelectManager<T> {
 	 *
 	 * @param value   neue aktive Filter
 	 */
-	public set filters(value: List<SelectFilter<T>>) {
-		this._filters = value;
+	public set filters(value: Iterable<SelectFilter<T>>) {
+		this._filters = this.getListFromIterable(value);
 	}
 
 	/**
 	 * Fügt einen Filter zu den aktiven Filtern hinzu. Der key des Filters muss eindeutig sein. Es dürfen keine zwei Filter mit demselben Key hinzugefügt werden.
 	 * Die gefilterte Liste wird sofort aktualisiert.
 	 *
-	 * @param filter   der neue, aktive Filter
+	 * @param newFilter   der neue, aktive Filter
 	 */
-	public addFilter(filter: SelectFilter<T>) {
-		for (const item of this.filters)
-			if (item.key === filter.key)
-				throw new DeveloperNotificationException(`Der SelectManager des UiSelects beinhaltet bereits einen Filter mit dem Key ${filter.key}`);
-		this.filters.add(filter);
-		const filteredList = filter.apply(this.options)
-		this._filterMap.set(filter.key, filteredList);
+	public addFilter(newFilter: SelectFilter<T>) {
+		for (const filter of this.filters)
+			if (filter.key === newFilter.key) {
+				this.removeFilter(newFilter);
+				break;
+			}
+		this.filters.add(newFilter);
+		const filteredList = newFilter.apply(this.options)
+		this._filterMap.set(newFilter.key, filteredList);
 		this.updateFiltered();
 	}
 
@@ -162,8 +176,8 @@ export abstract class BaseSelectManager<T> {
 	 * @param removeFilter   Filter, der entfernt werden soll.
 	 */
 	public removeFilter(removeFilter: SelectFilter<T>) {
-		const filter = this.findFilter(removeFilter);
-		if (filter === undefined)
+		const filter = this.getFilter(removeFilter.key);
+		if (filter === null)
 			return;
 		this.filters.remove(filter);
 		this._filterMap.delete(filter.key);
@@ -173,15 +187,15 @@ export abstract class BaseSelectManager<T> {
 	/**
 	 * Sucht einen Filter in der aktiven Filterliste anhand seines Keys.
 	 *
-	 * @param findFilter   der Filter, der gefunden werden soll
+	 * @param filterKey   der Key des Filters, der gefunden werden soll
 	 *
-	 * @returns den passenden Filter. Undefined, wenn keiner gefunden werden konnte.
+	 * @returns den passenden Filter. null, wenn keiner gefunden werden konnte.
 	 */
-	private findFilter(findFilter: SelectFilter<T>): SelectFilter<T> | undefined {
+	public getFilter(filterKey: string): SelectFilter<T> | null {
 		for (const filter of this.filters)
-			if (filter.key === findFilter.key)
+			if (filter.key === filterKey)
 				return filter;
-		return undefined;
+		return null;
 	}
 
 	/**
@@ -199,6 +213,19 @@ export abstract class BaseSelectManager<T> {
 				result = this.intersect(result, filteredOptions);
 
 		this.filtered = result;
+	}
+
+	/**
+	 * Fügt Attribute zum SearchSelectFilter (key = "search") hinzu, die bei der Suche nach Suchbegriffen berücksichtigt werden sollen.
+	 *
+	 * @param attributes   Attribute des Objekts, in denen bei einer Begriffssuche ebenfalls gesucht werden soll.
+	 */
+	public setDeepSearchAttributes(attributes: string[]) {
+		let searchFilter = this.getFilter("search");
+		if (searchFilter === null)
+			searchFilter = new SearchSelectFilter<T>("search", "", (option: T) => this.getOptionText(option));
+		(searchFilter as SearchSelectFilter<T>).deepSearchAttributes = attributes;
+		this.updateFilter(searchFilter);
 	}
 
 	/**
@@ -234,8 +261,8 @@ export abstract class BaseSelectManager<T> {
 	 *
 	 * @param value   neue Liste der gefilterten Optionen
 	 */
-	public set filtered(value: List<T>) {
-		this._filtered.value = value;
+	public set filtered(value: Iterable<T>) {
+		this._filtered.value = this.getListFromIterable(value);
 		triggerRef(this._filtered);
 	}
 

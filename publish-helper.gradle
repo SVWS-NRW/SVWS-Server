@@ -58,7 +58,7 @@ publishing {
 }
 
 task signJars(type: Exec) {
-	group 'signing'
+	group = 'signing'
 	dependsOn rootProject.prepareSigning
 	doFirst {
 		def fileJarsToSign = new File("${projectDir}/build/jarsToSign.txt")

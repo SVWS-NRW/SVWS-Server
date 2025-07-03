@@ -25,4 +25,6 @@ export interface LaufbahnplanungOberstufeProps {
 	saveLaufbahnplanung: () => Promise<void>;
 	restoreLaufbahnplanung: () => Promise<void>;
 	resetFachwahlen: (forceDelete: boolean) => Promise<void>;
+	exitLaufbahnplanung: () => Promise<void>;
+	dirty: () => boolean;
 }

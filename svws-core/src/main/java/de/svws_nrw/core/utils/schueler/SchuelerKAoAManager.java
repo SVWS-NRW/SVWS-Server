@@ -261,4 +261,8 @@ public class SchuelerKAoAManager extends AuswahlManager<Long, SchuelerKAoADaten,
 		}
 		throw new DeveloperNotificationException("Kein Jahrgang für das Schuljahr %d gefunden.".formatted(schuljahr));
 	}
+
+	// public void useFilter(final @NotNull SchuelerKAoAManager srcManager) {
+	// }
+
 }

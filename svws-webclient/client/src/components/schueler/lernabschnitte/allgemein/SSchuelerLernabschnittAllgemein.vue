@@ -9,7 +9,7 @@
 					:model-value="jahrgang" @update:model-value="value => patch({ jahrgangID: ((value === undefined) || (value === null)) ? null : value.id })"
 					autocomplete statistics required />
 				<svws-ui-select :disabled="!hatUpdateKompetenz" title="EP-Jahr" :items="PrimarstufeSchuleingangsphaseBesuchsjahre.data().getEintraegeBySchuljahr(schuljahr)" :item-text="i => i.kuerzel"
-					:model-value="epJahre" @update:model-value="value => patch({ epJahre: ((value === undefined) || (value === null)) ? null : value.id })"
+					:model-value="epJahre" @update:model-value="value => patch({ epJahre: ((value === undefined) || (value === null)) ? null : parseInt(value.schluessel) })"
 					statistics required />
 			</div>
 			<svws-ui-input-wrapper :grid="2">

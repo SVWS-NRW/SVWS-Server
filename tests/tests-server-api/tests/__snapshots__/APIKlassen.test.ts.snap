@@ -519,7 +519,6 @@ KlassenDaten {
   "idSchuljahresabschnitt": 1,
   "idVorgaengerklasse": 261,
   "idWeiterbildungOrganisationsform": null,
-  "istSichtbar": true,
   "klassenLeitungen": ArrayList {
     "addFirst": [Function],
     "addLast": [Function],
@@ -927,7 +926,6 @@ KlassenDaten {
   "idSchuljahresabschnitt": 1,
   "idVorgaengerklasse": null,
   "idWeiterbildungOrganisationsform": null,
-  "istSichtbar": false,
   "klassenLeitungen": ArrayList {
     "addFirst": [Function],
     "addLast": [Function],
@@ -978,7 +976,6 @@ exports[`APIKlassen Tests > gegen { schema: 'GymAbi01' } > POST: Neue Klasse (nu
   "idSchuljahresabschnitt": 2,
   "idVorgaengerklasse": null,
   "idWeiterbildungOrganisationsform": null,
-  "istSichtbar": true,
   "klassenLeitungen": ArrayList {
     "addFirst": [Function],
     "addLast": [Function],

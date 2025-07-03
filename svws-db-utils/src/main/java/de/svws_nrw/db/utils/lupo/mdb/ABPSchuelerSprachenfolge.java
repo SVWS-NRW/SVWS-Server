@@ -5,14 +5,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
 
-import com.healthmarketscience.jackcess.ColumnBuilder;
-import com.healthmarketscience.jackcess.DataType;
-import com.healthmarketscience.jackcess.Database;
-import com.healthmarketscience.jackcess.IndexBuilder;
-import com.healthmarketscience.jackcess.PropertyMap;
-import com.healthmarketscience.jackcess.Row;
-import com.healthmarketscience.jackcess.Table;
-import com.healthmarketscience.jackcess.TableBuilder;
+import io.github.spannm.jackcess.ColumnBuilder;
+import io.github.spannm.jackcess.DataType;
+import io.github.spannm.jackcess.Database;
+import io.github.spannm.jackcess.IndexBuilder;
+import io.github.spannm.jackcess.PropertyMap;
+import io.github.spannm.jackcess.Row;
+import io.github.spannm.jackcess.Table;
+import io.github.spannm.jackcess.TableBuilder;
 
 /**
  * Diese Klasse wird für den Import der Tabelle ABP_SchuelerSprachenfolge aus einer LuPO-Datenbank
@@ -100,16 +100,16 @@ public final class ABPSchuelerSprachenfolge {
 	public static void write(final Database db, final List<ABPSchuelerSprachenfolge> list) {
 		try {
 			final Table table = new TableBuilder("ABP_SchuelerSprachenfolge")
-					.addColumn(new ColumnBuilder(fieldSchueler_ID, DataType.LONG).putProperty(PropertyMap.REQUIRED_PROP, DataType.BOOLEAN, true))
-					.addColumn(new ColumnBuilder(fieldFachKrz, DataType.TEXT).setLengthInUnits(20).putProperty(PropertyMap.REQUIRED_PROP, DataType.BOOLEAN,
+					.addColumn(new ColumnBuilder(fieldSchueler_ID, DataType.LONG).withProperty(PropertyMap.REQUIRED_PROP, DataType.BOOLEAN, true))
+					.addColumn(new ColumnBuilder(fieldFachKrz, DataType.TEXT).withLengthInUnits(20).withProperty(PropertyMap.REQUIRED_PROP, DataType.BOOLEAN,
 							true))
 					.addColumn(new ColumnBuilder(fieldJahrgangVon, DataType.INT))
 					.addColumn(new ColumnBuilder(fieldJahrgangBis, DataType.INT))
-					.addColumn(new ColumnBuilder(fieldReihenfolge, DataType.TEXT).setLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldReihenfolge, DataType.TEXT).withLengthInUnits(1))
 					.addColumn(new ColumnBuilder(fieldAbschnittVon, DataType.INT))
 					.addColumn(new ColumnBuilder(fieldAbschnittBis, DataType.INT))
-					.addColumn(new ColumnBuilder(fieldStatistikKrz, DataType.TEXT).setLengthInUnits(2))
-					.addIndex(new IndexBuilder(IndexBuilder.PRIMARY_KEY_NAME).addColumns(fieldSchueler_ID, fieldFachKrz).setPrimaryKey())
+					.addColumn(new ColumnBuilder(fieldStatistikKrz, DataType.TEXT).withLengthInUnits(2))
+					.addIndex(new IndexBuilder(IndexBuilder.PRIMARY_KEY_NAME).withColumns(fieldSchueler_ID, fieldFachKrz).withPrimaryKey())
 					.toTable(db);
 			if (list == null)
 				return;

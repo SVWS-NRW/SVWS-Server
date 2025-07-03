@@ -241,6 +241,16 @@ export class FachListeManager extends AuswahlManager<number, FaecherListeEintrag
 		return (sortierung > 0) && (sortierung < JavaInteger.MAX_VALUE);
 	}
 
+	/**
+	 * Methode übernimmt Filterinformationen aus dem übergebenen {@link AuswahlManager}
+	 *
+	 * @param srcManager Manager, aus dem die Filterinformationen übernommen werden
+	 */
+	public useFilter(srcManager : FachListeManager) : void {
+		this.setFilterAuswahlPermitted(srcManager.isFilterAuswahlPermitted());
+		this.setFilterNurSichtbar(srcManager.filterNurSichtbar());
+	}
+
 	transpilerCanonicalName(): string {
 		return 'de.svws_nrw.core.utils.fach.FachListeManager';
 	}

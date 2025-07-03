@@ -23,6 +23,7 @@ import de.svws_nrw.asd.utils.json.JsonReader;
 @DisplayName("Teste den Validator für die Gesamt-Statistikdaten von Schulen")
 class TestValidatorGesamt {
 
+	/** Statistikdaten der Schule */
 	static final SchuleStatistikdatenGesamt testdaten_001 = JsonReader.fromResource("de/svws_nrw/asd/validate/Testdaten_001_SchuleStatistikdatenGesamt.json", SchuleStatistikdatenGesamt.class);
 
 	/**

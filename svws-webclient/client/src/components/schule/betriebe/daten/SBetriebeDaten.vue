@@ -23,14 +23,15 @@
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input class="contentFocusField" placeholder="Straße / Hausnummer" :model-value="daten.strassenname" @change="strassenname=>patch({strassenname: strassenname ?? undefined})" type="text" />
 				<svws-ui-text-input placeholder="Zusatz" :model-value="daten.hausnrzusatz" @change="hausnrzusatz=>patch({hausnrzusatz: hausnrzusatz ?? undefined})" type="text" />
-				<svws-ui-select title="Wohnort" v-model="inputWohnortID" :items="mapOrte" :item-text="i => `${i.plz} ${i.ortsname}`" autocomplete class="col-span-full" />
+				<svws-ui-select title="Wohnort" v-model="inputWohnortID" :items="mapOrte" :item-text="i => `${i.plz} ${i.ortsname}`" autocomplete
+					class="col-span-full" statistics />
 				<!-- <svws-ui-select title="Ortsteil" v-model="inputOrtsteilID" :items="mapOrtsteile" :item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil ?? ''"
             :item-sort="ortsteilSort" :item-filter="ortsteilFilter" /> -->
 				<svws-ui-spacing />
-				<svws-ui-text-input placeholder="Telefon" :model-value="daten.telefon1" @change="telefon1=>patch({telefon1: telefon1 ?? undefined})" type="text" />
-				<svws-ui-text-input placeholder="2. Telefon" :model-value="daten.telefon2" @change="telefon2=>patch({telefon2: telefon2 ?? undefined})" type="text" />
+				<svws-ui-text-input placeholder="Telefon" :model-value="daten.telefon1" @change="telefon1=>patch({telefon1: telefon1 ?? undefined})" type="text" :max-len="20" />
+				<svws-ui-text-input placeholder="2. Telefon" :model-value="daten.telefon2" @change="telefon2=>patch({telefon2: telefon2 ?? undefined})" type="text" :max-len="20" />
 				<svws-ui-text-input placeholder="E-Mail Adresse" :model-value="daten.email" @change="email=>patch({email: email ?? undefined})" type="email" verify-email />
-				<svws-ui-text-input placeholder="Fax" :model-value="daten.fax" @change="fax=>patch({fax: fax ?? undefined})" type="text" />
+				<svws-ui-text-input placeholder="Fax" :model-value="daten.fax" @change="fax=>patch({fax: fax ?? undefined})" type="text" :max-len="20" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Ansprechpartner">
@@ -45,7 +46,7 @@
 					<svws-ui-text-input :model-value="rowData.vorname" @change="vorname=>patchBetriebAnpsrechpartner({vorname}, rowData.id)" headless required />
 				</template>
 				<template #cell(telefon)="{ rowData }">
-					<svws-ui-text-input :model-value="rowData.telefon" @change="telefon=>patchBetriebAnpsrechpartner({telefon}, rowData.id)" headless required />
+					<svws-ui-text-input :model-value="rowData.telefon" @change="telefon=>patchBetriebAnpsrechpartner({telefon}, rowData.id)" headless required :max-len="20" />
 				</template>
 				<template #cell(email)="{ rowData }">
 					<svws-ui-text-input :model-value="rowData.email" @change="email=>patchBetriebAnpsrechpartner({email}, rowData.id)" headless required />

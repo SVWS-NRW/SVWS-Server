@@ -105,8 +105,8 @@
 
 <script setup lang="ts">
 
-	import type { GostFachwahlenAllgemeinProps } from "./SGostFachwahlenAllgemeinProps";
 	import { computed, ref } from "vue";
+	import type { GostFachwahlenAllgemeinProps } from "./SGostFachwahlenAllgemeinProps";
 	import { Fach, type GostStatistikFachwahl, type SchuelerListeEintrag, type List, ArrayList, GostHalbjahr } from "@core";
 
 	const props = defineProps<GostFachwahlenAllgemeinProps>();

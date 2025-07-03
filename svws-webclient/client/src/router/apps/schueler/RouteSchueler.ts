@@ -24,6 +24,7 @@ import type { SchuelerAppProps } from "~/components/schueler/SSchuelerAppProps";
 import { routeSchuelerSonstiges } from "./sonstiges/RouteSchuelerSonstiges";
 import { routeSchuelerAllgemeinesGruppenprozesse } from "~/router/apps/schueler/allgemeines/RouteSchuelerAllgemeinesGruppenprozesse";
 import { routeSchuelerIndividualdatenGruppenprozesse } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdatenGruppenprozesse";
+import { routeSchuelerAbitur } from "./abitur/RouteSchuelerAbitur";
 
 const SSchuelerAuswahl = () => import("~/components/schueler/SSchuelerAuswahl.vue")
 const SSchuelerApp = () => import("~/components/schueler/SSchuelerApp.vue")
@@ -54,6 +55,7 @@ export class RouteSchueler extends RouteAuswahlNode<SchuelerListeManager, RouteD
 			routeSchuelerLernabschnitte,
 			routeSchuelerSprachen,
 			routeSchuelerLaufbahnplanung,
+			routeSchuelerAbitur,
 			routeSchuelerStundenplan,
 			routeSchuelerAllgemeinesGruppenprozesse,
 			routeSchuelerIndividualdatenGruppenprozesse,
@@ -66,7 +68,7 @@ export class RouteSchueler extends RouteAuswahlNode<SchuelerListeManager, RouteD
 	}
 
 	protected doUpdateIfTarget = async (to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined) => {
-		if (!this.data.schuelerListeManager.hasDaten())
+		if (!this.data.manager.hasDaten())
 			return;
 		if ((from !== undefined) && (/(\.|^)stundenplan/).test(from.name))
 			return this.getRouteView(routeSchuelerStundenplan);

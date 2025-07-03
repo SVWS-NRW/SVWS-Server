@@ -190,7 +190,6 @@ describe("SvwsUiTooltip", () => {
 				content: "<span class='tooltip-content'>Lorem123</span>",
 			},
 		});
-		console.log(document.body.outerHTML)
 		expect(document.body.outerHTML).contains("absolute rotate-45 bg-inherit aspect-square w-2");
 	});
 });

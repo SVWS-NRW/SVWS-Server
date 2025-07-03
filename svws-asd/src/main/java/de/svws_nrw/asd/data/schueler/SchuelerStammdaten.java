@@ -17,7 +17,7 @@ public class SchuelerStammdaten {
 	// **** Basisdaten
 
 	/** Die ID des Schülerdatensatzes. */
-	@Schema(description = "die ID", example = "4711")
+	@Schema(description = "die ID", example = "4711", accessMode = Schema.AccessMode.READ_ONLY)
 	public long id;
 
 	/** Das Foto (in Base64 kodiert) des Schülerdatensatzes. */

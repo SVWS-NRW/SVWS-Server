@@ -15,11 +15,11 @@
 				</template>
 				<template #filterAdvanced>
 					<svws-ui-checkbox type="toggle" v-model="filterNurSichtbar">Nur Sichtbare</svws-ui-checkbox>
-					<svws-ui-multi-select v-model="filterSchueler" title="Schüler" :items="manager().schueler.list()" :item-text="textSchueler" :item-filter="findSchueler" />
-					<svws-ui-multi-select v-model="filterFaecher" title="Fach" :items="manager().faecher.list()" :item-text="text" :item-filter="find" />
-					<svws-ui-multi-select v-model="filterLehrer" title="Fachlehrer" :items="manager().lehrer.list()" :item-text="text" :item-filter="find" />
-					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="manager().jahrgaenge.list()" :item-text="text" :item-filter="find" />
-					<svws-ui-multi-select v-model="filterSchulgliederung" title="Schulgliederung" :items="manager().schulgliederungen.list()" :item-text="text_schulgliederung" />
+					<svws-ui-multi-select v-model="filterSchueler" title="Schüler" :items="manager().schueler.list()" :item-text="textSchueler" :item-filter="findSchueler" autocomplete />
+					<svws-ui-multi-select v-model="filterFaecher" title="Fach" :items="manager().faecher.list()" :item-text="text" :item-filter="find" autocomplete />
+					<svws-ui-multi-select v-model="filterLehrer" title="Fachlehrer" :items="manager().lehrer.list()" :item-text="text" :item-filter="find" autocomplete />
+					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="manager().jahrgaenge.list()" :item-text="text" :item-filter="find" autocomplete />
+					<svws-ui-multi-select v-model="filterSchulgliederung" title="Schulgliederung" :items="manager().schulgliederungen.list()" :item-text="text_schulgliederung" autocomplete />
 				</template>
 				<template #cell(lehrer)="{ value }"> {{ getLehrerKuerzel(value) }} </template>
 				<template #cell(idJahrgaenge)="{ value }"> {{ getJahrgangsKuerzel(value) }} </template>

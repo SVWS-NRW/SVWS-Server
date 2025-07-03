@@ -156,7 +156,7 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 		this.schuelerstatus = new AttributMitAuswahl(Arrays.asList(...SchuelerStatus.values()), this._schuelerstatusToId, KursListeManager._comparatorSchuelerStatus, this._eventHandlerFilterChanged);
 		this.schueler = new AttributMitAuswahl(schueler, KursListeManager._schuelerToId, SchuelerUtils.comparator, this._eventHandlerFilterChanged);
 		this.jahrgaenge = new AttributMitAuswahl(jahrgaenge, KursListeManager._jahrgangToId, JahrgangsUtils.comparator, this._eventHandlerFilterChanged);
-		this.lehrer = new AttributMitAuswahl(lehrer, KursListeManager._lehrerToId, LehrerUtils.comparator, this._eventHandlerFilterChanged);
+		this.lehrer = new AttributMitAuswahl(lehrer, KursListeManager._lehrerToId, LehrerUtils.comparatorKuerzel, this._eventHandlerFilterChanged);
 		this.faecher = new AttributMitAuswahl(faecher, KursListeManager._fachToId, KursListeManager.comparatorFaecherListe, this._eventHandlerFilterChanged);
 		const gliederungen : List<Schulgliederung> = (schulform === null) ? Arrays.asList(...Schulgliederung.values()) : Schulgliederung.getBySchuljahrAndSchulform(this.getSchuljahr(), schulform);
 		this.schulgliederungen = new AttributMitAuswahl(gliederungen, this._schulgliederungToId, KursListeManager._comparatorSchulgliederung, this._eventHandlerFilterChanged);
@@ -387,6 +387,20 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 	 */
 	public getByKuerzelAndJahrgangOrNull(kuerzel : string, idJahrgang : number) : KursDaten | null {
 		return this._mapKursByKuerzelAndJahrgang.getOrNull(kuerzel, idJahrgang);
+	}
+
+	/**
+	 * Methode übernimmt Filterinformationen aus dem übergebenen {@link KursListeManager}
+	 *
+	 * @param srcManager Manager, aus dem die Filterinformationen übernommen werden
+	 */
+	public useFilter(srcManager : KursListeManager) : void {
+		this.jahrgaenge.setAuswahl(srcManager.jahrgaenge);
+		this.lehrer.setAuswahl(srcManager.lehrer);
+		this.schulgliederungen.setAuswahl(srcManager.schulgliederungen);
+		this.faecher.setAuswahl(srcManager.faecher);
+		this.schueler.setAuswahl(srcManager.schueler);
+		this.setFilterNurSichtbar(srcManager._filterNurSichtbar);
 	}
 
 	transpilerCanonicalName(): string {

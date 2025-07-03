@@ -1,5 +1,6 @@
 package svws.gradle.java
 
+import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import groovy.json.JsonSlurper
@@ -27,16 +28,15 @@ class SvwsVSCodePlugin implements Plugin<Project> {
 			def sourceJson
 			try {
 				sourceJson = jsonSlurper.parse(source)
-			} catch (Exception ignored) {
-				return
+			} catch (Exception e) {
+				throw new GradleException("JSON ist ungültig: ${source.path} - ${e}")
 			}
 
 			def targetJson
 			try {
 				targetJson = jsonSlurper.parse(target)
-			} catch (Exception ignored) {
-				target.text = source.text
-				return
+			} catch (Exception e) {
+				throw new GradleException("JSON ist ungültig: ${target.path} - ${e}")
 			}
 
 			// Merge die JSON-Daten aus targetJson und sourceJson. Werte aus sourceJson überschreiben

@@ -24,6 +24,11 @@ export class AbiturFachbelegungHalbjahr extends JavaObject {
 	public biliSprache : string | null = null;
 
 	/**
+	 * Die ID des Kurses
+	 */
+	public idKurs : number | null = null;
+
+	/**
 	 * Die ID des unterrichtenden Lehrers, welcher die Note erteilt.
 	 */
 	public lehrer : number | null = null;
@@ -89,6 +94,7 @@ export class AbiturFachbelegungHalbjahr extends JavaObject {
 			throw new Error('invalid json format, missing attribute schriftlich');
 		result.schriftlich = obj.schriftlich;
 		result.biliSprache = (obj.biliSprache === undefined) ? null : obj.biliSprache === null ? null : obj.biliSprache;
+		result.idKurs = (obj.idKurs === undefined) ? null : obj.idKurs === null ? null : obj.idKurs;
 		result.lehrer = (obj.lehrer === undefined) ? null : obj.lehrer === null ? null : obj.lehrer;
 		if (obj.wochenstunden === undefined)
 			throw new Error('invalid json format, missing attribute wochenstunden');
@@ -111,6 +117,7 @@ export class AbiturFachbelegungHalbjahr extends JavaObject {
 		result += '"kursartKuerzel" : ' + JSON.stringify(obj.kursartKuerzel) + ',';
 		result += '"schriftlich" : ' + obj.schriftlich.toString() + ',';
 		result += '"biliSprache" : ' + ((obj.biliSprache === null) ? 'null' : JSON.stringify(obj.biliSprache)) + ',';
+		result += '"idKurs" : ' + ((obj.idKurs === null) ? 'null' : obj.idKurs.toString()) + ',';
 		result += '"lehrer" : ' + ((obj.lehrer === null) ? 'null' : obj.lehrer.toString()) + ',';
 		result += '"wochenstunden" : ' + obj.wochenstunden.toString() + ',';
 		result += '"fehlstundenGesamt" : ' + obj.fehlstundenGesamt.toString() + ',';
@@ -136,6 +143,9 @@ export class AbiturFachbelegungHalbjahr extends JavaObject {
 		}
 		if (obj.biliSprache !== undefined) {
 			result += '"biliSprache" : ' + ((obj.biliSprache === null) ? 'null' : JSON.stringify(obj.biliSprache)) + ',';
+		}
+		if (obj.idKurs !== undefined) {
+			result += '"idKurs" : ' + ((obj.idKurs === null) ? 'null' : obj.idKurs.toString()) + ',';
 		}
 		if (obj.lehrer !== undefined) {
 			result += '"lehrer" : ' + ((obj.lehrer === null) ? 'null' : obj.lehrer.toString()) + ',';

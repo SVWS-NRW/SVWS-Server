@@ -34,10 +34,10 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 	protected checkHidden(params?: RouteParams) {
 		try {
 			const { id } = (params !== undefined) ? RouteNode.getIntParams(params, ["id"]) : {id: undefined};
-			if (!routeSchueler.data.schuelerListeManager.hasDaten())
+			if (!routeSchueler.data.manager.hasDaten())
 				return false;
-			const abiturjahr = routeSchueler.data.schuelerListeManager.auswahl().abiturjahrgang;
-			if (((abiturjahr !== null) && routeSchueler.data.schuelerListeManager.abiturjahrgaenge.get(abiturjahr))
+			const abiturjahr = routeSchueler.data.manager.auswahl().abiturjahrgang;
+			if (((abiturjahr !== null) && routeSchueler.data.manager.abiturjahrgaenge.get(abiturjahr))
 				&& (api.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN)
 					|| (api.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN) && api.benutzerKompetenzenAbiturjahrgaenge.has(abiturjahr))))
 				return false;
@@ -52,20 +52,18 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 			if (isEntering)
 			// Wenn man in die Laufbahnplanung wechselt und von einer Gost-Route per Schülerlink kommt, dann im Filter direkt den Jahrgang wählen
 				if ((from !== undefined) && from.checkSuccessorOf('gost') !== false)
-					for (const e of routeSchueler.data.schuelerListeManager.jahrgaenge.list())
-						if (e.id === routeSchueler.data.schuelerListeManager.auswahl().idJahrgang) {
-							routeSchueler.data.schuelerListeManager.jahrgaenge.auswahlAdd(e);
+					for (const e of routeSchueler.data.manager.jahrgaenge.list())
+						if (e.id === routeSchueler.data.manager.auswahl().idJahrgang) {
+							routeSchueler.data.manager.jahrgaenge.auswahlAdd(e);
 							await routeSchueler.data.setFilter();
 							break;
 						}
 			const { id } = RouteNode.getIntParams(to_params, ["id"]);
-			if (this.parent === undefined)
-				throw new DeveloperNotificationException("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
 			if (id === undefined)
 				await this.data.ladeDaten(null);
 			else
 				try {
-					await this.data.ladeDaten(this.parent.data.schuelerListeManager.liste.get(id));
+					await this.data.ladeDaten(routeSchueler.data.manager.liste.get(id));
 				} catch(error) {
 					return routeSchueler.getRoute({ id });
 				}

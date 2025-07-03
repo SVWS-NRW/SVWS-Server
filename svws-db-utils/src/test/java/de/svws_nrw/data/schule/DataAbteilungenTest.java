@@ -39,7 +39,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class DataAbteilungenTest {
 
-	private final Long idSchuljahresabschnitts = 2L;
+	private final Long idSchuljahresabschnitt = 2L;
 
 	@Mock
 	private DBEntityManager conn;
@@ -57,7 +57,7 @@ class DataAbteilungenTest {
 	void initDTOTest() throws ApiOperationException {
 		final DTOAbteilungen dtoAbteilungen = createDTOAbteilungen();
 		final Map<String, Object> initAttributes = new HashMap<>();
-		initAttributes.put("idSchuljahresabschnitts", idSchuljahresabschnitts);
+		initAttributes.put("idSchuljahresabschnitt", idSchuljahresabschnitt);
 
 		this.dut.initDTO(dtoAbteilungen, 2L, initAttributes);
 
@@ -65,7 +65,7 @@ class DataAbteilungenTest {
 				.isInstanceOf(DTOAbteilungen.class)
 				.hasFieldOrPropertyWithValue("ID", 2L)
 				.hasFieldOrPropertyWithValue("Sichtbar", true)
-				.hasFieldOrPropertyWithValue("Schuljahresabschnitts_ID", idSchuljahresabschnitts);
+				.hasFieldOrPropertyWithValue("Schuljahresabschnitts_ID", idSchuljahresabschnitt);
 	}
 
 	@Test
@@ -120,9 +120,9 @@ class DataAbteilungenTest {
 	@Test
 	@DisplayName("getAll | Erfolgreich mit JahresabschnittsId, überprüfe Abteilungen")
 	void getAllTest() throws ApiOperationException {
-		dut = new DataAbteilungen(conn, idSchuljahresabschnitts);
+		dut = new DataAbteilungen(conn, idSchuljahresabschnitt);
 		final DTOAbteilungen dtoAbteilungen = createDTOAbteilungen();
-		when(conn.queryList(DTOAbteilungen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOAbteilungen.class, idSchuljahresabschnitts))
+		when(conn.queryList(DTOAbteilungen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOAbteilungen.class, idSchuljahresabschnitt))
 				.thenReturn(List.of(dtoAbteilungen));
 		final List<DTOAbteilungsKlassen> dtoAbteilungsKlassens = List.of(new DTOAbteilungsKlassen(1L, 2L, 3L));
 		when(conn.queryList(DTOAbteilungsKlassen.QUERY_LIST_BY_ABTEILUNG_ID, DTOAbteilungsKlassen.class, List.of(dtoAbteilungen.ID))).thenReturn(dtoAbteilungsKlassens);
@@ -139,7 +139,7 @@ class DataAbteilungenTest {
 							.isInstanceOf(Abteilung.class)
 							.hasFieldOrPropertyWithValue("id", dtoAbteilungen.ID)
 							.hasFieldOrPropertyWithValue("bezeichnung", dtoAbteilungen.Bezeichnung)
-							.hasFieldOrPropertyWithValue("idSchuljahresabschnitts", dtoAbteilungen.Schuljahresabschnitts_ID)
+							.hasFieldOrPropertyWithValue("idSchuljahresabschnitt", dtoAbteilungen.Schuljahresabschnitts_ID)
 							.hasFieldOrPropertyWithValue("raum", dtoAbteilungen.Raum)
 							.hasFieldOrPropertyWithValue("email", dtoAbteilungen.Email)
 							.hasFieldOrPropertyWithValue("durchwahl", dtoAbteilungen.Durchwahl)
@@ -150,8 +150,8 @@ class DataAbteilungenTest {
 	@Test
 	@DisplayName("getAll | Leere Liste")
 	void getAllTestEmptyList() throws ApiOperationException {
-		dut = new DataAbteilungen(conn, idSchuljahresabschnitts);
-		when(conn.queryList(DTOAbteilungen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOAbteilungen.class, idSchuljahresabschnitts))
+		dut = new DataAbteilungen(conn, idSchuljahresabschnitt);
+		when(conn.queryList(DTOAbteilungen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOAbteilungen.class, idSchuljahresabschnitt))
 				.thenReturn(Collections.emptyList());
 
 		final List<Abteilung> result = this.dut.getAll();
@@ -164,10 +164,10 @@ class DataAbteilungenTest {
 	@Test
 	@DisplayName("getAll | Erfolgreich mit JahresabschnittsId, überprüfe AbteilungKlassenzurodnungen")
 	void getAllTestAbteilungKlassenzuordnungen() throws ApiOperationException {
-		dut = new DataAbteilungen(conn, idSchuljahresabschnitts);
+		dut = new DataAbteilungen(conn, idSchuljahresabschnitt);
 		final DTOAbteilungen dtoAbteilungen = createDTOAbteilungen();
 		dtoAbteilungen.ID = 2L;
-		when(conn.queryList(DTOAbteilungen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOAbteilungen.class, idSchuljahresabschnitts))
+		when(conn.queryList(DTOAbteilungen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOAbteilungen.class, idSchuljahresabschnitt))
 				.thenReturn(List.of(dtoAbteilungen));
 		when(conn.queryList(DTOAbteilungsKlassen.QUERY_LIST_BY_ABTEILUNG_ID, DTOAbteilungsKlassen.class, List.of(2L))).thenReturn(List.of(new DTOAbteilungsKlassen(1L, 1L, 1L), new DTOAbteilungsKlassen(2L,
 				2L, 2L), new DTOAbteilungsKlassen(3L, 1L, 3L)));
@@ -197,7 +197,7 @@ class DataAbteilungenTest {
 				.isInstanceOf(Abteilung.class)
 				.hasFieldOrPropertyWithValue("id", 1L)
 				.hasFieldOrPropertyWithValue("bezeichnung", "Bezeichnung")
-				.hasFieldOrPropertyWithValue("idSchuljahresabschnitts", 2L)
+				.hasFieldOrPropertyWithValue("idSchuljahresabschnitt", 2L)
 				.hasFieldOrPropertyWithValue("idAbteilungsleiter", 2L)
 				.hasFieldOrPropertyWithValue("raum", "205")
 				.hasFieldOrPropertyWithValue("email", "test@test.com")
@@ -235,7 +235,7 @@ class DataAbteilungenTest {
 		switch (key) {
 			case "id" -> assertThat(expectedDTO.ID).isEqualTo(value);
 			case "bezeichnung" -> assertThat(expectedDTO.Bezeichnung).isEqualTo(value);
-			case "idSchuljahresabschnitts" -> assertThat(expectedDTO.Schuljahresabschnitts_ID).isEqualTo(value);
+			case "idSchuljahresabschnitt" -> assertThat(expectedDTO.Schuljahresabschnitts_ID).isEqualTo(value);
 			case "idAbteilungsleiter" -> assertThat(expectedDTO.AbteilungsLeiter_ID).isEqualTo(value);
 			case "raum" -> assertThat(expectedDTO.Raum).isEqualTo(value);
 			case "email" -> assertThat(expectedDTO.Email).isEqualTo(value);
@@ -270,7 +270,7 @@ class DataAbteilungenTest {
 		return Stream.of(
 				arguments("id", 1L),
 				arguments("bezeichnung", "Bezeichnung"),
-				arguments("idSchuljahresabschnitts", 2L),
+				arguments("idSchuljahresabschnitt", 2L),
 				arguments("idAbteilungsleiter", 2L),
 				arguments("raum", "205"),
 				arguments("email", "test@test.com"),
@@ -281,7 +281,7 @@ class DataAbteilungenTest {
 	}
 
 	private DTOAbteilungen createDTOAbteilungen() {
-		final DTOAbteilungen dtoAbteilungen = new DTOAbteilungen(1L, "Bezeichnung", idSchuljahresabschnitts);
+		final DTOAbteilungen dtoAbteilungen = new DTOAbteilungen(1L, "Bezeichnung", idSchuljahresabschnitt);
 		dtoAbteilungen.Sichtbar = true;
 		dtoAbteilungen.AbteilungsLeiter_ID = 2L;
 		dtoAbteilungen.Sortierung = 3200;

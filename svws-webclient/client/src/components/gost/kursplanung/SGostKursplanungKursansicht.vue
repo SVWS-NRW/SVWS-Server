@@ -38,13 +38,13 @@
 											:title="'Namen bearbeiten (' + s.bezeichnung + ')'" @click="hatUpdateKompetenz && (edit_schienenname = s.id)">
 											{{ s.bezeichnung }}
 										</span>
-										<span v-if="allow_del_schiene(s)" @click="del_schiene(s)" class="icon-sm inline-block i-ri-delete-bin-line cursor-pointer absolute top-1/2 transform -translate-y-1/2 right-px opacity-50 hover:opacity-100 hover:icon-ui-danger" />
+										<span v-if="allow_del_schiene(s)" @click="del_schiene(s)" class="icon-sm i-ri-delete-bin-line cursor-pointer absolute top-1/2 transform -translate-y-1/2 right-px opacity-50 hover:opacity-100 hover:icon-ui-danger" />
 									</div>
 								</template>
 								<template v-else>
 									<span :class="{ 'border-b border-dotted hover:border-transparent': hatUpdateKompetenz }" class="cursor-text normal-nums min-w-[1.5ch] h-full inline-flex items-center justify-center"
 										:title="'Namen bearbeiten (' + s.bezeichnung + ')'" @click="hatUpdateKompetenz && (edit_schienenname = s.id)">{{ s.nummer }}</span>
-									<span v-if="allow_del_schiene(s)" @click="del_schiene(s)" class="icon-sm inline-block i-ri-delete-bin-line cursor-pointer absolute top-1/2 transform -translate-y-1/2 right-px opacity-50 hover:opacity-100 hover:icon-ui-danger" />
+									<span v-if="allow_del_schiene(s)" @click="del_schiene(s)" class="icon-sm i-ri-delete-bin-line cursor-pointer absolute top-1/2 transform -translate-y-1/2 right-px opacity-50 hover:opacity-100 hover:icon-ui-danger" />
 								</template>
 							</div>
 						</div>
@@ -118,16 +118,16 @@
 										:class="{ 'bg-ui-brand/5 text-ui-onbrand hover:text-ui-onbrand-hover': istDropZoneSchiene(schiene), 'svws-divider': (index + 1) < schienen.size() }">
 										<div :key="schiene.id" @click="openModalRegelKursartSchiene(schiene)" class="select-none text-center" :class="(dragSperreSchiene !== undefined) ? ['cursor-grabbing'] : ['cursor-grab']" :draggable="true" @dragstart="dragSchieneStarted(schiene)" @dragend="dragSchieneEnded">
 											<span class="rounded-xs w-3 absolute top-1 left-1 max-w-[0.75rem]">
-												<span class="icon-sm inline-block i-ri-draggable opacity-25 group-hover:opacity-100" />
+												<span class="icon-sm i-ri-draggable opacity-25 group-hover:opacity-100" />
 											</span>
-											<span class="icon inline-block i-ri-lock-unlock-line opacity-25 group-hover:opacity-100" />
+											<span class="icon i-ri-lock-unlock-line opacity-25 group-hover:opacity-100" />
 										</div>
 									</div>
 								</template>
 							</template>
 							<template v-else>
 								<div v-for="(schiene, index) in schienen" :key="schiene.id" role="columnheader" class="svws-ui-td !px-0 svws-align-center" :class="{'svws-divider': (index + 1) < schienen.size() }">
-									<span class="icon inline-block i-ri-lock-unlock-line opacity-10" />
+									<span class="icon i-ri-lock-unlock-line opacity-10" />
 								</div>
 							</template>
 						</template>
@@ -186,8 +186,8 @@
 											<div role="cell" class="svws-ui-td svws-align-center cursor-pointer p-0 items-center hover:text-ui-100" @click="setKursdetailAnzeigen(kurs.id)"
 												:class="{'text-ui-50' : kursdetailAnzeigen !== kurs.id}"
 												title="Kursdetails anzeigen">
-												<span v-if="kursdetailAnzeigen === kurs.id" class="icon-uistatic icon i-ri-arrow-down-s-line relative" />
-												<span v-else class="icon-uistatic icon i-ri-arrow-right-s-line relative" />
+												<span v-if="kursdetailAnzeigen === kurs.id" class="icon-sm i-ri-arrow-down-s-line icon-uistatic relative" />
+												<span v-else class="icon-sm i-ri-arrow-right-s-line icon-uistatic relative" />
 											</div>
 										</template>
 										<div role="cell" class="svws-ui-td py-0 whitespace-nowrap overflow-hidden text-ellipsis w-full">
@@ -280,8 +280,8 @@
 														</svws-ui-tooltip>
 														<span v-else>{{ getErgebnismanager().getOfKursAnzahlSchuelerPlusDummy(kurs.id) }}</span>
 														<div v-if="hatUpdateKompetenz || istKursFixiertInSchiene(kurs, schiene).value" class="group" @click.stop="hatUpdateKompetenz && toggleRegelFixiereKursInSchiene(kurs, schiene)">
-															<span v-if="istKursFixiertInSchiene(kurs, schiene).value" class="icon-sm i-ri-pushpin-fill inline-block opacity-75 group-hover:opacity-100 -my-0.5" />
-															<span v-if="hatUpdateKompetenz && !istKursFixiertInSchiene(kurs, schiene).value" class="icon-sm i-ri-pushpin-line inline-block opacity-25 group-hover:opacity-100 -my-0.5" />
+															<span v-if="istKursFixiertInSchiene(kurs, schiene).value" class="icon-sm i-ri-pushpin-fill opacity-75 group-hover:opacity-100 -my-0.5" />
+															<span v-if="hatUpdateKompetenz && !istKursFixiertInSchiene(kurs, schiene).value" class="icon-sm i-ri-pushpin-line opacity-25 group-hover:opacity-100 -my-0.5" />
 														</div>
 													</div>
 													<!-- ... ansonsten ist er nicht draggable -->
@@ -290,8 +290,8 @@
 														draggable="true" @dragstart.stop="setDrag(kurs, schiene)" @dragend="resetDrag"
 														:class="{ 'svws-disabled': istKursVerbotenInSchiene(kurs, schiene).value }">
 														<div v-if="highlightKursVerschieben(kurs).value" class="absolute bg-ui-100/50 inset-0 border-2 border-dashed rounded-sm border-ui-25" />
-														<span v-if="istKursGesperrtInSchiene(kurs, schiene).value" class="icon i-ri-lock-2-line inline-block !opacity-50 group-hover:!opacity-100" />
-														<span v-if="hatUpdateKompetenz && !istKursGesperrtInSchiene(kurs, schiene).value" class="icon i-ri-lock-2-line inline-block !opacity-0 group-hover:!opacity-25" />
+														<span v-if="istKursGesperrtInSchiene(kurs, schiene).value" class="icon i-ri-lock-2-line !opacity-50 group-hover:!opacity-100" />
+														<span v-if="hatUpdateKompetenz && !istKursGesperrtInSchiene(kurs, schiene).value" class="icon i-ri-lock-2-line !opacity-0 group-hover:!opacity-25" />
 													</div>
 													<template v-if="(showTooltip.kursID === kurs.id) && (showTooltip.schieneID === schiene.id)">
 														<svws-ui-tooltip :show-arrow="false" init-open @close="resetDrop">
@@ -335,18 +335,18 @@
 		<div class="h-fit rounded-r-md border-r border-t border-b -ml-5 pl-4 pt-2 flex flex-col gap-2 pr-2">
 			<button type="button" @click="blockungstabelleHidden() !== 'alles' ? setBlockungstabelleHidden('alles') : setBlockungstabelleHidden('nichts')">
 				<template v-if="blockungstabelleHidden() !== 'alles'">
-					<span class="icon i-ri-menu-fold-line inline-block" title="Kurstabelle ausblenden" />
+					<span class="icon i-ri-menu-fold-line" title="Kurstabelle ausblenden" />
 				</template>
 				<template v-else>
-					<span class="icon i-ri-menu-unfold-line inline-block" :title="'Kurstabelle einblenden'" />
+					<span class="icon i-ri-menu-unfold-line" :title="'Kurstabelle einblenden'" />
 				</template>
 			</button>
 			<button v-if="blockungstabelleHidden() !== 'alles'" type="button" @click="blockungstabelleHidden() !== 'schienen' ? setBlockungstabelleHidden('schienen') : setBlockungstabelleHidden('nichts')">
 				<template v-if="blockungstabelleHidden() !== 'schienen'">
-					<span class="icon i-ri-contract-left-line inline-block" title="Schienen ausblenden" />
+					<span class="icon i-ri-contract-left-line" title="Schienen ausblenden" />
 				</template>
 				<template v-else>
-					<span class="icon i-ri-expand-right-line inline-block" :title="'Schienen einblenden'" />
+					<span class="icon i-ri-expand-right-line" :title="'Schienen einblenden'" />
 				</template>
 			</button>
 		</div>

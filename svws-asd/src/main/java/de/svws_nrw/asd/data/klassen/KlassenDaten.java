@@ -28,24 +28,21 @@ public class KlassenDaten {
 	public long idSchuljahresabschnitt;
 
 	/** Das Kürzel der Klasse. */
-	@Schema(description = "das Kürzel der Klasse", example = "06b")
+	@Schema(description = "das Kürzel der Klasse", example = "06b", nullable = true)
 	public String kuerzel;
 
 	/** Die ID des zugeordneten Jahrgangs, dem die Klasse zugeordnet ist, null falls es eine Jahrgangsübergreifende Klasse ist */
-	@Schema(description = "die ID des zugeordneten Jahrgangs, dem die Klasse zugeordnet ist, null falls es eine Jahrgangsübergreifende Klasse ist", example = "815")
+	@Schema(description = "die ID des zugeordneten Jahrgangs, dem die Klasse zugeordnet ist, null falls es eine Jahrgangsübergreifende Klasse ist",
+			example = "815", nullable = true)
 	public Long idJahrgang;
 
 	/** Das Kürzel für die Parallelität der Klasse innerhalb des Jahrgangs (A-Z). */
-	@Schema(description = "das Kürzel für die Parallelität der Klasse innerhalb des Jahrgangs (A-Z)", example = "B")
+	@Schema(description = "das Kürzel für die Parallelität der Klasse innerhalb des Jahrgangs (A-Z)", example = "B", nullable = true)
 	public String parallelitaet;
 
 	/** Die Sortierreihenfolge des Klassenlisten-Eintrags. */
 	@Schema(description = "die Sortierreihenfolge des Klassenlisten-Eintrags", example = "1")
 	public int sortierung;
-
-	/** Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. */
-	@Schema(description = "gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht", example = "true")
-	public boolean istSichtbar;
 
 	/** Die Liste der IDs der Klassenleitungen der Klasse. */
 	@ArraySchema(schema = @Schema(implementation = Long.class))
@@ -64,35 +61,35 @@ public class KlassenDaten {
 	public @NotNull String beschreibung = "";
 
 	/** Die ID der Vorgängerklasse, sofern im vorigen Schuljahresabschnitt definiert - ansonsten null */
-	@Schema(description = "die ID der Vorgängerklasse, sofern im vorigen Schuljahresabschnitt definiert - ansonsten null", example = "4711")
+	@Schema(description = "die ID der Vorgängerklasse, sofern im vorigen Schuljahresabschnitt definiert - ansonsten null", example = "4711", nullable = true)
 	public Long idVorgaengerklasse = null;
 
 	/** Das Kürzel der Vorgängerklasse vor der letzen Versetzung. */
-	@Schema(description = "das Kürzel der Vorgängerklasse vor der letzen Versetzung.", example = "08b")
+	@Schema(description = "das Kürzel der Vorgängerklasse vor der letzen Versetzung.", example = "08b", nullable = true)
 	public String kuerzelVorgaengerklasse = null;
 
 	/** Die ID der Folgeklasse, sofern im folgenden Schuljahresabschnitt definiert - ansonsten null */
-	@Schema(description = "die ID der Folgeklasse, sofern im folgenden Schuljahresabschnitt definiert - ansonsten null", example = "4712")
+	@Schema(description = "die ID der Folgeklasse, sofern im folgenden Schuljahresabschnitt definiert - ansonsten null", example = "4712", nullable = true)
 	public Long idFolgeklasse = null;
 
 	/** Das Kürzel der Folgeklasse nach der nächsten Versetzung. */
-	@Schema(description = "das Kürzel der Folgeklasse nach der nächsten Versetzung.", example = "10b")
+	@Schema(description = "das Kürzel der Folgeklasse nach der nächsten Versetzung.", example = "10b", nullable = true)
 	public String kuerzelFolgeklasse = null;
 
 	/** Die ID für die Organisationsform der Klasse im allgemeinbildenden Bereich */
-	@Schema(description = "die ID für die Organisationsform der Klasse im allgemeinbildenden Bereich", example = "4711")
+	@Schema(description = "die ID für die Organisationsform der Klasse im allgemeinbildenden Bereich", example = "4711", nullable = true)
 	public Long idAllgemeinbildendOrganisationsform = null;
 
 	/** Die ID für die Organisationsform der Klasse im berufsbildenden Bereich */
-	@Schema(description = "die ID für die Organisationsform der Klasse im berufsbildenden Bereich", example = "4711")
+	@Schema(description = "die ID für die Organisationsform der Klasse im berufsbildenden Bereich", example = "4711", nullable = true)
 	public Long idBerufsbildendOrganisationsform = null;
 
 	/** Die ID für die Organisationsform der Klasse im Weiterbildungsbereich */
-	@Schema(description = "die ID für die Organisationsform der Klasse im Weiterbildungsbereich", example = "4711")
+	@Schema(description = "die ID für die Organisationsform der Klasse im Weiterbildungsbereich", example = "4711", nullable = true)
 	public Long idWeiterbildungOrganisationsform = null;
 
 	/** Die zugewiesene Prüfungsordnung, welche in Schild 3 genutzt wird. */
-	@Schema(description = "die zugewiesene Prüfungsordnung, welche in Schild 3 genutzt wird", example = "APO-SI 05: Jahrgänge 5-10")
+	@Schema(description = "die zugewiesene Prüfungsordnung, welche in Schild 3 genutzt wird", example = "APO-SI 05: Jahrgänge 5-10", nullable = true)
 	public String pruefungsordnung = null;
 
 	/** Die ID für die Schulgliederung der Klasse oder -1, wenn der Klasse keine eindeutige Schulgliederung zugeordnet ist. */
@@ -113,7 +110,7 @@ public class KlassenDaten {
 	public boolean verwendungAnkreuzkompetenzen = false;
 
 	/** Die ID der Fachklasse, falls es sich um eine Klasse an einem Berufskolleg handelt oder null */
-	@Schema(description = "die ID der Fachklasse, falls es sich um eine Klasse an einem Berufskolleg handelt oder null", example = "4711")
+	@Schema(description = "die ID der Fachklasse, falls es sich um eine Klasse an einem Berufskolleg handelt oder null", example = "4711", nullable = true)
 	public Long idFachklasse = null;
 
 	/** Gibt am WBK an, ob die Klassen im Sommersemester angefangen hat. */

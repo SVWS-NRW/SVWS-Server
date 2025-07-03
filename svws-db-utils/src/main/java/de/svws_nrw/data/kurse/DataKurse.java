@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.kurse.KursDaten;
+import de.svws_nrw.asd.data.kurse.KursLehrer;
 import de.svws_nrw.asd.data.schueler.Schueler;
 import de.svws_nrw.core.types.KursFortschreibungsart;
 import de.svws_nrw.data.DataManager;
@@ -16,6 +17,7 @@ import de.svws_nrw.data.schueler.DataSchuelerliste;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
+import de.svws_nrw.db.dto.current.schild.kurse.DTOKursLehrer;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKursSchueler;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
@@ -203,21 +205,56 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 
 
 	/**
-	 * Fügt den übergebenen Kursdaten die Schüler des Kurses hinzu.
+	 * Ermittelt für die angegebenen Kurse alle Kurs-Schüler und gibt die Listen für die einzelnen Kurse
+	 * in einer Map zugeordnet zu ihrer Kurs-ID zurück. Bei leeren Kursen wird eine leere Liste zugeordnet.
 	 *
-	 * @param conn   	die Datenbankverbindung
-	 * @param kursdaten die Daten des Kurses
+	 * @param conn       die Datenbank-Verbindung
+	 * @param idsKurse   die IDs der Kurse
+	 *
+	 * @return die Map mit der Kurs-Schüler-Zuordnung
 	 */
-	private static void attachKursSchueler(final DBEntityManager conn, final KursDaten kursdaten) {
+	private static @NotNull Map<Long, List<Schueler>> getMapKursSchuelerByKursID(final DBEntityManager conn, final @NotNull List<Long> idsKurse) {
+		final @NotNull Map<Long, List<Schueler>> result = idsKurse.stream().collect(Collectors.toMap(id -> id, id -> new ArrayList<>()));
+		if (idsKurse.isEmpty())
+			return result;
 		final List<DTOKursSchueler> listKursSchueler =
-				conn.queryList("SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID = ?1 AND e.LernabschnittWechselNr = 0", DTOKursSchueler.class,
-						kursdaten.id);
+				conn.queryList("SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID IN ?1 AND e.LernabschnittWechselNr = 0", DTOKursSchueler.class, idsKurse);
 		final List<Long> schuelerIDs = listKursSchueler.stream().map(ks -> ks.Schueler_ID).toList();
-		final List<DTOSchueler> listSchueler = ((schuelerIDs == null) || (schuelerIDs.isEmpty())) ? new ArrayList<>()
-				: conn.queryByKeyList(DTOSchueler.class, schuelerIDs);
-		for (final DTOSchueler dto : listSchueler)
-			if (Boolean.FALSE.equals(dto.Geloescht))
-				kursdaten.schueler.add(DataSchuelerliste.mapToSchueler(dto, null));  // TODO Abschlussjahrgang bestimmen
+		final List<DTOSchueler> listSchueler =
+				((schuelerIDs == null) || (schuelerIDs.isEmpty())) ? new ArrayList<>() : conn.queryByKeyList(DTOSchueler.class, schuelerIDs);
+		final Map<Long, Schueler> mapSchueler = listSchueler.stream()
+				.filter(dto -> Boolean.FALSE.equals(dto.Geloescht))
+				.map(dto -> DataSchuelerliste.mapToSchueler(dto, null))
+				.collect(Collectors.toMap(s -> s.id, s -> s));
+		for (final @NotNull DTOKursSchueler kursSchueler : listKursSchueler)
+			result.get(kursSchueler.Kurs_ID).add(mapSchueler.get(kursSchueler.Schueler_ID));
+		return result;
+	}
+
+
+	/**
+	 * Ermittelt für die angegebenen Kurse alle zusätzlichen Kurslehrer und gibt die Listen für die einzelnen Kurse
+	 * in einer Map zugeordnet zu ihrer Kurs-ID zurück. Existieren keine zusätzlichen Kurslehrer, so wird eine
+	 * leere Liste zugeordnet.
+	 *
+	 * @param conn       die Datenbank-Verbindung
+	 * @param idsKurse   die IDs der Kurse
+	 *
+	 * @return die Map mit der Zuordnung weiterer Kurslehrer
+	 */
+	private static @NotNull Map<Long, List<KursLehrer>> getMapKursLehrerByKursID(final DBEntityManager conn, final @NotNull List<Long> idsKurse) {
+		final @NotNull Map<Long, List<KursLehrer>> result = idsKurse.stream().collect(Collectors.toMap(id -> id, id -> new ArrayList<>()));
+		if (idsKurse.isEmpty())
+			return result;
+		final List<DTOKursLehrer> listKursLehrer =
+				conn.queryList("SELECT e FROM DTOKursLehrer e WHERE e.Kurs_ID IN ?1", DTOKursLehrer.class, idsKurse);
+		for (final @NotNull DTOKursLehrer dto : listKursLehrer) {
+			final KursLehrer lehrer = new KursLehrer();
+			lehrer.idLehrer = dto.Lehrer_ID;
+			lehrer.wochenstundenLehrer = dto.Anteil;
+			result.get(dto.Kurs_ID).add(lehrer);
+		}
+		return result;
 	}
 
 
@@ -239,7 +276,9 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 			throw new ApiOperationException(Status.NOT_FOUND);
 		final KursDaten daten = mapInternal(kurs);
 		// Bestimme die Schüler des Kurses
-		attachKursSchueler(conn, daten);
+		daten.schueler.addAll(getMapKursSchuelerByKursID(conn, List.of(daten.id)).get(daten.id));
+		// Bestimme die Zusatzkräfte des Kurses
+		daten.weitereLehrer.addAll(getMapKursLehrerByKursID(conn, List.of(daten.id)).get(daten.id));
 		return daten;
 	}
 
@@ -328,12 +367,19 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 	private List<KursDaten> getKurseDaten(final List<DTOKurs> dtoKurse, final boolean attachSchueler) throws ApiOperationException {
 		if ((dtoKurse == null) || dtoKurse.isEmpty())
 			throw new ApiOperationException(Status.NOT_FOUND);
+
+		// Bestimme die IDs der Kurse
+		final List<Long> idsKurse = dtoKurse.stream().map(k -> k.ID).toList();
+		final Map<Long, List<Schueler>> mapKursSchueler = attachSchueler ? getMapKursSchuelerByKursID(conn, idsKurse) : new HashMap<>();
+		final Map<Long, List<KursLehrer>> mapKursLehrer = getMapKursLehrerByKursID(conn, idsKurse);
 		final List<KursDaten> kurseDaten = new ArrayList<>();
 		for (final DTOKurs kurs : dtoKurse) {
 			final KursDaten kursdaten = map(kurs);
 			// Bestimme die Schüler der Kurse, wenn gewünscht.
 			if (attachSchueler)
-				attachKursSchueler(conn, kursdaten);
+				kursdaten.schueler.addAll(mapKursSchueler.get(kurs.ID));
+			// Bestimme die Zusatzkräfte des Kurses
+			kursdaten.weitereLehrer.addAll(mapKursLehrer.get(kurs.ID));
 			kurseDaten.add(kursdaten);
 		}
 		return kurseDaten;

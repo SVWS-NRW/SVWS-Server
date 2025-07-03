@@ -27,6 +27,7 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
 @DisplayName("Teste den Validator zu SchuleStammdaten")
 class TestValidatorSchuleStammdaten {
 
+	/** Stammdaten der Schule */
 	static final SchuleStammdaten testdaten_001 = JsonReader.fromResource("de/svws_nrw/asd/validate/schule/Testdaten_001_SchuleStammdaten.json", SchuleStammdaten.class);
 
 	/**

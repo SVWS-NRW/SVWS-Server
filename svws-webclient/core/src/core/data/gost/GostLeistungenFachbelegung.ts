@@ -34,6 +34,11 @@ export class GostLeistungenFachbelegung extends JavaObject {
 	public jahrgang : string | null = null;
 
 	/**
+	 * Die ID des Kurses
+	 */
+	public idKurs : number | null = null;
+
+	/**
 	 * Gibt die ID des Fachlehrers an, bei dem der zur Fachbelegung gehörige Kurs belegt wurde.
 	 */
 	public lehrer : number | null = null;
@@ -108,6 +113,7 @@ export class GostLeistungenFachbelegung extends JavaObject {
 			throw new Error('invalid json format, missing attribute abschnittGewertet');
 		result.abschnittGewertet = obj.abschnittGewertet;
 		result.jahrgang = (obj.jahrgang === undefined) ? null : obj.jahrgang === null ? null : obj.jahrgang;
+		result.idKurs = (obj.idKurs === undefined) ? null : obj.idKurs === null ? null : obj.idKurs;
 		result.lehrer = (obj.lehrer === undefined) ? null : obj.lehrer === null ? null : obj.lehrer;
 		result.notenKuerzel = (obj.notenKuerzel === undefined) ? null : obj.notenKuerzel === null ? null : obj.notenKuerzel;
 		result.kursartKuerzel = (obj.kursartKuerzel === undefined) ? null : obj.kursartKuerzel === null ? null : obj.kursartKuerzel;
@@ -135,6 +141,7 @@ export class GostLeistungenFachbelegung extends JavaObject {
 		result += '"abschnitt" : ' + obj.abschnitt.toString() + ',';
 		result += '"abschnittGewertet" : ' + obj.abschnittGewertet.toString() + ',';
 		result += '"jahrgang" : ' + ((obj.jahrgang === null) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
+		result += '"idKurs" : ' + ((obj.idKurs === null) ? 'null' : obj.idKurs.toString()) + ',';
 		result += '"lehrer" : ' + ((obj.lehrer === null) ? 'null' : obj.lehrer.toString()) + ',';
 		result += '"notenKuerzel" : ' + ((obj.notenKuerzel === null) ? 'null' : JSON.stringify(obj.notenKuerzel)) + ',';
 		result += '"kursartKuerzel" : ' + ((obj.kursartKuerzel === null) ? 'null' : JSON.stringify(obj.kursartKuerzel)) + ',';
@@ -167,6 +174,9 @@ export class GostLeistungenFachbelegung extends JavaObject {
 		}
 		if (obj.jahrgang !== undefined) {
 			result += '"jahrgang" : ' + ((obj.jahrgang === null) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
+		}
+		if (obj.idKurs !== undefined) {
+			result += '"idKurs" : ' + ((obj.idKurs === null) ? 'null' : obj.idKurs.toString()) + ',';
 		}
 		if (obj.lehrer !== undefined) {
 			result += '"lehrer" : ' + ((obj.lehrer === null) ? 'null' : obj.lehrer.toString()) + ',';

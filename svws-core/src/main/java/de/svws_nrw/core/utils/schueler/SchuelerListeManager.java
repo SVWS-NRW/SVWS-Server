@@ -21,7 +21,6 @@ import de.svws_nrw.asd.data.klassen.KlassenDaten;
 import de.svws_nrw.asd.data.kurse.KursDaten;
 import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.asd.data.schueler.SchuelerStatusKatalogEintrag;
-import de.svws_nrw.core.data.schueler.SchuelerTelefon;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.asd.types.schule.Schulform;
@@ -101,7 +100,6 @@ public final class SchuelerListeManager extends AuswahlManager<Long, SchuelerLis
 	/** Das Filter-Attribut auf Schüler mit einem Lernabschnitt in dem Schuljahresabschnitt */
 	private boolean _filterNurMitLernabschitt = true;
 
-	private final @NotNull List<SchuelerTelefon> schuelerTelefonList = new ArrayList<>();
 
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
@@ -209,24 +207,6 @@ public final class SchuelerListeManager extends AuswahlManager<Long, SchuelerLis
 	public void setFilterNurMitLernabschitt(final boolean value) {
 		this._filterNurMitLernabschitt = value;
 		this._eventHandlerFilterChanged.run();
-	}
-
-	/** Gibt eine Liste mit Schülertelefonen zurück, die in der Auswahl sind und Schüler beinhalten
-	 *
-	 * @return Die Liste von Schülertelefonen, die Schüler haben
-	 */
-	public @NotNull List<SchuelerTelefon> getSuchuelerTelefone() {
-		 return this.schuelerTelefonList;
-	}
-
-	/**
-	 * Setzt die Schülertelefonliste des ausgewählten Schülers
-	 *
-	 * @param value  Liste mit dem Schülertelefon
-	 */
-	public void setSchuelerTelefone(final List<SchuelerTelefon> value) {
-		this.schuelerTelefonList.clear();
-		this.schuelerTelefonList.addAll(value);
 	}
 
 	/**

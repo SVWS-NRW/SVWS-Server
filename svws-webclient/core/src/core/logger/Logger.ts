@@ -86,6 +86,16 @@ export class Logger extends JavaObject {
 	}
 
 	/**
+	 * Gibt die Anzahl der Leerzeichen zurück, die für die Einrückung bei einer Ausgabe von
+	 * neuen Log-Informationen genutzt wird.
+	 *
+	 * @return die Anzahl der Leerzeichen
+	 */
+	public getIndent() : number {
+		return this.indent;
+	}
+
+	/**
 	 * Setzt die Anzahl der Leerzeichen, die für die Einrückung bei einer Ausgabe von
 	 * neuen Log-Informationen genutzt wird.
 	 *

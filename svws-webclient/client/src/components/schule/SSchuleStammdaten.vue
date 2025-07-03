@@ -12,13 +12,15 @@
 					<span class="svws-subline">{{ `${schule().bezeichnung2 ?? ''} ${schule().bezeichnung3 ?? ''}` }}</span>
 				</div>
 			</div>
-			<div class="svws-ui-header--actions" />
+			<div class="svws-ui-header--actions">
+				<svws-ui-modal-hilfe> <hilfe-schule-stammdaten /> </svws-ui-modal-hilfe>
+			</div>
 		</header>
 		<div class="page page-grid-cards">
 			<svws-ui-content-card title="Stammdaten">
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-text-input class="contentFocusField" placeholder="Bezeichnung 1" :model-value="schule().bezeichnung1" @change="bezeichnung1 => bezeichnung1 && patch({ bezeichnung1 })" type="text" :disabled="!editSchuldaten" />
-					<svws-ui-text-input placeholder="Schulnummer" :model-value="schule().schulNr.toString()" type="text" readonly />
+					<svws-ui-text-input placeholder="Schulnummer" :model-value="schule().schulNr.toString()" type="text" readonly statistics />
 					<svws-ui-text-input placeholder="Bezeichnung 2" :model-value="schule().bezeichnung2" @change="bezeichnung2 => patch({ bezeichnung2 })" type="text" :disabled="!editSchuldaten" />
 					<svws-ui-text-input placeholder="Schulform" :model-value="textSchulform" type="text" readonly />
 					<svws-ui-text-input placeholder="Bezeichnung 3" :model-value="schule().bezeichnung3" @change="bezeichnung3 => patch({ bezeichnung3 })" type="text" :disabled="!editSchuldaten" />
@@ -30,8 +32,8 @@
 					<svws-ui-text-input class="contentFocusField" placeholder="Straße" :model-value="strasse" @change="patchStrasse" type="text" span="full" :disabled="!editSchuldaten" />
 					<!-- TODO PLZ Ort sollte durch den Orstkatalog gehandhabt werden - siehe auch Schüler-Kontaktdaten -->
 					<!-- <svws-ui-select title="Wohnort" v-model="wohnortID" :items="mapOrte" :item-filter="orte_filter" :item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete :disabled="!editSchuldaten" /> -->
-					<svws-ui-text-input placeholder="Telefon" :model-value="schule().telefon" @change="telefon => patch({ telefon })" type="tel" :disabled="!editSchuldaten" />
-					<svws-ui-text-input placeholder="Fax" :model-value="schule().fax" @change="fax => patch({ fax })" type="tel" :disabled="!editSchuldaten" />
+					<svws-ui-text-input placeholder="Telefon" :model-value="schule().telefon" @change="telefon => patch({ telefon })" type="tel" :disabled="!editSchuldaten" :max-len="20" />
+					<svws-ui-text-input placeholder="Fax" :model-value="schule().fax" @change="fax => patch({ fax })" type="tel" :disabled="!editSchuldaten" :max-len="20" />
 					<svws-ui-text-input placeholder="Homepage" :model-value="schule().webAdresse" @change="webAdresse => patch({ webAdresse })" verify-email :disabled="!editSchuldaten" />
 					<svws-ui-text-input placeholder="E-Mail-Adresse" :model-value="schule().email" @change="email => patch({ email })" type="email" verify-email :disabled="!editSchuldaten" />
 				</svws-ui-input-wrapper>

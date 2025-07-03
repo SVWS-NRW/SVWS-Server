@@ -46,7 +46,12 @@ export class RouteDataSchuleFaecher extends RouteDataAuswahl<FachListeManager, R
 	protected async createManager(idSchuljahresabschnitt : number) : Promise<Partial<RouteStateAuswahlInterface<FachListeManager>>> {
 		const listKatalogeintraege = await api.server.getFaecher(api.schema);
 		const manager = new FachListeManager(idSchuljahresabschnitt, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,	api.schulform, listKatalogeintraege);
-		manager.setFilterAuswahlPermitted(true);
+		if (this._state.value.manager === undefined) {
+			manager.setFilterAuswahlPermitted(true);
+			manager.setFilterNurSichtbar(false);
+		} else {
+			manager.useFilter(this._state.value.manager);
+		}
 
 		return { manager }
 	}

@@ -418,10 +418,12 @@ public class StundenplanManager {
 	private final int _stundenplanAbschnitt;
 	private final @NotNull String _stundenplanGueltigAb;
 	private final @NotNull String _stundenplanGueltigBis;
+	private final boolean _aktiv;
 	private final @NotNull String _stundenplanBezeichnung;
 
 	// Default-Werte
 	private @NotNull StundenplanKonfiguration _stundenplanKonfig = new StundenplanKonfiguration();
+	private @NotNull List<String> _stundenplanWarnungen = new ArrayList<>();
 
 	/**
 	 * Der {@link StundenplanManager} benötigt vier data-Objekte und baut damit eine Datenstruktur für schnelle Zugriffe auf.
@@ -443,6 +445,7 @@ public class StundenplanManager {
 		_stundenplanAbschnitt = daten.abschnitt;
 		_stundenplanGueltigAb = daten.gueltigAb;
 		_stundenplanGueltigBis = init_gueltig_bis(daten.gueltigAb, daten.gueltigBis);
+		_aktiv = daten.aktiv;
 		_stundenplanBezeichnung = daten.bezeichnungStundenplan;
 
 		// Spezialfall: "unterrichtsverteilung" ist NULL
@@ -490,6 +493,7 @@ public class StundenplanManager {
 		_stundenplanAbschnitt = stundenplanKomplett.daten.abschnitt;
 		_stundenplanGueltigAb = stundenplanKomplett.daten.gueltigAb;
 		_stundenplanGueltigBis = init_gueltig_bis(stundenplanKomplett.daten.gueltigAb, stundenplanKomplett.daten.gueltigBis);
+		_aktiv = stundenplanKomplett.daten.aktiv;
 		_stundenplanBezeichnung = stundenplanKomplett.daten.bezeichnungStundenplan;
 
 		// Spezielle Prüfungen.
@@ -604,10 +608,10 @@ public class StundenplanManager {
 		schuelerAddAllOhneUpdate(listSchueler);                    // ✔, referenziert Klasse
 		klasseAddAllOhneUpdate(listKlasse);                        // ✔, referenziert [Jahrgang], [Schueler]
 		schieneAddAllOhneUpdate(listSchiene);                      // ✔, referenziert Jahrgang
-		klassenunterrichtAddAllOhneUpdate(listKlassenunterricht);  // ✔, referenziert Klasse, Fach, [Schiene], [Schueler], [Lehrer]
-		pausenaufsichtAddAllOhneUpdate(listPausenaufsicht);        // ✔, referenziert Lehrer, Pausenzeit, [Aufsichtsbereich]
-		kursAddAllOhneUpdate(listKurs);                            // ✔, referenziert [Schienen], [Jahrgang], [Schüler]
-		unterrichtAddAllOhneUpdate(listUnterricht);                // ✔, referenziert Zeitraster, Kurs, Fach, [Lehrer], [Klasse], [Raum], [Schiene]
+		klassenunterrichtAddAllOhneUpdate(listKlassenunterricht);  // ✔, referenziert Klasse, Fach, [Schiene], [Schueler], [Lehrer] --> ggf. werden Pseudo-Lehrkräfte erzeugt
+		pausenaufsichtAddAllOhneUpdate(listPausenaufsicht);        // ✔, referenziert Pausenzeit, [Aufsichtsbereich], Lehrer --> ggf. werden Pseudo-Lehrkräfte erzeugt
+		kursAddAllOhneUpdate(listKurs);                            // ✔, referenziert [Schienen], [Jahrgang], [Schüler], [Lehrer] --> ggf. werden Pseudo-Lehrkräfte erzeugt
+		unterrichtAddAllOhneUpdate(listUnterricht);                // ✔, referenziert Zeitraster, Kurs, Fach, [Klasse], [Raum], [Schiene], [Lehrer] --> ggf. werden Pseudo-Lehrkräfte erzeugt
 
 		update_all();
 	}
@@ -3157,6 +3161,7 @@ public class StundenplanManager {
 	private void klassenunterrichtAddAllOhneUpdate(final @NotNull List<StundenplanKlassenunterricht> list) {
 		// check all
 		final @NotNull Set<String> setOfIDs = new HashSet<>();
+
 		for (final @NotNull StundenplanKlassenunterricht klassenunterricht : list) {
 			klassenunterrichtCheckAttributes(klassenunterricht);
 			DeveloperNotificationException.ifTrue(
@@ -3176,8 +3181,14 @@ public class StundenplanManager {
 	private void klassenunterrichtCheckAttributes(final @NotNull StundenplanKlassenunterricht klassenunterricht) {
 		DeveloperNotificationException.ifMapNotContains("_klasse_by_id", _klasse_by_id, klassenunterricht.idKlasse);
 		DeveloperNotificationException.ifMapNotContains("_fach_by_id", _fach_by_id, klassenunterricht.idFach);
+
 		for (final long idSchiene : klassenunterricht.schienen)
 			DeveloperNotificationException.ifMapNotContains("_schiene_by_id", _schiene_by_id, idSchiene);
+
+		for (final long idLehrkraft : klassenunterricht.lehrer)
+			if (!_lehrer_by_id.containsKey(idLehrkraft))
+				lehrerAddPseudoLehrkraftOhneUpdate(idLehrkraft,
+						"Klasseunterricht " + klassenunterrichtGetBeschreibungKlasseAndFach(klassenunterricht) + " hat ungültige Lehrerreferenz.");
 	}
 
 	private @NotNull Comparator<@NotNull StundenplanKlassenunterricht> klassenunterrichtCreateComparator() {
@@ -3220,6 +3231,19 @@ public class StundenplanManager {
 	 */
 	public @NotNull StundenplanKlassenunterricht klassenunterrichtGetByKlasseIdAndFachIdOrException(final long idKlasse, final long idFach) {
 		return _klassenunterricht_by_idKlasse_and_idFach.getOrException(idKlasse, idFach);
+	}
+
+	/**
+	 * Liefert eine String-Repräsentation {@link StundenplanKlassenunterricht}-Objekts.
+	 *
+	 * @param klassenunterricht    Das Objekt, welches dargestellt werden soll.
+	 *
+	 * @return eine String-Repräsentation {@link StundenplanKlassenunterricht}-Objekts.
+	 */
+	public String klassenunterrichtGetBeschreibungKlasseAndFach(final @NotNull StundenplanKlassenunterricht klassenunterricht) {
+		final StundenplanKlasse kl = _klasse_by_id.get(klassenunterricht.idKlasse);
+		final StundenplanFach fa = _fach_by_id.get(klassenunterricht.idFach);
+		return (kl == null ? "Klasse ???" : kl.bezeichnung) + " " + (fa == null ? "Fach ???" : fa.bezeichnung);
 	}
 
 	/**
@@ -3586,14 +3610,20 @@ public class StundenplanManager {
 		DeveloperNotificationException.ifInvalidID("kurs.id", kurs.id);
 		DeveloperNotificationException.ifStringIsBlank("kurs.bezeichnung", kurs.bezeichnung);
 		DeveloperNotificationException.ifSmaller("kurs.wochenstunden", kurs.wochenstunden, 0);
+
 		for (final long idSchieneDesKurses : kurs.schienen)
 			DeveloperNotificationException.ifMapNotContains("_schiene_by_id", _schiene_by_id, idSchieneDesKurses);
+
 		for (final long idJahrgangDesKurses : kurs.jahrgaenge)
 			DeveloperNotificationException.ifMapNotContains("_jahrgang_by_id", _jahrgang_by_id, idJahrgangDesKurses);
+
 		for (final long idSchuelerDesKurses : kurs.schueler)
 			DeveloperNotificationException.ifMapNotContains("_schueler_by_id", _schueler_by_id, idSchuelerDesKurses);
+
 		for (final long idLehrerDesKurses : kurs.lehrer)
-			DeveloperNotificationException.ifMapNotContains("_lehrer_by_id", _lehrer_by_id, idLehrerDesKurses);
+			if (!_lehrer_by_id.containsKey(idLehrerDesKurses))
+				lehrerAddPseudoLehrkraftOhneUpdate(idLehrerDesKurses,
+						"StundenplanKurs " + kurs.bezeichnung + " hat ungültige Lehrerreferenz.");
 	}
 
 	/**
@@ -3946,6 +3976,22 @@ public class StundenplanManager {
 	// #####################################################################
 
 	/**
+	 * Erzeugt eine Pseudo-Lehrkraft, falls dies aufgrund ungültiger Referenzen nötig ist.
+	 * @param idLehrkraft   Die Datenbank-ID der Lehrkraft, zu der es keine Referenz mehr gibt.
+	 * @param warnung       Die warnung für den User, welche von der GUI angezeigt werden soll.
+	 */
+	private void lehrerAddPseudoLehrkraftOhneUpdate(final long idLehrkraft, final @NotNull String warnung) {
+		_stundenplanWarnungen.add(warnung);
+
+		final @NotNull StundenplanLehrer le = new StundenplanLehrer();
+		le.id = idLehrkraft;
+		le.kuerzel = "???";
+		le.nachname = "???";
+		le.vorname = "???";
+		DeveloperNotificationException.ifMapPutOverwrites(_lehrer_by_id, idLehrkraft, le);
+	}
+
+	/**
 	 * Fügt ein {@link StundenplanLehrer}-Objekt hinzu.
 	 *
 	 * @param lehrer  Das {@link StundenplanLehrer}-Objekt, welches hinzugefügt werden soll.
@@ -4232,8 +4278,13 @@ public class StundenplanManager {
 		DeveloperNotificationException.ifInvalidID("pausenaufsicht.id", pausenaufsicht.id);
 		DeveloperNotificationException.ifMapNotContains("_map_idLehrer_zu_lehrer", _lehrer_by_id, pausenaufsicht.idLehrer);
 		DeveloperNotificationException.ifMapNotContains("_map_idPausenzeit_zu_pausenzeit", _pausenzeit_by_id, pausenaufsicht.idPausenzeit);
+
 		for (final @NotNull StundenplanPausenaufsichtBereich aufsichtsbereich : pausenaufsicht.bereiche)
 			pausenaufsichtbereichCheckAttributes(aufsichtsbereich);
+
+		if (!_lehrer_by_id.containsKey(pausenaufsicht.idLehrer))
+			lehrerAddPseudoLehrkraftOhneUpdate(pausenaufsicht.idLehrer,
+					"Pausenaufsicht mit ID " + pausenaufsicht.id + " hat ungültige Lehrerreferenz.");
 	}
 
 	/**
@@ -5289,6 +5340,18 @@ public class StundenplanManager {
 	}
 
 	/**
+	 * Liefert das zur ID zugehörige {@link StundenplanRaum}-Objekt oder null, falls der Raum zur ID nicht existiert.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param idRaum Die ID des angefragten-Objektes.
+	 *
+	 * @return das zur ID zugehörige {@link StundenplanRaum}-Objekt oder null, falls der Raum zur ID nicht existiert.
+	 */
+	public StundenplanRaum raumGetByIdOrNull(final long idRaum) {
+		return _raum_by_id.get(idRaum);
+	}
+
+	/**
 	 * Liefert eine Beschreibung des {@link StundenplanRaum}-Objekts in der Form "042".
 	 * <br>Hinweis: Diese Methode liefert niemals eine Exception, stattdessen enthält der String eine Fehlermeldung.
 	 *
@@ -5996,6 +6059,15 @@ public class StundenplanManager {
 	}
 
 	/**
+	 * Liefert die Information, ob der Stundenplan aktiv ist.
+	 *
+	 * @return true, wenn der Stundenplan aktiv ist, sonst false.
+	 */
+	public boolean isAktiv() {
+		return _aktiv;
+	}
+
+	/**
 	 * Liefert die textuelle Beschreibung des Stundenplans.
 	 *
 	 * @return die textuelle Beschreibung des Stundenplans.
@@ -6328,6 +6400,15 @@ public class StundenplanManager {
 		return _stundenplanKonfig;
 	}
 
+	/**
+	 * Liefert alle Warnungen, die dem User angezeigt werden sollen.
+	 *
+	 * @return alle Warnungen, die dem User angezeigt werden sollen.
+	 */
+	public @NotNull List<String> stundenplanGetWarnungen() {
+		return _stundenplanWarnungen;
+	}
+
 	// #####################################################################
 	// #################### StundenplanUnterricht ##########################
 	// #####################################################################
@@ -6376,12 +6457,18 @@ public class StundenplanManager {
 		DeveloperNotificationException.ifTrue("(u.idKurs == null) && (u.klassen.size() != 1)", (u.idKurs == null) && (u.klassen.size() != 1)); // WENN Klassenunterricht, DANN genau 1 Klasse.
 
 		DeveloperNotificationException.ifMapNotContains("_fach_by_id", _fach_by_id, u.idFach);
-		for (final long idLehrkraftDesUnterrichts : u.lehrer)
-			DeveloperNotificationException.ifMapNotContains("_lehrer_by_id", _lehrer_by_id, idLehrkraftDesUnterrichts);
+
+		for (final long idLehrkraft : u.lehrer)
+			if (!_lehrer_by_id.containsKey(idLehrkraft))
+				lehrerAddPseudoLehrkraftOhneUpdate(idLehrkraft,
+						"StundenplanUnterricht " + unterrichtGetBeschreibungKurz(u) + " hat ungültige Lehrerreferenz.");
+
 		for (final long idKlasseDesUnterrichts : u.klassen)
 			DeveloperNotificationException.ifMapNotContains("_klasse_by_id", _klasse_by_id, idKlasseDesUnterrichts);
+
 		for (final long idRaumDesUnterrichts : u.raeume)
 			DeveloperNotificationException.ifMapNotContains("_raum_by_id", _raum_by_id, idRaumDesUnterrichts);
+
 		for (final long idSchieneDesUnterrichts : u.schienen)
 			DeveloperNotificationException.ifMapNotContains("_schiene_by_id", _schiene_by_id, idSchieneDesUnterrichts);
 	}
@@ -6474,6 +6561,26 @@ public class StundenplanManager {
 		};
 
 		return comp;
+	}
+
+	private String unterrichtGetBeschreibungKurz(final @NotNull StundenplanUnterricht u) {
+		if (u.idKurs == null) {
+			// Klassenunterricht
+			@NotNull String s = "";
+			final StundenplanFach fach = _fach_by_id.get(u.idFach);
+			s += (fach == null) ? "Fach ???" : fach.kuerzel;
+			s += " ";
+			for (final long idKlasse : u.klassen) {
+				final StundenplanKlasse klasse = _klasse_by_id.get(idKlasse);
+				s += (klasse == null) ? "Klasse ???" : klasse.kuerzel;
+			}
+
+			return s;
+		}
+
+		// Kursunterricht
+		final StundenplanKurs kurs = _kurs_by_id.get(u.idKurs);
+		return (kurs == null) ? "Kurs ???" : kurs.bezeichnung;
 	}
 
 	/**
@@ -7126,9 +7233,13 @@ public class StundenplanManager {
 	 * @return eine String-Repräsentation des Faches/Kurses eines {@link StundenplanUnterricht}-Objektes.
 	 */
 	public @NotNull String unterrichtGetByIDStringOfFachOderKurs(final long idUnterricht, final boolean klassenunterrichtDetailliert) {
-		final @NotNull StundenplanUnterricht unterricht = DeveloperNotificationException.ifMapGetIsNull(_unterricht_by_id, idUnterricht);
+		final StundenplanUnterricht unterricht = _unterricht_by_id.get(idUnterricht);
 
-		// Klassenunterricht?
+		// Referenz überprüfen
+		if (unterricht == null)
+			return "Unterricht ???";
+
+		// Klassenunterricht
 		if (unterricht.idKurs == null) {
 			final @NotNull StundenplanFach fach = DeveloperNotificationException.ifMapGetIsNull(_fach_by_id, unterricht.idFach);
 			return klassenunterrichtDetailliert ? fach.bezeichnung : fach.kuerzel;

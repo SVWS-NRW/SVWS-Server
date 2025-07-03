@@ -434,6 +434,34 @@ export class GostFaecherManager extends JavaObject {
 		return JavaObject.equalsTranspiler("VX", (fach.kuerzel));
 	}
 
+	/**
+	 * Gibt an, ob es sich bei dem Fach mit der übergebenen ID um Kunst handelt oder nicht.
+	 *
+	 * @param id   die ID des Faches
+	 *
+	 * @return true, wenn es sich um Kunst handelt und ansonsten false.
+	 */
+	public fachIstKunst(id : number) : boolean {
+		const fach : GostFach | null = this._map.get(id);
+		if (fach === null)
+			return false;
+		return JavaObject.equalsTranspiler("KU", (fach.kuerzel));
+	}
+
+	/**
+	 * Gibt an, ob es sich bei dem Fach mit der übergebenen ID um Musik handelt oder nicht.
+	 *
+	 * @param id   die ID des Faches
+	 *
+	 * @return true, wenn es sich um Musik handelt und ansonsten false.
+	 */
+	public fachIstMusik(id : number) : boolean {
+		const fach : GostFach | null = this._map.get(id);
+		if (fach === null)
+			return false;
+		return JavaObject.equalsTranspiler("MU", (fach.kuerzel));
+	}
+
 	transpilerCanonicalName(): string {
 		return 'de.svws_nrw.core.utils.gost.GostFaecherManager';
 	}

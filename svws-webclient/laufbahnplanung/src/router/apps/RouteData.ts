@@ -49,6 +49,7 @@ interface RouteState {
 	gostJahrgang: GostJahrgang;
 	gostJahrgangsdaten: GostJahrgangsdaten;
 	zwischenspeicher: Abiturdaten | undefined;
+	dirty: boolean;
 	view: RouteNode<any, any>;
 }
 
@@ -69,6 +70,7 @@ export class RouteData {
 		gostJahrgang: new GostJahrgang(),
 		gostJahrgangsdaten: new GostJahrgangsdaten(),
 		zwischenspeicher: undefined,
+		dirty: false,
 		view: routeLadeDaten,
 	}
 
@@ -98,6 +100,10 @@ export class RouteData {
 
 	public get config(): Config {
 		return this._state.value.config;
+	}
+
+	public get dirty(): boolean {
+		return this._state.value.dirty;
 	}
 
 	public async setView(view: RouteNode<any,any>) {
@@ -384,6 +390,7 @@ export class RouteData {
 			this.fachbelegungErstellen(fachID, wahl);
 		}
 		await this.setGostBelegpruefungErgebnis();
+		this.setPatchedState({ dirty: true });
 	}
 
 	exportLaufbahnplanung = async (): Promise<ApiFile> => {
@@ -394,6 +401,7 @@ export class RouteData {
 		const compressedStream = rawData.pipeThrough(new CompressionStream('gzip'))
 		const data = await new Response(compressedStream).blob();
 		const name = `Laufbahnplanung_${this.gostJahrgangsdaten.abiturjahr}_${this.gostJahrgangsdaten.jahrgang}_${this.auswahl.nachname}_${this.auswahl.vorname}_${this.auswahl.id}.lp`;
+		this.setPatchedState({ dirty: false });
 		return { data, name };
 	}
 
@@ -431,7 +439,7 @@ export class RouteData {
 		if (abiturdatenManager === undefined)
 			return;
 		const gostBelegpruefungErgebnis = abiturdatenManager.getBelegpruefungErgebnis();
-		this.setPatchedState({ zwischenspeicher: undefined, abiturdaten, abiturdatenManager, gostBelegpruefungErgebnis });
+		this.setPatchedState({ zwischenspeicher: undefined, abiturdaten, abiturdatenManager, gostBelegpruefungErgebnis, dirty: true });
 	}
 
 	resetFachwahlen = async (forceDelete: boolean) => {
@@ -454,5 +462,12 @@ export class RouteData {
 		this.setPatchedState({ abiturdaten, abiturdatenManager, gostBelegpruefungErgebnis });
 	}
 
-}
+	reset = () => {
+		this.setPatchedDefaultState({});
+	}
 
+	exitLaufbahnplanung = async () => {
+		await RouteManager.doRoute(routeApp.getRoute());
+	}
+
+}

@@ -64,6 +64,14 @@ export class RouteDataGostLaufbahnfehler extends RouteData<RouteStateDataGostLau
 		await api.config.setValue('gost.laufbahnfehler.filterNurMitFachwahlen', value ? "true" : "false");
 	}
 
+	get filterNeuaufnahmen(): boolean {
+		return api.config.getValue('gost.laufbahnfehler.filterNeuaufnahmen') === 'true';
+	}
+
+	setFilterNeuaufnahmen = async (value: boolean) => {
+		await api.config.setValue('gost.laufbahnfehler.filterNeuaufnahmen', value ? "true" : "false");
+	}
+
 	protected async updateList(abiturjahr : number, gostBelegpruefungsArt : GostBelegpruefungsArt) {
 		if (abiturjahr < 1)
 			throw new DeveloperNotificationException(`Fehlerhafte Übergabe des Abiturjahrs: ${abiturjahr}`)
@@ -93,6 +101,7 @@ export class RouteDataGostLaufbahnfehler extends RouteData<RouteStateDataGostLau
 	importLaufbahnplanung = async (data: FormData): Promise<void> => {
 		api.status.start();
 		await api.server.importGostSchuelerLaufbahnplanungen(data, api.schema);
+		await this.setAbiturjahr(this.abiturjahr);
 		api.status.stop();
 	}
 
@@ -130,8 +139,20 @@ export class RouteDataGostLaufbahnfehler extends RouteData<RouteStateDataGostLau
 		}
 	}
 
-	resetFachwahlenAlle = async () => {
-		await api.server.resetGostAbiturjahrgangSchuelerFachwahlen(api.schema, this.abiturjahr);
+	resetFachwahlenAlle = async (ergebnisse: Iterable<GostBelegpruefungsErgebnisse>) => {
+		if ([...ergebnisse].length === this.listBelegpruefungsErgebnisse.size())
+			await api.server.resetGostAbiturjahrgangSchuelerFachwahlen(api.schema, this.abiturjahr);
+		else
+			for (const ergebnis of ergebnisse)
+				await api.server.resetGostSchuelerFachwahlen(api.schema, ergebnis.schueler.id);
+		await this.setAbiturjahr(this.abiturjahr);
+	}
+
+	loeschenFachwahlenSelected = async (ergebnisse: Iterable<GostBelegpruefungsErgebnisse>) => {
+		const idsSchueler = new ArrayList<number>();
+		for (const ergebnis of ergebnisse)
+			idsSchueler.add(ergebnis.schueler.id);
+		await api.server.deleteGostSchuelerFachwahlenMultiple(idsSchueler, api.schema);
 		await this.setAbiturjahr(this.abiturjahr);
 	}
 

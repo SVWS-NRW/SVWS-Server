@@ -38,66 +38,64 @@
 				@click.stop="stepper(halbjahr)" :title="getTooltipHalbjahr(halbjahr)"
 				:tabindex="manager.istMoeglich(fach, halbjahr) ? 0 : -1" @keydown.enter.prevent="handleKeyboardStep($event, halbjahr)" @keydown.space.prevent="handleKeyboardStep($event, halbjahr)"
 				@keydown.delete.prevent="deleteFachwahlPlaceholder(halbjahr)" :ref="el => halbjahrRefs.set(halbjahr.id, el as HTMLElement)" @focus="() => emit('update:focus', fach.id, halbjahr.id)">
-				<div class="inline-flex items-center gap-1 relative w-full">
-					<span class="w-full text-center">
-						<template v-if="wahlen[halbjahr.id] !== '' && wahlen[halbjahr.id] === '6'">0</template>
-						<template v-else>{{ wahlen[halbjahr.id] }}&#8203;</template>
-					</span>
-					<span class="absolute -right-0 top-0">
-						<template v-if="istFachkombiErforderlich[halbjahr.id] || istFachkombiVerboten[halbjahr.id] || !zkMoeglich(halbjahr)">
-							<svws-ui-tooltip :color="istBewertet(halbjahr) ? 'light' : 'danger'" position="bottom">
-								<span class="icon i-ri-error-warning-line" :class="istBewertet(halbjahr) ? 'icon-ui-75' : 'icon-ui-danger'" />
-								<template #content v-if="istFachkombiErforderlich[halbjahr.id]">
-									Fachkombination erforderlich
+				<span class="relative">
+					<template v-if="wahlen[halbjahr.id] !== '' && wahlen[halbjahr.id] === '6'">0</template>
+					<template v-else>{{ wahlen[halbjahr.id] }}&#8203;</template>
+				</span>
+				<span class="absolute">
+					<template v-if="istFachkombiErforderlich[halbjahr.id] || istFachkombiVerboten[halbjahr.id] || !zkMoeglich(halbjahr)">
+						<svws-ui-tooltip :color="istBewertet(halbjahr) ? 'light' : 'danger'" position="bottom">
+							<span class="icon mr-12 i-ri-error-warning-line " :class="istBewertet(halbjahr) ? 'icon-ui-75' : 'icon-ui-danger'" />
+							<template #content v-if="istFachkombiErforderlich[halbjahr.id]">
+								Fachkombination erforderlich
+							</template>
+							<template #content v-else-if="istFachkombiVerboten[halbjahr.id]">
+								Fachkombination ist nicht zulässig
+							</template>
+							<template #content v-else>
+								Ein Zusatzkurs {{ fach.kuerzel }} wird in diesem Halbjahr nicht angeboten
+							</template>
+						</svws-ui-tooltip>
+					</template>
+					<template v-if="!manager.istMoeglich(fach, halbjahr) && (wahlen[halbjahr.id] !== '') && hatUpdateKompetenz">
+						<svws-ui-tooltip :color="istBewertet(halbjahr) && manager.hatNote(fach, halbjahr) ? 'light' : 'danger'">
+							<svws-ui-button type="icon" size="small" :disabled="istBewertet(halbjahr) && manager.hatNote(fach, halbjahr)" @click="manager.deleteFachwahl(fach, halbjahr)"
+								@keydown.enter.prevent="manager.deleteFachwahl(fach, halbjahr)" @keydown.space.prevent="manager.deleteFachwahl(fach, halbjahr)" class="left-4">
+								<span class="icon i-ri-close-line" />
+							</svws-ui-button>
+							<template #content>
+								<template v-if="istBewertet(halbjahr)">
+									Kurs nicht wählbar
 								</template>
-								<template #content v-else-if="istFachkombiVerboten[halbjahr.id]">
-									Fachkombination ist nicht zulässig
+								<template v-else>
+									Löschen (Kurs nicht wählbar)
 								</template>
-								<template #content v-else>
-									Ein Zusatzkurs {{ fach.kuerzel }} wird in diesem Halbjahr nicht angeboten
-								</template>
-							</svws-ui-tooltip>
-						</template>
-						<template v-else-if="!manager.istMoeglich(fach, halbjahr) && (wahlen[halbjahr.id] !== '') && hatUpdateKompetenz">
-							<svws-ui-tooltip :color="istBewertet(halbjahr) && manager.hatNote(fach, halbjahr) ? 'light' : 'danger'">
-								<svws-ui-button type="icon" size="small" :disabled="istBewertet(halbjahr) && manager.hatNote(fach, halbjahr)" @click="manager.deleteFachwahl(fach, halbjahr)"
-									@keydown.enter.prevent="manager.deleteFachwahl(fach, halbjahr)" @keydown.space.prevent="manager.deleteFachwahl(fach, halbjahr)">
-									<span class="icon i-ri-close-line" />
-								</svws-ui-button>
-								<template #content>
-									<template v-if="istBewertet(halbjahr)">
-										Kurs nicht wählbar
-									</template>
-									<template v-else>
-										Löschen (Kurs nicht wählbar)
-									</template>
-								</template>
-							</svws-ui-tooltip>
-						</template>
-						<template v-else-if="(wahlen[halbjahr.id] !== '') && istBewertet(halbjahr) && (!manager.hatNote(fach, halbjahr) && !manager.belegungHatImmerNoten) && hatUpdateKompetenz">
-							<svws-ui-tooltip :color="'danger'">
-								<svws-ui-button type="icon" size="small" @click="manager.deleteFachwahl(fach, halbjahr)"
-									@keydown.enter.prevent="manager.deleteFachwahl(fach, halbjahr)" @keydown.space.prevent="manager.deleteFachwahl(fach, halbjahr)">
-									<span class="icon i-ri-close-line" />
-								</svws-ui-button>
-								<template #content>
-									Kurs ist bei den Fachwahlen eingetragen, es liegen aber keine Einträge in den Leistungsdaten vor. <br>
-									Entfernen Sie entweder die Fachwahl durch Klicken oder korrigieren sie dies in den Leistungsdaten.
-								</template>
-							</svws-ui-tooltip>
-						</template>
-						<template v-else-if="wahlen[halbjahr.id] && wahlen[halbjahr.id] === '6'">
-							<svws-ui-tooltip color="danger" position="bottom">
-								<div class="inline-flex items-center">
-									<span class="icon i-ri-error-warning-line icon-ui-danger ml-0.5" />
-								</div>
-								<template #content>
-									Dieser Kurs gilt aufgrund von 0 Punkten als nicht belegt.
-								</template>
-							</svws-ui-tooltip>
-						</template>
-					</span>
-				</div>
+							</template>
+						</svws-ui-tooltip>
+					</template>
+					<template v-else-if="(wahlen[halbjahr.id] !== '') && istBewertet(halbjahr) && (!manager.hatNote(fach, halbjahr) && !manager.belegungHatImmerNoten) && hatUpdateKompetenz">
+						<svws-ui-tooltip :color="'danger'">
+							<svws-ui-button type="icon" size="small" @click="manager.deleteFachwahl(fach, halbjahr)" class="left-4"
+								@keydown.enter.prevent="manager.deleteFachwahl(fach, halbjahr)" @keydown.space.prevent="manager.deleteFachwahl(fach, halbjahr)">
+								<span class="icon i-ri-close-line" />
+							</svws-ui-button>
+							<template #content>
+								Kurs ist bei den Fachwahlen eingetragen, es liegen aber keine Einträge in den Leistungsdaten vor. <br>
+								Entfernen Sie entweder die Fachwahl durch Klicken oder korrigieren sie dies in den Leistungsdaten.
+							</template>
+						</svws-ui-tooltip>
+					</template>
+					<template v-else-if="wahlen[halbjahr.id] && wahlen[halbjahr.id] === '6'">
+						<svws-ui-tooltip color="danger" position="bottom">
+							<div class="inline-flex items-center">
+								<span class="icon mr-12 i-ri-error-warning-line icon-ui-danger" />
+							</div>
+							<template #content>
+								Dieser Kurs gilt aufgrund von 0 Punkten als nicht belegt.
+							</template>
+						</svws-ui-tooltip>
+					</template>
+				</span>
 			</div>
 		</template>
 		<div role="cell" class="laufbahn-cell svws-ui-td svws-align-center select-none font-medium"
@@ -109,18 +107,20 @@
 			} : {}"
 			@click.stop="stepperAbi()" :tabindex="manager.istMoeglichAbi(fach) ? 0 : -1" @keydown.enter.prevent="stepperAbi()" @keydown.space.prevent="stepperAbi()" @keydown.delete.prevent="deleteFachwahlAbiturPlaceholder()"
 			:ref="el => halbjahrRefs.set(GostHalbjahr.values().length, el as HTMLElement)" @focus="() => emit('update:focus', fach.id, GostHalbjahr.values().length)">
-			<template v-if="abi_wahl"> {{ abi_wahl }} </template>
-			<span v-if="abi_wahl && !manager.istMoeglichAbi(fach) && hatUpdateKompetenz" class="absolute -right-0">
-				<svws-ui-tooltip :color="'danger'">
-					<svws-ui-button type="icon" size="small" @click="manager.deleteFachwahlAbitur(fach)"
-						@keydown.enter.prevent="manager.deleteFachwahlAbitur(fach)" @keydown.space.prevent="manager.deleteFachwahlAbitur(fach)">
-						<span class="icon i-ri-close-line" />
-					</svws-ui-button>
-					<template #content>
-						Löschen (Nicht als Abiturfach wählbar)
-					</template>
-				</svws-ui-tooltip>
-			</span>
+			<template v-if="abi_wahl">
+				<span class="relative">{{ abi_wahl }}</span>
+				<span v-if="abi_wahl && !manager.istMoeglichAbi(fach) && hatUpdateKompetenz" class="absolute right-3">
+					<svws-ui-tooltip :color="'danger'">
+						<svws-ui-button type="icon" size="small" @click="manager.deleteFachwahlAbitur(fach)"
+							@keydown.enter.prevent="manager.deleteFachwahlAbitur(fach)" @keydown.space.prevent="manager.deleteFachwahlAbitur(fach)">
+							<span class="icon i-ri-close-line" />
+						</svws-ui-button>
+						<template #content>
+							Löschen (Nicht als Abiturfach wählbar)
+						</template>
+					</svws-ui-tooltip>
+				</span>
+			</template>
 		</div>
 	</div>
 </template>
@@ -131,7 +131,6 @@
 	import { AbiturdatenManager } from "../../../../../core/src/core/abschluss/gost/AbiturdatenManager";
 	import type { GostJahrgangsdaten } from "../../../../../core/src/core/data/gost/GostJahrgangsdaten";
 	import type { GostFach } from "../../../../../core/src/core/data/gost/GostFach";
-	import { Fach } from "../../../../../core/src/asd/types/fach/Fach";
 	import { GostHalbjahr } from "../../../../../core/src/core/types/gost/GostHalbjahr";
 	import { AbiturFachbelegungHalbjahr } from "../../../../../core/src/core/data/gost/AbiturFachbelegungHalbjahr";
 	import { GostKursart } from "../../../../../core/src/core/types/gost/GostKursart";

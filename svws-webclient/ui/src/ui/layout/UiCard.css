@@ -1,8 +1,8 @@
 .ui-card {
-	@apply rounded-lg min-w-fit gap-3;
+	@apply rounded-lg min-w-fit gap-3 m-[0.2em];
 
 	.ui-card--header {
-		@apply p-4 flex items-center gap-3 text-left w-full rounded-lg bg-ui-brand-secondary border border-ui-brand transition-[border-radius]
+		@apply p-4 flex items-center gap-3 text-left w-full rounded-lg border transition-[border-radius]
 			duration-100 delay-[450ms] ease-in-out;
 
 		.ui-card--header--icon span {
@@ -53,12 +53,8 @@
 		}
 
 		&.ui-card--active {
-			@apply rounded-b-none transition-[border-radius] delay-0 duration-100 ease-in-out bg-ui-brand text-ui-onbrand border-ui-brand;
+			@apply rounded-b-none transition-[border-radius] delay-0 duration-100 ease-in-out;
 
-			.ui-card--header--icon span,
-			.ui-card--header--collapse-icon span {
-				@apply icon-ui-onbrand;
-			}
 		}
 	}
 
@@ -66,7 +62,7 @@
 		@apply overflow-hidden rounded-b-lg;
 
 		.ui-card--body {
-			@apply rounded-b-lg p-4 bg-ui-neutral flex gap-3 flex-col border border-ui-brand border-t-0;
+			@apply rounded-b-lg p-4 bg-ui-neutral flex gap-3 flex-col border border-t-0;
 
 			.ui-card--body--content {
 				@apply flex gap-3 justify-between items-start overflow-auto;
@@ -138,23 +134,6 @@
 			.ui-card--card--buttons {
 				@apply gap-1;
 			}
-		}
-	}
-
-	&:hover,
-	&:focus-visible,
-	&:focus {
-		.ui-card--header {
-			@apply bg-ui-brand-hover border-ui-brand-hover text-ui-onbrand-hover;			
-		}
-
-		.ui-card--body-wrapper .ui-card--body {
-			@apply border-ui-brand-hover;
-		}
-
-		.ui-card--header--icon span,
-		.ui-card--header--collapse-icon span {
-			@apply icon-ui-hover;
 		}
 	}
 

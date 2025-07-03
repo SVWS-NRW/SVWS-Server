@@ -1,4 +1,7 @@
 <template>
+	<Teleport to=".svws-ui-header--actions" defer>
+		<svws-ui-modal-hilfe> <hilfe-schueler-individualdaten /> </svws-ui-modal-hilfe>
+	</Teleport>
 	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper :grid="2">
@@ -35,12 +38,12 @@
 				<svws-ui-select title="Haltestelle" :readonly="!hatKompetenzUpdate" v-model="inputHaltestelleID" :items="mapHaltestellen"
 					:item-text="i => i.text ?? ''" removable />
 				<svws-ui-text-input placeholder="Anmeldedatum" :readonly="!hatKompetenzUpdate" :model-value="data.anmeldedatum"
-					@change="d => patch({ anmeldedatum : d ?? null })" type="date" removable />
+					@change="anmeldedatum => patch({ anmeldedatum : anmeldedatum ?? null })" type="date" removable />
 				<svws-ui-text-input placeholder="Aufnahmedatum" :readonly="!hatKompetenzUpdate" :model-value="data.aufnahmedatum"
-					@change="aufnahmedatum => patch({aufnahmedatum})" type="date" statistics />
+					@change="aufnahmedatum => patch({ aufnahmedatum : aufnahmedatum ?? null })" type="date" statistics />
 				<svws-ui-spacing />
 				<svws-ui-input-wrapper :grid="2" class="input-wrapper--checkboxes">
-					<svws-ui-checkbox :disabled="!hatKompetenzUpdate" :model-value="data.istVolljaehrig === true"
+					<svws-ui-checkbox :disabled="!hatKompetenzUpdate" :model-value="data.istVolljaehrig" statistics
 						@update:model-value="istVolljaehrig => patch({ istVolljaehrig })">
 						Volljährig
 					</svws-ui-checkbox>
@@ -48,10 +51,10 @@
 						@update:model-value="keineAuskunftAnDritte => patch({ keineAuskunftAnDritte })">
 						Keine Auskunft an Dritte
 					</svws-ui-checkbox>
-					<svws-ui-checkbox :disabled="!hatKompetenzUpdate" :model-value="data.istSchulpflichtErfuellt === true" readonly>
+					<svws-ui-checkbox :disabled="!hatKompetenzUpdate" :model-value="data.istSchulpflichtErfuellt" readonly statistics>
 						Schulpflicht erfüllt
 					</svws-ui-checkbox>
-					<svws-ui-checkbox :disabled="!hatKompetenzUpdate" :model-value="data.istBerufsschulpflichtErfuellt === true"
+					<svws-ui-checkbox :disabled="!hatKompetenzUpdate" :model-value="data.istBerufsschulpflichtErfuellt"
 						@update:model-value="istBerufsschulpflichtErfuellt => patch({ istBerufsschulpflichtErfuellt })">
 						Schulpflicht SII erfüllt
 					</svws-ui-checkbox>
@@ -68,15 +71,17 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Wohnort und Kontaktdaten" v-if="hatKompetenzAnsehen">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input class="contentFocusField" placeholder="Straße" :readonly="!hatKompetenzUpdate" :model-value="strasse" @change="patchStrasse" type="text" span="full" />
-				<svws-ui-select title="Wohnort" :readonly="!hatKompetenzUpdate" v-model="wohnortID" :items="mapOrte" :item-filter="orte_filter"
-					:item-sort="orte_sort" :item-text="i => `${i.plz} ${i.ortsname}`" autocomplete statistics />
+				<svws-ui-text-input class="contentFocusField" placeholder="Straße" :readonly="!hatKompetenzUpdate" :model-value="strasse"
+					@change="patchStrasse" type="text" span="full" />
+				<svws-ui-select title="Wohnort" :readonly="!hatKompetenzUpdate" v-model="wohnortID" :items="mapOrte"
+					:item-filter="orte_filter" :item-sort="orte_sort" :item-text="i => `${i.plz} ${i.ortsname}`" autocomplete statistics />
 				<svws-ui-select title="Ortsteil" :readonly="!hatKompetenzUpdate" v-model="ortsteilID" :items="ortsteile"
 					:item-text="i => i.ortsteil ?? ''" :item-sort="ortsteilSort" :item-filter="ortsteilFilter" removable />
 				<svws-ui-spacing />
-				<svws-ui-text-input placeholder="Telefon" :readonly="!hatKompetenzUpdate" :model-value="data.telefon" @change="telefon => patch({ telefon })" type="tel" />
+				<svws-ui-text-input placeholder="Telefon" :readonly="!hatKompetenzUpdate" :model-value="data.telefon"
+					@change="telefon => patch({ telefon })" type="tel" :max-len="20" />
 				<svws-ui-text-input placeholder="Mobil oder Fax" :readonly="!hatKompetenzUpdate" :model-value="data.telefonMobil"
-					@change="telefonMobil => patch({ telefonMobil })" type="tel" />
+					@change="telefonMobil => patch({ telefonMobil })" type="tel" :max-len="20" />
 				<svws-ui-text-input placeholder="Private E-Mail-Adresse" :readonly="!hatKompetenzUpdate" :model-value="data.emailPrivat"
 					@change="emailPrivat => patch({ emailPrivat })" type="email" verify-email />
 				<svws-ui-text-input placeholder="Schulische E-Mail-Adresse" :readonly="!hatKompetenzUpdate" :model-value="data.emailSchule"
@@ -91,27 +96,27 @@
 				<svws-ui-select title="2. Staatsangehörigkeit" :readonly="!hatKompetenzUpdate" v-model="staatsangehoerigkeit2" autocomplete removable
 					:items="Nationalitaeten.values()" :item-text="i => i.historie().getLast().staatsangehoerigkeit"
 					:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter" />
-				<svws-ui-select title="Konfession" :readonly="!hatKompetenzUpdate" v-model="religion" :items="mapReligionen" :item-text="i => i.bezeichnung ?? ''" required statistics />
+				<svws-ui-select title="Konfession" :readonly="!hatKompetenzUpdate" v-model="religion" :items="mapReligionen" :item-text="i => i.bezeichnungZeugnis ?? ''" required statistics />
 				<div class="flex items-center pl-2">
 					<svws-ui-checkbox v-model="druckeKonfessionAufZeugnisse" :disabled="!hatKompetenzUpdate">Konfession aufs Zeugnis</svws-ui-checkbox>
 				</div>
 				<svws-ui-text-input placeholder="Abmeldung vom Religionsunterricht" :readonly="!hatKompetenzUpdate" :model-value="data.religionabmeldung"
-					@change="religionabmeldung => patch({religionabmeldung})" type="date" />
+					@change="religionabmeldung => patch({religionabmeldung})" type="date" statistics />
 				<svws-ui-text-input placeholder="Wiederanmeldung" :readonly="!hatKompetenzUpdate" :model-value="data.religionanmeldung"
-					@change="religionanmeldung => patch({religionanmeldung})" type="date" />
+					@change="religionanmeldung => patch({religionanmeldung})" type="date" statistics />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Weitere Telefonnummern" v-if="serverMode === ServerMode.DEV">
-			<svws-ui-table :clickable="true" :items="schuelerTelefon" :columns="columns" :selectable="hatKompetenzUpdate" :model-value="selected">
+			<svws-ui-table clickable @update:clicked="v => patchTelefonnummer(v)" :items="getListSchuelerTelefoneintraege()" :columns :selectable="hatKompetenzUpdate" v-model="selected">
 				<template #cell(idTelefonArt)="{ value }">
-					{{ getTelefonnummer(value) }}
+					{{ getBezeichnungTelefonart(value) }}
 				</template>
 				<template #cell(telefonnummer)="{ value }">
 					{{ value }}
 				</template>
 				<template #actions>
 					<div class="inline-flex gap-4">
-						<svws-ui-button type="trash" />
+						<svws-ui-button @click="deleteTelefonnummern" type="trash" :disabled="selected.length === 0" />
 						<svws-ui-button @click="addTelefonnummer" type="icon" title="Telefonnummer hinzufügen"><span class="icon i-ri-add-line" /></svws-ui-button>
 					</div>
 				</template>
@@ -119,13 +124,16 @@
 			<svws-ui-modal :show="showModalTelefonnummer" @update:show="closeModalTelefonnummer">
 				<template #modalTitle>Telefonnummer hinzufügen</template>
 				<template #modalContent>
-					<svws-ui-input-wrapper :grid="2" style="text-align: left">
+					<svws-ui-input-wrapper :grid="2" class="text-left">
 						<svws-ui-select title="Telefonart" :items="mapTelefonArten.values()" v-model="selectedTelefonArt" :item-text="i => i.bezeichnung" />
-						<svws-ui-text-input v-model="telefonnummer.telefonnummer" type="text" placeholder="Telefonnummer" />
+						<svws-ui-text-input v-model="newEntryTelefonnummer.telefonnummer" type="text" placeholder="Telefonnummer" :max-len="20" />
 					</svws-ui-input-wrapper>
+					<svws-ui-notification type="warning" v-if="mapTelefonArten.size === 0">Die Liste der Telefonarten ist leer, es sollte mindestens eine Telefonart unter Schule/Kataloge angelegt werden, damit zusätzliche Telefonnummern eine gültige Zuordnung haben. </svws-ui-notification>
 					<div class="mt-7 flex flex-row gap-4 justify end">
 						<svws-ui-button type="secondary" @click="closeModalTelefonnummer">Abbrechen</svws-ui-button>
-						<svws-ui-button>Speichern</svws-ui-button>
+						<svws-ui-button @click="sendRequestTelefonnummer" :disabled="(selectedTelefonArt === null) || (mapTelefonArten.size === 0) || (newEntryTelefonnummer.telefonnummer === null) || (newEntryTelefonnummer.telefonnummer.length === 0)">
+							Speichern
+						</svws-ui-button>
 					</div>
 				</template>
 			</svws-ui-modal>
@@ -159,10 +167,10 @@
 
 <script setup lang="ts">
 
-	import {computed, ref} from "vue";
+	import { computed, ref } from "vue";
 	import type { SchuelerIndividualdatenProps } from "./SSchuelerIndividualdatenProps";
-	import type { SchuelerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, KatalogEintrag, SchulEintrag} from "@core";
-	import { SchuelerStatus, Schulform, Nationalitaeten, Geschlecht, AdressenUtils, Verkehrssprache, BenutzerKompetenz, DateUtils, SchuelerTelefon, ServerMode } from "@core";
+	import type { SchuelerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, KatalogEintrag, SchulEintrag, TelefonArt } from "@core";
+	import { SchuelerStatus, Schulform, Nationalitaeten, Geschlecht, AdressenUtils, Verkehrssprache, BenutzerKompetenz, DateUtils, SchuelerTelefon, ServerMode, ArrayList } from "@core";
 	import { verkehrsspracheKatalogEintragFilter, verkehrsspracheKatalogEintragSort, nationalitaetenKatalogEintragFilter, nationalitaetenKatalogEintragSort,
 		staatsangehoerigkeitKatalogEintragSort, staatsangehoerigkeitKatalogEintragFilter, orte_sort, orte_filter, ortsteilSort, ortsteilFilter } from "~/utils/helfer";
 	import type { DataTableColumn } from "@ui";
@@ -176,32 +184,65 @@
 
 	const data = computed<SchuelerStammdaten>(() => props.schuelerListeManager().daten());
 
+	function enterDefaultMode() {
+		setMode(Mode.DEFAULT);
+		resetTelefonnummer();
+		closeModalTelefonnummer();
+	}
+
 	const selected = ref<SchuelerTelefon[]>([]);
-	const telefonnummer = ref(new SchuelerTelefon());
-	const schuelerTelefon = computed(() => [...props.schuelerListeManager().getSuchuelerTelefone()]);
+	const newEntryTelefonnummer = ref<SchuelerTelefon>(new SchuelerTelefon());
 
 	const columns: DataTableColumn[] = [
-		{ key: "idTelefonArt", label: "Ansprechpartner", span: 1 },
-		{ key: "telefonnummer", label: "Telefonnummern", span: 1 },
+		{ key: "idTelefonArt", label: "Ansprechpartner" },
+		{ key: "telefonnummer", label: "Telefonnummern" },
 	]
 
-	function getTelefonnummer(idTelefonArt: number): string {
+	function getBezeichnungTelefonart(idTelefonArt: number): string {
 		return props.mapTelefonArten.get(idTelefonArt)?.bezeichnung ?? "";
 	}
 
-	const selectedTelefonArt = computed({
-		get: () => props.mapTelefonArten.get(telefonnummer.value.idTelefonArt) ?? null,
-		set: (selected) => telefonnummer.value.idTelefonArt = (selected !== null) ? selected.id : 0,
+	const selectedTelefonArt = computed<TelefonArt|null>({
+		get: () => props.mapTelefonArten.get(newEntryTelefonnummer.value.idTelefonArt) ?? null,
+		set: (selected) => newEntryTelefonnummer.value.idTelefonArt = (selected !== null) ? selected.id : 0,
 	});
 
-	enum Mode { ADD, PATCH , DEFAULT }
+	enum Mode { ADD, PATCH, DEFAULT }
 	const currentMode = ref<Mode>(Mode.DEFAULT);
 	const showModalTelefonnummer = ref<boolean>(false);
-	const newEntryTelefonnummer = ref<SchuelerTelefon>(new SchuelerTelefon());
 	function addTelefonnummer() {
-		resetMerkmal();
+		resetTelefonnummer();
 		setMode(Mode.ADD);
 		openModalTelefonnummer();
+	}
+
+	async function sendRequestTelefonnummer() {
+		const { id, idSchueler, ...partialDataWithoutId } = newEntryTelefonnummer.value;
+		const schuelerId = props.schuelerListeManager().daten().id;
+		if (currentMode.value === Mode.ADD)
+			await props.addSchuelerTelefoneintrag(partialDataWithoutId, schuelerId);
+		if (currentMode.value === Mode.PATCH)
+			await props.patchSchuelerTelefoneintrag(partialDataWithoutId, newEntryTelefonnummer.value.id);
+		enterDefaultMode();
+	}
+
+	function patchTelefonnummer(telefonnummer: SchuelerTelefon) {
+		resetTelefonnummer();
+		setMode(Mode.PATCH);
+		newEntryTelefonnummer.value.id = telefonnummer.id;
+		newEntryTelefonnummer.value.idTelefonArt = telefonnummer.idTelefonArt;
+		newEntryTelefonnummer.value.telefonnummer = telefonnummer.telefonnummer;
+		openModalTelefonnummer();
+	}
+
+	async function deleteTelefonnummern() {
+		if (selected.value.length === 0)
+			return;
+		const ids = new ArrayList<number>();
+		for (const s of selected.value)
+			ids.add(s.id);
+		await props.deleteSchuelerTelefoneintrage(ids);
+		selected.value = [];
 	}
 
 	function openModalTelefonnummer() {
@@ -209,7 +250,7 @@
 	}
 
 	function closeModalTelefonnummer() {
-		resetMerkmal();
+		resetTelefonnummer();
 		setMode(Mode.DEFAULT)
 		showModalTelefonnummer.value = false;
 	}
@@ -218,8 +259,12 @@
 		return currentMode.value = newMode;
 	}
 
-	function resetMerkmal() {
-		newEntryTelefonnummer.value = new SchuelerTelefon();
+	function resetTelefonnummer() {
+		const defaultTelefon = new SchuelerTelefon();
+		defaultTelefon.telefonnummer = '+49';
+		const ersteTelefonArt = props.mapTelefonArten.values().next().value;
+		defaultTelefon.idTelefonArt = ersteTelefonArt?.id ?? 0;
+		newEntryTelefonnummer.value = defaultTelefon;
 	}
 
 	function istGeburtsdatumGueltig(strDate: string | null) {

@@ -25,9 +25,9 @@ public class Abteilung {
 	@Schema(description = "die Bezeichnung der Abteilung (max. 50 Zeichen)", example = "4712")
 	public @NotNull String bezeichnung = "";
 
-	/** Die ID des Schuljahresabschnittes für den die Abteilung definiert ist. */
-	@Schema(description = "die ID des Schuljahresabschnittes für den die Abteilung definiert ist", example = "4713")
-	public long idSchuljahresabschnitts;
+	/** Die ID des Schuljahresabschnitts für den die Abteilung definiert ist. */
+	@Schema(description = "die ID des Schuljahresabschnitts für den die Abteilung definiert ist", example = "4713")
+	public long idSchuljahresabschnitt;
 
 	/** Die Lehrer-ID des Abteilungsleiters, sofern die Abteilung einen zugewiesen hat. */
 	@Schema(description = "die Lehrer-ID des Abteilungsleiters, sofern die Abteilung einen zugewiesen hat", example = "null")

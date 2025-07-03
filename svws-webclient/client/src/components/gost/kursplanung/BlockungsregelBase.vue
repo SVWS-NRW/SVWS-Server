@@ -3,8 +3,8 @@
 		<svws-ui-table :items="aufgeklappt ? regeln : []" :no-data="false" :columns="cols" scroll clickable>
 			<template #header(information)>
 				<div v-if="regeln.size()" @click.stop="aufgeklappt = !aufgeklappt">
-					<span v-if="aufgeklappt" class="icon i-ri-arrow-down-s-line cursor-pointer inline-block" />
-					<span v-else class="icon i-ri-arrow-right-s-line cursor-pointer inline-block" />
+					<span v-if="aufgeklappt" class="icon i-ri-arrow-down-s-line cursor-pointer" />
+					<span v-else class="icon i-ri-arrow-right-s-line cursor-pointer" />
 				</div>
 			</template>
 			<template #[`header(${props.columns.at(0)?.key})`]="{ column }">

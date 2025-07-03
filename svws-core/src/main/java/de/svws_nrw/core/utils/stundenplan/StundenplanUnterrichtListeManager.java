@@ -194,4 +194,22 @@ public final class StundenplanUnterrichtListeManager extends AuswahlManager<Long
 		return true;
 	}
 
+	/**
+	 * Methode übernimmt Filterinformationen aus dem übergebenen {@link AuswahlManager}
+	 *
+	 * @param srcManager Manager, aus dem die Filterinformationen übernommen werden
+	 */
+	public void useFilter(final @NotNull StundenplanUnterrichtListeManager srcManager) {
+		this.faecher.setAuswahl(srcManager.faecher);
+		this.klassen.setAuswahl(srcManager.klassen);
+		this.kurse.setAuswahl(srcManager.kurse);
+		this.lehrer.setAuswahl(srcManager.lehrer);
+		this.raeume.setAuswahl(srcManager.raeume);
+		this.schienen.setAuswahl(srcManager.schienen);
+		this.schueler.setAuswahl(srcManager.schueler);
+		this.stunden.setAuswahl(srcManager.stunden);
+		this.wochentage.setAuswahl(srcManager.wochentage);
+		this.wochentypen.setAuswahl(srcManager.wochentypen);
+		this.zeitraster.setAuswahl(srcManager.zeitraster);
+	}
 }

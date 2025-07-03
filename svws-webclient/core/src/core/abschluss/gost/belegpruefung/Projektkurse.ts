@@ -19,11 +19,11 @@ import { HashSet } from '../../../../java/util/HashSet';
 
 export class Projektkurse extends GostBelegpruefung {
 
-	private projektkursBelegung : ArrayList<AbiturFachbelegung> | null = null;
+	private readonly projektkursBelegung : ArrayList<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 
 	private projektkurs : AbiturFachbelegung | null = null;
 
-	private projektkursHalbjahre : ArrayList<GostHalbjahr> | null = null;
+	private readonly projektkursHalbjahre : ArrayList<GostHalbjahr> = new ArrayList<GostHalbjahr>();
 
 
 	/**
@@ -38,8 +38,6 @@ export class Projektkurse extends GostBelegpruefung {
 
 	protected init() : void {
 		this.projektkurs = null;
-		this.projektkursBelegung = new ArrayList();
-		this.projektkursHalbjahre = new ArrayList();
 		const alleFachbelegungen : List<AbiturFachbelegung> = this.manager.getRelevanteFachbelegungen();
 		for (const fachbelegung of alleFachbelegungen) {
 			if (this.manager.zaehleBelegung(fachbelegung) <= 0)
@@ -68,8 +66,6 @@ export class Projektkurse extends GostBelegpruefung {
 	 * Prüft, ob ein Projektfach in der EF belegt wurde. Eine solche Belegung ist nicht zulässig.
 	 */
 	private pruefeBelegungEF() : void {
-		if (this.projektkursBelegung === null)
-			return;
 		for (const fachbelegung of this.projektkursBelegung) {
 			for (const belegungHalbjahr of fachbelegung.belegungen) {
 				if (belegungHalbjahr === null)
@@ -86,8 +82,6 @@ export class Projektkurse extends GostBelegpruefung {
 	 * auch nur genau ein anrechenbarer Projektkurs existieren!
 	 */
 	private pruefeAufAnrechenbarenProjektkurs() : void {
-		if (this.projektkursBelegung === null)
-			return;
 		for (const fachbelegung of this.projektkursBelegung) {
 			for (const belegungHalbjahr of fachbelegung.belegungen) {
 				if (belegungHalbjahr === null)
@@ -111,8 +105,6 @@ export class Projektkurse extends GostBelegpruefung {
 					break;
 				}
 				this.projektkurs = fachbelegung;
-				if (this.projektkursHalbjahre === null)
-					this.projektkursHalbjahre = new ArrayList();
 				this.projektkursHalbjahre.add(halbjahr);
 				this.projektkursHalbjahre.add(nextHalbjahr);
 				break;
@@ -127,8 +119,6 @@ export class Projektkurse extends GostBelegpruefung {
 	 * einem Halbjahr nicht mehrere Projektfächer belegt sein.
 	 */
 	private pruefeBelegungHalbjahre() : void {
-		if (this.projektkursBelegung === null)
-			return;
 		const pjkHalbjahre : HashSet<GostHalbjahr> = new HashSet<GostHalbjahr>();
 		for (const fachbelegung of this.projektkursBelegung) {
 			for (const belegungHalbjahr of fachbelegung.belegungen) {
@@ -157,8 +147,6 @@ export class Projektkurse extends GostBelegpruefung {
 	 * Prüft die Belegung der Leitfächer
 	 */
 	private pruefeBelegungLeitfaecher() : void {
-		if (this.projektkursBelegung === null)
-			return;
 		for (const fachbelegung of this.projektkursBelegung) {
 			const fach : GostFach | null = this.manager.getFach(fachbelegung);
 			if (fach === null)
@@ -281,6 +269,16 @@ export class Projektkurse extends GostBelegpruefung {
 		if ((this.projektkurs === null) || (this.manager.istProjektKursBesondereLernleistung()))
 			return 0;
 		return 2;
+	}
+
+	/**
+	 * Gibt die beiden anrechenbaren Halbjahre der Projektkursbelegung zurück, sofern
+	 * der Kurs anrechenbar ist.
+	 *
+	 * @return die beiden Halbjahre der Projektkursbelegung
+	 */
+	public getAnrechenbareHalbjahre() : List<GostHalbjahr> {
+		return this.projektkursHalbjahre;
 	}
 
 	transpilerCanonicalName(): string {

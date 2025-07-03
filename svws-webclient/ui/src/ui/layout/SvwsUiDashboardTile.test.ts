@@ -127,14 +127,12 @@ describe("Bedingte Rendern", () => {
 		});
 
 		// Testen
-		console.log(wrapper.html());
 		expect(wrapper.find(idComponent).find('.test-title').text()).toBe('Custom Title');
 	});
 
 	test("Rendert die Nummer im vorgegebenem Slot-Inhalt nicht, wenn number nicht gesetzt ist", async () => {
 		// Testen
 		expect(wrapper.find(idComponent).find(".svws-ui-dashboard-tile__number").exists()).toBe(false);
-		console.log(wrapper.html());
 	});
 
 	test("Rendert die Nummer im vorhandenen Slot-Inhalt, wenn number gesetzt ist", async () => {
@@ -161,7 +159,6 @@ describe("Bedingte Rendern", () => {
 		});
 
 		// Testen
-		console.log(wrapper.html());
 		expect(wrapper.find(idComponent).find('.test-number').text()).toBe('456');
 	});
 

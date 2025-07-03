@@ -6,14 +6,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.healthmarketscience.jackcess.ColumnBuilder;
-import com.healthmarketscience.jackcess.DataType;
-import com.healthmarketscience.jackcess.Database;
-import com.healthmarketscience.jackcess.IndexBuilder;
-import com.healthmarketscience.jackcess.PropertyMap;
-import com.healthmarketscience.jackcess.Row;
-import com.healthmarketscience.jackcess.Table;
-import com.healthmarketscience.jackcess.TableBuilder;
+import io.github.spannm.jackcess.ColumnBuilder;
+import io.github.spannm.jackcess.DataType;
+import io.github.spannm.jackcess.Database;
+import io.github.spannm.jackcess.IndexBuilder;
+import io.github.spannm.jackcess.PropertyMap;
+import io.github.spannm.jackcess.Row;
+import io.github.spannm.jackcess.Table;
+import io.github.spannm.jackcess.TableBuilder;
 
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 
@@ -187,36 +187,36 @@ public final class ABPFaecher {
 	public static void write(final Database db, final Map<String, ABPFaecher> map) {
 		try {
 			final Table table = new TableBuilder("ABP_Faecher")
-					.addColumn(new ColumnBuilder(fieldID, DataType.LONG).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "0"))
-					.addColumn(new ColumnBuilder(fieldFachKrz, DataType.TEXT).setLengthInUnits(20))
-					.addColumn(new ColumnBuilder(fieldBezeichnung, DataType.TEXT).setLengthInUnits(80))
-					.addColumn(new ColumnBuilder(fieldStatistikKrz, DataType.TEXT).setLengthInUnits(2))
-					.addColumn(new ColumnBuilder(fieldSortierung, DataType.LONG).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "32000"))
-					.addColumn(new ColumnBuilder(fieldIstSprache, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT,
+					.addColumn(new ColumnBuilder(fieldID, DataType.LONG).withProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "0"))
+					.addColumn(new ColumnBuilder(fieldFachKrz, DataType.TEXT).withLengthInUnits(20))
+					.addColumn(new ColumnBuilder(fieldBezeichnung, DataType.TEXT).withLengthInUnits(80))
+					.addColumn(new ColumnBuilder(fieldStatistikKrz, DataType.TEXT).withLengthInUnits(2))
+					.addColumn(new ColumnBuilder(fieldSortierung, DataType.LONG).withProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "32000"))
+					.addColumn(new ColumnBuilder(fieldIstSprache, DataType.TEXT).withLengthInUnits(1).withProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT,
 							"'N'"))
-					.addColumn(new ColumnBuilder(fieldUnterrichtssprache, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP,
+					.addColumn(new ColumnBuilder(fieldUnterrichtssprache, DataType.TEXT).withLengthInUnits(1).withProperty(PropertyMap.DEFAULT_VALUE_PROP,
 							DataType.TEXT, "'D'"))
-					.addColumn(new ColumnBuilder(fieldE1, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
-					.addColumn(new ColumnBuilder(fieldE2, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
-					.addColumn(new ColumnBuilder(fieldQ1, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
-					.addColumn(new ColumnBuilder(fieldQ2, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
-					.addColumn(new ColumnBuilder(fieldQ3, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
-					.addColumn(new ColumnBuilder(fieldQ4, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
-					.addColumn(new ColumnBuilder(fieldAbi_Moegl, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT,
+					.addColumn(new ColumnBuilder(fieldE1, DataType.TEXT).withLengthInUnits(1).withProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
+					.addColumn(new ColumnBuilder(fieldE2, DataType.TEXT).withLengthInUnits(1).withProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
+					.addColumn(new ColumnBuilder(fieldQ1, DataType.TEXT).withLengthInUnits(1).withProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
+					.addColumn(new ColumnBuilder(fieldQ2, DataType.TEXT).withLengthInUnits(1).withProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
+					.addColumn(new ColumnBuilder(fieldQ3, DataType.TEXT).withLengthInUnits(1).withProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
+					.addColumn(new ColumnBuilder(fieldQ4, DataType.TEXT).withLengthInUnits(1).withProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
+					.addColumn(new ColumnBuilder(fieldAbi_Moegl, DataType.TEXT).withLengthInUnits(1).withProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT,
 							"'J'"))
-					.addColumn(new ColumnBuilder(fieldLK_Moegl, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT,
+					.addColumn(new ColumnBuilder(fieldLK_Moegl, DataType.TEXT).withLengthInUnits(1).withProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT,
 							"'J'"))
-					.addColumn(new ColumnBuilder(fieldAlsNeueFSInSII, DataType.TEXT).setLengthInUnits(1))
-					.addColumn(new ColumnBuilder(fieldLeitfach, DataType.TEXT).setLengthInUnits(2))
-					.addColumn(new ColumnBuilder(fieldLeitfach2, DataType.TEXT).setLengthInUnits(2))
+					.addColumn(new ColumnBuilder(fieldAlsNeueFSInSII, DataType.TEXT).withLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldLeitfach, DataType.TEXT).withLengthInUnits(2))
+					.addColumn(new ColumnBuilder(fieldLeitfach2, DataType.TEXT).withLengthInUnits(2))
 					.addColumn(new ColumnBuilder(fieldE1_WStd, DataType.LONG))
 					.addColumn(new ColumnBuilder(fieldE2_WStd, DataType.LONG))
-					.addColumn(new ColumnBuilder(fieldE1_S_M, DataType.TEXT).setLengthInUnits(1))
-					.addColumn(new ColumnBuilder(fieldE2_S_M, DataType.TEXT).setLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldE1_S_M, DataType.TEXT).withLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldE2_S_M, DataType.TEXT).withLengthInUnits(1))
 					.addColumn(new ColumnBuilder(fieldQ_WStd, DataType.LONG))
-					.addColumn(new ColumnBuilder(fieldE_ExportKursart, DataType.TEXT).setLengthInUnits(5))
-					.addColumn(new ColumnBuilder(fieldNurMuendlich, DataType.TEXT).setLengthInUnits(1))
-					.addIndex(new IndexBuilder(IndexBuilder.PRIMARY_KEY_NAME).addColumns(fieldFachKrz).setPrimaryKey())
+					.addColumn(new ColumnBuilder(fieldE_ExportKursart, DataType.TEXT).withLengthInUnits(5))
+					.addColumn(new ColumnBuilder(fieldNurMuendlich, DataType.TEXT).withLengthInUnits(1))
+					.addIndex(new IndexBuilder(IndexBuilder.PRIMARY_KEY_NAME).withColumns(fieldFachKrz).withPrimaryKey())
 					.toTable(db);
 			map.values().stream().sorted((f1, f2) -> Integer.compare(f1.ID, f2.ID)).forEach(fach -> {
 				try {

@@ -8,7 +8,7 @@ task assembleEnmServer(type: NpmRun) {
 	dependsOn rootProject.npmPrepare
 	dependsOn project(':svws-webclient:core').tasks.assemble
 	dependsOn project(':svws-webclient:ui').tasks.assemble
-	group "build"
+	group = "build"
 	args = ['build']
 	doLast {
 		copy {
@@ -46,7 +46,7 @@ clean.dependsOn cleanEnmServer
 
 task publishNexusEnmServer(type: NpmPublish) {
 	dependsOn build
-	group "publishing"
+	group = "publishing"
 	npmrc = "$rootDir/.npmrc.nexus"
 	repository = "https://artifactory.svws-nrw.de/repository/npm-private/"
 	actor = project.ext.getNexusActor()
@@ -56,7 +56,7 @@ task publishNexusEnmServer(type: NpmPublish) {
 
 task publishNpmEnmServer(type: NpmPublish) {
 	dependsOn build
-	group "publishing"
+	group = "publishing"
 	npmrc = "$rootDir/.npmrc.npm"
 	repository = "https://registry.npmjs.org/"
 	token = project.ext.getNpmToken()

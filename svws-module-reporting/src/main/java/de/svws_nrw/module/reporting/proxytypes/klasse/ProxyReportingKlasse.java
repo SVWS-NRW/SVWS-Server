@@ -2,9 +2,11 @@ package de.svws_nrw.module.reporting.proxytypes.klasse;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
 import de.svws_nrw.asd.data.klassen.KlassenDaten;
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
+import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.data.jahrgaenge.DataJahrgangsdaten;
 import de.svws_nrw.data.klassen.DataKlassendaten;
@@ -65,7 +67,6 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 				klassenDaten.idSchulgliederung,
 				klassenDaten.idVorgaengerklasse,
 				klassenDaten.idWeiterbildungOrganisationsform,
-				klassenDaten.istSichtbar,
 				null,
 				new ArrayList<>(),
 				ersetzeNullBlankTrim(klassenDaten.kuerzel),
@@ -230,11 +231,16 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 				}
 			}
 			if (!super.idsSchueler.isEmpty()) {
-				super.schueler = DataSchuelerStammdaten.getListStammdaten(this.reportingRepository.conn(), idsSchueler).stream()
+				final List<SchuelerStammdaten> schuelerStammdaten;
+				try {
+					schuelerStammdaten = (new DataSchuelerStammdaten(this.reportingRepository.conn())).getListByIds(idsSchueler);
+				} catch (final ApiOperationException e) {
+					throw new DeveloperNotificationException(e.getMessage());
+				}
+
+				super.schueler = schuelerStammdaten.stream()
 						.map(s -> this.reportingRepository.mapSchuelerStammdaten().computeIfAbsent(s.id, k -> s))
-						.map(s -> (ReportingSchueler) new ProxyReportingSchueler(
-								this.reportingRepository,
-								s))
+						.map(s -> (ReportingSchueler) new ProxyReportingSchueler(this.reportingRepository, s))
 						.sorted(Comparator
 								.comparing(ReportingSchueler::nachname, colGerman)
 								.thenComparing(ReportingSchueler::vorname, colGerman)

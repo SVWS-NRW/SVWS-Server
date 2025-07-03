@@ -43,7 +43,7 @@ public class Tabelle_SchuelerLernabschnittsdaten extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Schulbesuchsjahre */
 	public SchemaTabelleSpalte col_Schulbesuchsjahre = add("Schulbesuchsjahre", SchemaDatentypen.SMALLINT, false)
-			.setJavaComment("Schulbesuchsjahre für den Lernabschnitt");
+			.setJavaComment("DEPRECATED: Schulbesuchsjahre für den Lernabschnitt");
 
 	/** Die Definition der Tabellenspalte Hochrechnung */
 	public SchemaTabelleSpalte col_Hochrechnung = add("Hochrechnung", SchemaDatentypen.INT, false)

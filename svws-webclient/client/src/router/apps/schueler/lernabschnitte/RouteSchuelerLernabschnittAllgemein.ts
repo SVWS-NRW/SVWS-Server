@@ -31,7 +31,7 @@ export class RouteSchuelerLernabschnittAllgemein extends RouteNode<any, RouteSch
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			benutzerKompetenzenKlassen: api.benutzerKompetenzenKlassen,
 			schule: api.schuleStammdaten,
-			schuelerListeManager: () => routeSchueler.data.schuelerListeManager,
+			schuelerListeManager: () => routeSchueler.data.manager,
 			manager: () => routeSchuelerLernabschnitte.data.manager,
 			patch: routeSchuelerLernabschnitte.data.patchLernabschnitt,
 		};

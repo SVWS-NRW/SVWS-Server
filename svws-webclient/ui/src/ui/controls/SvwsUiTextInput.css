@@ -9,8 +9,12 @@
 	@apply text-ui;
 	@apply flex;
 	@apply relative;
-	@apply w-full;
+	@apply w-[calc(100%-0.4rem)] m-[0.2em];
 	@apply overflow-hidden whitespace-nowrap text-base;
+
+	&:not(.text-input-component--headless) {
+		@apply mt-[0.8em];
+	}
 
 	&:focus {
 		@apply outline-hidden;
@@ -68,8 +72,18 @@
 	}
 }
 
-.text-input--statistics .svws-icon.icon {
-	@apply text-ui-statistic-secondary icon-ui-statistic;
+.text-input-component {
+	.text-input--muss-icon {
+		@apply icon-ui-danger;
+	}
+
+	.text-input--kann-icon {
+		@apply icon-ui-caution;
+	}
+
+	.text-input--hinweis-icon {
+		@apply icon-ui-warning;
+	}
 }
 
 .text-input--invalid .svws-icon {
@@ -122,7 +136,7 @@
 }
 
 .text-input-component .text-input--control:focus-visible {
-	@apply ring-3 ring-ui-neutral;
+	@apply ring-2 ring-ui-neutral;
 }
 
 .text-input--invalid.text-input-component:focus-within .text-input--control,
@@ -154,12 +168,6 @@
 
 .text-input--control--multiselect-tags {
 	@apply border-b-0 rounded-b-none pt-1 pb-0;
-}
-
-.text-input--statistics {
-	.tooltip-trigger--triggered span.icon {
-		@apply text-ui-statistic;
-	}
 }
 
 .text-input--search {
@@ -250,10 +258,6 @@
 	font-size: 0.78rem;
 }
 
-.text-input--statistics .text-input--placeholder {
-	@apply text-ui-statistic font-bold;
-}
-
 .text-input--invalid .text-input--placeholder,
 .text-input--invalid:not(:focus-within) .text-input--control {
 	@apply text-ui-danger;
@@ -269,12 +273,21 @@
 	@apply text-ui-warning;
 }
 
+.text-input--statistic-icon {
+	@apply icon-ui-statistic;
+	@apply pointer-events-auto mt-0.5;
+}
+
 .text-input--control:disabled,
 .text-input--disabled {
 	.text-input--control {
 		@apply bg-ui text-ui-disabled border-ui-disabled;
-		@apply pointer-events-none;
-
+		@apply pointer-events-none;	
+	}
+	.svws-icon,
+	.text-input--statistic-icon,
+	.text-input--state-icon {
+		@apply icon-ui-disabled;
 	}
 
 	.text-input--placeholder {
@@ -287,20 +300,26 @@
 	@apply overflow-visible;
 }
 
-.text-input--statistics .text-input--placeholder--required:after {
-	@apply icon-ui-statistic;
+.text-input--placeholder--required {
+	@apply inline-block font-normal relative;
+	top: -0.2em;
 }
 
-.text-input--invalid .text-input--placeholder--required:after {
-	@apply icon-ui-danger;
-}
-
-.text-input--statistic-kann .text-input--placeholder--required:after {
-	@apply icon-ui-caution;
-}
-
-.text-input--statistic-hinweis .text-input--placeholder--required:after {
-	@apply icon-ui-warning;
+.text-input--invalid {
+	.text-input--statistic-kann .text-input--state-icon {
+		@apply icon-ui-caution;
+	}
+	
+	&.text-input--statistic-hinweis .text-input--state-icon {
+		@apply icon-ui-warning;
+	}
+	
+	&.text-input--statistic-muss .text-input--state-icon {
+		@apply icon-ui-danger;
+	}
+	.text-input--state-icon {
+		@apply icon-ui-danger;
+	}
 }
 
 .text-input-component--headless .text-input--control {

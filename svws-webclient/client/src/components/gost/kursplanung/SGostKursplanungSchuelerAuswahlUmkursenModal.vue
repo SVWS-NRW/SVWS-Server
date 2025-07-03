@@ -19,23 +19,23 @@
 							</div>
 							<div v-else @click="toggleFixierRegelAlleKursSchueler">
 								<template v-if="kursSchuelerFixierungen === true">
-									<span class="icon-sm inline-block i-ri-pushpin-fill -my-0.5 hover:opacity-50" />
+									<span class="icon-sm i-ri-pushpin-fill hover:opacity-75" />
 								</template>
 								<template v-else-if="kursSchuelerFixierungen === null">
-									<span class="icon-sm inline-block i-ri-pushpin-line -my-0.5 hover:opacity-50" />
+									<span class="icon-sm i-ri-pushpin-line hover:opacity-100" />
 								</template>
 								<template v-else>
-									<span class="icon-sm inline-block i-ri-pushpin-line -my-0.5 opacity-0 hover:opacity-75" />
+									<span class="icon-sm i-ri-pushpin-line opacity-50 hover:opacity-100" />
 								</template>
 							</div>
 						</template>
 						<template #cell(pin)="{ rowData }">
 							<div @click="toggleFixierRegelKursSchueler(schuelerFilter().kurs?.id ?? null, rowData.id)">
 								<template v-if="hatFixierRegelKurs(rowData.id).value">
-									<span class="icon-sm inline-block i-ri-pushpin-fill -my-0.5 hover:opacity-50" />
+									<span class="icon-sm i-ri-pushpin-fill hover:opacity-75" />
 								</template>
 								<template v-else>
-									<span class="icon-sm inline-block i-ri-pushpin-line -my-0.5 opacity-0 hover:opacity-75" />
+									<span class="icon-sm i-ri-pushpin-line opacity-50 hover:opacity-100" />
 								</template>
 							</div>
 						</template>
@@ -62,10 +62,10 @@
 						<template #cell(pin)="{ rowData }">
 							<div @click="toggleFixierRegelKursSchueler(andererKurs(rowData.id).value?.id ?? null, rowData.id)">
 								<template v-if="hatFixierRegelAndererKurs(rowData.id).value">
-									<span class="icon-sm inline-block i-ri-pushpin-fill -my-0.5 hover:opacity-50" />
+									<span class="icon-sm i-ri-pushpin-fill hover:opacity-75" />
 								</template>
 								<template v-else-if="getKurs(rowData) !== undefined">
-									<span class="icon-sm inline-block i-ri-pushpin-line -my-0.5 opacity-0 hover:opacity-75" />
+									<span class="icon-sm i-ri-pushpin-line opacity-50 hover:opacity-100" />
 								</template>
 							</div>
 						</template>

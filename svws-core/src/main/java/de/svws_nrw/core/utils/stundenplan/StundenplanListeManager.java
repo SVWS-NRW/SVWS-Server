@@ -1,10 +1,12 @@
 package de.svws_nrw.core.utils.stundenplan;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 
+import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.core.data.stundenplan.StundenplanListeEintrag;
@@ -18,13 +20,16 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class StundenplanListeManager extends AuswahlManager<Long, StundenplanListeEintrag, StundenplanManager> {
 
-	/** Ein Default-Comparator für den Vergleich von Klassen in Klassenlisten. */
+	/** Ein Default-Comparator für den Vergleich von Stundenplänen in Stundenplanlisten. */
 	public static final @NotNull Comparator<StundenplanListeEintrag> comparator =
 			(final @NotNull StundenplanListeEintrag a, final @NotNull StundenplanListeEintrag b) -> {
 				int cmp = a.schuljahr - b.schuljahr;
 				if (cmp != 0)
 					return cmp;
 				cmp = a.abschnitt - b.abschnitt;
+				if (cmp != 0)
+					return cmp;
+				cmp = (a.aktiv == b.aktiv) ? 0 : (a.aktiv ? -1 : 1);
 				if (cmp != 0)
 					return cmp;
 				if ((a.gueltigAb != null) && (b.gueltigAb != null))
@@ -35,6 +40,11 @@ public final class StundenplanListeManager extends AuswahlManager<Long, Stundenp
 	/** Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ */
 	private static final @NotNull Function<StundenplanListeEintrag, Long> _listeEintragToId = (final @NotNull StundenplanListeEintrag s) -> s.id;
 	private static final @NotNull Function<StundenplanManager, Long> _stundenplanToId = (final @NotNull StundenplanManager s) -> s.stundenplanGetID();
+
+	/** Das Filter-Attribut auf nur aktive Stundenpläne */
+	private boolean _filterNurAktiv = false;
+	/** Die gefilterte Liste, sofern sie schon berechnet wurde */
+	protected List<StundenplanListeEintrag> _aktive = null;
 
 	private StundenplanListeEintrag _stundenplanVorlage;
 
@@ -60,12 +70,41 @@ public final class StundenplanListeManager extends AuswahlManager<Long, Stundenp
 
 	@Override
 	protected boolean checkFilter(final @NotNull StundenplanListeEintrag eintrag) {
+		if (this._filterNurAktiv && !eintrag.aktiv)
+			return false;
 		return true;
 	}
 
 	@Override
 	protected int compareAuswahl(final @NotNull StundenplanListeEintrag a, final @NotNull StundenplanListeEintrag b) {
-		return 0;
+		int cmp = a.schuljahr - b.schuljahr;
+		if (cmp != 0)
+			return cmp;
+		cmp = a.abschnitt - b.abschnitt;
+		if (cmp != 0)
+			return cmp;
+		if (a == _stundenplanVorlage)
+			return -1;
+		if (b == _stundenplanVorlage)
+			return 1;
+		cmp = (a.aktiv == b.aktiv) ? 0 : (a.aktiv ? -1 : 1);
+		if (cmp != 0)
+			return cmp;
+		for (final Pair<String, Boolean> criteria : _order) {
+			final String field = criteria.a;
+			final boolean asc = (criteria.b == null) || criteria.b;
+			if ("gueltigAb".equals(field))
+				cmp = a.gueltigAb.compareTo(b.gueltigAb);
+			else if ("bezeichnung".equals(field))
+				cmp = a.bezeichnung.compareTo(b.bezeichnung);
+			else
+				throw new DeveloperNotificationException("Fehler bei der Sortierung. Das Sortierkriterium wird vom Manager nicht unterstützt.");
+			if (cmp == 0)
+				continue;
+			return asc ? cmp : -cmp;
+		}
+		return Long.compare(a.id, b.id);
+
 	}
 
 	/**
@@ -83,6 +122,22 @@ public final class StundenplanListeManager extends AuswahlManager<Long, Stundenp
 		if (_stundenplanVorlage != null)
 			filtered.addFirst(_stundenplanVorlage);
 		return filtered;
+	}
+
+	/**
+	 * Gibt eine Auswahl-Liste aller aktiven Stundenpläne zurück.
+	 *
+	 * @return die Liste der aktiven Stundenpläne
+	 */
+	public @NotNull List<StundenplanListeEintrag> aktive() {
+		if (_filtered == null || _aktive == null) {
+			_aktive = new ArrayList<>();
+			for (final StundenplanListeEintrag stundenplan : liste.list()) {
+				if (stundenplan.aktiv)
+					_aktive.add(stundenplan);
+			}
+		}
+		return _aktive;
 	}
 
 	/**
@@ -137,60 +192,73 @@ public final class StundenplanListeManager extends AuswahlManager<Long, Stundenp
 	}
 
 	/**
-	 * Wenn das Datum nicht leer oder sich innerhalb der Gültigkeit eines anderen Stundenplans befindet oder hinter dem Gültigkeitsende befindet,
-	 * wird <code>false</code>, andernfalls <code>true</code> zurückgegeben.
+	 * Prüft für die aktuelle Auswahl eine neue Gültigkeit. Wenn das Datum leer oder hinter dem Gültigkeitsende befindet,
+	 * wird <code>false</code>, andernfalls <code>true</code> zurückgegeben. Je nach Parameter aktiv wird auch geprüft, ob es sich innerhalb der Gültigkeit eines anderen aktiven Stundenplans befindet.
 	 *
 	 * @param gueltigAb das Datum, ab wann der Stundenplan gültig sein soll
-	 * @param gueltigBis das Datum, bis zu dem der Stundenplan gültig sein soll
+	 * @param gueltigBis das Datum, bis wann der Stundenplan gültig sein soll. Falls null übergeben wird, wird das Datum der Auswahl verwendet.
+	 * @param aktiv falls true, werden zusätzlich die anderen aktiven Stundenpläne geprüft
+	 * @param checkUeberschneidung falls true, wird zusätzlich geprüft, ob es eine Überschneidung mit einem anderen Stundenplan gibt
 	 *
 	 * @return <code>true</code> wenn das Datum gültig ist, ansonsten <code>false</code>
 	 */
-	public boolean validateGueltigAb(final String gueltigAb, final String gueltigBis) {
+	public boolean validateGueltigAb(final String gueltigAb, final String gueltigBis, final boolean aktiv, final boolean checkUeberschneidung) {
 		if (gueltigAb == null || !DateUtils.isValidDate(gueltigAb))
 			return false;
-		if (gueltigBis != null && DateUtils.isValidDate(gueltigBis) && gueltigAb.compareTo(gueltigBis) > 0)
+		final String gueltigBisComputed = (gueltigBis != null ? gueltigBis : auswahl().gueltigBis);
+		if (gueltigAb.compareTo(gueltigBisComputed) > 0)
 			return false;
-		for (final StundenplanListeEintrag stundenplan : liste.list())
-			if ((!hasDaten() || stundenplan.id != auswahl().id) && (stundenplan.gueltigAb.compareTo(gueltigAb) <= 0)
-					&& (stundenplan.gueltigBis.compareTo(gueltigAb) >= 0))
-				return false;
+		if (aktiv || checkUeberschneidung) {
+			for (final StundenplanListeEintrag stundenplan : aktive())
+				if ((!hasDaten() || stundenplan.id != auswahl().id) && (stundenplan.gueltigAb.compareTo(gueltigAb) <= 0)
+						&& (stundenplan.gueltigBis.compareTo(gueltigAb) >= 0))
+					return false;
+			if (checkUeberschneidung)
+				return istKonfliktfreiZuAktivenStundenplaenen(gueltigAb, gueltigBisComputed);
+		}
 		return true;
 	}
 
 	/**
-	 * Wenn das Datum nicht leer oder sich innerhalb der Gültigkeit eines anderen Stundenplans befindet oder vor dem Gültigkeitsbeginn befindet,
-	 * wird <code>false</code>, andernfalls <code>true</code> zurückgegeben.
+	 * Prüft für die aktuelle Auswahl eine neue Gültigkeit. Wenn das Datum leer oder sich vor dem Gültigkeitsbeginn befindet,
+	 * wird <code>false</code>, andernfalls <code>true</code> zurückgegeben.  Je nach Parameter aktiv wird auch geprüft, ob es sich innerhalb der Gültigkeit eines anderen aktiven Stundenplans befindet.
 	 *
-	 * @param gueltigAb das Datum, ab wann der Stundenplan gültig sein soll
+	 * @param gueltigAb das Datum, ab wann der Stundenplan gültig sein soll. Falls null übergeben wird, wird das Datum der Auswahl verwendet.
 	 * @param gueltigBis das Datum, bis zu dem der Stundenplan gültig sein soll
+	 * @param aktiv falls true, werden zusätzlich die anderen aktiven Stundenpläne geprüft
 	 *
 	 * @return <code>true</code> wenn das Datum gültig ist, ansonsten <code>false</code>
 	 */
-	public boolean validateGueltigBis(final String gueltigAb, final String gueltigBis) {
+	public boolean validateGueltigBis(final String gueltigAb, final String gueltigBis, final boolean aktiv) {
 		if (gueltigBis == null || !DateUtils.isValidDate(gueltigBis))
 			return false;
-		if (gueltigAb != null && DateUtils.isValidDate(gueltigAb) && gueltigAb.compareTo(gueltigBis) > 0)
+		final String gueltigAbComputed = (gueltigAb != null ? gueltigAb : auswahl().gueltigAb);
+		if (gueltigBis.compareTo(gueltigAbComputed) < 0)
 			return false;
-		for (final StundenplanListeEintrag stundenplan : liste.list())
-			if ((!hasDaten() || stundenplan.id != auswahl().id) && (stundenplan.gueltigAb.compareTo(gueltigBis) <= 0)
-					&& (stundenplan.gueltigBis.compareTo(gueltigBis) >= 0))
-				return false;
+		if (aktiv) {
+			for (final StundenplanListeEintrag stundenplan : aktive())
+				if ((!hasDaten() || stundenplan.id != auswahl().id) && (stundenplan.gueltigAb.compareTo(gueltigBis) <= 0)
+						&& (stundenplan.gueltigBis.compareTo(gueltigBis) >= 0))
+					return false;
+		}
 		return true;
 	}
 
 	/**
-	 * Prüft, ob es eine Überschneidung mit einem anderen Stundenplan gibt.
+	 * Prüft, ob der aktuell ausgewählte Stundenplan mit den übergebenen Gültigkeitsdaten eine Überschneidung mit einem anderen Stundenplan gibt.
 	 *
-	 * @param stundenplan der Stundenplan, der geprüft werden soll
+	 * @param gueltigAb das Datum, ab wann der Stundenplan gültig sein soll
+	 * @param gueltigBis das Datum, bis zu dem der Stundenplan gültig sein soll
+
 	 *
 	 * @return <code>true</code> wenn es eine Überschneidung gibt, ansonsten <code>false</code>
 	 */
-	public boolean hatUeberschneidungMitAnderemStundenplan(final @NotNull StundenplanListeEintrag stundenplan) {
-		for (final StundenplanListeEintrag sp : liste.list())
-			if ((stundenplan.id != sp.id)
-					&& (DateUtils.berechneGemeinsameTage(stundenplan.gueltigAb, stundenplan.gueltigBis, sp.gueltigAb, sp.gueltigBis).length > 0))
-				return true;
-		return false;
+	public boolean istKonfliktfreiZuAktivenStundenplaenen(final String gueltigAb, final String gueltigBis) {
+		for (final StundenplanListeEintrag sp : aktive())
+			if ((!hasDaten() || auswahl().id != sp.id)
+					&& (DateUtils.berechneGemeinsameTage((gueltigAb != null ? gueltigAb : auswahl().gueltigAb), (gueltigBis != null ? gueltigBis : auswahl().gueltigBis), sp.gueltigAb, sp.gueltigBis).length > 0))
+				return false;
+		return true;
 	}
 
 	/**
@@ -198,8 +266,8 @@ public final class StundenplanListeManager extends AuswahlManager<Long, Stundenp
 	 *
 	 * @return der letzte Stundenplan in der Liste oder <code>null</code>, falls die Liste leer ist.
 	 */
-	public StundenplanListeEintrag getLastValidStundenplan() {
-		return liste.list().isEmpty() ? null : liste.list().getLast();
+	public StundenplanListeEintrag getLastAktivStundenplan() {
+		return aktive().isEmpty() ? null : aktive().getLast();
 	}
 
 	/**
@@ -231,5 +299,32 @@ public final class StundenplanListeManager extends AuswahlManager<Long, Stundenp
 	public boolean auswahlIsVorlage() {
 		return hasDaten() && auswahl() == _stundenplanVorlage;
 	}
+
+	/**
+	 * Gibt die aktuelle Filtereinstellung auf nur aktive Stundenpläne zurück.
+	 *
+	 * @return true, wenn nur aktive Stundenpläne angezeigt werden und ansonsten false
+	 */
+	public boolean filterNurAktiv() {
+		return this._filterNurAktiv;
+	}
+
+
+	/**
+	 * Setzt die Filtereinstellung auf nur aktive Stundenpläne.
+	 *
+	 * @param value   true, wenn der Filter aktiviert werden soll, und ansonsten false
+	 */
+	public void setFilterNurAktiv(final boolean value) {
+		this._filterNurAktiv = value;
+		this._eventHandlerFilterChanged.run();
+	}
+
+	@Override
+	protected boolean onSetDaten(final @NotNull StundenplanListeEintrag eintrag, final @NotNull StundenplanManager daten) {
+		return true;
+	}
+
+	// public void useFilter(final @NotNull StundenplanListeManager srcManager) {}
 
 }

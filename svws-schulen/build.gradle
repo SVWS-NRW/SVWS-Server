@@ -1,16 +1,16 @@
 configurations {
 	implementation.extendsFrom(jackson, resteasy, validation, swagger)
 	transpiler
-} 
+}
 
 dependencies {
 	implementation project(':svws-transpile')
-	
+
 	transpiler fileTree(dir: "$projectDir/src/main/java", includes: ['**/svws_nrw/schulen/*/data/**/*.java', '**/svws_nrw/schulen/*/utils/**/*.java'])
 }
 
 task cleanTranspiled(type: Delete) {
-	group "build"
+	group = "build"
 	delete fileTree(dir: "$buildDir/ts"), fileTree(dir: "$buildDir/tmp/transpiler/ts", includes: ["**/*.class"])
 }
 
@@ -18,14 +18,14 @@ task prepareTranspile {
 	doLast {
 		file("$buildDir/transpiler-files.txt").text = configurations.transpiler.files.toString().replace("[", "").replace("]", "").trim()
 	}
-	group "build"
+	group = "build"
 	dependsOn compileJava
 	inputs.files configurations.transpiler
 	outputs.files "$buildDir/transpiler-files.txt"
 }
 
 task transpile(type: JavaExec) {
-	group "build"
+	group = "build"
 	dependsOn compileJava
 	dependsOn prepareTranspile
 	dependsOn project(':svws-transpile').tasks.assemble

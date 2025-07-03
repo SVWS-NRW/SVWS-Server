@@ -3,6 +3,7 @@
 	@apply select-none relative;
 	@apply text-button font-bold;
 	@apply flex items-center justify-center;
+	@apply m-[0.2em];
 	gap: 0.25em;
 	padding: 0.45em 0.75em;
 
@@ -16,11 +17,7 @@
 	}
 
 	&:focus-visible {
-		@apply ring-3 ring-ui-brand;
-
-		.page--statistik & {
-			@apply ring-ui-statistic;
-		}
+		@apply ring-2 ring-ui-brand;
 	}
 
 	&:active {
@@ -72,14 +69,6 @@
 
 		.icon, .icon-sm {
 			@apply icon-ui-brand;
-		}
-
-		.page--statistik & {
-			@apply border-ui-statistic text-ui-statistic;
-
-			.icon, .icon-sm {
-				@apply icon-ui-statistic;
-			}
 		}
 
 		.notification--error &,

@@ -183,11 +183,13 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 				"""
 				DELETE FROM K_Ortsteil
 				WHERE ID IN (
-				    SELECT
-				        SUM(CASE WHEN SchulnrEigner <> 0 THEN ID ELSE null END) AS ID_ORIG
-				    FROM K_Ortsteil
-				    GROUP BY Bezeichnung
-				    HAVING count(ID) = 2 AND SUM(CASE WHEN SchulnrEigner = 0 THEN 1 ELSE 2 END) = 3
+				    SELECT ID FROM K_Ortsteil a JOIN (
+				        SELECT
+				            SUM(CASE WHEN SchulnrEigner <> 0 THEN ID ELSE null END) AS ID_ORIG
+				        FROM K_Ortsteil
+				        GROUP BY Bezeichnung
+				        HAVING count(ID) = 2 AND SUM(CASE WHEN SchulnrEigner = 0 THEN 1 ELSE 2 END) = 3
+				    ) b ON a.ID = b.ID_ORIG
 				)
 				""",
 				Schema.tab_K_Ortsteil
@@ -196,15 +198,17 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 
 
 	private void pruefeKatalogOrte() {
-		add("Entferne ID, falls ein Katalog-Eintrag doppelt vorkommt (z.B. bei SchildZentral-Dbs)",
+		add("Entferne ID, falls ein Orts-Katalog-Eintrag doppelt vorkommt (z.B. bei SchildZentral-Dbs)",
 				"""
 				DELETE FROM K_Ort
 				WHERE ID IN (
-				    SELECT
-				        SUM(CASE WHEN SchulnrEigner <> 0 THEN ID ELSE null END) AS ID_ORIG
-				    FROM K_Ort
-				    GROUP BY PLZ, Bezeichnung
-				    HAVING count(ID) = 2 AND SUM(CASE WHEN SchulnrEigner = 0 THEN 1 ELSE 2 END) = 3
+				    SELECT ID FROM K_Ort a JOIN (
+				        SELECT
+				            SUM(CASE WHEN SchulnrEigner <> 0 THEN ID ELSE null END) AS ID_ORIG
+				        FROM K_Ort
+				        GROUP BY PLZ, Bezeichnung
+				        HAVING count(ID) = 2 AND SUM(CASE WHEN SchulnrEigner = 0 THEN 1 ELSE 2 END) = 3
+				    ) b ON a.ID = b.ID_ORIG
 				)
 				""",
 				Schema.tab_K_Ort

@@ -118,10 +118,13 @@
 
 	const rowsFiltered = computed<LehrerListeEintrag[]>(() => {
 		const arr = [];
+		const locale = search.value.toLocaleLowerCase();
+		const searchValueIsNumber = /^[0-9]+$/.test(locale.trim());
 		for (const e of props.manager().filtered())
-			if (e.nachname.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())
-				|| e.vorname.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())
-				|| e.kuerzel.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()))
+			if ((searchValueIsNumber && e.id.toString().includes(locale))
+				|| e.nachname.toLocaleLowerCase().includes(locale)
+				|| e.vorname.toLocaleLowerCase().includes(locale)
+				|| e.kuerzel.toLocaleLowerCase().includes(locale))
 				arr.push(e);
 		return arr;
 	});

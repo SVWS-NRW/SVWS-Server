@@ -1,12 +1,19 @@
 <template>
+	<Teleport to=".svws-ui-header--actions" defer>
+		<svws-ui-modal-hilfe> <hilfe-lehrer-individualdaten /> </svws-ui-modal-hilfe>
+	</Teleport>
 	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-input-wrapper>
 					<svws-ui-checkbox :disabled="!hatUpdateKompetenz" :model-value="data().istSichtbar" @update:model-value="istSichtbar => patch({istSichtbar: istSichtbar === true})" focus-class-content> Ist sichtbar </svws-ui-checkbox>
-					<svws-ui-checkbox :disabled="!hatUpdateKompetenz" :model-value="data().istRelevantFuerStatistik" @update:model-value="istRelevantFuerStatistik => patch({istRelevantFuerStatistik: istRelevantFuerStatistik === true})"> Ist Relevant für Statistik </svws-ui-checkbox>
+					<svws-ui-checkbox :disabled="!hatUpdateKompetenz" :model-value="data().istRelevantFuerStatistik" statistics
+						@update:model-value="istRelevantFuerStatistik => patch({istRelevantFuerStatistik: istRelevantFuerStatistik === true})">
+						Ist Relevant für Statistik
+					</svws-ui-checkbox>
 				</svws-ui-input-wrapper>
-				<svws-ui-text-input placeholder="Kürzel" :disabled="!hatUpdateKompetenz" :model-value="data().kuerzel" @change="kuerzel => patch({kuerzel: kuerzel ?? undefined})" required focus />
+				<svws-ui-text-input placeholder="Kürzel" :disabled="!hatUpdateKompetenz" :model-value="data().kuerzel" statistics
+					@change="kuerzel => patch({kuerzel: kuerzel ?? undefined})" required focus />
 				<svws-ui-select title="Personal-Typ" :disabled="!hatUpdateKompetenz" v-model="inputPersonalTyp" :items="PersonalTyp.values()" :item-text="i => i.bezeichnung" required />
 				<svws-ui-text-input placeholder="Nachname" :disabled="!hatUpdateKompetenz" :model-value="data().nachname" @change="nachname => {if (nachname?.trim()) patch({nachname: nachname ?? undefined})}"
 					required statistics :validator="() => validatorNachname" :do-validate="validateNachname" />
@@ -17,7 +24,7 @@
 				<svws-ui-text-input placeholder="Geburtsdatum" :disabled="!hatUpdateKompetenz" :model-value="data().geburtsdatum" @change="geburtsdatum => geburtsdatum && patch({geburtsdatum})" type="date" required statistics />
 				<svws-ui-select title="Staatsangehörigkeit" :disabled="!hatUpdateKompetenz" v-model="inputStaatsangehoerigkeit" :items="Nationalitaeten.values()"
 					:item-text="i => i.historie().getLast().staatsangehoerigkeit" :item-sort="staatsangehoerigkeitKatalogEintragSort"
-					:item-filter="staatsangehoerigkeitKatalogEintragFilter" required autocomplete />
+					:item-filter="staatsangehoerigkeitKatalogEintragFilter" required autocomplete statistics />
 				<svws-ui-spacing />
 				<svws-ui-text-input placeholder="Akadademischer Grad" :disabled="!hatUpdateKompetenz" :model-value="data().titel" @change="titel => patch({titel})" type="text" />
 				<svws-ui-text-input placeholder="Amtsbezeichnung" :disabled="!hatUpdateKompetenz" :model-value="data().amtsbezeichnung" @change="amtsbezeichnung => patch({amtsbezeichnung})" />
@@ -29,8 +36,8 @@
 				<svws-ui-select v-model="wohnortID" title="Wohnort" :disabled="!hatUpdateKompetenz" :items="mapOrte" :item-filter="orte_filter" :item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
 				<svws-ui-select v-model="ortsteilID" title="Ortsteil" :disabled="!hatUpdateKompetenz" :items="ortsteile" :item-sort="ortsteilSort" :item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil ?? ''" removable />
 				<svws-ui-spacing />
-				<svws-ui-text-input placeholder="Telefon" :disabled="!hatUpdateKompetenz" :model-value="data().telefon" @change="telefon => patch({telefon})" type="tel" />
-				<svws-ui-text-input placeholder="Mobil oder Fax" :disabled="!hatUpdateKompetenz" :model-value="data().telefonMobil" @change="telefonMobil => patch({telefonMobil})" type="tel" />
+				<svws-ui-text-input placeholder="Telefon" :disabled="!hatUpdateKompetenz" :model-value="data().telefon" @change="telefon => patch({telefon})" type="tel" :max-len="20" />
+				<svws-ui-text-input placeholder="Mobil oder Fax" :disabled="!hatUpdateKompetenz" :model-value="data().telefonMobil" @change="telefonMobil => patch({telefonMobil})" type="tel" :max-len="20" />
 				<svws-ui-text-input placeholder="Private E-Mail-Adresse" :disabled="!hatUpdateKompetenz" :model-value="data().emailPrivat" @change="emailPrivat => patch({emailPrivat})" type="email" verify-email />
 				<svws-ui-text-input placeholder="Schulische E-Mail-Adresse" :disabled="!hatUpdateKompetenz" :model-value="data().emailDienstlich" @change="emailDienstlich => patch({emailDienstlich})" type="email" verify-email />
 			</svws-ui-input-wrapper>

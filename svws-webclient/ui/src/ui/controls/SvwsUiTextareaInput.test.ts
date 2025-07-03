@@ -129,9 +129,11 @@ describe.concurrent("Tests für die CSS-Props", () => {
 	test("Prop required mit true wird an CSS übergeben", async () => {
 		// Vorbereiten
 		await wrapper.setProps({ placeholder: "Placeholder", required: true });
+		const requiredSpan = wrapper.find(`${idPlaceholder} span.i-ri-asterisk`);
 
 		// Testen
-		expect(wrapper.find(idPlaceholder).classes()).toContain("textarea-input--placeholder--required");
+		expect(requiredSpan.exists()).toBeTruthy();
+		expect(requiredSpan.classes()).toContain("textarea-input--placeholder--required");
 	})
 });
 
@@ -170,7 +172,6 @@ describe("Bedingtes Rendern der HTML-Elemenete", () => {
 			// Vorbereiten
 			await wrapper.setProps({ required: true });
 			// Testen
-			console.log(wrapper.html())
 			expect(wrapper.get("textarea").attributes("required")).toBe("");
 		})
 
@@ -224,18 +225,18 @@ describe("Bedingtes Rendern der HTML-Elemenete", () => {
 
 		test("Icon alert-line wird gerendert, wenn isValid() false liefert", async () => {
 			// Vorbereiten
-			await wrapper.setProps({ placeholder:"Placeholder", required: true, modelValue: null });
+			await wrapper.setProps({ placeholder:"Placeholder", valid: (v) => false, modelValue: null });
 			expect(await wrapper.findComponent({ name:"SvwsUiTextareaInput" }).vm.isValid).toBeFalsy();
 
 			//Testen
 			const span_icon=wrapper.find("span.icon. i-ri-alert-line");
 			expect(span_icon.exists()).toBeTruthy();
-			["ml-0.5", "-my-0.5", "icon-ui-danger"].forEach((value) => expect(span_icon.classes()).toContain(value));
+			expect(span_icon.classes()).toContain("textarea-input--state-icon");
 		})
 
 		test("Icon alert-line wird nicht gerendert, wenn isValid() true liefert", async () => {
 			// Vorbereiten
-			await wrapper.setProps({ placeholder:"Placeholder", required: true, modelValue: "Test"});
+			await wrapper.setProps({ placeholder:"Placeholder", valid: (v) => true });
 			expect(await wrapper.findComponent({ name:"SvwsUiTextareaInput" }).vm.isValid).toBeTruthy();
 
 			//Testen
@@ -255,7 +256,7 @@ describe("Bedingtes Rendern der HTML-Elemenete", () => {
 			await wrapper.setProps({ placeholder:"Placeholder", maxLen: 12 });
 			expect(await wrapper.findComponent({ name:"SvwsUiTextareaInput" }).props('maxLen')).toBeDefined();
 			//Testen
-			expect(wrapper.find("span.inline-flex.ml-1.gap-1").exists()).toBeTruthy();
+			expect(wrapper.find("span.inline-flex.gap-1").exists()).toBeTruthy();
 		})
 
 		test("text-ui-danger wird an CSS übergeben, wenn maxLenValid() false liefert", async () => {
@@ -264,7 +265,7 @@ describe("Bedingtes Rendern der HTML-Elemenete", () => {
 			expect(await wrapper.findComponent({ name:"SvwsUiTextareaInput" }).vm.maxLenValid).toBeFalsy();
 
 			// Testen
-			expect(wrapper.find("span.inline-flex.ml-1.gap-1.text-ui-danger").exists()).toBeTruthy();
+			expect(wrapper.find("span.inline-flex.gap-1.text-ui-danger").exists()).toBeTruthy();
 		})
 
 		test("text-ui-danger wird an CSS nicht übergeben, wenn maxLenValid() true liefert", async () => {
@@ -304,37 +305,38 @@ describe("Bedingtes Rendern der HTML-Elemenete", () => {
 			// Testen
 			expect(tooltip.exists()).toBeTruthy();
 			expect(tooltip.props('position')).toBe("right");
-			const static_icon = tooltip.find("span.icon.i-ri-bar-chart-2-line");
-			["icon-ui-statistic", "pointer-events-auto", "ml-0.5"].forEach((value) => expect(static_icon.classes()).toContain(value));
+			const statistic_icon = tooltip.find("span.icon.i-ri-bar-chart-2-line");
+			expect(statistic_icon.classes()).toContain("textarea-input--statistic-icon");
 			// TODO #content-Slot testen ?????
 		})
 
-		test("span-icon-alert-fill wird gerendert, wenn data leer ist", async () => {
+		test("span-icon-alert-fill wird gerendert, wenn data leer ist (statistics: true, required: true)", async () => {
 			// Vorbereiten
-			await wrapper.setProps({ placeholder:"Placeholder", statistics: true, modelValue:''});
+			await wrapper.setProps({ placeholder:"Placeholder", statistics: true, required: true, modelValue:''});
 			expect(wrapper.vm.$props.modelValue).toBe("");
 
 			// Testen
-			expect(wrapper.find("span.i-ri-alert-fill.icon-ui-danger").exists()).toBeTruthy();
+			expect(wrapper.find("span.i-ri-alert-fill.textarea-input--state-icon").exists()).toBeTruthy();
 		})
 
-		test("span-icon-alert-fill wird gerendert, wenn data null ist", async () => {
+		test("span-icon-alert-fill wird gerendert, wenn data null ist (statistics: true, required: true)", async () => {
 			// Vorbereiten
-			await wrapper.setProps({ placeholder:"Placeholder", statistics: true, modelValue: null });
+			await wrapper.setProps({ placeholder:"Placeholder", statistics: true, required: true, modelValue: null });
 			expect(wrapper.vm.$props.modelValue).toBeNull();
 
 			// Testen
-			expect(wrapper.find("span.i-ri-alert-fill.icon-ui-danger").exists()).toBeTruthy();
+			expect(wrapper.find("span.i-ri-alert-fill.textarea-input--state-icon").exists()).toBeTruthy();
 		})
 
-		test("span-icon-alert-fill wird nicht gerendert, wenn data nicht null oder nicht leer ist", async () => {
+		test("span-icon-alert-fill wird nicht gerendert, wenn data nicht null oder nicht leer ist (statistics: true, required: true)", async () => {
 			// Vorbereiten
-			await wrapper.setProps({ placeholder:"Placeholder", statistics: true, modelValue: "Test" });
+			await wrapper.setProps({ placeholder:"Placeholder", statistics: true, required: true, modelValue: "Test" });
 			expect(wrapper.vm.$props.modelValue).toBe("Test");
 
 			// Testen
-			expect(wrapper.find("span.i-ri-alert-fill.icon-ui-danger").exists()).toBeFalsy();
+			expect(wrapper.find("span.i-ri-alert-fill.textarea-input--state-icon").exists()).toBeFalsy();
 		})
+
 	})
 })
 

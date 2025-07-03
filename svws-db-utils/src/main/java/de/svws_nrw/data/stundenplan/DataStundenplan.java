@@ -9,10 +9,12 @@ import de.svws_nrw.core.data.stundenplan.Stundenplan;
 import de.svws_nrw.core.data.stundenplan.StundenplanAufsichtsbereich;
 import de.svws_nrw.core.data.stundenplan.StundenplanJahrgang;
 import de.svws_nrw.core.data.stundenplan.StundenplanKalenderwochenzuordnung;
+import de.svws_nrw.core.data.stundenplan.StundenplanListeEintrag;
 import de.svws_nrw.core.data.stundenplan.StundenplanPausenzeit;
 import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
 import de.svws_nrw.core.data.stundenplan.StundenplanSchiene;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
+import de.svws_nrw.core.utils.DateUtils;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
@@ -89,6 +91,7 @@ public final class DataStundenplan extends DataManagerRevised<Long, DTOStundenpl
 		} else {
 			daten.gueltigBis = stundenplan.Ende;
 		}
+		daten.aktiv = stundenplan.Aktiv;
 		daten.bezeichnungStundenplan = stundenplan.Beschreibung;
 		daten.wochenTypModell = stundenplan.WochentypModell;
 		daten.zeitraster.addAll(zeitraster);
@@ -114,6 +117,7 @@ public final class DataStundenplan extends DataManagerRevised<Long, DTOStundenpl
 			case "idSchuljahresabschnitt" -> dto.Schuljahresabschnitts_ID = JSONMapper.convertToLong(value, false);
 			case "gueltigAb" -> dto.Beginn = JSONMapper.convertToString(value, false, false, null);
 			case "gueltigBis" -> dto.Ende = JSONMapper.convertToString(value, false, false, null);
+			case "aktiv" -> dto.Aktiv = JSONMapper.convertToBoolean(value, false);
 			case "bezeichnungStundenplan" -> dto.Beschreibung = JSONMapper.convertToString(value, false, false, 1000);
 			case "wochenTypModell" -> {
 				final long idStundenplan = dto.ID;
@@ -220,12 +224,34 @@ public final class DataStundenplan extends DataManagerRevised<Long, DTOStundenpl
 	@Override
 	public Stundenplan add(final Map<String, Object> initAttributes) throws ApiOperationException {
 		Stundenplan stundenplan = super.add(initAttributes);
-//		conn.transactionPersist(stundenplan);
-//		conn.transactionFlush();
 		// Füge die Schienen, welche bereits in der Kursliste angegeben sind zum Stundenplan hinzu
 		final List<KursDaten> kurse = DataKurse.getKursListenFuerAbschnitt(conn, stundenplan.idSchuljahresabschnitt, false);
 		DataStundenplanSchienen.updateSchienenFromKursliste(conn, stundenplan.id, kurse);
 		return stundenplan;
+	}
+
+	/**
+	 * Methode prüft vor dem Persistieren eines Datenbank-DTOs, ob alle Vorbedingungen zum Patch erfüllt sind.
+	 * Standardmäßig hat diese Methode keine Implementierung.
+	 * Wenn eine Prüfung durchgeführt werden soll, muss diese Methode überschrieben werden.
+	 *
+	 * @param dto              das Stundenplan-DTO
+	 * @param patchedAttributes    die Map mit dem Mapping der Attributnamen auf die Werte der Attribute im Patch
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	@Override
+	public void checkBeforePersist(final DTOStundenplan dto, final Map<String, Object> patchedAttributes) throws ApiOperationException {
+		if (Boolean.TRUE.equals(dto.Aktiv) && (patchedAttributes.containsKey("gueltigAb") || patchedAttributes.containsKey("gueltigBis") || patchedAttributes.containsKey("aktiv"))) {
+			final List<StundenplanListeEintrag> plaene = DataStundenplanListe.getStundenplaene(conn, dto.Schuljahresabschnitts_ID);
+			for (final StundenplanListeEintrag plan : plaene) {
+                if (plan.id == dto.ID || !plan.aktiv)
+                    continue;
+                if (DateUtils.berechneGemeinsameTage(plan.gueltigAb, plan.gueltigBis, dto.Beginn, dto.Ende).length > 0)
+                    throw new ApiOperationException(Status.CONFLICT,
+                            "Der Gültigkeit des Stundenplans steht in Konflikt zum Stundenplan mit der ID %d.".formatted(plan.id));
+            }
+		}
 	}
 
 }

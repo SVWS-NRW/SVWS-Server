@@ -28,4 +28,12 @@ public final class LehrerUtils {
 				return (cmp == 0) ? Long.compare(a.id, b.id) : cmp;
 			};
 
+
+	/** Ein Kuerzel-Comparator für den Vergleich von Lehrern in Lehrerlisten. */
+	public static final @NotNull Comparator<LehrerListeEintrag> comparatorKuerzel =
+			(final @NotNull LehrerListeEintrag a, final @NotNull LehrerListeEintrag b) -> {
+				final int cmp = a.kuerzel.compareTo(b.kuerzel);
+				return (cmp == 0) ? Long.compare(a.id, b.id) : cmp;
+			};
+
 }

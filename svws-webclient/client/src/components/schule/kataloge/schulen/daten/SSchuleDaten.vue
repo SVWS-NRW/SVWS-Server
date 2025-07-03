@@ -10,7 +10,7 @@
 				<svws-ui-select title="Schulform" :items="Schulform.values()" :item-text="i => i.daten(schuljahr)?.text ?? '—'"
 					:model-value="schuleListeManager().daten().idSchulform ? Schulform.data().getWertByID(schuleListeManager().daten().idSchulform ?? -1) : undefined"
 					@update:model-value="schulform => patch({ idSchulform: schulform?.daten(schuljahr)?.id ?? null})" removable />
-				<svws-ui-text-input placeholder="Statistik-Schulnummer" :model-value="schuleListeManager().daten().schulnummerStatistik" readonly />
+				<svws-ui-text-input placeholder="Statistik-Schulnummer" :model-value="schuleListeManager().daten().schulnummerStatistik" readonly statistics />
 				<svws-ui-text-input class="contentFocusField" placeholder="Kürzel" :model-value="schuleListeManager().daten().kuerzel" :valid="kuerzelIsValid"
 					@change="patchKuerzel" :max-len="10" />
 				<svws-ui-text-input placeholder="Schulname" :model-value="schuleListeManager().daten().name" :valid="v => mandatoryInputIsValid(v, 120)"

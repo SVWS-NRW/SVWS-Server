@@ -39,6 +39,7 @@ import { routeSchuleDatenaustauschSchulbewerbung } from "./schule/datenaustausch
 import { routeSchuleDatenaustauschWenom } from "./schule/datenaustausch/RouteSchuleDatenaustauschWenom";
 import { routeSchuleStammdaten } from "./schule/RouteSchuleStammdaten";
 import { routeSchuleReporting } from "./schule/reporting/RouteSchuleReporting";
+import { routeAbteilungen } from "~/router/apps/schule/abteilungen/RouteAbteilungen";
 import SApp from "~/components/SApp.vue";
 
 
@@ -107,6 +108,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		this._menuSchule = [
 			// Schulbezogen
 			routeSchuleStammdaten,
+			routeAbteilungen,
 			routeSchuleBetriebe,
 			routeKatalogEinwilligungsarten,
 			routeSchuleFaecher,

@@ -3,12 +3,14 @@
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input class="contentFocusField" placeholder="Kürzel" :model-value="manager().daten().kuerzel" @change="kuerzel => patch({ kuerzel: kuerzel ?? undefined })" />
-				<svws-ui-select title="Statistik-Fach" :model-value="Fach.getBySchluesselOrDefault(manager().daten().kuerzelStatistik)"
+				<svws-ui-select title="Statistik-Fach" :model-value="Fach.getBySchluesselOrDefault(manager().daten().kuerzelStatistik)" statistics
 					@update:model-value="value => patch({ kuerzelStatistik: (value === undefined) || (value === null) ? undefined : value.daten(schuljahr)?.schluessel })"
 					:items="Fach.values()" :item-text="(z: Fach) => z.daten(schuljahr)?.schluessel + ' : ' + z.daten(schuljahr)?.text" />
-				<svws-ui-text-input placeholder="Bezeichnung" :model-value="manager().daten().bezeichnung" @change="bezeichnung => patch({ bezeichnung: bezeichnung ?? undefined })" />
-				<svws-ui-text-input placeholder="Fachgruppe" :model-value="Fach.getBySchluesselOrDefault(manager().daten().kuerzelStatistik).getFachgruppe(schuljahr)?.daten(schuljahr)?.text ?? '—'" disabled />
-				<svws-ui-select title="Bilinguale Sachfachsprache"
+				<svws-ui-text-input placeholder="Bezeichnung" :model-value="manager().daten().bezeichnung" statistics
+					@change="bezeichnung => patch({ bezeichnung: bezeichnung ?? undefined })" />
+				<svws-ui-text-input placeholder="Fachgruppe" statistics
+					:model-value="Fach.getBySchluesselOrDefault(manager().daten().kuerzelStatistik).getFachgruppe(schuljahr)?.daten(schuljahr)?.text ?? '—'" disabled />
+				<svws-ui-select title="Bilinguale Sachfachsprache" statistics
 					:model-value="(manager().daten().bilingualeSprache === null) ? null : BilingualeSprache.data().getWertByKuerzel(manager().daten().bilingualeSprache!)"
 					@update:model-value="value => patch({ bilingualeSprache: value?.daten(schuljahr)?.kuerzel ?? null })"
 					:items="BilingualeSprache.values()" :item-text="(b: BilingualeSprache) => b.daten(schuljahr)?.text ?? '—'" />

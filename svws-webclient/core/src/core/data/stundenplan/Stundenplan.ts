@@ -43,6 +43,11 @@ export class Stundenplan extends JavaObject {
 	public gueltigBis : string = "";
 
 	/**
+	 * Gibt an, ob der Stundenplan aktiv ist. An einem Datum kann immer nur ein Stundenplan aktiv sein.
+	 */
+	public aktiv : boolean = false;
+
+	/**
 	 * Die textuelle Beschreibung des Stundenplans.
 	 */
 	public bezeichnungStundenplan : string = "";
@@ -126,6 +131,9 @@ export class Stundenplan extends JavaObject {
 		if (obj.gueltigBis === undefined)
 			throw new Error('invalid json format, missing attribute gueltigBis');
 		result.gueltigBis = obj.gueltigBis;
+		if (obj.aktiv === undefined)
+			throw new Error('invalid json format, missing attribute aktiv');
+		result.aktiv = obj.aktiv;
 		if (obj.bezeichnungStundenplan === undefined)
 			throw new Error('invalid json format, missing attribute bezeichnungStundenplan');
 		result.bezeichnungStundenplan = obj.bezeichnungStundenplan;
@@ -178,6 +186,7 @@ export class Stundenplan extends JavaObject {
 		result += '"abschnitt" : ' + obj.abschnitt.toString() + ',';
 		result += '"gueltigAb" : ' + JSON.stringify(obj.gueltigAb) + ',';
 		result += '"gueltigBis" : ' + JSON.stringify(obj.gueltigBis) + ',';
+		result += '"aktiv" : ' + obj.aktiv.toString() + ',';
 		result += '"bezeichnungStundenplan" : ' + JSON.stringify(obj.bezeichnungStundenplan) + ',';
 		result += '"wochenTypModell" : ' + obj.wochenTypModell.toString() + ',';
 		result += '"zeitraster" : [ ';
@@ -260,6 +269,9 @@ export class Stundenplan extends JavaObject {
 		}
 		if (obj.gueltigBis !== undefined) {
 			result += '"gueltigBis" : ' + JSON.stringify(obj.gueltigBis) + ',';
+		}
+		if (obj.aktiv !== undefined) {
+			result += '"aktiv" : ' + obj.aktiv.toString() + ',';
 		}
 		if (obj.bezeichnungStundenplan !== undefined) {
 			result += '"bezeichnungStundenplan" : ' + JSON.stringify(obj.bezeichnungStundenplan) + ',';

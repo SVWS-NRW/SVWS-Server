@@ -47,6 +47,7 @@ public final class DataStundenplanListe extends DataManager<Long> {
 		daten.gueltigAb = s.Beginn;
 		daten.gueltigBis = s.Ende;
 		daten.wochenTypModell = s.WochentypModell;
+		daten.aktiv = s.Aktiv;
 		return daten;
 	};
 
@@ -99,6 +100,19 @@ public final class DataStundenplanListe extends DataManager<Long> {
 		}).toList();
 	}
 
+	/**
+	 * Gibt die Liste der aktiven Stundenpläne für einen oder alle Schuljahresabschnitte zurück.
+	 *
+	 * @param conn                     die Datenbankverbindung
+	 * @param idSchuljahresabschnitt   die ID des schuljahresabschnitts oder null für alle
+	 *
+	 * @return die Liste der aktiven Stundenpläne
+	 */
+	public static List<StundenplanListeEintrag> getStundenplaeneAktiv(final DBEntityManager conn, final Long idSchuljahresabschnitt) {
+		final List<StundenplanListeEintrag> daten = getStundenplaene(conn, idSchuljahresabschnitt);
+		return daten.stream().filter(e -> e.aktiv).toList();
+	}
+
 
 	@Override
 	public Response getList() {
@@ -111,6 +125,18 @@ public final class DataStundenplanListe extends DataManager<Long> {
 	public Response get(final Long idSchuljahresabschnitt) {
 		// Stundenpläne für einen speziellen Schuljahresabschnitt
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(getStundenplaene(conn, idSchuljahresabschnitt)).build();
+	}
+
+	/**
+	 * Gibt die Liste der aktiven Stundenpläne für einen speziellen Schuljahresabschnitt zurück.
+	 *
+	 * @param idSchuljahresabschnitt   die ID des schuljahresabschnitts
+	 *
+	 * @return die Liste der aktiven Stundenpläne
+	 */
+	public Response getAktive(final Long idSchuljahresabschnitt) {
+		// Stundenpläne für einen speziellen Schuljahresabschnitt
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(getStundenplaeneAktiv(conn, idSchuljahresabschnitt)).build();
 	}
 
 
@@ -151,7 +177,7 @@ public final class DataStundenplanListe extends DataManager<Long> {
 					beginn = stundenplaene.get(stundenplaene.size() - 1).gueltigBis;
 			}
 			// Erstelle und persistiere den leeren Stundenplan mit Wochentyp-Modell 0
-			final DTOStundenplan stundenplan = new DTOStundenplan(idStundenplan, idSchuljahresabschnitt, beginn, "Neuer Stundenplan", 0);
+			final DTOStundenplan stundenplan = new DTOStundenplan(idStundenplan, idSchuljahresabschnitt, beginn, false, "Neuer Stundenplan", 0);
 			stundenplan.Ende = ende;
 			conn.transactionPersist(stundenplan);
 			conn.transactionFlush();

@@ -91,7 +91,7 @@ task renameInstallScript(type: Copy){
 
 task buildLinuxInstaller() {
 	dependsOn('renameInstallScript')
-	group "build"
+	group = "build"
 }
 
 clean.doLast {

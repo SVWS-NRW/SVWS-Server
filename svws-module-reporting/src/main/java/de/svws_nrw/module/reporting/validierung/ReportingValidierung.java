@@ -73,8 +73,8 @@ public final class ReportingValidierung {
 		}
 
 		// Prüfe die Schüler-IDs. Erzeuge Maps, damit auch später leicht auf die Schülerdaten zugegriffen werden kann.
-		final Map<Long, SchuelerStammdaten> mapSchueler =
-				DataSchuelerStammdaten.getListStammdaten(conn, idsNonNull).stream().collect(Collectors.toMap(s -> s.id, s -> s));
+		final Map<Long, SchuelerStammdaten> mapSchueler = (new DataSchuelerStammdaten(conn)).getListByIds(idsNonNull).stream()
+				.collect(Collectors.toMap(s -> s.id, s -> s));
 		for (final Long sID : idsNonNull)
 			if (mapSchueler.get(sID) == null) {
 				reportingRepository.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Es wurden ungültige Schüler-IDs übergeben.");

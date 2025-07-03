@@ -25,6 +25,14 @@ public class GostBelegpruefungsErgebnisse {
 	@Schema(description = "gibt an, ob der Schüler aktuell Fachwahlen hat der nicht", example = "true")
 	public boolean hatFachwahlen = false;
 
+	/** Gibt an, ob und wann der Schüler zuletzt beraten wurde. */
+	@Schema(description = "gibt an, ob und wann der Schüler zuletzt beraten wurde", example = "30.01.2042")
+	public String beratungsDatum = null;
+
+	/** Gibt an, ob und wann für den Schüler zuletzt ein Import der Laufbahnplanungsdaten stattgefunden hat. */
+	@Schema(description = "gibt an, ob und wann für den Schüler zuletzt ein Import der Laufbahnplanungsdaten stattgefunden hat", example = "01.02.2042")
+	public String ruecklaufDatum = null;
+
 	/** Die zugehörigen Belegprüfungsergebnisse */
 	@Schema(implementation = GostBelegpruefungErgebnis.class)
 	public @NotNull GostBelegpruefungErgebnis ergebnis = new GostBelegpruefungErgebnis();

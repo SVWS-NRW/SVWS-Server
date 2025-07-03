@@ -113,19 +113,19 @@
 										<span v-if="getDatenmanager().kursGetLehrkraefteSortiert(kurs.id).size() > 0" class="opacity-75 text-sm"> {{ getDatenmanager().kursGetLehrkraefteSortiert(kurs.id).getFirst().kuerzel }} </span>
 										<template v-if="fach_gewaehlt(kurs)">
 											<span class="cursor-pointer" @click.stop="verbieten_regel_toggle(kurs.id)" :title="verbieten_regel(kurs.id) ? 'Verboten' : 'Verbieten'">
-												<span class="icon i-ri-forbid-fill inline-block" v-if="verbieten_regel(kurs.id)" />
-												<span class="icon i-ri-prohibited-line inline-block opacity-75" v-if="!verbieten_regel(kurs.id) && !fixier_regel(kurs.id) && !getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id)" />
+												<span class="icon i-ri-forbid-fill" v-if="verbieten_regel(kurs.id)" />
+												<span class="icon i-ri-prohibited-line opacity-75" v-if="!verbieten_regel(kurs.id) && !fixier_regel(kurs.id) && !getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id)" />
 											</span>
 											<span class="cursor-pointer" @click.stop="fixieren_regel_toggle(kurs.id)" :title="fixier_regel(kurs.id) ? 'Fixiert' : 'Fixieren'">
-												<span class="icon i-ri-pushpin-fill inline-block" v-if="fixier_regel(kurs.id)"
+												<span class="icon i-ri-pushpin-fill" v-if="fixier_regel(kurs.id)"
 													:class="{'icon-uistatic': getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id) && !hatSchieneKollisionen(schiene.id).value, 'icon-ui-ondanger': getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id) && hatSchieneKollisionen(schiene.id).value}" />
-												<span class="icon i-ri-pushpin-line inline-block opacity-75" v-if="!verbieten_regel(kurs.id) && !fixier_regel(kurs.id)"
+												<span class="icon i-ri-pushpin-line opacity-75" v-if="!verbieten_regel(kurs.id) && !fixier_regel(kurs.id)"
 													:class="{'icon-uistatic': getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id) && !hatSchieneKollisionen(schiene.id).value, 'icon-ui-ondanger': getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id) && hatSchieneKollisionen(schiene.id).value}" />
 											</span>
 										</template>
 										<template v-else>
-											<span class="icon inline-block i-ri-forbid-fill" v-if="verbieten_regel(kurs.id)" title="Verboten" />
-											<span class="icon inline-block i-ri-pushpin-fill" v-if="fixier_regel(kurs.id)" title="Fixiert" />
+											<span class="icon i-ri-forbid-fill" v-if="verbieten_regel(kurs.id)" title="Verboten" />
+											<span class="icon i-ri-pushpin-fill" v-if="fixier_regel(kurs.id)" title="Fixiert" />
 										</template>
 									</span>
 								</div>

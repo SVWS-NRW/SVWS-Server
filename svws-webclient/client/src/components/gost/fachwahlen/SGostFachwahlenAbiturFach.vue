@@ -46,16 +46,15 @@
 
 <script setup lang="ts">
 
-	import type { GostFachwahlenAbiturFachProps } from "./SGostFachwahlenAbiturFachProps";
-	import type { ComputedRef} from "vue";
 	import { computed } from "vue";
+	import type { GostFachwahlenAbiturFachProps } from "./SGostFachwahlenAbiturFachProps";
 	import { GostAbiturFach, Fach, type GostStatistikFachwahl, type SchuelerListeEintrag, type List, ArrayList } from "@core";
 
 	const props = defineProps<GostFachwahlenAbiturFachProps>();
 
 	const schuljahr = computed<number>(() => props.faecherManager.getSchuljahr());
 
-	const fws: ComputedRef<GostStatistikFachwahl | undefined> = computed(() => {
+	const fws = computed<GostStatistikFachwahl | undefined>(() => {
 		for (const f of props.fachwahlstatistik)
 			if (f.id === props.fachID)
 				return f;

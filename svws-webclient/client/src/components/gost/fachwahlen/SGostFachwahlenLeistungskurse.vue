@@ -49,14 +49,13 @@
 
 <script setup lang="ts">
 
-	import type { GostFachwahlenLeistungskurseProps } from "./SGostFachwahlenLeistungskurseProps";
-	import type { ComputedRef} from "vue";
 	import { computed, ref } from "vue";
+	import type { GostFachwahlenLeistungskurseProps } from "./SGostFachwahlenLeistungskurseProps";
 	import { Fach, type GostStatistikFachwahl, type SchuelerListeEintrag, type List, ArrayList, GostHalbjahr } from "@core";
 
 	const props = defineProps<GostFachwahlenLeistungskurseProps>();
 
-	const fachwahlenstatistik: ComputedRef<GostStatistikFachwahl[]> = computed(() => {
+	const fachwahlenstatistik = computed<GostStatistikFachwahl[]>(() => {
 		const result = new Array<GostStatistikFachwahl>();
 		for (const fws of props.fachwahlstatistik)
 			if (hatLeistungskurs(fws))

@@ -95,8 +95,8 @@ public final class Revision36Updates extends SchemaRevisionUpdateSQL {
 					"UPDATE %s SET EPJahre = CAST(SUBSTRING(ASDJahrgang, 2, 1) AS INTEGER) WHERE ASDJahrgang IN ('E1','E2','E3')"
 							.formatted(Schema.tab_SchuelerLernabschnittsdaten.name()));
 			conn.transactionFlush();
-			doUpdate(conn, logger, "- Schuelerlernabschnittsdaten: Setze Jahrgang_ID, falls diese NULL ist über die Klassen-Tabelle.",
-					"UPDATE %s sla JOIN %s k ON sla.Klassen_ID = k.ID SET sla.Jahrgang_ID = k.Jahrgang_ID"
+			doUpdate(conn, logger, "- Schuelerlernabschnittsdaten: Setze Jahrgang_ID, falls diese NULL ist über die Klassen-Tabelle, sofern die Klasse nicht jahrgangsübergreifend ist.",
+					"UPDATE %s sla JOIN %s k ON sla.Klassen_ID = k.ID SET sla.Jahrgang_ID = k.Jahrgang_ID WHERE k.Jahrgang_ID IS NOT NULL"
 							.formatted(Schema.tab_SchuelerLernabschnittsdaten.name(), Schema.tab_Klassen.name()));
 			conn.transactionFlush();
 			doUpdate(conn, logger,
@@ -162,6 +162,26 @@ public final class Revision36Updates extends SchemaRevisionUpdateSQL {
 			// Entferne den Eintrag für Jahrgang E3 aus der Tabelle EigeneSchule_Jahrgänge. Dieser sollte zu diesem Zeitpunkt nicht mehr in Verwendung sein.
 			doUpdate(conn, logger, "- EigeneSchule_Jahrgaenge: Entferne den Eintrag für Jahrgang E3.",
 					"DELETE FROM %s WHERE ASDJahrgang = 'E3'".formatted(Schema.tab_EigeneSchule_Jahrgaenge.name()));
+			conn.transactionFlush();
+			// Und aktualisiere ggf. die Einträge in den Schülerlernabschnittsdaten, so dass diese nach wie eine fültige Jahrgangs-ID haben
+			doUpdate(conn, logger,
+					"- Schuelerlernabschnittsdaten: Setze die ID des Jahrgangs auf den ersten ASDJahrgang 02, wenn E3 eingetragen ist und die Klassen jahrgangsübergreifend ist.",
+					"""
+					UPDATE %s sla
+					JOIN %s k ON sla.Klassen_ID = k.ID AND k.Jahrgang_ID IS NULL AND sla.Jahrgang_ID IS NULL AND ASDJahrgang = 'E3'
+					SET sla.Jahrgang_ID = (SELECT ID FROM %s esj WHERE ASDJahrgang = '02' LIMIT 1),
+					sla.ASDJahrgang = '02'
+					"""
+							.formatted(Schema.tab_SchuelerLernabschnittsdaten.name(), Schema.tab_Klassen.name(), Schema.tab_EigeneSchule_Jahrgaenge.name()));
+			conn.transactionFlush();
+			doUpdate(conn, logger,
+					"- Schuelerlernabschnittsdaten: Setze die ID des Jahrgangs auf den ersten ASDJahrgang 02, wenn E3 eingetragen ist und die Klassen-ID nicht gesetzt ist.",
+					"""
+					UPDATE %s sla
+					SET sla.Jahrgang_ID = (SELECT ID FROM %s esj WHERE ASDJahrgang = '02' LIMIT 1), sla.ASDJahrgang = '02'
+					WHERE sla.Klassen_ID IS NULL AND sla.Jahrgang_ID IS NULL AND ASDJahrgang = 'E3'
+					"""
+							.formatted(Schema.tab_SchuelerLernabschnittsdaten.name(), Schema.tab_EigeneSchule_Jahrgaenge.name()));
 			conn.transactionFlush();
 			return true;
 		} catch (final DBException e) {

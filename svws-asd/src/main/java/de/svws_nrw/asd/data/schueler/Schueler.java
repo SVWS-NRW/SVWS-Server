@@ -43,7 +43,7 @@ public class Schueler {
 	public int abschlussjahrgang = -1;
 
 	/** Das Schulnummer bei einem externen Schüler oder null, wenn der Schüler kein externer Schüler ist. */
-	@Schema(description = "die Schulnummer eines externen Schülers oder null", example = "null")
+	@Schema(description = "die Schulnummer eines externen Schülers oder null", example = "null", nullable = true)
 	public String externeSchulNr;
 
 	/**

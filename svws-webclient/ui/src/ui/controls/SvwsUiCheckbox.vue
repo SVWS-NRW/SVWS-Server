@@ -1,12 +1,21 @@
 <template>
 	<div class="inline-flex">
-		<label class="svws-ui-checkbox" :class="{'svws-statistik': statistics, 'svws-bw': bw, 'svws-ui-toggle': type === 'toggle'}" :title :color>
+		<label class="svws-ui-checkbox" :class="{'svws-statistik': statistics, 'svws-headless': headless && type !== 'toggle', 'svws-bw': bw, 'svws-ui-toggle': type === 'toggle'}" :title :color>
 			<input type="checkbox" v-model="checked" :class="{'svws-headless': headless && type !== 'toggle', 'contentFocusField': focusClassContent}" :disabled :readonly :indeterminate :color ref="input">
 			<span v-if="type === 'toggle'" class="svws-ui-toggle--icon" />
 			<span v-if="$slots.default" class="svws-ui-checkbox--label">
 				<span v-if="statistics" class="-mb-1 inline-block align-top">
 					<svws-ui-tooltip position="right">
-						<span class="icon icon-ui-statistic i-ri-bar-chart-2-line pointer-events-auto mr-1" />
+						<span v-if="statistics" class="cursor-pointer">
+							<svws-ui-tooltip position="right">
+								<span class="inline-flex items-center">
+									<span class="icon i-ri-bar-chart-2-line svws-ui-checkbox--statistic-icon" />
+								</span>
+								<template #content>
+									Relevant für die Statistik
+								</template>
+							</svws-ui-tooltip>
+						</span>
 						<template #content>Relevant für die Statistik</template>
 					</svws-ui-tooltip>
 				</span>

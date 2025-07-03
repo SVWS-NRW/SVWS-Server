@@ -1,4 +1,5 @@
-import type { Fach, Fachgruppe } from "../../../../../../core/src";
+import type { Fachgruppe } from "../../../../../../core/src/asd/types/fach/Fachgruppe";
+import type { Fach } from "../../../../../../core/src/asd/types/fach/Fach";
 import { ArrayList } from "../../../../../../core/src/java/util/ArrayList";
 import type { List } from "../../../../../../core/src/java/util/List";
 import type { SelectFilter } from "./SelectFilter";
@@ -18,12 +19,16 @@ export class FachSelectFilter implements SelectFilter<Fach> {
 	 * Konstruktor für den FachSelectFilter
 	 *
 	 * @param key   	    eindeutiger Key für den Filter.
-	 * @param fachgruppe    Liste der Fachgruppen, nach denen gefiltert wird.
+	 * @param fachgruppen    Liste der Fachgruppen, nach denen gefiltert wird.
 	 * @param schuljahr     Das genutzte Schuljahr
 	 */
-	constructor(key: string, fachgruppe: List<Fachgruppe>, schuljahr: number ) {
+	constructor(key: string, fachgruppen: Iterable<Fachgruppe>, schuljahr: number ) {
 		this.key = key;
-		this._fachgruppen = fachgruppe;
+
+		const tmpFachgruppe = new ArrayList<Fachgruppe>();
+		for (const i of fachgruppen)
+			tmpFachgruppe.add(i);
+		this._fachgruppen = tmpFachgruppe;
 		this._schuljahr = schuljahr;
 	}
 
@@ -34,17 +39,17 @@ export class FachSelectFilter implements SelectFilter<Fach> {
 	 *
 	 * @returns Liste der gefilterten Optionen
 	 */
-	apply(options: Iterable<Fach>): List<Fach> {
-		const filteredItems: List<Fach> = new ArrayList<Fach>();
+	apply(options: List<Fach>): List<Fach> {
+		const filteredOptions: List<Fach> = new ArrayList<Fach>();
 
-		for (const item of options) {
+		for (const option of options) {
 			if (this._fachgruppen.isEmpty())
-				filteredItems.add(item);
+				filteredOptions.add(option);
 			for (const fachgruppe of this._fachgruppen)
-				if (item.getFachgruppe(this._schuljahr) === toRaw(fachgruppe))
-					filteredItems.add(item);
+				if (option.getFachgruppe(this._schuljahr) === toRaw(fachgruppe))
+					filteredOptions.add(option);
 		}
 
-		return filteredItems;
+		return filteredOptions;
 	}
 }

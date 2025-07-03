@@ -29,7 +29,7 @@ export class RouteSchuelerEinwilligungen extends RouteNode<RouteDataSchuelerEinw
 			if (id === undefined)
 				await this.data.ladeDaten(null);
 			else
-				await this.data.ladeDaten(routeSchueler.data.schuelerListeManager.liste.get(id));
+				await this.data.ladeDaten(routeSchueler.data.manager.liste.get(id));
 		} catch (e) {
 			return routeError.getErrorRoute(e as DeveloperNotificationException);
 		}

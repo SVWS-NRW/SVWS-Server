@@ -420,4 +420,32 @@ public class GostFaecherManager {
 		return "VX".equals(fach.kuerzel);
 	}
 
+	/**
+	 * Gibt an, ob es sich bei dem Fach mit der übergebenen ID um Kunst handelt oder nicht.
+	 *
+	 * @param id   die ID des Faches
+	 *
+	 * @return true, wenn es sich um Kunst handelt und ansonsten false.
+	 */
+	public boolean fachIstKunst(final long id) {
+		final GostFach fach = _map.get(id);
+		if (fach == null)
+			return false;
+		return "KU".equals(fach.kuerzel);
+	}
+
+	/**
+	 * Gibt an, ob es sich bei dem Fach mit der übergebenen ID um Musik handelt oder nicht.
+	 *
+	 * @param id   die ID des Faches
+	 *
+	 * @return true, wenn es sich um Musik handelt und ansonsten false.
+	 */
+	public boolean fachIstMusik(final long id) {
+		final GostFach fach = _map.get(id);
+		if (fach == null)
+			return false;
+		return "MU".equals(fach.kuerzel);
+	}
+
 }

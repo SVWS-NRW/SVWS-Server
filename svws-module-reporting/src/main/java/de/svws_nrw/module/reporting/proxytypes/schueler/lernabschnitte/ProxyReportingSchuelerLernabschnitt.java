@@ -44,7 +44,6 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 		super(ersetzeNullBlankTrim(schuelerLernabschnittsdaten.abschluss),
 				schuelerLernabschnittsdaten.abschlussart,
 				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.abschlussBerufsbildend),
-				schuelerLernabschnittsdaten.anzahlSchulbesuchsjahre,
 				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.bilingualerZweig),
 				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.datumAnfang),
 				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.datumEnde),

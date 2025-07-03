@@ -146,7 +146,7 @@ task runTestsAfterSetup(type: NpmRun) {
  */
 task testAgainstDockerEnv() {
 	description = 'Startet die Integrationstests gegen die Docker Umgebung'
-	group 'verification'
+	group = 'verification'
 	dependsOn ':svws-webclient:core:assemble'
 	dependsOn 'seedDatabase'
 

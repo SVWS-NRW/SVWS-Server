@@ -41,7 +41,7 @@
 	const selected = ref<LehrerLehramtEintrag[]>([]);
 
 	const columns = [
-		{key: 'lehramt', label: 'Lehramt', span: 1 },
+		{key: 'lehramt', label: 'Lehramt', span: 1, statistic: true },
 		{key: 'anerkennung', label: 'Anerkennungsgrund', span: 1 },
 	]
 

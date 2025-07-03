@@ -41,14 +41,13 @@
 
 <script setup lang="ts">
 
-	import type { GostFachwahlenFachHalbjahrProps } from "./SGostFachwahlenFachHalbjahrProps";
-	import type { ComputedRef} from "vue";
 	import { computed } from "vue";
+	import type { GostFachwahlenFachHalbjahrProps } from "./SGostFachwahlenFachHalbjahrProps";
 	import { Fach, type GostStatistikFachwahl, type SchuelerListeEintrag, type List, ArrayList } from "@core";
 
 	const props = defineProps<GostFachwahlenFachHalbjahrProps>();
 
-	const fws: ComputedRef<GostStatistikFachwahl | undefined> = computed(() => {
+	const fws = computed<GostStatistikFachwahl | undefined>(() => {
 		for (const f of props.fachwahlstatistik)
 			if (f.id === props.fachID)
 				return f;

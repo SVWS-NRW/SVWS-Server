@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.text.Collator;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -15,6 +16,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -62,6 +64,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangBeratungslehrer;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangFachkombinationen;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
+import de.svws_nrw.db.dto.current.gost.DTOGostSchueler;
 import de.svws_nrw.db.dto.current.gost.DTOGostSchuelerFachbelegungen;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
@@ -562,7 +565,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 	 */
 	private static boolean doImport(final DBEntityManager conn, final DTOSchueler dtoSchueler, final GostLaufbahnplanungDaten laufbahnplanungsdaten,
 			final Logger logger) throws ApiOperationException {
-		// Lese zunächst die Informationen zur Schule ein und prüfe, ob die Schulnummer übereinstimmt.
+		// Lese die Informationen zur Schule ein und prüfe, ob die Schulnummer übereinstimmt.
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 		if (schule == null) {
 			logger.logLn("Fehler: Die Daten der Schule können nicht aus der Datenbank eingelesen werden.");
@@ -570,6 +573,12 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 		}
 		if (laufbahnplanungsdaten.schulNr != schule.SchulNr) {
 			logger.logLn("Fehler: Die Schulnummer der Planungsdatei simmt nicht mit der Schulnummer der Datenbank überein.");
+			return false;
+		}
+		// Lese die allgemeinen Informationen des Schülers zu der Laufbahn ein.
+		final DTOGostSchueler gostSchueler = conn.queryByKey(DTOGostSchueler.class, dtoSchueler.ID);
+		if (gostSchueler == null) {
+			logger.logLn("Fehler: Es konnte kein Eintrag für den Schüler mit der ID %d in der Laufbahnplung ermittelt werden.".formatted(dtoSchueler.ID));
 			return false;
 		}
 		// Lese zunächst die Abiturdaten des Schülers ein, welche in der Datenbank gespeichert sind.
@@ -601,25 +610,19 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 		// Prüfe den Bilingualen Bildungsgang
 		if (((daten.bilingualeSprache == null) && (abidaten.bilingualeSprache != null))
 				|| ((daten.bilingualeSprache != null) && (abidaten.bilingualeSprache == null))
-				|| ((daten.bilingualeSprache != null) && !daten.bilingualeSprache.equals(abidaten.bilingualeSprache))) {
-			logger.logLn("Fehler: Die Angaben zum Bilingualen Bildungsgang stimmen nicht überein.");
-			return false;
-		}
+				|| ((daten.bilingualeSprache != null) && !daten.bilingualeSprache.equals(abidaten.bilingualeSprache)))
+			logger.logLn("Hinweis: Die Angaben zum Bilingualen Bildungsgang stimmen nicht überein.");
 		// Überprüfe die Sprachenfolge
-		if (abidaten.sprachendaten.belegungen.size() != daten.sprachendaten.belegungen.size()) {
-			logger.logLn("Fehler: Die Anzahl der Sprachbelegungen stimmen nicht überein.");
-			return false;
-		}
-		if (abidaten.sprachendaten.pruefungen.size() != daten.sprachendaten.pruefungen.size()) {
-			logger.logLn("Fehler: Die Anzahl der Sprachprüfungen stimmen nicht überein.");
-			return false;
-		}
+		if (abidaten.sprachendaten.belegungen.size() != daten.sprachendaten.belegungen.size())
+			logger.logLn("Hinweis: Die Anzahl der Sprachbelegungen stimmen nicht überein.");
+		if (abidaten.sprachendaten.pruefungen.size() != daten.sprachendaten.pruefungen.size())
+			logger.logLn("Hinweis: Die Anzahl der Sprachprüfungen stimmen nicht überein.");
 		final Map<String, Sprachbelegung> sprachBelegungen = abidaten.sprachendaten.belegungen.stream().collect(Collectors.toMap(b -> b.sprache, b -> b));
 		for (final Sprachbelegung belegung : daten.sprachendaten.belegungen) {
 			final Sprachbelegung vergleich = sprachBelegungen.get(belegung.sprache);
 			if (vergleich == null) {
-				logger.logLn("Fehler: Die Sprachbelegung für die Sprache " + belegung.sprache + " wurde in der Datenbank nicht gefunden.");
-				return false;
+				logger.logLn("Hinweis: Die Sprachbelegung für die Sprache " + belegung.sprache + " wurde in der Datenbank nicht gefunden.");
+				continue;
 			}
 			final boolean vglReihenfolge = ((belegung.reihenfolge == null) && (vergleich.reihenfolge == null))
 					|| ((belegung.reihenfolge != null) && (vergleich.reihenfolge != null)
@@ -630,17 +633,15 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 			final boolean vglVonAbschnitt = ((belegung.belegungVonAbschnitt == null) && (vergleich.belegungVonAbschnitt == null))
 					|| ((belegung.belegungVonAbschnitt != null) && (vergleich.belegungVonAbschnitt != null)
 							&& (belegung.belegungVonAbschnitt.equals(vergleich.belegungVonAbschnitt)));
-			if (!vglReihenfolge || !vglVonJg || !vglVonAbschnitt) {
-				logger.logLn("Fehler: Die Sprachbelegung für die Sprache " + belegung.sprache + " stimmt nicht mit der Eintragung in der Datenbank überein.");
-				return false;
-			}
+			if (!vglReihenfolge || !vglVonJg || !vglVonAbschnitt)
+				logger.logLn("Hinweis: Die Sprachbelegung für die Sprache " + belegung.sprache + " stimmt nicht mit der Eintragung in der Datenbank überein.");
 		}
 		final Map<String, Sprachpruefung> sprachPruefungen = abidaten.sprachendaten.pruefungen.stream().collect(Collectors.toMap(b -> b.sprache, b -> b));
 		for (final Sprachpruefung pruefung : daten.sprachendaten.pruefungen) {
 			final Sprachpruefung vergleich = sprachPruefungen.get(pruefung.sprache);
 			if (vergleich == null) {
-				logger.logLn("Fehler: Die Sprachprüfung für die Sprache " + pruefung.sprache + " wurde in der Datenbank nicht gefunden.");
-				return false;
+				logger.logLn("Hinweis: Die Sprachprüfung für die Sprache " + pruefung.sprache + " wurde in der Datenbank nicht gefunden.");
+				continue;
 			}
 			final boolean vglNiveau = ((pruefung.anspruchsniveauId == null) && (vergleich.anspruchsniveauId == null))
 					|| ((pruefung.anspruchsniveauId != null) && (vergleich.anspruchsniveauId != null)
@@ -652,11 +653,9 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 					|| (pruefung.kannErstePflichtfremdspracheErsetzen != vergleich.kannErstePflichtfremdspracheErsetzen)
 					|| (pruefung.kannZweitePflichtfremdspracheErsetzen != vergleich.kannZweitePflichtfremdspracheErsetzen)
 					|| (pruefung.kannWahlpflichtfremdspracheErsetzen != vergleich.kannWahlpflichtfremdspracheErsetzen)
-					|| (pruefung.kannBelegungAlsFortgefuehrteSpracheErlauben != vergleich.kannBelegungAlsFortgefuehrteSpracheErlauben)) {
-				logger.logLn("Fehler: Die Sprachprüfung für die Sprache " + pruefung.sprache
+					|| (pruefung.kannBelegungAlsFortgefuehrteSpracheErlauben != vergleich.kannBelegungAlsFortgefuehrteSpracheErlauben))
+				logger.logLn("Hinweis: Die Sprachprüfung für die Sprache " + pruefung.sprache
 						+ " stimmt nicht nicht mit der Eintragung in der Datenbank überein.");
-				return false;
-			}
 		}
 		// Prüfe die Fachbelegungen bei den Fachbelegungen, wo bereits Leistungsdaten in der Datenbank hinterlegt sind und übernehme die restlichen Fachwahlen
 		final Map<Long, AbiturFachbelegung> dbBelegungen = abidaten.fachbelegungen.stream().collect(Collectors.toMap(b -> b.fachID, b -> b));
@@ -735,39 +734,10 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 					conn.queryList("SELECT e FROM DTOGostSchuelerFachbelegungen e WHERE e.Schueler_ID = ?1 AND e.Fach_ID IN ?2",
 							DTOGostSchuelerFachbelegungen.class, dtoSchueler.ID, alle);
 			final Map<Long, DTOGostSchuelerFachbelegungen> mapFachwahlen = fachwahlen.stream().collect(Collectors.toMap(f -> f.Fach_ID, f -> f));
-			for (final Long idFach : beide) {
-				final AbiturFachbelegung db = dbBelegungen.get(idFach);
-				final GostLaufbahnplanungDatenFachbelegung datei = dateiBelegungen.get(idFach);
-				final DTOGostSchuelerFachbelegungen fachwahl = mapFachwahlen.get(idFach);
-				for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
-					final String dbKursart = (db.belegungen[halbjahr.id] == null) ? null : db.belegungen[halbjahr.id].kursartKuerzel;
-					final boolean dbSchriftlich = (db.belegungen[halbjahr.id] != null) && db.belegungen[halbjahr.id].schriftlich;
-					final String dateiKursart = datei.kursart[halbjahr.id];
-					if (((dbKursart == null) && (dateiKursart == null)) || ((dbKursart != null) && (dateiKursart != null)
-							&& (dbKursart.equals(dateiKursart)) && (dbSchriftlich == datei.schriftlich[halbjahr.id])))
-						continue;
-					final String kursart = (dateiKursart == null) ? null
-							: ("AT".equals(dateiKursart) ? "AT"
-									: (GostKursart.LK.kuerzel.equals(dateiKursart) ? "LK"
-											: (GostKursart.ZK.kuerzel.equals(dateiKursart) ? "ZK"
-													: (GostKursart.PJK.kuerzel.equals(dateiKursart) ? "M"
-															: (GostKursart.VTF.kuerzel.equals(dateiKursart) ? "M"
-																	: (datei.schriftlich[halbjahr.id] ? "S" : "M"))))));
-					switch (halbjahr) {
-						case EF1 -> fachwahl.EF1_Kursart = kursart;
-						case EF2 -> fachwahl.EF2_Kursart = kursart;
-						case Q11 -> fachwahl.Q11_Kursart = kursart;
-						case Q12 -> fachwahl.Q12_Kursart = kursart;
-						case Q21 -> fachwahl.Q21_Kursart = kursart;
-						case Q22 -> fachwahl.Q22_Kursart = kursart;
-					}
-				}
-				fachwahl.AbiturFach = datei.abiturFach;
-				fachwahlenGeaendert.add(fachwahl);
-			}
-			for (final Long idFach : nurDatei) {
+			for (final Long idFach : Stream.concat(beide.stream(), nurDatei.stream()).collect(Collectors.toSet())) {
 				final GostLaufbahnplanungDatenFachbelegung datei = dateiBelegungen.get(idFach);
 				DTOGostSchuelerFachbelegungen fachwahl = mapFachwahlen.get(idFach);
+				// Ergänze ggf. Fachwahl-Einträge, welche zwar durch Leistungsdaten bestehen, aber nicht wirklich in der DB abgelegt sind.
 				if (fachwahl == null)
 					fachwahl = new DTOGostSchuelerFachbelegungen(dtoSchueler.ID, idFach);
 				for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
@@ -797,6 +767,9 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 				final DTOGostSchuelerFachbelegungen fachwahl = mapFachwahlen.get(idFach);
 				conn.transactionRemove(fachwahl);
 			}
+			// Und setzen des Rücklaufdatums
+			gostSchueler.DatumRuecklauf = DateTimeFormatter.ISO_DATE.format(LocalDate.now(ZoneId.of("Europe/Berlin")));
+			conn.transactionPersist(gostSchueler);
 		} else {
 			logger.logLn("Keine Änderungen für den Schüler mit der ID " + dtoSchueler.ID + " gegenüber der Datenbank in der Datei enthalten.");
 		}
@@ -961,6 +934,9 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final int schuljahr = abiturjahr - 1;
 		final List<DTOSchueler> listSchuelerDTOs = (new DataGostJahrgangSchuelerliste(conn, abiturjahr)).getSchuelerDTOs();
+		final List<Long> listSchuelerIDs = listSchuelerDTOs.stream().map(s -> s.ID).toList();
+		final Map<Long, DTOGostSchueler> mapGostSchuelerDTOs = conn.queryByKeyList(DTOGostSchueler.class, listSchuelerIDs)
+				.stream().collect(Collectors.toMap(s -> s.Schueler_ID, s -> s));
 
 		// Erstelle das DTO für die Eregbnisrückmeldung
 		final List<GostBelegpruefungsErgebnisse> daten = new ArrayList<>();
@@ -984,6 +960,9 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 			// Bestimme die Laufbahndaten des Schülers
 			final Abiturdaten abidaten = DBUtilsGostLaufbahn.get(conn, dtoSchueler.ID);
 
+			// Bestimme die Beratungsdaten des Schülers
+			final DTOGostSchueler gostSchueler = mapGostSchuelerDTOs.get(dtoSchueler.ID);
+
 			// Erzeuge das Ergebnis-DTO für die Rückgabe
 			final GostBelegpruefungsErgebnisse ergebnisse = new GostBelegpruefungsErgebnisse();
 
@@ -992,6 +971,8 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 					new AbiturdatenManager(SVWSKonfiguration.get().getServerMode(), abidaten, jahrgangsdaten, faecherManager, pruefungsArt);
 			ergebnisse.ergebnis = abiManager.getBelegpruefungErgebnis();
 			ergebnisse.hatFachwahlen = abiManager.existsFachbelegung();
+			ergebnisse.beratungsDatum = (gostSchueler == null) ? null : gostSchueler.DatumBeratung;
+			ergebnisse.ruecklaufDatum = (gostSchueler == null) ? null : gostSchueler.DatumRuecklauf;
 
 			// F+lle das zugehörige Schüler-DTO
 			ergebnisse.schueler.id = dtoSchueler.ID;
@@ -1086,11 +1067,90 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 		final Abiturdaten abidaten = DBUtilsGostLaufbahn.get(conn, idSchueler);
 		for (final GostHalbjahr hj : GostHalbjahr.values())
 			if (abidaten.bewertetesHalbjahr[hj.id])
-				throw new ApiOperationException(Status.CONFLICT, "Die Fachwahlen können nicht vollständig gelöscht werden, da bereits bewertete Abschnitt vorliegen.");
+				throw new ApiOperationException(Status.CONFLICT,
+						"Die Fachwahlen können nicht vollständig gelöscht werden, da bereits bewertete Abschnitt vorliegen.");
 		final List<DTOGostSchuelerFachbelegungen> fachwahlen = conn.queryList(DTOGostSchuelerFachbelegungen.QUERY_BY_SCHUELER_ID,
 				DTOGostSchuelerFachbelegungen.class, idSchueler);
 		for (final DTOGostSchuelerFachbelegungen fw : fachwahlen)
 			conn.transactionRemove(fw);
+		return Response.status(Status.NO_CONTENT).build();
+	}
+
+
+	/**
+	 * Löscht die Fachwahlen für die angegebenen Schüler. Liegen bereits bewertete
+	 * Halbjahre vor, so werden nur die Informationen nach dem letzten bewerteten
+	 * Halbjahr gelöscht. Dabei werden die Informationen zum Abitur, wie dem Abiturfach,
+	 * der Q22 zugerechnet.
+	 *
+	 * @param idsSchueler   die IDs der Schüler
+	 *
+	 * @return Die HTTP-Response der Operation
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public Response deleteMultiple(final @NotNull List<Long> idsSchueler) throws ApiOperationException {
+		// Bestimme die aktuellen Abiturdaten zu den Schülern mit den angegebenen IDs
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		final @NotNull Map<Long, Abiturdaten> mapAbidaten = DBUtilsGostLaufbahn.getFromIDs(conn, idsSchueler);
+		// Bestimme alle zugehörigen Fachbelegungseinträge aus der Datenbank
+		final @NotNull Map<Long, List<DTOGostSchuelerFachbelegungen>> mapFachwahlen = conn.queryList(DTOGostSchuelerFachbelegungen.QUERY_LIST_BY_SCHUELER_ID,
+				DTOGostSchuelerFachbelegungen.class, idsSchueler).stream().collect(Collectors.groupingBy(b -> b.Schueler_ID));
+		for (final long idSchueler : idsSchueler) {
+			final Abiturdaten abidaten = mapAbidaten.get(idSchueler);
+			if (abidaten == null)
+				throw new ApiOperationException(Status.NOT_FOUND,
+						"Die Abiturdaten für den Schüler mit der ID %d konnten nicht bestimmt werden.".formatted(idSchueler));
+			final List<DTOGostSchuelerFachbelegungen> fachwahlen = mapFachwahlen.get(idSchueler);
+			if (fachwahlen == null)
+				continue;
+			// Prüfe, bis zu welchem Halbjahr es Bewertungen gibt
+			GostHalbjahr halbjahr = null;
+			for (final @NotNull GostHalbjahr tmpHalbjahr : GostHalbjahr.values())
+				if (abidaten.bewertetesHalbjahr[tmpHalbjahr.id])
+					halbjahr = tmpHalbjahr;
+			// Wenn es keine Bewertung gibt, dann können einfach alle Fachwahlen des Schülers komplett gelöscht werden
+			if (halbjahr == null) {
+				conn.transactionRemoveAll(fachwahlen);
+				continue;
+			}
+			// Wenn auch die Q22 bewertet ist, dann muss nichts gelöscht werden
+			if (halbjahr == GostHalbjahr.Q22)
+				continue;
+			// Die Fachwahlen müssen einzeln bearbeitet werden ...
+			for (final @NotNull DTOGostSchuelerFachbelegungen fachwahl : fachwahlen) {
+				if (halbjahr.compareTo(GostHalbjahr.EF2) < 0) {
+					fachwahl.EF2_Kursart = null;
+					fachwahl.EF2_Punkte = null;
+				}
+				if (halbjahr.compareTo(GostHalbjahr.Q11) < 0) {
+					fachwahl.Q11_Kursart = null;
+					fachwahl.Q11_Punkte = null;
+					fachwahl.Markiert_Q1 = false;
+				}
+				if (halbjahr.compareTo(GostHalbjahr.Q12) < 0) {
+					fachwahl.Q12_Kursart = null;
+					fachwahl.Q12_Punkte = null;
+					fachwahl.Markiert_Q2 = false;
+				}
+				if (halbjahr.compareTo(GostHalbjahr.Q21) < 0) {
+					fachwahl.Q21_Kursart = null;
+					fachwahl.Q21_Punkte = null;
+					fachwahl.Markiert_Q3 = false;
+				}
+				if (halbjahr.compareTo(GostHalbjahr.Q22) < 0) {
+					fachwahl.Q22_Kursart = null;
+					fachwahl.Q22_Punkte = null;
+					fachwahl.Markiert_Q4 = false;
+					fachwahl.AbiturFach = null;
+					fachwahl.Bemerkungen = null;
+					fachwahl.ergebnisAbiturpruefung = null;
+					fachwahl.ergebnisMuendlichePruefung = null;
+					fachwahl.hatMuendlichePflichtpruefung = null;
+				}
+				conn.transactionPersist(fachwahl);
+			}
+		}
 		return Response.status(Status.NO_CONTENT).build();
 	}
 

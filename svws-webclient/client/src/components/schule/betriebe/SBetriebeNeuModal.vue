@@ -9,9 +9,9 @@
 					<svws-ui-text-input placeholder="Name" v-model="betrieb.name1" type="text" />
 					<svws-ui-select title="Beschäftigungsart" v-model="beschaeftigungsart" :items="mapBeschaeftigungsarten" :item-text="i => i.text ?? ''" />
 					<svws-ui-text-input placeholder="Namensergänzung" v-model="betrieb.name2" type="text" />
-					<svws-ui-text-input placeholder="1. Telefon-Nr." v-model="betrieb.telefon1" type="text" />
-					<svws-ui-text-input placeholder="2. Telefon-Nr." v-model="betrieb.telefon2" type="text" />
-					<svws-ui-text-input placeholder="Fax-Nr." v-model="betrieb.fax" type="text" />
+					<svws-ui-text-input placeholder="1. Telefon-Nr." v-model="betrieb.telefon1" type="text" :max-len="20" />
+					<svws-ui-text-input placeholder="2. Telefon-Nr." v-model="betrieb.telefon2" type="text" :max-len="20" />
+					<svws-ui-text-input placeholder="Fax-Nr." v-model="betrieb.fax" type="text" :max-len="20" />
 					<svws-ui-text-input placeholder="E-Mail Adresse" v-model="betrieb.email" type="email" verify-email />
 					<svws-ui-text-input placeholder="Branche" v-model="betrieb.branche" title="Branche" type="text" />
 				</div>
@@ -78,7 +78,7 @@
 
 	const inputWohnortID = computed<OrtKatalogEintrag | null>({
 		get: () => (betrieb.value.ort_id !== null) ? props.mapOrte.get(betrieb.value.ort_id) ?? null : null,
-		set: (val) =>	betrieb.value.ort_id = (val !== null) ? val.id : null
+		set: (val) =>	betrieb.value.ort_id = (val !== null) ? val.id : null,
 	});
 
 	const openModal = () => {

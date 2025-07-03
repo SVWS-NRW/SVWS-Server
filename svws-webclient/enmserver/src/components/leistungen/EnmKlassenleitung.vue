@@ -22,7 +22,7 @@
 	import { computed, ref, watchEffect } from 'vue';
 	import type { BemerkungenHauptgruppe } from './EnmManager';
 	import type { EnmKlassenleitungProps } from './EnmKlassenleitungProps';
-	import type { ENMLeistungBemerkungen } from '@core/index';
+	import type { ENMLeistungBemerkungen } from '@core/core/data/enm/ENMLeistungBemerkungen';
 
 	const props = defineProps<EnmKlassenleitungProps>();
 
@@ -40,9 +40,9 @@
 	})
 
 	watchEffect(() => {
-		if (props.manager.klassenAuswahlGetSchueler().contains(props.manager.auswahlSchueler))
+		if (props.manager.klasseAuswahlGetSchueler().contains(props.manager.auswahlSchueler))
 			return;
-		props.manager.auswahlSchuelerNaechster();
+		props.manager.schuelerNext();
 	})
 
 	async function doPatchBemerkungen(bemerkung: string|null) {

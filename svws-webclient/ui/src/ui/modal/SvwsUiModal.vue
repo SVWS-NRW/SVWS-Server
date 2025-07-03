@@ -21,7 +21,7 @@
 					}">
 					<div class="modal--titlebar">
 						<DialogTitle class="modal--title inline-flex items-center gap-1">
-							<span class="icon i-ri-alert-fill icon-ui-danger inline-block" v-if="type === 'danger'" />
+							<span class="icon i-ri-alert-fill icon-ui-danger" v-if="type === 'danger'" />
 							<slot name="modalTitle" />
 						</DialogTitle>
 						<svws-ui-tooltip v-if="$slots.hilfe" autosize>

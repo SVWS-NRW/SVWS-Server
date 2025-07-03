@@ -8,7 +8,7 @@
 				<template #default>
 					<template v-for="item in menu.main" :key="item.name">
 						<svws-ui-menu-item :active="menu.mainEntry.name === item.name" @click="startSetApp(item)">
-							<template #icon><span class="inline-block icon-lg" :class="getIcon(item)" /></template>
+							<template #icon><span class="icon-lg" :class="getIcon(item)" /></template>
 							<template #label><span class="text-xs"> {{ item.text }}</span> </template>
 						</svws-ui-menu-item>
 					</template>
@@ -16,13 +16,13 @@
 				<template #footer>
 					<template v-if="menu.einstellungen !== null">
 						<svws-ui-menu-item :active="menu.mainEntry.name === menu.einstellungen.name" @click="startSetApp(menu.einstellungen)">
-							<template #icon><span class="inline-block icon-lg" :class="getIcon(menu.einstellungen)" /></template>
+							<template #icon><span class="icon-lg" :class="getIcon(menu.einstellungen)" /></template>
 							<template #label><span class="text-xs"> {{ menu.einstellungen.text }}</span> </template>
 						</svws-ui-menu-item>
 					</template>
 					<svws-ui-menu-item subline="" @click="doLogout">
 						<template #label>Abmelden</template>
-						<template #icon><span class="icon-lg i-ri-logout-circle-line inline-block" /></template>
+						<template #icon><span class="icon-lg i-ri-logout-circle-line" /></template>
 					</svws-ui-menu-item>
 				</template>
 				<template #version>

@@ -73,7 +73,8 @@ public class Tabelle_Klassen extends SchemaTabelle {
 	public SchemaTabelleSpalte col_Sichtbar = add("Sichtbar", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 			.setDefault("+")
 			.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
-			.setJavaComment("Gibt an ob eine Klasse sichtbar ist");
+			.setJavaComment("DEPRECATED: Gibt an ob eine Klasse sichtbar ist")
+			.setVeraltet(SchemaRevisionen.REV_39);
 
 	/** Die Definition der Tabellenspalte Sortierung */
 	public SchemaTabelleSpalte col_Sortierung = add("Sortierung", SchemaDatentypen.INT, false)

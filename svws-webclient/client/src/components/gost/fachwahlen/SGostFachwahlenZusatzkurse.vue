@@ -51,14 +51,13 @@
 
 <script setup lang="ts">
 
-	import type { GostFachwahlenZusatzkurseProps } from "./SGostFachwahlenZusatzkurseProps";
-	import type { ComputedRef} from "vue";
 	import { computed, ref } from "vue";
+	import type { GostFachwahlenZusatzkurseProps } from "./SGostFachwahlenZusatzkurseProps";
 	import { Fach, type GostStatistikFachwahl, type SchuelerListeEintrag, type List, ArrayList, GostHalbjahr } from "@core";
 
 	const props = defineProps<GostFachwahlenZusatzkurseProps>();
 
-	const fachwahlenstatistik: ComputedRef<GostStatistikFachwahl[]> = computed(() => {
+	const fachwahlenstatistik = computed<GostStatistikFachwahl[]>(() => {
 		const result = new Array<GostStatistikFachwahl>();
 		for (const fws of props.fachwahlstatistik)
 			if (hatZusatzkurs(fws))
@@ -71,7 +70,7 @@
 	}
 
 	const aktuell = ref<Auswahl>({
-		fachwahl: undefined, // fachwahlenstatistik.value.length === 0 ? undefined : fachwahlenstatistik.value.at(0)
+		fachwahl: undefined,
 	});
 
 	function onClick(fws : GostStatistikFachwahl): void {

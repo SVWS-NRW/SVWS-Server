@@ -704,7 +704,7 @@ OP_Schulformen;OP_POKrz;OP_Krz;OP_Abgangsart_B;OP_Abgangsart_NB;OP_Art;OP_Typ;OP
 -GY-SG-;APO-GOSt(C)10/G9;GY/APO-GOStG9/MSA_OV;F;null;A;null;A;MSA: Mittlerer Schulabschluss (Fachoberschulreife ohne Versetzungsvermerk);null;-10-;null;-***-GY8-GY9- ;0;null;null
 -GY-SG-;APO-GOSt(C)10/G9;GY/APO-GOStG9/V12;G;null;V;null;A;Versetzung in die Qualifikationsphase;null;-11-;null;-***-GY8-GY9- ;1;null;null
 -GY-SG-;GY/APO-SI05/5-10;GY/APO-SI05/AGZ_OHSA10;C;null;A;null;A;Abgangszeugnis ohne Gleichstellung zum Hauptschulabschluss nach Kl. 10;null;-10-;null;-***-GY9-;0;null;null
--GY-SG-;GY/APO-SI05/5-10;GY/APO-SI05/VSZ9;E;null;A;null;A;Versetzungszeugnis der Klasse 9 mit Berechtigung zum Besuch der Einführungsphase (G8);null;-09-;null;-GY8- ;3;null;null
+-GY-SG-;GY/APO-SI05/5-10;GY/APO-SI05/VSZ9;E;null;A;null;A;Versetzungszeugnis der Klasse 9 mit Berechtigung zum Besuch der Einführungsphase (G8);null;-09-;null;-GY8- ;0;null;null
 -GY-SG-;APO-GOSt01/11-13;GY/APO-GOSt01/ABI;K;null;A;ABI;A;AHR: Zuerkennung der allgemeinen Hochschulreife, APO-GOSt 01 §39;§39;-13-;null;-***-GY8-GY9- ;1;null;null
 -GY-SG-;APO-GOSt(B)10/G8;GY/APO-GOStG8/FHR;H;null;A;FHR;A;FHRst: Fachhochschulreife (schulischer Teil);null;-Q1-;null;-***-GY8-GY9- ;0;null;null
 -GY-SG-;APO-GOSt(C)10/G9;GY/APO-GOStG9/AGZ_MEESA;D;null;A;null;A;Abgangszeugnis mit Gleichstellung zum Erweiterten Ersten Schulabschluss;null;-10-;null;-***-GY8-GY9- ;0;null;null

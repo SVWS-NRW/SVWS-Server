@@ -3,7 +3,8 @@
 		<template #modalTitle>Lehramt hinzufügen</template>
 		<template #modalContent>
 			<svws-ui-input-wrapper>
-				<svws-ui-select title="Lehramt" v-model="lehramt" :items="LehrerLehramt.data().getWerteBySchuljahr(schuljahr)" :item-text="i => i.daten(schuljahr)?.text ?? '—'" headless />
+				<svws-ui-select title="Lehramt" v-model="lehramt" :items="LehrerLehramt.data().getWerteBySchuljahr(schuljahr)"
+					:item-text="i => i.daten(schuljahr)?.text ?? '—'" statistics />
 			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>

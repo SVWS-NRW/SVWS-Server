@@ -41,7 +41,7 @@
 	const selected = ref<LehrerLehrbefaehigungEintrag[]>([]);
 
 	const columns = [
-		{key: 'lehrbefaehigung', label: 'Lehrbefähigung', span: 1 },
+		{key: 'lehrbefaehigung', label: 'Lehrbefähigung', span: 1, statistic: true },
 		{key: 'anerkennung', label: 'Anerkennungsgrund', span: 1 },
 	]
 
