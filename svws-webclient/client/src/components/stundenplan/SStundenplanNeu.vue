@@ -16,7 +16,7 @@
 
 			<div class="mt-7 flex flex-row gap-4 justify-end">
 				<svws-ui-button type="secondary" @click="cancel" :disabled="isLoading">Abbrechen</svws-ui-button>
-				<svws-ui-button @click="addStundenplan" :disabled="!isValid || isLoading">
+				<svws-ui-button @click="addStundenplan" :disabled="!validateAll || isLoading">
 					Speichern <svws-ui-spinner :spinning="isLoading" />
 				</svws-ui-button>
 			</div>
@@ -28,13 +28,12 @@
 <script setup lang="ts">
 
 	import { StundenplanListeManager, DateUtils, type Stundenplan, DeveloperNotificationException, ValidatorFehlerart } from "@core";
-	import { ref, onMounted, watch } from "vue";
+	import { ref, onMounted, watch, computed } from "vue";
 	import type { StundenplanNeuProps } from "~/components/stundenplan/SStundenplanNeuProps";
 
 	const props = defineProps<StundenplanNeuProps>();
 
 	const isLoading = ref<boolean>(false);
-	const isValid = ref<boolean>(false);
 
 	type PartialExcept<T, K extends keyof T> = Partial<T> & Required<Pick<T, K>>;
 
@@ -56,7 +55,6 @@
 				return;
 
 			props.checkpoint.active = true;
-			validateAll();
 		}, { immediate: false, deep: true });
 
 		data.value = {
@@ -69,10 +67,13 @@
 
 	})
 
-	const validateBezeichnung = (bezeichnung: string | null ): boolean => StundenplanListeManager.validateBezeichnung(bezeichnung);
-	const validateGueltigkeit = () => (DateUtils.isValidDate(data.value.gueltigAb) && DateUtils.isValidDate(data.value.gueltigBis) && (data.value.aktiv === false || props.manager().istKonfliktfreiZuAktivenStundenplaenen(data.value.gueltigAb, data.value.gueltigBis)));
-
-	const validateAll = () => isValid.value = validateBezeichnung(data.value.bezeichnungStundenplan) && validateGueltigkeit();
+	const validateAll = computed(() =>
+		StundenplanListeManager.validateBezeichnung(data.value.bezeichnungStundenplan)
+		&& (DateUtils.isValidDate(data.value.gueltigAb)
+			&& DateUtils.isValidDate(data.value.gueltigBis)
+			&& props.manager().validateGueltigAb(data.value.gueltigAb, data.value.gueltigBis, data.value.aktiv,props. manager().validateGueltigBis(data.value.gueltigAb, data.value.gueltigAb, data.value.aktiv))
+			&& props.manager().validateGueltigBis(data.value.gueltigAb, data.value.gueltigBis, data.value.aktiv)
+			&& (data.value.aktiv === false || props.manager().istKonfliktfreiZuAktivenStundenplaenen(data.value.gueltigAb, data.value.gueltigBis))));
 
 	async function cancel() {
 		props.checkpoint.active = false;
