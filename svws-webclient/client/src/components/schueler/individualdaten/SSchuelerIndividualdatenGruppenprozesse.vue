@@ -320,8 +320,8 @@
 		optionDisplayText: selected => selected.text ?? '', selectionDisplayText: selected => selected.text ?? '',
 	});
 	const haltestelleSelectManager = new BaseSelectManager({
-		options: haltestellen.value, removable: false, optionDisplayText: selected => selected.text ?? '',
-		selectionDisplayText: selected => selected.text ?? '',
+		options: haltestellen.value, removable: false, optionDisplayText: selected => selected.bezeichnung ?? '',
+		selectionDisplayText: selected => selected.bezeichnung ?? '',
 	});
 	const stammschuleSelectManager = new BaseSelectManager({
 		options: schulen.value,

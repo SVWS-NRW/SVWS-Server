@@ -1,76 +1,111 @@
 package de.svws_nrw.data.kataloge;
 
-import java.io.InputStream;
-import java.util.List;
-import java.util.function.Function;
-
-import de.svws_nrw.core.data.kataloge.KatalogEintrag;
-import de.svws_nrw.data.DataManager;
+import de.svws_nrw.core.data.schule.Haltestelle;
+import de.svws_nrw.data.DataManagerRevised;
+import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOHaltestellen;
+import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
- * Diese Klasse erweitert den abstrakten {@link DataManager} für den
- * Core-DTO {@link KatalogEintrag}.
+ * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für das Core-DTO {@link Haltestelle}.
  */
-public final class DataHaltestellen extends DataManager<Long> {
+public final class DataHaltestellen extends DataManagerRevised<Long, DTOHaltestellen, Haltestelle> {
 
 	/**
-	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link KatalogEintrag}.
+	 * Erstellt einen neuen {@link DataManagerRevised} für das Core-DTO {@link Haltestelle}.
 	 *
 	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
 	 */
 	public DataHaltestellen(final DBEntityManager conn) {
 		super(conn);
-	}
-
-	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOHaltestellen} in einen Core-DTO {@link KatalogEintrag}.
-	 */
-	private final Function<DTOHaltestellen, KatalogEintrag> dtoMapper = (final DTOHaltestellen k) -> {
-		final KatalogEintrag daten = new KatalogEintrag();
-		daten.id = k.ID;
-		daten.kuerzel = "" + k.ID;
-		daten.text = k.Bezeichnung;
-		daten.istSichtbar = true;
-		daten.istAenderbar = true;
-		return daten;
-	};
-
-	@Override
-	public Response getAll() throws ApiOperationException {
-		final List<DTOHaltestellen> katalog = conn.queryAll(DTOHaltestellen.class);
-		if (katalog == null)
-			throw new ApiOperationException(Status.NOT_FOUND);
-		final List<KatalogEintrag> daten = katalog.stream().map(dtoMapper).sorted((a, b) -> {
-			if ((a.text == null) && (b.text == null))
-				return 0;
-			if (a.text == null)
-				return -1;
-			if (b.text == null)
-				return 1;
-			return a.text.compareTo(b.text);
-		}).toList();
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		setAttributesNotPatchable("id");
+		setAttributesRequiredOnCreation("bezeichnung");
 	}
 
 	@Override
-	public Response getList() throws ApiOperationException {
-		return this.getAll();
+	protected void initDTO(final DTOHaltestellen dto, final Long newID, final Map<String, Object> initAttributes) {
+		dto.ID = newID;
 	}
 
 	@Override
-	public Response get(final Long id) {
-		throw new UnsupportedOperationException();
+	protected long getLongId(final DTOHaltestellen dto) {
+		return dto.ID;
 	}
 
 	@Override
-	public Response patch(final Long id, final InputStream is) {
-		throw new UnsupportedOperationException();
+	public Haltestelle getById(final Long id) throws ApiOperationException {
+		if (id == null)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für die Haltestelle darf nicht null sein.");
+
+		final DTOHaltestellen dto = conn.queryByKey(DTOHaltestellen.class, id);
+		if (dto == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine Haltestelle mit der ID %d gefunden.".formatted(id));
+
+		return map(dto);
 	}
 
+	@Override
+	public List<Haltestelle> getAll() {
+		final List<DTOHaltestellen> haltestellen = this.conn.queryAll(DTOHaltestellen.class);
+		return haltestellen.stream().map(this::map).toList();
+	}
+
+	@Override
+	protected Haltestelle map(final DTOHaltestellen dto) {
+		final Haltestelle haltestelle = new Haltestelle();
+		haltestelle.id = dto.ID;
+		haltestelle.bezeichnung = dto.Bezeichnung;
+		haltestelle.entfernungSchule = dto.EntfernungSchule;
+		haltestelle.istSichtbar = (dto.Sichtbar == null) || dto.Sichtbar;
+		haltestelle.istAenderbar = (dto.Aenderbar == null) || dto.Aenderbar;
+		haltestelle.sortierung = (dto.Sortierung == null) ? -1 : dto.Sortierung;
+		return haltestelle;
+	}
+
+	@Override
+	protected void mapAttribute(final DTOHaltestellen dto, final String name, final Object value, final Map<String, Object> map)
+			throws ApiOperationException {
+		switch (name) {
+			case "id" -> {
+				final Long id = JSONMapper.convertToLong(value, false, name);
+				if (!Objects.equals(dto.ID, id))
+					throw new ApiOperationException(Status.BAD_REQUEST,
+							"Die ID %d des Patches ist null oder stimmt nicht mit der ID %d in der Datenbank überein.".formatted(id, dto.ID));
+			}
+			case "bezeichnung" -> updateBezeichnung(dto, value, name);
+			case "entfernungSchule" -> dto.EntfernungSchule = JSONMapper.convertToDouble(value, true, name);
+			case "istSichtbar" -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false, name);
+			case "istAenderbar" -> dto.Aenderbar = JSONMapper.convertToBoolean(value, false, name);
+			case "sortierung" -> dto.Sortierung = JSONMapper.convertToInteger(value, false, name);
+			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));
+		}
+	}
+
+	private void updateBezeichnung(final DTOHaltestellen dto, final Object value, final String name) throws ApiOperationException {
+		final String bezeichnung = JSONMapper.convertToString(value, false, false, Schema.tab_K_Haltestelle.col_Bezeichnung.datenlaenge(), name);
+		//Bezeichnung ist unverändert
+		if ((dto.Bezeichnung != null) && !dto.Bezeichnung.isBlank() && dto.Bezeichnung.equals(bezeichnung))
+			return;
+
+		//theoretischer Fall, der nicht eintreffen sollte
+		final List<DTOHaltestellen> haltestellen = this.conn.queryList(DTOHaltestellen.QUERY_BY_BEZEICHNUNG, DTOHaltestellen.class, bezeichnung);
+		if (haltestellen.size() > 1)
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Mehr als eine Haltestelle mit der gleichen Bezeichnung vorhanden.");
+
+		//Haltestelle mit dieser Bezeichnung bereits vorhanden
+		if (!haltestellen.isEmpty()) {
+			final DTOHaltestellen dtoHaltestelle = haltestellen.getFirst();
+			if ((dtoHaltestelle != null) && (dtoHaltestelle.ID != dto.ID))
+				throw new ApiOperationException(Status.BAD_REQUEST, "Die Bezeichnung %s ist bereits vorhanden.".formatted(bezeichnung));
+		}
+
+		//Bezeichnung wird geändert
+		dto.Bezeichnung = bezeichnung;
+	}
 }

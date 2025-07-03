@@ -87,6 +87,7 @@ import { GostSchuelerFachwahl } from '../core/data/gost/GostSchuelerFachwahl';
 import { GostSchuelerklausur } from '../core/data/gost/klausurplanung/GostSchuelerklausur';
 import { GostSchuelerklausurTermin } from '../core/data/gost/klausurplanung/GostSchuelerklausurTermin';
 import { GostStatistikFachwahl } from '../core/data/gost/GostStatistikFachwahl';
+import { Haltestelle } from '../core/data/schule/Haltestelle';
 import { HerkunftKatalogEintrag } from '../core/data/schule/HerkunftKatalogEintrag';
 import { HerkunftsartKatalogEintrag } from '../core/data/schule/HerkunftsartKatalogEintrag';
 import { HerkunftsschulnummerKatalogEintrag } from '../core/data/schule/HerkunftsschulnummerKatalogEintrag';
@@ -7599,26 +7600,109 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der GET-Methode getHaltestellen für den Zugriff auf die URL https://{hostname}/db/{schema}/haltestellen
 	 *
-	 * Erstellt eine Liste aller in dem Katalog vorhanden Haltestellen unter Angabe der ID, eines Kürzels und der textuellen Beschreibung sowie der Information, ob der Eintrag in der Anwendung sichtbar bzw. änderbar sein soll, und gibt diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * Gibt die Haltestellen zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Eine Liste von Katalog-Einträgen zu den Haltestellen.
+	 *   Code 200: Eine Liste der Haltestellen.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<KatalogEintrag>
+	 *     - Rückgabe-Typ: List<Haltestelle>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Katalog-Einträge gefunden
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
-	 * @returns Eine Liste von Katalog-Einträgen zu den Haltestellen.
+	 * @returns Eine Liste der Haltestellen.
 	 */
-	public async getHaltestellen(schema : string) : Promise<List<KatalogEintrag>> {
+	public async getHaltestellen(schema : string) : Promise<List<Haltestelle>> {
 		const path = "/db/{schema}/haltestellen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<KatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KatalogEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<Haltestelle>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Haltestelle.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchHaltestelle für den Zugriff auf die URL https://{hostname}/db/{schema}/haltestellen/{id : \d+}
+	 *
+	 * Patched die Haltestelle mit der angegebenen ID, insofern die notwendigen Berechtigungen vorliegen.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<Haltestelle>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchHaltestelle(data : Partial<Haltestelle>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/haltestellen/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = Haltestelle.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addHaltestelle für den Zugriff auf die URL https://{hostname}/db/{schema}/haltestellen/create
+	 *
+	 * Erstellt eine neue Haltestelle, insofern die notwendigen Berechtigungen vorliegen
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die Haltestelle wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Haltestelle
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Haltestellen anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<Haltestelle>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Haltestelle wurde erfolgreich hinzugefügt.
+	 */
+	public async addHaltestelle(data : Partial<Haltestelle>, schema : string) : Promise<Haltestelle> {
+		const path = "/db/{schema}/haltestellen/create"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = Haltestelle.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return Haltestelle.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteHaltestellen für den Zugriff auf die URL https://{hostname}/db/{schema}/haltestellen/delete/multiple
+	 *
+	 * Entfernt mehrere Haltestellen, insofern die notwendigen Berechtigungen vorhanden sind.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Lösch-Operationen wurden ausgeführt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Haltestellen zu entfernen.
+	 *   Code 404: Haltestellen nicht vorhanden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Lösch-Operationen wurden ausgeführt.
+	 */
+	public async deleteHaltestellen(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+		const path = "/db/{schema}/haltestellen/delete/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
 		return ret;
 	}
 

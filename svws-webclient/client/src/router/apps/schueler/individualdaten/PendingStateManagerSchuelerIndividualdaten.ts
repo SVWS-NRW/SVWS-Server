@@ -1,5 +1,5 @@
 import { PendingStateManager } from "@ui";
-import type { AuswahlManager, KatalogEintrag, ReligionEintrag, SchuelerStammdaten, SchulEintrag } from "@core";
+import type { AuswahlManager, Haltestelle, KatalogEintrag, ReligionEintrag, SchuelerStammdaten, SchulEintrag } from "@core";
 import { Nationalitaeten, SchuelerStatus, Verkehrssprache } from "@core";
 import { computed } from "vue";
 
@@ -22,7 +22,7 @@ export class PendingStateManagerSchuelerIndividualdaten extends PendingStateMana
 	/**
 	 * Maps, die Haltestellen-IDs zu entsprechenden Katalogeinträgen zuordnet.
 	 */
-	private readonly _mapHaltestellen: Map<number, KatalogEintrag>;
+	private readonly _mapHaltestellen: Map<number, Haltestelle>;
 
 	/**
 	 * Maps, die Fahrschülerarten zu entsprechenden Katalogeinträgen zuordnet.
@@ -39,7 +39,7 @@ export class PendingStateManagerSchuelerIndividualdaten extends PendingStateMana
 	 * @param mapFahrschuelerarten Map der Fahrschülerarten.
 	 */
 	public constructor(idFieldName: any, auswahlManager: () => AuswahlManager<any, any, SchuelerStammdaten>, mapReligionen: Map<number, ReligionEintrag>,
-		mapSchulen: Map<string, SchulEintrag>, mapHaltestellen: Map<number, KatalogEintrag>, mapFahrschuelerarten: Map<number, KatalogEintrag>) {
+		mapSchulen: Map<string, SchulEintrag>, mapHaltestellen: Map<number, Haltestelle>, mapFahrschuelerarten: Map<number, KatalogEintrag>) {
 		super(idFieldName, auswahlManager);
 		this._mapReligionen = mapReligionen;
 		this._mapSchulen = mapSchulen;
@@ -58,7 +58,7 @@ export class PendingStateManagerSchuelerIndividualdaten extends PendingStateMana
 		this._attributeDisplayMappers.set('staatsangehoerigkeit2ID', (value: any) => Nationalitaeten.getByISO3(value)?.daten(this.auswahlManager.getSchuljahr())?.bezeichnung);
 		this._attributeDisplayMappers.set('religionID', (value: any) => this._mapReligionen.get(Number(value))?.bezeichnung);
 		this._attributeDisplayMappers.set('fahrschuelerArtID', (value: any) => this._mapFahrschuelerarten.get(Number(value))?.text);
-		this._attributeDisplayMappers.set('haltestelleID', (value: any) => this._mapHaltestellen.get(Number(value))?.text);
+		this._attributeDisplayMappers.set('haltestelleID', (value: any) => this._mapHaltestellen.get(Number(value))?.bezeichnung);
 		this._attributeDisplayMappers.set('verkehrspracheFamilie', (value: any) => Verkehrssprache.getByIsoKuerzel(value)?.daten(this.auswahlManager.getSchuljahr())?.text);
 		this._attributeDisplayMappers.set('geburtsland', (value: any) => Nationalitaeten.data().getWertByKuerzel('' + value)?.daten(this.auswahlManager.getSchuljahr())?.text);
 		this._attributeDisplayMappers.set('geburtslandMutter', (value: any) => Nationalitaeten.data().getWertByKuerzel('' + value)?.daten(this.auswahlManager.getSchuljahr())?.text);
@@ -164,9 +164,9 @@ export class PendingStateManagerSchuelerIndividualdaten extends PendingStateMana
 	/**
 	 * Erzeugt das Attribut haltestelleID als computed value.
 	 */
-	public haltestelleID = this.genComputed<KatalogEintrag | null>('haltestelleID', null,
+	public haltestelleID = this.genComputed<Haltestelle | null>('haltestelleID', null,
 		(value: number | null | undefined) => ((value === null) || (value === undefined)) ? null : this._mapHaltestellen.get(value) ?? null,
-		(value: KatalogEintrag | null) => value?.id ?? null
+		(value: Haltestelle | null) => value?.id ?? null
 	);
 
 	/**

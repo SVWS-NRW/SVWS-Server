@@ -36,7 +36,7 @@
 				<svws-ui-select title="Fahrschüler" :readonly="!hatKompetenzUpdate" v-model="inputFahrschuelerArtID" :items="mapFahrschuelerarten"
 					:item-text="i => i.text ?? ''" removable />
 				<svws-ui-select title="Haltestelle" :readonly="!hatKompetenzUpdate" v-model="inputHaltestelleID" :items="mapHaltestellen"
-					:item-text="i => i.text ?? ''" removable />
+					:item-text="i => i.bezeichnung ?? ''" removable />
 				<svws-ui-text-input placeholder="Anmeldedatum" :readonly="!hatKompetenzUpdate" :model-value="data.anmeldedatum"
 					@change="anmeldedatum => patch({ anmeldedatum : anmeldedatum ?? null })" type="date" removable />
 				<svws-ui-text-input placeholder="Aufnahmedatum" :readonly="!hatKompetenzUpdate" :model-value="data.aufnahmedatum"
@@ -185,7 +185,7 @@
 
 	import { computed, ref } from "vue";
 	import type { SchuelerIndividualdatenProps } from "./SSchuelerIndividualdatenProps";
-	import type { SchuelerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, KatalogEintrag, SchulEintrag, TelefonArt } from "@core";
+	import type { SchuelerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, KatalogEintrag, SchulEintrag, TelefonArt, Haltestelle } from "@core";
 	import { SchuelerStatus, Schulform, Nationalitaeten, Geschlecht, AdressenUtils, Verkehrssprache, BenutzerKompetenz, DateUtils, SchuelerTelefon, ServerMode, ArrayList } from "@core";
 	import { verkehrsspracheKatalogEintragFilter, verkehrsspracheKatalogEintragSort, nationalitaetenKatalogEintragFilter, nationalitaetenKatalogEintragSort,
 		staatsangehoerigkeitKatalogEintragSort, staatsangehoerigkeitKatalogEintragFilter, orte_sort, orte_filter, ortsteilSort, ortsteilFilter } from "~/utils/helfer";
@@ -400,7 +400,7 @@
 		set: (value) => void props.patch({ fahrschuelerArtID: value === undefined ? null : value.id }),
 	});
 
-	const inputHaltestelleID = computed<KatalogEintrag | undefined>({
+	const inputHaltestelleID = computed<Haltestelle | undefined>({
 		get: () => {
 			const id = data.value.haltestelleID;
 			return id === null ? undefined : props.mapHaltestellen.get(id)

@@ -1,7 +1,6 @@
 package de.svws_nrw.api.server;
 
 import de.svws_nrw.core.data.SimpleOperationResponse;
-import de.svws_nrw.core.data.kataloge.KatalogEintrag;
 import de.svws_nrw.core.data.kataloge.KatalogEintragOrte;
 import de.svws_nrw.core.data.kataloge.KatalogEintragOrtsteile;
 import de.svws_nrw.core.data.kataloge.KatalogEintragStrassen;
@@ -9,6 +8,7 @@ import de.svws_nrw.core.data.kataloge.KatalogEntlassgrund;
 import de.svws_nrw.core.data.kataloge.OrtKatalogEintrag;
 import de.svws_nrw.core.data.kataloge.OrtsteilKatalogEintrag;
 import de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag;
+import de.svws_nrw.core.data.schule.Haltestelle;
 import de.svws_nrw.core.data.schule.Kindergarten;
 import de.svws_nrw.core.data.schule.Merkmal;
 import de.svws_nrw.core.data.schule.Sportbefreiung;
@@ -184,29 +184,6 @@ public class APIKataloge {
 				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
 	}
 
-
-	/**
-	 * Die OpenAPI-Methode für die Abfrage der Liste der Haltestellen im angegebenen Schema.
-	 *
-	 * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param request       die Informationen zur HTTP-Anfrage
-	 *
-	 * @return              die Liste der Haltestellen mit ID des Datenbankschemas
-	 */
-	@GET
-	@Path("/haltestellen")
-	@Operation(summary = "Gibt eine Übersicht der Haltestellen im Katalog zurück.",
-			description = "Erstellt eine Liste aller in dem Katalog vorhanden Haltestellen unter Angabe der ID, eines Kürzels und der textuellen Beschreibung "
-					+ "sowie der Information, ob der Eintrag in der Anwendung sichtbar bzw. änderbar sein soll, und gibt diese zurück. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
-	@ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen zu den Haltestellen.",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KatalogEintrag.class))))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
-	public Response getHaltestellen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataHaltestellen(conn).getList(),
-				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
-	}
 
 	/**
 	 * Die OpenAPI-Methode für die Abfrage der Liste der Entlassgruende.
@@ -746,4 +723,105 @@ public class APIKataloge {
 				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
 
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Liste der Haltestellen.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste der Haltestellen
+	 */
+	@GET
+	@Path("/haltestellen")
+	@Operation(summary = "Gibt eine Liste der Haltestellen im Katalog zurück.",
+			description = "Gibt die Haltestellen zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste der Haltestellen.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Haltestelle.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
+	public Response getHaltestellen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataHaltestellen(conn).getAllAsResponse(),
+				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Patchen einer Haltestelle.
+	 *
+	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param id        die Datenbank-ID zur Identifikation der Haltestelle
+	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/haltestellen/{id : \\d+}")
+	@Operation(summary = "Patched die Haltestelle mit der angegebenen ID.",
+			description = "Patched die Haltestelle mit der angegebenen ID, insofern die notwendigen Berechtigungen vorliegen.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Eintrag mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
+			+ " (z.B. eine negative ID)")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z. B. beim Datenbankzugriff)")
+	public Response patchHaltestelle(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@RequestBody(description = "Der Patch einer Haltestelle", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Haltestelle.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> new DataHaltestellen(conn).patchAsResponse(id, is), request, ServerMode.STABLE,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Hinzufügen einer Haltestelle.
+	 *
+	 * @param schema       das Datenbankschema
+	 * @param is           der Input-Stream mit den Daten der Haltestelle
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit der erstellten Haltestelle
+	 */
+	@POST
+	@Path("/haltestellen/create")
+	@Operation(summary = "Erstellt einer neue Haltestelle und gibt das erstellte Objekt zurück.",
+			description = "Erstellt eine neue Haltestelle, insofern die notwendigen Berechtigungen vorliegen")
+	@ApiResponse(responseCode = "201", description = "Die Haltestelle wurde erfolgreich hinzugefügt.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Haltestelle.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Haltestellen anzulegen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response addHaltestelle(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die Daten der zu erstellenden Haltestelle ohne ID, da diese automatisch generiert wird", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Haltestelle.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> new DataHaltestellen(conn).addAsResponse(is), request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Entfernen mehrerer Haltestellen.
+	 *
+	 * @param schema    das Datenbankschema
+	 * @param is        der InputStream, mit der Liste der zu löschenden IDs
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
+	 */
+	@DELETE
+	@Path("/haltestellen/delete/multiple")
+	@Operation(summary = "Entfernt mehrere Haltestellen.", description = "Entfernt mehrere Haltestellen, insofern die notwendigen Berechtigungen vorhanden sind.")
+	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Haltestellen zu entfernen.")
+	@ApiResponse(responseCode = "404", description = "Haltestellen nicht vorhanden")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteHaltestellen(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der zu löschenden Haltestellen",
+			required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+			array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
+				conn -> new DataHaltestellen(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
+	}
 }

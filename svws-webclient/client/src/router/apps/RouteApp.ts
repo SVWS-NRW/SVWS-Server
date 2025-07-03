@@ -50,6 +50,7 @@ import { routeNotenmodulLeistungen } from "./notenmodul/RouteNotenmodulLeistunge
 import { routeNotenmodulKlassenleitung } from "./notenmodul/RouteNotenmodulKlassenleitung";
 import { routeNotenmodulTeilleistungen } from "./notenmodul/RouteNotenmodulTeilleistungen";
 import { routeSportbefreiungen } from "~/router/apps/schule/sportbefreiungen/RouteSportbefreiungen";
+import { routeHaltestellen } from "~/router/apps/schule/haltestellen/RouteHaltestellen";
 import SApp from "~/components/SApp.vue";
 
 
@@ -147,11 +148,12 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeKatalogVermerkarten,
 			routeKatalogLernplattformen,
 			// Allgemein
+			routeKatalogErzieherarten,
+			routeHaltestellen,
 			routeKindergaerten,
 			routeKatalogReligionen,
 			routeKatalogSchulen,
 			routeKatalogTelefonArten,
-			routeKatalogErzieherarten,
 			// Datenaustausch
 			routeSchuleDatenaustauschENM,
 			routeSchuleDatenaustauschWenom,

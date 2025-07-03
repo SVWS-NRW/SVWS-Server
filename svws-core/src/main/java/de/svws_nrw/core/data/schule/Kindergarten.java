@@ -9,7 +9,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  * Die Klasse beschreibt den schulspezifischen Katalog der Kindergräten.
  */
 @XmlRootElement
-@Schema(description = "ein Eintrag in dem Katalog der schulspezifischen Kindergräten.")
+@Schema(description = "ein Eintrag in dem Katalog der schulspezifischen Kindergärten.")
 @TranspilerDTO
 public class Kindergarten {
 

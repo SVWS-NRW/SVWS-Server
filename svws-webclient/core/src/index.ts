@@ -586,6 +586,7 @@ export { BerufskollegFachklassenKatalogEintrag } from './core/data/schule/Berufs
 export { BerufskollegFachklassenKatalogIndex } from './core/data/schule/BerufskollegFachklassenKatalogIndex';
 export { Einwilligungsart } from './core/data/schule/Einwilligungsart';
 export { FoerderschwerpunktEintrag } from './core/data/schule/FoerderschwerpunktEintrag';
+export { Haltestelle } from './core/data/schule/Haltestelle';
 export { HerkunftKatalogEintrag } from './core/data/schule/HerkunftKatalogEintrag';
 export { HerkunftSchulformKatalogEintrag } from './core/data/schule/HerkunftSchulformKatalogEintrag';
 export { HerkunftSonstigeKatalogEintrag } from './core/data/schule/HerkunftSonstigeKatalogEintrag';
@@ -788,6 +789,7 @@ export { JahrgangsUtils } from './core/utils/jahrgang/JahrgangsUtils';
 export { AbteilungenListeManager } from './core/utils/kataloge/abteilungen/AbteilungenListeManager';
 export { EntlassgruendeListeManager } from './core/utils/kataloge/entlassgruende/EntlassgruendeListeManager';
 export { FoerderschwerpunkteListeManager } from './core/utils/kataloge/foerderschwerpunkte/FoerderschwerpunkteListeManager';
+export { HaltestellenListeManager } from './core/utils/kataloge/haltestellen/HaltestellenListeManager';
 export { KindergaertenListeManager } from './core/utils/kataloge/kindergaerten/KindergaertenListeManager';
 export { MerkmaleListeManager } from './core/utils/kataloge/merkmale/MerkmaleListeManager';
 export { SportbefreiungenListeManager } from './core/utils/kataloge/sportbefreiungen/SportbefreiungenListeManager';

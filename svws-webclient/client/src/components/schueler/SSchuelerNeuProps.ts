@@ -1,6 +1,7 @@
 import type { Checkpoint } from "@ui";
 import type { RoutingStatus } from "~/router/RoutingStatus";
-import type { SchuelerStammdaten, SchuelerListeManager, OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, KatalogEintrag, Kindergarten, EinschulungsartKatalogEintrag, Schuljahresabschnitt, Schulform, SchulEintrag, TelefonArt, List, SchuelerTelefon, SchuelerSchulbesuchsdaten, } from "@core";
+import type { SchuelerStammdaten, SchuelerListeManager, OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, KatalogEintrag, Kindergarten, EinschulungsartKatalogEintrag,
+	Schuljahresabschnitt, Schulform, SchulEintrag, TelefonArt, List, SchuelerTelefon, SchuelerSchulbesuchsdaten, Haltestelle } from "@core";
 
 export interface SchuelerNeuProps {
 	schuelerListeManager: () => SchuelerListeManager;
@@ -12,7 +13,7 @@ export interface SchuelerNeuProps {
 	mapOrtsteile: Map<number, OrtsteilKatalogEintrag>;
 	mapReligionen: Map<number, ReligionEintrag>;
 	mapFahrschuelerarten: Map<number, KatalogEintrag>;
-	mapHaltestellen: Map<number, KatalogEintrag>;
+	mapHaltestellen: Map<number, Haltestelle>;
 	mapKindergaerten: Map<number, Kindergarten>;
 	mapEinschulungsarten: Map<number, EinschulungsartKatalogEintrag>;
 	mapTelefonArten: Map<number, TelefonArt>;

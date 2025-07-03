@@ -99,7 +99,7 @@
 					:disabled="!data.hatMigrationshintergrund" removable />
 				<svws-ui-spacing />
 				<svws-ui-select title="Fahrschüler" :items="mapFahrschuelerarten" :item-text="i => i.text ?? ''" v-model="fahrschuelerart" removable />
-				<svws-ui-select title="Haltestelle" :items="mapHaltestellen" :item-text="i => i.text ?? ''" v-model="haltestelle" removable />
+				<svws-ui-select title="Haltestelle" :items="mapHaltestellen" :item-text="i => i.bezeichnung ?? ''" v-model="haltestelle" removable />
 				<svws-ui-text-input placeholder="Abmeldung vom Religionsunterricht" :model-value="data.religionabmeldung"
 					@change="religionabmeldung => patch({ religionabmeldung }, data.id)" type="date" />
 				<svws-ui-spacing />
@@ -200,7 +200,7 @@
 <script setup lang="ts">
 
 	import type { SchuelerNeuProps } from "~/components/schueler/SSchuelerNeuProps";
-	import type { KatalogEintrag, OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, SchulEintrag, TelefonArt } from "@core";
+	import type {Haltestelle, KatalogEintrag, OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, SchulEintrag, TelefonArt} from "@core";
 	import { AdressenUtils, ArrayList, Geschlecht, JavaString, Kindergartenbesuch, Nationalitaeten, SchuelerStammdaten, SchuelerStatus, SchuelerTelefon,
 		Schulform, Verkehrssprache, SchuelerSchulbesuchsdaten } from "@core";
 	import { nationalitaetenKatalogEintragFilter, nationalitaetenKatalogEintragSort, orte_filter, orte_sort, ortsteilSort, verkehrsspracheKatalogEintragSort,
@@ -317,7 +317,7 @@
 		set: (value) => void props.patch({ fahrschuelerArtID: value === undefined ? null : value.id }, data.value.id),
 	});
 
-	const haltestelle = computed<KatalogEintrag | undefined>({
+	const haltestelle = computed<Haltestelle | undefined>({
 		get: () => {
 			const id = data.value.haltestelleID;
 			return id === null ? undefined : props.mapHaltestellen.get(id)
