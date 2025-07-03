@@ -603,6 +603,7 @@ export { SchuleInfo } from './core/data/schule/SchuleInfo';
 export { SchulenKatalogEintrag } from './core/data/schule/SchulenKatalogEintrag';
 export { SchulformGliederungJahrgaenge } from './core/data/schule/SchulformGliederungJahrgaenge';
 export { SchultraegerKatalogEintrag } from './core/data/schule/SchultraegerKatalogEintrag';
+export { Sportbefreiung } from './core/data/schule/Sportbefreiung';
 export { TelefonArt } from './core/data/schule/TelefonArt';
 export { VermerkartEintrag } from './core/data/schule/VermerkartEintrag';
 export { WiedervorlageEintrag } from './core/data/schule/WiedervorlageEintrag';
@@ -789,6 +790,7 @@ export { EntlassgruendeListeManager } from './core/utils/kataloge/entlassgruende
 export { FoerderschwerpunkteListeManager } from './core/utils/kataloge/foerderschwerpunkte/FoerderschwerpunkteListeManager';
 export { KindergaertenListeManager } from './core/utils/kataloge/kindergaerten/KindergaertenListeManager';
 export { MerkmaleListeManager } from './core/utils/kataloge/merkmale/MerkmaleListeManager';
+export { SportbefreiungenListeManager } from './core/utils/kataloge/sportbefreiungen/SportbefreiungenListeManager';
 export { VermerkartenListeManager } from './core/utils/kataloge/vermerkart/VermerkartenListeManager';
 export { KlassenListeManager } from './core/utils/klassen/KlassenListeManager';
 export { KlassenUtils } from './core/utils/klassen/KlassenUtils';

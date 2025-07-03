@@ -45,11 +45,12 @@ import { routeEntlassgruende } from "~/router/apps/schule/entlassgruende/RouteEn
 import { routeMerkmale } from "~/router/apps/schule/merkmale/RouteMerkmale";
 import { routeKindergaerten } from "~/router/apps/schule/kindergaerten/RouteKindergaerten";
 import { routeFoerderschwerpunkte } from "~/router/apps/schule/foerderschwerpunkte/RouteFoerderschwerpunkte";
-import SApp from "~/components/SApp.vue";
 import { routeNotenmodul } from "./notenmodul/RouteNotenmodul";
 import { routeNotenmodulLeistungen } from "./notenmodul/RouteNotenmodulLeistungen";
 import { routeNotenmodulKlassenleitung } from "./notenmodul/RouteNotenmodulKlassenleitung";
 import { routeNotenmodulTeilleistungen } from "./notenmodul/RouteNotenmodulTeilleistungen";
+import { routeSportbefreiungen } from "~/router/apps/schule/sportbefreiungen/RouteSportbefreiungen";
+import SApp from "~/components/SApp.vue";
 
 
 export class RouteApp extends RouteNode<RouteDataApp, any> {
@@ -142,6 +143,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeFoerderschwerpunkte,
 			routeSchuleJahrgaenge,
 			routeMerkmale,
+			routeSportbefreiungen,
 			routeKatalogVermerkarten,
 			routeKatalogLernplattformen,
 			// Allgemein
