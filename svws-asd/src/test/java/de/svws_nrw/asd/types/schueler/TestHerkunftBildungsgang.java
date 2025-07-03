@@ -31,12 +31,12 @@ class TestHerkunftBildungsgang {
 	 *
 	 * CoreType: HerkunftBildungsgang
 	 * Testfall: Prüft die Anzahl der möglichen Werte
-	 * Ergebnis: Erwartete Anzahl - 41
+	 * Ergebnis: Erwartete Anzahl - 44
 	 */
 	@Test
 	@DisplayName("Teste CoreType HerkunftBildungsgang: Anzahl der vorhandenen Werte.")
 	void testHerkunftBildungsgang_AnzahlEintraege() {
-		assertEquals(41, HerkunftBildungsgang.data().getWerte().size());
+		assertEquals(44, HerkunftBildungsgang.data().getWerte().size());
 	}
 
 	/**
