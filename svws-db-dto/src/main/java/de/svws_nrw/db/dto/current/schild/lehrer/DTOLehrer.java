@@ -42,7 +42,7 @@ import de.svws_nrw.csv.converter.current.PersonalTypConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_Lehrer")
-@JsonPropertyOrder({"ID", "GU_ID", "Kuerzel", "kuerzelLID", "Nachname", "Vorname", "PersonTyp", "Sortierung", "Sichtbar", "Aenderbar", "FuerExport", "statistikRelevant", "Strassenname", "HausNr", "HausNrZusatz", "Ort_ID", "Ortsteil_ID", "telefon", "telefonMobil", "eMailPrivat", "eMailDienstlich", "staatsangehoerigkeit", "Geburtsdatum", "Geschlecht", "Anrede", "Amtsbezeichnung", "Titel", "Faecher", "identNrTeil1", "identNrTeil2SerNr", "PANr", "personalNrLBV", "verguetungsSchluessel", "DatumZugang", "GrundZugang", "DatumAbgang", "GrundAbgang", "CredentialID"})
+@JsonPropertyOrder({"ID", "GU_ID", "Kuerzel", "kuerzelLID", "Nachname", "Vorname", "PersonTyp", "Sortierung", "Sichtbar", "Aenderbar", "FuerExport", "statistikRelevant", "Strassenname", "HausNr", "HausNrZusatz", "Ort_ID", "Ortsteil_ID", "telefon", "telefonMobil", "eMailPrivat", "eMailDienstlich", "staatsangehoerigkeit", "Geburtsdatum", "Geschlecht", "Anrede", "Amtsbezeichnung", "Titel", "Faecher", "identNrTeil1", "identNrTeil2SerNr", "PANr", "personalNrLBV", "verguetungsSchluessel", "DatumZugang", "GrundZugang", "DatumAbgang", "GrundAbgang", "CredentialID", "Geburtsort", "Geburtsname"})
 public final class DTOLehrer {
 
 	/** Die Datenbankabfrage für alle DTOs */
@@ -285,6 +285,18 @@ public final class DTOLehrer {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes CredentialID */
 	public static final String QUERY_LIST_BY_CREDENTIALID = "SELECT e FROM DTOLehrer e WHERE e.CredentialID IN ?1";
 
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Geburtsort */
+	public static final String QUERY_BY_GEBURTSORT = "SELECT e FROM DTOLehrer e WHERE e.Geburtsort = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Geburtsort */
+	public static final String QUERY_LIST_BY_GEBURTSORT = "SELECT e FROM DTOLehrer e WHERE e.Geburtsort IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Geburtsname */
+	public static final String QUERY_BY_GEBURTSNAME = "SELECT e FROM DTOLehrer e WHERE e.Geburtsname = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Geburtsname */
+	public static final String QUERY_LIST_BY_GEBURTSNAME = "SELECT e FROM DTOLehrer e WHERE e.Geburtsname IN ?1";
+
 	/** Eindeutige ID zur Kennzeichnung des Lehrer-Datensatzes */
 	@Id
 	@Column(name = "ID")
@@ -506,6 +518,16 @@ public final class DTOLehrer {
 	@JsonProperty
 	public Long CredentialID;
 
+	/** Geburtsort der Lehrkraft */
+	@Column(name = "Geburtsort")
+	@JsonProperty
+	public String Geburtsort;
+
+	/** Geburtsname der Lehrkraft */
+	@Column(name = "Geburtsname")
+	@JsonProperty
+	public String Geburtsname;
+
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOLehrer ohne eine Initialisierung der Attribute.
 	 */
@@ -560,7 +582,7 @@ public final class DTOLehrer {
 	 */
 	@Override
 	public String toString() {
-		return "DTOLehrer(ID=" + this.ID + ", GU_ID=" + this.GU_ID + ", Kuerzel=" + this.Kuerzel + ", kuerzelLID=" + this.kuerzelLID + ", Nachname=" + this.Nachname + ", Vorname=" + this.Vorname + ", PersonTyp=" + this.PersonTyp + ", Sortierung=" + this.Sortierung + ", Sichtbar=" + this.Sichtbar + ", Aenderbar=" + this.Aenderbar + ", FuerExport=" + this.FuerExport + ", statistikRelevant=" + this.statistikRelevant + ", Strassenname=" + this.Strassenname + ", HausNr=" + this.HausNr + ", HausNrZusatz=" + this.HausNrZusatz + ", Ort_ID=" + this.Ort_ID + ", Ortsteil_ID=" + this.Ortsteil_ID + ", telefon=" + this.telefon + ", telefonMobil=" + this.telefonMobil + ", eMailPrivat=" + this.eMailPrivat + ", eMailDienstlich=" + this.eMailDienstlich + ", staatsangehoerigkeit=" + this.staatsangehoerigkeit + ", Geburtsdatum=" + this.Geburtsdatum + ", Geschlecht=" + this.Geschlecht + ", Anrede=" + this.Anrede + ", Amtsbezeichnung=" + this.Amtsbezeichnung + ", Titel=" + this.Titel + ", Faecher=" + this.Faecher + ", identNrTeil1=" + this.identNrTeil1 + ", identNrTeil2SerNr=" + this.identNrTeil2SerNr + ", PANr=" + this.PANr + ", personalNrLBV=" + this.personalNrLBV + ", verguetungsSchluessel=" + this.verguetungsSchluessel + ", DatumZugang=" + this.DatumZugang + ", GrundZugang=" + this.GrundZugang + ", DatumAbgang=" + this.DatumAbgang + ", GrundAbgang=" + this.GrundAbgang + ", CredentialID=" + this.CredentialID + ")";
+		return "DTOLehrer(ID=" + this.ID + ", GU_ID=" + this.GU_ID + ", Kuerzel=" + this.Kuerzel + ", kuerzelLID=" + this.kuerzelLID + ", Nachname=" + this.Nachname + ", Vorname=" + this.Vorname + ", PersonTyp=" + this.PersonTyp + ", Sortierung=" + this.Sortierung + ", Sichtbar=" + this.Sichtbar + ", Aenderbar=" + this.Aenderbar + ", FuerExport=" + this.FuerExport + ", statistikRelevant=" + this.statistikRelevant + ", Strassenname=" + this.Strassenname + ", HausNr=" + this.HausNr + ", HausNrZusatz=" + this.HausNrZusatz + ", Ort_ID=" + this.Ort_ID + ", Ortsteil_ID=" + this.Ortsteil_ID + ", telefon=" + this.telefon + ", telefonMobil=" + this.telefonMobil + ", eMailPrivat=" + this.eMailPrivat + ", eMailDienstlich=" + this.eMailDienstlich + ", staatsangehoerigkeit=" + this.staatsangehoerigkeit + ", Geburtsdatum=" + this.Geburtsdatum + ", Geschlecht=" + this.Geschlecht + ", Anrede=" + this.Anrede + ", Amtsbezeichnung=" + this.Amtsbezeichnung + ", Titel=" + this.Titel + ", Faecher=" + this.Faecher + ", identNrTeil1=" + this.identNrTeil1 + ", identNrTeil2SerNr=" + this.identNrTeil2SerNr + ", PANr=" + this.PANr + ", personalNrLBV=" + this.personalNrLBV + ", verguetungsSchluessel=" + this.verguetungsSchluessel + ", DatumZugang=" + this.DatumZugang + ", GrundZugang=" + this.GrundZugang + ", DatumAbgang=" + this.DatumAbgang + ", GrundAbgang=" + this.GrundAbgang + ", CredentialID=" + this.CredentialID + ", Geburtsort=" + this.Geburtsort + ", Geburtsname=" + this.Geburtsname + ")";
 	}
 
 }

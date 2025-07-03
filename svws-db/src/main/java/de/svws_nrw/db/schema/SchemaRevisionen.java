@@ -247,7 +247,10 @@ public enum SchemaRevisionen {
 	REV_42(42, "2025-06-04"),
 
 	/** ggf. Ergänzen der Spalte LehramtKrz in den Tabellen LehrerLehramtFachr und LehrerLehramtLehrbef */
-	REV_43(43, "2025-07-02");
+	REV_43(43, "2025-07-02"),
+
+	/** Schulbesuchsjahre aus DB entfernt, PrognoseAbschluss und PrognoseLog in Lernabschnitte, Geburtsort und Geburtsname bei Lehrerdaten */
+	REV_44(44, "2025-07-03");
 
 
 	/**
@@ -255,14 +258,14 @@ public enum SchemaRevisionen {
 	 * bis zu welcher alle Schema-Revision als stabil gelten und ab Version 1.0 des SVWS-Servers
 	 * nicht mehr verändert werden.
 	 */
-	public static final SchemaRevisionen maxRevision = REV_43;
+	public static final SchemaRevisionen maxRevision = REV_44;
 
 	/**
 	 * Gibt die größte Revisions-Nummer an, welche in diese Enumeration definiert wurde.
 	 * Dies dient dazu Revisionen als Entwickler-Revisionen zu kennzeichnen, die noch nicht
 	 * stabil sind. Dieser Wert ist also größer oder gleich {@link SchemaRevisionen#maxRevision}.
 	 */
-	public static final SchemaRevisionen maxDeveloperRevision = REV_43;
+	public static final SchemaRevisionen maxDeveloperRevision = REV_44;
 
 	/** Eine Map, welche von der Revisionsnummer auf das Objekt der Aufzählung abbildet. */
 	private static Map<Long, SchemaRevisionen> _mapByNumber = null;
