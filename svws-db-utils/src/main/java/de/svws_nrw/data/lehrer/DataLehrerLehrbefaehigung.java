@@ -67,7 +67,7 @@ public final class DataLehrerLehrbefaehigung extends DataManager<Long> {
 	 *
 	 * @return die Liste mit den Lehrbefähigungen
 	 */
-	public static List<LehrerLehrbefaehigungEintrag> getByLehrerId(final DBEntityManager conn, final Long idLehrer) {
+	public static List<LehrerLehrbefaehigungEintrag> getListByLehrerId(final DBEntityManager conn, final Long idLehrer) {
 		final List<LehrerLehrbefaehigungEintrag> result = new ArrayList<>();
 		// Bestimme die Lehrbefähigungen des Lehrers
 		final List<DTOLehrerLehramtBefaehigung> daten =

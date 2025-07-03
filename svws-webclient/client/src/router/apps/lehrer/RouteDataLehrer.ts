@@ -154,8 +154,7 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 	addLehramt = async (eintrag: LehrerLehramtEintrag) => {
 		if (!this.manager.hasPersonalDaten())
 			throw new DeveloperNotificationException("Lehrämter können nur hinzugefügt werden, wenn gültige Personal-Daten geladen sind.");
-		// TODO API-Aufruf ...
-		console.log("Hinzufügen von Lehrämtern noch nicht implementiert");
+		await api.server.addLehrerLehramt(eintrag, api.schema);
 		this.manager.personalDaten().lehraemter.add(eintrag);
 		this.commit();
 	}
@@ -163,8 +162,9 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 	removeLehraemter = async (eintraege: List<LehrerLehramtEintrag>) => {
 		if (!this.manager.hasPersonalDaten())
 			throw new DeveloperNotificationException("Lehrämter können nur entfernt werden, wenn gültige Personal-Daten geladen sind.");
-		// TODO API-Aufruf ...
-		console.log("Entfernen von Lehrämtern noch nicht implementiert");
+		// TODO ggf. zu einem API-Aufruf zusammenfassen - Server-API muss dafür noch erweitert werden
+		for (const eintrag of eintraege)
+			await api.server.deleteLehrerLehramt(api.schema, eintrag.id, eintrag. idLehramt);
 		this.manager.personalDaten().lehraemter.removeAll(eintraege);
 		this.commit();
 	}
@@ -172,9 +172,7 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 	patchLehramt = async (eintrag: LehrerLehramtEintrag, patch: Partial<LehrerLehramtEintrag>) => {
 		if (!this.manager.hasPersonalDaten())
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		// TODO API-Aufruf mit id (Lehrer) und idLehramt
-		// await api.server.patchLehrerLehramt();
-		console.log("Anpassen von Lehrämtern noch nicht implementiert");
+		await api.server.patchLehrerLehramt(patch, api.schema, eintrag.id, eintrag.idLehramt);
 		Object.assign(eintrag, patch);
 		this.commit();
 	}

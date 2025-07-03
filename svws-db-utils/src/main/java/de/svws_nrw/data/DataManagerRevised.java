@@ -412,6 +412,24 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 
 
 	/**
+	 * Passt die Informationen des Datenbank-DTOs mithilfe des JSON-Patches aus dem
+	 * übergebenen {@link InputStream} an.
+	 *
+	 * @param is   der Input-Stream
+	 *
+	 * @return die Response
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public Response patchSingleAsResponse(final InputStream is) throws ApiOperationException {
+		final Map<String, Object> map = JSONMapper.toMap(is);
+		patch(getID(map), map);
+		// TODO ggf. Anpassung, so dass Status.OK mit den veränderten Daten zurückgegeben wird
+		return Response.status(Status.NO_CONTENT).build();
+	}
+
+
+	/**
 	 * Passt die Informationen der Datenbank-DTOs mithilfe des
 	 * JSON-Patches aus dem übergebenen {@link InputStream} an. Dabei werden nur die
 	 * übergebenen Mappings zugelassen.

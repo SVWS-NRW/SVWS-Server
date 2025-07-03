@@ -18,7 +18,10 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public final class DataLehrerEinwilligungen extends DataManagerRevised<Long[], DTOLehrerDatenschutz, LehrerEinwilligung> {
 
+
+	/** Die ID des Lehrers, dessen Einwilligungen von diesem Manager verwaltet werden. */
 	private final Long idLehrer;
+
 
 	/**
 	 * Erstellt einen neuen {@link DataManagerRevised} für das Core-DTO {@link LehrerEinwilligung}.

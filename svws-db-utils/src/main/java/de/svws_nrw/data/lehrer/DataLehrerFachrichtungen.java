@@ -67,7 +67,7 @@ public final class DataLehrerFachrichtungen extends DataManager<Long> {
 	 *
 	 * @return die Liste mit den Fachrichtungen
 	 */
-	public static List<LehrerFachrichtungEintrag> getByLehrerId(final DBEntityManager conn, final Long idLehrer) {
+	public static List<LehrerFachrichtungEintrag> getListByLehrerId(final DBEntityManager conn, final Long idLehrer) {
 		final List<LehrerFachrichtungEintrag> result = new ArrayList<>();
 		// Bestimme die Fachrichtungen des Lehrers
 		final List<DTOLehrerLehramtFachrichtung> daten =

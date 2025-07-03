@@ -2,6 +2,7 @@ package de.svws_nrw.api.server;
 
 import java.io.InputStream;
 
+import de.svws_nrw.asd.adt.PairNN;
 import de.svws_nrw.asd.data.lehrer.LehrerAbgangsgrundKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerAnrechnungsgrundKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerBeschaeftigungsartKatalogEintrag;
@@ -9,6 +10,7 @@ import de.svws_nrw.asd.data.lehrer.LehrerEinsatzstatusKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerFachrichtungAnerkennungKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerFachrichtungKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerLehramtAnerkennungKatalogEintrag;
+import de.svws_nrw.asd.data.lehrer.LehrerLehramtEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerLehramtKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerLehrbefaehigungAnerkennungKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerLehrbefaehigungKatalogEintrag;
@@ -17,6 +19,7 @@ import de.svws_nrw.asd.data.lehrer.LehrerMehrleistungsartKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerMinderleistungsartKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerRechtsverhaeltnisKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerZugangsgrundKatalogEintrag;
+import de.svws_nrw.asd.types.lehrer.LehrerLehramt;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.lehrer.LehrerLernplattform;
 import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
@@ -46,6 +49,7 @@ import de.svws_nrw.data.lehrer.DataKatalogLehrerMinderleistungsarten;
 import de.svws_nrw.data.lehrer.DataKatalogLehrerRechtsverhaeltnis;
 import de.svws_nrw.data.lehrer.DataKatalogLehrerZugangsgruende;
 import de.svws_nrw.data.lehrer.DataLehrerEinwilligungen;
+import de.svws_nrw.data.lehrer.DataLehrerLehramt;
 import de.svws_nrw.data.lehrer.DataLehrerLernplattformen;
 import de.svws_nrw.data.lehrer.DataLehrerPersonalabschnittsdaten;
 import de.svws_nrw.data.lehrer.DataLehrerPersonalabschnittsdatenAnrechungen;
@@ -55,6 +59,7 @@ import de.svws_nrw.data.lehrer.DataLehrerPersonalabschnittsdatenMinderleistungen
 import de.svws_nrw.data.lehrer.DataLehrerPersonaldaten;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.lehrer.DataLehrerliste;
+import de.svws_nrw.db.utils.ApiOperationException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -74,6 +79,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 
 /**
@@ -137,8 +143,8 @@ public class APILehrer {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrer zu entfernen.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteLehrer(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der zu löschenden Lehrer", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+			content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
 				conn -> new DataLehrerliste(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
@@ -291,6 +297,109 @@ public class APILehrer {
 
 
 	/**
+	 * Die OpenAPI-Methode für das Patchen von Lehramtsdaten in den Personaldaten eines Lehrers.
+	 *
+	 * @param schema      das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param id          die Datenbank-ID zur Identifikation des Lehrers
+	 * @param idLehramt   die ID des Lehramtes
+	 * @param is          der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request     die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/{id : \\d+}/personaldaten/lehramt/{idLehramt : \\d+}")
+	@Operation(summary = "Führt einen Patch auf einem Lehramtseintrag in den Personaldaten des Lehrers durch.",
+			description = "Passt den Lehramtseintrag zu den angegebenen IDs an und speichert das Ergebnis in der Datenbank. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personaldaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Lehrer-Eintrag mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response patchLehrerLehramt(@PathParam("schema") final String schema, @PathParam("id") final long id, @PathParam("idLehramt") final long idLehramt,
+			@RequestBody(description = "Der Patch für den Lehramtseintrag", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					schema = @Schema(implementation = LehrerLehramtEintrag.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> {
+			final LehrerLehramtKatalogEintrag tmpLehramt = LehrerLehramt.data().getEintragByID(idLehramt);
+			if (tmpLehramt == null)
+				throw new ApiOperationException(Status.BAD_REQUEST, "Es existiert kein Lehramt mit der ID %d.".formatted(idLehramt));
+			return new DataLehrerLehramt(conn, id).patchAsResponse(new PairNN<>(id, tmpLehramt.schluessel), is);
+		}, request, ServerMode.STABLE,
+			BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Hinzufügen eines Lehramtes zu den Personaldaten eines Lehrers.
+	 *
+	 * @param schema       das Datenbankschema
+	 * @param is           der Input-Stream mit den Daten
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem neuen Datensaz
+	 */
+	@POST
+	@Path("/personaldaten/lehramt")
+	@Operation(
+			summary = "Erstellt einen neuen Datensatz für ein Lehramt in den Personaldaten eines Lehrers und gibt das zugehörige Objekt zurück.",
+			description = "Erstellt einen neuen Datensatz für ein Lehramt in den Personaldaten eines Lehrers und gibt das zugehörige Objekt zurück. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen besitzt.")
+	@ApiResponse(responseCode = "201", description = "Das Lehramt wurde erfolgreich hinzugefügt.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					schema = @Schema(implementation = LehrerLehramtEintrag.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um ein Lehramt hinzuzufügen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response addLehrerLehramt(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die Daten des Lehramtes", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = LehrerLehramtEintrag.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> new DataLehrerLehramt(conn, null).addAsResponse(is),
+				request,
+				ServerMode.STABLE,
+				BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN
+		);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Entfernen von Lehramtsdaten aus den Personaldaten eines Lehrers.
+	 *
+	 * @param schema      das Datenbankschema
+	 * @param id          die Datenbank-ID zur Identifikation des Lehrers
+	 * @param idLehramt   die ID des Lehramtes
+	 * @param request     die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status und ggf. dem gelöschten Datensatz
+	 */
+	@DELETE
+	@Path("/{id : \\d+}/personaldaten/lehramt/{idLehramt : \\d+}")
+	@Operation(summary = "Entfernt den Lehramtseintrag in den Personaldaten des Lehrers.",
+			description = "Entfernt den Lehramtseintrag in den Personaldaten des Lehrers aus der Datenbank. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personaldaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Der Datensatz wurde erfolgreich entfernt.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = LehrerLehramtEintrag.class)))
+	@ApiResponse(responseCode = "400", description = "Die Anfrage ist fehlerhaft.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu entfernen.")
+	@ApiResponse(responseCode = "404", description = "Kein Eintrag mit den angegebenen IDs gefunden")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteLehrerLehramt(@PathParam("schema") final String schema, @PathParam("id") final long id, @PathParam("idLehramt") final long idLehramt,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> {
+			final LehrerLehramtKatalogEintrag tmpLehramt = LehrerLehramt.data().getEintragByID(idLehramt);
+			if (tmpLehramt == null)
+				throw new ApiOperationException(Status.BAD_REQUEST, "Es existiert kein Lehramt mit der ID %d.".formatted(idLehramt));
+			return new DataLehrerLehramt(conn, id).deleteAsResponse(new PairNN<>(id, tmpLehramt.schluessel));
+		}, request, ServerMode.STABLE,
+			BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN);
+	}
+
+
+	/**
 	 * Die OpenAPI-Methode für die Abfrage der Personalabschnittsdaten eines Lehrers.
 	 *
 	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
@@ -386,23 +495,26 @@ public class APILehrer {
 	 */
 	@POST
 	@Path("/personalabschnittsdaten/minderleistung/add")
-	@Operation(summary = "Erstellt einen neuen Datensatz für eine Minderleistung in den Personalabschnittsdaten eines Lehrers und gibt das zugehörige Objekt zurück.",
+	@Operation(
+			summary = "Erstellt einen neuen Datensatz für eine Minderleistung in den Personalabschnittsdaten eines Lehrers und gibt das zugehörige Objekt zurück.",
 			description = "Erstellt einen neuen Datensatz für für eine Minderleistung in den Personalabschnittsdaten eines Lehrers und gibt das zugehörige Objekt zurück. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen neuer Entlastungsstunden besitzt.")
 	@ApiResponse(responseCode = "201", description = "Die Minderleistung wurde erfolgreich hinzugefügt.",
-			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class)))
+			content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					schema = @Schema(implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Minderleistungen anzulegen.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response addLehrerPersonalabschnittsdatenMinderleistung(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die Daten der zu erstellenden Minderleistung ohne ID, welche automatisch generiert wird", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-			    conn -> new DataLehrerPersonalabschnittsdatenMinderleistungen(conn).addAsResponse(is),
-			    request,
-			    ServerMode.STABLE,
-			    BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN
-			);
+				conn -> new DataLehrerPersonalabschnittsdatenMinderleistungen(conn).addAsResponse(is),
+				request,
+				ServerMode.STABLE,
+				BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN
+		);
 	}
 
 
@@ -428,7 +540,8 @@ public class APILehrer {
 	public Response deleteLehrerPersonalabschnittsdatenMinderleistung(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataLehrerPersonalabschnittsdatenMinderleistungen(conn).deleteAsResponse(id), request, ServerMode.STABLE, BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN);
+				conn -> new DataLehrerPersonalabschnittsdatenMinderleistungen(conn).deleteAsResponse(id), request, ServerMode.STABLE,
+				BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN);
 	}
 
 
@@ -501,23 +614,26 @@ public class APILehrer {
 	 */
 	@POST
 	@Path("/personalabschnittsdaten/mehrleistung/add")
-	@Operation(summary = "Erstellt einen neuen Datensatz für eine Mehrleistung in den Personalabschnittsdaten eines Lehrers und gibt das zugehörige Objekt zurück.",
+	@Operation(
+			summary = "Erstellt einen neuen Datensatz für eine Mehrleistung in den Personalabschnittsdaten eines Lehrers und gibt das zugehörige Objekt zurück.",
 			description = "Erstellt einen neuen Datensatz für für eine Mehrleistung in den Personalabschnittsdaten eines Lehrers und gibt das zugehörige Objekt zurück. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen neuer Entlastungsstunden besitzt.")
 	@ApiResponse(responseCode = "201", description = "Die Mehrleistung wurde erfolgreich hinzugefügt.",
-			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class)))
+			content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					schema = @Schema(implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Mehrleistungen anzulegen.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response addLehrerPersonalabschnittsdatenMehrleistung(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die Daten der zu erstellenden Mehrleistung ohne ID, welche automatisch generiert wird", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-			    conn -> new DataLehrerPersonalabschnittsdatenMehrleistungen(conn).addAsResponse(is),
-			    request,
-			    ServerMode.STABLE,
-			    BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN
-			);
+				conn -> new DataLehrerPersonalabschnittsdatenMehrleistungen(conn).addAsResponse(is),
+				request,
+				ServerMode.STABLE,
+				BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN
+		);
 	}
 
 
@@ -543,7 +659,8 @@ public class APILehrer {
 	public Response deleteLehrerPersonalabschnittsdatenMehrleistung(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataLehrerPersonalabschnittsdatenMehrleistungen(conn).deleteAsResponse(id), request, ServerMode.STABLE, BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN);
+				conn -> new DataLehrerPersonalabschnittsdatenMehrleistungen(conn).deleteAsResponse(id), request, ServerMode.STABLE,
+				BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN);
 	}
 
 
@@ -617,23 +734,26 @@ public class APILehrer {
 	 */
 	@POST
 	@Path("/personalabschnittsdaten/anrechnung/add")
-	@Operation(summary = "Erstellt einen neuen Datensatz für eine allgemeine Anrechnung in den Personalabschnittsdaten eines Lehrers und gibt das zugehörige Objekt zurück.",
+	@Operation(
+			summary = "Erstellt einen neuen Datensatz für eine allgemeine Anrechnung in den Personalabschnittsdaten eines Lehrers und gibt das zugehörige Objekt zurück.",
 			description = "Erstellt einen neuen Datensatz für für eine Mehrleistung in den Personalabschnittsdaten eines Lehrers und gibt das zugehörige Objekt zurück. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen neuer Entlastungsstunden besitzt.")
 	@ApiResponse(responseCode = "201", description = "Die allgemeine Anrechnung wurde erfolgreich hinzugefügt.",
-			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class)))
+			content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					schema = @Schema(implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine allgemeine Anrechnung anzulegen.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response addLehrerPersonalabschnittsdatenAllgemeineAnrechnung(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die Daten der zu erstellenden allgemeinen Anrechnung ohne ID, welche automatisch generiert wird", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-			    conn -> new DataLehrerPersonalabschnittsdatenAnrechungen(conn).addAsResponse(is),
-			    request,
-			    ServerMode.STABLE,
-			    BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN
-			);
+				conn -> new DataLehrerPersonalabschnittsdatenAnrechungen(conn).addAsResponse(is),
+				request,
+				ServerMode.STABLE,
+				BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN
+		);
 	}
 
 
@@ -659,7 +779,8 @@ public class APILehrer {
 	public Response deleteLehrerPersonalabschnittsdatenAllgemeineAnrechnung(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataLehrerPersonalabschnittsdatenAnrechungen(conn).deleteAsResponse(id), request, ServerMode.STABLE, BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN);
+				conn -> new DataLehrerPersonalabschnittsdatenAnrechungen(conn).deleteAsResponse(id), request, ServerMode.STABLE,
+				BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN);
 	}
 
 
@@ -740,14 +861,15 @@ public class APILehrer {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response addLehrerPersonalabschnittsdatenLehrerfunktionen(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die Daten des zu erstellenden Lehrerfunktion ohne ID, welche automatisch generiert wird", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = LehrerPersonalabschnittsdatenLehrerfunktion.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = LehrerPersonalabschnittsdatenLehrerfunktion.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-			    conn -> new DataLehrerPersonalabschnittsdatenLehrerfunktionen(conn).addAsResponse(is),
-			    request,
-			    ServerMode.STABLE,
-			    BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN
-			);
+				conn -> new DataLehrerPersonalabschnittsdatenLehrerfunktionen(conn).addAsResponse(is),
+				request,
+				ServerMode.STABLE,
+				BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN
+		);
 
 	}
 
@@ -805,7 +927,8 @@ public class APILehrer {
 	public Response deleteLehrerPersonalabschnittsdatenLehrerfunktionen(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataLehrerPersonalabschnittsdatenLehrerfunktionen(conn).deleteAsResponse(id), request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_LOESCHEN);
+				conn -> new DataLehrerPersonalabschnittsdatenLehrerfunktionen(conn).deleteAsResponse(id), request, ServerMode.STABLE,
+				BenutzerKompetenz.LEHRERDATEN_LOESCHEN);
 	}
 
 	/**
@@ -1220,10 +1343,11 @@ public class APILehrer {
 	public Response patchLehrerEinwilligung(@PathParam("schema") final String schema, @PathParam("idLehrer") final long idLehrer,
 			@PathParam("idEinwilligungsart") final long idEinwilligungsart,
 			@RequestBody(description = "Der Patch für die Lehrereinwilligung", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = LehrerEinwilligung.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = LehrerEinwilligung.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerEinwilligungen(conn, idLehrer)
-						.patchAsResponse(new Long[]{idLehrer, idEinwilligungsart}, is),
+				.patchAsResponse(new Long[] { idLehrer, idEinwilligungsart }, is),
 				request, ServerMode.DEV,
 				BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN);
 	}
@@ -1279,9 +1403,11 @@ public class APILehrer {
 	public Response patchLehrerLernplattform(@PathParam("schema") final String schema, @PathParam("id") final long idLehrer,
 			@PathParam("idLernplattform") final long idLernplattform,
 			@RequestBody(description = "Der Patch für die Lernplattformen eines Lehrers", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = LehrerLernplattform.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = LehrerLernplattform.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerLernplattformen(conn, idLehrer).patchAsResponse(new Long[]{idLehrer, idLernplattform},
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> new DataLehrerLernplattformen(conn, idLehrer).patchAsResponse(new Long[] { idLehrer, idLernplattform },
 						is),
 				request, ServerMode.DEV,
 				BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN);
