@@ -1,52 +1,54 @@
 <template>
-	<div class="overflow-hidden h-full flex flex-col" :class="{'border-l pl-4': floskelEditorVisible}">
-		<div @click="setFloskelEditorVisible(!floskelEditorVisible)" class="">
-			<span v-if="floskelEditorVisible" class="icon i-ri-menu-unfold-line cursor-pointer" />
-			<span v-else class="icon i-ri-menu-fold-line cursor-pointer" />
-			<div v-if="floskelEditorVisible && (schueler !== null)" class="text-headline-md flex justify-between pb-2"><span>{{ schueler.nachname }}, {{ schueler.vorname }}</span><span>{{ hauptgruppenBezeichnung[erlaubteHauptgruppe] }}</span></div>
+	<div class="h-full" :class="{'border-l pl-4': floskelEditorVisible}">
+		<div v-if="!floskelEditorVisible || schueler === null" @click="setFloskelEditorVisible(!floskelEditorVisible)">
+			<span class="icon i-ri-menu-fold-line cursor-pointer" />
 		</div>
-		<div v-if="floskelEditorVisible" class="h-full overflow-y-auto">
-			<div class="flex flex-auto flex-col gap-4">
-				<div class="py-4">
-					<svws-ui-textarea-input class="floskel-input" placeholder="Floskeln auswählen oder manuell eingeben" :model-value="text" @input="onInput" autoresize is-content-focus-field />
+		<div v-else class="h-full flex flex-col">
+			<div><span @click="setFloskelEditorVisible(!floskelEditorVisible)" class="icon i-ri-menu-unfold-line cursor-pointer" /></div>
+			<div class="text-headline-md flex justify-between pb-2">
+				<span>{{ schueler.nachname }}, {{ schueler.vorname }}</span><span>{{
+					hauptgruppenBezeichnung[erlaubteHauptgruppe] }}</span>
+			</div>
+			<div class="py-4">
+				<svws-ui-textarea-input class="floskel-input" placeholder="Floskeln auswählen oder manuell eingeben"
+					:model-value="text" @input="onInput" autoresize is-content-focus-field />
+			</div>
+			<div class="flex justify-between gap-2 w-full flex-row-reverse">
+				<div v-if="showButtons" class="flex gap-2">
+					<svws-ui-button @click="doPatchLeistung" :type="clean ? 'primary':'secondary'">
+						{{ clean ?
+							'Speichern':'Anwenden' }}
+					</svws-ui-button>
+					<svws-ui-button @click="text = bemerkung">Zurücksetzen</svws-ui-button>
 				</div>
-				<div class="flex justify-between gap-2 w-full flex-row-reverse">
-					<div v-if="showButtons" class="flex gap-2">
-						<svws-ui-button @click="doPatchLeistung" :type="clean ? 'primary':'secondary'">{{ clean ? 'Speichern':'Anwenden' }}</svws-ui-button>
-						<svws-ui-button @click="text = bemerkung">Zurücksetzen</svws-ui-button>
+				<div v-if="(text !== null) && /$Vorname$/i.exec(text)" class="flex gap-2">
+					<div class="w-20">
+						<svws-ui-input-number :model-value="every" :min="1" :max="9"
+							@update:model-value="value => every = value ?? 1" />
 					</div>
-					<div v-if="(text !== null) && /$Vorname$/i.exec(text)" class="flex gap-2">
-						<div class="w-20">
-							<svws-ui-input-number :model-value="every" :min="1" :max="9" @update:model-value="value => every = value ?? 1" />
-						</div>
-						<span class="mt-2">Vorname jedes {{ every === 1 ? '':`${every}.` }} Mal</span>
-					</div>
+					<span class="mt-2">Vorname jedes {{ every === 1 ? '':`${every}.` }} Mal</span>
 				</div>
-				<div class="svws-ui-table svws-clickable" role="table" aria-label="Tabelle">
-					<div class="svws-ui-tbody " role="rowgroup" aria-label="Tabelleninhalt">
-						<template v-for="[gruppe, floskeln] of gruppenMap" :key="gruppe.kuerzel">
-							<div class="svws-ui-thead cursor-pointer select-none sticky" role="rowgroup">
-								<div class="svws-ui-td col-span-4 flex items-center gap-1" role="cell" @click="collapsed.set(gruppe, collapsed.get(gruppe) ? false : true)">
-									<span class="icon i-ri-arrow-right-s-line" v-if="collapsed.get(gruppe)" />
-									<span class="icon i-ri-arrow-down-s-line" v-else />
-									<span class="text-headline-md"> {{ gruppe.bezeichnung }}</span>
-								</div>
-								<div v-if="!collapsed.get(gruppe)" class="svws-ui-tr" role="row">
-									<div class="svws-ui-td" role="columnheader">Kürzel</div>
-									<div class="svws-ui-td" role="columnheader">Text</div>
-									<div class="svws-ui-td" role="columnheader">Niveau</div>
-									<div class="svws-ui-td" role="columnheader">Jg</div>
-								</div>
-							</div>
-							<div v-for="floskel of floskeln" :key="floskel.kuerzel ?? 1" class="svws-ui-tr" role="row" v-show="!collapsed.get(gruppe)" @click="ergaenzeFloskel(floskel)">
-								<div class="svws-ui-td" role="cell"> {{ floskel.kuerzel }} </div>
-								<div class="svws-ui-td" role="cell"> {{ floskel.text }} </div>
-								<div class="svws-ui-td" role="cell"> {{ floskel.niveau }} </div>
-								<div class="svws-ui-td" role="cell"> {{ floskel.jahrgangID }} </div>
-							</div>
+			</div>
+			<div class="overflow-y-auto">
+				<ui-table-grid :footer-count="0" :manager="() => gridManager">
+					<template #header>
+						<th>Kürzel</th>
+						<th>Text</th>
+						<th>Niveau</th>
+						<th>Jg</th>
+					</template>
+					<template #default="{ row: data, index }">
+						<template v-if="data.floskel === null">
+							<td class="col-span-4 text-left bg-ui-50">{{ data.gruppe.bezeichnung }}</td>
 						</template>
-					</div>
-				</div>
+						<template v-else>
+							<td :ref="inputBemerkung(data.floskel, 1, index)" class="cursor-pointer"> {{ data.floskel.kuerzel }} </td>
+							<td class="text-left"> {{ data.floskel.text }} </td>
+							<td> {{ data.floskel.niveau }} </td>
+							<td> {{ data.floskel.jahrgangID }} </td>
+						</template>
+					</template>
+				</ui-table-grid>
 			</div>
 		</div>
 	</div>
@@ -54,6 +56,7 @@
 
 <script setup lang="ts">
 
+	import type { ComponentPublicInstance} from 'vue';
 	import { computed, ref, watch } from 'vue';
 	import type { ENMFloskel } from '../../../../core/src/core/data/enm/ENMFloskel';
 	import type { ENMFloskelgruppe } from '../../../../core/src/core/data/enm/ENMFloskelgruppe';
@@ -62,6 +65,8 @@
 	import type { ENMSchueler } from '../../../../core/src/core/data/enm/ENMSchueler';
 	import type { ENMLeistung } from '../../../../core/src/core/data/enm/ENMLeistung';
 	import type { ENMKlasse } from '../../../../core/src/core/data/enm/ENMKlasse';
+	import { GridManager } from '../../ui/controls/tablegrid/GridManager';
+	import type { List } from '../../../../core/src/java/util/List';
 
 
 	const props = defineProps<{
@@ -83,6 +88,61 @@
 		'VERS': 'Versetzung',
 		'ZB': 'Zeugnis-Bemerkungen',
 	};
+
+	type RowType = { gruppe: ENMFloskelgruppe, floskel: ENMFloskel | null }
+	const gridManager = new GridManager<string, RowType, List<RowType>>({
+		daten: computed<List<RowType>>(() => {
+			const result = new ArrayList<RowType>();
+			const auswahl = props.auswahl();
+			if ((auswahl.schueler === null) || (auswahl.leistung === null))
+				return result;
+			let floskelnHauptgruppe: ENMFloskelgruppe | null = null;
+			let floskelnAllgemein: ENMFloskelgruppe | null = null;
+			for (const gruppe of props.enmManager().listFloskelgruppen) {
+				if (gruppe.floskeln.isEmpty())
+					continue;
+				if (gruppe.hauptgruppe === props.erlaubteHauptgruppe)
+					floskelnHauptgruppe = gruppe;
+				else if (gruppe.hauptgruppe === 'ALLG')
+					floskelnAllgemein = gruppe;
+			}
+			if (floskelnHauptgruppe === null && floskelnAllgemein === null)
+				return result;
+			const temp = [];
+			if (floskelnHauptgruppe !== null)
+				temp.push(floskelnHauptgruppe);
+			if (floskelnAllgemein !== null)
+				temp.push(floskelnAllgemein);
+			for (const gruppe of temp) {
+				result.add({ gruppe, floskel: null });
+				const floskeln = new ArrayList<ENMFloskel>();
+				for (const floskel of gruppe.floskeln)
+					if ((floskel.fachID === null) || ((props.enmManager().lerngruppeByIDOrException(auswahl.leistung.lerngruppenID).fachID === floskel.fachID)
+						&& ((floskel.jahrgangID === null) || (floskel.jahrgangID === auswahl.schueler.jahrgangID))))
+						result.add({ gruppe, floskel });
+			}
+			return result;
+		}),
+		getRowKey: row => `${row.gruppe.hauptgruppe}_${row.gruppe.kuerzel}_${row.floskel?.kuerzel}`,
+		columns: [
+			{ kuerzel: "Kürzel", name: "Kürzel", width: "4rem", hideable: false },
+			{ kuerzel: "Text", name: "Text", width: "1fr", hideable: false },
+			{ kuerzel: "Niveau", name: "Niveau", width: "6rem", hideable: false },
+			{ kuerzel: "Jg", name: "Jahrgang", width: "4rem", hideable: false },
+		],
+	});
+
+	function inputBemerkung(floskel: ENMFloskel, col: number, index: number) {
+		const key = `Floskel_${floskel.kuerzel}`;
+		const setter = () => ergaenzeFloskel(floskel);
+		return (element : Element | ComponentPublicInstance<unknown> | null) => {
+			const input = gridManager.applyInputToggle(key, col, index, element, setter);
+			if (input !== null) {
+				gridManager.update(key, false);
+				gridManager.setNavigationOnEnter(key, null);
+			}
+		};
+	}
 
 	const showButtons = computed(() => text.value !== bemerkung.value);
 
