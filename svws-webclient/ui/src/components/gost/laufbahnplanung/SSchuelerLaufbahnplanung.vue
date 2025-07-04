@@ -41,7 +41,6 @@
 	import { LaufbahnplanungUiManager } from "./LaufbahnplanungUiManager";
 
 	const props = defineProps<SchuelerLaufbahnplanungProps>();
-	console.log(props)
 
 	const manager = computed<LaufbahnplanungUiManager>(() => new LaufbahnplanungUiManager(props.serverMode, props.abiturdatenManager, props.config, () => props.gostJahrgangsdaten, props.setWahl, { faecherZeigen: "app.schueler.laufbahnplanung.faecher.anzeigen", modus: "app.schueler.laufbahnplanung.modus" }));
 
