@@ -89,7 +89,7 @@
 <script setup lang="ts">
 
 	import type { Ref} from 'vue';
-	import { computed, onMounted, ref, shallowRef } from 'vue';
+	import { computed, onMounted, ref, shallowRef, watch } from 'vue';
 	import type { SchuleDatenaustauschUntisExporteProps } from './SSchuleDatenaustauschUntisExporteProps';
 	import { GostHalbjahr, Schulform } from '@core';
 
@@ -195,6 +195,8 @@
 	});
 
 	onMounted(() => onSelect(aktuell.value));
+
+	watch(() => props.schuljahresabschnitt, () => onSelect(aktuell.value));
 
 	function isVisible(gpu: GPU) {
 		if (gpu === blockungGPUs)
