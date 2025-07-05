@@ -26,7 +26,9 @@ public class NonPrimitiveToNullableConverter implements ModelConverter {
 
 				final JavaType javaType = Json.mapper().constructType(annotatedType.getType());
 
-				if (ClassUtils.isPrimitiveWrapper(javaType.getRawClass()) && (model.getNullable() == null) && !isPropertyDefinedAsNotNull) {
+				final boolean isPrimitive = javaType.isPrimitive();
+
+				if (!isPrimitive && (model.getNullable() == null) && !isPropertyDefinedAsNotNull) {
 					model.setNullable(true);
 				}
 
