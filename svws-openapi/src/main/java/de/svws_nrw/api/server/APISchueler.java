@@ -1290,6 +1290,32 @@ public class APISchueler {
 				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
 	}
 
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Einwilligungen mehrerer Schüler.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param is        Inputstream mit einer Liste von Schüler IDs
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Einwilligungen der Schüler
+	 */
+	@POST
+	@Path("/einwilligungen")
+	@Operation(summary = "Liefert zu den Schüler IDs die zugehörigen Einwilligungen.",
+			description = "Liest die Einwilligungen der Schüler zu der angegebenen IDs aus der Datenbank und liefert diese zurück. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Einwilligungen des Schülers",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchuelerEinwilligung.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schülerdaten anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
+	public Response getSchuelerEinwilligungenMultiple(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der Schüler", required =
+			true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerEinwilligungen(conn, 0L).getListByIdsAsResponse(JSONMapper.toListOfLong(is)),
+				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+	}
 
 	/**
 	 * Die OpenAPI-Methode für das Patchen einer Einwilligung.
