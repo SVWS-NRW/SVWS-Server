@@ -1,5 +1,7 @@
 package de.svws_nrw.data.schueler;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -94,11 +96,65 @@ class DataSchuelerEinwilligungenTest {
 
 	@Test
 	@DisplayName("getAll | Erfolg")
-	void getAllTest() throws ApiOperationException {
+	void getListBySchuelerIdsTest() throws ApiOperationException {
 		final DTOSchuelerDatenschutz dto = new DTOSchuelerDatenschutz(1L, 1L, false, false);
 		when(conn.queryAll(DTOSchuelerDatenschutz.class)).thenReturn(List.of(dto));
 
 		assertThat(dataSchuelerEinwilligungen.getAll())
+				.isNotNull()
+				.hasSize(1)
+				.first()
+				.satisfies(schuelerEinwilligung -> assertThat(schuelerEinwilligung)
+						.hasFieldOrPropertyWithValue("idSchueler", 1L)
+						.hasFieldOrPropertyWithValue("idEinwilligungsart", 1L)
+						.hasFieldOrPropertyWithValue("status", false)
+						.hasFieldOrPropertyWithValue("abgefragt", false));
+	}
+
+	@Test
+	@DisplayName("getAll(Long[]) | Erfolg mit IDs aller Schüler")
+	void getAllWithIdsTest() throws ApiOperationException {
+		final DTOSchuelerDatenschutz dto1 = new DTOSchuelerDatenschutz(1L, 1L, false, false);
+		final DTOSchuelerDatenschutz dto2 = new DTOSchuelerDatenschutz(2L, 1L, false, false);
+		when(conn.queryAll(DTOSchuelerDatenschutz.class)).thenReturn(List.of(dto1, dto2));
+
+		assertThat(dataSchuelerEinwilligungen.getListBySchuelerIds(Arrays.asList(1L, 2L)))
+				.isNotNull()
+				.hasSize(2)
+				.first()
+				.satisfies(schuelerEinwilligung -> assertThat(schuelerEinwilligung)
+						.hasFieldOrPropertyWithValue("idSchueler", 1L)
+						.hasFieldOrPropertyWithValue("idEinwilligungsart", 1L)
+						.hasFieldOrPropertyWithValue("status", false)
+						.hasFieldOrPropertyWithValue("abgefragt", false));
+	}
+
+	@Test
+	@DisplayName("getAll(Long[]) | Erfolg mit IDs, die nicht existieren (diese werden ignoriert)")
+	void getListBySchuelerIdsWithIdsButAtLeastOneNonExistentIdTest() throws ApiOperationException {
+		final DTOSchuelerDatenschutz dto1 = new DTOSchuelerDatenschutz(1L, 1L, false, false);
+		final DTOSchuelerDatenschutz dto2 = new DTOSchuelerDatenschutz(2L, 1L, false, false);
+		when(conn.queryAll(DTOSchuelerDatenschutz.class)).thenReturn(List.of(dto1, dto2));
+
+		assertThat(dataSchuelerEinwilligungen.getListBySchuelerIds(Arrays.asList(1L, 2L, 3L )))
+				.isNotNull()
+				.hasSize(2)
+				.first()
+				.satisfies(schuelerEinwilligung -> assertThat(schuelerEinwilligung)
+						.hasFieldOrPropertyWithValue("idSchueler", 1L)
+						.hasFieldOrPropertyWithValue("idEinwilligungsart", 1L)
+						.hasFieldOrPropertyWithValue("status", false)
+						.hasFieldOrPropertyWithValue("abgefragt", false));
+	}
+
+	@Test
+	@DisplayName("getAll(Long[]) | Erfolg")
+	void getListBySchuelerIdsWithIdsSimpleFilterTest() throws ApiOperationException {
+		final DTOSchuelerDatenschutz dto1 = new DTOSchuelerDatenschutz(1L, 1L, false, false);
+		final DTOSchuelerDatenschutz dto2 = new DTOSchuelerDatenschutz(2L, 1L, false, false);
+		when(conn.queryAll(DTOSchuelerDatenschutz.class)).thenReturn(List.of(dto1, dto2));
+
+		assertThat(dataSchuelerEinwilligungen.getListBySchuelerIds(List.of(1L)))
 				.isNotNull()
 				.hasSize(1)
 				.first()
