@@ -19,10 +19,10 @@ abstract class PnpxTask extends AbstractExecTask<PnpxTask> {
 	}
 
 	@TaskAction
-    @Override
-    protected void exec() {
-        // Make convention mapping work
-        def cmdLine = this.getCommandLine();
+	@Override
+	protected void exec() {
+		// Make convention mapping work
+		def cmdLine = this.getCommandLine();
 		def cfg = project.nodeconfig;
 		cfg.addEnvironment(this);
 		cmdLine.set(0, cfg.getPnpxExectuable());
@@ -33,7 +33,7 @@ abstract class PnpxTask extends AbstractExecTask<PnpxTask> {
 			throw new Exception("Unsupported operating system for the node plugin!");
 		}
 		this.setCommandLine(cmdLine);
-        super.exec();
-    }
+		super.exec();
+	}
 
 }

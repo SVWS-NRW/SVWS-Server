@@ -72,6 +72,6 @@ class SvwsMavenRepoPlugin extends SvwsMavenRepoCredentialsPlugin implements Plug
 		project.gradle.projectsEvaluated {
 			this.chooseMavenRepository()
 		}
-    }
+	}
 
 }

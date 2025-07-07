@@ -13,25 +13,25 @@ class NodePlugin implements Plugin<Project> {
 
 	def project;
 
-   	@Override
+	@Override
 	void apply(Project project) {
-    	this.project = project;
+		this.project = project;
 
-        // Erstelle die Konfiguration für das Plugin mit Default-Werten
-        def buildDir = project.getBuildDir();
+		// Erstelle die Konfiguration für das Plugin mit Default-Werten
+		def buildDir = project.getBuildDir();
 		def cfg = project.extensions.create('nodeconfig', NodePluginConfig, project);
 
- 		// Füge Tasks als globale Typen für gradle hinzu
+		// Füge Tasks als globale Typen für gradle hinzu
 		[ NpmGlobalInstall.class, NpmInstall.class, NpmRun.class, NpmPublish.class, NpmTask.class, NpxTask.class, PnpmTask.class, PnpxTask.class ].each {
 			clazz -> this.project.extensions.extraProperties[clazz.getSimpleName()] = clazz;
 		};
 
-        // Füge Tasks zum Projekt hinzu
-        [ NodeDownload.class, PnpmDownload.class, NodeWipe.class, TsDownload.class ].each {
+		// Füge Tasks zum Projekt hinzu
+		[ NodeDownload.class, PnpmDownload.class, NodeWipe.class, TsDownload.class ].each {
 			clazz -> this.project.tasks.register(clazz.getSimpleName().uncapitalize(), clazz);
 		};
 
-    }
+	}
 
 }
 

@@ -11,23 +11,23 @@ import org.gradle.api.file.RegularFileProperty;
 abstract class PnpmDownload extends Exec {
 
 	PnpmDownload() {
-		group "pnpm"
+		group = "pnpm"
 		dependsOn project.rootProject.tasks.getByPath('nodeDownload')
-		    
+
 		def cfg = project.nodeconfig;
 		if (cfg.isWindows()) {
 			outputs.dir(cfg.getNodeDirectory() + "/node_modules/pnpm");
 		} else if (!cfg.isLinux() && !cfg.isMacOsX()) {
 			throw new Exception("Unsupported operating system for the node plugin!");
 		}
-	    outputs.files(cfg.getPnpmExectuable(), cfg.getPnpxExectuable()); 
+		outputs.files(cfg.getPnpmExectuable(), cfg.getPnpxExectuable()); 
 	}
 
 	@TaskAction
-    @Override
-    protected void exec() {
-        // Make convention mapping work
-        def cmdLine = this.getCommandLine();
+	@Override
+	protected void exec() {
+		// Make convention mapping work
+		def cmdLine = this.getCommandLine();
 		def cfg = project.nodeconfig;
 		cfg.addEnvironment(this);
 		cmdLine.set(0, 'pnpm');
@@ -41,7 +41,7 @@ abstract class PnpmDownload extends Exec {
 			throw new Exception("Unsupported operating system for the node plugin!");
 		}
 		this.setCommandLine(cmdLine);
-        super.exec();
-    }
+		super.exec();
+	}
 
 }

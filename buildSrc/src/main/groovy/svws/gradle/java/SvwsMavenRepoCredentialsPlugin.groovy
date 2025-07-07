@@ -87,11 +87,11 @@ abstract class SvwsMavenRepoCredentialsPlugin implements Plugin<Project> {
 		def nexus_actor = project.ext.getNexusActor()
 		def nexus_token = project.ext.getNexusToken()
 		project.ext.getNexusNpmToken = { ->
-	    	if ((nexus_actor == null) || (nexus_token == null))
-		    	return null
-		    return (nexus_actor + ':' + nexus_token).bytes.encodeBase64().toString()
+			if ((nexus_actor == null) || (nexus_token == null))
+				return null
+			return (nexus_actor + ':' + nexus_token).bytes.encodeBase64().toString()
 		}
-    }
+	}
 
 	void addNpmToken() {
 		project.ext.getNpmToken = { ->
@@ -106,9 +106,9 @@ abstract class SvwsMavenRepoCredentialsPlugin implements Plugin<Project> {
 	}
 
 
-  	@Override
+	@Override
 	void apply(Project project) {
-    	this.project = project
+		this.project = project
 		this.addGithubActor()
 		this.addGithubToken()
 		this.addNexusActor()
@@ -117,6 +117,6 @@ abstract class SvwsMavenRepoCredentialsPlugin implements Plugin<Project> {
 		this.addOssrhToken()
 		this.addNexusNpmBase64Token()
 		this.addNpmToken()
-    }
+	}
 
 }

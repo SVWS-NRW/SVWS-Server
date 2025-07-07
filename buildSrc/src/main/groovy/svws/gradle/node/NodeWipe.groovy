@@ -11,7 +11,7 @@ import org.gradle.api.file.RelativePath;
 abstract class NodeWipe extends DefaultTask {
 
 	NodeWipe() {
-	    group 'node'
+		group = 'node'
 	}
 
 	@TaskAction

@@ -36,9 +36,9 @@ abstract class NpmInstall extends AbstractExecTask<NpmInstall> {
  	}
 	
 	@TaskAction
-    @Override
-    protected void exec() {
-        def cmdLine = this.getCommandLine();
+	@Override
+	protected void exec() {
+		def cmdLine = this.getCommandLine();
 		def cfg = project.nodeconfig;
 		cfg.addEnvironment(this);
 		cmdLine.set(0, 'install');
@@ -50,7 +50,7 @@ abstract class NpmInstall extends AbstractExecTask<NpmInstall> {
 			throw new Exception("Unsupported operating system for the node plugin!");
 		}
 		this.setCommandLine(cmdLine);
-        super.exec();
-    }
+		super.exec();
+	}
 
 }

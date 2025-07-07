@@ -11,9 +11,9 @@ import org.gradle.api.file.RelativePath;
 abstract class NodeDownload extends DefaultTask {
 
 	NodeDownload() {
-	    group 'node'
-	    def cfg = project.nodeconfig;
-	    outputs.dir(cfg.getNodeDirectory());
+		group = 'node'
+		def cfg = project.nodeconfig;
+		outputs.dir(cfg.getNodeDirectory());
 	}
 
 	@TaskAction
@@ -37,7 +37,7 @@ abstract class NodeDownload extends DefaultTask {
 			}
 		}
 
-    	def compFilename = cfg.getCompressedFilename();
+		def compFilename = cfg.getCompressedFilename();
 		if ("zip".equals(cfg.getCompressedFileType())) {
 			project.copy {
 				eachFile { f ->	f.relativePath = new RelativePath(true, f.relativePath.segments.drop(1)) }

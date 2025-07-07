@@ -26,13 +26,13 @@ abstract class NpmPublish extends AbstractExecTask<NpmPublish> {
 	}
 
 	@TaskAction
-    @Override
-    protected void exec() {
-    	if ((!tokenOnly) && (actor == null))
-    		throw new Exception("Es wurde kein Benutzername/Actor angegeben.");
-    	if (token == null)
-    		throw new Exception("Es wurde kein Benutzertoken bzw. -kennwort angegeben.");
-        def cmdLine = this.getCommandLine();
+	@Override
+	protected void exec() {
+		if ((!tokenOnly) && (actor == null))
+			throw new Exception("Es wurde kein Benutzername/Actor angegeben.");
+		if (token == null)
+			throw new Exception("Es wurde kein Benutzertoken bzw. -kennwort angegeben.");
+		def cmdLine = this.getCommandLine();
 		def cfg = project.nodeconfig;
 		cfg.addEnvironment(this);
 		if (tokenOnly) {
@@ -60,7 +60,7 @@ abstract class NpmPublish extends AbstractExecTask<NpmPublish> {
 			throw new Exception("Unsupported operating system for the node plugin!");
 		}		
 		this.setCommandLine(cmdLine);
-        super.exec();
-    }
+		super.exec();
+	}
 
 }

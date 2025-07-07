@@ -20,10 +20,10 @@ abstract class NpxTask extends AbstractExecTask<NpxTask> {
 	}
 
 	@TaskAction
-    @Override
-    protected void exec() {
-        // Make convention mapping work
-        def cmdLine = this.getCommandLine();
+	@Override
+	protected void exec() {
+		// Make convention mapping work
+		def cmdLine = this.getCommandLine();
 		def cfg = project.nodeconfig;
 		cfg.addEnvironment(this);
 		cmdLine.set(0, cfg.getNpxExectuable());
@@ -34,7 +34,7 @@ abstract class NpxTask extends AbstractExecTask<NpxTask> {
 			throw new Exception("Unsupported operating system for the node plugin!");
 		}
 		this.setCommandLine(cmdLine);
-        super.exec();
-    }
+		super.exec();
+	}
 
 }

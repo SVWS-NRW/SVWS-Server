@@ -19,9 +19,9 @@ abstract class NpmRun extends AbstractExecTask<NpmRun> {
 	}
 
 	@TaskAction
-    @Override
-    protected void exec() {
-        def cmdLine = this.getCommandLine();
+	@Override
+	protected void exec() {
+		def cmdLine = this.getCommandLine();
 		def cfg = project.nodeconfig;
 		cfg.addEnvironment(this);
 		cmdLine.set(0, 'run');
@@ -33,7 +33,7 @@ abstract class NpmRun extends AbstractExecTask<NpmRun> {
 			throw new Exception("Unsupported operating system for the node plugin!");
 		}
 		this.setCommandLine(cmdLine);
-        super.exec();
-    }
+		super.exec();
+	}
 
 }

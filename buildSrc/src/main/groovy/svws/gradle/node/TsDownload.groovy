@@ -13,7 +13,7 @@ import org.gradle.api.file.RegularFileProperty;
 abstract class TsDownload extends Exec {
 
 	TsDownload() {
-		group "node"
+		group = "node"
 		dependsOn project.rootProject.tasks.getByPath('nodeDownload')
 	}
 
@@ -55,9 +55,9 @@ abstract class TsDownload extends Exec {
 
 
 	@TaskAction
-    @Override
-    protected void exec() {
-        def cmdLine = this.getCommandLine();
+	@Override
+	protected void exec() {
+		def cmdLine = this.getCommandLine();
 		def cfg = project.nodeconfig;
 		cfg.addEnvironment(this);
 		cmdLine.set(0, '@types/node@' + this.getTSNodeTypesVersion());
@@ -72,7 +72,7 @@ abstract class TsDownload extends Exec {
 			throw new Exception("Unsupported operating system for the node plugin!");
 		}
 		this.setCommandLine(cmdLine);
-        super.exec();
-    }
+		super.exec();
+	}
 
 }

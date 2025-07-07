@@ -19,10 +19,10 @@ abstract class NpmGlobalInstall extends AbstractExecTask<NpmGlobalInstall> {
 	}
 	
 	@TaskAction
-    @Override
-    protected void exec() {
-        // Make convention mapping work
-        def cmdLine = this.getCommandLine();
+	@Override
+	protected void exec() {
+		// Make convention mapping work
+		def cmdLine = this.getCommandLine();
 		def cfg = project.nodeconfig;
 		if (cfg.isWindows())
 			environment 'PATH', cfg.getNodeDirectory() + ";${environment.PATH}"
@@ -38,7 +38,7 @@ abstract class NpmGlobalInstall extends AbstractExecTask<NpmGlobalInstall> {
 			throw new Exception("Unsupported operating system for the node plugin!");
 		}
 		this.setCommandLine(cmdLine);
-        super.exec();
-    }	
+		super.exec();
+	}	
 
 }
