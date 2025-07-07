@@ -1,5 +1,7 @@
 package de.svws_nrw.data.schueler;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -94,7 +96,7 @@ class DataSchuelerEinwilligungenTest {
 
 	@Test
 	@DisplayName("getAll | Erfolg")
-	void getAllTest() throws ApiOperationException {
+	void getListBySchuelerIdsTest() throws ApiOperationException {
 		final DTOSchuelerDatenschutz dto = new DTOSchuelerDatenschutz(1L, 1L, false, false);
 		when(conn.queryAll(DTOSchuelerDatenschutz.class)).thenReturn(List.of(dto));
 
@@ -116,7 +118,7 @@ class DataSchuelerEinwilligungenTest {
 		final DTOSchuelerDatenschutz dto2 = new DTOSchuelerDatenschutz(2L, 1L, false, false);
 		when(conn.queryAll(DTOSchuelerDatenschutz.class)).thenReturn(List.of(dto1, dto2));
 
-		assertThat(dataSchuelerEinwilligungen.getAll(new Long[] { 1L, 2L }))
+		assertThat(dataSchuelerEinwilligungen.getListBySchuelerIds(Arrays.asList(1L, 2L)))
 				.isNotNull()
 				.hasSize(2)
 				.first()
@@ -129,12 +131,12 @@ class DataSchuelerEinwilligungenTest {
 
 	@Test
 	@DisplayName("getAll(Long[]) | Erfolg mit IDs, die nicht existieren (diese werden ignoriert)")
-	void getAllWithIdsButAtLeastOneNonExistentIdTest() throws ApiOperationException {
+	void getListBySchuelerIdsWithIdsButAtLeastOneNonExistentIdTest() throws ApiOperationException {
 		final DTOSchuelerDatenschutz dto1 = new DTOSchuelerDatenschutz(1L, 1L, false, false);
 		final DTOSchuelerDatenschutz dto2 = new DTOSchuelerDatenschutz(2L, 1L, false, false);
 		when(conn.queryAll(DTOSchuelerDatenschutz.class)).thenReturn(List.of(dto1, dto2));
 
-		assertThat(dataSchuelerEinwilligungen.getAll(new Long[] { 1L, 2L, 3L }))
+		assertThat(dataSchuelerEinwilligungen.getListBySchuelerIds(Arrays.asList(1L, 2L, 3L )))
 				.isNotNull()
 				.hasSize(2)
 				.first()
@@ -147,12 +149,12 @@ class DataSchuelerEinwilligungenTest {
 
 	@Test
 	@DisplayName("getAll(Long[]) | Erfolg")
-	void getAllWithIdsSimpleFilterTest() throws ApiOperationException {
+	void getListBySchuelerIdsWithIdsSimpleFilterTest() throws ApiOperationException {
 		final DTOSchuelerDatenschutz dto1 = new DTOSchuelerDatenschutz(1L, 1L, false, false);
 		final DTOSchuelerDatenschutz dto2 = new DTOSchuelerDatenschutz(2L, 1L, false, false);
 		when(conn.queryAll(DTOSchuelerDatenschutz.class)).thenReturn(List.of(dto1, dto2));
 
-		assertThat(dataSchuelerEinwilligungen.getAll(new Long[] { 1L }))
+		assertThat(dataSchuelerEinwilligungen.getListBySchuelerIds(List.of(1L)))
 				.isNotNull()
 				.hasSize(1)
 				.first()

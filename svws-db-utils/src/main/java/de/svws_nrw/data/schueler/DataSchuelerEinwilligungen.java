@@ -10,11 +10,10 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für den
@@ -59,8 +58,13 @@ public final class DataSchuelerEinwilligungen extends DataManagerRevised<Long[],
 	 * @param ids Liste der Schüler IDs, deren Einwilligungen abgerufen werden sollen.
 	 * @return Alle Einwilligungen der angegebenen Schüler.
 	 */
-	public List<SchuelerEinwilligung> getAll(final List<Long> ids) throws ApiOperationException {
-		return getAll().stream().filter(e -> ids.contains(e.idSchueler)).toList();
+	public List<SchuelerEinwilligung> getListBySchuelerIds(final List<Long> ids) throws ApiOperationException {
+		if (ids.isEmpty()) {
+			return new ArrayList<>();
+		}
+
+		final List<DTOSchuelerDatenschutz> einwilligungen =  conn.queryList(DTOSchuelerDatenschutz.QUERY_LIST_BY_SCHUELER_ID, DTOSchuelerDatenschutz.class, ids);
+		return einwilligungen.stream().map(this::map).toList();
 	}
 
 	/**
@@ -69,8 +73,8 @@ public final class DataSchuelerEinwilligungen extends DataManagerRevised<Long[],
 	 * @return die Response mit der Liste von {@link SchuelerEinwilligung} Objekten
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response getListByIdsAsResponse(final List<Long> ids) throws ApiOperationException {
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(getAll(ids)).build();
+	public Response getListBySchuelerIdsAsResponse(final List<Long> ids) throws ApiOperationException {
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(getListBySchuelerIds(ids)).build();
 	}
 
 	@Override

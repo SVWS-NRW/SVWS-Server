@@ -1308,12 +1308,11 @@ public class APISchueler {
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchuelerEinwilligung.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schülerdaten anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
-	public Response getSchuelerEinwilligungenMultiple(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der Schüler", required =
-			true,
+	public Response getSchuelerEinwilligungenBySchuelerIds(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der Schüler", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerEinwilligungen(conn, 0L).getListByIdsAsResponse(JSONMapper.toListOfLong(is)),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerEinwilligungen(conn, 0L).getListBySchuelerIdsAsResponse(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
 	}
 
