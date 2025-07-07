@@ -19,10 +19,12 @@ class SvwsMavenPublishPlugin extends SvwsMavenRepoCredentialsPlugin implements P
 	 */
 	void configSigning() {
 		// Das Signieren von Artefakten soll nur bei RELEASES erfolgen, nicht bei SNAPSHOTS.
-		project.ext.isReleaseVersion = !project.version.endsWith('SNAPSHOT')
-		project.signing.required = project.ext.isReleaseVersion && project.gradle.taskGraph.hasTask("publish")
-		project.signing.sign = project.publishing.publications
-	}
+			project.ext.isReleaseVersion = !project.version.endsWith('SNAPSHOT')
+			project.signing {
+				required = { project.ext.isReleaseVersion && project.gradle.taskGraph.hasTask("publish") }
+				sign project.publishing.publications
+			}
+		}
 
 	/**
 	 * Legt die Maven-Repos für den publish-Task fest.
