@@ -60,8 +60,8 @@
 					</template>
 					<template v-else>
 						<svws-ui-select v-if="hatUpdateKompetenz" title="Referenzniveau" headless removable
-							:model-value="(rowData.referenzniveau === null) ? null : Sprachreferenzniveau.data().getWertByKuerzel(rowData.referenzniveau)"
-							@update:model-value="referenzniveau => patchSprachbelegung({referenzniveau: referenzniveau?.daten(schuljahr)?.kuerzel ?? null}, rowData.sprache)"
+							:model-value="(rowData.referenzniveau === null) ? null : Sprachreferenzniveau.data().getWertBySchluessel(rowData.referenzniveau)"
+							@update:model-value="referenzniveau => patchSprachbelegung({referenzniveau: referenzniveau?.daten(schuljahr)?.schluessel ?? null}, rowData.sprache)"
 							:items="Sprachreferenzniveau.values()" :item-text="i => i.daten(schuljahr)?.kuerzel ?? '—'" />
 						<div v-else> {{ rowData.referenzniveau }} </div>
 					</template>
@@ -108,8 +108,8 @@
 				</template>
 				<template #cell(referenzniveau)="{ rowData }">
 					<svws-ui-select v-if="hatUpdateKompetenz" title="Referenzniveau" headless removable
-						:model-value="(rowData.referenzniveau === null) ? null : Sprachreferenzniveau.data().getWertByKuerzel(rowData.referenzniveau)"
-						@update:model-value="referenzniveau => patchSprachpruefung({referenzniveau: referenzniveau?.daten(schuljahr)?.kuerzel ?? null}, rowData.sprache)"
+						:model-value="(rowData.referenzniveau === null) ? null : Sprachreferenzniveau.data().getWertBySchluessel(rowData.referenzniveau)"
+						@update:model-value="referenzniveau => patchSprachpruefung({referenzniveau: referenzniveau?.daten(schuljahr)?.schluessel ?? null}, rowData.sprache)"
 						:items="Sprachreferenzniveau.values()" :item-text="i => i.daten(schuljahr)?.kuerzel ?? '—'" />
 					<div v-else>{{ (rowData.referenzniveau === null) ? null : Sprachreferenzniveau.data().getWertByKuerzel(rowData.referenzniveau)?.daten(schuljahr)?.kuerzel ?? '-' }}</div>
 				</template>
@@ -161,8 +161,8 @@
 				</template>
 				<template #cell(referenzniveau)="{ rowData }">
 					<svws-ui-select v-if="hatUpdateKompetenz" title="Referenzniveau" headless removable
-						:model-value="(rowData.referenzniveau === null) ? null : Sprachreferenzniveau.data().getWertByKuerzel(rowData.referenzniveau)"
-						@update:model-value="referenzniveau => patchSprachpruefung({referenzniveau: referenzniveau?.daten(schuljahr)?.kuerzel ?? null}, rowData.sprache)"
+						:model-value="(rowData.referenzniveau === null) ? null : Sprachreferenzniveau.data().getWertBySchluessel(rowData.referenzniveau)"
+						@update:model-value="referenzniveau => patchSprachpruefung({referenzniveau: referenzniveau?.daten(schuljahr)?.schluessel ?? null}, rowData.sprache)"
 						:items="Sprachreferenzniveau.values()" :item-text="i => i.daten(schuljahr)?.kuerzel ?? '—'" />
 					<div v-else>{{ (rowData.referenzniveau === null) ? null : Sprachreferenzniveau.data().getWertByKuerzel(rowData.referenzniveau)?.daten(schuljahr)?.kuerzel ?? '—' }}</div>
 				</template>

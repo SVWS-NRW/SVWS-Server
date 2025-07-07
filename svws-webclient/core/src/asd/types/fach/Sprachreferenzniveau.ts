@@ -15,69 +15,74 @@ export class Sprachreferenzniveau extends JavaEnum<Sprachreferenzniveau> impleme
 	static readonly all_values_by_name : Map<string, Sprachreferenzniveau> = new Map<string, Sprachreferenzniveau>();
 
 	/**
+	 * Referenzniveau nach GeR Pre-A1.
+	 */
+	public static readonly A1M : Sprachreferenzniveau = new Sprachreferenzniveau("A1M", 0, );
+
+	/**
 	 * Referenzniveau nach GeR A1.
 	 */
-	public static readonly A1 : Sprachreferenzniveau = new Sprachreferenzniveau("A1", 0, );
+	public static readonly A1 : Sprachreferenzniveau = new Sprachreferenzniveau("A1", 1, );
 
 	/**
 	 * Referenzniveau nach GeR A1 Plus
 	 */
-	public static readonly A1P : Sprachreferenzniveau = new Sprachreferenzniveau("A1P", 1, );
+	public static readonly A1P : Sprachreferenzniveau = new Sprachreferenzniveau("A1P", 2, );
 
 	/**
 	 * Referenzniveau nach GeR A1A2
 	 */
-	public static readonly A1A2 : Sprachreferenzniveau = new Sprachreferenzniveau("A1A2", 2, );
+	public static readonly A1A2 : Sprachreferenzniveau = new Sprachreferenzniveau("A1A2", 3, );
 
 	/**
 	 * Referenzniveau nach GeR A2
 	 */
-	public static readonly A2 : Sprachreferenzniveau = new Sprachreferenzniveau("A2", 3, );
+	public static readonly A2 : Sprachreferenzniveau = new Sprachreferenzniveau("A2", 4, );
 
 	/**
 	 * Referenzniveau nach GeR A2 Plus
 	 */
-	public static readonly A2P : Sprachreferenzniveau = new Sprachreferenzniveau("A2P", 4, );
+	public static readonly A2P : Sprachreferenzniveau = new Sprachreferenzniveau("A2P", 5, );
 
 	/**
 	 * Referenzniveau nach GeR A2B1.
 	 */
-	public static readonly A2B1 : Sprachreferenzniveau = new Sprachreferenzniveau("A2B1", 5, );
+	public static readonly A2B1 : Sprachreferenzniveau = new Sprachreferenzniveau("A2B1", 6, );
 
 	/**
 	 * Referenzniveau nach GeR B1.
 	 */
-	public static readonly B1 : Sprachreferenzniveau = new Sprachreferenzniveau("B1", 6, );
+	public static readonly B1 : Sprachreferenzniveau = new Sprachreferenzniveau("B1", 7, );
 
 	/**
 	 * Referenzniveau nach GeR B1 Plus.
 	 */
-	public static readonly B1P : Sprachreferenzniveau = new Sprachreferenzniveau("B1P", 7, );
+	public static readonly B1P : Sprachreferenzniveau = new Sprachreferenzniveau("B1P", 8, );
 
 	/**
 	 * Referenzniveau nach GeR B1B2.
 	 */
-	public static readonly B1B2 : Sprachreferenzniveau = new Sprachreferenzniveau("B1B2", 8, );
+	public static readonly B1B2 : Sprachreferenzniveau = new Sprachreferenzniveau("B1B2", 9, );
 
 	/**
 	 * Referenzniveau nach GeR B2.
 	 */
-	public static readonly B2 : Sprachreferenzniveau = new Sprachreferenzniveau("B2", 9, );
+	public static readonly B2 : Sprachreferenzniveau = new Sprachreferenzniveau("B2", 10, );
 
 	/**
 	 * Referenzniveau nach GeR B2C1.
 	 */
-	public static readonly B2C1 : Sprachreferenzniveau = new Sprachreferenzniveau("B2C1", 10, );
+	public static readonly B2C1 : Sprachreferenzniveau = new Sprachreferenzniveau("B2C1", 11, );
 
 	/**
 	 * Referenzniveau nach GeR C1.
 	 */
-	public static readonly C1 : Sprachreferenzniveau = new Sprachreferenzniveau("C1", 11, );
+	public static readonly C1 : Sprachreferenzniveau = new Sprachreferenzniveau("C1", 12, );
 
 	/**
 	 * Referenzniveau nach GeR C2.
 	 */
-	public static readonly C2 : Sprachreferenzniveau = new Sprachreferenzniveau("C2", 12, );
+	public static readonly C2 : Sprachreferenzniveau = new Sprachreferenzniveau("C2", 13, );
 
 	private constructor(name : string, ordinal : number) {
 		super(name, ordinal);
