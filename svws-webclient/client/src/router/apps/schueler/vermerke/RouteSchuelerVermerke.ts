@@ -33,7 +33,7 @@ export class RouteSchuelerVermerke extends RouteNode<RouteDataSchuelerVermerke, 
 				throw new DeveloperNotificationException("Fehler: Die Parameter der Route sind nicht gültig gesetzt.");
 			return routeSchueler.data.manager.hasDaten() ? false : routeSchueler.getRouteDefaultChild({ id });
 		} catch (e) {
-			return routeError.getErrorRoute(e as DeveloperNotificationException);
+			return routeError.getSimpleErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 
@@ -47,7 +47,7 @@ export class RouteSchuelerVermerke extends RouteNode<RouteDataSchuelerVermerke, 
 			else
 				await this.data.ladeDaten(routeSchueler.data.manager.liste.get(id));
 		} catch (e) {
-			return routeError.getErrorRoute(e as DeveloperNotificationException);
+			return await routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 

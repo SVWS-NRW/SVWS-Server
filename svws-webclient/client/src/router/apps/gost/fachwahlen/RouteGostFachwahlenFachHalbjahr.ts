@@ -45,7 +45,7 @@ export class RouteGostFachwahlenFachHalbjahr extends RouteNode<any, RouteGost> {
 				return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr }};
 			return false;
 		} catch (e) {
-			return routeError.getErrorRoute(e as DeveloperNotificationException);
+			return routeError.getSimpleErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 
@@ -59,7 +59,7 @@ export class RouteGostFachwahlenFachHalbjahr extends RouteNode<any, RouteGost> {
 			this._halbjahr.value = halbjahr;
 			routeGostFachwahlen.data.auswahl = { idFach: this._idFach.value, bereich: halbjahr.kuerzel };
 		} catch (e) {
-			return routeError.getErrorRoute(e as DeveloperNotificationException);
+			return await routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 

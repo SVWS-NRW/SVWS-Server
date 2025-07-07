@@ -97,7 +97,7 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 			if (redirect.hidden({ abiturjahr: abiturjahr.toString() }) !== false)
 				return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr }};
 		} catch (e) {
-			return routeError.getErrorRoute(e as DeveloperNotificationException);
+			return await routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 

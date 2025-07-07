@@ -66,7 +66,7 @@ export class RouteGostKlausurplanungKalender extends RouteNode<any, RouteGostKla
 				// routeGostKlausurplanung.data.kalenderdatum.value = datum;
 			}
 		} catch(e) {
-			return routeError.getErrorRoute(e instanceof Error ? e : new DeveloperNotificationException("Unbekannter Fehler beim Laden der Klausurplanungsdaten."));
+			return await routeError.getErrorRoute(e instanceof Error ? e : new DeveloperNotificationException("Unbekannter Fehler beim Laden der Klausurplanungsdaten."));
 		}
 	}
 

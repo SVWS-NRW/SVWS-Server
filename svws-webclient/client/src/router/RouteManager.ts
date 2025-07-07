@@ -14,6 +14,7 @@ import { RoutingStatus } from "~/router/RoutingStatus";
 interface RouteStateError {
 	code: number | undefined;
 	error: Error | undefined;
+	text: string | undefined;
 }
 
 export class RouteManager {
@@ -37,6 +38,7 @@ export class RouteManager {
 	private _errorstate = reactive<RouteStateError>({
 		code: undefined,
 		error: undefined,
+		text: undefined,
 	});
 
 	/**
@@ -72,9 +74,18 @@ export class RouteManager {
 		this._errorstate.error = value;
 	}
 
+	public get errortext(): string | undefined {
+		return this._errorstate.text;
+	}
+
+	public set errortext(value : string | undefined) {
+		this._errorstate.text = value;
+	}
+
 	public resetErrorState() {
 		this._errorstate.code = undefined;
 		this._errorstate.error = undefined;
+		this._errorstate.text = undefined;
 	}
 
 	/**
@@ -210,7 +221,7 @@ export class RouteManager {
 		if (api.mode !== ServerMode.STABLE)
 			console.log("Routing '" + from.fullPath + "' --> '" + to.fullPath + "'"); // + "': " + from_node?.name + " " + JSON.stringify(from.params) +  " --> " + to_node.name + " " + JSON.stringify(to.params)
 		if (!to_node.mode.checkServerMode(api.mode))
-			return routeError.getErrorRoute(new DeveloperNotificationException("Die Route ist nicht verfügbar, da die Client-Funktionen sich derzeit in der Entwicklung befinden (Stand: " + to_node.mode.name() + ")."), 503);
+			return await routeError.getErrorRoute(new DeveloperNotificationException("Die Route ist nicht verfügbar, da die Client-Funktionen sich derzeit in der Entwicklung befinden (Stand: " + to_node.mode.name() + ")."), 503);
 		// Rufe die beforeEach-Methode bei der Ziel-Route auf und prüfe, ob die Route abgelehnt oder umgeleite wird...
 		let result: any = await to_node.doBeforeEach(to_node, to.params, from_node, from.params);
 		if (result !== true)

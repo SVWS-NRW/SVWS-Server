@@ -49,7 +49,7 @@ export class RouteSchuelerStundenplan extends RouteNode<RouteDataSchuelerStunden
 			if (idStundenplan !== undefined)
 				await routeSchuelerStundenplan.data.setEintrag(idSchueler, idStundenplan, wochentyp ?? 0, kwjahr, kw);
 		} catch (e) {
-			return routeError.getErrorRoute(e as DeveloperNotificationException);
+			return await routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 

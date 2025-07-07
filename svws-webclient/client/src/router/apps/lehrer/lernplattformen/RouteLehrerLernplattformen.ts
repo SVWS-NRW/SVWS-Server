@@ -32,7 +32,7 @@ export class RouteLehrerLernplattformen extends RouteNode<RouteDataLehrerLernpla
 			else
 				await this.data.ladeDaten(routeLehrer.data.manager.liste.get(id));
 		} catch (e) {
-			return routeError.getErrorRoute(e as DeveloperNotificationException);
+			return await routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 

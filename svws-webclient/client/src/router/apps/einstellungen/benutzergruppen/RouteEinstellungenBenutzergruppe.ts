@@ -41,7 +41,7 @@ export class RouteEinstellungenBenutzergruppe extends RouteNode<RouteDataEinstel
 				return routeEinstellungenBenutzergruppeDaten.getRoute({ id });
 			return true;
 		} catch(e) {
-			return routeError.getErrorRoute(e as DeveloperNotificationException);
+			return await routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 
@@ -62,7 +62,7 @@ export class RouteEinstellungenBenutzergruppe extends RouteNode<RouteDataEinstel
 			const eintrag = (id !== undefined) ? this.data.mapBenutzergruppe.get(id) : undefined;
 			await this.data.setBenutzergruppe(eintrag);
 		} catch(e) {
-			return routeError.getErrorRoute(e as DeveloperNotificationException);
+			return await routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 

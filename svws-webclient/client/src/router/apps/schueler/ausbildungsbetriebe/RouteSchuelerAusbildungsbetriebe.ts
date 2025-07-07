@@ -30,7 +30,7 @@ export class RouteSchuelerAusbildungsbetriebe extends RouteNode<RouteDataSchuele
 			await this.data.setSchueler(id);
 			await this.data.setSchuelerBetrieb();
 		} catch (e) {
-			return routeError.getErrorRoute(e as DeveloperNotificationException);
+			return await routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 

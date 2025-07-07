@@ -197,7 +197,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			if (cur !== this.data.view)
 				this.data.setView(cur, this.children);
 		} catch (e) {
-			return routeError.getErrorRoute(e as DeveloperNotificationException);
+			return await routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 

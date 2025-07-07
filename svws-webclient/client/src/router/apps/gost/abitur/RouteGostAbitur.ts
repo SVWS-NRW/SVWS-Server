@@ -55,7 +55,7 @@ export class RouteGostAbitur extends RouteNode<RouteDataGostAbitur, RouteGost> {
 				return false;
 			return routeGost.getRouteDefaultChild({ abiturjahr });
 		} catch (e) {
-			return routeError.getErrorRoute(e as DeveloperNotificationException);
+			return routeError.getSimpleErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 
@@ -79,7 +79,7 @@ export class RouteGostAbitur extends RouteNode<RouteDataGostAbitur, RouteGost> {
 					if (to.name.startsWith(child.name))
 						this.data.setView(child, this.children);
 		} catch (e) {
-			return routeError.getErrorRoute(e as DeveloperNotificationException);
+			return await routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 

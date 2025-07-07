@@ -5173,6 +5173,9 @@ export class ApiServer extends BaseApi {
 	 *   Code 404: Keine Blockung mit der angebenen ID gefunden.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 409: Die Daten der Blockung konnten nicht fehlerfrei bestimmt werden.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
 	 *   Code 500: Es ist ein unerwarteter interner Fehler aufgetreten.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: SimpleOperationResponse

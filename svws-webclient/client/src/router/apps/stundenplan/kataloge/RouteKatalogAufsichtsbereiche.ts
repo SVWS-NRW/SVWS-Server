@@ -46,7 +46,7 @@ export class RouteKatalogAufsichtsbereiche extends RouteNode<RouteDataKatalogAuf
 				eintrag = this.data.stundenplanManager.aufsichtsbereichGetByIdOrException(idAufsichtsbereich);
 			await this.data.setEintrag(eintrag);
 		} catch (error) {
-			return routeError.getErrorRoute(error as DeveloperNotificationException);
+			return await routeError.getErrorRoute(error as DeveloperNotificationException);
 		}
 	}
 

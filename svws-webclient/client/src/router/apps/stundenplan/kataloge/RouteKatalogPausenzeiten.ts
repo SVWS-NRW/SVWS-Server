@@ -45,7 +45,7 @@ export class RouteKatalogPausenzeiten extends RouteNode<RouteDataKatalogPausenze
 			}
 			await this.data.setEintrag(eintrag);
 		} catch (error) {
-			return routeError.getErrorRoute(error as DeveloperNotificationException);
+			return await routeError.getErrorRoute(error as DeveloperNotificationException);
 		}
 	}
 

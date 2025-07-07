@@ -41,7 +41,7 @@ export class RouteEinstellungenBenutzer extends RouteNode<RouteDataEinstellungen
 				return routeEinstellungenBenutzer.getRoute({ id });
 			return true;
 		} catch(e) {
-			return routeError.getErrorRoute(e as DeveloperNotificationException);
+			return await routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 
@@ -62,7 +62,7 @@ export class RouteEinstellungenBenutzer extends RouteNode<RouteDataEinstellungen
 			}
 			await this.data.setBenutzer(eintrag);
 		} catch(e) {
-			return routeError.getErrorRoute(e as DeveloperNotificationException);
+			return await routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 
 	}

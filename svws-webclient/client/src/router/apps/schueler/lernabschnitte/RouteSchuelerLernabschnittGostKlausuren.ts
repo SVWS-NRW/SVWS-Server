@@ -48,7 +48,7 @@ export class RouteSchuelerLernabschnittGostKlausuren extends RouteNode<any, Rout
 			}
 			return routeSchuelerLernabschnittAllgemein.getRoute({ id, abschnitt, wechselNr });
 		} catch (e) {
-			return routeError.getErrorRoute(e as DeveloperNotificationException);
+			return routeError.getSimpleErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 

@@ -29,7 +29,7 @@ export class RouteSchuelerErziehungsberechtigte extends RouteNode<RouteDataSchue
 			const { id } = RouteNode.getIntParams(to_params, ["id"]);
 			await this.data.setEintrag(id);
 		} catch (e) {
-			return routeError.getErrorRoute(e as DeveloperNotificationException);
+			return await routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 
