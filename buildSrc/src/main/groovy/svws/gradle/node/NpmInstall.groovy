@@ -5,6 +5,7 @@ import org.gradle.api.DefaultTask;
 import org.gradle.api.specs.Spec;
 import org.gradle.api.tasks.AbstractExecTask;
 import org.gradle.api.tasks.InputFile
+import org.gradle.api.tasks.Internal;
 import org.gradle.api.tasks.options.Option
 import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.TaskAction;
@@ -14,10 +15,13 @@ import org.gradle.api.provider.Property
 
 abstract class NpmInstall extends AbstractExecTask<NpmInstall> {
 
+	@Internal
+	NodePluginConfig cfg;
+
 	NpmInstall() {
 		super(NpmInstall.class);
 		dependsOn project.rootProject.tasks.getByPath('nodeDownload')
-		def cfg = project.nodeconfig;
+		this.cfg = project.nodeconfig;
 	}
 	
 	@InputFile
@@ -25,28 +29,27 @@ abstract class NpmInstall extends AbstractExecTask<NpmInstall> {
 		return "$workingDir/package.json";
 	}
 
- 	@InputFile
+	@InputFile
 	public String getPackageLockJson() {
 		return "$workingDir/package-lock.json";
 	}
- 
- 	@OutputDirectory
- 	public String getNodeModules() {
- 		return "$workingDir/node_modules";
- 	}
+
+	@OutputDirectory
+	public String getNodeModules() {
+		return "$workingDir/node_modules";
+	}
 	
 	@TaskAction
 	@Override
 	protected void exec() {
 		def cmdLine = this.getCommandLine();
-		def cfg = project.nodeconfig;
-		cfg.addEnvironment(this);
+		this.cfg.addEnvironment(this);
 		cmdLine.set(0, 'install');
-		cmdLine.add(0, cfg.getNpmExectuable());
-		if (cfg.isWindows()) {
+		cmdLine.add(0, this.cfg.getNpmExectuable());
+		if (this.cfg.isWindows()) {
 			cmdLine.add(0, '/c');
 			cmdLine.add(0, 'cmd');
-		} else if (!cfg.isLinux() && !cfg.isMacOsX()) {
+		} else if (!this.cfg.isLinux() && !this.cfg.isMacOsX()) {
 			throw new Exception("Unsupported operating system for the node plugin!");
 		}
 		this.setCommandLine(cmdLine);
