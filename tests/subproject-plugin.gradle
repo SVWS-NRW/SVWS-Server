@@ -327,7 +327,7 @@ tasks.register('buildDockerImage', Exec) {
 	description = 'Erstellen des Docker-Images für die Testumgebung'
 	dependsOn 'generateScripts'
 	executable 'docker'
-	args 'build', '-t', "${APP_IMAGE_NAME}", '-f', "$buildDirPath/tempdocker/Dockerfile", '.'
+	args 'build', '--label', '"integrationtests=prune"', '-t', "${APP_IMAGE_NAME}", '-f', "$buildDirPath/tempdocker/Dockerfile", '.'
 }
 
 
