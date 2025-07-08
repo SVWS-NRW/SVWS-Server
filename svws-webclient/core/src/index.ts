@@ -585,6 +585,7 @@ export { BerufskollegFachklassenKatalogDaten } from './core/data/schule/Berufsko
 export { BerufskollegFachklassenKatalogEintrag } from './core/data/schule/BerufskollegFachklassenKatalogEintrag';
 export { BerufskollegFachklassenKatalogIndex } from './core/data/schule/BerufskollegFachklassenKatalogIndex';
 export { Einwilligungsart } from './core/data/schule/Einwilligungsart';
+export { Fahrschuelerart } from './core/data/schule/Fahrschuelerart';
 export { FoerderschwerpunktEintrag } from './core/data/schule/FoerderschwerpunktEintrag';
 export { Haltestelle } from './core/data/schule/Haltestelle';
 export { HerkunftKatalogEintrag } from './core/data/schule/HerkunftKatalogEintrag';
@@ -788,6 +789,7 @@ export { JahrgangListeManager } from './core/utils/jahrgang/JahrgangListeManager
 export { JahrgangsUtils } from './core/utils/jahrgang/JahrgangsUtils';
 export { AbteilungenListeManager } from './core/utils/kataloge/abteilungen/AbteilungenListeManager';
 export { EntlassgruendeListeManager } from './core/utils/kataloge/entlassgruende/EntlassgruendeListeManager';
+export { FahrschuelerartenListeManager } from './core/utils/kataloge/fahrschuelerarten/FahrschuelerartenListeManager';
 export { FoerderschwerpunkteListeManager } from './core/utils/kataloge/foerderschwerpunkte/FoerderschwerpunkteListeManager';
 export { HaltestellenListeManager } from './core/utils/kataloge/haltestellen/HaltestellenListeManager';
 export { KindergaertenListeManager } from './core/utils/kataloge/kindergaerten/KindergaertenListeManager';

@@ -1,6 +1,5 @@
-import { Schulform} from "@core";
-import type { FoerderschwerpunktEintrag, KatalogEintrag, ReligionEintrag, SchulEintrag, SchulformKatalogEintrag, TelefonArt ,Haltestelle} from "@core";
-
+import { Schulform } from "@core";
+import type { FoerderschwerpunktEintrag, ReligionEintrag, Fahrschuelerart, SchulEintrag, SchulformKatalogEintrag, TelefonArt ,Haltestelle } from "@core";
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
@@ -8,7 +7,7 @@ import { PendingStateManagerSchuelerIndividualdaten } from "~/router/apps/schuel
 
 
 interface RouteStateDataSchuelerIndividualdaten extends RouteStateInterface {
-	mapFahrschuelerarten: Map<number, KatalogEintrag>;
+	mapFahrschuelerarten: Map<number, Fahrschuelerart>;
 	mapFoerderschwerpunkte: Map<number, FoerderschwerpunktEintrag>;
 	mapHaltestellen: Map<number, Haltestelle>;
 	mapReligionen: Map<number, ReligionEintrag>;
@@ -41,7 +40,7 @@ export class RouteDataSchuelerIndividualdaten extends RouteData<RouteStateDataSc
 		return this._state.value.pendingStateManager;
 	}
 
-	get mapFahrschuelerarten(): Map<number, KatalogEintrag> {
+	get mapFahrschuelerarten(): Map<number, Fahrschuelerart> {
 		return this._state.value.mapFahrschuelerarten;
 	}
 
@@ -67,7 +66,7 @@ export class RouteDataSchuelerIndividualdaten extends RouteData<RouteStateDataSc
 
 	public async ladeListe() {
 		// Lade den Katalog der Fahrschülerarten
-		const fahrschuelerarten = await api.server.getSchuelerFahrschuelerarten(api.schema)
+		const fahrschuelerarten = await api.server.getFahrschuelerarten(api.schema)
 		const mapFahrschuelerarten = new Map();
 		for (const fa of fahrschuelerarten)
 			mapFahrschuelerarten.set(fa.id, fa);

@@ -385,8 +385,8 @@ describe("Server", () => {
 		const res = await server.getSchuelerAktuell(schema);
 		expect(res).matchSnapshot();
 	});
-	test.skip("getSchuelerFahrschuelerarten", async () => {
-		const res = await server.getSchuelerFahrschuelerarten(schema);
+	test.skip("getFahrschuelerarten", async () => {
+		const res = await server.getFahrschuelerarten(schema);
 		expect(res).matchSnapshot();
 	});
 	test.skip("getSchuelerFoerderschwerpunkte", async () => {

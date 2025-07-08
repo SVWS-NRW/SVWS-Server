@@ -81,7 +81,7 @@ test('Modal bei Routenwechsel wird aktiv, bei Fortsetzen werden Änderungen zur�
     `);
 	await page.getByRole('button', { name: 'Ja' }).click();
 
-	await page.getByRole('link', { name: 'Schüler' }).click();
+	await page.getByRole('link', { name: 'Schüler', exact:true }).click();
 
 	await expect(page.locator(tooltipFahrschuelerId)).toHaveCount(0);
 })

@@ -193,7 +193,7 @@
 
 <script setup lang="ts">
 
-	import { BenutzerKompetenz, Nationalitaeten, SchuelerStatus, Schulform, Verkehrssprache } from "@core";
+	import { BenutzerKompetenz, Fahrschuelerart, Nationalitaeten, SchuelerStatus, Schulform, Verkehrssprache } from "@core";
 	import type { SchuelerIndividualdatenGruppenprozesseProps } from "~/components/schueler/individualdaten/SSchuelerIndividualdatenGruppenprozesseProps";
 	import { computed, ref, watch, toRefs } from "vue";
 	import { CoreTypeSelectManager } from "@ui";
@@ -317,7 +317,7 @@
 	});
 	const fahrschuelerSelectManager = new BaseSelectManager({
 		options: fahrschuelerArten.value, removable: false,
-		optionDisplayText: selected => selected.text ?? '', selectionDisplayText: selected => selected.text ?? '',
+		optionDisplayText: (selected: Fahrschuelerart) => selected.bezeichnung ?? '', selectionDisplayText: selected => selected.bezeichnung ?? '',
 	});
 	const haltestelleSelectManager = new BaseSelectManager({
 		options: haltestellen.value, removable: false, optionDisplayText: selected => selected.bezeichnung ?? '',

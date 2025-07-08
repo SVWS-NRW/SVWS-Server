@@ -30,8 +30,8 @@ describe("Schueler Tests ", () => {
 			expect(result).toMatchSnapshot();
 		});
 
-		test("getSchuelerFahrschuelerarten", async () => {
-			const result = await api.getSchuelerFahrschuelerarten(schema);
+		test("getFahrschuelerarten", async () => {
+			const result = await api.getFahrschuelerarten(schema);
 			expect(result).toMatchSnapshot();
 		});
 
