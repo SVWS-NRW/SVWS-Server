@@ -111,6 +111,9 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	/** Eine geschachtelte Map mit der Zuordnung eines Historien-Eintrags zu einem Schuljahr und einem Core-Type-Wert */
 	private final @NotNull HashMap<Integer, HashMap<U, T>> _mapWertAndSchuljahrToEintrag = new HashMap<>();
 
+	/** Eine geschachtelte Map mit der Zuordnung eines Historien-Eintrags zu einem Schuljahr und einem Schlüssel */
+	private final @NotNull HashMap<Integer, HashMap<String, T>> _mapSchluesselAndSchuljahrToEintrag = new HashMap<>();
+
 	/** Eine geschachtelte Map mit der Zuordnung einer Liste von Core-Type-Werten zu einem Schuljahr und einer Schulform */
 	private final @NotNull Map<Integer, Map<Schulform, List<U>>> _mapBySchuljahrAndSchulform = new HashMap<>();
 
@@ -488,7 +491,7 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 
 
 	/**
-	 * Gibt die Daten aus der Historie zu dem Core-Type-Wert für das angegeben Schuljahr zurück.
+	 * Gibt die Daten aus der Historie zu dem Core-Type-Wert für das angegebene Schuljahr zurück.
 	 *
 	 * @param schuljahr   das zu prüfende Schuljahr
 	 * @param value       der Core-Type-Wert
@@ -516,6 +519,37 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 		}
 		_mapWertAndSchuljahrToEintrag.put(schuljahr, mapEintraege);
 		return mapEintraege.get(value);
+	}
+
+	/**
+	 * Gibt die Daten aus der Historie für das angegebene Schuljahr und den Schlüssel zurück.
+	 *
+	 * @param schuljahr    das zu prüfende Schuljahr
+	 * @param schluessel   das zu prüfender Schlüssel
+	 * @return die Daten aus der Historie
+	 */
+	public @AllowNull T getEintragBySchuljahrUndSchluessel(final int schuljahr, final @NotNull String schluessel) {
+		// Prüfe, ob die Anfrage aus dem Cache bedient werden kann
+		final HashMap<String, T> cache = _mapSchluesselAndSchuljahrToEintrag.get(schuljahr);
+		if (cache != null)
+			return cache.get(schluessel);
+
+		// Wenn nicht, dann muss der Cache aufgebaut werden...
+		final @NotNull HashMap<String, T> mapEintraege = new HashMap<>();
+		// Durchwandere die einzelnen Core-Types und suche den zugehörigen Historien-Eintrag des Schuljahres für die Map
+		for (final @NotNull U wert : _listWerte) {
+			// Bestimme zunächst die Historie des Core-Type-Wertes
+			final @NotNull List<T> historie = getHistorieByWert(wert);
+			for (final @NotNull T eintrag : historie) {
+				if (((eintrag.gueltigVon == null) || (eintrag.gueltigVon <= schuljahr))
+						&& ((eintrag.gueltigBis == null) || (schuljahr <= eintrag.gueltigBis))) {
+					mapEintraege.put(eintrag.schluessel, eintrag);
+					break;
+				}
+			}
+		}
+		_mapSchluesselAndSchuljahrToEintrag.put(schuljahr, mapEintraege);
+		return mapEintraege.get(schluessel);
 	}
 
 
