@@ -1,17 +1,22 @@
-import type { ApiFile, LehrerFachrichtungAnerkennung, LehrerFachrichtungEintrag, LehrerLehramtAnerkennung, LehrerLehramtEintrag, LehrerLehrbefaehigungAnerkennung, LehrerLehrbefaehigungEintrag, LehrerListeEintrag, LehrerPersonalabschnittsdaten, LehrerPersonaldaten, LehrerStammdaten, List ,SimpleOperationResponse, StundenplanListeEintrag, ReportingParameter} from "@core";
-import { ArrayList, DeveloperNotificationException, LehrerListeManager, BenutzerKompetenz, ReportingReportvorlage } from "@core";
-
+import type {
+	ApiFile, LehrerFachrichtungAnerkennung, LehrerFachrichtungEintrag, LehrerLehramtAnerkennung, LehrerLehramtEintrag, LehrerLehrbefaehigungAnerkennung,
+	LehrerLehrbefaehigungEintrag, LehrerListeEintrag, LehrerPersonalabschnittsdaten, LehrerPersonaldaten, LehrerStammdaten, List, SimpleOperationResponse,
+	StundenplanListeEintrag, ReportingParameter,
+} from "@core";
+import { ArrayList, DeveloperNotificationException, LehrerListeManager, BenutzerKompetenz } from "@core";
 import { api } from "~/router/Api";
-
-import { routeLehrerIndividualdaten } from "~/router/apps/lehrer/RouteLehrerIndividualdaten";
-import { ViewType } from "@ui";
-import { routeLehrerGruppenprozesse } from "~/router/apps/lehrer/RouteLehrerGruppenprozesse";
+import { routeLehrerIndividualdaten } from "~/router/apps/lehrer/individualdaten/RouteLehrerIndividualdaten";
+import { type PendingStateManager, ViewType } from "@ui";
 import { routeLehrerNeu } from "~/router/apps/lehrer/RouteLehrerNeu";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
+import { routeLehrerIndividualdatenGruppenprozesse } from "~/router/apps/lehrer/individualdaten/RouteLehrerIndividualdatenGruppenprozesse";
+import { PendingStateManagerLehrerIndividualdaten } from "~/router/apps/lehrer/individualdaten/PendingStateManagerLehrerIndividualdaten";
+import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
 
 interface RouteStateLehrer extends RouteStateAuswahlInterface<LehrerListeManager> {
 	mapStundenplaene: Map<number, StundenplanListeEintrag>;
+	pendingStateManager: PendingStateManagerLehrerIndividualdaten | undefined;
 }
 
 const defaultState = <RouteStateLehrer>{
@@ -19,13 +24,23 @@ const defaultState = <RouteStateLehrer>{
 	manager: new LehrerListeManager(-1, -1, new ArrayList(), null, new ArrayList()),
 	activeViewType: ViewType.DEFAULT,
 	view: routeLehrerIndividualdaten,
+	gruppenprozesseView: routeLehrerIndividualdatenGruppenprozesse,
 	mapStundenplaene: new Map(),
+	pendingStateManager: undefined,
 };
 
 export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteStateLehrer> {
 
 	public constructor() {
-		super(defaultState, { gruppenprozesse: routeLehrerGruppenprozesse, hinzufuegen: routeLehrerNeu });
+		super(defaultState, { hinzufuegen: routeLehrerNeu });
+	}
+
+	get pendingStateManager(): PendingStateManagerLehrerIndividualdaten {
+		if (this._state.value.pendingStateManager === undefined) {
+			this._state.value.pendingStateManager = new PendingStateManagerLehrerIndividualdaten('id', () => routeLehrer.data.manager);
+			routeLehrer.data.pendingStateManagerRegistry.addPendingStateManager(this._state.value.pendingStateManager);
+		}
+		return this._state.value.pendingStateManager;
 	}
 
 	get filterNurSichtbar(): boolean {
@@ -52,7 +67,7 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 		param.id = id;
 	}
 
-	protected async createManager(idSchuljahresabschnitt : number) : Promise<Partial<RouteStateLehrer>> {
+	protected async createManager(idSchuljahresabschnitt: number): Promise<Partial<RouteStateLehrer>> {
 		// Lade die Daten von der API
 		const listLehrer = await api.server.getLehrer(api.schema);
 
@@ -71,7 +86,7 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 		return { manager };
 	}
 
-	public async ladeDaten(auswahl: LehrerListeEintrag | null) : Promise<LehrerStammdaten | null> {
+	public async ladeDaten(auswahl: LehrerListeEintrag | null): Promise<LehrerStammdaten | null> {
 		return (auswahl === null) ? null : await api.server.getLehrerStammdaten(api.schema, auswahl.id);
 	}
 
@@ -112,6 +127,17 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 		this.manager.setPersonalDaten(personaldaten);
 	}
 
+	public async ladeDatenMultiple(auswahlList: List<LehrerListeEintrag>, state: Partial<RouteStateLehrer>): Promise<List<LehrerStammdaten> | null> {
+		if (auswahlList.isEmpty())
+			return null;
+
+		const ids: List<number> = new ArrayList();
+		for (const eintrag of auswahlList) {
+			ids.add(eintrag.id);
+		}
+
+		return await api.server.getLehrerStammdatenMultiple(ids, api.schema);
+	}
 
 	public async loadPersonaldaten() {
 		if (!this.manager.hasDaten())
@@ -126,7 +152,7 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 		this.commit();
 	}
 
-	protected async doPatch(data : Partial<LehrerStammdaten>, id: number) : Promise<void> {
+	protected async doPatch(data: Partial<LehrerStammdaten>, id: number): Promise<void> {
 		await api.server.patchLehrerStammdaten(data, api.schema, id);
 	}
 
@@ -246,11 +272,11 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 		return list;
 	}
 
-	protected deleteMessage(id: number, lehrer: LehrerListeEintrag | null) : string {
+	protected deleteMessage(id: number, lehrer: LehrerListeEintrag | null): string {
 		return `Lehrer ${(lehrer?.vorname ?? '???') + ' ' + (lehrer?.nachname ?? '???')} (ID: ${id.toString()}) wurde erfolgreich gelöscht.`;
 	}
 
-	deleteLehrerCheck = (): [boolean, List<string>] => {
+	deleteLehrerCheck = (): { success: boolean, logs: List<string> } => {
 		const errorLog = new ArrayList<string>();
 		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.LEHRERDATEN_LOESCHEN))
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Lehrern vor.');
@@ -264,7 +290,7 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 				errorLog.add(`Die Lehrkraft ${lehrer.vorname} ${lehrer.nachname} ist an anderer Stelle referenziert und kann daher nicht gelöscht werden.`);
 		}
 
-		return [errorLog.isEmpty(), errorLog];
+		return { success: errorLog.isEmpty(), logs: errorLog };
 	}
 
 	add = async (data: Partial<LehrerStammdaten>): Promise<void> => {
@@ -282,5 +308,26 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 			reportingParameter.idsDetaildaten.add(l.id);
 		return await api.server.pdfReport(reportingParameter, api.schema);
 	})
+
+	patchMultiple = async (pendingStateManager: PendingStateManager<any>): Promise<void> => {
+		api.status.start();
+
+		const partialsToPatch = pendingStateManager.partials;
+		//TODO einbauen
+		// await api.server.patchLehrerStammdatenMultiple(partialsToPatch, api.schema);
+
+		// Übernehme nur geänderte LehrerStammdaten Objekte in den AuswahlManager, damit nicht alle Stammdaten neugeladen werden müssen
+		for (const partialToPatch of partialsToPatch) {
+			if (partialToPatch.id !== undefined) {
+				const patchId = (partialToPatch as Record<string, any>)[pendingStateManager.idFieldName];
+				const currentStammdaten = this._state.value.manager?.getListeDaten().get(patchId);
+				this._state.value.manager?.getListeDaten().put(patchId, Object.assign(Object.assign({}, currentStammdaten), partialToPatch));
+			}
+		}
+
+		pendingStateManager.resetPendingState();
+		this.commit();
+		api.status.stop();
+	}
 }
 

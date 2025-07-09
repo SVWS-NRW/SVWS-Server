@@ -2,14 +2,12 @@ import type { RouteParams } from "vue-router";
 
 import type { LehrerListeManager } from "@core";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
 import type { RouteNode } from "~/router/RouteNode";
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { RouteDataLehrer } from "~/router/apps/lehrer/RouteDataLehrer";
-import { routeLehrerGruppenprozesse } from "~/router/apps/lehrer/RouteLehrerGruppenprozesse";
 import { routeLehrerNeu } from "~/router/apps/lehrer/RouteLehrerNeu";
-import { routeLehrerIndividualdaten } from "~/router/apps/lehrer/RouteLehrerIndividualdaten";
+import { routeLehrerIndividualdaten } from "~/router/apps/lehrer/individualdaten/RouteLehrerIndividualdaten";
 import { routeLehrerPersonaldaten } from "~/router/apps/lehrer/RouteLehrerPersonaldaten";
 import { routeLehrerStundenplan } from "./stundenplan/RouteLehrerStundenplan";
 import { routeLehrerUnterrichtsdaten } from "~/router/apps/lehrer/RouteLehrerUnterrichtsdaten";
@@ -17,8 +15,11 @@ import { api } from "~/router/Api";
 import { ConfigElement } from "../../../../../ui/src/utils/Config";
 import type { LehrerAuswahlProps } from "~/components/lehrer/SLehrerAuswahlProps";
 import { AppMenuGroup } from "@ui";
-import {routeLehrerEinwilligungen} from "~/router/apps/lehrer/einwilligungen/RouteLehrerEinwilligungen";
-import {routeLehrerLernplattformen} from "~/router/apps/lehrer/lernplattformen/RouteLehrerLernplattformen";
+import { routeLehrerEinwilligungen } from "~/router/apps/lehrer/einwilligungen/RouteLehrerEinwilligungen";
+import { routeLehrerLernplattformen } from "~/router/apps/lehrer/lernplattformen/RouteLehrerLernplattformen";
+import { routeLehrerAllgemeinesGruppenprozesse } from "~/router/apps/lehrer/allgemeines/RouteLehrerAllgemeinesGruppenprozesse";
+import { routeLehrerIndividualdatenGruppenprozesse } from "~/router/apps/lehrer/individualdaten/RouteLehrerIndividualdatenGruppenprozesse";
+import type { LehrerAppProps } from "~/components/lehrer/SLehrerAppProps";
 
 const SLehrerAuswahl = () => import("~/components/lehrer/SLehrerAuswahl.vue");
 const SLehrerApp = () => import("~/components/lehrer/SLehrerApp.vue");
@@ -26,7 +27,8 @@ const SLehrerApp = () => import("~/components/lehrer/SLehrerApp.vue");
 export class RouteLehrer extends RouteAuswahlNode<LehrerListeManager, RouteDataLehrer, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.LEHRERDATEN_ANSEHEN ], "lehrer", "lehrkraefte/:id(\\d+)?", SLehrerApp, SLehrerAuswahl, new RouteDataLehrer());
+		super(Schulform.values(), [BenutzerKompetenz.LEHRERDATEN_ANSEHEN], "lehrer", "lehrkraefte/:id(\\d+)?", SLehrerApp, SLehrerAuswahl,
+			new RouteDataLehrer());
 		super.mode = ServerMode.STABLE;
 		super.text = "Lehrkräfte";
 		super.children = [
@@ -36,7 +38,8 @@ export class RouteLehrer extends RouteAuswahlNode<LehrerListeManager, RouteDataL
 			routeLehrerUnterrichtsdaten,
 			routeLehrerEinwilligungen,
 			routeLehrerLernplattformen,
-			routeLehrerGruppenprozesse,
+			routeLehrerAllgemeinesGruppenprozesse,
+			routeLehrerIndividualdatenGruppenprozesse,
 			routeLehrerNeu,
 		];
 		super.defaultChild = routeLehrerIndividualdaten;
@@ -47,6 +50,10 @@ export class RouteLehrer extends RouteAuswahlNode<LehrerListeManager, RouteDataL
 			...props,
 			setFilterNurSichtbar: this.data.setFilterNurSichtbar,
 			setFilterNurStatistikrelevant: this.data.setFilterNurStatistikrelevant,
+		});
+		super.getAuswahlProps = props => (<LehrerAppProps>{
+			...props,
+			gotoDefaultView: this.data.gotoDefaultView,
 		});
 		api.config.addElements([
 			new ConfigElement("lehrer.auswahl.filterNurSichtbar", "user", "true"),

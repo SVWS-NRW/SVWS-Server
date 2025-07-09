@@ -180,6 +180,33 @@ public class APILehrer {
 
 
 	/**
+	 * Die OpenAPI-Methode für die Abfrage der Stammdaten mehrerer Lehrer.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param is        Inputstream mit einer Liste von Lehrer IDs
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Stammdaten der Lehrer
+	 */
+	@POST
+	@Path("stammdaten")
+	@Operation(summary = "Liefert zu den Lehrer IDs die zugehörigen Stammdaten.",
+			description = "Liest die Stammdaten der Lehrer zu der angegebenen IDs aus der Datenbank und liefert diese zurück."
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerdaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Stammdaten der Lehrer",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LehrerStammdaten.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Kein Lehrer-Eintrag mit der angegebenen ID gefunden")
+	public Response getLehrerStammdatenMultiple(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der Lehrer", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerStammdaten(conn).getListByIdsAsResponse(JSONMapper.toListOfLong(is)),
+				request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_ANSEHEN);
+	}
+
+
+	/**
 	 * Die OpenAPI-Methode für das Hinzufügen neuer LehrerStammdaten.
 	 *
 	 * @param schema       das Datenbankschema

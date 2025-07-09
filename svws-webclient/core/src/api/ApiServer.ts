@@ -9871,6 +9871,35 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode getLehrerStammdatenMultiple für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/stammdaten
+	 *
+	 * Liest die Stammdaten der Lehrer zu der angegebenen IDs aus der Datenbank und liefert diese zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Stammdaten der Lehrer
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<LehrerStammdaten>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten anzusehen.
+	 *   Code 404: Kein Lehrer-Eintrag mit der angegebenen ID gefunden
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Stammdaten der Lehrer
+	 */
+	public async getLehrerStammdatenMultiple(data : List<number>, schema : string) : Promise<List<LehrerStammdaten>> {
+		const path = "/db/{schema}/lehrer/stammdaten"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.postJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<LehrerStammdaten>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerStammdaten.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getMerkmale für den Zugriff auf die URL https://{hostname}/db/{schema}/merkmale
 	 *
 	 * Gibt die Merkmale zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.

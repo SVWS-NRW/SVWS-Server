@@ -29,7 +29,7 @@ export class RouteLehrerIndividualdaten extends RouteNode<any, RouteLehrer> {
 			patch: routeLehrer.data.patch,
 			lehrerListeManager: () => routeLehrer.data.manager,
 			mapOrte: routeApp.data.mapOrte,
-			mapOrtsteile: routeApp.data.mapOrtsteile
+			mapOrtsteile: routeApp.data.mapOrtsteile,
 		};
 	}
 

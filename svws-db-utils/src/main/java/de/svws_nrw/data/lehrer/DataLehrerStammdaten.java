@@ -15,6 +15,8 @@ import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerFoto;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 import java.util.ArrayList;
@@ -54,6 +56,19 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Lehrkraft mit der ID %d gefunden.".formatted(id));
 
 		return map(lehrer);
+	}
+
+	/**
+	 * Liefert eine Response mit einer Liste mit {@link LehrerStammdaten} Objekten zu den übergebenen IDs.
+	 *
+	 * @param ids   IDs der Lehrer
+	 *
+	 * @return die Response mit der Liste von {@link LehrerStammdaten} Objekten
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public Response getListByIdsAsResponse(final List<Long> ids) throws ApiOperationException {
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(getListByIDs(ids)).build();
 	}
 
 	/**
