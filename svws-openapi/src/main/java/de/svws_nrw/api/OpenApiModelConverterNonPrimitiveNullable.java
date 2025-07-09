@@ -24,11 +24,11 @@ public class OpenApiModelConverterNonPrimitiveNullable implements ModelConverter
 
 	@Override
 	public final Schema resolve(final AnnotatedType annotatedType, final ModelConverterContext modelConverterContext, final Iterator<ModelConverter> iterator) {
-		if(!iterator.hasNext())
+		if (!iterator.hasNext())
 			return null;
 
 		final ModelConverter converter = iterator.next();
-		final Schema model = converter.resolve(annotatedType, modelConverterContext, iterator);
+		final Schema<?> model = converter.resolve(annotatedType, modelConverterContext, iterator);
 
 		if (model == null)
 			return null;
