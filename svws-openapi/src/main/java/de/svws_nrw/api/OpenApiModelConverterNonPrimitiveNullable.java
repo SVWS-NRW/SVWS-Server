@@ -23,7 +23,7 @@ import jakarta.validation.constraints.NotNull;
 public class OpenApiModelConverterNonPrimitiveNullable implements ModelConverter {
 
 	@Override
-	public final Schema resolve(final AnnotatedType annotatedType, final ModelConverterContext modelConverterContext, final Iterator<ModelConverter> iterator) {
+	public final Schema<?> resolve(final AnnotatedType annotatedType, final ModelConverterContext modelConverterContext, final Iterator<ModelConverter> iterator) {
 		if (!iterator.hasNext())
 			return null;
 

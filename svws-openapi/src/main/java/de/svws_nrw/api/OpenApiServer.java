@@ -111,9 +111,8 @@ public class OpenApiServer extends BaseOpenApiResource {
 	@Path("/openapi/server.{type:json|yaml}")
 	@Produces({ MediaType.APPLICATION_JSON, "application/yaml" })
 	@Operation(hidden = true)
-	public Response getOpenApi(@Context final HttpHeaders headers,
-			@Context final UriInfo uriInfo,
-			@PathParam("type") final String type) throws Exception {
+	public Response getOpenApi(@Context final HttpHeaders headers, @Context final UriInfo uriInfo, @PathParam("type") final String type)
+			throws Exception {
 		// Um das `nullable` Flag automatisch zu setzen, wird der entsprechende {@link io.swagger.v3.core.converter.ModelConverter} registriert
 		ModelConverters.getInstance().addConverter(new OpenApiModelConverterNonPrimitiveNullable());
 		final OpenApiContext ctx = getOpenApiContext();
