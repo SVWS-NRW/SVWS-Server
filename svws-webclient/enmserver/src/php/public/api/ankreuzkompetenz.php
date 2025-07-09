@@ -14,8 +14,8 @@
 	 */
 
 	// Initialisierung
-	require_once $_SERVER['DOCUMENT_ROOT'].'/../app/init.php';
-	require_once $_SERVER['DOCUMENT_ROOT'].'/../app/ENMDatenManager.php';
+	require_once __DIR__.'/../../app/init.php';
+	require_once __DIR__.'/../../app/ENMDatenManager.php';
 
 	// Prüfe die HTTP-Methode
 	$auth->pruefeHTTPMethod([ "POST" ]);
