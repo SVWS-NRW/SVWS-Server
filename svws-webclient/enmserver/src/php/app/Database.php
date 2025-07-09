@@ -930,7 +930,7 @@
 			$results = $this->queryAllOrExit500("SELECT daten FROM Lehrer", "Fehler beim Lesen der Lehrer-Daten");
 			foreach ($results as $row) {
 				$tmp = json_decode($row->daten);
-				if (strcasecmp($tmp->eMailDienstlich, $email) === 0)
+				if (($tmp->eMailDienstlich !== null) && (strcasecmp($tmp->eMailDienstlich, $email) === 0))
 					return $tmp;
 			}
 			return null;
@@ -948,7 +948,7 @@
 			$matchingCount = 0; // Zähler für passende Datensätze
 			foreach ($results as $row) {
 				$tmp = json_decode($row->daten);
-				if (strcasecmp($tmp->eMailDienstlich, $email) === 0)
+				if (($tmp->eMailDienstlich !== null) && (strcasecmp($tmp->eMailDienstlich, $email) === 0))
 					$matchingCount++;
 			}
 			// Wenn genau ein Datensatz gefunden wurde, return true, sonst false
