@@ -48,7 +48,7 @@
 		const list = props.manager().liste.auswahlSorted();
 		if (list.size() > 5)
 			return `${list.size()} Fahrschülerarten ausgewählt`;
-		return [...list].map(k => k.text).join(', ');
+		return [...list].map(k => k.bezeichnung).join(', ');
 	});
 
 </script>

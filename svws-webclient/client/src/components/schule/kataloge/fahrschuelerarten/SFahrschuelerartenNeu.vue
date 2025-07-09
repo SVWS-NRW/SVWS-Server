@@ -35,7 +35,7 @@
 	function fieldIsValid(field: keyof Fahrschuelerart | null) : (v: string | null) => boolean {
 		return (v: string | null) => {
 			switch (field) {
-				case 'text':
+				case 'bezeichnung':
 					return bezeichnungIsValid(data.value.bezeichnung);
 				default:
 					return true;
