@@ -56,7 +56,7 @@
 				$secret = Config::generateRandomSecret();
 				$success = file_put_contents($secretfile, $secret);
 				if ($success === false)
-					Http::exit500("Es konnte kein Client-Secret unter $this->secretfile generiert werden. Überprüfen Sie, ob die, beim Web-Server, konfigurierten Rechte ausreichend sind, um diese Datei anzulegen.");
+					Http::exit500("Es konnte kein Client-Secret unter $secretfile generiert werden. Überprüfen Sie, ob die, beim Web-Server, konfigurierten Rechte ausreichend sind, um diese Datei anzulegen.");
 			}
 			$this->secret = file_get_contents($secretfile);
 
