@@ -10,7 +10,7 @@
 		// Der Root-Pfad für die Applikation
 		protected $app_root = null;
 
-                // Default Speicherort von Datenbank/Secret/Server-Mode
+		// Default Speicherort von Datenbank/Secret/Server-Mode
 		protected static string $default_dbfolder = 'db';
 
 		// Speicherort von Datenbank/Secret/Server-Mode
@@ -43,9 +43,9 @@
 			// Bestimme zunächst das Root-Verzeichnis der Anwendung
 			$this->app_root = Config::determineAppRoot();
 
-			// ersetze dbfolder durch $_SERVER['dbfolder'] sofern gesetzt.
-			if (isset($_SERVER['dbfolder']))
-				$this->dbfolder=$_SERVER['dbfolder'];
+			// ersetze dbfolder durch $_SERVER['ENM_DB_DIR'] sofern gesetzt.
+			if (isset($_SERVER['ENM_DB_DIR']))
+				$this->dbfolder=$_SERVER['ENM_DB_DIR'];
 			else
 				$this->dbfolder=Config::$default_dbfolder;
 
@@ -90,8 +90,8 @@
 		 * das Client-Secret und die SQLite-Datenbank beide vorliegen.
 		 */
 		public static function isAppInitialized() : bool {
-			if (isset($_SERVER['dbfolder']))
-				$dbfolder=$_SERVER['dbfolder'];
+			if (isset($_SERVER['ENM_DB_DIR']))
+				$dbfolder=$_SERVER['ENM_DB_DIR'];
 			else
 				$dbfolder=Config::$default_dbfolder;
 			return file_exists(Config::determineAppRoot().'/'.$dbfolder.'/'.Config::$secretfile) && file_exists(Config::determineAppRoot()."/".$dbfolder.'/'.Config::$dbfile);
