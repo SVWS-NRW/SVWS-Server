@@ -119,23 +119,8 @@
 			return { id: 0, name: "Unbekannter Fehler", message: "Ein Fehler verhindert den weiteren Ablauf des SVWS-Client, der Fehler ist jedoch unbekannt", stack: "", log: null };
 		console.warn(reason);
 		const name = errorDescription.value;
-		let message = reason.message;
-		let log = null;
-		if (reason instanceof OpenApiError) {
-			if (reason.response instanceof Response) {
-				const text = await reason.response.text();
-				try {
-					const res = JSON.parse(text)
-					if (('log' in res) && ('success' in res))
-						log = res satisfies SimpleOperationResponse;
-				} catch {
-					if (text.length > 0)
-						message = text;
-					else
-						message += ` - Status: ${reason.response.status}`;
-				}
-			}
-		}
+		const message = reason.message;
+		const log = errorSimpleOperationResponse.value;
 		return { id: 0, name, message, stack: reason.stack?.split("\n") || '', log }
 	}
 
