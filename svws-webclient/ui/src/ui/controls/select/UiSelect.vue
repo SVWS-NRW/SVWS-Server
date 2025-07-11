@@ -8,7 +8,7 @@
 			:aria-activedescendant="((searchable === false) && (highlightedIndex !== -1)) ? `uiSelectOption_${highlightedIndex}_${instanceId}` : undefined"
 			class="relative outline-none focus-within:ring-2 ring-ui-neutral w-full rounded-md flex items-center gap-1 hover:ring-ui-neutral hover:ring-2 min-w-16 m-[0.2em]"
 			:class="[headless ? 'pl-1' : 'border mt-[0.8em] pl-3 pr-1 min-h-9', disabled ? 'pointer-events-none border-ui-disabled' : borderColorClass, backgroundColorClass,
-				{ 'pointer-events-none border-ui-disabled': disabled, 'cursor-text': searchable, 'cursor-pointer': !searchable}]" @click="handleComponentClick"
+				{ 'pointer-events-none border-ui-disabled': disabled, 'cursor-text': searchable, 'cursor-pointer': !searchable}, comboboxFocusClass]" @click="handleComponentClick"
 			@focus="handleComboboxFocus" @keydown="onKeyDown">
 			<div :class="[headless ? 'py-0' : (manager.multi ? 'py-1': 'py-1')]" class="flex">
 				<!-- Expand-Icon + Clear-Button headless -->
@@ -126,7 +126,8 @@
 							:aria-controls="`uiSelectDropdown_${instanceId}`" :aria-expanded="showDropdown"
 							:aria-activedescendant="(highlightedIndex !== -1) ? `uiSelectOption_${highlightedIndex}_${instanceId}` : undefined"
 							:aria-labelledby="`uiSelectLabel_${instanceId}`" :aria-disabled="(disabled === true) ? true : undefined" v-model="search"
-							class="row-start-1 col-start-1 outline-none font-normal h-5" @focus="handleComboboxFocus" @blur="handleBlur" @input="handleInput">
+							class="row-start-1 col-start-1 outline-none font-normal h-5" :class="searchInputFocusClass" @focus="handleComboboxFocus"
+							@blur="handleBlur" @input="handleInput">
 					</div>
 				</div>
 			</div>
@@ -202,7 +203,7 @@
 
 	/**
 	 * Extrahiert alle gesetzten Klassen von außerhalb und setzt diese an den Rootknoten. Icon-Farben werden jedoch herausgefiltert, da diese den Hintergrund
-	 * beeinflussen.
+	 * beeinflussen. Ebenso Fokusklassen, da diese an die Combobox bzw. das SearchInput weitergeleitet werden müssen.
 	 */
 	const filteredAttributes = computed (() => {
 		const result = { ...attrs };
@@ -210,7 +211,9 @@
 		const stringClass = result.class;
 
 		if (typeof stringClass === 'string')
-			result.class = stringClass.split(' ').filter(c => !c.startsWith('icon-ui')).join(' ');
+			result.class = stringClass.split(' ').filter(c => !c.startsWith('icon-ui') && (c !== 'contentFocusField')
+				&& (c !== 'subNavigationFocusField')).join(' ');
+
 		return result;
 	});
 
@@ -401,7 +404,39 @@
 		return (min !== null) ? `min. ${min}` : `max. ${max}`;
 	});
 
+	// Generiert die focusClass für die Combobox, falls eine gesetzt ist. Diese wird nur an die Combobox gesetzt, wenn das Select nicht searchable ist.
+	const comboboxFocusClass = computed(() => {
+		const result = { ...attrs };
+		const stringClass = result.class;
+		if (typeof stringClass === 'string')
+			if (!props.searchable && stringClass.includes('contentFocusField'))
+				return 'contentFocusField';
+			else if (!props.searchable && stringClass.includes('subNavigationFocusField'))
+				return 'subNavigationFocusField';
+		return '';
+	});
+
+	// Generiert die focusClass für das Searchinput, falls eine gesetzt ist. Diese wird nur an das Searchinput gesetzt, wenn das Select searchable ist.
+	const searchInputFocusClass = computed(() => {
+		const result = { ...attrs };
+		const stringClass = result.class;
+		if (typeof stringClass === 'string')
+			if (props.searchable && stringClass.includes('contentFocusField'))
+				return 'contentFocusField';
+			else if (props.searchable && stringClass.includes('subNavigationFocusField'))
+				return 'contentFocusField';
+		return '';
+	});
+
 	onMounted(() => {
+		const result = { ...attrs };
+		const stringClass = result.class;
+		if (typeof stringClass === 'string') {
+			if (props.searchable === true && stringClass.includes('contentFocusField'))
+				uiSelectSearch.value?.classList.add('contentFocusField');
+			else if (props.searchable === false && stringClass.includes('contentFocusField'))
+				uiSelectCombobox.value?.classList.add('contentFocusField');
+		}
 		// Wenn das Select durchsuchbar ist, wird ein SearchSelectFilter hinzugefügt. Sollte bereits einer existieren, wird nur der neue Suchbegriff gesetzt.
 		if (props.searchable) {
 			const tmpSearchFilter = props.manager.getFilterByKey("search") as SearchSelectFilter<T> | null;
