@@ -6,8 +6,11 @@ import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerDatenschutz;
 import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -48,6 +51,30 @@ public final class DataSchuelerEinwilligungen extends DataManagerRevised<Long[],
 	public List<SchuelerEinwilligung> getAll() throws ApiOperationException {
 		final List<DTOSchuelerDatenschutz> einwilligungen = conn.queryAll(DTOSchuelerDatenschutz.class);
 		return einwilligungen.stream().map(this::map).toList();
+	}
+
+	/**
+	 * Liefert alle Einwilligungen für die angegebenen Schüler.
+	 * @param ids Liste der Schüler IDs, deren Einwilligungen abgerufen werden sollen.
+	 * @return Alle Einwilligungen der angegebenen Schüler.
+	 */
+	public List<SchuelerEinwilligung> getListBySchuelerIds(final List<Long> ids) throws ApiOperationException {
+		if (ids.isEmpty()) {
+			return new ArrayList<>();
+		}
+
+		final List<DTOSchuelerDatenschutz> einwilligungen =  conn.queryList(DTOSchuelerDatenschutz.QUERY_LIST_BY_SCHUELER_ID, DTOSchuelerDatenschutz.class, ids);
+		return einwilligungen.stream().map(this::map).toList();
+	}
+
+	/**
+	 * Liefert eine Response mit einer Liste mit {@link SchuelerEinwilligung} Objekten zu den übergebenen IDs.
+	 * @param ids IDs der Schüler
+	 * @return die Response mit der Liste von {@link SchuelerEinwilligung} Objekten
+	 * @throws ApiOperationException im Fehlerfall
+	 */
+	public Response getListBySchuelerIdsAsResponse(final List<Long> ids) throws ApiOperationException {
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(getListBySchuelerIds(ids)).build();
 	}
 
 	@Override
@@ -130,4 +157,5 @@ public final class DataSchuelerEinwilligungen extends DataManagerRevised<Long[],
 	public DTOSchuelerDatenschutz getDatabaseDTOByID(final Long[] id) {
 		return conn.queryByKey(DTOSchuelerDatenschutz.class, id[0], id[1]);
 	}
+
 }
