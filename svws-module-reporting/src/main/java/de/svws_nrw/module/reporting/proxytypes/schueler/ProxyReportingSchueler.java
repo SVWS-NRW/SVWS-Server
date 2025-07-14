@@ -18,12 +18,15 @@ import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.data.erzieher.DataErzieherStammdaten;
 import de.svws_nrw.data.gost.DataGostAbiturdaten;
 import de.svws_nrw.data.schueler.DataSchuelerLernabschnittsdaten;
+import de.svws_nrw.data.schueler.DataSchuelerSchulbesuchsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerSprachbelegung;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.proxytypes.schueler.erzieher.ProxyReportingErzieher;
+import de.svws_nrw.module.reporting.proxytypes.schueler.schule.ProxyReportingSchuelerSchulbesuch;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchuelerDatenstatus;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ReportingErzieher;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ReportingErzieherArtGruppe;
+import de.svws_nrw.module.reporting.types.schueler.schulbesuch.ReportingSchuelerSchulbesuch;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import de.svws_nrw.module.reporting.proxytypes.schueler.gost.abitur.ProxyReportingSchuelerGostAbitur;
 import de.svws_nrw.module.reporting.proxytypes.schueler.gost.laufbahnplanung.ProxyReportingSchuelerGostLaufbahnplanung;
@@ -96,6 +99,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 				ersetzeNullBlankTrim(schuelerStammdaten.religionabmeldung),
 				ersetzeNullBlankTrim(schuelerStammdaten.religionanmeldung),
 				null,
+				null,
 				new ArrayList<>(),
 				Nationalitaeten.getByDESTATIS(schuelerStammdaten.staatsangehoerigkeitID),
 				Nationalitaeten.getByDESTATIS(schuelerStammdaten.staatsangehoerigkeit2ID),
@@ -107,13 +111,15 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 				ersetzeNullBlankTrim(schuelerStammdaten.verkehrspracheFamilie),
 				ersetzeNullBlankTrim(schuelerStammdaten.vorname),
 				ersetzeNullBlankTrim(schuelerStammdaten.alleVornamen),
-				(schuelerStammdaten.wohnortID != null) ? reportingRepository.katalogOrte().get(schuelerStammdaten.wohnortID) : null,
-				(schuelerStammdaten.ortsteilID != null) ? reportingRepository.katalogOrtsteile().get(schuelerStammdaten.ortsteilID) : null,
+				null,
+				null,
 				schuelerStammdaten.zuzugsjahr);
 
 		this.reportingRepository = reportingRepository;
 
-		super.religion = this.reportingRepository.katalogReligionen().get(schuelerStammdaten.religionID);
+		super.religion = (schuelerStammdaten.religionID != null) ? this.reportingRepository.katalogReligionen().get(schuelerStammdaten.religionID) : null;
+		super.wohnort = (schuelerStammdaten.wohnortID != null) ? this.reportingRepository.katalogOrte().get(schuelerStammdaten.wohnortID) : null;
+		super.wohnortsteil = (schuelerStammdaten.ortsteilID != null) ? this.reportingRepository.katalogOrtsteile().get(schuelerStammdaten.ortsteilID) : null;
 
 		// Füge Stammdaten des Schülers für weitere Verwendung in der Map im Repository hinzu.
 		this.reportingRepository.mapSchuelerStammdaten().put(super.id(), schuelerStammdaten);
@@ -379,6 +385,46 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 
 
 	/**
+	 * Stellt die Daten des bisherigen und zukünftigen Schulbesuches des Schülers zur Verfügung.
+	 *
+	 * @return Daten zum Schulbesuch
+	 */
+	@Override
+	public ReportingSchuelerSchulbesuch schulbesuch() {
+		if (super.schulbesuch == null) {
+			if (this.reportingRepository.mapSchuelerSchulbesuchsdaten().isEmpty()
+					|| (this.reportingRepository.mapSchuelerSchulbesuchsdaten().size() != this.reportingRepository.mapSchueler().size())
+					|| !this.reportingRepository.mapSchuelerSchulbesuchsdaten().containsKey(this.id())) {
+				final List<Long> idsSchuelerOhneSchulbesuchsdaten = new ArrayList<>();
+				if (this.reportingRepository.mapSchuelerSchulbesuchsdaten().isEmpty())
+					idsSchuelerOhneSchulbesuchsdaten.addAll(this.reportingRepository.mapSchueler().values().stream().map(ReportingSchueler::id).toList());
+				else
+					idsSchuelerOhneSchulbesuchsdaten.addAll(this.reportingRepository.mapSchueler().values().stream().map(ReportingSchueler::id)
+							.filter(id -> (!this.reportingRepository.mapSchuelerSchulbesuchsdaten().containsKey(id))).toList());
+				if (!idsSchuelerOhneSchulbesuchsdaten.isEmpty()) {
+					final DataSchuelerSchulbesuchsdaten dataSchulbesuch = new DataSchuelerSchulbesuchsdaten(this.reportingRepository.conn());
+					try {
+						this.reportingRepository.mapSchuelerSchulbesuchsdaten()
+								.putAll(dataSchulbesuch.getListByIds((idsSchuelerOhneSchulbesuchsdaten)).stream()
+										.collect(Collectors.toMap(sb -> sb.id, sb -> sb)));
+					} catch (final ApiOperationException e) {
+						ReportingExceptionUtils.putStacktraceInLog(
+								"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Schulbesuchsdaten eines Schülers.", e,
+								reportingRepository.logger(), LogLevel.INFO, 0);
+					}
+				}
+			}
+			if (this.reportingRepository.mapSchuelerSchulbesuchsdaten().containsKey(this.id()))
+				super.schulbesuch = new ProxyReportingSchuelerSchulbesuch(reportingRepository,
+						this.reportingRepository.mapSchuelerSchulbesuchsdaten().get(this.id()));
+			else
+				super.schulbesuch = null;
+		}
+		return super.schulbesuch;
+	}
+
+
+	/**
 	 * Stellt die Daten aller Sprachbelegungen des Schülers in einer Liste zur Verfügung.
 	 *
 	 * @return Liste der Daten aller Sprachbelegungen
@@ -398,7 +444,10 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 			}
 			if (this.reportingRepository.mapSchuelerSprachbelegungen().containsKey(this.id()))
 				super.sprachbelegungen = this.reportingRepository.mapSchuelerSprachbelegungen().get(this.id()).stream()
-						.map(sb -> ((ReportingSchuelerSprachbelegung) new ProxyReportingSchuelerSprachbelegung(reportingRepository, sb))).toList();
+						.map(sb -> ((ReportingSchuelerSprachbelegung) new ProxyReportingSchuelerSprachbelegung(reportingRepository, sb)))
+						.sorted(Comparator.comparing(ReportingSchuelerSprachbelegung::belegungVonJahrgang, Comparator.nullsLast(String::compareTo))
+								.thenComparing(ReportingSchuelerSprachbelegung::reihenfolge, Comparator.nullsLast(Integer::compareTo)))
+						.toList();
 			else
 				super.sprachbelegungen = new ArrayList<>();
 

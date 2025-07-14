@@ -1,5 +1,7 @@
 package de.svws_nrw.module.reporting.types.lehrer;
 
+import java.util.List;
+
 import de.svws_nrw.core.data.kataloge.OrtKatalogEintrag;
 import de.svws_nrw.core.data.kataloge.OrtsteilKatalogEintrag;
 import de.svws_nrw.asd.types.Geschlecht;
@@ -24,6 +26,9 @@ public class ReportingLehrer extends ReportingPerson {
 	/** Das Kürzel des Lehrers. */
 	protected String kuerzel;
 
+	/** Eine Liste von Leitungsfunktionen, die der Lehrer besaß oder besitzt. */
+	protected List<ReportingLehrerLeitungsfunktion> leitungsfunktionen;
+
 	/** Die Bezeichnung des Personals-Typs des Lehrers. */
 	protected PersonalTyp personalTyp;
 
@@ -45,6 +50,7 @@ public class ReportingLehrer extends ReportingPerson {
 	 * @param hausnummerZusatz Ggf. der Hausnummerzusatz zur Straße im Wohnort des Lehrers.
 	 * @param id Die ID des Lehrers.
 	 * @param kuerzel Das Kürzel des Lehrers.
+	 * @param leitungsfunktionen Eine Liste von Leitungsfunktionen, die der Lehrer besaß oder besitzt.
 	 * @param nachname Der Name des Lehrers.
 	 * @param personalTyp Die Bezeichnung des Personals-Typs des Lehrers.
 	 * @param staatsangehoerigkeit Die Staatsangehörigkeit des Lehrers.
@@ -62,17 +68,19 @@ public class ReportingLehrer extends ReportingPerson {
 	 */
 	public ReportingLehrer(final String amtsbezeichnung, final String anrede, final String emailPrivat, final String emailSchule, final String faxSchule,
 			final String foto, final String geburtsdatum, final String geburtsland, final String geburtsname, final String geburtsort,
-			final Geschlecht geschlecht, final String hausnummer, final String hausnummerZusatz, final long id, final String kuerzel, final String nachname,
-			final PersonalTyp personalTyp, final Nationalitaeten staatsangehoerigkeit, final Nationalitaeten staatsangehoerigkeit2, final String strassenname,
-			final String telefonPrivat, final String telefonPrivatMobil, final String telefonSchule, final String telefonSchuleMobil, final String titel,
-			final String vorname, final String vornamen, final OrtKatalogEintrag wohnort, final OrtsteilKatalogEintrag wohnortsteil) {
+			final Geschlecht geschlecht, final String hausnummer, final String hausnummerZusatz, final long id, final String kuerzel,
+			final List<ReportingLehrerLeitungsfunktion> leitungsfunktionen, final String nachname, final PersonalTyp personalTyp,
+			final Nationalitaeten staatsangehoerigkeit, final Nationalitaeten staatsangehoerigkeit2, final String strassenname, final String telefonPrivat,
+			final String telefonPrivatMobil, final String telefonSchule, final String telefonSchuleMobil, final String titel, final String vorname,
+			final String vornamen, final OrtKatalogEintrag wohnort, final OrtsteilKatalogEintrag wohnortsteil) {
 		super(anrede, emailPrivat, emailSchule, faxSchule, geburtsdatum, geburtsland, geburtsname, geburtsort, geschlecht, hausnummer, hausnummerZusatz,
 				nachname, staatsangehoerigkeit, staatsangehoerigkeit2, strassenname, telefonPrivat, telefonPrivatMobil, telefonSchule, telefonSchuleMobil,
-				titel, vorname,	vornamen, wohnort, wohnortsteil);
+				titel, vorname, vornamen, wohnort, wohnortsteil);
 		this.amtsbezeichnung = amtsbezeichnung;
 		this.foto = foto;
 		this.id = id;
 		this.kuerzel = kuerzel;
+		this.leitungsfunktionen = leitungsfunktionen;
 		this.personalTyp = personalTyp;
 	}
 
@@ -144,6 +152,44 @@ public class ReportingLehrer extends ReportingPerson {
 	}
 
 
+	// ##### Berechnete Methoden #####
+
+	/**
+	 * Gibt an, ob der Lehrer aktuell die Schulleitungsfunktion innehat.
+	 *
+	 * @return true, wenn aktuell die Leitungsfunktion Schulleitung vorhanden ist, sonst false
+	 */
+	public boolean istSchulleitungAktuell() {
+		return leitungsfunktionen.stream().anyMatch(ReportingLehrerLeitungsfunktion::istSchulleitungAktuell);
+	}
+
+	/**
+	 * Gibt an, ob der Lehrer aktuell die stv. Schulleitungsfunktion innehat.
+	 *
+	 * @return true, wenn aktuell die Leitungsfunktion stv. Schulleitung vorhanden ist, sonst false
+	 */
+	public boolean istStvSchulleitungAktuell() {
+		return leitungsfunktionen.stream().anyMatch(ReportingLehrerLeitungsfunktion::istStvSchulleitungAktuell);
+	}
+
+	/**
+	 * Gibt die Schulleitungsfunktion zurück, wenn der Lehrer die Schulleitung ist.
+	 *
+	 * @return Die Leitungsfunktion der Schulleitung oder null, wenn der Lehrer kein Schulleiter ist.
+	 */
+	public ReportingLehrerLeitungsfunktion schulleitungsfunktion() {
+		return leitungsfunktionen.stream().filter(ReportingLehrerLeitungsfunktion::istSchulleitungAktuell).findFirst().orElse(null);
+	}
+
+	/**
+	 * Gibt die stv. Schulleitungsfunktion zurück, wenn der Lehrer die stv. Schulleitung ist.
+	 *
+	 * @return Die Leitungsfunktion der stv. Schulleitung oder null, wenn der Lehrer kein stv. Schulleiter ist.
+	 */
+	public ReportingLehrerLeitungsfunktion stvSchulleitungsfunktion() {
+		return leitungsfunktionen.stream().filter(ReportingLehrerLeitungsfunktion::istStvSchulleitungAktuell).findFirst().orElse(null);
+	}
+
 
 	// ##### Getter #####
 
@@ -157,7 +203,7 @@ public class ReportingLehrer extends ReportingPerson {
 	}
 
 	/**
-	 * Ggf. das Foto des Lehrers (jpg, Base64-kodiert des Lehrers.)
+	 * Ggf. das Foto des Lehrers (jpg, Base64-kodiert des Lehrers).
 	 *
 	 * @return Inhalt des Feldes foto
 	 */
@@ -172,6 +218,15 @@ public class ReportingLehrer extends ReportingPerson {
 	 */
 	public long id() {
 		return id;
+	}
+
+	/**
+	 * Eine Liste von Leitungsfunktionen, die der Lehrer besaß oder besitzt.
+	 *
+	 * @return Inhalt des Feldes leitungsfunktionen
+	 */
+	public List<ReportingLehrerLeitungsfunktion> leitungsfunktionen() {
+		return leitungsfunktionen;
 	}
 
 	/**

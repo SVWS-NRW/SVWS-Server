@@ -383,6 +383,27 @@ public enum Note implements @NotNull CoreType<NoteKatalogEintrag, Note> {
 	}
 
 	/**
+	 * Gibt die Note als Notenpunkte der Sekundarstufe II als zweistelligen String zurück.
+	 *
+	 * @param schuljahr	Schuljahr, für das der Wert abgefragt wird.
+	 *
+	 * @return Die Notenpunkte 15 bis 00 als String oder im Fehlerfall null
+	 */
+
+	public String getNotenpunkteZweistellig(final int schuljahr) {
+		final NoteKatalogEintrag nke = this.daten(schuljahr);
+		if (nke == null)
+			return null;
+		final Integer np = nke.notenpunkte;
+		if ((np == null) || (np < 0) || (np > 15))
+			return null;
+		String notenpunkte  = np.toString();
+		if (notenpunkte.length() == 1)
+			notenpunkte = "0" + notenpunkte;
+		return notenpunkte;
+	}
+
+	/**
 	 * Gibt den Noten-Katalog-Eintrag zu dieser Note zurück.
 	 *
 	 * @param schuljahr	Schuljahr, für das der Wert abgefragt wird.

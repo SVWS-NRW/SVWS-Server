@@ -16,6 +16,7 @@ import de.svws_nrw.module.reporting.types.schueler.gost.abitur.ReportingSchueler
 import de.svws_nrw.module.reporting.types.schueler.gost.kursplanung.ReportingSchuelerGostKursplanungKursbelegung;
 import de.svws_nrw.module.reporting.types.schueler.gost.laufbahnplanung.ReportingSchuelerGostLaufbahnplanung;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLernabschnitt;
+import de.svws_nrw.module.reporting.types.schueler.schulbesuch.ReportingSchuelerSchulbesuch;
 import de.svws_nrw.module.reporting.types.schueler.sprachen.ReportingSchuelerSprachbelegung;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 
@@ -130,6 +131,9 @@ public class ReportingSchueler extends ReportingPerson {
 	/** Die Religion des Schülers. */
 	protected ReligionEintrag religion;
 
+	/** Daten zum bisherigen und zukünftigen Schulbesuch. */
+	protected ReportingSchuelerSchulbesuch schulbesuch;
+
 	/** Daten aller Sprachbelegungen. */
 	protected List<ReportingSchuelerSprachbelegung> sprachbelegungen;
 
@@ -189,6 +193,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @param religionabmeldung Das Datum der Religionsabmeldung des Schülers.
 	 * @param religionanmeldung Das Datum der Religionsanmeldung des Schülers.
 	 * @param religion Die Religion des Schülers.
+	 * @param schulbesuch Daten zum bisherigen und zukünftigen Schulbesuch.
 	 * @param sprachbelegungen Daten aller Sprachbelegungen.
 	 * @param staatsangehoerigkeit Die erste Staatsangehörigkeit des Schülers.
 	 * @param staatsangehoerigkeit2 Die zweite Staatsangehörigkeit des Schülers.
@@ -218,7 +223,7 @@ public class ReportingSchueler extends ReportingPerson {
 			final boolean hatMigrationshintergrund, final String hausnummer, final String hausnummerZusatz, final long id,
 			final Boolean istBerufsschulpflichtErfuellt, final boolean istDuplikat, final Boolean istSchulpflichtErfuellt, final Boolean istVolljaehrig,
 			final boolean keineAuskunftAnDritte, final List<ReportingSchuelerLernabschnitt> lernabschnitte, final String nachname,
-			final String religionabmeldung, final String religionanmeldung, final ReligionEintrag religion,
+			final String religionabmeldung, final String religionanmeldung, final ReligionEintrag religion, final ReportingSchuelerSchulbesuch schulbesuch,
 			final List<ReportingSchuelerSprachbelegung> sprachbelegungen, final Nationalitaeten staatsangehoerigkeit,
 			final Nationalitaeten staatsangehoerigkeit2, final SchuelerStatus status, final String strassenname, final String telefonPrivat,
 			final String telefonPrivatMobil, final String titel, final String verkehrspracheFamilie, final String vorname, final String vornamen,
@@ -258,6 +263,7 @@ public class ReportingSchueler extends ReportingPerson {
 		this.religionabmeldung = religionabmeldung;
 		this.religionanmeldung = religionanmeldung;
 		this.religion = religion;
+		this.schulbesuch = schulbesuch;
 		this.sprachbelegungen = sprachbelegungen;
 		this.status = status;
 		this.verkehrspracheFamilie = verkehrspracheFamilie;
@@ -316,7 +322,7 @@ public class ReportingSchueler extends ReportingPerson {
 	// ##### Getter #####
 
 	/**
-	 * Zum gegebenen Schuljahres Abschnitt wird der darin aktive Lernabschnitt (WechselNr. 0) ermittelt
+	 * Zum gegebenen Schuljahresabschnitt wird der darin aktive Lernabschnitt (WechselNr. 0) ermittelt
 	 *
 	 * @param schuljahresabschnitt  Der Schuljahresabschnitt, dessen Lernabschnitt ermittelt werden soll.
 	 *
@@ -637,12 +643,97 @@ public class ReportingSchueler extends ReportingPerson {
 	}
 
 	/**
+	 * Daten zum bisherigen und zukünftigen Schulbesuch.
+	 *
+	 * @return Inhalt des Feldes schulbesuch
+	 */
+	public ReportingSchuelerSchulbesuch schulbesuch() {
+		return schulbesuch;
+	}
+
+
+	/**
 	 * Daten aller Sprachbelegungen.
 	 *
 	 * @return Inhalt des Feldes sprachbelegungen
 	 */
 	public List<ReportingSchuelerSprachbelegung> sprachbelegungen() {
 		return sprachbelegungen;
+	}
+
+	/**
+	 * Gibt an, ob das kleine Latinum erreicht wurde.
+	 *
+	 * @return Wahr, wenn das kleine Latinum erreicht wurde, sonst false.
+	 */
+	public boolean hatKleinesLatinum() {
+		for (final ReportingSchuelerSprachbelegung sprachbelegung : sprachbelegungen) {
+			if (sprachbelegung.hatKleinesLatinum())
+				return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Gibt an, ob das Latinum erreicht wurde.
+	 *
+	 * @return Wahr, wenn das Latinum erreicht wurde, sonst false.
+	 */
+	public boolean hatLatinum() {
+		for (final ReportingSchuelerSprachbelegung sprachbelegung : sprachbelegungen) {
+			if (sprachbelegung.hatLatinum())
+				return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Gibt an, ob das Graecum erreicht wurde.
+	 *
+	 * @return Wahr, wenn das Graecum erreicht wurde, sonst false.
+	 */
+	public boolean hatGraecum() {
+		for (final ReportingSchuelerSprachbelegung sprachbelegung : sprachbelegungen) {
+			if (sprachbelegung.hatGraecum())
+				return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Gibt an, ob das Hebraicum erreicht wurde.
+	 *
+	 * @return Wahr, wenn das Hebraicum erreicht wurde, sonst false.
+	 */
+	public boolean hatHebraicum() {
+		for (final ReportingSchuelerSprachbelegung sprachbelegung : sprachbelegungen) {
+			if (sprachbelegung.hatHebraicum())
+				return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Die erreichten Sprachqualifikationen in den antiken Sprachen (Latinum, Graecum und Hebraicum).
+	 * Das kleine Latinum wird hier nicht berücksichtigt.
+	 *
+	 * @return Ein Text mit den erreichten Qualifikationen, andernfalls ein leerer String.
+	 */
+	public String alteSprachenQualifikationen() {
+		int hatErreicht = 0;
+		for (final ReportingSchuelerSprachbelegung sprachbelegung : sprachbelegungen) {
+			hatErreicht = hatErreicht + (sprachbelegung.hatLatinum() ? 1 : 0) + (sprachbelegung.hatGraecum() ? 2 : 0) + (sprachbelegung.hatHebraicum() ? 4 : 0);
+		}
+		return switch (hatErreicht) {
+			case 1 -> "Latinum";
+			case 2 -> "Graecum";
+			case 3 -> "Latinum und Graecum";
+			case 4 -> "Hebraicum";
+			case 5 -> "Latinum und Hebraicum";
+			case 6 -> "Graecum und Hebraicum";
+			case 7 -> "Latinum, Graecum und Hebraicum";
+			default -> "";
+		};
 	}
 
 	/**

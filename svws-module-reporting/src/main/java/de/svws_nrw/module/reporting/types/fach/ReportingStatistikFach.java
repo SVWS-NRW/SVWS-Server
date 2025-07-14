@@ -20,6 +20,9 @@ public class ReportingStatistikFach extends ReportingBaseType {
 	/** Gibt an, ob das Fach bei Export der amtlichen Schulstatistik berücksichtigt werden soll oder nicht. */
 	protected boolean exportASD;
 
+	/** Das Fach, dessen Statistikfach dieses Statistikfach ist und das mit ihm im Kürzel übereinstimmt. */
+	protected ReportingFach fach;
+
 	/** Die zugeordnete Fachgruppe */
 	protected Fachgruppe fachgruppe;
 
@@ -68,6 +71,7 @@ public class ReportingStatistikFach extends ReportingBaseType {
 	 * @param aufgabenfeld Das Aufgabenfeld, welchem das Fach ggf. zugeordnet ist (1, 2 oder 3)
 	 * @param bezeichnung Die textuelle Beschreibung des Faches
 	 * @param exportASD Gibt an, ob das Fach bei Export der amtlichen Schulstatistik berücksichtigt werden soll oder nicht.
+	 * @param fach Das Fach, dessen Statistikfach dieses Statistikfach ist und das mit ihm im Kürzel übereinstimmt.
 	 * @param fachgruppe Die zugeordnete Fachgruppe
 	 * @param gueltigBis Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 * @param gueltigVon Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
@@ -83,9 +87,9 @@ public class ReportingStatistikFach extends ReportingBaseType {
 	 * @param nurSII Gibt an, ob das Fach nur in der Sekundarstufe II unterrichtet wird.
 	 */
 	public ReportingStatistikFach(final String abJahrgang, final Integer aufgabenfeld, final String bezeichnung, final boolean exportASD,
-			final Fachgruppe fachgruppe, final Integer gueltigBis, final Integer gueltigVon, final String htmlFarbeRGB, final long idFachkatalog,
-			final boolean istAusRegUFach, final boolean istErsatzPflichtFS, final boolean istFremdsprache, final boolean istHKFS, final boolean istKonfKoop,
-			final String kuerzel, final String kuerzelASD, final boolean nurSII) {
+			final ReportingFach fach, final Fachgruppe fachgruppe, final Integer gueltigBis, final Integer gueltigVon, final String htmlFarbeRGB,
+			final long idFachkatalog, final boolean istAusRegUFach, final boolean istErsatzPflichtFS, final boolean istFremdsprache, final boolean istHKFS,
+			final boolean istKonfKoop, final String kuerzel, final String kuerzelASD, final boolean nurSII) {
 		this.abJahrgang = abJahrgang;
 		this.aufgabenfeld = aufgabenfeld;
 		this.bezeichnung = bezeichnung;
@@ -103,6 +107,7 @@ public class ReportingStatistikFach extends ReportingBaseType {
 		this.kuerzel = kuerzel;
 		this.kuerzelASD = kuerzelASD;
 		this.nurSII = nurSII;
+		setFach(fach);
 	}
 
 
@@ -169,7 +174,17 @@ public class ReportingStatistikFach extends ReportingBaseType {
 	}
 
 	/**
-	 * Das Kürzel der zugeordneten Fachgruppe
+	 * Sofern es ein Fach gibt, dessen Statistikfach dieses Statistikfach ist und die in ihrem Kürzel übereinstimmen, so wird dieses Fach bei seiner
+	 * Initialisierung hier abgelegt.
+	 *
+	 * @return Inhalt des Feldes fach oder null, wenn kein Fach hinterlegt ist.
+	 */
+	public ReportingFach fach() {
+		return fach;
+	}
+
+	/**
+	 * Die zugeordnete Fachgruppe
 	 *
 	 * @return Inhalt des Feldes fachgruppe
 	 */
@@ -285,4 +300,17 @@ public class ReportingStatistikFach extends ReportingBaseType {
 		return nurSII;
 	}
 
+
+	/**
+	 * Setzt das Fach zu diesem Statistikfach, sofern das Fach dieses Statistikfach hat und die Kürzel übereinstimmen.
+	 * Andernfalls wird null gesetzt.
+	 *
+	 * @param fach Das Fach, dessen Statistikfach dieses Statistikfach ist und das mit ihm im Kürzel übereinstimmt.
+	 */
+	public void setFach(final ReportingFach fach) {
+		if ((fach == null) || (fach.kuerzel() == null) || fach.kuerzel().isEmpty() || !fach.kuerzel().equals(this.kuerzel()))
+			this.fach = null;
+		else
+			this.fach = fach;
+	}
 }

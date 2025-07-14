@@ -595,6 +595,26 @@ export class Note extends JavaEnum<Note> implements CoreType<NoteKatalogEintrag,
 	}
 
 	/**
+	 * Gibt die Note als Notenpunkte der Sekundarstufe II als zweistelligen String zurück.
+	 *
+	 * @param schuljahr	Schuljahr, für das der Wert abgefragt wird.
+	 *
+	 * @return Die Notenpunkte 15 bis 00 als String oder im Fehlerfall null
+	 */
+	public getNotenpunkteZweistellig(schuljahr : number) : string | null {
+		const nke : NoteKatalogEintrag | null = this.daten(schuljahr);
+		if (nke === null)
+			return null;
+		const np : number | null = nke.notenpunkte;
+		if ((np === null) || (np < 0) || (np > 15))
+			return null;
+		let notenpunkte : string | null = np.toString();
+		if (notenpunkte.length === 1)
+			notenpunkte = "0" + notenpunkte;
+		return notenpunkte;
+	}
+
+	/**
 	 * Gibt den Noten-Katalog-Eintrag zu dieser Note zurück.
 	 *
 	 * @param schuljahr	Schuljahr, für das der Wert abgefragt wird.

@@ -26,6 +26,7 @@ public class ProxyReportingStatistikFach extends ReportingStatistikFach {
 				null,
 				null,
 				null,
+				null,
 				"",
 				-1,
 				false,
@@ -54,6 +55,7 @@ public class ProxyReportingStatistikFach extends ReportingStatistikFach {
 				-1,
 				null,
 				false,
+				null,
 				null,
 				null,
 				null,
@@ -95,6 +97,8 @@ public class ProxyReportingStatistikFach extends ReportingStatistikFach {
 			super.aufgabenfeld = statistikfachDaten.aufgabenfeld;
 			super.bezeichnung = ersetzeNullBlankTrim(statistikfachDaten.text);
 			super.exportASD = statistikfachDaten.exportASD;
+			// Der Eintrag des Faches wird bei dessen Initialisierung gesetzt.
+			super.fach = null;
 			super.fachgruppe = statistikfach.getFachgruppe(schuljahr);
 			super.gueltigBis = statistikfachDaten.gueltigBis;
 			super.gueltigVon = statistikfachDaten.gueltigVon;

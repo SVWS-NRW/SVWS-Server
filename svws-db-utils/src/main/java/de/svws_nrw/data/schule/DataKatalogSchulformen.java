@@ -2,6 +2,7 @@ package de.svws_nrw.data.schule;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -28,10 +29,21 @@ public final class DataKatalogSchulformen extends DataManager<Long> {
 
 	@Override
 	public Response getAll() {
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(getListAll()).build();
+	}
+
+	/**
+	 * Liefert eine Liste aller SchulformKatalogEintrag-Objekte, die auf den
+	 * historischen Einträgen aller Schulformen basieren.
+	 *
+	 * @return Eine Liste vom Typ List<SchulformKatalogEintrag>, die alle
+	 *         historischen Katalogeinträge der Schulformen enthält.
+	 */
+	public List<SchulformKatalogEintrag> getListAll() {
 		final ArrayList<SchulformKatalogEintrag> daten = new ArrayList<>();
 		for (final Schulform schulform : Schulform.values())
 			daten.addAll(schulform.historie());
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return daten;
 	}
 
 	@Override

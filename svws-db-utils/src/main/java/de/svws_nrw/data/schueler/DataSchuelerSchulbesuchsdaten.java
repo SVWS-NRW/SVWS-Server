@@ -13,6 +13,8 @@ import de.svws_nrw.core.types.schueler.Herkunftsarten;
 import de.svws_nrw.db.dto.current.schild.grundschule.DTOKindergarten;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOSchuleNRW;
 import jakarta.validation.constraints.NotNull;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -78,6 +80,30 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 		if (dto == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Schüler mit der Id %d gefunden".formatted(idSchueler));
 		return map(dto);
+	}
+
+	/**
+	 * Ruft eine Liste von SchuelerSchulbesuchsdaten ab, basierend auf den angegebenen Schüler-IDs.
+	 *
+	 * @param idsSchueler die Liste der IDs der Schüler, für die die Schulbesuchsdaten abgerufen werden sollen.
+	 *                    Die Liste darf nicht null oder leer sein und darf keine null-Werte enthalten.
+	 * @return eine Liste von SchuelerSchulbesuchsdaten, die den angegebenen IDs entsprechen.
+	 * @throws ApiOperationException wenn die Eingabe ungültig ist oder keine Daten für die angegebenen IDs gefunden werden konnten.
+	 */
+	public List<SchuelerSchulbesuchsdaten> getListByIds(final List<Long> idsSchueler) throws ApiOperationException {
+		if (idsSchueler == null)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die Liste der IDs der Schüler darf nicht null sein.");
+		final List<Long> ids = idsSchueler.stream().distinct().filter(Objects::nonNull).toList();
+		if (ids.isEmpty())
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die Liste der IDs der Schüler darf nicht leer sein.");
+		final List<DTOSchueler> dtos = conn.queryByKeyList(DTOSchueler.class, idsSchueler);
+		if ((dtos == null) || dtos.isEmpty() || (dtos.size() != ids.size()))
+			throw new ApiOperationException(Status.NOT_FOUND, "Es konnten nicht zu allen übergebenen IDs Schüler ermittelt werden.");
+		final List<SchuelerSchulbesuchsdaten> schulbesuchsdaten = new ArrayList<>(dtos.size());
+		for (final DTOSchueler dto : dtos) {
+			schulbesuchsdaten.add(map(dto));
+		}
+		return schulbesuchsdaten;
 	}
 
 	@Override
@@ -185,14 +211,14 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 					JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_LSBemerkung.datenlaenge(), "vorigeBemerkung");
 			case "vorigeEntlassgrundID" -> mapEntlassgrundID(value, "vorigeEntlassgrundID", v -> dtoSchueler.LSEntlassgrund = v);
 			case "vorigeAbschlussartID" -> // TODO Katalog ...
-					dtoSchueler.LSEntlassArt = JSONMapper.convertToString(value, true, true, null, "vorigeAbschlussartID");
+				dtoSchueler.LSEntlassArt = JSONMapper.convertToString(value, true, true, null, "vorigeAbschlussartID");
 
 			// Informationen zu der Entlassung von der eigenen Schule
 			case "entlassungDatum" -> dtoSchueler.Entlassdatum = JSONMapper.convertToString(value, true, true, null, "entlassungDatum");
 			case "entlassungJahrgang" -> mapJahrgang(value, "entlassungJahrgang", v -> dtoSchueler.Entlassjahrgang = v);
 			case "entlassungGrundID" -> mapEntlassgrundID(value, "entlassungGrundID", v -> dtoSchueler.Entlassgrund = v);
 			case "entlassungAbschlussartID" -> // TODO Katalog ...
-					dtoSchueler.Entlassart = JSONMapper.convertToString(value, true, true, null, "entlassungAbschlussartID");
+				dtoSchueler.Entlassart = JSONMapper.convertToString(value, true, true, null, "entlassungAbschlussartID");
 
 			// Informationen zu der aufnehmenden Schule nach einem Wechsel zu einer anderen Schule
 			case "idAufnehmendeSchule" -> mapSchulnummer(value, "idAufnehmendeSchule", v -> dtoSchueler.SchulwechselNr = v);

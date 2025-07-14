@@ -5,6 +5,7 @@ import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.asd.types.fach.Fachgruppe;
 import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.gost.abitur.ReportingGostAbiturFachbelegung;
+import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 
 import java.util.List;
 
@@ -15,6 +16,12 @@ public class ReportingSchuelerGostAbitur extends ReportingBaseType {
 
 	/** Das Kalenderjahr, in dem der Schüler sein Abitur ablegt bzw. ablegen wird. */
 	protected int abiturjahr;
+
+	/** Das Schuljahr, in dem der Schüler sein Abitur ablegt bzw. ablegen wird. */
+	protected int abiturSchuljahr;
+
+	/** Der Schuljahresabschnitt, in dem der Schüler sein Abitur abgelegt hat. */
+	protected ReportingSchuljahresabschnitt abiturSchuljahresabschnitt;
 
 	/** Art der besonderen Lernleistung (K - keine, P - in einem Projektkurs, E - extern). */
 	protected String besondereLernleistung;
@@ -94,15 +101,14 @@ public class ReportingSchuelerGostAbitur extends ReportingBaseType {
 	/** Die Angabe, ob die Abiturprüfung bestanden wurde oder nicht - sofern das Prüfungsverfahren schon abgeschlossen wurde. */
 	protected Boolean pruefungBestanden;
 
-	/** Das Schuljahr, in dem der Schüler sein Abitur ablegt bzw. ablegen wird. */
-	protected int schuljahrAbitur;
-
 
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
 	 *
 	 * @param abiturjahr Das Kalenderjahr, in dem der Schüler sein Abitur ablegt bzw. ablegen wird.
+	 * @param abiturSchuljahr Das Schuljahr, in dem der Schüler sein Abitur ablegt bzw. ablegen wird.
+	 * @param abiturSchuljahresabschnitt Der Schuljahresabschnitt, in dem der Schüler sein Abitur abgelegt hat.
 	 * @param besondereLernleistung Art der besonderen Lernleistung (K - keine, P - in einem Projektkurs, E - extern).
 	 * @param besondereLernleistungNote Ggf. die Note einer externen besonderen Lernleistung.
 	 * @param besondereLernleistungThema Das Thema der besonderen Lernleistung.
@@ -129,17 +135,19 @@ public class ReportingSchuelerGostAbitur extends ReportingBaseType {
 	 * @param note Die Abiturnote einer bestandenen Abiturprüfung - sofern das Prüfungsverfahren schon abgeschlossen wurde.
 	 * @param projektkursThema Das Projektkurs thema, sofern ein Projektkurs belegt wurde.
 	 * @param pruefungBestanden Die Angabe, ob die Abiturprüfung bestanden wurde oder nicht - sofern das Prüfungsverfahren schon abgeschlossen wurde.
-	 * @param schuljahrAbitur Das Schuljahr, in dem der Schüler sein Abitur ablegt bzw. ablegen wird.
 	 */
-	public ReportingSchuelerGostAbitur(final int abiturjahr, final String besondereLernleistung, final Note besondereLernleistungNote,
-			final String besondereLernleistungThema, final boolean[] bewertetesHalbjahr, final String bilingualeSprache, final Integer block1AnzahlKurse,
-			final Integer block1DefiziteGesamt, final Integer block1DefiziteLK, final long block1FehlstundenGesamt, final long block1FehlstundenUnentschuldigt,
+	public ReportingSchuelerGostAbitur(final int abiturjahr, final int abiturSchuljahr, final ReportingSchuljahresabschnitt abiturSchuljahresabschnitt,
+			final String besondereLernleistung, final Note besondereLernleistungNote, final String besondereLernleistungThema,
+			final boolean[] bewertetesHalbjahr, final String bilingualeSprache, final Integer block1AnzahlKurse, final Integer block1DefiziteGesamt,
+			final Integer block1DefiziteLK, final long block1FehlstundenGesamt, final long block1FehlstundenUnentschuldigt,
 			final Double block1NotenpunkteDurchschnitt, final Integer block1PunktSummeGK, final Integer block1PunktSummeLK,
 			final Integer block1PunktSummeNormiert, final Boolean block1Zulassung, final Integer block2DefiziteGesamt, final Integer block2DefiziteLK,
 			final Integer block2PunktSumme, final List<ReportingGostAbiturFachbelegung> fachbelegungen, final boolean freiwilligerRuecktritt,
 			final Integer gesamtPunkte, final Integer gesamtPunkteVerbesserung, final Integer gesamtPunkteVerschlechterung, final String note,
-			final String projektkursThema, final Boolean pruefungBestanden, final int schuljahrAbitur) {
+			final String projektkursThema, final Boolean pruefungBestanden) {
 		this.abiturjahr = abiturjahr;
+		this.abiturSchuljahr = abiturSchuljahr;
+		this.abiturSchuljahresabschnitt = abiturSchuljahresabschnitt;
 		this.besondereLernleistung = besondereLernleistung;
 		this.besondereLernleistungNote = besondereLernleistungNote;
 		this.besondereLernleistungThema = besondereLernleistungThema;
@@ -166,7 +174,6 @@ public class ReportingSchuelerGostAbitur extends ReportingBaseType {
 		this.note = note;
 		this.projektkursThema = projektkursThema;
 		this.pruefungBestanden = pruefungBestanden;
-		this.schuljahrAbitur = schuljahrAbitur;
 
 		this.fachbelegungen().sort(ReportingGostAbiturFachbelegung::compareToGost);
 	}
@@ -233,6 +240,24 @@ public class ReportingSchuelerGostAbitur extends ReportingBaseType {
 	 */
 	public int abiturjahr() {
 		return abiturjahr;
+	}
+
+	/**
+	 * Das Schuljahr, in dem der Schüler sein Abitur ablegt bzw. ablegen wird.
+	 *
+	 * @return Inhalt des Feldes abiturSchuljahr
+	 */
+	public int abiturSchuljahr() {
+		return abiturSchuljahr;
+	}
+
+	/**
+	 * Der Schuljahresabschnitt, in dem der Schüler sein Abitur abgelegt hat.
+	 *
+	 * @return Inhalt des Feldes abiturSchuljahresabschnitt
+	 */
+	public ReportingSchuljahresabschnitt abiturSchuljahresabschnitt() {
+		return abiturSchuljahresabschnitt;
 	}
 
 	/**
@@ -467,15 +492,6 @@ public class ReportingSchuelerGostAbitur extends ReportingBaseType {
 	 */
 	public Boolean pruefungBestanden() {
 		return pruefungBestanden;
-	}
-
-	/**
-	 * Das Schuljahr, in dem der Schüler sein Abitur ablegt bzw. ablegen wird.
-	 *
-	 * @return Inhalt des Feldes schuljahrAbitur
-	 */
-	public int schuljahrAbitur() {
-		return schuljahrAbitur;
 	}
 
 }
