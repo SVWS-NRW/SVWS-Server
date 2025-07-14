@@ -193,11 +193,11 @@ public final class OAuth2Client {
 					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Der in der Datenbank zur Nutzung hinterlegten TLS-Zertifikatskette des TLS-Servers wird nicht vertraut.");
 				final KeyStore keystore = KeyStoreUtils.newKeystore();
 				KeyStoreUtils.addCertificate(keystore, dto.AuthServer, certList.getFirst());
-				SSLContext sslContext = TLSUtils.getTLSContextFromKeystore(keystore);
+				final SSLContext sslContext = TLSUtils.getTLSContextFromKeystore(keystore);
 				builder = builder.sslContext(sslContext);
 			} catch (final ApiOperationException e) {
 				throw e;
-			} catch (GeneralSecurityException e) {
+			} catch (final GeneralSecurityException e) {
 				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, e.getMessage());
 			}
 		}
@@ -362,7 +362,7 @@ public final class OAuth2Client {
 		logger.logLn("Bereite die HTTP-Anfrage vor...");
 		final URI uri = URI.create(dto.AuthServer + path);
 		final HttpRequest request = HttpRequest.newBuilder().uri(uri).timeout(Duration.ofMinutes(2)).GET()
-				.header("Accept", "application/json").build();
+				.header("Accept", "*/*").build();
 		logger.logLn("Sende die HTTP-Anfrage an den OAuth2-Server...");
 		return send(request, handler);
 	}
