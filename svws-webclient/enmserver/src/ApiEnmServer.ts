@@ -86,7 +86,7 @@ export class ApiEnmServer extends BaseApi {
 	 *   Code 204: Der Server wurde gefunden
 	 */
 	public async isAlive() : Promise<void> {
-		await super.postJSON("/api/alive", "");
+		await super.postTextBased("/api/alive", 'application/json', '*/*', "");
 		return;
 	}
 
