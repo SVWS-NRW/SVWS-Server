@@ -50,7 +50,7 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 	void addJacksonConfiguration() {
-		def version = "2.19.0";
+		def version = "2.19.1";
 		project.configurations.create('jackson');
 		project.dependencies.add('jackson', 'com.fasterxml.jackson.core:jackson-annotations:' + version);
 		project.dependencies.add('jackson', 'com.fasterxml.jackson.core:jackson-core:' + version);
@@ -62,7 +62,7 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 	void addJettyConfiguration() {
-		def version = "12.0.20";
+		def version = "12.0.23";
 		def versionServletApi = "6.1.0";
 		project.configurations.create('jetty');
 		project.dependencies.add('jetty', 'jakarta.servlet:jakarta.servlet-api:' + versionServletApi);
@@ -76,8 +76,8 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 	void addPdfConfiguration() {
-		def version = "3.0.3";
-		def openHtmlToPdfVersion = "1.1.22";
+		def version = "3.0.5";
+		def openHtmlToPdfVersion = "1.1.28";
 		project.configurations.create('pdf');
 		project.dependencies.add('pdf', 'org.apache.pdfbox:pdfbox:' + version);
 		project.dependencies.add('pdf', 'io.github.openhtmltopdf:openhtmltopdf-core:' + openHtmlToPdfVersion);
@@ -108,12 +108,14 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 	void addSwagger() {
-		def version = "2.2.30";
-		def versionUI = "5.21.0";
+		def version = "2.2.34";
+		def versionUI = "5.26.2";
 		project.configurations.create('swagger');
 		project.dependencies.add('swagger', 'io.swagger.core.v3:swagger-jaxrs2-jakarta:' + version);
 		project.dependencies.add('swagger', 'io.swagger.core.v3:swagger-annotations-jakarta:' + version);
 		project.dependencies.add('swagger', 'org.webjars.npm:swagger-ui-dist:' + versionUI);
+		// vulnerability fix for: io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.34 -> pin org.apache.commons:commons-lang3:3.18.0
+		project.dependencies.add('swagger', 'org.apache.commons:commons-lang3:3.18.0');
 	}
 
 
