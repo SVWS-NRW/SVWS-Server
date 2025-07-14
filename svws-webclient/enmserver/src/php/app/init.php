@@ -15,7 +15,7 @@
 	$db = new Database($config);
 
 	// Bestimme die Informationen zur Authentifizierung
-	require_once 'Auth.php';
-	$auth = new Auth($db, $config);
+	require_once 'ENMAuth.php';
+	$auth = new ENMAuth($db, $config);
 
 ?>

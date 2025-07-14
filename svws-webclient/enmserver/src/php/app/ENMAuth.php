@@ -7,7 +7,7 @@
 	/**
 	 * Diese Klasse stellt die Funktionalität für die Authentifizierung zur Verfügung.
 	 */
-	class Auth {
+	class ENMAuth {
 
 		// Die Konfiguration
 		protected Config $config;

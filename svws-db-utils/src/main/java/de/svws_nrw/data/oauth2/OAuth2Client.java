@@ -240,7 +240,7 @@ public final class OAuth2Client {
 		final HttpRequest request = HttpRequest.newBuilder().uri(uri).timeout(Duration.ofMinutes(2))
 				.POST(BodyPublishers.ofByteArray(c))
 				.header("Content-Type", "multipart/form-data;boundary=" + actualBoundary)
-				.header("Accept", "application/json")
+				.header("Accept", "*/*")
 				.header("Authorization", "Bearer " + dto.Token).header("file", "file").build();
 		logger.logLn("Sende die HTTP-Anfrage an den OAuth2-Server...");
 		return send(request, handler);
@@ -293,7 +293,7 @@ public final class OAuth2Client {
 		final URI uri = URI.create(dto.AuthServer + path);
 		final HttpRequest request = HttpRequest.newBuilder().uri(uri).timeout(Duration.ofMinutes(2)).GET()
 				.POST(BodyPublishers.ofString("")).header("Content-Type", "application/x-www-form-urlencoded")
-				.header("Accept", "application/json")
+				.header("Accept", "*/*")
 				.header("Authorization", "Bearer " + dto.Token).build();
 		logger.logLn("Sende die HTTP-Anfrage an den OAuth2-Server...");
 		return send(request, handler);
@@ -318,7 +318,7 @@ public final class OAuth2Client {
 		final URI uri = URI.create(dto.AuthServer + path);
 		final HttpRequest request = HttpRequest.newBuilder().uri(uri).timeout(Duration.ofMinutes(2))
 				.PUT(BodyPublishers.ofString(daten)).header("Content-Type", "application/json")
-				.header("Accept", "application/json")
+				.header("Accept", "*/*")
 				.header("Authorization", "Bearer " + dto.Token).build();
 		logger.logLn("Sende die HTTP-Anfrage an den OAuth2-Server...");
 		return send(request, handler);
@@ -340,7 +340,7 @@ public final class OAuth2Client {
 		logger.logLn("Bereite die HTTP-Anfrage vor...");
 		final URI uri = URI.create(dto.AuthServer + path);
 		final HttpRequest request = HttpRequest.newBuilder().uri(uri).timeout(Duration.ofMinutes(2)).GET()
-				.header("Accept", "application/json")
+				.header("Accept", "*/*")
 				.header("Authorization", "Bearer " + dto.Token).build();
 		logger.logLn("Sende die HTTP-Anfrage an den OAuth2-Server...");
 		return send(request, handler);
