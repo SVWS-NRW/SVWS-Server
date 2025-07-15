@@ -121,7 +121,7 @@ ArrayList {
       "id": 6,
       "kuerzel": "TS",
       "schluessel": "TS",
-      "text": "Sabbatjahr",
+      "text": "Teilzeitbeschäftigung im Blockmodell (§ 65 LBG), ehemals Sabbatjahr",
     },
     LehrerBeschaeftigungsartKatalogEintrag {
       "gueltigBis": null,
@@ -129,7 +129,7 @@ ArrayList {
       "id": 8,
       "kuerzel": "SB",
       "schluessel": "SB",
-      "text": "Nebenberufliche Beschäftigung",
+      "text": "Angestellte, nebenberuflich",
     },
     LehrerBeschaeftigungsartKatalogEintrag {
       "gueltigBis": null,
@@ -153,7 +153,7 @@ ArrayList {
       "id": 12,
       "kuerzel": "NA",
       "schluessel": "NA",
-      "text": "Beamter, nebenamtlich (nicht hauptamtlich im Schuldienst)",
+      "text": "Beamte, nebenamtlich (nicht hauptamtlich im Schuldienst)",
     },
     LehrerBeschaeftigungsartKatalogEintrag {
       "gueltigBis": null,

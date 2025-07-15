@@ -48,6 +48,6 @@ class TestLehrerBeschaeftigungsart {
 	@Test
 	@DisplayName("Teste CoreType LehrerBeschaeftigungsart: Korrekter Text bei Wert SB.")
 	void testLehrerBeschaeftigungsart_TextBeiSb() {
-		assertEquals("Nebenberufliche Beschäftigung", LehrerBeschaeftigungsart.data().getHistorieByWert(LehrerBeschaeftigungsart.SB).getFirst().text);
+		assertEquals("Angestellte, nebenberuflich", LehrerBeschaeftigungsart.data().getHistorieByWert(LehrerBeschaeftigungsart.SB).getFirst().text);
 	}
 }
