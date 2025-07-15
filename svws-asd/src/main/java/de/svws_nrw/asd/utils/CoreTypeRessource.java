@@ -46,6 +46,7 @@ import de.svws_nrw.asd.data.schueler.HerkunftBildungsgangKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.HerkunftBildungsgangTypKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.SchuelerStatusKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.UebergangsempfehlungKatalogEintrag;
+import de.svws_nrw.asd.data.schule.BeruflichesGymnasiumPruefungsordnungAnlageKatalogEintrag;
 import de.svws_nrw.asd.data.schule.BerufskollegAnlageKatalogEintrag;
 import de.svws_nrw.asd.data.schule.BildungsgangTypKatalogEintrag;
 import de.svws_nrw.asd.data.schule.FoerderschwerpunktKatalogEintrag;
@@ -98,6 +99,7 @@ import de.svws_nrw.asd.types.schueler.HerkunftBildungsgangTyp;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.asd.types.schueler.Uebergangsempfehlung;
 import de.svws_nrw.asd.types.schule.AllgemeinbildendOrganisationsformen;
+import de.svws_nrw.asd.types.schule.BeruflichesGymnasiumPruefungsordnungAnlage;
 import de.svws_nrw.asd.types.schule.BerufskollegAnlage;
 import de.svws_nrw.asd.types.schule.BerufskollegBildungsgangTyp;
 import de.svws_nrw.asd.types.schule.BerufskollegOrganisationsformen;
@@ -359,6 +361,8 @@ public final class CoreTypeRessource<T extends CoreTypeData, U extends CoreType<
 				"de/svws_nrw/asd/types/schule/Schulform.json");
 		add(BerufskollegAnlage.class, BerufskollegAnlageKatalogEintrag.class, BerufskollegAnlage.values(),
 				"de/svws_nrw/asd/types/schule/BerufskollegAnlage.json");
+		add(BeruflichesGymnasiumPruefungsordnungAnlage.class, BeruflichesGymnasiumPruefungsordnungAnlageKatalogEintrag.class, BeruflichesGymnasiumPruefungsordnungAnlage.values(),
+				"de/svws_nrw/asd/types/schule/BeruflichesGymnasiumPruefungsordnungAnlage.json");
 		add(AllgemeinbildendOrganisationsformen.class, OrganisationsformKatalogEintrag.class, AllgemeinbildendOrganisationsformen.values(),
 				"de/svws_nrw/asd/types/schule/AllgemeinbildendOrganisationsformen.json");
 		add(BerufskollegOrganisationsformen.class, OrganisationsformKatalogEintrag.class, BerufskollegOrganisationsformen.values(),

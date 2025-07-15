@@ -171,6 +171,10 @@ export { Sprachbelegung } from './asd/data/schueler/Sprachbelegung';
 export { Sprachendaten } from './asd/data/schueler/Sprachendaten';
 export { Sprachpruefung } from './asd/data/schueler/Sprachpruefung';
 export { UebergangsempfehlungKatalogEintrag } from './asd/data/schueler/UebergangsempfehlungKatalogEintrag';
+export { BeruflichesGymnasiumPruefungsordnungAnlageKatalogEintrag } from './asd/data/schule/BeruflichesGymnasiumPruefungsordnungAnlageKatalogEintrag';
+export { BeruflichesGymnasiumStundentafel } from './asd/data/schule/BeruflichesGymnasiumStundentafel';
+export { BeruflichesGymnasiumStundentafelAbiturfaecherWahlmoeglichkeit } from './asd/data/schule/BeruflichesGymnasiumStundentafelAbiturfaecherWahlmoeglichkeit';
+export { BeruflichesGymnasiumStundentafelFach } from './asd/data/schule/BeruflichesGymnasiumStundentafelFach';
 export { BerufskollegAnlageKatalogEintrag } from './asd/data/schule/BerufskollegAnlageKatalogEintrag';
 export { BildungsgangTypKatalogEintrag } from './asd/data/schule/BildungsgangTypKatalogEintrag';
 export { FoerderschwerpunktKatalogEintrag } from './asd/data/schule/FoerderschwerpunktKatalogEintrag';
@@ -231,6 +235,7 @@ export { HerkunftBildungsgangTyp } from './asd/types/schueler/HerkunftBildungsga
 export { SchuelerStatus } from './asd/types/schueler/SchuelerStatus';
 export { Uebergangsempfehlung } from './asd/types/schueler/Uebergangsempfehlung';
 export { AllgemeinbildendOrganisationsformen } from './asd/types/schule/AllgemeinbildendOrganisationsformen';
+export { BeruflichesGymnasiumPruefungsordnungAnlage } from './asd/types/schule/BeruflichesGymnasiumPruefungsordnungAnlage';
 export { BerufskollegAnlage } from './asd/types/schule/BerufskollegAnlage';
 export { BerufskollegBildungsgangTyp } from './asd/types/schule/BerufskollegBildungsgangTyp';
 export { BerufskollegOrganisationsformen } from './asd/types/schule/BerufskollegOrganisationsformen';
