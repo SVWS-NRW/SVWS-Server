@@ -35,7 +35,7 @@ test('Admins können entsprechende Bereiche im DEV Mode einsehen', async ({page}
 
 	await expect(page.getByRole('button', {name: 'Erziehungsberechtigte'})).toBeVisible();
 	await page.getByRole('button', {name: 'Erziehungsberechtigte'}).click();
-	await expect(page.getByText('Daten zu Caroline Triebel')).toBeVisible();
+	await expect(page.getByText('Erziehungsberechtigte')).toBeVisible();
 
 
 	await expect(page.getByRole('button', {name: 'Ausbildungsbetriebe'})).toBeVisible();

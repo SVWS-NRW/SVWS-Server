@@ -64,7 +64,7 @@ public class APIErzieher {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Erzieherdaten anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Erzieher-Einträge gefunden")
 	public Response getErzieher(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataErzieherliste(conn).getAll(),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataErzieherliste(conn).getAllAsResponse(),
 				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
 	}
 
@@ -72,7 +72,7 @@ public class APIErzieher {
 	 * Die OpenAPI-Methode für die Abfrage der Stammdaten eines Erziehers.
 	 *
 	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param tmpid        die Datenbank-ID zur Identifikation des Erziehers
+	 * @param tmpid     die Datenbank-ID zur Identifikation des Erziehers
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die Stammdaten des Erziehers
@@ -88,25 +88,26 @@ public class APIErzieher {
 	@ApiResponse(responseCode = "404", description = "Kein Erzieher-Eintrag mit der angegebenen ID gefunden")
 	public Response getErzieherStammdaten(@PathParam("schema") final String schema, @PathParam("id") final long tmpid,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataErzieherStammdaten(conn).get(tmpid),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataErzieherStammdaten(conn).getByIdAsResponse(tmpid),
 				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
 	}
 
 
 	/**
-	 * Die OpenAPI-Methode für das Patchen der Stammdaten eines Erziehers.
+	 * Die OpenAPI-Methode für das Patchen der Stammdaten eines Erziehers an beiden Positionen im Eintrag.
 	 *
-	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
-	 * @param tmpid        die Datenbank-ID zur Identifikation des Erziehers
-	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
-	 * @param request   die Informationen zur HTTP-Anfrage
+	 * @param schema     das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param tmpid      die Datenbank-ID zur Identifikation des Erziehers
+	 * @param is         der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request    die Informationen zur HTTP-Anfrage
 	 *
 	 * @return das Ergebnis der Patch-Operation
 	 */
 	@PATCH
 	@Path("/{id : \\d+}/stammdaten")
 	@Operation(summary = "Passt die zu der ID des Erziehers zugehörigen Stammdaten an.",
-			description = "Passt die Erzieher-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. "
+			description = "Passt die Erzieher-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. Dieser Patch wird vom Client "
+					+ "zum Anpassen der Daten an beiden Positionen im Eintrag verwendet."
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Erzieherdaten besitzt.")
 	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Erzieher-Stammdaten integriert.")
 	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
@@ -120,7 +121,47 @@ public class APIErzieher {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							schema = @Schema(implementation = ErzieherStammdaten.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataErzieherStammdaten(conn).patch(tmpid, is),
+		// extrahieren der Datenbank-ID aus der API-ID, die ein Suffix beinhaltet
+		final long realId = DataErzieherStammdaten.getDatabaseErzieherIdFromApiId(tmpid);
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataErzieherStammdaten(conn, tmpid).patchAsResponse(realId, is),
+				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Patchen eines Erziehers an der zweiten Position eines Eintrags.
+	 *
+	 * @param schema     das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param tmpid      die Datenbank-ID zur Identifikation des Erziehers
+	 * @param pos        die Position, an der die Daten in die Datenbank gespeichert werden sollen
+	 * @param is         der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request    die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/{id : \\d+}/stammdaten/{pos : [12]}")
+	@Operation(summary = "Passt die zu der ID des Erziehers zugehörigen Stammdaten an der zweiten Position des Eintrags an, um einen zweiten Erzieher "
+			+ "anzulegen.",
+			description = "Passt die Erzieher-Stammdaten zu der angegebenen ID an der zweiten Postion im Eintrag an und speichert das Ergebnis in der "
+					+ "Datenbank. Dieser API-Call dient hauptsächlich dazu einen neuen Erzieher an der zweiten Postion im Eintrag zu patchen. Der Client "
+					+ "schickt im Param die entsprechende Postion mit."
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Erzieherdaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Erzieher-Stammdaten integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Erzieherdaten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Erzieher-Eintrag mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
+			+ " (z.B. eine negative ID)")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response patchErzieherStammdatenZweitePosition(@PathParam("schema") final String schema, @PathParam("id") final long tmpid,
+			@PathParam("pos") final int pos,
+			@RequestBody(description = "Der Patch für die Erzieher-Stammdaten", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = ErzieherStammdaten.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		// extrahieren der Datenbank-ID aus der API-ID, die ein Suffix beinhaltet
+		final long realId = DataErzieherStammdaten.getDatabaseErzieherIdFromApiId(tmpid);
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataErzieherStammdaten(conn, tmpid, pos).patchAsResponse(realId, is),
 				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
 	}
 

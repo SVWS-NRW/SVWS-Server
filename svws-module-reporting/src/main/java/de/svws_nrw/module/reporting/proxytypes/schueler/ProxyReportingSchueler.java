@@ -216,7 +216,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 					final List<Long> idsSchuelerOhneErzieher = this.reportingRepository.mapSchueler().values().stream()
 							.filter(s -> (!s.datenstatus().contains(ReportingSchuelerDatenstatus.ERZIEHER))).map(ReportingSchueler::id).toList();
 					final List<ErzieherStammdaten> erzieherStammdaten =
-							new DataErzieherStammdaten(this.reportingRepository.conn()).getFromIds(idsSchuelerOhneErzieher);
+							new DataErzieherStammdaten(this.reportingRepository.conn()).getListBySchuelerIds(idsSchuelerOhneErzieher);
 					if (!erzieherStammdaten.isEmpty())
 						this.reportingRepository.mapErzieherStammdaten().putAll(erzieherStammdaten.stream().collect(Collectors.groupingBy(e -> e.idSchueler)));
 				} catch (final ApiOperationException e) {

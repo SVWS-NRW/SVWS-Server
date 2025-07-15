@@ -953,7 +953,7 @@ public class APISchueler {
 	 *
 	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
 	 * @param request   die Informationen zur HTTP-Anfrage
-	 * @param id		die ID des Schülers, dessen Erzieher zurückegeben werden.
+	 * @param id		die ID des Schülers, dessen Erzieher zurückgegeben werden.
 	 *
 	 * @return die Liste mit den einzelnen Erziehern
 	 */
@@ -968,11 +968,46 @@ public class APISchueler {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Erzieherdaten anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Erzieher-Einträge gefunden")
 	public Response getSchuelerErzieher(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> (new DataErzieherStammdaten(conn)).getListFromSchueler(id),
+		return DBBenutzerUtils.runWithTransaction(conn -> (new DataErzieherStammdaten(conn)).getListBySchuelerIdAsResponse(id),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
 	}
 
+
+
+	/**
+	 *
+	 * Erzeugt einen Erzieher-Eintrag und gibt diesen zurück
+	 *
+	 * @param schema       das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param idSchueler   die ID des Schülers, bei dem der Erziehungsberechtigte angelegt werden soll
+	 * @param pos          die Position, an der die Daten in die Datenbank gespeichert werden sollen
+	 * @param is           der InputStream, mit dem JSON-Patch-Objekt der Erzieherdaten
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return HTTP_201 und die angelegten Erzieherdaten, wenn erfolgreich.
+	 *         HTTP_400, wenn Fehler bei der Validierung auftreten HTTP_403 bei fehlender Berechtigung,
+	 *         HTTP_404, wenn der Eintrag nicht gefunden wurde
+	 *
+	 */
+	@POST
+	@Path("/erzieher/new/{idSchueler : \\d+}/{pos : [12]}")
+	@Operation(summary = "Erstellt einen neuen Erziehereintrag (Position 1 oder Position 2) für einen Schüler.",
+			description = "Erstellt einen neuen Erziehereintrag einen Schüler. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern"
+					+ " von Schülerdaten besitzt.")
+	@ApiResponse(responseCode = "201", description = "Die Erzieherdaten des Schülers",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErzieherStammdaten.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzulegen.")
+	@ApiResponse(responseCode = "404", description = "Kein Schüler-Erzieher-Eintrag mit der angegebenen ID gefunden")
+	public Response addSchuelerErzieher(@PathParam("schema") final String schema, @PathParam("idSchueler") final long idSchueler,
+			@PathParam("pos") final int pos,
+			@RequestBody(description = "Die Erzieherdaten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					schema = @Schema(implementation = ErzieherStammdaten.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataErzieherStammdaten(conn, idSchueler, pos).addAsResponse(is),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
+	}
 
 	/**
 	 * Die OpenAPI-Methode für die Abfrage der Liste aller Betriebe.

@@ -4,8 +4,9 @@
 	</Teleport>
 	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Erziehungsberechtigte" class="col-span-full">
-			<svws-ui-table class="contentFocusField" :items="data()" :columns :no-data="data().size() === 0" clickable :clicked="erzieher" @update:clicked="value => erzieher = value" focus-first-element>
-				<template #header(anschreiben)>
+			<svws-ui-table clickable
+				@update:clicked="v => patchModal(v)" :items="data()" :columns :selectable="true" v-model="selected">
+				<template #header(erhaeltAnschreiben)>
 					<svws-ui-tooltip>
 						<span class="icon i-ri-mail-send-line" />
 						<template #content>
@@ -25,36 +26,64 @@
 				<template #cell(adresse)="{ rowData }">
 					{{ strasse(rowData) }}{{ rowData.wohnortID && mapOrte?.get(rowData.wohnortID) ? `, ${mapOrte.get(rowData.wohnortID)?.plz} ${mapOrte?.get(rowData.wohnortID)?.ortsname}` : '' }}
 				</template>
-				<template #cell(anschreiben)="{ value: erhaeltAnschreiben }">
+				<template #cell(erhaeltAnschreiben)="{ value: erhaeltAnschreiben }">
 					{{ erhaeltAnschreiben ? '&check;' : '&times;' }}
 				</template>
-			</svws-ui-table>
-			<!-- TODO: API erweitern <svws-ui-button class="mt-4" @click="hinzufuegen">Person hinzufügen</svws-ui-button> -->
-			<svws-ui-content-card v-if="erzieher !== undefined" :title="(erzieher.vorname !== null) || (erzieher.nachname !== null) ? `Daten zu ${erzieher.vorname ? erzieher.vorname + ' ' : '' }${erzieher.nachname}` : 'Daten zur Person'" class="col-span-full mt-16 lg:mt-20">
-				<template #actions>
-					<svws-ui-checkbox :model-value="erzieher.erhaeltAnschreiben === true" @update:model-value="erhaeltAnschreiben => erzieher !== undefined && patch({ erhaeltAnschreiben }, erzieher.id)" class="mr-2">
-						Erhält Anschreiben
-					</svws-ui-checkbox>
-					<!-- TOS: Api erweitern <svws-ui-button type="danger">
-				<span class="icon i-ri-delete-bin-line" />
-				Person löschen
-			</svws-ui-button> -->
+				<template #cell(actions)="{ rowData }">
+					<!-- Button zum Hinzufügen eines Erziehers an der zweiten Position, wird nur angezeigt wenn noch keine zweite Position in einem Eintrag existiert -->
+					<svws-ui-button v-if="isSuffix1(rowData.id) && !hasSuffix2(rowData.id)"
+						@click.stop="openModalForPos2(rowData)">
+						+
+					</svws-ui-button>
 				</template>
-				<svws-ui-input-wrapper :grid="4">
-					<svws-ui-select title="Erzieherart" v-model="idErzieherArt" :items="mapErzieherarten" :item-sort="erzieherArtSort" :item-text="i => i.bezeichnung ?? ''" />
-					<svws-ui-text-input placeholder="Name" :model-value="erzieher.nachname" @change="nachname=>erzieher !== undefined && patch({ nachname }, erzieher.id)" type="text" />
-					<svws-ui-text-input placeholder="Vorname" :model-value="erzieher.vorname" @change="vorname=>erzieher !== undefined && patch({ vorname }, erzieher.id)" type="text" />
-					<svws-ui-text-input placeholder="E-Mail Adresse" :model-value="erzieher.eMail" @change="eMail=>erzieher !== undefined && patch({ eMail }, erzieher.id)" type="email" verify-email />
-					<svws-ui-select title="Staatsangehörigkeit" v-model="staatsangehoerigkeit" :items="Nationalitaeten.values()" :item-text="i => i.historie().getLast().staatsangehoerigkeit" :item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter" autocomplete />
-					<svws-ui-spacing />
-					<svws-ui-text-input placeholder="Straße und Hausnummer" :model-value="strasse(erzieher)" @change="patchStrasse" type="text" />
-					<svws-ui-select title="Wohnort" v-model="wohnort" :items="mapOrte" :item-filter="orte_filter" :item-sort="orte_sort" :item-text="i => `${i.plz} ${i.ortsname}`" autocomplete />
-					<svws-ui-select title="Ortsteil" v-model="ortsteil" :items="ortsteile" :item-text="i => i.ortsteil ?? ''" :item-sort="ortsteilSort" :item-filter="ortsteilFilter" removable />
-					<svws-ui-spacing />
-					<svws-ui-textarea-input placeholder="Bemerkungen" :model-value="erzieher.bemerkungen" span="full" autoresize
-						@change="bemerkungen => erzieher !== undefined && patch({ bemerkungen: bemerkungen === null ? '' : bemerkungen }, erzieher.id)" />
-				</svws-ui-input-wrapper>
-			</svws-ui-content-card>
+				<template #actions>
+					<svws-ui-button @click="addModal" type="icon" title="Erziehungsberechtigten hinzufügen">
+						<span class="icon i-ri-add-line" />
+					</svws-ui-button>
+				</template>
+			</svws-ui-table>
+			<svws-ui-modal :show="showModal" @update:show="closeModal">
+				<template #modalTitle>Erziehungsberechtigten hinzufügen</template>
+				<template #modalContent>
+					<svws-ui-input-wrapper :grid="2" class="text-left">
+						<svws-ui-select title="Erzieherart" :items="mapErzieherarten.values()" v-model="selectedErzieherart" :item-text="i => i.bezeichnung"
+							:item-sort="erzieherArtSort" class="col-span-full" />
+						<svws-ui-spacing />
+						<svws-ui-text-input v-model="newEntry.anrede" type="text" placeholder="Anrede" />
+						<svws-ui-text-input v-model="newEntry.titel" type="text" placeholder="Titel" />
+						<svws-ui-text-input v-model="newEntry.vorname" type="text" placeholder="Vorname" required />
+						<svws-ui-text-input v-model="newEntry.nachname" type="text" placeholder="Nachname" required />
+						<svws-ui-text-input v-model="newEntry.eMail" type="email" placeholder="E-Mail Adresse" verify-email />
+						<svws-ui-select title="Staatsangehörigkeit" v-model="staatsangehoerigkeit" :items="Nationalitaeten.values()" :item-text="i => i.historie().getLast().staatsangehoerigkeit"
+							:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter" autocomplete />
+						<svws-ui-spacing />
+						<svws-ui-text-input placeholder="Straße und Hausnummer" v-model="adresse" type="text" />
+						<svws-ui-select title="Wohnort" v-model="wohnort" :items="mapOrte" :item-filter="orte_filter" :item-sort="orte_sort" :item-text="i => `${i.plz} ${i.ortsname}`" autocomplete />
+						<svws-ui-select title="Ortsteil" v-model="ortsteil" :items="ortsteile" :item-text="i => i.ortsteil ?? ''" :item-sort="ortsteilSort" :item-filter="ortsteilFilter" removable />
+						<svws-ui-spacing />
+						<svws-ui-tooltip class="col-span-full">
+							<svws-ui-text-input v-model="newEntry.bemerkungen" type="text" placeholder="Bemerkungen" />
+							<template #content>
+								{{ newEntry.bemerkungen ?? 'Bemerkungen' }}
+							</template>
+						</svws-ui-tooltip>
+						<svws-ui-checkbox :model-value="newEntry.erhaeltAnschreiben ?? false" @update:model-value="value => newEntry.erhaeltAnschreiben = value"
+							type="checkbox" title="Erhält Anschreiben" class="col-span-full">
+							Erhält Anschreiben
+						</svws-ui-checkbox>
+					</svws-ui-input-wrapper>
+					<svws-ui-notification type="warning" v-if="mapErzieherarten.size === 0">
+						Die Liste der Erzieherarten ist leer, es sollte mindestens eine Erzieherart unter Schule/Kataloge angelegt werden, damit zusätzliche Erzieher eine gültige Zuordnung haben.
+					</svws-ui-notification>
+					<div class="mt-7 flex flex-row gap-4 justify-end">
+						<svws-ui-button type="secondary" @click="closeModal">Abbrechen</svws-ui-button>
+						<svws-ui-button @click="sendRequest"
+							:disabled="(selectedErzieherart === null) || (mapErzieherarten.size === 0) || (!formIsValid)">
+							Speichern
+						</svws-ui-button>
+					</div>
+				</template>
+			</svws-ui-modal>
 		</svws-ui-content-card>
 	</div>
 </template>
@@ -63,13 +92,143 @@
 	import { computed, ref, watch } from "vue";
 	import type { DataTableColumn } from "@ui";
 	import type { SchuelerErziehungsberechtigteProps } from "./SSchuelerErziehungsberechtigteProps";
-	import type { Erzieherart, OrtKatalogEintrag, OrtsteilKatalogEintrag} from "@core";
-	import { AdressenUtils, Nationalitaeten, type ErzieherStammdaten } from "@core";
-	import { erzieherArtSort, staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort, orte_filter, orte_sort, ortsteilFilter, ortsteilSort } from "~/utils/helfer";
+	import type {Erzieherart, OrtKatalogEintrag, OrtsteilKatalogEintrag} from "@core";
+	import { AdressenUtils, Nationalitaeten, ErzieherStammdaten, JavaString } from "@core";
+	import { staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort, orte_filter, orte_sort, ortsteilFilter, ortsteilSort, erzieherArtSort } from "~/utils/helfer";
 
 	const props = defineProps<SchuelerErziehungsberechtigteProps>();
 
 	const erzieher = ref<ErzieherStammdaten | undefined>();
+
+	const selected = ref<ErzieherStammdaten[]>([]);
+	const newEntry = ref<ErzieherStammdaten>(new ErzieherStammdaten())
+	enum Mode { ADD, PATCH, PATCH_POS2, DEFAULT }
+	const currentMode = ref<Mode>(Mode.DEFAULT);
+	const showModal = ref<boolean>(false);
+
+	const selectedErzieherart = computed<Erzieherart | null>({
+		get: () => props.mapErzieherarten.get(newEntry.value.idErzieherArt ?? -1) ?? null,
+		set: (erzieherart) => newEntry.value.idErzieherArt = (erzieherart !== null) ? erzieherart.id : 0,
+	})
+
+	const idErzieherArt = computed<Erzieherart | undefined>({
+		get: () => ((erzieher.value === undefined) || (erzieher.value.idErzieherArt === null)) ? undefined : props.mapErzieherarten.get(erzieher.value.idErzieherArt),
+		set: (value) => (erzieher.value !== undefined) && void props.patch({ idErzieherArt: value === undefined ? null : value.id }, erzieher.value.id),
+	});
+
+	const wohnort = computed<OrtKatalogEintrag | undefined>({
+		get: () => ((newEntry.value.wohnortID === null)) ? undefined : props.mapOrte.get(newEntry.value.wohnortID),
+		set: (value) => newEntry.value.wohnortID = value === undefined ? null : value.id,
+	});
+
+	const staatsangehoerigkeit = computed<Nationalitaeten>({
+		get: () => Nationalitaeten.getByISO3(newEntry.value.staatsangehoerigkeitID) || Nationalitaeten.getDEU(),
+		set: (value) => newEntry.value.staatsangehoerigkeitID = value.historie().getLast().iso3,
+	});
+
+	const ortsteil = computed<OrtsteilKatalogEintrag | undefined>({
+		get: () => {
+			const id = newEntry.value.ortsteilID;
+			return id === null ? undefined : props.mapOrtsteile.get(id)
+		},
+		set: (value) => newEntry.value.ortsteilID = value === undefined ? null : value.id,
+	});
+
+	async function sendRequest() {
+		const { id, idSchueler, ...partialDataWithoutId } = newEntry.value;
+		if (currentMode.value === Mode.ADD)
+			await props.add(partialDataWithoutId, 1);
+		// Normale Patch für beide Positionen
+		if (currentMode.value === Mode.PATCH)
+			await props.patch(partialDataWithoutId, newEntry.value.id);
+		// Zweite Position zum bestehenden Eintrag hinzufügen
+		if (currentMode.value === Mode.PATCH_POS2)
+			await props.patchPosition(partialDataWithoutId, newEntry.value.id, 2);
+		enterDefaultMode();
+	}
+
+	function addModal() {
+		resetForm();
+		setMode(Mode.ADD);
+		openModal()
+		newEntry.value.id = 0;
+	}
+
+	function patchModal(eintrag: ErzieherStammdaten) {
+		resetForm();
+		setMode(Mode.PATCH);
+		newEntry.value.id = eintrag.id;
+		newEntry.value.idErzieherArt = eintrag.idErzieherArt;
+		newEntry.value.anrede = eintrag.anrede;
+		newEntry.value.titel = eintrag.titel;
+		newEntry.value.vorname = eintrag.vorname;
+		newEntry.value.nachname = eintrag.nachname;
+		newEntry.value.eMail = eintrag.eMail;
+		newEntry.value.staatsangehoerigkeitID = eintrag.staatsangehoerigkeitID;
+		newEntry.value.strassenname = eintrag.strassenname;
+		newEntry.value.hausnummer = eintrag.hausnummer;
+		newEntry.value.hausnummerZusatz = eintrag.hausnummerZusatz;
+		newEntry.value.wohnortID = eintrag.wohnortID;
+		newEntry.value.ortsteilID = eintrag.ortsteilID;
+		newEntry.value.bemerkungen = eintrag.bemerkungen;
+		newEntry.value.erhaeltAnschreiben = eintrag.erhaeltAnschreiben;
+		openModal();
+	}
+
+	function openModal() {
+		showModal.value = true;
+	}
+
+	function closeModal() {
+		resetForm();
+		setMode(Mode.DEFAULT);
+		showModal.value = false;
+	}
+
+	function setMode(newMode: Mode) {
+		return currentMode.value = newMode;
+	}
+
+	function resetForm() {
+		const defaultErzieherStammdaten = new ErzieherStammdaten();
+		const ersteErzieherart = props.mapErzieherarten.values().next().value;
+		defaultErzieherStammdaten.idErzieherArt = ersteErzieherart?.id ?? 0;
+		newEntry.value = defaultErzieherStammdaten;
+		newEntry.value.erhaeltAnschreiben = false;
+	}
+
+	function enterDefaultMode() {
+		setMode(Mode.DEFAULT);
+		resetForm();
+		closeModal();
+	}
+
+	/**
+	 * Prüft, ob eine ID auf die erste Position (Suffix 1) endet.
+	 * @param id Die künstliche ID mit Suffix.
+	 * @returns true, wenn Suffix === 1.
+	 */
+	function isSuffix1(id: number): boolean {
+		return id % 10 === 1;
+	}
+
+	/**
+	 * Prüft, ob bereits eine zweite Position (Suffix 2) für einen Eintrag existiert.
+	 * @param id Die künstliche ID mit Suffix.
+	 * @returns true, wenn ein Eintrag mit id+1 existiert.
+	 */
+	function hasSuffix2(id: number): boolean {
+		return Array.from(props.data()).some(e => e.id === id + 1);
+	}
+
+	// Patch-Modal um an der zweiten Postion in einem Eintrag einen Erziehungsberechtigten anzulegen
+	async function openModalForPos2(item: ErzieherStammdaten) {
+		resetForm();
+		setMode(Mode.PATCH_POS2);
+		openModal();
+		// die ID des Eintrags für den Patch an der zweiten Position
+		newEntry.value.id = item.id;
+	}
 
 	watch(() => props.data(), (neu) => {
 		if (neu.isEmpty())
@@ -81,48 +240,75 @@
 	const columns: DataTableColumn[] = [
 		{ key: "idErzieherArt", label: "Art"},
 		{ key: "name", label: "Name"},
-		{ key: "email", label: "E-Mail"},
+		{ key: "eMail", label: "E-Mail"},
 		{ key: "adresse", label: "Adresse"},
-		{ key: "anschreiben", label: "Anschreiben", tooltip: "Erhält Anschreiben", fixedWidth: 3, align: "center"},
+		{ key: "erhaeltAnschreiben", label: "Anschreiben", tooltip: "Erhält Anschreiben", fixedWidth: 3, align: "center"},
+		{ key: 'actions', label: 'Weiteres Elternteil', fixedWidth: 10, align: 'center' },
 	];
+
+	function fieldIsValid(field: keyof ErzieherStammdaten | null):(v: string | null) => boolean {
+		return (v: string | null) => {
+			switch (field) {
+				case 'nachname':
+					return stringIsValid(newEntry.value.nachname, true, 120);
+				case 'vorname':
+					return stringIsValid(newEntry.value.vorname, true, 120);
+				case 'strassenname':
+					return adresseIsValid();
+				case 'wohnortID':
+					return (newEntry.value.wohnortID === null) || (props.mapOrte.get(newEntry.value.wohnortID) !== undefined);
+				case 'ortsteilID':
+					return (newEntry.value.ortsteilID === null) || (props.mapOrtsteile.get(newEntry.value.ortsteilID) !== undefined);
+				case 'eMail':
+					return stringIsValid(newEntry.value.eMail, false, 20);
+				case 'staatsangehoerigkeitID':
+					return (newEntry.value.staatsangehoerigkeitID === null) || (Nationalitaeten.getByISO3(newEntry.value.staatsangehoerigkeitID) !== null);
+				default:
+					return true;
+			}
+		}
+	}
+
+	const formIsValid = computed(() => {
+		return Object.keys(newEntry.value).every((field) => {
+			const validateField = fieldIsValid(field as keyof ErzieherStammdaten);
+			const fieldValue = newEntry.value[field as keyof ErzieherStammdaten] as string | null;
+			return validateField(fieldValue);
+		})
+	})
+
+	function stringIsValid(input: string | null, mandatory: boolean, maxLength: number) {
+		if (mandatory)
+			return (input !== null) && (!JavaString.isBlank(input)) && (input.length <= maxLength);
+		return (input === null) || (input.length <= maxLength);
+	}
+
+	function adresseIsValid() {
+		return stringIsValid(newEntry.value.strassenname, false, 55) &&
+			stringIsValid(newEntry.value.hausnummer, false, 10) &&
+			stringIsValid(newEntry.value.hausnummerZusatz, false, 30);
+	}
 
 	function strasse(erzieher: ErzieherStammdaten) {
 		return AdressenUtils.combineStrasse(erzieher.strassenname ?? "", erzieher.hausnummer ?? "", erzieher.hausnummerZusatz ?? "");
 	}
 
-	function patchStrasse(value: string | null) {
-		if ((value !== null) && (erzieher.value !== undefined)) {
-			const vals = AdressenUtils.splitStrasse(value);
-			void props.patch({ strassenname: vals[0], hausnummer: vals[1], hausnummerZusatz: vals[2] }, erzieher.value.id);
-		}
-	}
-
-	const wohnort = computed<OrtKatalogEintrag | undefined>({
-		get: () => ((erzieher.value === undefined) || (erzieher.value.wohnortID === null)) ? undefined : props.mapOrte.get(erzieher.value.wohnortID),
-		set: (value) => (erzieher.value !== undefined) && void props.patch({ wohnortID: value === undefined ? null : value.id }, erzieher.value.id),
-	});
+	const adresse = computed({
+		get: () => AdressenUtils.combineStrasse(newEntry.value.strassenname, newEntry.value.hausnummer, newEntry.value.hausnummerZusatz),
+		set: (adresse : string) => {
+			const vals = AdressenUtils.splitStrasse(adresse);
+			newEntry.value.strassenname = vals[0];
+			newEntry.value.hausnummer = vals[1];
+			newEntry.value.hausnummerZusatz = vals[2];
+		},
+	})
 
 	const ortsteile = computed<Array<OrtsteilKatalogEintrag>>(() => {
 		const result : Array<OrtsteilKatalogEintrag> = [];
 		for (const ortsteil of props.mapOrtsteile.values())
-			if ((ortsteil.ort_id === null) || (ortsteil.ort_id === erzieher.value?.wohnortID))
+			if ((ortsteil.ort_id === null) || (ortsteil.ort_id === newEntry.value.wohnortID))
 				result.push(ortsteil);
 		return result;
-	});
-
-	const ortsteil = computed<OrtsteilKatalogEintrag | undefined>({
-		get: () => ((erzieher.value === undefined) || (erzieher.value.ortsteilID === null)) ? undefined : props.mapOrtsteile.get(erzieher.value.ortsteilID),
-		set: (value) => (erzieher.value !== undefined) && void props.patch({ ortsteilID: value === undefined ? null : value.id }, erzieher.value.id),
-	});
-
-	const staatsangehoerigkeit = computed<Nationalitaeten>({
-		get: () => ((erzieher.value !== undefined) && Nationalitaeten.getByISO3(erzieher.value.staatsangehoerigkeitID)) || Nationalitaeten.getDEU(),
-		set: (value) => (erzieher.value !== undefined) && void props.patch({ staatsangehoerigkeitID: value.historie().getLast().iso3 }, erzieher.value.id),
-	});
-
-	const idErzieherArt = computed<Erzieherart | undefined>({
-		get: () => ((erzieher.value === undefined) || (erzieher.value.idErzieherArt === null)) ? undefined : props.mapErzieherarten.get(erzieher.value.idErzieherArt),
-		set: (value) => (erzieher.value !== undefined) && void props.patch({ idErzieherArt: value === undefined ? null : value.id }, erzieher.value.id),
 	});
 
 </script>

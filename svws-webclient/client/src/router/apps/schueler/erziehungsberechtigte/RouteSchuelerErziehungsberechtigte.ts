@@ -36,6 +36,7 @@ export class RouteSchuelerErziehungsberechtigte extends RouteNode<RouteDataSchue
 	public getProps(to: RouteLocationNormalized): SchuelerErziehungsberechtigteProps {
 		return {
 			patch: this.data.patch,
+			patchPosition: this.data.patchPosition,
 			add: this.data.add,
 			data: () => this.data.daten,
 			mapErzieherarten: this.data.mapErzieherarten,

@@ -3309,7 +3309,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der PATCH-Methode patchErzieherStammdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/erzieher/{id : \d+}/stammdaten
 	 *
-	 * Passt die Erzieher-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Erzieherdaten besitzt.
+	 * Passt die Erzieher-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. Dieser Patch wird vom Client zum Anpassen der Daten an beiden Positionen im Eintrag verwendet.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Erzieherdaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Der Patch wurde erfolgreich in die Erzieher-Stammdaten integriert.
@@ -3327,6 +3327,34 @@ export class ApiServer extends BaseApi {
 		const path = "/db/{schema}/erzieher/{id : \\d+}/stammdaten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = ErzieherStammdaten.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchErzieherStammdatenZweitePosition für den Zugriff auf die URL https://{hostname}/db/{schema}/erzieher/{id : \d+}/stammdaten/{pos : [12]}
+	 *
+	 * Passt die Erzieher-Stammdaten zu der angegebenen ID an der zweiten Postion im Eintrag an und speichert das Ergebnis in der Datenbank. Dieser API-Call dient hauptsächlich dazu einen neuen Erzieher an der zweiten Postion im Eintrag zu patchen. Der Client schickt im Param die entsprechende Postion mit.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Erzieherdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich in die Erzieher-Stammdaten integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Erzieherdaten zu ändern.
+	 *   Code 404: Kein Erzieher-Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<ErzieherStammdaten>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 * @param {number} pos - der Pfad-Parameter pos
+	 */
+	public async patchErzieherStammdatenZweitePosition(data : Partial<ErzieherStammdaten>, schema : string, id : number, pos : number) : Promise<void> {
+		const path = "/db/{schema}/erzieher/{id : \\d+}/stammdaten/{pos : [12]}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
+			.replace(/{pos\s*(:[^{}]+({[^{}]+})*)?}/g, pos.toString());
 		const body : string = ErzieherStammdaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -12002,6 +12030,37 @@ export class ApiServer extends BaseApi {
 		const ret = new ArrayList<SimpleOperationResponse>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
 		return ret;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addSchuelerErzieher für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/erzieher/new/{idSchueler : \d+}/{pos : [12]}
+	 *
+	 * Erstellt einen neuen Erziehereintrag einen Schüler. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die Erzieherdaten des Schülers
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: ErzieherStammdaten
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzulegen.
+	 *   Code 404: Kein Schüler-Erzieher-Eintrag mit der angegebenen ID gefunden
+	 *
+	 * @param {Partial<ErzieherStammdaten>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} idSchueler - der Pfad-Parameter idSchueler
+	 * @param {number} pos - der Pfad-Parameter pos
+	 *
+	 * @returns Die Erzieherdaten des Schülers
+	 */
+	public async addSchuelerErzieher(data : Partial<ErzieherStammdaten>, schema : string, idSchueler : number, pos : number) : Promise<ErzieherStammdaten> {
+		const path = "/db/{schema}/schueler/erzieher/new/{idSchueler : \\d+}/{pos : [12]}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{idSchueler\s*(:[^{}]+({[^{}]+})*)?}/g, idSchueler.toString())
+			.replace(/{pos\s*(:[^{}]+({[^{}]+})*)?}/g, pos.toString());
+		const body : string = ErzieherStammdaten.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return ErzieherStammdaten.transpilerFromJSON(text);
 	}
 
 
