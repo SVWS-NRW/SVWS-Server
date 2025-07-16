@@ -253,7 +253,7 @@ public class APISchueler {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerStammdaten.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataSchuelerStammdaten(conn, idSchuljahresabschnitt).addAsResponse(is), request, ServerMode.DEV, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
+				conn -> new DataSchuelerStammdaten(conn, idSchuljahresabschnitt).addAsResponse(is), request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
 	}
 
 	/**
@@ -1156,7 +1156,7 @@ public class APISchueler {
 	@ApiResponse(responseCode = "404", description = "Kein Schüler-Vermerk-Eintrag mit der angegebenen ID gefunden")
 	public Response getVermerkdaten(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerVermerke(conn).getBySchuelerIdAsResponse(id),
-				request, ServerMode.DEV,
+				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
 	}
 
@@ -1183,7 +1183,7 @@ public class APISchueler {
 	public Response getVermerkdatenByVermerkArt(@PathParam("schema") final String schema, @PathParam("vermerkArt") final long vermerkArt,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerVermerke(conn).getListByVermerkartIdAsResponse(vermerkArt),
-				request, ServerMode.DEV,
+				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
 	}
 
@@ -1215,7 +1215,7 @@ public class APISchueler {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerVermerke.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerVermerke(conn).patchAsResponse(vid, is),
-				request, ServerMode.DEV,
+				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_VERMERKE_AENDERN);
 	}
 
@@ -1244,7 +1244,7 @@ public class APISchueler {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerVermerke.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerVermerke(conn).addAsResponse(is),
-				request, ServerMode.DEV,
+				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_VERMERKE_AENDERN);
 	}
 
@@ -1271,7 +1271,7 @@ public class APISchueler {
 	public Response deleteSchuelerVermerk(@PathParam("schema") final String schema, @PathParam("id") final long schuelerID,
 			@PathParam("idVermerk") final long idVermerk, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerVermerke(conn).deleteAsResponse(idVermerk),
-				request, ServerMode.DEV,
+				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_VERMERKE_AENDERN);
 	}
 
@@ -1297,7 +1297,7 @@ public class APISchueler {
 	public Response getSchuelerEinwilligungen(@PathParam("schema") final String schema, @PathParam("idSchueler") final long idSchueler,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerEinwilligungen(conn, idSchueler).getListAsResponse(),
-				request, ServerMode.DEV,
+				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
 	}
 
@@ -1359,7 +1359,7 @@ public class APISchueler {
 		return DBBenutzerUtils.runWithTransaction(
 				conn -> new DataSchuelerEinwilligungen(conn, idSchueler).patchAsResponse(new Long[] { idSchueler, idEinwilligungsart },
 						is),
-				request, ServerMode.DEV,
+				request, ServerMode.STABLE,
 				//TODO: Benutzerkompetenz hinzufügen
 				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
 	}
@@ -1800,7 +1800,7 @@ public class APISchueler {
 	public Response getSchuelerLernplattformen(@PathParam("schema") final String schema, @PathParam("id") final long idSchueler,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerLernplattformen(conn, idSchueler).getListAsResponse(),
-				request, ServerMode.DEV,
+				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
 	}
 
@@ -1836,7 +1836,7 @@ public class APISchueler {
 		return DBBenutzerUtils.runWithTransaction(
 				conn -> new DataSchuelerLernplattformen(conn, idSchueler).patchAsResponse(new Long[] { idSchueler, idLernplattform },
 						is),
-				request, ServerMode.DEV,
+				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
 	}
 
