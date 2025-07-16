@@ -37,6 +37,11 @@ export class LernplattformV1Schueler extends JavaObject {
 	public geschlecht : string | null = null;
 
 	/**
+	 * Die Status-ID des Schülers.
+	 */
+	public status : number = 0;
+
+	/**
 	 * Logindaten des Schülers bestehend aus Benutzername und Initialpasswort.
 	 */
 	public lernplattformlogin : LernplattformV1Login = new LernplattformV1Login();
@@ -79,6 +84,9 @@ export class LernplattformV1Schueler extends JavaObject {
 		result.nachname = (obj.nachname === undefined) ? null : obj.nachname === null ? null : obj.nachname;
 		result.vorname = (obj.vorname === undefined) ? null : obj.vorname === null ? null : obj.vorname;
 		result.geschlecht = (obj.geschlecht === undefined) ? null : obj.geschlecht === null ? null : obj.geschlecht;
+		if (obj.status === undefined)
+			throw new Error('invalid json format, missing attribute status');
+		result.status = obj.status;
 		if (obj.lernplattformlogin === undefined)
 			throw new Error('invalid json format, missing attribute lernplattformlogin');
 		result.lernplattformlogin = LernplattformV1Login.transpilerFromJSON(JSON.stringify(obj.lernplattformlogin));
@@ -98,6 +106,7 @@ export class LernplattformV1Schueler extends JavaObject {
 		result += '"nachname" : ' + ((obj.nachname === null) ? 'null' : JSON.stringify(obj.nachname)) + ',';
 		result += '"vorname" : ' + ((obj.vorname === null) ? 'null' : JSON.stringify(obj.vorname)) + ',';
 		result += '"geschlecht" : ' + ((obj.geschlecht === null) ? 'null' : JSON.stringify(obj.geschlecht)) + ',';
+		result += '"status" : ' + obj.status.toString() + ',';
 		result += '"lernplattformlogin" : ' + LernplattformV1Login.transpilerToJSON(obj.lernplattformlogin) + ',';
 		result += '"idsLerngruppen" : [ ';
 		for (let i = 0; i < obj.idsLerngruppen.size(); i++) {
@@ -131,6 +140,9 @@ export class LernplattformV1Schueler extends JavaObject {
 		}
 		if (obj.geschlecht !== undefined) {
 			result += '"geschlecht" : ' + ((obj.geschlecht === null) ? 'null' : JSON.stringify(obj.geschlecht)) + ',';
+		}
+		if (obj.status !== undefined) {
+			result += '"status" : ' + obj.status.toString() + ',';
 		}
 		if (obj.lernplattformlogin !== undefined) {
 			result += '"lernplattformlogin" : ' + LernplattformV1Login.transpilerToJSON(obj.lernplattformlogin) + ',';
