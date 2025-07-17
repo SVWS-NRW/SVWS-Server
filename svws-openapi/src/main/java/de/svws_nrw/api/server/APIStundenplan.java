@@ -335,7 +335,7 @@ public class APIStundenplan {
 	@ApiResponse(responseCode = "404", description = "Keine Zeitraster-Einträge gefunden")
 	public Response getStundenplanZeitraster(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanZeitraster(conn, id).getList(),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanZeitraster(conn, id).getListAsResponse(),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN);
 	}
@@ -361,7 +361,7 @@ public class APIStundenplan {
 	@ApiResponse(responseCode = "404", description = "Kein Zeitraster-Eintrag eines Stundenplans gefunden")
 	public Response getStundenplanZeitrasterEintrag(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanZeitraster(conn, null).get(id),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanZeitraster(conn, null).getByIdAsResponse(id),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN);
 	}
@@ -394,7 +394,7 @@ public class APIStundenplan {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							schema = @Schema(implementation = StundenplanZeitraster.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanZeitraster(conn, null).patch(id, is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanZeitraster(conn, null).patchAsResponse(id, is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
@@ -427,7 +427,7 @@ public class APIStundenplan {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(schema = @Schema(implementation = StundenplanZeitraster.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanZeitraster(conn, null).patchMultiple(is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanZeitraster(conn, null).patchMultipleAsResponse(is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
@@ -458,7 +458,7 @@ public class APIStundenplan {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							schema = @Schema(implementation = StundenplanZeitraster.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanZeitraster(conn, id).add(is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanZeitraster(conn, id).addAsResponse(is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
@@ -489,7 +489,7 @@ public class APIStundenplan {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(schema = @Schema(implementation = StundenplanZeitraster.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanZeitraster(conn, id).addMultiple(is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanZeitraster(conn, id).addMultipleAsResponse(is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
@@ -517,7 +517,7 @@ public class APIStundenplan {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteStundenplanZeitrasterEintrag(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanZeitraster(conn, null).delete(id),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanZeitraster(conn, null).deleteAsResponse(id),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
@@ -549,7 +549,7 @@ public class APIStundenplan {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanZeitraster(conn, id).deleteMultiple(JSONMapper.toListOfLong(is)),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanZeitraster(conn, id).deleteMultipleAsResponse(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
@@ -574,7 +574,7 @@ public class APIStundenplan {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Stundenplan anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Kein Raum eines Stundenplans gefunden")
 	public Response getStundenplanRaum(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanRaeume(conn, null).get(id),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanRaeume(conn, null).getByIdAsResponse(id),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN);
 	}
@@ -606,7 +606,7 @@ public class APIStundenplan {
 			@RequestBody(description = "Der Patch für den Raum", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = StundenplanRaum.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanRaeume(conn, null).patch(id, is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanRaeume(conn, null).patchAsResponse(id, is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
@@ -637,7 +637,7 @@ public class APIStundenplan {
 			@RequestBody(description = "Die Daten des zu erstellenden Raumes ohne ID, welche automatisch generiert wird", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = StundenplanRaum.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanRaeume(conn, id).add(is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanRaeume(conn, id).addAsResponse(is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
@@ -668,7 +668,7 @@ public class APIStundenplan {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(schema = @Schema(implementation = StundenplanRaum.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanRaeume(conn, id).addMultiple(is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanRaeume(conn, id).addMultipleAsResponse(is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
@@ -695,7 +695,7 @@ public class APIStundenplan {
 	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteStundenplanRaum(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanRaeume(conn, null).delete(id),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanRaeume(conn, null).deleteAsResponse(id),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
@@ -727,7 +727,7 @@ public class APIStundenplan {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanRaeume(conn, id).deleteMultiple(JSONMapper.toListOfLong(is)),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanRaeume(conn, id).deleteMultipleAsResponse(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}

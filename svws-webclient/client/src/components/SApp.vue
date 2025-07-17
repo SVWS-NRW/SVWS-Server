@@ -27,7 +27,7 @@
 				</template>
 				<template #version>
 					<div class="flex gap-1">
-						<div class="mt-1">{{ version }} <a :href="`https://github.com/SVWS-NRW/SVWS-Server/commit/${githash}`" v-if="version.includes('SNAPSHOT')">{{ githash.substring(0, 8) }}</a></div>
+						<div class="mt-1">{{ version }}<span v-if="version.includes('SNAPSHOT')">&nbsp;{{ servermode.name() }}-Mode&nbsp;<a :href="`https://github.com/SVWS-NRW/SVWS-Server/commit/${githash}`">{{ githash.substring(0, 8) }}</a></span></div>
 						<svws-ui-button type="transparent" @click="copyToClipboard">
 							<span class="icon i-ri-file-copy-line" v-if="copied === null" />
 							<span class="icon i-ri-error-warning-fill" v-else-if="copied === false" />
@@ -67,7 +67,9 @@
 					<div class="secondary-menu--header" />
 					<div class="secondary-menu--content">
 						<p v-if="focusSwitchingEnabled" v-show="focusHelpVisible" class="region-enumeration">2</p>
-						<svws-ui-secondary-menu-navigation class="focus-region" :class="{'highlighted': focusHelpVisible}" :tab-manager="(menu.current.name.startsWith('schule') ? tabManagerSchule : tabManagerEinstellungen)" />
+						<svws-ui-secondary-menu-navigation class="focus-region" :class="{'highlighted': focusHelpVisible}"
+							:tab-manager="(menu.current.name.startsWith('schule') ? tabManagerSchule :
+								(menu.current.name.startsWith('notenmodul') ? tabManagerNotenmodul : tabManagerEinstellungen))" />
 					</div>
 				</div>
 			</template>
@@ -133,14 +135,13 @@
 <script setup lang="ts">
 
 	import { computed, onMounted, onUnmounted, ref, onErrorCaptured, watch } from "vue";
-	import type { TabData } from "@ui";
+	import { useRegionSwitch, type TabData } from "@ui";
 	import type { AppProps } from './SAppProps';
 	import type { SimpleOperationResponse } from '@core';
 	import { DeveloperNotificationException, OpenApiError, UserNotificationException } from '@core';
 	import { githash } from '../../githash';
 	import { version } from '../../version';
 	import { api } from '~/router/Api';
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<AppProps>();
 
@@ -171,6 +172,7 @@
 			case "i-ri-briefcase-line":
 			case "i-ri-team-line":
 			case "i-ri-book-2-line":
+			case "i-ri-music-2-fill":
 			case "i-ri-graduation-cap-line":
 			case "i-ri-bar-chart-2-line":
 			case "i-ri-calendar-event-line":

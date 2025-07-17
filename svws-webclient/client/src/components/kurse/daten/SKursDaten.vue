@@ -17,7 +17,8 @@
 						@change="wstd => patch({ wochenstunden: wstd ?? 0 })" />
 					<svws-ui-multi-select title="Jahrgänge" :disabled="!hatKompetenzUpdate" v-model="jahrgaenge" :items="jahrgangsListe"
 						:item-text="jg => jg?.kuerzel ?? ''" statistics />
-					<svws-ui-input-number placeholder="Sortierung" :disabled="!hatKompetenzUpdate" :model-value="data().sortierung" @change="sortierung=> sortierung && patch({ sortierung })" />
+					<svws-ui-input-number placeholder="Sortierung" :disabled="!hatKompetenzUpdate" :model-value="data().sortierung" :min="0" :max="32000"
+						@change="sortierung=> sortierung && patch({ sortierung })" />
 					<svws-ui-text-input placeholder="Zeugnisbezeichnung" :disabled="!hatKompetenzUpdate" :model-value="data().bezeichnungZeugnis" @change="b => patch({ bezeichnungZeugnis : b })" type="text" />
 					<svws-ui-select title="Fortschreibungsart" :disabled="!hatKompetenzUpdate" :model-value="KursFortschreibungsart.fromID(data().idKursFortschreibungsart)"
 						@update:model-value="value => patch({ idKursFortschreibungsart: value?.id ?? 0 })"
@@ -57,7 +58,7 @@
 	import type { DataTableColumn } from "@ui";
 	import type { KursDatenProps } from "./SKursDatenProps";
 	import type { JahrgangsDaten, LehrerListeEintrag, List } from "@core";
-	import { FachDaten, SchuelerStatus, ZulaessigeKursart, KursFortschreibungsart, ArrayList, BenutzerKompetenz, ServerMode } from "@core";
+	import { SchuelerStatus, ZulaessigeKursart, KursFortschreibungsart, ArrayList, BenutzerKompetenz, ServerMode, FaecherListeEintrag } from "@core";
 
 	const props = defineProps<KursDatenProps>();
 
@@ -78,18 +79,16 @@
 		set: (value) => void props.patch({ lehrer: value?.id ?? null }),
 	});
 
-	const fach = computed<FachDaten>({
-		get: () => props.manager().faecher.get(data().idFach) ?? new FachDaten(),
+	const fach = computed<FaecherListeEintrag>({
+		get: () => props.manager().faecher.get(data().idFach) ?? new FaecherListeEintrag(),
 		set: (value) => void props.patch({ idFach: value.id }),
 	});
 
 
 	const jahrgangsListe = computed<List<JahrgangsDaten>>(() => {
 		const result = new ArrayList<JahrgangsDaten>();
-		for (const jg of props.manager().jahrgaenge.list()) {
-			if (jg.kuerzel !== "E3") // Das dritte Jahr der Schuleingangsphase sollte nicht für einen Jahrgang einer Klasse verwendet werden, da es Schüler-spezifisch ist
-				result.add(jg);
-		}
+		for (const jg of props.manager().jahrgaenge.list())
+			result.add(jg);
 		return result;
 	});
 

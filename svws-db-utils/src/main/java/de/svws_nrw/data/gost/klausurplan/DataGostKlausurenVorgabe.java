@@ -47,7 +47,7 @@ public final class DataGostKlausurenVorgabe extends DataManagerRevised<Long, DTO
 	 */
 	public DataGostKlausurenVorgabe(final DBEntityManager conn, final int abiturjahr) throws ApiOperationException {
 		super(conn);
-		super.setAttributesNotPatchable("abiJahrgang", "halbjahr", "quartal", "idFach", "kursart");
+		super.setAttributesNotPatchable("id", "abiJahrgang", "halbjahr", "quartal", "idFach", "kursart");
 		super.setAttributesRequiredOnCreation("abiJahrgang", "halbjahr", "quartal", "idFach", "kursart");
 		_abiturjahr = abiturjahr;
 		if ((abiturjahr != -1) && (conn.queryByKey(DTOGostJahrgangsdaten.class, abiturjahr) == null))
@@ -110,7 +110,7 @@ public final class DataGostKlausurenVorgabe extends DataManagerRevised<Long, DTO
 	@Override
 	protected GostKlausurvorgabe map(final DTOGostKlausurenVorgaben dto) throws ApiOperationException {
 		final GostKlausurvorgabe daten = new GostKlausurvorgabe();
-		daten.idVorgabe = dto.ID;
+		daten.id = dto.ID;
 		daten.abiJahrgang = dto.Abi_Jahrgang;
 		daten.idFach = dto.Fach_ID;
 		daten.kursart = dto.Kursart.kuerzel;

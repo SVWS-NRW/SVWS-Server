@@ -51,7 +51,7 @@ public final class HtmlContextGostKlausurplanungKlausurplan extends HtmlContext 
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Daten.
 	 *
 	 * @param reportingRepository	Repository mit Parametern, Logger und Daten zum Reporting.
-	 * @param gostKlausurplan		Ein GOSt-Klausurplan, auf dem dieser Kontext aufbauen sollen.
+	 * @param gostKlausurplan		Ein GOSt-Klausurplan, auf dem dieser Kontext aufbauen soll.
 	 * @param idsFilterSchueler 	Eine Liste, die die schülerbezogene Ausgabe auf die Schüler mit den enthaltenen IDs beschränkt.
 	 */
 	public HtmlContextGostKlausurplanungKlausurplan(final ReportingRepository reportingRepository, final ReportingGostKlausurplanungKlausurplan gostKlausurplan,
@@ -70,7 +70,7 @@ public final class HtmlContextGostKlausurplanungKlausurplan extends HtmlContext 
 	 */
 	private void erzeugeContext(final List<Long> idsFilterSchueler) throws ApiOperationException {
 
-		// In den idsHauptdaten der Reporting-Parameter werden im Wechsel das Abiturjahr und des GostHalbjahr (0 = EF.1 bis 5 = Q2.2) übergeben.
+		// In den idsHauptdaten der Reporting-Parameter werden im Wechsel das Abiturjahr und des GostHalbjahres (0 = EF.1 bis 5 = Q2.2) übergeben.
 		// Hier werden die Daten NICHT validiert. Die Daten aus den Parametern müssen vorab validiert worden sein (ReportingValidierung).
 		final List<Long> parameterDaten = reportingRepository.reportingParameter().idsHauptdaten.stream().filter(Objects::nonNull).toList();
 		final List<GostKlausurenCollectionHjData> selection = new ArrayList<>();

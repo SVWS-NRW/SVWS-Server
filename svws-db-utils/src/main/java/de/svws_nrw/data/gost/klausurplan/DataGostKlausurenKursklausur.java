@@ -8,10 +8,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionData;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionSkrsKrsData;
-import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumRich;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungDaten;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungErgebnis;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungErgebnisTermin;
@@ -27,12 +25,12 @@ import de.svws_nrw.core.utils.gost.klausurplanung.KlausurterminblockungAlgorithm
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenKursklausuren;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausuren;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenTermine;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenVorgaben;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
+import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
@@ -45,27 +43,7 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public final class DataGostKlausurenKursklausur extends DataManagerRevised<Long, DTOGostKlausurenKursklausuren, GostKursklausur> {
 
-	private Schuljahresabschnitt sja;
 	private GostKlausurenCollectionSkrsKrsData raumDataChanged = new GostKlausurenCollectionSkrsKrsData();
-
-	/**
-	 * Erstellt einen neuen {@link DataManagerRevised} für den Core-DTO
-	 * {@link GostKursklausur}.
-	 *
-	 * @param conn                   die Datenbank-Verbindung für den
-	 *                               Datenbankzugriff
-	 * @param abiturjahr             das Jahr, in welchem der Jahrgang Abitur machen
-	 *                               wird
-	 * @param halbjahr               das Gost-Halbjahr
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public DataGostKlausurenKursklausur(final DBEntityManager conn, final int abiturjahr, final GostHalbjahr halbjahr) throws ApiOperationException {
-		this(conn);
-		if ((abiturjahr != -1) && (conn.queryByKey(DTOGostJahrgangsdaten.class, abiturjahr) == null))
-			throw new ApiOperationException(Status.BAD_REQUEST, "Jahrgang nicht gefunden, ID: " + abiturjahr);
-		sja = DataGostKlausuren.getSchuljahresabschnittFromAbijahrUndHalbjahr(conn, abiturjahr, halbjahr);
-	}
 
 	/**
 	 * Erstellt einen neuen {@link DataManagerRevised} für den Core-DTO
@@ -78,7 +56,7 @@ public final class DataGostKlausurenKursklausur extends DataManagerRevised<Long,
 	 */
 	public DataGostKlausurenKursklausur(final DBEntityManager conn) throws ApiOperationException {
 		super(conn);
-		super.setAttributesNotPatchable("idVorgabe", "idKurs");
+		super.setAttributesNotPatchable("id", "idVorgabe", "idKurs");
 		super.setAttributesRequiredOnCreation("idVorgabe", "idKurs");
 	}
 
@@ -144,10 +122,7 @@ public final class DataGostKlausurenKursklausur extends DataManagerRevised<Long,
 				final Long newTermin = JSONMapper.convertToLong(value, true);
 				if (!Objects.equals(newTermin, dto.Termin_ID)) {
 					dto.Startzeit = null;
-					final GostKlausurraumRich krRich = new GostKlausurraumRich();
-					krRich.id = -1;
-					krRich.schuelerklausurterminIDs = getSchuelerklausurIDs(dto);
-					raumDataChanged = new DataGostKlausurenSchuelerklausurraumstunde(conn).loescheRaumZuSchuelerklausurenTransaction(ListUtils.create1(krRich)); // Auch alle Raumzuweisungen werden gelöscht
+					raumDataChanged = new DataGostKlausurenSchuelerklausurraumstunde(conn).loescheRaumZuSchuelerklausurenTransaction(getSchuelerklausurtermine(dto)); // Auch alle Raumzuweisungen werden gelöscht
 				}
 				if (newTermin != null) {
 					final DTOGostKlausurenTermine termin = conn.queryByKey(DTOGostKlausurenTermine.class, newTermin);
@@ -162,13 +137,7 @@ public final class DataGostKlausurenKursklausur extends DataManagerRevised<Long,
 				if (((startzeitNeu == null) && (dto.Startzeit != null)) || ((startzeitNeu != null) && !startzeitNeu.equals(dto.Startzeit))) {
 					dto.Startzeit = startzeitNeu;
 					conn.transactionPersist(dto);
-					if (sja == null)
-						throw new ApiOperationException(Status.FORBIDDEN, "Schuljahresabschnitt muss gesetzt sein, um Klausurzeit zu ändern.");
-					final GostKlausurraumRich krRich = new GostKlausurraumRich();
-					krRich.id = -1;
-					krRich.schuelerklausurterminIDs = getSchuelerklausurIDs(dto);
-					raumDataChanged = new DataGostKlausurenSchuelerklausurraumstunde(conn).transactionSetzeRaumZuSchuelerklausuren(ListUtils.create1(krRich),
-							sja);
+					raumDataChanged = new DataGostKlausurenSchuelerklausurraumstunde(conn).updateRaeumeZuSchuelerklausurterminen(getSchuelerklausurtermine(dto));
 				}
 			}
 			case "bemerkung" -> dto.Bemerkungen =
@@ -177,16 +146,14 @@ public final class DataGostKlausurenKursklausur extends DataManagerRevised<Long,
 		}
 	}
 
-	private List<Long> getSchuelerklausurIDs(final DTOGostKlausurenKursklausuren dto) throws ApiOperationException {
+	private List<GostSchuelerklausurTermin> getSchuelerklausurtermine(final DTOGostKlausurenKursklausuren dto) throws ApiOperationException {
 		final List<GostSchuelerklausur> sks = new DataGostKlausurenSchuelerklausur(conn).getSchuelerKlausurenZuKursklausuren(ListUtils.create1(map(dto)));
-		final List<GostSchuelerklausurTermin> skts = new DataGostKlausurenSchuelerklausurTermin(conn).getSchuelerklausurtermineZuSchuelerklausuren(sks);
-		return skts.stream().map(skt -> skt.id).toList();
+		return new DataGostKlausurenSchuelerklausurTermin(conn).getSchuelerklausurtermineZuSchuelerklausuren(sks);
 	}
 
 	@Override
 	public Response patchAsResponse(final Long id, final InputStream is) throws ApiOperationException {
-		final GostKursklausur patched = patchFromStream(id, is);
-		raumDataChanged.kursKlausurPatched = patched;
+		patchFromStream(id, is);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(raumDataChanged).build();
 	}
 
@@ -221,7 +188,7 @@ public final class DataGostKlausurenKursklausur extends DataManagerRevised<Long,
 		if (vorgaben.isEmpty())
 			return new ArrayList<>();
 		final List<DTOGostKlausurenKursklausuren> kursKlausurDTOs = conn.queryList(DTOGostKlausurenKursklausuren.QUERY_LIST_BY_VORGABE_ID,
-				DTOGostKlausurenKursklausuren.class, vorgaben.stream().map(v -> v.idVorgabe).toList());
+				DTOGostKlausurenKursklausuren.class, vorgaben.stream().map(v -> v.id).toList());
 		return mapList(kursKlausurDTOs);
 	}
 
@@ -363,7 +330,17 @@ public final class DataGostKlausurenKursklausur extends DataManagerRevised<Long,
 		for (final DTOGostKlausurenKursklausuren klausur : listKlausuren) {
 			final GostKlausurvorgabe vorgabe = manager.vorgabeGetByIdOrException(klausur.Vorgabe_ID);
 			if (termin == null) {
-				termin = new DTOGostKlausurenTermine(terminId, vorgabe.abiJahrgang, GostHalbjahr.fromIDorException(vorgabe.halbjahr),
+				final GostHalbjahr ghj = GostHalbjahr.fromIDorException(vorgabe.halbjahr);
+
+				final List<DTOSchuljahresabschnitte> sjaList =
+						conn.query("SELECT s FROM DTOSchuljahresabschnitte s WHERE s.Jahr = :jahr AND s.Abschnitt = :abschnitt", DTOSchuljahresabschnitte.class)
+								.setParameter("jahr", ghj.getSchuljahrFromAbiturjahr(vorgabe.abiJahrgang))
+								.setParameter("abschnitt", (vorgabe.halbjahr % 2) + 1)
+								.getResultList();
+				if ((sjaList == null) || (sjaList.size() != 1))
+					throw new ApiOperationException(Status.NOT_FOUND, "Noch kein Schuljahresabschnitt für dieses Halbjahr definiert.");
+
+				termin = new DTOGostKlausurenTermine(terminId, sjaList.getFirst().ID, vorgabe.abiJahrgang, ghj,
 						vorgabe.quartal, true, false);
 				conn.transactionPersist(termin);
 				blockung.termine.add(new DataGostKlausurenTermin(conn).map(termin));
@@ -423,7 +400,7 @@ public final class DataGostKlausurenKursklausur extends DataManagerRevised<Long,
 				kkr.idKurs = k.idKurs;
 				kkr.idLehrer = kurs.Lehrer_ID;
 				kkr.idTermin = k.idTermin;
-				kkr.idVorgabe = v.idVorgabe;
+				kkr.idVorgabe = v.id;
 				kkr.kursart = v.kursart;
 				kkr.kursKurzbezeichnung = kurs.KurzBez;
 				try {

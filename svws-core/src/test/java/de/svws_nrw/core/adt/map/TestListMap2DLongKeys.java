@@ -2,7 +2,10 @@ package de.svws_nrw.core.adt.map;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -152,6 +155,28 @@ class TestListMap2DLongKeys {
 			0, 4, 4
 			{null}, 5, 5
 		""";
+
+	private static final String TEST_REMOVE_VALUE_OR_EXCEPTION = """
+		    1, 2, 1, A, {null}
+		    1, 1, 2, B, {null}
+		    1, 3, 3, D, {null}
+		""";
+
+	private static final String TEST_REMOVE_SINGLE_OR_EXCEPTION = """
+		    1, 1, 2, B
+		    1, 3, 3, D
+		""";
+
+	private static final String TEST_REMOVE_ALL_BY_KEY1 = """
+		    2, 1
+		    1, 1
+		""";
+
+	private static final String TEST_REMOVE_AND_GET_EMPTY_OR_MISSING = """
+		    2, 1, "A", remove, true, 0
+		    99, 77, {null}, remove, false, 0
+		""";
+
 
 	/**
 	 * Initialisiert die Grunddaten.
@@ -514,5 +539,106 @@ class TestListMap2DLongKeys {
 				assertEquals(result, map.get12OrException(key1, key2).size());
 			});
 	}
+
+	/**
+	 * Test der 'removeValueOrException' Methode.
+	 *
+	 * @param sizeVorher      Die Listengröße vorher.
+	 * @param key1            Der 1. Schlüssel.
+	 * @param key2            Der 2. Schlüssel.
+	 * @param value           Der zu entfernende Wert.
+	 * @param resultErwartet  Der nach dem Entfernen erwartete Wert ({null} falls leer).
+	 */
+	@DisplayName("Test der 'removeValueOrException' Methode.")
+	@ParameterizedTest
+	@CsvSource(textBlock = TEST_REMOVE_VALUE_OR_EXCEPTION, nullValues = "{null}")
+	void test_removeValueOrException(final int sizeVorher, final int key1, final int key2, final String value, final String resultErwartet) {
+	    assertEquals(sizeVorher, map.get12(key1, key2).size());
+	    map.removeValueOrException(key1, key2, value);
+	    if (resultErwartet == null)
+	        assertEquals(0, map.get12(key1, key2).size());
+	    else
+	        assertEquals(resultErwartet, map.get12(key1, key2).getFirst());
+	}
+
+	/**
+	 * Test der 'removeSingleOrException' Methode.
+	 *
+	 * @param sizeVorher      Die Listengröße vorher.
+	 * @param key1            Der 1. Schlüssel.
+	 * @param key2            Der 2. Schlüssel.
+	 * @param value           Der einzig verbleibende Wert.
+	 */
+	@DisplayName("Test der 'removeSingleOrException' Methode.")
+	@ParameterizedTest
+	@CsvSource(textBlock = TEST_REMOVE_SINGLE_OR_EXCEPTION, nullValues = "{null}")
+	void test_removeSingleOrException(final int sizeVorher, final int key1, final int key2, final String value) {
+	    assertEquals(sizeVorher, map.get12(key1, key2).size());
+	    assertEquals(value, map.removeSingleOrException(key1, key2));
+	    assertEquals(0, map.get12(key1, key2).size());
+	}
+
+	/**
+	 * Test der 'removeAllByKey1' Methode.
+	 *
+	 * @param key1   Der 1. Schlüssel, dessen Zuordnungen entfernt werden.
+	 */
+	@DisplayName("Test der 'removeAllByKey1' Methode.")
+	@ParameterizedTest
+	@CsvSource(textBlock = TEST_REMOVE_ALL_BY_KEY1)
+	void test_removeAllByKey1(final int key1) {
+	    map.removeAllByKey1(key1);
+	    // Prüfe, dass zu diesem key1 keine Zuordnung mehr existiert
+	    for (int k2 = 1; k2 <= 4; k2++)
+	        assertEquals(0, map.get12(key1, k2).size());
+	}
+
+	/**
+	 * Test der 'getAllValues' Methode.
+	 */
+	@DisplayName("Test der 'getAllValues' Methode.")
+	@org.junit.jupiter.api.Test
+	void test_getAllValues() {
+	    // Nach Setup: "A", "B", "C", "D"
+	    assertEquals(4, map.getAllValues().size());
+	    assert (map.getAllValues().containsAll(java.util.List.of("A", "B", "C", "D")));
+	    // Nach Entfernen aller mit key1=1: nur "A", "D" bleiben übrig
+	    map.removeAllByKey1(1);
+	    assertEquals(2, map.getAllValues().size());
+	    assert (map.getAllValues().containsAll(java.util.List.of("A", "D")));
+	}
+
+	@DisplayName("Test remove auf leerer oder nie existenter Liste: Caches korrekt, get12 liefert leere Liste")
+	@ParameterizedTest
+	@CsvSource(
+	    textBlock = TEST_REMOVE_AND_GET_EMPTY_OR_MISSING,
+	    nullValues = "{null}"
+	)
+	void test_remove_on_empty_or_missing_path(final int key1, final int key2, final String addValue, final String action, final boolean existedBefore, final int expectedAfter) {
+	    // 1. Falls addValue gesetzt ist, Wert hinzufügen
+	    if (addValue != null && !"remove".equals(addValue)) {
+	        map.add(key1, key2, addValue.replace("\"", ""));
+	    }
+	    // 2. Vorher: existiert der Pfad?
+	    boolean existed = map.containsKey12(key1, key2);
+	    assertEquals(existedBefore, existed);
+
+	    // 3. remove auf Pfad (auch wenn schon leer oder nie da)
+	    map.remove(key1, key2);
+
+	    // 4. Danach: get12 ist niemals null, sondern eine (neue) leere Liste
+	    List<String> afterList = map.get12(key1, key2);
+	    assertNotNull(afterList);
+	    assertEquals(expectedAfter, afterList.size());
+
+	    // 5. Nach erneutem add sind Werte sofort wieder sichtbar
+	    map.add(key1, key2, "Z");
+	    List<String> newList = map.get12(key1, key2);
+	    assertEquals(1, newList.size());
+	    assertEquals("Z", newList.getFirst());
+	}
+
+
+
 
 }

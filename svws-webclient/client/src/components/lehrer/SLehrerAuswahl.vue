@@ -39,11 +39,10 @@
 
 	import { computed, ref } from "vue";
 	import type { SortByAndOrder} from "@ui";
-	import { ViewType } from "@ui";
+	import { useRegionSwitch, ViewType } from "@ui";
 	import type { PersonalTyp, LehrerListeEintrag } from "@core";
 	import { ServerMode, BenutzerKompetenz } from "@core";
 	import type { LehrerAuswahlProps } from "./SLehrerAuswahlProps";
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<LehrerAuswahlProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();

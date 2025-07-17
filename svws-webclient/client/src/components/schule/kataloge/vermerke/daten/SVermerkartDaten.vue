@@ -3,6 +3,7 @@
 		<svws-ui-content-card title="Vermerkart" class="w-full">
 			<svws-ui-input-wrapper>
 				<svws-ui-text-input class="contentFocusField w-5/5" placeholder="Bezeichnung" :model-value="vermerkartenManager().auswahl().bezeichnung" @change="bezeichnung => patch({ bezeichnung: bezeichnung ?? undefined })" type="text" />
+				<svws-ui-spacing />
 				<svws-ui-checkbox :model-value="vermerkartenManager().daten().istSichtbar" @update:model-value="value => patch({ istSichtbar: value === true })">
 					Sichtbar
 				</svws-ui-checkbox>

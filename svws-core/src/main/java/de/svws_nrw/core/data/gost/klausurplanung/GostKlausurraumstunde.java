@@ -23,7 +23,7 @@ public class GostKlausurraumstunde {
 
 	/** Die ID des Zeitrasters. */
 	@Schema(description = "die ID des Zeitrasters", example = "221")
-	public long idZeitraster = -1;
+	public Long idZeitraster = null;
 
 	/**
 	 * Vergleicht, ob das akutelle dasselbe Objekt, wie ein anderes übergebenes Objekt ist.

@@ -1,5 +1,6 @@
 import { JavaObject } from '../../java/lang/JavaObject';
 import { AttributMitAuswahl } from '../../core/utils/AttributMitAuswahl';
+import { HashMap } from '../../java/util/HashMap';
 import { Schulform } from '../../asd/types/schule/Schulform';
 import { ArrayList } from '../../java/util/ArrayList';
 import { SchuljahresabschnittsUtils } from '../../core/utils/schule/SchuljahresabschnittsUtils';
@@ -11,6 +12,7 @@ import type { Collection } from '../../java/util/Collection';
 import type { List } from '../../java/util/List';
 import { Class } from '../../java/lang/Class';
 import { Schuljahresabschnitt } from '../../asd/data/schule/Schuljahresabschnitt';
+import type { JavaMap } from '../../java/util/JavaMap';
 import { Pair } from '../../asd/adt/Pair';
 
 export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
@@ -94,6 +96,11 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 	 * Die Daten aus der vorherigen Auswahl.
 	 */
 	protected _vorherigeAuswahl : TDaten | null = null;
+
+	/**
+	 * Map mit allen selektierten Gruppenprozess CoreDto Objekten
+	 */
+	protected _listeDaten : JavaMap<TID, TDaten> = new HashMap<TID, TDaten>();
 
 
 	/**
@@ -227,7 +234,7 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 	 * welche das zu sortierende Feld als String angebenen und als boolean ob es aufsteigend (true)
 	 * oder absteigend (false) sortiert werden soll.
 	 *
-	 * @return   die Sortier-Ordnung
+	 * @return die Sortier-Ordnung
 	 */
 	public orderGet() : List<Pair<string, boolean>> {
 		return new ArrayList<Pair<string, boolean>>(this._order);
@@ -470,6 +477,35 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 	 */
 	public getIdByEintrag(eintrag : TAuswahl) : TID {
 		return this._listeToId.apply(eintrag);
+	}
+
+	/**
+	 * Gibt für das übergebene TDaten Objekt die ID zurück.
+	 *
+	 * @param daten   das TDaten Objekt
+	 *
+	 * @return die zugehörige ID
+	 */
+	public getIdByDaten(daten : TDaten) : TID {
+		return this._datenToId.apply(daten);
+	}
+
+	/**
+	 * Setzt Daten vom Typ TDaten der selektierten Gruppenprozesseinträge
+	 *
+	 * @param listeDaten selektierte Daten
+	 */
+	public setListeDaten(listeDaten : JavaMap<TID, TDaten>) : void {
+		this._listeDaten = listeDaten;
+	}
+
+	/**
+	 * Gibt Daten vom Typ TDaten der selektierten Gruppenprozesseinträge
+	 *
+	 * @return selektierte Daten
+	 */
+	public getListeDaten() : JavaMap<TID, TDaten> {
+		return this._listeDaten;
 	}
 
 	transpilerCanonicalName(): string {

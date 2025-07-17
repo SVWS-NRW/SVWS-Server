@@ -1,19 +1,19 @@
 <template>
 	<Story title="Button mit Auswahl" id="svws-ui-button-select" icon="ri:cursor-line" :layout="{ type: 'single', iframe: false }" auto-props-disabled>
-		<Variant title="Default">
+		<Variant title="Default" id="default">
 			<svws-ui-input-wrapper class="p-2">
-				<svws-ui-button-select @click="() => console.log('Default Button clicked')" :dropdown-actions="dropdownActions" />
-				<svws-ui-button-select type="danger" @click="() => console.log('Default Button clicked')" :dropdown-actions="dropdownActions" />
-				<svws-ui-button-select type="secondary" @click="() => console.log('Default Button clicked')" :dropdown-actions="dropdownActions" />
-				<svws-ui-button-select type="secondary" @click="() => console.log('Default Button clicked')" :dropdown-actions="dropdownActions">
+				<svws-ui-button-select :dropdown-actions="dropdownActions" />
+				<svws-ui-button-select type="danger" :dropdown-actions="dropdownActions" />
+				<svws-ui-button-select type="secondary" :dropdown-actions="dropdownActions" />
+				<svws-ui-button-select type="secondary" :dropdown-actions="dropdownActions">
 					<template #icon><span class="icon i-ri-printer-line" /></template>
 				</svws-ui-button-select>
 			</svws-ui-input-wrapper>
 			<svws-ui-input-wrapper class="p-2 page--statistik mt-10">
-				<svws-ui-button-select @click="() => console.log('Default Button clicked')" :dropdown-actions="dropdownActions" />
-				<svws-ui-button-select type="danger" @click="() => console.log('Default Button clicked')" :dropdown-actions="dropdownActions" />
-				<svws-ui-button-select type="secondary" @click="() => console.log('Default Button clicked')" :dropdown-actions="dropdownActions" />
-				<svws-ui-button-select type="secondary" @click="() => console.log('Default Button clicked')" :dropdown-actions="dropdownActions">
+				<svws-ui-button-select :dropdown-actions="dropdownActions" />
+				<svws-ui-button-select type="danger" :dropdown-actions="dropdownActions" />
+				<svws-ui-button-select type="secondary" :dropdown-actions="dropdownActions" />
+				<svws-ui-button-select type="secondary" :dropdown-actions="dropdownActions">
 					<template #icon><span class="icon i-ri-printer-line" /></template>
 				</svws-ui-button-select>
 			</svws-ui-input-wrapper>
@@ -35,11 +35,13 @@
 </template>
 
 <script setup lang="ts">
+	import { logEvent } from '../../stories/helper';
+
 	const dropdownActions = [
-		{ key: 1, text: "Button 1", action: () => console.log("Button 1 clicked") },
-		{ key: 2, text: "Button 2", action: () => console.log("Button 2 clicked") },
-		{ key: 3, text: "Button 3", action: () => console.log("Button 3 clicked") },
+		{ key: 1, text: "Button 1", action: () => logEvent("Button 1 clicked") },
+		{ key: 2, text: "Button 2", action: () => logEvent("Button 2 clicked") },
+		{ key: 3, text: "Button 3", action: () => logEvent("Button 3 clicked") },
 		{ key: 4, text: "", separator: true, action: () => {} },
-		{ key: 5, text: "Button 4", action: () => console.log("Button 4 clicked not possible") },
+		{ key: 5, text: "Button 4", action: () => logEvent("Button 4 clicked not possible") },
 	];
 </script>

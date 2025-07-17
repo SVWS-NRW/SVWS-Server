@@ -30,11 +30,12 @@ class ApiService {
 			const response = await fetch(`${this.baseUrl}${endpoint}`, {
 				...options,
 				headers: {
+					// eslint-disable-next-line @typescript-eslint/no-misused-spread
 					...options.headers,
 					'accept': '*/*',
 					'authorization': `Basic ${this.token}`,
 					'content-type': 'application/xml',
-					'content-length': `${contentLength}`
+					'content-length': `${contentLength}`,
 				},
 				body: options.body,
 			});

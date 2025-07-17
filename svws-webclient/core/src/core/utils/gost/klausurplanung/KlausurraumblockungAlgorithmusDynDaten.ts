@@ -27,9 +27,9 @@ export class KlausurraumblockungAlgorithmusDynDaten extends JavaObject {
 			return -1;
 		if (o1.groesse > o2.groesse)
 			return +1;
-		if (o1.id < o2.id)
+		if (o1.klausurraum.id < o2.klausurraum.id)
 			return -1;
-		if (o1.id > o2.id)
+		if (o1.klausurraum.id > o2.klausurraum.id)
 			return +1;
 		return 0;
 	} };
@@ -219,7 +219,7 @@ export class KlausurraumblockungAlgorithmusDynDaten extends JavaObject {
 				const raum2 : GostKlausurraumRich | null = klausurGruppeZuRaum[k];
 				if (raum2 === null)
 					continue;
-				if (raum1.id !== raum2.id)
+				if (raum1.klausurraum.id !== raum2.klausurraum.id)
 					continue;
 				counterGruppen++;
 			}
@@ -240,7 +240,7 @@ export class KlausurraumblockungAlgorithmusDynDaten extends JavaObject {
 				const raum2 : GostKlausurraumRich | null = klausurGruppeZuRaum[k];
 				if (raum2 === null)
 					continue;
-				if (raum1.id !== raum2.id)
+				if (raum1.klausurraum.id !== raum2.klausurraum.id)
 					continue;
 				counterKlausuren += this._klausurGruppen.get(k).size();
 			}
@@ -363,7 +363,7 @@ export class KlausurraumblockungAlgorithmusDynDaten extends JavaObject {
 				const raum2 : GostKlausurraumRich | null = this._klausurGruppeZuRaumSave[kg];
 				if (raum2 === null)
 					continue;
-				if (raum2.id !== raum.id)
+				if (raum2.klausurraum.id !== raum.klausurraum.id)
 					continue;
 				for (const klausur of this._klausurGruppen.get(kg))
 					raum.schuelerklausurterminIDs.add(klausur.id);

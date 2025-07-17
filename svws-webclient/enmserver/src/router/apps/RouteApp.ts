@@ -42,6 +42,9 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
 		try {
+			// Lade die ENM-Daten
+			if (isEntering)
+				await this.data.ladeDaten();
 			// Prüfe, ob dies die Ziel-Route ist. Wenn ja, dann leite zum Default-Child um
 			if (to.name === this.name)
 				return this.defaultChild!.getRoute();
@@ -54,6 +57,11 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		} catch (e) {
 			return routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
+	}
+
+	public async leave(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {
+		// Entferne die geladenen ENM-Daten wieder
+		this.data.entferneDaten();
 	}
 
 	public getProps(): AppProps {

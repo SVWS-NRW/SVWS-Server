@@ -1,173 +1,167 @@
 <template>
-	<table class="svws-ui-table h-full max-w-fit overflow-hidden" role="table" aria-label="Tabelle">
-		<thead class="svws-ui-thead" role="rowgroup" aria-label="Tabellenkopf">
-			<tr class="svws-ui-tr grid-cols-[24rem_24rem_8rem_16rem_4rem_8rem]" role="row">
-				<td class="svws-ui-td text-center svws-divider" role="columnheader" />
-				<td class="svws-ui-td text-center svws-divider" role="columnheader"> <div class="w-full">Zulassung</div> </td>
-				<td class="svws-ui-td text-center" role="columnheader"> <div class="w-full">Prüfung</div> </td>
-				<td class="svws-ui-td text-center" role="columnheader"> <div class="w-full">mündliche Prüfung</div> </td>
-				<td class="svws-ui-td text-center svws-divider" role="columnheader" />
-				<td class="svws-ui-td text-center" role="columnheader"> <div class="w-full">Abitur</div> </td>
-			</tr>
-			<tr class="svws-ui-tr grid-cols-[4rem_4rem_16rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_8rem]" role="row">
-				<td class="svws-ui-td text-center" role="columnheader"> <div class="w-full">Abi</div> </td>
-				<td class="svws-ui-td text-center" role="columnheader"> <div class="w-full">Kürzel</div> </td>
-				<td class="svws-ui-td svws-divider" role="columnheader"> Fach </td>
-				<td class="svws-ui-td text-center" role="columnheader"> <div class="w-full">Q1.1</div> </td>
-				<td class="svws-ui-td text-center" role="columnheader"> <div class="w-full">Q1.2</div> </td>
-				<td class="svws-ui-td text-center" role="columnheader"> <div class="w-full">Q2.1</div> </td>
-				<td class="svws-ui-td text-center" role="columnheader"> <div class="w-full">Q2.2</div> </td>
-				<td class="svws-ui-td text-center" role="columnheader"> <div class="w-full">Summe</div> </td>
-				<td class="svws-ui-td text-center svws-divider" role="columnheader"> <div class="w-full">⌀</div> </td>
-				<td class="svws-ui-td text-center" role="columnheader"> <div class="w-full">Punkte</div> </td>
-				<td class="svws-ui-td text-center svws-divider" role="columnheader"> <div class="w-full">Summe</div> </td>
-				<td class="svws-ui-td text-center" role="columnheader"> <div class="w-full">Pflicht</div> </td>
-				<td class="svws-ui-td text-center" role="columnheader"> <div class="w-full">Freiw.</div> </td>
-				<td class="svws-ui-td text-center" role="columnheader"> <div class="w-full">RF</div> </td>
-				<td class="svws-ui-td text-center svws-divider" role="columnheader"> <div class="w-full">Punkte</div> </td>
-				<td class="svws-ui-td text-center svws-divider" role="columnheader"> <div class="w-full">Punkte</div> </td>
-				<td class="svws-ui-td text-center" role="columnheader" :class="{
+	<ui-table-grid name="Übersicht über die Prüfungsergebnisse" :header-count="2" :manager="() => gridManager">
+		<template #header="params">
+			<template v-if="params.i === 1">
+				<th class="ui-divider text-ui-50 text-left col-span-3">{{ schueler.nachname }}, {{ schueler.vorname }}</th>
+				<th class="ui-divider col-span-6">Zulassung</th>
+				<th class="col-span-2">Prüfung</th>
+				<th class="col-span-4">mündliche Prüfung</th>
+				<th class="ui-divider" />
+				<th class="col-span-2">Abitur</th>
+			</template>
+			<template v-else>
+				<th>Abi</th>
+				<th>Kürzel</th>
+				<th class="ui-divider text-left"> Fach </th>
+				<th>Q1.1</th>
+				<th>Q1.2</th>
+				<th>Q2.1</th>
+				<th>Q2.2</th>
+				<th>Summe</th>
+				<th class="ui-divider">⌀</th>
+				<th>Punkte</th>
+				<th class="ui-divider">Wert</th>
+				<th>Pflicht</th>
+				<th>Freiw.</th>
+				<th>RF</th>
+				<th class="ui-divider">Punkte</th>
+				<th class="ui-divider">Summe</th>
+				<th class="col-span-2" :class="{
 					'text-ui-onsuccess bg-ui-success': istBestanden === true,
 					'text-ui-ondanger bg-ui-danger': istBestanden === false,
 				}">
-					<template v-if="istBestanden === true">
-						<div class="w-full">Bestanden: Ja</div>
-					</template>
-					<template v-else-if="istBestanden === false">
-						<div class="w-full">Bestanden: Nein</div>
-					</template>
-					<template v-else>
-						<div class="w-full">???</div>
-					</template>
-				</td>
-			</tr>
-		</thead>
-		<tbody class="svws-ui-tbody h-full overflow-y-auto" role="rowgroup" aria-label="Tabelleninhalt">
-			<template v-for="i in 5" :key="abiBelegungen[i]">
-				<template v-if="(abiBelegungen[i] !== null)">
-					<tr class="svws-ui-tr grid-cols-[4rem_4rem_16rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_4rem_8rem] text-ui-static" role="row">
-						<td class="svws-ui-td text-center" role="cell">
-							<div class="w-full">{{ abiBelegungen[i].abiturFach }}.</div>
-						</td>
-						<td class="svws-ui-td text-center" :style="{ 'background-color': getFachfarbe(abiBelegungen[i]) }" role="cell">
-							<div class="w-full">{{ manager().faecher().get(abiBelegungen[i].fachID)?.kuerzelAnzeige ?? "???" }}</div>
-						</td>
-						<td class="svws-ui-td" :style="{ 'background-color': getFachfarbe(abiBelegungen[i]) }" role="cell">
-							{{ manager().faecher().get(abiBelegungen[i].fachID)?.bezeichnung ?? "???" }}
-						</td>
-						<template v-for="hj in GostHalbjahr.getQualifikationsphase()" :key="hj.id">
-							<td class="svws-ui-td text-center" :class="{ 'svws-divider': (hj === GostHalbjahr.Q22) }" role="cell">
-								<div class="w-full">
-									{{ getNotenpunkteString(abiBelegungen[i], hj) }}
-								</div>
-							</td>
-						</template>
-						<td class="svws-ui-td svws-divider text-center" role="cell">
-							<div class="w-full">{{ abiBelegungen[i].block1PunktSumme ?? 0 }}</div>
-						</td>
-						<td class="svws-ui-td svws-divider text-center" role="cell">
-							<div class="w-full">{{ formatNotenpunkteDurchschnitt(abiBelegungen[i].block1NotenpunkteDurchschnitt) }}</div>
-						</td>
-						<td class="svws-ui-td text-center" role="cell">
-							<div class="w-full" :class="{
-								'font-bold text-ui-danger': istDefizit(abiBelegungen[i].block2NotenKuerzelPruefung)
-							}">
-								{{ getNotenpunkteStringFromKuerzel(abiBelegungen[i].block2NotenKuerzelPruefung) }}
-							</div>
-						</td>
-						<td class="svws-ui-td svws-divider text-center" role="cell">
-							<div class="w-full" :class="{
-								'font-bold text-ui-danger': istWertungDefizit(abiBelegungen[i].block2PunkteZwischenstand)
-							}">
-								{{ abiBelegungen[i].block2PunkteZwischenstand ?? '' }}
-							</div>
-						</td>
-						<td class="svws-ui-td text-center" role="cell" :class="{ 'bg-ui-75': i >= 4 }">
-							<div class="w-full">
-								<span v-if="abiBelegungen[i].block2MuendlichePruefungBestehen === true" class="icon-sm i-ri-check-line" />
-							</div>
-						</td>
-						<td class="svws-ui-td text-center" role="cell" :class="{ 'bg-ui-75': i >= 4 }">
-							<div class="w-full">
-								<span v-if="abiBelegungen[i].block2MuendlichePruefungFreiwillig === true" class="icon-sm i-ri-check-line" />
-							</div>
-						</td>
-						<td class="svws-ui-td text-center" role="cell" :class="{ 'bg-ui-75': i >= 4 }">
-							<div class="w-full">{{ abiBelegungen[i].block2MuendlichePruefungReihenfolge ?? '' }}</div>
-						</td>
-						<td class="svws-ui-td svws-divider text-center" role="cell" :class="{ 'bg-ui-75': i >= 4 }">
-							<div class="w-full">{{ getNotenpunkteStringFromKuerzel(abiBelegungen[i].block2MuendlichePruefungNotenKuerzel) }}</div>
-						</td>
-						<td class="svws-ui-td svws-divider text-center" role="cell">
-							<div class="w-full" :class="{
-								'font-bold text-ui-danger': istWertungDefizit(abiBelegungen[i].block2Punkte)
-							}">
-								{{ abiBelegungen[i].block2Punkte ?? '' }}
-							</div>
-						</td>
-						<td class="svws-ui-td text-center" role="cell" />
-					</tr>
-				</template>
+					Bestanden: {{ (istBestanden === true) ? 'Ja' : ((istBestanden === false) ? 'Nein' : '???') }}
+				</th>
 			</template>
-			<tr class="svws-ui-tr grid-cols-[24rem_16rem_4rem_4rem_4rem_4rem_16rem_4rem_4rem_4rem] text-ui-static" role="row">
-				<td class="svws-ui-td svws-divider" role="cell" />
-				<td class="svws-ui-td text-right" role="cell">
-					<div class="w-full"> Gesamt (normiert): </div>
+		</template>
+		<template #default="{ row: belegung, index: rowIndex }">
+			<template v-if="belegung.abiturFach !== null">
+				<td>{{ belegung.abiturFach }}.</td>
+				<td :style="{ 'background-color': getFachfarbe(belegung) }">
+					{{ manager().faecher().get(belegung.fachID)?.kuerzelAnzeige ?? "???" }}
 				</td>
-				<td class="svws-ui-td text-center" role="cell">
-					<div class="w-full font-bold"> {{ manager().daten().block1PunktSummeNormiert }} </div>
+				<td class="text-left ui-divider" :style="{ 'background-color': getFachfarbe(belegung) }">
+					{{ manager().faecher().get(belegung.fachID)?.bezeichnung ?? "???" }}
 				</td>
-				<td class="svws-ui-td svws-divider text-center" role="cell" />
-				<td class="svws-ui-td text-center" role="cell" />
-				<td class="svws-ui-td svws-divider text-center" role="cell">
-					<div class="w-full">
-						{{ getPunktSummePruefungen() }}
-					</div>
+				<template v-for="hj in GostHalbjahr.getQualifikationsphase()" :key="hj.id">
+					<td :class="{ 'ui-divider': (hj === GostHalbjahr.Q22) }">
+						{{ getNotenpunkteString(belegung, hj) }}
+					</td>
+				</template>
+				<td class="ui-divider">
+					{{ belegung.block1PunktSumme ?? 0 }}
 				</td>
-				<td class="svws-ui-td svws-divider text-center" role="cell" />
-				<td class="svws-ui-td svws-divider text-center" role="cell">
-					<div class="w-full font-bold">{{ manager().daten().block2PunktSumme }}</div>
+				<td class="ui-divider" :class="{ 'font-bold text-ui-danger': istAbweichungspruefung(belegung) }">
+					{{ formatNotenpunkteDurchschnitt(belegung.block1NotenpunkteDurchschnitt) }}
 				</td>
-				<td class="svws-ui-td text-center" role="cell">
-					<div class="w-full font-bold">{{ manager().daten().gesamtPunkte }}</div>
+				<td :ref="inputPruefungsnote(belegung, rowIndex)" class="ui-table-grid-input" :class="{
+					'font-bold text-ui-danger': istDefizit(belegung.block2NotenKuerzelPruefung)
+				}" />
+				<td class="ui-divider" :class="{ 'font-bold text-ui-danger': istWertungDefizit(belegung.block2PunkteZwischenstand) }">
+					{{ belegung.block2PunkteZwischenstand ?? '' }}
 				</td>
-				<td class="svws-ui-td text-center bg-ui-brand-secondary" role="cell">
-					<div class="w-full font-bold">{{ manager().daten().note }}</div>
+				<template v-if="belegung.abiturFach < 4">
+					<td v-if="!istAbweichungspruefung(belegung)" :ref="inputPflichtPruefung(belegung, rowIndex)" class="ui-table-grid-button">
+						<span class="icon-sm align-middle" :class="{
+							'i-ri-checkbox-line': (belegung.block2MuendlichePruefungBestehen === true) || (belegung.block2MuendlichePruefungAbweichung === true),
+							'i-ri-checkbox-blank-line': !((belegung.block2MuendlichePruefungBestehen === true) || (belegung.block2MuendlichePruefungAbweichung === true))
+						}" />
+					</td>
+					<td v-else><span class="icon-sm align-middle i-ri-check-line" /></td>
+					<td :ref="inputFreiwilligePruefung(belegung, rowIndex)" class="ui-table-grid-button">
+						<span class="icon-sm align-middle" :class="{
+							'i-ri-checkbox-line': belegung.block2MuendlichePruefungFreiwillig === true,
+							'i-ri-checkbox-blank-line': !(belegung.block2MuendlichePruefungFreiwillig === true)
+						}" />
+					</td>
+					<td :ref="inputPruefungsreihenfolge(belegung, rowIndex)" class="ui-table-grid-input" />
+					<td :ref="inputPruefungsnoteMdl(belegung, rowIndex)" class="ui-table-grid-input ui-divider" :class="{
+						'font-bold text-ui-danger': istDefizit(belegung.block2MuendlichePruefungNotenKuerzel)
+					}" />
+				</template>
+				<td v-else class="col-span-4 ui-divider bg-ui-75" />
+				<td class="ui-divider" :class="{ 'font-bold text-ui-danger': istWertungDefizit(belegung.block2Punkte) }">
+					{{ belegung.block2Punkte ?? '' }}
 				</td>
-			</tr>
-		</tbody>
-	</table>
+				<td class="col-span-2" />
+			</template>
+		</template>
+		<template #footer>
+			<td class="col-span-3 ui-divider" />
+			<td class="col-span-4 text-right">Gesamt (normiert):</td>
+			<td class="font-bold">{{ manager().daten().block1PunktSummeNormiert }}</td>
+			<td class="ui-divider" />
+			<td />
+			<td class="ui-divider">{{ getPunktSummePruefungen() }}</td>
+			<td class="col-span-4 ui-divider" />
+			<td class="font-bold ui-divider">{{ manager().daten().block2PunktSumme }}</td>
+			<td class="font-bold">{{ manager().daten().gesamtPunkte }}</td>
+			<td class="bg-ui-brand-secondary font-bold">{{ manager().daten().note }}</td>
+		</template>
+	</ui-table-grid>
 </template>
 
 <script setup lang="ts">
 
-	import { computed } from "vue";
-	import type { AbiturFachbelegung, Fachgruppe, NoteKatalogEintrag } from "@core";
-	import { Fach, GostBesondereLernleistung, Note, RGBFarbe } from "@core";
+	import { computed, watchEffect, type ComponentPublicInstance } from "vue";
+	import type { AbiturFachbelegung, Collection, Comparator, Fachgruppe, JavaMap, NoteKatalogEintrag } from "@core";
+	import { ArrayList, Fach, GostBesondereLernleistung, HashMap, Note, RGBFarbe } from "@core";
 	import { DeveloperNotificationException, GostHalbjahr } from "@core";
+	import { GridManager } from "@ui";
 
 	import type { SchuelerAbiturPruefungsuebersichtTabelleProps } from "./SchuelerAbiturPruefungsuebersichtTabelleProps";
 
 	const props = defineProps<SchuelerAbiturPruefungsuebersichtTabelleProps>();
 
-	const schuljahr = computed<number>(() => props.manager().getAbiturjahr() - 1);
-
-	const abiBelegungen = computed<Array<AbiturFachbelegung | null>>(() => {
-		const result = new Array<AbiturFachbelegung | null>();
-		for (let i = 1; i < 6; i++)
-			result[i] = null;
+	const abiBelegungen = computed<JavaMap<number, AbiturFachbelegung>>(() => {
+		const tmp = new ArrayList<AbiturFachbelegung>();
 		for (const belegung of props.manager().daten().fachbelegungen) {
 			if ((belegung.abiturFach === null) || (belegung.abiturFach < 1) || (belegung.abiturFach > 5))
 				continue;
-			if (result[belegung.abiturFach] !== null)
+			tmp.add(belegung);
+		}
+		tmp.sort(<Comparator<AbiturFachbelegung>>{ compare(a, b) { return a.abiturFach! - b.abiturFach!; } });
+		const result = new HashMap<number, AbiturFachbelegung>();
+		for (const belegung of tmp) {
+			if (belegung.abiturFach === null)
+				continue;
+			if (result.containsKey(belegung.abiturFach))
 				throw new DeveloperNotificationException("Ein Abiturfach darf nur einmal gesetzt sein. Dies muss an dieser Stelle sichergestellt werden.");
-			result[belegung.abiturFach] = belegung;
+			result.put(belegung.abiturFach, belegung);
 		}
 		return result;
 	});
 
+	const gridManager = new GridManager<string, AbiturFachbelegung, Collection<AbiturFachbelegung>>({
+		daten: computed<Collection<AbiturFachbelegung>>(() => abiBelegungen.value.values()),
+		getRowKey: row => `${props.manager().daten().schuelerID}_${row.abiturFach}`,
+		columns: [
+			{ kuerzel: "Abi", name: "Abiturfach", width: "4rem", hideable: false },
+			{ kuerzel: "Kürzel", name: "Fachkürzel", width: "4rem", hideable: false },
+			{ kuerzel: "Fach", name: "Fach", width: "16rem", hideable: false },
+			{ kuerzel: "Q1.1", name: "Notenpunkte in der Q1.1", width: "4rem", hideable: false },
+			{ kuerzel: "Q1.2", name: "Notenpunkte in der Q1.2", width: "4rem", hideable: false },
+			{ kuerzel: "Q2.1", name: "Notenpunkte in der Q2.1", width: "4rem", hideable: false },
+			{ kuerzel: "Q2.2", name: "Notenpunkte in der Q2.2", width: "4rem", hideable: false },
+			{ kuerzel: "QSumme", name: "Summe aus der Qualifikationsphase", width: "4rem", hideable: false },
+			{ kuerzel: "⌀", name: "Vornote (Notendurchschnitt)", width: "4rem", hideable: false },
+			{ kuerzel: "Punkte", name: "Notenpunkte", width: "4rem", hideable: false },
+			{ kuerzel: "Wert", name: "Wertung (5-Fach bei vier Abiturfächern und 4-Fach, wenn BLL als 5. Fach vorhanden ist)", width: "4rem", hideable: false },
+			{ kuerzel: "Pflicht", name: "mündliche Pflichtprüfung im 1.-3. Abiturfach", width: "4rem", hideable: false },
+			{ kuerzel: "Freiw.", name: "mündliche freiwillige Prüfung im 1.-3. Abiturfach", width: "4rem", hideable: false },
+			{ kuerzel: "RF", name: "Reihenfolge bei den mündlichen Prüfungen im 1.-3. Abiturfach", width: "4rem", hideable: false },
+			{ kuerzel: "Punkte (mdl.)", name: "Notenpunkte der mündlichen Prüfung im 1.-3. Abiturfach", width: "4rem", hideable: false },
+			{ kuerzel: "Summe", name: "Summe aus der Abiturprüfung und der mündlichen Prüfung im 1.-3. Abiturfach", width: "4rem", hideable: false },
+			{ kuerzel: "Gesamt", name: "die erreichte Gesamtpunktzahl in der Abiturprüfung", width: "4rem", hideable: false },
+			{ kuerzel: "Note", name: "Die Abiturnote, welche sich aus der Gesamtpunktzahl ergibt.", width: "4rem", hideable: false },
+			{ kuerzel: "", name: "", width: "1.25rem", hideable: false },
+		],
+	});
+
+	const schuljahr = computed<number>(() => props.manager().getAbiturjahr() - 1);
+
 	const hatBLL = computed<boolean>(() => GostBesondereLernleistung.fromKuerzel(props.manager().daten().besondereLernleistung) !== GostBesondereLernleistung.KEINE);
-	const hatAbiFach5 = computed<boolean>(() => (abiBelegungen.value[5] !== null) || hatBLL.value);
+	const hatAbiFach5 = computed<boolean>(() => abiBelegungen.value.containsKey(5) || hatBLL.value);
 
 	function istWertungDefizit(punkte: number | null): boolean {
 		if (punkte === null)
@@ -198,17 +192,10 @@
 		return (np !== null) && (np < 5);
 	}
 
-	function getNotenpunkteStringFromKuerzel(notenkuerzel: string | null) : string {
-		const np = getNotenpunkteFromKuerzel(notenkuerzel);
-		if (np === null)
-			return "";
-		return ((np < 10) ? "0" : "") + np;
-	}
-
 	function getPunktSummePruefungen() {
 		let summe = 0;
 		for (let i = 1; i <= 5; i++) {
-			const belegung = abiBelegungen.value[i];
+			const belegung = abiBelegungen.value.get(i);
 			if (belegung !== null)
 				summe += (belegung.block2PunkteZwischenstand ?? 0);
 		}
@@ -220,8 +207,8 @@
 		if (fach === null)
 			return null;
 		const f = Fach.getBySchluesselOrDefault(fach.kuerzel);
-		// TODO ggf. für Abi29ff zusätzlich check...
-		// if ((isAbi29ff) && ((f === Fach.IN) || (f === Fach.VO)))
+		// TODO ggf. für Abi30ff zusätzlich check...
+		// if ((isAbi30ff) && ((f === Fach.IN) || (f === Fach.VO)))
 		// 	return null;
 		return f.getFachgruppe(schuljahr.value) ?? null;
 	}
@@ -230,6 +217,10 @@
 		const gruppe = getFachgruppe(belegung);
 		const farbe : RGBFarbe = (gruppe === null) ? new RGBFarbe() : gruppe.getFarbe(schuljahr.value);
 		return "rgb(" + farbe.red + "," + farbe.green + "," + farbe.blue + ")";
+	}
+
+	function istAbweichungspruefung(belegung: AbiturFachbelegung): boolean {
+		return (props.manager().daten().abiturjahr <= 2019) && (belegung.block2MuendlichePruefungAbweichung === true);
 	}
 
 	function formatNotenpunkteDurchschnitt(avg: number | null): string {
@@ -241,6 +232,76 @@
 		while (tmp.length < 5)
 			tmp += "0";
 		return tmp;
+	}
+
+	function updateNotenpunkte(belegung: AbiturFachbelegung, value: string | null) : void {
+		void props.updateAbiturpruefungsdaten(props.manager, { fachID: belegung.fachID, block2NotenKuerzelPruefung: value }, true);
+	}
+
+	function updatePflichtPruefung(belegung: AbiturFachbelegung, value: boolean) : void {
+		void props.updateAbiturpruefungsdaten(props.manager, { fachID: belegung.fachID, block2MuendlichePruefungBestehen: value }, false);
+	}
+
+	function updateFreiwilligePruefung(belegung: AbiturFachbelegung, value: boolean) : void {
+		void props.updateAbiturpruefungsdaten(props.manager, { fachID: belegung.fachID, block2MuendlichePruefungFreiwillig: value }, false);
+	}
+
+	function updatePruefungsreihenfolge(belegung: AbiturFachbelegung, value: number | null) : void {
+		void props.updateAbiturpruefungsdaten(props.manager, { fachID: belegung.fachID, block2MuendlichePruefungReihenfolge: value }, false);
+	}
+
+	function updateNotenpunkteMdl(belegung: AbiturFachbelegung, value: string | null) : void {
+		void props.updateAbiturpruefungsdaten(props.manager, { fachID: belegung.fachID, block2MuendlichePruefungNotenKuerzel: value }, false);
+	}
+
+	function inputPruefungsnote(belegung: AbiturFachbelegung, rowIndex: number) {
+		const key = 'PrüfungsnoteAbiFach' + belegung.abiturFach;
+		const setter = (value : string | null) => updateNotenpunkte(belegung, value);
+		return (element : Element | ComponentPublicInstance<unknown> | null) => {
+			const input = gridManager.applyInputAbiturNotenpunkte(key, 1, rowIndex, element, setter, props.manager().daten().schuljahrAbitur);
+			if (input !== null)
+				watchEffect(() => gridManager.update(key, belegung.block2NotenKuerzelPruefung));
+		};
+	}
+
+	function inputPflichtPruefung(belegung: AbiturFachbelegung, rowIndex: number) {
+		const key = 'PflichtPrüfungAbiFach' + belegung.abiturFach;
+		const setter = (value : boolean) => updatePflichtPruefung(belegung, value);
+		return (element : Element | ComponentPublicInstance<unknown> | null) => {
+			const input = gridManager.applyInputToggle(key, 2, rowIndex, element, setter);
+			if (input !== null)
+				watchEffect(() => gridManager.update(key, (belegung.block2MuendlichePruefungBestehen === true) || (belegung.block2MuendlichePruefungAbweichung === true)));
+		};
+	}
+
+	function inputFreiwilligePruefung(belegung: AbiturFachbelegung, rowIndex: number) {
+		const key = 'FreiwilligePrüfungAbiFach' + belegung.abiturFach;
+		const setter = (value : boolean) => updateFreiwilligePruefung(belegung, value);
+		return (element : Element | ComponentPublicInstance<unknown> | null) => {
+			const input = gridManager.applyInputToggle(key, 3, rowIndex, element, setter);
+			if (input !== null)
+				watchEffect(() => gridManager.update(key, belegung.block2MuendlichePruefungFreiwillig ?? false));
+		};
+	}
+
+	function inputPruefungsreihenfolge(belegung: AbiturFachbelegung, rowIndex: number) {
+		const key = 'PrüfungsreihenfolgeAbiFach' + belegung.abiturFach;
+		const setter = (value : number | null) => updatePruefungsreihenfolge(belegung, value);
+		return (element : Element | ComponentPublicInstance<unknown> | null) => {
+			const input = gridManager.applyInputAbiturPruefungsreihenfolge(key, 4, rowIndex, element, setter);
+			if (input !== null)
+				watchEffect(() => gridManager.update(key, belegung.block2MuendlichePruefungReihenfolge));
+		};
+	}
+
+	function inputPruefungsnoteMdl(belegung: AbiturFachbelegung, rowIndex: number) {
+		const key = 'PrüfungsnoteMdlAbiFach' + belegung.abiturFach;
+		const setter = (value : string | null) => updateNotenpunkteMdl(belegung, value);
+		return (element : Element | ComponentPublicInstance<unknown> | null) => {
+			const input = gridManager.applyInputAbiturNotenpunkte(key, 5, rowIndex, element, setter, props.manager().daten().schuljahrAbitur);
+			if (input !== null)
+				watchEffect(() => gridManager.update(key, belegung.block2MuendlichePruefungNotenKuerzel));
+		};
 	}
 
 </script>

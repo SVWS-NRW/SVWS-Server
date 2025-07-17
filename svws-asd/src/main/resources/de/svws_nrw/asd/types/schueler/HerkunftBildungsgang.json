@@ -1,5 +1,5 @@
 {
-	"version": 2,
+	"version": 3,
 	"daten": [ {
 		"bezeichner": "A01",
 		"idStatistik": "1",
@@ -152,6 +152,48 @@
 				{"schulform": "BK", "gliederung": null},
 				{"schulform": "SB", "gliederung": null} ], 
 			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "A17",
+		"idStatistik": "42",
+		"historie": [ {
+			"id": 12000,
+			"schluessel": "A17",
+			"kuerzel": "A17",
+			"text": "Internationale Förderklasse",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": 2025,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "A18",
+		"idStatistik": "43",
+		"historie": [ {
+			"id": 13000,
+			"schluessel": "A18",
+			"kuerzel": "A18",
+			"text": "Fit für Mehr",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": 2025,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "A19",
+		"idStatistik": "44",
+		"historie": [ {
+			"id": 14000,
+			"schluessel": "A19",
+			"kuerzel": "A19",
+			"text": "Förderzentrum",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": 2025,
 			"gueltigBis": null
 		} ]
 	}, {

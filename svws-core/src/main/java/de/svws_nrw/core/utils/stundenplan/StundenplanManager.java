@@ -423,7 +423,8 @@ public class StundenplanManager {
 
 	// Default-Werte
 	private @NotNull StundenplanKonfiguration _stundenplanKonfig = new StundenplanKonfiguration();
-	private @NotNull List<String> _stundenplanWarnungen = new ArrayList<>();
+	private @NotNull
+	final List<String> _stundenplanWarnungen = new ArrayList<>();
 
 	/**
 	 * Der {@link StundenplanManager} benötigt vier data-Objekte und baut damit eine Datenstruktur für schnelle Zugriffe auf.
@@ -2196,6 +2197,19 @@ public class StundenplanManager {
 	}
 
 	/**
+	 * Liefert das zum Kürzel zugehörige {@link StundenplanAufsichtsbereich}-Objekt oder null, wenn kein
+	 * StundenplanAufsichtsbereich für das Kürzel vorhanden ist.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param kuerzelAufsichtsbereich   das Kürzel des angefragten-Objektes.
+	 *
+	 * @return das zum Kürzel zugehörige {@link StundenplanAufsichtsbereich}-Objekt oder null
+	 */
+	public StundenplanAufsichtsbereich aufsichtsbereichGetByKuerzelOrNull(final @NotNull String kuerzelAufsichtsbereich) {
+		return _aufsichtsbereich_by_kuerzel.get(kuerzelAufsichtsbereich);
+	}
+
+	/**
 	 * Liefert eine Liste aller {@link StundenplanAufsichtsbereich}-Objekte.
 	 * <br> Laufzeit: O(1)
 	 *
@@ -3045,7 +3059,7 @@ public class StundenplanManager {
 	 * @return eine Beschreibung des {@link StundenplanKlasse}-Objekts in der Form "7b".
 	 */
 	public @NotNull String klasseGetBeschreibungKuerzel(final long idKlasse) {
-		StundenplanKlasse kl = _klasse_by_id.get(idKlasse);
+		final StundenplanKlasse kl = _klasse_by_id.get(idKlasse);
 
 		if (kl == null)
 			return "Klassen-Objekt [" + idKlasse + "] ???";
@@ -3293,19 +3307,19 @@ public class StundenplanManager {
 		final @NotNull HashSet<Long> dragSchueler = new HashSet<>();
 		final @NotNull HashSet<Long> dragRaeume = new HashSet<>();
 
-		for (StundenplanKlassenunterricht kl : listKl) {
+		for (final StundenplanKlassenunterricht kl : listKl) {
 			dragLehrer.addAll(kl.lehrer);
 			dragKlassen.add(kl.idKlasse);
 			dragSchueler.addAll(kl.schueler);
 			// Räume existieren nicht
 		}
-		for (StundenplanKurs ku : listKu) {
+		for (final StundenplanKurs ku : listKu) {
 			dragLehrer.addAll(ku.lehrer);
 			// Klassen-Kollision nicht relevant, nur die der SuS.
 			dragSchueler.addAll(ku.schueler);
 			// Räume existieren nicht
 		}
-		for (StundenplanUnterricht u : listU) {
+		for (final StundenplanUnterricht u : listU) {
 			dragLehrer.addAll(u.lehrer);
 			dragKlassen.addAll(u.klassen);
 			for (final @NotNull StundenplanSchueler schueler : schuelerGetMengeByUnterrichtIdAsList(u.id))
@@ -4071,7 +4085,7 @@ public class StundenplanManager {
 	 * @return eine Beschreibung des {@link StundenplanLehrer}-Objekts in der Form "BAR".
 	 */
 	public @NotNull String lehrerGetBeschreibungKuerzel(final long idLehrer) {
-		StundenplanLehrer l = _lehrer_by_id.get(idLehrer);
+		final StundenplanLehrer l = _lehrer_by_id.get(idLehrer);
 
 		if (l == null)
 			return "Lehrer-Objekt [" + idLehrer + "] ???";
@@ -4276,7 +4290,6 @@ public class StundenplanManager {
 
 	private void pausenaufsichtCheckAttributes(final @NotNull StundenplanPausenaufsicht pausenaufsicht) {
 		DeveloperNotificationException.ifInvalidID("pausenaufsicht.id", pausenaufsicht.id);
-		DeveloperNotificationException.ifMapNotContains("_map_idLehrer_zu_lehrer", _lehrer_by_id, pausenaufsicht.idLehrer);
 		DeveloperNotificationException.ifMapNotContains("_map_idPausenzeit_zu_pausenzeit", _pausenzeit_by_id, pausenaufsicht.idPausenzeit);
 
 		for (final @NotNull StundenplanPausenaufsichtBereich aufsichtsbereich : pausenaufsicht.bereiche)
@@ -5360,7 +5373,7 @@ public class StundenplanManager {
 	 * @return eine Beschreibung des {@link StundenplanRaum}-Objekts in der Form "042".
 	 */
 	public @NotNull String raumGetBeschreibungKuerzel(final long idRaum) {
-		StundenplanRaum ra = _raum_by_id.get(idRaum);
+		final StundenplanRaum ra = _raum_by_id.get(idRaum);
 
 		if (ra == null)
 			return "Raum-Objekt [" + idRaum + "] ???";
@@ -5852,7 +5865,7 @@ public class StundenplanManager {
 	 * @return eine Beschreibung des {@link StundenplanSchueler}-Objekts in der Form "Peter Pan".
 	 */
 	public @NotNull String schuelerGetBeschreibungVornameNachname(final long idSchueler) {
-		StundenplanSchueler s = _schueler_by_id.get(idSchueler);
+		final StundenplanSchueler s = _schueler_by_id.get(idSchueler);
 
 		if (s == null)
 			return "Schüler-Objekt [" + idSchueler + "] ???";
@@ -6483,7 +6496,7 @@ public class StundenplanManager {
 	private @NotNull Comparator<StundenplanUnterricht> unterrichtCreateComparator() {
 		final @NotNull Comparator<StundenplanUnterricht> comp = (final @NotNull StundenplanUnterricht a, final @NotNull StundenplanUnterricht b) -> {
 			// Sortierung nach Jahrgängen
-			int cmpKlassenNachJahrgang = compareKlassenlistenIDsNachJahrgang(a.klassen, b.klassen);
+			final int cmpKlassenNachJahrgang = compareKlassenlistenIDsNachJahrgang(a.klassen, b.klassen);
 			if (cmpKlassenNachJahrgang != 0)
 				return cmpKlassenNachJahrgang;
 
@@ -6511,7 +6524,7 @@ public class StundenplanManager {
 				return cmpLehrer;
 
 			// Sortierung nach Wochentyp
-			int cmpWochentyp = compareWochentyp(a.wochentyp, b.wochentyp);
+			final int cmpWochentyp = compareWochentyp(a.wochentyp, b.wochentyp);
 			if (cmpWochentyp != 0)
 				return cmpWochentyp;
 
@@ -6552,7 +6565,7 @@ public class StundenplanManager {
 				return cmpFach;
 
 			// Sortierung nach Wochentyp
-			int cmpWochentyp = compareWochentyp(a.wochentyp, b.wochentyp);
+			final int cmpWochentyp = compareWochentyp(a.wochentyp, b.wochentyp);
 			if (cmpWochentyp != 0)
 				return cmpWochentyp;
 
@@ -7346,9 +7359,9 @@ public class StundenplanManager {
 	 * @return einen String, der diesen Unterricht beschreibt, in der Form 'M BAR 06b'.
 	 */
 	private @NotNull String unterrichtGetByID_StringOfFaLeKl(final long idUnterricht) {
-		String sFa = unterrichtGetByIDStringOfFachOderKurs(idUnterricht, false);
-		String sLe = unterrichtGetByIDLehrerFirstAsStringOrEmpty(idUnterricht);
-		String sKl = unterrichtGetByIDStringOfKlassen(idUnterricht);
+		final String sFa = unterrichtGetByIDStringOfFachOderKurs(idUnterricht, false);
+		final String sLe = unterrichtGetByIDLehrerFirstAsStringOrEmpty(idUnterricht);
+		final String sKl = unterrichtGetByIDStringOfKlassen(idUnterricht);
 
 		String s = sFa;
 		s = s + (s.isEmpty() ? "" : " ") + sLe;
@@ -7980,6 +7993,17 @@ public class StundenplanManager {
 	 */
 	public @NotNull StundenplanZeitraster zeitrasterGetByIdOrException(final long idZeitraster) {
 		return DeveloperNotificationException.ifMapGetIsNull(_zeitraster_by_id, idZeitraster);
+	}
+
+	/**
+	 * Liefert das zur ID zugehörige {@link StundenplanZeitraster}-Objekt.
+	 *
+	 * @param idZeitraster  Die Datenbank-ID des Zeitrasters.
+	 *
+	 * @return das zur ID zugehörige {@link StundenplanZeitraster}-Objekt.
+	 */
+	public StundenplanZeitraster zeitrasterGetByIdOrNull(final long idZeitraster) {
+		return _zeitraster_by_id.get(idZeitraster);
 	}
 
 	/**

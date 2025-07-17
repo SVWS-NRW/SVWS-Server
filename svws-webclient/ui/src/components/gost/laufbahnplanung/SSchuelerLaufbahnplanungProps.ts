@@ -1,4 +1,4 @@
-import type { Config } from "~/utils/Config";
+import type { Config } from "../../../utils/Config"
 import type { ApiFile } from "../../../../../core/src/api/BaseApi";
 import type { Schulform } from "../../../../../core/src/asd/types/schule/Schulform";
 import type { AbiturdatenManager } from "../../../../../core/src/core/abschluss/gost/AbiturdatenManager";

@@ -4,13 +4,10 @@ import { ApiStatus } from "~/components/ApiStatus";
 import { version } from '../../version';
 import { githash } from "../../githash";
 import type { ApiEnmServer } from "~/ApiEnmServer";
-import type { EnmManager } from "~/components/leistungen/EnmManager";
-import { Schulform } from "@core/asd/types/schule/Schulform";
-import type { ENMDaten } from "@core/core/data/enm/ENMDaten";
-import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import type { Schulform } from "@core/asd/types/schule/Schulform";
 import type { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import type { ServerMode } from "@core/core/types/ServerMode";
-import type { Config } from "~/components/Config";
+import { UserNotificationException } from "@core/core/exceptions/UserNotificationException";
 
 /**
  * Diese Klasse regelt den Zugriff auf die API eines ENM-Servers bezüglich
@@ -110,28 +107,15 @@ class Api {
 		await this.conn.logout();
 	}
 
-	// Gibt die ENM-Daten zurück
-	get daten(): ENMDaten {
-		return this.conn.daten;
-	}
-
-	// Gibt den Manager für die ENM-Daten des angemeldeten Benutzers zurück
-	get manager() : EnmManager {
-		return this.conn.manager;
-	}
-
 	/**
 	 * Gibt die Schulform der Schule zurück, wo der Benutzer angemeldet ist.
 	 *
 	 * @returns die Schulform
 	 */
 	public get schulform(): Schulform {
-		if (this.daten.schulform === null)
-			throw new DeveloperNotificationException("In den ENM-Daten ist keine Schulform eingetragen.");
-		const schulform = Schulform.data().getWertByKuerzel(this.daten.schulform);
-		if (schulform === null)
-			throw new DeveloperNotificationException("In den ENM-Daten ist eine ungültige Schulform eingetragen.");
-		return schulform;
+		if (this.conn.schulform === null)
+			throw new UserNotificationException("Die Schulform des Servers konnte nicht bestimmt werden.");
+		return this.conn.schulform;
 	}
 
 	/**
@@ -178,22 +162,6 @@ class Api {
 				this.status.stop();
 			}
 		}
-	}
-
-	/// --- Die Konfiguration
-
-	/**
-	 * Gibt die benutzerspezifische und globale Konfiguration zurück.
-	 */
-	public get config() : Config {
-		return this.conn.config;
-	}
-
-	/**
-	 * Gibt die benutzerspezifische und globale nicht persistierte Konfiguration zurück.
-	 */
-	public get nonPersistentConfig() : Config {
-		return this.conn.nonPersistentConfig;
 	}
 
 }

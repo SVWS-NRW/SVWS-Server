@@ -6,12 +6,27 @@ export class Erzieherart extends JavaObject {
 	/**
 	 * ID der Erzieherart
 	 */
-	public id : number = 0;
+	public id : number = -1;
 
 	/**
 	 * Bezeichnung der Erzieherart
 	 */
-	public bezeichnung : string | null = null;
+	public bezeichnung : string = "";
+
+	/**
+	 * Gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an.
+	 */
+	public sortierung : number = 1;
+
+	/**
+	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.
+	 */
+	public istSichtbar : boolean = true;
+
+	/**
+	 * Exportbezeichnung der Erzieherart
+	 */
+	public exportBez : string | null = "";
 
 
 	/**
@@ -37,14 +52,26 @@ export class Erzieherart extends JavaObject {
 		if (obj.id === undefined)
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.bezeichnung = (obj.bezeichnung === undefined) ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
+		if (obj.bezeichnung === undefined)
+			throw new Error('invalid json format, missing attribute bezeichnung');
+		result.bezeichnung = obj.bezeichnung;
+		if (obj.sortierung === undefined)
+			throw new Error('invalid json format, missing attribute sortierung');
+		result.sortierung = obj.sortierung;
+		if (obj.istSichtbar === undefined)
+			throw new Error('invalid json format, missing attribute istSichtbar');
+		result.istSichtbar = obj.istSichtbar;
+		result.exportBez = (obj.exportBez === undefined) ? null : obj.exportBez === null ? null : obj.exportBez;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : Erzieherart) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
-		result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
+		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
+		result += '"exportBez" : ' + ((obj.exportBez === null) ? 'null' : JSON.stringify(obj.exportBez)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -56,7 +83,16 @@ export class Erzieherart extends JavaObject {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+		}
+		if (obj.sortierung !== undefined) {
+			result += '"sortierung" : ' + obj.sortierung.toString() + ',';
+		}
+		if (obj.istSichtbar !== undefined) {
+			result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
+		}
+		if (obj.exportBez !== undefined) {
+			result += '"exportBez" : ' + ((obj.exportBez === null) ? 'null' : JSON.stringify(obj.exportBez)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

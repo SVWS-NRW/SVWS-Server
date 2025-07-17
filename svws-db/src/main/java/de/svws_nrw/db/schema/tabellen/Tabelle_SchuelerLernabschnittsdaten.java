@@ -43,6 +43,7 @@ public class Tabelle_SchuelerLernabschnittsdaten extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Schulbesuchsjahre */
 	public SchemaTabelleSpalte col_Schulbesuchsjahre = add("Schulbesuchsjahre", SchemaDatentypen.SMALLINT, false)
+			.setVeraltet(SchemaRevisionen.REV_44)
 			.setJavaComment("DEPRECATED: Schulbesuchsjahre für den Lernabschnitt");
 
 	/** Die Definition der Tabellenspalte Hochrechnung */
@@ -367,6 +368,18 @@ public class Tabelle_SchuelerLernabschnittsdaten extends SchemaTabelle {
 	public SchemaTabelleSpalte col_Folgeklasse = add("Folgeklasse", SchemaDatentypen.VARCHAR, false).setDatenlaenge(15)
 			.setVeraltet(SchemaRevisionen.REV_1)
 			.setJavaComment("DEPRECATED: Bezeichnung der Folgeklasse für den Lernabschnitt des Schülers");
+
+	/** Die Definition der Tabellenspalte PrognoseAbschluss */
+	public SchemaTabelleSpalte col_PrognoseAbschluss = add("PrognoseAbschluss", SchemaDatentypen.VARCHAR, false).setDatenlaenge(50)
+			.setRevision(SchemaRevisionen.REV_44)
+			.setJavaComment("allgemeinbildender Abschluss laut der Prognose");
+
+	/** Die Definition der Tabellenspalte PrognoseLog */
+	public SchemaTabelleSpalte col_PrognoseLog = add("PrognoseLog", SchemaDatentypen.TEXT, false)
+			.setRevision(SchemaRevisionen.REV_44)
+			.setJavaComment("Text für die Ergebnisse der Abschlussberechnungen für die Prognose");
+
+
 
 
 	/** Die Definition des Fremdschlüssels SchuelerLernabschnittsdaten_Schuljahreabschnitt_FK */

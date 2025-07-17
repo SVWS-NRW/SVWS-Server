@@ -1,4 +1,6 @@
+
 import groovy.json.JsonSlurper
+import org.codehaus.groovy.runtime.GStringImpl
 
 // Initialisierung der Plugins
 plugins {
@@ -7,6 +9,8 @@ plugins {
 
 def testConfigPath = "${rootDir}/config/tests/config.json" as String
 def CONFIG = new JsonSlurper().parse(new File(testConfigPath))
+
+def CLIENT_SECRET = "not set"
 
 // Führt alle Tasks von subproject-plugin.gradle in diesem Verzeichnis aus
 apply from: ('../subproject-plugin.gradle')
@@ -22,13 +26,13 @@ ext {
 	SVWS_SERVERMODE = "dev"
 
 	// Docker Konfiguration
-	APP_CONTAINER_NAME = "app-vite-enm-tests--$jobId"
-	DB_CONTAINER_NAME = "database-vite-enm-tests--$jobId"
-	ENM_CONTAINER_NAME = "env-server--$jobId"
+	APP_CONTAINER_NAME = "app-vite-enm-tests--$jobId" as GStringImpl
+	DB_CONTAINER_NAME = "database-vite-enm-tests--$jobId" as GStringImpl
+	ENM_CONTAINER_NAME = "env-server--$jobId" as GStringImpl
 
-	DB_SERVICE_NAME = "mariadb--$jobId"
-	APP_IMAGE_NAME = "svws-app--$jobId"
-	ENM_IMAGE_NAME = "svws-enm--$jobId"
+	DB_SERVICE_NAME = "mariadb--$jobId" as GStringImpl
+	APP_IMAGE_NAME = "svws-app--$jobId" as GStringImpl
+	ENM_IMAGE_NAME = "svws-enm--$jobId" as GStringImpl
 
 	// Auch für Docker. Forwarded Ports, werden nur bei lokal genutzten Container verwendet
 	FORWARDED_DB_PORT = 3333
@@ -41,7 +45,7 @@ ext {
 /**
  * Führt die Vitest Task setupTests mit entsprechenden Umgebungsvariablen aus
  */
-task runSetupTest(type: NpmRun) {
+tasks.register('runSetupTest', NpmRun) {
 	description = "Führt die Vitest Task setupTests mit entsprechenden Umgebungsvariablen aus"
 	outputs.dir file("$projectDir/build/test-results")
 	outputs.upToDateWhen { false }
@@ -50,15 +54,19 @@ task runSetupTest(type: NpmRun) {
 	// Falls Exceptions auftreten führen diese nicht zum Abbruch des Scripts
 	ignoreExitValue = true
 
+	def APP_CONTAINER_NAME = APP_CONTAINER_NAME
+	def ENM_CONTAINER_NAME = ENM_CONTAINER_NAME
+	def FORWARDED_APP_PORT = FORWARDED_APP_PORT
+
 	// Die Ziel-url vom Container mit der Application
-	environment VITE_ENM_FOR_SVWS_targetHost: "https://$project.ext.ENM_CONTAINER_NAME"
+	environment VITE_ENM_FOR_SVWS_targetHost: "https://$ENM_CONTAINER_NAME"
 
 	if (System.getenv('CI_SERVER')) {
-		environment VITE_APP_targetHost: "https://$project.ext.APP_CONTAINER_NAME:8443"
-		environment VITE_ENM_targetHost: "https://$project.ext.ENM_CONTAINER_NAME:443"
+		environment VITE_APP_targetHost: "https://$APP_CONTAINER_NAME:8443"
+		environment VITE_ENM_targetHost: "https://$ENM_CONTAINER_NAME:443"
 
 	} else {
-		environment VITE_APP_targetHost: "https://localhost:$project.ext.FORWARDED_APP_PORT"
+		environment VITE_APP_targetHost: "https://localhost:$FORWARDED_APP_PORT"
 		environment VITE_ENM_targetHost: "https://localhost"
 	}
 	args = ['test:setup']
@@ -67,28 +75,29 @@ task runSetupTest(type: NpmRun) {
 /**
  * Liest das Client Secret aus dem laufenden ENM Server aus sodass dies für die Testfälle zur verfügung steht
  */
-task extractClientSecret() {
+tasks.register('extractClientSecret', Exec) {
 	description = "Liest das Client Secret aus dem laufenden ENM Server aus sodass dies für die Testfälle zur verfügung steht"
 	mustRunAfter(runSetupTest)
+
+	executable 'docker'
+	def ENM_CONTAINER_NAME = project.ext.ENM_CONTAINER_NAME;
+	doFirst {
+		mkdir file("$projectDir/build/tempdocker/clientsecret")
+		args 'cp', "${ENM_CONTAINER_NAME}:/var/www/html/db/client.sec", "build/tempdocker/clientsecret"
+	}
+
 	doLast {
-		def output = new ByteArrayOutputStream()
-
-		exec {
-			executable 'docker'
-			args 'exec', "$project.ext.ENM_CONTAINER_NAME", "cat", "/var/www/html/db/client.sec"
-			standardOutput = output
-		}
-		def fileContent = output.toString().trim()
-		ext.fileContentVariable = fileContent
-
-		project.ext.CLIENTKEY = "${fileContent}"
+		def captured = file("build/tempdocker/clientsecret/client.sec").text
+		ext.fileContentVariable = captured
+		CLIENT_SECRET = "${captured}"
 	}
 }
+
 
 /**
  * Führt die Vitest Task SyncTests mit entsprechenden Umgebungsvariablen aus
  */
-task runSyncTest(type: NpmRun) {
+tasks.register('runSyncTest', NpmRun) {
 	description = "Führt die Vitest Task SyncTests mit entsprechenden Umgebungsvariablen aus"
 	mustRunAfter(extractClientSecret)
 
@@ -99,17 +108,19 @@ task runSyncTest(type: NpmRun) {
 	// Falls Exceptions auftreten führen diese nicht zum Abbruch des Scripts
 	ignoreExitValue = true
 
+	def ENM_CONTAINER_NAME = project.ext.ENM_CONTAINER_NAME
+	def APP_CONTAINER_NAME = project.ext.APP_CONTAINER_NAME
+	def FORWARDED_APP_PORT = project.ext.FORWARDED_APP_PORT
+
 	doFirst {
 		// Die Ziel-url vom Container mit der Application
-		environment VITE_ENM_FOR_SVWS_targetHost: "https://$project.ext.ENM_CONTAINER_NAME"
-		environment VITE_CLIENT_SECRET: "${project.ext.CLIENTKEY}"
-
+		environment VITE_ENM_FOR_SVWS_targetHost: "https://$ENM_CONTAINER_NAME"
+		environment VITE_CLIENT_SECRET: "${CLIENT_SECRET}"
 		if (System.getenv('CI_SERVER')) {
-			environment VITE_APP_targetHost: "https://$project.ext.APP_CONTAINER_NAME:8443"
-			environment VITE_ENM_targetHost: "https://$project.ext.ENM_CONTAINER_NAME:443"
-
+			environment VITE_APP_targetHost: "https://$APP_CONTAINER_NAME:8443"
+			environment VITE_ENM_targetHost: "https://$ENM_CONTAINER_NAME:443"
 		} else {
-			environment VITE_APP_targetHost: "https://localhost:$project.ext.FORWARDED_APP_PORT"
+			environment VITE_APP_targetHost: "https://localhost:$FORWARDED_APP_PORT"
 			environment VITE_ENM_targetHost: "https://localhost"
 		}
 		args = ['test:sync']
@@ -119,7 +130,7 @@ task runSyncTest(type: NpmRun) {
 /**
  * Führt die Vitest Task afterSetup mit entsprechenden Umgebungsvariablen aus
  */
-task runTestsAfterSetup(type: NpmRun) {
+tasks.register('runTestsAfterSetup', NpmRun) {
 	description = "Führt die Vitest Task afterSetup mit entsprechenden Umgebungsvariablen aus"
 	mustRunAfter("runSyncTest")
 	outputs.dir file("$projectDir/build/test-results")
@@ -129,13 +140,17 @@ task runTestsAfterSetup(type: NpmRun) {
 	// Falls Exceptions auftreten führen diese nicht zum Abbruch des Scripts
 	ignoreExitValue = true
 
+	def ENM_CONTAINER_NAME = project.ext.ENM_CONTAINER_NAME
+	def APP_CONTAINER_NAME = project.ext.APP_CONTAINER_NAME
+	def FORWARDED_APP_PORT = project.ext.FORWARDED_APP_PORT
+
 	// Die Ziel-url vom Container mit der Application
 	if (System.getenv('CI_SERVER')) {
-		environment VITE_APP_targetHost: "https://$project.ext.APP_CONTAINER_NAME:8443"
-		environment VITE_ENM_targetHost: "https://$project.ext.ENM_CONTAINER_NAME:443"
+		environment VITE_APP_targetHost: "https://$APP_CONTAINER_NAME:8443"
+		environment VITE_ENM_targetHost: "https://$ENM_CONTAINER_NAME:443"
 
 	} else {
-		environment VITE_APP_targetHost: "https://localhost:$project.ext.FORWARDED_APP_PORT"
+		environment VITE_APP_targetHost: "https://localhost:$FORWARDED_APP_PORT"
 		environment VITE_ENM_targetHost: "https://localhost"
 	}
 	args = ['test:afterSetup']
@@ -144,7 +159,7 @@ task runTestsAfterSetup(type: NpmRun) {
 /**
  * Starten der Integrationstests gegen die Docker Umgebung
  */
-task testAgainstDockerEnv() {
+tasks.register('testAgainstDockerEnv') {
 	description = 'Startet die Integrationstests gegen die Docker Umgebung'
 	group = 'verification'
 	dependsOn ':svws-webclient:core:assemble'
@@ -158,7 +173,6 @@ task testAgainstDockerEnv() {
 
 	doFirst {
 		mkdir file("$projectDir/build/test-results")
-
 	}
 
 	finalizedBy("runSetupTest")
@@ -175,10 +189,11 @@ task testAgainstDockerEnv() {
  * Beim Testen werden die Dateien (DB / Clientsecret) verändert. Da diese durch Docker mounted werden müssen diese nach
  * dem Testdurchlauf abgeräumt werden
  */
-task removeENMBuildArtifacts(type: Delete) {
+tasks.register('removeENMBuildArtifacts', Delete) {
 	mustRunAfter("runSetupTest")
 	mustRunAfter("runTestsAfterSetup")
 	mustRunAfter("extractClientSecret")
 	mustRunAfter("runSyncTest")
 	delete './build/tempdocker/enm'
+	delete './build/tempdocker/clientsecret'
 }

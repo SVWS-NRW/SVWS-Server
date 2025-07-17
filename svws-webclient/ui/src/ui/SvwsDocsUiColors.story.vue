@@ -1,7 +1,7 @@
 <template>
 	<Story title="Farben" id="farben" group="top" icon="ri:palette-line" :responsive-disabled="true" :layout="{ type: 'single', iframe: false }" auto-props-disabled>
-		<Variant title="Einleitung" source=" " id="resources">
-			<div class="htw-prose dark:htw-prose-invert inline">
+		<Variant title="Einleitung" id="resources">
+			<div class="prose inline">
 				<h1>Einleitung</h1>
 				<p class="text-ui">
 					SVWS-UI bietet einen breite Palette von aufeinander abgestimmten Farben, die für viele Anwendungsfälle vordefiniert sind und den Richtlinien
@@ -28,8 +28,8 @@
 				</p>
 			</div>
 		</Variant>
-		<Variant title="Design Tokens" source=" " id="info">
-			<div class="htw-prose dark:htw-prose-invert inline">
+		<Variant title="Design Tokens" id="info">
+			<div class="prose inline">
 				<h1>Design Tokens</h1>
 				<p class="text-ui">
 					Um eine konsistente Farbgebung zu gewährleisten, verwenden wir ein Farbschema, das auf Design Tokens basiert. Die unten aufgeführten Tokens
@@ -135,8 +135,8 @@
 				</ul>
 			</div>
 		</Variant>
-		<Variant title="Verwendung" source=" " id="verwendung">
-			<div class="htw-prose dark:htw-prose-invert inline">
+		<Variant title="Verwendung" id="verwendung">
+			<div class="prose inline">
 				<h1>Verwendung der Farben</h1>
 				<p class="text-ui">
 					SVWS-UI bietet eine breite Palette von aufeinander abgestimmten Farben, die für die verschiedensten Anwendungsfälle zum Einsatz kommen können.
@@ -152,7 +152,7 @@
 				<h3>Code</h3>
 				<pre class="w-fit">&lt;div class=&quot;bg-ui text-ui text-ui-hover&quot;&gt;Hover me!&lt;/div&gt;</pre>
 				<h3>Ergebnis</h3>
-				<div class="bg-ui text-ui text-ui-hover">Hover me!</div>
+				<div class="bg-ui text-ui">Hover me!</div>
 				<p class="text-ui">
 					Wird eine Textfarbe so definiert, dann wird der Text immer die Farbe <code class="bg-ui-selected">text-ui-hover</code> haben, egal ob er gehovert
 					wird oder nicht. <br>
@@ -235,15 +235,15 @@
 				</ul>
 			</div>
 		</Variant>
-		<Variant :title="`${type}-ui`" source=" " :id="`tokens-${type}`" v-for="([type, typeMap]) in typeList" :key="type">
-			<div v-if="type === 'bg'" class="htw-prose dark:htw-prose-invert inline">
+		<Variant :title="`${type}-ui`" :id="`tokens-${type}`" v-for="([type, typeMap]) in typeList" :key="type">
+			<div v-if="type === 'bg'" class="prose inline">
 				<h1>Hintergrundfarben</h1>
 				<p class="text-ui">
 					Folgende Farben werden für Hintergründe verwendet. Es ist zu beachten, dass die Kontrastrichtlinien von WCAG eingehalten werden. Um
 					diese zu erreichen, können zusätzliche Borders verwendet werden.
 				</p>
 			</div>
-			<div v-if="type === 'text'" class="htw-prose dark:htw-prose-invert inline">
+			<div v-if="type === 'text'" class="prose inline">
 				<h1>Textfarben</h1>
 				<p class="text-ui">
 					Folgende Farben werden für Texte verwendet. Es ist zu beachten, dass die Kontrastrichtlinien von WCAG eingehalten werden. Um
@@ -255,7 +255,7 @@
 					verwendet und das enstprechende Kontrastlevel angegeben. Für die Vorschau von weiteren Schriftgrößen, klicke auf eine Farbkachel.
 				</p>
 			</div>
-			<div v-if="type === 'border'" class="htw-prose dark:htw-prose-invert inline">
+			<div v-if="type === 'border'" class="prose inline">
 				<h1>Borderfarben</h1>
 				<p class="text-ui">
 					Folgende Farben werden für Borders (Rahmen) verwendet. Es ist zu beachten, dass die Kontrastrichtlinien von WCAG eingehalten werden. Um
@@ -265,7 +265,7 @@
 					die Borderfarbe <code class="bg-ui-selected">border-ui-onsuccess-hover</code> zu verwenden. <br>
 				</p>
 			</div>
-			<div v-if="type === 'accent'" class="htw-prose dark:htw-prose-invert inline">
+			<div v-if="type === 'accent'" class="prose inline">
 				<h1>Accentfarben</h1>
 				<p class="text-ui">
 					Folgende Farben werden für Akzente verwendet. Sie dienen zum Einfärben von Checkboxen, Radiobuttons, Rangs-Slidern etc.
@@ -275,14 +275,14 @@
 					<code class="bg-ui-selected">accent-ui-onsuccess</code> zu verwenden.
 				</p>
 			</div>
-			<div v-if="type === 'ring'" class="htw-prose dark:htw-prose-invert inline">
+			<div v-if="type === 'ring'" class="prose inline">
 				<h1>Ringfarben</h1>
 				<p class="text-ui">
 					Folgende Farben werden für Ringe verwendet. Sie dienen zur visuellen Hervorhebung eines Elements zum Beispiel bei einem Fokus oder Hover.
 					Ringfarben umschließen das Element und sind daher nicht mit den Borderfarben zu verwechseln.
 				</p>
 			</div>
-			<div v-if="type === 'icon'" class="htw-prose dark:htw-prose-invert inline">
+			<div v-if="type === 'icon'" class="prose inline">
 				<h1>Iconfarben</h1>
 				<p class="text-ui">
 					Folgende Farben werden für Icons verwendet. Es ist zu beachten, dass die Kontrastrichtlinien von WCAG eingehalten werden. Um
@@ -292,7 +292,7 @@
 					die Iconfarbe <code class="bg-ui-selected">icon-ui-onsuccess-hover</code> zu verwenden. <br>
 				</p>
 			</div>
-			<div v-if="type === 'shadow'" class="htw-prose dark:htw-prose-invert inline">
+			<div v-if="type === 'shadow'" class="prose inline">
 				<h1>Shadowfarben</h1>
 				<p class="text-ui">
 					Folgende Farben werden für Schattierungen verwendet. Wenn diese rein zum Styling verwendet werden, ohne inhaltlichen Wert zu übermitteln,
@@ -639,7 +639,7 @@
 		interaction: ['', 'hover'],
 	}
 
-	// Eine Inline-Komponente, die pro Theme verwendet wird. Das Uaslagern in diese Komponente verhindert, dass im Template mehrmals Funktionen für Kontraste
+	// Eine Inline-Komponente, die pro Theme verwendet wird. Das Auslagern in diese Komponente verhindert, dass im Template mehrmals Funktionen für Kontraste
 	// und Hintergrundfarben aufgerufen werden müssen.
 	const Theme = defineComponent({
 		props: {
@@ -665,7 +665,7 @@
 		background: '',
 		dark: false,
 		contrast: 'N/A',
-		contrastLevels: [] as string[],
+		contrastLevels: <string[]>[],
 	});
 
 	/**
@@ -678,7 +678,7 @@
 		colorPreview.color = color;
 		colorPreview.background = getBackgroundColor(color);
 		colorPreview.dark = dark;
-		const { contrastRatio: contrast, contrastLevel: score} = getContrast(color, dark);
+		const { contrastRatio: contrast, contrastLevel: score } = getContrast(color, dark);
 		colorPreview.contrast = contrast;
 		colorPreview.contrastLevels = generateContrastLevels(score);
 	}
@@ -1018,3 +1018,7 @@
 	}
 
 </script>
+
+<style scoped>
+
+</style>

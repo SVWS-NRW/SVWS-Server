@@ -9,6 +9,7 @@ import type { RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import type { SchuelerNeuProps } from "~/components/schueler/SSchuelerNeuProps";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeApp } from "~/router/apps/RouteApp";
+import { api } from "~/router/Api";
 
 const SSchuelerNeu = () => import("~/components/schueler/SSchuelerNeu.vue");
 
@@ -31,10 +32,24 @@ export class RouteSchuelerNeu extends RouteNode<any, RouteSchueler> {
 		return {
 			schuelerListeManager: () => routeSchueler.data.manager,
 			addSchueler: routeSchueler.data.addSchueler,
+			patch: routeSchueler.data.patchSchuelerNeu,
 			gotoDefaultView: routeSchueler.data.gotoDefaultView,
+			mapSchulen: routeApp.data.mapSchulen,
 			mapOrte: routeApp.data.mapOrte,
 			mapOrtsteile: routeApp.data.mapOrtsteile,
 			mapReligionen: routeApp.data.mapReligionen,
+			mapFahrschuelerarten: routeApp.data.mapFahrschuelerarten,
+			mapHaltestellen: routeApp.data.mapHaltestellen,
+			mapKindergaerten: routeApp.data.mapKindergaerten,
+			mapEinschulungsarten: routeApp.data.mapEinschulungsarten,
+			mapTelefonArten: routeApp.data.mapTelefonArten,
+			getListSchuelerTelefoneintraege: () => routeSchueler.data.listSchuelerTelefoneintraege,
+			addSchuelerTelefoneintrag: routeSchueler.data.addSchuelerTelefoneintrag,
+			patchSchuelerTelefoneintrag: routeSchueler.data.patchSchuelerTelefoneintrag,
+			deleteSchuelerTelefoneintrage: routeSchueler.data.deleteSchuelerTelefoneintrage,
+			patchSchuelerKindergarten: routeSchueler.data.patchSchuelerKindergarten,
+			aktAbschnitt: routeApp.data.aktAbschnitt.value,
+			schulform: api.schulform,
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
 		};

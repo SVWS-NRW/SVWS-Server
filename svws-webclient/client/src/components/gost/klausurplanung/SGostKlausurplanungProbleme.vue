@@ -105,17 +105,10 @@
 			</template>
 		</ui-card>
 
-		<ui-card v-if="!termineOhneDatum().isEmpty()" icon="i-ri-calendar-event-line" title="Klausurtermine ohne Datum" :fehler="ValidatorFehlerart.KANN"
-			:subtitle="termineOhneDatum().size() + ' Klausurtermine ohne Datum gefunden.'" :is-open="currentAction === 'termine_ohne_datum'"
-			@update:is-open="(isOpen) => setCurrentAction('termine_ohne_datum', isOpen)">
-			<svws-ui-table :items="termineOhneDatum()" :columns="addStatusColumn(colsTermine)">
-				<template #cell(status)="{ rowData }">
-					<svws-ui-button type="transparent" @click="gotoKalenderdatum(undefined, rowData)"
-						title="Datum setzen" size="small"
-						:disabled="abschnitt === undefined || !kMan().stundenplanManagerExistsByAbschnitt(abschnitt.id)">
-						<span class="icon i-ri-link" /> datieren
-					</svws-ui-button>
-				</template>
+		<ui-card v-if="!termineOhneStundenplan().isEmpty()" icon="i-ri-calendar-event-line" title="Klausurtermine ohne gültigen Stundenplan" :fehler="ValidatorFehlerart.MUSS"
+			:subtitle="termineOhneStundenplan().size() + ' Klausurtermine ohne gültigen Stundenplan gefunden.'" :is-open="currentAction === 'termine_ohne_stundenplan'"
+			@update:is-open="(isOpen) => setCurrentAction('termine_ohne_stundenplan', isOpen)">
+			<svws-ui-table :items="termineOhneStundenplan()" :columns="colsTermine">
 				<template #cell(kurse)="{ rowData }">
 					{{ terminBezeichnung(rowData) }}
 				</template>
@@ -123,6 +116,12 @@
 					{{ rowData.quartal }}
 				</template>
 			</svws-ui-table>
+			<template #buttonFooterLeft>
+				<svws-ui-button title="Zur Stundenplandefinition" @click="gotoStundenplan" class="mt-2">
+					<span class="icon i-ri-play-line" />
+					Zur Stundenplandefinition
+				</svws-ui-button>
+			</template>
 		</ui-card>
 
 		<ui-card v-if="!termineMitKonflikten().isEmpty()" icon="i-ri-alert-line" title="Klausurtermine mit Schülerkonflikten" :fehler="ValidatorFehlerart.MUSS"
@@ -134,6 +133,26 @@
 					<svws-ui-button type="transparent" @click="gotoSchienen(rowData)"
 						title="Schiene anzeigen" size="small">
 						<span class="icon i-ri-link" /> anzeigen
+					</svws-ui-button>
+				</template>
+				<template #cell(kurse)="{ rowData }">
+					{{ terminBezeichnung(rowData) }}
+				</template>
+				<template #cell(quartal)="{ rowData }">
+					{{ rowData.quartal }}
+				</template>
+			</svws-ui-table>
+		</ui-card>
+
+		<ui-card v-if="!termineOhneDatum().isEmpty()" icon="i-ri-calendar-event-line" title="Klausurtermine ohne Datum" :fehler="ValidatorFehlerart.KANN"
+			:subtitle="termineOhneDatum().size() + ' Klausurtermine ohne Datum gefunden.'" :is-open="currentAction === 'termine_ohne_datum'"
+			@update:is-open="(isOpen) => setCurrentAction('termine_ohne_datum', isOpen)">
+			<svws-ui-table :items="termineOhneDatum()" :columns="addStatusColumn(colsTermine)">
+				<template #cell(status)="{ rowData }">
+					<svws-ui-button type="transparent" @click="gotoKalenderdatum(undefined, rowData)"
+						title="Datum setzen" size="small"
+						:disabled="abschnitt === undefined || !kMan().stundenplanManagerExistsByAbschnitt(abschnitt.id)">
+						<span class="icon i-ri-link" /> datieren
 					</svws-ui-button>
 				</template>
 				<template #cell(kurse)="{ rowData }">
@@ -225,7 +244,7 @@
 			</template>
 			<template #subtitle>
 				<div class="flex">
-					<span>{{ klausurenProKwWarning().size() }} Probleme bei Schülern mit {{ kwWarnLimit }}&nbsp;</span>
+					<span>{{ klausurenProKwWarning().size() === 0 ? 'Keine' : klausurenProKwWarning().size() }} Schüler mit {{ kwWarnLimit }}&nbsp;</span>
 					<span v-if="kwErrorLimit - 1 > kwWarnLimit">bis {{ kwErrorLimit - 1 }}&nbsp;</span>
 					<span>Klausuren in einer Woche gefunden.</span>
 				</div>
@@ -251,7 +270,7 @@
 			</svws-ui-table>
 		</ui-card>
 		<ui-card icon="i-ri-alert-fill" :collapsible="!klausurenProKwError().isEmpty()" :fehler="ValidatorFehlerart.MUSS"
-			:subtitle="klausurenProKwError().size() + ' Fehler bei Schülern mit ' + kwErrorLimit + ' oder mehr Klausuren in einer Woche gefunden.'"
+			:subtitle="(klausurenProKwError().size() === 0 ? 'Keine' : klausurenProKwError().size()) + ' Schüler mit ' + kwErrorLimit + ' oder mehr Klausuren in einer Woche gefunden.'"
 			:is-open="!klausurenProKwError().isEmpty() && currentAction === 'konflikt_vier_wochenklausuren'" @update:is-open="(isOpen) => setCurrentAction('konflikt_vier_wochenklausuren', isOpen)">
 			<template #title>
 				<div class="ui-card--header--title flex items-center gap-3">
@@ -304,6 +323,7 @@
 	const kursklausurenNichtVerteilt = () => props.kMan().kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value);
 	const schuelerklausuren = () => props.kMan().schuelerklausurfehlendGetMengeByHalbjahrAndQuartal(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value);
 	const termineOhneDatum = () => props.kMan().terminOhneDatumGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value);
+	const termineOhneStundenplan = () => props.kMan().terminOhneStundenplanGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value);
 	const termineMitKonflikten = () => props.kMan().terminMitKonfliktGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value);
 	const termineUnvollstaendigeRaumzuweisung = () => props.kMan().terminUnvollstaendigeRaumzuweisungGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value);
 	const raumkapazitaetUeberschritten = () => props.kMan().terminUnzureichendePlatzkapazitaetGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value);
@@ -373,6 +393,7 @@
 	const colsTermine: DataTableColumn[] = [
 		{key: 'kurse', label: 'Titel', span: 1.25, sortable: true},
 		{key: 'quartal', label: 'Quartal', span: 0.1, align: 'center'},
+		{key: 'datum', type: 'date', label: 'Datum', span: 0.3, align: 'center'},
 	];
 
 	const colsKwKonflikte: DataTableColumn[] = [
@@ -381,9 +402,9 @@
 		{key: 'klausuren', label: 'Klausuren', sortable: true},
 	];
 
-	function addStatusColumn(columns: DataTableColumn[]) {
+	function addStatusColumn(columns: DataTableColumn[], span: number = 0.2) {
 		const newColumns = Array.from(columns);
-		newColumns.push({key: 'status', label: 'Korrektur', span: 0.5, align: 'right'});
+		newColumns.push({key: 'status', label: 'Korrektur', span, align: 'right'});
 		return newColumns;
 	}
 

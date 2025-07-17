@@ -528,7 +528,7 @@ export class StundenplanManager extends JavaObject {
 
 	private _stundenplanKonfig : StundenplanKonfiguration = new StundenplanKonfiguration();
 
-	private _stundenplanWarnungen : List<string> = new ArrayList<string>();
+	private readonly _stundenplanWarnungen : List<string> = new ArrayList<string>();
 
 
 	/**
@@ -2034,6 +2034,19 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert das zum Kürzel zugehörige {@link StundenplanAufsichtsbereich}-Objekt oder null, wenn kein
+	 * StundenplanAufsichtsbereich für das Kürzel vorhanden ist.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param kuerzelAufsichtsbereich   das Kürzel des angefragten-Objektes.
+	 *
+	 * @return das zum Kürzel zugehörige {@link StundenplanAufsichtsbereich}-Objekt oder null
+	 */
+	public aufsichtsbereichGetByKuerzelOrNull(kuerzelAufsichtsbereich : string) : StundenplanAufsichtsbereich | null {
+		return this._aufsichtsbereich_by_kuerzel.get(kuerzelAufsichtsbereich);
+	}
+
+	/**
 	 * Liefert eine Liste aller {@link StundenplanAufsichtsbereich}-Objekte.
 	 * <br> Laufzeit: O(1)
 	 *
@@ -2770,7 +2783,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Beschreibung des {@link StundenplanKlasse}-Objekts in der Form "7b".
 	 */
 	public klasseGetBeschreibungKuerzel(idKlasse : number) : string {
-		let kl : StundenplanKlasse | null = this._klasse_by_id.get(idKlasse);
+		const kl : StundenplanKlasse | null = this._klasse_by_id.get(idKlasse);
 		if (kl === null)
 			return "Klassen-Objekt [" + idKlasse + "] ???";
 		return kl.kuerzel;
@@ -2971,16 +2984,16 @@ export class StundenplanManager extends JavaObject {
 		const dragKlassen : HashSet<number> = new HashSet<number>();
 		const dragSchueler : HashSet<number> = new HashSet<number>();
 		const dragRaeume : HashSet<number> = new HashSet<number>();
-		for (let kl of listKl) {
+		for (const kl of listKl) {
 			dragLehrer.addAll(kl.lehrer);
 			dragKlassen.add(kl.idKlasse);
 			dragSchueler.addAll(kl.schueler);
 		}
-		for (let ku of listKu) {
+		for (const ku of listKu) {
 			dragLehrer.addAll(ku.lehrer);
 			dragSchueler.addAll(ku.schueler);
 		}
-		for (let u of listU) {
+		for (const u of listU) {
 			dragLehrer.addAll(u.lehrer);
 			dragKlassen.addAll(u.klassen);
 			for (const schueler of this.schuelerGetMengeByUnterrichtIdAsList(u.id))
@@ -3670,7 +3683,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Beschreibung des {@link StundenplanLehrer}-Objekts in der Form "BAR".
 	 */
 	public lehrerGetBeschreibungKuerzel(idLehrer : number) : string {
-		let l : StundenplanLehrer | null = this._lehrer_by_id.get(idLehrer);
+		const l : StundenplanLehrer | null = this._lehrer_by_id.get(idLehrer);
 		if (l === null)
 			return "Lehrer-Objekt [" + idLehrer + "] ???";
 		return l.kuerzel;
@@ -3840,7 +3853,6 @@ export class StundenplanManager extends JavaObject {
 
 	private pausenaufsichtCheckAttributes(pausenaufsicht : StundenplanPausenaufsicht) : void {
 		DeveloperNotificationException.ifInvalidID("pausenaufsicht.id", pausenaufsicht.id);
-		DeveloperNotificationException.ifMapNotContains("_map_idLehrer_zu_lehrer", this._lehrer_by_id, pausenaufsicht.idLehrer);
 		DeveloperNotificationException.ifMapNotContains("_map_idPausenzeit_zu_pausenzeit", this._pausenzeit_by_id, pausenaufsicht.idPausenzeit);
 		for (const aufsichtsbereich of pausenaufsicht.bereiche)
 			this.pausenaufsichtbereichCheckAttributes(aufsichtsbereich);
@@ -4831,7 +4843,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Beschreibung des {@link StundenplanRaum}-Objekts in der Form "042".
 	 */
 	public raumGetBeschreibungKuerzel(idRaum : number) : string {
-		let ra : StundenplanRaum | null = this._raum_by_id.get(idRaum);
+		const ra : StundenplanRaum | null = this._raum_by_id.get(idRaum);
 		if (ra === null)
 			return "Raum-Objekt [" + idRaum + "] ???";
 		return ra.kuerzel;
@@ -5255,7 +5267,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Beschreibung des {@link StundenplanSchueler}-Objekts in der Form "Peter Pan".
 	 */
 	public schuelerGetBeschreibungVornameNachname(idSchueler : number) : string {
-		let s : StundenplanSchueler | null = this._schueler_by_id.get(idSchueler);
+		const s : StundenplanSchueler | null = this._schueler_by_id.get(idSchueler);
 		if (s === null)
 			return "Schüler-Objekt [" + idSchueler + "] ???";
 		return s.vorname + " " + s.nachname;
@@ -5828,7 +5840,7 @@ export class StundenplanManager extends JavaObject {
 
 	private unterrichtCreateComparator() : Comparator<StundenplanUnterricht> {
 		const comp : Comparator<StundenplanUnterricht> = { compare : (a: StundenplanUnterricht, b: StundenplanUnterricht) => {
-			let cmpKlassenNachJahrgang : number = this.compareKlassenlistenIDsNachJahrgang(a.klassen, b.klassen);
+			const cmpKlassenNachJahrgang : number = this.compareKlassenlistenIDsNachJahrgang(a.klassen, b.klassen);
 			if (cmpKlassenNachJahrgang !== 0)
 				return cmpKlassenNachJahrgang;
 			if ((a.idKurs !== null) && (b.idKurs === null))
@@ -5846,7 +5858,7 @@ export class StundenplanManager extends JavaObject {
 			const cmpLehrer : number = this.lehrerCompareByLehrerIDs(a.lehrer, b.lehrer);
 			if (cmpLehrer !== 0)
 				return cmpLehrer;
-			let cmpWochentyp : number = StundenplanManager.compareWochentyp(a.wochentyp, b.wochentyp);
+			const cmpWochentyp : number = StundenplanManager.compareWochentyp(a.wochentyp, b.wochentyp);
 			if (cmpWochentyp !== 0)
 				return cmpWochentyp;
 			return JavaLong.compare(a.id, b.id);
@@ -5877,7 +5889,7 @@ export class StundenplanManager extends JavaObject {
 			const cmpFach : number = StundenplanManager._compFach.compare(aFach, bFach);
 			if (cmpFach !== 0)
 				return cmpFach;
-			let cmpWochentyp : number = StundenplanManager.compareWochentyp(a.wochentyp, b.wochentyp);
+			const cmpWochentyp : number = StundenplanManager.compareWochentyp(a.wochentyp, b.wochentyp);
 			if (cmpWochentyp !== 0)
 				return cmpWochentyp;
 			return JavaLong.compare(a.id, b.id);
@@ -6559,9 +6571,9 @@ export class StundenplanManager extends JavaObject {
 	 * @return einen String, der diesen Unterricht beschreibt, in der Form 'M BAR 06b'.
 	 */
 	private unterrichtGetByID_StringOfFaLeKl(idUnterricht : number) : string {
-		let sFa : string | null = this.unterrichtGetByIDStringOfFachOderKurs(idUnterricht, false);
-		let sLe : string | null = this.unterrichtGetByIDLehrerFirstAsStringOrEmpty(idUnterricht);
-		let sKl : string | null = this.unterrichtGetByIDStringOfKlassen(idUnterricht);
+		const sFa : string | null = this.unterrichtGetByIDStringOfFachOderKurs(idUnterricht, false);
+		const sLe : string | null = this.unterrichtGetByIDLehrerFirstAsStringOrEmpty(idUnterricht);
+		const sKl : string | null = this.unterrichtGetByIDStringOfKlassen(idUnterricht);
 		let s : string | null = sFa;
 		s = s + (JavaString.isEmpty(s) ? "" : " ") + sLe;
 		s = s + (JavaString.isEmpty(s) ? "" : " ") + sKl;
@@ -7130,6 +7142,17 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public zeitrasterGetByIdOrException(idZeitraster : number) : StundenplanZeitraster {
 		return DeveloperNotificationException.ifMapGetIsNull(this._zeitraster_by_id, idZeitraster);
+	}
+
+	/**
+	 * Liefert das zur ID zugehörige {@link StundenplanZeitraster}-Objekt.
+	 *
+	 * @param idZeitraster  Die Datenbank-ID des Zeitrasters.
+	 *
+	 * @return das zur ID zugehörige {@link StundenplanZeitraster}-Objekt.
+	 */
+	public zeitrasterGetByIdOrNull(idZeitraster : number) : StundenplanZeitraster | null {
+		return this._zeitraster_by_id.get(idZeitraster);
 	}
 
 	/**

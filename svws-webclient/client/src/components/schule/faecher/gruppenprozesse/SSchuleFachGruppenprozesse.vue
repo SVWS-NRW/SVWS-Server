@@ -20,7 +20,7 @@
 					</div>
 				</svws-ui-input-wrapper>
 				<template #buttonFooterLeft>
-					<svws-ui-button :disabled="stundenplanAuswahl === undefined" @click="downloadPDF" :is-loading="loading" class="mt-4">
+					<svws-ui-button class="mt-4" :disabled="(stundenplanAuswahl === undefined) || !hatKompetenzDrucken" @click="downloadPDF" :is-loading="loading">
 						<svws-ui-spinner v-if="loading" spinning />
 						<span v-else class="icon i-ri-play-line" />
 						Drucken
@@ -37,8 +37,8 @@
 					<span v-if="loeschbareFaecherVorhanden">Einige Fächer sind noch an anderer Stelle referenziert, die Übrigen können gelöscht werden.</span>
 				</div>
 				<template #buttonFooterLeft>
-					<svws-ui-button :disabled="manager().getIdsReferenzierterFaecher().size() === manager().liste.auswahlSize() || loading"
-						title="Löschen" @click="entferneFaecher" :is-loading="loading" class="mt-4">
+					<svws-ui-button class="mt-4" title="Löschen" @click="entferneFaecher" :is-loading="loading"
+						:disabled="manager().getIdsReferenzierterFaecher().size() === manager().liste.auswahlSize() || loading || !hatKompetenzLoeschen">
 						<svws-ui-spinner v-if="loading" spinning />
 						<span v-else class="icon i-ri-play-line" />
 						Löschen

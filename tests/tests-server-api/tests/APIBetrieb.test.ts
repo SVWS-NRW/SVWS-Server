@@ -1,6 +1,6 @@
-import {describe, expect, test} from "vitest";
-import {getApiServer} from "./utils/TestUtils.js";
-import {BetriebListeEintrag} from "@core";
+import { describe, expect, test } from "vitest";
+import { getApiServer } from "./utils/TestUtils.js";
+import { BetriebListeEintrag } from "@core";
 
 describe("Betrieb Tests2", () => {
 	describe.each([{schema: "GymAbi01"}])('gegen %s', ({schema}) => {

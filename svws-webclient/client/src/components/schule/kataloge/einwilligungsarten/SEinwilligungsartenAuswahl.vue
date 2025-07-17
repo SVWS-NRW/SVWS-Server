@@ -39,12 +39,11 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import type { EinwilligungenAuswahlProps } from "./SEinwilligungsartenAuswahlProps";
 	import type { Einwilligungsart} from "@core";
 	import { BenutzerKompetenz } from "@core";
 	import type { DataTableColumn } from "@ui";
-	import { ViewType} from "@ui";
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
+	import { useRegionSwitch, ViewType} from "@ui";
+	import type { EinwilligungenAuswahlProps } from "./SEinwilligungsartenAuswahlProps";
 
 	const props = defineProps<EinwilligungenAuswahlProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();

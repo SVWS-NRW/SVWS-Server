@@ -41,6 +41,7 @@ import de.svws_nrw.asd.data.lehrer.LehrerMehrleistungsartKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerMinderleistungsartKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerRechtsverhaeltnisKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerZugangsgrundKatalogEintrag;
+import de.svws_nrw.asd.data.schueler.EinschulungsartKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.HerkunftBildungsgangKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.HerkunftBildungsgangTypKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.SchuelerStatusKatalogEintrag;
@@ -56,6 +57,7 @@ import de.svws_nrw.asd.data.schule.SchulabschlussAllgemeinbildendKatalogEintrag;
 import de.svws_nrw.asd.data.schule.SchulabschlussBerufsbildendKatalogEintrag;
 import de.svws_nrw.asd.data.schule.SchulformKatalogEintrag;
 import de.svws_nrw.asd.data.schule.SchulgliederungKatalogEintrag;
+import de.svws_nrw.asd.data.schule.VerkehrsspracheKatalogEintrag;
 import de.svws_nrw.asd.types.CoreType;
 import de.svws_nrw.asd.types.CoreTypeSimple;
 import de.svws_nrw.asd.types.Note;
@@ -90,6 +92,7 @@ import de.svws_nrw.asd.types.lehrer.LehrerMehrleistungsarten;
 import de.svws_nrw.asd.types.lehrer.LehrerMinderleistungsarten;
 import de.svws_nrw.asd.types.lehrer.LehrerRechtsverhaeltnis;
 import de.svws_nrw.asd.types.lehrer.LehrerZugangsgrund;
+import de.svws_nrw.asd.types.schueler.Einschulungsart;
 import de.svws_nrw.asd.types.schueler.HerkunftBildungsgang;
 import de.svws_nrw.asd.types.schueler.HerkunftBildungsgangTyp;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
@@ -106,6 +109,7 @@ import de.svws_nrw.asd.types.schule.SchulabschlussAllgemeinbildend;
 import de.svws_nrw.asd.types.schule.SchulabschlussBerufsbildend;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
+import de.svws_nrw.asd.types.schule.Verkehrssprache;
 import de.svws_nrw.asd.types.schule.WeiterbildungskollegBildungsgangTyp;
 import de.svws_nrw.asd.types.schule.WeiterbildungskollegOrganisationsformen;
 import de.svws_nrw.asd.utils.json.JsonCoreTypeData;
@@ -444,6 +448,8 @@ public final class CoreTypeRessource<T extends CoreTypeData, U extends CoreType<
 				"de/svws_nrw/asd/types/kurse/ZulaessigeKursart.json");
 		add(Foerderschwerpunkt.class, FoerderschwerpunktKatalogEintrag.class, Foerderschwerpunkt.values(),
 				"de/svws_nrw/asd/types/schule/Foerderschwerpunkt.json");
+		addSimple(Einschulungsart.class, EinschulungsartKatalogEintrag.class,
+				"de/svws_nrw/asd/types/schueler/Einschulungsart.json");
 		addSimple(LehrerAnrechnungsgrund.class, LehrerAnrechnungsgrundKatalogEintrag.class,
 				"de/svws_nrw/asd/types/lehrer/LehrerAnrechnungsgrund.json");
 		addSimple(LehrerMehrleistungsarten.class, LehrerMehrleistungsartKatalogEintrag.class,
@@ -452,6 +458,8 @@ public final class CoreTypeRessource<T extends CoreTypeData, U extends CoreType<
 				"de/svws_nrw/asd/types/lehrer/LehrerMinderleistungsarten.json");
 		addSimple(Nationalitaeten.class, NationalitaetenKatalogEintrag.class,
 				"de/svws_nrw/asd/types/schule/Nationalitaeten.json");
+		addSimple(Verkehrssprache.class, VerkehrsspracheKatalogEintrag.class,
+				"de/svws_nrw/asd/types/schule/Verkehrssprache.json");
 	}
 
 }

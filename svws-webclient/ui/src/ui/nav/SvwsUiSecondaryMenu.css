@@ -18,7 +18,10 @@
 	@apply overflow-y-auto;
 	@apply relative z-0;
 	@apply flex flex-col;
-	margin-bottom: -1px;
+	.svws-ui-tfoot {
+		/* verhidnere doppelte border im Auswahlmeü */
+		@apply border-b-0;
+	}
 }
 
 .secondary-menu--content .secondary-menu--navigation {

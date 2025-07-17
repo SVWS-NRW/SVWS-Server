@@ -15,6 +15,7 @@
 		<svws-ui-content-card title="Zeugnis">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-checkbox v-model="data.aufZeugnis" :disabled>Auf Zeugnis</svws-ui-checkbox>
+				<div />
 				<svws-ui-text-input placeholder="Bezeichnung (Zeugnis)" required v-model="data.bezeichnungZeugnis" :disabled />
 				<svws-ui-text-input placeholder="Bezeichnung (Überweisungszeugnis)" required v-model="data.bezeichnungUeberweisungszeugnis" :disabled />
 			</svws-ui-input-wrapper>
@@ -37,7 +38,7 @@
 			</svws-ui-input-wrapper>
 			<div class="mt-7 flex flex-row gap-4 justify-end">
 				<svws-ui-button type="secondary" @click="cancel">Abbrechen</svws-ui-button>
-				<svws-ui-button @click="addFachDaten" :disabled="!isValid">Speichern</svws-ui-button>
+				<svws-ui-button @click="addFachDaten" :disabled="!isValid || !hatKompetenzUpdate">Speichern</svws-ui-button>
 			</div>
 		</svws-ui-content-card>
 		<svws-ui-checkpoint-modal :checkpoint :continue-routing="continueRoutingAfterCheckpoint" />
@@ -47,7 +48,7 @@
 <script setup lang="ts">
 
 	import { computed, ref, watch } from "vue";
-	import {BilingualeSprache, Fach, FachDaten, GostFachbereich, JavaInteger, Schulform} from "@core";
+	import {BenutzerKompetenz, BilingualeSprache, Fach, FachDaten, GostFachbereich, JavaInteger, Schulform} from "@core";
 	import type { FachKatalogEintrag, CoreTypeData } from "@core";
 	import type { SchuleFachNeuProps } from "./SSchuleFachNeuProps";
 	import { coreTypeDataFilter } from "~/utils/helfer";
@@ -56,7 +57,7 @@
 
 	const schuljahr = computed<number>(() => props.manager().getSchuljahr());
 	const data = ref<FachDaten>(new FachDaten());
-
+	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const isLoading = ref<boolean>(false);
 	const isValid = ref<boolean>(false);
 
@@ -74,7 +75,7 @@
 		props.manager().validateMaxZeichenInFachbemerkungen(data.value.maxZeichenInFachbemerkungen) &&
 		props.manager().validateSortierung(data.value.sortierung);
 
-	const disabled = computed(() => data.value.kuerzelStatistik === "");
+	const disabled = computed(() => (data.value.kuerzelStatistik === "") || !hatKompetenzUpdate.value);
 
 	const fachgruppe = computed(() => Fach.getBySchluesselOrDefault(data.value.kuerzelStatistik).getFachgruppe(schuljahr.value)?.daten(schuljahr.value)?.text ?? '—');
 

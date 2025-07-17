@@ -1,5 +1,5 @@
 {
-	"version": 4,
+	"version": 5,
 	"daten": [ {
 		"bezeichner": "DEFAULT",
 		"idStatistik": "1",
@@ -607,6 +607,75 @@
 				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_03"}
 			],
 			"gueltigVon": 2020,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "A17",
+		"idStatistik": "90",
+		"historie": [ {
+			"id": 1017000,
+			"kuerzel": "A17",
+			"schluessel": "A17",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Internationale Förderklasse",
+			"bkAnlage": "A",
+			"bkTyp": "17",
+			"bkIndex": 65,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": 2025,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "A18",
+		"idStatistik": "91",
+		"historie": [ {
+			"id": 1018000,
+			"kuerzel": "A18",
+			"schluessel": "A18",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Fit für mehr",
+			"bkAnlage": "A",
+			"bkTyp": "18",
+			"bkIndex": 66,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": 2025,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "A19",
+		"idStatistik": "92",
+		"historie": [ {
+			"id": 1019000,
+			"kuerzel": "A19",
+			"schluessel": "A19",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Förderzentrum",
+			"bkAnlage": "A",
+			"bkTyp": "19",
+			"bkIndex": 67,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": 2025,
 			"gueltigBis": null
 		}]
 	}, {

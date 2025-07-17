@@ -35,9 +35,19 @@ export class FachDaten extends JavaObject {
 	public istOberstufenFach : boolean = false;
 
 	/**
-	 * Gibt an, ob es sich um ein Fach handelt, welches relevant für die Pürfungsordnung ist oder nicht (z.B. bei Belegprüfungen).
+	 * Gibt an, ob es sich um ein Fach handelt, welches relevant für die Prüfungsordnung ist oder nicht (z.B. bei Belegprüfungen).
 	 */
 	public istPruefungsordnungsRelevant : boolean = false;
+
+	/**
+	 * Gibt an, ob es sich um ein Fremdsprachen-Fach handelt
+	 */
+	public istFremdsprache : boolean = false;
+
+	/**
+	 * Gibt an, ob es sich um ein Fremdsprachen-Fach handelt, welches in der Sekundarstufe II neu einsetzen ist.
+	 */
+	public istMoeglichAlsNeueFremdspracheInSekII : boolean = false;
 
 	/**
 	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.
@@ -141,6 +151,12 @@ export class FachDaten extends JavaObject {
 		if (obj.istPruefungsordnungsRelevant === undefined)
 			throw new Error('invalid json format, missing attribute istPruefungsordnungsRelevant');
 		result.istPruefungsordnungsRelevant = obj.istPruefungsordnungsRelevant;
+		if (obj.istFremdsprache === undefined)
+			throw new Error('invalid json format, missing attribute istFremdsprache');
+		result.istFremdsprache = obj.istFremdsprache;
+		if (obj.istMoeglichAlsNeueFremdspracheInSekII === undefined)
+			throw new Error('invalid json format, missing attribute istMoeglichAlsNeueFremdspracheInSekII');
+		result.istMoeglichAlsNeueFremdspracheInSekII = obj.istMoeglichAlsNeueFremdspracheInSekII;
 		if (obj.istSichtbar === undefined)
 			throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
@@ -185,6 +201,8 @@ export class FachDaten extends JavaObject {
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"istOberstufenFach" : ' + obj.istOberstufenFach.toString() + ',';
 		result += '"istPruefungsordnungsRelevant" : ' + obj.istPruefungsordnungsRelevant.toString() + ',';
+		result += '"istFremdsprache" : ' + obj.istFremdsprache.toString() + ',';
+		result += '"istMoeglichAlsNeueFremdspracheInSekII" : ' + obj.istMoeglichAlsNeueFremdspracheInSekII.toString() + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		result += '"aufgabenfeld" : ' + ((obj.aufgabenfeld === null) ? 'null' : JSON.stringify(obj.aufgabenfeld)) + ',';
 		result += '"bilingualeSprache" : ' + ((obj.bilingualeSprache === null) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
@@ -224,6 +242,12 @@ export class FachDaten extends JavaObject {
 		}
 		if (obj.istPruefungsordnungsRelevant !== undefined) {
 			result += '"istPruefungsordnungsRelevant" : ' + obj.istPruefungsordnungsRelevant.toString() + ',';
+		}
+		if (obj.istFremdsprache !== undefined) {
+			result += '"istFremdsprache" : ' + obj.istFremdsprache.toString() + ',';
+		}
+		if (obj.istMoeglichAlsNeueFremdspracheInSekII !== undefined) {
+			result += '"istMoeglichAlsNeueFremdspracheInSekII" : ' + obj.istMoeglichAlsNeueFremdspracheInSekII.toString() + ',';
 		}
 		if (obj.istSichtbar !== undefined) {
 			result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';

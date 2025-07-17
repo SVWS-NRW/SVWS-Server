@@ -182,31 +182,60 @@ public final class SvwsServer {
 
 
 	/**
-	 * Gibt einen ServerConnector für das Lauschen auf HTTP-Verbindungen auf dem übergebenen Port zurück.
+	 * Gibt die grundlegende HTTP-Konfiguration des Servers zurück.
 	 *
-	 * @param disableTLS         gibt an, ob TLS deaktiviert sein soll
-	 * @param preferHTTPv1_1     gibt an, ob HTTP-Verbindungen mit v1.1 gegenüber v2 bevorzugt werden sollen
+	 * @return die HTTP-Konfiguration mit einigen Grundeinstellungen für den Server.
+	 */
+	private static HttpConfiguration getNewHttpConfiguration() {
+		final HttpConfiguration http_config = new HttpConfiguration();
+		http_config.setOutputBufferSize(32768);
+		http_config.setRequestHeaderSize(8192);
+		http_config.setResponseHeaderSize(8192);
+		http_config.setSendServerVersion(true);
+		http_config.setSendDateHeader(false);
+		return http_config;
+	}
+
+
+	/**
+	 * Gibt einen ServerConnector für das Lauschen auf HTTP-Verbindungen über HTTPv1 auf dem übergebenen Port zurück.
+	 *
 	 * @param port               der Port, auf dem gelauscht werden soll
 	 * @param name               der eindeutige Name der dem Connector zugeordnet wird.
+	 *
+	 * @return der konfigurierte ServerConnector
+	 */
+	private ServerConnector getHttpServerConnector(final int port, final String name) {
+		// HTTP Configuration
+		final HttpConfiguration http_config = getNewHttpConfiguration();
+
+		// HTTP Connection Factory (v1.1 bei HTTP)
+		final AbstractConnectionFactory connFactoryHTTPv1_1 = new HttpConnectionFactory(http_config);
+		final ServerConnector connector = new ServerConnector(server, connFactoryHTTPv1_1);
+		connector.setName(name);
+		connector.setPort(port);
+		return connector;
+	}
+
+
+	/**
+	 * Gibt einen ServerConnector für das Lauschen auf HTTP-Verbindungen auf dem übergebenen Port zurück.
+	 *
+	 * @param port               der Port, auf dem gelauscht werden soll
+	 * @param name               der eindeutige Name der dem Connector zugeordnet wird.
+	 * @param preferHTTPv1_1     gibt an, ob HTTP-Verbindungen mit v1.1 gegenüber v2 bevorzugt werden sollen
 	 * @param keyStorePath       der Pfad zum Java-Key-Store für TLS-Verbindungen
 	 * @param keyStorePassword   das Kennwort für den Java-Key-Store
 	 * @param keyAlias           der Alias für das zu verwendende Zertifikat
 	 *
 	 * @return der konfigurierte ServerConnector
 	 */
-	private ServerConnector getHttpServerConnector(final boolean disableTLS, final boolean preferHTTPv1_1, final int port,
-			final String name, final String keyStorePath, final String keyStorePassword, final String keyAlias) {
+	private ServerConnector getHttpsServerConnector(final int port, final String name,
+			final boolean preferHTTPv1_1, final String keyStorePath, final String keyStorePassword, final String keyAlias) {
 		// HTTP Configuration
-		final HttpConfiguration http_config = new HttpConfiguration();
-		if (!disableTLS) {
-			http_config.setSecureScheme("https");
-			http_config.setSecurePort(port);
-		}
-		http_config.setOutputBufferSize(32768);
-		http_config.setRequestHeaderSize(8192);
-		http_config.setResponseHeaderSize(8192);
-		http_config.setSendServerVersion(true);
-		http_config.setSendDateHeader(false);
+		final HttpConfiguration http_config = getNewHttpConfiguration();
+		http_config.setSecureScheme("https");
+		http_config.setSecurePort(port);
 
 		// SSL Context Factory
 		final SslContextFactory.Server sslContextFactory = new SslContextFactory.Server();
@@ -227,23 +256,13 @@ public final class SvwsServer {
 		// SSL HTTP Configuration
 		final HttpConfiguration https_config = new HttpConfiguration(http_config);
 		final SecureRequestCustomizer secureRequestCustomizer = new SecureRequestCustomizer();
-		if (!disableTLS) {
-			secureRequestCustomizer.setSniHostCheck(false);
-		}
+		secureRequestCustomizer.setSniHostCheck(false);
 		https_config.addCustomizer(secureRequestCustomizer);
 
 		// HTTP Connection Factory (v1.1 oder v2)
 		final AbstractConnectionFactory connFactoryHTTPv1_1 = new HttpConnectionFactory(https_config);
 		final AbstractConnectionFactory connFactoryHTTPv2 = new HTTP2ServerConnectionFactory(https_config);
 		final ALPNServerConnectionFactory alpn = new ALPNServerConnectionFactory();
-		if (disableTLS) {
-			final ServerConnector connector = preferHTTPv1_1
-					? new ServerConnector(server, connFactoryHTTPv1_1, connFactoryHTTPv2)
-					: new ServerConnector(server, connFactoryHTTPv2, connFactoryHTTPv1_1);
-			connector.setName(name);
-			connector.setPort(port);
-			return connector;
-		}
 		final ServerConnector connector = preferHTTPv1_1
 				? new ServerConnector(server, sslContextFactory, alpn, connFactoryHTTPv1_1, connFactoryHTTPv2)
 				: new ServerConnector(server, sslContextFactory, alpn, connFactoryHTTPv2, connFactoryHTTPv1_1);
@@ -259,25 +278,20 @@ public final class SvwsServer {
 	 */
 	private void addHTTPServerConnections() {
 		final SVWSKonfiguration config = SVWSKonfiguration.get();
-		server.addConnector(getHttpServerConnector(
-				config.isTLSDisabled(),
-				config.useHTTPDefaultv11(),
-				config.isTLSDisabled() ? config.getPortHTTP() : config.getPortHTTPS(),
-				"Server",
-				config.getTLSKeystorePath(),
-				config.getTLSKeystorePassword(),
-				config.getTLSKeyAlias()
-		));
-		if (!config.isDBRootAccessDisabled() && config.hatPortHTTPPrivilegedAccess())
-			server.addConnector(getHttpServerConnector(
-					config.isTLSDisabled(),
-					config.useHTTPDefaultv11(),
-					config.getPortHTTPPrivilegedAccess(),
-					"Privileged",
-					config.getTLSKeystorePath(),
-					config.getTLSKeystorePassword(),
-					config.getTLSKeyAlias()
-			));
+		// Erstelle eine Verbindung für den Server
+		final ServerConnector connector = config.isTLSDisabled()
+				? getHttpServerConnector(config.getPortHTTP(), "Server")
+				: getHttpsServerConnector(config.getPortHTTPS(), "Server",
+						config.useHTTPDefaultv11(), config.getTLSKeystorePath(), config.getTLSKeystorePassword(), config.getTLSKeyAlias());
+		server.addConnector(connector);
+		// Ergänze ggf. eine weitere Verbindung für den Zugriff über einen priviligierten Port
+		if (!config.isDBRootAccessDisabled() && config.hatPortHTTPPrivilegedAccess()) {
+			final ServerConnector connectorPrivileged = config.isTLSDisabled()
+					? getHttpServerConnector(config.getPortHTTPPrivilegedAccess(), "Privileged")
+					: getHttpsServerConnector(config.getPortHTTPPrivilegedAccess(), "Privileged",
+							config.useHTTPDefaultv11(), config.getTLSKeystorePath(), config.getTLSKeystorePassword(), config.getTLSKeyAlias());
+			server.addConnector(connectorPrivileged);
+		}
 	}
 
 

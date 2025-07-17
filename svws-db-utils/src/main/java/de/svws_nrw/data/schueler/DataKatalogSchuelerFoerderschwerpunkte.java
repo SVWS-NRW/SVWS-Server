@@ -1,84 +1,121 @@
 package de.svws_nrw.data.schueler;
 
-import de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag;
 import de.svws_nrw.asd.types.schule.Foerderschwerpunkt;
-import de.svws_nrw.data.DataManager;
+import de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag;
+import de.svws_nrw.data.DataManagerRevised;
+import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOFoerderschwerpunkt;
 import de.svws_nrw.db.utils.ApiOperationException;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-
-import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
- * Diese Klasse erweitert den abstrakten {@link DataManager} für den
- * Core-DTO {@link FoerderschwerpunktEintrag}.
+ * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für das Core-DTO {@link FoerderschwerpunktEintrag}.
  */
-public final class DataKatalogSchuelerFoerderschwerpunkte extends DataManager<Long> {
+public final class DataKatalogSchuelerFoerderschwerpunkte extends DataManagerRevised<Long, DTOFoerderschwerpunkt, FoerderschwerpunktEintrag> {
 
 	/**
-	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link FoerderschwerpunktEintrag}.
+	 * Erstellt einen neuen {@link DataManagerRevised} für das Core-DTO {@link FoerderschwerpunktEintrag}.
 	 *
 	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
 	 */
 	public DataKatalogSchuelerFoerderschwerpunkte(final DBEntityManager conn) {
 		super(conn);
+		setAttributesRequiredOnCreation("kuerzelStatistik");
+		setAttributesNotPatchable("id", "text", "kuerzelStatistik");
 	}
 
-	private FoerderschwerpunktEintrag map(final DTOFoerderschwerpunkt k) {
+	@Override
+	protected void initDTO(final DTOFoerderschwerpunkt dto, final Long newID, final Map<String, Object> initAttributes) {
+		dto.ID = newID;
+		dto.Sichtbar = true;
+		dto.Sortierung = 32000;
+	}
+
+	@Override
+	protected long getLongId(final DTOFoerderschwerpunkt dto) {
+		return dto.ID;
+	}
+
+	@Override
+	public FoerderschwerpunktEintrag getById(final Long id) throws ApiOperationException {
+		if (id == null)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID des Förderschwerpunktes darf nicht null sein.");
+
+		final DTOFoerderschwerpunkt dto = this.conn.queryByKey(DTOFoerderschwerpunkt.class, id);
+		if (dto == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Förderschwerpunkt mit der ID %d gefunden.".formatted(id));
+
+		return map(dto);
+	}
+
+	@Override
+	public List<FoerderschwerpunktEintrag> getAll() {
+		final List<DTOFoerderschwerpunkt> foerderschwerpunkte = this.conn.queryAll(DTOFoerderschwerpunkt.class);
+		return foerderschwerpunkte.stream().map(this::map).toList();
+	}
+
+	@Override
+	protected FoerderschwerpunktEintrag map(final DTOFoerderschwerpunkt dto) {
+		final FoerderschwerpunktEintrag foerderschwerpunkt = new FoerderschwerpunktEintrag();
+		foerderschwerpunkt.id = dto.ID;
+		foerderschwerpunkt.kuerzel = (dto.Bezeichnung == null) ? "" : dto.Bezeichnung;
+		foerderschwerpunkt.kuerzelStatistik = dto.StatistikKrz;
+		foerderschwerpunkt.istSichtbar = (dto.Sichtbar == null) || dto.Sichtbar;
+		foerderschwerpunkt.sortierung = (dto.Sortierung != null) ? dto.Sortierung : 32000;
+		final Foerderschwerpunkt fs = Foerderschwerpunkt.data().getWertBySchluessel(dto.StatistikKrz);
 		final int schuljahr = conn.getUser().schuleGetSchuljahr();
-		final FoerderschwerpunktEintrag eintrag = new FoerderschwerpunktEintrag();
-		eintrag.id = k.ID;
-		eintrag.kuerzel = (k.Bezeichnung == null) ? "" : k.Bezeichnung;
-		final Foerderschwerpunkt fs = Foerderschwerpunkt.data().getWertByKuerzel(eintrag.kuerzel);
-		eintrag.text = ((fs == null) || (fs.daten(schuljahr) == null)) ? "---" : fs.daten(schuljahr).text;
-		eintrag.kuerzelStatistik = k.StatistikKrz;
-		eintrag.istSichtbar = k.Sichtbar;
-		return eintrag;
+		foerderschwerpunkt.text = ((fs == null) || (fs.daten(schuljahr) == null)) ? "" : fs.daten(schuljahr).text;
+		return foerderschwerpunkt;
+
 	}
 
 	@Override
-	public Response getAll() throws ApiOperationException {
-		final List<FoerderschwerpunktEintrag> daten = getAllFromDB();
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+	protected void mapAttribute(final DTOFoerderschwerpunkt dto, final String name, final Object value, final Map<String, Object> attributes)
+			throws ApiOperationException {
+		switch (name) {
+			case "id" -> {
+				final Long id = JSONMapper.convertToLong(value, false, name);
+				if (!Objects.equals(dto.ID, id))
+					throw new ApiOperationException(Status.BAD_REQUEST,
+							"Die ID %d des Patches ist null oder stimmt nicht mit der ID %d in der Datenbank überein.".formatted(id, dto.ID));
+			}
+			case "kuerzel" -> mapBezeichnung(dto, value);
+			case "kuerzelStatistik" -> mapKuerzelStatistik(dto, value);
+			case "istSichtbar" -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false, name);
+			case "sortierung" -> dto.Sortierung = JSONMapper.convertToInteger(value, false, name);
+			case "text" -> {
+				// kein mapping
+			}
+			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));
+		}
 	}
 
-	/**
-	 * Ermittelt alle Förderschwerpunkte aus der Datenbank.
-	 *
-	 * @return Liste der Förderschwerpunkte.
-	 *
-	 * @throws ApiOperationException im Fehlerfall
-	 */
-	public List<FoerderschwerpunktEintrag> getAllFromDB() throws ApiOperationException {
-		final List<DTOFoerderschwerpunkt> katalog = conn.queryAll(DTOFoerderschwerpunkt.class);
-		if (katalog == null)
-			throw new ApiOperationException(Status.NOT_FOUND);
-		return katalog.stream().map(fs -> map(fs)).toList();
+	private void mapBezeichnung(final DTOFoerderschwerpunkt dto, final Object value) throws ApiOperationException {
+		final String bezeichnung = JSONMapper.convertToString(value, false, false, 50, "kuerzel");
+		final List<DTOFoerderschwerpunkt> eintraege = this.conn.queryAll(DTOFoerderschwerpunkt.class);
+		for (final DTOFoerderschwerpunkt eintrag : eintraege)
+			if (eintrag.Bezeichnung.equals(bezeichnung))
+				throw new ApiOperationException(Status.BAD_REQUEST, "Das Kürzel %s darf nicht doppelt vergeben werden".formatted(bezeichnung));
+
+		dto.Bezeichnung = bezeichnung;
 	}
 
+	private static void mapKuerzelStatistik(final DTOFoerderschwerpunkt dto, final Object value) throws ApiOperationException {
+		final String kuerzel = JSONMapper.convertToString(value, false, false, 2, "kuerzelStatistik");
+		// Kürzel ist unverändert
+		if (kuerzel.equals(dto.StatistikKrz))
+			return;
 
-	@Override
-	public Response getList() throws ApiOperationException {
-		return this.getAll();
-	}
-
-	@Override
-	public Response get(final Long id) throws ApiOperationException {
-		final DTOFoerderschwerpunkt fs = conn.queryByKey(DTOFoerderschwerpunkt.class, id);
+		final Foerderschwerpunkt fs = Foerderschwerpunkt.data().getWertBySchluessel(kuerzel);
 		if (fs == null)
-			throw new ApiOperationException(Status.NOT_FOUND);
-		final FoerderschwerpunktEintrag daten = map(fs);
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
-	}
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					"Zum angegebenen Kürzel %s wurde kein passender Förderschwerpunkt gefunden.".formatted(kuerzel));
 
-	@Override
-	public Response patch(final Long id, final InputStream is) {
-		// TODO
-		throw new UnsupportedOperationException();
+		dto.StatistikKrz = kuerzel;
 	}
 
 }

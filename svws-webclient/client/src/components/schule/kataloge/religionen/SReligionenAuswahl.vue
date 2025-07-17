@@ -31,9 +31,8 @@
 
 	import { computed } from "vue";
 	import {BenutzerKompetenz, type ReligionEintrag, ServerMode} from "@core";
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
 	import type { KatalogReligionAuswahlProps } from "~/components/schule/kataloge/religionen/SReligionenAuswahlPops";
-	import { ViewType } from "@ui";
+	import { useRegionSwitch, ViewType } from "@ui";
 
 	const props = defineProps<KatalogReligionAuswahlProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();

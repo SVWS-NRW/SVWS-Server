@@ -8,7 +8,11 @@ import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.enm.ENMConfigResponse;
 import de.svws_nrw.core.data.enm.ENMDaten;
 import de.svws_nrw.core.data.enm.ENMLehrerInitialKennwort;
+import de.svws_nrw.core.data.enm.ENMLeistung;
+import de.svws_nrw.core.data.enm.ENMLeistungBemerkungen;
+import de.svws_nrw.core.data.enm.ENMLernabschnitt;
 import de.svws_nrw.core.data.enm.ENMServerConfigElement;
+import de.svws_nrw.core.data.enm.ENMTeilleistung;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.JSONMapper;
@@ -25,6 +29,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
@@ -147,6 +152,123 @@ public class APIENM {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataENMDaten(conn).get(id),
 				request, ServerMode.STABLE, BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_FUNKTION, BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Patchen von ENM-Leistungsdaten direkt auf dem SVWS-Server.
+	 *
+	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/leistung")
+	@Operation(summary = "Patch für die ENM-Leistungsdaten.",
+			description = "Passt die Leistungsdaten eines Schüler anhand der ENM-Daten an und speichert das Ergebnis in der Datenbank. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung im Rahmen der Notenmodul-Konfiguration besitzt.")
+	@ApiResponse(responseCode = "204", description = "Der Patch wurde erfolgreich integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die daten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Eintrag mit der, im Patch angegebenen, ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response patchENMLeistung(@PathParam("schema") final String schema,
+			@RequestBody(description = "Der Patch", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					schema = @Schema(implementation = ENMLeistung.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataENMDaten(conn).patchENMLeistung(is),
+				request, ServerMode.STABLE, BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_ALLGEMEIN, BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_FUNKTION);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Patchen von ENM-Teilleistungsdaten direkt auf dem SVWS-Server.
+	 *
+	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/teilleistung")
+	@Operation(summary = "Patch für die ENM-Teilleistungsdaten.",
+			description = "Passt die Teilleistungsdaten eines Schüler anhand der ENM-Daten an und speichert das Ergebnis in der Datenbank. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung im Rahmen der Notenmodul-Konfiguration besitzt.")
+	@ApiResponse(responseCode = "204", description = "Der Patch wurde erfolgreich integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die daten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Eintrag mit der, im Patch angegebenen, ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response patchENMTeilleistung(@PathParam("schema") final String schema,
+			@RequestBody(description = "Der Patch", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					schema = @Schema(implementation = ENMTeilleistung.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataENMDaten(conn).patchENMTeilleistung(is),
+				request, ServerMode.STABLE, BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_ALLGEMEIN, BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_FUNKTION);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Patchen von ENM-Bemerkungen zu einem Schülerlernabschnitt direkt auf dem SVWS-Server.
+	 *
+	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param id        die ID des Schülers
+	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/bemerkungen/{id : \\d+}")
+	@Operation(summary = "Patch für die Bemerkungen eines Schülers anhand der ENM-Daten.",
+			description = "Passt die Bemerkungen eines Schülers anhand der ENM-Daten an und speichert das Ergebnis in der Datenbank. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung im Rahmen der Notenmodul-Konfiguration besitzt.")
+	@ApiResponse(responseCode = "204", description = "Der Patch wurde erfolgreich integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die daten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Eintrag mit der, im Patch angegebenen, ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response patchENMSchuelerBemerkungen(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@RequestBody(description = "Der Patch", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					schema = @Schema(implementation = ENMLeistungBemerkungen.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataENMDaten(conn).patchENMSchuelerBemerkungen(id, is),
+				request, ServerMode.STABLE, BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_ALLGEMEIN, BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_FUNKTION);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Patchen von ENM-Lernabschnittsdaten direkt auf dem SVWS-Server.
+	 *
+	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/lernabschnitt")
+	@Operation(summary = "Patch für die ENM-Lernabschnittsdaten.",
+			description = "Passt die Lernabschnittsdaten eines Schüler anhand der ENM-Daten an und speichert das Ergebnis in der Datenbank. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung im Rahmen der Notenmodul-Konfiguration besitzt.")
+	@ApiResponse(responseCode = "204", description = "Der Patch wurde erfolgreich integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die daten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Eintrag mit der, im Patch angegebenen, ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response patchENMSchuelerLernabschnitt(@PathParam("schema") final String schema,
+			@RequestBody(description = "Der Patch", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					schema = @Schema(implementation = ENMLernabschnitt.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataENMDaten(conn).patchENMSchuelerlernabschnitt(is),
+				request, ServerMode.STABLE, BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_ALLGEMEIN, BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_FUNKTION);
 	}
 
 
@@ -546,7 +668,7 @@ public class APIENM {
 	@POST
 	@Path("/config")
 	@Operation(summary = "Schreibt den Konfigurationseintrag für den angebenen Schlüsselwert in die Konfiguration",
-		description = "Schreibt den Konfigurationseintrag für den angebenen Schlüsselwert in die Konfiguration.")
+			description = "Schreibt den Konfigurationseintrag für den angebenen Schlüsselwert in die Konfiguration.")
 	@ApiResponse(responseCode = "204", description = "Der Konfigurationseintrag wurde erfolgreich geschrieben",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	@ApiResponse(responseCode = "500", description = "Interner Serverfehler",
@@ -560,9 +682,11 @@ public class APIENM {
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	public Response setENMServerConfigElement(@PathParam("schema") final String schema,
 			@RequestBody(description = "Der zu setzende Konfigurationseintrag", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ENMServerConfigElement.class))) final InputStream daten,
-					@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> DataENMDaten.setENMServerConfigElement(conn, daten), request, ServerMode.STABLE, BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = ENMServerConfigElement.class))) final InputStream daten,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> DataENMDaten.setENMServerConfigElement(conn, daten), request, ServerMode.STABLE,
+				BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
 	}
 
 
@@ -579,7 +703,7 @@ public class APIENM {
 	@GET
 	@Path("/setup")
 	@Operation(summary = "Führt das initiale Setup des ENM-Servers durch",
-		description = "Dieser Aufruf initialisert den ENM-Server beim ersten Aufruf. Weitere Aufrufe führen zu einem Fehler.")
+			description = "Dieser Aufruf initialisert den ENM-Server beim ersten Aufruf. Weitere Aufrufe führen zu einem Fehler.")
 	@ApiResponse(responseCode = "200", description = "Der Stand des Setups, true, wurde initialisiert, false ist bereits initialisiert",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Boolean.class)))
 	@ApiResponse(responseCode = "500", description = "Interner Serverfehler",
@@ -596,4 +720,5 @@ public class APIENM {
 	public Response setupENMServer(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(DataENMDaten::setup, request, ServerMode.STABLE, BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
 	}
+
 }

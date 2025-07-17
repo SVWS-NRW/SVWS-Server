@@ -223,6 +223,11 @@ export class SchuelerStammdaten extends JavaObject {
 	 */
 	public erhaeltMeisterBAFOEG : boolean = false;
 
+	/**
+	 * Der Beginn des Bildungsgangs eines Schülers.
+	 */
+	public beginnBildungsgang : string | null = null;
+
 
 	/**
 	 * Leerer Standardkonstruktor.
@@ -320,6 +325,7 @@ export class SchuelerStammdaten extends JavaObject {
 		if (obj.erhaeltMeisterBAFOEG === undefined)
 			throw new Error('invalid json format, missing attribute erhaeltMeisterBAFOEG');
 		result.erhaeltMeisterBAFOEG = obj.erhaeltMeisterBAFOEG;
+		result.beginnBildungsgang = (obj.beginnBildungsgang === undefined) ? null : obj.beginnBildungsgang === null ? null : obj.beginnBildungsgang;
 		return result;
 	}
 
@@ -369,6 +375,7 @@ export class SchuelerStammdaten extends JavaObject {
 		result += '"keineAuskunftAnDritte" : ' + obj.keineAuskunftAnDritte.toString() + ',';
 		result += '"erhaeltSchuelerBAFOEG" : ' + obj.erhaeltSchuelerBAFOEG.toString() + ',';
 		result += '"erhaeltMeisterBAFOEG" : ' + obj.erhaeltMeisterBAFOEG.toString() + ',';
+		result += '"beginnBildungsgang" : ' + ((obj.beginnBildungsgang === null) ? 'null' : JSON.stringify(obj.beginnBildungsgang)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -507,6 +514,9 @@ export class SchuelerStammdaten extends JavaObject {
 		}
 		if (obj.erhaeltMeisterBAFOEG !== undefined) {
 			result += '"erhaeltMeisterBAFOEG" : ' + obj.erhaeltMeisterBAFOEG.toString() + ',';
+		}
+		if (obj.beginnBildungsgang !== undefined) {
+			result += '"beginnBildungsgang" : ' + ((obj.beginnBildungsgang === null) ? 'null' : JSON.stringify(obj.beginnBildungsgang)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

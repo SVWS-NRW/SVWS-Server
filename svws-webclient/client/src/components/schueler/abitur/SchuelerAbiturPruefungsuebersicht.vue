@@ -3,7 +3,7 @@
 		<!-- Darstellung der Prüfungsergebnisse aus dem persistierten Abiturbereich - Die Zulassung wird hier nur kurz Zusammengefasst -->
 		<template v-if="manager() !== null">
 			<template v-if="hatZulassung">
-				<schueler-abitur-pruefungsuebersicht-tabelle :server-mode :schule :manager="() => manager()!" />
+				<schueler-abitur-pruefungsuebersicht-tabelle :server-mode :schule :schueler :manager="() => manager()!" :update-abiturpruefungsdaten />
 			</template>
 			<template v-else>
 				<div class="text-ui-danger font-bold">Die Zulassung zum Abitur wurde nicht erreicht.</div>

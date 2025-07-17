@@ -22,7 +22,7 @@ const defaultState = {
 export class RouteDataKatalogLernplattformen extends RouteDataAuswahl<LernplattformListeManager, RouteStateAuswahlInterface<LernplattformListeManager>> {
 
 	public constructor() {
-		super(defaultState, routeKatalogLernplattformenGruppenprozesse, routeKatalogLernplattformenNeu);
+		super(defaultState, { gruppenprozesse: routeKatalogLernplattformenGruppenprozesse, hinzufuegen: routeKatalogLernplattformenNeu });
 	}
 
 	public addID(param: RouteParamsRawGeneric, id: number): void {

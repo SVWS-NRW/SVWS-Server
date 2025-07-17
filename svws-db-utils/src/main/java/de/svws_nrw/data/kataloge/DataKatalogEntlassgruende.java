@@ -65,7 +65,7 @@ public final class DataKatalogEntlassgruende extends DataManagerRevised<Long, DT
 		entlassgrund.bezeichnung = dto.Bezeichnung;
 		entlassgrund.sortierung = Optional.ofNullable(dto.Sortierung).orElse(-1);
 		entlassgrund.istSichtbar = Optional.ofNullable(dto.Sichtbar).orElse(true);
-		entlassgrund.istAenderbar = Optional.ofNullable(dto.Sichtbar).orElse(false);
+		entlassgrund.istAenderbar = Optional.ofNullable(dto.Aenderbar).orElse(false);
 		return entlassgrund;
 	}
 

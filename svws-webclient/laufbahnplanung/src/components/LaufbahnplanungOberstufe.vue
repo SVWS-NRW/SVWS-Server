@@ -71,7 +71,8 @@
 	const show = ref<boolean>(false);
 
 	const manager = computed<LaufbahnplanungUiManager>(() =>
-		new LaufbahnplanungUiManager(props.serverMode, props.abiturdatenManager, props.config, () => props.gostJahrgangsdaten, props.setWahl, false, true));
+		new LaufbahnplanungUiManager(props.serverMode, props.abiturdatenManager, props.config, () => props.gostJahrgangsdaten, props.setWahl,
+			{ faecherZeigen: "app.schueler.laufbahnplanung.faecher.anzeigen", modus: "app.schueler.laufbahnplanung.modus" }));
 
 	const tabManager = new TabManager([], <TabData>{}, async (value: TabData) => {});
 

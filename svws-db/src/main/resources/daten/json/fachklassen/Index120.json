@@ -1,6 +1,6 @@
 {
 	"index": 120,
-	"version": 2,
+	"version": 3,
 	"fachklassen": [
 		{
 			"schluessel": "101",
@@ -172,7 +172,7 @@
 				"istAusgelaufen": true,
 				"berufsfeldGruppe": "T",
 				"berufsfeld": "CP",
-				"ebene1": null,
+				"ebene1": "TN",
 				"ebene2": null,
 				"ebene3": null,
 				"bezeichnung": "Physik, Chemie, Biologie",
@@ -294,6 +294,23 @@
 				"bezeichnungM": "Informations- und Kommunikationstechnik",
 				"bezeichnungW": "Informations- und Kommunikationstechnik",
 				"gueltigVon": 2017,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "116",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1201160000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TN",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Ingenieurtechnik",
+				"bezeichnungM": "Ingenieurtechnik",
+				"bezeichnungW": "Ingenieurtechnik",
+				"gueltigVon": 2024,
 				"gueltigBis": null
 			} ]
 		}, {

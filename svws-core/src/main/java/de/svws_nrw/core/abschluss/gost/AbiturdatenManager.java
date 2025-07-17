@@ -27,21 +27,21 @@ import de.svws_nrw.core.abschluss.gost.belegpruefung.Naturwissenschaften;
 import de.svws_nrw.core.abschluss.gost.belegpruefung.Projektkurse;
 import de.svws_nrw.core.abschluss.gost.belegpruefung.Schwerpunkt;
 import de.svws_nrw.core.abschluss.gost.belegpruefung.Sport;
-import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2029.Abi29BelegpruefungAbiFaecher;
-import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2029.Abi29BelegpruefungAllgemeines;
-import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2029.Abi29BelegpruefungDeutsch;
-import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2029.Abi29BelegpruefungFachWaehlbar;
-import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2029.Abi29BelegpruefungFachkombinationen;
-import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2029.Abi29BelegpruefungFremdsprachen;
-import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2029.Abi29BelegpruefungGesellschaftswissenschaftenUndReligion;
-import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2029.Abi29BelegpruefungKurszahlenUndWochenstunden;
-import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2029.Abi29BelegpruefungLatinum;
-import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2029.Abi29BelegpruefungLiterarischKuenstlerisch;
-import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2029.Abi29BelegpruefungMathematik;
-import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2029.Abi29BelegpruefungNaturwissenschaften;
-import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2029.Abi29BelegpruefungProjektkurse;
-import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2029.Abi29BelegpruefungSchwerpunkt;
-import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2029.Abi29BelegpruefungSport;
+import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungAbiFaecher;
+import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungAllgemeines;
+import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungDeutsch;
+import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungFachWaehlbar;
+import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungFachkombinationen;
+import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungFremdsprachen;
+import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungGesellschaftswissenschaftenUndReligion;
+import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungKurszahlenUndWochenstunden;
+import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungLatinum;
+import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungLiterarischKuenstlerisch;
+import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungMathematik;
+import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungNaturwissenschaften;
+import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungProjektkurse;
+import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungSchwerpunkt;
+import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungSport;
 import de.svws_nrw.core.adt.map.ArrayMap;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.gost.AbiturFachbelegung;
@@ -127,7 +127,7 @@ public class AbiturdatenManager {
 	private KurszahlenUndWochenstunden belegpruefungKurszahlenUndWochenstunden = null;
 
 	/** Die zuletzt durchgeführte Belegprüfung bezüglich der Kurszahlen und der Wochenstunden - experimenteller Code */
-	private Abi29BelegpruefungKurszahlenUndWochenstunden abi29BelegpruefungKurszahlenUndWochenstunden = null;
+	private Abi30BelegpruefungKurszahlenUndWochenstunden abi30BelegpruefungKurszahlenUndWochenstunden = null;
 
 	/** Die Menge der Belegprüfungsfehler, die bei den durchgeführten Belegprüfungen aufgetreten sind. */
 	private @NotNull List<GostBelegungsfehler> belegpruefungsfehler = new ArrayList<>();
@@ -137,6 +137,9 @@ public class AbiturdatenManager {
 
 	/** Das Ergebnis des Markierungsalgorithmus */
 	private @NotNull GostAbiturMarkierungsalgorithmusErgebnis markierungsErgebnis = new GostAbiturMarkierungsalgorithmusErgebnis();
+
+	/** Das Ergebnis des Markierprüfungsalgorithmus */
+	private @NotNull GostAbiturMarkierungspruefungErgebnis markierpruefungsergebnis = new GostAbiturMarkierungspruefungErgebnis();
 
 
 	/**
@@ -204,31 +207,31 @@ public class AbiturdatenManager {
 	 *
 	 * @return eine Liste mit den durchgefuehrten Belegpruefungen
 	 */
-	private @NotNull List<GostBelegpruefung> getPruefungenAbi2029(final @NotNull GostBelegpruefungsArt pruefungsArt) {
+	private @NotNull List<GostBelegpruefung> getPruefungenAbi2030(final @NotNull GostBelegpruefungsArt pruefungsArt) {
 		final @NotNull ArrayList<GostBelegpruefung> pruefungen = new ArrayList<>();
-		pruefungen.add(new Abi29BelegpruefungDeutsch(this, pruefungsArt));
-		final @NotNull Abi29BelegpruefungFremdsprachen pruefungFremdsprachen = new Abi29BelegpruefungFremdsprachen(this, pruefungsArt);
+		pruefungen.add(new Abi30BelegpruefungDeutsch(this, pruefungsArt));
+		final @NotNull Abi30BelegpruefungFremdsprachen pruefungFremdsprachen = new Abi30BelegpruefungFremdsprachen(this, pruefungsArt);
 		pruefungen.add(pruefungFremdsprachen);
-		pruefungen.add(new Abi29BelegpruefungLatinum(this, pruefungsArt));
-		pruefungen.add(new Abi29BelegpruefungLiterarischKuenstlerisch(this, pruefungsArt));
-		pruefungen.add(new Abi29BelegpruefungGesellschaftswissenschaftenUndReligion(this, pruefungsArt));
-		pruefungen.add(new Abi29BelegpruefungMathematik(this, pruefungsArt));
-		final @NotNull Abi29BelegpruefungNaturwissenschaften pruefungNaturwissenschaften = new Abi29BelegpruefungNaturwissenschaften(this, pruefungsArt);
+		pruefungen.add(new Abi30BelegpruefungLatinum(this, pruefungsArt));
+		pruefungen.add(new Abi30BelegpruefungLiterarischKuenstlerisch(this, pruefungsArt));
+		pruefungen.add(new Abi30BelegpruefungGesellschaftswissenschaftenUndReligion(this, pruefungsArt));
+		pruefungen.add(new Abi30BelegpruefungMathematik(this, pruefungsArt));
+		final @NotNull Abi30BelegpruefungNaturwissenschaften pruefungNaturwissenschaften = new Abi30BelegpruefungNaturwissenschaften(this, pruefungsArt);
 		pruefungen.add(pruefungNaturwissenschaften);
-		pruefungen.add(new Abi29BelegpruefungSport(this, pruefungsArt));
-		final @NotNull Abi29BelegpruefungProjektkurse pruefungProjektkurse = new Abi29BelegpruefungProjektkurse(this, pruefungsArt);
+		pruefungen.add(new Abi30BelegpruefungSport(this, pruefungsArt));
+		final @NotNull Abi30BelegpruefungProjektkurse pruefungProjektkurse = new Abi30BelegpruefungProjektkurse(this, pruefungsArt);
 		pruefungen.add(pruefungProjektkurse);
 		// Die Prüfung zu dem Schwerpunkt muss nach den Prüfungen des naturwissenschaftlichen und der Fremdsprachen durchgeführt werden, da hier eine Abhängigkeit besteht.
-		pruefungen.add(new Abi29BelegpruefungSchwerpunkt(this, pruefungsArt, pruefungFremdsprachen, pruefungNaturwissenschaften));
-		pruefungen.add(new Abi29BelegpruefungAbiFaecher(this, pruefungsArt, pruefungProjektkurse));
+		pruefungen.add(new Abi30BelegpruefungSchwerpunkt(this, pruefungsArt, pruefungFremdsprachen, pruefungNaturwissenschaften));
+		pruefungen.add(new Abi30BelegpruefungAbiFaecher(this, pruefungsArt, pruefungProjektkurse));
 		// Die Prüfung der Kurszahlen und Wochenstunden ist abhängig von den Projektkursergebnissen - sie muss nach den Projektkursergebnissen durchgeführt werden!!!
-		abi29BelegpruefungKurszahlenUndWochenstunden = new Abi29BelegpruefungKurszahlenUndWochenstunden(this, pruefungsArt, pruefungProjektkurse);
-		pruefungen.add(abi29BelegpruefungKurszahlenUndWochenstunden);
-		pruefungen.add(new Abi29BelegpruefungAllgemeines(this, pruefungsArt));
+		abi30BelegpruefungKurszahlenUndWochenstunden = new Abi30BelegpruefungKurszahlenUndWochenstunden(this, pruefungsArt, pruefungProjektkurse);
+		pruefungen.add(abi30BelegpruefungKurszahlenUndWochenstunden);
+		pruefungen.add(new Abi30BelegpruefungAllgemeines(this, pruefungsArt));
 		// Die Prüfung von schulspezifischen Fachkombinationen
-		pruefungen.add(new Abi29BelegpruefungFachkombinationen(this, pruefungsArt));
+		pruefungen.add(new Abi30BelegpruefungFachkombinationen(this, pruefungsArt));
 		// Die Prüfung der schulspezifischen Wählbarkeit von Fächern
-		pruefungen.add(new Abi29BelegpruefungFachWaehlbar(this, pruefungsArt));
+		pruefungen.add(new Abi30BelegpruefungFachWaehlbar(this, pruefungsArt));
 		return pruefungen;
 	}
 
@@ -241,8 +244,8 @@ public class AbiturdatenManager {
 	 * @return eine Liste mit den durchgefuehrten Belegpruefungen
 	 */
 	public @NotNull List<GostBelegpruefung> getPruefungen(final @NotNull GostBelegpruefungsArt pruefungsArt) {
-		if ((abidaten.abiturjahr >= 2029) && (this.servermode == ServerMode.DEV)) // Führe ggf. den experimentellen Code aus
-			return this.getPruefungenAbi2029(pruefungsArt);
+		if (nutzeExperimentellenCode(this.servermode, abidaten.abiturjahr)) // Führe ggf. den experimentellen Code aus
+			return this.getPruefungenAbi2030(pruefungsArt);
 		return this.getPruefungenDefault(pruefungsArt);
 	}
 
@@ -261,15 +264,31 @@ public class AbiturdatenManager {
 			belegpruefung.pruefe();
 		belegpruefungsfehler = GostBelegpruefung.getBelegungsfehlerAlle(belegpruefungen);
 		belegpruefungErfolgreich = GostBelegpruefung.istErfolgreich(belegpruefungsfehler);
-		// Führe ggf. den Markierungsalgorithmus durch
+		// Führe ggf. den Markierungsalgorithmus durch...
 		if (istBewertetQualifikationsPhase()) {
-			if ((abidaten.abiturjahr >= 2029) && (this.servermode == ServerMode.DEV)) {
+			if (nutzeExperimentellenCode(this.servermode, abidaten.abiturjahr)) {
 				// Führe ggf. den experimentellen Code aus
-				markierungsErgebnis = Abi29GostAbiturMarkierungsalgorithmus.berechne(this, belegpruefungen);
+				markierungsErgebnis = Abi30GostAbiturMarkierungsalgorithmus.berechne(this, belegpruefungen);
 			} else {
 				markierungsErgebnis = GostAbiturMarkierungsalgorithmus.berechne(this, belegpruefungen);
 			}
 		}
+		// ... und ggf. auch eine Prüfung der aktuellen Markierungen
+		pruefeMarkierungen();
+	}
+
+
+	/**
+	 * Prüft ob, bei dem übergeben Servermode und dem übergebenen Abiturjahr der experimentelle Code
+	 * für das Abitur ab 2030 eingesetzt werden soll.
+	 *
+	 * @param servermode   der Server-Mode
+	 * @param abiturjahr   das Abiturjahr
+	 *
+	 * @return true, wenn der experimentelle Code genutzt werden soll, und ansonsten false
+	 */
+	public static boolean nutzeExperimentellenCode(final ServerMode servermode, final int abiturjahr) {
+		return ((abiturjahr >= 2030) && (servermode == ServerMode.DEV));
 	}
 
 
@@ -346,11 +365,12 @@ public class AbiturdatenManager {
 			// Bestimme die Fachbelegung, welche die letzte Belegung hat und die anderen Halbjahresbelegungen "aufnehmen" soll
 			AbiturFachbelegung ziel = null;
 			@NotNull GostHalbjahr letztes = GostHalbjahr.EF2;
-			for (final @NotNull AbiturFachbelegung belegung : abidaten.fachbelegungen) {
+			for (final @NotNull AbiturFachbelegung belegung : belegungen) {
 				GostHalbjahr halbjahr = letztes.next();
 				while (halbjahr != null) {
 					final AbiturFachbelegungHalbjahr belegungHalbjahr = belegung.belegungen[halbjahr.id];
-					if ((belegungHalbjahr != null) && (belegungHalbjahr.kursartKuerzel != null) && (belegungHalbjahr.notenkuerzel != null) && (!"".equals(belegungHalbjahr.notenkuerzel))) {
+					if ((belegungHalbjahr != null) && (belegungHalbjahr.kursartKuerzel != null) && (belegungHalbjahr.notenkuerzel != null)
+							&& (!"".equals(belegungHalbjahr.notenkuerzel))) {
 						ziel = belegung;
 						letztes = halbjahr;
 					}
@@ -361,13 +381,14 @@ public class AbiturdatenManager {
 			if (ziel == null)
 				continue;
 			// Kopiere die Halbjahresbelegungen, sofern diese keine gültige Halbjahresbelegung der Zielbelegung überschreiben würden
-			for (final @NotNull AbiturFachbelegung belegung : abidaten.fachbelegungen) {
+			for (final @NotNull AbiturFachbelegung belegung : belegungen) {
 				if (belegung == ziel)
 					continue;
 				for (final @NotNull GostHalbjahr halbjahr : GostHalbjahr.values()) {
 					// Prüfe, ob die Zielbelegung eine gültige Halbjahresbelegung hat
 					final AbiturFachbelegungHalbjahr zielHalbjahr = ziel.belegungen[halbjahr.id];
-					if ((zielHalbjahr != null) && (zielHalbjahr.kursartKuerzel != null) && (zielHalbjahr.notenkuerzel != null) && (!"".equals(zielHalbjahr.notenkuerzel)))
+					if ((zielHalbjahr != null) && (zielHalbjahr.kursartKuerzel != null) && (zielHalbjahr.notenkuerzel != null)
+							&& (!"".equals(zielHalbjahr.notenkuerzel)))
 						continue;
 					// Wenn nicht, dann prüfe, ob die Halbjahrsbelegung gültig ist und setze diese ggf.
 					final AbiturFachbelegungHalbjahr belegungHalbjahr = belegung.belegungen[halbjahr.id];
@@ -562,6 +583,86 @@ public class AbiturdatenManager {
 		if (belegung == null)
 			return null;
 		return faecherManager.get(belegung.fachID);
+	}
+
+
+	/**
+	 * Prüft, ob die Fachbelegung in einem der übergebenen Fachbereiche liegt.
+	 *
+	 * @param belegung   die Belegung
+	 * @param bereiche   die Fachbereiche
+	 *
+	 * @return true, wenn die Fachbelegung in einem der Bereiche liegt und ansonsten false
+	 */
+	public boolean hatFachbereich(final AbiturFachbelegung belegung, final @NotNull GostFachbereich... bereiche) {
+		if ((belegung == null) || (bereiche.length == 0))
+			return false;
+		final GostFach fach = this.getFach(belegung);
+		if (fach == null)
+			return false;
+		for (final @NotNull GostFachbereich bereich : bereiche)
+			if (bereich.hat(fach))
+				return true;
+		return false;
+	}
+
+
+	/**
+	 * Prüft, ob eine Belegung der Abiturfächer in einem der übergebenen Fachbereiche liegt.
+	 *
+	 * @param bereiche   die Fachbereiche
+	 *
+	 * @return true, wenn eine der Fachbelegungen in einem der Fachbereiche liegt und ansonsten false
+	 */
+	public boolean hatFachbereichInAbiturfaechern(final @NotNull GostFachbereich... bereiche) {
+		for (final @NotNull AbiturFachbelegung belegung : abidaten.fachbelegungen) {
+			final GostAbiturFach abiturFach = GostAbiturFach.fromID(belegung.abiturFach);
+			if ((abiturFach != null) && this.hatFachbereich(belegung, bereiche))
+				return true;
+		}
+		return false;
+	}
+
+
+	/**
+	 * Prüft, ob eine Belegung der Leistungskurse in einem der übergebenen Fachbereiche liegt.
+	 *
+	 * @param bereiche   die Fachbereiche
+	 *
+	 * @return true, wenn eine Belegung der Leistungskurse in einem der Fachbereiche liegt und ansonsten false
+	 */
+	public boolean hatFachbereichInLKAbiturfaechern(final @NotNull GostFachbereich... bereiche) {
+		for (final @NotNull AbiturFachbelegung belegung : abidaten.fachbelegungen) {
+			final GostAbiturFach abiturFach = GostAbiturFach.fromID(belegung.abiturFach);
+			if (abiturFach != null)
+				continue;
+			if ((abiturFach != GostAbiturFach.LK1) && (abiturFach != GostAbiturFach.LK2))
+				continue;
+			if (this.hatFachbereich(belegung, bereiche))
+				return true;
+		}
+		return false;
+	}
+
+
+	/**
+	 * Prüft, ob eine Belegung der Abitur-Grundkurse in einem der übergebenen Fachbereiche liegt.
+	 *
+	 * @param bereiche   die Fachbereiche
+	 *
+	 * @return true, wenn eine Belegung der Abitur-Grundkurse in einem der Fachbereiche liegt und ansonsten false
+	 */
+	public boolean hatFachbereichInGKAbiturfaechern(final @NotNull GostFachbereich... bereiche) {
+		for (final @NotNull AbiturFachbelegung belegung : abidaten.fachbelegungen) {
+			final GostAbiturFach abiturFach = GostAbiturFach.fromID(belegung.abiturFach);
+			if (abiturFach != null)
+				continue;
+			if ((abiturFach == GostAbiturFach.LK1) || (abiturFach == GostAbiturFach.LK2))
+				continue;
+			if (this.hatFachbereich(belegung, bereiche))
+				return true;
+		}
+		return false;
 	}
 
 
@@ -1938,8 +2039,8 @@ public class AbiturdatenManager {
 	 *         ausgewählt werden kann.
 	 */
 	public GostKursart getMoeglicheKursartAlsAbiturfach(final long id) {
-		if ((abidaten.abiturjahr >= 2029) && (this.servermode == ServerMode.DEV)) // Führe ggf. den experimentellen Code aus
-			return _getAbi29MoeglicheKursartAlsAbiturfach(id);
+		if (nutzeExperimentellenCode(this.servermode, abidaten.abiturjahr)) // Führe ggf. den experimentellen Code aus
+			return _getAbi30MoeglicheKursartAlsAbiturfach(id);
 		final GostFach fach = faecherManager.get(id);
 		if ((fach == null) || (!fach.istPruefungsordnungsRelevant))
 			return null;
@@ -1981,7 +2082,7 @@ public class AbiturdatenManager {
 	 * @return die mögliche Kursart des Faches im Abitur oder null, falls das Fach nicht als Abiturfach
 	 *         ausgewählt werden kann.
 	 */
-	private GostKursart _getAbi29MoeglicheKursartAlsAbiturfach(final long id) {
+	private GostKursart _getAbi30MoeglicheKursartAlsAbiturfach(final long id) {
 		final GostFach fach = faecherManager.get(id);
 		if ((fach == null) || (!fach.istPruefungsordnungsRelevant))
 			return null;
@@ -2295,10 +2396,10 @@ public class AbiturdatenManager {
 	 *
 	 * @return das Belegprüfungs-Objekt für die KurszahlenUndWochenstunden
 	 */
-	private @NotNull Abi29BelegpruefungKurszahlenUndWochenstunden getAbi29KurszahlenUndWochenstunden() {
-		if (this.abi29BelegpruefungKurszahlenUndWochenstunden == null)
+	private @NotNull Abi30BelegpruefungKurszahlenUndWochenstunden getAbi30KurszahlenUndWochenstunden() {
+		if (this.abi30BelegpruefungKurszahlenUndWochenstunden == null)
 			throw new NullPointerException("Die Belegprüfung zu Kurszahlen und Wochenstunden wurde noch nicht erstellt und durchgeführt.");
-		return this.abi29BelegpruefungKurszahlenUndWochenstunden;
+		return this.abi30BelegpruefungKurszahlenUndWochenstunden;
 	}
 
 
@@ -2309,8 +2410,8 @@ public class AbiturdatenManager {
 	 * @return ein Array mit den Wochenstunden für die sechs Halbjahre
 	 */
 	public @NotNull int[] getWochenstunden() {
-		if ((abidaten.abiturjahr >= 2029) && (this.servermode == ServerMode.DEV)) { // Führe ggf. den experimentellen Code aus
-			final @NotNull Abi29BelegpruefungKurszahlenUndWochenstunden kuw = getAbi29KurszahlenUndWochenstunden();
+		if (nutzeExperimentellenCode(this.servermode, abidaten.abiturjahr)) { // Führe ggf. den experimentellen Code aus
+			final @NotNull Abi30BelegpruefungKurszahlenUndWochenstunden kuw = getAbi30KurszahlenUndWochenstunden();
 			final @NotNull int[] stunden = new int[] { 0, 0, 0, 0, 0, 0 };
 			for (final GostHalbjahr hj : GostHalbjahr.values())
 				stunden[hj.id] = kuw.getWochenstunden(hj);
@@ -2330,8 +2431,8 @@ public class AbiturdatenManager {
 	 * @return die Anzahl der Wochenstunden
 	 */
 	public int getWochenstundenEinfuehrungsphase() {
-		if ((abidaten.abiturjahr >= 2029) && (this.servermode == ServerMode.DEV)) { // Führe ggf. den experimentellen Code aus
-			final @NotNull Abi29BelegpruefungKurszahlenUndWochenstunden kuw = getAbi29KurszahlenUndWochenstunden();
+		if (nutzeExperimentellenCode(this.servermode, abidaten.abiturjahr)) { // Führe ggf. den experimentellen Code aus
+			final @NotNull Abi30BelegpruefungKurszahlenUndWochenstunden kuw = getAbi30KurszahlenUndWochenstunden();
 			return kuw.getWochenstundenEinfuehrungsphase();
 		}
 		final @NotNull KurszahlenUndWochenstunden kuw = getKurszahlenUndWochenstunden();
@@ -2345,8 +2446,8 @@ public class AbiturdatenManager {
 	 * @return die Anzahl der Wochenstunden
 	 */
 	public int getWochenstundenQualifikationsphase() {
-		if ((abidaten.abiturjahr >= 2029) && (this.servermode == ServerMode.DEV)) { // Führe ggf. den experimentellen Code aus
-			final @NotNull Abi29BelegpruefungKurszahlenUndWochenstunden kuw = getAbi29KurszahlenUndWochenstunden();
+		if (nutzeExperimentellenCode(this.servermode, abidaten.abiturjahr)) { // Führe ggf. den experimentellen Code aus
+			final @NotNull Abi30BelegpruefungKurszahlenUndWochenstunden kuw = getAbi30KurszahlenUndWochenstunden();
 			return kuw.getWochenstundenQualifikationsphase();
 		}
 		final @NotNull KurszahlenUndWochenstunden kuw = getKurszahlenUndWochenstunden();
@@ -2361,8 +2462,8 @@ public class AbiturdatenManager {
 	 * @return ein Array mit den anrechenbaren Kursen für die sechs Halbjahre
 	 */
 	public @NotNull int[] getAnrechenbareKurse() {
-		if ((abidaten.abiturjahr >= 2029) && (this.servermode == ServerMode.DEV)) { // Führe ggf. den experimentellen Code aus
-			final @NotNull Abi29BelegpruefungKurszahlenUndWochenstunden kuw = getAbi29KurszahlenUndWochenstunden();
+		if (nutzeExperimentellenCode(this.servermode, abidaten.abiturjahr)) { // Führe ggf. den experimentellen Code aus
+			final @NotNull Abi30BelegpruefungKurszahlenUndWochenstunden kuw = getAbi30KurszahlenUndWochenstunden();
 			final @NotNull int[] anzahl = new int[] { 0, 0, 0, 0, 0, 0 };
 			for (final GostHalbjahr hj : GostHalbjahr.values())
 				anzahl[hj.id] = kuw.getKurszahlenAnrechenbar(hj);
@@ -2383,8 +2484,8 @@ public class AbiturdatenManager {
 	 * @return die anrechenbaren Kursen für Block I des Abiturs
 	 */
 	public int getAnrechenbareKurseBlockI() {
-		if ((abidaten.abiturjahr >= 2029) && (this.servermode == ServerMode.DEV)) { // Führe ggf. den experimentellen Code aus
-			final @NotNull Abi29BelegpruefungKurszahlenUndWochenstunden kuw = getAbi29KurszahlenUndWochenstunden();
+		if (nutzeExperimentellenCode(this.servermode, abidaten.abiturjahr)) { // Führe ggf. den experimentellen Code aus
+			final @NotNull Abi30BelegpruefungKurszahlenUndWochenstunden kuw = getAbi30KurszahlenUndWochenstunden();
 			return kuw.getBlockIAnzahlAnrechenbar();
 		}
 		final @NotNull KurszahlenUndWochenstunden kuw = getKurszahlenUndWochenstunden();
@@ -2418,6 +2519,246 @@ public class AbiturdatenManager {
 	 */
 	public Integer getNotenpunkteByFachIDAndHalbjahr(final long idFach, final @NotNull GostHalbjahr halbjahr) {
 		return getNotenpunkteOfFachbelegungHalbjahr(mapFachbelegungHalbjahrByFachIDAndHalbjahrID.getOrNull(idFach, halbjahr.id));
+	}
+
+
+	/**
+	 * Prüft, ob bei der Fachbelegung in allen Halbjahren der Qualifikationsphase eine Belegung vorliegt und
+	 * der Kurs jeweils als angerechnet markiert ist.
+	 *
+	 * @param belegung   die Fachbelegung
+	 *
+	 * @return true, falls alle Kurse der Fachbelegung in der Qualifikationsphase als angerechnet markiert sind, und ansonsten false
+	 */
+	public boolean hatMarkierungQualifikationsphase(final AbiturFachbelegung belegung) {
+		if (belegung == null)
+			return false;
+		for (final @NotNull GostHalbjahr halbjahr : GostHalbjahr.getQualifikationsphase()) {
+			final AbiturFachbelegungHalbjahr belegungHalbjahr = belegung.belegungen[halbjahr.id];
+			if ((belegungHalbjahr == null) || (belegungHalbjahr.block1gewertet == null) || (!belegungHalbjahr.block1gewertet))
+				return false;
+		}
+		return true;
+	}
+
+
+	/**
+	 * Prüft, ob eine Belegung eines der angegebenen Fächer mit den angegebenen Halbjahren existiert,
+	 * bei dem alle Halbjahre der Qualifikationsphase markiert sind und keine 0-Punkte Kurse beinhalten.
+	 * Die erste gefundene Belegung wird dann zurückgegeben.
+	 * Ist keine solche Fachbelegung gegeben, so schlägt die Prüfung fehl und es wird null zurückgegeben.
+	 * In dieser Methode wird ggf. auch geprüft, ob weitere Fachbelegungen existieren, welche das gleiche
+	 * Statistik-Kürzel haben und Ersatzweise eine Halbjahres-Belegung ersetzen können. Dies ist z.B. bei bilingualen
+	 * Fächern nötig oder bei der Unterscheidung von Sport-Profilen. In einem solchen Fall wird
+	 * die erste Belegung für das Fach zurückgegeben, welches evtl. nicht alle Belegungen beinhaltet
+	 *
+	 * @param fachbelegungen    die zu prüfenden Fachbelegungen
+	 *
+	 * @return eine Fachbelegung mit den Markierung in den Halbjahren der Qualifikationsphase und ansonsten null
+	 */
+	public AbiturFachbelegung pruefeMarkierungExistiertDurchgaengig(final List<AbiturFachbelegung> fachbelegungen) {
+		if (fachbelegungen == null)
+			return null;
+		for (final AbiturFachbelegung fachbelegung : fachbelegungen) {
+			// Beachte alle Fachbelegungen von Fächern des gleichen Statistik-Faches - dies kann bei bilingualen Fächern wichtig sein
+			final GostFach fach = faecherManager.get(fachbelegung.fachID);
+			if (fach == null)
+				continue;
+			final List<AbiturFachbelegung> alleBelegungen = getFachbelegungByFachkuerzel(fach.kuerzel);
+			if ((alleBelegungen == null) || (alleBelegungen.isEmpty()))
+				continue;
+			boolean hatBelegung = true;
+			for (final GostHalbjahr halbjahr : GostHalbjahr.getQualifikationsphase()) {
+				boolean hatHalbjahresBelegung = false;
+				for (final AbiturFachbelegung aktFachbelegung : alleBelegungen) {
+					final AbiturFachbelegungHalbjahr belegungHalbjahr = aktFachbelegung.belegungen[halbjahr.id];
+					if ((belegungHalbjahr != null) && (!istNullPunkteBelegungInQPhase(belegungHalbjahr))
+							&& (belegungHalbjahr.block1gewertet != null) && (belegungHalbjahr.block1gewertet)) {
+						hatHalbjahresBelegung = true;
+						break;
+					}
+				}
+				if (!hatHalbjahresBelegung) {
+					hatBelegung = false;
+					break;
+				}
+			}
+			if (hatBelegung)
+				return fachbelegung;
+		}
+		return null;
+	}
+
+
+	/**
+	 * Zählt die Anzahl der Markierungen bei der Fachbelegung in allen Halbjahren der Qualifikationsphase.
+	 * Ist belegung null, so wird 0 zurückgegeben.
+	 *
+	 * @param belegung   die Fachbelegung
+	 *
+	 * @return die Anzahl der Markierungen bei der Fachbelegung
+	 */
+	public int zaehleMarkierungenQualifikationsphase(final AbiturFachbelegung belegung) {
+		if (belegung == null)
+			return 0;
+		int count = 0;
+		for (final @NotNull GostHalbjahr halbjahr : GostHalbjahr.getQualifikationsphase()) {
+			final AbiturFachbelegungHalbjahr belegungHalbjahr = belegung.belegungen[halbjahr.id];
+			if ((belegungHalbjahr == null) || (belegungHalbjahr.block1gewertet == null) || (!belegungHalbjahr.block1gewertet))
+				continue;
+			count++;
+		}
+		return count;
+	}
+
+
+	/**
+	 * Zähle die Anzahl der Markierungen bei den Fachbelegungen in allen Halbjahren der Qualifikationsphase.
+	 *
+	 * @param belegungen   die Fachbelegungen
+	 *
+	 * @return die Anzahl der Markierungen bei den Fachbelegungen
+	 */
+	public int zaehleAlleMarkierungenQualifikationsphase(final @NotNull List<AbiturFachbelegung> belegungen) {
+		if (belegungen.isEmpty())
+			return 0;
+		int count = 0;
+		for (final @NotNull AbiturFachbelegung belegung : belegungen) {
+			for (final @NotNull GostHalbjahr halbjahr : GostHalbjahr.getQualifikationsphase()) {
+				final AbiturFachbelegungHalbjahr belegungHalbjahr = belegung.belegungen[halbjahr.id];
+				if ((belegungHalbjahr == null) || (belegungHalbjahr.block1gewertet == null) || (!belegungHalbjahr.block1gewertet))
+					continue;
+				count++;
+			}
+		}
+		return count;
+	}
+
+
+	/**
+	 * Zähle die Anzahl der markierten Fachbelegungen ohne Wertung oder mit 0 Punkten in allen Halbjahren der Qualifikationsphase.
+	 *
+	 * @param belegungen   die Fachbelegungen
+	 *
+	 * @return die Anzahl der markierten Fachbelegungen ohne Wertung oder mit 0 Punkten bei den Fachbelegungen
+	 */
+	public int zaehleMarkierungenOhneWertungOderMitNullPunkten(final @NotNull List<AbiturFachbelegung> belegungen) {
+		if (belegungen.isEmpty())
+			return 0;
+		int count = 0;
+		for (final @NotNull AbiturFachbelegung belegung : belegungen) {
+			for (final @NotNull GostHalbjahr halbjahr : GostHalbjahr.getQualifikationsphase()) {
+				final AbiturFachbelegungHalbjahr belegungHalbjahr = belegung.belegungen[halbjahr.id];
+				if ((belegungHalbjahr == null) || (belegungHalbjahr.block1gewertet == null) || (!belegungHalbjahr.block1gewertet))
+					continue;
+				final Integer np = getNotenpunkteOfFachbelegungHalbjahr(belegungHalbjahr);
+				if ((np == null) || (np == 0))
+					count++;
+			}
+		}
+		return count;
+	}
+
+
+	/**
+	 * Zähle die Anzahl der markierten Defizite bei den Fachbelegungen in allen Halbjahren der Qualifikationsphase.
+	 *
+	 * @param belegungen   die Fachbelegungen
+	 *
+	 * @return die Anzahl der Markierungen mit Defiziten bei den Fachbelegungen
+	 */
+	public int zaehleMarkierungenMitDefiziten(final @NotNull List<AbiturFachbelegung> belegungen) {
+		if (belegungen.isEmpty())
+			return 0;
+		int count = 0;
+		for (final @NotNull AbiturFachbelegung belegung : belegungen) {
+			for (final @NotNull GostHalbjahr halbjahr : GostHalbjahr.getQualifikationsphase()) {
+				final AbiturFachbelegungHalbjahr belegungHalbjahr = belegung.belegungen[halbjahr.id];
+				if ((belegungHalbjahr == null) || (belegungHalbjahr.block1gewertet == null) || (!belegungHalbjahr.block1gewertet))
+					continue;
+				final Integer np = getNotenpunkteOfFachbelegungHalbjahr(belegungHalbjahr);
+				if ((np != null) && (np < 5))
+					count++;
+			}
+		}
+		return count;
+	}
+
+
+	/**
+	 * Zähle die Anzahl der nicht markierten Kurse ohne Defizite bei den Fachbelegungen in allen Halbjahren der Qualifikationsphase.
+	 *
+	 * @param belegungen   die Fachbelegungen
+	 *
+	 * @return die Anzahl der nicht markierten Kurse ohne Defiziten bei den Fachbelegungen
+	 */
+	public int zaehleOhneMarkierungenUndOhneDefizite(final @NotNull List<AbiturFachbelegung> belegungen) {
+		if (belegungen.isEmpty())
+			return 0;
+		int count = 0;
+		for (final @NotNull AbiturFachbelegung belegung : belegungen) {
+			for (final @NotNull GostHalbjahr halbjahr : GostHalbjahr.getQualifikationsphase()) {
+				final AbiturFachbelegungHalbjahr belegungHalbjahr = belegung.belegungen[halbjahr.id];
+				if ((belegungHalbjahr == null) || (belegungHalbjahr.block1gewertet == null) || (!belegungHalbjahr.block1gewertet))
+					continue;
+				final Integer np = getNotenpunkteOfFachbelegungHalbjahr(belegungHalbjahr);
+				if ((np != null) && (np >= 5))
+					count++;
+			}
+		}
+		return count;
+	}
+
+
+	/**
+	 * Berechnet den Durchschnitte der Notenpunkte aller markierten Kurse.
+	 * Dabei fließen die Notenpunkte der Leistungskurse doppelt ein.
+	 *
+	 * @return der Durchschnitte der Notenpunkte aller markierten Kurse
+	 */
+	public double berechneMarkierungenDurchschnittspunkte() {
+		double summe = 0.0;
+		int count = 0;
+		for (final @NotNull AbiturFachbelegung belegung : this.abidaten.fachbelegungen) {
+			final GostKursart kursart = GostKursart.fromKuerzel(belegung.letzteKursart);
+			if (kursart == null)
+				continue;
+			for (final @NotNull GostHalbjahr halbjahr : GostHalbjahr.getQualifikationsphase()) {
+				final AbiturFachbelegungHalbjahr belegungHalbjahr = belegung.belegungen[halbjahr.id];
+				if ((belegungHalbjahr == null) || (belegungHalbjahr.block1gewertet == null) || (!belegungHalbjahr.block1gewertet))
+					continue;
+				final Integer np = getNotenpunkteOfFachbelegungHalbjahr(belegungHalbjahr);
+				if ((np == null) || (np == 0))
+					continue;
+				if (kursart == GostKursart.LK) {
+					summe += 2.0 * np;
+					count += 2;
+				} else {
+					summe += np;
+					count++;
+				}
+			}
+		}
+		return summe / count;
+	}
+
+
+	/**
+	 * Prüft, ob bei der Fachbelegung in dem angegebenen Halbjahr der Qualifikationsphase eine Belegung vorliegt und
+	 * der Kurs jeweils als angerechnet markiert ist.
+	 *
+	 * @param belegung   die Fachbelegung
+	 * @param halbjahr   das Halbjahr
+	 *
+	 * @return true, falls alle Kurse der Fachbelegung in der Qualifikationsphase als angerechnet markiert sind, und ansonsten false
+	 */
+	public boolean hatMarkierungHalbjahr(final AbiturFachbelegung belegung, final @NotNull GostHalbjahr halbjahr) {
+		if (belegung == null)
+			return false;
+		final AbiturFachbelegungHalbjahr belegungHalbjahr = belegung.belegungen[halbjahr.id];
+		if ((belegungHalbjahr == null) || (belegungHalbjahr.block1gewertet == null) || (!belegungHalbjahr.block1gewertet))
+			return false;
+		return true;
 	}
 
 
@@ -2474,10 +2815,40 @@ public class AbiturdatenManager {
 
 
 	/**
+	 * Gibt das Ergebnis des Markierprüfungsalgorithmus zurück. Dieses enthält, ob der Algorithmus erfolgreich gewesen ist
+	 * und im Fehlerfall den Log des Prüfungsergebnisses.
+	 *
+	 * @return das Ergebnis der Markierprüfungsalgorithmus
+	 */
+	public @NotNull GostAbiturMarkierungspruefungErgebnis getErgebnisMarkierpruefung() {
+		return this.markierpruefungsergebnis;
+	}
+
+
+	/**
+	 * Führt eine Prüfung der aktuellen Markierungen der Kurse durch.
+	 */
+	public void pruefeMarkierungen() {
+		if (!istBewertetQualifikationsPhase()) {
+			markierpruefungsergebnis.erfolgreich = false;
+			markierpruefungsergebnis.log.clear();
+			markierpruefungsergebnis.log.add("Es liegen noch nicht Bewertungen für alle Halbjahre des Qualifikationsphase vor.");
+			return;
+		}
+		if (nutzeExperimentellenCode(this.servermode, abidaten.abiturjahr)) {
+			// Führe ggf. den experimentellen Code aus
+			markierpruefungsergebnis = Abi30GostAbiturMarkierungspruefung.pruefe(this, belegpruefungen);
+		} else {
+			markierpruefungsergebnis = GostAbiturMarkierungspruefung.pruefe(this, belegpruefungen);
+		}
+	}
+
+
+	/**
 	 * Gibt das Ergebnis des Markierungsalgorithmus zurück. Dieses enthält, ob der Algorithmus erfolgreich gewesen ist
 	 * und im Erfolgsfall ein Liste für die einzelnen Belegungen der Qualifikationsphase, ob diese markiert wurden.
 	 *
-	 * @return das Ergebnis der Belegprüfung
+	 * @return das Ergebnis des Markierungsalgorithmus
 	 */
 	public @NotNull GostAbiturMarkierungsalgorithmusErgebnis getErgebnisMarkierungsalgorithmus() {
 		return this.markierungsErgebnis;
@@ -2485,29 +2856,9 @@ public class AbiturdatenManager {
 
 
 	/**
-	 * Wendet das Ergebnis des Markierungsergebnis auf diese Belegung an.
-	 *
-	 * @return true, wenn es erfolgreich angewendet wurde, und ansonsten false
+	 * Führt die Berechnung der Zulassung und Nutzung der zuvor markierten Kurse durch.
 	 */
-	public boolean applyErgebnisMarkierungsalgorithmus() {
-		// Wenn der Algorithmus nicht erfolgreich gelaufen ist, dann sollte er auch nicht angewendet werden...
-		if (!this.markierungsErgebnis.erfolgreich) {
-			abidaten.block1Zulassung = false;
-			return false;
-		}
-		// Gehe die einzelnen Markierungs-Einträge durch und wende diese die Abiturdaten an
-		for (final @NotNull GostAbiturMarkierungsalgorithmusMarkierung markierung : this.markierungsErgebnis.markierungen) {
-			final AbiturFachbelegung belegung = getFachbelegungByID(markierung.idFach);
-			if (belegung == null)
-				return false;
-			final GostHalbjahr halbjahr = GostHalbjahr.fromID(markierung.idHalbjahr);
-			if (halbjahr == null)
-				return false;
-			final AbiturFachbelegungHalbjahr belegungHalbjahr = belegung.belegungen[markierung.idHalbjahr];
-			if (belegungHalbjahr == null)
-				return false;
-			belegungHalbjahr.block1gewertet = markierung.markiert;
-		}
+	public void pruefeZulassung() {
 		// Gehe die einzelnen Fachbelegungen durch und aktualisiere die Ergebnisse für Block I
 		abidaten.block1AnzahlKurse = 0;
 		abidaten.block1DefiziteGesamt = 0;
@@ -2551,6 +2902,37 @@ public class AbiturdatenManager {
 		abidaten.block1Zulassung = (abidaten.block1PunktSummeNormiert >= 200)
 				&& (((abidaten.block1AnzahlKurse >= 35) && (abidaten.block1AnzahlKurse <= 37) && (abidaten.block1DefiziteGesamt <= 7))
 						|| ((abidaten.block1AnzahlKurse >= 38) && (abidaten.block1DefiziteGesamt <= 8)));
+		pruefeMarkierungen();
+		if (!markierpruefungsergebnis.erfolgreich)
+			abidaten.block1Zulassung = false;
+	}
+
+
+	/**
+	 * Wendet das Ergebnis des Markierungsergebnis auf diese Belegung an.
+	 *
+	 * @return true, wenn es erfolgreich angewendet wurde, und ansonsten false
+	 */
+	public boolean applyErgebnisMarkierungsalgorithmus() {
+		// Wenn der Algorithmus nicht erfolgreich gelaufen ist, dann sollte er auch nicht angewendet werden...
+		if (!this.markierungsErgebnis.erfolgreich) {
+			abidaten.block1Zulassung = null;
+			return false;
+		}
+		// Gehe die einzelnen Markierungs-Einträge durch und wende diese die Abiturdaten an
+		for (final @NotNull GostAbiturMarkierungsalgorithmusMarkierung markierung : this.markierungsErgebnis.markierungen) {
+			final AbiturFachbelegung belegung = getFachbelegungByID(markierung.idFach);
+			if (belegung == null)
+				return false;
+			final GostHalbjahr halbjahr = GostHalbjahr.fromID(markierung.idHalbjahr);
+			if (halbjahr == null)
+				return false;
+			final AbiturFachbelegungHalbjahr belegungHalbjahr = belegung.belegungen[markierung.idHalbjahr];
+			if (belegungHalbjahr == null)
+				return false;
+			belegungHalbjahr.block1gewertet = markierung.markiert;
+		}
+		pruefeZulassung();
 		return true;
 	}
 
@@ -2615,11 +2997,211 @@ public class AbiturdatenManager {
 	 * @return die Notenpunkte oder null
 	 */
 	public Integer getNotenpunkteFromKuerzel(final String kuerzel) {
+		return getNotenpunkteFromKuerzelInternal(kuerzel, getSchuljahr());
+	}
+
+
+	/**
+	 * Wandelt das übergebene Noten-Kürzel in die zugehörigen Notepunkte um.
+	 *
+	 * @param kuerzel     das Notenkürzel
+	 * @param schuljahr   das Schuljahr, in welchem die Abiturprüfung stattfindet
+	 *
+	 * @return die Notenpunkte oder null
+	 */
+	private static Integer getNotenpunkteFromKuerzelInternal(final String kuerzel, final int schuljahr) {
 		final Note tmpNote = Note.fromKuerzel(kuerzel);
-		if (!tmpNote.istNote(getSchuljahr()))
+		if (!tmpNote.istNote(schuljahr))
 			return null;
-		final NoteKatalogEintrag nke = tmpNote.daten(getSchuljahr());
+		final NoteKatalogEintrag nke = tmpNote.daten(schuljahr);
 		return (nke == null) ? null : nke.notenpunkte;
+	}
+
+
+	/**
+	 * Diese Methode berechnet das Prüfungsergebnis für Block II und das Gesamtergebnis,
+	 * sofern die Daten vollständig vorliegen. Ist dies nicht der Fall, so wird das Ergebnis soweit
+	 * wie möglich berechnet. Diese Methode setzt die vorherige Berechnung der Zulassung voraus.
+	 *
+	 * @param abidaten                       die Abiturdaten, welche zur Berechnung verwendet werden
+	 * @param berechnePflichtpruefungenNeu   gibt an, ob die Pflichtprüfungen neu berechnet/gesetzt werden sollen oder nicht
+	 *
+	 * @return true, wenn die Berechnung vollständig durchgeführt werden konnte
+	 */
+	public static boolean berechnePruefungsergebnis(final @NotNull Abiturdaten abidaten, final boolean berechnePflichtpruefungenNeu) {
+		// Bestimme die Fachbelegungen der Abiturfächer und sortiere diese
+		final @NotNull List<AbiturFachbelegung> abiBelegungen = new ArrayList<>();
+		for (final @NotNull AbiturFachbelegung fachbelegung : abidaten.fachbelegungen)
+			if (fachbelegung.abiturFach != null)
+				abiBelegungen.add(fachbelegung);
+
+		// Bestimme die Anzahl der Abiturfächer (BLL zählt ggf. als 5. Abiturfach), um die Punkte pro Notenpunkt festzulegen
+		final boolean hatBLL = !"K".equals(abidaten.besondereLernleistung);
+		final int faktor = hatBLL ? 4 : 5;
+
+		// Bestimme die Prüfungsergebnisse in den Abiturfächern (erster Durchgang ohne mdl. Prüfungen im 1.-3. Fach)
+		int summe = 0;
+		int defizite = 0;
+		int defiziteLK = 0;
+		int fehlendeNoten = 0;
+		for (final @NotNull AbiturFachbelegung abibelegung : abiBelegungen) {
+			final Integer npPruefung = getNotenpunkteFromKuerzelInternal(abibelegung.block2NotenKuerzelPruefung, abidaten.schuljahrAbitur);
+			if (npPruefung == null) {
+				abibelegung.block2PunkteZwischenstand = null;
+				abibelegung.block2Punkte = null;
+				if (berechnePflichtpruefungenNeu)
+					abibelegung.block2MuendlichePruefungAbweichung = null;
+				fehlendeNoten++;
+			} else {
+				abibelegung.block2PunkteZwischenstand = faktor * npPruefung;
+				abibelegung.block2Punkte = abibelegung.block2PunkteZwischenstand;
+				// nur bis Abiturjahrgang 2019, ab 2020 gibt es keine Abweichungsprüfungen mehr
+				if (berechnePflichtpruefungenNeu)
+					abibelegung.block2MuendlichePruefungAbweichung = (abidaten.abiturjahr <= 2019)
+							&& (abibelegung.block1NotenpunkteDurchschnitt != null)
+							&& (Math.abs(abibelegung.block1NotenpunkteDurchschnitt - npPruefung) >= 4.0);
+				summe += abibelegung.block2PunkteZwischenstand;
+				if (npPruefung < 5) {
+					defizite++;
+					if ((abibelegung.abiturFach == 1) || (abibelegung.abiturFach == 2))
+						defiziteLK++;
+				}
+			}
+		}
+
+		// Füge ggf. das Ergebnis der BLL noch hinzu
+		if (hatBLL) {
+			final Integer npPruefung = getNotenpunkteFromKuerzelInternal(abidaten.besondereLernleistungNotenKuerzel, abidaten.schuljahrAbitur);
+			if (npPruefung == null) {
+				fehlendeNoten++;
+			} else {
+				if (npPruefung < 5)
+					defizite++;
+				summe += faktor * npPruefung;
+			}
+		}
+
+		// Prüfe, ob Bestehensprüfungen im 1. - 3. Fach nötig sind.
+		final boolean hatPflichtPruefungen = (fehlendeNoten == 0)
+				&& ((defizite > (2 + (hatBLL ? 1 : 0))) || (defiziteLK > 1) || (summe < 100));
+		final boolean hatNotenPruefung = (fehlendeNoten == 0);
+
+		// Bestimme die Prüfungsergebnisse in den Abiturfächern (zweiter Durchgang ggf. mit mdl. Prüfungen im 1.-3. Fach)
+		int fehlendeNotenMdlPflicht = 0;
+		int fehlendeNotenMdlPflichtLK = 0;
+		int fehlendeNotenMdlFreiwillig = 0;
+		for (final @NotNull AbiturFachbelegung abibelegung : abiBelegungen) {
+			final Integer npPruefung = getNotenpunkteFromKuerzelInternal(abibelegung.block2NotenKuerzelPruefung, abidaten.schuljahrAbitur);
+			// Wenn noch keine Note gesetzt ist, dann kann auch noch keine weitere Information gesetzt sein...
+			if (npPruefung == null) {
+				if (berechnePflichtpruefungenNeu) {
+					abibelegung.block2MuendlichePruefungBestehen = null;
+					abibelegung.block2MuendlichePruefungFreiwillig = null;
+					abibelegung.block2MuendlichePruefungNotenKuerzel = null;
+				}
+				abibelegung.block2Punkte = null;
+				continue;
+			}
+			if (berechnePflichtpruefungenNeu)
+				abibelegung.block2MuendlichePruefungBestehen = (hatPflichtPruefungen && (abibelegung.abiturFach != null) && (abibelegung.abiturFach <= 3));
+			final boolean hatMdlAbweichung = (abibelegung.block2MuendlichePruefungAbweichung != null) && abibelegung.block2MuendlichePruefungAbweichung;
+			final boolean hatMdlBestehen = (abibelegung.block2MuendlichePruefungBestehen != null) && abibelegung.block2MuendlichePruefungBestehen;
+			final boolean hatMdlFreiwillig = (abibelegung.block2MuendlichePruefungFreiwillig != null) && abibelegung.block2MuendlichePruefungFreiwillig;
+			final Integer npPruefungMdl = getNotenpunkteFromKuerzelInternal(abibelegung.block2MuendlichePruefungNotenKuerzel, abidaten.schuljahrAbitur);
+			if (npPruefungMdl == null) {
+				if (hatMdlBestehen || hatMdlAbweichung || hatMdlFreiwillig) {
+					fehlendeNoten++;
+					if (hatMdlBestehen || hatMdlAbweichung) {
+						fehlendeNotenMdlPflicht++;
+						if ((abibelegung.abiturFach == 1) || (abibelegung.abiturFach == 2))
+							fehlendeNotenMdlPflichtLK++;
+					}
+					if (hatMdlFreiwillig)
+						fehlendeNotenMdlFreiwillig++;
+				} else {
+					if (berechnePflichtpruefungenNeu) {
+						abibelegung.block2MuendlichePruefungNotenKuerzel = null;
+						abibelegung.block2MuendlichePruefungReihenfolge = null;
+					}
+					abibelegung.block2Punkte = abibelegung.block2PunkteZwischenstand;
+				}
+			} else {
+				// Ist überhaupt eine Prüfung angesetzt?
+				if ((!hatMdlAbweichung) && (!hatMdlBestehen) && (!hatMdlFreiwillig)) {
+					if (berechnePflichtpruefungenNeu) {
+						abibelegung.block2MuendlichePruefungNotenKuerzel = null;
+						abibelegung.block2MuendlichePruefungReihenfolge = null;
+					}
+					abibelegung.block2Punkte = abibelegung.block2PunkteZwischenstand;
+				} else {
+					final int punkte = (int) Math.round((npPruefung * 2 + npPruefungMdl) * faktor / 3.0);
+					abibelegung.block2Punkte = punkte;
+					// ggf. ist durch die mdl. Prüfung ein Defizit verschwunden...
+					final int punkteVorher = (abibelegung.block2PunkteZwischenstand == null) ? 0 : abibelegung.block2PunkteZwischenstand;
+					final int punkteNachher = abibelegung.block2Punkte;
+					summe += (punkteNachher - punkteVorher);
+					if ((punkteVorher < 5 * faktor) && (punkteNachher >= 5 * faktor)) {
+						defizite--;
+						if ((abibelegung.abiturFach == 1) || (abibelegung.abiturFach == 2))
+							defiziteLK--;
+					}
+					if ((punkteVorher >= 5 * faktor) && (punkteNachher < 5 * faktor)) {
+						defizite++;
+						if ((abibelegung.abiturFach == 1) || (abibelegung.abiturFach == 2))
+							defiziteLK++;
+					}
+				}
+			}
+		}
+
+		// Berechne die Gesamtqualifikation
+		abidaten.block2DefiziteGesamt = defizite;
+		abidaten.block2DefiziteLK = defiziteLK;
+		abidaten.block2PunktSumme = summe;
+		abidaten.gesamtPunkte = ((abidaten.block1PunktSummeNormiert == null) ? null : abidaten.block1PunktSummeNormiert + summe);
+		if (abidaten.gesamtPunkte == null) {
+			abidaten.note = null;
+			abidaten.gesamtPunkteVerbesserung = null;
+			abidaten.gesamtPunkteVerschlechterung = null;
+		} else {
+			double note = Math.floor((5.0 + (2.0 / 3.0) - abidaten.gesamtPunkte / 180.0) * 10.0) / 10.0;
+			if (note < 1.0)
+				note = 1.0;
+			if (note <= 4.0) {
+				final @NotNull String strNote = "" + note;
+				abidaten.note = (strNote.length() <= 3) ? strNote : strNote.substring(0, 3);
+				if (note == 1.0) {
+					abidaten.gesamtPunkteVerbesserung = null;
+				} else {
+					final int punkteBesser = (int) (Math.round((5.0 + (2.0 / 3.0) - note) * 180.0) + 1);
+					abidaten.gesamtPunkteVerbesserung = punkteBesser;
+				}
+				if (note == 4.0) {
+					abidaten.gesamtPunkteVerschlechterung = null;
+				} else {
+					final int punkteSchlechter = (int) (Math.round((5.0 + (2.0 / 3.0) - (note - 0.1)) * 180.0) + 1);
+					abidaten.gesamtPunkteVerschlechterung = punkteSchlechter;
+				}
+			} else {
+				abidaten.note = null;
+				abidaten.gesamtPunkteVerbesserung = null;
+				abidaten.gesamtPunkteVerschlechterung = null;
+			}
+		}
+
+		// Stelle fest, ob noch Prüfungsdaten fehlen oder nicht. Wenn nicht, dann prüfe, ob das Abitur bestanden ist
+		if (hatNotenPruefung && (fehlendeNotenMdlFreiwillig == 0)) {
+			final boolean hatBestanden = (defizite <= (2 + (hatBLL ? 1 : 0))) && (defiziteLK <= 1) && (summe >= 100);
+			if (hatBestanden)
+				abidaten.pruefungBestanden = true;
+			else if ((fehlendeNotenMdlPflicht > 0) && ((fehlendeNotenMdlPflichtLK != 0) || (defiziteLK < 2)))
+				abidaten.pruefungBestanden = null;
+			else
+				abidaten.pruefungBestanden = false;
+		} else {
+			abidaten.pruefungBestanden = null;
+		}
+		return true;
 	}
 
 }

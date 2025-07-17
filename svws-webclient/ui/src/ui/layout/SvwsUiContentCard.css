@@ -47,10 +47,6 @@
 	}
 }
 
-.content-card--content--with-title {
-	@apply mt-4;
-}
-
 .content-card--content--overflow-scroll {
 	@apply h-full flex flex-col;
 }

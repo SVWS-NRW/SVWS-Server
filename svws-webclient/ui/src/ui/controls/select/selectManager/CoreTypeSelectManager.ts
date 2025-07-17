@@ -1,63 +1,101 @@
 import type { Class } from "../../../../../../core/src/java/lang/Class";
-import type { Schulform } from "../../../../../../core/src/asd/types/schule/Schulform";
-import { ArrayList } from "../../../../../../core/src/java/util/ArrayList";
-import { CoreTypeDataManager } from "../../../../../../core/src/asd/utils/CoreTypeDataManager";
-import { DeveloperNotificationException } from "../../../../../../core/src/core/exceptions/DeveloperNotificationException";
+import { Schulform } from "../../../../../../core/src/asd/types/schule/Schulform";
 import type { CoreTypeData } from "../../../../../../core/src/asd/data/CoreTypeData";
 import type { CoreType } from "../../../../../../core/src/asd/types/CoreType";
-import { BaseSelectManager } from "./BaseSelectManager";
 import { ref, toRaw } from "vue";
+import { CoreTypeDataManager } from "../../../../../../core/src/asd/utils/CoreTypeDataManager";
+import { BaseSelectManager, type BaseSelectManagerConfig } from "./BaseSelectManager";
+import { ArrayList } from "../../../../../../core/src/java/util/ArrayList";
+import type { List } from "../../../../../../core/src/java/util/List";
+
+import { DeveloperNotificationException } from "../../../../../../core/src/core/exceptions/DeveloperNotificationException";
+
+export interface CoreTypeSelectManagerConfig<U extends CoreTypeData, T extends CoreType<U, T>> extends Omit<BaseSelectManagerConfig<T>, 'options'> {
+	clazz?: Class<T>;
+	schuljahr?: number | null;
+	schulformen?: Schulform | Iterable<Schulform> | null;
+	selectionDisplayText?: "kuerzel" | "text" | "kuerzelText" | ((option: U) => string);
+	optionDisplayText?: "kuerzel" | "text" | "kuerzelText" | ((option: U) => string);
+}
 
 /**
  * Spezialisierte Manager-Klasse für die Select-Komponente (`UiSelect.vue`), die einfache CoreTypes als Optionstypen unterstützt.
  */
-export class CoreTypeSelectManager<T extends CoreTypeData, U extends CoreType<T, U>> extends BaseSelectManager<U> {
+export class CoreTypeSelectManager<U extends CoreTypeData, T extends CoreType<U, T>> extends BaseSelectManager<T> {
 
 	// Der CoreTypeDataManager für den Zugriff auf die Daten der CoreTypes
-	protected _manager: CoreTypeDataManager<CoreTypeData, U>;
+	protected _manager : CoreTypeDataManager<CoreTypeData, T> | null = null;
 
 	// Das Schuljahr, auf deren Basis der Eintrag ermittelt wird
-	protected _schuljahr = ref<number>();
+	protected _schuljahr = ref<number | null>(null);
 
 	// Die Schulform, auf dessen Basis der Eintrag ermittelt wird
-	protected _schulform = ref<Schulform>();
-
-	// Definiert, wie die aktuelle Selektion im Inputfeld dargestellt wird. Als default stehen die Werte "text" (nur Text-Attribut),
-	// "kuerzel" (nur Kürzel-Attribut) und "kuerzelText" (Kürzel-Attribut - Text-Attribut) zur Verfügung. Eigene Darstellungen können über Funktionen
-	// definiert werden.
-	protected _selectionDisplayText: "kuerzel" | "text" | "kuerzelText" | ((option: T) => string) = "kuerzelText";
-
-	// Definiert, wie die Optionen im Dropdown dargestellt werden. Als default stehen die Werte "text" (nur Text-Attribut),
-	// "kuerzel" (nur Kürzel-Attribut) und "kuerzelText" (Kürzel-Attribut - Text-Attribut) zur Verfügung. Eigene Darstellungen können über Funktionen
-	// definiert werden.
-	protected _optionDisplayText: "kuerzel" | "text" | "kuerzelText" | ((option: T) => string) = "kuerzelText";
+	protected _schulformen = ref<Schulform | Iterable<Schulform> | null>(null);
 
 	/**
 	 * Konstrutor des Managers
 	 *
-	 * @param multi                  definiert, ob Multi-Selektionen erlaubt sind.
-	 * @param clazz                  die CoreType Klasse der Optionen.
-	 * @param schuljahr 			 das Schuljahr, auf dessen Basis der Eintrag ermittelt wird
-	 * @param schulform 			 die Schulform, auf deren Basis der Eintrag ermittelt wird
-	 * @param selectionDisplayText   definiert, wie die aktuelle Selektion im Inputfeld dargestellt wird.
-	 * @param optionDisplayText      definiert, wie die Optionen im Dropdown dargestellt werden.
-	 * @param selected               optional. Die Liste der aktuell selektierten Optionen. Bei einer Singe-Select-Komponente darf maximal ein Objekt in dieser
-	 * 							     Liste sein.
+	 * @param config      die Konfiguration des Selects. Wenn nicht angegeben, dann wird das Select ohne Optionen generiert.
 	 */
-	public constructor(multi: boolean, clazz : Class<U>, schuljahr: number, schulform: Schulform,
-		selectionDisplayText: "kuerzel" | "text" | "kuerzelText" | ((option: T) => string) = "kuerzelText",
-		optionDisplayText: "kuerzel" | "text" | "kuerzelText" | ((option: T) => string) = "kuerzelText", selected?: any) {
+	public constructor(config?: CoreTypeSelectManagerConfig<U, T>) {
+		if (config === undefined)
+			return;
+		let data: List<T> = new ArrayList<T>();
+		let manager = null;
+		if (config.clazz !== undefined) {
+			manager = CoreTypeDataManager.getManager(config.clazz);
+			if ((config.schuljahr !== null) && (config.schuljahr !== undefined)) {
+				if (config.schulformen === null || config.schulformen === undefined)
+					data = manager.getWerteBySchuljahr(config.schuljahr);
+				else if (config.schulformen instanceof Schulform)
+					data = manager.getListBySchuljahrAndSchulform(config.schuljahr, config.schulformen);
+				else {
+					const result: List<T> = new ArrayList<T>();
 
-		const manager = CoreTypeDataManager.getManager(clazz);
-		const data = manager.getListBySchuljahrAndSchulform(schuljahr, schulform);
-		const list = data.isEmpty() ? new ArrayList<U>() : data;
+					for (const schulform of config.schulformen) {
+						const list = manager.getListBySchuljahrAndSchulform(config.schuljahr, schulform);
+						for (const item of list)
+							if (!result.contains(item))
+								result.add(item);
+					}
+					data = result;
+				}
+			}
+		}
 
-		super(multi, list, selected);
+		const baseConfig: BaseSelectManagerConfig<T> = {
+			options: data,
+			multi: config.multi,
+			selected: config.selected,
+			removable: config.removable,
+			sort: config.sort,
+			filters: config.filters,
+			selectionDisplayText: config.selectionDisplayText ?? "kuerzelText",
+			optionDisplayText: config.optionDisplayText ?? "kuerzelText",
+			deepSearchAttributes: config.deepSearchAttributes,
+		};
+		super(baseConfig);
 		this._manager = manager;
-		this.schuljahr = schuljahr;
-		this.schulform = schulform;
-		this.optionDisplayText = optionDisplayText;
-		this.seletcionDisplayText = selectionDisplayText;
+		if (config.schuljahr !== undefined)
+			this._schuljahr.value = config.schuljahr;
+		if (config.schulformen !== undefined)
+			this._schulformen.value = config.schulformen;
+		this.updateOptions();
+	}
+
+	/**
+		 * Setzt alle beliebigen Konfigurationsmerkmale und aktualisiert den Manager intern.
+		 *
+		 * @param config   Die Config für den SelectManager
+		 */
+	public setConfig(config: CoreTypeSelectManagerConfig<U, T>) {
+		if (config.clazz !== undefined)
+			this._manager = CoreTypeDataManager.getManager(config.clazz);
+		if (config.schuljahr !== undefined)
+			this._schuljahr.value = config.schuljahr;
+		if (config.schulformen !== undefined)
+			this._schulformen.value = config.schulformen;
+		this.updateOptions();
 	}
 
 	/**
@@ -65,7 +103,7 @@ export class CoreTypeSelectManager<T extends CoreTypeData, U extends CoreType<T,
 	 *
 	 * @return der Manager
 	 */
-	public get manager(): CoreTypeDataManager<CoreTypeData, U> {
+	private get manager(): CoreTypeDataManager<CoreTypeData, T> | null {
 		return this._manager;
 	}
 
@@ -74,43 +112,37 @@ export class CoreTypeSelectManager<T extends CoreTypeData, U extends CoreType<T,
 	 *
 	 * @param der neue Manager
 	 */
-	public set manager(value: CoreTypeDataManager<CoreTypeData, U>){
+	private set manager(value: CoreTypeDataManager<CoreTypeData, T> | null){
 		this._manager = value;
+		this.updateOptions();
 	}
 
 	/**
 	 * Getter für das Schuljahr, auf dessen Basis der Eintrag ermittelt wird
 	 *
 	 * @return das Schuljahr
-	 *
-	 * @throws DeveloperNotificationException, wenn das Schuljahr nicht definiert ist, obwohl dies im Konstruktor bereits überprüft wurde.
 	 */
-	public get schuljahr(): number {
-		if (this._schuljahr.value === undefined)
-			throw new DeveloperNotificationException("Das Schuljahr ist nicht definiert");
+	public get schuljahr(): number | null {
 		return this._schuljahr.value;
 	}
 
 	/**
-	 * Setter für das Schuljahr, auf dessen Basis der Eintrag ermittelt wird
+	 * Setter für das Schuljahr, auf dessen Basis der Eintrag ermittelt wird.
 	 *
 	 * @param value   das neue Schuljahr
 	 */
-	public set schuljahr(value: number) {
+	public set schuljahr(value: number | null) {
 		this._schuljahr.value = value;
+		this.updateOptions( );
 	}
 
 	/**
 	 * Getter für die Schulform, auf deren Basis der Eintrag ermittelt wird
 	 *
 	 * @return das Schulform
-	 *
-	 * @throws DeveloperNotificationException, wenn die Schulform nicht definiert ist, obwohl dies im Konstruktor bereits überprüft wurde.
 	 */
-	public get schulform(): Schulform {
-		if (this._schulform.value === undefined)
-			throw new DeveloperNotificationException("Die Schulform ist nicht definiert");
-		return this._schulform.value;
+	public get schulformen(): Schulform | Iterable<Schulform> | null {
+		return this._schulformen.value;
 	}
 
 	/**
@@ -118,8 +150,32 @@ export class CoreTypeSelectManager<T extends CoreTypeData, U extends CoreType<T,
 	 *
 	 * @param value   die neue Schulform
 	 */
-	public set schulform(value: Schulform) {
-		this._schulform.value = value;
+	public set schulformen(value: Schulform | Iterable<Schulform> | null) {
+		this._schulformen.value = value;
+		this.updateOptions();
+	}
+
+	/**
+	 * Aktualisiert die Optionen basierend auf dem aktuellen Schuljahr und den Schulformen.
+	 */
+	private updateOptions () {
+		if ( (this.manager === null) || (this.schuljahr === null ))
+			this.options = new ArrayList<T>();
+		else if ( this.schulformen === null )
+			this.options = this.manager.getWerteBySchuljahr( this.schuljahr );
+		else if ( this.schulformen instanceof Schulform )
+			this.options = this.manager.getListBySchuljahrAndSchulform( this.schuljahr, toRaw(this.schulformen) );
+		else {
+			const result: List<T> = new ArrayList<T>();
+
+			for ( const schulform of this.schulformen ) {
+				const list = this.manager.getListBySchuljahrAndSchulform( this.schuljahr, schulform );
+				for ( const item of list )
+					if ( !result.contains( item ) )
+						result.add( item );
+			}
+			this.options = result;
+		}
 	}
 
 	/**
@@ -129,15 +185,17 @@ export class CoreTypeSelectManager<T extends CoreTypeData, U extends CoreType<T,
 	 *
 	 * @returns den Text der Option.
 	 */
-	public getSelectionText(option: U): string {
-		const eintrag = this._manager.getEintragBySchuljahrUndWert(this.schuljahr, toRaw(option));
+	public getSelectionText ( option: T ): string {
+		if ( (this.manager === null) || (this.schuljahr === null ))
+			return ""
+		const eintrag = this.manager.getEintragBySchuljahrUndWert(this.schuljahr, toRaw(option));
 		if (eintrag === null)
 			throw new DeveloperNotificationException("Der Eintrag konnte nicht gefunden werden, obwohl die Existenz im Konstruktor bestimmt wurde.");
-		if (typeof this._selectionDisplayText === "function")
-			return this._selectionDisplayText(eintrag as T);
-		if (this._selectionDisplayText === "kuerzel")
+		if (typeof this.selectionDisplayText === "function")
+			return this.selectionDisplayText(eintrag as U);
+		if (this.selectionDisplayText === "kuerzel")
 			return eintrag.kuerzel;
-		if (this._selectionDisplayText === "text")
+		if (this.selectionDisplayText === "text")
 			return eintrag.text;
 		else
 			return `${eintrag.kuerzel} - ${eintrag.text}`;
@@ -150,15 +208,17 @@ export class CoreTypeSelectManager<T extends CoreTypeData, U extends CoreType<T,
 	 *
 	 * @returns den Text der Option.
 	 */
-	public getOptionText(option: U): string {
-		const eintrag = this._manager.getEintragBySchuljahrUndWert(this.schuljahr, option);
+	public getOptionText ( option: T ): string {
+		if ( (this.manager === null) || (this.schuljahr === null ))
+			return ""
+		const eintrag = this.manager.getEintragBySchuljahrUndWert(this.schuljahr, option);
 		if (eintrag === null)
 			throw new DeveloperNotificationException("Der Eintrag konnte nicht gefunden werden, obwohl die Existenz im Konstruktor bestimmt wurde.");
-		if (typeof this._optionDisplayText === "function")
-			return this._optionDisplayText(eintrag as T);
-		if (this._optionDisplayText === "kuerzel")
+		if (typeof this.optionDisplayText === "function")
+			return this.optionDisplayText(eintrag as U);
+		if (this.optionDisplayText === "kuerzel")
 			return eintrag.kuerzel;
-		if (this._optionDisplayText === "text")
+		if (this.optionDisplayText === "text")
 			return eintrag.text;
 		else
 			return `${eintrag.kuerzel} - ${eintrag.text}`;

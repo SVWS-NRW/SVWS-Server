@@ -43,6 +43,12 @@ export default tseslint.config(
 			"@stylistic": eslintPluginStylistic,
 		},
 		rules: {
+			//TESTING:
+			curly: ["off", "multi"], // if und for als Einzeiler ohne Klammern
+			"@stylistic/arrow-spacing": "off", // () => x
+			"@stylistic/semi": "off", // verwende Semikolon überall
+
+
 			// Standard Regeln
 			//"@stylistic/semi": "warn", => Probleme mit arrow functions
 			"@stylistic/max-len": "off",

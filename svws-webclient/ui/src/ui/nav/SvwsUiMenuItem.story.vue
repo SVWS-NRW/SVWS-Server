@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-	import { logEvent } from 'histoire/client';
+	import { logEvent } from '../../stories/helper';
 
 	const propsVariants = {
 		Default: { icon: "team", active: false, collapsed: false, subline: "" },

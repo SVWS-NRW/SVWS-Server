@@ -9,6 +9,11 @@ export class LehrerLehrbefaehigungEintrag extends JavaObject {
 	public id : number = 0;
 
 	/**
+	 * Die ID des Lehramtes.
+	 */
+	public idLehramt : number = 0;
+
+	/**
 	 * Die ID der Lehrbefähigung.
 	 */
 	public idLehrbefaehigung : number = 0;
@@ -42,6 +47,9 @@ export class LehrerLehrbefaehigungEintrag extends JavaObject {
 		if (obj.id === undefined)
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
+		if (obj.idLehramt === undefined)
+			throw new Error('invalid json format, missing attribute idLehramt');
+		result.idLehramt = obj.idLehramt;
 		if (obj.idLehrbefaehigung === undefined)
 			throw new Error('invalid json format, missing attribute idLehrbefaehigung');
 		result.idLehrbefaehigung = obj.idLehrbefaehigung;
@@ -52,6 +60,7 @@ export class LehrerLehrbefaehigungEintrag extends JavaObject {
 	public static transpilerToJSON(obj : LehrerLehrbefaehigungEintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"idLehramt" : ' + obj.idLehramt.toString() + ',';
 		result += '"idLehrbefaehigung" : ' + obj.idLehrbefaehigung.toString() + ',';
 		result += '"idAnerkennungsgrund" : ' + ((obj.idAnerkennungsgrund === null) ? 'null' : obj.idAnerkennungsgrund.toString()) + ',';
 		result = result.slice(0, -1);
@@ -63,6 +72,9 @@ export class LehrerLehrbefaehigungEintrag extends JavaObject {
 		let result = '{';
 		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id.toString() + ',';
+		}
+		if (obj.idLehramt !== undefined) {
+			result += '"idLehramt" : ' + obj.idLehramt.toString() + ',';
 		}
 		if (obj.idLehrbefaehigung !== undefined) {
 			result += '"idLehrbefaehigung" : ' + obj.idLehrbefaehigung.toString() + ',';

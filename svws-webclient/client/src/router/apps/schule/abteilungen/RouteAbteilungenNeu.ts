@@ -6,6 +6,8 @@ import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import { routeAbteilungen } from "~/router/apps/schule/abteilungen/RouteAbteilungen";
+import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
+import { api } from "~/router/Api";
 
 const SAbteilungenNeu = () => import("~/components/schule/kataloge/abteilungen/SAbteilungenNeu.vue");
 
@@ -20,14 +22,20 @@ export class RouteAbteilungenNeu extends RouteNode<any, RouteAbteilungen> {
 		super.setCheckpoint = true;
 	}
 
+	goToLehrer = async (idLehrer : number) => {
+		await RouteManager.doRoute(routeLehrer.getRoute({id : idLehrer}));
+	}
+
 	public getProps(to: RouteLocationNormalized): AbteilungenNeuProps {
 		return {
 			manager: () => routeAbteilungen.data.manager,
 			addAbteilung: routeAbteilungen.data.addAbteilung,
 			addKlassenzuordnungen: routeAbteilungen.data.addKlassenzuordnungen,
+			goToLehrer: this.goToLehrer,
 			goToDefaultView: routeAbteilungen.data.gotoDefaultView,
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
+			benutzerKompetenzen: api.benutzerKompetenzen,
 		}
 	}
 }

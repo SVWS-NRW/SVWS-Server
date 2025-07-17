@@ -30,7 +30,7 @@
 	import { computed, ref } from "vue";
 	import type { BetriebeAuswahlProps } from "./SBetriebeAuswahlProps";
 	import type { BetriebListeEintrag } from "@core";
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
+	import { useRegionSwitch } from "@ui";
 
 	const props = defineProps<BetriebeAuswahlProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();

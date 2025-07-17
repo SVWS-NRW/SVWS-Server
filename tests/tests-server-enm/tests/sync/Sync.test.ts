@@ -1,9 +1,7 @@
-import {beforeEach, describe, expect, test} from "vitest";
-import {getApiService} from "../../utils/RequestBuilder.js"
-import {parse} from "../../utils/ENMApiDataParser.js";
-import {resolve} from "node:path";
+import { beforeEach, describe, expect, test } from "vitest";
+import { getApiService } from "../../utils/RequestBuilder.js"
 
-const targetUrlENMServer: string = process.env.VITE_ENM_targetHost ?? "https://localhost";
+// const targetUrlENMServer: string = process.env.VITE_ENM_targetHost ?? "https://localhost";
 
 const targetUrlSVWSAppServer: string = process.env.VITE_APP_targetHost ?? "https://localhost:5050";
 

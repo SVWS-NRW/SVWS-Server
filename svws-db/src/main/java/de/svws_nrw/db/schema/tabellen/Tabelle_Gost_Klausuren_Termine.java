@@ -24,6 +24,12 @@ public class Tabelle_Gost_Klausuren_Termine extends SchemaTabelle {
 			.setNotNull()
 			.setJavaComment("ID des Klausurtermins (generiert)");
 
+	/** Die Definition der Tabellenspalte Schuljahresabschnitt_ID */
+	public SchemaTabelleSpalte col_Schuljahresabschnitt_ID = add("Schuljahresabschnitt_ID", SchemaDatentypen.BIGINT, false)
+			.setNotNull()
+			.setJavaComment("ID des Schuljahresabschnittes")
+			.setRevision(SchemaRevisionen.REV_40);
+
 	/** Die Definition der Tabellenspalte Abi_Jahrgang */
 	public SchemaTabelleSpalte col_Abi_Jahrgang = add("Abi_Jahrgang", SchemaDatentypen.INT, false)
 			.setNotNull()
@@ -72,6 +78,13 @@ public class Tabelle_Gost_Klausuren_Termine extends SchemaTabelle {
 			.setConverter(Boolean01Converter.class)
 			.setJavaComment("Gibt an, ob bei einem Haupttermin Nachschreibklausuren zugelassen sind (1) oder nicht (0).");
 
+	/** Die Definition des Fremdschlüssels Gost_Klausuren_Termine_Schuljahresabschnitt_ID_FK */
+	public SchemaTabelleFremdschluessel fk_Gost_Klausuren_Termine_Schuljahresabschnitt_ID_FK = addForeignKey(
+			"Gost_Klausuren_Termine_Schuljahresabschnitt_ID_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
+			new Pair<>(col_Schuljahresabschnitt_ID, Schema.tab_Schuljahresabschnitte.col_ID)
+	).setRevision(SchemaRevisionen.REV_40);
 
 	/** Die Definition des Fremdschlüssels Gost_Klausuren_Termine_Abi_Jahrgang_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Klausuren_Termine_Abi_Jahrgang_FK = addForeignKey(
@@ -80,6 +93,11 @@ public class Tabelle_Gost_Klausuren_Termine extends SchemaTabelle {
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Abi_Jahrgang, Schema.tab_Gost_Jahrgangsdaten.col_Abi_Jahrgang)
 	);
+
+	/** Die Definition des Non-Unique-Index Gost_Klausuren_Termine_IDX_Schuljahresabschnitt_ID */
+	public SchemaTabelleIndex index_Gost_Klausuren_Termine_IDX_Schuljahresabschnitt_ID = addIndex("Gost_Klausuren_Termine_IDX_Schuljahresabschnitt_ID",
+			col_Schuljahresabschnitt_ID
+	).setRevision(SchemaRevisionen.REV_40);
 
 	/** Die Definition des Non-Unique-Index Gost_Klausuren_Termine_IDX_Abi_Jahrgang */
 	public SchemaTabelleIndex index_Gost_Klausuren_Termine_IDX_Abi_Jahrgang = addIndex("Gost_Klausuren_Termine_IDX_Abi_Jahrgang",

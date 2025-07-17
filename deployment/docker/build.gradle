@@ -1,42 +1,101 @@
-def dockerfileAppDir = "$projectDir/svws/app"
-
 dependencies {
 	implementation project(':svws-server-app')
 }
 
-/*
- Task lädt die SVWS-Artefakte einer angegebenen Version
- aus dem Package-Repository von GitHub und speichert diese
- für die Integration in das Docker-Image des SVWSs.
-*/
 
-task copyArtifacts(type: Copy) {
+/* Dieser Task wird von der Pipeline aufgerufen, um alle svws-Docker-Images auf Dockerhub beim Release zu veröffentlichen. */
+task dockerPushAllDockerhub() {
+	dependsOn('dockerPushLatestDockerhub')
+	group = "Publishing"
+}
+
+
+/* Vorbereitung der Dateien im build-Ordner, um das SVWS-Docker-Image zu bauen. */
+task copyDockerClientArtifacts(type: Copy) {
 	description = 'Kopieren der aktuellen Artefakte'
+	group = "docker"
+	doFirst {
+		mkdir "$projectDir/build/svws/app/lib"
+	}
 	dependsOn (':svws-webclient:client:doZip')
 	dependsOn (':svws-webclient:admin:doZip')
 	// wenn doZip im build ausgeführt wird, muss dieser Task darauf warten
 	mustRunAfter(':svws-webclient:client:doZip')
 	mustRunAfter(':svws-webclient:admin:doZip')
 
-	into dockerfileAppDir
-	into ("lib/") {
+	into "$projectDir/build/svws"
+	into ("app/lib/") {
 		from (configurations.runtimeClasspath) {
 			exclude "svws-*.jar"
 		}
 	}
-	into ("/") {
+	into ("app/") {
 		from (configurations.runtimeClasspath) {
 			include "svws-*.jar"
 		}
 		from "../../svws-webclient/client/build/SVWS-Client.zip", "../../svws-webclient/admin/build/SVWS-Admin-Client.zip"
 	}
+	into ("/") {
+		from "$projectDir/svws/Dockerfile", "$projectDir/svws/startup.sh", "$projectDir/svws/svwsconfig-template.json", "$projectDir/svws/svwsconfig-template-nodb.json"
+	}
 }
 
 
+/* Baut das svws-Docker-Image lokal mit der entsprechenden Version als Tag. */
+task dockerBuildTag(type: Exec) {
+	group = "docker"
+	dependsOn copyDockerClientArtifacts
+	workingDir "$projectDir/build/svws"
+	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+		commandLine 'cmd', '/c', 'docker build . -t svwsnrw/svws-server:'+project.ext.svwsArtifactVersion
+	} else {
+		commandLine 'sh', '-c', 'docker build . -t svwsnrw/svws-server:'+project.ext.svwsArtifactVersion
+	}
+}
 
-/*
- Task führt ein Docker-Runner-17-Build per docker durch.
- */
+/* Baut das svws-Docker-Image lokal mit dem latest Tag. */
+task dockerBuildLatestTag(type: Exec) {
+	group = "docker"
+	dependsOn dockerBuildTag
+	workingDir "$projectDir/build/svws"
+	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+		commandLine 'cmd', '/c', 'docker build . -t svwsnrw/svws-server:latest'
+	} else {
+		commandLine 'sh', '-c', 'docker build . -t svwsnrw/svws-server:latest'
+	}
+}
+
+
+/* Führt ein Docker-Push mit dem SVWS-Server-Image mit dem versionierten Tag zu dockerhub durch. */
+task dockerPushDockerhub(type: Exec) {
+	group = "docker"
+	dependsOn dockerBuildLatestTag
+	workingDir "$projectDir/build/svws"
+	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+		commandLine 'cmd', '/c', 'docker login'
+		commandLine 'cmd', '/c', 'docker push svwsnrw/svws-server:'+project.ext.svwsArtifactVersion
+	} else {
+		commandLine 'sh', '-c', 'docker login'
+		commandLine 'sh', '-c', 'docker push svwsnrw/svws-server:'+project.ext.svwsArtifactVersion
+	}
+}
+
+/* Führt ein Docker-Push mit dem SVWS-Server-Image mit dem latest Tag zu dockerhub durch. */
+task dockerPushLatestDockerhub(type: Exec) {
+	group = "docker"
+	dependsOn dockerPushDockerhub
+	workingDir "$projectDir/build/svws"
+	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+		commandLine 'cmd', '/c', 'docker login'
+		commandLine 'cmd', '/c', 'docker push svwsnrw/svws-server:latest'
+	} else {
+		commandLine 'sh', '-c', 'docker login'
+		commandLine 'sh', '-c', 'docker push svwsnrw/svws-server:latest'
+	}
+}
+
+
+/* Task führt ein Docker-Runner-17-Build per docker durch. */
 task dockerRunner17BuildTag(type: Exec) {
 	group = "docker"
 	workingDir "$projectDir/dockerrunner/17"
@@ -46,9 +105,8 @@ task dockerRunner17BuildTag(type: Exec) {
 		commandLine 'sh', '-c', 'docker build . -t svwsnrw/dockerrunner:17'
 	}
 }
-/*
- Task führt ein Docker-Runner-17 push auf dockerhub durch
- */
+
+/* Task führt ein Docker-Runner-17 push auf dockerhub durch */
 task dockerRunner17Push(type: Exec) {
 	group = "docker"
 	dependsOn dockerRunner17BuildTag
@@ -62,9 +120,8 @@ task dockerRunner17Push(type: Exec) {
 	}
 }
 
-/*
- Task führt ein Docker-Runner-21-Build per docker durch.
- */
+
+/* Task führt ein Docker-Runner-21-Build per docker durch. */
 task dockerRunner21BuildTag(type: Exec) {
 	group = "docker"
 	workingDir "$projectDir/dockerrunner/21"
@@ -74,9 +131,8 @@ task dockerRunner21BuildTag(type: Exec) {
 		commandLine 'sh', '-c', 'docker build . -t svwsnrw/dockerrunner:21'
 	}
 }
-/*
- Task führt ein Docker-Runner-21 push auf dockerhub durch
- */
+
+/* Task führt ein Docker-Runner-21 push auf dockerhub durch */
 task dockerRunner21Push(type: Exec) {
 	group = "docker"
 	dependsOn dockerRunner21BuildTag
@@ -91,136 +147,9 @@ task dockerRunner21Push(type: Exec) {
 }
 
 
-
-/*
- Task führt ein Docker-Build per docker durch.
- */
-task dockerBuildTag(type: Exec) {
-	group = "docker"
-	dependsOn copyArtifacts
-	workingDir "$projectDir/svws"
-	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
-		commandLine 'cmd', '/c', 'docker build . -t svwsnrw/svws-server:'+project.ext.svwsArtifactVersion
-	} else {
-		commandLine 'sh', '-c', 'docker build . -t svwsnrw/svws-server:'+project.ext.svwsArtifactVersion
-	}
-}
-
-/*
- Task führt ein Docker-Build per docker durch.
- */
-task dockerBuildLatestTag(type: Exec) {
-	group = "docker"
-	dependsOn dockerBuildTag
-	workingDir "$projectDir/svws"
-	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
-		commandLine 'cmd', '/c', 'docker build . -t svwsnrw/svws-server:latest'
-	} else {
-		commandLine 'sh', '-c', 'docker build . -t svwsnrw/svws-server:latest'
-	}
-}
-
-/*
- Task führt ein Docker-Push zu dockerhub durch.
- */
-task dockerPushDockerhub(type: Exec) {
-	group = "docker"
-	dependsOn dockerBuildLatestTag
-	workingDir "$projectDir/svws"
-	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
-		commandLine 'cmd', '/c', 'docker login'
-		commandLine 'cmd', '/c', 'docker push svwsnrw/svws-server:'+project.ext.svwsArtifactVersion
-	} else {
-		commandLine 'sh', '-c', 'docker login'
-		commandLine 'sh', '-c', 'docker push svwsnrw/svws-server:'+project.ext.svwsArtifactVersion
-	}
-}
-
-/*
- Task führt ein Docker-Push zu dockerhub durch.
- */
-task dockerPushLatestDockerhub(type: Exec) {
-	group = "docker"
-	dependsOn dockerPushDockerhub
-	workingDir "$projectDir/svws"
-	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
-		commandLine 'cmd', '/c', 'docker login'
-		commandLine 'cmd', '/c', 'docker push svwsnrw/svws-server:latest'
-	} else {
-		commandLine 'sh', '-c', 'docker login'
-		commandLine 'sh', '-c', 'docker push svwsnrw/svws-server:latest'
-	}
-}
-
-/*
- Task führt ein Docker-Push zu dockerhub durch.
- */
-task dockerRunnerPushLatestDockerhub(type: Exec) {
-	group = "docker"
-	workingDir "$projectDir/dockerrunner"
-	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
-		commandLine 'cmd', '/c', 'docker login'
-		commandLine 'cmd', '/c', 'docker builder prune -a'
-		commandLine 'cmd', '/c', 'docker build . -t svwsnrw/dockerrunner:latest'
-		commandLine 'cmd', '/c', 'docker push svwsnrw/dockerrunner:latest'
-	} else {
-		commandLine 'sh', '-c', 'docker login'
-		commandLine 'sh', '-c', 'docker builder prune -a'
-		commandLine 'sh', '-c', 'docker build . -t svwsnrw/dockerrunner:latest'
-		commandLine 'sh', '-c', 'docker push svwsnrw/dockerrunner:latest'
-	}
-}
-
-
-
-task dockerPushAllDockerhub() {
-	dependsOn('dockerPushLatestDockerhub')
-	group = "Publishing"
-}
-
-
-
-/*
- Task führt ein Docker-Build per docker compose durch.
-
-task dockerComposeBuild(type: Exec) {
-	dependsOn copyArtifacts
-	workingDir "$projectDir"
-	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
-		commandLine 'cmd', '/c', 'docker compose build'
-	} else {
-		commandLine 'sh', '-c', 'docker compose build'
-	}
-}
-
-/*
- Task startet eine lokale SVWS-Umgebung per docker compose.
-
-task dockerComposeUp(type: Exec) {
-	workingDir "$projectDir"
-	def cmd = 'docker compose up'
-	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
-		commandLine 'cmd', '/c', cmd
-	} else {
-		commandLine 'sh', '-c', 'docker compose up'
-	}
-}
-
-/*
- Task führt einen Image-Build des SVWS durch.
-
-task dockerBuildSvws(type: Exec) {
-	dependsOn copyArtifacts
-	workingDir "$projectDir"
-	def cmd = "docker build svws/. -t svws:${svwsArtifactVersion}"
-	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
-		commandLine 'cmd', '/c', cmd
-	} else {
-		commandLine 'sh', '-c', cmd
-	}
-}
-
-/*
+/* Deprecated: Ein publish auf dem Nexus wurde durch den auf Harbor ersetzt.
+ Diese Task muss noch angepasst werden.
+ 
  Task führt einen Image-Build des SVWS durch, setzt ein Tag
  und veröffentlicht das Image im Image-Repository (Nexus)
 
@@ -246,7 +175,3 @@ task dockerBuildTagAndPublish(type: Exec) {
 }
 
 */
-
-clean.doLast {
-	file("${dockerfileAppDir}").deleteDir()
-}

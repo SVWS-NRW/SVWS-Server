@@ -339,6 +339,16 @@ public class Tabelle_K_Lehrer extends SchemaTabelle {
 	public SchemaTabelleSpalte col_CredentialID = add("CredentialID", SchemaDatentypen.BIGINT, false)
 			.setJavaComment("Die ID des Credential-Eintrags");
 
+	/** Die Definition der Tabellenspalte Geburtsort */
+	public SchemaTabelleSpalte col_Geburtsort = add("Geburtsort", SchemaDatentypen.VARCHAR, false).setDatenlaenge(100)
+			.setRevision(SchemaRevisionen.REV_44)
+			.setJavaComment("Geburtsort der Lehrkraft");
+
+	/** Die Definition der Tabellenspalte Geburtsname */
+	public SchemaTabelleSpalte col_Geburtsname = add("Geburtsname", SchemaDatentypen.VARCHAR, false).setDatenlaenge(120)
+			.setRevision(SchemaRevisionen.REV_44)
+			.setJavaComment("Geburtsname der Lehrkraft");
+
 
 	/** Die Definition des Fremdschlüssels K_Lehrer_Credentials_FK */
 	public SchemaTabelleFremdschluessel fk_K_Lehrer_Credentials_FK = addForeignKey(

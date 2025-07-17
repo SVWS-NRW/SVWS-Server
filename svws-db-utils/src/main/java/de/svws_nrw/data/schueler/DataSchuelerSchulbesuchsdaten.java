@@ -1,18 +1,26 @@
 package de.svws_nrw.data.schueler;
 
+import de.svws_nrw.asd.data.CoreTypeException;
+import de.svws_nrw.asd.data.jahrgang.PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag;
+import de.svws_nrw.asd.data.schule.KindergartenbesuchKatalogEintrag;
 import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.asd.types.jahrgang.PrimarstufeSchuleingangsphaseBesuchsjahre;
+import de.svws_nrw.asd.types.schueler.Einschulungsart;
 import de.svws_nrw.asd.types.schueler.Uebergangsempfehlung;
+import de.svws_nrw.asd.types.schule.Kindergartenbesuch;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.core.types.schueler.Herkunftsarten;
+import de.svws_nrw.db.dto.current.schild.grundschule.DTOKindergarten;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOSchuleNRW;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.asd.data.schueler.EinschulungsartKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchsdaten;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
@@ -50,6 +58,7 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 	 */
 	public DataSchuelerSchulbesuchsdaten(final DBEntityManager conn) {
 		super(conn);
+		setAttributesNotPatchable("id");
 		this.entlassartenByBezeichnung = conn.queryAll(DTOEntlassarten.class).stream().collect(Collectors.toMap(e -> e.Bezeichnung, e -> e));
 		this.merkmaleByKurztext = conn.queryAll(DTOMerkmale.class).stream().collect(Collectors.toMap(m -> m.Kurztext, m -> m));
 		this.schulenBySchulnummer = conn.queryAll(DTOSchuleNRW.class).stream().collect(Collectors.toMap(s -> s.SchulNr, s -> s));
@@ -79,7 +88,7 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 	}
 
 	private SchuelerSchulbesuchsdaten mapInternal(final DTOSchueler dtoSchueler, final @NotNull List<DTOSchuelerMerkmale> schuelerMerkmale,
-			final @NotNull List<DTOSchuelerAbgaenge> schuelerAbgaenge) {
+			final @NotNull List<DTOSchuelerAbgaenge> schuelerAbgaenge) throws ApiOperationException {
 
 		final SchuelerSchulbesuchsdaten daten = new SchuelerSchulbesuchsdaten();
 		// Basisdaten
@@ -108,13 +117,18 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 		daten.aufnehmendBestaetigt = dtoSchueler.WechselBestaetigt;
 		// Informationen zu der besuchten Grundschule
 		daten.grundschuleEinschulungsjahr = dtoSchueler.Einschulungsjahr;
-		daten.grundschuleEinschulungsartID = dtoSchueler.Einschulungsart_ID;
-		daten.grundschuleJahreEingangsphase = dtoSchueler.EPJahre;
+		final Einschulungsart einschulungsart = Einschulungsart.data().getWertBySchluessel(dtoSchueler.EinschulungsartASD);
+		daten.grundschuleEinschulungsartID = (einschulungsart == null) ? null : einschulungsart.getLetzterEintrag().id;
+		daten.idGrundschuleJahreEingangsphase = mapGrundschuleJahreEingangsphase(dtoSchueler);
 		daten.kuerzelGrundschuleUebergangsempfehlung = dtoSchueler.Uebergangsempfehlung_JG5;
 		// Informationen zu dem Besuch der Sekundarstufe I
 		daten.sekIWechsel = dtoSchueler.JahrWechsel_SI;
 		daten.sekIErsteSchulform = dtoSchueler.ErsteSchulform_SI;
 		daten.sekIIWechsel = dtoSchueler.JahrWechsel_SII;
+		daten.idDauerKindergartenbesuch = mapSchluesselDauerKindergartenbesuch(dtoSchueler);
+		daten.idKindergarten = dtoSchueler.Kindergarten_ID;
+		daten.verpflichtungSprachfoerderkurs = (dtoSchueler.VerpflichtungSprachfoerderkurs != null) && dtoSchueler.VerpflichtungSprachfoerderkurs;
+		daten.teilnahmeSprachfoerderkurs = (dtoSchueler.TeilnahmeSprachfoerderkurs != null) && dtoSchueler.TeilnahmeSprachfoerderkurs;
 
 		// Informationen zu besonderen Merkmalen für die Statistik
 		daten.merkmale = DataSchuelerMerkmale.mapMultiple(schuelerMerkmale, merkmaleByKurztext);
@@ -125,6 +139,31 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 		return daten;
 	}
 
+	private static Long mapSchluesselDauerKindergartenbesuch(final DTOSchueler dtoSchueler) throws ApiOperationException {
+		if (dtoSchueler.DauerKindergartenbesuch == null)
+			return null;
+
+		final Kindergartenbesuch kindergartenbesuch = Kindergartenbesuch.data().getWertBySchluessel(dtoSchueler.DauerKindergartenbesuch);
+		if (kindergartenbesuch == null)
+			throw new ApiOperationException(
+					Status.NOT_FOUND, "Kein Kindergartenbesuch mit dem Schlüssel %s gefunden.".formatted(dtoSchueler.DauerKindergartenbesuch));
+
+		try {
+			return kindergartenbesuch.historie().getLast().id;
+		} catch (final CoreTypeException | NoSuchElementException e) {
+			throw new ApiOperationException(
+					Status.NOT_FOUND, "Kein Historien-Eintrag für den Bezeichner %s gefunden".formatted(kindergartenbesuch.name()));
+		}
+	}
+
+	private static Long mapGrundschuleJahreEingangsphase(final DTOSchueler dtoSchueler) {
+		if ((dtoSchueler.EPJahre == null) || (dtoSchueler.Einschulungsjahr == null))
+			return null;
+		final PrimarstufeSchuleingangsphaseBesuchsjahre wert =
+				PrimarstufeSchuleingangsphaseBesuchsjahre.data().getWertBySchluessel(String.valueOf(dtoSchueler.EPJahre));
+		return wert.daten(dtoSchueler.Einschulungsjahr).id;
+	}
+
 
 	@Override
 	protected void mapAttribute(final DTOSchueler dtoSchueler, final String name, final Object value, final Map<String, Object> map)
@@ -133,7 +172,8 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 			case "id" -> {
 				final Long idPatch = JSONMapper.convertToLong(value, true, "idPatch");
 				if (!Objects.equals(idPatch, getLongId(dtoSchueler)))
-					throw new ApiOperationException(Status.BAD_REQUEST, "IdPatch %d ist ungleich idSchueler %d.".formatted(idPatch, getLongId(dtoSchueler)));
+					throw new ApiOperationException(Status.BAD_REQUEST,
+							"Die ID %d des Patches ist null oder stimmt nicht mit der ID %d in der Datenbank überein.".formatted(idPatch, getLongId(dtoSchueler)));
 			}
 			// Informationen zu der Schule, die vor der Aufnahme besucht wurde
 			case "idVorherigeSchule" -> mapSchulnummer(value, "idVorherigeSchule", v -> dtoSchueler.LSSchulNr = v);
@@ -161,17 +201,63 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 
 			// Informationen zu der besuchten Grundschule
 			case "grundschuleEinschulungsjahr" -> mapJahr(value, "grundschuleEinschulungsjahr", v -> dtoSchueler.Einschulungsjahr = v);
-			case "grundschuleEinschulungsartID" -> // TODO Katalog ...
-					dtoSchueler.Einschulungsart_ID = JSONMapper.convertToLong(value, true, "grundschuleEinschulungsartID");
-			case "grundschuleJahreEingangsphase" -> mapEingangsphase(dtoSchueler, value);
+			case "grundschuleEinschulungsartID" -> mapEinschulungsart(dtoSchueler, value);
+			case "idGrundschuleJahreEingangsphase" -> mapEingangsphase(dtoSchueler, value);
 			case "kuerzelGrundschuleUebergangsempfehlung" -> mapUebergangsempfehlung(dtoSchueler, value);
 
 			// Informationen zu dem Besuch der Sekundarstufe I
 			case "sekIWechsel" -> mapJahr(value, "sekIWechsel", v -> dtoSchueler.JahrWechsel_SI = v);
 			case "sekIErsteSchulform" -> mapSchulform(dtoSchueler, value);
 			case "sekIIWechsel" -> mapJahr(value, "sekIIWechsel", v -> dtoSchueler.JahrWechsel_SII = v);
+
+			// Informationen zu dem Besuch des Kindergartens
+			case "idDauerKindergartenbesuch" -> mapIdDauerKindergartenbesuch(dtoSchueler, value);
+			case "idKindergarten" -> mapKindergarten(dtoSchueler, value);
+			case "verpflichtungSprachfoerderkurs" -> dtoSchueler.VerpflichtungSprachfoerderkurs = JSONMapper.convertToBoolean(
+					value, false, "verpflichtungSprachfoerderkurs");
+			case "teilnahmeSprachfoerderkurs" -> dtoSchueler.TeilnahmeSprachfoerderkurs = JSONMapper.convertToBoolean(
+					value, false, "teilnahmeSprachfoerderkurs");
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));
 		}
+	}
+
+	private static void mapIdDauerKindergartenbesuch(final DTOSchueler dtoSchueler, final Object value) throws ApiOperationException {
+		final Long id = JSONMapper.convertToLong(value, true, "idDauerKindergartenbesuch");
+		if (id == null) {
+			dtoSchueler.DauerKindergartenbesuch = null;
+			return;
+		}
+		final KindergartenbesuchKatalogEintrag eintrag = Kindergartenbesuch.data().getEintragByID(id);
+		if (eintrag == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Kein Kindergartenbesuch mit der ID %d gefunden.".formatted(id));
+
+		dtoSchueler.DauerKindergartenbesuch = eintrag.schluessel;
+	}
+
+	private void mapKindergarten(final DTOSchueler dto, final Object value) throws ApiOperationException {
+		final Long id = JSONMapper.convertToLong(value, true, "idKindergarten");
+		if (id == null) {
+			dto.Kindergarten_ID = null;
+			return;
+		}
+		final DTOKindergarten kindergartenDTO = conn.queryByKey(DTOKindergarten.class, id);
+		if (kindergartenDTO == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Kein Kindergarten mit der ID %d gefunden.".formatted(id));
+
+		dto.Kindergarten_ID = id;
+	}
+
+	private static void mapEinschulungsart(final DTOSchueler dtoSchueler, final Object value) throws ApiOperationException {
+		final Long id = JSONMapper.convertToLong(value, true, "grundschuleEinschulungsartID");
+		if (id == null) {
+			dtoSchueler.EinschulungsartASD = null;
+			return;
+		}
+		final EinschulungsartKatalogEintrag eintrag = Einschulungsart.data().getEintragByID(id);
+		if (eintrag == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine Einschulungsart mit der ID %d gefunden.".formatted(id));
+
+		dtoSchueler.EinschulungsartASD = eintrag.schluessel;
 	}
 
 	private static void mapSchulform(final DTOSchueler dtoSchueler, final Object value) throws ApiOperationException {
@@ -193,7 +279,6 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 			dtoSchueler.Uebergangsempfehlung_JG5 = null;
 			return;
 		}
-
 		if (Uebergangsempfehlung.data().getWertByKuerzel(kuerzel) == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Übergangsempfehlung für das Kürzel %s gefunden.".formatted(kuerzel));
 
@@ -201,15 +286,16 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 	}
 
 	private static void mapEingangsphase(final DTOSchueler dtoSchueler, final Object value) throws ApiOperationException {
-		final Integer ep = JSONMapper.convertToInteger(value, true, "grundschuleJahreEingangsphase");
-		if (ep == null) {
+		final Long id = JSONMapper.convertToLong(value, true, "idGrundschuleJahreEingangsphase");
+		if (id == null) {
 			dtoSchueler.EPJahre = null;
 			return;
 		}
-		if (PrimarstufeSchuleingangsphaseBesuchsjahre.data().getWertBySchluessel(String.valueOf(ep)) == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Keine Eingangsphase mit dem Schlüssel %d vorhanden.".formatted(ep));
+		final PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag eintrag = PrimarstufeSchuleingangsphaseBesuchsjahre.data().getEintragByID(id);
+		if (eintrag == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine Eingangsphase mit der ID %d vorhanden.".formatted(id));
 
-		dtoSchueler.EPJahre = ep;
+		dtoSchueler.EPJahre = Integer.valueOf(eintrag.schluessel);
 	}
 
 	private static void mapJahr(final Object value, final String key, final Consumer<Integer> setter) throws ApiOperationException {

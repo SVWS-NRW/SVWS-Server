@@ -36,6 +36,17 @@ export class GostKlausurenCollectionRaumData extends JavaObject {
 		super();
 	}
 
+	/**
+	 * Fügt die Daten der übergebenen Instanz zu den aktuellen Daten hinzu.
+	 * @param data die zu hinzuzufügenden Daten
+	 */
+	public addAll(data : GostKlausurenCollectionRaumData) : void {
+		this.raeume.addAll(data.raeume);
+		this.raumstunden.addAll(data.raumstunden);
+		this.sktRaumstunden.addAll(data.sktRaumstunden);
+		this.idsKlausurtermine.addAll(data.idsKlausurtermine);
+	}
+
 	transpilerCanonicalName(): string {
 		return 'de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionRaumData';
 	}

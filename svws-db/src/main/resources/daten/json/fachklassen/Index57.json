@@ -1,6 +1,6 @@
 {
 	"index": 57,
-	"version": 2,
+	"version": 3,
 	"fachklassen": [
 		{
 			"schluessel": "101",
@@ -303,7 +303,7 @@
 				"ebene2": "ET",
 				"ebene3": "PF",
 				"bezeichnung": "Praktikanten/ Praktikantinnen mit Förderverträgen - Elektrotechnik",
-				"bezeichnungM": "Praktikanten/ Praktikantinnen mit Förderverträgen - Elektrotechnik",
+				"bezeichnungM": "Praktikanten mit Förderverträgen - Elektrotechnik",
 				"bezeichnungW": "Praktikantinnen mit Förderverträgen - Elektrotechnik",
 				"gueltigVon": 2015,
 				"gueltigBis": null
@@ -320,7 +320,7 @@
 				"ebene2": "ME",
 				"ebene3": "PF",
 				"bezeichnung": "Praktikanten/ Praktikantinnen mit Förderverträgen - Metalltechnik",
-				"bezeichnungM": "Praktikanten/ Praktikantinnen mit Förderverträgen - Metalltechnik",
+				"bezeichnungM": "Praktikanten mit Förderverträgen - Metalltechnik",
 				"bezeichnungW": "Praktikantinnen mit Förderverträgen - Metalltechnik",
 				"gueltigVon": 2015,
 				"gueltigBis": null
@@ -343,7 +343,7 @@
 				"gueltigBis": 2015
 			}, {
 				"id": 1777001,
-				"istAusgelaufen": false,
+				"istAusgelaufen": true,
 				"berufsfeldGruppe": null,
 				"berufsfeld": null,
 				"ebene1": "OZ",
@@ -353,14 +353,14 @@
 				"bezeichnungM": "Internationale Förderklasse",
 				"bezeichnungW": "Internationale Förderklasse",
 				"gueltigVon": 2016,
-				"gueltigBis": null
+				"gueltigBis": 2024
 			} ]
 		}, {
 			"schluessel": "110",
 			"schluessel2": "00",
 			"historie": [ {
 				"id": 1778000,
-				"istAusgelaufen": false,
+				"istAusgelaufen": true,
 				"berufsfeldGruppe": null,
 				"berufsfeld": null,
 				"ebene1": "OZ",
@@ -370,7 +370,7 @@
 				"bezeichnungM": "Fit für mehr",
 				"bezeichnungW": "Fit für mehr",
 				"gueltigVon": 2017,
-				"gueltigBis": null
+				"gueltigBis": 2024
 			} ]
 		}, {
 			"schluessel": "999",

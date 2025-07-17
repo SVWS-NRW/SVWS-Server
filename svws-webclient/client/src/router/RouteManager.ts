@@ -247,7 +247,7 @@ export class RouteManager {
 					return result;
 			} else if (from_is_successor) {
 				for (const node of from_is_successor.slice(1).reverse()) {
-					result = await node.doLeaveBefore(from_node, from.params);
+					result = await node.doLeaveBefore(from_node, from.params, to_node, to.params);
 					if (result !== undefined)
 						return result;
 				}
@@ -276,11 +276,11 @@ export class RouteManager {
 					from_predecessors = from_predecessors.slice(1);
 					to_predecessors = to_predecessors.slice(1);
 				}
-				result = await from_node.doLeaveBefore(from_node, from.params);
+				result = await from_node.doLeaveBefore(from_node, from.params, to_node, to.params);
 				if (result !== undefined)
 					return result;
 				for (const node of [...from_predecessors].reverse()) {
-					result = await node.doLeaveBefore(from_node, from.params);
+					result = await node.doLeaveBefore(from_node, from.params, to_node, to.params);
 					if (result !== undefined)
 						return result;
 				}
@@ -326,7 +326,7 @@ export class RouteManager {
 						const to_predecessors_all: RouteNode<any, any>[] = to_node.getPredecessors();
 						if (from_is_successor) {
 							for (const node of from_is_successor.slice(1).reverse())
-								await node.leave(from_node, from.params);
+								await node.leave(from_node, from.params, to_node, to.params);
 						} else if (!equals) {
 							let from_predecessors: RouteNode<any, any>[] = from_node.getPredecessors();
 							let to_predecessors: RouteNode<any, any>[] = [...to_predecessors_all];
@@ -335,9 +335,9 @@ export class RouteManager {
 								from_predecessors = from_predecessors.slice(1);
 								to_predecessors = to_predecessors.slice(1);
 							}
-							await from_node.leave(from_node, from.params);
+							await from_node.leave(from_node, from.params, to_node, to.params);
 							for (const node of [...from_predecessors].reverse())
-								await node.leave(from_node, from.params);
+								await node.leave(from_node, from.params, to_node, to.params);
 						}
 					}
 				}

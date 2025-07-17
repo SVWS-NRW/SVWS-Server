@@ -1,5 +1,5 @@
-import {describe, test, expect} from "vitest";
-import {getApiServer} from "./utils/TestUtils.js";
+import { describe, test, expect } from "vitest";
+import { getApiServer } from "./utils/TestUtils.js";
 
 describe("Server Tests2 ", () => {
 	describe.each([{schema: "GymAbi01"}])('gegen %s', ({schema}) => {

@@ -1,4 +1,4 @@
-import type { LehrerListeManager, LehrerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
+import type { BenutzerKompetenz, LehrerListeManager, LehrerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
 import type { Checkpoint } from "@ui";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 
@@ -10,4 +10,5 @@ export interface LehrerNeuProps {
 	continueRoutingAfterCheckpoint: () => Promise<RoutingStatus>;
 	mapOrte: Map<number, OrtKatalogEintrag>;
 	mapOrtsteile: Map<number, OrtsteilKatalogEintrag>;
+	benutzerKompetenzen: Set<BenutzerKompetenz>;
 }

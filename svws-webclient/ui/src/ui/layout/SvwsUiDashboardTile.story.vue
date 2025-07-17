@@ -1,6 +1,6 @@
 <template>
 	<Story title="Dashboard Tile" id="svws-ui-dashboard-tile" icon="ri:dashboard-line" :layout="{ type: 'single', iframe: false }" auto-props-disabled responsive-disabled>
-		<Variant title="Default" id="Default" source=" ">
+		<Variant title="Default" id="Default">
 			<div class="p-4">
 				<div class="svws-ui-dashboard">
 					<svws-ui-dashboard-tile title="Default">Lorem ipsum dolor, sit amet consectetur adipisicing elit.</svws-ui-dashboard-tile>

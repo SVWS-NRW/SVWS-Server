@@ -1,95 +1,141 @@
 <template>
-	<div ref="uiSelect" class="ui-select relative mt-1 rounded-md" :class="rootClasses">
+	<div ref="uiSelect" class="ui-select relative rounded-md text-base inline-flex h-fit w-full" v-bind="filteredAttributes">
 		<!-- Combobox -->
 		<div :id="`uiSelectInput_${instanceId}`" ref="uiSelectCombobox" :tabindex="(searchable === true) ? -1 : 0"
 			:role="(searchable === false) ? 'combobox' : undefined" :aria-labelledby="`uiSelectLabel_${instanceId}`"
 			:aria-controls="(searchable === false) ? `uiSelectDropdown_${instanceId}` : undefined" aria-autocomplete="none"
-			:aria-expanded="(searchable === false) ? showDropdown : undefined"
-			:aria-disabled="((searchable === false) && (disabled === true)) ? true : undefined"
+			:aria-expanded="(searchable === false) ? showDropdown : undefined" :aria-disabled="((searchable === false) && (disabled === true)) ? true : undefined"
 			:aria-activedescendant="((searchable === false) && (highlightedIndex !== -1)) ? `uiSelectOption_${highlightedIndex}_${instanceId}` : undefined"
-			class="relative outline-none focus-within:ring-3 ring-ui w-full rounded-md flex gap-1 hover:ring-ui-neutral hover:ring-3"
-			:class="[headless ? 'px-1 py-0' : 'border min-h-10 px-2 py-1', disabled ? 'pointer-events-none border-ui-disabled' : borderColorClass, backgroundColorClass,
-				{ 'pointer-events-none border-ui-disabled': disabled, 'cursor-text': searchable, 'cursor-pointer': !searchable}]"
-			@click="handleComponentClick" @focus="handleComboboxFocus" @keydown="onKeyDown">
-			<!-- Expand-Icon + Clear-Button headless -->
-			<div v-if="headless" class="ml-auto flex items-center">
-				<span class="icon-sm i-ri-expand-up-down-line cursor-pointer" :class="[ disabled ? 'icon-ui-disabled' : iconColorClass]" />
-				<button v-if="removable" type="button" :disabled aria-label="Auswahl löschen" @click="clearSelection" @keydown.enter="clearSelection"
-					class="hover:bg-ui-hover flex focus:ring-2 ring-ui outline-none rounded-sm">
-					<span class="icon-sm i-ri-close-line" :class="[ disabled ? 'icon-ui-disabled' : iconColorClass]" />
-				</button>
-			</div>
-
-			<!-- Label -->
-			<label v-if="label && ((headless && !moveLabel) || !headless)" :id="`uiSelectLabel_${instanceId}`"
-				class="absolute transition-all duration-100 ease-in-out pointer-events-none rounded left-2 whitespace-nowrap overflow-hidden truncate max-w-fit"
-				:class="[ moveLabel ? 'text-xs font-medium -top-2 px-1' : 'top-1/2 transform -translate-y-1/2',
-					removable ? (moveLabel ? 'right-2' : 'right-11') : (moveLabel ? 'right-2' : 'right-6'),
-					headless ? (removable ? 'left-10' : 'left-6') : '', disabled ? 'text-ui-disabled' : '', backgroundColorClass]">
-				<span v-if="statistics" class="icon icon-sm icon-ui-statistic i-ri-bar-chart-2-line mx-1" />
-				<span :class="disabled ? '' : moveLabel ? textColorClass : getSecondaryTextColor(textColorClass)">{{ label }}</span>
-				<span v-if="selectionLimitText !== null" :class="[disabled ? 'text-ui-disabled' : getSecondaryTextColor(textColorClass), 'text-xs pl-1']">
-					({{ selectionLimitText }}) </span>
-			</label>
-
-			<!-- Wrapper für die aktuelle Selektion und das Suchfeld -->
-			<div class="flex flex-wrap items-center gap-x-1 gap-y-1 flex-1 min-w-0">
-				<!-- Aktuelle Selektion (nur Mehrfachselektion) -->
-				<template v-if="selectManager.multi && !selectManager.selected.isEmpty()">
-					<span v-for="item in selectManager.selected" :key="selectManager.getSelectionText(item)" tabindex="0"
-						:aria-label="`Auswahl ${props.selectManager.getSelectionText(item)}`"
-						class="px-2 py-1 rounded-md text-sm flex items-center overflow-hidden max-w-30 shrink-0"
-						:class="[ disabled ? 'bg-ui-disabled text-ui-ondisabled' : 'bg-ui-selected text-ui-onselected', { 'mt-1' : !headless }]">
-
-						<svws-ui-tooltip position="top" :indicator="false" class="truncate">
+			class="relative outline-none focus-within:ring-2 ring-ui-neutral w-full rounded-md flex items-center gap-1 hover:ring-ui-neutral hover:ring-2 min-w-16 m-[0.2em]"
+			:class="[headless ? 'pl-1' : 'border mt-[0.8em] pl-3 pr-1 min-h-9', disabled ? 'pointer-events-none border-ui-disabled' : borderColorClass, backgroundColorClass,
+				{ 'pointer-events-none border-ui-disabled': disabled, 'cursor-text': searchable, 'cursor-pointer': !searchable}]" @click="handleComponentClick"
+			@focus="handleComboboxFocus" @keydown="onKeyDown">
+			<div :class="[headless ? 'py-0' : (manager.multi ? 'py-1': 'py-1')]" class="flex">
+				<!-- Expand-Icon + Clear-Button headless -->
+				<div v-if="headless" class="flex items-center">
+					<span class="icon-sm i-ri-expand-up-down-line cursor-pointer" :class="[ disabled ? 'icon-ui-disabled' : iconColorClass]" />
+					<button v-if="manager.removable" type="button" :disabled aria-label="Auswahl löschen" @click="clearSelection" @keydown.enter="clearSelection"
+						class="hover:bg-ui-hover flex focus:ring-2 ring-ui-neutral outline-none rounded-sm">
+						<span class="icon-sm i-ri-close-line" :class="[ disabled ? 'icon-ui-disabled' : iconColorClass]" />
+					</button>
+				</div>
+				<!-- Label -->
+				<label v-if="label && ((headless && !moveLabel) || !headless)" :id="`uiSelectLabel_${instanceId}`"
+					class="absolute transition-all duration-100 ease-in-out pointer-events-none rounded left-2 whitespace-nowrap  max-w-fit flex gap-1 px-1 -translate-y-1/2"
+					:class="[ moveLabel ? 'absolute -top-0.5 text-xs' : 'absolute top-1/2 font-normal',
+						manager.removable ? (moveLabel ? 'right-2' : 'right-11') : (moveLabel ? 'right-2' : 'right-6'),
+						headless ? (manager.removable ? 'left-10' : 'left-6') : '', backgroundColorClass, textColorClass]">
+					<span v-if="statistics" class="cursor-pointer flex">
+						<svws-ui-tooltip position="right">
+							<span class="icon i-ri-bar-chart-2-line pointer-events-auto" :class="[disabled ? 'icon-ui-disabled' : 'icon-ui-statistic']" />
 							<template #content>
-								{{ selectManager.getSelectionText(item) }}
+								Relevant für die Statistik
 							</template>
-							<div class="flex items-center justify-between w-full">
-								<span class="truncate">
-									{{ selectManager.getSelectionText(item) }}
-								</span>
-								<button @click="deselect($event, item)" class="hover:bg-ui rounded-sm flex ml-1 flex-shrink-0"
-									@keydown.enter="deselect($event, item)"
-									:aria-label="`Auswahl ${props.selectManager.getSelectionText(item)} löschen`">
-									<span class="icon-sm icon i-ri-close-line" :class="[ disabled ? 'icon-ui-disabled' : 'icon-ui-onselected']" />
-								</button>
-							</div>
 						</svws-ui-tooltip>
 					</span>
-				</template>
 
-				<!-- Wrapper für das Such-Input und aktuelle Selektion (nur Einzelselektion) -->
-				<div class="relative grid grid-cols-1 grid-rows-1 flex-1 min-w-10 shrink-0 order-last">
-					<!-- Aktuelle Selektion (nur Einzelselektion) -->
-					<div class="flex items-center overflow-hidden row-start-1 col-start-1">
-						<svws-ui-tooltip position="top" :indicator="false" class="truncate">
+					<span class="leading-none content-center overflow-hidden truncate h-5"
+						:class="disabled ? '' : moveLabel ? textColorClass : getSecondaryTextColor(textColorClass)">
+						{{ label }}
+					</span>
+					<span v-if="selectionLimitText !== null" class="h-5 leading-none content-center" :class="[getSecondaryTextColor(textColorClass)]">
+						<span>({{ selectionLimitText }})</span>
+					</span>
+					<span v-if="required" class="cursor-pointer flex items-end" aria-hidden>
+						<span class="icon-xs i-ri-asterisk font-normal relative -top-2" :class="iconColorClass" />
+					</span>
+					<span v-if="required" class="sr-only">erforderlich</span>
+					<span v-if="(isValid === false) && (!required || manager.hasSelection())" class="cursor-pointer flex items-end">
+						<span class="icon i-ri-alert-line" :class="iconColorClass" />
+					</span>
+					<span v-if="isValidatorValid === false" class="cursor-pointer">
+						<svws-ui-tooltip position="right">
+							<span class="pointer-events-auto">
+								<template v-if="!validator().getFehler().isEmpty()">
+									<span class="icon i-ri-alert-fill icon-ui-danger" v-if="validator().getFehlerart() === ValidatorFehlerart.MUSS" />
+									<span class="icon i-ri-error-warning-fill icon-ui-caution" v-if="validator().getFehlerart() === ValidatorFehlerart.KANN" />
+									<span class="icon i-ri-question-fill icon-ui-warning" v-if="validator().getFehlerart() === ValidatorFehlerart.HINWEIS" />
+								</template>
+							</span>
 							<template #content>
-								{{ selectManager.getSelectionText(selectManager.selected) }}
+								<template
+									v-if="(validator !== undefined) && (!validator().getFehler().isEmpty()) && (validator().getFehlerart() !== ValidatorFehlerart.UNGENUTZT)">
+									<div class="text-headline-sm text-center pt-1"> Validatorfehler </div>
+									<div v-for="fehler in validator().getFehler()" :key="fehler.hashCode()" class="pt-2 pb-2">
+										<div class="rounded-sm pl-2" :class="{
+											'bg-ui-danger': (validator().getFehlerart() === ValidatorFehlerart.MUSS),
+											'bg-ui-caution': (validator().getFehlerart() === ValidatorFehlerart.KANN),
+											'bg-ui-warning': (validator().getFehlerart() === ValidatorFehlerart.HINWEIS)}">
+											{{ fehler.getFehlerart() }}
+										</div>
+										<div class="pl-2"> {{ fehler.getFehlermeldung() }} </div>
+									</div>
+								</template>
+								<template v-else>
+									<div class="text-headline-sm text-center"> Relevant für die Statistik </div>
+								</template>
 							</template>
-							<div v-if="!selectManager.multi && (selectManager.selected !== null) && (search === '')"
-								class="truncate z-0 cursor-pointer"
-								:class="[disabled ? 'text-ui-disabled' : (visualFocusOnCombobox || !domFocusOnCombobox) ? textColorClass : getSecondaryTextColor(textColorClass)]">
-								{{ selectManager.getSelectionText(selectManager.selected) }}
-							</div>
 						</svws-ui-tooltip>
+					</span>
+				</label>
+
+				<!-- Wrapper für die aktuelle Selektion und das Suchfeld -->
+				<div class="flex flex-wrap items-center gap-x-1 flex-1 min-w-0">
+					<!-- Aktuelle Selektion (nur Mehrfachselektion) -->
+					<template v-if="manager.multi">
+						<span v-for="item in manager.selected" :key="manager.getSelectionText(item)" tabindex="0"
+							:aria-label="`Auswahl ${props.manager.getSelectionText(item)}`"
+							class="px-2 rounded-md text-sm flex items-center overflow-hidden max-w-30 shrink-0 border mt-1"
+							:class="[ disabled ? 'bg-ui-disabled text-ui-ondisabled border-ui-disabled' : 'bg-ui-selected text-ui-onselected border-ui-selected']">
+
+							<svws-ui-tooltip position="top" :indicator="false" class="truncate">
+								<template #content>
+									{{ manager.getSelectionText(item) }}
+								</template>
+								<div class="flex items-center justify-between w-full">
+									<span class="truncate">
+										{{ manager.getSelectionText(item) }}
+									</span>
+									<button v-if="manager.removable || manager.selected.size() > 1" @click="deselect($event, item)"
+										class="hover:bg-ui rounded-sm flex ml-1 flex-shrink-0" @keydown.enter="deselect($event, item)"
+										:aria-label="`Auswahl ${props.manager.getSelectionText(item)} löschen`">
+										<span class="icon-sm i-ri-close-line" :class="[ disabled ? 'icon-ui-disabled' : 'icon-ui-onselected']" />
+									</button>
+								</div>
+							</svws-ui-tooltip>
+						</span>
+					</template>
+
+					<!-- Wrapper für das Such-Input und aktuelle Selektion (nur Einzelselektion) -->
+					<div v-if="(manager.multi === false) || searchable" class="relative grid grid-cols-1 grid-rows-1 flex-1 min-w-5 order-last text-base">
+						<!-- Aktuelle Selektion (nur Einzelselektion) -->
+						<div v-if="manager.multi === false" class="flex items-center overflow-hidden row-start-1 col-start-1">
+							<svws-ui-tooltip position="top" :indicator="false" class="truncate">
+								<template #content>
+									{{ manager.getSelectionText(manager.selected) }}
+								</template>
+								<div v-if="!manager.multi && (manager.selected !== null) && (search === '')"
+									class="truncate z-0 cursor-pointer font-medium inline-block align-middle leading-none h-5 mt-1"
+									:class="[(visualFocusOnCombobox || !domFocusOnCombobox) ? textColorClass : getSecondaryTextColor(textColorClass)]">
+									{{ manager.getSelectionText(manager.selected) }}
+								</div>
+							</svws-ui-tooltip>
+						</div>
+						<!-- Such-Input -->
+						<input v-if="searchable" :id="`uiSelectinput_${instanceId}`" ref="uiSelectSearch" type="text" tabindex="0" role="combobox" aria-autocomplete="none"
+							:aria-controls="`uiSelectDropdown_${instanceId}`" :aria-expanded="showDropdown"
+							:aria-activedescendant="(highlightedIndex !== -1) ? `uiSelectOption_${highlightedIndex}_${instanceId}` : undefined"
+							:aria-labelledby="`uiSelectLabel_${instanceId}`" :aria-disabled="(disabled === true) ? true : undefined" v-model="search"
+							class="row-start-1 col-start-1 outline-none font-normal h-5" @focus="handleComboboxFocus" @blur="handleBlur" @input="handleInput">
 					</div>
-					<!-- Such-Input -->
-					<input v-if="searchable" :id="`uiSelectinput_${instanceId}`" ref="uiSelectSearch" type="text" tabindex="0" role="combobox"
-						aria-autocomplete="none" :aria-controls="`uiSelectDropdown_${instanceId}`" :aria-expanded="showDropdown"
-						:aria-activedescendant="(highlightedIndex !== -1) ? `uiSelectOption_${highlightedIndex}_${instanceId}` : undefined"
-						:aria-labelledby="`uiSelectLabel_${instanceId}`" :aria-disabled="(disabled === true) ? true : undefined"
-						v-model="search" class="row-start-1 col-start-1 outline-none" @focus="handleComboboxFocus" @blur="handleBlur"
-						@input="handleInput">
 				</div>
 			</div>
 
-
 			<!-- Expand-Icon + Clear-Button -->
-			<div v-if="!headless" class="ml-auto flex items-center">
-				<button v-if="removable" type="button" :disabled aria-label="Auswahl löschen" @click="clearSelection" @keydown.enter="clearSelection"
-					class="hover:bg-ui-hover flex ml-1 focus:ring-3 ring-ui outline-none rounded-sm">
-					<span class="icon-sm icon i-ri-close-line" :class="[ disabled ? 'icon-ui-disabled' : iconColorClass]" />
+			<div v-if="!headless" class="ml-auto flex items-center h-fit">
+				<button v-if="manager.removable" type="button" :disabled aria-label="Auswahl löschen" @click="clearSelection" @keydown.enter="clearSelection"
+					class="hover:bg-ui-hover flex focus:ring-2 ring-ui-neutral outline-none rounded-sm">
+					<span class="icon-sm i-ri-close-line" :class="[ disabled ? 'icon-ui-disabled' : iconColorClass]" />
 				</button>
 				<span class="icon i-ri-expand-up-down-line cursor-pointer" :class="[ disabled ? 'icon-ui-disabled' : iconColorClass]" />
 			</div>
@@ -97,18 +143,16 @@
 
 		<!-- Dropdown -->
 		<ul popover :aria-labelledby="`uiSelectLabel_${instanceId}`" :id="`uiSelectDropdown_${instanceId}`" ref="uiSelectDropdown" role="listbox"
-			class="overflow-auto bg-ui select-none scrollbar-thin p-1 rounded-md border border-ui"
+			class="overflow-auto bg-ui select-none scrollbar-thin p-1 rounded-md border border-ui font-normal"
 			:style="{ top: topPosition, left: leftPositionComputed, width: width + 'px', maxHeight: maxHeight + 'px' }">
-			<li v-if="selectManager.filtered.isEmpty()" class="cursor-not-allowed p-2 hover:bg-ui-hover text-ui-secondary italic">
+			<li v-if="manager.filteredOptions.isEmpty()" class="cursor-not-allowed p-2 hover:bg-ui-hover text-ui-secondary italic">
 				{{ "Keine passenden Einträge gefunden" }}
 			</li>
-			<li v-else :id="`uiSelectOption_${optionIndex}_${instanceId}`" v-for="(option, optionIndex) in selectManager.filtered"
-				:key="selectManager.getOptionText(option)" role="option" :aria-selected="selectManager.isSelected(option)"
-				class="cursor-pointer p-2 hover:bg-ui-hover hover:inset-ring-3 hover:inset-ring-ui-neutral rounded-lg"
-				:class="[(selectManager.isSelected(option)) ? 'bg-ui-selected text-ui-onselected font-medium border border-ui-selected' : 'text-ui',
-					{'bg-ui-hover inset-ring-3 inset-ring-ui-neutral ': (highlightedIndex === optionIndex)}]"
-				@click="toggleSelection($event, option)">
-				<template v-for="(part, index) in splitText(selectManager.getOptionText(option))" :key="index">
+			<li v-else :id="`uiSelectOption_${optionIndex}_${instanceId}`" v-for="(option, optionIndex) in manager.filteredOptions" :key="optionIndex"
+				role="option" :aria-selected="manager.isSelected(option)"
+				class="cursor-pointer m-1 p-1 hover:bg-ui-hover hover:inset-ring-2 hover:inset-ring-ui-neutral rounded-lg" :class="[(manager.isSelected(option)) ? 'bg-ui-selected text-ui-onselected font-medium border border-ui-selected' : 'text-ui',
+					{'bg-ui-hover inset-ring-2 inset-ring-ui-neutral ': (highlightedIndex === optionIndex)}]" @click="toggleSelection($event, option)">
+				<template v-for="(part, index) in splitText(manager.getOptionText(option))" :key="index">
 					<span v-if="part.matchIsSearch" class="bg-ui-selected">{{ part.text }}</span>
 					<span v-else>{{ part.text }}</span>
 				</template>
@@ -117,33 +161,39 @@
 	</div>
 </template>
 
-<script setup lang="ts" generic="T">
+<script setup lang="ts" generic="T, V extends Validator">
 
 	import { computed, nextTick, onBeforeUnmount, onMounted, ref, useAttrs, watch } from 'vue';
 	import { useElementBounding, useWindowSize } from '@vueuse/core';
-	import type { BaseSelectManager } from './selectManager/BaseSelectManager';
-	import type { ArrayList } from '../../../../../core/src';
+	import { BaseSelectManager } from './selectManager/BaseSelectManager';
+	import type { Validator } from '../../../../../core/src';
+	import { ValidatorFehlerart } from '../../../../../core/src';
 	import { SearchSelectFilter } from './filter/SearchSelectFilter';
 
 	const props = withDefaults(defineProps<{
 		label?: string;
-		selectManager: BaseSelectManager<T>;
+		manager?: BaseSelectManager<T>;
 		searchable?: boolean;
-		removable?: boolean;
+		required?: boolean;
 		disabled?: boolean;
 		statistics?: boolean;
 		headless?: boolean;
 		minOptions?: number | undefined;
 		maxOptions?: number | undefined;
+		validator?: () => V;
+		doValidate?: (validator: V, value: string | null) => boolean;
 	}>(), {
 		label: '',
-		filter: false,
-		removable: true,
+		manager: () => new BaseSelectManager<T>(),
+		searchable: false,
+		required: false,
 		disabled: false,
 		statistics: false,
 		headless: false,
 		minOptions: undefined,
 		maxOptions: undefined,
+		validator: undefined,
+		doValidate: (validator: V, value: string | null) : boolean => validator.run(),
 	});
 
 	/** Die Vererbung der Attribute wird abgestellt, damit diese manuell an die richtigen Stellen weitergeleitet werden kann */
@@ -154,7 +204,7 @@
 	 * Extrahiert alle gesetzten Klassen von außerhalb und setzt diese an den Rootknoten. Icon-Farben werden jedoch herausgefiltert, da diese den Hintergrund
 	 * beeinflussen.
 	 */
-	const rootClasses = computed (() => {
+	const filteredAttributes = computed (() => {
 		const result = { ...attrs };
 
 		const stringClass = result.class;
@@ -183,6 +233,22 @@
 	 * die sekundäre Variante der übergebenen Farbe verwendet.
 	 */
 	const textColorClass = computed(() => {
+		if (props.disabled === true)
+			return "text-ui-disabled";
+		if (isValid.value === false)
+			return "text-ui-danger";
+		if (isValidatorValid.value === false)
+			switch (props.validator!().getFehlerart()) {
+				case (ValidatorFehlerart.HINWEIS):
+					return "text-ui-warning";
+				case (ValidatorFehlerart.KANN):
+					return "text-ui-caution";
+				case (ValidatorFehlerart.MUSS):
+					return "text-ui-danger";
+			}
+
+		if (props.required && props.manager.hasSelection() === false)
+			return "text-ui-danger";
 		const classString = attrs.class;
 		if (typeof classString !== "string")
 			return "text-ui";
@@ -197,6 +263,19 @@
 	 * Berechnet die Iconfarbe. Wird von außen eine gesetzt, dann wird diese verwendet. Andernfalls icon-ui.
 	 */
 	const iconColorClass = computed(() => {
+		if (props.disabled === true)
+			return "icon-ui-disabled";
+		if (isValid.value === false)
+			return "icon-ui-danger";
+		if (isValidatorValid.value === false)
+			switch (props.validator!().getFehlerart()) {
+				case (ValidatorFehlerart.HINWEIS):
+					return "icon-ui-warning";
+				case (ValidatorFehlerart.KANN):
+					return "icon-ui-caution";
+				case (ValidatorFehlerart.MUSS):
+					return "icon-ui-danger";
+			}
 		const classString = attrs.class;
 		if (typeof classString !== "string")
 			return "icon-ui";
@@ -211,14 +290,26 @@
 	 * Berechnet die Borderfarbe der Combobox. Wird von außen eine gesetzt, dann wird diese verwendet. Andernfalls bg-ui-neutral.
 	 */
 	const borderColorClass = computed(() => {
+		if (isValid.value === false)
+			return "border-ui-danger";
+		if (isValidatorValid.value === false)
+			switch (props.validator!().getFehlerart()) {
+				case (ValidatorFehlerart.HINWEIS):
+					return "border-ui-warning";
+				case (ValidatorFehlerart.KANN):
+					return "border-ui-caution";
+				case (ValidatorFehlerart.MUSS):
+					return "border-ui-danger";
+			}
+
 		const classString = attrs.class;
 		if (typeof classString !== "string")
-			return "border-ui-neutral";
+			return "border-ui";
 		const classes = classString.split(' ');
 
 		// Nach erster border-ui* Klasse suchen
 		const match = classes.find(c => c.startsWith('border-ui'));
-		return match ?? 'border-ui-neutral';
+		return match ?? 'border-ui';
 	});
 
 
@@ -289,15 +380,15 @@
 
 	// Definiert, wann das Label der Combobox nach oben rutscht
 	const moveLabel = computed(() => {
-		const selected = props.selectManager.selected;
-		const hasSelection = (props.selectManager.multi) ? (selected.size() > 0) : ((selected !== null) && (selected !== undefined));
+		const selected = props.manager.selected;
+		const hasSelection = (props.manager.multi) ? (selected.size() > 0) : ((selected !== null) && (selected !== undefined));
 
 		return hasSelection || (search.value !== '' && props.searchable)
 	})
 
 	// Generiert den Text, der bei einer Multi-Selektion die Limitierung der Optinonen anzeigt
 	const selectionLimitText = computed(() => {
-		if (!props.selectManager.multi)
+		if (!props.manager.multi)
 			return null;
 		const min = (props.minOptions !== undefined) && (props.minOptions > 0) ? props.minOptions : null;
 		const max = (props.maxOptions !== undefined) && (props.maxOptions > 0) ? props.maxOptions : null;
@@ -310,18 +401,15 @@
 		return (min !== null) ? `min. ${min}` : `max. ${max}`;
 	});
 
-	let searchFilter: SearchSelectFilter<T> | undefined = undefined;
 	onMounted(() => {
 		// Wenn das Select durchsuchbar ist, wird ein SearchSelectFilter hinzugefügt. Sollte bereits einer existieren, wird nur der neue Suchbegriff gesetzt.
 		if (props.searchable) {
-			const tmpSearchFilter = props.selectManager.getFilter("search") as SearchSelectFilter<T> | null;
+			const tmpSearchFilter = props.manager.getFilterByKey("search") as SearchSelectFilter<T> | null;
 			if (tmpSearchFilter !== null) {
 				tmpSearchFilter.search = search.value;
-				searchFilter = tmpSearchFilter;
-			}
-			else {
-				searchFilter = new SearchSelectFilter("search", search.value, (item: T) => props.selectManager.getOptionText(item));
-				props.selectManager.addFilter(searchFilter);
+				props.manager.updateFilteredOptions(tmpSearchFilter);
+			}	else {
+				props.manager.addFilter(new SearchSelectFilter("search", search.value, (item: T) => props.manager.getOptionText(item)));
 			}
 		}
 
@@ -337,13 +425,9 @@
 			}
 		});
 
-		if (props.selectManager.multi) {
-			if ((props.selectManager.selected as ArrayList<T>).isEmpty())
-				props.selectManager.selected = model.value;
-		}
-		else
-			if ((props.selectManager.selected === undefined) || (props.selectManager.selected === null))
-				props.selectManager.selected = model.value;
+		if (props.manager.hasSelection() === false)
+			props.manager.selected = model.value;
+
 	});
 
 	onBeforeUnmount(() => {
@@ -378,10 +462,10 @@
 	watch(
 		() => model.value,
 		(newSelection) => {
-			props.selectManager.selected = newSelection;
+			props.manager.selected = newSelection;
 		},
 		{ deep: true }
-	)
+	);
 
 	/**
 	 * Teilt den Text in Teile auf, die mit der Suchanfrage übereinstimmen. Dies wird dazu verwendet, die übereinstimmenden Teile farblich hervorzuheben.
@@ -446,11 +530,14 @@
 	function updateSearchFilter() {
 		if (!props.searchable)
 			return;
-		if (searchFilter !== undefined)
+		let searchFilter = props.manager.getFilterByKey("search") as SearchSelectFilter<T> | null;
+		if (searchFilter === null)
+			searchFilter = new SearchSelectFilter("search", search.value, (item: T) => props.manager.getOptionText(item));
+		else {
+			searchFilter = props.manager.getFilterByKey("search") as SearchSelectFilter<T>;
 			searchFilter.search = search.value;
-		else
-			searchFilter = new SearchSelectFilter("search", search.value, (item: T) => props.selectManager.getOptionText(item));
-		props.selectManager.updateFilter(searchFilter);
+		}
+		props.manager.updateFilteredOptions(searchFilter);
 	}
 
 	/**
@@ -471,13 +558,14 @@
 	 */
 	function toggleSelection(event: MouseEvent, option: T) {
 		event.stopPropagation();
-		if (!props.selectManager.multi) {
+		if (!props.manager.multi) {
 			closeDropdown();
 		}
 
-		props.selectManager.toggleSelection(option);
+		props.manager.toggleSelection(option);
 		resetSearch();
-		model.value = props.selectManager.selected;
+		model.value = props.manager.selected;
+
 	};
 
 	/**
@@ -488,9 +576,9 @@
 	function clearSelection(event: MouseEvent | KeyboardEvent) {
 		event.stopPropagation();
 		closeDropdown();
-		props.selectManager.clearSelection();
+		props.manager.clearSelection();
 		resetSearch();
-		model.value = props.selectManager.selected;
+		model.value = props.manager.selected;
 	}
 
 	/**
@@ -501,8 +589,8 @@
 	 */
 	function deselect(event: MouseEvent | KeyboardEvent, option: T) {
 		event.stopPropagation();
-		props.selectManager.deselect(option);
-		model.value = props.selectManager.selected;
+		props.manager.deselect(option);
+		model.value = props.manager.selected;
 	}
 
 	/**
@@ -565,7 +653,7 @@
 			// Arrow Up
 			else if (event.key === "ArrowUp") {
 				openDropdown();
-				highlightedIndex.value = props.selectManager.filtered.size() -1;
+				highlightedIndex.value = props.manager.filteredOptions.size() -1;
 			}
 			// Enter, Space
 			else if ((event.key === "Enter") || (event.key === " "))
@@ -578,7 +666,7 @@
 			// End
 			else if (event.key === "End") {
 				openDropdown();
-				highlightedIndex.value = props.selectManager.filtered.size() - 1;
+				highlightedIndex.value = props.manager.filteredOptions.size() - 1;
 			}
 			// Escape
 			else if ((event.key === "Escape") && props.searchable)
@@ -595,7 +683,7 @@
 			// Enter, Space
 			if ((event.key === "Enter") || (event.key === " ")) {
 				selectFocussedOption();
-				if (!props.selectManager.multi)
+				if (!props.manager.multi)
 					closeDropdown();
 			}
 			// Tab (verhält sich wie Enter und Space, aber verschiebt automatisch auch den Focus auf das nächste Element und schließt immer die Liste)
@@ -609,7 +697,7 @@
 			// Alt + Arrow Up
 			else if (event.altKey && event.key === "ArrowUp") {
 				selectFocussedOption();
-				if (!props.selectManager.multi)
+				if (!props.manager.multi)
 					closeDropdown();
 			}
 			// Arrow Up
@@ -633,7 +721,7 @@
 				if (props.searchable)
 					highlightedIndex.value = -1; // Der Cursor wird automatisch versetzt und der visuelle Fokus dafür entfernt
 				else
-					highlightedIndex.value = props.selectManager.filtered.size() - 1;
+					highlightedIndex.value = props.manager.filteredOptions.size() - 1;
 			// Printable Characters
 			else if (isPrintableChar(event.key))
 				// Wenn searchable = false wird der visuelle Fokus in der Liste verändert. Andernfalls wird nur das Suchfeld befüllt und es ist hier keine
@@ -664,13 +752,13 @@
 	let lastInput: any = null;
 	function handlePrintableKeyInput(event: KeyboardEvent) {
 		if ((lastInput === event.key) && (highlightedIndex.value !== -1)) {
-			if ((highlightedIndex.value + 1) >= props.selectManager.filtered.size()) {
+			if ((highlightedIndex.value + 1) >= props.manager.filteredOptions.size()) {
 				focusOptionThatStartsWith(lastInput);
 				return;
 			}
 
-			const nextOption = props.selectManager.filtered.get(highlightedIndex.value + 1);
-			if (props.selectManager.getOptionText(nextOption).toLowerCase().startsWith(event.key))
+			const nextOption = props.manager.filteredOptions.get(highlightedIndex.value + 1);
+			if (props.manager.getOptionText(nextOption).toLowerCase().startsWith(event.key))
 				highlightedIndex.value += 1;
 			else
 				focusOptionThatStartsWith(lastInput);
@@ -705,13 +793,13 @@
 	function focusOptionThatStartsWith(start: string) {
 		const char = start.toLowerCase();
 		const startIndex = (highlightedIndex.value === -1) ? 0 : highlightedIndex.value + 1;
-		const optionsSize = props.selectManager.filtered.size();
+		const optionsSize = props.manager.filteredOptions.size();
 
 		// Suche nach einer Option, die mit 'char' beginnt
 		for (let i = startIndex; i < optionsSize + startIndex; i++) {
 			const index = i % optionsSize; // Um auf den Index am Anfang der Liste zurückzukommen
-			const option = props.selectManager.filtered.get(index);
-			if (props.selectManager.getOptionText(option).toLowerCase().startsWith(char)) {
+			const option = props.manager.filteredOptions.get(index);
+			if (props.manager.getOptionText(option).toLowerCase().startsWith(char)) {
 				highlightedIndex.value = index;
 				return;
 			}
@@ -725,6 +813,8 @@
 	 * Setzt die Eingabe im Suchfeld zurück und aktualisiert die gefilterte Liste.
 	 */
 	function resetSearch() {
+		if (search.value === "")
+			return;
 		search.value = "";
 		updateSearchFilter();
 	}
@@ -736,10 +826,10 @@
 	 */
 	async function navigateList (direction: number) {
 		let newIndex = highlightedIndex.value + direction;
-		if (newIndex >= props.selectManager.filtered.size())
+		if (newIndex >= props.manager.filteredOptions.size())
 			newIndex = 0;
 		else if (newIndex < 0)
-			newIndex = props.selectManager.filtered.size() - 1;
+			newIndex = props.manager.filteredOptions.size() - 1;
 		highlightedIndex.value = newIndex;
 	};
 
@@ -749,12 +839,13 @@
 	 */
 	function selectFocussedOption () {
 		if (highlightedIndex.value !== -1) {
-			const option = props.selectManager.filtered.get(highlightedIndex.value);
-			props.selectManager.toggleSelection(option);
+			const option = props.manager.filteredOptions.get(highlightedIndex.value);
+			props.manager.toggleSelection(option);
 			resetSearch();
 		}
 		handleComboboxFocus();
 	}
+
 
 	/**
 	 * Generiert die passende sekundäre Textfarbe für gesetzte Textfarben von außen.
@@ -763,7 +854,7 @@
 	 */
 	function getSecondaryTextColor (color: string) {
 		if (color.startsWith("text-uistatic"))
-			return "text-uistatic-50";
+			return "text-uistatic-25";
 		switch (color) {
 			case "text-ui":
 				return "text-ui-secondary";
@@ -804,8 +895,48 @@
 			case "text-ui-ondisabled":
 				return "text-ui-ondisabled-secondary"
 			default:
-				return "text-ui-disabled";
+				return "text-ui-secondary";
 		}
 	}
+
+	/**
+	 * Prüft, ob die Eingaben valide sind
+	 */
+	const isValid = computed((): boolean => {
+		if (props.required && props.manager.hasSelection() === false)
+			return false;
+		if (minOptionsValid.value === false)
+			return false;
+		if (maxOptionsValid.value === false)
+			return false;
+		return true;
+	});
+
+	/**
+	 * Prüft, ob Eingaben abhänig von den Validatoren valide sind
+	 */
+	const isValidatorValid = computed((): boolean =>
+		(props.validator !== undefined) ? props.doValidate(props.validator(), model.value) : true
+	);
+
+	/**
+	 * Prüft, ob die gewählte Optionenanzahl im Falle von MultiSelects dem Minimum entspricht
+	 */
+	const minOptionsValid = computed((): boolean => {
+		if (props.manager.multi === false)
+			return true;
+		if ((props.minOptions === undefined) || ((props.manager.hasSelection() === false) && (props.minOptions <= 0)))
+			return true;
+		return (props.manager.hasSelection() === true) && (props.manager.selected.size() >= props.minOptions);
+	})
+
+	/**
+	 * Prüft, ob die gewählte Optionenanzahl im Falle von MultiSelects dem Maximum entspricht
+	 */
+	const maxOptionsValid = computed((): boolean => {
+		if ((props.maxOptions === undefined) || ((props.manager.hasSelection() === false) && (props.maxOptions <= 0)))
+			return true;
+		return (props.manager.selected.size() <= props.maxOptions);
+	})
 
 </script>

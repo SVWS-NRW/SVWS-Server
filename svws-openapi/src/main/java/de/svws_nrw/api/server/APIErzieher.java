@@ -4,12 +4,10 @@ import java.io.InputStream;
 
 import de.svws_nrw.core.data.erzieher.ErzieherListeEintrag;
 import de.svws_nrw.core.data.erzieher.ErzieherStammdaten;
-import de.svws_nrw.core.data.erzieher.Erzieherart;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.data.erzieher.DataErzieherStammdaten;
-import de.svws_nrw.data.erzieher.DataErzieherarten;
 import de.svws_nrw.data.erzieher.DataErzieherliste;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -69,30 +67,6 @@ public class APIErzieher {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataErzieherliste(conn).getAll(),
 				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
 	}
-
-
-	/**
-	 * Die OpenAPI-Methode für die Abfrage der Liste aller Erzieherarten.
-	 *
-	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param request   die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die Liste mit den einzelnen Erzieherarten
-	 */
-	@GET
-	@Path("/arten")
-	@Operation(summary = "Gibt eine Übersicht von allen Erzieherarten zurück.",
-			description = "Erstellt eine Liste aller in der Datenbank vorhandenen Erzieherarten unter Angabe der ID, der Beschreibung, "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogdaten besitzt.")
-	@ApiResponse(responseCode = "200", description = "Eine Liste von Erzieherarten",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Erzieherart.class))))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalogdaten anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Keine Erzieherart-Einträge gefunden")
-	public Response getErzieherArten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataErzieherarten(conn).getList(),
-				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
-	}
-
 
 	/**
 	 * Die OpenAPI-Methode für die Abfrage der Stammdaten eines Erziehers.

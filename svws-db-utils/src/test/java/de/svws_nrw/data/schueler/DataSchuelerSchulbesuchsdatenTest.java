@@ -3,18 +3,27 @@ package de.svws_nrw.data.schueler;
 import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchsdaten;
 import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.asd.types.jahrgang.PrimarstufeSchuleingangsphaseBesuchsjahre;
+import de.svws_nrw.asd.types.schueler.Einschulungsart;
 import de.svws_nrw.asd.types.schueler.Uebergangsempfehlung;
+import de.svws_nrw.asd.types.schule.Kindergartenbesuch;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.core.types.schueler.Herkunftsarten;
+import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.schild.grundschule.DTOKindergarten;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOSchuleNRW;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOEntlassarten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
+import de.svws_nrw.db.dto.current.schild.schule.DTOMerkmale;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response;
+import java.io.InputStream;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
+import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,9 +37,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 @DisplayName("Diese Klasse testet die Klasse DataSchuelerSchulbesuchsdaten")
@@ -49,6 +61,32 @@ class DataSchuelerSchulbesuchsdatenTest {
 	@BeforeAll
 	static void setUpAll() {
 		ASDCoreTypeUtils.initAll();
+	}
+
+	@Test
+	@DisplayName("setAttributesNotPatchable: id")
+	void setAttributesNotPatchableTest_id() {
+		final var dto = new DTOSchueler(1L, "123", false);
+		when(this.conn.queryByKey(DTOSchueler.class, 1L)).thenReturn(dto);
+
+		try (var mapperMock = mockStatic(JSONMapper.class)) {
+			mapperMock.when(() -> JSONMapper.toMap(any(InputStream.class))).thenReturn(Map.of("id", 99L));
+
+			final var throwable = ThrowableAssert.catchThrowable(() -> this.schulbesuchsdaten.patchAsResponse(1L, mock(InputStream.class)));
+
+			assertThat(throwable)
+					.isInstanceOf(ApiOperationException.class)
+					.hasMessage("Folgende Attribute werden für ein Patch nicht zugelassen: id.")
+					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+		}
+	}
+
+	@Test
+	@DisplayName("getLongId | Erfolg")
+	void getLongIdTest() {
+		final var dto = new DTOSchueler(1L, "123", false);
+
+		assertThat(this.schulbesuchsdaten.getLongId(dto)).isEqualTo(1L);
 	}
 
 	@Test
@@ -85,7 +123,392 @@ class DataSchuelerSchulbesuchsdatenTest {
 				.hasFieldOrPropertyWithValue(STATUS, Response.Status.NOT_FOUND);
 	}
 
+	/** --- map Tests ---*/
+
+	@Test
+	@DisplayName("map | idVorherigeSchule | Erfolg")
+	void mapTest_idVorherigeSchule_Erfolg() throws ApiOperationException {
+		when(this.conn.queryAll(DTOEntlassarten.class)).thenReturn(Collections.emptyList());
+		when(this.conn.queryAll(DTOMerkmale.class)).thenReturn(Collections.emptyList());
+		when(this.conn.queryAll(DTOSchuleNRW.class)).thenReturn(List.of(new DTOSchuleNRW(3L, "123")));
+		final var data = new DataSchuelerSchulbesuchsdaten(this.conn);
+		final var dto = new DTOSchueler(1L, "2", false);
+		dto.LSSchulNr = "123";
+
+		final var result = data.map(dto);
+
+		assertThat(result).hasFieldOrPropertyWithValue("idVorherigeSchule", 3L);
+	}
+
+	@Test
+	@DisplayName("map | idVorherigeSchule | Erfolg")
+	void mapTest_idVorherigeSchule_Null() throws ApiOperationException {
+		when(this.conn.queryAll(DTOEntlassarten.class)).thenReturn(Collections.emptyList());
+		when(this.conn.queryAll(DTOMerkmale.class)).thenReturn(Collections.emptyList());
+		when(this.conn.queryAll(DTOSchuleNRW.class)).thenReturn(Collections.emptyList());
+		final var data = new DataSchuelerSchulbesuchsdaten(this.conn);
+		final var dto = new DTOSchueler(1L, "2", false);
+		dto.LSSchulNr = "123";
+
+		final var result = data.map(dto);
+
+		assertThat(result).hasFieldOrPropertyWithValue("idVorherigeSchule", null);
+	}
+
+	@Test
+	@DisplayName("map | vorigeEntlassgrundID | Erfolg")
+	void mapTest_vorigeEntlassgrundID_Erfolg() throws ApiOperationException {
+		when(this.conn.queryAll(DTOEntlassarten.class)).thenReturn(List.of(new DTOEntlassarten(3L, "entlassgrund")));
+		final var data = new DataSchuelerSchulbesuchsdaten(this.conn);
+		final var dto = new DTOSchueler(1L, "2", false);
+		dto.LSEntlassgrund = "entlassgrund";
+
+		final var result = data.map(dto);
+
+		assertThat(result).hasFieldOrPropertyWithValue("vorigeEntlassgrundID", 3L);
+	}
+
+	@Test
+	@DisplayName("map | vorigeEntlassgrundID | Null")
+	void mapTest_vorigeEntlassgrundID_Null() throws ApiOperationException {
+		when(this.conn.queryAll(DTOEntlassarten.class)).thenReturn(Collections.emptyList());
+		final var data = new DataSchuelerSchulbesuchsdaten(this.conn);
+		final var dto = new DTOSchueler(1L, "2", false);
+		dto.LSEntlassgrund = "entlassgrund";
+
+		final var result = data.map(dto);
+
+		assertThat(result).hasFieldOrPropertyWithValue("vorigeEntlassgrundID", null);
+	}
+
+	@Test
+	@DisplayName("map | entlassungGrundID | Erfolg")
+	void mapTest_entlassungGrundID_Erfolg() throws ApiOperationException {
+		when(this.conn.queryAll(DTOEntlassarten.class)).thenReturn(List.of(new DTOEntlassarten(3L, "entlassgrund")));
+		final var data = new DataSchuelerSchulbesuchsdaten(this.conn);
+		final var dto = new DTOSchueler(1L, "2", false);
+		dto.Entlassgrund = "entlassgrund";
+
+		final var result = data.map(dto);
+
+		assertThat(result).hasFieldOrPropertyWithValue("entlassungGrundID", 3L);
+	}
+
+	@Test
+	@DisplayName("map | entlassungGrundID | Null")
+	void mapTest_entlassungGrundID_Null() throws ApiOperationException {
+		when(this.conn.queryAll(DTOEntlassarten.class)).thenReturn(Collections.emptyList());
+		final var data = new DataSchuelerSchulbesuchsdaten(this.conn);
+		final var dto = new DTOSchueler(1L, "2", false);
+		dto.Entlassgrund = "entlassgrund";
+
+		final var result = data.map(dto);
+
+		assertThat(result).hasFieldOrPropertyWithValue("entlassungGrundID", null);
+	}
+
+	@Test
+	@DisplayName("map | idAufnehmendeSchule | Erfolg")
+	void mapTest_idAufnehmendeSchule_Erfolg() throws ApiOperationException {
+		when(this.conn.queryAll(DTOEntlassarten.class)).thenReturn(Collections.emptyList());
+		when(this.conn.queryAll(DTOMerkmale.class)).thenReturn(Collections.emptyList());
+		when(this.conn.queryAll(DTOSchuleNRW.class)).thenReturn(List.of(new DTOSchuleNRW(3L, "123")));
+		final var data = new DataSchuelerSchulbesuchsdaten(this.conn);
+		final var dto = new DTOSchueler(1L, "2", false);
+		dto.SchulwechselNr = "123";
+
+		final var result = data.map(dto);
+
+		assertThat(result).hasFieldOrPropertyWithValue("idAufnehmendeSchule", 3L);
+	}
+
+
+	@Test
+	@DisplayName("map | idAufnehmendeSchule | null")
+	void mapTest_idAufnehmendeSchule_Null() throws ApiOperationException {
+		when(this.conn.queryAll(DTOEntlassarten.class)).thenReturn(Collections.emptyList());
+		when(this.conn.queryAll(DTOMerkmale.class)).thenReturn(Collections.emptyList());
+		when(this.conn.queryAll(DTOSchuleNRW.class)).thenReturn(Collections.emptyList());
+		final var data = new DataSchuelerSchulbesuchsdaten(this.conn);
+		final var dto = new DTOSchueler(1L, "2", false);
+		dto.SchulwechselNr = "123";
+
+		final var result = data.map(dto);
+
+		assertThat(result).hasFieldOrPropertyWithValue("idAufnehmendeSchule", null);
+	}
+
+	@Test
+	@DisplayName("map | grundschuleEinschulungsartId | Erfolg")
+	void mapTest_grundschuleEinschulungsartId_Erfolg() throws ApiOperationException {
+		final var dto = new DTOSchueler(1L, "2", false);
+		final var einschulungsart = Einschulungsart.values()[0].getLetzterEintrag();
+		dto.EinschulungsartASD = einschulungsart.schluessel;
+
+		final var result = this.schulbesuchsdaten.map(dto);
+
+		assertThat(result).hasFieldOrPropertyWithValue("grundschuleEinschulungsartID", einschulungsart.id);
+	}
+
+	@Test
+	@DisplayName("map | verpflichtungSprachfoerderkurs | True")
+	void mapTest_verpflichtungSprachfoerderkurs_True() throws ApiOperationException {
+		final var dto = new DTOSchueler(1L, "2", false);
+		dto.VerpflichtungSprachfoerderkurs = true;
+
+		final var result = this.schulbesuchsdaten.map(dto);
+
+		assertThat(result).hasFieldOrPropertyWithValue("verpflichtungSprachfoerderkurs", true);
+	}
+
+	@Test
+	@DisplayName("map | verpflichtungSprachfoerderkurs | False")
+	void mapTest_verpflichtungSprachfoerderkurs_False() throws ApiOperationException {
+		final var dto = new DTOSchueler(1L, "2", false);
+		dto.VerpflichtungSprachfoerderkurs = false;
+
+		final var result = this.schulbesuchsdaten.map(dto);
+
+		assertThat(result).hasFieldOrPropertyWithValue("verpflichtungSprachfoerderkurs", false);
+	}
+
+
+	@Test
+	@DisplayName("map | verpflichtungSprachfoerderkurs | Null")
+	void mapTest_verpflichtungSprachfoerderkurs_Null() throws ApiOperationException {
+		final var dto = new DTOSchueler(1L, "2", false);
+		dto.VerpflichtungSprachfoerderkurs = null;
+
+		final var result = this.schulbesuchsdaten.map(dto);
+
+		assertThat(result).hasFieldOrPropertyWithValue("verpflichtungSprachfoerderkurs", false);
+	}
+
+	@Test
+	@DisplayName("map | teilnahmeSprachfoerderkurs | True")
+	void mapTest_teilnahmeSprachfoerderkurs_True() throws ApiOperationException {
+		final var dto = new DTOSchueler(1L, "2", false);
+		dto.TeilnahmeSprachfoerderkurs = true;
+
+		final var result = this.schulbesuchsdaten.map(dto);
+
+		assertThat(result).hasFieldOrPropertyWithValue("teilnahmeSprachfoerderkurs", true);
+	}
+
+	@Test
+	@DisplayName("map | teilnahmeSprachfoerderkurs | False")
+	void mapTest_teilnahmeSprachfoerderkurs_False() throws ApiOperationException {
+		final var dto = new DTOSchueler(1L, "2", false);
+		dto.TeilnahmeSprachfoerderkurs = false;
+
+		final var result = this.schulbesuchsdaten.map(dto);
+
+		assertThat(result).hasFieldOrPropertyWithValue("teilnahmeSprachfoerderkurs", false);
+	}
+
+
+	@Test
+	@DisplayName("map | teilnahmeSprachfoerderkurs | Null")
+	void mapTest_teilnahmeSprachfoerderkurs_Null() throws ApiOperationException {
+		final var dto = new DTOSchueler(1L, "2", false);
+		dto.TeilnahmeSprachfoerderkurs = null;
+
+		final var result = this.schulbesuchsdaten.map(dto);
+
+		assertThat(result).hasFieldOrPropertyWithValue("teilnahmeSprachfoerderkurs", false);
+	}
+
+	@Test
+	@DisplayName("map | idDauerKindergartenbesuch | Null")
+	void mapTest_idDauerKindergartenbesuch_Null() throws ApiOperationException {
+		final var dto = new DTOSchueler(1L, "2", false);
+		dto.DauerKindergartenbesuch = null;
+
+		final var result = this.schulbesuchsdaten.map(dto);
+
+		assertThat(result).hasFieldOrPropertyWithValue("idDauerKindergartenbesuch", null);
+	}
+
+	@Test
+	@DisplayName("map | idDauerKindergartenbesuch | wrongKey")
+	void mapTest_idDauerKindergartenbesuch_wrongKey() {
+		final var dto = new DTOSchueler(1L, "2", false);
+		dto.DauerKindergartenbesuch = "wrong";
+
+		final var throwable = catchThrowable(() -> this.schulbesuchsdaten.map(dto));
+
+		assertThat(throwable)
+				.isInstanceOf(ApiOperationException.class)
+				.hasMessage("Kein Kindergartenbesuch mit dem Schlüssel wrong gefunden.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.NOT_FOUND);
+	}
+
+	@Test
+	@DisplayName("map | idDauerKindergartenbesuch | Erfolg")
+	void mapTest_idDauerKindergartenbesuch_Erfolg() throws ApiOperationException {
+		final var dto = new DTOSchueler(1L, "2", false);
+		final var kindergartenbesuch = Kindergartenbesuch.values()[0].historie().getFirst();
+		dto.DauerKindergartenbesuch = kindergartenbesuch.schluessel;
+
+		final var result = this.schulbesuchsdaten.map(dto);
+
+		assertThat(result).hasFieldOrPropertyWithValue("idDauerKindergartenbesuch", kindergartenbesuch.id);
+	}
+
+	@Test
+	@DisplayName("map | idGrundschuleJahreEingangsphase | Erfolg")
+	void mapTest_idGrundschuleJahreEingangsphase_Erfolg() throws ApiOperationException {
+		final var primarstufe = PrimarstufeSchuleingangsphaseBesuchsjahre.values()[0].historie().getLast();
+		final var dto = new DTOSchueler(1L, "2", false);
+		dto.EPJahre = Integer.valueOf(primarstufe.schluessel);
+		dto.Einschulungsjahr = 2100;
+
+		final var result = this.schulbesuchsdaten.map(dto);
+
+		assertThat(result).hasFieldOrPropertyWithValue("idGrundschuleJahreEingangsphase", primarstufe.id);
+	}
+
+	@Test
+	@DisplayName("map | idGrundschuleJahreEingangsphase | EPJahre is null")
+	void mapTest_idGrundschuleJahreEingangsphase_EPJahreNull() throws ApiOperationException {
+		final var dto = new DTOSchueler(1L, "2", false);
+		dto.EPJahre = null;
+		dto.Einschulungsjahr = 2100;
+
+		final var result = this.schulbesuchsdaten.map(dto);
+
+		assertThat(result).hasFieldOrPropertyWithValue("idGrundschuleJahreEingangsphase", null);
+	}
+
+	@Test
+	@DisplayName("map | idGrundschuleJahreEingangsphase | Einschlungsjahr is null")
+	void mapTest_idGrundschuleJahreEingangsphase_EinschlungsjahrNull() throws ApiOperationException {
+		final var primarstufe = PrimarstufeSchuleingangsphaseBesuchsjahre.values()[0].historie().getLast();
+		final var dto = new DTOSchueler(1L, "2", false);
+		dto.EPJahre = Integer.valueOf(primarstufe.schluessel);
+		dto.Einschulungsjahr = null;
+
+		final var result = this.schulbesuchsdaten.map(dto);
+
+		assertThat(result).hasFieldOrPropertyWithValue("idGrundschuleJahreEingangsphase", null);
+	}
+
 	/** --- mapAttribute Tests ---*/
+
+	@Test
+	@DisplayName("mapAttribute | match id")
+	void mapAttributeTest_matchId() {
+		final var dto = new DTOSchueler(1L, "2", false);
+
+		assertDoesNotThrow(() -> this.schulbesuchsdaten.mapAttribute(dto, "id", 1L, null));
+	}
+
+	@Test
+	@DisplayName("mapAttribute | idDauerKindergartenbesuch | null")
+	void mapAttributeTest_idDauerKindergartenbesuch_null() throws ApiOperationException {
+		final var dto = new DTOSchueler(1L, "2", false);
+		dto.DauerKindergartenbesuch = "123";
+
+		this.schulbesuchsdaten.mapAttribute(dto, "idDauerKindergartenbesuch", null, null);
+
+		assertThat(dto.DauerKindergartenbesuch).isNull();
+	}
+
+	@Test
+	@DisplayName("mapAttribute | idDauerKindergartenbesuch | eintrag null")
+	void mapAttributeTest_idDauerKindergartenbesuch_eintragNull() {
+		final var dto = new DTOSchueler(1L, "2", false);
+
+		final var throwable = catchThrowable(() -> this.schulbesuchsdaten.mapAttribute(dto, "idDauerKindergartenbesuch", -1, null));
+
+		assertThat(throwable)
+				.isInstanceOf(ApiOperationException.class)
+				.hasMessage("Kein Kindergartenbesuch mit der ID -1 gefunden.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.NOT_FOUND);
+	}
+
+	@Test
+	@DisplayName("mapAttribute | idDauerKindergartenbesuch | Erfolg")
+	void mapAttributeTest_idDauerKindergartenbesuch_Erfolg() throws ApiOperationException {
+		final var dto = new DTOSchueler(1L, "2", false);
+		final var entry = Kindergartenbesuch.values()[0].historie().getLast();
+
+		this.schulbesuchsdaten.mapAttribute(dto, "idDauerKindergartenbesuch", entry.id, null);
+
+		assertThat(dto.DauerKindergartenbesuch).isEqualTo(entry.schluessel);
+	}
+
+	@Test
+	@DisplayName("mapAttribute | KindergartenID | null")
+	void mapAttributeTest_KindergartenID_Null() throws ApiOperationException {
+		final var dto = new DTOSchueler(1L, "2", false);
+
+		this.schulbesuchsdaten.mapAttribute(dto, "idKindergarten", null, null);
+
+		assertThat(dto.Kindergarten_ID).isNull();
+	}
+
+	@Test
+	@DisplayName("mapAttribute | KindergartenID | wrongKey")
+	void mapAttributeTest_KindergartenID_wrongKey() {
+		final var dto = new DTOSchueler(1L, "2", false);
+		when(this.conn.queryByKey(DTOKindergarten.class, 2L)).thenReturn(null);
+
+		final var throwable = catchThrowable(() -> this.schulbesuchsdaten.mapAttribute(dto, "idKindergarten", 2L, null));
+
+		assertThat(throwable)
+				.isInstanceOf(ApiOperationException.class)
+				.hasMessage("Kein Kindergarten mit der ID 2 gefunden.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.NOT_FOUND);
+	}
+
+	@Test
+	@DisplayName("mapAttribute | KindergartenID | Erfolg")
+	void mapAttributeTest_KindergartenId_Erfolg() throws ApiOperationException {
+		final var dto = new DTOSchueler(1L, "2", false);
+		final var kindergarten = new DTOKindergarten(5L);
+		when(this.conn.queryByKey(DTOKindergarten.class, 5L)).thenReturn(kindergarten);
+
+		this.schulbesuchsdaten.mapAttribute(dto, "idKindergarten", kindergarten.ID, null);
+
+		assertThat(dto.Kindergarten_ID).isEqualTo(kindergarten.ID);
+	}
+
+	@Test
+	@DisplayName("mapAttribute | Einschulungsart | idNull")
+	void mapAttributeTest_Einschulungsart_idNull() throws ApiOperationException {
+		final var dto = new DTOSchueler(1L, "2", false);
+		dto.EinschulungsartASD = "abc";
+
+		this.schulbesuchsdaten.mapAttribute(dto, "grundschuleEinschulungsartID", null, null);
+
+		assertThat(dto.EinschulungsartASD).isNull();
+	}
+
+	@Test
+	@DisplayName("mapAttribute | Einschulungsart | wrongID")
+	void mapAttributeTest_Einschulungsart_wrongID() {
+		final var dto = new DTOSchueler(1L, "2", false);
+
+		final var throwable = catchThrowable(() -> this.schulbesuchsdaten.mapAttribute(dto, "grundschuleEinschulungsartID", -1, null));
+
+		assertThat(throwable)
+				.isInstanceOf(ApiOperationException.class)
+				.hasMessage("Keine Einschulungsart mit der ID -1 gefunden.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.NOT_FOUND);
+	}
+
+	@Test
+	@DisplayName("mapAttribute | Einschulungsart | Erfolg")
+	void mapAttributeTest_Einschulungsart_Erfolg() throws ApiOperationException {
+		final var dto = new DTOSchueler(1L, "2", false);
+		final var entry = Einschulungsart.values()[0].historie().getLast();
+
+		this.schulbesuchsdaten.mapAttribute(dto, "grundschuleEinschulungsartID", entry.id, null);
+
+		assertThat(dto.EinschulungsartASD).isEqualTo(entry.schluessel);
+	}
+
 
 	@Test
 	@DisplayName("mapAttribute | idVorherigeSchule | Erfolg")
@@ -365,7 +788,7 @@ class DataSchuelerSchulbesuchsdatenTest {
 
 	@Test
 	@DisplayName("mapAttribute | grundschuleEinschulungsjahr | value is smaller then min")
-	void mapAttributeTest_grundschuleEinschulungsjahr_smallerThenMin() throws ApiOperationException {
+	void mapAttributeTest_grundschuleEinschulungsjahr_smallerThenMin() {
 		final var dtoSchueler = new DTOSchueler(1L, "1", true);
 
 		final var throwable = catchThrowable(() ->  this.schulbesuchsdaten.mapAttribute(dtoSchueler, "grundschuleEinschulungsjahr", 1899, null));
@@ -378,7 +801,7 @@ class DataSchuelerSchulbesuchsdatenTest {
 
 	@Test
 	@DisplayName("mapAttribute | grundschuleEinschulungsjahr | value is bigger then max")
-	void mapAttributeTest_grundschuleEinschulungsjahr_biggerThenMax() throws ApiOperationException {
+	void mapAttributeTest_grundschuleEinschulungsjahr_biggerThenMax() {
 		final var dtoSchueler = new DTOSchueler(1L, "1", true);
 
 		final var throwable = catchThrowable(() ->  this.schulbesuchsdaten.mapAttribute(dtoSchueler, "grundschuleEinschulungsjahr", 2101, null));
@@ -412,7 +835,7 @@ class DataSchuelerSchulbesuchsdatenTest {
 
 	@Test
 	@DisplayName("mapAttribute | sekIWechsel | value is smaller then min")
-	void mapAttributeTest_sekIWechsel_smallerThenMin() throws ApiOperationException {
+	void mapAttributeTest_sekIWechsel_smallerThenMin() {
 		final var dtoSchueler = new DTOSchueler(1L, "1", true);
 
 		final var throwable = catchThrowable(() ->  this.schulbesuchsdaten.mapAttribute(dtoSchueler, "sekIWechsel", 1899, null));
@@ -425,7 +848,7 @@ class DataSchuelerSchulbesuchsdatenTest {
 
 	@Test
 	@DisplayName("mapAttribute | sekIWechsel | value is bigger then max")
-	void mapAttributeTest_sekIWechsel_biggerThenMax() throws ApiOperationException {
+	void mapAttributeTest_sekIWechsel_biggerThenMax() {
 		final var dtoSchueler = new DTOSchueler(1L, "1", true);
 
 		final var throwable = catchThrowable(() ->  this.schulbesuchsdaten.mapAttribute(dtoSchueler, "sekIWechsel", 2101, null));
@@ -459,7 +882,7 @@ class DataSchuelerSchulbesuchsdatenTest {
 
 	@Test
 	@DisplayName("mapAttribute | sekIIWechsel | value is smaller then min")
-	void mapAttributeTest_sekIIWechsel_smallerThenMin() throws ApiOperationException {
+	void mapAttributeTest_sekIIWechsel_smallerThenMin() {
 		final var dtoSchueler = new DTOSchueler(1L, "1", true);
 
 		final var throwable = catchThrowable(() ->  this.schulbesuchsdaten.mapAttribute(dtoSchueler, "sekIIWechsel", 1899, null));
@@ -472,7 +895,7 @@ class DataSchuelerSchulbesuchsdatenTest {
 
 	@Test
 	@DisplayName("mapAttribute | sekIIWechsel | value is bigger then max")
-	void mapAttributeTest_sekIIWechsel_biggerThenMax() throws ApiOperationException {
+	void mapAttributeTest_sekIIWechsel_biggerThenMax() {
 		final var dtoSchueler = new DTOSchueler(1L, "1", true);
 
 		final var throwable = catchThrowable(() ->  this.schulbesuchsdaten.mapAttribute(dtoSchueler, "sekIIWechsel", 2101, null));
@@ -487,10 +910,10 @@ class DataSchuelerSchulbesuchsdatenTest {
 	@DisplayName("mapAttribute | grundschuleJahreEingangsphase | Erfolg")
 	void mapAttributeTest_grundschuleJahreEingangsphase() throws ApiOperationException {
 		final var dtoSchueler = new DTOSchueler(1L, "1", true);
-		final var key = PrimarstufeSchuleingangsphaseBesuchsjahre.E2.daten(2025).schluessel;
-		schulbesuchsdaten.mapAttribute(dtoSchueler, "grundschuleJahreEingangsphase", Integer.valueOf(key), null);
+		final var key = PrimarstufeSchuleingangsphaseBesuchsjahre.E2.daten(2025);
+		schulbesuchsdaten.mapAttribute(dtoSchueler, "idGrundschuleJahreEingangsphase", key.id, null);
 
-		assertThat(dtoSchueler.EPJahre).isEqualTo(Integer.valueOf(key));
+		assertThat(dtoSchueler.EPJahre).isEqualTo(Integer.valueOf(key.schluessel));
 	}
 
 	@Test
@@ -499,7 +922,7 @@ class DataSchuelerSchulbesuchsdatenTest {
 		final var dtoSchueler = new DTOSchueler(1L, "1", true);
 		dtoSchueler.EPJahre = 10;
 
-		this.schulbesuchsdaten.mapAttribute(dtoSchueler, "grundschuleJahreEingangsphase", null, null);
+		this.schulbesuchsdaten.mapAttribute(dtoSchueler, "idGrundschuleJahreEingangsphase", null, null);
 
 		assertThat(dtoSchueler.EPJahre).isNull();
 	}
@@ -509,11 +932,11 @@ class DataSchuelerSchulbesuchsdatenTest {
 	void mapAttributeTest_grundschuleJahreEingangsphase_exception() {
 		final var dtoSchueler = new DTOSchueler(1L, "1", true);
 
-		final var throwable = catchThrowable(() -> this.schulbesuchsdaten.mapAttribute(dtoSchueler, "grundschuleJahreEingangsphase", 15, null));
+		final var throwable = catchThrowable(() -> this.schulbesuchsdaten.mapAttribute(dtoSchueler, "idGrundschuleJahreEingangsphase", 15, null));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Keine Eingangsphase mit dem Schlüssel 15 vorhanden.")
+				.hasMessage("Keine Eingangsphase mit der ID 15 vorhanden.")
 				.hasFieldOrPropertyWithValue(STATUS, Response.Status.NOT_FOUND);
 	}
 
@@ -610,7 +1033,7 @@ class DataSchuelerSchulbesuchsdatenTest {
 		switch (key) {
 			case "id" -> assertThat(throwable)
 					.isInstanceOf(ApiOperationException.class)
-					.hasMessageStartingWith("IdPatch 5 ist ungleich idSchueler 1.")
+					.hasMessageStartingWith("Die ID 5 des Patches ist null oder stimmt nicht mit der ID 1 in der Datenbank überein.")
 					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 			case "vorigeEntlassdatum" -> assertThat(expectedDTO.LSSchulEntlassDatum).isEqualTo(value);
 			case "vorigeBemerkung" -> assertThat(expectedDTO.LSBemerkung).isEqualTo(value);

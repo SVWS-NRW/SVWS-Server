@@ -1,4 +1,5 @@
-import type { ApiFile, List, ReportingParameter, SchuelerListeEintrag, SchuelerStammdaten, SimpleOperationResponse, StundenplanListeEintrag , SchuelerTelefon } from "@core";
+import type { ApiFile, List, ReportingParameter, SchuelerListeEintrag, SchuelerStammdaten, SimpleOperationResponse, StundenplanListeEintrag, SchuelerTelefon, SchuelerSchulbesuchsdaten, } from "@core";
+
 import { BenutzerKompetenz, ArrayList, SchuelerListe, SchuelerListeManager, SchuelerStatus, DeveloperNotificationException } from "@core";
 
 import { api } from "~/router/Api";
@@ -8,9 +9,10 @@ import { ViewType } from "@ui";
 import { routeSchuelerNeu } from "~/router/apps/schueler/RouteSchuelerNeu";
 import type { RouteParamsRawGeneric } from "vue-router";
 import { routeSchuelerIndividualdatenGruppenprozesse } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdatenGruppenprozesse";
+import type { PendingStateManager } from "@ui";
 
 
-interface RouteStateSchueler extends RouteStateAuswahlInterface<SchuelerListeManager>{
+interface RouteStateSchueler extends RouteStateAuswahlInterface<SchuelerListeManager> {
 	mapStundenplaene: Map<number, StundenplanListeEintrag>;
 	listSchuelerTelefoneintraege: List<SchuelerTelefon>;
 };
@@ -23,12 +25,13 @@ const defaultState = <RouteStateSchueler> {
 	activeViewType: ViewType.DEFAULT,
 	mapStundenplaene: new Map(),
 	listSchuelerTelefoneintraege: new ArrayList(),
+	pendingStateRegistry: undefined,
 };
 
 export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, RouteStateSchueler> {
 
 	public constructor() {
-		super(defaultState, undefined, routeSchuelerNeu);
+		super(defaultState, { hinzufuegen: routeSchuelerNeu });
 	}
 
 	public addID(param: RouteParamsRawGeneric, id: number): void {
@@ -60,6 +63,7 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 		} else {
 			manager.useFilter(this._state.value.manager);
 		}
+
 		return { manager };
 	}
 
@@ -71,6 +75,23 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 		this.manager.schuelerstatus.auswahlAdd(SchuelerStatus.data().getWertByID(res.status));
 		this.setPatchedState({ listSchuelerTelefoneintraege });
 		return res;
+	}
+
+	public async ladeDatenMultiple(auswahlList: List<SchuelerListeEintrag>, state: Partial<RouteStateSchueler>): Promise<List<SchuelerStammdaten> | null> {
+		if (auswahlList.isEmpty())
+			return null;
+
+		const ids: List<number> = new ArrayList();
+		for (const eintrag of auswahlList){
+			ids.add(eintrag.id);
+		}
+		const response = await api.server.getSchuelerStammdatenMultiple(ids, api.schema);
+		// TODO: derzeit müsste bei einem Bulk selekt zu jedem Schüler einzeln ein API Call für Telefone gemacht werden, muss umgebaut werden
+		// const schuelerTelefone = await api.server.getSchuelerTelefone(api.schema, auswahl.id);
+		// this.manager.schuelerstatus.auswahlAdd(SchuelerStatus.data().getWertByID(response.status));
+		// state.listSchuelerTelefoneintraege = schuelerTelefone;
+
+		return response;
 	}
 
 	public async updateMapStundenplaene() {
@@ -90,10 +111,15 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 	// 	return new SchuelerListeManager(api.schulform, new SchuelerListe(), new ArrayList(), api.schuleStammdaten.abschnitte, api.schuleStammdaten.idSchuljahresabschnitt);
 	// }
 
-	addSchueler = async (data: Partial<SchuelerStammdaten>): Promise<void> => {
-		const schulerStammdaten = await api.server.addSchuelerStammdaten(data, api.schema, this._state.value.idSchuljahresabschnitt);
+	addSchueler = async (data: Partial<SchuelerStammdaten>): Promise<SchuelerStammdaten> => {
+		const schuelerStammdaten = await api.server.addSchuelerStammdaten(data, api.schema, this._state.value.idSchuljahresabschnitt);
 		await this.setSchuljahresabschnitt(this._state.value.idSchuljahresabschnitt, true);
-		await this.gotoDefaultView(schulerStammdaten.id);
+		// await this.gotoDefaultView(schuelerStammdaten.id);
+		return schuelerStammdaten;
+	}
+
+	patchSchuelerNeu = async (data : Partial<SchuelerStammdaten>, id: number) : Promise<void> => {
+		await api.server.patchSchuelerStammdaten(data, api.schema, id);
 	}
 
 	get listSchuelerTelefoneintraege(): List<SchuelerTelefon> {
@@ -135,6 +161,10 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 		api.status.stop();
 	}
 
+	patchSchuelerKindergarten = async (data : Partial<SchuelerSchulbesuchsdaten>, id: number) : Promise<void> => {
+		await api.server.patchSchuelerSchulbesuch(data, api.schema, id);
+	}
+
 	protected async doPatch(data : Partial<SchuelerStammdaten>, id: number) : Promise<void> {
 		await api.server.patchSchuelerStammdaten(data, api.schema, id);
 	}
@@ -153,7 +183,7 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Schülern vor.');
 
 		if (!this.manager.liste.auswahlExists())
-			errorLog.add('Es wurde kein Schüler zum Löschen ausgewählt.');
+			errorLog.add('Es ist kein Schüler ausgewählt.');
 
 		return [errorLog.isEmpty(), errorLog];
 	}
@@ -167,5 +197,25 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 			reportingParameter.idsDetaildaten.add(l.id);
 		return await api.server.pdfReport(reportingParameter, api.schema);
 	})
+
+	patchMultiple = async (pendingStateManager: PendingStateManager<any>): Promise<void> => {
+		api.status.start();
+
+		const partialsToPatch = pendingStateManager.partials;
+		await api.server.patchSchuelerStammdatenMultiple(partialsToPatch, api.schema);
+
+		// Übernehme nur geänderte SchuelerStammdaten Objekte in den AuswahlManager, damit nicht alle Stammdaten neugeladen werden müssen
+		for (const partialToPatch of partialsToPatch) {
+			if (partialToPatch.id !== undefined) {
+				const patchId = (partialToPatch as Record<string, any>)[pendingStateManager.idFieldName];
+				const currentStammdaten = this._state.value.manager?.getListeDaten().get(patchId);
+				this._state.value.manager?.getListeDaten().put(patchId, Object.assign(Object.assign({}, currentStammdaten), partialToPatch));
+			}
+		}
+
+		pendingStateManager.resetPendingState();
+		this.commit();
+		api.status.stop();
+	}
 
 }

@@ -46,9 +46,8 @@
 
 	import type { StundenplanAppProps } from "./SStundenplanAppProps";
 	import { DateUtils } from "@core";
-	import { ViewType } from "@ui";
+	import { useRegionSwitch, ViewType } from "@ui";
 	import { computed } from "vue";
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<StundenplanAppProps>();
 

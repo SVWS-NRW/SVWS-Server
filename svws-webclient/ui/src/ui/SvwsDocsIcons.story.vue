@@ -1,6 +1,6 @@
 <template>
 	<Story title="Icons" id="icons" group="top" icon="ri:landscape-line" :responsive-disabled="true" :layout="{type: 'grid', width: '45%'}">
-		<Variant title="Größen und Farben" source=" ">
+		<Variant title="Größen und Farben" id="farben">
 			<table class="svws-docs-icon-table">
 				<tbody>
 					<tr v-for="size in ['xxs', 'xs', 'sm', 'default', 'lg', 'xl', 'xxl']" :key="size" style="grid-template-columns: 1fr 1fr 2fr;" :class="size === 'default' ? 'bg-ui-selected text-ui-onselected' : ''">
@@ -11,7 +11,7 @@
 				</tbody>
 			</table>
 			<!-- Generate all icon sizes: icon-xxs icon-xs icon-sm icon icon-lg icon-xl icon-xxl -->
-			<div class="htw-prose dark:htw-prose-invert mt-12">
+			<div class="prose mt-12">
 				<div class="flex gap-1 flex-wrap -mb-3">
 					<template v-for="color in iconColors" :key="color">
 						<span class="icon-xl i-ri-palette-line" :class="`icon-${color}`" />
@@ -20,7 +20,7 @@
 				<p>Übersicht aller Varianten: <a href="/story/farben?variantId=tokens-icon">Farben (Design Tokens)</a>.</p>
 			</div>
 		</Variant>
-		<Variant title="App Icons" source=" ">
+		<Variant title="App Icons" id="icons">
 			<table class="svws-docs-icon-table">
 				<tbody>
 					<tr>
@@ -85,7 +85,7 @@
 				</tbody>
 			</table>
 		</Variant>
-		<Variant title="Häufig verwendet" source=" ">
+		<Variant title="Häufig verwendet" id="oftverwendet">
 			<table class="svws-docs-icon-table">
 				<tbody>
 					<tr>
@@ -145,7 +145,7 @@
 				</tbody>
 			</table>
 		</Variant>
-		<Variant title="Weitere Icons" source=" ">
+		<Variant title="Weitere Icons" id="weitere">
 			<table class="svws-docs-icon-table">
 				<tbody>
 					<tr>
@@ -201,7 +201,7 @@
 				</tbody>
 			</table>
 		</Variant>
-		<Variant title="Oberstufe" source=" ">
+		<Variant title="Oberstufe" id="gost">
 			<table class="svws-docs-icon-table">
 				<tbody>
 					<tr>
@@ -250,7 +250,7 @@
 				</tbody>
 			</table>
 		</Variant>
-		<Variant title="Input Fields und Interaktion" source=" ">
+		<Variant title="Input Fields und Interaktion" id="fehler">
 			<table class="svws-docs-icon-table">
 				<tbody>
 					<tr>

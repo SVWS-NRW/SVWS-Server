@@ -28,7 +28,7 @@ public final class AbteilungenListeManager extends AuswahlManager<Long, Abteilun
 
 	private final @NotNull Map<Long, LehrerListeEintrag> _lehrerById;
 
-	private final @NotNull Map<Long, KlassenDaten> _klassenById;
+	private @NotNull Map<Long, KlassenDaten> _klassenById;
 
 	/** Ein Default-Comparator für den Vergleich von Abteilungen. */
 	public static final @NotNull Comparator<Abteilung> comparator =
@@ -45,6 +45,16 @@ public final class AbteilungenListeManager extends AuswahlManager<Long, Abteilun
 
 				return Long.compare(a.id, b.id);
 			};
+
+	private final @NotNull Comparator<AbteilungKlassenzuordnung> comparatorKlassenzuordnung =
+			(final @NotNull AbteilungKlassenzuordnung a, final @NotNull AbteilungKlassenzuordnung b) -> {
+				final KlassenDaten firstClass = _klassenById.get(a.idKlasse);
+				final KlassenDaten secondClass = _klassenById.get(b.idKlasse);
+				if ((firstClass == null) || (firstClass.kuerzel == null) || (secondClass == null) || (secondClass.kuerzel == null))
+					return 0;
+				return firstClass.kuerzel.compareTo(secondClass.kuerzel);
+			};
+
 
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
@@ -79,6 +89,29 @@ public final class AbteilungenListeManager extends AuswahlManager<Long, Abteilun
 			result.put(v.id, v);
 		return result;
 	}
+
+	/**
+	 * Löscht Klassenzuordnungen anhand der IDs
+	 *
+	 * @param ids    Ids der Klassenzuordnungen
+	 */
+	public void deleteKlassenzuordnungen(final @NotNull List<Long> ids) {
+		if (this._daten == null)
+			return;
+
+		for (final Long id: ids) {
+			AbteilungKlassenzuordnung toBeDeleted = null;
+			for (final AbteilungKlassenzuordnung v : this._daten.klassenzuordnungen) {
+				if (v.id == id) {
+					toBeDeleted = v;
+					break;
+				}
+			}
+			if (toBeDeleted != null)
+				this._daten.klassenzuordnungen.remove(toBeDeleted);
+		}
+	}
+
 
 	/**
 	 * Ein Getter für die Liste der Lehrer
@@ -133,8 +166,10 @@ public final class AbteilungenListeManager extends AuswahlManager<Long, Abteilun
 	 * @param zuordnungen    Liste der AbteilungsKlassenzuordnungen
 	 */
 	public void addKlassenToAuswahl(final @NotNull List<AbteilungKlassenzuordnung> zuordnungen) {
-		if (_daten != null)
+		if (_daten != null) {
 			_daten.klassenzuordnungen.addAll(zuordnungen);
+			_daten.klassenzuordnungen.sort(comparatorKlassenzuordnung);
+		}
 	}
 
 	@Override

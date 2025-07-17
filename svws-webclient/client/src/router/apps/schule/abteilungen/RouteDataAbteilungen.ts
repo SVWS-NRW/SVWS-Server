@@ -1,6 +1,6 @@
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
-import { List, Abteilung, SimpleOperationResponse, AbteilungKlassenzuordnung } from "@core";
+import type { List, Abteilung, SimpleOperationResponse, AbteilungKlassenzuordnung } from "@core";
 import { ArrayList } from "@core";
 import { AbteilungenListeManager } from "@core";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
@@ -22,7 +22,7 @@ const defaultState = {
 export class RouteDataAbteilungen extends RouteDataAuswahl<AbteilungenListeManager, RouteStateAuswahlInterface<AbteilungenListeManager>> {
 
 	public constructor() {
-		super(defaultState, routeAbteilungenGruppenprozesse, routeAbteilungenNeu);
+		super(defaultState, { gruppenprozesse: routeAbteilungenGruppenprozesse, hinzufuegen: routeAbteilungenNeu });
 	}
 
 	public addID(param: RouteParamsRawGeneric, id: number) {
@@ -65,6 +65,12 @@ export class RouteDataAbteilungen extends RouteDataAuswahl<AbteilungenListeManag
 		const result = await api.server.addAbteilungKlassenzuordnung(data, api.schema);
 		await this.gotoDefaultView(idAbteilung);
 		this.manager.addKlassenToAuswahl(result);
+		this.commit();
+	}
+
+	deleteKlassenzuordnungen = async (ids: List<number>) : Promise<void> => {
+		await api.server.deleteAbteilungKlassenzuordnung(ids, api.schema);
+		this.manager.deleteKlassenzuordnungen(ids);
 		this.commit();
 	}
 

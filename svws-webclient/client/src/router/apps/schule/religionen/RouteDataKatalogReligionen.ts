@@ -18,14 +18,14 @@ const defaultState: RouteStateKatalogeReligionen = {
 export class RouteDataKatalogReligionen extends RouteDataAuswahl<ReligionListeManager, RouteStateKatalogeReligionen> {
 
 	public constructor() {
-		super(defaultState, routeKatalogReligionGruppenprozesse, routeKatalogReligionNeu);
+		super(defaultState, { gruppenprozesse: routeKatalogReligionGruppenprozesse, hinzufuegen: routeKatalogReligionNeu });
 	}
 
 	public addID(param: RouteParamsRawGeneric, id: number): void {
 		param.id = id;
 	}
 
-	protected async createManager(idSchuljahresabschnitt : number) : Promise<Partial<RouteStateKatalogeReligionen>> {
+	protected async createManager(idSchuljahresabschnitt: number): Promise<Partial<RouteStateKatalogeReligionen>> {
 		const listeReligionen = await api.server.getReligionen(api.schema);
 		const manager = new ReligionListeManager(idSchuljahresabschnitt, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte, api.schulform, listeReligionen);
 		if (this._state.value.manager === undefined) {
@@ -37,11 +37,11 @@ export class RouteDataKatalogReligionen extends RouteDataAuswahl<ReligionListeMa
 		return { manager };
 	}
 
-	public async ladeDaten(auswahl: ReligionEintrag | null) : Promise<ReligionEintrag | null> {
+	public async ladeDaten(auswahl: ReligionEintrag | null): Promise<ReligionEintrag | null> {
 		return auswahl;
 	}
 
-	protected async doPatch(data : Partial<ReligionEintrag>, id: number) : Promise<void> {
+	protected async doPatch(data: Partial<ReligionEintrag>, id: number): Promise<void> {
 		await api.server.patchReligion(data, api.schema, id);
 	}
 
@@ -56,7 +56,7 @@ export class RouteDataKatalogReligionen extends RouteDataAuswahl<ReligionListeMa
 		await this.gotoDefaultView(religion.id)
 	}
 
-	protected deleteMessage(id: number, religion: ReligionEintrag | null) : string {
+	protected deleteMessage(id: number, religion: ReligionEintrag | null): string {
 		return `Religion ${religion?.kuerzel} (ID: ${id.toString()}) wurde erfolgreich gelöscht.`;
 	}
 
@@ -70,6 +70,5 @@ export class RouteDataKatalogReligionen extends RouteDataAuswahl<ReligionListeMa
 
 		return errorLog;
 	}
-
 
 }

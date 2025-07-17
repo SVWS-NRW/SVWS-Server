@@ -22,7 +22,8 @@ import jakarta.ws.rs.core.Response.Status;
  * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für das
  * Core-DTO {@link LehrerPersonalabschnittsdatenAnrechnungsstunden}.
  */
-public final class DataLehrerPersonalabschnittsdatenAnrechungen extends DataManagerRevised<Long, DTOLehrerAnrechnungsstunde, LehrerPersonalabschnittsdatenAnrechnungsstunden> {
+public final class DataLehrerPersonalabschnittsdatenAnrechungen
+		extends DataManagerRevised<Long, DTOLehrerAnrechnungsstunde, LehrerPersonalabschnittsdatenAnrechnungsstunden> {
 
 	/**
 	 * Erstellt einen neuen Datenmanager mit der angegebenen Verbindung
@@ -31,8 +32,26 @@ public final class DataLehrerPersonalabschnittsdatenAnrechungen extends DataMana
 	 */
 	public DataLehrerPersonalabschnittsdatenAnrechungen(final DBEntityManager conn) {
 		super(conn);
+		// Eine Änderung der ID oder eine Neu-Zuweisung zu einem anderen Abschnitt eines ggf. anderen Lehrers ist nicht erlaubt
 		setAttributesNotPatchable("id", "idAbschnittsdaten");
+		// Außer der ID sind alle Attribute beim Erzeugen eines neuen Grundes korrekt zu setzen
 		setAttributesRequiredOnCreation("idAbschnittsdaten", "idGrund", "anzahl");
+	}
+
+
+	@Override
+	public void checkBeforeCreation(final Long newID, final Map<String, Object> initAttributes) throws ApiOperationException {
+		// Prüfe vor dem Erstellen, ob bereits ein entsprechender Grund für den Abschnitt in der Datenbank eingetragen ist.
+		final long idAbschnittsdaten = JSONMapper.convertToLong(initAttributes.get("idAbschnittsdaten"), false);
+		final long idGrund = JSONMapper.convertToLong(initAttributes.get("idGrund"), false);
+		final String anrechnungsgrundKrz = getAnrechnungsgrundKrz(idAbschnittsdaten, idGrund);
+		final List<DTOLehrerAnrechnungsstunde> funktionen = conn.queryList(
+				"SELECT p FROM DTOLehrerAnrechnungsstunde p WHERE p.Abschnitt_ID = ?1 AND p.AnrechnungsgrundKrz = ?2", DTOLehrerAnrechnungsstunde.class,
+				idAbschnittsdaten, anrechnungsgrundKrz);
+		// Wenn ja, dann ist das Anlegen eines neuen Eintrages unzulässig
+		if (!funktionen.isEmpty())
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					"Die Anrechnungsstunde mit der idGrund %s im Abschnitt mit der ID %s existiert bereits.".formatted(anrechnungsgrundKrz, idAbschnittsdaten));
 	}
 
 
@@ -42,7 +61,26 @@ public final class DataLehrerPersonalabschnittsdatenAnrechungen extends DataMana
 	}
 
 
-	protected static LehrerPersonalabschnittsdatenAnrechnungsstunden mapInternal(final DTOLehrerAnrechnungsstunde dto, final DBEntityManager conn) throws ApiOperationException {
+	@Override
+	public void checkBeforePersist(final DTOLehrerAnrechnungsstunde dto, final Map<String, Object> patchedAttributes) throws ApiOperationException {
+		// Wenn idAbschnittsdaten oder idGrund nicht bereits in das DTO eingetragen sind, dann liegt hier ein Fehler vor. Ein Patch muss hier bereits angewendet sein.
+		if (dto.Abschnitt_ID < 0)
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					"Eine negative ID %d für den Abschnitt des Lehrers ist nicht zulässig.".formatted(dto.Abschnitt_ID));
+		if (dto.AnrechnungsgrundKrz == null)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Der Wert null ist für den Grund nicht zulässig.");
+		// Überprüfe, ob ein anderes DTO-Objekt mit dem Abschnitt und dem Grund in der DB bereits existiert
+		final List<DTOLehrerAnrechnungsstunde> funktionen = conn.queryList(
+				"SELECT p FROM DTOLehrerAnrechnungsstunde p WHERE p.Abschnitt_ID = ?1 AND p.AnrechnungsgrundKrz = ?2 AND p.ID != ?3",
+				DTOLehrerAnrechnungsstunde.class, dto.Abschnitt_ID, dto.AnrechnungsgrundKrz, dto.ID);
+		if (!funktionen.isEmpty())
+			throw new ApiOperationException(Status.BAD_REQUEST, "Der Grund mit der ID %s existiert bereits im Abschnitt mit der ID %s."
+					.formatted(patchedAttributes.get("idGrund"), dto.Abschnitt_ID));
+	}
+
+
+	protected static LehrerPersonalabschnittsdatenAnrechnungsstunden mapInternal(final DTOLehrerAnrechnungsstunde dto, final DBEntityManager conn)
+			throws ApiOperationException {
 		final LehrerPersonalabschnittsdatenAnrechnungsstunden daten = new LehrerPersonalabschnittsdatenAnrechnungsstunden();
 		daten.id = dto.ID;
 		daten.idAbschnittsdaten = dto.Abschnitt_ID;
@@ -74,7 +112,7 @@ public final class DataLehrerPersonalabschnittsdatenAnrechungen extends DataMana
 			throws ApiOperationException {
 		switch (name) {
 			case "idAbschnittsdaten" -> updateAbschnittID(dto, JSONMapper.convertToLong(value, false, "idAbschnittsdaten"));
-			case "idGrund" -> updateAnrechnungsgrundKrz(dto, JSONMapper.convertToLong(value, false, "idGrund"));
+			case "idGrund" -> dto.AnrechnungsgrundKrz = getAnrechnungsgrundKrz(dto.Abschnitt_ID, JSONMapper.convertToLong(value, false, "idGrund"));
 			case "anzahl" -> dto.AnrechnungStd = JSONMapper.convertToDouble(value, false);
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));
 		}
@@ -117,19 +155,19 @@ public final class DataLehrerPersonalabschnittsdatenAnrechungen extends DataMana
 	}
 
 
-	private void updateAnrechnungsgrundKrz(final DTOLehrerAnrechnungsstunde dto, final long idGrund) throws ApiOperationException {
+	private String getAnrechnungsgrundKrz(final long Abschnitt_ID, final long idGrund) throws ApiOperationException {
 		try {
 			final LehrerAnrechnungsgrund grund = LehrerAnrechnungsgrund.data().getWertByID(idGrund);
-			final DTOLehrerAbschnittsdaten dtoAbschnitt = conn.queryByKey(DTOLehrerAbschnittsdaten.class, dto.Abschnitt_ID);
+			final DTOLehrerAbschnittsdaten dtoAbschnitt = conn.queryByKey(DTOLehrerAbschnittsdaten.class, Abschnitt_ID);
 			if (dtoAbschnitt == null)
 				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
-						"Die Lehrer-Abschnittsdaten für den Abschnitt mit der ID %d konnten nicht geladen werden".formatted(dto.Abschnitt_ID));
+						"Die Lehrer-Abschnittsdaten für den Abschnitt mit der ID %d konnten nicht geladen werden".formatted(Abschnitt_ID));
 			final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(dtoAbschnitt.Schuljahresabschnitts_ID);
 			final LehrerAnrechnungsgrundKatalogEintrag eintrag = grund.daten(abschnitt.schuljahr);
 			if (eintrag == null)
 				throw new ApiOperationException(Status.BAD_REQUEST,
 						"Der Anrechnungsgrund mit der ID %d ist im Schuljahr %d nicht gültig.".formatted(idGrund, abschnitt.schuljahr));
-			dto.AnrechnungsgrundKrz = eintrag.kuerzel;
+			return eintrag.kuerzel;
 		} catch (@SuppressWarnings("unused") final CoreTypeException cte) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Der Anrechnungsgrund mit der ID %d ist nicht vorhanden.".formatted(idGrund));
 		}
@@ -138,7 +176,7 @@ public final class DataLehrerPersonalabschnittsdatenAnrechungen extends DataMana
 
 	private void updateAbschnittID(final DTOLehrerAnrechnungsstunde dto, final long abschnittID) throws ApiOperationException {
 		if (((abschnittID < 0) || (conn.queryByKey(DTOLehrerAbschnittsdaten.class, abschnittID)) == null))
-				throw new ApiOperationException(Status.CONFLICT, "AbschnittID %d ungültig.".formatted(abschnittID));
+			throw new ApiOperationException(Status.CONFLICT, "AbschnittID %d ungültig.".formatted(abschnittID));
 		dto.Abschnitt_ID = abschnittID;
 	}
 

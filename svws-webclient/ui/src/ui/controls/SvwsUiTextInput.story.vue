@@ -91,9 +91,12 @@
 </template>
 
 <script setup lang="ts">
-	import { logEvent } from 'histoire/client';
+
+	import { logEvent } from '../../stories/helper';
+
 
 	function onInput(event: Event) {
 		logEvent('input', event);
 	}
+
 </script>

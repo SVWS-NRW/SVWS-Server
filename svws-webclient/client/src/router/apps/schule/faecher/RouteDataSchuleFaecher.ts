@@ -28,7 +28,7 @@ const defaultState: RouteStateFaecher = {
 export class RouteDataSchuleFaecher extends RouteDataAuswahl<FachListeManager, RouteStateFaecher> {
 
 	public constructor() {
-		super(defaultState, routeSchuleFachGruppenprozesse, routeSchuleFachNeu);
+		super(defaultState, { gruppenprozesse: routeSchuleFachGruppenprozesse, hinzufuegen: routeSchuleFachNeu });
 	}
 
 	public addID(param: RouteParamsRawGeneric, id: number): void {
@@ -57,7 +57,9 @@ export class RouteDataSchuleFaecher extends RouteDataAuswahl<FachListeManager, R
 	}
 
 	public async ladeDaten(auswahl: FachDaten | null) : Promise<FachDaten | null> {
-		return auswahl;
+		if (auswahl === null)
+			return null;
+		return await api.server.getFach(api.schema, auswahl.id);
 	}
 
 	public async updateMapStundenplaene() {
@@ -92,7 +94,7 @@ export class RouteDataSchuleFaecher extends RouteDataAuswahl<FachListeManager, R
 				errorLog.add(`Das Fach ${fach.bezeichnung} mit dem Kürzel ${fach.kuerzel} ist an anderer Stelle referenziert und kann daher nicht gelöscht werden.`);
 		}
 		return [errorLog.isEmpty(), errorLog];
-	}
+	};
 
 	setzeDefaultSortierungSekII = async () => {
 		if (this.manager.liste.list().isEmpty())
@@ -102,13 +104,13 @@ export class RouteDataSchuleFaecher extends RouteDataAuswahl<FachListeManager, R
 		await api.server.setFaecherSortierungSekII(api.schema);
 		await this.setSchuljahresabschnitt(idSchuljahresabschnitt, true);
 		await this.setDaten(this.manager.liste.get(auswahlId));
-	}
+	};
 
 	add = async (data: Partial<FachDaten>): Promise<void> => {
 		const fachDaten = await api.server.addFach(data, api.schema);
 		await this.setSchuljahresabschnitt(this._state.value.idSchuljahresabschnitt, true);
 		await this.gotoDefaultView(fachDaten.id);
-	}
+	};
 
 	getPDF = api.call(async (reportingParameter: ReportingParameter, idStundenplan: number): Promise<ApiFile> => {
 		if (!this.manager.liste.auswahlExists())
@@ -118,5 +120,6 @@ export class RouteDataSchuleFaecher extends RouteDataAuswahl<FachListeManager, R
 		for (const l of this.manager.liste.auswahl())
 			reportingParameter.idsDetaildaten.add(l.id);
 		return await api.server.pdfReport(reportingParameter, api.schema);
-	})
+	});
+
 }

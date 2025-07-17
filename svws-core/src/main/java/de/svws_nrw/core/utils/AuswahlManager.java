@@ -3,7 +3,9 @@ package de.svws_nrw.core.utils;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 import de.svws_nrw.asd.adt.Pair;
@@ -75,6 +77,8 @@ public abstract class AuswahlManager<TID, TAuswahl, TDaten> {
 	/** Die Daten aus der vorherigen Auswahl. */
 	protected TDaten _vorherigeAuswahl = null;
 
+	/** Map mit allen selektierten Gruppenprozess CoreDto Objekten */
+	protected @NotNull Map<@NotNull TID, @NotNull TDaten> _listeDaten = new HashMap<>();
 
 	/**
 	 * Initialisiert die Auswahl-Manager-Instanz
@@ -222,7 +226,7 @@ public abstract class AuswahlManager<TID, TAuswahl, TDaten> {
 	 * welche das zu sortierende Feld als String angebenen und als boolean ob es aufsteigend (true)
 	 * oder absteigend (false) sortiert werden soll.
 	 *
-	 * @return   die Sortier-Ordnung
+	 * @return die Sortier-Ordnung
 	 */
 	public final @NotNull List<Pair<String, Boolean>> orderGet() {
 		return new ArrayList<>(this._order);
@@ -498,6 +502,35 @@ public abstract class AuswahlManager<TID, TAuswahl, TDaten> {
 		return this._listeToId.apply(eintrag);
 	}
 
+
+	/**
+	 * Gibt für das übergebene TDaten Objekt die ID zurück.
+	 *
+	 * @param daten   das TDaten Objekt
+	 *
+	 * @return die zugehörige ID
+	 */
+	public @NotNull TID getIdByDaten(final @NotNull TDaten daten) {
+		return this._datenToId.apply(daten);
+	}
+
+
+	/** * Setzt Daten vom Typ TDaten der selektierten Gruppenprozesseinträge
+	 *
+	 * @param listeDaten selektierte Daten
+	 */
+	public void setListeDaten(final @NotNull Map<@NotNull TID, @NotNull TDaten> listeDaten) {
+		this._listeDaten = listeDaten;
+	}
+
+	/**
+	 * Gibt Daten vom Typ TDaten der selektierten Gruppenprozesseinträge
+	 *
+	 * @return selektierte Daten
+	 */
+	public @NotNull Map<TID, TDaten> getListeDaten() {
+		return this._listeDaten;
+	}
 	// /**
 	//  * Methode übernimmt Filterinformationen aus dem übergebenen {@link AuswahlManager}
 	//  *

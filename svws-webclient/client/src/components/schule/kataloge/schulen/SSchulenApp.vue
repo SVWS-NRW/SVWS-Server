@@ -37,8 +37,7 @@
 <script setup lang="ts">
 
 	import type { KatalogSchulenAppProps } from "./SSchulenAppProps";
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
-	import { ViewType } from "@ui";
+	import { useRegionSwitch, ViewType } from "@ui";
 	import {computed} from "vue";
 
 	const props = defineProps<KatalogSchulenAppProps>();

@@ -37,7 +37,7 @@
 								Abgefragt
 							</svws-ui-checkbox>
 							<svws-ui-checkbox class="w-2/5" :model-value="einwilligung.istZugestimmt" type="checkbox" title="Zugestimmt"
-								@update:model-value="istZugestimmt => patch({ istZugestimmt }, einwilligung.idEinwilligungsart)">
+								@update:model-value="istZugestimmt => updateEinwilligungStatus(einwilligung, istZugestimmt)">
 								Zugestimmt
 							</svws-ui-checkbox>
 						</ui-card>
@@ -71,6 +71,13 @@
 
 	function getBezeichnungEinwilligungsart(idEinwilligungsart: number): string {
 		return props.mapEinwilligungsarten.get(idEinwilligungsart)?.bezeichnung ?? "";
+	}
+
+	async function updateEinwilligungStatus(einwilligung: LehrerEinwilligung, istZugestimmt: boolean) {
+		const update: Partial<LehrerEinwilligung> = { istZugestimmt };
+		if ((istZugestimmt) && (!einwilligung.istAbgefragt))
+			update.istAbgefragt = true;
+		await props.patch(update, einwilligung.idEinwilligungsart);
 	}
 
 	function getEinwilligungsstatus(einwilligung: LehrerEinwilligung): string {

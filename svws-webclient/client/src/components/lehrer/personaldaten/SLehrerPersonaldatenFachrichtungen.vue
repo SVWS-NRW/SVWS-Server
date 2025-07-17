@@ -3,9 +3,15 @@
 		<template #cell(fachrichtung)="{ rowData }">
 			{{ getFachrichtung(rowData).daten(schuljahr)?.text ?? '—' }}
 		</template>
+		<template #cell(lehramt)="{ rowData }">
+			<svws-ui-select title="Fachrichtung durch Lehramt" v-if="hatUpdateKompetenz" :model-value="getLehramt(rowData)"
+				@update:model-value="lehramt => patchFachrichtung(rowData, { idLehramt: lehramt?.daten(schuljahr)?.id ?? -1 })"
+				:items="getLehraemter()" :item-text="i => i.daten(schuljahr)?.text ?? '—'" headless />
+			<div v-else> {{ getLehramt(rowData)?.daten(schuljahr)?.text ?? '—' }} </div>
+		</template>
 		<template #cell(anerkennung)="{ rowData }">
 			<svws-ui-select title="Anerkennungsgrund Fachrichtung" v-if="hatUpdateKompetenz" :model-value="getFachrichtungAnerkennung(rowData)"
-				@update:model-value="anerkennung => patchFachrichtungAnerkennung(rowData, anerkennung ?? null)"
+				@update:model-value="anerkennung => patchFachrichtung(rowData, { idAnerkennungsgrund: anerkennung?.daten(schuljahr)?.id ?? null })"
 				:items="LehrerFachrichtungAnerkennung.values()" :item-text="i => i.daten(schuljahr)?.text ?? '—'" headless />
 			<div v-else> {{ getFachrichtungAnerkennung(rowData)?.daten(schuljahr)?.text ?? '—' }} </div>
 		</template>
@@ -22,13 +28,13 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { List, LehrerFachrichtungEintrag, LehrerListeManager, LehrerPersonaldaten} from "@core";
-	import { LehrerFachrichtung, LehrerFachrichtungAnerkennung, Arrays } from "@core";
+	import type { List, LehrerFachrichtungEintrag, LehrerListeManager, LehrerPersonaldaten } from "@core";
+	import { LehrerFachrichtung, LehrerFachrichtungAnerkennung, Arrays, LehrerLehramt, ArrayList } from "@core";
 
 	const props = defineProps<{
 		hatUpdateKompetenz: boolean;
 		lehrerListeManager: () => LehrerListeManager;
-		patchFachrichtungAnerkennung: (eintrag: LehrerFachrichtungEintrag, anerkennung : LehrerFachrichtungAnerkennung | null) => Promise<void>;
+		patchFachrichtung: (eintrag: LehrerFachrichtungEintrag, patch : Partial<LehrerFachrichtungEintrag>) => Promise<void>;
 		addFachrichtung: (eintrag: LehrerFachrichtungEintrag) => Promise<void>;
 		removeFachrichtungen: (eintraege: List<LehrerFachrichtungEintrag>) => Promise<void>;
 		schuljahr: number;
@@ -36,18 +42,31 @@
 
 	const personaldaten = computed<LehrerPersonaldaten>(() => props.lehrerListeManager().personalDaten());
 
+	function getLehraemter() : List<LehrerLehramt> {
+		const result = new ArrayList<LehrerLehramt>();
+		for (const l of personaldaten.value.lehraemter)
+			if (l.id >= 0)
+				result.add(LehrerLehramt.data().getWertByID(l.id));
+		return result;
+	}
+
 	const show = ref<boolean>(false);
 
 	const selected = ref<LehrerFachrichtungEintrag[]>([]);
 
 	const columns = [
 		{key: 'fachrichtung', label: 'Fachrichtung', span: 1, statistic: true },
+		{key: 'lehramt', label: 'Lehramt', span: 1 },
 		{key: 'anerkennung', label: 'Anerkennungsgrund', span: 1 },
 	]
 
 	function getFachrichtung(eintrag: LehrerFachrichtungEintrag) : LehrerFachrichtung {
 		const fachrichtung = LehrerFachrichtung.data().getWertByID(eintrag.idFachrichtung);
 		return fachrichtung;
+	}
+
+	function getLehramt(eintrag: LehrerFachrichtungEintrag) : LehrerLehramt | null {
+		return (eintrag.idLehramt < 0) ? null : LehrerLehramt.data().getWertByID(eintrag.idLehramt);
 	}
 
 	function getFachrichtungAnerkennung(eintrag: LehrerFachrichtungEintrag) : LehrerFachrichtungAnerkennung | null {

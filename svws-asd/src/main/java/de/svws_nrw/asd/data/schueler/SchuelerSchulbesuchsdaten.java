@@ -104,9 +104,9 @@ public class SchuelerSchulbesuchsdaten {
 	@Schema(description = "die ID der Einschulungsart in die Grundschule", example = "51")
 	public Long grundschuleEinschulungsartID;
 
-	/** Die Anzahl der Jahre in der Schuleingangsphase der Grundschule. */
-	@Schema(description = "die Anzahl der Jahre in der Schuleingangsphase der Grundschule", example = "2")
-	public Integer grundschuleJahreEingangsphase;
+	/** Die ID der Schuleingangsphase der Grundschule. */
+	@Schema(description = "die ID der Schuleingangsphase der Grundschule", example = "2")
+	public Long idGrundschuleJahreEingangsphase;
 
 	/** Das Kürzel für die Übergangsempfehlung der Grundschule in die Sekundarstufe I */
 	@Schema(description = "das Kürzel für die Übergangsempfehlung der Grundschule in die Sekundarstufe I", example = "GY")
@@ -126,6 +126,22 @@ public class SchuelerSchulbesuchsdaten {
 	/** Das Jahr des Wechsels in die Sekundarstufe II. */
 	@Schema(description = "das Jahr des Wechsels in die Sekundarstufe II", example = "2017")
 	public Integer sekIIWechsel;
+
+	/** Die ID der Dauer des Kindergartenbesuchs eines Schülers. */
+	@Schema(description = "Die ID der Dauer des Kindergartenbesuchs eines Schülers", example = "1")
+	public Long idDauerKindergartenbesuch;
+
+	/** Die ID des Kindergartens. */
+	@Schema(description = "die ID des Kindergartens", example = "2")
+	public Long idKindergarten;
+
+	/** Schüler wurde zu einem Sprachförderkurs verpflichtet (Ja/Nein). */
+	@Schema(description = "gibt an, ob der Schüler zu einem Sprachförderkurs verpflichtet wurde", example = "false")
+	public boolean verpflichtungSprachfoerderkurs;
+
+	/** Teilnahme des Schülers an einem Sprachförderkurs (Ja/Nein). */
+	@Schema(description = "gibt an, ob der Schüler an einem Sprachförderkurs teilgenommen hat", example = "false")
+	public boolean teilnahmeSprachfoerderkurs;
 
 
 	// **** Informationen zu besonderen Merkmalen für die Statistik

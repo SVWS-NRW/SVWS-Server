@@ -9,7 +9,7 @@
 				<svws-ui-table :items="[]" :no-data="false" has-background :class="{'svws-fachwahlen--has-selection': selected().bereich !== 'Fach' || selected().idFach}">
 					<template #header>
 						<div role="row" class="svws-ui-tr select-none">
-							<div v-for="(heading, index) in colHeadings" :key="heading.text" class="svws-ui-td cursor-pointer" role="columnheader" @click="selectData(undefined, heading.text)"
+							<div v-for="(heading, index) in colHeadings" :key="heading.text" class="svws-ui-td cursor-pointer" role="columnheader" @click="isSelected(undefined, heading.text).value ? selectData(undefined, 'Fach') : selectData(undefined, heading.text)"
 								:class="{
 									[`col-span-${heading.cols.length}`]: true,
 									'svws-divider': index !== colHeadings.length - 1,
@@ -27,7 +27,7 @@
 						</div>
 						<div role="row" class="svws-ui-tr select-none">
 							<template v-for="(heading, index) in colHeadings" :key="heading.text">
-								<div v-for="(h, n) in heading.cols" class="svws-ui-td cursor-pointer" role="columnheader" :key="n" @click="selectData(undefined, heading.text)"
+								<div v-for="(h, n) in heading.cols" class="svws-ui-td cursor-pointer" role="columnheader" :key="n" @click="isSelected(undefined, heading.text).value ? selectData(undefined, 'Fach') : selectData(undefined, heading.text)"
 									:class="{
 										'svws-align-center': h.center,
 										'svws-divider': (n === heading.cols.length - 1 && index !== colHeadings.length - 1),
@@ -41,7 +41,7 @@
 					<template #body>
 						<div role="row" v-for="row in fachwahlstatistik" :key="row.id" class="svws-ui-tr text-uistatic" :style="{ 'background-color': getBgColor(row) }">
 							<template v-for="(heading, index) in colHeadings" :key="heading.text">
-								<div v-for="(h, n) in heading.cols" :key="n" class="svws-ui-td select-none" role="cell" @click="selectData(row, heading.text)"
+								<div v-for="(h, n) in heading.cols" :key="n" class="svws-ui-td select-none" role="cell" @click="isSelected(row, heading.text).value ? selectData(undefined, 'Fach') : selectData(row, heading.text)"
 									:class="{
 										'svws-align-center': h.center,
 										'svws-divider': (n === heading.cols.length - 1) && (index !== colHeadings.length - 1),

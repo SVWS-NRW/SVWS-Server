@@ -1,3 +1,5 @@
+import org.codehaus.groovy.runtime.GStringImpl
+
 plugins {
 	id 'svws.gradle.node.plugin'
 }
@@ -11,7 +13,7 @@ def jobId = UUID.randomUUID().toString().substring(0, 8)
 /**
  * Npm install
  */
-task npmInstall(type: NpmTask) {
+tasks.register('npmInstall', NpmTask) {
 	description = 'Installiert die Npm Abhängigkeiten'
 	args = ['install']
 }
@@ -20,7 +22,7 @@ task npmInstall(type: NpmTask) {
 /**
  * Playwright Abhängigkeiten installieren
  */
-task playwrightInstallDeps(type: NpmRun) {
+tasks.register('playwrightInstallDeps', NpmRun) {
 	description = 'Installiert die Playwright Abhängigkeiten'
 	group = 'testing'
 	dependsOn 'npmInstall'
@@ -39,10 +41,10 @@ ext {
 	SVWS_SERVERMODE = "dev"
 
 	// Docker Konfiguration
-	APP_CONTAINER_NAME = "app-playwright-e2e-tests--${jobId}"
-	DB_CONTAINER_NAME = "database-playwright-e2e-tests--${jobId}"
-	DB_SERVICE_NAME = "mariadb--${jobId}"
-	APP_IMAGE_NAME = "svws-app--${jobId}"
+	APP_CONTAINER_NAME = "app-playwright-e2e-tests--${jobId}" as GStringImpl
+	DB_CONTAINER_NAME = "database-playwright-e2e-tests--${jobId}" as GStringImpl
+	DB_SERVICE_NAME = "mariadb--${jobId}" as GStringImpl
+	APP_IMAGE_NAME = "svws-app--${jobId}" as GStringImpl
 
 	// Auch für Docker. Forwarded Ports, werden nur bei lokal genutzten Container verwendet
 	FORWARDED_DB_PORT = 3322
@@ -56,7 +58,7 @@ ext {
 /**
  * Starten der Integrationstests gegen die Docker Umgebung
  */
-task testAgainstDockerEnv(type: NpmRun) {
+tasks.register('testAgainstDockerEnv', NpmRun) {
 	description = 'Startet die Integrationstests gegen die Docker Umgebung'
 	group = 'testing'
 	dependsOn ':svws-webclient:client:assemble'
@@ -88,7 +90,7 @@ task testAgainstDockerEnv(type: NpmRun) {
 /**
  * Starten der Tests gegen die lokale Applikation. Hier wird kein Docker gestartet.
  */
-task no_auto_docker_test_E2E(type: NpmRun) {
+tasks.register('no_auto_docker_test_E2E', NpmRun) {
 	group = "verification"
 	dependsOn ':tests:checkIfLokalApplikationIsRunning'
 	dependsOn ':tests:checkIfLokalDataBaseIsRunning'
@@ -99,7 +101,7 @@ task no_auto_docker_test_E2E(type: NpmRun) {
 /**
  * Erzeugt die Codegen Dateien. Kann genutzt werden um E2E Tests aufzuzeichnen
  */
-task recordE2ETest(type: NpmRun) {
+tasks.register('recordE2ETest', NpmRun) {
 	dependsOn 'playwrightInstallDeps'
 	mkdir file("$projectDir/build/codegen")
 	args = ['codegen']

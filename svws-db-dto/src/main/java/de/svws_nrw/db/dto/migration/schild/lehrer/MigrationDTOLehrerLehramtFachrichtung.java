@@ -20,23 +20,29 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @IdClass(MigrationDTOLehrerLehramtFachrichtungPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "LehrerLehramtFachr")
-@JsonPropertyOrder({"Lehrer_ID", "FachrKrz", "FachrAnerkennungKrz", "SchulnrEigner"})
+@JsonPropertyOrder({"Lehrer_ID", "LehramtKrz", "FachrKrz", "FachrAnerkennungKrz", "SchulnrEigner"})
 public final class MigrationDTOLehrerLehramtFachrichtung {
 
 	/** Die Datenbankabfrage für alle DTOs */
 	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOLehrerLehramtFachrichtung e";
 
 	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
-	public static final String QUERY_PK = "SELECT e FROM MigrationDTOLehrerLehramtFachrichtung e WHERE e.Lehrer_ID = ?1 AND e.FachrKrz = ?2";
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOLehrerLehramtFachrichtung e WHERE e.Lehrer_ID = ?1 AND e.LehramtKrz = ?2 AND e.FachrKrz = ?3";
 
 	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
-	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOLehrerLehramtFachrichtung e WHERE e.Lehrer_ID IS NOT NULL AND e.FachrKrz IS NOT NULL";
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOLehrerLehramtFachrichtung e WHERE e.Lehrer_ID IS NOT NULL AND e.LehramtKrz IS NOT NULL AND e.FachrKrz IS NOT NULL";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Lehrer_ID */
 	public static final String QUERY_BY_LEHRER_ID = "SELECT e FROM MigrationDTOLehrerLehramtFachrichtung e WHERE e.Lehrer_ID = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Lehrer_ID */
 	public static final String QUERY_LIST_BY_LEHRER_ID = "SELECT e FROM MigrationDTOLehrerLehramtFachrichtung e WHERE e.Lehrer_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes LehramtKrz */
+	public static final String QUERY_BY_LEHRAMTKRZ = "SELECT e FROM MigrationDTOLehrerLehramtFachrichtung e WHERE e.LehramtKrz = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes LehramtKrz */
+	public static final String QUERY_LIST_BY_LEHRAMTKRZ = "SELECT e FROM MigrationDTOLehrerLehramtFachrichtung e WHERE e.LehramtKrz IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes FachrKrz */
 	public static final String QUERY_BY_FACHRKRZ = "SELECT e FROM MigrationDTOLehrerLehramtFachrichtung e WHERE e.FachrKrz = ?1";
@@ -61,6 +67,12 @@ public final class MigrationDTOLehrerLehramtFachrichtung {
 	@Column(name = "Lehrer_ID")
 	@JsonProperty
 	public Long Lehrer_ID;
+
+	/** Lehramtskürzel */
+	@Id
+	@Column(name = "LehramtKrz")
+	@JsonProperty
+	public String LehramtKrz;
 
 	/** Fachrichtungskürzel */
 	@Id
@@ -111,6 +123,11 @@ public final class MigrationDTOLehrerLehramtFachrichtung {
 				return false;
 		} else if (!Lehrer_ID.equals(other.Lehrer_ID))
 			return false;
+		if (LehramtKrz == null) {
+			if (other.LehramtKrz != null)
+				return false;
+		} else if (!LehramtKrz.equals(other.LehramtKrz))
+			return false;
 		if (FachrKrz == null) {
 			if (other.FachrKrz != null)
 				return false;
@@ -125,6 +142,8 @@ public final class MigrationDTOLehrerLehramtFachrichtung {
 		int result = 1;
 		result = prime * result + ((Lehrer_ID == null) ? 0 : Lehrer_ID.hashCode());
 
+		result = prime * result + ((LehramtKrz == null) ? 0 : LehramtKrz.hashCode());
+
 		result = prime * result + ((FachrKrz == null) ? 0 : FachrKrz.hashCode());
 		return result;
 	}
@@ -137,7 +156,7 @@ public final class MigrationDTOLehrerLehramtFachrichtung {
 	 */
 	@Override
 	public String toString() {
-		return "MigrationDTOLehrerLehramtFachrichtung(Lehrer_ID=" + this.Lehrer_ID + ", FachrKrz=" + this.FachrKrz + ", FachrAnerkennungKrz=" + this.FachrAnerkennungKrz + ", SchulnrEigner=" + this.SchulnrEigner + ")";
+		return "MigrationDTOLehrerLehramtFachrichtung(Lehrer_ID=" + this.Lehrer_ID + ", LehramtKrz=" + this.LehramtKrz + ", FachrKrz=" + this.FachrKrz + ", FachrAnerkennungKrz=" + this.FachrAnerkennungKrz + ", SchulnrEigner=" + this.SchulnrEigner + ")";
 	}
 
 }

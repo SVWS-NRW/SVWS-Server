@@ -17,6 +17,10 @@ public class LehrerFachrichtungEintrag {
 	@Schema(description = "Die ID des Lehrers.", example = "4711")
 	public long id;
 
+	/** Die ID des Lehramtes. */
+	@Schema(description = "Die ID des Lehramtes.", example = "4712")
+	public long idLehramt;
+
 	/** Die ID der Fachrichtung. */
 	@Schema(description = "Die ID der Fachrichtung.", example = "4712")
 	public long idFachrichtung;

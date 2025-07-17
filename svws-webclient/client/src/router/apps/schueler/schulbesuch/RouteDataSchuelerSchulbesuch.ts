@@ -86,8 +86,9 @@ export class RouteDataSchuelerSchulbesuch extends RouteData<RouteStateDataSchuel
 				const schulen = await api.server.getSchulen(api.schema);
 				const merkmale = await api.server.getMerkmale(api.schema);
 				const entlassgruende = await api.server.getEntlassgruende(api.schema);
+				const kindergaerten = await api.server.getKindergaerten(api.schema);
 				const schuelerSchulbesuchManager = new SchuelerSchulbesuchManager(
-					data, auswahl, api.schuleStammdaten.abschnitte, schulen, merkmale, entlassgruende, this.patch);
+					data, auswahl, api.schuleStammdaten.abschnitte, schulen, merkmale, entlassgruende, kindergaerten, this.patch);
 				this.setPatchedState({auswahl, schuelerSchulbesuchManager});
 			} catch (error) {
 				throw new DeveloperNotificationException("Fehler beim Erzeugen des SchuelerSchulbesuchManagers");

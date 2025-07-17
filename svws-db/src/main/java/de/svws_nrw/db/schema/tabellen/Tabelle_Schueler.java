@@ -784,6 +784,14 @@ public class Tabelle_Schueler extends SchemaTabelle {
 			new Pair<>(col_Einschulungsart_ID, Schema.tab_K_EinschulungsArt.col_ID)
 	).setRevision(SchemaRevisionen.REV_2);
 
+	/** Die Definition des Fremdschlüssels Schueler_Einschulungsart_ASD_FK */
+	public SchemaTabelleFremdschluessel fk_Schueler_Einschulungsart_ASD_FK = addForeignKey(
+			"Schueler_Einschulungsart_FK_ASD",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
+			new Pair<>(col_EinschulungsartASD, Schema.tab_EinschulungsartKatalog_Keys.col_Kuerzel)
+	).setRevision(SchemaRevisionen.REV_41);
+
 	/** Die Definition des Fremdschlüssels Schueler_Entlassjahrgang_FK */
 	public SchemaTabelleFremdschluessel fk_Schueler_Entlassjahrgang_FK = addForeignKey(
 			"Schueler_Entlassjahrgang_FK",

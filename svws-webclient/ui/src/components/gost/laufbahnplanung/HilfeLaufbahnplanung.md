@@ -2,8 +2,6 @@
 
 Die Laufbahnplanung dient der detaillierten Planung der Schullaufbahn von der Einführungsphase (EF) bis zur Qualifikationsphase 2 (Q2) und schließlich zum Abitur. Sie bildet die Grundlage für die Kursplanung und dient gleichzeitig dazu, die individuellen Wahlen automatisch in die Kursplanung einzubeziehen. Die Tabelle und die seitlichen Hilfsfelder unterstützen die individuelle Kurswahl und zeigen die Belegungspflichten sowie die Zuordnung der Kurse zu den jeweiligen Phasen an.
 
-Die **Grundeinstellungen** der Laufbahnplanungstabelle werden global für die jeweilige Stufe im Menü „Oberstufe“, „Abiturjahrgang“ und dann „Fächer“ vorgenommen.
-
 ## Übersicht der Tabelle
 
 - **Fachwahl**: Die Haupttabelle zeigt alle relevanten Fächer in Zeilen und die verschiedenen Phasen der Oberstufe in Spalten (EF.1, EF.2, Q1.1, Q1.2, Q2.1, Q2.2). Durch einen Klick auf ein Fachfeld in einer Zeile können Sie die Kursart auswählen, z. B. Grundkurs (GK), Leistungskurs (LK) oder Zusatzkurs (ZK). Die Fächer müssen im Fächerkatalog die Markierung „Fach der Oberstufe“ enthalten, damit sie hier ausgewählt werden können.
@@ -19,8 +17,6 @@ Die **Grundeinstellungen** der Laufbahnplanungstabelle werden global für die je
 - **Anrechenbare Kurse und Wochenstunden**: Am unteren Rand der Tabelle finden Sie die Berechnung der anrechenbaren Kurse und die Anzahl der Wochenstunden. Die Farbgebung zeigt den Status der Belegungspflichten an: von Rot (nicht erfüllt) bis Grün (erfüllt).
 
 ## Seitliche Hilfsfelder
-
-- **Beratung**: Hier können Notizen zur Beratung hinterlegt werden, z. B. Hinweise zu Gesprächen mit Schülerinnen und Schülern. Das Datum und der Beratungsinhalt können dokumentiert werden, was für eine spätere Überprüfung hilfreich ist.
 
 - **Belegprüfungsergebnisse**: In diesem Bereich erhalten Sie eine Übersicht über mögliche Belegfehler. Das System zeigt automatisch an, wenn in der aktuellen Laufbahn Fehler vorhanden sind, z. B. wenn eine vorgeschriebene Fächerkombination nicht eingehalten wurde. Zusätzlich werden Informationen zur Laufbahn angezeigt, etwa besondere Anforderungen in Bezug auf Fremdsprachen oder die Wahl der Leistungskurse. Es wird auch angezeigt, ob spezifische Fachkombinationen nicht zulässig sind oder bestimmte Regeln verletzt wurden. Rechts können Sie zwischen verschiedenen Prüfungsmodi für die Belegprüfung wählen, wie **EF.1**, **Gesamtprüfung** oder **Automatisch**. Diese Prüfungsmodi helfen dabei, die Beleganforderungen je nach aktueller Planungsphase automatisch zu überprüfen und auf Fehler hinzuweisen.
 

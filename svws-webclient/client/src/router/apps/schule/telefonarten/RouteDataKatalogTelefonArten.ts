@@ -20,7 +20,7 @@ const defaultState = {
 export class RouteDataKatalogTelefonArten extends RouteDataAuswahl<TelefonArtListeManager, RouteStateAuswahlInterface<TelefonArtListeManager>> {
 
 	public constructor() {
-		super(defaultState, routeKatalogTelefonArtenGruppenprozesse, routeKatalogTelefonArtenNeu);
+		super(defaultState, { gruppenprozesse: routeKatalogTelefonArtenGruppenprozesse, hinzufuegen: routeKatalogTelefonArtenNeu });
 	}
 
 	public addID(param: RouteParamsRawGeneric, id: number): void {

@@ -42,74 +42,79 @@ export class ReportingReportvorlage extends JavaEnum<ReportingReportvorlage> {
 	public static readonly GOST_KURSPLANUNG_v_SCHUELER_MIT_SCHIENEN_KURSEN : ReportingReportvorlage = new ReportingReportvorlage("GOST_KURSPLANUNG_v_SCHUELER_MIT_SCHIENEN_KURSEN", 5, "GostKursplanung-SchuelerMitSchienenKursen");
 
 	/**
+	 * Report-Vorlage: GOSt - Laufbahnplanung - Abiturjahrgang - Fachwahlstatistiken
+	 */
+	public static readonly GOST_LAUFBAHNPLANUNG_ABITURJAHRGANG_v_FACHWAHLSTATISTIKEN : ReportingReportvorlage = new ReportingReportvorlage("GOST_LAUFBAHNPLANUNG_ABITURJAHRGANG_v_FACHWAHLSTATISTIKEN", 6, "GostLaufbahnplanung-Abiturjahrgang-Fachwahlstatistiken");
+
+	/**
 	 * Report-Vorlage: Klasse - Schülerstammdaten - Liste
 	 */
-	public static readonly KLASSEN_v_KLASSE_SCHUELER_STAMMDATENLISTE : ReportingReportvorlage = new ReportingReportvorlage("KLASSEN_v_KLASSE_SCHUELER_STAMMDATENLISTE", 6, "Klasse-Schueler-Stammdatenliste");
+	public static readonly KLASSEN_v_KLASSE_SCHUELER_STAMMDATENLISTE : ReportingReportvorlage = new ReportingReportvorlage("KLASSEN_v_KLASSE_SCHUELER_STAMMDATENLISTE", 7, "Klasse-Schueler-Stammdatenliste");
 
 	/**
 	 * Report-Vorlage: Kurs - Schülerstammdaten - Liste
 	 */
-	public static readonly KURSE_v_KURS_SCHUELER_STAMMDATENLISTE : ReportingReportvorlage = new ReportingReportvorlage("KURSE_v_KURS_SCHUELER_STAMMDATENLISTE", 7, "Kurs-Schueler-Stammdatenliste");
+	public static readonly KURSE_v_KURS_SCHUELER_STAMMDATENLISTE : ReportingReportvorlage = new ReportingReportvorlage("KURSE_v_KURS_SCHUELER_STAMMDATENLISTE", 8, "Kurs-Schueler-Stammdatenliste");
 
 	/**
 	 * Report-Vorlage: Lehrer - Stammdaten - Liste
 	 */
-	public static readonly LEHRER_v_STAMMDATENLISTE : ReportingReportvorlage = new ReportingReportvorlage("LEHRER_v_STAMMDATENLISTE", 8, "Lehrer-Stammdatenliste");
+	public static readonly LEHRER_v_STAMMDATENLISTE : ReportingReportvorlage = new ReportingReportvorlage("LEHRER_v_STAMMDATENLISTE", 9, "Lehrer-Stammdatenliste");
 
 	/**
 	 * Report-Vorlage: GOSt - Abitur - APO - Anlage 12 (Abiturzeugnis)
 	 */
-	public static readonly SCHUELER_v_GOST_ABITUR_APO_ANLAGE_12 : ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_v_GOST_ABITUR_APO_ANLAGE_12", 9, "Schueler-GostAbiturApoAnlage12");
+	public static readonly SCHUELER_v_GOST_ABITUR_APO_ANLAGE_12 : ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_v_GOST_ABITUR_APO_ANLAGE_12", 10, "Schueler-GostAbiturApoAnlage12");
 
 	/**
 	 * Report-Vorlage: GOSt - Laufbahnplanung - Ergebnisübersicht
 	 */
-	public static readonly SCHUELER_v_GOST_LAUFBAHNPLANUNG_ERGEBNISUEBERSICHT : ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_v_GOST_LAUFBAHNPLANUNG_ERGEBNISUEBERSICHT", 10, "Schueler-GostLaufbahnplanungErgebnisuebersicht");
+	public static readonly SCHUELER_v_GOST_LAUFBAHNPLANUNG_ERGEBNISUEBERSICHT : ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_v_GOST_LAUFBAHNPLANUNG_ERGEBNISUEBERSICHT", 11, "Schueler-GostLaufbahnplanungErgebnisuebersicht");
 
 	/**
 	 * Report-Vorlage: GOSt - Laufbahnplanung - Wahlbogen
 	 */
-	public static readonly SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN : ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN", 11, "Schueler-GostLaufbahnplanungWahlbogen");
+	public static readonly SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN : ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN", 12, "Schueler-GostLaufbahnplanungWahlbogen");
 
 	/**
 	 * Report-Vorlage: Schüler - Schulbescheinigung
 	 */
-	public static readonly SCHUELER_v_SCHULBESCHEINIGUNG : ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_v_SCHULBESCHEINIGUNG", 12, "Schueler-Schulbescheinigung");
+	public static readonly SCHUELER_v_SCHULBESCHEINIGUNG : ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_v_SCHULBESCHEINIGUNG", 13, "Schueler-Schulbescheinigung");
 
 	/**
 	 * Report-Vorlage: Schüler - Stammdaten - Liste
 	 */
-	public static readonly SCHUELER_v_STAMMDATENLISTE : ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_v_STAMMDATENLISTE", 13, "Schueler-Stammdatenliste");
+	public static readonly SCHUELER_v_STAMMDATENLISTE : ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_v_STAMMDATENLISTE", 14, "Schueler-Stammdatenliste");
 
 	/**
 	 * Report-Vorlage: Stundenplanung - Fach - Stundenplan
 	 */
-	public static readonly STUNDENPLANUNG_v_FACH_STUNDENPLAN : ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_v_FACH_STUNDENPLAN", 14, "Stundenplanung-FachStundenplan");
+	public static readonly STUNDENPLANUNG_v_FACH_STUNDENPLAN : ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_v_FACH_STUNDENPLAN", 15, "Stundenplanung-FachStundenplan");
 
 	/**
 	 * Report-Vorlage: Stundenplanung - Klasse - Stundenplan
 	 */
-	public static readonly STUNDENPLANUNG_v_KLASSEN_STUNDENPLAN : ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_v_KLASSEN_STUNDENPLAN", 15, "Stundenplanung-KlassenStundenplan");
+	public static readonly STUNDENPLANUNG_v_KLASSEN_STUNDENPLAN : ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_v_KLASSEN_STUNDENPLAN", 16, "Stundenplanung-KlassenStundenplan");
 
 	/**
 	 * Report-Vorlage: Stundenplanung - Lehrer - Stundenplan
 	 */
-	public static readonly STUNDENPLANUNG_v_LEHRER_STUNDENPLAN : ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_v_LEHRER_STUNDENPLAN", 16, "Stundenplanung-LehrerStundenplan");
+	public static readonly STUNDENPLANUNG_v_LEHRER_STUNDENPLAN : ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_v_LEHRER_STUNDENPLAN", 17, "Stundenplanung-LehrerStundenplan");
 
 	/**
 	 * Report-Vorlage: Stundenplanung - Lehrer - Stundenplan - Kombiniert
 	 */
-	public static readonly STUNDENPLANUNG_v_LEHRER_STUNDENPLAN_KOMBINIERT : ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_v_LEHRER_STUNDENPLAN_KOMBINIERT", 17, "Stundenplanung-LehrerStundenplanKombiniert");
+	public static readonly STUNDENPLANUNG_v_LEHRER_STUNDENPLAN_KOMBINIERT : ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_v_LEHRER_STUNDENPLAN_KOMBINIERT", 18, "Stundenplanung-LehrerStundenplanKombiniert");
 
 	/**
 	 * Report-Vorlage: Stundenplanung - Fach - Stundenplan
 	 */
-	public static readonly STUNDENPLANUNG_v_RAUM_STUNDENPLAN : ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_v_RAUM_STUNDENPLAN", 18, "Stundenplanung-RaumStundenplan");
+	public static readonly STUNDENPLANUNG_v_RAUM_STUNDENPLAN : ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_v_RAUM_STUNDENPLAN", 19, "Stundenplanung-RaumStundenplan");
 
 	/**
 	 * Report-Vorlage: Stundenplanung - Schüler - Stundenplan
 	 */
-	public static readonly STUNDENPLANUNG_v_SCHUELER_STUNDENPLAN : ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_v_SCHUELER_STUNDENPLAN", 19, "Stundenplanung-SchuelerStundenplan");
+	public static readonly STUNDENPLANUNG_v_SCHUELER_STUNDENPLAN : ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_v_SCHUELER_STUNDENPLAN", 20, "Stundenplanung-SchuelerStundenplan");
 
 	/**
 	 * Die Bezeichnung der Report-Vorlage

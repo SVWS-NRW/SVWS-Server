@@ -3,28 +3,27 @@
 		<div class="flex flex-col gap-4">
 			<ui-card v-if="hatKompetenzDrucken && (mapStundenplaene.size > 0)" icon="i-ri-printer-line" title="Stundenplan drucken" subtitle="Drucke die Stundenpläne der ausgewählten Schüler."
 				:is-open="currentAction === 'print'" @update:is-open="isOpen => setCurrentAction('print', isOpen)">
-				<div>
-					<svws-ui-input-wrapper :grid="2" class="p-2">
-						<div>
-							<svws-ui-select title="Stundenplan" v-model="stundenplanAuswahl" :items="mapStundenplaene.values()"
-								:item-text="s => s.bezeichnung.replace('Stundenplan ', '') + ': ' + toDateStr(s.gueltigAb) + '—' + toDateStr(s.gueltigBis) + ' (KW ' + toKW(s.gueltigAb) + '—' + toKW(s.gueltigBis) + ')'" />
-						</div>
-						<div class="text-left">
+				<div class="w-full flex flex-col gap-6">
+					<ui-select :disabled="!schuelerListeManager().liste.auswahlExists()" label="Stundenplan" v-model="stundenplanAuswahl"
+						:manager="stundenplanSelectManager" />
+					<div class="w-full flex gap-6">
+						<div class="grow">
 							<svws-ui-checkbox v-model="option2">Pausenzeiten anzeigen</svws-ui-checkbox><br>
 							<svws-ui-checkbox v-model="option4">Fach- statt Kursbezeichnung verwenden (nicht Sek-II)</svws-ui-checkbox><br>
 							<svws-ui-checkbox v-model="option8">Fachkürzel statt Fachbezeichnung verwenden</svws-ui-checkbox><br>
 							<svws-ui-checkbox v-model="option16">Individuelle Kursart anzeigen</svws-ui-checkbox>
 						</div>
-						<div>
-							<svws-ui-radio-group>
-								<svws-ui-radio-option :value="false" v-model="gruppe2" name="Ausgabe" label="Gesamtausdruck" />
-								<svws-ui-radio-option :value="true" v-model="gruppe2" name="Ausgabe" label="Einzelausdruck" />
-							</svws-ui-radio-group>
-						</div>
-					</svws-ui-input-wrapper>
+						<svws-ui-radio-group class="grow">
+							<svws-ui-radio-option :value="false" v-model="gruppe2" name="Ausgabe" label="Gesamtausdruck" />
+							<svws-ui-radio-option :value="true" v-model="gruppe2" name="Ausgabe" label="Einzelausdruck" />
+						</svws-ui-radio-group>
+					</div>
+					<div v-if="!schuelerListeManager().liste.auswahlExists()">
+						<span class="text-ui-danger">Es ist kein Schüler ausgewählt.</span>
+					</div>
 				</div>
 				<template #buttonFooterLeft>
-					<svws-ui-button :disabled="stundenplanAuswahl === undefined" @click="downloadPDF" :is-loading="loading" class="mt-4">
+					<svws-ui-button :disabled="isPrintDisabled" @click="downloadPDF" :is-loading="loading" class="mt-4">
 						<svws-ui-spinner v-if="loading" spinning />
 						<span v-else class="icon i-ri-play-line" />
 						Drucken
@@ -32,89 +31,81 @@
 				</template>
 			</ui-card>
 			<ui-card v-if="hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen"
-				subtitle="Bei den ausgewählten Schülern wird ein Löschvermerk gesetzt." :is-open="currentAction === 'delete'"
+				subtitle="Setze einen Löschvermerk bei den ausgewählten Schülern." :is-open="currentAction === 'delete'"
 				@update:is-open="(isOpen) => setCurrentAction('delete', isOpen)">
 				<div>
-					<span v-if="preConditionCheck[0]">Alle ausgewählten Schüler sind bereit zum Löschen.</span>
-					<template v-else v-for="message in preConditionCheck[1]" :key="message">
+					<span v-if="deleteSchuelerCheck()[0]">Bereit zum Löschen.</span>
+					<template v-else v-for="message in deleteSchuelerCheck()[1]" :key="message">
 						<span class="text-ui-danger"> {{ message }} <br> </span>
 					</template>
 				</div>
 				<template #buttonFooterLeft>
-					<svws-ui-button :disabled="!preConditionCheck[0] || loading" title="Löschen" @click="entferneSchueler" :is-loading="loading" class="mt-4">
+					<svws-ui-button :disabled="isDeleteDisabled" title="Löschen" @click="entferneSchueler" :is-loading="loading" class="mt-4">
 						<svws-ui-spinner v-if="loading" spinning />
 						<span v-else class="icon i-ri-play-line" />
 						Löschen
 					</svws-ui-button>
 				</template>
 			</ui-card>
-
-			<log-box :logs :status>
-				<template #button>
-					<svws-ui-button v-if="status !== undefined" type="transparent" @click="clearLog" title="Log verwerfen">Log verwerfen</svws-ui-button>
-				</template>
-			</log-box>
 		</div>
+		<log-box :logs :status="statusAction">
+			<template #button>
+				<svws-ui-button v-if="statusAction !== undefined" type="transparent" @click="clearLog" title="Log verwerfen">Log verwerfen</svws-ui-button>
+			</template>
+		</log-box>
 	</div>
 </template>
 
 <script setup lang="ts">
 
-	import { ref, computed } from "vue";
+	import { ref, computed, watch } from "vue";
 	import type { SSchuelerAllgemeinesGruppenprozesseProps } from "./SSchuelerAllgemeinesGruppenprozesseProps";
-	import type { StundenplanListeEintrag, List } from "@core";
-	import { ArrayList, BenutzerKompetenz, DateUtils, ReportingParameter, ReportingReportvorlage } from "@core";
+	import { type StundenplanListeEintrag, type List, BenutzerKompetenz } from "@core";
+	import { DateUtils, ReportingParameter, ReportingReportvorlage } from "@core";
+	import { BaseSelectManager } from "@ui";
 
 	type Action = 'print' | 'delete' | '';
 
 	const props = defineProps<SSchuelerAllgemeinesGruppenprozesseProps>();
 
+	const hatKompetenzDrucken = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN));
+	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LOESCHEN));
+
+	const isPrintDisabled = computed<boolean>(() => !hatKompetenzDrucken.value || !props.schuelerListeManager().liste.auswahlExists() || stundenplanAuswahl.value === undefined || loading.value)
+	const isDeleteDisabled = computed<boolean>(() => !hatKompetenzLoeschen.value || !props.schuelerListeManager().liste.auswahlExists() || !props.deleteSchuelerCheck()[0] || loading.value)
+
+	const stundenplanAuswahl = ref<StundenplanListeEintrag>();
 	const currentAction = ref<Action>('');
-	const oldAction = ref<{ name: string | undefined; open: boolean }>({
-		name: undefined,
-		open: false,
-	});
 	const loading = ref<boolean>(false);
 	const logs = ref<List<string | null> | undefined>();
-	const status = ref<boolean | undefined>();
+	const statusAction = ref<boolean | undefined>();
 
-	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LOESCHEN));
-	const hatKompetenzDrucken = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN));
+	const stundenplanDisplayText = (eintrag: StundenplanListeEintrag) => {
+		return eintrag.bezeichnung.replace('Stundenplan ', '') + ': '
+			+ toDateStr(eintrag.gueltigAb) + '—'
+			+ toDateStr(eintrag.gueltigBis)
+			+ ' (KW ' + toKW(eintrag.gueltigAb) + '—'
+			+ toKW(eintrag.gueltigBis) + ')'
+	}
 
-	const preConditionCheck = computed(() => {
-		if (currentAction.value === 'delete')
-			return props.deleteSchuelerCheck();
-		return [true, new ArrayList<string>()];
+
+	const stundenplaene = computed<Array<StundenplanListeEintrag>>(() => [...props.mapStundenplaene.values()])
+	watch(
+		() => stundenplaene.value,
+		(newValue) => {
+			stundenplanSelectManager.options = newValue;
+		}
+	);
+	const stundenplanSelectManager = new BaseSelectManager({
+		options: stundenplaene.value, optionDisplayText: stundenplanDisplayText, selectionDisplayText: stundenplanDisplayText,
 	})
-
-	function setCurrentAction(newAction: Action, open: boolean) {
-		if (newAction === oldAction.value.name && !open)
-			return;
-
-		oldAction.value.name = currentAction.value;
-		oldAction.value.open = (currentAction.value !== "");
-		if (open)
-			currentAction.value= newAction;
-		else
-			currentAction.value = "";
-	}
-
-	function clearLog() {
-		loading.value = false;
-		logs.value = undefined;
-		status.value = undefined;
-	}
 
 	async function entferneSchueler() {
 		loading.value = true;
-
-		[status.value, logs.value] = await props.deleteSchueler();
-		currentAction.value = '';
-
+		[statusAction.value, logs.value] = await props.deleteSchueler();
 		loading.value = false;
 	}
 
-	const stundenplanAuswahl = ref<StundenplanListeEintrag>();
 	const option2 = ref(false);
 	const option4 = ref(false);
 	const option8 = ref(false);
@@ -150,4 +141,18 @@
 		const date = DateUtils.extractFromDateISO8601(iso);
 		return "" + date[5];
 	}
+
+	function setCurrentAction(newAction: Action, open: boolean) {
+		if ((newAction !== currentAction.value) && !open)
+			return;
+
+		currentAction.value = open ? newAction : '';
+	}
+
+	function clearLog() {
+		loading.value = false;
+		logs.value = undefined;
+		statusAction.value = undefined;
+	}
+
 </script>

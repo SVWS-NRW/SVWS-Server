@@ -148,6 +148,12 @@ public enum BenutzerKompetenz {
 			"Bietet die Möglichkeit zum Datenaustausch mit Schulbewerbung.de."
 	)),
 
+	/** Es werden Rechte zum Import und Export über die Lernplattform-Schnittstelle benötigt. */
+	IMPORT_EXPORT_LERNPLATTFORM(new BenutzerKompetenzKatalogEintrag(
+			48, BenutzerKompetenzGruppe.IMPORT_EXPORT, "Datenaustausch mit Lernplattformen", null,
+			"Bietet die Möglichkeit zum Datenaustausch mit Lernplattformen."
+	)),
+
 	/** Es werden Rechte zum Ansehen der Schulbezogenen Daten benötigt. */
 	SCHULBEZOGENE_DATEN_ANSEHEN(new BenutzerKompetenzKatalogEintrag(
 			61, BenutzerKompetenzGruppe.SCHULBEZOGENE_DATEN, "Ansehen", null,

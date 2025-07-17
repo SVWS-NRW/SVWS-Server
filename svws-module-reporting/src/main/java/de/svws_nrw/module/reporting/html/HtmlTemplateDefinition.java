@@ -99,6 +99,18 @@ public enum HtmlTemplateDefinition {
 			Arrays.asList(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
 					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)),
 
+	/** Report-Vorlage: GOSt - Laufbahnplanung - Abiturjahrgang - Fachwahlstatistiken */
+	GOST_LAUFBAHNPLANUNG_ABITURJAHRGANG_v_FACHWAHLSTATISTIKEN(
+			ReportingReportvorlage.GOST_LAUFBAHNPLANUNG_ABITURJAHRGANG_v_FACHWAHLSTATISTIKEN,
+			"de/svws_nrw/module/reporting/",
+			"gost/laufbahnplanung/GostLaufbahnplanungAbiturjahrgangFachwahlstatistiken.html",
+			"GOSt-Laufbahnplanung-Abiturjahrgang-Fachwahlstatistiken",
+			"""
+			        <p th:text="${'GOSt-Laufbahnplanung-Abiturjahrgang-Fachwahlstatistiken_Abi' + GostLaufbahnplanungAbiturjahrgangFachwahlstatistikenAbiturjahr + '_' + #dates.format(#dates.createNow(), 'yyyyMMdd-HHmm')}"></p>
+			""",
+			Arrays.asList(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
+					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)),
+
 	/** Report-Vorlage: GOSt - Kursplanung - Kurs - Kurschüler */
 	KLASSEN_v_KLASSE_SCHUELER_STAMMDATENLISTE(
 			ReportingReportvorlage.KLASSEN_v_KLASSE_SCHUELER_STAMMDATENLISTE,

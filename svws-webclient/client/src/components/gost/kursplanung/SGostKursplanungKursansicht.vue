@@ -68,14 +68,7 @@
 							<svws-ui-tooltip v-if="getAnzahlKollisionenSchiene(s.id) > 0" autosize>
 								<span class="inline-flex items-center"><span class="icon-sm icon-ui-danger i-ri-alert-line" />{{ getAnzahlKollisionenSchiene(s.id) }}</span>
 								<template #content>
-									<template v-for="list, indexTooltip of getErgebnismanager().getOfSchieneTooltipKurskollisionenAsData(s.id)" :key="indexTooltip">
-										<p>
-											<template v-for="pair, listIndex of list" :key="pair.a.id">
-												<span v-if="listIndex === 0" class="font-bold">{{ getDatenmanager().kursGetName(pair.a.id) }}:&nbsp;</span>
-												<span v-else>{{ getDatenmanager().kursGetName(pair.a.id) }} ({{ pair.b ?? 0 }}){{ ( listIndex !== list.size() -1) ? ',&nbsp;': '' }}</span>
-											</template>
-										</p>
-									</template>
+									<pre>{{ getErgebnismanager().getOfSchieneTooltipSchuelerkollisionen(s.id) }}</pre>
 								</template>
 							</svws-ui-tooltip>
 							<span v-else class="opacity-25 font-normal">0</span>
@@ -94,14 +87,7 @@
 						</div>
 						<div role="columnheader" class="svws-ui-td">Lehrkraft</div>
 						<div class="svws-ui-td svws-align-center" title="Kooperation">Koop</div>
-						<div class="svws-ui-td svws-align-center" title="Fachwahlen">
-							<svws-ui-tooltip>
-								FW
-								<template #content>
-									Fachwahlen
-								</template>
-							</svws-ui-tooltip>
-						</div>
+						<div class="svws-ui-td svws-align-center" title="Fachwahlen">FW</div>
 						<div class="svws-ui-td svws-align-center svws-divider" title="Differenz">Diff</div>
 						<!--Schienen-->
 						<!-- Es werden nicht alle Schienen gezeigt -->

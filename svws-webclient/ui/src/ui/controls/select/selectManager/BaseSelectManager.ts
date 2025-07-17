@@ -4,49 +4,125 @@ import { ArrayList } from "../../../../../../core/src/java/util/ArrayList";
 import { DeveloperNotificationException } from "../../../../../../core/src/core/exceptions/DeveloperNotificationException";
 import type { SelectFilter } from "../filter/SelectFilter";
 import { SearchSelectFilter } from "../filter/SearchSelectFilter";
+import type { Comparator } from "../../../../../../core/src/java/util/Comparator";
+
+export interface BaseSelectManagerConfig<T> {
+	options?: Iterable<T>;
+	multi?: boolean;
+	selected?: any;
+	removable?: boolean;
+	sort?: Comparator<T> | ((a: T, b: T) => number) | null;
+	filters?: Iterable<SelectFilter<T>>;
+	selectionDisplayText?: string | ((option: any) => string);
+	optionDisplayText?: string | ((option: any) => string);
+	deepSearchAttributes?: string[];
+}
 
 /**
  * Abstrakte Manager Klasse zur Verwendung in einer Select-Komponente (UiSelect.vue). SelectManager übernehmen die Logik der Select-Komponente.
  * T bezeichnet dabei den Datentyp der auswählbaren Optionen.
  */
-export abstract class BaseSelectManager<T> {
+export class BaseSelectManager<T> {
 
-	// Alle Optionen des Dropdowns
-	protected _options = shallowRef<List<T>>(new ArrayList<T>());
-
-	// Die aktuelle Selektion des Dropdowns. Enthält bei Single-Selektion immer nur ein Objekt
-	protected _selected = shallowRef<List<T>>(new ArrayList<T>());
+	// Alle Optionen des Selects. Diese Liste ist ungefiltert und enthält alle verfügbaren Optionen. Angezeigt werden im Dropdown aber nur die gefilterten
+	// Optionen aus `_filteredOptions`.
+	protected _allOptions = shallowRef<List<T>>(new ArrayList<T>());
 
 	// Die gefilterte Liste der Optionen, die im Dropdwon angezeigt werden.
-	protected _filtered = shallowRef<List<T>>(new ArrayList<T>());
-
-	// Eine Map, die alle validen Optionen zu einem Filter enthält.
-	protected _filterMap = new Map<string, List<T>>;
+	protected _filteredOptions = shallowRef<List<T>>(new ArrayList<T>());
 
 	// Alle Filter, die auf die Optionen angewendet werden
 	private _filters: List<SelectFilter<T>> = new ArrayList();
 
+	// Eine Map, die alle validen Optionen zu einem Filter enthält.
+	protected _filterMap = new Map<string, List<T>>;
+
+	// Die aktuelle Selektion des Dropdowns. Enthält bei Single-Selektion immer nur ein Objekt
+	protected _selected = shallowRef<List<T>>(new ArrayList<T>());
+
 	// Definiert, ob eine Multi-Selektion möglich ist
 	protected _multi = ref<boolean>(false);
 
+	// Definiert, ob die Selektion geleert werden kann
+	protected _removable = ref<boolean>(true);
+
+	// Definiert eine Sortierfunktion für die Optionen
+	protected _sort: Comparator<T> | null = null;
+
 	// Definiert, wie die aktuelle Selektion im Inputfeld dargestellt wird
-	protected abstract _selectionDisplayText: string | ((option: any) => string);
+	protected _selectionDisplayText: string | ((option: any) => string) = (option: T): string => option?.toString() ?? "";
 
 	// Definiert, wie die Optionen im Dropdown dargestellt werden
-	protected abstract _optionDisplayText: string | ((option: any) => string);
+	protected _optionDisplayText: string | ((option: any) => string) = (option: T): string => option?.toString() ?? "";
 
 	/**
 	 * Konstruktor des Managers.
 	 *
-	 * @param multi      definiert, ob Multi-Selektionen erlaubt sind
-	 * @param options    die Liste aller Optionen der Komponente (ungefiltert)
-	 * @param selected   optional. Die Liste der aktuell selektierten Optionen. Bei einer Singe-Select-Komponente darf maximal ein Objekt in dieser Liste sein.
+	 * @param config      die Konfiguration des Selects. Wenn nicht angegeben, dann wird das Select ohne Optionen generiert.
 	 */
-	protected constructor(multi: boolean, options: Iterable<T>, selected?: any) {
-		this.multi = multi;
-		this.options = options;
-		this.selected = selected;
-		this.updateFiltered();
+	public constructor (config?: BaseSelectManagerConfig<T>) {
+		if (config === undefined)
+			return;
+		// Alle Konfigurationen, die die angezeigten Optionen beeinflussen
+		let optionsUpdated = false;
+		if (config.options !== undefined)
+			this._allOptions.value = this.getListFromIterable(config.options);
+		if (config.filters !== undefined)
+			this._filters = this.getListFromIterable(config.filters);
+		if (config.deepSearchAttributes !== undefined) {
+			this.setDeepSearchAttributes(config.deepSearchAttributes);
+			optionsUpdated = true;
+		}	if (optionsUpdated === false)
+			// Sollte noch keine Aktualisierung stattgefunden haben, muss dies nun passieren, bevor eine Sortierung vorgenommen wird.
+			this.updateFilteredOptions();
+
+		// Weitere Konfigurationen
+		if (config.removable !== undefined)
+			this._removable.value = config.removable;
+		if (config.multi !== undefined)
+			this._multi.value = config.multi ?? false;
+		if (config.optionDisplayText !== undefined)
+			this._optionDisplayText = config.optionDisplayText;
+		if (config.selectionDisplayText !== undefined)
+			this._selectionDisplayText = config.selectionDisplayText;
+		if (config.sort !== undefined)
+			this.sort = config.sort;
+		if (config.selected !== undefined)
+			this.selected = config.selected;
+	}
+
+	/**
+	 * Setzt alle beliebigen Konfigurationsmerkmale und aktualisiert den Manager intern.
+	 *
+	 * @param config   Die Config für den SelectManager
+	 */
+	public setConfig(config: BaseSelectManagerConfig<T>) {
+		// Alle Konfigurationen, die die angezeigten Optionen beeinflussen
+		let optionsUpdated = false;
+		if (config.options !== undefined)
+			this._allOptions.value = this.getListFromIterable(config.options);
+		if (config.filters !== undefined)
+			this._filters = this.getListFromIterable(config.filters);
+		if (config.deepSearchAttributes !== undefined) {
+			this.setDeepSearchAttributes(config.deepSearchAttributes);
+			optionsUpdated = true;
+		}	if (optionsUpdated === false)
+			// Sollte noch keine Aktualisierung stattgefunden haben, muss dies nun passieren, bevor eine Sortierung vorgenommen wird.
+			this.updateFilteredOptions();
+
+		// Weitere Konfigurationen
+		if (config.removable !== undefined)
+			this._removable.value = config.removable;
+		if (config.multi !== undefined)
+			this._multi.value = config.multi ?? false;
+		if (config.optionDisplayText !== undefined)
+			this._optionDisplayText = config.optionDisplayText;
+		if (config.selectionDisplayText !== undefined)
+			this._selectionDisplayText = config.selectionDisplayText;
+		if (config.sort !== undefined)
+			this.sort = config.sort;
+		if (config.selected !== undefined)
+			this.selected = config.selected;
 	}
 
 	/**
@@ -55,16 +131,20 @@ export abstract class BaseSelectManager<T> {
 	 * @return ungefilterte Liste
 	 */
 	public get options(): List<T> {
-		return this._options.value;
+		return this._allOptions.value;
 	}
 
 	/**
-	 * Setter für alle (ungefilterten) Optionen der Komponente.
+	 * Setter für alle (ungefilterten) Optionen der Komponente. Der setter triggert auch eine Aktualisierung der gefilterten Optionen `_filteredOptions`.
 	 *
 	 * @param value   neue Optionenliste (ungefiltert)
 	 */
 	public set options(value: Iterable<T>) {
-		this._options.value = this.getListFromIterable(value);
+		const optionList = this.getListFromIterable(value);
+		this._allOptions.value = optionList;
+		triggerRef( this._allOptions );
+		this.updateFilteredOptions();
+		this.clearSelection();
 	}
 
 	/**
@@ -118,7 +198,7 @@ export abstract class BaseSelectManager<T> {
 
 		if (!this.multi && newSelection.size() > 1)
 			throw new DeveloperNotificationException("In einer Single-Select-Komponente können nicht mehrere Optionen selektiert sein. "
-				+ "Dem selected Setter wurden jedoch mehrere übergeben.");
+					+ "Dem selected Setter wurden jedoch mehrere übergeben.");
 
 		this._selected.value = newSelection;
 		triggerRef(this._selected);
@@ -140,11 +220,12 @@ export abstract class BaseSelectManager<T> {
 	 */
 	public set filters(value: Iterable<SelectFilter<T>>) {
 		this._filters = this.getListFromIterable(value);
+		this.updateFilteredOptions();
 	}
 
 	/**
 	 * Fügt einen Filter zu den aktiven Filtern hinzu. Der key des Filters muss eindeutig sein. Es dürfen keine zwei Filter mit demselben Key hinzugefügt werden.
-	 * Die gefilterte Liste wird sofort aktualisiert.
+	 * Die gefilterten Optionen des Dropdowns werden ebenfalls aktualisiert.
 	 *
 	 * @param newFilter   der neue, aktive Filter
 	 */
@@ -155,19 +236,7 @@ export abstract class BaseSelectManager<T> {
 				break;
 			}
 		this.filters.add(newFilter);
-		const filteredList = newFilter.apply(this.options)
-		this._filterMap.set(newFilter.key, filteredList);
-		this.updateFiltered();
-	}
-
-	/**
-	 * Aktualisiert einen bereits aktiven Filter z.B. wegen Zustandsänderungen innerhalb des Filters
-	 *
-	 * @param filter   der Filter, der aktualisiert werden soll-
-	 */
-	public updateFilter(filter: SelectFilter<T>) {
-		this.removeFilter(filter);
-		this.addFilter(filter);
+		this.updateFilteredOptions(newFilter);
 	}
 
 	/**
@@ -176,12 +245,10 @@ export abstract class BaseSelectManager<T> {
 	 * @param removeFilter   Filter, der entfernt werden soll.
 	 */
 	public removeFilter(removeFilter: SelectFilter<T>) {
-		const filter = this.getFilter(removeFilter.key);
+		const filter = this.getFilterByKey(removeFilter.key);
 		if (filter === null)
 			return;
-		this.filters.remove(filter);
-		this._filterMap.delete(filter.key);
-		this.updateFiltered();
+		this.updateFilteredOptions(filter, true);
 	}
 
 	/**
@@ -191,28 +258,11 @@ export abstract class BaseSelectManager<T> {
 	 *
 	 * @returns den passenden Filter. null, wenn keiner gefunden werden konnte.
 	 */
-	public getFilter(filterKey: string): SelectFilter<T> | null {
+	public getFilterByKey(filterKey: string): SelectFilter<T> | null {
 		for (const filter of this.filters)
 			if (filter.key === filterKey)
 				return filter;
 		return null;
-	}
-
-	/**
-	 * Aktualisiert die Liste der gefilterten Optionen basierend auf den aktuell aktiven Filtern.
-	 */
-	private updateFiltered() {
-		let result: List<T> = new ArrayList();
-		if (this._filterMap.size === 0)
-			result = this.options;
-
-		for (const filteredOptions of this._filterMap.values())
-			if (result.isEmpty())
-				result = filteredOptions;
-			else
-				result = this.intersect(result, filteredOptions);
-
-		this.filtered = result;
 	}
 
 	/**
@@ -221,11 +271,13 @@ export abstract class BaseSelectManager<T> {
 	 * @param attributes   Attribute des Objekts, in denen bei einer Begriffssuche ebenfalls gesucht werden soll.
 	 */
 	public setDeepSearchAttributes(attributes: string[]) {
-		let searchFilter = this.getFilter("search");
-		if (searchFilter === null)
-			searchFilter = new SearchSelectFilter<T>("search", "", (option: T) => this.getOptionText(option));
-		(searchFilter as SearchSelectFilter<T>).deepSearchAttributes = attributes;
-		this.updateFilter(searchFilter);
+		let searchFilter = this.getFilterByKey("search");
+		if (searchFilter === null) {
+			searchFilter = new SearchSelectFilter<T>("search", "", (option: T) => this.getOptionText(option), attributes);
+			this.addFilter(searchFilter);
+		} else
+			(searchFilter as SearchSelectFilter<T>).deepSearchAttributes = attributes;
+		this.updateFilteredOptions(searchFilter);
 	}
 
 	/**
@@ -252,18 +304,61 @@ export abstract class BaseSelectManager<T> {
 	 *
 	 * @return gefilterte Optionen
 	 */
-	public get filtered(): List<T> {
-		return this._filtered.value;
+	public get filteredOptions(): List<T> {
+		return this._filteredOptions.value;
 	}
 
 	/**
-	 * Setter für die gefilterte Liste an Optionen des Dropdowns.
+	 * Setter für die gefilterte Liste an Optionen des Dropdowns. Falls eine Sortierfunktion definiert ist, wird die gefilterte Liste auch sortiert.
 	 *
-	 * @param value   neue Liste der gefilterten Optionen
+	 * @param value   neue sortierte Liste der gefilterten Optionen
 	 */
-	public set filtered(value: Iterable<T>) {
-		this._filtered.value = this.getListFromIterable(value);
-		triggerRef(this._filtered);
+	public set filteredOptions (value: Iterable<T>) {
+		const filteredList = this.getListFromIterable(value);
+		if (this.sort !== null)
+			filteredList.sort(this.sort);
+		this._filteredOptions.value = filteredList;
+		triggerRef(this._filteredOptions);
+		this.clearSelection();
+	}
+
+	/**
+	 * Aktualisiert die Filter-Map, die alle aktiven Filter und deren gefilterte Listen enthält. Wenn kein Filter übergeben wird, dann wird die komplette Map
+	 * aktualisiert. Nach dem Update der Filter-Map wird auch die Liste der gefilterten Optionen aktualisiert.
+	 *
+	 * @param filter   der Filter, deren Optionen aktualisiert werden sollen. Wenn nicht angegeben, dann wird die komplette Map aktualisiert.
+	 * @param remove   wenn true, dann wird der Filter aus der Map entfernt. Andernfalls wird der Filter angewendet.
+	 */
+	public updateFilteredOptions (filter?: SelectFilter<T>, remove: boolean = false): void {
+		// Aktualisiert die Filter-Map, die alle aktiven Filter und deren gefilterte Listen enthält.
+
+		if (filter !== undefined)
+			if (remove === true) {
+				this.filters.remove(filter);
+				this._filterMap.delete(filter.key);
+			}	else
+				this._filterMap.set(filter.key, filter.apply(this.options));
+		else {
+			this._filterMap.clear();
+			for (const filter of this.filters) {
+				const filteredList = filter.apply(this.options);
+				this._filterMap.set(filter.key, filteredList);
+			}
+		}
+
+		// Aktualisiert die gefilterte Liste, die im Dropdown angezeigt wird.
+
+		let result: List<T> = new ArrayList();
+		if (this._filterMap.size === 0)
+			result = this.options;
+
+		for (const filteredOptions of this._filterMap.values())
+			if (result.isEmpty())
+				result = filteredOptions;
+			else
+				result = this.intersect(result, filteredOptions);
+
+		this.filteredOptions = result;
 	}
 
 	/**
@@ -285,6 +380,24 @@ export abstract class BaseSelectManager<T> {
 	}
 
 	/**
+	 * Setter zum Festlegen, ob eine Selektion geleert werden kann.
+	 *
+	 * @param value   true, wenn leeren erlaubt ist
+	 */
+	public set removable(value: boolean) {
+		this._removable.value = value;
+	}
+
+	/**
+	 * Getter, der angibt, ob eine Selektion geleert werden kann.
+	 *
+	 * @return true, wenn wenn leeren erlaubt ist
+	 */
+	public get removable(): boolean {
+		return this._removable.value;
+	}
+
+	/**
 	 * Getter für die Konfiguration der Darstellung der Selektion.
 	 *
 	 * @return Darstellungskonfiguration für die Selektion
@@ -294,11 +407,11 @@ export abstract class BaseSelectManager<T> {
 	}
 
 	/**
-		 * Setter für die Konfiguration der Darstellung der Selektion.
-		 *
-		 * @param value neue Darstellungskonfiguration für die Selektion.
-		 */
-	public set seletcionDisplayText(value: string | ((option: any) => string)) {
+	 * Setter für die Konfiguration der Darstellung der Selektion.
+	 *
+	 * @param value neue Darstellungskonfiguration für die Selektion.
+	 */
+	public set selectionDisplayText(value: string | ((option: any) => string)) {
 		this._selectionDisplayText = value;
 	}
 
@@ -319,6 +432,47 @@ export abstract class BaseSelectManager<T> {
 	public set optionDisplayText(value: string | ((option: any) => string)) {
 		this._optionDisplayText = value;
 	}
+
+	/**
+	 * Getter für den Sortier-Comparator der Optionen.
+	 *
+	 * @return Comparator für die Sortierung
+	 */
+	public get sort(): Comparator<T> | null {
+		return this._sort;
+	}
+
+	/**
+	 * Setter für den Sortier-Comparator der Optionen.
+	 *
+	 * @param value neuer Comparator für die Optionensortierung
+	 */
+	public set sort(value: Comparator<T> | ((a: T, b: T) => number) | null) {
+		let comparator: Comparator<T> | null = null;
+
+		if (value && typeof value === 'object' && typeof value.compare === 'function') {
+			comparator = value;
+		} else if (typeof value === 'function') {
+			comparator = {
+				compare: value,
+			};
+		}
+		this._sort = comparator;
+		this.updateSort();
+	}
+
+	/**
+	 * Aktualisiert die Sortierung der Optionen, der gefilterten Liste und der Selektion, falls eine Sortierfunktion definiert ist.
+	 */
+	public updateSort() {
+		if (this.options.size() > 0 && this.sort !== null) {
+			this.options.sort(this.sort);
+			this.filteredOptions.sort(this.sort);
+		}
+		triggerRef(this._allOptions);
+		triggerRef(this._filteredOptions);
+	}
+
 
 	/**
 	 * Toggelt den Select-Zustand der übergebenen Option.
@@ -344,7 +498,7 @@ export abstract class BaseSelectManager<T> {
 
 	/**
 	 * Selektiert die übergebene Option. Falls `_multi === false`, dann wird die aktuelle Selektion zunächst geleert. Andernfalls wird die neue Option der
-	 * bestehenden Selektion angefügt.
+	 * bestehenden Selektion angefügt. Falls `_removable === false`, dann wird die Selektion nicht geleert.
 	 *
 	 * @param option   die Option, die selektiert werden soll
 	 */
@@ -363,6 +517,8 @@ export abstract class BaseSelectManager<T> {
 	 * @param option   die Option, die deselektiert werden soll
 	 */
 	public deselect(option: T): void {
+		if (((this.removable === false) && (this.multi === false) )|| ((this.removable === false) && (this.multi === true) && (this._selected.value.size() === 1)))
+			return;
 		const index = this._selected.value.indexOf(option);
 		if (index !== -1) {
 			this._selected.value.removeElementAt(index);
@@ -378,6 +534,13 @@ export abstract class BaseSelectManager<T> {
 		triggerRef(this._selected);
 	}
 
+	public hasSelection(): boolean {
+		if (this.multi)
+			return this.selected.isEmpty() === false;
+		else
+			return (this.selected !== undefined) && (this.selected !== null);
+	}
+
 	/**
 	 * Getter für den Text eines selektierten Objektes.
 	 *
@@ -385,7 +548,12 @@ export abstract class BaseSelectManager<T> {
 	 *
 	 * @returns den Text der Option.
 	 */
-	public abstract getSelectionText(option: T): string;
+	public getSelectionText(option: T): string {
+		if (typeof this.selectionDisplayText === "function")
+			return this.selectionDisplayText(option);
+		else
+			return "";
+	}
 
 	/**
 	 * Getter für den Text der übergebenen Option.
@@ -394,6 +562,11 @@ export abstract class BaseSelectManager<T> {
 	 *
 	 * @returns den Text der Option.
 	 */
-	public abstract getOptionText(option: T): string;
+	public getOptionText(option: T): string {
+		if (typeof this.optionDisplayText === "function")
+			return this.optionDisplayText(option);
+		else
+			return "";
+	}
 
 }

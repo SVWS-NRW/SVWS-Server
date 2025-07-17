@@ -115,7 +115,7 @@ public final class DataSchuelerMerkmale extends DataManagerRevised<Long, DTOSchu
 			}
 			case "idMerkmal" -> {
 				final Long id = JSONMapper.convertToLong(value, false, "idMerkmal");
-				dto.Kurztext = merkmale.values().stream().filter(m -> m.ID == id).findFirst().map(m -> m.Kurztext.toUpperCase())
+				dto.Kurztext = merkmale.values().stream().filter(m -> m.ID == id).findFirst().map(m -> m.Kurztext)
 						.orElseThrow(() -> new ApiOperationException(Status.BAD_REQUEST, "Zur id %d existiert kein Merkmal.".formatted(id)));
 			}
 			case "datumVon" -> dto.DatumVon = JSONMapper.convertToString(value, true, true, null, "DatumVon");

@@ -1,33 +1,44 @@
-import { Schulform } from "@core";
-import type { FoerderschwerpunktEintrag, KatalogEintrag, ReligionEintrag, SchulEintrag, SchulformKatalogEintrag, TelefonArt } from "@core";
+import { Schulform} from "@core";
+import type { FoerderschwerpunktEintrag, KatalogEintrag, ReligionEintrag, SchulEintrag, SchulformKatalogEintrag, TelefonArt ,Haltestelle} from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
+import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
+import { PendingStateManagerSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/PendingStateManagerSchuelerIndividualdaten";
 
 
 interface RouteStateDataSchuelerIndividualdaten extends RouteStateInterface {
 	mapFahrschuelerarten: Map<number, KatalogEintrag>;
 	mapFoerderschwerpunkte: Map<number, FoerderschwerpunktEintrag>;
-	mapHaltestellen: Map<number, KatalogEintrag>;
+	mapHaltestellen: Map<number, Haltestelle>;
 	mapReligionen: Map<number, ReligionEintrag>;
 	mapSchulen: Map<string, SchulEintrag>;
 	mapTelefonArten: Map<number, TelefonArt>;
+	pendingStateManager: PendingStateManagerSchuelerIndividualdaten | undefined;
 }
-
-const defaultState = <RouteStateDataSchuelerIndividualdaten> {
-	mapFahrschuelerarten: new Map(),
-	mapFoerderschwerpunkte: new Map(),
-	mapHaltestellen: new Map(),
-	mapReligionen: new Map(),
-	mapSchulen: new Map<string, SchulEintrag>(),
-	mapTelefonArten: new Map(),
-};
-
 
 export class RouteDataSchuelerIndividualdaten extends RouteData<RouteStateDataSchuelerIndividualdaten> {
 
 	public constructor() {
-		super(defaultState);
+		super({
+			mapFahrschuelerarten: new Map(),
+			mapFoerderschwerpunkte: new Map(),
+			mapHaltestellen: new Map(),
+			mapReligionen: new Map(),
+			mapSchulen: new Map<string, SchulEintrag>(),
+			mapTelefonArten: new Map(),
+			pendingStateManager: undefined,
+		});
+	}
+
+	get pendingStateManager(): PendingStateManagerSchuelerIndividualdaten {
+		if (this._state.value.pendingStateManager === undefined) {
+			this._state.value.pendingStateManager = new PendingStateManagerSchuelerIndividualdaten('id',
+				() => routeSchueler.data.manager, this._state.value.mapReligionen,
+				this._state.value.mapSchulen, this._state.value.mapHaltestellen, this._state.value.mapFahrschuelerarten);
+			routeSchueler.data.pendingStateManagerRegistry.addPendingStateManager(this._state.value.pendingStateManager);
+		}
+		return this._state.value.pendingStateManager;
 	}
 
 	get mapFahrschuelerarten(): Map<number, KatalogEintrag> {
@@ -38,7 +49,7 @@ export class RouteDataSchuelerIndividualdaten extends RouteData<RouteStateDataSc
 		return this._state.value.mapFoerderschwerpunkte;
 	}
 
-	get mapHaltestellen(): Map<number, KatalogEintrag> {
+	get mapHaltestellen(): Map<number, Haltestelle> {
 		return this._state.value.mapHaltestellen;
 	}
 
@@ -61,7 +72,7 @@ export class RouteDataSchuelerIndividualdaten extends RouteData<RouteStateDataSc
 		for (const fa of fahrschuelerarten)
 			mapFahrschuelerarten.set(fa.id, fa);
 		// Lade den Katalog der Förderschwerpunkte
-		const foerderschwerpunkte = await api.server.getSchuelerFoerderschwerpunkte(api.schema);
+		const foerderschwerpunkte = await api.server.getKatalogFoerderschwerpunkte(api.schema);
 		const mapFoerderschwerpunkte = new Map();
 		for (const fs of foerderschwerpunkte)
 			mapFoerderschwerpunkte.set(fs.id, fs);
@@ -86,8 +97,8 @@ export class RouteDataSchuelerIndividualdaten extends RouteData<RouteStateDataSc
 		for (const schule of schulen) {
 			if (schule.schulnummerStatistik === null)
 				continue;
-			const sfEintrag : SchulformKatalogEintrag | null = schule.idSchulform === null ? null : Schulform.data().getEintragByID(schule.idSchulform);
-			const sf : Schulform | null = sfEintrag === null ? null : Schulform.data().getWertBySchluessel(sfEintrag.schluessel);
+			const sfEintrag: SchulformKatalogEintrag | null = schule.idSchulform === null ? null : Schulform.data().getEintragByID(schule.idSchulform);
+			const sf: Schulform | null = sfEintrag === null ? null : Schulform.data().getWertBySchluessel(sfEintrag.schluessel);
 			if (sf === api.schulform)
 				mapSchulen.set(schule.schulnummerStatistik, schule);
 		}

@@ -20,7 +20,7 @@ const defaultState = {
 export class RouteDataKatalogVermerkarten extends RouteDataAuswahl<VermerkartenListeManager, RouteStateAuswahlInterface<VermerkartenListeManager>> {
 
 	public constructor() {
-		super(defaultState, routeKatalogVermerkartenGruppenprozesse, routeKatalogVermerkartNeu);
+		super(defaultState, { gruppenprozesse: routeKatalogVermerkartenGruppenprozesse, hinzufuegen: routeKatalogVermerkartNeu });
 	}
 
 	public addID(param: RouteParamsRawGeneric, id: number): void {

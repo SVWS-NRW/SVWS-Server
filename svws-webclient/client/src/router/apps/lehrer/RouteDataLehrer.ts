@@ -25,7 +25,7 @@ const defaultState = <RouteStateLehrer>{
 export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteStateLehrer> {
 
 	public constructor() {
-		super(defaultState, routeLehrerGruppenprozesse, routeLehrerNeu);
+		super(defaultState, { gruppenprozesse: routeLehrerGruppenprozesse, hinzufuegen: routeLehrerNeu });
 	}
 
 	get filterNurSichtbar(): boolean {
@@ -154,8 +154,7 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 	addLehramt = async (eintrag: LehrerLehramtEintrag) => {
 		if (!this.manager.hasPersonalDaten())
 			throw new DeveloperNotificationException("Lehrämter können nur hinzugefügt werden, wenn gültige Personal-Daten geladen sind.");
-		// TODO API-Aufruf ...
-		console.log("Hinzufügen von Lehrämtern noch nicht implementiert");
+		await api.server.addLehrerLehramt(eintrag, api.schema);
 		this.manager.personalDaten().lehraemter.add(eintrag);
 		this.commit();
 	}
@@ -163,18 +162,18 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 	removeLehraemter = async (eintraege: List<LehrerLehramtEintrag>) => {
 		if (!this.manager.hasPersonalDaten())
 			throw new DeveloperNotificationException("Lehrämter können nur entfernt werden, wenn gültige Personal-Daten geladen sind.");
-		// TODO API-Aufruf ...
-		console.log("Entfernen von Lehrämtern noch nicht implementiert");
+		// TODO ggf. zu einem API-Aufruf zusammenfassen - Server-API muss dafür noch erweitert werden
+		for (const eintrag of eintraege)
+			await api.server.deleteLehrerLehramt(api.schema, eintrag.id, eintrag. idLehramt);
 		this.manager.personalDaten().lehraemter.removeAll(eintraege);
 		this.commit();
 	}
 
-	patchLehramtAnerkennung = async (eintrag: LehrerLehramtEintrag, anerkennung: LehrerLehramtAnerkennung | null) => {
+	patchLehramt = async (eintrag: LehrerLehramtEintrag, patch: Partial<LehrerLehramtEintrag>) => {
 		if (!this.manager.hasPersonalDaten())
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		// TODO API-Aufruf mit idAnerkennungsgrund ...
-		console.log("Anpassen von Lehrämtern noch nicht implementiert");
-		Object.assign(eintrag, { idAnerkennungsgrund: anerkennung?.daten(this.manager.getSchuljahr())?.id ?? null });
+		await api.server.patchLehrerLehramt(patch, api.schema, eintrag.id, eintrag.idLehramt);
+		Object.assign(eintrag, patch);
 		this.commit();
 	}
 
@@ -196,12 +195,13 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 		this.commit();
 	}
 
-	patchLehrbefaehigungAnerkennung = async (eintrag: LehrerLehrbefaehigungEintrag, anerkennung: LehrerLehrbefaehigungAnerkennung | null) => {
+	patchLehrbefaehigung = async (eintrag: LehrerLehrbefaehigungEintrag, patch: Partial<LehrerLehrbefaehigungEintrag>) => {
 		if (!this.manager.hasPersonalDaten())
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		// TODO API-Aufruf mit idAnerkennungsgrund ...
+		// await api.server.patchLehrerLehrbefaehigung();
 		console.log("Anpassen von Lehrbefähigungen noch nicht implementiert");
-		Object.assign(eintrag, { idAnerkennungsgrund: anerkennung?.daten(this.manager.getSchuljahr())?.id ?? null });
+		Object.assign(eintrag, patch);
 		this.commit();
 	}
 
@@ -223,12 +223,13 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 		this.commit();
 	}
 
-	patchFachrichtungAnerkennung = async (eintrag: LehrerFachrichtungEintrag, anerkennung: LehrerFachrichtungAnerkennung | null) => {
+	patchFachrichtung = async (eintrag: LehrerFachrichtungEintrag, patch : Partial<LehrerFachrichtungEintrag>) => {
 		if (!this.manager.hasPersonalDaten())
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		// TODO API-Aufruf mit idAnerkennungsgrund ...
+		// await api.server.patchLehrerFachrichtung();
 		console.log("Anpassen von Fachrichtungen noch nicht implementiert");
-		Object.assign(eintrag, { idAnerkennungsgrund: anerkennung?.daten(this.manager.getSchuljahr())?.id ?? null });
+		Object.assign(eintrag, patch);
 		this.commit();
 	}
 

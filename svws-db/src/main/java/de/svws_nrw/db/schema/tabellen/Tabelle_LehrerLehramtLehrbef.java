@@ -19,6 +19,10 @@ public class Tabelle_LehrerLehramtLehrbef extends SchemaTabelle {
 			.setNotNull()
 			.setJavaComment("LehrerID zu der die Lehrbefähigung gehört");
 
+	/** Die Definition der Tabellenspalte LehramtKrz */
+	public SchemaTabelleSpalte col_LehramtKrz = add("LehramtKrz", SchemaDatentypen.VARCHAR, true).setDatenlaenge(10)
+			.setJavaComment("Lehramtskürzel");
+
 	/** Die Definition der Tabellenspalte LehrbefKrz */
 	public SchemaTabelleSpalte col_LehrbefKrz = add("LehrbefKrz", SchemaDatentypen.VARCHAR, true).setDatenlaenge(10)
 			.setJavaComment("Kürzel der Lehrbefähigung");

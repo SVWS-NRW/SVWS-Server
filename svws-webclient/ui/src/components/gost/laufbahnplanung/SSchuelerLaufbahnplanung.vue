@@ -1,7 +1,4 @@
 <template>
-	<Teleport to=".svws-ui-header--actions" defer>
-		<svws-ui-modal-hilfe> <hilfe-schueler-laufbahnplanung /> </svws-ui-modal-hilfe>
-	</Teleport>
 	<div class="page page-flex-row max-w-480">
 		<Teleport v-if="hatUpdateKompetenz" defer to=".svws-sub-nav-target">
 			<svws-ui-sub-nav>
@@ -45,7 +42,7 @@
 
 	const props = defineProps<SchuelerLaufbahnplanungProps>();
 
-	const manager = computed<LaufbahnplanungUiManager>(() => new LaufbahnplanungUiManager(props.serverMode, props.abiturdatenManager, props.config, () => props.gostJahrgangsdaten, props.setWahl));
+	const manager = computed<LaufbahnplanungUiManager>(() => new LaufbahnplanungUiManager(props.serverMode, props.abiturdatenManager, props.config, () => props.gostJahrgangsdaten, props.setWahl, { faecherZeigen: "app.schueler.laufbahnplanung.faecher.anzeigen", modus: "app.schueler.laufbahnplanung.modus" }));
 
 	const hatUpdateKompetenz = computed<boolean>(() => {
 		if ((props.benutzerKompetenzen === undefined) || (props.benutzerKompetenzenAbiturjahrgaenge === undefined) || (props.schueler.abiturjahrgang === null))

@@ -143,7 +143,7 @@ public final class DataSchuelerSchulbesuchSchule extends DataManagerRevised<Long
 
 	private static void mapDatumBis(final DTOSchuelerAbgaenge dto, final Object value) throws ApiOperationException {
 		final String datum = JSONMapper.convertToString(value, true, true, null, "DatumBis");
-		if (dto.LSBeginnDatum != null) {
+		if ((dto.LSBeginnDatum != null) && (datum != null)) {
 			// Prüfung, ob das Enddatum nach dem Startdatum liegt
 			final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 			final LocalDate datumVon = LocalDate.parse(dto.LSBeginnDatum, formatter);

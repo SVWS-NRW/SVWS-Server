@@ -1,7 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`Feacher Tests > gegen { schema: 'GymAbi01' } > getFach 1`] = `
-FaecherListeEintrag {
+FachDaten {
   "aufZeugnis": true,
   "aufgabenfeld": "1",
   "bezeichnung": "Deutsch",
@@ -11,6 +11,8 @@ FaecherListeEintrag {
   "holeAusAltenLernabschnitten": true,
   "id": 16,
   "istFHRFach": true,
+  "istFremdsprache": false,
+  "istMoeglichAlsNeueFremdspracheInSekII": false,
   "istNachpruefungErlaubt": true,
   "istOberstufenFach": true,
   "istPruefungsordnungsRelevant": true,
@@ -20,7 +22,6 @@ FaecherListeEintrag {
   "kuerzel": "D",
   "kuerzelStatistik": "D",
   "maxZeichenInFachbemerkungen": 2147483647,
-  "referenziertInAnderenTabellen": null,
   "sortierung": 10,
 }
 `;

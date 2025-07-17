@@ -200,7 +200,7 @@
 
 	.svws-ui-tr {
 		.svws-ui-table.svws-has-background & {
-			background-color: var(background-color);
+			background-color: var(--background-color);
 		}
 	}
 
@@ -505,7 +505,7 @@
 }
 
 .svws-ui-table-filter {
-	@apply mb-5 text-ui;
+	@apply mb-4 text-ui;
 	/* TODO: COLORS icon */
 
 	.svws-ui-checkbox {

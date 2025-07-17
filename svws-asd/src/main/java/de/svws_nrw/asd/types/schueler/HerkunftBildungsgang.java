@@ -44,6 +44,15 @@ public enum HerkunftBildungsgang implements CoreType<HerkunftBildungsgangKatalog
 	/** Fachklassen (nach §2 BKAZVO) */
 	A16,
 
+	/** Internationale Förderklasse */
+	A17,
+
+	/** Fit für Mehr */
+	A18,
+
+	/** Förderzentrum */
+	A19,
+
 	/** Berufsfachschule, Berufsabschluss/Fachoberschulreife (2-jährig, Vollzeit) */
 	B01,
 

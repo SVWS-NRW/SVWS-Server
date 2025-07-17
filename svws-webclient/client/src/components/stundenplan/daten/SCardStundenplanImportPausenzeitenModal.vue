@@ -1,64 +1,112 @@
 <template>
 	<slot :open-modal />
-	<svws-ui-modal v-model:show="show" :type="listPausenzeiten.size() < 1 ? 'danger' : 'default'" size="medium">
-		<template #modalTitle>Pausenzeiten aus Katalog importieren</template>
+	<svws-ui-modal v-model:show="show" type="default" size="big">
+		<template #modalTitle>Pausenzeiten mit Vorlage synchronisieren</template>
 		<template #modalContent>
-			<div class="flex justify-center flex-wrap items-center gap-1">
-				<svws-ui-table v-if="listPausenzeiten.size()" :items="listPausenzeiten" :columns="cols" clickable :clicked="pausenzeit" selectable v-model="selected">
-					<template #cell(wochentag)="{value}">
-						{{ Wochentag.fromIDorException(value).kuerzel }}
-					</template>
-					<template #cell(beginn)="{value}">
-						{{ DateUtils.getStringOfUhrzeitFromMinuten(value ?? 0) }}
-					</template>
-					<template #cell(ende)="{value}">
-						{{ DateUtils.getStringOfUhrzeitFromMinuten(value ?? 0) }}
-					</template>
-				</svws-ui-table>
-				<div v-else>Importieren nicht möglich, keine (zusätzlichen) Einträge im Pausenzeiten-Katalog hinterlegt.</div>
-				<div>Neue Einträge im Pausenzeiten-Katalog können unter Schule angelegt werden</div>
-				<!-- TODO Link einfügen und Beschreibung anpassen -->
+			<div>Zur Synchronisation stehen Einträge, die entweder nur im Stundenplan oder nur in der Vorlage vorhanden sind. Achtung, Einträge mit Klassen lassen sich aktuell nicht synchronisieren.</div>
+			<div class="flex justify-between gap-2 overflow-hidden">
+				<div v-if="setVorlage.size > 0" class="overflow-auto w-full">
+					<div class="text-2xl">Vorlage</div>
+					<svws-ui-table :items="mapVorlage.entries().filter(([k,_v]) => onlyVorlage.has(k)).map(([_k,v]) => v)" selectable v-model="selectedVorlage" :columns>
+						<template #cell(wochentag)="{ value }">
+							<span>{{ Wochentag.fromIDorException(value).beschreibung }}</span>
+						</template>
+						<template #cell(beginn)="{ value }">
+							<span>{{ DateUtils.getStringOfUhrzeitFromMinuten(value ?? 0) }}</span>
+						</template>
+						<template #cell(ende)="{ value }">
+							<span>{{ DateUtils.getStringOfUhrzeitFromMinuten(value ?? 0) }}</span>
+						</template>
+						<template #cell(klassen)="{ value }">
+							<span>{{ klassenbezeichnungen(value) }}</span>
+						</template>
+						<template #actions>
+							<svws-ui-button v-if="selectedVorlage.length > 0" type="secondary" @click="syncToStundenplan"> Ausgewählte in Stundenplan übertragen </svws-ui-button>
+						</template>
+					</svws-ui-table>
+				</div>
+				<div v-if="setStundenplan.size > 0" class="overflow-auto w-full">
+					<div class="text-2xl">Stundenplan</div>
+					<svws-ui-table :items="mapStundenplan.entries().filter(([k,_v]) => onlyStundenplan.has(k)).map(([_k,v]) => v)" selectable v-model="selectedStundenplan" :columns>
+						<template #cell(wochentag)="{ value }">
+							<span>{{ Wochentag.fromIDorException(value).beschreibung }}</span>
+						</template>
+						<template #cell(beginn)="{ value }">
+							<span>{{ DateUtils.getStringOfUhrzeitFromMinuten(value ?? 0) }}</span>
+						</template>
+						<template #cell(ende)="{ value }">
+							<span>{{ DateUtils.getStringOfUhrzeitFromMinuten(value ?? 0) }}</span>
+						</template>
+						<template #cell(klassen)="{ value }">
+							<span>{{ klassenbezeichnungen(value) }}</span>
+						</template>
+						<template #actions>
+							<svws-ui-button v-if="selectedStundenplan.length > 0" type="secondary" @click="syncToVorlage"> Ausgewählte in Vorlage übertragen </svws-ui-button>
+						</template>
+					</svws-ui-table>
+				</div>
 			</div>
 		</template>
 		<template #modalActions>
 			<svws-ui-button type="secondary" @click="show = false"> Abbrechen </svws-ui-button>
-			<svws-ui-button type="secondary" @click="importer" :disabled="selected.length === 0"> Ausgewählte importieren </svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>
 
 <script setup lang="ts">
 
-	import { ref } from "vue";
-	import type { DataTableColumn } from "@ui";
-	import type { List, StundenplanPausenzeit } from "@core";
-	import { Wochentag, DateUtils } from "@core";
+	import { computed, ref } from "vue";
+	import type { List, StundenplanListeManager, StundenplanPausenzeit } from "@core";
+	import { Wochentag, DateUtils } from "@core"
 
 	const props = defineProps<{
-		importPausenzeiten: (Pausenzeiten: StundenplanPausenzeit[]) => Promise<void>;
-		listPausenzeiten: List<StundenplanPausenzeit>;
+		pausenzeitenSyncToVorlage: (raeume: StundenplanPausenzeit[]) => Promise<void>;
+		pausenzeitenSyncToStundenplan: (raeume: StundenplanPausenzeit[]) => Promise<void>;
+		listPausenzeiten: () => List<StundenplanPausenzeit>;
+		manager: () => StundenplanListeManager;
 	}>();
-
-	const cols: DataTableColumn[] = [
-		{ key: "wochentag", label: "Tag", span: 1 },
-		{ key: "beginn", label: "Beginn", span: 2 },
-		{ key: "ende", label: "Ende", span: 2 },
-		{ key: "bezeichnung", label: "Bezeichnung", span: 3 },
-	];
 
 	const show = ref<boolean>(false);
 
-	const selected = ref<StundenplanPausenzeit[]>([]);
-	const pausenzeit = ref<StundenplanPausenzeit>()
+	const selectedVorlage = ref<StundenplanPausenzeit[]>([]);
+	const selectedStundenplan = ref<StundenplanPausenzeit[]>([]);
+
+	const columns = [
+		{key: 'wochentag', label: 'Wochentag', span: 1},
+		{key: 'beginn', label: 'Beginn', span: 1},
+		{key: 'ende', label: 'Ende', span: 1},
+		{key: 'klassen', label: 'Klassen', span: 2},
+	];
+
+	const setVorlage = computed(() => new Set([...props.listPausenzeiten()].map(r => JSON.stringify(r))));
+	const setStundenplan = computed(() => new Set([...props.manager().daten().pausenzeitGetMengeAsList()].map(r => JSON.stringify(r))));
+	const onlyVorlage = computed(() => setVorlage.value.difference(setStundenplan.value));
+	const onlyStundenplan = computed(() => setStundenplan.value.difference(setVorlage.value));
+	const mapVorlage = computed(() => new Map([...props.listPausenzeiten()].map(r => [JSON.stringify(r), r])));
+	const mapStundenplan = computed(() => new Map([...props.manager().daten().pausenzeitGetMengeAsList()].map(r => [JSON.stringify(r), r])));
+
 
 	function openModal() {
-		selected.value = [...props.listPausenzeiten];
 		show.value = true;
 	}
 
-	async function importer() {
-		await props.importPausenzeiten(selected.value);
-		show.value = false;
-		selected.value = [];
+	async function syncToVorlage() {
+		await props.pausenzeitenSyncToVorlage(selectedStundenplan.value);
+		selectedStundenplan.value = [];
 	}
+
+	async function syncToStundenplan() {
+		await props.pausenzeitenSyncToStundenplan(selectedVorlage.value);
+		selectedVorlage.value = [];
+	}
+
+	function klassenbezeichnungen(klassen: number[]) {
+		const str = []
+		if (klassen.length === 0)
+			return "";
+		for (const k of klassen)
+			str.push(props.manager().daten().klasseGetByIdOrException(k).kuerzel);
+		return str.join(', ');
+	}
+
 </script>

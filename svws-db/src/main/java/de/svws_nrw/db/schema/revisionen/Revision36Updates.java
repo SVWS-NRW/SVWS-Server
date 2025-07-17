@@ -58,8 +58,8 @@ public final class Revision36Updates extends SchemaRevisionUpdateSQL {
 			// Prüfe, ob die Jahrgänge E1 und E2 in der Tabelle EigeneSchule_Jahrgänge angelegt sind. Ist dies der Fall, so setze diese auf 01 und 02, ansonsten lege sie an
 			doUpdate(conn, logger, "- EigeneSchule_Jahrgaenge: Ersetze ASDJahrgang und ASDBezeichnung für die ASD-Jahrgänge E1 und E2.",
 					"""
-					UPDATE %s SET
-					InternKrz = CASE WHEN InternKrz = 'E1' THEN '01' WHEN InternKrz = 'E2' THEN '02' ELSE InternKrz END,
+					UPDATE %1$s SET
+					InternKrz = CASE WHEN InternKrz = 'E1' AND '01' NOT IN (SELECT InternKrz FROM %1$s) THEN '01' WHEN InternKrz = 'E2' AND '02' NOT IN (SELECT InternKrz FROM %1$s) THEN '02' ELSE InternKrz END,
 					Spaltentitel = CASE WHEN Spaltentitel = 'E1' THEN '01' WHEN Spaltentitel = 'E2' THEN '02' ELSE Spaltentitel END,
 					ASDBezeichnung = CASE WHEN ASDJahrgang = 'E1' THEN '1. Jahrgang' ELSE '2. Jahrgang' END,
 					ASDJahrgang = CASE WHEN ASDJahrgang = 'E1' THEN '01' ELSE '02' END

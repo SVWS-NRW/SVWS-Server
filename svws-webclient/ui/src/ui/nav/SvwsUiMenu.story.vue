@@ -1,31 +1,21 @@
 <template>
 	<Story title="Sidebar/Menu" id="svws-ui-menu" :layout="{ type: 'single', iframe: false }" group="app">
-		<svws-ui-menu :collapsed="isCollapsed" @toggle="onToggle">
-			<template #header>
-				<svws-ui-menu-header :collapsed="isCollapsed">SVWS-NRW</svws-ui-menu-header>
-			</template>
-			<template #default>
-				<svws-ui-menu-item icon="team" :collapsed="isCollapsed" active>Schüler</svws-ui-menu-item>
-				<svws-ui-menu-item icon="building" :collapsed="isCollapsed">Schule</svws-ui-menu-item>
-				<svws-ui-menu-item icon="book-open" :collapsed="isCollapsed">Kataloge</svws-ui-menu-item>
-				<svws-ui-menu-item icon="donut-chart" :collapsed="isCollapsed">Extras</svws-ui-menu-item>
-			</template>
-			<template #footer>
-				<svws-ui-menu-item icon="settings-2" :collapsed="isCollapsed">Einstellungen</svws-ui-menu-item>
-				<svws-ui-menu-item icon="logout-box" subline="Schule XYZ" :collapsed="isCollapsed">Administrator</svws-ui-menu-item>
-			</template>
-		</svws-ui-menu>
+		<Variant title="Default" id="default">
+			<svws-ui-menu>
+				<template #header>
+					<svws-ui-menu-header>SVWS-NRW</svws-ui-menu-header>
+				</template>
+				<template #default>
+					<svws-ui-menu-item icon="team" active>Schüler</svws-ui-menu-item>
+					<svws-ui-menu-item icon="building">Schule</svws-ui-menu-item>
+					<svws-ui-menu-item icon="book-open">Kataloge</svws-ui-menu-item>
+					<svws-ui-menu-item icon="donut-chart">Extras</svws-ui-menu-item>
+				</template>
+				<template #footer>
+					<svws-ui-menu-item icon="settings-2">Einstellungen</svws-ui-menu-item>
+					<svws-ui-menu-item icon="logout-box" subline="Schule XYZ">Administrator</svws-ui-menu-item>
+				</template>
+			</svws-ui-menu>
+		</Variant>
 	</Story>
 </template>
-
-<script setup lang="ts">
-	import { ref } from 'vue';
-	import { logEvent } from 'histoire/client';
-
-	const isCollapsed = ref(false);
-
-	function onToggle(event: Event) {
-		isCollapsed.value = !isCollapsed.value;
-		logEvent("toggle", event);
-	}
-</script>

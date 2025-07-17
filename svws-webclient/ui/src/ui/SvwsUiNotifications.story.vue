@@ -84,14 +84,3 @@
 		</Variant>
 	</Story>
 </template>
-
-<style scoped>
-
-	html {
-		font-size: 16px !important;
-	}
-	body {
-		font-size: 0.875rem !important;
-	}
-
-</style>

@@ -119,20 +119,20 @@ public class APISchueler {
 
 
 	/**
-	 * Die OpenAPI-Methode für die Abfrage der Liste aller Schüler.
+	 * Die OpenAPI-Methode für die Abfrage der Liste aller Schüler mit Daten in Bezug auf den angegebenen Schuljahresabschnitt.
 	 *
-	 * @param schema      das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param abschnitt   die ID des Schuljahresabschnitts dessen Schüler zurückgegeben werden sollen
+	 * @param schema      das Datenbankschema, auf welchem die Abfrage ausgeführt wird.
+	 * @param abschnitt   die ID des Schuljahresabschnitts, dessen Daten zurückgegeben werden.
 	 * @param request     die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die Liste mit den einzelnen Schülern
 	 */
 	@GET
 	@Path("/abschnitt/{abschnitt : \\d+}")
-	@Operation(summary = "Gibt eine sortierte Übersicht von allen Schülern des angegebenen Schuljahresabschnitts zurück.",
-			description = "Erstellt eine Liste aller Schüler des angegebenen Schuljahresabschnitts unter Angabe der ID, des Vor- und Nachnamens, "
-					+ "der Klasse, des Jahrgangs, sein Status (z.B. aktiv), einer Sortierreihenfolge, ob sie in der Anwendung "
-					+ "sichtbar bzw. änderbar sein sollen. Die schüler sind anhand der Klasse, des Nchnamens und des Vornamens sortiert."
+	@Operation(summary = "Gibt eine sortierte Übersicht von allen Schülern zurück, zusammen mit deren Daten zum angegebenen Schuljahresabschnitt.",
+			description = "Erstellt eine Liste aller Schüler mit deren Daten zum angegebenen Schuljahresabschnitt u. a. unter Angabe der ID, des Vor- und "
+					+ "Nachnamens, der Klasse, des Jahrgangs, sein Status (z.B. aktiv), einer Sortierreihenfolge, ob sie in der Anwendung "
+					+ "sichtbar bzw. änderbar sein sollen. Die schüler sind anhand der Klasse, des Nachnamens und des Vornamens sortiert."
 					+ "Es wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.")
 	@ApiResponse(responseCode = "200", description = "Eine Liste von Schüler-Listen-Einträgen",
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchuelerListeEintrag.class))))
@@ -211,13 +211,13 @@ public class APISchueler {
 	 *
 	 * @return die Stammdaten der Schüler
 	 */
-	@GET
+	@POST
 	@Path("/stammdaten")
 	@Operation(summary = "Liefert zu den Schüler IDs die zugehörigen Stammdaten.",
 			description = "Liest die Stammdaten der Schüler zu der angegebenen IDs aus der Datenbank und liefert diese zurück. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.")
 	@ApiResponse(responseCode = "200", description = "Die Stammdaten des Schülers",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchuelerStammdaten.class)))
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchuelerStammdaten.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schülerdaten anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
 	public Response getSchuelerStammdatenMultiple(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der Schüler", required = true,
@@ -271,7 +271,7 @@ public class APISchueler {
 	@Operation(summary = "Patch für eines Schüler Stammdaten Objektes.",
 			description = "Passt die Schüler-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerdaten besitzt.")
-	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Schülerstammdaten integriert.")
+	@ApiResponse(responseCode = "204", description = "Der Patch wurde erfolgreich in die Schülerstammdaten integriert.")
 	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schülerdaten zu ändern.")
 	@ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
@@ -300,7 +300,7 @@ public class APISchueler {
 	@Operation(summary = "Patch für mehrere Schüler Stammdaten Objekte.",
 			description = "Passt die Schüler-Stammdaten zu den angegebenen IDs an und speichert das Ergebnis in der Datenbank. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerdaten besitzt.")
-	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Schülerstammdaten integriert.")
+	@ApiResponse(responseCode = "204", description = "Der Patch wurde erfolgreich in die Schülerstammdaten integriert.")
 	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schülerdaten zu ändern.")
 	@ApiResponse(responseCode = "404", description = "Ein Schüler-Eintrag mit den angegebenen IDs wurde nicht gefunden")
@@ -715,7 +715,7 @@ public class APISchueler {
 	@Operation(summary = "Passt die Schülerlernabschnittsdaten mit der angebenen ID an.",
 			description = "Passt die Schülerlernabschnittsdaten mit der angebenen ID an. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerlernabschnittsdaten besitzt.")
-	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.")
+	@ApiResponse(responseCode = "204", description = "Der Patch wurde erfolgreich integriert.")
 	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
 	@ApiResponse(responseCode = "404", description = "Kein Eintrag mit der angegebenen ID gefunden")

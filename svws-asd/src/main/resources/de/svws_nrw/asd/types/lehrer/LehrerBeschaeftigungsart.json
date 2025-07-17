@@ -1,11 +1,11 @@
 {
-	"version": 1,
+	"version": 2,
 	"daten": [ {
 		"bezeichner": "V",
 		"idStatistik": "1",
 		"historie": [ {
 			"id": 1,
-			"schluessel": "1",
+			"schluessel": "V",
 			"kuerzel": "V",
 			"text": "Vollzeit",
 			"gueltigVon": null,
@@ -16,7 +16,7 @@
 		"idStatistik": "2",
 		"historie": [ {
 			"id": 2,
-			"schluessel": "2",
+			"schluessel": "T",
 			"kuerzel": "T",
 			"text": "Teilzeit",
 			"gueltigVon": null,
@@ -27,7 +27,7 @@
 		"idStatistik": "3",
 		"historie": [ {
 			"id": 3,
-			"schluessel": "3",
+			"schluessel": "AT",
 			"kuerzel": "AT",
 			"text": "Altersteilzeit (Beschäftigungsphase)",
 			"gueltigVon": null,
@@ -38,7 +38,7 @@
 		"idStatistik": "4",
 		"historie": [ {
 			"id": 4,
-			"schluessel": "4",
+			"schluessel": "TA",
 			"kuerzel": "TA",
 			"text": "Altersteilzeit, vorm. teilzeitbeschäftigt (Verzichtsphase Altersermäßigung)",
 			"gueltigVon": null,
@@ -49,7 +49,7 @@
 		"idStatistik": "5",
 		"historie": [ {
 			"id": 5,
-			"schluessel": "5",
+			"schluessel": "VA",
 			"kuerzel": "VA",
 			"text": "Altersteilzeit, vorm. vollzeitbeschäftigt (Verzichtsphase Altersermäßigung)",
 			"gueltigVon": null,
@@ -60,7 +60,7 @@
 		"idStatistik": "6",
 		"historie": [ {
 			"id": 6,
-			"schluessel": "6",
+			"schluessel": "TS",
 			"kuerzel": "TS",
 			"text": "Sabbatjahr",
 			"gueltigVon": null,
@@ -71,7 +71,7 @@
 		"idStatistik": "7",
 		"historie": [ {
 			"id": 8,
-			"schluessel": "8",
+			"schluessel": "SB",
 			"kuerzel": "SB",
 			"text": "Nebenberufliche Beschäftigung",
 			"gueltigVon": null,
@@ -82,7 +82,7 @@
 		"idStatistik": "8",
 		"historie": [ {
 			"id": 9,
-			"schluessel": "9",
+			"schluessel": "GB",
 			"kuerzel": "GB",
 			"text": "Geringfügige Beschäftigung",
 			"gueltigVon": null,
@@ -93,7 +93,7 @@
 		"idStatistik": "9",
 		"historie": [ {
 			"id": 11,
-			"schluessel": "11",
+			"schluessel": "ST",
 			"kuerzel": "ST",
 			"text": "Studierende",
 			"gueltigVon": null,
@@ -104,7 +104,7 @@
 		"idStatistik": "10",
 		"historie": [ {
 			"id": 12,
-			"schluessel": "12",
+			"schluessel": "NA",
 			"kuerzel": "NA",
 			"text": "Beamter, nebenamtlich (nicht hauptamtlich im Schuldienst)",
 			"gueltigVon": null,
@@ -115,7 +115,7 @@
 		"idStatistik": "11",
 		"historie": [ {
 			"id": 13,
-			"schluessel": "13",
+			"schluessel": "G",
 			"kuerzel": "G",
 			"text": "Gestellungsvertrag",
 			"gueltigVon": null,
@@ -126,7 +126,7 @@
 		"idStatistik": "12",
 		"historie": [ {
 			"id": 15,
-			"schluessel": "15",
+			"schluessel": "X",
 			"kuerzel": "X",
 			"text": "Unentgeltlich Beschäftigte",
 			"gueltigVon": null,
@@ -137,7 +137,7 @@
 		"idStatistik": "13",
 		"historie": [ {
 			"id": 16,
-			"schluessel": "16",
+			"schluessel": "WT",
 			"kuerzel": "WT",
 			"text": "Beamte auf Widerruf (LAA) in Teilzeit",
 			"gueltigVon": null,
@@ -148,7 +148,7 @@
 		"idStatistik": "14",
 		"historie": [ {
 			"id": 17,
-			"schluessel": "17",
+			"schluessel": "WV",
 			"kuerzel": "WV",
 			"text": "Beamte auf Widerruf (LAA) in Vollzeit",
 			"gueltigVon": null,

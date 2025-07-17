@@ -5,7 +5,7 @@
 		</template>
 		<template #cell(anerkennung)="{ rowData }">
 			<svws-ui-select title="Anerkennungsgrund Lehramt" v-if="hatUpdateKompetenz" :model-value="getLehramtAnerkennung(rowData)"
-				@update:model-value="anerkennung => patchLehramtAnerkennung(rowData, anerkennung ?? null)"
+				@update:model-value="anerkennung => patchLehramt(rowData, { idAnerkennungsgrund: anerkennung?.daten(schuljahr)?.id ?? null })"
 				:items="LehrerLehramtAnerkennung.values()" :item-text="i => i.daten(schuljahr)?.text ?? '—'" headless />
 			<div v-else> {{ getLehramtAnerkennung(rowData)?.daten(schuljahr)?.text ?? '—' }} </div>
 		</template>
@@ -28,7 +28,7 @@
 	const props = defineProps<{
 		hatUpdateKompetenz: boolean;
 		lehrerListeManager: () => LehrerListeManager;
-		patchLehramtAnerkennung: (eintrag: LehrerLehramtEintrag, anerkennung : LehrerLehramtAnerkennung | null) => Promise<void>;
+		patchLehramt: (eintrag: LehrerLehramtEintrag, patch: Partial<LehrerLehramtEintrag>) => Promise<void>;
 		addLehramt: (eintrag: LehrerLehramtEintrag) => Promise<void>;
 		removeLehraemter: (eintraege: List<LehrerLehramtEintrag>) => Promise<void>;
 		schuljahr: number;

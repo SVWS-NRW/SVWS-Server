@@ -36,6 +36,9 @@ public enum ReportingReportvorlage {
 	/** Report-Vorlage: GOSt - Kursplanung - Schüler-Schienen-Kurse */
 	GOST_KURSPLANUNG_v_SCHUELER_MIT_SCHIENEN_KURSEN("GostKursplanung-SchuelerMitSchienenKursen"),
 
+	/** Report-Vorlage: GOSt - Laufbahnplanung - Abiturjahrgang - Fachwahlstatistiken */
+	GOST_LAUFBAHNPLANUNG_ABITURJAHRGANG_v_FACHWAHLSTATISTIKEN("GostLaufbahnplanung-Abiturjahrgang-Fachwahlstatistiken"),
+
 	/** Report-Vorlage: Klasse - Schülerstammdaten - Liste */
 	KLASSEN_v_KLASSE_SCHUELER_STAMMDATENLISTE("Klasse-Schueler-Stammdatenliste"),
 

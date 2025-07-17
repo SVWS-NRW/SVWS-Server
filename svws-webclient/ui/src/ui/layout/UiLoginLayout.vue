@@ -27,9 +27,9 @@
 								<div class="flex gap-2 place-items-center">
 									<div>
 										<span class="font-bold">v{{ version }}</span>
-										<a v-if="version.includes('SNAPSHOT')" :href="`https://github.com/SVWS-NRW/SVWS-Server/commit/${githash}`">
-											&nbsp;{{ githash.substring(0, 8) }}
-										</a>
+										<span v-if="version.includes('SNAPSHOT')">
+											<a :href="`https://github.com/SVWS-NRW/SVWS-Server/commit/${githash}`"> &nbsp;{{ githash.substring(0, 8) }} </a>
+										</span>
 									</div>
 									<div @click="copyToClipboard" class="cursor-pointer place-items-center flex">
 										<span class="icon-sm i-ri-file-copy-line" v-if="copied === null" />

@@ -1,12 +1,12 @@
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-
+import type { SchuleFachNeuProps } from "~/components/schule/faecher/SSchuleFachNeuProps";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
-import { routeApp } from "../../RouteApp";
 import { ViewType } from "@ui";
 import { RouteManager } from "~/router/RouteManager";
 import { routeSchuleFaecher, type RouteSchuleFaecher } from "./RouteSchuleFaecher";
-import type { SchuleFachNeuProps } from "~/components/schule/faecher/SSchuleFachNeuProps";
+import { routeApp } from "../../RouteApp";
+import { api } from "~/router/Api";
 
 const SSchuleFachNeu = () => import("~/components/schule/faecher/SSchuleFachNeu.vue");
 
@@ -32,6 +32,7 @@ export class RouteSchuleFachNeu extends RouteNode<any, RouteSchuleFaecher> {
 			gotoDefaultView: routeSchuleFaecher.data.gotoDefaultView,
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
+			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 }

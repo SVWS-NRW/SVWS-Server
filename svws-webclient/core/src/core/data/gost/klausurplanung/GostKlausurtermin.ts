@@ -10,6 +10,11 @@ export class GostKlausurtermin extends JavaObject {
 	public id : number = -1;
 
 	/**
+	 * Die ID des Schuljahresabschnitts, in welchem der Termin liegt.
+	 */
+	public idSchuljahresabschnitt : number = -1;
+
+	/**
 	 * Das Jahr, in welchem der Jahrgang Abitur machen wird.
 	 */
 	public abijahr : number = -1;
@@ -97,6 +102,9 @@ export class GostKlausurtermin extends JavaObject {
 		if (obj.id === undefined)
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
+		if (obj.idSchuljahresabschnitt === undefined)
+			throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
+		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
 		if (obj.abijahr === undefined)
 			throw new Error('invalid json format, missing attribute abijahr');
 		result.abijahr = obj.abijahr;
@@ -122,6 +130,7 @@ export class GostKlausurtermin extends JavaObject {
 	public static transpilerToJSON(obj : GostKlausurtermin) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt.toString() + ',';
 		result += '"abijahr" : ' + obj.abijahr.toString() + ',';
 		result += '"halbjahr" : ' + obj.halbjahr.toString() + ',';
 		result += '"quartal" : ' + obj.quartal.toString() + ',';
@@ -140,6 +149,9 @@ export class GostKlausurtermin extends JavaObject {
 		let result = '{';
 		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id.toString() + ',';
+		}
+		if (obj.idSchuljahresabschnitt !== undefined) {
+			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt.toString() + ',';
 		}
 		if (obj.abijahr !== undefined) {
 			result += '"abijahr" : ' + obj.abijahr.toString() + ',';

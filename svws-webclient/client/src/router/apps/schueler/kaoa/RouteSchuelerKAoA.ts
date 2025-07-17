@@ -1,13 +1,11 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-
+import type { SchuelerKAoAProps } from "~/components/schueler/kaoa/SSchuelerKaoaProps";
 import { BenutzerKompetenz, DeveloperNotificationException, SchuelerStatus, Schulform, ServerMode } from "@core";
-
+import { RouteDataSchuelerKAoA } from "~/router/apps/schueler/kaoa/RouteDataSchuelerKAoA";
 import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
 import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
-import { RouteDataSchuelerKAoA } from "~/router/apps/schueler/kaoa/RouteDataSchuelerKAoA";
-
-import type { SchuelerKAoAProps } from "~/components/schueler/kaoa/SSchuelerKaoaProps";
+import { api } from "~/router/Api";
 
 
 const SSchuelerKaoa = () => import("~/components/schueler/kaoa/SSchuelerKaoa.vue");
@@ -61,7 +59,8 @@ export class RouteSchuelerKAoA extends RouteNode<RouteDataSchuelerKAoA, RouteSch
 			auswahl: () => this.data.auswahl,
 			add: this.data.add,
 			patch: this.data.patch,
-			delete: this.data.delete
+			delete: this.data.delete,
+			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 

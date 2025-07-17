@@ -36,20 +36,20 @@
 
 	import { computed } from "vue";
 	import type { FaecherAppProps } from "./SFaecherAppProps";
-	import type { FachDaten } from "@core";
-	import { ViewType } from "@ui";
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
+	import type { FaecherListeEintrag } from "@core";
+	import { useRegionSwitch, ViewType } from "@ui";
 
 	const props = defineProps<FaecherAppProps>();
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
-	const fach = computed<FachDaten>(() => props.manager().auswahl());
+	const fach = computed<FaecherListeEintrag>(() => props.manager().auswahl());
 
 	const faecherSubline = computed(() => {
 		const auswahlFaecherList = props.manager().liste.auswahlSorted();
 		if (auswahlFaecherList.size() > 5)
 			return `${auswahlFaecherList.size()} Fächer ausgewählt`;
 		return [...auswahlFaecherList].map(k => k.kuerzel).join(', ');
-	})
+	});
+
 </script>

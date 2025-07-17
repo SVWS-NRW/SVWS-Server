@@ -1,6 +1,6 @@
 package de.svws_nrw.db.converter.current;
 
-import de.svws_nrw.core.types.schule.Verkehrssprache;
+import de.svws_nrw.asd.types.schule.Verkehrssprache;
 import de.svws_nrw.db.converter.DBAttributeConverter;
 import jakarta.persistence.Converter;
 
@@ -28,12 +28,12 @@ public final class VerkehrssprachenConverter extends DBAttributeConverter<Verkeh
 
 	@Override
 	public String convertToDatabaseColumn(final Verkehrssprache attribute) {
-		return (attribute == null) ? null : attribute.daten.kuerzel;
+		return (attribute == null) ? null : attribute.historie().getLast().iso3;
 	}
 
 	@Override
 	public Verkehrssprache convertToEntityAttribute(final String dbData) {
-		return Verkehrssprache.getByKuerzelAuto(dbData);
+		return Verkehrssprache.getByIsoKuerzel(dbData);
 	}
 
 	@Override

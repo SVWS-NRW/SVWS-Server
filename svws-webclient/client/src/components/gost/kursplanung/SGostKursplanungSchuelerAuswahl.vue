@@ -336,7 +336,7 @@
 
 </script>
 
-<style>
+<style scoped>
 
 	.svws-ui-table-filter--advanced {
 		display: flex;

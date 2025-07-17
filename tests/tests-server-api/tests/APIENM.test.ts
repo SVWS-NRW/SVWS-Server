@@ -1,14 +1,7 @@
-import {describe, expect, test} from "vitest";
-import {getApiServer} from "./utils/TestUtils.js";
-import {
-	ArrayList, ENMFach, ENMFloskelgruppe,
-	ENMFoerderschwerpunkt,
-	ENMJahrgang,
-	ENMKlasse, ENMLehrer,
-	ENMLerngruppe,
-	ENMNote,
-	ENMSchueler, ENMTeilleistungsart
-} from "@core";
+import { describe, expect, test } from "vitest";
+import { getApiServer } from "./utils/TestUtils.js";
+import type { ENMFach, ENMFloskelgruppe, ENMFoerderschwerpunkt, ENMJahrgang, ENMKlasse, ENMLehrer, ENMLerngruppe, ENMNote, ENMSchueler, ENMTeilleistungsart } from "@core";
+import { ArrayList } from "@core";
 
 describe("APIENM Tests", () => {
 	describe.each([{schema: "GymAbi01"}])('gegen %s', ({schema}) => {
@@ -26,7 +19,7 @@ describe("APIENM Tests", () => {
 				faecher: expect.any(ArrayList<ENMFach>),
 				teilleistungsarten: expect.any(ArrayList<ENMTeilleistungsart>),
 				lerngruppen: expect.any(ArrayList<ENMLerngruppe>),
-				schueler: expect.any(ArrayList<ENMSchueler>)
+				schueler: expect.any(ArrayList<ENMSchueler>),
 			});
 			expect(result.noten.size()).toMatchSnapshot();
 			expect(result.foerderschwerpunkte.size()).toMatchSnapshot();

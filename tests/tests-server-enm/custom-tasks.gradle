@@ -2,31 +2,31 @@ import groovy.json.JsonSlurper
 
 def svwsArtifactVersion = project.ext.latestRelease
 def buildDirPath = layout.buildDirectory.get()
-
+def rootProjectPath = project.rootProject.projectDir
 def testConfigPath = "${rootDir}/config/tests/config.json" as String
 def CONFIG = new JsonSlurper().parse(new File(testConfigPath))
 
 /**
  * Kopiert ENM-Build-Artefakte (ZIP).
  */
-task copyENMServerBuildArtefacts() {
+tasks.register('copyENMServerBuildArtefacts') {
 	description = 'Kopiert die ENM-Server-Build-Artefakte'
 	dependsOn ':svws-webclient:enmserver:doZip'
 	mustRunAfter(':svws-webclient:enmserver:doZip')
-	inputs.file("${project.rootProject.projectDir}/svws-webclient/enmserver/build/SVWS-ENMServer-${svwsArtifactVersion}.zip")
+	inputs.file("${rootProjectPath}/svws-webclient/enmserver/build/SVWS-ENMServer-${svwsArtifactVersion}.zip")
 	doLast {
 		copy {
-			from "${project.rootProject.projectDir}/svws-webclient/enmserver/build/SVWS-ENMServer-${svwsArtifactVersion}.zip"
+			from "${rootProjectPath}/svws-webclient/enmserver/build/SVWS-ENMServer-${svwsArtifactVersion}.zip"
 			into "./build"
 		}
-		println("${project.rootProject.projectDir}/svws-webclient/enmserver/build/SVWS-ENMServer-${svwsArtifactVersion}.zip")
+		println("${rootProjectPath}/svws-webclient/enmserver/build/SVWS-ENMServer-${svwsArtifactVersion}.zip")
 	}
 }
 
 /**
  * Entzippe die Build Artefakte in den build Ordner
  */
-task unzipENMBuildArtefact() {
+tasks.register('unzipENMBuildArtefact') {
 	description = 'Entzippe die Build Artefakte in den build Ordner'
 	dependsOn "copyENMServerBuildArtefacts"
 	mustRunAfter "copyENMServerBuildArtefacts"
@@ -49,25 +49,25 @@ task unzipENMBuildArtefact() {
 /**
  * Kopiere die SSL Zertifikate aus dem laufenden SVWS App Container
  */
-task copySSLCerts() {
+tasks.register('copySSLCerts', Exec) {
 	description = 'Kopiere die SSL Zertifikate aus dem laufenden SVWS App Container'
 	mustRunAfter("starteDockerContainerMitTestUmgebung")
 	mustRunAfter(unzipENMBuildArtefact)
 
-	doLast {
-		def targetContainer = "${project.ext.APP_CONTAINER_NAME}"
-		exec {
-			executable 'docker'
-			mkdir file("./build/tempdocker/enm")
-			args 'cp', "${targetContainer}:/var/ssl/.", "$buildDirPath/tempdocker/enm/certs"
-		}
+	def CONTAINER_NAME = project.ext.APP_CONTAINER_NAME
+	executable 'docker'
+
+	doFirst {
+		mkdir file("./build/tempdocker/enm")
+		mkdir file("./build/tempdocker/enm/certs")
+		args 'cp', "${CONTAINER_NAME}:/var/ssl/.", "$buildDirPath/tempdocker/enm/certs"
 	}
 }
 
 /**
  * Generiere das Dockerfile welches verwendet wird um das ENM Image zu bauen
  */
-task generateENMDockerFile() {
+tasks.register('generateENMDockerFile') {
 	description = 'Generiere das Dockerfile welches verwendet wird um das ENM Image zu bauen'
 	mustRunAfter("starteDockerContainerMitTestUmgebung")
 	mustRunAfter(unzipENMBuildArtefact)
@@ -110,11 +110,13 @@ task generateENMDockerFile() {
 /**
  * Generiere das Docker Compose File welches verwendet wird um den ENM Server zu starten
  */
-task generateENMDockerComposeFile() {
+tasks.register('generateENMDockerComposeFile') {
 	description = 'Generiere das Docker Compose File welches verwendet wird um den ENM Server zu starten'
 	mustRunAfter("starteDockerContainerMitTestUmgebung")
 	mustRunAfter(unzipENMBuildArtefact)
 
+	def ENM_IMAGE_NAME = project.ext.ENM_IMAGE_NAME
+	def ENM_CONTAINER_NAME = project.ext.ENM_CONTAINER_NAME
 	doFirst {
 		mkdir file("./build/tempdocker/enm")
 	}
@@ -131,11 +133,11 @@ task generateENMDockerComposeFile() {
 		def outputFile = file("$buildDirPath/tempdocker/enm/Docker-compose.yml")
 		def content = "services:\n" +
 				"  enm:\n" +
-				"    image: ${project.ext.ENM_IMAGE_NAME}\n" +
-				"    container_name: ${project.ext.ENM_CONTAINER_NAME}\n" +
+				"    image: ${ENM_IMAGE_NAME}\n" +
+				"    container_name: ${ENM_CONTAINER_NAME}\n" +
 				"    ${forwardsPortsString}" +
 				"    healthcheck:\n" +
-				"        test: [\"CMD-SHELL\", \"curl --insecure --fail --silent --show-error --output /dev/null https://${project.ext.ENM_CONTAINER_NAME}/api/alive || exit 1\"]\n" +
+				"        test: [\"CMD-SHELL\", \"curl --insecure --fail --silent --show-error --output /dev/null https://${ENM_CONTAINER_NAME}/api/alive || exit 1\"]\n" +
 				"        interval: 30s\n" +
 				"        timeout: 12s\n" +
 				"        retries: 5\n" +
@@ -156,7 +158,7 @@ task generateENMDockerComposeFile() {
 /**
  * Erstelle die Apache2 Host Dateien für das interne Routing im ENM Container
  */
-task generateHostConfig() {
+tasks.register('generateHostConfig') {
 	description = 'Erstelle die Apache2 Host Dateien für das interne Routing im ENM Container'
 	dependsOn 'generateENMDockerComposeFile'
 	mustRunAfter("starteDockerContainerMitTestUmgebung")
@@ -195,7 +197,7 @@ task generateHostConfig() {
 /**
  * Erstelle die Apache2 SSL Host Dateien für das interne Routing im ENM Container
  */
-task generateHostConfigSSL() {
+tasks.register('generateHostConfigSSL') {
 	description = 'Erstelle die Apache2 SSL Host Dateien für das interne Routing im ENM Container'
 	mustRunAfter("starteDockerContainerMitTestUmgebung")
 	mustRunAfter(unzipENMBuildArtefact)
@@ -240,7 +242,7 @@ task generateHostConfigSSL() {
 /**
  * Baue das Docker Image vom ENM Server
  */
-task buildDockerImageENM() {
+tasks.register('buildDockerImageENM', Exec) {
 	description = 'Baue das Docker Image vom ENM Server'
 	dependsOn generateENMDockerComposeFile
 	dependsOn generateENMDockerFile
@@ -254,28 +256,26 @@ task buildDockerImageENM() {
 	mustRunAfter(generateHostConfig)
 	mustRunAfter(copySSLCerts)
 
-	doLast {
-		def ENM_IMAGE_NAME = "${project.ext.ENM_IMAGE_NAME}"
-		exec {
-			executable 'docker'
-			args 'build', '-t', "${ENM_IMAGE_NAME}", '-f', "$buildDirPath/tempdocker/enm/Dockerfile", '.'
-		}
+	def ENM_IMAGE_NAME = project.ext.ENM_IMAGE_NAME
+
+	doFirst {
+		executable 'docker'
+		args 'build', '-t', "${ENM_IMAGE_NAME}", '-f', "$buildDirPath/tempdocker/enm/Dockerfile", '.'
 	}
 }
 
 /**
  * Starte den Docker-Container für die Testumgebung des ENM Server
  */
-task starteDockerContainerMitTestUmgebungENM() {
+tasks.register('starteDockerContainerMitTestUmgebungENM', Exec) {
 	description = 'Starte den Docker-Container für die Testumgebung des ENM Server'
 	dependsOn 'buildDockerImageENM'
-	doLast {
-		exec {
-			executable 'docker'
-			workingDir "$buildDirPath/tempdocker/enm"
+	def PROJECT_NAME = project.name
+	doFirst {
+		executable 'docker'
+		workingDir "$buildDirPath/tempdocker/enm"
+		args 'compose', '-p', "svws-$PROJECT_NAME", '-f', "$buildDirPath/tempdocker/enm/Docker-compose.yml", 'up', '--wait'
+		println("Docker Container ${ENM_CONTAINER_NAME} gestartet")
 
-			args 'compose', '-p', "svws-$project.name", '-f', "$buildDirPath/tempdocker/enm/Docker-compose.yml", 'up', '--wait'
-			println("Docker Container ${ENM_CONTAINER_NAME} gestartet")
-		}
 	}
 }

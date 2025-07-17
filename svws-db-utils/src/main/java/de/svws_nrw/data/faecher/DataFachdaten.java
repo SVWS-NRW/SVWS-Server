@@ -59,9 +59,11 @@ public final class DataFachdaten extends DataManagerRevised<Long, DTOFach, FachD
 		daten.kuerzelStatistik = dtoFach.StatistikKuerzel;
 		daten.bezeichnung = (dtoFach.Bezeichnung == null) ? "" : dtoFach.Bezeichnung;
 		daten.sortierung = dtoFach.SortierungAllg;
-		daten.istOberstufenFach = dtoFach.IstOberstufenFach;
-		daten.istPruefungsordnungsRelevant = dtoFach.IstPruefungsordnungsRelevant;
-		daten.istSichtbar = dtoFach.Sichtbar;
+		daten.istOberstufenFach = (dtoFach.IstOberstufenFach != null) && dtoFach.IstOberstufenFach;
+		daten.istPruefungsordnungsRelevant = (dtoFach.IstPruefungsordnungsRelevant != null) && dtoFach.IstPruefungsordnungsRelevant;
+		daten.istFremdsprache = (dtoFach.IstFremdsprache != null) && dtoFach.IstFremdsprache;
+		daten.istMoeglichAlsNeueFremdspracheInSekII = (dtoFach.IstMoeglichAlsNeueFremdspracheInSekII != null) && dtoFach.IstMoeglichAlsNeueFremdspracheInSekII;
+		daten.istSichtbar = (dtoFach.Sichtbar != null) && dtoFach.Sichtbar;
 		daten.aufgabenfeld = dtoFach.Aufgabenfeld;
 		daten.bilingualeSprache = dtoFach.Unterrichtssprache;
 		daten.istNachpruefungErlaubt = dtoFach.IstNachpruefungErlaubt;
@@ -92,6 +94,9 @@ public final class DataFachdaten extends DataManagerRevised<Long, DTOFach, FachD
 			case "istPruefungsordnungsRelevant" -> dto.IstPruefungsordnungsRelevant = JSONMapper.convertToBoolean(
 					value, false, "istPruefungsordnungsRelevant");
 			case "istOberstufenFach" -> dto.IstOberstufenFach = JSONMapper.convertToBoolean(value, false, "istOberstufenFach");
+			case "istFremdsprache" -> dto.IstFremdsprache = JSONMapper.convertToBoolean(value, false, "istFremdsprache");
+			case "istMoeglichAlsNeueFremdspracheInSekII" ->
+				dto.IstMoeglichAlsNeueFremdspracheInSekII = JSONMapper.convertToBoolean(value, false, "istMoeglichAlsNeueFremdspracheInSekII");
 			case "sortierung" -> dto.SortierungAllg = JSONMapper.convertToIntegerInRange(
 					value, false, 0, Integer.MAX_VALUE, "sortierung");
 			case "istSichtbar" -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false, "istSichtbar");

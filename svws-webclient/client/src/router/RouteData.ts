@@ -2,8 +2,7 @@ import { ref } from "vue";
 
 import { type RouteNode } from "~/router/RouteNode";
 import { DeveloperNotificationException } from "@core";
-import { ViewType } from "@ui";
-import { StateManager } from "./StateManager";
+import { StateManager, ViewType } from "@ui";
 
 
 /**

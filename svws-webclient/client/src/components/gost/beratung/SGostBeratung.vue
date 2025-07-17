@@ -48,13 +48,12 @@
 	import { BenutzerKompetenz, BenutzerTyp, type GostBeratungslehrer, type LehrerListeEintrag } from "@core";
 	import { computed, ref } from "vue";
 	import { lehrer_filter } from '~/utils/helfer';
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
-	import { LaufbahnplanungUiManager } from "@ui";
+	import { LaufbahnplanungUiManager, useRegionSwitch } from "@ui";
 
 	const props = defineProps<GostBeratungProps>();
 
 	const manager = computed<LaufbahnplanungUiManager>(() =>
-		new LaufbahnplanungUiManager(props.serverMode, props.abiturdatenManager, props.config, props.jahrgangsdaten, props.setWahl, true));
+		new LaufbahnplanungUiManager(props.serverMode, props.abiturdatenManager, props.config, props.jahrgangsdaten, props.setWahl, { faecherZeigen: "app.gost.beratung.faecher.anzeigen", modus: "app.gost.beratung.modus" }, true));
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 

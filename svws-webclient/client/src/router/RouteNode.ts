@@ -827,22 +827,26 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * Ein Ereignis, welches im globalen beforeEach-Guard aufgerufen wird,
 	 * bevor eine Route verlassen wird.
 	 *
-	 * @param from   die Route, die verlassen wird
-	 * @param from_params   die Routen-Parameter
+	 * @param from          die Route, die verlassen wird
+	 * @param from_params   die Routen-Parameter dazu
+	 * @param to            die Route, wohin verlassen wird
+	 * @param to_params     die Routen-Parameter dazu
 	 */
-	protected async leaveBefore(from: RouteNode<any, any>, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	protected async leaveBefore(from: RouteNode<any, any>, from_params: RouteParams, to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 	}
 
 	/**
 	 * Ein Ereignis, welches im globalen beforeEach-Guard aufgerufen wird,
 	 * bevor eine Route verlassen wird.
 	 *
-	 * @param from   die Route, die verlassen wird
-	 * @param from_params   die Routen-Parameter
+	 * @param from          die Route, die verlassen wird
+	 * @param from_params   die Routen-Parameter dazu
+	 * @param to            die Route, wohin verlassen wird
+	 * @param to_params     die Routen-Parameter dazu
 	 */
-	public async doLeaveBefore(from: RouteNode<any, any>, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	public async doLeaveBefore(from: RouteNode<any, any>, from_params: RouteParams, to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		try {
-			return await this.leaveBefore(from, from_params);
+			return await this.leaveBefore(from, from_params, to, to_params);
 		} catch (e) {
 			routerManager.errorcode = undefined;
 			routerManager.error = e instanceof Error ? e : new DeveloperNotificationException("Fehler beim Routing in doLeaveBefore(" + from.name + ")");
@@ -855,10 +859,12 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * Ein Ereignis, welches im globalen afterEach des Routings aufgerufen wird,
 	 * zu dem Zeitpunkt nachdem die Route verlassen wurde.
 	 *
-	 * @param from   die Route, die verlassen wird
-	 * @param from_params   die Routen-Parameter
+	 * @param from          die Route, die verlassen wird
+	 * @param from_params   die Routen-Parameter dazu
+	 * @param to            die Route, wohin verlassen wird
+	 * @param to_params     die Routen-Parameter dazu
 	 */
-	public async leave(from: RouteNode<any, any>, from_params: RouteParams) : Promise<void> {
+	public async leave(from: RouteNode<any, any>, from_params: RouteParams, to: RouteNode<any, any>, to_params: RouteParams) : Promise<void> {
 	}
 
 	/**

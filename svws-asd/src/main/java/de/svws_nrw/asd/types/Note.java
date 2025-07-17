@@ -345,6 +345,19 @@ public enum Note implements @NotNull CoreType<NoteKatalogEintrag, Note> {
 		return "";
 	}
 
+
+	/**
+	 * Gibt zurück, ob es sich bei der Note um ein Defizit im Sinne der gymnasialen Oberstufe handelt oder nicht.
+	 *
+	 * @return true, wenn es sich um ein Defizit handelt, und ansonsten false
+	 */
+	public boolean istDefizitSekII() {
+		return (this == Note.AUSREICHEND_MINUS)
+				|| (this == Note.MANGELHAFT_PLUS) || (this == Note.MANGELHAFT) || (this == Note.MANGELHAFT_MINUS)
+				|| (this == Note.UNGENUEGEND);
+	}
+
+
 	/**
 	 * Gibt die Note als Note der Sekundarstufe I ohne Tendenz als Zahl zurück.
 	 *

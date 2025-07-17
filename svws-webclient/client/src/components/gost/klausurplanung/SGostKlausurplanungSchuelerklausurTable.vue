@@ -10,9 +10,9 @@
 			<div v-for="schuelertermin in schuelerklausuren"
 				:key="schuelertermin.id"
 				:data="schuelertermin"
-				:draggable="onDrag && draggable(schuelertermin, termin!)"
-				@dragstart="onDrag!(schuelertermin);$event.stopPropagation()"
-				@dragend="onDrag!(undefined);$event.stopPropagation()"
+				:draggable="props.onDrag && draggable(schuelertermin, termin!)"
+				@dragstart="onDrag!($event, schuelertermin);$event.stopPropagation()"
+				@dragend="onDrag!($event, undefined);$event.stopPropagation()"
 				class="svws-ui-tr" role="row" style="grid-template-columns: minmax(4rem, 15fr) minmax(4rem, 8fr) minmax(4rem, 2fr) minmax(4rem, 8fr) minmax(4rem, 11fr) minmax(4rem, 4fr) minmax(4rem, 2fr);"
 				:class="[klausurCssClasses === undefined ? '' : klausurCssClasses(schuelertermin, termin)]">
 				<div class="svws-ui-td" role="cell">
@@ -59,11 +59,11 @@
 		kMan: () => GostKlausurplanManager;
 		termin?: GostKlausurtermin | undefined;
 		schuelerklausuren: List<GostSchuelerklausurTermin>;
-		onDrag?: (data: GostKlausurplanungDragData) => void;
+		onDrag?: (event: DragEvent, data: GostKlausurplanungDragData) => void;
 		draggable?: (data: GostKlausurplanungDragData, termin: GostKlausurtermin) => boolean;
 		onDrop?: (zone: GostKlausurplanungDropZone) => void;
 		selectedItems?: JavaSet<GostSchuelerklausurTermin>;
-		patchKlausur?: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<GostKlausurenCollectionSkrsKrsData>;
+		patchKlausur?: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<void>;
 		klausurCssClasses?: (klausur: GostKlausurplanungDragData, termin: GostKlausurtermin | undefined) => void;
 	}>(), {
 		termin: undefined,

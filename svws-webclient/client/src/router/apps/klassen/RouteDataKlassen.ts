@@ -37,7 +37,7 @@ const defaultState: RouteStateKlassen = {
 export class RouteDataKlassen extends RouteDataAuswahl<KlassenListeManager, RouteStateKlassen> {
 
 	public constructor() {
-		super(defaultState, routeKlasseGruppenprozesse, routeKlassenNeu);
+		super(defaultState, { gruppenprozesse: routeKlasseGruppenprozesse, hinzufuegen: routeKlassenNeu });
 	}
 
 	public addID(param: RouteParamsRawGeneric, id: number): void {

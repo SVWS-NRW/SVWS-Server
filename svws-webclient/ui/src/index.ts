@@ -39,6 +39,12 @@ export { default as StundenplanRaum } from "./components/stundenplan/Stundenplan
 export { default as StundenplanSchueler } from "./components/stundenplan/StundenplanSchueler.vue";
 export { default as StundenplanZeitrasterEinstellungen } from "./components/stundenplan/StundenplanZeitrasterEinstellungen.vue";
 export { default as StundenplanZeitrasterJsonImportModal } from "./components/stundenplan/StundenplanZeitrasterJsonImportModal.vue";
+export { default as EnmLeistungen } from "./components/enm/EnmLeistungen.vue";
+export { default as EnmLeistungenAuswahl } from "./components/enm/EnmLeistungenAuswahl.vue";
+export { default as EnmKlassenleitung } from "./components/enm/EnmKlassenleitung.vue";
+export { default as EnmKlassenleitungAuswahl } from "./components/enm/EnmKlassenleitungAuswahl.vue";
+export { default as EnmTeilleistungen } from "./components/enm/EnmTeilleistungen.vue";
+export { default as EnmTeilleistungenAuswahl } from "./components/enm/EnmTeilleistungenAuswahl.vue";
 export { default as SvwsUiAppLayout } from "./ui/layout/SvwsUiAppLayout.vue";
 export { default as SvwsUiAvatar } from "./ui/SvwsUiAvatar.vue";
 export { default as SvwsUiBadge } from "./ui/SvwsUiBadge.vue";
@@ -77,17 +83,39 @@ export { default as SvwsUiTodo } from "./ui/SvwsUiTodo.vue";
 export { default as SvwsUiToggle } from "./ui/controls/SvwsUiToggle.vue";
 export { default as SvwsUiTooltip } from "./ui/SvwsUiTooltip.vue";
 
+// Use exports
+export { useRegionSwitch } from "./ui/composables/useRegionSwitch";
+export { usePaneSplitter } from "./ui/composables/usePaneSplitter";
+
 // Type exorts
 export type { DataTableColumn, SortByAndOrder } from "./types";
 export type { TabData } from "./ui/nav/TabData";
 
 // Class exports
-export { Config } from "./utils/Config";
+export { Config, type ConfigSetter, ConfigElement } from "./utils/Config";
 export { AppMenuManager } from "./ui/nav/AppMenuManager";
 export { TabManager } from "./ui/nav/TabManager";
 export { Checkpoint } from "./ui/modal/Checkpoint";
 export { Color } from "./ui/Color";
 export { LaufbahnplanungUiManager } from "./components/gost/laufbahnplanung/LaufbahnplanungUiManager";
+export { BaseSelectManager } from "./ui/controls/select/selectManager/BaseSelectManager";
+export { CoreTypeSelectManager } from "./ui/controls/select/selectManager/CoreTypeSelectManager";
+export { GridManager } from "./ui/controls/tablegrid/GridManager";
+export { GridInput } from "./ui/controls/tablegrid/GridInput";
+export { GridInputInnerText } from "./ui/controls/tablegrid/GridInputInnerText";
+export { GridInputAbiturNotenpunkte } from "./ui/controls/tablegrid/GridInputAbiturNotenpunkte";
+export { GridInputAbiturPruefungsreihenfolge } from "./ui/controls/tablegrid/GridInputAbiturPruefungsreihenfolge";
+export { GridInputToggle } from "./ui/controls/tablegrid/GridInputToggle";
+export { PendingStateManager } from "./ui/wrapper/PendingStateManager";
+export { StateManager } from "./ui/StateManager";
+export { EnmManager } from "./components/enm/EnmManager";
+export { EnmLerngruppenAuswahlListeManager } from "./components/enm/EnmLerngruppenAuswahlListeManager";
+export { EnmKlassenleitungAuswahlListeManager } from "./components/enm/EnmKlassenleitungAuswahlListeManager";
+export type { EnmLerngruppenAuswahlEintrag } from "./components/enm/EnmManager";
+export type { EnmLeistungenProps } from "./components/enm/EnmLeistungenProps";
+export type { EnmLeistungenAuswahlProps } from "./components/enm/EnmLeistungenAuswahlProps";
+export type { EnmTeilleistungenProps } from "./components/enm/EnmTeilleistungenProps";
+export type { EnmKlassenleitungProps } from "./components/enm/EnmKlassenleitungProps";
 
 // Enums
 export { AppMenuGroup } from "./ui/nav/AppMenuGroup";

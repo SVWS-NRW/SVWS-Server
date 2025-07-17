@@ -1,6 +1,6 @@
 <template>
 	<Story title="TODO Platzhalter" id="svws-ui-todo" icon="ri:box-3-line" :layout="{ type: 'single', iframe: false }" auto-props-disabled>
-		<Variant title="Default">
+		<Variant title="Default" id="default">
 			<svws-ui-todo :title="state.title" :hide-icon="state.hideIcon">
 				Dieser Bereich ist noch in Entwicklung. Hier wird die Übersicht über XYZ implementiert.
 			</svws-ui-todo>
@@ -19,6 +19,9 @@
 				<HstCheckbox v-model="state.hideIcon" title="hideIcon" />
 			</template>
 		</Variant>
+		<template #source>
+			dsfsf
+		</template>
 	</Story>
 </template>
 

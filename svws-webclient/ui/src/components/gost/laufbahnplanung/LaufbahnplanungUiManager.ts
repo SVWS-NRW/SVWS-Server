@@ -1,9 +1,29 @@
 import { computed, ref } from "vue";
-import type { AbiturFachbelegungHalbjahr, GostJahrgangsdaten, GostSchuelerFachwahl, JavaMap, Sprachbelegung, AbiturdatenManager,
-	GostFach, List, Sprachpruefung } from "../../../../../core/src";
-import { ServerMode, GostAbiturFach, GostFachbereich, GostFachUtils, GostKursart, Note, Fach, Fachgruppe, HashMap2D, SprachendatenUtils,
-	ArrayList, GostHalbjahr, HashMap, RGBFarbe } from "../../../../../core/src";
-import type { Config } from "~/utils/Config";
+import type { AbiturFachbelegungHalbjahr } from "../../../../../core/src/core/data/gost/AbiturFachbelegungHalbjahr";
+import type { GostFach } from "../../../../../core/src/core/data/gost/GostFach";
+import type { GostJahrgangsdaten } from "../../../../../core/src/core/data/gost/GostJahrgangsdaten";
+import type { GostSchuelerFachwahl } from "../../../../../core/src/core/data/gost/GostSchuelerFachwahl";
+import type { JavaMap } from "../../../../../core/src/java/util/JavaMap";
+import type { List } from "../../../../../core/src/java/util/List";
+import type { ServerMode } from "../../../../../core/src/core/types/ServerMode";
+import type { Sprachpruefung } from "../../../../../core/src/asd/data/schueler/Sprachpruefung";
+import type { Sprachbelegung } from "../../../../../core/src/asd/data/schueler/Sprachbelegung";
+import { AbiturdatenManager } from "../../../../../core/src/core/abschluss/gost/AbiturdatenManager";
+import { ArrayList } from "../../../../../core/src/java/util/ArrayList";
+import { Fachgruppe } from "../../../../../core/src/asd/types/fach/Fachgruppe";
+import { Fach } from "../../../../../core/src/asd/types/fach/Fach";
+import { GostAbiturFach } from "../../../../../core/src/core/types/gost/GostAbiturFach";
+import { GostFachbereich } from "../../../../../core/src/core/types/gost/GostFachbereich";
+import { GostFachUtils } from "../../../../../core/src/core/utils/gost/GostFachUtils";
+import { GostHalbjahr } from "../../../../../core/src/core/types/gost/GostHalbjahr";
+import { GostKursart } from "../../../../../core/src/core/types/gost/GostKursart";
+import { HashMap } from "../../../../../core/src/java/util/HashMap";
+import { HashMap2D } from "../../../../../core/src/core/adt/map/HashMap2D";
+import { Note } from "../../../../../core/src/asd/types/Note";
+import { RGBFarbe } from "../../../../../core/src/asd/data/RGBFarbe";
+import { SprachendatenUtils } from "../../../../../core/src/core/utils/schueler/SprachendatenUtils";
+import type { Config } from "../../../utils/Config"
+
 
 /*
  * Die Implementierung enthält Teile von experimentellem Code. Für diesen gilt folgendes:
@@ -71,6 +91,9 @@ export class LaufbahnplanungUiManager {
 	/** Der Eingabemodus */
 	public _modus = ref<'manuell' | 'normal' | 'hochschreiben'>('normal');
 
+	/** Der Pfad zum Speichern der Configdaten */
+	private _configPfade: { faecherZeigen: string, modus: string };
+
 
 	/**
 	 * Erstellt einen neuen UI-Manager auf Basis des übergebenen Abiturdaten-Managers,
@@ -83,7 +106,7 @@ export class LaufbahnplanungUiManager {
 	 * @param belegungHatImmerNoten    gibt an, ob bei den einzelnen Fachbelegungen immer Noten bei den Leistungsdaten angenommen werden sollen
 	 */
 	public constructor(serverMode: ServerMode, manager: () => AbiturdatenManager, config: () => Config, jahrgang: () => GostJahrgangsdaten,
-		setWahl: (fachID: number, wahl: GostSchuelerFachwahl) => Promise<void>, ignoriereSprachenfolge : boolean = false,
+		setWahl: (fachID: number, wahl: GostSchuelerFachwahl) => Promise<void>, configPfade: { faecherZeigen: string, modus: string }, ignoriereSprachenfolge : boolean = false,
 		belegungHatImmerNoten : boolean = false) {
 		this.serverMode = serverMode;
 		this.manager = manager;
@@ -92,26 +115,27 @@ export class LaufbahnplanungUiManager {
 		this.setWahl = setWahl;
 		this._ignoriereSprachenfolge = ignoriereSprachenfolge;
 		this._belegungHatImmerNoten = belegungHatImmerNoten;
+		this._configPfade = configPfade;
 		// Lese aus der Konfiguration aus, ob alle Fächer oder nur ein Teil angezeigt werden soll
-		const wert = this.config().getValue("app.schueler.laufbahnplanung.faecher.anzeigen");
+		const wert = this.config().getValue(configPfade.faecherZeigen);
 		if ((wert === 'alle') || (wert === 'nur_waehlbare') || (wert === 'nur_gewaehlt')) {
 			this._faecherAnzeigen.value = wert;
 		} else {
-			void this.config().setValue("app.schueler.laufbahnplanung.faecher.anzeigen", 'alle');
+			void this.config().setValue(configPfade.faecherZeigen, 'alle');
 			this._faecherAnzeigen.value = 'alle';
 		}
 		// Lese den Eingabemodus aus der Konfiguration aus
-		const modus = this.config().getValue("app.schueler.laufbahnplanung.modus");
+		const modus = this.config().getValue(configPfade.modus);
 		if ((modus === 'manuell') || (modus === 'normal') || (modus === 'hochschreiben')) {
 			this._modus.value = modus;
 		} else {
-			void this.config().setValue("app.schueler.laufbahnplanung.modus", 'normal');
+			void this.config().setValue(configPfade.modus, 'normal');
 			this._modus.value = 'normal';
 		}
 	}
 
-	/** Gibt an, ob der experimentelle Code ab Abitur 2029 genutzt werden soll */
-	private isAbi29ff = computed<boolean>(() => (this.manager().getAbiturjahr() >= 2029) && (this.serverMode === ServerMode.DEV));
+	/** Gibt an, ob der experimentelle Code ab Abitur 2030 genutzt werden soll */
+	private isAbi30ff = computed<boolean>(() => AbiturdatenManager.nutzeExperimentellenCode(this.serverMode, this.manager().getAbiturjahr()));
 
 	/**
 	 * Gibt zurück, ob bei den angebotenen Sprachfächern eine Sprachenfolge berücksichtigt werden soll oder nicht
@@ -487,7 +511,7 @@ export class LaufbahnplanungUiManager {
 	private _fachgruppe = computed<JavaMap<GostFach, Fachgruppe>>(() => {
 		const map = new HashMap<GostFach, Fachgruppe>();
 		for (const fach of this.alleFaecher) {
-			if (this.isAbi29ff.value) {
+			if (this.isAbi30ff.value) {
 				const f = Fach.getBySchluesselOrDefault(fach.kuerzel);
 				if ((f === Fach.IN) || (f === Fach.VO))
 					continue;
@@ -975,13 +999,13 @@ export class LaufbahnplanungUiManager {
 
 	/**
 	 * Stepper für das Durchwandern der Auswahloptionen im Abiturbereich eines Faches
-	 * im manuellen Modus. (ab Abitur 2029 - experimenteller Code !)
+	 * im manuellen Modus. (ab Abitur 2030 - experimenteller Code !)
 	 *
 	 * @param fach   das Fach
 	 *
 	 * @returns -
 	 */
-	private async stepperAbitur2029Manuell(fach: GostFach) : Promise<void> {
+	private async stepperAbitur2030Manuell(fach: GostFach) : Promise<void> {
 		if (this.manager().istBewertet(GostHalbjahr.Q22))
 			return;
 		const wahl = this.manager().getSchuelerFachwahl(fach.id);
@@ -1015,13 +1039,13 @@ export class LaufbahnplanungUiManager {
 
 	/**
 	 * Stepper für das Durchwandern der Auswahloptionen im Abiturbereich eines Faches
-	 * im normalen Modus und im Hochschreibemodus. (ab Abitur 2029 - experimenteller Code !)
+	 * im normalen Modus und im Hochschreibemodus. (ab Abitur 2030 - experimenteller Code !)
 	 *
 	 * @param fach   das Fach
 	 *
 	 * @returns -
 	 */
-	private async stepperAbitur2029Normal(fach: GostFach) {
+	private async stepperAbitur2030Normal(fach: GostFach) {
 		// Prüfe, ob die Wahl als Abiturfach überhaupt möglich ist
 		if (!this.istMoeglichAbi(fach))
 			return;
@@ -1094,14 +1118,14 @@ export class LaufbahnplanungUiManager {
 	 * @returns -
 	 */
 	public async stepperAbitur(fach: GostFach) {
-		if (this.isAbi29ff.value) {
+		if (this.isAbi30ff.value) {
 			switch (this.modus) {
 				case 'manuell':
-					await this.stepperAbitur2029Manuell(fach);
+					await this.stepperAbitur2030Manuell(fach);
 					return;
 				case 'normal':
 				case 'hochschreiben':
-					await this.stepperAbitur2029Normal(fach);
+					await this.stepperAbitur2030Normal(fach);
 					return;
 			}
 		}

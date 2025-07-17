@@ -454,6 +454,7 @@ public class APIClient {
 				case "WeiterbildungskollegOrganisationsformen" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/WeiterbildungskollegOrganisationsformen.json");
 				case "SchulabschlussAllgemeinbildend" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/SchulabschlussAllgemeinbildend.json");
 				case "SchulabschlussBerufsbildend" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/SchulabschlussBerufsbildend.json");
+				case "Einschulungsart" -> JsonReader.fromResource("de/svws_nrw/asd/types/schueler/Einschulungsart.json");
 				case "HerkunftBildungsgang" -> JsonReader.fromResource("de/svws_nrw/asd/types/schueler/HerkunftBildungsgang.json");
 				case "HerkunftBildungsgangTyp" -> JsonReader.fromResource("de/svws_nrw/asd/types/schueler/HerkunftBildungsgangTyp.json");
 				case "Jahrgaenge" -> JsonReader.fromResource("de/svws_nrw/asd/types/jahrgang/Jahrgaenge.json");
@@ -466,6 +467,7 @@ public class APIClient {
 				case "BerufskollegBildungsgangTyp" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/BerufskollegBildungsgangTyp.json");
 				case "WeiterbildungskollegBildungsgangTyp" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/WeiterbildungskollegBildungsgangTyp.json");
 				case "Schulgliederung" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/Schulgliederung.json");
+				case "Verkehrssprache" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/Verkehrssprache.json");
 				case "Fachgruppe" -> JsonReader.fromResource("de/svws_nrw/asd/types/fach/Fachgruppe.json");
 				case "Fach" -> JsonReader.fromResource("de/svws_nrw/asd/types/fach/Fach.json");
 				case "LehrerAbgangsgrund" -> JsonReader.fromResource("de/svws_nrw/asd/types/lehrer/LehrerAbgangsgrund.json");

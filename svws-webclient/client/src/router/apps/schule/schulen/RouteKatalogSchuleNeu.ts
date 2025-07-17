@@ -1,13 +1,13 @@
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-
+import type { KatalogSchuleNeuProps } from "~/components/schule/kataloge/schulen/SKatalogSchuleNeuProps";
+import type { RouteKatalogSchulen } from "~/router/apps/schule/schulen/RouteKatalogSchulen";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
-import { routeApp } from "../../RouteApp";
 import { ViewType } from "@ui";
 import { RouteManager } from "~/router/RouteManager";
-import type { RouteKatalogSchulen } from "~/router/apps/schule/schulen/RouteKatalogSchulen";
-import type { KatalogSchuleNeuProps } from "~/components/schule/kataloge/schulen/SKatalogSchuleNeuProps";
+import { routeApp } from "../../RouteApp";
 import { routeKatalogSchulen } from "~/router/apps/schule/schulen/RouteKatalogSchulen";
+import { api } from "~/router/Api";
 
 const SKatalogSchuleNeu = () => import("~/components/schule/kataloge/schulen/SKatalogSchuleNeu.vue");
 
@@ -33,6 +33,7 @@ export class RouteKatalogSchuleNeu extends RouteNode<any, RouteKatalogSchulen> {
 			gotoDefaultView: routeKatalogSchulen.data.gotoDefaultView,
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
+			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 }

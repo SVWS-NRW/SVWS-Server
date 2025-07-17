@@ -38,10 +38,9 @@
 
 	import { computed } from "vue";
 	import type { FaecherAuswahlProps } from "./SFaecherAuswahlProps";
-	import { ViewType } from "@ui";
+	import { useRegionSwitch, ViewType } from "@ui";
 	import type { FaecherListeEintrag} from "@core";
 	import { BenutzerKompetenz } from "@core";
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<FaecherAuswahlProps>();
 

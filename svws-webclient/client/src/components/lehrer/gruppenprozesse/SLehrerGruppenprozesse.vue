@@ -34,7 +34,7 @@
 					</svws-ui-input-wrapper>
 				</div>
 				<template #buttonFooterLeft>
-					<svws-ui-button :disabled="stundenplanAuswahl === undefined" @click="downloadPDF" :is-loading="loading" class="mt-4">
+					<svws-ui-button class="mt-4" :disabled="(stundenplanAuswahl === undefined) || !hatKompetenzDrucken" @click="downloadPDF" :is-loading="loading">
 						<svws-ui-spinner v-if="loading" spinning />
 						<span v-else class="icon i-ri-play-line" />
 						Drucken
@@ -42,7 +42,7 @@
 				</template>
 			</ui-card>
 			<ui-card v-if="hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen" subtitle="Ausgewählte Lehrer werden gelöscht."
-					 :is-open="currentAction === 'delete'" @update:is-open="isOpen => setCurrentAction('delete', isOpen)">
+				:is-open="currentAction === 'delete'" @update:is-open="isOpen => setCurrentAction('delete', isOpen)">
 				<div>
 					<span v-if="preConditionCheck[0]">Alle ausgewählten Lehrer sind bereit zum Löschen.</span>
 					<template v-else v-for="message in preConditionCheck[1]" :key="message">
@@ -51,8 +51,8 @@
 					<span v-if="loeschbareLehrerVorhanden">Einige Lehrer sind noch an anderer Stelle referenziert, die Übrigen können gelöscht werden.</span>
 				</div>
 				<template #buttonFooterLeft>
-					<svws-ui-button :disabled="(lehrerListeManager().getIdsReferenzierterLehrer().size() === lehrerListeManager().liste.auswahlSize()) || loading"
-									title="Löschen" @click="entferneLehrer" :is-loading="loading" class="mt-4">
+					<svws-ui-button class="mt-4" title="Löschen" @click="entferneLehrer" :is-loading="loading"
+						:disabled="(lehrerListeManager().getIdsReferenzierterLehrer().size() === lehrerListeManager().liste.auswahlSize()) || loading || !hatKompetenzLoeschen">
 						<svws-ui-spinner v-if="loading" spinning />
 						<span v-else class="icon i-ri-play-line" />
 						Löschen

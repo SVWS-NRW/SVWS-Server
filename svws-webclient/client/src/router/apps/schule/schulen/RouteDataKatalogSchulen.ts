@@ -20,7 +20,7 @@ const defaultState = {
 export class RouteDataKatalogSchulen extends RouteDataAuswahl<KatalogSchuleListeManager, RouteStateAuswahlInterface<KatalogSchuleListeManager>> {
 
 	public constructor() {
-		super(defaultState, routeKatalogSchuleGruppenprozesse, routeKatalogSchuleNeu);
+		super(defaultState, { gruppenprozesse: routeKatalogSchuleGruppenprozesse, hinzufuegen: routeKatalogSchuleNeu });
 	}
 
 

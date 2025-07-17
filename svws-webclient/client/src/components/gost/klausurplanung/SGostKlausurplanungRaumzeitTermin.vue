@@ -119,12 +119,12 @@
 		createKlausurraum: (raum: Partial<GostKlausurraum>) => Promise<void>;
 		loescheKlausurraum: (id: number) => Promise<boolean>;
 		patchKlausurraum: (id: number, raum: Partial<GostKlausurraum>) => Promise<boolean>;
-		patchKlausur: (klausur: GostKursklausur, patch: Partial<GostKursklausur>) => Promise<GostKlausurenCollectionSkrsKrsData>;
+		patchKlausur: (klausur: GostKursklausur, patch: Partial<GostKursklausur>) => Promise<void>;
 		dragData: () => GostKlausurplanungDragData;
-		onDrag: (data: GostKlausurplanungDragData) => void;
+		onDrag: (event: DragEvent, data: GostKlausurplanungDragData) => void;
 		onDrop: (zone: GostKlausurplanungDropZone) => void;
 		zeigeAlleJahrgaenge: () => boolean;
-		setzeRaumZuSchuelerklausuren: (raeume: List<GostKlausurraumRich>, deleteFromRaeume: boolean) => Promise<GostKlausurenCollectionSkrsKrsData>;
+		setzeRaumZuSchuelerklausuren: (raeume: List<GostKlausurraumRich>, deleteFromRaeume: boolean) => Promise<void>;
 		getConfigValue: (value: string) => string;
 		setConfigValue: (key: string, value: string) => Promise<void>;
 		gotoTermin: (abiturjahr: number, halbjahr: GostHalbjahr, value: number) => Promise<void>;

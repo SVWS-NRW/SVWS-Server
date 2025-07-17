@@ -1,5 +1,4 @@
 import { StundenplanRaum, cast_de_svws_nrw_core_data_stundenplan_StundenplanRaum } from '../../../../core/data/stundenplan/StundenplanRaum';
-import { JavaLong } from '../../../../java/lang/JavaLong';
 import { ArrayList } from '../../../../java/util/ArrayList';
 import type { List } from '../../../../java/util/List';
 import { JavaObject } from '../../../../java/lang/JavaObject';
@@ -9,9 +8,9 @@ import { GostKlausurraum, cast_de_svws_nrw_core_data_gost_klausurplanung_GostKla
 export class GostKlausurraumRich extends JavaObject {
 
 	/**
-	 * Die ID des Klausurraums.
+	 * Die ID des Klausurtermins.
 	 */
-	public id : number = -1;
+	public klausurraum : GostKlausurraum = new GostKlausurraum();
 
 	/**
 	 * Die Grösse des Raumes an Arbeitsplätzen für Schüler.
@@ -45,7 +44,7 @@ export class GostKlausurraumRich extends JavaObject {
 		if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum')))) && ((__param1 !== undefined) && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.svws_nrw.core.data.stundenplan.StundenplanRaum'))) || (__param1 === null))) {
 			const klausurraum : GostKlausurraum = cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurraum(__param0);
 			const stundenplanraum : StundenplanRaum | null = cast_de_svws_nrw_core_data_stundenplan_StundenplanRaum(__param1);
-			this.id = klausurraum.id;
+			this.klausurraum = klausurraum;
 			if (stundenplanraum !== null) {
 				this.groesse = stundenplanraum.groesse;
 			}
@@ -61,7 +60,7 @@ export class GostKlausurraumRich extends JavaObject {
 	 * @return true, falls die Objekte identisch sind, sonst false
 	 */
 	public equals(another : unknown | null) : boolean {
-		return (another !== null) && (((another instanceof JavaObject) && (another.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumRich')))) && (this.id === (cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurraumRich(another)).id);
+		return (another !== null) && (((another instanceof JavaObject) && (another.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumRich')))) && (JavaObject.equalsTranspiler(this.klausurraum, ((cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurraumRich(another)).klausurraum)));
 	}
 
 	/**
@@ -70,7 +69,7 @@ export class GostKlausurraumRich extends JavaObject {
 	 * @return den HashCode
 	 */
 	public hashCode() : number {
-		return JavaLong.hashCode((this.id));
+		return JavaObject.getTranspilerHashCode(this.klausurraum);
 	}
 
 	transpilerCanonicalName(): string {
@@ -86,9 +85,9 @@ export class GostKlausurraumRich extends JavaObject {
 	public static transpilerFromJSON(json : string): GostKlausurraumRich {
 		const obj = JSON.parse(json) as Partial<GostKlausurraumRich>;
 		const result = new GostKlausurraumRich();
-		if (obj.id === undefined)
-			throw new Error('invalid json format, missing attribute id');
-		result.id = obj.id;
+		if (obj.klausurraum === undefined)
+			throw new Error('invalid json format, missing attribute klausurraum');
+		result.klausurraum = GostKlausurraum.transpilerFromJSON(JSON.stringify(obj.klausurraum));
 		if (obj.groesse === undefined)
 			throw new Error('invalid json format, missing attribute groesse');
 		result.groesse = obj.groesse;
@@ -102,7 +101,7 @@ export class GostKlausurraumRich extends JavaObject {
 
 	public static transpilerToJSON(obj : GostKlausurraumRich) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"klausurraum" : ' + GostKlausurraum.transpilerToJSON(obj.klausurraum) + ',';
 		result += '"groesse" : ' + obj.groesse.toString() + ',';
 		result += '"schuelerklausurterminIDs" : [ ';
 		for (let i = 0; i < obj.schuelerklausurterminIDs.size(); i++) {
@@ -119,8 +118,8 @@ export class GostKlausurraumRich extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostKlausurraumRich>) : string {
 		let result = '{';
-		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id.toString() + ',';
+		if (obj.klausurraum !== undefined) {
+			result += '"klausurraum" : ' + GostKlausurraum.transpilerToJSON(obj.klausurraum) + ',';
 		}
 		if (obj.groesse !== undefined) {
 			result += '"groesse" : ' + obj.groesse.toString() + ',';

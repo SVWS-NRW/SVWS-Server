@@ -40,19 +40,20 @@ export class RouteLehrerPersonaldaten extends RouteNode<any, RouteLehrer> {
 
 	public getProps(to: RouteLocationNormalized): LehrerPersonaldatenProps {
 		return {
+			validatorKontext: () => api.validatorKontext,
 			schulform: api.schulform,
 			serverMode: api.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			lehrerListeManager: () => routeLehrer.data.manager,
 			patch: routeLehrer.data.patchPersonaldaten,
 			patchAbschnittsdaten: routeLehrer.data.patchPersonalAbschnittsdaten,
-			patchLehramtAnerkennung: routeLehrer.data.patchLehramtAnerkennung,
+			patchLehramt: routeLehrer.data.patchLehramt,
 			addLehramt: routeLehrer.data.addLehramt,
 			removeLehraemter: routeLehrer.data.removeLehraemter,
-			patchLehrbefaehigungAnerkennung: routeLehrer.data.patchLehrbefaehigungAnerkennung,
+			patchLehrbefaehigung: routeLehrer.data.patchLehrbefaehigung,
 			addLehrbefaehigung: routeLehrer.data.addLehrbefaehigung,
 			removeLehrbefaehigungen: routeLehrer.data.removeLehrbefaehigungen,
-			patchFachrichtungAnerkennung: routeLehrer.data.patchFachrichtungAnerkennung,
+			patchFachrichtung: routeLehrer.data.patchFachrichtung,
 			addFachrichtung: routeLehrer.data.addFachrichtung,
 			removeFachrichtungen: routeLehrer.data.removeFachrichtungen,
 			aktAbschnitt: routeApp.data.aktAbschnitt.value,

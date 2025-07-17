@@ -5,26 +5,29 @@ ArrayList {
   "addFirst": [Function],
   "addLast": [Function],
   "elementData": [
-    KatalogEintrag {
-      "id": 2,
-      "istAenderbar": true,
-      "istSichtbar": true,
-      "kuerzel": "2",
-      "text": "628 Fingscheid",
-    },
-    KatalogEintrag {
+    Haltestelle {
+      "bezeichnung": "628 Meckelstraße",
+      "entfernungSchule": 0,
       "id": 1,
       "istAenderbar": true,
       "istSichtbar": true,
-      "kuerzel": "1",
-      "text": "628 Meckelstraße",
+      "sortierung": 1,
     },
-    KatalogEintrag {
+    Haltestelle {
+      "bezeichnung": "628 Fingscheid",
+      "entfernungSchule": 0,
+      "id": 2,
+      "istAenderbar": true,
+      "istSichtbar": true,
+      "sortierung": 2,
+    },
+    Haltestelle {
+      "bezeichnung": "RE7 Hauptbahnhof",
+      "entfernungSchule": 0,
       "id": 3,
       "istAenderbar": true,
       "istSichtbar": true,
-      "kuerzel": "3",
-      "text": "RE7 Hauptbahnhof",
+      "sortierung": 3,
     },
   ],
   "getFirst": [Function],

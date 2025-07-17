@@ -4,8 +4,9 @@ import type { RouteAbteilungen } from "~/router/apps/schule/abteilungen/RouteAbt
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { routeAbteilungen } from "~/router/apps/schule/abteilungen/RouteAbteilungen";
-import {RouteManager} from "~/router/RouteManager";
-import {routeLehrer} from "~/router/apps/lehrer/RouteLehrer";
+import { RouteManager } from "~/router/RouteManager";
+import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
+import { api } from "~/router/Api";
 
 const SAbteilungenDaten = () => import("~/components/schule/kataloge/abteilungen/daten/SAbteilungenDaten.vue");
 
@@ -27,7 +28,10 @@ export class RouteAbteilungenDaten extends RouteNode<any, RouteAbteilungen> {
 		return {
 			goToLehrer: this.goToLehrer,
 			manager: () => routeAbteilungen.data.manager,
+			benutzerKompetenzen: api.benutzerKompetenzen,
 			patch: routeAbteilungen.data.patch,
+			deleteKlassenzuordnungen: routeAbteilungen.data.deleteKlassenzuordnungen,
+			addKlassenzuordnungen: routeAbteilungen.data.addKlassenzuordnungen,
 		}
 	}
 }

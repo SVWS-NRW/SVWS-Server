@@ -18,7 +18,7 @@ public final class Revision34Updates extends SchemaRevisionUpdateSQL {
 	 * Erzeugt eine Instanz für die Revisions-Updates für Revision 34.
 	 *
 	 * Diese beinhalten Anpassungen, die bei Datenbanken notwendig werden, welcher früher schon Migrationen ausgeführt haben, bevor sich dort nochmals
-	 * Definitionen des Primärschlüssels geändert haben, da die Spalte Leistung_ID ergänzt wurde.
+	 * Definitionen des Primärschlüssels der Tabelle Kurs_Schueler geändert haben, da die Spalte Leistung_ID ergänzt wurde.
 	 */
 	public Revision34Updates() {
 		super(SchemaRevisionen.REV_34);

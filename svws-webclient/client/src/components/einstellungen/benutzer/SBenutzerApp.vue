@@ -28,8 +28,8 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
+	import { useRegionSwitch } from "@ui";
 	import type { BenutzerAppProps } from "./SBenutzerAppProps";
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<BenutzerAppProps>();
 

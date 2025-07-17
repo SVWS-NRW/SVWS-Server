@@ -1,6 +1,8 @@
 package de.svws_nrw.data.gost.klausurplan;
 
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,7 +10,9 @@ import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionData;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionSkrsKrsData;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumstunde;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostNachschreibterminblockungKonfiguration;
@@ -17,6 +21,7 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurterminraumstunde;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
+import de.svws_nrw.core.utils.ListUtils;
 import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
 import de.svws_nrw.core.utils.gost.klausurplanung.KlausurblockungNachschreiberAlgorithmus;
 import de.svws_nrw.data.DataManagerRevised;
@@ -25,9 +30,11 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausurenTermine;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausurenTermineRaumstunden;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenTermine;
+import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.persistence.TypedQuery;
+import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -38,6 +45,8 @@ import jakarta.ws.rs.core.Response.Status;
 public final class DataGostKlausurenSchuelerklausurTermin
 		extends DataManagerRevised<Long, DTOGostKlausurenSchuelerklausurenTermine, GostSchuelerklausurTermin> {
 
+	private GostKlausurenCollectionSkrsKrsData raumDataChanged = new GostKlausurenCollectionSkrsKrsData();
+
 	/**
 	 * Erstellt einen neuen {@link DataManagerRevised} für den Core-DTO
 	 * {@link GostSchuelerklausurTermin}.
@@ -46,7 +55,7 @@ public final class DataGostKlausurenSchuelerklausurTermin
 	 */
 	public DataGostKlausurenSchuelerklausurTermin(final DBEntityManager conn) {
 		super(conn);
-		super.setAttributesNotPatchable("idSchuelerklausur", "folgeNr");
+		super.setAttributesNotPatchable("id", "idSchuelerklausur", "folgeNr");
 		super.setAttributesRequiredOnCreation("idSchuelerklausur", "folgeNr");
 	}
 
@@ -110,7 +119,10 @@ public final class DataGostKlausurenSchuelerklausurTermin
 			case "idSchuelerklausur" -> dto.Schuelerklausur_ID = JSONMapper.convertToLong(value, false);
 			case "idTermin" -> dto.Termin_ID = JSONMapper.convertToLong(value, true);
 			case "folgeNr" -> dto.Folge_Nr = JSONMapper.convertToInteger(value, false);
-			case "startzeit" -> dto.Startzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440);
+			case "startzeit" -> {
+				dto.Startzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440);
+				raumDataChanged = new DataGostKlausurenSchuelerklausurraumstunde(conn).updateRaeumeZuSchuelerklausurterminen(ListUtils.create1(map(dto)));
+			}
 			case "bemerkung" -> dto.Bemerkungen =
 					DataGostKlausuren.convertEmptyStringToNull(JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Schuelerklausuren_Termine.col_Bemerkungen.datenlaenge()));
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Das Patchen des Attributes %s wird nicht unterstützt.".formatted(name));
@@ -206,7 +218,7 @@ public final class DataGostKlausurenSchuelerklausurTermin
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public List<GostSchuelerklausurTermin> getSchuelerklausurtermineZuSchuelerklausurterminraumstunden(
-			final List<GostSchuelerklausurterminraumstunde> listSktrs) throws ApiOperationException {
+			final Collection<GostSchuelerklausurterminraumstunde> listSktrs) throws ApiOperationException {
 		if (listSktrs.isEmpty())
 			return new ArrayList<>();
 		final List<DTOGostKlausurenSchuelerklausurenTermine> terminDTOs = conn.queryByKeyList(DTOGostKlausurenSchuelerklausurenTermine.class,
@@ -296,6 +308,21 @@ public final class DataGostKlausurenSchuelerklausurTermin
 	}
 
 	/**
+	 * Liefert die zu einer Liste von GostKlausurterminen gehörigen
+	 * GostSchuelerklausurTermin-Objekte zurück.
+	 *
+	 * @param termine die Liste der GostKlausurtermine
+	 *
+	 * @return die Liste der zugehörigen GostSchuelerklausurTermin-Objekte
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public List<GostSchuelerklausurTermin> getSchuelerklausurtermineZuTerminen(final List<GostKlausurtermin> termine)
+			throws ApiOperationException {
+		return getSchuelerklausurtermineZuTerminIds(termine.stream().map(t -> t.id).toList(), false);
+	}
+
+	/**
 	 * Startet den NachschreibterminblockungAlgorithmus mit den übergebenen
 	 * GostKlausurenDataCollection-Daten und persistiert die Blockung in der Datenbank.
 	 *
@@ -334,8 +361,18 @@ public final class DataGostKlausurenSchuelerklausurTermin
 				final GostKlausurvorgabe v = kMan.vorgabeBySchuelerklausurTermin(zuordnung.a);
 				DTOGostKlausurenTermine neuerTermin = mapNeueTermine.get(zuordnung.b);
 				if (neuerTermin == null) {
-					neuerTermin = new DTOGostKlausurenTermine(idNextTermin++, v.abiJahrgang,
-							GostHalbjahr.fromIDorException(v.halbjahr), v.quartal, false, true);
+					final GostHalbjahr ghj = GostHalbjahr.fromIDorException(v.halbjahr);
+
+					final List<DTOSchuljahresabschnitte> sjaList =
+							conn.query("SELECT s FROM DTOSchuljahresabschnitte s WHERE s.Jahr = :jahr AND s.Abschnitt = :abschnitt", DTOSchuljahresabschnitte.class)
+									.setParameter("jahr", ghj.getSchuljahrFromAbiturjahr(v.abiJahrgang))
+									.setParameter("abschnitt", (v.halbjahr % 2) + 1)
+									.getResultList();
+					if ((sjaList == null) || (sjaList.size() != 1))
+						throw new ApiOperationException(Status.NOT_FOUND, "Noch kein Schuljahresabschnitt für dieses Halbjahr definiert.");
+
+					neuerTermin = new DTOGostKlausurenTermine(idNextTermin++, sjaList.getFirst().ID, v.abiJahrgang,
+							ghj, v.quartal, false, true);
 					conn.transactionPersist(neuerTermin);
 					conn.transactionFlush();
 					mapNeueTermine.put(zuordnung.b, neuerTermin);
@@ -352,6 +389,12 @@ public final class DataGostKlausurenSchuelerklausurTermin
 		blockungsDaten.schuelerklausurtermine = mapList(mapNachschreiber.values());
 		blockungsDaten.termine = new DataGostKlausurenTermin(conn).mapList(mapNeueTermine.values());
 		return blockungsDaten;
+	}
+
+	@Override
+	public Response patchAsResponse(final Long id, final InputStream is) throws ApiOperationException {
+		patchFromStream(id, is);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(raumDataChanged).build();
 	}
 
 

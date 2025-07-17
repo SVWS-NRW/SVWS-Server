@@ -6,6 +6,7 @@ import BerufskollegOrganisationsformen from "@json/schule/BerufskollegOrganisati
 import WeiterbildungskollegOrganisationsformen from "@json/schule/WeiterbildungskollegOrganisationsformen.json";
 import SchulabschlussAllgemeinbildend from "@json/schule/SchulabschlussAllgemeinbildend.json";
 import SchulabschlussBerufsbildend from "@json/schule/SchulabschlussBerufsbildend.json";
+import Einschulungsart from "@json/schueler/Einschulungsart.json";
 import HerkunftBildungsgang from "@json/schueler/HerkunftBildungsgang.json";
 import HerkunftBildungsgangTyp from "@json/schueler/HerkunftBildungsgangTyp.json";
 import Jahrgaenge from "@json/jahrgang/Jahrgaenge.json";
@@ -18,6 +19,7 @@ import Sprachreferenzniveau from "@json/fach/Sprachreferenzniveau.json";
 import BerufskollegBildungsgangTyp from "@json/schule/BerufskollegBildungsgangTyp.json";
 import WeiterbildungskollegBildungsgangTyp from "@json/schule/WeiterbildungskollegBildungsgangTyp.json";
 import Schulgliederung from "@json/schule/Schulgliederung.json";
+import Verkehrssprache from "@json/schule/Verkehrssprache.json";
 import Fachgruppe from "@json/fach/Fachgruppe.json";
 import Fach from "@json/fach/Fach.json";
 import LehrerAbgangsgrund from "@json/lehrer/LehrerAbgangsgrund.json";
@@ -64,6 +66,7 @@ export class JsonCoreTypeReaderStatic extends JsonCoreTypeReader {
 		this.mapCoreTypeNameJsonDataImport.set("WeiterbildungskollegOrganisationsformen", WeiterbildungskollegOrganisationsformen);
 		this.mapCoreTypeNameJsonDataImport.set("SchulabschlussAllgemeinbildend", SchulabschlussAllgemeinbildend);
 		this.mapCoreTypeNameJsonDataImport.set("SchulabschlussBerufsbildend", SchulabschlussBerufsbildend);
+		this.mapCoreTypeNameJsonDataImport.set("Einschulungsart", Einschulungsart);
 		this.mapCoreTypeNameJsonDataImport.set("HerkunftBildungsgang", HerkunftBildungsgang);
 		this.mapCoreTypeNameJsonDataImport.set("HerkunftBildungsgangTyp", HerkunftBildungsgangTyp);
 		this.mapCoreTypeNameJsonDataImport.set("Jahrgaenge", Jahrgaenge);
@@ -76,6 +79,7 @@ export class JsonCoreTypeReaderStatic extends JsonCoreTypeReader {
 		this.mapCoreTypeNameJsonDataImport.set("BerufskollegBildungsgangTyp", BerufskollegBildungsgangTyp);
 		this.mapCoreTypeNameJsonDataImport.set("WeiterbildungskollegBildungsgangTyp", WeiterbildungskollegBildungsgangTyp);
 		this.mapCoreTypeNameJsonDataImport.set("Schulgliederung", Schulgliederung);
+		this.mapCoreTypeNameJsonDataImport.set("Verkehrssprache", Verkehrssprache);
 		this.mapCoreTypeNameJsonDataImport.set("Fachgruppe", Fachgruppe);
 		this.mapCoreTypeNameJsonDataImport.set("Fach", Fach);
 		this.mapCoreTypeNameJsonDataImport.set("LehrerAbgangsgrund", LehrerAbgangsgrund);

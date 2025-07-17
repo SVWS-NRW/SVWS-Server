@@ -98,9 +98,9 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 	public grundschuleEinschulungsartID : number | null = null;
 
 	/**
-	 * Die Anzahl der Jahre in der Schuleingangsphase der Grundschule.
+	 * Die ID der Schuleingangsphase der Grundschule.
 	 */
-	public grundschuleJahreEingangsphase : number | null = null;
+	public idGrundschuleJahreEingangsphase : number | null = null;
 
 	/**
 	 * Das Kürzel für die Übergangsempfehlung der Grundschule in die Sekundarstufe I
@@ -121,6 +121,26 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 	 * Das Jahr des Wechsels in die Sekundarstufe II.
 	 */
 	public sekIIWechsel : number | null = null;
+
+	/**
+	 * Die ID der Dauer des Kindergartenbesuchs eines Schülers.
+	 */
+	public idDauerKindergartenbesuch : number | null = null;
+
+	/**
+	 * Die ID des Kindergartens.
+	 */
+	public idKindergarten : number | null = null;
+
+	/**
+	 * Schüler wurde zu einem Sprachförderkurs verpflichtet (Ja/Nein).
+	 */
+	public verpflichtungSprachfoerderkurs : boolean = false;
+
+	/**
+	 * Teilnahme des Schülers an einem Sprachförderkurs (Ja/Nein).
+	 */
+	public teilnahmeSprachfoerderkurs : boolean = false;
 
 	/**
 	 * Die Informationen zu den besonderen Merkmalen für die Statistik.
@@ -173,11 +193,19 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 		result.aufnehmendBestaetigt = (obj.aufnehmendBestaetigt === undefined) ? null : obj.aufnehmendBestaetigt === null ? null : obj.aufnehmendBestaetigt;
 		result.grundschuleEinschulungsjahr = (obj.grundschuleEinschulungsjahr === undefined) ? null : obj.grundschuleEinschulungsjahr === null ? null : obj.grundschuleEinschulungsjahr;
 		result.grundschuleEinschulungsartID = (obj.grundschuleEinschulungsartID === undefined) ? null : obj.grundschuleEinschulungsartID === null ? null : obj.grundschuleEinschulungsartID;
-		result.grundschuleJahreEingangsphase = (obj.grundschuleJahreEingangsphase === undefined) ? null : obj.grundschuleJahreEingangsphase === null ? null : obj.grundschuleJahreEingangsphase;
+		result.idGrundschuleJahreEingangsphase = (obj.idGrundschuleJahreEingangsphase === undefined) ? null : obj.idGrundschuleJahreEingangsphase === null ? null : obj.idGrundschuleJahreEingangsphase;
 		result.kuerzelGrundschuleUebergangsempfehlung = (obj.kuerzelGrundschuleUebergangsempfehlung === undefined) ? null : obj.kuerzelGrundschuleUebergangsempfehlung === null ? null : obj.kuerzelGrundschuleUebergangsempfehlung;
 		result.sekIWechsel = (obj.sekIWechsel === undefined) ? null : obj.sekIWechsel === null ? null : obj.sekIWechsel;
 		result.sekIErsteSchulform = (obj.sekIErsteSchulform === undefined) ? null : obj.sekIErsteSchulform === null ? null : obj.sekIErsteSchulform;
 		result.sekIIWechsel = (obj.sekIIWechsel === undefined) ? null : obj.sekIIWechsel === null ? null : obj.sekIIWechsel;
+		result.idDauerKindergartenbesuch = (obj.idDauerKindergartenbesuch === undefined) ? null : obj.idDauerKindergartenbesuch === null ? null : obj.idDauerKindergartenbesuch;
+		result.idKindergarten = (obj.idKindergarten === undefined) ? null : obj.idKindergarten === null ? null : obj.idKindergarten;
+		if (obj.verpflichtungSprachfoerderkurs === undefined)
+			throw new Error('invalid json format, missing attribute verpflichtungSprachfoerderkurs');
+		result.verpflichtungSprachfoerderkurs = obj.verpflichtungSprachfoerderkurs;
+		if (obj.teilnahmeSprachfoerderkurs === undefined)
+			throw new Error('invalid json format, missing attribute teilnahmeSprachfoerderkurs');
+		result.teilnahmeSprachfoerderkurs = obj.teilnahmeSprachfoerderkurs;
 		if (obj.merkmale !== undefined) {
 			for (const elem of obj.merkmale) {
 				result.merkmale.add(SchuelerSchulbesuchMerkmal.transpilerFromJSON(JSON.stringify(elem)));
@@ -211,11 +239,15 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 		result += '"aufnehmendBestaetigt" : ' + ((obj.aufnehmendBestaetigt === null) ? 'null' : obj.aufnehmendBestaetigt.toString()) + ',';
 		result += '"grundschuleEinschulungsjahr" : ' + ((obj.grundschuleEinschulungsjahr === null) ? 'null' : obj.grundschuleEinschulungsjahr.toString()) + ',';
 		result += '"grundschuleEinschulungsartID" : ' + ((obj.grundschuleEinschulungsartID === null) ? 'null' : obj.grundschuleEinschulungsartID.toString()) + ',';
-		result += '"grundschuleJahreEingangsphase" : ' + ((obj.grundschuleJahreEingangsphase === null) ? 'null' : obj.grundschuleJahreEingangsphase.toString()) + ',';
+		result += '"idGrundschuleJahreEingangsphase" : ' + ((obj.idGrundschuleJahreEingangsphase === null) ? 'null' : obj.idGrundschuleJahreEingangsphase.toString()) + ',';
 		result += '"kuerzelGrundschuleUebergangsempfehlung" : ' + ((obj.kuerzelGrundschuleUebergangsempfehlung === null) ? 'null' : JSON.stringify(obj.kuerzelGrundschuleUebergangsempfehlung)) + ',';
 		result += '"sekIWechsel" : ' + ((obj.sekIWechsel === null) ? 'null' : obj.sekIWechsel.toString()) + ',';
 		result += '"sekIErsteSchulform" : ' + ((obj.sekIErsteSchulform === null) ? 'null' : JSON.stringify(obj.sekIErsteSchulform)) + ',';
 		result += '"sekIIWechsel" : ' + ((obj.sekIIWechsel === null) ? 'null' : obj.sekIIWechsel.toString()) + ',';
+		result += '"idDauerKindergartenbesuch" : ' + ((obj.idDauerKindergartenbesuch === null) ? 'null' : obj.idDauerKindergartenbesuch.toString()) + ',';
+		result += '"idKindergarten" : ' + ((obj.idKindergarten === null) ? 'null' : obj.idKindergarten.toString()) + ',';
+		result += '"verpflichtungSprachfoerderkurs" : ' + obj.verpflichtungSprachfoerderkurs.toString() + ',';
+		result += '"teilnahmeSprachfoerderkurs" : ' + obj.teilnahmeSprachfoerderkurs.toString() + ',';
 		result += '"merkmale" : [ ';
 		for (let i = 0; i < obj.merkmale.size(); i++) {
 			const elem = obj.merkmale.get(i);
@@ -293,8 +325,8 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 		if (obj.grundschuleEinschulungsartID !== undefined) {
 			result += '"grundschuleEinschulungsartID" : ' + ((obj.grundschuleEinschulungsartID === null) ? 'null' : obj.grundschuleEinschulungsartID.toString()) + ',';
 		}
-		if (obj.grundschuleJahreEingangsphase !== undefined) {
-			result += '"grundschuleJahreEingangsphase" : ' + ((obj.grundschuleJahreEingangsphase === null) ? 'null' : obj.grundschuleJahreEingangsphase.toString()) + ',';
+		if (obj.idGrundschuleJahreEingangsphase !== undefined) {
+			result += '"idGrundschuleJahreEingangsphase" : ' + ((obj.idGrundschuleJahreEingangsphase === null) ? 'null' : obj.idGrundschuleJahreEingangsphase.toString()) + ',';
 		}
 		if (obj.kuerzelGrundschuleUebergangsempfehlung !== undefined) {
 			result += '"kuerzelGrundschuleUebergangsempfehlung" : ' + ((obj.kuerzelGrundschuleUebergangsempfehlung === null) ? 'null' : JSON.stringify(obj.kuerzelGrundschuleUebergangsempfehlung)) + ',';
@@ -307,6 +339,18 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 		}
 		if (obj.sekIIWechsel !== undefined) {
 			result += '"sekIIWechsel" : ' + ((obj.sekIIWechsel === null) ? 'null' : obj.sekIIWechsel.toString()) + ',';
+		}
+		if (obj.idDauerKindergartenbesuch !== undefined) {
+			result += '"idDauerKindergartenbesuch" : ' + ((obj.idDauerKindergartenbesuch === null) ? 'null' : obj.idDauerKindergartenbesuch.toString()) + ',';
+		}
+		if (obj.idKindergarten !== undefined) {
+			result += '"idKindergarten" : ' + ((obj.idKindergarten === null) ? 'null' : obj.idKindergarten.toString()) + ',';
+		}
+		if (obj.verpflichtungSprachfoerderkurs !== undefined) {
+			result += '"verpflichtungSprachfoerderkurs" : ' + obj.verpflichtungSprachfoerderkurs.toString() + ',';
+		}
+		if (obj.teilnahmeSprachfoerderkurs !== undefined) {
+			result += '"teilnahmeSprachfoerderkurs" : ' + obj.teilnahmeSprachfoerderkurs.toString() + ',';
 		}
 		if (obj.merkmale !== undefined) {
 			result += '"merkmale" : [ ';

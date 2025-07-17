@@ -1,6 +1,6 @@
 {
 	"index": 170,
-	"version": 2,
+	"version": 4,
 	"fachklassen": [
 		{
 			"schluessel": "101",
@@ -396,6 +396,19 @@
 				"bezeichnungM": "Allgemeine Hochschulreife / Ingenieurwissenschaften",
 				"bezeichnungW": "Allgemeine Hochschulreife / Ingenieurwissenschaften",
 				"gueltigVon": 2014,
+				"gueltigBis": 2024
+			}, {
+				"id": 1701210000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": null,
+				"ebene3": "IW",
+				"bezeichnung": "Allgemeine Hochschulreife / International Business Communication (Betriebswirtschaftslehre Sprachen)",
+				"bezeichnungM": "Allgemeine Hochschulreife / International Business Communication (Betriebswirtschaftslehre Sprachen)",
+				"bezeichnungW": "Allgemeine Hochschulreife / International Business Communication (Betriebswirtschaftslehre Sprachen)",
+				"gueltigVon": 2025,
 				"gueltigBis": null
 			} ]
 		}, {

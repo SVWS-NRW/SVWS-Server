@@ -1,5 +1,5 @@
-import {describe, expect, test} from "vitest";
-import {getApiServer} from "./utils/TestUtils.js";
+import { describe, expect, test } from "vitest";
+import { getApiServer } from "./utils/TestUtils.js";
 
 describe("Schueler Tests ", () => {
 	describe.each([{schema: "GymAbi01"}])('gegen %s', ({schema}) => {
@@ -36,7 +36,7 @@ describe("Schueler Tests ", () => {
 		});
 
 		test("getSchuelerFoerderschwerpunkte", async () => {
-			const result = await api.getSchuelerFoerderschwerpunkte(schema);
+			const result = await api.getKatalogFoerderschwerpunkte(schema);
 			expect(result).toMatchSnapshot();
 		});
 	})

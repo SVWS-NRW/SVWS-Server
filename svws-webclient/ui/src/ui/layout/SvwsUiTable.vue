@@ -1,7 +1,7 @@
 <template>
 	<p v-if="focusSwitchingEnabled && ($slots.search || $slots.filter || $slots.filterAdvanced || toggleColumns)" v-show="focusHelpVisible" class="region-enumeration">3</p>
 	<div v-if="$slots.search || $slots.filter || $slots.filterAdvanced || toggleColumns" class="svws-ui-table-filter focus-region" :class="{'svws-open': $slots.filter && isFilterOpen, 'highlighted': focusHelpVisible}">
-		<div class="flex gap-2 p-0.5 w-full overflow-hidden">
+		<div class="flex gap-2 w-full overflow-hidden">
 			<div class="grow" v-if="$slots.search">
 				<slot name="search" />
 			</div>
@@ -70,7 +70,7 @@
 			<slot name="header" :all-rows-selected="allRowsSelected" :toggle-all-rows="toggleBulkSelection" :columns="columnsComputed">
 				<div role="row" class="svws-ui-tr" :style="getGridTemplateColumns">
 					<div v-if="selectable" class="svws-ui-td svws-align-center" role="columnheader" aria-label="Alle auswählen">
-						<svws-ui-checkbox :model-value="allRowsSelected" :indeterminate="someNotAllRowsSelected" @update:model-value="toggleBulkSelection" :disabled="typeof noData !== 'undefined' ? noData : noDataCalculated" />
+						<svws-ui-checkbox :model-value="allRowsSelected" :indeterminate="someNotAllRowsSelected" @update:model-value="toggleBulkSelection" :disabled="(typeof noData !== 'undefined' ? noData : noDataCalculated) || lockSelectable" />
 					</div>
 					<div v-for="column in columnsComputed" class="svws-ui-td" role="columnheader" :key="column.key" @click.exact="column.sortable && toggleSorting(column)" @keyup.enter="column.sortable && toggleSorting(column)"
 						:class="[
@@ -115,13 +115,13 @@
 					<slot name="rowCustom" :row="row.source">
 						<div class="svws-ui-tr" :style="getGridTemplateColumns" role="row" :key="`table-row_${row}_${index}`" @click.exact="toggleRowClick(row)" :ref="el => itemRefs.set(index, el)"
 							:class="{ 'svws-selected': isRowSelected(row), 'svws-clicked': isRowClicked(row), 'listFocusField': isRowClicked(row) || (multiSelectFocusEnabled && isRowSelected(row)) }" tabindex="0" @keydown.enter="toggleRowClick(row)"
-							@keydown.down.prevent="switchElement($event, itemRefs, index, false)" @keydown.up.prevent="switchElement($event, itemRefs, index, true)">
+							@keydown.down.prevent="switchElement($event, itemRefs, index, false)" @keydown.up.prevent="switchElement($event, itemRefs, index, true)" :data="row.source" :draggable="rowDraggable(row.source)" v-on="rowDragListeners(row.source)">
 							<slot name="row" :row="row.source">
 								<template v-if="selectable">
 									<div v-if="row.selectable" class="svws-ui-td svws-align-center" role="cell" :key="`selectable__${row}_${index}`">
-										<input type="checkbox" :checked="isRowSelected(row)" @input="toggleRowSelection(row)" @click.stop :ref="el => selectionRefs.set(index, el)" @keydown.down.prevent.stop="switchElement($event, selectionRefs, index, false)" @keydown.up.prevent.stop="switchElement($event, selectionRefs, index, true)">
+										<input type="checkbox" :checked="isRowSelected(row)" :disabled="lockSelectable" @input="toggleRowSelection(row)" @click.stop :ref="el => selectionRefs.set(index, el)" @keydown.down.prevent.stop="switchElement($event, selectionRefs, index, false)" @keydown.up.prevent.stop="switchElement($event, selectionRefs, index, true)">
 									</div>
-									<div v-else class="w-6 border-b border-ui" />
+									<div v-else class="w-full border-b border-ui" />
 								</template>
 								<slot name="rowSelectable" :row="row.source">
 									<div class="svws-ui-td" role="cell" v-for="cell in row.cells" :key="`table-cell_${cell.column.key + cell.rowIndex}`"
@@ -158,7 +158,7 @@
 			<slot name="footer" :all-rows-selected="allRowsSelected" :toggle-all-rows="toggleBulkSelection" :rows="sortedRows">
 				<div class="svws-ui-tr" :style="getGridTemplateColumns" role="row">
 					<div v-if="selectable" class="svws-ui-td svws-align-center" role="columnheader" aria-label="Alle auswählen">
-						<svws-ui-checkbox :model-value="allRowsSelected" :indeterminate="someNotAllRowsSelected" @update:model-value="toggleBulkSelection" :disabled="typeof noData !== 'undefined' ? noData : noDataCalculated" />
+						<svws-ui-checkbox :model-value="allRowsSelected" :indeterminate="someNotAllRowsSelected" @update:model-value="toggleBulkSelection" :disabled="(typeof noData !== 'undefined' ? noData : noDataCalculated) || lockSelectable" />
 					</div>
 					<div v-if="count" class="text-sm svws-ui-td font-medium" role="cell">
 						<template v-if="allRowsSelected && modelValue">Alle {{ modelValue.length - selectedItemsNotListed.length - unselectable.size }} ausgewählt<template v-if="selectedItemsNotListed.length > 0">, <svws-ui-button class="m-0.5" type="transparent" size="small" title="Weitere ausgewählte Einträge, die nicht angezeigt werden. Klicken entfernt aus der Liste." @click="unselectAllNotListedRows"><span class="icon-sm i-ri-close-line" />{{ selectedItemsNotListed.length }} Weitere nicht angezeigt</svws-ui-button>, <svws-ui-button type="transparent" size="small" title="Alle ausgwählten Einträge. Klicken, um alle aus der Auswahl zu entfernen." @click="unselectAllRows"><span class="icon-sm i-ri-close-line" />{{ modelValue.length - unselectable.size }}</svws-ui-button> insgesamt</template></template>
@@ -251,6 +251,10 @@
 			focusSwitchingEnabled? : boolean;
 			focusHelpVisible? : boolean;
 			multiSelectFocusEnabled?: boolean;
+			lockSelectable?: boolean;
+			rowDraggable?: (item: DataTableItem) => boolean;
+			rowDragstart?: (event: DragEvent, item: DataTableItem) => void;
+			rowDragend?: (event: DragEvent, item: DataTableItem) => void;
 		}>(),
 		{
 			columns: () => [],
@@ -284,6 +288,10 @@
 			focusSwitchingEnabled: false,
 			focusHelpVisible: false,
 			multiSelectFocusEnabled: false,
+			lockSelectable: false,
+			rowDraggable: () => false,
+			rowDragstart: () => {},
+			rowDragend: () => {},
 		}
 	);
 
@@ -558,5 +566,14 @@
 		else
 			itemRefs.value.get(clickedItemIndex.value)?.focus();
 	});
+
+	function rowDragListeners(row: DataTableItem) {
+		if (!props.rowDraggable(row))
+			return {} // keine Drag-Listener
+		return {
+			dragstart: (event: DragEvent) => props.rowDragstart(event, row),
+			dragend:   (event: DragEvent) => props.rowDragend(event, row),
+		}
+	}
 
 </script>

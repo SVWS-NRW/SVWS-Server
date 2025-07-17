@@ -165,10 +165,9 @@
 
 <script setup lang="ts">
 
-	import {computed, shallowRef, triggerRef} from "vue";
-	import type {StatistikAppProps} from "./SStatistikAppProps";
-	import { type TabData, type DataTableColumn, TabManager } from "@ui";
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
+	import { computed, shallowRef } from "vue";
+	import { type TabData, type DataTableColumn, TabManager, useRegionSwitch } from "@ui";
+	import type { StatistikAppProps } from "./SStatistikAppProps";
 
 	const props = defineProps<StatistikAppProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();

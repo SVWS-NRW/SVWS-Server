@@ -34,6 +34,10 @@ public class FoerderschwerpunktEintrag {
 	@Schema(description = "gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht", example = "true")
 	public boolean istSichtbar;
 
+	/** Die Sortierreihenfolge des Förderschwerpunkt-Eintrags. */
+	@Schema(description = "die Sortierreihenfolge des Förderschwerpunkt-Eintrags", example = "1")
+	public int sortierung;
+
 	/**
 	 * Leerer Standardkonstruktor.
 	 */

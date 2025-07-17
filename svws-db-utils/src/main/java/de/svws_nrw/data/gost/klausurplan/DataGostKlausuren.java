@@ -94,7 +94,7 @@ public final class DataGostKlausuren {
 				jg.kurse.addAll(DataKurse.getKursListenFuerAbschnitt(conn, sja.id, true));
 			}
 			jg.raumdata =
-					new DataGostKlausurenSchuelerklausurraumstunde(conn).getSchuelerklausurraumstundenByTerminids(jg.data.termine.stream().map(t -> t.id).toList());
+					new DataGostKlausurenSchuelerklausurraumstunde(conn).getRaumDataByTerminids(jg.data.termine.stream().map(t -> t.id).toList());
 			data.datacontained.add(jg);
 		}
 
@@ -170,8 +170,8 @@ public final class DataGostKlausuren {
 			if (listKursVorgaben.isEmpty() && !laDaten.isEmpty())
 				missingVorgaben.add(kurs);
 			for (final GostKlausurvorgabe vorgabe : listKursVorgaben) {
-				if (!(mapKursidVorgabeIdKursklausur.containsKey(kurs.ID) && mapKursidVorgabeIdKursklausur.get(kurs.ID).containsKey(vorgabe.idVorgabe))) {
-					final DTOGostKlausurenKursklausuren kursklausur = new DTOGostKlausurenKursklausuren(idNextKursklausur, vorgabe.idVorgabe, kurs.ID);
+				if (!(mapKursidVorgabeIdKursklausur.containsKey(kurs.ID) && mapKursidVorgabeIdKursklausur.get(kurs.ID).containsKey(vorgabe.id))) {
+					final DTOGostKlausurenKursklausuren kursklausur = new DTOGostKlausurenKursklausuren(idNextKursklausur, vorgabe.id, kurs.ID);
 					final List<DTOGostKlausurenSchuelerklausuren> listSk = createSchuelerklausurenZuKursklausur(kursklausur, laDaten);
 					if (!listSk.isEmpty()) {
 						idNextKursklausur++;
@@ -328,7 +328,7 @@ public final class DataGostKlausuren {
 						if (kursklausur == null) {
 							final GostKursklausur kursklausurFehlend = new GostKursklausur();
 							kursklausurFehlend.idKurs = kurs.ID;
-							kursklausurFehlend.idVorgabe = vorgabe.idVorgabe;
+							kursklausurFehlend.idVorgabe = vorgabe.id;
 							fehlendData.data.kursklausuren.add(kursklausurFehlend);
 						} else {
 							final Map<Long, GostSchuelerklausur> mapSks =

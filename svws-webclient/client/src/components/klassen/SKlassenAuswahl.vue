@@ -57,8 +57,7 @@
 	import type { KlassenAuswahlProps } from "./SKlassenAuswahlProps";
 	import type{ JahrgangsDaten, KlassenDaten, LehrerListeEintrag, Schulgliederung } from "@core";
 	import { BenutzerKompetenz } from "@core";
-	import { ViewType } from "@ui";
-	import {useRegionSwitch} from "~/components/useRegionSwitch";
+	import { useRegionSwitch, ViewType } from "@ui";
 
 	const props = defineProps<KlassenAuswahlProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
@@ -134,7 +133,6 @@
 		props.manager().schulgliederungen.auswahlClear();
 		props.manager().lehrer.auswahlClear();
 		props.manager().jahrgaenge.auswahlClear();
-		props.manager().setFilterNurSichtbar(false);
 		await props.setFilter();
 	}
 

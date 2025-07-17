@@ -37,9 +37,8 @@
 
 	import type { JahrgaengeAuswahlProps } from "./SJahrgaengeAuswahlProps";
 	import { computed } from "vue";
-	import { ViewType } from "@ui";
+	import { useRegionSwitch, ViewType } from "@ui";
 	import { BenutzerKompetenz, type JahrgangsDaten, ServerMode } from "@core";
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<JahrgaengeAuswahlProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();

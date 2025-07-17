@@ -9,7 +9,7 @@
 			@mouseenter="activeItemIndex = -1">
 			<li v-if="listEmpty" class="px-2 py-1.5 text-base text-ui-disabled inline-block">
 				<template v-if="!searchText">
-					Keine Einträge gefunden
+					{{ noItemsText }}
 				</template>
 				<template v-else>
 					Keine Ergebnisse für "{{ searchText }}"
@@ -53,6 +53,7 @@
 		floatingLeft?: string;
 		floatingTop?: string;
 		searchText?: string;
+		noItemsText?: string;
 		highlightItem?: Item;
 	}>(),{
 		statistics: false,
@@ -64,6 +65,7 @@
 		strategy: undefined,
 		floatingLeft: '',
 		floatingTop: '',
+		noItemsText: "Keine Einträge gefunden",
 	});
 
 	const floating = ref<HTMLDivElement | null>(null);

@@ -534,6 +534,15 @@ export class Note extends JavaEnum<Note> implements CoreType<NoteKatalogEintrag,
 	}
 
 	/**
+	 * Gibt zurück, ob es sich bei der Note um ein Defizit im Sinne der gymnasialen Oberstufe handelt oder nicht.
+	 *
+	 * @return true, wenn es sich um ein Defizit handelt, und ansonsten false
+	 */
+	public istDefizitSekII() : boolean {
+		return (this as unknown === Note.AUSREICHEND_MINUS as unknown) || (this as unknown === Note.MANGELHAFT_PLUS as unknown) || (this as unknown === Note.MANGELHAFT as unknown) || (this as unknown === Note.MANGELHAFT_MINUS as unknown) || (this as unknown === Note.UNGENUEGEND as unknown);
+	}
+
+	/**
 	 * Gibt die Note als Note der Sekundarstufe I ohne Tendenz als Zahl zurück.
 	 *
 	 * @param schuljahr	Schuljahr, für das der Wert abgefragt wird.

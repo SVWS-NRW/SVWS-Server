@@ -36,7 +36,7 @@
 				<svws-ui-select title="Fahrschüler" :readonly="!hatKompetenzUpdate" v-model="inputFahrschuelerArtID" :items="mapFahrschuelerarten"
 					:item-text="i => i.text ?? ''" removable />
 				<svws-ui-select title="Haltestelle" :readonly="!hatKompetenzUpdate" v-model="inputHaltestelleID" :items="mapHaltestellen"
-					:item-text="i => i.text ?? ''" removable />
+					:item-text="i => i.bezeichnung ?? ''" removable />
 				<svws-ui-text-input placeholder="Anmeldedatum" :readonly="!hatKompetenzUpdate" :model-value="data.anmeldedatum"
 					@change="anmeldedatum => patch({ anmeldedatum : anmeldedatum ?? null })" type="date" removable />
 				<svws-ui-text-input placeholder="Aufnahmedatum" :readonly="!hatKompetenzUpdate" :model-value="data.aufnahmedatum"
@@ -114,6 +114,12 @@
 				<template #cell(telefonnummer)="{ value }">
 					{{ value }}
 				</template>
+				<template #cell(bemerkung)="{ value }">
+					{{ value }}
+				</template>
+				<template #cell(istGesperrt)="{ value }">
+					{{ value ? 'Gesperrt' : 'Nicht gesperrt' }}
+				</template>
 				<template #actions>
 					<div class="inline-flex gap-4">
 						<svws-ui-button @click="deleteTelefonnummern" type="trash" :disabled="selected.length === 0" />
@@ -127,6 +133,16 @@
 					<svws-ui-input-wrapper :grid="2" class="text-left">
 						<svws-ui-select title="Telefonart" :items="mapTelefonArten.values()" v-model="selectedTelefonArt" :item-text="i => i.bezeichnung" />
 						<svws-ui-text-input v-model="newEntryTelefonnummer.telefonnummer" type="text" placeholder="Telefonnummer" :max-len="20" />
+						<svws-ui-tooltip class="col-span-full">
+							<svws-ui-text-input v-model="newEntryTelefonnummer.bemerkung" type="text" placeholder="Bemerkung" />
+							<template #content>
+								{{ newEntryTelefonnummer.bemerkung ?? 'Bemerkung' }}
+							</template>
+						</svws-ui-tooltip>
+						<svws-ui-spacing />
+						<svws-ui-checkbox v-model="newEntryTelefonnummer.istGesperrt" type="checkbox" title="Für Weitergabe gesperrt" class="col-span-full">
+							Für Weitergabe gesperrt
+						</svws-ui-checkbox>
 					</svws-ui-input-wrapper>
 					<svws-ui-notification type="warning" v-if="mapTelefonArten.size === 0">Die Liste der Telefonarten ist leer, es sollte mindestens eine Telefonart unter Schule/Kataloge angelegt werden, damit zusätzliche Telefonnummern eine gültige Zuordnung haben. </svws-ui-notification>
 					<div class="mt-7 flex flex-row gap-4 justify end">
@@ -152,7 +168,7 @@
 					:item-sort="nationalitaetenKatalogEintragSort" :item-filter="nationalitaetenKatalogEintragFilter"
 					:disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && !hatKompetenzUpdate" autocomplete statistics />
 				<svws-ui-select title="Verkehrssprache" v-model="verkehrsprache" autocomplete :items="Verkehrssprache.values()"
-					:item-text="i => `${i.daten.bezeichnung} (${i.daten.kuerzel})`" :item-sort="verkehrsspracheKatalogEintragSort"
+					:item-text="i => `${i.historie().getLast().text} (${i.historie().getLast().iso3})`" :item-sort="verkehrsspracheKatalogEintragSort"
 					:item-filter="verkehrsspracheKatalogEintragFilter" :disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && !hatKompetenzUpdate" class="col-span-full" statistics />
 				<svws-ui-select title="Geburtsland Mutter" v-model="geburtslandMutter" :items="Nationalitaeten.values()"
 					:item-text="i => `${i.historie().getLast().bezeichnung} (${i.historie().getLast().iso3})`" :item-sort="nationalitaetenKatalogEintragSort"
@@ -169,7 +185,7 @@
 
 	import { computed, ref } from "vue";
 	import type { SchuelerIndividualdatenProps } from "./SSchuelerIndividualdatenProps";
-	import type { SchuelerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, KatalogEintrag, SchulEintrag, TelefonArt } from "@core";
+	import type { SchuelerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, KatalogEintrag, SchulEintrag, TelefonArt, Haltestelle } from "@core";
 	import { SchuelerStatus, Schulform, Nationalitaeten, Geschlecht, AdressenUtils, Verkehrssprache, BenutzerKompetenz, DateUtils, SchuelerTelefon, ServerMode, ArrayList } from "@core";
 	import { verkehrsspracheKatalogEintragFilter, verkehrsspracheKatalogEintragSort, nationalitaetenKatalogEintragFilter, nationalitaetenKatalogEintragSort,
 		staatsangehoerigkeitKatalogEintragSort, staatsangehoerigkeitKatalogEintragFilter, orte_sort, orte_filter, ortsteilSort, ortsteilFilter } from "~/utils/helfer";
@@ -196,6 +212,8 @@
 	const columns: DataTableColumn[] = [
 		{ key: "idTelefonArt", label: "Ansprechpartner" },
 		{ key: "telefonnummer", label: "Telefonnummern" },
+		{ key: "bemerkung", label: "Bemerkung", span: 2 },
+		{ key: "istGesperrt", label: "Gesperrt", span: 1, align: "right" },
 	]
 
 	function getBezeichnungTelefonart(idTelefonArt: number): string {
@@ -232,6 +250,8 @@
 		newEntryTelefonnummer.value.id = telefonnummer.id;
 		newEntryTelefonnummer.value.idTelefonArt = telefonnummer.idTelefonArt;
 		newEntryTelefonnummer.value.telefonnummer = telefonnummer.telefonnummer;
+		newEntryTelefonnummer.value.bemerkung = telefonnummer.bemerkung;
+		newEntryTelefonnummer.value.istGesperrt = telefonnummer.istGesperrt;
 		openModalTelefonnummer();
 	}
 
@@ -363,8 +383,8 @@
 	});
 
 	const verkehrsprache = computed<Verkehrssprache>({
-		get: () => Verkehrssprache.getByKuerzelAuto(data.value.verkehrspracheFamilie) || Verkehrssprache.DEU,
-		set: (value) => void props.patch({ verkehrspracheFamilie: value.daten.kuerzel }),
+		get: () => Verkehrssprache.getByIsoKuerzel(data.value.verkehrspracheFamilie) || Verkehrssprache.data().getWertBySchluesselOrException("de"),
+		set: (value) => void props.patch({ verkehrspracheFamilie: value.historie().getLast().iso3 }),
 	});
 
 	const inputStammschule = computed<SchulEintrag | undefined>({
@@ -380,7 +400,7 @@
 		set: (value) => void props.patch({ fahrschuelerArtID: value === undefined ? null : value.id }),
 	});
 
-	const inputHaltestelleID = computed<KatalogEintrag | undefined>({
+	const inputHaltestelleID = computed<Haltestelle | undefined>({
 		get: () => {
 			const id = data.value.haltestelleID;
 			return id === null ? undefined : props.mapHaltestellen.get(id)

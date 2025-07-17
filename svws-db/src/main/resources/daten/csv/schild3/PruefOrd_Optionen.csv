@@ -446,7 +446,7 @@ OP_Schulformen;OP_POKrz;OP_Krz;OP_Abgangsart_B;OP_Abgangsart_NB;OP_Art;OP_Typ;OP
 -BK-SB-;APO-BK-03/E-SozPäd;APO-BK-03/E-SozW-SozPäd/BAB;null;null;A;null;B;BAB: Berufsabschluss nach APO-BK-03, Anl.E, § 8, 30;E, § 6(2), 8;-03-;-23-;-E05-;1;null;null
 -BK-SB-;APO-BK-99/E-HeilerzP;APO-BK-99/E-Heilerz.Pflege/BAB-FP;null;null;A;null;B;fachpraktische Prüfung nach APO-BK-99, Anl.E, § 40;E, § 33 - 37, 65 - 73;-01-02-03-04-05-06-;-23-;-E05-E07-;1;null;null
 -BK-SB-;APO-BK-11/D-BAB;APO-BK-11/D-BAB/BAB-FP;null;null;A;null;B;fachpraktische Prüfung der Berufsabschlussprüfung für Erz. nach APO-BK-11, Anl.D, § 42, 43;D, § 28-40;-05-;-16-;-D01-;1;null;null
--BK-SB-;APO-BK-15/A-AV;APO-BK-15/A-AV/BK;1A;null;A;null;B;BK: berufliche Kenntnisse, Fähigkeiten und Fertigkeiten nach APO-BK-15, Anl.A;A, § 19;-01-;-4-;-A12-A13-;0;null;null
+-BK-SB-;APO-BK-15/A-AV;APO-BK-15/A-AV/BK;1A;null;A;null;B;BK: berufliche Kenntnisse, Fähigkeiten und Fertigkeiten nach APO-BK-15, Anl.A;A, § 19;-01-;-4-;-A12-A13-A17-A18-A19-;0;null;null
 -BK-SB-;APO-BK-99/D-BAB;APO-BK-99/D-BAB/BAB2;null;null;A;null;B;2. Teilprüfung der Berufsabschlussprüfung (nicht Erz.) nach APO-BK-99, Anl.D, § 35-38;D, § 35-38;-04-;-16-;-D01-;1;null;null
 -BK-SB-;APO-BK-15/A-FK;APO-BK-15/A-FK/FGO;3G;null;A;null;A;FORQ: Sekundarabschluss I - Fachoberschulreife mit Berechtigung zum Besuch der gymnasialen Oberstufe - APO-BK-15, Anl. A;A,§ 9(5);-02-03-04-;-1-;-A01-A02-A03-A04-A16-;0;null;null
 -BK-SB-;APO-BK-15/C-FOS;APO-BK-15/C-FOS/V;null;null;V;null;A;Versetzung nach APO-BK-15;§ 10;-01-;-14-;-C05-;1;null;null
@@ -481,7 +481,7 @@ OP_Schulformen;OP_POKrz;OP_Krz;OP_Abgangsart_B;OP_Abgangsart_NB;OP_Art;OP_Typ;OP
 -BK-SB-;APO-BK-99/E-Informat;APO-BK-99/E-Informatik/BAB;null;null;A;null;B;BAB: Berufsabschluss nach APO-BK-99, Anl.E, § 62, 63, 65 - 73;E, § 62, 63, 65 - 73;-01-02-03-04-;-25-26-;-E09-E10-;1;null;null
 -BK-SB-;APO-BK-15/E-Agrar-1;APO-BK-15/E-Agrar-1200/BAB-II;null;null;A;null;B;BAB: Berufsabschluss Stufe II  nach APO-BK-15, Anl.E;E, § 20;-02-;-22-;-E04-;1;null;null
 -BK-SB-;APO-BK-15/A-AV;APO-BK-15/A-AV/BA;5A;null;A;null;A;Berufsabschluss (für Schüler, die die Qualifikation des Hauptschulabschlusses der Klasse 10 oder einen höheren Abschluss schon haben) nach APO-BK-15, Anl.A;A;-01-02-;-4-;-A10-A11-A14-A15-A16-;0;null;null
--BK-SB-;APO-BK-15/A-AV;APO-BK-15/A-AV/ESA_12/13;1B;null;A;null;A;ESA: Erster Schulabschluss nach APO-BK-15, Anl.A;A, § 19;-01-;-4-;-A12-A13-;1;null;null
+-BK-SB-;APO-BK-15/A-AV;APO-BK-15/A-AV/ESA_12/13;1B;null;A;null;A;ESA: Erster Schulabschluss nach APO-BK-15, Anl.A;A, § 19;-01-;-4-;-A12-A13-A17-A18-A19-;1;null;null
 -BK-SB-;APO-BK-15/E-Gestalt;APO-BK-15/E-Gestaltung/MSA;null;null;A;null;A;MSA: Sekundarabschluss I - Mittlerer Schulabschluss - nach APO-BK-15, Anl.E;E, § 6(1);-02-;-21-;-E02-;1;null;null
 -BK-SB-;APO-BK-99/E-Agrar-2J;APO-BK-99/E-Agrar-2J/BAB;null;null;A;null;B;BAB: Berufsabschluss nach APO-BK-99, Anl.E, § 21, 65 - 73, § 76;E, § 21, 65 - 73;-01-02-03-04-;-21-;-E01-E02-;1;null;null
 -BK-SB-;APO-BK-11/C-BFS-BAB;APO-BK-11/C-BFS-BAB/FHR;0H;null;A;null;A;FHR: Fachhochschulreife nach APO-BK-11, Anl.C, § 12 (1)-(6);C, § 12 (1)-(6);-03-;-10-;-C01-;1;null;null

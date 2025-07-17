@@ -1,5 +1,5 @@
-import {describe, expect, test} from "vitest";
-import {getApiService} from "../../utils/RequestBuilder.js"
+import { describe, expect, test } from "vitest";
+import { getApiService } from "../../utils/RequestBuilder.js"
 
 const targetUrlENMServer: string = process.env.VITE_ENM_targetHost ?? "https://localhost";
 

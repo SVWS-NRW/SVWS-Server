@@ -1,5 +1,6 @@
 <template>
 	<Story title="Card" id="ui-card" icon="ri:window-2-fill" :layout="{ type: 'single', iframe: false }" auto-props-disabled>
+		<template #docs><Docs /></template>
 		<Variant title="Collapsible" id="Collapsible" :responsive-disabled="false">
 			<div class="p-4">
 				<ui-card :compact="state.compact" :is-open="state.isOpen" :collapsible="true" :collapse-icon-position="state.iconPosition"
@@ -147,6 +148,7 @@
 
 	import { reactive } from 'vue';
 	import { ValidatorFehlerart } from '../../../../core/src/asd/validate/ValidatorFehlerart';
+	import Docs from './UiCard.story.md'
 
 	const onEdit = () => alert("Bearbeiten");
 	const onSave = () => alert("Speichern");

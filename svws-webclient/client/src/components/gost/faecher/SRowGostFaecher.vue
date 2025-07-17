@@ -72,7 +72,7 @@
 	import type { ComputedRef, WritableComputedRef } from "vue";
 	import { computed } from "vue";
 	import type { List, GostFach, GostFaecherManager} from "@core";
-	import { ServerMode, ArrayList, DeveloperNotificationException, Fachgruppe, Jahrgaenge, Fach } from "@core";
+	import { ServerMode, ArrayList, DeveloperNotificationException, Fachgruppe, Jahrgaenge, Fach, AbiturdatenManager } from "@core";
 
 	const props = defineProps<{
 		serverMode: ServerMode;
@@ -154,7 +154,7 @@
 
 	const abi_gk_moeglich: ComputedRef<boolean> = computed(() => {
 		const fg = Fach.getBySchluesselOrDefault(fach.value.kuerzel).getFachgruppe(schuljahr.value);
-		if (ServerMode.DEV.checkServerMode(props.serverMode) && (props.abiturjahr >= 2029)) // experimenteller Code
+		if (AbiturdatenManager.nutzeExperimentellenCode(props.serverMode, props.abiturjahr)) // experimenteller Code
 			return (fg !== Fachgruppe.FG_ME) && (fg !== Fachgruppe.FG_VX);
 		return (fg !== Fachgruppe.FG_ME) && (fg !== Fachgruppe.FG_VX) && (fg !== Fachgruppe.FG_PX);
 	});

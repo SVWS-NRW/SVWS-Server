@@ -1,4 +1,5 @@
 import { BaseApi, type ApiFile } from "@core/api/BaseApi";
+import { Schulform } from "@core/asd/types/schule/Schulform";
 import { BenutzerConfig } from "@core/core/data/benutzer/BenutzerConfig";
 import { ENMLeistung } from "@core/core/data/enm/ENMLeistung";
 import { ENMLeistungBemerkungen } from "@core/core/data/enm/ENMLeistungBemerkungen";
@@ -32,10 +33,28 @@ export class ApiEnmServer extends BaseApi {
 	 *   Code 401: Die Authentifzierung des Benutzers ist fehlgeschlagen
 	 *   Code 500: Ein interner Fehler im ENM-Server ist aufgetreten.
 	 *
-	 * @returns die GZip-komprimierte ENM-JSON-Datei
+	 * @returns der Server-Mode
 	 */
 	public async getServerMode() : Promise<ServerMode> {
 		return ServerMode.getByText(await super.getText("/api/mode"));
+	}
+
+	/**
+	 * Implementierung der GET-Methode getSchulform für den Zugriff auf die URL https://{hostname}/api/schulform
+	 *
+	 * Liest die Schulform aus, für welche die Daten auf dem Server vorliegen.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Ein String, mit der Schulform. Diese wird direkt in das zugehörige Objekt umgewandelt.
+	 *     - Mime-Type: text/plain
+	 *     - Rückgabe-Typ: Schulform
+	 *   Code 401: Die Authentifzierung des Benutzers ist fehlgeschlagen
+	 *   Code 500: Ein interner Fehler im ENM-Server ist aufgetreten.
+	 *
+	 * @returns die Schulform oder null, falls der Server ein ungültiges Schulform-Kürzel geliefert hat
+	 */
+	public async getSchulform() : Promise<Schulform | null> {
+		return Schulform.data().getWertByKuerzel(await super.getText("/api/schulform"));
 	}
 
 	/**

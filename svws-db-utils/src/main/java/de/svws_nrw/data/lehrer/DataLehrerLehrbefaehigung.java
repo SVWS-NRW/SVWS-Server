@@ -4,9 +4,11 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.svws_nrw.asd.data.lehrer.LehrerLehramtKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerLehrbefaehigungAnerkennungKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerLehrbefaehigungEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerLehrbefaehigungKatalogEintrag;
+import de.svws_nrw.asd.types.lehrer.LehrerLehramt;
 import de.svws_nrw.asd.types.lehrer.LehrerLehrbefaehigung;
 import de.svws_nrw.asd.types.lehrer.LehrerLehrbefaehigungAnerkennung;
 import de.svws_nrw.data.DataManager;
@@ -35,6 +37,9 @@ public final class DataLehrerLehrbefaehigung extends DataManager<Long> {
 		final int schuljahr = conn.getUser().schuleGetSchuljahr();
 		final LehrerLehrbefaehigungEintrag daten = new LehrerLehrbefaehigungEintrag();
 		daten.id = l.Lehrer_ID;
+		final LehrerLehramt lehramt = LehrerLehramt.data().getWertByKuerzel(l.LehramtKrz);
+		final LehrerLehramtKatalogEintrag eintragLehramt = (lehramt == null) ? null : lehramt.daten(schuljahr);
+		daten.idLehramt = (eintragLehramt == null) ? -1 : eintragLehramt.id;
 		final LehrerLehrbefaehigung lehrbefaehigung = LehrerLehrbefaehigung.data().getWertByKuerzel(l.LehrbefKrz);
 		final LehrerLehrbefaehigungKatalogEintrag eintragLehrbefaehigung = (lehrbefaehigung == null) ? null : lehrbefaehigung.daten(schuljahr);
 		daten.idLehrbefaehigung = (eintragLehrbefaehigung == null) ? -1 : eintragLehrbefaehigung.id;
@@ -62,7 +67,7 @@ public final class DataLehrerLehrbefaehigung extends DataManager<Long> {
 	 *
 	 * @return die Liste mit den Lehrbefähigungen
 	 */
-	public static List<LehrerLehrbefaehigungEintrag> getByLehrerId(final DBEntityManager conn, final Long idLehrer) {
+	public static List<LehrerLehrbefaehigungEintrag> getListByLehrerId(final DBEntityManager conn, final Long idLehrer) {
 		final List<LehrerLehrbefaehigungEintrag> result = new ArrayList<>();
 		// Bestimme die Lehrbefähigungen des Lehrers
 		final List<DTOLehrerLehramtBefaehigung> daten =

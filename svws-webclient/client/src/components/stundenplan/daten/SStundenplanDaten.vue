@@ -3,7 +3,7 @@
 		<div class="h-full overflow-y-auto w-full xl:w-1/2 flex flex-col gap-8 pr-4">
 			<div class="content-card" v-if="manager().hasDaten()">
 				<div class="content-card--header content-card--headline">Allgemein</div>
-				<div class="content-card--content content-card--content--with-title input-wrapper grid-cols-2">
+				<div class="content-card--content input-wrapper grid-cols-2">
 					<div class="flex gap-1"><svws-ui-checkbox type="toggle" :disabled="(!manager().auswahl().aktiv && !manager().istKonfliktfreiZuAktivenStundenplaenen(gueltigData.gueltigAb, gueltigData.gueltigBis))" :model-value="manager().daten().isAktiv()" @update:model-value="handleChangeAktiv" />Stundenplan aktiv</div>
 					<svws-ui-text-input class="contentFocusField" :disabled="!hatUpdateKompetenz" placeholder="Bezeichnung" :model-value="manager().daten().getBezeichnungStundenplan()" :valid="StundenplanListeManager.validateBezeichnung" @change="bezeichnungStundenplan=> bezeichnungStundenplan && patch({ bezeichnungStundenplan })" />
 					<div v-if="hatUpdateKompetenz" :class="{'flex gap-2': showExtraWTM}">
@@ -23,7 +23,7 @@
 				</svws-ui-table>
 			</ui-card>
 			<ui-card icon="i-ri-archive-line" title="Räume" :is-open="actionRaeume" @update:is-open="isOpen => actionRaeume = isOpen">
-				<svws-ui-table :columns="colsRaeume" :items="listRaeume" v-model:clicked="raum" :selectable="hatUpdateKompetenz" v-model="selectedRaeume" :count="listRaeume.length > 0">
+				<svws-ui-table :columns="colsRaeume" :items="listStundenplanRaeume" v-model:clicked="raum" :selectable="hatUpdateKompetenz" v-model="selectedRaeume" :count="listStundenplanRaeume.length > 0">
 					<template #cell(kuerzel)="{ rowData }">
 						<svws-ui-text-input :disabled="!hatUpdateKompetenz" :model-value="rowData.kuerzel" @change="kuerzel => (kuerzel !== null) && patchRaum({kuerzel}, rowData.id)" headless required />
 					</template>
@@ -35,7 +35,7 @@
 					</template>
 					<template #actions v-if="hatUpdateKompetenz">
 						<svws-ui-button @click="gotoKatalog('raeume')" type="transparent" title="Räume im Katalog bearbeiten"><span class="icon i-ri-link" /> Katalog bearbeiten</svws-ui-button>
-						<s-card-stundenplan-import-raeume-modal v-slot="{ openModal }" :import-raeume="importRaeume" :list-raeume="raeume">
+						<s-card-stundenplan-import-raeume-modal v-slot="{ openModal }" :raeume-sync-to-stundenplan :raeume-sync-to-vorlage :list-raeume :manager>
 							<svws-ui-button @click="openModal" type="transparent" title="Räume importieren"><span class="icon i-ri-archive-line" /> Aus Katalog importieren</svws-ui-button>
 						</s-card-stundenplan-import-raeume-modal>
 						<svws-ui-button @click="delRaeume" type="trash" :disabled="!selectedRaeume.length" />
@@ -64,7 +64,7 @@
 						</template>
 						<template #actions v-if="hatUpdateKompetenz">
 							<svws-ui-button @click="gotoKatalog('pausenzeiten')" type="transparent" title="Pausenzeiten im Katalog bearbeiten"><span class="icon i-ri-link" /> Katalog bearbeiten</svws-ui-button>
-							<s-card-stundenplan-import-pausenzeiten-modal v-slot="{ openModal }" :import-pausenzeiten :list-pausenzeiten="listPausenzeitenRest">
+							<s-card-stundenplan-import-pausenzeiten-modal v-slot="{ openModal }" :list-pausenzeiten :manager :pausenzeiten-sync-to-vorlage :pausenzeiten-sync-to-stundenplan>
 								<svws-ui-button @click="openModal" type="transparent" title="Pausenzeiten importieren"><span class="icon i-ri-archive-line" /> Aus Katalog importieren</svws-ui-button>
 							</s-card-stundenplan-import-pausenzeiten-modal>
 							<svws-ui-button @click="delPausenzeiten" type="trash" :disabled="!selectedPausenzeiten.length" />
@@ -84,7 +84,7 @@
 				</div>
 			</ui-card>
 			<ui-card icon="i-ri-archive-line" title="Aufsichtsbereiche" :is-open="actionAufsichtsbereiche" @update:is-open="isOpen => actionAufsichtsbereiche = isOpen">
-				<svws-ui-table :columns="colsAufsichtsbereiche" :items="listAufsichtsbereiche" v-model:clicked="bereich" :selectable="hatUpdateKompetenz" v-model="selectedAufsichtsbereiche" :count="listAufsichtsbereiche.length > 0">
+				<svws-ui-table :columns="colsAufsichtsbereiche" :items="listStundenplanAufsichtsbereiche" v-model:clicked="bereich" :selectable="hatUpdateKompetenz" v-model="selectedAufsichtsbereiche" :count="listAufsichtsbereiche.length > 0">
 					<template #cell(kuerzel)="{ rowData }">
 						<svws-ui-text-input :disabled="!hatUpdateKompetenz" :model-value="rowData.kuerzel" @change="kuerzel => (kuerzel !== null) && patchAufsichtsbereich({kuerzel}, rowData.id)" headless />
 					</template>
@@ -93,12 +93,12 @@
 					</template>
 					<template #actions v-if="hatUpdateKompetenz">
 						<svws-ui-button @click="gotoKatalog('aufsichtsbereiche')" type="transparent" title="Aufsichtsbereiche im Katalog bearbeiten"><span class="icon i-ri-link" /> Katalog bearbeiten</svws-ui-button>
-						<s-card-stundenplan-import-aufsichtsbereiche-modal v-slot="{ openModal }" :list-aufsichtsbereiche="listAufsichtsbereicheRest" :import-aufsichtsbereiche="importAufsichtsbereiche">
-							<svws-ui-button @click="openModal()" type="transparent" title="Aufsichtsbereiche importieren"><span class="icon i-ri-archive-line" /> Aus Katalog importieren</svws-ui-button>
+						<s-card-stundenplan-import-aufsichtsbereiche-modal v-slot="{ openModal }" :list-aufsichtsbereiche :manager :aufsichtsbereiche-sync-to-vorlage :aufsichtsbereiche-sync-to-stundenplan>
+							<svws-ui-button @click="openModal" type="transparent" title="Aufsichtsbereiche importieren"><span class="icon i-ri-archive-line" /> Aus Katalog importieren</svws-ui-button>
 						</s-card-stundenplan-import-aufsichtsbereiche-modal>
 						<svws-ui-button @click="delAufsichtsbereiche" type="trash" :disabled="!selectedAufsichtsbereiche.length" />
 						<s-card-stundenplan-add-aufsichtsbereich-modal v-slot="{ openModal }" :add-aufsichtsbereich>
-							<svws-ui-button @click="openModal()" type="icon" title="Aufsichtsbereich hinzufügen"> <span class="icon i-ri-add-line" /> </svws-ui-button>
+							<svws-ui-button @click="openModal" type="icon" title="Aufsichtsbereich hinzufügen"> <span class="icon i-ri-add-line" /> </svws-ui-button>
 						</s-card-stundenplan-add-aufsichtsbereich-modal>
 					</template>
 				</svws-ui-table>
@@ -114,7 +114,7 @@
 	import type { StundenplanDatenProps } from "./SStundenplanDatenProps";
 	import type { DataTableColumn, SortByAndOrder } from "@ui";
 	import { SvwsUiSelect } from "@ui";
-	import type { StundenplanRaum, Raum, StundenplanAufsichtsbereich, StundenplanPausenzeit, Stundenplan } from "@core";
+	import type { StundenplanRaum, StundenplanAufsichtsbereich, StundenplanPausenzeit, Stundenplan } from "@core";
 	import { ArrayList, BenutzerKompetenz, DateUtils, Wochentag, ValidatorFehlerart, StundenplanListeManager } from "@core";
 
 	const props = defineProps<StundenplanDatenProps>();
@@ -226,7 +226,8 @@
 
 	const raum = ref<StundenplanRaum | undefined>();
 	const selectedRaeume = ref<StundenplanRaum[]>([]);
-	const listRaeume = computed(() => [...props.manager().daten().raumGetMengeAsList()]);
+	const listStundenplanRaeume = computed(() => [...props.manager().daten().raumGetMengeAsList()]);
+	const listStundenplanAufsichtsbereiche = computed(() => props.manager().daten().aufsichtsbereichGetMengeAsList());
 
 	async function delRaeume() {
 		await props.removeRaeume(selectedRaeume.value);
@@ -238,15 +239,6 @@
 		{key: 'beschreibung', label: 'Beschreibung', span: 3},
 		{key: 'groesse', label: 'Größe', span: 1},
 	]
-
-	const raeume = computed(() => {
-		const moeglich = new ArrayList<Raum>();
-		for (const e of props.listRaeume())
-			if (!props.manager().daten().raumExistsByKuerzel(e.kuerzel))
-				moeglich.add(e);
-		return moeglich;
-	})
-
 
 	const zeit = ref<StundenplanPausenzeit | undefined>();
 	const selectedPausenzeiten = ref<StundenplanPausenzeit[]>([]);
@@ -318,20 +310,10 @@
 	const bereich = ref<StundenplanAufsichtsbereich | undefined>();
 	const selectedAufsichtsbereiche = ref<StundenplanAufsichtsbereich[]>([]);
 
-	const listAufsichtsbereiche = computed(() => [...props.manager().daten().aufsichtsbereichGetMengeAsList()]);
-
 	const colsAufsichtsbereiche = [
 		{key: 'kuerzel', label: 'Kürzel', span: 1},
 		{key: 'beschreibung', label: 'Beschreibung', span: 3},
 	]
-
-	const listAufsichtsbereicheRest = computed(() => {
-		const moeglich = new ArrayList<StundenplanAufsichtsbereich>();
-		for (const e of props.listAufsichtsbereiche())
-			if (!props.manager().daten().aufsichtsbereichExistsByKuerzel(e.kuerzel))
-				moeglich.add(e);
-		return moeglich;
-	})
 
 	async function delAufsichtsbereiche() {
 		await props.removeAufsichtsbereiche(selectedAufsichtsbereiche.value);

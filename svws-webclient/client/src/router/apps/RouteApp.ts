@@ -22,10 +22,10 @@ import { routeSchuleJahrgaenge } from "~/router/apps/schule/jahrgaenge/RouteSchu
 import { routeSchuleFaecher } from "~/router/apps/schule/faecher/RouteSchuleFaecher";
 import { routeSchuleBetriebe } from "./schule/betriebe/RouteSchuleBetriebe";
 import { routeKatalogEinwilligungsarten } from "./schule/einwilligungsarten/RouteKatalogEinwilligungsarten";
-import { routeKatalogFoerderschwerpunkte } from "./schule/foerderschwerpunkte/RouteKatalogFoerderschwerpunkte";
 import { routeKatalogReligionen } from "./schule/religionen/RouteKatalogReligionen";
 import { routeKatalogSchulen } from "./schule/schulen/RouteKatalogSchulen";
 import { routeKatalogTelefonArten } from "~/router/apps/schule/telefonarten/RouteKatalogTelefonArten";
+import { routeKatalogErzieherarten } from "~/router/apps/schule/erzieherarten/RouteKatalogErzieherarten";
 import { routeKatalogVermerkarten } from "./schule/vermerkarten/RouteKatalogVermerkarten";
 import { routeKatalogLernplattformen } from "~/router/apps/schule/lernplattformen/RouteKatalogLernplattformen";
 import { routeEinstellungen } from "./einstellungen/RouteEinstellungen";
@@ -37,9 +37,20 @@ import { routeSchuleDatenaustauschENM } from "./schule/datenaustausch/RouteSchul
 import { routeSchuleDatenaustauschLaufbahnplanung } from "./schule/datenaustausch/RouteSchuleDatenaustauschLupo";
 import { routeSchuleDatenaustauschSchulbewerbung } from "./schule/datenaustausch/RouteSchuleDatenaustauschSchulbewerbung";
 import { routeSchuleDatenaustauschWenom } from "./schule/datenaustausch/RouteSchuleDatenaustauschWenom";
+import { routeSchuleDatenaustauschLernplattformen } from "~/router/apps/schule/datenaustausch/lernplattformen/RouteSchuleDatenaustauschLernplattformen";
 import { routeSchuleStammdaten } from "./schule/RouteSchuleStammdaten";
 import { routeSchuleReporting } from "./schule/reporting/RouteSchuleReporting";
 import { routeAbteilungen } from "~/router/apps/schule/abteilungen/RouteAbteilungen";
+import { routeEntlassgruende } from "~/router/apps/schule/entlassgruende/RouteEntlassgruende";
+import { routeMerkmale } from "~/router/apps/schule/merkmale/RouteMerkmale";
+import { routeKindergaerten } from "~/router/apps/schule/kindergaerten/RouteKindergaerten";
+import { routeFoerderschwerpunkte } from "~/router/apps/schule/foerderschwerpunkte/RouteFoerderschwerpunkte";
+import { routeNotenmodul } from "./notenmodul/RouteNotenmodul";
+import { routeNotenmodulLeistungen } from "./notenmodul/RouteNotenmodulLeistungen";
+import { routeNotenmodulKlassenleitung } from "./notenmodul/RouteNotenmodulKlassenleitung";
+import { routeNotenmodulTeilleistungen } from "./notenmodul/RouteNotenmodulTeilleistungen";
+import { routeSportbefreiungen } from "~/router/apps/schule/sportbefreiungen/RouteSportbefreiungen";
+import { routeHaltestellen } from "~/router/apps/schule/haltestellen/RouteHaltestellen";
 import SApp from "~/components/SApp.vue";
 
 
@@ -84,6 +95,22 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		return this.menuSchule.map(c => c.hidden(routerManager.getRouteParams()) !== false);
 	}
 
+	/** Die Knoten, welche im Menu Notenmodul zur Verfügung gestellt werden */
+	// TODO in abstrahierter Form in RouteNode integrieren...
+	private _menuNotenmodul: RouteNode<any, any>[];
+	public get menuNotenmodul() : RouteNode<any, any>[] {
+		const result: RouteNode<any, any>[] = [];
+		for (const node of this._menuNotenmodul) {
+			if (api.authenticated && (!node.mode.checkServerMode(api.mode) || !node.hatSchulform() || !node.hatEineKompetenz()))
+				continue;
+			result.push(node);
+		}
+		return result;
+	}
+	public menuNotenmodulHidden() : boolean[] {
+		return this.menuNotenmodul.map(c => c.hidden(routerManager.getRouteParams()) !== false);
+	}
+
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "app", "/:schema?/:idSchuljahresabschnitt(\\d+)?", SApp, new RouteDataApp());
 		super.mode = ServerMode.STABLE;
@@ -96,6 +123,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeLehrer,
 			routeKlassen,
 			routeKurse,
+			routeNotenmodul,
 			routeGost,
 			routeStatistik,
 			routeStundenplan,
@@ -111,12 +139,18 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeAbteilungen,
 			routeSchuleBetriebe,
 			routeKatalogEinwilligungsarten,
+			routeEntlassgruende,
 			routeSchuleFaecher,
-			routeKatalogFoerderschwerpunkte,
+			routeFoerderschwerpunkte,
 			routeSchuleJahrgaenge,
+			routeMerkmale,
+			routeSportbefreiungen,
 			routeKatalogVermerkarten,
 			routeKatalogLernplattformen,
 			// Allgemein
+			routeKatalogErzieherarten,
+			routeHaltestellen,
+			routeKindergaerten,
 			routeKatalogReligionen,
 			routeKatalogSchulen,
 			routeKatalogTelefonArten,
@@ -127,12 +161,19 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeSchuleDatenaustauschLaufbahnplanung,
 			routeSchuleDatenaustauschKurs42,
 			routeSchuleDatenaustauschUntis,
+			routeSchuleDatenaustauschLernplattformen,
 			// Reporting
 			routeSchuleReporting,
 		];
+		this._menuNotenmodul = [
+			routeNotenmodulLeistungen,
+			routeNotenmodulTeilleistungen,
+			routeNotenmodulKlassenleitung,
+		]
 		super.children = [
 			...this._menuMain,
 			...this._menuSchule,
+			...this._menuNotenmodul,
 			...this._menuEinstellungen,
 		];
 		super.menu = this._menuMain;
@@ -176,6 +217,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			username: api.username,
 			schemaname: api.schema,
 			schulform: api.schulform,
+			servermode: api.mode,
 			schuleStammdaten: api.schuleStammdaten,
 			// Props für die Navigation
 			menu: this.getMenuManager(),
@@ -183,7 +225,8 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			apiStatus: api.status,
 			tabManagerSchule: this.getTabManagerSchule,
 			tabManagerEinstellungen: this.getTabManagerEinstellungen,
-			schuljahresabschnittsauswahl: () => this.data.getSchuljahresabschnittsauswahl(false),
+			tabManagerNotenmodul: this.getTabManagerNotenmodul,
+			schuljahresabschnittsauswahl: () => this.data.getSchuljahresabschnittsauswahl(true),
 		};
 	}
 
@@ -215,6 +258,8 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			node = this.menuEinstellungen.at(0);
 		else if (node === routeSchule)
 			node = this.menuSchule.at(0);
+		else if (node === routeNotenmodul)
+			node = this.menuNotenmodul.at(0);
 		if (node === undefined)
 			return;
 		const result = await RouteManager.doRoute(node.getRoute());
@@ -226,6 +271,8 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		const submenuManager = new Array<{name: string, manager: TabManager}>();
 		if (routeSchule.hidden() === false)
 			submenuManager.push({ name: "schule", manager: this.getTabManagerSchule() });
+		if ((routeNotenmodul.hidden() === false) && (api.mode === ServerMode.DEV))
+			submenuManager.push({ name: "notenmodul", manager: this.getTabManagerNotenmodul() });
 		if (routeEinstellungen.hidden() === false)
 			submenuManager.push({ name: "einstellungen", manager: this.getTabManagerEinstellungen() });
 		return new AppMenuManager(this.getTabManager(), submenuManager, this.getApp());
@@ -241,6 +288,10 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 
 	private getTabManagerSchule = () : TabManager => {
 		return this.createTabManager(this.menuSchule, this.menuSchuleHidden(), this.data.view.name, this.setTab, ViewType.DEFAULT);
+	}
+
+	private getTabManagerNotenmodul = () : TabManager => {
+		return this.createTabManager(this.menuNotenmodul, this.menuNotenmodulHidden(), this.data.view.name, this.setTab, ViewType.DEFAULT);
 	}
 
 	private setTab = async (value: TabData) => {

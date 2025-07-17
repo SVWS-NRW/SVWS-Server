@@ -61,7 +61,7 @@
 <script setup lang="ts">
 
 	import { ref } from 'vue';
-	import { logEvent } from 'histoire/client';
+	import { logEvent } from '../../stories/helper';
 
 	const show = ref<boolean>(false);
 	const showDanger = ref<boolean>(false);

@@ -45,10 +45,13 @@ public final class VermerkartenListeManager extends AuswahlManager<Long, Vermerk
 				int cmp = a.sortierung - b.sortierung;
 				if (cmp != 0)
 					return cmp;
-				if ((a.bezeichnung == null) || (b.bezeichnung == null))
-					return Long.compare(a.id, b.id);
-				cmp = a.bezeichnung.compareTo(b.bezeichnung);
-				return (cmp == 0) ? Long.compare(a.id, b.id) : cmp;
+
+				if ((a.bezeichnung != null) && (b.bezeichnung != null)) {
+					cmp = a.bezeichnung.compareTo(b.bezeichnung);
+					if (cmp != 0)
+						return cmp;
+				}
+				return Long.compare(a.id, b.id);
 	};
 
 	/**

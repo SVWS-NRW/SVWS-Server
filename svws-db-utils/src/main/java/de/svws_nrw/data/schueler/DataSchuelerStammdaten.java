@@ -14,7 +14,7 @@ import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.asd.types.schule.Nationalitaeten;
-import de.svws_nrw.core.types.schule.Verkehrssprache;
+import de.svws_nrw.asd.types.schule.Verkehrssprache;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
@@ -46,7 +46,6 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 	 */
 	public DataSchuelerStammdaten(final DBEntityManager conn) {
 		super(conn);
-		setAttributesNotPatchable("id");
 		this.idSchuljahresabschnitt = 0L;
 	}
 
@@ -151,6 +150,7 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 		return dto.ID;
 	}
 
+
 	@Override
 	protected void initDTO(final DTOSchueler dto, final Long id, final Map<String, Object> initAttributes) {
 		// Basisdaten
@@ -203,7 +203,16 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 		dto.MasernImpfnachweis = false;
 		dto.Bafoeg = false;
 		dto.MeisterBafoeg = false;
+
+		dto.BeginnBildungsgang = null;
 	}
+
+
+	@Override
+	protected Long getID(final Map<String, Object> attributes) throws ApiOperationException {
+		return JSONMapper.convertToLong(attributes.get("id"), false);
+	}
+
 
 	@Override
 	protected SchuelerStammdaten map(final DTOSchueler dto) throws ApiOperationException {
@@ -239,7 +248,7 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 		daten.hatMigrationshintergrund = Boolean.TRUE.equals(dto.Migrationshintergrund);
 		daten.zuzugsjahr = dto.JahrZuzug;
 		daten.geburtsland = (dto.GeburtslandSchueler == null) ? null : dto.GeburtslandSchueler.historie().getLast().iso3;
-		daten.verkehrspracheFamilie = (dto.VerkehrsspracheFamilie == null) ? null : dto.VerkehrsspracheFamilie.daten.kuerzel;
+		daten.verkehrspracheFamilie = (dto.VerkehrsspracheFamilie == null) ? null : dto.VerkehrsspracheFamilie.historie().getLast().iso3;
 		daten.geburtslandVater = (dto.GeburtslandVater == null) ? null : dto.GeburtslandVater.historie().getLast().iso3;
 		daten.geburtslandMutter = (dto.GeburtslandMutter == null) ? null : dto.GeburtslandMutter.historie().getLast().iso3;
 		// Statusdaten
@@ -257,6 +266,8 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 		daten.hatMasernimpfnachweis = dto.MasernImpfnachweis;
 		daten.erhaeltSchuelerBAFOEG = dto.Bafoeg;
 		daten.erhaeltMeisterBAFOEG = dto.MeisterBafoeg;
+		daten.beginnBildungsgang = dto.BeginnBildungsgang; // Schulform BK und SB
+		// TODO DauerBildungsgang // Schulform BK und SB
 		return daten;
 	}
 
@@ -283,8 +294,10 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 			case "hausnummer" -> dto.HausNr = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_HausNr.datenlaenge(), "hausnummer");
 			case "hausnummerZusatz" -> dto.HausNrZusatz = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_HausNrZusatz.datenlaenge(),
 					"hausnummerZusatz");
-			case "wohnortID" -> mapWohnortID(dto, value, map);
-			case "ortsteilID" -> mapOrtsteilID(dto, value, map);
+			case "wohnortID" -> setWohnort(dto, JSONMapper.convertToLong(value, true, "wohnortID"),
+					Optional.ofNullable(JSONMapper.convertToLong(map.get("ortsteilID"), true, "ortsteilID")).orElse(dto.Ortsteil_ID));
+			case "ortsteilID" -> setWohnort(dto, Optional.ofNullable(JSONMapper.convertToLong(map.get("wohnortID"), true, "wohnortID")).orElse(dto.Ort_ID),
+					JSONMapper.convertToLong(value, true, "ortsteilID"));
 			case "telefon" -> dto.Telefon = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_Telefon.datenlaenge(), "telefon");
 			case "telefonMobil" -> dto.Fax = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_Fax.datenlaenge(), "telefonMobil");
 			case "emailPrivat" -> dto.Email = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_Email.datenlaenge(), "emailPrivat");
@@ -323,25 +336,16 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 			case "erhaeltSchuelerBAFOEG" -> dto.Bafoeg = JSONMapper.convertToBoolean(value, false, "erhaeltSchuelerBAFOEG");
 			case "erhaeltMeisterBAFOEG" -> dto.MeisterBafoeg = JSONMapper.convertToBoolean(value, false, "erhaeltMeisterBAFOEG");
 			case "istDuplikat" -> dto.Duplikat = JSONMapper.convertToBoolean(value, false, "istDuplikat");
+
+			case "beginnBildungsgang" -> dto.BeginnBildungsgang = JSONMapper.convertToString(value, true, false, Schema.tab_Schueler.col_BeginnBildungsgang.datenlaenge(),
+					"beginnBildungsgang");
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Das Patchen des Attributes %s ist nicht implementiert.".formatted(name));
 		}
 	}
 
 
-	private void mapWohnortID(final DTOSchueler dto, final Object value, final Map<String, Object> map) throws ApiOperationException {
-		final Long ortsteilId = (map.get("ortsteilID") == null) ? dto.Ortsteil_ID : ((Long) map.get("ortsteilID"));
-		setWohnort(dto, JSONMapper.convertToLong(value, true, "wohnortID"), ortsteilId);
-	}
-
-
-	private void mapOrtsteilID(final DTOSchueler dto, final Object value, final Map<String, Object> map) throws ApiOperationException {
-		final Long wohnortId = (map.get("wohnortID") == null) ? dto.Ort_ID : ((Long) map.get("wohnortID"));
-		setWohnort(dto, wohnortId, JSONMapper.convertToLong(value, true, "ortsteilID"));
-	}
-
-
 	private static void mapID(final DTOSchueler dto, final Object value) throws ApiOperationException {
-		final Long id = JSONMapper.convertToLong(value, true);
+		final Long id = JSONMapper.convertToLong(value, true, "id");
 		if ((id == null) || (id != dto.ID))
 			throw new ApiOperationException(Status.BAD_REQUEST);
 	}
@@ -412,7 +416,7 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 			dto.VerkehrsspracheFamilie = null;
 			return;
 		}
-		final Verkehrssprache verkehrsprache = Verkehrssprache.getByKuerzelAuto(verkehrspracheFamilie);
+		final Verkehrssprache verkehrsprache = Verkehrssprache.getByIsoKuerzel(verkehrspracheFamilie);
 		if (verkehrsprache == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
 		dto.VerkehrsspracheFamilie = verkehrsprache;
@@ -487,7 +491,6 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 		}
 		dto.Haltestelle_ID = haltestelleId;
 	}
-
 
 	/**
 	 * Setzt das Schüler-Foto für den übergebenen Schüler.

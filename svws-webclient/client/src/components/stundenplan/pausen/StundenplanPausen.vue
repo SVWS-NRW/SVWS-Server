@@ -88,10 +88,10 @@
 <script setup lang="ts">
 
 	import { computed, onMounted, ref } from "vue";
-	import type { StundenplanPausenProps } from "./StundenplanPausenProps";
 	import type { Wochentag, List, StundenplanPausenzeit, StundenplanKlasse, StundenplanPausenaufsicht, StundenplanLehrer} from "@core";
 	import { StundenplanPausenaufsichtBereich, StundenplanPausenaufsichtBereichUpdate, HashMap3D, ArrayList, BenutzerKompetenz } from "@core";
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
+	import { useRegionSwitch } from "@ui";
+	import type { StundenplanPausenProps } from "./StundenplanPausenProps";
 
 	type PausenzeitBereichTyp = {pauseID: number; aufsichtsbereichID: number; typ: number, lehrerID?: number};
 

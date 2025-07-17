@@ -178,7 +178,7 @@ class DataMerkmaleTest {
 		switch (key) {
 			case "id" -> assertThat(throwable)
 					.isInstanceOf(ApiOperationException.class)
-					.hasMessage("IdPatch 35 ist ungleich dtoId 1")
+					.hasMessage("Die ID 35 des Patches ist null oder stimmt nicht mit der ID 1 in der Datenbank überein.")
 					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 			case "istSchulmerkmal" -> assertThat(dto.Schule).isEqualTo(value);
 			case "istSchuelermerkmal" -> assertThat(dto.Schueler).isEqualTo(value);
@@ -196,6 +196,38 @@ class DataMerkmaleTest {
 	void mapAttributeTest_idIsCorrect() {
 		final var dto = new DTOMerkmale(1L);
 		assertThatNoException().isThrownBy(() -> this.data.mapAttribute(dto, "id", 1L, null));
+	}
+
+	@Test
+	@DisplayName("mapAttribute | kuerzel bereits vorhanden")
+	void mapAttributeTest_kuerzelDoppeltVergeben() {
+		final var merkmalABC = new DTOMerkmale(1L);
+		merkmalABC.Kurztext = "ABC";
+		when(this.conn.queryList(DTOMerkmale.QUERY_BY_KURZTEXT, DTOMerkmale.class, "ABC")).thenReturn(List.of(merkmalABC));
+
+		final var throwable = catchThrowable(() -> this.data.mapAttribute(new DTOMerkmale(2L), "kuerzel", "ABC", null));
+
+		assertThat(throwable)
+				.isInstanceOf(ApiOperationException.class)
+				.hasMessage("Das Kürzel ABC ist bereits vorhanden.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("mapAttribute | Kuerzel doppelt in der Database | sollte in der Praxis nicht passieren")
+	void mapAttributeTest_kuerzelDoppeltInDB() {
+		final var merkmalABC = new DTOMerkmale(1L);
+		merkmalABC.Kurztext = "ABC";
+		final var merkmalDEF = new DTOMerkmale(1L);
+		merkmalDEF.Kurztext = "ABC";
+		when(this.conn.queryList(DTOMerkmale.QUERY_BY_KURZTEXT, DTOMerkmale.class, "ABC")).thenReturn(List.of(merkmalABC, merkmalDEF));
+
+		final var throwable = catchThrowable(() -> this.data.mapAttribute(new DTOMerkmale(2L), "kuerzel", "ABC", null));
+
+		assertThat(throwable)
+				.isInstanceOf(ApiOperationException.class)
+				.hasMessage("Mehr als ein Merkmal mit dem gleichen Kürzel vorhanden")
+				.hasFieldOrPropertyWithValue("status", Response.Status.INTERNAL_SERVER_ERROR);
 	}
 
 }

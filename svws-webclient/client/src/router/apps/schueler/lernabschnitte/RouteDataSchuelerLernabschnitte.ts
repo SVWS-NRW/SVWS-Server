@@ -174,7 +174,7 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 		} else {
 			[ listFaecher, listFoerderschwerpunkte, listJahrgaenge, listLehrer ] = await Promise.all([
 				api.server.getFaecher(api.schema),
-				api.server.getSchuelerFoerderschwerpunkte(api.schema),
+				api.server.getKatalogFoerderschwerpunkte(api.schema),
 				api.server.getJahrgaenge(api.schema),
 				api.server.getLehrer(api.schema),
 			]);

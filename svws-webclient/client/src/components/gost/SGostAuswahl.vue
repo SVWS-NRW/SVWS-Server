@@ -40,7 +40,7 @@
 	import type { GostAuswahlProps } from "./SGostAuswahlProps";
 	import type { GostJahrgang } from "@core";
 	import { BenutzerKompetenz } from "@core";
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
+	import { useRegionSwitch } from "@ui";
 
 	const props = defineProps<GostAuswahlProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();

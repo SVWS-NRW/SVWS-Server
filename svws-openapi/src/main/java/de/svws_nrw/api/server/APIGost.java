@@ -29,7 +29,7 @@ import de.svws_nrw.data.SimpleBinaryMultipartBody;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.data.gost.DBUtilsGost;
-import de.svws_nrw.data.gost.DBUtilsGostAbitur;
+import de.svws_nrw.data.gost.DataGostAbiturdaten;
 import de.svws_nrw.data.gost.DataGostAbiturjahrgangFachwahlen;
 import de.svws_nrw.data.gost.DataGostBeratungslehrer;
 import de.svws_nrw.data.gost.DataGostFaecher;
@@ -596,7 +596,7 @@ public class APIGost {
 		return DBBenutzerUtils.runWithTransaction(conn -> {
 			if (abiturjahr < 0)
 				throw new ApiOperationException(Status.NOT_FOUND, "Eine Belegprüfung ist für den Vorlagen-Abiturjahrgang nicht möglich.");
-			return (new DataGostSchuelerLaufbahnplanung(conn)).pruefeBelegungAbiturjahrgang(abiturjahr, GostBelegpruefungsArt.GESAMT);
+			return (new DataGostSchuelerLaufbahnplanung(conn, abiturjahr)).pruefeBelegungAbiturjahrgang(GostBelegpruefungsArt.GESAMT);
 		},
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
@@ -633,7 +633,7 @@ public class APIGost {
 		return DBBenutzerUtils.runWithTransaction(conn -> {
 			if (abiturjahr < 0)
 				throw new ApiOperationException(Status.NOT_FOUND, "Eine Belegprüfung ist für den Vorlagen-Abiturjahrgang nicht möglich.");
-			return (new DataGostSchuelerLaufbahnplanung(conn)).pruefeBelegungAbiturjahrgang(abiturjahr, GostBelegpruefungsArt.EF1);
+			return (new DataGostSchuelerLaufbahnplanung(conn, abiturjahr)).pruefeBelegungAbiturjahrgang(GostBelegpruefungsArt.EF1);
 		},
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
@@ -829,7 +829,41 @@ public class APIGost {
 			+ "gefunden")
 	public Response getGostSchuelerLaufbahnplanung(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn).getByIdAsResponse(id),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn, null).getByIdAsResponse(id),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
+				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN);
+	}
+
+
+	/**
+	 * Liest die Abiturdaten aus den Laufbahndaten für alle Schülers des angegebenen Abiturjahrgangs und liefert
+	 * diese in einer Liste zurück.
+	 * Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Laufbahndaten besitzt.
+	 *
+	 * @param schema       das Schema aus dem die Laufbahndaten kommen sollen
+	 * @param abiturjahr   das Abiturjahr der Schüler zu dem die Laufbahndaten geliefert werden sollen
+	 *
+	 * @param request  die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Laufbahndaten in der gymnasialen Oberstufe für alle Schüler des angegebenen Abiturjahrs
+	 */
+	@GET
+	@Path("/abiturjahrgang/{abiturjahr : -?\\d+}/laufbahndaten")
+	@Operation(summary = "Liefert zu dem Abiturjahrgang die zugehörigen Abiturdaten aus den Laufbahndaten der SVWS-DB.",
+			description = "Liefert zu dem Abiturjahrgang die zugehörigen Abiturdaten aus den Laufbahndaten und liefert diese zurück. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Laufbahndaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Laufbahndaten des Schülers",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Abiturdaten.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Laufbahndaten anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Kein Abiturjahrgang gefunden",
+			content = @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class)))
+	public Response getGostAbiturjahrgangLaufbahndaten(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> (new DataGostSchuelerLaufbahnplanung(conn, abiturjahr)).getListAsResponse(),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
 				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
@@ -929,7 +963,7 @@ public class APIGost {
 			+ "ID gefunden")
 	public Response getGostSchuelerFachwahl(@PathParam("schema") final String schema, @PathParam("schuelerid") final long schueler_id,
 			@PathParam("fachid") final long fach_id, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn).getFachwahl(schueler_id, fach_id),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn, null).getFachwahl(schueler_id, fach_id),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
 				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
@@ -966,7 +1000,7 @@ public class APIGost {
 			@RequestBody(description = "Der Patch für die Fachdaten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					schema = @Schema(implementation = GostSchuelerFachwahl.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn).patchFachwahl(schueler_id, fach_id, is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn, null).patchFachwahl(schueler_id, fach_id, is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
 				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
@@ -995,7 +1029,7 @@ public class APIGost {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response resetGostSchuelerFachwahlen(@PathParam("schema") final String schema, @PathParam("schuelerid") final long schuelerid,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn).reset(schuelerid),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn, null).reset(schuelerid),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
 				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN);
@@ -1024,7 +1058,7 @@ public class APIGost {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteGostSchuelerFachwahlen(@PathParam("schema") final String schema, @PathParam("schuelerid") final long schuelerid,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn).delete(schuelerid),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn, null).delete(schuelerid),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
 				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN);
@@ -1056,7 +1090,7 @@ public class APIGost {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn).deleteMultiple(JSONMapper.toListOfLong(is)),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn, null).deleteMultiple(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
 				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN);
@@ -1122,12 +1156,44 @@ public class APIGost {
 	public Response getGostSchuelerAbiturdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(DBUtilsGostAbitur.getAbiturdaten(conn, id)).build(),
+				conn -> (new DataGostAbiturdaten(conn, null)).getByIdAsResponse(id),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
 				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
 				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
 				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
+				BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN,
+				BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN);
+	}
+
+
+	/**
+	 * Liest die Abiturdaten aus den Abiturtabellen für alle Schülers des angegebenen Abiturjahrgangs ID und liefert
+	 * diese in einer Liste zurück.
+	 * Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Abiturdaten besitzt.
+	 *
+	 * @param schema       das Schema aus dem die Abiturdaten kommen sollen
+	 * @param abiturjahr   das Abiturjahr der Schüler zu dem die Abiturdaten geliefert werden sollen
+	 *
+	 * @param request  die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Abiturdaten in der gymnasialen Oberstufe für alle Schüler des angegebenen Abiturjahrs
+	 */
+	@GET
+	@Path("/abiturjahrgang/{abiturjahr : -?\\d+}/abiturdaten")
+	@Operation(summary = "Liefert zu dem Abiturjahrgang die zugehörigen Abiturdaten aus den entsprechenden Abiturtabellen der SVWS-DB.",
+			description = "Liefert zu dem Abiturjahrgang die zugehörigen Abiturdaten aus den Abiturtabellen und liefert diese zurück. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Abiturdaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Abiturdaten des Schülers",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Abiturdaten.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Abiturdaten anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Kein Abiturjahrgang gefunden",
+			content = @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class)))
+	public Response getGostAbiturjahrgangAbiturdaten(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> (new DataGostAbiturdaten(conn, abiturjahr)).getListAsResponse(),
+				request, ServerMode.STABLE,
 				BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN,
 				BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN);
 	}
@@ -1156,7 +1222,40 @@ public class APIGost {
 	public Response copyGostSchuelerAbiturdatenAusLeistungsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> DBUtilsGostAbitur.copyAbiturdatenAusLeistungsdaten(conn, id),
+				conn -> (new DataGostAbiturdaten(conn, null)).copyAbiturdatenAusLeistungsdaten(id),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.ABITUR_AENDERN_ALLGEMEIN,
+				BenutzerKompetenz.ABITUR_AENDERN_FUNKTIONSBEZOGEN);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Anpassen der Abiturdaten eines Schülers der gymnasialen Oberstufe.
+	 *
+	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param id        die ID des Schülers, dessen Abiturdaten angepasst werden sollen
+	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort
+	 */
+	@PATCH
+	@Path("/schueler/{id : \\d+}/abiturdaten")
+	@Operation(summary = "Passt die Abiturdaten eines Schüler an.",
+			description = "Passt die Abiturdaten eines Schüler an. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung hat.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Anpassungen durchzuführen.")
+	@ApiResponse(responseCode = "404", description = "Keine passenden Daten für den Patch gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response patchGostSchuelerAbiturdaten(
+			@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@RequestBody(description = "Der Patch für die Abiturdaten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					schema = @Schema(implementation = Abiturdaten.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> (new DataGostAbiturdaten(conn, null)).patchAbiturdatenAsResponse(id, is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.ABITUR_AENDERN_ALLGEMEIN,
 				BenutzerKompetenz.ABITUR_AENDERN_FUNKTIONSBEZOGEN);
@@ -1394,7 +1493,7 @@ public class APIGost {
 	@ApiResponse(responseCode = "404", description = "Es wurden nicht alle benötigten Daten für das Erstellen der Laufbahn-Daten gefunden.")
 	public Response exportGostSchuelerLaufbahnplanung(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn).exportGZip(id),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn, null).exportGZip(id),
 				request, ServerMode.STABLE, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN);
 	}
 
@@ -1425,7 +1524,7 @@ public class APIGost {
 			@RequestBody(description = "Die Laufbahnplanungsdatei - der Dateiname ist US-ASCII und darf daher u.a. keine Umlaute enthalten", required = true,
 					content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm final SimpleBinaryMultipartBody multipart,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn).importGZip(id, multipart.data),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn, null).importGZip(id, multipart.data),
 				request, ServerMode.STABLE, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN);
 	}
 
@@ -1453,7 +1552,7 @@ public class APIGost {
 	@ApiResponse(responseCode = "404", description = "Es wurden nicht alle benötigten Daten für das Erstellen der Laufbahn-Daten gefunden.")
 	public Response exportGostSchuelerLaufbahnplanungsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn).exportJSON(id),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn, null).exportJSON(id),
 				request, ServerMode.STABLE, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN);
 	}
 
@@ -1483,7 +1582,7 @@ public class APIGost {
 			@RequestBody(description = "Die Laufbahnplanungsdaten", required = false, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					schema = @Schema(implementation = GostLaufbahnplanungDaten.class))) final GostLaufbahnplanungDaten daten,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn).importJSON(id, daten),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn, null).importJSON(id, daten),
 				request, ServerMode.STABLE, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN);
 	}
 
@@ -1511,7 +1610,7 @@ public class APIGost {
 			@RequestBody(description = "Die Laufbahnplanungsdaten", required = true, content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA,
 					schema = @Schema(implementation = MultipleBinaryMultipartBody.class))) @MultipartForm final MultipartFormDataInput multipart,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn).importGZip(multipart),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn, null).importGZip(multipart),
 				request, ServerMode.STABLE, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN);
 	}
 
@@ -1542,7 +1641,7 @@ public class APIGost {
 			@RequestBody(description = "Die Liste der IDs der Schüler", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn).exportGZip(ids),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn, null).exportGZip(ids),
 				request, ServerMode.STABLE, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN);
 	}
 

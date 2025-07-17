@@ -23,7 +23,7 @@ const defaultState = {
 export class RouteDataKatalogEinwilligungsarten extends RouteDataAuswahl<EinwilligungsartenListeManager, RouteStateAuswahlInterface<EinwilligungsartenListeManager>> {
 
 	public constructor() {
-		super(defaultState, routeKatalogEinwilligungsartenGruppenprozesse, routeKatalogEinwilligungsartenNeu);
+		super(defaultState, { gruppenprozesse: routeKatalogEinwilligungsartenGruppenprozesse, hinzufuegen: routeKatalogEinwilligungsartenNeu });
 	}
 
 	public addID(param: RouteParamsRawGeneric, id: number): void {

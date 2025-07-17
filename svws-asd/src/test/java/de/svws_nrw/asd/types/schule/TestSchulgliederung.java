@@ -31,12 +31,12 @@ class TestSchulgliederung {
 	 *
 	 * CoreType: Schulgliederung
 	 * Testfall: Prüft die Anzahl der möglichen Werte
-	 * Ergebnis: Erwartete Anzahl - 89, 63
+	 * Ergebnis: Erwartete Anzahl - 92, 63
 	 */
 	@Test
 	@DisplayName("Teste CoreType Schulgliederung: Anzahl der vorhandenen Werte.")
     void testSchulgliederung_AnzahlEintraege() {
-    	assertEquals(89, Schulgliederung.data().getWerte().size());
+    	assertEquals(92, Schulgliederung.data().getWerte().size());
     	assertEquals(63, Schulgliederung.data().getWerteBySchuljahr(2023).size());
     }
 

@@ -15,8 +15,8 @@
 
 <script setup lang="ts">
 
+	import { useRegionSwitch } from '@ui';
 	import type { RouteTabProps } from '~/router/RouteTabNode';
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<RouteTabProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();

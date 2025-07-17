@@ -43,10 +43,9 @@
 
 	import { ref, computed } from "vue";
 	import type { KurseAuswahlProps } from "./SKurseAuswahlProps";
-	import { ViewType, type DataTableColumn, type SortByAndOrder } from "@ui";
+	import { useRegionSwitch, ViewType, type DataTableColumn, type SortByAndOrder } from "@ui";
 	import type { FachDaten, FaecherListeEintrag, JahrgangsDaten, KursDaten, LehrerListeEintrag, List, SchuelerListeEintrag, Schulgliederung } from "@core";
 	import { ServerMode, BenutzerKompetenz } from "@core";
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
 
 	const props = defineProps<KurseAuswahlProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
@@ -88,11 +87,11 @@
 		},
 	})
 
-	function text(eintrag: LehrerListeEintrag | JahrgangsDaten | FachDaten): string {
+	function text(eintrag: LehrerListeEintrag | JahrgangsDaten | FaecherListeEintrag): string {
 		return eintrag.kuerzel ?? "";
 	}
 
-	function find(items: Iterable<LehrerListeEintrag | JahrgangsDaten | FachDaten>, search: string) {
+	function find(items: Iterable<LehrerListeEintrag | JahrgangsDaten | FaecherListeEintrag>, search: string) {
 		const list = [];
 		for (const i of items)
 			if ((i.kuerzel !== null) && i.kuerzel.toLocaleLowerCase().includes(search.toLocaleLowerCase()))

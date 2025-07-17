@@ -4,7 +4,6 @@
 		"resolveJsonModule": true,
 		"checkJs": true,
 		"paths": {
-			"~/*": ["src/*"],
 			"@json/*": ["../../svws-asd/src/main/resources/de/svws_nrw/asd/types/*"],
 		},
 		"outDir": "./dist",
@@ -13,12 +12,13 @@
 	},
 	"include": [
 		"env.d.ts",
-		"vite.config.ts",
+		"vite.config*.ts",
 		"src/**/*.ts",
 		"src/**/*.vue",
+		"src/**/*.md",
 		"components.d.ts",
 		"../core/src/**/*.ts",
-		"histoire.setup.ts"	],
+		],
 	"exclude": [
 		"../core/src/index.ts",
 	]

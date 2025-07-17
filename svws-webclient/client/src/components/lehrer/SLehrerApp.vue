@@ -41,8 +41,7 @@
 
 	import { computed } from "vue";
 	import type { LehrerAppProps } from "./SLehrerAppProps";
-	import { ViewType } from "@ui";
-	import { useRegionSwitch } from "~/components/useRegionSwitch";
+	import { useRegionSwitch, ViewType } from "@ui";
 
 	const props = defineProps<LehrerAppProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();

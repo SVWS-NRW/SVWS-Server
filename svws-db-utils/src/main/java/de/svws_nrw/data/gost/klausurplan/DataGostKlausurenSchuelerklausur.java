@@ -2,6 +2,7 @@ package de.svws_nrw.data.gost.klausurplan;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +38,7 @@ public final class DataGostKlausurenSchuelerklausur extends DataManagerRevised<L
 	 */
 	public DataGostKlausurenSchuelerklausur(final DBEntityManager conn) {
 		super(conn);
-		super.setAttributesNotPatchable("idKursklausur", "idSchueler");
+		super.setAttributesNotPatchable("id", "idKursklausur", "idSchueler");
 		super.setAttributesRequiredOnCreation("idKursklausur", "idSchueler");
 	}
 
@@ -156,7 +157,7 @@ public final class DataGostKlausurenSchuelerklausur extends DataManagerRevised<L
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public List<GostSchuelerklausur> getSchuelerklausurenZuSchuelerklausurterminen(final List<GostSchuelerklausurTermin> termine) throws ApiOperationException {
+	public List<GostSchuelerklausur> getSchuelerklausurenZuSchuelerklausurterminen(final Collection<GostSchuelerklausurTermin> termine) throws ApiOperationException {
 		if (termine.isEmpty())
 			return new ArrayList<>();
 		final List<GostSchuelerklausur> sks = mapList(conn.queryByKeyList(DTOGostKlausurenSchuelerklausuren.class,

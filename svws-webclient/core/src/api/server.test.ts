@@ -390,7 +390,7 @@ describe("Server", () => {
 		expect(res).matchSnapshot();
 	});
 	test.skip("getSchuelerFoerderschwerpunkte", async () => {
-		const res = await server.getSchuelerFoerderschwerpunkte(schema);
+		const res = await server.getKatalogFoerderschwerpunkte(schema);
 		expect(res).matchSnapshot();
 	});
 	test.skip("getSchullogo", async () => {

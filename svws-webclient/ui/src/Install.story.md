@@ -9,7 +9,7 @@ icon: 'carbon:bookmark'
 # Vue3 UI-Komponenten für das SVWS-NRW Projekt
 
 
-Um die UI-Komponenten in ein vue3-Projekt einzubinden:
+Um die UI-Komponenten in ein Vue-Projekt einzubinden:
 
 ```shell
 npm i @svws-nrw/svws-ui
@@ -27,10 +27,10 @@ Komponenten können anschließend einzeln importiert werden:
 </template>
 ```
 
-Stories werden mit Hilfe von Histoire erstellt:
+Stories werden mit Hilfe von der Stories-App erstellt:
 
 ```shell
-npm run story:dev
+npm run dev
 ```
 
 ```shell

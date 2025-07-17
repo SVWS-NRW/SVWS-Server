@@ -49,7 +49,6 @@ import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
-import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.types.gost.GostFachbereich;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
@@ -99,13 +98,18 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Long, Long, Abiturdaten> {
 
+	/** Das Abitur, sofern sich die Anfrage auf ein konkretes Abiturjahr bezieht. Ansonsten null */
+	private final Integer abiturjahr;
+
 	/**
 	 * Erstellt einen neuen {@link DataManagerRevised} für den Core-DTO {@link Abiturdaten}.
 	 *
 	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
+	 * @param abiturjahr   das Abiturjahr, auf welches sich die Anfrage bezieht oder null, wenn kein konkretes angegeben wurde
 	 */
-	public DataGostSchuelerLaufbahnplanung(final DBEntityManager conn) {
+	public DataGostSchuelerLaufbahnplanung(final DBEntityManager conn, final Integer abiturjahr) {
 		super(conn);
+		this.abiturjahr = abiturjahr;
 	}
 
 	private void checkFunktionsbezogeneKompetenz(final Integer abiturjahrgang) throws ApiOperationException {
@@ -127,6 +131,16 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 		final Abiturdaten daten = map(idSchueler);
 		checkFunktionsbezogeneKompetenz(daten.abiturjahr);
 		return daten;
+	}
+
+	@Override
+	public List<Abiturdaten> getList() throws ApiOperationException {
+		if (abiturjahr == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Abiturjahrgang angegeben. Der Wert null ist nicht zulässig");
+		final List<DTOSchueler> schuelerListe = DBUtilsGostLaufbahn.getSchuelerOfAbiturjahrgang(conn, abiturjahr);
+		if (schuelerListe.isEmpty())
+			return new ArrayList<>();
+		return DBUtilsGostLaufbahn.getFromIDs(conn, schuelerListe.stream().map(s -> s.ID).toList());
 	}
 
 
@@ -371,7 +385,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 				}
 				case "abiturFach" -> {
 					// experimenteller Code für das 5. Abiturfach
-					final int maxAbifach = ((abiturjahr >= 2029) && (ServerMode.DEV.checkServerMode(SVWSKonfiguration.get().getServerMode())))
+					final int maxAbifach = AbiturdatenManager.nutzeExperimentellenCode(SVWSKonfiguration.get().getServerMode(), abiturjahr)
 							? 5 : 4;
 					fachbelegung.AbiturFach = JSONMapper.convertToIntegerInRange(value, true, 1, maxAbifach + 1);
 				}
@@ -922,14 +936,15 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 	 * Führt eine Belegprüfung für alles Schüler des angebenen Abitur-Jahrgangs durch
 	 * und gibt die Belegprüfungsergebnisse für die Schüler zurück.
 	 *
-	 * @param abiturjahr     der zu prüfende Abiturjahrgang
 	 * @param pruefungsArt   die Art der Belegprüfung
 	 *
 	 * @return die Belegprüfungsergebnisse
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response pruefeBelegungAbiturjahrgang(final int abiturjahr, final GostBelegpruefungsArt pruefungsArt) throws ApiOperationException {
+	public Response pruefeBelegungAbiturjahrgang(final GostBelegpruefungsArt pruefungsArt) throws ApiOperationException {
+		if (abiturjahr == null)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Es muss ein gültiges Abiturjahr angegeben werden. Der Wert null ist nicht zulässig.");
 		// Prüfe, ob die Schule eine gymnasiale Oberstufe hat und ob der Schüler überhaupt existiert.
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final int schuljahr = abiturjahr - 1;
@@ -1092,7 +1107,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 	public Response deleteMultiple(final @NotNull List<Long> idsSchueler) throws ApiOperationException {
 		// Bestimme die aktuellen Abiturdaten zu den Schülern mit den angegebenen IDs
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
-		final @NotNull Map<Long, Abiturdaten> mapAbidaten = DBUtilsGostLaufbahn.getFromIDs(conn, idsSchueler);
+		final @NotNull Map<Long, Abiturdaten> mapAbidaten = DBUtilsGostLaufbahn.getMapFromIDs(conn, idsSchueler);
 		// Bestimme alle zugehörigen Fachbelegungseinträge aus der Datenbank
 		final @NotNull Map<Long, List<DTOGostSchuelerFachbelegungen>> mapFachwahlen = conn.queryList(DTOGostSchuelerFachbelegungen.QUERY_LIST_BY_SCHUELER_ID,
 				DTOGostSchuelerFachbelegungen.class, idsSchueler).stream().collect(Collectors.groupingBy(b -> b.Schueler_ID));

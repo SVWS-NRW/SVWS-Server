@@ -15,8 +15,8 @@
 				</div>
 				<ul class="flex flex-col gap-0.5 overflow-auto pr-5">
 					<template v-for="termin in termine()" :key="termin.id">
-						<li :id="'termin' + termin.id" @click="chooseTermin(termin)"
-							:draggable="isDraggable(undefined, termin)" @dragstart="onDrag(termin)" @dragend="onDrag(undefined)"
+						<li :id="'termin' + termin.id" @click="kMan().stundenplanManagerGetByTerminOrNull(termin) !== null && chooseTermin(termin)"
+							:draggable="isDraggable(undefined, termin)" @dragstart="onDrag($event, termin)" @dragend="onDrag($event, undefined)"
 							@dragover="checkDropZone($event)" @drop="onDrop(termin)"
 							:data="termin"
 							:class="{
@@ -97,7 +97,7 @@
 		return false;
 	}
 
-	const onDrag = (data: GostKlausurplanungDragData) => dragData.value = data;
+	const onDrag = (event: DragEvent, data: GostKlausurplanungDragData) => dragData.value = data;
 
 	const onDrop = async (zone: GostKlausurplanungDropZone) => {
 		const data = dragData.value;

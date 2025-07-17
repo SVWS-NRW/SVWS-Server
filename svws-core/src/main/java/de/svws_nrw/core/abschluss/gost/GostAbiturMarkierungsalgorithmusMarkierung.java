@@ -23,7 +23,7 @@ public class GostAbiturMarkierungsalgorithmusMarkierung {
 	public int idHalbjahr = -1;
 
 	/** Gibt an, ob der Algorithmus die Belgung markiert hat oder nicht */
-	@Schema(description = "gibt an, ob der Algorithmus die Belgung markiert hat oder nicht.", example = "true")
+	@Schema(description = "gibt an, ob der Algorithmus die Belegung markiert hat oder nicht.", example = "true")
 	public boolean markiert;
 
 }

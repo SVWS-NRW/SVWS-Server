@@ -41,4 +41,15 @@ public class GostKlausurenCollectionRaumData {
 		super();
 	}
 
+	/**
+	 * Fügt die Daten der übergebenen Instanz zu den aktuellen Daten hinzu.
+	 * @param data die zu hinzuzufügenden Daten
+	 */
+	public void addAll(final @NotNull GostKlausurenCollectionRaumData data) {
+		raeume.addAll(data.raeume);
+		raumstunden.addAll(data.raumstunden);
+		sktRaumstunden.addAll(data.sktRaumstunden);
+		idsKlausurtermine.addAll(data.idsKlausurtermine);
+	}
+
 }
