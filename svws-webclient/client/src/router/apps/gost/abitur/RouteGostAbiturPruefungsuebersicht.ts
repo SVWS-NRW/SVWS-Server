@@ -46,7 +46,7 @@ export class RouteGostAbiturPruefungsuebersicht extends RouteNode<any, RouteGost
 				return false;
 			return routeGost.getRouteDefaultChild({ abiturjahr });
 		} catch (e) {
-			return routeError.getErrorRoute(e as DeveloperNotificationException);
+			return routeError.getSimpleErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 

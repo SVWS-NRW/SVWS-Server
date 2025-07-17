@@ -34,7 +34,7 @@
 					title="Stammschule" v-model="inputStammschule" :items="mapSchulen.values()" :item-text="i => i.kuerzel ?? i.schulnummerStatistik ?? i.kurzbezeichnung ?? i.name" removable />
 				<div v-else />
 				<svws-ui-select title="Fahrschüler" :readonly="!hatKompetenzUpdate" v-model="inputFahrschuelerArtID" :items="mapFahrschuelerarten"
-					:item-text="i => i.text ?? ''" removable />
+					:item-text="i => i.bezeichnung ?? ''" removable />
 				<svws-ui-select title="Haltestelle" :readonly="!hatKompetenzUpdate" v-model="inputHaltestelleID" :items="mapHaltestellen"
 					:item-text="i => i.bezeichnung ?? ''" removable />
 				<svws-ui-text-input placeholder="Anmeldedatum" :readonly="!hatKompetenzUpdate" :model-value="data.anmeldedatum"
@@ -185,7 +185,7 @@
 
 	import { computed, ref } from "vue";
 	import type { SchuelerIndividualdatenProps } from "./SSchuelerIndividualdatenProps";
-	import type { SchuelerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, KatalogEintrag, SchulEintrag, TelefonArt, Haltestelle } from "@core";
+	import type { SchuelerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, SchulEintrag, TelefonArt, Haltestelle, Fahrschuelerart } from "@core";
 	import { SchuelerStatus, Schulform, Nationalitaeten, Geschlecht, AdressenUtils, Verkehrssprache, BenutzerKompetenz, DateUtils, SchuelerTelefon, ServerMode, ArrayList } from "@core";
 	import { verkehrsspracheKatalogEintragFilter, verkehrsspracheKatalogEintragSort, nationalitaetenKatalogEintragFilter, nationalitaetenKatalogEintragSort,
 		staatsangehoerigkeitKatalogEintragSort, staatsangehoerigkeitKatalogEintragFilter, orte_sort, orte_filter, ortsteilSort, ortsteilFilter } from "~/utils/helfer";
@@ -307,17 +307,17 @@
 
 	const strasse = computed(() => AdressenUtils.combineStrasse(data.value.strassenname ?? "", data.value.hausnummer ?? "", data.value.hausnummerZusatz ?? ""))
 
-	function patchStrasse(value: string | null) {
+	async function patchStrasse(value: string | null) {
 		if (value !== null) {
 			const vals = AdressenUtils.splitStrasse(value);
-			void props.patch({ strassenname: vals[0], hausnummer: vals[1], hausnummerZusatz: vals[2] });
+			await props.patch({ strassenname: vals[0], hausnummer: vals[1], hausnummerZusatz: vals[2] });
 		}
 	}
 
 	const wohnortID = computed<OrtKatalogEintrag | undefined>({
 		get: () => {
 			const id = data.value.wohnortID;
-			return id === null ? undefined : props.mapOrte.get(id)
+			return id === null ? undefined : props.mapOrte.get(id);
 		},
 		set: (value) => void props.patch({ wohnortID: value === undefined ? null : value.id }),
 	});
@@ -333,7 +333,7 @@
 	const ortsteilID = computed<OrtsteilKatalogEintrag | undefined>({
 		get: () => {
 			const id = data.value.ortsteilID;
-			return id === null ? undefined : props.mapOrtsteile.get(id)
+			return id === null ? undefined : props.mapOrtsteile.get(id);
 		},
 		set: (value) => void props.patch({ ortsteilID: value === undefined ? null : value.id }),
 	});
@@ -352,7 +352,7 @@
 	const religion = computed<ReligionEintrag | undefined>({
 		get: () => {
 			const id = data.value.religionID;
-			return id === null ? undefined : props.mapReligionen.get(id)
+			return id === null ? undefined : props.mapReligionen.get(id);
 		},
 		set: (value) => void props.patch({ religionID: value === undefined ? null : value.id }),
 	});
@@ -392,10 +392,10 @@
 		set: (value) => void props.patch({ externeSchulNr: value === undefined ? null : value.schulnummerStatistik }),
 	});
 
-	const inputFahrschuelerArtID = computed<KatalogEintrag | undefined>({
+	const inputFahrschuelerArtID = computed<Fahrschuelerart | undefined>({
 		get: () => {
 			const id = data.value.fahrschuelerArtID;
-			return id === null ? undefined : props.mapFahrschuelerarten.get(id)
+			return id === null ? undefined : props.mapFahrschuelerarten.get(id);
 		},
 		set: (value) => void props.patch({ fahrschuelerArtID: value === undefined ? null : value.id }),
 	});
@@ -403,7 +403,7 @@
 	const inputHaltestelleID = computed<Haltestelle | undefined>({
 		get: () => {
 			const id = data.value.haltestelleID;
-			return id === null ? undefined : props.mapHaltestellen.get(id)
+			return id === null ? undefined : props.mapHaltestellen.get(id);
 		},
 		set: (value) => void props.patch({ haltestelleID: value === undefined ? null : value.id }),
 	});

@@ -58,7 +58,7 @@ export class RouteSchuleBetriebe extends RouteNode<RouteDataSchuleBetriebe, Rout
 			if (to.name === this.name)
 				return this.getRouteDefaultChild();
 		} catch(e) {
-			return routeError.getErrorRoute(e as DeveloperNotificationException);
+			return await routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 

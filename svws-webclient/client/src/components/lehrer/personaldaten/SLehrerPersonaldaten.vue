@@ -22,14 +22,14 @@
 		<svws-ui-content-card title="Beschäftigungsdaten">
 			<svws-ui-input-wrapper :grid="2">
 				<ui-select label="Rechtsverhältnis" :disabled="!hatUpdateKompetenz" v-model="rechtsverhaeltnis" :manager="rechtsverhaeltnisSelectManager" statistics
-					:validator="() => validatorPersonalabschnittsDaten" :do-validate="validatePersonalabschnittDaten" required focus-class-content />
+					:validator="() => validatorPersonalabschnittsDaten" :do-validate="validatePersonalabschnittDaten" class="contentFocusField" required />
 				<ui-select label="Beschäftigungsart" :disabled="!hatUpdateKompetenz" v-model="beschaeftigungsart" :manager="beschaeftigungsartSelectManager" statistics
-					required focus-class-content />
+					class="contentFocusField" required />
 				<svws-ui-input-number placeholder="Pflichtstundensoll" :disabled="!hatUpdateKompetenz" statistics
 					:model-value="personalabschnittsdaten()?.pflichtstundensoll ?? 0.0"
 					@change="pflichtstundensoll => patchAbschnittsdaten({ pflichtstundensoll: pflichtstundensoll }, personalabschnittsdaten()?.id ?? -1)" />
-				<ui-select label="Einsatzstatus" :disabled="!hatUpdateKompetenz" v-model="einsatzstatus" statistics
-					:manager="einsatzstatusSelectManager" required focus-class-content />
+				<ui-select label="Einsatzstatus" :disabled="!hatUpdateKompetenz" v-model="einsatzstatus" statistics :manager="einsatzstatusSelectManager"
+					class="contentFocusField" required />
 				<svws-ui-text-input placeholder="Stammschule" :disabled="!hatUpdateKompetenz" :model-value="personalabschnittsdaten()?.stammschulnummer"
 					@change="stammschulnummer => patchAbschnittsdaten({ stammschulnummer }, personalabschnittsdaten()?.id ?? -1)" statistics />
 			</svws-ui-input-wrapper>

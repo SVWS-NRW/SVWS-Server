@@ -260,7 +260,7 @@ tasks.register('buildDockerImageENM', Exec) {
 
 	doFirst {
 		executable 'docker'
-		args 'build', '-t', "${ENM_IMAGE_NAME}", '-f', "$buildDirPath/tempdocker/enm/Dockerfile", '.'
+		args 'build', '--label', '"integrationtests=prune"', '-t', "${ENM_IMAGE_NAME}", '-f', "$buildDirPath/tempdocker/enm/Dockerfile", '.'
 	}
 }
 

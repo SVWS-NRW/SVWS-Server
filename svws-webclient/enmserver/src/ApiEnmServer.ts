@@ -36,7 +36,7 @@ export class ApiEnmServer extends BaseApi {
 	 * @returns der Server-Mode
 	 */
 	public async getServerMode() : Promise<ServerMode> {
-		return ServerMode.getByText(await super.getText("/api/mode"));
+		return ServerMode.getByText(await super.getTextBased("/api/mode", "*/*"));
 	}
 
 	/**
@@ -54,7 +54,7 @@ export class ApiEnmServer extends BaseApi {
 	 * @returns die Schulform oder null, falls der Server ein ungültiges Schulform-Kürzel geliefert hat
 	 */
 	public async getSchulform() : Promise<Schulform | null> {
-		return Schulform.data().getWertByKuerzel(await super.getText("/api/schulform"));
+		return Schulform.data().getWertByKuerzel(await super.getTextBased("/api/schulform", "*/*"));
 	}
 
 	/**
@@ -74,7 +74,7 @@ export class ApiEnmServer extends BaseApi {
 	 * @returns die GZip-komprimierte ENM-JSON-Datei
 	 */
 	public async getLehrerENMDaten() : Promise<ApiFile> {
-		return await super.getOctetStream("/api/daten");
+		return await super.getBinary("/api/daten", "*/*");
 	}
 
 	/**
@@ -86,7 +86,7 @@ export class ApiEnmServer extends BaseApi {
 	 *   Code 204: Der Server wurde gefunden
 	 */
 	public async isAlive() : Promise<void> {
-		await super.postJSON("/api/alive", "");
+		await super.postTextBased("/api/alive", 'application/json', '*/*', "");
 		return;
 	}
 
@@ -103,7 +103,7 @@ export class ApiEnmServer extends BaseApi {
 	 * @param {Partial<ENMLeistung>} patch   die zu patchenden Attribut der Leistungsdaten
 	 */
 	public async patchENMLeistung(patch: Partial<ENMLeistung>): Promise<void> {
-		await super.postJSON("/api/leistung", ENMLeistung.transpilerToJSONPatch(patch));
+		await super.postTextBased("/api/leistung", 'application/json', '*/*', ENMLeistung.transpilerToJSONPatch(patch));
 		return;
 	}
 
@@ -120,7 +120,7 @@ export class ApiEnmServer extends BaseApi {
 	 * @param {Partial<ENMLernabschnitt>} patch   die zu patchenden Attribut der Lernabschnittsdaten
 	 */
 	public async patchENMSchuelerLernabschnitt(patch: Partial<ENMLernabschnitt>): Promise<void> {
-		await super.postJSON("/api/lernabschnitt", ENMLernabschnitt.transpilerToJSONPatch(patch));
+		await super.postTextBased("/api/lernabschnitt", 'application/json', '*/*', ENMLernabschnitt.transpilerToJSONPatch(patch));
 		return;
 	}
 
@@ -139,7 +139,7 @@ export class ApiEnmServer extends BaseApi {
 	 */
 	public async patchENMSchuelerBemerkungen(idSchueler: number, patch: Partial<ENMLeistungBemerkungen>): Promise<void> {
 		const body = `{ "id": ${idSchueler}, "patch": ${ENMLeistungBemerkungen.transpilerToJSONPatch(patch)}}`;
-		await super.postJSON("/api/bemerkungen", body);
+		await super.postTextBased("/api/bemerkungen", 'application/json', '*/*', body);
 		return;
 	}
 
@@ -156,7 +156,7 @@ export class ApiEnmServer extends BaseApi {
 	 * @param {Partial<ENMTeilleistung>} patch   die zu patchenden Attribut der Teilleistung
 	 */
 	public async patchENMTeilleistung(patch: Partial<ENMTeilleistung>): Promise<void> {
-		await super.postJSON("/api/teilleistung", ENMTeilleistung.transpilerToJSONPatch(patch));
+		await super.postTextBased("/api/teilleistung", 'application/json', '*/*', ENMTeilleistung.transpilerToJSONPatch(patch));
 		return;
 	}
 
@@ -173,7 +173,7 @@ export class ApiEnmServer extends BaseApi {
 	 * @param {Partial<ENMSchuelerAnkreuzkompetenz>} patch   die zu patchenden Attribut der Ankreuzkompetenz
 	 */
 	public async patchENMSchuelerAnkreuzkompetenzen(patch: Partial<ENMSchuelerAnkreuzkompetenz>): Promise<void> {
-		await super.postJSON("/api/ankreuzkompetenz", ENMSchuelerAnkreuzkompetenz.transpilerToJSONPatch(patch));
+		await super.postTextBased("/api/ankreuzkompetenz", 'application/json', '*/*', ENMSchuelerAnkreuzkompetenz.transpilerToJSONPatch(patch));
 		return;
 	}
 
@@ -191,7 +191,7 @@ export class ApiEnmServer extends BaseApi {
 	 * @returns Die Key-Value-Paare der Konfigurationseinträge als Liste
 	 */
 	public async getClientConfig() : Promise<BenutzerConfig> {
-		return BenutzerConfig.transpilerFromJSON(await super.getJSON("/api/clientconfig"));
+		return BenutzerConfig.transpilerFromJSON(await super.getTextBased("/api/clientconfig", "*/*"));
 	}
 
 	/**

@@ -49,6 +49,7 @@ import { routeNotenmodul } from "./notenmodul/RouteNotenmodul";
 import { routeNotenmodulLeistungen } from "./notenmodul/RouteNotenmodulLeistungen";
 import { routeNotenmodulKlassenleitung } from "./notenmodul/RouteNotenmodulKlassenleitung";
 import { routeNotenmodulTeilleistungen } from "./notenmodul/RouteNotenmodulTeilleistungen";
+import { routeFahrschuelerarten } from "~/router/apps/schule/fahrschuelerarten/RouteFahrschuelerarten";
 import { routeSportbefreiungen } from "~/router/apps/schule/sportbefreiungen/RouteSportbefreiungen";
 import { routeHaltestellen } from "~/router/apps/schule/haltestellen/RouteHaltestellen";
 import SApp from "~/components/SApp.vue";
@@ -149,6 +150,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeKatalogLernplattformen,
 			// Allgemein
 			routeKatalogErzieherarten,
+			routeFahrschuelerarten,
 			routeHaltestellen,
 			routeKindergaerten,
 			routeKatalogReligionen,
@@ -197,7 +199,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			if (cur !== this.data.view)
 				this.data.setView(cur, this.children);
 		} catch (e) {
-			return routeError.getErrorRoute(e as DeveloperNotificationException);
+			return await routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 

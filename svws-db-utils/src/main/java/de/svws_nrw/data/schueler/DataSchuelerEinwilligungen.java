@@ -6,8 +6,11 @@ import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerDatenschutz;
 import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -50,6 +53,31 @@ public final class DataSchuelerEinwilligungen extends DataManagerRevised<Long[],
 		return einwilligungen.stream().map(this::map).toList();
 	}
 
+	/**
+	 * Liefert alle Einwilligungen für die angegebenen Schüler.
+	 *
+	 * @param ids Liste der Schüler IDs, deren Einwilligungen abgerufen werden sollen.
+	 *
+	 * @return Alle Einwilligungen der angegebenen Schüler.
+	 */
+	public List<SchuelerEinwilligung> getListBySchuelerIds(final List<Long> ids) {
+		if (ids.isEmpty())
+			return new ArrayList<>();
+		final List<DTOSchuelerDatenschutz> einwilligungen = conn.queryList(DTOSchuelerDatenschutz.QUERY_LIST_BY_SCHUELER_ID, DTOSchuelerDatenschutz.class, ids);
+		return einwilligungen.stream().map(this::map).toList();
+	}
+
+	/**
+	 * Liefert eine Response mit einer Liste mit {@link SchuelerEinwilligung} Objekten zu den übergebenen IDs.
+	 *
+	 * @param ids IDs der Schüler
+	 *
+	 * @return die Response mit der Liste von {@link SchuelerEinwilligung} Objekten
+	 */
+	public Response getListBySchuelerIdsAsResponse(final List<Long> ids) {
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(getListBySchuelerIds(ids)).build();
+	}
+
 	@Override
 	public List<SchuelerEinwilligung> getList() throws ApiOperationException {
 		final List<DTOSchuelerDatenschutz> einwilligungen = conn.queryList(
@@ -59,9 +87,9 @@ public final class DataSchuelerEinwilligungen extends DataManagerRevised<Long[],
 
 	@Override
 	protected Long[] getID(final Map<String, Object> attributes) throws ApiOperationException {
-		final Long idSchueler = JSONMapper.convertToLong(attributes.get("idSchueler"), false, "idSchueler");
-		final Long idEinwilligungsart = JSONMapper.convertToLong(attributes.get("idEinwilligungsart"), false, "idEinwilligungsart");
-		return new Long[]{idSchueler, idEinwilligungsart};
+		final Long tmpIdSchueler = JSONMapper.convertToLong(attributes.get("idSchueler"), false, "idSchueler");
+		final Long tmpIdEinwilligungsart = JSONMapper.convertToLong(attributes.get("idEinwilligungsart"), false, "idEinwilligungsart");
+		return new Long[]{ tmpIdSchueler, tmpIdEinwilligungsart };
 	}
 
 	@Override
@@ -74,13 +102,13 @@ public final class DataSchuelerEinwilligungen extends DataManagerRevised<Long[],
 
 	@Override
 	public void checkBeforeCreation(final Long[] newID, final Map<String, Object> initAttributes) throws ApiOperationException {
-		final Long idSchueler = JSONMapper.convertToLong(initAttributes.get("idSchueler"), false, "idSchueler");
-		final Long idEinwilligungsart = JSONMapper.convertToLong(initAttributes.get("idEinwilligungsart"), false, "idEinwilligungsart");
-		final DTOSchuelerDatenschutz existingEntry = conn.queryByKey(DTOSchuelerDatenschutz.class, idSchueler, idEinwilligungsart);
+		final Long tmpIdSchueler = JSONMapper.convertToLong(initAttributes.get("idSchueler"), false, "idSchueler");
+		final Long tmpIdEinwilligungsart = JSONMapper.convertToLong(initAttributes.get("idEinwilligungsart"), false, "idEinwilligungsart");
+		final DTOSchuelerDatenschutz existingEntry = conn.queryByKey(DTOSchuelerDatenschutz.class, tmpIdSchueler, tmpIdEinwilligungsart);
 		if (existingEntry != null)
 			throw new ApiOperationException(
 					Status.BAD_REQUEST,
-					"Es existiert bereits eine Einwilligung für die Kombination aus Schüler-ID %d und Einwilligungsart-ID %d.".formatted(idSchueler, idEinwilligungsart)
+					"Es existiert bereits eine Einwilligung für die Kombination aus Schüler-ID %d und Einwilligungsart-ID %d.".formatted(tmpIdSchueler, tmpIdEinwilligungsart)
 			);
 	}
 
@@ -89,9 +117,9 @@ public final class DataSchuelerEinwilligungen extends DataManagerRevised<Long[],
 			final Map<String, Object> map) throws ApiOperationException {
 		switch (name) {
 			case "idSchueler" -> {
-				final Long idSchueler = JSONMapper.convertToLong(value, false, "idSchueler");
-				if (!Objects.equals(dto.Schueler_ID, idSchueler))
-					throw new ApiOperationException(Status.BAD_REQUEST, "IdPatch %d ist ungleich dtoId %d".formatted(idSchueler, dto.Schueler_ID));
+				final Long tmpId = JSONMapper.convertToLong(value, false, "idSchueler");
+				if (!Objects.equals(dto.Schueler_ID, tmpId))
+					throw new ApiOperationException(Status.BAD_REQUEST, "IdPatch %d ist ungleich dtoId %d".formatted(tmpId, dto.Schueler_ID));
 			}
 			case "idEinwilligungsart" -> {
 				final Long idEinwilligungsart = JSONMapper.convertToLong(value, false, "idEinwilligungsart");
@@ -130,4 +158,5 @@ public final class DataSchuelerEinwilligungen extends DataManagerRevised<Long[],
 	public DTOSchuelerDatenschutz getDatabaseDTOByID(final Long[] id) {
 		return conn.queryByKey(DTOSchuelerDatenschutz.class, id[0], id[1]);
 	}
+
 }

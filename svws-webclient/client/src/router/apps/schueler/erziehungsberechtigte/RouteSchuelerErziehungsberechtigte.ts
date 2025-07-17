@@ -29,13 +29,14 @@ export class RouteSchuelerErziehungsberechtigte extends RouteNode<RouteDataSchue
 			const { id } = RouteNode.getIntParams(to_params, ["id"]);
 			await this.data.setEintrag(id);
 		} catch (e) {
-			return routeError.getErrorRoute(e as DeveloperNotificationException);
+			return await routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuelerErziehungsberechtigteProps {
 		return {
 			patch: this.data.patch,
+			patchPosition: this.data.patchPosition,
 			add: this.data.add,
 			data: () => this.data.daten,
 			mapErzieherarten: this.data.mapErzieherarten,

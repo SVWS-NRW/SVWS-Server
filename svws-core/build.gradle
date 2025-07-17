@@ -1,6 +1,7 @@
 configurations {
 	implementation.extendsFrom(jackson, resteasy, validation, swagger, email)
 	transpiler
+	transpilerClasspath
 }
 
 dependencies {
@@ -16,6 +17,8 @@ dependencies {
 			'**/svws_nrw/core/data/schild3/reporting/SchildReportingDate.java',
 			'**/svws_nrw/core/data/schild3/reporting/SchildReportingMemo.java'
 		])
+
+	transpilerClasspath project(':svws-transpile')
 }
 
 task cleanTranspiled(type: Delete) {
@@ -44,7 +47,7 @@ task transpile(type: JavaExec) {
 	inputs.files "$buildDir/transpiler-files.txt", configurations.transpiler.files
 	outputs.dir "$buildDir/ts"
 	description = "Transpiliert den Java-Code nach Typescript"
-	classpath = sourceSets.main.runtimeClasspath.plus(project(":svws-transpile").sourceSets.main.runtimeClasspath)
+	classpath = sourceSets.main.runtimeClasspath.plus(project.configurations.transpilerClasspath)
 	mainClass = "de.svws_nrw.transpiler.app.TranspileTs"
 	args "--output", "$buildDir/ts",
 		"--ignore", "de.svws_nrw",

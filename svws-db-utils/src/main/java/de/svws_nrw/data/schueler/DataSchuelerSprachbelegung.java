@@ -67,9 +67,9 @@ public final class DataSchuelerSprachbelegung extends DataManagerRevised<Long, D
 		daten.belegungVonAbschnitt = dto.AbschnittVon;
 		daten.belegungBisJahrgang = dto.ASDJahrgangBis;
 		daten.belegungBisAbschnitt = dto.AbschnittBis;
-		final Sprachreferenzniveau niveau = (dto.Referenzniveau == null) ? null : Sprachreferenzniveau.data().getWertByKuerzel(dto.Referenzniveau);
+		final Sprachreferenzniveau niveau = (dto.Referenzniveau == null) ? null : Sprachreferenzniveau.data().getWertBySchluessel(dto.Referenzniveau);
 		final SprachreferenzniveauKatalogEintrag niveauEintrag = (niveau == null) ? null : niveau.daten(abschnitt.schuljahr);
-		daten.referenzniveau = (niveauEintrag == null) ? null : niveauEintrag.kuerzel;
+		daten.referenzniveau = (niveauEintrag == null) ? null : niveauEintrag.schluessel;
 		daten.hatKleinesLatinum = (dto.KleinesLatinumErreicht != null) && dto.KleinesLatinumErreicht;
 		daten.hatLatinum = (dto.LatinumErreicht != null) && dto.LatinumErreicht;
 		daten.hatGraecum = (dto.GraecumErreicht != null) && dto.GraecumErreicht;
@@ -142,18 +142,18 @@ public final class DataSchuelerSprachbelegung extends DataManagerRevised<Long, D
 				dto.AbschnittBis = JSONMapper.convertToIntegerInRange(value, true, 1, ((schule.AnzahlAbschnitte == null) ? 2 : schule.AnzahlAbschnitte) + 1);
 			}
 			case "referenzniveau" -> {
-				final String kuerzel = JSONMapper.convertToString(value, true, false, 10);
-				if (kuerzel == null) {
+				final String schluessel = JSONMapper.convertToString(value, true, false, 10);
+				if (schluessel == null) {
 					dto.Referenzniveau = null;
 				} else {
-					final Sprachreferenzniveau niveau = Sprachreferenzniveau.data().getWertByKuerzel(kuerzel);
+					final Sprachreferenzniveau niveau = Sprachreferenzniveau.data().getWertBySchluessel(schluessel);
 					if (niveau == null)
-						throw new ApiOperationException(Status.BAD_REQUEST, "Das Sprachreferenzniveau-Kürzel %s ist ungültig.".formatted(kuerzel));
+						throw new ApiOperationException(Status.BAD_REQUEST, "Das Sprachreferenzniveau-Kürzel %s ist ungültig.".formatted(schluessel));
 					final SprachreferenzniveauKatalogEintrag niveauEintrag = niveau.daten(abschnitt.schuljahr);
 					if (niveauEintrag == null)
 						throw new ApiOperationException(Status.BAD_REQUEST,
-								"Das Sprachreferenzniveau-Kürzel %s ist dem Schuljahr %d ungültig.".formatted(kuerzel, abschnitt.schuljahr));
-					dto.Referenzniveau = niveauEintrag.kuerzel;
+								"Das Sprachreferenzniveau-Kürzel %s ist dem Schuljahr %d ungültig.".formatted(schluessel, abschnitt.schuljahr));
+					dto.Referenzniveau = niveauEintrag.schluessel;
 				}
 			}
 			case "hatKleinesLatinum" -> dto.KleinesLatinumErreicht = JSONMapper.convertToBoolean(value, false);

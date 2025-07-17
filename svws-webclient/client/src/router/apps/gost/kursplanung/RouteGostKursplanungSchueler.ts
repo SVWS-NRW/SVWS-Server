@@ -46,7 +46,7 @@ export class RouteGostKursplanungSchueler extends RouteNode<any, RouteGostKurspl
 				return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr }};
 			return false;
 		} catch (e) {
-			return routeError.getErrorRoute(e as DeveloperNotificationException);
+			return routeError.getSimpleErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 
@@ -62,7 +62,7 @@ export class RouteGostKursplanungSchueler extends RouteNode<any, RouteGostKurspl
 				return routeGostKursplanung.getRouteBlockung(abiturjahr, halbjahr.id, idBlockung);
 			return true;
 		} catch(e) {
-			return routeError.getErrorRoute(e instanceof Error ? e : new DeveloperNotificationException("Unbekannter Fehler beim Laden der Klausurplanungsdaten."));
+			return await routeError.getErrorRoute(e instanceof Error ? e : new DeveloperNotificationException("Unbekannter Fehler beim Laden der Klausurplanungsdaten."));
 		}
 	}
 
@@ -99,7 +99,7 @@ export class RouteGostKursplanungSchueler extends RouteNode<any, RouteGostKurspl
 				await routeGostKursplanung.data.setAuswahlSchueler(schueler);
 			}
 		} catch(e) {
-			return routeError.getErrorRoute(e instanceof Error ? e : new DeveloperNotificationException("Unbekannter Fehler beim Laden der Klausurplanungsdaten."));
+			return await routeError.getErrorRoute(e instanceof Error ? e : new DeveloperNotificationException("Unbekannter Fehler beim Laden der Klausurplanungsdaten."));
 		}
 	}
 

@@ -28,6 +28,8 @@ public class ProxyReportingSchuelerGostAbitur extends ReportingSchuelerGostAbitu
 	 */
 	public ProxyReportingSchuelerGostAbitur(final ReportingRepository reportingRepository, final Abiturdaten abiturdaten) {
 		super(abiturdaten.abiturjahr,
+				abiturdaten.schuljahrAbitur,
+				null,
 				ersetzeNullBlankTrim(abiturdaten.besondereLernleistung),
 				null,
 				ersetzeNullBlankTrim(abiturdaten.besondereLernleistungThema),
@@ -53,10 +55,10 @@ public class ProxyReportingSchuelerGostAbitur extends ReportingSchuelerGostAbitu
 				abiturdaten.gesamtPunkteVerschlechterung,
 				ersetzeNullBlankTrim(abiturdaten.note),
 				ersetzeNullBlankTrim(abiturdaten.projektKursThema),
-				abiturdaten.pruefungBestanden,
-				abiturdaten.schuljahrAbitur);
+				abiturdaten.pruefungBestanden);
 		this.reportingRepository = reportingRepository;
 
+		super.abiturSchuljahresabschnitt = this.reportingRepository.schuljahresabschnitt(super.abiturSchuljahr, 2);
 		super.besondereLernleistungNote = Note.fromKuerzel(abiturdaten.besondereLernleistungNotenKuerzel);
 
 		super.fachbelegungen()

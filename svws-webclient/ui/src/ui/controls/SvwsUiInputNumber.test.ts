@@ -1,10 +1,12 @@
 import { describe, test, expect } from "vitest";
-import { mount, shallowMount } from "@vue/test-utils";
+import { mount } from "@vue/test-utils";
 import SvwsUiInputNumber from "./SvwsUiInputNumber.vue";
 
 describe("HTML Tests SvwsUiInputNumber", () => {
 	test("HTML wird erzeugt.", () => {
-		const wrapper = mount(SvwsUiInputNumber);
+		const wrapper = mount(SvwsUiInputNumber, {
+			props: { modelValue: 10 },
+		});
 		expect(wrapper.html()).toContain("<");
 		wrapper.unmount();
 	});

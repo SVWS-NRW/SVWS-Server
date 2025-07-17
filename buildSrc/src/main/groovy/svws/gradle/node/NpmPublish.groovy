@@ -4,6 +4,7 @@ import org.apache.tools.ant.Project
 import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.AbstractExecTask;
 import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.Internal;
 import org.gradle.api.tasks.options.Option
 import org.gradle.api.tasks.OutputFile;
 import org.gradle.api.tasks.TaskAction;
@@ -12,6 +13,9 @@ import org.gradle.api.file.RelativePath;
 import org.gradle.api.provider.Property
 
 abstract class NpmPublish extends AbstractExecTask<NpmPublish> {
+
+	@Internal
+	NodePluginConfig cfg;
 
 	public String repository = null
 	public String actor = null
@@ -23,18 +27,18 @@ abstract class NpmPublish extends AbstractExecTask<NpmPublish> {
 	NpmPublish() {
 		super(NpmPublish.class);
 		dependsOn project.rootProject.tasks.getByPath('nodeDownload')
+		this.cfg = project.nodeconfig;
 	}
 
 	@TaskAction
-    @Override
-    protected void exec() {
-    	if ((!tokenOnly) && (actor == null))
-    		throw new Exception("Es wurde kein Benutzername/Actor angegeben.");
-    	if (token == null)
-    		throw new Exception("Es wurde kein Benutzertoken bzw. -kennwort angegeben.");
-        def cmdLine = this.getCommandLine();
-		def cfg = project.nodeconfig;
-		cfg.addEnvironment(this);
+	@Override
+	protected void exec() {
+		if ((!tokenOnly) && (actor == null))
+			throw new Exception("Es wurde kein Benutzername/Actor angegeben.");
+		if (token == null)
+			throw new Exception("Es wurde kein Benutzertoken bzw. -kennwort angegeben.");
+		def cmdLine = this.getCommandLine();
+		this.cfg.addEnvironment(this);
 		if (tokenOnly) {
 			this.environment('NPM_TOKEN_BASE64', this.token);
 		} else {
@@ -52,15 +56,15 @@ abstract class NpmPublish extends AbstractExecTask<NpmPublish> {
 		} else {
 			cmdLine.set(0, 'publish');
 		}
-		cmdLine.add(0, cfg.getNpmExectuable());
-		if (cfg.isWindows()) {
+		cmdLine.add(0, this.cfg.getNpmExectuable());
+		if (this.cfg.isWindows()) {
 			cmdLine.add(0, '/c');
 			cmdLine.add(0, 'cmd');
-		} else if (!cfg.isLinux() && !cfg.isMacOsX()) {
+		} else if (!this.cfg.isLinux() && !this.cfg.isMacOsX()) {
 			throw new Exception("Unsupported operating system for the node plugin!");
 		}		
 		this.setCommandLine(cmdLine);
-        super.exec();
-    }
+		super.exec();
+	}
 
 }

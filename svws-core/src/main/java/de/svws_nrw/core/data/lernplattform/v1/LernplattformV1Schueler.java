@@ -41,6 +41,10 @@ public class LernplattformV1Schueler {
 	@Schema(description = "Das Geschlecht des Schülers (m - männlich, w - weiblich, d - divers, x - ohne Angabe im Geburtenregister)", example = "d")
 	public String geschlecht;
 
+	/** Die Status-ID des Schülers. */
+	@Schema(description = "die Status-ID des Schülers (0=Neuaufnahmen, 1=Warteliste, 2=Aktiv, 3=Beurlaubt, 6=Extern, 8=Abschluss, 9=Abgänger)", example = "2")
+	public int status;
+
 	/** Logindaten des Schülers bestehend aus Benutzername und Initialpasswort. */
 	@Schema(description = "Logindaten des Schülers bestehend aus Benutzername und Initialpasswort.")
 	public @NotNull LernplattformV1Login lernplattformlogin = new LernplattformV1Login();
@@ -56,4 +60,5 @@ public class LernplattformV1Schueler {
 	public LernplattformV1Schueler() {
 		// leer
 	}
+
 }

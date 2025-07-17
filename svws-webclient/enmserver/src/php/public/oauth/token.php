@@ -13,7 +13,7 @@
 	 * @return void
 	 */
 
-	require_once $_SERVER['DOCUMENT_ROOT'].'/../app/init.php';
+	require_once __DIR__.'/../../app/init.php';
 
 	// Prüfe die HTTP-Methode ...
 	$auth->pruefeHTTPMethod([ "POST" ]);
@@ -31,4 +31,3 @@
 	echo json_encode($newToken, JSON_UNESCAPED_SLASHES);
 
 ?>
-

@@ -21,7 +21,7 @@
 			</svws-ui-menu>
 		</template>
 		<template #main>
-			<div class="app--page">
+			<div class="app--page h-full w-full overflow-hidden flex flex-col">
 				<svws-ui-header>
 					<svws-ui-input-wrapper>
 						<div class="flex items-center gap-2">
@@ -39,12 +39,23 @@
 						</svws-ui-button>
 					</svws-ui-input-wrapper>
 				</svws-ui-header>
-				<div class="svws-ui-page" v-if="error !== undefined">
+				<div class="svws-ui-page h-full w-full overflow-hidden" v-if="error !== undefined">
 					<div class="svws-ui-tab-content">
-						<div class="page page-grid-cards">
-							<svws-ui-content-card :title="error.message">
-								<pre>{{ error.stack }}</pre>
-							</svws-ui-content-card>
+						<div class="page page-flex-col overflow-hidden">
+							<div v-if="errorSimpleOperationResponse !== null" class="w-full h-1/2 overflow-hidden flex flex-col">
+								<div class="text-headline-md mb-4">Fehlermeldung vom SVWS-Server:</div>
+								<div class="w-full overflow-y-auto">
+									<div v-for="line of errorSimpleOperationResponse.log" :key="line" class="first:font-bold">{{ line.trim() }}</div>
+								</div>
+							</div>
+							<div v-else-if="(errorSimpleOperationResponse === null) && (errorText !== null)" class="w-full h-1/2 overflow-hidden flex flex-col">
+								<div class="text-headline-md mb-4">Fehlermeldung vom SVWS-Server:</div>
+								<pre class="w-full overflow-y-auto">{{ errorText }}</pre>
+							</div>
+							<div class="w-full h-1/2 overflow-hidden flex flex-col">
+								<div class="text-headline-md mb-4">Fehlermeldung: {{ error.message }}</div>
+								<pre class="w-full overflow-y-auto">{{ error.stack }}</pre>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -58,7 +69,7 @@
 
 	import { computed, ref } from "vue";
 	import type { ErrorProps } from "./SErrorProps";
-	import type { SimpleOperationResponse} from "@core";
+	import { SimpleOperationResponse} from "@core";
 	import { DeveloperNotificationException, OpenApiError, UserNotificationException } from "@core";
 
 	type CapturedError = {
@@ -82,6 +93,22 @@
 		return "Unbekannter Fehler";
 	})
 
+	const errorText = computed<string | null>(() => {
+		if (props.errortext === undefined)
+			return null;
+		return props.errortext;
+	});
+
+	const errorSimpleOperationResponse = computed<SimpleOperationResponse | null>(() => {
+		if (errorText.value === null)
+			return null;
+		try {
+			return SimpleOperationResponse.transpilerFromJSON(errorText.value);
+		} catch (e) {
+			return null;
+		}
+	});
+
 	function goBack() {
 		window.history.back();
 	}
@@ -92,23 +119,8 @@
 			return { id: 0, name: "Unbekannter Fehler", message: "Ein Fehler verhindert den weiteren Ablauf des SVWS-Client, der Fehler ist jedoch unbekannt", stack: "", log: null };
 		console.warn(reason);
 		const name = errorDescription.value;
-		let message = reason.message;
-		let log = null;
-		if (reason instanceof OpenApiError) {
-			if (reason.response instanceof Response) {
-				const text = await reason.response.text();
-				try {
-					const res = JSON.parse(text)
-					if (('log' in res) && ('success' in res))
-						log = res satisfies SimpleOperationResponse;
-				} catch {
-					if (text.length > 0)
-						message = text;
-					else
-						message += ` - Status: ${reason.response.status}`;
-				}
-			}
-		}
+		const message = reason.message;
+		const log = errorSimpleOperationResponse.value;
 		return { id: 0, name, message, stack: reason.stack?.split("\n") || '', log }
 	}
 

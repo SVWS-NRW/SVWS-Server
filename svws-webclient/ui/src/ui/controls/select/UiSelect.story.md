@@ -5,6 +5,7 @@ UiSelect ist eien Combobox, die zur Auswahl von vorgegebenen Option verwendet we
 <summary>Inhalt</summary>
 
 - [Props](#props)
+- [Fokusklassen](#fokusklassen)
 - [Tastaturbedienung](#tastaturbedienung)
 - [SelectManager](#selectmanager)
   - [SimpleSelectManager](#simpleselectmanager)
@@ -32,6 +33,8 @@ Folgende Props können gesetzt werden, um die Komponente zu konfigurieren.
 | maxOptions  | `number`                                          | `undefined` | Nur bei Multiselektion: Definiert die maximale Anzahl an auswählbaren Optionen. Wird mit `minOptions` abgeglichen                                      |
 
 
+### Fokusklassen
+Wie bei anderen Inputs auch kann am UiSelect eine Fokusklasse gesetzt werden, entweder `contentFocusField` oder `subNavigationFocusField`. Diese Zuordnung erfolgt über `<ui-select [...] class="contentFocusField"` bzw. `<ui-select [...] class="subNavigationFocusField"`. Je nachdem ob es sich bei dem Select um ein searchable Select handelt, wird die Fokusklasse dann intern an die Combobox (searchable = false) oder an das SearchInput (searchable = true) weitergeleitet und gesetzt. Bei `contentFocusField` ist das Select über `Alt` + `8` ansteuerbar.
 ### Tastaturbedienung
 Die Komponente kann mit der Tastatur bedient werden. Wichtig bei der Navigation durch das Dropdown ist, dass dabei nur der visuelle Fokus gesteuert wird. Der DOM-Fokus bleibt auf dem Input.
 

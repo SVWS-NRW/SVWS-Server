@@ -37,7 +37,7 @@ export class RouteGostBeratung extends RouteNode<RouteDataGostBeratung, RouteGos
 				throw new DeveloperNotificationException("Fehler: Die Route ist ungültig - Ein Abiturjahrgang muss angegeben sein");
 			await this.data.ladeDaten(abiturjahr, isEntering);
 		} catch(e) {
-			return routeError.getErrorRoute(e as DeveloperNotificationException);
+			return await routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 

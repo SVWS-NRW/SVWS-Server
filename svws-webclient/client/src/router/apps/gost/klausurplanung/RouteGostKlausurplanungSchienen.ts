@@ -33,7 +33,7 @@ export class RouteGostKlausurplanungSchienen extends RouteNode<any, RouteGostKla
 			if ((abiturjahr === undefined) || (halbjahr === null))
 				throw new DeveloperNotificationException("Fehler: Abiturjahr und Halbjahr müssen als Parameter der Route an dieser Stelle vorhanden sein.");
 		} catch (e) {
-			return routeError.getErrorRoute(e instanceof Error ? e : new DeveloperNotificationException("Unbekannter Fehler beim Laden der Klausurplanungsdaten."));
+			return await routeError.getErrorRoute(e instanceof Error ? e : new DeveloperNotificationException("Unbekannter Fehler beim Laden der Klausurplanungsdaten."));
 		}
 	}
 

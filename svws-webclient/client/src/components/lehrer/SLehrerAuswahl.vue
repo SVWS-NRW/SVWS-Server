@@ -2,19 +2,23 @@
 	<div class="h-full flex flex-col">
 		<div class="secondary-menu--headline">
 			<h1>Lehrkräfte</h1>
-			<div><abschnitt-auswahl :daten="schuljahresabschnittsauswahl" /></div>
+			<div>
+				<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
+			</div>
 		</div>
 		<div class="secondary-menu--header" />
 		<div class="secondary-menu--content">
-			<svws-ui-table :clickable="!manager().liste.auswahlExists()" :clicked="clickedEintrag" @update:clicked="lehrerDaten => gotoDefaultView(lehrerDaten.id)"
-				:items="rowsFiltered" :model-value="[...props.manager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)"
-				:columns selectable count :filter-open="true" :filtered="filterChanged()" :filterReset scroll-into-view scroll
-				v-model:sort-by-and-order="sortByAndOrder" :sort-by-multi allow-arrow-key-selection :focus-switching-enabled :focus-help-visible>
+			<svws-ui-table :lock-selectable="pendingStateManagerRegistry().pendingStateExists()" :clickable="!manager().liste.auswahlExists()"
+				:clicked="clickedEintrag" @update:clicked="lehrerDaten => gotoDefaultView(lehrerDaten.id)" :items="rowsFiltered"
+				:model-value="[...props.manager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)" :columns selectable count
+				:filter-open="true" :filtered="filterChanged()" :filterReset scroll-into-view scroll v-model:sort-by-and-order="sortByAndOrder"
+				:sort-by-multi allow-arrow-key-selection :focus-switching-enabled :focus-help-visible>
 				<template #search>
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" removable />
 				</template>
 				<template #filterAdvanced>
-					<svws-ui-multi-select v-model="filterPersonaltyp" title="Personaltyp" :items="manager().personaltypen.list()" :item-text="textPersonaltyp" class="col-span-full" />
+					<svws-ui-multi-select v-model="filterPersonaltyp" title="Personaltyp" :items="manager().personaltypen.list()" :item-text="textPersonaltyp"
+						class="col-span-full" />
 					<div class="col-span-full flex flex-wrap gap-x-5">
 						<svws-ui-checkbox type="toggle" v-model="filterNurSichtbar">Nur Sichtbare</svws-ui-checkbox>
 						<svws-ui-checkbox type="toggle" v-model="filterNurStatistikrelevant">Nur Statistik-Relevante</svws-ui-checkbox>
@@ -22,7 +26,8 @@
 				</template>
 				<template #actions>
 					<svws-ui-tooltip position="bottom" v-if="ServerMode.DEV.checkServerMode(serverMode) && hatKompetenzAendern">
-						<svws-ui-button :disabled="activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="props.gotoHinzufuegenView(true)" :has-focus="rowsFiltered.length === 0">
+						<svws-ui-button :disabled="activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="props.gotoHinzufuegenView(true)"
+							:has-focus="rowsFiltered.length === 0">
 							<span class="icon i-ri-add-line" />
 						</svws-ui-button>
 						<template #content>
@@ -38,7 +43,7 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { SortByAndOrder} from "@ui";
+	import type { SortByAndOrder } from "@ui";
 	import { useRegionSwitch, ViewType } from "@ui";
 	import type { PersonalTyp, LehrerListeEintrag } from "@core";
 	import { ServerMode, BenutzerKompetenz } from "@core";
@@ -101,7 +106,7 @@
 			if (list.isEmpty())
 				return undefined;
 			else {
-				const { a: key, b: order} = list.get(0);
+				const { a: key, b: order } = list.get(0);
 				return { key, order };
 			}
 		},
@@ -145,7 +150,7 @@
 		return props.manager().hasDaten() ? props.manager().auswahl() : null;
 	});
 
-	async function setAuswahl(items : LehrerListeEintrag[]) {
+	async function setAuswahl(items: LehrerListeEintrag[]) {
 		props.manager().liste.auswahlClear();
 		for (const item of items)
 			if (props.manager().liste.hasValue(item))

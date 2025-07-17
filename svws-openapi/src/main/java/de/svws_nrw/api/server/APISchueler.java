@@ -1,5 +1,7 @@
 package de.svws_nrw.api.server;
 
+import de.svws_nrw.core.data.schule.Fahrschuelerart;
+import de.svws_nrw.data.kataloge.DataKatalogFahrschuelerarten;
 import java.io.InputStream;
 
 import de.svws_nrw.asd.data.schueler.SchuelerBetriebsdaten;
@@ -16,7 +18,6 @@ import de.svws_nrw.asd.data.schueler.UebergangsempfehlungKatalogEintrag;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.betrieb.BetriebStammdaten;
 import de.svws_nrw.core.data.erzieher.ErzieherStammdaten;
-import de.svws_nrw.core.data.kataloge.KatalogEintrag;
 import de.svws_nrw.core.data.schueler.SchuelerKAoADaten;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittListeEintrag;
 import de.svws_nrw.core.data.schueler.SchuelerLernplattform;
@@ -34,7 +35,6 @@ import de.svws_nrw.data.betriebe.DataBetriebsStammdaten;
 import de.svws_nrw.data.erzieher.DataErzieherStammdaten;
 import de.svws_nrw.data.schueler.DataKatalogHerkuenfte;
 import de.svws_nrw.data.schueler.DataKatalogHerkunftsarten;
-import de.svws_nrw.data.schueler.DataKatalogSchuelerFahrschuelerarten;
 import de.svws_nrw.data.schueler.DataKatalogUebergangsempfehlung;
 import de.svws_nrw.data.schueler.DataSchuelerBetriebsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerEinwilligungen;
@@ -253,7 +253,7 @@ public class APISchueler {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerStammdaten.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataSchuelerStammdaten(conn, idSchuljahresabschnitt).addAsResponse(is), request, ServerMode.DEV, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
+				conn -> new DataSchuelerStammdaten(conn, idSchuljahresabschnitt).addAsResponse(is), request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
 	}
 
 	/**
@@ -949,35 +949,11 @@ public class APISchueler {
 
 
 	/**
-	 * Die OpenAPI-Methode für die Abfrage des Kataloges für die Fahrschülerarten.
-	 *
-	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param request   die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die Liste mit dem Katalog der Fahrschülerarten
-	 */
-	@GET
-	@Path("fahrschuelerarten")
-	@Operation(summary = "Gibt den Katalog der Fahrschülerarten zurück.",
-			description = "Erstellt eine Liste aller in dem Katalog vorhanden Fahrschülerarten unter Angabe der ID, eines Kürzels und der Bezeichnung. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
-	@ApiResponse(responseCode = "200", description = "Eine Liste von Fahrschülerarten-Katalog-Einträgen",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KatalogEintrag.class))))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Keine Fahrschülerart-Katalog-Einträge gefunden")
-	public Response getSchuelerFahrschuelerarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogSchuelerFahrschuelerarten(conn).getList(),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KEINE);
-	}
-
-
-	/**
 	 * Die OpenAPI-Methode für die Abfrage der Liste aller Erzieher.
 	 *
 	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
 	 * @param request   die Informationen zur HTTP-Anfrage
-	 * @param id		die ID des Schülers, dessen Erzieher zurückegeben werden.
+	 * @param id		die ID des Schülers, dessen Erzieher zurückgegeben werden.
 	 *
 	 * @return die Liste mit den einzelnen Erziehern
 	 */
@@ -992,11 +968,46 @@ public class APISchueler {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Erzieherdaten anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Erzieher-Einträge gefunden")
 	public Response getSchuelerErzieher(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> (new DataErzieherStammdaten(conn)).getListFromSchueler(id),
+		return DBBenutzerUtils.runWithTransaction(conn -> (new DataErzieherStammdaten(conn)).getListBySchuelerIdAsResponse(id),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
 	}
 
+
+
+	/**
+	 *
+	 * Erzeugt einen Erzieher-Eintrag und gibt diesen zurück
+	 *
+	 * @param schema       das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param idSchueler   die ID des Schülers, bei dem der Erziehungsberechtigte angelegt werden soll
+	 * @param pos          die Position, an der die Daten in die Datenbank gespeichert werden sollen
+	 * @param is           der InputStream, mit dem JSON-Patch-Objekt der Erzieherdaten
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return HTTP_201 und die angelegten Erzieherdaten, wenn erfolgreich.
+	 *         HTTP_400, wenn Fehler bei der Validierung auftreten HTTP_403 bei fehlender Berechtigung,
+	 *         HTTP_404, wenn der Eintrag nicht gefunden wurde
+	 *
+	 */
+	@POST
+	@Path("/erzieher/new/{idSchueler : \\d+}/{pos : [12]}")
+	@Operation(summary = "Erstellt einen neuen Erziehereintrag (Position 1 oder Position 2) für einen Schüler.",
+			description = "Erstellt einen neuen Erziehereintrag einen Schüler. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern"
+					+ " von Schülerdaten besitzt.")
+	@ApiResponse(responseCode = "201", description = "Die Erzieherdaten des Schülers",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErzieherStammdaten.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzulegen.")
+	@ApiResponse(responseCode = "404", description = "Kein Schüler-Erzieher-Eintrag mit der angegebenen ID gefunden")
+	public Response addSchuelerErzieher(@PathParam("schema") final String schema, @PathParam("idSchueler") final long idSchueler,
+			@PathParam("pos") final int pos,
+			@RequestBody(description = "Die Erzieherdaten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					schema = @Schema(implementation = ErzieherStammdaten.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataErzieherStammdaten(conn, idSchueler, pos).addAsResponse(is),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
+	}
 
 	/**
 	 * Die OpenAPI-Methode für die Abfrage der Liste aller Betriebe.
@@ -1145,7 +1156,7 @@ public class APISchueler {
 	@ApiResponse(responseCode = "404", description = "Kein Schüler-Vermerk-Eintrag mit der angegebenen ID gefunden")
 	public Response getVermerkdaten(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerVermerke(conn).getBySchuelerIdAsResponse(id),
-				request, ServerMode.DEV,
+				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
 	}
 
@@ -1172,7 +1183,7 @@ public class APISchueler {
 	public Response getVermerkdatenByVermerkArt(@PathParam("schema") final String schema, @PathParam("vermerkArt") final long vermerkArt,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerVermerke(conn).getListByVermerkartIdAsResponse(vermerkArt),
-				request, ServerMode.DEV,
+				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
 	}
 
@@ -1204,7 +1215,7 @@ public class APISchueler {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerVermerke.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerVermerke(conn).patchAsResponse(vid, is),
-				request, ServerMode.DEV,
+				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_VERMERKE_AENDERN);
 	}
 
@@ -1233,7 +1244,7 @@ public class APISchueler {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerVermerke.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerVermerke(conn).addAsResponse(is),
-				request, ServerMode.DEV,
+				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_VERMERKE_AENDERN);
 	}
 
@@ -1260,7 +1271,7 @@ public class APISchueler {
 	public Response deleteSchuelerVermerk(@PathParam("schema") final String schema, @PathParam("id") final long schuelerID,
 			@PathParam("idVermerk") final long idVermerk, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerVermerke(conn).deleteAsResponse(idVermerk),
-				request, ServerMode.DEV,
+				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_VERMERKE_AENDERN);
 	}
 
@@ -1286,10 +1297,35 @@ public class APISchueler {
 	public Response getSchuelerEinwilligungen(@PathParam("schema") final String schema, @PathParam("idSchueler") final long idSchueler,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerEinwilligungen(conn, idSchueler).getListAsResponse(),
-				request, ServerMode.DEV,
+				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
 	}
 
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Einwilligungen mehrerer Schüler.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param is        Inputstream mit einer Liste von Schüler IDs
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Einwilligungen der Schüler
+	 */
+	@POST
+	@Path("/einwilligungen")
+	@Operation(summary = "Liefert zu den Schüler IDs die zugehörigen Einwilligungen.",
+			description = "Liest die Einwilligungen der Schüler zu der angegebenen IDs aus der Datenbank und liefert diese zurück. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Einwilligungen des Schülers",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchuelerEinwilligung.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schülerdaten anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
+	public Response getSchuelerEinwilligungenBySchuelerIds(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der Schüler", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerEinwilligungen(conn, 0L).getListBySchuelerIdsAsResponse(JSONMapper.toListOfLong(is)),
+				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+	}
 
 	/**
 	 * Die OpenAPI-Methode für das Patchen einer Einwilligung.
@@ -1323,7 +1359,7 @@ public class APISchueler {
 		return DBBenutzerUtils.runWithTransaction(
 				conn -> new DataSchuelerEinwilligungen(conn, idSchueler).patchAsResponse(new Long[] { idSchueler, idEinwilligungsart },
 						is),
-				request, ServerMode.DEV,
+				request, ServerMode.STABLE,
 				//TODO: Benutzerkompetenz hinzufügen
 				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
 	}
@@ -1764,7 +1800,7 @@ public class APISchueler {
 	public Response getSchuelerLernplattformen(@PathParam("schema") final String schema, @PathParam("id") final long idSchueler,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerLernplattformen(conn, idSchueler).getListAsResponse(),
-				request, ServerMode.DEV,
+				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
 	}
 
@@ -1800,7 +1836,7 @@ public class APISchueler {
 		return DBBenutzerUtils.runWithTransaction(
 				conn -> new DataSchuelerLernplattformen(conn, idSchueler).patchAsResponse(new Long[] { idSchueler, idLernplattform },
 						is),
-				request, ServerMode.DEV,
+				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
 	}
 
@@ -1938,4 +1974,109 @@ public class APISchueler {
 				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
 	}
 
+	/**
+	 * Die OpenAPI-Methode für die Abfrage des Kataloges für die Fahrschülerarten.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste mit dem Katalog der Fahrschülerarten
+	 */
+	@GET
+	@Path("fahrschuelerarten")
+	@Operation(summary = "Gibt den Katalog der Fahrschülerarten zurück.",
+			description = "Erstellt eine Liste aller in dem Katalog vorhanden Fahrschülerarten unter Angabe der ID, eines Kürzels und der Bezeichnung. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste von Fahrschülerarten-Katalog-Einträgen",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Fahrschuelerart.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Fahrschülerart-Katalog-Einträge gefunden")
+	public Response getFahrschuelerarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogFahrschuelerarten(conn).getAllAsResponse(),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.KEINE);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Hinzufügen einer neuen Fahrschülerart.
+	 *
+	 * @param schema       das Datenbankschema
+	 * @param is           der Input-Stream mit den Daten der Fahrschülerart
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit der erstellten Fahrschülerart
+	 */
+	@POST
+	@Path("/fahrschuelerarten/create")
+	@Operation(summary = "Erstellt einer neuen Fahrschülerart und gibt das erstellte Objekt zurück.",
+			description = "Erstellt einer neuen Fahrschülerart und gibt das erstellte Objekt zurück. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen neuer Fahrschülerarten besitzt.")
+	@ApiResponse(responseCode = "201", description = "Die Fahrschülerart wurde erfolgreich hinzugefügt.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Fahrschuelerart.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Fahrschülerarten anzulegen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response addFahrschuelerart(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die Daten der zu erstellenden Fahrschülerart ohne ID, da diese automatisch generiert wird", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Fahrschuelerart.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogFahrschuelerarten(conn).addAsResponse(is),
+				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Patchen einer Fahrschülerart.
+	 *
+	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param id        die Datenbank-ID zur Identifikation der Fahrschülerart
+	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/{id : \\d+}/fahrschuelerarten")
+	@Operation(summary = "Patched Fahrschülerart.",
+			description = "Passt die Fahrschülerart zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Fahrschülerarten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Fahrschülerarten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Keine Fahrschülerart mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
+			+ " (z.B. eine negative ID)")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response patchFahrschuelerart(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@RequestBody(description = "Der Patch für die Fahrschülerart", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Fahrschuelerart.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogFahrschuelerarten(conn).patchAsResponse(id, is),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Entfernen mehrerer Fahrschülerarten.
+	 *
+	 * @param schema       das Datenbankschema
+	 * @param is           die IDs der Fahrschülerarten
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
+	 */
+	@DELETE
+	@Path("/fahrschuelerarten/delete/multiple")
+	@Operation(summary = "Entfernt mehrere Fahrschülerarten.",
+			description = "Entfernt mehrere Fahrschülerarten, insofern, die notwendigen Berechtigungen vorhanden sind.")
+	@ApiResponse(responseCode = "200", description = "Die Fahrschülerarten wurden erfolgreich entfernt.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.")
+	@ApiResponse(responseCode = "404", description = "Fahrschülerarten nicht vorhanden")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteFahrschuelerarten(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die IDs der zu löschenden Fahrschülerarten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogFahrschuelerarten(conn).deleteMultipleAsSimpleResponseList(
+				JSONMapper.toListOfLong(is)), request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
 }

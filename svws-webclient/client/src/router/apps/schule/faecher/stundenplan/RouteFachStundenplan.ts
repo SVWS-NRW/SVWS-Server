@@ -48,7 +48,7 @@ export class RouteFachStundenplan extends RouteNode<RouteDataFachStundenplan, Ro
 			// Setze den Stundenplan ...
 			await routeFachStundenplan.data.setEintrag(idFach, idStundenplan, wochentyp ?? 0, kwjahr, kw);
 		} catch (e) {
-			return routeError.getErrorRoute(e as DeveloperNotificationException);
+			return await routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 

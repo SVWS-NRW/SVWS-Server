@@ -30,7 +30,7 @@ export class RouteLehrerPersonaldaten extends RouteNode<any, RouteLehrer> {
 			if ((!routeLehrer.data.manager.hasPersonalDaten()) || (id !== routeLehrer.data.manager.personalDaten().id))
 				await routeLehrer.data.loadPersonaldaten();
 		} catch (e) {
-			return routeError.getErrorRoute(e as DeveloperNotificationException);
+			return await routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 

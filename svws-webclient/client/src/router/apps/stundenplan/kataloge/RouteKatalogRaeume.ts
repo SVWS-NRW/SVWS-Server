@@ -44,7 +44,7 @@ export class RouteKatalogRaeume extends RouteNode<RouteDataKatalogRaeume, RouteS
 				return;
 			}
 		} catch (e) {
-			return routeError.getErrorRoute(e as DeveloperNotificationException);
+			return await routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 		return super.update(to, to_params, from, from_params, isEntering, redirected);
 	}

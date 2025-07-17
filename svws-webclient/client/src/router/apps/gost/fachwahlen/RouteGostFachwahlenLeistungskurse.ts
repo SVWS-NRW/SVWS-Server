@@ -42,7 +42,7 @@ export class RouteGostFachwahlenLeistungskurse extends RouteNode<any, RouteGost>
 				return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr }};
 			return false;
 		} catch (e) {
-			return routeError.getErrorRoute(e as DeveloperNotificationException);
+			return routeError.getSimpleErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 

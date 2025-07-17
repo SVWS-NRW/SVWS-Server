@@ -51,7 +51,7 @@ export class RouteSchuelerAbitur extends RouteNode<RouteDataSchuelerAbitur, Rout
 				return false;
 			return routeSchueler.getRouteDefaultChild({ id });
 		} catch (e) {
-			return routeError.getErrorRoute(e as DeveloperNotificationException);
+			return routeError.getSimpleErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 

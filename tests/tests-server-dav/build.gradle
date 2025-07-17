@@ -9,7 +9,7 @@ plugins {
 apply from: ('../subproject-plugin.gradle')
 
 // Erzeuge eine unique JobId welche in den Tasks, temporären Dateien und Container verwendet wird.
-def jobId = UUID.randomUUID().toString().substring(0, 2)
+def jobId = UUID.randomUUID().toString().substring(0, 8)
 
 /**
  * Konfiguration für das Subpackage bzw. die Tests

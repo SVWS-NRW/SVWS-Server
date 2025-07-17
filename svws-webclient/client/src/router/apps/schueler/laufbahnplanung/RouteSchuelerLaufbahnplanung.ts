@@ -43,7 +43,7 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 				return false;
 			return routeSchueler.getRouteDefaultChild({ id });
 		} catch (e) {
-			return routeError.getErrorRoute(e as DeveloperNotificationException);
+			return routeError.getSimpleErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 
@@ -68,7 +68,7 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 					return routeSchueler.getRoute({ id });
 				}
 		} catch (e) {
-			return routeError.getErrorRoute(e as DeveloperNotificationException);
+			return await routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 

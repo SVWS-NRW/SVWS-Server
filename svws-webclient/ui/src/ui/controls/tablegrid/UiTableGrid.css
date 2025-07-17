@@ -51,6 +51,7 @@
 		& > tbody > tr > td,
 		& > tfoot > tr > th,
 		& > tfoot > tr > td {
+			@apply focus-visible:outline-0;
 			@apply flex flex-col;
 			@apply px-1 pb-0.5;
 			overflow: hidden;

@@ -10,8 +10,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.klassen.KlassenDaten;
+import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchsdaten;
 import de.svws_nrw.asd.data.schule.SchuleStammdaten;
+import de.svws_nrw.asd.data.schule.SchulformKatalogEintrag;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.core.adt.map.ListMap3DLongKeys;
 import de.svws_nrw.core.adt.map.ListMap4DLongKeys;
 import de.svws_nrw.core.data.erzieher.ErzieherStammdaten;
@@ -19,9 +22,11 @@ import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
 import de.svws_nrw.core.data.gost.GostLaufbahnplanungBeratungsdaten;
 import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
+import de.svws_nrw.core.data.kataloge.KatalogEntlassgrund;
 import de.svws_nrw.core.data.kataloge.OrtKatalogEintrag;
 import de.svws_nrw.core.data.kataloge.OrtsteilKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
+import de.svws_nrw.core.data.kataloge.SchulEintrag;
 import de.svws_nrw.core.data.reporting.ReportingParameter;
 import de.svws_nrw.asd.data.schueler.SchuelerLeistungsdaten;
 import de.svws_nrw.asd.data.schueler.SchuelerLernabschnittsdaten;
@@ -41,6 +46,7 @@ import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.core.utils.stundenplan.StundenplanManager;
 import de.svws_nrw.data.erzieher.DataErzieherarten;
 import de.svws_nrw.data.jahrgaenge.DataJahrgangsdaten;
+import de.svws_nrw.data.kataloge.DataKatalogEntlassgruende;
 import de.svws_nrw.data.kataloge.DataOrte;
 import de.svws_nrw.data.kataloge.DataOrtsteile;
 import de.svws_nrw.data.klassen.DataKlassendaten;
@@ -48,6 +54,7 @@ import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.schueler.DataKatalogSchuelerFoerderschwerpunkte;
 import de.svws_nrw.data.schule.DataReligionen;
 import de.svws_nrw.data.schule.DataSchuleStammdaten;
+import de.svws_nrw.data.schule.DataSchulen;
 import de.svws_nrw.data.stundenplan.DataStundenplan;
 import de.svws_nrw.data.stundenplan.DataStundenplanListe;
 import de.svws_nrw.data.stundenplan.DataStundenplanPausenaufsichten;
@@ -107,6 +114,9 @@ public class ReportingRepository {
 	/** Die Stammdaten der Schule zur Datenbankanbindung. */
 	private final SchuleStammdaten schulstammdaten;
 
+	/** Stellt den Katalog der Entlassgründe über eine Map zur Entlassgrund-ID zur Verfügung */
+	private Map<Long, KatalogEntlassgrund> katalogEntlassgruende;
+
 	/** Stellt den Katalog der Förderschwerpunkte über eine Map zur Förderschwerpunkt-ID zur Verfügung */
 	private Map<Long, FoerderschwerpunktEintrag> katalogFoerderschwerpunkte;
 
@@ -118,6 +128,13 @@ public class ReportingRepository {
 
 	/** Stellt die Religionen aus dem Katalog der Schule zur Religion-ID zur Verfügung */
 	private Map<Long, ReligionEintrag> katalogReligionen;
+
+	/** Stellt die Schulen aus dem Katalog der Schulen der Schule zur Schul-ID zur Verfügung */
+	private Map<Long, SchulEintrag> katalogSchulen;
+
+	/** Stellt die Schulformen gemäß ihrer ID aus der Historie des Core-Types zur Verfügung */
+	private Map<Long, SchulformKatalogEintrag> katalogSchulformen;
+
 
 	/** Stellt die Daten aller bereits abgerufenen Leistungsdaten zur Schüler-, Lernabschnitts- und Leistungsdaten-ID zur Verfügung. */
 	private final ListMap3DLongKeys<SchuelerLeistungsdaten> mapAlleLeistungsdaten = new ListMap3DLongKeys<>();
@@ -154,6 +171,9 @@ public class ReportingRepository {
 
 	/** Stellt die Sprachbelegungen von bereits abgerufenen Schülern über eine Map zur Schüler-ID zur Verfügung */
 	private final Map<Long, List<Sprachbelegung>> mapSchuelerSprachbelegungen = new HashMap<>();
+
+	/** Stellt die Schulbesuchsdaten von bereits abgerufenen Schülern über eine Map zur Schüler-ID zur Verfügung */
+	private final Map<Long, SchuelerSchulbesuchsdaten> mapSchuelerSchulbesuchsdaten = new HashMap<>();
 
 	/** Stellt die Stammdaten von bereits abgerufenen Schülern über eine Map zur Schüler-ID zur Verfügung */
 	private final Map<Long, SchuelerStammdaten> mapSchuelerStammdaten = new HashMap<>();
@@ -284,6 +304,10 @@ public class ReportingRepository {
 		try {
 			this.logger.logLn(LogLevel.DEBUG, 8, "Ermittle Katalogdaten.");
 
+			this.katalogEntlassgruende =
+					new DataKatalogEntlassgruende(this.conn).getAll().stream().collect(Collectors.toMap(e -> e.id, e -> e));
+			this.logger.logLn(LogLevel.DEBUG, 8, "Katalog Endlassgründe geladen.");
+
 			this.katalogFoerderschwerpunkte =
 					new DataKatalogSchuelerFoerderschwerpunkte(this.conn).getAll().stream().collect(Collectors.toMap(f -> f.id, f -> f));
 			this.logger.logLn(LogLevel.DEBUG, 8, "Katalog Förderschwerpunkte geladen.");
@@ -296,6 +320,15 @@ public class ReportingRepository {
 
 			this.katalogReligionen = new DataReligionen(this.conn).getAll().stream().collect(Collectors.toMap(r -> r.id, r -> r));
 			this.logger.logLn(LogLevel.DEBUG, 8, "Katalog Religionen geladen.");
+
+			this.katalogSchulen = new DataSchulen(this.conn).getAll().stream().collect(Collectors.toMap(s -> s.id, s -> s));
+			this.logger.logLn(LogLevel.DEBUG, 8, "Katalog Schulen geladen.");
+
+			final ArrayList<SchulformKatalogEintrag> schulformen = new ArrayList<>();
+			for (final Schulform schulform : Schulform.values())
+				schulformen.addAll(schulform.historie());
+			this.katalogSchulformen = schulformen.stream().collect(Collectors.toMap(sfke -> sfke.id, sfke -> sfke));
+			this.logger.logLn(LogLevel.DEBUG, 8, "Katalog Schulformen geladen.");
 
 			this.mapErzieherarten = new DataErzieherarten(this.conn).getAll().stream().collect(Collectors.toMap(a -> a.id,
 					a -> new ProxyReportingErzieherArt(this, a)));
@@ -453,7 +486,7 @@ public class ReportingRepository {
 	 * @param schuljahr Das Schuljahr des angeforderten Schuljahresabschnitts
 	 * @param abschnitt Der Abschnitt des angeforderten Schuljahresabschnitts
 	 *
-	 * @return Schuljahresabschnitt der Schule zu den Parametern
+	 * @return Schuljahresabschnitt der Schule zu den Parametern oder null, wenn der Abschnitt nicht existiert.
 	 */
 	public ReportingSchuljahresabschnitt schuljahresabschnitt(final int schuljahr, final int abschnitt) {
 		final List<ReportingSchuljahresabschnitt> reportingSchuljahresabschnitte =
@@ -486,7 +519,16 @@ public class ReportingRepository {
 
 
 	/**
-	 * Stellt die eine Map der Förderschwerpunkt-Katalog-Einträge der Schule aus der Datenbankverbindung zu deren IDs zur Verfügung
+	 * Stellt eine Map der Entlassgründe der Schule aus der Datenbankverbindung zu deren IDs zur Verfügung
+	 *
+	 * @return Map der Endlassgründe
+	 */
+	public Map<Long, KatalogEntlassgrund> katalogEntlassgrunde() {
+		return katalogEntlassgruende;
+	}
+
+	/**
+	 * Stellt eine Map der Förderschwerpunkt-Katalog-Einträge der Schule aus der Datenbankverbindung zu deren IDs zur Verfügung
 	 *
 	 * @return Map der Förderschwerpunkt-Katalog-Einträge
 	 */
@@ -521,6 +563,23 @@ public class ReportingRepository {
 		return katalogReligionen;
 	}
 
+	/**
+	 * Stellt die Schulen aus dem Katalog der Schulen der Schule zur Schul-ID zur Verfügung
+	 *
+	 * @return Map der Schul-Katalog-Einträge
+	 */
+	public Map<Long, SchulEintrag> katalogSchulen() {
+		return katalogSchulen;
+	}
+
+	/**
+	 * Stellt die Schulformen gemäß ihrer ID aus der Historie des Core-Types zur Verfügung
+	 *
+	 * @return Map der Schulform-Einträge
+	 */
+	public Map<Long, SchulformKatalogEintrag> katalogSchulformen() {
+		return katalogSchulformen;
+	}
 
 
 	/**
@@ -647,6 +706,15 @@ public class ReportingRepository {
 	 */
 	public Map<Long, LehrerStammdaten> mapLehrerStammdaten() {
 		return mapLehrerStammdaten;
+	}
+
+	/**
+	 * Stellt die Schulbesuchsdaten von bereits abgerufenen Schülern über eine Map zur Schüler-ID zur Verfügung
+	 *
+	 * @return Map der Schulbesuchsdaten von bereits abgerufenen Schülern
+	 */
+	public Map<Long, SchuelerSchulbesuchsdaten> mapSchuelerSchulbesuchsdaten() {
+		return mapSchuelerSchulbesuchsdaten;
 	}
 
 	/**
@@ -793,7 +861,7 @@ public class ReportingRepository {
 
 		final List<ReportingLehrer> resultLehrer = new ArrayList<>();
 
-		// Sofern noch keine Reporting-Objekte der Lehrer existieren erzeuge sie und speichere sie.
+		// Sofern noch keine Reporting-Objekte der Lehrer existieren, erzeuge sie und speichere sie.
 		for (final Long idLehrer : idsLehrer) {
 			if ((idLehrer == null) || (idLehrer < 0)) {
 				continue;
@@ -842,7 +910,7 @@ public class ReportingRepository {
 
 		final List<ReportingSchueler> resultSchueler = new ArrayList<>();
 
-		// Sofern noch keine Reporting-Objekte der Schüler existieren erzeuge sie und speichere sie.
+		// Sofern noch keine Reporting-Objekte der Schüler existieren, erzeuge sie und speichere sie.
 		for (final Long idSchueler : idsSchueler) {
 			if ((idSchueler == null) || (idSchueler < 0)) {
 				continue;

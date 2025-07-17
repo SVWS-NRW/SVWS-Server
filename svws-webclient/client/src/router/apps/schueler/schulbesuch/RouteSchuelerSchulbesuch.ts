@@ -30,7 +30,7 @@ export class RouteSchuelerSchulbesuch extends RouteNode<RouteDataSchuelerSchulbe
 			if (id !== undefined)
 				await this.data.ladeDaten(routeSchueler.data.manager.liste.get(id));
 		} catch (e) {
-			return routeError.getErrorRoute(e as DeveloperNotificationException);
+			return await routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 

@@ -80,7 +80,7 @@ export class RouteStundenplan extends RouteAuswahlNode<StundenplanListeManager, 
 				return { name: routeKatalogZeitraster.name, params };
 			return false;
 		} catch (e) {
-			return routeError.getErrorRoute(e as DeveloperNotificationException);
+			return routeError.getSimpleErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 

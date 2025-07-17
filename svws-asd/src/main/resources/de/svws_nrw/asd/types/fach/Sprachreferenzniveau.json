@@ -1,11 +1,22 @@
 {
-	"version": 1,
+	"version": 2,
 	"daten": [ {
+		"bezeichner": "A1M",
+		"idStatistik": "14",
+		"historie": [ {
+			"id": 14,
+			"schluessel": "A1-",
+			"kuerzel": "Pre-A1",
+			"text": "Pre-A1",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
 		"bezeichner": "A1",
 		"idStatistik": "1",
 		"historie": [ {
 			"id": 1,
-			"schluessel": "1",
+			"schluessel": "A1",
 			"kuerzel": "A1",
 			"text": "A1",
 			"gueltigVon": null,
@@ -16,7 +27,7 @@
 		"idStatistik": "2",
 		"historie": [ {
 			"id": 2,
-			"schluessel": "2",
+			"schluessel": "A1+",
 			"kuerzel": "A1+",
 			"text": "A1+",
 			"gueltigVon": null,
@@ -27,7 +38,7 @@
 		"idStatistik": "3",
 		"historie": [ {
 			"id": 3,
-			"schluessel": "3",
+			"schluessel": "A1/A2",
 			"kuerzel": "A1/A2",
 			"text": "A1/A2",
 			"gueltigVon": null,
@@ -38,7 +49,7 @@
 		"idStatistik": "4",
 		"historie": [ {
 			"id": 4,
-			"schluessel": "4",
+			"schluessel": "A2",
 			"kuerzel": "A2",
 			"text": "A2",
 			"gueltigVon": null,
@@ -49,7 +60,7 @@
 		"idStatistik": "5",
 		"historie": [ {
 			"id": 5,
-			"schluessel": "5",
+			"schluessel": "A2+",
 			"kuerzel": "A2+",
 			"text": "A2+",
 			"gueltigVon": null,
@@ -60,7 +71,7 @@
 		"idStatistik": "6",
 		"historie": [ {
 			"id": 6,
-			"schluessel": "6",
+			"schluessel": "A2/B1",
 			"kuerzel": "A2/B1",
 			"text": "A2/B1",
 			"gueltigVon": null,
@@ -71,7 +82,7 @@
 		"idStatistik": "7",
 		"historie": [ {
 			"id": 7,
-			"schluessel": "7",
+			"schluessel": "B1",
 			"kuerzel": "B1",
 			"text": "B1",
 			"gueltigVon": null,
@@ -82,7 +93,7 @@
 		"idStatistik": "8",
 		"historie": [ {
 			"id": 8,
-			"schluessel": "8",
+			"schluessel": "B1+",
 			"kuerzel": "B1+",
 			"text": "B1+",
 			"gueltigVon": null,
@@ -93,7 +104,7 @@
 		"idStatistik": "9",
 		"historie": [ {
 			"id": 9,
-			"schluessel": "9",
+			"schluessel": "B1/B2",
 			"kuerzel": "B1/B2",
 			"text": "B1/B2",
 			"gueltigVon": null,
@@ -104,7 +115,7 @@
 		"idStatistik": "10",
 		"historie": [ {
 			"id": 10,
-			"schluessel": "10",
+			"schluessel": "B2",
 			"kuerzel": "B2",
 			"text": "B2",
 			"gueltigVon": null,
@@ -115,7 +126,7 @@
 		"idStatistik": "11",
 		"historie": [ {
 			"id": 11,
-			"schluessel": "11",
+			"schluessel": "B2/C1",
 			"kuerzel": "B2/C1",
 			"text": "B2/C1",
 			"gueltigVon": null,
@@ -126,7 +137,7 @@
 		"idStatistik": "12",
 		"historie": [ {
 			"id": 12,
-			"schluessel": "12",
+			"schluessel": "C1",
 			"kuerzel": "C1",
 			"text": "C1",
 			"gueltigVon": null,
@@ -137,7 +148,7 @@
 		"idStatistik": "13",
 		"historie": [ {
 			"id": 13,
-			"schluessel": "13",
+			"schluessel": "C2",
 			"kuerzel": "C2",
 			"text": "C2",
 			"gueltigVon": null,

@@ -321,6 +321,7 @@ public class DataLernplattformen {
 		lernplattformSchueler.nachname = schuelerDto.Nachname;
 		lernplattformSchueler.idJahrgang = schuelerLernabschnittsdaten.Jahrgang_ID;
 		lernplattformSchueler.idKlasse = schuelerLernabschnittsdaten.Klassen_ID;
+		lernplattformSchueler.status = schuelerDto.idStatus;
 
 		if (schuelerCredentialsDto != null) {
 			lernplattformSchueler.lernplattformlogin.benutzername = schuelerCredentialsDto.Benutzername;

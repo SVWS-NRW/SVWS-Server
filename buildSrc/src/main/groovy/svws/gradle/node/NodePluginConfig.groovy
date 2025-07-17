@@ -21,34 +21,33 @@ abstract class NodePluginConfig {
 	def rootProject;
 	def project;
 
-    abstract Property<String> getUrl();
-    abstract Property<String> getVersion();
-    abstract Property<String> getNpmVersion();
-    abstract Property<String> getTsVersion();
-    abstract Property<String> getTsNodeTypesVersion();
+	abstract Property<String> getUrl();
+	abstract Property<String> getVersion();
+	abstract Property<String> getNpmVersion();
+	abstract Property<String> getTsVersion();
+	abstract Property<String> getTsNodeTypesVersion();
 
-    NodePluginConfig(Project p) {
-    	this.project = p;
-    	this.rootProject = p.rootProject;
-    	url.convention('https://nodejs.org/dist/v');
-    	version.convention('22.17.0'); // https://nodejs.org/en/download/prebuilt-installer
-    	npmVersion.convention('10.9.2');
-    	tsVersion.convention('5.8.3'); // https://github.com/microsoft/TypeScript/releases
-    	tsNodeTypesVersion.convention('24.0.8'); // https://www.npmjs.com/package/@types/node
-			0
-    }
+	NodePluginConfig(Project p) {
+		this.project = p;
+		this.rootProject = p.rootProject;
+		url.convention('https://nodejs.org/dist/v');
+		version.convention('22.17.0'); // https://nodejs.org/en/download/prebuilt-installer
+		npmVersion.convention('10.9.2');
+		tsVersion.convention('5.8.3'); // https://github.com/microsoft/TypeScript/releases
+		tsNodeTypesVersion.convention('24.0.8'); // https://www.npmjs.com/package/@types/node
+	}
 
-    boolean isLinux() {
-    	return os.isLinux();
-    }
+	boolean isLinux() {
+		return os.isLinux();
+	}
 
-    boolean isWindows() {
-    	return os.isWindows();
-    }
+	boolean isWindows() {
+		return os.isWindows();
+	}
 
-    boolean isMacOsX() {
-    	return os.isMacOsX();
-    }
+	boolean isMacOsX() {
+		return os.isMacOsX();
+	}
 
 	String getOSString() {
 		if (os.isLinux())
@@ -61,12 +60,12 @@ abstract class NodePluginConfig {
 	}
 
 	String getArchString() {
-    	if (["x86_64", "amd64", "x64", "x86-64"].contains(arch))
+		if (["x86_64", "amd64", "x64", "x86-64"].contains(arch))
 			return "x64";
-    	if (["arm64", "arm-v8", "aarch64"].contains(arch))
+		if (["arm64", "arm-v8", "aarch64"].contains(arch))
 			return "arm64";
 		if (["ppc64"].contains(arch))
-		    return "ppc64le";
+			return "ppc64le";
 		throw new Exception("Unsupported operating system architecture ${os.getName()} ${arch} for the node plugin!")
 	}
 
@@ -83,7 +82,7 @@ abstract class NodePluginConfig {
 	}
 
 	String getCompressedFilenameExt() {
-        return "node-v" + this.version.get() + "-" + this.getOSString() + "-" + this.getArchString() + "." + this.getCompressedFileType();
+		return "node-v" + this.version.get() + "-" + this.getOSString() + "-" + this.getArchString() + "." + this.getCompressedFileType();
 	}
 
 	URL getDownloadURL() {
@@ -199,24 +198,24 @@ abstract class NodePluginConfig {
 		def nodePath = null;
 		for (entry in t.getEnvironment()) {
 			if ("PATH".equals(entry.key.toUpperCase())) {
-			    path = entry.value;
-			    break;
+				path = entry.value;
+				break;
 			}
 			if ("NODE_PATH".equals(entry.key.toUpperCase())) {
-			    nodePath = entry.value;
-			    break;
+				nodePath = entry.value;
+				break;
 			}
 		}
 		def rootNodePath = "${project.rootProject.projectDir}/node";
 		if ((nodePath == null) || ("".equals(nodePath.trim()))) {
-		    t.environment('NODE_PATH', rootNodePath);
+			t.environment('NODE_PATH', rootNodePath);
 		} else if (this.isWindows()) {
 			t.environment('NODE_PATH', rootNodePath + ";" + nodePath);
 		} else {
 			t.environment('NODE_PATH', rootNodePath + ":" + nodePath);
 		}
 		if ((path == null) || ("".equals(path.trim()))) {
-		    t.environment('PATH', this.getNodeDirectory());
+			t.environment('PATH', this.getNodeDirectory());
 		} else if (this.isWindows()) {
 			t.environment('PATH', this.getNodeDirectory() + ";" + path);
 		} else {

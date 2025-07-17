@@ -285,12 +285,15 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 					DTOSchuelerLernabschnittsdaten.class,
 					schuelerIDs);
 			final Map<Long, DTOSchuelerLernabschnittsdaten> mapAbschnitte = listAbschnitte.stream().collect(Collectors.toMap(l -> l.Schueler_ID, l -> l));
-			final List<SchuelerListeEintrag> tmpSchuelerListe = schuelerDTOs.stream()
-					.map(s -> DataSchuelerliste.erstelleSchuelerlistenEintrag(s,
-							mapSchuljahresabschnitte.get(mapAbschnitte.get(s.ID).Schuljahresabschnitts_ID).Jahr,
-							mapAbschnitte.get(s.ID), mapJahrgaenge, schulform))
-					.toList();
-
+			final List<SchuelerListeEintrag> tmpSchuelerListe = new ArrayList<>();
+			for (final DTOSchueler s : schuelerDTOs) {
+				final DTOSchuelerLernabschnittsdaten abschnitt = mapAbschnitte.get(s.ID);
+				if (abschnitt == null)
+					throw new ApiOperationException(Status.CONFLICT,
+							"Für die Schüler-ID %d aus der Blockung konnte der aktuelle Lernabschnitt nicht bestimmt werden.".formatted(s.ID));
+				tmpSchuelerListe.add(DataSchuelerliste.erstelleSchuelerlistenEintrag(s, mapSchuljahresabschnitte.get(abschnitt.Schuljahresabschnitts_ID).Jahr,
+						abschnitt, mapJahrgaenge, schulform));
+			}
 			for (final SchuelerListeEintrag s : tmpSchuelerListe) {
 				final DTOSchueler dto = mapSchueler.get(s.id);
 				if (dto == null)

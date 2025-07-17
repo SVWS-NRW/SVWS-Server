@@ -1,12 +1,14 @@
 configurations {
 	implementation.extendsFrom(jackson, resteasy, validation, swagger)
 	transpiler
+	transpilerClasspath
 }
 
 dependencies {
 	implementation project(':svws-transpile')
 
 	transpiler fileTree(dir: "$projectDir/src/main/java", includes: ['**/svws_nrw/schulen/*/data/**/*.java', '**/svws_nrw/schulen/*/utils/**/*.java'])
+	transpilerClasspath project(':svws-transpile')
 }
 
 task cleanTranspiled(type: Delete) {
@@ -29,13 +31,14 @@ task transpile(type: JavaExec) {
 	dependsOn compileJava
 	dependsOn prepareTranspile
 	dependsOn project(':svws-transpile').tasks.assemble
+	def transpilerResources = project.files(file("${project(':svws-transpile').projectDir}/src/main/resources"))
 	doFirst {
 		delete fileTree(dir: "$buildDir/ts"), fileTree(dir: "$buildDir/tmp/transpiler/ts", includes: ["**/*.class"])
 	}
 	inputs.files "$buildDir/transpiler-files.txt", configurations.transpiler.files
 	outputs.dir "$buildDir/ts"
 	description = "Transpiliert den Java-Code nach Typescript"
-	classpath = sourceSets.main.runtimeClasspath.plus(project(":svws-transpile").sourceSets.main.runtimeClasspath)
+	classpath = sourceSets.main.runtimeClasspath.plus(project.configurations.transpilerClasspath).plus(transpilerResources)
 	mainClass = "de.svws_nrw.transpiler.app.TranspileTs"
 	args "--output", "$buildDir/ts",
 		"--ignore", "de.svws_nrw",
@@ -51,14 +54,14 @@ assemble.dependsOn transpile
 apply from: "$rootDir/publish-helper.gradle"
 
 publishing {
-  publications {
-    publishJava(MavenPublication) {
-      artifactId = 'svws-schulen'
-      pom {
-        name = 'SVWS Bibliothek für den Zugriff auf die Daten des vom Land NRW bereitgestellten Web-Services zu Informationen rund um Schulen'
-        description = 'Diese Bibliothek ermöglicht den Zugriff auf die Schulinformationen, wie sie vom Web-Service des Landes NRW bereitgestellt werden.'
-      }
-    }
-  }
+	publications {
+		publishJava(MavenPublication) {
+			artifactId = 'svws-schulen'
+			pom {
+				name = 'SVWS Bibliothek für den Zugriff auf die Daten des vom Land NRW bereitgestellten Web-Services zu Informationen rund um Schulen'
+				description = 'Diese Bibliothek ermöglicht den Zugriff auf die Schulinformationen, wie sie vom Web-Service des Landes NRW bereitgestellt werden.'
+			}
+		}
+	}
 }
 

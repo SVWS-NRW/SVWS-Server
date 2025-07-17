@@ -47,7 +47,7 @@ class DataSchuelerEinwilligungenTest {
 	void initDTOTest() {
 		dataSchuelerEinwilligungen = new DataSchuelerEinwilligungen(conn, 1L);
 		final DTOSchuelerDatenschutz dto = getDTOSchuelerDatenschutz();
-		final Long[] idArray = new Long[]{1L, 2L};
+		final Long[] idArray = new Long[] { 1L, 2L };
 		final Map<String, Object> initAttributes = new HashMap<>();
 
 		dataSchuelerEinwilligungen.initDTO(dto, idArray, initAttributes);
@@ -64,9 +64,10 @@ class DataSchuelerEinwilligungenTest {
 	@DisplayName("getByID | Erfolg")
 	void getByIDTest() throws ApiOperationException {
 		final var dtoSchuelerDatenschutz = getDTOSchuelerDatenschutz();
-		when(this.conn.queryByKey(DTOSchuelerDatenschutz.class, dtoSchuelerDatenschutz.Schueler_ID, dtoSchuelerDatenschutz.Datenschutz_ID)).thenReturn(dtoSchuelerDatenschutz);
+		when(this.conn.queryByKey(DTOSchuelerDatenschutz.class, dtoSchuelerDatenschutz.Schueler_ID, dtoSchuelerDatenschutz.Datenschutz_ID))
+				.thenReturn(dtoSchuelerDatenschutz);
 
-		assertThat(dataSchuelerEinwilligungen.getById(new Long[] {dtoSchuelerDatenschutz.Schueler_ID, dtoSchuelerDatenschutz.Schueler_ID}))
+		assertThat(dataSchuelerEinwilligungen.getById(new Long[] { dtoSchuelerDatenschutz.Schueler_ID, dtoSchuelerDatenschutz.Schueler_ID }))
 				.isInstanceOf(SchuelerEinwilligung.class)
 				.hasFieldOrPropertyWithValue("idSchueler", dtoSchuelerDatenschutz.Schueler_ID);
 	}
@@ -76,7 +77,7 @@ class DataSchuelerEinwilligungenTest {
 	void getByIDTest_EinwilligungNotFound() {
 		when(this.conn.queryByKey(DTOSchuelerDatenschutz.class, null, null)).thenReturn(null);
 
-		final var throwable = catchThrowable(() -> dataSchuelerEinwilligungen.getById(new Long[] {null, null}));
+		final var throwable = catchThrowable(() -> dataSchuelerEinwilligungen.getById(new Long[] { null, null }));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
@@ -110,12 +111,68 @@ class DataSchuelerEinwilligungenTest {
 	}
 
 	@Test
+	@DisplayName("getListBySchuelerIdsTest(Long[]) | Erfolg mit IDs aller Schüler")
+	void getListBySchuelerIdsTest() throws ApiOperationException {
+		final DTOSchuelerDatenschutz dto1 = new DTOSchuelerDatenschutz(1L, 1L, false, false);
+		final DTOSchuelerDatenschutz dto2 = new DTOSchuelerDatenschutz(2L, 1L, false, false);
+		final List<Long> ids = List.of(1L, 2L);
+		when(conn.queryList(DTOSchuelerDatenschutz.QUERY_LIST_BY_SCHUELER_ID, DTOSchuelerDatenschutz.class, ids)).thenReturn(List.of(dto1, dto2));
+
+		assertThat(dataSchuelerEinwilligungen.getListBySchuelerIds(ids))
+				.isNotNull()
+				.hasSize(2)
+				.first()
+				.satisfies(schuelerEinwilligung -> assertThat(schuelerEinwilligung)
+						.hasFieldOrPropertyWithValue("idSchueler", 1L)
+						.hasFieldOrPropertyWithValue("idEinwilligungsart", 1L)
+						.hasFieldOrPropertyWithValue("status", false)
+						.hasFieldOrPropertyWithValue("abgefragt", false));
+	}
+
+	@Test
+	@DisplayName("getAll(Long[]) | Erfolg mit IDs, die nicht existieren (diese werden ignoriert)")
+	void getListBySchuelerIdsWithIdsButAtLeastOneNonExistentIdTest() throws ApiOperationException {
+		final DTOSchuelerDatenschutz dto1 = new DTOSchuelerDatenschutz(1L, 1L, false, false);
+		final DTOSchuelerDatenschutz dto2 = new DTOSchuelerDatenschutz(2L, 1L, false, false);
+		final List<Long> ids = List.of(1L, 2L, 3L);
+		when(conn.queryList(DTOSchuelerDatenschutz.QUERY_LIST_BY_SCHUELER_ID, DTOSchuelerDatenschutz.class, ids)).thenReturn(List.of(dto1, dto2));
+
+		assertThat(dataSchuelerEinwilligungen.getListBySchuelerIds(ids))
+				.isNotNull()
+				.hasSize(2)
+				.first()
+				.satisfies(schuelerEinwilligung -> assertThat(schuelerEinwilligung)
+						.hasFieldOrPropertyWithValue("idSchueler", 1L)
+						.hasFieldOrPropertyWithValue("idEinwilligungsart", 1L)
+						.hasFieldOrPropertyWithValue("status", false)
+						.hasFieldOrPropertyWithValue("abgefragt", false));
+	}
+
+	@Test
+	@DisplayName("getAll(Long[]) | Erfolg")
+	void getListBySchuelerIdsWithIdsSimpleFilterTest() throws ApiOperationException {
+		final DTOSchuelerDatenschutz dto = new DTOSchuelerDatenschutz(1L, 1L, false, false);
+		final List<Long> ids = List.of(1L);
+		when(conn.queryList(DTOSchuelerDatenschutz.QUERY_LIST_BY_SCHUELER_ID, DTOSchuelerDatenschutz.class, ids)).thenReturn(List.of(dto));
+
+		assertThat(dataSchuelerEinwilligungen.getListBySchuelerIds(List.of(1L)))
+				.isNotNull()
+				.hasSize(1)
+				.first()
+				.satisfies(schuelerEinwilligung -> assertThat(schuelerEinwilligung)
+						.hasFieldOrPropertyWithValue("idSchueler", 1L)
+						.hasFieldOrPropertyWithValue("idEinwilligungsart", 1L)
+						.hasFieldOrPropertyWithValue("status", false)
+						.hasFieldOrPropertyWithValue("abgefragt", false));
+	}
+
+	@Test
 	@DisplayName("getDatabaseDTOById | Erfolg")
 	void getDatabaseDTOByIdTest() {
 		final DTOSchuelerDatenschutz dto = getDTOSchuelerDatenschutz();
 		when(conn.queryByKey(DTOSchuelerDatenschutz.class, dto.Schueler_ID, dto.Datenschutz_ID)).thenReturn(dto);
 
-		assertThat(dataSchuelerEinwilligungen.getDatabaseDTOByID(new Long[]{dto.Schueler_ID, dto.Datenschutz_ID}))
+		assertThat(dataSchuelerEinwilligungen.getDatabaseDTOByID(new Long[] { dto.Schueler_ID, dto.Datenschutz_ID }))
 				.isNotNull()
 				.hasFieldOrPropertyWithValue("Schueler_ID", dto.Schueler_ID)
 				.hasFieldOrPropertyWithValue("Datenschutz_ID", dto.Datenschutz_ID)
@@ -128,7 +185,7 @@ class DataSchuelerEinwilligungenTest {
 	void checkBeforeCreationTest() throws ApiOperationException {
 		when(conn.queryByKey(DTOSchuelerDatenschutz.class, 1L, 1L)).thenReturn(null);
 
-		dataSchuelerEinwilligungen.checkBeforeCreation(new Long[]{1L, 1L}, attributesMap);
+		dataSchuelerEinwilligungen.checkBeforeCreation(new Long[] { 1L, 1L }, attributesMap);
 	}
 
 	@Test
@@ -138,8 +195,7 @@ class DataSchuelerEinwilligungenTest {
 		initAttributes.put("idSchueler", null);
 		initAttributes.put("idEinwilligungsart", 1L);
 
-		final var throwable = catchThrowable(() ->
-				dataSchuelerEinwilligungen.checkBeforeCreation(new Long[]{null, 1L}, initAttributes)
+		final var throwable = catchThrowable(() -> dataSchuelerEinwilligungen.checkBeforeCreation(new Long[] { null, 1L }, initAttributes)
 		);
 
 		assertThat(throwable)
@@ -153,8 +209,7 @@ class DataSchuelerEinwilligungenTest {
 		final DTOSchuelerDatenschutz existingEntry = getDTOSchuelerDatenschutz();
 		when(conn.queryByKey(DTOSchuelerDatenschutz.class, 1L, 1L)).thenReturn(existingEntry);
 
-		final var throwable = catchThrowable(() ->
-				dataSchuelerEinwilligungen.checkBeforeCreation(new Long[]{1L, 1L}, attributesMap)
+		final var throwable = catchThrowable(() -> dataSchuelerEinwilligungen.checkBeforeCreation(new Long[] { 1L, 1L }, attributesMap)
 		);
 
 		assertThat(throwable)
@@ -218,4 +273,5 @@ class DataSchuelerEinwilligungenTest {
 		dtoSchuelerDatenschutz.Abgefragt = false;
 		return dtoSchuelerDatenschutz;
 	}
+
 }

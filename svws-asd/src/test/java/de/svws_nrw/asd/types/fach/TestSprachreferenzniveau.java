@@ -31,12 +31,12 @@ class TestSprachreferenzniveau {
 	 *
 	 * CoreType: Sprachreferenzniveau
 	 * Testfall: Prüft die Anzahl der möglichen Werte
-	 * Ergebnis: Erwartete Anzahl - 13
+	 * Ergebnis: Erwartete Anzahl - 14
 	 */
 	@Test
 	@DisplayName("Teste CoreType Sprachreferenzniveau: Anzahl der vorhandenen Einträge.")
 	void testSprachreferenzniveau_AnzahlEintraege() {
-		assertEquals(13, Sprachreferenzniveau.data().getWerte().size());
+		assertEquals(14, Sprachreferenzniveau.data().getWerte().size());
 	}
 
 	/**

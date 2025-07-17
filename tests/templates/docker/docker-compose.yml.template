@@ -18,6 +18,8 @@ services:
     #GRADLE_PLACEHOLDER_MARIADB_FORWARDING_PORT
     networks:
       - gitlab_runner_network
+    labels:
+      - "integrationtests=prune"
 
   #GRADLE_PLACEHOLDER_APP_IMAGE_NAME:
     #GRADLE_PLACEHOLDER_APP_CONTAINER_NAME
@@ -35,6 +37,8 @@ services:
     #GRADLE_PLACEHOLDER_APP_FORWARDING_PORT
     networks:
       - gitlab_runner_network
+    labels:
+      - "integrationtests=prune"
 
 networks:
     gitlab_runner_network:

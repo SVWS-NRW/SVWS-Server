@@ -171,6 +171,10 @@ export { Sprachbelegung } from './asd/data/schueler/Sprachbelegung';
 export { Sprachendaten } from './asd/data/schueler/Sprachendaten';
 export { Sprachpruefung } from './asd/data/schueler/Sprachpruefung';
 export { UebergangsempfehlungKatalogEintrag } from './asd/data/schueler/UebergangsempfehlungKatalogEintrag';
+export { BeruflichesGymnasiumPruefungsordnungAnlageKatalogEintrag } from './asd/data/schule/BeruflichesGymnasiumPruefungsordnungAnlageKatalogEintrag';
+export { BeruflichesGymnasiumStundentafel } from './asd/data/schule/BeruflichesGymnasiumStundentafel';
+export { BeruflichesGymnasiumStundentafelAbiturfaecherWahlmoeglichkeit } from './asd/data/schule/BeruflichesGymnasiumStundentafelAbiturfaecherWahlmoeglichkeit';
+export { BeruflichesGymnasiumStundentafelFach } from './asd/data/schule/BeruflichesGymnasiumStundentafelFach';
 export { BerufskollegAnlageKatalogEintrag } from './asd/data/schule/BerufskollegAnlageKatalogEintrag';
 export { BildungsgangTypKatalogEintrag } from './asd/data/schule/BildungsgangTypKatalogEintrag';
 export { FoerderschwerpunktKatalogEintrag } from './asd/data/schule/FoerderschwerpunktKatalogEintrag';
@@ -231,6 +235,7 @@ export { HerkunftBildungsgangTyp } from './asd/types/schueler/HerkunftBildungsga
 export { SchuelerStatus } from './asd/types/schueler/SchuelerStatus';
 export { Uebergangsempfehlung } from './asd/types/schueler/Uebergangsempfehlung';
 export { AllgemeinbildendOrganisationsformen } from './asd/types/schule/AllgemeinbildendOrganisationsformen';
+export { BeruflichesGymnasiumPruefungsordnungAnlage } from './asd/types/schule/BeruflichesGymnasiumPruefungsordnungAnlage';
 export { BerufskollegAnlage } from './asd/types/schule/BerufskollegAnlage';
 export { BerufskollegBildungsgangTyp } from './asd/types/schule/BerufskollegBildungsgangTyp';
 export { BerufskollegOrganisationsformen } from './asd/types/schule/BerufskollegOrganisationsformen';
@@ -585,6 +590,7 @@ export { BerufskollegFachklassenKatalogDaten } from './core/data/schule/Berufsko
 export { BerufskollegFachklassenKatalogEintrag } from './core/data/schule/BerufskollegFachklassenKatalogEintrag';
 export { BerufskollegFachklassenKatalogIndex } from './core/data/schule/BerufskollegFachklassenKatalogIndex';
 export { Einwilligungsart } from './core/data/schule/Einwilligungsart';
+export { Fahrschuelerart } from './core/data/schule/Fahrschuelerart';
 export { FoerderschwerpunktEintrag } from './core/data/schule/FoerderschwerpunktEintrag';
 export { Haltestelle } from './core/data/schule/Haltestelle';
 export { HerkunftKatalogEintrag } from './core/data/schule/HerkunftKatalogEintrag';
@@ -788,6 +794,7 @@ export { JahrgangListeManager } from './core/utils/jahrgang/JahrgangListeManager
 export { JahrgangsUtils } from './core/utils/jahrgang/JahrgangsUtils';
 export { AbteilungenListeManager } from './core/utils/kataloge/abteilungen/AbteilungenListeManager';
 export { EntlassgruendeListeManager } from './core/utils/kataloge/entlassgruende/EntlassgruendeListeManager';
+export { FahrschuelerartenListeManager } from './core/utils/kataloge/fahrschuelerarten/FahrschuelerartenListeManager';
 export { FoerderschwerpunkteListeManager } from './core/utils/kataloge/foerderschwerpunkte/FoerderschwerpunkteListeManager';
 export { HaltestellenListeManager } from './core/utils/kataloge/haltestellen/HaltestellenListeManager';
 export { KindergaertenListeManager } from './core/utils/kataloge/kindergaerten/KindergaertenListeManager';

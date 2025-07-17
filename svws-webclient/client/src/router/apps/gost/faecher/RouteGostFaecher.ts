@@ -34,7 +34,7 @@ export class RouteGostFaecher extends RouteNode<RouteDataGostFaecher, RouteGost>
 				return routeGost.getRoute();
 			return true;
 		} catch (e) {
-			return routeError.getErrorRoute(e as DeveloperNotificationException);
+			return await routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 
@@ -45,7 +45,7 @@ export class RouteGostFaecher extends RouteNode<RouteDataGostFaecher, RouteGost>
 				throw new DeveloperNotificationException("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
 			await this.data.setEintrag(abiturjahr);
 		} catch (e) {
-			return routeError.getErrorRoute(e as DeveloperNotificationException);
+			return await routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 

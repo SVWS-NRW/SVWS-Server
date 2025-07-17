@@ -62,7 +62,7 @@
 			"id": 6,
 			"schluessel": "TS",
 			"kuerzel": "TS",
-			"text": "Sabbatjahr",
+			"text": "Teilzeitbeschäftigung im Blockmodell (§ 65 LBG), ehemals Sabbatjahr",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -73,7 +73,7 @@
 			"id": 8,
 			"schluessel": "SB",
 			"kuerzel": "SB",
-			"text": "Nebenberufliche Beschäftigung",
+			"text": "Angestellte, nebenberuflich",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -106,7 +106,7 @@
 			"id": 12,
 			"schluessel": "NA",
 			"kuerzel": "NA",
-			"text": "Beamter, nebenamtlich (nicht hauptamtlich im Schuldienst)",
+			"text": "Beamte, nebenamtlich (nicht hauptamtlich im Schuldienst)",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]

@@ -3,7 +3,8 @@ import type { List, ErzieherStammdaten, Erzieherart, OrtKatalogEintrag, Ortsteil
 export interface SchuelerErziehungsberechtigteProps {
 	data: () => List<ErzieherStammdaten>;
 	patch: (data : Partial<ErzieherStammdaten>, id: number) => Promise<void>;
-	add: () => Promise<ErzieherStammdaten>;
+	patchPosition: (data : Partial<ErzieherStammdaten>, id: number, pos: number) => Promise<void>;
+	add: (data: Partial<ErzieherStammdaten>, pos: number) => Promise<ErzieherStammdaten>;
 	mapErzieherarten: Map<number, Erzieherart>;
 	mapOrte: Map<number, OrtKatalogEintrag>;
 	mapOrtsteile: Map<number, OrtsteilKatalogEintrag>;

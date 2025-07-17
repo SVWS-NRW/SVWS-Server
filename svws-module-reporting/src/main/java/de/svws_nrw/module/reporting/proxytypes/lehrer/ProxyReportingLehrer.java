@@ -1,5 +1,7 @@
 package de.svws_nrw.module.reporting.proxytypes.lehrer;
 
+import java.util.ArrayList;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.asd.types.Geschlecht;
@@ -40,6 +42,7 @@ public class ProxyReportingLehrer extends ReportingLehrer {
 				ersetzeNullBlankTrim(lehrerStammdaten.hausnummerZusatz),
 				lehrerStammdaten.id,
 				ersetzeNullBlankTrim(lehrerStammdaten.kuerzel),
+				new ArrayList<>(),
 				ersetzeNullBlankTrim(lehrerStammdaten.nachname),
 				PersonalTyp.fromKuerzel(lehrerStammdaten.personalTyp),
 				Nationalitaeten.getByDESTATIS(lehrerStammdaten.staatsangehoerigkeitID),
@@ -56,6 +59,9 @@ public class ProxyReportingLehrer extends ReportingLehrer {
 				(lehrerStammdaten.ortsteilID != null) ? reportingRepository.katalogOrtsteile().get(lehrerStammdaten.ortsteilID) : null);
 
 		this.reportingRepository = reportingRepository;
+
+		lehrerStammdaten.leitungsfunktionen
+				.forEach(leitungsfunktion -> super.leitungsfunktionen.add(new ProxyReportingLehrerLeitungsfunktion(reportingRepository, leitungsfunktion)));
 
 		// Füge Stammdaten des Lehrers für weitere Verwendung in der Map im Repository hinzu.
 		reportingRepository.mapLehrerStammdaten().putIfAbsent(super.id(), lehrerStammdaten);

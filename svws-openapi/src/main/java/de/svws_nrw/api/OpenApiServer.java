@@ -3,7 +3,6 @@ package de.svws_nrw.api;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import de.svws_nrw.api.swagger.NonPrimitiveToNullableConverter;
 import io.swagger.v3.core.converter.ModelConverters;
 import org.apache.commons.lang3.StringUtils;
 
@@ -112,10 +111,10 @@ public class OpenApiServer extends BaseOpenApiResource {
 	@Path("/openapi/server.{type:json|yaml}")
 	@Produces({ MediaType.APPLICATION_JSON, "application/yaml" })
 	@Operation(hidden = true)
-	public Response getOpenApi(@Context final HttpHeaders headers,
-			@Context final UriInfo uriInfo,
-			@PathParam("type") final String type) throws Exception {
-		ModelConverters.getInstance().addConverter(new NonPrimitiveToNullableConverter());
+	public Response getOpenApi(@Context final HttpHeaders headers, @Context final UriInfo uriInfo, @PathParam("type") final String type)
+			throws Exception {
+		// Um das `nullable` Flag automatisch zu setzen, wird der entsprechende {@link io.swagger.v3.core.converter.ModelConverter} registriert
+		ModelConverters.getInstance().addConverter(new OpenApiModelConverterNonPrimitiveNullable());
 		final OpenApiContext ctx = getOpenApiContext();
 		final OpenAPI oas = ctx.read();
 

@@ -75,9 +75,9 @@ public final class DataSchuelerSprachpruefung extends DataManagerRevised<Long, D
 		daten.kannWahlpflichtfremdspracheErsetzen = (dto.KannWahlpflichtfremdspracheErsetzen != null) && dto.KannWahlpflichtfremdspracheErsetzen;
 		daten.kannBelegungAlsFortgefuehrteSpracheErlauben =
 				(dto.KannBelegungAlsFortgefuehrteSpracheErlauben != null) && dto.KannBelegungAlsFortgefuehrteSpracheErlauben;
-		final Sprachreferenzniveau niveau = (dto.Referenzniveau == null) ? null : Sprachreferenzniveau.data().getWertByKuerzel(dto.Referenzniveau);
+		final Sprachreferenzniveau niveau = (dto.Referenzniveau == null) ? null : Sprachreferenzniveau.data().getWertBySchluessel(dto.Referenzniveau);
 		final SprachreferenzniveauKatalogEintrag niveauEintrag = (niveau == null) ? null : niveau.daten(abschnitt.schuljahr);
-		daten.referenzniveau = (niveauEintrag == null) ? null : niveauEintrag.kuerzel;
+		daten.referenzniveau = (niveauEintrag == null) ? null : niveauEintrag.schluessel;
 		final Note note = Note.fromNoteSekI(dto.NotePruefung);
 		final NoteKatalogEintrag noteEintrag = (note == null) ? null : note.daten(abschnitt.schuljahr);
 		daten.note = (noteEintrag == null) ? null : dto.NotePruefung;
@@ -132,20 +132,20 @@ public final class DataSchuelerSprachpruefung extends DataManagerRevised<Long, D
 			case "kannWahlpflichtfremdspracheErsetzen" -> dto.KannWahlpflichtfremdspracheErsetzen = JSONMapper.convertToBoolean(value, false);
 			case "kannBelegungAlsFortgefuehrteSpracheErlauben" -> dto.KannBelegungAlsFortgefuehrteSpracheErlauben = JSONMapper.convertToBoolean(value, false);
 			case "referenzniveau" -> {
-				final String kuerzel = JSONMapper.convertToString(value, true, false, 10);
-				if (kuerzel == null) {
+				final String schluessel = JSONMapper.convertToString(value, true, false, 10);
+				if (schluessel == null) {
 					dto.Referenzniveau = null;
 				} else {
 					final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, dto.Schueler_ID);
 					final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(dtoSchueler.Schuljahresabschnitts_ID);
-					final Sprachreferenzniveau niveau = Sprachreferenzniveau.data().getWertByKuerzel(kuerzel);
+					final Sprachreferenzniveau niveau = Sprachreferenzniveau.data().getWertBySchluessel(schluessel);
 					if (niveau == null)
-						throw new ApiOperationException(Status.BAD_REQUEST, "Das Sprachreferenzniveau-Kürzel %s ist ungültig.".formatted(kuerzel));
+						throw new ApiOperationException(Status.BAD_REQUEST, "Das Sprachreferenzniveau-Kürzel %s ist ungültig.".formatted(schluessel));
 					final SprachreferenzniveauKatalogEintrag niveauEintrag = niveau.daten(abschnitt.schuljahr);
 					if (niveauEintrag == null)
 						throw new ApiOperationException(Status.BAD_REQUEST,
-								"Das Sprachreferenzniveau-Kürzel %s ist dem Schuljahr %d ungültig.".formatted(kuerzel, abschnitt.schuljahr));
-					dto.Referenzniveau = niveauEintrag.kuerzel;
+								"Das Sprachreferenzniveau-Kürzel %s ist dem Schuljahr %d ungültig.".formatted(schluessel, abschnitt.schuljahr));
+					dto.Referenzniveau = niveauEintrag.schluessel;
 				}
 			}
 			case "note" -> {

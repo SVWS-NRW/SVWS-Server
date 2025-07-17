@@ -1,6 +1,7 @@
 configurations {
 	implementation.extendsFrom(jackson, resteasy, validation, swagger)
 	transpiler
+	transpilerClasspath
 	docGenerator
 }
 
@@ -9,11 +10,11 @@ dependencies {
 
 	transpiler fileTree(dir: "$projectDir/src/main/java", includes: ['**/svws_nrw/asd/**/*.java' ],
 			excludes: ['**/svws_nrw/asd/utils/json/**/*.java', '**/svws_nrw/asd/utils/ASDCoreTypeUtils.java', '**/svws_nrw/asd/utils/CoreTypeRessource.java',
-			           '**/svws_nrw/asd/utils/docs/**/*.java'] )
+					'**/svws_nrw/asd/utils/docs/**/*.java'] )
 
-	docGenerator fileTree(dir: "$projectDir/src/main/java/de/svws_nrw/asd/validate",
-	                      includes: ['**/*.java' ],
-			              excludes: ['**/DateManager.java'],  )
+	transpilerClasspath project(':svws-transpile')
+
+	docGenerator fileTree(dir: "$projectDir/src/main/java/de/svws_nrw/asd/validate", includes: ['**/*.java' ], excludes: ['**/DateManager.java'],  )
 }
 
 task cleanTranspiled(type: Delete) {
@@ -42,7 +43,7 @@ task transpile(type: JavaExec) {
 	inputs.files "$buildDir/transpiler-files.txt", configurations.transpiler.files
 	outputs.dir "$buildDir/ts"
 	description = "Transpiliert den Java-Code nach Typescript"
-	classpath = sourceSets.main.runtimeClasspath.plus(project(":svws-transpile").sourceSets.main.runtimeClasspath)
+	classpath = sourceSets.main.runtimeClasspath.plus(project.configurations.transpilerClasspath)
 	mainClass = "de.svws_nrw.transpiler.app.TranspileTs"
 	args "--output", "$buildDir/ts",
 		"--ignore", "de.svws_nrw",

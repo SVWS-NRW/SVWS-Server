@@ -16,9 +16,9 @@ dependencies {
 	implementation project(':svws-db-dto')
 	implementation project(':svws-db-utils')
 	implementation project(':svws-module-reporting')
-    implementation project(':svws-module-dav-api')
+	implementation project(':svws-module-dav-api')
 
-    api fileTree(dir: "$projectDir/src/main/java", includes: ['**/svws_nrw/api/server/*.java', '**/svws_nrw/api/privileged/API*.java'])
+	api fileTree(dir: "$projectDir/src/main/java", includes: ['**/svws_nrw/api/server/*.java', '**/svws_nrw/api/privileged/API*.java'])
 }
 
 task cleanTranspiled(type: Delete) {
@@ -93,17 +93,17 @@ assemble.dependsOn assembleTranspiled
 // allerdings nicht zu problemen im gradle build.
 // mit Herrn bachran absprechen, ob das so iO ist.
 configurations.implementation {
-  exclude group: 'xml-apis'
+	exclude group: 'xml-apis'
 }
 
 task createVersionProperties() {
 	inputs.files "$rootDir/buildconfig.json"
-    outputs.files "$projectDir/src/main/resources/config/version.properties"
-    doLast {
-        file("src/main/resources/config/version.properties").text =
-        	"svws.version=" + project.version.toString() + "\n" +
-        	"schild.version=" + project.ext.schildMinVersion.toString() + "\n"
-    }
+	outputs.files "$projectDir/src/main/resources/config/version.properties"
+	def data = "svws.version=" + project.version.toString() + "\n" +
+		"schild.version=" + project.ext.schildMinVersion.toString() + "\n"
+	doLast {
+		file("src/main/resources/config/version.properties").text = data
+	}
 }
 
 processResources.dependsOn createVersionProperties
@@ -111,14 +111,14 @@ sourcesJar.dependsOn createVersionProperties
 
 apply from: "$rootDir/publish-helper.gradle"
 publishing {
-  publications {
-    publishJava(MavenPublication) {
-    artifactId = 'svws-openapi'
-      pom {
-        name = 'SVWS OpenApi Library'
-        description = 'Diese Bibliothek enthält die Java-Server-Definition der OpenApi-Schnittstelle für die Schulverwaltungssoftware in NRW'
-      }
-    }
-  }
+	publications {
+		publishJava(MavenPublication) {
+			artifactId = 'svws-openapi'
+			pom {
+				name = 'SVWS OpenApi Library'
+				description = 'Diese Bibliothek enthält die Java-Server-Definition der OpenApi-Schnittstelle für die Schulverwaltungssoftware in NRW'
+			}
+		}
+	}
 }
 

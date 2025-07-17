@@ -42,6 +42,7 @@ public class ProxyReportingFach extends ReportingFach {
 
 		if ((fach.StatistikKuerzel != null) && !fach.StatistikKuerzel.isEmpty()) {
 			super.statistikfach = new ProxyReportingStatistikFach(Fach.getBySchluesselOrDefault(fach.StatistikKuerzel), schuljahr, true);
+			super.statistikfach.setFach(this);
 			super.fachgruppe = super.statistikfach().fachgruppe();
 		}
 	}

@@ -1,5 +1,4 @@
-import type { SchuelerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag, KatalogEintrag, FoerderschwerpunktEintrag, ReligionEintrag, SchuelerListeManager,
-	SchulEintrag, Schulform, ServerMode, BenutzerKompetenz, TelefonArt, SchuelerTelefon, List, Haltestelle} from "@core";
+import type { SchuelerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag, FoerderschwerpunktEintrag, ReligionEintrag, SchuelerListeManager, SchulEintrag, Schulform, ServerMode, BenutzerKompetenz, TelefonArt, SchuelerTelefon, List, Haltestelle, Fahrschuelerart } from "@core";
 
 export interface SchuelerIndividualdatenProps {
 	patch: (data: Partial<SchuelerStammdaten>) => Promise<void>;
@@ -7,7 +6,7 @@ export interface SchuelerIndividualdatenProps {
 	mapSchulen: Map<string, SchulEintrag>;
 	mapOrte: Map<number, OrtKatalogEintrag>;
 	mapOrtsteile: Map<number, OrtsteilKatalogEintrag>;
-	mapFahrschuelerarten: Map<number, KatalogEintrag>;
+	mapFahrschuelerarten: Map<number, Fahrschuelerart>;
 	mapFoerderschwerpunkte: Map<number, FoerderschwerpunktEintrag>;
 	mapHaltestellen: Map<number, Haltestelle>
 	mapReligionen: Map<number, ReligionEintrag>;

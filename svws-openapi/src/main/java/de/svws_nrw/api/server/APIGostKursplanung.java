@@ -205,6 +205,8 @@ public class APIGostKursplanung {
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	@ApiResponse(responseCode = "404", description = "Keine Blockung mit der angebenen ID gefunden.",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "409", description = "Die Daten der Blockung konnten nicht fehlerfrei bestimmt werden.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	@ApiResponse(responseCode = "500", description = "Es ist ein unerwarteter interner Fehler aufgetreten.",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	public Response getGostBlockungGZip(@PathParam("schema") final String schema, @PathParam("blockungsid") final long id,

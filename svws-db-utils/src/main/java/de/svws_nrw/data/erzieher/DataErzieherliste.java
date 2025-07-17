@@ -1,23 +1,22 @@
 package de.svws_nrw.data.erzieher;
 
-import java.io.InputStream;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.erzieher.ErzieherListeEintrag;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.erzieher.DTOSchuelerErzieherAdresse;
 import de.svws_nrw.db.utils.ApiOperationException;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
+import de.svws_nrw.data.DataManagerRevised;
 
 /**
- * Diese Klasse erweitert den abstrakten {@link DataManager} für den
+ * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für den
  * Core-DTO {@link ErzieherListeEintrag}.
  */
-public final class DataErzieherliste extends DataManager<Long> {
+public final class DataErzieherliste extends DataManagerRevised<Long, DTOSchuelerErzieherAdresse, ErzieherListeEintrag> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link ErzieherListeEintrag}.
@@ -26,6 +25,15 @@ public final class DataErzieherliste extends DataManager<Long> {
 	 */
 	public DataErzieherliste(final DBEntityManager conn) {
 		super(conn);
+	}
+
+	@Override
+	protected ErzieherListeEintrag map(final DTOSchuelerErzieherAdresse dto) throws ApiOperationException {
+		if ((dto.Name1 != null) && !dto.Name1.isBlank())
+			return dtoMapperErzieher1.apply(dto);
+		if ((dto.Name2 != null) && !dto.Name2.isBlank())
+			return dtoMapperErzieher2.apply(dto);
+		throw new ApiOperationException(Status.NOT_FOUND);
 	}
 
 	/**
@@ -59,29 +67,15 @@ public final class DataErzieherliste extends DataManager<Long> {
 	};
 
 	@Override
-	public Response getAll() throws ApiOperationException {
+	public List<ErzieherListeEintrag> getAll() throws ApiOperationException {
 		final List<DTOSchuelerErzieherAdresse> erzieher = conn.queryAll(DTOSchuelerErzieherAdresse.class);
 		if (erzieher == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
-		final List<ErzieherListeEintrag> daten = erzieher.stream().filter(e -> ((e.Name1 != null) && !"".equals(e.Name1.trim()))).map(dtoMapperErzieher1)
-				.toList();
-		daten.addAll(erzieher.stream().filter(e -> ((e.Name2 != null) && !"".equals(e.Name2.trim()))).map(dtoMapperErzieher2).toList());
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
-	}
+		final List<ErzieherListeEintrag> daten = erzieher.stream().filter(e -> ((e.Name1 != null) && !e.Name1.trim().isEmpty())).map(dtoMapperErzieher1)
+				.collect(Collectors.toList());
+		daten.addAll(erzieher.stream().filter(e -> ((e.Name2 != null) && !e.Name2.trim().isEmpty())).map(dtoMapperErzieher2).toList());
 
-	@Override
-	public Response getList() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public Response get(final Long id) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public Response patch(final Long id, final InputStream is) {
-		throw new UnsupportedOperationException();
+		return daten;
 	}
 
 }

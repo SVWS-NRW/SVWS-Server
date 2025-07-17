@@ -101,6 +101,11 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	private readonly _mapWertAndSchuljahrToEintrag : HashMap<number, HashMap<U, T>> = new HashMap<number, HashMap<U, T>>();
 
 	/**
+	 * Eine geschachtelte Map mit der Zuordnung eines Historien-Eintrags zu einem Schuljahr und einem Schlüssel
+	 */
+	private readonly _mapSchluesselAndSchuljahrToEintrag : HashMap<number, HashMap<string, T>> = new HashMap<number, HashMap<string, T>>();
+
+	/**
 	 * Eine geschachtelte Map mit der Zuordnung einer Liste von Core-Type-Werten zu einem Schuljahr und einer Schulform
 	 */
 	private readonly _mapBySchuljahrAndSchulform : JavaMap<number, JavaMap<Schulform, List<U>>> = new HashMap<number, JavaMap<Schulform, List<U>>>();
@@ -476,7 +481,7 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	}
 
 	/**
-	 * Gibt die Daten aus der Historie zu dem Core-Type-Wert für das angegeben Schuljahr zurück.
+	 * Gibt die Daten aus der Historie zu dem Core-Type-Wert für das angegebene Schuljahr zurück.
 	 *
 	 * @param schuljahr   das zu prüfende Schuljahr
 	 * @param value       der Core-Type-Wert
@@ -499,6 +504,31 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 		}
 		this._mapWertAndSchuljahrToEintrag.put(schuljahr, mapEintraege);
 		return mapEintraege.get(value);
+	}
+
+	/**
+	 * Gibt die Daten aus der Historie für das angegebene Schuljahr und den Schlüssel zurück.
+	 *
+	 * @param schuljahr    das zu prüfende Schuljahr
+	 * @param schluessel   das zu prüfender Schlüssel
+	 * @return die Daten aus der Historie
+	 */
+	public getEintragBySchuljahrUndSchluessel(schuljahr : number, schluessel : string) : T | null {
+		const cache : HashMap<string, T> | null = this._mapSchluesselAndSchuljahrToEintrag.get(schuljahr);
+		if (cache !== null)
+			return cache.get(schluessel);
+		const mapEintraege : HashMap<string, T> = new HashMap<string, T>();
+		for (const wert of this._listWerte) {
+			const historie : List<T> = this.getHistorieByWert(wert);
+			for (const eintrag of historie) {
+				if (((eintrag.gueltigVon === null) || (eintrag.gueltigVon <= schuljahr)) && ((eintrag.gueltigBis === null) || (schuljahr <= eintrag.gueltigBis))) {
+					mapEintraege.put(eintrag.schluessel, eintrag);
+					break;
+				}
+			}
+		}
+		this._mapSchluesselAndSchuljahrToEintrag.put(schuljahr, mapEintraege);
+		return mapEintraege.get(schluessel);
 	}
 
 	/**

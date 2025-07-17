@@ -49,7 +49,7 @@ export class RouteGostKlausurplanungRaumzeit extends RouteNode<any, RouteGostKla
 				if (routeGostKlausurplanung.data.manager.stundenplanManagerExistsByAbschnittAndDatum(routeGostKlausurplanung.data.abschnitt!.id, termin.datum))
 					routeGostKlausurplanung.data.setRaumTermin(termin);
 		} catch (e) {
-			return routeError.getErrorRoute(e instanceof Error ? e : new DeveloperNotificationException("Unbekannter Fehler beim Laden der Klausurplanungsdaten."));
+			return await routeError.getErrorRoute(e instanceof Error ? e : new DeveloperNotificationException("Unbekannter Fehler beim Laden der Klausurplanungsdaten."));
 		}
 	}
 

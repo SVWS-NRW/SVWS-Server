@@ -1,5 +1,40 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`Schueler Tests  > gegen { schema: 'GymAbi01' } > getFahrschuelerarten 1`] = `
+ArrayList {
+  "addFirst": [Function],
+  "addLast": [Function],
+  "elementData": [
+    Fahrschuelerart {
+      "bezeichnung": "Rheingold",
+      "id": 1,
+      "istAenderbar": true,
+      "istSichtbar": true,
+      "sortierung": 1,
+    },
+    Fahrschuelerart {
+      "bezeichnung": "Meinhold",
+      "id": 2,
+      "istAenderbar": true,
+      "istSichtbar": true,
+      "sortierung": 2,
+    },
+    Fahrschuelerart {
+      "bezeichnung": "WSW",
+      "id": 3,
+      "istAenderbar": true,
+      "istSichtbar": true,
+      "sortierung": 3,
+    },
+  ],
+  "getFirst": [Function],
+  "getLast": [Function],
+  "modCount": 3,
+  "removeFirst": [Function],
+  "removeLast": [Function],
+}
+`;
+
 exports[`Schueler Tests  > gegen { schema: 'GymAbi01' } > getSchuelerAktuell 1`] = `
 ArrayList {
   "addFirst": [Function],
@@ -15667,41 +15702,6 @@ ArrayList {
   "getFirst": [Function],
   "getLast": [Function],
   "modCount": 2,
-  "removeFirst": [Function],
-  "removeLast": [Function],
-}
-`;
-
-exports[`Schueler Tests  > gegen { schema: 'GymAbi01' } > getSchuelerFahrschuelerarten 1`] = `
-ArrayList {
-  "addFirst": [Function],
-  "addLast": [Function],
-  "elementData": [
-    KatalogEintrag {
-      "id": 1,
-      "istAenderbar": true,
-      "istSichtbar": true,
-      "kuerzel": "1",
-      "text": "Rheingold",
-    },
-    KatalogEintrag {
-      "id": 2,
-      "istAenderbar": true,
-      "istSichtbar": true,
-      "kuerzel": "2",
-      "text": "Meinhold",
-    },
-    KatalogEintrag {
-      "id": 3,
-      "istAenderbar": true,
-      "istSichtbar": true,
-      "kuerzel": "3",
-      "text": "WSW",
-    },
-  ],
-  "getFirst": [Function],
-  "getLast": [Function],
-  "modCount": 3,
   "removeFirst": [Function],
   "removeLast": [Function],
 }

@@ -28,7 +28,7 @@ export class RouteGostKlausurplanungNachschreibAnsicht extends RouteNode<any, Ro
 			const { abiturjahr } = params ? RouteNode.getIntParams(params, ["abiturjahr"]) : { abiturjahr: undefined };
 			return ((abiturjahr === undefined) || (abiturjahr === -1))
 		} catch (e) {
-			return routeError.getErrorRoute(e as DeveloperNotificationException);
+			return routeError.getSimpleErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 

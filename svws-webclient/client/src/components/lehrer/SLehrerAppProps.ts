@@ -1,4 +1,6 @@
 import type { LehrerListeManager } from "@core";
 import type { RouteAuswahlProps } from "~/router/RouteAuswahlNode";
 
-export type LehrerAppProps = RouteAuswahlProps<LehrerListeManager>;
+export interface LehrerAppProps extends RouteAuswahlProps<LehrerListeManager> {
+	gotoDefaultView: (id?: number | null) => Promise<void>;
+}

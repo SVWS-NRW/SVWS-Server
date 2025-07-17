@@ -31,7 +31,7 @@
 				</svws-ui-tooltip>
 			</div>
 			<div v-if="$slots.filterAdvanced && filterHide" class="flex shrink-0" :class="{'ml-auto': !$slots.filter && !toggleColumns}">
-				<svws-ui-button type="transparent" @click="toggleFilterOpen" class="h-full" :class="{'opacity-50 hover:opacity-100 focus-visible:opacity-100': !filtered && isFilterOpen}" filter-button>
+				<svws-ui-button type="transparent" size="small" @click="toggleFilterOpen" :class="{'opacity-50 hover:opacity-100 focus-visible:opacity-100': !filtered && isFilterOpen}" filter-button>
 					<template #badge v-if="filtered">
 						<span />
 					</template>
@@ -41,7 +41,7 @@
 					</template>
 					<span>Filter</span>
 				</svws-ui-button>
-				<svws-ui-button v-if="filterReset && filtered" type="icon" @click="filterReset" class="h-full" title="Filter zurücksetzen">
+				<svws-ui-button v-if="filterReset && filtered" type="icon" @click="filterReset" title="Filter zurücksetzen">
 					<span class="icon i-ri-filter-off-line" />
 				</svws-ui-button>
 			</div>

@@ -10,6 +10,9 @@ import jakarta.validation.constraints.NotNull;
  */
 public enum Sprachreferenzniveau implements @NotNull CoreType<SprachreferenzniveauKatalogEintrag, Sprachreferenzniveau> {
 
+	/** Referenzniveau nach GeR Pre-A1. */
+	A1M,
+
 	/** Referenzniveau nach GeR A1. */
 	A1,
 

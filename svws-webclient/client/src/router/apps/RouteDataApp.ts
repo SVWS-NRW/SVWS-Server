@@ -58,7 +58,7 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 		for (const r of religionen)
 			mapReligionen.set(r.id, r);
 		// Lade den Katalog der Fahrschülerarten
-		const fahrschuelerarten = await api.server.getSchuelerFahrschuelerarten(api.schema)
+		const fahrschuelerarten = await api.server.getFahrschuelerarten(api.schema)
 		const mapFahrschuelerarten = new Map();
 		for (const fa of fahrschuelerarten)
 			mapFahrschuelerarten.set(fa.id, fa);

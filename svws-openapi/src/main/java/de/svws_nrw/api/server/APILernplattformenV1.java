@@ -20,6 +20,10 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+/**
+ * Die Klasse spezifiziert die OpenAPI-Schnittstelle für den Zugriff auf die Lernplattform-API.
+ * Diese Schnittstelle stellt einen Export für externe Lernplattformen zur Verfügung.
+ */
 @Path("/db/{schema}/v1/lernplattformen")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -57,7 +61,7 @@ public class APILernplattformenV1 {
 			@PathParam("idSchuljahresabschnitt") final int idSchuljahresabschnitt, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataLernplattformen(conn, idSchuljahresabschnitt).getByIdAsResponse(id),
-				request, ServerMode.DEV, BenutzerKompetenz.IMPORT_EXPORT_LERNPLATTFORM);
+				request, ServerMode.STABLE, BenutzerKompetenz.IMPORT_EXPORT_LERNPLATTFORM);
 	}
 
 	/**
@@ -87,6 +91,7 @@ public class APILernplattformenV1 {
 			@PathParam("idSchuljahresabschnitt") final int idSchuljahresabschnitt, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataLernplattformen(conn, idSchuljahresabschnitt).getByIdAsGzipResponse(id),
-				request, ServerMode.DEV, BenutzerKompetenz.IMPORT_EXPORT_LERNPLATTFORM);
+				request, ServerMode.STABLE, BenutzerKompetenz.IMPORT_EXPORT_LERNPLATTFORM);
 	}
+
 }

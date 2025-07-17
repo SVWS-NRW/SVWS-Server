@@ -1,6 +1,5 @@
-import type { Erzieherart, List } from "@core";
-import { ErzieherStammdaten, DeveloperNotificationException } from "@core";
-
+import type { Erzieherart, List, ErzieherStammdaten } from "@core";
+import { DeveloperNotificationException } from "@core";
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 
@@ -58,15 +57,21 @@ export class RouteDataSchuelerErziehungsberechtigte extends RouteData<RouteState
 
 	patch = async (data : Partial<ErzieherStammdaten>, id: number) => {
 		await api.server.patchErzieherStammdaten(data, api.schema, id);
+		const daten = await api.server.getSchuelerErzieher(api.schema, this.idSchueler);
+		this.setPatchedState({ daten });
 	}
 
-	add = async () => {
-		const data = new ErzieherStammdaten();
-		data.idSchueler = this.idSchueler;
-		this.daten.add(data);
-		// await api.server.createErzieherStammdaten();
-		this.commit();
-		return data;
+	patchPosition = async (data : Partial<ErzieherStammdaten>, id: number, pos: number) => {
+		await api.server.patchErzieherStammdatenZweitePosition(data, api.schema, id, pos);
+		const daten = await api.server.getSchuelerErzieher(api.schema, this.idSchueler);
+		this.setPatchedState({ daten });
+	}
+
+	add = async (data: Partial<ErzieherStammdaten>, pos: number): Promise<ErzieherStammdaten> => {
+		const neu = await api.server.addSchuelerErzieher(data, api.schema, this.idSchueler, pos);
+		const daten = await api.server.getSchuelerErzieher(api.schema, this.idSchueler);
+		this.setPatchedState({ daten });
+		return neu;
 	}
 
 }

@@ -1,9 +1,11 @@
 <template>
-	<template v-if="(manager().hasDaten() && (activeViewType === ViewType.DEFAULT)) || (activeViewType !== ViewType.DEFAULT)">
+	<div v-if="(manager().hasDaten() && (activeViewType === ViewType.DEFAULT)) || (activeViewType !== ViewType.DEFAULT)">
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
 				<template v-if="activeViewType === ViewType.DEFAULT">
-					<svws-ui-avatar :src="foto ? `data:image/png;base64, ${foto}` : undefined" :alt="foto !== null ? `Foto von ${manager().daten().vorname} ${manager().daten().nachname}` : ''" upload capture @image:base64="foto => patch({ foto })" />
+					<svws-ui-avatar :src="foto ? `data:image/png;base64, ${foto}` : undefined"
+						:alt="foto !== null ? `Foto von ${manager().daten().vorname} ${manager().daten().nachname}` : ''" upload capture
+						@image:base64="foto => patch({ foto })" />
 					<div class="svws-headline-wrapper">
 						<h2 class="svws-headline">
 							{{ manager().daten().titel }} {{ manager().daten().vorname }} {{ manager().daten().nachname }}
@@ -21,19 +23,26 @@
 				</template>
 				<template v-else-if="activeViewType === ViewType.GRUPPENPROZESSE">
 					<div class="svws-headline-wrapper">
-						<h2 class="svws-headline"> Gruppenprozesse </h2>
+						<div class="flex flex-row gap-3">
+							<h2 class="svws-headline text-ui-brand">Mehrfachauswahl</h2>
+							<svws-ui-button v-if="manager().liste.auswahlExists()" size="normal" type="danger" @click="resetSelection">
+								Auswahl aufheben
+							</svws-ui-button>
+						</div>
 						<span class="svws-subline">{{ lehrerSubline }}</span>
 					</div>
 				</template>
 			</div>
 			<div class="svws-ui-header--actions" />
 		</header>
+
 		<svws-ui-tab-bar :tab-manager :focus-switching-enabled :focus-help-visible>
 			<router-view />
 		</svws-ui-tab-bar>
-	</template>
+	</div>
+
 	<div v-else class="app--content--placeholder">
-		<span class="icon i-ri-briefcase-line" />
+		<span class="icon i-ri-group-line" />
 	</div>
 </template>
 
@@ -56,5 +65,9 @@
 			return `${auswahlLehrerList.size()} Lehrer ausgewählt`;
 		return [...auswahlLehrerList].map(k => k.kuerzel).join(', ');
 	})
+
+	async function resetSelection() {
+		await props.gotoDefaultView(props.manager().getVorherigeAuswahl()?.id);
+	}
 
 </script>
