@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.asd.data.lehrer.LehrerLehrbefaehigungKatalogEintrag;
+import de.svws_nrw.asd.types.lehrer.LehrerLehrbefaehigung;
 import de.svws_nrw.core.data.adressbuch.AdressbuchEintrag;
 import de.svws_nrw.core.data.adressbuch.AdressbuchKontakt;
 import de.svws_nrw.core.data.adressbuch.Telefonnummer;
@@ -21,7 +23,8 @@ import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassenLeitung;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
-import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerLehramtBefaehigung;
+import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerPersonaldatenLehramt;
+import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerPersonaldatenLehramtBefaehigung;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 
@@ -174,10 +177,20 @@ public final class LehrerWithCategoriesRepository implements IAdressbuchKontaktR
 			categories.add(kategorienUtil.formatLehrerJahrgangsteam(jahrgang));
 		}
 
-		final List<DTOLehrerLehramtBefaehigung> dtoLehrerLehramtBefaehigungQueryResult = conn.queryAll(DTOLehrerLehramtBefaehigung.class);
-		for (final DTOLehrerLehramtBefaehigung k : dtoLehrerLehramtBefaehigungQueryResult) {
-			final Set<String> categories = result.computeIfAbsent(k.Lehrer_ID, s -> new HashSet<>());
-			categories.add(kategorienUtil.formatLehrerFachschaft(k.LehrbefKrz));
+		final List<DTOLehrerPersonaldatenLehramt> dtoLehraemter = conn.queryAll(DTOLehrerPersonaldatenLehramt.class);
+		final Map<Long, List<DTOLehrerPersonaldatenLehramtBefaehigung>> mapLehraemterLehrbefaehigungen =
+				conn.queryAll(DTOLehrerPersonaldatenLehramtBefaehigung.class).stream().collect(Collectors.groupingBy(b -> b.Lehreramt_ID));
+		for (final DTOLehrerPersonaldatenLehramt l : dtoLehraemter) {
+			final List<DTOLehrerPersonaldatenLehramtBefaehigung> b = mapLehraemterLehrbefaehigungen.get(l.ID);
+			if (b == null)
+				continue;
+			for (final DTOLehrerPersonaldatenLehramtBefaehigung k : b) {
+				final LehrerLehrbefaehigungKatalogEintrag bef = LehrerLehrbefaehigung.data().getEintragByID(k.Lehrbefaehigung_Katalog_ID);
+				if (bef == null)
+					continue;
+				final Set<String> categories = result.computeIfAbsent(l.Lehrer_ID, s -> new HashSet<>());
+				categories.add(kategorienUtil.formatLehrerFachschaft(bef.kuerzel));
+			}
 		}
 		return result;
 	}

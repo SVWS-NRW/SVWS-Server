@@ -36,13 +36,10 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Lehrämter">
 			<svws-ui-input-wrapper>
-				<s-lehrer-personaldaten-lehraemter :hat-update-kompetenz :lehrer-liste-manager :patch-lehramt
-					:add-lehramt :remove-lehraemter :schuljahr />
-				<s-lehrer-personaldaten-lehrbefaehigungen :hat-update-kompetenz :lehrer-liste-manager
-					:patch-lehrbefaehigung :add-lehrbefaehigung :remove-lehrbefaehigungen :schuljahr />
-				<s-lehrer-personaldaten-fachrichtungen :hat-update-kompetenz :lehrer-liste-manager
-					:patch-fachrichtung :add-fachrichtung :remove-fachrichtungen="removeFachrichtungen"
-					:schuljahr />
+				<s-lehrer-personaldaten-lehraemter :hat-update-kompetenz :schuljahr :lehrer-liste-manager
+					:patch-lehramt :add-lehramt :remove-lehraemter
+					:patch-lehrbefaehigung :add-lehrbefaehigung :remove-lehrbefaehigungen
+					:patch-fachrichtung :add-fachrichtung :remove-fachrichtungen="removeFachrichtungen" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Mehr- und Minderleistung, Anrechnungsstunden">
@@ -71,7 +68,7 @@
 	import { DeveloperNotificationException, ValidatorLehrerPersonalabschnittsdaten} from "@core";
 	import { LehrerBeschaeftigungsart, LehrerEinsatzstatus, LehrerRechtsverhaeltnis, LehrerAnrechnungsgrund, LehrerMehrleistungsarten, LehrerMinderleistungsarten,
 		BenutzerKompetenz} from "@core";
-	import { CoreTypeSelectManager } from "../../../../../ui/src/ui/controls/select/selectManager/CoreTypeSelectManager";
+	import { CoreTypeSelectManager } from "@ui";
 
 	const props = defineProps<LehrerPersonaldatenProps>();
 

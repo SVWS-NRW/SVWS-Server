@@ -118,11 +118,13 @@ import { LehrerBeschaeftigungsartKatalogEintrag } from '../asd/data/lehrer/Lehre
 import { LehrerEinsatzstatusKatalogEintrag } from '../asd/data/lehrer/LehrerEinsatzstatusKatalogEintrag';
 import { LehrerEinwilligung } from '../core/data/lehrer/LehrerEinwilligung';
 import { LehrerFachrichtungAnerkennungKatalogEintrag } from '../asd/data/lehrer/LehrerFachrichtungAnerkennungKatalogEintrag';
+import { LehrerFachrichtungEintrag } from '../asd/data/lehrer/LehrerFachrichtungEintrag';
 import { LehrerFachrichtungKatalogEintrag } from '../asd/data/lehrer/LehrerFachrichtungKatalogEintrag';
 import { LehrerLehramtAnerkennungKatalogEintrag } from '../asd/data/lehrer/LehrerLehramtAnerkennungKatalogEintrag';
 import { LehrerLehramtEintrag } from '../asd/data/lehrer/LehrerLehramtEintrag';
 import { LehrerLehramtKatalogEintrag } from '../asd/data/lehrer/LehrerLehramtKatalogEintrag';
 import { LehrerLehrbefaehigungAnerkennungKatalogEintrag } from '../asd/data/lehrer/LehrerLehrbefaehigungAnerkennungKatalogEintrag';
+import { LehrerLehrbefaehigungEintrag } from '../asd/data/lehrer/LehrerLehrbefaehigungEintrag';
 import { LehrerLehrbefaehigungKatalogEintrag } from '../asd/data/lehrer/LehrerLehrbefaehigungKatalogEintrag';
 import { LehrerLeitungsfunktionKatalogEintrag } from '../asd/data/lehrer/LehrerLeitungsfunktionKatalogEintrag';
 import { LehrerLernplattform } from '../core/data/lehrer/LehrerLernplattform';
@@ -8931,61 +8933,89 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der PATCH-Methode patchLehrerLehramt für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/{id : \d+}/personaldaten/lehramt/{idLehramt : \d+}
+	 * Implementierung der GET-Methode getLehrerLehraemter für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/{id : \d+}/personaldaten/lehraemter
 	 *
-	 * Passt den Lehramtseintrag zu den angegebenen IDs an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personaldaten besitzt.
+	 * Liest zugehörigen Daten zu den Lehrämtern des Lehrers mit der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerpersonaldaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Patch wurde erfolgreich integriert.
-	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 200: Die zugehörigen Daten zu den Lehrämtern des Lehrers
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<LehrerLehramtEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrerpersonaldaten anzusehen.
 	 *   Code 404: Kein Lehrer-Eintrag mit der angegebenen ID gefunden
-	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
-	 * @param {Partial<LehrerLehramtEintrag>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
-	 * @param {number} idLehramt - der Pfad-Parameter idLehramt
+	 *
+	 * @returns Die zugehörigen Daten zu den Lehrämtern des Lehrers
 	 */
-	public async patchLehrerLehramt(data : Partial<LehrerLehramtEintrag>, schema : string, id : number, idLehramt : number) : Promise<void> {
-		const path = "/db/{schema}/lehrer/{id : \\d+}/personaldaten/lehramt/{idLehramt : \\d+}"
+	public async getLehrerLehraemter(schema : string, id : number) : Promise<List<LehrerLehramtEintrag>> {
+		const path = "/db/{schema}/lehrer/{id : \\d+}/personaldaten/lehraemter"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
-			.replace(/{idLehramt\s*(:[^{}]+({[^{}]+})*)?}/g, idLehramt.toString());
-		const body : string = LehrerLehramtEintrag.transpilerToJSONPatch(data);
-		return super.patchJSON(path, body);
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<LehrerLehramtEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerLehramtEintrag.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 
 	/**
-	 * Implementierung der DELETE-Methode deleteLehrerLehramt für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/{id : \d+}/personaldaten/lehramt/{idLehramt : \d+}
+	 * Implementierung der GET-Methode getLehrerLehramtFachrichtungen für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/{id : \d+}/personaldaten/lehramt/fachrichtungen
 	 *
-	 * Entfernt den Lehramtseintrag in den Personaldaten des Lehrers aus der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personaldaten besitzt.
+	 * Liest zugehörigen Daten zu den Fachrichtungen des Lehramtes mit der angegebenen ID eines Lehrers aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerpersonaldaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Datensatz wurde erfolgreich entfernt.
+	 *   Code 200: Die zugehörigen Daten zu den Fachrichtungen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: LehrerLehramtEintrag
-	 *   Code 400: Die Anfrage ist fehlerhaft.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu entfernen.
-	 *   Code 404: Kein Eintrag mit den angegebenen IDs gefunden
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *     - Rückgabe-Typ: List<LehrerFachrichtungEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrerpersonaldaten anzusehen.
+	 *   Code 404: Kein Lehramts-Eintrag mit der angegebenen ID gefunden
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
-	 * @param {number} idLehramt - der Pfad-Parameter idLehramt
 	 *
-	 * @returns Der Datensatz wurde erfolgreich entfernt.
+	 * @returns Die zugehörigen Daten zu den Fachrichtungen
 	 */
-	public async deleteLehrerLehramt(schema : string, id : number, idLehramt : number) : Promise<LehrerLehramtEintrag> {
-		const path = "/db/{schema}/lehrer/{id : \\d+}/personaldaten/lehramt/{idLehramt : \\d+}"
+	public async getLehrerLehramtFachrichtungen(schema : string, id : number) : Promise<List<LehrerFachrichtungEintrag>> {
+		const path = "/db/{schema}/lehrer/{id : \\d+}/personaldaten/lehramt/fachrichtungen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
-			.replace(/{idLehramt\s*(:[^{}]+({[^{}]+})*)?}/g, idLehramt.toString());
-		const result : string = await super.deleteJSON(path, null);
-		const text = result;
-		return LehrerLehramtEintrag.transpilerFromJSON(text);
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<LehrerFachrichtungEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerFachrichtungEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getLehrerLehramtLehrbefaehigungen für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/{id : \d+}/personaldaten/lehramt/lehrbefaehigungen
+	 *
+	 * Liest zugehörigen Daten zu den Lehrbefähigungen des Lehramtes mit der angegebenen ID eines Lehrers aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerpersonaldaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die zugehörigen Daten zu den Lehrbefähigungen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<LehrerLehrbefaehigungEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrerpersonaldaten anzusehen.
+	 *   Code 404: Kein Lehramts-Eintrag mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die zugehörigen Daten zu den Lehrbefähigungen
+	 */
+	public async getLehrerLehramtLehrbefaehigungen(schema : string, id : number) : Promise<List<LehrerLehrbefaehigungEintrag>> {
+		const path = "/db/{schema}/lehrer/{id : \\d+}/personaldaten/lehramt/lehrbefaehigungen"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<LehrerLehrbefaehigungEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerLehrbefaehigungEintrag.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 
@@ -9100,7 +9130,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getLehrerAbgangsgruende für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/allgemein/abgangsgruende
+	 * Implementierung der GET-Methode getKatalogLehrerAbgangsgruende für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/allgemein/abgangsgruende
 	 *
 	 * Erstellt eine Liste aller in dem Katalog vorhanden Lehrerabgangsgründe unter Angabe der ID, der Bezeichnung und des Statistikschlüssels. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
 	 *
@@ -9115,7 +9145,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Lehrerabgangsgrund-Katalog-Einträgen
 	 */
-	public async getLehrerAbgangsgruende(schema : string) : Promise<List<LehrerAbgangsgrundKatalogEintrag>> {
+	public async getKatalogLehrerAbgangsgruende(schema : string) : Promise<List<LehrerAbgangsgrundKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/abgangsgruende"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
@@ -9127,7 +9157,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getLehrerAnrechnungsgruende für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/allgemein/anrechnungsgruende
+	 * Implementierung der GET-Methode getKatalogLehrerAnrechnungsgruende für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/allgemein/anrechnungsgruende
 	 *
 	 * Erstellt eine Liste aller in dem Katalog vorhanden Gründe für Anrechnungsstunden von Lehrern.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
 	 *
@@ -9142,7 +9172,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Einträgen für Gründe von Anrechnungsstunden von Lehrern
 	 */
-	public async getLehrerAnrechnungsgruende(schema : string) : Promise<List<LehrerAnrechnungsgrundKatalogEintrag>> {
+	public async getKatalogLehrerAnrechnungsgruende(schema : string) : Promise<List<LehrerAnrechnungsgrundKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/anrechnungsgruende"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
@@ -9154,7 +9184,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getLehrerBeschaeftigungsarten für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/allgemein/beschaeftigungsarten
+	 * Implementierung der GET-Methode getKatalogLehrerBeschaeftigungsarten für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/allgemein/beschaeftigungsarten
 	 *
 	 * Erstellt eine Liste aller in dem Katalog vorhanden Beschäftigungsarten unter Angabe der ID, eines Kürzels und der Bezeichnung. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
 	 *
@@ -9169,7 +9199,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Beschäftigungsart-Katalog-Einträgen
 	 */
-	public async getLehrerBeschaeftigungsarten(schema : string) : Promise<List<LehrerBeschaeftigungsartKatalogEintrag>> {
+	public async getKatalogLehrerBeschaeftigungsarten(schema : string) : Promise<List<LehrerBeschaeftigungsartKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/beschaeftigungsarten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
@@ -9181,7 +9211,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getLehrerEinsatzstatus für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/allgemein/einsatzstatus
+	 * Implementierung der GET-Methode getKatalogLehrerEinsatzstatus für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/allgemein/einsatzstatus
 	 *
 	 * Erstellt eine Liste aller in dem Katalog vorhanden Einsatzstatusarten unter Angabe der ID, eines Kürzels und der Bezeichnung. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
 	 *
@@ -9196,7 +9226,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Einsatzstatus-Katalog-Einträgen
 	 */
-	public async getLehrerEinsatzstatus(schema : string) : Promise<List<LehrerEinsatzstatusKatalogEintrag>> {
+	public async getKatalogLehrerEinsatzstatus(schema : string) : Promise<List<LehrerEinsatzstatusKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/einsatzstatus"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
@@ -9208,7 +9238,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getLehrerFachrichtungen für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/allgemein/fachrichtungen
+	 * Implementierung der GET-Methode getKatalogLehrerFachrichtungen für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/allgemein/fachrichtungen
 	 *
 	 * Erstellt eine Liste aller in dem Katalog vorhanden Fachrichtungen von Lehrern. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
 	 *
@@ -9223,7 +9253,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Fachrichtungens-Katalog-Einträgen
 	 */
-	public async getLehrerFachrichtungen(schema : string) : Promise<List<LehrerFachrichtungKatalogEintrag>> {
+	public async getKatalogLehrerFachrichtungen(schema : string) : Promise<List<LehrerFachrichtungKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/fachrichtungen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
@@ -9235,7 +9265,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getLehrerFachrichtungAnerkennungen für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/allgemein/fachrichtungen_anerkennungen
+	 * Implementierung der GET-Methode getKatalogLehrerFachrichtungAnerkennungen für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/allgemein/fachrichtungen_anerkennungen
 	 *
 	 * Erstellt eine Liste aller in dem Katalog vorhanden Anerkennungen von Fachrichtungen für Lehrer. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
 	 *
@@ -9250,7 +9280,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Anerkennungs-Katalog-Einträgen
 	 */
-	public async getLehrerFachrichtungAnerkennungen(schema : string) : Promise<List<LehrerFachrichtungAnerkennungKatalogEintrag>> {
+	public async getKatalogLehrerFachrichtungAnerkennungen(schema : string) : Promise<List<LehrerFachrichtungAnerkennungKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/fachrichtungen_anerkennungen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
@@ -9262,7 +9292,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getLehrerLehraemter für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/allgemein/lehraemter
+	 * Implementierung der GET-Methode getKatalogLehrerLehraemter für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/allgemein/lehraemter
 	 *
 	 * Erstellt eine Liste aller in dem Katalog vorhanden Lehrämter. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
 	 *
@@ -9277,7 +9307,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Lehramt-Katalog-Einträgen
 	 */
-	public async getLehrerLehraemter(schema : string) : Promise<List<LehrerLehramtKatalogEintrag>> {
+	public async getKatalogLehrerLehraemter(schema : string) : Promise<List<LehrerLehramtKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/lehraemter"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
@@ -9289,7 +9319,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getLehrerLehramtAnerkennungen für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/allgemein/lehraemter_anerkennungen
+	 * Implementierung der GET-Methode getKatalogLehrerLehramtAnerkennungen für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/allgemein/lehraemter_anerkennungen
 	 *
 	 * Erstellt eine Liste aller Anerkennungen von Lehrämtern. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
 	 *
@@ -9304,7 +9334,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Anerkennungs-Katalog-Einträgen
 	 */
-	public async getLehrerLehramtAnerkennungen(schema : string) : Promise<List<LehrerLehramtAnerkennungKatalogEintrag>> {
+	public async getKatalogLehrerLehramtAnerkennungen(schema : string) : Promise<List<LehrerLehramtAnerkennungKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/lehraemter_anerkennungen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
@@ -9316,7 +9346,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getLehrerLehrbefaehigungen für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/allgemein/lehrbefaehigungen
+	 * Implementierung der GET-Methode getKatalogLehrerLehrbefaehigungen für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/allgemein/lehrbefaehigungen
 	 *
 	 * Erstellt eine Liste aller in dem Katalog vorhanden Lehrbefähigungen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
 	 *
@@ -9331,7 +9361,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Lehrbefähigung-Katalog-Einträgen
 	 */
-	public async getLehrerLehrbefaehigungen(schema : string) : Promise<List<LehrerLehrbefaehigungKatalogEintrag>> {
+	public async getKatalogLehrerLehrbefaehigungen(schema : string) : Promise<List<LehrerLehrbefaehigungKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/lehrbefaehigungen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
@@ -9343,7 +9373,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getLehrerLehrbefaehigungenAnerkennungen für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/allgemein/lehrbefaehigungen_anerkennungen
+	 * Implementierung der GET-Methode getKatalogLehrerLehrbefaehigungenAnerkennungen für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/allgemein/lehrbefaehigungen_anerkennungen
 	 *
 	 * Erstellt eine Liste aller in dem Katalog vorhanden Anerkennungen von Lehrbefähigungen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
 	 *
@@ -9358,7 +9388,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Einsatzstatus-Katalog-Einträgen
 	 */
-	public async getLehrerLehrbefaehigungenAnerkennungen(schema : string) : Promise<List<LehrerLehrbefaehigungAnerkennungKatalogEintrag>> {
+	public async getKatalogLehrerLehrbefaehigungenAnerkennungen(schema : string) : Promise<List<LehrerLehrbefaehigungAnerkennungKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/lehrbefaehigungen_anerkennungen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
@@ -9370,7 +9400,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getLehrerMehrleistungsarten für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/allgemein/mehrleistungsarten
+	 * Implementierung der GET-Methode getKatalogLehrerMehrleistungsarten für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/allgemein/mehrleistungsarten
 	 *
 	 * Erstellt eine Liste aller in dem Katalog vorhanden die Arten von Mehrleistungen durch Lehrer. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
 	 *
@@ -9385,7 +9415,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Mehrleistungsart-Katalog-Einträgen
 	 */
-	public async getLehrerMehrleistungsarten(schema : string) : Promise<List<LehrerMehrleistungsartKatalogEintrag>> {
+	public async getKatalogLehrerMehrleistungsarten(schema : string) : Promise<List<LehrerMehrleistungsartKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/mehrleistungsarten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
@@ -9397,7 +9427,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getLehrerMinderleistungsarten für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/allgemein/minderleistungsarten
+	 * Implementierung der GET-Methode getKatalogLehrerMinderleistungsarten für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/allgemein/minderleistungsarten
 	 *
 	 * Erstellt eine Liste aller in dem Katalog vorhanden Arten von Minderleistungen durch Lehrer. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
 	 *
@@ -9412,7 +9442,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Minderleistungsart-Katalog-Einträgen
 	 */
-	public async getLehrerMinderleistungsarten(schema : string) : Promise<List<LehrerMinderleistungsartKatalogEintrag>> {
+	public async getKatalogLehrerMinderleistungsarten(schema : string) : Promise<List<LehrerMinderleistungsartKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/minderleistungsarten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
@@ -9424,7 +9454,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getLehrerRechtsverhaeltnisse für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/allgemein/rechtsverhaeltnisse
+	 * Implementierung der GET-Methode getKatalogLehrerRechtsverhaeltnisse für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/allgemein/rechtsverhaeltnisse
 	 *
 	 * Erstellt eine Liste aller in dem Katalog vorhanden Rechtsverhältnisse unter Angabe der ID, eines Kürzels und der Bezeichnung. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
 	 *
@@ -9439,7 +9469,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Rechtsverhältnis-Katalog-Einträgen
 	 */
-	public async getLehrerRechtsverhaeltnisse(schema : string) : Promise<List<LehrerRechtsverhaeltnisKatalogEintrag>> {
+	public async getKatalogLehrerRechtsverhaeltnisse(schema : string) : Promise<List<LehrerRechtsverhaeltnisKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/rechtsverhaeltnisse"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
@@ -9451,7 +9481,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getLehrerZugangsgruende für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/allgemein/zugangsgruende
+	 * Implementierung der GET-Methode getKatalogLehrerZugangsgruende für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/allgemein/zugangsgruende
 	 *
 	 * Erstellt eine Liste aller in dem Katalog vorhanden Lehrerzugangsgründe unter Angabe der ID, der Bezeichnung und des Statistikschlüssels. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
 	 *
@@ -9466,7 +9496,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Lehrerzugangsgrund-Katalog-Einträgen
 	 */
-	public async getLehrerZugangsgruende(schema : string) : Promise<List<LehrerZugangsgrundKatalogEintrag>> {
+	public async getKatalogLehrerZugangsgruende(schema : string) : Promise<List<LehrerZugangsgrundKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/zugangsgruende"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
@@ -10073,6 +10103,312 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return LehrerLehramtEintrag.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getLehrerLehramt für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personaldaten/lehramt/{idLehramt : \d+}
+	 *
+	 * Liest die Daten des Lehramtes eines Lehrers zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerpersonaldaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Daten zu dem Lehramt
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: LehrerLehramtEintrag
+	 *   Code 400: Die Anfrage ist fehlerhaft.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten anzusehen.
+	 *   Code 404: Kein Lehramts-Eintrag mit der angegebenen ID gefunden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} idLehramt - der Pfad-Parameter idLehramt
+	 *
+	 * @returns Die Daten zu dem Lehramt
+	 */
+	public async getLehrerLehramt(schema : string, idLehramt : number) : Promise<LehrerLehramtEintrag> {
+		const path = "/db/{schema}/lehrer/personaldaten/lehramt/{idLehramt : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{idLehramt\s*(:[^{}]+({[^{}]+})*)?}/g, idLehramt.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return LehrerLehramtEintrag.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchLehrerLehramt für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personaldaten/lehramt/{idLehramt : \d+}
+	 *
+	 * Passt den Lehramtseintrag zu den angegebenen IDs an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personaldaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Lehramts-Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<LehrerLehramtEintrag>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} idLehramt - der Pfad-Parameter idLehramt
+	 */
+	public async patchLehrerLehramt(data : Partial<LehrerLehramtEintrag>, schema : string, idLehramt : number) : Promise<void> {
+		const path = "/db/{schema}/lehrer/personaldaten/lehramt/{idLehramt : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{idLehramt\s*(:[^{}]+({[^{}]+})*)?}/g, idLehramt.toString());
+		const body : string = LehrerLehramtEintrag.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteLehrerLehramt für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personaldaten/lehramt/{idLehramt : \d+}
+	 *
+	 * Entfernt den Lehramtseintrag in den Personaldaten des Lehrers aus der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personaldaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Datensatz wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: LehrerLehramtEintrag
+	 *   Code 400: Die Anfrage ist fehlerhaft.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu entfernen.
+	 *   Code 404: Kein Eintrag mit den angegebenen IDs gefunden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} idLehramt - der Pfad-Parameter idLehramt
+	 *
+	 * @returns Der Datensatz wurde erfolgreich entfernt.
+	 */
+	public async deleteLehrerLehramt(schema : string, idLehramt : number) : Promise<LehrerLehramtEintrag> {
+		const path = "/db/{schema}/lehrer/personaldaten/lehramt/{idLehramt : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{idLehramt\s*(:[^{}]+({[^{}]+})*)?}/g, idLehramt.toString());
+		const result : string = await super.deleteJSON(path, null);
+		const text = result;
+		return LehrerLehramtEintrag.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addLehrerFachrichtung für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personaldaten/lehramt/fachrichtung
+	 *
+	 * Erstellt einen neuen Datensatz für eine Fachrichtung zu einem Lehramt in den Personaldaten eines Lehrers und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die Fachrichtung wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: LehrerFachrichtungEintrag
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Fachrichtung hinzuzufügen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<LehrerFachrichtungEintrag>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Fachrichtung wurde erfolgreich hinzugefügt.
+	 */
+	public async addLehrerFachrichtung(data : Partial<LehrerFachrichtungEintrag>, schema : string) : Promise<LehrerFachrichtungEintrag> {
+		const path = "/db/{schema}/lehrer/personaldaten/lehramt/fachrichtung"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = LehrerFachrichtungEintrag.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return LehrerFachrichtungEintrag.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getLehrerFachrichtung für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personaldaten/lehramt/fachrichtung/{id : \d+}
+	 *
+	 * Liest die Daten des Fachrichtungseintrags mit der angegebenen ID zu einem Lehramt eines Lehrers aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerpersonaldaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Daten zu dem Fachrichtungseintrag
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: LehrerFachrichtungEintrag
+	 *   Code 400: Die Anfrage ist fehlerhaft.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrerpersonaldaten anzusehen.
+	 *   Code 404: Kein Fachrichtungseintrag mit der angegebenen ID gefunden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Daten zu dem Fachrichtungseintrag
+	 */
+	public async getLehrerFachrichtung(schema : string, id : number) : Promise<LehrerFachrichtungEintrag> {
+		const path = "/db/{schema}/lehrer/personaldaten/lehramt/fachrichtung/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return LehrerFachrichtungEintrag.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchLehrerFachrichtung für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personaldaten/lehramt/fachrichtung/{id : \d+}
+	 *
+	 * Passt den Fachrichtungseintrags zu den angegebenen IDs an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personaldaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Fachrichtungseintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<LehrerFachrichtungEintrag>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchLehrerFachrichtung(data : Partial<LehrerFachrichtungEintrag>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/lehrer/personaldaten/lehramt/fachrichtung/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = LehrerFachrichtungEintrag.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteLehrerFachrichtung für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personaldaten/lehramt/fachrichtung/{id : \d+}
+	 *
+	 * Entfernt den Fachrichtungseintrag eines Lehramtes eines Lehrers aus der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personaldaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Datensatz wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: LehrerFachrichtungEintrag
+	 *   Code 400: Die Anfrage ist fehlerhaft.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu entfernen.
+	 *   Code 404: Kein Eintrag mit den angegebenen IDs gefunden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Datensatz wurde erfolgreich entfernt.
+	 */
+	public async deleteLehrerFachrichtung(schema : string, id : number) : Promise<LehrerFachrichtungEintrag> {
+		const path = "/db/{schema}/lehrer/personaldaten/lehramt/fachrichtung/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.deleteJSON(path, null);
+		const text = result;
+		return LehrerFachrichtungEintrag.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addLehrerLehrbefaehigung für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personaldaten/lehramt/lehrbefaehigung
+	 *
+	 * Erstellt einen neuen Datensatz für eine Lehrbefähigung zu einem Lehramt in den Personaldaten eines Lehrers und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die Lehrbefähigung wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: LehrerLehrbefaehigungEintrag
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Lehrbefähigung hinzuzufügen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<LehrerLehrbefaehigungEintrag>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Lehrbefähigung wurde erfolgreich hinzugefügt.
+	 */
+	public async addLehrerLehrbefaehigung(data : Partial<LehrerLehrbefaehigungEintrag>, schema : string) : Promise<LehrerLehrbefaehigungEintrag> {
+		const path = "/db/{schema}/lehrer/personaldaten/lehramt/lehrbefaehigung"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = LehrerLehrbefaehigungEintrag.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return LehrerLehrbefaehigungEintrag.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getLehrerLehrbefaehigung für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personaldaten/lehramt/lehrbefaehigung/{id : \d+}
+	 *
+	 * Liest die Daten des Lehrbefähigungseintrags mit der angegebenen ID zu einem Lehramt eines Lehrers aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerpersonaldaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Daten zu dem Lehrbefähigungseintrag
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: LehrerLehrbefaehigungEintrag
+	 *   Code 400: Die Anfrage ist fehlerhaft.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrerpersonaldaten anzusehen.
+	 *   Code 404: Kein Lehrbefähigungseintrag mit der angegebenen ID gefunden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Daten zu dem Lehrbefähigungseintrag
+	 */
+	public async getLehrerLehrbefaehigung(schema : string, id : number) : Promise<LehrerLehrbefaehigungEintrag> {
+		const path = "/db/{schema}/lehrer/personaldaten/lehramt/lehrbefaehigung/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return LehrerLehrbefaehigungEintrag.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchLehrerLehrbefaehigung für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personaldaten/lehramt/lehrbefaehigung/{id : \d+}
+	 *
+	 * Passt den Lehrbefähigungseintrags zu den angegebenen IDs an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personaldaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Lehrbefähigungseintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<LehrerLehrbefaehigungEintrag>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchLehrerLehrbefaehigung(data : Partial<LehrerLehrbefaehigungEintrag>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/lehrer/personaldaten/lehramt/lehrbefaehigung/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = LehrerLehrbefaehigungEintrag.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteLehrerLehrbefaehigung für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personaldaten/lehramt/lehrbefaehigung/{id : \d+}
+	 *
+	 * Entfernt den Lehrbefähigungseintrag eines Lehramtes eines Lehrers aus der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personaldaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Datensatz wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: LehrerLehrbefaehigungEintrag
+	 *   Code 400: Die Anfrage ist fehlerhaft.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu entfernen.
+	 *   Code 404: Kein Eintrag mit den angegebenen IDs gefunden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Datensatz wurde erfolgreich entfernt.
+	 */
+	public async deleteLehrerLehrbefaehigung(schema : string, id : number) : Promise<LehrerLehrbefaehigungEintrag> {
+		const path = "/db/{schema}/lehrer/personaldaten/lehramt/lehrbefaehigung/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.deleteJSON(path, null);
+		const text = result;
+		return LehrerLehrbefaehigungEintrag.transpilerFromJSON(text);
 	}
 
 

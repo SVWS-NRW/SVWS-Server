@@ -4,22 +4,22 @@ import { Class } from '../../../java/lang/Class';
 export class LehrerLehrbefaehigungEintrag extends JavaObject {
 
 	/**
-	 * Die ID des Lehrers.
+	 * Die ID des Eintrages.
 	 */
 	public id : number = 0;
 
 	/**
-	 * Die ID des Lehramtes.
+	 * Die ID des Lehramteintrags des Lehrers.
 	 */
 	public idLehramt : number = 0;
 
 	/**
-	 * Die ID der Lehrbefähigung.
+	 * Die Katalog-ID der Lehrbefähigung.
 	 */
 	public idLehrbefaehigung : number = 0;
 
 	/**
-	 * Die ID des Anerkennungsgrund für die Lehrbefähigung.
+	 * Die Katalog-ID des Anerkennungsgrund für die Lehrbefähigung.
 	 */
 	public idAnerkennungsgrund : number | null = null;
 

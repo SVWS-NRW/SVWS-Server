@@ -57,6 +57,7 @@ public class Tabelle_LehrerLehramtFachr extends SchemaTabelle {
 		setJavaSubPackage("schild.lehrer");
 		setJavaClassName("DTOLehrerLehramtFachrichtung");
 		setJavaComment("Fachrichtung gültige Schlüssel zur Lehrkraft");
+		setVeraltet(SchemaRevisionen.REV_45);
 	}
 
 }

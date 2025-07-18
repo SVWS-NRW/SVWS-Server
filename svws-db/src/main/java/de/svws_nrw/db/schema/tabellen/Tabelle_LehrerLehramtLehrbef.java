@@ -57,6 +57,7 @@ public class Tabelle_LehrerLehramtLehrbef extends SchemaTabelle {
 		setJavaSubPackage("schild.lehrer");
 		setJavaClassName("DTOLehrerLehramtBefaehigung");
 		setJavaComment("Lehramt Lehrbefähigung gültige Schlüssel zur Lehrkraft");
+		setVeraltet(SchemaRevisionen.REV_45);
 	}
 
 }

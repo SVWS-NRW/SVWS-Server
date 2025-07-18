@@ -6,27 +6,27 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie beschreibt eine Lehrbefähigung eines Lehrers mit der übergebenen ID.
+ * Sie beschreibt eine Lehrbefähigung in Bezug auf das Lehramt eines Lehrers.
  */
 @XmlRootElement
-@Schema(description = "Eine Lehrbefähigung eines Lehrers.")
+@Schema(description = "Eine Lehrbefähigung zu einem Lehramt eines Lehrers.")
 @TranspilerDTO
 public class LehrerLehrbefaehigungEintrag {
 
-	/** Die ID des Lehrers. */
-	@Schema(description = "Die ID des Lehrers.", example = "4711")
+	/** Die ID des Eintrages. */
+	@Schema(description = "Die ID des Eintrages.", example = "4711")
 	public long id;
 
-	/** Die ID des Lehramtes. */
-	@Schema(description = "Die ID des Lehramtes.", example = "4712")
+	/** Die ID des Lehramteintrags des Lehrers. */
+	@Schema(description = "Die ID des Lehramteintrags des Lehrers.", example = "4712")
 	public long idLehramt;
 
-	/** Die ID der Lehrbefähigung. */
-	@Schema(description = "Die ID der Lehrbefähigung.", example = "4712")
+	/** Die Katalog-ID der Lehrbefähigung. */
+	@Schema(description = "Die Katalog-ID der Lehrbefähigung.", example = "4712")
 	public long idLehrbefaehigung;
 
-	/** Die ID des Anerkennungsgrund für die Lehrbefähigung. */
-	@Schema(description = "Die ID des Anerkennungsgrund für die Lehrbefähigung.", example = "4713")
+	/** Die Katalog-ID des Anerkennungsgrund für die Lehrbefähigung. */
+	@Schema(description = "Die Katalog-ID des Anerkennungsgrund für die Lehrbefähigung.", example = "4713")
 	public Long idAnerkennungsgrund;
 
 	/**

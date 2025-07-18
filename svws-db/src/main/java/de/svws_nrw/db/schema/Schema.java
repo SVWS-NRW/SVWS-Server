@@ -153,6 +153,9 @@ import de.svws_nrw.db.schema.tabellen.Tabelle_LehrerLeitungsfunktion_Keys;
 import de.svws_nrw.db.schema.tabellen.Tabelle_LehrerLernplattform;
 import de.svws_nrw.db.schema.tabellen.Tabelle_LehrerMehrleistung;
 import de.svws_nrw.db.schema.tabellen.Tabelle_LehrerNotenmodulCredentials;
+import de.svws_nrw.db.schema.tabellen.Tabelle_LehrerPersonaldatenLehramt;
+import de.svws_nrw.db.schema.tabellen.Tabelle_LehrerPersonaldatenLehramtFachrichtung;
+import de.svws_nrw.db.schema.tabellen.Tabelle_LehrerPersonaldatenLehramtLehrbefaehigung;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Lernplattformen;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Logins;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Nationalitaeten_Keys;
@@ -570,6 +573,17 @@ public final class Schema {
 
 	/** Tabelle LehrerLehramtLehrbef */
 	public static final Tabelle_LehrerLehramtLehrbef tab_LehrerLehramtLehrbef = add(new Tabelle_LehrerLehramtLehrbef());
+
+	/** Tabelle LehrerPersonaldatenLehramt */
+	public static final Tabelle_LehrerPersonaldatenLehramt tab_LehrerPersonaldatenLehramt = add(new Tabelle_LehrerPersonaldatenLehramt());
+
+	/** Tabelle LehrerPersonaldatenLehramtFachrichtung */
+	public static final Tabelle_LehrerPersonaldatenLehramtFachrichtung tab_LehrerPersonaldatenLehramtFachrichtung =
+			add(new Tabelle_LehrerPersonaldatenLehramtFachrichtung());
+
+	/** Tabelle LehrerPersonaldatenLehramtLehrbefaehigung */
+	public static final Tabelle_LehrerPersonaldatenLehramtLehrbefaehigung tab_LehrerPersonaldatenLehramtLehrbefaehigung =
+			add(new Tabelle_LehrerPersonaldatenLehramtLehrbefaehigung());
 
 	/** Tabelle LehrerLernplattform */
 	public static final Tabelle_LehrerLernplattform tab_LehrerLernplattform = add(new Tabelle_LehrerLernplattform());

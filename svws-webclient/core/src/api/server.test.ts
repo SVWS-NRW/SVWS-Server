@@ -341,28 +341,8 @@ describe("Server", () => {
 		const res = await server.getLehrerStammdaten(schema, 76);
 		expect(res).matchSnapshot();
 	});
-	test.skip("getLehrerAbgangsgruende", async () => {
-		const res = await server.getLehrerAbgangsgruende(schema);
-		expect(res).matchSnapshot();
-	});
-	test.skip("getLehrerBeschaeftigungsarten", async () => {
-		const res = await server.getLehrerBeschaeftigungsarten(schema);
-		expect(res).matchSnapshot();
-	});
-	test.skip("getLehrerEinsatzstatus", async () => {
-		const res = await server.getLehrerEinsatzstatus(schema);
-		expect(res).matchSnapshot();
-	});
 	test.skip("getLehrerLeitungsfunktionen", async () => {
 		const res = await server.getLehrerLeitungsfunktionen(schema);
-		expect(res).matchSnapshot();
-	});
-	test.skip("getLehrerRechtsverhaeltnisse", async () => {
-		const res = await server.getLehrerRechtsverhaeltnisse(schema);
-		expect(res).matchSnapshot();
-	});
-	test.skip("getLehrerZugangsgruende", async () => {
-		const res = await server.getLehrerZugangsgruende(schema);
 		expect(res).matchSnapshot();
 	});
 	test.skip("getSchuelerErzieher", async () => {

@@ -4,22 +4,22 @@ import { Class } from '../../../java/lang/Class';
 export class LehrerFachrichtungEintrag extends JavaObject {
 
 	/**
-	 * Die ID des Lehrers.
+	 * Die ID des Eintrages.
 	 */
 	public id : number = 0;
 
 	/**
-	 * Die ID des Lehramtes.
+	 * Die ID des Lehramteintrags des Lehrers.
 	 */
 	public idLehramt : number = 0;
 
 	/**
-	 * Die ID der Fachrichtung.
+	 * Die Katalog-ID der Fachrichtung.
 	 */
 	public idFachrichtung : number = 0;
 
 	/**
-	 * Die ID des Anerkennungsgrund für die Fachrichtung.
+	 * Die Katalog-ID des Anerkennungsgrund für die Fachrichtung.
 	 */
 	public idAnerkennungsgrund : number | null = null;
 

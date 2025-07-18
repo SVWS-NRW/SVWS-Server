@@ -4,8 +4,6 @@ import { LehrerPersonalabschnittsdaten } from '../../../asd/data/lehrer/LehrerPe
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
-import { LehrerLehrbefaehigungEintrag } from '../../../asd/data/lehrer/LehrerLehrbefaehigungEintrag';
-import { LehrerFachrichtungEintrag } from '../../../asd/data/lehrer/LehrerFachrichtungEintrag';
 
 export class LehrerPersonaldaten extends JavaObject {
 
@@ -69,16 +67,6 @@ export class LehrerPersonaldaten extends JavaObject {
 	 */
 	public readonly lehraemter : List<LehrerLehramtEintrag> = new ArrayList<LehrerLehramtEintrag>();
 
-	/**
-	 * Die Fachrichtungen des Lehrers.
-	 */
-	public readonly fachrichtungen : List<LehrerFachrichtungEintrag> = new ArrayList<LehrerFachrichtungEintrag>();
-
-	/**
-	 * Die Lehrbefähigungen des Lehrers.
-	 */
-	public readonly lehrbefaehigungen : List<LehrerLehrbefaehigungEintrag> = new ArrayList<LehrerLehrbefaehigungEintrag>();
-
 
 	/**
 	 * Leerer Standardkonstruktor.
@@ -122,16 +110,6 @@ export class LehrerPersonaldaten extends JavaObject {
 				result.lehraemter.add(LehrerLehramtEintrag.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (obj.fachrichtungen !== undefined) {
-			for (const elem of obj.fachrichtungen) {
-				result.fachrichtungen.add(LehrerFachrichtungEintrag.transpilerFromJSON(JSON.stringify(elem)));
-			}
-		}
-		if (obj.lehrbefaehigungen !== undefined) {
-			for (const elem of obj.lehrbefaehigungen) {
-				result.lehrbefaehigungen.add(LehrerLehrbefaehigungEintrag.transpilerFromJSON(JSON.stringify(elem)));
-			}
-		}
 		return result;
 	}
 
@@ -160,22 +138,6 @@ export class LehrerPersonaldaten extends JavaObject {
 			const elem = obj.lehraemter.get(i);
 			result += LehrerLehramtEintrag.transpilerToJSON(elem);
 			if (i < obj.lehraemter.size() - 1)
-				result += ',';
-		}
-		result += ' ]' + ',';
-		result += '"fachrichtungen" : [ ';
-		for (let i = 0; i < obj.fachrichtungen.size(); i++) {
-			const elem = obj.fachrichtungen.get(i);
-			result += LehrerFachrichtungEintrag.transpilerToJSON(elem);
-			if (i < obj.fachrichtungen.size() - 1)
-				result += ',';
-		}
-		result += ' ]' + ',';
-		result += '"lehrbefaehigungen" : [ ';
-		for (let i = 0; i < obj.lehrbefaehigungen.size(); i++) {
-			const elem = obj.lehrbefaehigungen.get(i);
-			result += LehrerLehrbefaehigungEintrag.transpilerToJSON(elem);
-			if (i < obj.lehrbefaehigungen.size() - 1)
 				result += ',';
 		}
 		result += ' ]' + ',';
@@ -232,26 +194,6 @@ export class LehrerPersonaldaten extends JavaObject {
 				const elem = obj.lehraemter.get(i);
 				result += LehrerLehramtEintrag.transpilerToJSON(elem);
 				if (i < obj.lehraemter.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
-		}
-		if (obj.fachrichtungen !== undefined) {
-			result += '"fachrichtungen" : [ ';
-			for (let i = 0; i < obj.fachrichtungen.size(); i++) {
-				const elem = obj.fachrichtungen.get(i);
-				result += LehrerFachrichtungEintrag.transpilerToJSON(elem);
-				if (i < obj.fachrichtungen.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
-		}
-		if (obj.lehrbefaehigungen !== undefined) {
-			result += '"lehrbefaehigungen" : [ ';
-			for (let i = 0; i < obj.lehrbefaehigungen.size(); i++) {
-				const elem = obj.lehrbefaehigungen.get(i);
-				result += LehrerLehrbefaehigungEintrag.transpilerToJSON(elem);
-				if (i < obj.lehrbefaehigungen.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';

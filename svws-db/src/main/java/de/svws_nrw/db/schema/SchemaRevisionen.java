@@ -35,6 +35,7 @@ import de.svws_nrw.db.schema.revisionen.Revision40Updates;
 import de.svws_nrw.db.schema.revisionen.Revision41Updates;
 import de.svws_nrw.db.schema.revisionen.Revision42Updates;
 import de.svws_nrw.db.schema.revisionen.Revision43Updates;
+import de.svws_nrw.db.schema.revisionen.Revision45Updates;
 import de.svws_nrw.db.schema.revisionen.Revision3Updates;
 import de.svws_nrw.db.schema.revisionen.Revision4Updates;
 import de.svws_nrw.db.schema.revisionen.Revision6Updates;
@@ -250,7 +251,10 @@ public enum SchemaRevisionen {
 	REV_43(43, "2025-07-02"),
 
 	/** Schulbesuchsjahre aus DB entfernt, PrognoseAbschluss und PrognoseLog in Lernabschnitte, Geburtsort und Geburtsname bei Lehrerdaten */
-	REV_44(44, "2025-07-03");
+	REV_44(44, "2025-07-03"),
+
+	/** Überarbeitung der Tabellen zu den Lehrämter und den dort zugeordneten Fachrichtungen und Lehrbefähigungen */
+	REV_45(45, "2025-07-18");
 
 
 	/**
@@ -258,14 +262,14 @@ public enum SchemaRevisionen {
 	 * bis zu welcher alle Schema-Revision als stabil gelten und ab Version 1.0 des SVWS-Servers
 	 * nicht mehr verändert werden.
 	 */
-	public static final SchemaRevisionen maxRevision = REV_44;
+	public static final SchemaRevisionen maxRevision = REV_45;
 
 	/**
 	 * Gibt die größte Revisions-Nummer an, welche in diese Enumeration definiert wurde.
 	 * Dies dient dazu Revisionen als Entwickler-Revisionen zu kennzeichnen, die noch nicht
 	 * stabil sind. Dieser Wert ist also größer oder gleich {@link SchemaRevisionen#maxRevision}.
 	 */
-	public static final SchemaRevisionen maxDeveloperRevision = REV_44;
+	public static final SchemaRevisionen maxDeveloperRevision = REV_45;
 
 	/** Eine Map, welche von der Revisionsnummer auf das Objekt der Aufzählung abbildet. */
 	private static Map<Long, SchemaRevisionen> _mapByNumber = null;
@@ -359,6 +363,7 @@ public enum SchemaRevisionen {
 				case REV_41 -> new Revision41Updates();
 				case REV_42 -> new Revision42Updates();
 				case REV_43 -> new Revision43Updates();
+				case REV_45 -> new Revision45Updates();
 				default -> new RevisionNoUpdates(this);
 			};
 		}

@@ -66,14 +66,6 @@ public class LehrerPersonaldaten {
 	@ArraySchema(schema = @Schema(implementation = LehrerLehramtEintrag.class, description = "Ein Array mit den Lehrämtern des Lehrers."))
 	public final @NotNull List<LehrerLehramtEintrag> lehraemter = new ArrayList<>();
 
-	/** Die Fachrichtungen des Lehrers. */
-	@ArraySchema(schema = @Schema(implementation = LehrerFachrichtungEintrag.class, description = "Ein Array mit den Fachrichtungen des Lehrers."))
-	public final @NotNull List<LehrerFachrichtungEintrag> fachrichtungen = new ArrayList<>();
-
-	/** Die Lehrbefähigungen des Lehrers. */
-	@ArraySchema(schema = @Schema(implementation = LehrerLehrbefaehigungEintrag.class, description = "Ein Array mit den Lehrbefähigungen des Lehrers."))
-	public final @NotNull List<LehrerLehrbefaehigungEintrag> lehrbefaehigungen = new ArrayList<>();
-
 	/**
 	 * Leerer Standardkonstruktor.
 	 */

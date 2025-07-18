@@ -61,8 +61,6 @@ public final class DataLehrerPersonaldaten extends DataManagerRevised<Long, DTOL
 		daten.abgangsgrund = dto.GrundAbgang;
 		daten.abschnittsdaten.addAll(DataLehrerPersonalabschnittsdaten.getByLehrerId(conn, dto.ID));
 		daten.lehraemter.addAll(DataLehrerLehramt.getListByLehrerId(conn, dto.ID));
-		daten.fachrichtungen.addAll(DataLehrerFachrichtungen.getListByLehrerId(conn, dto.ID));
-		daten.lehrbefaehigungen.addAll(DataLehrerLehrbefaehigung.getListByLehrerId(conn, dto.ID));
 		return daten;
 	}
 
