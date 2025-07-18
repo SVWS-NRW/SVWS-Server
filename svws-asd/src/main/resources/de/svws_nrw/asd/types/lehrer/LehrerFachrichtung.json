@@ -18,7 +18,7 @@
 			"id": 79,
 			"schluessel": "04",
 			"kuerzel": "04",
-			"text": "Metalltechnik, Maschinenbau (außer Kfz), Verfahrens-, Fertigungstechnik",
+			"text": "Maschinentechnik, Metalltechnik, Maschinenbau (außer Kfz), Verfahrens-, Fertigungstechnik",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -260,7 +260,7 @@
 			"id": 101,
 			"schluessel": "BL",
 			"kuerzel": "BL",
-			"text": "Fachrichtung für Sondererziehung und Rehabilitation der Blinden",
+			"text": "Sondererziehung und Rehabilitation der Blinden",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -271,7 +271,7 @@
 			"id": 102,
 			"schluessel": "EZ",
 			"kuerzel": "EZ",
-			"text": "Fachrichtung für Sondererziehung und Rehabilitation der Erziehungsschwierigen",
+			"text": "Sondererziehung und Rehabilitation der Erziehungsschwierigen",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -282,7 +282,7 @@
 			"id": 103,
 			"schluessel": "GB",
 			"kuerzel": "GB",
-			"text": "Fachrichtung für Sondererziehung und Rehabilitation der Geistigbehinderten",
+			"text": "Sondererziehung und Rehabilitation der Geistigbehinderten",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -293,7 +293,7 @@
 			"id": 104,
 			"schluessel": "GH",
 			"kuerzel": "GH",
-			"text": "Fachrichtung für Sondererziehung und Rehabilitation der Gehörlosen",
+			"text": "Sondererziehung und Rehabilitation der Gehörlosen",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -304,7 +304,7 @@
 			"id": 105,
 			"schluessel": "KB",
 			"kuerzel": "KB",
-			"text": "Fachrichtung für Sondererziehung und Rehabilitation der Körperbehinderten",
+			"text": "Sondererziehung und Rehabilitation der Körperbehinderten",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -315,7 +315,7 @@
 			"id": 106,
 			"schluessel": "LB",
 			"kuerzel": "LB",
-			"text": "Fachrichtung für Sondererziehung und Rehabilitation der Lernbehinderten",
+			"text": "Sondererziehung und Rehabilitation der Lernbehinderten",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -326,7 +326,7 @@
 			"id": 107,
 			"schluessel": "SB",
 			"kuerzel": "SB",
-			"text": "Fachrichtung für Sondererziehung und Rehabilitation der Sprachbehinderten",
+			"text": "Sondererziehung und Rehabilitation der Sprachbehinderten",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -337,7 +337,7 @@
 			"id": 108,
 			"schluessel": "SG",
 			"kuerzel": "SG",
-			"text": "Fachrichtung für Sondererziehung und Rehabilitation der Schwerhörigen",
+			"text": "Sondererziehung und Rehabilitation der Schwerhörigen",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -348,7 +348,7 @@
 			"id": 109,
 			"schluessel": "SH",
 			"kuerzel": "SH",
-			"text": "Fachrichtung für Sondererziehung und Rehabilitation der Sehbehinderten",
+			"text": "Sondererziehung und Rehabilitation der Sehbehinderten",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -370,7 +370,7 @@
 			"id": 111,
 			"schluessel": "FT",
 			"kuerzel": "FT",
-			"text": "Fertigungstechnik (spez. Fachrichtung)",
+			"text": "Fertigungstechnik",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -381,7 +381,7 @@
 			"id": 112,
 			"schluessel": "KT",
 			"kuerzel": "KT",
-			"text": "Fahrzeugtechnik (spez. Fachrichtung)",
+			"text": "Fahrzeugtechnik",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -392,7 +392,7 @@
 			"id": 113,
 			"schluessel": "VT",
 			"kuerzel": "VT",
-			"text": "Versorgungstechnik (spez. Fachrichtung)",
+			"text": "Versorgungstechnik",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -403,7 +403,7 @@
 			"id": 114,
 			"schluessel": "TI",
 			"kuerzel": "TI",
-			"text": "Technische Informatik (spez. Fachrichtung)",
+			"text": "Technische Informatik",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -414,7 +414,7 @@
 			"id": 115,
 			"schluessel": "ET",
 			"kuerzel": "ET",
-			"text": "Energietechnik (spez. Fachrichtung)",
+			"text": "Energietechnik",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -425,7 +425,7 @@
 			"id": 116,
 			"schluessel": "NT",
 			"kuerzel": "NT",
-			"text": "Nachrichtentechnik (spez. Fachrichtung)",
+			"text": "Nachrichtentechnik",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -436,7 +436,7 @@
 			"id": 117,
 			"schluessel": "HC",
 			"kuerzel": "HC",
-			"text": "Hochbau (spez. Fachrichtung)",
+			"text": "Hochbau",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -447,7 +447,7 @@
 			"id": 118,
 			"schluessel": "HT",
 			"kuerzel": "HT",
-			"text": "Holztechnik (spez. Fachrichtung)",
+			"text": "Holztechnik",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -458,7 +458,7 @@
 			"id": 119,
 			"schluessel": "TB",
 			"kuerzel": "TB",
-			"text": "Tiefbau (spez. Fachrichtung)",
+			"text": "Tiefbau",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -579,7 +579,7 @@
 			"id": 130,
 			"schluessel": "LT",
 			"kuerzel": "LT",
-			"text": "Lebensmitteltechnologie (spez. Fachrichtung)",
+			"text": "Lebensmitteltechnologie",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -887,7 +887,7 @@
 			"id": 158,
 			"schluessel": "59",
 			"kuerzel": "59",
-			"text": "Farbtechnik/Raumgestaltung/Oberflächentechnik",
+			"text": "Farbtechnik / Raumgestaltung / Oberflächentechnik",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -909,7 +909,7 @@
 			"id": 160,
 			"schluessel": "86",
 			"kuerzel": "86",
-			"text": "Gesundheitswissenschaft/Pflege",
+			"text": "Gesundheitswissenschaft / Pflege",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -1041,7 +1041,7 @@
 			"id": 172,
 			"schluessel": "6H",
 			"kuerzel": "6H",
-			"text": "Produktion, Logistik, Absatz mit dem Profil: Marketing/Handel",
+			"text": "Produktion, Logistik, Absatz mit dem Profil: Marketing / Handel",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -1118,7 +1118,7 @@
 			"id": 179,
 			"schluessel": "GL",
 			"kuerzel": "GL",
-			"text": "Garten- Landschaftsbau",
+			"text": "Garten- und Landschaftsbau",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]

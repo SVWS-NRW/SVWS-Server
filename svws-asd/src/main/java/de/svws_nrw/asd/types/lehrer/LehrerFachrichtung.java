@@ -14,7 +14,7 @@ public enum LehrerFachrichtung implements @NotNull CoreType<LehrerFachrichtungKa
 	/** Fachrichtung 'Kraftfahrzeugtechnik' */
 	ID_03,
 
-	/** Fachrichtung 'Metalltechnik, Maschinenbau (außer Kfz), Verfahrens-, Fertigungstechnik' */
+	/** Fachrichtung 'Maschinentechnik, Metalltechnik, Maschinenbau (außer Kfz), Verfahrens-, Fertigungstechnik' */
 	ID_04,
 
 	/** Fachrichtung 'Sanitär-, Heizungs-, Klima-, Lüftungstechnik' */
@@ -80,61 +80,61 @@ public enum LehrerFachrichtung implements @NotNull CoreType<LehrerFachrichtungKa
 	/** Fachrichtung 'Gartenbauwissenschaft' */
 	ID_92,
 
-	/** Fachrichtung 'Fachrichtung für Sondererziehung und Rehabilitation der Blinden' */
+	/** Fachrichtung 'Sondererziehung und Rehabilitation der Blinden' */
 	ID_BL,
 
-	/** Fachrichtung 'Fachrichtung für Sondererziehung und Rehabilitation der Erziehungsschwierigen' */
+	/** Fachrichtung 'Sondererziehung und Rehabilitation der Erziehungsschwierigen' */
 	ID_EZ,
 
-	/** Fachrichtung 'Fachrichtung für Sondererziehung und Rehabilitation der Geistigbehinderten' */
+	/** Fachrichtung 'Sondererziehung und Rehabilitation der Geistigbehinderten' */
 	ID_GB,
 
-	/** Fachrichtung 'Fachrichtung für Sondererziehung und Rehabilitation der Gehörlosen' */
+	/** Fachrichtung 'Sondererziehung und Rehabilitation der Gehörlosen' */
 	ID_GH,
 
-	/** Fachrichtung 'Fachrichtung für Sondererziehung und Rehabilitation der Körperbehinderten' */
+	/** Fachrichtung 'Sondererziehung und Rehabilitation der Körperbehinderten' */
 	ID_KB,
 
-	/** Fachrichtung 'Fachrichtung für Sondererziehung und Rehabilitation der Lernbehinderten' */
+	/** Fachrichtung 'Sondererziehung und Rehabilitation der Lernbehinderten' */
 	ID_LB,
 
-	/** Fachrichtung 'Fachrichtung für Sondererziehung und Rehabilitation der Sprachbehinderten' */
+	/** Fachrichtung 'Sondererziehung und Rehabilitation der Sprachbehinderten' */
 	ID_SB,
 
-	/** Fachrichtung 'Fachrichtung für Sondererziehung und Rehabilitation der Schwerhörigen' */
+	/** Fachrichtung 'Sondererziehung und Rehabilitation der Schwerhörigen' */
 	ID_SG,
 
-	/** Fachrichtung 'Fachrichtung für Sondererziehung und Rehabilitation der Sehbehinderten' */
+	/** Fachrichtung 'Sondererziehung und Rehabilitation der Sehbehinderten' */
 	ID_SH,
 
 	/** Fachrichtung 'Drucktechnik, Reproduktionstechnik' */
 	ID_51,
 
-	/** Fachrichtung 'Fertigungstechnik (spez. Fachrichtung)' */
+	/** Fachrichtung 'Fertigungstechnik' */
 	ID_FT,
 
-	/** Fachrichtung 'Fahrzeugtechnik (spez. Fachrichtung)' */
+	/** Fachrichtung 'Fahrzeugtechnik' */
 	ID_KT,
 
-	/** Fachrichtung 'Versorgungstechnik (spez. Fachrichtung)' */
+	/** Fachrichtung 'Versorgungstechnik' */
 	ID_VT,
 
-	/** Fachrichtung 'Technische Informatik (spez. Fachrichtung)' */
+	/** Fachrichtung 'Technische Informatik' */
 	ID_TI,
 
-	/** Fachrichtung 'Energietechnik (spez. Fachrichtung)' */
+	/** Fachrichtung 'Energietechnik' */
 	ID_ET,
 
-	/** Fachrichtung 'Nachrichtentechnik (spez. Fachrichtung)' */
+	/** Fachrichtung 'Nachrichtentechnik' */
 	ID_NT,
 
-	/** Fachrichtung 'Hochbau (spez. Fachrichtung)' */
+	/** Fachrichtung 'Hochbau' */
 	ID_HC,
 
-	/** Fachrichtung 'Holztechnik (spez. Fachrichtung)' */
+	/** Fachrichtung 'Holztechnik' */
 	ID_HT,
 
-	/** Fachrichtung 'Tiefbau (spez. Fachrichtung)' */
+	/** Fachrichtung 'Tiefbau' */
 	ID_TB,
 
 	/** Fachrichtung 'Banken, Bankbetriebslehre / Finanzwirtschaft' */
@@ -167,7 +167,7 @@ public enum LehrerFachrichtung implements @NotNull CoreType<LehrerFachrichtungKa
 	/** Fachrichtung 'Wirtschaftsinformatik' */
 	ID_WI,
 
-	/** Fachrichtung 'Lebensmitteltechnologie (spez. Fachrichtung)' */
+	/** Fachrichtung 'Lebensmitteltechnologie' */
 	ID_LT,
 
 	/** Fachrichtung 'Sonstige Fachrichtung' */
@@ -251,13 +251,13 @@ public enum LehrerFachrichtung implements @NotNull CoreType<LehrerFachrichtungKa
 	/** Fachrichtung 'Druck- und Medientechnik' */
 	ID_58,
 
-	/** Fachrichtung 'Farbtechnik/Raumgestaltung/Oberflächentechnik' */
+	/** Fachrichtung 'Farbtechnik / Raumgestaltung / Oberflächentechnik' */
 	ID_59,
 
 	/** Fachrichtung 'Lebensmitteltechnik' */
 	ID_68,
 
-	/** Fachrichtung 'Gesundheitswissenschaft/Pflege' */
+	/** Fachrichtung 'Gesundheitswissenschaft / Pflege' */
 	ID_86,
 
 	/** Fachrichtung 'Agrarwissenschaft' */
@@ -293,7 +293,7 @@ public enum LehrerFachrichtung implements @NotNull CoreType<LehrerFachrichtungKa
 	/** Fachrichtung 'Produktion, Logistik, Absatz mit dem Profil: Verkehr und Logistik' */
 	ID_6G,
 
-	/** Fachrichtung 'Produktion, Logistik, Absatz mit dem Profil: Marketing/Handel' */
+	/** Fachrichtung 'Produktion, Logistik, Absatz mit dem Profil: Marketing / Handel' */
 	ID_6H,
 
 	/** Fachrichtung 'Finanz- und Rechnungswesen mit dem Profil: Steuerung und Dokumentation' */
@@ -314,7 +314,7 @@ public enum LehrerFachrichtung implements @NotNull CoreType<LehrerFachrichtungKa
 	/** Fachrichtung 'Gartenbau' */
 	ID_GA,
 
-	/** Fachrichtung 'Garten- Landschaftsbau' */
+	/** Fachrichtung 'Garten- und Landschaftsbau' */
 	ID_GL,
 
 	/** Fachrichtung 'Pflanzenbau' */
