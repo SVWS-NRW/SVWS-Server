@@ -1,0 +1,34 @@
+plugins {
+	id 'java'
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'jakarta.xml.bind:jakarta.xml.bind-api:3.0.0' // Jakarta EE
+	implementation 'org.glassfish.jaxb:jaxb-runtime:3.0.0' // JAXB Runtime
+	implementation 'org.glassfish.jaxb:jaxb-xjc:3.0.0' // JAXB XJC
+}
+
+tasks.register('generateJaxbClasses', JavaExec) {
+	group = 'build'
+	description = 'Generiert Java-Klassen aus XSD-Datei mithilfe von JAXB'
+	classpath = configurations.compileClasspath
+	main = 'com.sun.tools.xjc.XJCFacade' // JAXB XJC-Main-Klasse
+	args = [
+			'-d', file('src/gen/java').absolutePath, // Ziel-Verzeichnis für generierte Dateien
+			file('src/main/resources/xsd/xschule.xsd').absolutePath // Pfad zur Schema-Datei (XSD)
+	]
+
+	systemProperties = [
+			'javax.xml.accessExternalDTD': 'all' // Zugriff auf externe DTDs erlauben
+	]
+
+	doFirst {
+		mkdir('src/gen/java') // Anlegen des Verzeichnisses für generierte Klassen
+	}
+}
+
+checkstyleMain.exclude 'src/gen/java' // Exklusion der generierten Dateien vom Checkstyle-Task
