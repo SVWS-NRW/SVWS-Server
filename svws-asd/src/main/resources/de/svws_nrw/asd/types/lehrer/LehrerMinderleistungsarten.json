@@ -40,7 +40,7 @@
 			"id": 40,
 			"schluessel": "230",
 			"kuerzel": "230",
-			"text": "Beurlaubung, Rückkehr im Laufe des Schuljahres",
+			"text": "Beurlaubung (auch Elternzeit), Rückkehr im Laufe des Schuljahres",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -119,7 +119,7 @@
 			"kuerzel": "280",
 			"text": "Seiteneinsteigerentlastung",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": 2009
 		} ]
 	},{
 		"bezeichner": "ID_290",
@@ -150,7 +150,7 @@
 			"id": 48,
 			"schluessel": "350",
 			"kuerzel": "350",
-			"text": "Abrundung der Pflichtstundenzahl wegen Aufrundung im vorhergehenden Schuljahr",
+			"text": "Abrundung der Pflichtstundenzahl aufgrund von § 2 Abs. 1 AVO-RL",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]

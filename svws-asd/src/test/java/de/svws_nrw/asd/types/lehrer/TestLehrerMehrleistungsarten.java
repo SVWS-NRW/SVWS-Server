@@ -52,12 +52,12 @@ class TestLehrerMehrleistungsarten {
 		assertEquals("100", LehrerMehrleistungsarten.data().getWertByKuerzel("100").daten(2024).kuerzel);
 		assertEquals("110", LehrerMehrleistungsarten.data().getWertByKuerzel("110").daten(2024).kuerzel);
 
-		assertEquals(LehrerMehrleistungsarten.data().getWertByKuerzel("100").daten(2024).text, ("Beschäftigungsphase Sabbatjahr"));
+		assertEquals(LehrerMehrleistungsarten.data().getWertByKuerzel("100").daten(2024).text, ("Ansparphase, Phase mit erhöhter Arbeitszeit \"Teilzeitbeschäftigung im Blockmodell\" (§ 65 LBG) (vormals Sabbatjahr)"));
 		assertEquals(LehrerMehrleistungsarten.data().getWertByKuerzel("110").daten(2024).text, ("Mehrarbeit (angeordnet und regelmäßig)"));
-		assertEquals(LehrerMehrleistungsarten.data().getWertByKuerzel("150").daten(2024).text, ("Aufrundung der Pflichtstundenzahl wegen Abrundung im folgenden Schuljahr "));
+		assertEquals(LehrerMehrleistungsarten.data().getWertByKuerzel("150").daten(2024).text, ("Aufrundung der Pflichtstundenzahl aufgrund von § 2 Abs. 1 AVO-RL"));
 		assertEquals(LehrerMehrleistungsarten.data().getWertByKuerzel("160").daten(2024).text, ("Überschreitung der Pflichtstundenzahl aus organisatorischen Gründen (z. B. Epochenunterricht)"));
 		assertNull(LehrerMehrleistungsarten.data().getWertByKuerzel("165").daten(2024));
-		assertEquals(LehrerMehrleistungsarten.data().getWertByKuerzel("170").daten(2024).text, ("Überschreitung der Pflichtstundenzahl wegen Pflichstunden-Bandbreite"));
+		assertEquals(LehrerMehrleistungsarten.data().getWertByKuerzel("170").daten(2024).text, ("Überschreitung der Pflichtstundenzahl wegen Pflichtstunden-Bandbreite"));
 	}
 
 }
