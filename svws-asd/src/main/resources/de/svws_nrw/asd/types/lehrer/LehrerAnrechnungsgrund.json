@@ -20,7 +20,7 @@
 			"kuerzel": "315",
 			"text": "Seiteneinstieg: Entlastung für berufsbegleitende Ausbildung für FH - Absolventen/-innen",
 			"gueltigVon": 2010,
-			"gueltigBis": null
+			"gueltigBis": 2024
 		} ]
 	},{
 		"bezeichner": "ID_320",
@@ -33,6 +33,17 @@
 			"gueltigVon": 2010,
 			"gueltigBis": null
 		} ]
+	},{
+		"bezeichner": "ID_321",
+		"idStatistik": "84",
+		"historie": [ {
+			"id": 321000,
+			"schluessel": "321",
+			"kuerzel": "321",
+			"text": "Werkstattlehrer/-in: Praktisch-pädagogische Einführung",
+			"gueltigVon": 2021,
+			"gueltigBis": null
+		} ]		
 	},{
 		"bezeichner": "ID_325",
 		"idStatistik": "4",
@@ -84,7 +95,7 @@
 			"id": 500000,
 			"schluessel": "500",
 			"kuerzel": "500",
-			"text": "Wahrnehmung besonderer schulischer Aufgaben / Ausgleich besonderer unterrichtlicher Belastungen",
+			"text": "Wahrnehmung besonderer schulischer Aufgaben und zum Ausgleich besonderer unterrichtlicher Belastungen",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -108,6 +119,17 @@
 			"kuerzel": "520",
 			"text": "Schulübergreifende Aufgaben kleineren Umfangs",
 			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_525",
+		"idStatistik": "85",
+		"historie": [ {
+			"id": 525000,
+			"schluessel": "525",
+			"kuerzel": "525",
+			"text": "Zukunftsschulen NRW - Anrechnungsstunden für Koordination und Dokumentation der Netzwerkarbeit",
+			"gueltigVon": 2022,
 			"gueltigBis": null
 		} ]
 	},{
@@ -150,7 +172,7 @@
 			"id": 590000,
 			"schluessel": "590",
 			"kuerzel": "590",
-			"text": "Koordinations- und Beratungsaufgaben im Landesvorhaben KAoA",
+			"text": "Koordinations- und Beratungsaufgaben im Landesvorhaben KAoA einschl. STAR",
 			"gueltigVon": 2013,
 			"gueltigBis": null
 		} ]
@@ -708,7 +730,7 @@
 			"kuerzel": "855",
 			"text": "sonderpädagogischer Förderbedarf, z.B. Lese- und Rechtschreibschwächen, Lernbehinderungen",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": 2020
 		} ]
 	},{
 		"bezeichner": "ID_860",
@@ -843,6 +865,17 @@
 			"gueltigBis": null
 		} ]
 	},{
+		"bezeichner": "ID_937",
+		"idStatistik": "86",
+		"historie": [ {
+			"id": 937000,
+			"schluessel": "937",
+			"kuerzel": "937",
+			"text": "Digitalisierungsbeauftragte/-r",
+			"gueltigVon": 2023,
+			"gueltigBis": null
+		} ]		
+	},{
 		"bezeichner": "ID_940",
 		"idStatistik": "72",
 		"historie": [ {
@@ -928,7 +961,7 @@
 			"kuerzel": "975",
 			"text": "Begleitung Schulversuch Gemeinschaftsschule",
 			"gueltigVon": 2011,
-			"gueltigBis": null
+			"gueltigBis": 2022
 		} ]
 	},{
 		"bezeichner": "ID_985",
@@ -937,7 +970,7 @@
 			"id": 985000,
 			"schluessel": "985",
 			"kuerzel": "985",
-			"text": "Übergangsbegleitung im Rahmen des Langzeitpraktikums im Ausbildungskonsens KAoA",
+			"text": "Übergangsbegleitung im Rahmen des Langzeitpraktikums im Ausbildungskonsens KAoA einschl. STAR",
 			"gueltigVon": 2015,
 			"gueltigBis": null
 		} ]
