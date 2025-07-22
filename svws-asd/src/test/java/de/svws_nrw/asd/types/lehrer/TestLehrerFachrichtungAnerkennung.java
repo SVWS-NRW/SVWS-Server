@@ -48,7 +48,7 @@ class TestLehrerFachrichtungAnerkennung {
 	@Test
 	@DisplayName("Teste CoreType LehrerFachrichtungAnerkennung: Korrekter Text bei Wert ID7.")
 	void testLehrerFachrichtungAnerkennung_TextBeiID7() {
-		assertEquals("sonstige", LehrerFachrichtungAnerkennung.data().getHistorieByWert(LehrerFachrichtungAnerkennung.ID7).getFirst().text);
+		assertEquals("Sonstige", LehrerFachrichtungAnerkennung.data().getHistorieByWert(LehrerFachrichtungAnerkennung.ID7).getFirst().text);
 	}
 
 }
