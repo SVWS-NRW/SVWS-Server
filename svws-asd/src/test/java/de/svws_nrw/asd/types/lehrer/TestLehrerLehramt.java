@@ -48,7 +48,7 @@ class TestLehrerLehramt {
 	@Test
 	@DisplayName("Teste CoreType LehrerLehramt: Korrekter Text beim Wert ID_01.")
 	void testLehrerLehramt_TextBeiID_01() {
-		assertEquals("an der Grund- und Hauptschule (Stufenschwerpunkt I)", LehrerLehramt.data().getHistorieByWert(LehrerLehramt.ID_01).getFirst().text);
+		assertEquals("Grund- und Hauptschule (Stufenschwerpunkt I) (altes Lehramt)", LehrerLehramt.data().getHistorieByWert(LehrerLehramt.ID_01).getFirst().text);
 	}
 
 }
