@@ -16,7 +16,7 @@ tasks.register('generateJaxbClasses', JavaExec) {
 	group = 'build'
 	description = 'Generiert Java-Klassen aus XSD-Datei mithilfe von JAXB'
 	classpath = configurations.compileClasspath
-	main = 'com.sun.tools.xjc.XJCFacade' // JAXB XJC-Main-Klasse
+	mainClass = 'com.sun.tools.xjc.XJCFacade' // JAXB XJC-Main-Klasse
 	args = [
 			'-d', file('src/gen/java').absolutePath, // Ziel-Verzeichnis für generierte Dateien
 			file('src/main/resources/xsd/xschule.xsd').absolutePath // Pfad zur Schema-Datei (XSD)
