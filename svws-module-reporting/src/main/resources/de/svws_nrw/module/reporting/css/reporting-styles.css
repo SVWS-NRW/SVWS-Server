@@ -360,6 +360,57 @@ Definitionen für Spacing, Padding, Margin
 	margin-right: 2mm
 }
 
+.m-t-3 {
+	margin-top: 3mm
+}
+.m-b-3 {
+	margin-bottom: 3mm
+}
+.m-l-3 {
+	margin-left: 3mm
+}
+.m-r-3 {
+	margin-right: 3mm
+}
+
+.m-t-4 {
+	margin-top: 4mm
+}
+.m-b-4 {
+	margin-bottom: 4mm
+}
+.m-l-4 {
+	margin-left: 4mm
+}
+.m-r-4 {
+	margin-right: 4mm
+}
+
+.m-t-5 {
+	margin-top: 5mm
+}
+.m-b-5 {
+	margin-bottom: 5mm
+}
+.m-l-5 {
+	margin-left: 5mm
+}
+.m-r-5 {
+	margin-right: 5mm
+}
+
+.m-t-6 {
+	margin-top: 6mm
+}
+.m-b-6 {
+	margin-bottom: 6mm
+}
+.m-l-6 {
+	margin-left: 6mm
+}
+.m-r-6 {
+	margin-right: 6mm
+}
 
 .m-t-1em {
 	margin-top: 1em;
@@ -393,6 +444,68 @@ Definitionen für Spacing, Padding, Margin
 	margin-right: 2em;
 }
 
+.m-tb-0 {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+.m-lr-0 {
+	margin-left: 0;
+	margin-right: 0;
+}
+
+.m-tb-1 {
+	margin-top: 1mm;
+	margin-bottom: 1mm;
+}
+.m-lr-1 {
+	margin-left: 1mm;
+	margin-right: 1mm;
+}
+
+.m-tb-2 {
+	margin-top: 2mm;
+	margin-bottom: 2mm;
+}
+.m-lr-2 {
+	margin-left: 2mm;
+	margin-right: 2mm;
+}
+
+.m-tb-3 {
+	margin-top: 3mm;
+	margin-bottom: 3mm;
+}
+.m-lr-3 {
+	margin-left: 3mm;
+	margin-right: 3mm;
+}
+
+.m-tb-4 {
+	margin-top: 4mm;
+	margin-bottom: 4mm;
+}
+.m-lr-4 {
+	margin-left: 4mm;
+	margin-right: 4mm;
+}
+
+.m-tb-5 {
+	margin-top: 5mm;
+	margin-bottom: 5mm;
+}
+.m-lr-5 {
+	margin-left: 5mm;
+	margin-right: 5mm;
+}
+
+.m-tb-6 {
+	margin-top: 6mm;
+	margin-bottom: 6mm;
+}
+.m-lr-6 {
+	margin-left: 6mm;
+	margin-right: 6mm;
+}
 
 /*
 ##########################################################################################################################
@@ -516,6 +629,12 @@ Definitionen für Border and Background
 
 .bo-black {
 	border: 0.5px solid #000000;
+}
+.bo-black-strong {
+	border: 1px solid #000000;
+}
+.bo-black-very-strong {
+	border: 2px solid #000000;
 }
 .bo-t-black {
 	border-top: 0.5px solid #000000;

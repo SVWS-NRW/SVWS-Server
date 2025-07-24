@@ -117,6 +117,105 @@ public class ReportingGostAbiturFachbelegung extends ReportingBaseType {
 
 
 
+	// ##### Berechnete Methoden #####
+
+	/**
+	 * Gibt die Fachbezeichnung für ein Zeugnis zurück. Optional kann dabei eine Kennzeichnung für Leistungskurse (LK) ausgegeben werden.
+	 *
+	 * @param mitLKBezeichnung Gibt an, ob die Fachbezeichnung mit dem Zusatz "(LK/eA)" bei den LKs ausgegeben werden soll.
+	 *                         Wenn true, wird der Zusatz hinzugefügt. Andernfalls wird nur die Fachbezeichnung zurückgegeben.
+	 *
+	 * @return Die Fachbezeichnung des Faches, ggf. erweitert um den Zusatz "(LK/eA)".
+	 */
+	public String zeugnisFachbezeichnung(final boolean mitLKBezeichnung) {
+		if (mitLKBezeichnung && (abiturFach != null) && (abiturFach <= 2))
+			return (fach.bezeichnungZeugnis() + " (LK/eA)");
+		else
+			return this.fach.bezeichnungZeugnis();
+	}
+
+	/**
+	 * Liefert die Notenpunkte eines bestimmten Halbjahrs für das Zeugnis zurück oder 'teilg.' bei der Note E3.
+	 * Berücksichtigt dabei, ob es sich um ein Abiturzeugnis handelt und ob der Kurs im Block 1 gewertet wird.
+	 *
+	 * @param gostHalbjahr        das gymnasiale Oberstufenhalbjahr (2 bis 5), für das die Notenpunkte abgerufen werden sollen
+	 * @param schuljahr           das Schuljahr, auf das sich die Notenpunkte beziehen
+	 * @param ausgabeAbiturzeugnis gibt an, ob die Notenpunkte für ein Abiturzeugnis ausgegeben werden
+	 * @return die Notenpunkte des angegebenen Halbjahres im zweistelligen Format, falls der Kurs
+	 *         gewertet wird, oder '--', falls keine gültige Belegung vorliegt oder der Kurs
+	 *         nicht auf dem Zeugnis erscheint
+	 */
+	private String zeugnisNotenpunkte(final int gostHalbjahr, final int schuljahr, final boolean ausgabeAbiturzeugnis) {
+		if ((gostHalbjahr < 2) || (gostHalbjahr > 5)
+				|| (this.halbjahresbelegungen()[gostHalbjahr] == null)
+				|| (this.halbjahresbelegungen()[gostHalbjahr].note() == null))
+			return "--";
+
+		if (ausgabeAbiturzeugnis && !this.halbjahresbelegungen()[gostHalbjahr].block1kursAufZeugnis())
+			return "--";
+
+		if (this.halbjahresbelegungen()[gostHalbjahr].note() == Note.E3_TEILGENOMMEN)
+			return "teilg.";
+
+		if (this.halbjahresbelegungen()[gostHalbjahr].note().getNotenpunkteZweistellig(schuljahr) == null)
+			return "--";
+
+		if (ausgabeAbiturzeugnis && !this.halbjahresbelegungen()[gostHalbjahr].block1gewertet())
+			return '(' + this.halbjahresbelegungen()[gostHalbjahr].note().getNotenpunkteZweistellig(schuljahr) + ')';
+
+		return this.halbjahresbelegungen()[gostHalbjahr].note().getNotenpunkteZweistellig(schuljahr);
+	}
+
+	/**
+	 * Gibt die Zeugnisnotenpunkte für die Q11 aus oder 'teilg.' bei der Note E3, z. B. bei einem Vertiefungskurs.
+	 *
+	 * @param schuljahr Das Schuljahr, für das die Notenpunkte ausgegeben werden sollen.
+	 * @param ausgabeAbiturzeugnis Ein Wahrheitswert, der angibt, ob die Notenpunkte in einem Format für das Abiturzeugnis ausgegeben werden sollen.
+	 * @return die Notenpunkte im zweistelligen Format, falls der Kurs gewertet wird, oder '--', falls keine gültige Belegung vorliegt oder der Kurs nicht
+	 * auf dem Zeugnis erscheint oder 'teilg.' bei Note E3.
+	 */
+	public String zeugnisNotenpunkteQ11(final int schuljahr, final boolean ausgabeAbiturzeugnis) {
+		return zeugnisNotenpunkte(2, schuljahr, ausgabeAbiturzeugnis);
+	}
+
+	/**
+	 * Gibt die Zeugnisnotenpunkte für die Q12 aus oder 'teilg.' bei der Note E3, z. B. bei einem Vertiefungskurs.
+	 *
+	 * @param schuljahr Das Schuljahr, für das die Notenpunkte ausgegeben werden sollen.
+	 * @param ausgabeAbiturzeugnis Ein Wahrheitswert, der angibt, ob die Notenpunkte in einem Format für das Abiturzeugnis ausgegeben werden sollen.
+	 * @return die Notenpunkte im zweistelligen Format, falls der Kurs gewertet wird, oder '--', falls keine gültige Belegung vorliegt oder der Kurs nicht
+	 * auf dem Zeugnis erscheint oder 'teilg.' bei Note E3.
+	 */
+	public String zeugnisNotenpunkteQ12(final int schuljahr, final boolean ausgabeAbiturzeugnis) {
+		return zeugnisNotenpunkte(3, schuljahr, ausgabeAbiturzeugnis);
+	}
+
+	/**
+	 * Gibt die Zeugnisnotenpunkte für die Q21 aus oder 'teilg.' bei der Note E3, z. B. bei einem Vertiefungskurs.
+	 *
+	 * @param schuljahr Das Schuljahr, für das die Notenpunkte ausgegeben werden sollen.
+	 * @param ausgabeAbiturzeugnis Ein Wahrheitswert, der angibt, ob die Notenpunkte in einem Format für das Abiturzeugnis ausgegeben werden sollen.
+	 * @return die Notenpunkte im zweistelligen Format, falls der Kurs gewertet wird, oder '--', falls keine gültige Belegung vorliegt oder der Kurs nicht
+	 * auf dem Zeugnis erscheint oder 'teilg.' bei Note E3.
+	 */
+	public String zeugnisNotenpunkteQ21(final int schuljahr, final boolean ausgabeAbiturzeugnis) {
+		return zeugnisNotenpunkte(4, schuljahr, ausgabeAbiturzeugnis);
+	}
+
+	/**
+	 * Gibt die Zeugnisnotenpunkte für die Q22 aus oder 'teilg.' bei der Note E3, z. B. bei einem Vertiefungskurs.
+	 *
+	 * @param schuljahr Das Schuljahr, für das die Notenpunkte ausgegeben werden sollen.
+	 * @param ausgabeAbiturzeugnis Ein Wahrheitswert, der angibt, ob die Notenpunkte in einem Format für das Abiturzeugnis ausgegeben werden sollen.
+	 * @return die Notenpunkte im zweistelligen Format, falls der Kurs gewertet wird, oder '--', falls keine gültige Belegung vorliegt oder der Kurs nicht
+	 * auf dem Zeugnis erscheint oder 'teilg.' bei Note E3.
+	 */
+	public String zeugnisNotenpunkteQ22(final int schuljahr, final boolean ausgabeAbiturzeugnis) {
+		return zeugnisNotenpunkte(5, schuljahr, ausgabeAbiturzeugnis);
+	}
+
+
+
 	// ##### Getter #####
 
 	/**

@@ -22,7 +22,7 @@ import de.svws_nrw.data.schueler.DataSchuelerSchulbesuchsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerSprachbelegung;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.proxytypes.schueler.erzieher.ProxyReportingErzieher;
-import de.svws_nrw.module.reporting.proxytypes.schueler.schule.ProxyReportingSchuelerSchulbesuch;
+import de.svws_nrw.module.reporting.proxytypes.schueler.schulbesuch.ProxyReportingSchuelerSchulbesuch;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchuelerDatenstatus;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ReportingErzieher;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ReportingErzieherArtGruppe;

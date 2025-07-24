@@ -1,5 +1,5 @@
 
-package de.svws_nrw.module.reporting.proxytypes.schueler.schule;
+package de.svws_nrw.module.reporting.proxytypes.schueler.schulbesuch;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchSchule;

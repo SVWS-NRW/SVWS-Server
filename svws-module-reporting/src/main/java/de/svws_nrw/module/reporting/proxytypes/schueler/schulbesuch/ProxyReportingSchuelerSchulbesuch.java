@@ -1,4 +1,4 @@
-package de.svws_nrw.module.reporting.proxytypes.schueler.schule;
+package de.svws_nrw.module.reporting.proxytypes.schueler.schulbesuch;
 
 import java.util.ArrayList;
 import java.util.List;
