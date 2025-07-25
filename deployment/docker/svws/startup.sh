@@ -3,6 +3,10 @@
 # Wechsle in das Verzeichnis mit der Konfiguration von wo aus der Server gestartet wird
 cd conf
 
+MARIADB_DATABASE=${MariaDB_DATABASE}
+MARIADB_USER=${MariaDB_USER}
+MARIADB_PASSWORD=${MariaDB_PASSWORD}
+
 # Konfigurationsdatei generieren, wenn nicht vorhanden
 if [[ ! -s /opt/app/svws/conf/svwsconfig.json ]];  then
     echo "Konfigurationsdatei '/opt/app/svws/conf/svwsconfig.json' nicht vorhanden. Erstelle Konfigurationsdatei..."
@@ -24,6 +28,15 @@ if [[ ! -s ${SVWS_TLS_KEYSTORE_PATH}/keystore ]]; then
 	keytool -genkey -noprompt -alias ${SVWS_TLS_KEY_ALIAS} -dname "CN=$SVWS_TLS_CERT_CN, OU=$SVWS_TLS_CERT_OU, O=$SVWS_TLS_CERT_O, L=$SVWS_TLS_CERT_L, S=$SVWS_TLS_CERT_S, C=$SVWS_TLS_CERT_C" -keystore ${SVWS_TLS_KEYSTORE_PATH}/keystore -storepass ${SVWS_TLS_KEYSTORE_PASSWORD} -keypass ${SVWS_TLS_KEYSTORE_PASSWORD} -keyalg RSA
 else
 	echo "Keystore vorhanden."
+fi
+
+# INIT-Scripts starten
+if [[ -d $INIT_SCRIPTS_DIR ]]; then
+    echo "INIT_SCRIPTS_DIR: $INIT_SCRIPTS_DIR"
+        for f in "$INIT_SCRIPTS_DIR"/*.sh; do
+          echo "Starte Shell script: $f"
+          /bin/bash "$f"
+        done
 fi
 
 # Testdatenbank importieren
