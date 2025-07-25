@@ -110,6 +110,7 @@ import { KindergartenbesuchKatalogEintrag } from '../asd/data/schule/Kindergarte
 import { KlassenartKatalogEintrag } from '../asd/data/klassen/KlassenartKatalogEintrag';
 import { KlassenDaten } from '../asd/data/klassen/KlassenDaten';
 import { KursDaten } from '../asd/data/kurse/KursDaten';
+import { KursLehrer } from '../asd/data/kurse/KursLehrer';
 import { LehrerAbgangsgrundKatalogEintrag } from '../asd/data/lehrer/LehrerAbgangsgrundKatalogEintrag';
 import { LehrerAnrechnungsgrundKatalogEintrag } from '../asd/data/lehrer/LehrerAnrechnungsgrundKatalogEintrag';
 import { LehrerBeschaeftigungsartKatalogEintrag } from '../asd/data/lehrer/LehrerBeschaeftigungsartKatalogEintrag';
@@ -8499,6 +8500,124 @@ export class ApiServer extends BaseApi {
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = KursDaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getKursLehrer für den Zugriff auf die URL https://{hostname}/db/{schema}/kurse/{idKurs : \d+}/kursLehrer
+	 *
+	 * Liefert zu der ID des Kurses die zugehörigen Kurslehrer, insofern der Benutzer die notwendigen Berechtigungen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Kurslehrer des Kurses
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<KursLehrer>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Kursdaten anzusehen.
+	 *   Code 404: Keine Kurslehrer für den Kurs mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} idKurs - der Pfad-Parameter idKurs
+	 *
+	 * @returns Die Kurslehrer des Kurses
+	 */
+	public async getKursLehrer(schema : string, idKurs : number) : Promise<List<KursLehrer>> {
+		const path = "/db/{schema}/kurse/{idKurs : \\d+}/kursLehrer"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{idKurs\s*(:[^{}]+({[^{}]+})*)?}/g, idKurs.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<KursLehrer>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KursLehrer.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchKursLehrer für den Zugriff auf die URL https://{hostname}/db/{schema}/kurse/{idKurs: \d+}/kursLehrer/{idLehrer: \d+}
+	 *
+	 * Patched den Kurslehrer mit der angegeben ID, insofern die notwendigen Berechtigungen vorliegen.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<KursLehrer>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} idKurs - der Pfad-Parameter idKurs
+	 * @param {number} idLehrer - der Pfad-Parameter idLehrer
+	 */
+	public async patchKursLehrer(data : Partial<KursLehrer>, schema : string, idKurs : number, idLehrer : number) : Promise<void> {
+		const path = "/db/{schema}/kurse/{idKurs: \\d+}/kursLehrer/{idLehrer: \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{idKurs\s*(:[^{}]+({[^{}]+})*)?}/g, idKurs.toString())
+			.replace(/{idLehrer\s*(:[^{}]+({[^{}]+})*)?}/g, idLehrer.toString());
+		const body : string = KursLehrer.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addKursLehrer für den Zugriff auf die URL https://{hostname}/db/{schema}/kurse/{idKurs: \d+}/kursLehrer/create
+	 *
+	 * Erstellt einen neuen Kurslehrer, insofern die notwendigen Berechtigungen vorliegen.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Der KursLehrer wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: KursLehrer
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um KursLehrer anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<KursLehrer>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} idKurs - der Pfad-Parameter idKurs
+	 *
+	 * @returns Der KursLehrer wurde erfolgreich hinzugefügt.
+	 */
+	public async addKursLehrer(data : Partial<KursLehrer>, schema : string, idKurs : number) : Promise<KursLehrer> {
+		const path = "/db/{schema}/kurse/{idKurs: \\d+}/kursLehrer/create"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{idKurs\s*(:[^{}]+({[^{}]+})*)?}/g, idKurs.toString());
+		const body : string = KursLehrer.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return KursLehrer.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteKursLehrer für den Zugriff auf die URL https://{hostname}/db/{schema}/kurse/{idKurs: \d+}/kursLehrer/delete/multiple
+	 *
+	 * Entfernt mehrere KursLehrer, insofern die notwendigen Berechtigungen vorhanden sind.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Lösch-Operationen wurden ausgeführt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um KursLehrer zu entfernen.
+	 *   Code 404: KursLehrer nicht vorhanden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} idKurs - der Pfad-Parameter idKurs
+	 *
+	 * @returns Die Lösch-Operationen wurden ausgeführt.
+	 */
+	public async deleteKursLehrer(data : List<number>, schema : string, idKurs : number) : Promise<List<SimpleOperationResponse>> {
+		const path = "/db/{schema}/kurse/{idKurs: \\d+}/kursLehrer/delete/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{idKurs\s*(:[^{}]+({[^{}]+})*)?}/g, idKurs.toString());
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 

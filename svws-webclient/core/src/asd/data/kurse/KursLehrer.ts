@@ -9,6 +9,11 @@ export class KursLehrer extends JavaObject {
 	public idLehrer : number = 0;
 
 	/**
+	 * Die ID des Kurses
+	 */
+	public idKurs : number = 0;
+
+	/**
 	 * Die Wochenstunden des Kurslehrers in dem Kurs.
 	 */
 	public wochenstundenLehrer : number = -1;
@@ -34,6 +39,9 @@ export class KursLehrer extends JavaObject {
 		if (obj.idLehrer === undefined)
 			throw new Error('invalid json format, missing attribute idLehrer');
 		result.idLehrer = obj.idLehrer;
+		if (obj.idKurs === undefined)
+			throw new Error('invalid json format, missing attribute idKurs');
+		result.idKurs = obj.idKurs;
 		if (obj.wochenstundenLehrer === undefined)
 			throw new Error('invalid json format, missing attribute wochenstundenLehrer');
 		result.wochenstundenLehrer = obj.wochenstundenLehrer;
@@ -43,6 +51,7 @@ export class KursLehrer extends JavaObject {
 	public static transpilerToJSON(obj : KursLehrer) : string {
 		let result = '{';
 		result += '"idLehrer" : ' + obj.idLehrer.toString() + ',';
+		result += '"idKurs" : ' + obj.idKurs.toString() + ',';
 		result += '"wochenstundenLehrer" : ' + obj.wochenstundenLehrer.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -53,6 +62,9 @@ export class KursLehrer extends JavaObject {
 		let result = '{';
 		if (obj.idLehrer !== undefined) {
 			result += '"idLehrer" : ' + obj.idLehrer.toString() + ',';
+		}
+		if (obj.idKurs !== undefined) {
+			result += '"idKurs" : ' + obj.idKurs.toString() + ',';
 		}
 		if (obj.wochenstundenLehrer !== undefined) {
 			result += '"wochenstundenLehrer" : ' + obj.wochenstundenLehrer.toString() + ',';

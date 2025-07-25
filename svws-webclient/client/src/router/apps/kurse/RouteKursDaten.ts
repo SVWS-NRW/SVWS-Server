@@ -28,6 +28,9 @@ export class RouteKursDaten extends RouteNode<any, RouteKurse> {
 			manager: () => routeKurse.data.manager,
 			setFilter: routeKurse.data.setFilter,
 			gotoSchueler: routeKurse.data.gotoSchueler,
+			addKursLehrer: routeKurse.data.addKurLehrer,
+			patchKursLehrer: routeKurse.data.patchKursLehrer,
+			deleteKursLehrer: routeKurse.data.deleteKursLehrer,
 		};
 	}
 
