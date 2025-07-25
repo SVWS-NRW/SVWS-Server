@@ -6,7 +6,7 @@
 	<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-pdf.css}" href="../../../../css/reporting-pdf.css" />
 	<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-A4-hoch-minimal-rand.css}" href="../../../../css/reporting-A4-hoch-minimal-rand.css" />
 	<link rel="stylesheet" th:href="@{css/reporting-styles.css}" href="../../../../css/reporting-styles.css" />
-	<link rel="stylesheet" th:href="@{schueler/gost/abitur/apo/SchuelerGostAbiturApoAnlage12.css}" href="../../../../schueler/gost/abitur/apo/SchuelerGostAbiturApoAnlage12.css" />
+	<link rel="stylesheet" th:href="@{schueler/gost/abitur/apo/SchuelerGostAbiturApoAnlage12-A4.css}" href="SchuelerGostAbiturApoAnlage12-A4.css" />
 </head>
 
 <body>
@@ -22,7 +22,7 @@
 	<!-- Seite 1 Beginn #################################################################################################################################### -->
 	<table class="fixed-100 m-tb-0 m-l-6 m-r-4 p-0 start-new-page">
 		<tr>
-			<td style="height: 5mm; "></td>
+			<td style="height: 5mm;" class="ta-lt"></td>
 		</tr>
 		<tr>
 			<td style="height: 277mm" class="bo-black-strong p-4 ta-ct">
@@ -32,7 +32,7 @@
 					</tr>
 					<tr>
 						<td style="width: 100%; height: 32mm" class="ta-cm p-l-4 p-r-4">
-							<img style="height: 32mm" th:src="@{'data:image/png;base64,'+${Schule.schullogo()}}"  alt="Schullogo"/>
+							<img style="height: 32mm" th:src="@{'data:image/unknown;base64,'+${Schule.schullogo()}}" alt="Schullogo"/>
 						</td>
 					</tr>
 					<tr>
@@ -45,7 +45,7 @@
 						<td style="width: 100%; height: 17mm; font-size: 17pt; " class="f-bold ta-cb" th:text="${schueler.vornamenNachname()}">Anna Mustermann</td>
 					</tr>
 					<tr>
-						<td style="width: 100%; height: 4mm; font-size: 9pt;" class="ta-ct p-tb-0 p-lr-4-4" th:text="${'(' + schueler.religion().bezeichnungZeugnis + ')'}">(Konfession)</td>
+						<td style="width: 100%; height: 4mm; font-size: 9pt;" class="ta-ct p-tb-0 p-lr-4-4" th:text="${schueler.druckeKonfessionAufZeugnisse() ? '(' + schueler.religion().bezeichnungZeugnis + ')' : ''}">(Konfession)</td>
 					</tr>
 					<tr>
 						<td style="width: 100%; height: 16mm; font-size: 13pt; " class="ta-cb" th:text="${'geboren am ' + #convert.toDateDELong(schueler.geburtsdatum())  + ' in ' + schueler.wohnort().ortsname}">geboren am 31. September 2006 in Musterstadt am Rhein</td>
@@ -79,7 +79,7 @@
 	<!-- Seite 2 Beginn #################################################################################################################################### -->
 	<table class="fixed-100 m-tb-0 m-l-6 m-r-4 p-0 start-new-page">
 		<tr>
-			<td style="width: 100%; height: 5mm">
+			<td style="width: 100%; height: 5mm" class="ta-lt">
 				<span class="f-tiny" th:text="${'2. Seite des Zeugnisses der allgemeinen Hochschulreife für ' + schueler.vornamenNachname()}">2. Seite des Zeugnisses der allgemeinen Hochschulreife für Anna Mustermann</span>
 			</td>
 		</tr>
@@ -342,7 +342,7 @@
 	<!-- Seite 3 Beginn #################################################################################################################################### -->
 	<table class="fixed-100 m-tb-0 m-l-6 m-r-4 p-0 start-new-page">
 		<tr>
-			<td style="width: 100%; height: 5mm">
+			<td style="width: 100%; height: 5mm" class="ta-lt">
 				<span class="f-tiny" th:text="${'3. Seite des Zeugnisses der allgemeinen Hochschulreife für ' + schueler.vornamenNachname()}">3. Seite des Zeugnisses der allgemeinen Hochschulreife für Anna Mustermann</span>
 			</td>
 		</tr>
@@ -549,7 +549,7 @@
 	<!-- Seite 4 Beginn #################################################################################################################################### -->
 	<table class="fixed-100 m-tb-0 m-l-6 m-r-4 p-0 start-new-page">
 		<tr>
-			<td style="width: 100%; height: 5mm">
+			<td style="width: 100%; height: 5mm" class="ta-lt">
 				<span class="f-tiny" th:text="${'4. Seite des Zeugnisses der allgemeinen Hochschulreife für ' + schueler.vornamenNachname()}">4. Seite des Zeugnisses der allgemeinen Hochschulreife für Anna Mustermann</span>
 			</td>
 		</tr>

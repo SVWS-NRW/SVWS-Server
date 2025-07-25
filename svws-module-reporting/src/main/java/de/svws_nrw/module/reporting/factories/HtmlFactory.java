@@ -167,7 +167,9 @@ public class HtmlFactory {
 		final boolean istGostLaufbahnplanung =
 				((htmlTemplateDefinition == HtmlTemplateDefinition.SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN)
 						|| (htmlTemplateDefinition == HtmlTemplateDefinition.SCHUELER_v_GOST_LAUFBAHNPLANUNG_ERGEBNISUEBERSICHT));
-		final boolean istGostAbitur = (htmlTemplateDefinition == HtmlTemplateDefinition.SCHUELER_v_GOST_ABITUR_APO_ANLAGE_12);
+		final boolean istGostAbitur =
+				((htmlTemplateDefinition == HtmlTemplateDefinition.SCHUELER_v_GOST_ABITUR_APO_ANLAGE_12_A3)
+						|| (htmlTemplateDefinition == HtmlTemplateDefinition.SCHUELER_v_GOST_ABITUR_APO_ANLAGE_12_A4));
 
 		ReportingValidierung.validiereDatenFuerSchueler(reportingRepository, reportingParameter.idsHauptdaten, istGostLaufbahnplanung, istGostAbitur);
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 4,

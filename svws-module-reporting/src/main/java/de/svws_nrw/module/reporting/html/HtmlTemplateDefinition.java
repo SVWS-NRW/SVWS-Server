@@ -153,11 +153,27 @@ public enum HtmlTemplateDefinition {
 			""",
 			Arrays.asList(BenutzerKompetenz.LEHRERDATEN_ANSEHEN)),
 
-	/** Report-Vorlage: Schüler - GOSt - Abitur - APO - Anlage 12 (Abiturzeugnis) */
-	SCHUELER_v_GOST_ABITUR_APO_ANLAGE_12(
-			ReportingReportvorlage.SCHUELER_v_GOST_ABITUR_APO_ANLAGE_12,
+	/** Report-Vorlage: Schüler - GOSt - Abitur - APO - Anlage 12 (Abiturzeugnis) - Din-A4 */
+	SCHUELER_v_GOST_ABITUR_APO_ANLAGE_12_A4(
+			ReportingReportvorlage.SCHUELER_v_GOST_ABITUR_APO_ANLAGE_12_A4,
 			"de/svws_nrw/module/reporting/",
-			"schueler/gost/abitur/apo/SchuelerGostAbiturApoAnlage12.html",
+			"schueler/gost/abitur/apo/SchuelerGostAbiturApoAnlage12-A4.html",
+			"APO-GOSt-Anlage12",
+			"""
+			        <p th:if="${Schueler.isEmpty()}">APO-GOSt-Anlage12</p>
+			        <th:block th:if="${!Schueler.isEmpty()}" th:each="schueler,iterState : ${Schueler}">
+			            <p th:if="${iterState.first && (Schueler.size() == 1)}" th:text="${'Abitur' + schueler.gostAbitur().abiturjahr() + '_APO-GOSt-Anlage12_' + '_' + #strings.replace(schueler.nachname(), ' ', '_') + '__' + #strings.replace(schueler.vorname(), ' ', '_') + '_(' + schueler.id() + ')'}"></p>
+			            <p th:if="${iterState.first && (Schueler.size() > 1)}" th:text="${'Abitur' + schueler.gostAbitur().abiturjahr() + '_APO-GOSt-Anlage12'}"></p>
+			        </th:block>
+			""",
+			Arrays.asList(BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN)),
+
+
+	/** Report-Vorlage: Schüler - GOSt - Abitur - APO - Anlage 12 (Abiturzeugnis) - Din-A3 */
+	SCHUELER_v_GOST_ABITUR_APO_ANLAGE_12_A3(
+			ReportingReportvorlage.SCHUELER_v_GOST_ABITUR_APO_ANLAGE_12_A3,
+			"de/svws_nrw/module/reporting/",
+			"schueler/gost/abitur/apo/SchuelerGostAbiturApoAnlage12-A3.html",
 			"APO-GOSt-Anlage12",
 			"""
 			        <p th:if="${Schueler.isEmpty()}">APO-GOSt-Anlage12</p>

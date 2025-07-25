@@ -48,8 +48,11 @@ public enum ReportingReportvorlage {
 	/** Report-Vorlage: Lehrer - Stammdaten - Liste */
 	LEHRER_v_STAMMDATENLISTE("Lehrer-Stammdatenliste"),
 
-	/** Report-Vorlage: GOSt - Abitur - APO - Anlage 12 (Abiturzeugnis) */
-	SCHUELER_v_GOST_ABITUR_APO_ANLAGE_12("Schueler-GostAbiturApoAnlage12"),
+	/** Report-Vorlage: GOSt - Abitur - APO - Anlage 12 (Abiturzeugnis) - Din-A4 */
+	SCHUELER_v_GOST_ABITUR_APO_ANLAGE_12_A4("Schueler-GostAbiturApoAnlage12-A4"),
+
+	/** Report-Vorlage: GOSt - Abitur - APO - Anlage 12 (Abiturzeugnis) - Din-A3 */
+	SCHUELER_v_GOST_ABITUR_APO_ANLAGE_12_A3("Schueler-GostAbiturApoAnlage12-A3"),
 
 	/** Report-Vorlage: GOSt - Laufbahnplanung - Ergebnisübersicht */
 	SCHUELER_v_GOST_LAUFBAHNPLANUNG_ERGEBNISUEBERSICHT("Schueler-GostLaufbahnplanungErgebnisuebersicht"),
