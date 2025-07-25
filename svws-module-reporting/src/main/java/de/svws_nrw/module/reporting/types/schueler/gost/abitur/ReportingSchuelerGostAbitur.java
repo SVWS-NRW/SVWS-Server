@@ -7,6 +7,7 @@ import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.gost.abitur.ReportingGostAbiturFachbelegung;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -372,25 +373,19 @@ public class ReportingSchuelerGostAbitur extends ReportingBaseType {
 	 * @return Die Abiturnote im Format 'Zahl Komma Zahl' oder '---'
 	 */
 	public String noteInWorten() {
-		final List<String> erlaubteZiffern = Arrays.asList("0", "1", "2", "3", "4", "5", "6", "7", "8", "9");
-		final List<String> erlaubteWorte = Arrays.asList("Null", "Eins", "Zwei", "Drei", "Vier", "Fünf", "Sechs", "Sieben", "Acht", "Neun");
-		if (note == null)
+		final List<String> zahlworte = Arrays.asList("Null", "Eins", "Zwei", "Drei", "Vier", "Fünf", "Sechs", "Sieben", "Acht", "Neun");
+
+		final String durchschnittsnote = note();
+		if (durchschnittsnote.isEmpty() || "---".equals(durchschnittsnote))
 			return "---";
 
-		final String durchschnittsnote = note.trim();
-		final List<String> durchschnittsnoteZiffern = Arrays.asList(durchschnittsnote.split(","));
+		final List<String> durchschnittsnoteZiffern = new ArrayList<>(Arrays.stream(durchschnittsnote.split(",")).toList());
 
-		if ((durchschnittsnoteZiffern.isEmpty()) || (durchschnittsnoteZiffern.size() > 2))
+		if (durchschnittsnoteZiffern.size() != 2)
 			return "---";
 
-		if (durchschnittsnoteZiffern.size() == 1)
-			durchschnittsnoteZiffern.add("0");
-
-		if (!erlaubteZiffern.contains(durchschnittsnoteZiffern.get(0)) || !erlaubteZiffern.contains(durchschnittsnoteZiffern.get(1)))
-			return "---";
-
-		return erlaubteWorte.get(Integer.parseInt(durchschnittsnoteZiffern.get(0))) + " Komma "
-				+ erlaubteWorte.get(Integer.parseInt(durchschnittsnoteZiffern.get(1)));
+		return zahlworte.get(Integer.parseInt(durchschnittsnoteZiffern.get(0))) + " Komma "
+				+ zahlworte.get(Integer.parseInt(durchschnittsnoteZiffern.get(1)));
 	}
 
 	/**
@@ -678,7 +673,26 @@ public class ReportingSchuelerGostAbitur extends ReportingBaseType {
 	 * @return Inhalt des Feldes note
 	 */
 	public String note() {
-		return note;
+		if ((note == null) || note.trim().isEmpty())
+			return "---";
+
+		String checkNote = note.trim();
+		if (!checkNote.contains(","))
+			checkNote += ",0";
+
+		if (checkNote.length() != 3)
+			return "---";
+
+		final List<String> erlaubteZiffern = Arrays.asList("0", "1", "2", "3", "4", "5", "6", "7", "8", "9");
+		final List<String> checkNoteZiffern = new ArrayList<>(Arrays.stream(checkNote.split(",")).toList());
+
+		if (checkNoteZiffern.size() != 2)
+			return "---";
+
+		if (!erlaubteZiffern.contains(checkNoteZiffern.get(0)) || !erlaubteZiffern.contains(checkNoteZiffern.get(1)))
+			return "---";
+
+		return checkNote;
 	}
 
 	/**
