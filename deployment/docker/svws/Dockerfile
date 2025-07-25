@@ -5,8 +5,8 @@ RUN apt update && apt-get -y upgrade && apt-get -y install gettext zip && apt au
 RUN mkdir -p /opt/app/svws/client && mkdir /opt/app/svws/conf && mkdir /opt/app/svws/init
 
 COPY app /opt/app/svws
-COPY svwsconfig-template.json /opt/app/svws/svwsconfig-template.json
-COPY svwsconfig-template-nodb.json /opt/app/svws/svwsconfig-template-nodb.json
+COPY svwsconfig-template.json /opt/app/svws/templates/svwsconfig-template.json
+COPY svwsconfig-template-nodb.json /opt/app/svws/templates/svwsconfig-template-nodb.json
 COPY startup.sh /opt/app/svws/startup.sh
 
 RUN unzip -d /opt/app/svws/client /opt/app/svws/SVWS-Client*.zip && rm -rf /opt/app/svws/SVWS-Client*.zip && unzip -d /opt/app/svws/adminclient /opt/app/svws/SVWS-Admin-Client*.zip && rm -rf /opt/app/svws/SVWS-Admin-Client*.zip
