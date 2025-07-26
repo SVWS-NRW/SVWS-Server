@@ -156,13 +156,13 @@ public class ReportingPerson extends ReportingBaseType {
 	public String anschrift() {
 		String result;
 		switch (anrede) {
-			case "Frau" -> result = "Frau " + this.vornameNachname() + "</br>";
-			case "Herr" -> result = "Herrn " + this.vornameNachname() + "</br>";
-			case "Familie" -> result = "Familie" + this.nachname() + "</br>";
-			case null, default -> result = this.vornameNachname() + "</br>";
+			case "Frau" -> result = "Frau " + this.vornameNachname() + "<br/>";
+			case "Herr" -> result = "Herrn " + this.vornameNachname() + "<br/>";
+			case "Familie" -> result = "Familie" + this.nachname() + "<br/>";
+			case null, default -> result = this.vornameNachname() + "<br/>";
 		}
-		result += !this.wohnortsteilname().isEmpty() ? ("OT " + this.wohnortsteilname() + "</br>") : "";
-		result += this.strassennameHausnummer() + "</br>";
+		result += !this.wohnortsteilname().isEmpty() ? ("OT " + this.wohnortsteilname() + "<br/>") : "";
+		result += this.strassennameHausnummer() + "<br/>";
 		result += this.plzOrt();
 
 		return result.trim();
@@ -176,13 +176,13 @@ public class ReportingPerson extends ReportingBaseType {
 	public String anschriftMitAllenVornamen() {
 		String result;
 		switch (anrede) {
-			case "Frau" -> result = "Frau " + this.vornamenNachnameMitTitel() + "</br>";
-			case "Herr" -> result = "Herrn " + this.vornamenNachnameMitTitel() + "</br>";
-			case "Familie" -> result = "Familie" + this.nachname() + "</br>";
-			case null, default -> result = this.vornamenNachnameMitTitel() + "</br>";
+			case "Frau" -> result = "Frau " + this.vornamenNachnameMitTitel() + "<br/>";
+			case "Herr" -> result = "Herrn " + this.vornamenNachnameMitTitel() + "<br/>";
+			case "Familie" -> result = "Familie" + this.nachname() + "<br/>";
+			case null, default -> result = this.vornamenNachnameMitTitel() + "<br/>";
 		}
-		result += !this.wohnortsteilname().isEmpty() ? ("OT " + this.wohnortsteilname() + "</br>") : "";
-		result += this.strassennameHausnummer() + "</br>";
+		result += !this.wohnortsteilname().isEmpty() ? ("OT " + this.wohnortsteilname() + "<br/>") : "";
+		result += this.strassennameHausnummer() + "<br/>";
 		result += this.plzOrt();
 
 		return result.trim();

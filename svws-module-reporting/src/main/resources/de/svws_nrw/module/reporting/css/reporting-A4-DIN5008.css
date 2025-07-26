@@ -7,14 +7,20 @@
 	############################################################################################################### */
 	@top-left {
 		content: element(pageTopLeft);
-		padding-top: 1mm;
+		padding-top: 0;
 		padding-left: 0;
 	}
 
 	@top-right {
 		content: element(pageTopRight);
-		padding-top: 1mm;
+		padding-top: 0;
 		padding-right: 0;
+	}
+
+	@left-middle {
+		content: element(pageLeftMiddle);
+		padding-top: 0;
+		padding-left: 0;
 	}
 
 	@bottom-center {
@@ -53,6 +59,16 @@
 .pageTopRight {
 	position: running(pageTopRight);
 	text-align: right;
+	padding: 0;
+	margin: 0;
+	font-weight: normal;
+	font-size: 7pt;
+	color: #808080;
+}
+
+.pageLeftMiddle {
+	position: running(pageLeftMiddle);
+	text-align: left;
 	padding: 0;
 	margin: 0;
 	font-weight: normal;
@@ -117,4 +133,107 @@ span.page-nums-print {
 }
 span.page-nums-print:after {
 	content: counter(page) " von " counter(pages);
+}
+
+
+/* Elemente für Schreiben nach DIN5008
+############################################################################################################### */
+.briefkopfbereich {
+	/* Umfasst den gesamten Briefkopf, z. B. für ein Bild als Ersatz */
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 190mm;
+	height: 35mm;
+}
+
+.absenderanschrift {
+	position: absolute;
+	top: 0;
+	left: 15mm;
+	width: 85mm;
+	height: 35mm;
+}
+
+.schullogo {
+	position: absolute;
+	top: 0;
+	left: 115mm;
+	width: 75mm;
+	height: 35mm;
+	text-align: right
+}
+
+.ruecksendeinformationen {
+	position: absolute;
+	top: 37mm;
+	left: 15mm;
+	width: 73mm;
+	height: 5mm;
+}
+
+.versandinformationen {
+	position: absolute;
+	top: 42mm;
+	left: 15mm;
+	width: 73mm;
+	height: 5mm;
+}
+
+.infoblock {
+	position: absolute;
+	top: 40mm;
+	left: 115mm;
+	width: 75mm;
+	height: 35mm;
+}
+
+.empfaengeranschrift {
+	position: absolute;
+	top: 47mm;
+	left: 15mm;
+	width: 73mm;
+	height: 31mm;
+}
+
+.ortunddatum {
+	position: absolute;
+	top: 75mm;
+	left: 115mm;
+	width: 75mm;
+	height: 5mm;
+}
+
+.schreiben {
+	position: absolute;
+	top: 89mm;
+	left: 15mm;
+	width: 165mm;
+}
+
+.faltmarke1 {
+	position: absolute;
+	top: 95mm;
+	left: 0;
+	width: 6mm;
+	border-width: 0.5px;
+	border-color: #404040;
+}
+
+.faltmarke2 {
+	position: absolute;
+	top: 200mm;
+	left: 0;
+	width: 6mm;
+	border-width: 0.5px;
+	border-color: #404040;
+}
+
+.lochmarke {
+	position: absolute;
+	top: 138.5mm;
+	left: 0;
+	width: 8mm;
+	border-width: 0.5px;
+	border-color: #404040;
 }

@@ -53,20 +53,20 @@ public class ReportingErzieherArtGruppe extends ReportingBaseType {
 		if ((erzieher() == null) || erzieher().isEmpty())
 			return "";
 
-		String result = "";
+		final StringBuilder result = new StringBuilder();
 		for (final ReportingErzieher e : erzieher()) {
 			switch (e.anrede()) {
-				case "Frau" -> result = "Frau " + e.vornameNachname() + "</br>";
-				case "Herr" -> result = "Herrn " + e.vornameNachname() + "</br>";
-				case "Familie" -> result = "Familie" + e.nachname() + "</br>";
-				case null, default -> result = e.vornameNachname() + "</br>";
+				case "Frau" -> result.append("Frau ").append(e.vornameNachname()).append("<br/>");
+				case "Herr" -> result.append("Herrn ").append(e.vornameNachname()).append("<br/>");
+				case "Familie" -> result.append("Familie").append(e.nachname()).append("<br/>");
+				case null, default -> result.append(e.vornameNachname()).append("<br/>");
 			}
 		}
-		result += !erzieher().getFirst().wohnortsteilname().isEmpty() ? ("OT " + erzieher().getFirst().wohnortsteilname() + "</br>") : "";
-		result += erzieher().getFirst().strassennameHausnummer() + "</br>";
-		result += erzieher().getFirst().plzOrt();
+		result.append(!erzieher().getFirst().wohnortsteilname().isEmpty() ? ("OT " + erzieher().getFirst().wohnortsteilname() + "<br/>") : "");
+		result.append(erzieher().getFirst().strassennameHausnummer()).append("<br/>");
+		result.append(erzieher().getFirst().plzOrt());
 
-		return result;
+		return result.toString();
 	}
 
 	// ##### Berechnete Felder #####
