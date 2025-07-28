@@ -50,7 +50,7 @@ ArrayList {
   "addLast": [Function],
   "elementData": [
     KlassenartKatalogEintrag {
-      "gueltigBis": null,
+      "gueltigBis": 2023,
       "gueltigVon": null,
       "id": 0,
       "kuerzel": "**",
@@ -73,7 +73,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
-      "gueltigBis": 2023,
+      "gueltigBis": 2022,
       "gueltigVon": null,
       "id": 1000,
       "kuerzel": "1A",
@@ -113,6 +113,41 @@ ArrayList {
     },
     KlassenartKatalogEintrag {
       "gueltigBis": 2023,
+      "gueltigVon": 2023,
+      "id": 1001,
+      "kuerzel": "1A",
+      "schluessel": "1A",
+      "text": "Klasse 10 Typ A (Hauptschule)",
+      "zulaessig": ArrayList {
+        "addFirst": [Function],
+        "addLast": [Function],
+        "elementData": [
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "H",
+          },
+          SchulformSchulgliederung {
+            "gliederung": "H",
+            "schulform": "R",
+          },
+          SchulformSchulgliederung {
+            "gliederung": "H",
+            "schulform": "SK",
+          },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "V",
+          },
+        ],
+        "getFirst": [Function],
+        "getLast": [Function],
+        "modCount": 4,
+        "removeFirst": [Function],
+        "removeLast": [Function],
+      },
+    },
+    KlassenartKatalogEintrag {
+      "gueltigBis": 2022,
       "gueltigVon": null,
       "id": 2000,
       "kuerzel": "1B",
@@ -148,6 +183,37 @@ ArrayList {
     },
     KlassenartKatalogEintrag {
       "gueltigBis": 2023,
+      "gueltigVon": 2023,
+      "id": 2001,
+      "kuerzel": "1B",
+      "schluessel": "1B",
+      "text": "Klasse 10 Typ B (Hauptschule)",
+      "zulaessig": ArrayList {
+        "addFirst": [Function],
+        "addLast": [Function],
+        "elementData": [
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "H",
+          },
+          SchulformSchulgliederung {
+            "gliederung": "H",
+            "schulform": "SK",
+          },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "V",
+          },
+        ],
+        "getFirst": [Function],
+        "getLast": [Function],
+        "modCount": 3,
+        "removeFirst": [Function],
+        "removeLast": [Function],
+      },
+    },
+    KlassenartKatalogEintrag {
+      "gueltigBis": 2022,
       "gueltigVon": null,
       "id": 3000,
       "kuerzel": "AB",
@@ -182,12 +248,43 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "gueltigBis": 2023,
+      "gueltigVon": 2023,
+      "id": 3001,
+      "kuerzel": "AB",
+      "schluessel": "AB",
+      "text": "Klassen im Jahrgang 10 ohne Differenzierung in Typ A und Typ B (Hauptschule)",
+      "zulaessig": ArrayList {
+        "addFirst": [Function],
+        "addLast": [Function],
+        "elementData": [
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "H",
+          },
+          SchulformSchulgliederung {
+            "gliederung": "H",
+            "schulform": "SK",
+          },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "V",
+          },
+        ],
+        "getFirst": [Function],
+        "getLast": [Function],
+        "modCount": 3,
+        "removeFirst": [Function],
+        "removeLast": [Function],
+      },
+    },
+    KlassenartKatalogEintrag {
       "gueltigBis": null,
       "gueltigVon": null,
       "id": 4000,
       "kuerzel": "AM",
       "schluessel": "AM",
-      "text": "Frühförderung: SKG (Ambulante Maßnahmen für blinde, gehörlose, sehbeh. und schwerh. Kinder)",
+      "text": "Frühförderung für hör- und sehgeschädigte Kinder: Hausfrüherziehung, ambulante Maßnahmen ",
       "zulaessig": ArrayList {
         "addFirst": [Function],
         "addLast": [Function],
@@ -229,10 +326,6 @@ ArrayList {
           },
           SchulformSchulgliederung {
             "gliederung": null,
-            "schulform": "GM",
-          },
-          SchulformSchulgliederung {
-            "gliederung": null,
             "schulform": "GY",
           },
           SchulformSchulgliederung {
@@ -271,6 +364,10 @@ ArrayList {
             "gliederung": null,
             "schulform": "V",
           },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "WB",
+          },
         ],
         "getFirst": [Function],
         "getLast": [Function],
@@ -285,7 +382,7 @@ ArrayList {
       "id": 5000,
       "kuerzel": "PG",
       "schluessel": "PG",
-      "text": "Frühförderung: SKG (Präsenzgruppe)",
+      "text": "Frühförderung für hör- und sehgeschädigte Kinder: Förderschulkindergarten, Präsenzgruppe",
       "zulaessig": ArrayList {
         "addFirst": [Function],
         "addLast": [Function],
@@ -307,7 +404,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
-      "gueltigBis": null,
+      "gueltigBis": 2023,
       "gueltigVon": null,
       "id": 6000,
       "kuerzel": "PK",
@@ -339,6 +436,29 @@ ArrayList {
     },
     KlassenartKatalogEintrag {
       "gueltigBis": null,
+      "gueltigVon": 2024,
+      "id": 6001,
+      "kuerzel": "PK",
+      "schluessel": "PK",
+      "text": "Profilklasse (gemäß § 21 Abs. 3 APO-S I)",
+      "zulaessig": ArrayList {
+        "addFirst": [Function],
+        "addLast": [Function],
+        "elementData": [
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "GY",
+          },
+        ],
+        "getFirst": [Function],
+        "getLast": [Function],
+        "modCount": 1,
+        "removeFirst": [Function],
+        "removeLast": [Function],
+      },
+    },
+    KlassenartKatalogEintrag {
+      "gueltigBis": 2022,
       "gueltigVon": null,
       "id": 7000,
       "kuerzel": "RK",
@@ -422,6 +542,168 @@ ArrayList {
     },
     KlassenartKatalogEintrag {
       "gueltigBis": 2023,
+      "gueltigVon": 2023,
+      "id": 7001,
+      "kuerzel": "RK",
+      "schluessel": "RK",
+      "text": "Regelklasse",
+      "zulaessig": ArrayList {
+        "addFirst": [Function],
+        "addLast": [Function],
+        "elementData": [
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "FW",
+          },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "HI",
+          },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "WF",
+          },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "G",
+          },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "GE",
+          },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "GY",
+          },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "H",
+          },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "PS",
+          },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "R",
+          },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "S",
+          },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "KS",
+          },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "SG",
+          },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "SK",
+          },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "SR",
+          },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "V",
+          },
+        ],
+        "getFirst": [Function],
+        "getLast": [Function],
+        "modCount": 15,
+        "removeFirst": [Function],
+        "removeLast": [Function],
+      },
+    },
+    KlassenartKatalogEintrag {
+      "gueltigBis": null,
+      "gueltigVon": 2024,
+      "id": 7002,
+      "kuerzel": "RK",
+      "schluessel": "RK",
+      "text": "Regelklasse",
+      "zulaessig": ArrayList {
+        "addFirst": [Function],
+        "addLast": [Function],
+        "elementData": [
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "FW",
+          },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "HI",
+          },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "WF",
+          },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "G",
+          },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "GE",
+          },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "GY",
+          },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "H",
+          },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "PS",
+          },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "R",
+          },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "S",
+          },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "KS",
+          },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "SG",
+          },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "SK",
+          },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "SR",
+          },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "V",
+          },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "WB",
+          },
+        ],
+        "getFirst": [Function],
+        "getLast": [Function],
+        "modCount": 16,
+        "removeFirst": [Function],
+        "removeLast": [Function],
+      },
+    },
+    KlassenartKatalogEintrag {
+      "gueltigBis": 2022,
       "gueltigVon": null,
       "id": 8000,
       "kuerzel": "SG",
@@ -491,10 +773,77 @@ ArrayList {
         "removeLast": [Function],
       },
     },
+    KlassenartKatalogEintrag {
+      "gueltigBis": 2023,
+      "gueltigVon": 2023,
+      "id": 8001,
+      "kuerzel": "SG",
+      "schluessel": "SG",
+      "text": "Deutschförderklasse (gemäß BASS 13-63 Nr. 3, Nummer 3.5.1)",
+      "zulaessig": ArrayList {
+        "addFirst": [Function],
+        "addLast": [Function],
+        "elementData": [
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "G",
+          },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "GE",
+          },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "GY",
+          },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "H",
+          },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "PS",
+          },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "R",
+          },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "S",
+          },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "KS",
+          },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "SG",
+          },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "SK",
+          },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "SR",
+          },
+          SchulformSchulgliederung {
+            "gliederung": null,
+            "schulform": "V",
+          },
+        ],
+        "getFirst": [Function],
+        "getLast": [Function],
+        "modCount": 12,
+        "removeFirst": [Function],
+        "removeLast": [Function],
+      },
+    },
   ],
   "getFirst": [Function],
   "getLast": [Function],
-  "modCount": 10,
+  "modCount": 17,
   "removeFirst": [Function],
   "removeLast": [Function],
 }
