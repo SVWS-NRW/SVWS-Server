@@ -30,12 +30,12 @@ class TestLehrerLehrbefaehigung {
 	 *
 	 * CoreType: LehrerLehrbefaehigung
 	 * Testfall: Prüft die Anzahl der möglichen Werte
-	 * Ergebnis: Erwartete Anzahl - 118
+	 * Ergebnis: Erwartete Anzahl - 121
 	 */
 	@Test
 	@DisplayName("Teste CoreType LehrerLehrbefaehigung: Anzahl der vorhandenen Werte.")
 	void testLehrerLehrbefaehigung_AnzahlEintraege() {
-		assertEquals(118, LehrerLehrbefaehigung.data().getWerte().size());
+		assertEquals(121, LehrerLehrbefaehigung.data().getWerte().size());
 	}
 
 	/**
