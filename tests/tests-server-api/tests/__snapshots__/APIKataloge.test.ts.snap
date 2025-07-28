@@ -38,7 +38,7 @@ ArrayList {
 }
 `;
 
-exports[`Kataloge Tests > gegen { schema: 'GymAbi01' } > getKatalogBeschaeftigungsart 1`] = `
+exports[`Kataloge Tests > gegen { schema: 'GymAbi01' } > getBeschaeftigungsarten 1`] = `
 ArrayList {
   "addFirst": [Function],
   "addLast": [Function],

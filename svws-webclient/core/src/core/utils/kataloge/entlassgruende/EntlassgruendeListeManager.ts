@@ -16,7 +16,7 @@ export class EntlassgruendeListeManager extends AuswahlManager<number, KatalogEn
 	private static readonly _entlassgrundToId : JavaFunction<KatalogEntlassgrund, number> = { apply : (a: KatalogEntlassgrund) => a.id };
 
 	/**
-	 * Ein Default-Comparator für den Vergleich von Abteilungen.
+	 * Ein Default-Comparator für den Vergleich von Entlassgründen.
 	 */
 	public static readonly comparator : Comparator<KatalogEntlassgrund> = { compare : (a: KatalogEntlassgrund, b: KatalogEntlassgrund) => {
 		let cmp : number = JavaInteger.compare(a.sortierung, b.sortierung);
@@ -34,7 +34,7 @@ export class EntlassgruendeListeManager extends AuswahlManager<number, KatalogEn
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
 	 *
-	 * @param idSchuljahresabschnitt    	  der Schuljahresabschnitt, auf den sich die Abteilungsauswahl bezieht
+	 * @param idSchuljahresabschnitt    	  der Schuljahresabschnitt, auf den sich die Entlassgrundauswahl bezieht
 	 * @param idSchuljahresabschnittSchule    der Schuljahresabschnitt, in welchem sich die Schule aktuell befindet.
 	 * @param schuljahresabschnitte           die Liste der Schuljahresabschnitte
 	 * @param schulform     				  die Schulform der Schule

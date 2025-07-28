@@ -1,4 +1,4 @@
-import type { BetriebAnsprechpartner, BetriebListeEintrag, BetriebStammdaten, KatalogEintrag, LehrerListeEintrag, List, SchuelerBetriebsdaten} from "@core";
+import type { Beschaeftigungsart, BetriebAnsprechpartner, BetriebListeEintrag, BetriebStammdaten, LehrerListeEintrag, List, SchuelerBetriebsdaten } from "@core";
 import { ArrayList, DeveloperNotificationException } from "@core";
 
 import { api } from "~/router/Api";
@@ -9,7 +9,7 @@ interface RouteStateDataSchuelerAusbildungsbetriebe extends RouteStateInterface 
 	idSchueler: number | undefined;
 	betrieb: SchuelerBetriebsdaten | undefined;
 	listSchuelerbetriebe : List<SchuelerBetriebsdaten>;
-	mapBeschaeftigungsarten: Map<number, KatalogEintrag>;
+	mapBeschaeftigungsarten: Map<number, Beschaeftigungsart>;
 	mapLehrer: Map<number, LehrerListeEintrag>;
 	mapBetriebe: Map<number, BetriebListeEintrag>;
 	listAnsprechpartner: List<BetriebAnsprechpartner>;
@@ -46,7 +46,7 @@ export class RouteDataSchuelerAusbildungsbetriebe extends RouteData<RouteStateDa
 		return this._state.value.listSchuelerbetriebe;
 	}
 
-	get mapBeschaeftigungsarten(): Map<number, KatalogEintrag> {
+	get mapBeschaeftigungsarten(): Map<number, Beschaeftigungsart> {
 		return this._state.value.mapBeschaeftigungsarten;
 	}
 
@@ -71,8 +71,8 @@ export class RouteDataSchuelerAusbildungsbetriebe extends RouteData<RouteStateDa
 	}
 
 	public async ladeListe() {
-		const listBeschaeftigungsarten = await api.server.getKatalogBeschaeftigungsart(api.schema);
-		const mapBeschaeftigungsarten = new Map<number, KatalogEintrag>();
+		const listBeschaeftigungsarten = await api.server.getBeschaeftigungsarten(api.schema);
+		const mapBeschaeftigungsarten = new Map<number, Beschaeftigungsart>();
 		for (const ba of listBeschaeftigungsarten)
 			mapBeschaeftigungsarten.set(ba.id, ba);
 		const listLehrer = await api.server.getLehrer(api.schema);

@@ -3,7 +3,7 @@
 		<svws-ui-select title="—" headless v-model="inputBetrieb" :items="mapBetriebe" :item-text="(i: BetriebListeEintrag) => i.name1 ?? ''" />
 	</div>
 	<div class="svws-ui-td" role="cell">
-		<svws-ui-select v-model="beschaeftigungsart" :items="mapBeschaeftigungsarten" :item-text="(i: KatalogEintrag) => i.text ?? ''" headless title="—" />
+		<svws-ui-select v-model="beschaeftigungsart" :items="mapBeschaeftigungsarten" :item-text="(i: Beschaeftigungsart) => i.bezeichnung ?? ''" headless title="—" />
 	</div>
 	<div class="svws-ui-td" role="cell">
 		<svws-ui-text-input :model-value="betrieb.vertragsbeginn" @change="vertragsbeginn=>patchSchuelerBetriebsdaten({vertragsbeginn}, betrieb.id)" type="date" />
@@ -34,12 +34,12 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import type { BetriebAnsprechpartner, BetriebListeEintrag, KatalogEintrag, LehrerListeEintrag, SchuelerBetriebsdaten } from "@core";
+	import type { Beschaeftigungsart, BetriebAnsprechpartner, BetriebListeEintrag, LehrerListeEintrag, SchuelerBetriebsdaten } from "@core";
 
 	const props = defineProps<{
 		patchSchuelerBetriebsdaten: (data : Partial<SchuelerBetriebsdaten>, id : number) => Promise<void>;
 		betrieb: SchuelerBetriebsdaten;
-		mapBeschaeftigungsarten: Map<number, KatalogEintrag>;
+		mapBeschaeftigungsarten: Map<number, Beschaeftigungsart>;
 		mapLehrer: Map<number, LehrerListeEintrag>;
 		mapBetriebe: Map<number, BetriebListeEintrag>;
 		mapAnsprechpartner: Map<number, BetriebAnsprechpartner>;
@@ -58,7 +58,7 @@
 		}
 	});
 
-	const beschaeftigungsart = computed<KatalogEintrag | undefined>({
+	const beschaeftigungsart = computed<Beschaeftigungsart | undefined>({
 		get: () => (props.betrieb.beschaeftigungsart_id === null) ? undefined : props.mapBeschaeftigungsarten.get(props.betrieb.beschaeftigungsart_id),
 		set: (value) => void props.patchSchuelerBetriebsdaten({ beschaeftigungsart_id: value === undefined ? null : value.id }, props.betrieb.id)
 	});

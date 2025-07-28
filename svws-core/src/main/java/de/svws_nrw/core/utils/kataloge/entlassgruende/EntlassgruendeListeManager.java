@@ -13,7 +13,7 @@ public final class EntlassgruendeListeManager extends AuswahlManager<Long, Katal
 
 	private static final @NotNull Function<KatalogEntlassgrund, Long> _entlassgrundToId = (final @NotNull KatalogEntlassgrund a) -> a.id;
 
-	/** Ein Default-Comparator für den Vergleich von Abteilungen. */
+	/** Ein Default-Comparator für den Vergleich von Entlassgründen. */
 	public static final @NotNull Comparator<KatalogEntlassgrund> comparator =
 			(final @NotNull KatalogEntlassgrund a, final @NotNull KatalogEntlassgrund b) -> {
 				int cmp = Integer.compare(a.sortierung, b.sortierung);
@@ -32,7 +32,7 @@ public final class EntlassgruendeListeManager extends AuswahlManager<Long, Katal
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
 	 *
-	 * @param idSchuljahresabschnitt    	  der Schuljahresabschnitt, auf den sich die Abteilungsauswahl bezieht
+	 * @param idSchuljahresabschnitt    	  der Schuljahresabschnitt, auf den sich die Entlassgrundauswahl bezieht
 	 * @param idSchuljahresabschnittSchule    der Schuljahresabschnitt, in welchem sich die Schule aktuell befindet.
 	 * @param schuljahresabschnitte           die Liste der Schuljahresabschnitte
 	 * @param schulform     				  die Schulform der Schule

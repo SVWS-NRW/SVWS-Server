@@ -19,6 +19,7 @@ import { BenutzerListeEintrag } from '../core/data/benutzer/BenutzerListeEintrag
 import { BerufskollegAnlageKatalogEintrag } from '../asd/data/schule/BerufskollegAnlageKatalogEintrag';
 import { BerufskollegBerufsebeneKatalogEintrag } from '../core/data/schule/BerufskollegBerufsebeneKatalogEintrag';
 import { BerufskollegFachklassenKatalog } from '../core/data/schule/BerufskollegFachklassenKatalog';
+import { Beschaeftigungsart } from '../core/data/betrieb/Beschaeftigungsart';
 import { BetriebAnsprechpartner } from '../core/data/betrieb/BetriebAnsprechpartner';
 import { BetriebListeEintrag } from '../core/data/betrieb/BetriebListeEintrag';
 import { BetriebStammdaten } from '../core/data/betrieb/BetriebStammdaten';
@@ -1453,141 +1454,112 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getKatalogBeschaeftigungsart für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/beschaeftigungsart
+	 * Implementierung der GET-Methode getBeschaeftigungsarten für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/beschaeftigungsarten
 	 *
-	 * Erstellt eine Liste aller in dem Katalog vorhandenen Beschäftigungsarten unter Angabe der ID, eines Kürzels und der textuellen Beschreibung sowie der Information, ob der Eintrag in der Anwendung sichtbar bzw. änderbar sein soll, und gibt diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * Gibt die Beschäftigungsarten zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Eine Liste von Katalog-Einträgen zu den Beschäftigungsarten.
+	 *   Code 200: Eine Liste der Beschäftigungsarten.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<KatalogEintrag>
+	 *     - Rückgabe-Typ: List<Beschaeftigungsart>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Katalog-Einträge gefunden
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
-	 * @returns Eine Liste von Katalog-Einträgen zu den Beschäftigungsarten.
+	 * @returns Eine Liste der Beschäftigungsarten.
 	 */
-	public async getKatalogBeschaeftigungsart(schema : string) : Promise<List<KatalogEintrag>> {
-		const path = "/db/{schema}/betriebe/beschaeftigungsart"
+	public async getBeschaeftigungsarten(schema : string) : Promise<List<Beschaeftigungsart>> {
+		const path = "/db/{schema}/betriebe/beschaeftigungsarten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<KatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KatalogEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<Beschaeftigungsart>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Beschaeftigungsart.transpilerFromJSON(text)); });
 		return ret;
 	}
 
 
 	/**
-	 * Implementierung der GET-Methode getKatalogBeschaeftigungsartmitID für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/beschaeftigungsart/{id : \d+}
+	 * Implementierung der PATCH-Methode patchBeschaeftigungsart für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/beschaeftigungsarten/{id : \d+}
 	 *
-	 * Liest die Daten der Beschäftigunsart zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Beschäftigungsart besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Katalog-Eintrag zu den Beschäftigungsarten.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<KatalogEintrag>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
-	 *   Code 404: Keine Katalog-Einträge gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Katalog-Eintrag zu den Beschäftigungsarten.
-	 */
-	public async getKatalogBeschaeftigungsartmitID(schema : string, id : number) : Promise<List<KatalogEintrag>> {
-		const path = "/db/{schema}/betriebe/beschaeftigungsart/{id : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<KatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KatalogEintrag.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
-	 * Implementierung der PATCH-Methode patchBeschaeftigungsart für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/beschaeftigungsart/{id : \d+}
-	 *
-	 * Passt die Beschäftigungsart-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern der Daten der Beschäftigungsart besitzt.
+	 * Patched die Beschäftigungsart mit der angegebenen ID, insofern die notwendigen Berechtigungen vorliegen.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Patch wurde erfolgreich in die Beschäftigungsart-Daten integriert.
+	 *   Code 200: Der Patch wurde erfolgreich integriert.
 	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Beschäftigungsart-Daten zu ändern.
 	 *   Code 404: Keine Beschäftigungsart mit der angegebenen ID gefunden
 	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
-	 * @param {Partial<KatalogEintrag>} data - der Request-Body für die HTTP-Methode
+	 * @param {Partial<Beschaeftigungsart>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchBeschaeftigungsart(data : Partial<KatalogEintrag>, schema : string, id : number) : Promise<void> {
-		const path = "/db/{schema}/betriebe/beschaeftigungsart/{id : \\d+}"
+	public async patchBeschaeftigungsart(data : Partial<Beschaeftigungsart>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/betriebe/beschaeftigungsarten/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = KatalogEintrag.transpilerToJSONPatch(data);
+		const body : string = Beschaeftigungsart.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
 
 	/**
-	 * Implementierung der GET-Methode getKatalogBetriebsartmitID für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/beschaeftigungsart/{id : \d+}
+	 * Implementierung der POST-Methode addBeschaeftigungsart für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/beschaeftigungsarten/create
 	 *
-	 * Liest die Daten der Betriebsart zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Betriebsarten besitzt.
+	 * Erstellt eine neue Beschäftigungsart, insofern die notwendigen Berechtigungen vorliegen.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Beschäftigungsart besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Katalog-Eintrag zu den Betriebsarten.
+	 *   Code 201: Beschäftigungsart wurde erfolgreich hinzugefügt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<KatalogEintrag>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
-	 *   Code 404: Keine Katalog-Einträge gefunden
+	 *     - Rückgabe-Typ: Beschaeftigungsart
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Beschäftigungsart anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
+	 * @param {Partial<Beschaeftigungsart>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
 	 *
-	 * @returns Katalog-Eintrag zu den Betriebsarten.
+	 * @returns Beschäftigungsart wurde erfolgreich hinzugefügt.
 	 */
-	public async getKatalogBetriebsartmitID(schema : string, id : number) : Promise<List<KatalogEintrag>> {
-		const path = "/db/{schema}/betriebe/beschaeftigungsart/{id : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<KatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KatalogEintrag.transpilerFromJSON(text)); });
-		return ret;
+	public async addBeschaeftigungsart(data : Partial<Beschaeftigungsart>, schema : string) : Promise<Beschaeftigungsart> {
+		const path = "/db/{schema}/betriebe/beschaeftigungsarten/create"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = Beschaeftigungsart.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return Beschaeftigungsart.transpilerFromJSON(text);
 	}
 
 
 	/**
-	 * Implementierung der POST-Methode createBeschaeftigungsArt für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/beschaeftigungsart/new
+	 * Implementierung der DELETE-Methode deleteBeschaeftigungsarten für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/beschaeftigungsarten/delete/multiple
 	 *
-	 * Erstellt eine neue Beschäftigungsart und gibt sie zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Beschäftigungsart besitzt.
+	 * Entfernt mehrere Beschäftigungsarten, insofern die notwendigen Berechtigungen vorhanden sind.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Beschäftigungsart wurde erfolgreich angelegt.
+	 *   Code 200: Die Lösch-Operationen wurden ausgeführt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: KatalogEintrag
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Beschäftigungsart anzulegen.
-	 *   Code 409: Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Beschäftigungsarten zu entfernen.
+	 *   Code 404: Beschäftigungsarten nicht vorhanden
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
-	 * @param {KatalogEintrag} data - der Request-Body für die HTTP-Methode
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
-	 * @returns Beschäftigungsart wurde erfolgreich angelegt.
+	 * @returns Die Lösch-Operationen wurden ausgeführt.
 	 */
-	public async createBeschaeftigungsArt(data : KatalogEintrag, schema : string) : Promise<KatalogEintrag> {
-		const path = "/db/{schema}/betriebe/beschaeftigungsart/new"
+	public async deleteBeschaeftigungsarten(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+		const path = "/db/{schema}/betriebe/beschaeftigungsarten/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = KatalogEintrag.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
-		const text = result;
-		return KatalogEintrag.transpilerFromJSON(text);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 
@@ -1661,6 +1633,35 @@ export class ApiServer extends BaseApi {
 	public async getKatalogBetriebsart(schema : string) : Promise<List<KatalogEintrag>> {
 		const path = "/db/{schema}/betriebe/betriebsart"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<KatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KatalogEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getKatalogBetriebsartMitID für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/betriebsart/{id : \d+}
+	 *
+	 * Liest die Daten der Betriebsart zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Betriebsarten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Katalog-Eintrag zu den Betriebsarten.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<KatalogEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Katalog-Eintrag zu den Betriebsarten.
+	 */
+	public async getKatalogBetriebsartMitID(schema : string, id : number) : Promise<List<KatalogEintrag>> {
+		const path = "/db/{schema}/betriebe/betriebsart/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<KatalogEintrag>();

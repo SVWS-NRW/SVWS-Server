@@ -403,6 +403,7 @@ export { BenutzerLehrerCredentials } from './core/data/benutzer/BenutzerLehrerCr
 export { BenutzerListeEintrag } from './core/data/benutzer/BenutzerListeEintrag';
 export { BenutzergruppeDaten } from './core/data/benutzer/BenutzergruppeDaten';
 export { BenutzergruppeListeEintrag } from './core/data/benutzer/BenutzergruppeListeEintrag';
+export { Beschaeftigungsart } from './core/data/betrieb/Beschaeftigungsart';
 export { BetriebAnsprechpartner } from './core/data/betrieb/BetriebAnsprechpartner';
 export { BetriebListeEintrag } from './core/data/betrieb/BetriebListeEintrag';
 export { BetriebStammdaten } from './core/data/betrieb/BetriebStammdaten';
@@ -793,6 +794,7 @@ export { KlausurterminblockungDynDaten } from './core/utils/gost/klausurplanung/
 export { JahrgangListeManager } from './core/utils/jahrgang/JahrgangListeManager';
 export { JahrgangsUtils } from './core/utils/jahrgang/JahrgangsUtils';
 export { AbteilungenListeManager } from './core/utils/kataloge/abteilungen/AbteilungenListeManager';
+export { BeschaeftigungsartenListeManager } from './core/utils/kataloge/beschaeftigungsarten/BeschaeftigungsartenListeManager';
 export { EntlassgruendeListeManager } from './core/utils/kataloge/entlassgruende/EntlassgruendeListeManager';
 export { FahrschuelerartenListeManager } from './core/utils/kataloge/fahrschuelerarten/FahrschuelerartenListeManager';
 export { FoerderschwerpunkteListeManager } from './core/utils/kataloge/foerderschwerpunkte/FoerderschwerpunkteListeManager';

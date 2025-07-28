@@ -283,8 +283,8 @@ describe("Server", () => {
 		const res = await server.getJahrgang(schema, 10);
 		expect(res).matchSnapshot();
 	});
-	test.skip("getKatalogBeschaeftigungsart", async () => {
-		const res = await server.getKatalogBeschaeftigungsart(schema);
+	test.skip("getBeschaeftigungsarten", async () => {
+		const res = await server.getBeschaeftigungsarten(schema);
 		expect(res).matchSnapshot();
 	});
 	test.skip("getKatalogBetriebsart", async () => {

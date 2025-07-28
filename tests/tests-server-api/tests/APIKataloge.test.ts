@@ -5,8 +5,8 @@ describe("Kataloge Tests", () => {
 	describe.each([{schema: "GymAbi01"}])('gegen %s', ({schema}) => {
 		const api = getApiServer(schema);
 
-		test("getKatalogBeschaeftigungsart", async () => {
-			const result = await api.getKatalogBeschaeftigungsart(schema);
+		test("getBeschaeftigungsarten", async () => {
+			const result = await api.getBeschaeftigungsarten(schema);
 			expect(result).toMatchSnapshot();
 		});
 
