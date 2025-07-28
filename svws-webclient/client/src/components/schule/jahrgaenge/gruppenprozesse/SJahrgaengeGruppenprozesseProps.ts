@@ -1,9 +1,9 @@
-import type { JahrgangListeManager, Schulform, List, Schulgliederung, ServerMode } from "@core";
+import type{ Schulform, List, Schulgliederung, ServerMode, JahrgaengeListeManager } from "@core";
 
 export interface SchuleJahrgangGruppenprozesseProps {
 	serverMode: ServerMode;
 	schulform: Schulform;
 	schulgliederungen: List<Schulgliederung>;
-	jahrgangListeManager: () => JahrgangListeManager;
+	manager: () => JahrgaengeListeManager;
 	delete: () => Promise<[boolean, List<string | null>]>;
 }

@@ -1,11 +1,11 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { IllegalStateException } from '../../../java/lang/IllegalStateException';
-import { JahrgangsUtils } from '../../../core/utils/jahrgang/JahrgangsUtils';
 import { Schulform } from '../../../asd/types/schule/Schulform';
 import { SchulformKatalogEintrag } from '../../../asd/data/schule/SchulformKatalogEintrag';
 import { Schulgliederung } from '../../../asd/types/schule/Schulgliederung';
 import { Class } from '../../../java/lang/Class';
 import { JavaString } from '../../../java/lang/JavaString';
+import { JahrgaengeUtils } from '../../../core/utils/kataloge/jahrgaenge/JahrgaengeUtils';
 import { GostJahrgang } from '../../../core/data/gost/GostJahrgang';
 import type { Comparator } from '../../../java/util/Comparator';
 
@@ -49,10 +49,10 @@ export class GostAbiturjahrUtils extends JavaObject {
 		const sfke : SchulformKatalogEintrag | null = schulform.daten(aktuellesSchuljahr);
 		if ((sfke === null) || (!sfke.hatGymOb))
 			return null;
-		let restjahre : number | null = JahrgangsUtils.getRestlicheJahre(schulform, gliederung, jahrgang);
+		let restjahre : number | null = JahrgaengeUtils.getRestlicheJahre(schulform, gliederung, jahrgang);
 		if (restjahre === null)
 			return null;
-		if ((schulform as unknown !== Schulform.GY as unknown) && (!JahrgangsUtils.istGymOb(jahrgang)))
+		if ((schulform as unknown !== Schulform.GY as unknown) && (!JahrgaengeUtils.istGymOb(jahrgang)))
 			restjahre += 3;
 		return aktuellesSchuljahr + restjahre;
 	}

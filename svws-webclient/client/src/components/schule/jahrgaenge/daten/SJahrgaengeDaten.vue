@@ -2,16 +2,16 @@
 	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input class="contentFocusField" placeholder="Kürzel" :model-value="jahrgangListeManager().daten().kuerzel" @change="patchKuerzel" type="text" :valid="validateKuerzel" :max-len="20" :min-len="1" />
-				<svws-ui-text-input placeholder="Bezeichnung" :model-value="jahrgangListeManager().daten().bezeichnung" @change="bezeichnung => patch({ bezeichnung: bezeichnung ?? '' })" type="text" />
+				<svws-ui-text-input class="contentFocusField" placeholder="Kürzel" :model-value="manager().daten().kuerzel" @change="patchKuerzel" type="text" :valid="validateKuerzel" :max-len="20" :min-len="1" />
+				<svws-ui-text-input placeholder="Bezeichnung" :model-value="manager().daten().bezeichnung" @change="bezeichnung => patch({ bezeichnung: bezeichnung ?? '' })" type="text" />
 				<svws-ui-select title="Schulgliederung" v-model="schulgliederung" :items="Schulgliederung.getBySchuljahrAndSchulform(schuljahr, schulform)"
 					:item-text="textSchulgliederung" statistics />
 				<svws-ui-select title="Statistik-Jahrgang" v-model="statistikjahrgang" :items="Jahrgaenge.getListBySchuljahrAndSchulform(schuljahr, schulform)"
 					:item-text="textStatistikJahrgang" :empty-text="() => textStatistikJahrgang(null)" removable statistics />
 				<svws-ui-select title="Folgejahrgang" v-model="idFolgejahrgang" :items="folgejahrgaenge" :item-text="textFolgejahrgang" />
-				<svws-ui-input-number placeholder="Anzahl der Restabschnitte" :model-value="jahrgangListeManager().daten().anzahlRestabschnitte" @change="patchRestabschnitte" :valid="validateRestabschnitte" :min="0" :max="40" :required="true" />
+				<svws-ui-input-number placeholder="Anzahl der Restabschnitte" :model-value="manager().daten().anzahlRestabschnitte" @change="patchRestabschnitte" :valid="validateRestabschnitte" :min="0" :max="40" :required="true" />
 				<svws-ui-spacing />
-				<svws-ui-input-number placeholder="Sortierung" :required="true" :min="0" :model-value="jahrgangListeManager().daten().sortierung"
+				<svws-ui-input-number placeholder="Sortierung" :required="true" :min="0" :model-value="manager().daten().sortierung"
 					@change="sortierung => patch({ sortierung: sortierung ?? undefined })" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
@@ -22,19 +22,19 @@
 
 	import { computed } from "vue";
 	import { type JahrgangsDaten, Schulgliederung, Jahrgaenge } from "@core";
-	import type { JahrgangDatenProps } from "./SJahrgangDatenProps";
+	import type { JahrgangDatenProps } from "./SJahrgaengeDatenProps";
 
 	const props = defineProps<JahrgangDatenProps>();
 
 	const folgejahrgaenge = computed<JahrgangsDaten[]>(() =>
-		[...props.jahrgangListeManager().liste.list()].filter(j => j.id !== props.jahrgangListeManager().daten().id)
+		[...props.manager().liste.list()].filter(j => j.id !== props.manager().daten().id)
 	);
 
 	const idFolgejahrgang = computed<JahrgangsDaten | undefined>({
 		get: () => {
-			const idFolgejahrgang = props.jahrgangListeManager().daten().idFolgejahrgang;
+			const idFolgejahrgang = props.manager().daten().idFolgejahrgang;
 			if (idFolgejahrgang !== null) {
-				const jahrgangsDaten = props.jahrgangListeManager().liste.get(idFolgejahrgang)
+				const jahrgangsDaten = props.manager().liste.get(idFolgejahrgang)
 				return jahrgangsDaten ?? undefined;
 			}
 			return undefined;
@@ -48,7 +48,7 @@
 
 	const schulgliederung = computed<Schulgliederung | null>({
 		get: () => {
-			const kuerzel = props.jahrgangListeManager().daten().kuerzelSchulgliederung;
+			const kuerzel = props.manager().daten().kuerzelSchulgliederung;
 			if (kuerzel === null)
 				return null;
 			return Schulgliederung.data().getWertByKuerzel(kuerzel);
@@ -65,7 +65,7 @@
 
 	const statistikjahrgang = computed<Jahrgaenge | null>({
 		get: () => {
-			const kuerzel = props.jahrgangListeManager().daten().kuerzelStatistik;
+			const kuerzel = props.manager().daten().kuerzelStatistik;
 			return (kuerzel === null) ? null : Jahrgaenge.data().getWertByKuerzel(kuerzel);
 		},
 		set: (value) => {
@@ -112,8 +112,8 @@
 			return false;
 
 		// Prüfen, ob das Kürzel bereits vergeben ist
-		for (const jg of props.jahrgangListeManager().liste.list())
-			if ((jg.id !== props.jahrgangListeManager().auswahlID()) && (jg.kuerzel === kuerzel))
+		for (const jg of props.manager().liste.list())
+			if ((jg.id !== props.manager().auswahlID()) && (jg.kuerzel === kuerzel))
 				return false;
 
 		return true;

@@ -18,7 +18,7 @@ import { routeStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
 import { routeLogin } from "~/router/login/RouteLogin";
 import { routeError } from "../error/RouteError";
 import { routeSchule } from "~/router/apps/schule/RouteSchule";
-import { routeSchuleJahrgaenge } from "~/router/apps/schule/jahrgaenge/RouteSchuleJahrgaenge";
+import { routeJahrgaenge } from "~/router/apps/schule/jahrgaenge/RouteJahrgaenge";
 import { routeSchuleFaecher } from "~/router/apps/schule/faecher/RouteSchuleFaecher";
 import { routeSchuleBetriebe } from "./schule/betriebe/RouteSchuleBetriebe";
 import { routeKatalogEinwilligungsarten } from "./schule/einwilligungsarten/RouteKatalogEinwilligungsarten";
@@ -144,7 +144,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeEntlassgruende,
 			routeSchuleFaecher,
 			routeFoerderschwerpunkte,
-			routeSchuleJahrgaenge,
+			routeJahrgaenge,
 			routeMerkmale,
 			routeSportbefreiungen,
 			routeKatalogVermerkarten,

@@ -26,7 +26,7 @@ import de.svws_nrw.core.utils.DateUtils;
 import de.svws_nrw.core.utils.gost.GostAbiturjahrUtils;
 import de.svws_nrw.core.utils.gost.GostFachUtils;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
-import de.svws_nrw.core.utils.jahrgang.JahrgangsUtils;
+import de.svws_nrw.core.utils.kataloge.jahrgaenge.JahrgaengeUtils;
 import de.svws_nrw.core.utils.schueler.SprachendatenUtils;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.data.schueler.DBUtilsSchueler;
@@ -541,7 +541,7 @@ public final class DBUtilsGost {
 				final DTOJahrgang dtoJahrgang = mapJahrgaenge.get(lernabschnitt.Jahrgang_ID);
 				final Jahrgaenge jahrgang =
 						((dtoJahrgang == null) || (dtoJahrgang.ASDJahrgang == null)) ? null : Jahrgaenge.data().getWertBySchluessel(dtoJahrgang.ASDJahrgang);
-				if ((jahrgang == null) || !JahrgangsUtils.istGymOb(jahrgang.daten(schuljahr).kuerzel))
+				if ((jahrgang == null) || !JahrgaengeUtils.istGymOb(jahrgang.daten(schuljahr).kuerzel))
 					continue;
 				final GostHalbjahr halbjahr = GostHalbjahr.fromJahrgangUndHalbjahr(jahrgang.daten(schuljahr).kuerzel, abschnittLeistungsdaten.Abschnitt);
 				if (halbjahr == null)
@@ -639,7 +639,7 @@ public final class DBUtilsGost {
 				final DTOJahrgang dtoJahrgang = mapJahrgaenge.get(lernabschnitt.Jahrgang_ID);
 				final Jahrgaenge jahrgang = ((dtoJahrgang == null) || (dtoJahrgang.ASDJahrgang == null))
 						? null : Jahrgaenge.data().getWertByKuerzel(dtoJahrgang.ASDJahrgang);
-				if ((jahrgang == null) || !JahrgangsUtils.istGymOb(jahrgang.daten(daten.aktuellesSchuljahr).kuerzel))
+				if ((jahrgang == null) || !JahrgaengeUtils.istGymOb(jahrgang.daten(daten.aktuellesSchuljahr).kuerzel))
 					continue;
 				final GostHalbjahr halbjahr =
 						GostHalbjahr.fromJahrgangUndHalbjahr(jahrgang.daten(daten.aktuellesSchuljahr).kuerzel, abschnittLeistungsdaten.Abschnitt);

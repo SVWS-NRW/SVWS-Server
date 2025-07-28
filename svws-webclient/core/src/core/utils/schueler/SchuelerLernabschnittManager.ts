@@ -17,7 +17,7 @@ import { Schulgliederung } from '../../../asd/types/schule/Schulgliederung';
 import type { List } from '../../../java/util/List';
 import { Fach } from '../../../asd/types/fach/Fach';
 import { SchuelerLeistungsdaten } from '../../../asd/data/schueler/SchuelerLeistungsdaten';
-import { JahrgangsUtils } from '../../../core/utils/jahrgang/JahrgangsUtils';
+import { JahrgaengeListeManager } from '../../../core/utils/kataloge/jahrgaenge/JahrgaengeListeManager';
 import { Jahrgaenge } from '../../../asd/types/jahrgang/Jahrgaenge';
 import { SchuelerLernabschnittsdaten } from '../../../asd/data/schueler/SchuelerLernabschnittsdaten';
 import { Note } from '../../../asd/types/Note';
@@ -154,7 +154,7 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	private initJahrgaenge(jahrgaenge : List<JahrgangsDaten>) : void {
 		this._jahrgaenge.clear();
 		this._jahrgaenge.addAll(jahrgaenge);
-		this._jahrgaenge.sort(JahrgangsUtils.comparator);
+		this._jahrgaenge.sort(JahrgaengeListeManager.comparator);
 		this._mapJahrgangByID.clear();
 		for (const j of jahrgaenge)
 			this._mapJahrgangByID.put(j.id, j);

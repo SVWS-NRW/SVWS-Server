@@ -1,29 +1,12 @@
-import { JavaObject } from '../../../java/lang/JavaObject';
-import { IllegalStateException } from '../../../java/lang/IllegalStateException';
-import { Jahrgaenge } from '../../../asd/types/jahrgang/Jahrgaenge';
-import { Schulform } from '../../../asd/types/schule/Schulform';
-import { SchulformKatalogEintrag } from '../../../asd/data/schule/SchulformKatalogEintrag';
-import { JavaLong } from '../../../java/lang/JavaLong';
-import { Schulgliederung } from '../../../asd/types/schule/Schulgliederung';
-import { JahrgangsDaten } from '../../../core/data/jahrgang/JahrgangsDaten';
-import { Class } from '../../../java/lang/Class';
-import { JavaString } from '../../../java/lang/JavaString';
-import type { Comparator } from '../../../java/util/Comparator';
+import { JavaObject } from '../../../../java/lang/JavaObject';
+import { IllegalStateException } from '../../../../java/lang/IllegalStateException';
+import { Jahrgaenge } from '../../../../asd/types/jahrgang/Jahrgaenge';
+import { Schulform } from '../../../../asd/types/schule/Schulform';
+import { SchulformKatalogEintrag } from '../../../../asd/data/schule/SchulformKatalogEintrag';
+import { Schulgliederung } from '../../../../asd/types/schule/Schulgliederung';
+import { Class } from '../../../../java/lang/Class';
 
-export class JahrgangsUtils extends JavaObject {
-
-	/**
-	 * Ein Default-Comparator für den Vergleich von Jahrgängen in Jahrgangslisten.
-	 */
-	public static readonly comparator : Comparator<JahrgangsDaten> = { compare : (a: JahrgangsDaten, b: JahrgangsDaten) => {
-		let cmp : number = a.sortierung - b.sortierung;
-		if (cmp !== 0)
-			return cmp;
-		if ((a.kuerzel === null) || (b.kuerzel === null))
-			return JavaLong.compare(a.id, b.id);
-		cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
-		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
-	} };
+export class JahrgaengeUtils extends JavaObject {
 
 
 	private constructor() {
@@ -251,17 +234,17 @@ export class JahrgangsUtils extends JavaObject {
 	}
 
 	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.core.utils.jahrgang.JahrgangsUtils';
+		return 'de.svws_nrw.core.utils.kataloge.jahrgaenge.JahrgaengeUtils';
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.utils.jahrgang.JahrgangsUtils'].includes(name);
+		return ['de.svws_nrw.core.utils.kataloge.jahrgaenge.JahrgaengeUtils'].includes(name);
 	}
 
-	public static class = new Class<JahrgangsUtils>('de.svws_nrw.core.utils.jahrgang.JahrgangsUtils');
+	public static class = new Class<JahrgaengeUtils>('de.svws_nrw.core.utils.kataloge.jahrgaenge.JahrgaengeUtils');
 
 }
 
-export function cast_de_svws_nrw_core_utils_jahrgang_JahrgangsUtils(obj : unknown) : JahrgangsUtils {
-	return obj as JahrgangsUtils;
+export function cast_de_svws_nrw_core_utils_kataloge_jahrgaenge_JahrgaengeUtils(obj : unknown) : JahrgaengeUtils {
+	return obj as JahrgaengeUtils;
 }

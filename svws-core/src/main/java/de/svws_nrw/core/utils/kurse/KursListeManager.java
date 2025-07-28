@@ -1,5 +1,6 @@
 package de.svws_nrw.core.utils.kurse;
 
+import de.svws_nrw.core.utils.kataloge.jahrgaenge.JahrgaengeListeManager;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -23,7 +24,6 @@ import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.core.utils.AttributMitAuswahl;
 import de.svws_nrw.core.utils.AuswahlManager;
-import de.svws_nrw.core.utils.jahrgang.JahrgangsUtils;
 import de.svws_nrw.core.utils.lehrer.LehrerUtils;
 import de.svws_nrw.core.utils.schueler.SchuelerUtils;
 import jakarta.validation.constraints.NotNull;
@@ -124,7 +124,7 @@ public final class KursListeManager extends AuswahlManager<Long, KursDaten, Kurs
 		this.schuelerstatus =
 				new AttributMitAuswahl<>(Arrays.asList(SchuelerStatus.values()), _schuelerstatusToId, _comparatorSchuelerStatus, _eventHandlerFilterChanged);
 		this.schueler = new AttributMitAuswahl<>(schueler, _schuelerToId, SchuelerUtils.comparator, _eventHandlerFilterChanged);
-		this.jahrgaenge = new AttributMitAuswahl<>(jahrgaenge, _jahrgangToId, JahrgangsUtils.comparator, _eventHandlerFilterChanged);
+		this.jahrgaenge = new AttributMitAuswahl<>(jahrgaenge, _jahrgangToId, JahrgaengeListeManager.comparator, _eventHandlerFilterChanged);
 		this.lehrer = new AttributMitAuswahl<>(lehrer, _lehrerToId, LehrerUtils.comparatorKuerzel, _eventHandlerFilterChanged);
 		this.faecher = new AttributMitAuswahl<>(faecher, _fachToId, comparatorFaecherListe, _eventHandlerFilterChanged);
 		final @NotNull List<Schulgliederung> gliederungen =
@@ -273,7 +273,7 @@ public final class KursListeManager extends AuswahlManager<Long, KursDaten, Kurs
 					else if (jb == null)
 						cmp = 1;
 					else
-						cmp = JahrgangsUtils.comparator.compare(ja, jb);
+						cmp = JahrgaengeListeManager.comparator.compare(ja, jb);
 				}
 			} else if ("schueler".equals(field)) {
 				cmp = Integer.compare(a.schueler.size(), b.schueler.size());

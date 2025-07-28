@@ -1,5 +1,6 @@
 package de.svws_nrw.core.utils.schueler;
 
+import de.svws_nrw.core.utils.kataloge.jahrgaenge.JahrgaengeListeManager;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -28,7 +29,6 @@ import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.core.utils.AttributMitAuswahl;
 import de.svws_nrw.core.utils.AuswahlManager;
 import de.svws_nrw.core.utils.gost.GostAbiturjahrUtils;
-import de.svws_nrw.core.utils.jahrgang.JahrgangsUtils;
 import de.svws_nrw.core.utils.klassen.KlassenUtils;
 import de.svws_nrw.core.utils.kurse.KursUtils;
 import de.svws_nrw.core.utils.lehrer.LehrerUtils;
@@ -123,7 +123,7 @@ public final class SchuelerListeManager extends AuswahlManager<Long, SchuelerLis
 				aktuelleKlassen.add(klasse);
 		}
 		this.klassen = new AttributMitAuswahl<>(aktuelleKlassen, _klasseToId, KlassenUtils.comparator, _eventHandlerFilterChanged);
-		this.jahrgaenge = new AttributMitAuswahl<>(daten.jahrgaenge, _jahrgangToId, JahrgangsUtils.comparator, _eventHandlerFilterChanged);
+		this.jahrgaenge = new AttributMitAuswahl<>(daten.jahrgaenge, _jahrgangToId, JahrgaengeListeManager.comparator, _eventHandlerFilterChanged);
 		this.kurse = new AttributMitAuswahl<>(daten.kurse, _kursToId, KursUtils.comparator, _eventHandlerFilterChanged);
 		this.abiturjahrgaenge = new AttributMitAuswahl<>(daten.jahrgaengeGost, _abiturjahrgangToId, GostAbiturjahrUtils.comparator, _eventHandlerFilterChanged);
 		final @NotNull List<Schulgliederung> gliederungen =

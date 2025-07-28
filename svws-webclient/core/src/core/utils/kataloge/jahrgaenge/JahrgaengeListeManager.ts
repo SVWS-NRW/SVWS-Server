@@ -1,22 +1,38 @@
-import { JavaObject } from '../../../java/lang/JavaObject';
-import { Schulform } from '../../../asd/types/schule/Schulform';
-import { JahrgangsDaten } from '../../../core/data/jahrgang/JahrgangsDaten';
-import { JavaString } from '../../../java/lang/JavaString';
-import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
-import { AuswahlManager } from '../../../core/utils/AuswahlManager';
-import type { JavaFunction } from '../../../java/util/function/JavaFunction';
-import { JahrgangsUtils } from '../../../core/utils/jahrgang/JahrgangsUtils';
-import type { List } from '../../../java/util/List';
-import { Class } from '../../../java/lang/Class';
-import { Arrays } from '../../../java/util/Arrays';
-import { Schuljahresabschnitt } from '../../../asd/data/schule/Schuljahresabschnitt';
+import { JavaObject } from '../../../../java/lang/JavaObject';
+import { Schulform } from '../../../../asd/types/schule/Schulform';
+import { JahrgangsDaten } from '../../../../core/data/jahrgang/JahrgangsDaten';
+import { JavaString } from '../../../../java/lang/JavaString';
+import { DeveloperNotificationException } from '../../../../core/exceptions/DeveloperNotificationException';
+import type { Comparator } from '../../../../java/util/Comparator';
+import { AuswahlManager } from '../../../../core/utils/AuswahlManager';
+import type { JavaFunction } from '../../../../java/util/function/JavaFunction';
+import { JavaLong } from '../../../../java/lang/JavaLong';
+import type { List } from '../../../../java/util/List';
+import { Class } from '../../../../java/lang/Class';
+import { Arrays } from '../../../../java/util/Arrays';
+import { Schuljahresabschnitt } from '../../../../asd/data/schule/Schuljahresabschnitt';
 
-export class JahrgangListeManager extends AuswahlManager<number, JahrgangsDaten, JahrgangsDaten> {
+export class JahrgaengeListeManager extends AuswahlManager<number, JahrgangsDaten, JahrgangsDaten> {
 
 	/**
 	 * Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ
 	 */
 	private static readonly _jahrgangToId : JavaFunction<JahrgangsDaten, number> = { apply : (j: JahrgangsDaten) => j.id };
+
+	/**
+	 * Ein Default-Comparator für den Vergleich von Jahrgängen in Jahrgangslisten.
+	 */
+	public static readonly comparator : Comparator<JahrgangsDaten> = { compare : (a: JahrgangsDaten, b: JahrgangsDaten) => {
+		let cmp : number = a.sortierung - b.sortierung;
+		if (cmp !== 0)
+			return cmp;
+		if ((a.kuerzel !== null) && (b.kuerzel !== null)) {
+			cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
+			if (cmp !== 0)
+				return cmp;
+		}
+		return JavaLong.compare(a.id, b.id);
+	} };
 
 
 	/**
@@ -29,7 +45,7 @@ export class JahrgangListeManager extends AuswahlManager<number, JahrgangsDaten,
 	 * @param jahrgaenge       die Liste der Jahrgänge
 	 */
 	public constructor(schuljahresabschnitt : number, schuljahresabschnittSchule : number, schuljahresabschnitte : List<Schuljahresabschnitt>, schulform : Schulform | null, jahrgaenge : List<JahrgangsDaten>) {
-		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, jahrgaenge, JahrgangsUtils.comparator, JahrgangListeManager._jahrgangToId, JahrgangListeManager._jahrgangToId, Arrays.asList());
+		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, jahrgaenge, JahrgaengeListeManager.comparator, JahrgaengeListeManager._jahrgangToId, JahrgaengeListeManager._jahrgangToId, Arrays.asList());
 	}
 
 	/**
@@ -87,7 +103,7 @@ export class JahrgangListeManager extends AuswahlManager<number, JahrgangsDaten,
 				continue;
 			return asc ? cmp : -cmp;
 		}
-		return JahrgangsUtils.comparator.compare(a, b);
+		return JahrgaengeListeManager.comparator.compare(a, b);
 	}
 
 	protected checkFilter(eintrag : JahrgangsDaten) : boolean {
@@ -95,17 +111,17 @@ export class JahrgangListeManager extends AuswahlManager<number, JahrgangsDaten,
 	}
 
 	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.core.utils.jahrgang.JahrgangListeManager';
+		return 'de.svws_nrw.core.utils.kataloge.jahrgaenge.JahrgaengeListeManager';
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.utils.AuswahlManager', 'de.svws_nrw.core.utils.jahrgang.JahrgangListeManager'].includes(name);
+		return ['de.svws_nrw.core.utils.AuswahlManager', 'de.svws_nrw.core.utils.kataloge.jahrgaenge.JahrgaengeListeManager'].includes(name);
 	}
 
-	public static class = new Class<JahrgangListeManager>('de.svws_nrw.core.utils.jahrgang.JahrgangListeManager');
+	public static class = new Class<JahrgaengeListeManager>('de.svws_nrw.core.utils.kataloge.jahrgaenge.JahrgaengeListeManager');
 
 }
 
-export function cast_de_svws_nrw_core_utils_jahrgang_JahrgangListeManager(obj : unknown) : JahrgangListeManager {
-	return obj as JahrgangListeManager;
+export function cast_de_svws_nrw_core_utils_kataloge_jahrgaenge_JahrgaengeListeManager(obj : unknown) : JahrgaengeListeManager {
+	return obj as JahrgaengeListeManager;
 }

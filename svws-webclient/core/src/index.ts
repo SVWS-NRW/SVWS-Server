@@ -791,14 +791,14 @@ export { KlausurterminblockungAlgorithmusGreedy2 } from './core/utils/gost/klaus
 export { KlausurterminblockungAlgorithmusGreedy2b } from './core/utils/gost/klausurplanung/KlausurterminblockungAlgorithmusGreedy2b';
 export { KlausurterminblockungAlgorithmusGreedy3 } from './core/utils/gost/klausurplanung/KlausurterminblockungAlgorithmusGreedy3';
 export { KlausurterminblockungDynDaten } from './core/utils/gost/klausurplanung/KlausurterminblockungDynDaten';
-export { JahrgangListeManager } from './core/utils/jahrgang/JahrgangListeManager';
-export { JahrgangsUtils } from './core/utils/jahrgang/JahrgangsUtils';
 export { AbteilungenListeManager } from './core/utils/kataloge/abteilungen/AbteilungenListeManager';
 export { BeschaeftigungsartenListeManager } from './core/utils/kataloge/beschaeftigungsarten/BeschaeftigungsartenListeManager';
 export { EntlassgruendeListeManager } from './core/utils/kataloge/entlassgruende/EntlassgruendeListeManager';
 export { FahrschuelerartenListeManager } from './core/utils/kataloge/fahrschuelerarten/FahrschuelerartenListeManager';
 export { FoerderschwerpunkteListeManager } from './core/utils/kataloge/foerderschwerpunkte/FoerderschwerpunkteListeManager';
 export { HaltestellenListeManager } from './core/utils/kataloge/haltestellen/HaltestellenListeManager';
+export { JahrgaengeListeManager } from './core/utils/kataloge/jahrgaenge/JahrgaengeListeManager';
+export { JahrgaengeUtils } from './core/utils/kataloge/jahrgaenge/JahrgaengeUtils';
 export { KindergaertenListeManager } from './core/utils/kataloge/kindergaerten/KindergaertenListeManager';
 export { MerkmaleListeManager } from './core/utils/kataloge/merkmale/MerkmaleListeManager';
 export { SportbefreiungenListeManager } from './core/utils/kataloge/sportbefreiungen/SportbefreiungenListeManager';

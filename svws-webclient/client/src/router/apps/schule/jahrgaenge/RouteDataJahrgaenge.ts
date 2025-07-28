@@ -1,36 +1,36 @@
-import { ArrayList, JahrgangListeManager, type JahrgangsDaten, type List, type SimpleOperationResponse} from "@core";
+import { ArrayList, JahrgaengeListeManager, type JahrgangsDaten, type List, type SimpleOperationResponse} from "@core";
 
-import { routeSchuleJahrgaengeDaten } from "./RouteSchuleJahrgaengeDaten";
+import { routeJahrgaengeDaten } from "./RouteJahrgaengeDaten";
 import { ViewType } from "@ui";
 import { api } from "~/router/Api";
-import { routeSchuleJahrgangNeu } from "~/router/apps/schule/jahrgaenge/RouteSchuleJahrgangNeu";
-import { routeSchuleJahrgangGruppenprozesse } from "~/router/apps/schule/jahrgaenge/RouteSchuleJahrgangGruppenprozesse";
+import { routeJahrgaengeNeu } from "~/router/apps/schule/jahrgaenge/RouteJahrgaengeNeu";
+import { routeJahrgaengeGruppenprozesse } from "~/router/apps/schule/jahrgaenge/RouteJahrgaengeGruppenprozesse";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import type {RouteParamsRawGeneric} from "vue-router";
 
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,
-	manager: new JahrgangListeManager(-1, -1, new ArrayList(), null, new ArrayList()),
-	view: routeSchuleJahrgaengeDaten,
+	manager: new JahrgaengeListeManager(-1, -1, new ArrayList(), null, new ArrayList()),
+	view: routeJahrgaengeDaten,
 	activeViewType: ViewType.DEFAULT,
 	oldView: undefined,
 };
 
 
-export class RouteDataSchuleJahrgaenge extends RouteDataAuswahl<JahrgangListeManager, RouteStateAuswahlInterface<JahrgangListeManager>> {
+export class RouteDataJahrgaenge extends RouteDataAuswahl<JahrgaengeListeManager, RouteStateAuswahlInterface<JahrgaengeListeManager>> {
 
 	public constructor() {
-		super(defaultState, { gruppenprozesse: routeSchuleJahrgangGruppenprozesse, hinzufuegen: routeSchuleJahrgangNeu });
+		super(defaultState, { gruppenprozesse: routeJahrgaengeGruppenprozesse, hinzufuegen: routeJahrgaengeNeu });
 	}
 
 	public addID(param: RouteParamsRawGeneric, id: number): void {
 		param.id = id;
 	}
 
-	protected async createManager(_ : number) : Promise<Partial<RouteStateAuswahlInterface<JahrgangListeManager>>> {
+	protected async createManager(_ : number) : Promise<Partial<RouteStateAuswahlInterface<JahrgaengeListeManager>>> {
 		const jahrgaenge = await api.server.getJahrgaenge(api.schema);
-		const manager = new JahrgangListeManager(api.abschnitt.id, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte, api.schulform, jahrgaenge);
+		const manager = new JahrgaengeListeManager(api.abschnitt.id, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte, api.schulform, jahrgaenge);
 
 		return { manager };
 	}

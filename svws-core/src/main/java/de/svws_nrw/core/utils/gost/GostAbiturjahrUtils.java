@@ -6,7 +6,7 @@ import de.svws_nrw.asd.data.schule.SchulformKatalogEintrag;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.core.data.gost.GostJahrgang;
-import de.svws_nrw.core.utils.jahrgang.JahrgangsUtils;
+import de.svws_nrw.core.utils.kataloge.jahrgaenge.JahrgaengeUtils;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -51,10 +51,10 @@ public final class GostAbiturjahrUtils {
 		final SchulformKatalogEintrag sfke = schulform.daten(aktuellesSchuljahr);
 		if ((sfke == null) || (!sfke.hatGymOb))
 			return null;
-		Integer restjahre = JahrgangsUtils.getRestlicheJahre(schulform, gliederung, jahrgang);
+		Integer restjahre = JahrgaengeUtils.getRestlicheJahre(schulform, gliederung, jahrgang);
 		if (restjahre == null)
 			return null;
-		if ((schulform != Schulform.GY) && (!JahrgangsUtils.istGymOb(jahrgang)))
+		if ((schulform != Schulform.GY) && (!JahrgaengeUtils.istGymOb(jahrgang)))
 			restjahre += 3;
 		return aktuellesSchuljahr + restjahre;
 	}

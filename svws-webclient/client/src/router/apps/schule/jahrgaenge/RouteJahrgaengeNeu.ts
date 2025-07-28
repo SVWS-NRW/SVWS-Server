@@ -5,16 +5,16 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeApp } from "../../RouteApp";
 import { ViewType } from "@ui";
 import { RouteManager } from "~/router/RouteManager";
-import { routeSchuleJahrgaenge } from "./RouteSchuleJahrgaenge";
-import type { RouteSchuleJahrgaenge } from "~/router/apps/schule/jahrgaenge/RouteSchuleJahrgaenge";
-import type { SchuleJahrgangNeuProps } from "~/components/schule/jahrgaenge/SSchuleJahrgangNeuProps";
+import { routeJahrgaenge } from "./RouteJahrgaenge";
+import type { RouteJahrgaenge } from "~/router/apps/schule/jahrgaenge/RouteJahrgaenge";
+import type { SchuleJahrgangNeuProps } from "~/components/schule/jahrgaenge/SJahrgaengeNeuProps";
 
-const SSchuleJahrgangNeu = () => import("~/components/schule/jahrgaenge/SSchuleJahrgangNeu.vue");
+const SJahrgaengeNeu = () => import("~/components/schule/jahrgaenge/SJahrgaengeNeu.vue");
 
-export class RouteSchuleJahrgangNeu extends RouteNode<any, RouteSchuleJahrgaenge> {
+export class RouteJahrgaengeNeu extends RouteNode<any, RouteJahrgaenge> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN ], "schule.jahrgaenge.neu", "neu", SSchuleJahrgangNeu);
+		super(Schulform.values(), [ BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN ], "schule.jahrgaenge.neu", "neu", SJahrgaengeNeu);
 		super.types = new Set([ ViewType.HINZUFUEGEN ]);
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
@@ -28,13 +28,13 @@ export class RouteSchuleJahrgangNeu extends RouteNode<any, RouteSchuleJahrgaenge
 
 	public getProps(to: RouteLocationNormalized): SchuleJahrgangNeuProps {
 		return {
-			jahrgangListeManager: () => routeSchuleJahrgaenge.data.manager,
-			add: routeSchuleJahrgaenge.data.add,
-			gotoDefaultView: routeSchuleJahrgaenge.data.gotoDefaultView,
+			manager: () => routeJahrgaenge.data.manager,
+			add: routeJahrgaenge.data.add,
+			gotoDefaultView: routeJahrgaenge.data.gotoDefaultView,
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
 		};
 	}
 }
 
-export const routeSchuleJahrgangNeu = new RouteSchuleJahrgangNeu();
+export const routeJahrgaengeNeu = new RouteJahrgaengeNeu();

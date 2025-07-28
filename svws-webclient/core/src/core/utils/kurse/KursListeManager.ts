@@ -19,10 +19,10 @@ import type { List } from '../../../java/util/List';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 import { Pair } from '../../../asd/adt/Pair';
 import { AttributMitAuswahl } from '../../../core/utils/AttributMitAuswahl';
+import { JahrgaengeListeManager } from '../../../core/utils/kataloge/jahrgaenge/JahrgaengeListeManager';
 import { FaecherListeEintrag } from '../../../core/data/fach/FaecherListeEintrag';
 import { AuswahlManager } from '../../../core/utils/AuswahlManager';
 import { JavaInteger } from '../../../java/lang/JavaInteger';
-import { JahrgangsUtils } from '../../../core/utils/jahrgang/JahrgangsUtils';
 import { LehrerUtils } from '../../../core/utils/lehrer/LehrerUtils';
 import { Schueler } from '../../../asd/data/schueler/Schueler';
 import type { Runnable } from '../../../java/lang/Runnable';
@@ -155,7 +155,7 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, kurse, KursUtils.comparator, KursListeManager._kursToId, KursListeManager._kursToId, Arrays.asList(new Pair("idJahrgaenge", true), new Pair("kuerzel", true)));
 		this.schuelerstatus = new AttributMitAuswahl(Arrays.asList(...SchuelerStatus.values()), this._schuelerstatusToId, KursListeManager._comparatorSchuelerStatus, this._eventHandlerFilterChanged);
 		this.schueler = new AttributMitAuswahl(schueler, KursListeManager._schuelerToId, SchuelerUtils.comparator, this._eventHandlerFilterChanged);
-		this.jahrgaenge = new AttributMitAuswahl(jahrgaenge, KursListeManager._jahrgangToId, JahrgangsUtils.comparator, this._eventHandlerFilterChanged);
+		this.jahrgaenge = new AttributMitAuswahl(jahrgaenge, KursListeManager._jahrgangToId, JahrgaengeListeManager.comparator, this._eventHandlerFilterChanged);
 		this.lehrer = new AttributMitAuswahl(lehrer, KursListeManager._lehrerToId, LehrerUtils.comparatorKuerzel, this._eventHandlerFilterChanged);
 		this.faecher = new AttributMitAuswahl(faecher, KursListeManager._fachToId, KursListeManager.comparatorFaecherListe, this._eventHandlerFilterChanged);
 		const gliederungen : List<Schulgliederung> = (schulform === null) ? Arrays.asList(...Schulgliederung.values()) : Schulgliederung.getBySchuljahrAndSchulform(this.getSchuljahr(), schulform);
@@ -301,7 +301,7 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 											if (jb === null)
 												cmp = 1;
 											else
-												cmp = JahrgangsUtils.comparator.compare(ja, jb);
+												cmp = JahrgaengeListeManager.comparator.compare(ja, jb);
 								}
 					} else
 						if (JavaObject.equalsTranspiler("schueler", (field))) {

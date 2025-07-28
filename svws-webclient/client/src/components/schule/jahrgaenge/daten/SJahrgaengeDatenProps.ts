@@ -1,8 +1,8 @@
-import type { JahrgangListeManager, JahrgangsDaten, Schulform } from "@core";
+import type { JahrgaengeListeManager, JahrgangsDaten, Schulform } from "@core";
 
 export interface JahrgangDatenProps {
 	schuljahr: number;
 	schulform: Schulform;
-	jahrgangListeManager: () => JahrgangListeManager;
+	manager: () => JahrgaengeListeManager;
 	patch: (data : Partial<JahrgangsDaten>) => Promise<void>;
 }

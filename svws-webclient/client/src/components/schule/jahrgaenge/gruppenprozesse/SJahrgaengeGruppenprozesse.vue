@@ -34,7 +34,7 @@
 <script setup lang="ts">
 
 	import { ref, computed } from "vue";
-	import type { SchuleJahrgangGruppenprozesseProps } from "./SSchuleJahrgangGruppenprozesseProps";
+	import type { SchuleJahrgangGruppenprozesseProps } from "./SJahrgaengeGruppenprozesseProps";
 	import type { List } from "@core";
 	import { ServerMode } from "@core";
 

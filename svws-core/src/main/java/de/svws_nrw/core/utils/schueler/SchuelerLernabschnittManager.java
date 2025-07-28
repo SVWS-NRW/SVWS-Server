@@ -1,5 +1,6 @@
 package de.svws_nrw.core.utils.schueler;
 
+import de.svws_nrw.core.utils.kataloge.jahrgaenge.JahrgaengeListeManager;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -22,7 +23,6 @@ import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
-import de.svws_nrw.core.utils.jahrgang.JahrgangsUtils;
 import de.svws_nrw.core.utils.klassen.KlassenUtils;
 import de.svws_nrw.core.utils.kurse.KursUtils;
 import jakarta.validation.constraints.NotNull;
@@ -163,7 +163,7 @@ public class SchuelerLernabschnittManager {
 	private void initJahrgaenge(final @NotNull List<JahrgangsDaten> jahrgaenge) {
 		this._jahrgaenge.clear();
 		this._jahrgaenge.addAll(jahrgaenge);
-		this._jahrgaenge.sort(JahrgangsUtils.comparator);
+		this._jahrgaenge.sort(JahrgaengeListeManager.comparator);
 		this._mapJahrgangByID.clear();
 		for (final @NotNull JahrgangsDaten j : jahrgaenge)
 			this._mapJahrgangByID.put(j.id, j);

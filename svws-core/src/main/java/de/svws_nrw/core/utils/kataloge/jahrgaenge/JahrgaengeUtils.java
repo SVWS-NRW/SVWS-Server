@@ -1,36 +1,20 @@
-package de.svws_nrw.core.utils.jahrgang;
+package de.svws_nrw.core.utils.kataloge.jahrgaenge;
 
-import java.util.Comparator;
 
 import de.svws_nrw.asd.data.schule.SchulformKatalogEintrag;
 import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
-import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
 import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse stellt Hilfsmethoden in Bezug auf Jahrgänge zur Verfügung.
  */
-public final class JahrgangsUtils {
+public final class JahrgaengeUtils {
 
-	private JahrgangsUtils() {
+	private JahrgaengeUtils() {
 		throw new IllegalStateException("Instantiation not allowed");
 	}
-
-
-	/** Ein Default-Comparator für den Vergleich von Jahrgängen in Jahrgangslisten. */
-	public static final @NotNull Comparator<JahrgangsDaten> comparator =
-			(final @NotNull JahrgangsDaten a, final @NotNull JahrgangsDaten b) -> {
-				int cmp = a.sortierung - b.sortierung;
-				if (cmp != 0)
-					return cmp;
-				if ((a.kuerzel == null) || (b.kuerzel == null))
-					return Long.compare(a.id, b.id);
-				cmp = a.kuerzel.compareTo(b.kuerzel);
-				return (cmp == 0) ? Long.compare(a.id, b.id) : cmp;
-			};
-
 
 	/**
 	 * Bestimmt für die angegebene Schulform, die übergebene Schulgliederung (auch beim Schüler eingetragenen Schulgliederung)

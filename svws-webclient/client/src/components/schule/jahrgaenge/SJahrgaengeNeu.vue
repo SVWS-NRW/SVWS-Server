@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-	import type { SchuleJahrgangNeuProps } from "./SSchuleJahrgangNeuProps";
+	import type { SchuleJahrgangNeuProps } from "./SJahrgaengeNeuProps";
 
 	const props = defineProps<SchuleJahrgangNeuProps>();
 </script>

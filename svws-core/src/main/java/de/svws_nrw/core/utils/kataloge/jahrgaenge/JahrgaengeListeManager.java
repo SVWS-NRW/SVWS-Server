@@ -1,6 +1,7 @@
-package de.svws_nrw.core.utils.jahrgang;
+package de.svws_nrw.core.utils.kataloge.jahrgaenge;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 
@@ -15,11 +16,26 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Ein Manager zum Verwalten der Jahrgangs-Listen.
  */
-public final class JahrgangListeManager extends AuswahlManager<Long, JahrgangsDaten, JahrgangsDaten> {
+public final class JahrgaengeListeManager extends AuswahlManager<Long, JahrgangsDaten, JahrgangsDaten> {
 
 	/** Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ */
 	private static final @NotNull Function<JahrgangsDaten, Long> _jahrgangToId = (final @NotNull JahrgangsDaten j) -> j.id;
 
+	/** Ein Default-Comparator für den Vergleich von Jahrgängen in Jahrgangslisten. */
+	public static final @NotNull Comparator<JahrgangsDaten> comparator =
+			(final @NotNull JahrgangsDaten a, final @NotNull JahrgangsDaten b) -> {
+				int cmp = a.sortierung - b.sortierung;
+				if (cmp != 0)
+					return cmp;
+
+				if ((a.kuerzel != null) && (b.kuerzel != null)) {
+					cmp = a.kuerzel.compareTo(b.kuerzel);
+					if (cmp != 0)
+						return cmp;
+				}
+
+				return Long.compare(a.id, b.id);
+			};
 
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
@@ -30,9 +46,9 @@ public final class JahrgangListeManager extends AuswahlManager<Long, JahrgangsDa
 	 * @param schulform     die Schulform der Schule
 	 * @param jahrgaenge       die Liste der Jahrgänge
 	 */
-	public JahrgangListeManager(final long schuljahresabschnitt, final long schuljahresabschnittSchule,
+	public JahrgaengeListeManager(final long schuljahresabschnitt, final long schuljahresabschnittSchule,
 			final @NotNull List<Schuljahresabschnitt> schuljahresabschnitte, final Schulform schulform, final @NotNull List<JahrgangsDaten> jahrgaenge) {
-		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, jahrgaenge, JahrgangsUtils.comparator, _jahrgangToId,
+		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, jahrgaenge, JahrgaengeListeManager.comparator, _jahrgangToId,
 				_jahrgangToId,  Arrays.asList());
 	}
 
@@ -94,7 +110,7 @@ public final class JahrgangListeManager extends AuswahlManager<Long, JahrgangsDa
 				continue;
 			return asc ? cmp : -cmp;
 		}
-		return JahrgangsUtils.comparator.compare(a, b);
+		return comparator.compare(a, b);
 	}
 
 
@@ -102,9 +118,5 @@ public final class JahrgangListeManager extends AuswahlManager<Long, JahrgangsDa
 	protected boolean checkFilter(final @NotNull JahrgangsDaten eintrag) {
 		return true;
 	}
-
-	// public void useFilter(final @NotNull JahrgangListeManager srcManager) {
-	// 	return;
-	// }
 
 }
