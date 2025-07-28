@@ -3362,6 +3362,37 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der DELETE-Methode deleteErzieherStammdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/erzieher/stammdaten/multiple
+	 *
+	 * Entfernt einen oder mehrerer Erziehungsberechtigte bei Schülern, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Erziehungsberechtigte wurden erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Long>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Erziehungsberechtigte zu entfernen.
+	 *   Code 404: Mindestens ein Erziehungsberechtigter ist nicht vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Erziehungsberechtigte wurden erfolgreich entfernt.
+	 */
+	public async deleteErzieherStammdaten(data : List<number>, schema : string) : Promise<List<number>> {
+		const path = "/db/{schema}/erzieher/stammdaten/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<number>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(parseFloat(JSON.parse(text))); });
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode exportSQLite für den Zugriff auf die URL https://{hostname}/db/{schema}/export/sqlite
 	 *
 	 * Exportiert das aktuelle Schema in eine neu erstellte SQLite-Datenbank. Der Aufruf erfordert administrative Rechte.

@@ -27,6 +27,7 @@ ArrayList {
   "addLast": [Function],
   "elementData": [
     Erzieherart {
+      "anzahlErziehungsberechtigte": 32,
       "bezeichnung": "Vater",
       "exportBez": "",
       "id": 1,
@@ -34,6 +35,7 @@ ArrayList {
       "sortierung": 1,
     },
     Erzieherart {
+      "anzahlErziehungsberechtigte": 39,
       "bezeichnung": "Mutter",
       "exportBez": "",
       "id": 2,
@@ -41,6 +43,7 @@ ArrayList {
       "sortierung": 2,
     },
     Erzieherart {
+      "anzahlErziehungsberechtigte": 152,
       "bezeichnung": "Schüler ist volljährig",
       "exportBez": "",
       "id": 3,
@@ -48,6 +51,7 @@ ArrayList {
       "sortierung": 3,
     },
     Erzieherart {
+      "anzahlErziehungsberechtigte": 162,
       "bezeichnung": "Schülerin ist volljährig",
       "exportBez": "",
       "id": 4,
@@ -55,6 +59,7 @@ ArrayList {
       "sortierung": 4,
     },
     Erzieherart {
+      "anzahlErziehungsberechtigte": 269,
       "bezeichnung": "Eltern",
       "exportBez": "",
       "id": 5,
@@ -62,6 +67,7 @@ ArrayList {
       "sortierung": 5,
     },
     Erzieherart {
+      "anzahlErziehungsberechtigte": 0,
       "bezeichnung": "Sonstige",
       "exportBez": "",
       "id": 6,
@@ -69,6 +75,7 @@ ArrayList {
       "sortierung": 6,
     },
     Erzieherart {
+      "anzahlErziehungsberechtigte": 0,
       "bezeichnung": "Partner",
       "exportBez": "",
       "id": 7,
@@ -76,6 +83,7 @@ ArrayList {
       "sortierung": 7,
     },
     Erzieherart {
+      "anzahlErziehungsberechtigte": 0,
       "bezeichnung": "Gastmutter",
       "exportBez": "",
       "id": 8,
@@ -83,6 +91,7 @@ ArrayList {
       "sortierung": 8,
     },
     Erzieherart {
+      "anzahlErziehungsberechtigte": 0,
       "bezeichnung": "Großeltern",
       "exportBez": "",
       "id": 9,
@@ -90,6 +99,7 @@ ArrayList {
       "sortierung": 9,
     },
     Erzieherart {
+      "anzahlErziehungsberechtigte": 0,
       "bezeichnung": "Pflegeeltern (Vollzeitpflege)",
       "exportBez": "",
       "id": 10,
@@ -97,6 +107,7 @@ ArrayList {
       "sortierung": 10,
     },
     Erzieherart {
+      "anzahlErziehungsberechtigte": 0,
       "bezeichnung": "Kinderheim",
       "exportBez": "",
       "id": 11,

@@ -2,7 +2,9 @@ package de.svws_nrw.core.utils.erzieherart;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 
 import de.svws_nrw.asd.adt.Pair;
@@ -20,6 +22,9 @@ public final class ErzieherartListeManager extends AuswahlManager<Long, Erzieher
 
 	/** Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ */
 	private static final @NotNull Function<Erzieherart, Long> _erzieherartenToId = (final @NotNull Erzieherart ea) -> ea.id;
+
+	/** Sets mit Listen zur aktuellen Auswahl */
+	private final @NotNull HashSet<Long> setErzieherartIDsMitPersonen = new HashSet<>();
 
 	/** Ein Default-Comparator für den Vergleich von Erzieherarten in Erzieherartlisten. */
 	public static final @NotNull Comparator<Erzieherart> comparator =
@@ -46,6 +51,22 @@ public final class ErzieherartListeManager extends AuswahlManager<Long, Erzieher
 			final @NotNull List<Schuljahresabschnitt> schuljahresabschnitte, final Schulform schulform, final @NotNull List<Erzieherart> listErzieherart) {
 		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, listErzieherart, ErzieherartListeManager.comparator,
 				_erzieherartenToId, _erzieherartenToId, Arrays.asList(new Pair<>("erzieherart", true)));
+	}
+
+	/** Gibt das Set mit den ErzieherartIds zurück, die in der Auswahl sind und Erziehungsberechtigte beinhalten
+	 *
+	 * @return Das Set mit IDs von Erzieherarten, die Schüler haben
+	 */
+	public @NotNull Set<Long> getErzieherartIDsMitPersonen() {
+		return this.setErzieherartIDsMitPersonen;
+	}
+
+	@Override
+	protected void onMehrfachauswahlChanged() {
+		this.setErzieherartIDsMitPersonen.clear();
+		for (final @NotNull Erzieherart e : this.liste.auswahl())
+			if (e.anzahlErziehungsberechtigte != 0)
+				this.setErzieherartIDsMitPersonen.add(e.id);
 	}
 
 	@Override

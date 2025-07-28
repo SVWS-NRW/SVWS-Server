@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import type { JavaSet } from '../../../java/util/JavaSet';
 import { Schulform } from '../../../asd/types/schule/Schulform';
 import { JavaString } from '../../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
@@ -11,6 +12,7 @@ import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import { Arrays } from '../../../java/util/Arrays';
 import { Schuljahresabschnitt } from '../../../asd/data/schule/Schuljahresabschnitt';
+import { HashSet } from '../../../java/util/HashSet';
 import { Pair } from '../../../asd/adt/Pair';
 
 export class ErzieherartListeManager extends AuswahlManager<number, Erzieherart, Erzieherart> {
@@ -19,6 +21,11 @@ export class ErzieherartListeManager extends AuswahlManager<number, Erzieherart,
 	 * Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ
 	 */
 	private static readonly _erzieherartenToId : JavaFunction<Erzieherart, number> = { apply : (ea: Erzieherart) => ea.id };
+
+	/**
+	 * Sets mit Listen zur aktuellen Auswahl
+	 */
+	private readonly setErzieherartIDsMitPersonen : HashSet<number> = new HashSet<number>();
 
 	/**
 	 * Ein Default-Comparator für den Vergleich von Erzieherarten in Erzieherartlisten.
@@ -45,6 +52,22 @@ export class ErzieherartListeManager extends AuswahlManager<number, Erzieherart,
 	 */
 	public constructor(schuljahresabschnitt : number, schuljahresabschnittSchule : number, schuljahresabschnitte : List<Schuljahresabschnitt>, schulform : Schulform | null, listErzieherart : List<Erzieherart>) {
 		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, listErzieherart, ErzieherartListeManager.comparator, ErzieherartListeManager._erzieherartenToId, ErzieherartListeManager._erzieherartenToId, Arrays.asList(new Pair("erzieherart", true)));
+	}
+
+	/**
+	 *Gibt das Set mit den ErzieherartIds zurück, die in der Auswahl sind und Erziehungsberechtigte beinhalten
+	 *
+	 * @return Das Set mit IDs von Erzieherarten, die Schüler haben
+	 */
+	public getErzieherartIDsMitPersonen() : JavaSet<number> {
+		return this.setErzieherartIDsMitPersonen;
+	}
+
+	protected onMehrfachauswahlChanged() : void {
+		this.setErzieherartIDsMitPersonen.clear();
+		for (const e of this.liste.auswahl())
+			if (e.anzahlErziehungsberechtigte !== 0)
+				this.setErzieherartIDsMitPersonen.add(e.id);
 	}
 
 	protected compareAuswahl(a : Erzieherart, b : Erzieherart) : number {

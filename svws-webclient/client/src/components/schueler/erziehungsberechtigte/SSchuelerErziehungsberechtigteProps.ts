@@ -1,11 +1,13 @@
-import type { List, ErzieherStammdaten, Erzieherart, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
+import type { List, ErzieherStammdaten, Erzieherart, OrtKatalogEintrag, OrtsteilKatalogEintrag, BenutzerKompetenz } from "@core";
 
 export interface SchuelerErziehungsberechtigteProps {
 	data: () => List<ErzieherStammdaten>;
-	patch: (data : Partial<ErzieherStammdaten>, id: number) => Promise<void>;
-	patchPosition: (data : Partial<ErzieherStammdaten>, id: number, pos: number) => Promise<void>;
-	add: (data: Partial<ErzieherStammdaten>, pos: number) => Promise<ErzieherStammdaten>;
+	patchErzieher: (data : Partial<ErzieherStammdaten>, id: number) => Promise<void>;
+	patchErzieherAnPosition: (data : Partial<ErzieherStammdaten>, id: number, pos: number) => Promise<void>;
+	addErzieher: (data: Partial<ErzieherStammdaten>, pos: number) => Promise<ErzieherStammdaten>;
+	deleteErzieher: (idsEintraege: List<number>) => Promise<void>;
 	mapErzieherarten: Map<number, Erzieherart>;
 	mapOrte: Map<number, OrtKatalogEintrag>;
 	mapOrtsteile: Map<number, OrtsteilKatalogEintrag>;
+	benutzerKompetenzen: Set<BenutzerKompetenz>,
 }
