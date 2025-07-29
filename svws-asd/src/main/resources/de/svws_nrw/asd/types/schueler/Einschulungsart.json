@@ -7,8 +7,8 @@
 			"id": 51,
 			"schluessel": "51",
 			"kuerzel": "51",
-			"text": "älter als 6. Jahre",
-			"beschreibung": "Kinder, die bis zum gültigen Einschulungsstichtag das 6. Lebensjahr vollendet haben",
+			"text": "älter als 6 Jahre",
+			"beschreibung": "Kinder, die bis zum relevanten Einschulungsstichtag das 6. Lebensjahr vollendet haben",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -20,7 +20,7 @@
 			"schluessel": "52",
 			"kuerzel": "52",
 			"text": "jünger als 6 Jahre",
-			"beschreibung": "Kinder, die nach dem gültigen Einschulungsstichtag das 6. Lebensjahr vollenden",
+			"beschreibung": "Kinder, die nach dem relevanten Einschulungsstichtag das 6. Lebensjahr vollenden",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
