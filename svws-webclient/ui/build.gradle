@@ -10,8 +10,14 @@ task assembleUi(type: NpmRun) {
 	outputs.dir file("$projectDir/dist")
 }
 
+task lint(type: NpmRun) {
+    dependsOn assembleUi
+		group = "build"
+    args = ["lint-tsc"]
+}
+
 task assembleUiHistoire(type: NpmRun) {
-	dependsOn assembleUi
+	dependsOn lint
 	group = "build"
 	args = ['story:build']
 	inputs.files fileTree("$projectDir").matching { exclude "build", "dist", ".histoire" }

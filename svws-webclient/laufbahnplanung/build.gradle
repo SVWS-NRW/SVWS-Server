@@ -18,8 +18,14 @@ task assembleLaufbahnplanung(type: NpmRun) {
 
 assemble.dependsOn assembleLaufbahnplanung
 
+task lint(type: NpmRun) {
+    dependsOn assembleLaufbahnplanung
+	group = "build"
+    args = ["lint-tsc"]
+}
+
 task doZip(type: Zip) {
-	dependsOn assembleLaufbahnplanung
+	dependsOn lint
     archiveFileName = "SVWS-Laufbahnplanung-"+svwsArtifactVersion+".zip"
     destinationDirectory = file("$buildDir")
     from "$buildDir/output"
