@@ -6,11 +6,16 @@ dependencies {
 	implementation project(':svws-server-app')
 }
 
-def testConfigPath = "${rootDir}/config/tests/config.json" as String
-def CONFIG = new JsonSlurper().parse(new File(testConfigPath))
+def configDir = "${rootDir}/config/tests"
+
+def configFile = file("$configDir/config.json")
+if (!configFile.exists()) {
+	configFile = file("$configDir/config_default.json")
+}
+
+def CONFIG = new JsonSlurper().parse(configFile)
 
 def buildDirPath = layout.buildDirectory.get()
-
 
 
 /**

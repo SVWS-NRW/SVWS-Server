@@ -1,11 +1,15 @@
 import { test, expect } from '@playwright/test';
 import { useLoginUtils } from "../../utils/LoginUtils";
 
+import { writeFile } from 'fs/promises';
+import { frontendURL } from '../../../../utils/APIUtils'
+
+
 test.use({
 	ignoreHTTPSErrors: true,
 });
 
-const targetHost = process.env.VITE_targetHost ?? "https://localhost:3000/#/svws"
+const targetHost = frontendURL;
 
 test('Admins können entsprechende Bereiche im DEV Mode einsehen', async ({page}) => {
 	const { loginAdmin } = useLoginUtils(targetHost, page);
@@ -36,10 +40,13 @@ test('Admins können entsprechende Bereiche im DEV Mode einsehen', async ({page}
 	await expect(page.getByRole('button', {name: 'Erziehungsberechtigte'})).toBeVisible();
 	await page.getByRole('button', {name: 'Erziehungsberechtigte'}).click();
 	await expect(page.getByText('Erziehungsberechtigte')).toBeVisible();
-
+	await expect(page.getByText('Daten zu Caroline Triebel')).toBeVisible();
 
 	await expect(page.getByRole('button', {name: 'Ausbildungsbetriebe'})).toBeVisible();
 	await page.getByRole('button', {name: 'Ausbildungsbetriebe'}).click();
+
+
+	await page.screenshot({path:"./screeny.png"})
 	await expect(page.getByText('Noch kein Schülerbetrieb vorhanden.')).toBeVisible();
 
 
@@ -93,7 +100,8 @@ test('Admins können entsprechende Bereiche im DEV Mode einsehen', async ({page}
 	await expect(page.getByRole('button', {name: 'Laufbahnplanung'})).toBeVisible();
 	await page.getByRole('button', {name: 'Laufbahnplanung'}).click();
 	await expect(page.getByText('Belegprüfungsergebnisse')).toBeVisible();
-
+	await expect(page.getByText('Wochenstunden')).toBeVisible();
+	await expect(page.getByText('Projektkurs Informatik')).toBeVisible();
 
 	await expect(page.getByRole('button', {name: 'Abitur'})).toBeVisible();
 	await page.getByRole('button', {name: 'Abitur'}).click();

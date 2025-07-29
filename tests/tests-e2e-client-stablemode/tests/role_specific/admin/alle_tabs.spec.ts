@@ -1,11 +1,12 @@
 import { test, expect } from '@playwright/test';
 import { useLoginUtils } from "../../utils/LoginUtils";
+import { frontendURL } from '../../../../utils/APIUtils'
 
 test.use({
 	ignoreHTTPSErrors: true,
 });
 
-const targetHost = process.env.VITE_targetHost ?? "https://localhost:3000/#/svws"
+const targetHost = frontendURL;
 
 test('Admins können entsprechende Bereiche im STABLE Mode einsehen', async ({page}) => {
 	const { loginAdmin } = useLoginUtils(targetHost, page);
@@ -18,6 +19,10 @@ test('Admins können entsprechende Bereiche im STABLE Mode einsehen', async ({pa
 	await expect(page.getByRole('button', {name: 'Individualdaten'})).toBeVisible();
 	await page.getByRole('button', {name: 'Individualdaten'}).click();
 	await expect(page.getByText('Staatsangehörigkeit und Konfession')).toBeVisible();
+	await expect(page.getByText('Migrationshintergrund', {exact:true})).toBeVisible();
+	await expect(page.getByRole('combobox', { name: 'Fahrschüler' })).toBeVisible();
+	expect(await page.getByRole('combobox', { name: 'Konfession' }).inputValue()).toBe("evangelisch");
+
 
 
 	await expect(page.getByRole('button', {name: 'Lernabschnitte'})).toBeVisible();
@@ -48,6 +53,8 @@ test('Admins können entsprechende Bereiche im STABLE Mode einsehen', async ({pa
 	await expect(page.getByRole('button', {name: 'Laufbahnplanung'})).toBeVisible();
 	await page.getByRole('button', {name: 'Laufbahnplanung'}).click();
 	await expect(page.getByText('Belegprüfungsergebnisse')).toBeVisible();
+	await expect(page.getByText('Wochenstunden')).toBeVisible();
+	await expect(page.getByText('Projektkurs Informatik')).toBeVisible();
 
 
 	await expect(page.getByRole('button', {name: 'Stundenplan'})).toBeVisible();

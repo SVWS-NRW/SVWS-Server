@@ -1,10 +1,10 @@
 import { describe, expect, test } from "vitest";
 import type { LehrerListeEintrag, List } from "@core";
-import { getApiServer } from "./utils/TestUtils.js";
+import { privilegedApiServer } from "../../utils/APIUtils";
 
 describe("Lehrer Tests ", () => {
 	describe.each([{schema: "GymAbi01"}])('gegen %s', ({schema}) => {
-		const api = getApiServer("gymabi");
+		const api = privilegedApiServer;
 
 		test("getLehrerListe", async () => {
 			const liste: List<LehrerListeEintrag> = await api.getLehrer(schema);

@@ -1,5 +1,18 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`Kataloge Tests > gegen { schema: 'GymAbi01' } > getBeschaeftigungsarten 1`] = `
+ArrayList {
+  "addFirst": [Function],
+  "addLast": [Function],
+  "elementData": [],
+  "getFirst": [Function],
+  "getLast": [Function],
+  "modCount": 0,
+  "removeFirst": [Function],
+  "removeLast": [Function],
+}
+`;
+
 exports[`Kataloge Tests > gegen { schema: 'GymAbi01' } > getHaltestellen 1`] = `
 ArrayList {
   "addFirst": [Function],
@@ -33,19 +46,6 @@ ArrayList {
   "getFirst": [Function],
   "getLast": [Function],
   "modCount": 3,
-  "removeFirst": [Function],
-  "removeLast": [Function],
-}
-`;
-
-exports[`Kataloge Tests > gegen { schema: 'GymAbi01' } > getBeschaeftigungsarten 1`] = `
-ArrayList {
-  "addFirst": [Function],
-  "addLast": [Function],
-  "elementData": [],
-  "getFirst": [Function],
-  "getLast": [Function],
-  "modCount": 0,
   "removeFirst": [Function],
   "removeLast": [Function],
 }

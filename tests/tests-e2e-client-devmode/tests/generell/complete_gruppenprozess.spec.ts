@@ -1,8 +1,9 @@
 import { expect, test } from "@playwright/test";
 import { useLoginUtils } from "../utils/LoginUtils";
 import { getContentOfActiveTooltip, getResetButton, startGruppenprozessMitSchuelern } from "../utils/SchuelerGruppenprozesseUtils";
+import { frontendURL } from "../../../utils/APIUtils";
 
-const targetHost = process.env.VITE_targetHost ?? "http://localhost:3000/#/svws"
+const targetHost = frontendURL;
 
 const tooltipFahrschuelerId = '#tooltip-fahrschuelerArtID';
 const tooltipHaltestelleId = '#tooltip-haltestelleID';

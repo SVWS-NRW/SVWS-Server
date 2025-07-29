@@ -1,11 +1,12 @@
 import { test, expect } from '@playwright/test';
 import { useLoginUtils } from "../../utils/LoginUtils";
+import { frontendURL } from '../../../../utils/APIUtils'
 
 test.use({
 	ignoreHTTPSErrors: true,
 });
 
-const targetHost = process.env.VITE_targetHost ?? "https://localhost:3000/#/svws"
+const targetHost = frontendURL;
 
 test('Nicht privilegierte Nutzer können nur entsprechende Bereiche im DEV Mode einsehen', async ({page}) => {
 	const { loginBISZ } = useLoginUtils(targetHost, page);

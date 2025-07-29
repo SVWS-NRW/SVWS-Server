@@ -3,7 +3,16 @@ import groovy.json.JsonSlurper
 import groovy.xml.XmlSlurper
 
 def testConfigPath = "${rootDir}/config/tests/config.json" as String
-def CONFIG = new JsonSlurper().parse(new File(testConfigPath))
+
+def configDir = "${rootDir}/config/tests"
+
+def configFile = file("$configDir/config.json")
+if (!configFile.exists()) {
+	configFile = file("$configDir/config_default.json")
+}
+
+def CONFIG = new JsonSlurper().parse(configFile)
+
 
 /**
  * Dieser Task lädt die Testdatenbanken herunter, die für die Integrationstests benötigt werden. Dieser Task überprüft auch, ob die Testdatenbanken aktualisiert wurden.
@@ -322,7 +331,17 @@ tasks.register('checkJUnitResults') {
  */
 def updateDownloadTimeStamp(String filePath, String newValue) {
 	def jsonFile = file(filePath)
-	def json = new JsonSlurper().parseText(jsonFile.text)
+
+
+	def configDir = "${rootDir}/config/tests"
+
+	def configFile = file("$configDir/config.json")
+	if (!configFile.exists()) {
+		configFile = file("$configDir/config_default.json")
+	}
+
+	def json = new JsonSlurper().parse(configFile)
+
 	json['lastRepoUpdate'] = newValue
 	jsonFile.text = JsonOutput.prettyPrint(JsonOutput.toJson(json))
 	println "Updated \"lastRepoUpdate\" to ${newValue} in ${filePath}"

@@ -1,10 +1,10 @@
 import { describe, test, expect } from 'vitest'
-import { getApiServer } from "./utils/TestUtils.js";
+import { privilegedApiServer } from "../../utils/APIUtils";
 import { Erzieherart, ErzieherListeEintrag } from "@core";
 
 describe("Erzieher Tests", () => {
 	describe.each([{schema: "GymAbi01"}])('gegen %s', ({schema}) => {
-		const api = getApiServer(schema);
+		const api = privilegedApiServer;
 
 		test('GET: Ein ErzieherStammdaten Objekt', async () => {
 			const result = await api.getErzieherStammdaten(schema, 19941);

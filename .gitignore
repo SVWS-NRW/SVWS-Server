@@ -452,3 +452,4 @@ svws-module-pdf
 /Temp
 svws-server-app/Temp
 
+/config/tests/config.json

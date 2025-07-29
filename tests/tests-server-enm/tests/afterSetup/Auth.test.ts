@@ -1,7 +1,8 @@
 import { describe, expect, test } from "vitest";
-import { getApiService } from "../../utils/RequestBuilder.js"
+import { getApiService } from "../../utils/RequestBuilder.js";
+import { enmURL } from "../../../utils/APIUtils";
 
-const targetUrlENMServer: string = process.env.VITE_ENM_targetHost ?? "https://localhost";
+const targetUrlENMServer: string = enmURL;
 
 const apiServiceAuth = getApiService('D.Berthold@lmail.de', 'uXkpaRLY', targetUrlENMServer)
 const apiServiceNoAuth = getApiService('', '', targetUrlENMServer)

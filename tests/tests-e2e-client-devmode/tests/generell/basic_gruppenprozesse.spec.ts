@@ -1,12 +1,13 @@
 import { test, expect } from '@playwright/test';
 import { useLoginUtils } from "../utils/LoginUtils";
 import { getResetButton, getSaveButton } from "../utils/SchuelerGruppenprozesseUtils";
+import { frontendURL } from "../../../utils/APIUtils";
 
 test.use({
 	ignoreHTTPSErrors: true,
 });
 
-const targetHost = process.env.VITE_targetHost ?? "http://localhost:3000/#/svws"
+const targetHost = frontendURL;
 
 test('Smoke Test Gruppenprozesse', async ({ page }) => {
 	const { loginAdmin } = useLoginUtils(targetHost, page);
