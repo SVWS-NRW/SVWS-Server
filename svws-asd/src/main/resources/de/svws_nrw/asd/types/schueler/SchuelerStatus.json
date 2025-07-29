@@ -7,7 +7,7 @@
 			"id": 0,
 			"schluessel": "0",
 			"kuerzel": "0",
-			"text": "Neuaufnahme",
+			"text": "Aufnahme",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -73,7 +73,7 @@
 			"id": 9,
 			"schluessel": "9",
 			"kuerzel": "9",
-			"text": "Abgang",
+			"text": "Abgang (ohne Abschluss)",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
