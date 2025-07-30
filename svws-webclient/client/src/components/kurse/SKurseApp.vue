@@ -7,8 +7,7 @@
 						<h2 class="svws-headline">
 							<span>{{ manager().daten().kuerzel }}</span>
 							<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
-								ID:
-								{{ manager().daten().id }}
+								ID: {{ manager().daten().id }}
 							</svws-ui-badge>
 						</h2>
 						<span class="svws-subline">

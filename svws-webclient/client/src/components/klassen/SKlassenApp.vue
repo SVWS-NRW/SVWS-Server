@@ -5,12 +5,10 @@
 				<div class="svws-headline-wrapper">
 					<template v-if="activeViewType === ViewType.DEFAULT">
 						<h2 class="svws-headline">
-							<span>
-								{{ manager().daten().kuerzel ? 'Klasse ' + manager().daten().kuerzel : '—' }}
-								<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
-									ID: {{ manager().daten().id }}
-								</svws-ui-badge>
-							</span>
+							{{ manager().daten().kuerzel ? 'Klasse ' + manager().daten().kuerzel : '—' }}
+							<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
+								ID: {{ manager().daten().id }}
+							</svws-ui-badge>
 						</h2>
 						<span class="svws-subline">
 							{{ lehrerkuerzel }}

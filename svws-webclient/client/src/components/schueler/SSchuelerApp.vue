@@ -13,7 +13,7 @@
 								ID: {{ manager().daten().id }}
 							</svws-ui-badge>
 						</h2>
-						<span v-if="klasse !== null" class="svws-subline">{{ klasse.kuerzel }}
+						<span v-if="klasse !== null" class="svws-subline">{{ klasse.kuerzel }}&nbsp;
 							<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
 								<template v-for="l of klasse.klassenLeitungen">
 									{{ manager().lehrer.get(l)?.kuerzel ?? '—' }}&nbsp;
