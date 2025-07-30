@@ -13,7 +13,7 @@
 					<ui-select title="Lernplattform" label="Lernplattform" :manager="selectManagerLernplattformen" v-model="lernplattform"
 						:removable="false" />
 					<ui-select title="Datenformat" label="Datenformat" :manager="selectManagerDatenformat" v-model="datenformat" :removable="false" />
-					<svws-ui-button type="primary" size="big" :disabled="!hatKompetenzExport || loading" @click="startExport">
+					<svws-ui-button type="primary" size="big" :disabled="exportDisabled" @click="startExport">
 						Starte Export
 						<svws-ui-spinner :spinning="loading" />
 					</svws-ui-button>
@@ -33,10 +33,8 @@
 
 	const props = defineProps<SchuleDatenaustauschLernplattformenProps>();
 
-	const hatKompetenzExport = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.IMPORT_EXPORT_LERNPLATTFORM));
-
 	const loading = ref<boolean>(false);
-	const lernplattform = ref<Lernplattform>();
+	const lernplattform = ref<Lernplattform | undefined>(undefined);
 	const datenformat = ref<string>('JSON');
 
 	const selectManagerLernplattformen = new BaseSelectManager<Lernplattform>({
@@ -46,15 +44,18 @@
 	})
 	const selectManagerDatenformat = new BaseSelectManager<string>({ removable: false, options: ['JSON', 'GZIP'], selected: 'JSON' });
 
+	const hatKompetenzExport = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.IMPORT_EXPORT_LERNPLATTFORM));
+	const exportDisabled = computed(() => (lernplattform.value === undefined) || !hatKompetenzExport.value || loading.value);
+
 	async function startExport() {
-		if ((lernplattform.value === undefined) || loading.value)
+		if (exportDisabled.value)
 			return
 
 		loading.value = true;
-		const blob = await props.export(lernplattform.value, datenformat.value);
+		const blob = await props.export(lernplattform.value!, datenformat.value);
 		if (blob !== null) {
 			const url = URL.createObjectURL(blob);
-			let filename = `LernplattformExport-${lernplattform.value.id}_${lernplattform.value.bezeichnung}.json`;
+			let filename = `LernplattformExport-${lernplattform.value!.id}_${lernplattform.value!.bezeichnung}.json`;
 			if (datenformat.value === 'GZIP')
 				filename += '.gzip';
 			const a = document.createElement("a");
