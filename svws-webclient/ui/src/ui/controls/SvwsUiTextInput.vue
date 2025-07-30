@@ -102,7 +102,7 @@
 
 <script setup lang="ts" generic="V extends Validator">
 
-	import { ref, computed, watch, type ComputedRef, type Ref, onBeforeMount, onMounted, onBeforeUnmount, useId } from "vue";
+	import { ref, computed, watch, onBeforeMount, onMounted, onBeforeUnmount, useId } from "vue";
 	import type { Validator } from "../../../../core/src/asd/validate/Validator";
 	import { ValidatorFehlerart } from "../../../../core/src/asd/validate/ValidatorFehlerart";
 
@@ -111,7 +111,7 @@
 	});
 
 	function firefox() {
-		return window.navigator.userAgent.includes('Firefox/')
+		return window.navigator.userAgent.includes('Firefox/');
 	}
 	const input = ref<null | HTMLInputElement>(null);
 
@@ -212,8 +212,6 @@
 
 	function updateData(value: string | null) {
 		if (data.value !== value) {
-			// if (value !== null && props.modelModifiers.trim)
-			// 	value = value.trim();
 			data.value = value;
 			emit("update:modelValue", data.value);
 		}
@@ -260,11 +258,6 @@
 
 	const content = computed<string | null>(() => data.value);
 
-	defineExpose<{
-		content: ComputedRef<string | null>,
-		input: Ref<HTMLInputElement | null>,
-		reset: () => void;
-		doFocus: () => void;
-	}>({ content, input, reset, doFocus });
+	defineExpose({ content, input, reset, doFocus });
 
 </script>

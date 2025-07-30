@@ -1,5 +1,4 @@
-import type { Erzieherart, KatalogEintrag, LehrerListeEintrag, Nationalitaeten, OrtKatalogEintrag, OrtsteilKatalogEintrag, Verkehrssprache, CoreTypeData,
-	SchulenKatalogEintrag, SchulEintrag } from "@core";
+import type { Erzieherart, KatalogEintrag, LehrerListeEintrag, Nationalitaeten, OrtKatalogEintrag, OrtsteilKatalogEintrag, Verkehrssprache, CoreTypeData, SchulenKatalogEintrag, SchulEintrag } from "@core";
 import { Schulform } from "@core";
 
 
@@ -137,13 +136,7 @@ export function ortsteilFilter(items: Iterable<OrtsteilKatalogEintrag>, search: 
 }
 
 export function erzieherArtSort(a: Erzieherart, b: Erzieherart) {
-	if ((a.bezeichnung !== null) && (b.bezeichnung !== null))
-		a.bezeichnung.localeCompare(b.bezeichnung);
-	else if ((a.bezeichnung !== null) && (b.bezeichnung === null))
-		return -1;
-	else if ((a.bezeichnung === null) && (b.bezeichnung === null))
-		return 1;
-	return 0;
+	return a.bezeichnung.localeCompare(b.bezeichnung);
 }
 
 /** Der Filter für Lehrer mit Kürzelsuche */
