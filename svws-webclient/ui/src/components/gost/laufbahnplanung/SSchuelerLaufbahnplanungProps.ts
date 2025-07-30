@@ -13,6 +13,15 @@ import type { BenutzerKompetenz } from "../../../../../core/src/core/types/benut
 import type { GostHalbjahr } from "../../../../../core/src/core/types/gost/GostHalbjahr";
 import type { ServerMode } from "../../../../../core/src/core/types/ServerMode";
 import type { ArrayList } from "../../../../../core/src/java/util/ArrayList";
+import type { Checkpoint } from "src/ui/modal/Checkpoint";
+
+export enum RoutingStatus {
+	SUCCESS,
+	STOPPED_ROUTING_IS_ACTIVE,
+	STOPPED_CHECKPOINT_ACTIVATED,
+	STOPPED_CHECKPOINT_DESTINATION_ROUTE_MISSING,
+	ERROR
+}
 
 export interface SchuelerLaufbahnplanungProps {
 	schulform: Schulform;
@@ -39,4 +48,6 @@ export interface SchuelerLaufbahnplanungProps {
 	restoreLaufbahnplanung: () => Promise<void>;
 	resetFachwahlen: (forceDelete: boolean) => Promise<void>;
 	gotoKursblockung: (halbjahr: GostHalbjahr) => Promise<void>;
+	checkpoint?: Checkpoint;
+	continueRoutingAfterCheckpoint?: () => Promise<RoutingStatus>;
 }

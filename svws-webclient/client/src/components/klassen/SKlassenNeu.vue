@@ -46,7 +46,7 @@
 	import { ref, computed, onMounted, watch } from "vue";
 	import type { KlassenNeuProps } from "~/components/klassen/SKlassenNeuProps";
 	import type { KlassenDaten, JahrgangsDaten, List } from '@core';
-	import { AllgemeinbildendOrganisationsformen, Klassenart, Schulgliederung, ArrayList, Schulform, BerufskollegOrganisationsformen, WeiterbildungskollegOrganisationsformen } from "@core";
+	import { AllgemeinbildendOrganisationsformen, Klassenart, Schulgliederung, ArrayList, BerufskollegOrganisationsformen, WeiterbildungskollegOrganisationsformen } from "@core";
 
 	const props = defineProps<KlassenNeuProps>();
 
@@ -63,7 +63,7 @@
 			: Schulgliederung.getBySchuljahrAndSchulform(props.manager().getSchuljahr(), props.schulform).getFirst();
 		const idSchulgliederung = schulgliederung.daten(props.manager().getSchuljahr())?.id ?? -1;
 		const idKlassenart = Klassenart.getDefault(props.schulform).daten(props.manager().getSchuljahr())?.id ?? Klassenart.UNDEFINIERT.daten(props.manager().getSchuljahr())?.id;
-		if (props.schulform.istAllgemeinbildend()) {
+		if (props.schulform.istAllgemeinbildend())
 			data.value = {
 				kuerzel: "",
 				beschreibung: "",
@@ -73,7 +73,7 @@
 				idKlassenart,
 				idAllgemeinbildendOrganisationsform: AllgemeinbildendOrganisationsformen.GANZTAG.daten(props.manager().getSchuljahr())?.id ?? null,
 			}
-		} else if (props.schulform.istBerufsbildend()) {
+		else if (props.schulform.istBerufsbildend())
 			data.value = {
 				kuerzel: "",
 				beschreibung: "",
@@ -82,7 +82,7 @@
 				idSchulgliederung,
 				idBerufsbildendOrganisationsform: BerufskollegOrganisationsformen.VOLLZEIT.daten(props.manager().getSchuljahr())?.id ?? null,
 			}
-		} else if (props.schulform.istWeiterbildung()) {
+		else if (props.schulform.istWeiterbildung())
 			data.value = {
 				kuerzel: "",
 				beschreibung: "",
@@ -91,7 +91,7 @@
 				idSchulgliederung,
 				idWeiterbildungOrganisationsform: WeiterbildungskollegOrganisationsformen.VOLLZEIT.daten(props.manager().getSchuljahr())?.id ?? null,
 			}
-		}
+
 
 		watch(() => data.value, async () => {
 			if (isLoading.value)
