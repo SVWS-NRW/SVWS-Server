@@ -16,6 +16,7 @@ ArrayList {
       "kuerzel": "05",
       "kuerzelSchulgliederung": "***",
       "kuerzelStatistik": "05",
+      "kurzbezeichnung": null,
       "sortierung": 10,
     },
     JahrgangsDaten {
@@ -29,6 +30,7 @@ ArrayList {
       "kuerzel": "06",
       "kuerzelSchulgliederung": "***",
       "kuerzelStatistik": "06",
+      "kurzbezeichnung": null,
       "sortierung": 20,
     },
     JahrgangsDaten {
@@ -42,6 +44,7 @@ ArrayList {
       "kuerzel": "07",
       "kuerzelSchulgliederung": "***",
       "kuerzelStatistik": "07",
+      "kurzbezeichnung": null,
       "sortierung": 30,
     },
     JahrgangsDaten {
@@ -55,6 +58,7 @@ ArrayList {
       "kuerzel": "08",
       "kuerzelSchulgliederung": "***",
       "kuerzelStatistik": "08",
+      "kurzbezeichnung": null,
       "sortierung": 40,
     },
     JahrgangsDaten {
@@ -68,6 +72,7 @@ ArrayList {
       "kuerzel": "09",
       "kuerzelSchulgliederung": "***",
       "kuerzelStatistik": "09",
+      "kurzbezeichnung": null,
       "sortierung": 50,
     },
     JahrgangsDaten {
@@ -81,6 +86,7 @@ ArrayList {
       "kuerzel": "EF",
       "kuerzelSchulgliederung": "***",
       "kuerzelStatistik": "EF",
+      "kurzbezeichnung": null,
       "sortierung": 60,
     },
     JahrgangsDaten {
@@ -94,6 +100,7 @@ ArrayList {
       "kuerzel": "Q1",
       "kuerzelSchulgliederung": "***",
       "kuerzelStatistik": "Q1",
+      "kurzbezeichnung": null,
       "sortierung": 70,
     },
     JahrgangsDaten {
@@ -107,6 +114,7 @@ ArrayList {
       "kuerzel": "Q2",
       "kuerzelSchulgliederung": "***",
       "kuerzelStatistik": "Q2",
+      "kurzbezeichnung": null,
       "sortierung": 80,
     },
   ],
@@ -130,6 +138,7 @@ JahrgangsDaten {
   "kuerzel": "EF",
   "kuerzelSchulgliederung": "***",
   "kuerzelStatistik": "EF",
+  "kurzbezeichnung": "EF",
   "sortierung": 60,
 }
 `;

@@ -2,17 +2,24 @@
 	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input class="contentFocusField" placeholder="Kürzel" :model-value="manager().daten().kuerzel" @change="patchKuerzel" type="text" :valid="validateKuerzel" :max-len="20" :min-len="1" />
-				<svws-ui-text-input placeholder="Bezeichnung" :model-value="manager().daten().bezeichnung" @change="bezeichnung => patch({ bezeichnung: bezeichnung ?? '' })" type="text" />
+				<svws-ui-text-input class="contentFocusField" placeholder="Kürzel" :model-value="manager().daten().kuerzel" @change="patchKuerzel"
+					:valid="kuerzelIsValid" :max-len="20" :min-len="1" :readonly />
+				<svws-ui-text-input placeholder="Bezeichnung" :model-value="manager().daten().bezeichnung" :max-len="100" @change="patchBezeichnung"
+					:valid="bezeichnungIsValid" :readonly />
+				<svws-ui-text-input placeholder="Kurzbezeichnung" :model-value="manager().daten().kurzbezeichnung" :max-len="2"
+					@change="patchKurzbezeichnung" :valid="kurzbezeichnungIsValid" :readonly />
 				<svws-ui-select title="Schulgliederung" v-model="schulgliederung" :items="Schulgliederung.getBySchuljahrAndSchulform(schuljahr, schulform)"
-					:item-text="textSchulgliederung" statistics />
-				<svws-ui-select title="Statistik-Jahrgang" v-model="statistikjahrgang" :items="Jahrgaenge.getListBySchuljahrAndSchulform(schuljahr, schulform)"
-					:item-text="textStatistikJahrgang" :empty-text="() => textStatistikJahrgang(null)" removable statistics />
+					:item-text="textSchulgliederung" statistics :readonly />
+				<svws-ui-select title="Jahrgang" v-model="statistikJahrgang" :items="Jahrgaenge.getListBySchuljahrAndSchulform(schuljahr, schulform)"
+					:item-text="textStatistikJahrgang" removable statistics :readonly />
 				<svws-ui-select title="Folgejahrgang" v-model="idFolgejahrgang" :items="folgejahrgaenge" :item-text="textFolgejahrgang" />
-				<svws-ui-input-number placeholder="Anzahl der Restabschnitte" :model-value="manager().daten().anzahlRestabschnitte" @change="patchRestabschnitte" :valid="validateRestabschnitte" :min="0" :max="40" :required="true" />
-				<svws-ui-spacing />
+				<svws-ui-input-number placeholder="Anzahl der Restabschnitte" :model-value="manager().daten().anzahlRestabschnitte"
+					@change="patchAnzahlRestabschnitte" :valid="anzahlRestabschnitteIsValid" :min="0" :max="40" :required="true" :readonly />
 				<svws-ui-input-number placeholder="Sortierung" :required="true" :min="0" :model-value="manager().daten().sortierung"
-					@change="sortierung => patch({ sortierung: sortierung ?? undefined })" />
+					@change="sortierung => patch({ sortierung: sortierung ?? undefined })" :readonly />
+				<svws-ui-checkbox :model-value="manager().daten().istSichtbar" @update:model-value="istSichtbar => patch({ istSichtbar })" :readonly>
+					Sichtbar
+				</svws-ui-checkbox>
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 	</div>
@@ -21,36 +28,33 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import { type JahrgangsDaten, Schulgliederung, Jahrgaenge } from "@core";
+	import { Schulgliederung, Jahrgaenge, JavaString, BenutzerKompetenz } from "@core";
+	import type { JahrgangsDaten } from "@core";
 	import type { JahrgangDatenProps } from "./SJahrgaengeDatenProps";
 
 	const props = defineProps<JahrgangDatenProps>();
-
-	const folgejahrgaenge = computed<JahrgangsDaten[]>(() =>
-		[...props.manager().liste.list()].filter(j => j.id !== props.manager().daten().id)
-	);
+	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const readonly = computed<boolean>(() => !hatKompetenzUpdate.value);
+	const folgejahrgaenge = computed<JahrgangsDaten[]>(() => [...props.manager().liste.list()].filter(j => j.id !== props.manager().daten().id));
 
 	const idFolgejahrgang = computed<JahrgangsDaten | undefined>({
 		get: () => {
 			const idFolgejahrgang = props.manager().daten().idFolgejahrgang;
-			if (idFolgejahrgang !== null) {
-				const jahrgangsDaten = props.manager().liste.get(idFolgejahrgang)
-				return jahrgangsDaten ?? undefined;
-			}
-			return undefined;
+			if (idFolgejahrgang === null)
+				return undefined;
+
+			const jahrgangsDaten = props.manager().liste.get(idFolgejahrgang)
+			return jahrgangsDaten ?? undefined;
 		},
 		set: (value) => void props.patch({ idFolgejahrgang: value?.id }),
 	});
-
-	const textFolgejahrgang = (jahrgang: JahrgangsDaten) => {
-		return (jahrgang.kuerzel !== '') ? jahrgang.kuerzel + ' : ' + jahrgang.bezeichnung : jahrgang.bezeichnung;
-	}
 
 	const schulgliederung = computed<Schulgliederung | null>({
 		get: () => {
 			const kuerzel = props.manager().daten().kuerzelSchulgliederung;
 			if (kuerzel === null)
 				return null;
+
 			return Schulgliederung.data().getWertByKuerzel(kuerzel);
 		},
 		set: (value) => {
@@ -59,61 +63,97 @@
 		},
 	});
 
-	function textSchulgliederung(schulgliederung: Schulgliederung): string {
-		return schulgliederung.daten(props.schuljahr)?.kuerzel ?? '—';
-	}
-
-	const statistikjahrgang = computed<Jahrgaenge | null>({
+	const statistikJahrgang = computed<Jahrgaenge | null>({
 		get: () => {
 			const kuerzel = props.manager().daten().kuerzelStatistik;
 			return (kuerzel === null) ? null : Jahrgaenge.data().getWertByKuerzel(kuerzel);
 		},
 		set: (value) => {
-			const kuerzel = value?.daten(props.schuljahr)?.kuerzel ?? null;
-			void props.patch({ kuerzelStatistik : kuerzel });
+			const kuerzelStatistik = value?.daten(props.schuljahr)?.kuerzel ?? null;
+			void props.patch({ kuerzelStatistik });
 		},
 	});
+
+	// --- Bezeichnungen ---
+	function textSchulgliederung(schulgliederung: Schulgliederung): string {
+		const eintrag = schulgliederung.daten(props.schuljahr);
+		if (eintrag === null)
+			return '_';
+		return eintrag.kuerzel + ' - ' + eintrag.text;
+	}
 
 	function textStatistikJahrgang(jahrgang: Jahrgaenge | null) {
 		const jahrgangEintrag = (jahrgang === null) ? null : jahrgang.daten(props.schuljahr);
 		if (jahrgangEintrag === null)
 			return 'JU - Jahrgangsübergreifend';
+
 		return jahrgangEintrag.kuerzel + " - " + jahrgangEintrag.text;
 	}
 
+	const textFolgejahrgang = (jahrgang: JahrgangsDaten) => {
+		return (JavaString.isBlank(jahrgang.kuerzel)) ? jahrgang.bezeichnung : jahrgang.kuerzel + ' : ' + jahrgang.bezeichnung;
+	}
+
+
+	// --- Patch ---
+	async function patchBezeichnung(bezeichnung: string | null) {
+		if (bezeichnungIsValid(bezeichnung))
+			await props.patch({ bezeichnung: bezeichnung ?? '' });
+	}
+
 	async function patchKuerzel(kuerzel: string | null) {
-		if (validateKuerzel(kuerzel))
+		if (kuerzelIsValid(kuerzel))
 			await props.patch({ kuerzel });
 	}
 
-	async function patchRestabschnitte(value: number | null) {
-		if (validateRestabschnitte(value))
-			await props.patch({ anzahlRestabschnitte: value });
+	async function patchAnzahlRestabschnitte(anzahlRestabschnitte: number | null) {
+		if (anzahlRestabschnitteIsValid(anzahlRestabschnitte))
+			await props.patch({ anzahlRestabschnitte });
 	}
 
-	/**
-	 * Wenn die übergebene Anzahl der Restabschnitte zwischen 0 und 40 ist wird <code>true</code> ansonsten <code>false</code> zurückgegeben.
-	 *
-	 * @param restabschnitte zu validierende Anzahl der Restabschnitte
-	 */
-	function validateRestabschnitte(restabschnitte: number | null): boolean {
-		if ((restabschnitte === null) || (restabschnitte < 0) || (restabschnitte > 40))
+	async function patchKurzbezeichnung(kurzbezeichnung: string | null) {
+		if (kurzbezeichnungIsValid(kurzbezeichnung))
+			await props.patch({ kurzbezeichnung });
+	}
+
+
+	// --- Validierung ---
+	function bezeichnungIsValid(bezeichnung: string | null): boolean {
+		if (bezeichnung !== null && bezeichnung.length > 100)
 			return false;
+
+		for (const jahrgang of props.manager().liste.list())
+			if ((jahrgang.id !== props.manager().auswahlID()) && JavaString.equalsIgnoreCase(jahrgang.bezeichnung, bezeichnung))
+				return false;
+
 		return true;
 	}
 
+	function kurzbezeichnungIsValid(kurzbezeichnung: string | null): boolean {
+		return (kurzbezeichnung === null) || (kurzbezeichnung.length <= 2);
+	}
+
 	/**
-	 * Wenn das neue Kürzel zwischen 1 und 20 Zeichen lang ist und nicht bereits vergeben ist wird <code>true</code> ansonsten <code>false</code> zurückgegeben.
+	 * Wenn die übergebene Anzahl der Restabschnitte zwischen 0 und 40 ist, wird true ansonsten false zurückgegeben.
+	 *
+	 * @param anzahlRestabschnitte zu validierende Anzahl der Restabschnitte
+	 */
+	function anzahlRestabschnitteIsValid(anzahlRestabschnitte: number | null): boolean {
+		return ((anzahlRestabschnitte !== null) && (anzahlRestabschnitte >= 0) && (anzahlRestabschnitte <= 40));
+	}
+
+	/**
+	 * Wenn das neue Kürzel zwischen 1 und 20 Zeichen lang ist und nicht bereits vergeben ist, wird true ansonsten false zurückgegeben.
 	 *
 	 * @param kuerzel zu validierendes Kürzel
 	 */
-	function validateKuerzel (kuerzel: string | null): boolean {
-		if ((kuerzel === null) || (kuerzel.length < 1) || (kuerzel.length > 20))
+	function kuerzelIsValid (kuerzel: string | null): boolean {
+		if ((kuerzel === null) || JavaString.isBlank(kuerzel) || (kuerzel.length > 20))
 			return false;
 
 		// Prüfen, ob das Kürzel bereits vergeben ist
-		for (const jg of props.manager().liste.list())
-			if ((jg.id !== props.manager().auswahlID()) && (jg.kuerzel === kuerzel))
+		for (const jahrgang of props.manager().liste.list())
+			if ((jahrgang.id !== props.manager().auswahlID()) && (jahrgang.kuerzel !== null) && JavaString.equalsIgnoreCase(jahrgang.kuerzel, kuerzel))
 				return false;
 
 		return true;

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import de.svws_nrw.asd.types.schule.Schulform;
@@ -35,7 +36,7 @@ import static org.mockito.Mockito.when;
 /**
  * Diese Klasse testet die Klasse {@link DataJahrgangsdaten}
  */
-@DisplayName("Diese Klasse testet die Klasse DataJahrgangsDaten")
+@DisplayName("Diese Klasse testet die Klasse DataJahrgangsdaten")
 @ExtendWith(MockitoExtension.class)
 class DataJahrgangsdatenTest {
 
@@ -43,7 +44,7 @@ class DataJahrgangsdatenTest {
 	private DBEntityManager conn;
 
 	@InjectMocks
-	private DataJahrgangsdaten dut;
+	private DataJahrgangsdaten data;
 
 	@BeforeAll
 	static void setUpAll() {
@@ -55,7 +56,7 @@ class DataJahrgangsdatenTest {
 	void initDTOTest() throws ApiOperationException {
 		final DTOJahrgang dtoJahrgang = new DTOJahrgang(0L);
 
-		this.dut.initDTO(dtoJahrgang, 14L, null);
+		this.data.initDTO(dtoJahrgang, 14L, null);
 
 		assertThat(dtoJahrgang.ID).isEqualTo(14L);
 	}
@@ -65,7 +66,7 @@ class DataJahrgangsdatenTest {
 	void getAllTest() {
 		when(this.conn.queryAll(DTOJahrgang.class)).thenReturn(List.of(new DTOJahrgang(1L), new DTOJahrgang(3L)));
 
-		final List<JahrgangsDaten> result = this.dut.getAll();
+		final List<JahrgangsDaten> result = this.data.getAll();
 
 		assertThat(result).hasSize(2)
 				.hasOnlyElementsOfType(JahrgangsDaten.class);
@@ -76,7 +77,7 @@ class DataJahrgangsdatenTest {
 	void getListAllTest() {
 		when(this.conn.queryAll(DTOJahrgang.class)).thenReturn(Collections.emptyList());
 
-		final List<JahrgangsDaten> result = this.dut.getAll();
+		final List<JahrgangsDaten> result = this.data.getAll();
 
 		assertThat(result).isEmpty();
 	}
@@ -87,7 +88,7 @@ class DataJahrgangsdatenTest {
 		final DTOJahrgang dtoJahrgang = getDTOJahrgang();
 		when(this.conn.queryByKey(DTOJahrgang.class, dtoJahrgang.ID)).thenReturn(dtoJahrgang);
 
-		assertThat(dut.getById(dtoJahrgang.ID))
+		assertThat(data.getById(dtoJahrgang.ID))
 				.isInstanceOf(JahrgangsDaten.class)
 				.hasFieldOrPropertyWithValue("id", dtoJahrgang.ID);
 	}
@@ -95,7 +96,7 @@ class DataJahrgangsdatenTest {
 	@Test
 	@DisplayName("GetById | Falsche ID")
 	void getByIdTestFailed() {
-		final Throwable throwable = catchThrowable(() -> dut.getById(1L));
+		final Throwable throwable = catchThrowable(() -> data.getById(1L));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
@@ -106,7 +107,7 @@ class DataJahrgangsdatenTest {
 	@Test
 	@DisplayName("GetById | ID null")
 	void getByIdTestIdNull() {
-		final Throwable throwable = catchThrowable(() -> dut.getById(null));
+		final Throwable throwable = catchThrowable(() -> data.getById(null));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
@@ -117,9 +118,9 @@ class DataJahrgangsdatenTest {
 	@Test
 	@DisplayName("Map | Erfolgreich")
 	void testMap() {
-		final DTOJahrgang dtoJahrgang = getDTOJahrgang();
+		final var dtoJahrgang = getDTOJahrgang();
 
-		assertThat(this.dut.map(dtoJahrgang))
+		assertThat(this.data.map(dtoJahrgang))
 				.isInstanceOf(JahrgangsDaten.class)
 				.hasFieldOrPropertyWithValue("id", 0L)
 				.hasFieldOrPropertyWithValue("kuerzel", "intern")
@@ -127,6 +128,7 @@ class DataJahrgangsdatenTest {
 				.hasFieldOrPropertyWithValue("gueltigVon", 4L)
 				.hasFieldOrPropertyWithValue("kuerzelStatistik", "ASD")
 				.hasFieldOrPropertyWithValue("bezeichnung", "ASD")
+				.hasFieldOrPropertyWithValue("kurzbezeichnung", "12")
 				.hasFieldOrPropertyWithValue("istSichtbar", false)
 				.hasFieldOrPropertyWithValue("sortierung", 10000)
 				.hasFieldOrPropertyWithValue("kuerzelSchulgliederung", "SGL")
@@ -141,17 +143,34 @@ class DataJahrgangsdatenTest {
 		dtoJahrgang.Sichtbar = null;
 		dtoJahrgang.Sortierung = null;
 
-		assertThat(this.dut.map(dtoJahrgang))
+		assertThat(this.data.map(dtoJahrgang))
 				.isInstanceOf(JahrgangsDaten.class)
 				.hasFieldOrPropertyWithValue("istSichtbar", true)
 				.hasFieldOrPropertyWithValue("sortierung", 32000);
+	}
+
+	private static Stream<Arguments> provideMappingAttributes() {
+		return Stream.of(
+				arguments("id", 2L),
+				arguments("kuerzel", "kl"),
+				arguments("kuerzelStatistik", "00"),
+				arguments("bezeichnung", "bezeichnung"),
+				arguments("sortierung", 10000),
+				arguments("kuerzelSchulgliederung", "A01"),
+				arguments("idFolgejahrgang", 10L),
+				arguments("anzahlRestabschnitte", 3),
+				arguments("istSichtbar", true),
+				arguments("gueltigVon", 10L),
+				arguments("gueltigBis", 12L),
+				arguments("unknownArgument", "oh oh ! das wollen wir auf keinen Fall!")
+		);
 	}
 
 	@ParameterizedTest
 	@DisplayName("mapAttribute | erfolgreiches mapping")
 	@MethodSource("provideMappingAttributes")
 	void testMapAttribute(final String key, final Object value) throws ApiOperationException {
-		final DTOJahrgang expectedDTO = new DTOJahrgang(2L);
+		final var expectedDTO = new DTOJahrgang(2L);
 		switch (key) {
 			case "kuerzelStatistik" -> {
 				when(conn.getUser()).thenReturn(mock(Benutzer.class));
@@ -163,9 +182,12 @@ class DataJahrgangsdatenTest {
 				when(conn.getUser().schuleGetSchulform()).thenReturn(Schulform.BK);
 			}
 			case "idFolgejahrgang" -> when(conn.queryByKey(DTOJahrgang.class, value)).thenReturn(new DTOJahrgang(10L));
+			default -> {
+				//
+			}
 		}
 
-		this.dut.mapAttribute(expectedDTO, key, value, null);
+		final var throwable = catchThrowable(() -> this.data.mapAttribute(expectedDTO, key, value, null));
 
 		switch (key) {
 			case "id" -> assertThat(expectedDTO.ID).isEqualTo(value);
@@ -179,6 +201,10 @@ class DataJahrgangsdatenTest {
 			case "istSichtbar" -> assertThat(expectedDTO.Sichtbar).isEqualTo(value);
 			case "gueltigVon" -> assertThat(expectedDTO.GueltigVon).isEqualTo(value);
 			case "gueltigBis" -> assertThat(expectedDTO.GueltigBis).isEqualTo(value);
+			default -> assertThat(throwable)
+					.isInstanceOf(ApiOperationException.class)
+					.hasMessageStartingWith("Die Daten des Patches enthalten das unbekannte Attribut")
+					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 		}
 	}
 
@@ -187,7 +213,7 @@ class DataJahrgangsdatenTest {
 	void testMapAttributeUnknownValue() {
 		final DTOJahrgang expectedDTO = new DTOJahrgang(1L);
 
-		final Throwable throwable = catchThrowable(() -> this.dut.mapAttribute(expectedDTO, "wdqwbidqwbid", "wbdbqwbd", null));
+		final Throwable throwable = catchThrowable(() -> this.data.mapAttribute(expectedDTO, "wdqwbidqwbid", "wbdbqwbd", null));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
@@ -197,13 +223,15 @@ class DataJahrgangsdatenTest {
 
 	@Test
 	@DisplayName("mapAttribute | mapping mit KürzelStatistik = null")
-	void testMapAttributeKuerzelStatistikIsNull() throws ApiOperationException {
-		final DTOJahrgang expectedDTO = new DTOJahrgang(1L);
+	void testMapAttributeKuerzelStatistikIsNull() {
+		final var expectedDTO = new DTOJahrgang(1L);
 
-		this.dut.mapAttribute(expectedDTO, "kuerzelStatistik", null, null);
+		final var throwable = catchThrowable(() -> this.data.mapAttribute(expectedDTO, "kuerzelStatistik", null, null));
 
-		assertThat(expectedDTO.ASDJahrgang).isNull();
-		assertThat(expectedDTO.ASDBezeichnung).isNull();
+		assertThat(throwable)
+				.isInstanceOf(ApiOperationException.class)
+				.hasMessage("Kein ASD-Jahrgang ausgewählt.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test
@@ -211,11 +239,11 @@ class DataJahrgangsdatenTest {
 	void testMapAttributeFalseKuerzelStatistik() {
 		final DTOJahrgang expectedDTO = new DTOJahrgang(1L);
 
-		final Throwable throwable = catchThrowable(() -> this.dut.mapAttribute(expectedDTO, "kuerzelStatistik", "YK", null));
+		final Throwable throwable = catchThrowable(() -> this.data.mapAttribute(expectedDTO, "kuerzelStatistik", "YK", null));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Kein Jahrgang mit zum Küerzel YK gefunden.")
+				.hasMessage("Kein Jahrgang mit dem Schlüssel YK gefunden.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.NOT_FOUND);
 	}
 
@@ -224,11 +252,11 @@ class DataJahrgangsdatenTest {
 	void testMapAttributeFalseID() {
 		final DTOJahrgang expectedDTO = new DTOJahrgang(2L);
 
-		final Throwable throwable = catchThrowable(() -> this.dut.mapAttribute(expectedDTO, "id", 1L, null));
+		final Throwable throwable = catchThrowable(() -> this.data.mapAttribute(expectedDTO, "id", 1L, null));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Id 1 der PatchMap ist ungleich der id 2 vom Dto")
+				.hasMessage("Die ID 1 des Patches ist null oder stimmt nicht mit der ID 2 in der Datenbank überein.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
@@ -237,12 +265,12 @@ class DataJahrgangsdatenTest {
 	void testMapAttributeKuerzelSchuldgliederungIsNull() {
 		final DTOJahrgang expectedDTO = new DTOJahrgang(2L);
 
-		final Throwable throwable = catchThrowable(() -> this.dut.mapAttribute(expectedDTO, "kuerzelSchulgliederung", null, null));
+		final Throwable throwable = catchThrowable(() -> this.data.mapAttribute(expectedDTO, "kuerzelSchulgliederung", null, null));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Die Schulgliederung ist für die Schulform nicht gültig.")
-				.hasFieldOrPropertyWithValue("status", Response.Status.CONFLICT);
+				.hasMessage("Keine Schulgliederung mit dem Schlüssel null gefunden.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.NOT_FOUND);
 	}
 
 	@Test
@@ -250,12 +278,12 @@ class DataJahrgangsdatenTest {
 	void testMapAttributeFalseKuerzelSchuldgliederung() {
 		final DTOJahrgang expectedDTO = new DTOJahrgang(2L);
 
-		final Throwable throwable = catchThrowable(() -> this.dut.mapAttribute(expectedDTO, "kuerzelSchulgliederung", "A50", null));
+		final Throwable throwable = catchThrowable(() -> this.data.mapAttribute(expectedDTO, "kuerzelSchulgliederung", "A50", null));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Das Kürzel für die Schulgliederung ist ungültig.")
-				.hasFieldOrPropertyWithValue("status", Response.Status.CONFLICT);
+				.hasMessage("Keine Schulgliederung mit dem Schlüssel A50 gefunden.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.NOT_FOUND);
 	}
 
 	@Test
@@ -266,11 +294,11 @@ class DataJahrgangsdatenTest {
 		when(conn.getUser().schuleGetSchuljahr()).thenReturn(2022);
 		when(conn.getUser().schuleGetSchulform()).thenReturn(Schulform.GE);
 
-		final Throwable throwable = catchThrowable(() -> this.dut.mapAttribute(expectedDTO, "kuerzelSchulgliederung", "A01", null));
+		final Throwable throwable = catchThrowable(() -> this.data.mapAttribute(expectedDTO, "kuerzelSchulgliederung", "A01", null));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Die Schulgliederung ist für die Schulform nicht gültig.")
+				.hasMessage("Die Schulgliederung ist für diese Schulform nicht gültig.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.CONFLICT);
 	}
 
@@ -281,7 +309,7 @@ class DataJahrgangsdatenTest {
 
 		when(conn.queryByKey(DTOJahrgang.class, 10L)).thenReturn(null);
 
-		final Throwable throwable = catchThrowable(() -> this.dut.mapAttribute(expectedDTO, "idFolgejahrgang", 10, null));
+		final Throwable throwable = catchThrowable(() -> this.data.mapAttribute(expectedDTO, "idFolgejahrgang", 10, null));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
@@ -294,7 +322,7 @@ class DataJahrgangsdatenTest {
 	void testMapAttributeIdFolgejahrgangIsNull() throws ApiOperationException {
 		final DTOJahrgang expectedDTO = new DTOJahrgang(2L);
 
-		this.dut.mapAttribute(expectedDTO, "idFolgejahrgang", null, null);
+		this.data.mapAttribute(expectedDTO, "idFolgejahrgang", null, null);
 
 		assertThat(expectedDTO.Folgejahrgang_ID).isNull();
 	}
@@ -312,54 +340,30 @@ class DataJahrgangsdatenTest {
 	@Test
 	@DisplayName("DTOMapByKlassen | Liste von DTOKlassen")
 	void testDTOMapByKlassenListDTOKlassen() {
-		final List<DTOKlassen> dtoKlassen = new ArrayList<>();
-		final DTOKlassen dtoKlasse = new DTOKlassen(1L, 1L, "5a");
-		dtoKlasse.Jahrgang_ID = 10L;
-		dtoKlassen.add(dtoKlasse);
+		final var klasse = new DTOKlassen(1L, 1L, "5a");
+		klasse.Jahrgang_ID = 10L;
+		final var jahrgang = new DTOJahrgang(klasse.Jahrgang_ID);
+		jahrgang.Folgejahrgang_ID = 11L;
+		when(conn.queryByKeyList(DTOJahrgang.class, Set.of(10L))).thenReturn(List.of(jahrgang));
 
-		final List<DTOJahrgang> dtoJahrgangs = new ArrayList<>();
-		final DTOJahrgang dtoJahrgang = new DTOJahrgang(dtoKlasse.Jahrgang_ID);
-		dtoJahrgang.Folgejahrgang_ID = 11L;
-		dtoJahrgangs.add(dtoJahrgang);
+		final var result = DataJahrgangsdaten.getDTOMapByKlassen(conn, List.of(klasse));
 
-		final List<Long> idsJahrgaenge = new ArrayList<>();
-		idsJahrgaenge.add(10L);
-
-		when(conn.queryByKeyList(DTOJahrgang.class, idsJahrgaenge)).thenReturn(dtoJahrgangs);
-
-		final Map<Long, DTOJahrgang> actual = DataJahrgangsdaten.getDTOMapByKlassen(conn, dtoKlassen);
-
-		assertThat(actual.get(dtoKlasse.ID))
+		assertThat(result.get(klasse.ID))
 				.isNotNull()
 				.satisfies(dto -> {
-					assertThat(dto.ID).isEqualTo(dtoJahrgang.ID);
-					assertThat(dto.Folgejahrgang_ID).isEqualTo(dtoJahrgang.Folgejahrgang_ID);
+					assertThat(dto.ID).isEqualTo(jahrgang.ID);
+					assertThat(dto.Folgejahrgang_ID).isEqualTo(jahrgang.Folgejahrgang_ID);
 				});
 	}
 
-	private static Stream<Arguments> provideMappingAttributes() {
-		return Stream.of(
-				arguments("id", 2L),
-				arguments("kuerzel", "kl"),
-				arguments("kuerzelStatistik", "00"),
-				arguments("bezeichnung", "bezeichnung"),
-				arguments("sortierung", 10000),
-				arguments("kuerzelSchulgliederung", "A01"),
-				arguments("idFolgejahrgang", 10L),
-				arguments("anzahlRestabschnitte", 3),
-				arguments("istSichtbar", true),
-				arguments("gueltigVon", 10L),
-				arguments("gueltigBis", 12L)
-		);
-	}
-
 	private DTOJahrgang getDTOJahrgang() {
-		final DTOJahrgang dto = new DTOJahrgang(0L);
+		final var dto = new DTOJahrgang(0L);
 		dto.InternKrz = "intern";
 		dto.GueltigVon = 4L;
 		dto.GueltigBis = 5L;
 		dto.ASDJahrgang = "ASD";
 		dto.ASDBezeichnung = "ASD";
+		dto.Kurzbezeichnung = "12";
 		dto.Sichtbar = false;
 		dto.Sortierung = 10000;
 		dto.GliederungKuerzel = "SGL";

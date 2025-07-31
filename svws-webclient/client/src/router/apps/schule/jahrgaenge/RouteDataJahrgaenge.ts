@@ -29,7 +29,7 @@ export class RouteDataJahrgaenge extends RouteDataAuswahl<JahrgaengeListeManager
 	}
 
 	protected async createManager(_ : number) : Promise<Partial<RouteStateAuswahlInterface<JahrgaengeListeManager>>> {
-		const jahrgaenge = await api.server.getJahrgaenge(api.schema);
+		const jahrgaenge = await api.server.getJahrgangsdaten(api.schema);
 		const manager = new JahrgaengeListeManager(api.abschnitt.id, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte, api.schulform, jahrgaenge);
 
 		return { manager };

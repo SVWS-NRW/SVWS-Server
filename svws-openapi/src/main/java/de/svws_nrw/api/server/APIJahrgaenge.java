@@ -75,6 +75,27 @@ public class APIJahrgaenge {
 				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
 	}
 
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Liste der Jahrgänge im angegebenen Schema.
+	 *
+	 * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request       die Informationen zur HTTP-Anfrage
+	 *
+	 * @return              die Liste der Jahrgänge mit ID des Datenbankschemas
+	 */
+	@GET
+	@Path("/")
+	@Operation(summary = "Gibt eine Übersicht von allen Jahrgangsdaten zurück.",
+			description = "Erstellt eine Liste aller in der Datenbank vorhanden Jahrgangsdaten insofern der SVWS-Benutzer die notwendige Berechtigung besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste von Jahrgangs-Listen-Einträgen",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = JahrgangsDaten.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Jahrgangsdaten anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Jahrgangs-Einträge gefunden")
+	public Response getJahrgangsdaten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> new DataJahrgangsdaten(conn).getAllAsResponse(), request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+	}
+
 
 
 	/**

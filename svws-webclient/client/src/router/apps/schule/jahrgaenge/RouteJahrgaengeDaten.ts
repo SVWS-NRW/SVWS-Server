@@ -26,6 +26,7 @@ export class RouteJahrgaengeDaten extends RouteNode<any, RouteJahrgaenge> {
 			schulform: api.schulform,
 			manager: () => routeJahrgaenge.data.manager,
 			patch: routeJahrgaenge.data.patch,
+			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 

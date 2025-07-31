@@ -9,9 +9,14 @@ export class JahrgangsDaten extends JavaObject {
 	public id : number = 0;
 
 	/**
-	 * Das Kürzel des Jahrgangs.
+	 * Das schulinterne Kürzel des Jahrgangs.
 	 */
 	public kuerzel : string | null = null;
+
+	/**
+	 * Die schulinterne Kurzbezeichnung
+	 */
+	public kurzbezeichnung : string | null = null;
 
 	/**
 	 * Das dem Jahrgang zugeordnete Statistik-Kürzel.
@@ -19,7 +24,7 @@ export class JahrgangsDaten extends JavaObject {
 	public kuerzelStatistik : string | null = null;
 
 	/**
-	 * Der Name / die Bezeichnung des Jahrgangs.
+	 * Die dem Jahrgang zugeordnete schulinterne Bezeichnung.
 	 */
 	public bezeichnung : string = "";
 
@@ -83,6 +88,7 @@ export class JahrgangsDaten extends JavaObject {
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		result.kuerzel = (obj.kuerzel === undefined) ? null : obj.kuerzel === null ? null : obj.kuerzel;
+		result.kurzbezeichnung = (obj.kurzbezeichnung === undefined) ? null : obj.kurzbezeichnung === null ? null : obj.kurzbezeichnung;
 		result.kuerzelStatistik = (obj.kuerzelStatistik === undefined) ? null : obj.kuerzelStatistik === null ? null : obj.kuerzelStatistik;
 		if (obj.bezeichnung === undefined)
 			throw new Error('invalid json format, missing attribute bezeichnung');
@@ -105,6 +111,7 @@ export class JahrgangsDaten extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
+		result += '"kurzbezeichnung" : ' + ((obj.kurzbezeichnung === null) ? 'null' : JSON.stringify(obj.kurzbezeichnung)) + ',';
 		result += '"kuerzelStatistik" : ' + ((obj.kuerzelStatistik === null) ? 'null' : JSON.stringify(obj.kuerzelStatistik)) + ',';
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
@@ -126,6 +133,9 @@ export class JahrgangsDaten extends JavaObject {
 		}
 		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
+		}
+		if (obj.kurzbezeichnung !== undefined) {
+			result += '"kurzbezeichnung" : ' + ((obj.kurzbezeichnung === null) ? 'null' : JSON.stringify(obj.kurzbezeichnung)) + ',';
 		}
 		if (obj.kuerzelStatistik !== undefined) {
 			result += '"kuerzelStatistik" : ' + ((obj.kuerzelStatistik === null) ? 'null' : JSON.stringify(obj.kuerzelStatistik)) + ',';
