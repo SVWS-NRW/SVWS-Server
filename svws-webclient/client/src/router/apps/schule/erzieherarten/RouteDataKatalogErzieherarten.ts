@@ -1,7 +1,7 @@
 import type { List, SimpleOperationResponse , Erzieherart } from "@core";
-import { ErzieherartListeManager, ArrayList } from "@core";
+import { ArrayList } from "@core";
 import { api } from "~/router/Api";
-import { ViewType } from "@ui";
+import { ViewType, ErzieherartListeManager } from "@ui";
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";

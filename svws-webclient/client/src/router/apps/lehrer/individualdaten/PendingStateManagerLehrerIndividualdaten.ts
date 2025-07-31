@@ -1,5 +1,5 @@
-import { PendingStateManager } from "@ui";
-import type { AuswahlManager, LehrerStammdaten } from "@core";
+import { PendingStateManager, AuswahlManager } from "@ui";
+import type { LehrerStammdaten } from "@core";
 
 
 /**

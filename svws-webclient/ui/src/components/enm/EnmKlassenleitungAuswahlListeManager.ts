@@ -2,7 +2,7 @@ import { JavaObject } from '../../../../core/src/java/lang/JavaObject';
 import type { Schulform } from '../../../../core/src/asd/types/schule/Schulform';
 import { JavaString } from '../../../../core/src/java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../../core/src/core/exceptions/DeveloperNotificationException';
-import { AuswahlManager } from '../../../../core/src/core/utils/AuswahlManager';
+import { AuswahlManager } from '../../ui/AuswahlManager';
 import type { JavaFunction } from '../../../../core/src/java/util/function/JavaFunction';
 import type { List } from '../../../../core/src/java/util/List';
 import { Arrays } from '../../../../core/src/java/util/Arrays';

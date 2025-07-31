@@ -1,4 +1,5 @@
-import type { BenutzerKompetenz, Merkmal, MerkmaleListeManager } from "@core";
+import type { BenutzerKompetenz, Merkmal } from "@core";
+import type { MerkmaleListeManager } from "@ui";
 
 export interface MerkmaleDatenProps {
 	manager: () => MerkmaleListeManager;

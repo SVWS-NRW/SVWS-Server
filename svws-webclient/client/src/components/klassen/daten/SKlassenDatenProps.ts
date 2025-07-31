@@ -1,5 +1,6 @@
-import type { Schulform, KlassenDaten, Schueler, KlassenListeManager, List, Schulgliederung, ServerMode, BenutzerKompetenz } from "@core";
+import type { Schulform, KlassenDaten, Schueler, List, Schulgliederung, ServerMode, BenutzerKompetenz } from "@core";
 import type { LehrerListeEintrag } from "@core";
+import type { KlassenListeManager } from "@ui";
 
 export interface KlassenDatenProps {
 	schulform: Schulform;

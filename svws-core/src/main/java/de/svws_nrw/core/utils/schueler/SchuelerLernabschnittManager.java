@@ -1,6 +1,5 @@
 package de.svws_nrw.core.utils.schueler;
 
-import de.svws_nrw.core.utils.kataloge.jahrgaenge.JahrgaengeListeManager;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -160,10 +159,25 @@ public class SchuelerLernabschnittManager {
 			this._mapFoerderschwerpunktByID.put(f.id, f);
 	}
 
+	private static final @NotNull Comparator<JahrgangsDaten> jahrgangsDatencomparator =
+			(final @NotNull JahrgangsDaten a, final @NotNull JahrgangsDaten b) -> {
+				int cmp = a.sortierung - b.sortierung;
+				if (cmp != 0)
+					return cmp;
+
+				if ((a.kuerzel != null) && (b.kuerzel != null)) {
+					cmp = a.kuerzel.compareTo(b.kuerzel);
+					if (cmp != 0)
+						return cmp;
+				}
+
+				return Long.compare(a.id, b.id);
+			};
+
 	private void initJahrgaenge(final @NotNull List<JahrgangsDaten> jahrgaenge) {
 		this._jahrgaenge.clear();
 		this._jahrgaenge.addAll(jahrgaenge);
-		this._jahrgaenge.sort(JahrgaengeListeManager.comparator);
+		this._jahrgaenge.sort(jahrgangsDatencomparator);
 		this._mapJahrgangByID.clear();
 		for (final @NotNull JahrgangsDaten j : jahrgaenge)
 			this._mapJahrgangByID.put(j.id, j);

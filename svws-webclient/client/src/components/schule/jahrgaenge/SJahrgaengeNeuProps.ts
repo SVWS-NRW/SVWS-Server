@@ -1,5 +1,5 @@
-import type { JahrgangsDaten, JahrgaengeListeManager } from "@core";
-import type { Checkpoint } from "@ui";
+import type { JahrgangsDaten } from "@core";
+import type { Checkpoint, JahrgaengeListeManager } from "@ui";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 
 export interface SchuleJahrgangNeuProps {

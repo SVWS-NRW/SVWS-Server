@@ -1,6 +1,5 @@
 import type { RouteParams } from "vue-router";
 
-import type { KlassenListeManager} from "@core";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import type { RouteNode } from "~/router/RouteNode";
@@ -13,7 +12,7 @@ import type { KlassenAuswahlProps } from "~/components/klassen/SKlassenAuswahlPr
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import { routeKlasseGruppenprozesse } from "./RouteKlassenGruppenprozesse";
 import { routeKlassenNeu } from "./RouteKlassenNeu";
-import { AppMenuGroup } from "@ui";
+import { AppMenuGroup, KlassenListeManager } from "@ui";
 
 
 const SKlassenAuswahl = () => import("~/components/klassen/SKlassenAuswahl.vue")

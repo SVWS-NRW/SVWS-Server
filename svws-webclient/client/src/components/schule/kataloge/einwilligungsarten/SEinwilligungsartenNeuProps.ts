@@ -1,5 +1,5 @@
-import type {Einwilligungsart, EinwilligungsartenListeManager} from "@core";
-import type { Checkpoint } from "@ui";
+import type { Einwilligungsart } from "@core";
+import type { Checkpoint, EinwilligungsartenListeManager } from "@ui";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 
 export interface SchuleEinwilligungsartenNeuProps {

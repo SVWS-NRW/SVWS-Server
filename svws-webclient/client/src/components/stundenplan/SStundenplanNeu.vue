@@ -27,7 +27,9 @@
 
 <script setup lang="ts">
 
-	import { StundenplanListeManager, DateUtils, type Stundenplan, DeveloperNotificationException, ValidatorFehlerart } from "@core";
+	import { DateUtils, type Stundenplan, DeveloperNotificationException, ValidatorFehlerart } from "@core";
+	import { StundenplanListeManager } from "@ui";
+
 	import { ref, onMounted, watch, computed } from "vue";
 	import type { StundenplanNeuProps } from "~/components/stundenplan/SStundenplanNeuProps";
 

@@ -1,11 +1,11 @@
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
 import type { VermerkartEintrag, List, SimpleOperationResponse } from "@core";
-import { ArrayList, VermerkartenListeManager } from "@core";
+import { ArrayList } from "@core";
 import { api } from "~/router/Api";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
 import { routeKatalogVermerkartenDaten } from "./RouteKatalogVermerkartenDaten";
-import { ViewType } from "@ui";
+import { ViewType, VermerkartenListeManager } from "@ui";
 import { routeKatalogVermerkartenGruppenprozesse } from "./RouteKatalogVermerkartenGruppenprozesse";
 import { routeKatalogVermerkartNeu } from "./RouteKatalogVermerkartNeu";
 

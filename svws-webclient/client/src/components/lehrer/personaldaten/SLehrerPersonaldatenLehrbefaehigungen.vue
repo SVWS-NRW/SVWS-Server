@@ -28,7 +28,8 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { List, LehrerLehrbefaehigungEintrag, LehrerListeManager, LehrerPersonaldaten } from "@core";
+	import type { List, LehrerLehrbefaehigungEintrag, LehrerPersonaldaten } from "@core";
+	import type { LehrerListeManager } from "@ui";
 	import { ArrayList, LehrerLehramt} from "@core";
 	import { LehrerLehrbefaehigung, LehrerLehrbefaehigungAnerkennung, Arrays } from "@core";
 

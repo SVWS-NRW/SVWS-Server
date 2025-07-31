@@ -1,6 +1,6 @@
-import type { BenutzerKompetenz, FoerderschwerpunktEintrag, FoerderschwerpunkteListeManager } from "@core";
+import type { BenutzerKompetenz, FoerderschwerpunktEintrag } from "@core";
 import type { RoutingStatus } from "~/router/RoutingStatus";
-import type { Checkpoint } from "@ui";
+import type { Checkpoint, FoerderschwerpunkteListeManager } from "@ui";
 
 export interface FoerderschwerpunkteNeuProps {
 	manager: () => FoerderschwerpunkteListeManager;

@@ -1,5 +1,5 @@
-import type { TelefonArt, TelefonArtListeManager } from "@core";
-import type { Checkpoint } from "@ui";
+import type { TelefonArt } from "@core";
+import type { Checkpoint, TelefonArtListeManager } from "@ui";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 
 export interface STelefonArtenNeuProps {

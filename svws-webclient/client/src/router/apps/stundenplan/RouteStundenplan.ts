@@ -1,7 +1,7 @@
-import type { RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteParams } from "vue-router";
 import type { RouteApp } from "~/router/apps/RouteApp";
 
-import type { StundenplanListeManager , DeveloperNotificationException} from "@core";
+import type {  DeveloperNotificationException} from "@core";
 import { BenutzerKompetenz, Schulform, ServerMode, StundenplanKonfiguration } from "@core";
 
 import { api } from "~/router/Api";
@@ -22,6 +22,7 @@ import { routeStundenplanRaum } from "./RouteStundenplanRaum";
 import { ConfigElement } from "../../../../../ui/src/utils/Config";
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import { AppMenuGroup } from "@ui";
+import type { StundenplanListeManager } from "@ui";
 import { routeStundenplanNeu } from "./RouteStundenplanNeu";
 import { routeStundenplanGruppenprozesse } from "./RouteStundenplanGruppenprozesse";
 import { routeError } from "~/router/error/RouteError";

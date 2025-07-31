@@ -1,7 +1,9 @@
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 
 import { List, SchuelerListeEintrag, SchuelerKAoADaten, SchuelerLernabschnittListeEintrag } from "@core";
-import { SchuelerKAoAManager, DeveloperNotificationException } from "@core";
+import { DeveloperNotificationException } from "@core";
+import { SchuelerKAoAManager } from "@ui";
+
 import { api } from "~/router/Api";
 import { routeApp } from "../../RouteApp";
 

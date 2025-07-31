@@ -1,10 +1,10 @@
 import type { List, SchulEintrag, SimpleOperationResponse } from "@core";
 import type { RouteParamsRawGeneric } from "vue-router";
-import { ArrayList, KatalogSchuleListeManager } from "@core";
+import { ArrayList } from "@core";
 import { api } from "~/router/Api";
 import { routeKatalogSchuleDaten } from "./RouteKatalogSchuleDaten";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
-import { ViewType } from "@ui";
+import { ViewType, KatalogSchuleListeManager } from "@ui";
 import { routeKatalogSchuleGruppenprozesse } from "~/router/apps/schule/schulen/RouteKatalogSchuleGruppenprozesse";
 import { routeKatalogSchuleNeu } from "~/router/apps/schule/schulen/RouteKatalogSchuleNeu";
 

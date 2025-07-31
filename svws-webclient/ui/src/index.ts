@@ -120,3 +120,32 @@ export type { EnmKlassenleitungProps } from "./components/enm/EnmKlassenleitungP
 // Enums
 export { AppMenuGroup } from "./ui/nav/AppMenuGroup";
 export { ViewType } from "./ui/nav/ViewType";
+
+// Managers
+export { AuswahlManager } from "./ui/AuswahlManager";
+export { TelefonArtListeManager } from "./ui/managers/telefonart/TelefonArtListeManager";
+export { StundenplanListeManager } from "./ui/managers/stundenplan/StundenplanListeManager";
+export { StundenplanUnterrichtListeManager } from "./ui/managers/stundenplan/StundenplanUnterrichtListeManager";
+export { KatalogSchuleListeManager } from "./ui/managers/schule/KatalogSchuleListeManager";
+export { SchuelerListeManager } from "./ui/managers/schueler/SchuelerListeManager";
+export { SchuelerKAoAManager } from "./ui/managers/schueler/SchuelerKAoAManager";
+export { ReligionListeManager } from "./ui/managers/religion/ReligionListeManager";
+export { RaumListeManager } from "./ui/managers/raum/RaumListeManager";
+export { LernplattformListeManager } from "./ui/managers/lernplattform/LernplattformListeManager";
+export { LehrerListeManager } from "./ui/managers/lehrer/LehrerListeManager";
+export { KursListeManager } from "./ui/managers/kurse/KursListeManager";
+export { KlassenListeManager } from "./ui/managers/klassen/KlassenListeManager";
+export { AbteilungenListeManager } from './ui/managers/kataloge/abteilungen/AbteilungenListeManager';
+export { BeschaeftigungsartenListeManager } from './ui/managers/kataloge/beschaeftigungsarten/BeschaeftigungsartenListeManager';
+export { EntlassgruendeListeManager } from './ui/managers/kataloge/entlassgruende/EntlassgruendeListeManager';
+export { FahrschuelerartenListeManager } from './ui/managers/kataloge/fahrschuelerarten/FahrschuelerartenListeManager';
+export { FoerderschwerpunkteListeManager } from './ui/managers/kataloge/foerderschwerpunkte/FoerderschwerpunkteListeManager';
+export { HaltestellenListeManager } from './ui/managers/kataloge/haltestellen/HaltestellenListeManager';
+export { JahrgaengeListeManager } from './ui/managers/kataloge/jahrgaenge/JahrgaengeListeManager';
+export { KindergaertenListeManager } from './ui/managers/kataloge/kindergaerten/KindergaertenListeManager';
+export { MerkmaleListeManager } from './ui/managers/kataloge/merkmale/MerkmaleListeManager';
+export { SportbefreiungenListeManager } from './ui/managers/kataloge/sportbefreiungen/SportbefreiungenListeManager';
+export { VermerkartenListeManager } from './ui/managers/kataloge/vermerkart/VermerkartenListeManager';
+export { FachListeManager } from './ui/managers/fach/FachListeManager';
+export { ErzieherartListeManager } from './ui/managers/erzieherart/ErzieherartListeManager';
+export { EinwilligungsartenListeManager } from './ui/managers/einwilligungsart/EinwilligungsartenListeManager';

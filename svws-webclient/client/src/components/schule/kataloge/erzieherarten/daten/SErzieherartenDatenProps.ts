@@ -1,4 +1,5 @@
-import type { Erzieherart, ErzieherartListeManager } from "@core";
+import type { Erzieherart } from "@core";
+import type { ErzieherartListeManager } from "@ui";
 
 export interface ErzieherartenDatenProps {
 	patch: (data : Partial<Erzieherart>) => Promise<void>;

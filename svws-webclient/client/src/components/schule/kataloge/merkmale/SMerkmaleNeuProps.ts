@@ -1,5 +1,5 @@
-import type { BenutzerKompetenz, Merkmal, MerkmaleListeManager } from "@core";
-import type { Checkpoint } from "@ui";
+import type { BenutzerKompetenz, Merkmal } from "@core";
+import type { Checkpoint, MerkmaleListeManager } from "@ui";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 
 export interface MerkmaleNeuProps {

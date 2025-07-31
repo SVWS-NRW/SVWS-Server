@@ -1,6 +1,6 @@
 import type { RouteParams } from "vue-router";
 
-import type { LehrerListeManager } from "@core";
+import type { LehrerListeManager } from "@ui";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { RouteNode } from "~/router/RouteNode";
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";

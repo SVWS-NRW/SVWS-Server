@@ -1,5 +1,5 @@
 import type { RouteParams } from "vue-router";
-import type { LernplattformListeManager} from "@core";
+import type { LernplattformListeManager } from "@ui";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { RouteNode } from "~/router/RouteNode";
 import type { RouteApp } from "~/router/apps/RouteApp";

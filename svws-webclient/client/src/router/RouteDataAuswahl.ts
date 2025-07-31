@@ -1,10 +1,11 @@
-import type { JavaMap, List, SimpleOperationResponse, AuswahlManager } from "@core";
+import type { JavaMap, List, SimpleOperationResponse } from "@core";
 import { ArrayList, DeveloperNotificationException, HashMap } from "@core";
 import { RouteData, type RouteStateInterface } from "./RouteData";
 import type { RouteParamsRawGeneric } from "vue-router";
 import { RouteManager } from "./RouteManager";
 import { RoutingStatus } from "./RoutingStatus";
 import { ViewType } from "@ui";
+import type { AuswahlManager } from "@ui";
 import type { RouteNode } from "./RouteNode";
 import { PendingStateManagerRegistry } from "~/router/PendingStateManagerRegistry";
 

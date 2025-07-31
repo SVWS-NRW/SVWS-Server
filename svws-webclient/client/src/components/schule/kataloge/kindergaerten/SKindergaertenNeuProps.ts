@@ -1,5 +1,5 @@
-import type { BenutzerKompetenz, KindergaertenListeManager, Kindergarten } from "@core";
-import type { Checkpoint } from "@ui";
+import type { BenutzerKompetenz, Kindergarten } from "@core";
+import type { Checkpoint, KindergaertenListeManager } from "@ui";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 
 export interface KindergaertenNeuProps {

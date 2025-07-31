@@ -1,9 +1,9 @@
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
 import type { List, SimpleOperationResponse, Kindergarten } from "@core";
-import { KindergaertenListeManager, ArrayList } from "@core";
+import { ArrayList } from "@core";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
-import { ViewType } from "@ui";
+import { ViewType, KindergaertenListeManager } from "@ui";
 import { api } from "~/router/Api";
 import { routeKindergaertenGruppenprozesse } from "~/router/apps/schule/kindergaerten/RouteKindergaertenGruppenprozesse";
 import { routeKindergaertenNeu } from "~/router/apps/schule/kindergaerten/RouteKindergaertenNeu";

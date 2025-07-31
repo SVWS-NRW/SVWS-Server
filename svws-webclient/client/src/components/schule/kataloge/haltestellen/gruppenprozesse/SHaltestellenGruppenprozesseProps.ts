@@ -1,4 +1,5 @@
-import type { BenutzerKompetenz, HaltestellenListeManager, List, Schulform, ServerMode } from "@core";
+import type { BenutzerKompetenz, List, Schulform, ServerMode } from "@core";
+import type { HaltestellenListeManager } from "@ui";
 
 export interface HaltestellenGruppenprozesseProps {
 	serverMode: ServerMode;

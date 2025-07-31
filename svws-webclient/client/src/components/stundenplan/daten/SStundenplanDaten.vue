@@ -113,9 +113,9 @@
 	import type { ComponentExposed } from "vue-component-type-helpers";
 	import type { StundenplanDatenProps } from "./SStundenplanDatenProps";
 	import type { DataTableColumn, SortByAndOrder } from "@ui";
-	import { SvwsUiSelect } from "@ui";
+	import { SvwsUiSelect, StundenplanListeManager } from "@ui";
 	import type { StundenplanRaum, StundenplanAufsichtsbereich, StundenplanPausenzeit, Stundenplan } from "@core";
-	import { ArrayList, BenutzerKompetenz, DateUtils, Wochentag, ValidatorFehlerart, StundenplanListeManager } from "@core";
+	import { ArrayList, BenutzerKompetenz, DateUtils, Wochentag, ValidatorFehlerart } from "@core";
 
 	const props = defineProps<StundenplanDatenProps>();
 	const select = ref<ComponentExposed<typeof SvwsUiSelect<typeof wochenTypModell>>>();

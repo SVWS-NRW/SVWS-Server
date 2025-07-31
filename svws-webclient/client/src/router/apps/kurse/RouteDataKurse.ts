@@ -1,5 +1,6 @@
 import type { KursDaten, KursLehrer, List, Schueler, SimpleOperationResponse } from "@core";
-import { DeveloperNotificationException, KursListeManager } from "@core";
+import { DeveloperNotificationException } from "@core";
+import { KursListeManager } from "@ui";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";

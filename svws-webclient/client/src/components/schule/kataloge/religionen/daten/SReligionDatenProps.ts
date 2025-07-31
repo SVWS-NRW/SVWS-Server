@@ -1,4 +1,5 @@
-import type { ReligionEintrag, ReligionListeManager } from "@core";
+import type { ReligionEintrag } from "@core";
+import type { ReligionListeManager } from "@ui";
 
 export interface ReligionDatenProps {
 	religionListeManager: () => ReligionListeManager;

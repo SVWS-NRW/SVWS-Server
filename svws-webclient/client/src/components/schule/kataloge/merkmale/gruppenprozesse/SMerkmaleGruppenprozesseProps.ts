@@ -1,4 +1,5 @@
-import type { BenutzerKompetenz, List, MerkmaleListeManager, Schulform, ServerMode } from "@core";
+import type { BenutzerKompetenz, List, Schulform, ServerMode } from "@core";
+import type { MerkmaleListeManager } from "@ui";
 
 export interface MerkmaleGruppenprozesseProps {
 	serverMode: ServerMode;

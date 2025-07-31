@@ -1,4 +1,5 @@
-import type { ReligionListeManager, ReligionEintrag } from "@core";
+import type { ReligionEintrag } from "@core";
+import type { ReligionListeManager } from "@ui";
 import type { Checkpoint } from "@ui";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 

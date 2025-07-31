@@ -1,5 +1,5 @@
-import { PendingStateManager } from "@ui";
-import type { AuswahlManager, Fahrschuelerart, Haltestelle, ReligionEintrag, SchuelerStammdaten, SchulEintrag } from "@core";
+import { PendingStateManager, AuswahlManager } from "@ui";
+import type { Fahrschuelerart, Haltestelle, ReligionEintrag, SchuelerStammdaten, SchulEintrag } from "@core";
 import { Nationalitaeten, SchuelerStatus, Verkehrssprache } from "@core";
 import { computed } from "vue";
 

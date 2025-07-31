@@ -1,4 +1,5 @@
-import type { KursDaten, Schueler, Schulform, KursListeManager, ServerMode, BenutzerKompetenz, KursLehrer, List } from "@core";
+import type { KursDaten, Schueler, Schulform, ServerMode, BenutzerKompetenz, KursLehrer, List } from "@core";
+import type { KursListeManager } from "@ui";
 
 export interface KursDatenProps {
 	schulform: Schulform;

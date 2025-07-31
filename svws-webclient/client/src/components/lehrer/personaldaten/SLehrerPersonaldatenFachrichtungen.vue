@@ -28,7 +28,8 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { List, LehrerFachrichtungEintrag, LehrerListeManager, LehrerPersonaldaten } from "@core";
+	import type { List, LehrerFachrichtungEintrag, LehrerPersonaldaten } from "@core";
+	import type { LehrerListeManager } from "@ui";
 	import { LehrerFachrichtung, LehrerFachrichtungAnerkennung, Arrays, LehrerLehramt, ArrayList } from "@core";
 
 	const props = defineProps<{

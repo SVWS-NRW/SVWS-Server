@@ -1,4 +1,5 @@
-import type { BenutzerKompetenz, Beschaeftigungsart, BeschaeftigungsartenListeManager } from "@core";
+import type { BenutzerKompetenz, Beschaeftigungsart } from "@core";
+import type { BeschaeftigungsartenListeManager } from "@ui";
 
 export interface BeschaeftigungsartenDatenProps {
 	manager: () => BeschaeftigungsartenListeManager;

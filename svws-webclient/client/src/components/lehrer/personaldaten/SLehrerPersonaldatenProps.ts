@@ -1,4 +1,5 @@
-import type { BenutzerKompetenz, LehrerFachrichtungAnerkennung, LehrerFachrichtungEintrag, LehrerLehramtAnerkennung, LehrerLehramtEintrag, LehrerLehrbefaehigungAnerkennung, LehrerLehrbefaehigungEintrag, LehrerListeEintrag, LehrerListeManager, LehrerPersonalabschnittsdaten, LehrerPersonaldaten, LehrerStammdaten, List, Schulform, Schuljahresabschnitt, ServerMode, ValidatorKontext} from "@core";
+import type { BenutzerKompetenz, LehrerFachrichtungEintrag, LehrerLehramtEintrag, LehrerLehrbefaehigungEintrag, LehrerPersonalabschnittsdaten, LehrerPersonaldaten, List, Schulform, Schuljahresabschnitt, ServerMode, ValidatorKontext} from "@core";
+import type { LehrerListeManager } from "@ui";
 
 export interface LehrerPersonaldatenProps {
 	validatorKontext: () => ValidatorKontext;

@@ -1,5 +1,5 @@
 
-import type { KursListeManager} from "@core";
+import type { KursListeManager } from "@ui";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { type RouteApp } from "~/router/apps/RouteApp";

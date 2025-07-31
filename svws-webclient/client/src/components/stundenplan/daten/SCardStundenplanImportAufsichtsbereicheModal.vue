@@ -38,7 +38,10 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { List, StundenplanAufsichtsbereich, StundenplanListeManager } from "@core";
+	import type { List, StundenplanAufsichtsbereich } from "@core";
+	import type { StundenplanListeManager } from "@ui";
+
+
 
 	const props = defineProps<{
 		aufsichtsbereicheSyncToVorlage: (aufsichtsbereiche: StundenplanAufsichtsbereich[]) => Promise<void>;

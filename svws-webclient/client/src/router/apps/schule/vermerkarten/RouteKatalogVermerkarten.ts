@@ -1,7 +1,7 @@
 import type { RouteParams } from "vue-router";
 import type { RouteNode } from "~/router/RouteNode";
 import type { RouteApp } from "~/router/apps/RouteApp";
-import type { VermerkartenListeManager } from "@core";
+import type { VermerkartenListeManager } from "@ui";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import { RouteSchuleMenuGroup } from "../RouteSchuleMenuGroup";

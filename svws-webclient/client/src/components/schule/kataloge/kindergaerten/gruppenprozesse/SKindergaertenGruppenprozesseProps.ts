@@ -1,4 +1,5 @@
-import type { BenutzerKompetenz, KindergaertenListeManager, List, Schulform, ServerMode } from "@core";
+import type { BenutzerKompetenz, List, Schulform, ServerMode } from "@core";
+import type { KindergaertenListeManager } from "@ui";
 
 export interface KindergaertenGruppenprozesseProps {
 	serverMode: ServerMode;

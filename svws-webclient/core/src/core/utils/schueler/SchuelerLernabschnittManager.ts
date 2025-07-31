@@ -17,7 +17,6 @@ import { Schulgliederung } from '../../../asd/types/schule/Schulgliederung';
 import type { List } from '../../../java/util/List';
 import { Fach } from '../../../asd/types/fach/Fach';
 import { SchuelerLeistungsdaten } from '../../../asd/data/schueler/SchuelerLeistungsdaten';
-import { JahrgaengeListeManager } from '../../../core/utils/kataloge/jahrgaenge/JahrgaengeListeManager';
 import { Jahrgaenge } from '../../../asd/types/jahrgang/Jahrgaenge';
 import { SchuelerLernabschnittsdaten } from '../../../asd/data/schueler/SchuelerLernabschnittsdaten';
 import { Note } from '../../../asd/types/Note';
@@ -98,6 +97,18 @@ export class SchuelerLernabschnittManager extends JavaObject {
 		return SchuelerLernabschnittManager._compFach.compare(aFach, bFach);
 	} };
 
+	private static readonly jahrgangsDatencomparator : Comparator<JahrgangsDaten> = { compare : (a: JahrgangsDaten, b: JahrgangsDaten) => {
+		let cmp : number = a.sortierung - b.sortierung;
+		if (cmp !== 0)
+			return cmp;
+		if ((a.kuerzel !== null) && (b.kuerzel !== null)) {
+			cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
+			if (cmp !== 0)
+				return cmp;
+		}
+		return JavaLong.compare(a.id, b.id);
+	} };
+
 
 	/**
 	 * Erstellt einen neuen Manager mit den übergebenen Lernabschnittsdaten und den übergebenen Katalogen
@@ -154,7 +165,7 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	private initJahrgaenge(jahrgaenge : List<JahrgangsDaten>) : void {
 		this._jahrgaenge.clear();
 		this._jahrgaenge.addAll(jahrgaenge);
-		this._jahrgaenge.sort(JahrgaengeListeManager.comparator);
+		this._jahrgaenge.sort(SchuelerLernabschnittManager.jahrgangsDatencomparator);
 		this._mapJahrgangByID.clear();
 		for (const j of jahrgaenge)
 			this._mapJahrgangByID.put(j.id, j);

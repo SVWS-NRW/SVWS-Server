@@ -1,5 +1,5 @@
 import type { ApiFile, FachDaten, List, ReportingParameter, SimpleOperationResponse, StundenplanListeEintrag } from "@core";
-import { ArrayList, BenutzerKompetenz, DeveloperNotificationException, FachListeManager } from "@core";
+import { ArrayList, BenutzerKompetenz, DeveloperNotificationException } from "@core";
 
 import { api } from "~/router/Api";
 
@@ -8,7 +8,7 @@ import { routeSchuleFachGruppenprozesse } from "./RouteSchuleFachGruppenprozesse
 import { routeSchuleFachNeu } from "./RouteSchuleFachNeu";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
-import { ViewType } from "@ui";
+import { ViewType, FachListeManager } from "@ui";
 import type { RouteNode } from "~/router/RouteNode";
 
 interface RouteStateFaecher extends RouteStateAuswahlInterface<FachListeManager> {

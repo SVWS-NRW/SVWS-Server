@@ -1,5 +1,5 @@
 import type { RouteParams } from "vue-router";
-import type { ErzieherartListeManager } from "@core";
+import type { ErzieherartListeManager } from "@ui";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { RouteNode } from "~/router/RouteNode";
 import type { RouteApp } from "~/router/apps/RouteApp";

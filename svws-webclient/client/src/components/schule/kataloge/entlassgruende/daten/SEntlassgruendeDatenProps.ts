@@ -1,4 +1,5 @@
-import type { BenutzerKompetenz, EntlassgruendeListeManager, KatalogEntlassgrund } from "@core";
+import type { BenutzerKompetenz, KatalogEntlassgrund } from "@core";
+import type { EntlassgruendeListeManager } from "@ui";
 
 export interface EntlassgruendeDatenProps {
 	manager: () => EntlassgruendeListeManager;

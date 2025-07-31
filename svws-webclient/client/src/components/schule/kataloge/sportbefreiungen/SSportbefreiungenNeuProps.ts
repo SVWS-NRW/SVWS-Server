@@ -1,5 +1,5 @@
-import type { BenutzerKompetenz, Sportbefreiung, SportbefreiungenListeManager } from "@core";
-import type { Checkpoint } from "@ui";
+import type { BenutzerKompetenz, Sportbefreiung } from "@core";
+import type { Checkpoint, SportbefreiungenListeManager } from "@ui";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 
 export interface SportbefreiungenNeuProps {

@@ -1,6 +1,6 @@
-import type { BenutzerKompetenz, Beschaeftigungsart, BeschaeftigungsartenListeManager } from "@core";
+import type { BenutzerKompetenz, Beschaeftigungsart } from "@core";
 import type { RoutingStatus } from "~/router/RoutingStatus";
-import type { Checkpoint } from "@ui";
+import type { Checkpoint, BeschaeftigungsartenListeManager } from "@ui";
 
 export interface BeschaeftigungsartenNeuProps{
 	manager: () => BeschaeftigungsartenListeManager;

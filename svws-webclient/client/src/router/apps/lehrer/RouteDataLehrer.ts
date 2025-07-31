@@ -3,10 +3,10 @@ import type {
 	LehrerLehrbefaehigungEintrag, LehrerListeEintrag, LehrerPersonalabschnittsdaten, LehrerPersonaldaten, LehrerStammdaten, List, SimpleOperationResponse,
 	StundenplanListeEintrag, ReportingParameter,
 } from "@core";
-import { ArrayList, DeveloperNotificationException, LehrerListeManager, BenutzerKompetenz } from "@core";
+import { ArrayList, DeveloperNotificationException, BenutzerKompetenz } from "@core";
 import { api } from "~/router/Api";
 import { routeLehrerIndividualdaten } from "~/router/apps/lehrer/individualdaten/RouteLehrerIndividualdaten";
-import { type PendingStateManager, ViewType } from "@ui";
+import { type PendingStateManager, ViewType,LehrerListeManager } from "@ui";
 import { routeLehrerNeu } from "~/router/apps/lehrer/RouteLehrerNeu";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";

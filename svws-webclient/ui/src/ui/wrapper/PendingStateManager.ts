@@ -1,10 +1,8 @@
 import { StateManager} from "../StateManager";
-
 import { Arrays } from "../../../../core/src/java/util/Arrays";
 import { ArrayList } from "../../../../core/src/java/util/ArrayList";
-
 import type { List } from "../../../../core/src/java/util/List";
-import type { AuswahlManager } from "../../../../core/src/core/utils/AuswahlManager";
+import type { AuswahlManager } from "../AuswahlManager";
 
 import { computed } from 'vue'
 

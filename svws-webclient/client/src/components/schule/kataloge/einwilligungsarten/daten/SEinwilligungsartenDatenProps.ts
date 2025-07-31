@@ -1,5 +1,6 @@
 import type {Einwilligungsart} from "@core";
-import type {EinwilligungsartenListeManager, SchuelerEinwilligungsartenZusammenfassung} from "@core";
+import type { SchuelerEinwilligungsartenZusammenfassung } from "@core";
+import type { EinwilligungsartenListeManager } from "@ui";
 
 export interface EinwilligungsartenDatenProps {
 	patch: (data : Partial<Einwilligungsart>) => Promise<void>;

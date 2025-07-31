@@ -1,6 +1,7 @@
 import type { ApiFile, List, ReportingParameter, SchuelerListeEintrag, SchuelerStammdaten, SimpleOperationResponse, StundenplanListeEintrag, SchuelerTelefon, SchuelerSchulbesuchsdaten, ErzieherStammdaten } from "@core";
 
-import { BenutzerKompetenz, ArrayList, SchuelerListe, SchuelerListeManager, SchuelerStatus, DeveloperNotificationException } from "@core";
+import { BenutzerKompetenz, ArrayList, SchuelerListe, SchuelerStatus, DeveloperNotificationException } from "@core";
+import { SchuelerListeManager } from "@ui";
 
 import { api } from "~/router/Api";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";

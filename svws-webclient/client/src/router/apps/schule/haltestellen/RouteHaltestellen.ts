@@ -1,7 +1,7 @@
 import type { RouteParams } from "vue-router";
 import type { RouteApp } from "~/router/apps/RouteApp";
 import type { RouteNode } from "~/router/RouteNode";
-import type { HaltestellenListeManager } from "@core";
+import type { HaltestellenListeManager } from "@ui";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import { RouteSchuleMenuGroup } from "~/router/apps/schule/RouteSchuleMenuGroup";

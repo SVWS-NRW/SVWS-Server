@@ -1,4 +1,5 @@
-import type { BenutzerKompetenz, Fahrschuelerart, FahrschuelerartenListeManager } from "@core";
+import type { BenutzerKompetenz, Fahrschuelerart } from "@core";
+import type { FahrschuelerartenListeManager } from "@ui";
 
 export interface FahrschuelerartenDatenProps {
 	manager: () => FahrschuelerartenListeManager;

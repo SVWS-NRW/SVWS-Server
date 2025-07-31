@@ -1,6 +1,8 @@
 import type { RouteParams } from "vue-router";
 
-import { BenutzerKompetenz, type JahrgaengeListeManager, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+import type { JahrgaengeListeManager } from "@ui";
+
 import type { RouteNode } from "~/router/RouteNode";
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { routeJahrgaengeDaten } from "~/router/apps/schule/jahrgaenge/RouteJahrgaengeDaten";

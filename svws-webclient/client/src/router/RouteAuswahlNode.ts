@@ -1,4 +1,4 @@
-import { DeveloperNotificationException, type AuswahlManager, type BenutzerKompetenz, type Schulform, type ServerMode } from "@core";
+import { DeveloperNotificationException, type BenutzerKompetenz, type Schulform, type ServerMode } from "@core";
 import type { RouteDataAuswahl, RouteStateAuswahlInterface } from "./RouteDataAuswahl";
 import { RouteNode } from "./RouteNode";
 import type { RouteTabProps } from "./RouteTabNode";
@@ -6,7 +6,7 @@ import { RouteTabNode } from "./RouteTabNode";
 import type { RouteComponent, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
 import { ViewType } from "@ui";
 import { api } from "./Api";
-import type { AbschnittAuswahlDaten } from "@ui";
+import type { AbschnittAuswahlDaten, AuswahlManager } from "@ui";
 import { routeApp } from "./apps/RouteApp";
 import { routeError } from "./error/RouteError";
 import { ConfigElement } from "../../../ui/src/utils/Config";

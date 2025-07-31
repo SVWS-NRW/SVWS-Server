@@ -1,4 +1,5 @@
-import type { SchuelerVermerkartZusammenfassung, VermerkartEintrag, VermerkartenListeManager } from "@core";
+import type { SchuelerVermerkartZusammenfassung, VermerkartEintrag } from "@core";
+import type { VermerkartenListeManager } from "@ui";
 
 export interface VermerkartDatenProps {
 	patch: (data : Partial<VermerkartEintrag>) => Promise<void>;

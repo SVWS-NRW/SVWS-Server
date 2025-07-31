@@ -1,4 +1,5 @@
-import { ArrayList, JahrgaengeListeManager, type JahrgangsDaten, type List, type SimpleOperationResponse} from "@core";
+import { ArrayList, type JahrgangsDaten, type List, type SimpleOperationResponse} from "@core";
+import { JahrgaengeListeManager } from "@ui";
 
 import { routeJahrgaengeDaten } from "./RouteJahrgaengeDaten";
 import { ViewType } from "@ui";

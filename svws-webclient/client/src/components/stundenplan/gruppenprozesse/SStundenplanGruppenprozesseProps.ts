@@ -1,4 +1,5 @@
-import type { List, BenutzerKompetenz, StundenplanListeManager } from "@core";
+import type { List, BenutzerKompetenz } from "@core";
+import type { StundenplanListeManager } from "@ui";
 
 export interface StundenplanGruppenprozesseProps {
 	benutzerKompetenzen: Set<BenutzerKompetenz>;

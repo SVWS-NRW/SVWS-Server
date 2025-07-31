@@ -1,4 +1,5 @@
-import type{ Schulform, List, Schulgliederung, ServerMode, JahrgaengeListeManager } from "@core";
+import type { Schulform, List, Schulgliederung, ServerMode } from "@core";
+import type { JahrgaengeListeManager } from "@ui";
 
 export interface SchuleJahrgangGruppenprozesseProps {
 	serverMode: ServerMode;

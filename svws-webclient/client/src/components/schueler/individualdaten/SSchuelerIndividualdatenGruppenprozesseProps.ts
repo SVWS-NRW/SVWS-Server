@@ -1,6 +1,6 @@
-import type { OrtKatalogEintrag, OrtsteilKatalogEintrag, FoerderschwerpunktEintrag, ReligionEintrag, SchuelerListeManager, SchulEintrag, Schulform,
+import type { OrtKatalogEintrag, OrtsteilKatalogEintrag, FoerderschwerpunktEintrag, ReligionEintrag, SchulEintrag, Schulform,
 	ServerMode, BenutzerKompetenz, Haltestelle, Fahrschuelerart } from "@core";
-import type { Checkpoint } from "@ui";
+import type { Checkpoint, SchuelerListeManager } from "@ui";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 import type { PendingStateManagerSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/PendingStateManagerSchuelerIndividualdaten";
 

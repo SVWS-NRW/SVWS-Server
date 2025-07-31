@@ -1,5 +1,5 @@
-import type { Schuljahresabschnitt, Stundenplan, StundenplanListeManager } from "@core";
-import type { Checkpoint } from "@ui";
+import type { Stundenplan } from "@core";
+import type { Checkpoint, StundenplanListeManager } from "@ui";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 
 export interface StundenplanNeuProps {

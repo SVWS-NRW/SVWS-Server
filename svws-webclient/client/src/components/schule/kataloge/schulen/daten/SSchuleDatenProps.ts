@@ -1,4 +1,5 @@
-import type { SchulEintrag, KatalogSchuleListeManager } from "@core";
+import type { SchulEintrag } from "@core";
+import type { KatalogSchuleListeManager } from "@ui";
 
 export interface SchuleDatenProps {
 	schuljahr: number;

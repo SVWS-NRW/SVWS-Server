@@ -1,5 +1,5 @@
-import type { OrtKatalogEintrag, OrtsteilKatalogEintrag, Schulform, ServerMode, BenutzerKompetenz, LehrerListeManager, ValidatorKontext } from "@core";
-import type { Checkpoint } from "@ui";
+import type { OrtKatalogEintrag, OrtsteilKatalogEintrag, Schulform, ServerMode, BenutzerKompetenz, ValidatorKontext } from "@core";
+import type { Checkpoint, LehrerListeManager } from "@ui";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 import type { PendingStateManagerLehrerIndividualdaten } from "~/router/apps/lehrer/individualdaten/PendingStateManagerLehrerIndividualdaten";
 

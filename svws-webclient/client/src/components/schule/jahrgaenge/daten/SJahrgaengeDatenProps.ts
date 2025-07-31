@@ -1,4 +1,5 @@
-import type { BenutzerKompetenz, JahrgaengeListeManager, JahrgangsDaten, Schulform } from "@core";
+import type { JahrgangsDaten, Schulform, BenutzerKompetenz } from "@core";
+import type { JahrgaengeListeManager } from "@ui";
 
 export interface JahrgangDatenProps {
 	schuljahr: number;

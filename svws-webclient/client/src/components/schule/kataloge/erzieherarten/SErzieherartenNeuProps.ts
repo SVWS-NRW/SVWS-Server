@@ -1,5 +1,5 @@
-import type { Erzieherart, ErzieherartListeManager } from "@core";
-import type { Checkpoint } from "@ui";
+import type { Erzieherart } from "@core";
+import type { Checkpoint, ErzieherartListeManager } from "@ui";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 
 export interface SErzieherartenNeuProps {

@@ -1,5 +1,5 @@
-import type { Schulform, KursListeManager, KursDaten, BenutzerKompetenz } from "@core";
-import type { Checkpoint } from "@ui";
+import type { Schulform, KursDaten, BenutzerKompetenz } from "@core";
+import type { Checkpoint, KursListeManager } from "@ui";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 
 export interface KurseNeuProps {

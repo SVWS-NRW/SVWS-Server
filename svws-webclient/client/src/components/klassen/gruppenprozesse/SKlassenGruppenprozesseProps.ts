@@ -1,4 +1,5 @@
-import type { Schulform, KlassenListeManager, List, Schulgliederung, BenutzerKompetenz, ApiFile, ReportingParameter, StundenplanListeEintrag } from "@core";
+import type { Schulform, List, Schulgliederung, BenutzerKompetenz, ApiFile, ReportingParameter, StundenplanListeEintrag } from "@core";
+import type { KlassenListeManager } from "@ui";
 import type { ApiStatus } from "~/components/ApiStatus";
 
 export interface KlassenGruppenprozesseProps {

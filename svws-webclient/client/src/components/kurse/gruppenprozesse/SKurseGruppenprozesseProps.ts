@@ -1,4 +1,5 @@
-import type { Schulform, List, Schulgliederung, KursListeManager, ServerMode } from "@core";
+import type { Schulform, List, Schulgliederung, ServerMode } from "@core";
+import type { KursListeManager } from "@ui";
 
 export interface KurseGruppenprozesseProps {
 	serverMode: ServerMode;

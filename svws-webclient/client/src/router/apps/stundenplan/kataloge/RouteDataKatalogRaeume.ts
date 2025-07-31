@@ -1,5 +1,6 @@
 import type { Raum } from "@core";
-import { ArrayList, UserNotificationException, DeveloperNotificationException, RaumListeManager } from "@core";
+import { ArrayList, UserNotificationException, DeveloperNotificationException } from "@core";
+import { RaumListeManager } from "@ui";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";

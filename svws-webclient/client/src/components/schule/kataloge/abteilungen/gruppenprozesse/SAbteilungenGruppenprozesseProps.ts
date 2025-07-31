@@ -1,4 +1,5 @@
-import type { AbteilungenListeManager, BenutzerKompetenz, List, Schulform, ServerMode } from "@core";
+import type { BenutzerKompetenz, List, Schulform, ServerMode } from "@core";
+import type { AbteilungenListeManager } from "@ui";
 
 export interface AbteilungenGruppenprozesseProps {
 	serverMode: ServerMode;

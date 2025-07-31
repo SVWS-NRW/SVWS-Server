@@ -1,4 +1,5 @@
-import type { BenutzerDaten, BenutzerKompetenz, List, SchuelerLeistungsdaten, SchuelerLernabschnittManager, SchuelerLernabschnittsdaten, SchuelerListeManager, SchuleStammdaten, Schulform, Schuljahresabschnitt, ServerMode } from "@core";
+import type { BenutzerDaten, BenutzerKompetenz, List, SchuelerLeistungsdaten, SchuelerLernabschnittManager, SchuelerLernabschnittsdaten, SchuleStammdaten, Schulform, Schuljahresabschnitt, ServerMode } from "@core";
+import type { SchuelerListeManager } from "@ui";
 
 export interface SchuelerLernabschnittLeistungenProps {
 	serverMode: ServerMode;

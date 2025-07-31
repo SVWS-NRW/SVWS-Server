@@ -1,4 +1,7 @@
-import type { BenutzerKompetenz, List, Schulform, ServerMode, SportbefreiungenListeManager } from "@core";
+import type { BenutzerKompetenz, List, Schulform, ServerMode } from "@core";
+import type { SportbefreiungenListeManager } from "@ui";
+
+
 
 export interface SportbefreiungenGruppenprozesseProps {
 	serverMode: ServerMode;

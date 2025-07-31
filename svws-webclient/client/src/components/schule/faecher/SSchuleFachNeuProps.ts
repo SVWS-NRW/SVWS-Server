@@ -1,5 +1,5 @@
-import type { BenutzerKompetenz, FachDaten, FachListeManager } from "@core";
-import type { Checkpoint } from "@ui";
+import type { BenutzerKompetenz, FachDaten } from "@core";
+import type { Checkpoint, FachListeManager } from "@ui";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 
 export interface SchuleFachNeuProps {
