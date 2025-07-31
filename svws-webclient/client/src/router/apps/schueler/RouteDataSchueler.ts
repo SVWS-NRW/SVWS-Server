@@ -1,4 +1,4 @@
-import type { ApiFile, List, ReportingParameter, SchuelerListeEintrag, SchuelerStammdaten, SimpleOperationResponse, StundenplanListeEintrag, SchuelerTelefon, SchuelerSchulbesuchsdaten, } from "@core";
+import type { ApiFile, List, ReportingParameter, SchuelerListeEintrag, SchuelerStammdaten, SimpleOperationResponse, StundenplanListeEintrag, SchuelerTelefon, SchuelerSchulbesuchsdaten, ErzieherStammdaten } from "@core";
 
 import { BenutzerKompetenz, ArrayList, SchuelerListe, SchuelerListeManager, SchuelerStatus, DeveloperNotificationException } from "@core";
 
@@ -14,6 +14,7 @@ import type { PendingStateManager } from "@ui";
 
 interface RouteStateSchueler extends RouteStateAuswahlInterface<SchuelerListeManager> {
 	mapStundenplaene: Map<number, StundenplanListeEintrag>;
+	listSchuelerErziehereintraege: List<ErzieherStammdaten>;
 	listSchuelerTelefoneintraege: List<SchuelerTelefon>;
 };
 
@@ -24,6 +25,7 @@ const defaultState = <RouteStateSchueler> {
 	gruppenprozesseView: routeSchuelerIndividualdatenGruppenprozesse,
 	activeViewType: ViewType.DEFAULT,
 	mapStundenplaene: new Map(),
+	listSchuelerErziehereintraege: new ArrayList(),
 	listSchuelerTelefoneintraege: new ArrayList(),
 	pendingStateRegistry: undefined,
 };
@@ -71,9 +73,10 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 		if (auswahl === null)
 			return null;
 		const res = await api.server.getSchuelerStammdaten(api.schema, auswahl.id);
+		const listSchuelerErziehereintraege = await api.server.getSchuelerErzieher(api.schema, auswahl.id);
 		const listSchuelerTelefoneintraege = await api.server.getSchuelerTelefone(api.schema, auswahl.id);
 		this.manager.schuelerstatus.auswahlAdd(SchuelerStatus.data().getWertByID(res.status));
-		this.setPatchedState({ listSchuelerTelefoneintraege });
+		this.setPatchedState({ listSchuelerErziehereintraege, listSchuelerTelefoneintraege });
 		return res;
 	}
 
@@ -122,6 +125,52 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 		await api.server.patchSchuelerStammdaten(data, api.schema, id);
 	}
 
+	get listSchuelerErziehereintraege(): List<ErzieherStammdaten> {
+		return this._state.value.listSchuelerErziehereintraege;
+	}
+
+	addSchuelerErziehereintrag = async (data: Partial<ErzieherStammdaten>, idEintrag: number, pos: number): Promise<ErzieherStammdaten> => {
+		api.status.start();
+		const erzieher = await api.server.addSchuelerErzieher(data, api.schema, idEintrag, pos);
+		this.listSchuelerErziehereintraege.add(erzieher);
+		this.setPatchedState({ listSchuelerErziehereintraege: this.listSchuelerErziehereintraege });
+		api.status.stop();
+		return erzieher;
+	}
+
+	patchSchuelerErziehereintrag = async (data : Partial<ErzieherStammdaten>, idEintrag: number) => {
+		await api.server.patchErzieherStammdaten(data, api.schema, idEintrag);
+		for (const e of this.listSchuelerErziehereintraege)
+			if (e.id === idEintrag)
+				Object.assign(e, data);
+		this.setPatchedState({ listSchuelerErziehereintraege: this.listSchuelerErziehereintraege });
+		api.status.stop();
+	}
+
+	patchSchuelerErzieherAnPosition = async (data : Partial<ErzieherStammdaten>, idEintrag: number, idSchueler: number, pos: number) => {
+		await api.server.patchErzieherStammdatenZweitePosition(data, api.schema, idEintrag, pos);
+		const listSchuelerErziehereintraege = await api.server.getSchuelerErzieher(api.schema, idSchueler);
+		this.setPatchedState({ listSchuelerErziehereintraege });
+		api.status.stop();
+	}
+
+	deleteSchuelerErziehereintrage = async (idsEintraege: List<number>): Promise<void> => {
+		api.status.start();
+		await api.server.deleteErzieherStammdaten(idsEintraege, api.schema);
+		const liste = this.listSchuelerErziehereintraege;
+		for (const id of idsEintraege) {
+			for (let i = 0; i < liste.size(); i++) {
+				const eintrag = liste.get(i);
+				if (eintrag.id === id) {
+					liste.removeElementAt(i);
+					break;
+				}
+			}
+		}
+		this.setPatchedState({ listSchuelerErziehereintraege: this.listSchuelerErziehereintraege });
+		api.status.stop();
+	}
+
 	get listSchuelerTelefoneintraege(): List<SchuelerTelefon> {
 		return this._state.value.listSchuelerTelefoneintraege;
 	}
@@ -130,7 +179,7 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 		api.status.start();
 		const telefon = await api.server.addSchuelerTelefon(data, api.schema, idSchueler);
 		this.listSchuelerTelefoneintraege.add(telefon);
-		this.setPatchedState({ listSchuelerTelefoneintraege: <List<SchuelerTelefon>>this.listSchuelerTelefoneintraege.clone() });
+		this.setPatchedState({ listSchuelerTelefoneintraege: this.listSchuelerTelefoneintraege });
 		api.status.stop();
 	}
 
@@ -140,7 +189,7 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 		for (const l of this.listSchuelerTelefoneintraege)
 			if (l.id === idEintrag)
 				Object.assign(l, data);
-		this.setPatchedState({ listSchuelerTelefoneintraege: <List<SchuelerTelefon>>this.listSchuelerTelefoneintraege.clone() });
+		this.setPatchedState({ listSchuelerTelefoneintraege: this.listSchuelerTelefoneintraege });
 		api.status.stop();
 	}
 
@@ -157,12 +206,12 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 				}
 			}
 		}
-		this.setPatchedState({ listSchuelerTelefoneintraege: <List<SchuelerTelefon>>this.listSchuelerTelefoneintraege.clone() });
+		this.setPatchedState({ listSchuelerTelefoneintraege: this.listSchuelerTelefoneintraege });
 		api.status.stop();
 	}
 
-	patchSchuelerKindergarten = async (data : Partial<SchuelerSchulbesuchsdaten>, id: number) : Promise<void> => {
-		await api.server.patchSchuelerSchulbesuch(data, api.schema, id);
+	patchSchuelerKindergarten = async (data : Partial<SchuelerSchulbesuchsdaten>, idEintrag: number) : Promise<void> => {
+		await api.server.patchSchuelerSchulbesuch(data, api.schema, idEintrag);
 	}
 
 	protected async doPatch(data : Partial<SchuelerStammdaten>, id: number) : Promise<void> {

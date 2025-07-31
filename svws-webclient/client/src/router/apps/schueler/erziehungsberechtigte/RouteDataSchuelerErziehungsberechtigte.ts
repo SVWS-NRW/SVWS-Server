@@ -77,8 +77,8 @@ export class RouteDataSchuelerErziehungsberechtigte extends RouteData<RouteState
 	deleteErzieher = async (idEintraege: List<number>): Promise<void> => {
 		api.status.start();
 		await api.server.deleteErzieherStammdaten(idEintraege, api.schema);
-  		const daten = await api.server.getSchuelerErzieher(api.schema, this.idSchueler);
-  		this.setPatchedState({ daten });
+		const daten = await api.server.getSchuelerErzieher(api.schema, this.idSchueler);
+		this.setPatchedState({ daten });
 		api.status.stop();
 	}
 

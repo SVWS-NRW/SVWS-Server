@@ -1,7 +1,7 @@
 import type { Checkpoint } from "@ui";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 import type { SchuelerStammdaten, SchuelerListeManager, OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, KatalogEintrag, Kindergarten, EinschulungsartKatalogEintrag,
-	Schuljahresabschnitt, Schulform, SchulEintrag, TelefonArt, List, SchuelerTelefon, SchuelerSchulbesuchsdaten, Haltestelle } from "@core";
+	Schuljahresabschnitt, Schulform, SchulEintrag, TelefonArt, List, SchuelerTelefon, SchuelerSchulbesuchsdaten, Haltestelle, BenutzerKompetenz, ErzieherStammdaten, Erzieherart } from "@core";
 
 export interface SchuelerNeuProps {
 	schuelerListeManager: () => SchuelerListeManager;
@@ -17,6 +17,12 @@ export interface SchuelerNeuProps {
 	mapKindergaerten: Map<number, Kindergarten>;
 	mapEinschulungsarten: Map<number, EinschulungsartKatalogEintrag>;
 	mapTelefonArten: Map<number, TelefonArt>;
+	mapErzieherarten: Map<number, Erzieherart>;
+	getListSchuelerErziehereintraege: () => List<ErzieherStammdaten>;
+	addSchuelerErziehereintrag: (data: Partial<ErzieherStammdaten>, idEintrag: number, pos: number) => Promise<ErzieherStammdaten>;
+	patchSchuelerErziehereintrag: (data: Partial<ErzieherStammdaten>, idEintrag: number) => Promise<void>;
+	patchSchuelerErzieherAnPosition: (data : Partial<ErzieherStammdaten>, idEintrag: number, idSchueler: number, pos: number) => Promise<void>;
+	deleteSchuelerErziehereintrage: (idsEintraege: List<number>) => Promise<void>;
 	getListSchuelerTelefoneintraege: () => List<SchuelerTelefon>;
 	addSchuelerTelefoneintrag: (data: Partial<SchuelerTelefon>, idSchueler: number) => Promise<void>;
 	patchSchuelerTelefoneintrag: (data: Partial<SchuelerTelefon>, idEintrag: number) => Promise<void>;
@@ -24,6 +30,7 @@ export interface SchuelerNeuProps {
 	patchSchuelerKindergarten: (data: Partial<SchuelerSchulbesuchsdaten>, idSchueler: number) => Promise<void>;
 	aktAbschnitt: Schuljahresabschnitt;
 	schulform: Schulform,
+	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	checkpoint: Checkpoint;
 	continueRoutingAfterCheckpoint: () => Promise<RoutingStatus>;
 }

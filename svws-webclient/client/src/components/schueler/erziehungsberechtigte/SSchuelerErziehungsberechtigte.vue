@@ -207,39 +207,10 @@
 		{ key: "actions", label: "2. Person", tooltip: "Weiteres Elternteil hinzufügen", fixedWidth: 10, align: "center" },
 	];
 
-	function fieldIsValid(field: keyof ErzieherStammdaten | null):(v: string | null) => boolean {
-		return (v: string | null) => {
-			switch (field) {
-				case 'nachname':
-					return stringIsValid(ersterErz.value.nachname, true, 120);
-				case 'vorname':
-					return stringIsValid(ersterErz.value.vorname, true, 120);
-				case 'strassenname':
-					return adresseIsValid();
-				case 'wohnortID':
-					return (ersterErz.value.wohnortID === null) || (props.mapOrte.get(ersterErz.value.wohnortID) !== undefined);
-				case 'ortsteilID':
-					return (ersterErz.value.ortsteilID === null) || (props.mapOrtsteile.get(ersterErz.value.ortsteilID) !== undefined);
-				case 'eMail':
-					return stringIsValid(ersterErz.value.eMail, false, 20);
-				case 'staatsangehoerigkeitID':
-					return (ersterErz.value.staatsangehoerigkeitID === null) || (Nationalitaeten.getByISO3(ersterErz.value.staatsangehoerigkeitID) !== null);
-				default:
-					return true;
-			}
-		}
-	}
-
 	function stringIsValid(input: string | null, mandatory: boolean, maxLength: number) {
 		if (mandatory)
 			return (input !== null) && (!JavaString.isBlank(input)) && (input.length <= maxLength);
 		return (input === null) || (input.length <= maxLength);
-	}
-
-	function adresseIsValid() {
-		return stringIsValid(ersterErz.value.strassenname, false, 55) &&
-			stringIsValid(ersterErz.value.hausnummer, false, 10) &&
-			stringIsValid(ersterErz.value.hausnummerZusatz, false, 30);
 	}
 
 	function strasse(erzieher: ErzieherStammdaten) {
