@@ -1,12 +1,34 @@
 <template>
 	<div class="page page-grid-cards">
 		<div class="flex flex-col gap-4">
+			<ui-card v-if="hatKompetenzDrucken" icon="i-ri-printer-line" title="Klassenliste drucken" subtitle="Drucke Listen mit den Daten der Schülerinnen und Schüler der ausgewählten Klassen."
+				:is-open="currentAction === 'printListe'" @update:is-open="isOpen => setCurrentAction('printListe', isOpen)">
+				<svws-ui-input-wrapper :grid="2" class="p-2">
+					<div class="text-left">
+						<svws-ui-checkbox v-model="option2" name="NurRufnamen">Nur Rufnamen verwenden</svws-ui-checkbox><br>
+						<svws-ui-checkbox v-model="option4" name="Erzieherdaten">Erzieherdaten anzeigen</svws-ui-checkbox><br>
+					</div>
+					<div>
+						<svws-ui-radio-group>
+							<svws-ui-radio-option :value="false" v-model="gruppe2" name="Ausgabe" label="Gesamtausdruck" />
+							<svws-ui-radio-option :value="true" v-model="gruppe2" name="Ausgabe" label="Einzelausdruck" />
+						</svws-ui-radio-group>
+					</div>
+				</svws-ui-input-wrapper>
+				<template #buttonFooterLeft>
+					<svws-ui-button @click="downloadPDF" :is-loading="loading" class="mt-4">
+						<svws-ui-spinner v-if="loading" spinning />
+						<span v-else class="icon i-ri-play-line" />
+						Drucken
+					</svws-ui-button>
+				</template>
+			</ui-card>
 			<ui-card v-if="hatKompetenzDrucken && (mapStundenplaene.size > 0)" icon="i-ri-printer-line" title="Stundenplan drucken" subtitle="Drucke die Stundenpläne der ausgewählten Klassen."
-				:is-open="currentAction === 'print'" @update:is-open="isOpen => setCurrentAction('print', isOpen)">
+					 :is-open="currentAction === 'printStundenplan'" @update:is-open="isOpen => setCurrentAction('printStundenplan', isOpen)">
 				<svws-ui-input-wrapper :grid="2" class="p-2">
 					<div>
 						<svws-ui-select title="Stundenplan" v-model="stundenplanAuswahl" :items="mapStundenplaene.values()"
-							:item-text="s => s.bezeichnung.replace('Stundenplan ', '') + ': ' + toDateStr(s.gueltigAb) + '—' + toDateStr(s.gueltigBis) + ' (KW ' + toKW(s.gueltigAb) + '—' + toKW(s.gueltigBis) + ')'" />
+										:item-text="s => s.bezeichnung.replace('Stundenplan ', '') + ': ' + toDateStr(s.gueltigAb) + '—' + toDateStr(s.gueltigBis) + ' (KW ' + toKW(s.gueltigAb) + '—' + toKW(s.gueltigBis) + ')'" />
 					</div>
 					<div />
 					<div class="text-left">
@@ -60,10 +82,10 @@
 
 	import { ref, computed } from "vue";
 	import type { KlassenGruppenprozesseProps } from "./SKlassenGruppenprozesseProps";
-	import type { StundenplanListeEintrag} from "@core";
+	import {ListUtils, StundenplanListeEintrag} from "@core";
 	import { ArrayList, BenutzerKompetenz, DateUtils, ReportingParameter, ReportingReportvorlage, type List } from "@core";
 
-	type Action = 'print' | 'delete' | '';
+	type Action = 'printListe' | 'printStundenplan' | 'delete' | '';
 
 	const props = defineProps<KlassenGruppenprozesseProps>();
 
@@ -95,6 +117,10 @@
 	function setCurrentAction(newAction: Action, open: boolean) {
 		if(newAction === oldAction.value.name && !open)
 			return;
+		option2.value = false;
+		option4.value = false;
+		option8.value = false;
+		gruppe2.value = false;
 		oldAction.value.name = currentAction.value;
 		oldAction.value.open = (currentAction.value === "") ? false : true;
 		if(open === true)
@@ -127,14 +153,29 @@
 	const gruppe2 = ref(false);
 
 	async function downloadPDF() {
-		if (stundenplanAuswahl.value === undefined)
-			return;
-		loading.value = true;
 		const reportingParameter = new ReportingParameter();
-		reportingParameter.reportvorlage = ReportingReportvorlage.STUNDENPLANUNG_v_KLASSEN_STUNDENPLAN.getBezeichnung();
+		const listeIdsKlassen = new ArrayList<number>();
+		for (const klasse of props.manager().liste.auswahl())
+			listeIdsKlassen.add(klasse.id);
+		switch (currentAction.value) {
+			case 'printListe':
+				reportingParameter.reportvorlage = ReportingReportvorlage.KLASSEN_v_KLASSE_SCHUELER_STAMMDATENLISTE.getBezeichnung();
+				reportingParameter.idsHauptdaten = listeIdsKlassen;
+				break;
+			case 'printStundenplan':
+				if (stundenplanAuswahl.value === undefined)
+					return;
+				reportingParameter.reportvorlage = ReportingReportvorlage.STUNDENPLANUNG_v_KLASSEN_STUNDENPLAN.getBezeichnung();
+				reportingParameter.idsHauptdaten = ListUtils.create1(stundenplanAuswahl.value.id);
+				reportingParameter.idsDetaildaten = listeIdsKlassen;
+				break;
+			default:
+				return;
+		}
+		reportingParameter.detailLevel = (option2.value ? 2 : 0) + (option4.value ? 4 : 0) + (option8.value ? 8 : 0);
 		reportingParameter.einzelausgabeDetaildaten = gruppe2.value;
-		reportingParameter.detailLevel = (option2.value ? 2 : 0) + (option4.value ? 4 : 0) + (option8.value ? 8 : 0) ;
-		const { data, name } = await props.getPDF(reportingParameter, stundenplanAuswahl.value.id);
+		loading.value = true;
+		const { data, name } = await props.getPDF(reportingParameter);
 		const link = document.createElement("a");
 		link.href = URL.createObjectURL(data);
 		link.download = name;

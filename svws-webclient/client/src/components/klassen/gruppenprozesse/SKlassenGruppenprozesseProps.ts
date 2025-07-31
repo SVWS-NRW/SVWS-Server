@@ -3,7 +3,7 @@ import type { ApiStatus } from "~/components/ApiStatus";
 
 export interface KlassenGruppenprozesseProps {
 	apiStatus: ApiStatus;
-	getPDF: (parameter: ReportingParameter, idStundenplan: number) => Promise<ApiFile>;
+	getPDF: (parameter: ReportingParameter) => Promise<ApiFile>;
 	mapStundenplaene: Map<number, StundenplanListeEintrag>;
 	schulform: Schulform;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;

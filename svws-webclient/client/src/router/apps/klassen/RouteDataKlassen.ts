@@ -196,13 +196,10 @@ export class RouteDataKlassen extends RouteDataAuswahl<KlassenListeManager, Rout
 		await RouteManager.doRoute(routeLehrer.getRoute({ id: eintrag.id }));
 	}
 
-	getPDF = api.call(async (reportingParameter: ReportingParameter, idStundenplan: number): Promise<ApiFile> => {
+	getPDF = api.call(async (reportingParameter: ReportingParameter): Promise<ApiFile> => {
 		if (!this.manager.liste.auswahlExists())
-			throw new DeveloperNotificationException("Dieser Stundenplan kann nur gedruckt werden, wenn mindestens eine Klasse ausgewählt ist.");
+			throw new DeveloperNotificationException("Die Ausgabe kann nur erfolgen, wenn mindestens eine Klasse ausgewählt ist.");
 		reportingParameter.idSchuljahresabschnitt = this.idSchuljahresabschnitt;
-		reportingParameter.idsHauptdaten.add(idStundenplan);
-		for (const l of this.manager.liste.auswahl())
-			reportingParameter.idsDetaildaten.add(l.id);
 		return await api.server.pdfReport(reportingParameter, api.schema);
 	})
 }

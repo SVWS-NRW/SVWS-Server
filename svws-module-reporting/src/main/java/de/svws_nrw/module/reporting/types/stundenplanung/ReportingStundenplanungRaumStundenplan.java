@@ -7,7 +7,7 @@ import de.svws_nrw.module.reporting.types.ReportingBaseType;
 
 
 /**
- * Basis-Raum im Rahmen des Reportings für Daten vom Typ Schüler-Stundenplan.
+ * Basis-Raum im Rahmen des Reportings für Daten vom Typ Raum-Stundenplan.
  */
 public class ReportingStundenplanungRaumStundenplan extends ReportingBaseType {
 
@@ -19,7 +19,7 @@ public class ReportingStundenplanungRaumStundenplan extends ReportingBaseType {
 
 
 	/**
-	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Raum.
+	 * Erstellt ein neues Reporting-Objekt auf Basis dieses Raumes.
 	 *
 	 * @param raum        Der Raum des Stundenplans.
 	 * @param stundenplan Der gesamte Stundenplan der Schule.
@@ -62,7 +62,7 @@ public class ReportingStundenplanungRaumStundenplan extends ReportingBaseType {
 	/**
 	 * Gibt den Raum zu diesem Stundenplan zurück.
 	 *
-	 * @return den Raum des Stundenplans
+	 * @return der Raum des Stundenplans
 	 */
 	public ReportingStundenplanungRaum raum() {
 		return raum;

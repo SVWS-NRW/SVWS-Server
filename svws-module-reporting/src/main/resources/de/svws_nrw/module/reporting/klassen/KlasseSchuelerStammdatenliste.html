@@ -68,14 +68,13 @@
 			<table class="fixed-100 p-0">
 				<colgroup>
 					<col style="width: 4%;"/>
-					<col style="width: 14%;"/>
 					<col style="width: 16%;"/>
-					<col style="width: 4%;"/>
-					<col style="width: 10%;"/>
-					<col style="width: 6%;"/>
+					<col style="width: 16%;"/>
+					<col style="width: 3%;"/>
+					<col style="width: 13%;"/>
 					<col style="width: 24%;"/>
-					<col style="width: 8%;"/>
-					<col style="width: 14%;"/>
+					<col style="width: 6%;"/>
+					<col style="width: 18%;"/>
 				</colgroup>
 				<thead>
 				<tr>
@@ -84,34 +83,56 @@
 					<td class="head-small-grey">Vorname</td>
 					<td class="head-small-grey ta-c">Ges.</td>
 					<td class="head-small-grey">Geb. am</td>
-					<td class="head-small-grey ta-c">Vollj.</td>
 					<td class="head-small-grey">Straße</td>
 					<td class="head-small-grey ta-r">PLZ</td>
 					<td class="head-small-grey">Ort</td>
 				</tr>
 				</thead>
-				<tbody th:each="schueler,iterationVarSchueler : ${klasse.schueler()}" th:classappend="${iterationVarSchueler.odd} ? 'bg-lightgrey'">
+				<tbody th:each="schueler,iterationVarSchueler : ${klasse.schueler()}" th:classappend="${iterationVarSchueler.odd} ? 'bg-lightgrey'"
+					   th:with="nurRufname = ${(Parameter.detailLevel % 2) == 1},
+					            mitErzieher = ${((Parameter.detailLevel % 4) / 2) >= 1}">
 				<tr>
-					<td class="f-tiny head-black-lines ta-r" th:text="${iterationVarSchueler.count + '. '}">1. </td>
-					<td class="f-small head-black-lines" th:text="${schueler.nachname()}">Mustermann</td>
-					<td class="f-small head-black-lines" th:text="${(Parameter.detailLevel % 2) == 1 ? schueler.vorname() : schueler.vornamen()}">Maximilian Moritz</td>
-					<td class="f-small head-black-lines ta-c" th:text="${schueler.geschlecht().kuerzel}">m</td>
-					<td class="f-small head-black-lines" th:text="${#convert.toDateDE(schueler.geburtsdatum())}">07.08.2010</td>
-					<td class="f-small head-black-lines ta-c" th:text="${schueler.istVolljaehrig() ? 'ja' : 'nein'}">nein</td>
-					<td class="f-small head-black-lines" th:text="${schueler.strassennameHausnummer()}">Musterstraße 13a</td>
-					<td class="f-small head-black-lines ta-r" th:text="${schueler.wohnort() != null ? schueler.wohnort().plz : ''}">12345</td>
-					<td class="f-small head-black-lines" th:text="${schueler.wohnort() != null ? schueler.wohnort().ortsname : ''}">Musterstadt</td>
+					<td class="f-tiny p-tb-0 p-lr-1 b-t-black ta-r" th:text="${iterationVarSchueler.count + '. '}">1. </td>
+					<td class="f-small p-tb-0 p-lr-1 b-t-black" th:text="${schueler.nachname()}">Mustermann</td>
+					<td class="f-small p-tb-0 p-lr-1 b-t-black" th:text="${nurRufname ? schueler.vorname() : schueler.vornamen()}">Maximilian Moritz</td>
+					<td class="f-small p-tb-0 p-lr-1 b-t-black ta-c" th:text="${schueler.geschlecht().kuerzel}">m</td>
+					<td class="f-small p-tb-0 p-lr-1 b-t-black" th:text="${#convert.toDateDE(schueler.geburtsdatum()) + (schueler.istVolljaehrig() ? ' (vj.)' : '')}">07.08.2010</td>
+					<td class="f-small p-tb-0 p-lr-1 b-t-black" th:text="${schueler.strassennameHausnummer()}">Musterstraße 13a</td>
+					<td class="f-small p-tb-0 p-lr-1 b-t-black ta-r" th:text="${schueler.wohnort() != null ? schueler.wohnort().plz : ''}">12345</td>
+					<td class="f-small p-tb-0 p-lr-1 b-t-black" th:text="${schueler.wohnort() != null ? schueler.wohnort().ortsname : ''}">Musterstadt</td>
 				</tr>
-				<th:block th:if="${Parameter.detailLevel >= 2 && schueler.erzieher() != null}">
-					<tr><td colspan="9" class="f-tiny" style="height: 1mm;"></td></tr>
-					<tr th:each="erziehergruppe,iterationVarErzieherGruppe : ${schueler.erzieherArtGruppen()}">
-						<td class="f-tiny"></td>
-						<td class="f-tiny p-tb-0 p-lr-1 f-ital t-ar " th:classappend="${!iterationVarErzieherGruppe.last} ? 'bo-b-grey'" th:text="${erziehergruppe.bezeichnung()}">Eltern</td>
-						<td colspan="4" class="f-tiny p-tb-0 p-lr-1" th:classappend="${!iterationVarErzieherGruppe.last} ? 'bo-b-grey'" th:text="${erziehergruppe.vornameNachnameMitTitel()}">Dr. Erika und Norbert Mustermann</td>
-						<td class="f-tiny p-tb-0 p-lr-1" th:classappend="${!iterationVarErzieherGruppe.last} ? 'bo-b-grey'" th:text="${erziehergruppe.strassennameHausnummer()}">Musterstraße 13a</td>
-						<td class="f-tiny p-tb-0 p-lr-1 ta-r" th:classappend="${!iterationVarErzieherGruppe.last} ? 'bo-b-grey'" th:text="${erziehergruppe.plz()}">12345</td>
-						<td class="f-tiny p-tb-0 p-lr-1" th:classappend="${!iterationVarErzieherGruppe.last} ? 'bo-b-grey'" th:text="${erziehergruppe.wohnortname()}">Musterstadt</td>
-					</tr>
+
+				<tr>
+					<td></td>
+					<td colspan="4"></td>
+					<td colspan="3">
+						<table class="p-0" style="width: 100%;">
+							<colgroup>
+								<col style="width: 27.5%;"/>
+								<col style="width: 35%;"/>
+								<col style="width: 37.5%;"/>
+							</colgroup>
+							<tr th:each="telefonkontakt,iterationVarTelefonkontakt : ${schueler.telefonKontakte()}" th:if="${!telefonkontakt.istGesperrt()}">
+								<td class="f-small p-tb-0 p-lr-1" th:text="${iterationVarTelefonkontakt.first ? 'Telefonkontakte:' : '' }">Telefonkontakte:</td>
+								<td class="f-small p-tb-0 p-lr-1 ta-r" th:text="${(!telefonkontakt.bezeichnung().isEmpty ? telefonkontakt.bezeichnung() : '(unbekannt)') + ':'}">Mutter mobil:</td>
+								<td class="f-small p-tb-0 p-lr-1" th:text="${telefonkontakt.telefonnummer()}">0123 4567890</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<th:block th:if="${mitErzieher && (schueler.erzieher() != null) && !schueler.erzieher().isEmpty()}">
+					<tr><td colspan="8" class="f-tiny" style="height: 1mm;"></td></tr>
+					<th:block th:each="erziehergruppe,iterationVarErzieherGruppe : ${schueler.erzieherArtGruppenOhneVolljaehrigenSchueler()}">
+						<tr th:if="${(erziehergruppe.erzieher() != null) && !erziehergruppe.erzieher().isEmpty()}">
+							<td class="f-tiny"></td>
+							<td class="f-tiny p-tb-0 p-lr-1 f-ital bo-t-grey" th:text="${erziehergruppe.bezeichnung()}">Eltern</td>
+							<td colspan="3" class="f-tiny p-tb-0 p-lr-1 bo-t-grey" th:text="${erziehergruppe.vornameNachnameMitTitel()}">Dr. Erika und Norbert Mustermann</td>
+							<td class="f-tiny p-tb-0 p-lr-1 bo-t-grey" th:text="${erziehergruppe.strassennameHausnummer()}">Musterstraße 13a</td>
+							<td class="f-tiny p-tb-0 p-lr-1 bo-t-grey ta-r" th:text="${erziehergruppe.plz()}">12345</td>
+							<td class="f-tiny p-tb-0 p-lr-1 bo-t-grey" th:text="${erziehergruppe.wohnortname()}">Musterstadt</td>
+						</tr>
+					</th:block>
 					<tr><td colspan="9" class="f-tiny p-tb-0 p-lr-1" style="height: 1mm;"></td></tr>
 				</th:block>
 				</tbody>

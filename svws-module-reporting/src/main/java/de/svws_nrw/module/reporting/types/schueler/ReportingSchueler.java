@@ -18,6 +18,7 @@ import de.svws_nrw.module.reporting.types.schueler.gost.laufbahnplanung.Reportin
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLernabschnitt;
 import de.svws_nrw.module.reporting.types.schueler.schulbesuch.ReportingSchuelerSchulbesuch;
 import de.svws_nrw.module.reporting.types.schueler.sprachen.ReportingSchuelerSprachbelegung;
+import de.svws_nrw.module.reporting.types.schueler.telefon.ReportingSchuelerTelefonkontakt;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 
 import java.util.ArrayList;
@@ -140,6 +141,9 @@ public class ReportingSchueler extends ReportingPerson {
 	/** Der Status des Schülers. */
 	protected SchuelerStatus status;
 
+	/** Eine Liste der telefonischen Kontakte zum Schüler. */
+	protected List<ReportingSchuelerTelefonkontakt> telefonKontakte;
+
 	/** Die Verkehrssprache der Familie des Schülers. */
 	protected String verkehrspracheFamilie;
 
@@ -199,6 +203,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @param staatsangehoerigkeit2 Die zweite Staatsangehörigkeit des Schülers.
 	 * @param status Der Status des Schülers.
 	 * @param strassenname Ggf. der Straßenname im Wohnort des Schülers.
+	 * @param telefonKontakte Eine Liste der telefonischen Kontakte zum Schüler.
 	 * @param telefonPrivat Die private Telefonnummer des Schülers.
 	 * @param telefonPrivatMobil Die private Mobilfunk-Telefonnummer des Schülers.
 	 * @param titel Der Titel des Schülers.
@@ -213,11 +218,10 @@ public class ReportingSchueler extends ReportingPerson {
 			final String anrede, final String aufnahmedatum, final ReportingSchuelerLernabschnitt auswahlLernabschnitt,
 			final EnumSet<ReportingSchuelerDatenstatus> datenstatus, final boolean druckeKonfessionAufZeugnisse,
 			final String emailPrivat, final String emailSchule, final boolean erhaeltMeisterBAFOEG, final boolean erhaeltSchuelerBAFOEG,
-			final List<ReportingErzieher> erzieher,
-			final List<ReportingErzieherArtGruppe> erzieherArtGruppen, final String externeSchulNr, final Long fahrschuelerArtID, final String foto,
-			final String geburtsdatum, final String geburtsland, final String geburtslandMutter, final String geburtslandVater, final String geburtsname,
-			final String geburtsort, final Geschlecht geschlecht, final ReportingSchuelerGostAbitur gostAbitur,
-			final List<ReportingGostKlausurplanungSchuelerklausur> gostKlausurplanungSchuelerklausuren,
+			final List<ReportingErzieher> erzieher, final List<ReportingErzieherArtGruppe> erzieherArtGruppen, final String externeSchulNr,
+			final Long fahrschuelerArtID, final String foto, final String geburtsdatum, final String geburtsland, final String geburtslandMutter,
+			final String geburtslandVater, final String geburtsname, final String geburtsort, final Geschlecht geschlecht,
+			final ReportingSchuelerGostAbitur gostAbitur, final List<ReportingGostKlausurplanungSchuelerklausur> gostKlausurplanungSchuelerklausuren,
 			final List<ReportingSchuelerGostKursplanungKursbelegung> gostKursplanungKursbelegungen,
 			final ReportingSchuelerGostLaufbahnplanung gostLaufbahnplanung, final Long haltestelleID, final boolean hatMasernimpfnachweis,
 			final boolean hatMigrationshintergrund, final String hausnummer, final String hausnummerZusatz, final long id,
@@ -225,9 +229,9 @@ public class ReportingSchueler extends ReportingPerson {
 			final boolean keineAuskunftAnDritte, final List<ReportingSchuelerLernabschnitt> lernabschnitte, final String nachname,
 			final String religionabmeldung, final String religionanmeldung, final ReligionEintrag religion, final ReportingSchuelerSchulbesuch schulbesuch,
 			final List<ReportingSchuelerSprachbelegung> sprachbelegungen, final Nationalitaeten staatsangehoerigkeit,
-			final Nationalitaeten staatsangehoerigkeit2, final SchuelerStatus status, final String strassenname, final String telefonPrivat,
-			final String telefonPrivatMobil, final String titel, final String verkehrspracheFamilie, final String vorname, final String vornamen,
-			final OrtKatalogEintrag wohnort,
+			final Nationalitaeten staatsangehoerigkeit2, final SchuelerStatus status, final String strassenname,
+			final List<ReportingSchuelerTelefonkontakt> telefonKontakte, final String telefonPrivat, final String telefonPrivatMobil, final String titel,
+			final String verkehrspracheFamilie, final String vorname, final String vornamen, final OrtKatalogEintrag wohnort,
 			final OrtsteilKatalogEintrag wohnortsteil, final Integer zuzugsjahr) {
 		super(anrede, emailPrivat, emailSchule, "", geburtsdatum, geburtsland, geburtsname, geburtsort, geschlecht, hausnummer, hausnummerZusatz, nachname,
 				staatsangehoerigkeit, staatsangehoerigkeit2, strassenname, telefonPrivat, telefonPrivatMobil, "", "", titel, vorname, vornamen, wohnort,
@@ -266,6 +270,7 @@ public class ReportingSchueler extends ReportingPerson {
 		this.schulbesuch = schulbesuch;
 		this.sprachbelegungen = sprachbelegungen;
 		this.status = status;
+		this.telefonKontakte = telefonKontakte;
 		this.verkehrspracheFamilie = verkehrspracheFamilie;
 		this.zuzugsjahr = zuzugsjahr;
 
@@ -422,6 +427,24 @@ public class ReportingSchueler extends ReportingPerson {
 	 */
 	public List<ReportingErzieherArtGruppe> erzieherArtGruppen() {
 		return erzieherArtGruppen;
+	}
+
+	/**
+	 * Die Liste der Erzieher des Schülers ohne einen evtl. volljährigen Schüler selbst.
+	 *
+	 * @return Inhalt des Feldes erzieher ohne evtl. volljähren Schüler.
+	 */
+	public List<ReportingErzieher> erzieherOhneVolljaehrigenSchueler() {
+		return erzieher.stream().filter(e -> !e.istVolljaehrigerSchueler()).toList();
+	}
+
+	/**
+	 * Die Liste der Erzieher gruppiert nach Erzieher-Art in Listen von Erziehern ohne einen evtl. volljährigen Schüler selbst.
+	 *
+	 * @return Inhalt des Feldes erzieherArtGruppen ohne evtl. volljähren Schüler.
+	 */
+	public List<ReportingErzieherArtGruppe> erzieherArtGruppenOhneVolljaehrigenSchueler() {
+		return erzieherArtGruppen.stream().filter(e -> !e.istVolljaehrigerSchueler()).toList();
 	}
 
 	/**
@@ -743,6 +766,15 @@ public class ReportingSchueler extends ReportingPerson {
 	 */
 	public SchuelerStatus status() {
 		return status;
+	}
+
+	/**
+	 * Eine Liste der telefonischen Kontakte zum Schüler.
+	 *
+	 * @return Inhalt des Feldes telefonKontakte
+	 */
+	public List<ReportingSchuelerTelefonkontakt> telefonKontakte() {
+		return telefonKontakte;
 	}
 
 	/**

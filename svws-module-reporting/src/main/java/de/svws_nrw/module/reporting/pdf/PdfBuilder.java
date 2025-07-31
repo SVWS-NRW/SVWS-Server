@@ -100,7 +100,7 @@ public class PdfBuilder {
 			if (data == null)
 				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehler bei der Generierung der PDF-Datei.");
 
-			final String encodedFilename = "filename*=UTF-8''" + URLEncoder.encode(dateiname, StandardCharsets.UTF_8);
+			final String encodedFilename = "filename*=UTF-8''" + URLEncoder.encode(getDateinameMitEndung(), StandardCharsets.UTF_8);
 
 			return Response.ok(data, "application/pdf")
 					.header("Content-Disposition", "attachment; " + encodedFilename)

@@ -15,10 +15,10 @@ public class ReportingErzieher extends ReportingPerson {
 	/** Die Art des Erziehereintrages. */
 	protected ReportingErzieherArt art;
 
-	/** Anmerkungen zum Erziehers. */
+	/** Anmerkungen zum Erzieher. */
 	protected String bemerkung;
 
-	/** Gibt an, ob der Erzieher Anschreiben erhält oder nicht. */
+	/** Gibt an, ob der Erzieher ein Anschreiben erhält oder nicht. */
 	protected Boolean erhaeltAnschreiben;
 
 	/** Die ID des Erziehers. */
@@ -33,10 +33,10 @@ public class ReportingErzieher extends ReportingPerson {
 	 *
 	 * @param anrede Die Anrede des Erziehers.
 	 * @param art Die Art des Erziehereintrages.
-	 * @param bemerkung Anmerkungen zum Erziehers.
+	 * @param bemerkung Anmerkungen zum Erzieher.
 	 * @param emailPrivat Private E-Mail-Adresse des Erziehers.
 	 * @param emailSchule Schulische E-Mail-Adresse des Erziehers.
-	 * @param erhaeltAnschreiben Gibt an, ob der Erzieher Anschreiben erhält oder nicht.
+	 * @param erhaeltAnschreiben Gibt an, ob der Erzieher ein Anschreiben erhält oder nicht.
 	 * @param geburtsdatum Das Geburtsdatum des Erziehers.
 	 * @param geburtsland Das Geburtsland des Erziehers.
 	 * @param geburtsname Der Geburtsname des Erziehers.
@@ -102,6 +102,16 @@ public class ReportingErzieher extends ReportingPerson {
 
 
 	// ##### Berechnete Felder #####
+
+	/**
+	 * Gibt an, ob der Erzieher gemäß Beschreibung der volljährige Schüler selbst ist.
+	 *
+	 * @return true, wenn der Erzieher ein Schüler ist, sonst false
+	 */
+	public boolean istVolljaehrigerSchueler() {
+		return ((this.art.bezeichnung().toLowerCase().contains("schüler")) && (this.art.bezeichnung().toLowerCase().contains("ist volljährig")));
+	}
+
 	/**
 	 * Erzeugt den geschlechtsspezifischen Ausdruck "Ihr Sohn/Ihre Tochter" im Nominativ.
 	 *
@@ -192,7 +202,7 @@ public class ReportingErzieher extends ReportingPerson {
 	}
 
 	/**
-	 * Anmerkungen zum Erziehers.
+	 * Anmerkungen zum Erzieher.
 	 *
 	 * @return Inhalt des Feldes bemerkung
 	 */
@@ -201,7 +211,7 @@ public class ReportingErzieher extends ReportingPerson {
 	}
 
 	/**
-	 * Gibt an, ob der Erzieher Anschreiben erhält oder nicht.
+	 * Gibt an, ob der Erzieher ein Anschreiben erhält oder nicht.
 	 *
 	 * @return Inhalt des Feldes erhaeltAnschreiben
 	 */

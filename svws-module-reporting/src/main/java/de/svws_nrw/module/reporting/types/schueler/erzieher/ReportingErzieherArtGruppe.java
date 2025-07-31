@@ -44,6 +44,8 @@ public class ReportingErzieherArtGruppe extends ReportingBaseType {
 		this.sortierung = sortierung;
 	}
 
+	// ##### Berechnete Felder #####
+
 	/**
 	 * Erzeugt die mehrzeilige Briefanschrift im html-Format.
 	 *
@@ -69,7 +71,6 @@ public class ReportingErzieherArtGruppe extends ReportingBaseType {
 		return result.toString();
 	}
 
-	// ##### Berechnete Felder #####
 	/**
 	 * Erzeugt die formale Anrede ("Sehr geehrte") des Erziehers.
 	 *
@@ -105,6 +106,16 @@ public class ReportingErzieherArtGruppe extends ReportingBaseType {
 					+ erzieher().getLast().briefanredePersoenlich().substring(1);
 
 		return result;
+	}
+
+	/**
+	 * Gibt an, ob ein Erzieher in der Gruppe gemäß Beschreibung der volljährige Schüler selbst ist.
+	 *
+	 * @return true, wenn einer der Erzieher ein Schüler ist, sonst false
+	 */
+	public boolean istVolljaehrigerSchueler() {
+		return ((this.erzieher.size() == 1) && (this.erzieher().getFirst().art.bezeichnung().toLowerCase().contains("schüler"))
+				&& (this.erzieher().getFirst().art.bezeichnung().toLowerCase().contains("ist volljährig")));
 	}
 
 	/**

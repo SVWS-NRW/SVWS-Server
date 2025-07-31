@@ -20,7 +20,7 @@ public class ReportingStundenplanungLehrerStundenplan extends ReportingBaseType 
 
 
 	/**
-	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
+	 * Erstellt ein neues Reporting-Objekt auf Basis dieses Lehrers.
 	 *
 	 * @param lehrer      Der Lehrer des Stundenplans.
 	 * @param stundenplan Der gesamte Stundenplan der Schule.
