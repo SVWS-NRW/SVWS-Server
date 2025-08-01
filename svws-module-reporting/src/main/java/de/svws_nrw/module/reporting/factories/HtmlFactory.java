@@ -431,7 +431,7 @@ public class HtmlFactory {
 	 */
 	private void erzeugeHauptEinzelContexts(final List<HtmlBuilder> htmlBuilders, final String htmlTemplateCode) throws ApiOperationException {
 		if (htmlTemplateDefinition.name().startsWith("SCHUELER_v_")) {
-			// Zerlege den Gesamt-Schüler-Context in einzelne Contexts mit jeweils einen Schüler
+			// Zerlege den Gesamt-Schüler-Context in einzelne Contexts mit jeweils einem Schüler
 			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Erzeuge einzelne Haupt-Kontexte für jeden Schüler, da einzelne Dateien angefordert "
 					+ "wurden.");
 			final List<HtmlContextSchueler> schuelerContexts = ((HtmlContextSchueler) mapHtmlContexts.get("Schueler")).getEinzelContexts();
@@ -441,6 +441,25 @@ public class HtmlFactory {
 							htmlTemplateDefinition.name()));
 			for (final HtmlContextSchueler schuelerContext : schuelerContexts) {
 				mapHtmlContexts.put("Schueler", schuelerContext);
+
+				// Dateiname der Dateien aus den Daten erzeugen.
+				final String dateiname = getDateiname(mapHtmlContexts);
+
+				// html-Builder erstellen und damit das html mit Daten für die html-Datei erzeugen
+				htmlBuilders.add(new HtmlBuilder(htmlTemplateCode, mapHtmlContexts.values().stream().toList(), dateiname));
+			}
+		}
+		if (htmlTemplateDefinition.name().startsWith("KLASSEN_v_")) {
+			// Zerlege den Gesamt-Klassen-Context in einzelne Contexts mit jeweils einer Klasse
+			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Erzeuge einzelne Haupt-Kontexte für jede Klasse, da einzelne Dateien angefordert "
+					+ "wurden.");
+			final List<HtmlContextKlassen> klassenContexts = ((HtmlContextKlassen) mapHtmlContexts.get("Klassen")).getEinzelContexts();
+
+			reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
+					"Verarbeite Template (%s) und Daten aus den einzelnen Kontexten zu finalen html-Dateiinhalten.".formatted(
+							htmlTemplateDefinition.name()));
+			for (final HtmlContextKlassen klasseContext : klassenContexts) {
+				mapHtmlContexts.put("Klassen", klasseContext);
 
 				// Dateiname der Dateien aus den Daten erzeugen.
 				final String dateiname = getDateiname(mapHtmlContexts);

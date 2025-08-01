@@ -444,7 +444,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Inhalt des Feldes erzieherArtGruppen ohne evtl. volljähren Schüler.
 	 */
 	public List<ReportingErzieherArtGruppe> erzieherArtGruppenOhneVolljaehrigenSchueler() {
-		return erzieherArtGruppen.stream().filter(e -> !e.istVolljaehrigerSchueler()).toList();
+		return erzieherArtGruppen().stream().filter(e -> !e.istVolljaehrigerSchueler()).toList();
 	}
 
 	/**

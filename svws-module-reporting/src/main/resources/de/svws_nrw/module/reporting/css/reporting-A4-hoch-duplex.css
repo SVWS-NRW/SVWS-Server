@@ -1,6 +1,6 @@
 @Page:left {
 	size: A4 portrait;
-	margin: 18mm 10mm 12mm 18mm;
+	margin: 18mm 18mm 12mm 10mm;
 
 	/* Boxen im Seitenrand. Für die Einträge in den Seitenköpfen und -füßen wird pro Bereich im body der
 	   html-Datei ein div definiert, die als Running Header bzw. Footer in den @page-Boxen eingefügt werden sollen.
@@ -39,7 +39,7 @@
 
 @Page:right {
 	size: A4 portrait;
-	margin: 18mm 18mm 12mm 10mm;
+	margin: 18mm 10mm 12mm 18mm;
 
 	/* Boxen im Seitenrand. Für die Einträge in den Seitenköpfen und -füßen wird pro Bereich im body der
 	   html-Datei ein div definiert, die als Running Header bzw. Footer in den @page-Boxen eingefügt werden sollen.

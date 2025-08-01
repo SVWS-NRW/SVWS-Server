@@ -596,6 +596,65 @@ public class ReportingPerson extends ReportingBaseType {
 	}
 
 	/**
+	 * Das Geschlecht als Kürzel in Klammern.
+	 *
+	 * @return Inhalt des Feldes geschlecht als druckbares Kürzel.
+	 */
+	public String geschlechtDruckKuerzelInKlammern() {
+		switch (geschlecht) {
+			case Geschlecht.M -> {
+				return "(" + Geschlecht.M.kuerzel + ")";
+			}
+			case Geschlecht.W -> {
+				return "(" + Geschlecht.W.kuerzel + ")";
+			}
+			case Geschlecht.D -> {
+				return "(" + Geschlecht.D.kuerzel + ")";
+			}
+			case Geschlecht.X -> {
+				return "(-)";
+			}
+			case null, default -> {
+				return "";
+			}
+		}
+	}
+
+	/**
+	 * Das Geschlecht als Symbol.
+	 *
+	 * @return Inhalt des Feldes geschlecht als druckbares Symbol.
+	 */
+	public String geschlechtDruckSymbolHtml() {
+		switch (geschlecht) {
+			case Geschlecht.M -> {
+				return "&#9792;";
+			}
+			case Geschlecht.W -> {
+				return "&#9794;";
+			}
+			case Geschlecht.D -> {
+				return Geschlecht.D.kuerzel;
+			}
+			case Geschlecht.X -> {
+				return "-";
+			}
+			case null, default -> {
+				return "";
+			}
+		}
+	}
+
+	/**
+	 * Das Geschlecht als Symbol in Klammern.
+	 *
+	 * @return Inhalt des Feldes geschlecht als druckbares Symbol in Klammern.
+	 */
+	public String geschlechtDruckSymbolInKlammernHtml() {
+		return "(" + this.geschlechtDruckSymbolHtml() + ")";
+	}
+
+	/**
 	 * Ggf. die Hausnummer zur Straße im Wohnort.
 	 *
 	 * @return Inhalt des Feldes hausnummer

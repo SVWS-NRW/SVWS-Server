@@ -177,6 +177,9 @@ Definitionen für Spacing, Padding, Margin
 .p-0 {
 	padding: 0;
 }
+.p-05 {
+	padding: 0.5mm;
+}
 .p-1 {
 	padding: 1mm;
 }
@@ -201,6 +204,19 @@ Definitionen für Spacing, Padding, Margin
 }
 .p-r-0 {
 	padding-right: 0;
+}
+
+.p-t-05 {
+	padding-top: 0.5mm;
+}
+.p-b-05 {
+	padding-bottom: 0.5mm;
+}
+.p-l-05 {
+	padding-left: 0.5mm;
+}
+.p-r-05 {
+	padding-right: 0.5mm;
 }
 
 .p-t-1 {
@@ -259,6 +275,10 @@ Definitionen für Spacing, Padding, Margin
 	padding-top: 0;
 	padding-bottom: 0;
 }
+.p-tb-05 {
+	padding-top: 0.5mm;
+	padding-bottom: 0.5mm;
+}
 .p-tb-1 {
 	padding-top: 1mm;
 	padding-bottom: 1mm;
@@ -279,6 +299,10 @@ Definitionen für Spacing, Padding, Margin
 .p-lr-0 {
 	padding-left: 0;
 	padding-right: 0;
+}
+.p-lr-05 {
+	padding-left: 0.5mm;
+	padding-right: 0.5mm;
 }
 .p-lr-1 {
 	padding-left: 1mm;

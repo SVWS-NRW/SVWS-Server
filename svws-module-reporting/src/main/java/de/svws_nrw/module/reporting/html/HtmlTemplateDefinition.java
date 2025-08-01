@@ -120,7 +120,8 @@ public enum HtmlTemplateDefinition {
 			"""
 			        <p th:if="${Klassen.isEmpty()}">Klasse-Schueler-Stammdatenliste"</p>
 			        <th:block th:if="${!Klassen.isEmpty()}" th:each="klasse,iterState : ${Klassen}">
-			            <p th:if="${iterState.first}" th:text="${'Klasse-Schueler-Stammdatenliste_' + #dates.format(#dates.createNow(), 'yyyyMMdd-HHmm')}"></p>
+			            <p th:if="${iterState.first && (Klassen.size() == 1)}" th:text="${'Klasse-Schueler-Stammdatenliste_' + #strings.replace(klasse.kuerzel(), ' ', '_')}"></p>
+			            <p th:if="${iterState.first && (Klassen.size() > 1)}" th:text="${'Klasse-Schueler-Stammdatenlisten'}"></p>
 			        </th:block>
 			""",
 			Arrays.asList(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)),

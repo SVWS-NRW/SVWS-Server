@@ -107,8 +107,8 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 				null,
 				null,
 				new ArrayList<>(),
-				Nationalitaeten.getByDESTATIS(schuelerStammdaten.staatsangehoerigkeitID),
-				Nationalitaeten.getByDESTATIS(schuelerStammdaten.staatsangehoerigkeit2ID),
+				getNationalitaet(schuelerStammdaten.staatsangehoerigkeitID),
+				getNationalitaet(schuelerStammdaten.staatsangehoerigkeit2ID),
 				SchuelerStatus.data().getWertByKuerzel("" + schuelerStammdaten.status),
 				ersetzeNullBlankTrim(schuelerStammdaten.strassenname),
 				null,
@@ -130,6 +130,24 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 
 		// Füge Stammdaten des Schülers für weitere Verwendung in der Map im Repository hinzu.
 		this.reportingRepository.mapSchuelerStammdaten().put(super.id(), schuelerStammdaten);
+	}
+
+
+	private static Nationalitaeten getNationalitaet(final String nationalitaetId) {
+		if ((nationalitaetId == null) || nationalitaetId.isBlank())
+			return null;
+
+		Nationalitaeten result = Nationalitaeten.getByISO3(nationalitaetId);
+		if (result != null)
+			return result;
+
+		result = Nationalitaeten.getByISO2(nationalitaetId);
+		if (result != null)
+			return result;
+
+		result = Nationalitaeten.getByDESTATIS(nationalitaetId);
+
+		return result;
 	}
 
 

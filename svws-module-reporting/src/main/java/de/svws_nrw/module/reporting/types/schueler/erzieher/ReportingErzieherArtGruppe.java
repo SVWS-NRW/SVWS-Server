@@ -109,6 +109,42 @@ public class ReportingErzieherArtGruppe extends ReportingBaseType {
 	}
 
 	/**
+	 * Erzeugt eine Liste aller E-Mail-Adressen in der Form einer zeilenweisen HTML-Ausgabe.
+	 *
+	 * @return E-Mail-Liste im HTML-Format.
+	 */
+	public String emailAdressenHtml() {
+		if ((erzieher() == null) || erzieher().isEmpty())
+			return "";
+
+		String result = erzieher().getFirst().emailPrivat();
+
+		// Maximal ein zweiter Erzieher kann noch in der Gruppe sein.
+		if (erzieher().size() > 1)
+			result += (!result.isEmpty() ? "<br/>" : "") + erzieher().getLast().emailPrivat();
+
+		return result;
+	}
+
+	/**
+	 * Erzeugt eine Liste aller E-Mail-Adressen in der Form einer durch Semikolon getrennten Liste.
+	 *
+	 * @return E-Mail-Liste durch Semikolon getrennt.
+	 */
+	public String emailAdressenListe() {
+		if ((erzieher() == null) || erzieher().isEmpty())
+			return "";
+
+		String result = erzieher().getFirst().emailPrivat();
+
+		// Maximal ein zweiter Erzieher kann noch in der Gruppe sein.
+		if (erzieher().size() > 1)
+			result += (!result.isEmpty() ? ";" : "") +  erzieher().getLast().emailPrivat();
+
+		return result;
+	}
+
+	/**
 	 * Gibt an, ob ein Erzieher in der Gruppe gemäß Beschreibung der volljährige Schüler selbst ist.
 	 *
 	 * @return true, wenn einer der Erzieher ein Schüler ist, sonst false
