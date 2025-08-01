@@ -31,14 +31,14 @@ class TestCoreTypeLehrerRechtsverhaeltnis {
 		assertEquals(LehrerRechtsverhaeltnis.S, LehrerRechtsverhaeltnis.data().getWertByKuerzel("S"));
 		assertEquals(LehrerRechtsverhaeltnis.X, LehrerRechtsverhaeltnis.data().getWertByKuerzel("X"));
 
-		assertEquals("Beamter auf Lebenszeit", LehrerRechtsverhaeltnis.L.daten(2024).text);
-		assertEquals("Beamter auf Probe", LehrerRechtsverhaeltnis.P.daten(2024).text);
-		assertEquals("Beamter auf Probe zur Anstellung", LehrerRechtsverhaeltnis.A.daten(2024).text);
-		assertEquals("Beamter, nebenamtlich (nicht hauptamtlich im Schuldienst)", LehrerRechtsverhaeltnis.N.daten(2024).text);
-		assertEquals("Beamter auf Widerruf (LAA)", LehrerRechtsverhaeltnis.W.daten(2024).text);
-		assertEquals("Angestellte, unbefristet (BAT-Vertrag)", LehrerRechtsverhaeltnis.U.daten(2024).text);
-		assertEquals("Angestellte, befristet (BAT-Vertrag)", LehrerRechtsverhaeltnis.B.daten(2024).text);
-		assertEquals("Angestellte, nicht BAT-Vertrag", LehrerRechtsverhaeltnis.J.daten(2024).text);
+		assertEquals("Beamte auf Lebenszeit", LehrerRechtsverhaeltnis.L.daten(2024).text);
+		assertEquals("Beamte auf Probe", LehrerRechtsverhaeltnis.P.daten(2024).text);
+		assertEquals("Beamter auf Probe zur Anstellung", LehrerRechtsverhaeltnis.A.daten(2009).text);
+		assertEquals("Beamte, nebenamtlich (nicht hauptamtlich im Schuldienst)", LehrerRechtsverhaeltnis.N.daten(2024).text);
+		assertEquals("Beamte auf Widerruf (LAA)", LehrerRechtsverhaeltnis.W.daten(2024).text);
+		assertEquals("Angestellte, unbefristet (TVL-Vertrag)", LehrerRechtsverhaeltnis.U.daten(2024).text);
+		assertEquals("Angestellte, befristet (TVL-Vertrag)", LehrerRechtsverhaeltnis.B.daten(2024).text);
+		assertEquals("Angestellte, nicht TVL-Vertrag", LehrerRechtsverhaeltnis.J.daten(2024).text);
 		assertEquals("Gestellungsvertrag", LehrerRechtsverhaeltnis.S.daten(2024).text);
 		assertEquals("Unentgeltlich Beschäftigte", LehrerRechtsverhaeltnis.X.daten(2024).text);
 	}

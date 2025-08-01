@@ -49,7 +49,7 @@ class TestLehrerRechtsverhaeltnis {
 	@Test
 	@DisplayName("Teste CoreType LehrerRechtsverhaeltnis: Korrekter Text bei Wert P.")
 	void testLehrerRechtsverhaeltnis_NameBeiP() {
-		assertEquals("Beamter auf Probe", LehrerRechtsverhaeltnis.data().getHistorieByWert(LehrerRechtsverhaeltnis.P).getFirst().text);
+		assertEquals("Beamte auf Probe", LehrerRechtsverhaeltnis.data().getHistorieByWert(LehrerRechtsverhaeltnis.P).getFirst().text);
 	}
 
 }

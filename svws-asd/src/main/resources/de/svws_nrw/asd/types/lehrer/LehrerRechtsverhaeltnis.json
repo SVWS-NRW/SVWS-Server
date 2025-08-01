@@ -7,7 +7,7 @@
 			"id": 3,
 			"schluessel": "L",
 			"kuerzel": "L",
-			"text": "Beamter auf Lebenszeit",
+			"text": "Beamte auf Lebenszeit",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -18,7 +18,7 @@
 			"id": 2,
 			"schluessel": "P",
 			"kuerzel": "P",
-			"text": "Beamter auf Probe",
+			"text": "Beamte auf Probe",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -31,7 +31,7 @@
 			"kuerzel": "A",
 			"text": "Beamter auf Probe zur Anstellung",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": 2009
 		} ]
 	}, {
 		"bezeichner": "N",
@@ -40,7 +40,7 @@
 			"id": 7,
 			"schluessel": "N",
 			"kuerzel": "N",
-			"text": "Beamter, nebenamtlich (nicht hauptamtlich im Schuldienst)",
+			"text": "Beamte, nebenamtlich (nicht hauptamtlich im Schuldienst)",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -51,7 +51,7 @@
 			"id": 9,
 			"schluessel": "W",
 			"kuerzel": "W",
-			"text": "Beamter auf Widerruf (LAA)",
+			"text": "Beamte auf Widerruf (LAA)",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -62,7 +62,7 @@
 			"id": 4,
 			"schluessel": "U",
 			"kuerzel": "U",
-			"text": "Angestellte, unbefristet (BAT-Vertrag)",
+			"text": "Angestellte, unbefristet (TVL-Vertrag)",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -73,7 +73,7 @@
 			"id": 5,
 			"schluessel": "B",
 			"kuerzel": "B",
-			"text": "Angestellte, befristet (BAT-Vertrag)",
+			"text": "Angestellte, befristet (TVL-Vertrag)",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -84,7 +84,7 @@
 			"id": 6,
 			"schluessel": "J",
 			"kuerzel": "J",
-			"text": "Angestellte, nicht BAT-Vertrag",
+			"text": "Angestellte, nicht TVL-Vertrag",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]

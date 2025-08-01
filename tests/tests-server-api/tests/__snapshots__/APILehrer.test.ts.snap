@@ -1449,7 +1449,7 @@ ArrayList {
       "id": 3,
       "kuerzel": "L",
       "schluessel": "L",
-      "text": "Beamter auf Lebenszeit",
+      "text": "Beamte auf Lebenszeit",
     },
     LehrerRechtsverhaeltnisKatalogEintrag {
       "gueltigBis": null,
@@ -1457,10 +1457,10 @@ ArrayList {
       "id": 2,
       "kuerzel": "P",
       "schluessel": "P",
-      "text": "Beamter auf Probe",
+      "text": "Beamte auf Probe",
     },
     LehrerRechtsverhaeltnisKatalogEintrag {
-      "gueltigBis": null,
+      "gueltigBis": 2009,
       "gueltigVon": null,
       "id": 1,
       "kuerzel": "A",
@@ -1473,7 +1473,7 @@ ArrayList {
       "id": 7,
       "kuerzel": "N",
       "schluessel": "N",
-      "text": "Beamter, nebenamtlich (nicht hauptamtlich im Schuldienst)",
+      "text": "Beamte, nebenamtlich (nicht hauptamtlich im Schuldienst)",
     },
     LehrerRechtsverhaeltnisKatalogEintrag {
       "gueltigBis": null,
@@ -1481,7 +1481,7 @@ ArrayList {
       "id": 9,
       "kuerzel": "W",
       "schluessel": "W",
-      "text": "Beamter auf Widerruf (LAA)",
+      "text": "Beamte auf Widerruf (LAA)",
     },
     LehrerRechtsverhaeltnisKatalogEintrag {
       "gueltigBis": null,
@@ -1489,7 +1489,7 @@ ArrayList {
       "id": 4,
       "kuerzel": "U",
       "schluessel": "U",
-      "text": "Angestellte, unbefristet (BAT-Vertrag)",
+      "text": "Angestellte, unbefristet (TVL-Vertrag)",
     },
     LehrerRechtsverhaeltnisKatalogEintrag {
       "gueltigBis": null,
@@ -1497,7 +1497,7 @@ ArrayList {
       "id": 5,
       "kuerzel": "B",
       "schluessel": "B",
-      "text": "Angestellte, befristet (BAT-Vertrag)",
+      "text": "Angestellte, befristet (TVL-Vertrag)",
     },
     LehrerRechtsverhaeltnisKatalogEintrag {
       "gueltigBis": null,
@@ -1505,7 +1505,7 @@ ArrayList {
       "id": 6,
       "kuerzel": "J",
       "schluessel": "J",
-      "text": "Angestellte, nicht BAT-Vertrag",
+      "text": "Angestellte, nicht TVL-Vertrag",
     },
     LehrerRechtsverhaeltnisKatalogEintrag {
       "gueltigBis": null,
