@@ -10,12 +10,12 @@
 </head>
 
 <body th:with="mediaPrint = ${Parameter.ausgabeformat == 2},
-               fuerErzieher = ${(Parameter.detailLevel % 2) == 1},
-               mitBildBriefkopf = ${((Parameter.detailLevel % 4) / 2) >= 1},
-               mitSchullogo = ${((Parameter.detailLevel % 8) / 4) >= 1},
-               keineAnschrift = ${((Parameter.detailLevel % 16) / 8) >= 1},
-               keinInfoblock = ${((Parameter.detailLevel % 32) / 16) >= 1},
-               keineUnterschrift = ${((Parameter.detailLevel % 64) / 32) >= 1}">
+               fuerErzieher = ${((Parameter.detailLevel % 4) / 2) >= 1},
+               mitBildBriefkopf = ${((Parameter.detailLevel % 8) / 4) >= 1},
+               mitSchullogo = ${((Parameter.detailLevel % 16) / 8) >= 1},
+               keineAnschrift = ${((Parameter.detailLevel % 32) / 16) >= 1},
+               keinInfoblock = ${((Parameter.detailLevel % 64) / 32) >= 1},
+               keineUnterschrift = ${((Parameter.detailLevel % 128) / 64) >= 1}">
 
 <th:block th:each="schueler,iterationVarSchueler : ${Schueler}"
 		  th:with="anzahlEmpfaenger = ${fuerErzieher ? schueler.erzieherArtGruppen().size() : 1 }">

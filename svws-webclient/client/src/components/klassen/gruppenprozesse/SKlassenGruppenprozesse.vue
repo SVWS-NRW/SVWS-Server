@@ -65,8 +65,8 @@
 					</div>
 					<div>
 						<svws-ui-radio-group>
-							<svws-ui-radio-option :value="1" v-model="gruppeDruck" name="Ausgabe" label="Gesamtausdruck" />
-							<svws-ui-radio-option :value="2" v-model="gruppeDruck" name="Ausgabe" label="Einzelausdruck" />
+							<svws-ui-radio-option :value="1" v-model="gruppeDruck" name="Ausgabe" label="Gesamtausdruck einseitig" />
+							<svws-ui-radio-option :value="2" v-model="gruppeDruck" name="Ausgabe" label="Einzelausdruck einseitig" />
 						</svws-ui-radio-group>
 					</div>
 				</svws-ui-input-wrapper>
