@@ -90,7 +90,7 @@
 					</template>
 				</svws-ui-tooltip>
 			</span>
-			<span v-if="readonly && !isSelectInput" class="icon-xs i-ri-lock-line ml-1" :class="{ 'icon-ui-statistic': statistics }" />
+			<span v-if="readonly && !isSelectInput" class="icon-xs i-ri-lock-line" />
 		</span>
 		<span v-if="removable && (type === 'date') && (!readonly)" @keydown.enter="updateData('')" @click.stop="updateData('')" class="svws-icon--remove icon i-ri-close-line" tabindex="0" />
 		<span v-if="(type === 'date') && !firefox()" class="svws-icon icon i-ri-calendar-2-line" />
