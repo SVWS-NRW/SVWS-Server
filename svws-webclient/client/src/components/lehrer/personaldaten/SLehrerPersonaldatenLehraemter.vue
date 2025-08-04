@@ -37,7 +37,7 @@
 					<svws-ui-select title="Anerkennungsgrund Lehramt" v-if="hatUpdateKompetenz" :model-value="getLehramtAnerkennung(row)"
 						@update:model-value="anerkennung => patchLehramt(row, { idAnerkennungsgrund: anerkennung?.daten(schuljahr)?.id ?? null })"
 						:items="LehrerLehramtAnerkennung.values()" :item-text="i => i.daten(schuljahr)?.text ?? '—'" headless />
-					<div v-else> {{ getLehramtAnerkennung(row)?.daten(schuljahr)?.text ?? '—' }} </div>
+					<div v-else class="text-left"> {{ getLehramtAnerkennung(row)?.daten(schuljahr)?.text ?? '—' }} </div>
 				</td>
 				<td class="text-left">
 					<div v-if="hatUpdateKompetenz" class="inline-flex gap-1">
@@ -54,7 +54,7 @@
 					<svws-ui-select title="Anerkennungsgrund Lehrbefähigung" v-if="hatUpdateKompetenz" :model-value="getLehrbefaehigungAnerkennung(row)"
 						@update:model-value="anerkennung => patchLehrbefaehigung(row, { idAnerkennungsgrund: anerkennung?.daten(schuljahr)?.id ?? null })"
 						:items="LehrerLehrbefaehigungAnerkennung.values()" :item-text="i => i.daten(schuljahr)?.text ?? '—'" headless />
-					<div v-else> {{ getLehrbefaehigungAnerkennung(row)?.daten(schuljahr)?.text ?? '—' }} </div>
+					<div v-else class="text-left"> {{ getLehrbefaehigungAnerkennung(row)?.daten(schuljahr)?.text ?? '—' }} </div>
 				</td>
 				<td class="text-left">
 					<div v-if="hatUpdateKompetenz" class="inline-flex gap-4">
@@ -71,7 +71,7 @@
 					<svws-ui-select title="Anerkennungsgrund Fachrichtung" v-if="hatUpdateKompetenz" :model-value="getFachrichtungAnerkennung(row)"
 						@update:model-value="anerkennung => patchFachrichtung(row, { idAnerkennungsgrund: anerkennung?.daten(schuljahr)?.id ?? null })"
 						:items="LehrerFachrichtungAnerkennung.values()" :item-text="i => i.daten(schuljahr)?.text ?? '—'" headless />
-					<div v-else> {{ getFachrichtungAnerkennung(row)?.daten(schuljahr)?.text ?? '—' }} </div>
+					<div v-else class="text-left"> {{ getFachrichtungAnerkennung(row)?.daten(schuljahr)?.text ?? '—' }} </div>
 				</td>
 				<td class="text-left">
 					<div v-if="hatUpdateKompetenz" class="inline-flex gap-4">
@@ -79,7 +79,7 @@
 					</div>
 				</td>
 			</template>
-			<template v-else-if="row.type === 'lehrbefaehigung'">
+			<template v-else-if="(row.type === 'lehrbefaehigung') && hatUpdateKompetenz">
 				<td />
 				<td>
 					<div class="w-fit flex flex-row items-center">
@@ -89,7 +89,7 @@
 				</td>
 				<td class="col-span-2" />
 			</template>
-			<template v-else>
+			<template v-else-if="(row.type === 'fachrichtung') && hatUpdateKompetenz">
 				<td />
 				<td class="">
 					<div class="w-fit flex flex-row items-center">

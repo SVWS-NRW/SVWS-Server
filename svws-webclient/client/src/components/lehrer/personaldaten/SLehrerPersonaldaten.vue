@@ -2,41 +2,41 @@
 	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input class="contentFocusField" placeholder="Identnummer" :disabled="!hatUpdateKompetenz" :model-value="personaldaten().identNrTeil1"
+				<svws-ui-text-input class="contentFocusField" placeholder="Identnummer" :readonly :model-value="personaldaten().identNrTeil1"
 					@change="identNrTeil1 => patch({identNrTeil1})" span="full" focus statistics />
-				<svws-ui-text-input placeholder="Seriennummer" :disabled="!hatUpdateKompetenz" :model-value="personaldaten().identNrTeil2SerNr"
+				<svws-ui-text-input placeholder="Seriennummer" :readonly :model-value="personaldaten().identNrTeil2SerNr"
 					@change="identNrTeil2SerNr => patch({identNrTeil2SerNr})" statistics />
-				<svws-ui-text-input placeholder="Vergütungsschlüssel" :disabled="!hatUpdateKompetenz" :model-value="personaldaten().lbvVerguetungsschluessel"
+				<svws-ui-text-input placeholder="Vergütungsschlüssel" :readonly :model-value="personaldaten().lbvVerguetungsschluessel"
 					@change="lbvVerguetungsschluessel => patch({lbvVerguetungsschluessel})" />
-				<svws-ui-text-input placeholder="PA-Nummer" :disabled="!hatUpdateKompetenz" :model-value="personaldaten().personalaktennummer"
+				<svws-ui-text-input placeholder="PA-Nummer" :readonly :model-value="personaldaten().personalaktennummer"
 					@change="personalaktennummer => patch({personalaktennummer})" />
-				<svws-ui-text-input placeholder="LBV-Personalnummer" :disabled="!hatUpdateKompetenz" :model-value="personaldaten().lbvPersonalnummer"
+				<svws-ui-text-input placeholder="LBV-Personalnummer" :readonly :model-value="personaldaten().lbvPersonalnummer"
 					@change="lbvPersonalnummer => patch({lbvPersonalnummer})" />
 				<svws-ui-spacing />
-				<svws-ui-text-input placeholder="Zugangsdatum" :disabled="!hatUpdateKompetenz" :model-value="personaldaten().zugangsdatum"
+				<svws-ui-text-input placeholder="Zugangsdatum" :readonly :model-value="personaldaten().zugangsdatum"
 					@change="zugangsdatum => patch({zugangsdatum})" type="date" />
-				<svws-ui-text-input placeholder="Abgangsdatum" :disabled="!hatUpdateKompetenz" :model-value="personaldaten().abgangsdatum"
+				<svws-ui-text-input placeholder="Abgangsdatum" :readonly :model-value="personaldaten().abgangsdatum"
 					@change="abgangsdatum => patch({abgangsdatum})" type="date" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Beschäftigungsdaten">
 			<svws-ui-input-wrapper :grid="2">
-				<ui-select label="Rechtsverhältnis" :disabled="!hatUpdateKompetenz" v-model="rechtsverhaeltnis" :manager="rechtsverhaeltnisSelectManager" statistics
+				<ui-select label="Rechtsverhältnis" :readonly v-model="rechtsverhaeltnis" :manager="rechtsverhaeltnisSelectManager" statistics
 					:validator="() => validatorPersonalabschnittsDaten" :do-validate="validatePersonalabschnittDaten" class="contentFocusField" required />
-				<ui-select label="Beschäftigungsart" :disabled="!hatUpdateKompetenz" v-model="beschaeftigungsart" :manager="beschaeftigungsartSelectManager" statistics
+				<ui-select label="Beschäftigungsart" :readonly v-model="beschaeftigungsart" :manager="beschaeftigungsartSelectManager" statistics
 					class="contentFocusField" required />
-				<svws-ui-input-number placeholder="Pflichtstundensoll" :disabled="!hatUpdateKompetenz" statistics
+				<svws-ui-input-number placeholder="Pflichtstundensoll" :readonly statistics
 					:model-value="personalabschnittsdaten()?.pflichtstundensoll ?? 0.0"
 					@change="pflichtstundensoll => patchAbschnittsdaten({ pflichtstundensoll: pflichtstundensoll }, personalabschnittsdaten()?.id ?? -1)" />
-				<ui-select label="Einsatzstatus" :disabled="!hatUpdateKompetenz" v-model="einsatzstatus" statistics :manager="einsatzstatusSelectManager"
+				<ui-select label="Einsatzstatus" :readonly v-model="einsatzstatus" statistics :manager="einsatzstatusSelectManager"
 					class="contentFocusField" required />
-				<svws-ui-text-input placeholder="Stammschule" :disabled="!hatUpdateKompetenz" :model-value="personalabschnittsdaten()?.stammschulnummer"
+				<svws-ui-text-input placeholder="Stammschule" :readonly :model-value="personalabschnittsdaten()?.stammschulnummer"
 					@change="stammschulnummer => patchAbschnittsdaten({ stammschulnummer }, personalabschnittsdaten()?.id ?? -1)" statistics />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Lehrämter">
 			<svws-ui-input-wrapper>
-				<s-lehrer-personaldaten-lehraemter :hat-update-kompetenz :schuljahr :lehrer-liste-manager
+				<s-lehrer-personaldaten-lehraemter :hat-update-kompetenz="!readonly" :schuljahr :lehrer-liste-manager
 					:patch-lehramt :add-lehramt :remove-lehraemter
 					:patch-lehrbefaehigung :add-lehrbefaehigung :remove-lehrbefaehigungen
 					:patch-fachrichtung :add-fachrichtung :remove-fachrichtungen="removeFachrichtungen" />
@@ -44,14 +44,14 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Mehr- und Minderleistung, Anrechnungsstunden">
 			<svws-ui-input-wrapper>
-				<svws-ui-select title="Mehrleistung" :disabled="!hatUpdateKompetenz" v-model="mehrleistungsgrund" :items="LehrerMehrleistungsarten.values()"
+				<svws-ui-select title="Mehrleistung" :readonly v-model="mehrleistungsgrund" :items="LehrerMehrleistungsarten.values()"
 					:item-text="i => i.daten(schuljahr)?.text ?? '—'" focus-class-content statistics />
-				<svws-ui-select title="Minderleistung" :disabled="!hatUpdateKompetenz" v-model="minderleistungsgrund" :items="LehrerMinderleistungsarten.values()"
+				<svws-ui-select title="Minderleistung" :readonly v-model="minderleistungsgrund" :items="LehrerMinderleistungsarten.values()"
 					:item-text="i => i.daten(schuljahr)?.text ?? '—'" statistics />
-				<svws-ui-input-number placeholder="Stundensumme" :disabled="!hatUpdateKompetenz" :model-value="personalabschnittsdaten()?.pflichtstundensoll ?? 0.0"
+				<svws-ui-input-number placeholder="Stundensumme" :readonly :model-value="personalabschnittsdaten()?.pflichtstundensoll ?? 0.0"
 					@change="pflichtstundensoll => patchAbschnittsdaten({ pflichtstundensoll: pflichtstundensoll }, personalabschnittsdaten()?.id ?? -1)"
 					statistics />
-				<svws-ui-select title="Nicht unterrichtliche Tätigkeiten" :disabled="!hatUpdateKompetenz" v-model="anrechnungsgrund"
+				<svws-ui-select title="Nicht unterrichtliche Tätigkeiten" :readonly v-model="anrechnungsgrund"
 					:items="LehrerAnrechnungsgrund.values()"
 					:item-text="i => i.daten(schuljahr)?.text ?? '—'" statistics />
 				<svws-ui-spacing />
@@ -65,9 +65,8 @@
 	import { computed, watch } from "vue";
 	import type { LehrerPersonaldatenProps } from './SLehrerPersonaldatenProps';
 	import type { Validator} from "@core";
-	import { DeveloperNotificationException, ValidatorLehrerPersonalabschnittsdaten} from "@core";
-	import { LehrerBeschaeftigungsart, LehrerEinsatzstatus, LehrerRechtsverhaeltnis, LehrerAnrechnungsgrund, LehrerMehrleistungsarten, LehrerMinderleistungsarten,
-		BenutzerKompetenz} from "@core";
+	import { DeveloperNotificationException, ValidatorLehrerPersonalabschnittsdaten, LehrerBeschaeftigungsart, LehrerEinsatzstatus, LehrerRechtsverhaeltnis,
+		LehrerAnrechnungsgrund, LehrerMehrleistungsarten, LehrerMinderleistungsarten, BenutzerKompetenz } from "@core";
 	import { CoreTypeSelectManager } from "@ui";
 
 	const props = defineProps<LehrerPersonaldatenProps>();
@@ -92,7 +91,7 @@
 		}
 	);
 
-	const hatUpdateKompetenz = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN));
+	const readonly = computed<boolean>(() => !props.benutzerKompetenzen.has(BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN));
 
 	const personaldaten = () => props.lehrerListeManager().personalDaten();
 	const personalabschnittsdaten = () => props.lehrerListeManager().getAbschnittBySchuljahresabschnittsId(props.aktAbschnitt.id);

@@ -6,57 +6,57 @@
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-input-wrapper>
-					<svws-ui-checkbox :disabled="!hatUpdateKompetenz" :model-value="data().istSichtbar"
+					<svws-ui-checkbox :readonly :model-value="data().istSichtbar"
 						@update:model-value="istSichtbar => patch({istSichtbar: istSichtbar === true})" focus-class-content>
 						Ist sichtbar
 					</svws-ui-checkbox>
-					<svws-ui-checkbox :disabled="!hatUpdateKompetenz" :model-value="data().istRelevantFuerStatistik" statistics
+					<svws-ui-checkbox :readonly :model-value="data().istRelevantFuerStatistik" statistics
 						@update:model-value="istRelevantFuerStatistik => patch({istRelevantFuerStatistik: istRelevantFuerStatistik === true})">
 						Ist Relevant für Statistik
 					</svws-ui-checkbox>
 				</svws-ui-input-wrapper>
-				<svws-ui-text-input placeholder="Kürzel" :disabled="!hatUpdateKompetenz" :model-value="data().kuerzel" statistics
+				<svws-ui-text-input placeholder="Kürzel" :readonly :model-value="data().kuerzel" statistics
 					@change="kuerzel => patch({kuerzel: kuerzel ?? undefined})" required focus />
-				<svws-ui-select title="Personal-Typ" :disabled="!hatUpdateKompetenz" v-model="inputPersonalTyp" :items="PersonalTyp.values()"
+				<svws-ui-select title="Personal-Typ" :readonly v-model="inputPersonalTyp" :items="PersonalTyp.values()"
 					:item-text="i => i.bezeichnung" required />
-				<svws-ui-text-input placeholder="Nachname" :disabled="!hatUpdateKompetenz" :model-value="data().nachname"
+				<svws-ui-text-input placeholder="Nachname" :readonly :model-value="data().nachname"
 					@change="nachname => {if (nachname?.trim()) patch({nachname: nachname ?? undefined})}" required statistics :validator="() => validatorNachname"
 					:do-validate="validateNachname" />
-				<svws-ui-text-input placeholder="Rufname" :disabled="!hatUpdateKompetenz" :model-value="data().vorname"
+				<svws-ui-text-input placeholder="Rufname" :readonly :model-value="data().vorname"
 					@change="vorname => {if (vorname?.trim()) patch({vorname: vorname ?? undefined})}" required statistics :validator="() => validatorVorname"
 					:do-validate="validateVorname" />
 				<svws-ui-spacing />
-				<svws-ui-select title="Geschlecht" :disabled="!hatUpdateKompetenz" v-model="inputGeschlecht" :items="Geschlecht.values()" :item-text="i=>i.text"
+				<svws-ui-select title="Geschlecht" :readonly v-model="inputGeschlecht" :items="Geschlecht.values()" :item-text="i=>i.text"
 					required />
-				<svws-ui-text-input placeholder="Geburtsdatum" :disabled="!hatUpdateKompetenz" :model-value="data().geburtsdatum"
+				<svws-ui-text-input placeholder="Geburtsdatum" :readonly :model-value="data().geburtsdatum"
 					@change="geburtsdatum => geburtsdatum && patch({geburtsdatum})" type="date" required statistics :validator="() => validatorGeburtsdatum"
 					:do-validate="validateGeburtsdatum" />
-				<svws-ui-select title="Staatsangehörigkeit" :disabled="!hatUpdateKompetenz" v-model="inputStaatsangehoerigkeit" :items="Nationalitaeten.values()"
+				<svws-ui-select title="Staatsangehörigkeit" :readonly v-model="inputStaatsangehoerigkeit" :items="Nationalitaeten.values()"
 					:item-text="i => i.historie().getLast().staatsangehoerigkeit" :item-sort="staatsangehoerigkeitKatalogEintragSort"
 					:item-filter="staatsangehoerigkeitKatalogEintragFilter" required autocomplete statistics />
 				<svws-ui-spacing />
-				<svws-ui-text-input placeholder="Akadademischer Grad" :disabled="!hatUpdateKompetenz" :model-value="data().titel" @change="titel => patch({titel})"
+				<svws-ui-text-input placeholder="Akadademischer Grad" :readonly :model-value="data().titel" @change="titel => patch({titel})"
 					type="text" />
-				<svws-ui-text-input placeholder="Amtsbezeichnung" :disabled="!hatUpdateKompetenz" :model-value="data().amtsbezeichnung"
+				<svws-ui-text-input placeholder="Amtsbezeichnung" :readonly :model-value="data().amtsbezeichnung"
 					@change="amtsbezeichnung => patch({amtsbezeichnung})" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Wohnort und Kontaktdaten">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input class="contentFocusField" placeholder="Straße" :disabled="!hatUpdateKompetenz" :model-value="strasse" @change="patchStrasse"
+				<svws-ui-text-input class="contentFocusField" placeholder="Straße" :readonly :model-value="strasse" @change="patchStrasse"
 					type="text" span="full" />
-				<svws-ui-select v-model="wohnortID" title="Wohnort" :disabled="!hatUpdateKompetenz" :items="mapOrte" :item-filter="orte_filter" :item-sort="orte_sort"
+				<svws-ui-select v-model="wohnortID" title="Wohnort" :readonly :items="mapOrte" :item-filter="orte_filter" :item-sort="orte_sort"
 					:item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
-				<svws-ui-select v-model="ortsteilID" title="Ortsteil" :disabled="!hatUpdateKompetenz" :items="ortsteile" :item-sort="ortsteilSort"
+				<svws-ui-select v-model="ortsteilID" title="Ortsteil" :readonly :items="ortsteile" :item-sort="ortsteilSort"
 					:item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil ?? ''" removable />
 				<svws-ui-spacing />
-				<svws-ui-text-input placeholder="Telefon" :disabled="!hatUpdateKompetenz" :model-value="data().telefon" @change="telefon => patch({telefon})"
+				<svws-ui-text-input placeholder="Telefon" :readonly :model-value="data().telefon" @change="telefon => patch({telefon})"
 					type="tel" :max-len="20" />
-				<svws-ui-text-input placeholder="Mobil oder Fax" :disabled="!hatUpdateKompetenz" :model-value="data().telefonMobil"
+				<svws-ui-text-input placeholder="Mobil oder Fax" :readonly :model-value="data().telefonMobil"
 					@change="telefonMobil => patch({telefonMobil})" type="tel" :max-len="20" />
-				<svws-ui-text-input placeholder="Private E-Mail-Adresse" :disabled="!hatUpdateKompetenz" :model-value="data().emailPrivat"
+				<svws-ui-text-input placeholder="Private E-Mail-Adresse" :readonly :model-value="data().emailPrivat"
 					@change="emailPrivat => patch({emailPrivat})" type="email" verify-email />
-				<svws-ui-text-input placeholder="Schulische E-Mail-Adresse" :disabled="!hatUpdateKompetenz" :model-value="data().emailDienstlich"
+				<svws-ui-text-input placeholder="Schulische E-Mail-Adresse" :readonly :model-value="data().emailDienstlich"
 					@change="emailDienstlich => patch({emailDienstlich})" type="email" verify-email />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
@@ -66,10 +66,10 @@
 					{{ LehrerLeitungsfunktion.data().getWertByID(value)?.daten(schuljahr)?.text ?? '—' }}
 				</template>
 				<template #cell(beginn)="{ value }">
-					{{ (value === null) || (JavaString.isBlank(value)) ? '–' : DateUtils.gibDatumGermanFormat(value) }}
+					{{ (value === null) || (JavaString.isBlank(value)) ? '—' : DateUtils.gibDatumGermanFormat(value) }}
 				</template>
 				<template #cell(ende)="{ value }">
-					{{ (value === null) || (JavaString.isBlank(value)) ? '–' : DateUtils.gibDatumGermanFormat(value) }}
+					{{ (value === null) || (JavaString.isBlank(value)) ? '—' : DateUtils.gibDatumGermanFormat(value) }}
 				</template>
 			</svws-ui-table>
 		</svws-ui-content-card>
@@ -116,7 +116,7 @@
 
 	const schuljahr = computed<number>(() => props.lehrerListeManager().getSchuljahr());
 
-	const hatUpdateKompetenz = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.LEHRERDATEN_AENDERN));
+	const readonly = computed<boolean>(() => !props.benutzerKompetenzen.has(BenutzerKompetenz.LEHRERDATEN_AENDERN));
 
 	const data = () => props.lehrerListeManager().daten();
 
@@ -135,11 +135,11 @@
 		set: (value) => void props.patch({ staatsangehoerigkeitID: value.historie().getLast().iso3 }),
 	});
 
-	const strasse = computed(() => AdressenUtils.combineStrasse(data().strassenname ?? "", data().hausnummer ?? "", data().hausnummerZusatz ?? ""))
+	const strasse = computed(() => AdressenUtils.combineStrasse(data().strassenname ?? "", data().hausnummer ?? "", data().hausnummerZusatz ?? ""));
 
-	const patchStrasse = (value: string | null) => {
+	async function patchStrasse(value: string | null) {
 		const vals = AdressenUtils.splitStrasse(value);
-		void props.patch({ strassenname: vals[0], hausnummer: vals[1], hausnummerZusatz: vals[2] });
+		await props.patch({ strassenname: vals[0], hausnummer: vals[1], hausnummerZusatz: vals[2] });
 	}
 
 	const wohnortID = computed<OrtKatalogEintrag | null>({
@@ -170,6 +170,6 @@
 		{key: 'idLeitungsfunktion', label: 'Funktion', span: 2 },
 		{key: 'beginn', label: 'Von', span: 1 },
 		{key: 'ende', label: 'Bis', span: 1 },
-	]
+	];
 
 </script>
