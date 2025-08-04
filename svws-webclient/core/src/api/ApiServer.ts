@@ -7973,7 +7973,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 201: Der Jahrgang wurde erfolgreich hinzugefügt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: Raum
+	 *     - Rückgabe-Typ: JahrgangsDaten
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Jahrgang für die Schule anzulegen.
 	 *   Code 404: Die Jahrgangsdaten wurden nicht gefunden
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
@@ -7983,13 +7983,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Jahrgang wurde erfolgreich hinzugefügt.
 	 */
-	public async addJahrgang(data : Partial<JahrgangsDaten>, schema : string) : Promise<Raum> {
+	public async addJahrgang(data : Partial<JahrgangsDaten>, schema : string) : Promise<JahrgangsDaten> {
 		const path = "/db/{schema}/jahrgaenge/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = JahrgangsDaten.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
-		return Raum.transpilerFromJSON(text);
+		return JahrgangsDaten.transpilerFromJSON(text);
 	}
 
 

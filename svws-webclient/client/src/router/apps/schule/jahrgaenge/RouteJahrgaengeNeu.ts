@@ -8,6 +8,7 @@ import { RouteManager } from "~/router/RouteManager";
 import { routeJahrgaenge } from "./RouteJahrgaenge";
 import type { RouteJahrgaenge } from "~/router/apps/schule/jahrgaenge/RouteJahrgaenge";
 import type { SchuleJahrgangNeuProps } from "~/components/schule/jahrgaenge/SJahrgaengeNeuProps";
+import { api } from "~/router/Api";
 
 const SJahrgaengeNeu = () => import("~/components/schule/jahrgaenge/SJahrgaengeNeu.vue");
 
@@ -29,9 +30,12 @@ export class RouteJahrgaengeNeu extends RouteNode<any, RouteJahrgaenge> {
 	public getProps(to: RouteLocationNormalized): SchuleJahrgangNeuProps {
 		return {
 			manager: () => routeJahrgaenge.data.manager,
-			add: routeJahrgaenge.data.add,
-			gotoDefaultView: routeJahrgaenge.data.gotoDefaultView,
+			schuljahr: routeApp.data.aktAbschnitt.value.schuljahr,
+			schulform: api.schulform,
+			addJahrgang: routeJahrgaenge.data.add,
+			goToDefaultView: routeJahrgaenge.data.gotoDefaultView,
 			checkpoint: this.checkpoint,
+			benutzerKompetenzen: api.benutzerKompetenzen,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
 		};
 	}

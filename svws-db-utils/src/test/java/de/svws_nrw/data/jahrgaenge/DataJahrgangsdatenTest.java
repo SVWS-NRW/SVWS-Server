@@ -262,15 +262,12 @@ class DataJahrgangsdatenTest {
 
 	@Test
 	@DisplayName("mapAttribute | mapping mit KuerzelSchuldgliederung = null")
-	void testMapAttributeKuerzelSchuldgliederungIsNull() {
+	void testMapAttributeKuerzelSchuldgliederungIsNull() throws ApiOperationException {
 		final DTOJahrgang expectedDTO = new DTOJahrgang(2L);
 
-		final Throwable throwable = catchThrowable(() -> this.data.mapAttribute(expectedDTO, "kuerzelSchulgliederung", null, null));
+		this.data.mapAttribute(expectedDTO, "kuerzelSchulgliederung", null, null);
 
-		assertThat(throwable)
-				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Keine Schulgliederung mit dem Schlüssel null gefunden.")
-				.hasFieldOrPropertyWithValue("status", Response.Status.NOT_FOUND);
+		assertThat(expectedDTO.GliederungKuerzel).isNull();
 	}
 
 	@Test

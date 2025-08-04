@@ -51,7 +51,10 @@ export class RouteDataJahrgaenge extends RouteDataAuswahl<JahrgaengeListeManager
 	}
 
 	add = async (data: Partial<JahrgangsDaten>): Promise<void> => {
-		// Muss implementiert werden
+		const result = await api.server.addJahrgang(data, api.schema);
+		this.manager.liste.add(result);
+		this.commit();
+		await this.gotoDefaultView(result.id);
 	}
 
 	protected deleteMessage(id: number, jahrgang: JahrgangsDaten | null) : string {

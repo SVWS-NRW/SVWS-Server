@@ -3,7 +3,7 @@
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input class="contentFocusField" placeholder="Kürzel" :model-value="manager().daten().kuerzel" @change="patchKuerzel"
-					:valid="kuerzelIsValid" :max-len="20" :min-len="1" :readonly />
+					:valid="kuerzelIsValid" :max-len="20" :min-len="1" :readonly required />
 				<svws-ui-text-input placeholder="Bezeichnung" :model-value="manager().daten().bezeichnung" :max-len="100" @change="patchBezeichnung"
 					:valid="bezeichnungIsValid" :readonly />
 				<svws-ui-text-input placeholder="Kurzbezeichnung" :model-value="manager().daten().kurzbezeichnung" :max-len="2"
@@ -11,11 +11,11 @@
 				<svws-ui-select title="Schulgliederung" v-model="schulgliederung" :items="Schulgliederung.getBySchuljahrAndSchulform(schuljahr, schulform)"
 					:item-text="textSchulgliederung" statistics :readonly />
 				<svws-ui-select title="Jahrgang" v-model="statistikJahrgang" :items="Jahrgaenge.getListBySchuljahrAndSchulform(schuljahr, schulform)"
-					:item-text="textStatistikJahrgang" removable statistics :readonly />
-				<svws-ui-select title="Folgejahrgang" v-model="idFolgejahrgang" :items="folgejahrgaenge" :item-text="textFolgejahrgang" />
+					:item-text="textStatistikJahrgang" removable statistics :readonly required />
+				<svws-ui-select title="Folgejahrgang" v-model="folgejahrgang" :items="folgejahrgaenge" :item-text="textFolgejahrgang" />
 				<svws-ui-input-number placeholder="Anzahl der Restabschnitte" :model-value="manager().daten().anzahlRestabschnitte"
-					@change="patchAnzahlRestabschnitte" :valid="anzahlRestabschnitteIsValid" :min="0" :max="40" :required="true" :readonly />
-				<svws-ui-input-number placeholder="Sortierung" :required="true" :min="0" :model-value="manager().daten().sortierung"
+					@change="patchAnzahlRestabschnitte" :valid="anzahlRestabschnitteIsValid" :min="0" :max="40" :readonly />
+				<svws-ui-input-number placeholder="Sortierung" :min="0" :model-value="manager().daten().sortierung"
 					@change="sortierung => patch({ sortierung: sortierung ?? undefined })" :readonly />
 				<svws-ui-checkbox :model-value="manager().daten().istSichtbar" @update:model-value="istSichtbar => patch({ istSichtbar })" :readonly>
 					Sichtbar
@@ -37,7 +37,7 @@
 	const readonly = computed<boolean>(() => !hatKompetenzUpdate.value);
 	const folgejahrgaenge = computed<JahrgangsDaten[]>(() => [...props.manager().liste.list()].filter(j => j.id !== props.manager().daten().id));
 
-	const idFolgejahrgang = computed<JahrgangsDaten | undefined>({
+	const folgejahrgang = computed<JahrgangsDaten | undefined>({
 		get: () => {
 			const idFolgejahrgang = props.manager().daten().idFolgejahrgang;
 			if (idFolgejahrgang === null)
@@ -52,10 +52,7 @@
 	const schulgliederung = computed<Schulgliederung | null>({
 		get: () => {
 			const kuerzel = props.manager().daten().kuerzelSchulgliederung;
-			if (kuerzel === null)
-				return null;
-
-			return Schulgliederung.data().getWertByKuerzel(kuerzel);
+			return (kuerzel === null) ? null : Schulgliederung.data().getWertByKuerzel(kuerzel);
 		},
 		set: (value) => {
 			const kuerzel = value?.daten(props.schuljahr)?.kuerzel;
@@ -119,7 +116,7 @@
 
 	// --- Validierung ---
 	function bezeichnungIsValid(bezeichnung: string | null): boolean {
-		if (bezeichnung !== null && bezeichnung.length > 100)
+		if ((bezeichnung !== null) && (bezeichnung.length > 100))
 			return false;
 
 		for (const jahrgang of props.manager().liste.list())

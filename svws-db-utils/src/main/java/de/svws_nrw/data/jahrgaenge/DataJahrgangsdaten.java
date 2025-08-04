@@ -92,10 +92,10 @@ public final class DataJahrgangsdaten extends DataManagerRevised<Long, DTOJahrga
 			case "bezeichnung" -> mapBezeichnung(dtoJahrgang, name, value);
 			case "kurzbezeichnung" -> dtoJahrgang.Kurzbezeichnung =
 					JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule_Jahrgaenge.col_Spaltentitel.datenlaenge(), name);
-			case "sortierung" -> dtoJahrgang.Sortierung = JSONMapper.convertToInteger(value, true, name);
+			case "sortierung" -> dtoJahrgang.Sortierung = JSONMapper.convertToIntegerInRange(value, true, 0, 32000, name);
 			case "kuerzelSchulgliederung" -> mapKuerzelSchulgliederung(dtoJahrgang, value, name);
 			case "idFolgejahrgang" -> mapIdFolgejahrgang(dtoJahrgang, value, name);
-			case "anzahlRestabschnitte" -> dtoJahrgang.AnzahlRestabschnitte = JSONMapper.convertToInteger(value, true, name);
+			case "anzahlRestabschnitte" -> dtoJahrgang.AnzahlRestabschnitte = JSONMapper.convertToIntegerInRange(value, true, 0, 40, name);
 			case "istSichtbar" -> dtoJahrgang.Sichtbar = JSONMapper.convertToBoolean(value, true, name);
 			case "gueltigVon" -> dtoJahrgang.GueltigVon = JSONMapper.convertToLong(value, true, name);
 			case "gueltigBis" -> dtoJahrgang.GueltigBis = JSONMapper.convertToLong(value, true, name);
@@ -166,6 +166,11 @@ public final class DataJahrgangsdaten extends DataManagerRevised<Long, DTOJahrga
 
 	private void mapKuerzelSchulgliederung(final DTOJahrgang dtoJahrgang, final Object value, final String attrName) throws ApiOperationException {
 		final String kuerzelSchuldgliederung = JSONMapper.convertToString(value, true, false, null, attrName);
+		if (kuerzelSchuldgliederung == null) {
+			dtoJahrgang.GliederungKuerzel = null;
+			return;
+		}
+
 		final Schulgliederung schulgliederung = Schulgliederung.data().getWertBySchluessel(kuerzelSchuldgliederung);
 		if (schulgliederung == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Schulgliederung mit dem Schlüssel %s gefunden.".formatted(kuerzelSchuldgliederung));

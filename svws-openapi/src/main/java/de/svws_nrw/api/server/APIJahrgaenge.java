@@ -4,7 +4,6 @@ import java.io.InputStream;
 
 import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
 import de.svws_nrw.asd.data.jahrgang.JahrgaengeKatalogEintrag;
-import de.svws_nrw.core.data.schule.Raum;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.JSONMapper;
@@ -193,7 +192,7 @@ public class APIJahrgaenge {
 			description = "Erstellt einen neuen Jahrgang und gibt das zugehörige Objekt zurück. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten der Jahrgänge besitzt.")
 	@ApiResponse(responseCode = "201", description = "Der Jahrgang wurde erfolgreich hinzugefügt.",
-			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Raum.class)))
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = JahrgangsDaten.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Jahrgang für die Schule anzulegen.")
 	@ApiResponse(responseCode = "404", description = "Die Jahrgangsdaten wurden nicht gefunden")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
