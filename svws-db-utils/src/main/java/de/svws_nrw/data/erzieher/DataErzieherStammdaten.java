@@ -88,7 +88,7 @@ public final class DataErzieherStammdaten extends DataManagerRevised<Long, DTOSc
 			return dtoMapperErzieher1.apply(dto);
 		if ((dto.Name2 != null) && !dto.Name2.isBlank())
 			return dtoMapperErzieher2.apply(dto);
-		throw new ApiOperationException(Status.NOT_FOUND);
+		throw new ApiOperationException(Status.NOT_FOUND, "Erzieher konnte nicht gemappt werden: weder Name1 noch Name2 sind befüllt.");
 	}
 
 	/**
@@ -460,6 +460,7 @@ public final class DataErzieherStammdaten extends DataManagerRevised<Long, DTOSc
 	 * @return      die List von IDs der Schüler-Erzieher-Einträge, welche der entsprechenden Erzieher-Art zugeordnet sind
 	 */
 	public List<Long> getIDsByErzieherartID(final Long id) {
-		return conn.queryList(DTOSchuelerErzieherAdresse.QUERY_BY_ERZIEHERART_ID, DTOSchuelerErzieherAdresse.class, id).stream().map(t -> t.Schueler_ID).toList();
+		return conn.queryList(DTOSchuelerErzieherAdresse.QUERY_BY_ERZIEHERART_ID, DTOSchuelerErzieherAdresse.class, id).stream().map(t -> t.Schueler_ID)
+				.toList();
 	}
 }

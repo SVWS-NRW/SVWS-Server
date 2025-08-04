@@ -704,6 +704,7 @@
 			ids.add(s.id);
 		await props.deleteSchuelerErziehereintrage(ids);
 		selectedErz.value = [];
+		erzieher.value = undefined;
 	}
 
 	watch(() => props.getListSchuelerErziehereintraege(), (neu) => {
