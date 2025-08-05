@@ -2,8 +2,6 @@ import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import groovy.xml.XmlSlurper
 
-def testConfigPath = "${rootDir}/config/tests/config.json" as String
-
 def configDir = "${rootDir}/config/tests"
 
 def configFile = file("$configDir/config.json")
@@ -48,7 +46,7 @@ tasks.register('downloadTestDatabases') {
 			if (lastRepoUpdate == -1 && file.exists()) {
 				// Es konnte nicht geprüft ob die aktuelle Datenbank auf dem neusten Stand ist
 				println 'Warnung: Aktualität der Testdatenbanken konnte nicht geprüft werden.'
-			} else if ((CONFIG.lastRepoUpdate != lastRepoUpdate) || !file.exists()) {
+			} else if ((getDownloadTimeStamp()["lastRepoUpdate"] != lastRepoUpdate) || !file.exists()) {
 				// Die remote verfügbare Datenbank ist neuer als die aktuelle oder es existiert keine Lokale. Daher muss die Datenbank downloaded werden.
 				println 'Testdatenbanken wurden aktualisiert oder sind nicht vorhanden und müssen daher neu heruntergeladen werden.'
 
@@ -58,7 +56,7 @@ tasks.register('downloadTestDatabases') {
 				}
 
 				// Aktualisiert den Zeitstempel des letzten Repository-Updates in der JSON-Datei für die Testeinstellungen.
-				updateDownloadTimeStamp(testConfigPath, lastRepoUpdate)
+				updateDownloadTimeStamp(lastRepoUpdate)
 
 			} else {
 				if (file.exists()) {
@@ -326,6 +324,17 @@ tasks.register('checkJUnitResults') {
 	}
 }
 
+def getDownloadTimeStamp() {
+	def dbJson = file("${rootDir}/download/testDatenbanken/download-state.json")
+
+	if (!dbJson.exists()) {
+		// Erstelle die Datei mit einem leeren JSON-Objekt oder einem Standardinhalt
+		dbJson.parentFile.mkdirs() // Stelle sicher, dass der Ordner existiert
+		dbJson.text = JsonOutput.toJson([lastRepoUpdate: "never "])
+	}
+	return new JsonSlurper().parse(dbJson)
+}
+
 
 /**
  * Aktualisiert den Zeitstempel des letzten Repository-Updates in der JSON-Datei für die Testeinstellungen.
@@ -333,20 +342,12 @@ tasks.register('checkJUnitResults') {
  * @param filePath Der Pfad zur JSON-Datei, die aktualisiert werden soll.
  * @param newValue Der neue Wert für das Feld "lastRepoUpdate".
  */
-def updateDownloadTimeStamp(String filePath, String newValue) {
-	def jsonFile = file(filePath)
-
-
-	def configDir = "${rootDir}/config/tests"
-
-	def configFile = file("$configDir/config.json")
-	if (!configFile.exists()) {
-		configFile = file("$configDir/config_default.json")
-	}
-
-	def json = new JsonSlurper().parse(configFile)
-
+def updateDownloadTimeStamp(String newValue) {
+	def dbJson = file("${rootDir}/download/testDatenbanken/download-state.json")
+	def json = getDownloadTimeStamp()
 	json['lastRepoUpdate'] = newValue
-	jsonFile.text = JsonOutput.prettyPrint(JsonOutput.toJson(json))
-	println "Updated \"lastRepoUpdate\" to ${newValue} in ${filePath}"
+	dbJson.text = JsonOutput.prettyPrint(JsonOutput.toJson(json))
+	println "Updated \"lastRepoUpdate\""
 }
+
+
