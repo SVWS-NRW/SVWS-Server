@@ -2,7 +2,7 @@
 	<div class="page page-grid-cards">
 		<div class="flex flex-col gap-4">
 			<ui-card v-if="hatKompetenzDrucken" icon="i-ri-printer-line" title="Schülerliste drucken" subtitle="Drucke eine Liste mit den Daten der ausgewählten Schülerinnen und Schüler."
-					 :is-open="currentAction === 'printListeSchuelerKontakteErzieher'" @update:is-open="isOpen => setCurrentAction('printListeSchuelerKontakteErzieher', isOpen)">
+				:is-open="currentAction === 'printListeSchuelerKontakteErzieher'" @update:is-open="isOpen => setCurrentAction('printListeSchuelerKontakteErzieher', isOpen)">
 				<svws-ui-input-wrapper :grid="4" class="p-2">
 					<div class="text-left">
 						<svws-ui-checkbox v-model="option1" name="nurSchuelerKlasse">Klasse</svws-ui-checkbox><br>
@@ -28,8 +28,8 @@
 					<div class="text-left col-span-4">
 						<br><p class="font-bold underline mb-2">Optionen zur Druckausgabe:</p>
 						<svws-ui-radio-group>
-							<svws-ui-radio-option :value=1 v-model="gruppeDruck" name="gesamtausdruckEinseitig" label="Gesamtausdruck einseitig" />
-							<svws-ui-radio-option :value=3 v-model="gruppeDruck" name="gesamtausdruckDuplex" label="Gesamtausdruck duplex" />
+							<svws-ui-radio-option :value="1" v-model="gruppeDruck" name="gesamtausdruckEinseitig" label="Gesamtausdruck einseitig" />
+							<svws-ui-radio-option :value="3" v-model="gruppeDruck" name="gesamtausdruckDuplex" label="Gesamtausdruck duplex" />
 						</svws-ui-radio-group>
 					</div>
 				</svws-ui-input-wrapper>
@@ -50,7 +50,7 @@
 				</template>
 			</ui-card>
 			<ui-card v-if="hatKompetenzDrucken" icon="i-ri-printer-line" title="Schulbescheinigung drucken" subtitle="Drucke eine Schulbescheinigung für die ausgewählten Schülerinnen und Schüler."
-					 :is-open="currentAction === 'printSchulbescheinigung'" @update:is-open="isOpen => setCurrentAction('printSchulbescheinigung', isOpen)">
+				:is-open="currentAction === 'printSchulbescheinigung'" @update:is-open="isOpen => setCurrentAction('printSchulbescheinigung', isOpen)">
 				<svws-ui-input-wrapper :grid="2" class="p-2">
 					<div class="text-left">
 						<svws-ui-checkbox v-model="option2" name="anErzieher">Erzieher als Adressat</svws-ui-checkbox><br>
@@ -65,8 +65,8 @@
 					<div class="text-left col-span-2">
 						<br><p class="font-bold underline mb-2">Optionen zur Druckausgabe:</p>
 						<svws-ui-radio-group>
-							<svws-ui-radio-option :value=1 v-model="gruppeDruck" name="gesamtausdruckEinseitig" label="Gesamtausdruck einseitig" />
-							<svws-ui-radio-option :value=2 v-model="gruppeDruck" name="einzelausdruckEinseitig" label="Einzelausdruck einseitig" />
+							<svws-ui-radio-option :value="1" v-model="gruppeDruck" name="gesamtausdruckEinseitig" label="Gesamtausdruck einseitig" />
+							<svws-ui-radio-option :value="2" v-model="gruppeDruck" name="einzelausdruckEinseitig" label="Einzelausdruck einseitig" />
 						</svws-ui-radio-group>
 					</div>
 				</svws-ui-input-wrapper>
@@ -91,8 +91,8 @@
 							<svws-ui-checkbox v-model="option16">Individuelle Kursart anzeigen</svws-ui-checkbox>
 						</div>
 						<svws-ui-radio-group class="grow">
-							<svws-ui-radio-option :value=1 v-model="gruppeDruck" name="gesamtausdruckEinseitig" label="Gesamtausdruck einseitig" />
-							<svws-ui-radio-option :value=2 v-model="gruppeDruck" name="einzelausdruckEinseitig" label="Einzelausdruck einseitig" />
+							<svws-ui-radio-option :value="1" v-model="gruppeDruck" name="gesamtausdruckEinseitig" label="Gesamtausdruck einseitig" />
+							<svws-ui-radio-option :value="2" v-model="gruppeDruck" name="einzelausdruckEinseitig" label="Einzelausdruck einseitig" />
 						</svws-ui-radio-group>
 					</div>
 					<div v-if="!schuelerListeManager().liste.auswahlExists()">
@@ -230,9 +230,9 @@
 		}
 		reportingParameter.duplexdruck = ((gruppeDruck.value === 3) || (gruppeDruck.value === 4));
 		reportingParameter.detailLevel = ((option1.value ? 1 : 0) + (option2.value ? 2 : 0) + (option4.value ? 4 : 0)
-				+ (option8.value ? 8 : 0) + (option16.value ? 16 : 0) + (option32.value ? 32 : 0) + (option64.value ? 64 : 0)
-				+ (option128.value ? 128 : 0) + (option256.value ? 256 : 0) + (option512.value ? 512 : 0)
-				+ (option1024.value ? 1024 : 0) + (option2048.value ? 2048 : 0) + (option4096.value ? 4096 : 0));
+			+ (option8.value ? 8 : 0) + (option16.value ? 16 : 0) + (option32.value ? 32 : 0) + (option64.value ? 64 : 0)
+			+ (option128.value ? 128 : 0) + (option256.value ? 256 : 0) + (option512.value ? 512 : 0)
+			+ (option1024.value ? 1024 : 0) + (option2048.value ? 2048 : 0) + (option4096.value ? 4096 : 0));
 		loading.value = true;
 		const { data, name } = await props.getPDF(reportingParameter);
 		const link = document.createElement("a");

@@ -27,10 +27,10 @@
 					<div class="text-left col-span-4">
 						<br><p class="font-bold underline mb-2">Optionen zur Druckausgabe:</p>
 						<svws-ui-radio-group>
-							<svws-ui-radio-option :value=1 v-model="gruppeDruck" name="gesamtausdruckEinseitig" label="Gesamtausdruck einseitig" />
-							<svws-ui-radio-option :value=2 v-model="gruppeDruck" name="einzelausdruckEinseitig" label="Einzelausdruck einseitig" />
-							<svws-ui-radio-option :value=3 v-model="gruppeDruck" name="gesamtausdruckDuplex" label="Gesamtausdruck duplex" />
-							<svws-ui-radio-option :value=4 v-model="gruppeDruck" name="einzelausdruckDuplex" label="Einzelausdruck duplex" />
+							<svws-ui-radio-option :value="1" v-model="gruppeDruck" name="gesamtausdruckEinseitig" label="Gesamtausdruck einseitig" />
+							<svws-ui-radio-option :value="2" v-model="gruppeDruck" name="einzelausdruckEinseitig" label="Einzelausdruck einseitig" />
+							<svws-ui-radio-option :value="3" v-model="gruppeDruck" name="gesamtausdruckDuplex" label="Gesamtausdruck duplex" />
+							<svws-ui-radio-option :value="4" v-model="gruppeDruck" name="einzelausdruckDuplex" label="Einzelausdruck duplex" />
 						</svws-ui-radio-group>
 					</div>
 				</svws-ui-input-wrapper>
@@ -51,11 +51,11 @@
 				</template>
 			</ui-card>
 			<ui-card v-if="hatKompetenzDrucken && (mapStundenplaene.size > 0)" icon="i-ri-printer-line" title="Stundenplan drucken" subtitle="Drucke die Stundenpläne der ausgewählten Klassen."
-					 :is-open="currentAction === 'printStundenplan'" @update:is-open="isOpen => setCurrentAction('printStundenplan', isOpen)">
+				:is-open="currentAction === 'printStundenplan'" @update:is-open="isOpen => setCurrentAction('printStundenplan', isOpen)">
 				<svws-ui-input-wrapper :grid="2" class="p-2">
 					<div>
 						<svws-ui-select title="Stundenplan" v-model="stundenplanAuswahl" :items="mapStundenplaene.values()"
-										:item-text="s => s.bezeichnung.replace('Stundenplan ', '') + ': ' + toDateStr(s.gueltigAb) + '—' + toDateStr(s.gueltigBis) + ' (KW ' + toKW(s.gueltigAb) + '—' + toKW(s.gueltigBis) + ')'" />
+							:item-text="s => s.bezeichnung.replace('Stundenplan ', '') + ': ' + toDateStr(s.gueltigAb) + '—' + toDateStr(s.gueltigBis) + ' (KW ' + toKW(s.gueltigAb) + '—' + toKW(s.gueltigBis) + ')'" />
 					</div>
 					<div />
 					<div class="text-left">
@@ -65,8 +65,8 @@
 					</div>
 					<div>
 						<svws-ui-radio-group>
-							<svws-ui-radio-option :value=1 v-model="gruppeDruck" name="gesamtausdruckEinseitig" label="Gesamtausdruck einseitig" />
-							<svws-ui-radio-option :value=2 v-model="gruppeDruck" name="einzelausdruckEinseitig" label="Einzelausdruck einseitig" />
+							<svws-ui-radio-option :value="1" v-model="gruppeDruck" name="gesamtausdruckEinseitig" label="Gesamtausdruck einseitig" />
+							<svws-ui-radio-option :value="2" v-model="gruppeDruck" name="einzelausdruckEinseitig" label="Einzelausdruck einseitig" />
 						</svws-ui-radio-group>
 					</div>
 				</svws-ui-input-wrapper>
@@ -221,9 +221,9 @@
 		}
 		reportingParameter.duplexdruck = ((gruppeDruck.value === 3) || (gruppeDruck.value === 4));
 		reportingParameter.detailLevel = ((option2.value ? 2 : 0) + (option4.value ? 4 : 0) + (option8.value ? 8 : 0)
-				+ (option16.value ? 16 : 0) + (option32.value ? 32 : 0) + (option64.value ? 64 : 0)
-				+ (option128.value ? 128 : 0) + (option256.value ? 256 : 0) + (option512.value ? 512 : 0)
-				+ (option1024.value ? 1024 : 0) + (option2048.value ? 2048 : 0) + (option4096.value ? 4096 : 0));
+			+ (option16.value ? 16 : 0) + (option32.value ? 32 : 0) + (option64.value ? 64 : 0)
+			+ (option128.value ? 128 : 0) + (option256.value ? 256 : 0) + (option512.value ? 512 : 0)
+			+ (option1024.value ? 1024 : 0) + (option2048.value ? 2048 : 0) + (option4096.value ? 4096 : 0));
 		loading.value = true;
 		const { data, name } = await props.getPDF(reportingParameter);
 		const link = document.createElement("a");
