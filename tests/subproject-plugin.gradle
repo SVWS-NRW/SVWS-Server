@@ -364,11 +364,15 @@ import java.security.cert.X509Certificate
  */
 tasks.register('seedDatabase') {
 	description = 'Seedet die Datenbanken in der Testumgebung'
-	dependsOn "starteDockerContainerMitTestUmgebung"
+	dependsOn 'starteDockerContainerMitTestUmgebung'
 
 	def APP_CONTAINER_NAME = project.ext.APP_CONTAINER_NAME
 	def TARGET_TEST_DATABASES = project.ext.TARGET_TEST_DATA_BASES
 	def FORWARDED_APP_PORT = project.ext.FORWARDED_APP_PORT
+
+	if(!CONFIG.keepContainerAfterTestRun) {
+		finalizedBy 'removeTestEnvironmentEntryPoint'
+	}
 
 	doLast {
 		TARGET_TEST_DATABASES.each { test_db ->

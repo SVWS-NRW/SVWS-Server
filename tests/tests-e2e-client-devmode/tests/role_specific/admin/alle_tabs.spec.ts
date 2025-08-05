@@ -46,7 +46,6 @@ test('Admins können entsprechende Bereiche im DEV Mode einsehen', async ({page}
 	await page.getByRole('button', {name: 'Ausbildungsbetriebe'}).click();
 
 
-	await page.screenshot({path:"./screeny.png"})
 	await expect(page.getByText('Noch kein Schülerbetrieb vorhanden.')).toBeVisible();
 
 

@@ -32,13 +32,13 @@ ext {
 	SVWS_SERVERMODE = "dev"
 
 	// Docker Konfiguration
-	APP_CONTAINER_NAME = "app-vite-enm-tests--$jobId" as GStringImpl
-	DB_CONTAINER_NAME = "database-vite-enm-tests--$jobId" as GStringImpl
-	ENM_CONTAINER_NAME = "env-server--$jobId" as GStringImpl
+	APP_CONTAINER_NAME = "app-vite-enm-tests${generateContainerSuffix(jobId)}"
+	DB_CONTAINER_NAME = "database-vite-enm-tests${generateContainerSuffix(jobId)}"
+	ENM_CONTAINER_NAME = "env-server${generateContainerSuffix(jobId)}"
 
-	DB_SERVICE_NAME = "mariadb--$jobId" as GStringImpl
-	APP_IMAGE_NAME = "svws-app--$jobId" as GStringImpl
-	ENM_IMAGE_NAME = "svws-enm--$jobId" as GStringImpl
+	DB_SERVICE_NAME = "mariadb${generateContainerSuffix(jobId)}"
+	APP_IMAGE_NAME = "svws-app${generateContainerSuffix(jobId)}"
+	ENM_IMAGE_NAME = "svws-enm${generateContainerSuffix(jobId)}"
 
 	// Auch für Docker. Forwarded Ports, werden nur bei lokal genutzten Container verwendet
 	FORWARDED_DB_PORT = 3333

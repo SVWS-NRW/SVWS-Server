@@ -55,7 +55,7 @@ build:
         expire_in: "1 days"
     when: always
 
-integration-tests:
+testrun:
     dependencies:
         - build
     stage: integration-tests
@@ -80,6 +80,18 @@ integration-tests:
             - ./tests/tests-e2e-client-*/build/test-results
         reports:
             junit: ./tests/**/build/test-results/**/*.xml
+
+docker-cleanup:
+    stage: integration-tests
+    needs:
+        - job: testrun
+    when: always
+    script:
+        # Stoppe Container und entferne Container und Images bei einem Commit
+        - docker ps --filter name=$CI_COMMIT_SHORT_SHA --filter status=running --filter name=gradled -aq | xargs -r docker stop
+        - docker ps -a --filter name=$CI_COMMIT_SHORT_SHA --filter name=gradled -aq | xargs -r docker rm
+        - docker images --filter reference="*${CI_COMMIT_SHORT_SHA}*gradled" -q | xargs -r docker rmi
+
 
 sonarqube_analysis:
     stage: analyze
