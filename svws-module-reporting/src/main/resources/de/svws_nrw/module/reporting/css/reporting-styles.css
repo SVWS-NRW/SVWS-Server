@@ -701,8 +701,17 @@ Definitionen für Border and Background
 	border-right: 1px solid #000000;
 }
 
+.bg-lightblue {
+	background-color: #44aaff;
+}
+.bg-lightgreen {
+	background-color: #aaff44;
+}
 .bg-lightgrey {
 	background-color: #DADADA;
+}
+.bg-lightorange {
+	background-color: #ffaa44;
 }
 .bg-lightyellow {
 	background-color: #FFFDAF;

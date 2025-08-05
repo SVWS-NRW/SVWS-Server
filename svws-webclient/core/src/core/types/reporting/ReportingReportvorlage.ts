@@ -47,9 +47,9 @@ export class ReportingReportvorlage extends JavaEnum<ReportingReportvorlage> {
 	public static readonly GOST_LAUFBAHNPLANUNG_ABITURJAHRGANG_v_FACHWAHLSTATISTIKEN : ReportingReportvorlage = new ReportingReportvorlage("GOST_LAUFBAHNPLANUNG_ABITURJAHRGANG_v_FACHWAHLSTATISTIKEN", 6, "GostLaufbahnplanung-Abiturjahrgang-Fachwahlstatistiken");
 
 	/**
-	 * Report-Vorlage: Klasse - Schülerstammdaten - Liste
+	 * Report-Vorlage: Klasse - Liste - Schüler - Kontaktdaten - Erzieher
 	 */
-	public static readonly KLASSEN_v_KLASSE_SCHUELER_STAMMDATENLISTE : ReportingReportvorlage = new ReportingReportvorlage("KLASSEN_v_KLASSE_SCHUELER_STAMMDATENLISTE", 7, "Klasse-Schueler-Stammdatenliste");
+	public static readonly KLASSEN_v_LISTE_SCHUELER_KONTAKTDATENERZIEHER : ReportingReportvorlage = new ReportingReportvorlage("KLASSEN_v_LISTE_SCHUELER_KONTAKTDATENERZIEHER", 7, "Klasse-Liste-Schueler-Kontaktdaten-Erzieher");
 
 	/**
 	 * Report-Vorlage: Kurs - Schülerstammdaten - Liste
@@ -87,9 +87,9 @@ export class ReportingReportvorlage extends JavaEnum<ReportingReportvorlage> {
 	public static readonly SCHUELER_v_SCHULBESCHEINIGUNG : ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_v_SCHULBESCHEINIGUNG", 14, "Schueler-Schulbescheinigung");
 
 	/**
-	 * Report-Vorlage: Schüler - Stammdaten - Liste
+	 * Report-Vorlage: Schüler - Liste - Kontaktdaten - Erzieher
 	 */
-	public static readonly SCHUELER_v_STAMMDATENLISTE : ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_v_STAMMDATENLISTE", 15, "Schueler-Stammdatenliste");
+	public static readonly SCHUELER_v_LISTE_KONTAKTDATENERZIEHER : ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_v_LISTE_KONTAKTDATENERZIEHER", 15, "Schueler-Liste-Kontaktdaten-Erzieher");
 
 	/**
 	 * Report-Vorlage: Stundenplanung - Fach - Stundenplan

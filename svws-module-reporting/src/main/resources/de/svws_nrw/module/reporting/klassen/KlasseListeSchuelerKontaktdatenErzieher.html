@@ -1,17 +1,17 @@
 <html lang="de" xmlns:th="http://www.thymeleaf.org">
-	<head th:with="mediaPrint = ${Parameter.ausgabeformat == 2}, duplex = ${(Parameter.detailLevel % 2) == 1},
+	<head th:with="mediaPrint = ${Parameter.ausgabeformat == 2}, duplex = ${Parameter.duplexdruck},
 	               querformat = ${(Parameter.detailLevel >= 1024) && (((Parameter.detailLevel % 128) / 64) >= 1 || ((Parameter.detailLevel % 256) / 128) >= 1 || ((Parameter.detailLevel % 512) / 256) >= 1 || ((Parameter.detailLevel % 1024) / 512) >= 1) }">
 		           <!-- querformat verwenden, wenn Erzieher plus eine weitere Datenart (Telefon, EMail, Kontakte) dargestellt werden sollen. -->
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width" />
-		<title>Klassenliste mit Schülerstammdaten</title>
+		<title>Klassenliste mit Kontaktdaten und Erziehern der Schülerinnen und Schüler</title>
 		<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-pdf.css}" href="../css/reporting-pdf.css" />
 		<link th:if="${mediaPrint && !querformat && !duplex}" rel="stylesheet" th:href="@{css/reporting-A4-hoch.css}" href="../css/reporting-A4-hoch.css" />
 		<link th:if="${mediaPrint && querformat && !duplex}" rel="stylesheet" th:href="@{css/reporting-A4-quer.css}" href="../css/reporting-A4-quer.css" />
 		<link th:if="${mediaPrint && !querformat && duplex}" rel="stylesheet" th:href="@{css/reporting-A4-hoch-duplex.css}" href="../css/reporting-A4-hoch-duplex.css" />
 		<link th:if="${mediaPrint && querformat && duplex}" rel="stylesheet" th:href="@{css/reporting-A4-quer-duplex.css}" href="../css/reporting-A4-quer-duplex.css" />
 		<link rel="stylesheet" th:href="@{css/reporting-styles.css}" href="../css/reporting-styles.css" />
-		<link rel="stylesheet" th:href="@{klassen/KlasseSchuelerStammdatenliste.css}" href="../klassen/KlasseSchuelerStammdatenliste.css" />
+		<link rel="stylesheet" th:href="@{klassen/KlasseListeSchuelerKontaktdatenErzieher.css}" href="../klassen/KlasseListeSchuelerKontaktdatenErzieher.css" />
 	</head>
 
 	<body th:with="mediaPrint = ${Parameter.ausgabeformat == 2},
@@ -38,7 +38,7 @@
 			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
 			<th:block th:if="${mediaPrint}">
 				<div class="pageTopLeft" th:utext="${Schule.bezeichnungSchuleMehrzeiligHtml}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>
-				<div class="pageTopRight" th:utext="'Klasse: ' + ${klasse.kuerzel()} + '<br/>Klassenleitung: ' + ${(klasse.auflistungKlassenleitung() != '') ? klasse.auflistungKlassenleitung() : '---'} + '<br/>Schulnummer: ' + ${Schule.schulnummer()}">Kurs: GE-GK2<br/><br/>Schulnummer: 123456</div>
+				<div class="pageTopRight" th:utext="'Klasse: ' + ${klasse.kuerzel()} + '<br/>Klassenleitung: ' + ${(klasse.auflistungKlassenleitung() != '') ? klasse.auflistungKlassenleitung() : '---'} + '<br/>Schulnummer: ' + ${Schule.schulnummer()}">Klasse 06C<br/>Klassenleitung: ABC,DEF<br/>Schulnummer: 123456</div>
 				<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')} + ' von ' + ${Benutzer.benutzername()}">Gedruckt am 02.02.2022 von ABC</div>
 				<div class="pageBottomRight"><span class="page-nums-print">Seite </span></div>
 			</th:block>
@@ -46,10 +46,10 @@
 
 			<table class="fixed-100 mp-0">
 				<colgroup>
-					<col style="width: 10mm;" />    <!-- Lfd Nr -->
-					<col style="width: 57mm;" />    <!-- Schüler: Name, Angaben, Anschrift -->
-					<col style="width: 57mm;" />    <!-- Schüler: E-Mail und Telefon -->
- 					<col style="width: 57mm;" />    <!-- Telefonkontakte -->
+					<col style="width: 7mm;" />    <!-- Lfd Nr -->
+					<col style="width: 58mm;" />    <!-- Schüler: Name, Angaben, Anschrift -->
+					<col style="width: 58mm;" />    <!-- Schüler: E-Mail und Telefon -->
+ 					<col style="width: 58mm;" />    <!-- Telefonkontakte -->
 					<col />          				<!-- Füllt auf 100% der Breite auf. Ist leer im Hochformat oder nimmt Erzieher, Anschrift, E-Mail auf. -->
 				</colgroup>
 
@@ -112,7 +112,7 @@
 										th:text="${(mitSchuelerGebDat ? (#convert.toDateDE(schueler.geburtsdatum()) + (schueler.istVolljaehrig() ? ' (vj.)' : '')) : '')
 													+ ((mitSchuelerGebDat && mitSchuelerStaat) ? ', ' : '')
 													+ (mitSchuelerStaat && (schueler.staatsangehoerigkeit() != null) ? schueler.staatsangehoerigkeit().daten(schuljahr).staatsangehoerigkeit : '')}">
-										m, 12.08.1980, deutsch
+										12.08.1980, deutsch
 									</td>
 								</tr>
 							</table>
@@ -155,7 +155,7 @@
 											th:text="${(mitSchuelerGebDat ? (#convert.toDateDE(schueler.geburtsdatum()) + (schueler.istVolljaehrig() ? ' (vj.)' : '')) : '')
 													+ ((mitSchuelerGebDat && mitSchuelerStaat) ? ', ' : '')
 													+ (mitSchuelerStaat && (schueler.staatsangehoerigkeit() != null) ? schueler.staatsangehoerigkeit().daten(schuljahr).staatsangehoerigkeit : '')}">
-											m, 12.08.1980, deutsch
+											12.08.1980, deutsch
 										</td>
 									</tr>
 								</table>
@@ -185,7 +185,7 @@
 											th:text="${(mitSchuelerGebDat ? (#convert.toDateDE(schueler.geburtsdatum()) + (schueler.istVolljaehrig() ? ' (vj.)' : '')) : '')
 													+ ((mitSchuelerGebDat && mitSchuelerStaat) ? ', ' : '')
 													+ (mitSchuelerStaat && (schueler.staatsangehoerigkeit() != null) ? schueler.staatsangehoerigkeit().daten(schuljahr).staatsangehoerigkeit : '')}">
-											m, 12.08.1980, deutsch
+											12.08.1980, deutsch
 										</td>
 									</tr>
 									<tr th:if="${mitSchuelerAnschrift}">

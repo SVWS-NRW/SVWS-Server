@@ -2,7 +2,7 @@
 	<div class="page page-grid-cards">
 		<div class="flex flex-col gap-4">
 			<ui-card v-if="hatKompetenzDrucken" icon="i-ri-printer-line" title="Klassenliste drucken" subtitle="Drucke Listen mit den Daten der Schülerinnen und Schüler der ausgewählten Klassen."
-				:is-open="currentAction === 'printListe'" @update:is-open="isOpen => setCurrentAction('printListe', isOpen)">
+				:is-open="currentAction === 'printListeKlasseSchuelerKontaktdatenErzieher'" @update:is-open="isOpen => setCurrentAction('printListeKlasseSchuelerKontaktdatenErzieher', isOpen)">
 				<svws-ui-input-wrapper :grid="4" class="p-2">
 					<div class="text-left">
 						<svws-ui-checkbox v-model="option2" name="nurSchuelerRufname">Nur Rufname</svws-ui-checkbox><br>
@@ -27,10 +27,10 @@
 					<div class="text-left col-span-4">
 						<br><p class="font-bold underline mb-2">Optionen zur Druckausgabe:</p>
 						<svws-ui-radio-group>
-							<svws-ui-radio-option :value="1" v-model="gruppeDruck" name="gesamtausdruckEinseitig" label="Gesamtausdruck einseitig" />
-							<svws-ui-radio-option :value="2" v-model="gruppeDruck" name="einzelausdruckEinseitig" label="Einzelausdruck einseitig" />
-							<svws-ui-radio-option :value="3" v-model="gruppeDruck" name="gesamtausdruckDuplex" label="Gesamtausdruck duplex" />
-							<svws-ui-radio-option :value="4" v-model="gruppeDruck" name="einzelausdruckDuplex" label="Einzelausdruck duplex" />
+							<svws-ui-radio-option :value=1 v-model="gruppeDruck" name="gesamtausdruckEinseitig" label="Gesamtausdruck einseitig" />
+							<svws-ui-radio-option :value=2 v-model="gruppeDruck" name="einzelausdruckEinseitig" label="Einzelausdruck einseitig" />
+							<svws-ui-radio-option :value=3 v-model="gruppeDruck" name="gesamtausdruckDuplex" label="Gesamtausdruck duplex" />
+							<svws-ui-radio-option :value=4 v-model="gruppeDruck" name="einzelausdruckDuplex" label="Einzelausdruck duplex" />
 						</svws-ui-radio-group>
 					</div>
 				</svws-ui-input-wrapper>
@@ -65,8 +65,8 @@
 					</div>
 					<div>
 						<svws-ui-radio-group>
-							<svws-ui-radio-option :value="1" v-model="gruppeDruck" name="Ausgabe" label="Gesamtausdruck einseitig" />
-							<svws-ui-radio-option :value="2" v-model="gruppeDruck" name="Ausgabe" label="Einzelausdruck einseitig" />
+							<svws-ui-radio-option :value=1 v-model="gruppeDruck" name="gesamtausdruckEinseitig" label="Gesamtausdruck einseitig" />
+							<svws-ui-radio-option :value=2 v-model="gruppeDruck" name="einzelausdruckEinseitig" label="Einzelausdruck einseitig" />
 						</svws-ui-radio-group>
 					</div>
 				</svws-ui-input-wrapper>
@@ -112,7 +112,7 @@
 	import {ListUtils, StundenplanListeEintrag} from "@core";
 	import { ArrayList, BenutzerKompetenz, DateUtils, ReportingParameter, ReportingReportvorlage, type List } from "@core";
 
-	type Action = 'printListe' | 'printStundenplan' | 'delete' | '';
+	type Action = 'printListeKlasseSchuelerKontaktdatenErzieher' | 'printStundenplan' | 'delete' | '';
 
 	const props = defineProps<KlassenGruppenprozesseProps>();
 
@@ -159,10 +159,8 @@
 		gruppeDruck.value = 1;
 		oldAction.value.name = currentAction.value;
 		oldAction.value.open = (currentAction.value === "") ? false : true;
-		if(open === true)
-			currentAction.value= newAction;
-		else
-			currentAction.value = "";
+
+		currentAction.value = open ? newAction : '';
 	}
 
 	function clearLog() {
@@ -203,10 +201,10 @@
 		for (const klasse of props.manager().liste.auswahl())
 			listeIdsKlassen.add(klasse.id);
 		switch (currentAction.value) {
-			case 'printListe':
-				reportingParameter.reportvorlage = ReportingReportvorlage.KLASSEN_v_KLASSE_SCHUELER_STAMMDATENLISTE.getBezeichnung();
+			case 'printListeKlasseSchuelerKontaktdatenErzieher':
+				reportingParameter.reportvorlage = ReportingReportvorlage.KLASSEN_v_LISTE_SCHUELER_KONTAKTDATENERZIEHER.getBezeichnung();
 				reportingParameter.idsHauptdaten = listeIdsKlassen;
-				reportingParameter.einzelausgabeHauptdaten = (((gruppeDruck.value === 2) || (gruppeDruck.value === 4)) ? true : false);
+				reportingParameter.einzelausgabeHauptdaten = ((gruppeDruck.value === 2) || (gruppeDruck.value === 4));
 				reportingParameter.einzelausgabeDetaildaten = false;
 				break;
 			case 'printStundenplan':
@@ -216,13 +214,13 @@
 				reportingParameter.idsHauptdaten = ListUtils.create1(stundenplanAuswahl.value.id);
 				reportingParameter.idsDetaildaten = listeIdsKlassen;
 				reportingParameter.einzelausgabeHauptdaten = false;
-				reportingParameter.einzelausgabeDetaildaten = ((gruppeDruck.value === 2) ? true : false);
+				reportingParameter.einzelausgabeDetaildaten = (gruppeDruck.value === 2);
 				break;
 			default:
 				return;
 		}
-		reportingParameter.detailLevel = ((((gruppeDruck.value === 3) || (gruppeDruck.value === 4)) ? 1 : 0)
-				+ (option2.value ? 2 : 0) + (option4.value ? 4 : 0) + (option8.value ? 8 : 0)
+		reportingParameter.duplexdruck = ((gruppeDruck.value === 3) || (gruppeDruck.value === 4));
+		reportingParameter.detailLevel = ((option2.value ? 2 : 0) + (option4.value ? 4 : 0) + (option8.value ? 8 : 0)
 				+ (option16.value ? 16 : 0) + (option32.value ? 32 : 0) + (option64.value ? 64 : 0)
 				+ (option128.value ? 128 : 0) + (option256.value ? 256 : 0) + (option512.value ? 512 : 0)
 				+ (option1024.value ? 1024 : 0) + (option2048.value ? 2048 : 0) + (option4096.value ? 4096 : 0));

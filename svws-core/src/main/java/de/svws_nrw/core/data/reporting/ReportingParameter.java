@@ -49,6 +49,10 @@ public class ReportingParameter {
 	@Schema(description = "Legt fest, ob pro Datensatz der Detaildaten eine einzelne PDF-Datei erzeugt werden soll.", example = "false")
 	public boolean einzelausgabeDetaildaten = false;
 
+	/** Legt fest, ob die Seiteneinstellungen für einen Duplexdruck verwendet werden sollen. */
+	@Schema(description = "Legt fest, ob die Seiteneinstellungen für einen Duplexdruck verwendet werden sollen.", example = "false")
+	public boolean duplexdruck = false;
+
 	/** Parameter, der in Templates verwendet werden kann, um den Detailgrad der Darstellung zu steuern. */
 	@Schema(description = "Parameter, der in Templates verwendet werden kann, um den Detailgrad der Darstellung zu steuern.", example = "0")
 	public int detailLevel = 0;

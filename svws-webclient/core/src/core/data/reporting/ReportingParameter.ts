@@ -42,6 +42,11 @@ export class ReportingParameter extends JavaObject {
 	public einzelausgabeDetaildaten : boolean = false;
 
 	/**
+	 * Legt fest, ob die Seiteneinstellungen für einen Duplexdruck verwendet werden sollen.
+	 */
+	public duplexdruck : boolean = false;
+
+	/**
 	 * Parameter, der in Templates verwendet werden kann, um den Detailgrad der Darstellung zu steuern.
 	 */
 	public detailLevel : number = 0;
@@ -93,6 +98,9 @@ export class ReportingParameter extends JavaObject {
 		if (obj.einzelausgabeDetaildaten === undefined)
 			throw new Error('invalid json format, missing attribute einzelausgabeDetaildaten');
 		result.einzelausgabeDetaildaten = obj.einzelausgabeDetaildaten;
+		if (obj.duplexdruck === undefined)
+			throw new Error('invalid json format, missing attribute duplexdruck');
+		result.duplexdruck = obj.duplexdruck;
 		if (obj.detailLevel === undefined)
 			throw new Error('invalid json format, missing attribute detailLevel');
 		result.detailLevel = obj.detailLevel;
@@ -122,6 +130,7 @@ export class ReportingParameter extends JavaObject {
 		}
 		result += ' ]' + ',';
 		result += '"einzelausgabeDetaildaten" : ' + obj.einzelausgabeDetaildaten.toString() + ',';
+		result += '"duplexdruck" : ' + obj.duplexdruck.toString() + ',';
 		result += '"detailLevel" : ' + obj.detailLevel.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -164,6 +173,9 @@ export class ReportingParameter extends JavaObject {
 		}
 		if (obj.einzelausgabeDetaildaten !== undefined) {
 			result += '"einzelausgabeDetaildaten" : ' + obj.einzelausgabeDetaildaten.toString() + ',';
+		}
+		if (obj.duplexdruck !== undefined) {
+			result += '"duplexdruck" : ' + obj.duplexdruck.toString() + ',';
 		}
 		if (obj.detailLevel !== undefined) {
 			result += '"detailLevel" : ' + obj.detailLevel.toString() + ',';

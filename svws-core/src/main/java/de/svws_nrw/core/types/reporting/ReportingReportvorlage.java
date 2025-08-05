@@ -39,8 +39,8 @@ public enum ReportingReportvorlage {
 	/** Report-Vorlage: GOSt - Laufbahnplanung - Abiturjahrgang - Fachwahlstatistiken */
 	GOST_LAUFBAHNPLANUNG_ABITURJAHRGANG_v_FACHWAHLSTATISTIKEN("GostLaufbahnplanung-Abiturjahrgang-Fachwahlstatistiken"),
 
-	/** Report-Vorlage: Klasse - Schülerstammdaten - Liste */
-	KLASSEN_v_KLASSE_SCHUELER_STAMMDATENLISTE("Klasse-Schueler-Stammdatenliste"),
+	/** Report-Vorlage: Klasse - Liste - Schüler - Kontaktdaten - Erzieher */
+	KLASSEN_v_LISTE_SCHUELER_KONTAKTDATENERZIEHER("Klasse-Liste-Schueler-Kontaktdaten-Erzieher"),
 
 	/** Report-Vorlage: Kurs - Schülerstammdaten - Liste */
 	KURSE_v_KURS_SCHUELER_STAMMDATENLISTE("Kurs-Schueler-Stammdatenliste"),
@@ -63,8 +63,8 @@ public enum ReportingReportvorlage {
 	/** Report-Vorlage: Schüler - Schulbescheinigung */
 	SCHUELER_v_SCHULBESCHEINIGUNG("Schueler-Schulbescheinigung"),
 
-	/** Report-Vorlage: Schüler - Stammdaten - Liste */
-	SCHUELER_v_STAMMDATENLISTE("Schueler-Stammdatenliste"),
+	/** Report-Vorlage: Schüler - Liste - Kontaktdaten - Erzieher */
+	SCHUELER_v_LISTE_KONTAKTDATENERZIEHER("Schueler-Liste-Kontaktdaten-Erzieher"),
 
 	/** Report-Vorlage: Stundenplanung - Fach - Stundenplan */
 	STUNDENPLANUNG_v_FACH_STUNDENPLAN("Stundenplanung-FachStundenplan"),
