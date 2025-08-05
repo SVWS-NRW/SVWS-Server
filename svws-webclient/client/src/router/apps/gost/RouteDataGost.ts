@@ -15,7 +15,6 @@ import { routeGostGruppenprozesse } from "./RouteGostGruppenprozesse";
 import type { TabData } from "@ui";
 
 interface RouteStateGost extends RouteStateInterface {
-	params: RouteParams;
 	idSchuljahresabschnitt: number,
 	auswahl: GostJahrgang | undefined;
 	jahrgangsdaten: GostJahrgangsdaten | undefined;
@@ -30,7 +29,6 @@ interface RouteStateGost extends RouteStateInterface {
 }
 
 const defaultState = <RouteStateGost> {
-	params: {abiturjahr: '-1'},
 	idSchuljahresabschnitt: -1,
 	auswahl: undefined,
 	jahrgangsdaten: undefined,
@@ -180,12 +178,12 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 		return this._state.value.jahrgangsdaten;
 	}
 
-	get params() {
-		return this._state.value.params;
+	get oldView() {
+		return this._state.value.oldView;
 	}
 
-	set params(value) {
-		this.setPatchedState({ params: value })
+	set oldView(value) {
+		this.setPatchedState({ oldView: value })
 	}
 
 	public get idSchuljahresabschnitt(): number {
