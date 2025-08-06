@@ -1,11 +1,12 @@
 import type { RouteLocationNormalized } from "vue-router";
-import type { SchuelerEinwilligungsartenZusammenfassung} from "@core";
-import {BenutzerKompetenz, Schulform, ServerMode} from "@core";
+import type { SchuelerEinwilligungsartenZusammenfassung } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { routeKatalogEinwilligungsarten, type RouteKatalogEinwilligungsarten } from "~/router/apps/schule/einwilligungsarten/RouteKatalogEinwilligungsarten";
 import type { EinwilligungsartenDatenProps } from "~/components/schule/kataloge/einwilligungsarten/daten/SEinwilligungsartenDatenProps";
-import {RouteManager} from "~/router/RouteManager";
-import {routeSchuelerEinwilligungen} from "~/router/apps/schueler/einwilligungen/RouteSchuelerEinwilligungen";
+import { RouteManager } from "~/router/RouteManager";
+import { routeSchuelerEinwilligungen } from "~/router/apps/schueler/einwilligungen/RouteSchuelerEinwilligungen";
+import { api } from "~/router/Api";
 
 const SEinwilligungsartDaten = () => import("~/components/schule/kataloge/einwilligungsarten/daten/SEinwilligungsartenDaten.vue");
 
@@ -27,6 +28,7 @@ export class RouteKatalogEinwilligungsartenDaten extends RouteNode<any, RouteKat
 			patch: routeKatalogEinwilligungsarten.data.patch,
 			einwilligungsartenListeManager: () => routeKatalogEinwilligungsarten.data.manager,
 			gotoSchueler: this.gotoSchueler,
+			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 

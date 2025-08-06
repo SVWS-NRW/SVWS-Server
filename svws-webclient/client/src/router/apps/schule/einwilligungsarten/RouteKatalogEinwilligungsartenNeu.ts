@@ -3,9 +3,10 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import { RouteManager } from "~/router/RouteManager";
-import type { RouteKatalogEinwilligungsarten} from "~/router/apps/schule/einwilligungsarten/RouteKatalogEinwilligungsarten";
-import {routeKatalogEinwilligungsarten} from "~/router/apps/schule/einwilligungsarten/RouteKatalogEinwilligungsarten";
-import type {SchuleEinwilligungsartenNeuProps} from "~/components/schule/kataloge/einwilligungsarten/SEinwilligungsartenNeuProps";
+import type { RouteKatalogEinwilligungsarten } from "~/router/apps/schule/einwilligungsarten/RouteKatalogEinwilligungsarten";
+import { routeKatalogEinwilligungsarten } from "~/router/apps/schule/einwilligungsarten/RouteKatalogEinwilligungsarten";
+import type { SchuleEinwilligungsartenNeuProps } from "~/components/schule/kataloge/einwilligungsarten/SEinwilligungsartenNeuProps";
+import { api } from "~/router/Api";
 
 const SEinwilligungsartNeu = () => import("~/components/schule/kataloge/einwilligungsarten/SEinwilligungsartenNeu.vue");
 
@@ -24,6 +25,7 @@ export class RouteKatalogEinwilligungsartenNeu extends RouteNode<any, RouteKatal
 		return {
 			manager: () => routeKatalogEinwilligungsarten.data.manager,
 			add: routeKatalogEinwilligungsarten.data.add,
+			benutzerKompetenzen: api.benutzerKompetenzen,
 			gotoDefaultView: routeKatalogEinwilligungsarten.data.gotoDefaultView,
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),

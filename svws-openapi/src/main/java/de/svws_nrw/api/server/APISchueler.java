@@ -1324,7 +1324,7 @@ public class APISchueler {
 							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerEinwilligungen(conn, 0L).getListBySchuelerIdsAsResponse(JSONMapper.toListOfLong(is)),
-				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
 	}
 
 	/**
@@ -1360,8 +1360,7 @@ public class APISchueler {
 				conn -> new DataSchuelerEinwilligungen(conn, idSchueler).patchAsResponse(new Long[] { idSchueler, idEinwilligungsart },
 						is),
 				request, ServerMode.STABLE,
-				//TODO: Benutzerkompetenz hinzufügen
-				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
+				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_EINWILLIGUNGEN_AENDERN);
 	}
 
 	/**

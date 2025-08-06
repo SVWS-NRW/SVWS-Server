@@ -12,11 +12,11 @@
 								<p class="text-headline-md mb-1"> Status </p>
 							</div>
 							<svws-ui-checkbox class="w-2/5" :model-value="einwilligung.istAbgefragt" type="checkbox" title="Abgefragt"
-								@update:model-value="istAbgefragt => patch({ istAbgefragt }, einwilligung.idEinwilligungsart)">
+								@update:model-value="istAbgefragt => patch({ istAbgefragt }, einwilligung.idEinwilligungsart)" :readonly>
 								Abgefragt
 							</svws-ui-checkbox>
 							<svws-ui-checkbox class="w-2/5" :model-value="einwilligung.istZugestimmt" type="checkbox" title="Zugestimmt"
-								@update:model-value="istZugestimmt => patch({ istZugestimmt }, einwilligung.idEinwilligungsart)">
+								@update:model-value="istZugestimmt => patch({ istZugestimmt }, einwilligung.idEinwilligungsart)" :readonly>
 								Zugestimmt
 							</svws-ui-checkbox>
 						</ui-card>
@@ -33,11 +33,11 @@
 								<p class="text-headline-md mb-1"> Status </p>
 							</div>
 							<svws-ui-checkbox class="w-2/5" :model-value="einwilligung.istAbgefragt" type="checkbox" title="Abgefragt"
-								@update:model-value="istAbgefragt => patch({ istAbgefragt }, einwilligung.idEinwilligungsart)">
+								@update:model-value="istAbgefragt => patch({ istAbgefragt }, einwilligung.idEinwilligungsart)" :readonly>
 								Abgefragt
 							</svws-ui-checkbox>
 							<svws-ui-checkbox class="w-2/5" :model-value="einwilligung.istZugestimmt" type="checkbox" title="Zugestimmt"
-								@update:model-value="istZugestimmt => updateEinwilligungStatus(einwilligung, istZugestimmt)">
+								@update:model-value="istZugestimmt => updateEinwilligungStatus(einwilligung, istZugestimmt)" :readonly>
 								Zugestimmt
 							</svws-ui-checkbox>
 						</ui-card>
@@ -52,8 +52,12 @@
 	import { computed } from "vue";
 	import type { LehrerEinwilligungenProps } from './LehrerEinwilligungenProps';
 	import type { LehrerEinwilligung } from "@core";
+	import { BenutzerKompetenz } from "@core";
 
 	const props = defineProps<LehrerEinwilligungenProps>();
+
+	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN));
+	const readonly = computed(() => !hatKompetenzAendern.value);
 
 	const hasAbgefragteEinwilligungen = computed(() => {
 		for (const einwilligung of props.einwilligungen())

@@ -1020,7 +1020,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
 	public Response getEinwilligungsarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogEinwilligungsarten(conn).getAllAsResponse(),
-				request, ServerMode.DEV, BenutzerKompetenz.KEINE);
+				request, ServerMode.DEV, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
 	}
 
 	/**
@@ -1046,7 +1046,7 @@ public class APISchule {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogEinwilligungsarten(conn).getByIdAsResponse(id),
 				request, ServerMode.DEV,
-				BenutzerKompetenz.KEINE);
+				BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
 	}
 
 	/**
