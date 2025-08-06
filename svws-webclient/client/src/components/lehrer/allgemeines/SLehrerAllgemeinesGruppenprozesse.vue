@@ -66,7 +66,7 @@
 	import type { SLehrerAllgemeinesGruppenprozesseProps } from "./SLehrerAllgemeinesGruppenprozesseProps";
 	import { type StundenplanListeEintrag, type List, BenutzerKompetenz } from "@core";
 	import { DateUtils, ReportingParameter, ReportingReportvorlage } from "@core";
-	import { BaseSelectManager } from "@ui";
+	import { SelectManagerSingle } from "@ui";
 
 	type Action = 'print' | 'delete' | '';
 
@@ -104,8 +104,8 @@
 			stundenplanSelectManager.options = newValue;
 		}
 	);
-	const stundenplanSelectManager = new BaseSelectManager({
-		options: stundenplaene.value, optionDisplayText: stundenplanDisplayText, selectionDisplayText: stundenplanDisplayText,
+	const stundenplanSelectManager = new SelectManagerSingle({ options: stundenplaene.value, optionDisplayText: stundenplanDisplayText,
+		selectionDisplayText: stundenplanDisplayText,
 	})
 
 	async function entferneLehrer() {

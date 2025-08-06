@@ -51,11 +51,11 @@
 <script setup lang="ts">
 
 	import type { AbteilungenDatenProps } from "~/components/schule/kataloge/abteilungen/daten/SAbteilungenDatenProps";
-	import type { DataTableColumn } from "@ui";
+	import type { DataTableColumn} from "@ui";
+	import { SelectManagerSingle } from "@ui";
 	import type { KlassenDaten, List } from "@core";
 	import { computed, ref, watch } from "vue";
 	import { AbteilungKlassenzuordnung, ArrayList, BenutzerKompetenz, HashMap } from "@core";
-	import { BaseSelectManager } from "../../../../../../../ui/src/ui/controls/select/selectManager/BaseSelectManager";
 
 	const props = defineProps<AbteilungenDatenProps>();
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
@@ -71,7 +71,7 @@
 		}
 	);
 
-	const selectManager = new BaseSelectManager({
+	const selectManager = new SelectManagerSingle({
 		options: lehrer.value, optionDisplayText: v => v.vorname + ' ' + v.nachname,
 		selectionDisplayText: v => v.vorname + ' ' + v.nachname,
 	});

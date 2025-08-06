@@ -1,5 +1,5 @@
-# UiSelect
-UiSelect ist eien Combobox, die zur Selektion einer Option aus mehreren vorgegebenen verwendet werden kann. Sie kann mit einfachen Datentypen wie Strings oder Numbers umgehen, aber auch mit komplexeren wie CoreTypes. Hierfür werden sogenannte `SelectManager` verwendet, von denen einige einfache bereits zur Verfügung stehen. Für komplexere Fälle können eigene SelectManager erstellt werden, die von den vorhandenen ableiten.
+# UiSelectMulti
+UiSelectMulti ist eien Combobox, die zur Selektion mehrerer Optionen aus mehreren vorgegebenen verwendet werden kann. Sie kann mit einfachen Datentypen wie Strings oder Numbers umgehen, aber auch mit komplexeren wie CoreTypes. Hierfür werden sogenannte `SelectManager` verwendet, von denen einige einfache bereits zur Verfügung stehen. Für komplexere Fälle können eigene SelectManager erstellt werden, die von den vorhandenen ableiten.
 
 <details>
 <summary>Inhalt</summary>
@@ -10,13 +10,13 @@ UiSelect ist eien Combobox, die zur Selektion einer Option aus mehreren vorgegeb
   - [Geschlossenes Dropdown](#geschlossenes-dropdown)
   - [Geöffnetes Dropdown](#geöffnetes-dropdown)
 - [SelectManager](#selectmanager)
-  - [BaseSelectManagerSingle](#baseselectmanagersinglet)
+  - [BaseSelectManagerMulti](#baseselectmanagermultit)
   - [BaseSelectManagerConfig](#baseselectmanagerconfigt)
-  - [BaseSelectManagerSingleConfig](#baseselectmanagersingeleconfigt)
-  - [SelectManagerSingle](#selectmanagersinglet)
-  - [SelectManagerSingleConfig](#selectmanagersingleconfigt)
-  - [CoreTypeSelectManagerSingle](#coretypeselectmanagersinglet)
-  - [CoreTypeSelectManagerSingleConfig](#coretypeselectmanagersingleconfigt)
+  - [BaseSelectManagerMultiConfig](#baseselectmanagermulticonfigt)
+  - [SelectManagerMulti](#selectmanagermultit)
+  - [SelectManagerMultiConfig](#selectmanagermulticonfigt)
+  - [CoreTypeSelectManagerMulti](#coretypeselectmanagermultit)
+  - [CoreTypeSelectManagerMultiConfig](#coretypeselectmanagermulticonfigt)
 - [Filter](#filter)
   - [SearchSelectFilter](#searchselectfilter)
   - [FachSelectFilter](#fachselectfilter)
@@ -28,18 +28,21 @@ Folgende Props können gesetzt werden, um die Komponente zu konfigurieren.
 
 | Prop        | Typ                                               | Default     | Definition                                                                                                                                              |
 |-------------|---------------------------------------------------|-------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
-| modelValue  | `T` \| `null` | `null`      | Enthält die aktuelle Selektion.                                                                                                                        |
+| modelValue  | `Iterable<T>` \| `null` | `null`      | Enthält die aktuelle Selektion.                                                                                                                        |
 | label       | `string`                                          | `""`        | Das Label der Komponente                                                                                                                                |
-| manager     | `BaseSelectManagerSingle<T>`      | `SelectManagerSingle<T>` mit Defaultwerten und ohne Optionen           | Der `SelectManager`, der für die Logik der Komponente verantwortlich ist. Stellt Optionen, Selektion und Multi-Selektionslogik bereit. [Mehr](#selectmanager) |
+| manager     | `BaseSelectManagerMulti<T>`      | `SelectManagerMulti<T>` mit Defaultwerten und ohne Optionen           | Der `SelectManager`, der für die Logik der Komponente verantwortlich ist. Stellt Optionen, Selektion und Multi-Selektionslogik bereit. [Mehr](#selectmanager) |
 | searchable  | `boolean`                                         | `false`     | Definiert, ob die Optionen des Dropdowns durch Suchbegriffe gefiltert werden können                                                                    |
 | disabled    | `boolean`                                         | `false`     | Definiert, ob die Komponente deaktiviert ist                                                                                                            |
 | statistics  | `boolean`                                         | `false`     | Definiert, ob die Komponente für die Statistik relevant ist                                                                                             |
-| headless    | `boolean`                                         | `false`     | Definiert, ob das Select headless (ohne Rahmen und Hintergrund) dargestellt wird, z. B. für Tabellen                                                    |
+| headless    | `boolean`                                         | `false`     | Definiert, ob das Select headless (ohne Rahmen und Hintergrund) dargestellt wird, z. B. für Tabellen                                                    |                            |
+| minOptions  | `number`                                          | `undefined` | Definiert die minimale Anzahl an auszuwählenden Optionen. Wird mit `maxOptions` abgeglichen                                    |
+| maxOptions  | `number`                                          | `undefined` | Definiert die maximale Anzahl an auswählbaren Optionen. Wird mit `minOptions` abgeglichen                                      |
+
 
 
 
 ## Fokusklassen
-Wie bei anderen Inputs auch kann am UiSelect eine Fokusklasse gesetzt werden, entweder `contentFocusField` oder `subNavigationFocusField`. Diese Zuordnung erfolgt über `<ui-select [...] class="contentFocusField"` bzw. `<ui-select [...] class="subNavigationFocusField"`. Je nachdem ob es sich bei dem Select um ein searchable Select handelt, wird die Fokusklasse dann intern an die Combobox (searchable = false) oder an das SearchInput (searchable = true) weitergeleitet und gesetzt. Bei `contentFocusField` ist das Select über `Alt` + `8` ansteuerbar.
+Wie bei anderen Inputs auch kann am UiSelectMulti eine Fokusklasse gesetzt werden, entweder `contentFocusField` oder `subNavigationFocusField`. Diese Zuordnung erfolgt über `<ui-select-multi [...] class="contentFocusField"` bzw. `<ui-select [...] class="subNavigationFocusField"`. Je nachdem ob es sich bei dem Select um ein searchable Select handelt, wird die Fokusklasse dann intern an die Combobox (searchable = false) oder an das SearchInput (searchable = true) weitergeleitet und gesetzt. Bei `contentFocusField` ist das Select über `Alt` + `8` ansteuerbar.
 
 ## Tastaturbedienung
 Die Komponente kann mit der Tastatur bedient werden. Wichtig bei der Navigation durch das Dropdown ist, dass dabei nur der visuelle Fokus gesteuert wird. Der DOM-Fokus bleibt auf dem Input.
@@ -68,13 +71,13 @@ Die Komponente kann mit der Tastatur bedient werden. Wichtig bei der Navigation 
 
 | Eingabe                          | Aktion |
 |----------------------------------|--------|
-| Enter oder Leertaste (Element fokussiert) | Wählt das Element aus und schließt das Dropdown |
+| Enter oder Leertaste (Element fokussiert) | Wählt das Element aus |
 | Enter oder Leertaste (kein Element fokussiert) | Schließt das Dropdown |
 | Tab                              | Wählt das markierte Element aus und schließt das Dropdown |
 | Escape                           | Schließt das Dropdown |
 | ↓                                | Springt zum nächsten Element in der Liste. Ist bereits das Letzte visuell fokussiert, dann springt es zum Letzten. |
 | ↑                                | Springt zum vorherigen Element in der Liste. Ist bereits das Erste visuell fokussiert, dann springt es zum Letzten. |
-| Alt + ↑                          | Wählt das markierte Element. Schließt das Dropdown |
+| Alt + ↑                          | Wählt das markierte Element. |
 | → / ← (`searchable = false`)       | Nichts passiert |
 | → / ← (`searchable = true`)        | Entfernt den visuellen Fokus im Dropdown |
 | Home (`searchable = false`)        | Springt zum ersten Element in der Liste |
@@ -92,8 +95,8 @@ Die Komponente kann mit der Tastatur bedient werden. Wichtig bei der Navigation 
 </details>
 
 ## SelectManager
-### BaseSelectManagerSingle\<T>
-`BaseSelectManagerSingle<T>` ist die abstrakte Basisklasse für alle Single-Selects. Um einen SelectManager zu erzeugen muss dem Konstruktor eine `BaseSelectManagerSingleConfig<T>` übergeben werden, die alle Grundeinstellungen vornimmt. Die Übergabe einer Config ist optional. Wird keine übergeben, dann wird in dem Select eine leere Liste für die Optionen angezeigt.
+### BaseSelectManagerMulti\<T>
+`BaseSelectManagerMulti<T>` ist die abstrakte Basisklasse für alle Multi-Selects. Um einen SelectManager zu erzeugen muss dem Konstruktor eine `BaseSelectManagerMultiConfig<T>` übergeben werden, die alle Grundeinstellungen vornimmt. Die Übergabe einer Config ist optional. Wird keine übergeben, dann wird in dem Select eine leere Liste für die Optionen angezeigt.
 
 ### BaseSelectManagerConfig\<T>
 
@@ -106,25 +109,25 @@ Alle Parameter der Config sind Optional. Wenn eine leere Config an den SelectMan
 | filters | `Iterable<SelectFilter<T>>` | Setzt die aktiven Filter für die Optionenliste |
 | deepSearchAttributes | `string[]` | Definiert Attribute von \<T>, die bei einem gesetzte Suchfilter durchsucht werden sollen. Werden keine Attribute festgelegt, dann werden ausschließlich die generierten Optionstexte für die Suche verwendet. |
 
-### BaseSelectManagerSingeleConfig\<T>
+### BaseSelectManagerMultiConfig\<T>
 Die Config erbt von `BaseSelectManagerConfig\<T>` und erweitert es.
 
  Parameter | Typ             | Definition                                               |
 |-----------|------------------|----------------------------------------------------------|
-| selected   | `T` \| `null` | Das aktuell selektierte Element            |
+| selected   | `Iterable<T>` \| `null` | Die aktuell selektierten Elemente            |
 
 
-### SelectManagerSingle\<T>
-Der SelectManagerSingle ist ein einfacher, allgemeiner SelectManager für Single-Selects, der für die verschiedensten Datentypen wie `string`, `number` oder auch Custom-Objekte verwendet werden kann. Er beinhaltet die Logik der Komponente basierend auf dem Datentyp der Optionen in Dropdown. Er kümmert sich um folgende Punkte:
+### SelectManagerMulti\<T>
+Der SelectManagerMulti ist ein einfacher, allgemeiner SelectManager für Multi-Selects, der für die verschiedensten Datentypen wie `string`, `number` oder auch Custom-Objekte verwendet werden kann. Er beinhaltet die Logik der Komponente basierend auf dem Datentyp der Optionen in Dropdown. Er kümmert sich um folgende Punkte:
 - speichert alle Optionen des Dropdowns
 - speichert die aktuelle Selektion
 - speichert aktive Filter und wendet diese an
 - gibt an, ob eine Selektion gelöscht werden kann
 - Gibt den Textinhalt für die Optionen und die Selektion im Dropdown zurück
-Für das Erzeugen eine SelectManagers wird dem Konstruktor eine `SelectManagerSingleConfig\<T>` übergeben. Wird das nicht getan, dann wird ein Select ohne Optionen erzeugt.
+Für das Erzeugen eine SelectManagers wird dem Konstruktor eine `SelectManagerMultiConfig\<T>` übergeben. Wird das nicht getan, dann wird ein Select ohne Optionen erzeugt.
 
-### SelectManagerSingleConfig\<T>
-Leitet von der Config `BaseSelectManagerSingeleConfig\<T>` ab und erweitert sie.
+### SelectManagerMultiConfig\<T>
+Leitet von der Config `BaseSelectManagerMultiConfig\<T>` ab und erweitert sie.
 
 | Parameter | Typ             | Definition                                               |
 |-----------|------------------|----------------------------------------------------------|
@@ -132,11 +135,11 @@ Leitet von der Config `BaseSelectManagerSingeleConfig\<T>` ab und erweitert sie.
 | optionDisplayText | `((option: U) => string)` | Gibt an, wie der Optionentext in Dropdown angezeigt werden soll. |
 
 
-### CoreTypeSelectManagerSingle\<T>
-Dieser Manager generiert seine Liste an Optionen selbst, basierend auf Angaben zum `CoreType`, dem Schuljahr und den Schulformen. Hierfür muss dem Konstruktor eine `CoreTypeSelectManagerSingleConfig<T>` übergeben werden, die alle Grundeinstellungen vornimmt. Die Übergabe einer Config ist optional. Wird keine übergeben, dann wird in dem Select eine leere Liste für die Optionen angezeigt.
+### CoreTypeSelectManagerMulti\<T>
+Dieser Manager generiert seine Liste an Optionen selbst, basierend auf Angaben zum `CoreType`, dem Schuljahr und den Schulformen. Hierfür muss dem Konstruktor eine `CoreTypeSelectManagerMultiConfig<T>` übergeben werden, die alle Grundeinstellungen vornimmt. Die Übergabe einer Config ist optional. Wird keine übergeben, dann wird in dem Select eine leere Liste für die Optionen angezeigt.
 
-### CoreTypeSelectManagerSingleConfig\<T>
-Diese Config erweitert die `BaseSelectManagerSingleConfig<T>`, implementiert aber nicht den Parameter `options`, da diese selbst berechnet werden. Die Optionen der Liste sind dabei vom Typ `CoreTypeData`. Für diese Berechnung ist Mindestens die Angabe von `clazz` und `schuljahr` erforderlich. Ohne diese bleibt die Optionenliste leer. Alle Parameter der Config sind optional. Wenn eine leere Config an den SelectManager übergeben wird, dann erzeugt dieser für die Optionen eine leere Liste.
+### CoreTypeSelectManagerMultiConfig\<T>
+Diese Config erweitert die `BaseSelectManagerMultiConfig<T>`, implementiert aber nicht den Parameter `options`, da diese selbst berechnet werden. Die Optionen der Liste sind dabei vom Typ `CoreTypeData`. Für diese Berechnung ist Mindestens die Angabe von `clazz` und `schuljahr` erforderlich. Ohne diese bleibt die Optionenliste leer. Alle Parameter der Config sind optional. Wenn eine leere Config an den SelectManager übergeben wird, dann erzeugt dieser für die Optionen eine leere Liste.
 
 | Parameter | Typ             | Definition                                               |
 |-----------|------------------|----------------------------------------------------------|
@@ -147,12 +150,12 @@ Diese Config erweitert die `BaseSelectManagerSingleConfig<T>`, implementiert abe
 | optionDisplayText | `"kuerzel" \| "text" \| "kuerzelText" \| ((option: U) => string)` | Gibt an, wie der Optionentext in Dropdown angezeigt werden soll. `kuerzel`, `text` und `kuerzelText` sind defaults, die verwendet werden können. |
 
 ## Filter
-Optionen im einem UiSelect können gefiltert werden. Damit mehrere Filter kombiniert werden können, existiert das Interface `SelectFilter`, auf dem basierend die Filter definiert werden. Diese Filter können anschließend an den `SelectManager` übergeben werden. \
+Optionen im einem UiSelectMulti können gefiltert werden. Damit mehrere Filter kombiniert werden können, existiert das Interface `SelectFilter`, auf dem basierend die Filter definiert werden. Diese Filter können anschließend an den `SelectManager` übergeben werden. \
 Bei Änderungen an einem Filter wie beispielsweise an darin befindlichen Attributen, muss `manager.updateFilteredOptions (filter?: SelectFilter<T>, remove: boolean = false)` aufgerufen werden, da der Manager diese Änderungen andernfalls nicht registriert. \
 Die angezeigten Optionen im Dropdown des Selects sind ausschließlich Optionen, die für alle angewendeten Filter valide sind.
 
 ### SearchSelectFilter
-Ein spezieller Filter, der für die Filterung nach Suchbegriffen verwendet wird. Wird im UiSelect die prop `searchable = true` gesetzt, dann wird dieser Filter automatisch verwendet. 
+Ein spezieller Filter, der für die Filterung nach Suchbegriffen verwendet wird. Wird im UiSelectMulti die prop `searchable = true` gesetzt, dann wird dieser Filter automatisch verwendet. 
 Es ist außerdem eine Tiefensuche möglich. Dabei wird der Suchbegriff nicht nur mit dem Optiontext verglichen, sondern auch mit den Inhalten von angegebenene Attributen.
 Diese Suche wird aktiviert, indem auf dem `SelectManager` `setDeepSearchAttributes(['attributeName'])` aufgerufen wird. Dabei werden alle Attributnamen übergeben, 
 die zusätzlich durchsucht werden sollen. Alternativ klnnen die Attribute auch direkt im `SearchSelectFilter` gesetzt werden, falls dieser selbst an den SelectManager

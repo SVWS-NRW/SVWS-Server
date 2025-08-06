@@ -139,7 +139,7 @@
 	import type { SSchuelerAllgemeinesGruppenprozesseProps } from "./SSchuelerAllgemeinesGruppenprozesseProps";
 	import type { StundenplanListeEintrag, List } from "@core";
 	import { DateUtils, ReportingParameter, ReportingReportvorlage, ListUtils, ArrayList, BenutzerKompetenz } from "@core";
-	import { BaseSelectManager } from "@ui";
+	import { SelectManagerSingle } from "@ui";
 
 	type Action = 'druckSchuelerListeKontaktdatenErzieher' | 'druckSchuelerSchulbescheinigung' | 'druckSchuelerStundenplan' | 'delete' | '';
 
@@ -175,7 +175,7 @@
 			stundenplanSelectManager.options = newValue;
 		}
 	);
-	const stundenplanSelectManager = new BaseSelectManager({
+	const stundenplanSelectManager = new SelectManagerSingle({
 		options: stundenplaene.value, optionDisplayText: stundenplanDisplayText, selectionDisplayText: stundenplanDisplayText,
 	})
 

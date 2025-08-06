@@ -29,7 +29,7 @@
 	import type { SchuleDatenaustauschLernplattformenProps } from "~/components/schule/datenaustausch/lernplattformen/SSchuleDatenaustauschLernplattformenProps";
 	import type { Lernplattform } from "@core";
 	import { BenutzerKompetenz } from "@core";
-	import { BaseSelectManager } from "@ui";
+	import { SelectManagerSingle } from "@ui";
 
 	const props = defineProps<SchuleDatenaustauschLernplattformenProps>();
 
@@ -37,12 +37,12 @@
 	const lernplattform = ref<Lernplattform | undefined>(undefined);
 	const datenformat = ref<string>('JSON');
 
-	const selectManagerLernplattformen = new BaseSelectManager<Lernplattform>({
+	const selectManagerLernplattformen = new SelectManagerSingle<Lernplattform>({
 		removable: false, options: props.lernplattformen,
 		selectionDisplayText: (lernplattform: Lernplattform) => lernplattform.id + " - " + lernplattform.bezeichnung,
 		optionDisplayText: (lernplattform: Lernplattform) => lernplattform.id + " - " + lernplattform.bezeichnung,
 	})
-	const selectManagerDatenformat = new BaseSelectManager<string>({ removable: false, options: ['JSON', 'GZIP'], selected: 'JSON' });
+	const selectManagerDatenformat = new SelectManagerSingle<string>({ removable: false, options: ['JSON', 'GZIP'], selected: 'JSON' });
 
 	const hatKompetenzExport = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.IMPORT_EXPORT_LERNPLATTFORM));
 	const exportDisabled = computed(() => (lernplattform.value === undefined) || !hatKompetenzExport.value || loading.value);

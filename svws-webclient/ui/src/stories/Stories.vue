@@ -98,7 +98,7 @@
 	import router from './router';
 	import type { PaneSplitterConfig} from './../ui/composables/usePaneSplitter';
 	import { usePaneSplitter } from './../ui/composables/usePaneSplitter';
-	import { BaseSelectManager } from './../ui/controls/select/selectManager/BaseSelectManager';
+	import { SelectManagerSingle } from './../ui/controls/select/selectManager/SelectManagerSingle';
 
 	const groups = new Map<string, RouteRecord[]>([['default', []]]);
 	for (const route of router.getRoutes()) {
@@ -200,7 +200,7 @@
 		{label:'bg-uistatic-100',color:'var(--background-color-uistatic-100)',contrastColor:'var(--text-color-ui-100)'},
 	];
 
-	const colorSelectManager = new BaseSelectManager({
+	const colorSelectManager = new SelectManagerSingle({
 		options: backgroundPresets, optionDisplayText: option => option.label,	selectionDisplayText: option => option.label,
 	});
 

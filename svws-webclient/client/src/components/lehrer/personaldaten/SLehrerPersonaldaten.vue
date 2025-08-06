@@ -64,10 +64,11 @@
 
 	import { computed, watch } from "vue";
 	import type { LehrerPersonaldatenProps } from './SLehrerPersonaldatenProps';
-	import type { Validator} from "@core";
-	import { DeveloperNotificationException, ValidatorLehrerPersonalabschnittsdaten, LehrerBeschaeftigungsart, LehrerEinsatzstatus, LehrerRechtsverhaeltnis,
-		LehrerAnrechnungsgrund, LehrerMehrleistungsarten, LehrerMinderleistungsarten, BenutzerKompetenz } from "@core";
-	import { CoreTypeSelectManager } from "@ui";
+	import type { LehrerBeschaeftigungsartKatalogEintrag, LehrerEinsatzstatusKatalogEintrag, LehrerRechtsverhaeltnisKatalogEintrag, Validator} from "@core";
+	import { DeveloperNotificationException, ValidatorLehrerPersonalabschnittsdaten} from "@core";
+	import { LehrerBeschaeftigungsart, LehrerEinsatzstatus, LehrerRechtsverhaeltnis, LehrerAnrechnungsgrund, LehrerMehrleistungsarten, LehrerMinderleistungsarten,
+		BenutzerKompetenz} from "@core";
+	import { CoreTypeSelectManagerSingle } from "@ui";
 
 	const props = defineProps<LehrerPersonaldatenProps>();
 
@@ -96,48 +97,52 @@
 	const personaldaten = () => props.lehrerListeManager().personalDaten();
 	const personalabschnittsdaten = () => props.lehrerListeManager().getAbschnittBySchuljahresabschnittsId(props.aktAbschnitt.id);
 
-	const rechtsverhaeltnisSelectManager = new CoreTypeSelectManager({ clazz: LehrerRechtsverhaeltnis.class, schuljahr: schuljahr.value, removable: false,
+	const rechtsverhaeltnisSelectManager = new CoreTypeSelectManagerSingle({ clazz: LehrerRechtsverhaeltnis.class, schuljahr: schuljahr.value, removable: false,
 		schulformen: props.schulform, optionDisplayText: "text", selectionDisplayText: "text",
 	});
 
-	const beschaeftigungsartSelectManager = new CoreTypeSelectManager({ clazz: LehrerBeschaeftigungsart.class, schuljahr: schuljahr.value,
+	const beschaeftigungsartSelectManager = new CoreTypeSelectManagerSingle({ clazz: LehrerBeschaeftigungsart.class, schuljahr: schuljahr.value,
 		schulformen: props.schulform, removable: false, optionDisplayText: "text", selectionDisplayText: "text",
 	});
 
-	const einsatzstatusSelectManager = new CoreTypeSelectManager({ clazz: LehrerEinsatzstatus.class, schuljahr: schuljahr.value, schulformen: props.schulform,
+	const einsatzstatusSelectManager = new CoreTypeSelectManagerSingle({ clazz: LehrerEinsatzstatus.class, schuljahr: schuljahr.value, schulformen: props.schulform,
 		removable: false, optionDisplayText: "text", selectionDisplayText: "text",
 	});
 
-	const rechtsverhaeltnis = computed<LehrerRechtsverhaeltnis | undefined>({
-		get(): LehrerRechtsverhaeltnis | undefined {
-			return LehrerRechtsverhaeltnis.values().find(r => r.daten(schuljahr.value)?.schluessel === personalabschnittsdaten()?.rechtsverhaeltnis);
+	const rechtsverhaeltnis = computed<LehrerRechtsverhaeltnisKatalogEintrag | undefined>({
+		get(): LehrerRechtsverhaeltnisKatalogEintrag | undefined {
+			return LehrerRechtsverhaeltnis.values().map(r => r.daten(schuljahr.value) ?? undefined)
+				.find(d => d?.schluessel === personalabschnittsdaten()?.rechtsverhaeltnis);
 		},
-		set(val: LehrerRechtsverhaeltnis | undefined) {
+		set(val: LehrerRechtsverhaeltnisKatalogEintrag | undefined) {
 			const daten = personalabschnittsdaten();
 			if (daten !== null)
-				void props.patchAbschnittsdaten({ rechtsverhaeltnis: val?.daten(schuljahr.value)?.schluessel }, daten.id);
+				void props.patchAbschnittsdaten({ rechtsverhaeltnis: val?.schluessel }, daten.id);
 		},
 	});
 
-	const beschaeftigungsart = computed<LehrerBeschaeftigungsart | undefined>({
-		get(): LehrerBeschaeftigungsart | undefined {
-			return LehrerBeschaeftigungsart.values().find(r => r.daten(schuljahr.value)?.schluessel === personalabschnittsdaten()?.beschaeftigungsart);
+	const beschaeftigungsart = computed<LehrerBeschaeftigungsartKatalogEintrag | undefined>({
+		get(): LehrerBeschaeftigungsartKatalogEintrag | undefined {
+			return LehrerBeschaeftigungsart.values().map(r => r.daten(schuljahr.value) || undefined)
+				.find(d => d?.schluessel === personalabschnittsdaten()?.beschaeftigungsart);
 		},
-		set(val: LehrerBeschaeftigungsart | undefined) {
+		set(val: LehrerBeschaeftigungsartKatalogEintrag | undefined) {
 			const daten = personalabschnittsdaten();
 			if (daten !== null)
-				void props.patchAbschnittsdaten({ beschaeftigungsart: val?.daten(schuljahr.value)?.schluessel }, daten.id);
+				void props.patchAbschnittsdaten({ beschaeftigungsart: val?.schluessel }, daten.id);
 		},
 	});
 
-	const einsatzstatus = computed<LehrerEinsatzstatus | undefined>({
-		get(): LehrerEinsatzstatus | undefined {
-			return LehrerEinsatzstatus.values().find(r => r.daten(schuljahr.value)?.schluessel === personalabschnittsdaten()?.einsatzstatus);
+
+	const einsatzstatus = computed<LehrerEinsatzstatusKatalogEintrag | undefined>({
+		get(): LehrerEinsatzstatusKatalogEintrag | undefined {
+			return LehrerEinsatzstatus.values().map(r => r.daten(schuljahr.value) || undefined)
+				.find(d => d?.schluessel === personalabschnittsdaten()?.einsatzstatus);
 		},
-		set(val: LehrerEinsatzstatus | undefined) {
+		set(val: LehrerEinsatzstatusKatalogEintrag | undefined) {
 			const daten = personalabschnittsdaten();
 			if (daten !== null)
-				void props.patchAbschnittsdaten({ einsatzstatus: val?.daten(schuljahr.value)?.schluessel }, daten.id);
+				void props.patchAbschnittsdaten({ einsatzstatus: val?.schluessel }, daten.id);
 		},
 	});
 
@@ -182,12 +187,8 @@
 		else throw new DeveloperNotificationException("Keine Personalabschnittsdaten gefunden.");
 	});
 
-	function validatePersonalabschnittDaten(validator: Validator, value: string | null): boolean {
-		const geburtsdatum = props.lehrerListeManager().daten().geburtsdatum;
-		props.lehrerListeManager().daten().geburtsdatum = value ?? "";
-		const res = validator.run();
-		props.lehrerListeManager().daten().geburtsdatum = geburtsdatum;
-		return res;
+	function validatePersonalabschnittDaten(validator: Validator): boolean {
+		return validator.run();
 	};
 
 </script>

@@ -1,5 +1,7 @@
-import { PendingStateManager, AuswahlManager } from "@ui";
-import type { Fahrschuelerart, Haltestelle, ReligionEintrag, SchuelerStammdaten, SchulEintrag } from "@core";
+import type { AuswahlManager } from "@ui";
+import { PendingStateManager } from "@ui";
+import type { Fahrschuelerart, Haltestelle, ReligionEintrag, NationalitaetenKatalogEintrag, SchuelerStammdaten, SchulEintrag, SchuelerStatusKatalogEintrag,
+	VerkehrsspracheKatalogEintrag} from "@core";
 import { Nationalitaeten, SchuelerStatus, Verkehrssprache } from "@core";
 import { computed } from "vue";
 
@@ -79,17 +81,17 @@ export class PendingStateManagerSchuelerIndividualdaten extends PendingStateMana
 	/**
 	 * Erzeugt das Attribut staatsangehoerigkeitID als computed value.
 	 */
-	public staatsangehoerigkeitID = this.genComputed<Nationalitaeten | null>('staatsangehoerigkeitID', null,
-		(value: string | null) => Nationalitaeten.getByISO3(value),
-		(value: Nationalitaeten | null) => value?.historie().getLast().iso3
+	public staatsangehoerigkeitID = this.genComputed<NationalitaetenKatalogEintrag | null>('staatsangehoerigkeitID', null,
+		(value: string | null) => Nationalitaeten.getByISO3(value)?.daten(this.auswahlManager.getSchuljahr()) ?? null,
+		(value: NationalitaetenKatalogEintrag | null) => value?.iso3
 	);
 
 	/**
 	 * Erzeugt das Attribut staatsangehoerigkeit2ID als computed value.
 	 */
-	public staatsangehoerigkeit2ID = this.genComputed<Nationalitaeten | null>('staatsangehoerigkeit2ID', null,
-		(value: string | null) => Nationalitaeten.getByISO3(value),
-		(value: Nationalitaeten | null) => value?.historie().getLast().iso3
+	public staatsangehoerigkeit2ID = this.genComputed<NationalitaetenKatalogEintrag | null>('staatsangehoerigkeit2ID', null,
+		(value: string | null) => Nationalitaeten.getByISO3(value)?.daten(this.auswahlManager.getSchuljahr()) ?? null,
+		(value: NationalitaetenKatalogEintrag | null) => value?.iso3
 	);
 
 	/**
@@ -118,9 +120,9 @@ export class PendingStateManagerSchuelerIndividualdaten extends PendingStateMana
 	/**
 	 * Erzeugt das Attribut status als computed value.
 	 */
-	public status = this.genComputed<SchuelerStatus | null>('status', null,
-		(value: number) => SchuelerStatus.data().getWertByKuerzel('' + value),
-		(value: SchuelerStatus | null) => value?.daten(this.auswahlManager.getSchuljahr())?.id
+	public status = this.genComputed<SchuelerStatusKatalogEintrag | null>('status', null,
+		(value: number) => SchuelerStatus.data().getEintragByID(value),
+		(value: SchuelerStatusKatalogEintrag | null) => value?.id
 	);
 
 	/**
@@ -217,33 +219,34 @@ export class PendingStateManagerSchuelerIndividualdaten extends PendingStateMana
 	/**
 	 * Erzeugt das Attribut geburtsland als computed value.
 	 */
-	public geburtsland = this.genComputed<Nationalitaeten | null>('geburtsland', null,
-		(value: string | null) => Nationalitaeten.getByISO3(value),
-		(value: Nationalitaeten | null) => value?.historie().getLast().iso3
+	public geburtsland = this.genComputed<NationalitaetenKatalogEintrag | null>('geburtsland', null,
+		(value: string | null) => Nationalitaeten.getByISO3(value)?.daten(this.auswahlManager.getSchuljahr()) ?? null,
+		(value) => value?.iso3
 	);
 
 	/**
 	 * Erzeugt das Attribut verkehrssprache als computed value.
 	 */
-	public verkehrssprache = this.genComputed<Verkehrssprache | null>('verkehrspracheFamilie', null,
-		(value: string | null | undefined) => (value === null || value === undefined) ? null : Verkehrssprache.getByIsoKuerzel(value),
-		(value: Verkehrssprache | null) => value?.historie().getLast().kuerzel
+	public verkehrssprache = this.genComputed<VerkehrsspracheKatalogEintrag | null>('verkehrspracheFamilie', null,
+		(value: string | null | undefined) => (value === null || value === undefined) ? null
+			: Verkehrssprache.getByIsoKuerzel(value)?.daten(this.auswahlManager.getSchuljahr()) ?? null,
+		(value) => value?.kuerzel
 	);
 
 	/**
 	 * Erzeugt das Attribut geburtslandMutter als computed value.
 	 */
-	public geburtslandMutter = this.genComputed<Nationalitaeten | null>('geburtslandMutter', null,
-		(value: string | null) => Nationalitaeten.getByISO3(value),
-		(value: Nationalitaeten | null) => value?.historie().getLast().iso3
+	public geburtslandMutter = this.genComputed<NationalitaetenKatalogEintrag | null>('geburtslandMutter', null,
+		(value: string | null) => Nationalitaeten.getByISO3(value)?.daten(this.auswahlManager.getSchuljahr()) ?? null,
+		(value) => value?.iso3
 	);
 
 	/**
 	 * Erzeugt das Attribut geburtslandVater als computed value.
 	 */
-	public geburtslandVater = this.genComputed<Nationalitaeten | null>('geburtslandVater', null,
-		(value: string | null) => Nationalitaeten.getByISO3(value),
-		(value: Nationalitaeten | null) => value?.historie().getLast().iso3
+	public geburtslandVater = this.genComputed<NationalitaetenKatalogEintrag | null>('geburtslandVater', null,
+		(value: string | null) => Nationalitaeten.getByISO3(value)?.daten(this.auswahlManager.getSchuljahr()) ?? null,
+		(value) => value?.iso3
 	);
 
 }

@@ -203,12 +203,12 @@
 						<svws-ui-text-input placeholder="Ende des Schulbesuchs" type="date" :min-date="newEntryBisherigeSchule.datumVon ?? undefined"
 							v-model="newEntryBisherigeSchuleDatumBis" :readonly />
 						<ui-select label="Jahrgang von" :manager="jahrgangVonManager"
-							:model-value="Jahrgaenge.data().getWertBySchluessel(newEntryBisherigeSchule.jahrgangVon ?? '') ?? null"
-							@update:model-value="(v : Jahrgaenge) => newEntryBisherigeSchule.jahrgangVon = v?.daten(schuljahrNewEntryBisherigeSchuleDatumVon)?.schluessel ?? null"
+							:model-value="Jahrgaenge.data().getEintragBySchuljahrUndSchluessel(manager().schuljahr, newEntryBisherigeSchule.jahrgangVon ?? '') ?? null"
+							@update:model-value="(v) => newEntryBisherigeSchule.jahrgangVon = v?.schluessel ?? null"
 							:disabled="!selectedSchuleForNewEntryBisherigeSchule || !newEntryBisherigeSchule.datumVon" />
-						<ui-select label="Jahrgang Bis" :manager="jahrgangBisManager"
-							:model-value="Jahrgaenge.data().getWertBySchluessel(newEntryBisherigeSchule.jahrgangBis ?? '') ?? null"
-							@update:model-value="(v : Jahrgaenge) => newEntryBisherigeSchule.jahrgangBis = v?.daten(schuljahrNewEntryBisherigeSchuleDatumBis)?.schluessel ?? null"
+						<ui-select label="Jahrgang von" :manager="jahrgangVonManager"
+							:model-value="Jahrgaenge.data().getEintragBySchuljahrUndSchluessel(manager().schuljahr, newEntryBisherigeSchule.jahrgangBis ?? '') ?? null"
+							@update:model-value="(v) => newEntryBisherigeSchule.jahrgangVon = v?.schluessel ?? null"
 							:disabled="!selectedSchuleForNewEntryBisherigeSchule || !newEntryBisherigeSchule.datumBis" />
 						<svws-ui-select class="col-span-full" title="Schulgliederung" :items="schulgliederungenBisherigeSchule" :readonly
 							:disabled="(!newEntryBisherigeSchule.datumBis || !schulformEintragSelectedSchuleNewEntryBisherigeSchule)" autocomplete
@@ -233,8 +233,7 @@
 		Uebergangsempfehlung, SchulEintrag, AdressenUtils, ArrayList, SchuelerSchulbesuchMerkmal, Kindergartenbesuch, Jahrgaenge } from "@core";
 	import type { Herkunftsarten, SchulformKatalogEintrag, SchulgliederungKatalogEintrag, Merkmal } from "@core";
 	import type { SchuelerSchulbesuchProps } from './SSchuelerSchulbesuchProps';
-	import { CoreTypeSelectManager } from "@ui";
-	import type { DataTableColumn } from "@ui";
+	import { CoreTypeSelectManagerSingle, type DataTableColumn } from "@ui";
 	import { coreTypeDataFilter, filterSchulenEintraege, formatDate } from "~/utils/helfer";
 	import { ref, computed, watch } from "vue";
 
@@ -417,10 +416,10 @@
 		return Number(newEntryBisherigeSchule.value.datumBis.toString().substring(0, 4));
 	});
 
-	const jahrgangVonManager = new CoreTypeSelectManager({ clazz: Jahrgaenge.class, schuljahr: schuljahrNewEntryBisherigeSchuleDatumVon.value,
+	const jahrgangVonManager = new CoreTypeSelectManagerSingle({ clazz: Jahrgaenge.class, schuljahr: schuljahrNewEntryBisherigeSchuleDatumVon.value,
 		schulformen: schulformSelectedSchuleNEwEntryBisherigeSchule.value, selectionDisplayText: "text", optionDisplayText: "text" })
 
-	const jahrgangBisManager = new CoreTypeSelectManager({ clazz: Jahrgaenge.class, schuljahr: schuljahrNewEntryBisherigeSchuleDatumBis.value,
+	const jahrgangBisManager = new CoreTypeSelectManagerSingle({ clazz: Jahrgaenge.class, schuljahr: schuljahrNewEntryBisherigeSchuleDatumBis.value,
 		schulformen: schulformSelectedSchuleNEwEntryBisherigeSchule.value, selectionDisplayText: "text", optionDisplayText: "text" })
 
 	watch(schuljahrNewEntryBisherigeSchuleDatumVon, () => {

@@ -1,51 +1,19 @@
 <template>
-	<Story title="Select New" id="ui-select" icon="ri:expand-up-down-line" auto-props-disabled :layout="{ type: 'grid', width: '45%'}" :source="getSourceString()">
+	<Story title="Select Multi New" id="ui-select-multi" icon="ri:expand-up-down-line" auto-props-disabled :layout="{ type: 'grid', width: '45%'}" :source="getSourceString()">
 		<template #docs><Docs /></template>
-		<Variant title="SelectManager" id="selectManager">
+		<Variant title="SelectManager" :source="getSourceString()" id="selectManager">
 			<svws-ui-input-wrapper>
-				<ui-select label="SelectManagerSingle mit String" :manager="sStringSelectManager" :searchable="state.searchable"
+				<ui-select-multi label="SelectManagerMulti mit String" :manager="stringSelectManager" :searchable="state.searchable"
 					:disabled="state.disabled" :statistics="state.statistics" :headless="state.headless"
-					:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
-				<ui-select label="SelectManagerSingle mit Custom-Objekten" :manager="sObjectSelectManager" :searchable="state.searchable"
-					:disabled="state.disabled" :statistics="state.statistics" :headless="state.headless"
-					:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
-				<ui-select label="CoreTypeSelectManagerSingle mit LehrerRechtsverhaeltnis" :manager="sCoreTypeSelectManager" :searchable="state.searchable" :disabled="state.disabled"
-					:statistics="state.statistics" :headless="state.headless"
-					:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
+					:min-options="state.minOptions" :max-options="state.maxOptions" :required="state.required"
+					:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" />
+				<ui-select-multi label="SelectManagerMulti mit Custom-Objekten" :manager="objectSelectManager" :searchable="state.searchable" :disabled="state.disabled"
+					:statistics="state.statistics" :headless="state.headless" :min-options="state.minOptions"
+					:max-options="state.maxOptions" :class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
+				<ui-select-multi label="CoreTypeSelectManagerMulti mit LehrerRechtsverhaeltnis" :manager="coreTypeSelectManager" :searchable="state.searchable" :disabled="state.disabled"
+					:statistics="state.statistics" :headless="state.headless" :min-options="state.minOptions"
+					:max-options="state.maxOptions" :class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
 			</svws-ui-input-wrapper>
-			<template #controls>
-				<HstCheckbox v-model="state.searchable" title="Searchable" />
-				<HstCheckbox v-model="state.required" title="Required" />
-				<HstCheckbox v-model="state.disabled" title="Disabled" />
-				<HstCheckbox v-model="state.statistics" title="Statistik" />
-				<HstCheckbox v-model="state.removable" title="Removable" />
-				<HstCheckbox v-model="state.headless" title="Headless" />
-				<span class="text-headline-md">Farben</span>
-				<HstRadio v-model="state.bgColor" title="Hintergrund" :options="[
-					{ label: 'keine', value: '' },
-					{ label: 'bg-ui-brand', value: 'bg-ui-brand' },
-					{ label: 'bg-ui-success', value: 'bg-ui-success' },
-					{ label: 'bg-ui-danger', value: 'bg-ui-danger' },
-				]" />
-				<HstRadio v-model="state.textColor" title="Text" :options="[
-					{ label: 'keine', value: '' },
-					{ label: 'text-ui-onbrand', value: 'text-ui-onbrand' },
-					{ label: 'text-ui-onsuccess', value: 'text-ui-onsuccess' },
-					{ label: 'text-ui-ondanger', value: 'text-ui-ondanger' },
-				]" />
-				<HstRadio v-model="state.iconColor" title="Icon" :options="[
-					{ label: 'keine', value: '' },
-					{ label: 'icon-ui-onbrand', value: 'icon-ui-onbrand' },
-					{ label: 'icon-ui-onsuccess', value: 'icon-ui-onsuccess' },
-					{ label: 'icon-ui-ondanger', value: 'icon-ui-ondanger' },
-				]" />
-				<HstRadio v-model="state.borderColor" title="Border" :options="[
-					{ label: 'keine', value: '' },
-					{ label: 'border-ui-brand', value: 'border-ui-brand' },
-					{ label: 'border-ui-success', value: 'border-ui-success' },
-					{ label: 'border-ui-danger', value: 'border-ui-danger' },
-				]" />
-			</template>
 		</Variant>
 		<Variant title="Filter" id="filter">
 			<svws-ui-input-wrapper>
@@ -67,7 +35,7 @@
 				<svws-ui-checkbox v-model="filterState2.musikUndKunst2">
 					Musik und Kunst
 				</svws-ui-checkbox>
-				<ui-select label="CoreTypeSelectManager Fach abhängig von Fachgruppe" :manager="sFachSelectManager" :searchable="state.searchable"
+				<ui-select-multi label="CoreTypeSelectManager Fach abhängig von Fachgruppe" :manager="fachSelectManager" :searchable="state.searchable"
 					:disabled="state.disabled" :statistics="state.statistics" :headless="state.headless"
 					:min-options="state.minOptions" :max-options="state.maxOptions" :required="state.required"
 					:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" />
@@ -86,14 +54,14 @@
 						]
 					</code>
 				</pre>
-				<ui-select label="Deep Search SelectManager" :manager="deepSearchSelectManager" :searchable="true" :disabled="state.disabled"
+				<ui-select-multi label="Deep Search SelectManager" :manager="deepSearchSelectManager" :searchable="true" :disabled="state.disabled"
 					:statistics="state.statistics" :headless="state.headless" :min-options="state.minOptions"
 					:max-options="state.maxOptions" :class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
 			</svws-ui-input-wrapper>
 		</Variant>
 		<Variant title="Sortierung" id="sortierung">
 			<svws-ui-input-wrapper>
-				<ui-select label="Sortiertes Select" :manager="sortableCoreTypeSelectManager" :searchable="true" :disabled="state.disabled"
+				<ui-select-multi label="Sortiertes Select" :manager="sortableCoreTypeSelectManager" :searchable="true" :disabled="state.disabled"
 					:statistics="state.statistics" :headless="state.headless" :min-options="state.minOptions"
 					:max-options="state.maxOptions" :class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
 			</svws-ui-input-wrapper>
@@ -187,9 +155,9 @@
 	import { LehrerRechtsverhaeltnis } from "../../../../../core/src/asd/types/lehrer/LehrerRechtsverhaeltnis";
 	import { Schulform } from "../../../../../core/src/asd/types/schule/Schulform";
 	import type { LehrerRechtsverhaeltnisKatalogEintrag } from "../../../../../core/src/asd/data/lehrer/LehrerRechtsverhaeltnisKatalogEintrag";
-	import { CoreTypeSelectManagerSingle } from "./selectManager/CoreTypeSelectManagerSingle";
-	import { SelectManagerSingle } from "./selectManager/SelectManagerSingle";
-	import Docs from "./UiSelect.story.md"
+	import { SelectManagerMulti } from "./selectManager/SelectManagerMulti";
+	import { CoreTypeSelectManagerMulti } from "./selectManager/CoreTypeSelectManagerMulti";
+	import Docs from "./UiSelectMulti.story.md"
 
 	const state = reactive({
 		searchable: false,
@@ -206,7 +174,6 @@
 		borderColor: "",
 		sort: "unsorted" as "unsorted" | "id" | "kuerzel" | "text",
 	});
-
 
 	const filterState1 = reactive({
 		fremdsprache: false,
@@ -225,27 +192,26 @@
 	const carItems: { marke: string, color: string, baujahr: number }[] = [{ marke: "BMW", color: "blue", baujahr: 2006 },
 		{ marke: "Audi", color: "red", baujahr: 2008}, { marke: "Opel", color: "schwarz", baujahr: 2006 }];
 
+	const stringSelectManager = new SelectManagerMulti({options: stringItems, removable: state.removable});
 
-	const sStringSelectManager = new SelectManagerSingle({options: stringItems, removable: state.removable});
-
-	const sCoreTypeSelectManager = new CoreTypeSelectManagerSingle({
-		clazz: LehrerRechtsverhaeltnis.class, schuljahr: 2018, schulformen: Schulform.GY,
-		selectionDisplayText: 'text', optionDisplayText: 'kuerzelText', removable: state.removable,
+	const coreTypeSelectManager = new CoreTypeSelectManagerMulti({
+		clazz: LehrerRechtsverhaeltnis.class, schuljahr: 2018, schulformen: Schulform.GY, removable: state.removable, optionDisplayText: 'kuerzelText',
+		selectionDisplayText: 'kuerzelText',
 	});
 
-	const sObjectSelectManager = new SelectManagerSingle({
+	const objectSelectManager = new SelectManagerMulti({
 		options: carItems, removable: state.removable,
-		selectionDisplayText: (option: { marke: string, color: string; }) => option.marke,
-		optionDisplayText: (option: { marke: string, color: string; }) => `${option.marke} - ${option.color}`,
+		selectionDisplayText: (option: { marke: string, color: string, baujahr: number; }) => option.marke,
+		optionDisplayText: (option: { marke: string, color: string, baujahr: number; }) => `${option.marke} - ${option.color}`,
 	});
 
-	const deepSearchSelectManager = new SelectManagerSingle({
+	const deepSearchSelectManager = new SelectManagerMulti({
 		options: carItems, removable: state.removable, deepSearchAttributes: ["marke", "color", "baujahr"],
 		selectionDisplayText: (option: { marke: string, color: string, baujahr: number; }) => option.marke,
 		optionDisplayText: (option: { marke: string, color: string, baujahr: number; }) => `${option.marke} - ${option.color}`,
 	});
 
-	const sFachSelectManager = new CoreTypeSelectManagerSingle({
+	const fachSelectManager = new CoreTypeSelectManagerMulti({
 		clazz: Fach.class, schuljahr: 2020, schulformen: Schulform.GY, optionDisplayText: 'kuerzelText', removable: state.removable,
 		selectionDisplayText: 'text', filters: [new FachSelectFilter("fachgruppe1", [], 2020), new FachSelectFilter("fachgruppe2", [], 2020)],
 	});
@@ -256,7 +222,7 @@
 			list.add(Fachgruppe.FG_FS);
 		if (filterState1.musikUndKunst1)
 			list.add(Fachgruppe.FG_MS);
-		sFachSelectManager.updateFilteredOptions(new FachSelectFilter("fachgruppe1", [ ...list ], 2020));
+		fachSelectManager.updateFilteredOptions(new FachSelectFilter("fachgruppe1", [ ...list ], 2020));
 	});
 
 	watch(filterState2, () => {
@@ -265,23 +231,23 @@
 			list.add(Fachgruppe.FG_D);
 		if (filterState2.musikUndKunst2)
 			list.add(Fachgruppe.FG_MS);
-		sFachSelectManager.updateFilteredOptions(new FachSelectFilter("fachgruppe2", [ ...list ], 2020));
+		fachSelectManager.updateFilteredOptions(new FachSelectFilter("fachgruppe2", [ ...list ], 2020));
 	});
 
 	watch(() => state.removable, (newVal) => {
-		sStringSelectManager.removable = newVal;
-		sCoreTypeSelectManager.removable = newVal;
-		sObjectSelectManager.removable = newVal;
+		stringSelectManager.removable = newVal;
+		coreTypeSelectManager.removable = newVal;
+		objectSelectManager.removable = newVal;
 		deepSearchSelectManager.removable = newVal;
-		sFachSelectManager.removable = newVal;
+		fachSelectManager.removable = newVal;
 		sortableCoreTypeSelectManager.removable = newVal;
 	});
 
-	watch(() => state.sort, (newVal) => {
+	watch(() => state.sort, () => {
 		sortableCoreTypeSelectManager.updateSort();
 	});
 
-	const sortableCoreTypeSelectManager = new CoreTypeSelectManagerSingle({
+	const sortableCoreTypeSelectManager = new CoreTypeSelectManagerMulti({
 		clazz: LehrerRechtsverhaeltnis.class, schuljahr: 2018, schulformen: Schulform.GY, removable: state.removable,
 		optionDisplayText: (a) => `${a.id} - ${a.kuerzel} - ${a.text}`, selectionDisplayText: 'kuerzelText',
 		sort: (a: LehrerRechtsverhaeltnisKatalogEintrag, b: LehrerRechtsverhaeltnisKatalogEintrag) => {
@@ -308,8 +274,8 @@
 		},
 	});
 
-	function getSourceString (multi = false) {
-		return `<ui-select
+	function getSourceString () {
+		return `<ui-select-multi
         label="..."
         :manager="..."
         ${state.searchable ? 'searchable' : ''}
@@ -318,6 +284,9 @@
 		${state.required ? 'required' : ''}
         ${state.headless ? 'headless' : ''}
 		${state.sort !== 'unsorted' ? ':sort="(a, b) => ..."' : '' }
+		${(state.minOptions !== undefined ? `:min-options="${state.minOptions}"` : '')}
+		${(state.maxOptions !== undefined ? `:max-options="${state.maxOptions}"` : '')}
+/>
       `.split('\n').filter(line => line.trim() !== '').join('\n');
 
 	};

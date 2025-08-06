@@ -28,6 +28,9 @@
 					<span :class="[labelTextColorClass, 'leading-none content-center overflow-hidden truncate h-5.5']">
 						{{ label }}
 					</span>
+					<span v-if="selectionLimitText !== null" class="h-5 leading-none content-center" :class="[getSecondaryTextColor(textColorClass)]">
+						<span>({{ selectionLimitText }})</span>
+					</span>
 					<span v-if="required" class="cursor-pointer flex items-end" aria-hidden>
 						<span :class="[iconColorClass, 'icon-xs i-ri-asterisk font-normal relative -top-2']" />
 					</span>
@@ -62,19 +65,28 @@
 
 				<!-- Wrapper für die aktuelle Selektion und das Suchfeld -->
 				<div class="flex flex-wrap items-center gap-x-1 flex-1 min-w-0">
-					<!-- Wrapper für das Such-Input und aktuelle Selektion -->
-					<div class="relative grid grid-cols-1 grid-rows-1 flex-1 min-w-5 order-last text-base">
-						<!-- Aktuelle Selektion -->
-						<div v-if="manager.hasSelection()" class="flex items-center overflow-hidden row-start-1 col-start-1">
-							<svws-ui-tooltip position="top" :indicator="false" class="truncate">
-								<template #content>
-									{{ manager.getSelectionText(manager.selected) }}
-								</template>
-								<div v-if="showSelection" :class="[focusBasedTextColorClass, 'truncate z-0 cursor-pointer font-medium inline-block align-middle leading-none h-5 mt-1']">
-									{{ manager.getSelectionText(manager.selected) }}
-								</div>
-							</svws-ui-tooltip>
-						</div>
+					<!-- Aktuelle Selektion -->
+					<span v-for="item in manager.selected" :key="manager.getSelectionText(item)" tabindex="0"
+						:aria-label="`Auswahl ${props.manager.getSelectionText(item)}`"
+						:class="[selectionBubbleClasses, 'px-2 rounded-md text-sm flex items-center overflow-hidden max-w-30 shrink-0 border ml-1 max-h-5 ']">
+
+						<svws-ui-tooltip position="top" :indicator="false" class="truncate">
+							<template #content>
+								{{ manager.getSelectionText(item) }}
+							</template>
+							<div class="flex items-center justify-between w-full">
+								<span class="truncate">
+									{{ manager.getSelectionText(item) }}
+								</span>
+								<button v-if="manager.removable || manager.selected.size() > 1" @click="deselect($event, item)"
+									class="hover:bg-ui rounded-sm flex ml-1 flex-shrink-0" @keydown.enter="deselect($event, item)"
+									:aria-label="`Auswahl ${props.manager.getSelectionText(item)} löschen`">
+									<span :class="[ disabled ? 'icon-ui-disabled' : 'icon-ui-onselected', 'icon-sm i-ri-close-line']" />
+								</button>
+							</div>
+						</svws-ui-tooltip>
+					</span>
+					<div v-if="searchable" class="relative grid grid-cols-1 grid-rows-1 flex-1 min-w-5 order-last text-base">
 						<!-- Such-Input -->
 						<input v-if="searchable && !disabled" :id="`uiSelectinput_${instanceId}`" ref="uiSelectSearch" type="text" role="combobox"
 							:tabindex="searchInputTabindex" v-bind="searchAriaAttrs" v-model="search"
@@ -115,30 +127,30 @@
 
 <script setup lang="ts" generic="T, V extends Validator">
 
-	import { computed, onMounted, ref, useAttrs, watch } from 'vue';
+	import { computed, ref, useAttrs, watch } from 'vue';
 	import { useUiSelectUtils } from './selectManager/UiSelectUtils';
-	import type { UiSelectSingleProps } from './selectManager/UiSelectProps';
 	import type { Validator } from '../../../../../core/src/asd/validate/Validator';
-	import { SelectManagerSingle } from './selectManager/SelectManagerSingle';
+	import type { UiSelectMultiProps } from './selectManager/UiSelectProps';
+	import { SelectManagerMulti } from './selectManager/SelectManagerMulti';
 
-	const props = withDefaults(defineProps<UiSelectSingleProps<T, V>>(), {
+	const props = withDefaults(defineProps<UiSelectMultiProps<T, V>>(), {
 		label: '',
-		manager: () => new SelectManagerSingle<T>(),
+		manager: () => new SelectManagerMulti<T>(),
 		searchable: false,
 		required: false,
 		disabled: false,
 		statistics: false,
 		headless: false,
+		minOptions: undefined,
+		maxOptions: undefined,
 		validator: undefined,
-		doValidate: (validator: V): boolean => validator.run(),
+		doValidate: (validator: V) : boolean => validator.run(),
 	});
 
 	/** Die Vererbung der Attribute wird abgestellt, damit diese manuell an die richtigen Stellen weitergeleitet werden kann */
 	defineOptions({ inheritAttrs: false });
 	const attrs = useAttrs();
-
-	type MaybeNull<T> = T | null;
-	const model = defineModel<MaybeNull<T>>();
+	const model = defineModel<Iterable<T> | null>();
 
 	// refs
 	const uiSelect = ref<HTMLElement | null>(null);
@@ -147,14 +159,27 @@
 	const uiSelectDropdown = ref<HTMLDivElement | null>(null);
 
 	/**
+	 * Berechnet die Farbe der Selektion-Bubbles abhängig davon, ob sie disabled sind
+	 */
+	const selectionBubbleClasses = computed((): string => {
+		const colors = props.disabled ? 'bg-ui-disabled text-ui-ondisabled border-ui-disabled' : 'bg-ui-selected text-ui-onselected border-ui-selected';
+		const height = props.headless ? '' : 'mt-[0.35rem]';
+		return `${colors} ${height}`;
+	});
+
+
+	/**
 	 * Prüft, ob die Eingaben valide sind
 	 */
 	const isValid = computed((): boolean => {
 		if (props.required && props.manager.hasSelection() === false)
 			return false;
+		if (minOptionsValid.value === false)
+			return false;
+		if (maxOptionsValid.value === false)
+			return false;
 		return true;
 	});
-
 
 	/**
 	 * Prüft, ob Eingaben abhänig von den Validatoren valide sind
@@ -163,12 +188,46 @@
 		(props.validator !== undefined) ? props.doValidate(props.validator(), model.value ?? null) : true
 	);
 
+	/**
+	 * Prüft, ob die gewählte Optionenanzahl im Falle von MultiSelects dem Minimum entspricht
+	 */
+	const minOptionsValid = computed((): boolean => {
+		if (props.manager.multi === false)
+			return true;
+		if ((props.minOptions === undefined) || ((props.manager.hasSelection() === false) && (props.minOptions <= 0)))
+			return true;
+		return (props.manager.hasSelection() === true) && (props.manager.selected.size() >= props.minOptions);
+	});
+
+	/**
+	 * Prüft, ob die gewählte Optionenanzahl im Falle von MultiSelects dem Maximum entspricht
+	 */
+	const maxOptionsValid = computed((): boolean => {
+		if ((props.maxOptions === undefined) || ((props.manager.hasSelection() === false) && (props.maxOptions <= 0)))
+			return true;
+		return (props.manager.selected.size() <= props.maxOptions);
+	});
+
+	// Generiert den Text, der bei einer Multi-Selektion die Limitierung der Optinonen anzeigt
+	const selectionLimitText = computed(() => {
+		if (!props.manager.multi)
+			return null;
+		const min = (props.minOptions !== undefined) && (props.minOptions > 0) ? props.minOptions : null;
+		const max = (props.maxOptions !== undefined) && (props.maxOptions > 0) ? props.maxOptions : null;
+
+		if ((min === null) && (max === null))
+			return null;
+		if ((min !== null) && (max !== null))
+			return (min === max) ? `${min} Option` : `${Math.min(min, max)} - ${Math.max(min, max)} Optionen`;
+
+		return (min !== null) ? `min. ${min}` : `max. ${max}`;
+	});
+
 	const {
-		instanceId, newSelection, search, filteredAttributes, iconColorClass, focusBasedTextColorClass, comboboxAriaAttrs, searchAriaAttrs, comboboxTabindex,
+		instanceId, newSelection, search, filteredAttributes, textColorClass, iconColorClass, comboboxAriaAttrs, searchAriaAttrs, comboboxTabindex,
 		searchInputTabindex, comboboxRole, dropdownPositionStyles, onKeyDown, searchInputFocusClass, handleComboboxFocus, handleBlur, handleComponentClick,
 		comboboxClasses, headlessPadding, labelClasses, labelTextColorClass, optionClasses, validatorErrorIcon, showLabel, showValidatorError,
-		showValidatorErrorMessage, validatorErrorBgClasses, showSelection, splitText, handleInput, toggleSelection, deselect,
-
+		showValidatorErrorMessage, validatorErrorBgClasses, splitText, getSecondaryTextColor, handleInput, toggleSelection, deselect,
 	} = useUiSelectUtils(
 		props,
 		attrs,
@@ -197,10 +256,5 @@
 			}
 		}
 	);
-
-	onMounted(() => {
-		if (model.value !== null)
-			props.manager.selected = model.value;
-	});
 
 </script>

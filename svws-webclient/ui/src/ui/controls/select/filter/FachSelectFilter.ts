@@ -4,11 +4,12 @@ import { ArrayList } from "../../../../../../core/src/java/util/ArrayList";
 import type { List } from "../../../../../../core/src/java/util/List";
 import type { SelectFilter } from "./SelectFilter";
 import { toRaw } from "vue";
+import type { FachKatalogEintrag } from "../../../../../../core/src";
 
 /**
  * Ein Filter für die UiSelect-Komponente. Er filtert Fächer auf Basis der übergebenen Fachgruppen.
  */
-export class FachSelectFilter implements SelectFilter<Fach> {
+export class FachSelectFilter implements SelectFilter<FachKatalogEintrag> {
 	public key: string;
 	// Liste der Fachgruppen, nach denen gefiltert wird.
 	private _fachgruppen: List<Fachgruppe>;
@@ -39,14 +40,14 @@ export class FachSelectFilter implements SelectFilter<Fach> {
 	 *
 	 * @returns Liste der gefilterten Optionen
 	 */
-	apply(options: List<Fach>): List<Fach> {
-		const filteredOptions: List<Fach> = new ArrayList<Fach>();
+	apply(options: List<FachKatalogEintrag>): List<FachKatalogEintrag> {
+		const filteredOptions: List<FachKatalogEintrag> = new ArrayList<FachKatalogEintrag>();
 
 		for (const option of options) {
 			if (this._fachgruppen.isEmpty())
 				filteredOptions.add(option);
 			for (const fachgruppe of this._fachgruppen)
-				if (option.getFachgruppe(this._schuljahr) === toRaw(fachgruppe))
+				if (option.fachgruppe === toRaw(fachgruppe).name())
 					filteredOptions.add(option);
 		}
 

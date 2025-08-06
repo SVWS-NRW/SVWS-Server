@@ -20,6 +20,7 @@ test('Weitere Felder zu Migrationshintergrund nur aktiv, wenn Migrationshintergr
 
 	await startGruppenprozessMitSchuelern(page, ['09a Daum Sven', '09a Delfes Michael']);
 
+	await page.waitForTimeout(1000);
 	expect(await page.locator("#Card-Migrationshintergrund").ariaSnapshot()).toContain('combobox "Geburtsland" [disabled]');
 	await page.getByRole('checkbox', { name: 'Migrationshintergrund' }).check();
 	expect(await page.locator("#Card-Migrationshintergrund").ariaSnapshot()).not.toContain('disabled');
