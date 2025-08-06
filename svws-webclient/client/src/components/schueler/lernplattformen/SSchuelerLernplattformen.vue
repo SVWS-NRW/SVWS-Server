@@ -7,11 +7,11 @@
 				</template>
 				<template #cell(EinwilligungAbgefragt)="{ rowData }">
 					<svws-ui-checkbox :model-value="rowData.einwilligungAbgefragt"
-						@update:model-value="value => patch({ einwilligungAbgefragt: value }, rowData.idLernplattform)" />
+						@update:model-value="value => patch({ einwilligungAbgefragt: value }, rowData.idLernplattform)" :readonly />
 				</template>
 				<template #cell(EinwilligungNutzung)="{ rowData }">
 					<svws-ui-checkbox :model-value="rowData.einwilligungNutzung"
-						@update:model-value="value => patch({ einwilligungNutzung: value }, rowData.idLernplattform)" />
+						@update:model-value="value => patch({ einwilligungNutzung: value }, rowData.idLernplattform)" :readonly />
 				</template>
 				<template #cell(benutzername)="{ value }">
 					{{ value }}
@@ -27,8 +27,13 @@
 <script setup lang="ts">
 	import type { SchuelerLernplattformenProps } from "~/components/schueler/lernplattformen/SchuelerLernplattformenProps";
 	import type { DataTableColumn } from "@ui";
+	import { computed } from "vue";
+	import { BenutzerKompetenz } from "@core";
 
 	const props = defineProps<SchuelerLernplattformenProps>();
+
+	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
+	const readonly = computed(() => !hatKompetenzAendern.value);
 
 	const columns: DataTableColumn[] = [
 		{ key: "idLernplattform", label: "Lernplattform", sortable: true },

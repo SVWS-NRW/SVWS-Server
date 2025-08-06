@@ -6,6 +6,7 @@ import { RouteManager } from "~/router/RouteManager";
 import type { RouteKatalogLernplattformen} from "~/router/apps/schule/lernplattformen/RouteKatalogLernplattformen";
 import { routeKatalogLernplattformen } from "~/router/apps/schule/lernplattformen/RouteKatalogLernplattformen";
 import type { SLernplattformenNeuProps } from "~/components/schule/kataloge/lernplattformen/SLernplattformenNeuProps";
+import { api } from "~/router/Api";
 
 const SLernplattformenNeu = () => import("~/components/schule/kataloge/lernplattformen/SLernplattformenNeu.vue");
 
@@ -25,6 +26,7 @@ export class RouteKatalogLernplattformenNeu extends RouteNode<any, RouteKatalogL
 			manager: () => routeKatalogLernplattformen.data.manager,
 			add: routeKatalogLernplattformen.data.add,
 			gotoDefaultView: routeKatalogLernplattformen.data.gotoDefaultView,
+			benutzerKompetenzen: api.benutzerKompetenzen,
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
 		};

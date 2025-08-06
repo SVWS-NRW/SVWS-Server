@@ -1676,7 +1676,7 @@ public class APILehrer {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerEinwilligungen(conn, idLehrer).getListAsResponse(),
 				request, ServerMode.DEV,
-				BenutzerKompetenz.LEHRER_PERSONALDATEN_ANSEHEN);
+				BenutzerKompetenz.LEHRERDATEN_ANSEHEN);
 	}
 
 	/**
@@ -1711,7 +1711,7 @@ public class APILehrer {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerEinwilligungen(conn, idLehrer)
 				.patchAsResponse(new Long[] { idLehrer, idEinwilligungsart }, is),
 				request, ServerMode.DEV,
-				BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN);
+				BenutzerKompetenz.LEHRERDATEN_AENDERN);
 	}
 
 	/**
@@ -1736,7 +1736,7 @@ public class APILehrer {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerLernplattformen(conn, idLehrer).getListAsResponse(),
 				request, ServerMode.DEV,
-				BenutzerKompetenz.LEHRER_PERSONALDATEN_ANSEHEN);
+				BenutzerKompetenz.LEHRERDATEN_ANSEHEN);
 	}
 
 	/**
@@ -1772,7 +1772,7 @@ public class APILehrer {
 				conn -> new DataLehrerLernplattformen(conn, idLehrer).patchAsResponse(new Long[] { idLehrer, idLernplattform },
 						is),
 				request, ServerMode.DEV,
-				BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN);
+				BenutzerKompetenz.LEHRERDATEN_AENDERN);
 	}
 
 }

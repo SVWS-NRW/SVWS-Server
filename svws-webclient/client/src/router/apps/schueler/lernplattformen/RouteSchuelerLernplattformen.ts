@@ -41,6 +41,7 @@ export class RouteSchuelerLernplattformen extends RouteNode<RouteDataSchuelerLer
 			schuelerLernplattformen: () => this.data.schuelerLernplattformen,
 			mapLernplattformen: this.data.mapLernplattformen,
 			patch: this.data.patch,
+			benutzerKompetenzen: api.benutzerKompetenzen,
 			apiStatus: api.status,
 		};
 	}

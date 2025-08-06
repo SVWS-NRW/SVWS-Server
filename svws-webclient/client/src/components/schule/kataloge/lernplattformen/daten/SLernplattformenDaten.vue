@@ -3,7 +3,7 @@
 		<svws-ui-content-card title="Lernplattform" class="w-full">
 			<svws-ui-input-wrapper>
 				<svws-ui-text-input class="contentFocusField w-5/5" placeholder="Bezeichnung" :model-value="lernplattformListeManager().auswahl().bezeichnung"
-					@change="bezeichnung => patch({ bezeichnung: bezeichnung ?? undefined })" />
+					@change="bezeichnung => patch({ bezeichnung: bezeichnung ?? undefined })" :readonly />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 	</div>
@@ -12,7 +12,11 @@
 <script setup lang="ts">
 
 	import type { LernplattformenDatenProps } from "~/components/schule/kataloge/lernplattformen/daten/SLernplattformenDatenProps";
+	import { computed } from "vue";
+	import { BenutzerKompetenz } from "@core";
 
-	defineProps<LernplattformenDatenProps>();
+	const props = defineProps<LernplattformenDatenProps>();
+	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const readonly = computed(() => !hatKompetenzUpdate.value);
 
 </script>

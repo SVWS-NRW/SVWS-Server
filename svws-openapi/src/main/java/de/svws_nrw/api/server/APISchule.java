@@ -2736,7 +2736,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
 	public Response getLernplattformen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogLernplattformen(conn).getAllAsResponse(),
-				request, ServerMode.DEV, BenutzerKompetenz.KEINE);
+				request, ServerMode.DEV, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
 	}
 
 	/**
@@ -2760,7 +2760,7 @@ public class APISchule {
 	public Response getLernplattform(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogLernplattformen(conn).getByIdAsResponse(id),
 				request, ServerMode.DEV,
-				BenutzerKompetenz.KEINE);
+				BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
 	}
 
 	/**
@@ -2847,7 +2847,7 @@ public class APISchule {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogLernplattformen(conn).deleteAsResponse(id),
 				request, ServerMode.DEV,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
 
 
@@ -2878,7 +2878,7 @@ public class APISchule {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogLernplattformen(conn).deleteMultipleAsResponse(JSONMapper.toListOfLong(is)),
 				request, ServerMode.DEV,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
 
 	/**
