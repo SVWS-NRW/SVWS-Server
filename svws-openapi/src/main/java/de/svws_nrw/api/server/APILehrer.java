@@ -1676,7 +1676,7 @@ public class APILehrer {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerEinwilligungen(conn, idLehrer).getListAsResponse(),
 				request, ServerMode.DEV,
-				BenutzerKompetenz.KEINE);
+				BenutzerKompetenz.LEHRERDATEN_ANSEHEN);
 	}
 
 	/**
@@ -1736,7 +1736,7 @@ public class APILehrer {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerLernplattformen(conn, idLehrer).getListAsResponse(),
 				request, ServerMode.DEV,
-				BenutzerKompetenz.KEINE);
+				BenutzerKompetenz.LEHRERDATEN_ANSEHEN);
 	}
 
 	/**
