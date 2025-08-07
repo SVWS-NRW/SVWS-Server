@@ -1,6 +1,6 @@
 // useSelectInteractions.ts
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch, type ComputedRef, type Ref } from 'vue';
-import { useElementBounding, useWindowSize } from "@vueuse/core";
+import { useWindowSize } from "@vueuse/core";
 import type { UiSelectProps } from "./UiSelectProps";
 import { SearchSelectFilter } from "../filter/SearchSelectFilter";
 import type { Validator } from "../../../../../../core/src/asd/validate/Validator";
@@ -33,7 +33,10 @@ export function useUiSelectUtils<T, V extends Validator>(
 
 
 	// Größen und Positionen zur Berechnung des Dropdowns
-	const { top, left, width, height } = useElementBounding(uiSelectCombobox);
+	const top = ref(0);
+	const left = ref(0);
+	const width = ref(0);
+	const height = ref(0);
 	const { height: windowHeight } = useWindowSize();
 
 	// Index des visuell hervorghobenen Dropdownlistenelements bei Tastennavigation
@@ -259,13 +262,13 @@ export function useUiSelectUtils<T, V extends Validator>(
 	 */
 	const dropdownPositionStyles = computed(() => ({
 		top: topPosition.value,
-		left: leftPositionComputed.value,
+		left: left.value + 'px',
 		width: width.value + 'px',
 		maxHeight: maxHeight.value + 'px',
 	}));
 
 	/**
-	 * Berechnet die top Position des Dropdowns abhängig von Position und Größe der Combobox
+	 * Berechnet die top Position des Dropdowns abhängig von Position und Größe der Combobox sowie des Flipflags.
 	 */
 	const topPosition = computed (() => {
 		if (flip.value) {
@@ -276,13 +279,6 @@ export function useUiSelectUtils<T, V extends Validator>(
 		} else
 			return `${top.value + height.value + 3}px`;
 
-	});
-
-	/**
-	 * Berechnet die left Position des Dropdowns abhängig von der Position der Combobox
-	 */
-	const leftPositionComputed = computed(() => {
-		return left.value + 'px';
 	});
 
 	/**
@@ -322,9 +318,23 @@ export function useUiSelectUtils<T, V extends Validator>(
 	}
 
 	/**
+	 * Aktualisiert die aktuelle Position und Größe des Dropdowns
+	 */
+	function updatePosition() {
+		const rect = uiSelectCombobox.value?.getBoundingClientRect();
+		if (!rect)
+			return;
+		top.value = rect.top;
+		left.value = rect.left;
+		width.value = rect.width;
+		height.value = rect.height;
+	}
+
+	/**
 	 * Öffnet das Dropdown
 	 */
 	function openDropdown() {
+		updatePosition();
 		handleComboboxFocus();
 		if (uiSelectDropdown.value === null || showDropdown.value)
 			return;
