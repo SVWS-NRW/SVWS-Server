@@ -4,7 +4,7 @@
 			<svws-ui-content-card title="Allgemein">
 				<svws-ui-input-wrapper :grid="2">
 					<div>
-						<svws-ui-text-input	:valid="validatorTelefonArtBezeichnung" v-model="telefonArt.bezeichnung" type="text" placeholder="Bezeichnung" />
+						<svws-ui-text-input	:valid="validatorTelefonArtBezeichnung" v-model="telefonArt.bezeichnung" type="text" placeholder="Bezeichnung" :readonly />
 						<div v-if="!validatorTelefonArtBezeichnung(telefonArt.bezeichnung) && (telefonArt.bezeichnung.length > 0)" class="flex my-auto">
 							<span class="icon i-ri-alert-line mx-0.5 mr-1 inline-flex" />
 							<p> Diese Bezeichnung wird bereits verwendet </p>
@@ -12,8 +12,9 @@
 					</div>
 				</svws-ui-input-wrapper>
 				<div class="mt-7 flex flex-row gap-4 justify-end">
-					<svws-ui-button type="secondary" @click="cancel" :disabled="isLoading">Abbrechen</svws-ui-button><svws-ui-button @click="addTelefonArt"
-						:disabled="((!validatorTelefonArtBezeichnung(telefonArt.bezeichnung)) || isLoading || (telefonArt.bezeichnung === ''))">
+					<svws-ui-button type="secondary" @click="cancel" :disabled="isLoading">Abbrechen</svws-ui-button>
+					<svws-ui-button @click="addTelefonArt"
+						:disabled="((!validatorTelefonArtBezeichnung(telefonArt.bezeichnung)) || isLoading || (telefonArt.bezeichnung === '') || (!hatKompetenzUpdate))">
 						Speichern <svws-ui-spinner :spinning="isLoading" />
 					</svws-ui-button>
 				</div>
@@ -24,11 +25,15 @@
 </template>
 
 <script setup lang="ts">
-	import { ref } from "vue";
-	import { TelefonArt } from "@core";
+	import { computed, ref } from "vue";
+	import { BenutzerKompetenz, TelefonArt } from "@core";
 	import type { STelefonArtenNeuProps } from "~/components/schule/kataloge/telefonarten/STelefonArtenNeuProps";
 
 	const props = defineProps<STelefonArtenNeuProps>();
+
+	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const readonly = computed(() => !hatKompetenzUpdate.value);
+
 	const telefonArt = ref(new TelefonArt());
 	const isLoading = ref<boolean>(false);
 

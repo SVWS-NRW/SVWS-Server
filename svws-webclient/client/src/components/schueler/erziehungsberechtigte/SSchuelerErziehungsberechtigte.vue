@@ -32,7 +32,7 @@
 				<template #cell(actions)="{ rowData }">
 					<!-- Button zum Hinzufügen eines Erziehers an der zweiten Position, wird nur angezeigt wenn noch keine zweite Position in einem Eintrag existiert -->
 					<svws-ui-button v-if="isSuffix1(rowData.id) && !hasSuffix2(rowData.id)"
-						@click.stop="openModalForPos2(rowData)">
+						@click.stop="openModalForPos2(rowData)" :disabled="!hatKompetenzUpdate">
 						+
 					</svws-ui-button>
 				</template>
@@ -47,37 +47,37 @@
 				`Daten zu ${erzieher.vorname ? erzieher.vorname + ' ' : '' }${erzieher.nachname}` : 'Daten zur Person'" class="col-span-full mt-16 lg:mt-20">
 				<template #actions>
 					<svws-ui-checkbox class="mr-2" :model-value="erzieher.erhaeltAnschreiben === true" @update:model-value="erhaeltAnschreiben => (erzieher !== undefined) &&
-						patchErzieher({ erhaeltAnschreiben }, erzieher.id)" :readonly="!hatKompetenzUpdate">
+						patchErzieher({ erhaeltAnschreiben }, erzieher.id)" :readonly >
 						Erhält Anschreiben
 					</svws-ui-checkbox>
 				</template>
 				<!-- Felder zum Patchen der Erzieherdaten -->
 				<svws-ui-input-wrapper :grid="4">
 					<svws-ui-select title="Erzieherart" v-model="idErzieherArt" :items="mapErzieherarten" :item-sort="erzieherArtSort"
-						:item-text="i => i.bezeichnung ?? ''" :readonly="!hatKompetenzUpdate" />
+						:item-text="i => i.bezeichnung ?? ''" :readonly />
 					<svws-ui-text-input placeholder="Anrede" :model-value="erzieher?.anrede" @change="anrede=>(erzieher !== undefined) &&
-						patchErzieher({ anrede }, erzieher.id)" type="text" :readonly="!hatKompetenzUpdate" />
+						patchErzieher({ anrede }, erzieher.id)" type="text" :readonly />
 					<svws-ui-text-input placeholder="Titel" :model-value="erzieher?.titel" @change="titel=>(erzieher !== undefined) &&
-						patchErzieher({ titel }, erzieher.id)" type="text" :readonly="!hatKompetenzUpdate" />
+						patchErzieher({ titel }, erzieher.id)" type="text" :readonly />
 					<svws-ui-spacing />
 					<svws-ui-text-input placeholder="Name" :model-value="erzieher?.nachname" @change="nachname=>(erzieher !== undefined) &&
-						patchErzieher({ nachname }, erzieher.id)" type="text" :readonly="!hatKompetenzUpdate" />
+						patchErzieher({ nachname }, erzieher.id)" type="text" :readonly />
 					<svws-ui-text-input placeholder="Vorname" :model-value="erzieher?.vorname" @change="vorname=>(erzieher !== undefined) &&
-						patchErzieher({ vorname }, erzieher.id)" type="text" :readonly="!hatKompetenzUpdate" />
+						patchErzieher({ vorname }, erzieher.id)" type="text" :readonly />
 					<svws-ui-text-input placeholder="E-Mail Adresse" :model-value="erzieher?.eMail" @change="eMail=>(erzieher !== undefined) &&
-						patchErzieher({ eMail }, erzieher.id)" type="email" verify-email :readonly="!hatKompetenzUpdate" />
+						patchErzieher({ eMail }, erzieher.id)" type="email" verify-email :readonly />
 					<svws-ui-spacing />
 					<svws-ui-select title="Staatsangehörigkeit" v-model="patchStaatsangehoerigkeit" :items="Nationalitaeten.values()" :item-text="i => i.historie().getLast().staatsangehoerigkeit"
-						:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter" autocomplete :readonly="!hatKompetenzUpdate" />
-					<svws-ui-text-input placeholder="Straße und Hausnummer" :model-value="strasse(erzieher)" @change="patchStrasse" type="text" :readonly="!hatKompetenzUpdate" />
+						:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter" autocomplete :readonly />
+					<svws-ui-text-input placeholder="Straße und Hausnummer" :model-value="strasse(erzieher)" @change="patchStrasse" type="text" :readonly />
 					<svws-ui-select title="Wohnort" v-model="wohnort" :items="mapOrte" :item-filter="orte_filter" :item-sort="orte_sort"
-						:item-text="i => `${i.plz} ${i.ortsname}`" autocomplete :readonly="!hatKompetenzUpdate" />
+						:item-text="i => `${i.plz} ${i.ortsname}`" autocomplete :readonly />
 					<svws-ui-select title="Ortsteil" v-model="ortsteil" :items="ortsteile" :item-text="i => i.ortsteil ?? ''" :item-sort="ortsteilSort"
-						:item-filter="ortsteilFilter" removable :readonly="!hatKompetenzUpdate" />
+						:item-filter="ortsteilFilter" removable :readonly />
 					<svws-ui-spacing />
 					<svws-ui-textarea-input placeholder="Bemerkungen" :model-value="erzieher?.bemerkungen" span="full" autoresize
 						@change="bemerkungen => (erzieher !== undefined) && patchErzieher({ bemerkungen: bemerkungen === null ? '' : bemerkungen }, erzieher.id)"
-						:readonly="!hatKompetenzUpdate" />
+						:readonly />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<!-- Modal zum Hinzufügen eines zweiten Erziehungsberechtigten (Position 2) über den "+"-Button -->
@@ -85,14 +85,14 @@
 				<template #modalTitle>Einen zweiten Erziehungsberechtigten hinzufügen</template>
 				<template #modalContent>
 					<svws-ui-input-wrapper :grid="2" class="text-left">
-						<svws-ui-text-input placeholder="Anrede" v-model="zweiterErz.anrede" type="text" :readonly="!hatKompetenzUpdate" />
-						<svws-ui-text-input placeholder="Titel" v-model="zweiterErz.titel" type="text" :readonly="!hatKompetenzUpdate" />
-						<svws-ui-text-input placeholder="Vorname" v-model="zweiterErz.vorname" type="text" required :readonly="!hatKompetenzUpdate" />
-						<svws-ui-text-input placeholder="Nachname" v-model="zweiterErz.nachname" type="text" required :readonly="!hatKompetenzUpdate" />
-						<svws-ui-text-input placeholder="E-Mail Adresse" v-model="zweiterErz.eMail" type="email" verify-email :readonly="!hatKompetenzUpdate" />
+						<svws-ui-text-input placeholder="Anrede" v-model="zweiterErz.anrede" type="text" :readonly />
+						<svws-ui-text-input placeholder="Titel" v-model="zweiterErz.titel" type="text" :readonly />
+						<svws-ui-text-input placeholder="Vorname" v-model="zweiterErz.vorname" type="text" required :readonly />
+						<svws-ui-text-input placeholder="Nachname" v-model="zweiterErz.nachname" type="text" required :readonly />
+						<svws-ui-text-input placeholder="E-Mail Adresse" v-model="zweiterErz.eMail" type="email" verify-email :readonly />
 						<svws-ui-select title="Staatsangehörigkeit" v-model="zweiteErzStaatsangehoerigkeit" :items="Nationalitaeten.values()"
 							:item-text="i => i.historie().getLast().staatsangehoerigkeit" :item-sort="staatsangehoerigkeitKatalogEintragSort"
-							:item-filter="staatsangehoerigkeitKatalogEintragFilter" autocomplete :readonly="!hatKompetenzUpdate" />
+							:item-filter="staatsangehoerigkeitKatalogEintragFilter" autocomplete :readonly />
 					</svws-ui-input-wrapper>
 					<div class="mt-7 flex flex-row gap-4 justify-end">
 						<svws-ui-button type="secondary" @click="showPatchPosModal = false">Abbrechen</svws-ui-button>
@@ -130,6 +130,7 @@
 	const props = defineProps<SchuelerErziehungsberechtigteProps>();
 
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
+	const readonly = computed(() => !hatKompetenzUpdate.value);
 
 	const erzieher = ref<ErzieherStammdaten | undefined>();
 

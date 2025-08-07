@@ -2736,7 +2736,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
 	public Response getLernplattformen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogLernplattformen(conn).getAllAsResponse(),
-				request, ServerMode.DEV, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+				request, ServerMode.DEV, BenutzerKompetenz.KEINE);
 	}
 
 	/**
@@ -2760,7 +2760,7 @@ public class APISchule {
 	public Response getLernplattform(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogLernplattformen(conn).getByIdAsResponse(id),
 				request, ServerMode.DEV,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+				BenutzerKompetenz.KEINE);
 	}
 
 	/**
@@ -3011,7 +3011,7 @@ public class APISchule {
 			@RequestBody(description = "Die IDs der zu löschenden Telefonarten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogTelefonArten(conn).deleteMultipleAsResponse(JSONMapper.toListOfLong(is)),
-				request, ServerMode.DEV, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+				request, ServerMode.DEV, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
 
 	/**
@@ -3143,6 +3143,6 @@ public class APISchule {
 			@RequestBody(description = "Die IDs der zu löschenden Erzieherarten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataErzieherarten(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
-				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
 }
