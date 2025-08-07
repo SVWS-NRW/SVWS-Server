@@ -1,13 +1,13 @@
-import { ArrayList, type JahrgangsDaten, type List, type SimpleOperationResponse} from "@core";
-import { JahrgaengeListeManager } from "@ui";
-
+import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
+import type { RouteParamsRawGeneric } from "vue-router";
+import type { JahrgangsDaten, List, SimpleOperationResponse } from "@core";
+import { ArrayList, BenutzerKompetenz } from "@core";
+import { JahrgaengeListeManager, ViewType } from "@ui";
+import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
 import { routeJahrgaengeDaten } from "./RouteJahrgaengeDaten";
-import { ViewType } from "@ui";
-import { api } from "~/router/Api";
 import { routeJahrgaengeNeu } from "~/router/apps/schule/jahrgaenge/RouteJahrgaengeNeu";
 import { routeJahrgaengeGruppenprozesse } from "~/router/apps/schule/jahrgaenge/RouteJahrgaengeGruppenprozesse";
-import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
-import type {RouteParamsRawGeneric} from "vue-router";
+import { api } from "~/router/Api";
 
 
 const defaultState = {
@@ -45,9 +45,7 @@ export class RouteDataJahrgaenge extends RouteDataAuswahl<JahrgaengeListeManager
 	}
 
 	protected async doDelete(ids: List<number>): Promise<List<SimpleOperationResponse>> {
-		//  TODO: anpassen auf SimpleOperationResponse
-		// return await api.server.deleteJahrgaenge(ids, api.schema);
-		return new ArrayList();
+		return await api.server.deleteJahrgaenge(ids, api.schema);
 	}
 
 	add = async (data: Partial<JahrgangsDaten>): Promise<void> => {
@@ -59,6 +57,23 @@ export class RouteDataJahrgaenge extends RouteDataAuswahl<JahrgaengeListeManager
 
 	protected deleteMessage(id: number, jahrgang: JahrgangsDaten | null) : string {
 		return `Jahrgang ${jahrgang?.kuerzel ?? '???'} (ID: ${id}) wurde erfolgreich gelöscht.`;
+	}
+
+	deleteCheck = (): [boolean, List<string>] => {
+		const errorLog = new ArrayList<string>();
+		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN))
+			errorLog.add('Es liegt keine Berechtigung zum Löschen von Jahrgängen vor.');
+
+		if (!this.manager.liste.auswahlExists())
+			errorLog.add('Es wurde kein Jahrgang zum Löschen ausgewählt.');
+
+		for (const id of this.manager.getIdsReferencedJahrgaenge()) {
+			const jahrgang = this.manager.liste.get(id);
+			if (jahrgang)
+				errorLog.add(`Der Jahrgang ${jahrgang.bezeichnung} (${jahrgang.kuerzelStatistik}) ist an anderer Stelle referenziert und kann daher nicht gelöscht werden.`);
+		}
+
+		return [ errorLog.isEmpty(), errorLog ];
 	}
 
 }

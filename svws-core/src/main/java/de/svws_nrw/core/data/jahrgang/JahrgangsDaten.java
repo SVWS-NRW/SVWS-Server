@@ -64,6 +64,10 @@ public class JahrgangsDaten {
 			example = "null")
 	public Long gueltigBis;
 
+	/** Gibt an, ob der Jahrgang in anderen Datenbanktabellen referenziert ist oder nicht. */
+	@Schema(description = "Gibt an, ob der Jahrgang in anderen Datenbanktabellen referenziert ist oder nicht.", example = "true")
+	public Boolean referenziertInAnderenTabellen = null;
+
 	// TODO Weitere Daten
 
 	/**

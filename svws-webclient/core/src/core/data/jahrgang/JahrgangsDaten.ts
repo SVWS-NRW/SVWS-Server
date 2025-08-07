@@ -63,6 +63,11 @@ export class JahrgangsDaten extends JavaObject {
 	 */
 	public gueltigBis : number | null = null;
 
+	/**
+	 * Gibt an, ob der Jahrgang in anderen Datenbanktabellen referenziert ist oder nicht.
+	 */
+	public referenziertInAnderenTabellen : boolean | null = null;
+
 
 	/**
 	 * Leerer Standardkonstruktor.
@@ -104,6 +109,7 @@ export class JahrgangsDaten extends JavaObject {
 		result.istSichtbar = obj.istSichtbar;
 		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
 		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
+		result.referenziertInAnderenTabellen = (obj.referenziertInAnderenTabellen === undefined) ? null : obj.referenziertInAnderenTabellen === null ? null : obj.referenziertInAnderenTabellen;
 		return result;
 	}
 
@@ -121,6 +127,7 @@ export class JahrgangsDaten extends JavaObject {
 		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
 		result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
+		result += '"referenziertInAnderenTabellen" : ' + ((obj.referenziertInAnderenTabellen === null) ? 'null' : obj.referenziertInAnderenTabellen.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -163,6 +170,9 @@ export class JahrgangsDaten extends JavaObject {
 		}
 		if (obj.gueltigBis !== undefined) {
 			result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
+		}
+		if (obj.referenziertInAnderenTabellen !== undefined) {
+			result += '"referenziertInAnderenTabellen" : ' + ((obj.referenziertInAnderenTabellen === null) ? 'null' : obj.referenziertInAnderenTabellen.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

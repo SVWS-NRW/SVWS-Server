@@ -10,7 +10,7 @@
 					@change="patchKurzbezeichnung" :valid="kurzbezeichnungIsValid" :readonly />
 				<svws-ui-select title="Schulgliederung" v-model="schulgliederung" :items="Schulgliederung.getBySchuljahrAndSchulform(schuljahr, schulform)"
 					:item-text="textSchulgliederung" statistics :readonly />
-				<svws-ui-select title="Jahrgang" v-model="statistikJahrgang" :items="Jahrgaenge.getListBySchuljahrAndSchulform(schuljahr, schulform)"
+				<svws-ui-select title="Jahrgang" v-model="statistikJahrgang" :items="manager().getAvailableJahrgaenge(statistikJahrgang)"
 					:item-text="textStatistikJahrgang" removable statistics :readonly required />
 				<svws-ui-select title="Folgejahrgang" v-model="folgejahrgang" :items="folgejahrgaenge" :item-text="textFolgejahrgang" />
 				<svws-ui-input-number placeholder="Anzahl der Restabschnitte" :model-value="manager().daten().anzahlRestabschnitte"

@@ -17,6 +17,7 @@ ArrayList {
       "kuerzelSchulgliederung": "***",
       "kuerzelStatistik": "05",
       "kurzbezeichnung": null,
+      "referenziertInAnderenTabellen": null,
       "sortierung": 10,
     },
     JahrgangsDaten {
@@ -31,6 +32,7 @@ ArrayList {
       "kuerzelSchulgliederung": "***",
       "kuerzelStatistik": "06",
       "kurzbezeichnung": null,
+      "referenziertInAnderenTabellen": null,
       "sortierung": 20,
     },
     JahrgangsDaten {
@@ -45,6 +47,7 @@ ArrayList {
       "kuerzelSchulgliederung": "***",
       "kuerzelStatistik": "07",
       "kurzbezeichnung": null,
+      "referenziertInAnderenTabellen": null,
       "sortierung": 30,
     },
     JahrgangsDaten {
@@ -59,6 +62,7 @@ ArrayList {
       "kuerzelSchulgliederung": "***",
       "kuerzelStatistik": "08",
       "kurzbezeichnung": null,
+      "referenziertInAnderenTabellen": null,
       "sortierung": 40,
     },
     JahrgangsDaten {
@@ -73,6 +77,7 @@ ArrayList {
       "kuerzelSchulgliederung": "***",
       "kuerzelStatistik": "09",
       "kurzbezeichnung": null,
+      "referenziertInAnderenTabellen": null,
       "sortierung": 50,
     },
     JahrgangsDaten {
@@ -87,6 +92,7 @@ ArrayList {
       "kuerzelSchulgliederung": "***",
       "kuerzelStatistik": "EF",
       "kurzbezeichnung": null,
+      "referenziertInAnderenTabellen": null,
       "sortierung": 60,
     },
     JahrgangsDaten {
@@ -101,6 +107,7 @@ ArrayList {
       "kuerzelSchulgliederung": "***",
       "kuerzelStatistik": "Q1",
       "kurzbezeichnung": null,
+      "referenziertInAnderenTabellen": null,
       "sortierung": 70,
     },
     JahrgangsDaten {
@@ -115,6 +122,7 @@ ArrayList {
       "kuerzelSchulgliederung": "***",
       "kuerzelStatistik": "Q2",
       "kurzbezeichnung": null,
+      "referenziertInAnderenTabellen": null,
       "sortierung": 80,
     },
   ],
@@ -139,6 +147,7 @@ JahrgangsDaten {
   "kuerzelSchulgliederung": "***",
   "kuerzelStatistik": "EF",
   "kurzbezeichnung": "EF",
+  "referenziertInAnderenTabellen": null,
   "sortierung": 60,
 }
 `;

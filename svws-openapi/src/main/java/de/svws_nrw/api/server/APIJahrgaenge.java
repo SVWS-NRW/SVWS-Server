@@ -1,5 +1,6 @@
 package de.svws_nrw.api.server;
 
+import de.svws_nrw.core.data.SimpleOperationResponse;
 import java.io.InputStream;
 
 import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
@@ -227,7 +228,7 @@ public class APIJahrgaenge {
 	public Response deleteJahrgang(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataJahrgangsdaten(conn).deleteAsResponse(id),
-				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
 
 
@@ -245,7 +246,7 @@ public class APIJahrgaenge {
 	@Operation(summary = "Entfernt mehrere Jahrgänge.",
 			description = "Entfernt mehrere Jahrgänge. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Jahrgängen hat.")
 	@ApiResponse(responseCode = "200", description = "Die Jahrgänge wurde erfolgreich entfernt.",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = JahrgangsDaten.class))))
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Jahrgang zu bearbeiten.")
 	@ApiResponse(responseCode = "404", description = "Ein Jahrgang oder mehrere Jahrgänge nicht vorhanden")
 	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
@@ -254,8 +255,8 @@ public class APIJahrgaenge {
 			@RequestBody(description = "Die IDs der zu löschenden Jahrgänge", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataJahrgangsdaten(conn).deleteMultipleAsResponse(JSONMapper.toListOfLong(is)),
-				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
+				conn -> new DataJahrgangsdaten(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
+				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
-
 }

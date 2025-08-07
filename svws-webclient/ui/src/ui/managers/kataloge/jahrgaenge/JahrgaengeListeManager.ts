@@ -1,6 +1,6 @@
 import { JavaObject } from '../../../../../../core/src/java/lang/JavaObject';
-import { Schulform } from '../../../../../../core/src/asd/types/schule/Schulform';
-import { JahrgangsDaten } from '../../../../../../core/src/core/data/jahrgang/JahrgangsDaten';
+import type { Schulform } from '../../../../../../core/src/asd/types/schule/Schulform';
+import type { JahrgangsDaten } from '../../../../../../core/src/core/data/jahrgang/JahrgangsDaten';
 import { JavaString } from '../../../../../../core/src/java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../../../../core/src/core/exceptions/DeveloperNotificationException';
 import type { Comparator } from '../../../../../../core/src/java/util/Comparator';
@@ -10,7 +10,12 @@ import { JavaLong } from '../../../../../../core/src/java/lang/JavaLong';
 import type { List } from '../../../../../../core/src/java/util/List';
 import { Class } from '../../../../../../core/src/java/lang/Class';
 import { Arrays } from '../../../../../../core/src/java/util/Arrays';
-import { Schuljahresabschnitt } from '../../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
+import type { Schuljahresabschnitt } from '../../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
+import { HashSet } from '../../../../../../core/src/java/util/HashSet';
+import type { JavaSet } from '../../../../../../core/src/java/util/JavaSet';
+import { Jahrgaenge } from '../../../../../../core/src/asd/types/jahrgang/Jahrgaenge';
+
+
 
 export class JahrgaengeListeManager extends AuswahlManager<number, JahrgangsDaten, JahrgangsDaten> {
 
@@ -19,6 +24,10 @@ export class JahrgaengeListeManager extends AuswahlManager<number, JahrgangsDate
 	 */
 	private static readonly _jahrgangToId : JavaFunction<JahrgangsDaten, number> = { apply : (j: JahrgangsDaten) => j.id };
 
+	/**
+	 * Set der IDs von Jahrgängen, die in anderen Datenbanktabellen referenziert werden.
+	 */
+	private readonly idsReferencedJahrgaenge : HashSet<number> = new HashSet<number>();
 	/**
 	 * Ein Default-Comparator für den Vergleich von Jahrgängen in Jahrgangslisten.
 	 */
@@ -104,6 +113,37 @@ export class JahrgaengeListeManager extends AuswahlManager<number, JahrgangsDate
 			return asc ? cmp : -cmp;
 		}
 		return JahrgaengeListeManager.comparator.compare(a, b);
+	}
+	/**
+	 *Gibt das Set mit den Ids der Jahrgänge zurück, die in der Auswahl sind und in anderen Datenbanktabellen referenziert werden
+	 *
+	 * @return Das Set mit IDs von Jahrgängen, die in anderen Datenbanktabellen referenziert werden
+	 */
+	public getIdsReferencedJahrgaenge() : JavaSet<number> {
+		return this.idsReferencedJahrgaenge;
+	}
+
+	protected onMehrfachauswahlChanged() : void {
+		this.idsReferencedJahrgaenge.clear();
+		for (const l of this.liste.auswahl())
+			if ((l.referenziertInAnderenTabellen !== null) && l.referenziertInAnderenTabellen)
+				this.idsReferencedJahrgaenge.add(l.id);
+	}
+
+	/**
+	 * Gibt alle bislang nicht in der Datenbank gespeicherten Einträge des Coretypes Jahrgaenge zurück.
+	 *
+	 * @param currentJahrgang Der Jahrgang des aktuellen Eintrags oder null
+	 *
+	 * @return Die bislang nicht in der Datenbank gespeicherten Einträge des Coretypes Jahrgaenge zurück.
+	 */
+	public getAvailableJahrgaenge(currentJahrgang : Jahrgaenge | null) : Jahrgaenge[] {
+		const alleJahrgaenge = [...Jahrgaenge.getListBySchuljahrAndSchulform(this.getSchuljahr(), this.schulform())];
+		const verwendeteJahrgaenge = [... this.liste.list()].map((j : JahrgangsDaten) => j.kuerzelStatistik);
+		const result = alleJahrgaenge.filter((j: Jahrgaenge) => !verwendeteJahrgaenge.includes(j.daten(this.getSchuljahr())?.kuerzel ?? ''));
+		if (currentJahrgang !== null)
+			result.push(currentJahrgang)
+		return result
 	}
 
 	protected checkFilter(eintrag : JahrgangsDaten) : boolean {

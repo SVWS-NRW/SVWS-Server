@@ -8,7 +8,7 @@
 				<svws-ui-text-input placeholder="Kurzbezeichnung" :max-len="2" v-model="data.kurzbezeichnung" :disabled :valid="fieldIsValid('kurzbezeichnung')" />
 				<svws-ui-select title="Schulgliederung" :items="Schulgliederung.getBySchuljahrAndSchulform(schuljahr, schulform)" :item-text="textSchulgliederung"
 					statistics :disabled v-model="schulgliederung" :valid="fieldIsValid('kuerzelSchulgliederung')" />
-				<svws-ui-select title="Jahrgang" :items="jahrgaenge" :item-text="textStatistikJahrgang"
+				<svws-ui-select title="Jahrgang" :items="manager().getAvailableJahrgaenge(null)" :item-text="textStatistikJahrgang"
 					statistics :disabled v-model="statistikJahrgang" :valid="fieldIsValid('kuerzelStatistik')" required />
 				<svws-ui-select title="Folgejahrgang" :items="folgejahrgaenge" :item-text="textFolgejahrgang"
 					:disabled="!hatKompetenzAdd || !data.kuerzelStatistik" v-model="folgejahrgang" :valid="fieldIsValid('idFolgejahrgang')" />
@@ -36,12 +36,6 @@
 
 	const props = defineProps<SchuleJahrgangNeuProps>();
 	const data = ref<JahrgangsDaten>(Object.assign(new JahrgangsDaten(), { istSichtbar: true, sortierung: 1, anzahlRestabschnitte: 0 }))
-	const jahrgaenge = computed<Jahrgaenge[]>(() => {
-		const alleJahrgaenge = [...Jahrgaenge.getListBySchuljahrAndSchulform(props.schuljahr, props.schulform)];
-		const verwendeteJahrgaenge = [...props.manager().liste.list()].map((j : JahrgangsDaten) => j.kuerzelStatistik);
-		// nur bislang nicht verwendete Jahrgänge anzeigen
-		return alleJahrgaenge.filter((j: Jahrgaenge) => !verwendeteJahrgaenge.includes(j.daten(props.schuljahr)?.kuerzel ?? ''));
-	})
 	const folgejahrgaenge = computed<JahrgangsDaten[]>(() => [...props.manager().liste.list()].filter((j : JahrgangsDaten) => j.kuerzelStatistik !== data.value.kuerzelStatistik));
 	const isLoading = ref<boolean>(false);
 	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
@@ -206,7 +200,7 @@
 
 		props.checkpoint.active = false;
 		isLoading.value = true;
-		const { id, ...partialData } = data.value;
+		const { id, referenziertInAnderenTabellen, ...partialData } = data.value;
 		await props.addJahrgang(partialData);
 		isLoading.value = false;
 	}

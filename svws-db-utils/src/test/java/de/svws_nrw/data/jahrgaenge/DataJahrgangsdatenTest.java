@@ -1,5 +1,6 @@
 package de.svws_nrw.data.jahrgaenge;
 
+import jakarta.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,6 +31,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -65,6 +69,10 @@ class DataJahrgangsdatenTest {
 	@DisplayName("getAll | 2 DTOJahrgang")
 	void getAllTest() {
 		when(this.conn.queryAll(DTOJahrgang.class)).thenReturn(List.of(new DTOJahrgang(1L), new DTOJahrgang(3L)));
+		final TypedQuery<Long> queryMock = mock(TypedQuery.class);
+		when(queryMock.setParameter(eq("ids"), any())).thenReturn(queryMock);
+		when(queryMock.getResultList()).thenReturn(List.of(1L));
+		when(conn.query(anyString(), eq(Long.class))).thenReturn(queryMock);
 
 		final List<JahrgangsDaten> result = this.data.getAll();
 
@@ -76,6 +84,10 @@ class DataJahrgangsdatenTest {
 	@DisplayName("getAll | Empty List")
 	void getListAllTest() {
 		when(this.conn.queryAll(DTOJahrgang.class)).thenReturn(Collections.emptyList());
+		final TypedQuery<Long> queryMock = mock(TypedQuery.class);
+		when(queryMock.setParameter(eq("ids"), any())).thenReturn(queryMock);
+		when(queryMock.getResultList()).thenReturn(List.of(1L));
+		when(conn.query(anyString(), eq(Long.class))).thenReturn(queryMock);
 
 		final List<JahrgangsDaten> result = this.data.getAll();
 

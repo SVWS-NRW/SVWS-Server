@@ -31,6 +31,8 @@ export class RouteJahrgaengeGruppenprozesse extends RouteNode<any, RouteJahrgaen
 			schulgliederungen: api.schulgliederungen,
 			manager: () => routeJahrgaenge.data.manager,
 			delete: routeJahrgaenge.data.delete,
+			deleteCheck: routeJahrgaenge.data.deleteCheck,
+			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 

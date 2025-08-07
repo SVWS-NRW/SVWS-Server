@@ -3,6 +3,7 @@ package de.svws_nrw.data.jahrgaenge;
 import de.svws_nrw.asd.data.jahrgang.JahrgaengeKatalogEintrag;
 import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
+import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
@@ -14,6 +15,8 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.Response.Status;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -62,7 +65,13 @@ public final class DataJahrgangsdaten extends DataManagerRevised<Long, DTOJahrga
 	@Override
 	public List<JahrgangsDaten> getAll() {
 		final List<DTOJahrgang> jahrgaenge = conn.queryAll(DTOJahrgang.class);
-		return jahrgaenge.stream().map(this::map).toList();
+		final Set<Long> idsOfReferencedJahrgaenge = getIdsOfReferencedJahrgaenge(jahrgaenge.stream().map(j -> j.ID).collect(Collectors.toSet()));
+
+		return jahrgaenge.stream().map(j -> {
+			final JahrgangsDaten jahrgang = map(j);
+			jahrgang.referenziertInAnderenTabellen = idsOfReferencedJahrgaenge.contains(j.ID);
+			return jahrgang;
+		}).sorted(Comparator.comparing(j -> j.id)).toList();
 	}
 
 	@Override
@@ -75,6 +84,11 @@ public final class DataJahrgangsdaten extends DataManagerRevised<Long, DTOJahrga
 			throw new ApiOperationException(Status.NOT_FOUND, "Kein Jahrgang zur ID %d gefunden.".formatted(id));
 
 		return map(jahrgang);
+	}
+
+	@Override
+	protected long getLongId(final DTOJahrgang jahrgang) {
+		return jahrgang.ID;
 	}
 
 	@Override
@@ -217,6 +231,31 @@ public final class DataJahrgangsdaten extends DataManagerRevised<Long, DTOJahrga
 				.collect(Collectors.toMap(j -> j.ID, j -> j));
 		return klassen.stream().filter(kl -> (kl.Jahrgang_ID != null)).filter(kl -> jahrgaengeById.containsKey(kl.Jahrgang_ID))
 				.collect(Collectors.toMap(kl -> kl.ID, kl -> jahrgaengeById.get(kl.Jahrgang_ID)));
+	}
+
+	@Override
+	protected void checkBeforeDeletionWithSimpleOperationResponse(final List<DTOJahrgang> jahrgaenge, final Map<Long, SimpleOperationResponse> mapResponses) {
+		final Set<Long> result = getIdsOfReferencedJahrgaenge(jahrgaenge.stream().map(j -> j.ID).collect(Collectors.toSet()));
+		jahrgaenge.stream().filter(j -> result.contains(j.ID)).forEach(j -> {
+			final SimpleOperationResponse response = mapResponses.get(j.ID);
+			response.success = false;
+			response.log.add("Der Jahrgang mit dem Kürzel %s und der Bezeichnung %s ist in der Datenbank referenziert und kann daher nicht gelöscht werden"
+					.formatted(j.InternKrz, j.ASDBezeichnung));
+		});
+	}
+
+	private Set<Long> getIdsOfReferencedJahrgaenge(final Set<Long> ids) {
+		final String querySchueler = "SELECT DISTINCT a.Entlassjahrgang_ID FROM DTOSchueler a WHERE a.Entlassjahrgang_ID IN :ids";
+		final String querySchuelerLernabschnittsdaten = "SELECT DISTINCT b.Jahrgang_ID FROM DTOSchuelerLernabschnittsdaten b WHERE b.Jahrgang_ID IN :ids";
+		final String queryKlassen = "SELECT DISTINCT c.Jahrgang_ID FROM DTOKlassen c WHERE c.Jahrgang_ID IN :ids";
+		final String queryStundenplanSchienen = "SELECT DISTINCT d.Jahrgang_ID FROM DTOStundenplanSchienen d WHERE d.Jahrgang_ID IN :ids";
+		final String queryKurse = "SELECT DISTINCT e.Jahrgang_ID FROM DTOKurs e WHERE e.Jahrgang_ID IN :ids";
+
+		final String query = String.join("\nUNION ALL\n", querySchueler, querySchuelerLernabschnittsdaten, queryKlassen,
+				queryStundenplanSchienen, queryKurse
+		);
+		final List<Long> results = conn.query(query, Long.class).setParameter("ids", ids).getResultList();
+		return new HashSet<>(results);
 	}
 
 }
