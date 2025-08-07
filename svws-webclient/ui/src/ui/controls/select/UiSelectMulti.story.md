@@ -37,6 +37,8 @@ Folgende Props können gesetzt werden, um die Komponente zu konfigurieren.
 | headless    | `boolean`                                         | `false`     | Definiert, ob das Select headless (ohne Rahmen und Hintergrund) dargestellt wird, z. B. für Tabellen                                                    |                            |
 | minOptions  | `number`                                          | `undefined` | Definiert die minimale Anzahl an auszuwählenden Optionen. Wird mit `maxOptions` abgeglichen                                    |
 | maxOptions  | `number`                                          | `undefined` | Definiert die maximale Anzahl an auswählbaren Optionen. Wird mit `minOptions` abgeglichen                                      |
+| validator   | `() => Validator`   | `undefined` | Ein Statistik-Validator, der auf Fehler für die Statistik prüft. |
+| doValidate | `(validator: Validator, value: Iterable<T> \| null) => boolean` | `(validator: Validator) : boolean => validator.run()` | Die Funktion, die zur Validierung ausgeführt wird. `value` beinhaltet die aktuelle Selektion, die validiert wird. |
 
 
 

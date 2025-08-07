@@ -35,6 +35,8 @@ Folgende Props können gesetzt werden, um die Komponente zu konfigurieren.
 | disabled    | `boolean`                                         | `false`     | Definiert, ob die Komponente deaktiviert ist                                                                                                            |
 | statistics  | `boolean`                                         | `false`     | Definiert, ob die Komponente für die Statistik relevant ist                                                                                             |
 | headless    | `boolean`                                         | `false`     | Definiert, ob das Select headless (ohne Rahmen und Hintergrund) dargestellt wird, z. B. für Tabellen                                                    |
+| validator   | `() => Validator`   | `undefined` | Ein Statistik-Validator, der auf Fehler für die Statistik prüft. |
+| doValidate | `(validator: Validator, value: T \| null) => boolean` | `(validator: Validator) : boolean => validator.run()` | Die Funktion, die zur Validierung ausgeführt wird. `value` beinhaltet die aktuelle Selektion, die validiert wird. |
 
 
 

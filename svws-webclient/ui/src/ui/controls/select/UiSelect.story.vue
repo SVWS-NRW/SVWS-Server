@@ -139,6 +139,60 @@
 				]" />
 			</template>
 		</Variant>
+		<Variant title="Validatoren" id="validatoren">
+			<svws-ui-content-card class="p-5">
+				<svws-ui-input-wrapper>
+					<ui-select label="SelectManager mit Muss-Validator" :manager="sMussValidatorSelectManager"
+						:validator="() => validatorMuss" :do-validate="validateSelect" v-model="mussValidatorSelection"
+						:searchable="state.searchable" :disabled="state.disabled" :statistics="state.statistics"
+						:removable="state.removable" :headless="state.headless" :required="state.required"
+						:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" />
+					<ui-select label="SelectManager mit Kann-Validator" :manager="sKannValidatorSelectManager"
+						:validator="() => validatorKann" :do-validate="validateSelect" v-model="kannValidatorSelection"
+						:searchable="state.searchable" :disabled="state.disabled" :statistics="state.statistics"
+						:removable="state.removable" :headless="state.headless" :required="state.required"
+						:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" />
+					<ui-select label="SelectManager mit Hinweis-Validator" :manager="sHinweisValidatorSelectManager"
+						:validator="() => validatorHinweis" :do-validate="validateSelect" v-model="hinweisValidatorSelection"
+						:searchable="state.searchable" :disabled="state.disabled" :statistics="state.statistics"
+						:removable="state.removable" :headless="state.headless" :required="state.required"
+						:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" />
+				</svws-ui-input-wrapper>
+			</svws-ui-content-card>
+			<template #controls>
+				<HstCheckbox v-model="state.searchable" title="Searchable" />
+				<HstCheckbox v-model="state.required" title="Required" />
+				<HstCheckbox v-model="state.disabled" title="Disabled" />
+				<HstCheckbox v-model="state.statistics" title="Statistik" />
+				<HstCheckbox v-model="state.removable" title="Removable" />
+				<HstCheckbox v-model="state.headless" title="Headless" />
+				<span class="text-headline-md">Farben</span>
+				<HstRadio v-model="state.bgColor" title="Hintergrund" :options="[
+					{ label: 'keine', value: '' },
+					{ label: 'bg-ui-brand', value: 'bg-ui-brand' },
+					{ label: 'bg-ui-success', value: 'bg-ui-success' },
+					{ label: 'bg-ui-danger', value: 'bg-ui-danger' },
+				]" />
+				<HstRadio v-model="state.textColor" title="Text" :options="[
+					{ label: 'keine', value: '' },
+					{ label: 'text-ui-onbrand', value: 'text-ui-onbrand' },
+					{ label: 'text-ui-onsuccess', value: 'text-ui-onsuccess' },
+					{ label: 'text-ui-ondanger', value: 'text-ui-ondanger' },
+				]" />
+				<HstRadio v-model="state.iconColor" title="Icon" :options="[
+					{ label: 'keine', value: '' },
+					{ label: 'icon-ui-onbrand', value: 'icon-ui-onbrand' },
+					{ label: 'icon-ui-onsuccess', value: 'icon-ui-onsuccess' },
+					{ label: 'icon-ui-ondanger', value: 'icon-ui-ondanger' },
+				]" />
+				<HstRadio v-model="state.borderColor" title="Border" :options="[
+					{ label: 'keine', value: '' },
+					{ label: 'border-ui-brand', value: 'border-ui-brand' },
+					{ label: 'border-ui-success', value: 'border-ui-success' },
+					{ label: 'border-ui-danger', value: 'border-ui-danger' },
+				]" />
+			</template>
+		</Variant>
 		<template #controls>
 			<HstCheckbox v-model="state.searchable" title="Searchable" />
 			<HstCheckbox v-model="state.required" title="Required" />
@@ -179,14 +233,15 @@
 
 <script setup lang="ts">
 
-	import { reactive, watch } from "vue";
+	import { computed, ref, reactive, watch } from "vue";
 	import { FachSelectFilter } from "./filter/FachSelectFilter";
 	import { ArrayList } from "../../../../../core/src/java/util/ArrayList";
 	import { Fach } from "../../../../../core/src/asd/types/fach/Fach";
 	import { Fachgruppe } from "../../../../../core/src/asd/types/fach/Fachgruppe";
 	import { LehrerRechtsverhaeltnis } from "../../../../../core/src/asd/types/lehrer/LehrerRechtsverhaeltnis";
 	import { Schulform } from "../../../../../core/src/asd/types/schule/Schulform";
-	import type { LehrerRechtsverhaeltnisKatalogEintrag } from "../../../../../core/src/asd/data/lehrer/LehrerRechtsverhaeltnisKatalogEintrag";
+	import type { Validator} from "../../../../../core/src";
+	import { LehrerPersonalabschnittsdaten, LehrerStammdaten, SchuleStammdaten, Schuljahresabschnitt, ValidatorKontext, ValidatorLehrerPersonalabschnittsdatenPflichtstundensoll, ValidatorLehrerStammdatenNachnameVorhanden, ValidatorLehrerStammdatenVorname, type LehrerRechtsverhaeltnisKatalogEintrag } from "../../../../../core/src";
 	import { CoreTypeSelectManagerSingle } from "./selectManager/CoreTypeSelectManagerSingle";
 	import { SelectManagerSingle } from "./selectManager/SelectManagerSingle";
 	import Docs from "./UiSelect.story.md"
@@ -307,6 +362,78 @@
 			return 0;
 		},
 	});
+
+	const schuleStammdaten = new SchuleStammdaten();
+	schuleStammdaten.schulform = Schulform.GY.toString();
+	schuleStammdaten.idSchuljahresabschnitt = 16;
+	const schuljahresabschnitt = new Schuljahresabschnitt();
+	schuljahresabschnitt.id = 16;
+	schuljahresabschnitt.schuljahr = 2023;
+	schuljahresabschnitt.abschnitt = 1;
+	schuljahresabschnitt.idVorigerAbschnitt = null;
+	schuljahresabschnitt.idFolgeAbschnitt = null;
+	schuleStammdaten.abschnitte.add(schuljahresabschnitt);
+	const selectValidatorKontext = new ValidatorKontext(schuleStammdaten, false);
+
+
+	const hinweisValidatorSelection = ref<string | undefined>();
+	const kannValidatorSelection = ref<string | undefined>();
+	const mussValidatorSelection = ref<string | undefined>();
+
+
+	const sHinweisValidatorSelectManager = new SelectManagerSingle({options: ["Christian", "Anna"], removable: state.removable,
+		selected: hinweisValidatorSelection.value});
+
+	const sKannValidatorSelectManager = new SelectManagerSingle({options: ["30 Pflichtstunden", "100 Pflichtstunden"], removable: state.removable,
+		selected: kannValidatorSelection.value });
+
+	const sMussValidatorSelectManager = new SelectManagerSingle({ options: ["Müller", "Meier"], removable: state.removable,
+		selected: mussValidatorSelection.value });
+
+
+	const validatorHinweis = computed(() => {
+		const lehrerStammdaten = new LehrerStammdaten();
+		lehrerStammdaten.vorname = hinweisValidatorSelection.value ?? "";
+		return new ValidatorLehrerStammdatenVorname(lehrerStammdaten, selectValidatorKontext);
+	});
+
+	const validatorKann = computed(() => {
+		const lehrerPersonalabschnittsdaten = new LehrerPersonalabschnittsdaten();
+		switch (kannValidatorSelection.value) {
+			case "30 Pflichtstunden":
+				lehrerPersonalabschnittsdaten.pflichtstundensoll = 30.0;
+				break;
+			case "100 Pflichtstunden":
+				lehrerPersonalabschnittsdaten.pflichtstundensoll = 100.0;
+				break;
+			default:
+				break;
+		}
+		return new ValidatorLehrerPersonalabschnittsdatenPflichtstundensoll(lehrerPersonalabschnittsdaten, selectValidatorKontext);
+	});
+
+
+	const validatorMuss = computed(() => {
+		const lehrerStammdaten = new LehrerStammdaten();
+		lehrerStammdaten.nachname = mussValidatorSelection.value ?? "";
+		return new ValidatorLehrerStammdatenNachnameVorhanden(lehrerStammdaten, selectValidatorKontext);
+	});
+
+	watch(() => hinweisValidatorSelection.value, (newVal) => {
+		sHinweisValidatorSelectManager.selected = newVal;
+	});
+
+	watch(() => kannValidatorSelection.value, (newVal) => {
+		sKannValidatorSelectManager.selected = newVal;
+	});
+
+	watch(() => mussValidatorSelection.value, (newVal) => {
+		sMussValidatorSelectManager.selected = newVal;
+	});
+
+	function validateSelect(validator: Validator, value: string | Iterable<string> | null): boolean {
+		return validator.run();
+	}
 
 	function getSourceString (multi = false) {
 		return `<ui-select
