@@ -84,7 +84,7 @@ public class APIJahrgaenge {
 	 * @return              die Liste der Jahrgänge mit ID des Datenbankschemas
 	 */
 	@GET
-	@Path("/")
+	@Path("/jahrgangsdaten")
 	@Operation(summary = "Gibt eine Übersicht von allen Jahrgangsdaten zurück.",
 			description = "Erstellt eine Liste aller in der Datenbank vorhanden Jahrgangsdaten insofern der SVWS-Benutzer die notwendige Berechtigung besitzt.")
 	@ApiResponse(responseCode = "200", description = "Eine Liste von Jahrgangs-Listen-Einträgen",

@@ -7830,33 +7830,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getJahrgangsdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/jahrgaenge/
-	 *
-	 * Erstellt eine Liste aller in der Datenbank vorhanden Jahrgangsdaten insofern der SVWS-Benutzer die notwendige Berechtigung besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Eine Liste von Jahrgangs-Listen-Einträgen
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<JahrgangsDaten>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Jahrgangsdaten anzusehen.
-	 *   Code 404: Keine Jahrgangs-Einträge gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Eine Liste von Jahrgangs-Listen-Einträgen
-	 */
-	public async getJahrgangsdaten(schema : string) : Promise<List<JahrgangsDaten>> {
-		const path = "/db/{schema}/jahrgaenge/"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<JahrgangsDaten>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(JahrgangsDaten.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
 	 * Implementierung der GET-Methode getJahrgang für den Zugriff auf die URL https://{hostname}/db/{schema}/jahrgaenge/{id : \d+}
 	 *
 	 * Liest die Daten des Jahrgangs zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Jahrgangsdaten besitzt.
@@ -8020,6 +7993,33 @@ export class ApiServer extends BaseApi {
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getJahrgangsdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/jahrgaenge/jahrgangsdaten
+	 *
+	 * Erstellt eine Liste aller in der Datenbank vorhanden Jahrgangsdaten insofern der SVWS-Benutzer die notwendige Berechtigung besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Eine Liste von Jahrgangs-Listen-Einträgen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<JahrgangsDaten>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Jahrgangsdaten anzusehen.
+	 *   Code 404: Keine Jahrgangs-Einträge gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Eine Liste von Jahrgangs-Listen-Einträgen
+	 */
+	public async getJahrgangsdaten(schema : string) : Promise<List<JahrgangsDaten>> {
+		const path = "/db/{schema}/jahrgaenge/jahrgangsdaten"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<JahrgangsDaten>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(JahrgangsDaten.transpilerFromJSON(text)); });
 		return ret;
 	}
 
