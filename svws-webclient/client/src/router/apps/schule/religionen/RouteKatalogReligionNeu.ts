@@ -8,6 +8,7 @@ import { RouteManager } from "~/router/RouteManager";
 import type { RouteKatalogReligionen } from "~/router/apps/schule/religionen/RouteKatalogReligionen";
 import type { KatalogReligionNeuProps } from "~/components/schule/kataloge/religionen/SKatalogReligionNeuProps";
 import { routeKatalogReligionen } from "~/router/apps/schule/religionen/RouteKatalogReligionen";
+import { api } from "~/router/Api";
 
 const SKatalogReligionNeu = () => import("~/components/schule/kataloge/religionen/SKatalogReligionNeu.vue");
 
@@ -33,6 +34,7 @@ export class RouteKatalogReligionNeu extends RouteNode<any, RouteKatalogReligion
 			gotoDefaultView: routeKatalogReligionen.data.gotoDefaultView,
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
+			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 }

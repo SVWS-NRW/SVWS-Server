@@ -8,6 +8,7 @@ import { routeApp } from "~/router/apps/RouteApp";
 import type { BetriebeDatenProps } from "~/components/schule/betriebe/daten/SBetriebeDatenProps";
 import type { RouteSchuleBetriebe} from "./RouteSchuleBetriebe";
 import { routeSchuleBetriebe } from "./RouteSchuleBetriebe";
+import { api } from "~/router/Api";
 
 const SBetriebeDaten = () => import("~/components/schule/betriebe/daten/SBetriebeDaten.vue")
 
@@ -35,6 +36,7 @@ export class RouteSchuleBetriebeDaten extends RouteNode<any, RouteSchuleBetriebe
 			mapBeschaeftigungsarten: routeSchuleBetriebe.data.mapBeschaeftigungsarten,
 			mapOrte: routeApp.data.mapOrte,
 			mapAnsprechpartner: routeSchuleBetriebe.data.mapAnsprechpartner,
+			benutzerKompetenzen: api.benutzerKompetenzen,
 
 		};
 	}

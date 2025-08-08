@@ -6,6 +6,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeKatalogReligionen, type RouteKatalogReligionen } from "~/router/apps/schule/religionen/RouteKatalogReligionen";
 
 import type { ReligionDatenProps } from "~/components/schule/kataloge/religionen/daten/SReligionDatenProps";
+import { api } from "~/router/Api";
 
 const SReligionDaten = () => import("~/components/schule/kataloge/religionen/daten/SReligionDaten.vue");
 
@@ -27,6 +28,7 @@ export class RouteKatalogReligionDaten extends RouteNode<any, RouteKatalogReligi
 		return {
 			religionListeManager: () => routeKatalogReligionen.data.manager,
 			patch: routeKatalogReligionen.data.patch,
+			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 

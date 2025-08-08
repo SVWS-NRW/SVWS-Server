@@ -1,4 +1,4 @@
-import type { BetriebListeEintrag, BetriebStammdaten, KatalogEintrag, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
+import type { BenutzerKompetenz, BetriebListeEintrag, BetriebStammdaten, KatalogEintrag, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
 import type { AbschnittAuswahlDaten } from "@ui";
 
 export interface BetriebeAuswahlProps{
@@ -11,4 +11,5 @@ export interface BetriebeAuswahlProps{
 	deleteEintraege: (betrieb: BetriebListeEintrag[]) => Promise<void>;
 	gotoEintrag:(eintrag: BetriebListeEintrag) => Promise<void>;
 	schuljahresabschnittsauswahl: () => AbschnittAuswahlDaten;
+	benutzerKompetenzen: Set<BenutzerKompetenz>;
 }

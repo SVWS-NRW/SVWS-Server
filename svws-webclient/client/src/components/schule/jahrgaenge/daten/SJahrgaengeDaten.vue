@@ -12,7 +12,7 @@
 					:item-text="textSchulgliederung" statistics :readonly />
 				<svws-ui-select title="Jahrgang" v-model="statistikJahrgang" :items="manager().getAvailableJahrgaenge(statistikJahrgang)"
 					:item-text="textStatistikJahrgang" removable statistics :readonly required />
-				<svws-ui-select title="Folgejahrgang" v-model="folgejahrgang" :items="folgejahrgaenge" :item-text="textFolgejahrgang" />
+				<svws-ui-select title="Folgejahrgang" v-model="folgejahrgang" :items="folgejahrgaenge" :item-text="textFolgejahrgang" :readonly />
 				<svws-ui-input-number placeholder="Anzahl der Restabschnitte" :model-value="manager().daten().anzahlRestabschnitte"
 					@change="patchAnzahlRestabschnitte" :valid="anzahlRestabschnitteIsValid" :min="0" :max="40" :readonly />
 				<svws-ui-input-number placeholder="Sortierung" :min="0" :model-value="manager().daten().sortierung"

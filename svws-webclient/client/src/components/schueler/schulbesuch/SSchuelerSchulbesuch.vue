@@ -49,17 +49,17 @@
 		<svws-ui-content-card title="Kindergartenbesuch" v-if="schuleHatPrimarstufe">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-select title="Name des Kindergartens" :items="manager().kindergaertenById.values()" :item-text="i => i.bezeichnung"
-					:model-value="manager().kindergaertenById.get(manager().daten.idKindergarten?? -1)"
+					:model-value="manager().kindergaertenById.get(manager().daten.idKindergarten?? -1)" :readonly
 					@update:model-value="v => manager().doPatch({ idKindergarten: v?.id ?? null})" removable />
 				<svws-ui-select title="Dauer des Kindergartenbesuchs" :items="Kindergartenbesuch.values()" :item-text="textDauerKindergartenbesuch" :readonly
 					:model-value="manager().getDauerKindergartenbesuch()" removeable
 					@update:model-value="v => manager().doPatch({ idDauerKindergartenbesuch: v?.daten(manager().schuljahr)?.id ?? null })" />
 				<svws-ui-spacing />
-				<svws-ui-checkbox title="Verpflichtung f. Sprachförderkurs" :model-value="manager().daten.verpflichtungSprachfoerderkurs"
+				<svws-ui-checkbox title="Verpflichtung f. Sprachförderkurs" :model-value="manager().daten.verpflichtungSprachfoerderkurs" :readonly
 					@update:model-value="verpflichtungSprachfoerderkurs => manager().doPatch({ verpflichtungSprachfoerderkurs })">
 					Verpflichtung für Sprachförderkurs
 				</svws-ui-checkbox>
-				<svws-ui-checkbox title="Teilnahme an Sprachförderkurs" :model-value="manager().daten.teilnahmeSprachfoerderkurs"
+				<svws-ui-checkbox title="Teilnahme an Sprachförderkurs" :model-value="manager().daten.teilnahmeSprachfoerderkurs" :readonly
 					@update:model-value="teilnahmeSprachfoerderkurs => manager().doPatch({ teilnahmeSprachfoerderkurs })">
 					Teilnahme an Sprachförderkurs
 				</svws-ui-checkbox>

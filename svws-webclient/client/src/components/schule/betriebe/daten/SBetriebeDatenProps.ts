@@ -1,4 +1,4 @@
-import type { BetriebAnsprechpartner, BetriebStammdaten, KatalogEintrag, OrtKatalogEintrag } from "@core";
+import type {BenutzerKompetenz, BetriebAnsprechpartner, BetriebStammdaten, KatalogEintrag, OrtKatalogEintrag} from "@core";
 
 export interface BetriebeDatenProps {
 	patch: (data : Partial<BetriebStammdaten>) => Promise<void>;
@@ -9,4 +9,5 @@ export interface BetriebeDatenProps {
 	mapBeschaeftigungsarten: Map<number, KatalogEintrag>;
 	mapOrte: Map<number, OrtKatalogEintrag>;
 	mapAnsprechpartner: Map<number, BetriebAnsprechpartner>;
+	benutzerKompetenzen: Set<BenutzerKompetenz>;
 }
