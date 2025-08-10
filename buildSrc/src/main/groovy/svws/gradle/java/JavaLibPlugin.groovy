@@ -127,7 +127,7 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 	void addEmail() {
-		def version = "2.0.3";
+		def version = "2.0.4";
 		project.configurations.create('email');
 		project.dependencies.add('email', 'org.eclipse.angus:angus-mail:' + version);
 	}
