@@ -94,6 +94,8 @@ test('Admins können entsprechende Bereiche im DEV Mode einsehen', async ({page}
 	await expect(page.getByRole('button', {name: 'Sprachen'})).toBeVisible();
 	await page.getByRole('button', {name: 'Sprachen'}).click();
 	await expect(page.getByText('Sprachenfolge')).toBeVisible();
+	await expect(page.getByText('Sprachprüfungen – Herkunftsprachlicher Unterricht')).toBeVisible();
+	await expect(page.getByText('Sprachprüfungen – Feststellungsprüfungen')).toBeVisible()
 
 
 	await expect(page.getByRole('button', {name: 'Laufbahnplanung'})).toBeVisible();

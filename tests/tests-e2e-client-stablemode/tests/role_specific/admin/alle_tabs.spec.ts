@@ -48,6 +48,8 @@ test('Admins können entsprechende Bereiche im STABLE Mode einsehen', async ({pa
 	await expect(page.getByRole('button', {name: 'Sprachen'})).toBeVisible();
 	await page.getByRole('button', {name: 'Sprachen'}).click();
 	await expect(page.getByText('Sprachenfolge')).toBeVisible();
+	await expect(page.getByText('Sprachprüfungen – Herkunftsprachlicher Unterricht')).toBeVisible();
+	await expect(page.getByText('Sprachprüfungen – Feststellungsprüfungen')).toBeVisible()
 
 
 	await expect(page.getByRole('button', {name: 'Laufbahnplanung'})).toBeVisible();
@@ -93,14 +95,12 @@ test('Admins können entsprechende Bereiche bei den Lehrern im STABLE Mode sehen
 })
 
 test('Admins können Oberstufe bearbeiten', async ({page}) => {
-	test.setTimeout(60_000);
 	const { loginAdmin } = useLoginUtils(targetHost, page);
 	await loginAdmin();
 	await expect(page.getByRole('link', {name: 'Oberstufe'})).toBeVisible();
 });
 
 test('Admins können Einstellung vornehmen', async ({page}) => {
-	test.setTimeout(60_000);
 	const { loginAdmin } = useLoginUtils(targetHost, page);
 	await loginAdmin();
 	await expect(page.getByRole('link', {name: 'Einstellungen'})).toBeVisible();
