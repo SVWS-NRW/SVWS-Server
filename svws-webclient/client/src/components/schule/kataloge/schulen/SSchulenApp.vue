@@ -38,7 +38,7 @@
 
 	import type { KatalogSchulenAppProps } from "./SSchulenAppProps";
 	import { useRegionSwitch, ViewType } from "@ui";
-	import {computed} from "vue";
+	import { computed } from "vue";
 
 	const props = defineProps<KatalogSchulenAppProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();

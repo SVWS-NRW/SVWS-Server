@@ -6,6 +6,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeKatalogVermerkarten, type RouteKatalogVermerkarten } from "~/router/apps/schule/vermerkarten/RouteKatalogVermerkarten";
 import { RouteManager } from "~/router/RouteManager";
 import { routeSchuelerVermerke } from "../../schueler/vermerke/RouteSchuelerVermerke";
+import { api } from "~/router/Api";
 
 const SVermerkDaten = () => import("~/components/schule/kataloge/vermerke/daten/SVermerkartDaten.vue");
 
@@ -27,6 +28,7 @@ export class RouteKatalogVermerkartenDaten extends RouteNode<any, RouteKatalogVe
 			patch: routeKatalogVermerkarten.data.patch,
 			vermerkartenManager: () => routeKatalogVermerkarten.data.manager,
 			gotoSchueler: this.gotoSchueler,
+			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 

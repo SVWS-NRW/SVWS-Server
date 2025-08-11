@@ -2,7 +2,7 @@
 	<div class="page page-grid-cards">
 		<div>
 			<div class="flex justify-between">
-				<svws-ui-button v-autofocus class="contentFocusField min-h-[32px]" @click="addWrapper">
+				<svws-ui-button :disabled="readonly" v-autofocus class="contentFocusField min-h-[32px]" @click="addWrapper">
 					<span class="icon i-ri-chat-new-line" />
 					<span class="ml-2">Neuen Vermerk hinzufügen</span>
 				</svws-ui-button>
@@ -12,10 +12,10 @@
 				<template v-for="vermerk of listVermerke" :key="vermerk.id">
 					<ui-card icon="i-ri-message-line" :title="getTitle(vermerk)" :subtitle="getDescription(vermerk)" :is-open="activeVermerk?.id === vermerk.id">
 						<svws-ui-input-wrapper class="px-6">
-							<svws-ui-textarea-input	v-model="vermerk.bemerkung" :autoresize="true" :rows="4" @change="bemerkung => patch({ bemerkung: String(bemerkung) }, vermerk.id)" />
+							<svws-ui-textarea-input	v-model="vermerk.bemerkung" :readonly :autoresize="true" :rows="4" @change="bemerkung => patch({ bemerkung: String(bemerkung) }, vermerk.id)" />
 							<div class="flex w-200">
 								<p class="my-auto mr-4">Vermerkart:</p>
-								<svws-ui-select class="bg-ui-100 mr-4" title="Bitte wählen" headless :model-value="mapVermerkArten.get(vermerk.idVermerkart || -1)" :items="mapVermerkArten.values()" :item-text="item => getItemText(item)"
+								<svws-ui-select :readonly class="bg-ui-100 mr-4" title="Bitte wählen" headless :model-value="mapVermerkArten.get(vermerk.idVermerkart || -1)" :items="mapVermerkArten.values()" :item-text="item => getItemText(item)"
 									@update:model-value="art => (art !== null) && patch({ idVermerkart: art?.id ?? -1 }, vermerk.id)" />
 							</div>
 							<div class="w-full flex justify-between">
@@ -32,7 +32,7 @@
 							</div>
 						</svws-ui-input-wrapper>
 						<template #buttonFooterRight>
-							<svws-ui-button type="danger" title="Löschen" @click="remove(vermerk.id)" class="mt-4">
+							<svws-ui-button :disabled="readonly" type="danger" title="Löschen" @click="remove(vermerk.id)" class="mt-4">
 								Löschen
 							</svws-ui-button>
 						</template>
@@ -47,9 +47,12 @@
 
 	import { computed, ref } from "vue";
 	import type { SchuelerVermerkeProps } from "./SSchuelerVermerkeProps";
-	import { ArrayList, DateUtils, type SchuelerVermerke, type VermerkartEintrag} from "@core";
+	import { ArrayList, BenutzerKompetenz, DateUtils, type SchuelerVermerke, type VermerkartEintrag } from "@core";
 
 	const props = defineProps<SchuelerVermerkeProps>();
+
+	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_EINWILLIGUNGEN_AENDERN));
+	const readonly = computed(() => !hatKompetenzAendern.value);
 
 	const activeVermerk = ref<SchuelerVermerke>();
 
