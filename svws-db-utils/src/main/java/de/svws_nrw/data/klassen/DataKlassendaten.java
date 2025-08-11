@@ -348,7 +348,8 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 			if (!klassenLeitungList.contains(lehrerIdEntry)) {
 				if (!conn.transactionRemove(entry))
 					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
-							"Die Klassenleitung mit der ID %d konnte bei der Klasse mit der ID %d nicht entfernt werden.".formatted(entry.Lehrer_ID, entry.Klassen_ID));
+							"Die Klassenleitung mit der ID %d konnte bei der Klasse mit der ID %d nicht entfernt werden.".formatted(entry.Lehrer_ID,
+									entry.Klassen_ID));
 				conn.transactionFlush();
 			}
 		}
@@ -613,10 +614,15 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 
 	private void mapIdKlassenart(final DTOKlassen dto, final Object value) throws ApiOperationException {
 		final Long idKlassenart = JSONMapper.convertToLong(value, true);
-		final Klassenart klassenart = Klassenart.data().getWertByID(idKlassenart);
+		final Klassenart klassenart = Klassenart.data().getWertByIDOrNull(idKlassenart);
 		if (klassenart == null)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Es konnte keine Klassenart für die ID %d gefunden werden.".formatted(idKlassenart));
-		dto.Klassenart = klassenart.daten(conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(dto.Schuljahresabschnitts_ID).schuljahr).kuerzel;
+		final int schuljahr = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(dto.Schuljahresabschnitts_ID).schuljahr;
+		final KlassenartKatalogEintrag eintrag = klassenart.daten(schuljahr);
+		if (eintrag == null)
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					"Die Klassenart mit der ID %d ist für das Schuljahr %d ungültig.".formatted(idKlassenart, schuljahr));
+		dto.Klassenart = eintrag.kuerzel;
 	}
 
 	private void mapIdSchulgliederung(final DTOKlassen dto, final Object value) throws ApiOperationException {
@@ -872,9 +878,11 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 		klassenDaten.pruefungsordnung = dto.PruefOrdnung;
 
 		final Klassenart klassenart = Klassenart.data().getWertByKuerzel(dto.Klassenart);
-		klassenDaten.idKlassenart = ((klassenart != null) && (klassenart.hatSchulform(schuljahresabschnitt.schuljahr, schulform)))
-				? klassenart.daten(schuljahresabschnitt.schuljahr).id
-				: Klassenart.UNDEFINIERT.daten(schuljahresabschnitt.schuljahr).id;
+		KlassenartKatalogEintrag eintragKlassenart = ((klassenart != null) && (klassenart.hatSchulform(schuljahresabschnitt.schuljahr, schulform)))
+				? klassenart.daten(schuljahresabschnitt.schuljahr) : null;
+		if (eintragKlassenart == null)
+			eintragKlassenart = Klassenart.RK.daten(schuljahresabschnitt.schuljahr);
+		klassenDaten.idKlassenart = eintragKlassenart.id;
 		klassenDaten.noteneingabeGesperrt = (dto.NotenGesperrt != null) && dto.NotenGesperrt;
 		klassenDaten.verwendungAnkreuzkompetenzen = (dto.Ankreuzzeugnisse != null) && dto.Ankreuzzeugnisse;
 		klassenDaten.kuerzelVorgaengerklasse = dto.VKlasse;
