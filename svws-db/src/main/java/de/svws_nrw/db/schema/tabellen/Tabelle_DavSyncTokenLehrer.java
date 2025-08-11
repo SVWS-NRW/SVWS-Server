@@ -158,7 +158,8 @@ public class Tabelle_DavSyncTokenLehrer extends SchemaTabelle {
                 END IF;
             END
             """,
-			Schema.tab_LehrerLehramtLehrbef, Schema.tab_DavSyncTokenLehrer);
+			Schema.tab_LehrerLehramtLehrbef, Schema.tab_DavSyncTokenLehrer)
+			.setVeraltet(SchemaRevisionen.REV_45);
 
 	/** Trigger t_INSERT_DavSyncTokenLehrer_LehrerLehramtLehrbef */
 	public SchemaTabelleTrigger trigger_MariaDB_INSERT_DavSyncTokenLehrer_LehrerLehramtLehrbef = addTrigger(
@@ -176,7 +177,8 @@ public class Tabelle_DavSyncTokenLehrer extends SchemaTabelle {
                 END IF;
             END
             """,
-			Schema.tab_LehrerLehramtLehrbef, Schema.tab_DavSyncTokenLehrer);
+			Schema.tab_LehrerLehramtLehrbef, Schema.tab_DavSyncTokenLehrer)
+			.setVeraltet(SchemaRevisionen.REV_45);
 
 	/** Trigger t_DELETE_DavSyncTokenLehrer_LehrerLehramtLehrbef */
 	public SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenLehrer_LehrerLehramtLehrbef = addTrigger(
@@ -194,7 +196,8 @@ public class Tabelle_DavSyncTokenLehrer extends SchemaTabelle {
                 END IF;
             END
             """,
-			Schema.tab_LehrerLehramtLehrbef, Schema.tab_DavSyncTokenLehrer);
+			Schema.tab_LehrerLehramtLehrbef, Schema.tab_DavSyncTokenLehrer)
+			.setVeraltet(SchemaRevisionen.REV_45);
 
 	/** Trigger t_UPDATE_DavSyncTokenLehrer_KlassenLehrer */
 	public SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenLehrer_KlassenLehrer = addTrigger(
