@@ -12,8 +12,6 @@ import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.davapi.api.DavExtendedHttpStatus;
-import de.svws_nrw.davapi.api.DavUriBuilder;
-import de.svws_nrw.davapi.api.DavUriParameter;
 import de.svws_nrw.davapi.api.PROPFIND;
 import de.svws_nrw.davapi.api.PropfindAddressbookDispatcher;
 import de.svws_nrw.davapi.api.PropfindDavRootDispatcher;
@@ -40,7 +38,7 @@ import jakarta.ws.rs.core.Response;
  * Die Klasse spezifiziert die CardDAV-API-Schnittstelle für den Zugriff auf
  * Adressbücher und Kontakte.
  */
-@Path(DavUriBuilder.DAV_BASE_URI_PATTERN)
+@Path("/dav/{schema}")
 @Tag(name = "Server")
 public class APIAdressbuch {
 
@@ -95,7 +93,7 @@ public class APIAdressbuch {
 	 *         {@link de.svws_nrw.davapi.model.dav.Error}
 	 */
 	@PROPFIND
-	@Path(DavUriBuilder.DAV_REL_URI_PATTERN_PRINCIPAL)
+	@Path("/benutzer/{benutzerId}")
 	@Consumes({ MediaType.TEXT_XML, MediaType.APPLICATION_XML })
 	@Produces(MediaType.TEXT_XML)
 	public Response propfindOnPrincipal(@PathParam("schema") final String schema, @PathParam("benutzerId") final String benutzerId,
@@ -124,7 +122,7 @@ public class APIAdressbuch {
 	 *         {@link de.svws_nrw.davapi.model.dav.Error}
 	 */
 	@PROPFIND
-	@Path(DavUriBuilder.CARD_DAV_REL_URI_PATTERN_ADDRESSBOOK_COLLECTION)
+	@Path("/adressbuecher")
 	@Consumes({ MediaType.TEXT_XML, MediaType.APPLICATION_XML })
 	@Produces(MediaType.TEXT_XML)
 	public Response propfindOnAddressbooks(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
@@ -154,7 +152,7 @@ public class APIAdressbuch {
 	 *         {@link de.svws_nrw.davapi.model.dav.Error}
 	 */
 	@PROPFIND
-	@Path(DavUriBuilder.CARD_DAV_REL_URI_PATTERN_ADDRESSBOOK)
+	@Path("/adressbuecher/{resourceCollectionId}")
 	@Consumes({ MediaType.TEXT_XML, MediaType.APPLICATION_XML })
 	@Produces(MediaType.TEXT_XML)
 	public Response propfindOnAddressbook(@PathParam("schema") final String schema,
@@ -185,7 +183,7 @@ public class APIAdressbuch {
 	 *         {@link de.svws_nrw.davapi.model.dav.Error}
 	 */
 	@REPORT
-	@Path(DavUriBuilder.CARD_DAV_REL_URI_PATTERN_ADDRESSBOOK)
+	@Path("/adressbuecher/{resourceCollectionId}")
 	@Consumes({ MediaType.TEXT_XML, MediaType.APPLICATION_XML })
 	@Produces(MediaType.TEXT_XML)
 	public Response reportOnAddressbook(@PathParam("schema") final String schema,
@@ -216,7 +214,7 @@ public class APIAdressbuch {
 	 *         {@link de.svws_nrw.davapi.model.dav.Error}
 	 */
 	@REPORT
-	@Path(DavUriBuilder.CARD_DAV_REL_URI_PATTERN_ADDRESS_ENTRY)
+	@Path("/adressbuecher/{resourceCollectionId}/{resourceId}.vcf")
 	@Consumes({ MediaType.TEXT_XML, MediaType.APPLICATION_XML })
 	@Produces(MediaType.TEXT_XML)
 	public Response reportOnContact(@PathParam("schema") final String schema,
@@ -246,13 +244,11 @@ public class APIAdressbuch {
 	 * @return Response Objekt
 	 */
 	private static Response buildResponse(final Object result) {
-		if (result instanceof Multistatus) {
+		if (result instanceof Multistatus)
 			return Response.status(DavExtendedHttpStatus.MULTISTATUS).type(MediaType.TEXT_XML).entity(result).build();
-		} else if (result instanceof Error) {
+		if (result instanceof Error)
 			return Response.status(Response.Status.NOT_FOUND).type(MediaType.TEXT_XML).entity(result).build();
-		} else {
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.TEXT_PLAIN).build();
-		}
+		return Response.status(Response.Status.BAD_REQUEST).type(MediaType.TEXT_PLAIN).build();
 	}
 
 	/**
@@ -275,10 +271,10 @@ public class APIAdressbuch {
 	 * @return ein parametrierter Dispatcher
 	 */
 	private static PropfindDavRootDispatcher createPropfindDavRootDispatcher(final DBEntityManager conn) {
-		final DavUriParameter uriParameter = new DavUriParameter();
-		uriParameter.setSchema(conn.getDBSchema());
-		uriParameter.setBenutzerId(String.valueOf(conn.getUser().getId()));
-		return new PropfindDavRootDispatcher(uriParameter);
+		final PropfindDavRootDispatcher dispatcher = new PropfindDavRootDispatcher();
+		dispatcher.setParameterSchema(conn.getDBSchema());
+		dispatcher.setParameterBenutzerId(String.valueOf(conn.getUser().getId()));
+		return dispatcher;
 	}
 
 	/**
@@ -290,10 +286,10 @@ public class APIAdressbuch {
 	 */
 	private static ReportAddressbookDispatcher createReportAddressbookDispatcher(final DBEntityManager conn) {
 		final IAdressbuchRepository adressbuchRepository = createAdressbuchRepository(conn);
-		final DavUriParameter uriParameter = new DavUriParameter();
-		uriParameter.setSchema(conn.getDBSchema());
-		uriParameter.setBenutzerId(String.valueOf(conn.getUser().getId()));
-		return new ReportAddressbookDispatcher(adressbuchRepository, uriParameter);
+		final ReportAddressbookDispatcher dispatcher = new ReportAddressbookDispatcher(adressbuchRepository);
+		dispatcher.setParameterSchema(conn.getDBSchema());
+		dispatcher.setParameterBenutzerId(String.valueOf(conn.getUser().getId()));
+		return dispatcher;
 	}
 
 	/**
@@ -305,10 +301,10 @@ public class APIAdressbuch {
 	 */
 	private static PropfindAddressbookDispatcher createPropfindAddressbookDispatcher(final DBEntityManager conn) {
 		final IAdressbuchRepository repository = createAdressbuchRepository(conn);
-		final DavUriParameter uriParameter = new DavUriParameter();
-		uriParameter.setSchema(conn.getDBSchema());
-		uriParameter.setBenutzerId(String.valueOf(conn.getUser().getId()));
-		return new PropfindAddressbookDispatcher(repository, uriParameter);
+		final PropfindAddressbookDispatcher dispatcher = new PropfindAddressbookDispatcher(repository);
+		dispatcher.setParameterSchema(conn.getDBSchema());
+		dispatcher.setParameterBenutzerId(String.valueOf(conn.getUser().getId()));
+		return dispatcher;
 	}
 
 	/**
@@ -319,10 +315,10 @@ public class APIAdressbuch {
 	 * @return ein parametrierter Dispatcher
 	 */
 	private static PropfindPrincipalDispatcher createPropfindPrincipalDispatcher(final DBEntityManager conn) {
-		final DavUriParameter uriParameter = new DavUriParameter();
-		uriParameter.setSchema(conn.getDBSchema());
-		uriParameter.setBenutzerId(String.valueOf(conn.getUser().getId()));
-		return new PropfindPrincipalDispatcher(uriParameter);
+		final PropfindPrincipalDispatcher dispatcher = new PropfindPrincipalDispatcher();
+		dispatcher.setParameterSchema(conn.getDBSchema());
+		dispatcher.setParameterBenutzerId(String.valueOf(conn.getUser().getId()));
+		return dispatcher;
 	}
 
 	/**
@@ -382,4 +378,5 @@ public class APIAdressbuch {
 		logger.copyConsumer(Logger.global());
 		return logger;
 	}
+
 }

@@ -26,21 +26,14 @@ public class PutCalendarDispatcher extends DavDispatcher {
 	 */
 	private final IKalenderEintragRepository kalenderEintragRepository;
 
-	/** URI-Parameter für die Erzeugung von URIs des Ergebnisobjekts */
-	private final DavUriParameter uriParameter;
-
 	/**
 	 * Erstellt einen neuen Dispatcher mit den angegebenen Repositorys und
 	 * URI-Parametern
 	 *
-	 * @param kalenderEintragRepository das Repository für Kalendereinträge
-	 * @param uriParameter              die URI-Parameter für im Response verwendete
-	 *                                  URIs
+	 * @param kalenderEintragRepository   das Repository für Kalendereinträge
 	 */
-	public PutCalendarDispatcher(final IKalenderEintragRepository kalenderEintragRepository,
-			final DavUriParameter uriParameter) {
+	public PutCalendarDispatcher(final IKalenderEintragRepository kalenderEintragRepository) {
 		this.kalenderEintragRepository = kalenderEintragRepository;
-		this.uriParameter = uriParameter;
 	}
 
 	/**
@@ -96,8 +89,8 @@ public class PutCalendarDispatcher extends DavDispatcher {
 			final Optional<String> eTag) {
 		// iCalender Payload aus dem Request auslesen
 		// request content ist kein xml String, sondern direkt das .ics
-		uriParameter.setResourceCollectionId(ressourceCollectionId);
-		uriParameter.setResourceId(ressourceUID);
+		this.setParameterResourceCollectionId(ressourceCollectionId);
+		this.setParameterResourceId(ressourceUID);
 		final ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		final byte[] buffer = new byte[2048];
 		try {
@@ -121,11 +114,10 @@ public class PutCalendarDispatcher extends DavDispatcher {
 					.saveKalenderEintrag(updatedKalendereintrag);
 			return new EntityTag(saveKalenderEintrag.version);
 		} catch (@SuppressWarnings("unused") final IOException e) {
-			return ErrorCode.INTERNAL_SERVER_ERROR.getDavResponse(DavUriBuilder.getCalendarEntryUri(uriParameter))
-					.getError();
+			return ErrorCode.INTERNAL_SERVER_ERROR.getDavResponse(getKalenderResourceUri()).getError();
 		} catch (final DavException e) {
 			// hier wird das ErrorObjekt zurückgegeben
-			return e.getDavResponse(DavUriBuilder.getCalendarEntryUri(uriParameter)).getError();
+			return e.getDavResponse(getKalenderResourceUri()).getError();
 		}
 	}
 }

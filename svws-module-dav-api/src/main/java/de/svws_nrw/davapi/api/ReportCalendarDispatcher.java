@@ -40,19 +40,14 @@ public class ReportCalendarDispatcher extends DavDispatcher {
 	/** Repository-Klasse zur Abfrage von Kalendern aus der SVWS-Datenbank */
 	private final IKalenderRepository repository;
 
-	/** URI-Parameter für die Erzeugung von URIs des Ergebnisobjekts */
-	private final DavUriParameter uriParameter;
-
 	/**
 	 * Erstellt einen neuen Dispatcher mit dem angegebenen Repository und
 	 * URI-Parameter
 	 *
-	 * @param kalenderRepository das Repository für Kalender
-	 * @param uriParameter       die URI-Parameter für im Response verwendete URIs
+	 * @param kalenderRepository   das Repository für Kalender
 	 */
-	public ReportCalendarDispatcher(final IKalenderRepository kalenderRepository, final DavUriParameter uriParameter) {
+	public ReportCalendarDispatcher(final IKalenderRepository kalenderRepository) {
 		this.repository = kalenderRepository;
-		this.uriParameter = uriParameter;
 	}
 
 	/**
@@ -121,7 +116,7 @@ public class ReportCalendarDispatcher extends DavDispatcher {
 	private Multistatus handleCalendarMultigetRequest(final Kalender kalender, final CalendarMultiget multiget) {
 		final Multistatus ms = new Multistatus();
 		final List<KalenderEintrag> eintraegeByHrefs = this.getEintraegeByHrefs(kalender, multiget.getHref());
-		uriParameter.setResourceCollectionId(kalender.id);
+		this.setParameterResourceCollectionId(kalender.id);
 		for (final KalenderEintrag eintrag : eintraegeByHrefs) {
 			ms.getResponse().add(this.generateResponseEventLevel(eintrag, multiget.getProp()));
 		}
@@ -141,7 +136,7 @@ public class ReportCalendarDispatcher extends DavDispatcher {
 	 */
 	private Multistatus handleSyncCollectionRequest(final Kalender kalender, final SyncCollection syncCollection) {
 		final Multistatus ms = new Multistatus();
-		uriParameter.setResourceCollectionId(kalender.id);
+		this.setParameterResourceCollectionId(kalender.id);
 		final Long syncTokenMillis = syncCollection.getSyncToken().isBlank() ? 0
 				: Long.valueOf(syncCollection.getSyncToken());
 		for (final KalenderEintrag eintrag : this.getEintraegeBySyncToken(kalender.id, syncTokenMillis)) {
@@ -158,8 +153,8 @@ public class ReportCalendarDispatcher extends DavDispatcher {
 	private Response generateResponseResourceNotFound(final String deletedResourceUID) {
 		final Response r = new Response();
 		r.setStatus(Propstat.PROP_STATUS_404_NOT_FOUND);
-		uriParameter.setResourceId(deletedResourceUID);
-		r.getHref().add(DavUriBuilder.getCalendarEntryUri(uriParameter));
+		this.setParameterResourceId(deletedResourceUID);
+		r.getHref().add(getKalenderResourceUri());
 		return r;
 	}
 
@@ -176,7 +171,7 @@ public class ReportCalendarDispatcher extends DavDispatcher {
 	 */
 	private Multistatus handleCalendarQueryRequest(final Kalender kalender, final CalendarQuery calendarQuery) {
 		final Multistatus ms = new Multistatus();
-		uriParameter.setResourceCollectionId(kalender.id);
+		this.setParameterResourceCollectionId(kalender.id);
 		for (final KalenderEintrag eintrag : this.getEintraegeByFilter(kalender.id, calendarQuery)) {
 			ms.getResponse().add(this.generateResponseEventLevel(eintrag, calendarQuery.getProp()));
 		}
@@ -195,10 +190,10 @@ public class ReportCalendarDispatcher extends DavDispatcher {
 	 * @return Liste von Eintraegen.
 	 */
 	private List<KalenderEintrag> getEintraegeByHrefs(final @NotNull Kalender kalender, final List<String> eintragHrefs) {
-		uriParameter.setResourceCollectionId(kalender.id);
+		this.setParameterResourceCollectionId(kalender.id);
 		return kalender.kalenderEintraege.stream().filter(k -> {
-			uriParameter.setResourceId(k.uid);
-			return eintragHrefs.isEmpty() || eintragHrefs.contains(DavUriBuilder.getCalendarEntryUri(uriParameter));
+			this.setParameterResourceId(k.uid);
+			return eintragHrefs.isEmpty() || eintragHrefs.contains(getKalenderResourceUri());
 		}).toList();
 	}
 
@@ -301,7 +296,7 @@ public class ReportCalendarDispatcher extends DavDispatcher {
 	 */
 	private Response generateResponseEventLevel(final KalenderEintrag eintrag, final Prop propRequested) {
 		final DynamicPropUtil dynamicPropUtil = new DynamicPropUtil(propRequested);
-		uriParameter.setResourceId(eintrag.uid);
+		this.setParameterResourceId(eintrag.uid);
 
 		final Prop prop200 = new Prop();
 		if (dynamicPropUtil.getIsFieldRequested(CalendarData.class)) {
@@ -323,7 +318,7 @@ public class ReportCalendarDispatcher extends DavDispatcher {
 		}
 
 		final Response response = createResponse(propRequested, prop200);
-		response.getHref().add(DavUriBuilder.getCalendarEntryUri(uriParameter));
+		response.getHref().add(getKalenderResourceUri());
 		return response;
 	}
 

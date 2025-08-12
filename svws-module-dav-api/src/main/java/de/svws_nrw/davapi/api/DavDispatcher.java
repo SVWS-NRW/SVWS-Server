@@ -1,5 +1,9 @@
 package de.svws_nrw.davapi.api;
 
+import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
+
 import de.svws_nrw.davapi.model.dav.All;
 import de.svws_nrw.davapi.model.dav.CurrentUserPrivilegeSet;
 import de.svws_nrw.davapi.model.dav.Error;
@@ -13,12 +17,228 @@ import de.svws_nrw.davapi.model.dav.Response;
 import de.svws_nrw.davapi.model.dav.SimplePrivilege;
 import de.svws_nrw.davapi.model.dav.Write;
 import jakarta.validation.constraints.NotNull;
+import jakarta.ws.rs.core.UriBuilder;
 
 /**
  * Diese abstrakte Klasse ist die Grundlage für das einheitliche Verarbeiten von
  * Requests über das DAV-API des SVWSs.
  */
-abstract class DavDispatcher {
+public abstract class DavDispatcher {
+
+	/** Die allgemeine URL für DAV */
+	public static final @NotNull String DAV_URL = "/dav/{schema}";
+
+	/** Die allgemeine URL für einen DAV-Benutzer */
+	public static final @NotNull String DAV_USER_URL = "/dav/{schema}/benutzer/{benutzerId}";
+
+	/** Die allgemeine URL für CalDav */
+	public static final @NotNull String CALDAV_URL = "/dav/{schema}/kalender";
+
+	/** Die allgemeine URL für eine CalDav-Resource-Collection */
+	public static final @NotNull String CALDAV_URL_RESOURCE_COLLECTION = "/dav/{schema}/kalender/{resourceCollectionId}";
+
+	/** Die allgemeine URL für eine CalDav-Resource */
+	public static final @NotNull String CALDAV_URL_RESOURCE = "/dav/{schema}/kalender/{resourceCollectionId}/{resourceId}.ics";
+
+	/** Die allgemeine URL für CardDav */
+	public static final @NotNull String CARDDAV_URL = "/dav/{schema}/adressbuecher";
+
+	/** Die allgemeine URL für eine CardDav-Resource-Collection */
+	public static final @NotNull String CARDDAV_URL_RESOURCE_COLLECTION = "/dav/{schema}/adressbuecher/{resourceCollectionId}";
+
+	/** Die allgemeine URL für eine CardDav-Resource */
+	public static final @NotNull String CARDDAV_URL_RESOURCE = "/dav/{schema}/adressbuecher/{resourceCollectionId}/{resourceId}.vcf";
+
+
+	/** URI-Parameter für die Erzeugung von URIs des Ergebnisobjekts */
+	protected final @NotNull Map<String, String> params = new HashMap<>();
+
+
+	/**
+	 * Setzt den URI-Parameter für key auf den Wert value.
+	 *
+	 * @param key     der Schlüssel
+	 * @param value   der Wert
+	 */
+	private void setParameterString(final @NotNull String key, final String value) {
+		if ((value == null) || (value.isBlank()))
+			params.remove(key);
+		else
+			params.put(key, value);
+	}
+
+
+	/**
+	 * getter für den Parameter 'schema', das Datenbankschema, gegen das Anfragen an
+	 * das API ausgeführt werden
+	 *
+	 * @return der Parameter für 'schema'
+	 */
+	public String getParameterSchema() {
+		return params.get("schema");
+	}
+
+	/**
+	 * setter für den Parameter 'schema', das Datenbankschema, gegen das Anfragen an
+	 * das API ausgeführt werden
+	 *
+	 * @param schema der Parameter für 'schema'
+	 */
+	public void setParameterSchema(final String schema) {
+		setParameterString("schema", schema);
+	}
+
+	/**
+	 * getter für den Parameter 'benutzerId', die Id der Ressource Benutzer
+	 *
+	 * @return der Parameter für 'benutzerId'
+	 */
+	public String getParameterBenutzerId() {
+		return params.get("benutzerId");
+	}
+
+	/**
+	 * setter für den Parameter 'benutzerId', die Id der Ressource Benutzer
+	 *
+	 * @param benutzerId der Parameter für 'benutzerId'
+	 */
+	public void setParameterBenutzerId(final String benutzerId) {
+		setParameterString("benutzerId", benutzerId);
+	}
+
+	/**
+	 * getter für den Parameter 'adressbuchId', die Id der Ressource Adressbuch
+	 *
+	 * @return der Parameter für 'adressbuchId'
+	 */
+	public String getParameterResourceCollectionId() {
+		return params.get("resourceCollectionId");
+	}
+
+	/**
+	 * setter für den Parameter 'adressbuchId', die Id der Ressource Adressbuch
+	 *
+	 * @param resourceCollectionId der Parameter für 'adressbuchId'
+	 */
+	public void setParameterResourceCollectionId(final String resourceCollectionId) {
+		setParameterString("resourceCollectionId", resourceCollectionId);
+	}
+
+	/**
+	 * getter für den Parameter 'adressbuchEintragId', die Id der Ressource
+	 * AdressbuchEintrag
+	 *
+	 * @return der Parameter für 'adressbuchEintragId'
+	 */
+	public String getParameterResourceId() {
+		return params.get("resourceId");
+	}
+
+	/**
+	 * setter für den Parameter 'adressbuchEintragId', die Id der Ressource
+	 * AdressbuchEintrag
+	 *
+	 * @param resourceId der Parameter für 'adressbuchEintragId'
+	 */
+	public void setParameterResourceId(final String resourceId) {
+		setParameterString("resourceId", resourceId);
+	}
+
+
+	/**
+	 * Generiert die URI zur für die Ressource durch einsetzen der übergebenen Parameter in den übergebenen Pfad.
+	 *
+	 * @param path     der Pfad
+	 * @param params   die Parameter für den Aufbau der URI
+	 *
+	 * @return die URI zur Ressource als String.
+	 */
+	private static @NotNull String getDavUri(final @NotNull String path, final @NotNull Map<String, String> params) {
+		final UriBuilder uriBuilder = UriBuilder.fromPath(path);
+		final URI uri = uriBuilder.buildFromMap(params);
+		return uri.toASCIIString();
+	}
+
+
+	/**
+	 * Gibt die URI für DAV zurück.
+	 *
+	 * @return die URI
+	 */
+	public @NotNull String getRootUri() {
+		return getDavUri(DAV_URL, params);
+	}
+
+
+	/**
+	 * Gibt die URI für den Benutzer zurück.
+	 *
+	 * @return die URI
+	 */
+	public @NotNull String getBenutzerUri() {
+		return getDavUri(DAV_USER_URL, params);
+	}
+
+
+	/**
+	 * Gibt die URI für den Kalender zurück.
+	 *
+	 * @return die URI
+	 */
+	public @NotNull String getKalenderUri() {
+		return getDavUri(CALDAV_URL, params);
+	}
+
+
+	/**
+	 * Gibt die URI für eine Kalender-Resource-Collection zurück.
+	 *
+	 * @return die URI
+	 */
+	public @NotNull String getKalenderResourceCollectionUri() {
+		return getDavUri(CALDAV_URL_RESOURCE_COLLECTION, params);
+	}
+
+
+	/**
+	 * Gibt die URI für eine Kalender-Resource zurück.
+	 *
+	 * @return die URI
+	 */
+	public @NotNull String getKalenderResourceUri() {
+		return getDavUri(CALDAV_URL_RESOURCE, params);
+	}
+
+
+	/**
+	 * Gibt die URI für die Adressbücher zurück.
+	 *
+	 * @return die URI
+	 */
+	public @NotNull String getCardDavUri() {
+		return getDavUri(CARDDAV_URL, params);
+	}
+
+
+	/**
+	 * Gibt die URI für eine Kalender-Resource-Collection zurück.
+	 *
+	 * @return die URI
+	 */
+	public @NotNull String getCardDavResourceCollectionUri() {
+		return getDavUri(CARDDAV_URL_RESOURCE_COLLECTION, params);
+	}
+
+
+	/**
+	 * Gibt die URI für eine Kalender-Resource zurück.
+	 *
+	 * @return die URI
+	 */
+	public @NotNull String getCardDavResourceUri() {
+		return getDavUri(CARDDAV_URL_RESOURCE, params);
+	}
+
 
 	/**
 	 * Erzeugt ein Error-Rückgabeobjekt mit der angegebenen Message. Dieses Objekt

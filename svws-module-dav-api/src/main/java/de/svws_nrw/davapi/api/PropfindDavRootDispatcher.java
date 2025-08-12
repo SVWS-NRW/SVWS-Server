@@ -21,19 +21,6 @@ import de.svws_nrw.davapi.util.XmlUnmarshallingUtil;
  */
 public class PropfindDavRootDispatcher extends DavDispatcher {
 
-	/** URI-Parameter zum Erzeugen von URIs für dieses Adressbuch */
-	private final DavUriParameter uriParameter;
-
-	/**
-	 * Konstruktor für einen neuen Dispatcher mit Repository und den gegebenen
-	 * UriParametern
-	 *
-	 * @param uriParameter die UriParameter zum Erstellen von URIs
-	 */
-	public PropfindDavRootDispatcher(final DavUriParameter uriParameter) {
-		this.uriParameter = uriParameter;
-	}
-
 	/**
 	 * Verarbeitet ein XML-Request aus dem gegebenen InputStream für die Sammlung
 	 * von Ressourcen
@@ -79,7 +66,7 @@ public class PropfindDavRootDispatcher extends DavDispatcher {
 
 		if (dynamicPropUtil.getIsFieldRequested(CurrentUserPrincipal.class)) {
 			final CurrentUserPrincipal principal = new CurrentUserPrincipal();
-			principal.getHref().add(DavUriBuilder.getPrincipalUri(this.uriParameter));
+			principal.getHref().add(getBenutzerUri());
 			prop200.setCurrentUserPrincipal(principal);
 		}
 
@@ -91,12 +78,12 @@ public class PropfindDavRootDispatcher extends DavDispatcher {
 			// Kalenderanfragen auf unserer Wurzel benötigen den Link zur Kalendersammlung
 			// unter dav/schema/kalender
 			final CalendarHomeSet calendarHomeSet = new CalendarHomeSet();
-			calendarHomeSet.getHref().add(DavUriBuilder.getCalendarCollectionUri(uriParameter));
+			calendarHomeSet.getHref().add(getKalenderUri());
 			prop200.setCalendarHomeSet(calendarHomeSet);
 		}
 
 		final Response response = createResponse(propRequested, prop200);
-		response.getHref().add(DavUriBuilder.getCardDavRootUri(this.uriParameter));
+		response.getHref().add(getRootUri());
 		return response;
 	}
 
@@ -120,7 +107,7 @@ public class PropfindDavRootDispatcher extends DavDispatcher {
 
 		if (dynamicPropUtil.getIsFieldRequested(CurrentUserPrincipal.class)) {
 			final CurrentUserPrincipal principal = new CurrentUserPrincipal();
-			principal.getHref().add(DavUriBuilder.getPrincipalUri(uriParameter));
+			principal.getHref().add(getBenutzerUri());
 			prop200.setCurrentUserPrincipal(principal);
 		}
 
@@ -129,7 +116,7 @@ public class PropfindDavRootDispatcher extends DavDispatcher {
 		}
 
 		final Response response = createResponse(propRequested, prop200);
-		response.getHref().add(DavUriBuilder.getAddressbookCollectionUri(uriParameter));
+		response.getHref().add(getCardDavUri());
 		return response;
 	}
 
@@ -156,7 +143,7 @@ public class PropfindDavRootDispatcher extends DavDispatcher {
 
 		if (dynamicPropUtil.getIsFieldRequested(CurrentUserPrincipal.class)) {
 			final CurrentUserPrincipal principal = new CurrentUserPrincipal();
-			principal.getHref().add(DavUriBuilder.getPrincipalUri(uriParameter));
+			principal.getHref().add(getBenutzerUri());
 			prop200.setCurrentUserPrincipal(principal);
 		}
 
@@ -166,12 +153,13 @@ public class PropfindDavRootDispatcher extends DavDispatcher {
 
 		if (dynamicPropUtil.getIsFieldRequested(CalendarHomeSet.class)) {
 			final CalendarHomeSet calendarHomeSet = new CalendarHomeSet();
-			calendarHomeSet.getHref().add(DavUriBuilder.getCalendarCollectionUri(uriParameter));
+			calendarHomeSet.getHref().add(getKalenderUri());
 			prop200.setCalendarHomeSet(calendarHomeSet);
 		}
 
 		final Response response = createResponse(propRequested, prop200);
-		response.getHref().add(DavUriBuilder.getCalendarCollectionUri(uriParameter));
+		response.getHref().add(getKalenderUri());
 		return response;
 	}
+
 }
