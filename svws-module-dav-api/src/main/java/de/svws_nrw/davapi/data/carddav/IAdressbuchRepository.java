@@ -1,9 +1,10 @@
-package de.svws_nrw.davapi.data;
+package de.svws_nrw.davapi.data.carddav;
 
 import java.util.List;
 import java.util.Optional;
 
 import de.svws_nrw.core.data.adressbuch.Adressbuch;
+import de.svws_nrw.davapi.data.dav.CollectionQueryParameters;
 
 /**
  * Schnittstelle für Adressbuch Repositories. Diese Repositories kapseln den
@@ -20,7 +21,7 @@ public interface IAdressbuchRepository {
 	 * @return Optional eines Adressbuchs oder Optional.empty(), falls kein
 	 *         Adressbuch mit der angegebenen Id gefunden werden konnte.
 	 */
-	Optional<Adressbuch> getAdressbuchById(String adressbuchId, CollectionRessourceQueryParameters params);
+	Optional<Adressbuch> getAdressbuchById(String adressbuchId, CollectionQueryParameters params);
 
 	/**
 	 * Ermittelt eine Liste aller für den angemeldeten Benutzer verfügbaren
@@ -29,6 +30,6 @@ public interface IAdressbuchRepository {
 	 * @param params QueryParameter zum Filtern des Inhalts der Adressbuecher
 	 * @return Liste verfügbarer Adressbücher.
 	 */
-	List<Adressbuch> getAvailableAdressbuecher(CollectionRessourceQueryParameters params);
+	List<Adressbuch> getAvailableAdressbuecher(CollectionQueryParameters params);
 
 }

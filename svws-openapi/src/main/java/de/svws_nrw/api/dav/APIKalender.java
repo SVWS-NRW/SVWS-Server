@@ -20,11 +20,10 @@ import de.svws_nrw.davapi.api.PropfindCalendarDispatcher;
 import de.svws_nrw.davapi.api.PutCalendarDispatcher;
 import de.svws_nrw.davapi.api.REPORT;
 import de.svws_nrw.davapi.api.ReportCalendarDispatcher;
-import de.svws_nrw.davapi.data.IDavRepository;
-import de.svws_nrw.davapi.data.IKalenderEintragRepository;
-import de.svws_nrw.davapi.data.IKalenderRepository;
-import de.svws_nrw.davapi.data.repos.dav.DavRepository;
-import de.svws_nrw.davapi.data.repos.kalender.KalenderRepository;
+import de.svws_nrw.davapi.data.caldav.IKalenderEintragRepository;
+import de.svws_nrw.davapi.data.caldav.IKalenderRepository;
+import de.svws_nrw.davapi.data.caldav.KalenderRepository;
+import de.svws_nrw.davapi.data.dav.DavDBRepository;
 import de.svws_nrw.davapi.model.dav.Error;
 import de.svws_nrw.davapi.model.dav.Multistatus;
 import de.svws_nrw.db.DBEntityManager;
@@ -309,7 +308,7 @@ public class APIKalender {
 	 * @return den Delete Dispatcher
 	 */
 	private static DeleteRessourceDispatcher createDeleteOnDavRessourceDispatcher(final DBEntityManager conn, final String schema) {
-		final IDavRepository davRepository = new DavRepository(conn);
+		final DavDBRepository davRepository = new DavDBRepository(conn);
 		final DeleteRessourceDispatcher dispatcher = new DeleteRessourceDispatcher(davRepository);
 		dispatcher.setParameterSchema(schema);
 		return new DeleteRessourceDispatcher(davRepository);
@@ -410,12 +409,12 @@ public class APIKalender {
 	}
 
 	/**
-	 * Erzeugt ein neues {@link de.svws_nrw.davapi.data.IKalenderRepository}
+	 * Erzeugt ein neues {@link de.svws_nrw.davapi.data.caldav.IKalenderRepository}
 	 * mit der gegebenen Datenbankverbindung.
 	 *
 	 * @param conn die Datenbankverbindung
 	 * @return eine Implementierung von
-	 *         {@link de.svws_nrw.davapi.data.IKalenderRepository} für den
+	 *         {@link de.svws_nrw.davapi.data.caldav.IKalenderRepository} für den
 	 *         Zugriff auf Kalender.
 	 */
 	private static IKalenderRepository createKalenderRepository(final DBEntityManager conn) {
@@ -424,12 +423,12 @@ public class APIKalender {
 
 	/**
 	 * Erzeugt ein neues
-	 * {@link de.svws_nrw.davapi.data.IKalenderEintragRepository} mit der
+	 * {@link de.svws_nrw.davapi.data.caldav.IKalenderEintragRepository} mit der
 	 * gegebenen Datenbankverbindung.
 	 *
 	 * @param conn die Datenbankverbindung
 	 * @return eine Implementierung von
-	 *         {@link de.svws_nrw.davapi.data.IKalenderEintragRepository} für
+	 *         {@link de.svws_nrw.davapi.data.caldav.IKalenderEintragRepository} für
 	 *         den Zugriff auf Kalender.
 	 */
 	private static IKalenderEintragRepository createKalenderEintragRepository(final DBEntityManager conn) {

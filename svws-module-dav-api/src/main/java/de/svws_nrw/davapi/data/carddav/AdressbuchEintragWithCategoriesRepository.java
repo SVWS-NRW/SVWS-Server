@@ -1,11 +1,9 @@
-package de.svws_nrw.davapi.data.repos.bycategory;
+package de.svws_nrw.davapi.data.carddav;
 
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.data.adressbuch.AdressbuchEintrag;
 import de.svws_nrw.core.utils.schule.SchuljahresAbschnittsManager;
-import de.svws_nrw.davapi.data.CollectionRessourceQueryParameters;
-import de.svws_nrw.davapi.data.IAdressbuchKontaktRepository;
-import de.svws_nrw.davapi.data.repos.bycategory.AdressbuchWithCategoriesRepository.AdressbuchContactTypes;
+import de.svws_nrw.davapi.data.dav.CollectionQueryParameters;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
@@ -15,12 +13,12 @@ import java.util.List;
 
 import jakarta.validation.constraints.NotNull;
 
+
 /**
  * Dieses Repository für Adressbucheinträge ergänzt an jedem Kontakt die
  * Kategorien, in denen dieser Kontakt gefunden werden soll, beispielsweise
  * Klassen oder Kurse, Fachschaft, etc. Dies ermöglicht Clientabhängige
  * Interpretation der Kategorien als Suchparameter oder als Mailingliste.
- *
  */
 class AdressbuchEintragWithCategoriesRepository implements IAdressbuchKontaktRepository {
 
@@ -49,6 +47,7 @@ class AdressbuchEintragWithCategoriesRepository implements IAdressbuchKontaktRep
 	 */
 	private AdressbuchKategorienUtil kategorienUtil;
 
+
 	/**
 	 * Die Datenbankverbindung
 	 */
@@ -56,6 +55,7 @@ class AdressbuchEintragWithCategoriesRepository implements IAdressbuchKontaktRep
 
 	/** der Benutzer, dessen Adressbuecher gesucht werden */
 	private final Benutzer user;
+
 
 	/**
 	 * Konstruktor zum Erstellen des Repositories mit einer Datenbankverbindung
@@ -69,35 +69,27 @@ class AdressbuchEintragWithCategoriesRepository implements IAdressbuchKontaktRep
 	}
 
 	/**
-	 * instantiieren des SchuelerRepositories
+	 * Instantiieren des SchuelerRepositories
 	 */
 	private void instantiateSchuelerRepository() {
-		if (this.schuelerRepository == null) {
-			this.schuelerRepository = new SchuelerWithCategoriesRepository(conn, user, aktuellerSchuljahresabschnitt,
-					kategorienUtil);
-		}
+		if (this.schuelerRepository == null)
+			this.schuelerRepository = new SchuelerWithCategoriesRepository(conn, user, aktuellerSchuljahresabschnitt, kategorienUtil);
 	}
 
 	/**
-	 * instantiieren des LehrerRepositories
+	 * Instantiieren des LehrerRepositories
 	 */
-
 	private void instantiateLehrerRepository() {
-		if (this.lehrerRepository == null) {
-			this.lehrerRepository = new LehrerWithCategoriesRepository(conn, user, aktuellerSchuljahresabschnitt,
-					kategorienUtil);
-		}
+		if (this.lehrerRepository == null)
+			this.lehrerRepository = new LehrerWithCategoriesRepository(conn, user, aktuellerSchuljahresabschnitt, kategorienUtil);
 	}
 
 	/**
-	 * instantiieren des ErzieherRepositories
+	 * Instantiieren des ErzieherRepositories
 	 */
-
 	private void instantiateErzieherRepository() {
-		if (this.erzieherRepository == null) {
-			this.erzieherRepository = new ErzieherWithCategoriesRepository(conn, aktuellerSchuljahresabschnitt,
-					kategorienUtil);
-		}
+		if (this.erzieherRepository == null)
+			this.erzieherRepository = new ErzieherWithCategoriesRepository(conn, aktuellerSchuljahresabschnitt, kategorienUtil);
 	}
 
 	/**
@@ -119,7 +111,7 @@ class AdressbuchEintragWithCategoriesRepository implements IAdressbuchKontaktRep
 	}
 
 	@Override
-	public List<AdressbuchEintrag> getKontakteByAdressbuch(final @NotNull String adressbuchId, final CollectionRessourceQueryParameters params) {
+	public List<AdressbuchEintrag> getKontakteByAdressbuch(final @NotNull String adressbuchId, final CollectionQueryParameters params) {
 		final AdressbuchContactTypes adressbuchEnum = AdressbuchContactTypes.valueOf(adressbuchId.toUpperCase());
 		final List<AdressbuchEintrag> result = switch (adressbuchEnum) {
 			case SCHUELER -> {

@@ -1,9 +1,10 @@
-package de.svws_nrw.davapi.data;
+package de.svws_nrw.davapi.data.caldav;
 
 import java.util.Optional;
 
 import de.svws_nrw.core.data.kalender.KalenderEintrag;
-import de.svws_nrw.davapi.data.repos.dav.DavException;
+import de.svws_nrw.davapi.data.dav.CollectionQueryParameters;
+import de.svws_nrw.davapi.data.dav.DavException;
 
 /**
  * Interface Definition für Repositories von Kalendereinträgen.
@@ -21,7 +22,7 @@ public interface IKalenderEintragRepository {
 	 * @return Optional des Kalendereintrags
 	 */
 	Optional<KalenderEintrag> getKalenderEintragByKalenderAndUID(String kalenderId, String kalenderEintragUID,
-			CollectionRessourceQueryParameters params);
+			CollectionQueryParameters params);
 
 	/**
 	 * Speichern einen Kalendereintrag. Existiert dieser bereits, erfährt der

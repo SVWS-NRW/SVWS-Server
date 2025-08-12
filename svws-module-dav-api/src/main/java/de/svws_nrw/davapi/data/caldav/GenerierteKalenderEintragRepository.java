@@ -1,10 +1,9 @@
-package de.svws_nrw.davapi.data.repos.kalender;
+package de.svws_nrw.davapi.data.caldav;
 
 import java.util.Optional;
 
 import de.svws_nrw.core.data.kalender.KalenderEintrag;
-import de.svws_nrw.davapi.data.CollectionRessourceQueryParameters;
-import de.svws_nrw.davapi.data.IKalenderEintragRepository;
+import de.svws_nrw.davapi.data.dav.CollectionQueryParameters;
 import de.svws_nrw.db.DBEntityManager;
 
 /**
@@ -27,7 +26,7 @@ public final class GenerierteKalenderEintragRepository implements IKalenderEintr
 
 	@Override
 	public Optional<KalenderEintrag> getKalenderEintragByKalenderAndUID(final String kalenderId, final String kalenderEintragUID,
-			final CollectionRessourceQueryParameters params) {
+			final CollectionQueryParameters params) {
 		return Optional.empty();
 	}
 

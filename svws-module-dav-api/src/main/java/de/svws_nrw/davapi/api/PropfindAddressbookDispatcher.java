@@ -2,8 +2,8 @@ package de.svws_nrw.davapi.api;
 
 import de.svws_nrw.core.data.adressbuch.Adressbuch;
 import de.svws_nrw.core.data.adressbuch.AdressbuchEintrag;
-import de.svws_nrw.davapi.data.CollectionRessourceQueryParameters;
-import de.svws_nrw.davapi.data.IAdressbuchRepository;
+import de.svws_nrw.davapi.data.carddav.IAdressbuchRepository;
+import de.svws_nrw.davapi.data.dav.CollectionQueryParameters;
 import de.svws_nrw.davapi.model.dav.Collection;
 import de.svws_nrw.davapi.model.dav.CurrentUserPrincipal;
 import de.svws_nrw.davapi.model.dav.CurrentUserPrivilegeSet;
@@ -56,16 +56,12 @@ public class PropfindAddressbookDispatcher extends DavDispatcher {
 	 * @throws IOException
 	 */
 	private Object dispatchCollection(final Propfind propfind) {
-		final List<Adressbuch> adressbuecher = this.repository
-				.getAvailableAdressbuecher(CollectionRessourceQueryParameters.EXCLUDE_RESSOURCES);
-		if (adressbuecher.isEmpty()) {
-			return this.createResourceNotFoundError(
-					"Es wurden keine Adressbücher für den angemeldeten Benutzer gefunden!");
-		}
+		final List<Adressbuch> adressbuecher = this.repository.getAvailableAdressbuecher(CollectionQueryParameters.NO_RESSOURCES);
+		if (adressbuecher.isEmpty())
+			return this.createResourceNotFoundError("Es wurden keine Adressbücher für den angemeldeten Benutzer gefunden!");
 		final Multistatus ms = new Multistatus();
-		for (final Adressbuch adressbuch : adressbuecher) {
+		for (final Adressbuch adressbuch : adressbuecher)
 			ms.getResponse().add(this.generateResponseAddressbookLevel(adressbuch, propfind.getProp()));
-		}
 		return ms;
 	}
 
@@ -88,7 +84,7 @@ public class PropfindAddressbookDispatcher extends DavDispatcher {
 		}
 
 		final Optional<Adressbuch> adressbuch = this.repository.getAdressbuchById(ressourceId,
-				CollectionRessourceQueryParameters.INCLUDE_RESSOURCES_EXCLUDE_PAYLOAD);
+				CollectionQueryParameters.NO_PAYLOAD);
 		if (adressbuch.isEmpty()) {
 			return this.createResourceNotFoundError("Adressbuch mit der angegebenen Id wurde nicht gefunden!");
 		}

@@ -1,4 +1,4 @@
-package de.svws_nrw.davapi.data.repos.bycategory;
+package de.svws_nrw.davapi.data.carddav;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -15,8 +15,7 @@ import de.svws_nrw.core.data.adressbuch.AdressbuchEintrag;
 import de.svws_nrw.core.data.adressbuch.Telefonnummer;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
-import de.svws_nrw.davapi.data.CollectionRessourceQueryParameters;
-import de.svws_nrw.davapi.data.IAdressbuchKontaktRepository;
+import de.svws_nrw.davapi.data.dav.CollectionQueryParameters;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.erzieher.DTOSchuelerTelefon;
@@ -79,7 +78,7 @@ public final class SchuelerWithCategoriesRepository implements IAdressbuchKontak
 
 	@Override
 	public List<AdressbuchEintrag> getKontakteByAdressbuch(final String adressbuchId,
-			final CollectionRessourceQueryParameters params) {
+			final CollectionQueryParameters params) {
 		if (!params.includeRessources || !user.pruefeKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) {
 			return new ArrayList<>();
 		}

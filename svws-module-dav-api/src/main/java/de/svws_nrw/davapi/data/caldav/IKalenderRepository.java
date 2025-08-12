@@ -1,10 +1,11 @@
-package de.svws_nrw.davapi.data;
+package de.svws_nrw.davapi.data.caldav;
 
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
 import de.svws_nrw.core.data.kalender.Kalender;
+import de.svws_nrw.davapi.data.dav.CollectionQueryParameters;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -22,7 +23,7 @@ public interface IKalenderRepository {
 	 * @return Optional eines Kalenders oder Optional.empty(), falls kein Kalender
 	 *         mit der angegebenen Id gefunden werden konnte.
 	 */
-	Optional<Kalender> getKalenderById(String kalenderId, CollectionRessourceQueryParameters params);
+	Optional<Kalender> getKalenderById(String kalenderId, CollectionQueryParameters params);
 
 	/**
 	 * Ermittelt eine Liste aller für den angemeldeten Benutzer verfügbaren
@@ -32,7 +33,7 @@ public interface IKalenderRepository {
 	 * @return Liste verfügbarer Adressbücher.
 	 */
 	@NotNull
-	List<Kalender> getAvailableKalender(CollectionRessourceQueryParameters params);
+	List<Kalender> getAvailableKalender(CollectionQueryParameters params);
 
 	/**
 	 * Sucht die gelöschten Ressourcen-UIDs einer Ressourcensammlung seit einem

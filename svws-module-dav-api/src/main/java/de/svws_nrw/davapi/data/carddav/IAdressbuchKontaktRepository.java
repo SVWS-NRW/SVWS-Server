@@ -1,8 +1,9 @@
-package de.svws_nrw.davapi.data;
+package de.svws_nrw.davapi.data.carddav;
 
 import de.svws_nrw.core.data.adressbuch.AdressbuchEintrag;
 import de.svws_nrw.core.data.adressbuch.AdressbuchKontakt;
 import de.svws_nrw.core.data.adressbuch.Telefonnummer;
+import de.svws_nrw.davapi.data.dav.CollectionQueryParameters;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
@@ -42,7 +43,7 @@ public interface IAdressbuchKontaktRepository {
 	 *                     notwendigt Informationen
 	 * @return Liste mit Kontakten des angegebenen Adressbuchs.
 	 */
-	List<AdressbuchEintrag> getKontakteByAdressbuch(String adressbuchId, CollectionRessourceQueryParameters params);
+	List<AdressbuchEintrag> getKontakteByAdressbuch(String adressbuchId, CollectionQueryParameters params);
 
 	/**
 	 * statische Methode zum mappen von SchuelerDTOs zu Kontakten

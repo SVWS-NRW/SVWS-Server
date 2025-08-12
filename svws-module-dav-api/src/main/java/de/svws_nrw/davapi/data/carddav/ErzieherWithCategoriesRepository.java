@@ -1,4 +1,4 @@
-package de.svws_nrw.davapi.data.repos.bycategory;
+package de.svws_nrw.davapi.data.carddav;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,8 +15,7 @@ import de.svws_nrw.core.data.adressbuch.AdressbuchKontakt;
 import de.svws_nrw.core.data.adressbuch.Telefonnummer;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
-import de.svws_nrw.davapi.data.CollectionRessourceQueryParameters;
-import de.svws_nrw.davapi.data.IAdressbuchKontaktRepository;
+import de.svws_nrw.davapi.data.dav.CollectionQueryParameters;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.erzieher.DTOSchuelerErzieherAdresse;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
@@ -65,7 +64,7 @@ public final class ErzieherWithCategoriesRepository implements IAdressbuchKontak
 	}
 
 	@Override
-	public List<AdressbuchEintrag> getKontakteByAdressbuch(final String adressbuchId, final CollectionRessourceQueryParameters params) {
+	public List<AdressbuchEintrag> getKontakteByAdressbuch(final String adressbuchId, final CollectionQueryParameters params) {
 		if (!params.includeRessources
 				|| !conn.getUser().pruefeKompetenz(BenutzerKompetenz.CARDDAV_ERZIEHER_ANSEHEN)) {
 			return new ArrayList<>();

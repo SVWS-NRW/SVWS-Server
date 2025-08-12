@@ -2,7 +2,7 @@ package de.svws_nrw.davapi.api;
 
 import java.util.Optional;
 
-import de.svws_nrw.davapi.data.IDavRepository;
+import de.svws_nrw.davapi.data.dav.DavDBRepository;
 import de.svws_nrw.davapi.model.dav.Error;
 import de.svws_nrw.davapi.model.dav.Multistatus;
 import de.svws_nrw.davapi.model.dav.Response;
@@ -14,7 +14,7 @@ import de.svws_nrw.davapi.model.dav.Response;
 public class DeleteRessourceDispatcher extends DavDispatcher {
 
 	/** das DavRepository */
-	private final IDavRepository repository;
+	private final DavDBRepository repository;
 
 	/**
 	 * Konstruktor mit Repository für Datenbankzugriff und URI-Parametern zum
@@ -22,7 +22,7 @@ public class DeleteRessourceDispatcher extends DavDispatcher {
 	 *
 	 * @param repository   das DavRepository
 	 */
-	public DeleteRessourceDispatcher(final IDavRepository repository) {
+	public DeleteRessourceDispatcher(final DavDBRepository repository) {
 		this.repository = repository;
 	}
 
@@ -42,7 +42,7 @@ public class DeleteRessourceDispatcher extends DavDispatcher {
 		this.setParameterResourceCollectionId(ressourceCollectionId);
 		this.setParameterResourceId(ressourceUID);
 		try {
-			if (repository.deleteRessourceIfUpToDate(Long.valueOf(ressourceCollectionId), ressourceUID,
+			if (repository.deleteRessource(Long.valueOf(ressourceCollectionId), ressourceUID,
 					Long.valueOf(adjustETags(ifMatchToken)))) {
 				return Optional.empty();
 			}

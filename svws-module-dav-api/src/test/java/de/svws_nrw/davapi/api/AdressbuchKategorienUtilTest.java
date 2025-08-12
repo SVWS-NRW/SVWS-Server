@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-import de.svws_nrw.davapi.data.repos.bycategory.AdressbuchKategorienUtil;
+import de.svws_nrw.davapi.data.carddav.AdressbuchKategorienUtil;
 
 /**
  * Testklasse für die Namensgebung von Kategorien

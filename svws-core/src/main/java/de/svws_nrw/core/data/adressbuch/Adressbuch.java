@@ -10,14 +10,15 @@ import java.util.ArrayList;
 
 import de.svws_nrw.transpiler.TranspilerDTO;
 
+
 /**
- * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle
- * verwendet. Sie beschreibt ein Adressbuch.
+ * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet. Sie beschreibt ein Adressbuch.
  */
 @XmlRootElement
 @Schema(description = "Ein Adressbuch.")
 @TranspilerDTO
 public class Adressbuch {
+
 	/** ID des Adressbuchs */
 	@Schema(description = "die ID des Adressbuchs", example = "global")
 	public @NotNull String id = "";
@@ -34,17 +35,14 @@ public class Adressbuch {
 	@Schema(description = "Versionskennzeichen des Adressbuchs", example = "98")
 	public int synctoken;
 
-	/**
-	 * der Typ des Adressbuchs
-	 */
+	/** Der Typ des Adressbuchs */
 	@Schema(description = "der Typ des Adressbuchs", example = "GENERIERT")
 	public @NotNull String adressbuchTyp = "";
 
-	/**
-	 * eine Liste der Einträge des Adressbuchs
-	 */
+	/** Eine Liste der Einträge des Adressbuchs */
 	@ArraySchema(schema = @Schema(description = "eine Liste der Einträge des Adressbuchs", example = "..."))
 	public @NotNull List<AdressbuchEintrag> adressbuchEintraege = new ArrayList<>();
+
 
 	/**
 	 * Leerer Standardkonstruktor.

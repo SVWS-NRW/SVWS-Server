@@ -367,4 +367,5 @@ public abstract class DavDispatcher {
 	protected String adjustETags(final String value) {
 		return value.replace("\"", "");
 	}
+
 }

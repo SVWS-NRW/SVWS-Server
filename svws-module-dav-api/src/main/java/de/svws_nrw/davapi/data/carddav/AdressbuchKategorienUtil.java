@@ -1,4 +1,4 @@
-package de.svws_nrw.davapi.data.repos.bycategory;
+package de.svws_nrw.davapi.data.carddav;
 
 /**
  * Diese Klasse dient der Namensgebung der verschiedenen Adressbuchkategorien

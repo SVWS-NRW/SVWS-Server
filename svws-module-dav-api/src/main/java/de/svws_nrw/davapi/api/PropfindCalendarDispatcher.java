@@ -7,8 +7,8 @@ import java.util.Optional;
 
 import de.svws_nrw.core.data.kalender.Kalender;
 import de.svws_nrw.core.data.kalender.KalenderEintrag;
-import de.svws_nrw.davapi.data.CollectionRessourceQueryParameters;
-import de.svws_nrw.davapi.data.IKalenderRepository;
+import de.svws_nrw.davapi.data.caldav.IKalenderRepository;
+import de.svws_nrw.davapi.data.dav.CollectionQueryParameters;
 import de.svws_nrw.davapi.model.dav.Collection;
 import de.svws_nrw.davapi.model.dav.CurrentUserPrincipal;
 import de.svws_nrw.davapi.model.dav.CurrentUserPrivilegeSet;
@@ -63,20 +63,15 @@ public class PropfindCalendarDispatcher extends DavDispatcher {
 	 * @throws IOException
 	 */
 	private Object dispatchCollection(final Propfind propfind) {
-		final List<Kalender> kalenderList = this.repository
-				.getAvailableKalender(CollectionRessourceQueryParameters.EXCLUDE_RESSOURCES);
-		if (kalenderList.isEmpty()) {
-			return this.createResourceNotFoundError(
-					"Es wurden keine Adressbücher für den angemeldeten Benutzer gefunden!");
-		}
+		final List<Kalender> kalenderList = this.repository.getAvailableKalender(CollectionQueryParameters.NO_RESSOURCES);
+		if (kalenderList.isEmpty())
+			return this.createResourceNotFoundError("Es wurden keine Adressbücher für den angemeldeten Benutzer gefunden!");
 		final Multistatus ms = new Multistatus();
-		// wichtig ist, dass dem Client die Collection selbst im Response beschrieben
-		// wird
+		// wichtig ist, dass dem Client die Collection selbst im Response beschrieben wird
 		final Response response = generateResponseCalendarCollectionLevel(propfind.getProp());
 		ms.getResponse().add(response);
-		for (final Kalender kalender : kalenderList) {
+		for (final Kalender kalender : kalenderList)
 			ms.getResponse().add(this.generateResponseCalendarLevel(kalender, propfind.getProp()));
-		}
 		return ms;
 	}
 
@@ -131,7 +126,7 @@ public class PropfindCalendarDispatcher extends DavDispatcher {
 		}
 
 		final Optional<Kalender> kalender = this.repository.getKalenderById(ressourceId,
-				CollectionRessourceQueryParameters.INCLUDE_RESSOURCES_EXCLUDE_PAYLOAD);
+				CollectionQueryParameters.NO_PAYLOAD);
 		if (kalender.isEmpty()) {
 			return this.createResourceNotFoundError("Kalender mit der angegebenen Id wurde nicht gefunden!");
 		}

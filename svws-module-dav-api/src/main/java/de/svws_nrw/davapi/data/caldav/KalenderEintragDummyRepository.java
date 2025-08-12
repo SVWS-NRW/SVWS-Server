@@ -1,11 +1,10 @@
-package de.svws_nrw.davapi.data.repos.kalender;
+package de.svws_nrw.davapi.data.caldav;
 
 import java.util.Optional;
 import java.util.UUID;
 
 import de.svws_nrw.core.data.kalender.KalenderEintrag;
-import de.svws_nrw.davapi.data.CollectionRessourceQueryParameters;
-import de.svws_nrw.davapi.data.IKalenderEintragRepository;
+import de.svws_nrw.davapi.data.dav.CollectionQueryParameters;
 
 /**
  * Dummy Repository für Prototypische Implementierung des
@@ -24,7 +23,7 @@ public final class KalenderEintragDummyRepository implements IKalenderEintragRep
 
 	@Override
 	public Optional<KalenderEintrag> getKalenderEintragByKalenderAndUID(final String kalenderId, final String kalenderEintragId,
-			final CollectionRessourceQueryParameters params) {
+			final CollectionQueryParameters params) {
 		final KalenderEintrag eintrag123 = new KalenderEintrag();
 		eintrag123.id = "123";
 		eintrag123.kalenderId = "dummy";

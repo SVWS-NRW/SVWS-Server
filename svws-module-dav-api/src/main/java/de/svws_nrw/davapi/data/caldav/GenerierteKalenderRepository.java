@@ -1,12 +1,11 @@
-package de.svws_nrw.davapi.data.repos.kalender;
+package de.svws_nrw.davapi.data.caldav;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import de.svws_nrw.core.data.kalender.Kalender;
-import de.svws_nrw.davapi.data.CollectionRessourceQueryParameters;
-import de.svws_nrw.davapi.data.IKalenderRepository;
+import de.svws_nrw.davapi.data.dav.CollectionQueryParameters;
 import de.svws_nrw.db.DBEntityManager;
 
 /**
@@ -28,12 +27,12 @@ public final class GenerierteKalenderRepository implements IKalenderRepository {
 	}
 
 	@Override
-	public Optional<Kalender> getKalenderById(final String kalenderId, final CollectionRessourceQueryParameters params) {
+	public Optional<Kalender> getKalenderById(final String kalenderId, final CollectionQueryParameters params) {
 		return Optional.empty();
 	}
 
 	@Override
-	public List<Kalender> getAvailableKalender(final CollectionRessourceQueryParameters params) {
+	public List<Kalender> getAvailableKalender(final CollectionQueryParameters params) {
 		return new ArrayList<>();
 	}
 

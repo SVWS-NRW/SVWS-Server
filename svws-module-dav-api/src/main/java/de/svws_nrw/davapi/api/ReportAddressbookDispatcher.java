@@ -2,8 +2,8 @@ package de.svws_nrw.davapi.api;
 
 import de.svws_nrw.core.data.adressbuch.Adressbuch;
 import de.svws_nrw.core.data.adressbuch.AdressbuchEintrag;
-import de.svws_nrw.davapi.data.CollectionRessourceQueryParameters;
-import de.svws_nrw.davapi.data.IAdressbuchRepository;
+import de.svws_nrw.davapi.data.carddav.IAdressbuchRepository;
+import de.svws_nrw.davapi.data.dav.CollectionQueryParameters;
 import de.svws_nrw.davapi.model.dav.Getetag;
 import de.svws_nrw.davapi.model.dav.Multistatus;
 import de.svws_nrw.davapi.model.dav.Prop;
@@ -53,7 +53,7 @@ public class ReportAddressbookDispatcher extends DavDispatcher {
 	 * @throws IOException bei der Verarbeitung des InputStreams/XML-Unmarshalling
 	 */
 	public Object dispatch(final InputStream inputStream, final String ressourceId) throws IOException {
-		final CollectionRessourceQueryParameters queryParameters = CollectionRessourceQueryParameters.INCLUDE_RESSOURCES_INCLUDE_PAYLOAD;
+		final CollectionQueryParameters queryParameters = CollectionQueryParameters.ALL;
 		final Optional<Adressbuch> adressbuch = this.repository.getAdressbuchById(ressourceId, queryParameters);
 		if (adressbuch.isEmpty()) {
 			return this.createResourceNotFoundError("Adressbuch mit der angegebenen Id wurde nicht gefunden!");
@@ -164,7 +164,7 @@ public class ReportAddressbookDispatcher extends DavDispatcher {
 	private List<AdressbuchEintrag> getEintraegeBySyncToken(final String adressbuchId, final String syncToken) {
 		// TODO: Filterung über Sync-Token ergänzen
 		final Optional<Adressbuch> adressbuchById = this.repository.getAdressbuchById(adressbuchId,
-				CollectionRessourceQueryParameters.INCLUDE_RESSOURCES_INCLUDE_PAYLOAD);
+				CollectionQueryParameters.ALL);
 		if (adressbuchById.isEmpty()) {
 			return Collections.emptyList();
 		}

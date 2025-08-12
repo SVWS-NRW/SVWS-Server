@@ -12,8 +12,8 @@ import java.util.function.Predicate;
 
 import de.svws_nrw.core.data.kalender.Kalender;
 import de.svws_nrw.core.data.kalender.KalenderEintrag;
-import de.svws_nrw.davapi.data.CollectionRessourceQueryParameters;
-import de.svws_nrw.davapi.data.IKalenderRepository;
+import de.svws_nrw.davapi.data.caldav.IKalenderRepository;
+import de.svws_nrw.davapi.data.dav.CollectionQueryParameters;
 import de.svws_nrw.davapi.model.dav.Getcontenttype;
 import de.svws_nrw.davapi.model.dav.Getetag;
 import de.svws_nrw.davapi.model.dav.Multistatus;
@@ -62,7 +62,7 @@ public class ReportCalendarDispatcher extends DavDispatcher {
 	 */
 	public Object dispatch(final InputStream inputStream, final String ressourceCollectionId) throws IOException {
 		final Optional<Kalender> kalender = this.repository.getKalenderById(ressourceCollectionId,
-				CollectionRessourceQueryParameters.INCLUDE_RESSOURCES_INCLUDE_PAYLOAD);
+				CollectionQueryParameters.ALL);
 		if (kalender.isEmpty()) {
 			return this.createResourceNotFoundError("Kalender mit der angegebenen Id wurde nicht gefunden!");
 		}
@@ -212,7 +212,7 @@ public class ReportCalendarDispatcher extends DavDispatcher {
 	 */
 	private List<KalenderEintrag> getEintraegeBySyncToken(final String kalenderId, final Long syncToken) {
 		final Optional<Kalender> kalenderById = this.repository.getKalenderById(kalenderId,
-				CollectionRessourceQueryParameters.INCLUDE_RESSOURCES_INCLUDE_PAYLOAD);
+				CollectionQueryParameters.ALL);
 		if (kalenderById.isEmpty()) {
 			return Collections.emptyList();
 		}
@@ -232,7 +232,7 @@ public class ReportCalendarDispatcher extends DavDispatcher {
 	 */
 	private List<KalenderEintrag> getEintraegeByFilter(final String kalenderId, final CalendarQuery calendarQuery) {
 		final Optional<Kalender> kalenderById = this.repository.getKalenderById(kalenderId,
-				CollectionRessourceQueryParameters.INCLUDE_RESSOURCES_INCLUDE_PAYLOAD);
+				CollectionQueryParameters.ALL);
 		if (kalenderById.isEmpty()) {
 			return Collections.emptyList();
 		}

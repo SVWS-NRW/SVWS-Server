@@ -27,12 +27,12 @@ export class Adressbuch extends JavaObject {
 	public synctoken : number = 0;
 
 	/**
-	 *  der Typ des Adressbuchs
+	 * Der Typ des Adressbuchs
 	 */
 	public adressbuchTyp : string = "";
 
 	/**
-	 *  eine Liste der Einträge des Adressbuchs
+	 * Eine Liste der Einträge des Adressbuchs
 	 */
 	public adressbuchEintraege : List<AdressbuchEintrag> = new ArrayList<AdressbuchEintrag>();
 

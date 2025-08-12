@@ -1,4 +1,4 @@
-package de.svws_nrw.davapi.data.repos.kalender;
+package de.svws_nrw.davapi.data.caldav;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,8 +7,7 @@ import java.util.UUID;
 
 import de.svws_nrw.core.data.kalender.Kalender;
 import de.svws_nrw.core.data.kalender.KalenderEintrag;
-import de.svws_nrw.davapi.data.CollectionRessourceQueryParameters;
-import de.svws_nrw.davapi.data.IKalenderRepository;
+import de.svws_nrw.davapi.data.dav.CollectionQueryParameters;
 
 /**
  * Dummy Repository für prototypische Implementierung des
@@ -28,7 +27,7 @@ public final class KalenderDummyRepository implements IKalenderRepository {
 	}
 
 	@Override
-	public Optional<Kalender> getKalenderById(final String kalenderId, final CollectionRessourceQueryParameters params) {
+	public Optional<Kalender> getKalenderById(final String kalenderId, final CollectionQueryParameters params) {
 		final Kalender dummyKalender = new Kalender();
 		dummyKalender.kalenderTyp = "GENERIERT";
 		dummyKalender.beschreibung = "Ein Dummy-Kalender";
@@ -52,7 +51,7 @@ public final class KalenderDummyRepository implements IKalenderRepository {
 	}
 
 	@Override
-	public List<Kalender> getAvailableKalender(final CollectionRessourceQueryParameters params) {
+	public List<Kalender> getAvailableKalender(final CollectionQueryParameters params) {
 		final Optional<Kalender> kalenderById = this.getKalenderById(DUMMY_KALENDER_ID, null);
 		if (kalenderById.isPresent()) {
 			final Kalender dummyKalender = kalenderById.get();

@@ -1,19 +1,18 @@
 package de.svws_nrw.davapi.api;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 import de.svws_nrw.core.data.kalender.KalenderEintrag;
-import de.svws_nrw.davapi.data.IKalenderEintragRepository;
-import de.svws_nrw.davapi.data.repos.dav.DavException;
-import de.svws_nrw.davapi.data.repos.dav.DavException.ErrorCode;
+import de.svws_nrw.davapi.data.caldav.IKalenderEintragRepository;
+import de.svws_nrw.davapi.data.dav.DavException;
 import de.svws_nrw.davapi.model.dav.Error;
 import de.svws_nrw.davapi.util.icalendar.DateTimeUtil;
 import de.svws_nrw.davapi.util.icalendar.VCalendar;
 import jakarta.ws.rs.core.EntityTag;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Dispatcher-Klasse für die Verarbeitung von Requests auf das DAV-API mittels
@@ -113,11 +112,10 @@ public class PutCalendarDispatcher extends DavDispatcher {
 			final KalenderEintrag saveKalenderEintrag = this.kalenderEintragRepository
 					.saveKalenderEintrag(updatedKalendereintrag);
 			return new EntityTag(saveKalenderEintrag.version);
-		} catch (@SuppressWarnings("unused") final IOException e) {
-			return ErrorCode.INTERNAL_SERVER_ERROR.getDavResponse(getKalenderResourceUri()).getError();
-		} catch (final DavException e) {
-			// hier wird das ErrorObjekt zurückgegeben
-			return e.getDavResponse(getKalenderResourceUri()).getError();
+		} catch (final Exception e) {
+			if (e instanceof final DavException eDav)
+				return eDav.getDavResponse(getKalenderResourceUri()).getError();
+			return new DavException(Status.INTERNAL_SERVER_ERROR).getDavResponse(getKalenderResourceUri()).getError();
 		}
 	}
 }
