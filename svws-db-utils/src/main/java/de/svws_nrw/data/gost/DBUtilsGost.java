@@ -8,20 +8,20 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.asd.data.schueler.Sprachendaten;
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
+import de.svws_nrw.asd.types.Note;
+import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
+import de.svws_nrw.asd.types.schueler.SchuelerStatus;
+import de.svws_nrw.asd.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.GostLeistungen;
 import de.svws_nrw.core.data.gost.GostLeistungenFachbelegung;
 import de.svws_nrw.core.data.gost.GostLeistungenFachwahl;
-import de.svws_nrw.asd.data.schueler.Sprachendaten;
-import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
-import de.svws_nrw.asd.types.Note;
-import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.core.types.gost.GostAbiturFach;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
-import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
-import de.svws_nrw.asd.types.schule.Schulform;
-import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.core.utils.DateUtils;
 import de.svws_nrw.core.utils.gost.GostAbiturjahrUtils;
 import de.svws_nrw.core.utils.gost.GostFachUtils;
@@ -281,7 +281,7 @@ public final class DBUtilsGost {
 			return false;
 		// In dem Fall, dass der Schüler bereits abgegangen ist, wird das Entlassdatum und der Schuljahresabschnitt mit dem Schuljahresabschnitt des GOSt-Halbjahres abgegleichen
 		final SchuelerStatus status = SchuelerStatus.data().getWertByID(dto.idStatus);
-		if ((status == SchuelerStatus.ABGANG) || (status == SchuelerStatus.ABSCHLUSS)) {
+		if ((status == SchuelerStatus.ABGANG) || (status == SchuelerStatus.ABSCHLUSS) || (status == SchuelerStatus.EHEMALIGE)) {
 			final int blockungSchuljahr = halbjahr.getSchuljahrFromAbiturjahr(abijahrgang);
 			final int[] entlassung = (dto.Entlassdatum == null) ? null : DateUtils.getSchuljahrUndHalbjahrFromDateISO8601(dto.Entlassdatum);
 			if (entlassung == null) {
