@@ -33,7 +33,7 @@ abstract class NodeDownload extends DefaultTask {
 		if (file.exists()) {
 			println "Datei ${filename} wurde bereits heruntergeladen, skipping download"
 		} else {
-			fs.mkdir(downloadPath);
+			project.mkdir(downloadPath);
 			def url = this.cfg.getDownloadURL();
 			println "Downloading ${filename} from ${url}...";
 			def username = this.cfg.getDownloadUser();
@@ -47,14 +47,14 @@ abstract class NodeDownload extends DefaultTask {
 
 		def compFilename = this.cfg.getCompressedFilename();
 		if ("zip".equals(this.cfg.getCompressedFileType())) {
-			fs.copy {
+			project.copy {
 				eachFile { f ->	f.relativePath = new RelativePath(true, f.relativePath.segments.drop(1)) }
 				from project.zipTree("${downloadPath}/${filename}").matching{ include "${compFilename}/**" };				
 				includeEmptyDirs = false    
 				into this.cfg.getNodeDirectory()
 			}
 		} else if ("tar.gz".equals(this.cfg.getCompressedFileType())) {
-			fs.exec {
+			project.exec {
 				commandLine 'tar', '-xzf', "${downloadPath}/${filename}", '--strip-components=1','-C', this.cfg.getNodeDirectory() + "/";
 			}
 		} else if ("tar.xz".equals(this.cfg.getCompressedFileType())) {
