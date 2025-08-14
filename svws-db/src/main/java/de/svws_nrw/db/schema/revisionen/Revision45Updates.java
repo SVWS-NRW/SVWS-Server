@@ -67,7 +67,7 @@ public final class Revision45Updates extends SchemaRevisionUpdateSQL {
 	}
 
 	@Override
-	public boolean runFirst(final DBEntityManager conn, final Logger logger) {
+	public boolean runLast(final DBEntityManager conn, final Logger logger) {
 		if (conn.getDBDriver() != DBDriver.MARIA_DB) {
 			logger.logLn("DBMS wird für dieses Datenbank Revisions-Update nicht unterstützt.");
 			return false;
