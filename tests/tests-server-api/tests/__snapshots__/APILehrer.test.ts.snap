@@ -1417,10 +1417,29 @@ LehrerPersonaldaten {
         "lehrbefaehigungen": ArrayList {
           "addFirst": [Function],
           "addLast": [Function],
-          "elementData": [],
+          "elementData": [
+            LehrerLehrbefaehigungEintrag {
+              "id": 164,
+              "idAnerkennungsgrund": 1,
+              "idLehramt": 75,
+              "idLehrbefaehigung": 203,
+            },
+            LehrerLehrbefaehigungEintrag {
+              "id": 165,
+              "idAnerkennungsgrund": 1,
+              "idLehramt": 75,
+              "idLehrbefaehigung": 216,
+            },
+            LehrerLehrbefaehigungEintrag {
+              "id": 166,
+              "idAnerkennungsgrund": 1,
+              "idLehramt": 75,
+              "idLehrbefaehigung": 226,
+            },
+          ],
           "getFirst": [Function],
           "getLast": [Function],
-          "modCount": 0,
+          "modCount": 3,
           "removeFirst": [Function],
           "removeLast": [Function],
         },
