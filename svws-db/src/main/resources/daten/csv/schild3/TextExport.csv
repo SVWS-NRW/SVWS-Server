@@ -84,7 +84,6 @@ Schueler;Aussiedler;Aussiedler;B;;;;;ALLE
 Schueler;Ausweisnummer;Ausweisnummer;S;;;;;ALLE
 Schueler;Bafoeg;Erhält BAFÖG;B;;;;;ALLE
 Schueler;BeginnBildungsgang;Beginn d. Bildungsganges;D;;;;;ALLE
-Schueler;Bemerkungen;Bemerkungen;S;;;;;ALLE
 Schueler;BerufsschulpflErf;Berufsschulpflicht erfüllt;B;;;;;ALLE
 Schueler;DSN_Text;Durchschnittsnote (Text);S;;;;;ALLE
 Schueler;Durchschnittsnote;Durchschnittsnote (Zahl);S;;;;;ALLE
