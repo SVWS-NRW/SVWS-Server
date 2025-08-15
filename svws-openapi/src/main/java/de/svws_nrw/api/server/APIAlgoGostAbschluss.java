@@ -24,7 +24,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
  * Die Klasse spezifiziert die OpenAPI-Schnittstelle für den Zugriff rund um die Abschlussberechnung in der Gymnasialen Oberstufe.
  * Ein Zugriff erfolgt über den Pfad https://{Hostname}/api/gost/...
  */
-@Path("/api/gost")
+@Path("/api/common/gost")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Tag(name = "ServerAlgorithmen")

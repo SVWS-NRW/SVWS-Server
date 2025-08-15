@@ -29,7 +29,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
  * Die Klasse spezifiziert die OpenAPI-Schnittstelle für den Zugriff auf die Abschlussberechnung an der Gesamtschule.
  * Ein Zugriff erfolgt über den Pfad https://{Hostname}/api/gesamtschule/abschluss/...
  */
-@Path("/api/gesamtschule/abschluss")
+@Path("/api/common/gesamtschule/abschluss")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Tag(name = "ServerAlgorithmen")
