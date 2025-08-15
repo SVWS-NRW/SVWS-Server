@@ -1,6 +1,6 @@
 package de.svws_nrw.asd.data.lehrer;
 
-import de.svws_nrw.asd.data.CoreTypeData;
+import de.svws_nrw.asd.data.CoreTypeDataNurSchulformen;
 import de.svws_nrw.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -12,7 +12,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @Schema(description = "ein Eintrag in dem Katalog der Mehrleistungsarten für Lehrer.")
 @TranspilerDTO
-public class LehrerMehrleistungsartKatalogEintrag extends CoreTypeData {
+public class LehrerMehrleistungsartKatalogEintrag extends CoreTypeDataNurSchulformen {
 
 	// keine weiteren Attribute
 

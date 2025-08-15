@@ -1,7 +1,7 @@
+import { CoreTypeDataNurSchulformen } from '../../../asd/data/CoreTypeDataNurSchulformen';
 import { Class } from '../../../java/lang/Class';
-import { CoreTypeData } from '../../../asd/data/CoreTypeData';
 
-export class LehrerMehrleistungsartKatalogEintrag extends CoreTypeData {
+export class LehrerMehrleistungsartKatalogEintrag extends CoreTypeDataNurSchulformen {
 
 
 	/**
@@ -16,7 +16,7 @@ export class LehrerMehrleistungsartKatalogEintrag extends CoreTypeData {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.asd.data.CoreTypeData', 'de.svws_nrw.asd.data.lehrer.LehrerMehrleistungsartKatalogEintrag'].includes(name);
+		return ['de.svws_nrw.asd.data.CoreTypeData', 'de.svws_nrw.asd.data.lehrer.LehrerMehrleistungsartKatalogEintrag', 'de.svws_nrw.asd.data.CoreTypeDataNurSchulformen'].includes(name);
 	}
 
 	public static class = new Class<LehrerMehrleistungsartKatalogEintrag>('de.svws_nrw.asd.data.lehrer.LehrerMehrleistungsartKatalogEintrag');
@@ -24,6 +24,11 @@ export class LehrerMehrleistungsartKatalogEintrag extends CoreTypeData {
 	public static transpilerFromJSON(json : string): LehrerMehrleistungsartKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<LehrerMehrleistungsartKatalogEintrag>;
 		const result = new LehrerMehrleistungsartKatalogEintrag();
+		if (obj.schulformen !== undefined) {
+			for (const elem of obj.schulformen) {
+				result.schulformen.add(elem);
+			}
+		}
 		if (obj.id === undefined)
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
@@ -43,6 +48,14 @@ export class LehrerMehrleistungsartKatalogEintrag extends CoreTypeData {
 
 	public static transpilerToJSON(obj : LehrerMehrleistungsartKatalogEintrag) : string {
 		let result = '{';
+		result += '"schulformen" : [ ';
+		for (let i = 0; i < obj.schulformen.size(); i++) {
+			const elem = obj.schulformen.get(i);
+			result += '"' + elem + '"';
+			if (i < obj.schulformen.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"schluessel" : ' + JSON.stringify(obj.schluessel) + ',';
 		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
@@ -56,6 +69,16 @@ export class LehrerMehrleistungsartKatalogEintrag extends CoreTypeData {
 
 	public static transpilerToJSONPatch(obj : Partial<LehrerMehrleistungsartKatalogEintrag>) : string {
 		let result = '{';
+		if (obj.schulformen !== undefined) {
+			result += '"schulformen" : [ ';
+			for (let i = 0; i < obj.schulformen.size(); i++) {
+				const elem = obj.schulformen.get(i);
+				result += '"' + elem + '"';
+				if (i < obj.schulformen.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
 		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
