@@ -18,7 +18,12 @@ import org.thymeleaf.context.Context;
 /**
  * Ein Thymeleaf-Html-Daten-Context zum Bereich "GostFachwahlstatistik", um Thymeleaf-html-Templates mit Daten zu füllen.
  */
-public final class HtmlContextGostLaufbahnplanungAbiturjahrgangFachwahlstatistiken extends HtmlContext {
+public final class HtmlContextGostLaufbahnplanungAbiturjahrgangFachwahlstatistiken extends HtmlContext<Object> {
+
+	@Override
+	public List<String> standardsortierung() {
+		return new ArrayList<>();
+	}
 
 	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
@@ -29,7 +34,8 @@ public final class HtmlContextGostLaufbahnplanungAbiturjahrgangFachwahlstatistik
 	 *
 	 * @param reportingRepository    Repository mit Parametern, Logger und Daten zum Reporting.
 	 */
-	public HtmlContextGostLaufbahnplanungAbiturjahrgangFachwahlstatistiken(final ReportingRepository reportingRepository) {
+ 	public HtmlContextGostLaufbahnplanungAbiturjahrgangFachwahlstatistiken(final ReportingRepository reportingRepository) {
+		super(reportingRepository, true);
 		this.reportingRepository = reportingRepository;
 		erzeugeContext();
 	}

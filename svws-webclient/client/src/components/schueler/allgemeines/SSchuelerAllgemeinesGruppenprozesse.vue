@@ -1,6 +1,6 @@
 <template>
 	<div class="page page-grid-cards">
-		<div class="flex flex-col gap-4">
+		<svws-ui-input-wrapper class="flex flex-col gap-4">
 			<ui-card v-if="hatKompetenzDruckenSchuelerIndividualdaten" icon="i-ri-printer-line" title="Schülerliste drucken" subtitle="Drucke eine Liste mit den Daten der ausgewählten Schülerinnen und Schüler."
 				:is-open="currentAction === 'druckSchuelerListeKontaktdatenErzieher'" @update:is-open="isOpen => setCurrentAction('druckSchuelerListeKontaktdatenErzieher', isOpen)">
 				<svws-ui-input-wrapper :grid="4" class="p-2">
@@ -25,11 +25,18 @@
 						<svws-ui-checkbox v-model="option2048" name="mitErzieherAnschrift">Erzieher Anschrift</svws-ui-checkbox><br>
 						<svws-ui-checkbox v-model="option4096" name="mitErzieherEmailPrivat">Erzieher E-Mail</svws-ui-checkbox><br>
 					</div>
-					<div class="text-left col-span-4">
+					<div class="text-left col-span-2">
 						<br><p class="font-bold underline mb-2">Optionen zur Druckausgabe:</p>
 						<svws-ui-radio-group>
 							<svws-ui-radio-option :value="1" v-model="druckoptionSchuelerListeKontaktdatenErzieher" name="druckoptionSchuelerListeKontaktdatenErzieherGesamtausdruckEinseitig" label="Gesamtausdruck einseitig" />
 							<svws-ui-radio-option :value="3" v-model="druckoptionSchuelerListeKontaktdatenErzieher" name="druckoptionSchuelerListeKontaktdatenErzieherGesamtausdruckDuplex" label="Gesamtausdruck duplex" />
+						</svws-ui-radio-group>
+					</div>
+					<div class="text-left col-span-2">
+						<br><p class="font-bold underline mb-2">Sortierung:</p>
+						<svws-ui-radio-group>
+							<svws-ui-radio-option :value="1" v-model="sortieroptionSchuelerListeKontaktdatenErzieher" name="sortieroptionSchuelerListeKontaktdatenErzieherName" label="Standard (Nachname, Vorname(n))" />
+							<svws-ui-radio-option :value="2" v-model="sortieroptionSchuelerListeKontaktdatenErzieher" name="sortieroptionSchuelerListeKontaktdatenErzieherKlasseName" label="Klasse, Nachname, Vorname(n)" />
 						</svws-ui-radio-group>
 					</div>
 				</svws-ui-input-wrapper>
@@ -62,11 +69,18 @@
 						<svws-ui-checkbox v-model="option32" name="keinInfoblock">Kein Infoblock</svws-ui-checkbox><br>
 						<svws-ui-checkbox v-model="option64" name="keineUnterschrift">Keine Unterschrift</svws-ui-checkbox><br>
 					</div>
-					<div class="text-left col-span-2">
+					<div class="text-left">
 						<br><p class="font-bold underline mb-2">Optionen zur Druckausgabe:</p>
 						<svws-ui-radio-group>
 							<svws-ui-radio-option :value="1" v-model="druckoptionSchuelerSchulbescheinigung" name="druckoptionSchuelerSchulbescheinigungGesamtausdruckEinseitig" label="Gesamtausdruck einseitig" />
 							<svws-ui-radio-option :value="2" v-model="druckoptionSchuelerSchulbescheinigung" name="druckoptionSchuelerSchulbescheinigungEinzelausdruckEinseitig" label="Einzelausdruck einseitig" />
+						</svws-ui-radio-group>
+					</div>
+					<div class="text-left">
+						<br><p class="font-bold underline mb-2">Sortierung:</p>
+						<svws-ui-radio-group>
+							<svws-ui-radio-option :value="1" v-model="sortieroptionSchuelerSchulbescheinigung" name="sortieroptionSchuelerSchulbescheinigungName" label="Standard (Nachname, Vorname(n))" />
+							<svws-ui-radio-option :value="2" v-model="sortieroptionSchuelerSchulbescheinigung" name="sortieroptionSchuelerSchulbescheinigungKlasseName" label="Klasse, Nachname, Vorname(n)" />
 						</svws-ui-radio-group>
 					</div>
 				</svws-ui-input-wrapper>
@@ -80,25 +94,37 @@
 			</ui-card>
 			<ui-card v-if="hatKompetenzDruckenStundenplan && (mapStundenplaene.size > 0)" icon="i-ri-printer-line" title="Stundenplan drucken" subtitle="Drucke die Stundenpläne der ausgewählten Schüler."
 				:is-open="currentAction === 'druckSchuelerStundenplan'" @update:is-open="isOpen => setCurrentAction('druckSchuelerStundenplan', isOpen)">
-				<div class="w-full flex flex-col gap-6">
-					<ui-select :disabled="!schuelerListeManager().liste.auswahlExists()" label="Stundenplan" v-model="stundenplanAuswahl"
-						:manager="stundenplanSelectManager" />
-					<div class="w-full flex gap-6">
-						<div class="grow">
-							<svws-ui-checkbox v-model="option2">Pausenzeiten anzeigen</svws-ui-checkbox><br>
-							<svws-ui-checkbox v-model="option4">Fach- statt Kursbezeichnung verwenden (nicht Sek-II)</svws-ui-checkbox><br>
-							<svws-ui-checkbox v-model="option8">Fachkürzel statt Fachbezeichnung verwenden</svws-ui-checkbox><br>
-							<svws-ui-checkbox v-model="option16">Individuelle Kursart anzeigen</svws-ui-checkbox>
-						</div>
-						<svws-ui-radio-group class="grow">
+				<svws-ui-input-wrapper :grid="2" class="p-2">
+					<div class="text-left col-span-2">
+						<ui-select :disabled="!schuelerListeManager().liste.auswahlExists()" label="Stundenplan" v-model="stundenplanAuswahl"
+							:manager="stundenplanSelectManager" />
+					</div>
+					<div class="text-left">
+						<svws-ui-checkbox v-model="option2">Pausenzeiten anzeigen</svws-ui-checkbox><br>
+						<svws-ui-checkbox v-model="option4">Fach- statt Kursbezeichnung verwenden (nicht Sek-II)</svws-ui-checkbox><br>
+					</div>
+					<div class="text-left">
+						<svws-ui-checkbox v-model="option8">Fachkürzel statt Fachbezeichnung verwenden</svws-ui-checkbox><br>
+						<svws-ui-checkbox v-model="option16">Individuelle Kursart anzeigen</svws-ui-checkbox>
+					</div>
+					<div class="text-left">
+						<br><p class="font-bold underline mb-2">Optionen zur Druckausgabe:</p>
+						<svws-ui-radio-group>
 							<svws-ui-radio-option :value="1" v-model="druckoptionSchuelerStundenplan" name="druckoptionSchuelerStundenplanGesamtausdruckEinseitig" label="Gesamtausdruck einseitig" />
-							<svws-ui-radio-option :value="2" v-model="druckoptionSchuelerStundenplan" name="druckoptionSchuelerStundenplanEinzelausdruckEinseitig" label="Einzelausdruck einseitig" />
+							<svws-ui-radio-option :value="2" v-model="druckoptionSchuelerStundenplan" name="druckoptionSchuelerStundenplanGesamtausdruckEinseitig" label="Einzelausdruck einseitig" />
+						</svws-ui-radio-group>
+					</div>
+					<div class="text-left">
+						<br><p class="font-bold underline mb-2">Sortierung:</p>
+						<svws-ui-radio-group>
+							<svws-ui-radio-option :value="1" v-model="sortieroptionSchuelerStundenplan" name="sortieroptionSchuelerStundenplanName" label="Standard (Nachname, Vorname(n))" />
+							<svws-ui-radio-option :value="2" v-model="sortieroptionSchuelerStundenplan" name="sortieroptionSchuelerStundenplanKlasseName" label="Klasse, Nachname, Vorname(n)" />
 						</svws-ui-radio-group>
 					</div>
 					<div v-if="!schuelerListeManager().liste.auswahlExists()">
 						<span class="text-ui-danger">Es ist kein Schüler ausgewählt.</span>
 					</div>
-				</div>
+				</svws-ui-input-wrapper>
 				<template #buttonFooterLeft>
 					<svws-ui-button :disabled="isPrintDisabled" @click="downloadPDF" :is-loading="loading" class="mt-4">
 						<svws-ui-spinner v-if="loading" spinning />
@@ -124,7 +150,7 @@
 					</svws-ui-button>
 				</template>
 			</ui-card>
-		</div>
+		</svws-ui-input-wrapper>
 		<log-box :logs :status="statusAction">
 			<template #button>
 				<svws-ui-button v-if="statusAction !== undefined" type="transparent" @click="clearLog" title="Log verwerfen">Log verwerfen</svws-ui-button>
@@ -199,8 +225,11 @@
 	const option2048 = ref(false);
 	const option4096 = ref(false);
 	const druckoptionSchuelerListeKontaktdatenErzieher = ref(1);
+	const sortieroptionSchuelerListeKontaktdatenErzieher = ref(1);
 	const druckoptionSchuelerSchulbescheinigung = ref(1);
+	const sortieroptionSchuelerSchulbescheinigung = ref(1);
 	const druckoptionSchuelerStundenplan = ref(1);
+	const sortieroptionSchuelerStundenplan = ref(1);
 
 	async function downloadPDF() {
 		const reportingParameter = new ReportingParameter();
@@ -213,12 +242,30 @@
 				reportingParameter.idsHauptdaten = listeIdsSchueler;
 				reportingParameter.einzelausgabeHauptdaten = false;
 				reportingParameter.einzelausgabeDetaildaten = false;
+				reportingParameter.verwendeStandardsortierung = (sortieroptionSchuelerListeKontaktdatenErzieher.value === 1);
+				if (sortieroptionSchuelerListeKontaktdatenErzieher.value === 2) {
+					reportingParameter.sortierungHauptdaten = new ArrayList<string>();
+					reportingParameter.sortierungHauptdaten.add("auswahlLernabschnitt.klasse.kuerzel");
+					reportingParameter.sortierungHauptdaten.add("nachname");
+					reportingParameter.sortierungHauptdaten.add("vorname");
+					reportingParameter.sortierungHauptdaten.add("vornamen");
+					reportingParameter.sortierungHauptdaten.add("id");
+				}
 				break;
 			case 'druckSchuelerSchulbescheinigung':
 				reportingParameter.reportvorlage = ReportingReportvorlage.SCHUELER_v_SCHULBESCHEINIGUNG.getBezeichnung();
 				reportingParameter.idsHauptdaten = listeIdsSchueler;
 				reportingParameter.einzelausgabeHauptdaten = (druckoptionSchuelerSchulbescheinigung.value === 2);
 				reportingParameter.einzelausgabeDetaildaten = false;
+				reportingParameter.verwendeStandardsortierung = (sortieroptionSchuelerSchulbescheinigung.value === 1);
+				if (sortieroptionSchuelerSchulbescheinigung.value === 2) {
+					reportingParameter.sortierungHauptdaten = new ArrayList<string>();
+					reportingParameter.sortierungHauptdaten.add("auswahlLernabschnitt.klasse.kuerzel");
+					reportingParameter.sortierungHauptdaten.add("nachname");
+					reportingParameter.sortierungHauptdaten.add("vorname");
+					reportingParameter.sortierungHauptdaten.add("vornamen");
+					reportingParameter.sortierungHauptdaten.add("id");
+				}
 				break;
 			case 'druckSchuelerStundenplan':
 				if (stundenplanAuswahl.value === undefined)
@@ -228,6 +275,15 @@
 				reportingParameter.idsDetaildaten = listeIdsSchueler;
 				reportingParameter.einzelausgabeHauptdaten = false;
 				reportingParameter.einzelausgabeDetaildaten = (druckoptionSchuelerStundenplan.value === 2);
+				reportingParameter.verwendeStandardsortierung = (sortieroptionSchuelerStundenplan.value === 1);
+				if (sortieroptionSchuelerStundenplan.value === 2) {
+					reportingParameter.sortierungDetaildaten = new ArrayList<string>();
+					reportingParameter.sortierungDetaildaten.add("schueler.auswahlLernabschnitt.klasse.kuerzel");
+					reportingParameter.sortierungDetaildaten.add("schueler.nachname");
+					reportingParameter.sortierungDetaildaten.add("schueler.vorname");
+					reportingParameter.sortierungDetaildaten.add("schueler.vornamen");
+					reportingParameter.sortierungDetaildaten.add("schueler.id");
+				}
 				break;
 			default:
 				return;
@@ -311,8 +367,11 @@
 		option2048.value = false;
 		option4096.value = false;
 		druckoptionSchuelerListeKontaktdatenErzieher.value = 1;
+		sortieroptionSchuelerListeKontaktdatenErzieher.value = 1;
 		druckoptionSchuelerSchulbescheinigung.value = 1;
+		sortieroptionSchuelerSchulbescheinigung.value = 1;
 		druckoptionSchuelerStundenplan.value = 1;
+		sortieroptionSchuelerStundenplan.value = 1;
 
 		currentAction.value = open ? newAction : "";
 	}

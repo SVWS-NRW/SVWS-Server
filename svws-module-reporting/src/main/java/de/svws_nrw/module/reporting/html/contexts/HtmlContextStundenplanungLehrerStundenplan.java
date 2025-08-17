@@ -16,15 +16,19 @@ import org.thymeleaf.context.Context;
 /**
  * Ein Thymeleaf-html-Daten-Context zum Bereich "Stundenplanung", um Thymeleaf-html-Templates mit Daten zu füllen.
  */
-public final class HtmlContextStundenplanungLehrerStundenplan extends HtmlContext {
+public final class HtmlContextStundenplanungLehrerStundenplan extends HtmlContext<ReportingStundenplanungLehrerStundenplan> {
+
+	@Override
+	public List<String> standardsortierung() {
+		final ArrayList<String> standardSort = new ArrayList<>();
+		standardSort.add(methodenreferenzToString(ReportingStundenplanungLehrerStundenplan::lehrer) + "." + methodenreferenzToString(ReportingLehrer::kuerzel));
+		return standardSort;
+	}
 
 	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
 	private final ReportingRepository reportingRepository;
 
-	/** Die Stundenpläne dieses Contexts zu den übergebenen IDs für die Ausgabe. */
-	@JsonIgnore
-	private final List<ReportingStundenplanungLehrerStundenplan> stundenplaene = new ArrayList<>();
 
 	/**
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Daten.
@@ -35,6 +39,7 @@ public final class HtmlContextStundenplanungLehrerStundenplan extends HtmlContex
 	 */
 	public HtmlContextStundenplanungLehrerStundenplan(final ReportingRepository reportingRepository, final ReportingStundenplanungStundenplan stundenplan,
 			final List<Long> idsAusgabe) {
+		super(reportingRepository, false);
 		this.reportingRepository = reportingRepository;
 		erzeugeContext(stundenplan, idsAusgabe);
 	}
@@ -47,6 +52,7 @@ public final class HtmlContextStundenplanungLehrerStundenplan extends HtmlContex
 	 */
 	private void erzeugeContext(final ReportingStundenplanungStundenplan stundenplan, final List<Long> idsAusgabe) {
 
+		final List<ReportingStundenplanungLehrerStundenplan> stundenplaene = new ArrayList<>();
 		this.reportingRepository.lehrer(idsAusgabe)
 				.forEach(lehrer -> stundenplaene.add(new ReportingStundenplanungLehrerStundenplan(lehrer, stundenplan)));
 
@@ -57,9 +63,12 @@ public final class HtmlContextStundenplanungLehrerStundenplan extends HtmlContex
 			auflistungKuerzel = listeLehrkraefte.stream().sorted(Comparator.comparing(ReportingLehrer::kuerzel))
 					.map(ReportingLehrer::kuerzel).collect(Collectors.joining(","));
 
+		setContextData(stundenplaene);
+		sortiereContext();
+
 		// Daten-Context für Thymeleaf erzeugen.
 		final Context context = new Context();
-		context.setVariable("LehrerStundenplaene", stundenplaene);
+		context.setVariable("LehrerStundenplaene", getContextData());
 		context.setVariable("LehrerStundenplaeneAuflistungKuerzel", auflistungKuerzel);
 
 		super.setContext(context);
@@ -73,7 +82,7 @@ public final class HtmlContextStundenplanungLehrerStundenplan extends HtmlContex
 	public List<HtmlContextStundenplanungLehrerStundenplan> getEinzelContexts() {
 		final List<HtmlContextStundenplanungLehrerStundenplan> resultContexts = new ArrayList<>();
 
-		for (final ReportingStundenplanungLehrerStundenplan stundenplan : this.stundenplaene) {
+		for (final ReportingStundenplanungLehrerStundenplan stundenplan : getContextData()) {
 			final List<Long> eineId = new ArrayList<>();
 			eineId.add(stundenplan.lehrer().id());
 			resultContexts.add(new HtmlContextStundenplanungLehrerStundenplan(this.reportingRepository, stundenplan.stundenplan(), eineId));
