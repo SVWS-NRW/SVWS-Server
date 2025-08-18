@@ -153,7 +153,7 @@
 			return false;
 		if (document.title !== title) {
 			document.title = title;
-			document.querySelector("link[rel~='icon']")?.setAttribute('href', 'favicon.svg')
+			document.querySelector("link[rel~='icon']")?.setAttribute('href', 'assets/favicon.svg')
 		}
 		return true;
 	}
