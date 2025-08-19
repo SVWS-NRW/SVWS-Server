@@ -1,5 +1,8 @@
-import type { List, FachDaten, LehrerListeEintrag, SchuelerLeistungsdaten, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten, FoerderschwerpunktEintrag, JahrgangsDaten, SchuelerLernabschnittBemerkungen, GostSchuelerklausurTermin} from "@core";
-import { ArrayList, DeveloperNotificationException, GostHalbjahr, GostKlausurplanManager, SchuelerLernabschnittManager } from "@core";
+import type { List, FachDaten, LehrerListeEintrag, SchuelerLeistungsdaten, SchuelerLernabschnittListeEintrag,
+	SchuelerLernabschnittsdaten, FoerderschwerpunktEintrag, JahrgangsDaten, SchuelerLernabschnittBemerkungen,
+	GostSchuelerklausurTermin} from "@core";
+import { ArrayList, DeveloperNotificationException, GostHalbjahr, GostKlausurplanManager,
+	SchuelerLernabschnittManager } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
