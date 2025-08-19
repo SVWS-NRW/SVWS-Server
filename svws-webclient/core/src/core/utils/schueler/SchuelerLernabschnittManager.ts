@@ -341,6 +341,17 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	 *
 	 * @param id   die ID des Faches
 	 *
+	 * @return die Fach-Informationen oder null, falls die ID ungültig ist
+	 */
+	public fachGetByIdOrNull(id : number) : FachDaten | null {
+		return this._mapFachByID.get(id);
+	}
+
+	/**
+	 * Ermittelt die Informationen zu dem Fach mit der angegebenen ID.
+	 *
+	 * @param id   die ID des Faches
+	 *
 	 * @return die Fach-Informationen
 	 * @throws DeveloperNotificationException falls kein Fach mit der ID existiert
 	 */
@@ -424,6 +435,17 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	 *
 	 * @param id   die ID des Jahrgangs
 	 *
+	 * @return die Jahrgangs-Informationen oder null, falls die ID ungültig ist
+	 */
+	public jahrgangGetByIdOrNull(id : number) : JahrgangsDaten | null {
+		return this._mapJahrgangByID.get(id);
+	}
+
+	/**
+	 * Ermittelt die Informationen zu dem Jahrgang mit der angegebenen ID.
+	 *
+	 * @param id   die ID des Jahrgangs
+	 *
 	 * @return die Jahrgangs-Informationen
 	 * @throws DeveloperNotificationException falls kein Jahrgang mit der ID existiert
 	 */
@@ -445,6 +467,17 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	 *
 	 * @param id   die ID der Klasse
 	 *
+	 * @return die Klassen-Informationen oder null, falls die ID ungültig ist
+	 */
+	public klasseGetByIdOrNull(id : number) : KlassenDaten | null {
+		return this._mapKlasseByID.get(id);
+	}
+
+	/**
+	 * Ermittelt die Informationen zu der Klasse mit der angegebenen ID.
+	 *
+	 * @param id   die ID der Klasse
+	 *
 	 * @return die Klassen-Informationen
 	 * @throws DeveloperNotificationException falls keine Klasse mit der ID existiert
 	 */
@@ -459,6 +492,17 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	 */
 	public klasseGetMenge() : List<KlassenDaten> {
 		return this._klassen;
+	}
+
+	/**
+	 * Ermittelt die Informationen zu dem Kurs mit der angegebenen ID.
+	 *
+	 * @param id   die ID des Kurses
+	 *
+	 * @return die Kurs-Informationen oder null, falls die ID nicht gültig ist
+	 */
+	public kursGetByIdOrNull(id : number) : KursDaten | null {
+		return this._mapKursByID.get(id);
 	}
 
 	/**

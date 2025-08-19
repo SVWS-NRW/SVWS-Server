@@ -364,6 +364,17 @@ public class SchuelerLernabschnittManager {
 	 *
 	 * @param id   die ID des Faches
 	 *
+	 * @return die Fach-Informationen oder null, falls die ID ungültig ist
+	 */
+	public FachDaten fachGetByIdOrNull(final long id) {
+		return _mapFachByID.get(id);
+	}
+
+	/**
+	 * Ermittelt die Informationen zu dem Fach mit der angegebenen ID.
+	 *
+	 * @param id   die ID des Faches
+	 *
 	 * @return die Fach-Informationen
 	 * @throws DeveloperNotificationException falls kein Fach mit der ID existiert
 	 */
@@ -449,6 +460,17 @@ public class SchuelerLernabschnittManager {
 	 *
 	 * @param id   die ID des Jahrgangs
 	 *
+	 * @return die Jahrgangs-Informationen oder null, falls die ID ungültig ist
+	 */
+	public JahrgangsDaten jahrgangGetByIdOrNull(final long id) {
+		return _mapJahrgangByID.get(id);
+	}
+
+	/**
+	 * Ermittelt die Informationen zu dem Jahrgang mit der angegebenen ID.
+	 *
+	 * @param id   die ID des Jahrgangs
+	 *
 	 * @return die Jahrgangs-Informationen
 	 * @throws DeveloperNotificationException falls kein Jahrgang mit der ID existiert
 	 */
@@ -471,6 +493,17 @@ public class SchuelerLernabschnittManager {
 	 *
 	 * @param id   die ID der Klasse
 	 *
+	 * @return die Klassen-Informationen oder null, falls die ID ungültig ist
+	 */
+	public KlassenDaten klasseGetByIdOrNull(final long id) {
+		return _mapKlasseByID.get(id);
+	}
+
+	/**
+	 * Ermittelt die Informationen zu der Klasse mit der angegebenen ID.
+	 *
+	 * @param id   die ID der Klasse
+	 *
 	 * @return die Klassen-Informationen
 	 * @throws DeveloperNotificationException falls keine Klasse mit der ID existiert
 	 */
@@ -487,6 +520,17 @@ public class SchuelerLernabschnittManager {
 		return this._klassen;
 	}
 
+
+	/**
+	 * Ermittelt die Informationen zu dem Kurs mit der angegebenen ID.
+	 *
+	 * @param id   die ID des Kurses
+	 *
+	 * @return die Kurs-Informationen oder null, falls die ID nicht gültig ist
+	 */
+	public KursDaten kursGetByIdOrNull(final long id) {
+		return _mapKursByID.get(id);
+	}
 
 	/**
 	 * Ermittelt die Informationen zu dem Kurs mit der angegebenen ID.
