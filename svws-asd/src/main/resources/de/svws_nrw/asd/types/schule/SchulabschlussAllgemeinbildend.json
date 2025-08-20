@@ -55,13 +55,13 @@
 			"schluessel": "S",
 			"kuerzel": "HA9_FOE",
 			"text": "Hauptschulabschluss nach Klasse 9 (ggf. mit Berechtigung zum Besuch eines weiterführenden Bildungsgangs am Berufskolleg bei internationalen Förderklassen)",
-			"gueltigVon": null,
+			"gueltigVon": 2015,
 			"gueltigBis": 2021
 		}, {	
 			"id": 3001,
 			"schluessel": "S",
 			"kuerzel": "ESA_FOE",
-			"text": "Erster Schulabschluss (ggf. mit Berechtigung zum Besuch eines weiterführenden Bildungsgangs am Berufskolleg bei internationalen Förderklassen)",
+			"text": "Ersten Schulabschluss, mit Berechtigung zum Besuch eines weiterführenden Bildungsgangs im Berufskolleg (nur für Internationale Förderklassen)",
 			"gueltigVon": 2022,
 			"gueltigBis": null
 		} ]
@@ -73,7 +73,7 @@
 			"schluessel": "O",
 			"kuerzel": "HA9_Q",
 			"text": "Hauptschulabschluss nach Klasse 9 (mit der Berechtigung zum Besuch der Gymnasialen Oberstufe)",
-			"gueltigVon": null,
+			"gueltigVon": 2012,
 			"gueltigBis": 2021
 		}, {
 			"id": 4001,
@@ -97,7 +97,7 @@
 			"id": 5001,
 			"schluessel": "D",
 			"kuerzel": "EESA",
-			"text": "Erweiterer Erster Schulabschluss",
+			"text": "Erweiterter Erster Schulabschluss",
 			"gueltigVon": 2022,
 			"gueltigBis": null
 		} ]
@@ -109,7 +109,7 @@
 			"schluessel": "U",
 			"kuerzel": "HA10_Q",
 			"text": "Hauptschulabschluss nach Klasse 10 (mit der Berechtigung zum Besuch der Gymnasialen Oberstufe)",
-			"gueltigVon": null,
+			"gueltigVon": 2012,
 			"gueltigBis": 2021
 		}, {
 			"id": 6001,
@@ -126,7 +126,7 @@
 			"id": 10000,
 			"schluessel": "F",
 			"kuerzel": "MSA",
-			"text": "Mittlerer Schulabschluss",
+			"text": "Mittlerer Schulabschluss - Fachoberschulreife ohne Berechtigung zum Besuch der gymnasialen Oberstufe",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -137,7 +137,7 @@
 			"id": 11000,
 			"schluessel": "G",
 			"kuerzel": "MSA_Q",
-			"text": "Mittlerer Schulabschluss (mit der Berechtigung zum Besuch Gymnasialen Oberstufe)",
+			"text": "Mittlerer Schulabschluss - Fachoberschulreife mit Berechtigung zum Besuch der gymnasialen Oberstufe",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -148,8 +148,8 @@
 			"id": 12000,
 			"schluessel": "I",
 			"kuerzel": "MSA_Q1",
-			"text": "Mittlerer Schulabschluss mit der Berechtigung zum Besuch der Qualifikationsphase Gymnasialen Oberstufe",
-			"gueltigVon": null,
+			"text": "Mittlerer Schulabschluss – Fachoberschulreife mit Berechtigung zum Besuch der Qualifikationsphase 1",
+			"gueltigVon": 2010,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -159,7 +159,7 @@
 			"id": 13000,
 			"schluessel": "P",
 			"kuerzel": "VS_11",
-			"text": "Versetzung in die Klasse 11 der Fachoberschule (BK)",
+			"text": "Versetzungszeugnis der Klasse 11 Fachoberschule",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -192,7 +192,7 @@
 			"id": 22000,
 			"schluessel": "Q",
 			"kuerzel": "FGHR",
-			"text": "fachgebundene Hochschulreife (BK)",
+			"text": "fachgebundene Hochschulreife",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -214,7 +214,7 @@
 			"id": 40000,
 			"schluessel": "M",
 			"kuerzel": "FOEG",
-			"text": "Förderschule (Förderschwerpunkt geistige Entwicklung)",
+			"text": "Abschlusszeugnis im zieldifferenten Bildungsgang Geistige Entwicklung",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -225,7 +225,7 @@
 			"id": 41000,
 			"schluessel": "V",
 			"kuerzel": "FOEL",
-			"text": "Förderschule (Förderschwerpunkt Lernen)",
+			"text": "Abschluss des zieldifferenten Bildungsgangs Lernen",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -238,6 +238,17 @@
 			"kuerzel": "WALD",
 			"text": "Zeugnis der Waldorfschule",
 			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "DFR",
+		"idStatistik": "19",
+		"historie": [ {
+			"id": 60000,
+			"schluessel": "R",
+			"kuerzel": "DFR",
+			"text": "Ohne Abschluss, kommt aus der Deutschförderung",
+			"gueltigVon": 2024,
 			"gueltigBis": null
 		} ]
 	} ]
