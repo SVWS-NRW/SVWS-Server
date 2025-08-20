@@ -5,7 +5,7 @@
 		"idStatistik": "1",
 		"historie": [ {
 			"id": 1001000,
-			"schluessel": "1",
+			"schluessel": "T",
 			"kuerzel": "T",
 			"text": "Teilzeitunterricht (außerhalb der TZ-Berufsschule)",
 			"schulformen": [ "BK", "SB" ],
@@ -17,7 +17,7 @@
 		"idStatistik": "2",
 		"historie": [ {
 			"id": 1002000,
-			"schluessel": "2",
+			"schluessel": "A",
 			"kuerzel": "A",
 			"text": "Teilzeitunterricht ohne Blockunterricht (Normalklasse) TZ-Berufsschule",
 			"schulformen": [ "BK", "SB" ],
@@ -29,7 +29,7 @@
 		"idStatistik": "3",
 		"historie": [ {
 			"id": 1003000,
-			"schluessel": "3",
+			"schluessel": "C",
 			"kuerzel": "C",
 			"text": "Teilzeitunterricht ohne Blockunterricht (Bezirksfachklasse) TZ-Berufsschule",
 			"schulformen": [ "BK", "SB" ],
@@ -41,7 +41,7 @@
 		"idStatistik": "4",
 		"historie": [ {
 			"id": 1004000,
-			"schluessel": "4",
+			"schluessel": "I",
 			"kuerzel": "I",
 			"text": "Teilzeitunterricht ohne Blockunterricht (Landesfachklasse) TZ-Berufsschule",
 			"schulformen": [ "BK", "SB" ],
@@ -53,7 +53,7 @@
 		"idStatistik": "5",
 		"historie": [ {
 			"id": 1005000,
-			"schluessel": "5",
+			"schluessel": "V",
 			"kuerzel": "V",
 			"text": "Vollzeitunterricht",
 			"schulformen": [ "BK", "SB" ],
@@ -65,7 +65,7 @@
 		"idStatistik": "6",
 		"historie": [ {
 			"id": 1006000,
-			"schluessel": "6",
+			"schluessel": "B",
 			"kuerzel": "B",
 			"text": "Blockunterricht z.Zt. im Unterricht (Normalklasse) im dualen System",
 			"schulformen": [ "BK", "SB" ],
@@ -77,7 +77,7 @@
 		"idStatistik": "7",
 		"historie": [ {
 			"id": 1007000,
-			"schluessel": "7",
+			"schluessel": "E",
 			"kuerzel": "E",
 			"text": "Blockunterricht z.Zt. nicht im Unterricht (Normalklasse) im dualen System",
 			"schulformen": [ "BK", "SB" ],
@@ -89,7 +89,7 @@
 		"idStatistik": "8",
 		"historie": [ {
 			"id": 1008000,
-			"schluessel": "8",
+			"schluessel": "G",
 			"kuerzel": "G",
 			"text": "Block- und Teilzeitunterr. z.Zt. im Block- oder TZ-Unterricht (Normalklasse) im dualen System",
 			"schulformen": [ "BK", "SB" ],
@@ -101,7 +101,7 @@
 		"idStatistik": "9",
 		"historie": [ {
 			"id": 1000,
-			"schluessel": "0",
+			"schluessel": "K",
 			"kuerzel": "K",
 			"text": "Ganztagsunterricht (Normalklasse) im dualen System",
 			"schulformen": [ "BK", "SB" ],
@@ -113,7 +113,7 @@
 		"idStatistik": "10",
 		"historie": [ {
 			"id": 1009000,
-			"schluessel": "9",
+			"schluessel": "D",
 			"kuerzel": "D",
 			"text": "Blockunterricht z.Zt. im Unterricht (Bezirksfachklasse) im dualen System",
 			"schulformen": [ "BK", "SB" ],
@@ -125,7 +125,7 @@
 		"idStatistik": "11",
 		"historie": [ {
 			"id": 1010000,
-			"schluessel": "10",
+			"schluessel": "F",
 			"kuerzel": "F",
 			"text": "Blockunterricht z.Zt. nicht im Unterricht (Bezirksfachklasse) im dualen System",
 			"schulformen": [ "BK", "SB" ],
@@ -137,7 +137,7 @@
 		"idStatistik": "12",
 		"historie": [ {
 			"id": 1011000,
-			"schluessel": "11",
+			"schluessel": "H",
 			"kuerzel": "H",
 			"text": "Block- und Teilzeitunterr. z.Zt. im Block- oder TZ-Unterricht (Bezirksfachklasse) im dualen System",
 			"schulformen": [ "BK", "SB" ],
@@ -149,7 +149,7 @@
 		"idStatistik": "13",
 		"historie": [ {
 			"id": 1012000,
-			"schluessel": "12",
+			"schluessel": "L",
 			"kuerzel": "L",
 			"text": "Ganztagsunterricht (Bezirksfachklasse) im dualen System",
 			"schulformen": [ "BK", "SB" ],
@@ -161,7 +161,7 @@
 		"idStatistik": "14",
 		"historie": [ {
 			"id": 1013000,
-			"schluessel": "13",
+			"schluessel": "O",
 			"kuerzel": "O",
 			"text": "Blockunterricht z.Zt. im Unterricht (Landesfachklasse) im dualen System",
 			"schulformen": [ "BK", "SB" ],
@@ -173,7 +173,7 @@
 		"idStatistik": "15",
 		"historie": [ {
 			"id": 1014000,
-			"schluessel": "14",
+			"schluessel": "P",
 			"kuerzel": "P",
 			"text": "Blockunterricht z.Zt. nicht im Unterricht (Landesfachklasse) im dualen System",
 			"schulformen": [ "BK", "SB" ],
@@ -185,7 +185,7 @@
 		"idStatistik": "16",
 		"historie": [ {
 			"id": 1015000,
-			"schluessel": "15",
+			"schluessel": "U",
 			"kuerzel": "U",
 			"text": "Block- und Teilzeitunterr. z.Zt. im Block- oder TZ-Unterricht (Landesfachklasse) im dualen System",
 			"schulformen": [ "BK", "SB" ],
@@ -197,7 +197,7 @@
 		"idStatistik": "17",
 		"historie": [ {
 			"id": 1016000,
-			"schluessel": "16",
+			"schluessel": "M",
 			"kuerzel": "M",
 			"text": "Ganztagsunterricht (Landesfachklasse) im dualen System",
 			"schulformen": [ "BK", "SB" ],
