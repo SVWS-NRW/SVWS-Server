@@ -109,6 +109,8 @@ import { NationalitaetenKatalogEintrag } from "../data/schule/NationalitaetenKat
 import { Nationalitaeten } from "../types/schule/Nationalitaeten";
 import { EinschulungsartKatalogEintrag } from "../data/schueler/EinschulungsartKatalogEintrag";
 import { VerkehrsspracheKatalogEintrag } from "../data/schule/VerkehrsspracheKatalogEintrag";
+import { LehrerPflichtstundensollVollzeit } from "../types/lehrer/LehrerPflichtstundensollVollzeit";
+import { LehrerPflichtstundensollVollzeitKatalogEintrag } from "../data/lehrer/LehrerPflichtstundensollVollzeitKatalogEintrag";
 
 interface JsonCoreTypeEntry<T> {
 	bezeichner: string;
@@ -150,7 +152,7 @@ export class JsonCoreTypeReader {
 		"LehrerAbgangsgrund", "LehrerBeschaeftigungsart", "LehrerEinsatzstatus", "LehrerFachrichtung", "LehrerLehrbefaehigung", "LehrerFachrichtungAnerkennung", "LehrerLehramt",
 		"LehrerLehramtAnerkennung", "LehrerLehrbefaehigungAnerkennung", "LehrerLeitungsfunktion", "LehrerRechtsverhaeltnis", "LehrerZugangsgrund", "BilingualeSprache", "KAOABerufsfeld",
 		"KAOAMerkmaleOptionsarten", "KAOAZusatzmerkmaleOptionsarten", "KAOAEbene4", "KAOAZusatzmerkmal", "KAOAAnschlussoptionen", "KAOAKategorie", "KAOAMerkmal", "Klassenart", "Uebergangsempfehlung",
-		"ZulaessigeKursart", "Foerderschwerpunkt", "LehrerAnrechnungsgrund", "LehrerMehrleistungsarten", "LehrerMinderleistungsarten", "Nationalitaeten", "ValidatorenFehlerartKontext",
+		"ZulaessigeKursart", "Foerderschwerpunkt", "LehrerAnrechnungsgrund", "LehrerMehrleistungsarten", "LehrerMinderleistungsarten", "LehrerPflichtstundensollVollzeit", "Nationalitaeten", "ValidatorenFehlerartKontext",
 	] as const;
 
 	public constructor(url?: string) {
@@ -508,6 +510,13 @@ export class JsonCoreTypeReader {
 		LehrerMinderleistungsarten.init(manager);
 	}
 
+	public readLehrerPflichtstundensollVollzeit() {
+		const data = this.read('LehrerPflichtstundensollVollzeit', (json) => LehrerPflichtstundensollVollzeitKatalogEintrag.transpilerFromJSON(json));
+		CoreTypeSimple.initValues(new LehrerPflichtstundensollVollzeit(), LehrerPflichtstundensollVollzeit.class, data.mapData);
+		const manager = new CoreTypeDataManager<LehrerPflichtstundensollVollzeitKatalogEintrag, LehrerPflichtstundensollVollzeit>(data.version, LehrerPflichtstundensollVollzeit.class, LehrerPflichtstundensollVollzeit.values(), data.mapData, data.mapStatistikIDs);
+		LehrerPflichtstundensollVollzeit.init(manager);
+	}
+
 	public readNationalitaeten() {
 		const data = this.read('Nationalitaeten', (json) => NationalitaetenKatalogEintrag.transpilerFromJSON(json));
 		CoreTypeSimple.initValues(new Nationalitaeten(), Nationalitaeten.class, data.mapData);
@@ -601,6 +610,7 @@ export class JsonCoreTypeReader {
 			this.readLehrerAnrechnungsgrund();
 			this.readLehrerMehrleistungsarten();
 			this.readLehrerMinderleistungsarten();
+			this.readLehrerPflichtstundensollVollzeit();
 			this.readNationalitaeten();
 			this.readValidatorenFehlerartKontext();
 		} catch (e) {

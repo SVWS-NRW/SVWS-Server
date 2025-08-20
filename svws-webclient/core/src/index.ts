@@ -149,6 +149,7 @@ export { LehrerPersonalabschnittsdaten } from './asd/data/lehrer/LehrerPersonala
 export { LehrerPersonalabschnittsdatenAnrechnungsstunden } from './asd/data/lehrer/LehrerPersonalabschnittsdatenAnrechnungsstunden';
 export { LehrerPersonalabschnittsdatenLehrerfunktion } from './asd/data/lehrer/LehrerPersonalabschnittsdatenLehrerfunktion';
 export { LehrerPersonaldaten } from './asd/data/lehrer/LehrerPersonaldaten';
+export { LehrerPflichtstundensollVollzeitKatalogEintrag } from './asd/data/lehrer/LehrerPflichtstundensollVollzeitKatalogEintrag';
 export { LehrerRechtsverhaeltnisKatalogEintrag } from './asd/data/lehrer/LehrerRechtsverhaeltnisKatalogEintrag';
 export { LehrerStammdaten } from './asd/data/lehrer/LehrerStammdaten';
 export { LehrerZugangsgrundKatalogEintrag } from './asd/data/lehrer/LehrerZugangsgrundKatalogEintrag';
@@ -227,6 +228,7 @@ export { LehrerLehrbefaehigungAnerkennung } from './asd/types/lehrer/LehrerLehrb
 export { LehrerLeitungsfunktion } from './asd/types/lehrer/LehrerLeitungsfunktion';
 export { LehrerMehrleistungsarten } from './asd/types/lehrer/LehrerMehrleistungsarten';
 export { LehrerMinderleistungsarten } from './asd/types/lehrer/LehrerMinderleistungsarten';
+export { LehrerPflichtstundensollVollzeit } from './asd/types/lehrer/LehrerPflichtstundensollVollzeit';
 export { LehrerRechtsverhaeltnis } from './asd/types/lehrer/LehrerRechtsverhaeltnis';
 export { LehrerZugangsgrund } from './asd/types/lehrer/LehrerZugangsgrund';
 export { Einschulungsart } from './asd/types/schueler/Einschulungsart';

@@ -39,6 +39,7 @@ import de.svws_nrw.asd.data.lehrer.LehrerLehrbefaehigungKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerLeitungsfunktionKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerMehrleistungsartKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerMinderleistungsartKatalogEintrag;
+import de.svws_nrw.asd.data.lehrer.LehrerPflichtstundensollVollzeitKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerRechtsverhaeltnisKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerZugangsgrundKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.EinschulungsartKatalogEintrag;
@@ -91,6 +92,7 @@ import de.svws_nrw.asd.types.lehrer.LehrerLehrbefaehigungAnerkennung;
 import de.svws_nrw.asd.types.lehrer.LehrerLeitungsfunktion;
 import de.svws_nrw.asd.types.lehrer.LehrerMehrleistungsarten;
 import de.svws_nrw.asd.types.lehrer.LehrerMinderleistungsarten;
+import de.svws_nrw.asd.types.lehrer.LehrerPflichtstundensollVollzeit;
 import de.svws_nrw.asd.types.lehrer.LehrerRechtsverhaeltnis;
 import de.svws_nrw.asd.types.lehrer.LehrerZugangsgrund;
 import de.svws_nrw.asd.types.schueler.Einschulungsart;
@@ -460,6 +462,8 @@ public final class CoreTypeRessource<T extends CoreTypeData, U extends CoreType<
 				"de/svws_nrw/asd/types/lehrer/LehrerMehrleistungsarten.json");
 		addSimple(LehrerMinderleistungsarten.class, LehrerMinderleistungsartKatalogEintrag.class,
 				"de/svws_nrw/asd/types/lehrer/LehrerMinderleistungsarten.json");
+		addSimple(LehrerPflichtstundensollVollzeit.class, LehrerPflichtstundensollVollzeitKatalogEintrag.class,
+				"de/svws_nrw/asd/types/lehrer/LehrerPflichtstundensollVollzeit.json");
 		addSimple(Nationalitaeten.class, NationalitaetenKatalogEintrag.class,
 				"de/svws_nrw/asd/types/schule/Nationalitaeten.json");
 		addSimple(Verkehrssprache.class, VerkehrsspracheKatalogEintrag.class,

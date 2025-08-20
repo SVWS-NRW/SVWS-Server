@@ -50,6 +50,7 @@ import Foerderschwerpunkt from "@json/schule/Foerderschwerpunkt.json";
 import LehrerAnrechnungsgrund from "@json/lehrer/LehrerAnrechnungsgrund.json";
 import LehrerMehrleistungsarten from "@json/lehrer/LehrerMehrleistungsarten.json";
 import LehrerMinderleistungsarten from "@json/lehrer/LehrerMinderleistungsarten.json";
+import LehrerPflichtstundensollVollzeit from "@json/lehrer/LehrerPflichtstundensollVollzeit.json";
 import Nationalitaeten from "@json/schule/Nationalitaeten.json";
 import ValidatorenFehlerartKontext from "@json/../validate/ValidatorenFehlerartKontext.json";
 
@@ -110,6 +111,7 @@ export class JsonCoreTypeReaderStatic extends JsonCoreTypeReader {
 		this.mapCoreTypeNameJsonDataImport.set("LehrerAnrechnungsgrund", LehrerAnrechnungsgrund);
 		this.mapCoreTypeNameJsonDataImport.set("LehrerMehrleistungsarten", LehrerMehrleistungsarten);
 		this.mapCoreTypeNameJsonDataImport.set("LehrerMinderleistungsarten", LehrerMinderleistungsarten);
+		this.mapCoreTypeNameJsonDataImport.set("LehrerPflichtstundensollVollzeit", LehrerPflichtstundensollVollzeit);
 		this.mapCoreTypeNameJsonDataImport.set("Nationalitaeten", Nationalitaeten);
 		this.mapCoreTypeNameJsonDataImport.set("ValidatorenFehlerartKontext", ValidatorenFehlerartKontext);
 		for (const [k,v] of this.mapCoreTypeNameJsonDataImport.entries())
