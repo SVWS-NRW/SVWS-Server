@@ -1,4 +1,4 @@
-import type { Slots } from "vue";
+import { nextTick, type Slots } from "vue";
 import { StateManager } from "../ui/StateManager";
 
 export interface ColorPreset { label: string, color: string, contrastColor: string };
@@ -31,8 +31,8 @@ export class Variant {
 export class Story {
 	readonly id: string;
 	readonly mapVariants: Map<string, Variant> = new Map();
-	protected _variant: Variant = new Variant();
-	protected _color: ColorPreset|undefined;
+	protected _variant: Variant | undefined;
+	protected _color: ColorPreset | undefined;
 	protected _events: string[] = [];
 
 	constructor(id: string = 'default') {
@@ -40,6 +40,8 @@ export class Story {
 	}
 
 	get variant() {
+		if (this._variant === undefined)
+			return new Variant();
 		return this._variant;
 	}
 	setVariantById(id: string) {
@@ -113,10 +115,11 @@ export class StoryManager extends StateManager<Stories> {
 	}
 
 	registerVariant(props: VariantProps, slots: Readonly<Slots>) {
-		// console.log(props.id)
 		const story = this.story;
 		story.registerVariant(new Variant(props, slots));
 		this.setPatchedState({ story });
+		if (story.mapVariants.size === 1)
+			void nextTick(() => this.setVariantById(props.id));
 	}
 
 	get color() {

@@ -2,14 +2,13 @@
 <template>
 	<template v-if="((storyManager.gridView === 'single') && active) || (storyManager.gridView === 'grid')">
 		<div class="size-full flex flex-col">
-			<div @click="active && storyManager.setVariantById('')" class="border-l border-t border-r pr-3 pl-3 rounded-t-md text-lg w-fit"
-				:class="active ? 'bg-ui-brand text-ui-onbrand cursor-pointer' : 'bg-ui-brand-secondary text-ui-50'">
+			<div class="border-l border-t border-r pr-3 pl-3 rounded-t-md text-lg w-fit" :class="active ? 'bg-ui-brand text-ui-onbrand' : 'bg-ui-brand-secondary text-ui-50'">
 				{{ title }}
 			</div>
 			<div @click="switchActive" class="border rounded-r-lg rounded-b-lg border-ui-50 size-full" ref="dragger">
 				<div class="border-r border-b rounded-lg relative border-ui-50 p-4 overflow-auto" :class="color?.label" :style>
 					<slot />
-					<div class="absolute bottom-0 right-0 pb-4 pr-4 size-6 cursor-nwse-resize bg-uistatic-100" @mousedown.prevent="dragStart"><span class="icon-sm i-ri-arrow-right-down-line" /></div>
+					<div class="absolute bottom-0 right-0 pb-4 pr-4 size-6 cursor-nwse-resize bg-uistatic-100" @mousedown.prevent="dragStart"><span class="icon-sm i-ri-arrow-right-down-line icon-uistatic-100" /></div>
 				</div>
 			</div>
 		</div>

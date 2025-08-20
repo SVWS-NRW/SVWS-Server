@@ -108,10 +108,4 @@
 		margin: -0.125rem auto -0.125rem -0.125rem;
 	}
 
-	.svws-ui-badge-transparent {
-		@apply rounded-sm border border-ui-10 font-medium text-ui-100 line-clamp-1 break-all inline-flex leading-none;
-		padding: 0.05rem 0.25rem;
-		margin: -0.125rem auto -0.125rem -0.125rem;
-	}
-
 }

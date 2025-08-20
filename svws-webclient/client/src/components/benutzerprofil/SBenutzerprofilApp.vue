@@ -35,18 +35,7 @@
 						<svws-ui-radio-option value="large" v-model="fontSize" name="fontSize" label="Größer" @click="updateFontSize('large')" />
 					</svws-ui-radio-group>
 				</div>
-				<div v-if="mode !== ServerMode.STABLE" class="flex flex-col gap-2 text-left">
-					<span class="font-bold">Theme</span>
-					<svws-ui-radio-group :row="true">
-						<svws-ui-radio-option value="light" v-model="themeRef" name="theme" label="Light" @click="updateTheme('light')" />
-						<svws-ui-radio-option value="dark" v-model="themeRef" name="theme" label="Dark (In Entwicklung)" @click="updateTheme('dark')" />
-					</svws-ui-radio-group>
-					<svws-ui-notification v-if="themeRef === 'dark'" type="warning">
-						Achtung! Das Dark-Theme befindet sich gerade noch in der Entwicklung und ist noch nicht
-						vollständig umgesetzt.
-						<br>Es kann an einigen Stellen zu Darstellungsproblemen führen.
-					</svws-ui-notification>
-				</div>
+				<ui-color-mode v-if="mode !== ServerMode.STABLE" warning mode="radio" auto />
 			</div>
 		</svws-ui-content-card>
 	</div>
@@ -91,7 +80,6 @@
 		}
 	}
 
-	const themeRef = ref<string>('light');
 	const fontSize = ref<string>('default');
 	const updateFontSize = (size: string | null) => {
 		if (size === null)
@@ -103,17 +91,6 @@
 		fontSize.value = size;
 	};
 
-	const updateTheme = (theme: string | null) => {
-		if (theme === null)
-			return;
-		document.documentElement.classList.remove('light', 'dark');
-		if (theme !== 'auto')
-			document.documentElement.classList.add(theme);
-		localStorage.setItem('theme', theme);
-		themeRef.value = theme;
-	};
-
-	updateTheme(localStorage.getItem('theme'));
 	updateFontSize(localStorage.getItem('fontSize'));
 
 </script>

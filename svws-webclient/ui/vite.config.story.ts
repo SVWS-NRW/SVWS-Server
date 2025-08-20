@@ -16,7 +16,7 @@ export default defineConfig({
 		Vue({ include: [/\.vue$/, /\.md$/] }),
 		tailwindcss(),
 		// Die MD Wrapper-Class sollte in Tailwind `prose` und `min-w-full` verwenden, da sonst die Breite nicht passt.
-		Markdown({ wrapperClasses: 'prose min-w-full' }),
+		Markdown({ wrapperClasses: 'prose dark:prose-invert min-w-full text-ui prose-headings:text-ui prose-code:text-ui prose-a:text-ui-brand prose-pre:bg-ui-75' }),
 		Components({ globs: ["src/**/*.{vue,md}", "src/**/*Props.ts", '!src/**/*.story.*'], types: [] }),
 	],
 	build: {

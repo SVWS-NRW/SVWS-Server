@@ -28,6 +28,7 @@
 							</svws-ui-menu-item>
 						</template>
 					</template>
+					<ui-color-mode />
 					<svws-ui-menu-item subline="" @click="doLogout">
 						<template #label>Abmelden</template>
 						<template #icon> <span class="icon-lg i-ri-logout-circle-line" /> </template>

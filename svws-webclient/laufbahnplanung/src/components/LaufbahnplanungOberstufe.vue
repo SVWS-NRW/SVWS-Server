@@ -7,6 +7,7 @@
 			</div>
 			<div class="flex flex-col gap-2">
 				<div class="flex gap-3">
+					<ui-color-mode />
 					<svws-ui-modal-hilfe> <hilfe-laufbahnplanung /> </svws-ui-modal-hilfe>
 					<svws-ui-button type="danger" @click="handleClick"><span class="icon-sm i-ri-logout-circle-line" /> Abmelden </svws-ui-button>
 				</div>
