@@ -104,6 +104,11 @@ export class SchulabschlussAllgemeinbildend extends JavaEnum<SchulabschlussAllge
 	 */
 	public static readonly WALD : SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("WALD", 17, );
 
+	/**
+	 * Ohne Abschluss, kommt aus der Deutschförderung
+	 */
+	public static readonly DFR : SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("DFR", 18, );
+
 	private constructor(name : string, ordinal : number) {
 		super(name, ordinal);
 		SchulabschlussAllgemeinbildend.all_values_by_ordinal.push(this);
