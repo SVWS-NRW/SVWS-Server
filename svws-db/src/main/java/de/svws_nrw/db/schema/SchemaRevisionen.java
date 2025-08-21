@@ -258,7 +258,10 @@ public enum SchemaRevisionen {
 	REV_45(45, "2025-07-18"),
 
 	/** Korrektur von Einträgen in der Klassentabelle. Undefiniert/Default auf Regelklasse setzen. */
-	REV_46(46, "2025-08-11");
+	REV_46(46, "2025-08-11"),
+
+	/** Tabelle Schuljahresabschnitte: Einführen einer Unique-Constraint auf Jahr und Abschnitt */
+	REV_47(47, "2025-08-21");
 
 
 	/**
@@ -266,14 +269,14 @@ public enum SchemaRevisionen {
 	 * bis zu welcher alle Schema-Revision als stabil gelten und ab Version 1.0 des SVWS-Servers
 	 * nicht mehr verändert werden.
 	 */
-	public static final SchemaRevisionen maxRevision = REV_46;
+	public static final SchemaRevisionen maxRevision = REV_47;
 
 	/**
 	 * Gibt die größte Revisions-Nummer an, welche in diese Enumeration definiert wurde.
 	 * Dies dient dazu Revisionen als Entwickler-Revisionen zu kennzeichnen, die noch nicht
 	 * stabil sind. Dieser Wert ist also größer oder gleich {@link SchemaRevisionen#maxRevision}.
 	 */
-	public static final SchemaRevisionen maxDeveloperRevision = REV_46;
+	public static final SchemaRevisionen maxDeveloperRevision = REV_47;
 
 	/** Eine Map, welche von der Revisionsnummer auf das Objekt der Aufzählung abbildet. */
 	private static Map<Long, SchemaRevisionen> _mapByNumber = null;
