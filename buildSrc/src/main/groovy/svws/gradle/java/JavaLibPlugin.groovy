@@ -62,7 +62,7 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 	void addJettyConfiguration() {
-		def version = "12.0.23";
+		def version = "12.0.25";
 		def versionServletApi = "6.1.0";
 		project.configurations.create('jetty');
 		project.dependencies.add('jetty', 'jakarta.servlet:jakarta.servlet-api:' + versionServletApi);
