@@ -7,7 +7,8 @@
 			</div>
 			<svws-ui-spacing />
 			<div class="font-bold text-button">Ziel-Datenbank (wird erstellt):</div>
-			<svws-ui-text-input v-model.trim="schema" required placeholder="Schemaname" />
+			Der Name des Schemas darf nur Buchstaben (ohne Umlaute), Zahlen sowie die Zeichen "$" und "_" enthalten:
+			<svws-ui-text-input v-model.trim="schema" required placeholder="Schemaname" :valid="validatorSchemaName" />
 			<svws-ui-text-input v-model.trim="user" required placeholder="Benutzername" :valid="validatorUsername" />
 			<svws-ui-text-input v-model.trim="password" required placeholder="Passwort" type="password" />
 		</div>
@@ -26,6 +27,7 @@
 	import { ref } from "vue";
 	import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 	import type { List } from "@core/java/util/List";
+	import { validatorSchemaName } from "~/utils/helfer";
 
 	const props = defineProps<{
 		importSchema: (formData: FormData, schema: string) => Promise<SimpleOperationResponse>;

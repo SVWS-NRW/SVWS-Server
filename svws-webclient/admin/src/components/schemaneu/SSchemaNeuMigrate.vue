@@ -21,7 +21,8 @@
 			</template>
 			<svws-ui-spacing />
 			<div class="font-bold text-button mt-2">Ziel-Datenbank (wird erstellt):</div>
-			<svws-ui-text-input v-model.trim="zielSchema" placeholder="Schema (wird erstellt, z.B. svwsdb)" />
+			Der Name des Schemas darf nur Buchstaben (ohne Umlaute), Zahlen sowie die Zeichen "$" und "_" enthalten:
+			<svws-ui-text-input v-model.trim="zielSchema" placeholder="Schema (wird erstellt, z.B. svwsdb)" :valid="validatorSchemaName" />
 			<svws-ui-text-input v-model.trim="zielUsername" placeholder="Name des Datenbankbenutzers" :valid="value => value !== 'root'" />
 			<svws-ui-text-input v-model.trim="zielUserPassword" placeholder="Passwort des Datenbankbenutzers" type="password" />
 		</div>
@@ -41,6 +42,7 @@
 	import { type SchemaMigrationQuelle } from "../schema/SchemaMigrationQuelle";
 	import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 	import type { List } from "@core/java/util/List";
+	import { validatorSchemaName } from "~/utils/helfer";
 
 	const props = defineProps<{
 		migrateSchema: (formData: FormData) => Promise<SimpleOperationResponse>;
