@@ -165,8 +165,8 @@ tasks.register('integrationTest') {
 	// Tatsächliche Integrationstests welche für jedes Subpackage ausgeführt werden
 	// Weitere Testpackages können hier hinzugefügt werden
 	dependsOn 'tests-server-api:testAgainstDockerEnv' // Vite API Tests
-	dependsOn 'tests-e2e-client-devmode:testAgainstDockerEnv' // Playwright E2E Tests DEV Modus
-	dependsOn 'tests-e2e-client-stablemode:testAgainstDockerEnv' // Playwright E2E Tests STABLE Modus
+	dependsOn 'tests-e2e-devmode:testAgainstDockerEnv' // Playwright E2E Tests DEV Modus
+	dependsOn 'tests-e2e-stablemode:testAgainstDockerEnv' // Playwright E2E Tests STABLE Modus
 	dependsOn 'tests-server-dav:testAgainstDockerEnv' // Vite API Dav Tests
 	dependsOn 'tests-server-enm:testAgainstDockerEnv' // Vite API ENM Tests
 
@@ -174,8 +174,8 @@ tasks.register('integrationTest') {
 		// Stoppe die container für die jeweiligen Testumgebungen nach den Integrationstests
 		// Jeden ausgeführte Test Sub-Packet sollte auch hier auftauchen
 		finalizedBy 'tests-server-api:removeTestEnvironmentEntryPoint'
-		finalizedBy 'tests-e2e-client-devmode:removeTestEnvironmentEntryPoint'
-		finalizedBy 'tests-e2e-client-stablemode:removeTestEnvironmentEntryPoint'
+		finalizedBy 'tests-e2e-devmode:removeTestEnvironmentEntryPoint'
+		finalizedBy 'tests-e2e-stablemode:removeTestEnvironmentEntryPoint'
 		finalizedBy 'tests-server-dav:removeTestEnvironmentEntryPoint'
 		finalizedBy 'tests-server-enm:removeTestEnvironmentEntryPoint'
 
@@ -254,8 +254,8 @@ tasks.register('no_auto_docker_integrationTest') {
 	// Führe die lokalen Tests der jeweiligen Subpackages aus
 	dependsOn 'tests-server-api:no_auto_docker_test_APIServer' // VITE API Tests
 /*	dependsOn 'tests-server-dav:no_auto_docker_test_DAV' // VITE API DAV Tests
-	dependsOn 'tests-e2e-client-devmode:no_auto_docker_test_E2E' // Ende zu Ende Tests
-	dependsOn 'tests-e2e-client-stablemode:no_auto_docker_test_E2E' // Ende zu Ende Tests*/
+	dependsOn 'tests-e2e-devmode:no_auto_docker_test_E2E' // Ende zu Ende Tests
+	dependsOn 'tests-e2e-stablemode:no_auto_docker_test_E2E' // Ende zu Ende Tests*/
 
 }
 
@@ -268,16 +268,16 @@ tasks.register('no_auto_docker_integrationTest') {
 tasks.register('checkJUnitResults') {
 	// Die Tests sollten komplett abgeschlossen (und rückgebaut) werden bevor die Ergebnisse evaluiert werden
 	mustRunAfter 'tests-server-api:removeTestEnvironmentEntryPoint'
-	mustRunAfter 'tests-e2e-client-devmode:removeTestEnvironmentEntryPoint'
-	mustRunAfter 'tests-e2e-client-stablemode:removeTestEnvironmentEntryPoint'
+	mustRunAfter 'tests-e2e-devmode:removeTestEnvironmentEntryPoint'
+	mustRunAfter 'tests-e2e-stablemode:removeTestEnvironmentEntryPoint'
 	mustRunAfter 'tests-server-dav:removeTestEnvironmentEntryPoint'
 	mustRunAfter 'tests-server-enm:removeTestEnvironmentEntryPoint'
 
 	// Die Liste der JUnit Report Files. Hier sollten neue Einträge ergänzt werden wenn weitere Testpackages geschrieben werden.
 	def junitReportFiles = [
 			'tests-server-api/build/test-results/api-test-results.xml',
-			'tests-e2e-client-devmode/build/test-results/zusammenfassung/e2e-results.xml',
-			'tests-e2e-client-stablemode/build/test-results/zusammenfassung/e2e-results.xml',
+			'tests-e2e-devmode/build/test-results/zusammenfassung/e2e-results.xml',
+			'tests-e2e-stablemode/build/test-results/zusammenfassung/e2e-results.xml',
 			'tests-server-dav/build/test-results/api-test-results.xml',
 			'tests-server-enm/build/test-results/after-setup-test-results.xml',
 			'tests-server-enm/build/test-results/setup-test-results.xml',

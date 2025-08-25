@@ -12,7 +12,7 @@
         "EnmA"
     ],
 	"localTestRunBackendURL": "https://localhost",
-	"localTestRunFrontendURL": "http://localhost:3000",
+	"localTestRunFrontendURL": "https://localhost",
 	"localTestRunENMURL": "https://localhost:8888",
 	"localTestRunDBSchema": "GymAbi01"
 }

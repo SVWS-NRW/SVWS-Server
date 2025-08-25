@@ -15,6 +15,8 @@ export const enmURL: string = process.env.VITE_ENM_targetHost ?? localTestRunENM
 
 export const frontendURL: string = process.env.VITE_targetHost ?? `${localTestRunFrontendURL}/#/${localTestRunDBSchema}`;
 
+export const adminFrontendURL: string = process.env.VITE_targetHost !== undefined ? `${process.env.VITE_targetHost}/admin` : `${localTestRunFrontendURL}/admin`;
+
 /**
  * Liefert eine neue Instanz vom Typ {@link ApiServer}, mit dem die API des SVWS-Servers genutzt werden kann.
  *

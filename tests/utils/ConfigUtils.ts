@@ -10,10 +10,10 @@ const configPath = '../../config/tests/config.json';
 const defaultConfigPath = '../../config/tests/config_default.json';
 
 export interface TestConfig {
-	"localTestRunBackendURL": string,
-	"localTestRunFrontendURL": string,
-	"localTestRunENMURL": string,
-	"localTestRunDBSchema": string
+	localTestRunBackendURL: string,
+	localTestRunFrontendURL: string,
+	localTestRunENMURL: string,
+	localTestRunDBSchema: string
 }
 
 /**
