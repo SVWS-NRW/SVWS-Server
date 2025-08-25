@@ -71,9 +71,9 @@
 							<div data-test-id="story-controls" class="flex flex-col divide-y divide-gray-100 dark:divide-gray-750 h-full overflow-auto p-2">
 								<div class="h-9 flex-none px-2 flex items-center relative" />
 								<div class="flex-none">
-									<div id="controls" class="size-full" :class="visible === 'controls' ? 'visible':'invisible'" />
-									<div id="docs" class="size-full" :class="visible === 'docs' ? 'visible':'invisible'" />
-									<div id="events" class="size-full" :class="visible === 'events' ? 'visible':'invisible'" />
+									<div id="controls" class="size-full" :class="visible === 'controls' ? '':'hidden'" />
+									<div id="docs" class="size-full" :class="visible === 'docs' ? '':'hidden'" />
+									<div id="events" class="size-full" :class="visible === 'events' ? '':'hidden'" />
 								</div>
 							</div>
 						</div>
