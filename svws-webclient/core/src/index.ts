@@ -266,6 +266,7 @@ export { ValidatorManager } from './asd/validate/ValidatorManager';
 export { ValidatorLehrerPersonalabschnittsdaten } from './asd/validate/lehrer/ValidatorLehrerPersonalabschnittsdaten';
 export { ValidatorLehrerPersonalabschnittsdatenPflichtstundensoll } from './asd/validate/lehrer/ValidatorLehrerPersonalabschnittsdatenPflichtstundensoll';
 export { ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum } from './asd/validate/lehrer/ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum';
+export { ValidatorLehrerPersonaldaten } from './asd/validate/lehrer/ValidatorLehrerPersonaldaten';
 export { ValidatorLehrerStammdaten } from './asd/validate/lehrer/ValidatorLehrerStammdaten';
 export { ValidatorLehrerStammdatenGeburtsdatum } from './asd/validate/lehrer/ValidatorLehrerStammdatenGeburtsdatum';
 export { ValidatorLehrerStammdatenNachname } from './asd/validate/lehrer/ValidatorLehrerStammdatenNachname';
