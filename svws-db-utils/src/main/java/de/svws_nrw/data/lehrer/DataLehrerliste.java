@@ -1,6 +1,7 @@
 package de.svws_nrw.data.lehrer;
 
 import java.text.Collator;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -11,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
 import de.svws_nrw.data.DataManagerRevised;
@@ -26,14 +28,22 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class DataLehrerliste extends DataManagerRevised<Long, DTOLehrer, LehrerListeEintrag> {
 
+	/** Die ID des Schuljahresabschnittes auf welchen sich die Abfrage bezieht. */
+	private final Long idSchuljahresabschnitt;
+
+
 	/**
 	 * Erstellt einen neuen {@link DataManagerRevised} für das Core-DTO {@link LehrerListeEintrag}.
 	 *
-	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
+	 * @param conn                     die Datenbank-Verbindung für den Datenbankzugriff
+	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnittes für die Lehrerliste oder null, falls keine Einschränkung
+	 *                                 auf einen Schuljahresabschnitt gewünscht ist
 	 */
-	public DataLehrerliste(final DBEntityManager conn) {
+	public DataLehrerliste(final DBEntityManager conn, final Long idSchuljahresabschnitt) {
 		super(conn);
+		this.idSchuljahresabschnitt = idSchuljahresabschnitt;
 	}
+
 
 	@Override
 	protected LehrerListeEintrag map(final DTOLehrer dtoLehrer) {
@@ -86,21 +96,60 @@ public final class DataLehrerliste extends DataManagerRevised<Long, DTOLehrer, L
 	/**
 	 * Bestimmt die Liste aller Lehrer.
 	 *
+	  *@param nurSichtbare          gibt an, ob nur sichtbare Lehrer eingelesen werden sollen
 	 * @param includeReferenzInfo   wenn True erhalten die Daten die Information, ob der Lehrer in anderen Datenbanktabellen referenziert ist oder nicht.
 	 * 								Dies erfordert eine zusätzliche Datenbankabfrage und ist aus daher Performancegründen nur empfohlen, wenn diese
 	 * 								Information benötigt wird.
 	 *
 	 * @return die Liste der Lehrer oder leere Liste
 	 */
-	public List<LehrerListeEintrag> getLehrerListe(final boolean includeReferenzInfo) {
-		final List<DTOLehrer> lehrer = conn.queryAll(DTOLehrer.class);
+	public List<LehrerListeEintrag> getLehrerListe(final boolean nurSichtbare, final boolean includeReferenzInfo) {
+		// Bestimme zunächst die Lehrer aus der Datenbank, ggf. nur sichtbare Lehrer
+		final List<DTOLehrer> lehrer = nurSichtbare
+				? conn.queryList(DTOLehrer.QUERY_BY_SICHTBAR, DTOLehrer.class, true)
+				: conn.queryAll(DTOLehrer.class);
 		if (lehrer.isEmpty())
 			return Collections.emptyList();
 
-		final Set<Long> idsOfReferencedLehrer =
-				includeReferenzInfo ? getIdsOfReferencedLehrer(lehrer.stream().map(l -> l.ID).collect(Collectors.toSet())) : Collections.emptySet();
+		// Ergänze ggf. die Information, ob Lehrer irgendwo in der Datenbank referenziert wurden... Dies ist die DB-Anfrage dafür
+		final Set<Long> idsOfReferencedLehrer = includeReferenzInfo
+				? getIdsOfReferencedLehrer(lehrer.stream().map(l -> l.ID).collect(Collectors.toSet()))
+				: Collections.emptySet();
 
-		return lehrer.stream().map(l -> {
+		final Schuljahresabschnitt schuljahresabschnitt = (idSchuljahresabschnitt != null)
+				? conn.getUser().schuleGetAbschnittById(idSchuljahresabschnitt) : null;
+
+		// Erstelle die Einträge für die Lehrerliste, filtere ggf. Einträge anhand des Schuljahresabschnittes und ergänze ggf. die Informationen, ob die Lehrer an anderer Stelle referenziert wurden
+		return lehrer.stream().filter(l -> {
+			if (schuljahresabschnitt != null) {
+				// Prüfe ggf. das Zugangsdatum
+				if (l.DatumZugang != null) {
+					final LocalDate dateZugang = LocalDate.parse(l.DatumZugang);
+					final int year = dateZugang.getYear();
+					if (year > schuljahresabschnitt.schuljahr + 1)
+						return false;
+					if (year == schuljahresabschnitt.schuljahr + 1) {
+						final int month = dateZugang.getMonthValue();
+						if ((month >= 8) || ((schuljahresabschnitt.abschnitt == 1) && (month >= 2)))
+							return false;
+					}
+				}
+				// Prüfe ggf. das Abgangsdatum
+				if (l.DatumAbgang != null) {
+					final LocalDate dateAbgang = LocalDate.parse(l.DatumAbgang);
+					final int year = dateAbgang.getYear();
+					if ((year < schuljahresabschnitt.schuljahr) || ((schuljahresabschnitt.abschnitt == 2) && (year == schuljahresabschnitt.schuljahr)))
+						return false;
+					if (year <= schuljahresabschnitt.schuljahr + 1) {
+						final int month = dateAbgang.getMonthValue();
+						if (((schuljahresabschnitt.abschnitt == 1) && (year == schuljahresabschnitt.schuljahr) && (month <= 7))
+								|| ((schuljahresabschnitt.abschnitt == 2) && (year == schuljahresabschnitt.schuljahr + 1) && (month <= 1)))
+							return false;
+					}
+				}
+			}
+			return true;
+		}).map(l -> {
 			final LehrerListeEintrag lehrerListeEintrag = map(l);
 			if (includeReferenzInfo)
 				lehrerListeEintrag.referenziertInAnderenTabellen = idsOfReferencedLehrer.contains(lehrerListeEintrag.id);
@@ -110,13 +159,13 @@ public final class DataLehrerliste extends DataManagerRevised<Long, DTOLehrer, L
 
 	@Override
 	public List<LehrerListeEintrag> getAll() {
-		return getLehrerListe(true);
+		return getLehrerListe(false, true);
 	}
 
 	@Override
 	public List<LehrerListeEintrag> getList() {
-		final List<DTOLehrer> lehrer = conn.queryList(DTOLehrer.QUERY_BY_SICHTBAR, DTOLehrer.class, true);
-		return lehrer.stream().map(this::map).sorted(dataComparator).toList();
+		final boolean nurSichtbare = (idSchuljahresabschnitt != null) && (idSchuljahresabschnitt == conn.getUser().schuleGetSchuljahresabschnitt().id);
+		return getLehrerListe(nurSichtbare, true);
 	}
 
 	/**
@@ -146,10 +195,10 @@ public final class DataLehrerliste extends DataManagerRevised<Long, DTOLehrer, L
 	protected void checkBeforeDeletionWithSimpleOperationResponse(final List<DTOLehrer> lehrer, final Map<Long, SimpleOperationResponse> mapResponses) {
 		final Set<Long> result = getIdsOfReferencedLehrer(lehrer.stream().map(l -> l.ID).collect(Collectors.toSet()));
 		lehrer.stream().filter(l -> result.contains(l.ID)).forEach(l -> {
-					final SimpleOperationResponse response = mapResponses.get(l.ID);
-					response.success = false;
-					response.log.add("Der Lehrer mit dem Kuerzel %s und der id %d ist in der Datenbank referenziert und kann daher nicht gelöscht werden"
-							.formatted(l.Kuerzel, l.ID));
+			final SimpleOperationResponse response = mapResponses.get(l.ID);
+			response.success = false;
+			response.log.add("Der Lehrer mit dem Kuerzel %s und der id %d ist in der Datenbank referenziert und kann daher nicht gelöscht werden"
+					.formatted(l.Kuerzel, l.ID));
 		});
 	}
 

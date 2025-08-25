@@ -105,7 +105,7 @@ public final class DataGostKlausuren {
 			jgs.getFirst().schueler = new ArrayList<>(jgs.getFirst().schueler);
 			jgs.getFirst().schueler.addAll(ladeSchuelerByIds(-1, conn, missingSchuelerIds));
 		}
-		data.lehrer.addAll(new DataLehrerliste(conn).getLehrerListe(false));
+		data.lehrer.addAll(new DataLehrerliste(conn, null).getLehrerListe(false, false));
 		return data;
 	}
 

@@ -119,7 +119,35 @@ public class APILehrer {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Lehrer-Einträge gefunden")
 	public Response getLehrer(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerliste(conn).getAllAsResponse(),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerliste(conn, null).getAllAsResponse(),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.KEINE);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Liste aller Lehrer eines Schuljahresabschnittes.
+	 *
+	 * @param schema      das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param abschnitt   die ID des Schuljahresabschnitts
+	 * @param request     die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste mit den Lehrern eines Schuljahresabschnittes
+	 */
+	@GET
+	@Path("/abschnitt/{abschnitt : \\d+}")
+	@Operation(summary = "Gibt eine Übersicht von allen Lehrern eines Schuljahresabschnittes zurück.",
+			description = "Erstellt eine Liste aller in der Datenbank vorhanden Lehrer eines Schuljahresabschnittes unter Angabe der ID, des Kürzels, "
+					+ "des Vor- und Nachnamens, der sog. Personentyps, einer Sortierreihenfolge, ob sie in der Anwendung "
+					+ "sichtbar bzw. änderbar sein sollen sowie ob sie für die Schulstatistik relevant sein sollen. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerdaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste von Lehrer-Listen-Einträgen",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LehrerListeEintrag.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Lehrer-Einträge gefunden")
+	public Response getLehrerFuerAbschnitt(@PathParam("schema") final String schema, @PathParam("abschnitt") final long abschnitt,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerliste(conn, abschnitt).getListAsResponse(),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);
 	}
@@ -147,7 +175,7 @@ public class APILehrer {
 					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
-				conn -> new DataLehrerliste(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
+				conn -> new DataLehrerliste(conn, null).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.LEHRERDATEN_LOESCHEN);
 	}
