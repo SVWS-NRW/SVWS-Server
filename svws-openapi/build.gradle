@@ -18,7 +18,37 @@ dependencies {
 	implementation project(':svws-module-reporting')
 	implementation project(':svws-module-dav-api')
 
-	api fileTree(dir: "$projectDir/src/main/java", includes: ['**/svws_nrw/api/server/*.java', '**/svws_nrw/api/privileged/API*.java'])
+	api fileTree(dir: "$projectDir/src/main/java", includes: ['**/svws_nrw/api/server/*.java', '**/svws_nrw/api/privileged/API*.java', '**/svws_nrw/api/external/API*.java'])
+}
+
+/**
+ * Der Gradle Task wird genutzt, um sich alle benötigten Dateien für die Auslieferung einer statischen SwaggerUI Seite mit Hilfe des SwaggerUIGenerators
+ * generieren zu lassen.
+ *
+ * Hinweis: Um die Server URLs, die von Swagger für Test Requests genutzt werden, zu konfigurieren, kann die Umgebungsvariable SVWS_SWAGGER_UI_SERVER_URLS
+ * beim Ausführen des Gradle Tasks gesetzt werden (Falls nicht gesetzt, Default: https://localhost).
+ * Die Umgebungsvariable kann auch mehrere Server URLs kommagetrennt beinhalten. Beispiel: SVWS_SWAGGER_UI_SERVER_URLS="https://server1.de,https://server2.de"
+ *
+ * Des Weiteren lässt sich auch ein individuelles Output Verzeichnis über die Umgebungsvariable SVWS_SWAGGER_UI_OUTPUT_DIR definieren.
+ * Beispiel: SVWS_SWAGGER_UI_OUTPUT_DIR="/temp/swagger-ui" (Falls nicht gesetzt, Default: "[buildOutputDir]/resources/main/swagger-ui").
+ */
+tasks.register('generateStaticSwaggerUI', JavaExec) {
+	description = "Erzeugt alle benötigten Ressourcen, um die SwaggerUI inklusive generierter OpenAPI Spezifikationen auszuliefern."
+	classpath = sourceSets.main.runtimeClasspath
+	mainClass = "de.svws_nrw.common.SwaggerUIGenerator"
+
+	String outputDir = System.getenv("SVWS_SWAGGER_UI_OUTPUT_DIR")
+	// Als Default werden die Files in den Build Output geschrieben werden
+	if (outputDir == null)
+		outputDir = new File(project.getLayout().buildDirectory.getAsFile().get(), "resources/main/swagger-ui").absolutePath
+
+	String swaggerServerUrls = System.getenv("SVWS_SWAGGER_UI_SERVER_URLS")
+	// Bei lokalem Build soll als Default https://localhost in der SwaggerUI als Server genutzt werden
+	if (swaggerServerUrls == null)
+		swaggerServerUrls = "https://localhost"
+
+	// Argumente für den SwaggerUIGenerator übergeben
+	args outputDir, swaggerServerUrls
 }
 
 task cleanTranspiled(type: Delete) {

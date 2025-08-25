@@ -823,6 +823,7 @@ export { StundenplanblockungManagerRaumMenge } from './core/utils/stundenplanblo
 export { StundenplanblockungManagerSchule } from './core/utils/stundenplanblockung/StundenplanblockungManagerSchule';
 export { StundenplanblockungManagerStatistik } from './core/utils/stundenplanblockung/StundenplanblockungManagerStatistik';
 export { StundenplanblockungManagerStundenelement } from './core/utils/stundenplanblockung/StundenplanblockungManagerStundenelement';
+export { ApiExternal } from './api/ApiExternal';
 export { ApiPrivileged } from './api/ApiPrivileged';
 export { ApiSchema } from './api/ApiSchema';
 export { ApiServer } from './api/ApiServer';

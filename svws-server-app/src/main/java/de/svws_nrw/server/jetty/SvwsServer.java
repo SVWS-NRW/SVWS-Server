@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
+import de.svws_nrw.api.RestAppExternal;
 import org.eclipse.jetty.alpn.server.ALPNServerConnectionFactory;
 import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
 import org.eclipse.jetty.ee10.servlet.ServletHandler;
@@ -301,9 +302,10 @@ public final class SvwsServer {
 	private void addAPIApplications() {
 		final SVWSKonfiguration config = SVWSKonfiguration.get();
 		addApplication(RestAppServer.class, RestAppServer.getPathSpecification());
-		addApplication(RestAppClient.class, "/*");
-		addApplication(RestAppDav.class, "/dav/*");
+		addApplication(RestAppClient.class, RestAppClient.getPathSpecification());
+		addApplication(RestAppDav.class, RestAppDav.getPathSpecification());
 		addApplication(RestAppDebug.class, RestAppDebug.getPathSpecification());
+		addApplication(RestAppExternal.class, RestAppExternal.getPathSpecification());
 		if (!config.isDBRootAccessDisabled()) {
 			addApplication(RestAppSchemaRoot.class, RestAppSchemaRoot.getPathSpecification());
 			if ((config.getAdminClientPath() != null) && (!config.getAdminClientPath().isBlank()))

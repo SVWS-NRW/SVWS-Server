@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.time.Duration;
 import java.util.List;
 
-import de.svws_nrw.api.ResourceFileManager;
-import de.svws_nrw.api.SVWSVersion;
+import de.svws_nrw.api.common.ResourceFileManager;
+import de.svws_nrw.api.common.SVWSVersion;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.config.LogConsumerLogfile;
 import de.svws_nrw.config.SVWSKonfiguration;

@@ -139,7 +139,6 @@ import { LehrerRechtsverhaeltnisKatalogEintrag } from '../asd/data/lehrer/Lehrer
 import { LehrerStammdaten } from '../asd/data/lehrer/LehrerStammdaten';
 import { LehrerZugangsgrundKatalogEintrag } from '../asd/data/lehrer/LehrerZugangsgrundKatalogEintrag';
 import { Lernplattform } from '../core/data/schule/Lernplattform';
-import { LernplattformV1Export } from '../core/data/lernplattform/v1/LernplattformV1Export';
 import { List } from '../java/util/List';
 import { LongAndStringLists } from '../core/data/LongAndStringLists';
 import { Merkmal } from '../core/data/schule/Merkmal';
@@ -18462,63 +18461,6 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<StundenplanZeitraster>).map(d => StundenplanZeitraster.transpilerToJSONPatch(d)).join() + "]";
 		return super.patchJSON(path, body);
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getLernplattformenExport für den Zugriff auf die URL https://{hostname}/db/{schema}/v1/lernplattformen/{id : \d+}/{idSchuljahresabschnitt : \d+}
-	 *
-	 * Es werden alle relevanten Daten zu Jahrgängen, Klassen, Lehrern, Schülern, Fächern und Lerngruppen aus der SVWS-DB geladen und für den Export bezogen auf eine Lernplattform aufbereitet und zurückgegeben.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Daten für den Lernplattformen Datenexport
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: LernplattformV1Export
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Lernplattformen Datenexport anzufordern.
-	 *   Code 404: Es wurden nicht alle benötigten Daten für das Erstellen des Lernplattformen Datenexports gefunden.
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} idSchuljahresabschnitt - der Pfad-Parameter idSchuljahresabschnitt
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Die Daten für den Lernplattformen Datenexport
-	 */
-	public async getLernplattformenExport(schema : string, idSchuljahresabschnitt : number, id : number) : Promise<LernplattformV1Export> {
-		const path = "/db/{schema}/v1/lernplattformen/{id : \\d+}/{idSchuljahresabschnitt : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{idSchuljahresabschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, idSchuljahresabschnitt.toString())
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
-		const text = result;
-		return LernplattformV1Export.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getLernplattformenExportAsGzip für den Zugriff auf die URL https://{hostname}/db/{schema}/v1/lernplattformen/{id : \d+}/{idSchuljahresabschnitt : \d+}/gzip
-	 *
-	 * Es werden alle relevanten Daten zu Jahrgängen, Klassen, Lehrern, Schülern, Fächern und Lerngruppen aus der SVWS-DB geladen und für den Export bezogen auf eine Lernplattform aufbereitet und komprimiert im gzip-Format zurückgegeben.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Daten für den Lernplattformen Datenexport
-	 *     - Mime-Type: application/octet-stream
-	 *     - Rückgabe-Typ: ApiFile
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Lernplattformen Datenexport anzufordern.
-	 *   Code 404: Es wurden nicht alle benötigten Daten für das Erstellen des Lernplattformen Datenexports gefunden.
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} idSchuljahresabschnitt - der Pfad-Parameter idSchuljahresabschnitt
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Die Daten für den Lernplattformen Datenexport
-	 */
-	public async getLernplattformenExportAsGzip(schema : string, idSchuljahresabschnitt : number, id : number) : Promise<ApiFile> {
-		const path = "/db/{schema}/v1/lernplattformen/{id : \\d+}/{idSchuljahresabschnitt : \\d+}/gzip"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{idSchuljahresabschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, idSchuljahresabschnitt.toString())
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const data : ApiFile = await super.getOctetStream(path);
-		return data;
 	}
 
 

@@ -1,5 +1,9 @@
 package de.svws_nrw.api;
 
+import java.util.Set;
+
+import de.svws_nrw.api.common.OpenAPICorsFilter;
+import de.svws_nrw.api.common.PathUtils;
 import de.svws_nrw.api.server.APIAbteilungen;
 import de.svws_nrw.api.server.APIAlgoGesamtschuleAbschluss;
 import de.svws_nrw.api.server.APIAlgoGostAbschluss;
@@ -9,13 +13,13 @@ import de.svws_nrw.api.server.APIBetrieb;
 import de.svws_nrw.api.server.APIClientConfig;
 import de.svws_nrw.api.server.APIConfig;
 import de.svws_nrw.api.server.APIDatabase;
+import de.svws_nrw.api.server.APIDatenaustausch;
 import de.svws_nrw.api.server.APIENM;
 import de.svws_nrw.api.server.APIEmail;
 import de.svws_nrw.api.server.APIErzieher;
 import de.svws_nrw.api.server.APIFaecher;
 import de.svws_nrw.api.server.APIGesamtschule;
 import de.svws_nrw.api.server.APIGost;
-import de.svws_nrw.api.server.APIDatenaustausch;
 import de.svws_nrw.api.server.APIGostKlausuren;
 import de.svws_nrw.api.server.APIGostKursplanung;
 import de.svws_nrw.api.server.APIJahrgaenge;
@@ -24,7 +28,6 @@ import de.svws_nrw.api.server.APIKataloge;
 import de.svws_nrw.api.server.APIKlassen;
 import de.svws_nrw.api.server.APIKurse;
 import de.svws_nrw.api.server.APILehrer;
-import de.svws_nrw.api.server.APILernplattformenV1;
 import de.svws_nrw.api.server.APIOAuth;
 import de.svws_nrw.api.server.APIReporting;
 import de.svws_nrw.api.server.APISchema;
@@ -34,8 +37,6 @@ import de.svws_nrw.api.server.APISchule;
 import de.svws_nrw.api.server.APIStundenplan;
 import de.svws_nrw.api.server.APIWiedervorlage;
 import jakarta.ws.rs.core.Application;
-
-import java.util.Set;
 
 
 /**
@@ -84,7 +85,6 @@ public final class RestAppServer extends Application {
 			APIReporting.class,
 			APIWiedervorlage.class,
 			APIAbteilungen.class,
-			APILernplattformenV1.class,
 			OpenAPICorsFilter.class,
 			OpenApiServer.class);
 
@@ -110,45 +110,6 @@ public final class RestAppServer extends Application {
 	}
 
 	/**
-	 * Gibt die Pfad-Spezifikationen für die App zurück, welche auch über den Zugriff von
-	 * anderen Ports zur Verfügung stehen sollen.
-	 *
-	 * @return die Pfad-Spezifikation
-	 */
-	public static String[] getPathSpecificationCommon() {
-		return pathSpec;
-	}
-
-	/**
-	 * Prüft, ob der übergebene Pfad in der Pfad-Spezifikation enthalten ist oder nicht
-	 *
-	 * @param pathSpecs   die Pfad-Spezifikationen
-	 * @param path        der zu prüfende Pfad
-	 *
-	 * @return true, falls er enthalten ist
-	 */
-	private static boolean checkIsInPathSpecification(final String[] pathSpecs, final String path) {
-		if (path == null)
-			return false;
-		for (final String pathSpec : pathSpecs)
-			if (path.equals(pathSpec) || (pathSpec.endsWith("/*") && (path.equals(pathSpec.substring(0, pathSpec.length() - 2))))
-					|| (pathSpec.endsWith("*") && (path.startsWith(pathSpec.substring(0, pathSpec.length() - 1)))))
-				return true;
-		return false;
-	}
-
-	/**
-	 * Prüft, ob der übergebene Pfad in der Pfad-Spezifikation enthalten ist oder nicht
-	 *
-	 * @param path   der zu prüfende Pfad
-	 *
-	 * @return true, falls er enthalten ist
-	 */
-	public static boolean checkIsInPathSpecification(final String path) {
-		return checkIsInPathSpecification(pathSpec, path);
-	}
-
-	/**
 	 * Prüft, ob der übergebene Pfad in der Pfad-Spezifikation enthalten ist,
 	 * welche auch die Pfade spezifiziert, die auch über den Zugriff von
 	 * anderen Ports zur Verfügung stehen sollen.
@@ -158,7 +119,7 @@ public final class RestAppServer extends Application {
 	 * @return true, falls er enthalten ist
 	 */
 	public static boolean checkIsInPathSpecificationCommon(final String path) {
-		return checkIsInPathSpecification(pathSpecCommon, path);
+		return PathUtils.checkIsInPathSpecification(pathSpecCommon, path);
 	}
 
 }

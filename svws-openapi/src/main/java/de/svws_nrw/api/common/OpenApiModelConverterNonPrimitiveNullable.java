@@ -1,4 +1,4 @@
-package de.svws_nrw.api;
+package de.svws_nrw.api.common;
 
 import java.util.Arrays;
 import java.util.Iterator;

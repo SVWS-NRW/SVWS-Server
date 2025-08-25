@@ -165,6 +165,8 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 			final var pathelements = path.split("/");
 			if ((pathelements.length > 2) && ("".equals(pathelements[0])) && (("db".equals(pathelements[1])) || ("dav".equals(pathelements[1]))))
 				schema = pathelements[2].replace("%20", " ");
+			else if ((pathelements.length > 2) && ("".equals(pathelements[0])) && ("api".equals(pathelements[1])) && ("external".equals(pathelements[2])))
+				schema = pathelements[3].replace("%20", " ");
 		}
 
 		// Erzeuge ggf. einen anonymen Principal

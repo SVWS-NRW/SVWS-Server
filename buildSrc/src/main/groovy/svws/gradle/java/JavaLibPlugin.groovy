@@ -141,6 +141,9 @@ class JavaLibPlugin implements Plugin<Project> {
 
 		project.dependencies.add('testImplementation', 'org.junit.jupiter:junit-jupiter:5.12.2');
 		project.dependencies.add('testImplementation', 'org.junit.platform:junit-platform-launcher:1.12.2');
+		project.dependencies.add('testImplementation', 'org.mockito:mockito-inline:5.2.0');
+		project.dependencies.add('testImplementation', 'org.mockito:mockito-junit-jupiter:5.2.0');
+		project.dependencies.add('testImplementation', 'org.assertj:assertj-core:3.25.3');
 
 		project.java.sourceCompatibility = JavaVersion.VERSION_21
 		project.java.targetCompatibility = JavaVersion.VERSION_21

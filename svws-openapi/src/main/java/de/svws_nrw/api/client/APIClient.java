@@ -2,8 +2,8 @@ package de.svws_nrw.api.client;
 
 import java.io.IOException;
 
-import de.svws_nrw.api.ResourceFile;
-import de.svws_nrw.api.ResourceFileManager;
+import de.svws_nrw.api.common.ResourceFile;
+import de.svws_nrw.api.common.ResourceFileManager;
 import de.svws_nrw.asd.utils.json.JsonReader;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.db.utils.ApiOperationException;

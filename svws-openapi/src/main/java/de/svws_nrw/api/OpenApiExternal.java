@@ -26,10 +26,10 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 
 /**
- * Stellt die OpenAPI-Schnittstelle für die Schema-Root-Applikation zur Verfügung
+ * Stellt die OpenAPI-Schnittstelle für die Extern angebotene API zur Verfügung
  */
 @Path("")
-public class OpenApiSchemaRoot extends BaseOpenApiResource implements OpenApiDefinition {
+public class OpenApiExternal extends BaseOpenApiResource implements OpenApiDefinition {
 
 	/** Die Servlet-Konfiguration */
 	@Context
@@ -42,7 +42,7 @@ public class OpenApiSchemaRoot extends BaseOpenApiResource implements OpenApiDef
 	/**
 	 * Leerer Standardkonstruktor.
 	 */
-	public OpenApiSchemaRoot() {
+	public OpenApiExternal() {
 		// leer
 	}
 
@@ -57,7 +57,7 @@ public class OpenApiSchemaRoot extends BaseOpenApiResource implements OpenApiDef
 	 * @throws JsonProcessingException im Fehlerfall
 	 */
 	@GET
-	@Path("/openapi/privileged.{type:json|yaml}")
+	@Path("/openapi/external.{type:json|yaml}")
 	@Override
 	public Response getOpenApiFile(@PathParam("type") final String type) throws OpenApiConfigurationException, JsonProcessingException {
 		return OpenApiDefinition.super.getOpenApiFile(type);
@@ -70,7 +70,7 @@ public class OpenApiSchemaRoot extends BaseOpenApiResource implements OpenApiDef
 	 */
 	@Override
 	public String getTitle() {
-		return "SVWS Open-API Datenbank-Schema (root)";
+		return "SVWS Open-API Extern";
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class OpenApiSchemaRoot extends BaseOpenApiResource implements OpenApiDef
 	 */
 	@Override
 	public String getDescription() {
-		return "Die Open-API-Schnittstellenbeschreibungen für die Schemaverwaltung (root) des SVWS-Servers.";
+		return "Die Open-API-Schnittstellenbeschreibungen für extern bereitgestellte API Endpunkte des SVWS-Servers.";
 	}
 
 	/**
@@ -121,7 +121,7 @@ public class OpenApiSchemaRoot extends BaseOpenApiResource implements OpenApiDef
 		return new SwaggerConfiguration()
 				.openAPI(getOpenAPI())
 				.prettyPrint(true)
-				.resourcePackages(Stream.of("de.svws_nrw.api.privileged").collect(Collectors.toSet()));
+				.resourcePackages(Stream.of("de.svws_nrw.api.external").collect(Collectors.toSet()));
 	}
 
 	/**
