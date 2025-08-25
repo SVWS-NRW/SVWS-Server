@@ -4,8 +4,8 @@
 		"bezeichner": "E1",
 		"idStatistik": "1",
 		"historie": [ {
-			"id" : 1000,
-			"schluessel": "1", 
+			"id" : 1,
+			"schluessel": "E1", 
 			"kuerzel": "E1", 
 			"text": "Schuleingangsphase, 1. Schulbesuchsjahr", 
 			"gueltigVon": null, 
@@ -15,8 +15,8 @@
 		"bezeichner": "E2",
 		"idStatistik": "2",
 		"historie": [ {
-			"id" : 2000,
-			"schluessel": "2",
+			"id" : 2,
+			"schluessel": "E2",
 			"kuerzel": "E2",
 			"text": "Schuleingangsphase, 2. Schulbesuchsjahr",
 			"gueltigVon": null,
@@ -26,8 +26,8 @@
 		"bezeichner": "E3",
 		"idStatistik": "3",
 		"historie": [ {
-			"id": 3000,
-			"schluessel": "3",
+			"id": 3,
+			"schluessel": "E3",
 			"kuerzel": "E3",
 			"text": "Schuleingangsphase, 3. Schulbesuchsjahr",
 			"gueltigVon": null,

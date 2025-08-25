@@ -27900,7 +27900,7 @@ SchuelerSchulbesuchsdaten {
   "id": 1199,
   "idAufnehmendeSchule": null,
   "idDauerKindergartenbesuch": null,
-  "idGrundschuleJahreEingangsphase": 2000,
+  "idGrundschuleJahreEingangsphase": 2,
   "idKindergarten": null,
   "idVorherigeSchule": 51,
   "kuerzelGrundschuleUebergangsempfehlung": null,
