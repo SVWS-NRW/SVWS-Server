@@ -795,7 +795,6 @@ export { KlassenUtils } from './core/utils/klassen/KlassenUtils';
 export { KursUtils } from './core/utils/kurse/KursUtils';
 export { LehrerUtils } from './core/utils/lehrer/LehrerUtils';
 export { RaumUtils } from './core/utils/raum/RaumUtils';
-export { SchuelerLernabschnittManager } from './core/utils/schueler/SchuelerLernabschnittManager';
 export { SchuelerUtils } from './core/utils/schueler/SchuelerUtils';
 export { SprachendatenUtils } from './core/utils/schueler/SprachendatenUtils';
 export { AbgangsartenManager } from './core/utils/schule/AbgangsartenManager';

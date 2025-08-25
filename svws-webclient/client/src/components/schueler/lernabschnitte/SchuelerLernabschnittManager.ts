@@ -1,32 +1,13 @@
-import { JavaObject } from '../../../java/lang/JavaObject';
-import { KlassenDaten } from '../../../asd/data/klassen/KlassenDaten';
-import { SchuelerListeEintrag } from '../../../core/data/schueler/SchuelerListeEintrag';
-import { HashMap } from '../../../java/util/HashMap';
-import { Schulform } from '../../../asd/types/schule/Schulform';
-import { KlassenUtils } from '../../../core/utils/klassen/KlassenUtils';
-import { ArrayList } from '../../../java/util/ArrayList';
-import { JahrgangsDaten } from '../../../core/data/jahrgang/JahrgangsDaten';
-import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
-import { JavaString } from '../../../java/lang/JavaString';
-import type { Comparator } from '../../../java/util/Comparator';
-import { KursDaten } from '../../../asd/data/kurse/KursDaten';
-import { LehrerListeEintrag } from '../../../core/data/lehrer/LehrerListeEintrag';
-import { FachDaten } from '../../../core/data/fach/FachDaten';
-import { FoerderschwerpunktEintrag } from '../../../core/data/schule/FoerderschwerpunktEintrag';
-import { Schulgliederung } from '../../../asd/types/schule/Schulgliederung';
-import type { List } from '../../../java/util/List';
-import { Fach } from '../../../asd/types/fach/Fach';
-import { SchuelerLeistungsdaten } from '../../../asd/data/schueler/SchuelerLeistungsdaten';
-import { Jahrgaenge } from '../../../asd/types/jahrgang/Jahrgaenge';
-import { SchuelerLernabschnittsdaten } from '../../../asd/data/schueler/SchuelerLernabschnittsdaten';
-import { Note } from '../../../asd/types/Note';
-import { JavaLong } from '../../../java/lang/JavaLong';
-import { Class } from '../../../java/lang/Class';
-import { KursUtils } from '../../../core/utils/kurse/KursUtils';
-import { Schuljahresabschnitt } from '../../../asd/data/schule/Schuljahresabschnitt';
-import type { JavaMap } from '../../../java/util/JavaMap';
+import { Jahrgaenge, Note, JavaLong, KursUtils, HashMap, Fach, KlassenUtils, ArrayList,
+	DeveloperNotificationException, Schulgliederung, JavaString } from '@core';
+import type { Schuljahresabschnitt, SchuelerLernabschnittsdaten, SchuelerLeistungsdaten, Schulform, JahrgangsDaten,
+	KlassenDaten, SchuelerListeEintrag, KursDaten, LehrerListeEintrag, FachDaten, FoerderschwerpunktEintrag , List,
+	Comparator , JavaMap} from '@core';
 
-export class SchuelerLernabschnittManager extends JavaObject {
+/**
+ * Ein Manager zum Verwalten der Schüler-Lernabschnittsdaten eines Schülers.
+ */
+export class SchuelerLernabschnittManager {
 
 	private readonly _schulform : Schulform;
 
@@ -66,28 +47,22 @@ export class SchuelerLernabschnittManager extends JavaObject {
 		let cmp : number = a.sortierung - b.sortierung;
 		if (cmp !== 0)
 			return cmp;
-		if ((a.kuerzel === null) || (b.kuerzel === null))
-			throw new DeveloperNotificationException("Fachkürzel dürfen nicht null sein")
 		cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
 		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
 	} };
 
 	private static readonly _compFoerderschwerpunkte : Comparator<FoerderschwerpunktEintrag> = { compare : (a: FoerderschwerpunktEintrag, b: FoerderschwerpunktEintrag) => {
-		if (a.text === null)
-			return -1;
-		if (b.text === null)
-			return 1;
 		return JavaString.compareTo(a.text, b.text);
 	} };
 
 	private static readonly _compLehrer : Comparator<LehrerListeEintrag> = { compare : (a: LehrerListeEintrag, b: LehrerListeEintrag) => {
-		let cmp : number = a.sortierung - b.sortierung;
-		if (cmp !== 0)
-			return cmp;
-		cmp = JavaString.compareTo(a.nachname, b.nachname);
+		let cmp : number = JavaString.compareTo(a.nachname, b.nachname);
 		if (cmp !== 0)
 			return cmp;
 		cmp = JavaString.compareTo(a.vorname, b.vorname);
+		if (cmp !== 0)
+			return cmp;
+		cmp = a.sortierung - b.sortierung;
 		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
 	} };
 
@@ -125,7 +100,6 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	 * @param foerderschwerpunkte   der Katalog der Förderschwerpunkte
 	 */
 	public constructor(schulform : Schulform, schueler : SchuelerListeEintrag, lernabschnittsdaten : SchuelerLernabschnittsdaten, schuljahresabschnitt : Schuljahresabschnitt, faecher : List<FachDaten>, foerderschwerpunkte : List<FoerderschwerpunktEintrag>, jahrgaenge : List<JahrgangsDaten>, klassen : List<KlassenDaten>, kurse : List<KursDaten>, lehrer : List<LehrerListeEintrag>) {
-		super();
 		this._schulform = schulform;
 		this._schueler = schueler;
 		this._lernabschnittsdaten = lernabschnittsdaten;
@@ -667,18 +641,4 @@ export class SchuelerLernabschnittManager extends JavaObject {
 		return this._schueler;
 	}
 
-	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.core.utils.schueler.SchuelerLernabschnittManager';
-	}
-
-	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.utils.schueler.SchuelerLernabschnittManager'].includes(name);
-	}
-
-	public static class = new Class<SchuelerLernabschnittManager>('de.svws_nrw.core.utils.schueler.SchuelerLernabschnittManager');
-
-}
-
-export function cast_de_svws_nrw_core_utils_schueler_SchuelerLernabschnittManager(obj : unknown) : SchuelerLernabschnittManager {
-	return obj as SchuelerLernabschnittManager;
 }

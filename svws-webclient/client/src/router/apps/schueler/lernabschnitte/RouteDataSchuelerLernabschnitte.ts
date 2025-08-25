@@ -1,8 +1,7 @@
 import type { List, FachDaten, LehrerListeEintrag, SchuelerLeistungsdaten, SchuelerLernabschnittListeEintrag,
 	SchuelerLernabschnittsdaten, FoerderschwerpunktEintrag, JahrgangsDaten, SchuelerLernabschnittBemerkungen,
 	GostSchuelerklausurTermin} from "@core";
-import { ArrayList, DeveloperNotificationException, GostHalbjahr, GostKlausurplanManager,
-	SchuelerLernabschnittManager } from "@core";
+import { ArrayList, DeveloperNotificationException, GostHalbjahr, GostKlausurplanManager } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -12,6 +11,7 @@ import { routeSchuelerLernabschnittLeistungen } from "~/router/apps/schueler/ler
 import { routeSchueler } from "../RouteSchueler";
 import { routeSchuelerLernabschnittGostKlausuren } from "./RouteSchuelerLernabschnittGostKlausuren";
 import { RouteNode } from "~/router/RouteNode";
+import { SchuelerLernabschnittManager } from "~/components/schueler/lernabschnitte/SchuelerLernabschnittManager";
 
 
 interface RouteStateDataSchuelerLernabschnitte extends RouteStateInterface {
