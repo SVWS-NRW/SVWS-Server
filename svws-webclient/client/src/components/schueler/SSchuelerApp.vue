@@ -79,11 +79,11 @@
 	const epJahre = computed<string | null>(() => {
 		if (!primarstufe.value)
 			return null;
-		const ep = props.manager().auswahl().epJahre?.toString() ?? null;
+		const ep = props.manager().auswahl().epJahre;
 		if (ep === null)
 			return null;
 		const schuljahr = props.manager().getSchuljahr();
-		return PrimarstufeSchuleingangsphaseBesuchsjahre.data().getWertBySchluesselOrException(ep).daten(schuljahr)?.kuerzel ?? null;
+		return PrimarstufeSchuleingangsphaseBesuchsjahre.data().getWertByIDOrNull(ep)?.daten(schuljahr)?.kuerzel ?? null;
 	});
 
 	const schuelerSubline = computed(() => {
