@@ -1,23 +1,21 @@
 import type { ApiFile, List, ReportingParameter, SchuelerListeEintrag, SchuelerStammdaten, SimpleOperationResponse, StundenplanListeEintrag, SchuelerTelefon, SchuelerSchulbesuchsdaten, ErzieherStammdaten } from "@core";
-
-import { BenutzerKompetenz, ArrayList, SchuelerListe, SchuelerStatus, DeveloperNotificationException } from "@core";
-import { SchuelerListeManager } from "@ui";
+import { BenutzerKompetenz, ArrayList, SchuelerListe, SchuelerStatus, DeveloperNotificationException, ServerMode } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdaten";
-import { ViewType } from "@ui";
+import { ViewType, SchuelerListeManager, type PendingStateManager } from "@ui";
 import { routeSchuelerNeu } from "~/router/apps/schueler/RouteSchuelerNeu";
 import type { RouteParamsRawGeneric } from "vue-router";
 import { routeSchuelerIndividualdatenGruppenprozesse } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdatenGruppenprozesse";
-import type { PendingStateManager } from "@ui";
+import { routeSchuelerAllgemeinesGruppenprozesse } from "~/router/apps/schueler/allgemeines/RouteSchuelerAllgemeinesGruppenprozesse";
 
 
 interface RouteStateSchueler extends RouteStateAuswahlInterface<SchuelerListeManager> {
 	mapStundenplaene: Map<number, StundenplanListeEintrag>;
 	listSchuelerErziehereintraege: List<ErzieherStammdaten>;
 	listSchuelerTelefoneintraege: List<SchuelerTelefon>;
-};
+}
 
 const defaultState = <RouteStateSchueler> {
 	idSchuljahresabschnitt: -1,
@@ -66,6 +64,13 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 		} else {
 			manager.useFilter(this._state.value.manager);
 		}
+
+		// Hinweis: Dieses Nachträgliche Verändern des DefaultStates wurde gemacht, weil zum Zeitpunkt der Klassen initialisierung der ServerMode noch nicht
+		// abgerufen wurde und somit die Bedingung, welche Route als Default für Gruppenprozesse genutzt werden soll, nicht geprüft werden kann
+		// Diese Stelle eignet sich als Alternative, da sie noch vor dem ersten Betreten der Route aber bereits nach dem Abruf der ServerModes liegt
+		// TODO: Ausbauen sobald die Route routeSchuelerIndividualdatenGruppenprozesse im "Stable" Mode bereitsteht
+		if (api.mode !== ServerMode.DEV)
+			this._defaultState = { ...defaultState, gruppenprozesseView: routeSchuelerAllgemeinesGruppenprozesse };
 
 		return { manager };
 	}
