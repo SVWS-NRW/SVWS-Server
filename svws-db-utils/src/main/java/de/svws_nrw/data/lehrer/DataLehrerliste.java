@@ -45,6 +45,46 @@ public final class DataLehrerliste extends DataManagerRevised<Long, DTOLehrer, L
 	}
 
 
+	/**
+	 * Prüft, ob der übergebene Lehrer in dem Schuljahresabschnitt, auf welchen sich die Abfrage bezieht aktiv ist oder nicht.
+	 * In dem Fall, dass die Abfrage keinen Bezug zu einem Schuljahresabschnitt hat, wird immer true zurückgegeben.
+	 *
+	 * @param l   das DTO des Lehrers
+	 *
+	 * @return true, wenn der Lehrer in dem Schuljahresabschnitt aktiv war, und ansonsten false
+	 */
+	private boolean pruefeAktiv(final DTOLehrer l) {
+		if (idSchuljahresabschnitt == null)
+			return true;
+		final Schuljahresabschnitt schuljahresabschnitt = conn.getUser().schuleGetAbschnittById(idSchuljahresabschnitt);
+		// Prüfe ggf. das Zugangsdatum
+		if (l.DatumZugang != null) {
+			final LocalDate dateZugang = LocalDate.parse(l.DatumZugang);
+			final int year = dateZugang.getYear();
+			if (year > schuljahresabschnitt.schuljahr + 1)
+				return false;
+			if (year == schuljahresabschnitt.schuljahr + 1) {
+				final int month = dateZugang.getMonthValue();
+				if ((month >= 8) || ((schuljahresabschnitt.abschnitt == 1) && (month >= 2)))
+					return false;
+			}
+		}
+		// Prüfe ggf. das Abgangsdatum
+		if (l.DatumAbgang != null) {
+			final LocalDate dateAbgang = LocalDate.parse(l.DatumAbgang);
+			final int year = dateAbgang.getYear();
+			if ((year < schuljahresabschnitt.schuljahr) || ((schuljahresabschnitt.abschnitt == 2) && (year == schuljahresabschnitt.schuljahr)))
+				return false;
+			if (year <= schuljahresabschnitt.schuljahr + 1) {
+				final int month = dateAbgang.getMonthValue();
+				if (((schuljahresabschnitt.abschnitt == 1) && (year == schuljahresabschnitt.schuljahr) && (month <= 7))
+						|| ((schuljahresabschnitt.abschnitt == 2) && (year == schuljahresabschnitt.schuljahr + 1) && (month <= 1)))
+					return false;
+			}
+		}
+		return true;
+	}
+
 	@Override
 	protected LehrerListeEintrag map(final DTOLehrer dtoLehrer) {
 		final LehrerListeEintrag eintrag = new LehrerListeEintrag();
@@ -55,6 +95,7 @@ public final class DataLehrerliste extends DataManagerRevised<Long, DTOLehrer, L
 		eintrag.vorname = (dtoLehrer.Vorname == null) ? "" : dtoLehrer.Vorname;
 		eintrag.personTyp = (dtoLehrer.PersonTyp == null) ? "" : dtoLehrer.PersonTyp.kuerzel;
 		eintrag.sortierung = (dtoLehrer.Sortierung == null) ? 32000 : dtoLehrer.Sortierung;
+		eintrag.istAktiv = this.pruefeAktiv(dtoLehrer);
 		eintrag.istSichtbar = (dtoLehrer.Sichtbar == null) || dtoLehrer.Sichtbar;
 		eintrag.istRelevantFuerStatistik = (dtoLehrer.statistikRelevant == null) || dtoLehrer.statistikRelevant;
 		return eintrag;
@@ -96,18 +137,15 @@ public final class DataLehrerliste extends DataManagerRevised<Long, DTOLehrer, L
 	/**
 	 * Bestimmt die Liste aller Lehrer.
 	 *
-	  *@param nurSichtbare          gibt an, ob nur sichtbare Lehrer eingelesen werden sollen
 	 * @param includeReferenzInfo   wenn True erhalten die Daten die Information, ob der Lehrer in anderen Datenbanktabellen referenziert ist oder nicht.
 	 * 								Dies erfordert eine zusätzliche Datenbankabfrage und ist aus daher Performancegründen nur empfohlen, wenn diese
 	 * 								Information benötigt wird.
 	 *
 	 * @return die Liste der Lehrer oder leere Liste
 	 */
-	public List<LehrerListeEintrag> getLehrerListe(final boolean nurSichtbare, final boolean includeReferenzInfo) {
+	public List<LehrerListeEintrag> getLehrerListe(final boolean includeReferenzInfo) {
 		// Bestimme zunächst die Lehrer aus der Datenbank, ggf. nur sichtbare Lehrer
-		final List<DTOLehrer> lehrer = nurSichtbare
-				? conn.queryList(DTOLehrer.QUERY_BY_SICHTBAR, DTOLehrer.class, true)
-				: conn.queryAll(DTOLehrer.class);
+		final List<DTOLehrer> lehrer = conn.queryAll(DTOLehrer.class);
 		if (lehrer.isEmpty())
 			return Collections.emptyList();
 
@@ -116,40 +154,8 @@ public final class DataLehrerliste extends DataManagerRevised<Long, DTOLehrer, L
 				? getIdsOfReferencedLehrer(lehrer.stream().map(l -> l.ID).collect(Collectors.toSet()))
 				: Collections.emptySet();
 
-		final Schuljahresabschnitt schuljahresabschnitt = (idSchuljahresabschnitt != null)
-				? conn.getUser().schuleGetAbschnittById(idSchuljahresabschnitt) : null;
-
 		// Erstelle die Einträge für die Lehrerliste, filtere ggf. Einträge anhand des Schuljahresabschnittes und ergänze ggf. die Informationen, ob die Lehrer an anderer Stelle referenziert wurden
-		return lehrer.stream().filter(l -> {
-			if (schuljahresabschnitt != null) {
-				// Prüfe ggf. das Zugangsdatum
-				if (l.DatumZugang != null) {
-					final LocalDate dateZugang = LocalDate.parse(l.DatumZugang);
-					final int year = dateZugang.getYear();
-					if (year > schuljahresabschnitt.schuljahr + 1)
-						return false;
-					if (year == schuljahresabschnitt.schuljahr + 1) {
-						final int month = dateZugang.getMonthValue();
-						if ((month >= 8) || ((schuljahresabschnitt.abschnitt == 1) && (month >= 2)))
-							return false;
-					}
-				}
-				// Prüfe ggf. das Abgangsdatum
-				if (l.DatumAbgang != null) {
-					final LocalDate dateAbgang = LocalDate.parse(l.DatumAbgang);
-					final int year = dateAbgang.getYear();
-					if ((year < schuljahresabschnitt.schuljahr) || ((schuljahresabschnitt.abschnitt == 2) && (year == schuljahresabschnitt.schuljahr)))
-						return false;
-					if (year <= schuljahresabschnitt.schuljahr + 1) {
-						final int month = dateAbgang.getMonthValue();
-						if (((schuljahresabschnitt.abschnitt == 1) && (year == schuljahresabschnitt.schuljahr) && (month <= 7))
-								|| ((schuljahresabschnitt.abschnitt == 2) && (year == schuljahresabschnitt.schuljahr + 1) && (month <= 1)))
-							return false;
-					}
-				}
-			}
-			return true;
-		}).map(l -> {
+		return lehrer.stream().map(l -> {
 			final LehrerListeEintrag lehrerListeEintrag = map(l);
 			if (includeReferenzInfo)
 				lehrerListeEintrag.referenziertInAnderenTabellen = idsOfReferencedLehrer.contains(lehrerListeEintrag.id);
@@ -159,13 +165,12 @@ public final class DataLehrerliste extends DataManagerRevised<Long, DTOLehrer, L
 
 	@Override
 	public List<LehrerListeEintrag> getAll() {
-		return getLehrerListe(false, true);
+		return getLehrerListe(true);
 	}
 
 	@Override
 	public List<LehrerListeEintrag> getList() {
-		final boolean nurSichtbare = (idSchuljahresabschnitt != null) && (idSchuljahresabschnitt == conn.getUser().schuleGetSchuljahresabschnitt().id);
-		return getLehrerListe(nurSichtbare, true);
+		return getLehrerListe(true);
 	}
 
 	/**

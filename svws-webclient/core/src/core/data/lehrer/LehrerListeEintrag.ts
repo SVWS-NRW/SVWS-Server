@@ -39,6 +39,11 @@ export class LehrerListeEintrag extends JavaObject {
 	public sortierung : number = 0;
 
 	/**
+	 * Gibt an, ob der Lehrer in dem Schuljahresabschnitt, auf welchen sich die Abfrage bezieht aktiv ist oder nicht.
+	 */
+	public istAktiv : boolean = true;
+
+	/**
 	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.
 	 */
 	public istSichtbar : boolean = false;
@@ -93,6 +98,9 @@ export class LehrerListeEintrag extends JavaObject {
 		if (obj.sortierung === undefined)
 			throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
+		if (obj.istAktiv === undefined)
+			throw new Error('invalid json format, missing attribute istAktiv');
+		result.istAktiv = obj.istAktiv;
 		if (obj.istSichtbar === undefined)
 			throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
@@ -112,6 +120,7 @@ export class LehrerListeEintrag extends JavaObject {
 		result += '"vorname" : ' + JSON.stringify(obj.vorname) + ',';
 		result += '"personTyp" : ' + JSON.stringify(obj.personTyp) + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
+		result += '"istAktiv" : ' + obj.istAktiv.toString() + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		result += '"istRelevantFuerStatistik" : ' + obj.istRelevantFuerStatistik.toString() + ',';
 		result += '"referenziertInAnderenTabellen" : ' + ((obj.referenziertInAnderenTabellen === null) ? 'null' : obj.referenziertInAnderenTabellen.toString()) + ',';
@@ -142,6 +151,9 @@ export class LehrerListeEintrag extends JavaObject {
 		}
 		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung.toString() + ',';
+		}
+		if (obj.istAktiv !== undefined) {
+			result += '"istAktiv" : ' + obj.istAktiv.toString() + ',';
 		}
 		if (obj.istSichtbar !== undefined) {
 			result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';

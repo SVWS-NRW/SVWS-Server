@@ -1,48 +1,72 @@
 import { Jahrgaenge, Note, JavaLong, KursUtils, HashMap, Fach, KlassenUtils, ArrayList,
-	DeveloperNotificationException, Schulgliederung, JavaString } from '@core';
+	DeveloperNotificationException, Schulgliederung, JavaString, HashSet } from '@core';
 import type { Schuljahresabschnitt, SchuelerLernabschnittsdaten, SchuelerLeistungsdaten, Schulform, JahrgangsDaten,
 	KlassenDaten, SchuelerListeEintrag, KursDaten, LehrerListeEintrag, FachDaten, FoerderschwerpunktEintrag , List,
-	Comparator , JavaMap} from '@core';
+	Comparator, JavaMap, JavaSet } from '@core';
 
 /**
  * Ein Manager zum Verwalten der Schüler-Lernabschnittsdaten eines Schülers.
  */
 export class SchuelerLernabschnittManager {
 
+	// Die Schulform der Schule
 	private readonly _schulform : Schulform;
 
+	// Die Informationen zum aktuell ausgewählten Schüler
 	private readonly _schueler : SchuelerListeEintrag;
 
+	// Die Lernabschnittsdaten des aktuell ausgewählten Lernabschnitts. Diese beinhalten auch die zugehörigen Leistungsdaten
 	private readonly _lernabschnittsdaten : SchuelerLernabschnittsdaten;
 
+	// Die Informationen zum Schuljahresabschnitt auf welcgen sich die Lernabschnittsdaten beziehen
 	private readonly _schuljahresabschnitt : Schuljahresabschnitt;
 
+	// Eine Map für den schnellen Zugriff auf die Leistungsdaten des Schülers anhand der ID der Leistungsdaten
 	private readonly _mapLeistungById : JavaMap<number, SchuelerLeistungsdaten> = new HashMap<number, SchuelerLeistungsdaten>();
 
+	// Der Katalog der Unterrichtsfächer
 	private readonly _faecher : List<FachDaten> = new ArrayList<FachDaten>();
 
+	// Eine Map für den schnellen Zugriff auf die Fächer anhand ihrer ID
 	private readonly _mapFachByID : JavaMap<number, FachDaten> = new HashMap<number, FachDaten>();
 
+	// Der Katalog der Förderschwerpunkte
 	private readonly _foerderschwerpunkte : List<FoerderschwerpunktEintrag> = new ArrayList<FoerderschwerpunktEintrag>();
 
+	// Eine Map für den schnellen Zugriff auf die Förderschwerpunkte anhand ihrer ID
 	private readonly _mapFoerderschwerpunktByID : JavaMap<number, FoerderschwerpunktEintrag> = new HashMap<number, FoerderschwerpunktEintrag>();
 
+	// Der Katalog der Jahrgänge
 	private readonly _jahrgaenge : List<JahrgangsDaten> = new ArrayList<JahrgangsDaten>();
 
+	// Eine Map für den schnellen Zugriff auf die Jahrgänge anhand ihrer ID
 	private readonly _mapJahrgangByID : JavaMap<number, JahrgangsDaten> = new HashMap<number, JahrgangsDaten>();
 
+	// Der Katalog der Klassen in dem Schuljahresabschnitt
 	private readonly _klassen : List<KlassenDaten> = new ArrayList<KlassenDaten>();
 
+	// Eine Map für den schnellen Zugriff auf die Klassen anhand ihrer ID
 	private readonly _mapKlasseByID : JavaMap<number, KlassenDaten> = new HashMap<number, KlassenDaten>();
 
+	// Der Katalog der Kurse in dem Schuljahresabschnitt
 	private readonly _kurse : List<KursDaten> = new ArrayList<KursDaten>();
 
+	// Eine Map für den schnellen Zugriff auf die Kurse anhand ihrer ID
 	private readonly _mapKursByID : JavaMap<number, KursDaten> = new HashMap<number, KursDaten>();
 
+	// Der Katalog der Lehrer
 	private readonly _lehrer : List<LehrerListeEintrag> = new ArrayList<LehrerListeEintrag>();
 
+	// Der Katalog der Lehrer, gefiltert anhand des Zugangs- und des Abgangsdatum des Lehrers
+	private readonly _lehrerAktiv : JavaSet<LehrerListeEintrag> = new HashSet<LehrerListeEintrag>();
+
+	// Der Katalog der sichbaren Lehrer, zusätzlich gefiltert anhand des Zugangs- und des Abgangsdatum des Lehrers
+	private readonly _lehrerAktivUndSichtbar : JavaSet<LehrerListeEintrag> = new HashSet<LehrerListeEintrag>();
+
+	// Eine Map für den schnellen Zugriff auf die Lehrer anhand ihrer ID
 	private readonly _mapLehrerByID : JavaMap<number, LehrerListeEintrag> = new HashMap<number, LehrerListeEintrag>();
 
+	// Comparator: Führt einen Vergleich von zwei Fächern durch
 	private static readonly _compFach : Comparator<FachDaten> = { compare : (a: FachDaten, b: FachDaten) => {
 		let cmp : number = a.sortierung - b.sortierung;
 		if (cmp !== 0)
@@ -51,10 +75,12 @@ export class SchuelerLernabschnittManager {
 		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
 	} };
 
+	// Comparator: Führt einen Vergleich von zwei Förderschwerpunkte durch
 	private static readonly _compFoerderschwerpunkte : Comparator<FoerderschwerpunktEintrag> = { compare : (a: FoerderschwerpunktEintrag, b: FoerderschwerpunktEintrag) => {
 		return JavaString.compareTo(a.text, b.text);
 	} };
 
+	// Comparator: Führt einen Vergleich von zwei Lehrern durch
 	private static readonly _compLehrer : Comparator<LehrerListeEintrag> = { compare : (a: LehrerListeEintrag, b: LehrerListeEintrag) => {
 		let cmp : number = JavaString.compareTo(a.nachname, b.nachname);
 		if (cmp !== 0)
@@ -66,12 +92,14 @@ export class SchuelerLernabschnittManager {
 		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
 	} };
 
+	// Comparator: Führt einen Vergleich von zwei Leistungsdatensätzen anhand des Faches durch
 	private readonly _compLeistungenByFach : Comparator<SchuelerLeistungsdaten> = { compare : (a: SchuelerLeistungsdaten, b: SchuelerLeistungsdaten) => {
 		const aFach : FachDaten = DeveloperNotificationException.ifMapGetIsNull(this._mapFachByID, a.fachID);
 		const bFach : FachDaten = DeveloperNotificationException.ifMapGetIsNull(this._mapFachByID, b.fachID);
 		return SchuelerLernabschnittManager._compFach.compare(aFach, bFach);
 	} };
 
+	// Comparator: Führt einen Vergleich von zwei Jahrgängen durch
 	private static readonly jahrgangsDatencomparator : Comparator<JahrgangsDaten> = { compare : (a: JahrgangsDaten, b: JahrgangsDaten) => {
 		let cmp : number = a.sortierung - b.sortierung;
 		if (cmp !== 0)
@@ -113,11 +141,22 @@ export class SchuelerLernabschnittManager {
 		this.initLehrer(lehrer);
 	}
 
+	/**
+	 * Initialisiert die internen Datenstrukturen für die Leistungsdaten
+	 *
+	 * @param leistungsdaten   die Leistungsdaten aus dem Schüler-Lernabschnitt
+	 */
 	private initLeistungsdaten(leistungsdaten : List<SchuelerLeistungsdaten>) : void {
 		for (const leistung of leistungsdaten)
 			this.leistungAddInternal(leistung);
 	}
 
+	/**
+	 * Initialisiert die internen Datenstrukturen für die Fächer und führt dabei
+	 * eine Sortierung der internen Fächerliste aus.
+	 *
+	 * @param faecher   die Liste der Fächer für die Initialisierung
+	 */
 	private initFaecher(faecher : List<FachDaten>) : void {
 		this._faecher.clear();
 		this._faecher.addAll(faecher);
@@ -127,6 +166,12 @@ export class SchuelerLernabschnittManager {
 			this._mapFachByID.put(f.id, f);
 	}
 
+	/**
+	 * Initialisiert die internen Datenstrukturen für die Förderschwerpunkt und führt dabei
+	 * eine Sortierung der internen Liste aus.
+	 *
+	 * @param foerderschwerpunkte   die Liste der Förderschwerpunkte für die Initialisierung
+	 */
 	private initFoerderschwerpunkte(foerderschwerpunkte : List<FoerderschwerpunktEintrag>) : void {
 		this._foerderschwerpunkte.clear();
 		this._foerderschwerpunkte.addAll(foerderschwerpunkte);
@@ -136,6 +181,12 @@ export class SchuelerLernabschnittManager {
 			this._mapFoerderschwerpunktByID.put(f.id, f);
 	}
 
+	/**
+	 * Initialisiert die internen Datenstrukturen für die Jahrgänge und führt dabei
+	 * eine Sortierung der internen Liste aus.
+	 *
+	 * @param jahrgaenge   die Liste der Jahrgänge für die Initialisierung
+	 */
 	private initJahrgaenge(jahrgaenge : List<JahrgangsDaten>) : void {
 		this._jahrgaenge.clear();
 		this._jahrgaenge.addAll(jahrgaenge);
@@ -145,6 +196,12 @@ export class SchuelerLernabschnittManager {
 			this._mapJahrgangByID.put(j.id, j);
 	}
 
+	/**
+	 * Initialisiert die internen Datenstrukturen für die Klassen und führt dabei
+	 * eine Sortierung der internen Liste aus.
+	 *
+	 * @param klassen   die Liste der Klassen für die Initialisierung
+	 */
 	private initKlassen(klassen : List<KlassenDaten>) : void {
 		this._klassen.clear();
 		this._klassen.addAll(klassen);
@@ -154,6 +211,12 @@ export class SchuelerLernabschnittManager {
 			this._mapKlasseByID.put(k.id, k);
 	}
 
+	/**
+	 * Initialisiert die internen Datenstrukturen für die Kurse und führt dabei
+	 * eine Sortierung der internen Liste aus.
+	 *
+	 * @param kurse   die Liste der Kurse für die Initialisierung
+	 */
 	private initKurse(kurse : List<KursDaten>) : void {
 		this._kurse.clear();
 		this._kurse.addAll(kurse);
@@ -163,14 +226,27 @@ export class SchuelerLernabschnittManager {
 			this._mapKursByID.put(k.id, k);
 	}
 
+	/**
+	 * Initialisiert die internen Datenstrukturen für die Lehrer und führt dabei
+	 * eine Sortierung der internen Liste aus.
+	 *
+	 * @param kurse   die Liste der Lehrer für die Initialisierung
+	 */
 	private initLehrer(lehrer : List<LehrerListeEintrag>) : void {
 		this._lehrer.clear();
 		this._lehrer.addAll(lehrer);
 		this._lehrer.sort(SchuelerLernabschnittManager._compLehrer);
 		this._mapLehrerByID.clear();
-		for (const l of lehrer)
+		for (const l of lehrer) {
 			this._mapLehrerByID.put(l.id, l);
+			if (l.istAktiv === true) {
+				this._lehrerAktiv.add(l);
+				if (l.istSichtbar)
+					this._lehrerAktivUndSichtbar.add(l);
+			}
+		}
 	}
+
 
 	/**
 	 * Gibt die Lernabschnittsdaten dieses Managers zurück.
@@ -232,6 +308,12 @@ export class SchuelerLernabschnittManager {
 		return jg.getLernbereichsnote2Bezeichnung(this._schulform, this.lernabschnittGetGliederung(), this._schuljahresabschnitt.schuljahr);
 	}
 
+
+	/**
+	 * Fügt einen Leistungsdatensatz in die interne Map ein.
+	 *
+	 * @param leistungsdaten   der hinzuzufügende Leistungsdatensatz
+	 */
 	private leistungAddInternal(leistungsdaten : SchuelerLeistungsdaten) : void {
 		this._mapLeistungById.put(leistungsdaten.id, leistungsdaten);
 	}
@@ -310,6 +392,7 @@ export class SchuelerLernabschnittManager {
 		return this._mapLehrerByID.get(leistung.lehrerID) !== null;
 	}
 
+
 	/**
 	 * Ermittelt die Informationen zu dem Fach mit der angegebenen ID.
 	 *
@@ -383,6 +466,7 @@ export class SchuelerLernabschnittManager {
 		return this._faecher;
 	}
 
+
 	/**
 	 * Ermittelt die Informationen zu dem Förderschwerpunkt mit der angegebenen ID.
 	 *
@@ -403,6 +487,7 @@ export class SchuelerLernabschnittManager {
 	public foerderschwerpunktGetMenge() : List<FoerderschwerpunktEintrag> {
 		return this._foerderschwerpunkte;
 	}
+
 
 	/**
 	 * Ermittelt die Informationen zu dem Jahrgang mit der angegebenen ID.
@@ -436,6 +521,7 @@ export class SchuelerLernabschnittManager {
 		return this._jahrgaenge;
 	}
 
+
 	/**
 	 * Ermittelt die Informationen zu der Klasse mit der angegebenen ID.
 	 *
@@ -467,6 +553,7 @@ export class SchuelerLernabschnittManager {
 	public klasseGetMenge() : List<KlassenDaten> {
 		return this._klassen;
 	}
+
 
 	/**
 	 * Ermittelt die Informationen zu dem Kurs mit der angegebenen ID.
@@ -545,6 +632,7 @@ export class SchuelerLernabschnittManager {
 		return result;
 	}
 
+
 	/**
 	 * Ermittelt die Informationen zu dem Lehrer mit der angegebenen ID.
 	 *
@@ -593,6 +681,25 @@ export class SchuelerLernabschnittManager {
 	}
 
 	/**
+	 * Gibt die Liste der aktiven Lehrer zurück.
+	 *
+	 * @return die Liste der aktiven Lehrer
+	 */
+	public lehrerGetMengeAktiv() : JavaSet<LehrerListeEintrag> {
+		return this._lehrerAktiv;
+	}
+
+	/**
+	 * Gibt die Liste der aktiven und sichtbaren Lehrer zurück.
+	 *
+	 * @return die Liste der aktiven und sichtbaren Lehrer
+	 */
+	public lehrerGetMengeAktivUndSichtbar() : JavaSet<LehrerListeEintrag> {
+		return this._lehrerAktivUndSichtbar;
+	}
+
+
+	/**
 	 * Ermittelt die Note, welche den Leistungsdaten zugewiesen ist.
 	 *
 	 * @param idLeistung   die ID der Leistungsdaten
@@ -605,6 +712,7 @@ export class SchuelerLernabschnittManager {
 		return Note.fromKuerzel(leistung.note);
 	}
 
+
 	/**
 	 * Gibt die Schulform der Schule des Schülers zurück.
 	 *
@@ -613,6 +721,7 @@ export class SchuelerLernabschnittManager {
 	public schulformGet() : Schulform {
 		return this._schulform;
 	}
+
 
 	/**
 	 * Gibt den Schuljahresabschnitt des Lernabschnittes zurück.
@@ -623,6 +732,7 @@ export class SchuelerLernabschnittManager {
 		return this._schuljahresabschnitt;
 	}
 
+
 	/**
 	 * Gibt das Schuljahr des Lernabschnittes zurück.
 	 *
@@ -631,6 +741,7 @@ export class SchuelerLernabschnittManager {
 	public schuljahrGet() : number {
 		return this._schuljahresabschnitt.schuljahr;
 	}
+
 
 	/**
 	 * Gibt die Informationen des Schülers zurück, zu dem die Lernabschnittsdaten gehören.

@@ -142,7 +142,7 @@ public final class DataUntis {
 			throw e;
 		}
 		// Bestimme die Lehrer
-		final Map<String, LehrerListeEintrag> mapLehrerByKuerzel = new DataLehrerliste(conn, null).getLehrerListe(false, false).stream()
+		final Map<String, LehrerListeEintrag> mapLehrerByKuerzel = new DataLehrerliste(conn, null).getLehrerListe(false).stream()
 				.collect(Collectors.toMap(l -> l.kuerzel, l -> l));
 		// Bestimme die Fächer
 		final Map<String, FaecherListeEintrag> mapFaecherByKuerzel =
