@@ -271,6 +271,7 @@ ArrayList {
   "elementData": [
     LehrerListeEintrag {
       "id": 1,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "ALBE",
@@ -283,6 +284,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 2,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "ALEN",
@@ -295,6 +297,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 3,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "ANDE",
@@ -307,6 +310,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 4,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "BAGI",
@@ -319,6 +323,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 5,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "BALD",
@@ -331,6 +336,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 6,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "BECK",
@@ -343,6 +349,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 7,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "BERG",
@@ -355,6 +362,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 8,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "BERK",
@@ -367,6 +375,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 9,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "BISZ",
@@ -379,6 +388,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 10,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "BRUN",
@@ -391,6 +401,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 11,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "BURT",
@@ -403,6 +414,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 12,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "BYRC",
@@ -415,6 +427,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 13,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "CHR1",
@@ -427,6 +440,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 14,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "CHRI",
@@ -439,6 +453,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 15,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "COOK",
@@ -451,6 +466,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 16,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "CRUS",
@@ -463,6 +479,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 17,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "DIEB",
@@ -475,6 +492,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 18,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "DIED",
@@ -487,6 +505,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 19,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "DURR",
@@ -499,6 +518,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 20,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "EILI",
@@ -511,6 +531,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 21,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "ERZI",
@@ -523,6 +544,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 22,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "FALK",
@@ -535,6 +557,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 23,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "FLET",
@@ -547,6 +570,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 24,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "FLEU",
@@ -559,6 +583,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 25,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "FONC",
@@ -571,6 +596,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 26,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "FONT",
@@ -583,6 +609,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 27,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "FORE",
@@ -595,6 +622,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 28,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "FUSE",
@@ -607,6 +635,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 29,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "GERO",
@@ -619,6 +648,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 30,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "GÖRG",
@@ -631,6 +661,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 31,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "GRAF",
@@ -643,6 +674,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 32,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "GUNT",
@@ -655,6 +687,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 33,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "HAHN",
@@ -667,6 +700,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 34,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "HEMM",
@@ -679,6 +713,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 35,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "HES1",
@@ -691,6 +726,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 36,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "HESS",
@@ -703,6 +739,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 37,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "HEYK",
@@ -715,6 +752,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 38,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "HINZ",
@@ -727,6 +765,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 39,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "HOLT",
@@ -739,6 +778,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 40,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "JANI",
@@ -751,6 +791,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 41,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "JENß",
@@ -763,6 +804,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 42,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "JOHA",
@@ -775,6 +817,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 43,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "JOR1",
@@ -787,6 +830,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 44,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "JORD",
@@ -799,6 +843,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 45,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "KERR",
@@ -811,6 +856,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 46,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "KLEY",
@@ -823,6 +869,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 47,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "KNIP",
@@ -835,6 +882,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 48,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "KREU",
@@ -847,6 +895,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 49,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "LAHN",
@@ -859,6 +908,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 50,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "LAN1",
@@ -871,6 +921,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 51,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "LANG",
@@ -883,6 +934,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 52,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "LIES",
@@ -895,6 +947,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 53,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "LOFT",
@@ -907,6 +960,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 54,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "MAGH",
@@ -919,6 +973,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 55,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "MATS",
@@ -931,6 +986,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 56,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "MAUN",
@@ -943,6 +999,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 57,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "MAUR",
@@ -955,6 +1012,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 58,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "MEY",
@@ -967,6 +1025,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 59,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "MOHN",
@@ -979,6 +1038,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 60,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "NECK",
@@ -991,6 +1051,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 61,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "OLDI",
@@ -1003,6 +1064,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 62,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "ORTH",
@@ -1015,6 +1077,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 63,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "PETE",
@@ -1027,6 +1090,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 64,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "RATJ",
@@ -1039,6 +1103,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 65,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "ROCK",
@@ -1051,6 +1116,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 66,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "RÖPE",
@@ -1063,6 +1129,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 67,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "ROSE",
@@ -1075,6 +1142,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 68,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "SCH1",
@@ -1087,6 +1155,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 69,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "SCH2",
@@ -1099,6 +1168,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 70,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "SCHA",
@@ -1111,6 +1181,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 71,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "SCHÖ",
@@ -1123,6 +1194,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 72,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "SCHU",
@@ -1135,6 +1207,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 73,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "SCHW",
@@ -1147,6 +1220,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 74,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "SIEB",
@@ -1159,6 +1233,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 75,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "SIEV",
@@ -1171,6 +1246,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 76,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "SPEC",
@@ -1183,6 +1259,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 77,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "SPLI",
@@ -1195,6 +1272,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 78,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "STAE",
@@ -1207,6 +1285,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 79,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "STÄH",
@@ -1219,6 +1298,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 80,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "STEF",
@@ -1231,6 +1311,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 81,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "STON",
@@ -1243,6 +1324,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 82,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "THEI",
@@ -1255,6 +1337,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 83,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "USED",
@@ -1267,6 +1350,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 84,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "WELL",
@@ -1279,6 +1363,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 85,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "WILU",
@@ -1291,6 +1376,7 @@ ArrayList {
     },
     LehrerListeEintrag {
       "id": 86,
+      "istAktiv": true,
       "istRelevantFuerStatistik": true,
       "istSichtbar": true,
       "kuerzel": "ZIME",
