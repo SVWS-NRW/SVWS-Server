@@ -85,11 +85,11 @@
 	const epJahre = computed<PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag | null>(() => {
 		if (!primarschulformen.has(schulform.value))
 			return null;
-		const ep = props.manager().schuelerGet().epJahre?.toString() ?? null;
+		const ep = props.manager().schuelerGet().epJahre ?? null;
 		if (ep === null)
 			return null;
 		const schuljahr = props.manager().schuljahrGet();
-		return PrimarstufeSchuleingangsphaseBesuchsjahre.data().getWertBySchluesselOrException(ep).daten(schuljahr) ?? null;
+		return PrimarstufeSchuleingangsphaseBesuchsjahre.data().getWertByIDOrNull(ep)?.daten(schuljahr) ?? null;
 	});
 
 	const hatUpdateKompetenz = computed<boolean>(() => {
