@@ -1,4 +1,4 @@
-import type { BenutzerKompetenz, LehrerFachrichtungEintrag, LehrerLehramtEintrag, LehrerLehrbefaehigungEintrag, LehrerPersonalabschnittsdaten, LehrerPersonaldaten, List, Schulform, Schuljahresabschnitt, ServerMode, ValidatorKontext} from "@core";
+import type { BenutzerKompetenz, LehrerFachrichtungEintrag, LehrerLehramtEintrag, LehrerLehrbefaehigungEintrag, LehrerPersonalabschnittsdaten, LehrerPersonalabschnittsdatenAnrechnungsstunden, LehrerPersonaldaten, List, Schulform, Schuljahresabschnitt, ServerMode, ValidatorKontext} from "@core";
 import type { LehrerListeManager } from "@ui";
 
 export interface LehrerPersonaldatenProps {
@@ -19,4 +19,13 @@ export interface LehrerPersonaldatenProps {
 	patchFachrichtung: (eintrag: LehrerFachrichtungEintrag, patch : Partial<LehrerFachrichtungEintrag>) => Promise<void>;
 	addFachrichtung: (eintrag: Partial<LehrerFachrichtungEintrag>) => Promise<void>;
 	removeFachrichtungen: (eintraege: List<LehrerFachrichtungEintrag>) => Promise<void>;
+	addMehrleistung: (data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>) => Promise<void>;
+	patchMehrleistung: (data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, id: number) => Promise<void>;
+	removeMehrleistung: (data: LehrerPersonalabschnittsdatenAnrechnungsstunden) => Promise<void>;
+	addMinderleistung: (data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>) => Promise<void>;
+	patchMinderleistung: (data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, id: number) => Promise<void>;
+	removeMinderleistung: (data: LehrerPersonalabschnittsdatenAnrechnungsstunden) => Promise<void>;
+	addAnrechnung: (data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>) => Promise<void>;
+	patchAnrechnung: (data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, id: number) => Promise<void>;
+	removeAnrechnung: (data: LehrerPersonalabschnittsdatenAnrechnungsstunden) => Promise<void>;
 }

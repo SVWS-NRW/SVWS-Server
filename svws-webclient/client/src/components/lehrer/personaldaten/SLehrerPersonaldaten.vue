@@ -44,17 +44,8 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Mehr- und Minderleistung, Anrechnungsstunden">
 			<svws-ui-input-wrapper>
-				<svws-ui-select title="Mehrleistung" :readonly v-model="mehrleistungsgrund" :items="LehrerMehrleistungsarten.values()"
-					:item-text="i => i.daten(schuljahr)?.text ?? '—'" focus-class-content statistics />
-				<svws-ui-select title="Minderleistung" :readonly v-model="minderleistungsgrund" :items="LehrerMinderleistungsarten.values()"
-					:item-text="i => i.daten(schuljahr)?.text ?? '—'" statistics />
-				<svws-ui-input-number placeholder="Stundensumme" :readonly :model-value="personalabschnittsdaten()?.pflichtstundensoll ?? 0.0"
-					@change="pflichtstundensoll => patchAbschnittsdaten({ pflichtstundensoll: pflichtstundensoll }, personalabschnittsdaten()?.id ?? -1)"
-					statistics />
-				<svws-ui-select title="Nicht unterrichtliche Tätigkeiten" :readonly v-model="anrechnungsgrund"
-					:items="LehrerAnrechnungsgrund.values()"
-					:item-text="i => i.daten(schuljahr)?.text ?? '—'" statistics />
-				<svws-ui-spacing />
+				<s-lehrer-personaldaten-leistungen :hat-update-kompetenz="!readonly" :personalabschnittsdaten :schuljahr :schulform :add-mehrleistung :patch-mehrleistung :remove-mehrleistung
+					:add-minderleistung :patch-minderleistung :remove-minderleistung :add-anrechnung :patch-anrechnung :remove-anrechnung />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 	</div>

@@ -2,6 +2,7 @@ import type {
 	ApiFile, LehrerFachrichtungEintrag, LehrerLehramtEintrag,
 	LehrerLehrbefaehigungEintrag, LehrerListeEintrag, LehrerPersonalabschnittsdaten, LehrerPersonaldaten, LehrerStammdaten, List, SimpleOperationResponse,
 	StundenplanListeEintrag, ReportingParameter,
+	LehrerPersonalabschnittsdatenAnrechnungsstunden,
 } from "@core";
 import { ArrayList, DeveloperNotificationException, BenutzerKompetenz } from "@core";
 import { api } from "~/router/Api";
@@ -174,6 +175,56 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten mit der ID " + id.toString() + " geladen.");
 		await api.server.patchLehrerPersonalabschnittsdaten(data, api.schema, abschnittsdaten.id);
 		Object.assign(abschnittsdaten, data);
+		this.commit();
+	}
+	addMehrleistung = async (data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>) => {
+		const result = await api.server.addLehrerPersonalabschnittsdatenMehrleistung(data, api.schema);
+		this.manager.getAbschnittBySchuljahresabschnittsId(this.idSchuljahresabschnitt)?.mehrleistung.add(result);
+		this.commit();
+	}
+
+	patchMehrleistung = async (data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, id: number) => {
+		await api.server.patchLehrerPersonalabschnittsdatenMehrleistung(data, api.schema, id);
+		this.commit();
+	}
+
+	removeMehrleistung = async (data: LehrerPersonalabschnittsdatenAnrechnungsstunden) => {
+		await api.server.deleteLehrerPersonalabschnittsdatenMehrleistung(api.schema, data.id);
+		this.manager.getAbschnittBySchuljahresabschnittsId(this.idSchuljahresabschnitt)?.mehrleistung.remove(data);
+		this.commit();
+	}
+
+	addMinderleistung = async (data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>) => {
+		const result = await api.server.addLehrerPersonalabschnittsdatenMinderleistung(data, api.schema);
+		this.manager.getAbschnittBySchuljahresabschnittsId(this.idSchuljahresabschnitt)?.minderleistung.add(result);
+		this.commit();
+	}
+
+	patchMinderleistung = async (data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, id: number) => {
+		await api.server.patchLehrerPersonalabschnittsdatenMinderleistung(data, api.schema, id);
+		this.commit();
+	}
+
+	removeMinderleistung = async (data: LehrerPersonalabschnittsdatenAnrechnungsstunden) => {
+		await api.server.deleteLehrerPersonalabschnittsdatenMinderleistung(api.schema, data.id);
+		this.manager.getAbschnittBySchuljahresabschnittsId(this.idSchuljahresabschnitt)?.minderleistung.remove(data);
+		this.commit();
+	}
+
+	addAnrechnung = async (data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>) => {
+		const result = await api.server.addLehrerPersonalabschnittsdatenAllgemeineAnrechnung(data, api.schema);
+		this.manager.getAbschnittBySchuljahresabschnittsId(this.idSchuljahresabschnitt)?.anrechnungen.add(result);
+		this.commit();
+	}
+
+	patchAnrechnung = async (data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, id: number) => {
+		await api.server.patchLehrerPersonalabschnittsdatenAllgemeineAnrechnung(data, api.schema, id);
+		this.commit();
+	}
+
+	removeAnrechnung = async (data: LehrerPersonalabschnittsdatenAnrechnungsstunden) => {
+		await api.server.deleteLehrerPersonalabschnittsdatenAllgemeineAnrechnung(api.schema, data.id);
+		this.manager.getAbschnittBySchuljahresabschnittsId(this.idSchuljahresabschnitt)?.anrechnungen.remove(data);
 		this.commit();
 	}
 
