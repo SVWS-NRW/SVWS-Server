@@ -66,7 +66,7 @@ export class RouteSchuelerNeu extends RouteNode<any, RouteSchueler> {
 			patchSchuelerErziehereintrag: routeSchueler.data.patchSchuelerErziehereintrag,
 			patchSchuelerErzieherAnPosition: routeSchueler.data.patchSchuelerErzieherAnPosition,
 			deleteSchuelerErziehereintrage: routeSchueler.data.deleteSchuelerErziehereintrage,
-			getListSchuelerTelefoneintraege: () => routeSchueler.data.listSchuelerTelefoneintraege,
+			getListSchuelerTelefoneintraege: () => routeSchueler.data.getListSchuelerTelefoneintraege,
 			addSchuelerTelefoneintrag: routeSchueler.data.addSchuelerTelefoneintrag,
 			patchSchuelerTelefoneintrag: routeSchueler.data.patchSchuelerTelefoneintrag,
 			deleteSchuelerTelefoneintrage: routeSchueler.data.deleteSchuelerTelefoneintrage,

@@ -177,43 +177,44 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 		api.status.stop();
 	}
 
-	get listSchuelerTelefoneintraege(): List<SchuelerTelefon> {
-		return this._state.value.listSchuelerTelefoneintraege;
+	get getListSchuelerTelefoneintraege(): List<SchuelerTelefon> {
+		const list = new ArrayList<SchuelerTelefon>();
+		list.addAll(this._state.value.listSchuelerTelefoneintraege);
+		return list;
 	}
 
+
 	addSchuelerTelefoneintrag = async (data: Partial<SchuelerTelefon>, idSchueler: number): Promise<void> => {
-		api.status.start();
 		const telefon = await api.server.addSchuelerTelefon(data, api.schema, idSchueler);
-		this.listSchuelerTelefoneintraege.add(telefon);
-		this.setPatchedState({ listSchuelerTelefoneintraege: this.listSchuelerTelefoneintraege });
-		api.status.stop();
+		const listSchuelerTelefoneintraege = this.getListSchuelerTelefoneintraege;
+		listSchuelerTelefoneintraege.add(telefon);
+		this.setPatchedState({ listSchuelerTelefoneintraege });
 	}
 
 	patchSchuelerTelefoneintrag = async (data: Partial<SchuelerTelefon>, idEintrag: number): Promise<void> => {
-		api.status.start();
 		await api.server.patchSchuelerTelefon(data, api.schema, idEintrag);
-		for (const l of this.listSchuelerTelefoneintraege)
-			if (l.id === idEintrag)
+		const listSchuelerTelefoneintraege = this.getListSchuelerTelefoneintraege;
+		for (const l of listSchuelerTelefoneintraege)
+			if (l.id === idEintrag) {
 				Object.assign(l, data);
-		this.setPatchedState({ listSchuelerTelefoneintraege: this.listSchuelerTelefoneintraege });
-		api.status.stop();
+				break;
+			}
+		this.setPatchedState({ listSchuelerTelefoneintraege });
 	}
 
 	deleteSchuelerTelefoneintrage = async (idsEintraege: List<number>): Promise<void> => {
-		api.status.start();
 		await api.server.deleteSchuelerTelefone(idsEintraege, api.schema);
-		const liste = this.listSchuelerTelefoneintraege;
+		const listSchuelerTelefoneintraege = this.getListSchuelerTelefoneintraege;
 		for (const id of idsEintraege) {
-			for (let i = 0; i < liste.size(); i++) {
-				const eintrag = liste.get(i);
+			for (let i = 0; i < listSchuelerTelefoneintraege .size(); i++) {
+				const eintrag = listSchuelerTelefoneintraege .get(i);
 				if (eintrag.id === id) {
-					liste.removeElementAt(i);
+					listSchuelerTelefoneintraege.removeElementAt(i);
 					break;
 				}
 			}
 		}
-		this.setPatchedState({ listSchuelerTelefoneintraege: this.listSchuelerTelefoneintraege });
-		api.status.stop();
+		this.setPatchedState({ listSchuelerTelefoneintraege });
 	}
 
 	patchSchuelerKindergarten = async (data : Partial<SchuelerSchulbesuchsdaten>, idEintrag: number) : Promise<void> => {
