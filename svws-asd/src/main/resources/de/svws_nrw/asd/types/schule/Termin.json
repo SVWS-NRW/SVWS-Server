@@ -1,5 +1,5 @@
 {
-	"version": 1,
+	"version": 2,
 	"daten": [ {
 		"bezeichner": "HALBJAHR_LETZTER_UNTERRICHTSTAG",
 		"idStatistik": "1",
@@ -417,8 +417,8 @@
 			"schluessel": "SJLUT",
 			"schulformen": [ "BK", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "S", "SB", "SG", "SK", "SR", "V", "WB" ],
 			"text": "Letzter Unterrichtstag im Schuljahr 2024/25",
-			"von": "2024-07-11",
-			"bis": "2024-07-11",
+			"von": "2025-07-11",
+			"bis": "2025-07-11",
 			"gueltigVon": 2024,
 			"gueltigBis": 2024
 		}, {
