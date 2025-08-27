@@ -194,6 +194,7 @@ export { SchulgliederungGueltigerAbschluss } from './asd/data/schule/Schulgliede
 export { SchulgliederungKatalogEintrag } from './asd/data/schule/SchulgliederungKatalogEintrag';
 export { Schuljahresabschnitt } from './asd/data/schule/Schuljahresabschnitt';
 export { Schulleitung } from './asd/data/schule/Schulleitung';
+export { TerminKatalogEintrag } from './asd/data/schule/TerminKatalogEintrag';
 export { VerkehrsspracheKatalogEintrag } from './asd/data/schule/VerkehrsspracheKatalogEintrag';
 export type { CoreType } from './asd/types/CoreType';
 export { CoreTypeSimple } from './asd/types/CoreTypeSimple';
@@ -249,6 +250,7 @@ export { SchulabschlussAllgemeinbildend } from './asd/types/schule/Schulabschlus
 export { SchulabschlussBerufsbildend } from './asd/types/schule/SchulabschlussBerufsbildend';
 export { Schulform } from './asd/types/schule/Schulform';
 export { Schulgliederung } from './asd/types/schule/Schulgliederung';
+export { Termin } from './asd/types/schule/Termin';
 export { Verkehrssprache } from './asd/types/schule/Verkehrssprache';
 export { WeiterbildungskollegBildungsgangTyp } from './asd/types/schule/WeiterbildungskollegBildungsgangTyp';
 export { WeiterbildungskollegOrganisationsformen } from './asd/types/schule/WeiterbildungskollegOrganisationsformen';

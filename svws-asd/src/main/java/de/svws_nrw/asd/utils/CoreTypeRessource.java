@@ -59,6 +59,7 @@ import de.svws_nrw.asd.data.schule.SchulabschlussAllgemeinbildendKatalogEintrag;
 import de.svws_nrw.asd.data.schule.SchulabschlussBerufsbildendKatalogEintrag;
 import de.svws_nrw.asd.data.schule.SchulformKatalogEintrag;
 import de.svws_nrw.asd.data.schule.SchulgliederungKatalogEintrag;
+import de.svws_nrw.asd.data.schule.TerminKatalogEintrag;
 import de.svws_nrw.asd.data.schule.VerkehrsspracheKatalogEintrag;
 import de.svws_nrw.asd.types.CoreType;
 import de.svws_nrw.asd.types.CoreTypeSimple;
@@ -113,6 +114,7 @@ import de.svws_nrw.asd.types.schule.SchulabschlussAllgemeinbildend;
 import de.svws_nrw.asd.types.schule.SchulabschlussBerufsbildend;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
+import de.svws_nrw.asd.types.schule.Termin;
 import de.svws_nrw.asd.types.schule.Verkehrssprache;
 import de.svws_nrw.asd.types.schule.WeiterbildungskollegBildungsgangTyp;
 import de.svws_nrw.asd.types.schule.WeiterbildungskollegOrganisationsformen;
@@ -454,6 +456,8 @@ public final class CoreTypeRessource<T extends CoreTypeData, U extends CoreType<
 				"de/svws_nrw/asd/types/kurse/ZulaessigeKursart.json");
 		add(Foerderschwerpunkt.class, FoerderschwerpunktKatalogEintrag.class, Foerderschwerpunkt.values(),
 				"de/svws_nrw/asd/types/schule/Foerderschwerpunkt.json");
+		add(Termin.class, TerminKatalogEintrag.class, Termin.values(),
+				"de/svws_nrw/asd/types/schule/Termin.json");
 		addSimple(Einschulungsart.class, EinschulungsartKatalogEintrag.class,
 				"de/svws_nrw/asd/types/schueler/Einschulungsart.json");
 		addSimple(LehrerAnrechnungsgrund.class, LehrerAnrechnungsgrundKatalogEintrag.class,

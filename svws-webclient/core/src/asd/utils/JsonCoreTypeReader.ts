@@ -111,6 +111,8 @@ import { EinschulungsartKatalogEintrag } from "../data/schueler/EinschulungsartK
 import { VerkehrsspracheKatalogEintrag } from "../data/schule/VerkehrsspracheKatalogEintrag";
 import { LehrerPflichtstundensollVollzeit } from "../types/lehrer/LehrerPflichtstundensollVollzeit";
 import { LehrerPflichtstundensollVollzeitKatalogEintrag } from "../data/lehrer/LehrerPflichtstundensollVollzeitKatalogEintrag";
+import { TerminKatalogEintrag } from "../data/schule/TerminKatalogEintrag";
+import { Termin } from "../types/schule/Termin";
 
 interface JsonCoreTypeEntry<T> {
 	bezeichner: string;
@@ -152,7 +154,7 @@ export class JsonCoreTypeReader {
 		"LehrerAbgangsgrund", "LehrerBeschaeftigungsart", "LehrerEinsatzstatus", "LehrerFachrichtung", "LehrerLehrbefaehigung", "LehrerFachrichtungAnerkennung", "LehrerLehramt",
 		"LehrerLehramtAnerkennung", "LehrerLehrbefaehigungAnerkennung", "LehrerLeitungsfunktion", "LehrerRechtsverhaeltnis", "LehrerZugangsgrund", "BilingualeSprache", "KAOABerufsfeld",
 		"KAOAMerkmaleOptionsarten", "KAOAZusatzmerkmaleOptionsarten", "KAOAEbene4", "KAOAZusatzmerkmal", "KAOAAnschlussoptionen", "KAOAKategorie", "KAOAMerkmal", "Klassenart", "Uebergangsempfehlung",
-		"ZulaessigeKursart", "Foerderschwerpunkt", "LehrerAnrechnungsgrund", "LehrerMehrleistungsarten", "LehrerMinderleistungsarten", "LehrerPflichtstundensollVollzeit", "Nationalitaeten", "ValidatorenFehlerartKontext",
+		"ZulaessigeKursart", "Foerderschwerpunkt", "Termin", "LehrerAnrechnungsgrund", "LehrerMehrleistungsarten", "LehrerMinderleistungsarten", "LehrerPflichtstundensollVollzeit", "Nationalitaeten", "ValidatorenFehlerartKontext",
 	] as const;
 
 	public constructor(url?: string) {
@@ -183,7 +185,7 @@ export class JsonCoreTypeReader {
 			const bezeichner = eintrag.bezeichner;
 			const idStatistik = eintrag.idStatistik;
 			const historie = eintrag.historie;
-			if (idsStatistik.contains(idStatistik))
+			if (idsStatistik.contains(idStatistik) === true)
 				throw new DeveloperNotificationException("Fehler beim Einlesen der Core-Type-Daten für den Core-Type " + name);
 			idsStatistik.add(idStatistik);
 			result.mapStatistikIDs.put(bezeichner, idStatistik);
@@ -489,6 +491,12 @@ export class JsonCoreTypeReader {
 		Foerderschwerpunkt.init(manager);
 	}
 
+	public readTermin() {
+		const data = this.read('Termin', (json) => TerminKatalogEintrag.transpilerFromJSON(json));
+		const manager = new CoreTypeDataManager<TerminKatalogEintrag, Termin>(data.version, Termin.class, Termin.values(), data.mapData, data.mapStatistikIDs);
+		Termin.init(manager);
+	}
+
 	public readLehrerAnrechnungsgrund() {
 		const data = this.read('LehrerAnrechnungsgrund', (json) => LehrerAnrechnungsgrundKatalogEintrag.transpilerFromJSON(json));
 		CoreTypeSimple.initValues(new LehrerAnrechnungsgrund(), LehrerAnrechnungsgrund.class, data.mapData);
@@ -535,7 +543,7 @@ export class JsonCoreTypeReader {
 		for (const eintrag of data.daten) {
 			const validator = eintrag.validator;
 			const historie = eintrag.historie;
-			if (nameValidatoren.contains(validator))
+			if (nameValidatoren.contains(validator) === true)
 				throw new DeveloperNotificationException("Fehler beim Einlesen der Fehlerarten für die Validatoren " + name);
 			nameValidatoren.add(validator);
 			const list = new ArrayList<ValidatorFehlerartKontext>();
@@ -607,6 +615,7 @@ export class JsonCoreTypeReader {
 			this.readUebergangsempfehlung();
 			this.readZulaessigeKursart();
 			this.readFoerderschwerpunkt();
+			this.readTermin();
 			this.readLehrerAnrechnungsgrund();
 			this.readLehrerMehrleistungsarten();
 			this.readLehrerMinderleistungsarten();

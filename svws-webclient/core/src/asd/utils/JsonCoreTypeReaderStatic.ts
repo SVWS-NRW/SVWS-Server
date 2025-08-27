@@ -47,6 +47,7 @@ import Klassenart from "@json/klassen/Klassenart.json";
 import Uebergangsempfehlung from "@json/schueler/Uebergangsempfehlung.json";
 import ZulaessigeKursart from "@json/kurse/ZulaessigeKursart.json";
 import Foerderschwerpunkt from "@json/schule/Foerderschwerpunkt.json";
+import Termin from "@json/schule/Termin.json";
 import LehrerAnrechnungsgrund from "@json/lehrer/LehrerAnrechnungsgrund.json";
 import LehrerMehrleistungsarten from "@json/lehrer/LehrerMehrleistungsarten.json";
 import LehrerMinderleistungsarten from "@json/lehrer/LehrerMinderleistungsarten.json";
@@ -108,6 +109,7 @@ export class JsonCoreTypeReaderStatic extends JsonCoreTypeReader {
 		this.mapCoreTypeNameJsonDataImport.set("Uebergangsempfehlung", Uebergangsempfehlung);
 		this.mapCoreTypeNameJsonDataImport.set("ZulaessigeKursart", ZulaessigeKursart);
 		this.mapCoreTypeNameJsonDataImport.set("Foerderschwerpunkt", Foerderschwerpunkt);
+		this.mapCoreTypeNameJsonDataImport.set("Termin", Termin);
 		this.mapCoreTypeNameJsonDataImport.set("LehrerAnrechnungsgrund", LehrerAnrechnungsgrund);
 		this.mapCoreTypeNameJsonDataImport.set("LehrerMehrleistungsarten", LehrerMehrleistungsarten);
 		this.mapCoreTypeNameJsonDataImport.set("LehrerMinderleistungsarten", LehrerMinderleistungsarten);
