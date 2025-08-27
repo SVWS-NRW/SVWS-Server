@@ -4,8 +4,7 @@
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
 				<template v-if="activeViewType === ViewType.DEFAULT">
-					<svws-ui-avatar :src="foto ? `data:image/png;base64, ${foto}` : undefined" :alt="foto !== null ? `Foto von ${vorname} ${nachname}` : ''"
-						upload capture @image:base64="f => patch({ f })" />
+					<svws-ui-avatar :src="foto ? `data:image/png;base64, ${foto}` : undefined" :alt="foto !== null ? `Foto von ${vorname} ${nachname}` : ''" upload capture @image:base64="foto => patch({ foto })" />
 					<div v-if="manager().hasDaten()" class="svws-headline-wrapper">
 						<h2 class="svws-headline">
 							<span>{{ vorname }} {{ nachname }}</span>
@@ -95,17 +94,9 @@
 		return [...auswahlSchuelerList].map(k => `${k.vorname} ${k.nachname}`).join(', ');
 	})
 
-	const foto = computed<string | null>(() => {
-		return props.manager().daten().foto;
-	});
-
-	const nachname = computed<string>(() => {
-		return props.manager().daten().nachname;
-	});
-
-	const vorname = computed<string>(() => {
-		return props.manager().daten().vorname;
-	});
+	const foto = computed<string | null>(() => props.manager().daten().foto);
+	const nachname = computed<string>(() => props.manager().daten().nachname);
+	const vorname = computed<string>(() => props.manager().daten().vorname);
 
 	const klasse = computed<KlassenDaten | null>(() => {
 		if (!props.manager().hasDaten())
