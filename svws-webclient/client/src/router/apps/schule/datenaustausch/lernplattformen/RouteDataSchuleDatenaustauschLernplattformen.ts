@@ -24,8 +24,8 @@ export class RouteDataSchuleDatenaustauschLernplattformen extends RouteData<Rout
 
 	export = async (lernplattform: Lernplattform, datenformat: string): Promise<Blob | null> => {
 		if (datenformat === 'JSON') {
-			const lernplattformenExport = JSON.stringify(
-				await api.external.getLernplattformenExport(api.schema, lernplattform.id, routeApp.data.idSchuljahresabschnitt));
+			const lernplattformenExport =
+				await api.server.getJSON(`/api/external/${api.schema}/v1/lernplattformen/${lernplattform.id}/${routeApp.data.idSchuljahresabschnitt}`);
 			return new Blob([lernplattformenExport], { type: "application/json" });
 		} else if (datenformat === 'GZIP') {
 			return (await api.external.getLernplattformenExportAsGzip(api.schema, lernplattform.id, routeApp.data.idSchuljahresabschnitt)).data;

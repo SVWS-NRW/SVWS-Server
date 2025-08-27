@@ -37,6 +37,11 @@ export class LernplattformV1Schueler extends JavaObject {
 	public geschlecht : string | null = null;
 
 	/**
+	 * Das Geburtsdatum des Schülers (z.B. 21.01.2000)
+	 */
+	public geburtsdatum : string | null = null;
+
+	/**
 	 * Die Status-ID des Schülers.
 	 */
 	public status : number = 0;
@@ -84,6 +89,7 @@ export class LernplattformV1Schueler extends JavaObject {
 		result.nachname = (obj.nachname === undefined) ? null : obj.nachname === null ? null : obj.nachname;
 		result.vorname = (obj.vorname === undefined) ? null : obj.vorname === null ? null : obj.vorname;
 		result.geschlecht = (obj.geschlecht === undefined) ? null : obj.geschlecht === null ? null : obj.geschlecht;
+		result.geburtsdatum = (obj.geburtsdatum === undefined) ? null : obj.geburtsdatum === null ? null : obj.geburtsdatum;
 		if (obj.status === undefined)
 			throw new Error('invalid json format, missing attribute status');
 		result.status = obj.status;
@@ -106,6 +112,7 @@ export class LernplattformV1Schueler extends JavaObject {
 		result += '"nachname" : ' + ((obj.nachname === null) ? 'null' : JSON.stringify(obj.nachname)) + ',';
 		result += '"vorname" : ' + ((obj.vorname === null) ? 'null' : JSON.stringify(obj.vorname)) + ',';
 		result += '"geschlecht" : ' + ((obj.geschlecht === null) ? 'null' : JSON.stringify(obj.geschlecht)) + ',';
+		result += '"geburtsdatum" : ' + ((obj.geburtsdatum === null) ? 'null' : JSON.stringify(obj.geburtsdatum)) + ',';
 		result += '"status" : ' + obj.status.toString() + ',';
 		result += '"lernplattformlogin" : ' + LernplattformV1Login.transpilerToJSON(obj.lernplattformlogin) + ',';
 		result += '"idsLerngruppen" : [ ';
@@ -140,6 +147,9 @@ export class LernplattformV1Schueler extends JavaObject {
 		}
 		if (obj.geschlecht !== undefined) {
 			result += '"geschlecht" : ' + ((obj.geschlecht === null) ? 'null' : JSON.stringify(obj.geschlecht)) + ',';
+		}
+		if (obj.geburtsdatum !== undefined) {
+			result += '"geburtsdatum" : ' + ((obj.geburtsdatum === null) ? 'null' : JSON.stringify(obj.geburtsdatum)) + ',';
 		}
 		if (obj.status !== undefined) {
 			result += '"status" : ' + obj.status.toString() + ',';

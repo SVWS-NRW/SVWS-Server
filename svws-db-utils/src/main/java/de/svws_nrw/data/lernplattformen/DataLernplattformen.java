@@ -319,6 +319,7 @@ public class DataLernplattformen {
 		final LernplattformV1Schueler lernplattformSchueler = new LernplattformV1Schueler();
 		lernplattformSchueler.id = schuelerDto.ID;
 		lernplattformSchueler.geschlecht = schuelerDto.Geschlecht.kuerzel;
+		lernplattformSchueler.geburtsdatum = schuelerDto.Geburtsdatum;
 		lernplattformSchueler.vorname = schuelerDto.Vorname;
 		lernplattformSchueler.nachname = schuelerDto.Nachname;
 		lernplattformSchueler.idJahrgang = schuelerLernabschnittsdaten.Jahrgang_ID;

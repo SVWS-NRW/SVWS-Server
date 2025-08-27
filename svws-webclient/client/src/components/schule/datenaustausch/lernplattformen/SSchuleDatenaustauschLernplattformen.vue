@@ -45,7 +45,7 @@
 	const selectManagerDatenformat = new SelectManagerSingle<string>({ removable: false, options: ['JSON', 'GZIP'], selected: 'JSON' });
 
 	const hatKompetenzExport = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.IMPORT_EXPORT_LERNPLATTFORM));
-	const exportDisabled = computed(() => (lernplattform.value === undefined) || !hatKompetenzExport.value || loading.value);
+	const exportDisabled = computed<boolean>(() => (lernplattform.value === undefined) || !hatKompetenzExport.value || loading.value);
 
 	async function startExport() {
 		if (exportDisabled.value)
