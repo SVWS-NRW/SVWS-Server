@@ -22,7 +22,6 @@ interface RouteStateDataSchuelerLernabschnitte extends RouteStateInterface {
 	listFaecher: List<FachDaten>;
 	listFoerderschwerpunkte: List<FoerderschwerpunktEintrag>;
 	listJahrgaenge: List<JahrgangsDaten>;
-	listLehrer: List<LehrerListeEintrag>;
 	// Daten, die in Abhängigkeit des ausgewählten Lernabschnitts geladen werden
 	auswahl: SchuelerLernabschnittListeEintrag | undefined;
 	daten: SchuelerLernabschnittsdaten | undefined;
@@ -37,7 +36,6 @@ const defaultState = <RouteStateDataSchuelerLernabschnitte> {
 	listFaecher: new ArrayList(),
 	listFoerderschwerpunkte: new ArrayList(),
 	listJahrgaenge: new ArrayList(),
-	listLehrer: new ArrayList(),
 	auswahl: undefined,
 	daten: undefined,
 	manager: undefined,
@@ -116,13 +114,16 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 		const daten = await api.server.getSchuelerLernabschnittsdatenByID(api.schema, found.id);
 		let listKurse;
 		let listKlassen;
+		let listLehrer;
 		if ((this.hatAuswahl) && (found.schuljahresabschnitt === this.auswahl.schuljahresabschnitt)) {
 			listKurse = this.manager.kursGetMenge();
 			listKlassen = this.manager.klasseGetMenge();
+			listLehrer = this.manager.lehrerGetMenge();
 		} else {
-			[ listKurse, listKlassen ] = await Promise.all([
+			[ listKurse, listKlassen, listLehrer ] = await Promise.all([
 				api.server.getKurseFuerAbschnitt(api.schema, found.schuljahresabschnitt),
 				api.server.getKlassenFuerAbschnitt(api.schema, found.schuljahresabschnitt),
+				api.server.getLehrerFuerAbschnitt(api.schema, found.schuljahresabschnitt),
 			]);
 		}
 		const schueler = routeSchueler.data.manager.auswahl();
@@ -130,7 +131,7 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 		const schuljahresabschnitt = mapSchuljahresabschnitte.get(daten.schuljahresabschnitt);
 		if (schuljahresabschnitt === undefined)
 			throw new DeveloperNotificationException("Der Schülerlernabschnitt hat keinen gültigen Schuljahresabschnitt zugeordnet. Dies darf nicht vorkommen.");
-		const manager = new SchuelerLernabschnittManager(api.schulform, schueler, daten, schuljahresabschnitt, curState.listFaecher, curState.listFoerderschwerpunkte, curState.listJahrgaenge, listKlassen, listKurse, curState.listLehrer);
+		const manager = new SchuelerLernabschnittManager(api.schulform, schueler, daten, schuljahresabschnitt, curState.listFaecher, curState.listFoerderschwerpunkte, curState.listJahrgaenge, listKlassen, listKurse, listLehrer);
 		let klausurManager = undefined;
 		const abiturjahrgang = routeSchueler.data.manager.auswahl().abiturjahrgang;
 		if (routeSchuelerLernabschnittGostKlausuren.hatEineKompetenz() && abiturjahrgang !== null) {
@@ -139,7 +140,7 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 				const gostKlausurCollection = await api.server.getGostKlausurenCollectionBySchuelerid(api.schema, schueler.id, abiturjahrgang, halbjahr.id);
 				klausurManager = new GostKlausurplanManager(gostKlausurCollection.vorgaben, gostKlausurCollection.kursklausuren, gostKlausurCollection.termine, gostKlausurCollection.schuelerklausuren, gostKlausurCollection.schuelerklausurtermine);
 				klausurManager.getKursManager().addAll(listKurse);
-				for (const l of curState.listLehrer)
+				for (const l of listLehrer)
 					klausurManager.getLehrerMap().put(l.id, l);
 			}
 		}
@@ -168,21 +169,18 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 		let listFaecher;
 		let listFoerderschwerpunkte;
 		let listJahrgaenge;
-		let listLehrer;
 		if (this.hatAuswahl) {
 			listFaecher = this.manager.fachGetMenge();
 			listFoerderschwerpunkte = this.manager.foerderschwerpunktGetMenge();
 			listJahrgaenge = this.manager.jahrgangGetMenge();
-			listLehrer = this.manager.lehrerGetMenge();
 		} else {
-			[ listFaecher, listFoerderschwerpunkte, listJahrgaenge, listLehrer ] = await Promise.all([
+			[ listFaecher, listFoerderschwerpunkte, listJahrgaenge ] = await Promise.all([
 				api.server.getFaecher(api.schema),
 				api.server.getKatalogFoerderschwerpunkte(api.schema),
 				api.server.getJahrgaenge(api.schema),
-				api.server.getLehrer(api.schema),
 			]);
 		}
-		let newState = <RouteStateDataSchuelerLernabschnitte>{ idSchueler, listAbschnitte, hatGymOb, listFaecher, listFoerderschwerpunkte, listJahrgaenge, listLehrer, view: this._state.value.view };
+		let newState = <RouteStateDataSchuelerLernabschnitte>{ idSchueler, listAbschnitte, hatGymOb, listFaecher, listFoerderschwerpunkte, listJahrgaenge, view: this._state.value.view };
 		const alteAuswahl = this._state.value.auswahl;
 		newState = await this.updateSchuljahresabschnitt(newState,
 			alteAuswahl === undefined ? undefined : alteAuswahl.schuljahresabschnitt,
