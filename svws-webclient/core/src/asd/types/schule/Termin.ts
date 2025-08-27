@@ -1,10 +1,14 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { TerminKatalogEintrag } from '../../../asd/data/schule/TerminKatalogEintrag';
+import { HashMap } from '../../../java/util/HashMap';
 import { CoreTypeDataManager } from '../../../asd/utils/CoreTypeDataManager';
+import { DateManager } from '../../../asd/validate/DateManager';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import type { CoreType } from '../../../asd/types/CoreType';
 import { de_svws_nrw_asd_types_CoreType_getManager, de_svws_nrw_asd_types_CoreType_daten, de_svws_nrw_asd_types_CoreType_statistikId, de_svws_nrw_asd_types_CoreType_historie } from '../../../asd/types/CoreType';
+import type { JavaMap } from '../../../java/util/JavaMap';
+import { CoreTypeException } from '../../../asd/data/CoreTypeException';
 
 export class Termin extends JavaEnum<Termin> implements CoreType<TerminKatalogEintrag, Termin> {
 
@@ -34,6 +38,8 @@ export class Termin extends JavaEnum<Termin> implements CoreType<TerminKatalogEi
 	 */
 	public static readonly GOST_SCHULJAHR_LETZTER_UNTERRICHTSTAG_Q2 : Termin = new Termin("GOST_SCHULJAHR_LETZTER_UNTERRICHTSTAG_Q2", 3, );
 
+	private static readonly _mapSchuljahrToLetzterUnterrichtstag : JavaMap<number, DateManager> = new HashMap<number, DateManager>();
+
 	private constructor(name : string, ordinal : number) {
 		super(name, ordinal);
 		Termin.all_values_by_ordinal.push(this);
@@ -47,6 +53,7 @@ export class Termin extends JavaEnum<Termin> implements CoreType<TerminKatalogEi
 	 */
 	public static init(manager : CoreTypeDataManager<TerminKatalogEintrag, Termin>) : void {
 		CoreTypeDataManager.putManager(Termin.class, manager);
+		Termin._mapSchuljahrToLetzterUnterrichtstag.clear();
 	}
 
 	/**
@@ -56,6 +63,30 @@ export class Termin extends JavaEnum<Termin> implements CoreType<TerminKatalogEi
 	 */
 	public static data() : CoreTypeDataManager<TerminKatalogEintrag, Termin> {
 		return CoreTypeDataManager.getManager(Termin.class);
+	}
+
+	/**
+	 * Gibt den Date-Manger für den letzten Unterrichtstag des ersten Halbjahres in dem übergebenen
+	 * Schuljahr zurück, sofern dieser in diesem Core-Type spezifiziert ist.
+	 *
+	 * @param schuljahr   das Schuljahr
+	 *
+	 * @return das Datum des letzten Unterrichtstages des ersten Halbjahres
+	 */
+	public static getLetzterUnterrichtstagImErstenHalbjahr(schuljahr : number) : DateManager | null {
+		let result : DateManager | null = Termin._mapSchuljahrToLetzterUnterrichtstag.get(schuljahr);
+		if (result !== null)
+			return result;
+		const eintrag : TerminKatalogEintrag | null = Termin.data().getEintragBySchuljahrUndWert(schuljahr, Termin.HALBJAHR_LETZTER_UNTERRICHTSTAG);
+		if (eintrag === null)
+			return null;
+		try {
+			result = DateManager.from(eintrag.von);
+		} catch(e : any) {
+			throw new CoreTypeException("Fehlerhafter Termin-Eintrag für HALBJAHR_LETZTER_UNTERRICHTSTAG im Schuljahr " + schuljahr, e)
+		}
+		Termin._mapSchuljahrToLetzterUnterrichtstag.put(schuljahr, result);
+		return result;
 	}
 
 	/**

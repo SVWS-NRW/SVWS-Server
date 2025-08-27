@@ -13,6 +13,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
+import de.svws_nrw.asd.types.schule.Termin;
+import de.svws_nrw.asd.validate.DateManager;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
 import de.svws_nrw.data.DataManagerRevised;
@@ -65,8 +67,16 @@ public final class DataLehrerliste extends DataManagerRevised<Long, DTOLehrer, L
 				return false;
 			if (year == schuljahresabschnitt.schuljahr + 1) {
 				final int month = dateZugang.getMonthValue();
-				if ((month >= 8) || ((schuljahresabschnitt.abschnitt == 1) && (month >= 2)))
+				if (month >= 8)
 					return false;
+				if (schuljahresabschnitt.abschnitt == 1) {
+					final DateManager date = Termin.getLetzterUnterrichtstagImErstenHalbjahr(schuljahresabschnitt.schuljahr);
+					if (date != null) {
+						final int day = dateZugang.getDayOfMonth();
+						if ((month > date.getMonat()) || ((month == date.getMonat()) && (day > date.getTag())))
+							return false;
+					}
+				}
 			}
 		}
 		// Prüfe ggf. das Abgangsdatum
@@ -77,9 +87,16 @@ public final class DataLehrerliste extends DataManagerRevised<Long, DTOLehrer, L
 				return false;
 			if (year <= schuljahresabschnitt.schuljahr + 1) {
 				final int month = dateAbgang.getMonthValue();
-				if (((schuljahresabschnitt.abschnitt == 1) && (year == schuljahresabschnitt.schuljahr) && (month <= 7))
-						|| ((schuljahresabschnitt.abschnitt == 2) && (year == schuljahresabschnitt.schuljahr + 1) && (month <= 1)))
+				if ((schuljahresabschnitt.abschnitt == 1) && (year == schuljahresabschnitt.schuljahr) && (month <= 7))
 					return false;
+				if ((schuljahresabschnitt.abschnitt == 2) && (year == schuljahresabschnitt.schuljahr + 1)) {
+					final DateManager date = Termin.getLetzterUnterrichtstagImErstenHalbjahr(schuljahresabschnitt.schuljahr);
+					if (date != null) {
+						final int day = dateAbgang.getDayOfMonth();
+						if ((month < date.getMonat()) || ((month == date.getMonat()) && (day <= date.getTag())))
+							return false;
+					}
+				}
 			}
 		}
 		return true;
