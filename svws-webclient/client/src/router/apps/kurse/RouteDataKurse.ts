@@ -48,7 +48,7 @@ export class RouteDataKurse extends RouteDataAuswahl<KursListeManager, RouteStat
 		const listKurse = await api.server.getKurseFuerAbschnitt(api.schema, idSchuljahresabschnitt);
 		const listSchueler = await api.server.getSchuelerFuerAbschnitt(api.schema, idSchuljahresabschnitt);
 		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
-		const listLehrer = await api.server.getLehrer(api.schema);
+		const listLehrer = await api.server.getLehrerFuerAbschnitt(api.schema, idSchuljahresabschnitt);
 		const listFaecher = await api.server.getFaecher(api.schema);
 		const manager = new KursListeManager(idSchuljahresabschnitt, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,
 			api.schulform, listKurse, listSchueler, listJahrgaenge, listLehrer, listFaecher);
