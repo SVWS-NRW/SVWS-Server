@@ -301,7 +301,7 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 					throw new ApiOperationException(Status.CONFLICT);
 				dto.Jahrgang_ID = idJahrgang;
 			}
-			case "epJahre" -> dto.EPJahre = JSONMapper.convertToIntegerInRange(value, true, 1, 3);
+			case "epJahre" -> dto.EPJahre = JSONMapper.convertToIntegerInRange(value, true, 1, 4);
 			case "fachklasseID" -> {
 				final Long idFachklasse = JSONMapper.convertToLong(value, true);
 				if (idFachklasse != null) {
