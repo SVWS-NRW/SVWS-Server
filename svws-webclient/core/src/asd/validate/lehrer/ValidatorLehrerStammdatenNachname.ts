@@ -4,6 +4,7 @@ import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
 import { ValidatorLehrerStammdatenNachnamePlausibel } from '../../../asd/validate/lehrer/ValidatorLehrerStammdatenNachnamePlausibel';
+import { ValidatorLehrerStammdatenNachnameOhneLeerzeichenVorNachBindestrich } from '../../../asd/validate/lehrer/ValidatorLehrerStammdatenNachnameOhneLeerzeichenVorNachBindestrich';
 
 export class ValidatorLehrerStammdatenNachname extends Validator {
 
@@ -18,6 +19,7 @@ export class ValidatorLehrerStammdatenNachname extends Validator {
 		super(kontext);
 		this._validatoren.add(new ValidatorLehrerStammdatenNachnameVorhanden(daten, kontext));
 		this._validatoren.add(new ValidatorLehrerStammdatenNachnamePlausibel(daten, kontext));
+		this._validatoren.add(new ValidatorLehrerStammdatenNachnameOhneLeerzeichenVorNachBindestrich(daten, kontext));
 	}
 
 	protected pruefe() : boolean {
