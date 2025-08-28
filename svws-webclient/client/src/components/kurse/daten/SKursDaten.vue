@@ -26,7 +26,7 @@
 			</svws-ui-content-card>
 			<svws-ui-content-card title="Lehrkraft">
 				<svws-ui-input-wrapper :grid="2">
-					<svws-ui-select title="Lehrkraft" :readonly v-model="lehrer" :items="manager().lehrer.list()" :item-text="v => v.vorname + ' ' + v.nachname"
+					<svws-ui-select title="Lehrkraft" :readonly v-model="lehrer" :items="lehrerAktiv" :item-text="getLehrerText"
 						:empty-text="() => '---'" removable statistics />
 					<svws-ui-input-number placeholder="Wochenstunden der Lehrkraft" :readonly :model-value="data().wochenstundenLehrer" statistics :min="0"
 						@change="v => patch({ wochenstundenLehrer: ((v !== null) && (v >= 0)) ? v : data().wochenstundenLehrer })" />
@@ -35,6 +35,9 @@
 			<svws-ui-content-card title="zusätzliche Lehrkräfte" v-if="serverMode === ServerMode.DEV">
 				<svws-ui-table clickable @update:clicked="v => patchLehrer(v)" :columns="columnsKursLehrer" :items="weitereLehrer" :readonly
 					v-model="auswahlKursLehrer" :selectable="hatKompetenzUpdate">
+					<template #cell(kuerzel)="{ rowData: s }">
+						<span>{{ manager().lehrer.get(s.idLehrer ?? -1)?.kuerzel ?? "-" }}</span>
+					</template>
 					<template #cell(vorname)="{ rowData: s }">
 						<span>{{ manager().lehrer.get(s.idLehrer ?? -1)?.vorname ?? "-" }}</span>
 					</template>
@@ -55,7 +58,7 @@
 					<template v-if="currentMode === Mode.ADD" #modalTitle>Weitere Lehrkraft hinzufügen</template>
 					<template v-else-if="currentMode === Mode.PATCH" #modalTitle>Wochenstunden bearbeiten</template>
 					<template #modalContent>
-						<svws-ui-select v-if="currentMode === Mode.ADD" title="Lehrkraft" :items="lehrerFiltered" :item-text="v => v.vorname + ' ' + v.nachname" removable
+						<svws-ui-select v-if="currentMode === Mode.ADD" title="Lehrkraft" :items="lehrerFiltered" :item-text="getLehrerText" removable
 							required @update:model-value="v => newEntryKursLehrer.idLehrer = v?.id ?? -1" statistics
 							:readonly :model-value="manager().lehrer.get(newEntryKursLehrer.idLehrer ?? -1)" />
 						<svws-ui-input-number placeholder="Wochenstunden" :readonly v-model="newEntryKursLehrer.wochenstundenLehrer" statistics :min="0" />
@@ -119,6 +122,18 @@
 		},
 		set: (value) => void props.patch({ lehrer: value?.id ?? null }),
 	});
+
+	const lehrerAktiv = computed<List<LehrerListeEintrag>>(() => {
+		const result = new ArrayList<LehrerListeEintrag>();
+		for (const l of props.manager().lehrer.list())
+			if (l.istAktiv)
+				result.add(l);
+		return result;
+	})
+
+	function getLehrerText(lehrer : LehrerListeEintrag) : string {
+		return lehrer.kuerzel + ' - ' + lehrer.vorname + ' ' + lehrer.nachname;
+	}
 
 	const fach = computed<FaecherListeEintrag>({
 		get: () => props.manager().faecher.get(data().idFach) ?? new FaecherListeEintrag(),
@@ -213,6 +228,7 @@
 	// --- Tabelle Kurslehrer ---
 	const weitereLehrer = computed(() => [...props.manager().daten().weitereLehrer]);
 	const columnsKursLehrer: DataTableColumn[] = [
+		{key: "kuerzel", label: "Kürzel", sortable: true},
 		{key: "vorname", label: "Vorname", sortable: true},
 		{key: "nachname", label: "Nachname", sortable: true},
 		{key: "wochenstundenLehrer", label: "Wochenstunden", sortable: true},
@@ -239,10 +255,10 @@
 			idsAssignedLehrer.add(kl.idLehrer);
 		const result = [];
 		for (const l of props.manager().lehrer.list())
-			if (!idsAssignedLehrer.has(l.id))
+			if (!idsAssignedLehrer.has(l.id) && (l.istAktiv))
 				result.push(l);
 		return result;
-	})
+	});
 	const newEntryKursLehrer = ref<KursLehrer>(createNewKursLehrerEntry());
 
 	function createNewKursLehrerEntry() {

@@ -104,7 +104,6 @@ export class RouteDataKurse extends RouteDataAuswahl<KursListeManager, RouteStat
 				Object.assign(k, data);
 		this.commit();
 		api.status.stop();
-
 	}
 
 	deleteKursLehrer = async (lehrerIds: List<number>, idKurs: number): Promise<void> => {

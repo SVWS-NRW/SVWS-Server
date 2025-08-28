@@ -1,23 +1,23 @@
 import { JavaObject } from '../../../../../core/src/java/lang/JavaObject';
 import { HashMap2D } from '../../../../../core/src/core/adt/map/HashMap2D';
-import { KlassenDaten } from '../../../../../core/src/asd/data/klassen/KlassenDaten';
-import { SchuelerListeEintrag } from '../../../../../core/src/core/data/schueler/SchuelerListeEintrag';
-import { SchuelerStatusKatalogEintrag } from '../../../../../core/src/asd/data/schueler/SchuelerStatusKatalogEintrag';
+import type { KlassenDaten } from '../../../../../core/src/asd/data/klassen/KlassenDaten';
+import type { SchuelerListeEintrag } from '../../../../../core/src/core/data/schueler/SchuelerListeEintrag';
+import type { SchuelerStatusKatalogEintrag } from '../../../../../core/src/asd/data/schueler/SchuelerStatusKatalogEintrag';
 import type { JavaSet } from '../../../../../core/src/java/util/JavaSet';
 import { HashMap } from '../../../../../core/src/java/util/HashMap';
-import { Schulform } from '../../../../../core/src/asd/types/schule/Schulform';
+import type { Schulform } from '../../../../../core/src/asd/types/schule/Schulform';
 import { KlassenUtils } from '../../../../../core/src/core/utils/klassen/KlassenUtils';
 import { SchuelerUtils } from '../../../../../core/src/core/utils/schueler/SchuelerUtils';
 import { ArrayList } from '../../../../../core/src/java/util/ArrayList';
-import { JahrgangsDaten } from '../../../../../core/src/core/data/jahrgang/JahrgangsDaten';
+import type { JahrgangsDaten } from '../../../../../core/src/core/data/jahrgang/JahrgangsDaten';
 import { JavaString } from '../../../../../core/src/java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../../../core/src/core/exceptions/DeveloperNotificationException';
 import { SchuelerStatus } from '../../../../../core/src/asd/types/schueler/SchuelerStatus';
 import type { Comparator } from '../../../../../core/src/java/util/Comparator';
 import type { JavaFunction } from '../../../../../core/src/java/util/function/JavaFunction';
-import { LehrerListeEintrag } from '../../../../../core/src/core/data/lehrer/LehrerListeEintrag';
+import type { LehrerListeEintrag } from '../../../../../core/src/core/data/lehrer/LehrerListeEintrag';
 import { Schulgliederung } from '../../../../../core/src/asd/types/schule/Schulgliederung';
-import { SchulgliederungKatalogEintrag } from '../../../../../core/src/asd/data/schule/SchulgliederungKatalogEintrag';
+import type { SchulgliederungKatalogEintrag } from '../../../../../core/src/asd/data/schule/SchulgliederungKatalogEintrag';
 import type { List } from '../../../../../core/src/java/util/List';
 import { IllegalArgumentException } from '../../../../../core/src/java/lang/IllegalArgumentException';
 import { HashSet } from '../../../../../core/src/java/util/HashSet';
@@ -27,12 +27,12 @@ import { JahrgaengeListeManager } from '../kataloge/jahrgaenge/JahrgaengeListeMa
 import { AuswahlManager } from '../../AuswahlManager';
 import { JavaInteger } from '../../../../../core/src/java/lang/JavaInteger';
 import { LehrerUtils } from '../../../../../core/src/core/utils/lehrer/LehrerUtils';
-import { Schueler } from '../../../../../core/src/asd/data/schueler/Schueler';
+import type { Schueler } from '../../../../../core/src/asd/data/schueler/Schueler';
 import type { Runnable } from '../../../../../core/src/java/lang/Runnable';
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
 import { Class } from '../../../../../core/src/java/lang/Class';
 import { Arrays } from '../../../../../core/src/java/util/Arrays';
-import { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
+import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
 
 export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, KlassenDaten> {
 
@@ -247,7 +247,7 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 			if (eintrag.idJahrgang === null)
 				return false;
 			const j : JahrgangsDaten | null = this.jahrgaenge.getOrException(eintrag.idJahrgang);
-			if ((j.kuerzelSchulgliederung === null) || ((j.kuerzelSchulgliederung !== null) && (!this.schulgliederungen.auswahlHasKey(j.kuerzelSchulgliederung))))
+			if ((j.kuerzelSchulgliederung === null) || (!this.schulgliederungen.auswahlHasKey(j.kuerzelSchulgliederung)))
 				return false;
 		}
 		return true;
