@@ -2,6 +2,7 @@ import { ValidatorLehrerStammdatenNachnameVorhanden } from '../../../asd/validat
 import { LehrerStammdaten } from '../../../asd/data/lehrer/LehrerStammdaten';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
+import { ValidatorLehrerStammdatenNachnameAnredeFehlerhaft } from '../../../asd/validate/lehrer/ValidatorLehrerStammdatenNachnameAnredeFehlerhaft';
 import { Validator } from '../../../asd/validate/Validator';
 import { ValidatorLehrerStammdatenNachnamePlausibel } from '../../../asd/validate/lehrer/ValidatorLehrerStammdatenNachnamePlausibel';
 import { ValidatorLehrerStammdatenNachnameOhneLeerzeichenVorNachBindestrich } from '../../../asd/validate/lehrer/ValidatorLehrerStammdatenNachnameOhneLeerzeichenVorNachBindestrich';
@@ -20,6 +21,7 @@ export class ValidatorLehrerStammdatenNachname extends Validator {
 		this._validatoren.add(new ValidatorLehrerStammdatenNachnameVorhanden(daten, kontext));
 		this._validatoren.add(new ValidatorLehrerStammdatenNachnamePlausibel(daten, kontext));
 		this._validatoren.add(new ValidatorLehrerStammdatenNachnameOhneLeerzeichenVorNachBindestrich(daten, kontext));
+		this._validatoren.add(new ValidatorLehrerStammdatenNachnameAnredeFehlerhaft(daten, kontext));
 	}
 
 	protected pruefe() : boolean {

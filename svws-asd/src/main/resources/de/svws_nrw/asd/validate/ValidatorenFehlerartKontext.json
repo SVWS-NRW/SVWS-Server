@@ -108,6 +108,28 @@
 			"gueltigBis": null
 		} ]
     }, {
+		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLehrerStammdatenVornameAnredeFehlerhaft",
+		"historie": [ {
+			"zebras": true,
+			"svws": true,
+			"muss": ["G", "H", "V", "S", "R", "PS", "SK", "GE", "GY", "WB", "BK", "SR", "SG", "SB"],
+			"kann": [],
+			"hinweis": [],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLehrerStammdatenNachnameAnredeFehlerhaft",
+		"historie": [ {
+			"zebras": true,
+			"svws": true,
+			"muss": ["G", "H", "V", "S", "R", "PS", "SK", "GE", "GY", "WB", "BK", "SR", "SG", "SB"],
+			"kann": [],
+			"hinweis": [],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+    }, {
 		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLehrerPersonalabschnittsdaten",
 		"historie": [ {
 			"zebras": true,

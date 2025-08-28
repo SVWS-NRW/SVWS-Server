@@ -80,9 +80,25 @@ class TestValidatorLehrerStammdaten {
 			'Müller', 'Thor Hendrik'  , true
 		""";
 
-	private static final String TESTDATEN_VORNAME_NACHNAME_KOMBI = """
-			'Herr Müller', 'Thor Hendrik'  , true
+	private static final String TESTDATEN_VORNAME_ANREDE_FEHLERHAFT = """
+			'Müller', 'Frauke'      , true
+			'Müller', 'Frau Anna'   , false
+			'Müller', 'Herr Peter'  , false
+			'Müller', 'Herr'        , true
+			'Müller', 'Frau'        , true
+			'Müller', 'Anna'        , true
 		""";
+
+	private static final String TESTDATEN_NACHNAME_ANREDE_FEHLERHAFT = """
+			'Herrmann'     , 'Frank', true
+			'Herr Müller'  , 'Frank', false
+			'Frau Schmidt' , 'Frank', false
+			'Herr'         , 'Frank', true
+			'Frau'         , 'Frank', true
+			'Meier'        , 'Frank', true
+		""";
+
+
 
 
 	/**
@@ -96,7 +112,7 @@ class TestValidatorLehrerStammdaten {
 	 */
 	@DisplayName("Tests für ValidatorLehrerStammdatenNachname")
 	@ParameterizedTest
-	@CsvSource(textBlock = TESTDATEN_NACHNAME)
+	@CsvSource(textBlock = TESTDATEN_NACHNAME + TESTDATEN_NACHNAME_ANREDE_FEHLERHAFT)
 	void testValidatorLehrerStammdatenNachname(final String nachname, final String vorname, final boolean result) {
 		// Testdaten setzen
 		lehrerTestdaten_001.nachname = nachname;
@@ -119,7 +135,7 @@ class TestValidatorLehrerStammdaten {
 	 */
 	@DisplayName("Tests für ValidatorLehrerStammdatenVorname")
 	@ParameterizedTest
-	@CsvSource(textBlock = TESTDATEN_VORNAME)
+	@CsvSource(textBlock = TESTDATEN_VORNAME + TESTDATEN_VORNAME_ANREDE_FEHLERHAFT)
 	void testValidatorLehrerStammdatenVorname(final String nachname, final String vorname, final boolean result) {
 		// Testdaten setzen
 		lehrerTestdaten_001.nachname = nachname;
@@ -141,7 +157,7 @@ class TestValidatorLehrerStammdaten {
 	 */
 	@DisplayName("Tests für ValidatorLehrerStammdaten")
 	@ParameterizedTest
-	@CsvSource(textBlock = TESTDATEN_VORNAME + TESTDATEN_NACHNAME + TESTDATEN_VORNAME_NACHNAME_KOMBI)
+	@CsvSource(textBlock = TESTDATEN_VORNAME + TESTDATEN_NACHNAME)
 	void testValidatorLehrerStammdaten(final String nachname, final String vorname, final boolean result) {
 		// Testdaten setzen
 		lehrerTestdaten_001.nachname = nachname;

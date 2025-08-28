@@ -1,5 +1,6 @@
 import { JavaCharacter } from '../../../java/lang/JavaCharacter';
 import { LehrerStammdaten } from '../../../asd/data/lehrer/LehrerStammdaten';
+import { ValidatorLehrerStammdatenVornameAnredeFehlerhaft } from '../../../asd/validate/lehrer/ValidatorLehrerStammdatenVornameAnredeFehlerhaft';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
@@ -21,6 +22,7 @@ export class ValidatorLehrerStammdatenVorname extends Validator {
 	public constructor(daten : LehrerStammdaten, kontext : ValidatorKontext) {
 		super(kontext);
 		this.daten = daten;
+		this._validatoren.add(new ValidatorLehrerStammdatenVornameAnredeFehlerhaft(daten, kontext));
 	}
 
 	protected pruefe() : boolean {
