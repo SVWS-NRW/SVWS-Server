@@ -12,7 +12,6 @@ import { RouteDataSchuelerLaufbahnplanung } from "~/router/apps/schueler/laufbah
 
 import { ConfigElement, SSchuelerLaufbahnplanung } from "@ui";
 import { schulformenGymOb } from "~/router/RouteHelper";
-import { RouteManager } from "~/router/RouteManager";
 
 export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLaufbahnplanung, RouteSchueler> {
 
@@ -24,7 +23,6 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Laufbahnplanung";
-		super.setCheckpoint = true;
 		this.isHidden = (params?: RouteParams) => {
 			return this.checkHidden(params);
 		}
@@ -104,8 +102,6 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 			restoreLaufbahnplanung: this.data.restoreLaufbahnplanung,
 			resetFachwahlen: this.data.resetFachwahlen,
 			gotoKursblockung: this.data.gotoKursblockung,
-			checkpoint: this.checkpoint,
-			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
 		};
 	}
 
