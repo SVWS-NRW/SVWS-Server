@@ -59,6 +59,8 @@ public final class DataLehrerliste extends DataManagerRevised<Long, DTOLehrer, L
 		if (idSchuljahresabschnitt == null)
 			return true;
 		final Schuljahresabschnitt schuljahresabschnitt = conn.getUser().schuleGetAbschnittById(idSchuljahresabschnitt);
+		if (schuljahresabschnitt == null)
+			return true;
 		// Prüfe ggf. das Zugangsdatum
 		if (l.DatumZugang != null) {
 			final LocalDate dateZugang = LocalDate.parse(l.DatumZugang);
