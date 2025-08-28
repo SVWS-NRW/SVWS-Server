@@ -634,65 +634,64 @@ OP_Schulformen;OP_POKrz;OP_Krz;OP_Abgangsart_B;OP_Abgangsart_NB;OP_Art;OP_Typ;OP
 -G-;G/AO-GS05/1-4;G/AO-GS05/KVE;null;null;V;null;A;Verbleib in der Eingangsphase, AO-GS 05 §6 (1);§11;-EP-;null;null;1;null;null
 -G-;G/AO-GS00/1-4;G/AO-GS00/KV1;null;null;V;null;A;VVzAO GS Bildungsgang in der Grundschule AO-GS 00 §11;§11;-01-;null;null;1;null;null
 -G-;G/AO-GS00/1-4;G/AO-GS00/V2-4;null;null;V;null;A;Versetzung in den Klassen 2-4 AO-GS 00 §11(1) u. (2);§11(2);-02-03-04-;null;null;1;null;null
--GE-;GE/AO-SI99/5-10;GE/AO-SI99/SI;null;null;A;null;A;HA10: Sekundarabschluss I - Hauptschulabschluss n. Kl. 10 -, AO-SI 99 §30(2);§30(2);-10-;null;null;1;null;null
--GE-;GE/APO-SI05/5-10;GE/APO-SI05/FORQ-Q;G;null;A;null;A;FORQ-Q: Mittlerer Schulabschluss (Fachoberschulreife mit Berechtigung z. Besuch d. gymn. Oberstufe -Qualifikationsphase-);§41(5);-09-10-;null;null;0;null;null
--GE-;GE/APO-SI05/5-10;GE/APO-SI05/HA10;D;null;A;null;A;HA10: Hauptschulabschluss n. Kl. 10;§39(2);-09-10-;null;null;0;null;null
--GE-;GE/APO-SI20/5-10;GE/APO-SI20/OA;C;null;A;null;A;Ohne Abschluss;null;-09-10-;null;null;0;null;null
+-GE-SK-;GE/AO-SI99/5-10;GE/AO-SI99/SI;null;null;A;null;A;HA10: Sekundarabschluss I - Hauptschulabschluss n. Kl. 10 -, AO-SI 99 §30(2);§30(2);-10-;null;null;1;null;null
+-GE-SK-;GE/APO-SI05/5-10;GE/APO-SI05/FORQ-Q;G;null;A;null;A;FORQ-Q: Mittlerer Schulabschluss (Fachoberschulreife mit Berechtigung z. Besuch d. gymn. Oberstufe -Qualifikationsphase-);§41(5);-09-10-;null;null;0;null;null
+-GE-SK-;GE/APO-SI05/5-10;GE/APO-SI05/HA10;D;null;A;null;A;HA10: Hauptschulabschluss n. Kl. 10;§39(2);-09-10-;null;null;0;null;null
+-GE-SK-;GE/APO-SI20/5-10;GE/APO-SI20/OA;C;null;A;null;A;Ohne Abschluss;null;-09-10-;null;null;0;null;null
 -GE-;APO-GOSt(B)10/G8;GE/APO-GOStG8/HA10;D;null;A;null;A;HA10: Hauptschulabschluss n. Kl. 10;§39(2);-EF-;null;null;0;null;null
--GE-;GE/APO-SI20/5-10;GE/APO-SI20/ESA;B;null;A;null;A;ESA: Erster Schulabschluss;§38(3);-09-;null;null;1;null;null
+-GE-SK-;GE/APO-SI20/5-10;GE/APO-SI20/ESA;B;null;A;null;A;ESA: Erster Schulabschluss;§38(3);-09-;null;null;1;null;null
 -GE-;APO-GOSt(B)10/G8;GE/APO-GOStG8/FHR12;H;null;A;FHR;A;Fachhochschulreife am Ende der Q1;null;-Q1-;null;null;1;null;null
--GE-;GE/APO-SI05/5-10;GE/APO-SI05/ESA;B;null;A;null;A;ESA: Erster Schulabschluss;§38(3);-09-;null;null;1;null;null
--GE-;GE/APO-SI20/5-10;GE/APO-SI20/KV5;null;null;V;null;A;Keine Versetzung von Kl. 5 nach Kl. 6;§11(2);-05-;null;null;1;null;null
+-GE-SK-;GE/APO-SI05/5-10;GE/APO-SI05/ESA;B;null;A;null;A;ESA: Erster Schulabschluss;§38(3);-09-;null;null;1;null;null
+-GE-SK-;GE/APO-SI20/5-10;GE/APO-SI20/KV5;null;null;V;null;A;Keine Versetzung von Kl. 5 nach Kl. 6;§11(2);-05-;null;null;1;null;null
 -GE-;APO-GOSt(C)10;GE/APO-GOStG9/FHR12;H;null;A;FHR;A;FHRsT: schul. Teil d. FHR am Ende der Jgst. 12;null;-12-;null;null;1;null;null
--GE-;GE/APO-SI05/5-10;GE/APO-SI05/FOR;F;null;A;null;A;FOR: Mittlerer Schulabschluss (Fachoberschulreife ohne Qualifikationsvermerk);§401(2);-09-10-;null;null;0;null;null
--GE-;GE/APO-SI05/5-10;GE/APO-SI05/KV5;null;null;V;null;A;Keine Versetzung von Kl. 5 nach Kl. 6;§11(2);-05-;null;null;1;null;null
--GE-;GE/APO-SI05/5-10;GE/APO-SI05/EESA;D;null;A;null;A;EESA: Erweiterter Erster Schulabschluss;§39(2);-09-10-;null;null;2;null;null
--GE-;GE/APO-SI05/5-10;GE/APO-SI05/V6-8;null;null;V;null;A;Besondere Vers.-Best. für die Klassen 6-8;§27(2);-06-07-08-;null;null;1;null;null
--GE-;GE/APO-SI05/5-10;GE/APO-SI05/FORQ-E;G;null;A;null;A;FORQ-E: Mittlerer Schulabschluss (Fachoberschulreife mit Berechtigung z. Besuch d. gymn. Oberstufe -Einführungsphase-);§41(4);-09-10-;null;null;0;null;null
--GE-;GY/APO-SI05/5-10;GY/APO-SI05/V6-10;null;null;V;null;A;Besondere Vers.-Best. für Kl. 6 bis Kl. 10;§26;-06-07-08-09-;null;null;1;null;null
--GE-;GE/APO-SI20/5-10;GE/APO-SI20/AGZ_FSL;N;null;A;null;A;Abgangszeugnis der Förderschule mit Förderschwerpunkt Lernen;null;-06-07-08-09-10-;null;null;0;null;null
--GE-;GE/AO-SI99/5-10;GE/AO-SI99/FOR;null;null;A;null;A;FOR: Sekundarabschluss I - Fachoberschulreife -, AO-SI 99 §31(2);§31(2);-10-;null;null;1;null;null
+-GE-SK-;GE/APO-SI05/5-10;GE/APO-SI05/FOR;F;null;A;null;A;FOR: Mittlerer Schulabschluss (Fachoberschulreife ohne Qualifikationsvermerk);§401(2);-09-10-;null;null;0;null;null
+-GE-SK-;GE/APO-SI05/5-10;GE/APO-SI05/KV5;null;null;V;null;A;Keine Versetzung von Kl. 5 nach Kl. 6;§11(2);-05-;null;null;1;null;null
+-GE-SK-;GE/APO-SI05/5-10;GE/APO-SI05/EESA;D;null;A;null;A;EESA: Erweiterter Erster Schulabschluss;§39(2);-09-10-;null;null;2;null;null
+-GE-SK-;GE/APO-SI05/5-10;GE/APO-SI05/V6-8;null;null;V;null;A;Besondere Vers.-Best. für die Klassen 6-8;§27(2);-06-07-08-;null;null;1;null;null
+-GE-SK-;GE/APO-SI05/5-10;GE/APO-SI05/FORQ-E;G;null;A;null;A;FORQ-E: Mittlerer Schulabschluss (Fachoberschulreife mit Berechtigung z. Besuch d. gymn. Oberstufe -Einführungsphase-);§41(4);-09-10-;null;null;0;null;null
+-GE-SK-;GY/APO-SI05/5-10;GY/APO-SI05/V6-10;null;null;V;null;A;Besondere Vers.-Best. für Kl. 6 bis Kl. 10;§26;-06-07-08-09-;null;null;1;null;null
+-GE-SK-;GE/APO-SI20/5-10;GE/APO-SI20/AGZ_FSL;N;null;A;null;A;Abgangszeugnis der Förderschule mit Förderschwerpunkt Lernen;null;-06-07-08-09-10-;null;null;0;null;null
+-GE-SK-;GE/AO-SI99/5-10;GE/AO-SI99/FOR;null;null;A;null;A;FOR: Sekundarabschluss I - Fachoberschulreife -, AO-SI 99 §31(2);§31(2);-10-;null;null;1;null;null
 -GE-;APO-GOSt(C)10;GE/APO-GOStG9/OABI_FHR;H;null;A;FHR;A;Ohne Abitur, jedoch mit Fachhochschulreife (schulischer Teil);null;-13-;null;null;2;null;null
--GE-;GE/APO-SI05/5-10;GE/APO-SI05/HA;B;null;A;null;A;HA: Hauptschulabschluss;§38(3);-09-;null;null;0;null;null
--GE-;GE/AO-SI99/5-10;GE/AO-SI99/V6-8;null;null;V;null;A;Besondere Vers.-Best. für die Klassen 6-8, AO-SI 99 §27(1);§27(2);-06-07-08-;null;null;1;null;null
+-GE-SK-;GE/APO-SI05/5-10;GE/APO-SI05/HA;B;null;A;null;A;HA: Hauptschulabschluss;§38(3);-09-;null;null;0;null;null
+-GE-SK-;GE/AO-SI99/5-10;GE/AO-SI99/V6-8;null;null;V;null;A;Besondere Vers.-Best. für die Klassen 6-8, AO-SI 99 §27(1);§27(2);-06-07-08-;null;null;1;null;null
 -GE-;APO-GOSt(B)10/G8;GE/APO-GOStG8/OABI_OFHR;G;null;A;null;A;Ohne Abitur, ohne Fachhochschulreife (schulischer Teil);null;-Q2-;null;null;1;null;null
--GE-;GE/AO-SI99/5-10;GE/AO-SI99/HSA;null;null;A;null;A;HA: Hauptschulabschluss, AO-SI 99 §29(2);§29(2);-09-;null;null;1;null;null
+-GE-SK-;GE/AO-SI99/5-10;GE/AO-SI99/HSA;null;null;A;null;A;HA: Hauptschulabschluss, AO-SI 99 §29(2);§29(2);-09-;null;null;1;null;null
 -GE-;APO-GOSt02/11-13;GE/APO-GOSt02/ABI;K;null;A;ABI;A;AHR: Zuerkennung der allgemeinen Hochschulreife;§39;-13-;null;null;1;null;null
 -GE-;APO-GOSt(B)10/G8;GE/APO-GOStG8/FORQ-E;G;null;A;null;A;FORQ-E: Mittlerer Schulabschluss (Fachoberschulreife mit Berechtigung z. Besuch d. gymn. Oberstufe -Einführungsphase-);§41(4);-EF-;null;null;0;null;null
 -GE-;APO-GOSt01/11-13;GE/APO-GOSt01/FHR11;H;null;A;null;A;FHRsT: schul. Teil d. FHR am Ende der Jgst. 11, APO-GOSt 01 §40(2) u. VV 40.21 in Verb. m. Anlage 17=§9;null;-11-;null;null;1;null;null
--GE-;GE/APO-SI05/5-10;GE/APO-SI05/MSAQ-Q;G;null;A;null;A;MSAQ-Q: Mittlerer Schulabschluss (Fachoberschulreife mit Berechtigung z. Besuch d. gymn. Oberstufe -Qualifikationsphase-);§41(5);-09-10-;null;null;99;null;null
+-GE-SK-;GE/APO-SI05/5-10;GE/APO-SI05/MSAQ-Q;G;null;A;null;A;MSAQ-Q: Mittlerer Schulabschluss (Fachoberschulreife mit Berechtigung z. Besuch d. gymn. Oberstufe -Qualifikationsphase-);§41(5);-09-10-;null;null;99;null;null
 -GE-;APO-GOSt02/11-13;GE/APO-GOSt02/FHR11;H;null;A;FHR;A;FHRsT: schul. Teil d. FHR am Ende der Jgst. 11, APO-GOSt 02 §40(2) u. VV 40.21 in Verb. m. Anlage 17=§9;null;-11-;null;null;1;null;null
--GE-;GE/APO-SI20/5-10;GE/APO-SI20/MSAQ-Q;G;null;A;null;A;MSAQ-Q: Mittlerer Schulabschluss (Fachoberschulreife mit Berechtigung z. Besuch d. gymn. Oberstufe -Qualifikationsphase-);§41(5);-09-10-;null;null;99;null;null
+-GE-SK-;GE/APO-SI20/5-10;GE/APO-SI20/MSAQ-Q;G;null;A;null;A;MSAQ-Q: Mittlerer Schulabschluss (Fachoberschulreife mit Berechtigung z. Besuch d. gymn. Oberstufe -Qualifikationsphase-);§41(5);-09-10-;null;null;99;null;null
 -GE-;APO-GOSt(B)10/G8;GE/APO-GOStG8/VQ;G;null;V;null;A;Versetzung in die Qualifikationsphase;null;-EF-11-;null;null;1;null;null
--GE-;APO-GOSt(B)10/G8;GE/APO-GOStG8/EESA;D;null;A;null;A;EESA: Erweiterter Erster Schulabschluss;§39(2);-EF-;null;null;0;null;null
--GE-;APO-GOSt(C)10;GE/APO-GOStG9/V12;G;null;V;null;A;Versetzung in die Qualifikationsphase;null;-11-;null;null;1;null;null
+-GE-;APO-GOSt(B)10/G8;GE/APO-GOStG8/EESA;D;null;A;null;A;EESA: Erweiterter Erster Schulabschluss;§39(2);-EF-;null;null;0;null;null-GE-;APO-GOSt(C)10;GE/APO-GOStG9/V12;G;null;V;null;A;Versetzung in die Qualifikationsphase;null;-11-;null;null;1;null;null
 -GE-;APO-GOSt(B)10/G8;GE/APO-GOStG8/V12;G;null;V;null;A;Versetzung in die Qualifikationsphase;null;-EF-;null;null;0;null;null
--GE-;GE/APO-SI05/5-10;GE/APO-SI05/HA;B;null;A;null;A;HA: Hauptschulabschluss;§38(3);-10-;null;null;0;null;null
+-GE-SK-;GE/APO-SI05/5-10;GE/APO-SI05/HA;B;null;A;null;A;HA: Hauptschulabschluss;§38(3);-10-;null;null;0;null;null
 -GE-;APO-GOSt01/11-13;GE/APO-GOSt01/ABI;K;null;A;ABI;A;AHR: Zuerkennung der allgemeinen Hochschulreife, APO-GOSt 01 §39;§39;-13-;null;null;1;null;null
 -GE-;APO-GOSt(B)10/G8;GE/APO-GOStG8/MSAQ-E;G;null;A;null;A;MSAQ-E: Mittlerer Schulabschluss (Fachoberschulreife mit Berechtigung z. Besuch d. gymn. Oberstufe -Einführungsphase-);§41(4);-EF-;null;null;0;null;null
 -GE-;APO-GOSt01/11-13;GE/APO-GOSt01/FHR12;H;null;A;FHR;A;FHRsT: schul. Teil d. FHR am Ende der Jgst. 12, APO-GOSt 01 §40(2) u. VV 40.21 in Verb. m. Anlage 18;null;-12-13-;null;null;1;null;null
--GE-;GE/AO-SI99/5-10;GE/AO-SI99/V9;null;null;V;null;A;Besondere Vers.-Best. für Kl. 9, AO-SI 99 §27(2);§27(2);-09-;null;null;1;null;null
--GE-;GE/APO-SI05/5-10;GE/APO-SI05/AGZ;A;null;A;null;A;Abgangszeugnis nach frühestens 10 Schulbesuchsjahren;null;-05-06-07-08-09-;null;null;0;null;null
+-GE-SK-;GE/AO-SI99/5-10;GE/AO-SI99/V9;null;null;V;null;A;Besondere Vers.-Best. für Kl. 9, AO-SI 99 §27(2);§27(2);-09-;null;null;1;null;null
+-GE-SK-;GE/APO-SI05/5-10;GE/APO-SI05/AGZ;A;null;A;null;A;Abgangszeugnis nach frühestens 10 Schulbesuchsjahren;null;-05-06-07-08-09-;null;null;0;null;null
 -GE-;APO-GOSt02/11-13;GE/APO-GOSt02/V12;G;null;V;null;A;Versetzung in die Jgst. 12;§9;-11-;null;null;1;null;null
--GE-;GE/APO-SI20/5-10;GE/APO-SI20/EESA;D;null;A;null;A;EESA: Erweiterter Erster Schulabschluss;§39(2);-09-10-;null;null;2;null;null
--GE-;GE/APO-SI20/5-10;GE/APO-SI20/AGZ;A;null;A;null;A;Abgangszeugnis nach frühestens 10 Schulbesuchsjahren;null;-05-06-07-08-09-;null;null;0;null;null
+-GE-SK-;GE/APO-SI20/5-10;GE/APO-SI20/EESA;D;null;A;null;A;EESA: Erweiterter Erster Schulabschluss;§39(2);-09-10-;null;null;2;null;null
+-GE-SK-;GE/APO-SI20/5-10;GE/APO-SI20/AGZ;A;null;A;null;A;Abgangszeugnis nach frühestens 10 Schulbesuchsjahren;null;-05-06-07-08-09-;null;null;0;null;null
 -GE-;APO-GOSt(C)10;GE/APO-GOStG9/OABI_OFHR;G;null;A;null;A;Ohne Abitur, ohne Fachhochschulreife (schulischer Teil);null;-13-;null;null;1;null;null
--GE-;GE/APO-SI05/5-10;GE/APO-SI05/ESA;B;null;A;null;A;ESA: Erster Schulabschluss;§38(3);-10-;null;null;99;null;null
--GE-;GE/APO-SI20/5-10;GE/APO-SI20/MSA;F;null;A;null;A;MSA: Mittlerer Schulabschluss (Fachoberschulreife ohne Qualifikationsvermerk);§401(2);-09-10-;null;null;3;null;null
--GE-;GE/APO-SI05/5-10;GE/APO-SI05/MSA;F;null;A;null;A;MSA: Mittlerer Schulabschluss (Fachoberschulreife ohne Qualifikationsvermerk);§401(2);-09-10-;null;null;3;null;null
--GE-;GE/APO-SI05/5-10;GE/APO-SI05/OA;C;null;A;null;A;Ohne Abschluss;null;-09-10-;null;null;0;null;null
--GE-;GE/APO-SI20/5-10;GE/APO-SI20/V6-8;null;null;V;null;A;Besondere Vers.-Best. für die Klassen 6-8;§27(2);-06-07-08-;null;null;1;null;null
--GE-;GE/APO-SI05/5-10;GE/APO-SI05/MSAQ-E;G;null;A;null;A;MSAQ-E: Mittlerer Schulabschluss (Fachoberschulreife mit Berechtigung z. Besuch d. gymn. Oberstufe -Einführungsphase-);§41(4);-09-10-;null;null;4;null;null
+-GE-SK-;GE/APO-SI05/5-10;GE/APO-SI05/ESA;B;null;A;null;A;ESA: Erster Schulabschluss;§38(3);-10-;null;null;99;null;null
+-GE-SK-;GE/APO-SI20/5-10;GE/APO-SI20/MSA;F;null;A;null;A;MSA: Mittlerer Schulabschluss (Fachoberschulreife ohne Qualifikationsvermerk);§401(2);-09-10-;null;null;3;null;null
+-GE-SK-;GE/APO-SI05/5-10;GE/APO-SI05/MSA;F;null;A;null;A;MSA: Mittlerer Schulabschluss (Fachoberschulreife ohne Qualifikationsvermerk);§401(2);-09-10-;null;null;3;null;null
+-GE-SK-;GE/APO-SI05/5-10;GE/APO-SI05/OA;C;null;A;null;A;Ohne Abschluss;null;-09-10-;null;null;0;null;null
+-GE-SK-;GE/APO-SI20/5-10;GE/APO-SI20/V6-8;null;null;V;null;A;Besondere Vers.-Best. für die Klassen 6-8;§27(2);-06-07-08-;null;null;1;null;null
+-GE-SK-;GE/APO-SI05/5-10;GE/APO-SI05/MSAQ-E;G;null;A;null;A;MSAQ-E: Mittlerer Schulabschluss (Fachoberschulreife mit Berechtigung z. Besuch d. gymn. Oberstufe -Einführungsphase-);§41(4);-09-10-;null;null;4;null;null
 -GE-;APO-GOSt01/11-13;GE/APO-GOSt01/V12;G;null;V;null;A;Versetzung in die Jgst. 12;§9;-11-;null;null;1;null;null
 -GE-;APO-GOSt(B)10/G8;GE/APO-GOStG8/OABI_FHR;H;null;A;FHR;A;Ohne Abitur, jedoch mit Fachhochschulreife (schulischer Teil);null;-Q2-;null;null;2;null;null
 -GE-;APO-GOSt(B)10/G8;GE/APO-GOStG8/ABI;K;null;A;ABI;A;AHR: Zuerkennung der allgemeinen Hochschulreife;§39;-Q2-;null;null;3;null;null
 -GE-;APO-GOSt(C)10;GE/APO-GOStG9/ABI;K;null;A;ABI;A;AHR: Zuerkennung der allgemeinen Hochschulreife;§39;-13-;null;null;3;null;null
--GE-;GE/APO-SI20/5-10;GE/APO-SI20/ESA;B;null;A;null;A;ESA: Erster Schulabschluss;§38(3);-10-;null;null;99;null;null
+-GE-SK-;GE/APO-SI20/5-10;GE/APO-SI20/ESA;B;null;A;null;A;ESA: Erster Schulabschluss;§38(3);-10-;null;null;99;null;null
 -GE-;APO-GOSt02/11-13;GE/APO-GOSt02/FHR12;H;null;A;FHR;A;FHRsT: schul. Teil d. FHR am Ende der Jgst. 12, APO-GOSt 02 §40(2) u. VV 40.21 in Verb. m. Anlage 18;null;-12-13-;null;null;1;null;null
--GE-;GE/AO-SI99/5-10;GE/AO-SI99/FGO;null;null;A;null;A;FORQ: Sekundarabschluss I - Fachoberschulreife - mit Berechtigung z. Besuch d. gymn. Oberstufe, AO-SI 99 §32(3);§32(3);-10-;null;null;1;null;null
--GE-;GE/APO-SI20/5-10;GE/APO-SI20/MSAQ-E;G;null;A;null;A;MSAQ-E: Mittlerer Schulabschluss (Fachoberschulreife mit Berechtigung z. Besuch d. gymn. Oberstufe -Einführungsphase-);§41(4);-09-10-;null;null;4;null;null
--GE-;GY/APO-SI20/5-10;GY/APO-SI20/V6-10;null;null;V;null;A;Besondere Vers.-Best. für Kl. 6 bis Kl. 10;§26;-06-07-08-09-;null;null;1;null;null
--GE-;GE/AO-SI99/5-10;GE/AO-SI99/KV5;null;null;V;null;A;Keine Versetzung von Kl. 5 nach Kl. 6, AO-SI 99 §11(2);§11(2);-05-;null;null;1;null;null
+-GE-SK-;GE/AO-SI99/5-10;GE/AO-SI99/FGO;null;null;A;null;A;FORQ: Sekundarabschluss I - Fachoberschulreife - mit Berechtigung z. Besuch d. gymn. Oberstufe, AO-SI 99 §32(3);§32(3);-10-;null;null;1;null;null
+-GE-SK-;GE/APO-SI20/5-10;GE/APO-SI20/MSAQ-E;G;null;A;null;A;MSAQ-E: Mittlerer Schulabschluss (Fachoberschulreife mit Berechtigung z. Besuch d. gymn. Oberstufe -Einführungsphase-);§41(4);-09-10-;null;null;4;null;null
+-GE-SK-;GY/APO-SI20/5-10;GY/APO-SI20/V6-10;null;null;V;null;A;Besondere Vers.-Best. für Kl. 6 bis Kl. 10;§26;-06-07-08-09-;null;null;1;null;null
+-GE-SK-;GE/AO-SI99/5-10;GE/AO-SI99/KV5;null;null;V;null;A;Keine Versetzung von Kl. 5 nach Kl. 6, AO-SI 99 §11(2);§11(2);-05-;null;null;1;null;null
 -GEgesperrt-;GE/APO-SI05/5-10;GE/APO-SI05/V9;null;null;V;null;A;Besondere Vers.-Best. für Kl. 9, APO-SI 05 §27(2);§27(2);-09-;null;null;1;null;null
 -Ginaktiv-;G/AO-GS05/1-4;G/AO-GS05/HS;null;null;A;null;A;Empfehlung für die Hauptschule, AO-GS 05 §7;§7;-04-;null;null;1;null;null
 -Ginaktiv-;G/AO-GS05/1-4;G/AO-GS05/RS;null;null;A;null;A;Empfehlung für die Realtschule, AO-GS 05 §7;§7;-04-;null;null;1;null;null
