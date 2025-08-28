@@ -11,6 +11,7 @@ import de.svws_nrw.core.types.PersonalTyp;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerAbschnittsdaten;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.persistence.TypedQuery;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -46,7 +47,7 @@ class DataLehrerListeTest {
 
 	@Test
 	@DisplayName("map | erfolgreiches mapping | check Basic Attributes")
-	void mapTest() {
+	void mapTest() throws ApiOperationException {
 		final var dtoLehrer = getDtoLehrer();
 
 		assertThat(this.dataLehrerliste.map(dtoLehrer))
@@ -64,7 +65,7 @@ class DataLehrerListeTest {
 
 	@Test
 	@DisplayName("map | erfolgreiches Mapping | some Values null")
-	void mapTest_someValuesNull() {
+	void mapTest_someValuesNull() throws ApiOperationException {
 		final var dtoLehrer = getDtoLehrer();
 		dtoLehrer.Titel = null;
 		dtoLehrer.Nachname = null;
@@ -87,7 +88,7 @@ class DataLehrerListeTest {
 
 	@Test
 	@DisplayName("getLehrerListe | ohne Referenz Info | Erfolg")
-	void getLehrerListeWithoutReferenceTest() {
+	void getLehrerListeWithoutReferenceTest() throws ApiOperationException {
 		when(conn.queryAll(DTOLehrer.class)).thenReturn(List.of(getDtoLehrer()));
 
 		assertThat(this.dataLehrerliste.getLehrerListe(false))
@@ -112,7 +113,7 @@ class DataLehrerListeTest {
 
 	@Test
 	@DisplayName("getLehrerListe | ohne Referenz Info | leere Liste | Erfolg")
-	void getLehrerListeWithoutReferenceEmptyListTest() {
+	void getLehrerListeWithoutReferenceEmptyListTest() throws ApiOperationException {
 		when(conn.queryAll(DTOLehrer.class)).thenReturn(Collections.emptyList());
 
 		assertThat(this.dataLehrerliste.getLehrerListe(false))
@@ -124,7 +125,7 @@ class DataLehrerListeTest {
 	@Test
 	@SuppressWarnings("unchecked")
 	@DisplayName("getLehrerListe | mit Referenz Info | Erfolg")
-	void getLehrerListeWithReferenceTest() {
+	void getLehrerListeWithReferenceTest() throws ApiOperationException {
 		when(conn.queryAll(DTOLehrer.class)).thenReturn(List.of(getDtoLehrer()));
 		final TypedQuery<Long> queryMock = mock(TypedQuery.class);
 		when(queryMock.setParameter(eq("idsLehrer"), any())).thenReturn(queryMock);
@@ -152,7 +153,7 @@ class DataLehrerListeTest {
 
 	@Test
 	@DisplayName("getLehrerListe | mit Referenz Info | leere Liste | Erfolg")
-	void getLehrerListeWithReferenceEmptyListTest() {
+	void getLehrerListeWithReferenceEmptyListTest() throws ApiOperationException {
 		when(conn.queryAll(DTOLehrer.class)).thenReturn(Collections.emptyList());
 
 		assertThat(this.dataLehrerliste.getLehrerListe(true))
@@ -164,7 +165,7 @@ class DataLehrerListeTest {
 	@Test
 	@SuppressWarnings("unchecked")
 	@DisplayName("getAllListe | Erfolg")
-	void getAllTest() {
+	void getAllTest() throws ApiOperationException {
 		when(conn.queryAll(DTOLehrer.class)).thenReturn(List.of(getDtoLehrer()));
 		final TypedQuery<Long> queryMock = mock(TypedQuery.class);
 		when(queryMock.setParameter(eq("idsLehrer"), any())).thenReturn(queryMock);
@@ -192,7 +193,7 @@ class DataLehrerListeTest {
 
 	@Test
 	@DisplayName("getAll | mit Referenz Info | leere Liste | Erfolg")
-	void getAllEmptyListTest() {
+	void getAllEmptyListTest() throws ApiOperationException {
 		when(conn.queryAll(DTOLehrer.class)).thenReturn(Collections.emptyList());
 
 		assertThat(this.dataLehrerliste.getAll())
@@ -205,7 +206,7 @@ class DataLehrerListeTest {
 	@Test
 	@SuppressWarnings("unchecked")
 	@DisplayName("getList | Erfolg")
-	void getListTest() {
+	void getListTest() throws ApiOperationException {
 		when(conn.queryAll(DTOLehrer.class)).thenReturn(List.of(getDtoLehrer()));
 		final TypedQuery<Long> queryMock = mock(TypedQuery.class);
 		when(queryMock.setParameter(eq("idsLehrer"), any())).thenReturn(queryMock);
@@ -231,7 +232,7 @@ class DataLehrerListeTest {
 
 	@Test
 	@DisplayName("getList | emptyList")
-	void getListTest_emptyList() {
+	void getListTest_emptyList() throws ApiOperationException {
 		when(conn.queryAll(DTOLehrer.class)).thenReturn(Collections.emptyList());
 
 		assertThat(this.dataLehrerliste.getList())

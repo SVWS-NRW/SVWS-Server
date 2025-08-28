@@ -51,7 +51,7 @@
 						</template>
 					</div>
 					<div class="svws-ui-td svws-divider" role="cell">
-						<svws-ui-select v-if="hatUpdateKompetenz" title="—" :items="manager().lehrerGetMengeAktivUndSichtbar()" :item-text="lehrer => textLehrer(lehrer)"
+						<svws-ui-select v-if="hatUpdateKompetenz" title="—" :items="manager().lehrerGetMengeAktiv()" :item-text="lehrer => textLehrer(lehrer)"
 							:model-value="manager().lehrerGetByLeistungIdOrNull(leistung.id)"
 							@update:model-value="value => patchLeistung({ lehrerID: ((value === null) || (value === undefined)) ? null : value.id }, leistung.id)"
 							class="w-full" headless />
