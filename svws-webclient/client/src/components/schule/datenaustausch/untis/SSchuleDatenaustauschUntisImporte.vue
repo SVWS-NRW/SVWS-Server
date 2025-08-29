@@ -52,7 +52,7 @@
 				<svws-ui-input-wrapper>
 					<div class="text-headline-md">Stunden aus Untis importieren</div>
 					<div v-if="aktuell === 'stundenplanGPU001'" class="mb-4"><span class="font-bold">Hinweis:</span> Diese Importvariante unterstützt keine Mehrwochenpläne</div>
-					<div v-if="aktuell === 'stundenplanGPU001002'" class="mb-4"><span class="font-bold">Hinweis:</span> Diese Importvariante unterstützt Mehrwochenpläne, aber nur, wenn die Wochentypen vor dem Rechnen des Stundenplanes ferstgelegt wurden</div>
+					<div v-if="aktuell === 'stundenplanGPU001002'" class="mb-4"><span class="font-bold">Hinweis:</span> Diese Importvariante unterstützt Mehrwochenpläne, aber nur, wenn die Wochentypen vor dem Rechnen des Stundenplanes festgelegt wurden</div>
 					<div v-if="aktuell === 'stundenplanGPP002GPU014'" class="mb-4">
 						<p class="text-justify">
 							<span class="font-bold">Hinweis:</span> Diese Importvariante unterstützt Mehrwochenpläne, erfordert allerdings die Informationen zu
