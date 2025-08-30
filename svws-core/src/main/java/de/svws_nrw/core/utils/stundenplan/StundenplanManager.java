@@ -2155,9 +2155,9 @@ public class StundenplanManager {
 		final @NotNull Set<Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanAufsichtsbereich aufsichtsbereich : list) {
 			aufsichtsbereichCheckAttributes(aufsichtsbereich);
-			DeveloperNotificationException.ifTrue("aufsichtsbereichAddAllOhneUpdate: ID=" + aufsichtsbereich.id + " existiert bereits!",
+			DeveloperNotificationException.ifTrue("ID existiert bereits bei " + aufsichtsbereichInfo(aufsichtsbereich),
 					_aufsichtsbereich_by_id.containsKey(aufsichtsbereich.id));
-			DeveloperNotificationException.ifTrue("aufsichtsbereichAddAllOhneUpdate: ID=" + aufsichtsbereich.id + " doppelt in der Liste!",
+			DeveloperNotificationException.ifTrue("ID Dopplung in Liste bei " + aufsichtsbereichInfo(aufsichtsbereich),
 					!setOfIDs.add(aufsichtsbereich.id));
 		}
 
@@ -2167,9 +2167,21 @@ public class StundenplanManager {
 	}
 
 	private static void aufsichtsbereichCheckAttributes(final @NotNull StundenplanAufsichtsbereich aufsichtsbereich) {
-		DeveloperNotificationException.ifInvalidID("aufsicht.id", aufsichtsbereich.id);
-		DeveloperNotificationException.ifStringIsBlank("aufsicht.kuerzel", aufsichtsbereich.kuerzel);
+		DeveloperNotificationException.ifInvalidID("Ungültige ID bei " + aufsichtsbereichInfo(aufsichtsbereich),
+				aufsichtsbereich.id);
+		DeveloperNotificationException.ifStringIsBlank("Leeres Kürzel bei " + aufsichtsbereichInfo(aufsichtsbereich),
+				aufsichtsbereich.kuerzel);
 		// aufsicht.beschreibung darf "blank" sein
+	}
+
+	private static @NotNull String aufsichtsbereichInfo(final @NotNull StundenplanAufsichtsbereich aufsichtsbereich) {
+		String s = "";
+		s += "[StundenplanAufsichtsbereich";
+		s += "(id=" + aufsichtsbereich.id + ")";
+		s += "(kuerzel=" + aufsichtsbereich.kuerzel + ")";
+		s += "(nachname=" + aufsichtsbereich.beschreibung + ")";
+		s += "]";
+		return s;
 	}
 
 	/**
@@ -2342,10 +2354,10 @@ public class StundenplanManager {
 		final @NotNull Set<Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanFach fach : list) {
 			fachCheckAttributes(fach);
-			DeveloperNotificationException.ifTrue("In der Menge der hinzuzufügenden Fächer existiert die ID="
-					+ fach.id + " bereits!", _fach_by_id.containsKey(fach.id));
-			DeveloperNotificationException.ifTrue("In der Menge der hinzuzufügenden Fächer ist die ID="
-					+ fach.id + " doppelt!", !setOfIDs.add(fach.id));
+			DeveloperNotificationException.ifTrue("ID existiert bereits bei " + fachInfo(fach),
+					_fach_by_id.containsKey(fach.id));
+			DeveloperNotificationException.ifTrue("ID Dopplung in Liste bei " + fachInfo(fach),
+					!setOfIDs.add(fach.id));
 		}
 
 		// add all
@@ -2354,8 +2366,28 @@ public class StundenplanManager {
 	}
 
 	private static void fachCheckAttributes(final @NotNull StundenplanFach fach) {
-		DeveloperNotificationException.ifInvalidID("fach.id", fach.id);
-		DeveloperNotificationException.ifTrue("Das Fach-Kürzel darf nicht leer sein!", fach.kuerzel.isBlank());
+		DeveloperNotificationException.ifInvalidID("Ungültige ID bei " + fachInfo(fach),
+				fach.id);
+		DeveloperNotificationException.ifTrue("Leeres Kürzel bei " + fachInfo(fach),
+				fach.kuerzel.isBlank());
+	}
+
+	private @NotNull String fachInfoByID(final long idFach) {
+		StundenplanFach fach = _fach_by_id.get(idFach);
+		return fach == null ? "Fach " + idFach + " ohne Referenz!" : fachInfo(fach);
+
+	}
+
+	private static @NotNull String fachInfo(final @NotNull StundenplanFach fach) {
+		String s = "";
+		s += "[StundenplanFach";
+		s += "(id=" + fach.id + ")";
+		s += "(kuerzel=" + fach.kuerzel + ")";
+		s += "(kuerzelStatistik=" + fach.kuerzelStatistik + ")";
+		s += "(bezeichnung=" + fach.bezeichnung + ")";
+		s += "(farbe=" + fach.farbe + ")";
+		s += "]";
+		return s;
 	}
 
 	/**
@@ -2417,10 +2449,10 @@ public class StundenplanManager {
 		final @NotNull Set<Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanJahrgang jahrgang : list) {
 			jahrgangCheckAttributes(jahrgang);
-			DeveloperNotificationException.ifTrue("Beim der hinzuzufügenden Liste aller Jahrgänge ist die ID="
-					+ jahrgang.id + " bereits existent!", _jahrgang_by_id.containsKey(jahrgang.id));
-			DeveloperNotificationException.ifTrue("Beim der hinzuzufügenden Liste aller Jahrgänge ist die ID="
-					+ jahrgang.id + " doppelt in der Liste!", !setOfIDs.add(jahrgang.id));
+			DeveloperNotificationException.ifTrue("ID existiert bereits bei " + jahrgangInfo(jahrgang),
+					_jahrgang_by_id.containsKey(jahrgang.id));
+			DeveloperNotificationException.ifTrue("ID Dopplung in Liste bei " + jahrgangInfo(jahrgang),
+					!setOfIDs.add(jahrgang.id));
 		}
 
 		// add all
@@ -2429,8 +2461,20 @@ public class StundenplanManager {
 	}
 
 	private static void jahrgangCheckAttributes(final @NotNull StundenplanJahrgang jahrgang) {
-		DeveloperNotificationException.ifInvalidID("jahrgang.id", jahrgang.id);
-		DeveloperNotificationException.ifTrue("Das Kürzel des Jahrgangs darf nicht leer sein!", jahrgang.kuerzel.isBlank());
+		DeveloperNotificationException.ifInvalidID("Ungültige ID bei " + jahrgangInfo(jahrgang),
+				jahrgang.id);
+		DeveloperNotificationException.ifTrue("Leeres Kürzel bei " + jahrgangInfo(jahrgang),
+				jahrgang.kuerzel.isBlank());
+	}
+
+	private static @NotNull String jahrgangInfo(final @NotNull StundenplanJahrgang jahrgang) {
+		String s = "";
+		s += "[StundenplanJahrgang";
+		s += "(id=" + jahrgang.id + ")";
+		s += "(kuerzel=" + jahrgang.kuerzel + ")";
+		s += "(bezeichnung=" + jahrgang.bezeichnung + ")";
+		s += "]";
+		return s;
 	}
 
 	/**
@@ -2609,12 +2653,14 @@ public class StundenplanManager {
 			kalenderwochenzuordnungCheckAttributes(kwz, true);
 
 			// Hat die Liste Duplikate?
-			DeveloperNotificationException.ifTrue("JAHR=" + kwz.jahr + ", KW=" + kwz.kw + " doppelt in der Liste!", !setOfIDs.add(kwz.jahr + ";" + kwz.kw));
+			DeveloperNotificationException.ifTrue("JAHR+KW-Dopplung in Liste bei " + kalenderwochenzuordnungInfo(kwz),
+					!setOfIDs.add(kwz.jahr + ";" + kwz.kw));
 
 			// Gibt es bereits dieses Objekt (und ist es kein Dummy-Objekt)?
 			if (_kwz_by_jahr_and_kw.contains(kwz.jahr, kwz.kw)) {
 				final @NotNull StundenplanKalenderwochenzuordnung kwzMapped = _kwz_by_jahr_and_kw.getOrException(kwz.jahr, kwz.kw);
-				DeveloperNotificationException.ifTrue("JAHR=" + kwz.jahr + ", KW=" + kwz.kw + " existiert bereits!", kwzMapped.id >= 0);
+				DeveloperNotificationException.ifTrue("JAHR+KW existiert bereits bei " + kalenderwochenzuordnungInfo(kwz),
+						kwzMapped.id >= 0);
 			}
 		}
 
@@ -2625,15 +2671,27 @@ public class StundenplanManager {
 
 	private void kalenderwochenzuordnungCheckAttributes(final @NotNull StundenplanKalenderwochenzuordnung kwz, final boolean checkID) {
 		if (checkID)
-			DeveloperNotificationException.ifInvalidID("kwz.id", kwz.id);
-		DeveloperNotificationException.ifTrue("Die Kalenderwochenzuordnung hat das ungültige Jahr " + kwz.jahr + "!",
+			DeveloperNotificationException.ifInvalidID("Ungültige ID bei " + kalenderwochenzuordnungInfo(kwz),
+					kwz.id);
+		DeveloperNotificationException.ifTrue("Ungültiges Jahr bei " + kalenderwochenzuordnungInfo(kwz),
 				(kwz.jahr < DateUtils.MIN_GUELTIGES_JAHR) || (kwz.jahr > DateUtils.MAX_GUELTIGES_JAHR));
-		DeveloperNotificationException.ifTrue("Die Kalenderwochenzuordnung hat die ungültige Kalenderwoche " + kwz.kw + "!",
+		DeveloperNotificationException.ifTrue("Ungültige KW bei " + kalenderwochenzuordnungInfo(kwz),
 				(kwz.kw < 1) || (kwz.kw > DateUtils.gibKalenderwochenOfJahr(kwz.jahr)));
-		DeveloperNotificationException.ifTrue("Die Kalenderwochenzuordnung hat den ungültigen Wochentyp " + kwz.wochentyp + "!",
+		DeveloperNotificationException.ifTrue("Ungültiger Wochentyp bei " + kalenderwochenzuordnungInfo(kwz),
 				kwz.wochentyp > _stundenplanWochenTypModell);
-		DeveloperNotificationException.ifTrue("Die Kalenderwochenzuordnung darf keinen negativen Wochentyp haben!",
+		DeveloperNotificationException.ifTrue("Negativer Wochentyp bei " + kalenderwochenzuordnungInfo(kwz),
 				kwz.wochentyp < 0);
+	}
+
+	private static @NotNull String kalenderwochenzuordnungInfo(final @NotNull StundenplanKalenderwochenzuordnung kwz) {
+		String s = "";
+		s += "[StundenplanKalenderwochenzuordnung";
+		s += "(id=" + kwz.id + ")";
+		s += "(jahr=" + kwz.jahr + ")";
+		s += "(kw=" + kwz.kw + ")";
+		s += "(wochentyp=" + kwz.wochentyp + ")";
+		s += "]";
+		return s;
 	}
 
 	/**
@@ -3014,10 +3072,10 @@ public class StundenplanManager {
 		final @NotNull Set<Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanKlasse klasse : list) {
 			klasseCheckAttributes(klasse);
-			DeveloperNotificationException.ifTrue("In der Menge der hinzuzufügenden Klassen ist die ID="
-					+ klasse.id + " bereits existent!", _klasse_by_id.containsKey(klasse.id));
-			DeveloperNotificationException.ifTrue("In der Menge der hinzuzufügenden Klassen ist die ID="
-					+ klasse.id + " doppelt in der Liste!", !setOfIDs.add(klasse.id));
+			DeveloperNotificationException.ifTrue("ID existiert bereits bei " + klasseInfo(klasse),
+					_klasse_by_id.containsKey(klasse.id));
+			DeveloperNotificationException.ifTrue("ID Dopplung in Liste bei " + klasseInfo(klasse),
+					!setOfIDs.add(klasse.id));
 		}
 
 		// add all
@@ -3026,16 +3084,30 @@ public class StundenplanManager {
 	}
 
 	private void klasseCheckAttributes(final @NotNull StundenplanKlasse klasse) {
-		DeveloperNotificationException.ifInvalidID("klasse.id", klasse.id);
-		DeveloperNotificationException.ifTrue("Das Kürzel der Klasse darf nicht leer sein!",
+		DeveloperNotificationException.ifInvalidID("Ungültige ID bei " + klasseInfo(klasse),
+				klasse.id);
+		DeveloperNotificationException.ifTrue("Leeres Kürzel bei " + klasseInfo(klasse),
 				klasse.kuerzel.isBlank());
 		for (final long idJahrgang : klasse.jahrgaenge)
-			DeveloperNotificationException.ifMapNotContains("_jahrgang_by_id", _jahrgang_by_id, idJahrgang);
+			DeveloperNotificationException.ifMapNotContains("_jahrgang_by_id fehlende Referenz bei " + klasseInfo(klasse),
+					_jahrgang_by_id, idJahrgang);
 		// Folgende zwei Zeilen nicht mehr nötig, sobald aus DTO entfernt.
 		for (final long idSchueler : klasse.schueler)
-			DeveloperNotificationException.ifMapNotContains("_schueler_by_id", _schueler_by_id, idSchueler);
+			DeveloperNotificationException.ifMapNotContains("_schueler_by_id fehlende Referenz bei " + klasseInfo(klasse),
+					_schueler_by_id, idSchueler);
 	}
 
+	private static @NotNull String klasseInfo(final @NotNull StundenplanKlasse klasse) {
+		String s = "";
+		s += "[StundenplanKlasse";
+		s += "(kuerzel=" + klasse.kuerzel + ")";
+		s += "(bezeichnung=" + klasse.bezeichnung + ")";
+		s += "(sortierung=" + klasse.sortierung + ")";
+		s += "(jahrgaenge=" + klasse.jahrgaenge + ")";
+		s += "(schueler=" + klasse.schueler + ")";
+		s += "]";
+		return s;
+	}
 
 	/**
 	 * Liefert das {@link StundenplanKlasse}-Objekt mit der übergebenen ID.
@@ -3177,31 +3249,45 @@ public class StundenplanManager {
 
 		for (final @NotNull StundenplanKlassenunterricht klassenunterricht : list) {
 			klassenunterrichtCheckAttributes(klassenunterricht);
-			DeveloperNotificationException.ifTrue(
-					"klassenunterrichtAddAllOhneUpdate: KLASSE=" + klassenunterricht.idKlasse + ", FACH=" + klassenunterricht.idFach + " existiert bereits!",
+			DeveloperNotificationException.ifTrue("KLASSE-FACH existiert bereits bei " + klassenunterrichtInfo(klassenunterricht),
 					_klassenunterricht_by_idKlasse_and_idFach.contains(klassenunterricht.idKlasse, klassenunterricht.idFach));
-			DeveloperNotificationException.ifTrue(
-					"klassenunterrichtAddAllOhneUpdate: ID=" + klassenunterricht.idKlasse + ", FACH=" + klassenunterricht.idFach + " doppelt in der Liste!",
+			DeveloperNotificationException.ifTrue("KLASSE-FACH Dopplung in Liste bei " + klassenunterrichtInfo(klassenunterricht),
 					!setOfIDs.add(klassenunterricht.idKlasse + ";" + klassenunterricht.idFach));
 		}
 
 		// add all
 		for (final @NotNull StundenplanKlassenunterricht klassenunterricht : list)
-			DeveloperNotificationException.ifMap2DPutOverwrites(_klassenunterricht_by_idKlasse_and_idFach, klassenunterricht.idKlasse, klassenunterricht.idFach,
-					klassenunterricht);
+			DeveloperNotificationException.ifMap2DPutOverwrites(_klassenunterricht_by_idKlasse_and_idFach,
+					klassenunterricht.idKlasse, klassenunterricht.idFach, klassenunterricht);
 	}
 
 	private void klassenunterrichtCheckAttributes(final @NotNull StundenplanKlassenunterricht klassenunterricht) {
-		DeveloperNotificationException.ifMapNotContains("_klasse_by_id", _klasse_by_id, klassenunterricht.idKlasse);
-		DeveloperNotificationException.ifMapNotContains("_fach_by_id", _fach_by_id, klassenunterricht.idFach);
+		DeveloperNotificationException.ifMapNotContains("_klasse_by_id fehlende Referenz bei " + klassenunterrichtInfo(klassenunterricht),
+				_klasse_by_id, klassenunterricht.idKlasse);
+		DeveloperNotificationException.ifMapNotContains("_fach_by_id fehlende Referenz bei " + klassenunterrichtInfo(klassenunterricht),
+				_fach_by_id, klassenunterricht.idFach);
 
 		for (final long idSchiene : klassenunterricht.schienen)
-			DeveloperNotificationException.ifMapNotContains("_schiene_by_id", _schiene_by_id, idSchiene);
+			DeveloperNotificationException.ifMapNotContains("_schiene_by_id fehlende Referenz bei " + klassenunterrichtInfo(klassenunterricht),
+					_schiene_by_id, idSchiene);
 
 		for (final long idLehrkraft : klassenunterricht.lehrer)
 			if (!_lehrer_by_id.containsKey(idLehrkraft))
 				lehrerAddPseudoLehrkraftOhneUpdate(idLehrkraft,
 						"Klasseunterricht " + klassenunterrichtGetBeschreibungKlasseAndFach(klassenunterricht) + " hat ungültige Lehrerreferenz.");
+	}
+
+	private static @NotNull String klassenunterrichtInfo(final @NotNull StundenplanKlassenunterricht ku) {
+		String s = "";
+		s += "[StundenplanKlassenunterricht";
+		s += "(idKlasse=" + ku.idKlasse + ")";
+		s += "(idFach=" + ku.idFach + ")";
+		s += "(bezeichnung=" + ku.bezeichnung + ")";
+		s += "(wochenstunden=" + ku.wochenstunden + ")";
+		s += "(schueler=" + ku.schueler + ")";
+		s += "(lehrer=" + ku.lehrer + ")";
+		s += "]";
+		return s;
 	}
 
 	private @NotNull Comparator<@NotNull StundenplanKlassenunterricht> klassenunterrichtCreateComparator() {
@@ -3610,8 +3696,10 @@ public class StundenplanManager {
 		final @NotNull Set<Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanKurs kurs : list) {
 			kursCheckAttributes(kurs);
-			DeveloperNotificationException.ifTrue("kursAddAllOhneUpdate: ID=" + kurs.id + " existiert bereits!", _kurs_by_id.containsKey(kurs.id));
-			DeveloperNotificationException.ifTrue("kursAddAllOhneUpdate: ID=" + kurs.id + " doppelt in der Liste!", !setOfIDs.add(kurs.id));
+			DeveloperNotificationException.ifTrue("ID existiert bereits bei " + kursInfo(kurs),
+					_kurs_by_id.containsKey(kurs.id));
+			DeveloperNotificationException.ifTrue("ID Dopplung in Liste bei " + kursInfo(kurs),
+					!setOfIDs.add(kurs.id));
 		}
 
 		// add all
@@ -3620,23 +3708,44 @@ public class StundenplanManager {
 	}
 
 	private void kursCheckAttributes(final @NotNull StundenplanKurs kurs) {
-		DeveloperNotificationException.ifInvalidID("kurs.id", kurs.id);
-		DeveloperNotificationException.ifStringIsBlank("kurs.bezeichnung", kurs.bezeichnung);
-		DeveloperNotificationException.ifSmaller("kurs.wochenstunden", kurs.wochenstunden, 0);
+		DeveloperNotificationException.ifInvalidID("Ungültige ID bei " + kursInfo(kurs),
+				kurs.id);
+		DeveloperNotificationException.ifStringIsBlank("Ungültige Bezeichnung bei " + kursInfo(kurs),
+				kurs.bezeichnung);
+		DeveloperNotificationException.ifSmaller("Ungültige Wochenstunden bei " + kursInfo(kurs),
+				kurs.wochenstunden, 0);
 
 		for (final long idSchieneDesKurses : kurs.schienen)
-			DeveloperNotificationException.ifMapNotContains("_schiene_by_id", _schiene_by_id, idSchieneDesKurses);
+			DeveloperNotificationException.ifMapNotContains("_schiene_by_id fehlende Referenz bei " + kursInfo(kurs),
+					_schiene_by_id, idSchieneDesKurses);
 
 		for (final long idJahrgangDesKurses : kurs.jahrgaenge)
-			DeveloperNotificationException.ifMapNotContains("_jahrgang_by_id", _jahrgang_by_id, idJahrgangDesKurses);
+			DeveloperNotificationException.ifMapNotContains("_jahrgang_by_id fehlende Referenz bei " + kursInfo(kurs),
+					_jahrgang_by_id, idJahrgangDesKurses);
 
 		for (final long idSchuelerDesKurses : kurs.schueler)
-			DeveloperNotificationException.ifMapNotContains("_schueler_by_id", _schueler_by_id, idSchuelerDesKurses);
+			DeveloperNotificationException.ifMapNotContains("_schueler_by_id fehlende Referenz bei " + kursInfo(kurs),
+					_schueler_by_id, idSchuelerDesKurses);
 
 		for (final long idLehrerDesKurses : kurs.lehrer)
 			if (!_lehrer_by_id.containsKey(idLehrerDesKurses))
-				lehrerAddPseudoLehrkraftOhneUpdate(idLehrerDesKurses,
-						"StundenplanKurs " + kurs.bezeichnung + " hat ungültige Lehrerreferenz.");
+				lehrerAddPseudoLehrkraftOhneUpdate(idLehrerDesKurses, "_lehrer_by_id fehlende Lehrer-Referenz bei " + kursInfo(kurs));
+	}
+
+	private static @NotNull String kursInfo(final @NotNull StundenplanKurs ku) {
+		String s = "";
+		s += "[StundenplanKurs";
+		s += "(id=" + ku.id + ")";
+		s += "(idFach=" + ku.idFach + ")";
+		s += "(bezeichnung=" + ku.bezeichnung + ")";
+		s += "(wochenstunden=" + ku.wochenstunden + ")";
+		s += "(sortierung=" + ku.sortierung + ")";
+		s += "(schienen=" + ku.schienen + ")";
+		s += "(jahrgaenge=" + ku.jahrgaenge + ")";
+		s += "(schueler=" + ku.schueler + ")";
+		s += "(lehrer=" + ku.lehrer + ")";
+		s += "]";
+		return s;
 	}
 
 	/**
@@ -4028,8 +4137,10 @@ public class StundenplanManager {
 		final @NotNull Set<Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanLehrer lehrer : list) {
 			lehrerCheckAttributes(lehrer);
-			DeveloperNotificationException.ifTrue("lehrerAddAllOhneUpdate: ID=" + lehrer.id + " existiert bereits!", _lehrer_by_id.containsKey(lehrer.id));
-			DeveloperNotificationException.ifTrue("lehrerAddAllOhneUpdate: ID=" + lehrer.id + " doppelt in der Liste!", !setOfIDs.add(lehrer.id));
+			DeveloperNotificationException.ifTrue("ID existiert bereits bei " + lehrerInfo(lehrer),
+					_lehrer_by_id.containsKey(lehrer.id));
+			DeveloperNotificationException.ifTrue("ID Dopplung in Liste bei " + lehrerInfo(lehrer),
+					!setOfIDs.add(lehrer.id));
 		}
 
 		// add all
@@ -4038,12 +4149,32 @@ public class StundenplanManager {
 	}
 
 	private void lehrerCheckAttributes(final @NotNull StundenplanLehrer lehrer) {
-		DeveloperNotificationException.ifInvalidID("lehrer.id", lehrer.id);
-		DeveloperNotificationException.ifStringIsBlank("lehrer.kuerzel", lehrer.kuerzel);
-		DeveloperNotificationException.ifStringIsBlank("lehrer.nachname", lehrer.nachname);
-		DeveloperNotificationException.ifStringIsBlank("lehrer.vorname", lehrer.vorname);
+		DeveloperNotificationException.ifInvalidID("Ungültige ID bei " + lehrerInfo(lehrer),
+				lehrer.id);
+		DeveloperNotificationException.ifStringIsBlank("Ungültiges Kürzel bei " + lehrerInfo(lehrer),
+				lehrer.kuerzel);
+
+		// Es gibt Situationen in denen Schulen den Vornamen/Nachnamen noch nicht kennen,
+		// aus diesem Grund ist "blank" bei "lehrer.nachname" und "lehrer.vorname" doch erlaubt.
+
 		for (final long idFachDesLehrers : lehrer.faecher)
-			DeveloperNotificationException.ifMapNotContains("_fach_by_id", _fach_by_id, idFachDesLehrers);
+			DeveloperNotificationException.ifMapNotContains("_fach_by_id fehlende Referenz bei " + lehrerInfo(lehrer),
+					_fach_by_id, idFachDesLehrers);
+	}
+
+	private @NotNull String lehrerInfo(final @NotNull StundenplanLehrer lehrer) {
+		String s = "[StundenplanLehrer";
+		s += "(id=" + lehrer.id + ")";
+		s += "(kuerzel=" + lehrer.kuerzel + ")";
+		s += "(nachname=" + lehrer.nachname + ")";
+		s += "(vorname=" + lehrer.vorname + ")";
+		s += "(faecher=" + lehrer.faecher.size() + ":";
+		for (final @NotNull long idFach : lehrer.faecher) {
+			s += fachInfoByID(idFach);
+		}
+		s += ")";
+		s += "]";
+		return s;
 	}
 
 	private int lehrerCompareByLehrerIDs(final @NotNull List<Long> a, final @NotNull List<Long> b) {
@@ -4272,9 +4403,9 @@ public class StundenplanManager {
 		final @NotNull Set<Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanPausenaufsicht pausenaufsicht : list) {
 			pausenaufsichtCheckAttributes(pausenaufsicht);
-			DeveloperNotificationException.ifTrue("pausenaufsichtAddAllOhneUpdate: ID=" + pausenaufsicht.id + " existiert bereits!",
+			DeveloperNotificationException.ifTrue("ID existiert bereits bei " + pausenaufsichtInfo(pausenaufsicht),
 					_pausenaufsicht_by_id.containsKey(pausenaufsicht.id));
-			DeveloperNotificationException.ifTrue("pausenaufsichtAddAllOhneUpdate: ID=" + pausenaufsicht.id + " doppelt in der Liste!",
+			DeveloperNotificationException.ifTrue("ID Dopplung in Liste bei " + pausenaufsichtInfo(pausenaufsicht),
 					!setOfIDs.add(pausenaufsicht.id));
 		}
 
@@ -4288,15 +4419,31 @@ public class StundenplanManager {
 	}
 
 	private void pausenaufsichtCheckAttributes(final @NotNull StundenplanPausenaufsicht pausenaufsicht) {
-		DeveloperNotificationException.ifInvalidID("pausenaufsicht.id", pausenaufsicht.id);
-		DeveloperNotificationException.ifMapNotContains("_map_idPausenzeit_zu_pausenzeit", _pausenzeit_by_id, pausenaufsicht.idPausenzeit);
+		DeveloperNotificationException.ifInvalidID("Ungültige ID bei " + pausenaufsichtInfo(pausenaufsicht),
+				pausenaufsicht.id);
+		DeveloperNotificationException.ifMapNotContains("_map_idPausenzeit_zu_pausenzeit fehlende Referenz bei " + pausenaufsichtInfo(pausenaufsicht),
+				_pausenzeit_by_id, pausenaufsicht.idPausenzeit);
 
 		for (final @NotNull StundenplanPausenaufsichtBereich aufsichtsbereich : pausenaufsicht.bereiche)
 			pausenaufsichtbereichCheckAttributes(aufsichtsbereich);
 
 		if (!_lehrer_by_id.containsKey(pausenaufsicht.idLehrer))
 			lehrerAddPseudoLehrkraftOhneUpdate(pausenaufsicht.idLehrer,
-					"Pausenaufsicht mit ID " + pausenaufsicht.id + " hat ungültige Lehrerreferenz.");
+					"Ungültige Lehrer-Referenz bei " + pausenaufsichtInfo(pausenaufsicht));
+	}
+
+	private @NotNull String pausenaufsichtInfo(final @NotNull StundenplanPausenaufsicht pa) {
+		String s = "[StundenplanPausenaufsicht";
+		s += "(id=" + pa.id + ")";
+		s += "(idPausenzeit=" + pa.idPausenzeit + ")";
+		s += "(idLehrer=" + pa.idLehrer + ")";
+		s += "(bereiche=" + pa.bereiche.size() + " : ";
+		for (final @NotNull StundenplanPausenaufsichtBereich a : pa.bereiche) {
+			s += pausenaufsichtbereichInfo(a);
+		}
+		s += ")";
+		s += "]";
+		return s;
 	}
 
 	/**
@@ -4593,9 +4740,9 @@ public class StundenplanManager {
 		final @NotNull Set<Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanPausenaufsichtBereich pausenaufsichtbereich : list) {
 			pausenaufsichtbereichCheckAttributes(pausenaufsichtbereich);
-			DeveloperNotificationException.ifTrue("pausenaufsichtAddAllOhneUpdate: ID=" + pausenaufsichtbereich.id + " existiert bereits!",
+			DeveloperNotificationException.ifTrue("ID existiert bereits bei " + pausenaufsichtbereichInfo(pausenaufsichtbereich),
 					_pausenaufsichtbereich_by_id.containsKey(pausenaufsichtbereich.id));
-			DeveloperNotificationException.ifTrue("pausenaufsichtAddAllOhneUpdate: ID=" + pausenaufsichtbereich.id + " doppelt in der Liste!",
+			DeveloperNotificationException.ifTrue("ID Dopplung in Liste bei " + pausenaufsichtbereichInfo(pausenaufsichtbereich),
 					!setOfIDs.add(pausenaufsichtbereich.id));
 		}
 
@@ -4611,11 +4758,22 @@ public class StundenplanManager {
 	}
 
 	private void pausenaufsichtbereichCheckAttributes(final @NotNull StundenplanPausenaufsichtBereich pausenaufsichtbereich) {
-		DeveloperNotificationException.ifInvalidID("pausenaufsichtbereich.id", pausenaufsichtbereich.id);
-		DeveloperNotificationException.ifMapNotContains("_map_idAufsichtsbereich_zu_aufsichtsbereich", _aufsichtsbereich_by_id,
-				pausenaufsichtbereich.idAufsichtsbereich);
-		DeveloperNotificationException.ifTrue("(pab.wochentyp > 0) && (pab.wochentyp > stundenplanWochenTypModell)",
+		DeveloperNotificationException.ifInvalidID("Ungültige ID bei " + pausenaufsichtbereichInfo(pausenaufsichtbereich),
+				pausenaufsichtbereich.id);
+		DeveloperNotificationException.ifMapNotContains("_map_idAufsichtsbereich_zu_aufsichtsbereich fehlende Referenz bei " + pausenaufsichtbereichInfo(pausenaufsichtbereich),
+				_aufsichtsbereich_by_id, pausenaufsichtbereich.idAufsichtsbereich);
+		DeveloperNotificationException.ifTrue("Ungültiger Wochentyp bei " + pausenaufsichtbereichInfo(pausenaufsichtbereich),
 				(pausenaufsichtbereich.wochentyp > 0) && (pausenaufsichtbereich.wochentyp > _stundenplanWochenTypModell));
+	}
+
+	private static @NotNull String pausenaufsichtbereichInfo(final @NotNull StundenplanPausenaufsichtBereich pausenaufsichtbereich) {
+		String s = "[StundenplanPausenaufsichtBereich";
+		s += "(id=" + pausenaufsichtbereich.id + ")";
+		s += "(idPausenaufsicht=" + pausenaufsichtbereich.idPausenaufsicht + ")";
+		s += "(idAufsichtsbereich=" + pausenaufsichtbereich.idAufsichtsbereich + ")";
+		s += "(wochentyp=" + pausenaufsichtbereich.wochentyp + ")";
+		s += "]";
+		return s;
 	}
 
 	/**
@@ -4783,9 +4941,10 @@ public class StundenplanManager {
 		final @NotNull Set<Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanPausenzeit pausenzeit : list) {
 			pausenzeitCheckAttributes(pausenzeit);
-			DeveloperNotificationException.ifTrue("pausenzeitAddAllOhneUpdate: ID=" + pausenzeit.id + " existiert bereits!",
+			DeveloperNotificationException.ifTrue("ID existiert bereits bei " + pausenzeitInfo(pausenzeit),
 					_pausenzeit_by_id.containsKey(pausenzeit.id));
-			DeveloperNotificationException.ifTrue("pausenzeitAddAllOhneUpdate: ID=" + pausenzeit.id + " doppelt in der Liste!", !setOfIDs.add(pausenzeit.id));
+			DeveloperNotificationException.ifTrue("ID Dopplung in Liste bei " + pausenzeitInfo(pausenzeit),
+					!setOfIDs.add(pausenzeit.id));
 		}
 
 		// add all
@@ -4794,10 +4953,29 @@ public class StundenplanManager {
 	}
 
 	private static void pausenzeitCheckAttributes(final @NotNull StundenplanPausenzeit pausenzeit) {
-		DeveloperNotificationException.ifInvalidID("pause.id", pausenzeit.id);
+		DeveloperNotificationException.ifInvalidID("Ungültige ID bei " + pausenzeitInfo(pausenzeit),
+				pausenzeit.id);
+
+		int length = Wochentag.values().length;
+		DeveloperNotificationException.ifTrue("Ungültiger Wochentag bei " + pausenzeitInfo(pausenzeit),
+				(pausenzeit.wochentag < 1) || (pausenzeit.wochentag > length));
+
 		Wochentag.fromIDorException(pausenzeit.wochentag);
 		if ((pausenzeit.beginn != null) && (pausenzeit.ende != null))
-			DeveloperNotificationException.ifTrue("pausenzeit.beginn >= pausenzeit.ende", pausenzeit.beginn >= pausenzeit.ende);
+			DeveloperNotificationException.ifTrue("Ungültige beginn-end-Zeiten bei " + pausenzeitInfo(pausenzeit),
+					pausenzeit.beginn >= pausenzeit.ende);
+	}
+
+	private static @NotNull String pausenzeitInfo(final @NotNull StundenplanPausenzeit pausenzeit) {
+		String s = "[StundenplanPausenzeit";
+		s += "(id=" + pausenzeit.id + ")";
+		s += "(wochentag=" + pausenzeit.wochentag + ")";
+		s += "(beginn=" + pausenzeit.beginn + ")";
+		s += "(ende=" + pausenzeit.ende + ")";
+		s += "(bezeichnung=" + pausenzeit.bezeichnung + ")";
+		s += "(klassen=" + pausenzeit.klassen + ")";
+		s += "]";
+		return s;
 	}
 
 	/**
@@ -5311,8 +5489,10 @@ public class StundenplanManager {
 		final @NotNull Set<Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanRaum raum : list) {
 			raumCheckAttributes(raum);
-			DeveloperNotificationException.ifTrue("raumAddAllOhneUpdate: ID=" + raum.id + " existiert bereits!", _raum_by_id.containsKey(raum.id));
-			DeveloperNotificationException.ifTrue("raumAddAllOhneUpdate: ID=" + raum.id + " doppelt in der Liste!", !setOfIDs.add(raum.id));
+			DeveloperNotificationException.ifTrue("ID existiert bereits bei " + raumInfo(raum),
+					_raum_by_id.containsKey(raum.id));
+			DeveloperNotificationException.ifTrue("ID Dopplung in Liste bei " + raumInfo(raum),
+					!setOfIDs.add(raum.id));
 		}
 
 		// add all
@@ -5321,10 +5501,23 @@ public class StundenplanManager {
 	}
 
 	private static void raumCheckAttributes(final @NotNull StundenplanRaum raum) {
-		DeveloperNotificationException.ifInvalidID("raum.id", raum.id);
-		DeveloperNotificationException.ifStringIsBlank("raum.kuerzel", raum.kuerzel);
+		DeveloperNotificationException.ifInvalidID("Ungültige ID bei " + raumInfo(raum),
+				raum.id);
+		DeveloperNotificationException.ifStringIsBlank("Ungültiges Kürzel bei " + raumInfo(raum),
+				raum.kuerzel);
 		// raum.beschreibung darf "blank" sein!
-		DeveloperNotificationException.ifTrue("raum.groesse < 0", raum.groesse < 0);
+		DeveloperNotificationException.ifTrue("Ungültige Größe bei " + raumInfo(raum),
+				raum.groesse < 0);
+	}
+
+	private static @NotNull String raumInfo(final @NotNull StundenplanRaum raum) {
+		String s = "[StundenplanRaum";
+		s += "(id=" + raum.id + ")";
+		s += "(kuerzel=" + raum.kuerzel + ")";
+		s += "(beschreibung=" + raum.beschreibung + ")";
+		s += "(groesse=" + raum.groesse + ")";
+		s += "]";
+		return s;
 	}
 
 	/**
@@ -5643,8 +5836,10 @@ public class StundenplanManager {
 		final @NotNull Set<Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanSchiene schiene : list) {
 			schieneCheckAttributes(schiene);
-			DeveloperNotificationException.ifTrue("schieneAddAllOhneUpdate: ID=" + schiene.id + " existiert bereits!", _schiene_by_id.containsKey(schiene.id));
-			DeveloperNotificationException.ifTrue("schieneAddAllOhneUpdate: ID=" + schiene.id + " doppelt in der Liste!", !setOfIDs.add(schiene.id));
+			DeveloperNotificationException.ifTrue("ID existiert bereits bei " + schieneInfo(schiene),
+					_schiene_by_id.containsKey(schiene.id));
+			DeveloperNotificationException.ifTrue("ID Dopplung in Liste bei" + schieneInfo(schiene),
+					!setOfIDs.add(schiene.id));
 		}
 
 		// add all
@@ -5653,10 +5848,24 @@ public class StundenplanManager {
 	}
 
 	private void schieneCheckAttributes(final @NotNull StundenplanSchiene schiene) {
-		DeveloperNotificationException.ifInvalidID("schiene.id", schiene.id);
-		DeveloperNotificationException.ifTrue("schiene.nummer <= 0", schiene.nummer <= 0);
-		DeveloperNotificationException.ifStringIsBlank("schiene.bezeichnung", schiene.bezeichnung);
-		DeveloperNotificationException.ifMapNotContains("_jahrgang_by_id", _jahrgang_by_id, schiene.idJahrgang);
+		DeveloperNotificationException.ifInvalidID("Ungültige ID bei " + schieneInfo(schiene),
+				schiene.id);
+		DeveloperNotificationException.ifTrue("Ungültige Nummer bei " + schieneInfo(schiene),
+				schiene.nummer <= 0);
+		DeveloperNotificationException.ifStringIsBlank("Ungültige Bezeichnung bei " + schieneInfo(schiene),
+				schiene.bezeichnung);
+		DeveloperNotificationException.ifMapNotContains("_jahrgang_by_id fehlende Referenz bei " + schieneInfo(schiene),
+				_jahrgang_by_id, schiene.idJahrgang);
+	}
+
+	private static @NotNull String schieneInfo(final @NotNull StundenplanSchiene schiene) {
+		String s = "[StundenplanSchiene";
+		s += "(id=" + schiene.id + ")";
+		s += "(idJahrgang=" + schiene.idJahrgang + ")";
+		s += "(nummer=" + schiene.nummer + ")";
+		s += "(bezeichnung=" + schiene.bezeichnung + ")";
+		s += "]";
+		return s;
 	}
 
 	/**
@@ -5838,9 +6047,10 @@ public class StundenplanManager {
 		final @NotNull Set<Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanSchueler schueler : list) {
 			schuelerCheckAttributes(schueler);
-			DeveloperNotificationException.ifTrue("schuelerAddAllOhneUpdate: ID=" + schueler.id + " existiert bereits!",
+			DeveloperNotificationException.ifTrue("ID existiert bereits bei " + schuelerInfo(schueler),
 					_schueler_by_id.containsKey(schueler.id));
-			DeveloperNotificationException.ifTrue("schuelerAddAllOhneUpdate: ID=" + schueler.id + " doppelt in der Liste!", !setOfIDs.add(schueler.id));
+			DeveloperNotificationException.ifTrue("ID Dopplung in Liste bei " + schuelerInfo(schueler),
+					!setOfIDs.add(schueler.id));
 		}
 
 		// add all
@@ -5849,10 +6059,23 @@ public class StundenplanManager {
 	}
 
 	private static void schuelerCheckAttributes(final @NotNull StundenplanSchueler schueler) {
-		DeveloperNotificationException.ifInvalidID("schueler.id", schueler.id);
-		DeveloperNotificationException.ifStringIsBlank("schueler.nachname", schueler.nachname);
-		DeveloperNotificationException.ifStringIsBlank("schueler.vorname", schueler.vorname);
+		DeveloperNotificationException.ifInvalidID("Ungültige ID bei " + schuelerInfo(schueler),
+				schueler.id);
+		DeveloperNotificationException.ifStringIsBlank("Ungültiger Nachname bei " + schuelerInfo(schueler),
+				schueler.nachname);
+		DeveloperNotificationException.ifStringIsBlank("Ungültiger Vorname bei " + schuelerInfo(schueler),
+				schueler.vorname);
 		// schueler.idKlasse nicht nötig, ein Schüler kann auch keine Klasse haben. Die Zuordnung erfolgt über StundenplanKlasse.
+	}
+
+	private static @NotNull String schuelerInfo(final @NotNull StundenplanSchueler schueler) {
+		String s = "[StundenplanSchueler";
+		s += "(id=" + schueler.id + ")";
+		s += "(nachname=" + schueler.nachname + ")";
+		s += "(vorname=" + schueler.vorname + ")";
+		s += "(idKlasse=" + schueler.idKlasse + ")";
+		s += "]";
+		return s;
 	}
 
 	/**
@@ -6449,8 +6672,10 @@ public class StundenplanManager {
 		final @NotNull Set<Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanUnterricht u : list) {
 			unterrichtCheckAttributes(u);
-			DeveloperNotificationException.ifTrue("unterrichtAddAllOhneUpdate: ID=" + u.id + " existiert bereits!", _unterricht_by_id.containsKey(u.id));
-			DeveloperNotificationException.ifTrue("unterrichtAddAllOhneUpdate: ID=" + u.id + " doppelt in der Liste!", !setOfIDs.add(u.id));
+			DeveloperNotificationException.ifTrue("ID existiert bereits bei " + unterrichtInfo(u),
+					_unterricht_by_id.containsKey(u.id));
+			DeveloperNotificationException.ifTrue("ID Dopplung in Liste bei " + unterrichtInfo(u),
+					!setOfIDs.add(u.id));
 		}
 
 		// check duplicates (tag, stunde)
@@ -6462,27 +6687,47 @@ public class StundenplanManager {
 	}
 
 	private void unterrichtCheckAttributes(final @NotNull StundenplanUnterricht u) {
-		DeveloperNotificationException.ifInvalidID("u.id", u.id);
-		DeveloperNotificationException.ifMapNotContains("_zeitraster_by_id", _zeitraster_by_id, u.idZeitraster);
-		DeveloperNotificationException.ifTrue("u.wochentyp > stundenplanWochenTypModell", u.wochentyp > _stundenplanWochenTypModell);
-		DeveloperNotificationException.ifTrue("u.wochentyp < 0", u.wochentyp < 0); // 0 ist erlaubt!
-		DeveloperNotificationException.ifTrue("(u.idKurs == null) && (u.klassen.size() != 1)", (u.idKurs == null) && (u.klassen.size() != 1)); // WENN Klassenunterricht, DANN genau 1 Klasse.
-
-		DeveloperNotificationException.ifMapNotContains("_fach_by_id", _fach_by_id, u.idFach);
+		DeveloperNotificationException.ifInvalidID("Ungültige ID bei " + unterrichtInfo(u),
+				u.id);
+		DeveloperNotificationException.ifMapNotContains("_zeitraster_by_id fehlende Referenz " + unterrichtInfo(u),
+				_zeitraster_by_id, u.idZeitraster);
+		DeveloperNotificationException.ifTrue("Ungültiger wochentyp bei " + unterrichtInfo(u),
+				u.wochentyp > _stundenplanWochenTypModell);
+		DeveloperNotificationException.ifTrue("Ungültiger wochentyp bei " + unterrichtInfo(u),
+				u.wochentyp < 0); // 0 ist erlaubt!
+		DeveloperNotificationException.ifTrue("Klassenunterricht darf nur einer Klasse zugeordnet sein bei " + unterrichtInfo(u),
+				(u.idKurs == null) && (u.klassen.size() != 1)); // WENN Klassenunterricht, DANN genau 1 Klasse.
+		DeveloperNotificationException.ifMapNotContains("_fach_by_id fehlende Referenz bei " + unterrichtInfo(u),
+				_fach_by_id, u.idFach);
 
 		for (final long idLehrkraft : u.lehrer)
 			if (!_lehrer_by_id.containsKey(idLehrkraft))
 				lehrerAddPseudoLehrkraftOhneUpdate(idLehrkraft,
-						"StundenplanUnterricht " + unterrichtGetBeschreibungKurz(u) + " hat ungültige Lehrerreferenz.");
-
+						"Fehlender Lehrer-Referenze bei " + unterrichtGetBeschreibungKurz(u));
 		for (final long idKlasseDesUnterrichts : u.klassen)
-			DeveloperNotificationException.ifMapNotContains("_klasse_by_id", _klasse_by_id, idKlasseDesUnterrichts);
-
+			DeveloperNotificationException.ifMapNotContains("_klasse_by_id fehlende Referenz bei " + unterrichtInfo(u),
+					_klasse_by_id, idKlasseDesUnterrichts);
 		for (final long idRaumDesUnterrichts : u.raeume)
-			DeveloperNotificationException.ifMapNotContains("_raum_by_id", _raum_by_id, idRaumDesUnterrichts);
-
+			DeveloperNotificationException.ifMapNotContains("_raum_by_id fehlende Referenz bei " + unterrichtInfo(u),
+					_raum_by_id, idRaumDesUnterrichts);
 		for (final long idSchieneDesUnterrichts : u.schienen)
-			DeveloperNotificationException.ifMapNotContains("_schiene_by_id", _schiene_by_id, idSchieneDesUnterrichts);
+			DeveloperNotificationException.ifMapNotContains("_schiene_by_id fehlende Referenz bei " + unterrichtInfo(u),
+					_schiene_by_id, idSchieneDesUnterrichts);
+	}
+
+	private static @NotNull String unterrichtInfo(final @NotNull StundenplanUnterricht unterricht) {
+		String s = "[StundenplanUnterricht";
+		s += "(id=" + unterricht.id + ")";
+		s += "(idZeitraster=" + unterricht.idZeitraster + ")";
+		s += "(wochentyp=" + unterricht.wochentyp + ")";
+		s += "(idKurs=" + unterricht.idKurs + ")";
+		s += "(idFach=" + unterricht.idFach + ")";
+		s += "(lehrer=" + unterricht.lehrer + ")";
+		s += "(klassen=" + unterricht.klassen + ")";
+		s += "(raeume=" + unterricht.raeume + ")";
+		s += "(schienen=" + unterricht.schienen + ")";
+		s += "]";
+		return s;
 	}
 
 	// TODO unterrichtCheckDuplicateInCell
@@ -7676,13 +7921,14 @@ public class StundenplanManager {
 		final @NotNull Set<Long> setOfIDs = new HashSet<>();
 		final @NotNull Set<String> setOfWochentagStunde = new HashSet<>();
 		for (final @NotNull StundenplanZeitraster z : list) {
-			zeitrasterCheck(z);
-			DeveloperNotificationException.ifTrue("zeitrasterAddAllOhneUpdate: ID=" + z.id + " existiert bereits!", _zeitraster_by_id.containsKey(z.id));
-			DeveloperNotificationException.ifTrue("zeitrasterAddAllOhneUpdate: ID=" + z.id + " doppelt in der Liste!", !setOfIDs.add(z.id));
-			DeveloperNotificationException.ifTrue(
-					"zeitrasterAddAllOhneUpdate: WOCHENTAG=" + z.wochentag + ", STUNDE=" + z.unterrichtstunde + " existiert bereits!",
+			zeitrasterCheckAttributes(z);
+			DeveloperNotificationException.ifTrue("ID existiert bereits bei " + zeitrasterInfo(z),
+					_zeitraster_by_id.containsKey(z.id));
+			DeveloperNotificationException.ifTrue("ID Dopplung in Liste bei " + zeitrasterInfo(z),
+					!setOfIDs.add(z.id));
+			DeveloperNotificationException.ifTrue("WOCHENTAG+STUNDE existiert bereits bei " + zeitrasterInfo(z),
 					_zeitraster_by_wochentag_and_stunde.contains(z.wochentag, z.unterrichtstunde));
-			DeveloperNotificationException.ifTrue("zeitrasterAddAllOhneUpdate: WOCHENTAG=" + z.wochentag + ", STUNDE=" + " doppelt in der Liste!",
+			DeveloperNotificationException.ifTrue("WOCHENTAG+STUNDE Dopplung in Liste bei " + zeitrasterInfo(z),
 					!setOfWochentagStunde.add(z.wochentag + ";" + z.unterrichtstunde));
 		}
 
@@ -7691,16 +7937,33 @@ public class StundenplanManager {
 			DeveloperNotificationException.ifMapPutOverwrites(_zeitraster_by_id, z.id, z);
 	}
 
-	private static void zeitrasterCheck(final @NotNull StundenplanZeitraster zeitraster) {
-		DeveloperNotificationException.ifInvalidID("zeitraster.id", zeitraster.id);
-		Wochentag.fromIDorException(zeitraster.wochentag);
-		DeveloperNotificationException.ifTrue("(zeit.unterrichtstunde < 0) || (zeit.unterrichtstunde > 29)",
+	private static void zeitrasterCheckAttributes(final @NotNull StundenplanZeitraster zeitraster) {
+		DeveloperNotificationException.ifInvalidID("Ungültige ID bei " + zeitrasterInfo(zeitraster),
+				zeitraster.id);
+
+		int length = Wochentag.values().length;
+		DeveloperNotificationException.ifTrue("Ungültiger Wochentag bei " + zeitrasterInfo(zeitraster),
+				(zeitraster.wochentag < 1) || (zeitraster.wochentag > length));
+
+		DeveloperNotificationException.ifTrue("Ungültige Unterrichtstunde bei " + zeitrasterInfo(zeitraster),
 				(zeitraster.unterrichtstunde < 0) || (zeitraster.unterrichtstunde > 29));
+
 		if ((zeitraster.stundenbeginn != null) && (zeitraster.stundenende != null)) {
 			final int beginn = zeitraster.stundenbeginn;
 			final int ende = zeitraster.stundenende;
-			DeveloperNotificationException.ifTrue("beginn >= ende", beginn >= ende);
+			DeveloperNotificationException.ifTrue("Ungültige stundenbeginn-stundenende-Werte bei " + zeitrasterInfo(zeitraster),
+					beginn >= ende);
 		}
+	}
+
+	private static @NotNull String zeitrasterInfo(final @NotNull StundenplanZeitraster zeitraster) {
+		String s = "[StundenplanZeitraster";
+		s += "(id=" + zeitraster.id + ")";
+		s += "(wochentag=" + zeitraster.wochentag + ")";
+		s += "(unterrichtstunde=" + zeitraster.unterrichtstunde + ")";
+		s += "(stundenbeginn=" + zeitraster.stundenbeginn + ")";
+		s += "(stundenende=" + zeitraster.stundenende + ")";
+		return s;
 	}
 
 	/**
@@ -8550,7 +8813,7 @@ public class StundenplanManager {
 		// check
 		final @NotNull HashMap2D<Integer, Integer, StundenplanZeitraster> mapWochentagStunde = new HashMap2D<>();
 		for (final @NotNull StundenplanZeitraster z : zeitrasterList) {
-			zeitrasterCheck(z);
+			zeitrasterCheckAttributes(z);
 			DeveloperNotificationException.ifMapNotContains("_zeitraster_by_id", _zeitraster_by_id, z.id);
 			DeveloperNotificationException.ifMap2DPutOverwrites(mapWochentagStunde, z.wochentag, z.unterrichtstunde, z);
 		}
