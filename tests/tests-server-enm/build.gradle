@@ -169,6 +169,7 @@ tasks.register('testAgainstDockerEnv') {
 	description = 'Startet die Integrationstests gegen die Docker Umgebung'
 	group = 'verification'
 	dependsOn ':svws-webclient:core:assemble'
+	dependsOn ':svws-webclient:client:assemble'
 	dependsOn 'seedDatabase'
 
 	// Stelle sicher das zwischen diesem Task und SeedDatabase noch die Custom Tasks von ENM laufen

@@ -38,6 +38,7 @@ tasks.register('testAgainstDockerEnv', NpmRun) {
 	description = 'Startet die Integrationstests gegen die Docker Umgebung'
 	group = 'verification'
 	dependsOn ':svws-webclient:core:assemble'
+	dependsOn ':svws-webclient:client:assemble'
 	dependsOn 'seedDatabase'
 
 	// Vite darf gegen Server laufen mit selbst signierten Zertifikaten
