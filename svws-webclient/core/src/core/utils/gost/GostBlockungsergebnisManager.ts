@@ -348,11 +348,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		this.update_3_kursdifferenz_to_fachartenList();
 		this.update_3_schuelerID_to_kollisionen();
 		this.update_3_schuelerID_fachID_to_kurs_or_null();
-		if (!this._fehlermeldungen.isEmpty()) {
-			console.log(JSON.stringify("Es sind Fehler aufgetreten: "));
-			for (const meldung of this._fehlermeldungen)
-				console.log(JSON.stringify("    " + meldung));
-		}
 		for (const schiene of this._ergebnis.schienen) {
 			const kursmenge : List<GostBlockungsergebnisKurs> = schiene.kurse;
 			if (this._fachartmenge_sortierung === 1) {

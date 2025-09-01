@@ -134,8 +134,9 @@ public class GostBlockungsdatenManager {
 	/** Die maximale Zeit in Millisekunden die der Blockungsalgorithmus verwenden darf. */
 	private long _maxTimeMillis = 1000;
 
-	/** Alle Warnungen, welche die GUI darstellen sollte. */
-	private @NotNull final List<String> _warnungen = new ArrayList<>();
+	/** Map ungültiger Regeln, bei denen Fehlern vorliegen und Map die den jeweiligen Fehler beschreibt. */
+	private final @NotNull HashMap<Long, GostBlockungRegel> _map_idRegel_regelUngueltig = new HashMap<>();
+	private final @NotNull HashMap<Long, String> _map_idRegel_regelUngueltigeBeschreibung = new HashMap<>();
 
 
 	/**
@@ -167,15 +168,6 @@ public class GostBlockungsdatenManager {
 		kursAddListe(daten.kurse);
 		regelAddListe(daten.regeln);  			// Muss vor den Ergebnissen erzeugt werden.
 		ergebnisAddListe(daten.ergebnisse);
-	}
-
-	/**
-	 * Liefert alle Warnungen, die dem User angezeigt werden sollen.
-	 *
-	 * @return alle Warnungen, die dem User angezeigt werden sollen.
-	 */
-	public @NotNull List<String> getWarnungen() {
-		return _warnungen;
 	}
 
 	/**
@@ -1760,19 +1752,22 @@ public class GostBlockungsdatenManager {
 			// Überprüfe Referenzen.
 			final @NotNull String warnung1 = regelCheckParameterReferencesAndReturnWarnung(r);
 			if (!warnung1.isEmpty()) {
-				_warnungen.add(warnung1);
+				_map_idRegel_regelUngueltig.put(r.id, r);
+				_map_idRegel_regelUngueltigeBeschreibung.put(r.id, warnung1);
 				continue;
 			}
 			// Überprüfe Werte.
 			final @NotNull String warnung2 = regelCheckParameterValuesAndReturnWarnung(r);
 			if (!warnung2.isEmpty()) {
-				_warnungen.add(warnung2);
+				_map_idRegel_regelUngueltig.put(r.id, r);
+				_map_idRegel_regelUngueltigeBeschreibung.put(r.id, warnung2);
 				continue;
 			}
 			// Überprüfe Duplikate.
 			final @NotNull String warnung3 = regelCheckDuplicatesAndReturnWarnung(r, setIDs, setMultiKey, menge1, menge6, menge9, menge10, menge15);
 			if (!warnung3.isEmpty()) {
-				_warnungen.add(warnung3);
+				_map_idRegel_regelUngueltig.put(r.id, r);
+				_map_idRegel_regelUngueltigeBeschreibung.put(r.id, warnung3);
 				continue;
 			}
 			// Regel ist okay.
@@ -2126,6 +2121,24 @@ public class GostBlockungsdatenManager {
 	}
 
 	/**
+	 * Liefert alle Regeln, die aufgrund von Fehlern ungültig sind.
+	 *
+	 * @return alle Regeln, die aufgrund von Fehlern ungültig sind.
+	 */
+	public @NotNull HashMap<Long, GostBlockungRegel> regelGetMapUngueltig() {
+		return _map_idRegel_regelUngueltig;
+	}
+
+	/**
+	 * Liefert die Beschreibung der jeweiligen ungültigen Regeln.
+	 *
+	 * @return die Beschreibung der jeweiligen ungültigen Regeln.
+	 */
+	public @NotNull HashMap<Long, String> regelGetMapUngueltigBeschreibung() {
+		return _map_idRegel_regelUngueltigeBeschreibung;
+	}
+
+	/**
 	 * Entfernt die Regel mit der übergebenen ID aus der Blockung.
 	 *
 	 * @param idRegel   Die Datenbank-ID der zu entfernenden Regel.
@@ -2153,27 +2166,50 @@ public class GostBlockungsdatenManager {
 		regelRemoveListeByIDs(setRegelIDs);
 	}
 
-	private void regelRemoveListeByIDsOhneRevalidierung(final @NotNull Set<Long> regelmenge) throws DeveloperNotificationException {
-		// Überprüfen
-		for (final long idRegel : regelmenge) {
-			final @NotNull GostBlockungRegel regel = regelGet(idRegel);
-			final @NotNull GostKursblockungRegelTyp typ = GostKursblockungRegelTyp.fromTyp(regel.typ);
-			DeveloperNotificationException.ifTrue("Der Regeltyp ist undefiniert!", typ == GostKursblockungRegelTyp.UNDEFINIERT);
-			DeveloperNotificationException.ifTrue("Die Multi-Map enthält die Regel nicht!", !_map_multikey_regeln.containsKey(regelToMultikey(regel)));
+	private void regelRemoveListeByIDsOhneRevalidierung(final @NotNull Set<Long> regelmengeGesamt) throws DeveloperNotificationException {
+		// Trenne die Regel-Menge in "ungültig" und "gültig".
+		ArrayList<Long> regelnUngueltig = new ArrayList<>();
+		ArrayList<Long> regelnGueltig = new ArrayList<>();
+		for (final long idRegel : regelmengeGesamt) {
+			if (_map_idRegel_regelUngueltig.containsKey(idRegel)) {
+				regelnUngueltig.add(idRegel);
+			} else {
+				regelnGueltig.add(idRegel);
+			}
 		}
 
-		// Löschen
-		for (final long idRegel : regelmenge) {
-			final @NotNull GostBlockungRegel regel = this.regelGet(idRegel);
-			final @NotNull GostKursblockungRegelTyp typ = GostKursblockungRegelTyp.fromTyp(regel.typ);
-			final @NotNull LongArrayKey multikey = GostBlockungsdatenManager.regelToMultikey(regel);
+		// A) Lösche die gültigen Regeln.
+		if (!regelnGueltig.isEmpty()) {
+			// Überprüfen
+			for (final long idRegel : regelnGueltig) {
+				final @NotNull GostBlockungRegel regel = regelGet(idRegel);
+				final @NotNull GostKursblockungRegelTyp typ = GostKursblockungRegelTyp.fromTyp(regel.typ);
+				DeveloperNotificationException.ifTrue("Der Regeltyp ist undefiniert!", typ == GostKursblockungRegelTyp.UNDEFINIERT);
+				DeveloperNotificationException.ifTrue("Die Multi-Map enthält die Regel nicht!", !_map_multikey_regeln.containsKey(regelToMultikey(regel)));
+			}
 
-			// Löschen aus den Datenstrukturen
-			_map_idRegel_regel.remove(idRegel);
-			MapUtils.getOrCreateArrayList(_map_regeltyp_regeln, typ).remove(regel);
-			_map_multikey_regeln.remove(multikey);
-			_daten.regeln.remove(regel);
+			// Löschen
+			for (final long idRegel : regelnGueltig) {
+				final @NotNull GostBlockungRegel regel = this.regelGet(idRegel);
+				final @NotNull GostKursblockungRegelTyp typ = GostKursblockungRegelTyp.fromTyp(regel.typ);
+				final @NotNull LongArrayKey multikey = GostBlockungsdatenManager.regelToMultikey(regel);
+
+				// Löschen aus den Datenstrukturen
+				_map_idRegel_regel.remove(idRegel);
+				MapUtils.getOrCreateArrayList(_map_regeltyp_regeln, typ).remove(regel);
+				_map_multikey_regeln.remove(multikey);
+				_daten.regeln.remove(regel);
+			}
 		}
+
+		// B) Lösche die ungültigen Regeln.
+		if (!regelnUngueltig.isEmpty()) {
+			for (final long idRegel : regelnUngueltig) {
+				_map_idRegel_regelUngueltig.remove(idRegel);
+				_map_idRegel_regelUngueltigeBeschreibung.remove(idRegel);
+			}
+		}
+
 	}
 
 	/**
