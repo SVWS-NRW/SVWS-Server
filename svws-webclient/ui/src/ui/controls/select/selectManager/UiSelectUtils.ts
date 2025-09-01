@@ -1,12 +1,13 @@
-// useSelectInteractions.ts
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch, type ComputedRef, type Ref } from 'vue';
 import { useWindowSize } from "@vueuse/core";
 import type { UiSelectProps } from "./UiSelectProps";
-import { SearchSelectFilter } from "../filter/SearchSelectFilter";
 import type { Validator } from "../../../../../../core/src/asd/validate/Validator";
 import { ValidatorFehlerart } from "../../../../../../core/src/asd/validate/ValidatorFehlerart";
+import { ArrayList } from "../../../../../../core/src/java/util/ArrayList";
+import type { List } from "../../../../../../core/src/java/util/List";
 
 export function useUiSelectUtils<T, V extends Validator>(
+	multi: boolean,
 	props: UiSelectProps<T, V>,
 	attrs: Record<string, any>,
 	isValid: ComputedRef<boolean>,
@@ -14,23 +15,24 @@ export function useUiSelectUtils<T, V extends Validator>(
 	uiSelect: Ref<HTMLElement | null>,
 	uiSelectCombobox: Ref<HTMLElement | null>,
 	uiSelectSearch: Ref<HTMLElement | null>,
-	uiSelectDropdown: Ref<HTMLDivElement | null>
+	uiSelectDropdown: Ref<HTMLDivElement | null>,
+	search: Ref<string>,
+	selectOption: (option: T) => void,
+	deselectOption: (option: T) => void,
+	hasSelection: () => boolean,
+	isSelected: (option: T) => boolean,
+	deselectAllowed: () => boolean
 ) {
 
 	// ID zur Eindeutigen Kennzeichnung der Komponente. Wird für die HTML IDs benötigt
 	const instanceId = crypto.randomUUID();
 
 	// Flag das anzeigt, ob eine neue Selektion gesetzt wurde
-	const newSelection = ref(false);
-	// Suchtext für durchsuchbare Listen (searchable = true)
-	const search = ref('');
 	const showDropdown = ref(false);
 
 	// Definiert, ob das Inputfeld gerade den visuellen bzw. den DOM-Fokus hat
 	const visualFocusOnCombobox = ref(false);
 	const domFocusOnCombobox = ref(false);
-
-
 
 	// Größen und Positionen zur Berechnung des Dropdowns
 	const top = ref(0);
@@ -46,22 +48,11 @@ export function useUiSelectUtils<T, V extends Validator>(
 	onMounted(() => {
 		const result = { ...attrs };
 		const stringClass = result.class;
-		if (typeof stringClass === 'string') {
-			if (props.searchable === true && stringClass.includes('contentFocusField'))
+		if (typeof stringClass === 'string')
+			if (props.searchable! && stringClass.includes('contentFocusField'))
 				uiSelectSearch.value?.classList.add('contentFocusField');
-			else if (props.searchable === false && stringClass.includes('contentFocusField'))
+			else if (!props.searchable! && stringClass.includes('contentFocusField'))
 				uiSelectCombobox.value?.classList.add('contentFocusField');
-		}
-		// Wenn das Select durchsuchbar ist, wird ein SearchSelectFilter hinzugefügt. Sollte bereits einer existieren, wird nur der neue Suchbegriff gesetzt.
-		if (props.searchable!) {
-			const tmpSearchFilter = props.manager!.getFilterByKey("search") as SearchSelectFilter<T> | null;
-			if (tmpSearchFilter !== null) {
-				tmpSearchFilter.search = search.value;
-				props.manager!.updateFilteredOptions(tmpSearchFilter);
-			}	else {
-				props.manager!.addFilter(new SearchSelectFilter("search", search.value, (item: T) => props.manager!.getOptionText(item)));
-			}
-		}
 
 		document.addEventListener('click', handleClickOutside);
 		window.addEventListener('resize', () => closeDropdown());
@@ -122,11 +113,11 @@ export function useUiSelectUtils<T, V extends Validator>(
 	 * die sekundäre Variante der übergebenen Farbe verwendet.
 	 */
 	const textColorClass = computed(() => {
-		if (props.disabled === true)
+		if (props.disabled!)
 			return "text-ui-disabled";
-		if (isValid.value === false)
+		if (!isValid.value)
 			return "text-ui-danger";
-		if (isValidatorValid.value === false)
+		if (!isValidatorValid.value)
 			switch (props.validator!().getFehlerart()) {
 				case (ValidatorFehlerart.HINWEIS):
 					return "text-ui-warning";
@@ -136,7 +127,7 @@ export function useUiSelectUtils<T, V extends Validator>(
 					return "text-ui-danger";
 			}
 
-		if (props.required! && props.manager!.hasSelection() === false)
+		if (props.required! && !hasSelection())
 			return "text-ui-danger";
 		const classString = attrs.class;
 		if (typeof classString !== "string")
@@ -152,11 +143,11 @@ export function useUiSelectUtils<T, V extends Validator>(
 	 * Berechnet die Iconfarbe. Wird von außen eine gesetzt, dann wird diese verwendet. Andernfalls icon-ui.
 	 */
 	const iconColorClass = computed(() => {
-		if (props.disabled === true)
+		if (props.disabled!)
 			return "icon-ui-disabled";
-		if (isValid.value === false)
+		if (!isValid.value)
 			return "icon-ui-danger";
-		if (isValidatorValid.value === false)
+		if (!isValidatorValid.value)
 			switch (props.validator!().getFehlerart()) {
 				case (ValidatorFehlerart.HINWEIS):
 					return "icon-ui-warning";
@@ -179,9 +170,9 @@ export function useUiSelectUtils<T, V extends Validator>(
 	 * Berechnet die Borderfarbe der Combobox. Wird von außen eine gesetzt, dann wird diese verwendet. Andernfalls bg-ui-neutral.
 	 */
 	const borderColorClass = computed(() => {
-		if (isValid.value === false)
+		if (!isValid.value)
 			return "border-ui-danger";
-		if (isValidatorValid.value === false)
+		if (!isValidatorValid.value)
 			switch (props.validator!().getFehlerart()) {
 				case (ValidatorFehlerart.HINWEIS):
 					return "border-ui-warning";
@@ -288,10 +279,10 @@ export function useUiSelectUtils<T, V extends Validator>(
 		if (!showDropdown.value)
 			return false;
 		const below = windowHeight.value - (top.value + height.value);
-		const uppon = top.value;
-		if (uiSelectDropdown.value?.clientHeight !== undefined && below > 100)
+		const above = top.value;
+		if ((uiSelectDropdown.value?.clientHeight !== undefined) && (below > 100))
 			return false;
-		return (below < uppon);
+		return (below < above);
 	});
 
 	/**
@@ -336,11 +327,13 @@ export function useUiSelectUtils<T, V extends Validator>(
 	function openDropdown() {
 		updatePosition();
 		handleComboboxFocus();
-		if (uiSelectDropdown.value === null || showDropdown.value)
+		if ((uiSelectDropdown.value === null) || showDropdown.value)
 			return;
 		showDropdown.value = true;
 		uiSelectDropdown.value.showPopover();
 		visualFocusOnCombobox.value = false;
+		if (highlightedIndex.value === -1)
+			uiSelectDropdown.value.scrollTop = 0;
 	}
 
 	/**
@@ -357,13 +350,18 @@ export function useUiSelectUtils<T, V extends Validator>(
 			handleComboboxFocus();
 		else
 			handleBlur();
+		highlightedIndex.value = -1;
 	}
 
 	// Passt die Scrollposition des Dropdowns an, falls der visuelle Fokus außerhalb des Sichtfelds landet
 	watch(highlightedIndex, async () => {
 		await nextTick(() => {
-			if (highlightedIndex.value === -1)
+			if (highlightedIndex.value === -1) {
+				if (uiSelectDropdown.value)
+					uiSelectDropdown.value.scrollTop = 0;
 				return;
+			}
+
 			const highlightedElement = document.getElementById(`uiSelectOption_${highlightedIndex.value}_${instanceId}`);
 
 			if (uiSelectDropdown.value && highlightedElement) {
@@ -381,7 +379,7 @@ export function useUiSelectUtils<T, V extends Validator>(
 				}
 			}
 		});
-	});
+	}, {deep: true});
 
 	/**
 	 * Dropdown Tastatursteuerung
@@ -397,7 +395,7 @@ export function useUiSelectUtils<T, V extends Validator>(
 			return;
 
 		// Nur bei geöffnetem Dropdown, oder wenn Navigation ausgelöst wird. Verhindert, dass die Seite beim Navigieren des Dropdowns gescrollt wird.
-		const keysToPrevent = ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' '];
+		const keysToPrevent = ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', ' '];
 		const isNavigationKey = keysToPrevent.includes(event.key);
 		const shouldPrevent = (	isNavigationKey || (event.altKey && event.key === 'ArrowDown') );
 
@@ -447,21 +445,19 @@ export function useUiSelectUtils<T, V extends Validator>(
 			// Enter, Space
 			if ((event.key === "Enter") || (event.key === " ")) {
 				selectFocussedOption();
-				if (!props.manager!.multi)
+				if (!multi)
 					closeDropdown();
 			}
 			// Tab (verhält sich wie Enter und Space, aber verschiebt automatisch auch den Focus auf das nächste Element und schließt immer die Liste)
-			if (event.key === "Tab") {
+			else if (event.key === "Tab")
 				selectFocussedOption();
-				closeDropdown();
-			}
 			// Arrow Down
 			else if (event.key === "ArrowDown")
 				await navigateList(1);
 			// Alt + Arrow Up
 			else if (event.altKey && event.key === "ArrowUp") {
 				selectFocussedOption();
-				if (!props.manager!.multi)
+				if (!multi)
 					closeDropdown();
 			}
 			// Arrow Up
@@ -474,7 +470,7 @@ export function useUiSelectUtils<T, V extends Validator>(
 			else if (event.key === "PageDown")
 				await navigateList(10);
 			// Home (bezieht sich auf die Listenposition (searchable = false) oder auf das Suchfeld (searchable = true))
-			if (event.key === "Home")
+			else if (event.key === "Home")
 				if (props.searchable!)
 					highlightedIndex.value = -1; // Der Cursor wird versetzt un der visuelle Fokus dafür entfernt
 				else
@@ -486,6 +482,10 @@ export function useUiSelectUtils<T, V extends Validator>(
 					highlightedIndex.value = -1; // Der Cursor wird automatisch versetzt und der visuelle Fokus dafür entfernt
 				else
 					highlightedIndex.value = props.manager!.filteredOptions.size() - 1;
+			else if (event.key === "Escape") {
+				closeDropdown();
+				resetSearch();
+			}
 			// Printable Characters
 			else if (isPrintableChar(event.key))
 				// Wenn searchable = false wird der visuelle Fokus in der Liste verändert. Andernfalls wird nur das Suchfeld befüllt und es ist hier keine
@@ -693,8 +693,8 @@ export function useUiSelectUtils<T, V extends Validator>(
 	 */
 	const labelClasses = computed((): (string | object)[] => [
 		moveLabel.value ? 'absolute -top-0.5 text-xs' : 'absolute top-1/2 font-normal',
-		props.manager!.removable ? (moveLabel.value ? 'right-2' : 'right-11') : (moveLabel.value ? 'right-2' : 'right-6'),
-		props.headless! ? (props.manager!.removable ? 'left-10' : 'left-6') : '',
+		props.removable! ? (moveLabel.value ? 'right-2' : 'right-11') : (moveLabel.value ? 'right-2' : 'right-6'),
+		props.headless! ? (props.removable! ? 'left-10' : 'left-6') : '',
 		backgroundColorClass.value,
 		textColorClass.value,
 	]);
@@ -710,7 +710,7 @@ export function useUiSelectUtils<T, V extends Validator>(
 	 * CSS- und Tailwindklassen einer Option im Dropdown
 	 */
 	const optionClasses = computed(() => (option: T, optionIndex: number) => [
-		props.manager!.isSelected(option) ? 'bg-ui-selected text-ui-onselected font-medium border border-ui-selected' : 'text-ui',
+		isSelected(option) ? 'bg-ui-selected text-ui-onselected font-medium border border-ui-selected' : 'text-ui',
 		{ 'bg-ui-hover inset-ring-2 inset-ring-ui-neutral ': highlightedIndex.value === optionIndex },
 	]);
 	/**
@@ -737,7 +737,7 @@ export function useUiSelectUtils<T, V extends Validator>(
 	/**
 	 * Definiert, wann das Label der Combobox nach oben rutscht
 	 */
-	const moveLabel = computed(() => props.manager!.hasSelection() || (search.value !== '' && props.searchable!));
+	const moveLabel = computed(() => hasSelection() || (search.value !== '' && props.searchable!));
 
 	/**
 	 * Berechnet, ob ein Label angezeigt wird
@@ -750,7 +750,7 @@ export function useUiSelectUtils<T, V extends Validator>(
 	 * Berechnet, ob ein Validatorfehler angezeigt werden soll
 	 */
 	const showValidatorError = computed((): boolean =>
-		!isValid.value && (!props.required! || props.manager!.hasSelection())
+		!isValid.value && (!props.required! || hasSelection())
 	);
 
 	/**
@@ -787,7 +787,7 @@ export function useUiSelectUtils<T, V extends Validator>(
 	 * Berechnet, ob eine aktuelle Selektion angezeigt werden soll
 	 */
 	const showSelection = computed((): boolean =>
-		props.manager!.hasSelection() && (search.value === '')
+		hasSelection() && (search.value === '')
 	);
 
 	/**
@@ -868,71 +868,67 @@ export function useUiSelectUtils<T, V extends Validator>(
 	 * Beginnt eine Suche bei der Eingabe von Zeichen in das Suchfeld. Dabei wird außerdem auch das Dropdown geöffnet, falls dies nicht bereits der Fall ist.
 	 */
 	function handleInput() {
-		updateSearchFilter();
 		openDropdown();
-	}
-
-	/**
-	 * Aktualisiert den SearchFilter mit dem neuen Suchbegriff
-	 */
-	function updateSearchFilter() {
-		if (!props.searchable!)
-			return;
-		let searchFilter = props.manager!.getFilterByKey("search") as SearchSelectFilter<T> | null;
-		if (searchFilter === null)
-			searchFilter = new SearchSelectFilter("search", search.value, (item: T) => props.manager!.getOptionText(item));
-		else {
-			searchFilter = props.manager!.getFilterByKey("search") as SearchSelectFilter<T>;
-			searchFilter.search = search.value;
-		}
-		props.manager!.updateFilteredOptions(searchFilter);
-	}
-
-	/**
-	 * Toggelt die aktuelle Selektion. Bei searchable = true wird auch das Suchfeld zurückgesetzt
-	 *
-	 * @param event    das Klickevent. Wird benötigt, um Eventbubbling zu verhindern
-	 * @param option   die Option, die selektiert bzw. deselektiert werden soll
-	 */
-	function toggleSelection(event: MouseEvent, option: T) {
-		event.stopPropagation();
-		if (!props.manager!.multi)
-			closeDropdown();
-
-		props.manager!.toggleSelection(option);
-		resetSearch();
-		newSelection.value = true;
-
-	};
-
-	/**
-	 * Deselektiert die gegebene Option
-   *
-	 * @param event   das Klickevent bzw. Keyboardevent. Wird benötigt, um Eventbubbling zu verhindern
-	 * @param option  die Option, die deselektiert werden soll
-	 */
-	function deselect(event: MouseEvent | KeyboardEvent, option?: T) {
-		event.stopPropagation();
-		if (option !== undefined)
-			props.manager!.deselect(option);
-		else
-			props.manager!.clearSelection();
-		resetSearch();
-		newSelection.value = true;
 	}
 
 	/**
 	 * Setzt die Eingabe im Suchfeld zurück und aktualisiert die gefilterte Liste.
 	 */
 	function resetSearch() {
-		if (search.value === "")
-			return;
 		search.value = "";
-		updateSearchFilter();
 	}
 
+	/**
+	 * Wendet den Suchbegriff auf die Optionen an und gibt ein Array der passenden Optionen zurück, die dann im Dropdown angezeigt werden.
+	 * Dabei werden auch deepSearchArttibute berücksichtigt
+	 *
+	 * @param searchText   der Suchbegriff
+	 * @returns ein Array mit validen Optionen
+	 */
+	function getMatchingOptions(searchText: string): List<T> {
+		const filteredOptions = new ArrayList<T>();
 
+		for (const option of props.manager!.filteredOptions) {
+			// Suche im Optionentext
+			if (searchText === "" || props.manager!.getOptionText(option).toLocaleLowerCase("de-DE").includes(searchText.toLocaleLowerCase("de-DE"))) {
+				filteredOptions.add(option);
+				continue;
+			}
 
+			// Suche in den DeepSearchAttributen der Option
+			let matches = false;
+			for (const attr of props.deepSearchAttributes?? []) {
+				const value = option[attr as keyof T];
+				const stringValue = (value !== undefined && value !== null) ? value.toString() : '';
+				if (stringValue.toLocaleLowerCase("de-DE").includes(searchText.toLocaleLowerCase("de-DE"))) {
+					matches = true;
+					break;
+				}
+			}
+
+			if (matches)
+				filteredOptions.add(option);
+		}
+
+		return filteredOptions;
+	}
+
+	/**
+	 * Toggelt die aktuelle Selektion. Bei searchable = true wird auch das Suchfeld zurückgesetzt
+	 *
+	 * @param option   die Option, die selektiert bzw. deselektiert werden soll
+	 */
+	function toggleSelection(option: T) {
+		if (!multi)
+			closeDropdown();
+
+		if (isSelected(option)) {
+			if (deselectAllowed())
+				deselectOption(option);
+		} else
+			selectOption(option);
+		resetSearch();
+	}
 
 	/**
 	 * Selektiert eine visuell fokussierte Option
@@ -940,18 +936,18 @@ export function useUiSelectUtils<T, V extends Validator>(
 	function selectFocussedOption () {
 		if (highlightedIndex.value !== -1) {
 			const option = props.manager!.filteredOptions.get(highlightedIndex.value);
-			props.manager!.toggleSelection(option);
-			resetSearch();
+			toggleSelection(option);
 		}
+		closeDropdown();
 		handleComboboxFocus();
 	}
 
 	return {
-		instanceId, newSelection, search, filteredAttributes, textColorClass, iconColorClass, focusBasedTextColorClass, comboboxAriaAttrs,
+		instanceId, search, filteredAttributes, textColorClass, iconColorClass, focusBasedTextColorClass, comboboxAriaAttrs,
 		searchAriaAttrs, comboboxTabindex, searchInputTabindex, comboboxRole, dropdownPositionStyles, onKeyDown, searchInputFocusClass, handleComboboxFocus,
 		handleBlur, handleComponentClick, comboboxClasses, headlessPadding, labelClasses, labelTextColorClass, optionClasses, validatorErrorIcon, showLabel,
-		showValidatorError, showValidatorErrorMessage, validatorErrorBgClasses, showSelection, splitText, getSecondaryTextColor, handleInput, toggleSelection,
-		deselect,
+		showValidatorError, showValidatorErrorMessage, validatorErrorBgClasses, showSelection, splitText, getSecondaryTextColor, handleInput,
+		toggleSelection, getMatchingOptions, resetSearch,
 	}
 
 }

@@ -15,7 +15,7 @@
 				<ui-select :key="`${row.id}-select`" :manager="getSelectManagerForRow(row)"
 					:model-value="getGrund(row)"
 					@update:model-value="setGrund(row, $event)"
-					headless removable />
+					headless :removable="false" />
 			</td>
 			<td class="ui-table-grid-input" :ref="inputAnzahl(row, index)">
 				{{ row.anzahl }}
@@ -29,17 +29,17 @@
 		<template #footer>
 			<td class="col-span-4">
 				<div class="w-fit flex flex-row items-center">
-					<ui-select label="+ Mehrleistung hinzufügen" @update:model-value="addGrund($event)" :manager="selectManagerAddMehrleistung" :headless="false" style="width: 50.99rem" />
+					<ui-select label="+ Mehrleistung hinzufügen" @update:model-value="addGrund($event)" :manager="selectManagerAddMehrleistung" style="width: 50.99rem" v-model="mehrleistung" />
 				</div>
 			</td>
 			<td class="col-span-4">
 				<div class="w-fit flex flex-row items-center">
-					<ui-select label="+ Minderleistung hinzufügen" @update:model-value="addGrund($event)" :manager="selectManagerAddMinderleistung" removable :headless="false" style="width: 50.99rem" />
+					<ui-select label="+ Minderleistung hinzufügen" @update:model-value="addGrund($event)" :manager="selectManagerAddMinderleistung" style="width: 50.99rem" v-model="minderleistung" />
 				</div>
 			</td>
 			<td class="col-span-4">
 				<div class="w-fit flex flex-row items-center">
-					<ui-select label="+ Anrechnung hinzufügen" @update:model-value="addGrund($event)" :manager="selectManagerAddAnrechnung" removable :headless="false" style="width: 50.99rem" />
+					<ui-select label="+ Anrechnung hinzufügen" @update:model-value="addGrund($event)" :manager="selectManagerAddAnrechnung" style="width: 50.99rem" />
 				</div>
 			</td>
 		</template>
@@ -48,9 +48,9 @@
 
 <script setup lang="ts">
 
-	import { GridManager, CoreTypeSelectManagerSingle } from "@ui";
-	import type { ComponentPublicInstance } from "vue";
-	import { computed, watch, watchEffect } from "vue";
+	import { GridManager, CoreTypeSelectManager } from "@ui";
+	import type { ComponentPublicInstance, ShallowRef } from "vue";
+	import { computed, ref, watch, watchEffect } from "vue";
 	import type { LehrerPersonalabschnittsdaten, LehrerPersonalabschnittsdatenAnrechnungsstunden, Schulform, List} from "@core";
 	import { LehrerAnrechnungsgrundKatalogEintrag, LehrerMehrleistungsartKatalogEintrag, LehrerMinderleistungsartKatalogEintrag,LehrerMehrleistungsarten, LehrerMinderleistungsarten, LehrerAnrechnungsgrund, ArrayList, DeveloperNotificationException } from "@core";
 
@@ -153,11 +153,13 @@
 		return set;
 	});
 
-	const selectManagerAddMehrleistung = new CoreTypeSelectManagerSingle<LehrerMehrleistungsartKatalogEintrag, LehrerMehrleistungsarten>({
+	const mehrleistung = ref<LehrerMehrleistungsartKatalogEintrag | null>(null);
+	const minderleistung = ref<LehrerMinderleistungsartKatalogEintrag | null>(null);
+
+	const selectManagerAddMehrleistung = new CoreTypeSelectManager<LehrerMehrleistungsartKatalogEintrag, LehrerMehrleistungsarten>({
 		clazz: LehrerMehrleistungsarten.class,
 		schuljahr: schuljahr.value,
 		schulformen: props.schulform,
-		removable: true,
 		optionDisplayText: "kuerzelText",
 		selectionDisplayText: "kuerzelText",
 		filters: [{
@@ -173,11 +175,10 @@
 		}],
 	});
 
-	const selectManagerAddMinderleistung = new CoreTypeSelectManagerSingle<LehrerMinderleistungsartKatalogEintrag, LehrerMinderleistungsarten>({
+	const selectManagerAddMinderleistung = new CoreTypeSelectManager<LehrerMinderleistungsartKatalogEintrag, LehrerMinderleistungsarten>({
 		clazz: LehrerMinderleistungsarten.class,
 		schuljahr: props.schuljahr,
 		schulformen: props.schulform,
-		removable: true,
 		optionDisplayText: "kuerzelText",
 		selectionDisplayText: "kuerzelText",
 		filters: [{
@@ -193,11 +194,10 @@
 		}],
 	});
 
-	const selectManagerAddAnrechnung = new CoreTypeSelectManagerSingle<LehrerAnrechnungsgrundKatalogEintrag, LehrerAnrechnungsgrund>({
+	const selectManagerAddAnrechnung = new CoreTypeSelectManager<LehrerAnrechnungsgrundKatalogEintrag, LehrerAnrechnungsgrund>({
 		clazz: LehrerAnrechnungsgrund.class,
 		schuljahr: props.schuljahr,
 		schulformen: props.schulform,
-		removable: false,
 		optionDisplayText: "kuerzelText",
 		selectionDisplayText: "kuerzelText",
 		filters: [{
@@ -223,22 +223,21 @@
 	});
 
 	// Map zur Speicherung der individuellen Select Manager für jede Zeile
-	const selectManagerMap = new Map<string, CoreTypeSelectManagerSingle<any, any>>();
+	const selectManagerMap = new Map<string, CoreTypeSelectManager<any, any>>();
 
 	// Funktion zum Erstellen oder Abrufen eines individuellen Select-Managers für jede Zeile
 	function getSelectManagerForRow(row: LehrerPersonalabschnittsdatenAnrechnungsstunden) {
 
 		const key = `${row.id}-${getTypText(row)}`;
 		if (!selectManagerMap.has(key)) {
-			let manager: CoreTypeSelectManagerSingle<any, any>;
+			let manager: CoreTypeSelectManager<any, any>;
 
 			switch (getTypText(row)) {
 				case 'mehrleistung':
-					manager = new CoreTypeSelectManagerSingle<LehrerMehrleistungsartKatalogEintrag, LehrerMehrleistungsarten>({
+					manager = new CoreTypeSelectManager<LehrerMehrleistungsartKatalogEintrag, LehrerMehrleistungsarten>({
 						clazz: LehrerMehrleistungsarten.class,
 						schuljahr: props.schuljahr,
 						schulformen: props.schulform,
-						removable: false,
 						optionDisplayText: "kuerzelText",
 						selectionDisplayText: "kuerzelText",
 						filters: [{
@@ -256,11 +255,10 @@
 					});
 					break;
 				case 'minderleistung':
-					manager = new CoreTypeSelectManagerSingle<LehrerMinderleistungsartKatalogEintrag, LehrerMinderleistungsarten>({
+					manager = new CoreTypeSelectManager<LehrerMinderleistungsartKatalogEintrag, LehrerMinderleistungsarten>({
 						clazz: LehrerMinderleistungsarten.class,
 						schuljahr: props.schuljahr,
 						schulformen: props.schulform,
-						removable: false,
 						optionDisplayText: "kuerzelText",
 						selectionDisplayText: "kuerzelText",
 						filters: [{
@@ -277,11 +275,10 @@
 					});
 					break;
 				case 'anrechnung':
-					manager = new CoreTypeSelectManagerSingle<LehrerAnrechnungsgrundKatalogEintrag, LehrerAnrechnungsgrund>({
+					manager = new CoreTypeSelectManager<LehrerAnrechnungsgrundKatalogEintrag, LehrerAnrechnungsgrund>({
 						clazz: LehrerAnrechnungsgrund.class,
 						schuljahr: props.schuljahr,
 						schulformen: props.schulform,
-						removable: false,
 						optionDisplayText: "kuerzelText",
 						selectionDisplayText: "kuerzelText",
 						filters: [{
@@ -326,8 +323,8 @@
 		}
 	}
 
-	async function setGrund(rowdata: LehrerPersonalabschnittsdatenAnrechnungsstunden, value: LehrerMehrleistungsartKatalogEintrag | LehrerMinderleistungsartKatalogEintrag | LehrerAnrechnungsgrundKatalogEintrag | null): Promise<void> {
-		if (value !== null) {
+	async function setGrund(rowdata: LehrerPersonalabschnittsdatenAnrechnungsstunden, value: LehrerMehrleistungsartKatalogEintrag | LehrerMinderleistungsartKatalogEintrag | LehrerAnrechnungsgrundKatalogEintrag | null | undefined): Promise<void> {
+		if ((value !== undefined) && (value !== null)) {
 			switch (getTypText(rowdata)) {
 				case 'mehrleistung':
 					await props.patchMehrleistung({idGrund: value.id}, rowdata.id);
@@ -415,7 +412,7 @@
 			else
 				throw new DeveloperNotificationException("Unbekannter Typ");
 		}
-		selectManagerAddMehrleistung.selected = null;
-		selectManagerAddMinderleistung.selected = null;
+		mehrleistung.value = null;
+		minderleistung.value = null;
 	}
 </script>

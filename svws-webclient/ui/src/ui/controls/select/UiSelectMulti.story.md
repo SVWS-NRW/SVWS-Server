@@ -1,5 +1,5 @@
 # UiSelectMulti
-UiSelectMulti ist eien Combobox, die zur Selektion mehrerer Optionen aus mehreren vorgegebenen verwendet werden kann. Sie kann mit einfachen Datentypen wie Strings oder Numbers umgehen, aber auch mit komplexeren wie CoreTypes. Hierfür werden sogenannte `SelectManager` verwendet, von denen einige einfache bereits zur Verfügung stehen. Für komplexere Fälle können eigene SelectManager erstellt werden, die von den vorhandenen ableiten.
+UiSelectMulti ist eien Combobox, die zur Selektion mehrerer Optionen aus mehreren vorgegebenen verwendet werden kann. Sie kann mit einfachen Datentypen wie Strings oder Numbers umgehen, aber auch mit komplexeren wie CoreTypes. Hierfür werden Manager verwendet, von denen einige einfache bereits zur Verfügung stehen. Für komplexere Fälle können eigene Manager erstellt werden, die von den vorhandenen ableiten.
 
 <details>
 <summary>Inhalt</summary>
@@ -9,17 +9,16 @@ UiSelectMulti ist eien Combobox, die zur Selektion mehrerer Optionen aus mehrere
 - [Tastaturbedienung](#tastaturbedienung)
   - [Geschlossenes Dropdown](#geschlossenes-dropdown)
   - [Geöffnetes Dropdown](#geöffnetes-dropdown)
-- [SelectManager](#selectmanager)
-  - [BaseSelectManagerMulti](#baseselectmanagermultit)
-  - [BaseSelectManagerConfig](#baseselectmanagerconfigt)
-  - [BaseSelectManagerMultiConfig](#baseselectmanagermulticonfigt)
-  - [SelectManagerMulti](#selectmanagermultit)
-  - [SelectManagerMultiConfig](#selectmanagermulticonfigt)
-  - [CoreTypeSelectManagerMulti](#coretypeselectmanagermultit)
-  - [CoreTypeSelectManagerMultiConfig](#coretypeselectmanagermulticonfigt)
+- [Manager](#manager)
+  - [BaseSelectManager](#baseselectmanager)
+  - [BaseSelectManagerConfig](#baseselectmanagerconfig)
+  - [SelectManager](#selectmanager-1)
+  - [SelectManagerConfig](#selectmanagerconfig)
+  - [CoreTypeSelectManager](#coretypeselectmanager)
+  - [CoreTypeSelectManagerConfig](#coretypeselectmanagerconfig)
 - [Filter](#filter)
-  - [SearchSelectFilter](#searchselectfilter)
   - [FachSelectFilter](#fachselectfilter)
+    - [Konstruktor](#konstruktor)
 
 </details>
 
@@ -30,8 +29,12 @@ Folgende Props können gesetzt werden, um die Komponente zu konfigurieren.
 |-------------|---------------------------------------------------|-------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
 | modelValue  | `Iterable<T>` \| `null` | `null`      | Enthält die aktuelle Selektion.                                                                                                                        |
 | label       | `string`                                          | `""`        | Das Label der Komponente                                                                                                                                |
-| manager     | `BaseSelectManagerMulti<T>`      | `SelectManagerMulti<T>` mit Defaultwerten und ohne Optionen           | Der `SelectManager`, der für die Logik der Komponente verantwortlich ist. Stellt Optionen, Selektion und Multi-Selektionslogik bereit. [Mehr](#selectmanager) |
+| manager     | `BaseSelectManager<T>`      | `SelectManager<T>` mit Defaultwerten und ohne Optionen           | Der Manager, der für die Logik der Komponente verantwortlich ist. [Mehr](#manager) |
 | searchable  | `boolean`                                         | `false`     | Definiert, ob die Optionen des Dropdowns durch Suchbegriffe gefiltert werden können                                                                    |
+| deepSearchAttributes | `string[]` | `[]` | Definiert Attribute in den Optionen, die bei der Suche zusätzlich berücksichtigt werden sollen, auch wenn diese nicht im Optionentext auftauchen. |
+| required | `boolean` | `false` | Definiert, ob das Select ein Pflichtfeld ist. |
+| removable | `boolean` | `true` | Definiert, ob eine Selektion gelöscht werden kann. Das Löschen ist dann nur für einzelne Elemente möglich, außer es ist das letzte in der Selektion. |
+| nullable | `boolean` | `true` | Definiert, ob für das model `null` oder `undefined` übergeben werden darf. |
 | disabled    | `boolean`                                         | `false`     | Definiert, ob die Komponente deaktiviert ist                                                                                                            |
 | statistics  | `boolean`                                         | `false`     | Definiert, ob die Komponente für die Statistik relevant ist                                                                                             |
 | headless    | `boolean`                                         | `false`     | Definiert, ob das Select headless (ohne Rahmen und Hintergrund) dargestellt wird, z. B. für Tabellen                                                    |                            |
@@ -96,87 +99,63 @@ Die Komponente kann mit der Tastatur bedient werden. Wichtig bei der Navigation 
 
 </details>
 
-## SelectManager
-### BaseSelectManagerMulti\<T>
-`BaseSelectManagerMulti<T>` ist die abstrakte Basisklasse für alle Multi-Selects. Um einen SelectManager zu erzeugen muss dem Konstruktor eine `BaseSelectManagerMultiConfig<T>` übergeben werden, die alle Grundeinstellungen vornimmt. Die Übergabe einer Config ist optional. Wird keine übergeben, dann wird in dem Select eine leere Liste für die Optionen angezeigt.
-
-### BaseSelectManagerConfig\<T>
-
-Alle Parameter der Config sind Optional. Wenn eine leere Config an den SelectManager übergeben wird, dann erzeugt dieser für die Optionen eine leere Liste.
-| Parameter | Typ             | Definition                                               |
-|-----------|------------------|----------------------------------------------------------|
-| options   | `Iterable<T>` |  Alle Optionen, die das Dropdown beinhaltet.              |
-| removable | `boolean` | Definiert, ob das Löschen von Selektionen erlaubt sein soll. |
-| sort | `Comparator<T>` \| `((a: T, b: T) => number)` \| `null`| Gibt eine Sortierfunktion an |
-| filters | `Iterable<SelectFilter<T>>` | Setzt die aktiven Filter für die Optionenliste |
-| deepSearchAttributes | `string[]` | Definiert Attribute von \<T>, die bei einem gesetzte Suchfilter durchsucht werden sollen. Werden keine Attribute festgelegt, dann werden ausschließlich die generierten Optionstexte für die Suche verwendet. |
-
-### BaseSelectManagerMultiConfig\<T>
-Die Config erbt von `BaseSelectManagerConfig\<T>` und erweitert es.
-
- Parameter | Typ             | Definition                                               |
-|-----------|------------------|----------------------------------------------------------|
-| selected   | `Iterable<T>` \| `null` | Die aktuell selektierten Elemente            |
-
-
-### SelectManagerMulti\<T>
-Der SelectManagerMulti ist ein einfacher, allgemeiner SelectManager für Multi-Selects, der für die verschiedensten Datentypen wie `string`, `number` oder auch Custom-Objekte verwendet werden kann. Er beinhaltet die Logik der Komponente basierend auf dem Datentyp der Optionen in Dropdown. Er kümmert sich um folgende Punkte:
-- speichert alle Optionen des Dropdowns
-- speichert die aktuelle Selektion
+## Manager
+Manager übernehmen die Logik des Selects. Sie kümmern sich um folgende Punkte:
+- speichert alle (gefilterten und ungefilterten) Optionen des Dropdowns
 - speichert aktive Filter und wendet diese an
-- gibt an, ob eine Selektion gelöscht werden kann
+- sortiert die Optionen
 - Gibt den Textinhalt für die Optionen und die Selektion im Dropdown zurück
-Für das Erzeugen eine SelectManagers wird dem Konstruktor eine `SelectManagerMultiConfig\<T>` übergeben. Wird das nicht getan, dann wird ein Select ohne Optionen erzeugt.
+- reagiert auf Änderungen aus der Config, falls die Attribute darin als Ref angegeben wurden
 
-### SelectManagerMultiConfig\<T>
-Leitet von der Config `BaseSelectManagerMultiConfig\<T>` ab und erweitert sie.
+### BaseManager\<T>
+`BaseSelectManager<T>` ist die abstrakte Basisklasse für alle Selects. Um einen Manager zu erzeugen muss dem Konstruktor eine `BaseSelectManagerConfig<T>` übergeben werden, die alle Grundeinstellungen vornimmt. Die Übergabe einer Config ist optional. Wird keine übergeben, dann wird in dem Select eine leere Liste für die Optionen angezeigt.
 
-| Parameter | Typ             | Definition                                               |
-|-----------|------------------|----------------------------------------------------------|
-| selectionDisplayText | `((option: U) => string)` | Gibt an, wie der Selektionstext angezeigt werden soll. |
-| optionDisplayText | `((option: U) => string)` | Gibt an, wie der Optionentext in Dropdown angezeigt werden soll. |
-
-
-### CoreTypeSelectManagerMulti\<T>
-Dieser Manager generiert seine Liste an Optionen selbst, basierend auf Angaben zum `CoreType`, dem Schuljahr und den Schulformen. Hierfür muss dem Konstruktor eine `CoreTypeSelectManagerMultiConfig<T>` übergeben werden, die alle Grundeinstellungen vornimmt. Die Übergabe einer Config ist optional. Wird keine übergeben, dann wird in dem Select eine leere Liste für die Optionen angezeigt.
-
-### CoreTypeSelectManagerMultiConfig\<T>
-Diese Config erweitert die `BaseSelectManagerMultiConfig<T>`, implementiert aber nicht den Parameter `options`, da diese selbst berechnet werden. Die Optionen der Liste sind dabei vom Typ `CoreTypeData`. Für diese Berechnung ist Mindestens die Angabe von `clazz` und `schuljahr` erforderlich. Ohne diese bleibt die Optionenliste leer. Alle Parameter der Config sind optional. Wenn eine leere Config an den SelectManager übergeben wird, dann erzeugt dieser für die Optionen eine leere Liste.
+#### BaseSelectManagerConfig\<T>
+Alle Parameter der Config sind optional und können entweder direkt angegeben werden oder in einem Ref. Werden sie in einem Ref angegeben, dann reagierte der Manager auf Änderungen dieses Refs und aktualisiert sich automatisch.
 
 | Parameter | Typ             | Definition                                               |
 |-----------|------------------|----------------------------------------------------------|
-| clazz   | `Class<T>` |  Die Klasse des CoreTypes           |
-| schuljahr     | `number \| null`           | Das Schuljahr, nach dem gefiltert wird. Bei null erhält die Komponente nur eine leere Liste an Optionen.      |
-| schulformen | `Schulform \| Schulform[] \| null` | Die Schulformen, nach denen gefiltert wird. Sie beinhaltet alle Daten, die in mindestens einer der Schulformen vorkommen. Bei `null` werden alle Daten unabhägig der Schulform geladen |
-| selectionDisplayText | `"kuerzel" \| "text" \| "kuerzelText" \| ((option: U) => string)` | Gibt an, wie der Selektionstext angezeigt werden soll. `kuerzel`, `text` und `kuerzelText` sind defaults, die verwendet werden können.  |
-| optionDisplayText | `"kuerzel" \| "text" \| "kuerzelText" \| ((option: U) => string)` | Gibt an, wie der Optionentext in Dropdown angezeigt werden soll. `kuerzel`, `text` und `kuerzelText` sind defaults, die verwendet werden können. |
+| options   | `MaybeRef<Iterable<T>>` |  Alle Optionen, die das Dropdown beinhaltet.              |
+| sort | `MaybeRef<Comparator<T>\|((a: T, b: T) => number)\|null>`| Gibt eine Sortierfunktion an |
+| filters | `MaybeRef<Iterable<SelectFilter<T>>>` | Setzt die aktiven Filter für die Optionenliste |
+
+### SelectManager\<T>
+Der `SelectManager<T>` ist ein einfacher, allgemeiner Manager für Selects, der für die verschiedensten Datentypen wie `string`, `number` oder auch Custom-Objekte verwendet werden kann. Er beinhaltet die Logik der Komponente basierend auf dem Datentyp der Optionen in Dropdown.
+
+Für das Erzeugen eines SelectManagers wird dem Konstruktor eine `SelectManagerConfig\<T>` übergeben. Wird das nicht getan, dann wird ein Select ohne Optionen erzeugt.
+
+#### SelectManagerConfig\<T>
+Leitet von der Config `BaseSelectManagerConfig\<T>` ab und erweitert sie. Alle Parameter der Config sind optional und können entweder direkt angegeben werden oder in einem Ref. Werden sie in einem Ref angegeben, dann reagierte der Manager auf Änderungen dieses Refs und aktualisiert sich automatisch.
+
+| Parameter | Typ             | Definition                                               |
+|-----------|------------------|----------------------------------------------------------|
+| selectionDisplayText | `MaybeRef<((option: U) => string)>` | Gibt an, wie der Selektionstext angezeigt werden soll. |
+| optionDisplayText | `MaybeRef<((option: U) => string)>` | Gibt an, wie der Optionentext in Dropdown angezeigt werden soll. |
+
+
+### CoreTypeSelectManager\<T>
+Dieser Manager generiert seine Liste an Optionen selbst, basierend auf Angaben zum `CoreType`, dem Schuljahr und den Schulformen. Hierfür muss dem Konstruktor eine `CoreTypeSelectManagerConfig<T>` übergeben werden, die alle Grundeinstellungen vornimmt. Die Übergabe einer Config ist optional. Wird keine übergeben, dann wird in dem Select eine leere Liste für die Optionen angezeigt.
+
+### CoreTypeSelectManagerConfig\<T>
+Diese Config erweitert die `BaseSelectManagerConfig<T>`, implementiert aber nicht den Parameter `options`, da diese selbst berechnet werden. Die Optionen der Liste sind dabei vom Typ `CoreTypeData`. Für diese Berechnung ist mindestens die Angabe von `clazz` und `schuljahr` erforderlich. Ohne diese bleibt die Optionenliste leer. Alle Parameter der Config sind optional und können entweder direkt angegeben werden oder in einem Ref. Werden sie in einem Ref angegeben, dann reagierte der Manager auf Änderungen dieses Refs und aktualisiert sich automatisch.
+
+| Parameter | Typ             | Definition                                               |
+|-----------|------------------|----------------------------------------------------------|
+| clazz   | `MaybeRef<Class<T>>` |  Die Klasse des CoreTypes           |
+| schuljahr     | `MaybeRef<number \| null>`           | Das Schuljahr, nach dem gefiltert wird. Bei null erhält die Komponente nur eine leere Liste an Optionen.      |
+| schulformen | `MaybeRef<Schulform \| Schulform[] \| null>` | Die Schulformen, nach denen gefiltert wird. Sie beinhaltet alle Daten, die in mindestens einer der Schulformen vorkommen. Bei `null` werden alle Daten unabhägig der Schulform geladen |
+| selectionDisplayText | `MaybeRef<"kuerzel" \| "text" \| "kuerzelText" \| ((option: U) => string)>` | Gibt an, wie der Selektionstext angezeigt werden soll. `kuerzel`, `text` und `kuerzelText` sind defaults, die verwendet werden können.  |
+| optionDisplayText | `MaybeRef<"kuerzel" \| "text" \| "kuerzelText" \| ((option: U) => string)>` | Gibt an, wie der Optionentext in Dropdown angezeigt werden soll. `kuerzel`, `text` und `kuerzelText` sind defaults, die verwendet werden können. |
 
 ## Filter
-Optionen im einem UiSelectMulti können gefiltert werden. Damit mehrere Filter kombiniert werden können, existiert das Interface `SelectFilter`, auf dem basierend die Filter definiert werden. Diese Filter können anschließend an den `SelectManager` übergeben werden. \
-Bei Änderungen an einem Filter wie beispielsweise an darin befindlichen Attributen, muss `manager.updateFilteredOptions (filter?: SelectFilter<T>, remove: boolean = false)` aufgerufen werden, da der Manager diese Änderungen andernfalls nicht registriert. \
+Optionen in einem UiSelect können gefiltert werden. Damit mehrere Filter kombiniert werden können, existiert das Interface `SelectFilter`, auf dem basierend die Filter definiert werden. Diese Filter können anschließend an den `Manager` übergeben werden. \
+Veränderbare Attribute eines Filters sollten als `ShallowRef` implementiert werden, damit auf deren Änderungen reagiert werden kann. Andernfalls muss bei Änderungen an einem Filter `manager.updateFilteredOptions (filter?: SelectFilter<T>, remove: boolean = false)` aufgerufen werden, da der Manager diese Änderungen andernfalls nicht registriert. \
 Die angezeigten Optionen im Dropdown des Selects sind ausschließlich Optionen, die für alle angewendeten Filter valide sind.
-
-### SearchSelectFilter
-Ein spezieller Filter, der für die Filterung nach Suchbegriffen verwendet wird. Wird im UiSelectMulti die prop `searchable = true` gesetzt, dann wird dieser Filter automatisch verwendet. 
-Es ist außerdem eine Tiefensuche möglich. Dabei wird der Suchbegriff nicht nur mit dem Optiontext verglichen, sondern auch mit den Inhalten von angegebenene Attributen.
-Diese Suche wird aktiviert, indem auf dem `SelectManager` `setDeepSearchAttributes(['attributeName'])` aufgerufen wird. Dabei werden alle Attributnamen übergeben, 
-die zusätzlich durchsucht werden sollen. Alternativ klnnen die Attribute auch direkt im `SearchSelectFilter` gesetzt werden, falls dieser selbst an den SelectManager
-übergeben wird.
-
-**Konstruktor**
-| Parameter | Typ             | Definition                                               |
-|-----------|------------------|----------------------------------------------------------|
-| key   | `string` |  Ein eindeutiger Key zur Identifikation des Filters. Der Key muss nur innerhalb des SelectManagers eindeutig sein.          |
-| search   | `string` | Der Suchbegriff, nach dem gefiltert werden soll. Es werden nur exakte Übereinstimmungen gefiltert (Groß- und Kleinschreibung irrelevant). Wildcards sind nicht erlaubt.          |
-| getText   | `(option: T) => string` |  Eine Funktion, die verwendet wird, um den Text der Optionen zu generieren. Dieser Text wird zum Vergleich mit dem Suchbegriff verwendet          |
-| deepSearchAttributes | `string[]` | Attribute der Option, die bei einer Suche ebenfalls durchsucht werden sollen, auch wenn sie nicht im Optionentext im Dropdown stehen. |
 
 ### FachSelectFilter
 Ein spezieller Filter, der Optionen vom Typ `Fach` nach `Fachgruppen` filtert. Es können mehrere Fachgruppen angegeben werden. Der Filter gibt dann alle Fächer zurück, die mit min. einer Fachgruppe übereinstimmen.
-
-**Konstruktor**
+#### Konstruktor
 | Parameter | Typ             | Definition                                               |
 |-----------|------------------|----------------------------------------------------------|
-| key   | `string` |  Ein eindeutiger Key zur Identifikation des Filters. Der Key muss nur innerhalb des SelectManagers eindeutig sein.          |
-| fachgruppen   | `List<Fachgruppe>` |  Eine Liste der Fachgruppen, nach denen gefiltert wird.          |
-| schuljahr   | `number` | Das dafür verwendet Schuljahr.          |
+| key   | `string` |  Ein eindeutiger Key zur Identifikation des Filters. Der Key muss nur innerhalb des Managers eindeutig sein.          |
+| fachgruppen   | `MaybeRef<List<Fachgruppe>>` |  Eine Liste der Fachgruppen, nach denen gefiltert wird.          |

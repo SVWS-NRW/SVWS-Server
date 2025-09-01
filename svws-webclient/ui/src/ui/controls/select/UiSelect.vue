@@ -3,12 +3,12 @@
 		<!-- Combobox -->
 		<div :id="`uiSelectInput_${instanceId}`" ref="uiSelectCombobox" :tabindex="comboboxTabindex" :role="comboboxRole" v-bind="comboboxAriaAttrs"
 			:class="[comboboxClasses, 'relative outline-none focus-within:ring-2 ring-ui-neutral w-full rounded-md flex items-center gap-1 hover:ring-ui-neutral hover:ring-2 min-w-16 m-[0.2em]']"
-			@click="handleComponentClick" @focus="handleComboboxFocus" @keydown="onKeyDown">
+			@click.stop="handleComponentClick" @focus="handleComboboxFocus" @keydown.stop="onKeyDown">
 			<div :class="[headlessPadding, 'flex']">
 				<!-- Expand-Icon + Clear-Button headless -->
 				<div v-if="headless" class="flex items-center">
 					<span :class="[iconColorClass, 'icon-sm i-ri-expand-up-down-line cursor-pointer']" />
-					<button v-if="manager.removable" type="button" :disabled aria-label="Auswahl löschen" @click="deselect" @keydown.enter="deselect"
+					<button v-if="removable" type="button" :disabled aria-label="Auswahl löschen" @click.stop="clearSelection" @keydown.enter.stop="clearSelection"
 						class="hover:bg-ui-hover flex focus:ring-2 ring-ui-neutral outline-none rounded-sm">
 						<span :class="[iconColorClass, 'icon-sm i-ri-close-line']" />
 					</button>
@@ -65,13 +65,13 @@
 					<!-- Wrapper für das Such-Input und aktuelle Selektion -->
 					<div class="relative grid grid-cols-1 grid-rows-1 flex-1 min-w-5 order-last text-base">
 						<!-- Aktuelle Selektion -->
-						<div v-if="manager.hasSelection()" class="flex items-center overflow-hidden row-start-1 col-start-1">
+						<div v-if="hasSelection()" class="flex items-center overflow-hidden row-start-1 col-start-1">
 							<svws-ui-tooltip position="top" :indicator="false" class="truncate">
 								<template #content>
-									{{ manager.getSelectionText(manager.selected) }}
+									{{ manager.getSelectionText(model ?? null) }}
 								</template>
 								<div v-if="showSelection" :class="[focusBasedTextColorClass, 'truncate z-0 cursor-pointer font-medium inline-block align-middle leading-none h-5 mt-1']">
-									{{ manager.getSelectionText(manager.selected) }}
+									{{ manager.getSelectionText(model ?? null) }}
 								</div>
 							</svws-ui-tooltip>
 						</div>
@@ -86,7 +86,7 @@
 
 			<!-- Expand-Icon + Clear-Button -->
 			<div v-if="!headless" class="ml-auto flex items-center h-fit">
-				<button v-if="manager.removable" type="button" :disabled aria-label="Auswahl löschen" @click="deselect" @keydown.enter="deselect"
+				<button v-if="removable" type="button" :disabled aria-label="Auswahl löschen" @click.stop="clearSelection" @keydown.enter.stop="clearSelection"
 					class="hover:bg-ui-hover flex focus:ring-2 ring-ui-neutral outline-none rounded-sm">
 					<span :class="[iconColorClass, 'icon-sm i-ri-close-line']" />
 				</button>
@@ -97,13 +97,13 @@
 		<!-- Dropdown -->
 		<ul popover :aria-labelledby="`uiSelectLabel_${instanceId}`" :id="`uiSelectDropdown_${instanceId}`" ref="uiSelectDropdown" role="listbox"
 			class="overflow-auto bg-ui select-none scrollbar-thin p-1 rounded-md border border-ui font-normal" :style="dropdownPositionStyles">
-			<li v-if="manager.filteredOptions.isEmpty()" class="cursor-not-allowed p-2 hover:bg-ui-hover text-ui-secondary italic">
+			<li v-if="manager.filteredOptions.isEmpty() || (searchFilteredOptions.size() === 0)" class="cursor-not-allowed p-2 hover:bg-ui-hover text-ui-secondary italic text-left">
 				{{ "Keine passenden Einträge gefunden" }}
 			</li>
-			<li v-else :id="`uiSelectOption_${optionIndex}_${instanceId}`" v-for="(option, optionIndex) in manager.filteredOptions" :key="optionIndex"
-				role="option" :aria-selected="manager.isSelected(option)"
-				:class="[optionClasses(option, optionIndex), 'cursor-pointer m-1 p-1 hover:bg-ui-hover hover:inset-ring-2 hover:inset-ring-ui-neutral rounded-lg']"
-				@click="toggleSelection($event, option)">
+			<li v-else :id="`uiSelectOption_${optionIndex}_${instanceId}`" v-for="(option, optionIndex) in searchFilteredOptions" :key="optionIndex"
+				role="option" :aria-selected="isSelected(option)"
+				:class="[optionClasses(option, optionIndex), 'cursor-pointer m-1 p-1 hover:bg-ui-hover hover:inset-ring-2 hover:inset-ring-ui-neutral rounded-lg text-left']"
+				@click.stop="toggleSelection(option)">
 				<template v-for="(part, index) in splitText(manager.getOptionText(option))" :key="index">
 					<span v-if="part.hit" class="bg-ui-selected">{{ part.text }}</span>
 					<span v-else>{{ part.text }}</span>
@@ -115,17 +115,21 @@
 
 <script setup lang="ts" generic="T, V extends Validator">
 
-	import { computed, onMounted, ref, useAttrs, watch } from 'vue';
+	import { computed, ref, toRaw, useAttrs, watch } from 'vue';
 	import { useUiSelectUtils } from './selectManager/UiSelectUtils';
 	import type { UiSelectSingleProps } from './selectManager/UiSelectProps';
 	import type { Validator } from '../../../../../core/src/asd/validate/Validator';
-	import { SelectManagerSingle } from './selectManager/SelectManagerSingle';
+	import { SelectManager } from './selectManager/SelectManager';
+	import { DeveloperNotificationException } from '../../../../../core/src/core/exceptions/DeveloperNotificationException';
 
 	const props = withDefaults(defineProps<UiSelectSingleProps<T, V>>(), {
 		label: '',
-		manager: () => new SelectManagerSingle<T>(),
+		manager: () => new SelectManager<T>(),
 		searchable: false,
+		deepSearchAttributes: () => [],
 		required: false,
+		removable: true,
+		nullable: true,
 		disabled: false,
 		statistics: false,
 		headless: false,
@@ -133,12 +137,50 @@
 		doValidate: (validator: V): boolean => validator.run(),
 	});
 
-	/** Die Vererbung der Attribute wird abgestellt, damit diese manuell an die richtigen Stellen weitergeleitet werden kann */
+	// model mit der aktuellen Selektion
+	type MaybeNull<T> = T | null;
+	const model = defineModel<MaybeNull<T>>();
+
+	/**
+	 * Watcher auf die aktuelle Selektion über das model.
+	 * Bei nicht validen Selektionen wird diese korrigiert oder ein Fehler geworfen.
+	 */
+	watch(
+		() => model.value,
+		(newSelection) => {
+			if ((newSelection === undefined) || (newSelection === null)) {
+				if (!props.nullable)
+					throw new DeveloperNotificationException("Ungültiges v-model: null oder undefined bei nullable = false");
+				return;
+			}
+			if (!props.manager.filteredOptions.contains(toRaw(newSelection)))
+				model.value = undefined;
+		}
+	);
+
+	/**
+	 * Watcher auf die gefilterten Optionen.
+	 * Falls diese sich ändern muss geprüft werden, ob die Selektion noch valide ist. Falls nicht wird diese angepasst.
+	 */
+	watch(
+		() => props.manager.filteredOptions,
+		(newOptions) => {
+			if ((model.value === undefined) || (model.value === null))
+				return;
+			if (!newOptions.contains(toRaw(model.value)))
+				model.value = undefined;
+		}
+	);
+
+	// Die Vererbung der Attribute wird abgestellt, damit diese manuell an die richtigen Stellen weitergeleitet werden kann
 	defineOptions({ inheritAttrs: false });
 	const attrs = useAttrs();
 
-	type MaybeNull<T> = T | null;
-	const model = defineModel<MaybeNull<T>>();
+	// Der aktuelle Suchbegriff mit dazu passenden Optionen
+	const search = ref("");
+	const searchFilteredOptions = computed(() => {
+		return (props.searchable) ? getMatchingOptions(search.value) : props.manager.filteredOptions;
+	});
 
 	// refs
 	const uiSelect = ref<HTMLElement | null>(null);
@@ -150,9 +192,7 @@
 	 * Prüft, ob die Eingaben valide sind
 	 */
 	const isValid = computed((): boolean => {
-		if (props.required && props.manager.hasSelection() === false)
-			return false;
-		return true;
+		return !props.required || hasSelection();
 	});
 
 
@@ -160,16 +200,70 @@
 	 * Prüft, ob Eingaben abhänig von den Validatoren valide sind
 	 */
 	const isValidatorValid = computed((): boolean =>
-		(props.validator !== undefined) ? props.doValidate(props.validator(), model.value ?? null) : true
+		(props.validator !== undefined) ? props.doValidate(props.validator(), toRaw(model.value) ?? null) : true
 	);
 
+	/**
+	 * Prüft, ob die angegebene Option bereits selektiert ist.
+	 *
+	 * @param option
+	 */
+	function isSelected(option: T): boolean {
+		if (model.value === undefined)
+			return false;
+		return toRaw(model.value) === option;
+	}
+
+	/**
+	 * Selektiert die angegebene Option.
+	 *
+	 * @param option   die zu selektierende Option
+	 *
+	 * @throws DeveloperNotificationException, wenn die Option bereits selektiert ist
+	 */
+	function selectOption(option: T): void {
+		if (isSelected(option))
+			throw new DeveloperNotificationException(`Die Option ${props.manager.getOptionText(option)} ist bereits selektiert.`);
+
+		model.value = option;
+		resetSearch();
+	}
+
+	/**
+	 * Deselektiert die komplette Selektion.
+	 *
+	 * @throws DeveloperNotificationException, wenn ein Löschen der Selektion durch removable = false nicht erlaubt ist.
+	 */
+	function clearSelection(): void {
+		if (!props.removable)
+			throw new DeveloperNotificationException("Das Select ist auf removable=false gesetzt, daher kann der Eintrag nicht deselektiert werden");
+		model.value = undefined;
+		resetSearch();
+	}
+
+	/**
+	 * Gibt an, ob das Deselektieren erlaubt ist.
+	 */
+	function deselectAllowed(): boolean {
+		return props.removable;
+	}
+
+	/**
+	 * Prüft, ob etwas selektiert ist.
+	 */
+	function hasSelection(): boolean {
+		return ((model.value !== undefined) && (model.value !== null));
+	}
+
+	// Helperklasse für einige Funktionen, die in Single- und Multi-Select-Komponenten benötigt werden.
 	const {
-		instanceId, newSelection, search, filteredAttributes, iconColorClass, focusBasedTextColorClass, comboboxAriaAttrs, searchAriaAttrs, comboboxTabindex,
+		instanceId, filteredAttributes, iconColorClass, focusBasedTextColorClass, comboboxAriaAttrs, searchAriaAttrs, comboboxTabindex,
 		searchInputTabindex, comboboxRole, dropdownPositionStyles, onKeyDown, searchInputFocusClass, handleComboboxFocus, handleBlur, handleComponentClick,
 		comboboxClasses, headlessPadding, labelClasses, labelTextColorClass, optionClasses, validatorErrorIcon, showLabel, showValidatorError,
-		showValidatorErrorMessage, validatorErrorBgClasses, showSelection, splitText, handleInput, toggleSelection, deselect,
+		showValidatorErrorMessage, validatorErrorBgClasses, showSelection, splitText, handleInput, toggleSelection, getMatchingOptions, resetSearch,
 
 	} = useUiSelectUtils(
+		false,
 		props,
 		attrs,
 		isValid,
@@ -177,30 +271,13 @@
 		uiSelect,
 		uiSelectCombobox,
 		uiSelectSearch,
-		uiSelectDropdown
+		uiSelectDropdown,
+		search,
+		selectOption,
+		clearSelection,
+		hasSelection,
+		isSelected,
+		deselectAllowed
 	);
-
-	watch(
-		() => model.value,
-		(newSelection) => {
-			props.manager.selected = newSelection;
-		},
-		{ deep: true }
-	);
-
-	watch(
-		() => newSelection.value,
-		(val) => {
-			if (val) {
-				model.value = props.manager.selected;
-				newSelection.value = false;
-			}
-		}
-	);
-
-	onMounted(() => {
-		if (model.value !== null)
-			props.manager.selected = model.value;
-	});
 
 </script>

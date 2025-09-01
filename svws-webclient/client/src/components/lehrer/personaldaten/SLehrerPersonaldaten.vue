@@ -22,14 +22,15 @@
 		<svws-ui-content-card title="Beschäftigungsdaten">
 			<svws-ui-input-wrapper :grid="2">
 				<ui-select label="Rechtsverhältnis" :readonly v-model="rechtsverhaeltnis" :manager="rechtsverhaeltnisSelectManager" statistics
-					:validator="() => validatorPersonalabschnittsDaten" :do-validate="validatePersonalabschnittDaten" class="contentFocusField" required />
+					:validator="() => validatorPersonalabschnittsDaten" :do-validate="validatePersonalabschnittDaten" class="contentFocusField"
+					:removable="false" required />
 				<ui-select label="Beschäftigungsart" :readonly v-model="beschaeftigungsart" :manager="beschaeftigungsartSelectManager" statistics
-					class="contentFocusField" required />
+					class="contentFocusField" :removable="false" required />
 				<svws-ui-input-number placeholder="Pflichtstundensoll" :readonly statistics
 					:model-value="personalabschnittsdaten()?.pflichtstundensoll ?? 0.0"
 					@change="pflichtstundensoll => patchAbschnittsdaten({ pflichtstundensoll: pflichtstundensoll }, personalabschnittsdaten()?.id ?? -1)" />
 				<ui-select label="Einsatzstatus" :readonly v-model="einsatzstatus" statistics :manager="einsatzstatusSelectManager"
-					class="contentFocusField" required />
+					class="contentFocusField" :removable="false" required />
 				<svws-ui-text-input placeholder="Stammschule" :readonly :model-value="personalabschnittsdaten()?.stammschulnummer"
 					@change="stammschulnummer => patchAbschnittsdaten({ stammschulnummer }, personalabschnittsdaten()?.id ?? -1)" statistics />
 			</svws-ui-input-wrapper>
@@ -59,45 +60,27 @@
 	import { DeveloperNotificationException, ValidatorLehrerPersonalabschnittsdaten} from "@core";
 	import { LehrerBeschaeftigungsart, LehrerEinsatzstatus, LehrerRechtsverhaeltnis, LehrerAnrechnungsgrund, LehrerMehrleistungsarten, LehrerMinderleistungsarten,
 		BenutzerKompetenz} from "@core";
-	import { CoreTypeSelectManagerSingle } from "@ui";
+	import { CoreTypeSelectManager } from "@ui";
 
 	const props = defineProps<LehrerPersonaldatenProps>();
 
 	const schuljahr = computed<number>(() => props.aktAbschnitt.schuljahr);
-
-	watch(
-		() => schuljahr.value,
-		(newValue) => {
-			rechtsverhaeltnisSelectManager.schuljahr = newValue;
-			beschaeftigungsartSelectManager.schuljahr = newValue;
-			einsatzstatusSelectManager.schuljahr = newValue;
-		}
-	);
-
-	watch(
-		() => props.schulform,
-		(newValue) => {
-			rechtsverhaeltnisSelectManager.schulformen = newValue;
-			beschaeftigungsartSelectManager.schulformen = newValue;
-			einsatzstatusSelectManager.schulformen = newValue;
-		}
-	);
 
 	const readonly = computed<boolean>(() => !props.benutzerKompetenzen.has(BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN));
 
 	const personaldaten = () => props.lehrerListeManager().personalDaten();
 	const personalabschnittsdaten = () => props.lehrerListeManager().getAbschnittBySchuljahresabschnittsId(props.aktAbschnitt.id);
 
-	const rechtsverhaeltnisSelectManager = new CoreTypeSelectManagerSingle({ clazz: LehrerRechtsverhaeltnis.class, schuljahr: schuljahr.value, removable: false,
+	const rechtsverhaeltnisSelectManager = new CoreTypeSelectManager({ clazz: LehrerRechtsverhaeltnis.class, schuljahr: schuljahr,
 		schulformen: props.schulform, optionDisplayText: "text", selectionDisplayText: "text",
 	});
 
-	const beschaeftigungsartSelectManager = new CoreTypeSelectManagerSingle({ clazz: LehrerBeschaeftigungsart.class, schuljahr: schuljahr.value,
-		schulformen: props.schulform, removable: false, optionDisplayText: "text", selectionDisplayText: "text",
+	const beschaeftigungsartSelectManager = new CoreTypeSelectManager({ clazz: LehrerBeschaeftigungsart.class, schuljahr: schuljahr,
+		schulformen: props.schulform, optionDisplayText: "text", selectionDisplayText: "text",
 	});
 
-	const einsatzstatusSelectManager = new CoreTypeSelectManagerSingle({ clazz: LehrerEinsatzstatus.class, schuljahr: schuljahr.value, schulformen: props.schulform,
-		removable: false, optionDisplayText: "text", selectionDisplayText: "text",
+	const einsatzstatusSelectManager = new CoreTypeSelectManager({ clazz: LehrerEinsatzstatus.class, schuljahr: schuljahr, schulformen: props.schulform,
+		optionDisplayText: "text", selectionDisplayText: "text",
 	});
 
 	const rechtsverhaeltnis = computed<LehrerRechtsverhaeltnisKatalogEintrag | undefined>({

@@ -165,7 +165,7 @@
 	import type { SSchuelerAllgemeinesGruppenprozesseProps } from "./SSchuelerAllgemeinesGruppenprozesseProps";
 	import type { StundenplanListeEintrag, List } from "@core";
 	import { DateUtils, ReportingParameter, ReportingReportvorlage, ListUtils, ArrayList, BenutzerKompetenz } from "@core";
-	import { SelectManagerSingle } from "@ui";
+	import { SelectManager } from "@ui";
 
 	type Action = 'druckSchuelerListeKontaktdatenErzieher' | 'druckSchuelerSchulbescheinigung' | 'druckSchuelerStundenplan' | 'delete' | '';
 
@@ -195,14 +195,8 @@
 
 
 	const stundenplaene = computed<Array<StundenplanListeEintrag>>(() => [...props.mapStundenplaene.values()])
-	watch(
-		() => stundenplaene.value,
-		(newValue) => {
-			stundenplanSelectManager.options = newValue;
-		}
-	);
-	const stundenplanSelectManager = new SelectManagerSingle({
-		options: stundenplaene.value, optionDisplayText: stundenplanDisplayText, selectionDisplayText: stundenplanDisplayText,
+	const stundenplanSelectManager = new SelectManager({
+		options: stundenplaene, optionDisplayText: stundenplanDisplayText, selectionDisplayText: stundenplanDisplayText,
 	})
 
 	async function entferneSchueler() {

@@ -33,7 +33,7 @@
 
 			<svws-ui-input-wrapper :grid="2">
 				<ui-gruppenprozesse-wrapper :pending-state-manager="pendingStateManager" attribute-name="status" :nullable="false">
-					<ui-select v-model="status" label="Status" :manager="statusSelectManager" statistics />
+					<ui-select v-model="status" label="Status" :manager="statusSelectManager" statistics :removable="false" />
 				</ui-gruppenprozesse-wrapper>
 
 				<ui-gruppenprozesse-wrapper v-if="alleExtern" :pending-state-manager="pendingStateManager" attribute-name="externeSchulNr">
@@ -46,7 +46,8 @@
 				</ui-gruppenprozesse-wrapper>
 
 				<ui-gruppenprozesse-wrapper :pending-state-manager="pendingStateManager" attribute-name="haltestelleID">
-					<ui-select v-model="haltestelleID" label="Haltestelle" :manager="haltestelleSelectManager" :readonly="!hatKompetenzUpdate" />
+					<ui-select v-model="haltestelleID" label="Haltestelle" :manager="haltestelleSelectManager" :readonly="!hatKompetenzUpdate"
+						:removable="false" />
 				</ui-gruppenprozesse-wrapper>
 
 				<ui-gruppenprozesse-wrapper :pending-state-manager="pendingStateManager" attribute-name="aufnahmedatum">
@@ -111,16 +112,18 @@
 		<svws-ui-content-card title="Staatsangehörigkeit und Konfession" v-if="hatKompetenzAnsehen">
 			<svws-ui-input-wrapper :grid="2">
 				<ui-gruppenprozesse-wrapper :pending-state-manager="pendingStateManager" attribute-name="staatsangehoerigkeitID">
-					<ui-select v-model="staatsangehoerigkeitID" label="1. Staatsangehörigkeit" :manager="ersteStaatsAngehoerigkeitSelectManager" statistics />
+					<ui-select v-model="staatsangehoerigkeitID" label="1. Staatsangehörigkeit" :manager="ersteStaatsAngehoerigkeitSelectManager" statistics
+						:removable="false" />
 				</ui-gruppenprozesse-wrapper>
 
 				<ui-gruppenprozesse-wrapper :pending-state-manager="pendingStateManager" attribute-name="staatsangehoerigkeit2ID">
-					<ui-select v-model="staatsangehoerigkeit2ID" label="2. Staatsangehörigkeit"	:manager="zweiteStaatsAngehoerigkeitSelectManager" statistics />
+					<ui-select v-model="staatsangehoerigkeit2ID" label="2. Staatsangehörigkeit"	:manager="zweiteStaatsAngehoerigkeitSelectManager" statistics
+						:removable="false" />
 				</ui-gruppenprozesse-wrapper>
 
 				<ui-gruppenprozesse-wrapper :pending-state-manager="pendingStateManager" attribute-name="religionID">
 					<ui-select v-model="konfession" label="Konfession" :manager="konfessionSelectManager" :readonly="!hatKompetenzUpdate"
-						statistics />
+						statistics :removable="false" />
 				</ui-gruppenprozesse-wrapper>
 
 				<ui-gruppenprozesse-wrapper :pending-state-manager="pendingStateManager" attribute-name="druckeKonfessionAufZeugnisse"
@@ -164,26 +167,27 @@
 
 				<ui-gruppenprozesse-wrapper :pending-state-manager="pendingStateManager" attribute-name="geburtsland" :nullable="hatMigrationshintergrund">
 					<ui-select v-model="geburtsland" label="Geburtsland" :manager="geburtslandSelectManager" :disabled="!hatMigrationshintergrund"
-						:readonly="hatMigrationshintergrund && !hatKompetenzUpdate" searchable statistics />
+						:readonly="hatMigrationshintergrund && !hatKompetenzUpdate" :removable="false" searchable statistics />
 				</ui-gruppenprozesse-wrapper>
 
 				<ui-gruppenprozesse-wrapper :pending-state-manager="pendingStateManager" attribute-name="verkehrspracheFamilie"
 					:nullable="hatMigrationshintergrund">
 					<ui-select v-model="verkehrssprache" label="Verkehrssprache" :manager="verkehrsspracheSelectManager"
-						:disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && !hatKompetenzUpdate"
+						:disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && !hatKompetenzUpdate" :removable="false"
 						searchable statistics />
 				</ui-gruppenprozesse-wrapper>
 
 				<ui-gruppenprozesse-wrapper :pending-state-manager="pendingStateManager" attribute-name="geburtslandMutter"
 					:nullable="hatMigrationshintergrund">
 					<ui-select v-model="geburtslandMutter" label="Geburtsland Mutter" :manager="geburtslandMutterSelectManager"
-						:disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && !hatKompetenzUpdate" searchable
+						:disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && !hatKompetenzUpdate" :removable="false" searchable
 						statistics />
 				</ui-gruppenprozesse-wrapper>
 
 				<ui-gruppenprozesse-wrapper :pending-state-manager="pendingStateManager" attribute-name="geburtslandVater" :nullable="hatMigrationshintergrund">
 					<ui-select v-model="geburtslandVater" label="Geburtsland Vater" :manager="geburtslandVaterSelectManager"
-						:disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && !hatKompetenzUpdate" searchable statistics />
+						:disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && !hatKompetenzUpdate" :removable="false"
+						searchable statistics />
 				</ui-gruppenprozesse-wrapper>
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
@@ -197,7 +201,7 @@
 	import { BenutzerKompetenz, Nationalitaeten, SchuelerStatus, Schulform, Verkehrssprache } from "@core";
 	import type { SchuelerIndividualdatenGruppenprozesseProps } from "~/components/schueler/individualdaten/SSchuelerIndividualdatenGruppenprozesseProps";
 	import { computed, ref, watch, toRefs } from "vue";
-	import { CoreTypeSelectManagerSingle, SelectManagerSingle } from "@ui";
+	import { CoreTypeSelectManager, SelectManager } from "@ui";
 
 	const props = defineProps<SchuelerIndividualdatenGruppenprozesseProps>();
 
@@ -245,104 +249,43 @@
 		props.checkpoint.active = somethingPending;
 	}, { immediate: false, deep: true });
 
-	watch(
-		() => schulform.value,
-		(newValue) => {
-			ersteStaatsAngehoerigkeitSelectManager.schulformen = newValue;
-			zweiteStaatsAngehoerigkeitSelectManager.schulformen = newValue;
-			statusSelectManager.schulformen = newValue;
-			geburtslandSelectManager.schulformen = newValue;
-			geburtslandMutterSelectManager.schulformen = newValue;
-			geburtslandVaterSelectManager.schulformen = newValue;
-			verkehrsspracheSelectManager.schulformen = newValue;
-		}
-	);
-
-	watch(
-		() => schuljahr.value,
-		(newValue) => {
-			ersteStaatsAngehoerigkeitSelectManager.schuljahr = newValue;
-			zweiteStaatsAngehoerigkeitSelectManager.schuljahr = newValue;
-			statusSelectManager.schuljahr = newValue;
-			geburtslandSelectManager.schuljahr = newValue;
-			geburtslandMutterSelectManager.schuljahr = newValue;
-			geburtslandVaterSelectManager.schuljahr = newValue;
-			verkehrsspracheSelectManager.schuljahr = newValue;
-		}
-	);
-
-	watch(
-		() => religionen.value,
-		(newValue) => {
-			konfessionSelectManager.options = newValue;
-		}
-	);
-
-	watch(
-		() => fahrschuelerArten.value,
-		(newValue) => {
-			fahrschuelerSelectManager.options = newValue;
-		}
-	);
-
-	watch(
-		() => haltestellen.value,
-		(newValue) => {
-			haltestelleSelectManager.options = newValue;
-		}
-	);
-
-	watch(
-		() => schulen.value,
-		(newValue) => {
-			stammschuleSelectManager.options = newValue;
-		}
-	);
-
-	const ersteStaatsAngehoerigkeitSelectManager = new CoreTypeSelectManagerSingle({
-		clazz: Nationalitaeten.class, schuljahr: schuljahr.value,
-		schulformen: schulform.value, removable: false,
+	const ersteStaatsAngehoerigkeitSelectManager = new CoreTypeSelectManager({
+		clazz: Nationalitaeten.class, schuljahr: schuljahr, schulformen: schulform,
 	});
-	const zweiteStaatsAngehoerigkeitSelectManager = new CoreTypeSelectManagerSingle({
-		clazz: Nationalitaeten.class, schuljahr: schuljahr.value,
-		schulformen: schulform.value, removable: false,
+	const zweiteStaatsAngehoerigkeitSelectManager = new CoreTypeSelectManager({
+		clazz: Nationalitaeten.class, schuljahr: schuljahr, schulformen: schulform,
 	});
-	const statusSelectManager = new CoreTypeSelectManagerSingle({
-		clazz: SchuelerStatus.class, schuljahr: schuljahr.value, schulformen: schulform.value,
-		removable: false,
+	const statusSelectManager = new CoreTypeSelectManager({
+		clazz: SchuelerStatus.class, schuljahr: schuljahr, schulformen: schulform,
 	});
-	const konfessionSelectManager = new SelectManagerSingle({
-		options: religionen.value, removable: false,
+	const konfessionSelectManager = new SelectManager({
+		options: religionen,
 		optionDisplayText: selected => selected.bezeichnung, selectionDisplayText: selected => selected.bezeichnung,
 	});
-	const fahrschuelerSelectManager = new SelectManagerSingle({
-		options: fahrschuelerArten.value, removable: false,
+	const fahrschuelerSelectManager = new SelectManager({
+		options: fahrschuelerArten,
 		optionDisplayText: (selected: Fahrschuelerart) => selected.bezeichnung ?? '', selectionDisplayText: selected => selected.bezeichnung ?? '',
 	});
-	const haltestelleSelectManager = new SelectManagerSingle({
-		options: haltestellen.value, removable: false, optionDisplayText: selected => selected.bezeichnung ?? '',
+	const haltestelleSelectManager = new SelectManager({
+		options: haltestellen, optionDisplayText: selected => selected.bezeichnung ?? '',
 		selectionDisplayText: selected => selected.bezeichnung ?? '',
 	});
-	const stammschuleSelectManager = new SelectManagerSingle({
-		options: schulen.value,
+	const stammschuleSelectManager = new SelectManager({
+		options: schulen,
 		optionDisplayText: selected => selected.kuerzel ?? selected.schulnummerStatistik ?? selected.kurzbezeichnung ?? selected.name,
 		selectionDisplayText: selected => selected.kuerzel ?? selected.schulnummerStatistik ?? selected.kurzbezeichnung ?? selected.name,
 	});
-	const geburtslandSelectManager = new CoreTypeSelectManagerSingle({
-		clazz: Nationalitaeten.class, schuljahr: schuljahr.value, schulformen: schulform.value,
-		removable: false,
+	const geburtslandSelectManager = new CoreTypeSelectManager({
+		clazz: Nationalitaeten.class, schuljahr: schuljahr, schulformen: schulform,
 	});
-	const geburtslandMutterSelectManager = new CoreTypeSelectManagerSingle({
-		clazz: Nationalitaeten.class, schuljahr: schuljahr.value, schulformen: schulform.value,
-		removable: false,
+	const geburtslandMutterSelectManager = new CoreTypeSelectManager({
+		clazz: Nationalitaeten.class, schuljahr: schuljahr, schulformen: schulform,
 	});
-	const geburtslandVaterSelectManager = new CoreTypeSelectManagerSingle({
-		clazz: Nationalitaeten.class, schuljahr: schuljahr.value, schulformen: schulform.value,
-		removable: false,
+	const geburtslandVaterSelectManager = new CoreTypeSelectManager({
+		clazz: Nationalitaeten.class, schuljahr: schuljahr, schulformen: schulform,
 	});
-	const verkehrsspracheSelectManager = new CoreTypeSelectManagerSingle({
-		clazz: Verkehrssprache.class, schuljahr: schuljahr.value, schulformen: schulform.value,
-		removable: false,
+	const verkehrsspracheSelectManager = new CoreTypeSelectManager({
+		clazz: Verkehrssprache.class, schuljahr: schuljahr, schulformen: schulform,
 	});
 
 	function setReligionabmeldung(value: string | null) {

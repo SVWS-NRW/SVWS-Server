@@ -52,7 +52,7 @@
 
 	import type { AbteilungenDatenProps } from "~/components/schule/kataloge/abteilungen/daten/SAbteilungenDatenProps";
 	import type { DataTableColumn} from "@ui";
-	import { SelectManagerSingle } from "@ui";
+	import { SelectManager } from "@ui";
 	import type { KlassenDaten, List } from "@core";
 	import { computed, ref, watch } from "vue";
 	import { AbteilungKlassenzuordnung, ArrayList, BenutzerKompetenz, HashMap } from "@core";
@@ -64,15 +64,8 @@
 	const klassenToBeAdded = ref<KlassenDaten[]>([]);
 	const lehrer = computed(() => props.manager().getLehrer().values());
 
-	watch(
-		() => lehrer.value,
-		(newValue) => {
-			selectManager.options = newValue;
-		}
-	);
-
-	const selectManager = new SelectManagerSingle({
-		options: lehrer.value, optionDisplayText: v => v.vorname + ' ' + v.nachname,
+	const selectManager = new SelectManager({
+		options: lehrer, optionDisplayText: v => v.vorname + ' ' + v.nachname,
 		selectionDisplayText: v => v.vorname + ' ' + v.nachname,
 	});
 	const columns: DataTableColumn[] = [ { key: "kuerzel", label: "Klasse"} ];

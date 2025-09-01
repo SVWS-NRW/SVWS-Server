@@ -3,14 +3,14 @@
 		<template #docs><Docs /></template>
 		<Variant title="SelectManager" id="selectManager">
 			<svws-ui-input-wrapper>
-				<ui-select label="SelectManagerSingle mit String" :manager="sStringSelectManager" :searchable="state.searchable"
+				<ui-select label="SelectManager mit String" :manager="stringSelectManager" :searchable="state.searchable" :removable="state.removable"
 					:disabled="state.disabled" :statistics="state.statistics" :headless="state.headless"
 					:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
-				<ui-select label="SelectManagerSingle mit Custom-Objekten" :manager="sObjectSelectManager" :searchable="state.searchable"
+				<ui-select label="SelectManager mit Custom-Objekten" :manager="objectSelectManager" :searchable="state.searchable" :removable="state.removable"
 					:disabled="state.disabled" :statistics="state.statistics" :headless="state.headless"
 					:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
-				<ui-select label="CoreTypeSelectManagerSingle mit LehrerRechtsverhaeltnis" :manager="sCoreTypeSelectManager" :searchable="state.searchable" :disabled="state.disabled"
-					:statistics="state.statistics" :headless="state.headless"
+				<ui-select label="CoreTypeSelectManager mit LehrerRechtsverhaeltnis" :manager="coreTypeSelectManager" :searchable="state.searchable" :disabled="state.disabled"
+					:statistics="state.statistics" :headless="state.headless" :removable="state.removable"
 					:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
 			</svws-ui-input-wrapper>
 			<template #controls>
@@ -67,8 +67,8 @@
 				<svws-ui-checkbox v-model="filterState2.musikUndKunst2">
 					Musik und Kunst
 				</svws-ui-checkbox>
-				<ui-select label="CoreTypeSelectManager Fach abhängig von Fachgruppe" :manager="sFachSelectManager" :searchable="state.searchable"
-					:disabled="state.disabled" :statistics="state.statistics" :headless="state.headless"
+				<ui-select label="CoreTypeSelectManager Fach abhängig von Fachgruppe" :manager="fachSelectManager" :searchable="state.searchable"
+					:disabled="state.disabled" :statistics="state.statistics" :headless="state.headless" :removable="state.removable"
 					:min-options="state.minOptions" :max-options="state.maxOptions" :required="state.required"
 					:class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" />
 			</svws-ui-input-wrapper>
@@ -87,14 +87,14 @@
 					</code>
 				</pre>
 				<ui-select label="Deep Search SelectManager" :manager="deepSearchSelectManager" :searchable="true" :disabled="state.disabled"
-					:statistics="state.statistics" :headless="state.headless" :min-options="state.minOptions"
+					:statistics="state.statistics" :headless="state.headless" :min-options="state.minOptions" :deep-search-attributes="['marke', 'color', 'baujahr']" :removable="state.removable"
 					:max-options="state.maxOptions" :class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
 			</svws-ui-input-wrapper>
 		</Variant>
 		<Variant title="Sortierung" id="sortierung">
 			<svws-ui-input-wrapper>
 				<ui-select label="Sortiertes Select" :manager="sortableCoreTypeSelectManager" :searchable="true" :disabled="state.disabled"
-					:statistics="state.statistics" :headless="state.headless" :min-options="state.minOptions"
+					:statistics="state.statistics" :headless="state.headless" :min-options="state.minOptions" :removable="state.removable"
 					:max-options="state.maxOptions" :class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]" :required="state.required" />
 			</svws-ui-input-wrapper>
 			<template #controls>
@@ -107,7 +107,6 @@
 				<HstNumber v-model="state.minOptions" title="minOptions" />
 				<HstNumber v-model="state.maxOptions" title="maxOptions" />
 				<HstRadio v-model="state.sort" title="Sortierung" :options="[
-					{ label: 'keine', value: 'unsorted' },
 					{ label: 'ID', value: 'id' },
 					{ label: 'Kürzel', value: 'kuerzel' },
 					{ label: 'Text', value: 'text' },
@@ -233,17 +232,16 @@
 
 <script setup lang="ts">
 
-	import { computed, ref, reactive, watch } from "vue";
+	import { computed, ref, reactive } from "vue";
 	import { FachSelectFilter } from "./filter/FachSelectFilter";
-	import { ArrayList } from "../../../../../core/src/java/util/ArrayList";
 	import { Fach } from "../../../../../core/src/asd/types/fach/Fach";
 	import { Fachgruppe } from "../../../../../core/src/asd/types/fach/Fachgruppe";
 	import { LehrerRechtsverhaeltnis } from "../../../../../core/src/asd/types/lehrer/LehrerRechtsverhaeltnis";
 	import { Schulform } from "../../../../../core/src/asd/types/schule/Schulform";
-	import type { Validator} from "../../../../../core/src";
-	import { LehrerPersonalabschnittsdaten, LehrerStammdaten, SchuleStammdaten, Schuljahresabschnitt, ValidatorKontext, ValidatorLehrerPersonalabschnittsdatenPflichtstundensoll, ValidatorLehrerStammdatenNachnameVorhanden, ValidatorLehrerStammdatenVorname, type LehrerRechtsverhaeltnisKatalogEintrag } from "../../../../../core/src";
-	import { CoreTypeSelectManagerSingle } from "./selectManager/CoreTypeSelectManagerSingle";
-	import { SelectManagerSingle } from "./selectManager/SelectManagerSingle";
+	import type { Validator, LehrerRechtsverhaeltnisKatalogEintrag} from "../../../../../core/src";
+	import { LehrerPersonalabschnittsdaten, LehrerStammdaten, SchuleStammdaten, Schuljahresabschnitt, ValidatorKontext, ValidatorLehrerPersonalabschnittsdatenPflichtstundensoll, ValidatorLehrerStammdatenNachnameVorhanden, ValidatorLehrerStammdatenVorname } from "../../../../../core/src";
+	import { CoreTypeSelectManager } from "./selectManager/CoreTypeSelectManager";
+	import { SelectManager } from "./selectManager/SelectManager";
 	import Docs from "./UiSelect.story.md"
 
 	const state = reactive({
@@ -259,7 +257,7 @@
 		textColor: "",
 		iconColor: "",
 		borderColor: "",
-		sort: "unsorted" as "unsorted" | "id" | "kuerzel" | "text",
+		sort: "id" as "id" | "kuerzel" | "text",
 	});
 
 
@@ -273,7 +271,7 @@
 		musikUndKunst2: false,
 	});
 
-	const stringItems: string[] = ["Ananas", "Aprikose", "Banane", "Birne", "Apfelsine", "Brombeere", "Clementine", "Granatapfel", "Himbeere",
+	const fruitItems: string[] = ["Ananas", "Aprikose", "Banane", "Birne", "Apfelsine", "Brombeere", "Clementine", "Granatapfel", "Himbeere",
 		"Ich will gleich den ganzen Obstkorb haben und am liebsten alles doppelt und dreifach, nur damit dieses Item einen langen Text zur Vorschau hat.",
 		"Kirsche", "Kiwi", "Lemon", "Litschi", "Melone", "Orange", "Papaya", "Pfirsich", "Pflaume", "Rote Johannisbeere", "Zitronenmelisse",
 	];
@@ -281,87 +279,90 @@
 		{ marke: "Audi", color: "red", baujahr: 2008}, { marke: "Opel", color: "schwarz", baujahr: 2006 }];
 
 
-	const sStringSelectManager = new SelectManagerSingle({options: stringItems, removable: state.removable});
+	const stringSelectManager = new SelectManager({options: fruitItems});
 
-	const sCoreTypeSelectManager = new CoreTypeSelectManagerSingle({
+	const coreTypeSelectManager = new CoreTypeSelectManager({
 		clazz: LehrerRechtsverhaeltnis.class, schuljahr: 2018, schulformen: Schulform.GY,
-		selectionDisplayText: 'text', optionDisplayText: 'kuerzelText', removable: state.removable,
+		selectionDisplayText: 'text', optionDisplayText: 'kuerzelText',
 	});
 
-	const sObjectSelectManager = new SelectManagerSingle({
-		options: carItems, removable: state.removable,
+	const objectSelectManager = new SelectManager({
+		options: carItems,
 		selectionDisplayText: (option: { marke: string, color: string; }) => option.marke,
 		optionDisplayText: (option: { marke: string, color: string; }) => `${option.marke} - ${option.color}`,
 	});
 
-	const deepSearchSelectManager = new SelectManagerSingle({
-		options: carItems, removable: state.removable, deepSearchAttributes: ["marke", "color", "baujahr"],
+	const deepSearchSelectManager = new SelectManager({
+		options: carItems,
 		selectionDisplayText: (option: { marke: string, color: string, baujahr: number; }) => option.marke,
 		optionDisplayText: (option: { marke: string, color: string, baujahr: number; }) => `${option.marke} - ${option.color}`,
 	});
 
-	const sFachSelectManager = new CoreTypeSelectManagerSingle({
-		clazz: Fach.class, schuljahr: 2020, schulformen: Schulform.GY, optionDisplayText: 'kuerzelText', removable: state.removable,
-		selectionDisplayText: 'text', filters: [new FachSelectFilter("fachgruppe1", [], 2020), new FachSelectFilter("fachgruppe2", [], 2020)],
-	});
-
-	watch(filterState1, () => {
-		const list = new ArrayList<Fachgruppe>();
+	const filter1 = computed<Fachgruppe[]>(() => {
+		const result: Fachgruppe[] = [];
 		if (filterState1.fremdsprache)
-			list.add(Fachgruppe.FG_FS);
+			result.push(Fachgruppe.FG_FS);
 		if (filterState1.musikUndKunst1)
-			list.add(Fachgruppe.FG_MS);
-		sFachSelectManager.updateFilteredOptions(new FachSelectFilter("fachgruppe1", [ ...list ], 2020));
+			result.push(Fachgruppe.FG_MS);
+		return result;
 	});
 
-	watch(filterState2, () => {
-		const list = new ArrayList<Fachgruppe>();
+	const filter2 = computed<Fachgruppe[]>(() => {
+		const result: Fachgruppe[] = [];
 		if (filterState2.deutsch)
-			list.add(Fachgruppe.FG_D);
+			result.push(Fachgruppe.FG_D);
 		if (filterState2.musikUndKunst2)
-			list.add(Fachgruppe.FG_MS);
-		sFachSelectManager.updateFilteredOptions(new FachSelectFilter("fachgruppe2", [ ...list ], 2020));
+			result.push(Fachgruppe.FG_MS);
+		return result;
 	});
 
-	watch(() => state.removable, (newVal) => {
-		sStringSelectManager.removable = newVal;
-		sCoreTypeSelectManager.removable = newVal;
-		sObjectSelectManager.removable = newVal;
-		deepSearchSelectManager.removable = newVal;
-		sFachSelectManager.removable = newVal;
-		sortableCoreTypeSelectManager.removable = newVal;
+
+	const filters = ref([new FachSelectFilter("fachgruppe1", filter1), new FachSelectFilter("fachgruppe2", filter2)]);
+
+	const fachSelectManager = new CoreTypeSelectManager({
+		clazz: Fach.class, schuljahr: 2020, schulformen: Schulform.GY, optionDisplayText: 'kuerzelText',
+		selectionDisplayText: 'text', filters: filters,
 	});
 
-	watch(() => state.sort, (newVal) => {
-		sortableCoreTypeSelectManager.updateSort();
+	const sortById = (a: LehrerRechtsverhaeltnisKatalogEintrag, b: LehrerRechtsverhaeltnisKatalogEintrag) => {
+		if (a.id < b.id) return -1;
+		if (a.id > b.id) return 1;
+		return 0;
+	};
+
+	const sortByKuerzel = (a: LehrerRechtsverhaeltnisKatalogEintrag, b: LehrerRechtsverhaeltnisKatalogEintrag) => {
+		if (a.kuerzel < b.kuerzel) return -1;
+		if (a.kuerzel > b.kuerzel) return 1;
+		return 0;
+	};
+
+	const sortByText = (a: LehrerRechtsverhaeltnisKatalogEintrag, b: LehrerRechtsverhaeltnisKatalogEintrag) => {
+		if (a.text < b.text) return -1;
+		if (a.text > b.text) return 1;
+		return 0;
+	};
+
+	const computedSort = computed(() => {
+		switch (state.sort) {
+			case "kuerzel":
+				return sortByKuerzel;
+			case "text":
+				return sortByText;
+			default:
+				return sortById;
+		}
 	});
 
-	const sortableCoreTypeSelectManager = new CoreTypeSelectManagerSingle({
-		clazz: LehrerRechtsverhaeltnis.class, schuljahr: 2018, schulformen: Schulform.GY, removable: state.removable,
-		optionDisplayText: (a) => `${a.id} - ${a.kuerzel} - ${a.text}`, selectionDisplayText: 'kuerzelText',
-		sort: (a: LehrerRechtsverhaeltnisKatalogEintrag, b: LehrerRechtsverhaeltnisKatalogEintrag) => {
-			if (state.sort === "unsorted") return 0;
-			if (state.sort === "id") {
-				if (a.id < b.id)
-					return -1;
-				if (a.id > b.id)
-					return 1;
-			}
-			if (state.sort === "kuerzel") {
-				if (a.kuerzel < b.kuerzel)
-					return -1;
-				if (a.kuerzel > b.kuerzel)
-					return 1;
-			}
-			if (state.sort === "text") {
-				if (a.text < b.text)
-					return -1;
-				if (a.text > b.text)
-					return 1;
-			}
-			return 0;
-		},
+
+	const sortableCoreTypeSelectManager = new CoreTypeSelectManager({
+		clazz: LehrerRechtsverhaeltnis.class, schuljahr: 2018, schulformen: Schulform.GY,
+		optionDisplayText: (a) => `${a.id} - ${a.kuerzel} - ${a.text}`, selectionDisplayText: 'text',
+		sort: computedSort,
 	});
+
+	/**
+	 * Validatoren
+	 */
 
 	const schuleStammdaten = new SchuleStammdaten();
 	schuleStammdaten.schulform = Schulform.GY.toString();
@@ -381,14 +382,11 @@
 	const mussValidatorSelection = ref<string | undefined>();
 
 
-	const sHinweisValidatorSelectManager = new SelectManagerSingle({options: ["Christian", "Anna"], removable: state.removable,
-		selected: hinweisValidatorSelection.value});
+	const sHinweisValidatorSelectManager = new SelectManager({options: ["Christian", "Anna"]});
 
-	const sKannValidatorSelectManager = new SelectManagerSingle({options: ["30 Pflichtstunden", "100 Pflichtstunden"], removable: state.removable,
-		selected: kannValidatorSelection.value });
+	const sKannValidatorSelectManager = new SelectManager({options: ["30 Pflichtstunden", "100 Pflichtstunden"] });
 
-	const sMussValidatorSelectManager = new SelectManagerSingle({ options: ["Müller", "Meier"], removable: state.removable,
-		selected: mussValidatorSelection.value });
+	const sMussValidatorSelectManager = new SelectManager({ options: ["Müller", "Meier"] });
 
 
 	const validatorHinweis = computed(() => {
@@ -419,18 +417,6 @@
 		return new ValidatorLehrerStammdatenNachnameVorhanden(lehrerStammdaten, selectValidatorKontext);
 	});
 
-	watch(() => hinweisValidatorSelection.value, (newVal) => {
-		sHinweisValidatorSelectManager.selected = newVal;
-	});
-
-	watch(() => kannValidatorSelection.value, (newVal) => {
-		sKannValidatorSelectManager.selected = newVal;
-	});
-
-	watch(() => mussValidatorSelection.value, (newVal) => {
-		sMussValidatorSelectManager.selected = newVal;
-	});
-
 	function validateSelect(validator: Validator, value: string | Iterable<string> | null): boolean {
 		return validator.run();
 	}
@@ -444,8 +430,8 @@
         ${state.statistics ? 'statistics' : ''}
 		${state.required ? 'required' : ''}
         ${state.headless ? 'headless' : ''}
-		${state.sort !== 'unsorted' ? ':sort="(a, b) => ..."' : '' }
+		':sort="(a, b) => ..."' : ''
       `.split('\n').filter(line => line.trim() !== '').join('\n');
 
-	};
+	}
 </script>

@@ -115,7 +115,7 @@
 	import type { List, AbiturFachbelegung, Comparator, Fachgruppe, NoteKatalogEintrag, SchuelerListeEintrag, KursDaten, LehrerListeEintrag, JavaMap } from "@core";
 	import { AbiturdatenManager } from "@core";
 	import { GostHalbjahr, ArrayList, Fach, GostBesondereLernleistung, Note, RGBFarbe, DeveloperNotificationException, HashMap, GostAbiturFach } from "@core";
-	import { SelectManagerSingle } from "@ui";
+	import { SelectManager } from "@ui";
 	import { GridManager } from "@ui";
 
 	import type { GostAbiturNoteneingabeProps } from "./GostAbiturNoteneingabeProps";
@@ -186,20 +186,20 @@
 	};
 
 	const auswahlKurs = shallowRef<KursDaten | null>(null);
-	const kursSelectManager = computed<SelectManagerSingle<KursDaten>>(() => new SelectManagerSingle({ options: alleKurse.value.keySet(),
+	const kursSelectManager = computed<SelectManager<KursDaten>>(() => new SelectManager({ options: alleKurse.value.keySet(),
 		optionDisplayText: k => k.kuerzel, selectionDisplayText: k => k.kuerzel	}));
 
 	const auswahlPruefer = shallowRef<LehrerListeEintrag | null>(null);
-	const prueferSelectManager = computed<SelectManagerSingle<LehrerListeEintrag>>(() => new SelectManagerSingle({ options: allePruefer.value.keySet(),
+	const prueferSelectManager = computed<SelectManager<LehrerListeEintrag>>(() => new SelectManager({ options: allePruefer.value.keySet(),
 		optionDisplayText: l => l.kuerzel, selectionDisplayText: l => l.kuerzel	}));
 
 	const auswahlAbiturfach = shallowRef<GostAbiturFach | null>(null);
-	const abiturfachSelectManager = computed<SelectManagerSingle<GostAbiturFach>>(() => {
+	const abiturfachSelectManager = computed<SelectManager<GostAbiturFach>>(() => {
 		const abiManager = props.managerMap().isEmpty() ? null : props.managerMap().values().iterator().next();
 		const values = [ GostAbiturFach.LK1, GostAbiturFach.LK2, GostAbiturFach.AB3, GostAbiturFach.AB4 ];
 		if ((abiManager !== null) && AbiturdatenManager.nutzeExperimentellenCode(props.serverMode, abiManager.daten().abiturjahr))
 			values.push(GostAbiturFach.AB5);
-		return new SelectManagerSingle({ options: values, optionDisplayText: f => f.kuerzel, selectionDisplayText: f => f.kuerzel	});
+		return new SelectManager({ options: values, optionDisplayText: f => f.kuerzel, selectionDisplayText: f => f.kuerzel	});
 	});
 
 	const alleKurse = computed<JavaMap<KursDaten, List<SchuelerAbiturbelegung>>>(() => {

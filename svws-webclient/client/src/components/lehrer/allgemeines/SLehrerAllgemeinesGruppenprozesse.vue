@@ -66,7 +66,7 @@
 	import type { SLehrerAllgemeinesGruppenprozesseProps } from "./SLehrerAllgemeinesGruppenprozesseProps";
 	import { type StundenplanListeEintrag, type List, BenutzerKompetenz } from "@core";
 	import { DateUtils, ReportingParameter, ReportingReportvorlage } from "@core";
-	import { SelectManagerSingle } from "@ui";
+	import { SelectManager } from "@ui";
 
 	type Action = 'print' | 'delete' | '';
 
@@ -98,13 +98,8 @@
 
 
 	const stundenplaene = computed<Array<StundenplanListeEintrag>>(() => [...props.mapStundenplaene.values()])
-	watch(
-		() => stundenplaene.value,
-		(newValue) => {
-			stundenplanSelectManager.options = newValue;
-		}
-	);
-	const stundenplanSelectManager = new SelectManagerSingle({ options: stundenplaene.value, optionDisplayText: stundenplanDisplayText,
+
+	const stundenplanSelectManager = new SelectManager({ options: stundenplaene, optionDisplayText: stundenplanDisplayText,
 		selectionDisplayText: stundenplanDisplayText,
 	})
 

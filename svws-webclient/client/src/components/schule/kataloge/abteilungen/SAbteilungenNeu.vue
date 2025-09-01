@@ -30,7 +30,7 @@
 
 	import type { AbteilungenNeuProps } from "~/components/schule/kataloge/abteilungen/SAbteilungenNeuProps";
 	import type { DataTableColumn} from "@ui";
-	import { SelectManagerSingle } from "@ui";
+	import { SelectManager } from "@ui";
 	import type { KlassenDaten, LehrerListeEintrag, List } from "@core";
 	import { computed, ref, watch } from "vue";
 	import { BenutzerKompetenz } from "@core";
@@ -49,14 +49,7 @@
 	});
 	const lehrerListe = computed(() => props.manager().getLehrer().values());
 
-	watch(
-		() => lehrerListe.value,
-		(newValue) => {
-			lehrerSelectManager.options = newValue;
-		}
-	);
-
-	const lehrerSelectManager = new SelectManagerSingle({	options: lehrerListe.value, optionDisplayText: v => v.vorname + ' ' + v.nachname,
+	const lehrerSelectManager = new SelectManager({	options: lehrerListe, optionDisplayText: v => v.vorname + ' ' + v.nachname,
 		selectionDisplayText: v => v.vorname + ' ' + v.nachname,
 	});
 
