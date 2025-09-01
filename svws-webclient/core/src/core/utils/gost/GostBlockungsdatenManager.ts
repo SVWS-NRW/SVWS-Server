@@ -1163,6 +1163,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		}
 		listOfLehrer.add(neueLehrkraft);
 		listOfLehrer.sort(GostBlockungsdatenManager._compLehrkraefte);
+		this.ergebnisAlleRevalidieren();
 	}
 
 	/**
@@ -1179,6 +1180,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		for (let i : number = 0; i < listOfLehrer.size(); i++)
 			if (listOfLehrer.get(i).id === idAlteLehrkraft) {
 				listOfLehrer.remove(listOfLehrer.get(i));
+				this.ergebnisAlleRevalidieren();
 				return;
 			}
 		throw new DeveloperNotificationException(this.toStringKurs(idKurs) + " enthält nicht " + this.toStringKursLehrkraft(idKurs, idAlteLehrkraft))

@@ -1174,6 +1174,9 @@ public class GostBlockungsdatenManager {
 		// Hinzufügen
 		listOfLehrer.add(neueLehrkraft);
 		listOfLehrer.sort(GostBlockungsdatenManager._compLehrkraefte);
+
+		// Alle Ergebnisse revalidieren, damit die Bewertung aktuell ist.
+		ergebnisAlleRevalidieren();
 	}
 
 	/**
@@ -1190,6 +1193,9 @@ public class GostBlockungsdatenManager {
 		for (int i = 0; i < listOfLehrer.size(); i++)
 			if (listOfLehrer.get(i).id == idAlteLehrkraft) {
 				listOfLehrer.remove(listOfLehrer.get(i));
+
+				// Alle Ergebnisse revalidieren, damit die Bewertung aktuell ist.
+				ergebnisAlleRevalidieren();
 				return;
 			}
 		throw new DeveloperNotificationException(toStringKurs(idKurs) + " enthält nicht " + toStringKursLehrkraft(idKurs, idAlteLehrkraft));
