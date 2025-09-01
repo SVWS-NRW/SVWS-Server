@@ -23,12 +23,12 @@ task lint(type: NpmRun) {
 }
 
 task doZip(type: Zip) {
+	dependsOn lint
     archiveFileName = "SVWS-Admin-Client.zip"
     destinationDirectory = file("$buildDir")
     from "$buildDir/output"
 }
 
-build.dependsOn lint
 build.dependsOn doZip
 
 task cleanAdminClient(type: Delete) {
