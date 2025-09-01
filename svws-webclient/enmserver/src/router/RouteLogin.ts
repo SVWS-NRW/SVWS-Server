@@ -22,12 +22,9 @@ export class RouteLogin extends RouteNode<any, any> {
 	}
 
 	public login = async (username: string, password: string): Promise<void> => {
-		let success = await api.login(username, password);
-		if (success) {
-			success = await api.init();
-			if (success)
-				await RouteManager.doRoute(this.routepath);
-		}
+		const success = await api.login(username, password);
+		if (success)
+			await RouteManager.doRoute(this.routepath);
 	}
 
 	public logout = async () => {

@@ -20,7 +20,7 @@
 					<svws-ui-spacing />
 					<div class="flex gap-2">
 						<svws-ui-modal-hilfe> <s-login-hilfe /> </svws-ui-modal-hilfe>
-						<svws-ui-button @click="doLogin" type="primary" :disabled="authenticating">
+						<svws-ui-button @click="doLogin" type="primary" :disabled="authenticating || (username.length === 0) || (password.length === 0)">
 							Anmelden
 							<svws-ui-spinner v-if="authenticating" spinning />
 							<span class="icon i-ri-login-circle-line" v-else />
@@ -41,7 +41,7 @@
 <script setup lang="ts">
 
 	import { computed, nextTick, onMounted, ref, shallowRef } from "vue";
-	import { type ComponentExposed } from "vue-component-type-helpers";
+	import type { ComponentExposed } from "vue-component-type-helpers";
 	import { version } from '../../version';
 	import { githash } from '../../githash';
 	import type { LoginProps } from "./SLoginProps";
@@ -56,42 +56,31 @@
 	const username = ref("");
 	const password = ref("");
 	const error = ref<{name: string; message: string;}|null>(null);
-	const copied = ref<boolean|null>(null);
 
-	onMounted(() => {
+	onMounted(async () => {
 		try {
 			const set = new Set();
 			set.difference(new Set());
+			// Versuche beim Laden der Komponente automatisch mit Default-Einstellungen eine Verbindung zu dem Server aufzubauen
+			await connect();
 		} catch (e) {
-			error.value = {name: "Achtung", message: "Ihr Browser ist veraltet. Bitte aktualisieren Sie Ihren Browser auf eine aktuelle Version. Die weitere Nutzung wird zu Fehlern im ENM-Client führen."};
+			error.value = {
+				name: "Achtung",
+				message: "Ihr Browser ist veraltet. Bitte aktualisieren Sie Ihren Browser auf eine aktuelle Version. Die weitere Nutzung wird zu Fehlern im ENM-Client führen.",
+			};
 		}
 	})
-
-	async function copyToClipboard() {
-		try {
-			await navigator.clipboard.writeText(`${version} ${githash}`);
-		} catch(e) {
-			copied.value = false;
-		}
-		copied.value = true;
-	}
 
 	const connecting = ref(false);
 	const authenticating = ref(false);
 	const inputFocus = ref(false);
-
 	const connection_failed = ref(false);
-	const authentication_success = ref(false);
-
 	const serverFound = shallowRef<boolean>(false);
 
 	const inputHostname = computed<string>({
 		get: () => props.hostname,
 		set: (value) => props.setHostname(value),
 	});
-
-	// Versuche zu beim Laden der Komponente automatisch mit Default-Einstellungen eine Verbindung zu dem Server aufzubauen
-	void connect();
 
 	async function initCoreTypes() {
 		const reader = new JsonCoreTypeReaderStatic();
@@ -110,7 +99,7 @@
 			connection_failed.value = true;
 			connecting.value = false;
 			const message = e instanceof DeveloperNotificationException ? e.message : "Verbindung zum Server fehlgeschlagen. Bitte die Serveradresse prüfen und erneut versuchen.";
-			error.value = {name: "Serverfehler", message};
+			error.value = { name: "Serverfehler", message };
 			return;
 		}
 		connection_failed.value = false;
@@ -128,7 +117,7 @@
 		authenticating.value = false;
 		firstauth.value = false;
 		if (!props.authenticated)
-			error.value = {name: "Eingabefehler", message: "Passwort oder Benutzername falsch."};
+			error.value = { name: "Eingabefehler", message: "Passwort oder Benutzername falsch." };
 	}
 
 </script>
