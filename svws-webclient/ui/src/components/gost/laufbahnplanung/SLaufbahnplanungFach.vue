@@ -73,7 +73,7 @@
 							</template>
 						</svws-ui-tooltip>
 					</template>
-					<template v-else-if="(wahlen[halbjahr.id] !== '') && istBewertet(halbjahr) && (!manager.hatNote(fach, halbjahr) && !manager.belegungHatImmerNoten) && hatUpdateKompetenz">
+					<template v-else-if="(wahlen[halbjahr.id] !== '') && (istBewertet(halbjahr) || manager.istAktuellOderVergangen(halbjahr)) && (!manager.hatNote(fach, halbjahr) && !manager.belegungHatImmerNoten) && hatUpdateKompetenz">
 						<svws-ui-tooltip :color="'danger'">
 							<svws-ui-button type="icon" size="small" @click="manager.deleteFachwahl(fach, halbjahr)" class="left-4"
 								@keydown.enter.prevent="manager.deleteFachwahl(fach, halbjahr)" @keydown.space.prevent="manager.deleteFachwahl(fach, halbjahr)">
