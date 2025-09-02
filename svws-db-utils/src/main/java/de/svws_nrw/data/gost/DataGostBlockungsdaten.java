@@ -304,9 +304,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 						continue;
 					final int abiturjahrgang = GostAbiturjahrUtils.getGostAbiturjahr(schulform, Schulgliederung.data().getWertByKuerzel(s.schulgliederung),
 							schuljahresabschnitt.Jahr, s.jahrgang);
-					// Prüfe, ob der Schüler noch an der Schule ist. Wenn ja, dann füge ihn zu der Liste hinzu...
-					if (!DBUtilsGost.pruefeIstAnSchule(dto, blockung.Halbjahr, abiturjahrgang, mapSchuljahresabschnitte))
-						continue;
+					// Es wird nicht geprüft, ob es sich um Abgänger oder ähnliches handelt, da die Daten der Kurs-Schüler-Zuordnung sonst nicht mehr zugreifbar sind
 					schuelerListe.add(DataSchuelerliste.mapToSchueler(dto, abiturjahrgang));
 				}
 			}
