@@ -1,5 +1,5 @@
 {
-	"version": 2,
+	"version": 3,
 	"daten": [ {
 		"bezeichner": "XXA",
 		"idStatistik": "997",
@@ -7,15 +7,15 @@
 			"id" : 88088065,
 			"schluessel": "997",
 			"kuerzel": "XXA",
-			"text": "(staatenlos)",
+			"text": "staatenlos",
 			"iso3": "XXA",
 			"iso2": "XA",
 			"isoNumerisch": "997",
 			"codeDEStatis": "997",
-			"bezeichnungSuche": "(staatenlos)",
-			"bezeichnung": "(staatenlos)",
-			"bezeichnungLang": "(staatenlos)",
-			"staatsangehoerigkeit": "(staatenlos)",
+			"bezeichnungSuche": "staatenlos",
+			"bezeichnung": "staatenlos",
+			"bezeichnungLang": "staatenlos",
+			"staatsangehoerigkeit": "staatenlos",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -26,15 +26,15 @@
 			"id": 88088066,
 			"schluessel": "998",
 			"kuerzel": "XXB",
-			"text": "(ungeklärt)",
+			"text": "ungeklärt",
 			"iso3": "XXB",
 			"iso2": "XB",
 			"isoNumerisch": "998",
 			"codeDEStatis": "998",
-			"bezeichnungSuche": "(ungeklärt)",
-			"bezeichnung": "(ungeklärt)",
-			"bezeichnungLang": "(ungeklärt)",
-			"staatsangehoerigkeit": "(ungeklärt)",
+			"bezeichnungSuche": "ungeklärt",
+			"bezeichnung": "ungeklärt",
+			"bezeichnungLang": "ungeklärt",
+			"staatsangehoerigkeit": "ungeklärt",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -45,15 +45,15 @@
 			"id": 88088067,
 			"schluessel": "999",
 			"kuerzel": "XXC",
-			"text": "(ohne Angabe)",
+			"text": "ohne Angabe",
 			"iso3": "XXC",
 			"iso2": "XC",
 			"isoNumerisch": "999",
 			"codeDEStatis": "999",
-			"bezeichnungSuche": "(ohne Angabe)",
-			"bezeichnung": "(ohne Angabe)",
-			"bezeichnungLang": "(ohne Angabe)",
-			"staatsangehoerigkeit": "(ohne Angabe)",
+			"bezeichnungSuche": "ohne Angabe",
+			"bezeichnung": "ohne Angabe",
+			"bezeichnungLang": "ohne Angabe",
+			"staatsangehoerigkeit": "ohne Angabe",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -699,7 +699,7 @@
 			"bezeichnungSuche": "Cookinseln",
 			"bezeichnung": "Cookinseln",
 			"bezeichnungLang": "die Cookinseln",
-			"staatsangehoerigkeit": "neuseeländisch",
+			"staatsangehoerigkeit": "neuseeländisch (Cookinseln)",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -2538,7 +2538,7 @@
 			"bezeichnungSuche": "Niue",
 			"bezeichnung": "Niue",
 			"bezeichnungLang": "Niue",
-			"staatsangehoerigkeit": "neuseeländisch",
+			"staatsangehoerigkeit": "neuseeländisch (Niue)",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -2786,6 +2786,25 @@
 			"bezeichnung": "Portugal",
 			"bezeichnungLang": "die Portugiesische Republik",
 			"staatsangehoerigkeit": "portugiesisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "PSE",
+		"idStatistik": "459",
+		"historie": [ {
+			"id": 80082085,
+			"schluessel": "459",
+			"kuerzel": "PSE",
+			"text": "Palästinensische Gebiete",
+			"iso3": "PSE",
+			"iso2": "PS",
+			"isoNumerisch": "275",
+			"codeDEStatis": "459",
+			"bezeichnungSuche": "Palästinensische Gebiete",
+			"bezeichnung": "Palästinensische Gebiete",
+			"bezeichnungLang": "die Palästinensischen Gebiete",
+			"staatsangehoerigkeit": "staatenlos (Palästinensische Gebiete)",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -3918,6 +3937,25 @@
 			"bezeichnung": "Vereinigtes Königreich",
 			"bezeichnungLang": "das Vereinigte Königreich Großbritannien und Nordirland",
 			"staatsangehoerigkeit": "britisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "BMU",
+		"idStatistik": "185",
+		"historie": [ {
+			"id": 71066083,
+			"schluessel": "185",
+			"kuerzel": "BMU",
+			"text": "Britisches Überseegebiet",
+			"iso3": "BMU",
+			"iso2": "BM",
+			"isoNumerisch": "060",
+			"codeDEStatis": "185",
+			"bezeichnungSuche": "Britisches Überseegebiet",
+			"bezeichnung": "Britisches Überseegebiet",
+			"bezeichnungLang": "das Britische Überseegebiet",
+			"staatsangehoerigkeit": "britisch (Überseegebiet)",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]

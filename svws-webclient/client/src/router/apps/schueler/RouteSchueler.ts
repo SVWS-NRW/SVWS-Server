@@ -1,7 +1,7 @@
 import type { RouteParams } from "vue-router";
 
 import type { SchuelerAuswahlProps } from "~/components/schueler/SSchuelerAuswahlProps";
-import type { SchuelerListeManager } from "@core";
+import type { SchuelerListeManager } from "@ui";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import type { RouteNode } from "~/router/RouteNode";

@@ -10,7 +10,6 @@ apply from: ('../subproject-plugin.gradle')
 
 // Erzeuge eine unique JobId welche in den Tasks, temporären Dateien und Container verwendet wird.
 def jobId = UUID.randomUUID().toString().substring(0, 8)
-
 /**
  * Konfiguration für das Subpackage bzw. die Tests
  */
@@ -18,10 +17,10 @@ ext {
 	SVWS_SERVERMODE = "dev"
 
 	// Docker Konfiguration
-	APP_CONTAINER_NAME = "app-vite-api-tests--${jobId}" as GStringImpl
-	DB_CONTAINER_NAME = "database-vite-api-tests--${jobId}" as GStringImpl
-	DB_SERVICE_NAME = "mariadb--${jobId}" as GStringImpl
-	APP_IMAGE_NAME = "svws-app--${jobId}" as GStringImpl
+	APP_CONTAINER_NAME = "app-vite-api-tests${generateContainerSuffix(jobId)}"
+	DB_CONTAINER_NAME = "database-vite-api-tests${generateContainerSuffix(jobId)}"
+	DB_SERVICE_NAME = "mariadb${generateContainerSuffix(jobId)}"
+	APP_IMAGE_NAME = "svws-app${generateContainerSuffix(jobId)}"
 
 	// Auch für Docker. Forwarded Ports, werden nur bei lokal genutzten Container verwendet
 	FORWARDED_DB_PORT = 3317

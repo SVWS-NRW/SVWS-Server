@@ -15,7 +15,7 @@
 					<slot>Für diesen Bereich wurde noch kein Text geschrieben.</slot>
 				</div>
 				<template v-if="!disabledFooter">
-					<hr class="border-2 my-4">Nutzen Sie für weitere Informationen und Anleitungen die <a class="text-ui-brand" href="https://doku.svws-nrw.de">ausführliche Dokumentation</a>.
+					<hr class="border-2 my-4">Nutzen Sie für weitere Informationen und Anleitungen die <a class="text-ui-brand" href="https://doku.svws-nrw.de" target="blank">ausführliche Dokumentation</a>.
 				</template>
 			</template>
 		</svws-ui-modal>

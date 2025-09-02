@@ -27,7 +27,8 @@
 										class="select-none svws-ui-td svws-no-padding group rounded-sm text-uistatic"
 										:class="hatUpdateKompetenz && (fachwahlKurszuordnungen.get(fach.fachID) === undefined) ? 'cursor-grab' : 'opacity-50'"
 										:style="{ 'background-color': bgColorFachwahl(fach.fachID) }">
-										<div class="svws-ui-badge-transparent w-auto grow !h-full items-center m-0">
+										<div class="rounded-sm border border-ui-10 font-medium text-ui-100 inline-flex w-auto grow !h-full items-center self-center"
+											style="padding: 0.05rem 0.25rem; margin: -0.125rem auto -0.125rem -0.125rem;">
 											<div class="flex flex-row grow">
 												<template v-if="(fachwahlKurszuordnungen.get(fach.fachID) === undefined) && hatUpdateKompetenz">
 													<span class="icon-uistatic icon-sm i-ri-draggable opacity-50 group-hover:opacity-100 rounded-xs" />

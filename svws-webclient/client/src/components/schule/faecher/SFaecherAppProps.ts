@@ -1,5 +1,4 @@
-import type { FachListeManager } from "@core";
-import type { TabManager, ViewType } from "@ui";
+import type { TabManager, ViewType, FachListeManager } from "@ui";
 
 export interface FaecherAppProps {
 	manager: () => FachListeManager;

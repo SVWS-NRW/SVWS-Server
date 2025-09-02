@@ -1,11 +1,9 @@
 import { beforeEach, describe, expect, test } from "vitest";
 import { getApiService } from "../../utils/RequestBuilder.js"
 
-// const targetUrlENMServer: string = process.env.VITE_ENM_targetHost ?? "https://localhost";
+const targetUrlSVWSAppServer: string = process.env.VITE_APP_targetHost ?? "X";
 
-const targetUrlSVWSAppServer: string = process.env.VITE_APP_targetHost ?? "https://localhost:5050";
-
-const targetUrlENMServerFORSvwsApp: string = process.env.VITE_ENM_FOR_SVWS_targetHost ?? 'https://env-server--dd0794';
+const targetUrlENMServerFORSvwsApp: string = process.env.VITE_ENM_FOR_SVWS_targetHost ?? 'X';
 
 const CLIENT_SECRET = process.env.VITE_CLIENT_SECRET ?? "clientsecret";
 

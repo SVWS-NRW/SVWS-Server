@@ -21,14 +21,14 @@
 <script setup lang="ts">
 
 	import { ref } from "vue";
-	import type { BetriebAnsprechpartner, BetriebListeEintrag, KatalogEintrag, LehrerListeEintrag, List, SchuelerBetriebsdaten } from "@core";
+	import type { Beschaeftigungsart, BetriebAnsprechpartner, BetriebListeEintrag, LehrerListeEintrag, List, SchuelerBetriebsdaten } from "@core";
 	import type { DataTableColumn } from "@ui";
 
 	const props = defineProps<{
 		patchSchuelerBetriebsdaten: (data : Partial<SchuelerBetriebsdaten>, id : number) => Promise<void>;
 		setSchuelerBetrieb: (betrieb : SchuelerBetriebsdaten | undefined) => Promise<void>;
 		listSchuelerbetriebe: () => List<SchuelerBetriebsdaten>;
-		mapBeschaeftigungsarten: Map<number, KatalogEintrag>;
+		mapBeschaeftigungsarten: Map<number, Beschaeftigungsart>;
 		mapLehrer: Map<number, LehrerListeEintrag>;
 		mapBetriebe: Map<number, BetriebListeEintrag>;
 		mapAnsprechpartner: Map<number, BetriebAnsprechpartner>;

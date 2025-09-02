@@ -1,0 +1,105 @@
+{
+	"version": 1,
+	"daten": [ {
+		"bezeichner": "PFST_22",
+		"idStatistik": "1",
+		"historie": [ {
+			"id": 1,
+			"schluessel": "22",
+			"kuerzel": "PFST_22",
+			"text": "PFST_22",
+			"zulaessig": [
+				{ "schulform": "WB", "gliederung": "G02" },
+				{ "schulform": "WB", "gliederung": "K02" }
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "PFST_25",
+		"idStatistik": "2",
+		"historie": [ {
+			"id": 2,
+			"schluessel": "25",
+			"kuerzel": "PFST_25",
+			"text": "PFST_25",
+			"zulaessig": [ 
+				{ "schulform": "WB", "gliederung": "R02" }
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "PFST_25_5",
+		"idStatistik": "3",
+		"historie": [ {
+			"id": 3,
+			"schluessel": "25.5",
+			"kuerzel": "PFST_25_5",
+			"text": "PFST_25_5",
+			"zulaessig": [
+				{ "schulform": "BK", "gliederung": null },
+				{ "schulform": "FW", "gliederung": null },
+				{ "schulform": "HI", "gliederung": null },
+				{ "schulform": "GE", "gliederung": null },
+				{ "schulform": "GY", "gliederung": null },
+				{ "schulform": "PS", "gliederung": null }, 
+				{ "schulform": "SB", "gliederung": null },
+				{ "schulform": "SK", "gliederung": null }
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "PFST_27_5",
+		"idStatistik": "4",
+		"historie": [ {
+			"id": 4,
+			"schluessel": "27.5",
+			"kuerzel": "PFST_27_5",
+			"text": "PFST_27_5",
+			"zulaessig": [
+				{ "schulform": "FW", "gliederung": null },
+				{ "schulform": "KS", "gliederung": null },
+				{ "schulform": "S", "gliederung": null },
+				{ "schulform": "SG", "gliederung": null },
+				{ "schulform": "SR", "gliederung": null },
+				{ "schulform": "WF", "gliederung": null }
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "PFST_28",
+		"idStatistik": "5",
+		"historie": [ {
+			"id": 5,
+			"schluessel": "28",
+			"kuerzel": "PFST_28",
+			"text": "PFST_28",
+			"zulaessig": [
+				{ "schulform": "G", "gliederung": null },
+				{ "schulform": "H", "gliederung": null },
+				{ "schulform": "R", "gliederung": null },
+				{ "schulform": "V", "gliederung": null }
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "PFST_30",
+		"idStatistik": "6",
+		"historie": [ {
+			"id": 6,
+			"schluessel": "30",
+			"kuerzel": "PFST_30",
+			"text": "PFST_30",
+			"zulaessig": [
+				{ "schulform": "HI", "gliederung": null }
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	} ]
+}
+

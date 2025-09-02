@@ -1,5 +1,8 @@
 package de.svws_nrw.module.reporting.html.contexts;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnis;
 import de.svws_nrw.core.utils.gost.GostBlockungsdatenManager;
@@ -15,7 +18,12 @@ import org.thymeleaf.context.Context;
 /**
  * Ein Thymeleaf-Html-Daten-Context zum Bereich "GostKursplanung", um Thymeleaf-html-Templates mit Daten zu füllen.
  */
-public final class HtmlContextGostKursplanungBlockungsergebnis extends HtmlContext {
+public final class HtmlContextGostKursplanungBlockungsergebnis extends HtmlContext<Object> {
+
+	@Override
+	public List<String> standardsortierung() {
+		return new ArrayList<>();
+	}
 
 	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
@@ -28,13 +36,14 @@ public final class HtmlContextGostKursplanungBlockungsergebnis extends HtmlConte
 	 *
 	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
-	public HtmlContextGostKursplanungBlockungsergebnis(final ReportingRepository reportingRepository) throws ApiOperationException {
+ public HtmlContextGostKursplanungBlockungsergebnis(final ReportingRepository reportingRepository) throws ApiOperationException {
+		super(reportingRepository, true);
 		this.reportingRepository = reportingRepository;
 		erzeugeContext();
 	}
 
 	/**
-	 * Erzeugt den Context zum Füllen eines html-Templates.
+	 * Erzeugt den Context zum Füllen eines HTML-Templates.
 	 *
 	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */

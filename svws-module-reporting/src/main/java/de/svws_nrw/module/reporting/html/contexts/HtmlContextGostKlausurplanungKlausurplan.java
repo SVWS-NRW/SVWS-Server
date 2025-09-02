@@ -23,7 +23,12 @@ import jakarta.ws.rs.core.Response;
 /**
  * Ein Thymeleaf-html-Daten-Context zum Bereich "GostKlausurplanung", um Thymeleaf-html-Templates mit Daten zu füllen.
  */
-public final class HtmlContextGostKlausurplanungKlausurplan extends HtmlContext {
+public final class HtmlContextGostKlausurplanungKlausurplan extends HtmlContext<Object> {
+
+	@Override
+	public List<String> standardsortierung() {
+		return new ArrayList<>();
+	}
 
 	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
@@ -41,8 +46,9 @@ public final class HtmlContextGostKlausurplanungKlausurplan extends HtmlContext 
 	 *
 	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
-	public HtmlContextGostKlausurplanungKlausurplan(final ReportingRepository reportingRepository, final List<Long> idsFilterSchueler)
+ public HtmlContextGostKlausurplanungKlausurplan(final ReportingRepository reportingRepository, final List<Long> idsFilterSchueler)
 			throws ApiOperationException {
+		super(reportingRepository, true);
 		this.reportingRepository = reportingRepository;
 		erzeugeContext(idsFilterSchueler);
 	}
@@ -56,6 +62,7 @@ public final class HtmlContextGostKlausurplanungKlausurplan extends HtmlContext 
 	 */
 	public HtmlContextGostKlausurplanungKlausurplan(final ReportingRepository reportingRepository, final ReportingGostKlausurplanungKlausurplan gostKlausurplan,
 			final List<Long> idsFilterSchueler) {
+		super(reportingRepository, true);
 		this.reportingRepository = reportingRepository;
 		erzeugeContextFromKlausurplan(gostKlausurplan, idsFilterSchueler);
 	}
@@ -70,7 +77,7 @@ public final class HtmlContextGostKlausurplanungKlausurplan extends HtmlContext 
 	 */
 	private void erzeugeContext(final List<Long> idsFilterSchueler) throws ApiOperationException {
 
-		// In den idsHauptdaten der Reporting-Parameter werden im Wechsel das Abiturjahr und des GostHalbjahres (0 = EF.1 bis 5 = Q2.2) übergeben.
+		// In den idsHauptdaten der Reporting-Parameter werden im Wechsel das Abiturjahr und das GostHalbjahr (0 = EF.1 bis 5 = Q2.2) übergeben.
 		// Hier werden die Daten NICHT validiert. Die Daten aus den Parametern müssen vorab validiert worden sein (ReportingValidierung).
 		final List<Long> parameterDaten = reportingRepository.reportingParameter().idsHauptdaten.stream().filter(Objects::nonNull).toList();
 		final List<GostKlausurenCollectionHjData> selection = new ArrayList<>();
@@ -115,7 +122,7 @@ public final class HtmlContextGostKlausurplanungKlausurplan extends HtmlContext 
 	/**
 	 * Erzeugt den Context zur GOSt-Klausurplanung auf Basis des Klausurplan-Objektes.
 	 *
-	 * @param gostKlausurplan		Ein GOSt-Klausurplan, auf dem dieser Kontext aufbauen sollen.
+	 * @param gostKlausurplan		Ein GOSt-Klausurplan, auf dem dieser Kontext aufbauen soll.
 	 * @param idsFilterSchueler 	Eine Liste, die die schülerbezogene Ausgabe auf die Schüler mit den enthaltenen IDs beschränkt.
 	 */
 	private void erzeugeContextFromKlausurplan(final ReportingGostKlausurplanungKlausurplan gostKlausurplan, final List<Long> idsFilterSchueler) {

@@ -4,6 +4,7 @@ import { RouteNode } from "~/router/RouteNode";
 import type { RouteKatalogLernplattformen } from "~/router/apps/schule/lernplattformen/RouteKatalogLernplattformen";
 import { routeKatalogLernplattformen } from "~/router/apps/schule/lernplattformen/RouteKatalogLernplattformen";
 import type { LernplattformenDatenProps } from "~/components/schule/kataloge/lernplattformen/daten/SLernplattformenDatenProps";
+import { api } from "~/router/Api";
 
 const SLernplattformenDaten = () => import("~/components/schule/kataloge/lernplattformen/daten/SLernplattformenDaten.vue");
 
@@ -20,6 +21,7 @@ export class RouteKatalogLernplattformenDaten extends RouteNode<any, RouteKatalo
 		return {
 			patch: routeKatalogLernplattformen.data.patch,
 			lernplattformListeManager: () => routeKatalogLernplattformen.data.manager,
+			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 

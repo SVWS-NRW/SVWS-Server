@@ -1,16 +1,17 @@
+import { backendURL } from "../../../utils/APIUtils";
+
 // Deaktiviert die Überprüfung von TLS-Zertifikaten. Dies sollte nur in Entwicklungsumgebungen verwendet werden.
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
-class ApiService {
+class DavApiService {
 	private baseUrl: string;
 	private token: string;
 	private xmlData: string;
 
 	constructor(username: string, password: string) {
 		// Setzt die Basis-URL für die API-Anfragen. Standardmäßig wird "https://localhost" verwendet, wenn keine Umgebungsvariable gesetzt ist.
-		const targetHost : string = process.env.VITE_targetHost ?? "https://localhost";
 
-		this.baseUrl = targetHost;
+		this.baseUrl = backendURL;
 		// Kodiert den Benutzernamen und das Passwort in Base64 für die HTTP-Basic-Authentifizierung.
 		const tmp = (new TextEncoder()).encode(username + ":" + password);
 		this.token = btoa(String.fromCodePoint(...tmp));
@@ -27,7 +28,7 @@ class ApiService {
 
 		try {
 			// Führt die HTTP-Anfrage durch und fügt die notwendigen Header hinzu.
-			const response = await fetch(`${this.baseUrl}${endpoint}`, {
+			return await fetch(`${this.baseUrl}${endpoint}`, {
 				...options,
 				headers: {
 					// eslint-disable-next-line @typescript-eslint/no-misused-spread
@@ -38,8 +39,7 @@ class ApiService {
 					'content-length': `${contentLength}`,
 				},
 				body: options.body,
-			});
-			return response
+			})
 		} catch (e) {
 			// Fehlerbehandlung für fehlgeschlagene Anfragen.
 			console.log("Request fehlgeschlagen: ", e)
@@ -69,5 +69,5 @@ class ApiService {
 
 // Funktion zum Erstellen einer neuen Instanz von ApiService.
 export function getApiService(username: string, password: string) {
-	return new ApiService(username, password)
+	return new DavApiService(username, password)
 }

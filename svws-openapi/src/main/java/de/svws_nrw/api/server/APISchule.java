@@ -2847,7 +2847,7 @@ public class APISchule {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogLernplattformen(conn).deleteAsResponse(id),
 				request, ServerMode.DEV,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
 
 
@@ -2878,7 +2878,7 @@ public class APISchule {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogLernplattformen(conn).deleteMultipleAsResponse(JSONMapper.toListOfLong(is)),
 				request, ServerMode.DEV,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
 
 	/**
@@ -3011,7 +3011,7 @@ public class APISchule {
 			@RequestBody(description = "Die IDs der zu löschenden Telefonarten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogTelefonArten(conn).deleteMultipleAsResponse(JSONMapper.toListOfLong(is)),
-				request, ServerMode.DEV, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+				request, ServerMode.DEV, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
 
 	/**
@@ -3142,7 +3142,7 @@ public class APISchule {
 	public Response deleteErzieherarten(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die IDs der zu löschenden Erzieherarten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataErzieherarten(conn).deleteMultipleAsResponse(JSONMapper.toListOfLong(is)),
-				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataErzieherarten(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
+				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
 }

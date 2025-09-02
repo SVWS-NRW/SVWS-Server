@@ -7,7 +7,11 @@ import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.gost.abitur.ReportingGostAbiturFachbelegung;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ GostAbiturdaten.
@@ -24,7 +28,7 @@ public class ReportingSchuelerGostAbitur extends ReportingBaseType {
 	protected ReportingSchuljahresabschnitt abiturSchuljahresabschnitt;
 
 	/** Art der besonderen Lernleistung (K - keine, P - in einem Projektkurs, E - extern). */
-	protected String besondereLernleistung;
+	protected String besondereLernleistungArt;
 
 	/** Ggf. die Note einer externen besonderen Lernleistung. */
 	protected Note besondereLernleistungNote;
@@ -109,7 +113,7 @@ public class ReportingSchuelerGostAbitur extends ReportingBaseType {
 	 * @param abiturjahr Das Kalenderjahr, in dem der Schüler sein Abitur ablegt bzw. ablegen wird.
 	 * @param abiturSchuljahr Das Schuljahr, in dem der Schüler sein Abitur ablegt bzw. ablegen wird.
 	 * @param abiturSchuljahresabschnitt Der Schuljahresabschnitt, in dem der Schüler sein Abitur abgelegt hat.
-	 * @param besondereLernleistung Art der besonderen Lernleistung (K - keine, P - in einem Projektkurs, E - extern).
+	 * @param besondereLernleistungArt Art der besonderen Lernleistung (K - keine, P - in einem Projektkurs, E - extern).
 	 * @param besondereLernleistungNote Ggf. die Note einer externen besonderen Lernleistung.
 	 * @param besondereLernleistungThema Das Thema der besonderen Lernleistung.
 	 * @param bewertetesHalbjahr Gibt für die einzelnen GostHalbjahr-Werte an, ob gewertete Leistungsdaten vorhanden sind oder es sich um Werte der Laufbahnplanung handelt.
@@ -137,7 +141,7 @@ public class ReportingSchuelerGostAbitur extends ReportingBaseType {
 	 * @param pruefungBestanden Die Angabe, ob die Abiturprüfung bestanden wurde oder nicht - sofern das Prüfungsverfahren schon abgeschlossen wurde.
 	 */
 	public ReportingSchuelerGostAbitur(final int abiturjahr, final int abiturSchuljahr, final ReportingSchuljahresabschnitt abiturSchuljahresabschnitt,
-			final String besondereLernleistung, final Note besondereLernleistungNote, final String besondereLernleistungThema,
+			final String besondereLernleistungArt, final Note besondereLernleistungNote, final String besondereLernleistungThema,
 			final boolean[] bewertetesHalbjahr, final String bilingualeSprache, final Integer block1AnzahlKurse, final Integer block1DefiziteGesamt,
 			final Integer block1DefiziteLK, final long block1FehlstundenGesamt, final long block1FehlstundenUnentschuldigt,
 			final Double block1NotenpunkteDurchschnitt, final Integer block1PunktSummeGK, final Integer block1PunktSummeLK,
@@ -148,7 +152,7 @@ public class ReportingSchuelerGostAbitur extends ReportingBaseType {
 		this.abiturjahr = abiturjahr;
 		this.abiturSchuljahr = abiturSchuljahr;
 		this.abiturSchuljahresabschnitt = abiturSchuljahresabschnitt;
-		this.besondereLernleistung = besondereLernleistung;
+		this.besondereLernleistungArt = besondereLernleistungArt;
 		this.besondereLernleistungNote = besondereLernleistungNote;
 		this.besondereLernleistungThema = besondereLernleistungThema;
 		this.bewertetesHalbjahr = bewertetesHalbjahr;
@@ -182,16 +186,216 @@ public class ReportingSchuelerGostAbitur extends ReportingBaseType {
 	// ##### Berechnete Methoden #####
 
 	/**
+	 * Ermittelt und liefert eine Liste von Abiturfachbelegungen basierend auf den Fachbelegungen,
+	 * wobei nur nicht-null Einträge berücksichtigt werden, deren zugehöriges Abiturfach nicht null ist.
+	 * Die resultierende Liste wird nach den Abiturfächern sortiert.
+	 *
+	 * @return eine sortierte Liste der Abiturfachbelegungen
+	 */
+	public List<ReportingGostAbiturFachbelegung> fachbelegungenAbiturfaecher() {
+		return fachbelegungen.stream()
+				.filter(Objects::nonNull)
+				.filter(f -> f.abiturFach() != null)
+				.sorted(Comparator.comparing(ReportingGostAbiturFachbelegung::abiturFach))
+				.toList();
+	}
+
+	/**
+	 * Diese Methode filtert die Fachbelegungen des Aufgabenfeldes 1 mit Relevanz für die Prüfungsordnung.
+	 * Eingeschlossene Fachgruppen sind Deutsch (FG_D), Fremdsprachen (FG_FS), Musik (FG_ME) und Kunst (FG_MS).
+	 *
+	 * @return Eine Liste von {@code ReportingGostAbiturFachbelegung} mit Fachbelegungen, die den oben genannten Fachgruppen zugeordnet sind.
+	 */
+	public List<ReportingGostAbiturFachbelegung> fachbelegungenAB1() {
+		return getFachbelegungen(Fachgruppe.FG_D, Fachgruppe.FG_FS, Fachgruppe.FG_ME, Fachgruppe.FG_MS);
+	}
+
+	/**
+	 * Diese Methode filtert die Fachbelegungen des Aufgabenfeldes 1 mit Relevanz für die Prüfungsordnung und Zeugnisse.
+	 * Eingeschlossene Fachgruppen sind Deutsch (FG_D), Fremdsprachen (FG_FS), Musik (FG_ME) und Kunst (FG_MS).
+	 *
+	 @return Eine Liste von {@code ReportingGostAbiturFachbelegung} mit Fachbelegungen, die den oben genannten Fachgruppen zugeordnet sind.
+	 */
+	public List<ReportingGostAbiturFachbelegung> fachbelegungenAB1Zeugnisrelevant() {
+		return getFachbelegungenZeugnisrelevant(Fachgruppe.FG_D, Fachgruppe.FG_FS, Fachgruppe.FG_ME, Fachgruppe.FG_MS);
+	}
+
+	/**
+	 * Diese Methode filtert die Fachbelegungen des Aufgabenfeldes 2 mit Relevanz für die Prüfungsordnung.
+	 * Eingeschlossene Fachgruppen sind Gesellschaftswissenschaften (FG_GE) und Philosophie (FG_PL).
+	 *
+	 @return Eine Liste von {@code ReportingGostAbiturFachbelegung} mit Fachbelegungen, die den oben genannten Fachgruppen zugeordnet sind.
+	 */
+	public List<ReportingGostAbiturFachbelegung> fachbelegungenAB2() {
+		return getFachbelegungen(Fachgruppe.FG_GS, Fachgruppe.FG_PL);
+	}
+
+	/**
+	 * Diese Methode filtert die Fachbelegungen des Aufgabenfeldes 2 mit Relevanz für die Prüfungsordnung und Zeugnisse.
+	 * Eingeschlossene Fachgruppen sind Gesellschaftswissenschaften (FG_GE) und Philosophie (FG_PL).
+	 *
+	 @return Eine Liste von {@code ReportingGostAbiturFachbelegung} mit Fachbelegungen, die den oben genannten Fachgruppen zugeordnet sind.
+	 */
+	public List<ReportingGostAbiturFachbelegung> fachbelegungenAB2Zeugnisrelevant() {
+		return getFachbelegungenZeugnisrelevant(Fachgruppe.FG_GS, Fachgruppe.FG_PL);
+	}
+
+	/**
+	 * Diese Methode filtert die Fachbelegungen des Aufgabenfeldes 3 mit Relevanz für die Prüfungsordnung.
+	 * Eingeschlossene Fachgruppen sind Mathematik (FG_M), Naturwissenschaften (FG_NW) oder Wahlpflichtfächer Naturwissenschaften (FG_WN).
+	 *
+	 @return Eine Liste von {@code ReportingGostAbiturFachbelegung} mit Fachbelegungen, die den oben genannten Fachgruppen zugeordnet sind.
+	 */
+	public List<ReportingGostAbiturFachbelegung> fachbelegungenAB3() {
+		return getFachbelegungen(Fachgruppe.FG_M, Fachgruppe.FG_NW, Fachgruppe.FG_WN);
+	}
+
+	/**
+	 * Diese Methode filtert die Fachbelegungen des Aufgabenfeldes 3 mit Relevanz für die Prüfungsordnung und Zeugnisse.
+	 * Eingeschlossene Fachgruppen sind Mathematik (FG_M), Naturwissenschaften (FG_NW) oder Wahlpflichtfächer Naturwissenschaften (FG_WN).
+	 *
+	 @return Eine Liste von {@code ReportingGostAbiturFachbelegung} mit Fachbelegungen, die den oben genannten Fachgruppen zugeordnet sind.
+	 */
+	public List<ReportingGostAbiturFachbelegung> fachbelegungenAB3Zeugnisrelevant() {
+		return getFachbelegungenZeugnisrelevant(Fachgruppe.FG_M, Fachgruppe.FG_NW, Fachgruppe.FG_WN);
+	}
+
+	/**
+	 * Diese Methode filtert die Religionsfachbelegungen mit Relevanz für die Prüfungsordnung.
+	 * Eingeschlossene Fachgruppe ist Religion (FG_RE).
+	 *
+	 * @return Eine Liste von {@code ReportingGostAbiturFachbelegung} mit Religionsfachbelegungen.
+	 */
+	public List<ReportingGostAbiturFachbelegung> fachbelegungenReligion() {
+		return getFachbelegungen(Fachgruppe.FG_RE);
+	}
+
+	/**
+	 * Diese Methode filtert die Religionsfachbelegungen mit Relevanz für die Prüfungsordnung und Zeugnisse.
+	 * Eingeschlossene Fachgruppe ist Religion (FG_RE).
+	 *
+	 * @return Eine Liste von {@code ReportingGostAbiturFachbelegung} mit Religionsfachbelegungen.
+	 */
+	public List<ReportingGostAbiturFachbelegung> fachbelegungenReligionZeugnisrelevant() {
+		return getFachbelegungenZeugnisrelevant(Fachgruppe.FG_RE);
+	}
+
+	/**
+	 * Diese Methode filtert die Sportfachbelegungen mit Relevanz für die Prüfungsordnung.
+	 * Eingeschlossene Fachgruppe ist Sport (FG_SP).
+	 *
+	 * @return Eine Liste von {@code ReportingGostAbiturFachbelegung} mit Sportfachbelegungen.
+	 */
+	public List<ReportingGostAbiturFachbelegung> fachbelegungenSport() {
+		return getFachbelegungen(Fachgruppe.FG_SP);
+	}
+
+	/**
+	 * Diese Methode filtert die Sportfachbelegungen mit Relevanz für die Prüfungsordnung und Zeugnisse.
+	 * Eingeschlossene Fachgruppe ist Sport (FG_SP).
+	 *
+	 * @return Eine Liste von {@code ReportingGostAbiturFachbelegung} mit Sportfachbelegungen.
+	 */
+	public List<ReportingGostAbiturFachbelegung> fachbelegungenSportZeugnisrelevant() {
+		return getFachbelegungenZeugnisrelevant(Fachgruppe.FG_SP);
+	}
+
+	/**
+	 * Diese Methode filtert die Projektkursbelegungen mit Relevanz für die Prüfungsordnung.
+	 * Eingeschlossene Fachgruppe ist die Gruppe Projektkurs (FG_PX).
+	 *
+	 * @return Eine Liste von {@code ReportingGostAbiturFachbelegung} mit Projektkursbelegungen.
+	 */
+	public List<ReportingGostAbiturFachbelegung> fachbelegungenProjektkurse() {
+		return getFachbelegungen(Fachgruppe.FG_PX);
+	}
+
+	/**
+	 * Diese Methode filtert die Projektkursbelegungen mit Relevanz für die Prüfungsordnung und Zeugnisse.
+	 * Eingeschlossene Fachgruppe ist die Gruppe Projektkurs (FG_PX).
+	 *
+	 * @return Eine Liste von {@code ReportingGostAbiturFachbelegung} mit Projektkursbelegungen.
+	 */
+	public List<ReportingGostAbiturFachbelegung> fachbelegungenProjektkurseZeugnisrelevant() {
+		return getFachbelegungenZeugnisrelevant(Fachgruppe.FG_PX);
+	}
+
+	/**
+	 * Diese Methode filtert die Vertiefungsfachbelegungen mit Relevanz für die Prüfungsordnung.
+	 * Eingeschlossene Fachgruppe ist die Gruppe Vertiefungskurs (FG_VX).
+	 *
+	 * @return Eine Liste von {@code ReportingGostAbiturFachbelegung} mit Vertiefungsfachbelegungen.
+	 */
+	public List<ReportingGostAbiturFachbelegung> fachbelegungenVertiefungskurse() {
+		return getFachbelegungen(Fachgruppe.FG_VX);
+	}
+
+	/**
+	 * Diese Methode filtert die Vertiefungsfachbelegungen mit Relevanz für die Prüfungsordnung und Zeugnisse.
+	 * Eingeschlossene Fachgruppe ist die Gruppe Vertiefungskurs (FG_VX).
+	 *
+	 * @return Eine Liste von {@code ReportingGostAbiturFachbelegung} mit Vertiefungsfachbelegungen.
+	 */
+	public List<ReportingGostAbiturFachbelegung> fachbelegungenVertiefungskurseZeugnisrelevant() {
+		return getFachbelegungenZeugnisrelevant(Fachgruppe.FG_VX);
+	}
+
+	/**
+	 * Private Hilfsmethode zum Filtern der Fachbelegungen nach Prüfungsordnungsrelevanz und Fachgruppen.
+	 *
+	 * @param fachgruppen Die Fachgruppen, deren Fachbelegungen berücksichtigt werden sollen.
+	 *
+	 * @return Eine Liste der Fachbelegungen zu den übergebenen Fachgruppen.
+	 */
+	private List<ReportingGostAbiturFachbelegung> getFachbelegungen(final Fachgruppe... fachgruppen) {
+		return fachbelegungen.stream()
+				.filter(Objects::nonNull)
+				.filter(f -> f.fach().istPruefungsordnungsRelevant())
+				.filter(f -> Arrays.asList(fachgruppen).contains(f.fach().fachgruppe()))
+				.toList();
+	}
+
+	/**
+	 * Private Hilfsmethode zum Filtern der Fachbelegungen nach Prüfungsordnungsrelevanz, Zeugnisrelevanz und Fachgruppen.
+	 *
+	 * @param fachgruppen Die Fachgruppen, deren Fachbelegungen berücksichtigt werden sollen.
+	 *
+	 * @return Eine Liste der Fachbelegungen zu den übergebenen Fachgruppen.
+	 */
+	private List<ReportingGostAbiturFachbelegung> getFachbelegungenZeugnisrelevant(final Fachgruppe... fachgruppen) {
+		return getFachbelegungen(fachgruppen).stream()
+				.filter(f -> f.fach().aufZeugnis())
+				.toList();
+	}
+
+	/**
+	 * Gibt die Abiturendnote in Worten aus, oder '---', wenn keine Note vorhanden ist.
+	 * @return Die Abiturnote im Format 'Zahl Komma Zahl' oder '---'
+	 */
+	public String noteInWorten() {
+		final List<String> zahlworte = Arrays.asList("Null", "Eins", "Zwei", "Drei", "Vier", "Fünf", "Sechs", "Sieben", "Acht", "Neun");
+
+		final String durchschnittsnote = note();
+		if (durchschnittsnote.isEmpty() || "---".equals(durchschnittsnote))
+			return "---";
+
+		final List<String> durchschnittsnoteZiffern = new ArrayList<>(Arrays.stream(durchschnittsnote.split(",")).toList());
+
+		if (durchschnittsnoteZiffern.size() != 2)
+			return "---";
+
+		return zahlworte.get(Integer.parseInt(durchschnittsnoteZiffern.get(0))) + " Komma "
+				+ zahlworte.get(Integer.parseInt(durchschnittsnoteZiffern.get(1)));
+	}
+
+	/**
 	 * Gibt die Information zurück, ob in der Q-Phase ein Projektkurs belegt wurde.
 	 *
 	 * @return Projektkursbelegung vorhanden.
 	 */
 	@JsonIgnore
 	public boolean projektkursVorhanden() {
-		return !this.fachbelegungen.stream()
-				.filter(f -> ((f != null) && (Fachgruppe.FG_PX == f.fach().fachgruppe())))
-				.toList()
-				.isEmpty();
+		return !fachbelegungenProjektkurseZeugnisrelevant().isEmpty();
 	}
 
 	/**
@@ -201,10 +405,7 @@ public class ReportingSchuelerGostAbitur extends ReportingBaseType {
 	 */
 	@JsonIgnore
 	public boolean religionVorhanden() {
-		return !this.fachbelegungen.stream()
-				.filter(f -> ((f != null) && (Fachgruppe.FG_RE == f.fach().fachgruppe())))
-				.toList()
-				.isEmpty();
+		return !fachbelegungenReligionZeugnisrelevant().isEmpty();
 	}
 
 	/**
@@ -214,8 +415,7 @@ public class ReportingSchuelerGostAbitur extends ReportingBaseType {
 	 */
 	@JsonIgnore
 	public boolean vertiefungskursVorhanden() {
-		final List<ReportingGostAbiturFachbelegung> listVertiefungskurse =
-				this.fachbelegungen.stream().filter(f -> (Fachgruppe.FG_VX == f.fach().fachgruppe())).toList();
+		final List<ReportingGostAbiturFachbelegung> listVertiefungskurse = fachbelegungenVertiefungskurseZeugnisrelevant();
 		if (listVertiefungskurse.isEmpty())
 			return false;
 
@@ -265,8 +465,8 @@ public class ReportingSchuelerGostAbitur extends ReportingBaseType {
 	 *
 	 * @return Inhalt des Feldes besondereLernleistung
 	 */
-	public String besondereLernleistung() {
-		return besondereLernleistung;
+	public String besondereLernleistungArt() {
+		return besondereLernleistungArt;
 	}
 
 	/**
@@ -473,7 +673,26 @@ public class ReportingSchuelerGostAbitur extends ReportingBaseType {
 	 * @return Inhalt des Feldes note
 	 */
 	public String note() {
-		return note;
+		if ((note == null) || note.trim().isEmpty())
+			return "---";
+
+		String checkNote = note.trim();
+		if (!checkNote.contains(","))
+			checkNote += ",0";
+
+		if (checkNote.length() != 3)
+			return "---";
+
+		final List<String> erlaubteZiffern = Arrays.asList("0", "1", "2", "3", "4", "5", "6", "7", "8", "9");
+		final List<String> checkNoteZiffern = new ArrayList<>(Arrays.stream(checkNote.split(",")).toList());
+
+		if (checkNoteZiffern.size() != 2)
+			return "---";
+
+		if (!erlaubteZiffern.contains(checkNoteZiffern.get(0)) || !erlaubteZiffern.contains(checkNoteZiffern.get(1)))
+			return "---";
+
+		return checkNote;
 	}
 
 	/**

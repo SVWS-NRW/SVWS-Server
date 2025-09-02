@@ -1,6 +1,6 @@
 
 import type { KlassenDaten, Schueler, List, LehrerListeEintrag, SimpleOperationResponse, ApiFile, ReportingParameter, StundenplanListeEintrag } from "@core";
-import { ArrayList, DeveloperNotificationException, KlassenListeManager } from "@core";
+import { ArrayList, DeveloperNotificationException } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -11,7 +11,7 @@ import type { RouteNode } from "~/router/RouteNode";
 import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { routeKlassenNeu } from "~/router/apps/klassen/RouteKlassenNeu";
 import { routeApp } from "~/router/apps/RouteApp";
-import { ViewType } from "@ui";
+import { ViewType, KlassenListeManager } from "@ui";
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
@@ -74,7 +74,7 @@ export class RouteDataKlassen extends RouteDataAuswahl<KlassenListeManager, Rout
 			: await api.getKlassenListe(schuljahresabschnitt.idFolgeAbschnitt);
 		const listSchueler = await api.server.getSchuelerFuerAbschnitt(api.schema, idSchuljahresabschnitt);
 		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
-		const listLehrer = await api.server.getLehrer(api.schema);
+		const listLehrer = await api.server.getLehrerFuerAbschnitt(api.schema, idSchuljahresabschnitt);
 		const manager = new KlassenListeManager(idSchuljahresabschnitt, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,
 			api.schulform, listKlassen, listSchueler, listJahrgaenge, listLehrer);
 		if (this._state.value.manager === undefined) {
@@ -196,13 +196,10 @@ export class RouteDataKlassen extends RouteDataAuswahl<KlassenListeManager, Rout
 		await RouteManager.doRoute(routeLehrer.getRoute({ id: eintrag.id }));
 	}
 
-	getPDF = api.call(async (reportingParameter: ReportingParameter, idStundenplan: number): Promise<ApiFile> => {
+	getPDF = api.call(async (reportingParameter: ReportingParameter): Promise<ApiFile> => {
 		if (!this.manager.liste.auswahlExists())
-			throw new DeveloperNotificationException("Dieser Stundenplan kann nur gedruckt werden, wenn mindestens eine Klasse ausgewählt ist.");
+			throw new DeveloperNotificationException("Die Ausgabe kann nur erfolgen, wenn mindestens eine Klasse ausgewählt ist.");
 		reportingParameter.idSchuljahresabschnitt = this.idSchuljahresabschnitt;
-		reportingParameter.idsHauptdaten.add(idStundenplan);
-		for (const l of this.manager.liste.auswahl())
-			reportingParameter.idsDetaildaten.add(l.id);
 		return await api.server.pdfReport(reportingParameter, api.schema);
 	})
 }

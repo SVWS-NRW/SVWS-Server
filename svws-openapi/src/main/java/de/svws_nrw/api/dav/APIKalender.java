@@ -14,19 +14,16 @@ import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.davapi.api.DavExtendedHttpStatus;
-import de.svws_nrw.davapi.api.DavUriBuilder;
-import de.svws_nrw.davapi.api.DavUriParameter;
 import de.svws_nrw.davapi.api.DeleteRessourceDispatcher;
 import de.svws_nrw.davapi.api.PROPFIND;
 import de.svws_nrw.davapi.api.PropfindCalendarDispatcher;
 import de.svws_nrw.davapi.api.PutCalendarDispatcher;
 import de.svws_nrw.davapi.api.REPORT;
 import de.svws_nrw.davapi.api.ReportCalendarDispatcher;
-import de.svws_nrw.davapi.data.IDavRepository;
-import de.svws_nrw.davapi.data.IKalenderEintragRepository;
-import de.svws_nrw.davapi.data.IKalenderRepository;
-import de.svws_nrw.davapi.data.repos.dav.DavRepository;
-import de.svws_nrw.davapi.data.repos.kalender.KalenderRepository;
+import de.svws_nrw.davapi.data.caldav.IKalenderEintragRepository;
+import de.svws_nrw.davapi.data.caldav.IKalenderRepository;
+import de.svws_nrw.davapi.data.caldav.KalenderRepository;
+import de.svws_nrw.davapi.data.dav.DavDBRepository;
 import de.svws_nrw.davapi.model.dav.Error;
 import de.svws_nrw.davapi.model.dav.Multistatus;
 import de.svws_nrw.db.DBEntityManager;
@@ -50,9 +47,11 @@ import jakarta.ws.rs.core.Response;
  * Die Klasse spezifiziert die CardDAV-API-Schnittstelle für den Zugriff auf
  * Kalender und Kalendereinträge.
  */
-@Path(DavUriBuilder.DAV_BASE_URI_PATTERN)
+@Path("/dav/{schema}")
 @Tag(name = "Server")
 public class APIKalender {
+
+	// TODO Schuljahresabschnitt als URI param ergänzen und so auch Kalender und Adressbücher für mehrere Halbjahre zur Verfügung stellen
 
 	/**
 	 * Logger für diese Klasse
@@ -76,7 +75,7 @@ public class APIKalender {
 	 * @return Ergebnisobjekt vom Typ {@link Multistatus} oder {@link Error}
 	 */
 	@PROPFIND
-	@Path(DavUriBuilder.CARD_DAV_REL_URI_PATTERN_CALENDAR_COLLECTION)
+	@Path("/kalender")
 	@Consumes({ MediaType.TEXT_XML, MediaType.APPLICATION_XML })
 	@Produces(MediaType.TEXT_XML)
 	public Response propfindOnCalendarCollection(@PathParam("schema") final String schema,
@@ -108,7 +107,7 @@ public class APIKalender {
 	 * @return Ergebnisobjekt vom Typ {@link Multistatus} oder {@link Error}
 	 */
 	@PROPFIND
-	@Path(DavUriBuilder.CARD_DAV_REL_URI_PATTERN_CALENDAR)
+	@Path("/kalender/{resourceCollectionId}")
 	@Consumes({ MediaType.TEXT_XML, MediaType.APPLICATION_XML })
 	@Produces(MediaType.TEXT_XML)
 	public Response propfindOnCalendar(@PathParam("schema") final String schema,
@@ -138,7 +137,7 @@ public class APIKalender {
 	 *         {@link de.svws_nrw.davapi.model.dav.Error}
 	 */
 	@REPORT
-	@Path(DavUriBuilder.CARD_DAV_REL_URI_PATTERN_CALENDAR)
+	@Path("/kalender/{resourceCollectionId}")
 	@Consumes({ MediaType.TEXT_XML, MediaType.APPLICATION_XML })
 	@Produces(MediaType.TEXT_XML)
 	public Response reportOnCalendar(@PathParam("schema") final String schema,
@@ -174,7 +173,7 @@ public class APIKalender {
 	 *         {@link de.svws_nrw.davapi.model.dav.Error}
 	 */
 	@PUT
-	@Path(DavUriBuilder.CARD_DAV_REL_URI_PATTERN_CALENDAR_ENTRY)
+	@Path("/kalender/{resourceCollectionId}/{resourceId}.ics")
 	@Consumes({ "Text/Calendar", MediaType.APPLICATION_XML })
 	@Produces(MediaType.TEXT_XML)
 	public Response putOnCalendar(@PathParam("schema") final String schema,
@@ -238,7 +237,7 @@ public class APIKalender {
 	 *         Multistatus mit Fehlermeldung
 	 */
 	@DELETE
-	@Path(DavUriBuilder.CARD_DAV_REL_URI_PATTERN_CALENDAR_ENTRY)
+	@Path("/kalender/{resourceCollectionId}/{resourceId}.ics")
 	@Produces(MediaType.TEXT_XML)
 	public Response deleteOnCalendar(@PathParam("schema") final String schema,
 			@PathParam("resourceCollectionId") final String kalenderId, @PathParam("resourceId") final String kalenderEintragUID,
@@ -275,7 +274,7 @@ public class APIKalender {
 	 *         Multistatus mit Fehlermeldungen
 	 */
 	@DELETE
-	@Path(DavUriBuilder.CARD_DAV_REL_URI_PATTERN_CALENDAR)
+	@Path("/kalender/{resourceCollectionId}")
 	@Produces(MediaType.TEXT_XML)
 	public Response deleteOnCalendar(@PathParam("schema") final String schema,
 			@PathParam("resourceCollectionId") final String kalenderId, @Context final HttpServletRequest request) {
@@ -309,10 +308,10 @@ public class APIKalender {
 	 * @return den Delete Dispatcher
 	 */
 	private static DeleteRessourceDispatcher createDeleteOnDavRessourceDispatcher(final DBEntityManager conn, final String schema) {
-		final IDavRepository davRepository = new DavRepository(conn);
-		final DavUriParameter uriParameter = new DavUriParameter();
-		uriParameter.setSchema(schema);
-		return new DeleteRessourceDispatcher(davRepository, uriParameter);
+		final DavDBRepository davRepository = new DavDBRepository(conn);
+		final DeleteRessourceDispatcher dispatcher = new DeleteRessourceDispatcher(davRepository);
+		dispatcher.setParameterSchema(schema);
+		return new DeleteRessourceDispatcher(davRepository);
 	}
 
 	/**
@@ -326,13 +325,11 @@ public class APIKalender {
 	 * @return Response Objekt
 	 */
 	private static Response buildResponse(final Object result) {
-		if (result instanceof Multistatus) {
+		if (result instanceof Multistatus)
 			return Response.status(DavExtendedHttpStatus.MULTISTATUS).type(MediaType.TEXT_XML).entity(result).build();
-		} else if (result instanceof Error) {
+		if (result instanceof Error)
 			return Response.status(Response.Status.NOT_FOUND).type(MediaType.TEXT_XML).entity(result).build();
-		} else {
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.TEXT_PLAIN).build();
-		}
+		return Response.status(Response.Status.BAD_REQUEST).type(MediaType.TEXT_PLAIN).build();
 	}
 
 	/**
@@ -377,10 +374,10 @@ public class APIKalender {
 	 */
 	private static PropfindCalendarDispatcher createPropfindCalendarDispatcher(final DBEntityManager conn) {
 		final IKalenderRepository repository = createKalenderRepository(conn);
-		final DavUriParameter uriParameter = new DavUriParameter();
-		uriParameter.setSchema(conn.getDBSchema());
-		uriParameter.setBenutzerId(String.valueOf(conn.getUser().getId()));
-		return new PropfindCalendarDispatcher(repository, uriParameter);
+		final PropfindCalendarDispatcher dispatcher = new PropfindCalendarDispatcher(repository);
+		dispatcher.setParameterSchema(conn.getDBSchema());
+		dispatcher.setParameterBenutzerId(String.valueOf(conn.getUser().getId()));
+		return dispatcher;
 	}
 
 	/**
@@ -391,10 +388,10 @@ public class APIKalender {
 	 */
 	private static ReportCalendarDispatcher createReportCalendarDispatcher(final DBEntityManager conn) {
 		final IKalenderRepository repository = createKalenderRepository(conn);
-		final DavUriParameter uriParameter = new DavUriParameter();
-		uriParameter.setSchema(conn.getDBSchema());
-		uriParameter.setBenutzerId(String.valueOf(conn.getUser().getId()));
-		return new ReportCalendarDispatcher(repository, uriParameter);
+		final ReportCalendarDispatcher dispatcher = new ReportCalendarDispatcher(repository);
+		dispatcher.setParameterSchema(conn.getDBSchema());
+		dispatcher.setParameterBenutzerId(String.valueOf(conn.getUser().getId()));
+		return dispatcher;
 	}
 
 	/**
@@ -405,19 +402,19 @@ public class APIKalender {
 	 */
 	private static PutCalendarDispatcher createPutCalendarDispatcher(final DBEntityManager conn) {
 		final IKalenderEintragRepository eintragRepository = createKalenderEintragRepository(conn);
-		final DavUriParameter uriParameter = new DavUriParameter();
-		uriParameter.setSchema(conn.getDBSchema());
-		uriParameter.setBenutzerId(String.valueOf(conn.getUser().getId()));
-		return new PutCalendarDispatcher(eintragRepository, uriParameter);
+		final PutCalendarDispatcher dispatcher = new PutCalendarDispatcher(eintragRepository);
+		dispatcher.setParameterSchema(conn.getDBSchema());
+		dispatcher.setParameterBenutzerId(String.valueOf(conn.getUser().getId()));
+		return dispatcher;
 	}
 
 	/**
-	 * Erzeugt ein neues {@link de.svws_nrw.davapi.data.IKalenderRepository}
+	 * Erzeugt ein neues {@link de.svws_nrw.davapi.data.caldav.IKalenderRepository}
 	 * mit der gegebenen Datenbankverbindung.
 	 *
 	 * @param conn die Datenbankverbindung
 	 * @return eine Implementierung von
-	 *         {@link de.svws_nrw.davapi.data.IKalenderRepository} für den
+	 *         {@link de.svws_nrw.davapi.data.caldav.IKalenderRepository} für den
 	 *         Zugriff auf Kalender.
 	 */
 	private static IKalenderRepository createKalenderRepository(final DBEntityManager conn) {
@@ -426,12 +423,12 @@ public class APIKalender {
 
 	/**
 	 * Erzeugt ein neues
-	 * {@link de.svws_nrw.davapi.data.IKalenderEintragRepository} mit der
+	 * {@link de.svws_nrw.davapi.data.caldav.IKalenderEintragRepository} mit der
 	 * gegebenen Datenbankverbindung.
 	 *
 	 * @param conn die Datenbankverbindung
 	 * @return eine Implementierung von
-	 *         {@link de.svws_nrw.davapi.data.IKalenderEintragRepository} für
+	 *         {@link de.svws_nrw.davapi.data.caldav.IKalenderEintragRepository} für
 	 *         den Zugriff auf Kalender.
 	 */
 	private static IKalenderEintragRepository createKalenderEintragRepository(final DBEntityManager conn) {

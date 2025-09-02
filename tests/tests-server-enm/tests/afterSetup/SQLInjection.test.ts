@@ -2,8 +2,9 @@ import { describe, expect, test } from "vitest";
 import { getApiService } from "../../utils/RequestBuilder.js"
 import { parse } from "../../utils/ENMApiDataParser.js";
 import type { ENMSchueler } from "@core";
+import { enmURL } from "../../../utils/APIUtils";
 
-const targetUrlENMServer: string = process.env.VITE_ENM_targetHost ?? "https://localhost";
+const targetUrlENMServer: string = enmURL;
 
 const apiServiceAuth = getApiService('T.Giesen@lmail.de', 'UD73Js0Uro', targetUrlENMServer)
 const apiServiceAuthInjected = getApiService('M.Gehring@lmail.de', 'uTdNE7EUIb', targetUrlENMServer)

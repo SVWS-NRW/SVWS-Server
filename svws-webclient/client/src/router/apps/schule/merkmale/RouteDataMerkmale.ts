@@ -1,7 +1,7 @@
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
 import type { List, SimpleOperationResponse, Merkmal } from "@core";
-import { MerkmaleListeManager } from "@core";
+import { MerkmaleListeManager } from "@ui";
 import { ArrayList } from "@core";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
 import { ViewType } from "@ui";

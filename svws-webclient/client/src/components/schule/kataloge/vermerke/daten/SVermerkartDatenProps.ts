@@ -1,7 +1,9 @@
-import type { SchuelerVermerkartZusammenfassung, VermerkartEintrag, VermerkartenListeManager } from "@core";
+import type { BenutzerKompetenz, SchuelerVermerkartZusammenfassung, VermerkartEintrag } from "@core";
+import type { VermerkartenListeManager } from "@ui";
 
 export interface VermerkartDatenProps {
 	patch: (data : Partial<VermerkartEintrag>) => Promise<void>;
 	vermerkartenManager: () => VermerkartenListeManager,
 	gotoSchueler : (schuelerVermerkartZusammenfassung : SchuelerVermerkartZusammenfassung) => Promise<void>;
+	benutzerKompetenzen: Set<BenutzerKompetenz>,
 }

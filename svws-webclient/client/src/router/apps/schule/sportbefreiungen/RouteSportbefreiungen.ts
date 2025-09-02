@@ -1,5 +1,5 @@
 import type { RouteParams } from "vue-router";
-import type { SportbefreiungenListeManager } from "@core";
+import type { SportbefreiungenListeManager } from "@ui";
 import type { RouteApp } from "~/router/apps/RouteApp";
 import type { RouteNode } from "~/router/RouteNode";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";

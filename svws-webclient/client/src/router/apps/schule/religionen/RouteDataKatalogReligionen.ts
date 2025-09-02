@@ -1,5 +1,6 @@
 import type { List, ReligionEintrag, SimpleOperationResponse } from "@core";
-import { BenutzerKompetenz, ReligionListeManager, ArrayList } from "@core";
+import { BenutzerKompetenz, ArrayList } from "@core";
+import { ReligionListeManager } from "@ui";
 import { api } from "~/router/Api";
 import { routeKatalogReligionDaten } from "./RouteKatalogReligionDaten";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";

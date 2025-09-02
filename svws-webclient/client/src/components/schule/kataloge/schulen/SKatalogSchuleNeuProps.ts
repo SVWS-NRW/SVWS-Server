@@ -1,6 +1,6 @@
-import type { Checkpoint } from "@ui";
+import type { Checkpoint, KatalogSchuleListeManager } from "@ui";
 import type { RoutingStatus } from "~/router/RoutingStatus";
-import type { SchulEintrag, KatalogSchuleListeManager, BenutzerKompetenz } from "@core";
+import type { SchulEintrag, BenutzerKompetenz } from "@core";
 
 export interface KatalogSchuleNeuProps {
 	schuleListeManager: () => KatalogSchuleListeManager;

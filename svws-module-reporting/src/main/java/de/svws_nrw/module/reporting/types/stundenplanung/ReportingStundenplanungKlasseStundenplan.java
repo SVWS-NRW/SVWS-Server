@@ -8,7 +8,7 @@ import de.svws_nrw.module.reporting.types.klasse.ReportingKlasse;
 
 
 /**
- * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Schüler-Stundenplan.
+ * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Klassen-Stundenplan.
  */
 public class ReportingStundenplanungKlasseStundenplan extends ReportingBaseType {
 

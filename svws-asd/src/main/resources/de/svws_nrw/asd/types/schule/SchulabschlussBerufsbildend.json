@@ -31,7 +31,7 @@
 			"kuerzel": "VERS",
 			"text": "Versetzungszeugnis",
 			"gueltigVon": 2005,
-			"gueltigBis": 2015
+			"gueltigBis": null
 		} ]
 	}, {
 		"bezeichner": "AUFB",

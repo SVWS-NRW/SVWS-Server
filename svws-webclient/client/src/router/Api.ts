@@ -2,8 +2,8 @@ import { computed } from "vue";
 
 import type { AES } from "~/utils/crypto/aes";
 import type { Config } from "../../../ui/src/utils/Config";
-import type { List, DBSchemaListeEintrag, ApiServer, LehrerListeEintrag, SchuelerListeEintrag, KlassenDaten, KursDaten, JahrgangsDaten, SchuleStammdaten, Schuljahresabschnitt, BenutzerDaten, BenutzerKompetenz, ServerMode, ValidatorKontext} from "@core";
-import { Schulform, Schulgliederung, BenutzerTyp, OpenApiError, SimpleOperationResponse, DeveloperNotificationException } from "@core";
+import type { List, DBSchemaListeEintrag, ApiServer, ApiExternal, LehrerListeEintrag, SchuelerListeEintrag, KlassenDaten, KursDaten, JahrgangsDaten, SchuleStammdaten, Schuljahresabschnitt, BenutzerDaten, BenutzerKompetenz, ServerMode, ValidatorKontext} from "@core";
+import { Schulform, Schulgliederung, BenutzerTyp, DeveloperNotificationException } from "@core";
 
 import { ApiConnection } from "~/router/ApiConnection";
 import type { ApiPendingData} from "~/components/ApiStatus";
@@ -33,6 +33,11 @@ class Api {
 	/** Gibt das Objekt für alle Aufrufe der Server-Schnittstelle des SVWS-Server zurück. */
 	get server(): ApiServer {
 		return this.conn.api;
+	}
+
+	/** Gibt das Objekt für alle Aufrufe der externen Schnittstellen des SVWS-Server zurück. */
+	get external(): ApiExternal {
+		return this.conn.apiExternal;
 	}
 
 	/** Gibt den Namen des Schemas beim SVWS-Server zurück, welches mit dieser Verbindung angesprochen wird */

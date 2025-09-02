@@ -6,6 +6,7 @@ import de.svws_nrw.core.data.erzieher.ErzieherListeEintrag;
 import de.svws_nrw.core.data.erzieher.ErzieherStammdaten;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
+import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.data.erzieher.DataErzieherStammdaten;
 import de.svws_nrw.data.erzieher.DataErzieherliste;
@@ -18,6 +19,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.Path;
@@ -162,6 +164,33 @@ public class APIErzieher {
 		// extrahieren der Datenbank-ID aus der API-ID, die ein Suffix beinhaltet
 		final long realId = DataErzieherStammdaten.getDatabaseErzieherIdFromApiId(tmpid);
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataErzieherStammdaten(conn, tmpid, pos).patchAsResponse(realId, is),
+				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Entfernen mehrerer Erziehungsberechtigten von Schülern.
+	 *
+	 * @param schema    das Datenbankschema
+	 * @param ids       die IDs der Erziehungsberechtigten
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status und ggf. der gelöschten Erziehungsberechtigten
+	 */
+	@DELETE
+	@Path("/stammdaten/multiple")
+	@Operation(summary = "Entfernt einen oder mehrerer Erziehungsberechtigte bei Schülern.",
+			description = "Entfernt einen oder mehrerer Erziehungsberechtigte bei Schülern, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Erziehungsberechtigte wurden erfolgreich entfernt.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Long.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Erziehungsberechtigte zu entfernen.")
+	@ApiResponse(responseCode = "404", description = "Mindestens ein Erziehungsberechtigter ist nicht vorhanden")
+	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteErzieherStammdaten(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der zu löschenden Erziehungsberechtigten",
+					required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream ids,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataErzieherStammdaten(conn).deleteMultipleAsResponse(JSONMapper.toListOfLong(ids)),
 				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
 	}
 

@@ -2,6 +2,7 @@ package de.svws_nrw.api;
 
 import java.util.Set;
 
+import de.svws_nrw.api.common.OpenAPICorsFilter;
 import de.svws_nrw.api.dav.APIAdressbuch;
 import de.svws_nrw.api.dav.APIKalender;
 import jakarta.ws.rs.core.Application;
@@ -13,11 +14,13 @@ import jakarta.ws.rs.core.Application;
  */
 public final class RestAppDav extends Application {
 
+	/** Die Pfad-Spezifikation für diese Applikation */
+	private static final String[] pathSpec = { "/dav/*" };
+
 	/// Enthält alle Klassen, die für die OpenAPI eingebunden werden
 	private final Set<Class<?>> classes = Set.of(
 			APIAdressbuch.class,
 			APIKalender.class,
-
 			OpenAPICorsFilter.class);
 
 	/**
@@ -30,6 +33,16 @@ public final class RestAppDav extends Application {
 	@Override
 	public Set<Class<?>> getClasses() {
 		return this.classes;
+	}
+
+
+	/**
+	 * Gibt die Pfad-Spezifikation für die App zurück
+	 *
+	 * @return die Pfad-Spezifikation
+	 */
+	public static String[] getPathSpecification() {
+		return pathSpec;
 	}
 
 }

@@ -6,27 +6,27 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie beschreibt eine Fachrichtung eines Lehrers mit der übergebenen ID.
+ * Sie beschreibt eine Fachrichtung in Bezug auf das Lehramt eines Lehrers.
  */
 @XmlRootElement
-@Schema(description = "Eine Fachrichtung eines Lehrers.")
+@Schema(description = "Eine Fachrichtung zu einem Lehramt eines Lehrers.")
 @TranspilerDTO
 public class LehrerFachrichtungEintrag {
 
-	/** Die ID des Lehrers. */
-	@Schema(description = "Die ID des Lehrers.", example = "4711")
+	/** Die ID des Eintrages. */
+	@Schema(description = "Die ID des Eintrages.", example = "4711")
 	public long id;
 
-	/** Die ID des Lehramtes. */
-	@Schema(description = "Die ID des Lehramtes.", example = "4712")
+	/** Die ID des Lehramteintrags des Lehrers. */
+	@Schema(description = "Die ID des Lehramteintrags des Lehrers.", example = "4712")
 	public long idLehramt;
 
-	/** Die ID der Fachrichtung. */
-	@Schema(description = "Die ID der Fachrichtung.", example = "4712")
+	/** Die Katalog-ID der Fachrichtung. */
+	@Schema(description = "Die Katalog-ID der Fachrichtung.", example = "4712")
 	public long idFachrichtung;
 
-	/** Die ID des Anerkennungsgrund für die Fachrichtung. */
-	@Schema(description = "Die ID des Anerkennungsgrund für die Fachrichtung.", example = "4713")
+	/** Die Katalog-ID des Anerkennungsgrund für die Fachrichtung. */
+	@Schema(description = "Die Katalog-ID des Anerkennungsgrund für die Fachrichtung.", example = "4713")
 	public Long idAnerkennungsgrund;
 
 	/**

@@ -16,7 +16,8 @@ plugins {
 	id 'java'
 }
 
-def downloadDir = "$projectDir/download"
+def downloadBaseDir = "$projectDir/download"
+def downloadDir = "$downloadBaseDir/svws-${project.version}"
 
 group = 'de.svws-nrw'
 version = project.ext.svwsArtifactVersion
@@ -102,7 +103,7 @@ task downloadJarsAll(type: Copy) {
 	into "download/svws-" + project.version + "/jar/"
 	include "*.jar"
 	doLast {
-		file("download/svws-" + project.version + "/run_server.cmd").text =
+		file(downloadDir + "/run_server.cmd").text =
 			'@echo off' + System.lineSeparator() +
 			'.\\java\\bin\\java.exe --class-path ' + configurations.extendedImplementation.collect{ t -> 'svws-server/' + t.getName() }.join(';') + ' de.svws_nrw.server.jetty.Main' +
 			System.lineSeparator() +
@@ -116,11 +117,11 @@ task downloadJarsAll(type: Copy) {
 			') else (' + System.lineSeparator() +
 			'  echo SVWS-Server wurde normal beendet' + System.lineSeparator() +
 			')'
-		file("download/svws-" + project.version + "/run_server.sh").text =
+		file(downloadDir + "/run_server.sh").text =
 			'#!/bin/sh' + '\n' +
 			'java.exe --class-path "' + configurations.extendedImplementation.collect{ t -> 'svws-server/' + t.getName() }.join(':') + '" de.svws_nrw.server.jetty.Main' +
 			System.lineSeparator()
-		file("download/svws-" + project.version + "/config_writer.cmd").text =
+		file(downloadDir + "/config_writer.cmd").text =
 			"set outputfile=%1" + System.lineSeparator() +
 			"set clientpath=%2" + System.lineSeparator() +
 			"set adminclientpath=%3" + System.lineSeparator() +
@@ -137,11 +138,11 @@ task downloadJarsAll(type: Copy) {
 
 task downloadJDK {
 	doLast {
-		def file = new File("${projectDir}/download/svws-${project.version}/jdk-${jdk_version}-win.zip")
+		def file = new File("${downloadDir}/jdk-${jdk_version}-win.zip")
 		if (file.exists()) {
 			println "Datei jdk-${jdk_version}-win.zip wurde bereits heruntergeladen, skipping download"
 		} else {
-			mkdir "download/svws-${project.version}"
+			mkdir "${downloadDir}"
 			def url = new URL(jdk_win_url)
 			println "Downloading jdk-${jdk_version}-win.zip from $url..."
 			url.withInputStream { i -> file.withOutputStream { it << i } }
@@ -152,11 +153,11 @@ task downloadJDK {
 
 task downloadMariaDB {
 	doLast {
-		def file = new File("${projectDir}/download/svws-${project.version}/mariadb-${mariadb_version}-winx64.zip")
+		def file = new File("${downloadDir}/mariadb-${mariadb_version}-winx64.zip")
 		if (file.exists()) {
 			println "Datei mariadb-${mariadb_version}-winx64.zip wurde bereits heruntergeladen, skipping download"
 		} else {
-			mkdir "download/svws-${project.version}"
+			mkdir "${downloadDir}"
 			def url = new URL(mariadb_win_url)
 			println "Downloading mariadb-${mariadb_version}-winx64.zip from $url..."
 			url.withInputStream { i -> file.withOutputStream { it << i } }
@@ -168,11 +169,11 @@ task downloadMariaDB {
 
 task downloadInnosetup {
 	doLast {
-		def file = new File("${projectDir}/download/svws-${project.version}/innosetup-${innosetup_version}.exe")
+		def file = new File("${downloadDir}/innosetup-${innosetup_version}.exe")
 		if (file.exists()) {
 			println "Datei innosetup-${innosetup_version}.exe wurde bereits heruntergeladen, skipping download"
 		} else {
-			mkdir "download/svws-${project.version}"
+			mkdir "${downloadDir}"
 			def url = new URL(innosetup_win_url)
 			println "Downloading innosetup-${innosetup_version}.exe from $url..."
 			url.withInputStream { i -> file.withOutputStream { it << i } }
@@ -183,11 +184,11 @@ task downloadInnosetup {
 
 task downloadInnoextract {
 	doLast {
-		def file = new File("${projectDir}/download/svws-${project.version}/innoextract-${innoextract_version}-windows.zip")
+		def file = new File("${downloadDir}/innoextract-${innoextract_version}-windows.zip")
 		if (file.exists()) {
 			println "Datei innoextract-${innoextract_version}-windows.zip wurde bereits heruntergeladen, skipping download"
 		} else {
-			mkdir "download/svws-${project.version}"
+			mkdir "${downloadDir}"
 			def url = new URL(innoextract_win_url)
 			println "Downloading innoextract-${innoextract_version}-windows.zip from $url..."
 			url.withInputStream { i -> file.withOutputStream { it << i } }
@@ -198,11 +199,11 @@ task downloadInnoextract {
 
 task downloadWindowsServiceWrapper {
 	doLast {
-		def file = new File("${projectDir}/download/svws-${project.version}/servicewrapper-v${windowsservicewrapper_version}-windows.exe")
+		def file = new File("${downloadDir}/servicewrapper-v${windowsservicewrapper_version}-windows.exe")
 		if (file.exists()) {
 			println "Datei servicewrapper-v${windowsservicewrapper_version}-windows.exe wurde bereits heruntergeladen, skipping download"
 		} else {
-			mkdir "download/svws-${project.version}"
+			mkdir "${downloadDir}"
 			def url = new URL(windowsservicewrapper_win_url)
 			println "Downloading servicewrapper-v${windowsservicewrapper_version}-windows.exe from $url..."
 			url.withInputStream { i -> file.withOutputStream { it << i } }
@@ -213,11 +214,11 @@ task downloadWindowsServiceWrapper {
 
 task downloadCurl {
 	doLast {
-		def file = new File("${projectDir}/download/svws-${project.version}/curl-${curl_version}-windows.zip")
+		def file = new File("${downloadDir}/curl-${curl_version}-windows.zip")
 		if (file.exists()) {
 			println "Datei curl-${curl_version}-windows.zip wurde bereits heruntergeladen, skipping download"
 		} else {
-			mkdir "download/svws-${project.version}"
+			mkdir "${downloadDir}"
 			def url = new URL(curl_win_url)
 			println "Downloading curl-${curl_version}-windows.zip from $url..."
 			url.withInputStream { i -> file.withOutputStream { it << i } }
@@ -247,7 +248,7 @@ task copyJARs(type:Copy) {
 task extract(type:Copy) {
 	dependsOn "copyJARs"
 	dependsOn "download"
-	from(zipTree("${projectDir}/download/svws-${project.version}/mariadb-${mariadb_version}-winx64.zip")) {
+	from(zipTree("${downloadDir}/mariadb-${mariadb_version}-winx64.zip")) {
 		include "mariadb-${mariadb_version}-winx64/bin/mysqld.exe"
 		include "mariadb-${mariadb_version}-winx64/bin/server.dll"
 		include "mariadb-${mariadb_version}-winx64/bin/mariadb-install-db.exe"
@@ -258,32 +259,32 @@ task extract(type:Copy) {
 		include "mariadb-${mariadb_version}-winx64/THIRDPARTY"
 		includeEmptyDirs = false
 	}
-	from(zipTree(file("${projectDir}/download/svws-${project.version}/jdk-${jdk_version}-win.zip"))) {
+	from(zipTree(file("${downloadDir}/jdk-${jdk_version}-win.zip"))) {
 		exclude "jdk-${jdk_version}/lib/src.zip"
 		includeEmptyDirs = false
 	}
-	from(zipTree(file("${projectDir}/download/svws-${project.version}/curl-${curl_version}-windows.zip"))) {
+	from(zipTree(file("${downloadDir}/curl-${curl_version}-windows.zip"))) {
 		include "curl-${curl_version}-win64-mingw/*"
 		include "curl-${curl_version}-win64-mingw/bin/*"
 		includeEmptyDirs = false
 	}
-	from file("${projectDir}/download/svws-${project.version}/servicewrapper-v${windowsservicewrapper_version}-windows.exe")
-	from file("${projectDir}/download/svws-${project.version}/run_server.cmd")
-	from file("${projectDir}/download/svws-${project.version}/config_writer.cmd")
+	from file("${downloadDir}/servicewrapper-v${windowsservicewrapper_version}-windows.exe")
+	from file("${downloadDir}/run_server.cmd")
+	from file("${downloadDir}/config_writer.cmd")
 	into "${buildDir}/installer/files/"
 }
 
 
 task extractClient(type:Copy) {
 	dependsOn "extract"
-	from zipTree(file("${projectDir}/download/svws-${project.version}/SVWS-Client.zip"))
+	from zipTree(file("${downloadDir}/SVWS-Client.zip"))
 	into "${buildDir}/installer/files/client/"
 }
 
 
 task extractAdminClient(type:Copy) {
 	dependsOn "extract"
-	from zipTree(file("${projectDir}/download/svws-${project.version}/SVWS-Admin-Client.zip"))
+	from zipTree(file("${downloadDir}/SVWS-Admin-Client.zip"))
 	into "${buildDir}/installer/files/adminclient/"
 }
 
@@ -318,7 +319,7 @@ task copyInstallerScript(type:Copy) {
 
 task copyInnoExtractor(type: Copy) {
 	dependsOn "download"
-	from zipTree(file("${projectDir}/download/svws-${project.version}/innoextract-${innoextract_version}-windows.zip"))
+	from zipTree(file("${downloadDir}/innoextract-${innoextract_version}-windows.zip"))
 	into "${buildDir}/inno"
 	include "innoextract.exe"
 }
@@ -328,9 +329,9 @@ task extractInnoSetup(type:Exec) {
 	dependsOn "copyInnoExtractor"
 	workingDir file("${buildDir}/inno")
 	if (OperatingSystem.current().isWindows()) {
-		commandLine "cmd", "/c", "innoextract.exe", "--output-dir", "${buildDir}/inno/", "${projectDir}/download/svws-${project.version}/innosetup-${innosetup_version}.exe"
+		commandLine "cmd", "/c", "innoextract.exe", "--output-dir", "${buildDir}/inno/", "${downloadDir}/innosetup-${innosetup_version}.exe"
 	} else {
-		commandLine "wine", "innoextract.exe", "--output-dir", "${buildDir}/inno/", "${projectDir}/download/svws-${project.version}/innosetup-${innosetup_version}.exe"
+		commandLine "wine", "innoextract.exe", "--output-dir", "${buildDir}/inno/", "${downloadDir}/innosetup-${innosetup_version}.exe"
 	}
 }
 
@@ -371,5 +372,5 @@ task doZip(type: Zip) {
 doZip.dependsOn buildWindowsInstaller
 
 clean.doLast {
-	file("${downloadDir}").deleteDir()
+	file("${downloadBaseDir}").deleteDir()
 }

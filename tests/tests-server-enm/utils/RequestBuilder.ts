@@ -33,7 +33,7 @@ class ApiService {
 			contentLength = new TextEncoder().encode(options.body as string).length;
 		}
 
-		const response = await fetch(`${this.baseUrl}${endpoint}`, {
+		return await fetch(`${this.baseUrl}${endpoint}`, {
 			...options,
 			headers: {
 				// eslint-disable-next-line @typescript-eslint/no-misused-spread
@@ -44,7 +44,6 @@ class ApiService {
 			},
 			...(options.body !== undefined) && {body: options.body},
 		})
-		return response
 	}
 
 	/**

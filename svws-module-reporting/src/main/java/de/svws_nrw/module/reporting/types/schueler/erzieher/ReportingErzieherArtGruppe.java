@@ -44,6 +44,8 @@ public class ReportingErzieherArtGruppe extends ReportingBaseType {
 		this.sortierung = sortierung;
 	}
 
+	// ##### Berechnete Felder #####
+
 	/**
 	 * Erzeugt die mehrzeilige Briefanschrift im html-Format.
 	 *
@@ -53,23 +55,22 @@ public class ReportingErzieherArtGruppe extends ReportingBaseType {
 		if ((erzieher() == null) || erzieher().isEmpty())
 			return "";
 
-		String result = "";
+		final StringBuilder result = new StringBuilder();
 		for (final ReportingErzieher e : erzieher()) {
 			switch (e.anrede()) {
-				case "Frau" -> result = "Frau " + e.vornameNachname() + "</br>";
-				case "Herr" -> result = "Herrn " + e.vornameNachname() + "</br>";
-				case "Familie" -> result = "Familie" + e.nachname() + "</br>";
-				case null, default -> result = e.vornameNachname() + "</br>";
+				case "Frau" -> result.append("Frau ").append(e.vornameNachname()).append("<br/>");
+				case "Herr" -> result.append("Herrn ").append(e.vornameNachname()).append("<br/>");
+				case "Familie" -> result.append("Familie").append(e.nachname()).append("<br/>");
+				case null, default -> result.append(e.vornameNachname()).append("<br/>");
 			}
 		}
-		result += !erzieher().getFirst().wohnortsteilname().isEmpty() ? ("OT " + erzieher().getFirst().wohnortsteilname() + "</br>") : "";
-		result += erzieher().getFirst().strassennameHausnummer() + "</br>";
-		result += erzieher().getFirst().plzOrt();
+		result.append(!erzieher().getFirst().wohnortsteilname().isEmpty() ? ("OT " + erzieher().getFirst().wohnortsteilname() + "<br/>") : "");
+		result.append(erzieher().getFirst().strassennameHausnummer()).append("<br/>");
+		result.append(erzieher().getFirst().plzOrt());
 
-		return result;
+		return result.toString();
 	}
 
-	// ##### Berechnete Felder #####
 	/**
 	 * Erzeugt die formale Anrede ("Sehr geehrte") des Erziehers.
 	 *
@@ -105,6 +106,52 @@ public class ReportingErzieherArtGruppe extends ReportingBaseType {
 					+ erzieher().getLast().briefanredePersoenlich().substring(1);
 
 		return result;
+	}
+
+	/**
+	 * Erzeugt eine Liste aller E-Mail-Adressen in der Form einer zeilenweisen HTML-Ausgabe.
+	 *
+	 * @return E-Mail-Liste im HTML-Format.
+	 */
+	public String emailAdressenHtml() {
+		if ((erzieher() == null) || erzieher().isEmpty())
+			return "";
+
+		String result = erzieher().getFirst().emailPrivat();
+
+		// Maximal ein zweiter Erzieher kann noch in der Gruppe sein.
+		if (erzieher().size() > 1)
+			result += (!result.isEmpty() ? "<br/>" : "") + erzieher().getLast().emailPrivat();
+
+		return result;
+	}
+
+	/**
+	 * Erzeugt eine Liste aller E-Mail-Adressen in der Form einer durch Semikolon getrennten Liste.
+	 *
+	 * @return E-Mail-Liste durch Semikolon getrennt.
+	 */
+	public String emailAdressenListe() {
+		if ((erzieher() == null) || erzieher().isEmpty())
+			return "";
+
+		String result = erzieher().getFirst().emailPrivat();
+
+		// Maximal ein zweiter Erzieher kann noch in der Gruppe sein.
+		if (erzieher().size() > 1)
+			result += (!result.isEmpty() ? ";" : "") +  erzieher().getLast().emailPrivat();
+
+		return result;
+	}
+
+	/**
+	 * Gibt an, ob ein Erzieher in der Gruppe gemäß Beschreibung der volljährige Schüler selbst ist.
+	 *
+	 * @return true, wenn einer der Erzieher ein Schüler ist, sonst false
+	 */
+	public boolean istVolljaehrigerSchueler() {
+		return ((this.erzieher.size() == 1) && (this.erzieher().getFirst().art.bezeichnung().toLowerCase().contains("schüler"))
+				&& (this.erzieher().getFirst().art.bezeichnung().toLowerCase().contains("ist volljährig")));
 	}
 
 	/**

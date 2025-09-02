@@ -145,7 +145,7 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 		daten.grundschuleEinschulungsjahr = dtoSchueler.Einschulungsjahr;
 		final Einschulungsart einschulungsart = Einschulungsart.data().getWertBySchluessel(dtoSchueler.EinschulungsartASD);
 		daten.grundschuleEinschulungsartID = (einschulungsart == null) ? null : einschulungsart.getLetzterEintrag().id;
-		daten.idGrundschuleJahreEingangsphase = mapGrundschuleJahreEingangsphase(dtoSchueler);
+		daten.idGrundschuleJahreEingangsphase = mapGrundschuleJahreEingangsphase(dtoSchueler.EPJahre);
 		daten.kuerzelGrundschuleUebergangsempfehlung = dtoSchueler.Uebergangsempfehlung_JG5;
 		// Informationen zu dem Besuch der Sekundarstufe I
 		daten.sekIWechsel = dtoSchueler.JahrWechsel_SI;
@@ -182,12 +182,14 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 		}
 	}
 
-	private static Long mapGrundschuleJahreEingangsphase(final DTOSchueler dtoSchueler) {
-		if ((dtoSchueler.EPJahre == null) || (dtoSchueler.Einschulungsjahr == null))
+	private static Long mapGrundschuleJahreEingangsphase(final Integer value) {
+		if (value == null)
 			return null;
-		final PrimarstufeSchuleingangsphaseBesuchsjahre wert =
-				PrimarstufeSchuleingangsphaseBesuchsjahre.data().getWertBySchluessel(String.valueOf(dtoSchueler.EPJahre));
-		return wert.daten(dtoSchueler.Einschulungsjahr).id;
+		final PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag eintrag =
+				PrimarstufeSchuleingangsphaseBesuchsjahre.data().getEintragByID(value);
+		if (eintrag == null)
+			return null;
+		return eintrag.id;
 	}
 
 
@@ -321,7 +323,7 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 		if (eintrag == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Eingangsphase mit der ID %d vorhanden.".formatted(id));
 
-		dtoSchueler.EPJahre = Integer.valueOf(eintrag.schluessel);
+		dtoSchueler.EPJahre = (int) eintrag.id;
 	}
 
 	private static void mapJahr(final Object value, final String key, final Consumer<Integer> setter) throws ApiOperationException {

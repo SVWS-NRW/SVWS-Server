@@ -1,20 +1,20 @@
 package de.svws_nrw.api.server;
 
-import java.io.InputStream;
-import java.util.List;
-
 import de.svws_nrw.asd.data.schueler.SchuelerBetriebsdaten;
+import de.svws_nrw.core.data.SimpleOperationResponse;
+import de.svws_nrw.core.data.betrieb.Beschaeftigungsart;
 import de.svws_nrw.core.data.betrieb.BetriebAnsprechpartner;
 import de.svws_nrw.core.data.betrieb.BetriebListeEintrag;
 import de.svws_nrw.core.data.betrieb.BetriebStammdaten;
 import de.svws_nrw.core.data.kataloge.KatalogEintrag;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
+import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.data.betriebe.DataBetriebAnsprechpartner;
 import de.svws_nrw.data.betriebe.DataBetriebsStammdaten;
 import de.svws_nrw.data.betriebe.DataBetriebsliste;
-import de.svws_nrw.data.betriebe.DataKatalogBeschaeftigunsarten;
+import de.svws_nrw.data.betriebe.DataBeschaeftigungsarten;
 import de.svws_nrw.data.betriebe.DataKatalogBetriebsarten;
 import de.svws_nrw.data.schueler.DataSchuelerBetriebsdaten;
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,6 +36,8 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.io.InputStream;
+import java.util.List;
 
 /**
  * Die Klasse spezifiziert die OpenAPI-Schnittstelle für den Zugriff auf die grundlegenden Betriebsdaten aus der SVWS-Datenbank.
@@ -457,45 +459,18 @@ public class APIBetrieb {
 	* @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
 	* @param request       die Informationen zur HTTP-Anfrage
 	*
-	* @return              die Liste der Beschäftigungsarten mit ID des Datenbankschemas
+	* @return              die Liste der Beschäftigungsarten
 	*/
 	@GET
-	@Path("/beschaeftigungsart")
-	@Operation(summary = "Gibt eine Übersicht aller Beschäftigungsarten im Katalog zurück.",
-			description = "Erstellt eine Liste aller in dem Katalog vorhandenen Beschäftigungsarten unter Angabe der ID, eines Kürzels und der textuellen "
-					+ "Beschreibung sowie der Information, ob der Eintrag in der Anwendung sichtbar bzw. änderbar sein soll, und gibt diese zurück. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
-	@ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen zu den Beschäftigungsarten.",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KatalogEintrag.class))))
+	@Path("/beschaeftigungsarten")
+	@Operation(summary = "Gibt eine Übersicht der Beschäftigungsarten im Katalog zurück.",
+			description = "Gibt die Beschäftigungsarten zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste der Beschäftigungsarten.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Beschaeftigungsart.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
-	public Response getKatalogBeschaeftigungsart(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogBeschaeftigunsarten(conn).getList(),
-				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
-	}
-
-
-	/**
-	 * Die OpenAPI-Methode für die Abfrage einer Beschäftigungsart im angegebenen Schema.
-	 *
-	 * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param request       die Informationen zur HTTP-Anfrage
-	 * @param id            die Datenbank-ID zur Identifikation der Beschäftigungsart
-	 *
-	 * @return              die Liste der Beschäftigungsarten mit ID des Datenbankschemas
-	 */
-	@GET
-	@Path("/beschaeftigungsart/{id : \\d+}")
-	@Operation(summary = "Liefert zu der ID der Beshäftigungsart die zugehörigen Daten..",
-			description = "Liest die Daten der Beschäftigunsart zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Beschäftigungsart besitzt.")
-	@ApiResponse(responseCode = "200", description = "Katalog-Eintrag zu den Beschäftigungsarten.",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KatalogEintrag.class))))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
-	public Response getKatalogBeschaeftigungsartmitID(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogBeschaeftigunsarten(conn).get(id),
+	public Response getBeschaeftigungsarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataBeschaeftigungsarten(conn).getAllAsResponse(),
 				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
 	}
 
@@ -510,21 +485,21 @@ public class APIBetrieb {
 	 * @return die HTTP-Antwort mit der neuen Beschäftigungsart
 	 */
 	@POST
-	@Path("/beschaeftigungsart/new")
+	@Path("/beschaeftigungsarten/create")
 	@Operation(summary = "Erstellt eine neue Beschäftigungsart und gibt sie zurück.",
-			description = "Erstellt eine neue Beschäftigungsart und gibt sie zurück."
+			description = "Erstellt eine neue Beschäftigungsart, insofern die notwendigen Berechtigungen vorliegen."
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Beschäftigungsart besitzt.")
-	@ApiResponse(responseCode = "200", description = "Beschäftigungsart wurde erfolgreich angelegt.", content = @Content(mediaType = MediaType.APPLICATION_JSON,
-			schema = @Schema(implementation = KatalogEintrag.class)))
+	@ApiResponse(responseCode = "201", description = "Beschäftigungsart wurde erfolgreich hinzugefügt.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Beschaeftigungsart.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Beschäftigungsart anzulegen.")
-	@ApiResponse(responseCode = "409", description = "Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response createBeschaeftigungsArt(
+	public Response addBeschaeftigungsart(
 			@PathParam("schema") final String schema,
-			@RequestBody(description = "Der Post für die Beschäftigungsart-Daten", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = KatalogEintrag.class))) final InputStream is,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogBeschaeftigunsarten(conn).create(is),
+			@RequestBody(description = "Die Daten der zu erstellenden Beschäftigungsart ohne ID, da diese automatisch generiert wird", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Beschaeftigungsart.class))) final InputStream is,
+			@Context final HttpServletRequest request
+	) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataBeschaeftigungsarten(conn).addAsResponse(is),
 				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
 
@@ -540,11 +515,10 @@ public class APIBetrieb {
 	* @return das Ergebnis der Patch-Operation
 	*/
 	@PATCH
-	@Path("/beschaeftigungsart/{id : \\d+}")
-	@Operation(summary = "Passt die zu der ID der Beschäftigungsart zugehörigen Stammdaten an.",
-			description = "Passt die Beschäftigungsart-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern der Daten der Beschäftigungsart besitzt.")
-	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Beschäftigungsart-Daten integriert.")
+	@Path("/beschaeftigungsarten/{id : \\d+}")
+	@Operation(summary = "Patched die Beschäftigungsart mit der angegebenen ID.",
+			description = "Patched die Beschäftigungsart mit der angegebenen ID, insofern die notwendigen Berechtigungen vorliegen.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.")
 	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Beschäftigungsart-Daten zu ändern.")
 	@ApiResponse(responseCode = "404", description = "Keine Beschäftigungsart mit der angegebenen ID gefunden")
@@ -552,11 +526,37 @@ public class APIBetrieb {
 			+ " (z.B. eine negative ID)")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response patchBeschaeftigungsart(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@RequestBody(description = "Der Patch für die Betrieb-Stammdaten", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = KatalogEintrag.class))) final InputStream is,
+			@RequestBody(description = "Der Patch einer Beschäftigungsart", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Beschaeftigungsart.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogBeschaeftigunsarten(conn).patch(id, is),
-				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataBeschaeftigungsarten(conn).patchAsResponse(id, is), request,
+				ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Entfernen mehrerer Beschäftigungsarten.
+	 *
+	 * @param schema    das Datenbankschema
+	 * @param is        der InputStream, mit der Liste der zu löschenden IDs
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
+	 */
+	@DELETE
+	@Path("/beschaeftigungsarten/delete/multiple")
+	@Operation(summary = "Entfernt mehrere Beschäftigungsarten.", description = "Entfernt mehrere Beschäftigungsarten, insofern die notwendigen Berechtigungen vorhanden sind.")
+	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Beschäftigungsarten zu entfernen.")
+	@ApiResponse(responseCode = "404", description = "Beschäftigungsarten nicht vorhanden")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteBeschaeftigungsarten(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der zu löschenden Beschäftigungsarten",
+			required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+			array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
+				conn -> new DataBeschaeftigungsarten(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
 
 
@@ -593,7 +593,7 @@ public class APIBetrieb {
 	 * @return              die Betriebsart mit ID des Datenbankschemas
 	 */
 	@GET
-	@Path("/beschaeftigungsart/{id : \\d+}")
+	@Path("/betriebsart/{id : \\d+}")
 	@Operation(summary = "Liefert zu der ID der Betriebsart die zugehörigen Daten..",
 			description = "Liest die Daten der Betriebsart zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Betriebsarten besitzt.")
@@ -601,7 +601,7 @@ public class APIBetrieb {
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KatalogEintrag.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
-	public Response getKatalogBetriebsartmitID(@PathParam("schema") final String schema, @PathParam("id") final long id,
+	public Response getKatalogBetriebsartMitID(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogBetriebsarten(conn).get(id),
 				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);

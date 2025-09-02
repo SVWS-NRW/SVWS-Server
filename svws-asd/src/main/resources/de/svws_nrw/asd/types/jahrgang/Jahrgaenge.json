@@ -1,5 +1,5 @@
 {
-	"version": 3,
+	"version": 4,
 	"daten": [ {	
 		"bezeichner": "HAUSFRUEHERZIEHUNG",
 		"idStatistik": "27",
@@ -313,21 +313,41 @@
 			"gueltigBis": null
 		} ]
 	}, {
-		"bezeichner": "BERUFSPRAXISSTUFE",
+		"bezeichner": "BERUFSPRAXISSTUFE_VOLLZEIT",
 		"idStatistik": "17",
 		"historie": [ {
 			"id": 30000000,
-			"schluessel": "85,86",
-			"kuerzel": "BP",
-			"text": "Werkstufe der Förderschulen für Geistige Entwicklung",
+			"schluessel": "85",
+			"kuerzel": "BV",
+			"text": "Werkstufe in Vollzeit der Förderschulen für Geistige Entwicklung",
 			"schulformen": [ "FW", "WF", "S", "KS" ],
 			"gueltigVon": null,
 			"gueltigBis": 2011
 		}, {
 			"id": 30000001,
-			"schluessel": "85,86",
-			"kuerzel": "BP",
-			"text": "Berufspraxisstufe der Förderschulen für Geistige Entwicklung",
+			"schluessel": "85",
+			"kuerzel": "BV",
+			"text": "Berufspraxisstufe in Vollzeit der Förderschulen für Geistige Entwicklung",
+			"schulformen": [ "FW", "WF", "S", "KS" ],
+			"gueltigVon": 2012,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "BERUFSPRAXISSTUFE_TEILZEIT",
+		"idStatistik": "34",
+		"historie": [ {
+			"id": 30100000,
+			"schluessel": "86",
+			"kuerzel": "BT",
+			"text": "Werkstufe in Teilzeit der Förderschulen für Geistige Entwicklung",
+			"schulformen": [ "FW", "WF", "S", "KS" ],
+			"gueltigVon": null,
+			"gueltigBis": 2011
+		}, {
+			"id": 30100001,
+			"schluessel": "86",
+			"kuerzel": "BT",
+			"text": "Berufspraxisstufe in Teilzeit der Förderschulen für Geistige Entwicklung",
 			"schulformen": [ "FW", "WF", "S", "KS" ],
 			"gueltigVon": 2012,
 			"gueltigBis": null

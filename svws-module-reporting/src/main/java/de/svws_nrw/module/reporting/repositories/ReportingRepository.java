@@ -34,6 +34,7 @@ import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.asd.data.schueler.Sprachbelegung;
 import de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag;
 import de.svws_nrw.core.data.schule.ReligionEintrag;
+import de.svws_nrw.core.data.schule.TelefonArt;
 import de.svws_nrw.core.data.stundenplan.Stundenplan;
 import de.svws_nrw.core.data.stundenplan.StundenplanListeEintrag;
 import de.svws_nrw.core.data.stundenplan.StundenplanPausenaufsicht;
@@ -52,6 +53,7 @@ import de.svws_nrw.data.kataloge.DataOrtsteile;
 import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.schueler.DataKatalogSchuelerFoerderschwerpunkte;
+import de.svws_nrw.data.schule.DataKatalogTelefonArten;
 import de.svws_nrw.data.schule.DataReligionen;
 import de.svws_nrw.data.schule.DataSchuleStammdaten;
 import de.svws_nrw.data.schule.DataSchulen;
@@ -74,6 +76,7 @@ import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.person.ReportingPerson;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ReportingErzieherArt;
+import de.svws_nrw.module.reporting.types.schueler.telefon.ReportingSchuelerTelefonkontakt;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungStundenplan;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
@@ -82,11 +85,11 @@ import jakarta.ws.rs.core.Response.Status;
 /**
  * <p>Dieses Repository enthält neben den Stammdaten der Schule Maps, in denen Objekte wie Kataloge, Jahrgänge, Klassen, Lehrer, Schüler usw. gespeichert
  * werden. So sollen Datenbankzugriffe minimiert werden.</p>
- * <p>Des Weiteren kann diese Klasse genutzt werden, um die Maps bereits vor der Erstellung er eigentlichen Reporting-Objekte zu füllen,
+ * <p>Des Weiteren kann diese Klasse genutzt werden, um die Maps bereits vor der Erstellung der eigentlichen Reporting-Objekte zu füllen,
  * beispielsweise mit Daten aus im Vorfeld durchgeführten Prüfungen bei API-Abfragen. So müssen diese Daten nicht erneut aus der Datenbank
  * geladen werden.</p>
- * <p>Werden in anderen Klasse Daten nachgeladen, so werden diese in der Regel auch in der entsprechenden Map des Repository ergänzt.</p>
- * <p>Ebenso werden einige bereits erzeugte Reporting-Objekt hier zwischengespeichert.</p>
+ * <p>Werden in anderen Klassen Daten nachgeladen, so werden diese in der Regel auch in der entsprechenden Map des Repository ergänzt.</p>
+ * <p>Ebenso werden einige bereits erzeugte Reporting-Objekte hier zwischengespeichert.</p>
  */
 public class ReportingRepository {
 
@@ -134,6 +137,9 @@ public class ReportingRepository {
 
 	/** Stellt die Schulformen gemäß ihrer ID aus der Historie des Core-Types zur Verfügung */
 	private Map<Long, SchulformKatalogEintrag> katalogSchulformen;
+
+	/** Stelle die Telefonnummer-Arten zu ihrer ID zur Verfügung. */
+	private Map<Long, TelefonArt> katalogTelefonnummerArten = new HashMap<>();
 
 
 	/** Stellt die Daten aller bereits abgerufenen Leistungsdaten zur Schüler-, Lernabschnitts- und Leistungsdaten-ID zur Verfügung. */
@@ -201,6 +207,9 @@ public class ReportingRepository {
 
 	/** Stellt die Liste aller Schüler über eine Map zur Schüler-ID zur Verfügung */
 	private final Map<Long, ReportingSchueler> mapSchueler = new HashMap<>();
+
+	/** Stellt die Liste aller Schüler über eine Map zur Schüler-ID zur Verfügung */
+	private final Map<Long, List<ReportingSchuelerTelefonkontakt>> mapSchuelerTelefonkontakte = new HashMap<>();
 
 	/** Stellt die Liste aller Schuljahresabschnitte über eine Map zur Schulabschnitts-ID zur Verfügung */
 	private final Map<Long, ReportingSchuljahresabschnitt> mapSchuljahresabschnitte = new HashMap<>();
@@ -329,6 +338,9 @@ public class ReportingRepository {
 				schulformen.addAll(schulform.historie());
 			this.katalogSchulformen = schulformen.stream().collect(Collectors.toMap(sfke -> sfke.id, sfke -> sfke));
 			this.logger.logLn(LogLevel.DEBUG, 8, "Katalog Schulformen geladen.");
+
+			this.katalogTelefonnummerArten = new DataKatalogTelefonArten(this.conn).getAll().stream().collect(Collectors.toMap(ta -> ta.id, ta -> ta));
+			this.logger.logLn(LogLevel.DEBUG, 8, "Katalog TelefonnummerArten geladen.");
 
 			this.mapErzieherarten = new DataErzieherarten(this.conn).getAll().stream().collect(Collectors.toMap(a -> a.id,
 					a -> new ProxyReportingErzieherArt(this, a)));
@@ -581,6 +593,14 @@ public class ReportingRepository {
 		return katalogSchulformen;
 	}
 
+	/**
+	 * Stellt die Telefonnummer-Arten zu ihrer ID zur Verfügung.
+	 *
+	 * @return Map der Telefonnummer-Arten
+	 */
+	public Map<Long, TelefonArt> katalogTelefonnummerArten() {
+		return katalogTelefonnummerArten;
+	}
 
 	/**
 	 * Stellt die Daten aller bereits abgerufenen Leistungsdaten zur Schüler-, Lernabschnitts- und Leistungsdaten-ID zur Verfügung.
@@ -733,6 +753,15 @@ public class ReportingRepository {
 	 */
 	public Map<Long, ReportingSchueler> mapSchueler() {
 		return mapSchueler;
+	}
+
+	/**
+	 * Stellt die Listen aller Telefonkontakte pro Schüler für alle Schüler über eine Map zur Schüler-ID zur Verfügung
+	 *
+	 * @return Inhalt des Feldes mapSchuelerTelefonkontakte
+	 */
+	public Map<Long, List<ReportingSchuelerTelefonkontakt>> mapSchuelerTelefonkontakte() {
+		return mapSchuelerTelefonkontakte;
 	}
 
 	/**

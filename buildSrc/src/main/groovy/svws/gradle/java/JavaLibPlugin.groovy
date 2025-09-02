@@ -62,7 +62,7 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 	void addJettyConfiguration() {
-		def version = "12.0.23";
+		def version = "12.0.25";
 		def versionServletApi = "6.1.0";
 		project.configurations.create('jetty');
 		project.dependencies.add('jetty', 'jakarta.servlet:jakarta.servlet-api:' + versionServletApi);
@@ -102,8 +102,8 @@ class JavaLibPlugin implements Plugin<Project> {
 		project.dependencies.add('resteasy', 'org.jboss.resteasy:resteasy-jackson2-provider:' + version);
 		project.dependencies.add('resteasy', 'org.jboss.resteasy:resteasy-multipart-provider:' + version);
 		project.dependencies.add('resteasy', 'org.jboss.resteasy:resteasy-jaxb-provider:' + version);
-		// vulnerability fix for: org.jboss.resteasy:resteasy-multipart-provider:6.2.10.Final -> pin commons-io:commons-io:2.17.0
-		// project.dependencies.add('resteasy', 'commons-io:commons-io:2.17.0');
+		// vulnerability fix for: org.jboss.resteasy:resteasy-multipart-provider:6.2.12.Final -> pin org.eclipse.angus:angus-mail:2.0.4
+		project.dependencies.add('resteasy', 'org.eclipse.angus:angus-mail:2.0.4');
 	}
 
 
@@ -127,7 +127,7 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 	void addEmail() {
-		def version = "2.0.3";
+		def version = "2.0.4";
 		project.configurations.create('email');
 		project.dependencies.add('email', 'org.eclipse.angus:angus-mail:' + version);
 	}
@@ -141,6 +141,9 @@ class JavaLibPlugin implements Plugin<Project> {
 
 		project.dependencies.add('testImplementation', 'org.junit.jupiter:junit-jupiter:5.12.2');
 		project.dependencies.add('testImplementation', 'org.junit.platform:junit-platform-launcher:1.12.2');
+		project.dependencies.add('testImplementation', 'org.mockito:mockito-inline:5.2.0');
+		project.dependencies.add('testImplementation', 'org.mockito:mockito-junit-jupiter:5.2.0');
+		project.dependencies.add('testImplementation', 'org.assertj:assertj-core:3.25.3');
 
 		project.java.sourceCompatibility = JavaVersion.VERSION_21
 		project.java.targetCompatibility = JavaVersion.VERSION_21

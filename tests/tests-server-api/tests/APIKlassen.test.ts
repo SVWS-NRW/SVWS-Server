@@ -1,12 +1,12 @@
 import { describe, test, expect } from 'vitest';
 import { ArrayList } from "@core";
-import { getApiServer, handleRequest } from "./utils/TestUtils.js";
+import { privilegedApiServer, handleRequest } from "../../utils/APIUtils";
 
 const allowDestructiveTests = process.env.MODE === 'allowDestructiveTests'
 
 describe("APIKlassen Tests", () => {
 	describe.each([{schema: "GymAbi01"}])('gegen %s', ({schema}) => {
-		const api = getApiServer(schema);
+		const api = privilegedApiServer;
 
 		test('GET: Alle Klassen zum Schuljahresabschnitt 1', async () => {
 			const result = await handleRequest(api, api.getKlassenFuerAbschnitt, schema, 1);
@@ -44,23 +44,23 @@ describe("APIKlassen Tests", () => {
 
 		test.runIf(allowDestructiveTests)('PATCH: Alle erlaubten Attribute einer Klasse', async () => {
 			const result = await handleRequest(api, api.patchKlasse, {
-				kuerzel: '06dNeu',
-				idJahrgang: 2,
-				parallelitaet: 'K',
-				sortierung: 999,
-				istSichtbar: false,
-				teilstandort: 'A',
-				beschreibung: 'Test Test',
-				idVorgaengerklasse: 81,
-				idFolgeklasse: 95,
-				idAllgemeinbildendOrganisationsform: 3002000,
-				idSchulgliederung: 60001000,
-				idKlassenart: 6000,
-				noteneingabeGesperrt: true,
-				verwendungAnkreuzkompetenzen: true,
-				beginnSommersemester: true,
-			},
-			schema, 3);
+						kuerzel: '06dNeu',
+						idJahrgang: 2,
+						parallelitaet: 'K',
+						sortierung: 999,
+						istSichtbar: false,
+						teilstandort: 'A',
+						beschreibung: 'Test Test',
+						idVorgaengerklasse: 81,
+						idFolgeklasse: 95,
+						idAllgemeinbildendOrganisationsform: 3002000,
+						idSchulgliederung: 60001000,
+						idKlassenart: 6000,
+						noteneingabeGesperrt: true,
+						verwendungAnkreuzkompetenzen: true,
+						beginnSommersemester: true,
+					},
+					schema, 3);
 
 			expect(result).toBeTruthy();
 			expect((await handleRequest(api, api.getKlasse, schema, 3)).content).toMatchSnapshot();

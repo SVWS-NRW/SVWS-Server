@@ -6,23 +6,11 @@
 				<template v-if="gostLaufbahnBeratungsdaten().ruecklaufdatum === null">'—'</template>
 				<template v-else> {{ new Date(gostLaufbahnBeratungsdaten().ruecklaufdatum!).toLocaleDateString("de-DE", { year: "numeric", month: "2-digit", day: "2-digit" }) }} </template>
 			</div>
-			<svws-ui-select title="Zuletzt beraten von" :items="listLehrer" :model-value="getBeratungslehrer"
-				:item-text="i=>`${i.kuerzel} (${i.vorname} ${i.nachname})`"
-				:item-filter="filter" removable autocomplete ref="refLehrer" />
+			<svws-ui-select title="Zuletzt beraten von" :items="listLehrer" :model-value="getBeratungslehrer" :item-text="i => `${i.kuerzel} (${i.vorname} ${i.nachname})`" :item-filter removable autocomplete ref="refLehrer" />
 			<svws-ui-text-input :model-value="beratungsdatum" type="date" placeholder="Datum" ref="refBeratungsdatum" />
-			<svws-ui-textarea-input placeholder="Kommentar" :model-value="gostLaufbahnBeratungsdaten().kommentar" :autoresize="true" ref="refKommentar" span="full" />
+			<svws-ui-textarea-input placeholder="Kommentar" :model-value="gostLaufbahnBeratungsdaten().kommentar" autoresize ref="refKommentar" span="full" />
 			<svws-ui-button @click="speichern" :disabled="!dirty">Beratungsdaten speichern</svws-ui-button>
 		</svws-ui-input-wrapper>
-		<svws-ui-modal size="small" :show>
-			<template #modalTitle>Ungesicherte Beratungsdaten</template>
-			<template #modalContent>
-				Die Änderungen an den Beratungsdaten wurden noch nicht gespeichert.
-			</template>
-			<template #modalActions>
-				<svws-ui-button type="secondary" @click="show = false">Nicht sichern</svws-ui-button>
-				<svws-ui-button type="secondary" @click="show = false">Änderungen speichern</svws-ui-button>
-			</template>
-		</svws-ui-modal>
 	</svws-ui-content-card>
 </template>
 
@@ -51,8 +39,6 @@
 	const refLehrer = ref<ComponentExposed<typeof SvwsUiSelect<LehrerListeEintrag>>>();
 	const refBeratungsdatum = ref<ComponentExposed<typeof SvwsUiTextInput>>();
 	const refKommentar = ref<ComponentExposed<typeof SvwsUiTextareaInput>>();
-	const show = ref<boolean>(false);
-
 	const beratungsdatum = computed<string>(() => props.gostLaufbahnBeratungsdaten().beratungsdatum ?? new Date().toISOString().slice(0, -14))
 
 	watch(() => props.schueler, () => {
@@ -77,14 +63,14 @@
 		return (lehrerIDNeu !== lehrerIDalt) || (kommentarNeu !== kommentarAlt) || (datumAlt !== datumNeu) || (props.updated === true);
 	})
 
-	const getBeratungslehrer = computed<LehrerListeEintrag | undefined>(() => {
+	const getBeratungslehrer = computed<LehrerListeEintrag | null>(() => {
 		let id = props.gostLaufbahnBeratungsdaten().beratungslehrerID;
 		if (id === null)
 			id = (props.id === undefined) ? -1 : props.id;
 		for (const l of props.listLehrer)
 			if (l.id === id)
 				return l;
-		return undefined;
+		return null;
 	})
 
 	async function speichern() {
@@ -98,9 +84,10 @@
 		await props.patchBeratungsdaten(result);
 	}
 
-	const filter = (items: LehrerListeEintrag[], search: string) => {
-		return items.filter(i => (i.istSichtbar === true) && (i.kuerzel.includes(search.toLocaleLowerCase()) || i.nachname.toLocaleLowerCase().includes(search.toLocaleLowerCase())));
-	};
+	function itemFilter(items: LehrerListeEintrag[], search: string) {
+		return items.filter(i => (i.istSichtbar === true)
+			&& (i.kuerzel.includes(search.toLocaleLowerCase()) || i.nachname.toLocaleLowerCase().includes(search.toLocaleLowerCase())));
+	}
 
 </script>
 

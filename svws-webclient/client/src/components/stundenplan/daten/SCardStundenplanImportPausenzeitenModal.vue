@@ -56,7 +56,8 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { List, StundenplanListeManager, StundenplanPausenzeit } from "@core";
+	import type { List, StundenplanPausenzeit } from "@core";
+	import type { StundenplanListeManager } from "@ui";
 	import { Wochentag, DateUtils } from "@core"
 
 	const props = defineProps<{

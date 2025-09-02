@@ -1,9 +1,9 @@
 import { describe, test, expect } from "vitest";
-import { getApiServer } from "./utils/TestUtils.js";
+import { privilegedApiServer } from "../../utils/APIUtils";
 
 describe("Server Tests2 ", () => {
-	describe.each([{schema: "GymAbi01"}])('gegen %s', ({schema}) => {
-		const api = getApiServer(schema);
+	describe.each([{schema: "GymAbi01"}])('gegen %s', ({}) => {
+		const api = privilegedApiServer;
 
 		test("Ein Server Objekt konnte erzeugt werden", async () => {
 			expect(api).toBeDefined();

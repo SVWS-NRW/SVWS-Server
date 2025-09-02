@@ -1,10 +1,13 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-	<div class="flex isolate overflow-auto h-screen bg-ui-100">
+	<div class="flex isolate overflow-auto h-screen">
 		<div class="relative top-0 left-0 z-20 border-r border-ui-25" style="width: 15%;">
 			<div class="flex flex-col h-full bg-ui-75">
 				<div class="px-4 h-16 flex items-center gap-2 flex-none">
-					<div class="py-3 sm:py-4 flex-1 h-full flex items-center pr-2 cursor-pointer" @click="router.push({path: '/'})"><img src="/src/assets/img/histoire-svws.svg" width="50%"></div>
+					<div class="py-3 sm:py-4 flex-1 h-full flex items-center pr-2 cursor-pointer" @click="router.push({path: '/'})">
+						<img src="/src/assets/img/histoire-svws-dark.svg" width="50%" class="hidden dark:block">
+						<img src="/src/assets/img/histoire-svws.svg" width="50%" class="block dark:hidden">
+					</div>
 					<div class="ml-auto flex-none flex" />
 				</div>
 				<div class="overflow-y-auto flex-1 pl-2">
@@ -24,12 +27,12 @@
 		</div>
 		<div class="relative bottom-0 right-0" style="width: 85%;">
 			<div class="h-full flex isolate" ref="dragger1">
-				<div class="flex flex-col relative top-0 left-0 z-20 border-r border-ui-25 h-full bg-ui-100" :style="leftStyle1">
+				<div class="flex flex-col relative top-0 left-0 z-20 border-r border-ui-25 h-full" :style="leftStyle1">
 					<div class="flex-none flex justify-around h-10 mx-8 items-center gap-4">
 						<div class="text-ui-caution font-bold">
 							Zur alten Histoire-Version der Doku geht es hier: <a href="https://eloquent-baklava-d6aa9d.netlify.app/">Link</a>
 						</div>
-						<div class="w-60"><SvwsUiButton type="icon" @click="updateTheme(themeRef === 'dark' ? 'light':'dark')"><span class="icon" :class="themeRef === 'light' ? 'i-ri-sun-line':'i-ri-moon-line'" /> </SvwsUiButton></div>
+						<div class="w-60"> <SvwsUiButton type="icon" @click="isDark = !isDark"><span class="icon" :class="!isDark ? 'i-ri-sun-line':'i-ri-moon-line'" /> </SvwsUiButton> </div>
 						<div class="w-60"><SvwsUiButton type="transparent" @click="gridView = (gridView === 'single') ? 'grid':'single'">{{ gridView === 'single' ? 'Single':'Grid' }} aktiviert</SvwsUiButton></div>
 						<div class="w-60">
 							<ui-select label="Hintergrundfarbe" v-model="color" :manager="colorSelectManager" searchable headless />
@@ -41,7 +44,7 @@
 								<svws-ui-table clickable :clicked="storyManager.variant" :items="storyManager.story.mapVariants.values()" scroll-into-view scroll :columns="columnsVariant" @update:clicked="storyManager.setVariantById($event.id)" />
 							</div>
 						</template>
-						<div class="bottom-0 right-0 overflow-auto size-full pr-4 pl-4" :class="{' grid-cols-2 grid gap-4 ': (gridView === 'grid') && (storyManager.story.mapVariants.size > 1) }">
+						<div class="bottom-0 right-0 overflow-auto size-full pr-4 pl-4" :class="{'grid-cols-2 grid gap-4': (gridView === 'grid') && (storyManager.story.mapVariants.size > 1) }">
 							<RouterView />
 						</div>
 					</div>
@@ -68,9 +71,9 @@
 							<div data-test-id="story-controls" class="flex flex-col divide-y divide-gray-100 dark:divide-gray-750 h-full overflow-auto p-2">
 								<div class="h-9 flex-none px-2 flex items-center relative" />
 								<div class="flex-none">
-									<div id="controls" class="size-full" :class="visible === 'controls' ? 'visible':'hidden'" />
-									<div id="docs" class="size-full" :class="visible === 'docs' ? 'visible':'hidden'" />
-									<div id="events" class="size-full" :class="visible === 'events' ? 'visible':'hidden'" />
+									<div id="controls" class="size-full" :class="visible === 'controls' ? '':'hidden'" />
+									<div id="docs" class="size-full" :class="visible === 'docs' ? '':'hidden'" />
+									<div id="events" class="size-full" :class="visible === 'events' ? '':'hidden'" />
 								</div>
 							</div>
 						</div>
@@ -92,13 +95,16 @@
 <script setup lang="ts">
 
 	import { computed, onUnmounted, reactive, ref, watchEffect } from 'vue';
+	import { useDark } from "@vueuse/core";
 	import type { RouteRecord } from 'vue-router';
 	import type { ColorPreset } from './StoryManager';
 	import storyManager from './StoryManager';
 	import router from './router';
 	import type { PaneSplitterConfig} from './../ui/composables/usePaneSplitter';
 	import { usePaneSplitter } from './../ui/composables/usePaneSplitter';
-	import { BaseSelectManager } from './../ui/controls/select/selectManager/BaseSelectManager';
+	import { SelectManagerSingle } from './../ui/controls/select/selectManager/SelectManagerSingle';
+
+	const isDark = useDark({ selector: 'html' });
 
 	const groups = new Map<string, RouteRecord[]>([['default', []]]);
 	for (const route of router.getRoutes()) {
@@ -129,6 +135,7 @@
 	async function routeTo(option: RouteRecord) {
 		clicked.value = option;
 		await router.push({ path: option.path });
+		// storyManager.setStoryByID('default');
 	}
 
 	const visible = ref<'events'|'docs'|'controls'>('controls');
@@ -200,23 +207,9 @@
 		{label:'bg-uistatic-100',color:'var(--background-color-uistatic-100)',contrastColor:'var(--text-color-ui-100)'},
 	];
 
-	const colorSelectManager = new BaseSelectManager({
+	const colorSelectManager = new SelectManagerSingle({
 		options: backgroundPresets, optionDisplayText: option => option.label,	selectionDisplayText: option => option.label,
 	});
-
-	const themeRef = ref<'light'|'dark'|'auto'>('light');
-
-	const updateTheme = (theme: ('light'|'dark'|'auto') | null) => {
-		if (theme === null)
-			return;
-		document.documentElement.classList.remove('light', 'dark');
-		if (theme !== 'auto')
-			document.documentElement.classList.add(theme);
-		localStorage.setItem('theme', theme);
-		themeRef.value = theme;
-	};
-
-	updateTheme(<'light'|'dark'|'auto'>localStorage.getItem('theme'));
 
 	const configH = reactive<PaneSplitterConfig>({minSplit: 20, maxSplit: 80, mode: 'horizontal', defaultSplit: 50});
 

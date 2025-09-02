@@ -193,11 +193,11 @@
 
 <script setup lang="ts">
 
-	import { BenutzerKompetenz, Fahrschuelerart, Nationalitaeten, SchuelerStatus, Schulform, Verkehrssprache } from "@core";
+	import type { Fahrschuelerart} from "@core";
+	import { BenutzerKompetenz, Nationalitaeten, SchuelerStatus, Schulform, Verkehrssprache } from "@core";
 	import type { SchuelerIndividualdatenGruppenprozesseProps } from "~/components/schueler/individualdaten/SSchuelerIndividualdatenGruppenprozesseProps";
 	import { computed, ref, watch, toRefs } from "vue";
-	import { CoreTypeSelectManager } from "@ui";
-	import { BaseSelectManager } from "@ui";
+	import { CoreTypeSelectManagerSingle, SelectManagerSingle } from "@ui";
 
 	const props = defineProps<SchuelerIndividualdatenGruppenprozesseProps>();
 
@@ -299,48 +299,48 @@
 		}
 	);
 
-	const ersteStaatsAngehoerigkeitSelectManager = new CoreTypeSelectManager({
+	const ersteStaatsAngehoerigkeitSelectManager = new CoreTypeSelectManagerSingle({
 		clazz: Nationalitaeten.class, schuljahr: schuljahr.value,
 		schulformen: schulform.value, removable: false,
 	});
-	const zweiteStaatsAngehoerigkeitSelectManager = new CoreTypeSelectManager({
+	const zweiteStaatsAngehoerigkeitSelectManager = new CoreTypeSelectManagerSingle({
 		clazz: Nationalitaeten.class, schuljahr: schuljahr.value,
 		schulformen: schulform.value, removable: false,
 	});
-	const statusSelectManager = new CoreTypeSelectManager({
+	const statusSelectManager = new CoreTypeSelectManagerSingle({
 		clazz: SchuelerStatus.class, schuljahr: schuljahr.value, schulformen: schulform.value,
 		removable: false,
 	});
-	const konfessionSelectManager = new BaseSelectManager({
+	const konfessionSelectManager = new SelectManagerSingle({
 		options: religionen.value, removable: false,
-		optionDisplayText: selected => selected.bezeichnung ?? '', selectionDisplayText: selected => selected.bezeichnung ?? '',
+		optionDisplayText: selected => selected.bezeichnung, selectionDisplayText: selected => selected.bezeichnung,
 	});
-	const fahrschuelerSelectManager = new BaseSelectManager({
+	const fahrschuelerSelectManager = new SelectManagerSingle({
 		options: fahrschuelerArten.value, removable: false,
 		optionDisplayText: (selected: Fahrschuelerart) => selected.bezeichnung ?? '', selectionDisplayText: selected => selected.bezeichnung ?? '',
 	});
-	const haltestelleSelectManager = new BaseSelectManager({
+	const haltestelleSelectManager = new SelectManagerSingle({
 		options: haltestellen.value, removable: false, optionDisplayText: selected => selected.bezeichnung ?? '',
 		selectionDisplayText: selected => selected.bezeichnung ?? '',
 	});
-	const stammschuleSelectManager = new BaseSelectManager({
+	const stammschuleSelectManager = new SelectManagerSingle({
 		options: schulen.value,
 		optionDisplayText: selected => selected.kuerzel ?? selected.schulnummerStatistik ?? selected.kurzbezeichnung ?? selected.name,
 		selectionDisplayText: selected => selected.kuerzel ?? selected.schulnummerStatistik ?? selected.kurzbezeichnung ?? selected.name,
 	});
-	const geburtslandSelectManager = new CoreTypeSelectManager({
+	const geburtslandSelectManager = new CoreTypeSelectManagerSingle({
 		clazz: Nationalitaeten.class, schuljahr: schuljahr.value, schulformen: schulform.value,
 		removable: false,
 	});
-	const geburtslandMutterSelectManager = new CoreTypeSelectManager({
+	const geburtslandMutterSelectManager = new CoreTypeSelectManagerSingle({
 		clazz: Nationalitaeten.class, schuljahr: schuljahr.value, schulformen: schulform.value,
 		removable: false,
 	});
-	const geburtslandVaterSelectManager = new CoreTypeSelectManager({
+	const geburtslandVaterSelectManager = new CoreTypeSelectManagerSingle({
 		clazz: Nationalitaeten.class, schuljahr: schuljahr.value, schulformen: schulform.value,
 		removable: false,
 	});
-	const verkehrsspracheSelectManager = new CoreTypeSelectManager({
+	const verkehrsspracheSelectManager = new CoreTypeSelectManagerSingle({
 		clazz: Verkehrssprache.class, schuljahr: schuljahr.value, schulformen: schulform.value,
 		removable: false,
 	});

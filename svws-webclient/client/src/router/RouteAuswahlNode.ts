@@ -1,4 +1,4 @@
-import { DeveloperNotificationException, type AuswahlManager, type BenutzerKompetenz, type Schulform, type ServerMode } from "@core";
+import { DeveloperNotificationException, type BenutzerKompetenz, type Schulform, type ServerMode } from "@core";
 import type { RouteDataAuswahl, RouteStateAuswahlInterface } from "./RouteDataAuswahl";
 import { RouteNode } from "./RouteNode";
 import type { RouteTabProps } from "./RouteTabNode";
@@ -6,7 +6,7 @@ import { RouteTabNode } from "./RouteTabNode";
 import type { RouteComponent, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
 import { ViewType } from "@ui";
 import { api } from "./Api";
-import type { AbschnittAuswahlDaten } from "@ui";
+import type { AbschnittAuswahlDaten, AuswahlManager } from "@ui";
 import { routeApp } from "./apps/RouteApp";
 import { routeError } from "./error/RouteError";
 import { ConfigElement } from "../../../ui/src/utils/Config";
@@ -56,7 +56,7 @@ export abstract class RouteAuswahlNode<TAuswahlManager extends AuswahlManager<nu
 	private _getAuswahlListProps: (props: RouteAuswahlListProps<TAuswahlManager>) => Record<string, any> = (props) => props;
 
 	/** Diese Methode kann ersetzt werden und ergänzt ggf. weitere Routing-Parameter für den Applikationsbereich */
-	private _getAuswahlProps: (props: RouteAuswahlProps<TAuswahlManager>) => Record<string, any> = (props) => props;
+	private _getAuswahlProps: (props: RouteAuswahlProps<TAuswahlManager>) => RouteTabProps = (props) => props;
 
 	/** Diese Methode kann gesetzt werden, um die Update-Methode mit speziellen Aufrufen abzuschließen, wenn diese das Ziel ist */
 	private _updateIfTarget: ((to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams,
@@ -190,7 +190,7 @@ export abstract class RouteAuswahlNode<TAuswahlManager extends AuswahlManager<nu
 	 *
 	 * @returns die zusätzlichen Properties für die Komponente
 	 */
-	public set getAuswahlProps(value: (props: RouteAuswahlProps<TAuswahlManager>) => Record<string, any>) {
+	public set getAuswahlProps(value: (props: RouteAuswahlProps<TAuswahlManager>) => RouteTabProps) {
 		this._getAuswahlProps = value;
 	}
 
@@ -201,7 +201,7 @@ export abstract class RouteAuswahlNode<TAuswahlManager extends AuswahlManager<nu
 	 *
 	 * @returns die Properties ergänzt um zusätzliche Properties dieser Auswahllisten-Node
 	 */
-	public getProps(props: RouteTabProps): Record<string, any> {
+	public getProps(props: RouteTabProps): RouteTabProps {
 		return this._getAuswahlProps({
 			...props,
 			manager: () => this.data.manager,

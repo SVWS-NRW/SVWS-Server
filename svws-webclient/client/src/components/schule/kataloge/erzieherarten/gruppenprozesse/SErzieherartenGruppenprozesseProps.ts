@@ -1,4 +1,5 @@
-import type { List, BenutzerKompetenz, ErzieherartListeManager } from "@core";
+import type { List, BenutzerKompetenz } from "@core";
+import type { ErzieherartListeManager } from "@ui";
 
 export interface SErzieherartenGruppenprozesseProps {
 	benutzerKompetenzen: Set<BenutzerKompetenz>;

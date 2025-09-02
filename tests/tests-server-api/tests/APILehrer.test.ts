@@ -1,10 +1,10 @@
 import { describe, expect, test } from "vitest";
 import type { LehrerListeEintrag, List } from "@core";
-import { getApiServer } from "./utils/TestUtils.js";
+import { privilegedApiServer } from "../../utils/APIUtils";
 
 describe("Lehrer Tests ", () => {
 	describe.each([{schema: "GymAbi01"}])('gegen %s', ({schema}) => {
-		const api = getApiServer("gymabi");
+		const api = privilegedApiServer;
 
 		test("getLehrerListe", async () => {
 			const liste: List<LehrerListeEintrag> = await api.getLehrer(schema);
@@ -22,35 +22,11 @@ describe("Lehrer Tests ", () => {
 			expect(result).toMatchSnapshot();
 		});
 
-		test("getLehrerAbgangsgruende", async () => {
-			const result = await api.getLehrerAbgangsgruende(schema);
-			expect(result).toMatchSnapshot();
-		});
-
-		test("getLehrerBeschaeftigungsarten", async () => {
-			const result = await api.getLehrerBeschaeftigungsarten(schema);
-			expect(result).toMatchSnapshot();
-		});
-
-		test("getLehrerEinsatzstatus", async () => {
-			const result = await api.getLehrerEinsatzstatus(schema);
-			expect(result).toMatchSnapshot();
-		});
-
 		test("getLehrerLeitungsfunktionen", async () => {
 			const result = await api.getLehrerLeitungsfunktionen(schema);
 			expect(result).toMatchSnapshot();
 		});
 
-		test("getLehrerRechtsverhaeltnisse", async () => {
-			const result = await api.getLehrerRechtsverhaeltnisse(schema);
-			expect(result).toMatchSnapshot();
-		});
-
-		test("getLehrerZugangsgruende", async () => {
-			const result = await api.getLehrerZugangsgruende(schema);
-			expect(result).toMatchSnapshot();
-		});
 	})
 
 })

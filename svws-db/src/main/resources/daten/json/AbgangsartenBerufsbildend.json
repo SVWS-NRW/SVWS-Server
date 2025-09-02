@@ -1,5 +1,5 @@
 {
-	"version": 2,
+	"version": 3,
 	"eintraege": [ {
 		"kuerzel": "0A",
 		"historie": [ {
@@ -449,6 +449,20 @@
 			"gueltigBis": null
 		} ]
 	}, {
+		"kuerzel": "0R",
+		"historie": [ {
+			"id": 2177000,
+			"beschreibung": "ohne Abschluss, kommt aus Deutschförderung",
+			"zulaessig": [
+				{ "schulform": "BK", "gliederung": "A12", "jahrgaenge": [ "01" ] },
+				{ "schulform": "BK", "gliederung": "A13", "jahrgaenge": [ "01" ] },
+				{ "schulform": "SB", "gliederung": "A12", "jahrgaenge": [ "01" ] },
+				{ "schulform": "SB", "gliederung": "A13", "jahrgaenge": [ "01" ] }
+			],
+			"gueltigVon": 2025,
+			"gueltigBis": null
+		} ]
+	}, {
 		"kuerzel": "1A",
 		"historie": [ {
 			"id": 1007000,
@@ -464,6 +478,20 @@
 				{ "schulform": "SB", "gliederung": "E04", "jahrgaenge": [ "02" ] }
 			],
 			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"kuerzel": "1R",
+		"historie": [ {
+			"id": 2178000,
+			"beschreibung": "Abschlusszeugnis (berufliche Kenntnisse, Fähigkeiten und Fertigkeiten), kommt aus Deutschförderung",
+			"zulaessig": [
+				{ "schulform": "BK", "gliederung": "A12", "jahrgaenge": [ "01" ] },
+				{ "schulform": "BK", "gliederung": "A13", "jahrgaenge": [ "01" ] },
+				{ "schulform": "SB", "gliederung": "A12", "jahrgaenge": [ "01" ] },
+				{ "schulform": "SB", "gliederung": "A13", "jahrgaenge": [ "01" ] }
+			],
+			"gueltigVon": 2025,
 			"gueltigBis": null
 		} ]
 	}, {

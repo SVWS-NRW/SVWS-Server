@@ -10,6 +10,7 @@ import { type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { RouteDataSchuelerErziehungsberechtigte } from "~/router/apps/schueler/erziehungsberechtigte/RouteDataSchuelerErziehungsberechtigte";
 
 import type { SchuelerErziehungsberechtigteProps } from "~/components/schueler/erziehungsberechtigte/SSchuelerErziehungsberechtigteProps";
+import { api } from "~/router/Api";
 
 const SSchuelerErziehungsberechtigte = () => import("~/components/schueler/erziehungsberechtigte/SSchuelerErziehungsberechtigte.vue");
 
@@ -35,13 +36,15 @@ export class RouteSchuelerErziehungsberechtigte extends RouteNode<RouteDataSchue
 
 	public getProps(to: RouteLocationNormalized): SchuelerErziehungsberechtigteProps {
 		return {
-			patch: this.data.patch,
-			patchPosition: this.data.patchPosition,
-			add: this.data.add,
+			patchErzieher: this.data.patchErzieher,
+			patchErzieherAnPosition: this.data.patchErzieherAnPosition,
+			addErzieher: this.data.addErzieher,
+			deleteErzieher: this.data.deleteErzieher,
 			data: () => this.data.daten,
 			mapErzieherarten: this.data.mapErzieherarten,
 			mapOrte: routeApp.data.mapOrte,
 			mapOrtsteile: routeApp.data.mapOrtsteile,
+			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 

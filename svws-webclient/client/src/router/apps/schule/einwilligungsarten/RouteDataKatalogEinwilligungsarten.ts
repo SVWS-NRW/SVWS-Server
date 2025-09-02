@@ -1,16 +1,16 @@
-import type {List, SimpleOperationResponse} from "@core";
-import {ArrayList, type Einwilligungsart, EinwilligungsartenListeManager} from "@core";
+import type { List, SimpleOperationResponse } from "@core";
+import { ArrayList, type Einwilligungsart } from "@core";
 
 import { api } from "~/router/Api";
 
 import { routeKatalogEinwilligungsartenDaten } from "./RouteKatalogEinwilligungsartenDaten";
 
-import {ViewType} from "@ui";
-import type { RouteStateAuswahlInterface} from "~/router/RouteDataAuswahl";
-import {RouteDataAuswahl} from "~/router/RouteDataAuswahl";
-import {routeKatalogEinwilligungsartenGruppenprozesse} from "~/router/apps/schule/einwilligungsarten/RouteKatalogEinwilligungsartenGruppenprozesse";
-import {routeKatalogEinwilligungsartenNeu} from "~/router/apps/schule/einwilligungsarten/RouteKatalogEinwilligungsartenNeu";
-import type {RouteParamsRawGeneric} from "vue-router";
+import { ViewType, EinwilligungsartenListeManager } from "@ui";
+import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
+import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
+import { routeKatalogEinwilligungsartenGruppenprozesse } from "~/router/apps/schule/einwilligungsarten/RouteKatalogEinwilligungsartenGruppenprozesse";
+import { routeKatalogEinwilligungsartenNeu } from "~/router/apps/schule/einwilligungsarten/RouteKatalogEinwilligungsartenNeu";
+import type {RouteParamsRawGeneric } from "vue-router";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,

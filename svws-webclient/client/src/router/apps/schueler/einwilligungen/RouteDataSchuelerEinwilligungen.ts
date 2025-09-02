@@ -40,15 +40,11 @@ export class RouteDataSchuelerEinwilligungen extends RouteData<RouteStateSchuele
 	patch = async (data : Partial<SchuelerEinwilligung> | undefined, idEinwilligungsart: number) => {
 		if (data === undefined)
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		api.status.start();
-
 		await api.server.patchSchuelerEinwilligung(data, api.schema, this.auswahl.id, idEinwilligungsart);
-
 		for (const einwilligung of this.einwilligungen)
 			if (einwilligung.idEinwilligungsart === idEinwilligungsart)
 				Object.assign(einwilligung, data);
 		this.commit();
-		api.status.stop();
 	}
 
 	public async ladeDaten(auswahl: SchuelerListeEintrag | null | undefined) {

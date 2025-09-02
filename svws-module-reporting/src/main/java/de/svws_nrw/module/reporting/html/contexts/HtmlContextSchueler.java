@@ -11,12 +11,9 @@ import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
 import org.thymeleaf.context.Context;
 
-import java.text.Collator;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -24,15 +21,22 @@ import java.util.stream.Collectors;
 /**
  * Ein Thymeleaf-Html-Daten-Context zum Bereich "Schüler", um Thymeleaf-html-Templates mit Daten zu füllen.
  */
-public final class HtmlContextSchueler extends HtmlContext {
+public final class HtmlContextSchueler extends HtmlContext<ReportingSchueler> {
+
+	@Override
+	public List<String> standardsortierung() {
+		final ArrayList<String> standardSort = new ArrayList<>();
+		standardSort.add(methodenreferenzToString(ReportingSchueler::nachname));
+		standardSort.add(methodenreferenzToString(ReportingSchueler::vorname));
+		standardSort.add(methodenreferenzToString(ReportingSchueler::vornamen));
+		standardSort.add(methodenreferenzToString(ReportingSchueler::id));
+		return standardSort;
+	}
 
 	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
 	private final ReportingRepository reportingRepository;
 
-	/** Liste, die die im Context ermitteln Daten speichert und den Zugriff auf die Daten abseits des html-Templates ermöglicht. */
-	@JsonIgnore
-	private ArrayList<ReportingSchueler> schueler = new ArrayList<>();
 
 	/**
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Schülern.
@@ -41,6 +45,7 @@ public final class HtmlContextSchueler extends HtmlContext {
 	 * @param reportingSchueler		Liste der Schüler, die berücksichtigt werden sollen.
 	 */
 	public HtmlContextSchueler(final ReportingRepository reportingRepository, final List<ReportingSchueler> reportingSchueler) {
+		super(reportingRepository, true);
 		this.reportingRepository = reportingRepository;
 		erzeugeContextFromSchueler(reportingSchueler);
 	}
@@ -51,6 +56,7 @@ public final class HtmlContextSchueler extends HtmlContext {
 	 * @param reportingRepository   Repository mit Parametern, Logger und Daten zum Reporting.
 	 */
 	public HtmlContextSchueler(final ReportingRepository reportingRepository) {
+		super(reportingRepository, true);
 		this.reportingRepository = reportingRepository;
 		erzeugeContextFromIds(this.reportingRepository.reportingParameter().idsHauptdaten);
 	}
@@ -63,19 +69,12 @@ public final class HtmlContextSchueler extends HtmlContext {
 	 */
 	private void erzeugeContextFromSchueler(final List<ReportingSchueler> reportingSchueler) {
 
-		// Sortiere die übergebene Liste der Schüler
-		final Collator colGerman = Collator.getInstance(Locale.GERMAN);
-		reportingSchueler.sort(Comparator.comparing(ReportingSchueler::nachname, colGerman)
-				.thenComparing(ReportingSchueler::vorname, colGerman)
-				.thenComparing(ReportingSchueler::vornamen, colGerman)
-				.thenComparing(ReportingSchueler::id));
-
-		schueler = new ArrayList<>();
-		schueler.addAll(reportingSchueler);
+		setContextData(reportingSchueler);
+		sortiereContext();
 
 		// Daten-Context für Thymeleaf erzeugen.
 		final Context context = new Context();
-		context.setVariable("Schueler", schueler);
+		context.setVariable("Schueler", getContextData());
 
 		super.setContext(context);
 	}
@@ -108,30 +107,21 @@ public final class HtmlContextSchueler extends HtmlContext {
 			mapSchueler.putAll(fehlendeSchuelerStammdaten.stream().collect(Collectors.toMap(s -> s.id, s -> s)));
 		}
 
-		// Die Schüler bzw. ihre IDs können in einer beliebigen Reihenfolge sein. Für die Ausgabe sollten
-		// sie aber in alphabetischer Reihenfolge der Schüler sein.
-		// Erzeuge daher eine Liste mit Schülern, die in der alphabetischen Reihenfolge der Schüler sortiert ist.
-		final Collator colGerman = Collator.getInstance(Locale.GERMAN);
-		final List<SchuelerStammdaten> sortierteSchueler = mapSchueler.values().stream()
-				.sorted(Comparator.comparing((final SchuelerStammdaten s) -> s.nachname, colGerman)
-						.thenComparing((final SchuelerStammdaten s) -> s.vorname, colGerman)
-						.thenComparing((final SchuelerStammdaten s) -> s.alleVornamen, colGerman)
-						.thenComparing((final SchuelerStammdaten s) -> s.id))
-				.toList();
-		final List<Long> sortierteSchuelerIDs = sortierteSchueler.stream().map(s -> s.id).toList();
-
 		// Erzeuge nun die einzelnen Schülerobjekte. Alle weiteren Daten werden später dynamisch nachgeladen.
-		schueler = new ArrayList<>();
+		final List<ReportingSchueler> temp = new ArrayList<>();
 
-		for (final Long schuelerID : sortierteSchuelerIDs) {
+		for (final Long schuelerID : mapSchueler.values().stream().map(s -> s.id).toList()) {
 			final ProxyReportingSchueler proxyReportingSchueler = new ProxyReportingSchueler(reportingRepository, mapSchueler.get(schuelerID));
-			schueler.add(proxyReportingSchueler);
+			temp.add(proxyReportingSchueler);
 			this.reportingRepository.mapSchueler().put(schuelerID, proxyReportingSchueler);
 		}
 
+		setContextData(temp);
+		sortiereContext();
+
 		// Daten-Context für Thymeleaf erzeugen.
 		final Context context = new Context();
-		context.setVariable("Schueler", schueler);
+		context.setVariable("Schueler", getContextData());
 
 		super.setContext(context);
 	}
@@ -146,7 +136,7 @@ public final class HtmlContextSchueler extends HtmlContext {
 	public List<HtmlContextSchueler> getEinzelContexts() {
 		final List<HtmlContextSchueler> resultContexts = new ArrayList<>();
 
-		for (final ReportingSchueler reportingSchueler : schueler) {
+		for (final ReportingSchueler reportingSchueler : getContextData()) {
 			final List<ReportingSchueler> einSchueler = new ArrayList<>();
 			einSchueler.add(reportingSchueler);
 			resultContexts.add(new HtmlContextSchueler(this.reportingRepository, einSchueler));

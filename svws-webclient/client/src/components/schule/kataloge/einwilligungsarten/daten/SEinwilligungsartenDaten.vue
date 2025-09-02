@@ -3,13 +3,13 @@
 		<svws-ui-content-card title="Einwilligungsart" class="w-full">
 			<svws-ui-input-wrapper>
 				<svws-ui-text-input class="contentFocusField w-5/5" placeholder="Bezeichnung" :model-value="einwilligungsartenListeManager().auswahl().bezeichnung"
-					@change="bezeichnung => patch({ bezeichnung: bezeichnung ?? undefined })" />
+					@change="bezeichnung => patch({ bezeichnung: bezeichnung ?? undefined })" :readonly />
 				<svws-ui-text-input class="contentFocusField w-5/5" placeholder="Schlüssel" :model-value="einwilligungsartenListeManager().auswahl().schluessel"
-					@change="schluessel => patch({ schluessel: schluessel ?? undefined })" />
+					@change="schluessel => patch({ schluessel: schluessel ?? undefined })" :readonly />
 				<svws-ui-text-input class="contentFocusField w-5/5" placeholder="Beschreibung" :model-value="einwilligungsartenListeManager().auswahl().beschreibung"
-					@change="beschreibung => patch({ beschreibung: beschreibung ?? undefined })" />
+					@change="beschreibung => patch({ beschreibung: beschreibung ?? undefined })" :readonly />
 				<svws-ui-text-input class="contentFocusField w-5/5" placeholder="Personenart" :model-value="getPersonTypName(einwilligungsartenListeManager().auswahl().personTyp)" disabled />
-				<svws-ui-checkbox :model-value="einwilligungsartenListeManager().daten().istSichtbar" @update:model-value="istSichtbar => patch({ istSichtbar })">
+				<svws-ui-checkbox :model-value="einwilligungsartenListeManager().daten().istSichtbar" @update:model-value="istSichtbar => patch({ istSichtbar })" :readonly>
 					Sichtbar
 				</svws-ui-checkbox>
 			</svws-ui-input-wrapper>
@@ -20,9 +20,13 @@
 <script setup lang="ts">
 
 	import type { EinwilligungsartenDatenProps } from "./SEinwilligungsartenDatenProps";
-	import { PersonTyp } from "@core";
+	import { BenutzerKompetenz, PersonTyp } from "@core";
+	import { computed } from "vue";
 
-	defineProps<EinwilligungsartenDatenProps>();
+	const props = defineProps<EinwilligungsartenDatenProps>();
+
+	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const readonly = computed(() => !hatKompetenzUpdate.value);
 
 	const getPersonTypName = (personTypID: number | undefined): string => {
 		const personTyp = personTypID !== undefined ? PersonTyp.getByID(personTypID) : undefined;

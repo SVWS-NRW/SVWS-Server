@@ -1,4 +1,5 @@
-import type { BenutzerKompetenz, FahrschuelerartenListeManager, List, Schulform, ServerMode } from "@core";
+import type { BenutzerKompetenz, List, Schulform, ServerMode } from "@core";
+import type { FahrschuelerartenListeManager } from "@ui";
 
 export interface FahrschuelerartenGruppenprozesseProps {
 	serverMode: ServerMode;

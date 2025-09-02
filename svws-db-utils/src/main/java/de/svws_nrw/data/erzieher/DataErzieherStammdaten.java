@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.core.data.erzieher.ErzieherStammdaten;
@@ -87,7 +88,7 @@ public final class DataErzieherStammdaten extends DataManagerRevised<Long, DTOSc
 			return dtoMapperErzieher1.apply(dto);
 		if ((dto.Name2 != null) && !dto.Name2.isBlank())
 			return dtoMapperErzieher2.apply(dto);
-		throw new ApiOperationException(Status.NOT_FOUND);
+		throw new ApiOperationException(Status.NOT_FOUND, "Erzieher konnte nicht gemappt werden: weder Name1 noch Name2 sind befüllt.");
 	}
 
 	/**
@@ -352,6 +353,67 @@ public final class DataErzieherStammdaten extends DataManagerRevised<Long, DTOSc
 		}
 	}
 
+	@Override
+	public Response deleteMultipleAsResponse(final List<Long> apiIds) throws ApiOperationException {
+		if (apiIds == null)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Für das Löschen müssen IDs angegeben werden. Null ist nicht zulässig.");
+
+		// Extrahiere die echten Datenbank-IDs und zugehörigen Suffixe
+		final Map<Long, List<Integer>> idMap = apiIds.stream()
+				.collect(Collectors.groupingBy(
+						DataErzieherStammdaten::getDatabaseErzieherIdFromApiId,
+						Collectors.mapping(apiId -> (int) (apiId % 10), Collectors.toList())
+				));
+
+		// Alle DTOs laden
+		final List<Long> dbIds = new ArrayList<>(idMap.keySet());
+		final List<DTOSchuelerErzieherAdresse> dtos = conn.queryByKeyList(DTOSchuelerErzieherAdresse.class, dbIds);
+		if (dtos.isEmpty())
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurden keine Entitäten zu den IDs gefunden.");
+
+		// Teile der DTOs werden auf null gesetzt oder komplett gelöscht
+		final List<ErzieherStammdaten> deleted = new ArrayList<>();
+		for (final DTOSchuelerErzieherAdresse dto : dtos) {
+			final long dtoId = dto.ID;
+			final List<Integer> suffixes = idMap.get(dtoId);
+			if (suffixes == null)
+				continue;
+			// Für jede angefragte Position
+			for (final int suffix : suffixes) {
+				// Core-DTO zur gelöschten Position erzeugen
+				final ErzieherStammdaten removed = (suffix == 1) ? dtoMapperErzieher1.apply(dto) : dtoMapperErzieher2.apply(dto);
+				deleted.add(removed);
+				// Felder der jeweiligen Position werden auf null gesetzt
+				if (suffix == 1) {
+					dto.Name1 = null;
+					dto.Vorname1 = null;
+					dto.Titel1 = null;
+					dto.Anrede1 = null;
+					dto.ErzEmail = null;
+					dto.Erz1StaatKrz = null;
+				} else {
+					dto.Name2 = null;
+					dto.Vorname2 = null;
+					dto.Titel2 = null;
+					dto.Anrede2 = null;
+					dto.ErzEmail2 = null;
+					dto.Erz2StaatKrz = null;
+				}
+			}
+			// Falls beide Positionen leer sind, dann wird das gesamte DTO aus der Datenbank gelöscht
+			final boolean pos1Empty = ((dto.Name1 == null) || dto.Name1.isBlank());
+			final boolean pos2Empty = ((dto.Name2 == null) || dto.Name2.isBlank());
+			if (pos1Empty && pos2Empty) {
+				if (!conn.transactionRemove(dto))
+					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehler beim Entfernen der Entität.");
+			} else {
+				// Andernfalls nur flushen, damit die Änderungen persistiert werden
+				conn.transactionFlush();
+			}
+		}
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(deleted).build();
+	}
+
 	/**
 	 * Setzt den Wohnort bei den Erzieherdaten und prüft dabei die Angabe des Ortsteils auf Korrektheit in Bezug auf die Ortsteile
 	 * in der Datenbank. Ggf. wird der Ortsteil auf null gesetzt.
@@ -388,4 +450,17 @@ public final class DataErzieherStammdaten extends DataManagerRevised<Long, DTOSc
 		return (ortsteil != null) && Objects.equals(ortsteil.Ort_ID, wohnortID);
 	}
 
+	/**
+	 * Bestimmt die Schüler-IDs, welche Einträge zu der übergebenen Erzieher-Art gehören.
+	 * Diese Methode wird im Rahmen der Löschvorbedingungen in {@link DataErzieherarten#deleteMultipleAsSimpleResponseList(List)} verwendet, um zu ermitteln,
+	 * welche Schüler-Erzieher-Einträge noch existieren, bevor eine Erzieher-Art gelöscht wird.
+	 *
+	 * @param id    die ID der Erzieher-Art
+	 *
+	 * @return      die List von IDs der Schüler-Erzieher-Einträge, welche der entsprechenden Erzieher-Art zugeordnet sind
+	 */
+	public List<Long> getIDsByErzieherartID(final Long id) {
+		return conn.queryList(DTOSchuelerErzieherAdresse.QUERY_BY_ERZIEHERART_ID, DTOSchuelerErzieherAdresse.class, id).stream().map(t -> t.Schueler_ID)
+				.toList();
+	}
 }

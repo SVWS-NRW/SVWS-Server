@@ -111,16 +111,17 @@ public enum HtmlTemplateDefinition {
 			Arrays.asList(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
 					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)),
 
-	/** Report-Vorlage: GOSt - Kursplanung - Kurs - Kurschüler */
-	KLASSEN_v_KLASSE_SCHUELER_STAMMDATENLISTE(
-			ReportingReportvorlage.KLASSEN_v_KLASSE_SCHUELER_STAMMDATENLISTE,
+	/** Report-Vorlage: Klasse - Liste - Schüler - Kontaktdaten - Erzieher */
+	KLASSEN_v_LISTE_SCHUELER_KONTAKTDATENERZIEHER(
+			ReportingReportvorlage.KLASSEN_v_LISTE_SCHUELER_KONTAKTDATENERZIEHER,
 			"de/svws_nrw/module/reporting/",
-			"klassen/KlasseSchuelerStammdatenliste.html",
-			"Klasse-Schueler-Stammdatenliste",
+			"klassen/KlasseListeSchuelerKontaktdatenErzieher.html",
+			"Klasse-Liste-Schueler-Kontaktdaten-Erzieher",
 			"""
-			        <p th:if="${Klassen.isEmpty()}">Klasse-Schueler-Stammdatenliste"</p>
+			        <p th:if="${Klassen.isEmpty()}">Klasse-Liste-Schueler-Kontaktdaten-Erzieher</p>
 			        <th:block th:if="${!Klassen.isEmpty()}" th:each="klasse,iterState : ${Klassen}">
-			            <p th:if="${iterState.first}" th:text="${'Klasse-Schueler-Stammdatenliste_' + #dates.format(#dates.createNow(), 'yyyyMMdd-HHmm')}"></p>
+			            <p th:if="${iterState.first && (Klassen.size() == 1)}" th:text="${'Klasse-Liste-Schueler-Kontaktdaten-Erzieher_' + #strings.replace(klasse.kuerzel(), ' ', '_')}"></p>
+			            <p th:if="${iterState.first && (Klassen.size() > 1)}" th:text="${'Klasse-Liste-Schueler-Kontaktdaten-Erzieher'}"></p>
 			        </th:block>
 			""",
 			Arrays.asList(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)),
@@ -153,11 +154,27 @@ public enum HtmlTemplateDefinition {
 			""",
 			Arrays.asList(BenutzerKompetenz.LEHRERDATEN_ANSEHEN)),
 
-	/** Report-Vorlage: Schüler - GOSt - Abitur - APO - Anlage 12 (Abiturzeugnis) */
-	SCHUELER_v_GOST_ABITUR_APO_ANLAGE_12(
-			ReportingReportvorlage.SCHUELER_v_GOST_ABITUR_APO_ANLAGE_12,
+	/** Report-Vorlage: Schüler - GOSt - Abitur - APO - Anlage 12 (Abiturzeugnis) - Din-A4 */
+	SCHUELER_v_GOST_ABITUR_APO_ANLAGE_12_A4(
+			ReportingReportvorlage.SCHUELER_v_GOST_ABITUR_APO_ANLAGE_12_A4,
 			"de/svws_nrw/module/reporting/",
-			"schueler/gost/abitur/apo/SchuelerGostAbiturApoAnlage12.html",
+			"schueler/gost/abitur/apo/SchuelerGostAbiturApoAnlage12-A4.html",
+			"APO-GOSt-Anlage12",
+			"""
+			        <p th:if="${Schueler.isEmpty()}">APO-GOSt-Anlage12</p>
+			        <th:block th:if="${!Schueler.isEmpty()}" th:each="schueler,iterState : ${Schueler}">
+			            <p th:if="${iterState.first && (Schueler.size() == 1)}" th:text="${'Abitur' + schueler.gostAbitur().abiturjahr() + '_APO-GOSt-Anlage12_' + '_' + #strings.replace(schueler.nachname(), ' ', '_') + '__' + #strings.replace(schueler.vorname(), ' ', '_') + '_(' + schueler.id() + ')'}"></p>
+			            <p th:if="${iterState.first && (Schueler.size() > 1)}" th:text="${'Abitur' + schueler.gostAbitur().abiturjahr() + '_APO-GOSt-Anlage12'}"></p>
+			        </th:block>
+			""",
+			Arrays.asList(BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN)),
+
+
+	/** Report-Vorlage: Schüler - GOSt - Abitur - APO - Anlage 12 (Abiturzeugnis) - Din-A3 */
+	SCHUELER_v_GOST_ABITUR_APO_ANLAGE_12_A3(
+			ReportingReportvorlage.SCHUELER_v_GOST_ABITUR_APO_ANLAGE_12_A3,
+			"de/svws_nrw/module/reporting/",
+			"schueler/gost/abitur/apo/SchuelerGostAbiturApoAnlage12-A3.html",
 			"APO-GOSt-Anlage12",
 			"""
 			        <p th:if="${Schueler.isEmpty()}">APO-GOSt-Anlage12</p>
@@ -215,15 +232,15 @@ public enum HtmlTemplateDefinition {
 			Arrays.asList(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)),
 
 	/** Report-Vorlage: Schüler - Stammdaten - Liste */
-	SCHUELER_v_STAMMDATENLISTE(
-			ReportingReportvorlage.SCHUELER_v_STAMMDATENLISTE,
+	SCHUELER_v_LISTE_KONTAKTDATENERZIEHER(
+			ReportingReportvorlage.SCHUELER_v_LISTE_KONTAKTDATENERZIEHER,
 			"de/svws_nrw/module/reporting/",
-			"schueler/stammdaten/SchuelerStammdatenliste.html",
-			"Schueler-Stammdatenliste",
+			"schueler/listen/SchuelerListeKontaktdatenErzieher.html",
+			"Schueler-Liste-Kontaktdaten-Erzieher",
 			"""
-			        <p th:if="${Schueler.isEmpty()}">Schueler-Stammdatenliste"</p>
+			        <p th:if="${Schueler.isEmpty()}">Schueler-Liste-Kontaktdaten-Erzieher</p>
 			        <th:block th:if="${!Schueler.isEmpty()}" th:each="schueler,iterState : ${Schueler}">
-			            <p th:if="${iterState.first}" th:text="${'Schueler-Stammdatenliste_' + #dates.format(#dates.createNow(), 'yyyyMMdd-HHmm')}"></p>
+			            <p th:if="${iterState.first}" th:text="${'Schueler-Liste-Kontaktdaten-Erzieher_' + #dates.format(#dates.createNow(), 'yyyyMMdd-HHmm')}"></p>
 			        </th:block>
 			""",
 			Arrays.asList(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)),

@@ -1,9 +1,9 @@
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
 import type { List, SimpleOperationResponse, KatalogEntlassgrund } from "@core";
-import { ArrayList, EntlassgruendeListeManager } from "@core";
+import { ArrayList } from "@core";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
-import { ViewType } from "@ui";
+import { ViewType, EntlassgruendeListeManager } from "@ui";
 import { api } from "~/router/Api";
 import { routeEntlassgruendeDaten } from "~/router/apps/schule/entlassgruende/RouteEntlassgruendeDaten";
 import { routeEntlassgruendeGruppenprozesse } from "~/router/apps/schule/entlassgruende/RouteEntlassgruendeGruppenprozesse";

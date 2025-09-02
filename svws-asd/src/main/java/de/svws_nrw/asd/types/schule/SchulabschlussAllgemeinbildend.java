@@ -62,8 +62,10 @@ public enum SchulabschlussAllgemeinbildend implements CoreType<SchulabschlussAll
 	FOEL,
 
 	/** Waldorfschule */
-	WALD;
+	WALD,
 
+	/** Ohne Abschluss, kommt aus der Deutschförderung */
+	DFR;
 
 	/**
 	 * Initialisiert den Core-Type mit dem angegebenen Manager.

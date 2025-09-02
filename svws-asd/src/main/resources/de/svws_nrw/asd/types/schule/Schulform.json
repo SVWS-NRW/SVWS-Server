@@ -127,7 +127,7 @@
 			"id": 11000,
 			"schluessel":  "08",
 			"kuerzel":  "S",
-			"text":  "Förderschule im Bereich G/H",
+			"text":  "Förderschule im Bereich Grund-/Hauptschule",
 			"hatGymOb":  false,
 			"gueltigVon":  null,
 			"gueltigBis":  null
@@ -199,7 +199,7 @@
 			"id": 17000,
 			"schluessel":  "06",
 			"kuerzel":  "V",
-			"text":  "nicht umorganisierte Volksschule",
+			"text":  "Volksschule",
 			"hatGymOb":  false,
 			"gueltigVon":  null,
 			"gueltigBis":  null
@@ -223,7 +223,7 @@
 			"id": 19000,
 			"schluessel":  "19",
 			"kuerzel":  "WF",
-			"text":  "Freie Waldorfschule (Förderschule)",
+			"text":  "Freie Waldorfförderschule",
 			"hatGymOb":  true,
 			"gueltigVon":  null,
 			"gueltigBis":  null

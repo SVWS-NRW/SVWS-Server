@@ -1,5 +1,5 @@
-import type { JahrgangsDaten, VermerkartenListeManager } from "@core";
-import type { Checkpoint } from "@ui";
+import type { JahrgangsDaten } from "@core";
+import type { Checkpoint, VermerkartenListeManager } from "@ui";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 
 export interface SchuleVermerkartNeuProps {

@@ -75,8 +75,11 @@ public enum Jahrgaenge implements CoreType<JahrgaengeKatalogEintrag, Jahrgaenge>
 	Q2,
 
 
-	/** Jahrgang Berufspraxisstufe laut AO-SF für den Förderschwerpunkt Geistige Entwicklung (je nach Organisationsform in Teilzeit (86) und Vollzeit (85) möglich) */
-	BERUFSPRAXISSTUFE,
+	/** Jahrgang Berufspraxisstufe in Vollzeit laut AO-SF für den Förderschwerpunkt Geistige Entwicklung (je nach Organisationsform in Teilzeit (86) und Vollzeit (85) möglich) */
+	BERUFSPRAXISSTUFE_VOLLZEIT,
+
+	/** Jahrgang Berufspraxisstufe in Teilzeit laut AO-SF für den Förderschwerpunkt Geistige Entwicklung (je nach Organisationsform in Teilzeit (86) und Vollzeit (85) möglich) */
+	BERUFSPRAXISSTUFE_TEILZEIT,
 
 	/** 91: Abendrealschule Vorkurs, 1. Semester */
 	REALSCHULE_VORKURS_SEMESTER_1,
@@ -218,7 +221,8 @@ public enum Jahrgaenge implements CoreType<JahrgaengeKatalogEintrag, Jahrgaenge>
 			case EF -> (gl == Schulgliederung.GY8) ? (vergleichsjahrgang == JAHRGANG_09) : (vergleichsjahrgang == JAHRGANG_10);
 			case Q1 -> (vergleichsjahrgang == EF);
 			case Q2 -> (vergleichsjahrgang == Q1);
-			case BERUFSPRAXISSTUFE -> (vergleichsjahrgang == null);
+			case BERUFSPRAXISSTUFE_VOLLZEIT -> (vergleichsjahrgang == null);
+			case BERUFSPRAXISSTUFE_TEILZEIT -> (vergleichsjahrgang == null);
 			case REALSCHULE_VORKURS_SEMESTER_1 -> (vergleichsjahrgang == null);
 			case REALSCHULE_VORKURS_SEMESTER_2 -> (vergleichsjahrgang == REALSCHULE_VORKURS_SEMESTER_1);
 			case REALSCHULE_SEMESTER_01 -> (vergleichsjahrgang == REALSCHULE_VORKURS_SEMESTER_2);
@@ -278,7 +282,8 @@ public enum Jahrgaenge implements CoreType<JahrgaengeKatalogEintrag, Jahrgaenge>
 			case EF -> (vergleichsjahrgang == Q1);
 			case Q1 -> (vergleichsjahrgang == Q2);
 			case Q2 -> (vergleichsjahrgang == null);
-			case BERUFSPRAXISSTUFE -> (vergleichsjahrgang == null);
+			case BERUFSPRAXISSTUFE_VOLLZEIT -> (vergleichsjahrgang == null);
+			case BERUFSPRAXISSTUFE_TEILZEIT -> (vergleichsjahrgang == null);
 			case REALSCHULE_VORKURS_SEMESTER_1 -> (vergleichsjahrgang == REALSCHULE_VORKURS_SEMESTER_2);
 			case REALSCHULE_VORKURS_SEMESTER_2 -> (vergleichsjahrgang == REALSCHULE_SEMESTER_01);
 			case REALSCHULE_SEMESTER_01 -> (vergleichsjahrgang == REALSCHULE_SEMESTER_02);
@@ -329,7 +334,8 @@ public enum Jahrgaenge implements CoreType<JahrgaengeKatalogEintrag, Jahrgaenge>
 			case EF -> (vergleichsjahrgang == JAHRGANG_09) || (vergleichsjahrgang == JAHRGANG_10);
 			case Q1 -> (vergleichsjahrgang == EF);
 			case Q2 -> (vergleichsjahrgang == Q1);
-			case BERUFSPRAXISSTUFE -> (vergleichsjahrgang == null);
+			case BERUFSPRAXISSTUFE_VOLLZEIT -> (vergleichsjahrgang == null);
+			case BERUFSPRAXISSTUFE_TEILZEIT -> (vergleichsjahrgang == null);
 			case REALSCHULE_VORKURS_SEMESTER_1 -> (vergleichsjahrgang == null);
 			case REALSCHULE_VORKURS_SEMESTER_2 -> (vergleichsjahrgang == REALSCHULE_VORKURS_SEMESTER_1);
 			case REALSCHULE_SEMESTER_01 -> (vergleichsjahrgang == REALSCHULE_VORKURS_SEMESTER_2);
@@ -380,7 +386,8 @@ public enum Jahrgaenge implements CoreType<JahrgaengeKatalogEintrag, Jahrgaenge>
 			case EF -> (vergleichsjahrgang == Q1);
 			case Q1 -> (vergleichsjahrgang == Q2);
 			case Q2 -> (vergleichsjahrgang == null);
-			case BERUFSPRAXISSTUFE -> (vergleichsjahrgang == null);
+			case BERUFSPRAXISSTUFE_VOLLZEIT -> (vergleichsjahrgang == null);
+			case BERUFSPRAXISSTUFE_TEILZEIT -> (vergleichsjahrgang == null);
 			case REALSCHULE_VORKURS_SEMESTER_1 -> (vergleichsjahrgang == REALSCHULE_VORKURS_SEMESTER_2);
 			case REALSCHULE_VORKURS_SEMESTER_2 -> (vergleichsjahrgang == REALSCHULE_SEMESTER_01);
 			case REALSCHULE_SEMESTER_01 -> (vergleichsjahrgang == REALSCHULE_SEMESTER_02);

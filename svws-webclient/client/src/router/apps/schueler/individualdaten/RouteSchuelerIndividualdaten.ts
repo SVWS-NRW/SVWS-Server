@@ -38,7 +38,7 @@ export class RouteSchuelerIndividualdaten extends RouteNode<RouteDataSchuelerInd
 			mapHaltestellen: this.data.mapHaltestellen,
 			mapReligionen: this.data.mapReligionen,
 			mapTelefonArten: this.data.mapTelefonArten,
-			getListSchuelerTelefoneintraege: () => routeSchueler.data.listSchuelerTelefoneintraege,
+			getListSchuelerTelefoneintraege: () => routeSchueler.data.getListSchuelerTelefoneintraege,
 			addSchuelerTelefoneintrag: routeSchueler.data.addSchuelerTelefoneintrag,
 			patchSchuelerTelefoneintrag: routeSchueler.data.patchSchuelerTelefoneintrag,
 			deleteSchuelerTelefoneintrage: routeSchueler.data.deleteSchuelerTelefoneintrage,

@@ -2,8 +2,8 @@ package de.svws_nrw.davapi.api;
 
 import de.svws_nrw.core.data.adressbuch.Adressbuch;
 import de.svws_nrw.core.data.adressbuch.AdressbuchEintrag;
-import de.svws_nrw.davapi.data.CollectionRessourceQueryParameters;
-import de.svws_nrw.davapi.data.IAdressbuchRepository;
+import de.svws_nrw.davapi.data.carddav.IAdressbuchRepository;
+import de.svws_nrw.davapi.data.dav.CollectionQueryParameters;
 import de.svws_nrw.davapi.model.dav.Getetag;
 import de.svws_nrw.davapi.model.dav.Multistatus;
 import de.svws_nrw.davapi.model.dav.Prop;
@@ -33,20 +33,13 @@ public class ReportAddressbookDispatcher extends DavDispatcher {
 	/** Repository-Klasse zur Abfrage von Adressbüchern aus der SVWS-Datenbank */
 	private final IAdressbuchRepository repository;
 
-	/** URI-Parameter für die Erzeugung von URIs des Ergebnisobjekts */
-	private final DavUriParameter uriParameter;
-
 	/**
-	 * Erstellt einen neuen Dispatcher mit den angegebenen Repositorys und
-	 * URI-Parametern
+	 * Erstellt einen neuen Dispatcher mit den angegebenen Repositorys und URI-Parametern
 	 *
-	 * @param adressbuchRepository das Repository für Adressbuecher
-	 * @param uriParameter         die URI-Parameter für im Response verwendete URIs
+	 * @param adressbuchRepository   das Repository für Adressbuecher
 	 */
-	public ReportAddressbookDispatcher(final IAdressbuchRepository adressbuchRepository,
-			final DavUriParameter uriParameter) {
+	public ReportAddressbookDispatcher(final IAdressbuchRepository adressbuchRepository) {
 		this.repository = adressbuchRepository;
-		this.uriParameter = uriParameter;
 	}
 
 	/**
@@ -60,7 +53,7 @@ public class ReportAddressbookDispatcher extends DavDispatcher {
 	 * @throws IOException bei der Verarbeitung des InputStreams/XML-Unmarshalling
 	 */
 	public Object dispatch(final InputStream inputStream, final String ressourceId) throws IOException {
-		final CollectionRessourceQueryParameters queryParameters = CollectionRessourceQueryParameters.INCLUDE_RESSOURCES_INCLUDE_PAYLOAD;
+		final CollectionQueryParameters queryParameters = CollectionQueryParameters.ALL;
 		final Optional<Adressbuch> adressbuch = this.repository.getAdressbuchById(ressourceId, queryParameters);
 		if (adressbuch.isEmpty()) {
 			return this.createResourceNotFoundError("Adressbuch mit der angegebenen Id wurde nicht gefunden!");
@@ -109,7 +102,7 @@ public class ReportAddressbookDispatcher extends DavDispatcher {
 	private Multistatus handleAdressbookMultigetRequest(final Adressbuch adressbuch, final AddressbookMultiget multiget) {
 		final Multistatus ms = new Multistatus();
 		final List<AdressbuchEintrag> eintraegeByHrefs = this.getEintraegeByHrefs(adressbuch, multiget.getHref());
-		uriParameter.setResourceCollectionId(adressbuch.id);
+		this.setParameterResourceCollectionId(adressbuch.id);
 		for (final AdressbuchEintrag eintrag : eintraegeByHrefs) {
 			ms.getResponse().add(this.generateResponseContactLevel(eintrag, multiget.getProp()));
 		}
@@ -129,7 +122,7 @@ public class ReportAddressbookDispatcher extends DavDispatcher {
 	 */
 	private Multistatus handleSyncCollectionRequest(final Adressbuch adressbuch, final SyncCollection syncCollection) {
 		final Multistatus ms = new Multistatus();
-		uriParameter.setResourceCollectionId(adressbuch.id);
+		this.setParameterResourceCollectionId(adressbuch.id);
 		for (final AdressbuchEintrag eintrag : this.getEintraegeBySyncToken(adressbuch.id, syncCollection.getSyncToken())) {
 			ms.getResponse().add(this.generateResponseContactLevel(eintrag, syncCollection.getProp()));
 		}
@@ -149,7 +142,7 @@ public class ReportAddressbookDispatcher extends DavDispatcher {
 	 * @return Liste von Eintraegen.
 	 */
 	private List<AdressbuchEintrag> getEintraegeByHrefs(final @NotNull Adressbuch adressbuch, final List<String> eintragHrefs) {
-		uriParameter.setResourceCollectionId(adressbuch.id);
+		this.setParameterResourceCollectionId(adressbuch.id);
 		adressbuch.adressbuchEintraege.forEach(this::modifyEintragUri);
 		return adressbuch.adressbuchEintraege.stream().filter(k -> eintragHrefs.contains(k.uri)).toList();
 	}
@@ -171,7 +164,7 @@ public class ReportAddressbookDispatcher extends DavDispatcher {
 	private List<AdressbuchEintrag> getEintraegeBySyncToken(final String adressbuchId, final String syncToken) {
 		// TODO: Filterung über Sync-Token ergänzen
 		final Optional<Adressbuch> adressbuchById = this.repository.getAdressbuchById(adressbuchId,
-				CollectionRessourceQueryParameters.INCLUDE_RESSOURCES_INCLUDE_PAYLOAD);
+				CollectionQueryParameters.ALL);
 		if (adressbuchById.isEmpty()) {
 			return Collections.emptyList();
 		}
@@ -185,8 +178,8 @@ public class ReportAddressbookDispatcher extends DavDispatcher {
 	 * @return eintrag Eintrag mit URI
 	 */
 	private AdressbuchEintrag modifyEintragUri(final AdressbuchEintrag eintrag) {
-		uriParameter.setResourceId(eintrag.id);
-		eintrag.uri = (DavUriBuilder.getAddressEntryUri(uriParameter));
+		this.setParameterResourceId(eintrag.id);
+		eintrag.uri = getCardDavResourceUri();
 		return eintrag;
 	}
 
@@ -201,7 +194,7 @@ public class ReportAddressbookDispatcher extends DavDispatcher {
 	 */
 	private Response generateResponseContactLevel(final AdressbuchEintrag eintrag, final Prop propRequested) {
 		final DynamicPropUtil dynamicPropUtil = new DynamicPropUtil(propRequested);
-		uriParameter.setResourceId(eintrag.id);
+		this.setParameterResourceId(eintrag.id);
 
 		final Prop prop200 = new Prop();
 		if (dynamicPropUtil.getIsFieldRequested(CardAddressData.class)) {
@@ -218,7 +211,7 @@ public class ReportAddressbookDispatcher extends DavDispatcher {
 		}
 
 		final Response response = createResponse(propRequested, prop200);
-		response.getHref().add(DavUriBuilder.getAddressEntryUri(uriParameter));
+		response.getHref().add(getCardDavResourceUri());
 		return response;
 	}
 

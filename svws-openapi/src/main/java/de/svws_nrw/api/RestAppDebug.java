@@ -2,6 +2,8 @@ package de.svws_nrw.api;
 
 import java.util.Set;
 
+import de.svws_nrw.api.common.OpenAPICorsFilter;
+import de.svws_nrw.api.common.PathUtils;
 import de.svws_nrw.api.debug.APIDebug;
 import jakarta.ws.rs.core.Application;
 
@@ -49,13 +51,7 @@ public final class RestAppDebug extends Application {
 	 * @return true, falls er enthalten ist
 	 */
 	public static boolean checkIsInPathSpecification(final String path) {
-		if (path == null)
-			return false;
-		for (final String pathSpec : pathSpec)
-			if (path.equals(pathSpec) || (pathSpec.endsWith("/*") && (path.equals(pathSpec.substring(0, pathSpec.length() - 2))))
-					|| (pathSpec.endsWith("*") && (path.startsWith(pathSpec.substring(0, pathSpec.length() - 1)))))
-				return true;
-		return false;
+		return PathUtils.checkIsInPathSpecification(pathSpec, path);
 	}
 
 }

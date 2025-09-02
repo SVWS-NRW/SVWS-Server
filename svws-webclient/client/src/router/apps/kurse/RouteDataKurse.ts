@@ -1,5 +1,6 @@
-import type { KursDaten, List, Schueler , SimpleOperationResponse } from "@core";
-import { DeveloperNotificationException, KursListeManager } from "@core";
+import type { KursDaten, KursLehrer, List, Schueler, SimpleOperationResponse } from "@core";
+import { DeveloperNotificationException } from "@core";
+import { KursListeManager } from "@ui";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -47,7 +48,7 @@ export class RouteDataKurse extends RouteDataAuswahl<KursListeManager, RouteStat
 		const listKurse = await api.server.getKurseFuerAbschnitt(api.schema, idSchuljahresabschnitt);
 		const listSchueler = await api.server.getSchuelerFuerAbschnitt(api.schema, idSchuljahresabschnitt);
 		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
-		const listLehrer = await api.server.getLehrer(api.schema);
+		const listLehrer = await api.server.getLehrerFuerAbschnitt(api.schema, idSchuljahresabschnitt);
 		const listFaecher = await api.server.getFaecher(api.schema);
 		const manager = new KursListeManager(idSchuljahresabschnitt, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,
 			api.schulform, listKurse, listSchueler, listJahrgaenge, listLehrer, listFaecher);
@@ -85,6 +86,33 @@ export class RouteDataKurse extends RouteDataAuswahl<KursListeManager, RouteStat
 		const neuerKurs = await api.server.addKurs({ ...partialKurs, idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }, api.schema);
 		await this.setSchuljahresabschnitt(this._state.value.idSchuljahresabschnitt, true);
 		await this.gotoDefaultView(neuerKurs.id);
+	}
+
+	addKurLehrer = async (data: Partial<KursLehrer>, idKurs: number): Promise<void> => {
+		api.status.start();
+		const result = await api.server.addKursLehrer(data, api.schema, idKurs);
+		this.manager.daten().weitereLehrer.add(result);
+		this.commit();
+		api.status.stop();
+	}
+
+	patchKursLehrer = async (data: Partial<KursLehrer>, idKurs: number, idLehrer: number): Promise<void> => {
+		api.status.start();
+		await api.server.patchKursLehrer(data, api.schema, idKurs, idLehrer);
+		for (const k of this.manager.daten().weitereLehrer)
+			if (k.idLehrer === idLehrer)
+				Object.assign(k, data);
+		this.commit();
+		api.status.stop();
+	}
+
+	deleteKursLehrer = async (lehrerIds: List<number>, idKurs: number): Promise<void> => {
+		await api.server.deleteKursLehrer(lehrerIds, api.schema, idKurs);
+		const weitereLehrer = this.manager.daten().weitereLehrer;
+		for (let i = weitereLehrer.size() - 1; i >= 0; i--)
+			if (lehrerIds.contains(weitereLehrer.get(i).idLehrer))
+				weitereLehrer.removeElementAt(i);
+		this.commit();
 	}
 
 	/* TODO

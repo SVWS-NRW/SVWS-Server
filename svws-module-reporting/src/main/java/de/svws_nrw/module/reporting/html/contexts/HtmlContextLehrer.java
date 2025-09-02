@@ -1,10 +1,7 @@
 package de.svws_nrw.module.reporting.html.contexts;
 
-import java.text.Collator;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
@@ -15,15 +12,22 @@ import org.thymeleaf.context.Context;
 /**
  * Ein Thymeleaf-Html-Daten-Context zum Bereich "Lehrer", um Thymeleaf-html-Templates mit Daten zu füllen.
  */
-public final class HtmlContextLehrer extends HtmlContext {
+public final class HtmlContextLehrer extends HtmlContext<ReportingLehrer> {
+
+	@Override
+	public List<String> standardsortierung() {
+		final ArrayList<String> standardSort = new ArrayList<>();
+		standardSort.add(methodenreferenzToString(ReportingLehrer::nachname));
+		standardSort.add(methodenreferenzToString(ReportingLehrer::vorname));
+		standardSort.add(methodenreferenzToString(ReportingLehrer::kuerzel));
+		standardSort.add(methodenreferenzToString(ReportingLehrer::id));
+		return standardSort;
+	}
 
 	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
 	private final ReportingRepository reportingRepository;
 
-	/** Liste, die die im Context ermitteln Daten speichert und den Zugriff auf die Daten abseits des html-Templates ermöglicht. */
-	@JsonIgnore
-	private List<ReportingLehrer> lehrer = new ArrayList<>();
 
 	/**
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Lehrern.
@@ -31,7 +35,8 @@ public final class HtmlContextLehrer extends HtmlContext {
 	 * @param reportingRepository 	Repository mit Parametern, Logger und Daten zum Reporting.
 	 * @param reportingLehrer		Liste der Lehrer, die berücksichtigt werden sollen.
 	 */
-	public HtmlContextLehrer(final ReportingRepository reportingRepository, final List<ReportingLehrer> reportingLehrer) {
+ public HtmlContextLehrer(final ReportingRepository reportingRepository, final List<ReportingLehrer> reportingLehrer) {
+		super(reportingRepository, true);
 		this.reportingRepository = reportingRepository;
 		erzeugeContextFromLehrer(reportingLehrer);
 	}
@@ -42,6 +47,7 @@ public final class HtmlContextLehrer extends HtmlContext {
 	 * @param reportingRepository   Repository mit Parametern, Logger und Daten zum Reporting.
 	 */
 	public HtmlContextLehrer(final ReportingRepository reportingRepository) {
+		super(reportingRepository, true);
 		this.reportingRepository = reportingRepository;
 		erzeugeContextFromIds(this.reportingRepository.reportingParameter().idsHauptdaten);
 	}
@@ -54,19 +60,12 @@ public final class HtmlContextLehrer extends HtmlContext {
 	 */
 	private void erzeugeContextFromLehrer(final List<ReportingLehrer> reportingLehrer) {
 
-		// Sortiere die übergebene Liste der Lehrer
-		final Collator colGerman = Collator.getInstance(Locale.GERMAN);
-		reportingLehrer.sort(Comparator.comparing(ReportingLehrer::nachname, colGerman)
-				.thenComparing(ReportingLehrer::vorname, colGerman)
-				.thenComparing(ReportingLehrer::kuerzel, colGerman)
-				.thenComparing(ReportingLehrer::id));
-
-		lehrer = new ArrayList<>();
-		lehrer.addAll(reportingLehrer);
+		setContextData(reportingLehrer);
+		sortiereContext();
 
 		// Daten-Context für Thymeleaf erzeugen.
 		final Context context = new Context();
-		context.setVariable("Lehrer", lehrer);
+		context.setVariable("Lehrer", getContextData());
 
 		super.setContext(context);
 	}
@@ -79,12 +78,12 @@ public final class HtmlContextLehrer extends HtmlContext {
 	 */
 	private void erzeugeContextFromIds(final List<Long> idsLehrer) {
 
-		// Erzeuge nun die einzelnen Lehrerobjekte. Alle weiteren Daten werden später dynamisch nachgeladen.
-		lehrer = this.reportingRepository.lehrer(idsLehrer);
+		setContextData(this.reportingRepository.lehrer(idsLehrer));
+		sortiereContext();
 
 		// Daten-Context für Thymeleaf erzeugen.
 		final Context context = new Context();
-		context.setVariable("Lehrer", lehrer);
+		context.setVariable("Lehrer", getContextData());
 
 		super.setContext(context);
 	}
@@ -98,7 +97,7 @@ public final class HtmlContextLehrer extends HtmlContext {
 	public List<HtmlContextLehrer> getEinzelContexts() {
 		final List<HtmlContextLehrer> resultContexts = new ArrayList<>();
 
-		for (final ReportingLehrer reportingLehrer : lehrer) {
+  for (final ReportingLehrer reportingLehrer : getContextData()) {
 			final List<ReportingLehrer> einLehrer = new ArrayList<>();
 			einLehrer.add(reportingLehrer);
 			resultContexts.add(new HtmlContextLehrer(this.reportingRepository, einLehrer));

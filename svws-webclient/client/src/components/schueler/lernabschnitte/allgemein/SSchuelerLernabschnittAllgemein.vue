@@ -9,7 +9,7 @@
 					:model-value="jahrgang" @update:model-value="value => patch({ jahrgangID: ((value === undefined) || (value === null)) ? null : value.id })"
 					autocomplete statistics required />
 				<svws-ui-select :disabled="!hatUpdateKompetenz" title="EP-Jahr" :items="PrimarstufeSchuleingangsphaseBesuchsjahre.data().getEintraegeBySchuljahr(schuljahr)" :item-text="i => i.kuerzel"
-					:model-value="epJahre" @update:model-value="value => patch({ epJahre: ((value === undefined) || (value === null)) ? null : parseInt(value.schluessel) })"
+					:model-value="epJahre" @update:model-value="value => patch({ epJahre: ((value === undefined) || (value === null)) ? null : value.id })"
 					statistics required />
 			</div>
 			<svws-ui-input-wrapper :grid="2">
@@ -85,11 +85,11 @@
 	const epJahre = computed<PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag | null>(() => {
 		if (!primarschulformen.has(schulform.value))
 			return null;
-		const ep = props.manager().schuelerGet().epJahre?.toString() ?? null;
+		const ep = props.manager().schuelerGet().epJahre ?? null;
 		if (ep === null)
 			return null;
 		const schuljahr = props.manager().schuljahrGet();
-		return PrimarstufeSchuleingangsphaseBesuchsjahre.data().getWertBySchluesselOrException(ep).daten(schuljahr) ?? null;
+		return PrimarstufeSchuleingangsphaseBesuchsjahre.data().getWertByIDOrNull(ep)?.daten(schuljahr) ?? null;
 	});
 
 	const hatUpdateKompetenz = computed<boolean>(() => {

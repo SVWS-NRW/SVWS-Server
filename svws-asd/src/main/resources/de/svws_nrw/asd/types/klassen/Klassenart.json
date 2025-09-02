@@ -1,5 +1,5 @@
 {
-	"version": 2,
+	"version": 3,
 	"daten": [ {
 		"bezeichner": "UNDEFINIERT",
 		"idStatistik": "1",
@@ -12,7 +12,7 @@
 				{ "schulform": "WB", "gliederung": null }
 			],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": 2023
 		} ]
 	}, {
 		"bezeichner": "HA_1A",
@@ -30,6 +30,19 @@
 				{ "schulform": "V", "gliederung": null }
 			],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 1001,
+			"kuerzel": "1A",
+			"text": "Klasse 10 Typ A (Hauptschule)",
+			"schluessel": "1A",
+			"zulaessig": [
+				{ "schulform": "H", "gliederung": null },
+				{ "schulform": "R", "gliederung": "H" },
+				{ "schulform": "SK", "gliederung": "H" },
+				{ "schulform": "V", "gliederung": null }
+			],
+			"gueltigVon": 2023,
 			"gueltigBis": 2023
 		} ]
 	}, {
@@ -47,6 +60,18 @@
 				{ "schulform": "V", "gliederung": null }
 			],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 2001,
+			"kuerzel": "1B",
+			"text": "Klasse 10 Typ B (Hauptschule)",
+			"schluessel": "1B",
+			"zulaessig": [
+				{ "schulform": "H", "gliederung": null },
+				{ "schulform": "SK", "gliederung": "H" },
+				{ "schulform": "V", "gliederung": null }
+			],
+			"gueltigVon": 2023,
 			"gueltigBis": 2023
 		} ]
 	}, {
@@ -64,6 +89,18 @@
 				{ "schulform": "V", "gliederung": null }
 			],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 3001,
+			"kuerzel": "AB",
+			"text": "Klassen im Jahrgang 10 ohne Differenzierung in Typ A und Typ B (Hauptschule)",
+			"schluessel": "AB",
+			"zulaessig": [
+				{ "schulform": "H", "gliederung": null },
+				{ "schulform": "SK", "gliederung": "H" },
+				{ "schulform": "V", "gliederung": null }
+			],
+			"gueltigVon": 2023,
 			"gueltigBis": 2023
 		} ]
 	}, {
@@ -72,7 +109,7 @@
 		"historie": [ {
 			"id": 4000,
 			"kuerzel": "AM",
-			"text": "Frühförderung: SKG (Ambulante Maßnahmen für blinde, gehörlose, sehbeh. und schwerh. Kinder)",
+			"text": "Frühförderung für hör- und sehgeschädigte Kinder: Hausfrüherziehung, ambulante Maßnahmen ",
 			"schluessel": "AM",
 			"zulaessig": [
 				{ "schulform": "KS", "gliederung": null },
@@ -87,7 +124,7 @@
 		"historie": [ {
 			"id": 5000,
 			"kuerzel": "PG",
-			"text": "Frühförderung: SKG (Präsenzgruppe)",
+			"text": "Frühförderung für hör- und sehgeschädigte Kinder: Förderschulkindergarten, Präsenzgruppe",
 			"schluessel": "PG",
 			"zulaessig": [
 				{ "schulform": "KS", "gliederung": null },
@@ -110,7 +147,17 @@
 				{ "schulform": "SK", "gliederung": "GY" }
 			],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": 2023
+		}, {	
+			"id": 6001,
+			"kuerzel": "PK",
+			"text": "Profilklasse (gemäß § 21 Abs. 3 APO-S I)",
+			"schluessel": "PK",
+			"zulaessig": [
+				{ "schulform": "GY", "gliederung": null }
+			],
+			"gueltigVon": 2024,
+			"gueltigBis": null		
 		} ]
 	}, {
 		"bezeichner": "RK",
@@ -139,6 +186,55 @@
 				{ "schulform": "V", "gliederung": null }
 			],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+			}, {
+				"id": 7001,
+				"kuerzel": "RK",
+				"text": "Regelklasse",
+				"schluessel": "RK",
+				"zulaessig": [
+					{ "schulform": "FW", "gliederung": null },
+					{ "schulform": "HI", "gliederung": null },
+					{ "schulform": "WF", "gliederung": null },
+					{ "schulform": "G", "gliederung": null },
+					{ "schulform": "GE", "gliederung": null },
+					{ "schulform": "GY", "gliederung": null },
+					{ "schulform": "H", "gliederung": null },
+					{ "schulform": "PS", "gliederung": null },
+					{ "schulform": "R", "gliederung": null },
+					{ "schulform": "S", "gliederung": null },
+					{ "schulform": "KS", "gliederung": null },
+					{ "schulform": "SG", "gliederung": null },
+					{ "schulform": "SK", "gliederung": null },
+					{ "schulform": "SR", "gliederung": null },
+					{ "schulform": "V", "gliederung": null }
+				],
+				"gueltigVon": 2023,
+				"gueltigBis": 2023
+			}, {
+			"id": 7002,
+			"kuerzel": "RK",
+			"text": "Regelklasse",
+			"schluessel": "RK",
+			"zulaessig": [
+				{ "schulform": "FW", "gliederung": null },
+				{ "schulform": "HI", "gliederung": null },
+				{ "schulform": "WF", "gliederung": null },
+				{ "schulform": "G", "gliederung": null },
+				{ "schulform": "GE", "gliederung": null },
+				{ "schulform": "GY", "gliederung": null },
+				{ "schulform": "H", "gliederung": null },
+				{ "schulform": "PS", "gliederung": null },
+				{ "schulform": "R", "gliederung": null },
+				{ "schulform": "S", "gliederung": null },
+				{ "schulform": "KS", "gliederung": null },
+				{ "schulform": "SG", "gliederung": null },
+				{ "schulform": "SK", "gliederung": null },
+				{ "schulform": "SR", "gliederung": null },
+				{ "schulform": "V", "gliederung": null },
+				{ "schulform": "WB", "gliederung": null }
+			],
+			"gueltigVon": 2024,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -165,7 +261,28 @@
 				{ "schulform": "V", "gliederung": null }
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2023
+			"gueltigBis": 2022
+		}, {	
+			"id": 8001,
+			"kuerzel": "SG",
+			"text": "Deutschförderklasse (gemäß BASS 13-63 Nr. 3, Nummer 3.5.1)",
+			"schluessel": "SG",
+			"zulaessig": [
+				{ "schulform": "G", "gliederung": null },
+				{ "schulform": "GE", "gliederung": null },
+				{ "schulform": "GY", "gliederung": null },
+				{ "schulform": "H", "gliederung": null },
+				{ "schulform": "PS", "gliederung": null },
+				{ "schulform": "R", "gliederung": null },
+				{ "schulform": "S", "gliederung": null },
+				{ "schulform": "KS", "gliederung": null },
+				{ "schulform": "SG", "gliederung": null },
+				{ "schulform": "SK", "gliederung": null },
+				{ "schulform": "SR", "gliederung": null },
+				{ "schulform": "V", "gliederung": null }
+			],
+			"gueltigVon": 2023,
+			"gueltigBis": 2023		
 		} ]
 	}, {
 		"bezeichner": "DF",
@@ -178,7 +295,6 @@
 			"zulaessig": [
 				{ "schulform": "G", "gliederung": null },
 				{ "schulform": "GE", "gliederung": null },
-				{ "schulform": "GM", "gliederung": null },
 				{ "schulform": "GY", "gliederung": null },
 				{ "schulform": "H", "gliederung": null },
 				{ "schulform": "PS", "gliederung": null },
@@ -188,7 +304,8 @@
 				{ "schulform": "SG", "gliederung": null },
 				{ "schulform": "SK", "gliederung": null },
 				{ "schulform": "SR", "gliederung": null },
-				{ "schulform": "V", "gliederung": null }
+				{ "schulform": "V", "gliederung": null },
+				{ "schulform": "WB", "gliederung": null }
 			],
 			"gueltigVon": 2024,
 			"gueltigBis": null

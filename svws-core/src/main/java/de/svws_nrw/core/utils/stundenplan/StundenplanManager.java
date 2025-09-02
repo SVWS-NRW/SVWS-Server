@@ -423,8 +423,7 @@ public class StundenplanManager {
 
 	// Default-Werte
 	private @NotNull StundenplanKonfiguration _stundenplanKonfig = new StundenplanKonfiguration();
-	private @NotNull
-	final List<String> _stundenplanWarnungen = new ArrayList<>();
+	private @NotNull final List<String> _stundenplanWarnungen = new ArrayList<>();
 
 	/**
 	 * Der {@link StundenplanManager} benötigt vier data-Objekte und baut damit eine Datenstruktur für schnelle Zugriffe auf.

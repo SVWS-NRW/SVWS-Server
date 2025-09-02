@@ -136,8 +136,8 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 		if (path.startsWith("/index.php"))
 			return null;
 
-		// Prüfe, ob die Pfade "/debug/" oder "/openapi/" angefragt werden. Hier erfolgt immer ein anonymer Zugriff und keine Überprüfung über die DB
-		boolean isAnonymous = path.matches("/debug/.*") || path.matches("/openapi/.*");
+		// Prüfe, ob die Pfade "admin", "/debug/" oder "/openapi/" angefragt werden. Hier erfolgt immer ein anonymer Zugriff und keine Überprüfung über die DB
+		boolean isAnonymous = path.matches("/admin(/.*)?") || path.matches("/debug(/.*)?") || path.matches("/openapi/.*");
 		// Prüfe, ob aufgrund der Konfiguration ein anonymer Zugriff auf den SVWS-Client ermöglicht werden soll
 		if ((!SVWSKonfiguration.get().isEnableClientProtection())
 				&& (path.matches("/") || path.matches("/.*\\.html")
@@ -165,6 +165,8 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 			final var pathelements = path.split("/");
 			if ((pathelements.length > 2) && ("".equals(pathelements[0])) && (("db".equals(pathelements[1])) || ("dav".equals(pathelements[1]))))
 				schema = pathelements[2].replace("%20", " ");
+			else if ((pathelements.length > 2) && ("".equals(pathelements[0])) && ("api".equals(pathelements[1])) && ("external".equals(pathelements[2])))
+				schema = pathelements[3].replace("%20", " ");
 		}
 
 		// Erzeuge ggf. einen anonymen Principal
@@ -175,10 +177,18 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 		if (isDBAuthentication)
 			return loginUsingDBAuthentication(username, password, path, schema);
 
-		// Existiert keine Konfiguration zu dem Schema so liegt immer einer anonymer Zugriff vor -> anonymer Principal
+		// Konfiguration zum Datenbankschema laden
 		DBConfig config = SVWSKonfiguration.get().getDBConfig(schema);
-		if (config == null)
+
+		// Auf die "/status/", "/config/", "/api/common/" und "/types/" URLs muss auch ohne Schema zugegriffen werden können
+		final boolean isPathWithoutSchema = path.matches("/status/.*") || path.matches("/config/.*") || path.matches("/api/common/.*")
+			|| path.matches("/types/.*");
+		if ((config == null) && isPathWithoutSchema)
 			return new BenutzerApiPrincipal();
+
+		// Datenbankschema existiert nicht
+		if (config == null)
+			throw new ApiOperationException(Status.FORBIDDEN, "Das Datenbank-Schema existiert nicht.");
 
 		// Prüfe, ob das Datenbankschema ggf. gesperrt ist.
 		if (config.getDBSchema() != null) {

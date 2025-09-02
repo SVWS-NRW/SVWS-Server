@@ -7,7 +7,7 @@
 			<svws-ui-input-wrapper :grid="2" class="mb-9">
 				<svws-ui-select title="Betrieb" v-model="betrieb" :items="mapBetriebe" :item-text="(i: BetriebListeEintrag) => i.name1 ?? ''" class="col-span-full" />
 				<svws-ui-text-input placeholder="Ausbilder" v-model="schuelerBetriebsdaten.ausbilder" type="text" />
-				<svws-ui-select title="Beschäftigungsart" v-model="beschaeftigungsart" :items="mapBeschaeftigungsarten" :item-text="(i: KatalogEintrag) => i.text ?? ''" />
+				<svws-ui-select title="Beschäftigungsart" v-model="beschaeftigungsart" :items="mapBeschaeftigungsarten" :item-text="(i: Beschaeftigungsart) => i.bezeichnung ?? ''" />
 				<svws-ui-checkbox v-model="schuelerBetriebsdaten.praktikum"> Praktikum </svws-ui-checkbox>
 			</svws-ui-input-wrapper>
 			<svws-ui-input-wrapper :grid="2">
@@ -28,13 +28,13 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { BetriebAnsprechpartner, BetriebListeEintrag, KatalogEintrag, LehrerListeEintrag} from "@core";
+	import type { Beschaeftigungsart, BetriebAnsprechpartner, BetriebListeEintrag, LehrerListeEintrag } from "@core";
 	import { DeveloperNotificationException, SchuelerBetriebsdaten } from "@core";
 
 	const props = defineProps<{
 		createSchuelerBetriebsdaten: (data: SchuelerBetriebsdaten) => Promise<void>;
 		idSchueler: number;
-		mapBeschaeftigungsarten: Map<number, KatalogEintrag>;
+		mapBeschaeftigungsarten: Map<number, Beschaeftigungsart>;
 		mapLehrer: Map<number, LehrerListeEintrag>;
 		mapBetriebe: Map<number, BetriebListeEintrag>;
 		mapAnsprechpartner: Map<number, BetriebAnsprechpartner>;
@@ -65,7 +65,7 @@
 		set: (value) => schuelerBetriebsdaten.value.ansprechpartner_id = (value === undefined) ? null : value.id
 	});
 
-	const beschaeftigungsart = computed<KatalogEintrag | undefined>({
+	const beschaeftigungsart = computed<Beschaeftigungsart | undefined>({
 		get: () => (schuelerBetriebsdaten.value.beschaeftigungsart_id === null) ? undefined : props.mapBeschaeftigungsarten.get(schuelerBetriebsdaten.value.beschaeftigungsart_id),
 		set: (value) => schuelerBetriebsdaten.value.beschaeftigungsart_id = (value === undefined) ? null : value.id
 	})

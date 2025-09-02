@@ -39,9 +39,11 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
 class TestValidatorLehrerStammdaten {
 
 	/** Stammdaten der Schule */
-	static final SchuleStammdaten schuleTestdaten_001 = JsonReader.fromResource("de/svws_nrw/asd/validate/schule/Testdaten_001_SchuleStammdaten.json", SchuleStammdaten.class);
+	static final SchuleStammdaten schuleTestdaten_001 =
+			JsonReader.fromResource("de/svws_nrw/asd/validate/schule/Testdaten_001_SchuleStammdaten.json", SchuleStammdaten.class);
 	/** Stammdaten des Lehrers */
-	static final LehrerStammdaten lehrerTestdaten_001 = JsonReader.fromResource("de/svws_nrw/asd/validate/lehrer/Testdaten_001_LehrerStammdaten.json", LehrerStammdaten.class);
+	static final LehrerStammdaten lehrerTestdaten_001 =
+			JsonReader.fromResource("de/svws_nrw/asd/validate/lehrer/Testdaten_001_LehrerStammdaten.json", LehrerStammdaten.class);
 
 	/**
 	 * Initialisiert die Core-Types, damit die Tests ausgeführt werden können.
@@ -78,6 +80,26 @@ class TestValidatorLehrerStammdaten {
 			'Müller', 'Thor Hendrik'  , true
 		""";
 
+	private static final String TESTDATEN_VORNAME_ANREDE_FEHLERHAFT = """
+			'Müller', 'Frauke'      , true
+			'Müller', 'Frau Anna'   , false
+			'Müller', 'Herr Peter'  , false
+			'Müller', 'Herr'        , true
+			'Müller', 'Frau'        , true
+			'Müller', 'Anna'        , true
+		""";
+
+	private static final String TESTDATEN_NACHNAME_ANREDE_FEHLERHAFT = """
+			'Herrmann'     , 'Frank', true
+			'Herr Müller'  , 'Frank', false
+			'Frau Schmidt' , 'Frank', false
+			'Herr'         , 'Frank', true
+			'Frau'         , 'Frank', true
+			'Meier'        , 'Frank', true
+		""";
+
+
+
 
 	/**
 	 * Test von ValidatorLehrerStammdatenNachname
@@ -90,7 +112,7 @@ class TestValidatorLehrerStammdaten {
 	 */
 	@DisplayName("Tests für ValidatorLehrerStammdatenNachname")
 	@ParameterizedTest
-	@CsvSource(textBlock = TESTDATEN_NACHNAME)
+	@CsvSource(textBlock = TESTDATEN_NACHNAME + TESTDATEN_NACHNAME_ANREDE_FEHLERHAFT)
 	void testValidatorLehrerStammdatenNachname(final String nachname, final String vorname, final boolean result) {
 		// Testdaten setzen
 		lehrerTestdaten_001.nachname = nachname;
@@ -113,7 +135,7 @@ class TestValidatorLehrerStammdaten {
 	 */
 	@DisplayName("Tests für ValidatorLehrerStammdatenVorname")
 	@ParameterizedTest
-	@CsvSource(textBlock = TESTDATEN_VORNAME)
+	@CsvSource(textBlock = TESTDATEN_VORNAME + TESTDATEN_VORNAME_ANREDE_FEHLERHAFT)
 	void testValidatorLehrerStammdatenVorname(final String nachname, final String vorname, final boolean result) {
 		// Testdaten setzen
 		lehrerTestdaten_001.nachname = nachname;

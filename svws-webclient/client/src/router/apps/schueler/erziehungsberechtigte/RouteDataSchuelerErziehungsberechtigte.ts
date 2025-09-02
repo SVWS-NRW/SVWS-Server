@@ -55,23 +55,31 @@ export class RouteDataSchuelerErziehungsberechtigte extends RouteData<RouteState
 		this.setPatchedDefaultState({ mapErzieherarten });
 	}
 
-	patch = async (data : Partial<ErzieherStammdaten>, id: number) => {
+	patchErzieher = async (data : Partial<ErzieherStammdaten>, id: number) => {
 		await api.server.patchErzieherStammdaten(data, api.schema, id);
 		const daten = await api.server.getSchuelerErzieher(api.schema, this.idSchueler);
 		this.setPatchedState({ daten });
 	}
 
-	patchPosition = async (data : Partial<ErzieherStammdaten>, id: number, pos: number) => {
+	patchErzieherAnPosition = async (data : Partial<ErzieherStammdaten>, id: number, pos: number) => {
 		await api.server.patchErzieherStammdatenZweitePosition(data, api.schema, id, pos);
 		const daten = await api.server.getSchuelerErzieher(api.schema, this.idSchueler);
 		this.setPatchedState({ daten });
 	}
 
-	add = async (data: Partial<ErzieherStammdaten>, pos: number): Promise<ErzieherStammdaten> => {
+	addErzieher = async (data: Partial<ErzieherStammdaten>, pos: number): Promise<ErzieherStammdaten> => {
 		const neu = await api.server.addSchuelerErzieher(data, api.schema, this.idSchueler, pos);
 		const daten = await api.server.getSchuelerErzieher(api.schema, this.idSchueler);
 		this.setPatchedState({ daten });
 		return neu;
+	}
+
+	deleteErzieher = async (idEintraege: List<number>): Promise<void> => {
+		api.status.start();
+		await api.server.deleteErzieherStammdaten(idEintraege, api.schema);
+		const daten = await api.server.getSchuelerErzieher(api.schema, this.idSchueler);
+		this.setPatchedState({ daten });
+		api.status.stop();
 	}
 
 }

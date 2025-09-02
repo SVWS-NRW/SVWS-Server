@@ -10,7 +10,7 @@ import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
-import de.svws_nrw.core.utils.jahrgang.JahrgangsUtils;
+import de.svws_nrw.core.utils.kataloge.jahrgaenge.JahrgaengeUtils;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
@@ -112,8 +112,8 @@ public final class DataGostJahrgangsdaten extends DataManager<Integer> {
 			final int restjahre = jahrgangsdaten.Abi_Jahrgang - aktuellerAbschnitt.Jahr;
 			for (final DTOJahrgang jahrgang : dtosJahrgaenge) {
 				Integer jahrgangRestjahre =
-						JahrgangsUtils.getRestlicheJahre(schulform, Schulgliederung.data().getWertByKuerzel(jahrgang.GliederungKuerzel), jahrgang.ASDJahrgang);
-				if ((jahrgangRestjahre != null) && (schulform != Schulform.GY) && JahrgangsUtils.istSekI(jahrgang.ASDJahrgang))
+						JahrgaengeUtils.getRestlicheJahre(schulform, Schulgliederung.data().getWertByKuerzel(jahrgang.GliederungKuerzel), jahrgang.ASDJahrgang);
+				if ((jahrgangRestjahre != null) && (schulform != Schulform.GY) && JahrgaengeUtils.istSekI(jahrgang.ASDJahrgang))
 					jahrgangRestjahre += 3;
 				if ((jahrgangRestjahre != null) && (restjahre == jahrgangRestjahre)) {
 					daten.jahrgang = jahrgang.ASDJahrgang;

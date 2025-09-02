@@ -40,15 +40,19 @@ public class LehrerListeEintrag {
 
 	/** Die Sortierreihenfolge des Lehrerlisten-Eintrags. */
 	@Schema(description = "die Sortierreihenfolge des Lehrerlisten-Eintrags", example = "1")
-	public int sortierung;
+	public int sortierung = 0;
+
+	/** Gibt an, ob der Lehrer in dem Schuljahresabschnitt, auf welchen sich die Abfrage bezieht aktiv ist oder nicht. */
+	@Schema(description = "gibt an, ob der Lehrer in dem Schuljahresabschnitt, auf welchen sich die Abfrage bezieht aktiv ist oder nicht", example = "true")
+	public boolean istAktiv = true;
 
 	/** Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. */
 	@Schema(description = "gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht", example = "true")
-	public boolean istSichtbar;
+	public boolean istSichtbar = false;
 
 	/** Gibt an, ob der Eintrag für die Schulstatistik relevant ist oder nicht. */
 	@Schema(description = "gibt an, ob der Eintrag für die Schulstatistik relevant ist oder nicht", example = "true")
-	public boolean istRelevantFuerStatistik;
+	public boolean istRelevantFuerStatistik = false;
 
 	/** Gibt an, ob der Lehrer in anderen Datenbanktabellen referenziert ist oder nicht. */
 	@Schema(description = "Gibt an, ob der Lehrer in anderen Datenbanktabellen referenziert ist oder nicht.", example = "true")

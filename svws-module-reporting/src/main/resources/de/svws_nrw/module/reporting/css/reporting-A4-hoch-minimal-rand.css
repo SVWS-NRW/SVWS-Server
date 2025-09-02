@@ -1,0 +1,32 @@
+@Page {
+	size: A4 portrait;
+	margin: 5mm;
+}
+
+
+/* Seitenumbrüche: Wenn Style angewendet wird, wird beim Druck ein Seitenumbruch eingefügt, evtl. mit Ausnahme.
+############################################################################################################### */
+.start-new-page {
+	page-break-before: always;
+}
+.start-new-page:first-child {
+	page-break-before: avoid;
+}
+
+
+/* Um evtl. Zähler im div einzufügen, ergänze einen span, an den die Zähler angehängt werden.
+############################################################################################################### */
+span.page-num-print {
+	padding: 0;
+	margin: 0;
+}
+span.page-num-print:after {
+	content: counter(page);
+}
+span.page-nums-print {
+	padding: 0;
+	margin: 0;
+}
+span.page-nums-print:after {
+	content: counter(page) " von " counter(pages);
+}

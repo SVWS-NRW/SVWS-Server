@@ -1,6 +1,6 @@
 import { computed } from "vue";
 import type { RouteLocationRaw } from "vue-router";
-import type { Haltestelle, Kindergarten, EinschulungsartKatalogEintrag, OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, KatalogEintrag, SchulEintrag, SchulformKatalogEintrag, TelefonArt } from "@core";
+import type { Haltestelle, Kindergarten, EinschulungsartKatalogEintrag, OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, KatalogEintrag, SchulEintrag, SchulformKatalogEintrag, TelefonArt, Erzieherart } from "@core";
 import { Schulform, Schuljahresabschnitt } from "@core";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { api } from "~/router/Api";
@@ -19,6 +19,7 @@ interface RouteStateApp extends RouteStateInterface {
 	mapKindergaerten: Map<number, Kindergarten>;
 	mapEinschulungsarten: Map<number, EinschulungsartKatalogEintrag>;
 	mapTelefonArten: Map<number, TelefonArt>;
+	mapErzieherarten: Map<number, Erzieherart>;
 }
 
 const defaultState = <RouteStateApp>{
@@ -32,6 +33,7 @@ const defaultState = <RouteStateApp>{
 	mapKindergaerten: new Map(),
 	mapEinschulungsarten: new Map(),
 	mapTelefonArten: new Map(),
+	mapErzieherarten: new Map(),
 	view: routeSchueler,
 };
 
@@ -82,6 +84,11 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 		const mapTelefonArten = new Map();
 		for (const ta of telefonArten)
 			mapTelefonArten.set(ta.id, ta);
+		// Lade den Katalog der Erzieherarten
+		const erzieherarten = await api.server.getErzieherArten(api.schema);
+		const mapErzieherarten = new Map();
+		for (const ea of erzieherarten)
+			mapErzieherarten.set(ea.id, ea);
 		// Ermittle den Katalog der Schulen, welche ein Kürzel haben und als Stammschulen für Schüler in Frage kommen
 		const schulen = await api.server.getSchulen(api.schema);
 		const mapSchulen = new Map<string, SchulEintrag>();
@@ -94,7 +101,7 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 				mapSchulen.set(schule.schulnummerStatistik, schule);
 		}
 		// Und aktualisiere den internen State
-		this.setPatchedDefaultStateKeepView({ mapOrte, mapOrtsteile, mapReligionen, mapFahrschuelerarten, mapHaltestellen, mapKindergaerten, mapEinschulungsarten, mapSchulen, mapTelefonArten });
+		this.setPatchedDefaultStateKeepView({ mapOrte, mapOrtsteile, mapReligionen, mapFahrschuelerarten, mapHaltestellen, mapKindergaerten, mapEinschulungsarten, mapSchulen, mapTelefonArten, mapErzieherarten });
 	}
 
 	public async leave() {
@@ -174,6 +181,10 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 
 	get mapTelefonArten(): Map<number, TelefonArt> {
 		return this._state.value.mapTelefonArten;
+	}
+
+	get mapErzieherarten(): Map<number, Erzieherart> {
+		return this._state.value.mapErzieherarten;
 	}
 
 	public get idSchuljahresabschnitt() {

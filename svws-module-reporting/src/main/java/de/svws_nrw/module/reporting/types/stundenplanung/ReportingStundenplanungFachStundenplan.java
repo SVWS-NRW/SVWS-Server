@@ -8,7 +8,7 @@ import de.svws_nrw.module.reporting.types.fach.ReportingFach;
 
 
 /**
- * Basis-Fach im Rahmen des Reportings für Daten vom Typ Schüler-Stundenplan.
+ * Basis-Fach im Rahmen des Reportings für Daten vom Typ Fach-Stundenplan.
  */
 public class ReportingStundenplanungFachStundenplan extends ReportingBaseType {
 
@@ -20,7 +20,7 @@ public class ReportingStundenplanungFachStundenplan extends ReportingBaseType {
 
 
 	/**
-	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Fach.
+	 * Erstellt ein neues Reporting-Objekt auf Basis dieses Faches.
 	 *
 	 * @param fach        Das Fach des Stundenplans.
 	 * @param stundenplan Der gesamte Stundenplan der Schule.

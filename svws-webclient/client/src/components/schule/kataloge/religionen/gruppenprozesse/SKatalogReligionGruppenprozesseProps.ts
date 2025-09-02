@@ -1,4 +1,5 @@
-import type { ReligionListeManager, Schulform, List, Schulgliederung, ServerMode } from "@core";
+import type { Schulform, List, Schulgliederung, ServerMode } from "@core";
+import type { ReligionListeManager } from "@ui";
 
 export interface KatalogReligionGruppenprozesseProps {
 	serverMode: ServerMode;

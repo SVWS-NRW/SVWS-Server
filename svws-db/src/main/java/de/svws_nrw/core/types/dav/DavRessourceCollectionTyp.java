@@ -7,12 +7,16 @@ public enum DavRessourceCollectionTyp {
 
 	/** Eine Ressourcensammlung für Adressdaten */
 	ADRESSBUCH(0),
+
 	/** Eine Ressourcensammlung für Kalenderdaten */
 	KALENDER(1),
+
 	/** Eine Ressourcensammlung, die den eigenen Kalender repräsentiert */
 	EIGENER_KALENDER(2),
+
 	/** Eine Ressourcensammlung, die das eigene Adressbuch repräsentiert */
 	EIGENES_ADRESSBUCH(3);
+
 
 	/** die ID */
 	public final int id;

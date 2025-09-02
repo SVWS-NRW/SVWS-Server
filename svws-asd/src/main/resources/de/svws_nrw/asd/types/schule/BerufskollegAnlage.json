@@ -5,7 +5,7 @@
 		"idStatistik": "1",
 		"historie": [ {
 			"id" : 1000,
-			"schluessel": "1", 
+			"schluessel": "A", 
 			"kuerzel": "A", 
 			"text": "Fachklassen duales System und Ausbildungsvorbereitung", 
 			"gueltigVon": null, 
@@ -16,7 +16,7 @@
 		"idStatistik": "2",
 		"historie": [ {
 			"id" : 2000,
-			"schluessel": "2",
+			"schluessel": "B",
 			"kuerzel": "B",
 			"text": "Berufsfachschule",
 			"gueltigVon": null,
@@ -27,7 +27,7 @@
 		"idStatistik": "3",
 		"historie": [ {
 			"id": 3000,
-			"schluessel": "3",
+			"schluessel": "C",
 			"kuerzel": "C",
 			"text": "Berufsfachschule und Fachoberschule",
 			"gueltigVon": null,
@@ -38,7 +38,7 @@
 		"idStatistik": "4",
 		"historie": [ {
 			"id": 4000,
-			"schluessel": "4",
+			"schluessel": "D",
 			"kuerzel": "D",
 			"text": "Berufliches Gymnasium und Fachoberschule",
 			"gueltigVon": null,
@@ -49,7 +49,7 @@
 		"idStatistik": "5",
 		"historie": [ {
 			"id": 5000,
-			"schluessel": "5",
+			"schluessel": "E",
 			"kuerzel": "E",
 			"text": "Fachschule",
 			"gueltigVon": null,
@@ -60,7 +60,7 @@
 		"idStatistik": "6",
 		"historie": [ {
 			"id": 7000,
-			"schluessel": "7",
+			"schluessel": "H",
 			"kuerzel": "H",
 			"text": "Bildungsgänge an freien Waldorfschulen / Hiberniakolleg",
 			"gueltigVon": null,
@@ -71,22 +71,22 @@
 		"idStatistik": "7",
 		"historie": [ {
 			"id": 24000,
-			"schluessel": "24",
+			"schluessel": "X",
 			"kuerzel": "X",
 			"text": "Ehemalige Kollegschule",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": 2000
 		} ]
 	}, {
 		"bezeichner": "Z",
 		"idStatistik": "8",
 		"historie": [ {
 			"id": 26000,
-			"schluessel": "26",
+			"schluessel": "Z",
 			"kuerzel": "Z",
 			"text": "Kooperationsklasse Hauptschule",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": 2017
 		} ]
 	} ]
 }

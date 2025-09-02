@@ -4,11 +4,11 @@
 		<template #modalTitle>Ansprechpartner hinzufügen</template>
 		<template #modalContent>
 			<div class="flex justify-center flex-wrap items-center gap-2">
-				<svws-ui-text-input v-model="item.anrede" placeholder="Anrede" />
-				<svws-ui-text-input v-model="item.name" placeholder="Name" required />
-				<svws-ui-text-input v-model="item.vorname" placeholder="Vorname" />
-				<svws-ui-text-input v-model="item.telefon" placeholder="Telefon" :max-len="20" />
-				<svws-ui-text-input v-model="item.email" placeholder="E-Mail" />
+				<svws-ui-text-input v-model="item.anrede" placeholder="Anrede" :readonly />
+				<svws-ui-text-input v-model="item.name" placeholder="Name" required :readonly />
+				<svws-ui-text-input v-model="item.vorname" placeholder="Vorname" :readonly />
+				<svws-ui-text-input v-model="item.telefon" placeholder="Telefon" :max-len="20" :readonly />
+				<svws-ui-text-input v-model="item.email" placeholder="E-Mail" :readonly />
 			</div>
 		</template>
 		<template #modalActions>
@@ -20,12 +20,16 @@
 
 <script setup lang="ts">
 
-	import { ref } from "vue";
-	import { BetriebAnsprechpartner } from "@core";
+	import { computed, ref } from "vue";
+	import { BenutzerKompetenz, BetriebAnsprechpartner } from "@core";
 
 	const props = defineProps<{
 		addBetriebAnsprechpartner: (ansprechpartner: BetriebAnsprechpartner) => Promise<void>;
+		benutzerKompetenzen: Set<BenutzerKompetenz>;
 	}>();
+
+	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
+	const readonly = computed(() => !hatKompetenzUpdate.value);
 
 	const show = ref<boolean>(false);
 

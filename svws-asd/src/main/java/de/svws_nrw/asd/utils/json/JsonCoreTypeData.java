@@ -12,6 +12,8 @@ import java.util.Set;
 
 import com.fasterxml.jackson.core.util.DefaultIndenter;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.core.util.Separators;
+import com.fasterxml.jackson.core.util.Separators.Spacing;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -134,10 +136,18 @@ public class JsonCoreTypeData<T extends CoreTypeData> {
 		final OutputStream outputStream = new ByteArrayOutputStream();
 		// Identer mit Tab-Einrückung und Unix-LineFeed erstellen.
 		DefaultPrettyPrinter.Indenter indenter = new DefaultIndenter("\t", "\n");
+		Separators separators = new Separators(Separators.DEFAULT_ROOT_VALUE_SEPARATOR, //
+				':', // objectFieldValueSeparator
+				Spacing.AFTER, // objectFieldValueSpacing
+				',', // objectEntrySeparator
+				Spacing.NONE, // objectEntrySpacing
+				Separators.DEFAULT_OBJECT_EMPTY_SEPARATOR, //
+				',', // arrayValueSeparator
+				Spacing.NONE, // arrayValueSpacing
+				Separators.DEFAULT_ARRAY_EMPTY_SEPARATOR);
 		// PerryPrinter erstellen und den Indenter zuweisen.
-		DefaultPrettyPrinter printer = new DefaultPrettyPrinter();
+		DefaultPrettyPrinter printer = new DefaultPrettyPrinter(separators);
 		printer.indentObjectsWith(indenter);
-
 		// Sorgt für einen formatierten Json-String mittels PrettyPrinter.
 		mapper.enable(SerializationFeature.INDENT_OUTPUT);
 		// Create a new root node

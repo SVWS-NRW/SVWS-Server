@@ -1,5 +1,5 @@
 {
-	"version": 2,
+	"version": 3,
 	"daten": [ {
 		"bezeichner": "ID_100",
 		"idStatistik": "1",
@@ -7,7 +7,8 @@
 			"id": 1,
 			"schluessel": "100",
 			"kuerzel": "100",
-			"text": "Beschäftigungsphase Sabbatjahr",
+			"text": "Ansparphase, Phase mit erhöhter Arbeitszeit \"Teilzeitbeschäftigung im Blockmodell\" (§ 65 LBG) (vormals Sabbatjahr)",
+			"schulformen": ["BK","FW","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB"],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -19,6 +20,7 @@
 			"schluessel": "110",
 			"kuerzel": "110",
 			"text": "Mehrarbeit (angeordnet und regelmäßig)",
+			"schulformen": ["BK","FW","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -29,7 +31,8 @@
 			"id": 3,
 			"schluessel": "150",
 			"kuerzel": "150",
-			"text": "Aufrundung der Pflichtstundenzahl wegen Abrundung im folgenden Schuljahr ",
+			"text": "Aufrundung der Pflichtstundenzahl aufgrund von § 2 Abs. 1 AVO-RL",
+			"schulformen": ["BK","FW","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -41,6 +44,7 @@
 			"schluessel": "160",
 			"kuerzel": "160",
 			"text": "Überschreitung der Pflichtstundenzahl aus organisatorischen Gründen (z. B. Epochenunterricht)",
+			"schulformen": ["BK","FW","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -52,6 +56,7 @@
 			"schluessel": "165",
 			"kuerzel": "165",
 			"text": "Überschreitung der Pflichtstundenzahl wegen COVID-19",
+			"schulformen": ["BK","FW","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
 			"gueltigVon": null,
 			"gueltigBis": 2022
 		} ]
@@ -62,7 +67,8 @@
 			"id": 6,
 			"schluessel": "170",
 			"kuerzel": "170",
-			"text": "Überschreitung der Pflichtstundenzahl wegen Pflichstunden-Bandbreite",
+			"text": "Überschreitung der Pflichtstundenzahl wegen Pflichtstunden-Bandbreite",
+			"schulformen": ["BK","FW","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]

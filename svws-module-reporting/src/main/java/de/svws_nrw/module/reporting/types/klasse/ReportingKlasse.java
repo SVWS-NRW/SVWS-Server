@@ -210,6 +210,20 @@ public class ReportingKlasse extends ReportingBaseType {
 		return this.klassenleitungen().stream().map(ReportingLehrer::kuerzel).collect(Collectors.joining(","));
 	}
 
+	/**
+	 * Erstellt aus den Geschlechtern der Schüler eine Statistik in der Form (m/w/d) für diese Klasse.
+	 *
+	 * @return		Statistik in der Form (m/w/d).
+	 */
+	public String statistikGeschlechter() {
+		if ((this.schueler() == null) || this.schueler().isEmpty())
+			return "(0/0/0)";
+		final long anzahlM = this.schueler().stream().filter(s -> "m".equalsIgnoreCase(s.geschlecht().kuerzel)).count();
+		final long anzahlW = this.schueler().stream().filter(s -> "w".equalsIgnoreCase(s.geschlecht().kuerzel)).count();
+		final long anzahlD = this.schueler().stream().filter(s -> "d".equalsIgnoreCase(s.geschlecht().kuerzel)).count();
+		return String.format("(%d/%d/%d)", anzahlM, anzahlW, anzahlD);
+	}
+
 
 	// ##### Getter #####
 

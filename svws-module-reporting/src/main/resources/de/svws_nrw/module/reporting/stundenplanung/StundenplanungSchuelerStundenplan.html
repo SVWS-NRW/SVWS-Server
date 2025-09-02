@@ -13,14 +13,15 @@
 		<div class="reset-page-counter start-new-page"
 			 th:each="plan,iterationVarPlan : ${SchuelerStundenplaene}"
 			 th:with="lernabschnittZumStundenplan =${plan.schueler().aktiverLernabschnittInSchuljahresabschnitt(plan.stundenplan().schuljahresabschnitt())},
-				      istSchuelerSek2oWB = ${lernabschnittZumStundenplan.jahrgang().istJahrgangImBereichSek2OderWeiterbildung()},
+			          hatLernabschnittJahrgangKlasse = ${(lernabschnittZumStundenplan != null) && (lernabschnittZumStundenplan.jahrgang() != null) && (lernabschnittZumStundenplan.klasse() != null)},
+				      istSchuelerSek2oWB = ${hatLernabschnittJahrgangKlasse ? lernabschnittZumStundenplan.jahrgang().istJahrgangImBereichSek2OderWeiterbildung() : false},
 				      anzeigeMitPausenzeiten = ${((Parameter.detailLevel % 4) / 2) >= 1},
 					  anzeigeFachStattKursbezeichnung = ${(((Parameter.detailLevel % 8) / 4) >= 1) && !istSchuelerSek2oWB},
 					  anzeigeFachkuerzelStattFachbezeichnung = ${(((Parameter.detailLevel % 16) / 8) >= 1)},
 					  anzeigeIndividuelleKursart = ${(((Parameter.detailLevel % 32) / 16) >= 1)}">
 			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
 			<div class="pageTopLeft" th:utext="${Schule.bezeichnungSchuleMehrzeiligHtml}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>
-			<div class="pageTopRight">Stundenplan <span th:text="${plan.stundenplan().schuljahresabschnitt().textSchuljahresabschnittKurz()}">2022.2</span><br/>Gültig ab: <span th:text="${plan.stundenplan().gueltigAb()}">01.02.2022</span><br/><span th:text="${plan.schueler().nachnameVorname() + ' (' + lernabschnittZumStundenplan.klasse().kuerzel() +')'}">Mustermann, Thomas (10A)</span></div>
+			<div class="pageTopRight">Stundenplan <span th:text="${plan.stundenplan().schuljahresabschnitt().textSchuljahresabschnittKurz()}">2022.2</span><br/>Gültig ab: <span th:text="${plan.stundenplan().gueltigAb()}">01.02.2022</span><br/><span th:text="${plan.schueler().nachnameVorname() + (hatLernabschnittJahrgangKlasse ? ' (' +  lernabschnittZumStundenplan.klasse().kuerzel() + ')' : '')}">Mustermann, Thomas (10A)</span></div>
 			<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')}">Gedruckt am: 02.02.2022</div>
 			<div class="pageBottomRight"><span class="page-nums-print" th:text="${#lists.size(SchuelerStundenplaene) > 0} ? ('Druck ' + ${iterationVarPlan.count} + '/' + ${#lists.size(SchuelerStundenplaene)} + ' - Seite ') : 'Seite '">Druck 13/57 - Seite </span></div>
 			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
@@ -40,7 +41,7 @@
 						<!-- Angaben zum Schüler und Wochen -->
 						<tr th:if="${wochennummer == 1}">
 							<th th:colspan="${spaltenzahl - 1}" style="border-bottom: 1px grey solid; vertical-align: middle"><h3 class="m-t-0" th:text="${plan.schueler().nachnameVorname()}">Mustermann, Thomas</h3></th>
-                            <th class="ta-r" style="border-bottom: 1px grey solid; vertical-align: middle"><h3 class="m-t-0" th:text="${lernabschnittZumStundenplan.klasse().kuerzel()}">10A</h3></th>
+                            <th class="ta-r" style="border-bottom: 1px grey solid; vertical-align: middle"><h3 class="m-t-0" th:text="${hatLernabschnittJahrgangKlasse ? lernabschnittZumStundenplan.klasse().kuerzel() : ''}">10A</h3></th>
 						</tr>
 						<tr th:if="${wochennummer == 1}" style="height: 3px;">
 							<th th:colspan="${spaltenzahl}"></th>

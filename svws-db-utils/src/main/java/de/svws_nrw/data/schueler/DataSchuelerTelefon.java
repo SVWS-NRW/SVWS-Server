@@ -1,5 +1,7 @@
 package de.svws_nrw.data.schueler;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -34,7 +36,7 @@ public final class DataSchuelerTelefon extends DataManagerRevised<Long, DTOSchue
 	 * Erstellt einen neuen {@link DataManagerRevised} für den Core-DTO {@link SchuelerTelefon}.
 	 *
 	 * @param conn         die Datenbank-Verbindung für den Datenbankzugriff
-	 * @param idSchueler   die ID des Schülerdatensatzes auf dem die Datenbankoperationen ausgeführt werden
+	 * @param idSchueler   die ID des Schülerdatensatzes, auf dem die Datenbankoperationen ausgeführt werden
 	 */
 	public DataSchuelerTelefon(final DBEntityManager conn, final Long idSchueler) {
 		super(conn);
@@ -75,6 +77,31 @@ public final class DataSchuelerTelefon extends DataManagerRevised<Long, DTOSchue
 	public List<SchuelerTelefon> getList() throws ApiOperationException {
 		final List<DTOSchuelerTelefon> telefone = conn.queryList(DTOSchuelerTelefon.QUERY_BY_SCHUELER_ID, DTOSchuelerTelefon.class, idSchueler);
 		return telefone.stream().map(this::map).toList();
+	}
+
+	/**
+	 * Ermittelt eine Liste von {@link SchuelerTelefon} Objekten zu den übergebenen IDs der Schüler. Die Liste ist nach Schüler-ID und Sortierungsnummer
+	 * sortiert.
+	 *
+	 * @param idsSchueler Die IDs der Schüler, deren Telefonnummern ermittelt werden sollen.
+	 *
+	 * @return Eine sortierte Liste von {@link SchuelerTelefon} Objekten
+	 */
+	public List<SchuelerTelefon> getListFromSchuelerIDs(final List<Long> idsSchueler) throws ApiOperationException {
+		// Prüfe, ob die Liste der Schüler-IDs existiert
+		if (idsSchueler == null)
+			throw new ApiOperationException(Response.Status.NOT_FOUND, "Es sind keine Schueler-IDs angegeben worden.");
+		final List<Long> idsSchuelerNonNull = idsSchueler.stream().filter(Objects::nonNull).toList();
+		if (idsSchuelerNonNull.isEmpty())
+			return new ArrayList<>();
+
+		final List<DTOSchuelerTelefon> dtosSchuelerTelefon =
+				conn.queryList(DTOSchuelerTelefon.QUERY_LIST_BY_SCHUELER_ID, DTOSchuelerTelefon.class, idsSchuelerNonNull)
+						.stream().filter(t -> ((t.Telefonnummer != null) && !t.Telefonnummer.isEmpty()))
+						.sorted(Comparator.comparing((DTOSchuelerTelefon t) -> t.Schueler_ID).thenComparing(t -> t.Sortierung))
+						.toList();
+
+		return dtosSchuelerTelefon.stream().map(this::map).toList();
 	}
 
 	@Override

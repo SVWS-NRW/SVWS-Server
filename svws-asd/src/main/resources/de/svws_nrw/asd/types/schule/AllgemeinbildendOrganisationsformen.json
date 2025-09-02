@@ -1,11 +1,11 @@
 {
-	"version": 2,
+	"version": 3,
 	"daten": [ {
 		"bezeichner": "NICHT_ZUGEORDNET",
 		"idStatistik": "1",
 		"historie": [ {
 			"id": 3000000,
-			"schluessel": "0",
+			"schluessel": "*",
 			"kuerzel": "*",
 			"text": "Nicht zuordbar (Früherziehung für Hör- und Sehgeschädigte, Ambulante Maßnahmen)",
 			"schulformen": [ 
@@ -140,7 +140,23 @@
 				"SK"
 			],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": 2021
+		}, {	
+			"id": 3003001,
+			"schluessel": "3",
+			"kuerzel": "3",
+			"text": "Teilnahme am erweiterten Ganztag",
+			"schulformen": [
+				"FW",
+				"HI",
+				"WF",
+				"H",
+				"S",
+				"KS",
+				"SK"
+			],
+			"gueltigVon": 2022,
+			"gueltigBis": null	
 		} ]
 	}, {	
 		"bezeichner": "GANZTAG_OFFEN",

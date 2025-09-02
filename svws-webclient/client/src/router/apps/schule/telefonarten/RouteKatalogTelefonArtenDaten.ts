@@ -4,6 +4,7 @@ import { RouteNode } from "~/router/RouteNode";
 import type { RouteKatalogTelefonArten } from "~/router/apps/schule/telefonarten/RouteKatalogTelefonArten";
 import { routeKatalogTelefonArten } from "~/router/apps/schule/telefonarten/RouteKatalogTelefonArten";
 import type { TelefonArtenDatenProps } from "~/components/schule/kataloge/telefonarten/daten/STelefonArtenDatenProps";
+import { api } from "~/router/Api";
 
 const STelefonArtenDaten = () => import("~/components/schule/kataloge/telefonarten/daten/STelefonArtenDaten.vue");
 
@@ -20,6 +21,7 @@ export class RouteKatalogTelefonArtenDaten extends RouteNode<any, RouteKatalogTe
 		return {
 			patch: routeKatalogTelefonArten.data.patch,
 			telefonArtListeManager: () => routeKatalogTelefonArten.data.manager,
+			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 }

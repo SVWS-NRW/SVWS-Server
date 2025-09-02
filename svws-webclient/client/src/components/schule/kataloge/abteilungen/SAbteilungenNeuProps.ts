@@ -1,6 +1,6 @@
-import type { Abteilung, AbteilungenListeManager, AbteilungKlassenzuordnung, BenutzerKompetenz, List } from "@core";
+import type { Abteilung, AbteilungKlassenzuordnung, BenutzerKompetenz, List } from "@core";
 import type { RoutingStatus } from "~/router/RoutingStatus";
-import type { Checkpoint } from "@ui";
+import type { Checkpoint, AbteilungenListeManager } from "@ui";
 
 export interface AbteilungenNeuProps {
 	manager: () => AbteilungenListeManager;

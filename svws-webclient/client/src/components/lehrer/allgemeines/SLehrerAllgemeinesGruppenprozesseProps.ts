@@ -1,4 +1,5 @@
-import type { List, BenutzerKompetenz, ApiFile, ReportingParameter, StundenplanListeEintrag, LehrerListeManager } from "@core";
+import type { List, BenutzerKompetenz, ApiFile, ReportingParameter, StundenplanListeEintrag } from "@core";
+import type { LehrerListeManager } from "@ui";
 import type { ApiStatus } from "~/components/ApiStatus";
 
 export interface SLehrerAllgemeinesGruppenprozesseProps {

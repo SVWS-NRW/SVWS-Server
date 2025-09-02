@@ -1,4 +1,5 @@
-import type { List, BenutzerKompetenz, TelefonArtListeManager } from "@core";
+import type { List, BenutzerKompetenz } from "@core";
+import type { TelefonArtListeManager } from "@ui"
 
 export interface STelefonArtenGruppenprozesseProps {
 	benutzerKompetenzen: Set<BenutzerKompetenz>;

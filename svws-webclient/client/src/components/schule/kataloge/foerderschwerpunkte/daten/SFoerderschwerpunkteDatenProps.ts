@@ -1,4 +1,5 @@
-import type { BenutzerKompetenz, FoerderschwerpunktEintrag, FoerderschwerpunkteListeManager } from "@core";
+import type { BenutzerKompetenz, FoerderschwerpunktEintrag } from "@core";
+import type { FoerderschwerpunkteListeManager } from "@ui";
 
 export interface FoerderschwerpunkteDatenProps {
 	manager: () => FoerderschwerpunkteListeManager;

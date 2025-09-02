@@ -1,17 +1,17 @@
 import { describe, expect, test } from "vitest";
-import { getApiServer } from "./utils/TestUtils.js";
+import { privilegedApiServer } from "../../utils/APIUtils";
 import { BetriebListeEintrag } from "@core";
 
 describe("Betrieb Tests2", () => {
 	describe.each([{schema: "GymAbi01"}])('gegen %s', ({schema}) => {
 
-		const api = getApiServer(schema);
+		const api = privilegedApiServer;
 
 		test("getBetriebe", async () => {
 			const result = await api.getBetriebe(schema);
 
 			expect(result).toMatchSnapshot();
-			expect(result.toArray()[0] ).toBeInstanceOf(BetriebListeEintrag);
+			expect(result.toArray()[0]).toBeInstanceOf(BetriebListeEintrag);
 		});
 
 		test("getBetriebStammdaten", async () => {

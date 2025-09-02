@@ -53,6 +53,9 @@ public enum LehrerLehrbefaehigung implements @NotNull CoreType<LehrerLehrbefaehi
 	/** Lehrbefähigung 'Deutsch' */
 	D,
 
+	/** Lehrbefähigung 'Deutsche Gebärdensprache' */
+	DG,
+
 	/** Lehrbefähigung 'Englisch' */
 	E,
 
@@ -109,6 +112,9 @@ public enum LehrerLehrbefaehigung implements @NotNull CoreType<LehrerLehrbefaehi
 
 	/** Lehrbefähigung 'Informatik (nachgewiesen durch 2. Staatsprüfung, sonst siehe IK)' */
 	IF,
+
+	/** Lehrbefähigung 'Ingenieurwissenschaft und Ingenieurtechnik' */
+	IG,
 
 	/** Lehrbefähigung 'Italienisch (Muttersprachl. Unterricht)' */
 	IM,
@@ -271,6 +277,9 @@ public enum LehrerLehrbefaehigung implements @NotNull CoreType<LehrerLehrbefaehi
 
 	/** Lehrbefähigung 'Werken (Musisches)' */
 	W,
+
+	/** Lehrbefähigung 'Wirtschaft-Politik' */
+	WK,
 
 	/** Lehrbefähigung 'Slowenisch (Muttersprachl. Unterricht)' */
 	WM,

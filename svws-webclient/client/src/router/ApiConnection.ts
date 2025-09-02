@@ -1,7 +1,7 @@
 import { ref, shallowRef } from "vue";
 
 import type { BenutzerDaten, DBSchemaListeEintrag, List, SchuleStammdaten } from "@core";
-import { ValidatorKontext, ApiSchema, ApiServer, BenutzerKompetenz, ServerMode, DeveloperNotificationException, UserNotificationException, OpenApiError } from "@core";
+import { ValidatorKontext, ApiSchema, ApiServer, ApiExternal, BenutzerKompetenz, ServerMode, DeveloperNotificationException, UserNotificationException, OpenApiError } from "@core";
 
 import { Config } from "../../../ui/src/utils/Config";
 import { AES } from "~/utils/crypto/aes";
@@ -35,6 +35,9 @@ export class ApiConnection {
 
 	// Die Api selbst
 	protected _api: ApiServer | undefined;
+
+	// Die Api selbst
+	protected _apiExternal: ApiExternal | undefined;
 
 	// Die Benutzerdaten des angemeldeten Benutzers
 	protected _benutzerdaten = shallowRef<BenutzerDaten | undefined>(undefined);
@@ -79,6 +82,13 @@ export class ApiConnection {
 		if (this._api === undefined)
 			throw new DeveloperNotificationException("Es wurde kein Api-Objekt angelegt - Verbindungen zum Server können nicht erfolgen")
 		return this._api;
+	}
+
+	// Gibt die External-API zurück.
+	get apiExternal(): ApiExternal {
+		if (this._apiExternal === undefined)
+			throw new DeveloperNotificationException("Es wurde kein Api-Objekt angelegt - Verbindungen zum Server können nicht erfolgen")
+		return this._apiExternal;
 	}
 
 	// Gibt das Datenbank-Schema zurück.
@@ -433,6 +443,7 @@ export class ApiConnection {
 			const aesKey = await AES.getKey256(password, username);
 			this._aes.value = new AES(AESAlgo.CBC, aesKey);
 			this._api = new ApiServer(this._url, this._username, this._password);
+			this._apiExternal = new ApiExternal(this._url, this._username, this._password);
 			this._authenticated.value = true;
 			this._benutzerdaten.value = await this._api.getBenutzerDatenEigene(this._schema);
 			this._istAdmin.value = this.getIstAdmin(this._benutzerdaten.value);
@@ -483,6 +494,7 @@ export class ApiConnection {
 		this._schema_api = undefined;
 		this._aes.value = undefined;
 		this._api = undefined;
+		this._apiExternal = undefined;
 		this.config.mapGlobal = new Map();
 		this.config.mapUser = new Map();
 		this.nonPersistentConfig.mapGlobal = new Map();

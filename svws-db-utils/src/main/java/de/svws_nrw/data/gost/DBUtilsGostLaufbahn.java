@@ -21,7 +21,7 @@ import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
-import de.svws_nrw.core.utils.jahrgang.JahrgangsUtils;
+import de.svws_nrw.core.utils.kataloge.jahrgaenge.JahrgaengeUtils;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.data.schueler.DBUtilsSchueler;
 import de.svws_nrw.db.DBEntityManager;
@@ -1006,7 +1006,7 @@ public final class DBUtilsGostLaufbahn {
 			// Bestimme die Restjahre in Bezug auf den Abiturjahrgang und den Schuljahresabschnitt
 			final int restjahreNachAbiturjahr = abijahrgang - schuljahresabschnitt.Jahr;
 			final Integer restjahreNachJahrgang =
-					JahrgangsUtils.getRestlicheJahreBisAbitur(schulform, Schulgliederung.data().getWertByKuerzel(jahrgang.GliederungKuerzel),
+					JahrgaengeUtils.getRestlicheJahreBisAbitur(schulform, Schulgliederung.data().getWertByKuerzel(jahrgang.GliederungKuerzel),
 							schuljahresabschnitt.Jahr, jahrgang.ASDJahrgang);
 			if ((restjahreNachJahrgang != null) && (restjahreNachAbiturjahr == restjahreNachJahrgang))
 				result.add(schueler);

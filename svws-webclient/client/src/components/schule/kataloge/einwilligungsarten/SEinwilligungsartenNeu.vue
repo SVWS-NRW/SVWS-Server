@@ -4,26 +4,28 @@
 			<svws-ui-content-card title="Allgemein">
 				<svws-ui-input-wrapper :grid="2">
 					<div>
-						<svws-ui-text-input	:valid="validatorEinwilligungsartBezeichnung" v-model="einwilligungsart.bezeichnung" type="text" placeholder="Bezeichnung" />
+						<svws-ui-text-input	:valid="validatorEinwilligungsartBezeichnung" v-model="einwilligungsart.bezeichnung" type="text" placeholder="Bezeichnung" :readonly />
 						<div v-if="!validatorEinwilligungsartBezeichnung(einwilligungsart.bezeichnung) && (einwilligungsart.bezeichnung.length > 0)" class="flex my-auto">
 							<span class="icon i-ri-alert-line mx-0.5 mr-1 inline-flex" />
 							<p> Diese Bezeichnung wird bereits verwendet </p>
 						</div>
 					</div>
 					<div>
-						<svws-ui-text-input :valid="validatorEinwilligungsartSchluessel" v-model="einwilligungsart.schluessel" type="text" placeholder="Schlüssel" />
+						<svws-ui-text-input :valid="validatorEinwilligungsartSchluessel" v-model="einwilligungsart.schluessel" type="text" placeholder="Schlüssel" :readonly />
 						<div v-if="!validatorEinwilligungsartSchluessel(einwilligungsart.schluessel) && (einwilligungsart.schluessel.length > 0)" class="flex my-auto">
 							<span class="icon i-ri-alert-line mx-0.5 mr-1 inline-flex" />
 							<p> Dieser Schlüssel wird bereits verwendet </p>
 						</div>
 					</div>
-					<svws-ui-textarea-input v-model="einwilligungsart.beschreibung" type="text" placeholder="Beschreibung" class="col-span-full" />
-					<svws-ui-select v-model="auswahlPersonTyp" :items="personTypen" :item-text="item => item.bezeichnung" placeholder="Personenart" label="Personenart" class="col-span-full" />
+					<svws-ui-textarea-input v-model="einwilligungsart.beschreibung" type="text" placeholder="Beschreibung" class="col-span-full" :readonly />
+					<svws-ui-select v-model="auswahlPersonTyp" :items="personTypen" :item-text="item => item.bezeichnung" placeholder="Personenart" title="Personenart"
+						class="col-span-full" :readonly />
 				</svws-ui-input-wrapper>
 				<div class="mt-7 flex flex-row gap-4 justify-end">
-					<svws-ui-button type="secondary" @click="cancel" :disabled="isLoading">Abbrechen</svws-ui-button><svws-ui-button @click="addEinwilligungsart"
+					<svws-ui-button type="secondary" @click="cancel" :disabled="isLoading">Abbrechen</svws-ui-button>
+					<svws-ui-button @click="addEinwilligungsart"
 						:disabled="((!validatorEinwilligungsartBezeichnung(einwilligungsart.bezeichnung) || !validatorEinwilligungsartSchluessel(einwilligungsart.schluessel)) ||
-							isLoading || (einwilligungsart.bezeichnung === ''))">
+							isLoading || (einwilligungsart.bezeichnung === '') || (!hatKompetenzUpdate))">
 						Speichern <svws-ui-spinner :spinning="isLoading" />
 					</svws-ui-button>
 				</div>
@@ -35,10 +37,13 @@
 
 <script setup lang="ts">
 	import { computed, ref } from "vue";
-	import { Einwilligungsart, PersonTyp } from "@core";
+	import { BenutzerKompetenz, Einwilligungsart, PersonTyp } from "@core";
 	import type { SchuleEinwilligungsartenNeuProps } from "~/components/schule/kataloge/einwilligungsarten/SEinwilligungsartenNeuProps";
 
 	const props = defineProps<SchuleEinwilligungsartenNeuProps>();
+	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const readonly = computed(() => !hatKompetenzUpdate.value);
+
 	const einwilligungsart = ref(new Einwilligungsart());
 	const isLoading = ref<boolean>(false);
 

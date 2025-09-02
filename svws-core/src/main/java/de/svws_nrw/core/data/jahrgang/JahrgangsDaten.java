@@ -18,16 +18,20 @@ public class JahrgangsDaten {
 	@Schema(description = "die ID des Jahrgangs", example = "4711")
 	public long id;
 
-	/** Das Kürzel des Jahrgangs. */
-	@Schema(description = "das Kürzel des Jahrgangs", example = "EF")
+	/** Das schulinterne Kürzel des Jahrgangs. */
+	@Schema(description = "Das schulinterne Kürzel des Jahrgangs.", example = "ABC")
 	public String kuerzel;
+
+	/** Die schulinterne Kurzbezeichnung */
+	@Schema(description = "die schulinterne Kurzbezeichnung", example = "ABC")
+	public String kurzbezeichnung;
 
 	/** Das dem Jahrgang zugeordnete Statistik-Kürzel. */
 	@Schema(description = "das dem Jahrgang zugeordnete Statistik-Kürzel", example = "EF")
 	public String kuerzelStatistik;
 
-	/** Der Name / die Bezeichnung des Jahrgangs. */
-	@Schema(description = "der Name / die Bezeichnung des Jahrgangs", example = "Einführungsphase")
+	/** Die dem Jahrgang zugeordnete schulinterne Bezeichnung. */
+	@Schema(description = "Die dem Jahrgang zugeordnete schulinterne Bezeichnung.", example = "Einführungsphase")
 	public @NotNull String bezeichnung = "";
 
 	/** Die Sortierreihenfolge des Jahrgangslisten-Eintrags. */
@@ -59,6 +63,10 @@ public class JahrgangsDaten {
 	@Schema(description = "Gibt an, bis zu welchem Schuljahresabschnitt an der Jahrgang gültig ist (einschließlich), null bedeutet bis zum letzten Abschnitt, Ende offen",
 			example = "null")
 	public Long gueltigBis;
+
+	/** Gibt an, ob der Jahrgang in anderen Datenbanktabellen referenziert ist oder nicht. */
+	@Schema(description = "Gibt an, ob der Jahrgang in anderen Datenbanktabellen referenziert ist oder nicht.", example = "true")
+	public Boolean referenziertInAnderenTabellen = null;
 
 	// TODO Weitere Daten
 

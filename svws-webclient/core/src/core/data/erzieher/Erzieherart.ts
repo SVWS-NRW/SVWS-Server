@@ -28,6 +28,11 @@ export class Erzieherart extends JavaObject {
 	 */
 	public exportBez : string | null = "";
 
+	/**
+	 * Gibt an wie vielen Erziehungsberechtigten die entsprechende Erzieherart zugeordnet sind.
+	 */
+	public anzahlErziehungsberechtigte : number = 0;
+
 
 	/**
 	 * Leerer Standardkonstruktor.
@@ -62,6 +67,9 @@ export class Erzieherart extends JavaObject {
 			throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
 		result.exportBez = (obj.exportBez === undefined) ? null : obj.exportBez === null ? null : obj.exportBez;
+		if (obj.anzahlErziehungsberechtigte === undefined)
+			throw new Error('invalid json format, missing attribute anzahlErziehungsberechtigte');
+		result.anzahlErziehungsberechtigte = obj.anzahlErziehungsberechtigte;
 		return result;
 	}
 
@@ -72,6 +80,7 @@ export class Erzieherart extends JavaObject {
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		result += '"exportBez" : ' + ((obj.exportBez === null) ? 'null' : JSON.stringify(obj.exportBez)) + ',';
+		result += '"anzahlErziehungsberechtigte" : ' + obj.anzahlErziehungsberechtigte.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -93,6 +102,9 @@ export class Erzieherart extends JavaObject {
 		}
 		if (obj.exportBez !== undefined) {
 			result += '"exportBez" : ' + ((obj.exportBez === null) ? 'null' : JSON.stringify(obj.exportBez)) + ',';
+		}
+		if (obj.anzahlErziehungsberechtigte !== undefined) {
+			result += '"anzahlErziehungsberechtigte" : ' + obj.anzahlErziehungsberechtigte.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

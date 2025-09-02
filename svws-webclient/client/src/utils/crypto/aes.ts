@@ -40,7 +40,7 @@ export class AES {
 	 *
 	 * @throws AESException   eine Exception, falls ein Fehler beim Verschlüsseln auftritt
 	 */
-	public async encrypt(input: BufferSource): Promise<Uint8Array> {
+	public async encrypt(input: BufferSource): Promise<Uint8Array<ArrayBuffer>> {
 		try {
 			const iv = crypto.getRandomValues(new Uint8Array(16));
 			const encrypted = await crypto.subtle.encrypt({name: this.algo.value, iv}, this.key, input);
@@ -49,8 +49,10 @@ export class AES {
 			output.set(iv, 0);
 			output.set(new Uint8Array(encrypted), 16);
 			return output;
-		} catch (e: any) {
-			throw new AESException("Fehler beim Verschlüsseln der Daten.", e);
+		} catch (e: unknown) {
+			if (e instanceof Error)
+				throw new AESException("Fehler beim Verschlüsseln der Daten.", e);
+			throw new AESException("Fehler beim Verschüsseln der Daten", new Error("Unbekannter Fehlergrund"));
 		}
 	}
 
@@ -66,7 +68,7 @@ export class AES {
 	 * @throws AESException   eine Exception, falls ein Fehler beim Entschlüsseln auftritt
 	 */
 
-	public async decrypt(input: Uint8Array): Promise<Uint8Array> {
+	public async decrypt(input: Uint8Array<ArrayBuffer>): Promise<Uint8Array<ArrayBuffer>> {
 		try {
 			if (input.length < 16)
 				throw new ArrayIndexOutOfBoundsException("Das übegebene Array ist zu klein und kann noch nicht einmal einen Initialisierungsvektor enthalten.");
@@ -74,9 +76,10 @@ export class AES {
 			const data = input.slice(16);
 			const decryptedData = await crypto.subtle.decrypt({name: this.algo.value, iv}, this.key, data);
 			return new Uint8Array(decryptedData);
-		} catch (e: any) {
-			console.log(e)
-			throw new AESException("Fehler beim Entschlüsseln der Daten.", e);
+		} catch (e: unknown) {
+			if (e instanceof Error)
+				throw new AESException("Fehler beim Entschlüsseln der Daten.", e);
+			throw new AESException("Fehler beim Entschlüsseln der Daten", new Error("Unbekannter Fehlergrund"));
 		}
 	}
 
@@ -90,11 +93,10 @@ export class AES {
 	 *
 	 * @throws AESException   eine Exception, falls ein Fehler beim Verschlüsseln auftritt
 	 */
-	public async encryptBase64(input: Uint8Array): Promise<string> {
+	public async encryptBase64(input: Uint8Array<ArrayBuffer>): Promise<string> {
 		const buf = await this.encrypt(input);
 		const res = await this.arraybufferToBase64(buf);
 		return res;
-		// return window.btoa(decoder.decode(buf));
 	}
 
 
@@ -109,7 +111,7 @@ export class AES {
 	 *
 	 * @throws AESException   eine Exception, falls ein Fehler beim Entschlüsseln auftritt
 	 */
-	public async decryptBase64(input: string): Promise<Uint8Array> {
+	public async decryptBase64(input: string): Promise<Uint8Array<ArrayBuffer>> {
 		const buf = await this.base64ToBufferAsync(input);
 		return this.decrypt(buf);
 	}
@@ -141,7 +143,7 @@ export class AES {
 	 * @param base64 Ein Base64-String
 	 * @return ein Promise mit einem Buffer
 	 */
-	private async base64ToBufferAsync(base64: string): Promise<Uint8Array> {
+	private async base64ToBufferAsync(base64: string): Promise<Uint8Array<ArrayBuffer>> {
 		const dataUrl = "data:application/octet-binary;base64," + base64;
 		const res = await fetch(dataUrl);
 		const buffer = await res.arrayBuffer();
@@ -158,8 +160,10 @@ export class AES {
 	public static async getRandomKey256(): Promise<CryptoKey> {
 		try {
 			return await crypto.subtle.generateKey({name: "AEA-CBC", length: 256}, true, ["encrypt", "decrypt"]);
-		} catch (e: any) {
-			throw new AESException("Fehler beim Erstellen eines zufälligen AES-Schlüssels.", e);
+		} catch (e: unknown) {
+			if (e instanceof Error)
+				throw new AESException("Fehler beim Erstellen eines zufälligen AES-Schlüssels.", e);
+			throw new AESException("Fehler beim Erstellen eines zufälligen AES-Schlüssels.", new Error("Unbekannter Fehlergrund"));
 		}
 	}
 
@@ -185,9 +189,10 @@ export class AES {
 			const derivedKeyType = { name: "AES-CBC", length: 256}
 			const key = await crypto.subtle.deriveKey(keySpec, passwordKey, derivedKeyType, true, ["encrypt", "decrypt"]);
 			return key;
-		} catch (e: any) {
-			console.log(e)
-			throw new AESException("Fehler beim Erstellen des AES-Schlüssels aus dem Kennwort und dem Salt.", e);
+		} catch (e: unknown) {
+			if (e instanceof Error)
+				throw new AESException("Fehler beim Erstellen des AES-Schlüssels aus dem Kennwort und dem Salt.", e);
+			throw new AESException("Fehler beim Erstellen des AES-Schlüssels aus dem Kennwort und dem Salt.", new Error("Unbekannter Fehlergrund"));
 		}
 	}
 
@@ -196,7 +201,7 @@ export class AES {
 	 *
 	 * @return der IV der Länge 16 Byte
 	 */
-	public static getRandomIV(): Uint8Array {
+	public static getRandomIV(): Uint8Array<ArrayBuffer> {
 		const result = new Uint8Array(16);
 		return crypto.getRandomValues(result);
 	}

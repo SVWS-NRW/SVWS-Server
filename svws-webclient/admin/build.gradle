@@ -16,8 +16,14 @@ task assembleAdminClient(type: NpmRun) {
 
 assemble.dependsOn assembleAdminClient
 
+task lint(type: NpmRun) {
+    dependsOn assembleAdminClient
+	group = "build"
+    args = ["lint-tsc"]
+}
+
 task doZip(type: Zip) {
-	dependsOn assembleAdminClient
+	dependsOn lint
     archiveFileName = "SVWS-Admin-Client.zip"
     destinationDirectory = file("$buildDir")
     from "$buildDir/output"

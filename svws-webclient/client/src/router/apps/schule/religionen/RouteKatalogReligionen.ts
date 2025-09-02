@@ -1,5 +1,6 @@
 import type { RouteParams } from "vue-router";
-import { BenutzerKompetenz, type ReligionListeManager, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+import type { ReligionListeManager } from "@ui";
 import type { RouteNode } from "~/router/RouteNode";
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { routeKatalogReligionDaten } from "~/router/apps/schule/religionen/RouteKatalogReligionDaten";

@@ -301,7 +301,7 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 					throw new ApiOperationException(Status.CONFLICT);
 				dto.Jahrgang_ID = idJahrgang;
 			}
-			case "epJahre" -> dto.EPJahre = JSONMapper.convertToIntegerInRange(value, true, 1, 3);
+			case "epJahre" -> dto.EPJahre = JSONMapper.convertToIntegerInRange(value, true, 1, 4);
 			case "fachklasseID" -> {
 				final Long idFachklasse = JSONMapper.convertToLong(value, true);
 				if (idFachklasse != null) {
@@ -417,6 +417,9 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 	private void checkFunktionsbezogeneKompetenzAufKlasse(final List<Long> idsKlassen) throws ApiOperationException {
 		if (hatBenutzerNurFunktionsbezogeneKompetenz(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN,
 				Set.of(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN))) {
+			if (idsKlassen == null)
+				throw new ApiOperationException(Status.FORBIDDEN,
+						"Der Benutzer kann keine funktionsbezogene Kompetenz nutzen, um auf Daten zuzugreifen, die keiner Klasse zugeordnet sind.");
 			for (final Long idKlasse : idsKlassen)
 				checkBenutzerFunktionsbezogeneKompetenzKlasse(idKlasse);
 		}
@@ -427,7 +430,7 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 	public void checkBeforeCreation(final Long newID, final Map<String, Object> initAttributes) throws ApiOperationException {
 		// Prüfe ggf., ob der Benutzer die Rechte in Abhängigkeit der Klasse hat, um die Lernabschnittsdaten in dem Lernabschnitt zu erstellen
 		final Long idKlasse = JSONMapper.convertToLong(initAttributes.get("klassenID"), true);
-		checkFunktionsbezogeneKompetenzAufKlasse(List.of(idKlasse));
+		checkFunktionsbezogeneKompetenzAufKlasse((idKlasse == null) ? null : List.of(idKlasse));
 	}
 
 
@@ -438,14 +441,15 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 			final Long idKlasse = JSONMapper.convertToLong(patchAttributes.get("klassenID"), true);
 			checkFunktionsbezogeneKompetenzAufKlasse(List.of(idKlasse));
 		}
-		checkFunktionsbezogeneKompetenzAufKlasse(List.of(dto.Klassen_ID));
+		checkFunktionsbezogeneKompetenzAufKlasse((dto.Klassen_ID == null) ? null : List.of(dto.Klassen_ID));
 	}
 
 
 	@Override
 	public void checkBeforeDeletion(final List<DTOSchuelerLernabschnittsdaten> dtos) throws ApiOperationException {
+		final boolean hasKlassenIdNull = dtos.stream().anyMatch(l -> (l.Klassen_ID == null));
 		// Prüfe ggf., ob der Benutzer die Rechte in Abhängigkeit der Klasse hat, um die Lernabschnittsdaten zu löschen
-		checkFunktionsbezogeneKompetenzAufKlasse(dtos.stream().map(l -> l.Klassen_ID).toList());
+		checkFunktionsbezogeneKompetenzAufKlasse(hasKlassenIdNull ? null : dtos.stream().map(l -> l.Klassen_ID).toList());
 	}
 
 

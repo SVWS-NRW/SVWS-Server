@@ -24,6 +24,8 @@ public final class ValidatorLehrerStammdatenVorname extends Validator {
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		this.daten = daten;
+
+		_validatoren.add(new ValidatorLehrerStammdatenVornameAnredeFehlerhaft(daten, kontext));
 	}
 
 	@Override
@@ -43,11 +45,13 @@ public final class ValidatorLehrerStammdatenVorname extends Validator {
 			success = false;
 		}
 		if ((vorname.length() > 1) && Character.isUpperCase(vorname.charAt(1))) {
-			addFehler("Vorname der Lehrkraft: Die zweite Stelle des Vornamens ist mit einem Großbuchstaben besetzt. Bitte stellen sie sicher, dass nur der erste Buchstabe des Vornamens ein Großbuchstabe ist. Bitte schreiben Sie auf ihn folgende Buchstaben klein.");
+			addFehler(
+					"Vorname der Lehrkraft: Die zweite Stelle des Vornamens ist mit einem Großbuchstaben besetzt. Bitte stellen sie sicher, dass nur der erste Buchstabe des Vornamens ein Großbuchstabe ist. Bitte schreiben Sie auf ihn folgende Buchstaben klein.");
 			success = false;
 		}
 		if ((vorname.length() > 2) && Character.isUpperCase(vorname.charAt(2))) {
-			addFehler("Vorname der Lehrkraft: Die dritte Stelle des Vornamens ist mit einem Großbuchstaben besetzt. Bitte stellen sie sicher, dass nur der erste Buchstabe des Vornamens ein Großbuchstabe ist. Bitte schreiben Sie auf ihn folgende Buchstaben klein.");
+			addFehler(
+					"Vorname der Lehrkraft: Die dritte Stelle des Vornamens ist mit einem Großbuchstaben besetzt. Bitte stellen sie sicher, dass nur der erste Buchstabe des Vornamens ein Großbuchstabe ist. Bitte schreiben Sie auf ihn folgende Buchstaben klein.");
 			success = false;
 		}
 		return success;

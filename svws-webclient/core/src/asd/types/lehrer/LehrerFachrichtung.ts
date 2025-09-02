@@ -20,7 +20,7 @@ export class LehrerFachrichtung extends JavaEnum<LehrerFachrichtung> implements 
 	public static readonly ID_03 : LehrerFachrichtung = new LehrerFachrichtung("ID_03", 0, );
 
 	/**
-	 * Fachrichtung 'Metalltechnik, Maschinenbau (außer Kfz), Verfahrens-, Fertigungstechnik'
+	 * Fachrichtung 'Maschinentechnik, Metalltechnik, Maschinenbau (außer Kfz), Verfahrens-, Fertigungstechnik'
 	 */
 	public static readonly ID_04 : LehrerFachrichtung = new LehrerFachrichtung("ID_04", 1, );
 
@@ -130,47 +130,47 @@ export class LehrerFachrichtung extends JavaEnum<LehrerFachrichtung> implements 
 	public static readonly ID_92 : LehrerFachrichtung = new LehrerFachrichtung("ID_92", 22, );
 
 	/**
-	 * Fachrichtung 'Fachrichtung für Sondererziehung und Rehabilitation der Blinden'
+	 * Fachrichtung 'Sondererziehung und Rehabilitation der Blinden'
 	 */
 	public static readonly ID_BL : LehrerFachrichtung = new LehrerFachrichtung("ID_BL", 23, );
 
 	/**
-	 * Fachrichtung 'Fachrichtung für Sondererziehung und Rehabilitation der Erziehungsschwierigen'
+	 * Fachrichtung 'Sondererziehung und Rehabilitation der Erziehungsschwierigen'
 	 */
 	public static readonly ID_EZ : LehrerFachrichtung = new LehrerFachrichtung("ID_EZ", 24, );
 
 	/**
-	 * Fachrichtung 'Fachrichtung für Sondererziehung und Rehabilitation der Geistigbehinderten'
+	 * Fachrichtung 'Sondererziehung und Rehabilitation der Geistigbehinderten'
 	 */
 	public static readonly ID_GB : LehrerFachrichtung = new LehrerFachrichtung("ID_GB", 25, );
 
 	/**
-	 * Fachrichtung 'Fachrichtung für Sondererziehung und Rehabilitation der Gehörlosen'
+	 * Fachrichtung 'Sondererziehung und Rehabilitation der Gehörlosen'
 	 */
 	public static readonly ID_GH : LehrerFachrichtung = new LehrerFachrichtung("ID_GH", 26, );
 
 	/**
-	 * Fachrichtung 'Fachrichtung für Sondererziehung und Rehabilitation der Körperbehinderten'
+	 * Fachrichtung 'Sondererziehung und Rehabilitation der Körperbehinderten'
 	 */
 	public static readonly ID_KB : LehrerFachrichtung = new LehrerFachrichtung("ID_KB", 27, );
 
 	/**
-	 * Fachrichtung 'Fachrichtung für Sondererziehung und Rehabilitation der Lernbehinderten'
+	 * Fachrichtung 'Sondererziehung und Rehabilitation der Lernbehinderten'
 	 */
 	public static readonly ID_LB : LehrerFachrichtung = new LehrerFachrichtung("ID_LB", 28, );
 
 	/**
-	 * Fachrichtung 'Fachrichtung für Sondererziehung und Rehabilitation der Sprachbehinderten'
+	 * Fachrichtung 'Sondererziehung und Rehabilitation der Sprachbehinderten'
 	 */
 	public static readonly ID_SB : LehrerFachrichtung = new LehrerFachrichtung("ID_SB", 29, );
 
 	/**
-	 * Fachrichtung 'Fachrichtung für Sondererziehung und Rehabilitation der Schwerhörigen'
+	 * Fachrichtung 'Sondererziehung und Rehabilitation der Schwerhörigen'
 	 */
 	public static readonly ID_SG : LehrerFachrichtung = new LehrerFachrichtung("ID_SG", 30, );
 
 	/**
-	 * Fachrichtung 'Fachrichtung für Sondererziehung und Rehabilitation der Sehbehinderten'
+	 * Fachrichtung 'Sondererziehung und Rehabilitation der Sehbehinderten'
 	 */
 	public static readonly ID_SH : LehrerFachrichtung = new LehrerFachrichtung("ID_SH", 31, );
 
@@ -180,47 +180,47 @@ export class LehrerFachrichtung extends JavaEnum<LehrerFachrichtung> implements 
 	public static readonly ID_51 : LehrerFachrichtung = new LehrerFachrichtung("ID_51", 32, );
 
 	/**
-	 * Fachrichtung 'Fertigungstechnik (spez. Fachrichtung)'
+	 * Fachrichtung 'Fertigungstechnik'
 	 */
 	public static readonly ID_FT : LehrerFachrichtung = new LehrerFachrichtung("ID_FT", 33, );
 
 	/**
-	 * Fachrichtung 'Fahrzeugtechnik (spez. Fachrichtung)'
+	 * Fachrichtung 'Fahrzeugtechnik'
 	 */
 	public static readonly ID_KT : LehrerFachrichtung = new LehrerFachrichtung("ID_KT", 34, );
 
 	/**
-	 * Fachrichtung 'Versorgungstechnik (spez. Fachrichtung)'
+	 * Fachrichtung 'Versorgungstechnik'
 	 */
 	public static readonly ID_VT : LehrerFachrichtung = new LehrerFachrichtung("ID_VT", 35, );
 
 	/**
-	 * Fachrichtung 'Technische Informatik (spez. Fachrichtung)'
+	 * Fachrichtung 'Technische Informatik'
 	 */
 	public static readonly ID_TI : LehrerFachrichtung = new LehrerFachrichtung("ID_TI", 36, );
 
 	/**
-	 * Fachrichtung 'Energietechnik (spez. Fachrichtung)'
+	 * Fachrichtung 'Energietechnik'
 	 */
 	public static readonly ID_ET : LehrerFachrichtung = new LehrerFachrichtung("ID_ET", 37, );
 
 	/**
-	 * Fachrichtung 'Nachrichtentechnik (spez. Fachrichtung)'
+	 * Fachrichtung 'Nachrichtentechnik'
 	 */
 	public static readonly ID_NT : LehrerFachrichtung = new LehrerFachrichtung("ID_NT", 38, );
 
 	/**
-	 * Fachrichtung 'Hochbau (spez. Fachrichtung)'
+	 * Fachrichtung 'Hochbau'
 	 */
 	public static readonly ID_HC : LehrerFachrichtung = new LehrerFachrichtung("ID_HC", 39, );
 
 	/**
-	 * Fachrichtung 'Holztechnik (spez. Fachrichtung)'
+	 * Fachrichtung 'Holztechnik'
 	 */
 	public static readonly ID_HT : LehrerFachrichtung = new LehrerFachrichtung("ID_HT", 40, );
 
 	/**
-	 * Fachrichtung 'Tiefbau (spez. Fachrichtung)'
+	 * Fachrichtung 'Tiefbau'
 	 */
 	public static readonly ID_TB : LehrerFachrichtung = new LehrerFachrichtung("ID_TB", 41, );
 
@@ -275,7 +275,7 @@ export class LehrerFachrichtung extends JavaEnum<LehrerFachrichtung> implements 
 	public static readonly ID_WI : LehrerFachrichtung = new LehrerFachrichtung("ID_WI", 51, );
 
 	/**
-	 * Fachrichtung 'Lebensmitteltechnologie (spez. Fachrichtung)'
+	 * Fachrichtung 'Lebensmitteltechnologie'
 	 */
 	public static readonly ID_LT : LehrerFachrichtung = new LehrerFachrichtung("ID_LT", 52, );
 
@@ -415,7 +415,7 @@ export class LehrerFachrichtung extends JavaEnum<LehrerFachrichtung> implements 
 	public static readonly ID_58 : LehrerFachrichtung = new LehrerFachrichtung("ID_58", 79, );
 
 	/**
-	 * Fachrichtung 'Farbtechnik/Raumgestaltung/Oberflächentechnik'
+	 * Fachrichtung 'Farbtechnik / Raumgestaltung / Oberflächentechnik'
 	 */
 	public static readonly ID_59 : LehrerFachrichtung = new LehrerFachrichtung("ID_59", 80, );
 
@@ -425,7 +425,7 @@ export class LehrerFachrichtung extends JavaEnum<LehrerFachrichtung> implements 
 	public static readonly ID_68 : LehrerFachrichtung = new LehrerFachrichtung("ID_68", 81, );
 
 	/**
-	 * Fachrichtung 'Gesundheitswissenschaft/Pflege'
+	 * Fachrichtung 'Gesundheitswissenschaft / Pflege'
 	 */
 	public static readonly ID_86 : LehrerFachrichtung = new LehrerFachrichtung("ID_86", 82, );
 
@@ -485,7 +485,7 @@ export class LehrerFachrichtung extends JavaEnum<LehrerFachrichtung> implements 
 	public static readonly ID_6G : LehrerFachrichtung = new LehrerFachrichtung("ID_6G", 93, );
 
 	/**
-	 * Fachrichtung 'Produktion, Logistik, Absatz mit dem Profil: Marketing/Handel'
+	 * Fachrichtung 'Produktion, Logistik, Absatz mit dem Profil: Marketing / Handel'
 	 */
 	public static readonly ID_6H : LehrerFachrichtung = new LehrerFachrichtung("ID_6H", 94, );
 
@@ -520,7 +520,7 @@ export class LehrerFachrichtung extends JavaEnum<LehrerFachrichtung> implements 
 	public static readonly ID_GA : LehrerFachrichtung = new LehrerFachrichtung("ID_GA", 100, );
 
 	/**
-	 * Fachrichtung 'Garten- Landschaftsbau'
+	 * Fachrichtung 'Garten- und Landschaftsbau'
 	 */
 	public static readonly ID_GL : LehrerFachrichtung = new LehrerFachrichtung("ID_GL", 101, );
 

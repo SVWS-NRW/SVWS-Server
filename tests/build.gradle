@@ -2,8 +2,20 @@ import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import groovy.xml.XmlSlurper
 
-def testConfigPath = "${rootDir}/config/tests/config.json" as String
-def CONFIG = new JsonSlurper().parse(new File(testConfigPath))
+def configDir = "${rootDir}/config/tests"
+
+def configFile = file("$configDir/config.json")
+if (!configFile.exists()) {
+	configFile = file("$configDir/config_default.json")
+}
+
+def CONFIG = new JsonSlurper().parse(configFile)
+
+def commitId = System.getenv('CI_COMMIT_SHORT_SHA') ?: '-' ;
+
+ext.generateContainerSuffix = { jobId ->
+	return "-${jobId}-${commitId}-gradled" as String
+}
 
 /**
  * Dieser Task lädt die Testdatenbanken herunter, die für die Integrationstests benötigt werden. Dieser Task überprüft auch, ob die Testdatenbanken aktualisiert wurden.
@@ -34,7 +46,7 @@ tasks.register('downloadTestDatabases') {
 			if (lastRepoUpdate == -1 && file.exists()) {
 				// Es konnte nicht geprüft ob die aktuelle Datenbank auf dem neusten Stand ist
 				println 'Warnung: Aktualität der Testdatenbanken konnte nicht geprüft werden.'
-			} else if ((CONFIG.lastRepoUpdate != lastRepoUpdate) || !file.exists()) {
+			} else if ((getDownloadTimeStamp()["lastRepoUpdate"] != lastRepoUpdate) || !file.exists()) {
 				// Die remote verfügbare Datenbank ist neuer als die aktuelle oder es existiert keine Lokale. Daher muss die Datenbank downloaded werden.
 				println 'Testdatenbanken wurden aktualisiert oder sind nicht vorhanden und müssen daher neu heruntergeladen werden.'
 
@@ -44,7 +56,7 @@ tasks.register('downloadTestDatabases') {
 				}
 
 				// Aktualisiert den Zeitstempel des letzten Repository-Updates in der JSON-Datei für die Testeinstellungen.
-				updateDownloadTimeStamp(testConfigPath, lastRepoUpdate)
+				updateDownloadTimeStamp(lastRepoUpdate)
 
 			} else {
 				if (file.exists()) {
@@ -153,18 +165,17 @@ tasks.register('integrationTest') {
 	// Tatsächliche Integrationstests welche für jedes Subpackage ausgeführt werden
 	// Weitere Testpackages können hier hinzugefügt werden
 	dependsOn 'tests-server-api:testAgainstDockerEnv' // Vite API Tests
-	dependsOn 'tests-e2e-client-devmode:testAgainstDockerEnv' // Playwright E2E Tests DEV Modus
-	dependsOn 'tests-e2e-client-stablemode:testAgainstDockerEnv' // Playwright E2E Tests STABLE Modus
+	dependsOn 'tests-e2e-devmode:testAgainstDockerEnv' // Playwright E2E Tests DEV Modus
+	dependsOn 'tests-e2e-stablemode:testAgainstDockerEnv' // Playwright E2E Tests STABLE Modus
 	dependsOn 'tests-server-dav:testAgainstDockerEnv' // Vite API Dav Tests
 	dependsOn 'tests-server-enm:testAgainstDockerEnv' // Vite API ENM Tests
-
 
 	if(!CONFIG.keepContainerAfterTestRun) {
 		// Stoppe die container für die jeweiligen Testumgebungen nach den Integrationstests
 		// Jeden ausgeführte Test Sub-Packet sollte auch hier auftauchen
 		finalizedBy 'tests-server-api:removeTestEnvironmentEntryPoint'
-		finalizedBy 'tests-e2e-client-devmode:removeTestEnvironmentEntryPoint'
-		finalizedBy 'tests-e2e-client-stablemode:removeTestEnvironmentEntryPoint'
+		finalizedBy 'tests-e2e-devmode:removeTestEnvironmentEntryPoint'
+		finalizedBy 'tests-e2e-stablemode:removeTestEnvironmentEntryPoint'
 		finalizedBy 'tests-server-dav:removeTestEnvironmentEntryPoint'
 		finalizedBy 'tests-server-enm:removeTestEnvironmentEntryPoint'
 
@@ -242,9 +253,9 @@ tasks.register('no_auto_docker_integrationTest') {
 
 	// Führe die lokalen Tests der jeweiligen Subpackages aus
 	dependsOn 'tests-server-api:no_auto_docker_test_APIServer' // VITE API Tests
-	dependsOn 'tests-server-dav:no_auto_docker_test_DAV' // VITE API DAV Tests
-	dependsOn 'tests-e2e-client-devmode:no_auto_docker_test_E2E' // Ende zu Ende Tests
-	dependsOn 'tests-e2e-client-stablemode:no_auto_docker_test_E2E' // Ende zu Ende Tests
+/*	dependsOn 'tests-server-dav:no_auto_docker_test_DAV' // VITE API DAV Tests
+	dependsOn 'tests-e2e-devmode:no_auto_docker_test_E2E' // Ende zu Ende Tests
+	dependsOn 'tests-e2e-stablemode:no_auto_docker_test_E2E' // Ende zu Ende Tests*/
 
 }
 
@@ -257,16 +268,16 @@ tasks.register('no_auto_docker_integrationTest') {
 tasks.register('checkJUnitResults') {
 	// Die Tests sollten komplett abgeschlossen (und rückgebaut) werden bevor die Ergebnisse evaluiert werden
 	mustRunAfter 'tests-server-api:removeTestEnvironmentEntryPoint'
-	mustRunAfter 'tests-e2e-client-devmode:removeTestEnvironmentEntryPoint'
-	mustRunAfter 'tests-e2e-client-stablemode:removeTestEnvironmentEntryPoint'
+	mustRunAfter 'tests-e2e-devmode:removeTestEnvironmentEntryPoint'
+	mustRunAfter 'tests-e2e-stablemode:removeTestEnvironmentEntryPoint'
 	mustRunAfter 'tests-server-dav:removeTestEnvironmentEntryPoint'
 	mustRunAfter 'tests-server-enm:removeTestEnvironmentEntryPoint'
 
 	// Die Liste der JUnit Report Files. Hier sollten neue Einträge ergänzt werden wenn weitere Testpackages geschrieben werden.
 	def junitReportFiles = [
 			'tests-server-api/build/test-results/api-test-results.xml',
-			'tests-e2e-client-devmode/build/test-results/zusammenfassung/e2e-results.xml',
-			'tests-e2e-client-stablemode/build/test-results/zusammenfassung/e2e-results.xml',
+			'tests-e2e-devmode/build/test-results/zusammenfassung/e2e-results.xml',
+			'tests-e2e-stablemode/build/test-results/zusammenfassung/e2e-results.xml',
 			'tests-server-dav/build/test-results/api-test-results.xml',
 			'tests-server-enm/build/test-results/after-setup-test-results.xml',
 			'tests-server-enm/build/test-results/setup-test-results.xml',
@@ -313,6 +324,17 @@ tasks.register('checkJUnitResults') {
 	}
 }
 
+def getDownloadTimeStamp() {
+	def dbJson = file("${rootDir}/download/testDatenbanken/download-state.json")
+
+	if (!dbJson.exists()) {
+		// Erstelle die Datei mit einem leeren JSON-Objekt oder einem Standardinhalt
+		dbJson.parentFile.mkdirs() // Stelle sicher, dass der Ordner existiert
+		dbJson.text = JsonOutput.toJson([lastRepoUpdate: "never "])
+	}
+	return new JsonSlurper().parse(dbJson)
+}
+
 
 /**
  * Aktualisiert den Zeitstempel des letzten Repository-Updates in der JSON-Datei für die Testeinstellungen.
@@ -320,10 +342,12 @@ tasks.register('checkJUnitResults') {
  * @param filePath Der Pfad zur JSON-Datei, die aktualisiert werden soll.
  * @param newValue Der neue Wert für das Feld "lastRepoUpdate".
  */
-def updateDownloadTimeStamp(String filePath, String newValue) {
-	def jsonFile = file(filePath)
-	def json = new JsonSlurper().parseText(jsonFile.text)
+def updateDownloadTimeStamp(String newValue) {
+	def dbJson = file("${rootDir}/download/testDatenbanken/download-state.json")
+	def json = getDownloadTimeStamp()
 	json['lastRepoUpdate'] = newValue
-	jsonFile.text = JsonOutput.prettyPrint(JsonOutput.toJson(json))
-	println "Updated \"lastRepoUpdate\" to ${newValue} in ${filePath}"
+	dbJson.text = JsonOutput.prettyPrint(JsonOutput.toJson(json))
+	println "Updated \"lastRepoUpdate\""
 }
+
+

@@ -284,9 +284,9 @@ export class GostKursblockungRegelTyp extends JavaEnum<GostKursblockungRegelTyp>
 	}
 
 	/**
-	 * Gibt die Anzahl der Parameter für diesen Regel-Type zurück.
+	 * Gibt die Anzahl der Parameter für diesen Regel-Typ zurück.
 	 *
-	 * @return die Anzahl der Parameter für diesen Regel-Type zurück.
+	 * @return die Anzahl der Parameter für diesen Regel-Typ zurück.
 	 */
 	public getParamCount() : number {
 		return this.paramTypes.size();

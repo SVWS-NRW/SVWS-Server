@@ -41,6 +41,7 @@ export class RouteLehrerEinwilligungen extends RouteNode<RouteDataLehrerEinwilli
 			einwilligungen: () => this.data.einwilligungen,
 			mapEinwilligungsarten: this.data.mapEinwilligungsarten,
 			patch: this.data.patch,
+			benutzerKompetenzen: api.benutzerKompetenzen,
 			apiStatus: api.status,
 		};
 	}

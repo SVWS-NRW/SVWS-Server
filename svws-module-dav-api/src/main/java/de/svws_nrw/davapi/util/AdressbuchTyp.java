@@ -15,11 +15,13 @@ public enum AdressbuchTyp {
 	/** Ein globales Adressbuchtyp für berechtige Personen */
 	OEFFENTLICH(2, "Öffentlich");
 
+
 	/** Die ID des Adressbuchtyps */
 	public final int id;
 
 	/** Die textuelle Bezeichnung des Adressbuchtyps. */
 	public final String bezeichnung;
+
 
 	/**
 	 * Erzeugt einen neuen Adressbuchtyp für die Aufzählung.
@@ -31,6 +33,7 @@ public enum AdressbuchTyp {
 		this.id = id;
 		this.bezeichnung = bezeichnung;
 	}
+
 
 	/**
 	 * Gibt den Adressbuchtyp anhand der übergebenen ID zurück.
@@ -51,4 +54,5 @@ public enum AdressbuchTyp {
 				return null;
 		}
 	}
+
 }

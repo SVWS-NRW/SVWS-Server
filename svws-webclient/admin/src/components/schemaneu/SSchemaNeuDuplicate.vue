@@ -1,7 +1,8 @@
 <template>
 	<ui-card icon="i-ri-file-copy-line" :title="`Schema „${schema}“ duplizieren`" subtitle="Dupliziert das aktuell ausgewählte Schema in ein neues Schema." :is-open @update:is-open="(open) => emit('opened', open)">
 		<div class="input-wrapper mt-2">
-			<svws-ui-text-input v-model.trim="schemaNeu" placeholder="Name des neuen Schemas" />
+			Der Name des Schemas darf nur Buchstaben (ohne Umlaute), Zahlen sowie die Zeichen "$" und "_" enthalten:
+			<svws-ui-text-input v-model.trim="schemaNeu" required placeholder="Name des neuen Schemas" :valid="validatorSchemaName" />
 			<svws-ui-spacing />
 			<svws-ui-text-input v-model.trim="user" required placeholder="Benutzername" :valid="validatorUsername" />
 			<svws-ui-text-input v-model.trim="password" required placeholder="Passwort" />
@@ -21,6 +22,7 @@
 	import { ref } from "vue";
 	import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 	import type { List } from "@core/java/util/List";
+	import { validatorSchemaName } from "~/utils/helfer";
 
 	const props = defineProps<{
 		duplicateSchema: (formData: FormData, schema: string) => Promise<SimpleOperationResponse>;

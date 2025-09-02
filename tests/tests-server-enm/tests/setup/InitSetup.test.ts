@@ -1,7 +1,8 @@
 import { describe, expect, test } from "vitest";
 import { getApiService } from "../../utils/RequestBuilder.js"
+import { enmURL } from "../../../utils/APIUtils";
 
-const targetUrlENMServer: string = process.env.VITE_ENM_targetHost ?? "https://localhost";
+const targetUrlENMServer: string = enmURL;
 
 describe("Init Setup Methode", () => {
 

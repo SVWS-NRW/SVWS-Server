@@ -42,6 +42,26 @@ export class ReportingParameter extends JavaObject {
 	public einzelausgabeDetaildaten : boolean = false;
 
 	/**
+	 * Legt fest, ob die in den Daten-Contexts definierte Standardsortierung verwendet werden soll, oder die in diesen Parametern definierten Sortierungen.
+	 */
+	public verwendeStandardsortierung : boolean | null = true;
+
+	/**
+	 * Liste von Attributnamen, nach denen die Hauptdaten sortiert werden sollen.
+	 */
+	public sortierungHauptdaten : List<string> | null = new ArrayList<string>();
+
+	/**
+	 * Liste von Attributnamen, nach denen die Detaildaten sortiert werden sollen.
+	 */
+	public sortierungDetaildaten : List<string> | null = new ArrayList<string>();
+
+	/**
+	 * Legt fest, ob die Seiteneinstellungen für einen Duplexdruck verwendet werden sollen.
+	 */
+	public duplexdruck : boolean = false;
+
+	/**
 	 * Parameter, der in Templates verwendet werden kann, um den Detailgrad der Darstellung zu steuern.
 	 */
 	public detailLevel : number = 0;
@@ -93,6 +113,26 @@ export class ReportingParameter extends JavaObject {
 		if (obj.einzelausgabeDetaildaten === undefined)
 			throw new Error('invalid json format, missing attribute einzelausgabeDetaildaten');
 		result.einzelausgabeDetaildaten = obj.einzelausgabeDetaildaten;
+		result.verwendeStandardsortierung = (obj.verwendeStandardsortierung === undefined) ? null : obj.verwendeStandardsortierung === null ? null : obj.verwendeStandardsortierung;
+		if ((obj.sortierungHauptdaten !== undefined) && (obj.sortierungHauptdaten !== null)) {
+			result.sortierungHauptdaten = new ArrayList();
+			for (const elem of obj.sortierungHauptdaten) {
+				result.sortierungHauptdaten.add(elem);
+			}
+		} else {
+			result.sortierungHauptdaten = null;
+		}
+		if ((obj.sortierungDetaildaten !== undefined) && (obj.sortierungDetaildaten !== null)) {
+			result.sortierungDetaildaten = new ArrayList();
+			for (const elem of obj.sortierungDetaildaten) {
+				result.sortierungDetaildaten.add(elem);
+			}
+		} else {
+			result.sortierungDetaildaten = null;
+		}
+		if (obj.duplexdruck === undefined)
+			throw new Error('invalid json format, missing attribute duplexdruck');
+		result.duplexdruck = obj.duplexdruck;
 		if (obj.detailLevel === undefined)
 			throw new Error('invalid json format, missing attribute detailLevel');
 		result.detailLevel = obj.detailLevel;
@@ -122,6 +162,32 @@ export class ReportingParameter extends JavaObject {
 		}
 		result += ' ]' + ',';
 		result += '"einzelausgabeDetaildaten" : ' + obj.einzelausgabeDetaildaten.toString() + ',';
+		result += '"verwendeStandardsortierung" : ' + ((obj.verwendeStandardsortierung === null) ? 'null' : obj.verwendeStandardsortierung.toString()) + ',';
+		if (!obj.sortierungHauptdaten) {
+			result += '"sortierungHauptdaten" : null' + ',';
+		} else {
+			result += '"sortierungHauptdaten" : [ ';
+			for (let i = 0; i < obj.sortierungHauptdaten.size(); i++) {
+				const elem = obj.sortierungHauptdaten.get(i);
+				result += '"' + elem + '"';
+				if (i < obj.sortierungHauptdaten.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
+		if (!obj.sortierungDetaildaten) {
+			result += '"sortierungDetaildaten" : null' + ',';
+		} else {
+			result += '"sortierungDetaildaten" : [ ';
+			for (let i = 0; i < obj.sortierungDetaildaten.size(); i++) {
+				const elem = obj.sortierungDetaildaten.get(i);
+				result += '"' + elem + '"';
+				if (i < obj.sortierungDetaildaten.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
+		result += '"duplexdruck" : ' + obj.duplexdruck.toString() + ',';
 		result += '"detailLevel" : ' + obj.detailLevel.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -164,6 +230,40 @@ export class ReportingParameter extends JavaObject {
 		}
 		if (obj.einzelausgabeDetaildaten !== undefined) {
 			result += '"einzelausgabeDetaildaten" : ' + obj.einzelausgabeDetaildaten.toString() + ',';
+		}
+		if (obj.verwendeStandardsortierung !== undefined) {
+			result += '"verwendeStandardsortierung" : ' + ((obj.verwendeStandardsortierung === null) ? 'null' : obj.verwendeStandardsortierung.toString()) + ',';
+		}
+		if (obj.sortierungHauptdaten !== undefined) {
+			if (!obj.sortierungHauptdaten) {
+				result += '"sortierungHauptdaten" : null' + ',';
+			} else {
+				result += '"sortierungHauptdaten" : [ ';
+				for (let i = 0; i < obj.sortierungHauptdaten.size(); i++) {
+					const elem = obj.sortierungHauptdaten.get(i);
+					result += '"' + elem + '"';
+					if (i < obj.sortierungHauptdaten.size() - 1)
+						result += ',';
+				}
+				result += ' ]' + ',';
+			}
+		}
+		if (obj.sortierungDetaildaten !== undefined) {
+			if (!obj.sortierungDetaildaten) {
+				result += '"sortierungDetaildaten" : null' + ',';
+			} else {
+				result += '"sortierungDetaildaten" : [ ';
+				for (let i = 0; i < obj.sortierungDetaildaten.size(); i++) {
+					const elem = obj.sortierungDetaildaten.get(i);
+					result += '"' + elem + '"';
+					if (i < obj.sortierungDetaildaten.size() - 1)
+						result += ',';
+				}
+				result += ' ]' + ',';
+			}
+		}
+		if (obj.duplexdruck !== undefined) {
+			result += '"duplexdruck" : ' + obj.duplexdruck.toString() + ',';
 		}
 		if (obj.detailLevel !== undefined) {
 			result += '"detailLevel" : ' + obj.detailLevel.toString() + ',';

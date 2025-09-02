@@ -15395,7 +15395,7 @@ JahrgangsDaten {
 }
 `;
 
-exports[`Server > getKatalogBeschaeftigungsart 1`] = `
+exports[`Server > getBeschaeftigungsarten 1`] = `
 ArrayList {
   "elementData": [],
   "modCount": 0,

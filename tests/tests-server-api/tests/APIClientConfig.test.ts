@@ -1,10 +1,10 @@
 import { describe, expect, test } from "vitest";
-import { getApiServer } from "./utils/TestUtils.js";
+import { privilegedApiServer } from "../../utils/APIUtils";
 
 describe.skip("ClientConfig Tests", () => {
 	describe.each([{schema: "GymAbi01"}])('gegen %s', ({schema}) => {
 
-		const api = getApiServer(schema);
+		const api = privilegedApiServer;
 
 		test("getClientConfigUserKey", async () => {
 			// throw bei fehlendem Parameter, bzw Fehler abfangen

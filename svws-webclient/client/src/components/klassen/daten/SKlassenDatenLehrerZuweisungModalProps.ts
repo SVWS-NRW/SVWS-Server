@@ -1,4 +1,4 @@
-import type { KlassenListeManager } from "@core";
+import type { KlassenListeManager } from "@ui";
 
 export interface SKlassenDatenLehrerZuweisungModalProps {
 	manager: () => KlassenListeManager,

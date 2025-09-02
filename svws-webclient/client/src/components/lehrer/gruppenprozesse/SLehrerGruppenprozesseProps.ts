@@ -1,4 +1,5 @@
-import type { Schulform, List, Schulgliederung, ServerMode, BenutzerKompetenz, ApiFile, LehrerListeManager, StundenplanListeEintrag, ReportingParameter } from "@core";
+import type { Schulform, List, Schulgliederung, ServerMode, BenutzerKompetenz, ApiFile, StundenplanListeEintrag, ReportingParameter } from "@core";
+import type { LehrerListeManager } from "@ui";
 import type { ApiStatus } from "~/components/ApiStatus";
 
 export interface LehrerGruppenprozesseProps {

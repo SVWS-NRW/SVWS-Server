@@ -28,6 +28,7 @@
 							</svws-ui-menu-item>
 						</template>
 					</template>
+					<ui-color-mode />
 					<svws-ui-menu-item subline="" @click="doLogout">
 						<template #label>Abmelden</template>
 						<template #icon> <span class="icon-lg i-ri-logout-circle-line" /> </template>
@@ -153,7 +154,7 @@
 			return false;
 		if (document.title !== title) {
 			document.title = title;
-			document.querySelector("link[rel~='icon']")?.setAttribute('href', 'favicon.svg')
+			document.querySelector("link[rel~='icon']")?.setAttribute('href', 'assets/favicon.svg')
 		}
 		return true;
 	}

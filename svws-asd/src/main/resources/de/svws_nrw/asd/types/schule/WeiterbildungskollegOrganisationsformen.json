@@ -1,13 +1,13 @@
 {
-	"version": 1,
+	"version": 2,
 	"daten": [ {
 		"bezeichner": "TEILZEIT",
 		"idStatistik": "1",
 		"historie": [ {
 			"id": 2001000,
-			"schluessel": "1",
+			"schluessel": "T",
 			"kuerzel": "T",
-			"text": "Teilbeleger",
+			"text": "Teilbeleger/-in",
 			"schulformen": [
 				"WB"
 			],
@@ -19,9 +19,9 @@
 		"idStatistik": "2",
 		"historie": [ {
 			"id": 2002000,
-			"schluessel": "2",
+			"schluessel": "V",
 			"kuerzel": "V",
-			"text": "Vollbeleger",
+			"text": "Vollbeleger/-in",
 			"schulformen": [
 				"WB"
 			],

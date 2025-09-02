@@ -34,6 +34,10 @@ public class Erzieherart {
 	@Schema(description = "die Bezeichnung der Erzieherart, welche exportiert wird", example = "Export")
 	public String exportBez = "";
 
+	/** Gibt an wie vielen Erziehungsberechtigten die entsprechende Erzieherart zugeordnet sind. */
+	@Schema(description = "Gibt an wie vielen Erziehungsberechtigten die entsprechende Erzieherart zugeordnet sind", example = "3")
+	public int anzahlErziehungsberechtigte;
+
 	/**
 	 * Leerer Standardkonstruktor.
 	 */

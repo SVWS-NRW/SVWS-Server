@@ -2,35 +2,35 @@
 	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Schulangaben" v-if="schuleListeManager().hasDaten()">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-checkbox :model-value="schuleListeManager().daten().istSichtbar" @update:model-value="istSichtbar => patch({ istSichtbar })" focus-class-content>
+				<svws-ui-checkbox :model-value="schuleListeManager().daten().istSichtbar" @update:model-value="istSichtbar => patch({ istSichtbar })" focus-class-content :readonly>
 					Ist sichtbar
 				</svws-ui-checkbox>
-				<svws-ui-input-number placeholder="Sortierung" :model-value="schuleListeManager().daten().sortierung"
+				<svws-ui-input-number placeholder="Sortierung" :model-value="schuleListeManager().daten().sortierung" :readonly
 					@change="sortierung => sortierung && patch({ sortierung })" />
-				<svws-ui-select title="Schulform" :items="Schulform.values()" :item-text="i => i.daten(schuljahr)?.text ?? '—'"
+				<svws-ui-select title="Schulform" :items="Schulform.values()" :item-text="i => i.daten(schuljahr)?.text ?? '—'" :readonly
 					:model-value="schuleListeManager().daten().idSchulform ? Schulform.data().getWertByID(schuleListeManager().daten().idSchulform ?? -1) : undefined"
 					@update:model-value="schulform => patch({ idSchulform: schulform?.daten(schuljahr)?.id ?? null})" removable />
 				<svws-ui-text-input placeholder="Statistik-Schulnummer" :model-value="schuleListeManager().daten().schulnummerStatistik" readonly statistics />
 				<svws-ui-text-input class="contentFocusField" placeholder="Kürzel" :model-value="schuleListeManager().daten().kuerzel" :valid="kuerzelIsValid"
-					@change="patchKuerzel" :max-len="10" />
+					@change="patchKuerzel" :max-len="10" :readonly />
 				<svws-ui-text-input placeholder="Schulname" :model-value="schuleListeManager().daten().name" :valid="v => mandatoryInputIsValid(v, 120)"
-					@change="patchSchulname" required :max-len="120" />
-				<svws-ui-text-input placeholder="Kurzbezeichnung" :model-value="schuleListeManager().daten().kurzbezeichnung" required :max-len="40"
+					@change="patchSchulname" required :max-len="120" :readonly />
+				<svws-ui-text-input placeholder="Kurzbezeichnung" :model-value="schuleListeManager().daten().kurzbezeichnung" required :max-len="40" :readonly
 					@change="patchKurzBezeichnung" :valid="v => mandatoryInputIsValid(v, 40)" />
 				<svws-ui-text-input placeholder="Schulleitung" :model-value="schuleListeManager().daten().schulleiter" :valid="v => optionalInputIsValid(v, 40)"
-					@change="patchSchulleiter" :max-len="40" />
+					@change="patchSchulleiter" :max-len="40" :readonly />
 				<svws-ui-text-input placeholder="Straße" :model-value="strasse" :max-len="55" :valid="v => adresseIsValid(AdressenUtils.splitStrasse(v))"
-					@change="patchStrasse" />
+					@change="patchStrasse" :readonly />
 				<svws-ui-text-input placeholder="PLZ" :model-value="schuleListeManager().daten().plz" :valid="v => optionalNumberIsValid(v, 10)"
-					@change="patchPlz" :max-len="10" />
+					@change="patchPlz" :max-len="10" :readonly />
 				<svws-ui-text-input placeholder="Ort" :model-value="schuleListeManager().daten().ort" :valid="v => optionalInputIsValid(v, 50)"
-					@change="patchOrt" :max-len="50" />
+					@change="patchOrt" :max-len="50" :readonly />
 				<svws-ui-text-input placeholder="Telefon" :model-value="schuleListeManager().daten().telefon" :valid="phoneNumberIsValid"
-					@change="patchTelefon" type="tel" :max-len="20" />
+					@change="patchTelefon" type="tel" :max-len="20" :readonly />
 				<svws-ui-text-input placeholder="Fax" :model-value="schuleListeManager().daten().fax" :valid="phoneNumberIsValid"
-					@change="patchFax" type="tel" :max-len="20" />
+					@change="patchFax" type="tel" :max-len="20" :readonly />
 				<svws-ui-text-input placeholder="E-Mail-Adresse" :model-value="schuleListeManager().daten().email" :valid="emailIsValid"
-					@change="patchEmail" type="email" :max-len="40" />
+					@change="patchEmail" type="email" :max-len="40" :readonly />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 	</div>
@@ -40,9 +40,11 @@
 
 	import { computed } from "vue";
 	import type { SchuleDatenProps } from "./SSchuleDatenProps";
-	import { AdressenUtils, Schulform, JavaObject, JavaString } from "@core"
+	import { AdressenUtils, Schulform, JavaObject, JavaString, BenutzerKompetenz } from "@core"
 
 	const props = defineProps<SchuleDatenProps>();
+	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const readonly = computed(() => !hatKompetenzUpdate.value);
 	const strasse = computed(() => AdressenUtils.combineStrasse(props.schuleListeManager().daten().strassenname ?? "",
 		props.schuleListeManager().daten().hausnummer ?? "", props.schuleListeManager().daten().zusatzHausnummer ?? ""));
 

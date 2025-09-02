@@ -41,6 +41,10 @@ public class LernplattformV1Schueler {
 	@Schema(description = "Das Geschlecht des Schülers (m - männlich, w - weiblich, d - divers, x - ohne Angabe im Geburtenregister)", example = "d")
 	public String geschlecht;
 
+	/** Das Geburtsdatum des Schülers (z.B. 21.01.2000) */
+	@Schema(description = "Das Geburtsdatum des Schülers", example = "21.01.2000")
+	public String geburtsdatum;
+
 	/** Die Status-ID des Schülers. */
 	@Schema(description = "die Status-ID des Schülers (0=Neuaufnahmen, 1=Warteliste, 2=Aktiv, 3=Beurlaubt, 6=Extern, 8=Abschluss, 9=Abgänger)", example = "2")
 	public int status;

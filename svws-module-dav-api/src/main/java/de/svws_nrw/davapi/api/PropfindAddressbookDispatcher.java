@@ -2,8 +2,8 @@ package de.svws_nrw.davapi.api;
 
 import de.svws_nrw.core.data.adressbuch.Adressbuch;
 import de.svws_nrw.core.data.adressbuch.AdressbuchEintrag;
-import de.svws_nrw.davapi.data.CollectionRessourceQueryParameters;
-import de.svws_nrw.davapi.data.IAdressbuchRepository;
+import de.svws_nrw.davapi.data.carddav.IAdressbuchRepository;
+import de.svws_nrw.davapi.data.dav.CollectionQueryParameters;
 import de.svws_nrw.davapi.model.dav.Collection;
 import de.svws_nrw.davapi.model.dav.CurrentUserPrincipal;
 import de.svws_nrw.davapi.model.dav.CurrentUserPrivilegeSet;
@@ -35,8 +35,6 @@ public class PropfindAddressbookDispatcher extends DavDispatcher {
 
 	/** Repository-Klasse zur Abfrage von Adressbüchern aus der SVWS-Datenbank */
 	private final IAdressbuchRepository repository;
-	/** URI-Parameter zum Erzeugen von URIs für dieses Adressbuch */
-	private final DavUriParameter uriParameter;
 
 	/**
 	 * Konstruktor für einen neuen Dispatcher mit Repository und den gegebenen
@@ -44,11 +42,9 @@ public class PropfindAddressbookDispatcher extends DavDispatcher {
 	 *
 	 * @param repository   das Repository zum Zugriff auf Adressbuecher der
 	 *                     Datenbank
-	 * @param uriParameter die UriParameter zum Erstellen von URIs
 	 */
-	public PropfindAddressbookDispatcher(final IAdressbuchRepository repository, final DavUriParameter uriParameter) {
+	public PropfindAddressbookDispatcher(final IAdressbuchRepository repository) {
 		this.repository = repository;
-		this.uriParameter = uriParameter;
 	}
 
 	/**
@@ -60,16 +56,12 @@ public class PropfindAddressbookDispatcher extends DavDispatcher {
 	 * @throws IOException
 	 */
 	private Object dispatchCollection(final Propfind propfind) {
-		final List<Adressbuch> adressbuecher = this.repository
-				.getAvailableAdressbuecher(CollectionRessourceQueryParameters.EXCLUDE_RESSOURCES);
-		if (adressbuecher.isEmpty()) {
-			return this.createResourceNotFoundError(
-					"Es wurden keine Adressbücher für den angemeldeten Benutzer gefunden!");
-		}
+		final List<Adressbuch> adressbuecher = this.repository.getAvailableAdressbuecher(CollectionQueryParameters.NO_RESSOURCES);
+		if (adressbuecher.isEmpty())
+			return this.createResourceNotFoundError("Es wurden keine Adressbücher für den angemeldeten Benutzer gefunden!");
 		final Multistatus ms = new Multistatus();
-		for (final Adressbuch adressbuch : adressbuecher) {
+		for (final Adressbuch adressbuch : adressbuecher)
 			ms.getResponse().add(this.generateResponseAddressbookLevel(adressbuch, propfind.getProp()));
-		}
 		return ms;
 	}
 
@@ -92,7 +84,7 @@ public class PropfindAddressbookDispatcher extends DavDispatcher {
 		}
 
 		final Optional<Adressbuch> adressbuch = this.repository.getAdressbuchById(ressourceId,
-				CollectionRessourceQueryParameters.INCLUDE_RESSOURCES_EXCLUDE_PAYLOAD);
+				CollectionQueryParameters.NO_PAYLOAD);
 		if (adressbuch.isEmpty()) {
 			return this.createResourceNotFoundError("Adressbuch mit der angegebenen Id wurde nicht gefunden!");
 		}
@@ -118,7 +110,7 @@ public class PropfindAddressbookDispatcher extends DavDispatcher {
 	private Response generateResponseAddressbookLevel(final Adressbuch adressbuch, final Prop propRequested) {
 		final DynamicPropUtil dynamicPropUtil = new DynamicPropUtil(propRequested);
 		final Prop prop200 = new Prop();
-		uriParameter.setResourceCollectionId(adressbuch.id);
+		this.setParameterResourceCollectionId(adressbuch.id);
 
 		if (dynamicPropUtil.getIsFieldRequested(Resourcetype.class)) {
 			final Resourcetype resourcetype = new Resourcetype();
@@ -135,7 +127,7 @@ public class PropfindAddressbookDispatcher extends DavDispatcher {
 
 		if (dynamicPropUtil.getIsFieldRequested(CurrentUserPrincipal.class)) {
 			final CurrentUserPrincipal principal = new CurrentUserPrincipal();
-			principal.getHref().add(DavUriBuilder.getPrincipalUri(uriParameter));
+			principal.getHref().add(getBenutzerUri());
 			prop200.setCurrentUserPrincipal(principal);
 		}
 
@@ -165,7 +157,7 @@ public class PropfindAddressbookDispatcher extends DavDispatcher {
 		}
 
 		final Response response = createResponse(propRequested, prop200);
-		response.getHref().add(DavUriBuilder.getAddressbookUri(uriParameter));
+		response.getHref().add(getCardDavResourceCollectionUri());
 		return response;
 	}
 
@@ -182,8 +174,8 @@ public class PropfindAddressbookDispatcher extends DavDispatcher {
 		final DynamicPropUtil dynamicPropUtil = new DynamicPropUtil(propRequested);
 		final Prop prop200 = new Prop();
 
-		uriParameter.setResourceCollectionId(eintrag.adressbuchId);
-		uriParameter.setResourceId(eintrag.id);
+		this.setParameterResourceCollectionId(eintrag.adressbuchId);
+		this.setParameterResourceId(eintrag.id);
 
 		if (dynamicPropUtil.getIsFieldRequested(Resourcetype.class)) {
 			final Resourcetype resourcetype = new Resourcetype();
@@ -209,7 +201,7 @@ public class PropfindAddressbookDispatcher extends DavDispatcher {
 		}
 
 		final Response response = createResponse(propRequested, prop200);
-		response.getHref().add(DavUriBuilder.getAddressEntryUri(uriParameter));
+		response.getHref().add(getCardDavResourceUri());
 		return response;
 	}
 

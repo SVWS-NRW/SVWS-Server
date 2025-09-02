@@ -31,12 +31,12 @@ class TestJahrgaenge {
 	 *
 	 * CoreType: Jahrgaenge
 	 * Testfall: Prüft die Anzahl der möglichen Werte
-	 * Ergebnis: Erwartete Anzahl - 27
+	 * Ergebnis: Erwartete Anzahl - 34
 	 */
 	@Test
 	@DisplayName("Teste CoreType Jahrgaenge: Anzahl der vorhandenen Werte.")
 	void testJahrgaenge_AnzahlEintraege() {
-		assertEquals(33, Jahrgaenge.data().getWerte().size());
+		assertEquals(34, Jahrgaenge.data().getWerte().size());
 	}
 
 }

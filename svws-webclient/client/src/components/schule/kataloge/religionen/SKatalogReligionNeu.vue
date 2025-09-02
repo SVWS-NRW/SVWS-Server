@@ -4,14 +4,15 @@
 			<svws-ui-content-card title="Allgemein">
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-input-wrapper>
-						<svws-ui-select v-model="religion" title="Statistikkürzel" :items="religionKatalogList" :item-text="i => i.kuerzel || '--- bitte auswählen ---'" required />
+						<svws-ui-select v-model="religion" title="Statistikkürzel" :items="religionKatalogList" :disabled
+							:item-text="i => i.kuerzel || '--- bitte auswählen ---'" required />
 					</svws-ui-input-wrapper>
-					<svws-ui-text-input v-model="data.bezeichnung" placeholder="Bezeichnung" />
-					<svws-ui-text-input v-model="data.bezeichnungZeugnis" placeholder="Zeugnisbezeichnung" />
+					<svws-ui-text-input v-model="data.bezeichnung" placeholder="Bezeichnung" :disabled />
+					<svws-ui-text-input v-model="data.bezeichnungZeugnis" placeholder="Zeugnisbezeichnung" :disabled />
 				</svws-ui-input-wrapper>
 				<div class="mt-7 flex flex-row gap-4 justify-end">
 					<svws-ui-button type="secondary" @click="cancel" :disabled="isLoading">Abbrechen</svws-ui-button>
-					<svws-ui-button @click="addReligion()" :disabled="!isValid || isLoading">
+					<svws-ui-button @click="addReligion()" :disabled="!isValid || isLoading || !hatKompetenzUpdate">
 						Speichern <svws-ui-spinner :spinning="isLoading" />
 					</svws-ui-button>
 				</div>
@@ -24,9 +25,11 @@
 <script setup lang="ts">
 	import { computed, ref, watch } from "vue";
 	import type { KatalogReligionNeuProps } from "./SKatalogReligionNeuProps";
-	import { ArrayList, type List, Religion, ReligionEintrag } from "@core";
+	import { ArrayList, BenutzerKompetenz, type List, Religion, ReligionEintrag } from "@core";
 
 	const props = defineProps<KatalogReligionNeuProps>();
+	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const disabled = computed(() => !hatKompetenzUpdate.value);
 
 	const isLoading = ref<boolean>(false);
 	const isValid = ref<boolean>(false);

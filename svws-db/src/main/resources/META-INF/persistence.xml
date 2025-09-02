@@ -328,12 +328,12 @@
         <class>de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerEntlastungsstunde</class>
         <class>de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerFoto</class>
         <class>de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerFunktion</class>
-        <class>de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerLehramt</class>
-        <class>de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerLehramtBefaehigung</class>
-        <class>de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerLehramtFachrichtung</class>
         <class>de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerLeitungsfunktionKeys</class>
         <class>de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerLernplattform</class>
         <class>de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerMehrleistung</class>
+        <class>de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerPersonaldatenLehramt</class>
+        <class>de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerPersonaldatenLehramtBefaehigung</class>
+        <class>de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerPersonaldatenLehramtFachrichtung</class>
         <class>de.svws_nrw.db.dto.current.schild.lehrer.DTOSchulleitung</class>
         <class>de.svws_nrw.db.dto.current.schild.personengruppen.DTOPersonengruppen</class>
         <class>de.svws_nrw.db.dto.current.schild.personengruppen.DTOPersonengruppenPersonen</class>

@@ -15,6 +15,7 @@ const routes = [
 	{ path: '/ui/Avatar', component: () => import('../ui/SvwsUiAvatar.story.vue') },
 	{ path: '/ui/Notifications', component: () => import('../ui/SvwsUiNotifications.story.vue') },
 	{ path: '/controls/Select', component: () => import('../ui/controls/select/UiSelect.story.vue') },
+	{ path: '/controls/SelectMulti', component: () => import('../ui/controls/select/UiSelectMulti.story.vue') },
 	{ path: '/controls/Button', component: () => import('../ui/controls/SvwsUiButton.story.vue') },
 	{ path: '/controls/ButtonSelect', component: () => import('../ui/controls/SvwsUiButtonSelect.story.vue') },
 	{ path: '/controls/Checkbox', component: () => import('../ui/controls/SvwsUiCheckbox.story.vue') },

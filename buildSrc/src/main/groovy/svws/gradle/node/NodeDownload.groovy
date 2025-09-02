@@ -1,11 +1,13 @@
 package svws.gradle.node;
 
+import javax.inject.Inject
 import org.apache.tools.ant.Project
 import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.Copy;
 import org.gradle.api.tasks.Internal;
 import org.gradle.api.tasks.OutputFile;
 import org.gradle.api.tasks.TaskAction;
+import org.gradle.api.file.FileSystemOperations
 import org.gradle.api.file.RegularFileProperty;
 import org.gradle.api.file.RelativePath;
 
@@ -13,6 +15,9 @@ abstract class NodeDownload extends DefaultTask {
 
 	@Internal
 	NodePluginConfig cfg;
+	
+	@Inject
+	abstract FileSystemOperations getFs()
 
 	NodeDownload() {
 		group = 'node'

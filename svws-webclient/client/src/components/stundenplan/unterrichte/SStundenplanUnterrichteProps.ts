@@ -1,4 +1,5 @@
-import type { BenutzerKompetenz, Schulform, ServerMode, StundenplanManager, StundenplanUnterricht, StundenplanUnterrichtListeManager } from "@core";
+import type { BenutzerKompetenz, Schulform, ServerMode, StundenplanManager, StundenplanUnterricht } from "@core";
+import type { StundenplanUnterrichtListeManager } from "@ui";
 
 export interface StundenplanUnterrichteProps {
 	schulform: Schulform;

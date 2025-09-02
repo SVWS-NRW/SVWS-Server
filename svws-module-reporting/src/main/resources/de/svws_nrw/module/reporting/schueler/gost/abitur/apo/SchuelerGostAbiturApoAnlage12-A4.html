@@ -1,0 +1,794 @@
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head th:with="mediaPrint = ${Parameter.ausgabeformat == 2}">
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width" />
+	<title>NRW - Anlage 12 - Zeugnis der allgemeinen Hochschulreife</title>
+	<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-pdf.css}" href="../../../../css/reporting-pdf.css" />
+	<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-A4-hoch-minimal-rand.css}" href="../../../../css/reporting-A4-hoch-minimal-rand.css" />
+	<link rel="stylesheet" th:href="@{css/reporting-styles.css}" href="../../../../css/reporting-styles.css" />
+	<link rel="stylesheet" th:href="@{schueler/gost/abitur/apo/SchuelerGostAbiturApoAnlage12-A4.css}" href="SchuelerGostAbiturApoAnlage12-A4.css" />
+</head>
+
+<body>
+<div th:each="schueler,iterationVarSchueler : ${Schueler}"
+	 th:with="schuljahr = ${schueler.gostAbitur().abiturSchuljahr()},
+	 abiturLernabschnitt = ${schueler.aktiverLernabschnittInSchuljahresabschnitt(schueler.gostAbitur().abiturSchuljahresabschnitt())},
+	 fachbelegungenAbiturfaecher = ${schueler.gostAbitur().fachbelegungenAbiturfaecher()},
+	 religionVorhanden = ${schueler.gostAbitur().religionVorhanden()},
+	 projektkursVorhanden = ${schueler.gostAbitur().projektkursVorhanden()},
+	 vertiefungskursVorhanden = ${schueler.gostAbitur().vertiefungskursVorhanden()},
+	 bblVorhanden = ${((schueler.gostAbitur().besondereLernleistungArt().equalsIgnoreCase('E')) || (schueler.gostAbitur().besondereLernleistungArt().equalsIgnoreCase('P')))}">
+
+	<!-- Seite 1 Beginn #################################################################################################################################### -->
+	<table class="fixed-100 m-tb-0 m-l-6 m-r-4 p-0 start-new-page">
+		<tr>
+			<td style="height: 5mm;" class="ta-lt"></td>
+		</tr>
+		<tr>
+			<td style="height: 277mm" class="bo-black-strong p-4 ta-ct">
+				<table  class="fixed-100 mp-0">
+					<tr>
+						<td style="width: 100%; height: 55mm"></td>
+					</tr>
+					<tr>
+						<td style="width: 100%; height: 32mm" class="ta-cm p-l-4 p-r-4">
+							<img style="height: 32mm" th:src="@{'data:image/unknown;base64,'+${Schule.schullogo()}}" alt="Schullogo"/>
+						</td>
+					</tr>
+					<tr>
+						<td style="width: 100%; height: 21mm; font-size: 24pt; " class="f-bold ta-cb">Z E U G N I S</td>
+					</tr>
+					<tr>
+						<td style="width: 100%; height: 12mm; font-size: 20pt; " class="f-bold ta-cb">DER ALLGEMEINEN HOCHSCHULREIFE</td>
+					</tr>
+					<tr>
+						<td style="width: 100%; height: 17mm; font-size: 17pt; " class="f-bold ta-cb" th:text="${schueler.vornamenNachname()}">Anna Mustermann</td>
+					</tr>
+					<tr>
+						<td style="width: 100%; height: 4mm; font-size: 9pt;" class="ta-ct p-tb-0 p-lr-4-4" th:text="${schueler.druckeKonfessionAufZeugnisse() ? '(' + schueler.religion().bezeichnungZeugnis + ')' : ''}">(Konfession)</td>
+					</tr>
+					<tr>
+						<td style="width: 100%; height: 16mm; font-size: 13pt; " class="ta-cb" th:text="${'geboren am ' + #convert.toDateDELong(schueler.geburtsdatum())  + ' in ' + schueler.wohnort().ortsname}">geboren am 31. September 2006 in Musterstadt am Rhein</td>
+					</tr>
+					<tr>
+						<td style="width: 100%; height: 12mm; font-size: 13pt; " class="ta-cb" th:text="${'wohnhaft in ' + schueler.geburtsort()}">wohnhaft in Musterstadt am Rhein</td>
+					</tr>
+					<tr>
+						<td style="width: 100%; height: 12mm; font-size: 13pt; " class="ta-cb">hat sich nach dem Besuch der gymnasialen Oberstufe der Abiturprüfung unterzogen.</td>
+					</tr>
+					<tr>
+						<td style="width: 100%; height: 87mm" class="p-4 ta-cb">
+							<p style="font-size: 8pt; margin-bottom: 1.5em" class="f-small">Dem Zeugnis liegen zugrunde:</p>
+							<p style="font-size: 8pt; margin-bottom: 1.5em" class="f-small">Vereinbarung zur Gestaltung der gymnasialen Oberstufe und der Abiturprüfung<br/>
+								(Beschluss der Kultusministerkonferenz vom 7. Juli 1972 in der jeweils geltenden Fassung)</p>
+							<p style="font-size: 8pt; margin-bottom: 1.5em" class="f-small">Bildungsstandards für die Allgemeine Hochschulreife und Vereinbarungen über die Einheitlichen Prüfungsanforderungen in der
+								Abiturprüfung</p>
+							<p style="font-size: 8pt; margin-bottom: 1em">Verordnung über den Bildungsgang und die Abiturprüfung in der gymnasialen Oberstufe - APO-GOSt - vom 5. Oktober 1998 in der jeweils
+								geltenden Fassung (BASS 13-32 Nr. 3.1)</p>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+		</tr>
+	</table>
+	<!-- Seite 1 Ende ###################################################################################################################################### -->
+
+	<!-- Seite 2 Beginn #################################################################################################################################### -->
+	<table class="fixed-100 m-tb-0 m-l-6 m-r-4 p-0 start-new-page">
+		<tr>
+			<td style="width: 100%; height: 5mm" class="ta-lt">
+				<span class="f-tiny" th:text="${'2. Seite des Zeugnisses der allgemeinen Hochschulreife für ' + schueler.vornamenNachname()}">2. Seite des Zeugnisses der allgemeinen Hochschulreife für Anna Mustermann</span>
+			</td>
+		</tr>
+		<tr>
+			<td style="height: 277mm"  class="bo-black-strong p-t-2 p-lr-4 p-b-4 ta-ct">
+				<table  class="fixed-100 mp-0">
+					<tr>
+						<td style="width: 100%; height: 6mm" class="ta-lt f-bold">
+							Block I: Ergebnisse in der Qualifikationsphase
+						</td>
+					</tr>
+					<tr>
+						<td style="width: 100%; height: 226mm" class="ta-ct">
+							<table  class="fixed-100 mp-0">
+								<colgroup>
+									<col style="width: 50%" />
+									<col style="width: 12.5%" />
+									<col style="width: 12.5%" />
+									<col style="width: 12.5%" />
+									<col style="width: 12.5%" />
+								</colgroup>
+								<tr>
+									<td rowspan="3" class="p-lr-2 ta-lm bo-black-strong">Fach <sup>1)</sup></td>
+									<td colspan="4" style="height: 16mm;" class="p-lr-2 ta-cm bo-black-strong">Bewertung <sup>2)</sup><br/>Halbjahresergebnisse in einfacher Wertung</td>
+								</tr>
+								<tr style="height: 12mm;">
+									<td colspan="2" class="p-lr-2 ta-cm bo-black-strong"><p>1. Jahr der Qualifikationsphase (Q1)</p></td>
+									<td colspan="2" class="p-lr-2 ta-cm bo-black-strong"><p>2. Jahr der Qualifikationsphase (Q2)</p></td>
+								</tr>
+								<tr style="height: 7mm;">
+									<td class="p-lr-2 ta-cm bo-black-strong">1. Halbjahr</td>
+									<td class="p-lr-2 ta-cm bo-black-strong">2. Halbjahr</td>
+									<td class="p-lr-2 ta-cm bo-black-strong">1. Halbjahr</td>
+									<td class="p-lr-2 ta-cm bo-black-strong">2. Halbjahr</td>
+								</tr>
+								<tr>
+									<td colspan="5" style="height: 10mm" class="p-tb-1 p-lr-2 ta-lb bo-black-strong f-bold">Sprachlich-literarisch-künstlerisches Aufgabenfeld</td>
+								</tr>
+								<th:block th:each="fachbelegung : ${schueler.gostAbitur().fachbelegungenAB1Zeugnisrelevant()}">
+									<tr style="height: 7.25mm">
+										<td class="p-tb-1 p-lr-2 ta-lm bo-black-strong" th:text="${fachbelegung.zeugnisFachbezeichnung(true)}">Fachbezeichnung</td>
+										<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.zeugnisNotenpunkteQ11(schuljahr, true)}">06</td>
+										<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.zeugnisNotenpunkteQ12(schuljahr, true)}">07</td>
+										<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.zeugnisNotenpunkteQ21(schuljahr, true)}">08</td>
+										<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.zeugnisNotenpunkteQ22(schuljahr, true)}">09</td>
+									</tr>
+								</th:block>
+								<tr>
+									<td colspan="5" style="height: 10mm" class="p-tb-1 p-lr-2 ta-lb bo-black-strong f-bold">Gesellschaftswissenschaftliches Aufgabenfeld</td>
+								</tr>
+								<th:block th:each="fachbelegung : ${schueler.gostAbitur().fachbelegungenAB2Zeugnisrelevant()}">
+									<tr style="height: 7.25mm">
+										<td class="p-tb-1 p-lr-2 ta-lm bo-black-strong" th:text="${fachbelegung.zeugnisFachbezeichnung(true)}">Fachbezeichnung</td>
+										<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.zeugnisNotenpunkteQ11(schuljahr, true)}">06</td>
+										<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.zeugnisNotenpunkteQ12(schuljahr, true)}">07</td>
+										<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.zeugnisNotenpunkteQ21(schuljahr, true)}">08</td>
+										<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.zeugnisNotenpunkteQ22(schuljahr, true)}">09</td>
+									</tr>
+								</th:block>
+								<tr>
+									<td colspan="5" style="height: 10mm" class="p-tb-1 p-lr-2 ta-lb bo-black-strong f-bold">Mathematisch-naturwissenschaftlich-technisches Aufgabenfeld</td>
+								</tr>
+								<th:block th:each="fachbelegung : ${schueler.gostAbitur().fachbelegungenAB3Zeugnisrelevant()}">
+									<tr style="height: 7.25mm">
+										<td class="p-tb-1 p-lr-2 ta-lm bo-black-strong" th:text="${fachbelegung.zeugnisFachbezeichnung(true)}">Fachbezeichnung</td>
+										<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.zeugnisNotenpunkteQ11(schuljahr, true)}">06</td>
+										<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.zeugnisNotenpunkteQ12(schuljahr, true)}">07</td>
+										<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.zeugnisNotenpunkteQ21(schuljahr, true)}">08</td>
+										<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.zeugnisNotenpunkteQ22(schuljahr, true)}">09</td>
+									</tr>
+								</th:block>
+								<tr>
+									<td colspan="5" style="height: 6mm" class="p-tb-1 p-lr-2 ta-lb bo-black-strong"></td>
+								</tr>
+								<th:block th:if="${religionVorhanden}">
+									<th:block th:each="fachbelegung : ${schueler.gostAbitur().fachbelegungenReligionZeugnisrelevant()}">
+										<tr style="height: 7.25mm">
+											<td class="p-tb-1 p-lr-2 ta-lm bo-black-strong" th:text="${fachbelegung.zeugnisFachbezeichnung(true)}">Fachbezeichnung</td>
+											<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.zeugnisNotenpunkteQ11(schuljahr, true)}">06</td>
+											<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.zeugnisNotenpunkteQ12(schuljahr, true)}">07</td>
+											<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.zeugnisNotenpunkteQ21(schuljahr, true)}">08</td>
+											<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.zeugnisNotenpunkteQ22(schuljahr, true)}">09</td>
+										</tr>
+									</th:block>
+									<tr>
+										<td colspan="5" style="height: 4mm" class="p-tb-1 p-lr-2 ta-lb bo-black-strong"></td>
+									</tr>
+								</th:block>
+								<th:block th:each="fachbelegung : ${schueler.gostAbitur().fachbelegungenSportZeugnisrelevant()}">
+									<tr style="height: 7.25mm">
+										<td class="p-tb-1 p-lr-2 ta-lm bo-black-strong" th:text="${fachbelegung.zeugnisFachbezeichnung(true)}">Fachbezeichnung</td>
+										<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.zeugnisNotenpunkteQ11(schuljahr, true)}">06</td>
+										<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.zeugnisNotenpunkteQ12(schuljahr, true)}">07</td>
+										<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.zeugnisNotenpunkteQ21(schuljahr, true)}">08</td>
+										<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.zeugnisNotenpunkteQ22(schuljahr, true)}">09</td>
+									</tr>
+								</th:block>
+								<tr>
+									<td colspan="5" style="height: 4mm" class="p-tb-1 p-lr-2 ta-lb bo-black-strong f-bold"></td>
+								</tr>
+								<th:block th:each="fachbelegung : ${schueler.gostAbitur().fachbelegungenProjektkurseZeugnisrelevant()}">
+									<tr style="height: 7.25mm">
+										<td  class="p-tb-1 p-lr-2 ta-lm bo-t-black-strong bo-lr-black"><b>Projektkurs</b> <sup class="tiny">3)</sup></td>
+										<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.zeugnisNotenpunkteQ11(schuljahr, true)}">06</td>
+										<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.zeugnisNotenpunkteQ12(schuljahr, true)}">07</td>
+										<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.zeugnisNotenpunkteQ21(schuljahr, true)}">08</td>
+										<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.zeugnisNotenpunkteQ22(schuljahr, true)}">09</td>
+									</tr>
+								</th:block>
+								<tr th:if="${projektkursVorhanden}">
+									<td colspan="5" style="height: 7.25mm" class="p-tb-1 p-lr-2 ta-lm bo-b-black bo-lr-black f-ital" th:text="${'Thema: ' + schueler.gostAbitur().projektkursThema()}">Thema: Das Thema des Projektkurses aus den fachbezogenen Bemerkungen zum Projektkurs.</td>
+								</tr>
+								<tr style="height: 7.25mm" th:if="${!projektkursVorhanden}">
+									<td class="p-tb-1 p-lr-2 ta-lm bo-t-black-strong bo-lr-black"><b>Projektkurs</b> <sup class="tiny">3)</sup></td>
+									<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">--</td>
+									<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">--</td>
+									<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">--</td>
+									<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">--</td>
+								</tr>
+								<tr style="height: 7.25mm" th:if="${!projektkursVorhanden}">
+									<td colspan="5" class="p-tb-1 p-lr-2 ta-lm bo-b-black bo-lr-black f-ital">Thema: ---</td>
+								</tr>
+								<tr style="height: 10mm">
+									<td colspan="5" class="p-tb-1 p-lr-2 ta-lb bo-black-strong"><b>Vertiefungsfächer</b></td>
+								</tr>
+								<th:block th:each="fachbelegung : ${schueler.gostAbitur().fachbelegungenVertiefungskurseZeugnisrelevant()}">
+									<tr style="height: 7.25mm">
+										<td class="p-tb-1 p-lr-2 ta-lm bo-black-strong" th:text="${fachbelegung.fach().bezeichnungZeugnis()}">Fachbezeichnung</td>
+										<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.zeugnisNotenpunkteQ11(schuljahr, true)}">06</td>
+										<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.zeugnisNotenpunkteQ12(schuljahr, true)}">07</td>
+										<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.zeugnisNotenpunkteQ21(schuljahr, true)}">08</td>
+										<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.zeugnisNotenpunkteQ22(schuljahr, true)}">09</td>
+									</tr>
+								</th:block>
+								<tr style="height: 7.25mm" th:if="${!vertiefungskursVorhanden}">
+									<td colspan="5" class="p-tb-1 p-lr-2 ta-lm bo-black-strong">- keine -</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+				<table>
+					<tr>
+						<td style="width: 20%; height: 1mm;" class="bo-t-black-strong"></td>
+						<td colspan="4" style="width: 80%; height: 1mm;"></td>
+					</tr>
+					<tr>
+						<td colspan="5" style="width: 100%; height: 35mm" class="ta-lt fixed-100">
+							<table>
+								<colgroup>
+									<col style="width: 2%" />
+									<col style="width: 98%" />
+								</colgroup>
+								<tr>
+									<td class="ta-lt"><sup>1) </sup></td>
+									<td class="ta-lt f-very-tiny">Leistungskursfächer werden mit dem Klammerzusatz „LK/eA“ (Leistungskurs/erhöhtes Anforderungsniveau) gekennzeichnet. Grundkurse bleiben ohne besondere Kennzeichnung.</td>
+								</tr>
+								<tr>
+									<td class="ta-lt"><sup>2) </sup></td>
+									<td class="ta-lt f-very-tiny">Für die Umsetzung der Noten in Punkte gilt:</td>
+								</tr>
+								<tr>
+									<td class="ta-lt"></td>
+									<td style="padding-left: 0.5mm; padding-top: 1mm; padding-bottom: 1mm" class="ta-cm f-very-tiny">
+										<table class="fixed-100 m-0">
+											<colgroup>
+												<col style="width: 14.5%" />
+												<col style="width: 4.75%" />
+												<col style="width: 4.75%" />
+												<col style="width: 4.75%" />
+												<col style="width: 4.75%" />
+												<col style="width: 4.75%" />
+												<col style="width: 4.75%" />
+												<col style="width: 4.75%" />
+												<col style="width: 4.75%" />
+												<col style="width: 4.75%" />
+												<col style="width: 4.75%" />
+												<col style="width: 4.75%" />
+												<col style="width: 4.75%" />
+												<col style="width: 4.75%" />
+												<col style="width: 4.75%" />
+												<col style="width: 4.75%" />
+												<col style="width: 4.75%" />
+												<col style="width: 4.75%" />
+												<col style="width: 4.75%" />
+											</colgroup>
+											<tr>
+												<td rowspan="2" class="bo-black">Noten</td>
+												<td colspan="3" class="bo-black">sehr gut</td>
+												<td colspan="3" class="bo-black">gut</td>
+												<td colspan="3" class="bo-black">befriedigend</td>
+												<td colspan="3" class="bo-black">ausreichend</td>
+												<td colspan="3" class="bo-black">mangelhaft</td>
+												<td colspan="3" class="bo-black">ungenügend</td>
+											</tr>
+											<tr>
+												<td class="bo-b-black">+</td>
+												<td class="bo-b-black">1</td>
+												<td class="bo-r-black bo-b-black">-</td>
+												<td class="bo-l-black bo-b-black">+</td>
+												<td class="bo-b-black">2</td>
+												<td class="bo-r-black bo-b-black">-</td>
+												<td class="bo-l-black bo-b-black">+</td>
+												<td class="bo-b-black">3</td>
+												<td class="bo-r-black bo-b-black">-</td>
+												<td class="bo-l-black bo-b-black">+</td>
+												<td class="bo-b-black">4</td>
+												<td class="bo-r-black bo-b-black">-</td>
+												<td class="bo-l-black bo-b-black">+</td>
+												<td class="bo-b-black">5</td>
+												<td class="bo-r-black bo-b-black">-</td>
+												<td class="bo-l-black bo-b-black"></td>
+												<td class="bo-b-black">6</td>
+												<td class="bo-r-black bo-b-black"></td>
+											</tr>
+											<tr>
+												<td class="bo-black">Punkte</td>
+												<td class="bo-b-black">15</td>
+												<td class="bo-b-black">14</td>
+												<td class="bo-r-black bo-b-black">13</td>
+												<td class="bo-l-black bo-b-black">12</td>
+												<td class="bo-b-black">11</td>
+												<td class="bo-r-black bo-b-black">10</td>
+												<td class="bo-l-black bo-b-black">09</td>
+												<td class="bo-b-black">08</td>
+												<td class="bo-r-black bo-b-black">07</td>
+												<td class="bo-l-black bo-b-black">06</td>
+												<td class="bo-b-black">05</td>
+												<td class="bo-r-black bo-b-black">04</td>
+												<td class="bo-l-black bo-b-black">03</td>
+												<td class="bo-b-black">02</td>
+												<td class="bo-r-black bo-b-black">01</td>
+												<td class="bo-l-black bo-b-black"></td>
+												<td class="bo-b-black">00</td>
+												<td class="bo-r-black bo-b-black"></td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+								<tr>
+									<td class="ta-lt"></td>
+									<td class="ta-lt f-very-tiny">Die Punktzahlen in Klammern sind nicht in die Gesamtqualifikation einbezogen worden. Punktzahlen werden in einfacher Wertung und stets zweistellig angegeben.</td>
+								</tr>
+								<tr>
+									<td class="ta-lt"><sup>3) </sup></td>
+									<td class="ta-lt f-very-tiny">Wird der Projektkurs als besondere Lernleistung eingebracht, wird hier nur die Belegung ausgewiesen.</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+		</tr>
+	</table>
+	<!-- Seite 2 Ende ###################################################################################################################################### -->
+
+	<!-- Seite 3 Beginn #################################################################################################################################### -->
+	<table class="fixed-100 m-tb-0 m-l-6 m-r-4 p-0 start-new-page">
+		<tr>
+			<td style="width: 100%; height: 5mm" class="ta-lt">
+				<span class="f-tiny" th:text="${'3. Seite des Zeugnisses der allgemeinen Hochschulreife für ' + schueler.vornamenNachname()}">3. Seite des Zeugnisses der allgemeinen Hochschulreife für Anna Mustermann</span>
+			</td>
+		</tr>
+		<tr>
+			<td style="height: 277mm" class="bo-black-strong p-t-2 p-lr-4 p-b-4 ta-ct">
+				<table  class="fixed-100 mp-0">
+					<tr>
+						<td style="width: 100%; height: 6mm" class="ta-lt f-bold">
+							Block II: Ergebnisse der Abiturprüfung
+						</td>
+					</tr>
+					<tr>
+						<td style="width: 100%; height: 57mm" class="ta-ct">
+							<table  class="fixed-100 mp-0">
+								<colgroup>
+									<col style="width: 62%" />
+									<col style="width: 19%" />
+									<col style="width: 19%" />
+								</colgroup>
+								<tr style="height: 5.5mm">
+									<td class="p-lr-2 ta-cm bo-l-black-strong bo-t-black-strong"></td>
+									<td colspan="2" class="p-lr-2 ta-cm bo-black-strong">Prüfungsergebnis in einfacher Wertung</td>
+								</tr>
+								<tr style="height: 5.5mm">
+									<td class="p-lr-2 ta-lm bo-l-black-strong bo-b-black-strong">Prüfungsfach <sup class="tiny">4)</sup></td>
+									<td class="p-lr-2 ta-cm bo-black-strong">schriftlich</td>
+									<td class="p-lr-2 ta-cm bo-black-strong">mündlich</td>
+								</tr>
+								<th:block th:each="fachbelegung : ${schueler.gostAbitur().fachbelegungenAbiturfaecher()}">
+									<tr style="height: 11.5mm"  th:if="${fachbelegung.fach().aufZeugnis() && (fachbelegung.abiturFach() != null && fachbelegung.abiturFach() == 1)}">
+										<td class="p-tb-3 p-lr-2 ta-lm bo-black-strong" th:text="${'1. ' + fachbelegung.fach().bezeichnungZeugnis() + ' (LK/eA)'}">Fachbezeichnung</td>
+										<td class="p-tb-3 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.block2PruefungNote().getNotenpunkteZweistellig(schuljahr) == null ? '--' : fachbelegung.block2PruefungNote().getNotenpunkteZweistellig(schuljahr)}">06</td>
+										<td class="p-tb-3 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.block2MuendlichePruefungNote().getNotenpunkteZweistellig(schuljahr) == null ? '--' : fachbelegung.block2MuendlichePruefungNote().getNotenpunkteZweistellig(schuljahr)}">07</td>
+									</tr>
+								</th:block>
+								<th:block th:each="fachbelegung : ${schueler.gostAbitur().fachbelegungenAbiturfaecher()}">
+									<tr style="height: 11.5mm" th:if="${fachbelegung.fach().aufZeugnis() && (fachbelegung.abiturFach() != null && fachbelegung.abiturFach() == 2)}">
+										<td class="p-tb-3 p-lr-2 ta-lm bo-black-strong" th:text="${'2. ' + fachbelegung.fach().bezeichnungZeugnis() + ' (LK/eA)'}">Fachbezeichnung</td>
+										<td class="p-tb-3 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.block2PruefungNote().getNotenpunkteZweistellig(schuljahr) == null ? '--' : fachbelegung.block2PruefungNote().getNotenpunkteZweistellig(schuljahr)}">06</td>
+										<td class="p-tb-3 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.block2MuendlichePruefungNote().getNotenpunkteZweistellig(schuljahr) == null ? '--' : fachbelegung.block2MuendlichePruefungNote().getNotenpunkteZweistellig(schuljahr)}">07</td>
+									</tr>
+								</th:block>
+								<th:block th:each="fachbelegung : ${schueler.gostAbitur().fachbelegungenAbiturfaecher()}">
+									<tr style="height: 11.5mm" th:if="${fachbelegung.fach().aufZeugnis() && (fachbelegung.abiturFach() != null && fachbelegung.abiturFach() == 3)}">
+										<td class="p-tb-3 p-lr-2 ta-lm bo-black-strong" th:text="${'3. ' + fachbelegung.fach().bezeichnungZeugnis()}">Fachbezeichnung</td>
+										<td class="p-tb-3 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.block2PruefungNote().getNotenpunkteZweistellig(schuljahr) == null ? '--' : fachbelegung.block2PruefungNote().getNotenpunkteZweistellig(schuljahr)}">06</td>
+										<td class="p-tb-3 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.block2MuendlichePruefungNote().getNotenpunkteZweistellig(schuljahr) == null ? '--' : fachbelegung.block2MuendlichePruefungNote().getNotenpunkteZweistellig(schuljahr)}">07</td>
+									</tr>
+								</th:block>
+								<th:block th:each="fachbelegung : ${schueler.gostAbitur().fachbelegungenAbiturfaecher()}">
+									<tr style="height: 11.5mm" th:if="${fachbelegung.fach().aufZeugnis() && (fachbelegung.abiturFach() != null && fachbelegung.abiturFach() == 4)}">
+										<td class="p-tb-3 p-lr-2 ta-lm bo-black-strong" th:text="${'4. ' + fachbelegung.fach().bezeichnungZeugnis()}">Fachbezeichnung</td>
+										<td class="p-tb-3 p-lr-2 ta-cm bo-black-strong">--</td>
+										<td class="p-tb-3 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.block2PruefungNote().getNotenpunkteZweistellig(schuljahr) == null ? '--' : fachbelegung.block2PruefungNote().getNotenpunkteZweistellig(schuljahr)}">06</td>
+									</tr>
+								</th:block>
+							</table>
+						</td>
+					</tr>
+					<tr style="height: 31mm">
+						<td style="width: 100%" class="ta-ct">
+							<table  class="fixed-100 mp-0">
+								<colgroup>
+									<col style="width: 28%" />
+									<col style="width: 59%" />
+									<col style="width: 13%" />
+								</colgroup>
+								<tr>
+									<td colspan="3" style="height: 11mm" class="ta-lb"><span class="f-bold">Besondere Lernleistung </span><sup>5)</sup></td>
+								</tr>
+								<tr style="height: 6.5mm" >
+									<td class="p-lr-2 ta-cm bo-black-strong">Zugeordnet zu Fach/Fächer</td>
+									<td class="p-lr-2 ta-cm bo-black-strong">Thema</td>
+									<td class="p-lr-2 ta-cm bo-black-strong">Punktzahl</td>
+								</tr>
+								<tr style="height: 6.5mm" th:if="${!bblVorhanden}">
+									<td class="p-lr-2 ta-cm bo-black-strong">---</td>
+									<td class="p-lr-2 ta-cm bo-black-strong">- entfällt -</td>
+									<td class="p-lr-2 ta-cm bo-black-strong">--</td>
+								</tr>
+								<tr style="height: 6.5mm" th:if="${bblVorhanden}">
+									<td class="p-lr-2 ta-cm bo-black-strong" th:text="${'TODO: Fach in DB ablegen'}">Fach der BBL</td>
+									<td class="p-lr-2 ta-cm bo-black-strong" th:text="${schueler.gostAbitur().besondereLernleistungThema()}">Das Thema der BBL wird hier ausgegeben.</td>
+									<td class="p-lr-2 ta-cm bo-black-strong" th:text="${schueler.gostAbitur().besondereLernleistungNote().getNotenpunkteZweistellig(schuljahr) == null ? '--' : schueler.gostAbitur().besondereLernleistungNote().getNotenpunkteZweistellig(schuljahr)}">12</td>
+								</tr>
+								<tr>
+									<td colspan="3"></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td style="width: 100%; height: 137mm" class="ta-ct">
+							<table class="fixed-100 mp-0">
+								<colgroup>
+									<col style="width: 104mm" />
+									<col style="width: 13mm" />
+									<col style="width: 5mm" />
+									<col />
+								</colgroup>
+								<tr style="height: 4mm">
+									<td colspan="4" class="ta-lt f-bold">Berechnung der Gesamtqualifikation und der Durchschnittsnote</td>
+								</tr>
+								<tr style="height: 7mm">
+									<td colspan="4" class="ta-lb"><span class="f-bold">Block I: </span><sup>6)</sup></td>
+								</tr>
+								<tr>
+									<td colspan="4" class="ta-lt">Punktsumme aus den Halbjahresergebnissen</td>
+								</tr>
+								<tr style="height: 17mm" >
+									<td class="ta-lm">
+										<table style="table-layout: fixed; width: 72mm" class="mp-0">
+											<tr>
+												<td rowspan="2" style="width: 48%" class="p-lr-1 f-ital ta-rm">E =</td>
+												<td style="width: 4%" class="f-ital ta-cm bo-b-black-strong">P</td>
+												<td rowspan="2" style="width: 48%" class="p-lr-1 f-ital ta-lm">&#183; 40</td>
+											</tr>
+											<tr>
+												<td class="f-ital ta-cm">S</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+								<tr style="height: 13mm">
+									<td class="ta-lm"><p style="margin-bottom: -0.5mm">P: erzielte Punkte in den eingebrachten Fächern</p><p style="margin-bottom: -0.5mm">S: Anzahl der Schulhalbjahresergebnisse</p><p>(doppelt gewichtete Fächer zählen auch hier doppelt)</p></td>
+									<td style="background-color: silver" class="ta-cm bo-black-strong" th:text="${schueler.gostAbitur().block1PunktSummeNormiert()}">999</td>
+									<td class="ta-lm"></td>
+									<td class="ta-lm">mindestens 200,<br/>höchstens 600 Punkte</td>
+								</tr>
+								<tr style="height: 12mm" >
+									<td colspan="4" class="ta-lb"><span class="f-bold">Block II: </span><sup>7)</sup></td>
+								</tr>
+								<tr style="height: 13mm">
+									<td class="ta-lm">Punktsumme aus den Gesamtergebnissen in den<br/>Prüfungsfächern in fünffacher Wertung</td>
+									<td style="background-color: silver;" class="ta-cm bo-black-strong" th:text="${schueler.gostAbitur().block2PunktSumme()}">999</td>
+									<td class="ta-lm"></td>
+									<td class="ta-lm">mindestens 100,<br/>höchstens 300 Punkte</td>
+								</tr>
+								<tr>
+									<td colspan="4" style="height: 8.5mm"></td>
+								</tr>
+								<tr style="height: 13mm">
+									<td class="ta-lm f-bold">Gesamtpunktzahl:</td>
+									<td style="background-color: silver" class="ta-cm bo-black-strong" th:text="${schueler.gostAbitur().gesamtPunkte()}">999</td>
+									<td class="ta-lm"></td>
+									<td class="ta-lm">mindestens 300,<br/>höchstens 900 Punkte</td>
+								</tr>
+								<tr>
+									<td colspan="4" style="height: 8.5mm"></td>
+								</tr>
+								<tr style="height: 13mm">
+									<td class="ta-lm f-bold">Durchschnittsnote:</td>
+									<td style="background-color: silver" class="ta-cm bo-black-strong" th:text="${schueler.gostAbitur().note()}">999</td>
+									<td class="ta-lm"></td>
+									<td style="background-color: silver" class="ta-cm bo-black-strong" th:text="${schueler.gostAbitur().noteInWorten()}">??? Komma ???</td>
+								</tr>
+								<tr>
+									<td colspan="4"></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+				<table>
+					<tr>
+						<td style="width: 20%; height: 1mm;" class="bo-t-black-strong"></td>
+						<td colspan="4" style="width: 80%; height: 1mm;"></td>
+					</tr>
+					<tr>
+						<td colspan="5" style="width: 100%; height: 35mm" class="ta-lt fixed-100">
+							<table>
+								<colgroup>
+									<col style="width: 2%" />
+									<col style="width: 98%" />
+								</colgroup>
+								<tr>
+									<td class="ta-lt"><sup>4) </sup></td>
+									<td class="ta-lt f-very-tiny">Leistungskursfächer werden mit dem Klammerzusatz „LK/eA“ (Leistungskurs/erhöhtes Anforderungsniveau) gekennzeichnet. Die Ergebnisse der Leistungskursfächer werden in Block I doppelt gewichtet.</td>
+								</tr>
+								<tr>
+									<td class="ta-lt"><sup>5) </sup></td>
+									<td class="ta-lt f-very-tiny">Eine besondere Lernleistung kann als 5. Prüfungselement angerechnet werden (Nummer 9.3.5 der „Vereinbarung zur Gestaltung der gymnasialen	Oberstufe und der Abiturprüfung“, Beschluss der Kultusministerkonferenz vom 07.07.1972 in der jeweils geltenden Fassung).</td>
+								</tr>
+								<tr>
+									<td class="ta-lt"><sup>6) </sup></td>
+									<td class="ta-lt f-very-tiny">Bei der Bildung des Gesamtergebnisses wird auf eine ganzzahlige Punktzahl gerundet; dabei wird ab der Dezimalen 5 aufgerundet.</td>
+								</tr>
+								<tr>
+									<td class="ta-lt"><sup>7) </sup></td>
+									<td class="ta-lt f-very-tiny">Wird zusätzlich eine besondere Lernleistung eingebracht, werden die Prüfungsfächer nur 4-fach gewertet.</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+		</tr>
+	</table>
+	<!-- Seite 3 Ende ###################################################################################################################################### -->
+
+	<!-- Seite 4 Beginn #################################################################################################################################### -->
+	<table class="fixed-100 m-tb-0 m-l-6 m-r-4 p-0 start-new-page">
+		<tr>
+			<td style="width: 100%; height: 5mm" class="ta-lt">
+				<span class="f-tiny" th:text="${'4. Seite des Zeugnisses der allgemeinen Hochschulreife für ' + schueler.vornamenNachname()}">4. Seite des Zeugnisses der allgemeinen Hochschulreife für Anna Mustermann</span>
+			</td>
+		</tr>
+		<tr>
+			<td style="height: 277mm"  class="bo-black-strong p-t-2 p-lr-4 p-b-4 ta-ct">
+				<table class="fixed-100 mp-0">
+					<tr>
+						<td style="width: 100%; height: 137mm;" class="ta-lt">
+							<table class="fixed-100 mp-0">
+								<tr>
+									<td style="width: 100%; height: 5mm" class="ta-lm">
+										<span class="f-bold">Fremdsprachen</span> <sup>8)</sup>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<table class="fixed-100 mp-0">
+											<colgroup>
+												<col style="width: 44%" />
+												<col style="width: 19%" />
+												<col style="width: 19%" />
+												<col style="width: 18%" />
+											</colgroup>
+											<tr>
+												<td style="height: 7mm" class="p-tb-1 p-lr-2 f-bold ta-lm bo-black-strong">Fach</td>
+												<td style="height: 7mm" colspan="2" class="p-tb-1 p-lr-2 f-bold ta-cm bo-black-strong">Jahrgangsstufe</td>
+												<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm f-bold bo-black-strong">GER</td>
+											</tr>
+											<th:block th:each="sprachbelegung : ${schueler.sprachbelegungen()}">
+												<tr>
+													<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-lm bo-black-strong" th:text="${(sprachbelegung.statistikfach().fach() != null) ? sprachbelegung.statistikfach().fach().bezeichnungZeugnis() : sprachbelegung.statistikfach().bezeichnung()}">Fachbezeichnung</td>
+													<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black-strong" th:text="${(sprachbelegung.belegungVonJahrgang() == null || sprachbelegung.belegungVonJahrgang().isEmpty()) ? '--' : 'von ' + sprachbelegung.belegungVonJahrgang() + ((sprachbelegung.belegungVonAbschnitt() == null || sprachbelegung.belegungVonAbschnitt() < 1) ? '.1' : '.' + sprachbelegung.belegungVonAbschnitt())}">05.1</td>
+													<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black-strong" th:text="${(sprachbelegung.belegungBisJahrgang() == null || sprachbelegung.belegungBisJahrgang().isEmpty()) ? '--' : 'bis ' + sprachbelegung.belegungBisJahrgang() + ((sprachbelegung.belegungBisAbschnitt() == null || sprachbelegung.belegungBisAbschnitt() < 1) ? '.1' : '.' + sprachbelegung.belegungBisAbschnitt())}">Q2.2</td>
+													<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black-strong" th:text="${(sprachbelegung.referenzniveau() == null) ? '--' : sprachbelegung.referenzniveau().daten(schuljahr).text}">B2/C1</td>
+												</tr>
+											</th:block>
+										</table>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<p style="margin-bottom: 0.5em">Für die modernen Fremdsprachen schließt dieses Zeugnis Kompetenzen des Gemeinsamen europäischen Referenzrahmens für Sprachen (GeR) ein. <sup class="tiny">9)</sup></p>
+									</td>
+								</tr>
+								<tr th:if="${!schueler.alteSprachenQualifikationen().isEmpty()}">
+									<td>
+										<p style="margin-bottom: 0.5em" th:text="${'Dieses Zeugnis schließt das ' + schueler.alteSprachenQualifikationen() + ' gemäß „Vereinbarung über das Latinum und das Graecum“ (Beschluss der Kultusministerkonferenz vom 22.09.2005) ein.'}">
+										Dieses Zeugnis schließt das Latinum/Graecum/Hebraicum gemäß „Vereinbarung über das Latinum und das Graecum“ (Beschluss der Kultusministerkonferenz vom 22.09.2005) ein.</p>
+									</td>
+								</tr>
+								<tr th:if="${schueler.hatKleinesLatinum()}">
+									<td>
+										<p style="margin-bottom: 0.5em">Das Zeugnis schließt Lateinkenntnisse im Umfang eines Kleinen Latinums (BASS 13 - 32 Nr. 3.2) ein.</p>
+									</td>
+								</tr>
+							</table>
+							<table class="fixed-100 mp-0">
+								<tr>
+									<td style="width: 100%; height: 7mm" class="ta-lb">
+										<p><span class="f-bold">Bemerkungen</span> <sup> 10)</sup></p>
+									</td>
+								</tr>
+								<tr>
+									<td style="width: 100%;" class="ta-lt" th:text="${(abiturLernabschnitt == null || abiturLernabschnitt.zeugnisBemerkungText().isEmpty()) ? '- keine -' : abiturLernabschnitt.zeugnisBemerkungText()}">
+										Eingetragene Zeugnisbemerkungen werden hier ausgegeben oder '- keine -'.
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+
+				<table class="fixed-100 mp-0">
+					<tr>
+						<td style="height: 27mm;" class="ta-lt">
+							<table class="fixed-100 mp-0">
+								<tr>
+									<td style="width: 100%;" class="ta-lt">
+										<p th:text="${schueler.anredeVornamenNachname() + ' hat die Abiturprüfung bestanden und damit die Berechtigung zum Studium an einer Hochschule in der Bundesrepublik Deutschland erworben.'}">
+											Frau/Herr N. N. hat die Abiturprüfung bestanden und damit die Berechtigung zum Studium an einer Hochschule in der Bundesrepublik Deutschland erworben.</p>
+									</td>
+								</tr>
+								<tr>
+									<td style="width: 100%;" class="ta-lt">
+										<p>Die allgemeine Hochschulreife ist im Deutschen und Europäischen Qualifikationsrahmen dem Niveau 4 zugeordnet.</p>
+									</td>
+								</tr>
+								<tr>
+									<td style="width: 100%; height: 14mm;" class="ta-lm">
+										<p th:text="${Schule.ort() + ', den ' + #convert.toDateDELong(schueler.schulbesuch().entlassungDatum())}">
+										Ort, Datum</p>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td style="height: 40mm;" >
+							<table class="fixed-100 mp-0">
+								<colgroup>
+									<col style="width: 39%" />
+									<col style="width: 22%" />
+									<col style="width: 39%" />
+								</colgroup>
+								<tr style="height: 16mm">
+									<td class="ta-cb f-very-tiny"></td>
+									<td class="ta-cb f-very-tiny">(Siegel)</td>
+									<td class="ta-cb f-very-tiny"></td>
+								</tr>
+								<tr style="height: 8mm" th:if="${((Parameter.detailLevel == 0) || (Schule.schulleitung() == null)) }">
+									<td class="bo-t-black-strong ta-ct f-very-tiny">
+										Vorsitzende/r des Zentralen Abiturausschusses
+									</td>
+									<td class="ta-ct"></td>
+									<td class="bo-t-black-strong ta-ct f-very-tiny">
+										Schulleiter/in
+									</td>
+								</tr>
+								<tr th:if="${((Parameter.detailLevel > 0) && (Schule.schulleitung() != null))}">
+									<td class="bo-t-black-strong ta-ct f-very-tiny" th:text="${Schule.schulleitung().unterschriftfeld(true, true)}">
+										N. N., OStD
+									</td>
+									<td class="ta-ct f-very-tiny"></td>
+									<td class="bo-t-black-strong ta-ct f-very-tiny" th:text="${Schule.schulleitung().unterschriftfeld(true, true)}">
+										N. N., OStD
+									</td>
+								</tr>
+								<tr th:if="${((Parameter.detailLevel > 0) && (Schule.schulleitung() != null))}">
+									<td class="ta-ct f-very-tiny" th:text="${Schule.schulleitung().geschlecht().kuerzel.equalsIgnoreCase('W') ? '(Vorsitzende des Zentralen Abiturausschusses)' : (Schule.schulleitung().geschlecht().kuerzel.equalsIgnoreCase('M') ?  '(Vorsitzender des Zentralen Abiturausschusses)' : '(Vorsitz des Zentralen Abiturausschusses)')}">
+										(Vorsitzende/r des Zentralen Abiturausschusses)
+									</td>
+									<td class="ta-ct f-very-tiny"></td>
+									<td class="ta-ct f-very-tiny" th:text="${'(' + Schule.schulleitung().schulleitungsfunktion().bezeichnung() + ')'}">
+										(Schulleiter/in)
+									</td>
+								</tr>
+								<tr style="height: 20mm;">
+									<td class="ta-cb f-very-tiny"></td>
+									<td class="ta-cb f-very-tiny"></td>
+									<td class="ta-cb f-very-tiny"></td>
+								</tr>
+								<tr style="height: 8mm" th:if="${((Parameter.detailLevel == 0) || (abiturLernabschnitt.klasse().klassenleitungen().isEmpty()))}">
+									<td class="bo-t-black-strong ta-ct f-very-tiny">
+										Vertreter/in des Schulträgers
+									</td>
+									<td class="ta-tm f-very-tiny"></td>
+									<td class="bo-t-black-strong ta-ct f-very-tiny">
+										Beratungslehrer/in
+									</td>
+								</tr>
+								<th:block th:if="${((Parameter.detailLevel == 1)  && (!abiturLernabschnitt.klasse().klassenleitungen().isEmpty()))}">
+									<tr>
+										<td class="bo-t-black-strong ta-ct f-very-tiny">
+											Vertreter/in des Schulträgers
+										</td>
+										<td class="ta-tm f-very-tiny"></td>
+										<td class="bo-t-black-strong ta-ct f-very-tiny" th:text="${abiturLernabschnitt.klasse().klassenleitungen().getFirst().unterschriftfeld(true, true)}">
+											N. N., OStR
+										</td>
+									</tr>
+									<tr>
+										<td class="ta-ct f-very-tiny"></td>
+										<td class="ta-tm f-very-tiny"></td>
+										<td class="ta-ct f-very-tiny" th:text="${abiturLernabschnitt.klasse().klassenleitungen().getFirst().geschlecht().kuerzel.equalsIgnoreCase('W') ? '(Beratungslehrerin)' : (abiturLernabschnitt.klasse().klassenleitungen().getFirst().geschlecht().kuerzel.equalsIgnoreCase('M') ?  '(Beratungslehrer)' : '(Beratungslehrkraft)')}">
+											(Beratungslehrer/in)
+										</td>
+									</tr>
+								</th:block>
+								<th:block th:if="${((Parameter.detailLevel == 2)  && (abiturLernabschnitt.klasse().klassenleitungen().size() > 1))}">
+									<tr>
+										<td class="bo-t-black-strong ta-ct f-very-tiny" th:text="${abiturLernabschnitt.klasse().klassenleitungen().get(0).unterschriftfeld(true, true)}">
+											N. N., OStR
+										</td>
+										<td class="ta-tm f-very-tiny"></td>
+										<td class="bo-t-black-strong ta-ct f-very-tiny" th:text="${abiturLernabschnitt.klasse().klassenleitungen().get(1).unterschriftfeld(true, true)}">
+											N. N., OStR
+										</td>
+									</tr>
+									<tr>
+										<td class="ta-ct f-very-tiny" th:text="${abiturLernabschnitt.klasse().klassenleitungen().get(0).geschlecht().kuerzel.equalsIgnoreCase('W') ? '(Beratungslehrerin)' : (abiturLernabschnitt.klasse().klassenleitungen().get(0).geschlecht().kuerzel.equalsIgnoreCase('M') ?  '(Beratungslehrer)' : '(Beratungslehrkraft)')}">
+											(Beratungslehrer/in)
+										</td><td class="ta-tm f-very-tiny"></td>
+										<td class="ta-ct f-very-tiny" th:text="${abiturLernabschnitt.klasse().klassenleitungen().get(1).geschlecht().kuerzel.equalsIgnoreCase('W') ? '(Beratungslehrerin)' : (abiturLernabschnitt.klasse().klassenleitungen().get(1).geschlecht().kuerzel.equalsIgnoreCase('M') ?  '(Beratungslehrer)' : '(Beratungslehrkraft)')}">
+											(Beratungslehrer/in)
+										</td>
+									</tr>
+								</th:block>
+								<tr style="height: 3mm">
+									<td class="ta-cb f-very-tiny"></td>
+									<td class="ta-cb f-very-tiny"></td>
+									<td class="ta-cb f-very-tiny"></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td style="width: 100%; height: 18mm;" class="ta-lt">
+							<p class="f-very-tiny"><span class="f-bold">Rechtsbehelfsbelehrung: </span><span th:text="${'Gegen die Leistungen in der Abiturprüfung und die Berechnung der Gesamtqualifikation einschließlich der Durchschnittsnote kann innerhalb eines Monats nach Bekanntgabe des Zeugnisses Widerspruch erhoben werden. Der Widerspruch ist bei der Schule ' + Schule.anschriftEinzeilig() + ' schriftlich oder zur Niederschrift zu erheben.'}">
+								Gegen die Leistungen in der Abiturprüfung und die Berechnung der Gesamtqualifikation einschließlich der Durchschnittsnote kann innerhalb eines Monats nach Bekanntgabe des Zeugnisses Widerspruch erhoben werden. Der Widerspruch ist bei der Schule N. N. schriftlich oder zur Niederschrift zu erheben.</span>
+							</p>
+						</td>
+					</tr>
+				</table>
+
+				<table>
+					<tr>
+						<td style="width: 20%; height: 1mm;" class="bo-t-black-strong"></td>
+						<td colspan="4" style="width: 80%; height: 1mm;"></td>
+					</tr>
+					<tr>
+						<td colspan="5" style="width: 100%; height: 25mm" class="ta-lt fixed-100">
+							<table>
+								<colgroup>
+									<col style="width: 2%" />
+									<col style="width: 98%" />
+								</colgroup>
+								<tr>
+									<td class="ta-lt"><sup>8) </sup></td>
+									<td class="ta-lt f-very-tiny">Außer Arbeitsgemeinschaften</td>
+								</tr>
+								<tr>
+									<td class="ta-lt"><sup>9) </sup></td>
+									<td class="ta-lt f-very-tiny">Sind für eine Sprache zwei Referenzniveaus ausgewiesen, ist das niedrigere in vollem Umfang, das höhere in Anteilen erreicht. Das ausgewiesene Niveau kann auch in einem vorangegangenen Schuljahr erreicht worden sein.</td>
+								</tr>
+								<tr>
+									<td class="ta-lt"><sup>10) </sup></td>
+									<td class="ta-lt f-very-tiny">Auf Wunsch der Schülerin/des Schülers kann hier die Teilnahme an Arbeitsgemeinschaften in der Qualifikationsphase oder die erfolgreiche Teilnahme an Landes- oder Bundeswettbewerben vermerkt werden. Auch können hier gemäß § 49 Abs. 3 SchulG Aussagen zum außerunterrichtlichen Engagement aufgenommen werden.</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+		</tr>
+	</table>
+	<!-- Seite 4 Ende ###################################################################################################################################### -->
+</div>
+</body>
+</html>

@@ -1,8 +1,8 @@
 import type { List, Raum, JahrgangsDaten, LehrerListeEintrag, StundenplanPausenaufsichtBereichUpdate, StundenplanKalenderwochenzuordnung, SimpleOperationResponse, StundenplanListeEintrag, ApiFile, ReportingParameter} from "@core";
 import { Stundenplan} from "@core";
-import { StundenplanUnterrichtListeManager } from "@core";
+import { StundenplanUnterrichtListeManager } from "@ui";
 import { StundenplanManager } from "@core";
-import { StundenplanListeManager} from "@core";
+import { StundenplanListeManager } from "@ui";
 import { StundenplanKonfiguration} from "@core";
 import { StundenplanPausenaufsicht, Wochentag, StundenplanRaum, StundenplanAufsichtsbereich, StundenplanPausenzeit, StundenplanUnterricht, StundenplanZeitraster, DeveloperNotificationException, ArrayList, StundenplanJahrgang, UserNotificationException } from "@core";
 

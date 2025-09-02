@@ -423,6 +423,17 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	}
 
 	/**
+	 * Gibt den Core-Type-Wert für die angegebene ID zurück oder null, falls die ID ungültig ist.
+	 *
+	 * @param id   die ID
+	 *
+	 * @return der Core-Type-Wert oder null
+	 */
+	public getWertByIDOrNull(id : number) : U | null {
+		return this._mapIDToEnum.get(id);
+	}
+
+	/**
 	 * Gibt den Core-Type-Wert für den angegebene numerischen Schlüssel zurück.
 	 *
 	 * @param schluessel   der numerische Schlüssel

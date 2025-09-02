@@ -49,6 +49,23 @@ public class ReportingParameter {
 	@Schema(description = "Legt fest, ob pro Datensatz der Detaildaten eine einzelne PDF-Datei erzeugt werden soll.", example = "false")
 	public boolean einzelausgabeDetaildaten = false;
 
+	/** Legt fest, ob die in den Daten-Contexts definierte Standardsortierung verwendet werden soll, oder die in diesen Parametern definierten Sortierungen. */
+	@Schema(description = "Legt fest, ob die in den Daten-Contexts definierte Standardsortierung verwendet werden soll, oder die in diesen Parametern definierten Sortierungen.",
+			example = "true")
+	public Boolean verwendeStandardsortierung = true;
+
+	/** Liste von Attributnamen, nach denen die Hauptdaten sortiert werden sollen. */
+	@Schema(description = "Liste von Attributnamen, nach denen die Hauptdaten sortiert werden sollen.", example = "Nachname, Vorname")
+	public List<String> sortierungHauptdaten = new ArrayList<>();
+
+	/** Liste von Attributnamen, nach denen die Detaildaten sortiert werden sollen. */
+	@Schema(description = "Liste von Attributnamen, nach denen die Detaildaten sortiert werden sollen.", example = "Nachname, Vorname")
+	public List<String> sortierungDetaildaten = new ArrayList<>();
+
+	/** Legt fest, ob die Seiteneinstellungen für einen Duplexdruck verwendet werden sollen. */
+	@Schema(description = "Legt fest, ob die Seiteneinstellungen für einen Duplexdruck verwendet werden sollen.", example = "false")
+	public boolean duplexdruck = false;
+
 	/** Parameter, der in Templates verwendet werden kann, um den Detailgrad der Darstellung zu steuern. */
 	@Schema(description = "Parameter, der in Templates verwendet werden kann, um den Detailgrad der Darstellung zu steuern.", example = "0")
 	public int detailLevel = 0;

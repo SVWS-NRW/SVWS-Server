@@ -3,7 +3,9 @@ package de.svws_nrw.module.reporting.proxytypes.schueler;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -11,6 +13,7 @@ import de.svws_nrw.core.data.erzieher.ErzieherStammdaten;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.asd.data.schueler.SchuelerLernabschnittsdaten;
 import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
+import de.svws_nrw.core.data.schueler.SchuelerTelefon;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
@@ -20,13 +23,16 @@ import de.svws_nrw.data.gost.DataGostAbiturdaten;
 import de.svws_nrw.data.schueler.DataSchuelerLernabschnittsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerSchulbesuchsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerSprachbelegung;
+import de.svws_nrw.data.schueler.DataSchuelerTelefon;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.proxytypes.schueler.erzieher.ProxyReportingErzieher;
-import de.svws_nrw.module.reporting.proxytypes.schueler.schule.ProxyReportingSchuelerSchulbesuch;
+import de.svws_nrw.module.reporting.proxytypes.schueler.schulbesuch.ProxyReportingSchuelerSchulbesuch;
+import de.svws_nrw.module.reporting.proxytypes.schueler.telefon.ProxyReportingSchuelerTelefonkontakt;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchuelerDatenstatus;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ReportingErzieher;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ReportingErzieherArtGruppe;
 import de.svws_nrw.module.reporting.types.schueler.schulbesuch.ReportingSchuelerSchulbesuch;
+import de.svws_nrw.module.reporting.types.schueler.telefon.ReportingSchuelerTelefonkontakt;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import de.svws_nrw.module.reporting.proxytypes.schueler.gost.abitur.ProxyReportingSchuelerGostAbitur;
 import de.svws_nrw.module.reporting.proxytypes.schueler.gost.laufbahnplanung.ProxyReportingSchuelerGostLaufbahnplanung;
@@ -101,10 +107,11 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 				null,
 				null,
 				new ArrayList<>(),
-				Nationalitaeten.getByDESTATIS(schuelerStammdaten.staatsangehoerigkeitID),
-				Nationalitaeten.getByDESTATIS(schuelerStammdaten.staatsangehoerigkeit2ID),
+				getNationalitaet(schuelerStammdaten.staatsangehoerigkeitID),
+				getNationalitaet(schuelerStammdaten.staatsangehoerigkeit2ID),
 				SchuelerStatus.data().getWertByKuerzel("" + schuelerStammdaten.status),
 				ersetzeNullBlankTrim(schuelerStammdaten.strassenname),
+				null,
 				ersetzeNullBlankTrim(schuelerStammdaten.telefon),
 				ersetzeNullBlankTrim(schuelerStammdaten.telefonMobil),
 				"",
@@ -123,6 +130,24 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 
 		// Füge Stammdaten des Schülers für weitere Verwendung in der Map im Repository hinzu.
 		this.reportingRepository.mapSchuelerStammdaten().put(super.id(), schuelerStammdaten);
+	}
+
+
+	private static Nationalitaeten getNationalitaet(final String nationalitaetId) {
+		if ((nationalitaetId == null) || nationalitaetId.isBlank())
+			return null;
+
+		Nationalitaeten result = Nationalitaeten.getByISO3(nationalitaetId);
+		if (result != null)
+			return result;
+
+		result = Nationalitaeten.getByISO2(nationalitaetId);
+		if (result != null)
+			return result;
+
+		result = Nationalitaeten.getByDESTATIS(nationalitaetId);
+
+		return result;
 	}
 
 
@@ -454,5 +479,50 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 			super.datenstatus.add(ReportingSchuelerDatenstatus.SPRACHBELEGUNGEN);
 		}
 		return super.sprachbelegungen();
+	}
+
+	/**
+	 * Stellt die verfügbaren Telefonkontakte eines Schülers bereit.
+	 *
+	 * @return Eine Liste von {@link ReportingSchuelerTelefonkontakt}, die die Telefonkontakte des Schülers enthält.
+	 */
+	@Override
+	public List<ReportingSchuelerTelefonkontakt> telefonKontakte() {
+		if (super.telefonKontakte == null) {
+			if (this.reportingRepository.mapSchuelerTelefonkontakte().isEmpty()
+					|| (this.reportingRepository.mapSchuelerTelefonkontakte().size() != this.reportingRepository.mapSchueler().size())
+					|| !this.reportingRepository.mapSchuelerTelefonkontakte().containsKey(this.id())) {
+				final List<Long> idsSchuelerOhneTelefon = new ArrayList<>();
+				if (this.reportingRepository.mapSchuelerTelefonkontakte().isEmpty())
+					idsSchuelerOhneTelefon.addAll(this.reportingRepository.mapSchueler().values().stream().map(ReportingSchueler::id).toList());
+				else
+					idsSchuelerOhneTelefon.addAll(this.reportingRepository.mapSchueler().values().stream().map(ReportingSchueler::id)
+							.filter(id -> (!this.reportingRepository.mapSchuelerTelefonkontakte().containsKey(id))).toList());
+				if (!idsSchuelerOhneTelefon.isEmpty()) {
+					try {
+						final List<SchuelerTelefon> schuelerTelefone =
+								new DataSchuelerTelefon(this.reportingRepository.conn()).getListFromSchuelerIDs(idsSchuelerOhneTelefon);
+						final Map<Long, List<SchuelerTelefon>> mapTelefone =
+								new HashMap<>(schuelerTelefone.stream().collect(Collectors.groupingBy(dto -> dto.idSchueler)));
+						// Ermittle alle Schüler-IDs, zu denen keine Telefonnummern geladen werden konnten und ergänze dort eine leere Liste.
+						this.reportingRepository.mapSchueler().values().stream().map(ReportingSchueler::id).filter(id -> (!mapTelefone.containsKey(id)))
+								.forEach(id -> mapTelefone.put(id, new ArrayList<>()));
+						// Wandle alle SchuelerTelefone-Objekte in Reporting-Objekte um und lege sie im Repository ab.
+						mapTelefone.forEach((id, telefonListe) -> this.reportingRepository.mapSchuelerTelefonkontakte().put(id, telefonListe.stream()
+								.map(t -> (ReportingSchuelerTelefonkontakt) new ProxyReportingSchuelerTelefonkontakt(this.reportingRepository, t))
+								.sorted(Comparator.comparing(ReportingSchuelerTelefonkontakt::sortierung)).toList()));
+					} catch (final Exception e) {
+						ReportingExceptionUtils.putStacktraceInLog(
+								"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Telefonnummern eines Schülers.", e,
+								reportingRepository.logger(), LogLevel.INFO, 0);
+					}
+				}
+			}
+			if (this.reportingRepository.mapSchuelerTelefonkontakte().containsKey(this.id()))
+				super.telefonKontakte = this.reportingRepository.mapSchuelerTelefonkontakte().get(this.id());
+			else
+				super.telefonKontakte = new ArrayList<>();
+		}
+		return super.telefonKontakte;
 	}
 }

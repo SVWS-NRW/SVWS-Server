@@ -812,6 +812,7 @@ public final class DBEntityManager implements AutoCloseable {
 	 * Daten generiert und im Rahmen einer Transaktion ausgeführt. Dies Ausführung erfolgt über ein
 	 * {@link PreparedStatement} mit Batch-Processing auf der JDBC-Connection (siehe {@link Connection}), die
 	 * aus dem intern verwendeten {@link EntityManager} ausgelesen wird.
+	 * Die zugehörige Transaktion darum muss manuell gehandhabt werden.
 	 *
 	 * @param tablename   der Name der Tabelle, in die eingefügt wird
 	 * @param colnames    die Liste mit den Spaltennamen, die zu der Reihenfolge der Object-Array-Elementen
@@ -822,16 +823,13 @@ public final class DBEntityManager implements AutoCloseable {
 	 *
 	 * @return true, falls die SQL-Anfrage erfolgreich ausgeführt wurde und ansonsten false
 	 */
-	@SuppressWarnings("resource")
-	public boolean insertRangeNative(final String tablename, final List<String> colnames, final List<Object[]> entities, final int indexFirst,
+	public boolean transactionInsertRangeNative(final String tablename, final List<String> colnames, final List<Object[]> entities, final int indexFirst,
 			final int indexLast) {
 		if ((entities == null) || (colnames == null) || (tablename == null) || (colnames.isEmpty()) || (entities.isEmpty()))
 			return false;
 		final int first = (indexFirst < 0) ? 0 : indexFirst;
 		final int last = (indexLast >= entities.size()) ? (entities.size() - 1) : indexLast;
 		try {
-			this.lock();
-			this.transactionBegin();
 			final Connection conn = em.unwrap(Connection.class);
 			final StringBuilder sb = new StringBuilder();
 			final String prepCols = colnames.stream().map(col -> "?").collect(Collectors.joining(", ", "(", ")"));
@@ -859,11 +857,42 @@ public final class DBEntityManager implements AutoCloseable {
 				}
 				prepared.executeUpdate();
 			}
-			if (this.transactionCommit())
+			return true;
+		} catch (@SuppressWarnings("unused") final SQLException e) {
+			return false;
+		}
+	}
+
+
+	/**
+	 * Diese Methode fügt die Entities aus dem angegebenen Bereich der übergebenen Liste in die angebene
+	 * Tabelle mit den übergebenen Spalten ein. Die entsprechende SQL-INSERT-Anfrage wird aus den übergebenen
+	 * Daten generiert und im Rahmen einer Transaktion ausgeführt. Dies Ausführung erfolgt über ein
+	 * {@link PreparedStatement} mit Batch-Processing auf der JDBC-Connection (siehe {@link Connection}), die
+	 * aus dem intern verwendeten {@link EntityManager} ausgelesen wird.
+	 *
+	 * @param tablename   der Name der Tabelle, in die eingefügt wird
+	 * @param colnames    die Liste mit den Spaltennamen, die zu der Reihenfolge der Object-Array-Elementen
+	 *                    der Entitäten passen muss
+	 * @param entities    die Liste mit den einzelnen Datensätzen in Form von Object-Arrays
+	 * @param indexFirst  der Index des ersten Datensatzes aus der Entitätenliste, der geschrieben wird
+	 * @param indexLast   der Index des letzten Datensatzes aus der Entitätenliste, der geschrieben wird
+	 *
+	 * @return true, falls die SQL-Anfrage erfolgreich ausgeführt wurde und ansonsten false
+	 */
+	public boolean insertRangeNative(final String tablename, final List<String> colnames, final List<Object[]> entities, final int indexFirst,
+			final int indexLast) {
+		if ((entities == null) || (colnames == null) || (tablename == null) || (colnames.isEmpty()) || (entities.isEmpty()))
+			return false;
+		try {
+			this.lock();
+			this.transactionBegin();
+			final boolean success = transactionInsertRangeNative(tablename, colnames, entities, indexFirst, indexLast);
+			if (success && this.transactionCommit())
 				return true;
 			this.transactionRollback();
 			return false;
-		} catch (@SuppressWarnings("unused") SQLException | PersistenceException | IllegalStateException e) {
+		} catch (@SuppressWarnings("unused") PersistenceException | IllegalStateException e) {
 			this.transactionRollback();
 			return false;
 		} finally {

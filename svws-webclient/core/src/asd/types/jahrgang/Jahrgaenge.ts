@@ -108,79 +108,84 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> implements CoreType<Jahrgae
 	public static readonly Q2 : Jahrgaenge = new Jahrgaenge("Q2", 17, );
 
 	/**
-	 * Jahrgang Berufspraxisstufe laut AO-SF für den Förderschwerpunkt Geistige Entwicklung (je nach Organisationsform in Teilzeit (86) und Vollzeit (85) möglich)
+	 * Jahrgang Berufspraxisstufe in Vollzeit laut AO-SF für den Förderschwerpunkt Geistige Entwicklung (je nach Organisationsform in Teilzeit (86) und Vollzeit (85) möglich)
 	 */
-	public static readonly BERUFSPRAXISSTUFE : Jahrgaenge = new Jahrgaenge("BERUFSPRAXISSTUFE", 18, );
+	public static readonly BERUFSPRAXISSTUFE_VOLLZEIT : Jahrgaenge = new Jahrgaenge("BERUFSPRAXISSTUFE_VOLLZEIT", 18, );
+
+	/**
+	 * Jahrgang Berufspraxisstufe in Teilzeit laut AO-SF für den Förderschwerpunkt Geistige Entwicklung (je nach Organisationsform in Teilzeit (86) und Vollzeit (85) möglich)
+	 */
+	public static readonly BERUFSPRAXISSTUFE_TEILZEIT : Jahrgaenge = new Jahrgaenge("BERUFSPRAXISSTUFE_TEILZEIT", 19, );
 
 	/**
 	 * 91: Abendrealschule Vorkurs, 1. Semester
 	 */
-	public static readonly REALSCHULE_VORKURS_SEMESTER_1 : Jahrgaenge = new Jahrgaenge("REALSCHULE_VORKURS_SEMESTER_1", 19, );
+	public static readonly REALSCHULE_VORKURS_SEMESTER_1 : Jahrgaenge = new Jahrgaenge("REALSCHULE_VORKURS_SEMESTER_1", 20, );
 
 	/**
 	 * 92: Abendrealschule Vorkurs, 2. Semester
 	 */
-	public static readonly REALSCHULE_VORKURS_SEMESTER_2 : Jahrgaenge = new Jahrgaenge("REALSCHULE_VORKURS_SEMESTER_2", 20, );
+	public static readonly REALSCHULE_VORKURS_SEMESTER_2 : Jahrgaenge = new Jahrgaenge("REALSCHULE_VORKURS_SEMESTER_2", 21, );
 
 	/**
 	 * Abendrealschule 1. Semester
 	 */
-	public static readonly REALSCHULE_SEMESTER_01 : Jahrgaenge = new Jahrgaenge("REALSCHULE_SEMESTER_01", 21, );
+	public static readonly REALSCHULE_SEMESTER_01 : Jahrgaenge = new Jahrgaenge("REALSCHULE_SEMESTER_01", 22, );
 
 	/**
 	 * Abendrealschule 2. Semester
 	 */
-	public static readonly REALSCHULE_SEMESTER_02 : Jahrgaenge = new Jahrgaenge("REALSCHULE_SEMESTER_02", 22, );
+	public static readonly REALSCHULE_SEMESTER_02 : Jahrgaenge = new Jahrgaenge("REALSCHULE_SEMESTER_02", 23, );
 
 	/**
 	 * Abendrealschule 3. Semester
 	 */
-	public static readonly REALSCHULE_SEMESTER_03 : Jahrgaenge = new Jahrgaenge("REALSCHULE_SEMESTER_03", 23, );
+	public static readonly REALSCHULE_SEMESTER_03 : Jahrgaenge = new Jahrgaenge("REALSCHULE_SEMESTER_03", 24, );
 
 	/**
 	 * Abendrealschule 4. Semester
 	 */
-	public static readonly REALSCHULE_SEMESTER_04 : Jahrgaenge = new Jahrgaenge("REALSCHULE_SEMESTER_04", 24, );
+	public static readonly REALSCHULE_SEMESTER_04 : Jahrgaenge = new Jahrgaenge("REALSCHULE_SEMESTER_04", 25, );
 
 	/**
 	 * Abendgymnasium/Kolleg: Vorkurs, 1. Semester
 	 */
-	public static readonly VORKURS_SEMESTER_1 : Jahrgaenge = new Jahrgaenge("VORKURS_SEMESTER_1", 25, );
+	public static readonly VORKURS_SEMESTER_1 : Jahrgaenge = new Jahrgaenge("VORKURS_SEMESTER_1", 26, );
 
 	/**
 	 * Abendgymnasium/Kolleg: Vorkurs, 2. Semester
 	 */
-	public static readonly VORKURS_SEMESTER_2 : Jahrgaenge = new Jahrgaenge("VORKURS_SEMESTER_2", 26, );
+	public static readonly VORKURS_SEMESTER_2 : Jahrgaenge = new Jahrgaenge("VORKURS_SEMESTER_2", 27, );
 
 	/**
 	 * Abendgymnasium/Kolleg: 1. Semester (EF.1)
 	 */
-	public static readonly SEMESTER_01 : Jahrgaenge = new Jahrgaenge("SEMESTER_01", 27, );
+	public static readonly SEMESTER_01 : Jahrgaenge = new Jahrgaenge("SEMESTER_01", 28, );
 
 	/**
 	 * Abendgymnasium/Kolleg: 2. Semester (EF.2)
 	 */
-	public static readonly SEMESTER_02 : Jahrgaenge = new Jahrgaenge("SEMESTER_02", 28, );
+	public static readonly SEMESTER_02 : Jahrgaenge = new Jahrgaenge("SEMESTER_02", 29, );
 
 	/**
 	 * Abendgymnasium/Kolleg: 3. Semester (Q1.1)
 	 */
-	public static readonly SEMESTER_03 : Jahrgaenge = new Jahrgaenge("SEMESTER_03", 29, );
+	public static readonly SEMESTER_03 : Jahrgaenge = new Jahrgaenge("SEMESTER_03", 30, );
 
 	/**
 	 * Abendgymnasium/Kolleg: 4. Semester (Q1.2)
 	 */
-	public static readonly SEMESTER_04 : Jahrgaenge = new Jahrgaenge("SEMESTER_04", 30, );
+	public static readonly SEMESTER_04 : Jahrgaenge = new Jahrgaenge("SEMESTER_04", 31, );
 
 	/**
 	 * Abendgymnasium/Kolleg: 5. Semester (Q2.1)
 	 */
-	public static readonly SEMESTER_05 : Jahrgaenge = new Jahrgaenge("SEMESTER_05", 31, );
+	public static readonly SEMESTER_05 : Jahrgaenge = new Jahrgaenge("SEMESTER_05", 32, );
 
 	/**
 	 * Abendgymnasium/Kolleg: 6. Semester (Q2.2)
 	 */
-	public static readonly SEMESTER_06 : Jahrgaenge = new Jahrgaenge("SEMESTER_06", 32, );
+	public static readonly SEMESTER_06 : Jahrgaenge = new Jahrgaenge("SEMESTER_06", 33, );
 
 	private constructor(name : string, ordinal : number) {
 		super(name, ordinal);
@@ -274,78 +279,80 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> implements CoreType<Jahrgae
 		if (!this.hatSchulform(schuljahr, schulform) || ((vergleichsjahrgang !== null) && (!vergleichsjahrgang.hatSchulform(schuljahr, schulform))))
 			return false;
 		const gl : Schulgliederung | null = (gliederung === null) ? Schulgliederung.getDefault(schulform) : gliederung;
-		let _sevar_175904178 : any;
-		const _seexpr_175904178 = (this);
-		if (_seexpr_175904178 === Jahrgaenge.HAUSFRUEHERZIEHUNG) {
-			_sevar_175904178 = (vergleichsjahrgang === null);
-		} else if (_seexpr_175904178 === Jahrgaenge.JAHRGANG_00) {
-			_sevar_175904178 = (vergleichsjahrgang === null);
-		} else if (_seexpr_175904178 === Jahrgaenge.JAHRGANG_01) {
-			_sevar_175904178 = (vergleichsjahrgang === null);
-		} else if (_seexpr_175904178 === Jahrgaenge.JAHRGANG_02) {
-			_sevar_175904178 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_01 as unknown);
-		} else if (_seexpr_175904178 === Jahrgaenge.JAHRGANG_03) {
-			_sevar_175904178 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_02 as unknown);
-		} else if (_seexpr_175904178 === Jahrgaenge.JAHRGANG_04) {
-			_sevar_175904178 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_03 as unknown);
-		} else if (_seexpr_175904178 === Jahrgaenge.JAHRGANG_05) {
-			_sevar_175904178 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_04 as unknown);
-		} else if (_seexpr_175904178 === Jahrgaenge.JAHRGANG_06) {
-			_sevar_175904178 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_05 as unknown);
-		} else if (_seexpr_175904178 === Jahrgaenge.JAHRGANG_07) {
-			_sevar_175904178 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_06 as unknown);
-		} else if (_seexpr_175904178 === Jahrgaenge.JAHRGANG_08) {
-			_sevar_175904178 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_07 as unknown);
-		} else if (_seexpr_175904178 === Jahrgaenge.JAHRGANG_09) {
-			_sevar_175904178 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_08 as unknown);
-		} else if (_seexpr_175904178 === Jahrgaenge.JAHRGANG_10) {
-			_sevar_175904178 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_09 as unknown);
-		} else if (_seexpr_175904178 === Jahrgaenge.JAHRGANG_11) {
-			_sevar_175904178 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
-		} else if (_seexpr_175904178 === Jahrgaenge.JAHRGANG_12) {
-			_sevar_175904178 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_11 as unknown);
-		} else if (_seexpr_175904178 === Jahrgaenge.JAHRGANG_13) {
-			_sevar_175904178 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_12 as unknown);
-		} else if (_seexpr_175904178 === Jahrgaenge.EF) {
-			_sevar_175904178 = (gl as unknown === Schulgliederung.GY8 as unknown) ? (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_09 as unknown) : (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
-		} else if (_seexpr_175904178 === Jahrgaenge.Q1) {
-			_sevar_175904178 = (vergleichsjahrgang as unknown === Jahrgaenge.EF as unknown);
-		} else if (_seexpr_175904178 === Jahrgaenge.Q2) {
-			_sevar_175904178 = (vergleichsjahrgang as unknown === Jahrgaenge.Q1 as unknown);
-		} else if (_seexpr_175904178 === Jahrgaenge.BERUFSPRAXISSTUFE) {
-			_sevar_175904178 = (vergleichsjahrgang === null);
-		} else if (_seexpr_175904178 === Jahrgaenge.REALSCHULE_VORKURS_SEMESTER_1) {
-			_sevar_175904178 = (vergleichsjahrgang === null);
-		} else if (_seexpr_175904178 === Jahrgaenge.REALSCHULE_VORKURS_SEMESTER_2) {
-			_sevar_175904178 = (vergleichsjahrgang as unknown === Jahrgaenge.REALSCHULE_VORKURS_SEMESTER_1 as unknown);
-		} else if (_seexpr_175904178 === Jahrgaenge.REALSCHULE_SEMESTER_01) {
-			_sevar_175904178 = (vergleichsjahrgang as unknown === Jahrgaenge.REALSCHULE_VORKURS_SEMESTER_2 as unknown);
-		} else if (_seexpr_175904178 === Jahrgaenge.REALSCHULE_SEMESTER_02) {
-			_sevar_175904178 = (vergleichsjahrgang as unknown === Jahrgaenge.REALSCHULE_SEMESTER_01 as unknown);
-		} else if (_seexpr_175904178 === Jahrgaenge.REALSCHULE_SEMESTER_03) {
-			_sevar_175904178 = (vergleichsjahrgang as unknown === Jahrgaenge.REALSCHULE_SEMESTER_02 as unknown);
-		} else if (_seexpr_175904178 === Jahrgaenge.REALSCHULE_SEMESTER_04) {
-			_sevar_175904178 = (vergleichsjahrgang as unknown === Jahrgaenge.REALSCHULE_SEMESTER_03 as unknown);
-		} else if (_seexpr_175904178 === Jahrgaenge.VORKURS_SEMESTER_1) {
-			_sevar_175904178 = (vergleichsjahrgang === null);
-		} else if (_seexpr_175904178 === Jahrgaenge.VORKURS_SEMESTER_2) {
-			_sevar_175904178 = (vergleichsjahrgang as unknown === Jahrgaenge.VORKURS_SEMESTER_1 as unknown);
-		} else if (_seexpr_175904178 === Jahrgaenge.SEMESTER_01) {
-			_sevar_175904178 = (vergleichsjahrgang as unknown === Jahrgaenge.VORKURS_SEMESTER_2 as unknown);
-		} else if (_seexpr_175904178 === Jahrgaenge.SEMESTER_02) {
-			_sevar_175904178 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_01 as unknown);
-		} else if (_seexpr_175904178 === Jahrgaenge.SEMESTER_03) {
-			_sevar_175904178 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_02 as unknown);
-		} else if (_seexpr_175904178 === Jahrgaenge.SEMESTER_04) {
-			_sevar_175904178 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_03 as unknown);
-		} else if (_seexpr_175904178 === Jahrgaenge.SEMESTER_05) {
-			_sevar_175904178 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_04 as unknown);
-		} else if (_seexpr_175904178 === Jahrgaenge.SEMESTER_06) {
-			_sevar_175904178 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_05 as unknown);
+		let _sevar_515668459 : any;
+		const _seexpr_515668459 = (this);
+		if (_seexpr_515668459 === Jahrgaenge.HAUSFRUEHERZIEHUNG) {
+			_sevar_515668459 = (vergleichsjahrgang === null);
+		} else if (_seexpr_515668459 === Jahrgaenge.JAHRGANG_00) {
+			_sevar_515668459 = (vergleichsjahrgang === null);
+		} else if (_seexpr_515668459 === Jahrgaenge.JAHRGANG_01) {
+			_sevar_515668459 = (vergleichsjahrgang === null);
+		} else if (_seexpr_515668459 === Jahrgaenge.JAHRGANG_02) {
+			_sevar_515668459 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_01 as unknown);
+		} else if (_seexpr_515668459 === Jahrgaenge.JAHRGANG_03) {
+			_sevar_515668459 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_02 as unknown);
+		} else if (_seexpr_515668459 === Jahrgaenge.JAHRGANG_04) {
+			_sevar_515668459 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_03 as unknown);
+		} else if (_seexpr_515668459 === Jahrgaenge.JAHRGANG_05) {
+			_sevar_515668459 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_04 as unknown);
+		} else if (_seexpr_515668459 === Jahrgaenge.JAHRGANG_06) {
+			_sevar_515668459 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_05 as unknown);
+		} else if (_seexpr_515668459 === Jahrgaenge.JAHRGANG_07) {
+			_sevar_515668459 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_06 as unknown);
+		} else if (_seexpr_515668459 === Jahrgaenge.JAHRGANG_08) {
+			_sevar_515668459 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_07 as unknown);
+		} else if (_seexpr_515668459 === Jahrgaenge.JAHRGANG_09) {
+			_sevar_515668459 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_08 as unknown);
+		} else if (_seexpr_515668459 === Jahrgaenge.JAHRGANG_10) {
+			_sevar_515668459 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_09 as unknown);
+		} else if (_seexpr_515668459 === Jahrgaenge.JAHRGANG_11) {
+			_sevar_515668459 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
+		} else if (_seexpr_515668459 === Jahrgaenge.JAHRGANG_12) {
+			_sevar_515668459 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_11 as unknown);
+		} else if (_seexpr_515668459 === Jahrgaenge.JAHRGANG_13) {
+			_sevar_515668459 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_12 as unknown);
+		} else if (_seexpr_515668459 === Jahrgaenge.EF) {
+			_sevar_515668459 = (gl as unknown === Schulgliederung.GY8 as unknown) ? (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_09 as unknown) : (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
+		} else if (_seexpr_515668459 === Jahrgaenge.Q1) {
+			_sevar_515668459 = (vergleichsjahrgang as unknown === Jahrgaenge.EF as unknown);
+		} else if (_seexpr_515668459 === Jahrgaenge.Q2) {
+			_sevar_515668459 = (vergleichsjahrgang as unknown === Jahrgaenge.Q1 as unknown);
+		} else if (_seexpr_515668459 === Jahrgaenge.BERUFSPRAXISSTUFE_VOLLZEIT) {
+			_sevar_515668459 = (vergleichsjahrgang === null);
+		} else if (_seexpr_515668459 === Jahrgaenge.BERUFSPRAXISSTUFE_TEILZEIT) {
+			_sevar_515668459 = (vergleichsjahrgang === null);
+		} else if (_seexpr_515668459 === Jahrgaenge.REALSCHULE_VORKURS_SEMESTER_1) {
+			_sevar_515668459 = (vergleichsjahrgang === null);
+		} else if (_seexpr_515668459 === Jahrgaenge.REALSCHULE_VORKURS_SEMESTER_2) {
+			_sevar_515668459 = (vergleichsjahrgang as unknown === Jahrgaenge.REALSCHULE_VORKURS_SEMESTER_1 as unknown);
+		} else if (_seexpr_515668459 === Jahrgaenge.REALSCHULE_SEMESTER_01) {
+			_sevar_515668459 = (vergleichsjahrgang as unknown === Jahrgaenge.REALSCHULE_VORKURS_SEMESTER_2 as unknown);
+		} else if (_seexpr_515668459 === Jahrgaenge.REALSCHULE_SEMESTER_02) {
+			_sevar_515668459 = (vergleichsjahrgang as unknown === Jahrgaenge.REALSCHULE_SEMESTER_01 as unknown);
+		} else if (_seexpr_515668459 === Jahrgaenge.REALSCHULE_SEMESTER_03) {
+			_sevar_515668459 = (vergleichsjahrgang as unknown === Jahrgaenge.REALSCHULE_SEMESTER_02 as unknown);
+		} else if (_seexpr_515668459 === Jahrgaenge.REALSCHULE_SEMESTER_04) {
+			_sevar_515668459 = (vergleichsjahrgang as unknown === Jahrgaenge.REALSCHULE_SEMESTER_03 as unknown);
+		} else if (_seexpr_515668459 === Jahrgaenge.VORKURS_SEMESTER_1) {
+			_sevar_515668459 = (vergleichsjahrgang === null);
+		} else if (_seexpr_515668459 === Jahrgaenge.VORKURS_SEMESTER_2) {
+			_sevar_515668459 = (vergleichsjahrgang as unknown === Jahrgaenge.VORKURS_SEMESTER_1 as unknown);
+		} else if (_seexpr_515668459 === Jahrgaenge.SEMESTER_01) {
+			_sevar_515668459 = (vergleichsjahrgang as unknown === Jahrgaenge.VORKURS_SEMESTER_2 as unknown);
+		} else if (_seexpr_515668459 === Jahrgaenge.SEMESTER_02) {
+			_sevar_515668459 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_01 as unknown);
+		} else if (_seexpr_515668459 === Jahrgaenge.SEMESTER_03) {
+			_sevar_515668459 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_02 as unknown);
+		} else if (_seexpr_515668459 === Jahrgaenge.SEMESTER_04) {
+			_sevar_515668459 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_03 as unknown);
+		} else if (_seexpr_515668459 === Jahrgaenge.SEMESTER_05) {
+			_sevar_515668459 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_04 as unknown);
+		} else if (_seexpr_515668459 === Jahrgaenge.SEMESTER_06) {
+			_sevar_515668459 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_05 as unknown);
 		} else {
-			_sevar_175904178 = false;
+			_sevar_515668459 = false;
 		}
-		return _sevar_175904178;
+		return _sevar_515668459;
 	}
 
 	/**
@@ -368,78 +375,80 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> implements CoreType<Jahrgae
 		if (ske === null)
 			return false;
 		const gl : Schulgliederung | null = (gliederung === null) ? Schulgliederung.getDefault(schulform) : gliederung;
-		let _sevar_1524148950 : any;
-		const _seexpr_1524148950 = (this);
-		if (_seexpr_1524148950 === Jahrgaenge.HAUSFRUEHERZIEHUNG) {
-			_sevar_1524148950 = (vergleichsjahrgang === null);
-		} else if (_seexpr_1524148950 === Jahrgaenge.JAHRGANG_00) {
-			_sevar_1524148950 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_01 as unknown);
-		} else if (_seexpr_1524148950 === Jahrgaenge.JAHRGANG_01) {
-			_sevar_1524148950 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_02 as unknown);
-		} else if (_seexpr_1524148950 === Jahrgaenge.JAHRGANG_02) {
-			_sevar_1524148950 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_03 as unknown);
-		} else if (_seexpr_1524148950 === Jahrgaenge.JAHRGANG_03) {
-			_sevar_1524148950 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_04 as unknown);
-		} else if (_seexpr_1524148950 === Jahrgaenge.JAHRGANG_04) {
-			_sevar_1524148950 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_05 as unknown);
-		} else if (_seexpr_1524148950 === Jahrgaenge.JAHRGANG_05) {
-			_sevar_1524148950 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_06 as unknown);
-		} else if (_seexpr_1524148950 === Jahrgaenge.JAHRGANG_06) {
-			_sevar_1524148950 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_07 as unknown);
-		} else if (_seexpr_1524148950 === Jahrgaenge.JAHRGANG_07) {
-			_sevar_1524148950 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_08 as unknown);
-		} else if (_seexpr_1524148950 === Jahrgaenge.JAHRGANG_08) {
-			_sevar_1524148950 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_09 as unknown);
-		} else if (_seexpr_1524148950 === Jahrgaenge.JAHRGANG_09) {
-			_sevar_1524148950 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_10 as unknown) || ((schulform as unknown === Schulform.GY as unknown) && ((gl as unknown === Schulgliederung.GY8 as unknown) || (gl as unknown === Schulgliederung.DEFAULT as unknown)) && (vergleichsjahrgang as unknown === Jahrgaenge.EF as unknown));
-		} else if (_seexpr_1524148950 === Jahrgaenge.JAHRGANG_10) {
-			_sevar_1524148950 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_11 as unknown) || ((ske.hatGymOb) && (vergleichsjahrgang as unknown === Jahrgaenge.EF as unknown));
-		} else if (_seexpr_1524148950 === Jahrgaenge.JAHRGANG_11) {
-			_sevar_1524148950 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_12 as unknown);
-		} else if (_seexpr_1524148950 === Jahrgaenge.JAHRGANG_12) {
-			_sevar_1524148950 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_13 as unknown);
-		} else if (_seexpr_1524148950 === Jahrgaenge.JAHRGANG_13) {
-			_sevar_1524148950 = (vergleichsjahrgang === null);
-		} else if (_seexpr_1524148950 === Jahrgaenge.EF) {
-			_sevar_1524148950 = (vergleichsjahrgang as unknown === Jahrgaenge.Q1 as unknown);
-		} else if (_seexpr_1524148950 === Jahrgaenge.Q1) {
-			_sevar_1524148950 = (vergleichsjahrgang as unknown === Jahrgaenge.Q2 as unknown);
-		} else if (_seexpr_1524148950 === Jahrgaenge.Q2) {
-			_sevar_1524148950 = (vergleichsjahrgang === null);
-		} else if (_seexpr_1524148950 === Jahrgaenge.BERUFSPRAXISSTUFE) {
-			_sevar_1524148950 = (vergleichsjahrgang === null);
-		} else if (_seexpr_1524148950 === Jahrgaenge.REALSCHULE_VORKURS_SEMESTER_1) {
-			_sevar_1524148950 = (vergleichsjahrgang as unknown === Jahrgaenge.REALSCHULE_VORKURS_SEMESTER_2 as unknown);
-		} else if (_seexpr_1524148950 === Jahrgaenge.REALSCHULE_VORKURS_SEMESTER_2) {
-			_sevar_1524148950 = (vergleichsjahrgang as unknown === Jahrgaenge.REALSCHULE_SEMESTER_01 as unknown);
-		} else if (_seexpr_1524148950 === Jahrgaenge.REALSCHULE_SEMESTER_01) {
-			_sevar_1524148950 = (vergleichsjahrgang as unknown === Jahrgaenge.REALSCHULE_SEMESTER_02 as unknown);
-		} else if (_seexpr_1524148950 === Jahrgaenge.REALSCHULE_SEMESTER_02) {
-			_sevar_1524148950 = (vergleichsjahrgang as unknown === Jahrgaenge.REALSCHULE_SEMESTER_03 as unknown);
-		} else if (_seexpr_1524148950 === Jahrgaenge.REALSCHULE_SEMESTER_03) {
-			_sevar_1524148950 = (vergleichsjahrgang as unknown === Jahrgaenge.REALSCHULE_SEMESTER_04 as unknown);
-		} else if (_seexpr_1524148950 === Jahrgaenge.REALSCHULE_SEMESTER_04) {
-			_sevar_1524148950 = (vergleichsjahrgang === null);
-		} else if (_seexpr_1524148950 === Jahrgaenge.VORKURS_SEMESTER_1) {
-			_sevar_1524148950 = (vergleichsjahrgang as unknown === Jahrgaenge.VORKURS_SEMESTER_2 as unknown);
-		} else if (_seexpr_1524148950 === Jahrgaenge.VORKURS_SEMESTER_2) {
-			_sevar_1524148950 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_01 as unknown);
-		} else if (_seexpr_1524148950 === Jahrgaenge.SEMESTER_01) {
-			_sevar_1524148950 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_02 as unknown);
-		} else if (_seexpr_1524148950 === Jahrgaenge.SEMESTER_02) {
-			_sevar_1524148950 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_03 as unknown);
-		} else if (_seexpr_1524148950 === Jahrgaenge.SEMESTER_03) {
-			_sevar_1524148950 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_04 as unknown);
-		} else if (_seexpr_1524148950 === Jahrgaenge.SEMESTER_04) {
-			_sevar_1524148950 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_05 as unknown);
-		} else if (_seexpr_1524148950 === Jahrgaenge.SEMESTER_05) {
-			_sevar_1524148950 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_06 as unknown);
-		} else if (_seexpr_1524148950 === Jahrgaenge.SEMESTER_06) {
-			_sevar_1524148950 = (vergleichsjahrgang === null);
+		let _sevar_285007581 : any;
+		const _seexpr_285007581 = (this);
+		if (_seexpr_285007581 === Jahrgaenge.HAUSFRUEHERZIEHUNG) {
+			_sevar_285007581 = (vergleichsjahrgang === null);
+		} else if (_seexpr_285007581 === Jahrgaenge.JAHRGANG_00) {
+			_sevar_285007581 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_01 as unknown);
+		} else if (_seexpr_285007581 === Jahrgaenge.JAHRGANG_01) {
+			_sevar_285007581 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_02 as unknown);
+		} else if (_seexpr_285007581 === Jahrgaenge.JAHRGANG_02) {
+			_sevar_285007581 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_03 as unknown);
+		} else if (_seexpr_285007581 === Jahrgaenge.JAHRGANG_03) {
+			_sevar_285007581 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_04 as unknown);
+		} else if (_seexpr_285007581 === Jahrgaenge.JAHRGANG_04) {
+			_sevar_285007581 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_05 as unknown);
+		} else if (_seexpr_285007581 === Jahrgaenge.JAHRGANG_05) {
+			_sevar_285007581 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_06 as unknown);
+		} else if (_seexpr_285007581 === Jahrgaenge.JAHRGANG_06) {
+			_sevar_285007581 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_07 as unknown);
+		} else if (_seexpr_285007581 === Jahrgaenge.JAHRGANG_07) {
+			_sevar_285007581 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_08 as unknown);
+		} else if (_seexpr_285007581 === Jahrgaenge.JAHRGANG_08) {
+			_sevar_285007581 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_09 as unknown);
+		} else if (_seexpr_285007581 === Jahrgaenge.JAHRGANG_09) {
+			_sevar_285007581 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_10 as unknown) || ((schulform as unknown === Schulform.GY as unknown) && ((gl as unknown === Schulgliederung.GY8 as unknown) || (gl as unknown === Schulgliederung.DEFAULT as unknown)) && (vergleichsjahrgang as unknown === Jahrgaenge.EF as unknown));
+		} else if (_seexpr_285007581 === Jahrgaenge.JAHRGANG_10) {
+			_sevar_285007581 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_11 as unknown) || ((ske.hatGymOb) && (vergleichsjahrgang as unknown === Jahrgaenge.EF as unknown));
+		} else if (_seexpr_285007581 === Jahrgaenge.JAHRGANG_11) {
+			_sevar_285007581 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_12 as unknown);
+		} else if (_seexpr_285007581 === Jahrgaenge.JAHRGANG_12) {
+			_sevar_285007581 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_13 as unknown);
+		} else if (_seexpr_285007581 === Jahrgaenge.JAHRGANG_13) {
+			_sevar_285007581 = (vergleichsjahrgang === null);
+		} else if (_seexpr_285007581 === Jahrgaenge.EF) {
+			_sevar_285007581 = (vergleichsjahrgang as unknown === Jahrgaenge.Q1 as unknown);
+		} else if (_seexpr_285007581 === Jahrgaenge.Q1) {
+			_sevar_285007581 = (vergleichsjahrgang as unknown === Jahrgaenge.Q2 as unknown);
+		} else if (_seexpr_285007581 === Jahrgaenge.Q2) {
+			_sevar_285007581 = (vergleichsjahrgang === null);
+		} else if (_seexpr_285007581 === Jahrgaenge.BERUFSPRAXISSTUFE_VOLLZEIT) {
+			_sevar_285007581 = (vergleichsjahrgang === null);
+		} else if (_seexpr_285007581 === Jahrgaenge.BERUFSPRAXISSTUFE_TEILZEIT) {
+			_sevar_285007581 = (vergleichsjahrgang === null);
+		} else if (_seexpr_285007581 === Jahrgaenge.REALSCHULE_VORKURS_SEMESTER_1) {
+			_sevar_285007581 = (vergleichsjahrgang as unknown === Jahrgaenge.REALSCHULE_VORKURS_SEMESTER_2 as unknown);
+		} else if (_seexpr_285007581 === Jahrgaenge.REALSCHULE_VORKURS_SEMESTER_2) {
+			_sevar_285007581 = (vergleichsjahrgang as unknown === Jahrgaenge.REALSCHULE_SEMESTER_01 as unknown);
+		} else if (_seexpr_285007581 === Jahrgaenge.REALSCHULE_SEMESTER_01) {
+			_sevar_285007581 = (vergleichsjahrgang as unknown === Jahrgaenge.REALSCHULE_SEMESTER_02 as unknown);
+		} else if (_seexpr_285007581 === Jahrgaenge.REALSCHULE_SEMESTER_02) {
+			_sevar_285007581 = (vergleichsjahrgang as unknown === Jahrgaenge.REALSCHULE_SEMESTER_03 as unknown);
+		} else if (_seexpr_285007581 === Jahrgaenge.REALSCHULE_SEMESTER_03) {
+			_sevar_285007581 = (vergleichsjahrgang as unknown === Jahrgaenge.REALSCHULE_SEMESTER_04 as unknown);
+		} else if (_seexpr_285007581 === Jahrgaenge.REALSCHULE_SEMESTER_04) {
+			_sevar_285007581 = (vergleichsjahrgang === null);
+		} else if (_seexpr_285007581 === Jahrgaenge.VORKURS_SEMESTER_1) {
+			_sevar_285007581 = (vergleichsjahrgang as unknown === Jahrgaenge.VORKURS_SEMESTER_2 as unknown);
+		} else if (_seexpr_285007581 === Jahrgaenge.VORKURS_SEMESTER_2) {
+			_sevar_285007581 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_01 as unknown);
+		} else if (_seexpr_285007581 === Jahrgaenge.SEMESTER_01) {
+			_sevar_285007581 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_02 as unknown);
+		} else if (_seexpr_285007581 === Jahrgaenge.SEMESTER_02) {
+			_sevar_285007581 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_03 as unknown);
+		} else if (_seexpr_285007581 === Jahrgaenge.SEMESTER_03) {
+			_sevar_285007581 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_04 as unknown);
+		} else if (_seexpr_285007581 === Jahrgaenge.SEMESTER_04) {
+			_sevar_285007581 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_05 as unknown);
+		} else if (_seexpr_285007581 === Jahrgaenge.SEMESTER_05) {
+			_sevar_285007581 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_06 as unknown);
+		} else if (_seexpr_285007581 === Jahrgaenge.SEMESTER_06) {
+			_sevar_285007581 = (vergleichsjahrgang === null);
 		} else {
-			_sevar_1524148950 = false;
+			_sevar_285007581 = false;
 		}
-		return _sevar_1524148950;
+		return _sevar_285007581;
 	}
 
 	/**
@@ -454,78 +463,80 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> implements CoreType<Jahrgae
 	 * @return true, falls dieser Jahrgang ein möglicher Vorgänger des übergebenen Vergleichsjahrgangs ist.
 	 */
 	public isMoeglicherNachfolgerVon(vergleichsjahrgang : Jahrgaenge | null) : boolean {
-		let _sevar_1615290442 : any;
-		const _seexpr_1615290442 = (this);
-		if (_seexpr_1615290442 === Jahrgaenge.HAUSFRUEHERZIEHUNG) {
-			_sevar_1615290442 = (vergleichsjahrgang === null);
-		} else if (_seexpr_1615290442 === Jahrgaenge.JAHRGANG_00) {
-			_sevar_1615290442 = (vergleichsjahrgang === null);
-		} else if (_seexpr_1615290442 === Jahrgaenge.JAHRGANG_01) {
-			_sevar_1615290442 = (vergleichsjahrgang === null);
-		} else if (_seexpr_1615290442 === Jahrgaenge.JAHRGANG_02) {
-			_sevar_1615290442 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_01 as unknown);
-		} else if (_seexpr_1615290442 === Jahrgaenge.JAHRGANG_03) {
-			_sevar_1615290442 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_02 as unknown);
-		} else if (_seexpr_1615290442 === Jahrgaenge.JAHRGANG_04) {
-			_sevar_1615290442 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_03 as unknown);
-		} else if (_seexpr_1615290442 === Jahrgaenge.JAHRGANG_05) {
-			_sevar_1615290442 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_04 as unknown);
-		} else if (_seexpr_1615290442 === Jahrgaenge.JAHRGANG_06) {
-			_sevar_1615290442 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_05 as unknown);
-		} else if (_seexpr_1615290442 === Jahrgaenge.JAHRGANG_07) {
-			_sevar_1615290442 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_06 as unknown);
-		} else if (_seexpr_1615290442 === Jahrgaenge.JAHRGANG_08) {
-			_sevar_1615290442 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_07 as unknown);
-		} else if (_seexpr_1615290442 === Jahrgaenge.JAHRGANG_09) {
-			_sevar_1615290442 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_08 as unknown);
-		} else if (_seexpr_1615290442 === Jahrgaenge.JAHRGANG_10) {
-			_sevar_1615290442 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_09 as unknown);
-		} else if (_seexpr_1615290442 === Jahrgaenge.JAHRGANG_11) {
-			_sevar_1615290442 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
-		} else if (_seexpr_1615290442 === Jahrgaenge.JAHRGANG_12) {
-			_sevar_1615290442 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_11 as unknown);
-		} else if (_seexpr_1615290442 === Jahrgaenge.JAHRGANG_13) {
-			_sevar_1615290442 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_12 as unknown);
-		} else if (_seexpr_1615290442 === Jahrgaenge.EF) {
-			_sevar_1615290442 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_09 as unknown) || (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
-		} else if (_seexpr_1615290442 === Jahrgaenge.Q1) {
-			_sevar_1615290442 = (vergleichsjahrgang as unknown === Jahrgaenge.EF as unknown);
-		} else if (_seexpr_1615290442 === Jahrgaenge.Q2) {
-			_sevar_1615290442 = (vergleichsjahrgang as unknown === Jahrgaenge.Q1 as unknown);
-		} else if (_seexpr_1615290442 === Jahrgaenge.BERUFSPRAXISSTUFE) {
-			_sevar_1615290442 = (vergleichsjahrgang === null);
-		} else if (_seexpr_1615290442 === Jahrgaenge.REALSCHULE_VORKURS_SEMESTER_1) {
-			_sevar_1615290442 = (vergleichsjahrgang === null);
-		} else if (_seexpr_1615290442 === Jahrgaenge.REALSCHULE_VORKURS_SEMESTER_2) {
-			_sevar_1615290442 = (vergleichsjahrgang as unknown === Jahrgaenge.REALSCHULE_VORKURS_SEMESTER_1 as unknown);
-		} else if (_seexpr_1615290442 === Jahrgaenge.REALSCHULE_SEMESTER_01) {
-			_sevar_1615290442 = (vergleichsjahrgang as unknown === Jahrgaenge.REALSCHULE_VORKURS_SEMESTER_2 as unknown);
-		} else if (_seexpr_1615290442 === Jahrgaenge.REALSCHULE_SEMESTER_02) {
-			_sevar_1615290442 = (vergleichsjahrgang as unknown === Jahrgaenge.REALSCHULE_SEMESTER_01 as unknown);
-		} else if (_seexpr_1615290442 === Jahrgaenge.REALSCHULE_SEMESTER_03) {
-			_sevar_1615290442 = (vergleichsjahrgang as unknown === Jahrgaenge.REALSCHULE_SEMESTER_02 as unknown);
-		} else if (_seexpr_1615290442 === Jahrgaenge.REALSCHULE_SEMESTER_04) {
-			_sevar_1615290442 = (vergleichsjahrgang as unknown === Jahrgaenge.REALSCHULE_SEMESTER_03 as unknown);
-		} else if (_seexpr_1615290442 === Jahrgaenge.VORKURS_SEMESTER_1) {
-			_sevar_1615290442 = (vergleichsjahrgang === null);
-		} else if (_seexpr_1615290442 === Jahrgaenge.VORKURS_SEMESTER_2) {
-			_sevar_1615290442 = (vergleichsjahrgang as unknown === Jahrgaenge.VORKURS_SEMESTER_1 as unknown);
-		} else if (_seexpr_1615290442 === Jahrgaenge.SEMESTER_01) {
-			_sevar_1615290442 = (vergleichsjahrgang as unknown === Jahrgaenge.VORKURS_SEMESTER_2 as unknown);
-		} else if (_seexpr_1615290442 === Jahrgaenge.SEMESTER_02) {
-			_sevar_1615290442 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_01 as unknown);
-		} else if (_seexpr_1615290442 === Jahrgaenge.SEMESTER_03) {
-			_sevar_1615290442 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_02 as unknown);
-		} else if (_seexpr_1615290442 === Jahrgaenge.SEMESTER_04) {
-			_sevar_1615290442 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_03 as unknown);
-		} else if (_seexpr_1615290442 === Jahrgaenge.SEMESTER_05) {
-			_sevar_1615290442 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_04 as unknown);
-		} else if (_seexpr_1615290442 === Jahrgaenge.SEMESTER_06) {
-			_sevar_1615290442 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_05 as unknown);
+		let _sevar_24040579 : any;
+		const _seexpr_24040579 = (this);
+		if (_seexpr_24040579 === Jahrgaenge.HAUSFRUEHERZIEHUNG) {
+			_sevar_24040579 = (vergleichsjahrgang === null);
+		} else if (_seexpr_24040579 === Jahrgaenge.JAHRGANG_00) {
+			_sevar_24040579 = (vergleichsjahrgang === null);
+		} else if (_seexpr_24040579 === Jahrgaenge.JAHRGANG_01) {
+			_sevar_24040579 = (vergleichsjahrgang === null);
+		} else if (_seexpr_24040579 === Jahrgaenge.JAHRGANG_02) {
+			_sevar_24040579 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_01 as unknown);
+		} else if (_seexpr_24040579 === Jahrgaenge.JAHRGANG_03) {
+			_sevar_24040579 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_02 as unknown);
+		} else if (_seexpr_24040579 === Jahrgaenge.JAHRGANG_04) {
+			_sevar_24040579 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_03 as unknown);
+		} else if (_seexpr_24040579 === Jahrgaenge.JAHRGANG_05) {
+			_sevar_24040579 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_04 as unknown);
+		} else if (_seexpr_24040579 === Jahrgaenge.JAHRGANG_06) {
+			_sevar_24040579 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_05 as unknown);
+		} else if (_seexpr_24040579 === Jahrgaenge.JAHRGANG_07) {
+			_sevar_24040579 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_06 as unknown);
+		} else if (_seexpr_24040579 === Jahrgaenge.JAHRGANG_08) {
+			_sevar_24040579 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_07 as unknown);
+		} else if (_seexpr_24040579 === Jahrgaenge.JAHRGANG_09) {
+			_sevar_24040579 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_08 as unknown);
+		} else if (_seexpr_24040579 === Jahrgaenge.JAHRGANG_10) {
+			_sevar_24040579 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_09 as unknown);
+		} else if (_seexpr_24040579 === Jahrgaenge.JAHRGANG_11) {
+			_sevar_24040579 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
+		} else if (_seexpr_24040579 === Jahrgaenge.JAHRGANG_12) {
+			_sevar_24040579 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_11 as unknown);
+		} else if (_seexpr_24040579 === Jahrgaenge.JAHRGANG_13) {
+			_sevar_24040579 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_12 as unknown);
+		} else if (_seexpr_24040579 === Jahrgaenge.EF) {
+			_sevar_24040579 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_09 as unknown) || (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
+		} else if (_seexpr_24040579 === Jahrgaenge.Q1) {
+			_sevar_24040579 = (vergleichsjahrgang as unknown === Jahrgaenge.EF as unknown);
+		} else if (_seexpr_24040579 === Jahrgaenge.Q2) {
+			_sevar_24040579 = (vergleichsjahrgang as unknown === Jahrgaenge.Q1 as unknown);
+		} else if (_seexpr_24040579 === Jahrgaenge.BERUFSPRAXISSTUFE_VOLLZEIT) {
+			_sevar_24040579 = (vergleichsjahrgang === null);
+		} else if (_seexpr_24040579 === Jahrgaenge.BERUFSPRAXISSTUFE_TEILZEIT) {
+			_sevar_24040579 = (vergleichsjahrgang === null);
+		} else if (_seexpr_24040579 === Jahrgaenge.REALSCHULE_VORKURS_SEMESTER_1) {
+			_sevar_24040579 = (vergleichsjahrgang === null);
+		} else if (_seexpr_24040579 === Jahrgaenge.REALSCHULE_VORKURS_SEMESTER_2) {
+			_sevar_24040579 = (vergleichsjahrgang as unknown === Jahrgaenge.REALSCHULE_VORKURS_SEMESTER_1 as unknown);
+		} else if (_seexpr_24040579 === Jahrgaenge.REALSCHULE_SEMESTER_01) {
+			_sevar_24040579 = (vergleichsjahrgang as unknown === Jahrgaenge.REALSCHULE_VORKURS_SEMESTER_2 as unknown);
+		} else if (_seexpr_24040579 === Jahrgaenge.REALSCHULE_SEMESTER_02) {
+			_sevar_24040579 = (vergleichsjahrgang as unknown === Jahrgaenge.REALSCHULE_SEMESTER_01 as unknown);
+		} else if (_seexpr_24040579 === Jahrgaenge.REALSCHULE_SEMESTER_03) {
+			_sevar_24040579 = (vergleichsjahrgang as unknown === Jahrgaenge.REALSCHULE_SEMESTER_02 as unknown);
+		} else if (_seexpr_24040579 === Jahrgaenge.REALSCHULE_SEMESTER_04) {
+			_sevar_24040579 = (vergleichsjahrgang as unknown === Jahrgaenge.REALSCHULE_SEMESTER_03 as unknown);
+		} else if (_seexpr_24040579 === Jahrgaenge.VORKURS_SEMESTER_1) {
+			_sevar_24040579 = (vergleichsjahrgang === null);
+		} else if (_seexpr_24040579 === Jahrgaenge.VORKURS_SEMESTER_2) {
+			_sevar_24040579 = (vergleichsjahrgang as unknown === Jahrgaenge.VORKURS_SEMESTER_1 as unknown);
+		} else if (_seexpr_24040579 === Jahrgaenge.SEMESTER_01) {
+			_sevar_24040579 = (vergleichsjahrgang as unknown === Jahrgaenge.VORKURS_SEMESTER_2 as unknown);
+		} else if (_seexpr_24040579 === Jahrgaenge.SEMESTER_02) {
+			_sevar_24040579 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_01 as unknown);
+		} else if (_seexpr_24040579 === Jahrgaenge.SEMESTER_03) {
+			_sevar_24040579 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_02 as unknown);
+		} else if (_seexpr_24040579 === Jahrgaenge.SEMESTER_04) {
+			_sevar_24040579 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_03 as unknown);
+		} else if (_seexpr_24040579 === Jahrgaenge.SEMESTER_05) {
+			_sevar_24040579 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_04 as unknown);
+		} else if (_seexpr_24040579 === Jahrgaenge.SEMESTER_06) {
+			_sevar_24040579 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_05 as unknown);
 		} else {
-			_sevar_1615290442 = false;
+			_sevar_24040579 = false;
 		}
-		return _sevar_1615290442;
+		return _sevar_24040579;
 	}
 
 	/**
@@ -540,78 +551,80 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> implements CoreType<Jahrgae
 	 * @return true, falls dieser Jahrgang ein möglicher Vorgänger des übergebenen Vergleichsjahrgangs ist.
 	 */
 	public isMoeglicherVorgaengerVon(vergleichsjahrgang : Jahrgaenge | null) : boolean {
-		let _sevar_1772225412 : any;
-		const _seexpr_1772225412 = (this);
-		if (_seexpr_1772225412 === Jahrgaenge.HAUSFRUEHERZIEHUNG) {
-			_sevar_1772225412 = (vergleichsjahrgang === null);
-		} else if (_seexpr_1772225412 === Jahrgaenge.JAHRGANG_00) {
-			_sevar_1772225412 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_01 as unknown);
-		} else if (_seexpr_1772225412 === Jahrgaenge.JAHRGANG_01) {
-			_sevar_1772225412 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_02 as unknown);
-		} else if (_seexpr_1772225412 === Jahrgaenge.JAHRGANG_02) {
-			_sevar_1772225412 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_03 as unknown);
-		} else if (_seexpr_1772225412 === Jahrgaenge.JAHRGANG_03) {
-			_sevar_1772225412 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_04 as unknown);
-		} else if (_seexpr_1772225412 === Jahrgaenge.JAHRGANG_04) {
-			_sevar_1772225412 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_05 as unknown);
-		} else if (_seexpr_1772225412 === Jahrgaenge.JAHRGANG_05) {
-			_sevar_1772225412 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_06 as unknown);
-		} else if (_seexpr_1772225412 === Jahrgaenge.JAHRGANG_06) {
-			_sevar_1772225412 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_07 as unknown);
-		} else if (_seexpr_1772225412 === Jahrgaenge.JAHRGANG_07) {
-			_sevar_1772225412 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_08 as unknown);
-		} else if (_seexpr_1772225412 === Jahrgaenge.JAHRGANG_08) {
-			_sevar_1772225412 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_09 as unknown);
-		} else if (_seexpr_1772225412 === Jahrgaenge.JAHRGANG_09) {
-			_sevar_1772225412 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
-		} else if (_seexpr_1772225412 === Jahrgaenge.JAHRGANG_10) {
-			_sevar_1772225412 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_11 as unknown);
-		} else if (_seexpr_1772225412 === Jahrgaenge.JAHRGANG_11) {
-			_sevar_1772225412 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_12 as unknown);
-		} else if (_seexpr_1772225412 === Jahrgaenge.JAHRGANG_12) {
-			_sevar_1772225412 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_13 as unknown);
-		} else if (_seexpr_1772225412 === Jahrgaenge.JAHRGANG_13) {
-			_sevar_1772225412 = (vergleichsjahrgang === null);
-		} else if (_seexpr_1772225412 === Jahrgaenge.EF) {
-			_sevar_1772225412 = (vergleichsjahrgang as unknown === Jahrgaenge.Q1 as unknown);
-		} else if (_seexpr_1772225412 === Jahrgaenge.Q1) {
-			_sevar_1772225412 = (vergleichsjahrgang as unknown === Jahrgaenge.Q2 as unknown);
-		} else if (_seexpr_1772225412 === Jahrgaenge.Q2) {
-			_sevar_1772225412 = (vergleichsjahrgang === null);
-		} else if (_seexpr_1772225412 === Jahrgaenge.BERUFSPRAXISSTUFE) {
-			_sevar_1772225412 = (vergleichsjahrgang === null);
-		} else if (_seexpr_1772225412 === Jahrgaenge.REALSCHULE_VORKURS_SEMESTER_1) {
-			_sevar_1772225412 = (vergleichsjahrgang as unknown === Jahrgaenge.REALSCHULE_VORKURS_SEMESTER_2 as unknown);
-		} else if (_seexpr_1772225412 === Jahrgaenge.REALSCHULE_VORKURS_SEMESTER_2) {
-			_sevar_1772225412 = (vergleichsjahrgang as unknown === Jahrgaenge.REALSCHULE_SEMESTER_01 as unknown);
-		} else if (_seexpr_1772225412 === Jahrgaenge.REALSCHULE_SEMESTER_01) {
-			_sevar_1772225412 = (vergleichsjahrgang as unknown === Jahrgaenge.REALSCHULE_SEMESTER_02 as unknown);
-		} else if (_seexpr_1772225412 === Jahrgaenge.REALSCHULE_SEMESTER_02) {
-			_sevar_1772225412 = (vergleichsjahrgang as unknown === Jahrgaenge.REALSCHULE_SEMESTER_03 as unknown);
-		} else if (_seexpr_1772225412 === Jahrgaenge.REALSCHULE_SEMESTER_03) {
-			_sevar_1772225412 = (vergleichsjahrgang as unknown === Jahrgaenge.REALSCHULE_SEMESTER_04 as unknown);
-		} else if (_seexpr_1772225412 === Jahrgaenge.REALSCHULE_SEMESTER_04) {
-			_sevar_1772225412 = (vergleichsjahrgang === null);
-		} else if (_seexpr_1772225412 === Jahrgaenge.VORKURS_SEMESTER_1) {
-			_sevar_1772225412 = (vergleichsjahrgang as unknown === Jahrgaenge.VORKURS_SEMESTER_2 as unknown);
-		} else if (_seexpr_1772225412 === Jahrgaenge.VORKURS_SEMESTER_2) {
-			_sevar_1772225412 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_01 as unknown);
-		} else if (_seexpr_1772225412 === Jahrgaenge.SEMESTER_01) {
-			_sevar_1772225412 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_02 as unknown);
-		} else if (_seexpr_1772225412 === Jahrgaenge.SEMESTER_02) {
-			_sevar_1772225412 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_03 as unknown);
-		} else if (_seexpr_1772225412 === Jahrgaenge.SEMESTER_03) {
-			_sevar_1772225412 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_04 as unknown);
-		} else if (_seexpr_1772225412 === Jahrgaenge.SEMESTER_04) {
-			_sevar_1772225412 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_05 as unknown);
-		} else if (_seexpr_1772225412 === Jahrgaenge.SEMESTER_05) {
-			_sevar_1772225412 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_06 as unknown);
-		} else if (_seexpr_1772225412 === Jahrgaenge.SEMESTER_06) {
-			_sevar_1772225412 = (vergleichsjahrgang === null);
+		let _sevar_305222773 : any;
+		const _seexpr_305222773 = (this);
+		if (_seexpr_305222773 === Jahrgaenge.HAUSFRUEHERZIEHUNG) {
+			_sevar_305222773 = (vergleichsjahrgang === null);
+		} else if (_seexpr_305222773 === Jahrgaenge.JAHRGANG_00) {
+			_sevar_305222773 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_01 as unknown);
+		} else if (_seexpr_305222773 === Jahrgaenge.JAHRGANG_01) {
+			_sevar_305222773 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_02 as unknown);
+		} else if (_seexpr_305222773 === Jahrgaenge.JAHRGANG_02) {
+			_sevar_305222773 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_03 as unknown);
+		} else if (_seexpr_305222773 === Jahrgaenge.JAHRGANG_03) {
+			_sevar_305222773 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_04 as unknown);
+		} else if (_seexpr_305222773 === Jahrgaenge.JAHRGANG_04) {
+			_sevar_305222773 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_05 as unknown);
+		} else if (_seexpr_305222773 === Jahrgaenge.JAHRGANG_05) {
+			_sevar_305222773 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_06 as unknown);
+		} else if (_seexpr_305222773 === Jahrgaenge.JAHRGANG_06) {
+			_sevar_305222773 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_07 as unknown);
+		} else if (_seexpr_305222773 === Jahrgaenge.JAHRGANG_07) {
+			_sevar_305222773 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_08 as unknown);
+		} else if (_seexpr_305222773 === Jahrgaenge.JAHRGANG_08) {
+			_sevar_305222773 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_09 as unknown);
+		} else if (_seexpr_305222773 === Jahrgaenge.JAHRGANG_09) {
+			_sevar_305222773 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
+		} else if (_seexpr_305222773 === Jahrgaenge.JAHRGANG_10) {
+			_sevar_305222773 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_11 as unknown);
+		} else if (_seexpr_305222773 === Jahrgaenge.JAHRGANG_11) {
+			_sevar_305222773 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_12 as unknown);
+		} else if (_seexpr_305222773 === Jahrgaenge.JAHRGANG_12) {
+			_sevar_305222773 = (vergleichsjahrgang as unknown === Jahrgaenge.JAHRGANG_13 as unknown);
+		} else if (_seexpr_305222773 === Jahrgaenge.JAHRGANG_13) {
+			_sevar_305222773 = (vergleichsjahrgang === null);
+		} else if (_seexpr_305222773 === Jahrgaenge.EF) {
+			_sevar_305222773 = (vergleichsjahrgang as unknown === Jahrgaenge.Q1 as unknown);
+		} else if (_seexpr_305222773 === Jahrgaenge.Q1) {
+			_sevar_305222773 = (vergleichsjahrgang as unknown === Jahrgaenge.Q2 as unknown);
+		} else if (_seexpr_305222773 === Jahrgaenge.Q2) {
+			_sevar_305222773 = (vergleichsjahrgang === null);
+		} else if (_seexpr_305222773 === Jahrgaenge.BERUFSPRAXISSTUFE_VOLLZEIT) {
+			_sevar_305222773 = (vergleichsjahrgang === null);
+		} else if (_seexpr_305222773 === Jahrgaenge.BERUFSPRAXISSTUFE_TEILZEIT) {
+			_sevar_305222773 = (vergleichsjahrgang === null);
+		} else if (_seexpr_305222773 === Jahrgaenge.REALSCHULE_VORKURS_SEMESTER_1) {
+			_sevar_305222773 = (vergleichsjahrgang as unknown === Jahrgaenge.REALSCHULE_VORKURS_SEMESTER_2 as unknown);
+		} else if (_seexpr_305222773 === Jahrgaenge.REALSCHULE_VORKURS_SEMESTER_2) {
+			_sevar_305222773 = (vergleichsjahrgang as unknown === Jahrgaenge.REALSCHULE_SEMESTER_01 as unknown);
+		} else if (_seexpr_305222773 === Jahrgaenge.REALSCHULE_SEMESTER_01) {
+			_sevar_305222773 = (vergleichsjahrgang as unknown === Jahrgaenge.REALSCHULE_SEMESTER_02 as unknown);
+		} else if (_seexpr_305222773 === Jahrgaenge.REALSCHULE_SEMESTER_02) {
+			_sevar_305222773 = (vergleichsjahrgang as unknown === Jahrgaenge.REALSCHULE_SEMESTER_03 as unknown);
+		} else if (_seexpr_305222773 === Jahrgaenge.REALSCHULE_SEMESTER_03) {
+			_sevar_305222773 = (vergleichsjahrgang as unknown === Jahrgaenge.REALSCHULE_SEMESTER_04 as unknown);
+		} else if (_seexpr_305222773 === Jahrgaenge.REALSCHULE_SEMESTER_04) {
+			_sevar_305222773 = (vergleichsjahrgang === null);
+		} else if (_seexpr_305222773 === Jahrgaenge.VORKURS_SEMESTER_1) {
+			_sevar_305222773 = (vergleichsjahrgang as unknown === Jahrgaenge.VORKURS_SEMESTER_2 as unknown);
+		} else if (_seexpr_305222773 === Jahrgaenge.VORKURS_SEMESTER_2) {
+			_sevar_305222773 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_01 as unknown);
+		} else if (_seexpr_305222773 === Jahrgaenge.SEMESTER_01) {
+			_sevar_305222773 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_02 as unknown);
+		} else if (_seexpr_305222773 === Jahrgaenge.SEMESTER_02) {
+			_sevar_305222773 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_03 as unknown);
+		} else if (_seexpr_305222773 === Jahrgaenge.SEMESTER_03) {
+			_sevar_305222773 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_04 as unknown);
+		} else if (_seexpr_305222773 === Jahrgaenge.SEMESTER_04) {
+			_sevar_305222773 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_05 as unknown);
+		} else if (_seexpr_305222773 === Jahrgaenge.SEMESTER_05) {
+			_sevar_305222773 = (vergleichsjahrgang as unknown === Jahrgaenge.SEMESTER_06 as unknown);
+		} else if (_seexpr_305222773 === Jahrgaenge.SEMESTER_06) {
+			_sevar_305222773 = (vergleichsjahrgang === null);
 		} else {
-			_sevar_1772225412 = false;
+			_sevar_305222773 = false;
 		}
-		return _sevar_1772225412;
+		return _sevar_305222773;
 	}
 
 	/**

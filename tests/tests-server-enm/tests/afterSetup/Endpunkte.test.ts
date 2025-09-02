@@ -3,8 +3,10 @@ import { getApiService } from "../../utils/RequestBuilder.js";
 import { parse } from "../../utils/ENMApiDataParser.js";
 import type { ENMLeistung, ENMSchuelerAnkreuzkompetenz } from "@core";
 import { ENMSchueler } from "@core";
+import { enmURL } from "../../../utils/APIUtils";
 
-const targetUrlENMServer: string = process.env.VITE_ENM_targetHost ?? "https://localhost";
+const targetUrlENMServer: string = enmURL;
+
 const apiServiceAuth = getApiService('T.Giesen@lmail.de', 'UD73Js0Uro', targetUrlENMServer)
 const apiServiceAuthWrongTeacher = getApiService('D.Berthold@lmail.de', 'uXkpaRLY', targetUrlENMServer)
 

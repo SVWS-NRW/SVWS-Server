@@ -360,7 +360,7 @@ class DataSchuelerSchulbesuchsdatenTest {
 	void mapTest_idGrundschuleJahreEingangsphase_Erfolg() throws ApiOperationException {
 		final var primarstufe = PrimarstufeSchuleingangsphaseBesuchsjahre.values()[0].historie().getLast();
 		final var dto = new DTOSchueler(1L, "2", false);
-		dto.EPJahre = Integer.valueOf(primarstufe.schluessel);
+		dto.EPJahre = (int) primarstufe.id;
 		dto.Einschulungsjahr = 2100;
 
 		final var result = this.schulbesuchsdaten.map(dto);
@@ -373,20 +373,6 @@ class DataSchuelerSchulbesuchsdatenTest {
 	void mapTest_idGrundschuleJahreEingangsphase_EPJahreNull() throws ApiOperationException {
 		final var dto = new DTOSchueler(1L, "2", false);
 		dto.EPJahre = null;
-		dto.Einschulungsjahr = 2100;
-
-		final var result = this.schulbesuchsdaten.map(dto);
-
-		assertThat(result).hasFieldOrPropertyWithValue("idGrundschuleJahreEingangsphase", null);
-	}
-
-	@Test
-	@DisplayName("map | idGrundschuleJahreEingangsphase | Einschlungsjahr is null")
-	void mapTest_idGrundschuleJahreEingangsphase_EinschlungsjahrNull() throws ApiOperationException {
-		final var primarstufe = PrimarstufeSchuleingangsphaseBesuchsjahre.values()[0].historie().getLast();
-		final var dto = new DTOSchueler(1L, "2", false);
-		dto.EPJahre = Integer.valueOf(primarstufe.schluessel);
-		dto.Einschulungsjahr = null;
 
 		final var result = this.schulbesuchsdaten.map(dto);
 
@@ -913,7 +899,7 @@ class DataSchuelerSchulbesuchsdatenTest {
 		final var key = PrimarstufeSchuleingangsphaseBesuchsjahre.E2.daten(2025);
 		schulbesuchsdaten.mapAttribute(dtoSchueler, "idGrundschuleJahreEingangsphase", key.id, null);
 
-		assertThat(dtoSchueler.EPJahre).isEqualTo(Integer.valueOf(key.schluessel));
+		assertThat(dtoSchueler.EPJahre).isEqualTo(key.id);
 	}
 
 	@Test

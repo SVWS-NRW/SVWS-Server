@@ -56,7 +56,7 @@ class TestLehrerMinderleistungsarten {
 				("Pflichtstundenermäßigung wegen Schwerbehinderung (Regelanrechnung)"));
 		assertEquals(LehrerMinderleistungsarten.data().getWertByKuerzel("220").daten(2024).text,
 				("Pflichtstundenermäßigung wegen Schwerbehinderung (Erhöhung auf Antrag)"));
-		assertEquals(LehrerMinderleistungsarten.data().getWertByKuerzel("230").daten(2024).text, ("Beurlaubung, Rückkehr im Laufe des Schuljahres"));
+		assertEquals(LehrerMinderleistungsarten.data().getWertByKuerzel("230").daten(2024).text, ("Beurlaubung (auch Elternzeit), Rückkehr im Laufe des Schuljahres"));
 		assertEquals(LehrerMinderleistungsarten.data().getWertByKuerzel("240").daten(2024).text, ("Langfristige Erkrankung"));
 		assertEquals(LehrerMinderleistungsarten.data().getWertByKuerzel("250").daten(2024).text, ("Abwesend wegen Beschäftigungsverbot gem. § 3 MuSchG"));
 		assertEquals(LehrerMinderleistungsarten.data().getWertByKuerzel("255").daten(2024).text, ("Abwesend wegen Teilbeschäftigungsverbot gem. § 3 MuSchG"));
@@ -64,12 +64,12 @@ class TestLehrerMinderleistungsarten {
 		assertEquals(LehrerMinderleistungsarten.data().getWertByKuerzel("270").daten(2024).text,
 				("Rückgabe vorgeleisteter Stunden wegen Nichtinanspruchnahme von Altersteilzeit"));
 		assertEquals(LehrerMinderleistungsarten.data().getWertByKuerzel("275").daten(2024).text, ("Rückgabe der Vorgriffsstunden"));
-		assertEquals(LehrerMinderleistungsarten.data().getWertByKuerzel("280").daten(2024).text, ("Seiteneinsteigerentlastung"));
+		assertEquals(LehrerMinderleistungsarten.data().getWertByKuerzel("280").daten(2009).text, ("Seiteneinsteigerentlastung"));
 		assertEquals(LehrerMinderleistungsarten.data().getWertByKuerzel("290").daten(2024).text,
 				("Ermäßigungs-/Freistellungsphase \"Teilzeitbeschäftigung im Blockmodell\" (§ 65 LBG) (vormals Sabbatjahr)"));
 		assertEquals(LehrerMinderleistungsarten.data().getWertByKuerzel("300").daten(2024).text, ("Sonstige Ermäßigungen aus besonderen persönlichen Gründen"));
 		assertEquals(LehrerMinderleistungsarten.data().getWertByKuerzel("350").daten(2024).text,
-				("Abrundung der Pflichtstundenzahl wegen Aufrundung im vorhergehenden Schuljahr"));
+				("Abrundung der Pflichtstundenzahl aufgrund von § 2 Abs. 1 AVO-RL"));
 		assertEquals(LehrerMinderleistungsarten.data().getWertByKuerzel("360").daten(2024).text,
 				("Unterschreitung der Pflichtstundenzahl aus organisatorischen Gründen (z. B. Epochenunterricht)"));
 		assertEquals(LehrerMinderleistungsarten.data().getWertByKuerzel("365").daten(2022).text, ("Unterschreitung der Pflichtstundenzahl wegen COVID-19"));

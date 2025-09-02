@@ -1,5 +1,5 @@
 {
-	"version": 4,
+	"version": 5,
 	"daten": [ {
 		"bezeichner": "XX",
 		"idStatistik": "1",
@@ -7,8 +7,20 @@
 			"id": 1,
 			"kuerzel": "xx",
 			"schluessel": "xx",
-			"text": "Unbekannt",
+			"text": "unbekannt",
 			"iso3": "und",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "XY",
+		"idStatistik": "2",
+		"historie": [ {
+			"id": 2,
+			"kuerzel": "xy",
+			"schluessel": "xy",
+			"text": "sonstige Sprache",
+			"iso3": "mis",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -357,18 +369,6 @@
 			"schluessel": "cv",
 			"text": "Tschuwaschisch",
 			"iso3": "chv",
-			"gueltigVon": null,
-			"gueltigBis": null
-		} ]
-	}, {
-		"bezeichner": "CU",
-		"idStatistik": "174000",
-		"historie": [ {
-			"id": 174000,
-			"kuerzel": "cu",
-			"schluessel": "cu",
-			"text": "Kirchenslawisch",
-			"iso3": "chu",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -793,18 +793,6 @@
 			"gueltigBis": null
 		} ]
 	}, {
-		"bezeichner": "IA",
-		"idStatistik": "178000",
-		"historie": [ {
-			"id": 178000,
-			"kuerzel": "ia",
-			"schluessel": "ia",
-			"text": "Interlingua",
-			"iso3": "ina",
-			"gueltigVon": null,
-			"gueltigBis": null
-		} ]
-	}, {
 		"bezeichner": "ID",
 		"idStatistik": "61000",
 		"historie": [ {
@@ -813,18 +801,6 @@
 			"schluessel": "id",
 			"text": "Indonesisch",
 			"iso3": "ind",
-			"gueltigVon": null,
-			"gueltigBis": null
-		} ]
-	}, {
-		"bezeichner": "IE",
-		"idStatistik": "179000",
-		"historie": [ {
-			"id": 179000,
-			"kuerzel": "ie",
-			"schluessel": "ie",
-			"text": "Interlingue",
-			"iso3": "ile",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -861,18 +837,6 @@
 			"schluessel": "ik",
 			"text": "Inupiaq",
 			"iso3": "ipk",
-			"gueltigVon": null,
-			"gueltigBis": null
-		} ]
-	}, {
-		"bezeichner": "IO",
-		"idStatistik": "181000",
-		"historie": [ {
-			"id": 181000,
-			"kuerzel": "io",
-			"schluessel": "io",
-			"text": "Ido",
-			"iso3": "ido",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -1117,18 +1081,6 @@
 			"gueltigBis": null
 		} ]
 	}, {
-		"bezeichner": "LA",
-		"idStatistik": "182000",
-		"historie": [ {
-			"id": 182000,
-			"kuerzel": "la",
-			"schluessel": "la",
-			"text": "Latein",
-			"iso3": "lat",
-			"gueltigVon": null,
-			"gueltigBis": null
-		} ]
-	}, {
 		"bezeichner": "LB",
 		"idStatistik": "87000",
 		"historie": [ {
@@ -1357,18 +1309,6 @@
 			"gueltigBis": null
 		} ]
 	}, {
-		"bezeichner": "NB",
-		"idStatistik": "183000",
-		"historie": [ {
-			"id": 183000,
-			"kuerzel": "nb",
-			"schluessel": "nb",
-			"text": "Bokmål",
-			"iso3": "nob",
-			"gueltigVon": null,
-			"gueltigBis": null
-		} ]
-	}, {
 		"bezeichner": "ND",
 		"idStatistik": "104000",
 		"historie": [ {
@@ -1413,18 +1353,6 @@
 			"schluessel": "nl",
 			"text": "Niederländisch",
 			"iso3": "nld",
-			"gueltigVon": null,
-			"gueltigBis": null
-		} ]
-	}, {
-		"bezeichner": "NN",
-		"idStatistik": "184000",
-		"historie": [ {
-			"id": 184000,
-			"kuerzel": "nn",
-			"schluessel": "nn",
-			"text": "Nynorsk",
-			"iso3": "nno",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -1545,18 +1473,6 @@
 			"schluessel": "pa",
 			"text": "Panjabi",
 			"iso3": "pan",
-			"gueltigVon": null,
-			"gueltigBis": null
-		} ]
-	}, {
-		"bezeichner": "PI",
-		"idStatistik": "185000",
-		"historie": [ {
-			"id": 185000,
-			"kuerzel": "pi",
-			"schluessel": "pi",
-			"text": "Pali",
-			"iso3": "pli",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]

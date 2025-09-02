@@ -1,6 +1,6 @@
-import type { BenutzerKompetenz, Haltestelle, HaltestellenListeManager } from "@core";
+import type { BenutzerKompetenz, Haltestelle } from "@core";
 import type { RoutingStatus } from "~/router/RoutingStatus";
-import type { Checkpoint } from "@ui";
+import type { Checkpoint, HaltestellenListeManager } from "@ui";
 
 export interface HaltestellenNeuProps {
 	manager: () => HaltestellenListeManager;

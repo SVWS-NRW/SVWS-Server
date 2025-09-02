@@ -1,0 +1,510 @@
+{
+	"version": 2,
+	"daten": [ {
+		"bezeichner": "HALBJAHR_LETZTER_UNTERRICHTSTAG",
+		"idStatistik": "1",
+		"historie": [ {
+			"id": 12009,
+			"kuerzel": "Ende 1. Halbjahr",
+			"schluessel": "HJ1LUT",
+			"schulformen": [ "BK", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "S", "SB", "SG", "SK", "SR", "V", "WB" ],
+			"text": "Letzter Unterrichtstag des 1. Halbjahres im Schuljahr 2009/10",
+			"von": "2010-01-29",
+			"bis": "2010-01-29",
+			"gueltigVon": 2009,
+			"gueltigBis": 2009
+		}, {
+			"id": 12010,
+			"kuerzel": "Ende 1. Halbjahr",
+			"schluessel": "HJ1LUT",
+			"schulformen": [ "BK", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "S", "SB", "SG", "SK", "SR", "V", "WB" ],
+			"text": "Letzter Unterrichtstag des 1. Halbjahres im Schuljahr 2010/11",
+			"von": "2011-02-11",
+			"bis": "2011-02-11",
+			"gueltigVon": 2010,
+			"gueltigBis": 2010
+		}, {
+			"id": 12011,
+			"kuerzel": "Ende 1. Halbjahr",
+			"schluessel": "HJ1LUT",
+			"schulformen": [ "BK", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "S", "SB", "SG", "SK", "SR", "V", "WB" ],
+			"text": "Letzter Unterrichtstag des 1. Halbjahres im Schuljahr 2011/12",
+			"von": "2012-02-10",
+			"bis": "2012-02-10",
+			"gueltigVon": 2011,
+			"gueltigBis": 2011
+		}, {
+			"id": 12012,
+			"kuerzel": "Ende 1. Halbjahr",
+			"schluessel": "HJ1LUT",
+			"schulformen": [ "BK", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "S", "SB", "SG", "SK", "SR", "V", "WB" ],
+			"text": "Letzter Unterrichtstag des 1. Halbjahres im Schuljahr 2012/13",
+			"von": "2013-02-01",
+			"bis": "2013-02-01",
+			"gueltigVon": 2012,
+			"gueltigBis": 2012
+		}, {
+			"id": 12013,
+			"kuerzel": "Ende 1. Halbjahr",
+			"schluessel": "HJ1LUT",
+			"schulformen": [ "BK", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "S", "SB", "SG", "SK", "SR", "V", "WB" ],
+			"text": "Letzter Unterrichtstag des 1. Halbjahres im Schuljahr 2013/14",
+			"von": "2014-02-07",
+			"bis": "2014-02-07",
+			"gueltigVon": 2013,
+			"gueltigBis": 2013
+		}, {
+			"id": 12014,
+			"kuerzel": "Ende 1. Halbjahr",
+			"schluessel": "HJ1LUT",
+			"schulformen": [ "BK", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "S", "SB", "SG", "SK", "SR", "V", "WB" ],
+			"text": "Letzter Unterrichtstag des 1. Halbjahres im Schuljahr 2014/15",
+			"von": "2015-01-30",
+			"bis": "2015-01-30",
+			"gueltigVon": 2014,
+			"gueltigBis": 2014
+		}, {
+			"id": 12015,
+			"kuerzel": "Ende 1. Halbjahr",
+			"schluessel": "HJ1LUT",
+			"schulformen": [ "BK", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "S", "SB", "SG", "SK", "SR", "V", "WB" ],
+			"text": "Letzter Unterrichtstag des 1. Halbjahres im Schuljahr 2015/16",
+			"von": "2016-01-29",
+			"bis": "2016-01-29",
+			"gueltigVon": 2015,
+			"gueltigBis": 2015
+		}, {
+			"id": 12016,
+			"kuerzel": "Ende 1. Halbjahr",
+			"schluessel": "HJ1LUT",
+			"schulformen": [ "BK", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "S", "SB", "SG", "SK", "SR", "V", "WB" ],
+			"text": "Letzter Unterrichtstag des 1. Halbjahres im Schuljahr 2016/17",
+			"von": "2017-02-03",
+			"bis": "2017-02-03",
+			"gueltigVon": 2016,
+			"gueltigBis": 2016
+		}, {
+			"id": 12017,
+			"kuerzel": "Ende 1. Halbjahr",
+			"schluessel": "HJ1LUT",
+			"schulformen": [ "BK", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "S", "SB", "SG", "SK", "SR", "V", "WB" ],
+			"text": "Letzter Unterrichtstag des 1. Halbjahres im Schuljahr 2017/18",
+			"von": "2018-02-02",
+			"bis": "2018-02-02",
+			"gueltigVon": 2017,
+			"gueltigBis": 2017
+		}, {
+			"id": 12018,
+			"kuerzel": "Ende 1. Halbjahr",
+			"schluessel": "HJ1LUT",
+			"schulformen": [ "BK", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "S", "SB", "SG", "SK", "SR", "V", "WB" ],
+			"text": "Letzter Unterrichtstag des 1. Halbjahres im Schuljahr 2018/19",
+			"von": "2019-02-08",
+			"bis": "2019-02-08",
+			"gueltigVon": 2018,
+			"gueltigBis": 2018
+		}, {
+			"id": 12019,
+			"kuerzel": "Ende 1. Halbjahr",
+			"schluessel": "HJ1LUT",
+			"schulformen": [ "BK", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "S", "SB", "SG", "SK", "SR", "V", "WB" ],
+			"text": "Letzter Unterrichtstag des 1. Halbjahres im Schuljahr 2019/20",
+			"von": "2020-01-31",
+			"bis": "2020-01-31",
+			"gueltigVon": 2019,
+			"gueltigBis": 2019
+		}, {
+			"id": 12020,
+			"kuerzel": "Ende 1. Halbjahr",
+			"schluessel": "HJ1LUT",
+			"schulformen": [ "BK", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "S", "SB", "SG", "SK", "SR", "V", "WB" ],
+			"text": "Letzter Unterrichtstag des 1. Halbjahres im Schuljahr 2020/21",
+			"von": "2021-01-29",
+			"bis": "2021-01-29",
+			"gueltigVon": 2020,
+			"gueltigBis": 2020
+		}, {
+			"id": 12021,
+			"kuerzel": "Ende 1. Halbjahr",
+			"schluessel": "HJ1LUT",
+			"schulformen": [ "BK", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "S", "SB", "SG", "SK", "SR", "V", "WB" ],
+			"text": "Letzter Unterrichtstag des 1. Halbjahres im Schuljahr 2021/22",
+			"von": "2022-01-28",
+			"bis": "2022-01-28",
+			"gueltigVon": 2021,
+			"gueltigBis": 2021
+		}, {
+			"id": 12022,
+			"kuerzel": "Ende 1. Halbjahr",
+			"schluessel": "HJ1LUT",
+			"schulformen": [ "BK", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "S", "SB", "SG", "SK", "SR", "V", "WB" ],
+			"text": "Letzter Unterrichtstag des 1. Halbjahres im Schuljahr 2022/23",
+			"von": "2023-01-20",
+			"bis": "2023-01-20",
+			"gueltigVon": 2022,
+			"gueltigBis": 2022
+		}, {
+			"id": 12023,
+			"kuerzel": "Ende 1. Halbjahr",
+			"schluessel": "HJ1LUT",
+			"schulformen": [ "BK", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "S", "SB", "SG", "SK", "SR", "V", "WB" ],
+			"text": "Letzter Unterrichtstag des 1. Halbjahres im Schuljahr 2023/24",
+			"von": "2024-01-26",
+			"bis": "2024-01-26",
+			"gueltigVon": 2023,
+			"gueltigBis": 2023
+		}, {
+			"id": 12024,
+			"kuerzel": "Ende 1. Halbjahr",
+			"schluessel": "HJ1LUT",
+			"schulformen": [ "BK", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "S", "SB", "SG", "SK", "SR", "V", "WB" ],
+			"text": "Letzter Unterrichtstag des 1. Halbjahres im Schuljahr 2024/25",
+			"von": "2025-02-07",
+			"bis": "2025-02-07",
+			"gueltigVon": 2024,
+			"gueltigBis": 2024
+		}, {
+			"id": 12025,
+			"kuerzel": "Ende 1. Halbjahr",
+			"schluessel": "HJ1LUT",
+			"schulformen": [ "BK", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "S", "SB", "SG", "SK", "SR", "V", "WB" ],
+			"text": "Letzter Unterrichtstag des 1. Halbjahres im Schuljahr 2025/26",
+			"von": "2026-02-06",
+			"bis": "2026-02-06",
+			"gueltigVon": 2025,
+			"gueltigBis": 2025
+		}, {
+			"id": 12026,
+			"kuerzel": "Ende 1. Halbjahr",
+			"schluessel": "HJ1LUT",
+			"schulformen": [ "BK", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "S", "SB", "SG", "SK", "SR", "V", "WB" ],
+			"text": "Letzter Unterrichtstag des 1. Halbjahres im Schuljahr 2026/27",
+			"von": "2027-02-12",
+			"bis": "2027-02-12",
+			"gueltigVon": 2026,
+			"gueltigBis": 2026
+		}, {
+			"id": 12027,
+			"kuerzel": "Ende 1. Halbjahr",
+			"schluessel": "HJ1LUT",
+			"schulformen": [ "BK", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "S", "SB", "SG", "SK", "SR", "V", "WB" ],
+			"text": "Letzter Unterrichtstag des 1. Halbjahres im Schuljahr 2027/28",
+			"von": "2028-02-04",
+			"bis": "2028-02-04",
+			"gueltigVon": 2027,
+			"gueltigBis": 2027
+		}, {
+			"id": 12028,
+			"kuerzel": "Ende 1. Halbjahr",
+			"schluessel": "HJ1LUT",
+			"schulformen": [ "BK", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "S", "SB", "SG", "SK", "SR", "V", "WB" ],
+			"text": "Letzter Unterrichtstag des 1. Halbjahres im Schuljahr 2028/29",
+			"von": "2029-01-26",
+			"bis": "2029-01-26",
+			"gueltigVon": 2028,
+			"gueltigBis": 2028
+		}, {
+			"id": 12029,
+			"kuerzel": "Ende 1. Halbjahr",
+			"schluessel": "HJ1LUT",
+			"schulformen": [ "BK", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "S", "SB", "SG", "SK", "SR", "V", "WB" ],
+			"text": "Letzter Unterrichtstag des 1. Halbjahres im Schuljahr 2029/30",
+			"von": "2030-01-25",
+			"bis": "2030-01-25",
+			"gueltigVon": 2029,
+			"gueltigBis": 2029
+		} ]
+	}, {
+		"bezeichner": "GOST_HALBJAHR_LETZTER_UNTERRICHTSTAG_Q2",
+		"idStatistik": "2",
+		"historie": [ {
+			"id": 22023,
+			"kuerzel": "Q2 Ende 1. Halbjahr",
+			"schluessel": "HJ1LUT_Q2",
+			"schulformen": [ "GE", "GY", "SG" ],
+			"text": "Letzter Unterrichtstag des 1. Halbjahres im Schuljahr 2023/24 für den Jahrgang Q2",
+			"von": "2023-12-20",
+			"bis": "2023-12-20",
+			"gueltigVon": 2023,
+			"gueltigBis": 2023
+		}, {
+			"id": 22024,
+			"kuerzel": "Q2 Ende 1. Halbjahr",
+			"schluessel": "HJ1LUT_Q2",
+			"schulformen": [ "GE", "GY", "SG" ],
+			"text": "Letzter Unterrichtstag des 1. Halbjahres im Schuljahr 2024/25 für den Jahrgang Q2",
+			"von": "2024-12-20",
+			"bis": "2024-12-20",
+			"gueltigVon": 2024,
+			"gueltigBis": 2024
+		}, {
+			"id": 22025,
+			"kuerzel": "Q2 Ende 1. Halbjahr",
+			"schluessel": "HJ1LUT_Q2",
+			"schulformen": [ "GE", "GY", "SG" ],
+			"text": "Letzter Unterrichtstag des 1. Halbjahres im Schuljahr 2025/26 für den Jahrgang Q2",
+			"von": "2025-12-19",
+			"bis": "2025-12-19",
+			"gueltigVon": 2025,
+			"gueltigBis": 2025
+		}, {
+			"id": 22026,
+			"kuerzel": "Q2 Ende 1. Halbjahr",
+			"schluessel": "HJ1LUT_Q2",
+			"schulformen": [ "GE", "GY", "SG" ],
+			"text": "Letzter Unterrichtstag des 1. Halbjahres im Schuljahr 2026/27 für den Jahrgang Q2",
+			"von": "2026-12-22",
+			"bis": "2026-12-22",
+			"gueltigVon": 2026,
+			"gueltigBis": 2026
+		} ]
+	}, {
+		"bezeichner": "SCHULJAHR_LETZTER_UNTERRICHTSTAG",
+		"idStatistik": "3",
+		"historie": [ {
+			"id": 32009,
+			"kuerzel": "Letzter Unterrichtstag",
+			"schluessel": "SJLUT",
+			"schulformen": [ "BK", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "S", "SB", "SG", "SK", "SR", "V", "WB" ],
+			"text": "Letzter Unterrichtstag im Schuljahr 2009/10",
+			"von": "2010-07-12",
+			"bis": "2010-07-12",
+			"gueltigVon": 2009,
+			"gueltigBis": 2009
+		}, {
+			"id": 32010,
+			"kuerzel": "Letzter Unterrichtstag",
+			"schluessel": "SJLUT",
+			"schulformen": [ "BK", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "S", "SB", "SG", "SK", "SR", "V", "WB" ],
+			"text": "Letzter Unterrichtstag im Schuljahr 2010/11",
+			"von": "2011-07-22",
+			"bis": "2011-07-22",
+			"gueltigVon": 2010,
+			"gueltigBis": 2010
+		}, {
+			"id": 32011,
+			"kuerzel": "Letzter Unterrichtstag",
+			"schluessel": "SJLUT",
+			"schulformen": [ "BK", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "S", "SB", "SG", "SK", "SR", "V", "WB" ],
+			"text": "Letzter Unterrichtstag im Schuljahr 2011/12",
+			"von": "2012-07-06",
+			"bis": "2012-07-06",
+			"gueltigVon": 2011,
+			"gueltigBis": 2011
+		}, {
+			"id": 32012,
+			"kuerzel": "Letzter Unterrichtstag",
+			"schluessel": "SJLUT",
+			"schulformen": [ "BK", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "S", "SB", "SG", "SK", "SR", "V", "WB" ],
+			"text": "Letzter Unterrichtstag im Schuljahr 2012/13",
+			"von": "2013-07-19",
+			"bis": "2013-07-19",
+			"gueltigVon": 2012,
+			"gueltigBis": 2012
+		}, {
+			"id": 32013,
+			"kuerzel": "Letzter Unterrichtstag",
+			"schluessel": "SJLUT",
+			"schulformen": [ "BK", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "S", "SB", "SG", "SK", "SR", "V", "WB" ],
+			"text": "Letzter Unterrichtstag im Schuljahr 2013/14",
+			"von": "2014-07-04",
+			"bis": "2014-07-04",
+			"gueltigVon": 2013,
+			"gueltigBis": 2013
+		}, {
+			"id": 32014,
+			"kuerzel": "Letzter Unterrichtstag",
+			"schluessel": "SJLUT",
+			"schulformen": [ "BK", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "S", "SB", "SG", "SK", "SR", "V", "WB" ],
+			"text": "Letzter Unterrichtstag im Schuljahr 2014/15",
+			"von": "2015-06-26",
+			"bis": "2015-06-26",
+			"gueltigVon": 2014,
+			"gueltigBis": 2014
+		}, {
+			"id": 32015,
+			"kuerzel": "Letzter Unterrichtstag",
+			"schluessel": "SJLUT",
+			"schulformen": [ "BK", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "S", "SB", "SG", "SK", "SR", "V", "WB" ],
+			"text": "Letzter Unterrichtstag im Schuljahr 2015/16",
+			"von": "2016-07-08",
+			"bis": "2016-07-08",
+			"gueltigVon": 2015,
+			"gueltigBis": 2015
+		}, {
+			"id": 32016,
+			"kuerzel": "Letzter Unterrichtstag",
+			"schluessel": "SJLUT",
+			"schulformen": [ "BK", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "S", "SB", "SG", "SK", "SR", "V", "WB" ],
+			"text": "Letzter Unterrichtstag im Schuljahr 2016/17",
+			"von": "2017-07-14",
+			"bis": "2017-07-14",
+			"gueltigVon": 2016,
+			"gueltigBis": 2016
+		}, {
+			"id": 32017,
+			"kuerzel": "Letzter Unterrichtstag",
+			"schluessel": "SJLUT",
+			"schulformen": [ "BK", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "S", "SB", "SG", "SK", "SR", "V", "WB" ],
+			"text": "Letzter Unterrichtstag im Schuljahr 2017/18",
+			"von": "2018-07-13",
+			"bis": "2018-07-13",
+			"gueltigVon": 2017,
+			"gueltigBis": 2017
+		}, {
+			"id": 32018,
+			"kuerzel": "Letzter Unterrichtstag",
+			"schluessel": "SJLUT",
+			"schulformen": [ "BK", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "S", "SB", "SG", "SK", "SR", "V", "WB" ],
+			"text": "Letzter Unterrichtstag im Schuljahr 2018/19",
+			"von": "2019-07-12",
+			"bis": "2019-07-12",
+			"gueltigVon": 2018,
+			"gueltigBis": 2018
+		}, {
+			"id": 32019,
+			"kuerzel": "Letzter Unterrichtstag",
+			"schluessel": "SJLUT",
+			"schulformen": [ "BK", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "S", "SB", "SG", "SK", "SR", "V", "WB" ],
+			"text": "Letzter Unterrichtstag im Schuljahr 2019/20",
+			"von": "2020-06-26",
+			"bis": "2020-06-26",
+			"gueltigVon": 2019,
+			"gueltigBis": 2019
+		}, {
+			"id": 32020,
+			"kuerzel": "Letzter Unterrichtstag",
+			"schluessel": "SJLUT",
+			"schulformen": [ "BK", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "S", "SB", "SG", "SK", "SR", "V", "WB" ],
+			"text": "Letzter Unterrichtstag im Schuljahr 2020/21",
+			"von": "2021-07-02",
+			"bis": "2021-07-02",
+			"gueltigVon": 2020,
+			"gueltigBis": 2020
+		}, {
+			"id": 32021,
+			"kuerzel": "Letzter Unterrichtstag",
+			"schluessel": "SJLUT",
+			"schulformen": [ "BK", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "S", "SB", "SG", "SK", "SR", "V", "WB" ],
+			"text": "Letzter Unterrichtstag im Schuljahr 2021/22",
+			"von": "2022-06-24",
+			"bis": "2022-06-24",
+			"gueltigVon": 2021,
+			"gueltigBis": 2021
+		}, {
+			"id": 32022,
+			"kuerzel": "Letzter Unterrichtstag",
+			"schluessel": "SJLUT",
+			"schulformen": [ "BK", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "S", "SB", "SG", "SK", "SR", "V", "WB" ],
+			"text": "Letzter Unterrichtstag im Schuljahr 2022/23",
+			"von": "2023-06-21",
+			"bis": "2023-06-21",
+			"gueltigVon": 2022,
+			"gueltigBis": 2022
+		}, {
+			"id": 32023,
+			"kuerzel": "Letzter Unterrichtstag",
+			"schluessel": "SJLUT",
+			"schulformen": [ "BK", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "S", "SB", "SG", "SK", "SR", "V", "WB" ],
+			"text": "Letzter Unterrichtstag im Schuljahr 2023/24",
+			"von": "2024-07-05",
+			"bis": "2024-07-05",
+			"gueltigVon": 2023,
+			"gueltigBis": 2023
+		}, {
+			"id": 32024,
+			"kuerzel": "Letzter Unterrichtstag",
+			"schluessel": "SJLUT",
+			"schulformen": [ "BK", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "S", "SB", "SG", "SK", "SR", "V", "WB" ],
+			"text": "Letzter Unterrichtstag im Schuljahr 2024/25",
+			"von": "2025-07-11",
+			"bis": "2025-07-11",
+			"gueltigVon": 2024,
+			"gueltigBis": 2024
+		}, {
+			"id": 32025,
+			"kuerzel": "Letzter Unterrichtstag",
+			"schluessel": "SJLUT",
+			"schulformen": [ "BK", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "S", "SB", "SG", "SK", "SR", "V", "WB" ],
+			"text": "Letzter Unterrichtstag im Schuljahr 2025/26",
+			"von": "2026-07-17",
+			"bis": "2026-07-17",
+			"gueltigVon": 2025,
+			"gueltigBis": 2025
+		}, {
+			"id": 32026,
+			"kuerzel": "Letzter Unterrichtstag",
+			"schluessel": "SJLUT",
+			"schulformen": [ "BK", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "S", "SB", "SG", "SK", "SR", "V", "WB" ],
+			"text": "Letzter Unterrichtstag im Schuljahr 2026/27",
+			"von": "2027-07-16",
+			"bis": "2027-07-16",
+			"gueltigVon": 2026,
+			"gueltigBis": 2026
+		}, {
+			"id": 32027,
+			"kuerzel": "Letzter Unterrichtstag",
+			"schluessel": "SJLUT",
+			"schulformen": [ "BK", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "S", "SB", "SG", "SK", "SR", "V", "WB" ],
+			"text": "Letzter Unterrichtstag im Schuljahr 2027/28",
+			"von": "2028-07-07",
+			"bis": "2028-07-07",
+			"gueltigVon": 2027,
+			"gueltigBis": 2027
+		}, {
+			"id": 32028,
+			"kuerzel": "Letzter Unterrichtstag",
+			"schluessel": "SJLUT",
+			"schulformen": [ "BK", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "S", "SB", "SG", "SK", "SR", "V", "WB" ],
+			"text": "Letzter Unterrichtstag im Schuljahr 2028/29",
+			"von": "2029-06-29",
+			"bis": "2029-06-29",
+			"gueltigVon": 2028,
+			"gueltigBis": 2028
+		} ]
+	}, {
+		"bezeichner": "GOST_SCHULJAHR_LETZTER_UNTERRICHTSTAG_Q2",
+		"idStatistik": "4",
+		"historie": [ {
+			"id": 42023,
+			"kuerzel": "Q2 Letzter Unterrichtstag",
+			"schluessel": "SJLUT_Q2",
+			"schulformen": [ "GE", "GY", "SG" ],
+			"text": "Letzter Unterrichtstag im Schuljahr 2023/24 für den Jahrgang Q2",
+			"von": "2024-04-15",
+			"bis": "2024-04-15",
+			"gueltigVon": 2023,
+			"gueltigBis": 2023
+		}, {
+			"id": 42024,
+			"kuerzel": "Q2 Letzter Unterrichtstag",
+			"schluessel": "SJLUT_Q2",
+			"schulformen": [ "GE", "GY", "SG" ],
+			"text": "Letzter Unterrichtstag im Schuljahr 2024/25 für den Jahrgang Q2",
+			"von": "2025-04-11",
+			"bis": "2025-04-11",
+			"gueltigVon": 2024,
+			"gueltigBis": 2024
+		}, {
+			"id": 42025,
+			"kuerzel": "Q2 Letzter Unterrichtstag",
+			"schluessel": "SJLUT_Q2",
+			"schulformen": [ "GE", "GY", "SG" ],
+			"text": "Letzter Unterrichtstag im Schuljahr 2025/26 für den Jahrgang Q2",
+			"von": "2026-03-27",
+			"bis": "2026-03-27",
+			"gueltigVon": 2025,
+			"gueltigBis": 2025
+		}, {
+			"id": 42026,
+			"kuerzel": "Q2 Letzter Unterrichtstag",
+			"schluessel": "SJLUT_Q2",
+			"schulformen": [ "GE", "GY", "SG" ],
+			"text": "Letzter Unterrichtstag im Schuljahr 2026/27 für den Jahrgang Q2",
+			"von": "2027-03-19",
+			"bis": "2027-03-19",
+			"gueltigVon": 2026,
+			"gueltigBis": 2026
+		} ]
+	} ]
+}

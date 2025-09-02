@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-
+import de.svws_nrw.api.common.SwaggerUIResourceUtils;
 import de.svws_nrw.config.SVWSKonfiguration;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,11 +16,15 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import jakarta.ws.rs.core.UriBuilder;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 /**
  * Die Klasse spezifiziert die OpenAPI-Schnittstelle für den Zugriff auf die Debug-API.
@@ -31,14 +35,12 @@ import jakarta.ws.rs.core.UriBuilder;
 @Path("")
 @Tag(name = "Debug OpenAPI")
 public class APIDebug {
-	/** Der Pfad der Swagger-UI-Ressourcen in dem Swagger-UI-Jar */
-	private static final String pathSwaggerUIDist = "META-INF/resources/webjars/swagger-ui-dist";
 
-	/** Die Version der Swagger-UI. Diese wird hier benötigt, da die Ressourcen in einem entsprechenden Unterverzeichnis liegen. */
-	private static final String versionSwaggerUIDist = "5.26.2";
-	// TODO determine Swagger UI Dist Version automatically...
+	private static final String SWAGGER_UI_DIST_RESOURCE_PATH = SwaggerUIResourceUtils.getSwaggerUIDistResourcePath();
 
-	private static final String pathToOpenapiJson = "/openapi/";
+	private static final String PATH_TO_OPENAPI_FILE = "/openapi/";
+
+	private static final String DEFAULT_API_DEFINITION = "server";
 
 	/** Die Liste der zulässigen Dateien */
 	private static final Map<String, String> mapMediaType = Map.ofEntries(
@@ -59,14 +61,15 @@ public class APIDebug {
 	/** Die Lister der verfügbaren APIs */
 	private static final Map<String, Boolean> mapApiIsPrivileged = Map.ofEntries(
 			Map.entry("server", false),
+			Map.entry("external", false),
 			Map.entry("privileged", true));
 
-
 	/**
-	 * Leerer Standardkonstruktor.
+	 * Standardkonstruktor.
 	 */
 	public APIDebug() {
-		// leer
+		// Prüfen, ob eine verfügbare SwaggerUI Dist Version gefunden wurde, ansonsten wäre der Path null
+		Objects.requireNonNull(SWAGGER_UI_DIST_RESOURCE_PATH);
 	}
 
 
@@ -86,16 +89,16 @@ public class APIDebug {
 		final String mediaType = mapMediaType.get(filename);
 		if ((mediaType == null) || (!mapApiIsPrivileged.containsKey(api)))
 			return Response.status(Status.NOT_FOUND).build();
-		// Prüfe, ob für die API ein priviligierter Zugriff benötigt wird und ob dieser so zulässig ist.
+		// Prüfe, ob für die API ein privilegierter Zugriff benötigt wird und ob dieser so zulässig ist.
 		final SVWSKonfiguration config = SVWSKonfiguration.get();
 		final boolean apiIsPrivileged = mapApiIsPrivileged.get(api);
 		if (config.isDBRootAccessDisabled() && apiIsPrivileged)
-			return Response.status(Status.FORBIDDEN).entity("Der Zugriff auf die API für priviligierte Anfragen wurde beim Server gesperrt.")
+			return Response.status(Status.FORBIDDEN).entity("Der Zugriff auf die API für privilegierte Anfragen wurde beim Server gesperrt.")
 					.type(MediaType.TEXT_PLAIN).build();
 		if (config.hatPortHTTPPrivilegedAccess()) {
 			final boolean portIsPrivileged = (request.getServerPort() == config.getPortHTTPPrivilegedAccess());
 			if (apiIsPrivileged && (!portIsPrivileged))
-				return Response.status(Status.FORBIDDEN).entity("Der Zugriff auf die API für priviligierte Anfragen wurde beim Server gesperrt.")
+				return Response.status(Status.FORBIDDEN).entity("Der Zugriff auf die API für privilegierte Anfragen wurde beim Server gesperrt.")
 						.type(MediaType.TEXT_PLAIN).build();
 			if (!apiIsPrivileged && (portIsPrivileged)) { // Redirect
 				final URI uri = UriBuilder.fromPath(request.getServletPath() + request.getPathInfo())
@@ -106,24 +109,26 @@ public class APIDebug {
 				return Response.temporaryRedirect(uri).build();
 			}
 		}
+
 		// Lese die zugehörige Datei aus der Swagger-UI ein
 		String data = null;
 		try {
-			final String resourceName = pathSwaggerUIDist + "/" + versionSwaggerUIDist + "/" + filename;
+			final String resourceName = SWAGGER_UI_DIST_RESOURCE_PATH + "/" + filename;
 			try (InputStream in = ClassLoader.getSystemResourceAsStream(resourceName)) {
 				data = IOUtils.toString(in, StandardCharsets.UTF_8);
 				if ("swagger-initializer.js".equalsIgnoreCase(filename)) {
-					final String openapi_file = api + (isYAML ? ".yaml" : ".json");
-					final String openapi_url =
-							StringUtils.removeEnd(request.getRequestURL().toString(), request.getRequestURI()) + pathToOpenapiJson + openapi_file;
-					data = data.replace(
-							"\"https://petstore.swagger.io/v2/swagger.json\"",
-							"\"" + openapi_url + "\"");
+					final List<String> openApiPaths = mapApiIsPrivileged.keySet().stream().map(apiName -> {
+						final String openApiFile = apiName + (isYAML ? ".yaml" : ".json");
+						return Strings.CS.removeEnd(request.getRequestURL().toString(), request.getRequestURI()) + PATH_TO_OPENAPI_FILE + openApiFile;
+					}).toList();
+
+					data = SwaggerUIResourceUtils.customizeSwaggerInitializerJs(data, openApiPaths);
 				}
 			}
 		} catch (NullPointerException | IOException e) {
 			e.printStackTrace();
 		}
+
 		if (data == null)
 			return Response.status(Status.NOT_FOUND).build();
 		return Response.ok(data).type(mediaType).build();
@@ -131,8 +136,8 @@ public class APIDebug {
 
 
 	/**
-	 * Führt ein Redirect auf die "/debug/index.html" durch, falls auf "/debug" zugegriffen wird und
-	 * auf "/debug/yaml/index.html", falls auf "debug/yaml" zugegriffen wird.
+	 * Führt ein Redirect auf die "/debug/server/index.html" durch, falls auf "/debug" zugegriffen wird und
+	 * auf "/debug/server/yaml/index.html", falls auf "debug/yaml" zugegriffen wird.
 	 *
 	 * @param yaml       ist auf "/yaml" gesetzt, wenn auf die Debug-API mithilfe der yaml-OpenAPI-Datei zugegriffen wird.
 	 * @param request    der HTTP-Request
@@ -143,28 +148,41 @@ public class APIDebug {
 	@Produces(MediaType.TEXT_HTML)
 	@Path("/debug{yaml : (/yaml)?}")
 	public Response debugRootWrong(@PathParam("yaml") final String yaml, @Context final HttpServletRequest request) {
-		if ("/yaml".equals(yaml))
-			return Response.temporaryRedirect(UriBuilder.fromPath("/debug/yaml/index.html").build()).build();
-		return Response.temporaryRedirect(UriBuilder.fromPath("/debug/index.html").build()).build();
+		return redirectToDefault(yaml);
 	}
 
 
 	/**
 	 * Diese Methode gibt die für den SVWS-Server angepasste Datei der Swagger-UI zurück.
 	 *
-	 * @param yaml       ist auf "/yaml" gesetzt, wenn auf die Debug-API mithilfe der yaml-OpenAPI-Datei zugegriffen wird.
-	 * @param api        die api, auf welche zugegriffen werden soll
-	 * @param filename   der Dateiname
-	 * @param request    der HTTP-Request
+	 * @param yaml           ist auf "/yaml" gesetzt, wenn auf die Debug-API mithilfe der yaml-OpenAPI-Datei zugegriffen wird.
+	 * @param apiDefinition  die ApiDefinition, auf welche zugegriffen werden soll
+	 * @param filename       der Dateiname
+	 * @param request        der HTTP-Request
 	 *
 	 * @return die HTTP-Response
 	 */
 	@GET
 	@Produces({ MediaType.TEXT_HTML, "text/javascript", "text/css", MediaType.TEXT_PLAIN })
-	@Path("/debug{yaml : (/yaml)?}{api : (/\\w+)?}/{filename}")
-	public Response debugFile(@PathParam("yaml") final String yaml, @PathParam("api") final String api,
+	@Path("/debug{yaml : (/yaml)?}/{filename}")
+	public Response debugFile(@PathParam("yaml") final String yaml, @QueryParam("urls.primaryName") final String apiDefinition,
 			@PathParam("filename") final String filename, @Context final HttpServletRequest request) {
-		return getResource(filename, request, "/yaml".equals(yaml), ((api == null) || api.isBlank()) ? "server" : api.substring(1));
+		if ("index.html".equals(filename) && StringUtils.isBlank(apiDefinition))
+			return redirectToDefault(yaml);
+		return getResource(filename, request, "/yaml".equals(yaml), StringUtils.isBlank(apiDefinition) ? DEFAULT_API_DEFINITION : apiDefinition);
+	}
+
+	/**
+	 * Die Methode macht einen Redirect auf die standardmäßige OpenAPI-Definition.
+	 *
+	 * @param yaml ist auf "/yaml" gesetzt, wenn auf die Debug-API mithilfe der yaml-OpenAPI-Datei zugegriffen wird.
+	 *
+	 * @return Redirect HTTP-Response
+	 */
+	private Response redirectToDefault(final String yaml) {
+		if ("/yaml".equals(yaml))
+			return Response.temporaryRedirect(UriBuilder.fromPath("/debug/yaml/index.html").queryParam("urls.primaryName", DEFAULT_API_DEFINITION).build()).build();
+		return Response.temporaryRedirect(UriBuilder.fromPath("/debug/index.html").queryParam("urls.primaryName", DEFAULT_API_DEFINITION).build()).build();
 	}
 
 }

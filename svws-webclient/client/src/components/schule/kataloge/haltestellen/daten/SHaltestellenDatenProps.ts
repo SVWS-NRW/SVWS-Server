@@ -1,4 +1,5 @@
-import type { BenutzerKompetenz, Haltestelle, HaltestellenListeManager } from "@core";
+import type { BenutzerKompetenz, Haltestelle } from "@core";
+import type { HaltestellenListeManager } from "@ui";
 
 export interface HaltestellenDatenProps {
 	manager: () => HaltestellenListeManager;

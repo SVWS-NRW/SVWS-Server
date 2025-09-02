@@ -1,5 +1,5 @@
 {
-	"version": 5,
+	"version": 6,
 	"daten": [ {
 		"bezeichner": "DEFAULT",
 		"idStatistik": "1",
@@ -687,8 +687,6 @@
 			"schluessel": "AB",
 			"istBK": false,
 			"schulformen": [
-				"FW",
-				"HI",
 				"WF",
 				"KS",
 				"S"
@@ -709,8 +707,6 @@
 			"schluessel": "AB",
 			"istBK": false,
 			"schulformen": [
-				"FW",
-				"HI",
 				"WF",
 				"KS",
 				"S"
@@ -1358,8 +1354,6 @@
 			"schluessel": "BT",
 			"istBK": false,
 			"schulformen": [
-				"FW",
-				"HI",
 				"WF",
 				"KS",
 				"S"
@@ -1380,8 +1374,6 @@
 			"schluessel": "BT",
 			"istBK": false,
 			"schulformen": [
-				"FW",
-				"HI",
 				"WF",
 				"KS",
 				"S"
@@ -1406,8 +1398,6 @@
 			"schluessel": "BV",
 			"istBK": false,
 			"schulformen": [
-				"FW",
-				"HI",
 				"WF",
 				"KS",
 				"S"
@@ -1428,8 +1418,6 @@
 			"schluessel": "BV",
 			"istBK": false,
 			"schulformen": [
-				"FW",
-				"HI",
 				"WF",
 				"KS",
 				"S"
@@ -3218,7 +3206,7 @@
 			],
 			"istAuslaufend": true,
 			"istAusgelaufen": false,
-			"text": "Gemeinschaftsschule (auslaufend) integrierte Form",
+			"text": "Gemeinschaftsschule auslaufend: integrierte Form",
 			"bkAnlage": null,
 			"bkTyp": null,
 			"bkIndex": null,
@@ -3240,14 +3228,14 @@
 			],
 			"istAuslaufend": true,
 			"istAusgelaufen": false,
-			"text": "Gemeinschaftsschule (auslaufend) Gymnasialbildungsgang",
+			"text": "Gemeinschaftsschule auslaufend: Gymnasialbildungsgang",
 			"bkAnlage": null,
 			"bkTyp": null,
 			"bkIndex": null,
 			"istVZ": false,
 			"abschluesse": [ ],
 			"gueltigVon": 2017,
-			"gueltigBis": null
+			"gueltigBis": 2023
 		} ]
 	}, {
 		"bezeichner": "GMS",
@@ -3331,7 +3319,7 @@
 			"istVZ": false,
 			"abschluesse": [ ],
 			"gueltigVon": 2017,
-			"gueltigBis": null
+			"gueltigBis": 2023
 		} ]
 	}, {
 		"bezeichner": "GS",
@@ -3752,7 +3740,6 @@
 			"schluessel": "R00",
 			"istBK": false,
 			"schulformen": [
-				"KS",
 				"S"
 			],
 			"istAuslaufend": false,
@@ -3771,7 +3758,6 @@
 			"schluessel": "R00",
 			"istBK": false,
 			"schulformen": [
-				"KS",
 				"S"
 			],
 			"istAuslaufend": false,
@@ -3903,7 +3889,7 @@
 			],
 			"istAuslaufend": false,
 			"istAusgelaufen": false,
-			"text": "Katholische  Bekenntnisschule",
+			"text": "Katholische Bekenntnisschule",
 			"bkAnlage": null,
 			"bkTyp": null,
 			"bkIndex": null,
@@ -3921,7 +3907,7 @@
 			],
 			"istAuslaufend": false,
 			"istAusgelaufen": false,
-			"text": "angeschlossene katholische  Bekenntnisschule",
+			"text": "angeschlossene katholische Bekenntnisschule",
 			"bkAnlage": null,
 			"bkTyp": null,
 			"bkIndex": null,
@@ -3943,7 +3929,7 @@
 			],
 			"istAuslaufend": true,
 			"istAusgelaufen": false,
-			"text": "Sekundarschule, teilintegrierte Form (auslaufend)",
+			"text": "Sekundarschule auslaufend: teilintegrierte Form",
 			"bkAnlage": null,
 			"bkTyp": null,
 			"bkIndex": null,
@@ -3965,7 +3951,7 @@
 			],
 			"istAuslaufend": true,
 			"istAusgelaufen": false,
-			"text": "Sekundarschule, integrierte Form (auslaufend)",
+			"text": "Sekundarschule auslaufend: integrierte Form",
 			"bkAnlage": null,
 			"bkTyp": null,
 			"bkIndex": null,

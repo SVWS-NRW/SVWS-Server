@@ -1,4 +1,4 @@
-import type { LehrerListeManager } from "@core";
+import type { LehrerListeManager } from "@ui";
 
 export interface LehrerUnterrichtsdatenProps {
 	lehrerListeManager: () => LehrerListeManager;

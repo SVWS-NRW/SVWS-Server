@@ -1,4 +1,5 @@
-import type { BenutzerKompetenz, Sportbefreiung, SportbefreiungenListeManager } from "@core";
+import type { BenutzerKompetenz, Sportbefreiung } from "@core";
+import type { SportbefreiungenListeManager } from "@ui";
 
 export interface SportbefreiungenDatenProps {
 	manager: () => SportbefreiungenListeManager;

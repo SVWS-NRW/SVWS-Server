@@ -1,4 +1,5 @@
-import type { BenutzerKompetenz, KindergaertenListeManager, Kindergarten } from "@core";
+import type { BenutzerKompetenz, Kindergarten } from "@core";
+import type { KindergaertenListeManager } from "@ui";
 
 export interface KindergaertenDatenProps {
 	manager: () => KindergaertenListeManager;

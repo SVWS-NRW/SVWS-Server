@@ -152,7 +152,7 @@
 								{{ stundenplanManager().zeitrasterGetByIdOrException(u.idZeitraster).unterrichtstunde }}. Std
 								<span v-if="u.wochentyp > 0">({{ stundenplanManager().stundenplanGetWochenTypAsString(u.wochentyp) }})</span>
 							</div>
-							<svws-ui-multi-select label="Raumzuordnung" :items="stundenplanManager().raumGetMengeSortiertNachGueteByUnterrichtListe(ListUtils.create1(u.id))" :model-value="getRaeume(u)"
+							<svws-ui-multi-select label="Raumzuordnung" :items="stundenplanManager().raumGetMengeAsList()" :model-value="getRaeume(u)"
 								@update:model-value="liste => patchUnterrichtRaeume(ListUtils.create1(u), liste)" :item-text="item => raumInfo(item, ListUtils.create1(u))" :disabled />
 						</template>
 					</div>
@@ -210,13 +210,13 @@
 	watch(auswahl, () => {
 		if (auswahl.value instanceof StundenplanKlassenunterricht) {
 			unterrichteAuswahl.value = props.stundenplanManager().unterrichtGetMengeByKlasseIdAndFachId(klasse.value.id, auswahl.value.idFach);
-			raeumeAuswahl.value = props.stundenplanManager().raumGetMengeSortiertNachGueteByKlasseIdAndFachId(klasse.value.id, auswahl.value.idFach);
+			raeumeAuswahl.value = props.stundenplanManager().raumGetMengeAsList();
 			schuelerzahl.value = props.stundenplanManager().schuelerGetAnzahlByKlasseIdOrException(klasse.value.id);
 			unterrichtBezeichnung.value = props.stundenplanManager().fachGetByIdOrException(auswahl.value.idFach).bezeichnung;
 		}
 		else if (auswahl.value instanceof StundenplanUnterricht) {
 			unterrichteAuswahl.value = props.stundenplanManager().unterrichtGetMengeByUnterrichtId(auswahl.value.id);
-			raeumeAuswahl.value = props.stundenplanManager().raumGetMengeSortiertNachGueteByUnterrichtListe(getListOfUnterrichte(auswahl.value));
+			raeumeAuswahl.value = props.stundenplanManager().raumGetMengeAsList();
 			if (auswahl.value.idKurs === null) {
 				schuelerzahl.value = props.stundenplanManager().schuelerGetAnzahlByKlasseIdOrException(klasse.value.id);
 				unterrichtBezeichnung.value = props.stundenplanManager().fachGetByIdOrException(auswahl.value.idFach).bezeichnung;
@@ -228,7 +228,7 @@
 		}
 		else if (auswahl.value instanceof StundenplanKurs) {
 			unterrichteAuswahl.value = props.stundenplanManager().unterrichtGetMengeByKurs(auswahl.value.id);
-			raeumeAuswahl.value = props.stundenplanManager().raumGetMengeSortiertNachGueteByKursId(auswahl.value.id);
+			raeumeAuswahl.value = props.stundenplanManager().raumGetMengeAsList();
 			schuelerzahl.value = props.stundenplanManager().schuelerGetAnzahlByKursIdAsListOrException(auswahl.value.id);
 			unterrichtBezeichnung.value = auswahl.value.bezeichnung;
 		}
@@ -247,14 +247,16 @@
 		const beschreibung = raum.kuerzel;
 		const groesse = raum.groesse;
 		const kollisionen = props.stundenplanManager().raumGetAnzahlAnKollisionenFuerUnterrichte(raum.id, ids);
-		const sterne = ['*', '**', '***', '****'];
-		if (kollisionen > 0)
-			sterne.pop();
-		if (schuelerzahl.value > groesse) {
-			sterne.pop();
-			sterne.pop();
-		}
-		return `${beschreibung}: ${groesse} (${kollisionen}K) ${sterne.at(-1)}`
+
+		const zuKlein = schuelerzahl.value > groesse;
+		const belegt = kollisionen > 0;
+
+		const status = (belegt && zuKlein)
+			? "→ belegt und zu klein" : belegt
+				? "→ belegt" : zuKlein
+					? "→ zu klein" : "";
+
+		return `${beschreibung} (${groesse}) ${status}`;
 	}
 
 	function wochentypen(): List<number> {

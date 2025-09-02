@@ -549,7 +549,7 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 		final List<CoreDTO> deletedCoreDTOs = new ArrayList<>();
 		if (!ids.isEmpty()) {
 			// DTOs mit Hilfe der IDs ermitteln
-			final List<DatabaseDTO> dbDTOs = conn.queryByKeyList(classDatabaseDTO, ids);
+			final List<DatabaseDTO> dbDTOs = getDatabaseDTOsByIds(ids);
 			if (dbDTOs.isEmpty())
 				throw new ApiOperationException(Status.NOT_FOUND, "Es wurden keine Entitäten zu den IDs gefunden.");
 
@@ -618,7 +618,7 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 		final Map<Long, SimpleOperationResponse> mapResponses = new HashMap<>();
 		if (!ids.isEmpty()) {
 			// DTOs mit Hilfe der IDs ermitteln
-			final List<DatabaseDTO> dbDTOs = conn.queryByKeyList(classDatabaseDTO, ids);
+			final List<DatabaseDTO> dbDTOs = getDatabaseDTOsByIds(ids);
 			if (dbDTOs.isEmpty())
 				throw new ApiOperationException(Status.NOT_FOUND, "Es wurden keine Entitäten zu den IDs gefunden.");
 			// Erstelle die SimpleOperationResponse-Objekte und füge sie in die Map ein.
@@ -644,6 +644,19 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 			}
 		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(mapResponses.values()).build();
+	}
+
+	/**
+	 * Ermittelt die Database-DTOs mit den angegebenen IDs. Diese Methode sollte bei Bedarf für komplexere
+	 * IDs überschrieben werden.
+	 *
+	 * @param ids   die IDs
+	 *
+	 * @return die Database-DTOs
+	 */
+	public List<DatabaseDTO> getDatabaseDTOsByIds(final List<ID> ids) {
+		final List<DatabaseDTO> dbDTOs = conn.queryByKeyList(classDatabaseDTO, ids);
+		return dbDTOs;
 	}
 
 

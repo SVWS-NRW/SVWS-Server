@@ -1,7 +1,7 @@
 import type { RouteParams } from "vue-router";
 import type { RouteApp } from "~/router/apps/RouteApp";
 import type { RouteNode } from "~/router/RouteNode";
-import type { AbteilungenListeManager } from "@core";
+import type { AbteilungenListeManager } from "@ui";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import { RouteDataAbteilungen } from "./RouteDataAbteilungen";

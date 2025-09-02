@@ -48,7 +48,7 @@ class TestLehrerFachrichtung {
 	@Test
 	@DisplayName("Teste CoreType LehrerFachrichtung: Korrekter Text bei ID_04.")
 	void testLehrerFachrichtung_TextBeiID_04() {
-		assertEquals("Metalltechnik, Maschinenbau (außer Kfz), Verfahrens-, Fertigungstechnik", LehrerFachrichtung.data().getHistorieByWert(LehrerFachrichtung.ID_04).getFirst().text);
+		assertEquals("Maschinentechnik, Metalltechnik, Maschinenbau (außer Kfz), Verfahrens-, Fertigungstechnik", LehrerFachrichtung.data().getHistorieByWert(LehrerFachrichtung.ID_04).getFirst().text);
 	}
 
 }

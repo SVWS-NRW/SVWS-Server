@@ -1,21 +1,21 @@
-import type { ApiFile, List, ReportingParameter, SchuelerListeEintrag, SchuelerStammdaten, SimpleOperationResponse, StundenplanListeEintrag, SchuelerTelefon, SchuelerSchulbesuchsdaten, } from "@core";
-
-import { BenutzerKompetenz, ArrayList, SchuelerListe, SchuelerListeManager, SchuelerStatus, DeveloperNotificationException } from "@core";
+import type { ApiFile, List, ReportingParameter, SchuelerListeEintrag, SchuelerStammdaten, SimpleOperationResponse, StundenplanListeEintrag, SchuelerTelefon, SchuelerSchulbesuchsdaten, ErzieherStammdaten } from "@core";
+import { BenutzerKompetenz, ArrayList, SchuelerListe, SchuelerStatus, DeveloperNotificationException, ServerMode } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdaten";
-import { ViewType } from "@ui";
+import { ViewType, SchuelerListeManager, type PendingStateManager } from "@ui";
 import { routeSchuelerNeu } from "~/router/apps/schueler/RouteSchuelerNeu";
 import type { RouteParamsRawGeneric } from "vue-router";
 import { routeSchuelerIndividualdatenGruppenprozesse } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdatenGruppenprozesse";
-import type { PendingStateManager } from "@ui";
+import { routeSchuelerAllgemeinesGruppenprozesse } from "~/router/apps/schueler/allgemeines/RouteSchuelerAllgemeinesGruppenprozesse";
 
 
 interface RouteStateSchueler extends RouteStateAuswahlInterface<SchuelerListeManager> {
 	mapStundenplaene: Map<number, StundenplanListeEintrag>;
+	listSchuelerErziehereintraege: List<ErzieherStammdaten>;
 	listSchuelerTelefoneintraege: List<SchuelerTelefon>;
-};
+}
 
 const defaultState = <RouteStateSchueler> {
 	idSchuljahresabschnitt: -1,
@@ -24,6 +24,7 @@ const defaultState = <RouteStateSchueler> {
 	gruppenprozesseView: routeSchuelerIndividualdatenGruppenprozesse,
 	activeViewType: ViewType.DEFAULT,
 	mapStundenplaene: new Map(),
+	listSchuelerErziehereintraege: new ArrayList(),
 	listSchuelerTelefoneintraege: new ArrayList(),
 	pendingStateRegistry: undefined,
 };
@@ -64,6 +65,13 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 			manager.useFilter(this._state.value.manager);
 		}
 
+		// Hinweis: Dieses Nachträgliche Verändern des DefaultStates wurde gemacht, weil zum Zeitpunkt der Klassen initialisierung der ServerMode noch nicht
+		// abgerufen wurde und somit die Bedingung, welche Route als Default für Gruppenprozesse genutzt werden soll, nicht geprüft werden kann
+		// Diese Stelle eignet sich als Alternative, da sie noch vor dem ersten Betreten der Route aber bereits nach dem Abruf der ServerModes liegt
+		// TODO: Ausbauen sobald die Route routeSchuelerIndividualdatenGruppenprozesse im "Stable" Mode bereitsteht
+		if (api.mode !== ServerMode.DEV)
+			this._defaultState = { ...defaultState, gruppenprozesseView: routeSchuelerAllgemeinesGruppenprozesse };
+
 		return { manager };
 	}
 
@@ -71,9 +79,10 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 		if (auswahl === null)
 			return null;
 		const res = await api.server.getSchuelerStammdaten(api.schema, auswahl.id);
+		const listSchuelerErziehereintraege = await api.server.getSchuelerErzieher(api.schema, auswahl.id);
 		const listSchuelerTelefoneintraege = await api.server.getSchuelerTelefone(api.schema, auswahl.id);
 		this.manager.schuelerstatus.auswahlAdd(SchuelerStatus.data().getWertByID(res.status));
-		this.setPatchedState({ listSchuelerTelefoneintraege });
+		this.setPatchedState({ listSchuelerErziehereintraege, listSchuelerTelefoneintraege });
 		return res;
 	}
 
@@ -122,32 +131,39 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 		await api.server.patchSchuelerStammdaten(data, api.schema, id);
 	}
 
-	get listSchuelerTelefoneintraege(): List<SchuelerTelefon> {
-		return this._state.value.listSchuelerTelefoneintraege;
+	get listSchuelerErziehereintraege(): List<ErzieherStammdaten> {
+		return this._state.value.listSchuelerErziehereintraege;
 	}
 
-	addSchuelerTelefoneintrag = async (data: Partial<SchuelerTelefon>, idSchueler: number): Promise<void> => {
+	addSchuelerErziehereintrag = async (data: Partial<ErzieherStammdaten>, idEintrag: number, pos: number): Promise<ErzieherStammdaten> => {
 		api.status.start();
-		const telefon = await api.server.addSchuelerTelefon(data, api.schema, idSchueler);
-		this.listSchuelerTelefoneintraege.add(telefon);
-		this.setPatchedState({ listSchuelerTelefoneintraege: <List<SchuelerTelefon>>this.listSchuelerTelefoneintraege.clone() });
+		const erzieher = await api.server.addSchuelerErzieher(data, api.schema, idEintrag, pos);
+		this.listSchuelerErziehereintraege.add(erzieher);
+		this.setPatchedState({ listSchuelerErziehereintraege: this.listSchuelerErziehereintraege });
+		api.status.stop();
+		return erzieher;
+	}
+
+	patchSchuelerErziehereintrag = async (data : Partial<ErzieherStammdaten>, idEintrag: number) => {
+		await api.server.patchErzieherStammdaten(data, api.schema, idEintrag);
+		for (const e of this.listSchuelerErziehereintraege)
+			if (e.id === idEintrag)
+				Object.assign(e, data);
+		this.setPatchedState({ listSchuelerErziehereintraege: this.listSchuelerErziehereintraege });
 		api.status.stop();
 	}
 
-	patchSchuelerTelefoneintrag = async (data: Partial<SchuelerTelefon>, idEintrag: number): Promise<void> => {
-		api.status.start();
-		await api.server.patchSchuelerTelefon(data, api.schema, idEintrag);
-		for (const l of this.listSchuelerTelefoneintraege)
-			if (l.id === idEintrag)
-				Object.assign(l, data);
-		this.setPatchedState({ listSchuelerTelefoneintraege: <List<SchuelerTelefon>>this.listSchuelerTelefoneintraege.clone() });
+	patchSchuelerErzieherAnPosition = async (data : Partial<ErzieherStammdaten>, idEintrag: number, idSchueler: number, pos: number) => {
+		await api.server.patchErzieherStammdatenZweitePosition(data, api.schema, idEintrag, pos);
+		const listSchuelerErziehereintraege = await api.server.getSchuelerErzieher(api.schema, idSchueler);
+		this.setPatchedState({ listSchuelerErziehereintraege });
 		api.status.stop();
 	}
 
-	deleteSchuelerTelefoneintrage = async (idsEintraege: List<number>): Promise<void> => {
+	deleteSchuelerErziehereintrage = async (idsEintraege: List<number>): Promise<void> => {
 		api.status.start();
-		await api.server.deleteSchuelerTelefone(idsEintraege, api.schema);
-		const liste = this.listSchuelerTelefoneintraege;
+		await api.server.deleteErzieherStammdaten(idsEintraege, api.schema);
+		const liste = this.listSchuelerErziehereintraege;
 		for (const id of idsEintraege) {
 			for (let i = 0; i < liste.size(); i++) {
 				const eintrag = liste.get(i);
@@ -157,12 +173,52 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 				}
 			}
 		}
-		this.setPatchedState({ listSchuelerTelefoneintraege: <List<SchuelerTelefon>>this.listSchuelerTelefoneintraege.clone() });
+		this.setPatchedState({ listSchuelerErziehereintraege: this.listSchuelerErziehereintraege });
 		api.status.stop();
 	}
 
-	patchSchuelerKindergarten = async (data : Partial<SchuelerSchulbesuchsdaten>, id: number) : Promise<void> => {
-		await api.server.patchSchuelerSchulbesuch(data, api.schema, id);
+	get getListSchuelerTelefoneintraege(): List<SchuelerTelefon> {
+		const list = new ArrayList<SchuelerTelefon>();
+		list.addAll(this._state.value.listSchuelerTelefoneintraege);
+		return list;
+	}
+
+
+	addSchuelerTelefoneintrag = async (data: Partial<SchuelerTelefon>, idSchueler: number): Promise<void> => {
+		const telefon = await api.server.addSchuelerTelefon(data, api.schema, idSchueler);
+		const listSchuelerTelefoneintraege = this.getListSchuelerTelefoneintraege;
+		listSchuelerTelefoneintraege.add(telefon);
+		this.setPatchedState({ listSchuelerTelefoneintraege });
+	}
+
+	patchSchuelerTelefoneintrag = async (data: Partial<SchuelerTelefon>, idEintrag: number): Promise<void> => {
+		await api.server.patchSchuelerTelefon(data, api.schema, idEintrag);
+		const listSchuelerTelefoneintraege = this.getListSchuelerTelefoneintraege;
+		for (const l of listSchuelerTelefoneintraege)
+			if (l.id === idEintrag) {
+				Object.assign(l, data);
+				break;
+			}
+		this.setPatchedState({ listSchuelerTelefoneintraege });
+	}
+
+	deleteSchuelerTelefoneintrage = async (idsEintraege: List<number>): Promise<void> => {
+		await api.server.deleteSchuelerTelefone(idsEintraege, api.schema);
+		const listSchuelerTelefoneintraege = this.getListSchuelerTelefoneintraege;
+		for (const id of idsEintraege) {
+			for (let i = 0; i < listSchuelerTelefoneintraege .size(); i++) {
+				const eintrag = listSchuelerTelefoneintraege .get(i);
+				if (eintrag.id === id) {
+					listSchuelerTelefoneintraege.removeElementAt(i);
+					break;
+				}
+			}
+		}
+		this.setPatchedState({ listSchuelerTelefoneintraege });
+	}
+
+	patchSchuelerKindergarten = async (data : Partial<SchuelerSchulbesuchsdaten>, idEintrag: number) : Promise<void> => {
+		await api.server.patchSchuelerSchulbesuch(data, api.schema, idEintrag);
 	}
 
 	protected async doPatch(data : Partial<SchuelerStammdaten>, id: number) : Promise<void> {
@@ -188,13 +244,10 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 		return [errorLog.isEmpty(), errorLog];
 	}
 
-	getPDF = api.call(async (reportingParameter: ReportingParameter, idStundenplan: number): Promise<ApiFile> => {
+	getPDF = api.call(async (reportingParameter: ReportingParameter): Promise<ApiFile> => {
 		if (!this.manager.liste.auswahlExists())
-			throw new DeveloperNotificationException("Dieser Stundenplan kann nur gedruckt werden, wenn mindestens eine Klasse ausgewählt ist.");
+			throw new DeveloperNotificationException("Dieser Stundenplan kann nur gedruckt werden, wenn mindestens ein Schüler ausgewählt ist.");
 		reportingParameter.idSchuljahresabschnitt = this.idSchuljahresabschnitt;
-		reportingParameter.idsHauptdaten.add(idStundenplan);
-		for (const l of this.manager.liste.auswahl())
-			reportingParameter.idsDetaildaten.add(l.id);
 		return await api.server.pdfReport(reportingParameter, api.schema);
 	})
 

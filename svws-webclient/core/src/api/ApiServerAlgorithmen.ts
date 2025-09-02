@@ -19,7 +19,7 @@ export class ApiServerAlgorithmen extends BaseApi {
 	}
 
 	/**
-	 * Implementierung der POST-Methode getGesamtschuleAbschlussHA10 für den Zugriff auf die URL https://{hostname}/api/gesamtschule/abschluss/ha10
+	 * Implementierung der POST-Methode getGesamtschuleAbschlussHA10 für den Zugriff auf die URL https://{hostname}/api/common/gesamtschule/abschluss/ha10
 	 *
 	 * Prüft anhand der übergeben Fächerdaten, ob ein Hauptschulabschluss der Klasse 10 an einer Gesamtschule erreicht wird oder nicht. Im Falle, dass er nicht erreicht wird, werden ggf. Nachprüfungsfächer zurückgegeben.
 	 *
@@ -33,7 +33,7 @@ export class ApiServerAlgorithmen extends BaseApi {
 	 * @returns Das Ergebnis der Abschlussberechnung, ggf. mit Nachprüfungsmöglichkeiten
 	 */
 	public async getGesamtschuleAbschlussHA10(data : GEAbschlussFaecher) : Promise<AbschlussErgebnis> {
-		const path = "/api/gesamtschule/abschluss/ha10";
+		const path = "/api/common/gesamtschule/abschluss/ha10";
 		const body : string = GEAbschlussFaecher.transpilerToJSON(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -42,7 +42,7 @@ export class ApiServerAlgorithmen extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode getGesamtschuleAbschlussHA9 für den Zugriff auf die URL https://{hostname}/api/gesamtschule/abschluss/ha9
+	 * Implementierung der POST-Methode getGesamtschuleAbschlussHA9 für den Zugriff auf die URL https://{hostname}/api/common/gesamtschule/abschluss/ha9
 	 *
 	 * Prüft anhand der übergeben Fächerdaten, ob ein Hauptschulabschluss der Klasse 9 an einer Gesamtschule erreicht wird oder nicht. Im Falle, dass er nicht erreicht wird, werden ggf. Nachprüfungsfächer zurückgegeben.
 	 *
@@ -57,7 +57,7 @@ export class ApiServerAlgorithmen extends BaseApi {
 	 * @returns Das Ergebnis der Abschlussberechnung, ggf. mit Nachprüfungsmöglichkeiten
 	 */
 	public async getGesamtschuleAbschlussHA9(data : GEAbschlussFaecher) : Promise<AbschlussErgebnis> {
-		const path = "/api/gesamtschule/abschluss/ha9";
+		const path = "/api/common/gesamtschule/abschluss/ha9";
 		const body : string = GEAbschlussFaecher.transpilerToJSON(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -66,7 +66,7 @@ export class ApiServerAlgorithmen extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode getGesamtschuleAbschlussMSA für den Zugriff auf die URL https://{hostname}/api/gesamtschule/abschluss/msa
+	 * Implementierung der POST-Methode getGesamtschuleAbschlussMSA für den Zugriff auf die URL https://{hostname}/api/common/gesamtschule/abschluss/msa
 	 *
 	 * Prüft anhand der übergeben Fächerdaten, ob ein Mittlerer Schulabschluss nach der Klasse 10 an einer Gesamtschule erreicht wird oder nicht. Im Falle, dass er nicht erreicht wird, werden ggf. Nachprüfungsfächer zurückgegeben.
 	 *
@@ -80,7 +80,7 @@ export class ApiServerAlgorithmen extends BaseApi {
 	 * @returns Das Ergebnis der Abschlussberechnung, ggf. mit Nachprüfungsmöglichkeiten
 	 */
 	public async getGesamtschuleAbschlussMSA(data : GEAbschlussFaecher) : Promise<AbschlussErgebnis> {
-		const path = "/api/gesamtschule/abschluss/msa";
+		const path = "/api/common/gesamtschule/abschluss/msa";
 		const body : string = GEAbschlussFaecher.transpilerToJSON(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -89,7 +89,7 @@ export class ApiServerAlgorithmen extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode getGesamtschuleAbschlussMSAQ für den Zugriff auf die URL https://{hostname}/api/gesamtschule/abschluss/msaq
+	 * Implementierung der POST-Methode getGesamtschuleAbschlussMSAQ für den Zugriff auf die URL https://{hostname}/api/common/gesamtschule/abschluss/msaq
 	 *
 	 * Prüft anhand der übergeben Fächerdaten, ob die Berechtigung zum Besuch der gymnasialen Oberstufe im Rahmen eines Mittlerer Schulabschlusses nach der Klasse 10 an einer Gesamtschule erreicht wird oder nicht.
 	 *
@@ -103,7 +103,7 @@ export class ApiServerAlgorithmen extends BaseApi {
 	 * @returns Das Ergebnis der Abschlussberechnung, ggf. mit Nachprüfungsmöglichkeiten
 	 */
 	public async getGesamtschuleAbschlussMSAQ(data : GEAbschlussFaecher) : Promise<AbschlussErgebnis> {
-		const path = "/api/gesamtschule/abschluss/msaq";
+		const path = "/api/common/gesamtschule/abschluss/msaq";
 		const body : string = GEAbschlussFaecher.transpilerToJSON(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -112,7 +112,7 @@ export class ApiServerAlgorithmen extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode getGesamtschuleAbschlussPrognose für den Zugriff auf die URL https://{hostname}/api/gesamtschule/abschluss/prognose
+	 * Implementierung der POST-Methode getGesamtschuleAbschlussPrognose für den Zugriff auf die URL https://{hostname}/api/common/gesamtschule/abschluss/prognose
 	 *
 	 * Führt anhand der übergeben Fächerdaten eine Abschlussprognose für den Gesamtschulabschluss nach Klasse 9 bzw. Klasse 10 durch.Wird der Jahrgang 10 angegeben, so findet keine Prüfung auf den HA9 statt.
 	 *
@@ -126,7 +126,7 @@ export class ApiServerAlgorithmen extends BaseApi {
 	 * @returns Das Ergebnis der Prognoseberechnung, ggf. mit Nachprüfungsmöglichkeiten
 	 */
 	public async getGesamtschuleAbschlussPrognose(data : GEAbschlussFaecher) : Promise<AbschlussErgebnis> {
-		const path = "/api/gesamtschule/abschluss/prognose";
+		const path = "/api/common/gesamtschule/abschluss/prognose";
 		const body : string = GEAbschlussFaecher.transpilerToJSON(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -135,7 +135,7 @@ export class ApiServerAlgorithmen extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode getGostBelegpruefungEF1 für den Zugriff auf die URL https://{hostname}/api/gost/belegpruefung/EF1
+	 * Implementierung der POST-Methode getGostBelegpruefungEF1 für den Zugriff auf die URL https://{hostname}/api/common/gost/belegpruefung/EF1
 	 *
 	 * Prüft anhand der übergeben Abiturdaten, ob die Belegung in den Abiturdaten korrekt ist oder nicht. Es werden ggf. auch Belegungsfehler und Hinweise zur Belegung zurückgegeben.
 	 *
@@ -149,7 +149,7 @@ export class ApiServerAlgorithmen extends BaseApi {
 	 * @returns Das Ergebnis der Belegprüfung, ggf. mit Belegungsfehlern
 	 */
 	public async getGostBelegpruefungEF1(data : GostBelegpruefungsdaten) : Promise<GostBelegpruefungErgebnis> {
-		const path = "/api/gost/belegpruefung/EF1";
+		const path = "/api/common/gost/belegpruefung/EF1";
 		const body : string = GostBelegpruefungsdaten.transpilerToJSON(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -158,7 +158,7 @@ export class ApiServerAlgorithmen extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode getGostBelegpruefungGesamt für den Zugriff auf die URL https://{hostname}/api/gost/belegpruefung/gesamt
+	 * Implementierung der POST-Methode getGostBelegpruefungGesamt für den Zugriff auf die URL https://{hostname}/api/common/gost/belegpruefung/gesamt
 	 *
 	 * Prüft anhand der übergeben Abiturdaten, ob die Belegung in den Abiturdaten korrekt ist oder nicht. Es werden ggf. auch Belegungsfehler und Hinweise zur Belegung zurückgegeben.
 	 *
@@ -172,7 +172,7 @@ export class ApiServerAlgorithmen extends BaseApi {
 	 * @returns Das Ergebnis der Belegprüfung, ggf. mit Belegungsfehlern
 	 */
 	public async getGostBelegpruefungGesamt(data : GostBelegpruefungsdaten) : Promise<GostBelegpruefungErgebnis> {
-		const path = "/api/gost/belegpruefung/gesamt";
+		const path = "/api/common/gost/belegpruefung/gesamt";
 		const body : string = GostBelegpruefungsdaten.transpilerToJSON(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;

@@ -1,5 +1,5 @@
-import type { Schulform, KlassenDaten, KlassenListeManager } from "@core";
-import type { Checkpoint } from "@ui";
+import type { Schulform, KlassenDaten } from "@core";
+import type { Checkpoint, KlassenListeManager } from "@ui";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 
 export interface KlassenNeuProps {

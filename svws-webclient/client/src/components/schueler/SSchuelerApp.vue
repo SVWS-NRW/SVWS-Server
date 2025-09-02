@@ -4,8 +4,7 @@
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
 				<template v-if="activeViewType === ViewType.DEFAULT">
-					<svws-ui-avatar :src="foto ? `data:image/png;base64, ${foto}` : undefined" :alt="foto !== null ? `Foto von ${vorname} ${nachname}` : ''"
-						upload capture @image:base64="f => patch({ f })" />
+					<svws-ui-avatar :src="foto ? `data:image/png;base64, ${foto}` : undefined" :alt="foto !== null ? `Foto von ${vorname} ${nachname}` : ''" upload capture @image:base64="foto => patch({ foto })" />
 					<div v-if="manager().hasDaten()" class="svws-headline-wrapper">
 						<h2 class="svws-headline">
 							<span>{{ vorname }} {{ nachname }}</span>
@@ -13,7 +12,7 @@
 								ID: {{ manager().daten().id }}
 							</svws-ui-badge>
 						</h2>
-						<span v-if="klasse !== null" class="svws-subline">{{ klasse.kuerzel }}
+						<span v-if="klasse !== null" class="svws-subline">{{ klasse.kuerzel }}&nbsp;
 							<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
 								<template v-for="l of klasse.klassenLeitungen">
 									{{ manager().lehrer.get(l)?.kuerzel ?? '—' }}&nbsp;
@@ -79,11 +78,11 @@
 	const epJahre = computed<string | null>(() => {
 		if (!primarstufe.value)
 			return null;
-		const ep = props.manager().auswahl().epJahre?.toString() ?? null;
+		const ep = props.manager().auswahl().epJahre;
 		if (ep === null)
 			return null;
 		const schuljahr = props.manager().getSchuljahr();
-		return PrimarstufeSchuleingangsphaseBesuchsjahre.data().getWertBySchluesselOrException(ep).daten(schuljahr)?.kuerzel ?? null;
+		return PrimarstufeSchuleingangsphaseBesuchsjahre.data().getWertByIDOrNull(ep)?.daten(schuljahr)?.kuerzel ?? null;
 	});
 
 	const schuelerSubline = computed(() => {
@@ -95,17 +94,9 @@
 		return [...auswahlSchuelerList].map(k => `${k.vorname} ${k.nachname}`).join(', ');
 	})
 
-	const foto = computed<string | null>(() => {
-		return props.manager().daten().foto;
-	});
-
-	const nachname = computed<string>(() => {
-		return props.manager().daten().nachname;
-	});
-
-	const vorname = computed<string>(() => {
-		return props.manager().daten().vorname;
-	});
+	const foto = computed<string | null>(() => props.manager().daten().foto);
+	const nachname = computed<string>(() => props.manager().daten().nachname);
+	const vorname = computed<string>(() => props.manager().daten().vorname);
 
 	const klasse = computed<KlassenDaten | null>(() => {
 		if (!props.manager().hasDaten())

@@ -22,9 +22,9 @@
 			type="number"
 			inputmode="numeric"
 			:value="data"
-			:disabled="disabled"
-			:required="required"
-			:readonly="readonly"
+			:disabled
+			:required
+			:readonly
 			:aria-labelledby="labelId"
 			:placeholder="headless ? placeholder : ''"
 			@input="onInput"
@@ -44,9 +44,10 @@
 			<span v-if="statistics" class="cursor-pointer">
 				<span class="icon i-ri-alert-fill input-number--state-icon" v-if="required && (data === null)" />
 			</span>
+			<span v-if="readonly" class="icon-xs i-ri-lock-line" />
 		</span>
 
-		<span v-if="data !== null && !hideStepper && !disabled" class="svws-input-stepper">
+		<span v-if="data !== null && !hideStepper && !disabled && !readonly" class="svws-input-stepper">
 			<button ref="btnMinus" role="button" @click="onInputNumber('down')" @blur="onBlur" :class="{'svws-disabled': String($attrs?.min) === String(data)}"><span class="icon i-ri-subtract-line" /></button>
 			<button ref="btnPlus" role="button" @click="onInputNumber('up')" @blur="onBlur" :class="{'svws-disabled': String($attrs?.max) === String(data)}"><span class="icon i-ri-add-line" /></button>
 		</span>

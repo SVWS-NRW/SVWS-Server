@@ -64,9 +64,12 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 	public async beforeEach(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
 		try {
 			const { abiturjahr, halbjahr: halbjahrId, idblockung: idBlockung, idergebnis: idErgebnis } = RouteNode.getIntParams(to_params, ["abiturjahr", "halbjahr", "idblockung", "idergebnis"]);
-			const halbjahr = GostHalbjahr.fromID(halbjahrId ?? null);
 			if ((abiturjahr === undefined))
 				return this.getRoute({ abiturjahr: -1 });
+			const zuletztBesucht = this.data.zuletztBesucht.get(abiturjahr);
+			if ((halbjahrId === undefined) && (idBlockung === undefined) && (idErgebnis === undefined) && (zuletztBesucht !== undefined))
+				return this.getRouteErgebnis(abiturjahr, zuletztBesucht.halbjahrId, zuletztBesucht.idBlockung, zuletztBesucht.idErgebnis);
+			const halbjahr = GostHalbjahr.fromID(halbjahrId ?? null);
 			if (halbjahr === null)
 				return this.getRouteHalbjahr(abiturjahr, 0);
 			if ((idBlockung === undefined) && (idErgebnis !== undefined))
@@ -84,8 +87,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			if (abiturjahr === undefined)
 				throw new DeveloperNotificationException("Fehler: Der Abiturjahrgang darf an dieser Stelle nicht undefined sein.");
 			const abiturjahrwechsel = await this.data.setAbiturjahr(abiturjahr, isEntering);
-			const zuletztBesucht = this.data.zuletztBesucht.get(abiturjahr);
-			const halbjahr = GostHalbjahr.fromID(halbjahrId ?? zuletztBesucht?.halbjahrId ?? null);
+			const halbjahr = GostHalbjahr.fromID(halbjahrId ?? null);
 			// Prüfe das Halbjahr und setzte dieses ggf.
 			if ((abiturjahrwechsel) || (halbjahr === null)) {
 				let hj = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abiturjahr, routeApp.data.aktAbschnitt.value.schuljahr, routeApp.data.aktAbschnitt.value.abschnitt);
@@ -101,18 +103,13 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 				// ... wurde die ID der Blockung auf undefined gesetzt, so prüfe, ob die Blockungsliste leer ist und wähle ggf. die aktive Blockung oder das erste Element aus
 				if (this.data.mapBlockungen.size > 0) {
 					let blockungsEintrag : GostBlockungListeneintrag | undefined = undefined;
-					for (const e of this.data.mapBlockungen.values()) {
+					for (const e of this.data.mapBlockungen.values())
 						if (e.istAktiv === true) {
 							blockungsEintrag = e;
 							break;
 						}
-					}
-					if (blockungsEintrag === undefined) {
-						if (zuletztBesucht?.idBlockung !== undefined)
-							blockungsEintrag = this.data.mapBlockungen.get(zuletztBesucht.idBlockung);
-						if (blockungsEintrag === undefined)
-							[blockungsEintrag] = this.data.mapBlockungen.values();
-					}
+					if (blockungsEintrag === undefined)
+						[blockungsEintrag] = this.data.mapBlockungen.values();
 					return this.getRouteBlockung(abiturjahr, halbjahr.id, blockungsEintrag.id);
 				}
 				if (this.data.hatBlockung)
@@ -120,11 +117,10 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 				return; // akzeptiere die Route, da keine Blockung für den Abiturjahrgang und das Halbjahr vorhanden ist.
 			}
 			const blockungsEintrag = this.data.mapBlockungen.get(idBlockung);
-			if (blockungsEintrag === undefined) {
 			// ... eine Blockung mit der ID ist nicht vorhanden. Die Route wird abgelehnt und es findet eine Umleitung statt
 			// TODO sollte z.B. nach Anlegen einer Ableitung die neue ID trotzdem erreichen können
+			if (blockungsEintrag === undefined)
 				return this.getRouteHalbjahr(abiturjahr, halbjahr.id);
-			}
 			if (!this.data.hatBlockung || (this.data.auswahlBlockung.id !== blockungsEintrag.id)) {
 				await this.data.setAuswahlBlockung(blockungsEintrag);
 				// ... wurde die ID der Blockung verändert, so setze den neu ausgewählten Blockungs-Eintrag und aktualisiere ggf. die Route
@@ -132,7 +128,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 					if (this.data.ergebnisse.size() <= 0)
 						throw new DeveloperNotificationException("Fehler bei der Blockung. Es muss bei einer Blockung immer mindestens das Vorlagen-Ergebnis vorhanden sein.");
 					// ...wenn kein Ergebnis in der Route gesetzt wurde, aber ein Ergebnis existiert, dann setze die Route neu auf das Vorlagen-Ergebnis und ggf. auf den aktuellen Schüler
-					const currErgebnisId = zuletztBesucht?.idErgebnis ?? this.data.auswahlErgebnis.id;
+					const currErgebnisId = this.data.auswahlErgebnis.id;
 					if (this.data.hatSchueler)
 						return this.getRouteSchueler(abiturjahr, halbjahr.id, blockungsEintrag.id, currErgebnisId, this.data.auswahlSchueler.id);
 					return this.getRouteErgebnis(abiturjahr, halbjahr.id, blockungsEintrag.id, currErgebnisId);
@@ -143,18 +139,13 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			if (idErgebnis === undefined) {
 				// ... wurde die ID des Ergebnisses auf undefined setzt, so prüfe, ob die Ergebnisliste leer ist und wähle ggf. das aktiver oder das erste Element aus
 				if ((this.data.hatBlockung) && (this.data.ergebnisse.size() > 0)) {
-					for (const e of this.data.datenmanager.ergebnisGetListeSortiertNachBewertung()) {
+					for (const e of this.data.datenmanager.ergebnisGetListeSortiertNachBewertung())
 						if (e.istAktiv === true) {
 							ergebnis = e;
 							break;
 						}
-					}
-					if (ergebnis === undefined) {
-						if (zuletztBesucht?.idErgebnis !== undefined)
-							ergebnis = this.data.datenmanager.ergebnisGet(zuletztBesucht.idErgebnis);
-						if (ergebnis === undefined)
-							ergebnis = this.data.datenmanager.ergebnisGetListeSortiertNachBewertung().get(0);
-					}
+					if (ergebnis === undefined)
+						ergebnis = this.data.datenmanager.ergebnisGetListeSortiertNachBewertung().get(0);
 					return this.getRouteErgebnis(abiturjahr, halbjahr.id, idBlockung, ergebnis.id);
 				}
 				if ((this.data.hatBlockung) && (this.data.ergebnisse.size() <= 0))

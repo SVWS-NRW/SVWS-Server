@@ -6,37 +6,37 @@ export class SchuelerLernabschnittBemerkungen extends JavaObject {
 	/**
 	 * Der Text für allgemeine Zeugnisbemerkungen.
 	 */
-	public zeugnisAllgemein : string = "";
+	public zeugnisAllgemein : string | null = "";
 
 	/**
 	 * Der Text für Zeugnisbemerkungen zum Arbeits- und Sozialverhalten.
 	 */
-	public zeugnisASV : string = "";
+	public zeugnisASV : string | null = "";
 
 	/**
 	 * Der Text für Zeugnisbemerkungen zur Lernentwicklung in Grundschulen.
 	 */
-	public zeugnisLELS : string = "";
+	public zeugnisLELS : string | null = "";
 
 	/**
 	 * Der Text für Zeugnisbemerkungen zum Außerunterrichtlichen Engagement.
 	 */
-	public zeugnisAUE : string = "";
+	public zeugnisAUE : string | null = "";
 
 	/**
 	 * Der Text für Empfehlung der Schulform beim Übergang von der Primarstufe in die Sekundarstufe I.
 	 */
-	public uebergangESF : string = "";
+	public uebergangESF : string | null = "";
 
 	/**
 	 * Eine Bemerkung zum Förderschwerpunkt.
 	 */
-	public foerderschwerpunkt : string = "";
+	public foerderschwerpunkt : string | null = "";
 
 	/**
 	 * Eine Bemerkung zur Versetzungsentscheidung.
 	 */
-	public versetzungsentscheidung : string = "";
+	public versetzungsentscheidung : string | null = "";
 
 
 	/**
@@ -59,39 +59,25 @@ export class SchuelerLernabschnittBemerkungen extends JavaObject {
 	public static transpilerFromJSON(json : string): SchuelerLernabschnittBemerkungen {
 		const obj = JSON.parse(json) as Partial<SchuelerLernabschnittBemerkungen>;
 		const result = new SchuelerLernabschnittBemerkungen();
-		if (obj.zeugnisAllgemein === undefined)
-			throw new Error('invalid json format, missing attribute zeugnisAllgemein');
-		result.zeugnisAllgemein = obj.zeugnisAllgemein;
-		if (obj.zeugnisASV === undefined)
-			throw new Error('invalid json format, missing attribute zeugnisASV');
-		result.zeugnisASV = obj.zeugnisASV;
-		if (obj.zeugnisLELS === undefined)
-			throw new Error('invalid json format, missing attribute zeugnisLELS');
-		result.zeugnisLELS = obj.zeugnisLELS;
-		if (obj.zeugnisAUE === undefined)
-			throw new Error('invalid json format, missing attribute zeugnisAUE');
-		result.zeugnisAUE = obj.zeugnisAUE;
-		if (obj.uebergangESF === undefined)
-			throw new Error('invalid json format, missing attribute uebergangESF');
-		result.uebergangESF = obj.uebergangESF;
-		if (obj.foerderschwerpunkt === undefined)
-			throw new Error('invalid json format, missing attribute foerderschwerpunkt');
-		result.foerderschwerpunkt = obj.foerderschwerpunkt;
-		if (obj.versetzungsentscheidung === undefined)
-			throw new Error('invalid json format, missing attribute versetzungsentscheidung');
-		result.versetzungsentscheidung = obj.versetzungsentscheidung;
+		result.zeugnisAllgemein = (obj.zeugnisAllgemein === undefined) ? null : obj.zeugnisAllgemein === null ? null : obj.zeugnisAllgemein;
+		result.zeugnisASV = (obj.zeugnisASV === undefined) ? null : obj.zeugnisASV === null ? null : obj.zeugnisASV;
+		result.zeugnisLELS = (obj.zeugnisLELS === undefined) ? null : obj.zeugnisLELS === null ? null : obj.zeugnisLELS;
+		result.zeugnisAUE = (obj.zeugnisAUE === undefined) ? null : obj.zeugnisAUE === null ? null : obj.zeugnisAUE;
+		result.uebergangESF = (obj.uebergangESF === undefined) ? null : obj.uebergangESF === null ? null : obj.uebergangESF;
+		result.foerderschwerpunkt = (obj.foerderschwerpunkt === undefined) ? null : obj.foerderschwerpunkt === null ? null : obj.foerderschwerpunkt;
+		result.versetzungsentscheidung = (obj.versetzungsentscheidung === undefined) ? null : obj.versetzungsentscheidung === null ? null : obj.versetzungsentscheidung;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : SchuelerLernabschnittBemerkungen) : string {
 		let result = '{';
-		result += '"zeugnisAllgemein" : ' + JSON.stringify(obj.zeugnisAllgemein) + ',';
-		result += '"zeugnisASV" : ' + JSON.stringify(obj.zeugnisASV) + ',';
-		result += '"zeugnisLELS" : ' + JSON.stringify(obj.zeugnisLELS) + ',';
-		result += '"zeugnisAUE" : ' + JSON.stringify(obj.zeugnisAUE) + ',';
-		result += '"uebergangESF" : ' + JSON.stringify(obj.uebergangESF) + ',';
-		result += '"foerderschwerpunkt" : ' + JSON.stringify(obj.foerderschwerpunkt) + ',';
-		result += '"versetzungsentscheidung" : ' + JSON.stringify(obj.versetzungsentscheidung) + ',';
+		result += '"zeugnisAllgemein" : ' + ((obj.zeugnisAllgemein === null) ? 'null' : JSON.stringify(obj.zeugnisAllgemein)) + ',';
+		result += '"zeugnisASV" : ' + ((obj.zeugnisASV === null) ? 'null' : JSON.stringify(obj.zeugnisASV)) + ',';
+		result += '"zeugnisLELS" : ' + ((obj.zeugnisLELS === null) ? 'null' : JSON.stringify(obj.zeugnisLELS)) + ',';
+		result += '"zeugnisAUE" : ' + ((obj.zeugnisAUE === null) ? 'null' : JSON.stringify(obj.zeugnisAUE)) + ',';
+		result += '"uebergangESF" : ' + ((obj.uebergangESF === null) ? 'null' : JSON.stringify(obj.uebergangESF)) + ',';
+		result += '"foerderschwerpunkt" : ' + ((obj.foerderschwerpunkt === null) ? 'null' : JSON.stringify(obj.foerderschwerpunkt)) + ',';
+		result += '"versetzungsentscheidung" : ' + ((obj.versetzungsentscheidung === null) ? 'null' : JSON.stringify(obj.versetzungsentscheidung)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -100,25 +86,25 @@ export class SchuelerLernabschnittBemerkungen extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<SchuelerLernabschnittBemerkungen>) : string {
 		let result = '{';
 		if (obj.zeugnisAllgemein !== undefined) {
-			result += '"zeugnisAllgemein" : ' + JSON.stringify(obj.zeugnisAllgemein) + ',';
+			result += '"zeugnisAllgemein" : ' + ((obj.zeugnisAllgemein === null) ? 'null' : JSON.stringify(obj.zeugnisAllgemein)) + ',';
 		}
 		if (obj.zeugnisASV !== undefined) {
-			result += '"zeugnisASV" : ' + JSON.stringify(obj.zeugnisASV) + ',';
+			result += '"zeugnisASV" : ' + ((obj.zeugnisASV === null) ? 'null' : JSON.stringify(obj.zeugnisASV)) + ',';
 		}
 		if (obj.zeugnisLELS !== undefined) {
-			result += '"zeugnisLELS" : ' + JSON.stringify(obj.zeugnisLELS) + ',';
+			result += '"zeugnisLELS" : ' + ((obj.zeugnisLELS === null) ? 'null' : JSON.stringify(obj.zeugnisLELS)) + ',';
 		}
 		if (obj.zeugnisAUE !== undefined) {
-			result += '"zeugnisAUE" : ' + JSON.stringify(obj.zeugnisAUE) + ',';
+			result += '"zeugnisAUE" : ' + ((obj.zeugnisAUE === null) ? 'null' : JSON.stringify(obj.zeugnisAUE)) + ',';
 		}
 		if (obj.uebergangESF !== undefined) {
-			result += '"uebergangESF" : ' + JSON.stringify(obj.uebergangESF) + ',';
+			result += '"uebergangESF" : ' + ((obj.uebergangESF === null) ? 'null' : JSON.stringify(obj.uebergangESF)) + ',';
 		}
 		if (obj.foerderschwerpunkt !== undefined) {
-			result += '"foerderschwerpunkt" : ' + JSON.stringify(obj.foerderschwerpunkt) + ',';
+			result += '"foerderschwerpunkt" : ' + ((obj.foerderschwerpunkt === null) ? 'null' : JSON.stringify(obj.foerderschwerpunkt)) + ',';
 		}
 		if (obj.versetzungsentscheidung !== undefined) {
-			result += '"versetzungsentscheidung" : ' + JSON.stringify(obj.versetzungsentscheidung) + ',';
+			result += '"versetzungsentscheidung" : ' + ((obj.versetzungsentscheidung === null) ? 'null' : JSON.stringify(obj.versetzungsentscheidung)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

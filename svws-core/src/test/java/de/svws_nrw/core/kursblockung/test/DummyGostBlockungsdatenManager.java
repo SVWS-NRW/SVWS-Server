@@ -2098,11 +2098,11 @@ public class DummyGostBlockungsdatenManager {
 	/**
 	 * Fügt eine Menge an Regeln hinzu.
 	 *
-	 * @param regelmenge  Die Menge an Regeln.
+	 * @param regeln  Die Menge an Regeln.
 	 *
 	 * @throws DeveloperNotificationException Falls die Daten der Regeln inkonsistent sind.
 	 */
-	public void regelAddListe(final @NotNull List<GostBlockungRegel> regelmenge) throws DeveloperNotificationException {
+	public void regelAddListe(final @NotNull List<GostBlockungRegel> regeln) throws DeveloperNotificationException {
 		// Datenkonsistenz überprüfen.
 		final @NotNull Set<LongArrayKey> setMultiKey = new HashSet<>();
 		final @NotNull Set<Long> setIDs = new HashSet<>();
@@ -2116,14 +2116,20 @@ public class DummyGostBlockungsdatenManager {
 		final @NotNull List<GostBlockungRegel> menge10 = new ArrayList<>(regelGetListeOfTyp(GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN));
 		final @NotNull List<GostBlockungRegel> menge15 = new ArrayList<>(regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL));
 
-		for (final @NotNull GostBlockungRegel r : regelmenge) {
-			regelCheckParameterReferences(r);
-			regelCheckParameterValues(r);
-			regelCheckDuplicates(r, setIDs, setMultiKey, menge1, menge6, menge9, menge10, menge15);
+		final @NotNull List<GostBlockungRegel> regelnOkay = new ArrayList<>();
+
+		for (final @NotNull GostBlockungRegel r : regeln) {
+			if (!regelCheckParameterReferencesAndReturnWarnung(r).isEmpty())
+				continue;
+			if (!regelCheckParameterValuesAndReturnWarnung(r).isEmpty())
+				continue;
+			if (!regelCheckDuplicatesAndReturnWarnung(r, setIDs, setMultiKey, menge1, menge6, menge9, menge10, menge15).isEmpty())
+				continue;
+			regelnOkay.add(r);
 		}
 
 		// Hinzufügen
-		for (final @NotNull GostBlockungRegel regel : regelmenge)
+		for (final @NotNull GostBlockungRegel regel : regelnOkay)
 			_daten.regeln.add(regel);
 
 		// Sortieren
@@ -2132,7 +2138,7 @@ public class DummyGostBlockungsdatenManager {
 		// Alle Ergebnisse revalidieren, damit die Bewertung aktuell ist.
 		ergebnisAlleRevalidieren();
 	}
-
+/*
 	private void regelCheckParameterReferences(final @NotNull GostBlockungRegel r) {
 		// Falsche Parameteranzahl?
 		final @NotNull GostKursblockungRegelTyp typ = GostKursblockungRegelTyp.fromTyp(r.typ);
@@ -2160,7 +2166,39 @@ public class DummyGostBlockungsdatenManager {
 						GostKursart.fromIDorNull((int) value) == null);
 		}
 	}
+	*/
+	private @NotNull String regelCheckParameterReferencesAndReturnWarnung(final @NotNull GostBlockungRegel r) {
+		// Falsche Parameteranzahl?
+		final @NotNull GostKursblockungRegelTyp typ = GostKursblockungRegelTyp.fromTyp(r.typ);
+		final int paramCount = typ.getParamCount();
+		if (paramCount != r.parameter.size())
+			return toStringRegel(r.id) + " hat falsche Parameter-Anzahl!";
 
+		// Ist eine Referenz falsch?
+		for (int i = 0; i < paramCount; i++) {
+			long value = r.parameter.get(i);
+			if (typ.getParamType(i) == GostKursblockungRegelParameterTyp.SCHUELER_ID)
+				if (schuelerGetOrNull(value) == null)
+					return toStringRegel(r.id) + " hat falsche Schüler-ID-Referenz!";
+			if (typ.getParamType(i) == GostKursblockungRegelParameterTyp.KURS_ID)
+				if (!kursGetExistiert(value))
+				return toStringRegel(r.id) + " hat falsche Kurs-ID-Referenz!";
+			if (typ.getParamType(i) == GostKursblockungRegelParameterTyp.SCHIENEN_NR)
+				if ((value < 1) || (value > schieneGetAnzahl()))
+					return toStringRegel(r.id) + " hat falsche Schienen-Nr-Referenz!";
+			if (typ.getParamType(i) == GostKursblockungRegelParameterTyp.FACH_ID)
+				if (_faecherManager.get(value) == null)
+					return toStringRegel(r.id) + " hat falsche Fach-ID-Referenz!";
+			if (typ.getParamType(i) == GostKursblockungRegelParameterTyp.KURSART)
+				if (GostKursart.fromIDorNull((int) value) == null)
+					return toStringRegel(r.id) + " hat falsche Kursart-Referenz!";
+		}
+
+		// Keine Warnung
+		return "";
+	}
+
+	/*
 	private void regelCheckParameterValues(final @NotNull GostBlockungRegel r) {
 		// Ist die Regel-ID ungültig?
 		DeveloperNotificationException.ifInvalidID("Regel.id", r.id);
@@ -2225,7 +2263,77 @@ public class DummyGostBlockungsdatenManager {
 		}
 
 	}
+	*/
 
+	private @NotNull String regelCheckParameterValuesAndReturnWarnung(final @NotNull GostBlockungRegel r) {
+		// Ist die Regel-ID ungültig?
+		if (r.id < 0)
+			return toStringRegel(r.id) + " hat eine ungültige ID " + r.id;
+
+		// Falsche Parameteranzahl?
+		final @NotNull GostKursblockungRegelTyp typ = GostKursblockungRegelTyp.fromTyp(r.typ);
+		final int paramCount = typ.getParamCount();
+		if (paramCount != r.parameter.size())
+			return toStringRegel(r.id) + " hat falsche Parameter-Anzahl!";
+
+		// Überprüfe jeden Typ einzeln.
+		final @NotNull List<Long> p = r.parameter;
+		switch (typ) {
+			// Undefinierte Regel ist nicht erlaubt.
+			case UNDEFINIERT: // 0
+				return toStringRegel(r.id) + " hat unbekannten Typ (" + r.typ + ")!";
+
+			// Diese Regeln können keine falschen Parameter haben
+			// Referenzen wie z.B. SchienenNR, KursID, SchienenID, ... werden woanders geprüft.
+			case
+					KURS_FIXIERE_IN_SCHIENE, KURS_SPERRE_IN_SCHIENE,  // 2, 3
+					SCHUELER_FIXIEREN_IN_KURS, SCHUELER_VERBIETEN_IN_KURS,  // 4, 5
+					KURS_VERBIETEN_MIT_KURS, KURS_ZUSAMMEN_MIT_KURS, // 7, 8
+					LEHRKRAEFTE_BEACHTEN, SCHUELER_IGNORIEREN, // 10, 16
+					SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH, SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH, // 11, 12
+					SCHUELER_ZUSAMMEN_MIT_SCHUELER, SCHUELER_VERBIETEN_MIT_SCHUELER, // 13, 14
+					KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN: // 17
+				break;
+
+			// Schiene-Von und Schiene-Bis werden überprüft. SchienenNr wurde bereits geprüft.
+			case KURSART_SPERRE_SCHIENEN_VON_BIS, KURSART_ALLEIN_IN_SCHIENEN_VON_BIS:  // 1, 6
+				if (p.get(2) < p.get(1))
+					return toStringRegel(r.id) + " Die BIS-Schiene " + p.get(2) + " kann nicht kleiner sein als die VON-Schiene " + p.get(1) + "!";
+				break;
+
+			// Der Wert wird überprüft.
+			case KURS_MIT_DUMMY_SUS_AUFFUELLEN:  // 9
+				if (p.get(1) < GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN_MIN)
+					return toStringRegel(r.id) + " KURS_MIT_DUMMY_SUS_AUFFUELLEN ist mit " + p.get(1) + " zu klein!";
+				if (p.get(1) > GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN_MAX)
+					return toStringRegel(r.id) + " KURS_MIT_DUMMY_SUS_AUFFUELLEN ist mit " + p.get(1) + " zu groß!";
+				break;
+
+			// Der Wert wird überprüft.
+			case KURS_MAXIMALE_SCHUELERANZAHL:  // 15
+				if (p.get(1) < GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL_MIN)
+					return toStringRegel(r.id) + " KURS_MAXIMALE_SCHUELERANZAHL ist mit " + p.get(1) + " zu klein!";
+				if (p.get(1) > GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL_MAX)
+					return toStringRegel(r.id) + " KURS_MAXIMALE_SCHUELERANZAHL ist mit " + p.get(1) + " zu groß!";
+				break;
+
+			// Der Wert wird überprüft.
+			case FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE:  // 18
+				if (p.get(2) < GostKursblockungRegelTyp.FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE_MIN)
+					return toStringRegel(r.id) + " FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE ist mit " + p.get(2) + " zu klein!";
+				if (p.get(2) > GostKursblockungRegelTyp.FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE_MAX)
+					return toStringRegel(r.id) + " FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE ist mit " + p.get(2) + " zu groß!";
+				break;
+
+			default:
+				return toStringRegel(r.id) + " Regeltypüberprüfung: Der Regeltyp ist unbekannt!";
+		}
+
+		// Keine Warnung
+		return "";
+	}
+
+/*
 	private void regelCheckDuplicates(final @NotNull GostBlockungRegel r, final @NotNull Set<Long> setIDs, final @NotNull Set<LongArrayKey> setMultiKey,
 			final @NotNull List<GostBlockungRegel> menge1, final @NotNull List<GostBlockungRegel> menge6, final @NotNull List<GostBlockungRegel> menge9,
 			final @NotNull List<GostBlockungRegel> menge10, final @NotNull List<GostBlockungRegel> menge15) {
@@ -2275,6 +2383,64 @@ public class DummyGostBlockungsdatenManager {
 			menge15.add(r);
 		}
 
+	}
+*/
+
+
+
+	private @NotNull String regelCheckDuplicatesAndReturnWarnung(final @NotNull GostBlockungRegel r, final @NotNull Set<Long> setIDs, final @NotNull Set<LongArrayKey> setMultiKey,
+			final @NotNull List<GostBlockungRegel> menge1, final @NotNull List<GostBlockungRegel> menge6, final @NotNull List<GostBlockungRegel> menge9,
+			final @NotNull List<GostBlockungRegel> menge10, final @NotNull List<GostBlockungRegel> menge15) {
+		// Ist die Regel-ID doppelt?
+		if (!setIDs.add(r.id))
+			return toStringRegel(r.id) + "Regel-ID " + r.id + " Dopplung!";
+
+		// Existiert bereits exakt die selbe Regel?
+		final @NotNull LongArrayKey multikey = regelToMultikey(r);
+		if (!setMultiKey.add(multikey))
+			return toStringRegel(r.id) + " existiert bereits als gleiche  (nicht als selbe) Regel im MultiMap!";
+
+		// Regel  1 "KURSART_SPERRE_SCHIENEN_VON_BIS" Intervall-Überschneidung prüfen.
+		if (r.typ == GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ) {
+			for (GostBlockungRegel rAlt : menge1)
+				if (regelKursartIntervallSchnitt(rAlt, r))
+					return "Intervallschnitt bei " + toStringRegel(r.id) + " und " + toStringRegel(rAlt.id) + "!";
+			menge1.add(r);
+		}
+
+		// Regel  6 "KURSART_ALLEIN_IN_SCHIENEN_VON_BIS" Intervall-Überschneidung prüfen.
+		if (r.typ == GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ) {
+			for (GostBlockungRegel rAlt : menge6)
+				if (regelKursartIntervallSchnitt(rAlt, r))
+					return "Intervallschnitt bei " + toStringRegel(r.id) + " und " + toStringRegel(rAlt.id) + "!";
+			menge6.add(r);
+		}
+
+		// Regel  9 "KURS_MIT_DUMMY_SUS_AUFFUELLEN" darf es nur ein Mal pro Kurs geben.
+		if (r.typ == GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN.typ) {
+			for (GostBlockungRegel rAlt : menge9)
+				if (rAlt.parameter.get(0).equals(r.parameter.get(0)))
+					return toStringRegel(r.id) + " Regel-Dopplung!";
+			menge9.add(r);
+		}
+
+		// Regel 10 "LEHRKRAEFTE_BEACHTEN" darf es nur ein Mal pro Blockung geben.
+		if (r.typ == GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN.typ) {
+			if (!menge10.isEmpty())
+				return toStringRegel(r.id) + " Regel-Dopplung!";
+			menge10.add(r);
+		}
+
+		// Regel 15 "KURS_MAXIMALE_SCHUELERANZAHL" darf es nur ein Mal pro Kurs geben.
+		if (r.typ == GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL.typ) {
+			for (GostBlockungRegel rAlt : menge15)
+				if (rAlt.parameter.get(0).equals(r.parameter.get(0)))
+					return toStringRegel(r.id) + " Regel-Dopplung!";
+			menge15.add(r);
+		}
+
+		// Keine Warnung
+		return "";
 	}
 
 	private static boolean regelKursartIntervallSchnitt(final @NotNull GostBlockungRegel r1, final @NotNull GostBlockungRegel r2) {

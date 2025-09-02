@@ -6,6 +6,7 @@ import { RouteManager } from "~/router/RouteManager";
 import type { SErzieherartenNeuProps } from "~/components/schule/kataloge/erzieherarten/SErzieherartenNeuProps";
 import type { RouteKatalogErzieherarten } from "~/router/apps/schule/erzieherarten/RouteKatalogErzieherarten";
 import { routeKatalogErzieherarten } from "~/router/apps/schule/erzieherarten/RouteKatalogErzieherarten";
+import { api } from "~/router/Api";
 
 const SErzieherartenNeu = () => import("~/components/schule/kataloge/erzieherarten/SErzieherartenNeu.vue");
 
@@ -25,6 +26,7 @@ export class RouteKatalogErzieherartenNeu extends RouteNode<any, RouteKatalogErz
 			manager: () => routeKatalogErzieherarten.data.manager,
 			add: routeKatalogErzieherarten.data.add,
 			gotoDefaultView: routeKatalogErzieherarten.data.gotoDefaultView,
+			benutzerKompetenzen: api.benutzerKompetenzen,
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
 		};

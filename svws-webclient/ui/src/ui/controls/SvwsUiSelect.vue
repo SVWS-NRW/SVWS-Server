@@ -36,7 +36,7 @@
 			@keydown.enter.prevent="selectCurrentActiveItem"
 			@keydown.backspace="onBackspace"
 			@keydown.esc.prevent="toggleListBox"
-			@keydown.space.prevent="onSpace"
+			@keydown.space="onSpace"
 			@keydown.tab="onTab"
 			:focus="autofocus"
 			:class="{ 'contentFocusField': focusClassContent, 'subNavigationFocusField': focusClassSubNav }" />
@@ -116,7 +116,7 @@
 		(e: "update:modelValue", items: SelectDataType): void;
 	}>();
 
-	const refList = ref<ComponentExposed<typeof SvwsUiDropdownList>>();
+	const refList = ref<ComponentExposed<typeof SvwsUiDropdownList>|null|undefined>(null);
 	const showList = ref(false);
 	const inputEl = ref();
 	const hasFocus = ref(false);
@@ -315,12 +315,14 @@
 			openListbox();
 	}
 
-	function onSpace() {
-		if (!props.autocomplete)
+	function onSpace(e: KeyboardEvent) {
+		if (!props.autocomplete) {
 			if (!showList.value)
 				openListbox();
 			else
 				selectCurrentActiveItem();
+			e.preventDefault();
+		}
 	}
 
 	function onTab() {

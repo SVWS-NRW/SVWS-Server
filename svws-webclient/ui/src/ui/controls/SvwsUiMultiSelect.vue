@@ -46,7 +46,7 @@
 			@keydown.enter.prevent="selectCurrentActiveItem"
 			@keydown.backspace="onBackspace"
 			@keydown.esc.prevent="toggleListBox"
-			@keydown.space.prevent="onSpace"
+			@keydown.space="onSpace"
 			@keydown.tab="onTab" />
 		<button v-if="!readonly" role="button" class="svws-dropdown-icon" @keydown.enter="toggleListBox" @keydown.down="toggleListBox">
 			<span class="icon i-ri-expand-up-down-line" v-if="headless" />
@@ -106,7 +106,7 @@
 
 	const methodsTextField = shallowRef<{ focus: () => void } | undefined>(undefined);
 
-	const refList = ref<ComponentExposed<typeof SvwsUiDropdownList>>();
+	const refList = ref<ComponentExposed<typeof SvwsUiDropdownList>|null|undefined>(null);
 
 	const showList = ref(false);
 	const listIdPrefix = useId();
@@ -279,12 +279,14 @@
 			openListbox();
 	}
 
-	function onSpace() {
-		if (!props.autocomplete)
-			if (showList.value)
-				selectCurrentActiveItem();
-			else
+	function onSpace(e: KeyboardEvent) {
+		if (!props.autocomplete) {
+			if (!showList.value)
 				openListbox();
+			else
+				selectCurrentActiveItem();
+			e.preventDefault();
+		}
 	}
 
 	function onTab() {

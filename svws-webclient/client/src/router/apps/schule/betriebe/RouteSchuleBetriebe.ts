@@ -16,6 +16,7 @@ import { RouteDataSchuleBetriebe } from "./RouteDataSchuleBetriebe";
 import { routeSchuleBetriebeDaten } from "./RouteSchuleBetriebeDaten";
 import { RouteSchuleMenuGroup } from "../RouteSchuleMenuGroup";
 import { routeError } from "~/router/error/RouteError";
+import { api } from "~/router/Api";
 
 const SBetriebeAuswahl = () => import("~/components/schule/betriebe/SBetriebeAuswahl.vue")
 const SBetriebeApp = () => import("~/components/schule/betriebe/SBetriebeApp.vue")
@@ -77,6 +78,7 @@ export class RouteSchuleBetriebe extends RouteNode<RouteDataSchuleBetriebe, Rout
 			addEintrag: this.data.addEintrag,
 			deleteEintraege: this.data.deleteEintraege,
 			gotoEintrag: this.data.gotoEintrag,
+			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 

@@ -61,6 +61,7 @@ export class RouteSchuelerVermerke extends RouteNode<RouteDataSchuelerVermerke, 
 			apiStatus: api.status,
 			autofocus: routeSchueler.data.autofocus,
 			filterNurSichtbare: this.data.filterNurSichtbare,
+			benutzerKompetenzen: api.benutzerKompetenzen,
 			setFilterNurSichtbare: this.data.setFilterNurSichtbare,
 		};
 	}

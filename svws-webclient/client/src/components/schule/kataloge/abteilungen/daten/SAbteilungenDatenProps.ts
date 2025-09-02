@@ -1,4 +1,5 @@
-import type { Abteilung, AbteilungenListeManager, AbteilungKlassenzuordnung, BenutzerKompetenz, List } from "@core";
+import type { Abteilung, AbteilungKlassenzuordnung, BenutzerKompetenz, List } from "@core";
+import type { AbteilungenListeManager } from "@ui";
 
 export interface AbteilungenDatenProps {
 	goToLehrer: (idAbteilungsleiter : number) => Promise<void>;

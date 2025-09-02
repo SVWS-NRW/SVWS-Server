@@ -187,6 +187,11 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	private _maxTimeMillis : number = 1000;
 
+	/**
+	 * Alle Warnungen, welche die GUI darstellen sollte.
+	 */
+	private readonly _warnungen : List<string> = new ArrayList<string>();
+
 
 	/**
 	 * Erstellt einen neuen Manager mit den angegebenen Blockungsdaten und dem Fächer-Manager.
@@ -214,6 +219,15 @@ export class GostBlockungsdatenManager extends JavaObject {
 		this.kursAddListe(daten.kurse);
 		this.regelAddListe(daten.regeln);
 		this.ergebnisAddListe(daten.ergebnisse);
+	}
+
+	/**
+	 * Liefert alle Warnungen, die dem User angezeigt werden sollen.
+	 *
+	 * @return alle Warnungen, die dem User angezeigt werden sollen.
+	 */
+	public getWarnungen() : List<string> {
+		return this._warnungen;
 	}
 
 	/**
@@ -1667,7 +1681,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		this.regelAddListe(ListUtils.create1(regel));
 	}
 
-	private regelAddListeOhneRevalidierung(regelmenge : List<GostBlockungRegel>) : void {
+	private regelAddListeOhneRevalidierung(regeln : List<GostBlockungRegel>) : void {
 		const setMultiKey : JavaSet<LongArrayKey> = new HashSet<LongArrayKey>();
 		const setIDs : JavaSet<number> = new HashSet<number>();
 		const menge1 : List<GostBlockungRegel> = new ArrayList<GostBlockungRegel>(this.regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS));
@@ -1675,12 +1689,26 @@ export class GostBlockungsdatenManager extends JavaObject {
 		const menge9 : List<GostBlockungRegel> = new ArrayList<GostBlockungRegel>(this.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN));
 		const menge10 : List<GostBlockungRegel> = new ArrayList<GostBlockungRegel>(this.regelGetListeOfTyp(GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN));
 		const menge15 : List<GostBlockungRegel> = new ArrayList<GostBlockungRegel>(this.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL));
-		for (const r of regelmenge) {
-			this.regelCheckParameterReferences(r);
-			this.regelCheckParameterValues(r);
-			this.regelCheckDuplicates(r, setIDs, setMultiKey, menge1, menge6, menge9, menge10, menge15);
+		const regelmengeOkay : List<GostBlockungRegel> = new ArrayList<GostBlockungRegel>();
+		for (const r of regeln) {
+			const warnung1 : string = this.regelCheckParameterReferencesAndReturnWarnung(r);
+			if (!JavaString.isEmpty(warnung1)) {
+				this._warnungen.add(warnung1);
+				continue;
+			}
+			const warnung2 : string = this.regelCheckParameterValuesAndReturnWarnung(r);
+			if (!JavaString.isEmpty(warnung2)) {
+				this._warnungen.add(warnung2);
+				continue;
+			}
+			const warnung3 : string = this.regelCheckDuplicatesAndReturnWarnung(r, setIDs, setMultiKey, menge1, menge6, menge9, menge10, menge15);
+			if (!JavaString.isEmpty(warnung3)) {
+				this._warnungen.add(warnung3);
+				continue;
+			}
+			regelmengeOkay.add(r);
 		}
-		for (const regel of regelmenge)
+		for (const regel of regelmengeOkay)
 			this.regelAddOhneSortierung(regel);
 		this._daten.regeln.sort(this._compRegel);
 		for (const listOfTyp of this._map_regeltyp_regeln.values())
@@ -1699,34 +1727,43 @@ export class GostBlockungsdatenManager extends JavaObject {
 		this.ergebnisAlleRevalidieren();
 	}
 
-	private regelCheckParameterReferences(r : GostBlockungRegel) : void {
+	private regelCheckParameterReferencesAndReturnWarnung(r : GostBlockungRegel) : string {
 		const typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(r.typ);
 		const paramCount : number = typ.getParamCount();
-		DeveloperNotificationException.ifTrue(this.toStringRegel(r.id) + " hat falsche Parameter-Anzahl!", paramCount !== r.parameter.size());
+		if (paramCount !== r.parameter.size())
+			return this.toStringRegel(r.id) + " hat falsche Parameter-Anzahl!";
 		for (let i : number = 0; i < paramCount; i++) {
 			let value : number = r.parameter.get(i).valueOf();
 			if (typ.getParamType(i) as unknown === GostKursblockungRegelParameterTyp.SCHUELER_ID as unknown)
-				DeveloperNotificationException.ifTrue(this.toStringRegel(r.id) + " hat falsche Schüler-ID-Referenz!", this.schuelerGetOrNull(value) === null);
+				if (this.schuelerGetOrNull(value) === null)
+					return this.toStringRegel(r.id) + " hat falsche Schüler-ID-Referenz " + value + "!";
 			if (typ.getParamType(i) as unknown === GostKursblockungRegelParameterTyp.KURS_ID as unknown)
-				DeveloperNotificationException.ifTrue(this.toStringRegel(r.id) + " hat falsche Kurs-ID-Referenz!", !this.kursGetExistiert(value));
+				if (!this.kursGetExistiert(value))
+					return this.toStringRegel(r.id) + " hat falsche Kurs-ID-Referenz " + value + "!";
 			if (typ.getParamType(i) as unknown === GostKursblockungRegelParameterTyp.SCHIENEN_NR as unknown)
-				DeveloperNotificationException.ifTrue(this.toStringRegel(r.id) + " hat falsche Schienen-Nr-Referenz!", (value < 1) || (value > this.schieneGetAnzahl()));
+				if ((value < 1) || (value > this.schieneGetAnzahl()))
+					return this.toStringRegel(r.id) + " hat falsche Schienen-Nr-Referenz " + value + "!";
 			if (typ.getParamType(i) as unknown === GostKursblockungRegelParameterTyp.FACH_ID as unknown)
-				DeveloperNotificationException.ifTrue(this.toStringRegel(r.id) + " hat falsche Fach-ID-Referenz!", this._faecherManager.get(value) === null);
+				if (this._faecherManager.get(value) === null)
+					return this.toStringRegel(r.id) + " hat falsche Fach-ID-Referenz " + value + "!";
 			if (typ.getParamType(i) as unknown === GostKursblockungRegelParameterTyp.KURSART as unknown)
-				DeveloperNotificationException.ifTrue(this.toStringRegel(r.id) + " hat falsche Kursart-Referenz!", GostKursart.fromIDorNull(value as number) === null);
+				if (GostKursart.fromIDorNull(value as number) === null)
+					return this.toStringRegel(r.id) + " hat falsche Kursart-Referenz " + value + "!";
 		}
+		return "";
 	}
 
-	private regelCheckParameterValues(r : GostBlockungRegel) : void {
-		DeveloperNotificationException.ifInvalidID("Regel.id", r.id);
+	private regelCheckParameterValuesAndReturnWarnung(r : GostBlockungRegel) : string {
+		if (r.id < 0)
+			return this.toStringRegel(r.id) + " hat eine ungültige ID " + r.id;
 		const typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(r.typ);
 		const paramCount : number = typ.getParamCount();
-		DeveloperNotificationException.ifTrue(this.toStringRegel(r.id) + " hat falsche Parameter-Anzahl!", paramCount !== r.parameter.size());
+		if (paramCount !== r.parameter.size())
+			return this.toStringRegel(r.id) + " hat falsche Parameter-Anzahl " + r.parameter.size() + "!";
 		const p : List<number> = r.parameter;
 		switch (typ) {
 			case GostKursblockungRegelTyp.UNDEFINIERT: {
-				throw new DeveloperNotificationException(this.toStringRegel(r.id) + " hat unbekannten Typ (" + r.typ + ")!")
+				return this.toStringRegel(r.id) + " hat unbekannten Typ (" + r.typ + ")!";
 			}
 			case GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE:
 			case GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE:
@@ -1746,71 +1783,73 @@ export class GostBlockungsdatenManager extends JavaObject {
 			case GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS:
 			case GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS: {
 				if (p.get(2) < p.get(1))
-					throw new DeveloperNotificationException("Die BIS-Schiene kann nicht kleiner sein als die VON-Schiene!")
+					return this.toStringRegel(r.id) + " Die BIS-Schiene " + p.get(2) + " kann nicht kleiner sein als die VON-Schiene " + p.get(1) + "!";
 				break;
 			}
 			case GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN: {
 				if (p.get(1) < GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN_MIN)
-					throw new DeveloperNotificationException("KURS_MIT_DUMMY_SUS_AUFFUELLEN ist mit " + p.get(1) + " zu klein!")
+					return this.toStringRegel(r.id) + " KURS_MIT_DUMMY_SUS_AUFFUELLEN ist mit " + p.get(1) + " zu klein!";
 				if (p.get(1) > GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN_MAX)
-					throw new DeveloperNotificationException("KURS_MIT_DUMMY_SUS_AUFFUELLEN ist mit " + p.get(1) + " zu groß!")
+					return this.toStringRegel(r.id) + " KURS_MIT_DUMMY_SUS_AUFFUELLEN ist mit " + p.get(1) + " zu groß!";
 				break;
 			}
 			case GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL: {
 				if (p.get(1) < GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL_MIN)
-					throw new DeveloperNotificationException("KURS_MAXIMALE_SCHUELERANZAHL ist mit " + p.get(1) + " zu klein!")
+					return this.toStringRegel(r.id) + " KURS_MAXIMALE_SCHUELERANZAHL ist mit " + p.get(1) + " zu klein!";
 				if (p.get(1) > GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL_MAX)
-					throw new DeveloperNotificationException("KURS_MAXIMALE_SCHUELERANZAHL ist mit " + p.get(1) + " zu groß!")
+					return this.toStringRegel(r.id) + " KURS_MAXIMALE_SCHUELERANZAHL ist mit " + p.get(1) + " zu groß!";
 				break;
 			}
 			case GostKursblockungRegelTyp.FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE: {
 				if (p.get(2) < GostKursblockungRegelTyp.FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE_MIN)
-					throw new DeveloperNotificationException("FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE ist mit " + p.get(2) + " zu klein!")
+					return this.toStringRegel(r.id) + " FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE ist mit " + p.get(2) + " zu klein!";
 				if (p.get(2) > GostKursblockungRegelTyp.FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE_MAX)
-					throw new DeveloperNotificationException("FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE ist mit " + p.get(2) + " zu groß!")
+					return this.toStringRegel(r.id) + " FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE ist mit " + p.get(2) + " zu groß!";
 				break;
 			}
 			default: {
-				throw new DeveloperNotificationException("Regeltypüberprüfung: Der Regeltyp ist unbekannt!")
+				return this.toStringRegel(r.id) + " Regeltypüberprüfung: Der Regeltyp ist unbekannt!";
 			}
 		}
+		return "";
 	}
 
-	private regelCheckDuplicates(r : GostBlockungRegel, setIDs : JavaSet<number>, setMultiKey : JavaSet<LongArrayKey>, menge1 : List<GostBlockungRegel>, menge6 : List<GostBlockungRegel>, menge9 : List<GostBlockungRegel>, menge10 : List<GostBlockungRegel>, menge15 : List<GostBlockungRegel>) : void {
-		DeveloperNotificationException.ifTrue("Regel-ID " + r.id + " Dopplung!", this._map_idRegel_regel.containsKey(r.id));
-		DeveloperNotificationException.ifTrue("Regel-ID " + r.id + " Dopplung!", !setIDs.add(r.id));
+	private regelCheckDuplicatesAndReturnWarnung(r : GostBlockungRegel, setIDs : JavaSet<number>, setMultiKey : JavaSet<LongArrayKey>, menge1 : List<GostBlockungRegel>, menge6 : List<GostBlockungRegel>, menge9 : List<GostBlockungRegel>, menge10 : List<GostBlockungRegel>, menge15 : List<GostBlockungRegel>) : string {
+		if (this._map_idRegel_regel.containsKey(r.id) || !setIDs.add(r.id))
+			return this.toStringRegel(r.id) + "Regel-ID " + r.id + " Dopplung!";
 		const multikey : LongArrayKey = GostBlockungsdatenManager.regelToMultikey(r);
-		DeveloperNotificationException.ifTrue(this.toStringRegel(r.id) + " existiert bereits!", !setMultiKey.add(multikey));
-		DeveloperNotificationException.ifTrue(this.toStringRegel(r.id) + " existiert bereits!", this._map_multikey_regeln.containsKey(multikey));
+		if (!setMultiKey.add(multikey) || this._map_multikey_regeln.containsKey(multikey))
+			return this.toStringRegel(r.id) + " existiert bereits als gleiche  (nicht als selbe) Regel im MultiMap!";
 		if (r.typ === GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ) {
 			for (let rAlt of menge1)
 				if (GostBlockungsdatenManager.regelKursartIntervallSchnitt(rAlt, r))
-					throw new DeveloperNotificationException("Intervallschnitt bei " + this.toStringRegel(r.id) + " und " + this.toStringRegel(rAlt.id) + "!")
+					return "Intervallschnitt bei " + this.toStringRegel(r.id) + " und " + this.toStringRegel(rAlt.id) + "!";
 			menge1.add(r);
 		}
 		if (r.typ === GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ) {
 			for (let rAlt of menge6)
 				if (GostBlockungsdatenManager.regelKursartIntervallSchnitt(rAlt, r))
-					throw new DeveloperNotificationException("Intervallschnitt bei " + this.toStringRegel(r.id) + " und " + this.toStringRegel(rAlt.id) + "!")
+					return "Intervallschnitt bei " + this.toStringRegel(r.id) + " und " + this.toStringRegel(rAlt.id) + "!";
 			menge6.add(r);
 		}
 		if (r.typ === GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN.typ) {
 			for (let rAlt of menge9)
 				if (JavaObject.equalsTranspiler(rAlt.parameter.get(0), (r.parameter.get(0))))
-					throw new DeveloperNotificationException(this.toStringRegel(r.id) + " Regel-Dopplung!")
+					return this.toStringRegel(r.id) + " Regel-Dopplung!";
 			menge9.add(r);
 		}
 		if (r.typ === GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN.typ) {
 			if (!menge10.isEmpty())
-				throw new DeveloperNotificationException(this.toStringRegel(r.id) + " Regel-Dopplung!")
+				return this.toStringRegel(r.id) + " Regel-Dopplung!";
 			menge10.add(r);
 		}
 		if (r.typ === GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL.typ) {
 			for (let rAlt of menge15)
 				if (JavaObject.equalsTranspiler(rAlt.parameter.get(0), (r.parameter.get(0))))
-					throw new DeveloperNotificationException(this.toStringRegel(r.id) + " Regel-Dopplung!")
+					return this.toStringRegel(r.id) + " Regel-Dopplung!";
 			menge15.add(r);
 		}
+		return "";
 	}
 
 	private static regelKursartIntervallSchnitt(r1 : GostBlockungRegel, r2 : GostBlockungRegel) : boolean {

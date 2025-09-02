@@ -1,12 +1,12 @@
 import { describe, expect, test } from "vitest";
-import { getApiServer } from "./utils/TestUtils.js";
+import { privilegedApiServer } from "../../utils/APIUtils";
 
 describe("Kataloge Tests", () => {
 	describe.each([{schema: "GymAbi01"}])('gegen %s', ({schema}) => {
-		const api = getApiServer(schema);
+		const api = privilegedApiServer;
 
-		test("getKatalogBeschaeftigungsart", async () => {
-			const result = await api.getKatalogBeschaeftigungsart(schema);
+		test("getBeschaeftigungsarten", async () => {
+			const result = await api.getBeschaeftigungsarten(schema);
 			expect(result).toMatchSnapshot();
 		});
 

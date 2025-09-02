@@ -1,4 +1,5 @@
-import type { BenutzerKompetenz, SchuelerKAoADaten, SchuelerKAoAManager, SchuelerListeEintrag } from "@core";
+import type { BenutzerKompetenz, SchuelerKAoADaten, SchuelerListeEintrag } from "@core";
+import type { SchuelerKAoAManager } from "@ui";
 
 export interface SchuelerKAoAProps {
 	schuelerKaoaManager: () => SchuelerKAoAManager;

@@ -1,20 +1,15 @@
 import { ref, shallowRef, toRaw, triggerRef } from "vue";
 import type { List } from "../../../../../../core/src/java/util/List";
 import { ArrayList } from "../../../../../../core/src/java/util/ArrayList";
-import { DeveloperNotificationException } from "../../../../../../core/src/core/exceptions/DeveloperNotificationException";
+import type { Comparator } from "../../../../../../core/src/java/util/Comparator";
 import type { SelectFilter } from "../filter/SelectFilter";
 import { SearchSelectFilter } from "../filter/SearchSelectFilter";
-import type { Comparator } from "../../../../../../core/src/java/util/Comparator";
 
 export interface BaseSelectManagerConfig<T> {
 	options?: Iterable<T>;
-	multi?: boolean;
-	selected?: any;
 	removable?: boolean;
 	sort?: Comparator<T> | ((a: T, b: T) => number) | null;
 	filters?: Iterable<SelectFilter<T>>;
-	selectionDisplayText?: string | ((option: any) => string);
-	optionDisplayText?: string | ((option: any) => string);
 	deepSearchAttributes?: string[];
 }
 
@@ -22,7 +17,7 @@ export interface BaseSelectManagerConfig<T> {
  * Abstrakte Manager Klasse zur Verwendung in einer Select-Komponente (UiSelect.vue). SelectManager übernehmen die Logik der Select-Komponente.
  * T bezeichnet dabei den Datentyp der auswählbaren Optionen.
  */
-export class BaseSelectManager<T> {
+export abstract class BaseSelectManager<T> {
 
 	// Alle Optionen des Selects. Diese Liste ist ungefiltert und enthält alle verfügbaren Optionen. Angezeigt werden im Dropdown aber nur die gefilterten
 	// Optionen aus `_filteredOptions`.
@@ -32,16 +27,16 @@ export class BaseSelectManager<T> {
 	protected _filteredOptions = shallowRef<List<T>>(new ArrayList<T>());
 
 	// Alle Filter, die auf die Optionen angewendet werden
-	private _filters: List<SelectFilter<T>> = new ArrayList();
+	protected _filters: List<SelectFilter<T>> = new ArrayList();
 
 	// Eine Map, die alle validen Optionen zu einem Filter enthält.
 	protected _filterMap = new Map<string, List<T>>;
 
 	// Die aktuelle Selektion des Dropdowns. Enthält bei Single-Selektion immer nur ein Objekt
-	protected _selected = shallowRef<List<T>>(new ArrayList<T>());
+	protected abstract _selected: unknown;
 
 	// Definiert, ob eine Multi-Selektion möglich ist
-	protected _multi = ref<boolean>(false);
+	protected abstract readonly _multi: boolean;
 
 	// Definiert, ob die Selektion geleert werden kann
 	protected _removable = ref<boolean>(true);
@@ -50,10 +45,10 @@ export class BaseSelectManager<T> {
 	protected _sort: Comparator<T> | null = null;
 
 	// Definiert, wie die aktuelle Selektion im Inputfeld dargestellt wird
-	protected _selectionDisplayText: string | ((option: any) => string) = (option: T): string => option?.toString() ?? "";
+	protected abstract _selectionDisplayText: unknown;
 
 	// Definiert, wie die Optionen im Dropdown dargestellt werden
-	protected _optionDisplayText: string | ((option: any) => string) = (option: T): string => option?.toString() ?? "";
+	protected abstract _optionDisplayText: unknown;
 
 	/**
 	 * Konstruktor des Managers.
@@ -79,16 +74,8 @@ export class BaseSelectManager<T> {
 		// Weitere Konfigurationen
 		if (config.removable !== undefined)
 			this._removable.value = config.removable;
-		if (config.multi !== undefined)
-			this._multi.value = config.multi ?? false;
-		if (config.optionDisplayText !== undefined)
-			this._optionDisplayText = config.optionDisplayText;
-		if (config.selectionDisplayText !== undefined)
-			this._selectionDisplayText = config.selectionDisplayText;
 		if (config.sort !== undefined)
 			this.sort = config.sort;
-		if (config.selected !== undefined)
-			this.selected = config.selected;
 	}
 
 	/**
@@ -113,16 +100,8 @@ export class BaseSelectManager<T> {
 		// Weitere Konfigurationen
 		if (config.removable !== undefined)
 			this._removable.value = config.removable;
-		if (config.multi !== undefined)
-			this._multi.value = config.multi ?? false;
-		if (config.optionDisplayText !== undefined)
-			this._optionDisplayText = config.optionDisplayText;
-		if (config.selectionDisplayText !== undefined)
-			this._selectionDisplayText = config.selectionDisplayText;
 		if (config.sort !== undefined)
 			this.sort = config.sort;
-		if (config.selected !== undefined)
-			this.selected = config.selected;
 	}
 
 	/**
@@ -144,16 +123,15 @@ export class BaseSelectManager<T> {
 		this._allOptions.value = optionList;
 		triggerRef( this._allOptions );
 		this.updateFilteredOptions();
-		this.clearSelection();
 	}
 
 	/**
 	 * Generiert eine ArrayList aus einem Iterable
 	 *
-	 * @param iterable   das Itereable, das umgerechnetw erden soll.
+	 * @param iterable   das Itereable, das umgerechnet werden soll.
 	 * @returns eine ArrayList, die die Elemente des Iterables enthält.
 	 */
-	private getListFromIterable<U>(iterable: Iterable<U>): ArrayList<U> {
+	protected getListFromIterable<U>(iterable: Iterable<U>): ArrayList<U> {
 		const tmpList = new ArrayList<U>()
 		for (const item of iterable)
 			tmpList.add(toRaw(item))
@@ -165,12 +143,7 @@ export class BaseSelectManager<T> {
 	 *
 	 * @return Aktuelle Selektion. Bei Single-Selektion ein einzelnes Objekt, bei Multi-Selektion eine Liste.
 	 */
-	public get selected(): any {
-		if (this.multi)
-			return this._selected.value;
-		else
-			return (this._selected.value.isEmpty()) ? null : this._selected.value.getFirst();
-	}
+	public abstract get selected(): unknown;
 
 	/**
 	 * Setter für alle selektierten Optionen der Komponente.
@@ -179,30 +152,11 @@ export class BaseSelectManager<T> {
 	 *
 	 * @throws DeveloperNotificationException   wenn nur Single-Selektion erlaubt ist, aber eine Liste übergeben wird.
 	 */
-	public set selected(value: any) {
-		let newSelection = new ArrayList<T>();
-		if (value !== undefined && value !== null) {
-			if ((typeof value[Symbol.iterator] === 'function') && (typeof value !== "string")) {
-				if (!this.multi)
-					throw new DeveloperNotificationException(`In einer Single-Select-Komponente darf nur ein einzelnes Objekt als Selektion übergeben werden!
-					Übergeben wurde jedoch ${value}`);
-				newSelection = this.getListFromIterable(value);
-			}
-			else {
-				if (this.multi)
-					throw new DeveloperNotificationException(`In einer Multi-Select-Komponente darf nur eine Liste von Objekten als Selektion übergeben werden!
-					Übergeben wurde jedoch "${value}"`);
-				newSelection.add(toRaw(value));
-			}
-		}
+	public abstract set selected(value: unknown);
 
-		if (!this.multi && newSelection.size() > 1)
-			throw new DeveloperNotificationException("In einer Single-Select-Komponente können nicht mehrere Optionen selektiert sein. "
-					+ "Dem selected Setter wurden jedoch mehrere übergeben.");
+	public abstract clearSelection(): void;
 
-		this._selected.value = newSelection;
-		triggerRef(this._selected);
-	}
+	public abstract hasSelection(): boolean;
 
 	/**
 	 * Getter für alle aktiven Filter der Optionen.
@@ -319,8 +273,13 @@ export class BaseSelectManager<T> {
 			filteredList.sort(this.sort);
 		this._filteredOptions.value = filteredList;
 		triggerRef(this._filteredOptions);
-		this.clearSelection();
 	}
+
+	/**
+	 * Synchronisiert die aktuelle Selektion mit der Liste der gefilterten Optionen. Das bedeutet, dass Selektionen, die nicht mehr in der filteredList vorkommen,
+	 * entfernt werden. Das darf jedoch nicht bei der Filterung durch den SearchSelectFilter mit dem key "search" passieren.
+	 */
+	public abstract syncSelectionAndFilteredOptions(): void;
 
 	/**
 	 * Aktualisiert die Filter-Map, die alle aktiven Filter und deren gefilterte Listen enthält. Wenn kein Filter übergeben wird, dann wird die komplette Map
@@ -359,24 +318,9 @@ export class BaseSelectManager<T> {
 				result = this.intersect(result, filteredOptions);
 
 		this.filteredOptions = result;
-	}
-
-	/**
-	 * Getter, der angibt, ob die Multi-Selektion erlaubt ist.
-	 *
-	 * @return true, wenn Multi-Selektionen erlaubt sind
-	 */
-	public get multi(): boolean {
-		return this._multi.value;
-	}
-
-	/**
-	 * Setter zum Festlegen, ob die Multi-Selektion erlaubt ist.
-	 *
-	 * @param value   true, wenn Mult-Selektionen erlaubt sind
-	 */
-	public set multi(value: boolean) {
-		this._multi.value = value;
+		// Beim Suchfilter darf die Selektion nicht zurückgesetzt werden, sonst geht diese bei jeder erneuten Suche verloren
+		if ((filter !== undefined )&& (filter.key !== "search"))
+			this.syncSelectionAndFilteredOptions();
 	}
 
 	/**
@@ -402,7 +346,7 @@ export class BaseSelectManager<T> {
 	 *
 	 * @return Darstellungskonfiguration für die Selektion
 	 */
-	public get selectionDisplayText(): string | ((option: any) => string) {
+	public get selectionDisplayText(): unknown {
 		return this._selectionDisplayText;
 	}
 
@@ -411,7 +355,7 @@ export class BaseSelectManager<T> {
 	 *
 	 * @param value neue Darstellungskonfiguration für die Selektion.
 	 */
-	public set selectionDisplayText(value: string | ((option: any) => string)) {
+	public set selectionDisplayText(value: unknown) {
 		this._selectionDisplayText = value;
 	}
 
@@ -420,7 +364,7 @@ export class BaseSelectManager<T> {
 	 *
 	 * @return Darstellungskonfiguration für Optionen
 	 */
-	public get optionDisplayText(): string | ((option: any) => string) {
+	public get optionDisplayText(): unknown {
 		return this._optionDisplayText;
 	}
 
@@ -429,7 +373,7 @@ export class BaseSelectManager<T> {
 	 *
 	 * @param value neue Darstellungskonfiguration für Optionen.
 	 */
-	public set optionDisplayText(value: string | ((option: any) => string)) {
+	public set optionDisplayText(value: unknown) {
 		this._optionDisplayText = value;
 	}
 
@@ -490,11 +434,9 @@ export class BaseSelectManager<T> {
 	 * Prüft, ob die übergebene Option bereits selektiert ist.
 	 *
 	 * @param option   die Option, die geprüft werden soll
-	 * @returns true, wenn die Option seketiert ist
+	 * @returns true, wenn die Option selektiert ist
 	 */
-	public isSelected(option: T): boolean {
-		return this._selected.value.contains(option);
-	}
+	public abstract isSelected(option: T): boolean;
 
 	/**
 	 * Selektiert die übergebene Option. Falls `_multi === false`, dann wird die aktuelle Selektion zunächst geleert. Andernfalls wird die neue Option der
@@ -502,44 +444,14 @@ export class BaseSelectManager<T> {
 	 *
 	 * @param option   die Option, die selektiert werden soll
 	 */
-	public select(option: T): void {
-		if (this.isSelected(option))
-			throw new DeveloperNotificationException(`Die Option ${this.getOptionText(option)} ist bereits selektiert.`);
-		if (this._multi.value === false)
-			this.clearSelection();
-		this._selected.value.add(option);
-		triggerRef(this._selected);
-	}
+	public abstract select(option: T): void;
 
 	/**
 	 * Deselektiert die übergebene Option.
 	 *
 	 * @param option   die Option, die deselektiert werden soll
 	 */
-	public deselect(option: T): void {
-		if (((this.removable === false) && (this.multi === false) )|| ((this.removable === false) && (this.multi === true) && (this._selected.value.size() === 1)))
-			return;
-		const index = this._selected.value.indexOf(option);
-		if (index !== -1) {
-			this._selected.value.removeElementAt(index);
-			triggerRef(this._selected);
-		}
-	}
-
-	/**
-	 * Leert die aktuelle Selektion
-	 */
-	public clearSelection(): void {
-		this._selected.value.clear();
-		triggerRef(this._selected);
-	}
-
-	public hasSelection(): boolean {
-		if (this.multi)
-			return this.selected.isEmpty() === false;
-		else
-			return (this.selected !== undefined) && (this.selected !== null);
-	}
+	public abstract deselect(option: T): void;
 
 	/**
 	 * Getter für den Text eines selektierten Objektes.
@@ -548,11 +460,13 @@ export class BaseSelectManager<T> {
 	 *
 	 * @returns den Text der Option.
 	 */
-	public getSelectionText(option: T): string {
+	public getSelectionText(option: T | null): string {
+		if (option === null)
+			return "";
 		if (typeof this.selectionDisplayText === "function")
 			return this.selectionDisplayText(option);
-		else
-			return "";
+
+		return "";
 	}
 
 	/**
@@ -562,11 +476,16 @@ export class BaseSelectManager<T> {
 	 *
 	 * @returns den Text der Option.
 	 */
-	public getOptionText(option: T): string {
+	public getOptionText(option: T | null): string {
+		if (option === null)
+			return "";
 		if (typeof this.optionDisplayText === "function")
 			return this.optionDisplayText(option);
-		else
-			return "";
+		return "";
+	}
+
+	public get multi(): boolean {
+		return this._multi;
 	}
 
 }

@@ -7,8 +7,8 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-import de.svws_nrw.api.ResourceFile;
-import de.svws_nrw.api.ResourceFileManager;
+import de.svws_nrw.api.common.ResourceFile;
+import de.svws_nrw.api.common.ResourceFileManager;
 import de.svws_nrw.db.utils.ApiOperationException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 

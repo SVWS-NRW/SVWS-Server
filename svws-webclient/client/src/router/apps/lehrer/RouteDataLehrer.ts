@@ -1,12 +1,13 @@
 import type {
-	ApiFile, LehrerFachrichtungAnerkennung, LehrerFachrichtungEintrag, LehrerLehramtAnerkennung, LehrerLehramtEintrag, LehrerLehrbefaehigungAnerkennung,
+	ApiFile, LehrerFachrichtungEintrag, LehrerLehramtEintrag,
 	LehrerLehrbefaehigungEintrag, LehrerListeEintrag, LehrerPersonalabschnittsdaten, LehrerPersonaldaten, LehrerStammdaten, List, SimpleOperationResponse,
 	StundenplanListeEintrag, ReportingParameter,
+	LehrerPersonalabschnittsdatenAnrechnungsstunden,
 } from "@core";
-import { ArrayList, DeveloperNotificationException, LehrerListeManager, BenutzerKompetenz } from "@core";
+import { ArrayList, DeveloperNotificationException, BenutzerKompetenz } from "@core";
 import { api } from "~/router/Api";
 import { routeLehrerIndividualdaten } from "~/router/apps/lehrer/individualdaten/RouteLehrerIndividualdaten";
-import { type PendingStateManager, ViewType } from "@ui";
+import { type PendingStateManager, ViewType, LehrerListeManager } from "@ui";
 import { routeLehrerNeu } from "~/router/apps/lehrer/RouteLehrerNeu";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
@@ -176,12 +177,62 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 		Object.assign(abschnittsdaten, data);
 		this.commit();
 	}
+	addMehrleistung = async (data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>) => {
+		const result = await api.server.addLehrerPersonalabschnittsdatenMehrleistung(data, api.schema);
+		this.manager.getAbschnittBySchuljahresabschnittsId(this.idSchuljahresabschnitt)?.mehrleistung.add(result);
+		this.commit();
+	}
 
-	addLehramt = async (eintrag: LehrerLehramtEintrag) => {
+	patchMehrleistung = async (data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, id: number) => {
+		await api.server.patchLehrerPersonalabschnittsdatenMehrleistung(data, api.schema, id);
+		this.commit();
+	}
+
+	removeMehrleistung = async (data: LehrerPersonalabschnittsdatenAnrechnungsstunden) => {
+		await api.server.deleteLehrerPersonalabschnittsdatenMehrleistung(api.schema, data.id);
+		this.manager.getAbschnittBySchuljahresabschnittsId(this.idSchuljahresabschnitt)?.mehrleistung.remove(data);
+		this.commit();
+	}
+
+	addMinderleistung = async (data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>) => {
+		const result = await api.server.addLehrerPersonalabschnittsdatenMinderleistung(data, api.schema);
+		this.manager.getAbschnittBySchuljahresabschnittsId(this.idSchuljahresabschnitt)?.minderleistung.add(result);
+		this.commit();
+	}
+
+	patchMinderleistung = async (data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, id: number) => {
+		await api.server.patchLehrerPersonalabschnittsdatenMinderleistung(data, api.schema, id);
+		this.commit();
+	}
+
+	removeMinderleistung = async (data: LehrerPersonalabschnittsdatenAnrechnungsstunden) => {
+		await api.server.deleteLehrerPersonalabschnittsdatenMinderleistung(api.schema, data.id);
+		this.manager.getAbschnittBySchuljahresabschnittsId(this.idSchuljahresabschnitt)?.minderleistung.remove(data);
+		this.commit();
+	}
+
+	addAnrechnung = async (data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>) => {
+		const result = await api.server.addLehrerPersonalabschnittsdatenAllgemeineAnrechnung(data, api.schema);
+		this.manager.getAbschnittBySchuljahresabschnittsId(this.idSchuljahresabschnitt)?.anrechnungen.add(result);
+		this.commit();
+	}
+
+	patchAnrechnung = async (data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, id: number) => {
+		await api.server.patchLehrerPersonalabschnittsdatenAllgemeineAnrechnung(data, api.schema, id);
+		this.commit();
+	}
+
+	removeAnrechnung = async (data: LehrerPersonalabschnittsdatenAnrechnungsstunden) => {
+		await api.server.deleteLehrerPersonalabschnittsdatenAllgemeineAnrechnung(api.schema, data.id);
+		this.manager.getAbschnittBySchuljahresabschnittsId(this.idSchuljahresabschnitt)?.anrechnungen.remove(data);
+		this.commit();
+	}
+
+	addLehramt = async (eintrag: Partial<LehrerLehramtEintrag>) => {
 		if (!this.manager.hasPersonalDaten())
 			throw new DeveloperNotificationException("Lehrämter können nur hinzugefügt werden, wenn gültige Personal-Daten geladen sind.");
-		await api.server.addLehrerLehramt(eintrag, api.schema);
-		this.manager.personalDaten().lehraemter.add(eintrag);
+		const result = await api.server.addLehrerLehramt(eintrag, api.schema);
+		this.manager.personalDaten().lehraemter.add(result);
 		this.commit();
 	}
 
@@ -190,7 +241,7 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 			throw new DeveloperNotificationException("Lehrämter können nur entfernt werden, wenn gültige Personal-Daten geladen sind.");
 		// TODO ggf. zu einem API-Aufruf zusammenfassen - Server-API muss dafür noch erweitert werden
 		for (const eintrag of eintraege)
-			await api.server.deleteLehrerLehramt(api.schema, eintrag.id, eintrag. idLehramt);
+			await api.server.deleteLehrerLehramt(api.schema, eintrag.id);
 		this.manager.personalDaten().lehraemter.removeAll(eintraege);
 		this.commit();
 	}
@@ -198,63 +249,69 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 	patchLehramt = async (eintrag: LehrerLehramtEintrag, patch: Partial<LehrerLehramtEintrag>) => {
 		if (!this.manager.hasPersonalDaten())
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		await api.server.patchLehrerLehramt(patch, api.schema, eintrag.id, eintrag.idLehramt);
+		await api.server.patchLehrerLehramt(patch, api.schema, eintrag.id);
 		Object.assign(eintrag, patch);
 		this.commit();
 	}
 
-	addLehrbefaehigung = async (eintrag: LehrerLehrbefaehigungEintrag) => {
+	addLehrbefaehigung = async (eintrag: Partial<LehrerLehrbefaehigungEintrag>) => {
 		if (!this.manager.hasPersonalDaten())
 			throw new DeveloperNotificationException("Lehrbefähigungen können nur hinzugefügt werden, wenn gültige Personal-Daten geladen sind.");
-		// TODO API-Aufruf ...
-		console.log("Hinzufügen von Lehrbefähigungen noch nicht implementiert");
-		this.manager.personalDaten().lehrbefaehigungen.add(eintrag);
+		if (eintrag.idLehramt === undefined)
+			throw new DeveloperNotificationException("Lehrbefähigungen können nur mit einer Lehramts-ID hinzugefügt werden.");
+		const result = await api.server.addLehrerLehrbefaehigung(eintrag, api.schema);
+		for (const lehramt of this.manager.personalDaten().lehraemter)
+			if (lehramt.id === eintrag.idLehramt)
+				lehramt.lehrbefaehigungen.add(result);
 		this.commit();
 	}
 
 	removeLehrbefaehigungen = async (eintraege: List<LehrerLehrbefaehigungEintrag>) => {
 		if (!this.manager.hasPersonalDaten())
 			throw new DeveloperNotificationException("Lehrbefähigungen können nur entfernt werden, wenn gültige Personal-Daten geladen sind.");
-		// TODO API-Aufruf ...
-		console.log("Entfernen von Lehrbefähigungen noch nicht implementiert");
-		this.manager.personalDaten().lehrbefaehigungen.removeAll(eintraege);
+		// TODO ggf. zu einem API-Aufruf zusammenfassen - Server-API muss dafür noch erweitert werden
+		for (const eintrag of eintraege)
+			await api.server.deleteLehrerLehrbefaehigung(api.schema, eintrag.id);
+		for (const lehramt of this.manager.personalDaten().lehraemter)
+			lehramt.lehrbefaehigungen.removeAll(eintraege);
 		this.commit();
 	}
 
 	patchLehrbefaehigung = async (eintrag: LehrerLehrbefaehigungEintrag, patch: Partial<LehrerLehrbefaehigungEintrag>) => {
 		if (!this.manager.hasPersonalDaten())
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		// TODO API-Aufruf mit idAnerkennungsgrund ...
-		// await api.server.patchLehrerLehrbefaehigung();
-		console.log("Anpassen von Lehrbefähigungen noch nicht implementiert");
+		await api.server.patchLehrerLehrbefaehigung(patch, api.schema, eintrag.id);
 		Object.assign(eintrag, patch);
 		this.commit();
 	}
 
-	addFachrichtung = async (eintrag: LehrerFachrichtungEintrag) => {
+	addFachrichtung = async (eintrag: Partial<LehrerFachrichtungEintrag>) => {
 		if (!this.manager.hasPersonalDaten())
 			throw new DeveloperNotificationException("Fachrichtungen können nur hinzugefügt werden, wenn gültige Personal-Daten geladen sind.");
-		// TODO API-Aufruf ...
-		console.log("Hinzufügen von Fachrichtungen noch nicht implementiert");
-		this.manager.personalDaten().fachrichtungen.add(eintrag);
+		if (eintrag.idLehramt === undefined)
+			throw new DeveloperNotificationException("Fachrichtungen können nur mit einer Lehramts-ID hinzugefügt werden.");
+		const result = await api.server.addLehrerFachrichtung(eintrag, api.schema);
+		for (const lehramt of this.manager.personalDaten().lehraemter)
+			if (lehramt.id === eintrag.idLehramt)
+				lehramt.fachrichtungen.add(result);
 		this.commit();
 	}
 
 	removeFachrichtungen = async (eintraege: List<LehrerFachrichtungEintrag>) => {
 		if (!this.manager.hasPersonalDaten())
 			throw new DeveloperNotificationException("Fachrichtungen können nur entfernt werden, wenn gültige Personal-Daten geladen sind.");
-		// TODO API-Aufruf ...
-		console.log("Entfernen von Fachrichtungen noch nicht implementiert");
-		this.manager.personalDaten().fachrichtungen.removeAll(eintraege);
+		// TODO ggf. zu einem API-Aufruf zusammenfassen - Server-API muss dafür noch erweitert werden
+		for (const eintrag of eintraege)
+			await api.server.deleteLehrerFachrichtung(api.schema, eintrag.id);
+		for (const lehramt of this.manager.personalDaten().lehraemter)
+			lehramt.fachrichtungen.removeAll(eintraege);
 		this.commit();
 	}
 
 	patchFachrichtung = async (eintrag: LehrerFachrichtungEintrag, patch : Partial<LehrerFachrichtungEintrag>) => {
 		if (!this.manager.hasPersonalDaten())
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		// TODO API-Aufruf mit idAnerkennungsgrund ...
-		// await api.server.patchLehrerFachrichtung();
-		console.log("Anpassen von Fachrichtungen noch nicht implementiert");
+		await api.server.patchLehrerFachrichtung(patch, api.schema, eintrag.id);
 		Object.assign(eintrag, patch);
 		this.commit();
 	}

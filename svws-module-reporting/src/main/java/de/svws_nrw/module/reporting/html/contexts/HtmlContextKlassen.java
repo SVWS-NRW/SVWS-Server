@@ -1,11 +1,8 @@
 package de.svws_nrw.module.reporting.html.contexts;
 
-import java.text.Collator;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -23,15 +20,20 @@ import org.thymeleaf.context.Context;
 /**
  * Ein Thymeleaf-Html-Daten-Context zum Bereich "Klassen", um Thymeleaf-html-Templates mit Daten zu füllen.
  */
-public final class HtmlContextKlassen extends HtmlContext {
+public final class HtmlContextKlassen extends HtmlContext<ReportingKlasse> {
+
+	@Override
+	public List<String> standardsortierung() {
+		final ArrayList<String> standardSort = new ArrayList<>();
+		standardSort.add(methodenreferenzToString(ReportingKlasse::sortierung));
+		standardSort.add(methodenreferenzToString(ReportingKlasse::kuerzel));
+		return standardSort;
+	}
 
 	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
 	private final ReportingRepository reportingRepository;
 
-	/** Liste, die die im Context ermitteln Daten speichert und den Zugriff auf die Daten abseits des html-Templates ermöglicht. */
-	@JsonIgnore
-	private ArrayList<ReportingKlasse> klassen = new ArrayList<>();
 
 	/**
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Klassen.
@@ -40,18 +42,18 @@ public final class HtmlContextKlassen extends HtmlContext {
 	 * @param reportingKlassen		Liste der Klassen, die berücksichtigt werden sollen.
 	 */
 	public HtmlContextKlassen(final ReportingRepository reportingRepository, final List<ReportingKlasse> reportingKlassen) {
+		super(reportingRepository, true);
 		this.reportingRepository = reportingRepository;
 		erzeugeContextFromKlassen(reportingKlassen);
 	}
 
 	/**
-	 * Initialisiert einen neuen HtmlContext mit den übergebenen Kurs-IDs.
+	 * Initialisiert einen neuen HtmlContext mit den übergebenen Klassen-IDs.
 	 *
 	 * @param reportingRepository   Repository mit Parametern, Logger und Daten zum Reporting.
-	 *
-	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
-	public HtmlContextKlassen(final ReportingRepository reportingRepository) throws ApiOperationException {
+	public HtmlContextKlassen(final ReportingRepository reportingRepository) {
+		super(reportingRepository, true);
 		this.reportingRepository = reportingRepository;
 		erzeugeContextFromIds(this.reportingRepository.reportingParameter().idsHauptdaten);
 	}
@@ -64,17 +66,12 @@ public final class HtmlContextKlassen extends HtmlContext {
 	 */
 	private void erzeugeContextFromKlassen(final List<ReportingKlasse> reportingKlassen) {
 
-		// Sortiere die übergebene Liste der Klassen
-		final Collator colGerman = Collator.getInstance(Locale.GERMAN);
-		reportingKlassen.sort(Comparator.comparing(ReportingKlasse::sortierung)
-				.thenComparing(ReportingKlasse::kuerzel, colGerman));
-
-		klassen = new ArrayList<>();
-		klassen.addAll(reportingKlassen);
+		setContextData(reportingKlassen);
+		sortiereContext();
 
 		// Daten-Context für Thymeleaf erzeugen.
 		final Context context = new Context();
-		context.setVariable("Klassen", klassen);
+		context.setVariable("Klassen", getContextData());
 
 		super.setContext(context);
 	}
@@ -84,19 +81,16 @@ public final class HtmlContextKlassen extends HtmlContext {
 	 * Erzeugt den Context aus einer Liste von Klassen-IDs.
 	 *
 	 * @param idsKlassen	Liste der IDs der Klassen, die berücksichtigt werden sollen.
-	 *
-	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
-	private void erzeugeContextFromIds(final List<Long> idsKlassen) throws ApiOperationException {
+	private void erzeugeContextFromIds(final List<Long> idsKlassen) {
 
-		// Erzeuge Maps, damit auch später leicht auf die Kursdaten zugegriffen
-		// werden kann.
+		// Erzeuge Maps, damit auch später leicht auf die Klassendaten zugegriffen werden kann.
 		final Map<Long, ReportingKlasse> mapKlassen = new HashMap<>();
 		for (final Long idKlasse : idsKlassen) {
 			if (reportingRepository.mapKlassen().containsKey(idKlasse))
 				mapKlassen.put(idKlasse, reportingRepository.mapKlassen().get(idKlasse));
 			else {
-				// ID der Klassen ist bekannt, aber er wurde noch nicht aus der DB geladen. Lade dessen Daten und lade dabei alle Klassen des Lernabschnitts.
+				// Die ID der Klasse ist bekannt, aber sie wurde noch nicht aus der DB geladen. Lade dessen Daten und lade dabei alle Klassen des Lernabschnitts.
 				final KlassenDaten klassenDaten;
 				try {
 					klassenDaten = new DataKlassendaten(reportingRepository.conn()).getById(idKlasse);
@@ -110,29 +104,26 @@ public final class HtmlContextKlassen extends HtmlContext {
 			}
 		}
 
-		// Die Klassen bzw. ihre IDs können in einer beliebigen Reihenfolge sein. Für die Ausgabe sollten
-		// sie aber Sortierreihenfolge sein.
-		final Collator colGerman = Collator.getInstance(Locale.GERMAN);
-		klassen.addAll(mapKlassen.values().stream().sorted(Comparator.comparing(ReportingKlasse::sortierung)
-				.thenComparing(ReportingKlasse::kuerzel, colGerman)).toList());
+		setContextData(mapKlassen.values().stream().toList());
+		sortiereContext();
 
 		// Daten-Context für Thymeleaf erzeugen.
 		final Context context = new Context();
-		context.setVariable("Klassen", klassen);
+		context.setVariable("Klassen", getContextData());
 
 		super.setContext(context);
 	}
 
 
 	/**
-	 * Teile diesen Context mit allen Klassen in eine Liste von Contexts auf, die jeweils einen Kurs enthalten.
+	 * Teile diesen Context mit allen Klassen in eine Liste von Contexts auf, die jeweils eine Klasse enthalten.
 	 *
 	 * @return	Liste der Einzel-Contexts.
 	 */
 	public List<HtmlContextKlassen> getEinzelContexts() {
 		final List<HtmlContextKlassen> resultContexts = new ArrayList<>();
 
-		for (final ReportingKlasse reportingKlasse : klassen) {
+		for (final ReportingKlasse reportingKlasse : getContextData()) {
 			final List<ReportingKlasse> eineKlasse = new ArrayList<>();
 			eineKlasse.add(reportingKlasse);
 			resultContexts.add(new HtmlContextKlassen(this.reportingRepository, eineKlasse));

@@ -1,5 +1,6 @@
 <template>
 	<router-view />
+	<ui-color-mode headless />
 	<svws-ui-notification type="error" v-if="!browser()">
 		<template #header>
 			Browser veraltet

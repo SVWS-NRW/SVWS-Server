@@ -13,7 +13,8 @@
 				</template>
 				<template #actions>
 					<svws-ui-button @click="doDeleteEintraege()" type="trash" :disabled="selected.length === 0" />
-					<s-betriebe-neu-modal v-slot="{ openModal }" :add-eintrag :delete-eintraege="doDeleteEintraege" :map-beschaeftigungsarten :map-orte :map-ortsteile>
+					<s-betriebe-neu-modal v-slot="{ openModal }" :add-eintrag :delete-eintraege="doDeleteEintraege" :map-beschaeftigungsarten :map-orte
+						:map-ortsteile :benutzer-kompetenzen="props.benutzerKompetenzen">
 						<svws-ui-button type="icon" @click="openModal()" :has-focus="rowsFiltered.length === 0">
 							<span class="icon i-ri-add-line" />
 						</svws-ui-button>

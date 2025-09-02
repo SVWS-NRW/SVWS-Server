@@ -5,7 +5,7 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
 import java.util.List;
 
-import de.svws_nrw.api.SVWSVersion;
+import de.svws_nrw.api.common.SVWSVersion;
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.data.db.DBSchemaListeEintrag;
 import de.svws_nrw.core.types.ServerMode;

@@ -1,5 +1,8 @@
 package de.svws_nrw.module.reporting.html.contexts;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.module.reporting.proxytypes.schule.ProxyReportingBenutzer;
 import de.svws_nrw.module.reporting.proxytypes.schule.ProxyReportingSchule;
@@ -10,7 +13,12 @@ import org.thymeleaf.context.Context;
 /**
  * Ein Thymeleaf-Html-Daten-Context zum Bereich "Schule" und den Parametern zum Druck, um Thymeleaf-html-Templates mit Daten zu füllen.
  */
-public final class HtmlContextSchule extends HtmlContext {
+public final class HtmlContextSchule extends HtmlContext<Object> {
+
+ @Override
+	public List<String> standardsortierung() {
+		return new ArrayList<>();
+	}
 
 	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
@@ -22,6 +30,7 @@ public final class HtmlContextSchule extends HtmlContext {
 	 * @param reportingRepository	Repository mit Parametern, Logger und Daten zum Reporting.
 	 */
 	public HtmlContextSchule(final ReportingRepository reportingRepository) {
+		super(reportingRepository, true);
 		this.reportingRepository = reportingRepository;
 		erzeugeContext();
 	}

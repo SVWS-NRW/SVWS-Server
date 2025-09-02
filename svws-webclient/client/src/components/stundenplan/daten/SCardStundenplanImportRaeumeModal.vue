@@ -38,7 +38,8 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { List, Raum, StundenplanListeManager } from "@core";
+	import type { List, Raum } from "@core";
+	import type { StundenplanListeManager } from "@ui";
 
 	const props = defineProps<{
 		raeumeSyncToVorlage: (raeume: Raum[]) => Promise<void>;

@@ -134,6 +134,9 @@ public class GostBlockungsdatenManager {
 	/** Die maximale Zeit in Millisekunden die der Blockungsalgorithmus verwenden darf. */
 	private long _maxTimeMillis = 1000;
 
+	/** Alle Warnungen, welche die GUI darstellen sollte. */
+	private @NotNull final List<String> _warnungen = new ArrayList<>();
+
 
 	/**
 	 * Erstellt einen neuen Manager mit den angegebenen Blockungsdaten und dem Fächer-Manager.
@@ -164,6 +167,15 @@ public class GostBlockungsdatenManager {
 		kursAddListe(daten.kurse);
 		regelAddListe(daten.regeln);  			// Muss vor den Ergebnissen erzeugt werden.
 		ergebnisAddListe(daten.ergebnisse);
+	}
+
+	/**
+	 * Liefert alle Warnungen, die dem User angezeigt werden sollen.
+	 *
+	 * @return alle Warnungen, die dem User angezeigt werden sollen.
+	 */
+	public @NotNull List<String> getWarnungen() {
+		return _warnungen;
 	}
 
 	/**
@@ -1727,7 +1739,7 @@ public class GostBlockungsdatenManager {
 		regelAddListe(ListUtils.create1(regel));
 	}
 
-	private void regelAddListeOhneRevalidierung(final @NotNull List<GostBlockungRegel> regelmenge) throws DeveloperNotificationException {
+	private void regelAddListeOhneRevalidierung(final @NotNull List<GostBlockungRegel> regeln) throws DeveloperNotificationException {
 		// Regeln überprüfen
 		final @NotNull Set<LongArrayKey> setMultiKey = new HashSet<>();
 		final @NotNull Set<Long> setIDs = new HashSet<>();
@@ -1736,15 +1748,33 @@ public class GostBlockungsdatenManager {
 		final @NotNull List<GostBlockungRegel> menge9 = new ArrayList<>(regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN));
 		final @NotNull List<GostBlockungRegel> menge10 = new ArrayList<>(regelGetListeOfTyp(GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN));
 		final @NotNull List<GostBlockungRegel> menge15 = new ArrayList<>(regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL));
+		final @NotNull List<GostBlockungRegel> regelmengeOkay = new ArrayList<>();
 
-		for (final @NotNull GostBlockungRegel r : regelmenge) {
-			regelCheckParameterReferences(r);
-			regelCheckParameterValues(r);
-			regelCheckDuplicates(r, setIDs, setMultiKey, menge1, menge6, menge9, menge10, menge15);
+		for (final @NotNull GostBlockungRegel r : regeln) {
+			// Überprüfe Referenzen.
+			final @NotNull String warnung1 = regelCheckParameterReferencesAndReturnWarnung(r);
+			if (!warnung1.isEmpty()) {
+				_warnungen.add(warnung1);
+				continue;
+			}
+			// Überprüfe Werte.
+			final @NotNull String warnung2 = regelCheckParameterValuesAndReturnWarnung(r);
+			if (!warnung2.isEmpty()) {
+				_warnungen.add(warnung2);
+				continue;
+			}
+			// Überprüfe Duplikate.
+			final @NotNull String warnung3 = regelCheckDuplicatesAndReturnWarnung(r, setIDs, setMultiKey, menge1, menge6, menge9, menge10, menge15);
+			if (!warnung3.isEmpty()) {
+				_warnungen.add(warnung3);
+				continue;
+			}
+			// Regel ist okay.
+			regelmengeOkay.add(r);
 		}
 
 		// Regeln hinzufügen.
-		for (final @NotNull GostBlockungRegel regel : regelmenge)
+		for (final @NotNull GostBlockungRegel regel : regelmengeOkay)
 			regelAddOhneSortierung(regel);
 
 		// Sortieren der Regelmenge.
@@ -1769,50 +1799,54 @@ public class GostBlockungsdatenManager {
 		ergebnisAlleRevalidieren();
 	}
 
-	private void regelCheckParameterReferences(final @NotNull GostBlockungRegel r) {
+	private @NotNull String regelCheckParameterReferencesAndReturnWarnung(final @NotNull GostBlockungRegel r) {
 		// Falsche Parameteranzahl?
 		final @NotNull GostKursblockungRegelTyp typ = GostKursblockungRegelTyp.fromTyp(r.typ);
 		final int paramCount = typ.getParamCount();
-		DeveloperNotificationException.ifTrue(toStringRegel(r.id) + " hat falsche Parameter-Anzahl!",
-				paramCount != r.parameter.size());
+		if (paramCount != r.parameter.size())
+			return toStringRegel(r.id) + " hat falsche Parameter-Anzahl!";
 
 		// Ist eine Referenz falsch?
 		for (int i = 0; i < paramCount; i++) {
 			long value = r.parameter.get(i);
 			if (typ.getParamType(i) == GostKursblockungRegelParameterTyp.SCHUELER_ID)
-				DeveloperNotificationException.ifTrue(toStringRegel(r.id) + " hat falsche Schüler-ID-Referenz!",
-						schuelerGetOrNull(value) == null);
+				if (schuelerGetOrNull(value) == null)
+					return toStringRegel(r.id) + " hat falsche Schüler-ID-Referenz " + value + "!";
 			if (typ.getParamType(i) == GostKursblockungRegelParameterTyp.KURS_ID)
-				DeveloperNotificationException.ifTrue(toStringRegel(r.id) + " hat falsche Kurs-ID-Referenz!",
-						!kursGetExistiert(value));
+				if (!kursGetExistiert(value))
+					return toStringRegel(r.id) + " hat falsche Kurs-ID-Referenz " + value + "!";
 			if (typ.getParamType(i) == GostKursblockungRegelParameterTyp.SCHIENEN_NR)
-				DeveloperNotificationException.ifTrue(toStringRegel(r.id) + " hat falsche Schienen-Nr-Referenz!",
-						(value < 1) || (value > schieneGetAnzahl()));
+				if ((value < 1) || (value > schieneGetAnzahl()))
+					return toStringRegel(r.id) + " hat falsche Schienen-Nr-Referenz " + value + "!";
 			if (typ.getParamType(i) == GostKursblockungRegelParameterTyp.FACH_ID)
-				DeveloperNotificationException.ifTrue(toStringRegel(r.id) + " hat falsche Fach-ID-Referenz!",
-						_faecherManager.get(value) == null);
+				if (_faecherManager.get(value) == null)
+					return toStringRegel(r.id) + " hat falsche Fach-ID-Referenz " + value + "!";
 			if (typ.getParamType(i) == GostKursblockungRegelParameterTyp.KURSART)
-				DeveloperNotificationException.ifTrue(toStringRegel(r.id) + " hat falsche Kursart-Referenz!",
-						GostKursart.fromIDorNull((int) value) == null);
+				if (GostKursart.fromIDorNull((int) value) == null)
+					return toStringRegel(r.id) + " hat falsche Kursart-Referenz " + value + "!";
 		}
+
+		// Keine Warnung
+		return "";
 	}
 
-	private void regelCheckParameterValues(final @NotNull GostBlockungRegel r) {
+	private @NotNull String regelCheckParameterValuesAndReturnWarnung(final @NotNull GostBlockungRegel r) {
 		// Ist die Regel-ID ungültig?
-		DeveloperNotificationException.ifInvalidID("Regel.id", r.id);
+		if (r.id < 0)
+			return toStringRegel(r.id) + " hat eine ungültige ID " + r.id;
 
 		// Falsche Parameteranzahl?
 		final @NotNull GostKursblockungRegelTyp typ = GostKursblockungRegelTyp.fromTyp(r.typ);
 		final int paramCount = typ.getParamCount();
-		DeveloperNotificationException.ifTrue(toStringRegel(r.id) + " hat falsche Parameter-Anzahl!",
-				paramCount != r.parameter.size());
+		if (paramCount != r.parameter.size())
+			return toStringRegel(r.id) + " hat falsche Parameter-Anzahl " + r.parameter.size() + "!";
 
 		// Überprüfe jeden Typ einzeln.
 		final @NotNull List<Long> p = r.parameter;
 		switch (typ) {
 			// Undefinierte Regel ist nicht erlaubt.
 			case UNDEFINIERT: // 0
-				throw new DeveloperNotificationException(toStringRegel(r.id) + " hat unbekannten Typ (" + r.typ + ")!");
+				return toStringRegel(r.id) + " hat unbekannten Typ (" + r.typ + ")!";
 
 			// Diese Regeln können keine falschen Parameter haben
 			// Referenzen wie z.B. SchienenNR, KursID, SchienenID, ... werden woanders geprüft.
@@ -1829,56 +1863,58 @@ public class GostBlockungsdatenManager {
 			// Schiene-Von und Schiene-Bis werden überprüft. SchienenNr wurde bereits geprüft.
 			case KURSART_SPERRE_SCHIENEN_VON_BIS, KURSART_ALLEIN_IN_SCHIENEN_VON_BIS:  // 1, 6
 				if (p.get(2) < p.get(1))
-					throw new DeveloperNotificationException("Die BIS-Schiene kann nicht kleiner sein als die VON-Schiene!");
+					return toStringRegel(r.id) + " Die BIS-Schiene " + p.get(2) + " kann nicht kleiner sein als die VON-Schiene " + p.get(1) + "!";
 				break;
 
 			// Der Wert wird überprüft.
 			case KURS_MIT_DUMMY_SUS_AUFFUELLEN:  // 9
 				if (p.get(1) < GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN_MIN)
-					throw new DeveloperNotificationException("KURS_MIT_DUMMY_SUS_AUFFUELLEN ist mit " + p.get(1) + " zu klein!");
+					return toStringRegel(r.id) + " KURS_MIT_DUMMY_SUS_AUFFUELLEN ist mit " + p.get(1) + " zu klein!";
 				if (p.get(1) > GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN_MAX)
-					throw new DeveloperNotificationException("KURS_MIT_DUMMY_SUS_AUFFUELLEN ist mit " + p.get(1) + " zu groß!");
+					return toStringRegel(r.id) + " KURS_MIT_DUMMY_SUS_AUFFUELLEN ist mit " + p.get(1) + " zu groß!";
 				break;
 
 			// Der Wert wird überprüft.
 			case KURS_MAXIMALE_SCHUELERANZAHL:  // 15
 				if (p.get(1) < GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL_MIN)
-					throw new DeveloperNotificationException("KURS_MAXIMALE_SCHUELERANZAHL ist mit " + p.get(1) + " zu klein!");
+					return toStringRegel(r.id) + " KURS_MAXIMALE_SCHUELERANZAHL ist mit " + p.get(1) + " zu klein!";
 				if (p.get(1) > GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL_MAX)
-					throw new DeveloperNotificationException("KURS_MAXIMALE_SCHUELERANZAHL ist mit " + p.get(1) + " zu groß!");
+					return toStringRegel(r.id) + " KURS_MAXIMALE_SCHUELERANZAHL ist mit " + p.get(1) + " zu groß!";
 				break;
 
 			// Der Wert wird überprüft.
 			case FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE:  // 18
 				if (p.get(2) < GostKursblockungRegelTyp.FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE_MIN)
-					throw new DeveloperNotificationException("FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE ist mit " + p.get(2) + " zu klein!");
+					return toStringRegel(r.id) + " FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE ist mit " + p.get(2) + " zu klein!";
 				if (p.get(2) > GostKursblockungRegelTyp.FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE_MAX)
-					throw new DeveloperNotificationException("FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE ist mit " + p.get(2) + " zu groß!");
+					return toStringRegel(r.id) + " FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE ist mit " + p.get(2) + " zu groß!";
 				break;
 
 			default:
-				throw new DeveloperNotificationException("Regeltypüberprüfung: Der Regeltyp ist unbekannt!");
+				return toStringRegel(r.id) + " Regeltypüberprüfung: Der Regeltyp ist unbekannt!";
 		}
 
+		// Keine Warnung
+		return "";
 	}
 
-	private void regelCheckDuplicates(final @NotNull GostBlockungRegel r, final @NotNull Set<Long> setIDs, final @NotNull Set<LongArrayKey> setMultiKey,
+	private @NotNull String regelCheckDuplicatesAndReturnWarnung(final @NotNull GostBlockungRegel r, final @NotNull Set<Long> setIDs, final @NotNull Set<LongArrayKey> setMultiKey,
 			final @NotNull List<GostBlockungRegel> menge1, final @NotNull List<GostBlockungRegel> menge6, final @NotNull List<GostBlockungRegel> menge9,
 			final @NotNull List<GostBlockungRegel> menge10, final @NotNull List<GostBlockungRegel> menge15) {
 		// Ist die Regel-ID doppelt?
-		DeveloperNotificationException.ifTrue("Regel-ID " + r.id + " Dopplung!", _map_idRegel_regel.containsKey(r.id));
-		DeveloperNotificationException.ifTrue("Regel-ID " + r.id + " Dopplung!", !setIDs.add(r.id));
+		if (_map_idRegel_regel.containsKey(r.id) || !setIDs.add(r.id))
+			return toStringRegel(r.id) + "Regel-ID " + r.id + " Dopplung!";
 
 		// Existiert bereits exakt die selbe Regel?
 		final @NotNull LongArrayKey multikey = GostBlockungsdatenManager.regelToMultikey(r);
-		DeveloperNotificationException.ifTrue(toStringRegel(r.id) + " existiert bereits!", !setMultiKey.add(multikey));
-		DeveloperNotificationException.ifTrue(toStringRegel(r.id) + " existiert bereits!", _map_multikey_regeln.containsKey(multikey));
+		if (!setMultiKey.add(multikey) || _map_multikey_regeln.containsKey(multikey))
+			return toStringRegel(r.id) + " existiert bereits als gleiche  (nicht als selbe) Regel im MultiMap!";
 
 		// Regel  1 "KURSART_SPERRE_SCHIENEN_VON_BIS" Intervall-Überschneidung prüfen.
 		if (r.typ == GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ) {
 			for (GostBlockungRegel rAlt : menge1)
 				if (regelKursartIntervallSchnitt(rAlt, r))
-					throw new DeveloperNotificationException("Intervallschnitt bei " + toStringRegel(r.id) + " und " + toStringRegel(rAlt.id) + "!");
+					return "Intervallschnitt bei " + toStringRegel(r.id) + " und " + toStringRegel(rAlt.id) + "!";
 			menge1.add(r);
 		}
 
@@ -1886,7 +1922,7 @@ public class GostBlockungsdatenManager {
 		if (r.typ == GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ) {
 			for (GostBlockungRegel rAlt : menge6)
 				if (regelKursartIntervallSchnitt(rAlt, r))
-					throw new DeveloperNotificationException("Intervallschnitt bei " + toStringRegel(r.id) + " und " + toStringRegel(rAlt.id) + "!");
+					return "Intervallschnitt bei " + toStringRegel(r.id) + " und " + toStringRegel(rAlt.id) + "!";
 			menge6.add(r);
 		}
 
@@ -1894,14 +1930,14 @@ public class GostBlockungsdatenManager {
 		if (r.typ == GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN.typ) {
 			for (GostBlockungRegel rAlt : menge9)
 				if (rAlt.parameter.get(0).equals(r.parameter.get(0)))
-					throw new DeveloperNotificationException(toStringRegel(r.id) + " Regel-Dopplung!");
+					return toStringRegel(r.id) + " Regel-Dopplung!";
 			menge9.add(r);
 		}
 
 		// Regel 10 "LEHRKRAEFTE_BEACHTEN" darf es nur ein Mal pro Blockung geben.
 		if (r.typ == GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN.typ) {
 			if (!menge10.isEmpty())
-				throw new DeveloperNotificationException(toStringRegel(r.id) + " Regel-Dopplung!");
+				return toStringRegel(r.id) + " Regel-Dopplung!";
 			menge10.add(r);
 		}
 
@@ -1909,10 +1945,12 @@ public class GostBlockungsdatenManager {
 		if (r.typ == GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL.typ) {
 			for (GostBlockungRegel rAlt : menge15)
 				if (rAlt.parameter.get(0).equals(r.parameter.get(0)))
-					throw new DeveloperNotificationException(toStringRegel(r.id) + " Regel-Dopplung!");
+					return toStringRegel(r.id) + " Regel-Dopplung!";
 			menge15.add(r);
 		}
 
+		// Keine Warnung
+		return "";
 	}
 
 	private static boolean regelKursartIntervallSchnitt(final @NotNull GostBlockungRegel r1, final @NotNull GostBlockungRegel r2) {

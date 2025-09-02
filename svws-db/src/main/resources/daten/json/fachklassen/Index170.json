@@ -396,8 +396,12 @@
 				"bezeichnungM": "Allgemeine Hochschulreife / Ingenieurwissenschaften",
 				"bezeichnungW": "Allgemeine Hochschulreife / Ingenieurwissenschaften",
 				"gueltigVon": 2014,
-				"gueltigBis": 2024
-			}, {
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "122",
+			"schluessel2": "00",
+			"historie": [ {
 				"id": 1701210000,
 				"istAusgelaufen": false,
 				"berufsfeldGruppe": "T",

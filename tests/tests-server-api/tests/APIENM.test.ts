@@ -1,11 +1,11 @@
 import { describe, expect, test } from "vitest";
-import { getApiServer } from "./utils/TestUtils.js";
+import { privilegedApiServer } from "../../utils/APIUtils";
 import type { ENMFach, ENMFloskelgruppe, ENMFoerderschwerpunkt, ENMJahrgang, ENMKlasse, ENMLehrer, ENMLerngruppe, ENMNote, ENMSchueler, ENMTeilleistungsart } from "@core";
 import { ArrayList } from "@core";
 
 describe("APIENM Tests", () => {
 	describe.each([{schema: "GymAbi01"}])('gegen %s', ({schema}) => {
-		const api = getApiServer(schema);
+		const api = privilegedApiServer;
 
 		test("getLehrerENMDaten", async () => {
 			const result = await api.getLehrerENMDaten(schema, 76);
