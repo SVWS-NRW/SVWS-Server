@@ -76,8 +76,10 @@ public final class Revision45Updates extends SchemaRevisionUpdateSQL {
 		// Bestimme das aktuelle Schuljahr der Schule
 		final List<Object[]> listEigeneSchule = conn.queryNative("SELECT ID, Schuljahresabschnitts_ID FROM EigeneSchule");
 		if (listEigeneSchule.isEmpty() || (listEigeneSchule.size() != 1)) {
-			logger.logLn("Fehler beim Bestimmen der ID des aktuellen Schuljahresabschnittes der Schule.");
-			return false;
+			// Dieser Fall kann eigentlich nur auftreten, wenn eine neue Schule angelegt wurde.
+			// In diesem Fall ist die Aktualisierung an sich erfolgreich, da nichts gemacht werden muss
+			logger.logLn("Fehler beim Bestimmen der ID des aktuellen Schuljahresabschnittes der Schule. Es wird davon ausgegangen, dass aktuell ein neues DB-Schema angelegt wird.");
+			return true;
 		}
 		final Long idSchuljahresabschnitt = (Long) listEigeneSchule.getFirst()[1];
 		if (idSchuljahresabschnitt == null) {
