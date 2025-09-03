@@ -30,11 +30,11 @@
 
 	import type { AbteilungenNeuProps } from "~/components/schule/kataloge/abteilungen/SAbteilungenNeuProps";
 	import type { DataTableColumn} from "@ui";
-	import { SelectManager } from "@ui";
 	import type { KlassenDaten, LehrerListeEintrag, List } from "@core";
+	import { BenutzerKompetenz, Abteilung, AbteilungKlassenzuordnung, ArrayList } from "@core";
+	import { SelectManager } from "@ui";
 	import { computed, ref, watch } from "vue";
-	import { BenutzerKompetenz } from "@core";
-	import { Abteilung, AbteilungKlassenzuordnung, ArrayList, JavaString } from "@core";
+	import { emailIsValid, mandatoryInputIsValid, optionalInputIsValid } from "~/util/validation/Validation";
 
 	const props = defineProps<AbteilungenNeuProps>();
 	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
@@ -47,9 +47,9 @@
 		get: () => props.manager().getLehrer().get(data.value.idAbteilungsleiter),
 		set: (v: LehrerListeEintrag | null) => data.value.idAbteilungsleiter = v?.id ?? null,
 	});
-	const lehrerListe = computed(() => props.manager().getLehrer().values());
+	const lehrer = computed(() => props.manager().getLehrer().values());
 
-	const lehrerSelectManager = new SelectManager({	options: lehrerListe, optionDisplayText: v => v.vorname + ' ' + v.nachname,
+	const lehrerSelectManager = new SelectManager({	options: lehrer, optionDisplayText: v => v.vorname + ' ' + v.nachname,
 		selectionDisplayText: v => v.vorname + ' ' + v.nachname,
 	});
 
@@ -57,36 +57,17 @@
 		return (v: string | null) => {
 			switch (field) {
 				case 'bezeichnung':
-					return bezeichnungIsValid();
+					return mandatoryInputIsValid(data.value.bezeichnung, 50);
 				case 'raum':
 					return optionalInputIsValid(data.value.raum, 20);
 				case 'email':
-					return emailIsValid(data.value.email);
+					return emailIsValid(data.value.email, 100);
 				case 'durchwahl':
 					return optionalInputIsValid(data.value.durchwahl, 20);
 				default:
 					return true;
 			}
 		}
-	}
-
-	function emailIsValid(value: string | null) {
-		if ((value === null) || JavaString.isBlank(value))
-			return true;
-		if (value.length > 100)
-			return false;
-		return /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))[^@]?$/.test(value) ||
-			/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(value);
-	}
-
-	function bezeichnungIsValid() {
-		return (!JavaString.isBlank(data.value.bezeichnung)) && (data.value.bezeichnung.length <= 50);
-	}
-
-	function optionalInputIsValid(input : string | null, maxLength : number) {
-		if ((input === null) || (JavaString.isBlank(input)))
-			return true;
-		return input.length <= maxLength;
 	}
 
 	const formIsValid = computed(() => {
@@ -126,9 +107,9 @@
 		return klassenzuordnungen;
 	}
 
-	function cancel() {
+	async function cancel() {
 		props.checkpoint.active = false;
-		void props.goToDefaultView(null);
+		await props.goToDefaultView(null);
 	}
 
 	const columns: DataTableColumn[] = [

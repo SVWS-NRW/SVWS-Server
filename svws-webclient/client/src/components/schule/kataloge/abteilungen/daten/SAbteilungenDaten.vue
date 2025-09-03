@@ -10,7 +10,7 @@
 				<svws-ui-text-input placeholder="Durchwahl" type="tel" :max-len="20" :model-value="manager().daten().durchwahl" :readonly
 					@change="durchwahl => patch({ durchwahl })" />
 				<svws-ui-spacing />
-				<ui-select label="Lehrer" :manager="selectManager" :model-value="manager().getLehrer().get(manager().daten().idAbteilungsleiter)"
+				<ui-select label="Lehrer" :manager="lehrerSelectManager" :model-value="manager().getLehrer().get(manager().daten().idAbteilungsleiter)"
 					:readonly @update:model-value="v => patch({ idAbteilungsleiter: v?.id ?? null })" />
 				<svws-ui-button :disabled="manager().daten().idAbteilungsleiter === null" type="transparent"
 					@click="goToLehrer(manager().daten().idAbteilungsleiter ?? -1)">
@@ -52,9 +52,9 @@
 
 	import type { AbteilungenDatenProps } from "~/components/schule/kataloge/abteilungen/daten/SAbteilungenDatenProps";
 	import type { DataTableColumn} from "@ui";
-	import { SelectManager } from "@ui";
 	import type { KlassenDaten, List } from "@core";
-	import { computed, ref, watch } from "vue";
+	import { SelectManager } from "@ui";
+	import { computed, ref } from "vue";
 	import { AbteilungKlassenzuordnung, ArrayList, BenutzerKompetenz, HashMap } from "@core";
 
 	const props = defineProps<AbteilungenDatenProps>();
@@ -64,7 +64,7 @@
 	const klassenToBeAdded = ref<KlassenDaten[]>([]);
 	const lehrer = computed(() => props.manager().getLehrer().values());
 
-	const selectManager = new SelectManager({
+	const lehrerSelectManager = new SelectManager({
 		options: lehrer, optionDisplayText: v => v.vorname + ' ' + v.nachname,
 		selectionDisplayText: v => v.vorname + ' ' + v.nachname,
 	});

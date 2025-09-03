@@ -261,7 +261,7 @@ class DataAbteilungenTest {
 		if (key.equals("id"))
 			assertThat(throwable)
 					.isInstanceOf(ApiOperationException.class)
-					.hasMessage("Id 1 der PatchMap ist ungleich der id 14 vom Dto")
+					.hasMessage("Die ID 1 des Patches ist null oder stimmt nicht mit der ID 14 in der Datenbank überein.")
 					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 
 	}
