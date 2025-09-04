@@ -36,6 +36,7 @@ task lint(type: NpmRun) {
 }
 
 task doZip(type: Zip) {
+	build.dependsOn assembleEnmServer
 	archiveFileName = "SVWS-ENMServer-"+svwsArtifactVersion+".zip"
 	destinationDirectory = file("$buildDir")
 	from "$buildDir/output"

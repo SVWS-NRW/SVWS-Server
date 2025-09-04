@@ -25,6 +25,7 @@ task lint(type: NpmRun) {
 }
 
 task doZip(type: Zip) {
+	build.dependsOn assembleLaufbahnplanung
     archiveFileName = "SVWS-Laufbahnplanung-"+svwsArtifactVersion+".zip"
     destinationDirectory = file("$buildDir")
     from "$buildDir/output"
