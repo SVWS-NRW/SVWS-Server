@@ -12,12 +12,11 @@ task assembleUi(type: NpmRun) {
 
 task lint(type: NpmRun) {
     dependsOn assembleUi
-		group = "build"
+	group = "build"
     args = ["lint-tsc"]
 }
 
 task assembleUiHistoire(type: NpmRun) {
-	dependsOn lint
 	group = "build"
 	args = ['story:build']
 	inputs.files fileTree("$projectDir").matching { exclude "build", "dist", ".histoire" }
@@ -25,6 +24,7 @@ task assembleUiHistoire(type: NpmRun) {
 }
 
 assemble.dependsOn assembleUi
+build.dependsOn lint
 build.dependsOn assembleUiHistoire
 
 task cleanUi(type: Delete) {
