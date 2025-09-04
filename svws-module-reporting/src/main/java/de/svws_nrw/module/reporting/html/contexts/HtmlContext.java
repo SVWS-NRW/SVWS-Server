@@ -1,19 +1,33 @@
 package de.svws_nrw.module.reporting.html.contexts;
 
+import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingKlasse;
+import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingKurs;
+import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingLehrer;
+import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingSchueler;
+import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingStundenplanungFachStundenplan;
+import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingStundenplanungKlasseStundenplan;
+import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingStundenplanungLehrerStundenplan;
+import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingStundenplanungRaumStundenplan;
+import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingStundenplanungSchuelerStundenplan;
+import de.svws_nrw.module.reporting.types.klasse.ReportingKlasse;
+import de.svws_nrw.module.reporting.types.kurs.ReportingKurs;
+import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
+import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
+import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungFachStundenplan;
+import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungKlasseStundenplan;
+import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungLehrerStundenplan;
+import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungRaumStundenplan;
+import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungSchuelerStundenplan;
+import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import org.thymeleaf.context.Context;
 
-import java.io.Serializable;
-import java.lang.invoke.SerializedLambda;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.function.Function;
-import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 /**
  * Abstrakte Basisklasse für die Thymeleaf-html-Daten-Contexts.
@@ -34,6 +48,9 @@ public abstract class HtmlContext<T> {
 	/** Legt fest, ob der Context als Haupt-Daten-Context verwendet werden soll (true) oder als Detail-Daten-Conetxt (false). */
 	private boolean istHauptdatenContext = true;
 
+	/** Legt fest, ob die Standardsortierung verwendet des entsprechenden Types werden soll. */
+	private boolean verwendeStandardsortierung = true;
+
 	/** Liste von Attributnamen, nach denen der Context sortiert werden soll. */
 	private List<String> sortierungAttribute = new ArrayList<>();
 
@@ -47,13 +64,13 @@ public abstract class HtmlContext<T> {
 	protected HtmlContext(final ReportingRepository reportingRepository, final Boolean istHauptdatenContext) {
 		this.reportingRepository = reportingRepository;
 		this.istHauptdatenContext = istHauptdatenContext;
-		if (!this.reportingRepository.reportingParameter().verwendeStandardsortierung) {
-			if (this.istHauptdatenContext)
-				setSortierungAttribute(this.reportingRepository.reportingParameter().sortierungHauptdaten);
-			else
-				setSortierungAttribute(this.reportingRepository.reportingParameter().sortierungDetaildaten);
-		} else
-			setSortierungAttribute(standardsortierung());
+		if (this.istHauptdatenContext) {
+			this.verwendeStandardsortierung = reportingRepository.reportingParameter().sortierungHauptdaten.verwendeStandardsortierung;
+			setSortierungAttribute(this.reportingRepository.reportingParameter().sortierungHauptdaten.attribute);
+		} else {
+			this.verwendeStandardsortierung = reportingRepository.reportingParameter().sortierungDetaildaten.verwendeStandardsortierung;
+			setSortierungAttribute(this.reportingRepository.reportingParameter().sortierungDetaildaten.attribute);
+		}
 	}
 
 
@@ -109,15 +126,6 @@ public abstract class HtmlContext<T> {
 		return sortierungAttribute;
 	}
 
-
-	/**
-	 * Diese abstrakte Methode wird in der abgeleiteten Klasse implementiert, indem dort in dieser Methode eine Liste erzeugt und zurückgegeben wird, die die
-	 * Attributnamen enthält, nach denen der Kontext sortiert werden soll.
-	 *
-	 * @return Die Attributnamen, nach denen der Kontext sortiert werden soll.
-	 */
-	public abstract List<String> standardsortierung();
-
 	/**
 	 * Legt die Sortierungsattribute für den Kontext fest. Null-Werte und leere Strings
 	 * in der übergebenen Liste der Attribute werden herausgefiltert. Wenn die gefilterte Liste leer ist
@@ -133,9 +141,11 @@ public abstract class HtmlContext<T> {
 		}
 
 		final List<String> filterSortierungsattribute =
-				new ArrayList<>(sortierungAttribute.stream().filter(Objects::nonNull).filter(sa -> !sa.isBlank()).toList());
-
-		filterSortierungsattribute.forEach(sa -> sa = sa.replace("()", "").trim());
+				new ArrayList<>(sortierungAttribute.stream()
+						.filter(Objects::nonNull)
+						.map(sa -> sa.replace("()", "").trim())
+						.filter(sa -> !sa.isBlank())
+						.toList());
 
 		if (!filterSortierungsattribute.isEmpty())
 			this.sortierungAttribute = filterSortierungsattribute;
@@ -152,26 +162,28 @@ public abstract class HtmlContext<T> {
 	 * Die Methode filtert null-Werte aus contextData heraus. Für Strings wird die deutsche Sortierreihenfolge angewandt.
 	 * Falls die Attribute nicht gefunden werden, werden sie für die Sortierung ignoriert.
 	 */
-	protected void sortiereContext() {
+	protected void sortiereContextMitRegistry() {
 		if ((this.contextData == null) || this.contextData.isEmpty())
 			return;
-		final List<T> sorted = sortiereContext(this.contextData);
+		final List<T> sorted = sortiereListeMitRegistry(this.contextData);
 		this.contextData = (sorted == null) ? new ArrayList<>() : sorted;
 	}
 
 	/**
-	 * Sortiert eine Liste von Objekten basierend auf den im Context definierten Sortierungsattributen.
-	 * Die Methode filtert null-Werte aus der übergebenen Liste heraus. Anschließend wird die Liste nach den Werten der angegebenen Attribute sortiert. Für
-	 * Strings wird dabei die deutsche Sortierreihenfolge angewandt.
-	 * Falls die Attribute nicht gefunden werden, werden sie für die Sortierung ignoriert.
+	 * Sortiert eine Liste von Objekten basierend auf den im Kontext definierten Sortierungsattributen,
+	 * die durch eine Sortierung-Registry bereitgestellt werden.
+	 * Sofern eine Sortierung möglich ist, werden Null-Werte aus der übergebenen Liste in der sortierten Ergebnisliste entfernt,
+	 * aber falls die Sortierungsattribute leer sind oder nicht gültig sind und so eine Sortierung nicht möglich ist,
+	 * wird die ursprüngliche Liste ohne Änderungen zurückgegeben.
 	 *
-	 * @param <T> Typ der Objekte in der zu sortiereden Liste.
-	 * @param list Die Liste von Objekten, die sortiert werden sollen. Null-Werte werden bei der Rückgabe entfernt.
-	 * @return Die sortierte Liste. Falls die Eingabeliste oder die Sortierungsattribute null oder leer sind oder keine Attribute für die Sortierung gefunden
-	 * werden konnten, dann wird die Original-Liste zurückgegeben. Null-Werte aus der originalen Liste werden nicht in der sortierten Liste zurückgegeben.
+	 * @param list Die Liste von Objekten, die sortiert werden sollen. Null-Werte in der Liste
+	 *             werden herausgefiltert. Wenn die Liste null ist, wird ebenfalls null zurückgegeben.
+	 * @return Die sortierte Liste, ggf. bereinigt um null-Werte. Falls die Eingabeliste oder die Sortierungsattribute null
+	 *         oder leer sind oder keine gültigen Attribute für die Sortierung gefunden werden konnten,
+	 *         wird die unveränderte Eingabeliste zurückgegeben.
 	 */
-	protected <T> List<T> sortiereContext(final List<T> list) {
-		if ((list == null) || this.sortierungAttribute.isEmpty())
+	protected List<T> sortiereListeMitRegistry(final List<T> list) {
+		if ((list == null) || (this.sortierungAttribute.isEmpty() && !this.verwendeStandardsortierung))
 			return list;
 
 		final List<T> listNonNull = new ArrayList<>(list.stream().filter(Objects::nonNull).toList());
@@ -179,152 +191,128 @@ public abstract class HtmlContext<T> {
 		if (listNonNull.isEmpty())
 			return list;
 
-		final Collator colGerman = Collator.getInstance(Locale.GERMAN);
-		Comparator<T> comparator = null;
+		// Erstelle eine Liste für evtl. fehlerhaft übergebene Sortierkriterien.
+		final List<String> validierungsfehler = new ArrayList<>();
 
-		for (final String attribut : this.sortierungAttribute) {
-			try {
-				// Ein Eintrag der sortierungAttribute-Liste kann durch einen Punkt separierte Attribute von Unterobjekten enthalten. Daher splitte diese
-				// Attributkette hier in einzelne Attribute auf und speichere diese in einer Liste.
-				final List<String> attributkette = Arrays.stream(attribut.split("\\.")).map(String::trim).filter(a -> !a.isBlank()).toList();
-				if (attributkette.isEmpty())
-					continue;
-
-				// Erzeuge eine Methoden-Kette zur Attributkette, sowohl für einfache (Kette der Länge 1) als auch für Punkt-separierte Attribute. Diese
-				// Kette wird benötigt, um später beim Vergleichen auf die Werte am Ende der Kette zuzugreifen.
-				final List<Method> methodenkette = new ArrayList<>();
-				Class<?> aktuelleClass = listNonNull.getFirst().getClass();
-				for (final String teilattribut : attributkette) {
-					final Method m = aktuelleClass.getMethod(teilattribut);
-					methodenkette.add(m);
-					aktuelleClass = m.getReturnType();
-				}
-
-				// Setze nun den Comparator zusammen.
-				if (comparator == null) {
-					// Die oberste Ebene der Sortierung definiert den Comparator.
-					comparator = (o1, o2) -> {
-						try {
-							// Für die beiden zu vergleichenden Objekte wird die Methodenkette aufgerufen, um die zu vergleichenden Werte zu ermitteln.
-							final Object value1 = invokeMethodenkette(o1, methodenkette);
-							final Object value2 = invokeMethodenkette(o2, methodenkette);
-							return compareValues(value1, value2, colGerman);
-						} catch (final Exception e) {
-							return 0;
-						}
-					};
-				} else {
-					// Die weiteren Ebenen der Sortierung werden mit thenComparing angehängt.
-					final Comparator<T> next = (o1, o2) -> {
-						try {
-							// Für die beiden zu vergleichenden Objekte wird die Methodenkette aufgerufen, um die zu vergleichenden Werte zu ermitteln.
-							final Object value1 = invokeMethodenkette(o1, methodenkette);
-							final Object value2 = invokeMethodenkette(o2, methodenkette);
-							return compareValues(value1, value2, colGerman);
-						} catch (final Exception e) {
-							return 0;
-						}
-					};
-					comparator = comparator.thenComparing(next);
-				}
-			} catch (final Exception e) {
-				// Wenn keine Methode zum Attribut gefunden wird, wird ein Fehler geworfen. Ignoriere diese Exception und gehe weiter.
+		switch (listNonNull.getFirst()) {
+			case final ReportingSchueler ignore -> {
+				return sortiereMitComparatorAusRegistry(list, listNonNull, this.verwendeStandardsortierung,
+						() -> SortierungRegistryReportingSchueler.buildComparatorStandard(validierungsfehler),
+						() -> SortierungRegistryReportingSchueler.buildComparator(this.sortierungAttribute, validierungsfehler), "ReportingSchueler",
+						validierungsfehler);
+			}
+			case final ReportingLehrer ignore -> {
+				return sortiereMitComparatorAusRegistry(list, listNonNull, this.verwendeStandardsortierung,
+						() -> SortierungRegistryReportingLehrer.buildComparatorStandard(validierungsfehler),
+						() -> SortierungRegistryReportingLehrer.buildComparator(this.sortierungAttribute, validierungsfehler), "ReportingLehrer",
+						validierungsfehler);
+			}
+			case final ReportingKlasse ignore -> {
+				return sortiereMitComparatorAusRegistry(list, listNonNull, this.verwendeStandardsortierung,
+						() -> SortierungRegistryReportingKlasse.buildComparatorStandard(validierungsfehler),
+						() -> SortierungRegistryReportingKlasse.buildComparator(this.sortierungAttribute, validierungsfehler), "ReportingKlasse",
+						validierungsfehler);
+			}
+			case final ReportingKurs ignore -> {
+				return sortiereMitComparatorAusRegistry(list, listNonNull, this.verwendeStandardsortierung,
+						() -> SortierungRegistryReportingKurs.buildComparatorStandard(validierungsfehler),
+						() -> SortierungRegistryReportingKurs.buildComparator(this.sortierungAttribute, validierungsfehler), "ReportingKurs",
+						validierungsfehler);
+			}
+			case final ReportingStundenplanungFachStundenplan ignore -> {
+				return sortiereMitComparatorAusRegistry(list, listNonNull, this.verwendeStandardsortierung,
+						() -> SortierungRegistryReportingStundenplanungFachStundenplan.buildComparatorStandard(validierungsfehler),
+						() -> SortierungRegistryReportingStundenplanungFachStundenplan.buildComparator(this.sortierungAttribute, validierungsfehler),
+						"ReportingStundenplanungFachStundenplan", validierungsfehler);
+			}
+			case final ReportingStundenplanungKlasseStundenplan ignore -> {
+				return sortiereMitComparatorAusRegistry(list, listNonNull, this.verwendeStandardsortierung,
+						() -> SortierungRegistryReportingStundenplanungKlasseStundenplan.buildComparatorStandard(validierungsfehler),
+						() -> SortierungRegistryReportingStundenplanungKlasseStundenplan.buildComparator(this.sortierungAttribute, validierungsfehler),
+						"ReportingStundenplanungKlasseStundenplan", validierungsfehler);
+			}
+			case final ReportingStundenplanungLehrerStundenplan ignore -> {
+				return sortiereMitComparatorAusRegistry(list, listNonNull, this.verwendeStandardsortierung,
+						() -> SortierungRegistryReportingStundenplanungLehrerStundenplan.buildComparatorStandard(validierungsfehler),
+						() -> SortierungRegistryReportingStundenplanungLehrerStundenplan.buildComparator(this.sortierungAttribute, validierungsfehler),
+						"ReportingStundenplanungLehrerStundenplan", validierungsfehler);
+			}
+			case final ReportingStundenplanungRaumStundenplan ignore -> {
+				return sortiereMitComparatorAusRegistry(list, listNonNull, this.verwendeStandardsortierung,
+						() -> SortierungRegistryReportingStundenplanungRaumStundenplan.buildComparatorStandard(validierungsfehler),
+						() -> SortierungRegistryReportingStundenplanungRaumStundenplan.buildComparator(this.sortierungAttribute, validierungsfehler),
+						"ReportingStundenplanungRaumStundenplan", validierungsfehler);
+			}
+			case final ReportingStundenplanungSchuelerStundenplan ignore -> {
+				return sortiereMitComparatorAusRegistry(list, listNonNull, this.verwendeStandardsortierung,
+						() -> SortierungRegistryReportingStundenplanungSchuelerStundenplan.buildComparatorStandard(validierungsfehler),
+						() -> SortierungRegistryReportingStundenplanungSchuelerStundenplan.buildComparator(this.sortierungAttribute, validierungsfehler),
+						"ReportingStundenplanungSchuelerStundenplan", validierungsfehler);
+			}
+			case null, default -> {
+				return list;
 			}
 		}
-
-		// Wenn ein Comparator erzeugt wurde, sortiere damit die gefilterte Liste. Andernfalls wird die originale Liste zurückgegeben.
-		if (comparator != null) {
-			listNonNull.sort(comparator);
-			return listNonNull;
-		} else
-			return list;
 	}
 
 	/**
-	 * Führt eine Kette von Methodenaufrufen auf einem gegebenen Startobjekt aus.
-	 * Die Methoden werden in der Reihenfolge der angegebenen Liste aufgerufen.
-	 * Wenn eines der Zwischenergebnisse null ist, wird der Vorgang abgebrochen und null zurückgegeben.
+	 * Sortiert eine Liste basierend auf einem Comparator, der entweder aus einer Standard- oder einer benutzerdefinierten
+	 * Registry bezogen wird. Falls kein Comparator erstellt werden kann, wird die ursprüngliche Liste zurückgegeben
+	 * und entsprechende Informationen ins Log geschrieben. Ungültige Attribute zur Sortierung werden ebenfalls ins Log
+	 * geschrieben.
 	 *
-	 * @param root Das Ausgangsobjekt, auf dem die Methode beginnt.
-	 * @param kette Eine Liste von Methoden, die aufeinanderfolgend aufgerufen werden sollen.
-	 * @return Das Ergebnis des letzten Methodenaufrufs in der Kette oder null, wenn ein Zwischenergebnis null ist.
-	 * @throws Exception Falls während eines Methodenaufrufs eine Ausnahme auftritt.
+	 * @param <X> Der Elementtyp, für den der übergebene Comparator definiert ist (und der damit den tatsächlichen Typ der Listeneinträge beschreibt).
+	 * @param listOriginal Die ursprüngliche Liste, die zurückgegeben wird, falls kein Comparator definiert werden konnte.
+	 * @param listNonNull Die Liste ohne null-Werte, die sortiert werden soll.
+	 * @param verwendeStandardsortierung Gibt an, ob die Standardsortierung verwendet werden soll.
+	 * @param supplierComparatorStandard Supplier für den standardmäßigen Comparator.
+	 * @param supplierComparatorBenutzerdefiniert Supplier für den benutzerdefinierten Comparator.
+	 * @param typeName Der Typname, für den der Comparator gesucht wird (wird im Log verwendet).
+	 * @param validierungsfehler Liste der Attributnamen, die nicht validiert werden konnten und ins Log geschrieben werden.
+	 * @return Die sortierte Liste, sofern ein Comparator verfügbar war. Andernfalls die ursprüngliche Liste.
 	 */
-	private static Object invokeMethodenkette(final Object root, final List<Method> kette) throws Exception {
-		Object aktuell = root;
-		for (final Method m : kette) {
-			if (aktuell == null)
-				return null;
-			aktuell = m.invoke(aktuell);
+	private <X> List<T> sortiereMitComparatorAusRegistry(final List<T> listOriginal, final List<T> listNonNull, final boolean verwendeStandardsortierung,
+			final Supplier<Comparator<X>> supplierComparatorStandard, final Supplier<Comparator<X>> supplierComparatorBenutzerdefiniert,
+			final String typeName, final List<String> validierungsfehler) {
+
+		final Comparator<X> comparator = verwendeStandardsortierung ? supplierComparatorStandard.get() : supplierComparatorBenutzerdefiniert.get();
+		if (comparator == null) {
+			if (validierungsfehler.isEmpty())
+				validierungsfehler.add("- keine -");
+			ReportingExceptionUtils.putInfoInLog(
+					("INFO: Es konnte kein Comparator für %s erstellt werden. Zudem wurden folgende Attribute zur Sortierung "
+							+ "übergeben, die nicht in der Registry definiert wurden: %s.")
+							.formatted(typeName, String.join(", ", validierungsfehler)),
+					reportingRepository.logger(), LogLevel.INFO, 0
+			);
+			return listOriginal;
 		}
-		return aktuell;
+		typisierteSortierung(listNonNull, comparator);
+
+		// Falls Attribute ungültig waren, werden diese ins Log geschrieben.
+		if (!validierungsfehler.isEmpty()) {
+			ReportingExceptionUtils.putInfoInLog(
+					"INFO: Es wurden folgende Attribute zur Sortierung übergeben, die nicht in der Registry definiert wurden: "
+							+ String.join(", ", validierungsfehler),
+					reportingRepository.logger(), LogLevel.INFO, 0);
+		}
+
+		return listNonNull;
 	}
 
 	/**
-	 * Vergleicht zwei Werte unter Berücksichtigung der deutschen Sortierreihenfolge.
-	 * Falls beide Werte Strings sind, wird der Vergleich mit dem übergebenen deutschen Collator durchgeführt.
-	 * Sind die Werte Comparable, wird ein separater Vergleich durchgeführt.
-	 * Falls die Werte nicht vergleichbar sind, wird 0 zurückgegeben.
+	 * Sortiert eine Liste von Objekten basierend auf einem angegebenen Comparator.
+	 * Die Methode führt einen kontrollierten Cast durch, um die Liste zur Typisierung zu bringen,
+	 * und ruft anschließend die Sortierfunktion der Liste mit dem bereitgestellten Comparator auf.
 	 *
-	 * @param value1 Der erste zu vergleichende Wert.
-	 * @param value2 Der zweite zu vergleichende Wert.
-	 * @param colGerman Der Collator, der für die deutsche Sortierreihenfolge verwendet wird.
-	 * @return Ein negativer Wert, wenn der erste Wert kleiner ist als der zweite; 0, wenn beide gleich sind;
-	 * ein positiver Wert, wenn der erste Wert größer ist als der zweite.
+	 * @param <X> Der Typ der Objekte, die innerhalb der Liste erwartet werden, auf die der Comparator angewandt wird.
+	 * @param liste Die Liste von Objekten, die sortiert werden soll. Die Liste darf nicht null sein.
+	 * @param comparator Der Comparator, der zur Bestimmung der Sortierfolge für die Liste verwendet wird.
+	 *                   Der Comparator darf nicht null sein.
 	 */
-	private int compareValues(final Object value1, final Object value2, final Collator colGerman) {
-		if ((value1 instanceof String) && (value2 instanceof String)) {
-			return colGerman.compare((String) value1, (String) value2);
-		} else if ((value1 instanceof Comparable<?>) && (value2 instanceof Comparable<?>)) {
-			return compareComparableValues(value1, value2); // Separate Methode implementiert, um die Warnung vor einem "unchecked cast" unterdrücken zu können.
-		}
-		return 0;
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private static <X> void typisierteSortierung(final List<?> liste, final Comparator<X> comparator) {
+		final List typisierteListe = (List) liste;
+		typisierteListe.sort((Comparator) comparator);
 	}
-
-	@SuppressWarnings("unchecked")
-	private int compareComparableValues(final Object value1, final Object value2) {
-		try {
-			return ((Comparable<Object>) value1).compareTo(value2);
-		} catch (final ClassCastException e) {
-			return 0;
-		}
-	}
-
-
-	/**
-	 * Functional Interface für serialisierbare Methodenreferenzen, damit der Methodenname über eine SerializedLambda ermittelt werden kann. Es wird von der
-	 * Methode {@link #methodenreferenzToString(SerializableFunction)} verwendet.
-	 * Beispiel: methodenreferenzToString(ReportingKlasse::sortierung) -> "sortierung"
-	 *
-	 * @param <T> Typ des Eingabeparameters der Funktion
-	 * @param <R> Rückgabetyp der Funktion
-	 */
-	@FunctionalInterface
-	protected interface SerializableFunction<T, R> extends Function<T, R>, Serializable {
-	}
-
-	/**
-	 * Hilfsmethode zur Ermittelung der Methodennamen als String einer übergebenen Methodenreferenz. Wird für die Attributnamen bei der Sortierung verwendet.
-	 *
-	 * @param methodRef eine Methodenreferenz, z. B. ReportingKlasse::sortierung
-	 * @param <T> Typ des Eingabeparameters der Funktion
-	 * @param <R> Rückgabetyp der Funktion
-	 * @return der Name der implementierenden Methode (z. B. "sortierung"). Bei einem Fehler wird ein leerer String zurückgegeben.
-	 */
-	protected static <T, R> String methodenreferenzToString(final SerializableFunction<T, R> methodRef) {
-		try {
-			final Method writeReplace = methodRef.getClass().getDeclaredMethod("writeReplace");
-			writeReplace.setAccessible(true);
-			final Object serializedForm = writeReplace.invoke(methodRef);
-			if (serializedForm instanceof final SerializedLambda lambda)
-				return lambda.getImplMethodName();
-			return "";
-		} catch (final ReflectiveOperationException e) {
-			return "";
-		}
-	}
-
-
-
-
 }

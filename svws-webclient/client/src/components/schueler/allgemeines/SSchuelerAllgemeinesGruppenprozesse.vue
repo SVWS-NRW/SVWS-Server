@@ -163,7 +163,7 @@
 
 	import { ref, computed, watch } from "vue";
 	import type { SSchuelerAllgemeinesGruppenprozesseProps } from "./SSchuelerAllgemeinesGruppenprozesseProps";
-	import type { StundenplanListeEintrag, List } from "@core";
+	import {StundenplanListeEintrag, List, ReportingSortierungDefinition} from "@core";
 	import { DateUtils, ReportingParameter, ReportingReportvorlage, ListUtils, ArrayList, BenutzerKompetenz } from "@core";
 	import { SelectManager } from "@ui";
 
@@ -236,14 +236,18 @@
 				reportingParameter.idsHauptdaten = listeIdsSchueler;
 				reportingParameter.einzelausgabeHauptdaten = false;
 				reportingParameter.einzelausgabeDetaildaten = false;
-				reportingParameter.verwendeStandardsortierung = (sortieroptionSchuelerListeKontaktdatenErzieher.value === 1);
+				reportingParameter.sortierungHauptdaten = new ReportingSortierungDefinition();
+				reportingParameter.sortierungHauptdaten.verwendeStandardsortierung = (sortieroptionSchuelerListeKontaktdatenErzieher.value === 1);
 				if (sortieroptionSchuelerListeKontaktdatenErzieher.value === 2) {
-					reportingParameter.sortierungHauptdaten = new ArrayList<string>();
-					reportingParameter.sortierungHauptdaten.add("auswahlLernabschnitt.klasse.kuerzel");
-					reportingParameter.sortierungHauptdaten.add("nachname");
-					reportingParameter.sortierungHauptdaten.add("vorname");
-					reportingParameter.sortierungHauptdaten.add("vornamen");
-					reportingParameter.sortierungHauptdaten.add("id");
+					const attribute = new ArrayList<string>();
+					attribute.add("auswahlLernabschnitt.klasse.kuerzel");
+					attribute.add("nachname");
+					attribute.add("vorname");
+					attribute.add("vornamen");
+					attribute.add("geburtsdatum");
+					attribute.add("id");
+					reportingParameter.sortierungHauptdaten.attribute = attribute;
+
 				}
 				break;
 			case 'druckSchuelerSchulbescheinigung':
@@ -251,14 +255,17 @@
 				reportingParameter.idsHauptdaten = listeIdsSchueler;
 				reportingParameter.einzelausgabeHauptdaten = (druckoptionSchuelerSchulbescheinigung.value === 2);
 				reportingParameter.einzelausgabeDetaildaten = false;
-				reportingParameter.verwendeStandardsortierung = (sortieroptionSchuelerSchulbescheinigung.value === 1);
+				reportingParameter.sortierungHauptdaten = new ReportingSortierungDefinition();
+				reportingParameter.sortierungHauptdaten.verwendeStandardsortierung = (sortieroptionSchuelerSchulbescheinigung.value === 1);
 				if (sortieroptionSchuelerSchulbescheinigung.value === 2) {
-					reportingParameter.sortierungHauptdaten = new ArrayList<string>();
-					reportingParameter.sortierungHauptdaten.add("auswahlLernabschnitt.klasse.kuerzel");
-					reportingParameter.sortierungHauptdaten.add("nachname");
-					reportingParameter.sortierungHauptdaten.add("vorname");
-					reportingParameter.sortierungHauptdaten.add("vornamen");
-					reportingParameter.sortierungHauptdaten.add("id");
+					const attribute = new ArrayList<string>();
+					attribute.add("auswahlLernabschnitt.klasse.kuerzel");
+					attribute.add("nachname");
+					attribute.add("vorname");
+					attribute.add("vornamen");
+					attribute.add("geburtsdatum");
+					attribute.add("id");
+					reportingParameter.sortierungHauptdaten.attribute = attribute;
 				}
 				break;
 			case 'druckSchuelerStundenplan':
@@ -269,14 +276,18 @@
 				reportingParameter.idsDetaildaten = listeIdsSchueler;
 				reportingParameter.einzelausgabeHauptdaten = false;
 				reportingParameter.einzelausgabeDetaildaten = (druckoptionSchuelerStundenplan.value === 2);
-				reportingParameter.verwendeStandardsortierung = (sortieroptionSchuelerStundenplan.value === 1);
+				// Sortierung der Detaildaten (Schüler innerhalb des Stundenplans)
+				reportingParameter.sortierungDetaildaten = new ReportingSortierungDefinition();
+				reportingParameter.sortierungDetaildaten.verwendeStandardsortierung = (sortieroptionSchuelerStundenplan.value === 1);
 				if (sortieroptionSchuelerStundenplan.value === 2) {
-					reportingParameter.sortierungDetaildaten = new ArrayList<string>();
-					reportingParameter.sortierungDetaildaten.add("schueler.auswahlLernabschnitt.klasse.kuerzel");
-					reportingParameter.sortierungDetaildaten.add("schueler.nachname");
-					reportingParameter.sortierungDetaildaten.add("schueler.vorname");
-					reportingParameter.sortierungDetaildaten.add("schueler.vornamen");
-					reportingParameter.sortierungDetaildaten.add("schueler.id");
+					const attribute = new ArrayList<string>();
+					attribute.add("schueler.auswahlLernabschnitt.klasse.kuerzel");
+					attribute.add("schueler.nachname");
+					attribute.add("schueler.vorname");
+					attribute.add("schueler.vornamen");
+					attribute.add("schueler.geburtsdatum");
+					attribute.add("schueler.id");
+					reportingParameter.sortierungDetaildaten.attribute = attribute;
 				}
 				break;
 			default:

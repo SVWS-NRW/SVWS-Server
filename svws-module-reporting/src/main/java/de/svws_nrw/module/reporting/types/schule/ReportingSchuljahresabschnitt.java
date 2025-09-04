@@ -93,9 +93,9 @@ public class ReportingSchuljahresabschnitt extends ReportingBaseType {
 	}
 
 	/**
-	 * Kurzer Text zum Schuljahresabschnitt im Format 20XX/YY.A
+	 * Kurzer Text zum Schuljahresabschnitt im Format 20XX/YY A. Halbjahr
 	 *
-	 * @return Kurzer Text zum Schuljahresabschnitt
+	 * @return Langer Text zum Schuljahresabschnitt
 	 */
 	public String textSchuljahresabschnittLang() {
 		return "%s/%s %s. Halbjahr".formatted(schuljahr, (schuljahr % 100) + 1, abschnitt);

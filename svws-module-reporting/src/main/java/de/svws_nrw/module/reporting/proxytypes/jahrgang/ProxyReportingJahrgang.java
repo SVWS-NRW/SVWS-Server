@@ -3,6 +3,8 @@ package de.svws_nrw.module.reporting.proxytypes.jahrgang;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
+import de.svws_nrw.module.reporting.sortierung.ComparatorFactory;
+import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingSchueler;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
@@ -11,6 +13,7 @@ import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Proxy-Klasse im Rahmen des Reportings für Daten vom Typ Jahrgang und erweitert die Klasse {@link ReportingJahrgang}.
@@ -133,16 +136,12 @@ public class ProxyReportingJahrgang extends ReportingJahrgang {
 	@Override
 	public List<ReportingSchueler> schueler() {
 		if (super.schueler().isEmpty()) {
-			super.schueler =
-					klassen().stream()
-							.flatMap(k -> k.schueler().stream())
-							.sorted(Comparator
-									.comparing(ReportingSchueler::nachname)
-									.thenComparing(ReportingSchueler::vorname)
-									.thenComparing(ReportingSchueler::vornamen)
-									.thenComparing(ReportingSchueler::geburtsdatum)
-									.thenComparing(ReportingSchueler::id))
-							.toList();
+			final Optional<Comparator<ReportingSchueler>> optionalComparator =
+					ComparatorFactory.buildOptionalComparator(this.reportingRepository, ReportingSchueler.class.getSimpleName(),
+							SortierungRegistryReportingSchueler.sortierungRegistry(), SortierungRegistryReportingSchueler.standardsortierung());
+			super.schueler = optionalComparator.map(
+					reportingSchuelerComparator -> klassen().stream().flatMap(k -> k.schueler().stream()).sorted(reportingSchuelerComparator).toList())
+					.orElseGet(() -> klassen().stream().flatMap(k -> k.schueler().stream()).toList());
 		}
 		return super.schueler();
 	}

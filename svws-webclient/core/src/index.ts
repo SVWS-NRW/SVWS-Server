@@ -560,6 +560,7 @@ export { LernplattformV1Login } from './core/data/lernplattform/v1/Lernplattform
 export { LernplattformV1Schueler } from './core/data/lernplattform/v1/LernplattformV1Schueler';
 export { OAuth2ClientConnection } from './core/data/oauth2/OAuth2ClientConnection';
 export { ReportingParameter } from './core/data/reporting/ReportingParameter';
+export { ReportingSortierungDefinition } from './core/data/reporting/ReportingSortierungDefinition';
 export { DatenbankVerbindungsdaten } from './core/data/schema/DatenbankVerbindungsdaten';
 export { Schild3KatalogEintragAbiturInfos } from './core/data/schild3/Schild3KatalogEintragAbiturInfos';
 export { Schild3KatalogEintragDQRNiveaus } from './core/data/schild3/Schild3KatalogEintragDQRNiveaus';

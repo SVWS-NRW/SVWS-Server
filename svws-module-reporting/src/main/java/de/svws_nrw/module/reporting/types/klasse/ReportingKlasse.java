@@ -216,11 +216,12 @@ public class ReportingKlasse extends ReportingBaseType {
 	 * @return		Statistik in der Form (m/w/d).
 	 */
 	public String statistikGeschlechter() {
-		if ((this.schueler() == null) || this.schueler().isEmpty())
+		final List<ReportingSchueler> reportingSchueler = this.schueler();
+		if ((reportingSchueler == null) || reportingSchueler.isEmpty())
 			return "(0/0/0)";
-		final long anzahlM = this.schueler().stream().filter(s -> "m".equalsIgnoreCase(s.geschlecht().kuerzel)).count();
-		final long anzahlW = this.schueler().stream().filter(s -> "w".equalsIgnoreCase(s.geschlecht().kuerzel)).count();
-		final long anzahlD = this.schueler().stream().filter(s -> "d".equalsIgnoreCase(s.geschlecht().kuerzel)).count();
+		final long anzahlM = reportingSchueler.stream().filter(s -> "m".equalsIgnoreCase(s.geschlecht().kuerzel)).count();
+		final long anzahlW = reportingSchueler.stream().filter(s -> "w".equalsIgnoreCase(s.geschlecht().kuerzel)).count();
+		final long anzahlD = reportingSchueler.stream().filter(s -> "d".equalsIgnoreCase(s.geschlecht().kuerzel)).count();
 		return String.format("(%d/%d/%d)", anzahlM, anzahlW, anzahlD);
 	}
 

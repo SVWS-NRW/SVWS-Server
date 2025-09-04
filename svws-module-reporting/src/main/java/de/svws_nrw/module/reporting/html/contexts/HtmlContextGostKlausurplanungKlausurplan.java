@@ -25,11 +25,6 @@ import jakarta.ws.rs.core.Response;
  */
 public final class HtmlContextGostKlausurplanungKlausurplan extends HtmlContext<Object> {
 
-	@Override
-	public List<String> standardsortierung() {
-		return new ArrayList<>();
-	}
-
 	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
 	private final ReportingRepository reportingRepository;

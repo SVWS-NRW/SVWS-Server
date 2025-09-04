@@ -160,9 +160,10 @@ public class ReportingKurs extends ReportingBaseType {
 	 * @return Liste der Klassen der Schüler im Kurs.
 	 */
 	public List<ReportingKlasse> klassen() {
-		if (klassen.isEmpty() && (this.schueler() != null) && !schueler().isEmpty()) {
+		final List<ReportingSchueler> reportingSchueler = this.schueler();
+		if (klassen.isEmpty() && (reportingSchueler != null) && !reportingSchueler.isEmpty()) {
 			final List<ReportingKlasse> result = new ArrayList<>();
-			for (final ReportingSchueler s : this.schueler()) {
+			for (final ReportingSchueler s : reportingSchueler) {
 				final ReportingSchuelerLernabschnitt lernabschnitt = s.aktiverLernabschnittInSchuljahresabschnitt(this.schuljahresabschnitt);
 				if ((lernabschnitt != null) && (lernabschnitt.klasse() != null))
 					result.add(lernabschnitt.klasse());

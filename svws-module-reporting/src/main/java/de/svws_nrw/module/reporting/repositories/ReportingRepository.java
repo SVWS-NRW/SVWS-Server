@@ -1,12 +1,12 @@
 package de.svws_nrw.module.reporting.repositories;
 
-import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.klassen.KlassenDaten;
@@ -53,6 +53,7 @@ import de.svws_nrw.data.kataloge.DataOrtsteile;
 import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.schueler.DataKatalogSchuelerFoerderschwerpunkte;
+import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
 import de.svws_nrw.data.schule.DataKatalogTelefonArten;
 import de.svws_nrw.data.schule.DataReligionen;
 import de.svws_nrw.data.schule.DataSchuleStammdaten;
@@ -70,10 +71,12 @@ import de.svws_nrw.module.reporting.proxytypes.schueler.ProxyReportingSchueler;
 import de.svws_nrw.module.reporting.proxytypes.schueler.erzieher.ProxyReportingErzieherArt;
 import de.svws_nrw.module.reporting.proxytypes.schule.ProxyReportingSchuljahresabschnitt;
 import de.svws_nrw.module.reporting.proxytypes.stundenplanung.ProxyReportingStundenplanungStundenplan;
+import de.svws_nrw.module.reporting.sortierung.ComparatorFactory;
+import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingLehrer;
+import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingSchueler;
 import de.svws_nrw.module.reporting.types.klasse.ReportingKlasse;
 import de.svws_nrw.module.reporting.types.kurs.ReportingKurs;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
-import de.svws_nrw.module.reporting.types.person.ReportingPerson;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ReportingErzieherArt;
 import de.svws_nrw.module.reporting.types.schueler.telefon.ReportingSchuelerTelefonkontakt;
@@ -102,14 +105,14 @@ public class ReportingRepository {
 	/** Logger, der den Ablauf protokolliert und Fehlerdaten sammelt. */
 	private final Logger logger;
 
-	/** Liste, die Einträge aus dem Logger sammelt. */
+	/** Die Liste, die Einträge aus dem Logger sammelt. */
 	private final LogConsumerList log;
 
 	/** Die ID des aktuellen Schuljahresabschnitts der Schule. */
-	private final Long idAktuellerSchuljahresbaschnitt;
+	private final Long idAktuellerSchuljahresabschnitt;
 
-	/** Die ID des in den ReportingParamtern ausgewählten Schuljahresabschnitts. */
-	private final Long idAuswahlSchuljahresbaschnitt;
+	/** Die ID des in den ReportingParametern ausgewählten Schuljahresabschnitts. */
+	private final Long idAuswahlSchuljahresabschnitt;
 
 
 	// #########  Ab hier folgen Objekte aus dem Core. #########
@@ -151,13 +154,13 @@ public class ReportingRepository {
 	/** Stellt die Stammdaten von bereits abgerufenen Erziehern über eine Map zur Schueler-ID zur Verfügung. */
 	private final Map<Long, List<ErzieherStammdaten>> mapErzieherStammdaten = new HashMap<>();
 
-	/** Stellt alle Fächer der Schule als DTOs zur Fach-ID zur Verfügung. Die Reporting-Fächer -Objekte sind in den Schuljahresabschnitten abrufbar. */
+	/** Stellt alle Fächer der Schule als DTOs zur Fach-ID zur Verfügung. Die Reporting-Fächer-Objekte sind in den Schuljahresabschnitten abrufbar. */
 	private final Map<Long, DTOFach> mapFachdaten = new HashMap<>();
 
-	/** Stellt die Daten der Abiturjahrgänge über eine Map zum Abiturjahr Verfügung. */
+	/** Stellt die Daten der Abiturjahrgänge über eine Map zum Abiturjahr zur Verfügung. */
 	private final Map<Integer, GostJahrgangsdaten> mapGostAbiturjahrgangDaten = new HashMap<>();
 
-	/** Stellt die Fächer der Abiturjahrgänge über eine Map zum Abiturjahr Verfügung. */
+	/** Stellt die Fächer der Abiturjahrgänge über eine Map zum Abiturjahr zur Verfügung. */
 	private final Map<Integer, GostFaecherManager> mapGostAbiturjahrgangFaecher = new HashMap<>();
 
 	/** Stellt die Beratungsdaten zur GOSt von bereits abgerufenen Schülern über eine Map zur Schüler-ID zur Verfügung. */
@@ -220,13 +223,13 @@ public class ReportingRepository {
 
 
 	/**
-	 * Erstellt das Repository für häufig genutzte Daten aus der Schuldatenbank, um die Zugriffe darauf zu minimieren. Ebenso werden einzelne
+	 * Erstellt das Repository für häufig genutzte Daten aus der Schuldatenbank, um Zugriffe darauf zu minimieren. Ebenso werden einzelne
 	 * Reporting-Objekte hier zwischengespeichert.
 	 *
 	 * @param conn						Die Verbindung zur Datenbank.
 	 * @param reportingParameter 		Einstellungen und Daten zum Steuern der Report-Generierung.
 	 * @param logger 					Logger, der den Ablauf protokolliert und Fehlerdaten sammelt.
-	 * @param log 						Liste, die Einträge aus dem Logger sammelt.
+	 * @param log 						Die Liste, die Einträge aus dem Logger sammelt.
 	 *
 	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
@@ -275,8 +278,8 @@ public class ReportingRepository {
 						new ProxyReportingSchuljahresabschnitt(this, datenSchuljahresabschnitt));
 			}
 
-			idAktuellerSchuljahresbaschnitt = this.schulstammdaten.idSchuljahresabschnitt;
-			idAuswahlSchuljahresbaschnitt = this.reportingParameter.idSchuljahresabschnitt;
+			idAktuellerSchuljahresabschnitt = this.schulstammdaten.idSchuljahresabschnitt;
+			idAuswahlSchuljahresabschnitt = this.reportingParameter.idSchuljahresabschnitt;
 		} catch (final Exception e) {
 			ReportingExceptionUtils.putStacktraceInLog(
 					"FEHLER: Die Stamm- oder Abschnittsdaten der Schule konnten nicht ermittelt werden oder der Schuljahresabschnitt ist ungültig.",
@@ -315,7 +318,7 @@ public class ReportingRepository {
 
 			this.katalogEntlassgruende =
 					new DataKatalogEntlassgruende(this.conn).getAll().stream().collect(Collectors.toMap(e -> e.id, e -> e));
-			this.logger.logLn(LogLevel.DEBUG, 8, "Katalog Endlassgründe geladen.");
+			this.logger.logLn(LogLevel.DEBUG, 8, "Katalog Entlassgründe geladen.");
 
 			this.katalogFoerderschwerpunkte =
 					new DataKatalogSchuelerFoerderschwerpunkte(this.conn).getAll().stream().collect(Collectors.toMap(f -> f.id, f -> f));
@@ -432,7 +435,7 @@ public class ReportingRepository {
 	}
 
 	/**
-	 * Liste, die Einträge aus dem Logger sammelt.
+	 * Die Liste, die Einträge aus dem Logger sammelt.
 	 *
 	 * @return Inhalt des Feldes log
 	 */
@@ -515,7 +518,7 @@ public class ReportingRepository {
 	 * @return Aktueller Schuljahresabschnitt der Schule
 	 */
 	public ReportingSchuljahresabschnitt aktuellerSchuljahresabschnitt() {
-		return this.mapSchuljahresabschnitte.get(idAktuellerSchuljahresbaschnitt);
+		return this.mapSchuljahresabschnitte.get(idAktuellerSchuljahresabschnitt);
 	}
 
 	/**
@@ -524,7 +527,7 @@ public class ReportingRepository {
 	 * @return Schuljahresabschnitt der Auswahl für den Druck
 	 */
 	public ReportingSchuljahresabschnitt auswahlSchuljahresabschnitt() {
-		return this.mapSchuljahresabschnitte.get(idAuswahlSchuljahresbaschnitt);
+		return this.mapSchuljahresabschnitte.get(idAuswahlSchuljahresabschnitt);
 	}
 
 
@@ -533,9 +536,9 @@ public class ReportingRepository {
 	/**
 	 * Stellt eine Map der Entlassgründe der Schule aus der Datenbankverbindung zu deren IDs zur Verfügung
 	 *
-	 * @return Map der Endlassgründe
+	 * @return Map der Entlassgründe
 	 */
-	public Map<Long, KatalogEntlassgrund> katalogEntlassgrunde() {
+	public Map<Long, KatalogEntlassgrund> katalogEntlassgruende() {
 		return katalogEntlassgruende;
 	}
 
@@ -549,7 +552,7 @@ public class ReportingRepository {
 	}
 
 	/**
-	 * Stellt die eine Map der Ort-Katalog-Einträge der Schule aus der Datenbankverbindung zu deren IDs zur Verfügung
+	 * Stellt eine Map der Ort-Katalog-Einträge der Schule aus der Datenbankverbindung zu deren IDs zur Verfügung
 	 *
 	 * @return Map der Ort-Katalog-Einträge
 	 */
@@ -558,7 +561,7 @@ public class ReportingRepository {
 	}
 
 	/**
-	 * Stellt die eine Map der Ortsteil-Katalog-Einträge der Schule aus der Datenbankverbindung zu deren IDs zur Verfügung
+	 * Stellt eine Map der Ortsteil-Katalog-Einträge der Schule aus der Datenbankverbindung zu deren IDs zur Verfügung
 	 *
 	 * @return Map der Ortsteil-Katalog-Einträge
 	 */
@@ -639,7 +642,7 @@ public class ReportingRepository {
 	}
 
 	/**
-	 * Stellt alle Fächer der Schule als DTOs zur Fach-ID zur Verfügung. Die Reporting-Fächer -Objekte sind in den Schuljahresabschnitten abrufbar.
+	 * Stellt alle Fächer der Schule als DTOs zur Fach-ID zur Verfügung. Die Reporting-Fächer-Objekte sind in den Schuljahresabschnitten abrufbar.
 	 *
 	 * @return Map der Fächer-DTO
 	 */
@@ -648,7 +651,7 @@ public class ReportingRepository {
 	}
 
 	/**
-	 * Stellt die Daten der Abiturjahrgänge über eine Map zum Abiturjahr Verfügung.
+	 * Stellt die Daten der Abiturjahrgänge über eine Map zum Abiturjahr zur Verfügung.
 	 *
 	 * @return Map der Daten zu den Abiturjahrgängen
 	 */
@@ -657,7 +660,7 @@ public class ReportingRepository {
 	}
 
 	/**
-	 * Stellt die Fächer der Abiturjahrgänge über eine Map zum Abiturjahr Verfügung.
+	 * Stellt die Fächer der Abiturjahrgänge über eine Map zum Abiturjahr zur Verfügung.
 	 *
 	 * @return Map der Fächer zu den Abiturjahrgängen
 	 */
@@ -797,7 +800,7 @@ public class ReportingRepository {
 	/**
 	 * Liefert ein ReportingKlasse-Objekt basierend auf der gegebenen Klassen-ID.
 	 * Wenn die ID negativ ist, wird null zurückgegeben.
-	 * Ansonsten wird ein ProxyReportingKlasse erstellt und in der Map gespeichert,
+	 * Ansonsten wird eine ProxyReportingKlasse erstellt und in der Map gespeichert,
 	 * falls für die ID noch kein Eintrag existiert.
 	 *
 	 * @param idKlasse Die eindeutige ID der Klasse
@@ -819,13 +822,13 @@ public class ReportingRepository {
 	 *
 	 * @param idsKlassen Eine Liste von Long-Werten, die die IDs der Klassen repräsentieren, für die ReportingKlasse-Objekte erstellt werden sollen.
 	 *                    Null- oder negative Werte in der Liste werden ignoriert.
-	 * @return Eine sortierte Liste von ReportingKlasse-Objekten basierend auf Klassenkürzel.
+	 * @return Eine sortierte Liste von ReportingKlasse-Objekten basierend auf dem Klassenkürzel.
 	 */
 	public List<ReportingKlasse> klassen(final List<Long> idsKlassen) {
 
 		final List<ReportingKlasse> resultKlassen = new ArrayList<>();
 
-		// Sofern noch keine Reporting-Objekte der Klassen existieren erzeuge sie und speichere sie.
+		// Sofern noch keine Reporting-Objekte der Klassen existieren, erzeuge sie und speichere sie.
 		for (final Long idKlasse : idsKlassen) {
 			if ((idKlasse == null) || (idKlasse < 0))
 				continue;
@@ -838,7 +841,7 @@ public class ReportingRepository {
 	}
 
 	/**
-	 * Ergänzt eine Klassen in der Map der Klassen, wenn diese dort noch nicht existiert. Gleichzeitig werden auch alle anderen Klassen des gleichen
+	 * Ergänzt eine Klasse in der Map der Klassen, wenn diese dort noch nicht existiert. Gleichzeitig werden auch alle anderen Klassen des gleichen
 	 * Schuljahresabschnitts ergänzt.
 	 *
 	 * @param idKlasse Die ID der Klasse, die bei Fehlen in der Map ergänzt wird.
@@ -863,98 +866,185 @@ public class ReportingRepository {
 	// ##### Reporting Lehrer erzeugen und verwalten #####
 
 	/**
-	 * Liefert ein ReportingLehrer-Objekt basierend auf der gegebenen Lehrer-ID.
-	 * Wenn die ID negativ ist, wird null zurückgegeben.
-	 * Ansonsten wird ein ProxyReportingLehrer erstellt und in der Map gespeichert,
-	 * falls für die ID noch kein Eintrag existiert.
+	 * Gibt ein ReportingLehrer-Objekt für die angegebene Lehrer-ID zurück.
+	 * Falls die Stammdaten des Lehrers nicht im Cache vorhanden sind, werden sie aus der Datenbank geladen.
 	 *
-	 * @param idLehrer Die eindeutige ID des Lehrers
-	 * @return Ein ReportingLehrer-Objekt für die gegebene Lehrer-ID oder null, falls die ID negativ ist
+	 * @param idLehrer Die eindeutige ID des Lehrers, für den das ReportingLehrer-Objekt erstellt werden soll.
+	 *                 Die ID muss größer oder gleich 0 sein.
+	 * @return Das ReportingLehrer-Objekt, falls Stammdaten gefunden wurden, oder null, wenn der Lehrer nicht existiert
+	 *         oder ein Fehler beim Laden der Stammdaten aufgetreten ist.
 	 */
 	public ReportingLehrer lehrer(final long idLehrer) {
 		if (idLehrer < 0)
 			return null;
 
-		return mapLehrer.computeIfAbsent(idLehrer, key -> new ProxyReportingLehrer(this, mapLehrerStammdaten.get(key)));
+		// Lade ggf. fehlende Lehrerstammdaten analog zum Vorgehen bei Schülern nach.
+		if (!mapLehrerStammdaten.containsKey(idLehrer)) {
+			try {
+				final LehrerStammdaten fehlendeLehrerstammdaten = new DataLehrerStammdaten(this.conn).getById(idLehrer);
+				mapLehrerStammdaten.put(fehlendeLehrerstammdaten.id, fehlendeLehrerstammdaten);
+			} catch (final ApiOperationException e) {
+				ReportingExceptionUtils.putStacktraceInLog(
+						"FEHLER: Fehler bei der Ermittlung der fehlenden Lehrerstammdaten einer Lehrkraft aus der Datenbank im ReportingRepository.", e,
+						this.logger(), LogLevel.ERROR, 0);
+				return null;
+			}
+		}
+
+		if (mapLehrerStammdaten.containsKey(idLehrer))
+			return mapLehrer.computeIfAbsent(idLehrer, key -> new ProxyReportingLehrer(this, mapLehrerStammdaten.get(key)));
+		else
+			return null;
 	}
 
 	/**
-	 * Erzeugt und sortiert eine Liste von ReportingLehrer-Objekten basierend auf den übergebenen Lehrer-IDs.
-	 * Falls ein Lehrer bereits existiert, wird er aus einem internen Cache abgerufen.
+	 * Diese Methode erstellt eine Liste von ReportingLehrer-Objekten basierend auf den übergebenen Lehrerkürzeln (IDs).
+	 * Fehlende Stammdaten werden bei Bedarf nachgeladen und zur weiteren Verarbeitung genutzt.
 	 *
-	 * @param idsLehrer Eine Liste von Long-Werten, die die IDs der Lehrer repräsentieren, für die ReportingLehrer-Objekte erstellt werden sollen.
-	 *                  Null- oder negative Werte in der Liste werden ignoriert.
-	 * @return Eine sortierte Liste von ReportingLehrer-Objekten basierend auf Nachname, Vorname, Kürzel und ID.
+	 * @param idsLehrer Eine Liste der IDs der gewünschten Lehrer. Nullwerte oder IDs kleiner 0 werden ignoriert.
+	 * @return Eine gemäß den konfigurierten Reporting-Parametern sortierte Liste von ReportingLehrer-Objekten.
 	 */
 	public List<ReportingLehrer> lehrer(final List<Long> idsLehrer) {
 
 		final List<ReportingLehrer> resultLehrer = new ArrayList<>();
 
-		// Sofern noch keine Reporting-Objekte der Lehrer existieren, erzeuge sie und speichere sie.
-		for (final Long idLehrer : idsLehrer) {
-			if ((idLehrer == null) || (idLehrer < 0)) {
-				continue;
+		// Analog zu schueler(...): fehlende Stammdaten nachladen.
+		if ((idsLehrer == null) || idsLehrer.isEmpty())
+			return resultLehrer;
+
+		final List<Long> fehlendeLehrerIds = idsLehrer.stream()
+				.filter(Objects::nonNull)
+				.filter(id -> id >= 0)
+				.distinct()
+				.filter(id -> !mapLehrerStammdaten.containsKey(id))
+				.toList();
+
+		if (!fehlendeLehrerIds.isEmpty()) {
+			try {
+				final List<LehrerStammdaten> fehlendeLehrerstammdaten = new DataLehrerStammdaten(this.conn).getListByIDs(fehlendeLehrerIds);
+				for (final LehrerStammdaten l : fehlendeLehrerstammdaten) {
+					if (l != null)
+						mapLehrerStammdaten.put(l.id, l);
+				}
+			} catch (final ApiOperationException e) {
+				ReportingExceptionUtils.putStacktraceInLog(
+						"FEHLER: Fehler bei der Ermittlung der fehlenden Lehrerstammdaten einer Lehrerliste aus der Datenbank im ReportingRepository.", e,
+						this.logger(), LogLevel.ERROR, 0);
+				return resultLehrer;
 			}
-			resultLehrer.add(mapLehrer.computeIfAbsent(idLehrer, key -> new ProxyReportingLehrer(this, mapLehrerStammdaten.get(key))));
 		}
 
-		// Sortiere die Lehrerliste für die Rückgabe
-		final Collator colGerman = Collator.getInstance(Locale.GERMAN);
-		return resultLehrer.stream().sorted(Comparator.comparing(ReportingLehrer::nachname, colGerman)
-				.thenComparing(ReportingPerson::vorname, colGerman)
-				.thenComparing(ReportingLehrer::kuerzel, colGerman)
-				.thenComparing(ReportingLehrer::id))
-				.toList();
+		// Sofern noch keine Reporting-Objekte der Lehrer existieren, erzeuge sie und speichere sie.
+		for (final Long idLehrer : idsLehrer) {
+			if ((idLehrer == null) || (idLehrer < 0))
+				continue;
+			if (mapLehrerStammdaten.containsKey(idLehrer))
+				resultLehrer.add(mapLehrer.computeIfAbsent(idLehrer, key -> new ProxyReportingLehrer(this, mapLehrerStammdaten.get(key))));
+		}
+
+		// Sortiere gemäß den Angaben in den ReportingParametern.
+		final Optional<Comparator<ReportingLehrer>> optionalComparator = ComparatorFactory.buildOptionalComparator(this, ReportingLehrer.class.getSimpleName(),
+				SortierungRegistryReportingLehrer.sortierungRegistry(),
+				SortierungRegistryReportingLehrer.standardsortierung());
+
+		return optionalComparator
+				.map(reportingLehrerComparator -> resultLehrer.stream().sorted(reportingLehrerComparator).toList())
+				.orElse(resultLehrer);
 	}
 
 
-	// ##### Reporting Schüler erzeugen und verwalten #####
+	// ##### ReportingSchueler-Objekte erzeugen und verwalten #####
 
 	/**
-	 * Liefert ein ReportingSchueler-Objekt basierend auf der gegebenen Schüler-ID.
-	 * Wenn die ID negativ ist, wird null zurückgegeben.
-	 * Ansonsten wird ein ProxyReportingSchueler erstellt und in der Map gespeichert,
-	 * falls für die ID noch kein Eintrag existiert.
+	 * Holt die Reporting-Daten eines Schülers basierend auf der gegebenen ID.
+	 * Falls die Schülerdaten nicht im lokalen Cache enthalten sind, werden sie aus der Datenbank abgerufen
+	 * und im Cache gespeichert. Tritt ein Fehler beim Abrufen auf, wird null zurückgegeben.
 	 *
-	 * @param idSchueler Die eindeutige ID des Schülers
-	 *
-	 * @return Ein ReportingSchueler-Objekt für die gegebene Schüler-ID oder null, falls die ID negativ ist
+	 * @param idSchueler die ID des Schülers, dessen Reporting-Daten abgerufen werden sollen
+	 *                   (muss positiv oder 0 sein, andernfalls wird null zurückgegeben).
+	 * @return ein ReportingSchueler-Objekt für den gegebenen Schüler,
+	 *         falls die Daten erfolgreich abgerufen werden konnten; sonst null.
 	 */
 	public ReportingSchueler schueler(final long idSchueler) {
 		if (idSchueler < 0)
 			return null;
 
-		return mapSchueler.computeIfAbsent(idSchueler, key -> new ProxyReportingSchueler(this, mapSchuelerStammdaten.get(key)));
+		if (!mapSchuelerStammdaten.containsKey(idSchueler)) {
+			try {
+				final SchuelerStammdaten fehlendeSchulerstammdaten = new DataSchuelerStammdaten(this.conn).getById(idSchueler);
+				mapSchuelerStammdaten.put(fehlendeSchulerstammdaten.id, fehlendeSchulerstammdaten);
+			} catch (final ApiOperationException e) {
+				ReportingExceptionUtils.putStacktraceInLog(
+						"FEHLER: Fehler bei der Ermittlung der fehlenden Schülerstammdaten eines Schülers aus der Datenbank im ReportingRepository.", e,
+						this.logger(), LogLevel.ERROR, 0);
+				return null;
+			}
+		}
+
+		if (mapSchuelerStammdaten.containsKey(idSchueler))
+			return mapSchueler.computeIfAbsent(idSchueler, key -> new ProxyReportingSchueler(this, mapSchuelerStammdaten.get(key)));
+		else
+			return null;
 	}
 
 	/**
-	 * Erzeugt und sortiert eine Liste von ReportingSchüler-Objekten basierend auf den übergebenen Schüler-IDs.
-	 * Falls ein Schüler bereits existiert, wird er aus einem internen Cache abgerufen.
+	 * Liefert eine Liste von {@link ReportingSchueler}-Objekten basierend auf einer gegebenen Liste von Schüler-IDs.
+	 * Diese Methode überprüft, ob die benötigten Stammdaten für die angegebenen Schüler-IDs bereits im Speicher vorhanden sind,
+	 * und lädt diese gegebenenfalls aus der Datenbank nach. Anschließend werden entsprechende {@link ReportingSchueler}-Objekte erstellt
+	 * und zurückgegeben.
 	 *
-	 * @param idsSchueler Eine Liste von Long-Werten, die die IDs der Schüler repräsentieren, für die ReportingSchueler-Objekte erstellt werden sollen.
-	 *                    Null- oder negative Werte in der Liste werden ignoriert.
-	 * @return Eine sortierte Liste von ReportingSchueler-Objekten basierend auf Nachname, Vorname, Vornamen, Geburtsdatum und ID.
+	 * @param idsSchueler Eine Liste von Schüler-IDs, für die {@link ReportingSchueler}-Objekte erstellt und/oder zurückgegeben werden sollen;
+	 *                    null oder eine leere Liste führt zu einer Rückgabe einer leeren Liste.
+	 * @return Eine Liste von {@link ReportingSchueler}-Objekten, sortiert gemäß den vordefinierten oder standardmäßigen Sortierparametern,
+	 *         sofern definiert. Wenn keine Schüler gefunden werden, wird eine leere Liste zurückgegeben.
 	 */
 	public List<ReportingSchueler> schueler(final List<Long> idsSchueler) {
 
 		final List<ReportingSchueler> resultSchueler = new ArrayList<>();
 
-		// Sofern noch keine Reporting-Objekte der Schüler existieren, erzeuge sie und speichere sie.
-		for (final Long idSchueler : idsSchueler) {
-			if ((idSchueler == null) || (idSchueler < 0)) {
-				continue;
+		// Sofern noch keine Schülerstammdaten für (einzelne) Schüler aus der DB geladen wurden, müssen diese nachgeladen werden, weil dann auch keine
+		// ReportingSchueler-Objekte vorhanden sein können.
+		if ((idsSchueler == null) || idsSchueler.isEmpty())
+			return resultSchueler;
+
+		final List<Long> fehlendeSchuelerIds = idsSchueler.stream()
+				.filter(Objects::nonNull)
+				.filter(id -> id >= 0)
+				.distinct()
+				.filter(id -> !mapSchuelerStammdaten.containsKey(id))
+				.toList();
+
+		if (!fehlendeSchuelerIds.isEmpty()) {
+			try {
+				final List<SchuelerStammdaten> fehlendeSchulerstammdaten = new DataSchuelerStammdaten(this.conn).getListByIds(fehlendeSchuelerIds);
+				for (final SchuelerStammdaten s : fehlendeSchulerstammdaten) {
+					if (s != null)
+						mapSchuelerStammdaten.put(s.id, s);
+				}
+			} catch (final ApiOperationException e) {
+				ReportingExceptionUtils.putStacktraceInLog(
+						"FEHLER: Fehler bei der Ermittlung der fehlenden Schülerstammdaten einer Schülerliste aus der Datenbank im ReportingRepository.", e,
+						this.logger(), LogLevel.ERROR, 0);
+				return resultSchueler;
 			}
-			resultSchueler.add(mapSchueler.computeIfAbsent(idSchueler, key -> new ProxyReportingSchueler(this, mapSchuelerStammdaten.get(key))));
 		}
 
-		// Sortiere die Schülerliste für die Rückgabe
-		final Collator colGerman = Collator.getInstance(Locale.GERMAN);
-		return resultSchueler.stream().sorted(Comparator.comparing(ReportingSchueler::nachname, colGerman)
-				.thenComparing(ReportingSchueler::vorname, colGerman)
-				.thenComparing(ReportingSchueler::vornamen, colGerman)
-				.thenComparing(ReportingSchueler::geburtsdatum)
-				.thenComparing(ReportingSchueler::id))
-				.toList();
+		// Sofern noch keine Reporting-Objekte der Schüler existieren, erzeuge sie und speichere sie.
+		for (final Long idSchueler : idsSchueler) {
+			if ((idSchueler == null) || (idSchueler < 0))
+				continue;
+			if (mapSchuelerStammdaten.containsKey(idSchueler))
+				resultSchueler.add(mapSchueler.computeIfAbsent(idSchueler, key -> new ProxyReportingSchueler(this, mapSchuelerStammdaten.get(key))));
+		}
+
+		// Sortiere gemäß den Angaben in den ReportingParametern.
+		final Optional<Comparator<ReportingSchueler>> optionalComparator =
+				ComparatorFactory.buildOptionalComparator(this, ReportingSchueler.class.getSimpleName(),
+						SortierungRegistryReportingSchueler.sortierungRegistry(), SortierungRegistryReportingSchueler.standardsortierung());
+
+		return optionalComparator
+				.map(reportingSchuelerComparator -> resultSchueler.stream().sorted(reportingSchuelerComparator).toList())
+				.orElse(resultSchueler);
 	}
 
 
@@ -1002,7 +1092,7 @@ public class ReportingRepository {
 			return mapStundenplaene.get(idStundenplan);
 		}
 
-		// Sind bisher keine Daten vorhanden, lade die Daten aus der DB nach.
+		// Sind bisher keine Daten vorhanden, dann lade die Daten aus der DB nach.
 		try {
 			final StundenplanManager stundenplanManager = stundenplanManager(idStundenplan);
 			if (stundenplanManager != null) {
@@ -1011,7 +1101,7 @@ public class ReportingRepository {
 				return mapStundenplaene.get(idStundenplan);
 			}
 		} catch (@SuppressWarnings("unused") final Exception ignore) {
-			// Stundenplan konnte nicht aus der Datenbank ermittelt werden. Sollte nicht eintreten, wenn Definition vorhanden ist.
+			// Stundenplan konnte nicht aus der Datenbank ermittelt werden. Sollte nicht eintreten, wenn eine Definition vorhanden ist.
 		}
 		return null;
 	}

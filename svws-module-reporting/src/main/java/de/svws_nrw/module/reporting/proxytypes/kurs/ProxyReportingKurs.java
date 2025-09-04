@@ -1,29 +1,21 @@
 package de.svws_nrw.module.reporting.proxytypes.kurs;
 
-import java.text.Collator;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.asd.data.kurse.KursDaten;
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
-import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.data.kurse.DataKurse;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
-import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKursLehrer;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.proxytypes.lehrer.ProxyReportingLehrer;
-import de.svws_nrw.module.reporting.proxytypes.schueler.ProxyReportingSchueler;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.kurs.ReportingKurs;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
@@ -34,10 +26,6 @@ import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
  * Proxy-Klasse im Rahmen des Reportings für Daten vom Typ Kurs und erweitert die Klasse {@link ReportingKurs}.
  */
 public class ProxyReportingKurs extends ReportingKurs {
-
-	/** Collator für die deutsche Sortierung von Einträgen */
-	@JsonIgnore
-	private final Collator colGerman = Collator.getInstance(Locale.GERMAN);
 
 	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
@@ -86,13 +74,13 @@ public class ProxyReportingKurs extends ReportingKurs {
 			}
 		}
 
-		// Bestimme zunächst, ob es mehr als einen Lehrer für den Kurs gibt und speichere sie dann ggf. in einer Map mit ihren Wochenstunden.
-		final List<DTOKursLehrer> dtokursLehrer = this.reportingRepository.conn().queryList(DTOKursLehrer.QUERY_BY_KURS_ID, DTOKursLehrer.class, super.id);
+		// Bestimme zunächst, ob es mehr als einen Lehrer für den Kurs gibt, und speichere sie dann ggf. in einer Map mit ihren Wochenstunden.
+		final List<DTOKursLehrer> dtoKursLehrer = this.reportingRepository.conn().queryList(DTOKursLehrer.QUERY_BY_KURS_ID, DTOKursLehrer.class, super.id);
 		Map<Long, Double> mapKursZusatzkraefte = new HashMap<>();
-		if (!dtokursLehrer.isEmpty())
-			mapKursZusatzkraefte = dtokursLehrer.stream().collect(Collectors.toMap(k -> k.Lehrer_ID, k -> k.Anteil));
+		if (!dtoKursLehrer.isEmpty())
+			mapKursZusatzkraefte = dtoKursLehrer.stream().collect(Collectors.toMap(k -> k.Lehrer_ID, k -> k.Anteil));
 
-		// Erstelle die Map zu den Wochenstunden. Prüfe, ob auch Kursleiter bei Zusatzkräften ist und addiere hier die Wochenstunden der Kursleitung.
+		// Erstelle die map zu den Wochenstunden. Prüfe, ob auch Kursleiter bei Zusatzkräften ist, und addiere hier die Wochenstunden der Kursleitung.
 		if (kursDaten.lehrer != null) {
 			if (mapKursZusatzkraefte.containsKey(kursDaten.lehrer)) {
 				super.wochenstundenLehrkraefte.put(kursDaten.lehrer, kursDaten.wochenstundenLehrer + mapKursZusatzkraefte.get(kursDaten.lehrer));
@@ -160,7 +148,7 @@ public class ProxyReportingKurs extends ReportingKurs {
 	/**
 	 * Equals der Klasse
 	 * @param obj Das Vergleichsobjekt
-	 * @return    true, falls es das gleiche Objekt ist, andernfalls false.
+	 * @return    True, falls es das gleiche Objekt ist, andernfalls false.
 	 */
 	@Override
 	public boolean equals(final Object obj) {
@@ -194,43 +182,14 @@ public class ProxyReportingKurs extends ReportingKurs {
 						idsSchueler.addAll(kursDaten.schueler.stream().map(s -> s.id).toList());
 				} catch (final ApiOperationException e) {
 					ReportingExceptionUtils.putStacktraceInLog(
-							"FEHLER: Fehler bei der Ermittlung der Schülerdaten des Kurses %s in %s."
+							"FEHLER: Fehler bei der Ermittlung der Daten des Kurses %s in %s."
 									.formatted(super.kuerzel, super.schuljahresabschnitt.textSchuljahresabschnittKurz()),
 							e, reportingRepository.logger(), LogLevel.ERROR, 0);
 					return super.schueler();
 				}
 			}
-			if (!idsSchueler.isEmpty()) {
-				// Filtere fehlende Schüler-IDs
-				final List<Long> fehlendeSchuelerIDs = idsSchueler.stream()
-						.filter(id -> !this.reportingRepository.mapSchuelerStammdaten().containsKey(id)).toList();
-
-				// Lade fehlende Daten, falls nötig
-				if (!fehlendeSchuelerIDs.isEmpty()) {
-					final List<SchuelerStammdaten> schuelerStammdaten;
-					try {
-						schuelerStammdaten = (new DataSchuelerStammdaten(this.reportingRepository.conn())).getListByIds(fehlendeSchuelerIDs);
-					} catch (final ApiOperationException e) {
-						throw new DeveloperNotificationException(e.getMessage());
-					}
-					// Aktualisiere die Map
-					this.reportingRepository.mapSchuelerStammdaten()
-							.putAll(schuelerStammdaten.stream().collect(Collectors.toMap(s -> s.id, Function.identity())));
-				}
-
-				// Erstelle und sortiere die Schülerliste in einem Schritt
-				super.schueler = idsSchueler.stream()
-						.filter(id -> this.reportingRepository.mapSchuelerStammdaten().containsKey(id))
-						.map(id -> this.reportingRepository.mapSchueler()
-								.computeIfAbsent(id, s -> new ProxyReportingSchueler(this.reportingRepository,
-										this.reportingRepository.mapSchuelerStammdaten().get(id))))
-						.sorted(Comparator.comparing(ReportingSchueler::nachname, colGerman)
-								.thenComparing(ReportingSchueler::vorname, colGerman)
-								.thenComparing(ReportingSchueler::vornamen, colGerman)
-								.thenComparing(ReportingSchueler::geburtsdatum)
-								.thenComparingLong(ReportingSchueler::id))
-						.toList();
-			}
+			if (!idsSchueler.isEmpty())
+				super.schueler = this.reportingRepository.schueler(idsSchueler);
 		}
 		return super.schueler();
 	}

@@ -132,4 +132,18 @@ public final class ReportingExceptionUtils {
 		logger.modifyIndent(-4);
 	}
 
+	/**
+	 * Erzeugt Log-Einträge für reine Informationen.
+	 *
+	 * @param beschreibung		Beschreibung, die im Log erfasst wird.
+	 * @param logger 			Logger, der den Ablauf protokolliert und Fehlerdaten gesammelt hat
+	 * @param loglevel			Das Level des Logging, auf dem der Eintrag erfolgen soll.
+	 * @param relativeIndent 	Einschub der Meldung gegenüber dem bisherigen Logger Einschub (positive und negative Werte möglich)
+	 */
+	public static void putInfoInLog(final String beschreibung, final Logger logger, final LogLevel loglevel, final int relativeIndent) {
+		logger.modifyIndent(relativeIndent);
+		if ((beschreibung != null) && !beschreibung.isEmpty())
+			logger.logLn(loglevel, beschreibung);
+	}
+
 }

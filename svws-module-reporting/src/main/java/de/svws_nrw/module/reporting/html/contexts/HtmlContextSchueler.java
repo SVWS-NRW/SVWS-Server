@@ -23,20 +23,9 @@ import java.util.stream.Collectors;
  */
 public final class HtmlContextSchueler extends HtmlContext<ReportingSchueler> {
 
-	@Override
-	public List<String> standardsortierung() {
-		final ArrayList<String> standardSort = new ArrayList<>();
-		standardSort.add(methodenreferenzToString(ReportingSchueler::nachname));
-		standardSort.add(methodenreferenzToString(ReportingSchueler::vorname));
-		standardSort.add(methodenreferenzToString(ReportingSchueler::vornamen));
-		standardSort.add(methodenreferenzToString(ReportingSchueler::id));
-		return standardSort;
-	}
-
 	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
 	private final ReportingRepository reportingRepository;
-
 
 	/**
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Schülern.
@@ -70,7 +59,7 @@ public final class HtmlContextSchueler extends HtmlContext<ReportingSchueler> {
 	private void erzeugeContextFromSchueler(final List<ReportingSchueler> reportingSchueler) {
 
 		setContextData(reportingSchueler);
-		sortiereContext();
+		sortiereContextMitRegistry();
 
 		// Daten-Context für Thymeleaf erzeugen.
 		final Context context = new Context();
@@ -117,7 +106,7 @@ public final class HtmlContextSchueler extends HtmlContext<ReportingSchueler> {
 		}
 
 		setContextData(temp);
-		sortiereContext();
+		sortiereContextMitRegistry();
 
 		// Daten-Context für Thymeleaf erzeugen.
 		final Context context = new Context();
@@ -125,6 +114,7 @@ public final class HtmlContextSchueler extends HtmlContext<ReportingSchueler> {
 
 		super.setContext(context);
 	}
+
 
 
 	/**

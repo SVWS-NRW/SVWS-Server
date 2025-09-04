@@ -23,7 +23,7 @@ public class ReportingParameter {
 	@Schema(description = "Der Schuljahresabschnitt, für den der Report erstellt werden soll.", example = "0")
 	public long idSchuljahresabschnitt = -1;
 
-	/** Das Dateiformat, in dem der Report ausgegeben werden soll, als Wert gemäß CoreType {@link ReportingAusgabeformat} */
+	/** Das Dateiformat, in dem der Report ausgegeben werden soll, angegeben als Wert gemäß CoreType {@link ReportingAusgabeformat} */
 	@Schema(description = "Das Dateiformat, in dem der Report ausgegeben werden soll. Werte gemäß CoreType ReportingAusgabeformat, z. B. (HTML = 1, PDF = 2).",
 			example = "2")
 	public int ausgabeformat = ReportingAusgabeformat.PDF.getId();
@@ -33,7 +33,7 @@ public class ReportingParameter {
 			example = "GostKlausurplanung-SchuelerMitKlausuren")
 	public @NotNull String reportvorlage = "";
 
-	/** Eine Liste von IDs für die Hauptdatenquelle des zu erstellenden PDF. */
+	/** Eine Liste von IDs für die Hauptdatenquelle des zu erstellenden PDFs. */
 	@Schema(description = "Eine Liste von IDs für die Hauptdatenquelle des zu erstellenden PDF.", example = "[2019,5,2020,3,2021,1]")
 	public @NotNull List<Long> idsHauptdaten = new ArrayList<>();
 
@@ -49,18 +49,21 @@ public class ReportingParameter {
 	@Schema(description = "Legt fest, ob pro Datensatz der Detaildaten eine einzelne PDF-Datei erzeugt werden soll.", example = "false")
 	public boolean einzelausgabeDetaildaten = false;
 
-	/** Legt fest, ob die in den Daten-Contexts definierte Standardsortierung verwendet werden soll, oder die in diesen Parametern definierten Sortierungen. */
-	@Schema(description = "Legt fest, ob die in den Daten-Contexts definierte Standardsortierung verwendet werden soll, oder die in diesen Parametern definierten Sortierungen.",
-			example = "true")
-	public Boolean verwendeStandardsortierung = true;
+	/** Eine ReportingSortierungDefinition für die Hauptdaten. Der Typ wird dabei ignoriert und nur die übrigen Einstellungen werden benutzt.*/
+	@Schema(description = "Eine ReportingSortierungDefinition für die Hauptdaten. Der Typ wird dabei ignoriert und nur die übrigen Einstellungen werden benutzt.",
+			example = "[ {\"typ\":\"\",\"verwendeStandardsortierung\":true,\"attribute\":[] } ]")
+	public ReportingSortierungDefinition sortierungHauptdaten = new ReportingSortierungDefinition();
 
-	/** Liste von Attributnamen, nach denen die Hauptdaten sortiert werden sollen. */
-	@Schema(description = "Liste von Attributnamen, nach denen die Hauptdaten sortiert werden sollen.", example = "Nachname, Vorname")
-	public List<String> sortierungHauptdaten = new ArrayList<>();
+	/** Eine ReportingSortierungDefinition für die Detaildaten. Der Typ wird dabei ignoriert und nur die übrigen Einstellungen werden benutzt.*/
+	@Schema(description = "Eine ReportingSortierungDefinition für die Detaildaten. Der Typ wird dabei ignoriert und nur die übrigen Einstellungen werden benutzt.",
+			example = "[ {\"typ\":\"\",\"verwendeStandardsortierung\":true,\"attribute\":[] } ]")
+	public ReportingSortierungDefinition sortierungDetaildaten = new ReportingSortierungDefinition();
 
-	/** Liste von Attributnamen, nach denen die Detaildaten sortiert werden sollen. */
-	@Schema(description = "Liste von Attributnamen, nach denen die Detaildaten sortiert werden sollen.", example = "Nachname, Vorname")
-	public List<String> sortierungDetaildaten = new ArrayList<>();
+	/** Typenspezifische Sortierdefinitionen, die für die Sortierung von ProxyTyp-Objekten verwendet werden sollen. */
+	@Schema(description = "Typenspezifische Sortierdefinitionen, die für die Sortierung von ProxyTyp-Objekten verwendet werden sollen.",
+			example = "[ {\"typ\":\"ReportingSchueler\",\"verwendeStandardsortierung\":false,\"attribute\":[auswahlLernabschnitt.klasse, nachname, vorname] }"
+					+ " ]")
+	public List<ReportingSortierungDefinition> sortierungDefinitionen = new ArrayList<>();
 
 	/** Legt fest, ob die Seiteneinstellungen für einen Duplexdruck verwendet werden sollen. */
 	@Schema(description = "Legt fest, ob die Seiteneinstellungen für einen Duplexdruck verwendet werden sollen.", example = "false")
