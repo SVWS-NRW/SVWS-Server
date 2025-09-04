@@ -273,11 +273,13 @@ export { ValidatorLehrerStammdaten } from './asd/validate/lehrer/ValidatorLehrer
 export { ValidatorLehrerStammdatenGeburtsdatum } from './asd/validate/lehrer/ValidatorLehrerStammdatenGeburtsdatum';
 export { ValidatorLehrerStammdatenNachname } from './asd/validate/lehrer/ValidatorLehrerStammdatenNachname';
 export { ValidatorLehrerStammdatenNachnameAnredeFehlerhaft } from './asd/validate/lehrer/ValidatorLehrerStammdatenNachnameAnredeFehlerhaft';
+export { ValidatorLehrerStammdatenNachnameNurEinstellig } from './asd/validate/lehrer/ValidatorLehrerStammdatenNachnameNurEinstellig';
 export { ValidatorLehrerStammdatenNachnameOhneLeerzeichenVorNachBindestrich } from './asd/validate/lehrer/ValidatorLehrerStammdatenNachnameOhneLeerzeichenVorNachBindestrich';
 export { ValidatorLehrerStammdatenNachnamePlausibel } from './asd/validate/lehrer/ValidatorLehrerStammdatenNachnamePlausibel';
 export { ValidatorLehrerStammdatenNachnameVorhanden } from './asd/validate/lehrer/ValidatorLehrerStammdatenNachnameVorhanden';
 export { ValidatorLehrerStammdatenVorname } from './asd/validate/lehrer/ValidatorLehrerStammdatenVorname';
 export { ValidatorLehrerStammdatenVornameAnredeFehlerhaft } from './asd/validate/lehrer/ValidatorLehrerStammdatenVornameAnredeFehlerhaft';
+export { ValidatorLehrerStammdatenVornameNurEinstellig } from './asd/validate/lehrer/ValidatorLehrerStammdatenVornameNurEinstellig';
 export { ValidatorSchuleStammdaten } from './asd/validate/schule/ValidatorSchuleStammdaten';
 export { ValidatorSchuleStammdatenSchulform } from './asd/validate/schule/ValidatorSchuleStammdatenSchulform';
 export { Service } from './core/Service';

@@ -26,6 +26,7 @@ public final class ValidatorLehrerStammdatenVorname extends Validator {
 		this.daten = daten;
 
 		_validatoren.add(new ValidatorLehrerStammdatenVornameAnredeFehlerhaft(daten, kontext));
+		_validatoren.add(new ValidatorLehrerStammdatenVornameNurEinstellig(daten, kontext));
 	}
 
 	@Override

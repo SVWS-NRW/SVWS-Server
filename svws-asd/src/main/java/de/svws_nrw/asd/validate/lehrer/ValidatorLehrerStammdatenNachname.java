@@ -24,6 +24,7 @@ public final class ValidatorLehrerStammdatenNachname extends Validator {
 		_validatoren.add(new ValidatorLehrerStammdatenNachnamePlausibel(daten, kontext));
 		_validatoren.add(new ValidatorLehrerStammdatenNachnameOhneLeerzeichenVorNachBindestrich(daten, kontext));
 		_validatoren.add(new ValidatorLehrerStammdatenNachnameAnredeFehlerhaft(daten, kontext));
+		_validatoren.add(new ValidatorLehrerStammdatenNachnameNurEinstellig(daten, kontext));
 	}
 
 	@Override

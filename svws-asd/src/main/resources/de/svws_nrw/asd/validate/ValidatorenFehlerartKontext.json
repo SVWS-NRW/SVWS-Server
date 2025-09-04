@@ -75,6 +75,17 @@
 			"gueltigBis": null
 		} ]
 	}, {
+		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLehrerStammdatenNachnameNurEinstellig",
+		"historie": [ {
+			"zebras": true,
+			"svws": true,
+			"muss": ["G", "H", "V", "S", "R", "PS", "SK", "GE", "GY", "WB", "BK", "SR", "SG", "SB"],
+			"kann": [],
+			"hinweis": [],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]	
+	}, {
 		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLehrerStammdatenNachnameOhneLeerzeichenVorNachBindestrich",
 		"historie": [ {
 			"zebras": true,
@@ -129,6 +140,17 @@
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
+	}, {
+		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLehrerStammdatenVornameNurEinstellig",
+		"historie": [ {
+			"zebras": true,
+			"svws": true,
+			"muss": ["G", "H", "V", "S", "R", "PS", "SK", "GE", "GY", "WB", "BK", "SR", "SG", "SB"],
+			"kann": [],
+			"hinweis": [],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]		
     }, {
 		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLehrerPersonalabschnittsdaten",
 		"historie": [ {

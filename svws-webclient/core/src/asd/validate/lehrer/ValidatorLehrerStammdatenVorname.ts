@@ -4,6 +4,7 @@ import { ValidatorLehrerStammdatenVornameAnredeFehlerhaft } from '../../../asd/v
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
+import { ValidatorLehrerStammdatenVornameNurEinstellig } from '../../../asd/validate/lehrer/ValidatorLehrerStammdatenVornameNurEinstellig';
 
 export class ValidatorLehrerStammdatenVorname extends Validator {
 
@@ -23,6 +24,7 @@ export class ValidatorLehrerStammdatenVorname extends Validator {
 		super(kontext);
 		this.daten = daten;
 		this._validatoren.add(new ValidatorLehrerStammdatenVornameAnredeFehlerhaft(daten, kontext));
+		this._validatoren.add(new ValidatorLehrerStammdatenVornameNurEinstellig(daten, kontext));
 	}
 
 	protected pruefe() : boolean {

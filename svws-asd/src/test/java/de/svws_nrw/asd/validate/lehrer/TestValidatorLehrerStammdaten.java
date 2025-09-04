@@ -38,12 +38,59 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
 @DisplayName("Tests zur Validierung der LehrerStammdaten")
 class TestValidatorLehrerStammdaten {
 
-	/** Stammdaten der Schule */
-	static final SchuleStammdaten schuleTestdaten_001 =
-			JsonReader.fromResource("de/svws_nrw/asd/validate/schule/Testdaten_001_SchuleStammdaten.json", SchuleStammdaten.class);
+	private static final String TESTDATEN_NACHNAME = """
+			''          , 'Frank', false
+			'Müller'    , 'Frank', true
+			' Müller'   , 'Frank', false
+			'MÜller'    , 'Frank', false
+			'von Müller', 'Frank', true
+			'von MÜller', 'Frank', false
+			'mÜller'    , 'Frank', false
+			'von mÜller', 'Frank', false
+			'Thor'      , 'Frank', true
+			'thor'      , 'Frank', false
+			'm'         , 'Frank', false
+			'M'         , 'Frank', false
+		""";
+	private static final String TESTDATEN_NACHNAME_ANREDE_FEHLERHAFT = """
+			'Herrmann'     , 'Frank', true
+			'Herr Müller'  , 'Frank', false
+			'Frau Schmidt' , 'Frank', false
+			'Herr'         , 'Frank', true
+			'Frau'         , 'Frank', true
+			'Meier'        , 'Frank', true
+		""";
+
+	private static final String TESTDATEN_VORNAME = """
+			'Müller', ''              , false
+			'Müller', 'Frank'         , true
+			'Müller', ' Linksbündig'  , false
+			'Müller', 'GRoßbuchstaben', false
+			'Müller', 'GROßbuchstaben', false
+			'Müller', 'GrOßbuchstaben', false
+			'Müller', 'kleinbuchstabe', false
+			'Müller', 'Thor Hendrik'  , true
+			'Müller', 'f'             , false
+			'Müller', 'F'             , false
+		""";
+
+
+	private static final String TESTDATEN_VORNAME_ANREDE_FEHLERHAFT = """
+			'Müller', 'Frauke'      , true
+			'Müller', 'Frau Anna'   , false
+			'Müller', 'Herr Peter'  , false
+			'Müller', 'Herr'        , true
+			'Müller', 'Frau'        , true
+			'Müller', 'Anna'        , true
+		""";
+
 	/** Stammdaten des Lehrers */
 	static final LehrerStammdaten lehrerTestdaten_001 =
 			JsonReader.fromResource("de/svws_nrw/asd/validate/lehrer/Testdaten_001_LehrerStammdaten.json", LehrerStammdaten.class);
+
+	/** Stammdaten der Schule */
+	static final SchuleStammdaten schuleTestdaten_001 =
+			JsonReader.fromResource("de/svws_nrw/asd/validate/schule/Testdaten_001_SchuleStammdaten.json", SchuleStammdaten.class);
 
 	/**
 	 * Initialisiert die Core-Types, damit die Tests ausgeführt werden können.
@@ -56,50 +103,28 @@ class TestValidatorLehrerStammdaten {
 	}
 
 
-	private static final String TESTDATEN_NACHNAME = """
-			''          , 'Frank', false
-			'Müller'    , 'Frank', true
-			' Müller'   , 'Frank', false
-			'MÜller'    , 'Frank', false
-			'von Müller', 'Frank', true
-			'von MÜller', 'Frank', false
-			'mÜller'    , 'Frank', false
-			'von mÜller', 'Frank', false
-			'Thor'      , 'Frank', true
-			'thor'      , 'Frank', false
-		""";
-
-	private static final String TESTDATEN_VORNAME = """
-			'Müller', ''              , false
-			'Müller', 'Frank'         , true
-			'Müller', ' Linksbündig'  , false
-			'Müller', 'GRoßbuchstaben', false
-			'Müller', 'GROßbuchstaben', false
-			'Müller', 'GrOßbuchstaben', false
-			'Müller', 'kleinbuchstabe', false
-			'Müller', 'Thor Hendrik'  , true
-		""";
-
-	private static final String TESTDATEN_VORNAME_ANREDE_FEHLERHAFT = """
-			'Müller', 'Frauke'      , true
-			'Müller', 'Frau Anna'   , false
-			'Müller', 'Herr Peter'  , false
-			'Müller', 'Herr'        , true
-			'Müller', 'Frau'        , true
-			'Müller', 'Anna'        , true
-		""";
-
-	private static final String TESTDATEN_NACHNAME_ANREDE_FEHLERHAFT = """
-			'Herrmann'     , 'Frank', true
-			'Herr Müller'  , 'Frank', false
-			'Frau Schmidt' , 'Frank', false
-			'Herr'         , 'Frank', true
-			'Frau'         , 'Frank', true
-			'Meier'        , 'Frank', true
-		""";
 
 
+	/**
+	 * Test von ValidatorLehrerStammdaten
+	 *
+	 * @param nachname   der Nachname, welcher bei den eingelesenen Testdaten ersetzt wird
+	 * @param vorname    der Vorname, welcher bei den eingelesenen Testdaten ersetzt wird
+	 * @param result     gibt an, welches Ergebnis bei den Testdaten erwartet wird
+	 */
+	@DisplayName("Tests für ValidatorLehrerStammdaten")
+	@ParameterizedTest
+	@CsvSource(textBlock = TESTDATEN_VORNAME + TESTDATEN_NACHNAME)
+	void testValidatorLehrerStammdaten(final String nachname, final String vorname, final boolean result) {
+		// Testdaten setzen
+		lehrerTestdaten_001.nachname = nachname;
+		lehrerTestdaten_001.vorname = vorname;
 
+		// Erzeuge den Kontext für die Validierung
+		final ValidatorKontext kontext = new ValidatorKontext(schuleTestdaten_001, true);
+		final ValidatorLehrerStammdaten validator = new ValidatorLehrerStammdaten(lehrerTestdaten_001, kontext);
+		assertEquals(result, validator.run());
+	}
 
 	/**
 	 * Test von ValidatorLehrerStammdatenNachname
@@ -124,6 +149,7 @@ class TestValidatorLehrerStammdaten {
 		assertEquals(result, validator.run());
 	}
 
+
 	/**
 	 * Test von ValidatorLehrerStammdatenVorname
 	 *
@@ -144,28 +170,6 @@ class TestValidatorLehrerStammdaten {
 		// Erzeuge den Kontext für die Validierung
 		final ValidatorKontext kontext = new ValidatorKontext(schuleTestdaten_001, true);
 		final ValidatorLehrerStammdatenVorname validator = new ValidatorLehrerStammdatenVorname(lehrerTestdaten_001, kontext);
-		assertEquals(result, validator.run());
-	}
-
-
-	/**
-	 * Test von ValidatorLehrerStammdaten
-	 *
-	 * @param nachname   der Nachname, welcher bei den eingelesenen Testdaten ersetzt wird
-	 * @param vorname    der Vorname, welcher bei den eingelesenen Testdaten ersetzt wird
-	 * @param result     gibt an, welches Ergebnis bei den Testdaten erwartet wird
-	 */
-	@DisplayName("Tests für ValidatorLehrerStammdaten")
-	@ParameterizedTest
-	@CsvSource(textBlock = TESTDATEN_VORNAME + TESTDATEN_NACHNAME)
-	void testValidatorLehrerStammdaten(final String nachname, final String vorname, final boolean result) {
-		// Testdaten setzen
-		lehrerTestdaten_001.nachname = nachname;
-		lehrerTestdaten_001.vorname = vorname;
-
-		// Erzeuge den Kontext für die Validierung
-		final ValidatorKontext kontext = new ValidatorKontext(schuleTestdaten_001, true);
-		final ValidatorLehrerStammdaten validator = new ValidatorLehrerStammdaten(lehrerTestdaten_001, kontext);
 		assertEquals(result, validator.run());
 	}
 
