@@ -15,38 +15,38 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für den
- * Core-DTO {@link Einwilligungsart}.
+ * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für das Core-DTO {@link Einwilligungsart}.
  */
 public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long, DTOKatalogEinwilligungsart, Einwilligungsart> {
 
 	/**
-	 * Erstellt einen neuen {@link DataManagerRevised} für den Core-DTO {@link Einwilligungsart}.
+	 * Erstellt einen neuen {@link DataManagerRevised} für das Core-DTO {@link Einwilligungsart}.
 	 *
 	 * @param conn die Datenbank-Verbindung für den Datenbankzugriff
 	 */
 	public DataKatalogEinwilligungsarten(final DBEntityManager conn) {
 		super(conn);
 		setAttributesRequiredOnCreation("bezeichnung", "personTyp");
+		setAttributesNotPatchable("id");
 	}
 
 
 	@Override
-	public Einwilligungsart map(final DTOKatalogEinwilligungsart dtoKatalogEinwilligungsart) {
+	public Einwilligungsart map(final DTOKatalogEinwilligungsart dto) {
 		final Einwilligungsart daten = new Einwilligungsart();
-		daten.id = dtoKatalogEinwilligungsart.ID;
-		daten.bezeichnung = (dtoKatalogEinwilligungsart.Bezeichnung == null) ? "" : dtoKatalogEinwilligungsart.Bezeichnung;
-		daten.sichtbar = (dtoKatalogEinwilligungsart.Sichtbar == null) || dtoKatalogEinwilligungsart.Sichtbar;
-		daten.schluessel = (dtoKatalogEinwilligungsart.Schluessel == null) ? "" : dtoKatalogEinwilligungsart.Schluessel;
-		daten.sortierung = dtoKatalogEinwilligungsart.Sortierung;
-		daten.beschreibung = (dtoKatalogEinwilligungsart.Beschreibung == null) ? "" : dtoKatalogEinwilligungsart.Beschreibung;
-		daten.personTyp = dtoKatalogEinwilligungsart.personTyp.id;
+		daten.id = dto.ID;
+		daten.bezeichnung = (dto.Bezeichnung == null) ? "" : dto.Bezeichnung;
+		daten.schluessel = (dto.Schluessel == null) ? "" : dto.Schluessel;
+		daten.sortierung = dto.Sortierung;
+		daten.beschreibung = (dto.Beschreibung == null) ? "" : dto.Beschreibung;
+		daten.personTyp = (dto.personTyp == null) ? PersonTyp.SCHUELER.id : dto.personTyp.id;
 		daten.anzahlEinwilligungen = 0;
 		return daten;
 	}
@@ -65,22 +65,26 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 		return ea;
 	}
 
-
 	@Override
 	public List<Einwilligungsart> getAll() throws ApiOperationException {
-		final List<DTOKatalogEinwilligungsart> katalog = conn.queryAll(DTOKatalogEinwilligungsart.class);
-		final Map<Long, Long> mapSchuelerEinwilligungen = conn.queryList(DTOSchuelerDatenschutz.QUERY_ALL.concat(" WHERE e.Datenschutz_ID IS NOT NULL"),
-				DTOSchuelerDatenschutz.class).stream().collect(Collectors.groupingBy(s -> s.Datenschutz_ID, Collectors.counting()));
-		final Map<Long, Long> mapLehrerEinwilligugen = conn.queryList(DTOLehrerDatenschutz.QUERY_ALL.concat(" WHERE e.DatenschutzID IS NOT NULL"),
-				DTOLehrerDatenschutz.class).stream().collect(Collectors.groupingBy(l -> l.DatenschutzID, Collectors.counting()));
-		return katalog.stream().map(ea -> {
-			int anzahlEinwilligungen = 0;
-			if (ea.personTyp == PersonTyp.SCHUELER)
-				anzahlEinwilligungen = mapSchuelerEinwilligungen.computeIfAbsent(ea.ID, a -> 0L).intValue();
-			else if (ea.personTyp == PersonTyp.LEHRER)
-				anzahlEinwilligungen = mapLehrerEinwilligugen.computeIfAbsent(ea.ID, a -> 0L).intValue();
-			return map(ea, anzahlEinwilligungen);
-		}).toList();
+		final Map<Long, Long> anzahlSchuelerByIdEinwilligungsart = conn
+				.queryList(DTOSchuelerDatenschutz.QUERY_ALL.concat(" WHERE e.Datenschutz_ID IS NOT NULL"), DTOSchuelerDatenschutz.class).stream()
+				.collect(Collectors.groupingBy(s -> s.Datenschutz_ID, Collectors.counting()));
+
+		final Map<Long, Long> anzahlLehrerByIdEinwilligungsart = conn
+				.queryList(DTOLehrerDatenschutz.QUERY_ALL.concat(" WHERE e.DatenschutzID IS NOT NULL"), DTOLehrerDatenschutz.class).stream()
+				.collect(Collectors.groupingBy(l -> l.DatenschutzID, Collectors.counting()));
+
+		return conn.queryAll(DTOKatalogEinwilligungsart.class).stream()
+				.map(ea -> {
+					final int anzahlEinwilligungen = switch (ea.personTyp) {
+						case SCHUELER -> anzahlSchuelerByIdEinwilligungsart.getOrDefault(ea.ID, 0L).intValue();
+						case LEHRER -> anzahlLehrerByIdEinwilligungsart.getOrDefault(ea.ID, 0L).intValue();
+						default -> 0;
+					};
+					return map(ea, anzahlEinwilligungen);
+				})
+				.toList();
 	}
 
 
@@ -88,17 +92,19 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 	public Einwilligungsart getById(final Long id) throws ApiOperationException {
 		if (id == null)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einer Einwilligungsart mit der ID null ist unzulässig.");
-		final DTOKatalogEinwilligungsart einwilligung = conn.queryByKey(DTOKatalogEinwilligungsart.class, id);
-		if (einwilligung == null)
+
+		final DTOKatalogEinwilligungsart einwilligungsart = conn.queryByKey(DTOKatalogEinwilligungsart.class, id);
+		if (einwilligungsart == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Die Einwilligungsart mit der ID %d wurde nicht gefunden.".formatted(id));
+
 		int anzahlEinwilligungen = 0;
-		if (einwilligung.personTyp == PersonTyp.SCHUELER)
+		if (einwilligungsart.personTyp == PersonTyp.SCHUELER)
 			anzahlEinwilligungen = conn.queryList(DTOSchuelerDatenschutz.QUERY_BY_DATENSCHUTZ_ID.replace("SELECT e ", "SELECT COUNT(e) "),
-				DTOSchuelerDatenschutz.class, einwilligung.ID).size();
-		else if (einwilligung.personTyp == PersonTyp.LEHRER)
+					DTOSchuelerDatenschutz.class, einwilligungsart.ID).size();
+		else if (einwilligungsart.personTyp == PersonTyp.LEHRER)
 			anzahlEinwilligungen = conn.queryList(DTOLehrerDatenschutz.QUERY_BY_DATENSCHUTZID.replace("SELECT e ", "SELECT COUNT(e) "),
-					DTOLehrerDatenschutz.class, einwilligung.ID).size();
-		return map(einwilligung, anzahlEinwilligungen);
+					DTOLehrerDatenschutz.class, einwilligungsart.ID).size();
+		return map(einwilligungsart, anzahlEinwilligungen);
 	}
 
 
@@ -106,67 +112,32 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 	protected void initDTO(final DTOKatalogEinwilligungsart dto, final Long id, final Map<String, Object> initAttributes) {
 		dto.ID = id;
 		dto.Bezeichnung = "";
-		dto.Sichtbar = true;
 		dto.Schluessel = "";
 		dto.Sortierung = 32000;
 		dto.Beschreibung = "";
 		dto.personTyp = PersonTyp.SCHUELER;
 	}
 
+
 	@Override
 	protected Einwilligungsart addBasic(final Long newID, final Map<String, Object> initAttributes) throws ApiOperationException {
-		final Einwilligungsart neueEinwilligungsart = super.addBasic(newID, initAttributes);
-		if (neueEinwilligungsart.personTyp == PersonTyp.LEHRER.id) {
-			final List<DTOLehrerDatenschutz> lehrerEinwilligungen = new ArrayList<>();
-			final List<Long> lehrerIds = conn.queryList("SELECT e.ID FROM DTOLehrer e", Long.class);
-			for (final Long lehrerId : lehrerIds) {
-				final DTOLehrerDatenschutz dto = new DTOLehrerDatenschutz(lehrerId, neueEinwilligungsart.id, false, false);
-				lehrerEinwilligungen.add(dto);
-			}
-		conn.transactionPersistAll(lehrerEinwilligungen);
-		} else if (neueEinwilligungsart.personTyp == PersonTyp.SCHUELER.id) {
-			final List<Long> schuelerIds = conn.queryList("SELECT e.ID FROM DTOSchueler e", Long.class);
-			final List<DTOSchuelerDatenschutz> schuelerEinwilligungen = new ArrayList<>();
-			for (final Long schuelerId : schuelerIds) {
-				final DTOSchuelerDatenschutz dto = new DTOSchuelerDatenschutz(schuelerId, neueEinwilligungsart.id, false, false);
-				schuelerEinwilligungen.add(dto);
-			}
-			conn.transactionPersistAll(schuelerEinwilligungen);
-		} else {
-			throw new ApiOperationException(Status.BAD_REQUEST, "Unbekannter Personentyp: " + neueEinwilligungsart.personTyp);
-		}
-		return neueEinwilligungsart;
+		final Einwilligungsart ea = super.addBasic(newID, initAttributes);
+
+		if (ea.personTyp == PersonTyp.LEHRER.id)
+			persistEinwilligungen("SELECT e.ID FROM DTOLehrer e", id -> new DTOLehrerDatenschutz(id, ea.id, false, false));
+		else if (ea.personTyp == PersonTyp.SCHUELER.id)
+			persistEinwilligungen("SELECT e.ID FROM DTOSchueler e", id -> new DTOSchuelerDatenschutz(id, ea.id, false, false));
+		else
+			throw new ApiOperationException(Status.BAD_REQUEST, "Unbekannter Personentyp: %d".formatted(ea.personTyp));
+
+		return ea;
 	}
 
-
-	private String validateBezeichnung(final Object value, final PersonTyp personTyp, final String name) throws ApiOperationException {
-		final String bezeichnung = JSONMapper.convertToString(value, false, false, Schema.tab_K_Datenschutz.col_Bezeichnung.datenlaenge(), name);
-		final List<DTOKatalogEinwilligungsart> bezeichnungenFiltered = conn.queryList(
-				"SELECT e FROM DTOKatalogEinwilligungsart e WHERE e.Bezeichnung = ?1 AND e.personTyp = ?2", DTOKatalogEinwilligungsart.class,
-				bezeichnung, personTyp);
-		if (!bezeichnungenFiltered.isEmpty())
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"Die Bezeichnung '%s' wird bereits für eine andere Einwilligungsart des gleichen Personentyps ('%s') genutzt.".formatted(bezeichnung,
-							personTyp.bezeichnung));
-		return bezeichnung;
+	private <T> void persistEinwilligungen(final String query, final Function<Long, T> dtoMapper) {
+		final List<Long> ids = conn.queryList(query, Long.class);
+		final List<T> einwilligungen = ids.stream().map(dtoMapper).toList();
+		conn.transactionPersistAll(einwilligungen);
 	}
-
-
-	private String validateSchluessel(final Object value, final PersonTyp personTyp, final String name) throws ApiOperationException {
-		final String schluessel = JSONMapper.convertToString(value, true, true, Schema.tab_K_Datenschutz.col_Schluessel.datenlaenge(), name);
-		if (schluessel.isEmpty()) {
-			return schluessel;
-		}
-		final List<DTOKatalogEinwilligungsart> schluesselFiltered = conn.queryList(
-				"SELECT e FROM DTOKatalogEinwilligungsart e WHERE e.Schluessel = ?1 AND e.personTyp = ?2", DTOKatalogEinwilligungsart.class,
-				schluessel, personTyp);
-		if (!schluesselFiltered.isEmpty())
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"Der Schlüssel '%s' wird bereits für eine andere Einwilligungsart des gleichen Personentyps ('%s') genutzt.".formatted(schluessel,
-							personTyp.bezeichnung));
-		return schluessel;
-	}
-
 
 	@Override
 	protected void mapAttribute(final DTOKatalogEinwilligungsart dto, final String name, final Object value, final Map<String, Object> map)
@@ -174,10 +145,10 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 		final PersonTyp personTyp = (map.containsKey("personTyp")) ? PersonTyp.getByID(JSONMapper.convertToInteger(map.get("personTyp"), true)) : dto.personTyp;
 		switch (name) {
 			case "id" -> {
-				final Long patch_id = JSONMapper.convertToLong(value, true, name);
-				if ((patch_id == null) || (Long.compare(patch_id, dto.ID) != 0))
+				final Long id = JSONMapper.convertToLong(value, false, name);
+				if (!Objects.equals(dto.ID, id))
 					throw new ApiOperationException(Status.BAD_REQUEST,
-							"Die angegebene ID %d ist null oder stimmt nicht mit der ID %d im DTO überein.".formatted(patch_id, dto.ID));
+							"Die ID %d des Patches ist null oder stimmt nicht mit der ID %d in der Datenbank überein.".formatted(id, dto.ID));
 			}
 			case "bezeichnung" -> dto.Bezeichnung = validateBezeichnung(value, personTyp, name);
 			case "istSichtbar" -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false, name);
@@ -185,17 +156,44 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 			case "sortierung" -> dto.Sortierung = JSONMapper.convertToInteger(value, false, name);
 			case "beschreibung" -> dto.Beschreibung =
 					JSONMapper.convertToString(value, true, true, Schema.tab_K_Datenschutz.col_Beschreibung.datenlaenge(), name);
-			case "personTyp" -> {
-				final PersonTyp convertedValue = PersonTyp.getByID(JSONMapper.convertToInteger(value, false, name));
-				validateBezeichnung(map.containsKey("bezeichnung") ? map.get("bezeichnung") : dto.Bezeichnung, convertedValue, name);
-				validateSchluessel(map.containsKey("schluessel") ? map.get("schluessel") : dto.Schluessel, convertedValue, name);
-				dto.personTyp = convertedValue;
-				if (dto.personTyp == null)
-					throw new ApiOperationException(Status.BAD_REQUEST,
-							"Die ID %d ist für den Personentyp ungültig.".formatted(JSONMapper.convertToInteger(value, false, name)));
-			}
-			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten ein unbekanntes Attribut.");
+			case "personTyp" -> validatePersonTyp(dto, name, value, map);
+			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));
 		}
+	}
+
+	private String validateBezeichnung(final Object value, final PersonTyp personTyp, final String name) throws ApiOperationException {
+		final String bezeichnung = JSONMapper.convertToString(value, false, false, Schema.tab_K_Datenschutz.col_Bezeichnung.datenlaenge(), name);
+		final List<DTOKatalogEinwilligungsart> einwilligungsarten = conn.queryList(
+				"SELECT e FROM DTOKatalogEinwilligungsart e WHERE e.Bezeichnung = ?1 AND e.personTyp = ?2", DTOKatalogEinwilligungsart.class, bezeichnung, personTyp);
+		if (!einwilligungsarten.isEmpty())
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die Bezeichnung '%s' wird bereits genutzt.".formatted(bezeichnung));
+
+		return bezeichnung;
+	}
+
+
+	private String validateSchluessel(final Object value, final PersonTyp personTyp, final String name) throws ApiOperationException {
+		final String schluessel = JSONMapper.convertToString(value, true, true, Schema.tab_K_Datenschutz.col_Schluessel.datenlaenge(), name);
+		if (schluessel.isEmpty())
+			return schluessel;
+
+		final List<DTOKatalogEinwilligungsart> schluesselFiltered = conn.queryList(
+				"SELECT e FROM DTOKatalogEinwilligungsart e WHERE e.Schluessel = ?1 AND e.personTyp = ?2", DTOKatalogEinwilligungsart.class, schluessel, personTyp);
+		if (!schluesselFiltered.isEmpty())
+			throw new ApiOperationException(Status.BAD_REQUEST, "Der Schlüssel '%s' wird bereits für genutzt.".formatted(schluessel));
+
+		return schluessel;
+	}
+
+	private void validatePersonTyp(final DTOKatalogEinwilligungsart dto, final String name, final Object value, final Map<String, Object> map) throws ApiOperationException {
+		final int id = JSONMapper.convertToInteger(value, false, name);
+		final PersonTyp personTyp = PersonTyp.getByID(id);
+		if (personTyp == null)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID %d ist für den Personentyp ungültig.".formatted(id));
+
+		validateBezeichnung(map.containsKey("bezeichnung") ? map.get("bezeichnung") : dto.Bezeichnung, personTyp, name);
+		validateSchluessel(map.containsKey("schluessel") ? map.get("schluessel") : dto.Schluessel, personTyp, name);
+		dto.personTyp = personTyp;
 	}
 
 	/**
@@ -208,10 +206,10 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 	@Override
 	public Response deleteMultipleAsResponse(final List<Long> ids) {
 		// Bestimme die Datenbank-DTOs der Einwilligungsarten
-		final List<DTOKatalogEinwilligungsart> einwilligungsArten = this.conn.queryByKeyList(DTOKatalogEinwilligungsart.class, ids).stream().toList();
+		final List<DTOKatalogEinwilligungsart> einwilligungsarten = this.conn.queryByKeyList(DTOKatalogEinwilligungsart.class, ids).stream().toList();
 
 		// Prüfe, ob das Löschen der Einwilligungsarten erlaubt ist
-		final Map<Long, SimpleOperationResponse> mapResponse = einwilligungsArten.stream()
+		final Map<Long, SimpleOperationResponse> mapResponse = einwilligungsarten.stream()
 				.collect(Collectors.toMap(dto -> dto.ID, dto -> {
 					final SimpleOperationResponse response = new SimpleOperationResponse();
 					response.id = dto.ID;
@@ -219,7 +217,7 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 				}));
 
 		// Lösche die Einwilligungsarten und gib den Erfolg in der Response zurück
-		for (final DTOKatalogEinwilligungsart dtoEinwilligungsArt : einwilligungsArten) {
+		for (final DTOKatalogEinwilligungsart dtoEinwilligungsArt : einwilligungsarten) {
 			final SimpleOperationResponse operationResponse = mapResponse.get(dtoEinwilligungsArt.ID);
 			if (operationResponse == null)
 				throw new DeveloperNotificationException("Das SimpleOperationResponse Objekt zu der ID %d existiert nicht.".formatted(dtoEinwilligungsArt.ID));

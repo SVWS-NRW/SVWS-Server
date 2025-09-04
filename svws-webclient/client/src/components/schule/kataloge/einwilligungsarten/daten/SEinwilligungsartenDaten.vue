@@ -1,17 +1,14 @@
 <template>
 	<div class="page page-grid-cards">
-		<svws-ui-content-card title="Einwilligungsart" class="w-full">
+		<svws-ui-content-card title="Einwilligungsart">
 			<svws-ui-input-wrapper>
-				<svws-ui-text-input class="contentFocusField w-5/5" placeholder="Bezeichnung" :model-value="einwilligungsartenListeManager().auswahl().bezeichnung"
-					@change="bezeichnung => patch({ bezeichnung: bezeichnung ?? undefined })" :readonly />
-				<svws-ui-text-input class="contentFocusField w-5/5" placeholder="Schlüssel" :model-value="einwilligungsartenListeManager().auswahl().schluessel"
-					@change="schluessel => patch({ schluessel: schluessel ?? undefined })" :readonly />
-				<svws-ui-text-input class="contentFocusField w-5/5" placeholder="Beschreibung" :model-value="einwilligungsartenListeManager().auswahl().beschreibung"
+				<svws-ui-text-input class="contentFocusField" placeholder="Bezeichnung" :model-value="einwilligungsartenListeManager().auswahl().bezeichnung"
+					@change="bezeichnung => patch({ bezeichnung: bezeichnung ?? undefined })" :readonly required :min-len="1" :max-len="250" />
+				<svws-ui-text-input placeholder="Schlüssel" :model-value="einwilligungsartenListeManager().auswahl().schluessel"
+					@change="schluessel => patch({ schluessel: schluessel ?? undefined })" :readonly :max-len="20" />
+				<svws-ui-textarea-input placeholder="Beschreibung" :model-value="einwilligungsartenListeManager().auswahl().beschreibung"
 					@change="beschreibung => patch({ beschreibung: beschreibung ?? undefined })" :readonly />
-				<svws-ui-text-input class="contentFocusField w-5/5" placeholder="Personenart" :model-value="getPersonTypName(einwilligungsartenListeManager().auswahl().personTyp)" disabled />
-				<svws-ui-checkbox :model-value="einwilligungsartenListeManager().daten().istSichtbar" @update:model-value="istSichtbar => patch({ istSichtbar })" :readonly>
-					Sichtbar
-				</svws-ui-checkbox>
+				<svws-ui-text-input placeholder="Personenart" :model-value="getPersonTypName(einwilligungsartenListeManager().auswahl().personTyp)" disabled />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 	</div>

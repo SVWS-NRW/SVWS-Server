@@ -15,11 +15,6 @@ export class Einwilligungsart extends JavaObject {
 	public bezeichnung : string = "";
 
 	/**
-	 * Gibt an, ob die Einwilligungsart in der Anwendung sichtbar sein soll oder nicht.
-	 */
-	public sichtbar : boolean = true;
-
-	/**
 	 * Der Schlüssel der Einwilligungsart.
 	 */
 	public schluessel : string = "";
@@ -38,11 +33,6 @@ export class Einwilligungsart extends JavaObject {
 	 * Gibt an, für welche Personengruppe die Einwilligungsart relevant ist.
 	 */
 	public personTyp : number = PersonTyp.SCHUELER.id;
-
-	/**
-	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.
-	 */
-	public istSichtbar : boolean = true;
 
 	/**
 	 * Gibt an, für welche Personengruppe die Einwilligungsart relevant ist.
@@ -76,9 +66,6 @@ export class Einwilligungsart extends JavaObject {
 		if (obj.bezeichnung === undefined)
 			throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
-		if (obj.sichtbar === undefined)
-			throw new Error('invalid json format, missing attribute sichtbar');
-		result.sichtbar = obj.sichtbar;
 		if (obj.schluessel === undefined)
 			throw new Error('invalid json format, missing attribute schluessel');
 		result.schluessel = obj.schluessel;
@@ -89,9 +76,6 @@ export class Einwilligungsart extends JavaObject {
 		if (obj.personTyp === undefined)
 			throw new Error('invalid json format, missing attribute personTyp');
 		result.personTyp = obj.personTyp;
-		if (obj.istSichtbar === undefined)
-			throw new Error('invalid json format, missing attribute istSichtbar');
-		result.istSichtbar = obj.istSichtbar;
 		if (obj.anzahlEinwilligungen === undefined)
 			throw new Error('invalid json format, missing attribute anzahlEinwilligungen');
 		result.anzahlEinwilligungen = obj.anzahlEinwilligungen;
@@ -102,12 +86,10 @@ export class Einwilligungsart extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
-		result += '"sichtbar" : ' + obj.sichtbar.toString() + ',';
 		result += '"schluessel" : ' + JSON.stringify(obj.schluessel) + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"beschreibung" : ' + ((obj.beschreibung === null) ? 'null' : JSON.stringify(obj.beschreibung)) + ',';
 		result += '"personTyp" : ' + obj.personTyp.toString() + ',';
-		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		result += '"anzahlEinwilligungen" : ' + obj.anzahlEinwilligungen.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -122,9 +104,6 @@ export class Einwilligungsart extends JavaObject {
 		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		}
-		if (obj.sichtbar !== undefined) {
-			result += '"sichtbar" : ' + obj.sichtbar.toString() + ',';
-		}
 		if (obj.schluessel !== undefined) {
 			result += '"schluessel" : ' + JSON.stringify(obj.schluessel) + ',';
 		}
@@ -136,9 +115,6 @@ export class Einwilligungsart extends JavaObject {
 		}
 		if (obj.personTyp !== undefined) {
 			result += '"personTyp" : ' + obj.personTyp.toString() + ',';
-		}
-		if (obj.istSichtbar !== undefined) {
-			result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		}
 		if (obj.anzahlEinwilligungen !== undefined) {
 			result += '"anzahlEinwilligungen" : ' + obj.anzahlEinwilligungen.toString() + ',';

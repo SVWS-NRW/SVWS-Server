@@ -79,7 +79,6 @@ class DataKatalogEinwilligungsartenTest {
 				.hasFieldOrPropertyWithValue("beschreibung", "Testbeschreibung")
 				.hasFieldOrPropertyWithValue("schluessel", "Testschluessel")
 				.hasFieldOrPropertyWithValue("personTyp", PersonTyp.SCHUELER.id)
-				.hasFieldOrPropertyWithValue("sichtbar", true)
 				.hasFieldOrPropertyWithValue("sortierung", 32000)
 				.hasFieldOrPropertyWithValue("anzahlEinwilligungen", 0);
 	}
@@ -99,7 +98,6 @@ class DataKatalogEinwilligungsartenTest {
 				.hasFieldOrPropertyWithValue("beschreibung", "")
 				.hasFieldOrPropertyWithValue("schluessel", "")
 				.hasFieldOrPropertyWithValue("personTyp", PersonTyp.SCHUELER.id)
-				.hasFieldOrPropertyWithValue("sichtbar", true)
 				.hasFieldOrPropertyWithValue("sortierung", 32000)
 				.hasFieldOrPropertyWithValue("anzahlEinwilligungen", 0);
 	}

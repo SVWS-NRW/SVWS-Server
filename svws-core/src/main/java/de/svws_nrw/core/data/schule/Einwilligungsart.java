@@ -22,9 +22,6 @@ public class Einwilligungsart {
 	@Schema(description = "die Bezeichnung der Einwilligungsart", example = "Verwendung Foto")
 	public @NotNull String bezeichnung = "";
 
-	/** Gibt an, ob die Einwilligungsart in der Anwendung sichtbar sein soll oder nicht. */
-	@Schema(description = "gibt an, ob die Einwilligungsart in der Anwendung sichtbar sein soll oder nicht", example = "true")
-	public boolean sichtbar = true;
 
 	/** Der Schlüssel der Einwilligungsart. */
 	@Schema(description = "der Schlüssel der Einwilligungsart", example = "FOTO")
@@ -41,10 +38,6 @@ public class Einwilligungsart {
 	/** Gibt an, für welche Personengruppe die Einwilligungsart relevant ist. */
 	@Schema(description = "gibt an, für welche Personengruppe die Einwilligungsart relevant ist", example = "2")
 	public int personTyp = PersonTyp.SCHUELER.id;
-
-	/** Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. */
-	@Schema(description = "gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht", example = "true")
-	public boolean istSichtbar = true;
 
 	/** Gibt an, für welche Personengruppe die Einwilligungsart relevant ist. */
 	@Schema(description = "gibt an wie viele Einwilligungen dem entsprechenden Einwilligungsart-Eintrag zugeordnet sind", example = "3")

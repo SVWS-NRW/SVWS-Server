@@ -1,68 +1,84 @@
 <template>
 	<div class="page page-grid-cards">
-		<div class="flex flex-col gap-y-16 lg:gap-y-20">
-			<svws-ui-content-card title="Allgemein">
-				<svws-ui-input-wrapper :grid="2">
-					<div>
-						<svws-ui-text-input	:valid="validatorEinwilligungsartBezeichnung" v-model="einwilligungsart.bezeichnung" type="text" placeholder="Bezeichnung" :readonly />
-						<div v-if="!validatorEinwilligungsartBezeichnung(einwilligungsart.bezeichnung) && (einwilligungsart.bezeichnung.length > 0)" class="flex my-auto">
-							<span class="icon i-ri-alert-line mx-0.5 mr-1 inline-flex" />
-							<p> Diese Bezeichnung wird bereits verwendet </p>
-						</div>
-					</div>
-					<div>
-						<svws-ui-text-input :valid="validatorEinwilligungsartSchluessel" v-model="einwilligungsart.schluessel" type="text" placeholder="Schlüssel" :readonly />
-						<div v-if="!validatorEinwilligungsartSchluessel(einwilligungsart.schluessel) && (einwilligungsart.schluessel.length > 0)" class="flex my-auto">
-							<span class="icon i-ri-alert-line mx-0.5 mr-1 inline-flex" />
-							<p> Dieser Schlüssel wird bereits verwendet </p>
-						</div>
-					</div>
-					<svws-ui-textarea-input v-model="einwilligungsart.beschreibung" type="text" placeholder="Beschreibung" class="col-span-full" :readonly />
-					<svws-ui-select v-model="auswahlPersonTyp" :items="personTypen" :item-text="item => item.bezeichnung" placeholder="Personenart" title="Personenart"
-						class="col-span-full" :readonly />
-				</svws-ui-input-wrapper>
-				<div class="mt-7 flex flex-row gap-4 justify-end">
-					<svws-ui-button type="secondary" @click="cancel" :disabled="isLoading">Abbrechen</svws-ui-button>
-					<svws-ui-button @click="addEinwilligungsart"
-						:disabled="((!validatorEinwilligungsartBezeichnung(einwilligungsart.bezeichnung) || !validatorEinwilligungsartSchluessel(einwilligungsart.schluessel)) ||
-							isLoading || (einwilligungsart.bezeichnung === '') || (!hatKompetenzUpdate))">
-						Speichern <svws-ui-spinner :spinning="isLoading" />
-					</svws-ui-button>
-				</div>
-			</svws-ui-content-card>
-		</div>
+		<svws-ui-content-card title="Einwilligungsart">
+			<svws-ui-input-wrapper>
+				<svws-ui-text-input :valid="fieldIsValid('bezeichnung')" v-model="data.bezeichnung" placeholder="Bezeichnung" :disabled
+					required :min-len="1" :max-len="250" />
+				<svws-ui-text-input :valid="schluesselIsValid" v-model="data.schluessel" placeholder="Schlüssel" :disabled :max-len="20" />
+				<svws-ui-textarea-input v-model="data.beschreibung" placeholder="Beschreibung" class="col-span-full" :disabled />
+				<svws-ui-select title="Personenart" class="col-span-full" :items="[PersonTyp.LEHRER, PersonTyp.SCHUELER]" v-model="selectedPersonTyp"
+					:item-text="item => item.bezeichnung" :disabled />
+			</svws-ui-input-wrapper>
+			<div class="mt-7 flex flex-row gap-4 justify-end">
+				<svws-ui-button type="secondary" @click="cancel">Abbrechen</svws-ui-button>
+				<svws-ui-button @click="addEinwilligungsart" :disabled="!formIsValid || !hatKompetenzUpdate">Speichern</svws-ui-button>
+			</div>
+		</svws-ui-content-card>
 		<svws-ui-checkpoint-modal :checkpoint :continue-routing="props.continueRoutingAfterCheckpoint" />
 	</div>
 </template>
 
 <script setup lang="ts">
-	import { computed, ref } from "vue";
-	import { BenutzerKompetenz, Einwilligungsart, PersonTyp } from "@core";
 	import type { SchuleEinwilligungsartenNeuProps } from "~/components/schule/kataloge/einwilligungsarten/SEinwilligungsartenNeuProps";
+	import { computed, ref, watch} from "vue";
+	import { BenutzerKompetenz, Einwilligungsart, PersonTyp} from "@core";
+	import { isUniqueInList, mandatoryInputIsValid, optionalInputIsValid } from "~/util/validation/Validation";
 
 	const props = defineProps<SchuleEinwilligungsartenNeuProps>();
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
-	const readonly = computed(() => !hatKompetenzUpdate.value);
+	const disabled = computed(() => !hatKompetenzUpdate.value);
 
-	const einwilligungsart = ref(new Einwilligungsart());
+	const data = ref(new Einwilligungsart());
 	const isLoading = ref<boolean>(false);
 
-	function validatorEinwilligungsartBezeichnung(value: string | null): boolean {
-		if (value === null)
-			return true;
-		for (const eintrag of props.manager().liste.list())
-			if (eintrag.bezeichnung === value.trim())
-				return false;
-		return true;
+	const selectedPersonTyp = computed<PersonTyp>({
+		get: () => PersonTyp.SCHUELER,
+		set: (value) => data.value.personTyp = value.id,
+	});
+
+	function fieldIsValid(field: keyof Einwilligungsart | null) : (v: string | null) => boolean {
+		return (v: string | null) => {
+			switch (field) {
+				case 'bezeichnung':
+					return bezeichnungIsValid(data.value.bezeichnung);
+				case 'schluessel':
+					return schluesselIsValid(data.value.schluessel);
+				default:
+					return true;
+			}
+		}
 	}
 
-	function validatorEinwilligungsartSchluessel(value: string | null): boolean {
-		if ((value === null) || (value.trim() === ""))
-			return true;
-		for (const eintrag of props.manager().liste.list())
-			if (eintrag.schluessel === value.trim())
-				return false;
-		return true;
+	const formIsValid = computed(() => {
+		// alle Felder auf validity prüfen
+		return Object.keys(data.value).every(field => {
+			const validateField = fieldIsValid(field as keyof Einwilligungsart);
+			const fieldValue = data.value[field as keyof Einwilligungsart] as string | null;
+			return validateField(fieldValue);
+		})
+	})
+
+	function bezeichnungIsValid(value: string | null): boolean {
+		if (!mandatoryInputIsValid(value, 250))
+			return false;
+		return isUniqueInList(value, [...props.manager().liste.list()], 'bezeichnung');
+	}
+
+	function schluesselIsValid(value: string | null): boolean {
+		if (!optionalInputIsValid(value, 20))
+			return false;
+		return isUniqueInList(value, [...props.manager().liste.list()], 'schluessel');
+	}
+
+	async function addEinwilligungsart() {
+		if (isLoading.value)
+			return;
+
+		isLoading.value = true;
+		props.checkpoint.active = false;
+		const { id, anzahlEinwilligungen, ...partialData } = data.value;
+		await props.add(partialData);
+		isLoading.value = false;
 	}
 
 	async function cancel() {
@@ -70,32 +86,11 @@
 		await props.gotoDefaultView(null);
 	}
 
-	const personTypen = computed<PersonTyp[]>(() => [PersonTyp.LEHRER, PersonTyp.SCHUELER]);
-
-	const auswahlPersonTyp = computed<PersonTyp>({
-		get: () => PersonTyp.getByID(einwilligungsart.value.personTyp) ?? PersonTyp.SCHUELER,
-		set: (value) => {
-			const tmp = new Einwilligungsart();
-			tmp.bezeichnung = einwilligungsart.value.bezeichnung;
-			tmp.schluessel = einwilligungsart.value.schluessel;
-			tmp.beschreibung = einwilligungsart.value.beschreibung;
-			tmp.personTyp = value.id;
-			einwilligungsart.value = tmp;
-		},
-	});
-
-	async function addEinwilligungsart() {
-		if (isLoading.value === true)
+	watch(() => data.value, async() => {
+		if (isLoading.value)
 			return;
-		isLoading.value = true;
-		props.checkpoint.active = false;
-		await props.add({
-			bezeichnung: einwilligungsart.value.bezeichnung.trim(),
-			personTyp: einwilligungsart.value.personTyp,
-			schluessel: einwilligungsart.value.schluessel.trim(),
-			beschreibung: einwilligungsart.value.beschreibung?.trim(),
-		});
-		einwilligungsart.value = new Einwilligungsart();
-		isLoading.value = false;
-	}
+		props.checkpoint.active = true;
+	}, {immediate: false, deep: true});
+
+
 </script>
