@@ -14,12 +14,23 @@ import de.svws_nrw.davapi.model.dav.Resourcetype;
 import de.svws_nrw.davapi.model.dav.Response;
 import de.svws_nrw.davapi.model.dav.cal.CalendarHomeSet;
 import de.svws_nrw.davapi.util.XmlUnmarshallingUtil;
+import de.svws_nrw.db.DBEntityManager;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * Dispatcher-Klasse für die Verarbeitung von Requests auf das DAV-API mittels
  * der HTTP-Methode PROPFIND auf die Ressource Adressbuch.
  */
-public class PropfindDavRootDispatcher extends DavDispatcher {
+public class PropfindDavRootDispatcher extends DavRequestManager {
+
+	/**
+	 * Konstruktor für einen neuen Dispatcher und den gegebenen UriParametern
+	 *
+	 * @param conn         die Datenbankverbindung
+	 */
+	public PropfindDavRootDispatcher(final @NotNull DBEntityManager conn) {
+		super(conn);
+	}
 
 	/**
 	 * Verarbeitet ein XML-Request aus dem gegebenen InputStream für die Sammlung
@@ -82,9 +93,7 @@ public class PropfindDavRootDispatcher extends DavDispatcher {
 			prop200.setCalendarHomeSet(calendarHomeSet);
 		}
 
-		final Response response = createResponse(propRequested, prop200);
-		response.getHref().add(getRootUri());
-		return response;
+		return createResponse(propRequested, prop200, getRootUri());
 	}
 
 	/**
@@ -115,9 +124,7 @@ public class PropfindDavRootDispatcher extends DavDispatcher {
 			prop200.setCurrentUserPrivilegeSet(getReadOnlyPrivilegeSet());
 		}
 
-		final Response response = createResponse(propRequested, prop200);
-		response.getHref().add(getCardDavUri());
-		return response;
+		return createResponse(propRequested, prop200, getCardDavUri());
 	}
 
 	/**
@@ -157,9 +164,7 @@ public class PropfindDavRootDispatcher extends DavDispatcher {
 			prop200.setCalendarHomeSet(calendarHomeSet);
 		}
 
-		final Response response = createResponse(propRequested, prop200);
-		response.getHref().add(getKalenderUri());
-		return response;
+		return createResponse(propRequested, prop200, getKalenderUri());
 	}
 
 }

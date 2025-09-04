@@ -55,11 +55,28 @@ public final class XmlUnmarshallingUtil {
 	 *                     dieser Methode zu einer IOException
 	 */
 	public static <T> T unmarshal(final InputStream inputstream, final Class<T> typeClass) throws IOException {
-		if (typeClass == String.class) {
+		if (typeClass == String.class)
 			return typeClass.cast(unmarshalToString(inputstream));
-		}
 		final ObjectMapper mapper = getMapper();
 		return mapper.readValue(inputstream, typeClass);
+	}
+
+	/**
+	 * Deserialisiert einen InputStream mit XML-Daten in eine Java-Klasse eines
+	 * angegebenen Typs. Fehlende XML-Mappings oder fehlerhaftes XML führen in
+	 * dieser Methode zu einer IOException.
+	 *
+	 * @param data        InputStream mit XML-Daten
+	 * @param typeClass   Java-Klasse, die das Ziel der Deserialisierung sein soll
+	 *                    (z.B. Profind.class)
+	 * @param <T>         Generischer Typ
+	 * @return Java-Objekt der angegebenen Typ-Klasse
+	 * @throws IOException Fehlende XML-Mappings oder fehlerhaftes XML führen in
+	 *                     dieser Methode zu einer IOException
+	 */
+	public static <T> T unmarshal(final byte[] data, final Class<T> typeClass) throws IOException {
+		final ObjectMapper mapper = getMapper();
+		return mapper.readValue(data, typeClass);
 	}
 
 	/**

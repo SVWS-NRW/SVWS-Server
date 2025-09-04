@@ -198,4 +198,23 @@ public final class KalenderRepository implements IKalenderRepository, IKalenderE
 	public List<String> getDeletedResourceUIDsSince(final String kalenderId, final Long syncTokenMillis) {
 		return this.davRepository.getDeletedResourceUIDsSince(Long.valueOf(kalenderId), syncTokenMillis);
 	}
+
+
+	/**
+	 * Entfernt einen Kalendereintrag anhand der UID aus dem Kalender mit der übergebenen ID, sofern der
+	 * übergebene SyncToken mit dem gespeicherten übereinstimmt, d.h. die Anfrage auf dem aktuellen Kalendereintrag
+	 * basiert.
+	 *
+	 * @param idCal       die ID des Kalenders
+	 * @param uid         die UID des Kalendereintrags
+	 * @param syncToken   der SyncToken aus der Anfrage für den Abgleich der letzten Änderung an der Ressource
+	 *
+	 * @return true, wenn das Löschen erfolgreich war, und ansonsten false
+	 *
+	 * @throws DavException   im Fehlerfall (z.B. fehlende Rechte auf dem Kalender, fehlender Kalendereintrag, abweichendes Synctoken, ...)
+	 */
+	public boolean deleteKalenderEintrag(final long idCal, final String uid, final Long syncToken) throws DavException {
+		return this.davRepository.deleteRessource(idCal, uid, syncToken);
+	}
+
 }

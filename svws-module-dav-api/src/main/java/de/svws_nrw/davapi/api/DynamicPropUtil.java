@@ -36,15 +36,13 @@ class DynamicPropUtil {
 	 * Prüft, ob eine bestimmte Property im Prop-Objekt angefordert wurde.
 	 *
 	 * @param fieldType Typklasse der Property, für die Prüfung erfolgen soll.
-	 * @return true, falls die Property zur gegebenen Typklasse im Prop-Objekt
-	 *         enthalten ist.
+	 *
+	 * @return true, falls die Property zur gegebenen Typklasse im Prop-Objekt enthalten ist.
 	 */
 	protected final boolean getIsFieldRequested(final @NotNull Class<?> fieldType) {
-		for (final Field field : fieldsRequested) {
-			if (field.getType() == fieldType) {
+		for (final Field field : fieldsRequested)
+			if (field.getType() == fieldType)
 				return true;
-			}
-		}
 		return false;
 	}
 
@@ -52,6 +50,7 @@ class DynamicPropUtil {
 	 * Ermittelt per Reflection die angefragten Properties den Prop-Objekt.
 	 *
 	 * @param propRequested Prop-Objekt aus dem Request.
+	 *
 	 * @return Liste der angefragten Properties als Field-Objekte (Relection)
 	 */
 	@SuppressWarnings("static-method")
@@ -61,9 +60,8 @@ class DynamicPropUtil {
 		for (final Field field : fields) {
 			field.setAccessible(true);
 			try {
-				if (field.get(propRequested) != null) {
+				if (field.get(propRequested) != null)
 					requestedFields.add(field);
-				}
 			} catch (final IllegalAccessException e) {
 				e.printStackTrace();
 			}
@@ -77,6 +75,7 @@ class DynamicPropUtil {
 	 * Dispatcher nicht unterstützt werden.
 	 *
 	 * @param propResponded Prop-Objekt, Ergebnisobjekt des Dispatchers.
+	 *
 	 * @return Prop-Objekt mit allen nicht-unterstützten Properties, bzw. null,
 	 *         falls keine nicht-unterstützten Properties gefunden wurden.
 	 */
@@ -90,9 +89,7 @@ class DynamicPropUtil {
 				try {
 					final Object instance = field.getType().getDeclaredConstructor().newInstance();
 					field.set(prop404, instance);
-
-				} catch (InstantiationException | IllegalAccessException | InvocationTargetException
-						| NoSuchMethodException e) {
+				} catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
 					e.printStackTrace();
 				}
 			}

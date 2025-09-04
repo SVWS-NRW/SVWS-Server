@@ -13,6 +13,7 @@ import de.svws_nrw.davapi.model.dav.card.AddressbookMultiget;
 import de.svws_nrw.davapi.model.dav.card.CardAddressData;
 import de.svws_nrw.davapi.util.XmlUnmarshallingUtil;
 import de.svws_nrw.davapi.util.vcard.VCard;
+import de.svws_nrw.db.DBEntityManager;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -28,7 +29,7 @@ import jakarta.validation.constraints.NotNull;
  * Dispatcher-Klasse für die Verarbeitung von Requests auf das DAV-API mittels
  * der HTTP-Methode REPORT auf die Ressource Adressbuch.
  */
-public class ReportAddressbookDispatcher extends DavDispatcher {
+public class ReportAddressbookDispatcher extends DavRequestManager {
 
 	/** Repository-Klasse zur Abfrage von Adressbüchern aus der SVWS-Datenbank */
 	private final IAdressbuchRepository repository;
@@ -36,9 +37,11 @@ public class ReportAddressbookDispatcher extends DavDispatcher {
 	/**
 	 * Erstellt einen neuen Dispatcher mit den angegebenen Repositorys und URI-Parametern
 	 *
+	 * @param conn                   die Datenbankverbindung
 	 * @param adressbuchRepository   das Repository für Adressbuecher
 	 */
-	public ReportAddressbookDispatcher(final IAdressbuchRepository adressbuchRepository) {
+	public ReportAddressbookDispatcher(final @NotNull DBEntityManager conn, final IAdressbuchRepository adressbuchRepository) {
+		super(conn);
 		this.repository = adressbuchRepository;
 	}
 
@@ -210,9 +213,7 @@ public class ReportAddressbookDispatcher extends DavDispatcher {
 			prop200.setGetetag(getetag);
 		}
 
-		final Response response = createResponse(propRequested, prop200);
-		response.getHref().add(getCardDavResourceUri());
-		return response;
+		return createResponse(propRequested, prop200, getCardDavResourceUri());
 	}
 
 }

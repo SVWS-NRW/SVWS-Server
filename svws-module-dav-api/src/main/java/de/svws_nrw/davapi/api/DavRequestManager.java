@@ -1,57 +1,179 @@
 package de.svws_nrw.davapi.api;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.DeserializationConfig;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.module.jakarta.xmlbind.JakartaXmlBindAnnotationModule;
+
+import de.svws_nrw.core.types.ServerMode;
+import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
+import de.svws_nrw.data.ThrowingFunction;
+import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.davapi.model.dav.All;
 import de.svws_nrw.davapi.model.dav.CurrentUserPrivilegeSet;
 import de.svws_nrw.davapi.model.dav.Error;
+import de.svws_nrw.davapi.model.dav.Multistatus;
 import de.svws_nrw.davapi.model.dav.Privilege;
 import de.svws_nrw.davapi.model.dav.Prop;
 import de.svws_nrw.davapi.model.dav.Propstat;
 import de.svws_nrw.davapi.model.dav.Read;
 import de.svws_nrw.davapi.model.dav.ReadAcl;
 import de.svws_nrw.davapi.model.dav.ReadCurrentUserPrivilegeSet;
-import de.svws_nrw.davapi.model.dav.Response;
 import de.svws_nrw.davapi.model.dav.SimplePrivilege;
 import de.svws_nrw.davapi.model.dav.Write;
+import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.NotNull;
+import jakarta.ws.rs.core.EntityTag;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
- * Diese abstrakte Klasse ist die Grundlage für das einheitliche Verarbeiten von
- * Requests über das DAV-API des SVWSs.
+ * Diese abstrakte Klasse dient als Grundlage für das einheitliche Verarbeiten von HTTP-Requests an
+ * die DAV-API des SVWS-Servers.
  */
-public abstract class DavDispatcher {
+public abstract class DavRequestManager {
 
-	/** Die allgemeine URL für DAV */
-	public static final @NotNull String DAV_URL = "/dav/{schema}";
+	/** Debug Option, damit Requests nach Insomnia übertragen werden können */
+	protected static final boolean LOG_REQUESTS = false;
 
-	/** Die allgemeine URL für einen DAV-Benutzer */
-	public static final @NotNull String DAV_USER_URL = "/dav/{schema}/benutzer/{benutzerId}";
+	/** Der ObjectMapper für das Deserialisieren der XML-Daten */
+	protected final ObjectMapper mapper = getMapper();
 
-	/** Die allgemeine URL für CalDav */
-	public static final @NotNull String CALDAV_URL = "/dav/{schema}/kalender";
-
-	/** Die allgemeine URL für eine CalDav-Resource-Collection */
-	public static final @NotNull String CALDAV_URL_RESOURCE_COLLECTION = "/dav/{schema}/kalender/{resourceCollectionId}";
-
-	/** Die allgemeine URL für eine CalDav-Resource */
-	public static final @NotNull String CALDAV_URL_RESOURCE = "/dav/{schema}/kalender/{resourceCollectionId}/{resourceId}.ics";
-
-	/** Die allgemeine URL für CardDav */
-	public static final @NotNull String CARDDAV_URL = "/dav/{schema}/adressbuecher";
-
-	/** Die allgemeine URL für eine CardDav-Resource-Collection */
-	public static final @NotNull String CARDDAV_URL_RESOURCE_COLLECTION = "/dav/{schema}/adressbuecher/{resourceCollectionId}";
-
-	/** Die allgemeine URL für eine CardDav-Resource */
-	public static final @NotNull String CARDDAV_URL_RESOURCE = "/dav/{schema}/adressbuecher/{resourceCollectionId}/{resourceId}.vcf";
-
+	/** Die Datenbank-Verbindung, die von dem Request-Manager verwendet wird */
+	protected final @NotNull DBEntityManager conn;
 
 	/** URI-Parameter für die Erzeugung von URIs des Ergebnisobjekts */
 	protected final @NotNull Map<String, String> params = new HashMap<>();
+
+
+	/**
+	 * Erstellt einen neuen Request-Manager, welcher die übergebene Datenbank-Verbindung nutzt.
+	 *
+	 * @param conn   die Datenbankverbindung
+	 */
+	protected DavRequestManager(final @NotNull DBEntityManager conn) {
+		this.conn = conn;
+	}
+
+
+	/**
+	 * Erstellt einen neuen ObjectMapper zum Deserialisieren von XML-Daten
+	 *
+	 * @return der ObjectMapper
+	 */
+	private static ObjectMapper getMapper() {
+		final JacksonXmlModule module = new JacksonXmlModule();
+		module.setDefaultUseWrapper(false);
+		final ObjectMapper mapper = new XmlMapper(module);
+		mapper.registerModule(new JakartaXmlBindAnnotationModule());
+		mapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
+		final DeserializationConfig deserializationConfig = mapper.getDeserializationConfig();
+		deserializationConfig.with(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES);
+		mapper.setConfig(deserializationConfig);
+		return mapper;
+	}
+
+
+	/**
+	 * Führt den übergebenen Task für den übergebenen HTTP-Request im angegebenen Server-Mode und mit den
+	 * übergebenen benötigten Benutzerkompetenzen aus, sofern dies erlaubt ist.
+	 *
+	 * @param task          der auszuführende Task
+	 * @param request       die HTTP-Anfrage
+	 * @param mode          der Server-Mode
+	 * @param kompetenzen   die benötigten Kompetenzen
+	 *
+	 * @return die HTTP-Response
+	 */
+	public static Response handle(final ThrowingFunction<DBEntityManager, Response> task, final HttpServletRequest request,
+			final ServerMode mode, final BenutzerKompetenz... kompetenzen) {
+		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, mode, kompetenzen)) {
+				return task.applyThrows(conn);
+		} catch (final ApiOperationException e) {
+			return e.getResponse();
+		} catch (final IOException e) {
+			e.printStackTrace();
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.TEXT_PLAIN).entity(e.getMessage()).build();
+		} catch (final Exception e) {
+			if (e instanceof final ApiOperationException apiOperationException)
+				return apiOperationException.getResponse();
+			return new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e).getResponse();
+		}
+	}
+
+
+	/**
+	 * Generiert eine HTTP-Response für das übergebene Antwort-Objekt. Dabei wird
+	 * zwischen den Fällen unterschieden, dass es sich um eine {@link Multistatus}-Antwort,
+	 * eine {@link Error}-Antwort oder um eine fehlerhafte Anfrage handelt (alle anderen Fälle).
+	 *
+	 * @param o   das Objekt mit den Antwortdaten ({@link Multistatus} oder {@link Error})
+	 *
+	 * @return die HTTP-Response für das übergebene Objekt
+	 */
+	public static Response buildResponse(final Object o) {
+		if (o instanceof Multistatus)
+			return Response.status(DavExtendedHttpStatus.MULTISTATUS).type(MediaType.TEXT_XML).entity(o).build();
+		if (o instanceof Error)
+			return Response.status(Response.Status.NOT_FOUND).type(MediaType.TEXT_XML).entity(o).build();
+		return Response.status(Response.Status.BAD_REQUEST).type(MediaType.TEXT_PLAIN).build();
+	}
+
+
+	/**
+	 * Generiert ein HTTP-Response mit dem Statuscode 201 (Created) und einem EntityTag-Header.
+	 *
+	 * @param eTag   das {@link EntityTag}
+	 *
+	 * @return die HTTP-Response
+	 */
+	protected static Response buildCreatedResponse(final EntityTag eTag) {
+		return Response.status(Response.Status.CREATED).header("ETag", eTag.getValue()).build();
+	}
+
+	/**
+	 * Generiert ein HTTP-Response mit dem Statuscode 204 (No Content).
+	 *
+	 * @return die HTTP-Response
+	 */
+	protected static Response buildNoContentResponse() {
+		return Response.status(Status.NO_CONTENT).type(MediaType.TEXT_PLAIN).build();
+	}
+
+	/**
+	 * Generiert ein HTTP-Response mit dem Statuscode 204 (No Content) und einem EntityTag-Header.
+	 *
+	 * @param eTag   das {@link EntityTag}
+	 *
+	 * @return die HTTP-Response
+	 */
+	protected static Response buildNoContentResponse(final EntityTag eTag) {
+		return Response.status(Response.Status.NO_CONTENT).header("ETag", eTag.getValue()).build();
+	}
+
+	/**
+	 * Generiert ein HTTP-Response mit dem Statuscode 400 (Bad Request) und der Message aus der übergebenen Exception
+	 * als Fehlermeldung.
+	 *
+	 * @param e   die Exception
+	 *
+	 * @return die HTTP-Response
+	 */
+	protected static Response buildBadRequest(final Exception e) {
+		return Response.status(Response.Status.BAD_REQUEST).type(MediaType.TEXT_PLAIN).entity(e.getMessage()).build();
+	}
 
 
 	/**
@@ -166,7 +288,7 @@ public abstract class DavDispatcher {
 	 * @return die URI
 	 */
 	public @NotNull String getRootUri() {
-		return getDavUri(DAV_URL, params);
+		return getDavUri("/dav/{schema}", params);
 	}
 
 
@@ -176,7 +298,7 @@ public abstract class DavDispatcher {
 	 * @return die URI
 	 */
 	public @NotNull String getBenutzerUri() {
-		return getDavUri(DAV_USER_URL, params);
+		return getDavUri("/dav/{schema}/benutzer/{benutzerId}", params);
 	}
 
 
@@ -186,7 +308,7 @@ public abstract class DavDispatcher {
 	 * @return die URI
 	 */
 	public @NotNull String getKalenderUri() {
-		return getDavUri(CALDAV_URL, params);
+		return getDavUri("/dav/{schema}/kalender", params);
 	}
 
 
@@ -196,7 +318,7 @@ public abstract class DavDispatcher {
 	 * @return die URI
 	 */
 	public @NotNull String getKalenderResourceCollectionUri() {
-		return getDavUri(CALDAV_URL_RESOURCE_COLLECTION, params);
+		return getDavUri("/dav/{schema}/kalender/{resourceCollectionId}", params);
 	}
 
 
@@ -206,7 +328,7 @@ public abstract class DavDispatcher {
 	 * @return die URI
 	 */
 	public @NotNull String getKalenderResourceUri() {
-		return getDavUri(CALDAV_URL_RESOURCE, params);
+		return getDavUri("/dav/{schema}/kalender/{resourceCollectionId}/{resourceId}.ics", params);
 	}
 
 
@@ -216,7 +338,7 @@ public abstract class DavDispatcher {
 	 * @return die URI
 	 */
 	public @NotNull String getCardDavUri() {
-		return getDavUri(CARDDAV_URL, params);
+		return getDavUri("/dav/{schema}/adressbuecher", params);
 	}
 
 
@@ -226,7 +348,7 @@ public abstract class DavDispatcher {
 	 * @return die URI
 	 */
 	public @NotNull String getCardDavResourceCollectionUri() {
-		return getDavUri(CARDDAV_URL_RESOURCE_COLLECTION, params);
+		return getDavUri("/dav/{schema}/adressbuecher/{resourceCollectionId}", params);
 	}
 
 
@@ -236,7 +358,7 @@ public abstract class DavDispatcher {
 	 * @return die URI
 	 */
 	public @NotNull String getCardDavResourceUri() {
-		return getDavUri(CARDDAV_URL_RESOURCE, params);
+		return getDavUri("/dav/{schema}/adressbuecher/{resourceCollectionId}/{resourceId}.vcf", params);
 	}
 
 
@@ -278,10 +400,13 @@ public abstract class DavDispatcher {
 	 *
 	 * @param propRequested Angeforderte Properties zu einer Ressource
 	 * @param propResponded Gefundene/Ermittelte Properties zu einer Ressource
+	 * @param uri   die Uri für das href-Feld der XML-Response
+	 *
 	 * @return Response-Objekt
 	 */
-	protected static final Response createResponse(final @NotNull Prop propRequested, final @NotNull Prop propResponded) {
-		final Response response = new Response();
+	protected static final de.svws_nrw.davapi.model.dav.Response createResponse(final @NotNull Prop propRequested,
+			final @NotNull Prop propResponded, final @NotNull String uri) {
+		final de.svws_nrw.davapi.model.dav.Response response = new de.svws_nrw.davapi.model.dav.Response();
 		final Propstat propStat200 = new Propstat();
 		propStat200.setStatus(Propstat.PROP_STATUS_200_OK);
 		propStat200.setProp(propResponded);
@@ -295,6 +420,7 @@ public abstract class DavDispatcher {
 			propStat404.setProp(prop404);
 			response.getPropstat().add(propStat404);
 		}
+		response.getHref().add(uri);
 		return response;
 	}
 

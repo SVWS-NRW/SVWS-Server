@@ -7,6 +7,8 @@ import de.svws_nrw.davapi.model.dav.Response;
 import de.svws_nrw.davapi.model.dav.cal.CalendarHomeSet;
 import de.svws_nrw.davapi.model.dav.card.AddressbookHomeSet;
 import de.svws_nrw.davapi.util.XmlUnmarshallingUtil;
+import de.svws_nrw.db.DBEntityManager;
+import jakarta.validation.constraints.NotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,7 +17,16 @@ import java.io.InputStream;
  * Dispatcher-Klasse für die Verarbeitung von Requests auf das DAV-API mittels
  * der HTTP-Methode PROPFIND auf die Ressource Benutzer (Principal).
  */
-public final class PropfindPrincipalDispatcher extends DavDispatcher {
+public final class PropfindPrincipalDispatcher extends DavRequestManager {
+
+	/**
+	 * Konstruktor für einen neuen Dispatcher und den gegebenen UriParametern
+	 *
+	 * @param conn         die Datenbankverbindung
+	 */
+	public PropfindPrincipalDispatcher(final @NotNull DBEntityManager conn) {
+		super(conn);
+	}
 
 	/**
 	 * Verarbeitet die XML-Anfrage aus einem InputStream für eine gegebene
@@ -66,9 +77,7 @@ public final class PropfindPrincipalDispatcher extends DavDispatcher {
 			prop200.setCalendarHomeSet(calendarHomeSet);
 		}
 
-		final Response response = createResponse(propRequested, prop200);
-		response.getHref().add(getBenutzerUri());
-		return response;
+		return createResponse(propRequested, prop200, getBenutzerUri());
 	}
 
 }

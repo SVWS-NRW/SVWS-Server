@@ -1,36 +1,15 @@
 package de.svws_nrw.api.dav;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
-import java.util.Optional;
-
-import de.svws_nrw.core.logger.LogLevel;
-import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
-import de.svws_nrw.data.benutzer.DBBenutzerUtils;
-import de.svws_nrw.davapi.api.DavExtendedHttpStatus;
-import de.svws_nrw.davapi.api.DeleteRessourceDispatcher;
+import de.svws_nrw.davapi.api.CalDavRequestManager;
+import de.svws_nrw.davapi.api.DavRequestManager;
 import de.svws_nrw.davapi.api.PROPFIND;
-import de.svws_nrw.davapi.api.PropfindCalendarDispatcher;
-import de.svws_nrw.davapi.api.PutCalendarDispatcher;
 import de.svws_nrw.davapi.api.REPORT;
-import de.svws_nrw.davapi.api.ReportCalendarDispatcher;
-import de.svws_nrw.davapi.data.caldav.IKalenderEintragRepository;
-import de.svws_nrw.davapi.data.caldav.IKalenderRepository;
-import de.svws_nrw.davapi.data.caldav.KalenderRepository;
-import de.svws_nrw.davapi.data.dav.DavDBRepository;
 import de.svws_nrw.davapi.model.dav.Error;
 import de.svws_nrw.davapi.model.dav.Multistatus;
-import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.utils.ApiOperationException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.HeaderParam;
@@ -39,7 +18,6 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.EntityTag;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
@@ -51,12 +29,7 @@ import jakarta.ws.rs.core.Response;
 @Tag(name = "Server")
 public class APIKalender {
 
-	// TODO Schuljahresabschnitt als URI param ergänzen und so auch Kalender und Adressbücher für mehrere Halbjahre zur Verfügung stellen
-
-	/**
-	 * Logger für diese Klasse
-	 */
-	private static final Logger logger = createLogger();
+	// TODO Schuljahresabschnitt als URI param ergänzen und so auch Kalender für mehrere Halbjahre zur Verfügung stellen
 
 	/**
 	 * Leerer Standardkonstruktor.
@@ -78,23 +51,12 @@ public class APIKalender {
 	@Path("/kalender")
 	@Consumes({ MediaType.TEXT_XML, MediaType.APPLICATION_XML })
 	@Produces(MediaType.TEXT_XML)
-	public Response propfindOnCalendarCollection(@PathParam("schema") final String schema,
-			@Context final HttpServletRequest request) {
-		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.CALDAV_NUTZEN,
-				BenutzerKompetenz.CALDAV_KALENDER_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.CALDAV_KALENDER_ANSEHEN_FUNKTIONSBEZOGEN);
-				InputStream inputStream = getInputStream(request)) {
-			final PropfindCalendarDispatcher dispatcher = createPropfindCalendarDispatcher(conn);
-			final Object result = dispatcher.dispatch(inputStream, "");
-			return buildResponse(result);
-		} catch (final ApiOperationException e) {
-			return e.getResponse();
-		} catch (final IOException e) {
-			final StringWriter out = new StringWriter();
-			final PrintWriter pw = new PrintWriter(out);
-			e.printStackTrace(pw);
-			logger.log(LogLevel.ERROR, "Bei der Anfrage ist folgende IOException aufgetreten:" + pw.toString());
-			return buildBadRequest(e);
-		}
+	public Response caldavPropfindAllCalendars(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DavRequestManager.handle(conn -> new CalDavRequestManager(conn, request.getInputStream()).propfindCollection(),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.CALDAV_NUTZEN,
+				BenutzerKompetenz.CALDAV_KALENDER_ANSEHEN_ALLGEMEIN,
+				BenutzerKompetenz.CALDAV_KALENDER_ANSEHEN_FUNKTIONSBEZOGEN);
 	}
 
 	/**
@@ -110,20 +72,14 @@ public class APIKalender {
 	@Path("/kalender/{resourceCollectionId}")
 	@Consumes({ MediaType.TEXT_XML, MediaType.APPLICATION_XML })
 	@Produces(MediaType.TEXT_XML)
-	public Response propfindOnCalendar(@PathParam("schema") final String schema,
-			@PathParam("resourceCollectionId") final String kalenderId, @Context final HttpServletRequest request) {
-		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.CALDAV_NUTZEN,
-				BenutzerKompetenz.CALDAV_KALENDER_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.CALDAV_KALENDER_ANSEHEN_FUNKTIONSBEZOGEN);
-				InputStream inputStream = getInputStream(request, "kalenderId=" + kalenderId)) {
-			final PropfindCalendarDispatcher dispatcher = createPropfindCalendarDispatcher(conn);
-			final Object result = dispatcher.dispatch(inputStream, kalenderId);
-			return buildResponse(result);
-		} catch (final ApiOperationException e) {
-			return e.getResponse();
-		} catch (final IOException e) {
-			e.printStackTrace();
-			return buildBadRequest(e);
-		}
+	public Response caldavPropfindCalendar(@PathParam("schema") final String schema, @PathParam("resourceCollectionId") final String kalenderId,
+			@Context final HttpServletRequest request) {
+		return DavRequestManager.handle(
+				conn -> new CalDavRequestManager(conn, request.getInputStream()).propfindCalendar(kalenderId),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.CALDAV_NUTZEN,
+				BenutzerKompetenz.CALDAV_KALENDER_ANSEHEN_ALLGEMEIN,
+				BenutzerKompetenz.CALDAV_KALENDER_ANSEHEN_FUNKTIONSBEZOGEN);
 	}
 
 	/**
@@ -140,20 +96,14 @@ public class APIKalender {
 	@Path("/kalender/{resourceCollectionId}")
 	@Consumes({ MediaType.TEXT_XML, MediaType.APPLICATION_XML })
 	@Produces(MediaType.TEXT_XML)
-	public Response reportOnCalendar(@PathParam("schema") final String schema,
-			@PathParam("resourceCollectionId") final String kalenderId, @Context final HttpServletRequest request) {
-		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.CALDAV_NUTZEN,
-				BenutzerKompetenz.CALDAV_KALENDER_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.CALDAV_KALENDER_ANSEHEN_FUNKTIONSBEZOGEN);
-				InputStream inputStream = getInputStream(request, "kalenderId=" + kalenderId)) {
-			final ReportCalendarDispatcher dispatcher = createReportCalendarDispatcher(conn);
-			final Object result = dispatcher.dispatch(inputStream, kalenderId);
-			return buildResponse(result);
-		} catch (final ApiOperationException e) {
-			return e.getResponse();
-		} catch (final IOException e) {
-			e.printStackTrace();
-			return buildBadRequest(e);
-		}
+	public Response caldavReportCalendar(@PathParam("schema") final String schema, @PathParam("resourceCollectionId") final String kalenderId,
+			@Context final HttpServletRequest request) {
+		return DavRequestManager.handle(
+				conn -> new CalDavRequestManager(conn, request.getInputStream()).reportCalendar(kalenderId),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.CALDAV_NUTZEN,
+				BenutzerKompetenz.CALDAV_KALENDER_ANSEHEN_ALLGEMEIN,
+				BenutzerKompetenz.CALDAV_KALENDER_ANSEHEN_FUNKTIONSBEZOGEN);
 	}
 
 	/**
@@ -176,52 +126,16 @@ public class APIKalender {
 	@Path("/kalender/{resourceCollectionId}/{resourceId}.ics")
 	@Consumes({ "Text/Calendar", MediaType.APPLICATION_XML })
 	@Produces(MediaType.TEXT_XML)
-	public Response putOnCalendar(@PathParam("schema") final String schema,
+	public Response caldavPutCalendarEntry(@PathParam("schema") final String schema,
 			@PathParam("resourceCollectionId") final String kalenderId, @PathParam("resourceId") final String kalenderEintragUId,
 			@HeaderParam("If-None-Match") final String ifNonMatchHeader, @HeaderParam("If-Match") final String ifMatchHeader,
 			@Context final HttpServletRequest request) {
-
-		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.CALDAV_NUTZEN,
-				BenutzerKompetenz.CALDAV_KALENDER_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.CALDAV_KALENDER_ANSEHEN_FUNKTIONSBEZOGEN);
-				InputStream inputStream = getInputStream(request, "kalenderId=" + kalenderId, "kalenderEintragUId=" + kalenderEintragUId,
-						"ifNonMatchHeader=" + ifNonMatchHeader, "ifMatchHeader=" + ifMatchHeader)) {
-			final PutCalendarDispatcher dispatcher = createPutCalendarDispatcher(conn);
-
-			if ((ifNonMatchHeader != null) && "*".equals(ifNonMatchHeader)) {
-				// Es soll ein neuer Termin erstellt werden,
-				// also nicht etwa (versehentlich) ein Termin mit der angegebenen Id
-				// überschrieben werden.
-				final Object eTagResult = dispatcher.dispatchCreate(inputStream, kalenderId, kalenderEintragUId);
-				if (eTagResult instanceof Error) {
-					return buildResponse(eTagResult);
-				}
-				// Response vorbereiten
-				// Header "ETag" (MD5-Checksumme) und HTTP-Statuscode 201 (Created)
-				// zurückliefern
-				return buildCreatedResponse((EntityTag) eTagResult);
-			}
-
-			if ((ifMatchHeader != null) && !ifMatchHeader.isBlank()) {
-				// Update des Kalendereintrags durchführen
-				final Object eTagResult = dispatcher.dispatchUpdate(inputStream, kalenderId, kalenderEintragUId,
-						ifMatchHeader);
-				if (eTagResult instanceof Error) {
-					return buildResponse(eTagResult);
-				}
-				// Response vorbereiten
-				// Header "ETag" (neue MD5-Checksumme) und HTTP-Statuscode 204 (No Content)
-				// zurückliefern
-				return buildNoContentResponse((EntityTag) eTagResult);
-			}
-
-			return buildBadRequest(new BadRequestException("Ungültige Anfrage"));
-
-		} catch (final ApiOperationException e) {
-			return e.getResponse();
-		} catch (final IOException e) {
-			e.printStackTrace();
-			return buildBadRequest(e);
-		}
+		return DavRequestManager.handle(conn -> new CalDavRequestManager(conn, request.getInputStream())
+				.putEntry(kalenderId, kalenderEintragUId, ifNonMatchHeader, ifMatchHeader),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.CALDAV_NUTZEN,
+				BenutzerKompetenz.CALDAV_KALENDER_ANSEHEN_ALLGEMEIN,
+				BenutzerKompetenz.CALDAV_KALENDER_ANSEHEN_FUNKTIONSBEZOGEN);
 	}
 
 	/**
@@ -239,29 +153,13 @@ public class APIKalender {
 	@DELETE
 	@Path("/kalender/{resourceCollectionId}/{resourceId}.ics")
 	@Produces(MediaType.TEXT_XML)
-	public Response deleteOnCalendar(@PathParam("schema") final String schema,
+	public Response caldavDeleteCalendarEntry(@PathParam("schema") final String schema,
 			@PathParam("resourceCollectionId") final String kalenderId, @PathParam("resourceId") final String kalenderEintragUID,
 			@HeaderParam("If-Match") final String ifMatchHeader, @Context final HttpServletRequest request) {
-		try (DBEntityManager dbConnection = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-				BenutzerKompetenz.CALDAV_EIGENER_KALENDER)) {
-			try (var is = getInputStream(request, "kalenderId=" + kalenderId, "kalenderEintragId=" + kalenderEintragUID, "ifMatchHeader=" + ifMatchHeader)) {
-				// ...
-			}
-			final DeleteRessourceDispatcher dispatcher = createDeleteOnDavRessourceDispatcher(dbConnection, schema);
-			final Optional<Multistatus> dispatched = dispatcher.dispatch(kalenderId, kalenderEintragUID, ifMatchHeader);
-			if (dispatched.isPresent()) {
-				// ein Ergebnis zeigt an, dass der Request nicht erfolgreich war, warum steht im
-				// Multistatus
-				return buildResponse(dispatched);
-			}
-			// kein ergebnis zeigt erfolgreiches löschen an
-			return Response.status(Response.Status.NO_CONTENT).type(MediaType.TEXT_PLAIN).build();
-		} catch (final ApiOperationException e) {
-			return e.getResponse();
-		} catch (final IOException e) {
-			e.printStackTrace();
-			return buildBadRequest(e);
-		}
+		return DavRequestManager.handle(
+				conn -> new CalDavRequestManager(conn, request.getInputStream()).deleteEntry(kalenderId, kalenderEintragUID, ifMatchHeader),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.CALDAV_EIGENER_KALENDER);
 	}
 
 	/**
@@ -276,209 +174,12 @@ public class APIKalender {
 	@DELETE
 	@Path("/kalender/{resourceCollectionId}")
 	@Produces(MediaType.TEXT_XML)
-	public Response deleteOnCalendar(@PathParam("schema") final String schema,
+	public Response caldavDeleteCalendar(@PathParam("schema") final String schema,
 			@PathParam("resourceCollectionId") final String kalenderId, @Context final HttpServletRequest request) {
-		try (DBEntityManager dbConnection = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-				BenutzerKompetenz.CALDAV_EIGENER_KALENDER)) {
-			try (var is = getInputStream(request, "kalenderId=" + kalenderId)) {
-				// ...
-			}
-			final DeleteRessourceDispatcher dispatcher = createDeleteOnDavRessourceDispatcher(dbConnection, schema);
-			final Optional<Multistatus> dispatched = dispatcher.dispatch(kalenderId);
-			if (dispatched.isPresent()) {
-				// ein Ergebnis zeigt an, dass der Request nicht erfolgreich war, warum steht im
-				// Multistatus
-				return buildResponse(dispatched);
-			}
-			// kein ergebnis zeigt erfolgreiches löschen an
-			return Response.status(Response.Status.NO_CONTENT).type(MediaType.TEXT_PLAIN).build();
-		} catch (final ApiOperationException e) {
-			return e.getResponse();
-		} catch (final IOException e) {
-			e.printStackTrace();
-			return buildBadRequest(e);
-		}
+		return DavRequestManager.handle(
+				conn -> new CalDavRequestManager(conn, request.getInputStream()).deleteCalendar(kalenderId),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.CALDAV_EIGENER_KALENDER);
 	}
 
-	/**
-	 * erstellt einen Delete-Dispatcher für die Connection
-	 *
-	 * @param conn   die Datenbankverbindung
-	 * @param schema das Schema für die URI-Parameter
-	 * @return den Delete Dispatcher
-	 */
-	private static DeleteRessourceDispatcher createDeleteOnDavRessourceDispatcher(final DBEntityManager conn, final String schema) {
-		final DavDBRepository davRepository = new DavDBRepository(conn);
-		final DeleteRessourceDispatcher dispatcher = new DeleteRessourceDispatcher(davRepository);
-		dispatcher.setParameterSchema(schema);
-		return new DeleteRessourceDispatcher(davRepository);
-	}
-
-	/**
-	 * Generiert ein Response-Objekt in Abhängigkeit des Typs der zurückzugebenden
-	 * Objektklasse.
-	 *
-	 * @param result Objektklasse, entspricht dem Ergebnis der Anfrage. In
-	 *               Abhängigkeit des Typs (z.B. {@link Multistatus}, {@link Error})
-	 *               wird das Response-Objekt inkl. passendem HTTP-Status-Code
-	 *               generiert.
-	 * @return Response Objekt
-	 */
-	private static Response buildResponse(final Object result) {
-		if (result instanceof Multistatus)
-			return Response.status(DavExtendedHttpStatus.MULTISTATUS).type(MediaType.TEXT_XML).entity(result).build();
-		if (result instanceof Error)
-			return Response.status(Response.Status.NOT_FOUND).type(MediaType.TEXT_XML).entity(result).build();
-		return Response.status(Response.Status.BAD_REQUEST).type(MediaType.TEXT_PLAIN).build();
-	}
-
-	/**
-	 * Generiert ein Response-Objekt mit dem Statuscode 201 (Created) und einem
-	 * eTag-Header
-	 *
-	 * @param eTag Objektklasse für das eTag({@link EntityTag}
-	 * @return Response Objekt
-	 */
-	private static Response buildCreatedResponse(final EntityTag eTag) {
-		return Response.status(Response.Status.CREATED).header("ETag", eTag.getValue()).build();
-	}
-
-	/**
-	 * Generiert ein Response-Objekt mit dem Statuscode 204 (No Content) und einem
-	 * eTag-Header
-	 *
-	 * @param eTag Objektklasse für das eTag({@link EntityTag}
-	 * @return Response Objekt
-	 */
-	private static Response buildNoContentResponse(final EntityTag eTag) {
-		return Response.status(Response.Status.NO_CONTENT).header("ETag", eTag.getValue()).build();
-	}
-
-	/**
-	 * Generiert ein Response-Objekt mit dem Status BAD_REQUEST und der gegebenen
-	 * ErrorMessage
-	 *
-	 * @param e the Exception
-	 * @return Response Objekt
-	 */
-	private static Response buildBadRequest(final Exception e) {
-		return Response.status(Response.Status.BAD_REQUEST).type(MediaType.TEXT_PLAIN).entity(e.getMessage()).build();
-	}
-
-	/**
-	 * Erzeugt einen PropfindCalendarDispatcher mit der gegebenen
-	 * Datenbankverbindung.
-	 *
-	 * @param conn die Datenbankverbindung
-	 * @return ein parametrierter Dispatcher
-	 */
-	private static PropfindCalendarDispatcher createPropfindCalendarDispatcher(final DBEntityManager conn) {
-		final IKalenderRepository repository = createKalenderRepository(conn);
-		final PropfindCalendarDispatcher dispatcher = new PropfindCalendarDispatcher(repository);
-		dispatcher.setParameterSchema(conn.getDBSchema());
-		dispatcher.setParameterBenutzerId(String.valueOf(conn.getUser().getId()));
-		return dispatcher;
-	}
-
-	/**
-	 * Erzeugt einen ReportCalendarDispatcher mit der gegebenen Datenbankverbindung
-	 *
-	 * @param conn die Datenbankverbindung
-	 * @return ein parametrierter Dispatcher
-	 */
-	private static ReportCalendarDispatcher createReportCalendarDispatcher(final DBEntityManager conn) {
-		final IKalenderRepository repository = createKalenderRepository(conn);
-		final ReportCalendarDispatcher dispatcher = new ReportCalendarDispatcher(repository);
-		dispatcher.setParameterSchema(conn.getDBSchema());
-		dispatcher.setParameterBenutzerId(String.valueOf(conn.getUser().getId()));
-		return dispatcher;
-	}
-
-	/**
-	 * Erzeugt einen PutCalendarDispatcher mit der gegebenen Datenbankverbindung.
-	 *
-	 * @param conn die Datenbankverbindung
-	 * @return ein parametrierter Dispatcher
-	 */
-	private static PutCalendarDispatcher createPutCalendarDispatcher(final DBEntityManager conn) {
-		final IKalenderEintragRepository eintragRepository = createKalenderEintragRepository(conn);
-		final PutCalendarDispatcher dispatcher = new PutCalendarDispatcher(eintragRepository);
-		dispatcher.setParameterSchema(conn.getDBSchema());
-		dispatcher.setParameterBenutzerId(String.valueOf(conn.getUser().getId()));
-		return dispatcher;
-	}
-
-	/**
-	 * Erzeugt ein neues {@link de.svws_nrw.davapi.data.caldav.IKalenderRepository}
-	 * mit der gegebenen Datenbankverbindung.
-	 *
-	 * @param conn die Datenbankverbindung
-	 * @return eine Implementierung von
-	 *         {@link de.svws_nrw.davapi.data.caldav.IKalenderRepository} für den
-	 *         Zugriff auf Kalender.
-	 */
-	private static IKalenderRepository createKalenderRepository(final DBEntityManager conn) {
-		return new KalenderRepository(conn);
-	}
-
-	/**
-	 * Erzeugt ein neues
-	 * {@link de.svws_nrw.davapi.data.caldav.IKalenderEintragRepository} mit der
-	 * gegebenen Datenbankverbindung.
-	 *
-	 * @param conn die Datenbankverbindung
-	 * @return eine Implementierung von
-	 *         {@link de.svws_nrw.davapi.data.caldav.IKalenderEintragRepository} für
-	 *         den Zugriff auf Kalender.
-	 */
-	private static IKalenderEintragRepository createKalenderEintragRepository(final DBEntityManager conn) {
-		return new KalenderRepository(conn);
-	}
-
-	/**
-	 * Debug Option, damit Requests nach Insomnia übertragen werden können
-	 */
-	private static final boolean LOG_INPUTSTREAM = false;
-
-	/**
-	 * Loggt abhängig von {@link #LOG_INPUTSTREAM} den Informationen sowie
-	 * Inputstream des Requests
-	 *
-	 * @param request  der request
-	 * @param params   string
-	 *
-	 * @return ein ungelesener Inputstream des Requests
-	 *
-	 * @throws IOException
-	 */
-	private static InputStream getInputStream(final HttpServletRequest request, final String... params) throws IOException {
-		InputStream result = request.getInputStream();
-		if (LOG_INPUTSTREAM) {
-			final String methodName = getApiMethodName(2);
-			logger.log(LogLevel.WARNING, methodName);
-			for (final String s : params)
-				logger.log(LogLevel.WARNING, s);
-			final String input = new String(result.readAllBytes(), StandardCharsets.UTF_8);
-			logger.log(methodName + "\n");
-			logger.log(LogLevel.WARNING, request.toString());
-			logger.log(LogLevel.WARNING, input);
-			result = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8));
-		}
-		return result;
-	}
-
-
-	private static String getApiMethodName(final long n) {
-		final StackWalker walker = StackWalker.getInstance();
-		final Optional<String> methodName = walker.walk(frames -> frames
-				.skip(n).findFirst()
-				.map(StackWalker.StackFrame::getMethodName));
-		return methodName.orElse("");
-	}
-
-	private static Logger createLogger() {
-		final Logger logger = new Logger();
-		logger.copyConsumer(Logger.global());
-		return logger;
-	}
 }

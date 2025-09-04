@@ -20,6 +20,8 @@ import de.svws_nrw.davapi.model.dav.card.CardAddressbook;
 import de.svws_nrw.davapi.model.dav.card.SupportedAddressData;
 import de.svws_nrw.davapi.model.dav.cs.Getctag;
 import de.svws_nrw.davapi.util.XmlUnmarshallingUtil;
+import de.svws_nrw.db.DBEntityManager;
+import jakarta.validation.constraints.NotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,19 +33,19 @@ import java.util.UUID;
  * Dispatcher-Klasse für die Verarbeitung von Requests auf das DAV-API mittels
  * der HTTP-Methode PROPFIND auf die Ressource Adressbuch.
  */
-public class PropfindAddressbookDispatcher extends DavDispatcher {
+public class PropfindAddressbookDispatcher extends DavRequestManager {
 
 	/** Repository-Klasse zur Abfrage von Adressbüchern aus der SVWS-Datenbank */
 	private final IAdressbuchRepository repository;
 
 	/**
-	 * Konstruktor für einen neuen Dispatcher mit Repository und den gegebenen
-	 * UriParametern
+	 * Konstruktor für einen neuen Dispatcher mit Repository und den gegebenen UriParametern
 	 *
-	 * @param repository   das Repository zum Zugriff auf Adressbuecher der
-	 *                     Datenbank
+	 * @param conn         die Datenbankverbindung
+	 * @param repository   das Repository zum Zugriff auf Adressbuecher der Datenbank
 	 */
-	public PropfindAddressbookDispatcher(final IAdressbuchRepository repository) {
+	public PropfindAddressbookDispatcher(final @NotNull DBEntityManager conn, final IAdressbuchRepository repository) {
+		super(conn);
 		this.repository = repository;
 	}
 
@@ -156,9 +158,7 @@ public class PropfindAddressbookDispatcher extends DavDispatcher {
 			prop200.setSupportedAddressData(supportedAddressData);
 		}
 
-		final Response response = createResponse(propRequested, prop200);
-		response.getHref().add(getCardDavResourceCollectionUri());
-		return response;
+		return createResponse(propRequested, prop200, getCardDavResourceCollectionUri());
 	}
 
 	/**
@@ -200,9 +200,7 @@ public class PropfindAddressbookDispatcher extends DavDispatcher {
 			prop200.setCurrentUserPrivilegeSet(getReadOnlyPrivilegeSet());
 		}
 
-		final Response response = createResponse(propRequested, prop200);
-		response.getHref().add(getCardDavResourceUri());
-		return response;
+		return createResponse(propRequested, prop200, getCardDavResourceUri());
 	}
 
 }
