@@ -57,10 +57,12 @@
 							</template>
 						</svws-ui-tooltip>
 					</template>
+				</span>
+				<span class="absolute">
 					<template v-if="!manager.istMoeglich(fach, halbjahr) && (wahlen[halbjahr.id] !== '') && hatUpdateKompetenz">
 						<svws-ui-tooltip :color="istBewertet(halbjahr) && manager.hatNote(fach, halbjahr) ? 'light' : 'danger'">
 							<svws-ui-button type="icon" size="small" :disabled="istBewertet(halbjahr) && manager.hatNote(fach, halbjahr)" @click="manager.deleteFachwahl(fach, halbjahr)"
-								@keydown.enter.prevent="manager.deleteFachwahl(fach, halbjahr)" @keydown.space.prevent="manager.deleteFachwahl(fach, halbjahr)" class="left-4">
+								@keydown.enter.prevent="manager.deleteFachwahl(fach, halbjahr)" @keydown.space.prevent="manager.deleteFachwahl(fach, halbjahr)" class="left-5">
 								<span class="icon i-ri-close-line" />
 							</svws-ui-button>
 							<template #content>
@@ -75,7 +77,7 @@
 					</template>
 					<template v-else-if="(wahlen[halbjahr.id] !== '') && (istBewertet(halbjahr) || manager.istAktuellOderVergangen(halbjahr)) && (!manager.hatNote(fach, halbjahr) && !manager.belegungHatImmerNoten) && hatUpdateKompetenz">
 						<svws-ui-tooltip :color="'danger'">
-							<svws-ui-button type="icon" size="small" @click="manager.deleteFachwahl(fach, halbjahr)" class="left-4"
+							<svws-ui-button type="icon" size="small" @click="manager.deleteFachwahl(fach, halbjahr)" class="left-5"
 								@keydown.enter.prevent="manager.deleteFachwahl(fach, halbjahr)" @keydown.space.prevent="manager.deleteFachwahl(fach, halbjahr)">
 								<span class="icon i-ri-close-line" />
 							</svws-ui-button>
