@@ -63,6 +63,9 @@ export class EnmManager {
 	/** Die Liste aller Floskelgruppen */
 	readonly listFloskelgruppen: List<ENMFloskelgruppe>;
 
+	/** Eine Map von der ID der Jahrgänge auf deren Objekte */
+	readonly mapJahrgaenge: JavaMap<number, ENMJahrgang> = new HashMap<number, ENMJahrgang>();
+
 	/** Eine Map von der ID der Klassen auf deren Objekte */
 	readonly mapKlassen: JavaMap<number, ENMKlasse> = new HashMap<number, ENMKlasse>();
 
@@ -123,6 +126,9 @@ export class EnmManager {
 		this.halbjahr = daten.aktuellerAbschnitt;
 		this.listFloskelgruppen = daten.floskelgruppen;
 
+		for (const j of daten.jahrgaenge)
+			this.mapJahrgaenge.put(j.id, j);
+
 		for (const k of daten.klassen) {
 			this.mapKlassen.put(k.id, k);
 			this.mapKlassenSchueler.put(k.id, new ArrayList());
@@ -149,6 +155,7 @@ export class EnmManager {
 			this.mapLerngruppeTeilleistungsarten.put(l.id, new HashSet<number>());
 		}
 
+		daten.schueler.sort(this.comparatorSchueler);
 		for (const s of daten.schueler) {
 			this.mapSchueler.put(s.id, s);
 			for (const leistung of s.leistungsdaten) {
@@ -173,10 +180,15 @@ export class EnmManager {
 		for (const l of daten.lerngruppen) {
 			const listSchueler = this.mapLerngruppenSchueler.get(l.id);
 			const tmpKlassenIDs = new HashSet<number>();
+			const tmpJahrgangIDs = new HashSet<number>();
 			const listKlassen = new ArrayList<ENMKlasse>();
-			if (listSchueler !== null)
-				for (const s of listSchueler)
+			const listJahrgaenge = new ArrayList<ENMJahrgang>();
+			if (listSchueler !== null) {
+				for (const s of listSchueler) {
 					tmpKlassenIDs.add(s.klasseID);
+					tmpJahrgangIDs.add(s.jahrgangID);
+				}
+			}
 			for (const idKlasse of tmpKlassenIDs) {
 				const klasse = this.mapKlassen.get(idKlasse);
 				if (klasse === null)
@@ -185,8 +197,21 @@ export class EnmManager {
 			}
 			listKlassen.sort(this.comparatorKlassen);
 			this.mapLerngruppeKlassen.put(l.id, listKlassen);
+			for (const idJahrgang of tmpJahrgangIDs) {
+				const jg = this.mapJahrgaenge.get(idJahrgang);
+				if (jg === null)
+					continue;
+				listJahrgaenge.add(jg);
+			}
+			listJahrgaenge.sort(this.comparatorJahrgaenge);
+			this.mapLerngruppeJahrgaenge.put(l.id, listJahrgaenge);
 			if ((this.idLehrer === null) || l.lehrerID.contains(this.idLehrer)) {
 				this.setLerngruppenLehrer.add(l.id);
+			}
+		}
+		daten.lerngruppen.sort(this.comparatorLerngruppen);
+		for (const l of daten.lerngruppen) {
+			if ((this.idLehrer === null) || l.lehrerID.contains(this.idLehrer)) {
 				this.mapLerngruppenAuswahl.put(l.id, <EnmLerngruppenAuswahlEintrag>{
 					id: l.id,
 					bezeichnung: this.lerngruppeGetBezeichnung(l.id),
@@ -194,13 +219,19 @@ export class EnmManager {
 				});
 			}
 		}
-		for (const s of daten.schueler)
-			for (const l of s.leistungsdaten)
+
+		for (const jg of this.mapLerngruppeJahrgaenge.values())
+			jg.sort(this.comparatorJahrgaenge);
+
+		for (const s of daten.schueler) {
+			for (const l of s.leistungsdaten) {
 				if (this.setLerngruppenLehrer.contains(l.lerngruppenID)) {
 					const pair = new PairNN(l, s);
 					const list = this.mapLerngruppeLeistungen.get(l.lerngruppenID);
 					list?.add(pair);
 				}
+			}
+		}
 	}
 
 	/**
@@ -223,7 +254,23 @@ export class EnmManager {
 				return 1;
 			const aJg = aJgs.get(0);
 			const bJg = bJgs.get(0);
-			const tmp = aJg.sortierung - bJg.sortierung;
+			const tmp = this.compareJahrgaenge(aJg, bJg);
+			if (tmp !== 0)
+				return tmp;
+		}
+		// ... dann anhand der Klassen, sofern es Klassenunterricht ist, Kurse ggf. dann weiter hinten
+		if ((a.kursartID === null) || (b.kursartID === null)) {
+			if ((a.kursartID === null) && (b.kursartID !== null))
+				return 1;
+			if ((a.kursartID !== null) && (b.kursartID === null))
+				return -1;
+			const aKl = this.mapKlassen.get(a.kID);
+			if (aKl === null)
+				throw new DeveloperNotificationException(`Die Klasse mit der ID ${a.kID} wird in einer Lerngruppe angegeben, ist aber im Katalog der Klassen nicht vorhanden.`);
+			const bKl = this.mapKlassen.get(b.kID);
+			if (bKl === null)
+				throw new DeveloperNotificationException(`Die Klasse mit der ID ${b.kID} wird in einer Lerngruppe angegeben, ist aber im Katalog der Klassen nicht vorhanden.`);
+			const tmp = this.compareKlassen(aKl, bKl);
 			if (tmp !== 0)
 				return tmp;
 		}
@@ -239,12 +286,45 @@ export class EnmManager {
 			if (tmp !== 0)
 				return tmp;
 		}
+		// ... dann anhand der Bezeichnung der Lerngruppe
+		if ((a.bezeichnung !== null) && (b.bezeichnung !== null))
+			return a.bezeichnung.localeCompare(b.bezeichnung);
+		if ((a.bezeichnung === null) && (b.bezeichnung !== null))
+			return -1;
+		if ((a.bezeichnung !== null) && (b.bezeichnung === null))
+			return 1;
 		// ... und ansonsten anhand der ID der Lerngruppe
 		return a.id - b.id;
 	}
 
 	/** Definition des Comparators für zwei Lerngruppen */
 	public comparatorLerngruppen = <Comparator<ENMLerngruppe>>{ compare: this.compareLerngruppen };
+
+	/**
+	 * Vergleicht zwei Jahrgänge miteinander und sortiert diese.
+	 *
+	 * @param a   der erste Jahrgang
+	 * @param b   der zweite Jahrgang
+	 *
+	 * @returns der Wert für den Vergleich (< 0, 0 oder >0)
+	 */
+	protected compareJahrgaenge = (a : ENMJahrgang, b : ENMJahrgang) : number => {
+		// Vergleiche zuerst anhand der gesetzten Sortierung des Jahrgangs...
+		const tmp = a.sortierung - b.sortierung;
+		if (tmp !== 0)
+			return tmp;
+		// ... und ansonsten anhand des Anzeige-Kürzels der Jahrgänge
+		if ((a.kuerzelAnzeige !== null) && (b.kuerzelAnzeige !== null))
+			return a.kuerzelAnzeige.localeCompare(b.kuerzelAnzeige);
+		if (a.kuerzelAnzeige === null)
+			return -1;
+		if (b.kuerzelAnzeige === null)
+			return 1;
+		return 0;
+	}
+
+	/** Definition des Comparators für zwei Jahrgänge */
+	public comparatorJahrgaenge = <Comparator<ENMJahrgang>>{ compare: this.compareJahrgaenge };
 
 	/**
 	 * Vergleicht zwei Klassen miteinander und sortiert diese.
