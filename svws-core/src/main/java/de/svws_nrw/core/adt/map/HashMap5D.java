@@ -273,6 +273,43 @@ public class HashMap5D<K1, K2, K3, K4, K5, V> {
 	}
 
 	/**
+	 * Entfernt das Mapping (key1, key2, key3) falls es existiert<br>.
+	 *
+	 * @param key1 Der 1. Schlüssel.
+	 * @param key2 Der 2. Schlüssel.
+	 * @param key3 Der 3. Schlüssel.
+	 *
+	 */
+	public void removeMap3(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3) {
+		HashMap4D<K2, K3, K4, K5, V> map1 = _map.get(key1);
+		if (map1 == null)
+			return;
+		map1.removeMap2(key2, key3);
+		if (map1.isEmpty()) {
+			_map.remove(key1);
+		}
+	}
+
+	/**
+	 * Entfernt das Mapping (key1, key2, key3 key4) falls es existiert<br>.
+	 *
+	 * @param key1 Der 1. Schlüssel.
+	 * @param key2 Der 2. Schlüssel.
+	 * @param key3 Der 3. Schlüssel.
+	 * @param key4 Der 4. Schlüssel.
+	 *
+	 */
+	public void removeMap4(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3, final @NotNull K4 key4) {
+		HashMap4D<K2, K3, K4, K5, V> map1 = _map.get(key1);
+		if (map1 == null)
+			return;
+		map1.removeMap3(key2, key3, key4);
+		if (map1.isEmpty()) {
+			_map.remove(key1);
+		}
+	}
+
+	/**
 	 * Liefert das KeySet des 1. Schlüssels.
 	 *
 	 * @return das KeySet der SubMap des 1. Schlüssels.

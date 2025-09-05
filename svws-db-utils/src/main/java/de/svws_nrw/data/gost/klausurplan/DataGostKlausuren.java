@@ -102,7 +102,7 @@ public final class DataGostKlausuren {
 		final List<Long> missingSchuelerIds = jgs.stream().flatMap(jg -> jg.data.schuelerklausuren.stream()).map(sk -> sk.idSchueler)
 				.filter(item -> !schuelerNichtSenden.stream().map(s -> s.id).distinct().toList().contains(item)).toList();
 		if (!missingSchuelerIds.isEmpty()) {
-			jgs.getFirst().schueler = new ArrayList<>(jgs.getFirst().schueler);
+			jgs.getFirst().schueler = jgs.getFirst().schueler == null ? new ArrayList<>() : new ArrayList<>(jgs.getFirst().schueler);
 			jgs.getFirst().schueler.addAll(ladeSchuelerByIds(-1, conn, missingSchuelerIds));
 		}
 		data.lehrer.addAll(new DataLehrerliste(conn, null).getLehrerListe(false));

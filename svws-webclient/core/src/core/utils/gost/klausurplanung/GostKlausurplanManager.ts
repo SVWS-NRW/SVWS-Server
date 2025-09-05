@@ -34,7 +34,6 @@ import { cast_java_util_Collection } from '../../../../java/util/Collection';
 import { Class } from '../../../../java/lang/Class';
 import type { JavaMap } from '../../../../java/util/JavaMap';
 import { GostKlausurenCollectionSkrsKrsData } from '../../../../core/data/gost/klausurplanung/GostKlausurenCollectionSkrsKrsData';
-import { HashMap4D } from '../../../../core/adt/map/HashMap4D';
 import { HashMap2D } from '../../../../core/adt/map/HashMap2D';
 import type { JavaSet } from '../../../../java/util/JavaSet';
 import { ListMap3DLongKeys } from '../../../../core/adt/map/ListMap3DLongKeys';
@@ -66,6 +65,8 @@ export class GostKlausurplanManager extends JavaObject {
 	private readonly _kursManager : KursManager = new KursManager();
 
 	private readonly _stundenplanmanager_by_schuljahresabschnitt_and_datum : HashMap2D<number, string, StundenplanManager> = new HashMap2D<number, string, StundenplanManager>();
+
+	private readonly _stundenplanmanager_by_schuljahresabschnitt_and_kw : HashMap2D<number, number, StundenplanManager> = new HashMap2D<number, number, StundenplanManager>();
 
 	private readonly _stundenplanmanagermenge_by_schuljahresabschnitt : JavaMap<number, List<StundenplanManager>> = new HashMap<number, List<StundenplanManager>>();
 
@@ -206,7 +207,7 @@ export class GostKlausurplanManager extends JavaObject {
 
 	private readonly _kursklausurfehlendmenge : List<GostKursklausur> = new ArrayList<GostKursklausur>();
 
-	private readonly _kursklausurfehlend_by_abijahr_and_halbjahr_and_quartal_and_idKurs : HashMap4D<number, number, number, number, GostKursklausur> = new HashMap4D<number, number, number, number, GostKursklausur>();
+	private readonly _kursklausurfehlend_by_abijahr_and_halbjahr_and_quartal_and_idVorgabe_and_idKurs : HashMap5D<number, number, number, number, number, GostKursklausur> = new HashMap5D<number, number, number, number, number, GostKursklausur>();
 
 	private readonly _schuelerklausurfehlendmenge : List<GostSchuelerklausur> = new ArrayList<GostSchuelerklausur>();
 
@@ -461,7 +462,7 @@ export class GostKlausurplanManager extends JavaObject {
 		this._kursManager.addAll(kurse);
 		for (const lehrer of meta.lehrer)
 			this._lehrerMap.put(lehrer.id, lehrer);
-		this.schuelerAddAllOhneUpdate(schueler);
+		this.schuelerAddAllOhneUpdate(schueler, true);
 	}
 
 	private addKlausurDataListenOhneUpdate(listVorgaben : Collection<GostKlausurvorgabe>, listKlausuren : Collection<GostKursklausur>, listTermine : Collection<GostKlausurtermin> | null, listSchuelerklausuren : Collection<GostSchuelerklausur> | null, listSchuelerklausurtermine : Collection<GostSchuelerklausurTermin> | null) : void {
@@ -505,7 +506,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 */
 	public setKlausurDataFehlend(fehlendData : GostKlausurenCollectionHjData) : void {
 		this._vorgabefehlend_by_abijahr_and_halbjahr_and_quartal_and_kursartAllg_and_idFach.removeMap2(fehlendData.abiturjahrgang, fehlendData.gostHalbjahr);
-		this._kursklausurfehlend_by_abijahr_and_halbjahr_and_quartal_and_idKurs.removeMap2(fehlendData.abiturjahrgang, fehlendData.gostHalbjahr);
+		this._kursklausurfehlend_by_abijahr_and_halbjahr_and_quartal_and_idVorgabe_and_idKurs.removeMap2(fehlendData.abiturjahrgang, fehlendData.gostHalbjahr);
 		this._schuelerklausurfehlendmenge_by_abijahr_and_halbjahr_and_quartal_and_idSchueler_and_idKursklausur.removeMap2(fehlendData.abiturjahrgang, fehlendData.gostHalbjahr);
 		this.addKlausurDataFehlendOhneUpdate(fehlendData);
 		this._fehlenddatenEnthalten.put(fehlendData.abiturjahrgang, fehlendData.gostHalbjahr, true);
@@ -660,6 +661,28 @@ export class GostKlausurplanManager extends JavaObject {
 		return this._stundenplanmanager_by_schuljahresabschnitt_and_datum.contains(idSchuljahresabschnitt, datum);
 	}
 
+	private static gibIntkeyJahrUndKwDesDatumsISO8601(datumISO8601 : string) : number {
+		const split : Array<number> | null = DateUtils.extractFromDateISO8601(datumISO8601);
+		return GostKlausurplanManager.gibIntkeyJahrUndKw(split[6], split[5]);
+	}
+
+	private static gibIntkeyJahrUndKw(jahr : number, kw : number) : number {
+		return JavaInteger.parseInt(jahr + "" + kw);
+	}
+
+	/**
+	 * Prüft, ob zu den angegebenen Parametern ein StundenplanManager existiert. Falls noch keine StundenplanManager für den angegebenen Schuljahresabschnitt geladen wurden, wird eine {@link DeveloperNotificationException} geworfen
+	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnitts
+	 * @param jahr das Jahr
+	 * @param kw die Kalenderwoche
+	 * @return true, wenn ein StundenplanManager existiert, sonst false
+	 */
+	public stundenplanManagerExistsByAbschnittAndJahrAndKw(idSchuljahresabschnitt : number, jahr : number, kw : number) : boolean {
+		if (!this.stundenplanManagerGeladenByAbschnitt(idSchuljahresabschnitt))
+			throw new DeveloperNotificationException("StundenplanManager für Schuljahresabschnitt " + idSchuljahresabschnitt + " wurde nicht geladen.")
+		return this._stundenplanmanager_by_schuljahresabschnitt_and_kw.contains(idSchuljahresabschnitt, GostKlausurplanManager.gibIntkeyJahrUndKw(jahr, kw));
+	}
+
 	/**
 	 * Setzt die {@link StundenplanManager} für den angegebenen Schuljahresabschnitt
 	 *
@@ -699,6 +722,9 @@ export class GostKlausurplanManager extends JavaObject {
 	 */
 	public stundenplanManagerAddByAbschnittAndDatum(idSchuljahresabschnitt : number, datum : string, stundenplanManager : StundenplanManager) : void {
 		DeveloperNotificationException.ifMap2DPutOverwrites(this._stundenplanmanager_by_schuljahresabschnitt_and_datum, idSchuljahresabschnitt, datum, stundenplanManager);
+		const kw : number = GostKlausurplanManager.gibIntkeyJahrUndKwDesDatumsISO8601(datum);
+		if (!this._stundenplanmanager_by_schuljahresabschnitt_and_kw.contains(idSchuljahresabschnitt, kw))
+			this._stundenplanmanager_by_schuljahresabschnitt_and_kw.put(idSchuljahresabschnitt, kw, stundenplanManager);
 	}
 
 	/**
@@ -711,6 +737,19 @@ export class GostKlausurplanManager extends JavaObject {
 	 */
 	public stundenplanManagerGetByAbschnittAndDatumOrNull(idSchuljahresabschnitt : number, datum : string) : StundenplanManager | null {
 		return this._stundenplanmanager_by_schuljahresabschnitt_and_datum.getOrNull(idSchuljahresabschnitt, datum);
+	}
+
+	/**
+	 * Liefert den {@link StundenplanManager}, zu den übergebenen Parametern, sonst null.
+	 *
+	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnitts
+	 * @param jahr das Jahr
+	 * @param kw die Kalenderwoche, zu der der gesuchte Stundenplan gültig ist
+	 *
+	 * @return den {@link StundenplanManager}, zu den übergebenen Parametern, sonst null.
+	 */
+	public stundenplanManagerGetByAbschnittAndKwOrNull(idSchuljahresabschnitt : number, jahr : number, kw : number) : StundenplanManager | null {
+		return this._stundenplanmanager_by_schuljahresabschnitt_and_kw.getOrNull(idSchuljahresabschnitt, GostKlausurplanManager.gibIntkeyJahrUndKw(jahr, kw));
 	}
 
 	/**
@@ -818,6 +857,19 @@ export class GostKlausurplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert den {@link StundenplanManager}, zu den übergebenen Parametern, sonst wird eine {@link DeveloperNotificationException} geworfen.
+	 *
+	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnitts
+	 * @param jahr das Jahr
+	 * @param kw die Kalenderwoche, zu der der gesuchte Stundenplan gültig ist
+	 *
+	 * @return den {@link StundenplanManager}, zu den übergebenen Parametern, sonst wird eine {@link DeveloperNotificationException} geworfen.
+	 */
+	public stundenplanManagerGetByAbschnittAndKwOrException(idSchuljahresabschnitt : number, jahr : number, kw : number) : StundenplanManager {
+		return DeveloperNotificationException.ifNull(JavaString.format("Kein Stundenplanmanager zu Abschnitt %d und Datum %s gefunden.", idSchuljahresabschnitt, kw), this.stundenplanManagerGetByAbschnittAndKwOrNull(idSchuljahresabschnitt, jahr, kw));
+	}
+
+	/**
 	 * Liefert den {@link StundenplanManager}, zu den übergebenen Parametern, sonst null.
 	 *
 	 * @param termin der {@link GostKlausurtermin}
@@ -871,10 +923,15 @@ export class GostKlausurplanManager extends JavaObject {
 	 * Setzt die Maps, die zu den {@link SchuelerListeEintrag}en gehören.
 	 *
 	 * @param listSchueler Liste von {@link SchuelerListeEintrag}en
+	 * @param ignoreExists wenn true, wird bei bereits existierenden Schülern kein Fehler geworfen und der alte Eintrag beibehalten
 	 */
-	private schuelerAddAllOhneUpdate(listSchueler : List<SchuelerListeEintrag>) : void {
+	private schuelerAddAllOhneUpdate(listSchueler : List<SchuelerListeEintrag>, ignoreExists : boolean) : void {
 		for (const sle of listSchueler)
-			DeveloperNotificationException.ifMapPutOverwrites(this._schuelerlisteeintrag_by_id, sle.id, sle);
+			if (ignoreExists) {
+				if (!this._schuelerlisteeintrag_by_id.containsKey(sle.id))
+					this._schuelerlisteeintrag_by_id.put(sle.id, sle);
+			} else
+				DeveloperNotificationException.ifMapPutOverwrites(this._schuelerlisteeintrag_by_id, sle.id, sle);
 	}
 
 	private addSchuljahr(jahrgaenge : List<GostKlausurenCollectionHjData>, abijahr : number, hjStart : number, abijahreAngefordert : JavaSet<number>) : void {
@@ -1267,6 +1324,7 @@ export class GostKlausurplanManager extends JavaObject {
 
 	private vorgabeRemoveOhneUpdateById(idVorgabe : number) : void {
 		const vorgabe : GostKlausurvorgabe = DeveloperNotificationException.ifMapRemoveFailes(this._vorgabe_by_id, idVorgabe);
+		this._kursklausurfehlend_by_abijahr_and_halbjahr_and_quartal_and_idVorgabe_and_idKurs.removeMap4(vorgabe.abiJahrgang, vorgabe.halbjahr, vorgabe.quartal, vorgabe.id);
 		vorgabe.id = -1;
 		this.vorgabefehlendAddAllOhneUpdate(ListUtils.create1(vorgabe));
 	}
@@ -1493,7 +1551,7 @@ export class GostKlausurplanManager extends JavaObject {
 
 	private update_kursklausurfehlendmenge() : void {
 		this._kursklausurfehlendmenge.clear();
-		this._kursklausurfehlendmenge.addAll(this._kursklausurfehlend_by_abijahr_and_halbjahr_and_quartal_and_idKurs.getNonNullValuesAsList());
+		this._kursklausurfehlendmenge.addAll(this._kursklausurfehlend_by_abijahr_and_halbjahr_and_quartal_and_idVorgabe_and_idKurs.getNonNullValuesAsList());
 	}
 
 	/**
@@ -1510,7 +1568,7 @@ export class GostKlausurplanManager extends JavaObject {
 	private kursklausurfehlendAddAllOhneUpdate(list : List<GostKursklausur>) : void {
 		for (const klausur of list) {
 			const v : GostKlausurvorgabe = this.vorgabeByKursklausur(klausur);
-			DeveloperNotificationException.ifMap4DPutOverwrites(this._kursklausurfehlend_by_abijahr_and_halbjahr_and_quartal_and_idKurs, v.abiJahrgang, v.halbjahr, v.quartal, klausur.idKurs, klausur);
+			DeveloperNotificationException.ifMap5DPutOverwrites(this._kursklausurfehlend_by_abijahr_and_halbjahr_and_quartal_and_idVorgabe_and_idKurs, v.abiJahrgang, v.halbjahr, v.quartal, v.id, klausur.idKurs, klausur);
 		}
 	}
 
@@ -1537,7 +1595,7 @@ export class GostKlausurplanManager extends JavaObject {
 
 	private kursklausurfehlendRemoveOhneUpdate(kursklausur : GostKursklausur) : void {
 		const vorgabe : GostKlausurvorgabe = this.vorgabeByKursklausur(kursklausur);
-		this._kursklausurfehlend_by_abijahr_and_halbjahr_and_quartal_and_idKurs.remove(vorgabe.abiJahrgang, vorgabe.halbjahr, vorgabe.quartal, kursklausur.idKurs);
+		this._kursklausurfehlend_by_abijahr_and_halbjahr_and_quartal_and_idVorgabe_and_idKurs.remove(vorgabe.abiJahrgang, vorgabe.halbjahr, vorgabe.quartal, vorgabe.id, kursklausur.idKurs);
 	}
 
 	/**
@@ -4892,8 +4950,8 @@ export class GostKlausurplanManager extends JavaObject {
 	 */
 	public kursklausurfehlendGetMengeByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number) : List<GostKursklausur> {
 		if (quartal === 0)
-			return this._kursklausurfehlend_by_abijahr_and_halbjahr_and_quartal_and_idKurs.getNonNullValuesOfMap3AsList(abiJahrgang, halbjahr.id);
-		return this._kursklausurfehlend_by_abijahr_and_halbjahr_and_quartal_and_idKurs.getNonNullValuesOfMap4AsList(abiJahrgang, halbjahr.id, quartal);
+			return this._kursklausurfehlend_by_abijahr_and_halbjahr_and_quartal_and_idVorgabe_and_idKurs.getNonNullValuesOfMap3AsList(abiJahrgang, halbjahr.id);
+		return this._kursklausurfehlend_by_abijahr_and_halbjahr_and_quartal_and_idVorgabe_and_idKurs.getNonNullValuesOfMap4AsList(abiJahrgang, halbjahr.id, quartal);
 	}
 
 	/**
