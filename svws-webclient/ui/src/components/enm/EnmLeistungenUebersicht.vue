@@ -3,39 +3,43 @@
 		<template #header>
 			<template v-for="col of gridManager.cols.values()" :key="col.name">
 				<template v-if="col.kuerzel !== ''">
-					<th v-if="gridManager.isColVisible(col.kuerzel) ?? true">
-						<svws-ui-tooltip v-if="col.kuerzel !== col.name">
-							{{ col.kuerzel }}
-							<template #content>{{ col.name }}</template>
-						</svws-ui-tooltip>
-						<span v-else>{{ col.kuerzel }}</span>
-						<span v-if="colsValidationTooltip.includes(col.kuerzel)">
-							<svws-ui-tooltip>
-								<span class="icon i-ri-question-line" />
-								<template #content>
-									<div class="font-bold">{{ col.name }}</div>
-									<template v-if="(col.kuerzel === 'Quartal') || (col.kuerzel === 'Note')">
-										<ul>
-											<li v-for="n in notenKuerzel" :key="n"> {{ n }} </li>
-										</ul>
+					<th v-if="gridManager.isColVisible(col.kuerzel) ?? true" class="flex h-10">
+						<div class="h-full content-center">
+							<template v-if="col.kuerzel !== col.name">
+								<svws-ui-tooltip>
+									{{ col.kuerzel }}
+									<template #content>{{ col.name }}</template>
+								</svws-ui-tooltip>
+							</template>
+							<template v-else>{{ col.kuerzel }}</template>
+							<template v-if="colsValidationTooltip.includes(col.kuerzel)">
+								<svws-ui-tooltip>
+									<span class="icon-sm i-ri-question-line ml-0.5" />
+									<template #content>
+										<div class="font-bold">{{ col.name }}</div>
+										<template v-if="(col.kuerzel === 'Quartal') || (col.kuerzel === 'Note')">
+											<ul>
+												<li v-for="n in notenKuerzel" :key="n"> {{ n }} </li>
+											</ul>
+										</template>
+										<template v-else-if="col.kuerzel === 'FS'">
+											<ul>
+												<li>Keine negativen Werte</li>
+												<li>Maximal 999</li>
+												<li>Größer/gleich FSU</li>
+											</ul>
+										</template>
+										<template v-else-if="col.kuerzel === 'FSU'">
+											<ul>
+												<li>Keine negativen Werte</li>
+												<li>Maximal 999</li>
+												<li>Kleiner/gleich FS</li>
+											</ul>
+										</template>
 									</template>
-									<template v-else-if="col.kuerzel === 'FS'">
-										<ul>
-											<li>Keine negativen Werte</li>
-											<li>Maximal 999</li>
-											<li>Größer/gleich FSU</li>
-										</ul>
-									</template>
-									<template v-else-if="col.kuerzel === 'FSU'">
-										<ul>
-											<li>Keine negativen Werte</li>
-											<li>Maximal 999</li>
-											<li>Kleiner/gleich FS</li>
-										</ul>
-									</template>
-								</template>
-							</svws-ui-tooltip>
-						</span>
+								</svws-ui-tooltip>
+							</template>
+						</div>
 					</th>
 				</template>
 				<template v-else>
