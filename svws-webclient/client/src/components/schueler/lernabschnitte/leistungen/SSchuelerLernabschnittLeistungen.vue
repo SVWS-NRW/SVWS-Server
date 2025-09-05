@@ -3,7 +3,11 @@
 		<svws-ui-table :columns :items="leistungen" has-background>
 			<template #header>
 				<div role="row" class="svws-ui-tr">
-					<div role="columnheader" :class="{ 'col-span-5': hatUpdateKompetenz, 'col-span-4': !hatUpdateKompetenz }" aria-label="Fach" />
+					<div role="columnheader" :class="{
+						'col-span-6': hatUpdateKompetenz && istGymOb,
+						'col-span-5': (hatUpdateKompetenz && !istGymOb) || (!hatUpdateKompetenz && istGymOb),
+						'col-span-4': !hatUpdateKompetenz && !istGymOb
+					}" aria-label="Fach" />
 					<div role="columnheader" class="svws-ui-td svws-align-center col-span-2" aria-label="Noten"> Noten </div>
 				</div>
 				<div role="row" class="svws-ui-tr">
@@ -13,6 +17,9 @@
 					<div role="columnheader" class="svws-ui-td svws-align-left" aria-label="Fach"> Fach </div>
 					<div role="columnheader" class="svws-ui-td svws-align-left" aria-label="Kurs"> Kurs </div>
 					<div role="columnheader" class="svws-ui-td svws-align-left" aria-label="Kursart"> Kursart </div>
+					<template v-if="istGymOb">
+						<div role="columnheader" class="svws-ui-td svws-align-center" aria-label="Abifach"> Abi </div>
+					</template>
 					<div role="columnheader" class="svws-ui-td svws-align-left" aria-label="Lehrer"> Lehrer </div>
 					<div role="columnheader" class="svws-ui-td svws-align-center" aria-label="Quartalsnote"> Quartal </div>
 					<div role="columnheader" class="svws-ui-td svws-align-center" aria-label="Halbjahresnote"> Halbjahr </div>
@@ -50,6 +57,9 @@
 							<div v-else>{{ (leistung.kursart === null) ? null : ZulaessigeKursart.data().getWertByKuerzel(leistung.kursart)?.daten(schuljahr)?.kuerzel ?? '—' }}</div>
 						</template>
 					</div>
+					<template v-if="istGymOb">
+						<div class="svws-ui-td svws-align-center" role="cell"> {{ (leistung.abifach === null) ? "" : leistung.abifach }} </div>
+					</template>
 					<div class="svws-ui-td svws-divider" role="cell">
 						<svws-ui-select v-if="hatUpdateKompetenz" title="—" :items="manager().lehrerGetMengeAktiv()" :item-text="lehrer => textLehrer(lehrer)"
 							:model-value="manager().lehrerGetByLeistungIdOrNull(leistung.id)"
@@ -115,9 +125,11 @@
 	import { computed, ref, watch } from "vue";
 	import type { SchuelerLernabschnittLeistungenProps } from "./SSchuelerLernabschnittLeistungenProps";
 	import type { SchuelerLeistungsdaten, List, KursDaten, FachDaten, LehrerListeEintrag} from "@core";
-	import { Note, ZulaessigeKursart, ArrayList, Fach, BenutzerKompetenz, BenutzerTyp } from "@core";
+	import { Note, ZulaessigeKursart, ArrayList, Fach, BenutzerKompetenz, BenutzerTyp, Jahrgaenge } from "@core";
 
 	const props = defineProps<SchuelerLernabschnittLeistungenProps>();
+
+	const istGymOb = computed<boolean>(() => Jahrgaenge.data().getWertBySchluessel(props.schuelerListeManager().auswahl().jahrgang)?.istGymOb() ?? false);
 
 	const columns = computed(() => {
 		const result = [];
@@ -126,6 +138,8 @@
 		result.push({ key: "fachID", label: "Fach", span: 3, sortable: false, minWidth: 10 });
 		result.push({ key: "kursID", label: "Kurs", span: 1, sortable: false, minWidth: 10 });
 		result.push({ key: "kursart", label: "Kursart", span: 1, sortable: false, fixedWidth: 6 });
+		if (istGymOb.value)
+			result.push({ key: "abifach", label: "Abifach", span: 1, sortable: false, fixedWidth: 3 });
 		result.push({ key: "lehrerID", label: "Lehrer", span: 2, sortable: false, minWidth: 10 });
 		result.push({ key: "noteQuartal", label: "Quartalsnote", tooltip: "Quartalsnote", sortable: false, fixedWidth: 5 });
 		result.push({ key: "note", label: "Note", sortable: false, fixedWidth: 5 });
@@ -316,13 +330,20 @@
 	const lernbereichsnote2Bezeichnung = computed<string | null>(() => props.manager().lernabschnittGetLernbereichsnote2Bezeichnung());
 	const hatLernbereichsnote = computed<boolean>(() => (lernbereichsnote1Bezeichnung.value !== null) || lernbereichsnote2Bezeichnung.value !== null);
 
-	const setRem = computed(() => hatUpdateKompetenz.value ? '1.5rem':'');
+	const gridcolumns = computed<string>(() => {
+		let result = hatUpdateKompetenz.value ? "1.5rem " : "";
+		result += "minmax(10rem, 3fr) minmax(10rem, 1fr) 6rem ";
+		if (istGymOb.value)
+			result += "3rem ";
+		result += "minmax(10rem, 2fr) 5rem 5rem";
+		return result;
+	});
 </script>
 
 <style scoped>
 
 	.svws-ui-tr {
-		grid-template-columns: v-bind(setRem) minmax(10rem, 3fr) minmax(10rem, 1fr) minmax(6rem, 1fr) minmax(10rem, 2fr) 5rem 5rem;
+		grid-template-columns: v-bind(gridcolumns);
 	}
 
 </style>
