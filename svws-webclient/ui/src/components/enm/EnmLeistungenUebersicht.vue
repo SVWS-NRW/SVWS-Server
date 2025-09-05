@@ -208,7 +208,7 @@
 		return (element : Element | ComponentPublicInstance<unknown> | null) => {
 			const input = gridManager.applyInputNote(key, col, index, element, setter, props.enmManager().schuljahr);
 			if (input !== null)
-				watchEffect(() => gridManager.update(key, pair.a.noteQuartal));
+				gridManager.update(key, pair.a.noteQuartal);
 		};
 	}
 
@@ -218,7 +218,7 @@
 		return (element : Element | ComponentPublicInstance<unknown> | null) => {
 			const input = gridManager.applyInputNote(key, col, index, element, setter, props.enmManager().schuljahr);
 			if (input !== null)
-				watchEffect(() => gridManager.update(key, pair.a.note));
+				gridManager.update(key, pair.a.note);
 		};
 	}
 

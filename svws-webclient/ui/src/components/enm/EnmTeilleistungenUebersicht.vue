@@ -153,11 +153,14 @@
 
 	function inputNoteTeilleistung(pair: PairNN<ENMLeistung, ENMSchueler>, teilleistung: ENMTeilleistung, col: number, index: number) {
 		const key = 'Teilleistung_' + teilleistung.id + '_' + pair.a.id + "_" + pair.b.id;
-		const setter = (value : string | null) => void props.patchTeilleistung(teilleistung, { note: value });
+		const setter = (value : string | null) => {
+			console.log("setter", value);
+			void props.patchTeilleistung(teilleistung, { note: value });
+		};
 		return (element : Element | ComponentPublicInstance<unknown> | null) => {
 			const input = gridManager.applyInputNote(key, col, index, element, setter, props.enmManager().schuljahr);
 			if (input !== null)
-				watchEffect(() => gridManager.update(key, teilleistung.note));
+				gridManager.update(key, teilleistung.note);
 		};
 	}
 
@@ -167,7 +170,7 @@
 		return (element : Element | ComponentPublicInstance<unknown> | null) => {
 			const input = gridManager.applyInputNote(key, col, index, element, setter, props.enmManager().schuljahr);
 			if (input !== null)
-				watchEffect(() => gridManager.update(key, pair.a.noteQuartal));
+				gridManager.update(key, pair.a.noteQuartal);
 		};
 	}
 
@@ -177,7 +180,7 @@
 		return (element : Element | ComponentPublicInstance<unknown> | null) => {
 			const input = gridManager.applyInputNote(key, col, index, element, setter, props.enmManager().schuljahr);
 			if (input !== null)
-				watchEffect(() => gridManager.update(key, pair.a.note));
+				gridManager.update(key, pair.a.note);
 		};
 	}
 
