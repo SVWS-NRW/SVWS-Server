@@ -3,8 +3,7 @@ package de.svws_nrw.api;
 import java.util.Set;
 
 import de.svws_nrw.api.common.OpenAPICorsFilter;
-import de.svws_nrw.api.dav.APIAdressbuch;
-import de.svws_nrw.api.dav.APIKalender;
+import de.svws_nrw.api.dav.APIDav;
 import jakarta.ws.rs.core.Application;
 
 
@@ -19,8 +18,7 @@ public final class RestAppDav extends Application {
 
 	/// Enthält alle Klassen, die für die OpenAPI eingebunden werden
 	private final Set<Class<?>> classes = Set.of(
-			APIAdressbuch.class,
-			APIKalender.class,
+			APIDav.class,
 			OpenAPICorsFilter.class);
 
 	/**

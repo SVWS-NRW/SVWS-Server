@@ -1,11 +1,10 @@
 package de.svws_nrw.module.reporting.proxytypes.gost.klausurplanung;
 
-import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -14,14 +13,11 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumstunde;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin;
-import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
-import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
-import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
-import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.proxytypes.kurs.ProxyReportingKurs;
-import de.svws_nrw.module.reporting.proxytypes.schueler.ProxyReportingSchueler;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.sortierung.ComparatorFactory;
+import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingGostKlausurplanungSchuelerklausur;
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKlausurplan;
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKlausurraum;
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKlausurtermin;
@@ -121,22 +117,18 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 		// 6. Schülerklausuren erstellen.
 		initSchuelerklausuren();
 
-		// 7. Sortiere alle Schülerklausuren, sowohl Gesamtliste als auch bei den Kursklausuren.
-		final Collator colGerman = Collator.getInstance(Locale.GERMAN);
-		super.schuelerklausuren.sort(Comparator
-				.comparing((final ReportingGostKlausurplanungSchuelerklausur sk) -> sk.schueler().nachname(), colGerman)
-				.thenComparing(sk -> sk.schueler().vorname(), colGerman)
-				.thenComparing(sk -> sk.schueler().vornamen(), colGerman)
-				.thenComparing(sk -> sk.schueler().id())
-				.thenComparing(sk -> ((sk.klausurtermin() != null) && (sk.klausurtermin().datum() != null)) ? sk.klausurtermin().datum() : "yyyy-MM-dd"));
-		super.kursklausuren.forEach(kk -> kk.schuelerklausuren().sort(Comparator
-				.comparing((final ReportingGostKlausurplanungSchuelerklausur sk) -> sk.schueler().nachname(), colGerman)
-				.thenComparing(sk -> sk.schueler().vorname(), colGerman)
-				.thenComparing(sk -> sk.schueler().vornamen(), colGerman)
-				.thenComparing(sk -> sk.schueler().id())
-				.thenComparing(sk -> ((sk.klausurtermin() != null) && (sk.klausurtermin().datum() != null)) ? sk.klausurtermin().datum() : "yyyy-MM-dd")));
+		// 7. Sortiere alle Schülerklausuren, sowohl in der Gesamtliste als auch bei den Kursklausuren.
+		final Optional<Comparator<ReportingGostKlausurplanungSchuelerklausur>> optionalComparator =
+				ComparatorFactory.buildOptionalComparator(this.reportingRepository, ReportingGostKlausurplanungSchuelerklausur.class.getSimpleName(),
+						SortierungRegistryReportingGostKlausurplanungSchuelerklausur.sortierungRegistry(),
+						SortierungRegistryReportingGostKlausurplanungSchuelerklausur.standardsortierung());
 
-		// 8. Ergänze die Schülerklausuren in der Liste der KLausuren des Schülers.
+		if (optionalComparator.isPresent()) {
+			super.schuelerklausuren.sort(optionalComparator.get());
+			super.kursklausuren.forEach(kk -> kk.schuelerklausuren().sort(optionalComparator.get()));
+		}
+
+		// 8. Ergänze die Schülerklausuren in der Liste der Klausuren des Schülers.
 		super.schuelerklausuren.forEach(sk -> sk.schueler().gostKlausurplanungSchuelerklausuren().add(sk));
 	}
 
@@ -146,35 +138,8 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 	private void initSchueler() {
 		if (this.gostKlausurplanManager == null)
 			return;
-
-		final List<SchuelerStammdaten> schuelerStammdaten = new ArrayList<>();
-		final List<Long> fehlendeSchueler = new ArrayList<>();
-
-		for (final Long idSchueler : this.gostKlausurplanManager.schuelerklausurGetMengeAsList().stream().map(s -> s.idSchueler).distinct().toList()) {
-			if (this.reportingRepository.mapSchuelerStammdaten().containsKey(idSchueler))
-				schuelerStammdaten.add(this.reportingRepository.mapSchuelerStammdaten().get(idSchueler));
-			else
-				fehlendeSchueler.add(idSchueler);
-		}
-		if (!fehlendeSchueler.isEmpty()) {
-			final List<SchuelerStammdaten> fehlendeSchuelerStammdaten;
-			try {
-				fehlendeSchuelerStammdaten = (new DataSchuelerStammdaten(this.reportingRepository.conn())).getListByIds(fehlendeSchueler);
-			} catch (final ApiOperationException e) {
-				throw new DeveloperNotificationException(e.getMessage());
-			}
-			schuelerStammdaten.addAll(fehlendeSchuelerStammdaten);
-			fehlendeSchuelerStammdaten.forEach(s -> this.reportingRepository.mapSchuelerStammdaten().putIfAbsent(s.id, s));
-		}
-
-		final Collator colGerman = Collator.getInstance(Locale.GERMAN);
-		super.schueler.addAll(schuelerStammdaten.stream().map(s -> (ReportingSchueler) new ProxyReportingSchueler(this.reportingRepository, s))
-				.sorted(Comparator.comparing(ReportingSchueler::nachname, colGerman)
-						.thenComparing(ReportingSchueler::vorname, colGerman)
-						.thenComparing(ReportingSchueler::vornamen, colGerman)
-						.thenComparing(ReportingSchueler::id))
-				.toList());
-		this.reportingRepository.mapSchueler().putAll(super.schueler.stream().collect(Collectors.toMap(ReportingSchueler::id, s -> s)));
+		super.schueler().addAll(this.reportingRepository
+				.schueler(this.gostKlausurplanManager.schuelerklausurGetMengeAsList().stream().map(s -> s.idSchueler).distinct().toList()));
 	}
 
 	/**
@@ -218,7 +183,7 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 			// Zu einer Schülerklausur kann es mehrere Schülerklausurtermine geben, die sich in ihrer FolgeNr unterscheiden (z. B. bei Nachschrieb).
 			for (final GostSchuelerklausurTermin skTermin : gostKlausurplanManager.schuelerklausurterminGetMengeBySchuelerklausur(sk)) {
 				// 1. Den Klausurtermin für den Schülerklausurtermin ermitteln.
-				ReportingGostKlausurplanungKlausurtermin klausurtermin = null;
+				final ReportingGostKlausurplanungKlausurtermin klausurtermin;
 
 				// Der Termin mit FolgeNr 0 und TerminID null ist der Termin der Kursklausur.
 				if ((skTermin.folgeNr == 0) && (skTermin.idTermin == null)) {

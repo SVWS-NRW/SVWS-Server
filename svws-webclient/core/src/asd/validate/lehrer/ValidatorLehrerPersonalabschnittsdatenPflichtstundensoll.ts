@@ -26,17 +26,17 @@ export class ValidatorLehrerPersonalabschnittsdatenPflichtstundensoll extends Va
 	protected pruefe() : boolean {
 		const pflichtstundensoll : number | null = this.daten.pflichtstundensoll;
 		if (pflichtstundensoll === null) {
-			this.addFehler("Kein Wert im Feld 'pflichtstundensoll'.");
+			this.addFehler(0, "Kein Wert im Feld 'pflichtstundensoll'.");
 			return false;
 		}
 		let success : boolean = true;
 		if ((pflichtstundensoll < 0.0) || (pflichtstundensoll > 41.0)) {
-			this.addFehler("Unzulässiger Wert im Feld 'pflichtstundensoll'. Zulässig sind im Stundenmodell Werte im Bereich von 0,00 bis 41,00 Wochenstunden. Im Minutenmodell zwischen 0,00 und 1845,00 Minuten.");
+			this.addFehler(1, "Unzulässiger Wert im Feld 'pflichtstundensoll'. Zulässig sind im Stundenmodell Werte im Bereich von 0,00 bis 41,00 Wochenstunden. Im Minutenmodell zwischen 0,00 und 1845,00 Minuten.");
 			success = false;
 		}
 		const einsatzstatus : LehrerEinsatzstatus | null = LehrerEinsatzstatus.getBySchluessel(this.daten.einsatzstatus);
 		if ((einsatzstatus as unknown === LehrerEinsatzstatus.B as unknown) && (pflichtstundensoll === 0.0)) {
-			this.addFehler("Bei Lehrkräften, die von einer anderen Schule abgeordnet wurden (Einsatzstatus = 'B'), darf das Pflichtstundensoll nicht 0,00 betragen.");
+			this.addFehler(2, "Bei Lehrkräften, die von einer anderen Schule abgeordnet wurden (Einsatzstatus = 'B'), darf das Pflichtstundensoll nicht 0,00 betragen.");
 			success = false;
 		}
 		return success;

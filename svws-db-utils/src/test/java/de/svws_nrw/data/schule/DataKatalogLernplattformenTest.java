@@ -196,7 +196,7 @@ class DataKatalogLernplattformenTest {
 			case "konfiguration" -> assertThat(expectedDTO.Konfiguration).isEqualTo(value);
 			default -> assertThat(throwable)
 					.isInstanceOf(ApiOperationException.class)
-					.hasMessageStartingWith("Die Daten des Patches enthalten ein unbekanntes Attribut.")
+					.hasMessageStartingWith("Die Daten des Patches enthalten das unbekannte Attribut beschreibung.")
 					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 		}
 	}

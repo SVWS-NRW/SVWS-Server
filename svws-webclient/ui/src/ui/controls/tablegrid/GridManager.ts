@@ -272,6 +272,28 @@ export class GridManager<KEY, DATA, LIST extends Collection<DATA> | List<DATA>> 
 	}
 
 	/**
+	 * Gibt zu den angegebenen Zeilen- und Spaltennumer das Gridinput zurück, sofern es vorhanden ist.
+	 *
+	 * @param row   die Zeilennummer oder null
+	 * @param col   die Spaltennummer oder null
+	 *
+	 * @returns das Gridinput oder null
+	 */
+	public getInputByPosition(row: number | null, col: number | null): GridInput<KEY, any> | null {
+		if ((row === null) || (col === null))
+			return null;
+		if (!(row in this.gridInputsRows))
+			return null;
+		const gridInputsRow = this.gridInputsRows[row];
+		if (gridInputsRow === undefined)
+			return null;
+		for (const input of gridInputsRow.cols)
+			if (input.col === col)
+				return input;
+		return null;
+	}
+
+	/**
 	 * Fügt das Input mit seiner Position ein.
 	 *
 	 * @param input   das input, dessen Position hinzugefügt werden soll.
@@ -849,7 +871,24 @@ export class GridManager<KEY, DATA, LIST extends Collection<DATA> | List<DATA>> 
 	}
 
 	/**
-	 * Fokussiert das Grid, s.h. ein Input im Grid. Ist restore auf false gesetzt,
+	 * Setzt die fokussierte Zeile auf den übergebenen Wert, sofern für die angegebene Zeile in der Spalte, die zuletzt fokussiert war,
+	 * ein Input existiert.
+	 *
+	 * @param row   die Zeilennummer oder null
+	 */
+	public set focusRowLast(row: number | null) {
+		const daten = this._daten.value;
+		if ((row === null) || (row < 0) || (row >= daten.size()))
+			return;
+		const input = this.getInputByPosition(row, this.focusColumnLast);
+		if (input === null)
+			return;
+		this._focusLastKey.value = input.key;
+		this._focusLastRow.value = row;
+	}
+
+	/**
+	 * Fokussiert das Grid, d.h. ein Input im Grid. Ist restore auf false gesetzt,
 	 * so wird einfach das erste Input im Grid fokussiert. Ist restore auf true
 	 * gesetzt, so wird vorher versucht die Position der letzten Fokussierung
 	 * wiederherzustellen.
@@ -877,6 +916,22 @@ export class GridManager<KEY, DATA, LIST extends Collection<DATA> | List<DATA>> 
 			}
 		}
 		found?.element.focus();
+	}
+
+	/**
+	 * Fokussiert das Grid-Input mit Hilfe des übergebenen Keys, sofern dieser vorhanden ist.
+	 *
+	 * @param key   der Key des Grid-Inputs
+	 */
+	public doFocusByKey(key: KEY): void {
+		const input = this.mapInputs.get(key);
+		if (input === undefined)
+			return;
+		this._focusLastKey.value = input.key;
+		this._focusLastColumn.value = input.col;
+		this._focusLastRow.value = input.row;
+		this._focusInput.value = input;
+		input.element.focus();
 	}
 
 	/**

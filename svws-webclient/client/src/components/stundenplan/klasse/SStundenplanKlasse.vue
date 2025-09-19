@@ -222,7 +222,7 @@
 				unterrichtBezeichnung.value = props.stundenplanManager().fachGetByIdOrException(auswahl.value.idFach).bezeichnung;
 			}
 			else {
-				schuelerzahl.value = props.stundenplanManager().schuelerGetAnzahlByKursIdAsListOrException(auswahl.value.id);
+				schuelerzahl.value = props.stundenplanManager().schuelerGetAnzahlByKursIdAsListOrException(auswahl.value.idKurs);
 				unterrichtBezeichnung.value = props.stundenplanManager().unterrichtGetByIDStringOfFachOderKurs(auswahl.value.id, true);
 			}
 		}

@@ -1,6 +1,6 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import type { DeveloperNotificationException} from "@core";
+import type { DeveloperNotificationException } from "@core";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
@@ -45,6 +45,7 @@ export class RouteSchuelerErziehungsberechtigte extends RouteNode<RouteDataSchue
 			mapOrte: routeApp.data.mapOrte,
 			mapOrtsteile: routeApp.data.mapOrtsteile,
 			benutzerKompetenzen: api.benutzerKompetenzen,
+			aktAbschnitt: routeApp.data.aktAbschnitt.value,
 		};
 	}
 

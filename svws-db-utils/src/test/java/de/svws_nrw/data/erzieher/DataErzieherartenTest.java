@@ -1,5 +1,6 @@
 package de.svws_nrw.data.erzieher;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,11 +9,13 @@ import java.util.stream.Stream;
 
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.core.data.erzieher.Erzieherart;
+import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.erzieher.DTOErzieherart;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response;
 import org.assertj.core.api.Assertions;
+import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,13 +23,17 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @DisplayName("Diese Testklasse testet die Klasse DataErzieherarten")
@@ -37,7 +44,7 @@ class DataErzieherartenTest {
 	private DBEntityManager conn;
 
 	@InjectMocks
-	private DataErzieherarten dataErzieherarten;
+	private DataErzieherarten data;
 
 	@BeforeAll
 	static void setUp() {
@@ -47,12 +54,12 @@ class DataErzieherartenTest {
 	@Test
 	@DisplayName("initDTO | setzt die Felder korrekt")
 	void initDTOTest() {
-		dataErzieherarten = new DataErzieherarten(conn);
+		data = new DataErzieherarten(conn);
 		final DTOErzieherart dto = getDTOErzieherart();
 		final long id = 1L;
 		final Map<String, Object> initAttributes = new HashMap<>();
 
-		dataErzieherarten.initDTO(dto, id, initAttributes);
+		data.initDTO(dto, id, initAttributes);
 
 		assertThat(dto)
 				.hasFieldOrPropertyWithValue("ID", id)
@@ -66,7 +73,7 @@ class DataErzieherartenTest {
 	void mapTest() {
 		final DTOErzieherart dto = getDTOErzieherart();
 
-		assertThat(dataErzieherarten.map(dto))
+		assertThat(data.map(dto))
 				.isInstanceOf(Erzieherart.class)
 				.hasFieldOrPropertyWithValue("id", 1L)
 				.hasFieldOrPropertyWithValue("bezeichnung", "Mutter")
@@ -89,7 +96,7 @@ class DataErzieherartenTest {
 
 		when(conn.queryAll(DTOErzieherart.class)).thenReturn(dtoList);
 
-		final List<Erzieherart> result = dataErzieherarten.getAll();
+		final List<Erzieherart> result = data.getAll();
 		final Erzieherart expectedDto1 = result.stream().filter(lFirst -> lFirst.id == dto1.ID).findFirst().orElse(null);
 		final Erzieherart expectedDto2 = result.stream().filter(lSecond -> lSecond.id == dto2.ID).findFirst().orElse(null);
 
@@ -114,7 +121,7 @@ class DataErzieherartenTest {
 	@DisplayName("getById | Erzieherart null")
 	void getByIdTest_notFound() {
 		when(conn.queryByKey(DTOErzieherart.class, 1L)).thenReturn(null);
-		final var throwable = catchThrowable(() -> dataErzieherarten.getById(1L));
+		final var throwable = catchThrowable(() -> data.getById(1L));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
@@ -127,7 +134,7 @@ class DataErzieherartenTest {
 		final DTOErzieherart dto = getDTOErzieherart();
 		when(conn.queryByKey(DTOErzieherart.class, 1L)).thenReturn(dto);
 
-		assertThat(dataErzieherarten.getById(dto.ID))
+		assertThat(data.getById(dto.ID))
 				.isNotNull()
 				.hasFieldOrPropertyWithValue("id", 1L)
 				.hasFieldOrPropertyWithValue("bezeichnung", "Mutter")
@@ -143,7 +150,7 @@ class DataErzieherartenTest {
 	void mapAttributeTest(final String key, final Object value) {
 		final var expectedDTO = getDTOErzieherart();
 		final Map<String, Object> map = new HashMap<>();
-		final var throwable = Assertions.catchThrowable(() -> this.dataErzieherarten.mapAttribute(expectedDTO, key, value, map));
+		final var throwable = Assertions.catchThrowable(() -> this.data.mapAttribute(expectedDTO, key, value, map));
 
 		switch (key) {
 			case "id" -> assertThat(expectedDTO.ID).isEqualTo(value);
@@ -154,6 +161,28 @@ class DataErzieherartenTest {
 			default -> assertThat(throwable)
 					.isInstanceOf(ApiOperationException.class)
 					.hasMessageStartingWith("Die Daten des Patches enthalten ein unbekanntes Attribut.")
+					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+		}
+	}
+
+	@ParameterizedTest(name = "patch | Die Entitäten mit den IDs 1-5 dürfen aufgrund von Restriktionen von SchildZentral nicht geändert werden")
+	@ValueSource(longs = {1, 2, 3, 4, 5})
+	void forbidPatchingForEntriesTest(final long id) {
+		final var dto = new DTOErzieherart(id, "abc");
+		when(this.conn.queryByKey(DTOErzieherart.class, id))
+				.thenReturn(dto);
+
+		try (var mapperMock = Mockito.mockStatic(JSONMapper.class)) {
+			mapperMock.when(() -> JSONMapper.toMap(any(InputStream.class)))
+					.thenReturn(Map.of("id", id));
+
+			final var throwable = ThrowableAssert.catchThrowable(
+					() -> this.data.patchAsResponse(id, mock(InputStream.class))
+			);
+
+			assertThat(throwable)
+					.isInstanceOf(ApiOperationException.class)
+					.hasMessage("Der Eintrag abc mit der id %d darf nicht verändert werden.".formatted(id))
 					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 		}
 	}

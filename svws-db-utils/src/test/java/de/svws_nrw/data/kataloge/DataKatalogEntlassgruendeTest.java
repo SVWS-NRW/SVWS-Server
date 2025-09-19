@@ -12,7 +12,6 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOEntlassarten;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response;
-import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -115,7 +114,7 @@ class DataKatalogEntlassgruendeTest {
 	@Test
 	@DisplayName("getByID | ID can't be null")
 	void getByIdTest_IdNull() {
-		final var throwable = ThrowableAssert.catchThrowable(() -> this.data.getById(null));
+		final var throwable = catchThrowable(() -> this.data.getById(null));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
@@ -126,7 +125,7 @@ class DataKatalogEntlassgruendeTest {
 	@Test
 	@DisplayName("getByID | id not found")
 	void getByIdTest_IdNotFound() {
-		final var throwable = ThrowableAssert.catchThrowable(() -> this.data.getById(99L));
+		final var throwable = catchThrowable(() -> this.data.getById(99L));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
@@ -192,12 +191,12 @@ class DataKatalogEntlassgruendeTest {
 	void mapAttributeTest(final String key, final Object value) {
 		final var dto = new DTOEntlassarten(1L, "test");
 
-		final var throwable = ThrowableAssert.catchThrowable(() -> this.data.mapAttribute(dto, key, value, null));
+		final var throwable = catchThrowable(() -> this.data.mapAttribute(dto, key, value, null));
 
 		switch (key) {
 			case "id" -> assertThat(throwable)
 					.isInstanceOf(ApiOperationException.class)
-					.hasMessage("IdPatch 35 ist ungleich dtoId 1")
+					.hasMessage("Die ID 35 des Patches ist null oder stimmt nicht mit der ID 1 in der Datenbank überein.")
 					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 			case "bezeichnung" -> assertThat(dto.Bezeichnung).isEqualTo(value);
 			case "sortierung" -> assertThat(dto.Sortierung).isEqualTo(value);
@@ -215,12 +214,37 @@ class DataKatalogEntlassgruendeTest {
 	void mapAttributeTest_bezeichnungNull() {
 		final var expectedDTO = new DTOEntlassarten(1L, "test");
 
-		final var throwable = ThrowableAssert.catchThrowable(() -> this.data.mapAttribute(expectedDTO, "bezeichnung", null, null));
+		final var throwable = catchThrowable(() -> this.data.mapAttribute(expectedDTO, "bezeichnung", null, null));
 
 		assertThat(throwable)
 					.isInstanceOf(ApiOperationException.class)
 					.hasMessage("Attribut bezeichnung: Der Wert null ist nicht erlaubt.")
 					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("mapAttribute | bezeichnung doppelt vergeben")
+	void mapAttributeTest_bezeichnungDoppeltVergeben() {
+		final var expectedDTO = new DTOEntlassarten(1L, "abc");
+		when(this.conn.queryAll(DTOEntlassarten.class)).thenReturn(List.of(new DTOEntlassarten(2L, "test")));
+
+		final var throwable = catchThrowable(() -> this.data.mapAttribute(expectedDTO, "bezeichnung", "TEST", null));
+
+		assertThat(throwable)
+				.isInstanceOf(ApiOperationException.class)
+				.hasMessage("Die Bezeichnung TEST ist bereits vorhanden.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("mapAttribute | bezeichnung case aendern im gleichen Objekt")
+	void mapAttributeTest_changeCaseOfBezeichnung() throws ApiOperationException {
+		final var expectedDTO = new DTOEntlassarten(1L, "test");
+		when(this.conn.queryAll(DTOEntlassarten.class)).thenReturn(List.of(expectedDTO));
+
+		this.data.mapAttribute(expectedDTO, "bezeichnung", "TEST", null);
+
+		assertThat(expectedDTO.Bezeichnung).isEqualTo("TEST");
 	}
 
 	@Test

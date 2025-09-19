@@ -1,8 +1,10 @@
 package de.svws_nrw.data.schule;
 
+import de.svws_nrw.db.schema.Schema;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import de.svws_nrw.core.data.schule.Abteilung;
 import de.svws_nrw.core.data.schule.AbteilungKlassenzuordnung;
@@ -14,8 +16,7 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
- * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für den
- * Core-DTO {@link Abteilung}.
+ * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für das Core-DTO {@link Abteilung}.
  */
 public final class DataAbteilungen extends DataManagerRevised<Long, DTOAbteilungen, Abteilung> {
 
@@ -23,7 +24,7 @@ public final class DataAbteilungen extends DataManagerRevised<Long, DTOAbteilung
 	private final Long idSchuljahresabschnitt;
 
 	/**
-	 * Erstellt einen neuen {@link DataManagerRevised} für den Core-DTO {@link Abteilung}.
+	 * Erstellt einen neuen {@link DataManagerRevised} für das Core-DTO {@link Abteilung}.
 	 *
 	 * @param conn                     die Datenbankverbindung
 	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnittes, auf den sich die Anfragen beziehen
@@ -77,20 +78,37 @@ public final class DataAbteilungen extends DataManagerRevised<Long, DTOAbteilung
 			throws ApiOperationException {
 		switch (name) {
 			case "id"  -> {
-				final Long id = JSONMapper.convertToLong(value, false, "id");
+				final Long id = JSONMapper.convertToLong(value, false, name);
 				if (id != dtoAbteilungen.ID)
 					throw new ApiOperationException(Status.BAD_REQUEST,
-							"Id %d der PatchMap ist ungleich der id %d vom Dto".formatted(id, dtoAbteilungen.ID));
+							"Die ID %d des Patches ist null oder stimmt nicht mit der ID %d in der Datenbank überein.".formatted(id, dtoAbteilungen.ID));
 			}
-			case "idSchuljahresabschnitt" -> dtoAbteilungen.Schuljahresabschnitts_ID = JSONMapper.convertToLong(value, false, "idSchuljahresabschnitt");
-			case "bezeichnung" -> dtoAbteilungen.Bezeichnung = JSONMapper.convertToString(value, false, false, 50, "bezeichnung");
-			case "idAbteilungsleiter" -> dtoAbteilungen.AbteilungsLeiter_ID = JSONMapper.convertToLong(value, true, "idAbteilungsleiter");
-			case "raum" -> dtoAbteilungen.Raum = JSONMapper.convertToString(value, true, false, 20, "raum");
-			case "email" -> dtoAbteilungen.Email = JSONMapper.convertToString(value, true, false, 100, "email");
-			case "durchwahl" -> dtoAbteilungen.Durchwahl = JSONMapper.convertToString(value, true, false, 20, "durchwahl");
-			case "sortierung" -> dtoAbteilungen.Sortierung = JSONMapper.convertToInteger(value, false, "sortierung");
+			case "idSchuljahresabschnitt" -> dtoAbteilungen.Schuljahresabschnitts_ID = JSONMapper.convertToLong(value, false, name);
+			case "bezeichnung" -> updateBezeichnung(dtoAbteilungen, name, value);
+			case "idAbteilungsleiter" -> dtoAbteilungen.AbteilungsLeiter_ID = JSONMapper.convertToLong(value, true, name);
+			case "raum" -> dtoAbteilungen.Raum =
+					JSONMapper.convertToString(value, true, true,  Schema.tab_EigeneSchule_Abteilungen.col_Raum.datenlaenge(), name);
+			case "email" -> dtoAbteilungen.Email =
+					JSONMapper.convertToString(value, true, true,  Schema.tab_EigeneSchule_Abteilungen.col_Email.datenlaenge(), name);
+			case "durchwahl" -> dtoAbteilungen.Durchwahl =
+					JSONMapper.convertToString(value, true, false,  Schema.tab_EigeneSchule_Abteilungen.col_Durchwahl.datenlaenge(), name);
+			case "sortierung" -> dtoAbteilungen.Sortierung = JSONMapper.convertToInteger(value, false, name);
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Das Patchen des Attributes %s wird nicht unterstützt.".formatted(name));
 		}
+	}
+
+	private void updateBezeichnung(final DTOAbteilungen dto, final String name, final Object value) throws ApiOperationException {
+		final String bezeichnung =
+				JSONMapper.convertToString(value, false, false, Schema.tab_EigeneSchule_Abteilungen.col_Bezeichnung.datenlaenge(), name);
+		if (Objects.equals(dto.Bezeichnung, bezeichnung) || bezeichnung.isBlank())
+			return;
+
+		final boolean bezeichnungAlreadyUsed = this.conn.queryAll(DTOAbteilungen.class).stream()
+				.anyMatch(a -> (a.ID != dto.ID) && a.Bezeichnung.equalsIgnoreCase(bezeichnung));
+		if (bezeichnungAlreadyUsed)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die Bezeichnung %s ist bereits vorhanden.".formatted(value));
+
+		dto.Bezeichnung = bezeichnung;
 	}
 
 	@Override
@@ -125,10 +143,8 @@ public final class DataAbteilungen extends DataManagerRevised<Long, DTOAbteilung
 			throw new ApiOperationException(Status.NOT_FOUND, "Eine Abteilung mit der ID %d konnte nicht gefunden werden.".formatted(id));
 
 		final Abteilung abteilung = map(dtoAbteilungen);
-
 		final DataAbteilungenKlassenzuordnungen dataAbteilungenKlassenzuordnungen = new DataAbteilungenKlassenzuordnungen(conn);
 		abteilung.klassenzuordnungen.addAll(dataAbteilungenKlassenzuordnungen.getListByIdAbteilung(dtoAbteilungen.ID));
-
 		return abteilung;
 	}
 

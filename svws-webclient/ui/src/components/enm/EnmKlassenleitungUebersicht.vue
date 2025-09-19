@@ -4,11 +4,35 @@
 			<template v-for="col of gridManager.cols.values()" :key="col.name">
 				<template v-if="col.kuerzel !== ''">
 					<th v-if="gridManager.isColVisible(col.kuerzel) ?? true">
-						<svws-ui-tooltip v-if="col.kuerzel !== col.name">
-							{{ col.kuerzel }}
-							<template #content>{{ col.name }}</template>
-						</svws-ui-tooltip>
-						<span v-else>{{ col.kuerzel }}</span>
+						<template v-if="col.kuerzel !== col.name">
+							<svws-ui-tooltip>
+								{{ col.kuerzel }}
+								<template #content>{{ col.name }}</template>
+							</svws-ui-tooltip>
+						</template>
+						<template v-else>{{ col.kuerzel }}</template>
+						<template v-if="colsValidationTooltip.has(col.kuerzel)">
+							<svws-ui-tooltip>
+								<span class="icon-sm i-ri-question-line ml-0.5" />
+								<template #content>
+									<div class="font-bold">{{ col.name }}</div>
+									<template v-if="col.kuerzel === 'FS'">
+										<ul>
+											<li>Keine negativen Werte</li>
+											<li>Maximal 999</li>
+											<li>Größer/gleich FSU</li>
+										</ul>
+									</template>
+									<template v-else-if="col.kuerzel === 'FSU'">
+										<ul>
+											<li>Keine negativen Werte</li>
+											<li>Maximal 999</li>
+											<li>Kleiner/gleich FS</li>
+										</ul>
+									</template>
+								</template>
+							</svws-ui-tooltip>
+						</template>
 					</th>
 				</template>
 				<template v-else>
@@ -96,6 +120,8 @@
 
 	const props = defineProps<EnmKlassenleitungUebersichtProps>();
 
+	const colsValidationTooltip = new Set(["FS", "FSU"]);
+
 	const gridManager = new GridManager<string, PairNN<ENMKlasse, ENMSchueler>, List<PairNN<ENMKlasse, ENMSchueler>>>({
 		daten: computed<List<PairNN<ENMKlasse, ENMSchueler>>>(() => {
 			const result = new ArrayList<PairNN<ENMKlasse, ENMSchueler>>();
@@ -128,7 +154,7 @@
 		if ((input === null) || (input.row >= gridManager.daten.size()))
 			return;
 		const pair = gridManager.daten.get(input.row);
-		void props.focusFloskelEditor(null, pair.b, pair.a, false);
+		void props.focusFloskelEditor(null, pair.b, pair.a, input.row, false);
 	}
 	defineExpose({ gridManager });
 
@@ -164,7 +190,7 @@
 
 	function inputASV(pair: PairNN<ENMKlasse, ENMSchueler>, col: number, index: number) {
 		const key = 'ASV_' + pair.a.id + "_" + pair.b.id;
-		const setter = (value : boolean) => void props.focusFloskelEditor('ASV', pair.b, pair.a, true);
+		const setter = (value : boolean) => void props.focusFloskelEditor('ASV', pair.b, pair.a, index, true);
 		return (element : Element | ComponentPublicInstance<unknown> | null) => {
 			const input = gridManager.applyInputToggle(key, col, index, element, setter);
 			if (input !== null) {
@@ -176,7 +202,7 @@
 
 	function inputAUE(pair: PairNN<ENMKlasse, ENMSchueler>, col: number, index: number) {
 		const key = 'AUE_' + pair.a.id + "_" + pair.b.id;
-		const setter = (value : boolean) => void props.focusFloskelEditor('AUE', pair.b, pair.a, true);
+		const setter = (value : boolean) => void props.focusFloskelEditor('AUE', pair.b, pair.a, index, true);
 		return (element : Element | ComponentPublicInstance<unknown> | null) => {
 			const input = gridManager.applyInputToggle(key, col, index, element, setter);
 			if (input !== null) {
@@ -188,7 +214,7 @@
 
 	function inputZB(pair: PairNN<ENMKlasse, ENMSchueler>, col: number, index: number) {
 		const key = 'ZB_' + pair.a.id + "_" + pair.b.id;
-		const setter = (value : boolean) => void props.focusFloskelEditor('ZB', pair.b, pair.a, true);
+		const setter = (value : boolean) => void props.focusFloskelEditor('ZB', pair.b, pair.a, index, true);
 		return (element : Element | ComponentPublicInstance<unknown> | null) => {
 			const input = gridManager.applyInputToggle(key, col, index, element, setter);
 			if (input !== null) {

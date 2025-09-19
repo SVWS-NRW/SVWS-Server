@@ -1,17 +1,17 @@
 import { JavaObject } from '../../../../../core/src/java/lang/JavaObject';
 import type { JavaSet } from '../../../../../core/src/java/util/JavaSet';
-import { Schulform } from '../../../../../core/src/asd/types/schule/Schulform';
+import type { Schulform } from '../../../../../core/src/asd/types/schule/Schulform';
 import { JavaString } from '../../../../../core/src/java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../../../core/src/core/exceptions/DeveloperNotificationException';
 import type { Comparator } from '../../../../../core/src/java/util/Comparator';
 import { AuswahlManager } from '../../AuswahlManager';
 import type { JavaFunction } from '../../../../../core/src/java/util/function/JavaFunction';
-import { Erzieherart } from '../../../../../core/src/core/data/erzieher/Erzieherart';
+import type { Erzieherart } from '../../../../../core/src/core/data/erzieher/Erzieherart';
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
 import type { List } from '../../../../../core/src/java/util/List';
 import { Class } from '../../../../../core/src/java/lang/Class';
 import { Arrays } from '../../../../../core/src/java/util/Arrays';
-import { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
+import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
 import { HashSet } from '../../../../../core/src/java/util/HashSet';
 import { Pair } from '../../../../../core/src/asd/adt/Pair';
 
@@ -25,20 +25,25 @@ export class ErzieherartListeManager extends AuswahlManager<number, Erzieherart,
 	/**
 	 * Sets mit Listen zur aktuellen Auswahl
 	 */
-	private readonly setErzieherartIDsMitPersonen : HashSet<number> = new HashSet<number>();
+	private readonly idsVerwendeteErzieherarten : HashSet<number> = new HashSet<number>();
 
 	/**
 	 * Ein Default-Comparator für den Vergleich von Erzieherarten in Erzieherartlisten.
 	 */
 	public static readonly comparator : Comparator<Erzieherart> = { compare : (a: Erzieherart, b: Erzieherart) => {
-		let cmp : number = (a.id - b.id) as number;
-		if (cmp !== 0)
-			return cmp;
-		if ((a.bezeichnung === null) || (b.bezeichnung === null))
-			return JavaLong.compare(a.id, b.id);
-		cmp = JavaString.compareTo(a.bezeichnung, b.bezeichnung);
-		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
+		let cmp: number = JavaString.compareTo(a.bezeichnung, b.bezeichnung);
+		if (cmp === 0)
+			cmp = JavaLong.compare(a.id, b.id);
+		return cmp;
 	} };
+
+	protected onSetDaten(eintrag: Erzieherart, daten: Erzieherart) : boolean {
+		if (JavaObject.equalsTranspiler(daten.bezeichnung, (eintrag.bezeichnung)))
+			return false;
+
+		eintrag.bezeichnung = daten.bezeichnung;
+		return true;
+	}
 
 
 	/**
@@ -48,10 +53,12 @@ export class ErzieherartListeManager extends AuswahlManager<number, Erzieherart,
 	 * @param schuljahresabschnitte        die Liste der Schuljahresabschnitte
 	 * @param schuljahresabschnittSchule   der Schuljahresabschnitt, in welchem sich die Schule aktuell befindet.
 	 * @param schulform                    die Schulform der Schule
-	 * @param listErzieherart     	       die Liste der Erzieherart
+	 * @param erzieherarten     	       die Liste der Erzieherart
 	 */
-	public constructor(schuljahresabschnitt : number, schuljahresabschnittSchule : number, schuljahresabschnitte : List<Schuljahresabschnitt>, schulform : Schulform | null, listErzieherart : List<Erzieherart>) {
-		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, listErzieherart, ErzieherartListeManager.comparator, ErzieherartListeManager._erzieherartenToId, ErzieherartListeManager._erzieherartenToId, Arrays.asList(new Pair("erzieherart", true)));
+	public constructor(schuljahresabschnitt : number, schuljahresabschnittSchule : number, schuljahresabschnitte : List<Schuljahresabschnitt>,
+		schulform : Schulform | null, erzieherarten : List<Erzieherart>) {
+		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, erzieherarten, ErzieherartListeManager.comparator,
+			ErzieherartListeManager._erzieherartenToId, ErzieherartListeManager._erzieherartenToId, Arrays.asList(new Pair("erzieherart", true)));
 	}
 
 	/**
@@ -59,15 +66,15 @@ export class ErzieherartListeManager extends AuswahlManager<number, Erzieherart,
 	 *
 	 * @return Das Set mit IDs von Erzieherarten, die Schüler haben
 	 */
-	public getErzieherartIDsMitPersonen() : JavaSet<number> {
-		return this.setErzieherartIDsMitPersonen;
+	public getIdsVerwendeteErzieherarten() : JavaSet<number> {
+		return this.idsVerwendeteErzieherarten;
 	}
 
 	protected onMehrfachauswahlChanged() : void {
-		this.setErzieherartIDsMitPersonen.clear();
+		this.idsVerwendeteErzieherarten.clear();
 		for (const e of this.liste.auswahl())
 			if (e.anzahlErziehungsberechtigte !== 0)
-				this.setErzieherartIDsMitPersonen.add(e.id);
+				this.idsVerwendeteErzieherarten.add(e.id);
 	}
 
 	protected compareAuswahl(a : Erzieherart, b : Erzieherart) : number {
@@ -86,7 +93,7 @@ export class ErzieherartListeManager extends AuswahlManager<number, Erzieherart,
 		return JavaLong.compare(a.id, b.id);
 	}
 
-	protected checkFilter(eintrag : Erzieherart) : boolean {
+	protected checkFilter() : boolean {
 		return true;
 	}
 

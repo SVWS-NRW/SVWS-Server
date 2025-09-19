@@ -127,7 +127,7 @@ describe("Dav Api, prüfe ob privilegierter Benutzer auf Daten anderer Benutzer 
 		const content = await response!.text()
 		expect(response!.status).toBe(207)
 		expect(content).toContain('Eigener Kalender')
-		expect(content).toContain('/dav/GymAbiDav/kalender/2')
+		expect(content).toContain('/dav/GymAbiDav/kalender/persoenlich_2')
 
 		// Ande Account kann ebenfalls Kalender enthalten, dort ist nicht der des Admins mit drin
 		const apiServiceAnde = getApiService('Ande', '');
@@ -135,14 +135,14 @@ describe("Dav Api, prüfe ob privilegierter Benutzer auf Daten anderer Benutzer 
 		const contentAnde = await responseAnde!.text()
 		expect(responseAnde!.status).toBe(207)
 		expect(contentAnde).toContain('Eigener Kalender')
-		expect(contentAnde).not.toContain('/dav/GymAbiDav/kalender/2')
+		expect(contentAnde).not.toContain('/dav/GymAbiDav/kalender/persoenlich_2')
 
 		// Admin Account kann seinen eigenen Kalender ansehen
-		const responseAllowed = await apiServiceAdmin.propfind("/dav/GymAbiDav/kalender/2");
+		const responseAllowed = await apiServiceAdmin.propfind("/dav/GymAbiDav/kalender/persoenlich_2");
 		expect(responseAllowed!.status).toBe(207);
 
 		// Ande Account kann seinen eigenen Kalender ansehen
-		const responseNotAllowed = await apiServiceAnde.propfind("/dav/GymAbiDav/kalender/2");
+		const responseNotAllowed = await apiServiceAnde.propfind("/dav/GymAbiDav/kalender/persoenlich_2");
 		const contentNotAllowed = await responseNotAllowed!.text()
 		expect(responseNotAllowed!.status).toBe(404);
 		expect(contentNotAllowed).toContain('<d:error')

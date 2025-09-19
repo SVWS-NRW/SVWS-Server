@@ -102,7 +102,7 @@
 	import router from './router';
 	import type { PaneSplitterConfig} from './../ui/composables/usePaneSplitter';
 	import { usePaneSplitter } from './../ui/composables/usePaneSplitter';
-	import { SelectManagerSingle } from './../ui/controls/select/selectManager/SelectManagerSingle';
+	import { SelectManager } from './../ui/controls/select/selectManager/SelectManager';
 
 	const isDark = useDark({ selector: 'html' });
 
@@ -207,7 +207,7 @@
 		{label:'bg-uistatic-100',color:'var(--background-color-uistatic-100)',contrastColor:'var(--text-color-ui-100)'},
 	];
 
-	const colorSelectManager = new SelectManagerSingle({
+	const colorSelectManager = new SelectManager({
 		options: backgroundPresets, optionDisplayText: option => option.label,	selectionDisplayText: option => option.label,
 	});
 

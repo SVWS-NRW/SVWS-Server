@@ -1,6 +1,6 @@
 import { computed } from "vue";
 import type { RouteLocationRaw } from "vue-router";
-import type { Haltestelle, Kindergarten, EinschulungsartKatalogEintrag, OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, KatalogEintrag, SchulEintrag, SchulformKatalogEintrag, TelefonArt, Erzieherart } from "@core";
+import type { Haltestelle, Kindergarten, EinschulungsartKatalogEintrag, OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, SchulEintrag, SchulformKatalogEintrag, TelefonArt, Erzieherart, Fahrschuelerart } from "@core";
 import { Schulform, Schuljahresabschnitt } from "@core";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { api } from "~/router/Api";
@@ -14,7 +14,7 @@ interface RouteStateApp extends RouteStateInterface {
 	mapOrte: Map<number, OrtKatalogEintrag>;
 	mapOrtsteile: Map<number, OrtsteilKatalogEintrag>;
 	mapReligionen: Map<number, ReligionEintrag>;
-	mapFahrschuelerarten: Map<number, KatalogEintrag>;
+	mapFahrschuelerarten: Map<number, Fahrschuelerart>;
 	mapHaltestellen: Map<number, Haltestelle>;
 	mapKindergaerten: Map<number, Kindergarten>;
 	mapEinschulungsarten: Map<number, EinschulungsartKatalogEintrag>;
@@ -163,7 +163,7 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 		return this._state.value.mapReligionen;
 	}
 
-	get mapFahrschuelerarten(): Map<number, KatalogEintrag> {
+	get mapFahrschuelerarten(): Map<number, Fahrschuelerart> {
 		return this._state.value.mapFahrschuelerarten;
 	}
 

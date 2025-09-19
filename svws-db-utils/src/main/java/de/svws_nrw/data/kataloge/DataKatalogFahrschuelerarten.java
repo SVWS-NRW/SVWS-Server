@@ -87,23 +87,14 @@ public final class DataKatalogFahrschuelerarten extends DataManagerRevised<Long,
 
 	private void updateBezeichnung(final DTOFahrschuelerart dto, final Object value, final String name) throws ApiOperationException {
 		final String bezeichnung = JSONMapper.convertToString(value, false, false, Schema.tab_K_FahrschuelerArt.col_Bezeichnung.datenlaenge(), name);
-		//Bezeichnung ist unverändert
-		if ((dto.Bezeichnung != null) && !dto.Bezeichnung.isBlank() && dto.Bezeichnung.equals(bezeichnung))
+		if (Objects.equals(dto.Bezeichnung, bezeichnung) || bezeichnung.isBlank())
 			return;
 
-		//theoretischer Fall, der nicht eintreffen sollte
-		final List<DTOFahrschuelerart> fahrschuelerarten = this.conn.queryList(DTOFahrschuelerart.QUERY_BY_BEZEICHNUNG, DTOFahrschuelerart.class, bezeichnung);
-		if (fahrschuelerarten.size() > 1)
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Mehr als eine Fahrschülerart mit der gleichen Bezeichnung vorhanden.");
+		final boolean bezeichnungAlreadyUsed = this.conn.queryAll(DTOFahrschuelerart.class).stream()
+				.anyMatch(f -> (f.ID != dto.ID) && f.Bezeichnung.equalsIgnoreCase(bezeichnung));
+		if (bezeichnungAlreadyUsed)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die Bezeichnung %s ist bereits vorhanden.".formatted(bezeichnung));
 
-		//Fahrschülerart mit dieser Bezeichnung bereits vorhanden
-		if (!fahrschuelerarten.isEmpty()) {
-			final DTOFahrschuelerart dtoFahrschuelerart = fahrschuelerarten.getFirst();
-			if ((dtoFahrschuelerart != null) && (dtoFahrschuelerart.ID != dto.ID))
-				throw new ApiOperationException(Status.BAD_REQUEST, "Die Bezeichnung %s ist bereits vorhanden.".formatted(bezeichnung));
-		}
-
-		//Bezeichnung wird geändert
 		dto.Bezeichnung = bezeichnung;
 	}
 

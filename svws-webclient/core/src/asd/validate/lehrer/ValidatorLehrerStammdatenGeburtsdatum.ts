@@ -28,12 +28,12 @@ export class ValidatorLehrerStammdatenGeburtsdatum extends Validator {
 		try {
 			geburtsdatum = DateManager.from(this.daten.geburtsdatum);
 		} catch(e : any) {
-			this.addFehler("Das Geburtsdatum ist ungültig: " + e.getMessage());
+			this.addFehler(0, "Das Geburtsdatum ist ungültig: " + e.getMessage());
 			return false;
 		}
 		const schuljahr : number = this.kontext().getSchuljahr();
 		if (!geburtsdatum.istInJahren(schuljahr - 80, schuljahr - 18)) {
-			this.addFehler("Unzulässige Eintragung im Feld Jahr (Geburtsdatum). Zulässig sind die Werte " + (schuljahr - 80) + " bis " + (schuljahr - 18) + ".");
+			this.addFehler(1, "Unzulässige Eintragung im Feld Jahr (Geburtsdatum). Zulässig sind die Werte " + (schuljahr - 80) + " bis " + (schuljahr - 18) + ".");
 			return false;
 		}
 		return true;

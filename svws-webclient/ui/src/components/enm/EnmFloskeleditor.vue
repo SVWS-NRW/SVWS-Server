@@ -1,84 +1,110 @@
 <template>
-	<div class="h-full" :class="{'border-l pl-4': floskelEditorVisible}">
-		<div v-if="!floskelEditorVisible || schueler === null" @click="setFloskelEditorVisible(!floskelEditorVisible)">
-			<span class="icon i-ri-menu-fold-line cursor-pointer" />
-		</div>
-		<div v-else class="h-full flex flex-col">
-			<div><span @click="setFloskelEditorVisible(!floskelEditorVisible)" class="icon i-ri-menu-unfold-line cursor-pointer" /></div>
-			<div class="text-headline-md flex justify-between pb-2">
-				<span>{{ schueler.nachname }}, {{ schueler.vorname }}</span><span>{{
-					hauptgruppenBezeichnung[erlaubteHauptgruppe] }}</span>
-			</div>
-			<div class="py-4">
-				<svws-ui-textarea-input class="floskel-input" placeholder="Floskeln auswählen oder manuell eingeben"
-					:model-value="text" @input="onInput" autoresize is-content-focus-field />
-			</div>
-			<div class="flex justify-between gap-2 w-full flex-row-reverse">
-				<div v-if="showButtons" class="flex gap-2">
-					<svws-ui-button @click="doPatchLeistung" :type="clean ? 'primary':'secondary'">
-						{{ clean ?
-							'Speichern':'Anwenden' }}
-					</svws-ui-button>
-					<svws-ui-button @click="text = bemerkung">Zurücksetzen</svws-ui-button>
+	<svws-ui-modal :show type="default" size="big" @update:show="show = $event">
+		<template #modalTitle>
+			<div class="text-right w-full">{{ schueler?.nachname }}, {{ schueler?.vorname }}<br>{{ hauptgruppenBezeichnung[erlaubteHauptgruppe] }}</div>
+		</template>
+		<template #modalContent>
+			<div class="flex overflow-hidden gap-6">
+				<div class="min-w-fit overflow-auto border rounded-md border-uistatic-50">
+					<ui-table-grid name="Schüler" :manager="() => gridManagerSchueler">
+						<template #default="{ row, index }">
+							<td :ref="auswahlSchueler(index)" :class="['cursor-pointer text-left', gridManagerSchueler.focusRowLast === index ? 'bg-ui-selected':'']">
+								{{ row.a }} {{ row.b.nachname }}, {{ row.b.vorname }}
+							</td>
+						</template>
+					</ui-table-grid>
 				</div>
-				<div v-if="(text !== null) && /$Vorname$/i.exec(text)" class="flex gap-2">
-					<div class="w-20">
-						<svws-ui-input-number :model-value="every" :min="1" :max="9"
-							@update:model-value="value => every = value ?? 1" />
+				<div class="overflow-hidden flex flex-col">
+					<div>
+						<div class="pb-4">
+							<svws-ui-textarea-input class="floskel-input" placeholder="Floskeln auswählen oder manuell eingeben"
+								:model-value="text" @input="onInput" autoresize is-content-focus-field />
+						</div>
+						<div class="flex justify-between gap-2 w-full flex-row-reverse">
+							<div v-if="showButtons" class="flex gap-2">
+								<svws-ui-button @click="doPatchLeistung" :type="clean ? 'primary':'secondary'">
+									{{ clean ? 'Speichern':'Anwenden' }}
+								</svws-ui-button>
+								<svws-ui-button @click="text = bemerkung">Zurücksetzen</svws-ui-button>
+							</div>
+							<div v-if="(text !== null) && /$Vorname$/i.exec(text)" class="flex gap-2">
+								<div class="w-20">
+									<svws-ui-input-number :model-value="every" :min="1" :max="9"
+										@update:model-value="value => every = value ?? 1" />
+								</div>
+								<span class="mt-2">Vorname jedes {{ every === 1 ? '':`${every}.` }} Mal</span>
+							</div>
+						</div>
 					</div>
-					<span class="mt-2">Vorname jedes {{ every === 1 ? '':`${every}.` }} Mal</span>
+					<div class="overflow-y-auto">
+						<ui-table-grid :footer-count="0" :manager="() => gridManager">
+							<template #header>
+								<th>Kürzel</th>
+								<th>Text</th>
+								<th>Niveau</th>
+								<th>Jg</th>
+							</template>
+							<template #default="{ row: data, index }">
+								<template v-if="data.floskel === null">
+									<td class="col-span-4 text-left bg-ui-50">{{ data.gruppe.bezeichnung }}</td>
+								</template>
+								<template v-else>
+									<td :ref="inputBemerkung(data.floskel, 1, index)" class="cursor-pointer"> {{ data.floskel.kuerzel }} </td>
+									<td class="text-left"> {{ data.floskel.text }} </td>
+									<td> {{ data.floskel.niveau }} </td>
+									<td> {{ data.floskel.jahrgangID }} </td>
+								</template>
+							</template>
+						</ui-table-grid>
+					</div>
 				</div>
 			</div>
-			<div class="overflow-y-auto">
-				<ui-table-grid :footer-count="0" :manager="() => gridManager">
-					<template #header>
-						<th>Kürzel</th>
-						<th>Text</th>
-						<th>Niveau</th>
-						<th>Jg</th>
-					</template>
-					<template #default="{ row: data, index }">
-						<template v-if="data.floskel === null">
-							<td class="col-span-4 text-left bg-ui-50">{{ data.gruppe.bezeichnung }}</td>
-						</template>
-						<template v-else>
-							<td :ref="inputBemerkung(data.floskel, 1, index)" class="cursor-pointer"> {{ data.floskel.kuerzel }} </td>
-							<td class="text-left"> {{ data.floskel.text }} </td>
-							<td> {{ data.floskel.niveau }} </td>
-							<td> {{ data.floskel.jahrgangID }} </td>
-						</template>
-					</template>
-				</ui-table-grid>
-			</div>
-		</div>
-	</div>
+		</template>
+		<template #modalActions>
+			<svws-ui-button type="secondary" @click="show = false"> Abbrechen </svws-ui-button>
+		</template>
+	</svws-ui-modal>
 </template>
 
 <script setup lang="ts">
 
-	import type { ComponentPublicInstance} from 'vue';
-	import { computed, ref, watch } from 'vue';
+	import type { ComponentPublicInstance } from 'vue';
+	import { computed, onMounted, onBeforeUnmount, onUnmounted, ref, watch, watchEffect } from 'vue';
 	import type { ENMFloskel } from '../../../../core/src/core/data/enm/ENMFloskel';
 	import type { ENMFloskelgruppe } from '../../../../core/src/core/data/enm/ENMFloskelgruppe';
-	import type { EnmManager, BemerkungenHauptgruppe } from './EnmManager';
 	import { ArrayList } from '../../../../core/src/java/util/ArrayList';
 	import type { ENMSchueler } from '../../../../core/src/core/data/enm/ENMSchueler';
 	import type { ENMLeistung } from '../../../../core/src/core/data/enm/ENMLeistung';
-	import type { ENMKlasse } from '../../../../core/src/core/data/enm/ENMKlasse';
+	import { ENMKlasse } from '../../../../core/src/core/data/enm/ENMKlasse';
 	import { GridManager } from '../../ui/controls/tablegrid/GridManager';
 	import type { List } from '../../../../core/src/java/util/List';
+	import type { EnmManager, BemerkungenHauptgruppe, EnmLerngruppenAuswahlEintrag } from './EnmManager';
+	import { PairNN } from '../../../../core/src/asd/adt/PairNN';
 
+	type RowType = { gruppe: ENMFloskelgruppe, floskel: ENMFloskel | null };
+	type StrOrUndef = string|undefined;
 
 	const props = defineProps<{
 		enmManager: () => EnmManager;
-		auswahl: () => { klasse: ENMKlasse | null, schueler: ENMSchueler | null, leistung: ENMLeistung | null };
+		lerngruppenAuswahl: () => Array<EnmLerngruppenAuswahlEintrag|ENMKlasse>;
+		auswahl: { klasse: ENMKlasse | null, schueler: ENMSchueler | null, leistung: ENMLeistung | null };
 		patch: (value: string|null) => Promise<void>;
 		erlaubteHauptgruppe: BemerkungenHauptgruppe;
-		floskelEditorVisible: boolean;
-		setFloskelEditorVisible: (value: boolean) => Promise<void>;
+		initialRow: number | null;
+		onUpdate: (row: number | null, focus: boolean) => void;
 	}>();
 
-	const hauptgruppenBezeichnung: Record<BemerkungenHauptgruppe, string> = {
+	const show = defineModel<boolean>({default: true});
+
+	const lastRow = ref<number | null>(null);
+
+	/** Die ausgewählte Zeile aus der Liste merken und in das Modal übernehmen */
+	onMounted(() =>	lastRow.value = props.initialRow);
+	/** Ebenso die zuletzt ausgewählte Zeile in die Übersicht übernehmen */
+	onBeforeUnmount(() => lastRow.value = gridManagerSchueler.focusRowLast);
+	onUnmounted(() => props.onUpdate(lastRow.value, true));
+
+	const hauptgruppenBezeichnung = {
 		'ASV': 'Arbeits- und Sozialverhalten',
 		'AUE': 'Außerunterrichtliches Engagement',
 		'FACH': 'Fachbezogene Bemerkungen',
@@ -87,13 +113,43 @@
 		'VERM': 'Vermerke',
 		'VERS': 'Versetzung',
 		'ZB': 'Zeugnis-Bemerkungen',
-	};
+	} as const;
 
-	type RowType = { gruppe: ENMFloskelgruppe, floskel: ENMFloskel | null }
+	const gridManagerSchueler = new GridManager<string, PairNN<string, ENMSchueler>, List<PairNN<string, ENMSchueler>>>({
+		daten: computed<List<PairNN<string, ENMSchueler>>>(() => {
+			const result = new ArrayList<PairNN<string, ENMSchueler>>();
+			for (const lerngruppenAuswahl of props.lerngruppenAuswahl())
+				if (lerngruppenAuswahl instanceof ENMKlasse) {
+					const listSchueler = props.enmManager().mapKlassenSchueler.get(lerngruppenAuswahl.id);
+					const klasse = props.enmManager().mapKlassen.get(lerngruppenAuswahl.id)
+					if ((klasse === null) || (listSchueler === null))
+						continue;
+					const list = new ArrayList<PairNN<string, ENMSchueler>>();
+					for (const schueler of listSchueler) {
+						const pair = new PairNN<string, ENMSchueler>(klasse.kuerzel ?? '???', schueler);
+						list.add(pair);
+					}
+					result.addAll(list);
+				} else {
+					const leistungen = props.enmManager().mapLerngruppeLeistungen.get(lerngruppenAuswahl.id);
+					const fach = props.enmManager().lerngruppeByIDOrException(lerngruppenAuswahl.id);
+					if (leistungen === null)
+						continue;
+					for (const pairLeistung of leistungen) {
+						const pair = new PairNN<string, ENMSchueler>(fach.bezeichnung ?? '???', pairLeistung.b);
+						result.add(pair);
+					}
+				}
+			return result;
+		}),
+		getRowKey: row => `${row.a}_${row.b.id}`,
+		columns: [ { kuerzel: "Name", name: "Name, Vorname", width: '15rem' } ],
+	})
+
 	const gridManager = new GridManager<string, RowType, List<RowType>>({
 		daten: computed<List<RowType>>(() => {
 			const result = new ArrayList<RowType>();
-			const auswahl = props.auswahl();
+			const auswahl = props.auswahl;
 			if ((auswahl.schueler === null) || (auswahl.leistung === null))
 				return result;
 			let floskelnHauptgruppe: ENMFloskelgruppe | null = null;
@@ -106,7 +162,7 @@
 				else if (gruppe.hauptgruppe === 'ALLG')
 					floskelnAllgemein = gruppe;
 			}
-			if (floskelnHauptgruppe === null && floskelnAllgemein === null)
+			if ((floskelnHauptgruppe === null) && (floskelnAllgemein === null))
 				return result;
 			const temp = [];
 			if (floskelnHauptgruppe !== null)
@@ -115,7 +171,6 @@
 				temp.push(floskelnAllgemein);
 			for (const gruppe of temp) {
 				result.add({ gruppe, floskel: null });
-				const floskeln = new ArrayList<ENMFloskel>();
 				for (const floskel of gruppe.floskeln)
 					if ((floskel.fachID === null) || ((props.enmManager().lerngruppeByIDOrException(auswahl.leistung.lerngruppenID).fachID === floskel.fachID)
 						&& ((floskel.jahrgangID === null) || (floskel.jahrgangID === auswahl.schueler.jahrgangID))))
@@ -144,12 +199,22 @@
 		};
 	}
 
-	const showButtons = computed(() => text.value !== bemerkung.value);
-
-	const text = ref<string|null>(null);
+	function auswahlSchueler(index: number) {
+		const key = `Schueler_${index}`;
+		const setter = () => props.onUpdate(index, false);
+		return (element : Element | ComponentPublicInstance<unknown> | null) => {
+			const input = gridManagerSchueler.applyInputToggle(key, 1, index, element, setter);
+			if (input !== null) {
+				gridManagerSchueler.update(key, false);
+				gridManagerSchueler.setNavigationOnEnter(key, null);
+				if (index === lastRow.value)
+					gridManagerSchueler.doFocusByKey(key);
+			}
+		};
+	}
 
 	const bemerkung = computed<string|null>(() => {
-		const auswahl = props.auswahl();
+		const auswahl = props.auswahl;
 		if (auswahl.schueler === null)
 			return null;
 		if (auswahl.leistung !== null)
@@ -166,24 +231,23 @@
 		}
 	});
 
-	watch([bemerkung, () => props.auswahl(), () => props.auswahl(), () => props.erlaubteHauptgruppe],
-		([neuBemerkung]) => text.value = neuBemerkung);
+	const text = ref<string|null>(null);
+	const showButtons = computed(() => text.value !== bemerkung.value);
 
-	const schueler = computed<ENMSchueler | null>(() => {
-		return props.auswahl().schueler;
-	})
+	watch(bemerkung, () => text.value = bemerkung.value, { immediate: true });
 
+	const schueler = computed<ENMSchueler | null>(() => props.auswahl.schueler);
 	const clean = computed(() => (text.value === null) || !templateRegex.exec(text.value));
 
 	function onInput(value: string) {
 		if (value.length > 1)
-			text.value = value
+			text.value = value;
 		else text.value = null;
 	}
 
 	const gruppenMap = computed(() => {
 		const map = new Map<ENMFloskelgruppe, ArrayList<ENMFloskel>>();
-		const auswahl = props.auswahl();
+		const auswahl = props.auswahl;
 		if ((auswahl.schueler === null) || (auswahl.leistung === null))
 			return map;
 		for (const gruppe of props.enmManager().listFloskelgruppen) {
@@ -219,8 +283,8 @@
 	const templateRegexGlobal = new RegExp(query, 'gi');
 	const templateRegex = new RegExp(query, 'i');
 	const every = ref(3);
-	const kleinPronomenMap = computed(() => new Map([['m', 'er'], ['w', 'sie'], ['d', props.auswahl().schueler?.vorname ?? '???'], ['x', props.auswahl().schueler?.vorname ?? '???']]));
-	const grossPronomenMap = computed(() => new Map([['m', 'Er'], ['w', 'Sie'], ['d', props.auswahl().schueler?.vorname ?? '???'], ['x', props.auswahl().schueler?.vorname ?? '???']]));
+	const kleinPronomenMap = computed(() => new Map([['m', 'er'], ['w', 'sie'], ['d', props.auswahl.schueler?.vorname ?? '???'], ['x', props.auswahl.schueler?.vorname ?? '???']]));
+	const grossPronomenMap = computed(() => new Map([['m', 'Er'], ['w', 'Sie'], ['d', props.auswahl.schueler?.vorname ?? '???'], ['x', props.auswahl.schueler?.vorname ?? '???']]));
 	const anredeMap = computed(() => new Map([['m', 'Herr'], ['w', 'Frau']]));
 
 	function ergaenzeFloskel(floskel: ENMFloskel) {
@@ -234,14 +298,11 @@
 	}
 
 	function ersetzeTemplates() {
-		if (text.value === null)
-			return;
-		const schueler = props.auswahl().schueler;
-		if (schueler === null)
+		const schueler = props.auswahl.schueler;
+		if ((schueler === null) || (text.value === null))
 			return;
 		let counter = -1;
-		let tmp = text.value;
-		tmp = tmp.replaceAll(templateRegexGlobal, (match, vorname, nachname, weibl, ein, anrede, mwdx, kuerzel, _offset, fullString: string, _groups) => {
+		text.value = text.value.replaceAll(templateRegexGlobal, (match, vorname: StrOrUndef, nachname: StrOrUndef, weibl: StrOrUndef, ein: StrOrUndef, anrede: StrOrUndef, mwdx: StrOrUndef, kuerzel: StrOrUndef, _offset, fullString: string, _groups: string[]) => {
 			if (vorname !== undefined) {
 				counter++;
 				if ((counter % every.value) === 0)
@@ -258,7 +319,7 @@
 			} else if (anrede !== undefined) {
 				return anredeMap.value.get(schueler.geschlecht ?? 'm') ?? '';
 			} else if (mwdx !== undefined) {
-				const arr = match.slice(1, -1).split('%')
+				const arr = match.slice(1, -1).split('%');
 				const mwdxMap = new Map([['m', arr[0] ?? ''], ['w', arr[1] ?? ''], ['d', arr[2] ?? ''], ['x', arr[3] ?? '']]);
 				return mwdxMap.get((schueler.geschlecht ?? 'x') as 'm'|'w'|'d'|'x')!;
 			} else if (kuerzel !== undefined) {
@@ -266,11 +327,7 @@
 			}
 			return '???';
 		});
-		text.value = tmp;
 	}
-
-	// eslint-disable-next-line vue/no-setup-props-reactivity-loss
-	const collapsed = ref(new Map<ENMFloskelgruppe, boolean>([...props.enmManager().listFloskelgruppen].map(g => g.hauptgruppe === 'ALLG' ? [g, true] : [g, false])));
 
 	async function doPatchLeistung() {
 		if (!clean.value)

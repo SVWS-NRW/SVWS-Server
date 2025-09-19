@@ -2,33 +2,29 @@ import { JavaObject } from '../../java/lang/JavaObject';
 import { ArrayList } from '../../java/util/ArrayList';
 import type { List } from '../../java/util/List';
 import { Class } from '../../java/lang/Class';
+import { ValidatorFehlerartKontextPruefschritt } from '../../asd/validate/ValidatorFehlerartKontextPruefschritt';
 
 export class ValidatorFehlerartKontext extends JavaObject {
 
 	/**
-	 * ob der Validator im zebras ausgeführt werden soll.
+	 * Gibt an, ob der Validator im zebras ausgeführt werden soll.
 	 */
 	public zebras : boolean = false;
 
 	/**
-	 * ob der Validator im client ausgeführt werden soll.
+	 * Gibt an, ob der Validator im client ausgeführt werden soll.
 	 */
 	public svws : boolean = false;
 
 	/**
-	 * Liste der Schulformen, in denen ein Fehler vorliegt
+	 * der Präfix-Teil des ASD-Fehlercodes
 	 */
-	public muss : List<string> = new ArrayList<string>();
+	public praefix : string = "";
 
 	/**
-	 * Liste der Schulformen, in denen wahrscheinlich ein Fehler vorliegt
+	 * Die Liste mit den Zuordnungen der Fehlerarten für die einzelnen Prüfschritte eines Validators
 	 */
-	public kann : List<string> = new ArrayList<string>();
-
-	/**
-	 * Liste der Schulformen, in denen ein Hinweise auf einen möglichen Fehler erfolgt
-	 */
-	public hinweis : List<string> = new ArrayList<string>();
+	public pruefschritte : List<ValidatorFehlerartKontextPruefschritt> = new ArrayList<ValidatorFehlerartKontextPruefschritt>();
 
 	/**
 	 * Gibt an, ab welchem Schuljahr die Laufeigenschaft des Validators gilt. Falls schon immer, so ist null gesetzt.
@@ -67,19 +63,12 @@ export class ValidatorFehlerartKontext extends JavaObject {
 		if (obj.svws === undefined)
 			throw new Error('invalid json format, missing attribute svws');
 		result.svws = obj.svws;
-		if (obj.muss !== undefined) {
-			for (const elem of obj.muss) {
-				result.muss.add(elem);
-			}
-		}
-		if (obj.kann !== undefined) {
-			for (const elem of obj.kann) {
-				result.kann.add(elem);
-			}
-		}
-		if (obj.hinweis !== undefined) {
-			for (const elem of obj.hinweis) {
-				result.hinweis.add(elem);
+		if (obj.praefix === undefined)
+			throw new Error('invalid json format, missing attribute praefix');
+		result.praefix = obj.praefix;
+		if (obj.pruefschritte !== undefined) {
+			for (const elem of obj.pruefschritte) {
+				result.pruefschritte.add(ValidatorFehlerartKontextPruefschritt.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
@@ -91,27 +80,12 @@ export class ValidatorFehlerartKontext extends JavaObject {
 		let result = '{';
 		result += '"zebras" : ' + obj.zebras.toString() + ',';
 		result += '"svws" : ' + obj.svws.toString() + ',';
-		result += '"muss" : [ ';
-		for (let i = 0; i < obj.muss.size(); i++) {
-			const elem = obj.muss.get(i);
-			result += '"' + elem + '"';
-			if (i < obj.muss.size() - 1)
-				result += ',';
-		}
-		result += ' ]' + ',';
-		result += '"kann" : [ ';
-		for (let i = 0; i < obj.kann.size(); i++) {
-			const elem = obj.kann.get(i);
-			result += '"' + elem + '"';
-			if (i < obj.kann.size() - 1)
-				result += ',';
-		}
-		result += ' ]' + ',';
-		result += '"hinweis" : [ ';
-		for (let i = 0; i < obj.hinweis.size(); i++) {
-			const elem = obj.hinweis.get(i);
-			result += '"' + elem + '"';
-			if (i < obj.hinweis.size() - 1)
+		result += '"praefix" : ' + JSON.stringify(obj.praefix) + ',';
+		result += '"pruefschritte" : [ ';
+		for (let i = 0; i < obj.pruefschritte.size(); i++) {
+			const elem = obj.pruefschritte.get(i);
+			result += ValidatorFehlerartKontextPruefschritt.transpilerToJSON(elem);
+			if (i < obj.pruefschritte.size() - 1)
 				result += ',';
 		}
 		result += ' ]' + ',';
@@ -130,32 +104,15 @@ export class ValidatorFehlerartKontext extends JavaObject {
 		if (obj.svws !== undefined) {
 			result += '"svws" : ' + obj.svws.toString() + ',';
 		}
-		if (obj.muss !== undefined) {
-			result += '"muss" : [ ';
-			for (let i = 0; i < obj.muss.size(); i++) {
-				const elem = obj.muss.get(i);
-				result += '"' + elem + '"';
-				if (i < obj.muss.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		if (obj.praefix !== undefined) {
+			result += '"praefix" : ' + JSON.stringify(obj.praefix) + ',';
 		}
-		if (obj.kann !== undefined) {
-			result += '"kann" : [ ';
-			for (let i = 0; i < obj.kann.size(); i++) {
-				const elem = obj.kann.get(i);
-				result += '"' + elem + '"';
-				if (i < obj.kann.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
-		}
-		if (obj.hinweis !== undefined) {
-			result += '"hinweis" : [ ';
-			for (let i = 0; i < obj.hinweis.size(); i++) {
-				const elem = obj.hinweis.get(i);
-				result += '"' + elem + '"';
-				if (i < obj.hinweis.size() - 1)
+		if (obj.pruefschritte !== undefined) {
+			result += '"pruefschritte" : [ ';
+			for (let i = 0; i < obj.pruefschritte.size(); i++) {
+				const elem = obj.pruefschritte.get(i);
+				result += ValidatorFehlerartKontextPruefschritt.transpilerToJSON(elem);
+				if (i < obj.pruefschritte.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';

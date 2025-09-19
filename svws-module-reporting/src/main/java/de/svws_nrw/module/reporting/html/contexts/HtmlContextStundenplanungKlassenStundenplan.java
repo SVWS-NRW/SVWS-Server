@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
-import de.svws_nrw.module.reporting.types.klasse.ReportingKlasse;
 import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungKlasseStundenplan;
 import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungStundenplan;
 import org.thymeleaf.context.Context;
@@ -15,13 +14,6 @@ import org.thymeleaf.context.Context;
  * Ein Thymeleaf-html-Daten-Context zum Bereich "Stundenplanung", um Thymeleaf-html-Templates mit Daten zu füllen.
  */
 public final class HtmlContextStundenplanungKlassenStundenplan extends HtmlContext<ReportingStundenplanungKlasseStundenplan> {
-
-	@Override
-	public List<String> standardsortierung() {
-		final ArrayList<String> standardSort = new ArrayList<>();
-		standardSort.add(methodenreferenzToString(ReportingStundenplanungKlasseStundenplan::klasse) + "." + methodenreferenzToString(ReportingKlasse::kuerzel));
-		return standardSort;
-	}
 
 	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
@@ -55,7 +47,7 @@ public final class HtmlContextStundenplanungKlassenStundenplan extends HtmlConte
 				.forEach(klasse -> stundenplaene.add(new ReportingStundenplanungKlasseStundenplan(klasse, stundenplan)));
 
 		setContextData(stundenplaene);
-		sortiereContext();
+		sortiereContextMitRegistry();
 
 		// Daten-Context für Thymeleaf erzeugen.
 		final Context context = new Context();

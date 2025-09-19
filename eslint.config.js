@@ -45,7 +45,6 @@ export default tseslint.config(
 		rules: {
 			//TESTING:
 			curly: ["off", "multi"], // if und for als Einzeiler ohne Klammern
-			"@stylistic/arrow-spacing": "off", // () => x
 			"@stylistic/semi": "off", // verwende Semikolon überall
 
 

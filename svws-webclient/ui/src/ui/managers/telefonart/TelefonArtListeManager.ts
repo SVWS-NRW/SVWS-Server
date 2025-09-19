@@ -1,7 +1,7 @@
 import { JavaObject } from '../../../../../core/src/java/lang/JavaObject';
-import { TelefonArt } from '../../../../../core/src/core/data/schule/TelefonArt';
+import type { TelefonArt } from '../../../../../core/src/core/data/schule/TelefonArt';
 import type { JavaSet } from '../../../../../core/src/java/util/JavaSet';
-import { Schulform } from '../../../../../core/src/asd/types/schule/Schulform';
+import type { Schulform } from '../../../../../core/src/asd/types/schule/Schulform';
 import { JavaString } from '../../../../../core/src/java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../../../core/src/core/exceptions/DeveloperNotificationException';
 import type { Comparator } from '../../../../../core/src/java/util/Comparator';
@@ -11,7 +11,7 @@ import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
 import type { List } from '../../../../../core/src/java/util/List';
 import { Class } from '../../../../../core/src/java/lang/Class';
 import { Arrays } from '../../../../../core/src/java/util/Arrays';
-import { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
+import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
 import { HashSet } from '../../../../../core/src/java/util/HashSet';
 import { Pair } from '../../../../../core/src/asd/adt/Pair';
 
@@ -23,22 +23,19 @@ export class TelefonArtListeManager extends AuswahlManager<number, TelefonArt, T
 	private static readonly _telefonArtenToId : JavaFunction<TelefonArt, number> = { apply : (ta: TelefonArt) => ta.id };
 
 	/**
-	 * Sets mit Listen zur aktuellen Auswahl
+	 * Sets der Ids der Telefonarten, die von Personen verwendet und daher nicht gelöscht werden können.
 	 */
-	private readonly setTelefonArtIDsMitPersonen : HashSet<number> = new HashSet<number>();
+	private readonly idsVerwendeteTelefonarten : HashSet<number> = new HashSet<number>();
 
 	/**
 	 * Ein Default-Comparator für den Vergleich von Telefonarten in Telefonartlisten.
 	 */
 	public static readonly comparator : Comparator<TelefonArt> = { compare : (a: TelefonArt, b: TelefonArt) => {
-		let cmp : number = (a.id - b.id) as number;
-		if (cmp !== 0)
-			return cmp;
-		if ((a.bezeichnung === null) || (b.bezeichnung === null))
-			return JavaLong.compare(a.id, b.id);
-		cmp = JavaString.compareTo(a.bezeichnung, b.bezeichnung);
-		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
-	} };
+		let cmp: number = JavaString.compareTo(a.bezeichnung, b.bezeichnung);
+		if (cmp === 0)
+			cmp = JavaLong.compare(a.id, b.id);
+		return cmp;
+	}};
 
 
 	/**
@@ -48,35 +45,36 @@ export class TelefonArtListeManager extends AuswahlManager<number, TelefonArt, T
 	 * @param schuljahresabschnitte        die Liste der Schuljahresabschnitte
 	 * @param schuljahresabschnittSchule   der Schuljahresabschnitt, in welchem sich die Schule aktuell befindet.
 	 * @param schulform                    die Schulform der Schule
-	 * @param listTelefonArt     	       die Liste der Telefonart
+	 * @param telefonarten     	       die Liste der Telefonart
 	 */
-	public constructor(schuljahresabschnitt : number, schuljahresabschnittSchule : number, schuljahresabschnitte : List<Schuljahresabschnitt>, schulform : Schulform | null, listTelefonArt : List<TelefonArt>) {
-		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, listTelefonArt, TelefonArtListeManager.comparator, TelefonArtListeManager._telefonArtenToId, TelefonArtListeManager._telefonArtenToId, Arrays.asList(new Pair("telefonArt", true)));
+	public constructor(schuljahresabschnitt: number, schuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>,
+		schulform: Schulform | null, telefonarten: List<TelefonArt>) {
+		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, telefonarten, TelefonArtListeManager.comparator,
+			TelefonArtListeManager._telefonArtenToId, TelefonArtListeManager._telefonArtenToId, Arrays.asList(new Pair("telefonArt", true)));
 	}
 
 	/**
-	 *Gibt das Set mit den TelefonArtIds zurück, die in der Auswahl sind und Schüler beinhalten
+	 * Gibt das Set der Ids der Telefonarten zurück, die von Personen verwendet und daher nicht gelöscht werden können.
 	 *
-	 * @return Das Set mit IDs von Telefonarten, die Schüler haben
+	 * @return Das Set der Ids der Telefonarten zurück, die von Personen verwendet und daher nicht gelöscht werden können.
 	 */
-	public getTelefonArtIDsMitPersonen() : JavaSet<number> {
-		return this.setTelefonArtIDsMitPersonen;
+	public getIdsVerwendeteTelefonarten() : JavaSet<number> {
+		return this.idsVerwendeteTelefonarten;
 	}
 
-	protected onSetDaten(eintrag : TelefonArt, daten : TelefonArt) : boolean {
-		let updateEintrag : boolean = false;
-		if (!JavaObject.equalsTranspiler(daten.bezeichnung, (eintrag.bezeichnung))) {
-			eintrag.bezeichnung = daten.bezeichnung;
-			updateEintrag = true;
-		}
-		return updateEintrag;
+	protected onSetDaten(eintrag: TelefonArt, daten: TelefonArt) : boolean {
+		if (JavaObject.equalsTranspiler(daten.bezeichnung, (eintrag.bezeichnung)))
+			return false;
+
+		eintrag.bezeichnung = daten.bezeichnung;
+		return true;
 	}
 
 	protected onMehrfachauswahlChanged() : void {
-		this.setTelefonArtIDsMitPersonen.clear();
+		this.idsVerwendeteTelefonarten.clear();
 		for (const t of this.liste.auswahl())
 			if (t.anzahlTelefonnummern !== 0)
-				this.setTelefonArtIDsMitPersonen.add(t.id);
+				this.idsVerwendeteTelefonarten.add(t.id);
 	}
 
 	protected compareAuswahl(a : TelefonArt, b : TelefonArt) : number {
@@ -95,7 +93,7 @@ export class TelefonArtListeManager extends AuswahlManager<number, TelefonArt, T
 		return JavaLong.compare(a.id, b.id);
 	}
 
-	protected checkFilter(eintrag : TelefonArt) : boolean {
+	protected checkFilter() : boolean {
 		return true;
 	}
 

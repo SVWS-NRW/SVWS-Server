@@ -36,7 +36,7 @@ public class Adressbuch {
 	public int synctoken;
 
 	/** Der Typ des Adressbuchs */
-	@Schema(description = "der Typ des Adressbuchs", example = "GENERIERT")
+	@Schema(description = "der Typ des Adressbuchs", example = "Generiert")
 	public @NotNull String adressbuchTyp = "";
 
 	/** Eine Liste der Einträge des Adressbuchs */

@@ -10,27 +10,32 @@ public class ValidatorFehler {
 	/** Der Validator bei dem die Validierung fehlgeschlagen ist. */
 	private final @NotNull Validator _validator;
 
-    /** Die Fehlermeldung, welche vom Validator gemeldet wurde */
-    private final @NotNull String _fehlermeldung;
+	/** Die Nummer des Prüfschrittes, bei welchem der Fehler aufgetreten ist */
+	private final int _pruefschritt;
+
+	/** Die Fehlermeldung, welche vom Validator gemeldet wurde */
+	private final @NotNull String _fehlermeldung;
 
 
-    /**
-     * Erstellt einen neuen Validierungs-Fehler
-     *
-     * @param validator       der Validator bei dem die Validierung fehlgeschlagen ist
-     * @param fehlermeldung   die Fehlermeldung, welche vom Validator gemeldet wurde
-     */
-    public ValidatorFehler(final @NotNull Validator validator, final @NotNull String fehlermeldung) {
-    	this._validator = validator;
-    	this._fehlermeldung = fehlermeldung;
-    }
+	/**
+	 * Erstellt einen neuen Validierungs-Fehler
+	 *
+	 * @param validator       der Validator bei dem die Validierung fehlgeschlagen ist
+	 * @param pruefschritt    die Nummer des Prüfschrittes, bei welchem der Fehler aufgetreten ist
+	 * @param fehlermeldung   die Fehlermeldung, welche vom Validator gemeldet wurde
+	 */
+	public ValidatorFehler(final @NotNull Validator validator, final int pruefschritt, final @NotNull String fehlermeldung) {
+		this._validator = validator;
+		this._fehlermeldung = fehlermeldung;
+		this._pruefschritt = pruefschritt;
+	}
 
 
-    /**
-     * Die Schulnummer der Schule, bei der die Validierung fehlgeschlagen ist
-     *
-     * @return die Schulnummer
-     */
+	/**
+	 * Gibt die Schulnummer der Schule zurück, bei der die Validierung fehlgeschlagen ist
+	 *
+	 * @return die Schulnummer
+	 */
 	public long getSchulnummer() {
 		return _validator.kontext().getSchulnummer();
 	}
@@ -47,7 +52,7 @@ public class ValidatorFehler {
 
 
 	/**
-	 * Der Validator, bei dem die Validierung fehlgeschlagen ist
+	 * Gibt den Validator zurück, bei dem die Validierung fehlgeschlagen ist
 	 *
 	 * @return der Validator
 	 */
@@ -57,7 +62,7 @@ public class ValidatorFehler {
 
 
 	/**
-	 * Der Name der Validator-Klasse, bei der die Validierung fehlgeschlagen ist
+	 * Gibt den Namen der Validator-Klasse zurück, bei der die Validierung fehlgeschlagen ist
 	 *
 	 * @return der Name der Validator-Klasse
 	 */
@@ -67,7 +72,7 @@ public class ValidatorFehler {
 
 
 	/**
-	 * Die Validator-Klasse, bei der die Validierung fehlgeschlagen ist
+	 * Gibt die Validator-Klasse zurück, bei der die Validierung fehlgeschlagen ist
 	 *
 	 * @return die Validator-Klasse
 	 */
@@ -77,7 +82,27 @@ public class ValidatorFehler {
 
 
 	/**
-	 * Die Fehlermeldung, welche vom Validator erzeugt wurde
+	 * Gibt die Nummer des Prüfschrittes zurück, bei welchem der Fehler aufgetreten ist
+	 *
+	 * @return die Nummer des Prüfschrittes
+	 */
+	public int getPruefschritt() {
+		return _pruefschritt;
+	}
+
+
+	/**
+	 * Gibt den ASD-Fehlercode für diesen Validator-Fehler zurück.
+	 *
+	 * @return der ASD-Fehlercode
+	 */
+	public @NotNull String getFehlercode() {
+		return _validator.getFehlercodePraefix() + _pruefschritt;
+	}
+
+
+	/**
+	 * Gibt die Fehlermeldung zurück, welche vom Validator erzeugt wurde
 	 *
 	 * @return die Fehlermeldung
 	 */
@@ -87,12 +112,12 @@ public class ValidatorFehler {
 
 
 	/**
-	 * Die Fehlerart, welcher der Fehler zugeordnet ist.
+	 * Gibt die Fehlerart zurück, welche dem Fehler zugeordnet ist.
 	 *
 	 * @return die Fehlerart
 	 */
 	public @NotNull ValidatorFehlerart getFehlerart() {
-		return _validator.getValidatorFehlerart();
+		return _validator.getValidatorFehlerart(_pruefschritt);
 	}
 
 }

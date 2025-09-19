@@ -102,7 +102,7 @@ public final class DataGostKlausuren {
 		final List<Long> missingSchuelerIds = jgs.stream().flatMap(jg -> jg.data.schuelerklausuren.stream()).map(sk -> sk.idSchueler)
 				.filter(item -> !schuelerNichtSenden.stream().map(s -> s.id).distinct().toList().contains(item)).toList();
 		if (!missingSchuelerIds.isEmpty()) {
-			jgs.getFirst().schueler = new ArrayList<>(jgs.getFirst().schueler);
+			jgs.getFirst().schueler = jgs.getFirst().schueler == null ? new ArrayList<>() : new ArrayList<>(jgs.getFirst().schueler);
 			jgs.getFirst().schueler.addAll(ladeSchuelerByIds(-1, conn, missingSchuelerIds));
 		}
 		data.lehrer.addAll(new DataLehrerliste(conn, null).getLehrerListe(false));
@@ -279,78 +279,94 @@ public final class DataGostKlausuren {
 	 */
 	public static GostKlausurenCollectionHjData getFehlendData(final DBEntityManager conn, final int abijahr, final GostHalbjahr halbjahr) throws ApiOperationException {
 		final GostKlausurenCollectionData klausuren = new DataGostKlausurenKursklausur(conn).getKlausurDataCollection(abijahr, halbjahr.id, true);
-		return getFehlendeKlausuren(conn, abijahr, halbjahr, getSchuljahresabschnittFromAbijahrUndHalbjahr(conn, abijahr, halbjahr), klausuren);
+		return ermittleFehlendeKlausuren(conn, abijahr, halbjahr, getSchuljahresabschnittFromAbijahrUndHalbjahr(conn, abijahr, halbjahr), klausuren);
 	}
 
-	private static GostKlausurenCollectionHjData getFehlendeKlausuren(final DBEntityManager conn, final int abijahr, final GostHalbjahr halbjahr, final Schuljahresabschnitt sja,
-			final GostKlausurenCollectionData allData) {
+	private static GostKlausurenCollectionHjData ermittleFehlendeKlausuren(final DBEntityManager conn, final int abijahr,
+		    final GostHalbjahr halbjahr, final Schuljahresabschnitt sja, final GostKlausurenCollectionData alleDaten) {
 
-		final GostKlausurenCollectionHjData fehlendData = new GostKlausurenCollectionHjData(abijahr, halbjahr.id);
+		  final GostKlausurenCollectionHjData fehlend = new GostKlausurenCollectionHjData(abijahr, halbjahr.id);
+		  final List<DTOKurs> kurse = conn
+		      .query("SELECT k FROM DTOKurs k WHERE k.Schuljahresabschnitts_ID = :sja AND k.ASDJahrgang = :jg", DTOKurs.class)
+		      .setParameter("jg", halbjahr.jahrgang)
+		      .setParameter("sja", sja.id)
+		      .getResultList();
+		  final GostKlausurplanManager manager = new GostKlausurplanManager(alleDaten);
 
-		// Kurse ermitteln
-		final List<DTOKurs> kurse =
-				conn.query("SELECT k FROM DTOKurs k WHERE k.Schuljahresabschnitts_ID = :sja AND k.ASDJahrgang = :jg", DTOKurs.class)
-						.setParameter("jg", halbjahr.jahrgang)
-						.setParameter("sja", sja.id)
-						.getResultList();
+		  for (final DTOKurs kurs : kurse) {
+		    final GostKursart kursart = GostKursart.fromKuerzelOrException(kurs.KursartAllg);
+		    final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = getLernabschnittsdatenZuKurs(conn, sja.schuljahr, kurs);
+		    for (final int quartal : new int[] { 1, 2 }) {
+		      final GostKlausurvorgabe vorgabe = manager
+		          .vorgabeGetByHalbjahrAndQuartalAndKursartallgAndFachid(abijahr, halbjahr, quartal, kursart, kurs.Fach_ID);
 
-		final GostKlausurplanManager manager = new GostKlausurplanManager(allData);
-
-		for (final DTOKurs kurs : kurse) {
-			final GostKursart kursart = GostKursart.fromKuerzelOrException(kurs.KursartAllg);
-			final List<DTOSchuelerLernabschnittsdaten> laDaten = getLernabschnittsdatenZuKurs(conn, sja.schuljahr, kurs);
-
-			for (final int quartal : new int[] { 1, 2 }) {
-				final GostKlausurvorgabe vorgabe =
-						manager.vorgabeGetByHalbjahrAndQuartalAndKursartallgAndFachid(abijahr, halbjahr, quartal, kursart, kurs.Fach_ID);
-				if (laDaten.isEmpty()) {
-					if (vorgabe != null) {
-						final GostKursklausur kursklausur = manager.kursklausurByVorgabeAndKursid(vorgabe, kurs.ID);
-						if (kursklausur != null) {
-							fehlendData.data.kursklausuren.add(kursklausur);
-							manager.kursklausurfehlendAdd(kursklausur);
-						}
-					}
-				} else {
-					if (vorgabe == null && manager.vorgabefehlendGetByHalbjahrAndQuartalAndKursartallgAndFachid(abijahr, halbjahr, quartal, kursart,
-							kurs.Fach_ID) == null) {
-						final GostKlausurvorgabe vorgabeFehlend = new GostKlausurvorgabe();
-						vorgabeFehlend.abiJahrgang = abijahr;
-						vorgabeFehlend.halbjahr = halbjahr.id;
-						vorgabeFehlend.idFach = kurs.Fach_ID;
-						vorgabeFehlend.kursart = kurs.KursartAllg;
-						vorgabeFehlend.quartal = quartal;
-						fehlendData.data.vorgaben.add(vorgabeFehlend);
-						manager.vorgabefehlendAdd(vorgabeFehlend);
-					}
-					if (vorgabe != null) {
-						final GostKursklausur kursklausur = manager.kursklausurByVorgabeAndKursid(vorgabe, kurs.ID);
-						if (kursklausur == null) {
-							final GostKursklausur kursklausurFehlend = new GostKursklausur();
-							kursklausurFehlend.idKurs = kurs.ID;
-							kursklausurFehlend.idVorgabe = vorgabe.id;
-							fehlendData.data.kursklausuren.add(kursklausurFehlend);
-						} else {
-							final Map<Long, GostSchuelerklausur> mapSks =
-									manager.schuelerklausurGetMengeByKursklausur(kursklausur).stream().collect(Collectors.toMap(sk -> sk.idSchueler, sk -> sk));
-							for (final DTOSchuelerLernabschnittsdaten lad : laDaten) {
-								if (manager.schuelerklausurByKursklausurAndSchuelerid(kursklausur, lad.Schueler_ID) == null) {
-									final GostSchuelerklausur schuelerklausurFehlend = new GostSchuelerklausur();
-									schuelerklausurFehlend.idKursklausur = kursklausur.id;
-									schuelerklausurFehlend.idSchueler = lad.Schueler_ID;
-									fehlendData.data.schuelerklausuren.add(schuelerklausurFehlend);
-								} else {
-									mapSks.remove(lad.Schueler_ID);
-								}
-							}
-							fehlendData.data.schuelerklausuren.addAll(mapSks.values());
-						}
-					}
-				}
-			}
+		      if (lernabschnitte.isEmpty()) {
+		        bearbeiteKursOhneSchueler(fehlend, manager, vorgabe, kurs);
+		        continue;
+		      }
+		      if (vorgabe == null) {
+		        erzeugeFehlendeVorgabe(fehlend, manager, abijahr, halbjahr, quartal, kurs);
+		        continue;
+		      }
+		      bearbeiteKursMitVorgabe(fehlend, manager, vorgabe, kurs, lernabschnitte);
+		    }
+		  }
+		  return fehlend;
 		}
-		return fehlendData;
-	}
+
+		private static void bearbeiteKursOhneSchueler(final GostKlausurenCollectionHjData fehlend, final GostKlausurplanManager manager,
+		    final GostKlausurvorgabe vorgabe, final DTOKurs kurs) {
+		  if (vorgabe == null) return;
+		  final GostKursklausur kursklausur = manager.kursklausurByVorgabeAndKursid(vorgabe, kurs.ID);
+		  if (kursklausur == null) return;
+		  fehlend.data.kursklausuren.add(kursklausur);
+		  manager.kursklausurfehlendAdd(kursklausur);
+		  fehlend.data.schuelerklausuren.addAll(manager.schuelerklausurGetMengeByKursklausur(kursklausur));
+		}
+
+		private static void erzeugeFehlendeVorgabe(final GostKlausurenCollectionHjData fehlend, final GostKlausurplanManager manager,
+		    final int abijahr, final GostHalbjahr halbjahr, final int quartal, final DTOKurs kurs) {
+		  if (manager.vorgabefehlendGetByHalbjahrAndQuartalAndKursartallgAndFachid(
+		      abijahr, halbjahr, quartal, GostKursart.fromKuerzelOrException(kurs.KursartAllg), kurs.Fach_ID) != null) return;
+
+		  final GostKlausurvorgabe neueVorgabe = new GostKlausurvorgabe();
+		  neueVorgabe.abiJahrgang = abijahr;
+		  neueVorgabe.halbjahr = halbjahr.id;
+		  neueVorgabe.idFach = kurs.Fach_ID;
+		  neueVorgabe.kursart = kurs.KursartAllg;
+		  neueVorgabe.quartal = quartal;
+		  fehlend.data.vorgaben.add(neueVorgabe);
+		  manager.vorgabefehlendAdd(neueVorgabe);
+		}
+
+		private static void bearbeiteKursMitVorgabe(final GostKlausurenCollectionHjData fehlend, final GostKlausurplanManager manager,
+		    final GostKlausurvorgabe vorgabe, final DTOKurs kurs, final List<DTOSchuelerLernabschnittsdaten> lernabschnitte) {
+
+		  final GostKursklausur kursklausur = manager.kursklausurByVorgabeAndKursid(vorgabe, kurs.ID);
+		  if (kursklausur == null) {
+		    final GostKursklausur neueKursklausur = new GostKursklausur();
+		    neueKursklausur.idKurs = kurs.ID;
+		    neueKursklausur.idVorgabe = vorgabe.id;
+		    fehlend.data.kursklausuren.add(neueKursklausur);
+		    return;
+		  }
+
+		  final Map<Long, GostSchuelerklausur> schuelerklausurenMap =
+		      manager.schuelerklausurGetMengeByKursklausur(kursklausur)
+		             .stream().collect(Collectors.toMap(sk -> sk.idSchueler, sk -> sk));
+
+		  for (final DTOSchuelerLernabschnittsdaten la : lernabschnitte) {
+		    if (manager.schuelerklausurByKursklausurAndSchuelerid(kursklausur, la.Schueler_ID) == null) {
+		      final GostSchuelerklausur fehlendeSchuelerklausur = new GostSchuelerklausur();
+		      fehlendeSchuelerklausur.idKursklausur = kursklausur.id;
+		      fehlendeSchuelerklausur.idSchueler = la.Schueler_ID;
+		      fehlend.data.schuelerklausuren.add(fehlendeSchuelerklausur);
+		    } else {
+		      schuelerklausurenMap.remove(la.Schueler_ID);
+		    }
+		  }
+		  fehlend.data.schuelerklausuren.addAll(schuelerklausurenMap.values());
+		}
 
 	/**
 	 * Konvertiert einen leeren oder nur aus Leerzeichen bestehenden String in {@code null}.

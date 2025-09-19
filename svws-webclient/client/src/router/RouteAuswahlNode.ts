@@ -1,12 +1,12 @@
-import { DeveloperNotificationException, type BenutzerKompetenz, type Schulform, type ServerMode } from "@core";
+import { type BenutzerKompetenz, DeveloperNotificationException, type Schulform, type ServerMode } from "@core";
 import type { RouteDataAuswahl, RouteStateAuswahlInterface } from "./RouteDataAuswahl";
 import { RouteNode } from "./RouteNode";
 import type { RouteTabProps } from "./RouteTabNode";
 import { RouteTabNode } from "./RouteTabNode";
 import type { RouteComponent, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
+import type { AbschnittAuswahlDaten, AuswahlManager } from "@ui";
 import { ViewType } from "@ui";
 import { api } from "./Api";
-import type { AbschnittAuswahlDaten, AuswahlManager } from "@ui";
 import { routeApp } from "./apps/RouteApp";
 import { routeError } from "./error/RouteError";
 import { ConfigElement } from "../../../ui/src/utils/Config";
@@ -25,6 +25,7 @@ export interface RouteAuswahlListProps<TAuswahlManager extends AuswahlManager<an
 	activeViewType: ViewType;
 	gotoDefaultView: (id?: number | null) => Promise<void>;
 	gotoHinzufuegenView: (navigate: boolean) => Promise<void>;
+	gotoSchnelleingabeView: (navigate: boolean, id?: number | null) => Promise<void>;
 	gotoGruppenprozessView: (navigate: boolean) => Promise<void>;
 	pendingStateManagerRegistry: () => PendingStateManagerRegistry;
 }
@@ -88,6 +89,7 @@ export abstract class RouteAuswahlNode<TAuswahlManager extends AuswahlManager<nu
 			activeViewType: this.data.activeViewType,
 			gotoDefaultView: this.data.gotoDefaultView,
 			gotoHinzufuegenView: this.data.gotoHinzufuegenView,
+			gotoSchnelleingabeView: this.data.gotoSchnelleingabeView,
 			gotoGruppenprozessView: this.data.gotoGruppenprozessView,
 			pendingStateManagerRegistry: () => this.data.pendingStateManagerRegistry,
 		}));
@@ -113,7 +115,7 @@ export abstract class RouteAuswahlNode<TAuswahlManager extends AuswahlManager<nu
 				if (!isNaN(lastId))
 					id = lastId;
 			}
-			if (isEntering && to.hasOneOfTypes([ViewType.GRUPPENPROZESSE, ViewType.HINZUFUEGEN]))
+			if (isEntering && to.hasOneOfTypes([ViewType.GRUPPENPROZESSE, ViewType.HINZUFUEGEN, ViewType.NEU]))
 				return this.getRouteView(this.data.view, { id: id ?? '' });
 			// Daten zum ausgewählten Schuljahresabschnitt und Schüler laden
 			const idNeu = await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt, isEntering);
@@ -128,6 +130,8 @@ export abstract class RouteAuswahlNode<TAuswahlManager extends AuswahlManager<nu
 				await this.data.gotoGruppenprozessView(false);
 			else if (to.hasType(ViewType.HINZUFUEGEN))
 				await this.data.gotoHinzufuegenView(false);
+			else if (to.hasType(ViewType.NEU))
+				await this.data.gotoSchnelleingabeView(false);
 			else
 				await this.data.gotoDefaultView(id);
 

@@ -32,18 +32,18 @@ public final class ValidatorLehrerPersonalabschnittsdatenPflichtstundensoll exte
 	protected boolean pruefe() {
 		final Double pflichtstundensoll = daten.pflichtstundensoll;
 		if (pflichtstundensoll == null) {
-			addFehler("Kein Wert im Feld 'pflichtstundensoll'.");
+			addFehler(0, "Kein Wert im Feld 'pflichtstundensoll'.");
 			return false;
 		}
 		boolean success = true;
 		if ((pflichtstundensoll < 0.0) || (pflichtstundensoll > 41.0)) {
-			addFehler("Unzulässiger Wert im Feld 'pflichtstundensoll'. Zulässig sind im Stundenmodell Werte im Bereich von 0,00 bis 41,00 Wochenstunden. "
+			addFehler(1, "Unzulässiger Wert im Feld 'pflichtstundensoll'. Zulässig sind im Stundenmodell Werte im Bereich von 0,00 bis 41,00 Wochenstunden. "
 					+ "Im Minutenmodell zwischen 0,00 und 1845,00 Minuten.");
 			success = false;
 		}
 		final LehrerEinsatzstatus einsatzstatus = LehrerEinsatzstatus.getBySchluessel(daten.einsatzstatus);
 		if ((einsatzstatus == LehrerEinsatzstatus.B) && (pflichtstundensoll == 0.0)) {
-			addFehler("Bei Lehrkräften, die von einer anderen Schule abgeordnet wurden (Einsatzstatus = 'B'), darf das Pflichtstundensoll"
+			addFehler(2, "Bei Lehrkräften, die von einer anderen Schule abgeordnet wurden (Einsatzstatus = 'B'), darf das Pflichtstundensoll"
 					+ " nicht 0,00 betragen.");
 			success = false;
 		}

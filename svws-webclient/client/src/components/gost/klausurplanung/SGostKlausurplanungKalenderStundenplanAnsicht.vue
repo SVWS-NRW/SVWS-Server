@@ -19,7 +19,7 @@
 				<template v-for="n in zeitrasterRows" :key="n">
 					<span v-if="n % 3 === 2" class="svws-ui-stundenplan--einheit" :class="{'svws-extended': n % 4 === 2, 'svws-small': n % 4 === 1 || n % 4 === 3}" :style="`grid-row: ${ n-1 } / ${n+2}; grid-column: 1`">
 						<template v-if="n % 4 === 2">
-							{{ beginn / 60 + Math.floor((n * 5) / 60) }}:00
+							{{ Math.floor((beginn + n * 5) / 60) }}:00
 						</template>
 					</span>
 				</template>

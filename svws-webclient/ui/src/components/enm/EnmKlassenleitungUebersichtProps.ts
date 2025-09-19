@@ -12,5 +12,5 @@ export interface EnmKlassenleitungUebersichtProps {
 	columnsVisible: () => Map<string, boolean | null>;
 	setColumnsVisible: (columns: Map<string, boolean | null>) => Promise<void>;
 	floskelEditorVisible: boolean;
-	focusFloskelEditor: (hauptgruppe: BemerkungenHauptgruppe | null, schueler: ENMSchueler | null, klasse: ENMKlasse | null, value: boolean) => Promise<void>;
+	focusFloskelEditor: (hauptgruppe: BemerkungenHauptgruppe | null, schueler: ENMSchueler | null, klasse: ENMKlasse | null, row: number | null, doFocus: boolean) => Promise<void>;
 }

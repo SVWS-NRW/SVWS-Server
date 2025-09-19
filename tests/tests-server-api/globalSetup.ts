@@ -1,4 +1,4 @@
-import { JsonCoreTypeReader } from "@core";
+import { JsonCoreTypeReader } from "../../svws-webclient/core/src/asd/utils/JsonCoreTypeReader";
 import { backendURL } from "../utils/APIUtils";
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";

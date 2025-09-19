@@ -664,7 +664,8 @@ OP_Schulformen;OP_POKrz;OP_Krz;OP_Abgangsart_B;OP_Abgangsart_NB;OP_Art;OP_Typ;OP
 -GE-;APO-GOSt02/11-13;GE/APO-GOSt02/FHR11;H;null;A;FHR;A;FHRsT: schul. Teil d. FHR am Ende der Jgst. 11, APO-GOSt 02 §40(2) u. VV 40.21 in Verb. m. Anlage 17=§9;null;-11-;null;null;1;null;null
 -GE-SK-;GE/APO-SI20/5-10;GE/APO-SI20/MSAQ-Q;G;null;A;null;A;MSAQ-Q: Mittlerer Schulabschluss (Fachoberschulreife mit Berechtigung z. Besuch d. gymn. Oberstufe -Qualifikationsphase-);§41(5);-09-10-;null;null;99;null;null
 -GE-;APO-GOSt(B)10/G8;GE/APO-GOStG8/VQ;G;null;V;null;A;Versetzung in die Qualifikationsphase;null;-EF-11-;null;null;1;null;null
--GE-;APO-GOSt(B)10/G8;GE/APO-GOStG8/EESA;D;null;A;null;A;EESA: Erweiterter Erster Schulabschluss;§39(2);-EF-;null;null;0;null;null-GE-;APO-GOSt(C)10;GE/APO-GOStG9/V12;G;null;V;null;A;Versetzung in die Qualifikationsphase;null;-11-;null;null;1;null;null
+-GE-;APO-GOSt(B)10/G8;GE/APO-GOStG8/EESA;D;null;A;null;A;EESA: Erweiterter Erster Schulabschluss;§39(2);-EF-;null;null;0;null;null
+-GE-;APO-GOSt(C)10;GE/APO-GOStG9/V12;G;null;V;null;A;Versetzung in die Qualifikationsphase;null;-11-;null;null;1;null;null
 -GE-;APO-GOSt(B)10/G8;GE/APO-GOStG8/V12;G;null;V;null;A;Versetzung in die Qualifikationsphase;null;-EF-;null;null;0;null;null
 -GE-SK-;GE/APO-SI05/5-10;GE/APO-SI05/HA;B;null;A;null;A;HA: Hauptschulabschluss;§38(3);-10-;null;null;0;null;null
 -GE-;APO-GOSt01/11-13;GE/APO-GOSt01/ABI;K;null;A;ABI;A;AHR: Zuerkennung der allgemeinen Hochschulreife, APO-GOSt 01 §39;§39;-13-;null;null;1;null;null

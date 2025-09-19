@@ -2,6 +2,7 @@ package de.svws_nrw.asd.validate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -41,19 +42,19 @@ public final class ValidatorManager {
 
 	/* ----- Die nachfolgenden Attribute werden nicht initialisiert und werden als Cache verwendet, um z.B. den Schuljahres-bezogenen Zugriff zu cachen ----- */
 
-	/** Eine geschachtelte Map, die einem Schuljar eine Map mit der Zuordnung der Validatoren zu ihrer Fehlerart für die Schulform _schulform */
-	private final @NotNull HashMap<Integer, HashMap<String, ValidatorFehlerart>> _mapSchuljahrValidatornameToFehlerart = new HashMap<>();
+	/** Eine geschachtelte Map, die einem Schuljahr eine Map mit der Zuordnung der Validatoren zu den Prüfschritten und deren Fehlerarten für die Schulform _schulform */
+	private final @NotNull HashMap<Integer, HashMap<String, HashMap<Integer, ValidatorFehlerart>>> _mapSchuljahrValidatornameToFehlerart = new HashMap<>();
 
-	/** Eine geschachtelte Map, die einem Schuljahr eine Map mit der Zuordnung einer Fehlerart zu jedem Validator für die Schulform _schulform */
-	private final @NotNull HashMap<Integer, HashMap<ValidatorFehlerart, List<String>>> _mapSchuljahrFehlerartToValidatorname = new HashMap<>();
+	/** Eine geschachtelte Map, die einem Schuljahr eine Map mit der Zuordnung der Validatoren zu den Fehlercode-Präfixen des Validators */
+	private final @NotNull HashMap<Integer, HashMap<String, String>> _mapSchuljahrValidatornameToFehlercodePraefix = new HashMap<>();
 
 
 	/**
 	 * Erstellt einen neuen Manager für die übergebene Schulform und die Entsprechene Validierungsumgebung
 	 * (Zebras oder SVWS)
 	 *
-	 * @param zebras            die Umgebung, in der gerade validiert wird: true: ZeBrAS  false: SVWS
-	 * @param schulform			die Schulform, für die gerade
+	 * @param zebras      die Umgebung, in der gerade validiert wird: true: ZeBrAS  false: SVWS
+	 * @param schulform   die Schulform, für die gerade
 	 */
 	private ValidatorManager(final @NotNull Schulform schulform, final boolean zebras) {
 		this._schulform = schulform;
@@ -75,16 +76,32 @@ public final class ValidatorManager {
 
 		// TODO Überprüfung ob alle Validatoren in der Json aufgeführt sind
 
-		// Überprüfung ob die Schulformen, die eingetragen sind, zu dem entsprechenden Zeitpunkt beim Core-Type überhaupt gültig sind
+		// Führe Prüfungen auf die einzelnen Einträge zu den Fehlerarten durch
 		for (final Entry<String, List<ValidatorFehlerartKontext>> entry : _data.entrySet()) {
 			final @NotNull String validatorName = entry.getKey();
 			final @NotNull List<ValidatorFehlerartKontext> list = entry.getValue();
+
+			// Überprüfung ob die Schulformen, die eingetragen sind, zu dem entsprechenden Zeitpunkt beim Core-Type überhaupt gültig sind
+			// Hierbei wird sich an der Default-Definition für die Prüfschritte orientiert
 			final @NotNull HashMap<String, List<PairNN<Integer, Integer>>> mapZeitraeumeBySchulform = new HashMap<>();
 			for (final @NotNull ValidatorFehlerartKontext eintrag : list) {
-				final @NotNull PairNN<Integer, Integer> zeitraum = createZeitraum(eintrag.gueltigVon, eintrag.gueltigBis);
-				addZeitraum(mapZeitraeumeBySchulform, zeitraum, eintrag.muss);
-				addZeitraum(mapZeitraeumeBySchulform, zeitraum, eintrag.kann);
-				addZeitraum(mapZeitraeumeBySchulform, zeitraum, eintrag.hinweis);
+				ValidatorFehlerartKontextPruefschritt prfDefault = null; // Die Default-Defintion der Fehlerarberten bei Prüfschritten
+				for (final @NotNull ValidatorFehlerartKontextPruefschritt prf : eintrag.pruefschritte) {
+					if (prf.nummer < -1)
+						throw new CoreTypeException(
+								"Fehler bei der Definition der Prüfschritte. Der Validator %s hat eine Nummer für einen Prüfschritt angegeben, der kleiner als -1 ist."
+										.formatted(validatorName));
+					if (prf.nummer == -1) {
+						prfDefault = prf;
+						final @NotNull PairNN<Integer, Integer> zeitraum = createZeitraum(eintrag.gueltigVon, eintrag.gueltigBis);
+						addZeitraum(mapZeitraeumeBySchulform, zeitraum, prf.muss);
+						addZeitraum(mapZeitraeumeBySchulform, zeitraum, prf.kann);
+						addZeitraum(mapZeitraeumeBySchulform, zeitraum, prf.hinweis);
+					}
+				}
+				if (prfDefault == null)
+					throw new CoreTypeException("Fehler bei der Definition der Prüfschritte. Der Validator %s hat keine Default-Definition für Prüfschritte."
+							.formatted(validatorName));
 			}
 			for (final Entry<String, List<PairNN<Integer, Integer>>> zeitraeume : mapZeitraeumeBySchulform.entrySet()) {
 				final @NotNull List<CoreTypeData> l = new ArrayList<>();
@@ -93,7 +110,7 @@ public final class ValidatorManager {
 					l.addAll(sf.historie());
 				if (!pruefeAufZeitraumueberdeckung(validatorName, createSchulformZeitraumListe(l), zeitraeume.getValue()))
 					throw new CoreTypeException(
-							"Fehler beim prüfen der Schulform. Der Validator %s hat ungültige Schulform-Zeitraum-Kombinationen.".formatted(validatorName));
+							"Fehler beim Prüfen der Schulform. Der Validator %s hat ungültige Schulform-Zeitraum-Kombinationen.".formatted(validatorName));
 			}
 		}
 	}
@@ -170,8 +187,8 @@ public final class ValidatorManager {
 	 *
 	 * @return die Map, die für das gegebene Schuljahr die Fehlerart pro Validator enthält
 	 */
-	private @NotNull HashMap<String, ValidatorFehlerart> getValidatornameToFehlerartCache(final int schuljahr) {
-		final @NotNull HashMap<String, ValidatorFehlerart> mapValidatorToFehlerart = computeIfAbsentValidatornameToFehlerart(schuljahr);
+	private @NotNull HashMap<String, HashMap<Integer, ValidatorFehlerart>> getValidatornameToFehlerartCache(final int schuljahr) {
+		final @NotNull HashMap<String, HashMap<Integer, ValidatorFehlerart>> mapValidatorToFehlerart = computeIfAbsentValidatornameToFehlerart(schuljahr);
 		// Prüfe, ob die Einträge im Cache sind. Wenn nicht, dann erzeuge die Daten im Cache
 		if (mapValidatorToFehlerart.isEmpty())
 			createCache(schuljahr);
@@ -180,30 +197,14 @@ public final class ValidatorManager {
 
 
 	/**
-	 * Liefert für das angegebene Schuljahr die Map die einer Fehlerart die Liste der Namen der zugehörigen Validatoren liefert.
-	 * Ist der Cache für das Schuljahr noch nicht aufgebaut, so wird dieser erstellt.
+	 * Holt das Objekt aus der HashMap oder erzeugt es wenn es nicht vorhanden ist.
 	 *
-	 * @param schuljahr   das zu prüfende Schuljahr
+	 * @param schuljahr  das Schuljahr, für das das Objekt geholt wird
 	 *
-	 * @return die Map, die für das gegebene Schuljahr pro Fehlerart die Liste der Validatornamen enthält
-	 */
-	private @NotNull HashMap<ValidatorFehlerart, List<String>> getFehlerartToValidatornameCache(final int schuljahr) {
-		final @NotNull HashMap<ValidatorFehlerart, List<String>> mapFehlerartToValidatorname = computeIfAbsentFehlerartToValidatorname(schuljahr);
-		// Prüfe, ob die Einträge im Cache sind. Wenn nicht, dann erzeuge die Daten im Cache
-		if (mapFehlerartToValidatorname.isEmpty())
-			createCache(schuljahr);
-		return mapFehlerartToValidatorname;
-	}
-
-
-	/**
-	 * holt das Objekt aus der HashMap oder erzeugt es wenn es nicht vorhanden ist.
-
-	 * @param schuljahr - das Schuljahr, für das das Objekt geholt wird
 	 * @return das benötigte Objekt
 	 */
-	private @NotNull HashMap<String, ValidatorFehlerart> computeIfAbsentValidatornameToFehlerart(final int schuljahr) {
-		HashMap<String, ValidatorFehlerart> mapValidatorToFehlerart = _mapSchuljahrValidatornameToFehlerart.get(schuljahr);
+	private @NotNull HashMap<String, HashMap<Integer, ValidatorFehlerart>> computeIfAbsentValidatornameToFehlerart(final int schuljahr) {
+		HashMap<String, HashMap<Integer, ValidatorFehlerart>> mapValidatorToFehlerart = _mapSchuljahrValidatornameToFehlerart.get(schuljahr);
 		if (mapValidatorToFehlerart == null) {
 			mapValidatorToFehlerart = new HashMap<>();
 			_mapSchuljahrValidatornameToFehlerart.put(schuljahr, mapValidatorToFehlerart);
@@ -213,26 +214,45 @@ public final class ValidatorManager {
 
 
 	/**
-	 * holt das Objekt aus der HashMap oder erzeugt es wenn es nicht vorhanden ist.
-
-	 * @param schuljahr - das Schuljahr, für das das Objekt geholt wird
-	 * @return das benötigte Objekt
+	 * Liefert für das angegebene Schuljahr die Map von dem Validatornamen zu dem Fehlercode-Präfix.
+	 * Ist der Cache für das Schuljahr noch nicht aufgebaut, so wird dieser erstellt.
+	 *
+	 * @param schuljahr   das zu prüfende Schuljahr
+	 *
+	 * @return die Map, die für das gegebene Schuljahr das Fehlercode-Präfix pro Validator enthält
 	 */
-	private @NotNull HashMap<ValidatorFehlerart, List<String>> computeIfAbsentFehlerartToValidatorname(final int schuljahr) {
-		HashMap<ValidatorFehlerart, List<String>> mapFehlerartToValidatorname = _mapSchuljahrFehlerartToValidatorname.get(schuljahr);
-		if (mapFehlerartToValidatorname == null) {
-			mapFehlerartToValidatorname = new HashMap<>();
-			_mapSchuljahrFehlerartToValidatorname.put(schuljahr, mapFehlerartToValidatorname);
-		}
-		return mapFehlerartToValidatorname;
+	private @NotNull HashMap<String, String> getValidatornameToFehlercodePraefixCache(final int schuljahr) {
+		final @NotNull HashMap<String, String> mapValidatorToFehlercodePraefix = computeIfAbsentValidatornameToFehlercodePraefix(schuljahr);
+		// Prüfe, ob die Einträge im Cache sind. Wenn nicht, dann erzeuge die Daten im Cache
+		if (mapValidatorToFehlercodePraefix.isEmpty())
+			createCache(schuljahr);
+		return mapValidatorToFehlercodePraefix;
 	}
 
 
 	/**
-	 * holt das Objekt aus der HashMap oder erzeugt es wenn es nicht vorhanden ist.
+	 * Holt das Objekt aus der HashMap oder erzeugt es wenn es nicht vorhanden ist.
+	 *
+	 * @param schuljahr  das Schuljahr, für das das Objekt geholt wird
+	 *
+	 * @return das benötigte Objekt
+	 */
+	private @NotNull HashMap<String, String> computeIfAbsentValidatornameToFehlercodePraefix(final int schuljahr) {
+		HashMap<String, String> mapValidatorToFehlercodePraefix = _mapSchuljahrValidatornameToFehlercodePraefix.get(schuljahr);
+		if (mapValidatorToFehlercodePraefix == null) {
+			mapValidatorToFehlercodePraefix = new HashMap<>();
+			_mapSchuljahrValidatornameToFehlercodePraefix.put(schuljahr, mapValidatorToFehlercodePraefix);
+		}
+		return mapValidatorToFehlercodePraefix;
+	}
 
+
+	/**
+	 * Holt das Objekt aus der HashMap oder erzeugt es wenn es nicht vorhanden ist.
+	 *
 	 * @param art - die Fehlerart, für die die Liste ggfs. erzeugt wird
 	 * @param map - die HashMap mit den ArrayLists
+	 *
 	 * @return das benötigte Objekt
 	 */
 	private static @NotNull List<String> computeIfAbsentFehlerartValidator(final @NotNull ValidatorFehlerart art,
@@ -270,45 +290,56 @@ public final class ValidatorManager {
 	 * @param schuljahr   das Schuljahr
 	 */
 	private void createCache(final int schuljahr) {
-		final @NotNull Map<String, ValidatorFehlerart> mapValidatorToFehlerart = computeIfAbsentValidatornameToFehlerart(schuljahr);
+		final @NotNull HashMap<String, HashMap<Integer, ValidatorFehlerart>> mapValidatorToFehlerart = computeIfAbsentValidatornameToFehlerart(schuljahr);
 		mapValidatorToFehlerart.clear();
-		final @NotNull Map<ValidatorFehlerart, List<String>> mapFehlerartToValidator = computeIfAbsentFehlerartToValidatorname(schuljahr);
-		mapFehlerartToValidator.clear();
-		final @NotNull List<String> muss = computeIfAbsentFehlerartValidator(ValidatorFehlerart.MUSS, mapFehlerartToValidator);
-		muss.clear();
-		final @NotNull List<String> kann = computeIfAbsentFehlerartValidator(ValidatorFehlerart.KANN, mapFehlerartToValidator);
-		kann.clear();
-		final @NotNull List<String> hinweis = computeIfAbsentFehlerartValidator(ValidatorFehlerart.HINWEIS, mapFehlerartToValidator);
-		hinweis.clear();
-		final @NotNull List<String> ungenutzt = computeIfAbsentFehlerartValidator(ValidatorFehlerart.UNGENUTZT, mapFehlerartToValidator);
-		ungenutzt.clear();
+		final @NotNull HashMap<String, String> mapValidatorToFehlercodePraefix = computeIfAbsentValidatornameToFehlercodePraefix(schuljahr);
+		mapValidatorToFehlercodePraefix.clear();
+
+		// Definiert ein Set zur Erkennung von Duplikaten bei den Fehlercode-Präfixen der Validatoren zu erkennen
+		final Set<String> praefixe = new HashSet<>();
 		for (final Entry<String, List<ValidatorFehlerartKontext>> entry : _data.entrySet()) {
 			final @NotNull String validatorName = entry.getKey();
 			final @NotNull List<ValidatorFehlerartKontext> list = entry.getValue();
+			final @NotNull HashMap<Integer, ValidatorFehlerart> mapPruefschrittToFehlerart = new HashMap<>();
+			mapValidatorToFehlerart.put(validatorName, mapPruefschrittToFehlerart);
+
 			for (final @NotNull ValidatorFehlerartKontext eintrag : list) {
-				// Überprüfe die Fehlerart ...
-				final boolean hasHart = eintrag.muss.contains(_schulform.name());
-				final boolean hasMuss = eintrag.kann.contains(_schulform.name());
-				final boolean hasHinweis = eintrag.hinweis.contains(_schulform.name());
-				if ((hasHart && hasMuss) || (hasMuss && hasHinweis) || (hasHart && hasHinweis))
-					throw new CoreTypeException("Ein Validator kann bei einer Schulform nicht gleichzeitig bei mehreren Fehlerarten aktiv sein.");
+				// Überprüfe bei den einzelnen Prüfschritten die Zuordnung der Fehlerarten bei der Schulform
+				for (final @NotNull ValidatorFehlerartKontextPruefschritt prf : eintrag.pruefschritte) {
+					final boolean hasHart = prf.muss.contains(_schulform.name());
+					final boolean hasMuss = prf.kann.contains(_schulform.name());
+					final boolean hasHinweis = prf.hinweis.contains(_schulform.name());
+					if ((hasHart && hasMuss) || (hasMuss && hasHinweis) || (hasHart && hasHinweis))
+						throw new CoreTypeException(
+								"Ein Validator kann bei einer Schulform nicht bei einem Prüfschritt gleichzeitig bei mehreren Fehlerarten aktiv sein.");
+				}
+
 				// ... überprüfe Umgebung und Schuljahr ...
 				final boolean validatorAktivInUmgebungUndSchuljahr = (_isZebras ? eintrag.zebras : eintrag.svws)
 						&& ((eintrag.gueltigVon == null) || (eintrag.gueltigVon <= schuljahr))
 						&& ((eintrag.gueltigBis == null) || (schuljahr <= eintrag.gueltigBis));
-				// ... und befülle den Cache
-				if (validatorAktivInUmgebungUndSchuljahr && hasHart) {
-					mapValidatorToFehlerart.put(validatorName, ValidatorFehlerart.MUSS);
-					muss.add(validatorName);
-				} else if (validatorAktivInUmgebungUndSchuljahr && hasMuss) {
-					mapValidatorToFehlerart.put(validatorName, ValidatorFehlerart.KANN);
-					kann.add(validatorName);
-				} else if (validatorAktivInUmgebungUndSchuljahr && hasHinweis) {
-					mapValidatorToFehlerart.put(validatorName, ValidatorFehlerart.HINWEIS);
-					hinweis.add(validatorName);
-				} else {
-					mapValidatorToFehlerart.put(validatorName, ValidatorFehlerart.UNGENUTZT);
-					ungenutzt.add(validatorName);
+				if (validatorAktivInUmgebungUndSchuljahr) {
+					// ... ob das Fehlercode-Präfix eindeutig ist (aber nur für den Historieneinträge des Schuljahres des gleichen Core-Type-Wertes)
+					if (praefixe.contains(eintrag.praefix))
+						throw new CoreTypeException(
+								"Das Fehlercode-Präfix eines Validators muss eindeutig sein. Das Präfix %s wurde mehrfach verwendet."
+										.formatted(eintrag.praefix));
+					praefixe.add(eintrag.praefix);
+					mapValidatorToFehlercodePraefix.put(validatorName, eintrag.praefix);
+					for (final @NotNull ValidatorFehlerartKontextPruefschritt prf : eintrag.pruefschritte) {
+						// ... und befülle den Cache
+						final boolean hasHart = prf.muss.contains(_schulform.name());
+						final boolean hasMuss = prf.kann.contains(_schulform.name());
+						final boolean hasHinweis = prf.hinweis.contains(_schulform.name());
+						if (hasHart)
+							mapPruefschrittToFehlerart.put(prf.nummer, ValidatorFehlerart.MUSS);
+						else if (hasMuss)
+							mapPruefschrittToFehlerart.put(prf.nummer, ValidatorFehlerart.KANN);
+						else if (hasHinweis)
+							mapPruefschrittToFehlerart.put(prf.nummer, ValidatorFehlerart.HINWEIS);
+						else
+							mapPruefschrittToFehlerart.put(prf.nummer, ValidatorFehlerart.UNGENUTZT);
+					}
 				}
 			}
 		}
@@ -318,68 +349,131 @@ public final class ValidatorManager {
 	/**
 	 * Gibt die Fehlerart eines Validators für das angegebene Schuljahr zurück.
 	 *
-	 * @param schuljahr   das Schuljahr
-	 * @param validator   der kanonische Name des Validators
+	 * @param schuljahr      das Schuljahr
+	 * @param validator      der kanonische Name des Validators
+	 * @param pruefschritt   die Nummer des Prüfschrittes
 	 *
 	 * @return die Fehlerart des Validators für das angegebene Schuljahr
 	 */
-	public ValidatorFehlerart getFehlerartBySchuljahrAndValidatorName(final int schuljahr, final @NotNull String validator) {
-		return getValidatornameToFehlerartCache(schuljahr).get(validator);
+	public ValidatorFehlerart getFehlerartBySchuljahrAndValidatorNameAndPruefschritt(final int schuljahr, final @NotNull String validator,
+			final int pruefschritt) {
+		if (pruefschritt < -1)
+			return null;
+		final HashMap<Integer, ValidatorFehlerart> mapPruefschritt = getValidatornameToFehlerartCache(schuljahr).get(validator);
+		if (mapPruefschritt == null)
+			return null;
+		if (pruefschritt >= 0) {
+			final ValidatorFehlerart art = mapPruefschritt.get(pruefschritt);
+			if (art != null)
+				return art;
+		}
+		final ValidatorFehlerart art = mapPruefschritt.get(-1);
+		return (art == null) ? ValidatorFehlerart.UNGENUTZT : art;
 	}
 
 
 	/**
 	 * Gibt die Fehlerart eines Validators für das angegebene Schuljahr zurück.
 	 *
-	 * @param <T>         der Type des Validators
-	 * @param schuljahr   das Schuljahr
-	 * @param validator   die Klasse des Validators
+	 * @param <T>            der Type des Validators
+	 * @param schuljahr      das Schuljahr
+	 * @param validator      die Klasse des Validators
+	 * @param pruefschritt   die Nummer des Prüfschrittes
 	 *
 	 * @return die Fehlerart des Validators für das angegebene Schuljahr
 	 */
-	public <T extends Validator> @NotNull ValidatorFehlerart getFehlerartBySchuljahrAndValidatorClass(final int schuljahr,
-			final @NotNull Class<T> validator) {
-		final ValidatorFehlerart tmp = getValidatornameToFehlerartCache(schuljahr).get(validator.getCanonicalName());
+	public <T extends Validator> @NotNull ValidatorFehlerart getFehlerartBySchuljahrAndValidatorClassAndPruefschritt(final int schuljahr,
+			final @NotNull Class<T> validator, final int pruefschritt) {
+		final ValidatorFehlerart tmp = getFehlerartBySchuljahrAndValidatorNameAndPruefschritt(schuljahr, validator.getCanonicalName(), pruefschritt);
 		return (tmp == null) ? ValidatorFehlerart.UNGENUTZT : tmp;
 	}
 
 
 	/**
-	 * Setzt die Fehlerart eines Validators für das angegebene Schuljahr.
+	 * Setzt die Fehlerart eines Prüfschrittes eines Validators für das angegebene Schuljahr.
 	 *
-	 * @param schuljahr   das Schuljahr
-	 * @param validator   der kanonische Name des Validators
-	 * @param fehlerart   die Fehlerart des Validators
+	 * @param schuljahr      das Schuljahr
+	 * @param validator      der kanonische Name des Validators
+	 * @param fehlerart      die Fehlerart des Validators
+	 * @param pruefschritt   die Nummer des Prüfschrittes
 	 */
-	public void setFehlerartBySchuljahr(final int schuljahr, final @NotNull String validator, final @NotNull ValidatorFehlerart fehlerart) {
-		// Ändere Cache FehlerartToValidatorname
-		final @NotNull HashMap<ValidatorFehlerart, List<String>> mapFehlerartToValidator = getFehlerartToValidatornameCache(schuljahr);
-		// Entferne validator aus alter Fehlerartliste, wenn vorhanden
-		final ValidatorFehlerart art = getFehlerartBySchuljahrAndValidatorName(schuljahr, validator);
-		if (art != null) {
-			final List<String> list = mapFehlerartToValidator.get(art);
-			if (list != null)
-				list.remove(validator);
-		}
-		// Füge den Validator in entsprechende Fehlerartliste ein
-		computeIfAbsentFehlerartValidator(fehlerart, mapFehlerartToValidator).add(validator);
+	public void setFehlerartBySchuljahr(final int schuljahr, final @NotNull String validator, final @NotNull ValidatorFehlerart fehlerart,
+			final int pruefschritt) {
 		// Ändere Cache ValidatornameToFehlerart
-		final @NotNull HashMap<String, ValidatorFehlerart> map = getValidatornameToFehlerartCache(schuljahr);
-		map.remove(validator);
-		map.put(validator, fehlerart);
+		final @NotNull HashMap<String, HashMap<Integer, ValidatorFehlerart>> mapValidator = getValidatornameToFehlerartCache(schuljahr);
+		HashMap<Integer, ValidatorFehlerart> mapPruefschritt = mapValidator.get(validator);
+		if (mapPruefschritt == null) {
+			mapPruefschritt = new HashMap<>();
+			mapValidator.put(validator, mapPruefschritt);
+		}
+		mapPruefschritt.put(pruefschritt, fehlerart);
 	}
 
 
 	/**
-	 * Prüft, ob der übergebene Validator in dem angegebenen Schuljar aktiv ist oder nicht.
+	 * Prüft, ob der übergebene Validator in dem angegebenen Schuljahr aktiv ist oder nicht.
 	 *
-	 * @param schuljahr   das Schuljahr
-	 * @param validator   der kanonische Name des Validators
+	 * @param schuljahr      das Schuljahr
+	 * @param validator      der kanonische Name des Validators
 	 *
 	 * @return true, falls der Validator in dem Schuljahr aktiv ist.
 	 */
 	public boolean isValidatorActiveInSchuljahr(final int schuljahr, final @NotNull String validator) {
-		return (getValidatornameToFehlerartCache(schuljahr).get(validator) != ValidatorFehlerart.UNGENUTZT);
+		final @NotNull HashMap<String, HashMap<Integer, ValidatorFehlerart>> mapValidator = getValidatornameToFehlerartCache(schuljahr);
+		final HashMap<Integer, ValidatorFehlerart> mapPruefschritt = mapValidator.get(validator);
+		if (mapPruefschritt == null)
+			return false;
+		final ValidatorFehlerart fa = mapPruefschritt.get(-1);
+		return (fa != null) && (fa != ValidatorFehlerart.UNGENUTZT);
+	}
+
+
+	/**
+	 * Prüft, ob der übergebene Prüfschritt des übergebenen Validators in dem angegebenen Schuljahr aktiv ist oder nicht.
+	 *
+	 * @param schuljahr      das Schuljahr
+	 * @param validator      der kanonische Name des Validators
+	 * @param pruefschritt   die Nummer des Prüfschrittes
+	 *
+	 * @return true, falls der Validator in dem Schuljahr aktiv ist.
+	 */
+	public boolean isPruefschrittActiveInSchuljahr(final int schuljahr, final @NotNull String validator, final int pruefschritt) {
+		final @NotNull HashMap<String, HashMap<Integer, ValidatorFehlerart>> mapValidator = getValidatornameToFehlerartCache(schuljahr);
+		final HashMap<Integer, ValidatorFehlerart> mapPruefschritt = mapValidator.get(validator);
+		if (mapPruefschritt == null)
+			return false;
+		final ValidatorFehlerart fa = mapPruefschritt.get(pruefschritt);
+		return (fa != null) && (fa != ValidatorFehlerart.UNGENUTZT);
+	}
+
+
+	/**
+	 * Gibt das Fehlercode-Präfix eines Validators für das angegebene Schuljahr zurück.
+	 *
+	 * @param schuljahr      das Schuljahr
+	 * @param validator      der kanonische Name des Validators
+	 *
+	 * @return das Fehlercode-Präfix des Validators für das angegebene Schuljahr
+	 */
+	public @NotNull String getFehlercodePraefixBySchuljahrAndValidatorName(final int schuljahr, final @NotNull String validator) {
+		final String code = getValidatornameToFehlercodePraefixCache(schuljahr).get(validator);
+		if (code == null)
+			throw new ValidatorException("Fehler beim Zugriff auf den Fehlercode-Präfix für den Validator %s im Schuljahr %d.".formatted(validator, schuljahr));
+		return code;
+	}
+
+
+	/**
+	 * Gibt das Fehlercode-Präfix eines Validators für das angegebene Schuljahr zurück.
+	 *
+	 * @param <T>            der Type des Validators
+	 * @param schuljahr      das Schuljahr
+	 * @param validator      die Klasse des Validators
+	 *
+	 * @return das Fehlercode-Präfix des Validators für das angegebene Schuljahr
+	 */
+	public <T extends Validator> @NotNull String getFehlercodePraefixBySchuljahrAndValidatorClass(final int schuljahr, final @NotNull Class<T> validator) {
+		return getFehlercodePraefixBySchuljahrAndValidatorName(schuljahr, validator.getCanonicalName());
 	}
 
 

@@ -33,6 +33,9 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	/** Die Route für das Hinzufügen */
 	private readonly _routeHinzufuegen: RouteNode<any, any> | undefined;
 
+	/** Die Route für die Schnelleingabe */
+	private readonly _routeSchnelleingabe: RouteNode<any, any> | undefined;
+
 	private _pendingStateManagerRegistry: PendingStateManagerRegistry;
 
 	/**
@@ -43,11 +46,13 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	 * @param defaultState   der Default-State
 	 * @param routeGruppenprozesse Route für Gruppenprozesse
 	 * @param routeHinzufuegen Route für Hinzufügen
+	 * @param _routeSchnelleingabe Route für Schnelleingabe
 	 */
-	protected constructor(defaultState: RouteState, routes: { gruppenprozesse?: RouteNode<any, any>, hinzufuegen?: RouteNode<any, any> }) {
+	protected constructor(defaultState: RouteState, routes: { gruppenprozesse?: RouteNode<any, any>, hinzufuegen?: RouteNode<any, any>, schnelleingabe?: RouteNode<any, any> }) {
 		super(defaultState);
 		this._routeGruppenprozesse = routes.gruppenprozesse;
 		this._routeHinzufuegen = routes.hinzufuegen;
+		this._routeSchnelleingabe = routes.schnelleingabe;
 		this._pendingStateManagerRegistry = new PendingStateManagerRegistry();
 	}
 
@@ -359,7 +364,7 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 		const params = {};
 		if ((id !== null) && (id !== undefined) && this.manager.liste.has(id)) {
 			this.addID(params, id);
-			const route = (this.activeViewType !== ViewType.HINZUFUEGEN) && (this.activeViewType !== ViewType.GRUPPENPROZESSE)
+			const route = (this.activeViewType !== ViewType.HINZUFUEGEN) && (this.activeViewType !== ViewType.GRUPPENPROZESSE) && (this.activeViewType !== ViewType.NEU)
 				? this.view.getRoute(params) : this.defaultView.getRoute(params);
 			const result = await RouteManager.doRoute(route);
 			if (result === RoutingStatus.STOPPED_ROUTING_IS_ACTIVE) {
@@ -418,7 +423,6 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 					newSelection.put(this.manager.getIdByDaten(datenObj), datenObj);
 				}
 			}
-
 			currentSelection.clear();
 			currentSelection.putAll(newSelection);
 		}
@@ -441,8 +445,6 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 			} else
 				throw new DeveloperNotificationException('Es wurde keine Standard Route für Gruppenprozesse festgelegt!');
 		}
-
-		this.manager.setDaten(null);
 		this.commit();
 	}
 
@@ -468,8 +470,33 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 		}
 
 		this._state.value.view = this._routeHinzufuegen;
-		this.manager.setDaten(null);
 		this.commit();
 	}
 
+	/**
+	 * Lädt die Ansicht für die Schnelleingabe von Daten
+	 *
+	 * @param navigate   gibt an, ob ein Routing durchgeführt werden soll oder nur die View im State gesetzt werden soll
+	 * @param id         die ID des Schülers, zu dessen Schnelleingabe navigiert werden soll
+	 */
+	gotoSchnelleingabeView = async (navigate: boolean, id?: number | null) => {
+		if (this._routeSchnelleingabe === undefined)
+			throw new DeveloperNotificationException("Es wurde keine Route definiert, um Daten in der Auswahlliste zu ergänzen.");
+
+		if ((this.activeViewType === ViewType.NEU) || (this._state.value.view === this._routeSchnelleingabe)) {
+			return;
+		}
+
+		this.activeViewType = ViewType.NEU;
+
+		if (navigate) {
+			const params: RouteParamsRawGeneric = {};
+			if ((id !== undefined) && (id !== null) && this.manager.liste.has(id))
+				this.addID(params, id);
+
+			await RouteManager.doRoute(this._routeSchnelleingabe.getRoute(params));
+		}
+
+		this._state.value.view = this._routeSchnelleingabe;
+	}
 }

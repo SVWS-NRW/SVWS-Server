@@ -32,7 +32,7 @@ export class ValidatorException extends RuntimeException {
 	/**
 	 * Erstellt eine neue Validator-Exception mit dem übergebenen Grund.
 	 *
-	 * @param cause     der Grund für die Exception oder null
+	 * @param cause   der Grund für die Exception oder null
 	 */
 	public constructor(cause : Throwable | null);
 

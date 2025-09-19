@@ -78,20 +78,19 @@ public final class DavDBRepository {
 	 * Überträgt eine gegebene Ressource aus dem Datenbankformat in eine vereinfachte Repräsentation abhängig von gegebenen Query-Parametern
 	 *
 	 * @param dto           das Datenbankobjekt
-	 * @param parameters    die Parameter der Abfrage um unnötiges setzen von Daten zu vermeiden
+	 * @param withPayload   gibt an, ob die Ressource mit dem Ressourceninhalt/Payload erzeugt werden soll
 	 * @param permissions   die Berechtigungen des angemeldeten Nutzers auf diese Ressource
 	 *
 	 * @return die DavRessource ergänzt um Berechtigungen
 	 */
-	private static DavRessource mapDTODavRessource(final DTODavRessource dto, final CollectionQueryParameters parameters,
-			final DavPermissions permissions) {
+	private static DavRessource mapDTODavRessource(final DTODavRessource dto, final boolean withPayload, final DavPermissions permissions) {
 		final DavRessource r = new DavRessource();
 		r.idCollection = dto.DavRessourceCollection_ID;
 		r.id = dto.ID;
 		r.uid = dto.UID;
 		r.permissions = permissions;
 		r.syncToken = DateTimeUtil.getTimeInMillis(dto.lastModified);
-		if ((parameters != null) && parameters.includeEintragPayload) {
+		if (withPayload) {
 			r.kalenderEnde = dto.KalenderEnde;
 			r.kalenderStart = dto.KalenderStart;
 			r.kalenderTyp = dto.KalenderTyp;
@@ -177,6 +176,18 @@ public final class DavDBRepository {
 	 */
 	public List<DavCollection> getCollectionsByIDs(final Collection<Long> idsCollection) {
 		return getReadableCollections().stream().filter(dto -> idsCollection.contains(dto.id)).toList();
+	}
+
+
+	/**
+	 * Gibt die Collection für die angegebenen ID zurück, wenn darauf mindestens eine Lese-Berechtigung des Benutzers existiert.
+	 *
+	 * @param idCollection   die ID der Collection
+	 *
+	 * @return eine Collection oder null
+	 */
+	public DavCollection getCollectionByID(final long idCollection) {
+		return getReadableCollections().stream().filter(dto -> idCollection == dto.id).findFirst().orElse(null);
 	}
 
 
@@ -340,11 +351,11 @@ public final class DavDBRepository {
 	 * werden ausgelassen.
 	 *
 	 * @param idsCollection   die IDs der Collections, für welche die Ressourcen gelesen werden sollen
-	 * @param parameters      gibt an, welche Informatione zu den Ressourcen zurückgegeben werden
+	 * @param withPayload     gibt an, ob die Ressource mit dem Ressourceninhalt/Payload erzeugt werden soll
 	 *
 	 * @return Eine Liste mit den Informationen zu den Ressourcen
 	 */
-	public List<DavRessource> getRessources(final Collection<Long> idsCollection, final CollectionQueryParameters parameters) {
+	public List<DavRessource> getRessources(final Collection<Long> idsCollection, final boolean withPayload) {
 		// Bestimme eine Map mit allen Berechitungen zu den angegebenen Collection-IDs
 		final Map<Long, DavPermissions> mapPermissions = getReadableCollectionPermissionsById(idsCollection);
 		if (mapPermissions.isEmpty())
@@ -352,7 +363,7 @@ public final class DavDBRepository {
 		// Lese alle Collections ein, wo eine Berechtigung in der Map existiert und gib diese zurück
 		return conn.queryList(DTODavRessource.QUERY_LIST_BY_DAVRESSOURCECOLLECTION_ID, DTODavRessource.class, mapPermissions.keySet()).stream()
 				.filter(dto -> dto.geloeschtam == null)
-				.map(dto -> mapDTODavRessource(dto, parameters, mapPermissions.get(dto.DavRessourceCollection_ID))).toList();
+				.map(dto -> mapDTODavRessource(dto, withPayload, mapPermissions.get(dto.DavRessourceCollection_ID))).toList();
 	}
 
 
@@ -364,16 +375,14 @@ public final class DavDBRepository {
 	 * @param syncToken      das neue Synctoken
 	 *
 	 * @return true, falls die Transaktion erfolgreich abgeschlossen wurde, und ansonsten false
-	 *
-	 * @throws DavException   falls die Transaktion nicht erfolgreich abgeschlossen wurde
 	 */
-	private boolean updateCollectionSynctoken(final long idCollection, final String syncToken) throws DavException {
+	private boolean updateCollectionSynctoken(final long idCollection, final String syncToken) {
 		final DTODavRessourceCollection collection = conn.queryByKey(DTODavRessourceCollection.class, idCollection);
 		collection.SyncToken = syncToken;
 		final boolean transactionPersist = conn.transactionPersist(collection);
 		if (!transactionPersist) {
 			conn.transactionRollback();
-			throw new DavException(Status.INTERNAL_SERVER_ERROR);
+			return false;
 		}
 		conn.transactionCommit();
 		return true;
@@ -387,11 +396,9 @@ public final class DavDBRepository {
 	 * @param davRessource   die Ressource die hinzugefügt werden soll.
 	 * @param permissions    die Berechtigungen auf der Collection, zu welcher die Ressource gehört
 	 *
-	 * @return die aktualisierte Ressource mit gesetzer ID
-	 *
-	 * @throws DavException   im Fehlerfall
+	 * @return die aktualisierte Ressource mit gesetzer ID oder null im Fehlerfall
 	 */
-	private DavRessource insertRessource(final DavRessource davRessource, final DavPermissions permissions) throws DavException {
+	private DavRessource insertRessource(final DavRessource davRessource, final DavPermissions permissions) {
 		final String newSynctoken = getNewSyncToken();
 		final DTODavRessource dtoDavRessource = new DTODavRessource(conn.transactionGetNextID(DTODavRessource.class),
 				davRessource.idCollection, davRessource.uid, newSynctoken,
@@ -399,10 +406,11 @@ public final class DavDBRepository {
 				davRessource.data.getBytes(StandardCharsets.UTF_8));
 		if (!conn.transactionPersist(dtoDavRessource)) {
 			conn.transactionRollback();
-			throw new DavException(Status.INTERNAL_SERVER_ERROR);
+			return null;
 		}
-		updateCollectionSynctoken(davRessource.idCollection, newSynctoken);
-		return mapDTODavRessource(dtoDavRessource, CollectionQueryParameters.ALL, permissions);
+		if (!updateCollectionSynctoken(davRessource.idCollection, newSynctoken))
+			return null;
+		return mapDTODavRessource(dtoDavRessource, true, permissions);
 	}
 
 
@@ -413,17 +421,15 @@ public final class DavDBRepository {
 	 * @param davRessource   die Ressource die aktualisiert werden soll.
 	 * @param permissions    die Berechtigungen auf der Collection, zu welcher die Ressource gehört
 	 *
-	 * @return die aktualisierte Ressource
-	 *
-	 * @throws DavException   im Fehlerfall
+	 * @return die aktualisierte Ressource oder null im Fehlerfall
 	 */
-	private DavRessource updateRessource(final DavRessource davRessource, final DavPermissions permissions) throws DavException {
+	private DavRessource updateRessource(final DavRessource davRessource, final DavPermissions permissions) {
 		final String newSynctoken = getNewSyncToken();
 		final DTODavRessource dtoDavRessource = conn.queryByKey(DTODavRessource.class, davRessource.id);
 		// Prüfe, ob der Client die letzte Version hatte
 		if (DateTimeUtil.getTimeInMillis(dtoDavRessource.lastModified) != davRessource.syncToken) {
 			conn.transactionRollback();
-			throw new DavException(Status.CONFLICT);
+			return null;
 		}
 		dtoDavRessource.DavRessourceCollection_ID = davRessource.idCollection;
 		dtoDavRessource.KalenderEnde = davRessource.kalenderEnde;
@@ -434,10 +440,11 @@ public final class DavDBRepository {
 		dtoDavRessource.ressource = davRessource.data.getBytes(StandardCharsets.UTF_8);
 		if (!conn.transactionPersist(dtoDavRessource)) {
 			conn.transactionRollback();
-			throw new DavException(Status.INTERNAL_SERVER_ERROR);
+			return null;
 		}
-		updateCollectionSynctoken(davRessource.idCollection, newSynctoken);
-		return mapDTODavRessource(dtoDavRessource, CollectionQueryParameters.ALL, permissions);
+		if (!updateCollectionSynctoken(davRessource.idCollection, newSynctoken))
+			return null;
+		return mapDTODavRessource(dtoDavRessource, true, permissions);
 	}
 
 
@@ -447,15 +454,14 @@ public final class DavDBRepository {
 	 *
 	 * @param davRessource   die Ressource die hinzugefügt bzw. aktualisiert werden soll.
 	 *
-	 * @return die aktuelle Ressource mit gesetzer ID
-	 *
-	 * @throws DavException   im Fehlerfall, z.B. bei fehlenden Berechtigungen oder Fehlern beim Schreiben in die Datenbank
+	 * @return die aktuelle Ressource mit gesetzer ID oder null im Fehlerfall, z.B. bei
+	 *         fehlenden Berechtigungen oder Fehlern beim Schreiben in die Datenbank
 	 */
-	public DavRessource insertOrUpdateRessource(final DavRessource davRessource) throws DavException {
+	public DavRessource insertOrUpdateRessource(final DavRessource davRessource) {
 		// Prüfe zunächst, ob die Collection read only ist.
 		final DavPermissions permissions = isWritableCollection(davRessource.idCollection);
 		if (permissions == null)
-			throw new DavException(Status.FORBIDDEN);
+			return null;
 
 		// Starte die Transaktion und prüfe, ob es eine neue Ressource hinzugefügt wurde oder eine bestehende aktualisiert wird
 		conn.transactionBegin();

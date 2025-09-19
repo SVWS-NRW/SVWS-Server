@@ -222,7 +222,7 @@ class DataHaltestellenTest {
 	void mapAttributeTest_bezeichnungDoppeltVergeben() {
 		final var haltestelle = getDto();
 		haltestelle.Bezeichnung = "ABC";
-		when(this.conn.queryList(DTOHaltestellen.QUERY_BY_BEZEICHNUNG, DTOHaltestellen.class, "ABC")).thenReturn(List.of(haltestelle));
+		when(this.conn.queryAll(DTOHaltestellen.class)).thenReturn(List.of(haltestelle));
 
 		final var throwable = catchThrowable(() -> this.data.mapAttribute(new DTOHaltestellen(2L, "DEF"), "bezeichnung", "ABC", null));
 
@@ -230,21 +230,6 @@ class DataHaltestellenTest {
 				.isInstanceOf(ApiOperationException.class)
 				.hasMessage("Die Bezeichnung ABC ist bereits vorhanden.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
-	}
-
-	@Test
-	@DisplayName("mapAttribute | bezeichnung doppelt in der Database | sollte in der Praxis nicht passieren")
-	void mapAttributeTest_bezeichnungDoppeltInDB() {
-		final var haltestelleABC = new DTOHaltestellen(1L, "ABC");
-		final var haltestelleDEF = new DTOHaltestellen(2L, "ABC");
-		when(this.conn.queryList(DTOHaltestellen.QUERY_BY_BEZEICHNUNG, DTOHaltestellen.class, "ABC")).thenReturn(List.of(haltestelleABC, haltestelleDEF));
-
-		final var throwable = catchThrowable(() -> this.data.mapAttribute(new DTOHaltestellen(3L, "DEF"), "bezeichnung", "ABC", null));
-
-		assertThat(throwable)
-				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Mehr als eine Haltestelle mit der gleichen Bezeichnung vorhanden.")
-				.hasFieldOrPropertyWithValue("status", Response.Status.INTERNAL_SERVER_ERROR);
 	}
 
 	@Test

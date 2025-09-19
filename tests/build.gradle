@@ -170,6 +170,23 @@ tasks.register('integrationTest') {
 	dependsOn 'tests-server-dav:testAgainstDockerEnv' // Vite API Dav Tests
 	dependsOn 'tests-server-enm:testAgainstDockerEnv' // Vite API ENM Tests
 
+
+	// Serielle Ausführung sicherstellen
+	project('tests-e2e-devmode').tasks.named('testAgainstDockerEnv').configure {
+		mustRunAfter project('tests-server-api').tasks.named('testAgainstDockerEnv')
+	}
+	project('tests-e2e-stablemode').tasks.named('testAgainstDockerEnv').configure {
+		mustRunAfter project('tests-e2e-devmode').tasks.named('testAgainstDockerEnv')
+	}
+	project('tests-server-dav').tasks.named('testAgainstDockerEnv').configure {
+		mustRunAfter project('tests-e2e-stablemode').tasks.named('testAgainstDockerEnv')
+	}
+	project('tests-server-enm').tasks.named('testAgainstDockerEnv').configure {
+		mustRunAfter project('tests-server-dav').tasks.named('testAgainstDockerEnv')
+	}
+
+
+
 	if(!CONFIG.keepContainerAfterTestRun) {
 		// Stoppe die container für die jeweiligen Testumgebungen nach den Integrationstests
 		// Jeden ausgeführte Test Sub-Packet sollte auch hier auftauchen

@@ -250,8 +250,12 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 				.filter(dto -> Boolean.FALSE.equals(dto.Geloescht))
 				.map(dto -> DataSchuelerliste.mapToSchueler(dto, null))
 				.collect(Collectors.toMap(s -> s.id, s -> s));
-		for (final @NotNull DTOKursSchueler kursSchueler : listKursSchueler)
-			result.get(kursSchueler.Kurs_ID).add(mapSchueler.get(kursSchueler.Schueler_ID));
+		for (final @NotNull DTOKursSchueler kursSchueler : listKursSchueler) {
+			final List<Schueler> tmpList = result.get(kursSchueler.Kurs_ID);
+			final Schueler schueler = mapSchueler.get(kursSchueler.Schueler_ID);
+			if (schueler != null)
+				tmpList.add(schueler);
+		}
 		return result;
 	}
 

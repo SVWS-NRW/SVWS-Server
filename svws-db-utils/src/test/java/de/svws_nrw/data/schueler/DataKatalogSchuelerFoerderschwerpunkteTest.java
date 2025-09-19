@@ -260,16 +260,26 @@ class DataKatalogSchuelerFoerderschwerpunkteTest {
 	@Test
 	@DisplayName("mapAttribute | kuerzel doppelt vergeben")
 	void mapAttribute_kuerzelDoppelt() {
-		final var dbDto = new DTOFoerderschwerpunkt(1L, "bezeichnung");
-		dbDto.Bezeichnung = "doppelt";
-		when(this.conn.queryAll(DTOFoerderschwerpunkt.class)).thenReturn(List.of(dbDto));
-		final var dto = new DTOFoerderschwerpunkt(1L, "bezeichnung");
-		final var throwable = catchThrowable(() -> this.data.mapAttribute(dto, "kuerzel", "doppelt", null));
+		final var expectedDTO = new DTOFoerderschwerpunkt(1L, "abc");
+		when(this.conn.queryAll(DTOFoerderschwerpunkt.class)).thenReturn(List.of(new DTOFoerderschwerpunkt(2L, "test")));
+
+		final var throwable = catchThrowable(() -> this.data.mapAttribute(expectedDTO, "kuerzel", "TEST", null));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Das Kürzel doppelt darf nicht doppelt vergeben werden")
+				.hasMessage("Das Kürzel TEST darf nicht doppelt vergeben werden")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("mapAttribute | bezeichnung case aendern im gleichen Objekt")
+	void mapAttributeTest_changeCaseOfBezeichnung() throws ApiOperationException {
+		final var expectedDTO = new DTOFoerderschwerpunkt(1L, "test");
+		when(this.conn.queryAll(DTOFoerderschwerpunkt.class)).thenReturn(List.of(expectedDTO));
+
+		this.data.mapAttribute(expectedDTO, "kuerzel", "TEST", null);
+
+		assertThat(expectedDTO.Bezeichnung).isEqualTo("TEST");
 	}
 
 	@Test

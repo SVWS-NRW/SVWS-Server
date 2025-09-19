@@ -197,7 +197,7 @@ describe("Adressbuch Dav", () => {
 			});
 
 			test("Ruft ein Propfind auf den Gemeinsamen Kalender auf.", async () => {
-				const response = await apiServiceAnde.propfind(`/dav/${schema}/kalender/1`, {body: bodyDataDavCal})
+				const response = await apiServiceAnde.propfind(`/dav/${schema}/kalender/oeffentlich_1`, {body: bodyDataDavCal})
 				const xmlAsString = await response!.text()
 
 				expect(response).toBeDefined();

@@ -9,6 +9,8 @@ export default defineConfig({
 		outputFile: "build/test-results/api-test-results.xml",
 		globalSetup: ["globalSetup.ts"],
 		silent: false,
+		isolate: false,
+		fileParallelism: false,
 
 		coverage: {
 			provider: "v8",
@@ -18,7 +20,6 @@ export default defineConfig({
 	resolve: {
 		alias: {
 			"~": resolve(__dirname, "src"),
-			"@core": resolve(__dirname, '../../svws-webclient/core/src/index.ts'),
 		},
 	},
 });

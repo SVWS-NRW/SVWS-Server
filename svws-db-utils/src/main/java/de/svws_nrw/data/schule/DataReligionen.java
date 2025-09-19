@@ -2,6 +2,7 @@ package de.svws_nrw.data.schule;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import de.svws_nrw.asd.types.schule.Religion;
 import de.svws_nrw.core.data.schule.ReligionEintrag;
@@ -11,16 +12,16 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKonfession;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
- * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für den
- * Core-DTO {@link ReligionEintrag}.
+ * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für das Core-DTO {@link ReligionEintrag}.
  */
 public final class DataReligionen extends DataManagerRevised<Long, DTOKonfession, ReligionEintrag> {
 
 	/**
-	 * Erstellt einen neuen {@link DataManagerRevised} für den Core-DTO {@link ReligionEintrag}.
+	 * Erstellt einen neuen {@link DataManagerRevised} für das Core-DTO {@link ReligionEintrag}.
 	 *
 	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
 	 */
@@ -36,12 +37,20 @@ public final class DataReligionen extends DataManagerRevised<Long, DTOKonfession
 	}
 
 	@Override
+	protected long getLongId(final DTOKonfession dbDTO) {
+		return dbDTO.ID;
+	}
+
+	@Override
 	public List<ReligionEintrag> getAll() {
 		return conn.queryAll(DTOKonfession.class).stream().map(this::map).toList();
 	}
 
 	@Override
 	public ReligionEintrag getById(final Long id) throws ApiOperationException {
+		if (id == null)
+			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Eine Anfrage mit der ID null ist unzulässig.");
+
 		final DTOKonfession religion = conn.queryByKey(DTOKonfession.class, id);
 		if (religion == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Eintrag im Katalog der Religionen mit der ID %d gefunden.".formatted(id));
@@ -53,7 +62,7 @@ public final class DataReligionen extends DataManagerRevised<Long, DTOKonfession
 	protected ReligionEintrag map(final DTOKonfession dto) {
 		final ReligionEintrag daten = new ReligionEintrag();
 		daten.id = dto.ID;
-		daten.bezeichnung = dto.Bezeichnung;
+		daten.bezeichnung = (dto.Bezeichnung == null) ? "" : dto.Bezeichnung;
 		daten.bezeichnungZeugnis = dto.ZeugnisBezeichnung;
 		daten.kuerzel = dto.StatistikKrz;
 		daten.sortierung = (dto.Sortierung == null) ? 32000 : dto.Sortierung;
@@ -62,48 +71,43 @@ public final class DataReligionen extends DataManagerRevised<Long, DTOKonfession
 	}
 
 	@Override
-	protected void mapAttribute(final DTOKonfession dto, final String name, final Object patchValue, final Map<String, Object> map)
+	protected void mapAttribute(final DTOKonfession dto, final String name, final Object value, final Map<String, Object> map)
 			throws ApiOperationException {
 		switch (name) {
+			case "id" -> {
+				final Long id = JSONMapper.convertToLong(value, false, name);
+				if (!Objects.equals(dto.ID, id))
+					throw new ApiOperationException(Response.Status.BAD_REQUEST,
+							"Die ID %d des Patches ist null oder stimmt nicht mit der ID %d in der Datenbank überein.".formatted(id, dto.ID));
+			}
 			case "kuerzel" -> {
-				final String statistikKrz = JSONMapper.convertToString(patchValue, true, true, Schema.tab_K_Religion.col_StatistikKrz.datenlaenge());
+				final String statistikKrz = JSONMapper.convertToString(value, true, true, Schema.tab_K_Religion.col_StatistikKrz.datenlaenge(), name);
 				if ((statistikKrz != null) && (Religion.data().getWertByKuerzel(statistikKrz) == null)) {
 					throw new ApiOperationException(Status.BAD_REQUEST,
 							"Eine Religion mit dem Kürzel " + statistikKrz + " existiert in der amtlichen Schulstatistik nicht.");
 				}
 				dto.StatistikKrz = statistikKrz;
 			}
-			case "bezeichnung" -> {
-				final String bezeichnung = JSONMapper.convertToString(patchValue, false, true, Schema.tab_K_Religion.col_Bezeichnung.datenlaenge());
-				if (bezeichnungExists(bezeichnung)) {
-					throw new ApiOperationException(Status.BAD_REQUEST,
-							"Eine Religion mit der Bezeichnung " + bezeichnung + " existiert bereits. Die Bezeichnung muss eindeutig sein.");
-				}
-				dto.Bezeichnung = bezeichnung;
-			}
+			case "bezeichnung" -> validateBezeichnung(dto, name, value);
 			case "bezeichnungZeugnis" ->
-					dto.ZeugnisBezeichnung = JSONMapper.convertToString(patchValue, true, true, Schema.tab_K_Religion.col_ZeugnisBezeichnung.datenlaenge());
-			case "istSichtbar" -> dto.Sichtbar = JSONMapper.convertToBoolean(patchValue, true);
-			case "sortierung" -> dto.Sortierung = JSONMapper.convertToInteger(patchValue, true);
-			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Für das Attribut %s existiert kein Patch Mapping.".formatted(name));
+					dto.ZeugnisBezeichnung = JSONMapper.convertToString(value, true, true, Schema.tab_K_Religion.col_ZeugnisBezeichnung.datenlaenge(), name);
+			case "istSichtbar" -> dto.Sichtbar = JSONMapper.convertToBoolean(value, true, name);
+			case "sortierung" -> dto.Sortierung = JSONMapper.convertToInteger(value, true, name);
+			default -> throw new ApiOperationException(Response.Status.BAD_REQUEST, "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));
 		}
 	}
 
-	@Override
-	protected long getLongId(final DTOKonfession dbDTO) {
-		return dbDTO.ID;
-	}
+	private void validateBezeichnung(final DTOKonfession dto, final String name, final Object value) throws ApiOperationException {
+		final String bezeichnung = JSONMapper.convertToString(value, false, false, Schema.tab_K_Religion.col_Bezeichnung.datenlaenge(), name);
+		if (Objects.equals(dto.Bezeichnung, bezeichnung) || bezeichnung.isBlank())
+			return;
 
-	/**
-	 * Methode prüft, ob bereits ein DTOKonfession Eintrag mit der gegebenen Bezeichnung in der DB existiert.
-	 *
-	 * @param bezeichnung zu prüfende Bezeichnung
-	 * @return <code>true</code>, wenn es bereits ein DTOKonfession mit der Bezeichnung in der DB existiert, ansonsten <code>false</code>
-	 */
-	boolean bezeichnungExists(final String bezeichnung) {
-		return !conn.query(DTOKonfession.QUERY_BY_BEZEICHNUNG, DTOKonfession.class)
-				.setParameter(1, bezeichnung)
-				.getResultList()
-				.isEmpty();
+		final boolean bezeichnungAlreadyUsed = this.conn.queryAll(DTOKonfession.class).stream()
+				.anyMatch(e -> (e.ID != dto.ID) && e.Bezeichnung.equalsIgnoreCase(bezeichnung));
+
+		if (bezeichnungAlreadyUsed)
+			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Die Bezeichnung %s ist bereits vorhanden.".formatted(bezeichnung));
+
+		dto.Bezeichnung =  bezeichnung;
 	}
 }

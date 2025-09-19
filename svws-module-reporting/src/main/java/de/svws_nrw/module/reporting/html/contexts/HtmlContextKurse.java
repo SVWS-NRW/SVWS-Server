@@ -22,14 +22,6 @@ import org.thymeleaf.context.Context;
  */
 public final class HtmlContextKurse extends HtmlContext<ReportingKurs> {
 
-	@Override
-	public List<String> standardsortierung() {
-		final ArrayList<String> standardSort = new ArrayList<>();
-		standardSort.add(methodenreferenzToString(ReportingKurs::sortierung));
-		standardSort.add(methodenreferenzToString(ReportingKurs::kuerzel));
-		return standardSort;
-	}
-
 	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
 	private final ReportingRepository reportingRepository;
@@ -67,7 +59,7 @@ public final class HtmlContextKurse extends HtmlContext<ReportingKurs> {
 	private void erzeugeContextFromKurse(final List<ReportingKurs> reportingKurse) {
 
 		setContextData(reportingKurse);
-		sortiereContext();
+		sortiereContextMitRegistry();
 
 		// Daten-Context für Thymeleaf erzeugen.
 		final Context context = new Context();
@@ -104,7 +96,7 @@ public final class HtmlContextKurse extends HtmlContext<ReportingKurs> {
 		}
 
 		setContextData(mapKurse.values().stream().toList());
-		sortiereContext();
+		sortiereContextMitRegistry();
 
 		// Daten-Context für Thymeleaf erzeugen.
 		final Context context = new Context();

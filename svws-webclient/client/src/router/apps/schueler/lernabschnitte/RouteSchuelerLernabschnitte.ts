@@ -5,7 +5,7 @@ import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMod
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
-import { type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
+import { type RouteSchueler} from "~/router/apps/schueler/RouteSchueler";
 import { routeSchuelerLernabschnittAllgemein } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnittAllgemein";
 import { routeSchuelerLernabschnittLeistungen } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnittLeistungen";
 import { routeSchuelerLernabschnittVersetzungAbschluss } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnittVersetzungAbschluss";

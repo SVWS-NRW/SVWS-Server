@@ -61,7 +61,7 @@
 								<td class="ta-lb" style="width: 35%; font-size: 13pt; font-weight: bold;" th:text="${'Klassenliste ' + klasse.kuerzel()}">
 									Klassenliste 06C
 								</td>
-								<td class="f-bold ta-rb" style="width: 65%;" th:text="${'Jahrgang ' + klasse.jahrgang().kuerzel() + ' - ' + klasse.schueler().size() + ' Personen ' + klasse.statistikGeschlechter() + ' - Leitung: ' + klasse.auflistungKlassenleitung()}">
+								<td class="f-bold ta-rb" style="width: 65%;" th:text="${((klasse.jahrgang() != null) ? ('Jahrgang ' + klasse.jahrgang().kuerzel() + ' - ') : '') + klasse.schueler().size() + ' Personen ' + klasse.statistikGeschlechter() + ' - Leitung: ' + klasse.auflistungKlassenleitung()}">
 									Jahrgang 06 - 30 Personen - Leitung: ABC,DEF}"
 								</td>
 							</tr>

@@ -51,7 +51,6 @@ class TestAVLMapRandom {
 		}
 	}
 
-	@SuppressWarnings("unlikely-arg-type")
 	private void testeEineRunde() {
 		final int rnd = RANDOM.nextInt(100);
 		switch (rnd) {

@@ -6,12 +6,11 @@
 		"baseUrl": ".",
 		"paths": {
 			"~/*": ["./src/*"],
-			"@core": ["../../svws-webclient/core/src/index.ts"]
 		}
 	},
 	"include": [
 		"./*.ts",
 		"./tests/**/*",
-		"../../svws-webclient/core/src/index.ts"
+		"../../svws-webclient/core/src/**/*"
 	]
 }

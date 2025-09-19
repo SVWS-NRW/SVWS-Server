@@ -1,7 +1,7 @@
 import { DateManager } from '../../../asd/validate/DateManager';
-import { ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum } from '../../../asd/validate/lehrer/ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum';
 import { LehrerPersonalabschnittsdaten } from '../../../asd/data/lehrer/LehrerPersonalabschnittsdaten';
 import { LehrerStammdaten } from '../../../asd/data/lehrer/LehrerStammdaten';
+import { ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnis } from '../../../asd/validate/lehrer/ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnis';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
@@ -22,7 +22,7 @@ export class ValidatorLehrerPersonalabschnittsdaten extends Validator {
 		this._validatoren.add(new ValidatorLehrerPersonalabschnittsdatenPflichtstundensoll(daten, kontext));
 		try {
 			const geburtsdatum : DateManager = DateManager.from(stammdaten.geburtsdatum);
-			this._validatoren.add(new ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum(daten, geburtsdatum, kontext));
+			this._validatoren.add(new ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnis(daten, geburtsdatum, kontext));
 		} catch(e : any) {
 			// empty block
 		}

@@ -218,7 +218,7 @@ class DataKatalogFahrschuelerartenTest {
 	void mapAttributeTest_bezeichnungDoppeltVergeben() {
 		final var fahrschuelerart = getDto();
 		fahrschuelerart.Bezeichnung = "ABC";
-		when(this.conn.queryList(DTOFahrschuelerart.QUERY_BY_BEZEICHNUNG, DTOFahrschuelerart.class, "ABC")).thenReturn(List.of(fahrschuelerart));
+		when(this.conn.queryAll(DTOFahrschuelerart.class)).thenReturn(List.of(fahrschuelerart));
 
 		final var throwable = catchThrowable(() -> this.data.mapAttribute(new DTOFahrschuelerart(2L, "DEF"), "bezeichnung", "ABC", null));
 
@@ -226,21 +226,6 @@ class DataKatalogFahrschuelerartenTest {
 				.isInstanceOf(ApiOperationException.class)
 				.hasMessage("Die Bezeichnung ABC ist bereits vorhanden.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
-	}
-
-	@Test
-	@DisplayName("mapAttribute | bezeichnung doppelt in der Database | sollte in der Praxis nicht passieren")
-	void mapAttributeTest_bezeichnungDoppeltInDB() {
-		final var fahrschuelerartABC = new DTOFahrschuelerart(1L, "ABC");
-		final var fahrschuelerartDEF = new DTOFahrschuelerart(2L, "ABC");
-		when(this.conn.queryList(DTOFahrschuelerart.QUERY_BY_BEZEICHNUNG, DTOFahrschuelerart.class, "ABC")).thenReturn(List.of(fahrschuelerartABC, fahrschuelerartDEF));
-
-		final var throwable = catchThrowable(() -> this.data.mapAttribute(new DTOFahrschuelerart(3L, "DEF"), "bezeichnung", "ABC", null));
-
-		assertThat(throwable)
-				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Mehr als eine Fahrschülerart mit der gleichen Bezeichnung vorhanden.")
-				.hasFieldOrPropertyWithValue("status", Response.Status.INTERNAL_SERVER_ERROR);
 	}
 
 	@Test

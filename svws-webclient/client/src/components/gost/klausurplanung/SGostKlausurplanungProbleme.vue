@@ -37,28 +37,6 @@
 			</template>
 		</ui-card>
 
-		<ui-card v-if="!kursklausuren().isEmpty()" icon="i-ri-book-2-line" title="Fehlende Kursklausuren" :fehler="ValidatorFehlerart.MUSS"
-			:subtitle="kursklausuren().size() + ' fehlende Kursklausuren gefunden.'" :is-open="currentAction === 'kursklausuren_fehlend'"
-			@update:is-open="(isOpen) => setCurrentAction('kursklausuren_fehlend', isOpen)">
-			<svws-ui-table :items="kursklausuren()" :columns="colsKursklausuren">
-				<template #cell(kurs)="{ rowData }">
-					{{ kMan().kursKurzbezeichnungByKursklausur(rowData) }}
-				</template>
-				<template #cell(lehrer)="{ rowData }">
-					{{ kMan().kursLehrerKuerzelByKursklausur(rowData) }}
-				</template>
-				<template #cell(quartal)="{ rowData }">
-					{{ kMan().vorgabeByKursklausur(rowData).quartal }}
-				</template>
-			</svws-ui-table>
-			<template #buttonFooterLeft>
-				<svws-ui-button title="Fehlende Kursklausuren erstellen" @click="erzeugeKursklausurenAusVorgabenOrModal" class="mt-2">
-					<span class="icon i-ri-play-line" />
-					Fehlende Kursklausuren erstellen
-				</svws-ui-button>
-			</template>
-		</ui-card>
-
 		<ui-card v-if="!schuelerklausuren().isEmpty()" icon="i-ri-group-line" title="Abweichende Schülerklausurmenge" :fehler="ValidatorFehlerart.MUSS"
 			:subtitle="schuelerklausuren().size() + ' Abweichungen gefunden.'" :is-open="currentAction === 'schuelerklausurmenge_abweichend'"
 			@update:is-open="(isOpen) => setCurrentAction('schuelerklausurmenge_abweichend', isOpen)">
@@ -81,6 +59,33 @@
 					{{ kMan().vorgabeBySchuelerklausur(rowData).quartal }}
 				</template>
 			</svws-ui-table>
+		</ui-card>
+
+		<ui-card v-if="!kursklausuren().isEmpty()" icon="i-ri-book-2-line" title="Abweichende Kursklausurmenge" :fehler="ValidatorFehlerart.MUSS"
+			:subtitle="kursklausuren().size() + ' Abweichungen gefunden.'" :is-open="currentAction === 'kursklausuren_fehlend'"
+			@update:is-open="(isOpen) => setCurrentAction('kursklausuren_fehlend', isOpen)">
+			<svws-ui-table :items="kursklausuren()" :columns="(kursklausuren().toArray() as GostKursklausur[]).some(kk => kk.id !== -1) ? addStatusColumn(colsKursklausuren) : colsKursklausuren">
+				<template #cell(status)="{ rowData }">
+					<svws-ui-button v-if="rowData.id !== -1" type="transparent" @click="loescheKursklausuren(ListUtils.create1(rowData))" title="löschen">
+						<span class="icon i-ri-delete-bin-line" /> löschen
+					</svws-ui-button>
+				</template>
+				<template #cell(kurs)="{ rowData }">
+					{{ kMan().kursKurzbezeichnungByKursklausur(rowData) }}
+				</template>
+				<template #cell(lehrer)="{ rowData }">
+					{{ kMan().kursLehrerKuerzelByKursklausur(rowData) }}
+				</template>
+				<template #cell(quartal)="{ rowData }">
+					{{ kMan().vorgabeByKursklausur(rowData).quartal }}
+				</template>
+			</svws-ui-table>
+			<template #buttonFooterLeft>
+				<svws-ui-button v-if="!(kursklausuren().toArray() as GostKursklausur[]).every(kk => kk.id !== -1)" title="Fehlende Kursklausuren erstellen" @click="erzeugeKursklausurenAusVorgabenOrModal" class="mt-2">
+					<span class="icon i-ri-play-line" />
+					Fehlende Kursklausuren erstellen
+				</svws-ui-button>
+			</template>
 		</ui-card>
 
 		<ui-card v-if="!kursklausurenNichtVerteilt().isEmpty()" icon="i-ri-book-2-line" title="Nicht verteilte Kursklausuren" :fehler="ValidatorFehlerart.MUSS"
@@ -311,7 +316,7 @@
 <script setup lang="ts">
 	import { ref, onMounted, computed } from 'vue';
 	import type { DataTableColumn } from "@ui";
-	import type {GostKlausurtermin } from "@core";
+	import type {GostKlausurtermin, GostKursklausur } from "@core";
 	import { DateUtils, GostHalbjahr, ListUtils, OpenApiError, ValidatorFehlerart} from "@core";
 	import { Fach } from "@core";
 	import type { GostKlausurplanungProblemeProps } from "./SGostKlausurplanungProblemeProps";

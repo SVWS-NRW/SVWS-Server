@@ -22,7 +22,6 @@ public final class ValidatorLehrerStammdaten extends Validator {
 		_validatoren.add(new ValidatorLehrerStammdatenNachname(daten, kontext));
 		_validatoren.add(new ValidatorLehrerStammdatenVorname(daten, kontext));
 		_validatoren.add(new ValidatorLehrerStammdatenGeburtsdatum(daten, kontext));
-
 	}
 
 	@Override

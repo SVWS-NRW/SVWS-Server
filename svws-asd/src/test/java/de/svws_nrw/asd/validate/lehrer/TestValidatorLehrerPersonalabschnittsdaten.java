@@ -155,7 +155,7 @@ class TestValidatorLehrerPersonalabschnittsdaten {
 
 		try {
 			final @NotNull DateManager geburtsdatum = DateManager.from(lsdTestdaten_001.geburtsdatum);
-			final ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum validator = new ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum(lpadTestdaten_002, geburtsdatum, kontext);
+			final ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnis validator = new ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnis(lpadTestdaten_002, geburtsdatum, kontext);
 			assertEquals(true, validator.run());
 		} catch (@SuppressWarnings("unused") final InvalidDateException e) {
 			assertEquals(true, false); // darf hier nicht hin
@@ -180,7 +180,7 @@ class TestValidatorLehrerPersonalabschnittsdaten {
 
 		try {
 			final @NotNull DateManager geburtsdatum = DateManager.from("2004-01-01");
-			final ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum validator = new ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum(lpadTestdaten_002, geburtsdatum, kontext);
+			final ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnis validator = new ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnis(lpadTestdaten_002, geburtsdatum, kontext);
 			assertEquals(false, validator.run());
 		} catch (@SuppressWarnings("unused") final InvalidDateException e) {
 			assertEquals(true, false); // darf hier nicht hin
@@ -206,7 +206,7 @@ class TestValidatorLehrerPersonalabschnittsdaten {
 		// Wir erwarten eine InvalidDateException bei der Übergabe des Datums.
 		try {
 			final @NotNull DateManager geburtsdatum = DateManager.from("01.01.1990");
-			new ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum(lpadTestdaten_002, geburtsdatum, kontext);
+			new ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnis(lpadTestdaten_002, geburtsdatum, kontext);
 		} catch (final InvalidDateException e) {
 			assertTrue(e.getMessage().contains("ist nicht konform zu ISO8601"));
 		}

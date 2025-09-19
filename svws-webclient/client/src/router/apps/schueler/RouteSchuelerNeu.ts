@@ -1,6 +1,7 @@
-import type {RouteLocationNormalized, RouteParams, RouteParamsRawGeneric} from "vue-router";
+import type { RouteLocationNormalized, RouteParams, RouteParamsRawGeneric } from "vue-router";
 
-import {BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode} from "@core";
+import type { DeveloperNotificationException } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
@@ -10,7 +11,7 @@ import type { SchuelerNeuProps } from "~/components/schueler/SSchuelerNeuProps";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeApp } from "~/router/apps/RouteApp";
 import { api } from "~/router/Api";
-import {routeError} from "~/router/error/RouteError";
+import { routeError } from "~/router/error/RouteError";
 
 const SSchuelerNeu = () => import("~/components/schueler/SSchuelerNeu.vue");
 
@@ -49,28 +50,11 @@ export class RouteSchuelerNeu extends RouteNode<any, RouteSchueler> {
 		return {
 			schuelerListeManager: () => routeSchueler.data.manager,
 			addSchueler: routeSchueler.data.addSchueler,
-			patch: routeSchueler.data.patchSchuelerNeu,
-			gotoDefaultView: routeSchueler.data.gotoDefaultView,
-			mapSchulen: routeApp.data.mapSchulen,
-			mapOrte: routeApp.data.mapOrte,
-			mapOrtsteile: routeApp.data.mapOrtsteile,
-			mapReligionen: routeApp.data.mapReligionen,
-			mapFahrschuelerarten: routeApp.data.mapFahrschuelerarten,
-			mapHaltestellen: routeApp.data.mapHaltestellen,
+			patchSchuelerSchulbesuchdaten: routeSchueler.data.patchSchuelerSchulbesuchdaten,
 			mapKindergaerten: routeApp.data.mapKindergaerten,
 			mapEinschulungsarten: routeApp.data.mapEinschulungsarten,
-			mapErzieherarten: routeApp.data.mapErzieherarten,
-			mapTelefonArten: routeApp.data.mapTelefonArten,
-			getListSchuelerErziehereintraege: () => routeSchueler.data.listSchuelerErziehereintraege,
-			addSchuelerErziehereintrag: routeSchueler.data.addSchuelerErziehereintrag,
-			patchSchuelerErziehereintrag: routeSchueler.data.patchSchuelerErziehereintrag,
-			patchSchuelerErzieherAnPosition: routeSchueler.data.patchSchuelerErzieherAnPosition,
-			deleteSchuelerErziehereintrage: routeSchueler.data.deleteSchuelerErziehereintrage,
-			getListSchuelerTelefoneintraege: () => routeSchueler.data.getListSchuelerTelefoneintraege,
-			addSchuelerTelefoneintrag: routeSchueler.data.addSchuelerTelefoneintrag,
-			patchSchuelerTelefoneintrag: routeSchueler.data.patchSchuelerTelefoneintrag,
-			deleteSchuelerTelefoneintrage: routeSchueler.data.deleteSchuelerTelefoneintrage,
-			patchSchuelerKindergarten: routeSchueler.data.patchSchuelerKindergarten,
+			gotoSchnelleingabeView: routeSchueler.data.gotoSchnelleingabeView,
+			gotoDefaultView: routeSchueler.data.gotoDefaultView,
 			aktAbschnitt: routeApp.data.aktAbschnitt.value,
 			schulform: api.schulform,
 			benutzerKompetenzen: api.benutzerKompetenzen,

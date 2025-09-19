@@ -16,25 +16,21 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @TranspilerDTO
 public class ValidatorFehlerartKontext {
 
-	/** ob der Validator im zebras ausgeführt werden soll. */
-	@Schema(description = "ob der Validator in Zebras ausgeführt werden soll")
-	public boolean zebras;
+	/** Gibt an, ob der Validator im zebras ausgeführt werden soll. */
+	@Schema(description = "gibt an, ob der Validator in Zebras ausgeführt werden soll")
+	public boolean zebras = false;
 
-	/** ob der Validator im client ausgeführt werden soll. */
-	@Schema(description = "ob der Validator in Client ausgeführt werden soll")
-	public boolean svws;
+	/** Gibt an, ob der Validator im client ausgeführt werden soll. */
+	@Schema(description = "gibt an, ob der Validator in SVWS-Client ausgeführt werden soll")
+	public boolean svws = false;
 
-	/** Liste der Schulformen, in denen ein Fehler vorliegt */
-	@Schema(description = "Liste der Schulformen, in denen ein Fehler vorliegt")
-	public @NotNull List<String> muss = new ArrayList<>();
+	/** der Präfix-Teil des ASD-Fehlercodes */
+	@Schema(description = "der Präfix-Teil des ASD-Fehlercodes")
+	public @NotNull String praefix = "";
 
-	/** Liste der Schulformen, in denen wahrscheinlich ein Fehler vorliegt */
-	@Schema(description = "Liste der Schulformen, in denen wahrscheinlich ein Fehler vorliegt")
-	public @NotNull List<String> kann = new ArrayList<>();
-
-	/** Liste der Schulformen, in denen ein Hinweise auf einen möglichen Fehler erfolgt */
-	@Schema(description = "Liste der Schulformen, in denen ein Hinweis auf einen möglichen Fehler erfolgt")
-	public @NotNull List<String> hinweis = new ArrayList<>();
+	/** Die Liste mit den Zuordnungen der Fehlerarten für die einzelnen Prüfschritte eines Validators */
+	@Schema(description = "die Liste mit den Zuordnungen der Fehlerarten für die einzelnen Prüfschritte eines Validators")
+	public @NotNull List<ValidatorFehlerartKontextPruefschritt> pruefschritte = new ArrayList<>();
 
 	/** Gibt an, ab welchem Schuljahr die Laufeigenschaft des Validators gilt. Falls schon immer, so ist null gesetzt. */
 	@Schema(description = "gibt an, ab welchem Schuljahr der Fehlerart-Kontext des Validators gilt. Falls schon immer, so ist null gesetzt.", example = "null")

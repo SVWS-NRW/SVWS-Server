@@ -71,40 +71,44 @@ public final class DataMerkmale extends DataManagerRevised<Long, DTOMerkmale, Me
 		throws ApiOperationException {
 		switch (name) {
 			case "id" -> {
-				final Long id = JSONMapper.convertToLong(value, false, "id");
+				final Long id = JSONMapper.convertToLong(value, false, name);
 				if (!Objects.equals(dto.ID, id))
 					throw new ApiOperationException(Status.BAD_REQUEST,
 							"Die ID %d des Patches ist null oder stimmt nicht mit der ID %d in der Datenbank überein.".formatted(id, dto.ID));
 			}
-			case "istSchulmerkmal" -> dto.Schule = JSONMapper.convertToBoolean(value, true, "istSchulmerkmal");
-			case "istSchuelermerkmal" -> dto.Schueler = JSONMapper.convertToBoolean(value, true, "istSchuelermerkmal");
-			case "kuerzel" -> updateKuerzel(dto, value);
-			case "bezeichnung" -> dto.Langtext = JSONMapper.convertToString(
-					value, true, true, Schema.tab_EigeneSchule_Merkmale.col_Langtext.datenlaenge(), "bezeichnung");
+			case "istSchulmerkmal" -> dto.Schule = JSONMapper.convertToBoolean(value, true, name);
+			case "istSchuelermerkmal" -> dto.Schueler = JSONMapper.convertToBoolean(value, true, name);
+			case "kuerzel" -> updateKuerzel(dto, name, value);
+			case "bezeichnung" -> updateBezeichnung(dto, name, value);
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));
 		}
 	}
 
-	private void updateKuerzel(final DTOMerkmale dto, final Object value) throws ApiOperationException {
-		final String kuerzel = JSONMapper.convertToString(
-				value, false, false, Schema.tab_EigeneSchule_Merkmale.col_Kurztext.datenlaenge(), "kuerzel");
-		// Kürzel ist unverändert
-		if ((dto.Kurztext != null) && !dto.Kurztext.isBlank() && dto.Kurztext.equals(kuerzel))
+	private void updateBezeichnung(final DTOMerkmale dto, final String name, final Object value) throws ApiOperationException {
+		final String bezeichnung = JSONMapper.convertToString(
+				value, false, false, Schema.tab_EigeneSchule_Merkmale.col_Langtext.datenlaenge(), name);
+		if (Objects.equals(dto.Langtext, bezeichnung) || bezeichnung.isBlank())
 			return;
 
-		// theoretischer Fall, der nicht eintreten sollte
-		final List<DTOMerkmale> merkmale = conn.queryList(DTOMerkmale.QUERY_BY_KURZTEXT, DTOMerkmale.class, kuerzel);
-		if (merkmale.size() > 1)
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Mehr als ein Merkmal mit dem gleichen Kürzel vorhanden");
+		final boolean bezeichnungAlreadyUsed = this.conn.queryAll(DTOMerkmale.class).stream()
+				.anyMatch(m -> (m.ID != dto.ID) && m.Langtext.equalsIgnoreCase(bezeichnung));
+		if (bezeichnungAlreadyUsed)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die Bezeichnung %s ist bereits vorhanden.".formatted(bezeichnung));
 
-		// kuerzel bereits vorhanden
-		if (!merkmale.isEmpty()) {
-			final DTOMerkmale dtoMerkmal = merkmale.getFirst();
-			if ((dtoMerkmal != null) && (dtoMerkmal.ID != dto.ID))
-					throw new ApiOperationException(Status.BAD_REQUEST, "Das Kürzel %s ist bereits vorhanden.".formatted(value));
-		}
+		dto.Langtext = bezeichnung;
+	}
 
-		// kuerzel wird gepatched
+	private void updateKuerzel(final DTOMerkmale dto, final String name, final Object value) throws ApiOperationException {
+		final String kuerzel = JSONMapper.convertToString(
+				value, false, false, Schema.tab_EigeneSchule_Merkmale.col_Kurztext.datenlaenge(), name);
+		if (Objects.equals(dto.Kurztext, kuerzel) || kuerzel.isBlank())
+			return;
+
+		final boolean kuerzelAlreadyUsed = this.conn.queryAll(DTOMerkmale.class).stream()
+				.anyMatch(m -> (m.ID != dto.ID) && m.Kurztext.equalsIgnoreCase(kuerzel));
+		if (kuerzelAlreadyUsed)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Das Kürzel %s ist bereits vorhanden.".formatted(kuerzel));
+
 		dto.Kurztext = kuerzel;
 	}
 }

@@ -6,8 +6,6 @@ import de.svws_nrw.core.data.gost.GostBlockungsergebnis;
 import de.svws_nrw.core.data.gost.GostFachwahl;
 import de.svws_nrw.core.data.gost.GostStatistikFachwahl;
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
-import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
-import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
@@ -15,12 +13,10 @@ import de.svws_nrw.core.utils.gost.GostBlockungsdatenManager;
 import de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager;
 import de.svws_nrw.data.gost.DataGostAbiturjahrgangFachwahlen;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
-import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.proxytypes.gost.ProxyReportingGostFachwahlstatistikHalbjahr;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import de.svws_nrw.module.reporting.proxytypes.lehrer.ProxyReportingLehrer;
-import de.svws_nrw.module.reporting.proxytypes.schueler.ProxyReportingSchueler;
 import de.svws_nrw.module.reporting.proxytypes.schueler.gost.kursplanung.ProxyReportingSchuelerGostKursplanungKursbelegung;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplanungBlockungsergebnis;
@@ -30,12 +26,9 @@ import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplan
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
-import java.text.Collator;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -68,10 +61,6 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 		// Initialisiere den Blockungsergebnis-Manager.
 		ergebnisManager = new GostBlockungsergebnisManager(datenManager, blockungsergebnis);
 
-		// Sortierungen definieren.
-		ergebnisManager.kursSetSortierungKursartFachNummer();
-		final Collator colGerman = java.text.Collator.getInstance(Locale.GERMAN);
-
 		// Grundwerte des Blockungsergebnisses setzen.
 		super.abiturjahr = datenManager.daten().abijahrgang;
 		super.anzahlDummy = ergebnisManager.getAnzahlSchuelerDummy();
@@ -82,36 +71,10 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 		super.bezeichnung = ersetzeNullBlankTrim(datenManager.daten().name);
 		super.gostHalbjahr = GostHalbjahr.fromID(datenManager.daten().gostHalbjahr);
 
-		// Schülerstammdaten ermitteln und in Listen und Maps einfügen
-		final List<SchuelerStammdaten> schuelerStammdaten = new ArrayList<>();
-		final List<Long> fehlendeSchueler = new ArrayList<>();
-		for (final Long idSchueler : datenManager.schuelerGetListe().stream().map(s -> s.id).toList()) {
-			if (reportingRepository.mapSchuelerStammdaten().containsKey(idSchueler))
-				schuelerStammdaten.add(reportingRepository.mapSchuelerStammdaten().get(idSchueler));
-			else
-				fehlendeSchueler.add(idSchueler);
-		}
-		if (!fehlendeSchueler.isEmpty()) {
-			final List<SchuelerStammdaten> fehlendeSchuelerStammdaten;
-			try {
-				fehlendeSchuelerStammdaten = (new DataSchuelerStammdaten(reportingRepository.conn())).getListByIds(fehlendeSchueler);
-			} catch (final ApiOperationException e) {
-				throw new DeveloperNotificationException(e.getMessage());
-			}
-			schuelerStammdaten.addAll(fehlendeSchuelerStammdaten);
-			fehlendeSchuelerStammdaten.forEach(s -> this.reportingRepository.mapSchuelerStammdaten().putIfAbsent(s.id, s));
-		}
-
-		// Füge die neu erzeugten Reporting-Objekte der Schüler der internen Map hinzu, um auf die Schüler im Folgenden direkt zugreifen zu können.
+		// Füge die Schüler der Liste der Schüler dieses Blockungsergebnisses hinzu und lege eine interne Map an, um auf die Schüler im Folgenden direkt zugreifen zu können.
+		super.schueler().addAll(this.reportingRepository.schueler(datenManager.schuelerGetListe().stream().map(s -> s.id).toList()));
 		final HashMap<Long, ReportingSchueler> mapBlockungsergebnisSchuelermenge = new HashMap<>();
-		mapBlockungsergebnisSchuelermenge.putAll(schuelerStammdaten
-				.stream()
-				.map(s -> (ReportingSchueler) new ProxyReportingSchueler(
-						reportingRepository,
-						s))
-				.toList()
-				.stream()
-				.collect(Collectors.toMap(ReportingSchueler::id, s -> s)));
+		mapBlockungsergebnisSchuelermenge.putAll(super.schueler().stream().collect(Collectors.toMap(ReportingSchueler::id, s -> s)));
 
 		// Liste der Schienen aus der Blockung einlesen und diese einer internen Map hinzufügen. Dabei werden Schienen ohne Kurse nicht berücksichtigt.
 		final HashMap<Long, ReportingGostKursplanungSchiene> mapBlockungsergebnisSchienenmenge = new HashMap<>();
@@ -218,16 +181,6 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 				.filter(s -> !ergebnisManager.getOfSchieneKursmengeSortiert(s.id).isEmpty())
 				.toList()
 				.forEach(s -> super.schienen().add(mapBlockungsergebnisSchienenmenge.get(s.id)));
-
-		// Erstelle eine alphabetisch sortierte Liste der Schülermenge aus dem Blockungsergebnis und initialisiere damit die Liste der Super-Klasse.
-		super.schueler().addAll(mapBlockungsergebnisSchuelermenge.values()
-				.stream()
-				.sorted(Comparator.comparing(ReportingSchueler::nachname, colGerman)
-						.thenComparing(ReportingSchueler::vorname, colGerman)
-						.thenComparing(ReportingSchueler::vornamen, colGerman)
-						.thenComparing(ReportingSchueler::id))
-				.toList());
-		this.reportingRepository.mapSchueler().putAll(super.schueler.stream().collect(Collectors.toMap(ReportingSchueler::id, s -> s)));
 	}
 
 
@@ -245,7 +198,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 	/**
 	 * Map mit den Fachwahlstatistiken des GOSt-Halbjahres des Blockungsergebnisses zur Fach-ID
 	 *
-	 * @return Map mit den Fachwahlstatistiken zu den Fächern.
+	 * @return Map mit den Fachwahlstatistiken zur Fach-ID.
 	 */
 	@Override
 	public Map<Long, ReportingGostKursplanungFachwahlstatistik> fachwahlstatistik() {
@@ -255,7 +208,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 					new DataGostAbiturjahrgangFachwahlen(reportingRepository.conn(), super.abiturjahr());
 			try {
 				final List<GostStatistikFachwahl> gostFachwahlenStatistik = gostAbiturjahrgangFachwahlen.getFachwahlen();
-				if ((gostFachwahlenStatistik != null) && (!gostFachwahlenStatistik.isEmpty())) {
+				if (!gostFachwahlenStatistik.isEmpty()) {
 					mapFachwahlStatistik.putAll(
 							gostFachwahlenStatistik.stream().collect(
 									Collectors.toMap(

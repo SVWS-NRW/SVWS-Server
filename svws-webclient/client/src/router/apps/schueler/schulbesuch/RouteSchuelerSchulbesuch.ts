@@ -11,7 +11,7 @@ import { RouteDataSchuelerSchulbesuch } from "~/router/apps/schueler/schulbesuch
 import type { SchuelerSchulbesuchProps } from "~/components/schueler/schulbesuch/SSchuelerSchulbesuchProps";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
-import { routeKatalogSchulen } from "~/router/apps/schule/schulen/RouteKatalogSchulen";
+import { routeKatalogSchulen } from "~/router/apps/schule/allgemein/schulen/RouteKatalogSchulen";
 
 const SSchuelerSchulbesuch = () => import("~/components/schueler/schulbesuch/SSchuelerSchulbesuch.vue");
 

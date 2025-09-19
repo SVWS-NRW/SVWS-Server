@@ -30,6 +30,7 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 /** Diese Klasse testet die Klasse {@link DataBeschaeftigungsarten}*/
@@ -197,7 +198,7 @@ class DataBeschaeftigungsartenTest {
 		switch (key) {
 			case "id" -> assertThat(throwable)
 					.isInstanceOf(ApiOperationException.class)
-					.hasMessage("IdPatch 35 ist ungleich dtoId 1")
+					.hasMessage("Die ID 35 des Patches ist null oder stimmt nicht mit der ID 1 in der Datenbank überein.")
 					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 			case "bezeichnung" -> assertThat(dto.Bezeichnung).isEqualTo(value);
 			case "sortierung" -> assertThat(dto.Sortierung).isEqualTo(value);
@@ -228,6 +229,42 @@ class DataBeschaeftigungsartenTest {
 	void mapAttributeTest_idIsCorrect() {
 		final var dto = getDto();
 		assertThatNoException().isThrownBy(() -> this.data.mapAttribute(dto, "id", 1L, null));
+	}
+
+	@Test
+	@DisplayName("mapAttribute | bezeichnung bereits vorhanden")
+	void mapAttributeTest_bezeichnungDoppeltVergeben() {
+		final var beschaeftigungsart = getDto();
+		when(this.conn.queryAll(DTOBeschaeftigungsart.class)).thenReturn(List.of(beschaeftigungsart));
+
+		final var throwable = catchThrowable(() -> this.data.mapAttribute(new DTOBeschaeftigungsart(2L, "DEF"), "bezeichnung", "TEST", null));
+
+		assertThat(throwable)
+				.isInstanceOf(ApiOperationException.class)
+				.hasMessage("Die Bezeichnung TEST ist bereits vorhanden.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("mapAttribute | bezeichnung unverändert")
+	void mapAttributeTest_bezeichnungUnchanging() {
+		final var dto = getDto();
+
+		assertThatNoException().isThrownBy(() -> this.data.mapAttribute(dto, "bezeichnung", "test", null));
+
+		verifyNoInteractions(this.conn);
+		assertThat(dto.Bezeichnung).isEqualTo("test");
+	}
+
+	@Test
+	@DisplayName("mapAttribute | bezeichnung blank")
+	void mapAttributeTest_bezeichnungBlank() {
+		final var throwable = catchThrowable(() -> this.data.mapAttribute(getDto(), "bezeichnung", "", null));
+
+		assertThat(throwable)
+				.isInstanceOf(ApiOperationException.class)
+				.hasMessage("Attribut bezeichnung: Ein leerer String ist hier nicht erlaubt.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	private static DTOBeschaeftigungsart getDto() {

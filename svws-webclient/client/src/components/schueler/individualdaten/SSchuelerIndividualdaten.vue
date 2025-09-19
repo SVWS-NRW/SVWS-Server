@@ -1,5 +1,6 @@
 <template>
 	<Teleport to=".svws-ui-header--actions" defer>
+		<svws-ui-button @click="downloadPDF" type="secondary"><svws-ui-spinner v-if="loading" spinning /><span v-else class="icon i-ri-printer-line" /> Schulbescheinigung drucken</svws-ui-button>
 		<svws-ui-modal-hilfe> <hilfe-schueler-individualdaten /> </svws-ui-modal-hilfe>
 	</Teleport>
 	<div class="page page-grid-cards">
@@ -180,7 +181,7 @@
 	import { computed, ref } from "vue";
 	import type { SchuelerIndividualdatenProps } from "./SSchuelerIndividualdatenProps";
 	import type { SchuelerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, SchulEintrag, TelefonArt, Haltestelle, Fahrschuelerart } from "@core";
-	import { SchuelerStatus, Schulform, Nationalitaeten, Geschlecht, AdressenUtils, Verkehrssprache, BenutzerKompetenz, DateUtils, SchuelerTelefon, ServerMode, ArrayList } from "@core";
+	import { SchuelerStatus, Schulform, Nationalitaeten, Geschlecht, AdressenUtils, Verkehrssprache, BenutzerKompetenz, DateUtils, SchuelerTelefon, ServerMode, ArrayList, ReportingParameter, ReportingSortierungDefinition, ReportingReportvorlage } from "@core";
 	import { verkehrsspracheKatalogEintragFilter, verkehrsspracheKatalogEintragSort, nationalitaetenKatalogEintragFilter, nationalitaetenKatalogEintragSort,
 		staatsangehoerigkeitKatalogEintragSort, staatsangehoerigkeitKatalogEintragFilter, orte_sort, orte_filter, ortsteilSort, ortsteilFilter } from "~/utils/helfer";
 	import type { DataTableColumn } from "@ui";
@@ -402,5 +403,30 @@
 		},
 		set: (value) => void props.patch({ haltestelleID: value === undefined ? null : value.id }),
 	});
+
+	const loading = ref<boolean>(false);
+
+	async function downloadPDF() {
+		const reportingParameter = new ReportingParameter();
+		const listeIdsSchueler = new ArrayList<number>();
+		listeIdsSchueler.add(props.schuelerListeManager().auswahlID());
+		reportingParameter.reportvorlage = ReportingReportvorlage.SCHUELER_v_SCHULBESCHEINIGUNG.getBezeichnung();
+		reportingParameter.idsHauptdaten = listeIdsSchueler;
+		reportingParameter.einzelausgabeHauptdaten = true;
+		reportingParameter.einzelausgabeDetaildaten = false;
+		reportingParameter.sortierungHauptdaten = new ReportingSortierungDefinition();
+		reportingParameter.sortierungHauptdaten.verwendeStandardsortierung = true;
+		reportingParameter.detailLevel = 8;
+
+		loading.value = true;
+		const { data, name } = await props.getPDF(reportingParameter);
+		const link = document.createElement("a");
+		link.href = URL.createObjectURL(data);
+		link.download = name;
+		link.target = "_blank";
+		link.click();
+		URL.revokeObjectURL(link.href);
+		loading.value = false;
+	}
 
 </script>

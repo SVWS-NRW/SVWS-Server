@@ -1,5 +1,6 @@
-import { ValidatorSchuleStammdatenSchulform } from '../../../asd/validate/schule/ValidatorSchuleStammdatenSchulform';
+import { Schulform } from '../../../asd/types/schule/Schulform';
 import { Class } from '../../../java/lang/Class';
+import { JavaString } from '../../../java/lang/JavaString';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
 
@@ -13,10 +14,20 @@ export class ValidatorSchuleStammdaten extends Validator {
 	 */
 	public constructor(kontext : ValidatorKontext) {
 		super(kontext);
-		this._validatoren.add(new ValidatorSchuleStammdatenSchulform(kontext));
 	}
 
 	protected pruefe() : boolean {
+		const schulformKrz : string | null = super.kontext().getSchuleStammdaten().schulform;
+		if ((schulformKrz === null) || (JavaString.isBlank(schulformKrz))) {
+			this.addFehler(0, "Die Schulform muss gesetzt sein.");
+			return false;
+		}
+		try {
+			Schulform.data().getWertByKuerzel(schulformKrz);
+		} catch(e : any) {
+			this.addFehler(1, "Das Kürzel für die Schulform ist ungültig.");
+			return false;
+		}
 		return true;
 	}
 

@@ -202,8 +202,8 @@ class DataMerkmaleTest {
 	@DisplayName("mapAttribute | kuerzel bereits vorhanden")
 	void mapAttributeTest_kuerzelDoppeltVergeben() {
 		final var merkmalABC = new DTOMerkmale(1L);
-		merkmalABC.Kurztext = "ABC";
-		when(this.conn.queryList(DTOMerkmale.QUERY_BY_KURZTEXT, DTOMerkmale.class, "ABC")).thenReturn(List.of(merkmalABC));
+		merkmalABC.Kurztext = "abc";
+		when(this.conn.queryAll(DTOMerkmale.class)).thenReturn(List.of(merkmalABC));
 
 		final var throwable = catchThrowable(() -> this.data.mapAttribute(new DTOMerkmale(2L), "kuerzel", "ABC", null));
 
@@ -214,20 +214,42 @@ class DataMerkmaleTest {
 	}
 
 	@Test
-	@DisplayName("mapAttribute | Kuerzel doppelt in der Database | sollte in der Praxis nicht passieren")
-	void mapAttributeTest_kuerzelDoppeltInDB() {
-		final var merkmalABC = new DTOMerkmale(1L);
-		merkmalABC.Kurztext = "ABC";
-		final var merkmalDEF = new DTOMerkmale(1L);
-		merkmalDEF.Kurztext = "ABC";
-		when(this.conn.queryList(DTOMerkmale.QUERY_BY_KURZTEXT, DTOMerkmale.class, "ABC")).thenReturn(List.of(merkmalABC, merkmalDEF));
+	@DisplayName("mapAttribute | kuerzel case aendert sich")
+	void mapAttributeTest_changeCaseOfKuerzel() throws ApiOperationException {
+		final var dto = new DTOMerkmale(1L);
+		dto.Kurztext = "abc";
+		when(this.conn.queryAll(DTOMerkmale.class)).thenReturn(List.of(dto));
 
-		final var throwable = catchThrowable(() -> this.data.mapAttribute(new DTOMerkmale(2L), "kuerzel", "ABC", null));
+		this.data.mapAttribute(dto, "kuerzel", "ABC", null);
+
+		assertThat(dto.Kurztext).isEqualTo("ABC");
+	}
+
+	@Test
+	@DisplayName("mapAttribute | Bezeichnung bereits vorhanden")
+	void mapAttributeTest_bezeichnungDoppeltVergeben() {
+		final var merkmalABC = new DTOMerkmale(1L);
+		merkmalABC.Langtext = "abc";
+		when(this.conn.queryAll(DTOMerkmale.class)).thenReturn(List.of(merkmalABC));
+
+		final var throwable = catchThrowable(() -> this.data.mapAttribute(new DTOMerkmale(2L), "bezeichnung", "ABC", null));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Mehr als ein Merkmal mit dem gleichen Kürzel vorhanden")
-				.hasFieldOrPropertyWithValue("status", Response.Status.INTERNAL_SERVER_ERROR);
+				.hasMessage("Die Bezeichnung ABC ist bereits vorhanden.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("mapAttribute | Bezeichnung case aendert sich")
+	void mapAttributeTest_changeCaseOfBezeichnung() throws ApiOperationException {
+		final var dto = new DTOMerkmale(1L);
+		dto.Langtext = "abc";
+		when(this.conn.queryAll(DTOMerkmale.class)).thenReturn(List.of(dto));
+
+		this.data.mapAttribute(dto, "bezeichnung", "ABC", null);
+
+		assertThat(dto.Langtext).isEqualTo("ABC");
 	}
 
 }

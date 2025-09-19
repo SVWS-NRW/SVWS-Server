@@ -18,13 +18,6 @@ import org.thymeleaf.context.Context;
  */
 public final class HtmlContextStundenplanungLehrerStundenplan extends HtmlContext<ReportingStundenplanungLehrerStundenplan> {
 
-	@Override
-	public List<String> standardsortierung() {
-		final ArrayList<String> standardSort = new ArrayList<>();
-		standardSort.add(methodenreferenzToString(ReportingStundenplanungLehrerStundenplan::lehrer) + "." + methodenreferenzToString(ReportingLehrer::kuerzel));
-		return standardSort;
-	}
-
 	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
 	private final ReportingRepository reportingRepository;
@@ -64,7 +57,7 @@ public final class HtmlContextStundenplanungLehrerStundenplan extends HtmlContex
 					.map(ReportingLehrer::kuerzel).collect(Collectors.joining(","));
 
 		setContextData(stundenplaene);
-		sortiereContext();
+		sortiereContextMitRegistry();
 
 		// Daten-Context für Thymeleaf erzeugen.
 		final Context context = new Context();

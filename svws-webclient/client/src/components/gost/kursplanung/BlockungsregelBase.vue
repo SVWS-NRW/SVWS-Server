@@ -8,7 +8,7 @@
 				</div>
 			</template>
 			<template #[`header(${props.columns.at(0)?.key})`]="{ column }">
-				<span v-if="!aufgeklappt" class="rounded-md bg-ui-brand p-1 text-ui-onbrand cursor-pointer inline-block">{{ regeln.size() }}</span>
+				<span v-if="!aufgeklappt && (regeln.size() > 0)" class="rounded-md bg-ui-brand p-1 text-ui-onbrand cursor-pointer inline-block">{{ regeln.size() }}</span>
 				<span class="line-clamp-1 break-all leading-tight">{{ column.label }}</span>
 			</template>
 			<template #header(entfernen)>

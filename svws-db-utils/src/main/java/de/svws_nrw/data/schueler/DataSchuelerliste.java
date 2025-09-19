@@ -257,7 +257,7 @@ public final class DataSchuelerliste extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	private static List<SchuelerListeEintrag> getListeSchueler(final DBEntityManager conn, final long abschnitt, final boolean nurAktive)
+	public static List<SchuelerListeEintrag> getListeSchueler(final DBEntityManager conn, final long abschnitt, final boolean nurAktive)
 			throws ApiOperationException {
 		// Lese die Schüler aus der Datenbank
 		List<DTOSchueler> schueler = null;

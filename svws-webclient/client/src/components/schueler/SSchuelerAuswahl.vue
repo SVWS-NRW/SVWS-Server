@@ -44,6 +44,15 @@
 				</template>
 				<!-- <template v-if="primarstufe" #cell(epJahre)="{ rowData }"> {{ rowData.jahrgang }} </template> -->
 				<template #actions>
+					<svws-ui-tooltip position="bottom" v-if="((ServerMode.DEV.checkServerMode(serverMode)) && (hatKompetenzAendern) && (manager().auswahl()?.status === SchuelerStatus.NEUAUFNAHME.daten(schuljahr)?.id))">
+						<svws-ui-button :disabled="((activeViewType === ViewType.NEU) || (activeViewType === ViewType.HINZUFUEGEN))" type="icon" @click="startQuickCreationMode"
+							:has-focus="rowsFiltered.length === 0">
+							<span class="icon i-ri-edit-2-line" />
+						</svws-ui-button>
+						<template #content>
+							Zur Schnelleingabeansicht wechseln
+						</template>
+					</svws-ui-tooltip>
 					<svws-ui-tooltip position="bottom" v-if="ServerMode.DEV.checkServerMode(serverMode) && hatKompetenzAendern">
 						<svws-ui-button :disabled="activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="startCreationMode"
 							:has-focus="rowsFiltered.length === 0">
@@ -81,10 +90,10 @@
 <script setup lang="ts">
 
 	import { computed, ref, shallowRef, watch } from "vue";
-	import type { SchuelerListeEintrag, JahrgangsDaten, KlassenDaten, Schulgliederung, KursDaten } from "@core";
-	import { ServerMode, SchuelerStatus, BenutzerKompetenz } from "@core";
+	import type { JahrgangsDaten, KlassenDaten, KursDaten, SchuelerListeEintrag, Schulgliederung } from "@core";
+	import { BenutzerKompetenz, SchuelerStatus, ServerMode } from "@core";
 	import type { SortByAndOrder } from "@ui";
-	import { useRegionSwitch, ViewType } from "@ui";
+	import { useRegionSwitch, ViewType} from "@ui";
 	import type { SchuelerAuswahlProps } from "./SSchuelerAuswahlProps";
 
 	const props = defineProps<SchuelerAuswahlProps>();
@@ -110,7 +119,14 @@
 	const search = ref<string>("");
 
 	async function startCreationMode(): Promise<void> {
+		props.manager().schuelerstatus.auswahlClear();
+		props.manager().schuelerstatus.auswahlAdd(SchuelerStatus.NEUAUFNAHME);
+		await props.setFilter();
 		await props.gotoHinzufuegenView(true);
+	}
+
+	async function startQuickCreationMode(): Promise<void> {
+		await props.gotoSchnelleingabeView(true, props.manager().auswahl().id);
 	}
 
 	const sortByMulti = computed<Map<string, boolean>>(() => {

@@ -2,6 +2,7 @@ package de.svws_nrw.data.schule;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import de.svws_nrw.core.data.schule.Kindergarten;
 import de.svws_nrw.data.DataManagerRevised;
@@ -11,7 +12,6 @@ import de.svws_nrw.db.dto.current.schild.grundschule.DTOKindergarten;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response;
-import java.util.Objects;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für das Core-DTO {@link Kindergarten}.
@@ -84,8 +84,8 @@ public final class DataKatalogKindergaerten extends DataManagerRevised<Long, DTO
 					throw new ApiOperationException(Response.Status.BAD_REQUEST,
 							"Die ID %d des Patches ist null oder stimmt nicht mit der ID %d in der Datenbank überein.".formatted(id, dto.ID));
 			}
-			case "bezeichnung" ->
-					dto.Bezeichnung = JSONMapper.convertToString(value, false, false, Schema.tab_K_Kindergarten.col_Bezeichnung.datenlaenge(), name);
+			case "bezeichnung" -> dto.Bezeichnung =
+					JSONMapper.convertToString(value, false, false, Schema.tab_K_Kindergarten.col_Bezeichnung.datenlaenge(), name);
 			case "plz" -> dto.PLZ = JSONMapper.convertToString(value, true, true, Schema.tab_K_Kindergarten.col_PLZ.datenlaenge(), name);
 			case "ort" -> dto.Ort = JSONMapper.convertToString(value, true, true, Schema.tab_K_Kindergarten.col_Ort.datenlaenge(), name);
 			case "strassenname" ->
@@ -93,7 +93,7 @@ public final class DataKatalogKindergaerten extends DataManagerRevised<Long, DTO
 			case "hausNr" -> dto.HausNr = JSONMapper.convertToString(value, true, true, Schema.tab_K_Kindergarten.col_HausNr.datenlaenge(), name);
 			case "hausNrZusatz" ->
 					dto.HausNrZusatz = JSONMapper.convertToString(value, true, true, Schema.tab_K_Kindergarten.col_HausNrZusatz.datenlaenge(), name);
-			case "tel" -> dto.Tel = JSONMapper.convertToString(value, true, true, Schema.tab_K_Kindergarten.col_Tel.datenlaenge(), name);
+			case "tel" -> validateTel(dto, name, value);
 			case "email" -> dto.Email = JSONMapper.convertToString(value, true, true, Schema.tab_K_Kindergarten.col_Email.datenlaenge(), name);
 			case "bemerkung" -> dto.Bemerkung = JSONMapper.convertToString(value, true, true, Schema.tab_K_Kindergarten.col_Bemerkung.datenlaenge(), name);
 			case "istSichtbar" -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false, name);
@@ -101,4 +101,17 @@ public final class DataKatalogKindergaerten extends DataManagerRevised<Long, DTO
 			default -> throw new ApiOperationException(Response.Status.BAD_REQUEST, "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));
 		}
 	}
+
+	private static void validateTel(final DTOKindergarten dto, final String name, final Object value) throws ApiOperationException {
+		final String tel = JSONMapper.convertToString(value, true, true, Schema.tab_K_Kindergarten.col_Tel.datenlaenge(), name);
+		if (Objects.equals(tel, dto.Tel) || tel.isBlank())
+			return;
+
+		// folgende Formate sind erlaubt: 0151123456, 0151/123456, 0151-123456, +49/176-456456 -> Buchstaben sind nicht erlaubt
+		if (!tel.matches("^\\+?\\d+([-/]?\\d+)*$"))
+			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Die Telefonnummer %s entspricht nicht dem erlaubten Format.".formatted(tel));
+
+		dto.Tel = tel;
+	}
+
 }

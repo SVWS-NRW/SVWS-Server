@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { privilegedApiServer } from "../../utils/APIUtils";
-import { BetriebListeEintrag } from "@core";
+import { BetriebListeEintrag } from "../../../svws-webclient/core/src/core/data/betrieb/BetriebListeEintrag";
 
 describe("Betrieb Tests2", () => {
 	describe.each([{schema: "GymAbi01"}])('gegen %s', ({schema}) => {

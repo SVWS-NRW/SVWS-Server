@@ -8,6 +8,24 @@ import jakarta.validation.constraints.NotNull;
  */
 public enum BKGymBelegungsfehler {
 
+	/** BelegungsfehlerArt LK_1 */
+	LK_1("LK_1", BKGymBelegungsfehlerArt.BELEGUNG, "Es muss ein erster Leistungskurs gewählt werden."),
+
+	/** BelegungsfehlerArt LK_2 */
+	LK_2("LK_2", BKGymBelegungsfehlerArt.BELEGUNG, "Es muss ein zweiter Leistungskurs gewählt werden."),
+
+	/** BelegungsfehlerArt LK_3 */
+	LK_3("LK_3", BKGymBelegungsfehlerArt.BELEGUNG, "Die Kombination aus erstem und zweiten Leistungskurs ist für den Bildungsgang nicht zulässig."),
+
+	/** BelegungsfehlerArt AB_3 */
+	AB_3("AB_3", BKGymBelegungsfehlerArt.BELEGUNG, "Es muss ein drittes Abiturfach gewählt werden."),
+
+	/** BelegungsfehlerArt AB_4 */
+	AB_4("AB_4", BKGymBelegungsfehlerArt.BELEGUNG, "Es muss ein viertes Abiturfach gewählt werden."),
+
+	/** BelegungsfehlerArt AB_5 */
+	AB_5("AB_5", BKGymBelegungsfehlerArt.BELEGUNG, "Die gewählte Kombination aus drittem und viertem Abiturfach is in dem Bildungsgang nicht zulässig."),
+
 	/** BelegungsfehlerArt ABI_11 */
 	ABI_11("ABI_11", BKGymBelegungsfehlerArt.BELEGUNG, "Religionslehre und Sport dürfen nicht gleichzeitig Abiturfächer sein."),
 

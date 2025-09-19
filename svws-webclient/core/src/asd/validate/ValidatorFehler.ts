@@ -12,6 +12,11 @@ export class ValidatorFehler extends JavaObject {
 	private readonly _validator : Validator;
 
 	/**
+	 * Die Nummer des Prüfschrittes, bei welchem der Fehler aufgetreten ist
+	 */
+	private readonly _pruefschritt : number;
+
+	/**
 	 * Die Fehlermeldung, welche vom Validator gemeldet wurde
 	 */
 	private readonly _fehlermeldung : string;
@@ -21,16 +26,18 @@ export class ValidatorFehler extends JavaObject {
 	 * Erstellt einen neuen Validierungs-Fehler
 	 *
 	 * @param validator       der Validator bei dem die Validierung fehlgeschlagen ist
+	 * @param pruefschritt    die Nummer des Prüfschrittes, bei welchem der Fehler aufgetreten ist
 	 * @param fehlermeldung   die Fehlermeldung, welche vom Validator gemeldet wurde
 	 */
-	public constructor(validator : Validator, fehlermeldung : string) {
+	public constructor(validator : Validator, pruefschritt : number, fehlermeldung : string) {
 		super();
 		this._validator = validator;
 		this._fehlermeldung = fehlermeldung;
+		this._pruefschritt = pruefschritt;
 	}
 
 	/**
-	 * Die Schulnummer der Schule, bei der die Validierung fehlgeschlagen ist
+	 * Gibt die Schulnummer der Schule zurück, bei der die Validierung fehlgeschlagen ist
 	 *
 	 * @return die Schulnummer
 	 */
@@ -48,7 +55,7 @@ export class ValidatorFehler extends JavaObject {
 	}
 
 	/**
-	 * Der Validator, bei dem die Validierung fehlgeschlagen ist
+	 * Gibt den Validator zurück, bei dem die Validierung fehlgeschlagen ist
 	 *
 	 * @return der Validator
 	 */
@@ -57,7 +64,7 @@ export class ValidatorFehler extends JavaObject {
 	}
 
 	/**
-	 * Der Name der Validator-Klasse, bei der die Validierung fehlgeschlagen ist
+	 * Gibt den Namen der Validator-Klasse zurück, bei der die Validierung fehlgeschlagen ist
 	 *
 	 * @return der Name der Validator-Klasse
 	 */
@@ -66,7 +73,7 @@ export class ValidatorFehler extends JavaObject {
 	}
 
 	/**
-	 * Die Validator-Klasse, bei der die Validierung fehlgeschlagen ist
+	 * Gibt die Validator-Klasse zurück, bei der die Validierung fehlgeschlagen ist
 	 *
 	 * @return die Validator-Klasse
 	 */
@@ -75,7 +82,25 @@ export class ValidatorFehler extends JavaObject {
 	}
 
 	/**
-	 * Die Fehlermeldung, welche vom Validator erzeugt wurde
+	 * Gibt die Nummer des Prüfschrittes zurück, bei welchem der Fehler aufgetreten ist
+	 *
+	 * @return die Nummer des Prüfschrittes
+	 */
+	public getPruefschritt() : number {
+		return this._pruefschritt;
+	}
+
+	/**
+	 * Gibt den ASD-Fehlercode für diesen Validator-Fehler zurück.
+	 *
+	 * @return der ASD-Fehlercode
+	 */
+	public getFehlercode() : string {
+		return this._validator.getFehlercodePraefix() + this._pruefschritt;
+	}
+
+	/**
+	 * Gibt die Fehlermeldung zurück, welche vom Validator erzeugt wurde
 	 *
 	 * @return die Fehlermeldung
 	 */
@@ -84,12 +109,12 @@ export class ValidatorFehler extends JavaObject {
 	}
 
 	/**
-	 * Die Fehlerart, welcher der Fehler zugeordnet ist.
+	 * Gibt die Fehlerart zurück, welche dem Fehler zugeordnet ist.
 	 *
 	 * @return die Fehlerart
 	 */
 	public getFehlerart() : ValidatorFehlerart {
-		return this._validator.getValidatorFehlerart();
+		return this._validator.getValidatorFehlerart(this._pruefschritt);
 	}
 
 	transpilerCanonicalName(): string {

@@ -1,17 +1,15 @@
 package de.svws_nrw.data.schule;
 
-import java.lang.reflect.Field;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Stream;
 
+import de.svws_nrw.asd.types.schule.Religion;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.core.data.schule.ReligionEintrag;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKonfession;
 import de.svws_nrw.db.utils.ApiOperationException;
-import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -25,18 +23,18 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class DataReligionenTest {
 
 	@InjectMocks
-	private DataReligionen cut;
+	private DataReligionen data;
 
 	@Mock
 	private DBEntityManager conn;
@@ -51,7 +49,7 @@ class DataReligionenTest {
 	void initDTO() throws ApiOperationException {
 		final var konfession = new DTOKonfession(-1L, "test");
 
-		cut.initDTO(konfession, 1L, new HashMap<>());
+		data.initDTO(konfession, 1L, new HashMap<>());
 		assertThat(konfession.ID).isEqualTo(1L);
 	}
 
@@ -61,7 +59,7 @@ class DataReligionenTest {
 		final DTOKonfession dto = createDTO(1L);
 		when(conn.queryByKey(DTOKonfession.class, 1L)).thenReturn(dto);
 
-		ReligionEintrag result = cut.getById(1L);
+		final ReligionEintrag result = data.getById(1L);
 
 		assertThat(result)
 				.hasFieldOrPropertyWithValue("id", 1L)
@@ -73,11 +71,22 @@ class DataReligionenTest {
 	}
 
 	@Test
+	@DisplayName("getByID | ID can't be null")
+	void getByIdTest_IdNull() {
+		final var throwable = catchThrowable(() -> this.data.getById(null));
+
+		assertThat(throwable)
+				.isInstanceOf(ApiOperationException.class)
+				.hasMessage("Eine Anfrage mit der ID null ist unzulässig.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
 	@DisplayName("getById | Religion mit ID existiert nicht")
 	void getByIdWithReligionNotExists() {
 		when(conn.queryByKey(DTOKonfession.class, 1L)).thenReturn(null);
 
-		final Throwable result = catchThrowable(() -> cut.getById(1L));
+		final Throwable result = catchThrowable(() -> data.getById(1L));
 
 		assertThat(result)
 				.isInstanceOf(ApiOperationException.class)
@@ -89,7 +98,7 @@ class DataReligionenTest {
 	void getAll() {
 		when(conn.queryAll(DTOKonfession.class)).thenReturn(List.of(createDTO(1L), createDTO(2L), createDTO(3L)));
 
-		final List<ReligionEintrag> result = cut.getAll();
+		final List<ReligionEintrag> result = data.getAll();
 		assertThat(result)
 				.hasSize(3)
 				.hasOnlyElementsOfType(ReligionEintrag.class)
@@ -102,7 +111,7 @@ class DataReligionenTest {
 	void map() {
 		final DTOKonfession dto = createDTO(2L);
 
-		final ReligionEintrag result = cut.map(dto);
+		final ReligionEintrag result = data.map(dto);
 		assertThat(result)
 				.hasFieldOrPropertyWithValue("id", 2L)
 				.hasFieldOrPropertyWithValue("bezeichnung", "bezeichnung2")
@@ -114,40 +123,47 @@ class DataReligionenTest {
 
 	private static Stream<Arguments> mapAttributeAttributes() {
 		return Stream.of(
-				arguments("kuerzel", "ER", "StatistikKrz"),
-				arguments("bezeichnung", "wunderbar alles klar", "Bezeichnung"),
-				arguments("bezeichnungZeugnis", "gutes Zeugnis", "ZeugnisBezeichnung"),
-				arguments("sortierung", 1337, "Sortierung"),
-				arguments("istSichtbar", true, "Sichtbar")
+				arguments("id", 35),
+				arguments("bezeichnung", "test"),
+				arguments("bezeichnungZeugnis", "asd"),
+				arguments("istSichtbar", true),
+				arguments("kuerzel", Religion.AR.historie().getFirst().kuerzel),
+				arguments("sortierung", 25),
+				arguments("unknownArgument", "oh oh ! das wollen wir auf keinen Fall!")
 		);
 	}
 
 	@ParameterizedTest
 	@DisplayName("mapAttribute | erfolgreiches mapping aller Attribute")
 	@MethodSource("mapAttributeAttributes")
-	void mapAttribute(final String key, final Object value, final String destAttributeKey) throws ApiOperationException, NoSuchFieldException,
-			IllegalAccessException {
-		cut = spy(cut);
-		final DTOKonfession dto = createDTO(1L);
+	void mapAttribute(final String key, final Object value) {
+		final var dto = new DTOKonfession(1L, "abc");
 
-		// bedingtes stubbing
-		if (key.equals("bezeichnung")) {
-			doReturn(false).when(cut).bezeichnungExists("wunderbar alles klar");
+		final var throwable = catchThrowable(() -> this.data.mapAttribute(dto, key, value, null));
+
+		switch (key) {
+			case "id" -> assertThat(throwable)
+					.isInstanceOf(ApiOperationException.class)
+					.hasMessage("Die ID 35 des Patches ist null oder stimmt nicht mit der ID 1 in der Datenbank überein.")
+					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+			case "bezeichnung" -> assertThat(dto.Bezeichnung).isEqualTo(value);
+			case "bezeichnungZeugnis" -> assertThat(dto.ZeugnisBezeichnung).isEqualTo(value);
+			case "istSichtbar" -> assertThat(dto.Sichtbar).isEqualTo(value);
+			case "kuerzel" -> assertThat(dto.StatistikKrz).isEqualTo(value);
+			case "sortierung" -> assertThat(dto.Sortierung).isEqualTo(value);
+			default -> assertThat(throwable)
+					.isInstanceOf(ApiOperationException.class)
+					.hasMessageStartingWith("Die Daten des Patches enthalten das unbekannte Attribut")
+					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 		}
 
-		cut.mapAttribute(dto, key, value, null);
-
-		// Zielattribut via Reflection auslesen
-		final Field field = DTOKonfession.class.getDeclaredField(destAttributeKey);
-		field.setAccessible(true);
-		assertThat(field.get(dto)).isEqualTo(value);
 	}
 
 	@Test
 	void mapAttributeWithStatistikKrzNotExists() {
 		final DTOKonfession dto = createDTO(1L);
 
-		final Throwable result = catchThrowable(() -> cut.mapAttribute(dto, "kuerzel", "abc", null));
+		final Throwable result = catchThrowable(() -> data.mapAttribute(dto, "kuerzel", "abc", null));
 		assertThat(result)
 				.isInstanceOf(ApiOperationException.class)
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST)
@@ -155,58 +171,50 @@ class DataReligionenTest {
 	}
 
 	@Test
-	void mapAttributeWithbezeichnungAlreadyExists() {
-		cut = spy(cut);
-		final DTOKonfession dto = createDTO(1L);
+	@DisplayName("mapAttribute | bezeichnung bereits vorhanden")
+	void mapAttributeTest_bezeichnungDoppeltVergeben() {
+		final var religion = new DTOKonfession(1L, "abc");
+		when(this.conn.queryAll(DTOKonfession.class)).thenReturn(List.of(religion));
 
-		doReturn(true).when(cut).bezeichnungExists("bezeichnung1");
+		final var throwable = catchThrowable(() -> this.data.mapAttribute(new DTOKonfession(2L, "DEF"), "bezeichnung", "ABC", null));
 
-		final Throwable result = catchThrowable(() -> cut.mapAttribute(dto, "bezeichnung", "bezeichnung1", null));
-		assertThat(result)
+		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
-				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST)
-				.hasMessage("Eine Religion mit der Bezeichnung bezeichnung1 existiert bereits. Die Bezeichnung muss eindeutig sein.");
+				.hasMessage("Die Bezeichnung ABC ist bereits vorhanden.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test
-	void mapAttributeWithUnsupportedAttribute() {
-		final DTOKonfession dto = createDTO(1L);
+	@DisplayName("mapAttribute | bezeichnung unverändert")
+	void mapAttributeTest_bezeichnungUnchanging() {
+		final var dto = new DTOKonfession(1L, "abc");
 
-		final Throwable result = catchThrowable(() -> cut.mapAttribute(dto, "foo", "faa", null));
-		assertThat(result)
+		assertThatNoException().isThrownBy(() -> this.data.mapAttribute(dto, "bezeichnung", "abc", null));
+
+		verifyNoInteractions(this.conn);
+		assertThat(dto.Bezeichnung).isEqualTo("abc");
+	}
+
+	@Test
+	@DisplayName("mapAttribute | bezeichnung null")
+	void mapAttributeTest_bezeichnungNull() {
+		final var throwable = catchThrowable(() -> this.data.mapAttribute(mock(DTOKonfession.class), "bezeichnung", null, null));
+
+		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
-				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST)
-				.hasMessage("Für das Attribut foo existiert kein Patch Mapping.");
+				.hasMessage("Attribut bezeichnung: Der Wert null ist nicht erlaubt.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test
-	@DisplayName("bezeichnungExists | mit Bezeichnung die bereits existiert")
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	void bezeichnungExistsWithNoBezeichnungExists() {
-		final TypedQuery queryMock = mock(TypedQuery.class);
+	@DisplayName("mapAttribute | bezeichnung blank")
+	void mapAttributeTest_bezeichnungBlank() {
+		final var throwable = catchThrowable(() -> this.data.mapAttribute(mock(DTOKonfession.class), "bezeichnung", "", null));
 
-		when(queryMock.getResultList()).thenReturn(List.of(mock(DTOKonfession.class)));
-		when(queryMock.setParameter(1, "testBezeichnung")).thenReturn(queryMock);
-
-		when(conn.query(DTOKonfession.QUERY_BY_BEZEICHNUNG, DTOKonfession.class)).thenReturn(queryMock);
-
-		final boolean result = cut.bezeichnungExists("testBezeichnung");
-		assertThat(result).isTrue();
-	}
-
-	@Test
-	@DisplayName("bezeichnungExists | Bezeichnung existiert noch nicht")
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	void bezeichnungExistsWithBezeichnungExists() {
-		final TypedQuery queryMock = mock(TypedQuery.class);
-
-		when(queryMock.getResultList()).thenReturn(Collections.emptyList());
-		when(queryMock.setParameter(1, "testBezeichnung")).thenReturn(queryMock);
-
-		when(conn.query(DTOKonfession.QUERY_BY_BEZEICHNUNG, DTOKonfession.class)).thenReturn(queryMock);
-
-		final boolean result = cut.bezeichnungExists("testBezeichnung");
-		assertThat(result).isFalse();
+		assertThat(throwable)
+				.isInstanceOf(ApiOperationException.class)
+				.hasMessage("Attribut bezeichnung: Ein leerer String ist hier nicht erlaubt.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	private DTOKonfession createDTO(final long id) {

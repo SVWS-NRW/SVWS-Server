@@ -91,6 +91,9 @@ public class DummyGostBlockungsdatenManager {
 	/** Die maximale Zeit in Millisekunden die der Blockungsalgorithmus verwenden darf. Der Wert muss positiv sein.*/
 	private long _maxTimeMillis = 1000;
 
+	/** Alle ungültigen Regeln. */
+	private final @NotNull HashMap<Long, GostBlockungRegel> _map_regelnUngueltig = new HashMap<>();
+
 	/**
 	 * Erstellt einen neuen Manager mit den leeren Daten.
 	 *
@@ -2119,12 +2122,19 @@ public class DummyGostBlockungsdatenManager {
 		final @NotNull List<GostBlockungRegel> regelnOkay = new ArrayList<>();
 
 		for (final @NotNull GostBlockungRegel r : regeln) {
-			if (!regelCheckParameterReferencesAndReturnWarnung(r).isEmpty())
+			if (!regelCheckParameterReferencesAndReturnWarnung(r).isEmpty()) {
+				_map_regelnUngueltig.put(r.id, r);
 				continue;
-			if (!regelCheckParameterValuesAndReturnWarnung(r).isEmpty())
+			}
+			if (!regelCheckParameterValuesAndReturnWarnung(r).isEmpty()) {
+				_map_regelnUngueltig.put(r.id, r);
 				continue;
-			if (!regelCheckDuplicatesAndReturnWarnung(r, setIDs, setMultiKey, menge1, menge6, menge9, menge10, menge15).isEmpty())
+			}
+			if (!regelCheckDuplicatesAndReturnWarnung(r, setIDs, setMultiKey, menge1, menge6, menge9, menge10, menge15).isEmpty()) {
+				_map_regelnUngueltig.put(r.id, r);
 				continue;
+			}
+			// Regeln sind fehlerfrei.
 			regelnOkay.add(r);
 		}
 
@@ -2552,16 +2562,37 @@ public class DummyGostBlockungsdatenManager {
 		return list;
 	}
 
-	private void regelRemoveListeByIDsOhneRevalidierung(final @NotNull Set<Long> regelmenge) throws DeveloperNotificationException {
-		// Datenkonsistenz überprüfen.
-		for (final long idRegel : regelmenge) {
-			final @NotNull GostBlockungRegel regel = regelGet(idRegel);
-			final @NotNull GostKursblockungRegelTyp typ = GostKursblockungRegelTyp.fromTyp(regel.typ);
-			DeveloperNotificationException.ifTrue("Der Regeltyp ist undefiniert!", typ == GostKursblockungRegelTyp.UNDEFINIERT);
+	private void regelRemoveListeByIDsOhneRevalidierung(final @NotNull Set<Long> regelmengeGesamt) throws DeveloperNotificationException {
+		// Trenne die Regel-Menge in "ungültig" und "gültig".
+		ArrayList<Long> regelnUngueltig = new ArrayList<>();
+		ArrayList<Long> regelnGueltig = new ArrayList<>();
+		for (final long idRegel : regelmengeGesamt) {
+			if (_map_regelnUngueltig.containsKey(idRegel)) {
+				regelnUngueltig.add(idRegel);
+			} else {
+				regelnGueltig.add(idRegel);
+			}
 		}
 
-		// Entfernen anhand der ID.
-		_daten.regeln.removeIf(regel -> regelmenge.contains(regel.id));
+		// A) Lösche die gültigen Regeln.
+		if (!regelnGueltig.isEmpty()) {
+			for (final long idRegel : regelnGueltig) {
+				final @NotNull GostBlockungRegel regel = regelGet(idRegel);
+				final @NotNull GostKursblockungRegelTyp typ = GostKursblockungRegelTyp.fromTyp(regel.typ);
+				DeveloperNotificationException.ifTrue("Der Regeltyp ist undefiniert!", typ == GostKursblockungRegelTyp.UNDEFINIERT);
+			}
+
+			// Entfernen anhand der ID.
+			_daten.regeln.removeIf(regel -> regelnGueltig.contains(regel.id));
+		}
+
+
+		// B) Lösche die ungültigen Regeln.
+		if (!regelnUngueltig.isEmpty()) {
+			for (final long idRegel : regelnUngueltig) {
+				_map_regelnUngueltig.remove(idRegel);
+			}
+		}
 	}
 
 	/**

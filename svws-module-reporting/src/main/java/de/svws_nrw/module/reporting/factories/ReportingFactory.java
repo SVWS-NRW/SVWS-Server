@@ -116,22 +116,37 @@ public final class ReportingFactory {
 		try {
 			this.logger.logLn(LogLevel.DEBUG, 0, "### Beginn der Erzeugung einer API-Response zur Report-Generierung.");
 
-			return switch (ReportingAusgabeformat.getByID(reportingParameter.ausgabeformat)) {
-				case ReportingAusgabeformat.HTML -> new HtmlFactory(reportingRepository).createHtmlResponse();
+			final Response reportResponse;
+
+			switch (ReportingAusgabeformat.getByID(reportingParameter.ausgabeformat)) {
+				case ReportingAusgabeformat.HTML -> reportResponse = new HtmlFactory(reportingRepository).createHtmlResponse();
 				case ReportingAusgabeformat.PDF -> {
 					final HtmlFactory htmlFactory = new HtmlFactory(reportingRepository);
-					yield new PdfFactory(htmlFactory.createHtmlBuilders(), reportingRepository).createPdfResponse();
+					reportResponse = new PdfFactory(htmlFactory.createHtmlBuilders(), reportingRepository).createPdfResponse();
 				}
 				case null -> {
 					logger.logLn(LogLevel.ERROR, 4, "FEHLER: Kein bekanntes Ausgabeformat für die Report-Generierung übergeben.");
 					final SimpleOperationResponse sop = ReportingExceptionUtils.getSimpleOperationResponse(null, logger, log);
 					throw new ApiOperationException(Status.NOT_FOUND, null, sop, MediaType.APPLICATION_JSON);
 				}
-			};
+			}
+			// Prüfe nun, ob während der Report-Generierung ein Fehler aufgetreten ist, der als Error ins Log geschrieben wurde, aber nicht als Fehler
+			// geworfen wurde.
+			if (!log.getText(LogLevel.ERROR).isEmpty()) {
+				logger.logLn(LogLevel.ERROR, 0, "### FEHLER: Während der Erzeugung einer API-Response zur Report-Generierung ist ein Fehler geloggt worden. "
+						+ "Fehlerdaten folgen.");
+				final SimpleOperationResponse sop = ReportingExceptionUtils.getSimpleOperationResponse(null, logger, log);
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, null, sop, MediaType.APPLICATION_JSON);
+			}
+
+			// Wenn kein Fehler vermerkt wurde, kann der Report zurückgegeben werden.
+			this.logger.logLn(LogLevel.DEBUG, 0, "### Ende der Erzeugung einer API-Response zur Report-Generierung.");
+			return reportResponse;
 		} catch (final Exception e) {
-			logger.logLn(LogLevel.ERROR, 0, "### Fehler während der Erzeugung einer API-Response zur Report-Generierung. Fehlerdaten folgen.");
+			logger.logLn(LogLevel.ERROR, 0, "### FEHLER: Während der Erzeugung einer API-Response zur Report-Generierung ist ein Fehler aufgetreten. "
+					+ "Fehlerdaten folgen.");
 			final SimpleOperationResponse sop = ReportingExceptionUtils.getSimpleOperationResponse(e, logger, log);
-			// Gebe das Log, dass in der SimpleOperationResponse für Entwicklungszwecke auf der Console aus.
+			// Gebe das Log, das in der SimpleOperationResponse für Entwicklungszwecke auf der Console aus.
 			sop.log.forEach(System.out::println);
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, sop, MediaType.APPLICATION_JSON);
 		}

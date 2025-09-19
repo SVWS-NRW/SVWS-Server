@@ -8,6 +8,5 @@ export interface EnmLeistungenUebersichtProps {
 	patchLeistung: (data: ENMLeistung, patch: Partial<ENMLeistung>) => Promise<void>;
 	columnsVisible: () => Map<string, boolean | null>;
 	setColumnsVisible: (columns: Map<string, boolean | null>) => Promise<void>;
-	floskelEditorVisible: boolean;
-	focusFloskelEditor: (schueler: ENMSchueler | null, leistung: ENMLeistung | null, value: boolean) => Promise<void>;
+	focusFloskelEditor: (schueler: ENMSchueler | null, leistung: ENMLeistung | null, row: number | null, doFocus: boolean) => Promise<void>;
 }

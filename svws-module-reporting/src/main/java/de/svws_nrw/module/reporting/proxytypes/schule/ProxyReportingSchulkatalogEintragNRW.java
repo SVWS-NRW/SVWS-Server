@@ -90,7 +90,9 @@ public class ProxyReportingSchulkatalogEintragNRW extends ReportingSchulkatalogE
 	 * @param idSchulform        Die ID der Schulform
 	 * @return Die ermittelte Schulform oder null
 	 */
-	private static SchulformKatalogEintrag getSchulform(final ReportingRepository reportingRepository, final long idSchulform) {
+	private static SchulformKatalogEintrag getSchulform(final ReportingRepository reportingRepository, final Long idSchulform) {
+		if (idSchulform == null)
+			return null;
 		return reportingRepository.katalogSchulformen().get(idSchulform);
 	}
 

@@ -89,23 +89,14 @@ public final class DataHaltestellen extends DataManagerRevised<Long, DTOHalteste
 
 	private void updateBezeichnung(final DTOHaltestellen dto, final Object value, final String name) throws ApiOperationException {
 		final String bezeichnung = JSONMapper.convertToString(value, false, false, Schema.tab_K_Haltestelle.col_Bezeichnung.datenlaenge(), name);
-		//Bezeichnung ist unverändert
-		if ((dto.Bezeichnung != null) && !dto.Bezeichnung.isBlank() && dto.Bezeichnung.equals(bezeichnung))
+		if (Objects.equals(dto.Bezeichnung, bezeichnung) || bezeichnung.isBlank())
 			return;
 
-		//theoretischer Fall, der nicht eintreffen sollte
-		final List<DTOHaltestellen> haltestellen = this.conn.queryList(DTOHaltestellen.QUERY_BY_BEZEICHNUNG, DTOHaltestellen.class, bezeichnung);
-		if (haltestellen.size() > 1)
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Mehr als eine Haltestelle mit der gleichen Bezeichnung vorhanden.");
+		final boolean bezeichnungAlreadyUsed = this.conn.queryAll(DTOHaltestellen.class).stream()
+				.anyMatch(h -> (h.ID != dto.ID) && h.Bezeichnung.equalsIgnoreCase(bezeichnung));
+		if (bezeichnungAlreadyUsed)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die Bezeichnung %s ist bereits vorhanden.".formatted(bezeichnung));
 
-		//Haltestelle mit dieser Bezeichnung bereits vorhanden
-		if (!haltestellen.isEmpty()) {
-			final DTOHaltestellen dtoHaltestelle = haltestellen.getFirst();
-			if ((dtoHaltestelle != null) && (dtoHaltestelle.ID != dto.ID))
-				throw new ApiOperationException(Status.BAD_REQUEST, "Die Bezeichnung %s ist bereits vorhanden.".formatted(bezeichnung));
-		}
-
-		//Bezeichnung wird geändert
 		dto.Bezeichnung = bezeichnung;
 	}
 }

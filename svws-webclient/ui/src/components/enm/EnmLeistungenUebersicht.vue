@@ -3,39 +3,43 @@
 		<template #header>
 			<template v-for="col of gridManager.cols.values()" :key="col.name">
 				<template v-if="col.kuerzel !== ''">
-					<th v-if="gridManager.isColVisible(col.kuerzel) ?? true">
-						<svws-ui-tooltip v-if="col.kuerzel !== col.name">
-							{{ col.kuerzel }}
-							<template #content>{{ col.name }}</template>
-						</svws-ui-tooltip>
-						<span v-else>{{ col.kuerzel }}</span>
-						<span v-if="colsValidationTooltip.includes(col.kuerzel)">
-							<svws-ui-tooltip>
-								<span class="icon i-ri-question-line" />
-								<template #content>
-									<div class="font-bold">{{ col.name }}</div>
-									<template v-if="(col.kuerzel === 'Quartal') || (col.kuerzel === 'Note')">
-										<ul>
-											<li v-for="n in notenKuerzel" :key="n"> {{ n }} </li>
-										</ul>
+					<th v-if="gridManager.isColVisible(col.kuerzel) ?? true" class="flex h-10">
+						<div class="h-full content-center">
+							<template v-if="col.kuerzel !== col.name">
+								<svws-ui-tooltip>
+									{{ col.kuerzel }}
+									<template #content>{{ col.name }}</template>
+								</svws-ui-tooltip>
+							</template>
+							<template v-else>{{ col.kuerzel }}</template>
+							<template v-if="colsValidationTooltip.has(col.kuerzel)">
+								<svws-ui-tooltip>
+									<span class="icon-sm i-ri-question-line ml-0.5" />
+									<template #content>
+										<div class="font-bold">{{ col.name }}</div>
+										<template v-if="(col.kuerzel === 'Quartal') || (col.kuerzel === 'Note')">
+											<ul>
+												<li v-for="n in notenKuerzel" :key="n"> {{ n }} </li>
+											</ul>
+										</template>
+										<template v-else-if="col.kuerzel === 'FS'">
+											<ul>
+												<li>Keine negativen Werte</li>
+												<li>Maximal 999</li>
+												<li>Größer/gleich FSU</li>
+											</ul>
+										</template>
+										<template v-else-if="col.kuerzel === 'FSU'">
+											<ul>
+												<li>Keine negativen Werte</li>
+												<li>Maximal 999</li>
+												<li>Kleiner/gleich FS</li>
+											</ul>
+										</template>
 									</template>
-									<template v-else-if="col.kuerzel === 'FS'">
-										<ul>
-											<li>Keine negativen Werte</li>
-											<li>Maximal 999</li>
-											<li>Größer/gleich FSU</li>
-										</ul>
-									</template>
-									<template v-else-if="col.kuerzel === 'FSU'">
-										<ul>
-											<li>Keine negativen Werte</li>
-											<li>Maximal 999</li>
-											<li>Kleiner/gleich FS</li>
-										</ul>
-									</template>
-								</template>
-							</svws-ui-tooltip>
-						</span>
+								</svws-ui-tooltip>
+							</template>
+						</div>
 					</th>
 				</template>
 				<template v-else>
@@ -127,7 +131,7 @@
 				<td :ref="inputBemerkung(pair, 6, index)" class="ui-table-grid-button"
 					:class="{
 						'bg-ui-selected': (gridManager.focusColumn === 6),
-						'bg-ui-selected text-ui-onselected': floskelEditorVisible && ((gridManager.focusColumnLast === 6) && (gridManager.focusRowLast === index)),
+						'bg-ui-selected text-ui-onselected': ((gridManager.focusColumnLast === 6) && (gridManager.focusRowLast === index)),
 					}">
 					<span class="text-ellipsis overflow-hidden whitespace-nowrap w-full">{{ pair.a.fachbezogeneBemerkungen ?? "-" }}</span>
 				</td>
@@ -154,7 +158,7 @@
 
 	const props = defineProps<EnmLeistungenUebersichtProps>();
 
-	const colsValidationTooltip = ["Quartal", "Note", "FS", "FSU"];
+	const colsValidationTooltip = new Set(["Quartal", "Note", "FS", "FSU"]);
 
 	const gridManager = new GridManager<string, PairNN<ENMLeistung, ENMSchueler>, List<PairNN<ENMLeistung, ENMSchueler>>>({
 		daten: computed<List<PairNN<ENMLeistung, ENMSchueler>>>(() => {
@@ -192,9 +196,11 @@
 		if ((input === null) || (input.row >= gridManager.daten.size()))
 			return;
 		const pair = gridManager.daten.get(input.row);
-		void props.focusFloskelEditor(pair.b, pair.a, false);
+		void props.focusFloskelEditor(pair.b, pair.a, input.row, false);
 	}
 	defineExpose({ gridManager });
+
+
 
 	const notenKuerzel = computed(() => Note.values().map(e => e.daten(props.enmManager().schuljahr)?.kuerzel).filter(e => e !== ""));
 
@@ -204,7 +210,7 @@
 		return (element : Element | ComponentPublicInstance<unknown> | null) => {
 			const input = gridManager.applyInputNote(key, col, index, element, setter, props.enmManager().schuljahr);
 			if (input !== null)
-				watchEffect(() => gridManager.update(key, pair.a.noteQuartal));
+				gridManager.update(key, pair.a.noteQuartal);
 		};
 	}
 
@@ -214,7 +220,7 @@
 		return (element : Element | ComponentPublicInstance<unknown> | null) => {
 			const input = gridManager.applyInputNote(key, col, index, element, setter, props.enmManager().schuljahr);
 			if (input !== null)
-				watchEffect(() => gridManager.update(key, pair.a.note));
+				gridManager.update(key, pair.a.note);
 		};
 	}
 
@@ -261,7 +267,7 @@
 
 	function inputBemerkung(pair: PairNN<ENMLeistung, ENMSchueler>, col: number, index: number) {
 		const key = 'Bemerkung_' + pair.a.id + "_" + pair.b.id;
-		const setter = (value : boolean) => void props.focusFloskelEditor(pair.b, pair.a, true);
+		const setter = (value : boolean) => void props.focusFloskelEditor(pair.b, pair.a, index, true);
 		return (element : Element | ComponentPublicInstance<unknown> | null) => {
 			const input = gridManager.applyInputToggle(key, col, index, element, setter);
 			if (input !== null) {

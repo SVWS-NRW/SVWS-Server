@@ -282,12 +282,6 @@ public class GostBlockungsergebnisManager {
 		update_3_schuelerID_to_kollisionen();										// _schuelerID_schienenID_to_kurseSet
 		update_3_schuelerID_fachID_to_kurs_or_null();                               // _schuelerID_to_kurseSet
 
-		if (!_fehlermeldungen.isEmpty()) {
-			System.out.println("Es sind Fehler aufgetreten: ");
-			for (final @NotNull String meldung : _fehlermeldungen)
-				System.out.println("    " + meldung);
-		}
-
 		// Kursmenge pro Schiene sortieren.
 		for (final @NotNull GostBlockungsergebnisSchiene schiene : _ergebnis.schienen) {
 			final @NotNull List<GostBlockungsergebnisKurs> kursmenge = schiene.kurse;

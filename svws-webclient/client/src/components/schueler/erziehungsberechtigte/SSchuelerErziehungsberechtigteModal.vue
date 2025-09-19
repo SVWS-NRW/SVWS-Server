@@ -4,22 +4,20 @@
 		<template #modalTitle>Erziehungsberechtigten hinzufügen</template>
 		<template #modalContent>
 			<svws-ui-input-wrapper :grid="2" class="text-left">
-				<svws-ui-select title="Erzieherart" :items="mapErzieherarten" v-model="selectedErzieherart" :item-text="i => i.bezeichnung"
-					:item-sort="erzieherArtSort" class="col-span-full" :readonly="(!hatKompetenzUpdate) || (istErsterErzGespeichert)" />
+				<ui-select label="Erzieherart" v-model="selectedErzieherart" :manager="erzieherartenManager" :removable="false" class="col-span-full"
+					:readonly="(!hatKompetenzUpdate) || (istErsterErzGespeichert)" searchable />
 				<svws-ui-spacing />
 				<svws-ui-text-input placeholder="Anrede" v-model="ersterErz.anrede" type="text" :readonly="(!hatKompetenzUpdate) || (istErsterErzGespeichert)" />
 				<svws-ui-text-input placeholder="Titel" v-model="ersterErz.titel" type="text" :readonly="(!hatKompetenzUpdate) || (istErsterErzGespeichert)" />
 				<svws-ui-text-input placeholder="Vorname" v-model="ersterErz.vorname" type="text" :readonly="(!hatKompetenzUpdate) || (istErsterErzGespeichert)" required />
 				<svws-ui-text-input placeholder="Nachname" v-model="ersterErz.nachname" type="text" :readonly="(!hatKompetenzUpdate) || (istErsterErzGespeichert)" required />
 				<svws-ui-text-input placeholder="E-Mail Adresse" v-model="ersterErz.eMail" type="email" :readonly="(!hatKompetenzUpdate) || (istErsterErzGespeichert)" verify-email />
-				<svws-ui-select title="Staatsangehörigkeit" v-model="ersteErzStaatsangehoerigkeit" :items="Nationalitaeten.values()" :item-text="i => i.historie().getLast().staatsangehoerigkeit"
-					:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter" :readonly="(!hatKompetenzUpdate) || (istErsterErzGespeichert)" autocomplete />
+				<ui-select label="Staatsangehörigkeit" v-model="ersteErzStaatsangehoerigkeit" :manager="staatsangehoerigkeitManager" searchable />
+
 				<svws-ui-spacing />
 				<svws-ui-text-input placeholder="Straße und Hausnummer" v-model="adresse" type="text" :readonly="(!hatKompetenzUpdate) || (istErsterErzGespeichert)" />
-				<svws-ui-select title="Wohnort" v-model="wohnort" :items="mapOrte" :item-filter="orte_filter" :item-sort="orte_sort"
-					:item-text="i => `${i.plz} ${i.ortsname}`" :readonly="(!hatKompetenzUpdate) || (istErsterErzGespeichert)" autocomplete />
-				<svws-ui-select title="Ortsteil" v-model="ortsteil" :items="mapOrtsteile" :item-text="i => i.ortsteil ?? ''" :item-sort="ortsteilSort"
-					:item-filter="ortsteilFilter" :readonly="(!hatKompetenzUpdate) || (istErsterErzGespeichert)" removable />
+				<ui-select label="Wohnort" v-model="wohnort" :manager="wohnortManager" :disabled="(!hatKompetenzUpdate) || (istErsterErzGespeichert)" searchable />
+				<ui-select label="Ortsteil" v-model="ortsteil" :manager="ortsteilManager" :readonly="(!hatKompetenzUpdate) || (istErsterErzGespeichert) || (!ersterErz.wohnortID)" searchable />
 				<svws-ui-spacing />
 				<svws-ui-tooltip class="col-span-full">
 					<svws-ui-text-input v-model="ersterErz.bemerkungen" type="text" placeholder="Bemerkungen" :readonly="(!hatKompetenzUpdate) || (istErsterErzGespeichert)" />
@@ -41,9 +39,7 @@
 					<svws-ui-text-input placeholder="Vorname" v-model="zweiterErz.vorname" type="text" required :readonly="!hatKompetenzUpdate" />
 					<svws-ui-text-input placeholder="Nachname" v-model="zweiterErz.nachname" type="text" required :readonly="!hatKompetenzUpdate" />
 					<svws-ui-text-input placeholder="E-Mail Adresse" v-model="zweiterErz.eMail" type="email" verify-email :readonly="!hatKompetenzUpdate" />
-					<svws-ui-select title="Staatsangehörigkeit" v-model="zweiteErzStaatsangehoerigkeit" :items="Nationalitaeten.values()"
-						:item-text="i => i.historie().getLast().staatsangehoerigkeit" :item-sort="staatsangehoerigkeitKatalogEintragSort"
-						:item-filter="staatsangehoerigkeitKatalogEintragFilter" autocomplete :readonly="!hatKompetenzUpdate" />
+					<ui-select label="Staatsangehörigkeit" v-model="zweiteErzStaatsangehoerigkeit" :manager="staatsangehoerigkeitManager" searchable />
 				</svws-ui-input-wrapper>
 			</div>
 			<svws-ui-notification type="warning" v-if="mapErzieherarten.size === 0">
@@ -81,10 +77,11 @@
 
 <script setup lang="ts">
 
-	import { erzieherArtSort, orte_filter, orte_sort, ortsteilFilter, ortsteilSort, staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort } from "~/utils/helfer";
+	import { erzieherArtSort, orte_sort, ortsteilSort } from "~/utils/helfer";
 	import { AdressenUtils, JavaString, Nationalitaeten } from "@core";
-	import type { OrtKatalogEintrag, OrtsteilKatalogEintrag , ErzieherStammdaten, Erzieherart } from "@core";
+	import type { OrtKatalogEintrag, OrtsteilKatalogEintrag , ErzieherStammdaten, Erzieherart , NationalitaetenKatalogEintrag } from "@core";
 	import { computed } from "vue";
+	import { CoreTypeSelectManager, SelectManager } from "@ui";
 
 	const props = defineProps<{
 		ersterErz: ErzieherStammdaten;
@@ -95,6 +92,7 @@
 		istErsterErzGespeichert: boolean;
 		mapOrte: Map<number, OrtKatalogEintrag>;
 		mapOrtsteile: Map<number, OrtsteilKatalogEintrag>;
+		schuljahr: number;
 	}>();
 
 	const emit = defineEmits<{
@@ -102,19 +100,35 @@
 		(e: 'send-request' | 'save-and-show-second' | 'save-second-erzieher' | 'close-modal'): void;
 	}>();
 
+	const erzieherarten = computed(() => props.mapErzieherarten.values());
+
+	const erzieherartenManager = new SelectManager({ options: erzieherarten.value, sort: erzieherArtSort, optionDisplayText: i => i.bezeichnung, selectionDisplayText: i => i.bezeichnung });
+
 	const selectedErzieherart = computed<Erzieherart | null>({
 		get: () => props.mapErzieherarten.get(props.ersterErz.idErzieherArt ?? -1) ?? null,
 		set: (erzieherart) => props.ersterErz.idErzieherArt = (erzieherart !== null) ? erzieherart.id : 0,
 	})
 
-	const ersteErzStaatsangehoerigkeit = computed<Nationalitaeten>({
-		get: () => Nationalitaeten.getByISO3(props.ersterErz.staatsangehoerigkeitID) || Nationalitaeten.getDEU(),
-		set: (value) => props.ersterErz.staatsangehoerigkeitID = value.historie().getLast().iso3,
+	const staatsangehoerigkeitManager = new CoreTypeSelectManager({ clazz: Nationalitaeten.class, schuljahr: props.schuljahr, optionDisplayText: "text", selectionDisplayText: "text" });
+
+	const ersteErzStaatsangehoerigkeit = computed<NationalitaetenKatalogEintrag | null>({
+		get: (): NationalitaetenKatalogEintrag | null => {
+			const iso3 = props.ersterErz.staatsangehoerigkeitID ?? null;
+			return Nationalitaeten.getByISO3(iso3)?.daten(props.schuljahr) ?? null;
+		},
+		set: (value) => {
+			props.ersterErz.staatsangehoerigkeitID = value?.iso3 ?? null
+		},
 	});
 
-	const zweiteErzStaatsangehoerigkeit = computed<Nationalitaeten>({
-		get: () => Nationalitaeten.getByISO3(props.zweiterErz.staatsangehoerigkeitID) || Nationalitaeten.getDEU(),
-		set: (value) => props.zweiterErz.staatsangehoerigkeitID = value.historie().getLast().iso3,
+	const zweiteErzStaatsangehoerigkeit = computed<NationalitaetenKatalogEintrag | null>({
+		get: (): NationalitaetenKatalogEintrag | null => {
+			const iso3 = props.zweiterErz.staatsangehoerigkeitID ?? null;
+			return Nationalitaeten.getByISO3(iso3)?.daten(props.schuljahr) ?? null;
+		},
+		set: (value) => {
+			props.zweiterErz.staatsangehoerigkeitID = value?.iso3 ?? null
+		},
 	});
 
 	const adresse = computed({
@@ -127,17 +141,31 @@
 		},
 	})
 
+	const orte = computed(() => props.mapOrte.values());
+
+	const wohnortManager = new SelectManager({ options: orte.value, sort: orte_sort, optionDisplayText: i => `${i.plz} ${i.ortsname}`, selectionDisplayText: i => `${i.plz} ${i.ortsname}` });
+
 	const wohnort = computed<OrtKatalogEintrag | undefined>({
 		get: () => ((props.ersterErz.wohnortID === null)) ? undefined : props.mapOrte.get(props.ersterErz.wohnortID),
 		set: (value) => props.ersterErz.wohnortID = (value === undefined) ? null : value.id,
 	});
 
-	const ortsteil = computed<OrtsteilKatalogEintrag | undefined>({
-		get: () => {
-			const id = props.ersterErz.ortsteilID;
-			return (id === null) ? undefined : props.mapOrtsteile.get(id)
-		},
-		set: (value) => props.ersterErz.ortsteilID = (value === undefined) ? null : value.id,
+	const ortsteile = computed(() => Array.from(props.mapOrtsteile.values()));
+
+	const erzOrtsteileFiltered = computed(() => {
+		const wohnortID = props.ersterErz.wohnortID;
+		if (wohnortID === null)
+			return ortsteile.value;
+		return ortsteile.value.filter(o => o.ort_id === wohnortID);
+	});
+
+	const erzItems = computed(() => erzOrtsteileFiltered.value);
+
+	const ortsteilManager = new SelectManager({ options: erzItems, sort: ortsteilSort, optionDisplayText: i => i.ortsteil ?? '', selectionDisplayText: i => i.ortsteil ?? '' });
+
+	const ortsteil = computed<OrtsteilKatalogEintrag | null>({
+		get: () => props.mapOrtsteile.get(props.ersterErz.ortsteilID ?? -1) ?? null,
+		set: (value: OrtsteilKatalogEintrag | null) => props.ersterErz.ortsteilID = value ? value.id : null,
 	});
 
 	const formIsValid = computed(() => {
@@ -157,14 +185,8 @@
 					return stringIsValid(props.ersterErz.vorname, true, 120);
 				case 'strassenname':
 					return adresseIsValid();
-				case 'wohnortID':
-					return (props.ersterErz.wohnortID === null) || (props.mapOrte.get(props.ersterErz.wohnortID) !== undefined);
-				case 'ortsteilID':
-					return (props.ersterErz.ortsteilID === null) || (props.mapOrtsteile.get(props.ersterErz.ortsteilID) !== undefined);
 				case 'eMail':
 					return stringIsValid(props.ersterErz.eMail, false, 20);
-				case 'staatsangehoerigkeitID':
-					return (props.ersterErz.staatsangehoerigkeitID === null) || (Nationalitaeten.getByISO3(props.ersterErz.staatsangehoerigkeitID) !== null);
 				default:
 					return true;
 			}

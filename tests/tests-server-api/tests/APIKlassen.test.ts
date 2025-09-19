@@ -1,6 +1,6 @@
 import { describe, test, expect } from 'vitest';
-import { ArrayList } from "@core";
 import { privilegedApiServer, handleRequest } from "../../utils/APIUtils";
+import { ArrayList } from '../../../svws-webclient/core/src/java/util/ArrayList';
 
 const allowDestructiveTests = process.env.MODE === 'allowDestructiveTests'
 

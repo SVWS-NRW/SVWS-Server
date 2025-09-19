@@ -386,6 +386,27 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 							logger.logLn("Fehler beim Verschieben von Leistungsdaten in das jeweilige zweite Quartal des Halbjahres.");
 							return false;
 						}
+					} else if (tmpFolgeLernabschnitte.isEmpty()) {
+						// Verschiebe den Lernabschnitt in das zweite Quartal des Halbjahres
+						sql = "UPDATE SchuelerLernabschnittsdaten sla SET sla.Schuljahresabschnitts_ID = " + folgeAbschnittID + " WHERE sla.ID = " + lernabschnittID;
+						if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql)) {
+							logger.logLn("Fehler beim Anpassen des Schuljahresabschnittes beim Lernabschnitt.");
+							return false;
+						}
+
+						// Kopiere die Quartalsnoten und die Teilleistungen, wenn sich die Leistungsdaten zuordnen lassen
+						sql = "UPDATE SchuelerLeistungsdaten sld SET sld.NotenKrzQuartal = sld.NotenKrz WHERE sld.Abschnitt_ID = " + lernabschnittID;
+						if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql)) {
+							logger.logLn("Fehler beim Kopieren der Quartalsnoten");
+							return false;
+						}
+
+						// Setzte die Halbjahresnoten zurück.
+						sql = "UPDATE SchuelerLeistungsdaten sld SET sld.NotenKrz = NULL WHERE sld.Abschnitt_ID = " + lernabschnittID;
+						if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql)) {
+							logger.logLn("Fehler beim Zurücksetzen der Halbjahresnoten");
+							return false;
+						}
 					}
 				}
 				// Verschiebe die Kurse in das zweite Quartal des Halbjahres, welche im zweiten Quartal nicht entsprechend angelegt wurden

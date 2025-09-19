@@ -121,19 +121,6 @@ public final class DataSchuelerVermerke extends DataManagerRevised<Long, DTOSchu
 		return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
-
-	/**
-	 * Bestimmt die IDs der Vermerke, welche zu der übergebenen ID der Vermerkart gehören.
-	 *
-	 * @param id     die ID der Vermerkart
-	 *
-	 * @return die List von Vermerken IDs, welche der entsprechenden Vermerkart zugeordnet sind
-	 */
-	public List<Long> getIDsByVermerkartId(final Long id) {
-		return conn.queryList(DTOSchuelerVermerke.QUERY_BY_VERMERKART_ID, DTOSchuelerVermerke.class, id).stream().map(v -> v.Schueler_ID).toList();
-	}
-
-
 	@Override
 	public SchuelerVermerke getById(final Long id) throws ApiOperationException {
 		if (id == null)
@@ -143,7 +130,6 @@ public final class DataSchuelerVermerke extends DataManagerRevised<Long, DTOSchu
 			throw new ApiOperationException(Status.NOT_FOUND, "Es existiert mit der ID kein Vermerk.");
 		return map(schuelerVermerk);
 	}
-
 
 	@Override
 	protected void mapAttribute(final DTOSchuelerVermerke dto, final String name, final Object value,

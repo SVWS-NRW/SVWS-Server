@@ -31,12 +31,12 @@
 						</s-gost-kursplanung-kursansicht-modal-ergebnis-synchronisieren>
 						<div class="border-l border-ui-10 ml-6 h-5 w-7" />
 						<div class="text-button font-normal">Kurse:</div>
-						<s-gost-kursplanung-kursansicht-modal-irrlaeufer v-if="props.getErgebnismanager().getOfSchuelerMapIDzuUngueltigeKurse().size()" :update-kurs-schueler-zuordnungen :get-ergebnismanager v-slot="{ openModal }">
+						<s-gost-kursplanung-kursansicht-modal-irrlaeufer v-if="getErgebnismanager().getOfSchuelerMapIDzuUngueltigeKurse().size()" :update-kurs-schueler-zuordnungen :get-ergebnismanager v-slot="{ openModal }">
 							<svws-ui-button type="error" size="small" @click="openModal()" title="Zeigt ungültige Schüler/Kurs-Zuordnungen, die aufgelöst werden können">
 								<span class="icon-sm i-ri-error-warning-line" /> Ungültige Kurszuordnungen
 							</svws-ui-button>
 						</s-gost-kursplanung-kursansicht-modal-irrlaeufer>
-						<s-gost-kursplanung-kursansicht-modal-falscher-abi-jg v-if="props.getErgebnismanager().getOfSchuelerMengeMitAbweichendemAbijahrgang().size()" :regeln-update :update-kurs-schueler-zuordnungen :get-ergebnismanager v-slot="{ openModal }">
+						<s-gost-kursplanung-kursansicht-modal-falscher-abi-jg v-if="getErgebnismanager().getOfSchuelerMengeMitAbweichendemAbijahrgang().size()" :regeln-update :update-kurs-schueler-zuordnungen :get-ergebnismanager v-slot="{ openModal }">
 							<svws-ui-button type="error" size="small" @click="openModal()" title="Zeigt Schüler mit ungültigem Abiturjahrgang, die entfernt werden können">
 								<span class="icon-sm i-ri-error-warning-line" /> Ungültige Abiturjahrgänge
 							</svws-ui-button>
@@ -79,6 +79,11 @@
 						<svws-ui-button @click="onToggle" size="small" type="transparent" title="Alle Regeln anzeigen" :class="{'mr-2': regelzahl}">
 							<span class="icon-sm i-ri-settings-3-line" /> Detailansicht&nbsp;<template #badge v-if="regelzahl"> {{ regelzahl }} </template>
 						</svws-ui-button>
+						<s-gost-kursplanung-kursansicht-modal-regeln-ungueltig v-if="getDatenmanager().regelGetMapUngueltig().size() > 0" :manager="getDatenmanager" :regeln-update v-slot="{ openModal }">
+							<svws-ui-button type="error" size="small" @click="openModal()" title="Zeigt ungültige Regeln, die entfernt werden können">
+								<span class="icon-sm i-ri-error-warning-line" /> Ungültige Regeln
+							</svws-ui-button>
+						</s-gost-kursplanung-kursansicht-modal-regeln-ungueltig>
 					</div>
 				</svws-ui-sub-nav>
 			</Teleport>

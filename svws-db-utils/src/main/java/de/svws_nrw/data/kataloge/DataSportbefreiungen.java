@@ -87,24 +87,16 @@ public final class DataSportbefreiungen extends DataManagerRevised<Long, DTOSpor
 
 
 	private void updateBezeichnung(final DTOSportbefreiung dto, final Object value, final String name) throws ApiOperationException {
-		final String bezeichnung = JSONMapper.convertToString(value, false, false, Schema.tab_K_Sportbefreiung.col_Bezeichnung.datenlaenge(), name);
-		//Bezeichnung ist unverändert
-		if ((dto.Bezeichnung != null) && !dto.Bezeichnung.isBlank() && dto.Bezeichnung.equals(bezeichnung))
+		final String bezeichnung = JSONMapper.convertToString(
+				value, false, false, Schema.tab_K_Sportbefreiung.col_Bezeichnung.datenlaenge(), name);
+		if (Objects.equals(dto.Bezeichnung, bezeichnung) || bezeichnung.isBlank())
 			return;
 
-		//theoretischer Fall, der nicht eintreffen sollte
-		final List<DTOSportbefreiung> sportbefreiungen = this.conn.queryList(DTOSportbefreiung.QUERY_BY_BEZEICHNUNG, DTOSportbefreiung.class, bezeichnung);
-		if (sportbefreiungen.size() > 1)
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Mehr als eine Sportbefreiung mit der gleichen Bezeichnung vorhanden.");
+		final boolean bezeichnungAlreadyUsed = this.conn.queryAll(DTOSportbefreiung.class).stream()
+				.anyMatch(s -> (s.ID != dto.ID) && (s.Bezeichnung.equalsIgnoreCase(bezeichnung)));
+		if (bezeichnungAlreadyUsed)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die Bezeichnung %s ist bereits vorhanden.".formatted(bezeichnung));
 
-		//Sportbefreiung mit dieser Bezeichnung bereits vorhanden
-		if (!sportbefreiungen.isEmpty()) {
-			final DTOSportbefreiung dtoSportbefreiung = sportbefreiungen.getFirst();
-			if ((dtoSportbefreiung != null) && (dtoSportbefreiung.ID != dto.ID))
-				throw new ApiOperationException(Status.BAD_REQUEST, "Die Bezeichnung %s ist bereits vorhanden.".formatted(bezeichnung));
-		}
-
-		//Bezeichnung wird geändert
 		dto.Bezeichnung = bezeichnung;
 	}
 }

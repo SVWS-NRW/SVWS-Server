@@ -41,7 +41,7 @@ class DataSchulenTest {
 	private DBEntityManager conn;
 
 	@InjectMocks
-	private DataSchulen dataSchulen;
+	private DataSchulen data;
 
 	@BeforeAll
 	static void setUpAll() {
@@ -53,7 +53,7 @@ class DataSchulenTest {
 	void initDTOTest() throws ApiOperationException {
 		final var dtoSchuleNRW = new DTOSchuleNRW(1L, "");
 
-		this.dataSchulen.initDTO(dtoSchuleNRW, 2L, null);
+		this.data.initDTO(dtoSchuleNRW, 2L, null);
 
 		assertThat(dtoSchuleNRW.ID).isEqualTo(2L);
 	}
@@ -63,7 +63,7 @@ class DataSchulenTest {
 	void getAllTest() {
 		when(this.conn.queryAll(DTOSchuleNRW.class)).thenReturn(List.of(new DTOSchuleNRW(1L, "123"), new DTOSchuleNRW(3L, "123")));
 
-		final var result = this.dataSchulen.getAll();
+		final var result = this.data.getAll();
 
 		assertThat(result).hasSize(2)
 				.isInstanceOf(List.class)
@@ -77,7 +77,7 @@ class DataSchulenTest {
 		dtoWithKuerzel.Kuerzel = "abc";
 		when(this.conn.queryAll(DTOSchuleNRW.class)).thenReturn(List.of(dtoWithKuerzel, new DTOSchuleNRW(3L, "123")));
 
-		final var result = this.dataSchulen.getList();
+		final var result = this.data.getList();
 
 		assertThat(result).hasSize(1)
 				.isInstanceOf(List.class)
@@ -91,7 +91,7 @@ class DataSchulenTest {
 		when(this.conn.queryByKey(DTOSchuleNRW.class, dtoSchuleNRW.ID)).thenReturn(dtoSchuleNRW);
 		when(this.conn.getUser()).thenReturn(mock(Benutzer.class));
 
-		assertThat(dataSchulen.getById(dtoSchuleNRW.ID))
+		assertThat(data.getById(dtoSchuleNRW.ID))
 				.isInstanceOf(SchulEintrag.class)
 				.hasFieldOrPropertyWithValue("id", dtoSchuleNRW.ID);
 	}
@@ -101,7 +101,7 @@ class DataSchulenTest {
 	void getByIdTest_wrongId() {
 		when(this.conn.queryByKey(any(), any())).thenReturn(null);
 
-		final var throwable = catchThrowable(() -> dataSchulen.getById(1L));
+		final var throwable = catchThrowable(() -> data.getById(1L));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
@@ -115,7 +115,7 @@ class DataSchulenTest {
 		final var dtoSchuleNRW = getDtoSchuleNRW();
 		when(this.conn.getUser()).thenReturn(mock(Benutzer.class));
 
-		assertThat(this.dataSchulen.map(dtoSchuleNRW))
+		assertThat(this.data.map(dtoSchuleNRW))
 				.isInstanceOf(SchulEintrag.class)
 				.hasFieldOrPropertyWithValue("id", 1L)
 				.hasFieldOrPropertyWithValue("schulnummerStatistik", "456")
@@ -142,7 +142,7 @@ class DataSchulenTest {
 		dtoSchuleNRW.Sortierung = null;
 		dtoSchuleNRW.Sichtbar = null;
 
-		assertThat(this.dataSchulen.map(dtoSchuleNRW))
+		assertThat(this.data.map(dtoSchuleNRW))
 				.isInstanceOf(SchulEintrag.class)
 				.hasFieldOrPropertyWithValue("idSchulform", null)
 				.hasFieldOrPropertyWithValue("name", "")
@@ -150,15 +150,43 @@ class DataSchulenTest {
 				.hasFieldOrPropertyWithValue("istSichtbar", true);
 	}
 
+	private static Stream<Arguments> provideMappingAttributes() {
+		return Stream.of(
+				arguments("id", 35),
+				arguments("schulnummer", "123456"),
+				arguments("kuerzel", "1234567890"),
+				arguments("kurzbezeichnung", "eine ganz kurze be"),
+				arguments("name", "Telefonmann"),
+				arguments("idSchulform", 10000L),
+				arguments("strassenname", "CoasterRollerStr"),
+				arguments("hausnummer", "101"),
+				arguments("zusatzHausnummer", "a"),
+				arguments("plz", "31514"),
+				arguments("ort", "Dorf"),
+				arguments("telefon", "12345678"),
+				arguments("fax", "hmm"),
+				arguments("email", "mail@mail.com"),
+				arguments("schulleiter", "Herr Lehrer"),
+				arguments("sortierung", 101),
+				arguments("istSichtbar", true),
+				arguments("unknownArgument", "oh oh ! das wollen wir auf keinen Fall!")
+		);
+	}
+
+
 	@ParameterizedTest
 	@DisplayName("mapAttribute | erfolgreiches mapping")
 	@MethodSource("provideMappingAttributes")
 	void mapAttributeTest(final String key, final Object value) {
 		final var expectedDTO = new DTOSchuleNRW(1L, "123456");
 
-		final var throwable = catchThrowable(() -> this.dataSchulen.mapAttribute(expectedDTO, key, value, null));
+		final var throwable = catchThrowable(() -> this.data.mapAttribute(expectedDTO, key, value, null));
 
 		switch (key) {
+			case "id" -> assertThat(throwable)
+					.isInstanceOf(ApiOperationException.class)
+					.hasMessage("Die ID 35 des Patches ist null oder stimmt nicht mit der ID 1 in der Datenbank überein.")
+					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 			case "schulnummer" -> assertThat(expectedDTO.SchulNr).isEqualTo(value);
 			case "kuerzel" -> assertThat(expectedDTO.Kuerzel).isEqualTo(value);
 			case "kurzbezeichnung" -> assertThat(expectedDTO.KurzBez).isEqualTo(value);
@@ -190,7 +218,7 @@ class DataSchulenTest {
 	void mapAttributeTest_WrongIdSchulform() {
 		final var expectedDTO = new DTOSchuleNRW(1L, "123456");
 
-		final var throwable = catchThrowable(() -> this.dataSchulen.mapAttribute(expectedDTO, "idSchulform", 1L, null));
+		final var throwable = catchThrowable(() -> this.data.mapAttribute(expectedDTO, "idSchulform", 1L, null));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
@@ -203,7 +231,7 @@ class DataSchulenTest {
 	void mapAttributeTest_idSchulformNull() throws ApiOperationException {
 		final var expectedDTO = new DTOSchuleNRW(1L, "123456");
 
-		this.dataSchulen.mapAttribute(expectedDTO, "idSchulform", null, null);
+		this.data.mapAttribute(expectedDTO, "idSchulform", null, null);
 
 		assertThat(expectedDTO)
 				.hasFieldOrPropertyWithValue("SchulformBez", null)
@@ -216,7 +244,7 @@ class DataSchulenTest {
 	void mapAttributeTest_interneSchulnummer() throws ApiOperationException {
 		final var expectedDTO = new DTOSchuleNRW(1L, "1");
 
-		this.dataSchulen.mapAttribute(expectedDTO, "schulnummerStatistik", "123456", null);
+		this.data.mapAttribute(expectedDTO, "schulnummerStatistik", "123456", null);
 
 		assertThat(expectedDTO)
 				.hasFieldOrPropertyWithValue("SchulNr", "123456")
@@ -228,7 +256,7 @@ class DataSchulenTest {
 	void mapAttributeTest_externeSchulnummer() throws ApiOperationException {
 		final var expectedDTO = new DTOSchuleNRW(123L, "1");
 
-		this.dataSchulen.mapAttribute(expectedDTO, "schulnummerStatistik", "987654", null);
+		this.data.mapAttribute(expectedDTO, "schulnummerStatistik", "987654", null);
 
 		assertThat(expectedDTO)
 				.hasFieldOrPropertyWithValue("SchulNr", "200123")
@@ -240,7 +268,7 @@ class DataSchulenTest {
 	void mapAttributeTest_wrongSchulnummer() {
 		final var expectedDTO = new DTOSchuleNRW(1L, "1");
 
-		final var throwable = catchThrowable(() -> this.dataSchulen.mapAttribute(expectedDTO, "schulnummerStatistik", "222333", null));
+		final var throwable = catchThrowable(() -> this.data.mapAttribute(expectedDTO, "schulnummerStatistik", "222333", null));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
@@ -253,7 +281,7 @@ class DataSchulenTest {
 	void mapAttributeTest_schulnummerHasntChanged() throws ApiOperationException {
 		final var expectedDTO = new DTOSchuleNRW(1L, "123456");
 
-		this.dataSchulen.mapAttribute(expectedDTO, "schulnummerStatistik", "123456", null);
+		this.data.mapAttribute(expectedDTO, "schulnummerStatistik", "123456", null);
 
 		assertThat(expectedDTO).hasFieldOrPropertyWithValue("SchulNr", "123456");
 		verifyNoInteractions(this.conn);
@@ -263,42 +291,39 @@ class DataSchulenTest {
 	@Test
 	@DisplayName("mapAttribute | kuerzel doppelt vergeben")
 	void mapAttributeTest_duplicatedKuerzel() {
-		final var schuleXYZ = new DTOSchuleNRW(1L, "1");
-		schuleXYZ.Kuerzel = "xyz";
-		final var schuleABC = new DTOSchuleNRW(2L, "2");
-		schuleABC.Kuerzel = "ABC";
-		when(this.conn.queryList(DTOSchuleNRW.QUERY_BY_KUERZEL, DTOSchuleNRW.class, "ABC"))
-				.thenReturn(List.of(schuleXYZ, schuleABC));
+		final var schuleABC = new DTOSchuleNRW(1L, "2");
+		schuleABC.Kuerzel = "abc";
+		when(this.conn.queryAll(DTOSchuleNRW.class))
+				.thenReturn(List.of(schuleABC));
 
-		final var throwable = catchThrowable(() -> this.dataSchulen.mapAttribute(schuleXYZ, "kuerzel", "ABC", null));
+		final var throwable = catchThrowable(() -> this.data.mapAttribute(new DTOSchuleNRW(2L, "123"), "kuerzel", "ABC", null));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Mehr als eine Schule mit dem gleichen Kuerzel vorhanden")
-				.hasFieldOrPropertyWithValue("Status", Response.Status.INTERNAL_SERVER_ERROR);
+				.hasMessage("Das Kuerzel ABC ist bereits vorhanden.")
+				.hasFieldOrPropertyWithValue("Status", Response.Status.BAD_REQUEST);
 	}
 
+	@Test
+	@DisplayName("mapAttribute | kuerzel ist null")
+	void mapAttributeTest_kuerzelNull() throws ApiOperationException {
+		final var schule = new DTOSchuleNRW(1L, "123");
+		schule.Kuerzel = "kuerzel";
 
-	private static Stream<Arguments> provideMappingAttributes() {
-		return Stream.of(
-				arguments("schulnummer", "123456"),
-				arguments("kuerzel", "1234567890"),
-				arguments("kurzbezeichnung", "eine ganz kurze be"),
-				arguments("name", "Telefonmann"),
-				arguments("idSchulform", 10000L),
-				arguments("strassenname", "CoasterRollerStr"),
-				arguments("hausnummer", "101"),
-				arguments("zusatzHausnummer", "a"),
-				arguments("plz", "31514"),
-				arguments("ort", "Dorf"),
-				arguments("telefon", "12345678"),
-				arguments("fax", "hmm"),
-				arguments("email", "mail@mail.com"),
-				arguments("schulleiter", "Herr Lehrer"),
-				arguments("sortierung", 101),
-				arguments("istSichtbar", true),
-				arguments("unknownArgument", "oh oh ! das wollen wir auf keinen Fall!")
-		);
+		this.data.mapAttribute(schule, "kuerzel", null, null);
+
+		assertThat(schule.Kuerzel).isNull();
+	}
+
+	@Test
+	@DisplayName("mapAttribute | kuerzel ist empty")
+	void mapAttributeTest_kuerzelEmpty() throws ApiOperationException {
+		final var schule = new DTOSchuleNRW(1L, "123");
+		schule.Kuerzel = "kuerzel";
+
+		this.data.mapAttribute(schule, "kuerzel", "", null);
+
+		assertThat(schule.Kuerzel).isNull();
 	}
 
 	private static DTOSchuleNRW getDtoSchuleNRW() {

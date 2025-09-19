@@ -450,17 +450,4 @@ public final class DataErzieherStammdaten extends DataManagerRevised<Long, DTOSc
 		return (ortsteil != null) && Objects.equals(ortsteil.Ort_ID, wohnortID);
 	}
 
-	/**
-	 * Bestimmt die Schüler-IDs, welche Einträge zu der übergebenen Erzieher-Art gehören.
-	 * Diese Methode wird im Rahmen der Löschvorbedingungen in {@link DataErzieherarten#deleteMultipleAsSimpleResponseList(List)} verwendet, um zu ermitteln,
-	 * welche Schüler-Erzieher-Einträge noch existieren, bevor eine Erzieher-Art gelöscht wird.
-	 *
-	 * @param id    die ID der Erzieher-Art
-	 *
-	 * @return      die List von IDs der Schüler-Erzieher-Einträge, welche der entsprechenden Erzieher-Art zugeordnet sind
-	 */
-	public List<Long> getIDsByErzieherartID(final Long id) {
-		return conn.queryList(DTOSchuelerErzieherAdresse.QUERY_BY_ERZIEHERART_ID, DTOSchuelerErzieherAdresse.class, id).stream().map(t -> t.Schueler_ID)
-				.toList();
-	}
 }

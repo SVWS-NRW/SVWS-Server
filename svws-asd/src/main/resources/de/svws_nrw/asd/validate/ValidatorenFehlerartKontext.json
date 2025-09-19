@@ -1,166 +1,174 @@
 {
-	"version": 1,
+	"version": 2,
 	"daten": [ {
 		"validator": "de.svws_nrw.asd.validate.schule.ValidatorSchuleStammdaten",
 		"historie": [ {
-			"zebras": true,
-			"svws": true,
-			"muss": ["BK"],
-			"kann": ["GY", "R"],
-			"hinweis": [],
-			"gueltigVon": null,
-			"gueltigBis": 2018
-		}, {
 			"zebras": false,
 			"svws": true,
-			"muss": ["BK"],
-			"kann": ["GY"],
-			"hinweis": ["R"],
-			"gueltigVon": 2019,
+			"praefix": "SS",
+			"pruefschritte" : [ {
+				"nummer": -1,
+				"muss": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+				"kann": [],
+				"hinweis": []
+			} ],
+			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
 	}, {
-		"validator": "de.svws_nrw.asd.validate.schule.ValidatorSchuleStammdatenSchulform",
-		"historie": [ {
-			"zebras": false,
-			"svws": true,
-			"muss": ["BK", "GY", "R"],
-			"kann": [],
-			"hinweis": [],
-			"gueltigVon": null,
-			"gueltigBis": null
-		} ]
-    }, {
 		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLehrerStammdaten",
 		"historie": [ {
 			"zebras": true,
 			"svws": true,
-			"muss": [],
-			"kann": [],
-			"hinweis": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+			"praefix": "LS",
+			"pruefschritte" : [ {
+				"nummer": -1,
+				"muss": [],
+				"kann": [],
+				"hinweis": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"]
+			} ],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
-    }, {
+	}, {
 		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLehrerStammdatenGeburtsdatum",
 		"historie": [ {
 			"zebras": true,
 			"svws": true,
-			"muss": [],
-			"kann": [],
-			"hinweis": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+			"praefix": "LSG",
+			"pruefschritte" : [ {
+				"nummer": -1,
+				"muss": [],
+				"kann": [],
+				"hinweis": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"]
+			} ],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
-    }, {
+	}, {
 		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLehrerStammdatenNachname",
 		"historie": [ {
 			"zebras": true,
 			"svws": true,
-			"muss": [],
-			"kann": [],
-			"hinweis": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
-			"gueltigVon": null,
-			"gueltigBis": null
-		} ]
-    }, {
-		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLehrerStammdatenNachnamePlausibel",
-		"historie": [ {
-			"zebras": true,
-			"svws": true,
-			"muss": [],
-			"kann": [],
-			"hinweis": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+			"praefix": "LSN",
+			"pruefschritte" : [ {
+				"nummer": -1,
+				"muss": [],
+				"kann": [],
+				"hinweis": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"]
+			}, {
+				"nummer": 0,
+				"muss": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+				"kann": [],
+				"hinweis": []
+			}, {
+				"nummer": 1,
+				"muss": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+				"kann": [],
+				"hinweis": []
+			}, {
+				"nummer": 2,
+				"muss": [],
+				"kann": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+				"hinweis": []
+			}, {
+				"nummer": 7,
+				"muss": [],
+				"kann": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+				"hinweis": []
+			}, {
+				"nummer": 8,
+				"muss": [],
+				"kann": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+				"hinweis": []
+			} ],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
 	}, {
-		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLehrerStammdatenNachnameOhneLeerzeichenVorNachBindestrich",
-		"historie": [ {
-			"zebras": true,
-			"svws": true,
-			"muss": ["G", "H", "V", "S", "R", "PS", "SK", "GE", "GY", "WB", "BK", "SR", "SG", "SB"],
-			"kann": [],
-			"hinweis": [],
-			"gueltigVon": null,
-			"gueltigBis": null
-		} ]
-    }, {
-		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLehrerStammdatenNachnameVorhanden",
-		"historie": [ {
-			"zebras": true,
-			"svws": true,
-			"muss": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
-			"kann": [],
-			"hinweis": [],
-			"gueltigVon": null,
-			"gueltigBis": null
-		} ]
-    }, {
 		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLehrerStammdatenVorname",
 		"historie": [ {
 			"zebras": true,
 			"svws": true,
-			"muss": [],
-			"kann": [],
-			"hinweis": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
-			"gueltigVon": null,
-			"gueltigBis": null
-		} ]
-    }, {
-		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLehrerStammdatenVornameAnredeFehlerhaft",
-		"historie": [ {
-			"zebras": true,
-			"svws": true,
-			"muss": ["G", "H", "V", "S", "R", "PS", "SK", "GE", "GY", "WB", "BK", "SR", "SG", "SB"],
-			"kann": [],
-			"hinweis": [],
+			"praefix": "LSV",
+			"pruefschritte" : [ {
+				"nummer": -1,
+				"muss": [],
+				"kann": [],
+				"hinweis": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"]
+			}, {
+				"nummer": 0,
+				"muss": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+				"kann": [],
+				"hinweis": []
+			}, {
+				"nummer": 1,
+				"muss": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+				"kann": [],
+				"hinweis": []
+			}, {
+				"nummer": 2,
+				"muss": [],
+				"kann": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+				"hinweis": []
+			}, {
+				"nummer": 7,
+				"muss": [],
+				"kann": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+				"hinweis": []
+			}, {
+				"nummer": 8,
+				"muss": [],
+				"kann": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+				"hinweis": []
+			} ],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
 	}, {
-		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLehrerStammdatenNachnameAnredeFehlerhaft",
-		"historie": [ {
-			"zebras": true,
-			"svws": true,
-			"muss": ["G", "H", "V", "S", "R", "PS", "SK", "GE", "GY", "WB", "BK", "SR", "SG", "SB"],
-			"kann": [],
-			"hinweis": [],
-			"gueltigVon": null,
-			"gueltigBis": null
-		} ]
-    }, {
 		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLehrerPersonalabschnittsdaten",
 		"historie": [ {
 			"zebras": true,
 			"svws": true,
-			"muss": [],
-			"kann": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
-			"hinweis": [],
+			"praefix": "LA",
+			"pruefschritte" : [ {
+				"nummer": -1,
+				"muss": [],
+				"kann": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+				"hinweis": []
+			} ],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
-    }, {
-		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum",
+	}, {
+		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnis",
 		"historie": [ {
 			"zebras": true,
 			"svws": true,
-			"muss": [],
-			"kann": [],
-			"hinweis": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+			"praefix": "LAR",
+			"pruefschritte" : [ {
+				"nummer": -1,
+				"muss": [],
+				"kann": [],
+				"hinweis": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"]
+			} ],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
-    }, {
+	}, {
 		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLehrerPersonalabschnittsdatenPflichtstundensoll",
 		"historie": [ {
 			"zebras": true,
 			"svws": true,
-			"muss": [],
-			"kann": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
-			"hinweis": [],
+			"praefix": "LAP",
+			"pruefschritte" : [ {
+				"nummer": -1,
+				"muss": [],
+				"kann": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+				"hinweis": []
+			} ],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
-    } ]
-}	
+	} ]
+}

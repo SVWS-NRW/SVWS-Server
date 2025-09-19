@@ -64,6 +64,8 @@ export class GridInputNote<KEY> extends GridInputInnerText<KEY, string | null> {
 	 * @param value   der Wert
 	 */
 	public update(value: string | null) {
+		if (value === null)
+			this._noteTemp.value = "";
 		const note = this.getNoteFromKuerzel(value);
 		super.updateText(value);
 		this._note.value = note;
@@ -73,7 +75,12 @@ export class GridInputNote<KEY> extends GridInputInnerText<KEY, string | null> {
 	 * Schreibt die internen Daten dieses Inputs mithilfe des Setters.
 	 */
 	public commit() : void {
-		this._setter(this.getNotenKuerzelFromNote(this._note.value));
+		if (this._note.value === Note.KEINE) {
+			super.updateText("");
+			this._setter(null);
+		} else {
+			this._setter(this.getNotenKuerzelFromNote(this._note.value));
+		}
 	}
 
 	/**
@@ -90,6 +97,7 @@ export class GridInputNote<KEY> extends GridInputInnerText<KEY, string | null> {
 		if (((len === 0) && !this._firstChars.has(ziffer)) || ((len > 0) && (note === Note.KEINE)))
 			return false;
 		this._noteTemp.value = tmp;
+		super.updateText(tmp);
 		if (note !== Note.KEINE)
 			this.update(tmp);
 		return true;
@@ -142,7 +150,8 @@ export class GridInputNote<KEY> extends GridInputInnerText<KEY, string | null> {
 		// Wenn es sich um eine neue Fokussierung handelt, dann ersetze den Wert bei einer Eingabe (sonst anhängen)
 		if (this._isNewFocus.value)
 			this.update(null);
-		return this.append(event.key);
+		// Konvertiere automatisch in Großbuchstaben, um z.B. E3 zu erfassen, auch bei Eigabe von e3
+		return this.append(event.key.toLocaleUpperCase());
 	}
 
 }

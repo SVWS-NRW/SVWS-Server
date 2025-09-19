@@ -1,21 +1,13 @@
 package de.svws_nrw.module.reporting.html.contexts;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
-import de.svws_nrw.core.exceptions.DeveloperNotificationException;
-import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
-import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.module.reporting.proxytypes.schueler.ProxyReportingSchueler;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
 import org.thymeleaf.context.Context;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 
 /**
@@ -23,20 +15,9 @@ import java.util.stream.Collectors;
  */
 public final class HtmlContextSchueler extends HtmlContext<ReportingSchueler> {
 
-	@Override
-	public List<String> standardsortierung() {
-		final ArrayList<String> standardSort = new ArrayList<>();
-		standardSort.add(methodenreferenzToString(ReportingSchueler::nachname));
-		standardSort.add(methodenreferenzToString(ReportingSchueler::vorname));
-		standardSort.add(methodenreferenzToString(ReportingSchueler::vornamen));
-		standardSort.add(methodenreferenzToString(ReportingSchueler::id));
-		return standardSort;
-	}
-
 	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
 	private final ReportingRepository reportingRepository;
-
 
 	/**
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Schülern.
@@ -70,7 +51,7 @@ public final class HtmlContextSchueler extends HtmlContext<ReportingSchueler> {
 	private void erzeugeContextFromSchueler(final List<ReportingSchueler> reportingSchueler) {
 
 		setContextData(reportingSchueler);
-		sortiereContext();
+		sortiereContextMitRegistry();
 
 		// Daten-Context für Thymeleaf erzeugen.
 		final Context context = new Context();
@@ -87,37 +68,9 @@ public final class HtmlContextSchueler extends HtmlContext<ReportingSchueler> {
 	 */
 	private void erzeugeContextFromIds(final List<Long> idsSchueler) {
 
-		// Erzeuge Maps, damit auch später leicht auf die Schülerdaten zugegriffen werden kann.
-		final Map<Long, SchuelerStammdaten> mapSchueler = new HashMap<>();
-		final List<Long> fehlendeSchueler = new ArrayList<>();
-		for (final Long idSchueler : idsSchueler) {
-			if (reportingRepository.mapSchuelerStammdaten().containsKey(idSchueler))
-				mapSchueler.put(idSchueler, reportingRepository.mapSchuelerStammdaten().get(idSchueler));
-			else
-				fehlendeSchueler.add(idSchueler);
-		}
-		if (!fehlendeSchueler.isEmpty()) {
-			final List<SchuelerStammdaten> fehlendeSchuelerStammdaten;
-			try {
-				fehlendeSchuelerStammdaten = (new DataSchuelerStammdaten(reportingRepository.conn())).getListByIds(fehlendeSchueler);
-			} catch (final ApiOperationException e) {
-				throw new DeveloperNotificationException(e.getMessage());
-			}
-			fehlendeSchuelerStammdaten.forEach(s -> this.reportingRepository.mapSchuelerStammdaten().putIfAbsent(s.id, s));
-			mapSchueler.putAll(fehlendeSchuelerStammdaten.stream().collect(Collectors.toMap(s -> s.id, s -> s)));
-		}
-
-		// Erzeuge nun die einzelnen Schülerobjekte. Alle weiteren Daten werden später dynamisch nachgeladen.
-		final List<ReportingSchueler> temp = new ArrayList<>();
-
-		for (final Long schuelerID : mapSchueler.values().stream().map(s -> s.id).toList()) {
-			final ProxyReportingSchueler proxyReportingSchueler = new ProxyReportingSchueler(reportingRepository, mapSchueler.get(schuelerID));
-			temp.add(proxyReportingSchueler);
-			this.reportingRepository.mapSchueler().put(schuelerID, proxyReportingSchueler);
-		}
-
-		setContextData(temp);
-		sortiereContext();
+		// Rufe die Schülerdaten ab oder erzeuge sie, falls sie noch nicht existieren. Weise sie dann dem Context zu.
+		setContextData(this.reportingRepository.schueler(idsSchueler));
+		sortiereContextMitRegistry();
 
 		// Daten-Context für Thymeleaf erzeugen.
 		final Context context = new Context();
@@ -125,6 +78,7 @@ public final class HtmlContextSchueler extends HtmlContext<ReportingSchueler> {
 
 		super.setContext(context);
 	}
+
 
 
 	/**

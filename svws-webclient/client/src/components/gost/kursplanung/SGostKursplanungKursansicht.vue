@@ -190,7 +190,7 @@
 											</div>
 										</div>
 										<div role="cell" class="svws-ui-td">
-											<template v-if="istVorlage && hatUpdateKompetenz">
+											<template v-if="hatUpdateKompetenz">
 												<svws-ui-select v-model="kurslehrer(kurs).value" autocomplete :item-filter="lehrer_filter" removable headless :items="kurslehrer_liste(kurs).value" :item-text="l => l.kuerzel" title="Lehrkraft" />
 											</template>
 											<template v-else>
@@ -198,7 +198,7 @@
 											</template>
 										</div>
 										<div role="cell" class="svws-ui-td svws-align-center svws-no-padding">
-											<svws-ui-checkbox :disabled="!(istVorlage && hatUpdateKompetenz)" headless bw :model-value="kurs.istKoopKurs" @update:model-value="setKoop(kurs, $event)" class="my-auto" />
+											<svws-ui-checkbox :disabled="!(hatUpdateKompetenz)" headless bw :model-value="kurs.istKoopKurs" @update:model-value="setKoop(kurs, $event)" class="my-auto" />
 										</div>
 										<template v-if="blockungstabelleHidden() === 'nichts'">
 											<template v-if="setze_kursdifferenz(kurs).value && kurs_blockungsergebnis(kurs).value">

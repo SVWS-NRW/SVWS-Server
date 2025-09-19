@@ -258,6 +258,7 @@ class DataErzieherStammdatenTest {
 		final Response resp = dataErzieherStammdaten.deleteMultipleAsResponse(List.of(12L));
 		assertThat(resp.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
 
+		@SuppressWarnings("unchecked")
 		final List<ErzieherStammdaten> deleted = (List<ErzieherStammdaten>) resp.getEntity();
 		assertThat(deleted).hasSize(1);
 		assertThat(deleted.getFirst().id).isEqualTo(12L);

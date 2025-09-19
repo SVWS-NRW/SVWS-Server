@@ -28,7 +28,7 @@ public final class ValidatorLehrerPersonalabschnittsdaten extends Validator {
 		// Die nachfolgenden Prüfungen sind nur durchführbar, wenn bei den Stammdaten ein Geburtsdatum gesetzt ist...
 		try {
 			final @NotNull DateManager geburtsdatum = DateManager.from(stammdaten.geburtsdatum);
-			_validatoren.add(new ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum(daten, geburtsdatum, kontext));
+			_validatoren.add(new ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnis(daten, geburtsdatum, kontext));
 		} catch (@SuppressWarnings("unused") final InvalidDateException e) {
 			// Ist kein gültiges Geburtsdatum gesetzt, so werden die Prüfungen übersprungen.
 			// Die eigentliche Validierung des Geburtsdatums erfolgt bei den Lehrer-Stammdaten

@@ -216,11 +216,10 @@ class DataSportbefreiungenTest {
 	@Test
 	@DisplayName("mapAttribute | bezeichnung bereits vorhanden")
 	void mapAttributeTest_bezeichnungDoppeltVergeben() {
-		final var sportbefreiung = getDto();
-		sportbefreiung.Bezeichnung = "ABC";
-		when(this.conn.queryList(DTOSportbefreiung.QUERY_BY_BEZEICHNUNG, DTOSportbefreiung.class, "ABC")).thenReturn(List.of(sportbefreiung));
+		final var dto = new DTOSportbefreiung(1L, "abc");
+		when(this.conn.queryAll(DTOSportbefreiung.class)).thenReturn(List.of(new DTOSportbefreiung(2L, "abc")));
 
-		final var throwable = catchThrowable(() -> this.data.mapAttribute(new DTOSportbefreiung(2L, "DEF"), "bezeichnung", "ABC", null));
+		final var throwable = catchThrowable(() -> this.data.mapAttribute(dto, "bezeichnung", "ABC", null));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
@@ -229,19 +228,18 @@ class DataSportbefreiungenTest {
 	}
 
 	@Test
-	@DisplayName("mapAttribute | bezeichnung doppelt in der Database | sollte in der Praxis nicht passieren")
-	void mapAttributeTest_bezeichnungDoppeltInDB() {
-		final var sportbefreiungABC = new DTOSportbefreiung(1L, "ABC");
-		final var sportbefreiungDEF = new DTOSportbefreiung(2L, "ABC");
-		when(this.conn.queryList(DTOSportbefreiung.QUERY_BY_BEZEICHNUNG, DTOSportbefreiung.class, "ABC")).thenReturn(List.of(sportbefreiungABC, sportbefreiungDEF));
+	@DisplayName("mapAttribute | bezeichnung change case")
+	void mapAttributeTest_bezeichnungChangeCase() throws ApiOperationException {
+		final var dto = new DTOSportbefreiung(1L, "abc");
+		when(this.conn.queryAll(DTOSportbefreiung.class)).thenReturn(List.of(dto));
 
-		final var throwable = catchThrowable(() -> this.data.mapAttribute(new DTOSportbefreiung(3L, "DEF"), "bezeichnung", "ABC", null));
+		this.data.mapAttribute(dto, "bezeichnung", "ABC", null);
 
-		assertThat(throwable)
-				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Mehr als eine Sportbefreiung mit der gleichen Bezeichnung vorhanden.")
-				.hasFieldOrPropertyWithValue("status", Response.Status.INTERNAL_SERVER_ERROR);
+		assertThat(dto.Bezeichnung).isEqualTo("ABC");
+
+
 	}
+
 
 	@Test
 	@DisplayName("mapAttribute | bezeichnung unverändert")

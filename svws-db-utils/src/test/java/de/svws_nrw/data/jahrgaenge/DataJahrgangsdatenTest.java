@@ -69,6 +69,7 @@ class DataJahrgangsdatenTest {
 	@DisplayName("getAll | 2 DTOJahrgang")
 	void getAllTest() {
 		when(this.conn.queryAll(DTOJahrgang.class)).thenReturn(List.of(new DTOJahrgang(1L), new DTOJahrgang(3L)));
+		@SuppressWarnings("unchecked")
 		final TypedQuery<Long> queryMock = mock(TypedQuery.class);
 		when(queryMock.setParameter(eq("ids"), any())).thenReturn(queryMock);
 		when(queryMock.getResultList()).thenReturn(List.of(1L));
@@ -84,6 +85,7 @@ class DataJahrgangsdatenTest {
 	@DisplayName("getAll | Empty List")
 	void getListAllTest() {
 		when(this.conn.queryAll(DTOJahrgang.class)).thenReturn(Collections.emptyList());
+		@SuppressWarnings("unchecked")
 		final TypedQuery<Long> queryMock = mock(TypedQuery.class);
 		when(queryMock.setParameter(eq("ids"), any())).thenReturn(queryMock);
 		when(queryMock.getResultList()).thenReturn(List.of(1L));

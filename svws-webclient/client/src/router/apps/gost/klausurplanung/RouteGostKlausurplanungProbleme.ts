@@ -30,6 +30,7 @@ export class RouteGostKlausurplanungProbleme extends RouteNode<any, RouteGostKla
 			erzeugeSchuelerklausuren: routeGostKlausurplanung.data.erzeugeSchuelerklausuren,
 			loescheSchuelerklausuren: routeGostKlausurplanung.data.loescheSchuelerklausuren,
 			erzeugeKursklausurenAusVorgaben: routeGostKlausurplanung.data.erzeugeKursklausurenAusVorgaben,
+			loescheKursklausuren: routeGostKlausurplanung.data.loescheKursklausuren,
 			gotoVorgaben: routeGostKlausurplanung.data.gotoVorgaben,
 			gotoSchienen: routeGostKlausurplanung.data.gotoSchienen,
 			gotoKalenderdatum: routeGostKlausurplanung.data.gotoKalenderdatum,

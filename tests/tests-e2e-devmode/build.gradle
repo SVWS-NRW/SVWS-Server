@@ -66,6 +66,7 @@ ext {
 tasks.register('testAgainstDockerEnv', NpmRun) {
 	description = 'Startet die Integrationstests gegen die Docker Umgebung'
 	group = 'testing'
+	dependsOn ':svws-webclient:core:assemble'
 	dependsOn ':svws-webclient:client:assemble'
 	dependsOn 'seedDatabase'
 	dependsOn 'playwrightInstallDeps'

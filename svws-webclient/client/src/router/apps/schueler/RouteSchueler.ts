@@ -25,6 +25,7 @@ import { routeSchuelerSonstiges } from "./sonstiges/RouteSchuelerSonstiges";
 import { routeSchuelerAllgemeinesGruppenprozesse } from "~/router/apps/schueler/allgemeines/RouteSchuelerAllgemeinesGruppenprozesse";
 import { routeSchuelerIndividualdatenGruppenprozesse } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdatenGruppenprozesse";
 import { routeSchuelerAbitur } from "./abitur/RouteSchuelerAbitur";
+import { routeSchuelerNeuSchnelleingabe } from "~/router/apps/schueler/RouteSchuelerNeuSchnelleingabe";
 
 const SSchuelerAuswahl = () => import("~/components/schueler/SSchuelerAuswahl.vue")
 const SSchuelerApp = () => import("~/components/schueler/SSchuelerApp.vue")
@@ -57,6 +58,7 @@ export class RouteSchueler extends RouteAuswahlNode<SchuelerListeManager, RouteD
 			routeSchuelerLaufbahnplanung,
 			routeSchuelerAbitur,
 			routeSchuelerStundenplan,
+			routeSchuelerNeuSchnelleingabe,
 			routeSchuelerAllgemeinesGruppenprozesse,
 			routeSchuelerIndividualdatenGruppenprozesse,
 			routeSchuelerNeu,

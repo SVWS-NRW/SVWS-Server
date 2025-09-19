@@ -27,7 +27,9 @@ public final class SwaggerUIResourceUtils {
 			return null;
 
 		// Versions-Tag ausschneiden und mit dem Base Pfad zusammenfügen
-		final String version = StringUtils.substringBefore(StringUtils.substringAfter(jarURL.getPath(), "swagger-ui-dist/"), "/");
+		String version = StringUtils.substringBefore(StringUtils.substringAfter(jarURL.getPath(), "swagger-ui-dist/"), "/");
+		if ((version == null) || (version.isBlank()))
+			version = StringUtils.substringBefore(StringUtils.substringAfter(jarURL.getPath(), "swagger-ui-dist-"), ".jar!");
 		return RESOURCE_PATH_SWAGGER_UI_DIST + '/' + version;
 	}
 

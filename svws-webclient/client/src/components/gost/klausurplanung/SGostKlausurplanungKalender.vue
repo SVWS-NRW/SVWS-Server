@@ -179,7 +179,7 @@
 		return props.kMan().stundenplanManagerGetByAbschnittAndDatumOrException(props.abschnitt!.id, datum).kalenderwochenzuordnungGetByDatum(datum)
 	};
 
-	const stundenplanManager = () => props.kMan().stundenplanManagerGetByAbschnittAndDatumOrException(props.abschnitt!.id, DateUtils.gibDatumDesMontagsOfJahrAndKalenderwoche(kalenderwoche().jahr, kalenderwoche().kw));
+	const stundenplanManager = () => props.kMan().stundenplanManagerGetByAbschnittAndKwOrException(props.abschnitt!.id, kalenderwoche().jahr, kalenderwoche().kw);
 
 	const showMoreKonflikte = ref(false);
 	const showMoreWarnungen = ref(false);
@@ -235,7 +235,7 @@
 		const datum = new Date(props.kalenderdatum.value!);
 		datum.setDate(datum.getDate() + by);
 		const datumStr = datum.getFullYear() + "-" + (datum.getMonth() + 1).toString().padStart(2, '0') + "-" + datum.getDate().toString().padStart(2, '0');// datum.toLocaleDateString("de-DE").slice(0, 10);
-		const stundenplan = by > 0 ? props.kMan().stundenplanManagerGetByAbschnittAndDatumOrAfterOrNull(props.abschnitt!.id, datumStr) : props.kMan().stundenplanManagerGetByAbschnittAndDatumOrBeforeOrNull(props.abschnitt!.id, datumStr);
+		const stundenplan = props.kMan().stundenplanManagerGetByAbschnittAndKwOrNull(props.abschnitt!.id, DateUtils.gibKwJahrDesDatumsISO8601(datumStr), DateUtils.gibKwDesDatumsISO8601(datumStr));
 		if (stundenplan === null)
 			return undefined;
 		const kw = stundenplan.kalenderwochenzuordnungGetByDatum(datumStr);

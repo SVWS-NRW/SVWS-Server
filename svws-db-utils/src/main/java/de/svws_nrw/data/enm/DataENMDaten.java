@@ -587,7 +587,7 @@ public final class DataENMDaten extends DataManager<Long> {
 			throw new ApiOperationException(Status.NOT_FOUND, "Für die ID %d konnten keine Leistungsdaten gefunden werden.".formatted(id));
 
 		// Prüfe die Berechtigung für das Patchen der Leistungsdaten
-		final int berechtigung = pruefeBerechtigungPatchLeistung(leistung);
+		pruefeBerechtigungPatchLeistung(leistung); // final int berechtigung =
 
 		// Durchführen des Patches
 		// TODO Prüfe, ob die aktuelle Notenmodul-Konfiguration die jeweilige Änderung zulässt
@@ -667,7 +667,7 @@ public final class DataENMDaten extends DataManager<Long> {
 					"Für die ID %d konnten keine Leistungsdaten gefunden werden.".formatted(teilleistung.Leistung_ID));
 
 		// Prüfe die Berechtigung für das Patchen der Teilleistungsdaten anhand der zugehörigen Leistungsdaten
-		final int berechtigung = pruefeBerechtigungPatchLeistung(leistung);
+		pruefeBerechtigungPatchLeistung(leistung); // final int berechtigung =
 
 		// Durchführen des Patches
 		// TODO Prüfe, ob die aktuelle Notenmodul-Konfiguration die jeweilige Änderungen zulässt
@@ -746,7 +746,7 @@ public final class DataENMDaten extends DataManager<Long> {
 		final DTOSchuelerLernabschnittsdaten sla = getLernabschnitt(id);
 
 		// Prüfe die Berechtigung für das Patchen der Bemerkungen anhand des Lernabschnittes des Schülers
-		final int berechtigung = pruefeBerechtigungPatchLernabschnitt(sla);
+		pruefeBerechtigungPatchLernabschnitt(sla); // final int berechtigung =
 
 		// Bestimme die Bemerkungen, welche dem Schüler zugeordnet sind.
 		final List<DTOSchuelerPSFachBemerkungen> sbs =
@@ -813,7 +813,7 @@ public final class DataENMDaten extends DataManager<Long> {
 			throw new ApiOperationException(Status.NOT_FOUND, "Für die ID %d konnte kein Lernabschnitt gefunden werden.".formatted(id));
 
 		// Prüfe die Berechtigung für das Patchen der Bemerkungen anhand des Lernabschnittes des Schülers
-		final int berechtigung = pruefeBerechtigungPatchLernabschnitt(sla);
+		pruefeBerechtigungPatchLernabschnitt(sla); // final int berechtigung =
 
 		// Durchführen des Patches
 		// TODO Prüfe, ob die aktuelle Notenmodul-Konfiguration die jeweilige Änderungen zulässt

@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { privilegedApiServer } from "../../utils/APIUtils";
-import { GostFach } from "@core";
+import { GostFach } from "../../../svws-webclient/core/src/core/data/gost/GostFach";
 
 const allowDestructiveTests = process.env.MODE === 'allowDestructiveTests'
 

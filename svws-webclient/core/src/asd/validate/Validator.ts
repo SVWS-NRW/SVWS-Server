@@ -78,7 +78,7 @@ export abstract class Validator extends JavaObject {
 				if (!this.pruefe())
 					success = false;
 			} catch(e : any) {
-				this.addFehler("Unerwarteter Fehler bei der Validierung: " + e.getMessage());
+				this.addFehler(-1, "Unerwarteter Fehler bei der Validierung: " + e.getMessage());
 			}
 		}
 		return success;
@@ -91,20 +91,20 @@ export abstract class Validator extends JavaObject {
 	 *
 	 * @param art   die Fehlerart, die für die Überprüfung genutzt wird, oder null
 	 */
-	private updateFehlerart(art : ValidatorFehlerart | null) : void {
-		const tmp : ValidatorFehlerart = (art !== null) ? art : this.getValidatorFehlerart();
-		if (this._fehlerart.ordinal() > tmp.ordinal())
-			this._fehlerart = tmp;
+	private updateFehlerart(art : ValidatorFehlerart) : void {
+		if (this._fehlerart.ordinal() > art.ordinal())
+			this._fehlerart = art;
 	}
 
 	/**
 	 * Erstellt einen neuen Fehler mit der übergebenen Fehlermeldung
 	 *
+	 * @param pruefschritt    die Nummer des Prüfschrittes, bei welchem der Fehler aufgetreten ist
 	 * @param fehlermeldung   die Fehlermeldung
 	 */
-	protected addFehler(fehlermeldung : string) : void {
-		this._fehler.add(new ValidatorFehler(this, fehlermeldung));
-		this.updateFehlerart(null);
+	protected addFehler(pruefschritt : number, fehlermeldung : string) : void {
+		this._fehler.add(new ValidatorFehler(this, pruefschritt, fehlermeldung));
+		this.updateFehlerart(this.getValidatorFehlerart(pruefschritt));
 	}
 
 	/**
@@ -119,10 +119,21 @@ export abstract class Validator extends JavaObject {
 	/**
 	 * Die Fehlerart, welche diesem speziellen Validator zugeordnet ist.
 	 *
+	 * @param pruefschritt   der Prüfschritt, bei welchem der Fehler aufgetreten ist
+	 *
 	 * @return die Fehlerart
 	 */
-	public getValidatorFehlerart() : ValidatorFehlerart {
-		return this._kontext.getValidatorManager().getFehlerartBySchuljahrAndValidatorClass(this._kontext.getSchuljahr(), this.getClass());
+	public getValidatorFehlerart(pruefschritt : number) : ValidatorFehlerart {
+		return this._kontext.getValidatorManager().getFehlerartBySchuljahrAndValidatorClassAndPruefschritt(this._kontext.getSchuljahr(), this.getClass(), pruefschritt);
+	}
+
+	/**
+	 * Gibt das Fehlercode-Präfix zurück, welcher diesem speziellen Validator zugeordnet ist.
+	 *
+	 * @return das Fehlercode-Präfix
+	 */
+	public getFehlercodePraefix() : string {
+		return this._kontext.getValidatorManager().getFehlercodePraefixBySchuljahrAndValidatorClass(this._kontext.getSchuljahr(), this.getClass());
 	}
 
 	/**

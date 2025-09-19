@@ -11,19 +11,49 @@ export class BKGymBelegungsfehler extends JavaEnum<BKGymBelegungsfehler> {
 	static readonly all_values_by_name : Map<string, BKGymBelegungsfehler> = new Map<string, BKGymBelegungsfehler>();
 
 	/**
+	 * BelegungsfehlerArt LK_1
+	 */
+	public static readonly LK_1 : BKGymBelegungsfehler = new BKGymBelegungsfehler("LK_1", 0, "LK_1", BKGymBelegungsfehlerArt.BELEGUNG, "Es muss ein erster Leistungskurs gewählt werden.");
+
+	/**
+	 * BelegungsfehlerArt LK_2
+	 */
+	public static readonly LK_2 : BKGymBelegungsfehler = new BKGymBelegungsfehler("LK_2", 1, "LK_2", BKGymBelegungsfehlerArt.BELEGUNG, "Es muss ein zweiter Leistungskurs gewählt werden.");
+
+	/**
+	 * BelegungsfehlerArt LK_3
+	 */
+	public static readonly LK_3 : BKGymBelegungsfehler = new BKGymBelegungsfehler("LK_3", 2, "LK_3", BKGymBelegungsfehlerArt.BELEGUNG, "Die Kombination aus erstem und zweiten Leistungskurs ist für den Bildungsgang nicht zulässig.");
+
+	/**
+	 * BelegungsfehlerArt AB_3
+	 */
+	public static readonly AB_3 : BKGymBelegungsfehler = new BKGymBelegungsfehler("AB_3", 3, "AB_3", BKGymBelegungsfehlerArt.BELEGUNG, "Es muss ein drittes Abiturfach gewählt werden.");
+
+	/**
+	 * BelegungsfehlerArt AB_4
+	 */
+	public static readonly AB_4 : BKGymBelegungsfehler = new BKGymBelegungsfehler("AB_4", 4, "AB_4", BKGymBelegungsfehlerArt.BELEGUNG, "Es muss ein viertes Abiturfach gewählt werden.");
+
+	/**
+	 * BelegungsfehlerArt AB_5
+	 */
+	public static readonly AB_5 : BKGymBelegungsfehler = new BKGymBelegungsfehler("AB_5", 5, "AB_5", BKGymBelegungsfehlerArt.BELEGUNG, "Die gewählte Kombination aus drittem und viertem Abiturfach is in dem Bildungsgang nicht zulässig.");
+
+	/**
 	 * BelegungsfehlerArt ABI_11
 	 */
-	public static readonly ABI_11 : BKGymBelegungsfehler = new BKGymBelegungsfehler("ABI_11", 0, "ABI_11", BKGymBelegungsfehlerArt.BELEGUNG, "Religionslehre und Sport dürfen nicht gleichzeitig Abiturfächer sein.");
+	public static readonly ABI_11 : BKGymBelegungsfehler = new BKGymBelegungsfehler("ABI_11", 6, "ABI_11", BKGymBelegungsfehlerArt.BELEGUNG, "Religionslehre und Sport dürfen nicht gleichzeitig Abiturfächer sein.");
 
 	/**
 	 * BelegungsfehlerArt ABI_12
 	 */
-	public static readonly ABI_12 : BKGymBelegungsfehler = new BKGymBelegungsfehler("ABI_12", 1, "ABI_12", BKGymBelegungsfehlerArt.SCHRIFTLICHKEIT, "In Q2.2 muss das 3. Abiturfach schriftlich belegt sein.");
+	public static readonly ABI_12 : BKGymBelegungsfehler = new BKGymBelegungsfehler("ABI_12", 7, "ABI_12", BKGymBelegungsfehlerArt.SCHRIFTLICHKEIT, "In Q2.2 muss das 3. Abiturfach schriftlich belegt sein.");
 
 	/**
 	 * BelegungsfehlerArt 	ABI_13
 	 */
-	public static readonly ABI_13 : BKGymBelegungsfehler = new BKGymBelegungsfehler("ABI_13", 2, "ABI_13", BKGymBelegungsfehlerArt.SCHRIFTLICHKEIT, "In Q2.2 muss das 4. Abiturfach mündlich belegt sein.");
+	public static readonly ABI_13 : BKGymBelegungsfehler = new BKGymBelegungsfehler("ABI_13", 8, "ABI_13", BKGymBelegungsfehlerArt.SCHRIFTLICHKEIT, "In Q2.2 muss das 4. Abiturfach mündlich belegt sein.");
 
 	/**
 	 * Der eindeutige Code des Belegungsfehlers

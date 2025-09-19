@@ -3,7 +3,7 @@
 		class="flex flex-col w-full h-full overflow-hidden">
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
-				<template v-if="activeViewType === ViewType.DEFAULT">
+				<template v-if="((activeViewType === ViewType.DEFAULT) || (activeViewType === ViewType.NEU))">
 					<svws-ui-avatar :src="foto ? `data:image/png;base64, ${foto}` : undefined" :alt="foto !== null ? `Foto von ${vorname} ${nachname}` : ''" upload capture @image:base64="foto => patch({ foto })" />
 					<div v-if="manager().hasDaten()" class="svws-headline-wrapper">
 						<h2 class="svws-headline">

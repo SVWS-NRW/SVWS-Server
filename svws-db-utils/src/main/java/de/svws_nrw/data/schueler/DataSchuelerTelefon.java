@@ -142,13 +142,4 @@ public final class DataSchuelerTelefon extends DataManagerRevised<Long, DTOSchue
 		}
 	}
 
-	/**
-	 * Bestimmt die IDs der Schülertelefoneinträge, welche zu der übergebenen ID der Telefonarten gehören.
-	 *
-	 * @param id    die ID der Telefonart
-	 * @return      die List von IDs der SchülertelefonEinträge, welche der entsprechenden Telefonart zugeordnet sind
-	 */
-	public List<Long> getIDsByTelefonArtId(final Long id) {
-		return conn.queryList(DTOSchuelerTelefon.QUERY_BY_TELEFONART_ID, DTOSchuelerTelefon.class, id).stream().map(t -> t.Schueler_ID).toList();
-	}
 }

@@ -45,7 +45,7 @@ class DataAbteilungenTest {
 	private DBEntityManager conn;
 
 	@InjectMocks
-	private DataAbteilungen dut;
+	private DataAbteilungen data;
 
 	@BeforeAll
 	static void setUpAll() {
@@ -59,7 +59,7 @@ class DataAbteilungenTest {
 		final Map<String, Object> initAttributes = new HashMap<>();
 		initAttributes.put("idSchuljahresabschnitt", idSchuljahresabschnitt);
 
-		this.dut.initDTO(dtoAbteilungen, 2L, initAttributes);
+		this.data.initDTO(dtoAbteilungen, 2L, initAttributes);
 
 		assertThat(dtoAbteilungen)
 				.isInstanceOf(DTOAbteilungen.class)
@@ -74,7 +74,7 @@ class DataAbteilungenTest {
 		final DTOAbteilungen dtoAbteilungen = createDTOAbteilungen();
 		when(this.conn.queryByKey(DTOAbteilungen.class, dtoAbteilungen.ID)).thenReturn(dtoAbteilungen);
 
-		assertThat(dut.getById(dtoAbteilungen.ID))
+		assertThat(data.getById(dtoAbteilungen.ID))
 				.isInstanceOf(Abteilung.class)
 				.hasFieldOrPropertyWithValue("id", dtoAbteilungen.ID)
 				.hasFieldOrPropertyWithValue("bezeichnung", dtoAbteilungen.Bezeichnung)
@@ -93,7 +93,7 @@ class DataAbteilungenTest {
 		when(this.conn.queryList(DTOAbteilungsKlassen.QUERY_BY_ABTEILUNG_ID, DTOAbteilungsKlassen.class, dtoAbteilungen.ID))
 				.thenReturn(List.of(new DTOAbteilungsKlassen(1L, dtoAbteilungen.ID, 2L)));
 
-		assertThat(dut.getById(dtoAbteilungen.ID).klassenzuordnungen)
+		assertThat(data.getById(dtoAbteilungen.ID).klassenzuordnungen)
 				.isInstanceOf(List.class)
 				.isNotNull()
 				.isNotEmpty()
@@ -109,7 +109,7 @@ class DataAbteilungenTest {
 	@Test
 	@DisplayName("GetById | Falsche ID")
 	void getByIdTestFailed() {
-		final Throwable throwable = Assertions.catchThrowable(() -> dut.getById(1L));
+		final Throwable throwable = Assertions.catchThrowable(() -> data.getById(1L));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
@@ -120,14 +120,14 @@ class DataAbteilungenTest {
 	@Test
 	@DisplayName("getAll | Erfolgreich mit JahresabschnittsId, überprüfe Abteilungen")
 	void getAllTest() throws ApiOperationException {
-		dut = new DataAbteilungen(conn, idSchuljahresabschnitt);
+		data = new DataAbteilungen(conn, idSchuljahresabschnitt);
 		final DTOAbteilungen dtoAbteilungen = createDTOAbteilungen();
 		when(conn.queryList(DTOAbteilungen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOAbteilungen.class, idSchuljahresabschnitt))
 				.thenReturn(List.of(dtoAbteilungen));
 		final List<DTOAbteilungsKlassen> dtoAbteilungsKlassens = List.of(new DTOAbteilungsKlassen(1L, 2L, 3L));
 		when(conn.queryList(DTOAbteilungsKlassen.QUERY_LIST_BY_ABTEILUNG_ID, DTOAbteilungsKlassen.class, List.of(dtoAbteilungen.ID))).thenReturn(dtoAbteilungsKlassens);
 
-		final List<Abteilung> result = this.dut.getAll();
+		final List<Abteilung> result = this.data.getAll();
 
 		assertThat(result)
 				.isInstanceOf(List.class)
@@ -150,11 +150,11 @@ class DataAbteilungenTest {
 	@Test
 	@DisplayName("getAll | Leere Liste")
 	void getAllTestEmptyList() throws ApiOperationException {
-		dut = new DataAbteilungen(conn, idSchuljahresabschnitt);
+		data = new DataAbteilungen(conn, idSchuljahresabschnitt);
 		when(conn.queryList(DTOAbteilungen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOAbteilungen.class, idSchuljahresabschnitt))
 				.thenReturn(Collections.emptyList());
 
-		final List<Abteilung> result = this.dut.getAll();
+		final List<Abteilung> result = this.data.getAll();
 
 		assertThat(result).isEmpty();
 
@@ -164,7 +164,7 @@ class DataAbteilungenTest {
 	@Test
 	@DisplayName("getAll | Erfolgreich mit JahresabschnittsId, überprüfe AbteilungKlassenzurodnungen")
 	void getAllTestAbteilungKlassenzuordnungen() throws ApiOperationException {
-		dut = new DataAbteilungen(conn, idSchuljahresabschnitt);
+		data = new DataAbteilungen(conn, idSchuljahresabschnitt);
 		final DTOAbteilungen dtoAbteilungen = createDTOAbteilungen();
 		dtoAbteilungen.ID = 2L;
 		when(conn.queryList(DTOAbteilungen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOAbteilungen.class, idSchuljahresabschnitt))
@@ -172,7 +172,7 @@ class DataAbteilungenTest {
 		when(conn.queryList(DTOAbteilungsKlassen.QUERY_LIST_BY_ABTEILUNG_ID, DTOAbteilungsKlassen.class, List.of(2L))).thenReturn(List.of(new DTOAbteilungsKlassen(1L, 1L, 1L), new DTOAbteilungsKlassen(2L,
 				2L, 2L), new DTOAbteilungsKlassen(3L, 1L, 3L)));
 
-		final List<Abteilung> actual = this.dut.getAll();
+		final List<Abteilung> actual = this.data.getAll();
 
 		assertThat(actual.getFirst().klassenzuordnungen)
 				.isInstanceOf(List.class)
@@ -193,7 +193,7 @@ class DataAbteilungenTest {
 	void testMap() throws ApiOperationException {
 		final DTOAbteilungen dtoAbteilungen = createDTOAbteilungen();
 
-		assertThat(this.dut.map(dtoAbteilungen))
+		assertThat(this.data.map(dtoAbteilungen))
 				.isInstanceOf(Abteilung.class)
 				.hasFieldOrPropertyWithValue("id", 1L)
 				.hasFieldOrPropertyWithValue("bezeichnung", "Bezeichnung")
@@ -215,7 +215,7 @@ class DataAbteilungenTest {
 		dtoAbteilungen.Bezeichnung = null;
 		dtoAbteilungen.Sortierung = null;
 
-		assertThat(this.dut.map(dtoAbteilungen))
+		assertThat(this.data.map(dtoAbteilungen))
 				.isInstanceOf(Abteilung.class)
 				.hasFieldOrPropertyWithValue("bezeichnung", "")
 				.hasFieldOrPropertyWithValue("raum", null)
@@ -230,7 +230,7 @@ class DataAbteilungenTest {
 	void testMapAttribute(final String key, final Object value) {
 		final DTOAbteilungen expectedDTO = createDTOAbteilungen();
 
-		final Throwable throwable = catchThrowable(() -> this.dut.mapAttribute(expectedDTO, key, value, null));
+		final Throwable throwable = catchThrowable(() -> this.data.mapAttribute(expectedDTO, key, value, null));
 
 		switch (key) {
 			case "id" -> assertThat(expectedDTO.ID).isEqualTo(value);
@@ -256,12 +256,12 @@ class DataAbteilungenTest {
 		final DTOAbteilungen expectedDTO = createDTOAbteilungen();
 		expectedDTO.ID = 14L;
 
-		final Throwable throwable = ThrowableAssert.catchThrowable(() -> this.dut.mapAttribute(expectedDTO, key, value, null));
+		final Throwable throwable = ThrowableAssert.catchThrowable(() -> this.data.mapAttribute(expectedDTO, key, value, null));
 
 		if (key.equals("id"))
 			assertThat(throwable)
 					.isInstanceOf(ApiOperationException.class)
-					.hasMessage("Id 1 der PatchMap ist ungleich der id 14 vom Dto")
+					.hasMessage("Die ID 1 des Patches ist null oder stimmt nicht mit der ID 14 in der Datenbank überein.")
 					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 
 	}
@@ -280,6 +280,32 @@ class DataAbteilungenTest {
 		);
 	}
 
+
+	@Test
+	@DisplayName("mapAttribute | bezeichnung doppelt vergeben")
+	void mapAttributeTest_bezeichnungDoppeltVergeben() {
+		final var expectedDTO = new DTOAbteilungen(1L, "abc", 1L);
+		when(this.conn.queryAll(DTOAbteilungen.class)).thenReturn(List.of(new DTOAbteilungen(2L, "test", 1L)));
+
+		final var throwable = catchThrowable(() -> this.data.mapAttribute(expectedDTO, "bezeichnung", "TEST", null));
+
+		assertThat(throwable)
+				.isInstanceOf(ApiOperationException.class)
+				.hasMessage("Die Bezeichnung TEST ist bereits vorhanden.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("mapAttribute | bezeichnung case aendern im gleichen Objekt")
+	void mapAttributeTest_changeCaseOfBezeichnung() throws ApiOperationException {
+		final var expectedDTO = new DTOAbteilungen(1L, "test", 1L);
+		when(this.conn.queryAll(DTOAbteilungen.class)).thenReturn(List.of(expectedDTO));
+
+		this.data.mapAttribute(expectedDTO, "bezeichnung", "TEST", null);
+
+		assertThat(expectedDTO.Bezeichnung).isEqualTo("TEST");
+	}
+
 	private DTOAbteilungen createDTOAbteilungen() {
 		final DTOAbteilungen dtoAbteilungen = new DTOAbteilungen(1L, "Bezeichnung", idSchuljahresabschnitt);
 		dtoAbteilungen.Sichtbar = true;
@@ -291,7 +317,4 @@ class DataAbteilungenTest {
 		return dtoAbteilungen;
 	}
 
-	private List<DTOAbteilungsKlassen> getDTOAbteilungsklassen() {
-		return List.of(new DTOAbteilungsKlassen(1L, 1L, 1L), new DTOAbteilungsKlassen(2L, 1L, 2L));
-	}
 }

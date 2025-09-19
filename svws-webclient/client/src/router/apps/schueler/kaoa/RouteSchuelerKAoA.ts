@@ -23,10 +23,11 @@ export class RouteSchuelerKAoA extends RouteNode<RouteDataSchuelerKAoA, RouteSch
 	protected checkHidden(params: RouteParams = {}) {
 		try {
 			const { id } = RouteNode.getIntParams(params, ["id"]);
+			const auswahl = routeSchueler.data.manager.auswahl();
 			const schuljahr = routeSchueler.data.manager.getSchuljahr();
 			if (!routeSchueler.data.manager.hasDaten()
-				|| (routeSchueler.data.manager.auswahl().status === SchuelerStatus.EXTERN.daten(schuljahr)?.id)
-				|| (routeSchueler.data.manager.auswahl().status === SchuelerStatus.EHEMALIGE.daten(schuljahr)?.id))
+				|| (auswahl.status === SchuelerStatus.EXTERN.daten(schuljahr)?.id)
+				|| (auswahl.status === SchuelerStatus.EHEMALIGE.daten(schuljahr)?.id))
 				return routeSchueler.getRouteDefaultChild({ id });
 			return false;
 		} catch (e) {

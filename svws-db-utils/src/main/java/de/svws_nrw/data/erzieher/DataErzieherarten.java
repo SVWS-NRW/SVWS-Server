@@ -3,6 +3,7 @@ package de.svws_nrw.data.erzieher;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.SimpleOperationResponse;
@@ -18,19 +19,29 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response;
 
 /**
- * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für den
- * Core-DTO {@link Erzieherart}.
+ * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für das Core-DTO {@link Erzieherart}.
  */
 public final class DataErzieherarten extends DataManagerRevised<Long, DTOErzieherart, Erzieherart> {
 
 	/**
-	 * Erstellt einen neuen {@link DataManagerRevised} für den Core-DTO {@link Erzieherart}.
+	 * patching or deleting these entries is not aloud according to SchILDzentral
+	 */
+	static final Set<Long> IDS_OF_NON_PATCHABLE_ENTRIES = Set.of(1L, 2L, 3L, 4L, 5L);
+
+	/**
+	 * Erstellt einen neuen {@link DataManagerRevised} für das Core-DTO {@link Erzieherart}.
 	 *
 	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
 	 */
 	public DataErzieherarten(final DBEntityManager conn) {
 		super(conn);
 		setAttributesRequiredOnCreation("bezeichnung");
+		setAttributesNotPatchable("id");
+	}
+
+	@Override
+	protected long getLongId(final DTOErzieherart dto) {
+		return dto.ID;
 	}
 
 	@Override
@@ -38,7 +49,7 @@ public final class DataErzieherarten extends DataManagerRevised<Long, DTOErziehe
 		final Erzieherart daten = new Erzieherart();
 		daten.id = dto.ID;
 		daten.bezeichnung = (dto.Bezeichnung == null) ? "" : dto.Bezeichnung;
-		daten.sortierung = dto.Sortierung;
+		daten.sortierung = (dto.Sortierung == null) ? 32000 : dto.Sortierung;
 		daten.istSichtbar = (dto.Sichtbar == null) || dto.Sichtbar;
 		daten.exportBez = (dto.ExportBez == null) ? "" : dto.ExportBez;
 		daten.anzahlErziehungsberechtigte = 0;
@@ -48,37 +59,38 @@ public final class DataErzieherarten extends DataManagerRevised<Long, DTOErziehe
 	/**
 	 * Konvertiert ein DTOErzieherart-Objekt in ein Erzieherart-Objekt und setzt die Anzahl der Erziehungsberechtigte.
 	 *
-	 * @param dtoErzieherart Das DTOErzieherart-Objekt, das konvertiert werden soll.
+	 * @param dto Das DTOErzieherart-Objekt, das konvertiert werden soll.
 	 * @param anzahlErziehungsberechtigte Die Anzahl der Erziehungsberechtigte, die gesetzt werden sollen.
 	 *
 	 * @return Ein Erzieherart-Objekt, das aus dem DTOErzieherart-Objekt konvertiert und mit der Anzahl der Erziehungsberechtigte gesetzt wurde.
 	 */
-	public Erzieherart map(final DTOErzieherart dtoErzieherart, final int anzahlErziehungsberechtigte) {
-		final Erzieherart et = map(dtoErzieherart);
-		et.anzahlErziehungsberechtigte = anzahlErziehungsberechtigte;
-		return et;
+	public Erzieherart map(final DTOErzieherart dto, final int anzahlErziehungsberechtigte) {
+		final Erzieherart erzieherart = map(dto);
+		erzieherart.anzahlErziehungsberechtigte = anzahlErziehungsberechtigte;
+		return erzieherart;
 	}
 
 	@Override
 	public List<Erzieherart> getAll() throws ApiOperationException {
-		final List<DTOErzieherart> listErzieherart = conn.queryAll(DTOErzieherart.class);
-		final Map<Long, Long> mapSchuelerErz = conn.queryList(DTOSchuelerErzieherAdresse.QUERY_ALL.concat("  WHERE e.ErzieherArt_ID IS NOT NULL"),
-				DTOSchuelerErzieherAdresse.class).stream().collect(Collectors.groupingBy(t -> t.ErzieherArt_ID, Collectors.counting()));
-		return listErzieherart.stream()
-				.map(et -> map(et, mapSchuelerErz.getOrDefault(et.ID, 0L).intValue()))
-				.toList();
+		final List<DTOErzieherart> erzieherarten = conn.queryAll(DTOErzieherart.class);
+		final Map<Long, Long> erzieherartCountById =
+				conn.queryList(DTOSchuelerErzieherAdresse.QUERY_ALL.concat("  WHERE e.ErzieherArt_ID IS NOT NULL"), DTOSchuelerErzieherAdresse.class).stream()
+						.collect(Collectors.groupingBy(t -> t.ErzieherArt_ID, Collectors.counting()));
+		return erzieherarten.stream().map(e -> map(e, erzieherartCountById.getOrDefault(e.ID, 0L).intValue())).toList();
 	}
 
 	@Override
 	public Erzieherart getById(final Long id) throws ApiOperationException {
 		if (id == null)
 			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Eine Anfrage zu einer Erzieherart mit der ID null ist unzulässig.");
+
 		final DTOErzieherart erzieherart = conn.queryByKey(DTOErzieherart.class, id);
 		if (erzieherart == null)
 			throw new ApiOperationException(Response.Status.NOT_FOUND, "Die Erzieherart mit der ID %d wurde nicht gefunden.".formatted(id));
-		final int anzahlErz = conn.queryList(DTOSchuelerErzieherAdresse.QUERY_BY_ERZIEHERART_ID.replace("SELECT e ", "SELECT COUNT(e) "),
-				DTOSchuelerErzieherAdresse.class, erzieherart.ID).size();
-		return map(erzieherart, anzahlErz);
+
+		final int anzahlErziehungsberechtigte =
+				conn.queryList(DTOSchuelerErzieherAdresse.QUERY_BY_ERZIEHERART_ID, DTOSchuelerErzieherAdresse.class, erzieherart.ID).size();
+		return map(erzieherart, anzahlErziehungsberechtigte);
 	}
 
 	@Override
@@ -90,50 +102,67 @@ public final class DataErzieherarten extends DataManagerRevised<Long, DTOErziehe
 	}
 
 	@Override
+	public void checkBeforePatch(final DTOErzieherart dto, final Map<String, Object> patchAttributes) throws ApiOperationException {
+		if (IDS_OF_NON_PATCHABLE_ENTRIES.contains(dto.ID))
+			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Der Eintrag %s mit der id %d darf nicht verändert werden.".formatted(dto.Bezeichnung, dto.ID));
+	}
+
+	@Override
 	protected void mapAttribute(final DTOErzieherart dto, final String name, final Object value, final Map<String, Object> map) throws ApiOperationException {
 		switch (name) {
 			case "id" -> {
-				final Long id = JSONMapper.convertToLong(value, false, "id");
+				final Long id = JSONMapper.convertToLong(value, false, name);
 				if (!Objects.equals(dto.ID, id))
-					throw new ApiOperationException(Response.Status.BAD_REQUEST, "IdPatch %d ist ungleich dtoId %d".formatted(id, dto.ID));
+					throw new ApiOperationException(Response.Status.BAD_REQUEST,
+							"Die ID %d des Patches ist null oder stimmt nicht mit der ID %d in der Datenbank überein.".formatted(id, dto.ID));
 			}
-			case "bezeichnung" -> dto.Bezeichnung = validateBezeichnung(value, name);
+			case "bezeichnung" -> validateBezeichnung(dto, value, name);
 			case "istSichtbar" -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false, name);
 			case "sortierung" -> dto.Sortierung = JSONMapper.convertToInteger(value, false, name);
 			case "exportBez" -> dto.ExportBez = JSONMapper.convertToString(value, false, false, Schema.tab_K_ErzieherArt.col_ExportBez.datenlaenge(), name);
-			default -> throw new ApiOperationException(Response.Status.BAD_REQUEST, "Die Daten des Patches enthalten ein unbekanntes Attribut.");
+			default -> throw new ApiOperationException(Response.Status.BAD_REQUEST, "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));
+
 		}
 	}
 
-	private String validateBezeichnung(final Object value, final String name) throws ApiOperationException {
-		final String bezeichnung = JSONMapper.convertToString(value, false, false, Schema.tab_K_ErzieherArt.col_Bezeichnung.datenlaenge(), name);
-		final List<DTOErzieherart> bezeichnungenFiltered = conn.queryList(
-				"SELECT e FROM DTOErzieherart e WHERE e.Bezeichnung = ?1", DTOErzieherart.class, bezeichnung);
-		if (!bezeichnungenFiltered.isEmpty())
-			throw new ApiOperationException(Response.Status.BAD_REQUEST,
-					"Die Bezeichnung '%s' wird bereits für eine andere Erzieherart genutzt.".formatted(bezeichnung));
-		return bezeichnung;
+	private void validateBezeichnung(final DTOErzieherart dto, final Object value, final String name) throws ApiOperationException {
+		final String bezeichnung = JSONMapper.convertToString(
+				value, false, false, Schema.tab_K_ErzieherArt.col_Bezeichnung.datenlaenge(), name);
+		if (Objects.equals(dto.Bezeichnung, bezeichnung) || bezeichnung.isBlank())
+			return;
+
+		final boolean bezeichnungAlreadyUsed = this.conn.queryAll(DTOErzieherart.class).stream()
+				.anyMatch(e -> (e.ID != dto.ID) && e.Bezeichnung.equalsIgnoreCase(bezeichnung));
+
+		if (bezeichnungAlreadyUsed)
+			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Die Bezeichnung %s ist bereits vorhanden.".formatted(bezeichnung));
+
+		dto.Bezeichnung =  bezeichnung;
 	}
 
-	@Override
-	protected long getLongId(final DTOErzieherart erzieherart) {
-		return erzieherart.ID;
-	}
 
 	@Override
 	protected void checkBeforeDeletionWithSimpleOperationResponse(final List<DTOErzieherart> dtos, final Map<Long, SimpleOperationResponse> mapResponses) {
-
-		for (final DTOErzieherart dtoErzieherart : dtos) {
-			final SimpleOperationResponse response = mapResponses.get(dtoErzieherart.ID);
+		final List<Long> ids = dtos.stream().map(d -> d.ID).toList();
+		final Map<Long, Long> erziehungsberechtigteCountById = conn.queryList(
+						"SELECT e.ErzieherArt_ID, COUNT(e) FROM DTOSchuelerErzieherAdresse e "
+								+ "WHERE e.ErzieherArt_ID IN ?1 GROUP BY e.ErzieherArt_ID", Object[].class, ids).stream()
+				.collect(Collectors.toMap(id -> (Long) id[0], count -> (Long) count[1]));
+		for (final DTOErzieherart dto : dtos) {
+			final SimpleOperationResponse response = mapResponses.getOrDefault(dto.ID, null);
 			if (response == null)
-				throw new DeveloperNotificationException("Das SimpleOperationResponse Objekt zu der ID %d existiert nicht.".formatted(dtoErzieherart.ID));
-			final List<Long> schuelerErziehungsberchtigteIds = new DataErzieherStammdaten(conn, 1L).getIDsByErzieherartID(dtoErzieherart.ID);
+				throw new DeveloperNotificationException("Das SimpleOperationResponse Objekt zu der ID %d existiert nicht.".formatted(dto.ID));
 
-			if (!schuelerErziehungsberchtigteIds.isEmpty()) {
+			if (IDS_OF_NON_PATCHABLE_ENTRIES.contains(dto.ID)) {
 				response.success = false;
-				response.log.add("Erzieherart %s (ID: %d) hat noch %d verknüpfte(n) SchülerErziehereinträge.".formatted(
-						dtoErzieherart.Bezeichnung, dtoErzieherart.ID, schuelerErziehungsberchtigteIds.size()
-				));
+				response.log.add("Erzieherart %s (ID: %d) darf weder gelöscht noch verändert werden".formatted(dto.Bezeichnung, dto.ID));
+				continue;
+			}
+
+			final long count = erziehungsberechtigteCountById.getOrDefault(dto.ID, 0L);
+			if (count > 0) {
+				response.success = false;
+				response.log.add("Erzieherart %s (ID: %d) hat noch %d verknüpfte SchülerErziehereinträge.".formatted(dto.Bezeichnung, dto.ID, count));
 			}
 		}
 	}

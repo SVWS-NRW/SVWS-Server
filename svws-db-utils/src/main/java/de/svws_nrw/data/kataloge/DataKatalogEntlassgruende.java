@@ -74,16 +74,30 @@ public final class DataKatalogEntlassgruende extends DataManagerRevised<Long, DT
 		throws ApiOperationException {
 		switch (name) {
 			case "id" -> {
-				final Long id = JSONMapper.convertToLong(value, false, "id");
+				final Long id = JSONMapper.convertToLong(value, false, name);
 				if (!Objects.equals(dto.ID, id))
-					throw new ApiOperationException(Status.BAD_REQUEST, "IdPatch %d ist ungleich dtoId %d".formatted(id, dto.ID));
+					throw new ApiOperationException(Status.BAD_REQUEST,
+							"Die ID %d des Patches ist null oder stimmt nicht mit der ID %d in der Datenbank überein.".formatted(id, dto.ID));
 			}
-			case "bezeichnung" -> dto.Bezeichnung = JSONMapper.convertToString(
-					value, false, false, Schema.tab_K_EntlassGrund.col_Bezeichnung.datenlaenge(), "bezeichnung");
-			case "sortierung" -> dto.Sortierung = JSONMapper.convertToInteger(value, true, "sortierung");
-			case "istSichtbar" -> dto.Sichtbar = JSONMapper.convertToBoolean(value, true, "istSichtbar");
-			case "istAenderbar" -> dto.Aenderbar = JSONMapper.convertToBoolean(value, true, "istAenderbar");
+			case "bezeichnung" -> updateBezeichnung(dto, value, name);
+			case "sortierung" -> dto.Sortierung = JSONMapper.convertToInteger(value, true, name);
+			case "istSichtbar" -> dto.Sichtbar = JSONMapper.convertToBoolean(value, true, name);
+			case "istAenderbar" -> dto.Aenderbar = JSONMapper.convertToBoolean(value, true, name);
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));
 		}
+	}
+
+	private void updateBezeichnung(final DTOEntlassarten dto, final Object value, final String name) throws ApiOperationException {
+		final String bezeichnung =
+				JSONMapper.convertToString(value, false, false, Schema.tab_K_EntlassGrund.col_Bezeichnung.datenlaenge(), name);
+		if (Objects.equals(dto.Bezeichnung, bezeichnung) || bezeichnung.isBlank())
+			return;
+
+		final boolean bezeichnungAlreadyUsed = this.conn.queryAll(DTOEntlassarten.class).stream()
+				.anyMatch(e -> (e.ID != dto.ID) && e.Bezeichnung.equalsIgnoreCase(bezeichnung));
+		if (bezeichnungAlreadyUsed)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die Bezeichnung %s ist bereits vorhanden.".formatted(value));
+
+		dto.Bezeichnung = bezeichnung;
 	}
 }

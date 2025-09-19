@@ -83,7 +83,7 @@ public final class DataKatalogSchuelerFoerderschwerpunkte extends DataManagerRev
 					throw new ApiOperationException(Status.BAD_REQUEST,
 							"Die ID %d des Patches ist null oder stimmt nicht mit der ID %d in der Datenbank überein.".formatted(id, dto.ID));
 			}
-			case "kuerzel" -> mapBezeichnung(dto, value);
+			case "kuerzel" -> mapBezeichnung(dto, value, name);
 			case "kuerzelStatistik" -> mapKuerzelStatistik(dto, value);
 			case "istSichtbar" -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false, name);
 			case "sortierung" -> dto.Sortierung = JSONMapper.convertToInteger(value, false, name);
@@ -94,11 +94,14 @@ public final class DataKatalogSchuelerFoerderschwerpunkte extends DataManagerRev
 		}
 	}
 
-	private void mapBezeichnung(final DTOFoerderschwerpunkt dto, final Object value) throws ApiOperationException {
-		final String bezeichnung = JSONMapper.convertToString(value, false, false, 50, "kuerzel");
-		final List<DTOFoerderschwerpunkt> eintraege = this.conn.queryAll(DTOFoerderschwerpunkt.class);
-		for (final DTOFoerderschwerpunkt eintrag : eintraege)
-			if (eintrag.Bezeichnung.equals(bezeichnung))
+	private void mapBezeichnung(final DTOFoerderschwerpunkt dto, final Object value, final String name) throws ApiOperationException {
+		final String bezeichnung = JSONMapper.convertToString(value, false, false, 50, name);
+		if (Objects.equals(dto.Bezeichnung, bezeichnung) || bezeichnung.isBlank())
+			return;
+
+		final boolean bezeichnungAlreadyUsed = this.conn.queryAll(DTOFoerderschwerpunkt.class).stream()
+				.anyMatch(f -> (f.ID != dto.ID) && f.Bezeichnung.equalsIgnoreCase(bezeichnung));
+		if (bezeichnungAlreadyUsed)
 				throw new ApiOperationException(Status.BAD_REQUEST, "Das Kürzel %s darf nicht doppelt vergeben werden".formatted(bezeichnung));
 
 		dto.Bezeichnung = bezeichnung;
@@ -106,14 +109,11 @@ public final class DataKatalogSchuelerFoerderschwerpunkte extends DataManagerRev
 
 	private static void mapKuerzelStatistik(final DTOFoerderschwerpunkt dto, final Object value) throws ApiOperationException {
 		final String kuerzel = JSONMapper.convertToString(value, false, false, 2, "kuerzelStatistik");
-		// Kürzel ist unverändert
-		if (kuerzel.equals(dto.StatistikKrz))
+		if (Objects.equals(dto.StatistikKrz, kuerzel) || kuerzel.isBlank())
 			return;
 
-		final Foerderschwerpunkt fs = Foerderschwerpunkt.data().getWertBySchluessel(kuerzel);
-		if (fs == null)
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"Zum angegebenen Kürzel %s wurde kein passender Förderschwerpunkt gefunden.".formatted(kuerzel));
+		if (Foerderschwerpunkt.data().getWertBySchluessel(kuerzel) == null)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Zum angegebenen Kürzel %s wurde kein passender Förderschwerpunkt gefunden.".formatted(kuerzel));
 
 		dto.StatistikKrz = kuerzel;
 	}

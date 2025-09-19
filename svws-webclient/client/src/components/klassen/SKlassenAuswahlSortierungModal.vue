@@ -3,8 +3,8 @@
 	<svws-ui-modal v-model:show="show">
 		<template #modalTitle>Standardsortierung anwenden</template>
 		<template #modalContent>
-			Sollen alle Klassen nach der Standardsortierung sortiert werden, die sich an der Klassenbezeichnung orientiert? Dabei geht die aktuell hinterlegt Sortierreihenfolge verloren.
-			<br>Die Standardsortierung orientiert sich an der Jahrgang-Sortierung und Parallelität. Die Jahrgangssortierung wird im Katalog der Jahrgänge festgelegt.
+			Soll die Reihenfolge der Sortierung anhand der Jahrgangsortierung angepasst werden? Dabei werden unter Umständen bereits festgelegte Sortierreihenfolgen der Klassen unwiderruflich verändert.
+			<br>Die Standardsortierung orientiert sich dabei an der Jahrgangsortierung und -Parallelität und wird im Katalog der Jahrgänge festgelegt.
 		</template>
 		<template #modalActions>
 			<svws-ui-button type="secondary" @click="show = false"> Abbrechen </svws-ui-button>

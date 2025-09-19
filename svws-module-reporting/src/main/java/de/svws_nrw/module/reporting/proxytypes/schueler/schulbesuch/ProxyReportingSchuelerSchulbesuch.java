@@ -80,7 +80,7 @@ public class ProxyReportingSchuelerSchulbesuch extends ReportingSchuelerSchulbes
 		if (idEntlassgrund == null)
 			return null;
 
-		return reportingRepository.katalogEntlassgrunde().get(idEntlassgrund);
+		return reportingRepository.katalogEntlassgruende().get(idEntlassgrund);
 	}
 
 	/**

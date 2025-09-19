@@ -1,7 +1,16 @@
 import { describe, expect, test } from "vitest";
 import { privilegedApiServer } from "../../utils/APIUtils";
-import type { ENMFach, ENMFloskelgruppe, ENMFoerderschwerpunkt, ENMJahrgang, ENMKlasse, ENMLehrer, ENMLerngruppe, ENMNote, ENMSchueler, ENMTeilleistungsart } from "@core";
-import { ArrayList } from "@core";
+import { ArrayList } from "../../../svws-webclient/core/src/java/util/ArrayList";
+import type { ENMNote } from "../../../svws-webclient/core/src/core/data/enm/ENMNote";
+import type { ENMFoerderschwerpunkt } from "../../../svws-webclient/core/src/core/data/enm/ENMFoerderschwerpunkt";
+import type { ENMJahrgang } from "../../../svws-webclient/core/src/core/data/enm/ENMJahrgang";
+import type { ENMKlasse } from "../../../svws-webclient/core/src/core/data/enm/ENMKlasse";
+import type { ENMFloskelgruppe } from "../../../svws-webclient/core/src/core/data/enm/ENMFloskelgruppe";
+import type { ENMLehrer } from "../../../svws-webclient/core/src/core/data/enm/ENMLehrer";
+import type { ENMFach } from "../../../svws-webclient/core/src/core/data/enm/ENMFach";
+import type { ENMTeilleistungsart } from "../../../svws-webclient/core/src/core/data/enm/ENMTeilleistungsart";
+import type { ENMLerngruppe } from "../../../svws-webclient/core/src/core/data/enm/ENMLerngruppe";
+import type { ENMSchueler } from "../../../svws-webclient/core/src/core/data/enm/ENMSchueler";
 
 describe("APIENM Tests", () => {
 	describe.each([{schema: "GymAbi01"}])('gegen %s', ({schema}) => {

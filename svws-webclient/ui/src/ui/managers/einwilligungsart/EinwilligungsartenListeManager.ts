@@ -179,8 +179,8 @@ export class EinwilligungsartenListeManager extends AuswahlManager<number, Einwi
 		return JavaLong.compare(a.id, b.id);
 	}
 
-	protected checkFilter(eintrag : Einwilligungsart) : boolean {
-		return !(this._filterNurSichtbar && !eintrag.istSichtbar);
+	protected checkFilter() : boolean {
+		return true;
 	}
 
 	transpilerCanonicalName(): string {

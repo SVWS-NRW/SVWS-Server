@@ -5,6 +5,7 @@ import type {
 	GostKlausurenCollectionData,
 	GostKlausurplanManager,
 	GostKlausurtermin,
+	GostKursklausur,
 	GostSchuelerklausur,
 	List,
 	Schuljahresabschnitt,
@@ -20,6 +21,7 @@ export interface GostKlausurplanungProblemeProps {
 	erzeugeSchuelerklausuren: (termine: List<Partial<GostSchuelerklausur>>) => Promise<void>;
 	loescheSchuelerklausuren: (termine: List<GostSchuelerklausur>) => Promise<void>;
 	erzeugeKursklausurenAusVorgaben: (quartal: number) => Promise<GostKlausurenCollectionData>;
+	loescheKursklausuren: (klausuren: List<GostKursklausur>) => Promise<void>;
 	gotoVorgaben: () => Promise<void>;
 	gotoSchienen: (termin: GostKlausurtermin | undefined) => Promise<void>;
 	gotoKalenderdatum: (datum: string | undefined, termin: GostKlausurtermin | undefined) => Promise<void>;

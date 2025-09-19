@@ -4,8 +4,8 @@ import { RouteNode } from "~/router/RouteNode";
 
 import { type RouteApp } from "~/router/apps/RouteApp";
 
-import { RouteDataSchule } from "~/router/apps/schule/RouteDataSchule";
-import { routeSchuleStammdaten } from "./RouteSchuleStammdaten";
+import { RouteDataSchule } from "~/router/apps/schule/schulbezogen/stammdaten/RouteDataSchule";
+import { routeSchuleStammdaten } from "./schulbezogen/stammdaten/RouteSchuleStammdaten";
 import { AppMenuGroup } from "@ui";
 
 

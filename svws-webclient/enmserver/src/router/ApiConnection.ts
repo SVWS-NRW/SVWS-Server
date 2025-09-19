@@ -131,8 +131,8 @@ export class ApiConnection {
 			this._username = username;
 			this._password = password;
 			this._api = new ApiEnmServer(this._url, this._username, this._password);
-			// Prüfe, ob die Anmeldedaten korrekt sind, indem der Server-Modus und Schulform abgefragt werden
 			this._serverMode.value = await this._api.getServerMode();
+			// Prüfe, ob die Anmeldedaten korrekt sind, indem die Schulform abgefragt wird
 			this._schulform.value = await this._api.getSchulform();
 			this._authenticated.value = true;
 		} catch (error) {
@@ -140,7 +140,6 @@ export class ApiConnection {
 			this._serverMode.value = ServerMode.STABLE;
 			this._schulform.value = null;
 			this._authenticated.value = false;
-			throw error;
 		}
 		return this._authenticated.value;
 	}

@@ -7,6 +7,7 @@ export function useLoginUtils(targetHost: string, page: Page) {
 		await page.getByLabel('Benutzername').click();
 		await page.getByLabel('Benutzername').fill('Admin');
 		await page.getByRole('button', { name: 'Anmelden' }).click();
+		await page.waitForURL('**/#/**/schueler/**/daten', { timeout: 30_000 });
 	}
 
 	const loginBISZ = async () => {
@@ -16,6 +17,7 @@ export function useLoginUtils(targetHost: string, page: Page) {
 		await page.getByLabel('Passwort').click();
 		await page.getByLabel('Passwort').fill('BISZ');
 		await page.getByRole('button', { name: 'Anmelden' }).click();
+		await page.waitForURL('**/#/**/schueler/**/daten', { timeout: 30_000 });
 	}
 
 	const loginRoot = async () => {
