@@ -2,7 +2,7 @@ import type {
 	ApiFile, LehrerFachrichtungEintrag, LehrerLehramtEintrag, LehrerLehrbefaehigungEintrag, LehrerListeEintrag, LehrerPersonalabschnittsdatenAnrechnungsstunden,
 	LehrerPersonaldaten, LehrerPersonalabschnittsdaten, LehrerStammdaten, List, SimpleOperationResponse, StundenplanListeEintrag,
 	ReportingParameter, SchulEintrag } from "@core";
-import { ArrayList, UserNotificationException, DeveloperNotificationException, BenutzerKompetenz } from "@core";
+import { ArrayList, UserNotificationException, DeveloperNotificationException, BenutzerKompetenz, ServerMode } from "@core";
 import { api } from "~/router/Api";
 import { routeLehrerIndividualdaten } from "~/router/apps/lehrer/individualdaten/RouteLehrerIndividualdaten";
 import { type PendingStateManager, ViewType, LehrerListeManager } from "@ui";
@@ -12,6 +12,7 @@ import type { RouteParamsRawGeneric } from "vue-router";
 import { routeLehrerIndividualdatenGruppenprozesse } from "~/router/apps/lehrer/individualdaten/RouteLehrerIndividualdatenGruppenprozesse";
 import { PendingStateManagerLehrerIndividualdaten } from "~/router/apps/lehrer/individualdaten/PendingStateManagerLehrerIndividualdaten";
 import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
+import { routeLehrerAllgemeinesGruppenprozesse } from "./allgemeines/RouteLehrerAllgemeinesGruppenprozesse";
 
 interface RouteStateLehrer extends RouteStateAuswahlInterface<LehrerListeManager> {
 	mapStundenplaene: Map<number, StundenplanListeEintrag>;
@@ -88,6 +89,14 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 		} else {
 			manager.useFilter(this._state.value.manager);
 		}
+
+		// Hinweis: Dieses Nachträgliche Verändern des DefaultStates wurde gemacht, weil zum Zeitpunkt der Klassen initialisierung der ServerMode noch nicht
+		// abgerufen wurde und somit die Bedingung, welche Route als Default für Gruppenprozesse genutzt werden soll, nicht geprüft werden kann
+		// Diese Stelle eignet sich als Alternative, da sie noch vor dem ersten Betreten der Route aber bereits nach dem Abruf der ServerModes liegt
+		// TODO: Ausbauen sobald die Route routeSchuelerIndividualdatenGruppenprozesse im "Stable" Mode bereitsteht
+		if (api.mode !== ServerMode.DEV)
+			this._defaultState = { ...defaultState, gruppenprozesseView: routeLehrerAllgemeinesGruppenprozesse };
+
 		return { manager };
 	}
 
