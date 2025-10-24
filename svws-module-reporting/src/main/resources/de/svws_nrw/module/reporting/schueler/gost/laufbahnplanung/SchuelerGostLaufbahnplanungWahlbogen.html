@@ -83,23 +83,23 @@
 				<tfoot>
 					<tr>
 						<td colspan="3" class="p-tb-0 p-lr-1 m-0 bo-t-black" style="padding-right: 6px; text-align: right;"><b>Anzahl anrechenbare Kurse:</b></td>
-						<td class="p-tb-0 p-lr-1 m-0 ta-c bo-t-black bo-l-grey bo-b-grey" style="border-left: 1px grey solid;" th:text="${schueler.gostLaufbahnplanung().kursanzahlEF1()}">12</td>
-						<td class="p-tb-0 p-lr-1 m-0 ta-c bo-t-black bo-l-grey bo-b-grey" th:text="${schueler.gostLaufbahnplanung().kursanzahlEF2()}">11</td>
-						<td class="p-tb-0 p-lr-1 m-0 ta-c bo-t-black bo-l-grey bo-b-grey bg-lightyellow" style="border-left: 1px grey solid;" th:text="${schueler.gostLaufbahnplanung().kursanzahlQ11()}">11</td>
-						<td class="p-tb-0 p-lr-1 m-0 ta-c bo-t-black bo-l-grey bo-b-grey bg-lightyellow" th:text="${schueler.gostLaufbahnplanung().kursanzahlQ12()}">10</td>
-						<td class="p-tb-0 p-lr-1 m-0 ta-c bo-t-black bo-l-grey bo-b-grey bg-lightyellow" th:text="${schueler.gostLaufbahnplanung().kursanzahlQ21()}">10</td>
-						<td class="p-tb-0 p-lr-1 m-0 ta-c bo-t-black bo-l-grey bo-b-grey bg-lightyellow" th:text="${schueler.gostLaufbahnplanung().kursanzahlQ22()}">10</td>
-						<td class="p-tb-0 p-lr-1 m-0 ta-c bo-t-black bo-l-grey bo-b-grey bg-lightyellow" style="border-left: 1px grey solid; border-right: 1px grey solid;" th:text="${schueler.gostLaufbahnplanung().kursanzahlAnrechenbarBlockI()}"><b>41</b></td>
+						<td class="p-tb-0 p-lr-1 m-0 ta-c bo-t-black bo-l-grey bo-b-grey" style="border-left: 1px grey solid;" th:styleappend="${schueler.gostLaufbahnplanung().kursanzahlEF1() < 10  ? 'background-color: lightcoral;' : (schueler.gostLaufbahnplanung().kursanzahlEF1() <= 10  ? 'background-color: yellow;' : '')}" th:text="${schueler.gostLaufbahnplanung().kursanzahlEF1()}">12</td>
+						<td class="p-tb-0 p-lr-1 m-0 ta-c bo-t-black bo-l-grey bo-b-grey" th:styleappend="${schueler.gostLaufbahnplanung().kursanzahlEF2() < 10  ? 'background-color: lightcoral;' : (schueler.gostLaufbahnplanung().kursanzahlEF2() <= 10  ? 'background-color: yellow;' : '')}" th:text="${schueler.gostLaufbahnplanung().kursanzahlEF2()}">11</td>
+						<td class="p-tb-0 p-lr-1 m-0 ta-c bo-t-black bo-l-grey bo-b-grey" style="border-top: 1px black solid; border-bottom: 1px black solid; border-left: 1px black solid;" th:styleappend="${schueler.gostLaufbahnplanung().kursanzahlQ11() < 9  ? 'background-color: lightcoral;' : (schueler.gostLaufbahnplanung().kursanzahlQ11() <= 9  ? 'background-color: yellow;' : '')}" th:text="${schueler.gostLaufbahnplanung().kursanzahlQ11()}">11</td>
+						<td class="p-tb-0 p-lr-1 m-0 ta-c bo-t-black bo-l-grey bo-b-grey" style="border-top: 1px black solid; border-bottom: 1px black solid;" th:styleappend="${schueler.gostLaufbahnplanung().kursanzahlQ12() < 9  ? 'background-color: lightcoral;' : (schueler.gostLaufbahnplanung().kursanzahlQ12() <= 9  ? 'background-color: yellow;' : '')}" th:text="${schueler.gostLaufbahnplanung().kursanzahlQ12()}">10</td>
+						<td class="p-tb-0 p-lr-1 m-0 ta-c bo-t-black bo-l-grey bo-b-grey" style="border-top: 1px black solid; border-bottom: 1px black solid;" th:styleappend="${schueler.gostLaufbahnplanung().kursanzahlQ21() < 9  ? 'background-color: lightcoral;' : (schueler.gostLaufbahnplanung().kursanzahlQ21() <= 9  ? 'background-color: yellow;' : '')}" th:text="${schueler.gostLaufbahnplanung().kursanzahlQ21()}">10</td>
+						<td class="p-tb-0 p-lr-1 m-0 ta-c bo-t-black bo-l-grey bo-b-grey" style="border-top: 1px black solid; border-bottom: 1px black solid;" th:styleappend="${schueler.gostLaufbahnplanung().kursanzahlQ22() < 9  ? 'background-color: lightcoral;' : (schueler.gostLaufbahnplanung().kursanzahlQ22() <= 9  ? 'background-color: yellow;' : '')}" th:text="${schueler.gostLaufbahnplanung().kursanzahlQ22()}">10</td>
+						<td class="p-tb-0 p-lr-1 m-0 ta-c bo-t-black bo-l-grey bo-b-grey" style="border-top: 1px black solid; border-bottom: 1px black solid; border-right: 1px black solid; border-left: 1px grey solid;" th:styleappend="${schueler.gostLaufbahnplanung().kursanzahlAnrechenbarBlockI() < 38  ? 'background-color: lightcoral;' : (schueler.gostLaufbahnplanung().kursanzahlAnrechenbarBlockI() <= 39  ? 'background-color: yellow;' : '')}" th:text="${schueler.gostLaufbahnplanung().kursanzahlAnrechenbarBlockI()}"><b>41</b></td>
 					</tr>
 					<tr>
 						<td colspan="3" class="p-tb-0 p-lr-1 m-0" style="padding-right: 6px; text-align: right;"><b>Wochenstundensumme:</b></td>
-						<td class="p-tb-0 p-lr-1 m-0 ta-c bo-grey" style="border-left: 1px grey solid;" th:text="${schueler.gostLaufbahnplanung().wochenstundenEF1()}">36</td>
-						<td class="p-tb-0 p-lr-1 m-0 ta-c bo-grey" th:text="${schueler.gostLaufbahnplanung().wochenstundenEF2()}">33</td>
-						<td class="p-tb-0 p-lr-1 m-0 ta-c bo-grey" style="border-left: 1px grey solid;" th:text="${schueler.gostLaufbahnplanung().wochenstundenQ11()}">37</td>
-						<td class="p-tb-0 p-lr-1 m-0 ta-c bo-grey" th:text="${schueler.gostLaufbahnplanung().wochenstundenQ12()}">34</td>
-						<td class="p-tb-0 p-lr-1 m-0 ta-c bo-grey" th:text="${schueler.gostLaufbahnplanung().wochenstundenQ21()}">34</td>
-						<td class="p-tb-0 p-lr-1 m-0 ta-c bo-grey" th:text="${schueler.gostLaufbahnplanung().wochenstundenQ22()}">34</td>
-						<td rowspan="2" class="p-tb-0 p-lr-1 m-0 ta-c  bo-grey" style="border-left: 1px grey solid; border-right: 1px grey solid; vertical-align: middle;" th:text="${#numbers.formatDecimal(schueler.gostLaufbahnplanung().wochenstundenGesamt(), 1, 1)}"><b>104,0</b></td>
+						<td class="p-tb-0 p-lr-1 m-0 ta-c bo-grey" style="border-left: 1px grey solid;" th:styleappend="${schueler.gostLaufbahnplanung().wochenstundenEF1() < 32  ? 'background-color: lightcoral;' : (schueler.gostLaufbahnplanung().wochenstundenEF1() <= 32  ? 'background-color: yellow;' : '')}" th:text="${schueler.gostLaufbahnplanung().wochenstundenEF1()}">36</td>
+						<td class="p-tb-0 p-lr-1 m-0 ta-c bo-grey" th:styleappend="${schueler.gostLaufbahnplanung().wochenstundenEF2() < 32  ? 'background-color: lightcoral;' : (schueler.gostLaufbahnplanung().wochenstundenEF2() <= 32  ? 'background-color: yellow;' : '')}" th:text="${schueler.gostLaufbahnplanung().wochenstundenEF2()}">33</td>
+						<td class="p-tb-0 p-lr-1 m-0 ta-c bo-grey" style="border-left: 1px grey solid;" th:styleappend="${schueler.gostLaufbahnplanung().wochenstundenQ11() < 31  ? 'background-color: lightcoral;' : (schueler.gostLaufbahnplanung().wochenstundenQ11() <= 33  ? 'background-color: yellow;' : '')}" th:text="${schueler.gostLaufbahnplanung().wochenstundenQ11()}">37</td>
+						<td class="p-tb-0 p-lr-1 m-0 ta-c bo-grey" th:styleappend="${schueler.gostLaufbahnplanung().wochenstundenQ12() < 31  ? 'background-color: lightcoral;' : (schueler.gostLaufbahnplanung().wochenstundenQ12() <= 33  ? 'background-color: yellow;' : '')}" th:text="${schueler.gostLaufbahnplanung().wochenstundenQ12()}">34</td>
+						<td class="p-tb-0 p-lr-1 m-0 ta-c bo-grey" th:styleappend="${schueler.gostLaufbahnplanung().wochenstundenQ21() < 31  ? 'background-color: lightcoral;' : (schueler.gostLaufbahnplanung().wochenstundenQ21() <= 33  ? 'background-color: yellow;' : '')}" th:text="${schueler.gostLaufbahnplanung().wochenstundenQ21()}">34</td>
+						<td class="p-tb-0 p-lr-1 m-0 ta-c bo-grey" th:styleappend="${schueler.gostLaufbahnplanung().wochenstundenQ22() < 31  ? 'background-color: lightcoral;' : (schueler.gostLaufbahnplanung().wochenstundenQ22() <= 33  ? 'background-color: yellow;' : '')}" th:text="${schueler.gostLaufbahnplanung().wochenstundenQ22()}">34</td>
+						<td rowspan="2" class="p-tb-0 p-lr-1 m-0 ta-c  bo-grey" style="border-left: 1px grey solid; border-right: 1px grey solid; vertical-align: middle;" th:styleappend="${schueler.gostLaufbahnplanung().wochenstundenGesamt() < 100  ? 'background-color: lightcoral;' : (schueler.gostLaufbahnplanung().wochenstundenGesamt() < 102  ? 'background-color: yellow;' : '')}" th:text="${#numbers.formatDecimal(schueler.gostLaufbahnplanung().wochenstundenGesamt(), 1, 1)}"><b>104,0</b></td>
 					</tr>
 					<tr>
 						<td colspan="3" class="p-tb-0 p-lr-1 m-0 f-small ta-c" style="padding-right: 6px; text-align: right;">(pro Schuljahr)</td>
@@ -109,8 +109,8 @@
 					</tr>
 					<tr>
 						<td colspan="3" class="p-tb-0 p-lr-1 m-0" style="padding-right: 6px; text-align: right;"><b>Wochenstundendurchschnitt:</b></td>
-						<td colspan="2" class="p-tb-0 p-lr-1 m-0 ta-c bo-grey" style="border-left: 1px grey solid;" th:text="${#numbers.formatDecimal(schueler.gostLaufbahnplanung().wochenstundenDurchschnittEF(), 1, 1)}"><b>34,5</b></td>
-						<td colspan="4" class="p-tb-0 p-lr-1 m-0 ta-c bo-grey" style="border-left: 1px grey solid;" th:text="${#numbers.formatDecimal(schueler.gostLaufbahnplanung().wochenstundenDurchschnittQPh(), 1, 2)}"><b>34,75</b></td>
+						<td colspan="2" class="p-tb-0 p-lr-1 m-0 ta-c bo-grey" style="border-left: 1px grey solid;" th:styleappend="${schueler.gostLaufbahnplanung().wochenstundenDurchschnittEF() < 34 ? 'background-color: lightcoral;' : ''}" th:text="${#numbers.formatDecimal(schueler.gostLaufbahnplanung().wochenstundenDurchschnittEF(), 1, 1)}"><b>34,5</b></td>
+						<td colspan="4" class="p-tb-0 p-lr-1 m-0 ta-c bo-grey" style="border-left: 1px grey solid;" th:styleappend="${schueler.gostLaufbahnplanung().wochenstundenDurchschnittQPh() < 34 ? 'background-color: lightcoral;' : ''}" th:text="${#numbers.formatDecimal(schueler.gostLaufbahnplanung().wochenstundenDurchschnittQPh(), 1, 2)}"><b>34,75</b></td>
 						<td class="p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;"></td>
 					</tr>
 					<tr th:if="${nurBelegteFaecher}">
