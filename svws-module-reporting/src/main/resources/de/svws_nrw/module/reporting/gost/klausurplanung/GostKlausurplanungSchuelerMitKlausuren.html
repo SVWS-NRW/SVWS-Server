@@ -67,7 +67,7 @@
 									<td class="bo-t-grey p-tb-0 p-lr-1" th:text="${schuelerklausur.klausurtermin() != null ? #convert.toKalenderwocheDE(schuelerklausur.klausurtermin().datum()) : ''}">35</td>
 									<td class="bo-t-grey p-tb-0 p-lr-1" th:text="${schuelerklausur.klausurtermin() != null ? (#convert.toWochentagKurzDE(schuelerklausur.klausurtermin().datum()) + ' ' + #convert.toDateDE(schuelerklausur.klausurtermin().datum())) : ''}">Do. 02.10.2024</td>
 									<td class="bo-t-grey p-tb-0 p-lr-1" th:text="${schuelerklausur.kursklausur().kurs().kuerzel()}">ABC</td>
-									<td class="bo-t-grey p-tb-0 p-lr-1" th:text="${schuelerklausur.kursklausur().kurs().kursleitung().kuerzel()}">ABC</td>
+									<td class="bo-t-grey p-tb-0 p-lr-1" th:text="${(schuelerklausur.kursklausur().kurs().kursleitung() == null) ? '' : schuelerklausur.kursklausur().kurs().kursleitung().kuerzel()}">ABC</td>
 									<td class="bo-t-grey p-tb-0 p-lr-1" th:text="${((schuelerklausur.klausurraum() == null) || (schuelerklausur.klausurraum().raumdaten() == null)) ? '' : schuelerklausur.klausurraum().raumdaten().kuerzel()}">A2.13</td>
 									<td class="bo-t-grey p-tb-0 p-lr-1" th:text="${schuelerklausur.startuhrzeit() + ' Uhr'}">08:00 Uhr</td>
 									<td class="bo-t-grey p-tb-0 p-lr-1" th:text="${schuelerklausur.kursklausur().dauer() + ' Min.'}">180 Min.</td>

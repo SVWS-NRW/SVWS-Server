@@ -89,7 +89,7 @@
 							<tr>
 								<td></td>
 								<td class="bo-t-grey p-tb-0 p-lr-1" th:text="${kursklausur.kurs().kuerzel()}">GE-GK2</td>
-								<td class="bo-t-grey p-tb-0 p-lr-1" th:text="${kursklausur.kurs().kursleitung().kuerzel()}">ABC</td>
+								<td class="bo-t-grey p-tb-0 p-lr-1" th:text="${(kursklausur.kurs().kursleitung() == null) ? '' : kursklausur.kurs().kursleitung().kuerzel()}">ABC</td>
 								<td class="bo-t-grey p-tb-0 p-lr-1" th:text="${kursklausur.textRaeume()}">A2.13</td>
 								<td class="bo-t-grey p-tb-0 p-lr-1" th:text="${kursklausur.startuhrzeit() + ' Uhr'}">08:00 Uhr</td>
 								<td class="bo-t-grey p-tb-0 p-lr-1" th:text="${kursklausur.dauer() + ' Min.'}">180 Min.</td>
