@@ -12,6 +12,9 @@ import de.svws_nrw.module.reporting.types.person.ReportingPerson;
  */
 public class ReportingBenutzer extends ReportingPerson {
 
+	/** Der Anzeigename (displayname) des Benutzers. */
+	protected String anzeigename;
+
 	/** Der Benutzername (username) des Benutzers. */
 	protected String benutzername;
 
@@ -28,6 +31,7 @@ public class ReportingBenutzer extends ReportingPerson {
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
 	 *
 	 * @param anrede Die Anrede des Benutzers.
+	 * @param anzeigename Der Anzeigename (displayname) des Benutzers.
 	 * @param benutzername Der Benutzername (username) des Benutzers.
 	 * @param emailPrivat Private E-Mail-Adresse des Benutzers.
 	 * @param emailSchule Schulische E-Mail-Adresse des Benutzers.
@@ -57,7 +61,7 @@ public class ReportingBenutzer extends ReportingPerson {
 	 * @param wohnort Der Wohnort des Benutzers.
 	 * @param wohnortsteil Ggf. der Ortsteil des Wohnortes des Benutzers.
 	 */
-	public ReportingBenutzer(final String anrede, final String benutzername, final String emailPrivat, final String emailSchule, final String faxSchule,
+	public ReportingBenutzer(final String anrede, final String anzeigename, final String benutzername, final String emailPrivat, final String emailSchule, final String faxSchule,
 			final String geburtsdatum, final String geburtsland, final String geburtsname, final String geburtsort,
 			final Geschlecht geschlecht, final String hausnummer, final String hausnummerZusatz, final long id, final boolean istAdmin, final String kuerzel,
 			final ReportingLehrer lehrer, final String nachname, final Nationalitaeten staatsangehoerigkeit,
@@ -67,6 +71,8 @@ public class ReportingBenutzer extends ReportingPerson {
 		super(anrede, emailPrivat, emailSchule, faxSchule, geburtsdatum, geburtsland, geburtsname, geburtsort, geschlecht, hausnummer, hausnummerZusatz,
 				nachname, staatsangehoerigkeit, staatsangehoerigkeit2, strassenname, telefonPrivat, telefonPrivatMobil, telefonSchule, telefonSchuleMobil,
 				titel, vorname, vornamen, wohnort, wohnortsteil);
+		this.anzeigename = anzeigename;
+		this.benutzername = benutzername;
 		this.id = id;
 		this.istAdmin = istAdmin;
 		this.lehrer = lehrer;
@@ -111,6 +117,15 @@ public class ReportingBenutzer extends ReportingPerson {
 
 
 	// ##### Getter #####
+
+	/**
+	 * Der Anzeigename (displayname) des Benutzers.
+	 *
+	 * @return Inhalt des Feldes anzeigename
+	 */
+	public String anzeigename() {
+		return anzeigename;
+	}
 
 	/**
 	 * Der Benutzername (username) des Benutzers.

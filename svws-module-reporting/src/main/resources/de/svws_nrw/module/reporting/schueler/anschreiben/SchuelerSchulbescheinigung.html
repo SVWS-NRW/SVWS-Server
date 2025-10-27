@@ -81,7 +81,7 @@
 						<td>Kontakt:</td>
 						<td></td>
 						<!-- ToDo: Benutzer abseits von Lehrern müssen in der DB mehr Daten erhalten, um den Info-Block füllen zu können. -->
-						<td th:text="${Benutzer.hatLehrkraftdaten() ? Benutzer.lehrer().anredeNachname() : Benutzer.benutzername()}">Herr Mustermann-Schuster</td>
+						<td th:text="${Benutzer.hatLehrkraftdaten() ? Benutzer.lehrer().anredeNachname() : Benutzer.anzeigename()}">Herr Mustermann-Schuster</td>
 					</tr>
 					<tr>
 						<td>Telefon:</td>
@@ -116,7 +116,7 @@
 				<p class="f-bold m-b-2em">Schulbescheinigung</p>
 				<p class="m-b-1em">Hiermit wird bescheinigt, dass</p>
 				<p class="m-l-2em" th:text="${schueler.vornamenNachname()} + ', '"></p>
-				<p class="m-l-2em"  th:text="'geboren am ' + ${#convert.toDateDE(schueler.geburtsdatum())} + ' in ' + ${schueler.geburtsort()} + ', '"></p>
+				<p class="m-l-2em"  th:text="'geboren am ' + ${#convert.toDateDE(schueler.geburtsdatum()) + (!schueler.geburtsort().isEmpty() ? (' in ' + schueler.geburtsort()) : '')} + ', '"></p>
 				<p class="m-l-2em m-b-1em" th:text="'wohnhaft in ' + ${schueler.strassennameHausnummer()} + ', ' + ${schueler.plzOrt()} + ', '"></p>
 				<th:block th:if="${schueler.schulbesuch().entlassungDatum().isEmpty()}">
 					<p class="m-b-1em" th:text="'seit dem ' + ${#convert.toDateDE(schueler.aufnahmedatum())} + ' unsere Schule,'"></p>
@@ -141,7 +141,7 @@
 					<tr style="height: 5mm">
 						<td style="width: 100%;" class="ta-lb">
 							<!-- ToDo: Benutzer abseits von Lehrern müssen in der DB mehr Daten erhalten, um den Info-Block füllen zu können. -->
-							<p th:text="${Benutzer.hatLehrkraftdaten() ? ('gez. ' +  Benutzer.lehrer().unterschriftfeld(true, true)) : ('gez. ' +  Benutzer.benutzername())}">gez. T. Musterfrau</p>
+							<p th:text="${Benutzer.hatLehrkraftdaten() ? ('gez. ' +  Benutzer.lehrer().unterschriftfeld(true, true)) : ('gez. ' +  Benutzer.anzeigename())}">gez. T. Musterfrau</p>
 						</td>
 					</tr>
 					<tr>

@@ -67,7 +67,7 @@
 				<td class="bo-b-grey p-tb-0 p-lr-1 f-small c-grey" th:text="${#numbers.formatInteger(iterationVarKurs.count,2)} + '.'">Nr.</td>
 				<td class="bo-b-grey p-tb-0 p-lr-1 ta-l" th:text="${Kurs.bezeichnung()}">GE-GK2</td>
 				<td class="bo-b-grey p-tb-0 p-lr-1 ta-l" th:text="${Kurs.lehrkraefteAuflistung()}">ABC</td>
-				<td class="bo-b-grey p-tb-0 p-lr-1 ta-c" th:text="(${Kurs.anzahlExterne()} == 0) ? ${Kurs.anzahlSchueler()} : ${Kurs.anzahlSchueler()} + ' (+' + ${Kurs.anzahlExterne()} + ')'">23 (+8)</td>
+				<td class="bo-b-grey p-tb-0 p-lr-1 ta-c" th:utext="(${Kurs.anzahlExterne()} == 0) ? ${Kurs.anzahlSchueler()} : ${Kurs.anzahlSchueler() + ' <span style=\'font-size: 0.6em;\'> (Ex. ' + Kurs.anzahlExterne() + ')</span>'}">23 (Ex. 8)</td>
 				<td class="bo-b-grey p-tb-0 p-lr-1 ta-c" th:text="${Kurs.anzahlSchuelerSchriftlich()}">12</td>
 				<td class="bo-b-grey p-tb-0 p-lr-1 ta-c" th:text="${Kurs.anzahlAB12()}">0</td>
 				<td class="bo-b-grey p-tb-0 p-lr-1 ta-c" th:text="${Kurs.anzahlAB3()}">5</td>

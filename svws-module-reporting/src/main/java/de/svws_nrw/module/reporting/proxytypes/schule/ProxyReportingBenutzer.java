@@ -2,6 +2,7 @@ package de.svws_nrw.module.reporting.proxytypes.schule;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.db.Benutzer;
+import de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzerdetails;
 import de.svws_nrw.module.reporting.proxytypes.lehrer.ProxyReportingLehrer;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.schule.ReportingBenutzer;
@@ -23,6 +24,7 @@ public class ProxyReportingBenutzer extends ReportingBenutzer {
 	 */
 	public ProxyReportingBenutzer(final ReportingRepository reportingRepository) {
 		super("",
+				"",
 				"",
 				"",
 				"",
@@ -59,11 +61,19 @@ public class ProxyReportingBenutzer extends ReportingBenutzer {
 		super.id = user.getId();
 		super.istAdmin = user.istAdmin();
 
-		// Prüfe, ob der angemeldete Benutzer ein Lehrer ist. Übernehme dann dessen Informationen.
+		// Prüfe, ob der angemeldete Benutzer Lehrer ist. Übernehme dann dessen Informationen. Andernfalls weitere Informationen aus der Datenbank laden.
 		if ((user.getIdLehrer() != null) && this.reportingRepository.mapLehrerStammdaten().containsKey(user.getIdLehrer())) {
 			super.lehrer = new ProxyReportingLehrer(this.reportingRepository, this.reportingRepository.mapLehrerStammdaten().get(user.getIdLehrer()));
+			super.anzeigename = super.lehrer.vornameNachname();
+		} else {
+			try {
+				final DTOViewBenutzerdetails dtoBenutzer = this.reportingRepository.conn().queryByKey(DTOViewBenutzerdetails.class, super.id);
+				if (dtoBenutzer != null)
+					super.anzeigename = dtoBenutzer.AnzeigeName;
+			} catch (final Exception ignore) {
+				// Bei einem Fehler im Datenbankzugriff fehlt nur der Anzeigename. Daher kann der Fehler ignoriert werden.
+			}
 		}
-
 	}
 
 

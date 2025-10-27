@@ -53,15 +53,15 @@
 					<td></td>
 					<td class="f-bold" th:text="${Kurs.gostKursart().kuerzel}">GK</td>
 					<td></td>
-					<td class="f-small ta-c" th:text="(${Kurs.anzahlExterne()} == 0) ? ${Kurs.anzahlSchueler()} : ${Kurs.anzahlSchueler()} + ' (Ext. ' + ${Kurs.anzahlExterne()} + ')'">23 (Ext. 08)</td>
+					<td class="f-small ta-c" th:text="(${Kurs.anzahlExterne()} == 0) ? ${Kurs.anzahlSchueler()} : ${Kurs.anzahlSchueler()} + ' (Ex. ' + ${Kurs.anzahlExterne()} + ')'">23 (Ext. 08)</td>
 					<td></td>
 					<td class="f-small ta-c" th:text="${Kurs.anzahlSchuelerSchriftlich()}">12</td>
 					<td></td>
 					<td class="f-small ta-c" th:text="${#strings.equalsIgnoreCase('E', Kurs.gostHalbjahr().kuerzel.charAt(0)) ? '' : Kurs.anzahlAB12()}">0</td>
 					<td></td>
-					<td class="f-small ta-c" th:text="${#strings.equalsIgnoreCase('E', Kurs.gostHalbjahr().kuerzel.charAt(0)) ? '' : Kurs.anzahlAB3()}">5</td>
+					<td class="f-small ta-c" th:utext="${#strings.equalsIgnoreCase('E', Kurs.gostHalbjahr().kuerzel.charAt(0)) ? '' : (Kurs.anzahlAB3() + (#strings.equalsIgnoreCase('1', Kurs.gostHalbjahr().kuerzel.charAt(1)) ? '<span style=\'font-size: 0.6em;\'> (Pl.)</span>'  : ''))}">5</td>
 					<td></td>
-					<td class="f-small ta-c" th:text="${#strings.equalsIgnoreCase('E', Kurs.gostHalbjahr().kuerzel.charAt(0)) ? '' : Kurs.anzahlAB4()}">3</td>
+					<td class="f-small ta-c" th:utext="${#strings.equalsIgnoreCase('E', Kurs.gostHalbjahr().kuerzel.charAt(0)) ? '' : (Kurs.anzahlAB4() + (#strings.equalsIgnoreCase('1', Kurs.gostHalbjahr().kuerzel.charAt(1)) ? '<span style=\'font-size: 0.6em;\'> (Pl.)</span>'  : ''))}">3</td>
 				</tr>
 				<tr>
 					<td class="cell-small-grey">Kursbezeichnung</td>
@@ -110,7 +110,7 @@
 					<td class="bo-b-grey p-tb-0 p-lr-1" th:text="${Kursschueler.nachname()} + ', ' + ${Kursschueler.vorname()}">Mustermann, Max</td>
 					<td th:if="(${Kurs.anzahlExterne()} != 0)" class="bo-b-grey p-tb-0 p-lr-1 ta-c" th:text="${Kursschueler.externeSchulNr()}">123456</td>
 					<td class="bo-b-grey p-tb-0 p-lr-1 ta-c" th:text="${Kursschueler.getGostKursplanungKursbelegungById(Kurs.id()).hatGueltigeFachwahl() ? (Kursschueler.getGostKursplanungKursbelegungById(Kurs.id()).istSchriftlich() ? 's' : 'm') : 'ungültig'}">s</td>
-					<td class="bo-b-grey p-tb-0 p-lr-1 ta-c" th:text="${Kursschueler.getGostKursplanungKursbelegungById(Kurs.id()).hatGueltigeFachwahl() ? (#strings.equalsIgnoreCase('E', GostBlockungsergebnis.gostHalbjahr().kuerzel.charAt(0)) ? '' : Kursschueler.getGostKursplanungKursbelegungById(Kurs.id()).abiturfach()) : 'ungültig'}">3</td>
+					<td class="bo-b-grey p-tb-0 p-lr-1 ta-c" th:utext="${Kursschueler.getGostKursplanungKursbelegungById(Kurs.id()).hatGueltigeFachwahl() ? (#strings.equalsIgnoreCase('E', GostBlockungsergebnis.gostHalbjahr().kuerzel.charAt(0)) ? '' : (Kursschueler.getGostKursplanungKursbelegungById(Kurs.id()).abiturfach() + (((#strings.equalsIgnoreCase('1', GostBlockungsergebnis.gostHalbjahr().kuerzel.charAt(1)) && Kursschueler.getGostKursplanungKursbelegungById(Kurs.id()).abiturfach() > 2) ? '<span style=\'font-size: 0.6em;\'> (Planung)</span>'  : '')))) : 'ungültig'}">3</td>
 					<td class="bo-b-grey p-tb-0 p-lr-1 ta-c" th:text="${#convert.toDateDE(Kursschueler.geburtsdatum())}">22.08.2008</td>
 					<td class="bo-b-grey p-tb-0 p-lr-1 ta-c" th:text="${Kursschueler.geschlecht().kuerzel}">w</td>
 				</tr>
