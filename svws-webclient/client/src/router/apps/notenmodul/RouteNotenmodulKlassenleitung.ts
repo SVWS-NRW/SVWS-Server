@@ -28,7 +28,7 @@ export class RouteNotenmodulKlassenleitung extends RouteAuswahlNode<EnmKlassenle
 			BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_ALLGEMEIN,
 			BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_FUNKTION,
 		], "notenmodul.klassenleitung", "klassenleitung", NotenmodulKlassenleitungApp, NotenmodulKlassenleitungAuswahl, new RouteDataNotenmodulKlassenleitung());
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.ALPHA;
 		super.getAuswahlListProps = (props) => (<NotenmodulKlassenleitungAuswahlProps>{
 			...props,
 			enmManager: () => routeNotenmodul.data.manager,

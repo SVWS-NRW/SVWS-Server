@@ -18,7 +18,7 @@ export class RouteNotenmodulTeilleistungenData extends RouteNode<any, RouteNoten
 			BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_ALLGEMEIN,
 			BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_FUNKTION,
 		], "notenmodul.teilleistungen.daten", "daten", NotenmodulTeilleistungen);
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.ALPHA;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Teilleistungen";
 	}

@@ -275,7 +275,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		const submenuManager = new Array<{ name: string, manager: TabManager }>();
 		if (routeSchule.hidden() === false)
 			submenuManager.push({ name: "schule", manager: this.getTabManagerSchule() });
-		if ((routeNotenmodul.hidden() === false) && (api.mode === ServerMode.DEV))
+		if ((routeNotenmodul.hidden() === false) && ((api.mode === ServerMode.DEV) || (api.mode === ServerMode.ALPHA)))
 			submenuManager.push({ name: "notenmodul", manager: this.getTabManagerNotenmodul() });
 		if (routeEinstellungen.hidden() === false)
 			submenuManager.push({ name: "einstellungen", manager: this.getTabManagerEinstellungen() });

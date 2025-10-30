@@ -18,7 +18,7 @@ export class RouteNotenmodulKlassenleitungData extends RouteNode<any, RouteNoten
 			BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_ALLGEMEIN,
 			BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_FUNKTION,
 		], "notenmodul.klassenleitung.daten", "daten", NotenmodulKlassenleitung);
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.ALPHA;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Klassenleitung";
 	}

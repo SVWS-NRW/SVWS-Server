@@ -27,7 +27,7 @@ export class RouteNotenmodulTeilleistungen extends RouteAuswahlNode<EnmLerngrupp
 			BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_ALLGEMEIN,
 			BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_FUNKTION,
 		], "notenmodul.teilleistungen", "notenmodul/teilleistungen", NotenmodulTeilleistungenApp, NotenmodulTeilleistungenAuswahl, new RouteDataNotenmodulTeilleistungen());
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.ALPHA;
 		super.getAuswahlListProps = (props) => (<NotenmodulTeilleistungenAuswahlProps>{
 			...props,
 			enmManager: () => routeNotenmodul.data.manager,
