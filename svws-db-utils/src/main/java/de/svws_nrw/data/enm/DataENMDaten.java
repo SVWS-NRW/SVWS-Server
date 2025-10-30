@@ -260,7 +260,6 @@ public final class DataENMDaten extends DataManager<Long> {
 			final DTOKlassen dtoKlasse = mapKlassen.get(lernabschnitt.Klassen_ID);
 			if (dtoKlasse == null)
 				throw new NullPointerException();
-			final Set<Long> idsKlassenleitungen = new HashSet<>();
 			ENMKlasse enmKlasse = manager.getKlasse(dtoKlasse.ID);
 			if (enmKlasse == null) {
 				manager.addKlasse(dtoKlasse.ID, dtoKlasse.ASDKlasse, dtoKlasse.Klasse, dtoKlasse.Jahrgang_ID, dtoKlasse.Sortierung);
@@ -279,7 +278,6 @@ public final class DataENMDaten extends DataManager<Long> {
 							}
 						}
 						enmKlasse.klassenlehrer.add(kl.Lehrer_ID);
-						idsKlassenleitungen.add(kl.Lehrer_ID);
 					}
 				}
 			}
@@ -387,10 +385,10 @@ public final class DataENMDaten extends DataManager<Long> {
 										(creds == null) ? "" : creds, (tsCreds == null) ? null : tsCreds);
 							}
 						}
-						// TODO ggf. im Team-Teaching unterrichtende Lehrer hinzufügen (Zusatzkraft in Leistungsdaten bzw. weitere Lehrkraft bei Kursen)
-						if ((dtoLehrer != null) && (leistung.Fachlehrer_ID == dtoLehrer.ID))
-							leistungenFachIDs.add(fach.ID);
 					}
+					// TODO ggf. im Team-Teaching unterrichtende Lehrer hinzufügen (Zusatzkraft in Leistungsdaten bzw. weitere Lehrkraft bei Kursen)
+					if ((dtoLehrer != null) && (leistung.Fachlehrer_ID == dtoLehrer.ID))
+						leistungenFachIDs.add(lerngruppe.fachID);
 
 					final int halbjahr = abschnitt.abschnitt;
 					final boolean istSchriftlich = (leistung.Kurs_ID != null)
@@ -455,7 +453,7 @@ public final class DataENMDaten extends DataManager<Long> {
 					if (dtoAnkreuzkompetenz == null) // DB-Error -> should not happen
 						throw new NullPointerException();
 					// Überspringe bei Lehrer-Spezifischen Daten die Ankreuzkompetezen, falls keine Fachlehrer-Zuordnung vorliegt bzw. der Lehrer kein Klassenlehrer ist
-					if ((dtoLehrer != null) && (((dtoAnkreuzkompetenz.Fach_ID == null) && !idsKlassenleitungen.contains(dtoLehrer.ID))
+					if ((dtoLehrer != null) && (((dtoAnkreuzkompetenz.Fach_ID == null) && !enmKlasse.klassenlehrer.contains(dtoLehrer.ID))
 							|| ((dtoAnkreuzkompetenz.Fach_ID != null) && !leistungenFachIDs.contains(dtoAnkreuzkompetenz.Fach_ID))))
 						continue;
 					// Prüfe die Ankreuzfloskel und ergänze sie ggf.
