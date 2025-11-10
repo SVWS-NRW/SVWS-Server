@@ -166,7 +166,7 @@ public class AES {
 	public static SecretKey getKey256(final String password, final String salt) throws AESException {
 		try {
 			final SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-			final KeySpec spec = new PBEKeySpec(password.toCharArray(), salt.getBytes(), 65536, 256);
+			final KeySpec spec = new PBEKeySpec(password.toCharArray(), salt.getBytes(), 131072, 256);
 			final byte[] key = factory.generateSecret(spec).getEncoded();
 			return new SecretKeySpec(key, "AES");
 		} catch (final Exception e) {
