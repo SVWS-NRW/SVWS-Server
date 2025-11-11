@@ -39,8 +39,9 @@
 				<template #cell(gueltigBis)="{ value }">
 					{{ (DateUtils.isValidDate(value) ? DateUtils.gibDatumGermanFormat(value) : '') }}
 				</template>
-				<template #cell(aktiv)="{ value }">
+				<template #cell(aktiv)="{ value, rowData }">
 					<span v-if="value" class="icon icon-ui-brand i-ri-checkbox-circle-fill ml-2 hover:opacity-50" title="Dieser Stundenplan ist aktiv" />
+					<span v-else-if="rowData.id !== -1 && !manager().istKonfliktfreiZuAktivenStundenplaenen(rowData.gueltigAb, rowData.gueltigBis, true)" class="icon icon-ui-caution i-ri-alert-line ml-2 hover:opacity-50" title="Konflikte liegen vor" />
 				</template>
 				<template #actions>
 					<svws-ui-tooltip position="bottom" v-if="hatKompetenzAendern">

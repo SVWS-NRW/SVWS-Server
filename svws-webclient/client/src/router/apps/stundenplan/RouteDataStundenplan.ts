@@ -118,8 +118,9 @@ export class RouteDataStundenplan extends RouteDataAuswahl<StundenplanListeManag
 
 	protected async doPatch(data: Partial<any>, id: number): Promise<void> {
 		await api.server.patchStundenplan(data, api.schema, this.manager.auswahl().id);
-		const daten = this.manager.daten();
+		const daten = this.manager.daten().getStundenplan();
 		Object.assign(daten, data);
+		this.manager.daten().setStundenplan(daten);
 		if (data.wochenTypModell !== undefined)
 			this.manager.daten().stundenplanSetWochenTypModell(data.wochenTypModell);
 		if (data.bezeichnungStundenplan !== undefined)
@@ -137,6 +138,7 @@ export class RouteDataStundenplan extends RouteDataAuswahl<StundenplanListeManag
 			const res = await api.server.deleteStundenplanKalenderwochenzuordnungen(ids, api.schema, this.manager.auswahl().id);
 			this.manager.daten().kalenderwochenzuordnungRemoveAll(res);
 		}
+		this.commit();
 	}
 	protected async doDelete(ids: List<number>): Promise<List<SimpleOperationResponse>> {
 		return await api.server.deleteStundenplaene(ids, api.schema);
@@ -200,7 +202,11 @@ export class RouteDataStundenplan extends RouteDataAuswahl<StundenplanListeManag
 	}
 
 	addAsCopy = async (partial: Partial<Stundenplan>, idFromStundenplan: number | undefined): Promise<void> => {
-		const neu = (idFromStundenplan === undefined) ? await api.server.addStundenplan({ ...partial, idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }, api.schema) : await api.server.addStundenplanAsCopy({ ...partial, idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }, api.schema, idFromStundenplan);
+		let neu = null;
+		if (idFromStundenplan === undefined)
+			neu = await api.server.addStundenplan({ ...partial, idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }, api.schema);
+		else
+			neu = await api.server.addStundenplanAsCopy({ ...partial, idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }, api.schema, idFromStundenplan);
 		await this.setSchuljahresabschnitt(this._state.value.idSchuljahresabschnitt, true);
 		await this.gotoDefaultView(neu.id);
 	};

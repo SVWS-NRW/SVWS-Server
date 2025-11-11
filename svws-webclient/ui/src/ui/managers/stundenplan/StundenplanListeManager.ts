@@ -202,47 +202,46 @@ export class StundenplanListeManager extends AuswahlManager<number, StundenplanL
 	 * @param gueltigAb das Datum, ab wann der Stundenplan gültig sein soll
 	 * @param gueltigBis das Datum, bis wann der Stundenplan gültig sein soll. Falls null übergeben wird, wird das Datum der Auswahl verwendet.
 	 * @param aktiv falls true, werden zusätzlich die anderen aktiven Stundenpläne geprüft
-	 * @param checkUeberschneidung falls true, wird zusätzlich geprüft, ob es eine Überschneidung mit einem anderen Stundenplan gibt
+	 * @param warn falls true, wird zusätzlich geprüft, ob es eine Überschneidung mit einem anderen Stundenplan gibt
+	 * @param neu gibt an, ob es sich um einen neuen Stundenplan handelt
 	 *
 	 * @return <code>true</code> wenn das Datum gültig ist, ansonsten <code>false</code>
 	 */
-	public validateGueltigAb(gueltigAb: string | null, gueltigBis: string | null, aktiv: boolean, checkUeberschneidung: boolean): boolean {
+	public validateGueltigAb(gueltigAb: string | null, gueltigBis: string | null, aktiv: boolean, warn: boolean, neu: boolean): boolean {
 		if (gueltigAb === null || !DateUtils.isValidDate(gueltigAb))
 			return false;
-		const gueltigBisComputed: string | null = (gueltigBis !== null ? gueltigBis : this.auswahl().gueltigBis);
+		const gueltigBisComputed: string = (gueltigBis ?? this.auswahl().gueltigBis);
 		if (JavaString.compareTo(gueltigAb, gueltigBisComputed) > 0)
 			return false;
-		if (aktiv || checkUeberschneidung) {
+		if (aktiv || warn)
 			for (const stundenplan of this.aktive())
-				if ((!this.hasDaten() || stundenplan.id !== this.auswahl().id) && (JavaString.compareTo(stundenplan.gueltigAb, gueltigAb) <= 0) && (JavaString.compareTo(stundenplan.gueltigBis, gueltigAb) >= 0))
+				if ((!this.hasDaten() || stundenplan.id !== this.auswahl().id || neu) && (JavaString.compareTo(stundenplan.gueltigAb, gueltigAb) <= 0) && (JavaString.compareTo(stundenplan.gueltigBis, gueltigAb) >= 0))
 					return false;
-			if (checkUeberschneidung)
-				return this.istKonfliktfreiZuAktivenStundenplaenen(gueltigAb, gueltigBisComputed);
-		}
 		return true;
 	}
 
 	/**
 	 * Prüft für die aktuelle Auswahl eine neue Gültigkeit. Wenn das Datum leer oder sich vor dem Gültigkeitsbeginn befindet,
-	 * wird <code>false</code>, andernfalls <code>true</code> zurückgegeben.  Je nach Parameter aktiv wird auch geprüft, ob es sich innerhalb der Gültigkeit eines anderen aktiven Stundenplans befindet.
+	 * wird <code>false</code>, andernfalls <code>true</code> zurückgegeben. Je nach Parameter aktiv wird auch geprüft, ob es sich innerhalb der Gültigkeit eines anderen aktiven Stundenplans befindet.
 	 *
 	 * @param gueltigAb das Datum, ab wann der Stundenplan gültig sein soll. Falls null übergeben wird, wird das Datum der Auswahl verwendet.
 	 * @param gueltigBis das Datum, bis zu dem der Stundenplan gültig sein soll
 	 * @param aktiv falls true, werden zusätzlich die anderen aktiven Stundenpläne geprüft
+	 * @param warn falls true, wird zusätzlich geprüft, ob es eine Überschneidung mit einem anderen Stundenplan gibt
+	 * @param neu gibt an, ob es sich um einen neuen Stundenplan handelt
 	 *
 	 * @return <code>true</code> wenn das Datum gültig ist, ansonsten <code>false</code>
 	 */
-	public validateGueltigBis(gueltigAb: string | null, gueltigBis: string | null, aktiv: boolean): boolean {
+	public validateGueltigBis(gueltigAb: string | null, gueltigBis: string | null, aktiv: boolean, warn: boolean, neu: boolean): boolean {
 		if (gueltigBis === null || !DateUtils.isValidDate(gueltigBis))
 			return false;
-		const gueltigAbComputed: string | null = (gueltigAb !== null ? gueltigAb : this.auswahl().gueltigAb);
+		const gueltigAbComputed: string = (gueltigAb ?? this.auswahl().gueltigAb);
 		if (JavaString.compareTo(gueltigBis, gueltigAbComputed) < 0)
 			return false;
-		if (aktiv) {
+		if (aktiv || warn)
 			for (const stundenplan of this.aktive())
-				if ((!this.hasDaten() || stundenplan.id !== this.auswahl().id) && (JavaString.compareTo(stundenplan.gueltigAb, gueltigBis) <= 0) && (JavaString.compareTo(stundenplan.gueltigBis, gueltigBis) >= 0))
+				if ((!this.hasDaten() || stundenplan.id !== this.auswahl().id || neu) && (JavaString.compareTo(stundenplan.gueltigAb, gueltigBis) <= 0) && (JavaString.compareTo(stundenplan.gueltigBis, gueltigBis) >= 0))
 					return false;
-		}
 		return true;
 	}
 
@@ -251,13 +250,14 @@ export class StundenplanListeManager extends AuswahlManager<number, StundenplanL
 	 *
 	 * @param gueltigAb das Datum, ab wann der Stundenplan gültig sein soll
 	 * @param gueltigBis das Datum, bis zu dem der Stundenplan gültig sein soll
+	 * @param neu gibt an, ob es sich um einen neuen Stundenplan handelt
 	 *
 	 *
 	 * @return <code>true</code> wenn es eine Überschneidung gibt, ansonsten <code>false</code>
 	 */
-	public istKonfliktfreiZuAktivenStundenplaenen(gueltigAb: string | null, gueltigBis: string | null): boolean {
+	public istKonfliktfreiZuAktivenStundenplaenen(gueltigAb: string | null, gueltigBis: string | null, neu: boolean = false): boolean {
 		for (const sp of this.aktive())
-			if ((!this.hasDaten() || this.auswahl().id !== sp.id) && (DateUtils.berechneGemeinsameTage((gueltigAb !== null ? gueltigAb : this.auswahl().gueltigAb), (gueltigBis !== null ? gueltigBis : this.auswahl().gueltigBis), sp.gueltigAb, sp.gueltigBis).length > 0))
+			if ((!this.hasDaten() || this.auswahl().id !== sp.id || neu) && (DateUtils.berechneGemeinsameTage((gueltigAb ?? this.auswahl().gueltigAb), (gueltigBis ?? this.auswahl().gueltigBis), sp.gueltigAb, sp.gueltigBis).length > 0))
 				return false;
 		return true;
 	}
