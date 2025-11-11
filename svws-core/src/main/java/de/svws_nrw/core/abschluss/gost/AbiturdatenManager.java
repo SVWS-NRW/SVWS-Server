@@ -2106,11 +2106,11 @@ public class AbiturdatenManager {
 			// Prüfe Belegung des Projektkurses
 			if (!pruefeBelegungMitKursart(belegung, kursart, GostHalbjahr.Q21, GostHalbjahr.Q22))
 				return null;
-			// Prüfe die Belegung des Leitfaches und dessen Schriftlichkeit
-			final AbiturFachbelegung leitfach = getFachbelegungByKuerzel(fach.projektKursLeitfach1Kuerzel);
-			if (!pruefeBelegungMitKursart(leitfach, GostKursart.GK, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12))
+			// Prüfe die Belegung des Referenzfaches und dessen Schriftlichkeit
+			final AbiturFachbelegung referenzfach = getFachbelegungByKuerzel(fach.projektKursLeitfach1Kuerzel);
+			if (!pruefeBelegungMitKursart(referenzfach, GostKursart.GK, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12))
 				return null;
-			if (!pruefeBelegungMitSchriftlichkeit(leitfach, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12))
+			if (!pruefeBelegungMitSchriftlichkeit(referenzfach, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12))
 				return null;
 			return kursart;
 		}
