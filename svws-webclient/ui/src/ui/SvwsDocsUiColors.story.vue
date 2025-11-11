@@ -258,11 +258,7 @@
 			<div v-if="type === 'border'" class=" inline">
 				<h1>Borderfarben</h1>
 				<p>
-					Folgende Farben werden für Borders (Rahmen) verwendet. Es ist zu beachten, dass die Kontrastrichtlinien von WCAG eingehalten werden. Um
-					diese zu erreichen, müssen die <code class="bg-ui-selected">-on</code> Farben zu den passenden Hintergründen verwendet werden. Beispiel:
-					Für die Hintergrundfarbe <code class="bg-ui-selected">bg-ui-success</code> ist die Borderfarbe
-					<code class="bg-ui-selected">border-ui-onsuccess</code> zu verwenden. Für <code class="bg-ui-selected">bg-ui-success-hover</code> hingegen ist
-					die Borderfarbe <code class="bg-ui-selected">border-ui-onsuccess-hover</code> zu verwenden. <br>
+					Folgende Farben werden für Borders (Rahmen) verwendet.
 				</p>
 			</div>
 			<div v-if="type === 'accent'" class=" inline">
@@ -537,15 +533,6 @@
 		['caution', ['border-ui-caution', 'border-ui-caution-hover']],
 		['neutral', ['border-ui-neutral', 'border-ui-neutral-hover']],
 		['disabled', ['border-ui-disabled']],
-		['onbrand', ['border-ui-onbrand', 'border-ui-onbrand-hover']],
-		['onstatistic', ['border-ui-onstatistic', 'border-ui-onstatistic-hover']],
-		['onselected', ['border-ui-onselected', 'border-ui-onselected-hover']],
-		['ondanger', ['border-ui-ondanger', 'border-ui-ondanger-hover']],
-		['onsuccess', ['border-ui-onsuccess', 'border-ui-onsuccess-hover']],
-		['onwarning', ['border-ui-onwarning', 'border-ui-onwarning-hover']],
-		['oncaution', ['border-ui-oncaution', 'border-ui-oncaution-hover']],
-		['onneutral', ['border-ui-onneutral', 'border-ui-onneutral-hover']],
-		['ondisabled', ['border-ui-ondisabled']],
 		['uistatic', ['border-uistatic', 'border-uistatic-0', 'border-uistatic-10', 'border-uistatic-25', 'border-uistatic-50', 'border-uistatic-75', 'border-uistatic-100']],
 	]);
 

@@ -136,9 +136,9 @@
 				]" />
 				<HstRadio v-model="state.borderColor" title="Border" :options="[
 					{ label: 'keine', value: '' },
-					{ label: 'border-ui-onbrand', value: 'border-ui-onbrand' },
-					{ label: 'border-ui-onsuccess', value: 'border-ui-onsuccess' },
-					{ label: 'border-ui-ondanger', value: 'border-ui-ondanger' },
+					{ label: 'border-ui-brand', value: 'border-ui-brand' },
+					{ label: 'border-ui-success', value: 'border-ui-success' },
+					{ label: 'border-ui-danger', value: 'border-ui-danger' },
 				]" />
 			</template>
 		</Variant>
@@ -228,9 +228,9 @@
 			]" />
 			<HstRadio v-model="state.borderColor" title="Border" :options="[
 				{ label: 'keine', value: '' },
-				{ label: 'border-ui-onbrand', value: 'border-ui-onbrand' },
-				{ label: 'border-ui-onsuccess', value: 'border-ui-onsuccess' },
-				{ label: 'border-ui-ondanger', value: 'border-ui-ondanger' },
+				{ label: 'border-ui-brand', value: 'border-ui-brand' },
+				{ label: 'border-ui-success', value: 'border-ui-success' },
+				{ label: 'border-ui-danger', value: 'border-ui-danger' },
 			]" />
 		</template>
 	</Story>
