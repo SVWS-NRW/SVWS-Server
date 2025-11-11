@@ -8,6 +8,14 @@
 		<div role="cell" class="svws-ui-td select-all">
 			<div class="break-all line-clamp-1 leading-tight -my-0.5">
 				{{ fach.bezeichnung || '' }}
+				<template v-if="manager.getFachgruppe(fach) === Fachgruppe.FG_PX">
+					<svws-ui-tooltip>
+						<span class="icon-sm i-ri-information-line -my-0.5" />
+						<template #content>
+							<pre>{{ manager.getLeitfaecherTooltipText(fach) }}</pre>
+						</template>
+					</svws-ui-tooltip>
+				</template>
 			</div>
 		</div>
 		<div role="cell" class="svws-ui-td svws-align-center svws-divider">
@@ -133,6 +141,7 @@
 	import { AbiturdatenManager } from "../../../../../core/src/core/abschluss/gost/AbiturdatenManager";
 	import type { GostJahrgangsdaten } from "../../../../../core/src/core/data/gost/GostJahrgangsdaten";
 	import type { GostFach } from "../../../../../core/src/core/data/gost/GostFach";
+	import { Fachgruppe } from "../../../../../core/src/asd/types/fach/Fachgruppe";
 	import { GostHalbjahr } from "../../../../../core/src/core/types/gost/GostHalbjahr";
 	import { AbiturFachbelegungHalbjahr } from "../../../../../core/src/core/data/gost/AbiturFachbelegungHalbjahr";
 	import { GostKursart } from "../../../../../core/src/core/types/gost/GostKursart";

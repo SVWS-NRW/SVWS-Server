@@ -92,7 +92,7 @@ export class LaufbahnplanungUiManager {
 	public _modus = ref<'manuell' | 'normal' | 'hochschreiben'>('normal');
 
 	/** Der Pfad zum Speichern der Configdaten */
-	private _configPfade: { faecherZeigen: string, modus: string };
+	private readonly _configPfade: { faecherZeigen: string, modus: string };
 
 
 	/**
@@ -638,6 +638,36 @@ export class LaufbahnplanungUiManager {
 	public hatDoppelbelegung(fach: GostFach, halbjahr: GostHalbjahr): boolean {
 		return this._fachDoppelbelegungen.value.getOrNull(fach, halbjahr) ?? false;
 	}
+
+
+	/**
+	 * Gibt den Tooltip-Text für die Anzeige der Leitfächer zurück.
+	 *
+	 * @param fach   das Fach für den Vertiefungskurs bzw. den Projektkurs
+	 *
+	 * @returns der Tooltip-Text
+	 */
+	public getLeitfaecherTooltipText(fach: GostFach): string {
+		if ((this.getFachgruppe(fach) !== Fachgruppe.FG_PX) && (this.getFachgruppe(fach) !== Fachgruppe.FG_VX))
+			return "";
+		const textLeitfach = this.isAbi30ff.value ? "Referenzfach" : "Leitfach";
+		let result = "";
+		if (fach.projektKursLeitfach1ID !== null) {
+			const leitFach1 = this.manager().faecher().get(fach.projektKursLeitfach1ID);
+			if (leitFach1 !== null)
+				result += textLeitfach + " " + leitFach1.kuerzel + ": " + leitFach1.bezeichnung;
+		}
+		if (fach.projektKursLeitfach2ID !== null) {
+			const leitFach2 = this.manager().faecher().get(fach.projektKursLeitfach2ID);
+			if (leitFach2 !== null) {
+				if (result.length > 0)
+					result += "\n";
+				result += textLeitfach + " " + leitFach2.kuerzel + ": " + leitFach2.bezeichnung;
+			}
+		}
+		return result;
+	}
+
 
 	/**
 	 * Eine Map, welche zu einem Fach angibt, ob es sich um eine Fremdsprachen handelt oder nicht
