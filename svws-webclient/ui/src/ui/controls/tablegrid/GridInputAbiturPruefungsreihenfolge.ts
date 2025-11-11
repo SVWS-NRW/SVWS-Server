@@ -87,8 +87,8 @@ export class GridInputAbiturPruefungsreihenfolge<KEY> extends GridInputInnerText
 			return true;
 		}
 		// Prüfe, ob eine Ziffer eingegeben wurde
-		const ziffer = parseInt(event.key);
-		if (isNaN(ziffer))
+		const ziffer = Number.parseInt(event.key);
+		if (Number.isNaN(ziffer))
 			return false; // Keine erfolgreiche Eingabe...
 		return this.check(ziffer);
 	}

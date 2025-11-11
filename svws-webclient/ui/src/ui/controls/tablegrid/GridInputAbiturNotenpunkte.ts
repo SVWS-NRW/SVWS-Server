@@ -45,9 +45,7 @@ export class GridInputAbiturNotenpunkte<KEY> extends GridInputInnerText<KEY, str
 		if (notenkuerzel === null)
 			return null;
 		const nke: NoteKatalogEintrag | null = Note.fromKuerzel(notenkuerzel).daten(this._schuljahr);
-		if ((nke === null) || (nke.notenpunkte === null))
-			return null;
-		return nke.notenpunkte;
+		return nke?.notenpunkte ?? null;
 	}
 
 	private getNotenKuerzelFromNotenpunkte(value: number | null): string | null {
@@ -63,7 +61,10 @@ export class GridInputAbiturNotenpunkte<KEY> extends GridInputInnerText<KEY, str
 	 */
 	public update(value: string | null) {
 		const np = this.getNotenpunkteFromKuerzel(value);
-		super.updateText((np === null) ? null : ((np < 10) ? "0" : "") + np);
+		if (np === null)
+			super.updateText(null);
+		else
+			super.updateText(((np < 10) ? "0" : "") + np);
 		this._notenpunkte.value = np;
 	}
 
@@ -134,8 +135,8 @@ export class GridInputAbiturNotenpunkte<KEY> extends GridInputInnerText<KEY, str
 			return true;
 		}
 		// Prüfe, ob eine Ziffer eingegeben wurde
-		const ziffer = parseInt(event.key);
-		if (isNaN(ziffer))
+		const ziffer = Number.parseInt(event.key);
+		if (Number.isNaN(ziffer))
 			return false; // Keine erfolgreiche Eingabe...
 		// Wenn es sich um eine neue Fokussierung handelt, dann ersetze den Wert bei einer Eingabe (sonst anhängen)
 		if (this._isNewFocus.value)

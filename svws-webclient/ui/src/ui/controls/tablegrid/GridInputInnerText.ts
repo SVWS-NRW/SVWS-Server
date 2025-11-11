@@ -33,7 +33,7 @@ export class GridInputInnerText<KEY, DATA> extends GridInput<KEY, DATA> {
 	 * und setzt den inneren Text des Input-Elements
 	 */
 	public updateText(value: string | null): void {
-		this._elem.innerText = (value === null) ? "" : value;
+		this._elem.innerText = value ?? "";
 	}
 
 	/**
@@ -51,7 +51,6 @@ export class GridInputInnerText<KEY, DATA> extends GridInput<KEY, DATA> {
 		if (this._autoCommit) {
 			if (!this._isNewFocus.value)
 				this.commit();
-			return;
 		}
 	}
 

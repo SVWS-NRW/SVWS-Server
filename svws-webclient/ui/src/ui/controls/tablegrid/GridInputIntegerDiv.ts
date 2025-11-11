@@ -124,8 +124,8 @@ export class GridInputIntegerDiv<KEY> extends GridInputInnerText<KEY, number | n
 			return true;
 		}
 		// Prüfe, ob eine Ziffer eingegeben wurde
-		const ziffer = parseInt(event.key);
-		if (isNaN(ziffer))
+		const ziffer = Number.parseInt(event.key);
+		if (Number.isNaN(ziffer))
 			return false; // Keine erfolgreiche Eingabe...
 		// Wenn es sich um eine neue Fokussierung handelt, dann darf die Ziffer aber nicht größer als das vorgegebene Maximum sein (falls dieses einstellig ist)
 		if ((this._isNewFocus.value) && ((this._max !== null) && (ziffer > this._max)))

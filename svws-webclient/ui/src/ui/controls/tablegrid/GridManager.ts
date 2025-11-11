@@ -1,5 +1,5 @@
-import type { Ref, ShallowRef, WritableComputedRef } from "vue";
-import { ref, shallowRef, triggerRef, type ComponentPublicInstance } from "vue";
+import type { Ref, ShallowRef, WritableComputedRef, ComponentPublicInstance } from "vue";
+import { ref, shallowRef, triggerRef } from "vue";
 import type { GridInput } from "./GridInput";
 import { GridInputAbiturNotenpunkte } from "./GridInputAbiturNotenpunkte";
 import { GridInputAbiturPruefungsreihenfolge } from "./GridInputAbiturPruefungsreihenfolge";
@@ -14,6 +14,8 @@ import { HashMap } from "../../../../../core/src/java/util/HashMap";
 import { ArrayList } from "../../../../../core/src/java/util/ArrayList";
 import { GridInputNumberFixed } from "./GridInputNumberFixed";
 
+/** Der Typ des Elements, welches als Grid-Input-Element in den Manager übergeben werden kann */
+type GridElementType = Element | ComponentPublicInstance<unknown> | null;
 
 /**
  * Die Definition und der aktuelle Zustand einer Spalte im Grid
@@ -60,7 +62,7 @@ export class GridManager<KEY, DATA, LIST extends Collection<DATA> | List<DATA>> 
 	private _stateUpToDate: boolean = false;
 
 	/** Eine Map mit der Zuordnung aller Inputs dieses Grids zu ihrem eindeutigen Schlüssel. */
-	private mapInputs: Map<KEY, GridInput<KEY, any>> = new Map();
+	private readonly mapInputs: Map<KEY, GridInput<KEY, any>> = new Map();
 
 	/** Alle Inputs dieses Grid in Arrays, ggf. sortiert nach der Zeile. Diese Listen sind der jeweigen Spalte im äußeren Array zugeordnet. */
 	private gridInputsCols = new Array<{ sorted: boolean, rows: Array<GridInput<KEY, any>> } | undefined>();
@@ -68,34 +70,34 @@ export class GridManager<KEY, DATA, LIST extends Collection<DATA> | List<DATA>> 
 	private gridInputsRows = new Array<{ sorted: boolean, cols: Array<GridInput<KEY, any>> } | undefined>();
 
 	/** Das aktuell fokussierte Input im Grid. */
-	private _focusInput = shallowRef<GridInput<KEY, any> | null>(null);
+	private readonly _focusInput = shallowRef<GridInput<KEY, any> | null>(null);
 
 	/** Der Schlüssel des zuletzt fokussierten Inputs im Grid. (Hier ist der Schlüssel gespeichert, da das Input evtl. nicht mehr im Grid vorhanden ist) */
-	private _focusLastKey = shallowRef<KEY | null>(null);
+	private readonly _focusLastKey = shallowRef<KEY | null>(null);
 
 	/** Der Spalte des zuletzt fokussierten Inputs im Grid. (berechnet und evtl. null, da das Input evtl. nicht mehr im Grid vorhanden ist) */
-	private _focusLastColumn = shallowRef<number | null>(null);
+	private readonly _focusLastColumn = shallowRef<number | null>(null);
 
 	/** Der Spalte des zuletzt fokussierten Inputs im Grid. (berechnet und evtl. null, da das Input evtl. nicht mehr im Grid vorhanden ist) */
-	private _focusLastRow = shallowRef<number | null>(null);
+	private readonly _focusLastRow = shallowRef<number | null>(null);
 
 	/** Eine vue-Ref, welche verwendet wird, um auf die aktuellen Daten zuzugreifen. */
-	private _daten: Ref<LIST>;
+	private readonly _daten: Ref<LIST>;
 
 	/** Die Liste der Spalten-Definitionen im Grid. */
-	private _cols: ShallowRef<JavaMap<string, GridColumn<DATA>>>;
+	private readonly _cols: ShallowRef<JavaMap<string, GridColumn<DATA>>>;
 
 	/** Die Liste der Spalten-Definitionen im Grid anhand ihres Index */
-	private _colsByIndex: ShallowRef<JavaMap<number, GridColumn<DATA>>>;
+	private readonly _colsByIndex: ShallowRef<JavaMap<number, GridColumn<DATA>>>;
 
 	/** Eine Map, um ggf. die Sichtbarkeit der Spalten zu verwalten. */
-	private _colsVisible: Ref<Map<string, boolean | null>>;
+	private readonly _colsVisible: Ref<Map<string, boolean | null>>;
 
 	/** Gibt an, ob in dem Grid eine Spalte existiert, die ausblendbar ist. */
-	private _hideableColumns = shallowRef<List<GridColumn<DATA>>>(new ArrayList<GridColumn<DATA>>);
+	private readonly _hideableColumns = shallowRef<List<GridColumn<DATA>>>(new ArrayList<GridColumn<DATA>>);
 
 	/** Die Methode, zum Bestimmen des Schlüssels zu einer Datenzeile */
-	private _getRowKey: (row: DATA) => KEY;
+	private readonly _getRowKey: (row: DATA) => KEY;
 
 	/** Ein Handler, der jedes mal aufgerufen wird, wenn ein input ausgewählt wird */
 	private _onFocusInputHandler: ((input: GridInput<any, any> | null) => void) | null = null;
@@ -142,12 +144,10 @@ export class GridManager<KEY, DATA, LIST extends Collection<DATA> | List<DATA>> 
 		if (columns !== null) {
 			let index = 0;
 			for (const col of columns) {
-				if (col.hideable === undefined)
-					col.hideable = false;
+				col.hideable ??= false;
 				if (col.hideable)
 					hideableColumns.add(col);
-				if (col.width === undefined)
-					col.width = '4rem';
+				col.width ??= '4rem';
 				this._cols.value.put(col.kuerzel, col);
 				this._colsByIndex.value.put(index, col);
 				index++;
@@ -229,7 +229,7 @@ export class GridManager<KEY, DATA, LIST extends Collection<DATA> | List<DATA>> 
 	 */
 	public setColVisibility(kuerzel: string, value: boolean) {
 		const col = this._cols.value.get(kuerzel);
-		if ((col === null) || (col.hideable !== true))
+		if (col?.hideable !== true)
 			throw new DeveloperNotificationException("Die Spalte mit dem Kürzel '" + kuerzel + "' ist in der Spalten-Definition nicht auf hideable gesetzt.");
 		if (value === this.isColVisible(kuerzel))
 			return;
@@ -391,17 +391,15 @@ export class GridManager<KEY, DATA, LIST extends Collection<DATA> | List<DATA>> 
 	 * @param key   der Schlüssel zur eindeutigen Identifikation des Inputs
 	 * @param col   die neue Spalte
 	 * @param row   die neue Zeile
-	 *
-	 * @returns immer null
 	 */
-	private updateRegistration(key: KEY, col: number, row: number): null {
+	private updateRegistration(key: KEY, col: number, row: number): void {
 		// Bestimme zunächst das Input, welches ggf. angepasst werden muss
 		const input = this.mapInputs.get(key);
 		if (input === undefined)
-			return null;
+			return;
 		// Prüfe, ob die Position angepasst werden muss
 		if ((col === input.col) && (row === input.row))
-			return null;
+			return;
 		// Entferne das Input aus der alten Position
 		this.removeInputPosition(input);
 		// Setze die neue Position
@@ -414,21 +412,18 @@ export class GridManager<KEY, DATA, LIST extends Collection<DATA> | List<DATA>> 
 		}
 		// Füge das Input in der neuen Position hinzu
 		this.addInputPosition(input);
-		return null;
 	}
 
 	/**
 	 * Entfernt die Registrierung des Inputs mit dem angegebenen Schlüssel im Grid.
 	 *
 	 * @param key   der Key des Input-Managers
-	 *
-	 * @returns null
 	 */
-	private unregister(key: KEY): null {
+	private unregister(key: KEY): void {
 		// Prüfe, ob ein Input-Manager mit dem Key überhaupt registiert ist...
 		const input = this.mapInputs.get(key);
 		if (input === undefined)
-			return null;
+			return;
 		this._stateUpToDate = false;
 		// Wenn ja, dann entferne ihn aus der Map mit den Inputs,
 		this.mapInputs.delete(key);
@@ -440,7 +435,6 @@ export class GridManager<KEY, DATA, LIST extends Collection<DATA> | List<DATA>> 
 		}
 		// Entferne das Input aus seiner Position
 		this.removeInputPosition(input);
-		return null;
 	}
 
 
@@ -518,7 +512,7 @@ export class GridManager<KEY, DATA, LIST extends Collection<DATA> | List<DATA>> 
 		let cur: HTMLElement | null = input.element;
 		while (cur.parentElement !== null) {
 			cur = cur.parentElement;
-			const computedStyle = window.getComputedStyle(cur);
+			const computedStyle = globalThis.getComputedStyle(cur);
 			if ((cur.tagName === 'TBODY') && ((computedStyle.overflowY === 'auto') || (computedStyle.overflowY === 'scroll')))
 				return cur;
 		}
@@ -686,6 +680,36 @@ export class GridManager<KEY, DATA, LIST extends Collection<DATA> | List<DATA>> 
 		manager.update(data);
 	}
 
+
+	/**
+	 * Fügt oder entfernt ein HTML-Element für den übergebenen Schlüssel hinzu. Zum Erstellen konkreter Inputs wird der Parameter
+	 * getInput aufgerufen.
+	 *
+	 * @param key        der Schlüssel, welcher den Input-Manager identifiziert
+	 * @param col        die Nummer der Spalte im Grid
+	 * @param row        die Nummer der Zeile im Grid
+	 * @param elem       das HTML-Element, welches zum Manager hinzugefügt werden soll, oder null, falls es entfernt werden soll
+	 * @param getInput   Die Methode zum Erstellen des Inputs
+	 *
+	 * @returns das Input oder null
+	 */
+	private applyInput<T extends GridInput<KEY, any>>(key: KEY, col: number, row: number, elem: GridElementType, getInput: (e: HTMLElement) => T): T | null {
+		// Wenn elem null ist, dann entferne das Element
+		if (elem === null) {
+			this.unregister(key);
+			return null;
+		}
+		// Registriere das HTMLElement, sofern nicht bereits ein Grid-Input mit dem gleichen Schlüssel registriert ist
+		if (!(elem instanceof HTMLElement))
+			throw new DeveloperNotificationException("Der Grid-Input für einen Toggle erfordert ein HTMLElement");
+		if (this.mapInputs.has(key)) {
+			this.updateRegistration(key, col, row);
+			return null;
+		}
+		return this.register(getInput(elem));
+	}
+
+
 	/**
 	 * Fügt oder entfernt ein HTML-Element für den übergebenen Schlüssel hinzu
 	 *
@@ -697,17 +721,8 @@ export class GridManager<KEY, DATA, LIST extends Collection<DATA> | List<DATA>> 
 	 *
 	 * @returns das Input oder null
 	 */
-	public applyInputToggle(key: KEY, col: number, row: number, elem: Element | ComponentPublicInstance<unknown> | null,
-		setter: (value: boolean) => void): GridInputToggle<KEY> | null {
-		// Wenn elem null ist, dann entferne das Element
-		if (elem === null)
-			return this.unregister(key);
-		// Registriere das HTMLElement, sofern nicht bereits ein Grid-Input mit dem gleichen Schlüssel registriert ist
-		if (!(elem instanceof HTMLElement))
-			throw new DeveloperNotificationException("Der Grid-Input für einen Toggle erfordert ein HTMLElement");
-		if (this.mapInputs.has(key))
-			return this.updateRegistration(key, col, row);
-		return this.register(new GridInputToggle(this, key, col, row, elem, setter));
+	public applyInputToggle(key: KEY, col: number, row: number, elem: GridElementType, setter: (value: boolean) => void): GridInputToggle<KEY> | null {
+		return this.applyInput(key, col, row, elem, e => new GridInputToggle(this, key, col, row, e, setter));
 	}
 
 
@@ -723,17 +738,9 @@ export class GridManager<KEY, DATA, LIST extends Collection<DATA> | List<DATA>> 
 	 *
 	 * @returns das Input oder null
 	 */
-	public applyInputIntegerDiv(key: KEY, col: number, row: number, elem: Element | ComponentPublicInstance<unknown> | null, max: number | null,
+	public applyInputIntegerDiv(key: KEY, col: number, row: number, elem: GridElementType, max: number | null,
 		setter: (value: number | null) => void): GridInputIntegerDiv<KEY> | null {
-		// Wenn elem null ist, dann entferne das Element
-		if (elem === null)
-			return this.unregister(key);
-		// Registriere das HTMLElement, sofern nicht bereits ein Grid-Input mit dem gleichen Schlüssel registriert ist
-		if (!(elem instanceof HTMLElement))
-			throw new DeveloperNotificationException("Der Grid-Input für Ganzzahlen erfordert ein HTMLElement");
-		if (this.mapInputs.has(key))
-			return this.updateRegistration(key, col, row);
-		return this.register(new GridInputIntegerDiv(this, key, col, row, elem, max, setter));
+		return this.applyInput(key, col, row, elem, e => new GridInputIntegerDiv(this, key, col, row, e, max, setter));
 	}
 
 
@@ -750,17 +757,9 @@ export class GridManager<KEY, DATA, LIST extends Collection<DATA> | List<DATA>> 
 	 *
 	 * @returns das Input oder null
 	 */
-	public applyInputNumberFixed(key: KEY, col: number, row: number, elem: Element | ComponentPublicInstance<unknown> | null, max: number | null,
+	public applyInputNumberFixed(key: KEY, col: number, row: number, elem: GridElementType, max: number | null,
 		dp: number, setter: (value: number | null) => void): GridInputNumberFixed<KEY> | null {
-		// Wenn elem null ist, dann entferne das Element
-		if (elem === null)
-			return this.unregister(key);
-		// Registriere das HTMLElement, sofern nicht bereits ein Grid-Input mit dem gleichen Schlüssel registriert ist
-		if (!(elem instanceof HTMLElement))
-			throw new DeveloperNotificationException("Der Grid-Input für Zahlen mit einer festen Anzahl von Nachkommastellen erfordert ein HTMLElement");
-		if (this.mapInputs.has(key))
-			return this.updateRegistration(key, col, row);
-		return this.register(new GridInputNumberFixed(this, key, col, row, elem, max, dp, setter));
+		return this.applyInput(key, col, row, elem, e => new GridInputNumberFixed(this, key, col, row, e, max, dp, setter));
 	}
 
 
@@ -776,17 +775,9 @@ export class GridManager<KEY, DATA, LIST extends Collection<DATA> | List<DATA>> 
 	 *
 	 * @returns das Input oder null
 	 */
-	public applyInputNote(key: KEY, col: number, row: number, elem: Element | ComponentPublicInstance<unknown> | null,
+	public applyInputNote(key: KEY, col: number, row: number, elem: GridElementType,
 		setter: (value: string | null) => void, schuljahr: number): GridInputNote<KEY> | null {
-		// Wenn elem null ist, dann entferne das Element
-		if (elem === null)
-			return this.unregister(key);
-		// Registriere das HTMLElement, sofern nicht bereits ein Grid-Input mit dem gleichen Schlüssel registriert ist
-		if (!(elem instanceof HTMLElement))
-			throw new DeveloperNotificationException("Der Grid-Input für Noten erfordert ein HTMLElement");
-		if (this.mapInputs.has(key))
-			return this.updateRegistration(key, col, row);
-		return this.register(new GridInputNote(this, key, col, row, elem, setter, schuljahr));
+		return this.applyInput(key, col, row, elem, e => new GridInputNote(this, key, col, row, e, setter, schuljahr));
 	}
 
 
@@ -802,17 +793,9 @@ export class GridManager<KEY, DATA, LIST extends Collection<DATA> | List<DATA>> 
 	 *
 	 * @returns das Input oder null
 	 */
-	public applyInputAbiturNotenpunkte(key: KEY, col: number, row: number, elem: Element | ComponentPublicInstance<unknown> | null,
+	public applyInputAbiturNotenpunkte(key: KEY, col: number, row: number, elem: GridElementType,
 		setter: (value: string | null) => void, schuljahr: number): GridInputAbiturNotenpunkte<KEY> | null {
-		// Wenn elem null ist, dann entferne das Element
-		if (elem === null)
-			return this.unregister(key);
-		// Registriere das HTMLElement, sofern nicht bereits ein Grid-Input mit dem gleichen Schlüssel registriert ist
-		if (!(elem instanceof HTMLElement))
-			throw new DeveloperNotificationException("Der Grid-Input für Abitur-Notenpunkte erfordert ein HTMLElement");
-		if (this.mapInputs.has(key))
-			return this.updateRegistration(key, col, row);
-		return this.register(new GridInputAbiturNotenpunkte(this, key, col, row, elem, setter, schuljahr));
+		return this.applyInput(key, col, row, elem, e => new GridInputAbiturNotenpunkte(this, key, col, row, e, setter, schuljahr));
 	}
 
 	/**
@@ -826,17 +809,9 @@ export class GridManager<KEY, DATA, LIST extends Collection<DATA> | List<DATA>> 
 	 *
 	 * @returns das Input oder null
 	 */
-	public applyInputAbiturPruefungsreihenfolge(key: KEY, col: number, row: number, elem: Element | ComponentPublicInstance<unknown> | null,
+	public applyInputAbiturPruefungsreihenfolge(key: KEY, col: number, row: number, elem: GridElementType,
 		setter: (value: number | null) => void): GridInputAbiturPruefungsreihenfolge<KEY> | null {
-		// Wenn elem null ist, dann entferne das Element
-		if (elem === null)
-			return this.unregister(key);
-		// Registriere das HTMLElement, sofern nicht bereits ein Grid-Input mit dem gleichen Schlüssel registriert ist
-		if (!(elem instanceof HTMLElement))
-			throw new DeveloperNotificationException("Der Grid-Input für die Prüfungsreihenfolge der mündlichen Abiturprüfungen erfordert ein HTMLElement");
-		if (this.mapInputs.has(key))
-			return this.updateRegistration(key, col, row);
-		return this.register(new GridInputAbiturPruefungsreihenfolge(this, key, col, row, elem, setter));
+		return this.applyInput(key, col, row, elem, e => new GridInputAbiturPruefungsreihenfolge(this, key, col, row, e, setter));
 	}
 
 
