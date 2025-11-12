@@ -20,11 +20,6 @@ export class Einwilligungsart extends JavaObject {
 	public schluessel: string = "";
 
 	/**
-	 * Gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an.
-	 */
-	public sortierung: number = 1;
-
-	/**
 	 * Eine ausführliche Beschreibung der Einwilligungsart.
 	 */
 	public beschreibung: string | null = "";
@@ -38,6 +33,16 @@ export class Einwilligungsart extends JavaObject {
 	 * Gibt an, für welche Personengruppe die Einwilligungsart relevant ist.
 	 */
 	public anzahlEinwilligungen: number = 0;
+
+	/**
+	 * Gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an.
+	 */
+	public sortierung: number = 32000;
+
+	/**
+	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.
+	 */
+	public istSichtbar: boolean = true;
 
 
 	/**
@@ -69,9 +74,6 @@ export class Einwilligungsart extends JavaObject {
 		if (obj.schluessel === undefined)
 			throw new Error('invalid json format, missing attribute schluessel');
 		result.schluessel = obj.schluessel;
-		if (obj.sortierung === undefined)
-			throw new Error('invalid json format, missing attribute sortierung');
-		result.sortierung = obj.sortierung;
 		result.beschreibung = (obj.beschreibung === undefined) ? null : obj.beschreibung === null ? null : obj.beschreibung;
 		if (obj.personTyp === undefined)
 			throw new Error('invalid json format, missing attribute personTyp');
@@ -79,6 +81,12 @@ export class Einwilligungsart extends JavaObject {
 		if (obj.anzahlEinwilligungen === undefined)
 			throw new Error('invalid json format, missing attribute anzahlEinwilligungen');
 		result.anzahlEinwilligungen = obj.anzahlEinwilligungen;
+		if (obj.sortierung === undefined)
+			throw new Error('invalid json format, missing attribute sortierung');
+		result.sortierung = obj.sortierung;
+		if (obj.istSichtbar === undefined)
+			throw new Error('invalid json format, missing attribute istSichtbar');
+		result.istSichtbar = obj.istSichtbar;
 		return result;
 	}
 
@@ -87,10 +95,11 @@ export class Einwilligungsart extends JavaObject {
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		result += '"schluessel" : ' + JSON.stringify(obj.schluessel) + ',';
-		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"beschreibung" : ' + ((obj.beschreibung === null) ? 'null' : JSON.stringify(obj.beschreibung)) + ',';
 		result += '"personTyp" : ' + obj.personTyp.toString() + ',';
 		result += '"anzahlEinwilligungen" : ' + obj.anzahlEinwilligungen.toString() + ',';
+		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
+		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -107,9 +116,6 @@ export class Einwilligungsart extends JavaObject {
 		if (obj.schluessel !== undefined) {
 			result += '"schluessel" : ' + JSON.stringify(obj.schluessel) + ',';
 		}
-		if (obj.sortierung !== undefined) {
-			result += '"sortierung" : ' + obj.sortierung.toString() + ',';
-		}
 		if (obj.beschreibung !== undefined) {
 			result += '"beschreibung" : ' + ((obj.beschreibung === null) ? 'null' : JSON.stringify(obj.beschreibung)) + ',';
 		}
@@ -118,6 +124,12 @@ export class Einwilligungsart extends JavaObject {
 		}
 		if (obj.anzahlEinwilligungen !== undefined) {
 			result += '"anzahlEinwilligungen" : ' + obj.anzahlEinwilligungen.toString() + ',';
+		}
+		if (obj.sortierung !== undefined) {
+			result += '"sortierung" : ' + obj.sortierung.toString() + ',';
+		}
+		if (obj.istSichtbar !== undefined) {
+			result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

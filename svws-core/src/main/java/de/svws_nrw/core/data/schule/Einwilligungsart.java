@@ -27,9 +27,6 @@ public class Einwilligungsart {
 	@Schema(description = "der Schlüssel der Einwilligungsart", example = "FOTO")
 	public @NotNull String schluessel = "";
 
-	/** Gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an. */
-	@Schema(description = "gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an", example = "1")
-	public int sortierung = 1;
 
 	/** Eine ausführliche Beschreibung der Einwilligungsart. */
 	@Schema(description = "Eine ausführliche Beschreibung der Einwilligungsart", example = "Einwilligung zur Verwendung von Fotos")
@@ -42,6 +39,14 @@ public class Einwilligungsart {
 	/** Gibt an, für welche Personengruppe die Einwilligungsart relevant ist. */
 	@Schema(description = "gibt an wie viele Einwilligungen dem entsprechenden Einwilligungsart-Eintrag zugeordnet sind", example = "3")
 	public int anzahlEinwilligungen;
+
+	/** Gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an. */
+	@Schema(description = "gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an", example = "1")
+	public int sortierung = 32000;
+
+	/** Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. */
+	@Schema(description = "gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht", example = "true")
+	public boolean istSichtbar = true;
 
 	/**
 	 * Leerer Standardkonstruktor.

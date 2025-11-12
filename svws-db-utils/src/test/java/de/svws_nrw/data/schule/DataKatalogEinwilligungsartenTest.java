@@ -1,38 +1,38 @@
 package de.svws_nrw.data.schule;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
+import de.svws_nrw.asd.types.schule.Einwilligungsschluessel;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.core.data.schule.Einwilligungsart;
 import de.svws_nrw.core.types.schule.PersonTyp;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogEinwilligungsart;
-import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerDatenschutz;
-import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerDatenschutz;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response;
-import org.assertj.core.api.Assertions;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static java.util.Collections.emptyMap;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatException;
 import static org.assertj.core.api.Assertions.assertThatNoException;
-import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
-import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.mockito.Mockito.verifyNoInteractions;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
 
 @DisplayName("Diese Testklasse testet die Klasse DataKatalogEinwilligungsarten")
 @ExtendWith(MockitoExtension.class)
@@ -50,335 +50,661 @@ class DataKatalogEinwilligungsartenTest {
 	}
 
 	@Test
-	@DisplayName("initDTO | setzt die Felder korrekt")
-	void initDTOTest() {
-		data = new DataKatalogEinwilligungsarten(conn);
-		final DTOKatalogEinwilligungsart dto = getDTOKatalogEinwilligungsart();
-		final long id = 1L;
-		final Map<String, Object> initAttributes = new HashMap<>();
-
-		data.initDTO(dto, id, initAttributes);
-
-		assertThat(dto)
-				.hasFieldOrPropertyWithValue("ID", id)
-				.hasFieldOrPropertyWithValue("Bezeichnung", "")
-				.hasFieldOrPropertyWithValue("Beschreibung", "")
-				.hasFieldOrPropertyWithValue("Schluessel", "")
-				.hasFieldOrPropertyWithValue("personTyp", PersonTyp.SCHUELER)
-				.hasFieldOrPropertyWithValue("Sichtbar", true)
-				.hasFieldOrPropertyWithValue("Sortierung", 32000);
-
+	@DisplayName("setAttributesRequiredOnCreation: bezeichnung")
+	void setAttributesRequiredOnCreationBezeichnung() {
+		assertThatException()
+				.isThrownBy(() -> this.data.add(Map.of("personTyp", "test")))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Es werden weitere Attribute (bezeichnung) benötigt, damit die Entität erstellt werden kann.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test
-	@DisplayName("map | erfolgreiches Mapping | check Basic Attributes")
-	void mapTest() {
-		final DTOKatalogEinwilligungsart dto = getDTOKatalogEinwilligungsart();
-
-		assertThat(this.data.map(dto))
-				.isInstanceOf(Einwilligungsart.class)
-				.hasFieldOrPropertyWithValue("id", 1L)
-				.hasFieldOrPropertyWithValue("bezeichnung", "Testbezeichnung")
-				.hasFieldOrPropertyWithValue("beschreibung", "Testbeschreibung")
-				.hasFieldOrPropertyWithValue("schluessel", "Testschluessel")
-				.hasFieldOrPropertyWithValue("personTyp", PersonTyp.SCHUELER.id)
-				.hasFieldOrPropertyWithValue("sortierung", 32000)
-				.hasFieldOrPropertyWithValue("anzahlEinwilligungen", 0);
+	@DisplayName("setAttributesRequiredOnCreation: personTyp")
+	void setAttributesRequiredOnCreationPersonTyp() {
+		assertThatException()
+				.isThrownBy(() -> this.data.add(Map.of("bezeichnung", "test")))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Es werden weitere Attribute (personTyp) benötigt, damit die Entität erstellt werden kann.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test
-	@DisplayName("map | erfolgreiches Mapping | some Values null")
-	void mapTest_someValuesNull() {
-		final DTOKatalogEinwilligungsart dto = getDTOKatalogEinwilligungsart();
-		dto.Bezeichnung = null;
-		dto.Beschreibung = null;
-		dto.Schluessel = null;
+	@DisplayName("setAttributesNotPatchable: id")
+	void setAttributesNotPatchableId() {
+		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(mock(DTOKatalogEinwilligungsart.class));
 
-		assertThat(this.data.map(dto))
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, Map.of("id", "test")))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Folgende Attribute werden für ein Patch nicht zugelassen: id.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("initDTO | Erfolg")
+	void initDTO() {
+		final var dto = new DTOKatalogEinwilligungsart(1L, "", true, 1);
+
+		this.data.initDTO(dto, 2L, null);
+
+		assertThat(dto).hasFieldOrPropertyWithValue("ID", 2L);
+	}
+
+	@Test
+	@DisplayName("getLongId | Erfolg")
+	void getLongId() {
+		final var dto = new DTOKatalogEinwilligungsart(1L, "", true, 1);
+
+		assertThat(this.data.getLongId(dto)).isEqualTo(1L);
+	}
+
+	@Test
+	@DisplayName("getById | Erfolg")
+	void getById() throws ApiOperationException {
+		final var dto = new DTOKatalogEinwilligungsart(1L, "", true, 1);
+		dto.personTyp = PersonTyp.ERZIEHER;
+
+		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto);
+
+		assertThat(this.data.getById(1L))
 				.isInstanceOf(Einwilligungsart.class)
-				.hasFieldOrPropertyWithValue("id", 1L)
-				.hasFieldOrPropertyWithValue("bezeichnung", "")
-				.hasFieldOrPropertyWithValue("beschreibung", "")
-				.hasFieldOrPropertyWithValue("schluessel", "")
-				.hasFieldOrPropertyWithValue("personTyp", PersonTyp.SCHUELER.id)
-				.hasFieldOrPropertyWithValue("sortierung", 32000)
-				.hasFieldOrPropertyWithValue("anzahlEinwilligungen", 0);
+				.hasFieldOrPropertyWithValue("id", dto.ID);
+	}
+
+	@Test
+	@DisplayName("getByID | ID can't be null")
+	void getByIdNull() {
+		assertThatException()
+				.isThrownBy(() -> this.data.getById(null))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Die ID der Einwilligungsart darf nicht null sein.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("getByID | id not found")
+	void getByIdNotFound() {
+		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 99L)).thenReturn(null);
+
+		assertThatException()
+				.isThrownBy(() -> this.data.getById(99L))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Die Einwilligungsart mit der ID 99 wurde nicht gefunden.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.NOT_FOUND);
 	}
 
 	@Test
 	@DisplayName("getAll | Erfolg")
-	void getAllTest() throws ApiOperationException {
-		final DTOKatalogEinwilligungsart dtoSchueler = getDTOKatalogEinwilligungsart();
-		final DTOKatalogEinwilligungsart dtoLehrer = getDTOKatalogEinwilligungsart();
-		dtoLehrer.ID = 2L;
-		dtoLehrer.personTyp = PersonTyp.LEHRER;
+	void getAll() {
+		final var dto1 = new DTOKatalogEinwilligungsart(1L, "bez1", true, 1);
+		dto1.personTyp = PersonTyp.ERZIEHER;
+		final var dto2 = new DTOKatalogEinwilligungsart(2L, "bez2", false, 2);
+		dto2.personTyp = PersonTyp.SCHUELER;
 
-		when(conn.queryAll(DTOKatalogEinwilligungsart.class)).thenReturn(List.of(dtoSchueler, dtoLehrer));
+		when(this.conn.queryAll(DTOKatalogEinwilligungsart.class)).thenReturn(List.of(dto1, dto2));
 
-		final DTOSchuelerDatenschutz schueler = getDTOSchuelerDatenschutz();
-		schueler.Datenschutz_ID = dtoSchueler.ID;
-		when(conn.queryList((DTOSchuelerDatenschutz.QUERY_ALL.concat(" WHERE e.Datenschutz_ID IS NOT NULL")), (DTOSchuelerDatenschutz.class)))
-				.thenReturn(List.of(schueler));
-
-		final DTOLehrerDatenschutz lehrer = getDTOLehrerDatenschutz();
-		lehrer.DatenschutzID = dtoLehrer.ID;
-		when(conn.queryList((DTOLehrerDatenschutz.QUERY_ALL.concat(" WHERE e.DatenschutzID IS NOT NULL")), (DTOLehrerDatenschutz.class)))
-				.thenReturn(List.of(lehrer, lehrer));
-
-		final List<Einwilligungsart> result = data.getAll();
-		final Einwilligungsart eaSchueler = result.stream().filter(ea -> ea.id == dtoSchueler.ID).findFirst().orElse(null);
-		final Einwilligungsart eaLehrer = result.stream().filter(ea -> ea.id == dtoLehrer.ID).findFirst().orElse(null);
-
-		assertThat(eaSchueler)
-				.isNotNull()
-				.hasFieldOrPropertyWithValue("anzahlEinwilligungen", 1);
-		assertThat(eaLehrer)
-				.isNotNull()
-				.hasFieldOrPropertyWithValue("anzahlEinwilligungen", 2);
+		assertThat(this.data.getAll())
+				.hasSize(2)
+				.satisfiesExactly(
+						f1 -> assertThat(f1)
+								.isInstanceOf(Einwilligungsart.class)
+								.hasFieldOrPropertyWithValue("id", 1L)
+								.hasFieldOrPropertyWithValue("bezeichnung", "bez1")
+								.hasFieldOrPropertyWithValue("personTyp", 3)
+								.hasFieldOrPropertyWithValue("istSichtbar", true)
+								.hasFieldOrPropertyWithValue("sortierung", 1),
+						f2 -> assertThat(f2)
+								.isInstanceOf(Einwilligungsart.class)
+								.hasFieldOrPropertyWithValue("id", 2L)
+								.hasFieldOrPropertyWithValue("bezeichnung", "bez2")
+								.hasFieldOrPropertyWithValue("personTyp", 2)
+								.hasFieldOrPropertyWithValue("istSichtbar", false)
+								.hasFieldOrPropertyWithValue("sortierung", 2)
+				);
 	}
 
 	@Test
-	@DisplayName("getById | Einwilligungsart null")
-	void getByIdTest_notFound() {
-		when(conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(null);
-		final var throwable = catchThrowable(() -> data.getById(1L));
-		assertThat(throwable)
-				.isInstanceOf(ApiOperationException.class)
-				.hasMessageContaining("Die Einwilligungsart mit der ID 1 wurde nicht gefunden.");
+	@DisplayName("getAll | Database empty")
+	void getAllEmpty() {
+		when(this.conn.queryAll(DTOKatalogEinwilligungsart.class)).thenReturn(Collections.emptyList());
+
+		assertThat(this.data.getAll()).isEmpty();
 	}
 
 	@Test
-	@DisplayName("getById | Schüler")
-	void getByIdTest_Schueler() throws ApiOperationException {
-		final DTOKatalogEinwilligungsart dto = getDTOKatalogEinwilligungsart();
-		when(conn.queryByKey(DTOKatalogEinwilligungsart.class, dto.ID)).thenReturn(dto);
-		final DTOSchuelerDatenschutz schueler1 = getDTOSchuelerDatenschutz();
-		final DTOSchuelerDatenschutz schueler2 = getDTOSchuelerDatenschutz();
-		when(conn.queryList((DTOSchuelerDatenschutz.QUERY_BY_DATENSCHUTZ_ID.replace("SELECT e ", "SELECT COUNT(e) ")),
-				(DTOSchuelerDatenschutz.class), (dto.ID)))
-				.thenReturn(List.of(schueler1, schueler2));
+	@DisplayName("map | Erfolg")
+	void map() {
+		final var dto = new DTOKatalogEinwilligungsart(1L, "bezeichnung", true, 123);
+		dto.personTyp = PersonTyp.ERZIEHER;
+		dto.Schluessel = "key";
+		dto.Beschreibung = "tolle Beschreibung";
 
-		assertThat(data.getById(dto.ID))
-				.isNotNull()
-				.hasFieldOrPropertyWithValue("anzahlEinwilligungen", 2);
+		assertThat(this.data.map(dto))
+				.isInstanceOf(Einwilligungsart.class)
+				.hasFieldOrPropertyWithValue("id", dto.ID)
+				.hasFieldOrPropertyWithValue("bezeichnung", dto.Bezeichnung)
+				.hasFieldOrPropertyWithValue("istSichtbar", dto.Sichtbar)
+				.hasFieldOrPropertyWithValue("sortierung", dto.Sortierung)
+				.hasFieldOrPropertyWithValue("personTyp", dto.personTyp.id)
+				.hasFieldOrPropertyWithValue("schluessel", dto.Schluessel)
+				.hasFieldOrPropertyWithValue("beschreibung", dto.Beschreibung);
 	}
 
 	@Test
-	@DisplayName("getById | Lehrer")
-	void getByIdTest_Lehrer() throws ApiOperationException {
-		final DTOKatalogEinwilligungsart dto = getDTOKatalogEinwilligungsart();
-		dto.ID = 2L;
-		dto.personTyp = PersonTyp.LEHRER;
-		when(conn.queryByKey(DTOKatalogEinwilligungsart.class, dto.ID)).thenReturn(dto);
-		final DTOLehrerDatenschutz lehrer1 = getDTOLehrerDatenschutz();
-		final DTOLehrerDatenschutz lehrer2 = getDTOLehrerDatenschutz();
-		when(conn.queryList((DTOLehrerDatenschutz.QUERY_BY_DATENSCHUTZID.replace("SELECT e ", "SELECT COUNT(e) ")),
-				(DTOLehrerDatenschutz.class), (dto.ID)))
-				.thenReturn(List.of(lehrer1, lehrer2));
-
-		assertThat(data.getById(dto.ID))
-				.isNotNull()
-				.hasFieldOrPropertyWithValue("anzahlEinwilligungen", 2);
-	}
-
-	@ParameterizedTest
-	@DisplayName("mapAttribute | erfolgreiches mapping")
-	@MethodSource("provideMappingAttributes")
-	void mapAttributeTest(final String key, final Object value) {
-		final var expectedDTO = getDTOKatalogEinwilligungsart();
-		final Map<String, Object> map = new HashMap<>();
-		final var throwable = Assertions.catchThrowable(() -> this.data.mapAttribute(expectedDTO, key, value, map));
-
-		switch (key) {
-			case "id" -> assertThat(expectedDTO.ID).isEqualTo(value);
-			case "bezeichnung" -> assertThat(expectedDTO.Bezeichnung).isEqualTo(value);
-			case "beschreibung" -> assertThat(expectedDTO.Beschreibung).isEqualTo(value);
-			case "schluessel" -> assertThat(expectedDTO.Schluessel).isEqualTo(value);
-			case "personTyp" -> assertThat(expectedDTO.personTyp).isEqualTo(value);
-			case "sichtbar" -> assertThat(expectedDTO.Sichtbar).isEqualTo(value);
-			case "sortierung" -> assertThat(expectedDTO.Sortierung).isEqualTo(value);
-			default -> assertThat(throwable)
-					.isInstanceOf(ApiOperationException.class)
-					.hasMessageStartingWith("Die Daten des Patches enthalten ein unbekanntes Attribut.")
-					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
-		}
-	}
-
-	private static Stream<Arguments> provideMappingAttributes() {
-		return Stream.of(
-				arguments("id", 1L),
-				arguments("bezeichnung", "Testbezeichnung"),
-				arguments("beschreibung", "Testbeschreibung"),
-				arguments("schluessel", "Testschluessel"),
-				arguments("personTyp", PersonTyp.SCHUELER),
-				arguments("sichtbar", true),
-				arguments("sortierung", 32000)
-		);
-	}
-
-	private DTOKatalogEinwilligungsart getDTOKatalogEinwilligungsart() {
-		final var dtoKatalogEinwilligungsart = new DTOKatalogEinwilligungsart(1L, "Testbezeichnung", true, 32000);
-		dtoKatalogEinwilligungsart.ID = 1L;
-		dtoKatalogEinwilligungsart.Bezeichnung = "Testbezeichnung";
-		dtoKatalogEinwilligungsart.Beschreibung = "Testbeschreibung";
-		dtoKatalogEinwilligungsart.Schluessel = "Testschluessel";
-		dtoKatalogEinwilligungsart.personTyp = PersonTyp.SCHUELER;
-		dtoKatalogEinwilligungsart.Sichtbar = true;
-		dtoKatalogEinwilligungsart.Sortierung = 32000;
-		return dtoKatalogEinwilligungsart;
-	}
-
-	private DTOSchuelerDatenschutz getDTOSchuelerDatenschutz() {
-		final var dtoSchuelerDatenschutz = new DTOSchuelerDatenschutz(1L, 1L, false, false);
-		dtoSchuelerDatenschutz.Schueler_ID = 1L;
-		dtoSchuelerDatenschutz.Datenschutz_ID = 1L;
-		dtoSchuelerDatenschutz.Status = false;
-		dtoSchuelerDatenschutz.Abgefragt = false;
-		return dtoSchuelerDatenschutz;
-	}
-
-	private DTOLehrerDatenschutz getDTOLehrerDatenschutz() {
-		final var dtoLehrerDatenschutz = new DTOLehrerDatenschutz(1L, 1L, false, false);
-		dtoLehrerDatenschutz.LehrerID = 1L;
-		dtoLehrerDatenschutz.DatenschutzID = 1L;
-		dtoLehrerDatenschutz.Status = false;
-		dtoLehrerDatenschutz.Abgefragt = false;
-		return dtoLehrerDatenschutz;
-	}
-
-	@Test
-	@DisplayName("mapAttribute | bezeichnung bereits vorhanden")
-	void mapAttributeTest_bezeichnungDoppeltVergeben() {
-		final var dto = new DTOKatalogEinwilligungsart(1L, "abc", true, 1);
-		when(this.conn.queryAll(DTOKatalogEinwilligungsart.class)).thenReturn(List.of(dto));
-
-		final var throwable = catchThrowable(
-				() -> this.data.mapAttribute(new DTOKatalogEinwilligungsart(2L, "test", true, 1), "bezeichnung", "ABC", emptyMap())
-		);
-
-		assertThat(throwable)
-				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Die Bezeichnung ABC ist bereits vorhanden.")
-				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
-	}
-
-	@Test
-	@DisplayName("mapAttribute | bezeichnung unverändert")
-	void mapAttributeTest_bezeichnungUnchanging() {
-		final var dto = new DTOKatalogEinwilligungsart(1L, "abc", true, 1);
-
-		assertThatNoException().isThrownBy(
-				() -> this.data.mapAttribute(dto, "bezeichnung", "abc", emptyMap())
-		);
-
-		verifyNoInteractions(this.conn);
-		assertThat(dto.Bezeichnung).isEqualTo("abc");
-	}
-
-	@Test
-	@DisplayName("mapAttribute | bezeichnung null")
-	void mapAttributeTest_bezeichnungNull() {
-		final var throwable = catchThrowable(
-				() -> this.data.mapAttribute(new DTOKatalogEinwilligungsart(1L, "abc", true, 1), "bezeichnung", null, emptyMap())
-		);
-
-		assertThat(throwable)
-				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Attribut bezeichnung: Der Wert null ist nicht erlaubt.")
-				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
-	}
-
-	@Test
-	@DisplayName("mapAttribute | bezeichnung blank")
-	void mapAttributeTest_bezeichnungBlank() {
-		final var throwable = catchThrowable(
-				() -> this.data.mapAttribute(new DTOKatalogEinwilligungsart(1L, "abc", true, 1), "bezeichnung", "", emptyMap())
-		);
-
-		assertThat(throwable)
-				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Attribut bezeichnung: Ein leerer String ist hier nicht erlaubt.")
-				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
-	}
-
-	@Test
-	@DisplayName("mapAttribute | bezeichnung dto is null")
-	void mapAttributeTest_bezeichnungDtoISNull() throws ApiOperationException {
-		final var dto = new DTOKatalogEinwilligungsart(1L, "1", true, 1);
+	@DisplayName("map | bezeichnung null")
+	void mapBezeichnungIsNull() {
+		final var dto = new DTOKatalogEinwilligungsart(1L, "bezeichnung", true, 123);
 		dto.Bezeichnung = null;
-		final var newDto = new DTOKatalogEinwilligungsart(2L, "abc", true, 1);
-		when(conn.queryAll(DTOKatalogEinwilligungsart.class)).thenReturn(List.of(dto));
 
-		this.data.mapAttribute(newDto, "bezeichnung", "test", emptyMap());
-
-		assertThat(newDto.Bezeichnung).isEqualTo("test");
+		assertThat(this.data.map(dto))
+				.isInstanceOf(Einwilligungsart.class)
+				.hasFieldOrPropertyWithValue("bezeichnung", "");
 	}
 
 	@Test
-	@DisplayName("mapAttribute | schluessel bereits vorhanden")
-	void mapAttributeTest_schluesselBereitsVorhanden() {
-		final var dto = new DTOKatalogEinwilligungsart(1L, "abc", true, 1);
-		dto.Schluessel = "abc";
-		when(this.conn.queryAll(DTOKatalogEinwilligungsart.class)).thenReturn(List.of(dto));
+	@DisplayName("map | schluessel null")
+	void mapSchluesselIsNull() {
+		final var dto = new DTOKatalogEinwilligungsart(1L, "bezeichnung", true, 123);
+		dto.Schluessel = null;
 
-		final var throwable = catchThrowable(
-				() -> this.data.mapAttribute(new DTOKatalogEinwilligungsart(2L, "test", true, 1), "schluessel", "ABC", emptyMap())
-		);
+		assertThat(this.data.map(dto))
+				.isInstanceOf(Einwilligungsart.class)
+				.hasFieldOrPropertyWithValue("schluessel", "");
+	}
 
-		assertThat(throwable)
+
+	@Test
+	@DisplayName("map | beschreibung null")
+	void mapBeschreibungIsNull() {
+		final var dto = new DTOKatalogEinwilligungsart(1L, "bezeichnung", true, 123);
+		dto.Beschreibung = null;
+
+		assertThat(this.data.map(dto))
+				.isInstanceOf(Einwilligungsart.class)
+				.hasFieldOrPropertyWithValue("beschreibung", "");
+	}
+
+
+	@Test
+	@DisplayName("map | personTyp null")
+	void mapPersonTypIsNull() {
+		final var dto = new DTOKatalogEinwilligungsart(1L, "bezeichnung", true, 123);
+		dto.personTyp = null;
+
+		assertThat(this.data.map(dto))
+				.isInstanceOf(Einwilligungsart.class)
+				.hasFieldOrPropertyWithValue("personTyp", PersonTyp.SCHUELER.id);
+	}
+
+	@Test
+	@DisplayName("map | sichtbar null")
+	void mapSichtbarIsNull() {
+		final var dto = new DTOKatalogEinwilligungsart(1L, "bezeichnung", true, 123);
+		dto.Sichtbar = null;
+
+		assertThat(this.data.map(dto))
+				.isInstanceOf(Einwilligungsart.class)
+				.hasFieldOrPropertyWithValue("istSichtbar", false);
+	}
+
+	@Test
+	@DisplayName("addBasic | lehrerEinwilligung")
+	void addBasicLehrerEinwilligung() throws ApiOperationException {
+		final var dto = new DTOKatalogEinwilligungsart(1L, "bezeichnung", true, 123);
+		dto.personTyp = PersonTyp.LEHRER;
+		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+
+		this.data.addBasic(1L, Map.of("bezeichnung", "bezeichnung", "personTyp", 1));
+
+		verify(this.conn, times(1)).queryList("SELECT e.ID FROM DTOLehrer e", Long.class);
+		verify(this.conn, times(1)).transactionPersistAll(any());
+		verify(this.conn, times(2)).transactionFlush();
+	}
+
+	@Test
+	@DisplayName("addBasic | schuelerEinwilligung")
+	void addBasicSchuelerEinwilligung() throws ApiOperationException {
+		final var dto = new DTOKatalogEinwilligungsart(1L, "bezeichnung", true, 123);
+		dto.personTyp = PersonTyp.SCHUELER;
+		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+
+		this.data.addBasic(1L, Map.of("bezeichnung", "bezeichnung", "personTyp", 1));
+
+		verify(this.conn, times(1)).queryList("SELECT e.ID FROM DTOSchueler e", Long.class);
+		verify(this.conn, times(1)).transactionPersistAll(any());
+		verify(this.conn, times(2)).transactionFlush();
+	}
+
+	@Test
+	@DisplayName("addBasic | other persontyp")
+	void addBasicEinwilligungOtherPersonTyp() {
+		final var dto = new DTOKatalogEinwilligungsart(1L, "bezeichnung", true, 123);
+		dto.personTyp = PersonTyp.ERZIEHER;
+		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+
+		assertThatException()
+				.isThrownBy(() -> this.data.addBasic(1L, Map.of("bezeichnung", "bezeichnung", "personTyp", 1)))
 				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Der Schlüssel ABC ist bereits vorhanden.")
+				.withMessage("Der PersonTyp 3 ist unzulässig.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test
-	@DisplayName("mapAttribute | Schlüssel unverändert")
-	void mapAttributeTest_schluesselUnchanging() {
-		final var dto = new DTOKatalogEinwilligungsart(1L, "abc", true, 1);
-		dto.Schluessel = "123";
-
-		assertThatNoException().isThrownBy(
-				() -> this.data.mapAttribute(dto, "schluessel", "123", emptyMap())
-		);
-
-		verifyNoInteractions(this.conn);
-		assertThat(dto.Bezeichnung).isEqualTo("abc");
+	@DisplayName("mapAttribute | idWrong")
+	void mapAttributeIdIsWrong() {
+		assertThatException()
+				.isThrownBy(() -> this.data.mapAttribute(mock(DTOKatalogEinwilligungsart.class), "id", 2L, null))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Die ID 2 des Patches ist null oder stimmt nicht mit der ID 0 in der Datenbank überein.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test
-	@DisplayName("mapAttribute | schluessel null")
-	void mapAttributeTest_schluesselNull() throws ApiOperationException {
-		final var dto = new  DTOKatalogEinwilligungsart(1L, "abc", true, 1);
-		dto.Schluessel = "324";
+	@DisplayName("mapAttribute | id")
+	void mapAttributeId() {
+		final var dto = new DTOKatalogEinwilligungsart(1L, "bezeichnung", true, 123);
 
-		this.data.mapAttribute(dto, "schluessel", null, emptyMap());
+		assertDoesNotThrow(() -> this.data.mapAttribute(dto, "id", 1L, null));
+	}
+
+	@Test
+	@DisplayName("patch | bezeichnung > 250 Zeichen")
+	void patchBezeichnungIsTooLong() {
+		final var dto = new DTOKatalogEinwilligungsart(1L, "bezeichnung", true, 123);
+		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto);
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, Map.of("bezeichnung", RandomStringUtils.insecure().nextAscii(251))))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Attribut bezeichnung: Die Länge des Strings ist auf 250 Zeichen limitiert.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("patch | bezeichnung Null")
+	void patchBezeichnungIsNull() {
+		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(mock(DTOKatalogEinwilligungsart.class));
+		final var map = new HashMap<String, Object>();
+		map.put("bezeichnung", null);
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, map))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Attribut bezeichnung: Der Wert null ist nicht erlaubt.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("patch | bezeichnung empty")
+	void patchBezeichnungIsEmpty() {
+		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(mock(DTOKatalogEinwilligungsart.class));
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, Map.of("bezeichnung", "")))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Attribut bezeichnung: Ein leerer String ist hier nicht erlaubt.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("patch | bezeichnung is blank")
+	void patchBezeichnungIsBlank() throws ApiOperationException {
+		final var dto = new DTOKatalogEinwilligungsart(1L, "bezeichnung", true, 123);
+		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+
+		this.data.patch(1L, Map.of("bezeichnung", "    "));
+
+		verify(this.conn, never()).queryAll(DTOKatalogEinwilligungsart.class);
+		assertThat(dto.Bezeichnung).isEqualTo("bezeichnung");
+	}
+
+	@Test
+	@DisplayName("patch | bezeichnung doesn't change")
+	void patchBezeichnungDoesNotChange() throws ApiOperationException {
+		final var dto = new DTOKatalogEinwilligungsart(1L, "bezeichnung", true, 123);
+		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+
+		this.data.patch(1L, Map.of("bezeichnung", "bezeichnung"));
+
+		verify(this.conn, never()).queryAll(DTOKatalogEinwilligungsart.class);
+		assertThat(dto.Bezeichnung).isEqualTo("bezeichnung");
+	}
+
+	@Test
+	@DisplayName("patch | bezeichnung already used")
+	void patchBezeichnungAlreadyUsed() {
+		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(mock(DTOKatalogEinwilligungsart.class));
+		when(this.conn.queryAll(DTOKatalogEinwilligungsart.class)).thenReturn(List.of(new DTOKatalogEinwilligungsart(1L, "test", true, 123)));
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, Map.of("bezeichnung", "test")))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Die Bezeichnung test ist bereits vorhanden.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("patch | bezeichnung already used different case")
+	void patchBezeichnungAlreadyUsedWithDifferentCase() {
+		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(mock(DTOKatalogEinwilligungsart.class));
+		when(this.conn.queryAll(DTOKatalogEinwilligungsart.class)).thenReturn(List.of(new DTOKatalogEinwilligungsart(2L, "TEST", true, 123)));
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, Map.of("bezeichnung", "test")))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Die Bezeichnung test ist bereits vorhanden.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("patch | bezeichnung change case in same object")
+	void patchBezeichnungChangeCase() throws ApiOperationException {
+		final var dto = new DTOKatalogEinwilligungsart(1L, "test", true, 123);
+		when(conn.queryAll(DTOKatalogEinwilligungsart.class)).thenReturn(List.of(dto));
+		final var newDto = new DTOKatalogEinwilligungsart(2L, "abc", true, 123);
+		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 2L)).thenReturn(newDto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+
+		this.data.patch(2L, Map.of("bezeichnung", "ABC"));
+
+		assertThat(newDto.Bezeichnung).isEqualTo("ABC");
+	}
+
+	@Test
+	@DisplayName("patch | bezeichnung dto is null | make sure no Nullpointer is thrown in equalsIgnoreCase check")
+	void patchBezeichnungInDtoISNull() {
+		final var dto = new DTOKatalogEinwilligungsart(1L, "123", true, 123);
+		dto.Bezeichnung = null;
+		when(conn.queryAll(DTOKatalogEinwilligungsart.class)).thenReturn(List.of(dto));
+		final var newDto = new DTOKatalogEinwilligungsart(2L, "abc", true, 123);
+		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 2L)).thenReturn(newDto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+
+		assertThatNoException()
+				.isThrownBy(() -> this.data.patch(2L, Map.of("bezeichnung", "test")));
+	}
+
+	@Test
+	@DisplayName("patch | bezeichnung")
+	void patchBezeichnung() throws ApiOperationException {
+		final var dto = new DTOKatalogEinwilligungsart(1L, "bezeichnung", true, 123);
+		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+
+		this.data.patch(1L, Map.of("bezeichnung", "neu"));
+
+		assertThat(dto.Bezeichnung).isEqualTo("neu");
+	}
+
+	@Test
+	@DisplayName("patch | schluessel > 20 Zeichen")
+	void patchSchluesselIsTooLong() {
+		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(mock(DTOKatalogEinwilligungsart.class));
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, Map.of("schluessel", RandomStringUtils.insecure().nextAscii(21))))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Attribut schluessel: Die Länge des Strings ist auf 20 Zeichen limitiert.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("patch | schluessel is null")
+	void patchSchluesselIsNull() throws ApiOperationException {
+		final var dto = new DTOKatalogEinwilligungsart(1L, "test", true, 123);
+		dto.Schluessel = "toBeChanged";
+		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+		final var map = new HashMap<String, Object>();
+		map.put("schluessel", null);
+
+		this.data.patch(1L, map);
 
 		assertThat(dto.Schluessel).isNull();
 	}
 
 	@Test
-	@DisplayName("mapAttribute | schluessel blank")
-	void mapAttributeTest_schluesselBlank() throws ApiOperationException {
-		final var dto = new  DTOKatalogEinwilligungsart(1L, "abc", true, 1);
-		dto.Schluessel = "324";
+	@DisplayName("patch | schluessel is blank")
+	void patchSchluesselIsBlank() throws ApiOperationException {
+		final var dto = new DTOKatalogEinwilligungsart(1L, "test", true, 123);
+		dto.Schluessel = "notToBeChanged";
+		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
 
-		this.data.mapAttribute(dto, "schluessel", " ", emptyMap());
+		this.data.patch(1L, Map.of("schluessel", "   "));
 
-		assertThat(dto.Schluessel).isBlank();
+		assertThat(dto.Schluessel).isEqualTo("notToBeChanged");
 	}
 
 	@Test
-	@DisplayName("mapAttribute | schluessel dto is null")
-	void mapAttributeTest_schluesselDtoISNull() throws ApiOperationException {
-		final var dto = new DTOKatalogEinwilligungsart(1L, "1", true, 1);
-		dto.Schluessel = null;
-		final var newDto = new DTOKatalogEinwilligungsart(2L, "abc", true, 1);
-		when(conn.queryAll(DTOKatalogEinwilligungsart.class)).thenReturn(List.of(dto));
+	@DisplayName("patch | schluessel | value has not changes")
+	void patchSchluesselHasNotChanged() throws ApiOperationException {
+		final var dto = new DTOKatalogEinwilligungsart(1L, "test", true, 123);
+		dto.Schluessel = "oldValue";
+		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
 
-		this.data.mapAttribute(newDto, "schluessel", "test", emptyMap());
+		this.data.patch(1L, Map.of("schluessel", "oldValue"));
 
-		assertThat(newDto.Schluessel).isEqualTo("test");
+		assertThat(dto.Schluessel).isEqualTo("oldValue");
 	}
 
+	@Test
+	@DisplayName("patch | schluessel already used from same personTyp")
+	void patchSchluesselAlreadyUsedFromSamePersonTyp() {
+		final var dto1 = new DTOKatalogEinwilligungsart(1L, "test", true, 123);
+		dto1.personTyp = PersonTyp.SCHUELER;
+		dto1.Schluessel = "abc";
+		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto1);
+		final var dto2 = new DTOKatalogEinwilligungsart(2L, "test", true, 123);
+		dto2.personTyp = PersonTyp.SCHUELER;
+		final String schluessel = Einwilligungsschluessel.data().getWerte().getFirst().historie().getFirst().schluessel;
+		dto2.Schluessel = schluessel;
+		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto1);
+		when(this.conn.queryAll(DTOKatalogEinwilligungsart.class)).thenReturn(List.of(dto1, dto2));
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, Map.of("schluessel", schluessel)))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Der Schlüssel FOTO wird bereits beim PersonTyp SCHUELER verwendet.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("patch | schluessel used from different personTyp")
+	void patchSchluesselAlreadyUsedFromDifferentPersonTyp() throws ApiOperationException {
+		final var dto1 = new DTOKatalogEinwilligungsart(1L, "test", true, 123);
+		dto1.personTyp = PersonTyp.SCHUELER;
+		dto1.Schluessel = "abc";
+		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto1);
+		final var dto2 = new DTOKatalogEinwilligungsart(2L, "test", true, 123);
+		dto2.personTyp = PersonTyp.LEHRER;
+		final String schluessel = Einwilligungsschluessel.data().getWerte().getFirst().historie().getFirst().schluessel;
+		dto2.Schluessel = schluessel;
+		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto1);
+		when(this.conn.queryAll(DTOKatalogEinwilligungsart.class)).thenReturn(List.of(dto1, dto2));
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+
+		this.data.patch(1L, Map.of("schluessel", schluessel));
+
+		assertThat(dto1.Schluessel).isEqualTo(schluessel);
+	}
+
+	@Test
+	@DisplayName("patch | schluessel | coreType does not match")
+	void patchSchluesselCoreTypeDoesNotMatch() {
+		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(mock(DTOKatalogEinwilligungsart.class));
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, Map.of("schluessel", "-35")))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Zum angegebenen Schlüssel -35 wurde keine passende Einwilligungsart gefunden.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.NOT_FOUND);
+	}
+
+	@Test
+	@DisplayName("patch | schluessel")
+	void patchSchluessel() throws ApiOperationException {
+		final var dto = new DTOKatalogEinwilligungsart(1L, "test", true, 123);
+		dto.Schluessel = "oldValue";
+		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+		final String schluessel = Einwilligungsschluessel.data().getWerte().getFirst().historie().getFirst().schluessel;
+
+		this.data.patch(1L, Map.of("schluessel", schluessel));
+
+		assertThat(dto.Schluessel).isEqualTo(schluessel);
+	}
+
+	@Test
+	@DisplayName("patch | beschreibung is null ")
+	void patchBeschreibungIsNull() throws ApiOperationException {
+		final var dto = new DTOKatalogEinwilligungsart(1L, "test", true, 123);
+		dto.Beschreibung = "oldValue";
+		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+		final var map = new HashMap<String, Object>();
+		map.put("beschreibung", null);
+
+		this.data.patch(1L, map);
+
+		assertThat(dto.Beschreibung).isNull();
+	}
+
+	@Test
+	@DisplayName("patch | beschreibung")
+	void patchBeschreibung() throws ApiOperationException {
+		final var dto = new DTOKatalogEinwilligungsart(1L, "test", true, 123);
+		dto.Beschreibung = "oldValue";
+		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+
+		this.data.patch(1L, Map.of("beschreibung", "newValue"));
+
+		assertThat(dto.Beschreibung).isEqualTo("newValue");
+	}
+
+	@Test
+	@DisplayName("patch | personTyp is null")
+	void patchPersonTypIsNull() {
+		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(mock(DTOKatalogEinwilligungsart.class));
+		final var map = new HashMap<String, Object>();
+		map.put("personTyp", null);
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, map))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Attribut personTyp: Der Wert null ist nicht erlaubt")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("patch | personTyp wrong if")
+	void patchPersonTypWrongId() {
+		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(mock(DTOKatalogEinwilligungsart.class));
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, Map.of("personTyp", -35)))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Die ID -35 ist für den Personentyp ungültig.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("patch | personTyp wrong type")
+	void patchPersonTypWrongType()  {
+		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(mock(DTOKatalogEinwilligungsart.class));
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, Map.of("personTyp", PersonTyp.ERZIEHER.id)))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Die PersonTyp Erzieher ist nicht zugelassen.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("patch | personTyp")
+	void patchPersonTyp() throws ApiOperationException {
+		final var dto = new DTOKatalogEinwilligungsart(1L, "test", true, 123);
+		dto.personTyp = PersonTyp.LEHRER;
+		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+
+		this.data.patch(1L, Map.of("personTyp", PersonTyp.SCHUELER.id));
+
+		assertThat(dto.personTyp).isEqualTo(PersonTyp.SCHUELER);
+	}
+
+	@Test
+	@DisplayName("patch | istSichtbar is null")
+	void patchIstSichtbarIsNull() {
+		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(mock(DTOKatalogEinwilligungsart.class));
+		final var map = new HashMap<String, Object>();
+		map.put("istSichtbar", null);
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, map))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Attribut istSichtbar: Der Wert null ist nicht erlaubt")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("patch | istSichtbar")
+	void patchIstSichtbar() throws ApiOperationException {
+		final var dto = new DTOKatalogEinwilligungsart(1L, "bezeichnung", true, 123);
+		dto.Sichtbar = false;
+		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+
+		this.data.patch(1L, Map.of("istSichtbar", true));
+
+		assertThat(dto.Sichtbar).isTrue();
+	}
+
+	@Test
+	@DisplayName("patch | sortierung is null")
+	void patchSortierungIsNull() {
+		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(mock(DTOKatalogEinwilligungsart.class));
+		final var map = new HashMap<String, Object>();
+		map.put("sortierung", null);
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, map))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Attribut sortierung: Der Wert null ist nicht erlaubt")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("patch | Sortierung")
+	void patchSortierung() throws ApiOperationException {
+		final var dto = new DTOKatalogEinwilligungsart(1L, "bezeichnung", true, 123);
+		dto.Sortierung = 123;
+		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+
+		this.data.patch(1L, Map.of("sortierung", 345));
+
+		assertThat(dto.Sortierung).isEqualTo(345);
+	}
+
+	@Test
+	@DisplayName("patch | unknown argument")
+	void patchUnknownArgument() {
+		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(mock(DTOKatalogEinwilligungsart.class));
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, Map.of("unknown", "unknown")))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Die Daten des Patches enthalten das unbekannte Attribut unknown.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
 
 }

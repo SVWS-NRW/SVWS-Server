@@ -169,10 +169,6 @@ public final class DataKatalogSchuelerFoerderschwerpunkte extends DataManagerRev
 				.collect(Collectors.toSet());
 	}
 
-	private static boolean valueIsBlankOrHasNotChanged(final String oldValue, final String newValue) {
-		return Objects.equals(oldValue, newValue) || newValue.isBlank();
-	}
-
 	private static boolean noMatchingCoreTypeFound(final String kuerzel) {
 		return Foerderschwerpunkt.data().getWertBySchluessel(kuerzel) == null;
 	}
@@ -182,4 +178,9 @@ public final class DataKatalogSchuelerFoerderschwerpunkte extends DataManagerRev
 				.queryAll(DTOFoerderschwerpunkt.class).stream()
 				.anyMatch(f -> (f.ID != id) && bezeichnung.equalsIgnoreCase(f.Bezeichnung));
 	}
+
+	private static boolean valueIsBlankOrHasNotChanged(final String oldValue, final String newValue) {
+		return Objects.equals(oldValue, newValue) || ((newValue != null) && newValue.isBlank());
+	}
+
 }
