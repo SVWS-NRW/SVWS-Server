@@ -2,13 +2,13 @@
 	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper>
-				<svws-ui-text-input class="contentFocusField" placeholder="Bezeichnung" :model-value="einwilligungsartenListeManager().auswahl().bezeichnung"
+				<svws-ui-text-input class="contentFocusField" placeholder="Bezeichnung" :model-value="manager().auswahl().bezeichnung"
 					@change="bezeichnung => patch({ bezeichnung: bezeichnung ?? undefined })" :readonly required :min-len="1" :max-len="250" />
-				<svws-ui-text-input placeholder="Schlüssel" :model-value="einwilligungsartenListeManager().auswahl().schluessel"
+				<svws-ui-text-input placeholder="Schlüssel" :model-value="manager().auswahl().schluessel"
 					@change="schluessel => patch({ schluessel: schluessel ?? undefined })" :readonly :max-len="20" />
-				<svws-ui-textarea-input placeholder="Beschreibung" :model-value="einwilligungsartenListeManager().auswahl().beschreibung"
+				<svws-ui-textarea-input placeholder="Beschreibung" :model-value="manager().auswahl().beschreibung"
 					@change="beschreibung => patch({ beschreibung: beschreibung ?? undefined })" :readonly />
-				<svws-ui-text-input placeholder="Personenart" :model-value="getPersonTypName(einwilligungsartenListeManager().auswahl().personTyp)" disabled />
+				<svws-ui-text-input placeholder="Personenart" :model-value="getPersonTypName(manager().auswahl().personTyp)" disabled />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 	</div>
@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 
-	import type { EinwilligungsartenDatenProps } from "./SEinwilligungsartenDatenProps";
+	import type { EinwilligungsartenDatenProps } from "./EinwilligungsartenDatenProps";
 	import { BenutzerKompetenz, PersonTyp } from "@core";
 	import { computed } from "vue";
 

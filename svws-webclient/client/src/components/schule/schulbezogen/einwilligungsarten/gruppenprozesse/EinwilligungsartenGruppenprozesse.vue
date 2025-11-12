@@ -37,10 +37,10 @@
 	import { ref, computed } from "vue";
 	import { BenutzerKompetenz, type List, ServerMode } from "@core";
 	import type {
-		SchuleEinwilligungsartenGruppenprozesseProps,
-	} from "~/components/schule/schulbezogen/einwilligungsarten/gruppenprozesse/SEinwilligungsartenGruppenprozesseProps";
+		EinwilligungsartenGruppenprozesseProps,
+	} from "~/components/schule/schulbezogen/einwilligungsarten/gruppenprozesse/EinwilligungsartenGruppenprozesseProps";
 
-	const props = defineProps<SchuleEinwilligungsartenGruppenprozesseProps>();
+	const props = defineProps<EinwilligungsartenGruppenprozesseProps>();
 
 	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
 

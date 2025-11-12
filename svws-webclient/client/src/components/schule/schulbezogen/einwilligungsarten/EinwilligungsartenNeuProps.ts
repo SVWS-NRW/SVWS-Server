@@ -2,7 +2,7 @@ import type { BenutzerKompetenz, Einwilligungsart } from "@core";
 import type { Checkpoint, EinwilligungsartenListeManager } from "@ui";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 
-export interface SchuleEinwilligungsartenNeuProps {
+export interface EinwilligungsartenNeuProps {
 	manager: () => EinwilligungsartenListeManager;
 	add: (patchObject: Partial<Einwilligungsart>) => Promise<void>;
 	benutzerKompetenzen: Set<BenutzerKompetenz>,

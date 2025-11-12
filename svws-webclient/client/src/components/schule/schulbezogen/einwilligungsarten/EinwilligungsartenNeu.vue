@@ -37,12 +37,12 @@
 </template>
 
 <script setup lang="ts">
-	import type { SchuleEinwilligungsartenNeuProps } from "~/components/schule/schulbezogen/einwilligungsarten/SEinwilligungsartenNeuProps";
+	import type { EinwilligungsartenNeuProps } from "~/components/schule/schulbezogen/einwilligungsarten/EinwilligungsartenNeuProps";
 	import { computed, ref, watch } from "vue";
 	import { BenutzerKompetenz, Einwilligungsart, PersonTyp } from "@core";
 	import { isUniqueInList, mandatoryInputIsValid, optionalInputIsValid } from "~/util/validation/Validation";
 
-	const props = defineProps<SchuleEinwilligungsartenNeuProps>();
+	const props = defineProps<EinwilligungsartenNeuProps>();
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const disabled = computed(() => !hatKompetenzUpdate.value);
 

@@ -43,7 +43,7 @@
 	import { BenutzerKompetenz } from "@core";
 	import type { DataTableColumn } from "@ui";
 	import { useRegionSwitch, ViewType } from "@ui";
-	import type { EinwilligungenAuswahlProps } from "./SEinwilligungsartenAuswahlProps";
+	import type { EinwilligungenAuswahlProps } from "./EinwilligungsartenAuswahlProps";
 
 	const props = defineProps<EinwilligungenAuswahlProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();

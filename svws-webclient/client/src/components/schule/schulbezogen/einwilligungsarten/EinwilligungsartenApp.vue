@@ -38,7 +38,7 @@
 
 	import { computed } from "vue";
 	import { useRegionSwitch, ViewType } from "@ui";
-	import type { EinwilligungsartenAppProps } from "~/components/schule/schulbezogen/einwilligungsarten/SEinwilligungsartenAppProps";
+	import type { EinwilligungsartenAppProps } from "~/components/schule/schulbezogen/einwilligungsarten/EinwilligungsartenAppProps";
 
 	const props = defineProps<EinwilligungsartenAppProps>();
 

@@ -2,18 +2,19 @@ import type { RouteLocationNormalized } from "vue-router";
 import type { SchuelerEinwilligungsartenZusammenfassung } from "@core";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
-import { routeKatalogEinwilligungsarten, type RouteKatalogEinwilligungsarten } from "~/router/apps/schule/schulbezogen/einwilligungsarten/RouteKatalogEinwilligungsarten";
-import type { EinwilligungsartenDatenProps } from "~/components/schule/schulbezogen/einwilligungsarten/daten/SEinwilligungsartenDatenProps";
+import { routeEinwilligungsarten, type RouteEinwilligungsarten } from "~/router/apps/schule/schulbezogen/einwilligungsarten/RouteEinwilligungsarten";
+import type { EinwilligungsartenDatenProps } from "~/components/schule/schulbezogen/einwilligungsarten/daten/EinwilligungsartenDatenProps";
 import { RouteManager } from "~/router/RouteManager";
 import { routeSchuelerEinwilligungen } from "~/router/apps/schueler/einwilligungen/RouteSchuelerEinwilligungen";
 import { api } from "~/router/Api";
 
-const SEinwilligungsartDaten = () => import("~/components/schule/schulbezogen/einwilligungsarten/daten/SEinwilligungsartenDaten.vue");
+const EinwilligungsartenDaten = () => import("~/components/schule/schulbezogen/einwilligungsarten/daten/EinwilligungsartenDaten.vue");
 
-export class RouteKatalogEinwilligungsartenDaten extends RouteNode<any, RouteKatalogEinwilligungsarten> {
+export class RouteEinwilligungsartenDaten extends RouteNode<any, RouteEinwilligungsarten> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.einwilligungsarten.daten", "daten", SEinwilligungsartDaten);
+		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN],
+			"schule.einwilligungsarten.daten", "daten", EinwilligungsartenDaten);
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Einwilligungsart";
@@ -25,8 +26,8 @@ export class RouteKatalogEinwilligungsartenDaten extends RouteNode<any, RouteKat
 
 	public getProps(to: RouteLocationNormalized): EinwilligungsartenDatenProps {
 		return {
-			patch: routeKatalogEinwilligungsarten.data.patch,
-			einwilligungsartenListeManager: () => routeKatalogEinwilligungsarten.data.manager,
+			patch: routeEinwilligungsarten.data.patch,
+			manager: () => routeEinwilligungsarten.data.manager,
 			gotoSchueler: this.gotoSchueler,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
@@ -34,4 +35,4 @@ export class RouteKatalogEinwilligungsartenDaten extends RouteNode<any, RouteKat
 
 }
 
-export const routeKatalogEinwilligungsartenDaten = new RouteKatalogEinwilligungsartenDaten();
+export const routeEinwilligungsartenDaten = new RouteEinwilligungsartenDaten();
