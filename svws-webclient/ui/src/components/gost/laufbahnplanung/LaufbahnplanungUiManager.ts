@@ -23,6 +23,7 @@ import { Note } from "../../../../../core/src/asd/types/Note";
 import { RGBFarbe } from "../../../../../core/src/asd/data/RGBFarbe";
 import { SprachendatenUtils } from "../../../../../core/src/core/utils/schueler/SprachendatenUtils";
 import type { Config } from "../../../utils/Config";
+import { GostSchriftlichkeit } from "../../../../../core/src";
 
 
 /*
@@ -840,10 +841,37 @@ export class LaufbahnplanungUiManager {
 				map.put(fach, GostHalbjahr.Q12, false);
 				map.put(fach, GostHalbjahr.Q21, false);
 				map.put(fach, GostHalbjahr.Q22, false);
+			} else if (this.getFachgruppe(fach) === Fachgruppe.FG_PX) {
+				// Prüfe, ob die Vorraussetzungen für die Projektkursbelegungen erfüllt sind.
+				map.put(fach, GostHalbjahr.EF1, false);
+				map.put(fach, GostHalbjahr.EF2, false);
+				if (this.isAbi30ff.value) { // experimenteller Code
+					map.put(fach, GostHalbjahr.Q11, false);
+					map.put(fach, GostHalbjahr.Q12, false);
+					// Prüfe Belegung des Referenzfaches
+					const belegungReferenzfach1 = (fach.projektKursLeitfach1ID === null) ? null : this.manager().getFachbelegungByID(fach.projektKursLeitfach1ID);
+					const belegungReferenzfach2 = (fach.projektKursLeitfach2ID === null) ? null : this.manager().getFachbelegungByID(fach.projektKursLeitfach2ID);
+					const hatBelegungReferenzfach1 = (this.manager().pruefeBelegung(belegungReferenzfach1, GostHalbjahr.EF1, GostHalbjahr.EF2) &&
+						this.manager().pruefeBelegungMitSchriftlichkeit(belegungReferenzfach1, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12));
+					const hatBelegungReferenzfach2 = (this.manager().pruefeBelegung(belegungReferenzfach2, GostHalbjahr.EF1, GostHalbjahr.EF2) &&
+						this.manager().pruefeBelegungMitSchriftlichkeit(belegungReferenzfach2, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12));
+					if (hatBelegungReferenzfach1 || hatBelegungReferenzfach2) {
+						map.put(fach, GostHalbjahr.Q21, (fach.istMoeglichQ21 && !this.hatDoppelbelegung(fach, GostHalbjahr.Q21)));
+						map.put(fach, GostHalbjahr.Q22, (fach.istMoeglichQ22 && !this.hatDoppelbelegung(fach, GostHalbjahr.Q22)));
+					} else {
+						map.put(fach, GostHalbjahr.Q21, false);
+						map.put(fach, GostHalbjahr.Q22, false);
+					}
+				} else {
+					map.put(fach, GostHalbjahr.Q11, (fach.istMoeglichQ11 && !this.hatDoppelbelegung(fach, GostHalbjahr.Q11)));
+					map.put(fach, GostHalbjahr.Q12, (fach.istMoeglichQ12 && !this.hatDoppelbelegung(fach, GostHalbjahr.Q12)));
+					map.put(fach, GostHalbjahr.Q21, (fach.istMoeglichQ21 && !this.hatDoppelbelegung(fach, GostHalbjahr.Q21)));
+					map.put(fach, GostHalbjahr.Q22, (fach.istMoeglichQ22 && !this.hatDoppelbelegung(fach, GostHalbjahr.Q22)));
+				}
 			} else {
-				const istNichtErsatzOderPjk = (this.getFachgruppe(fach) !== Fachgruppe.FG_ME) && (this.getFachgruppe(fach) !== Fachgruppe.FG_PX);
-				map.put(fach, GostHalbjahr.EF1, (fach.istMoeglichEF1 && !this.hatDoppelbelegung(fach, GostHalbjahr.EF1) && istNichtErsatzOderPjk));
-				map.put(fach, GostHalbjahr.EF2, (fach.istMoeglichEF2 && !this.hatDoppelbelegung(fach, GostHalbjahr.EF2) && istNichtErsatzOderPjk));
+				const istNichtErsatz = (this.getFachgruppe(fach) !== Fachgruppe.FG_ME);
+				map.put(fach, GostHalbjahr.EF1, (fach.istMoeglichEF1 && !this.hatDoppelbelegung(fach, GostHalbjahr.EF1) && istNichtErsatz));
+				map.put(fach, GostHalbjahr.EF2, (fach.istMoeglichEF2 && !this.hatDoppelbelegung(fach, GostHalbjahr.EF2) && istNichtErsatz));
 				map.put(fach, GostHalbjahr.Q11, (fach.istMoeglichQ11 && !this.hatDoppelbelegung(fach, GostHalbjahr.Q11)));
 				map.put(fach, GostHalbjahr.Q12, (fach.istMoeglichQ12 && !this.hatDoppelbelegung(fach, GostHalbjahr.Q12)));
 				map.put(fach, GostHalbjahr.Q21, (fach.istMoeglichQ21 && !this.hatDoppelbelegung(fach, GostHalbjahr.Q21)));
