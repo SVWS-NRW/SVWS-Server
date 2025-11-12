@@ -1,17 +1,16 @@
 import type {
+	BenutzerKompetenz,
 	GostHalbjahr,
-	GostKlausurenCollectionSkrsKrsData,
+	GostJahrgangsdaten,
+	GostKlausurenUpdate,
+	GostKlausurplanManager,
 	GostKlausurtermin,
 	GostKursklausur,
-	GostKlausurplanManager,
-	GostSchuelerklausurTermin,
 	GostNachschreibterminblockungKonfiguration,
+	GostSchuelerklausurTermin,
 	List,
-	GostKlausurenUpdate,
-	GostJahrgangsdaten,
-	BenutzerKompetenz,
 } from "@core";
-import type { WritableComputedRef } from "vue";
+import type {WritableComputedRef} from "vue";
 
 export interface GostKlausurplanungNachschreiberProps {
 	benutzerKompetenzen: Set<BenutzerKompetenz>,

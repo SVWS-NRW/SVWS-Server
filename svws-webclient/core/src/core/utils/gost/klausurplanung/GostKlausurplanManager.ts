@@ -2427,9 +2427,8 @@ export class GostKlausurplanManager extends JavaObject {
 
 	private schuelerklausurraumstundenmengeRemoveOhneUpdateByIdSchuelerklausurtermin(idSchuelerklausurtermin: number): void {
 		const skrsList: List<GostSchuelerklausurterminraumstunde> | null = this._schuelerklausurraumstunde_by_idSchuelerklausurtermin_and_idRaumstunde.get1(idSchuelerklausurtermin);
-		if (skrsList !== null)
-			for (const skrs of skrsList)
-				this._schuelerklausurraumstunde_by_idSchuelerklausurtermin_and_idRaumstunde.removeSingleOrException(skrs.idSchuelerklausurtermin, skrs.idRaumstunde);
+		for (const skrs of skrsList)
+			this._schuelerklausurraumstunde_by_idSchuelerklausurtermin_and_idRaumstunde.removeSingleOrException(skrs.idSchuelerklausurtermin, skrs.idRaumstunde);
 	}
 
 	/**
@@ -5125,8 +5124,7 @@ export class GostKlausurplanManager extends JavaObject {
 		const ergebnis: List<GostSchuelerklausurterminraumstunde> = new ArrayList<GostSchuelerklausurterminraumstunde>();
 		for (let stunde of raumStunden) {
 			const listStunden: List<GostSchuelerklausurterminraumstunde> | null = this._schuelerklausurraumstunde_by_idSchuelerklausurtermin_and_idRaumstunde.get2(stunde.id);
-			if (listStunden !== null)
-				ergebnis.addAll(listStunden);
+			ergebnis.addAll(listStunden);
 		}
 		return ergebnis;
 	}
