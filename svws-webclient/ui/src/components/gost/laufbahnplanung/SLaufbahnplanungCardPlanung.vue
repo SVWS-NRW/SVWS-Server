@@ -74,7 +74,7 @@
 					<svws-ui-tooltip>
 						<span class="icon i-ri-question-line -m-0.5 mx-0.5" />
 						<template #content>
-							Die Anzahl der anrechenbaren Kurse. Vertiefungskurse werden z.B. nicht mitgezählt.
+							{{ manager.getTooltipAnrechenbareKurse() }}
 						</template>
 					</svws-ui-tooltip>
 				</div>
@@ -97,6 +97,7 @@
 					<svws-ui-tooltip>
 						<span class="icon i-ri-question-line -m-0.5 mx-0.5" />
 						<template #content>
+							{{ manager.getTooltipWochenstunden() }}
 							Die Anzahl der Wochenstunden. Pro Halbjahr sollten etwa <strong>33—36</strong> Wochenstunden gewählt werden.
 						</template>
 					</svws-ui-tooltip>
@@ -114,7 +115,7 @@
 					</span>
 				</div>
 			</div>
-			<div role="row" class="svws-ui-tr">
+			<div role="row" class="svws-ui-tr" v-if="manager.zeigeWochenstundenDurchschnitt()">
 				<div role="rowheader" class="svws-ui-td font-bold svws-align-right col-span-5 svws-divider">
 					<span>Durchschnitt</span>
 					<svws-ui-tooltip>

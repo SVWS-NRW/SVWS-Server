@@ -172,6 +172,11 @@ export class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBelegpruef
 					this.blockIAnzahlLeistungskurse++;
 					this.blockIAnzahlAnrechenbar++;
 				}
+				if (halbjahr.istQualifikationsphase() && (kursart as unknown === GostKursart.VTF as unknown)) {
+					const kurszahlAnrechenbar: number | null = this.kurszahlenAnrechenbar.get(halbjahr);
+					this.kurszahlenAnrechenbar.put(halbjahr, (kurszahlAnrechenbar === null) ? 1 : (kurszahlAnrechenbar + 1));
+					this.blockIAnzahlAnrechenbar++;
+				}
 				let stunden: number = 0;
 				switch (kursart.kuerzel) {
 					case "GK": {
@@ -183,7 +188,7 @@ export class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBelegpruef
 						break;
 					}
 					case "PJK": {
-						stunden = (fachbelegungHalbjahr.wochenstunden === 3) ? 3 : 2;
+						stunden = 3;
 						break;
 					}
 					case "VTF": {
@@ -346,8 +351,8 @@ export class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBelegpruef
 		if (this.kurszahlenQualifikationsphase === null)
 			throw new NullPointerException()
 		const kurszahlQ_VTF: number | null = this.kurszahlenQualifikationsphase.get(GostKursart.VTF);
-		if ((kurszahlQ_VTF !== null) && (kurszahlQ_VTF > 2))
-			this.addFehler(GostBelegungsfehler.VF_11);
+		if ((kurszahlQ_VTF !== null) && (kurszahlQ_VTF > 4))
+			this.addFehler(GostBelegungsfehler.VF_11_2);
 	}
 
 	/**
@@ -356,7 +361,7 @@ export class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBelegpruef
 	 */
 	private pruefeAnrechenbareKurse(): void {
 		if (this.blockIAnzahlAnrechenbar < 36)
-			this.addFehler(GostBelegungsfehler.ANZ_12);
+			this.addFehler(GostBelegungsfehler.ANZ_12_2);
 	}
 
 	/**

@@ -594,6 +594,11 @@ public enum GostBelegungsfehler {
 			"In der Qualifikationsphase können maximal zwei Vertiefungskurse belegt werden.",
 			null),
 
+	/** BelegungsfehlerArt VF_11_2 */
+	VF_11_2("VF_11_2", GostBelegungsfehlerArt.BELEGUNG,
+			"In der Qualifikationsphase können maximal vier Vertiefungskurse belegt werden.",
+			null),
+
 	/** BelegungsfehlerArt WST_10 */
 	WST_10("WST_10", GostBelegungsfehlerArt.BELEGUNG,
 			"Die Summe der durchschnittlichen Jahreskursstunden von EF.1 bis Q2.2 darf 100 nicht unterschreiten.",

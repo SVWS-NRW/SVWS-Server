@@ -177,6 +177,18 @@ export class LaufbahnplanungUiManager {
 
 
 	/**
+	 * Gibt den Text für den Tooltip der anrechenbaren Kurse zurück.
+	 *
+	 * @returns der Tooltip-Text
+	 */
+	public getTooltipAnrechenbareKurse(): string {
+		if (this.isAbi30ff.value)
+			return 'Die Anzahl der anrechenbaren Kurse. Vertiefungskurse werden mitgezählt.';
+		return 'Die Anzahl der anrechenbaren Kurse. Vertiefungskurse werden z.B. nicht mitgezählt.';
+	}
+
+
+	/**
 	 * Gibt die Anzahl der Kurs für das übergebene Halbjahr zurück.
 	 */
 	public getAnrechenbareKurse(hj: GostHalbjahr): number {
@@ -192,6 +204,22 @@ export class LaufbahnplanungUiManager {
 	 */
 	public getAnrechenbareKurseCSS(hj: GostHalbjahr): string {
 		const kurse = this.getAnrechenbareKurse(hj);
+		if (this.isAbi30ff.value) {
+			if (hj.istEinfuehrungsphase()) {
+				if (kurse < 10)
+					return 'svws-ergebnis--not-enough';
+				if ((kurse > 9) && (kurse < 11))
+					return 'svws-ergebnis--good';
+				return 'svws-ergebnis--more';
+			}
+			if (kurse < 9)
+				return 'svws-ergebnis--not-enough';
+			if ((kurse > 8) && (kurse < 10))
+				return 'svws-ergebnis--low';
+			if ((kurse > 9) && (kurse < 12))
+				return 'svws-ergebnis--good';
+			return 'svws-ergebnis--more';
+		}
 		if (hj.istEinfuehrungsphase()) {
 			if (kurse < 10)
 				return 'svws-ergebnis--not-enough';
@@ -225,6 +253,11 @@ export class LaufbahnplanungUiManager {
 	 * @returns die CSS-Klasse zur Einstufung
 	 */
 	public getSummeAnrechenbareKurseCSS(): string {
+		if (this.isAbi30ff.value) {
+			if ((this.summeAnrechenbareKurse === 40))
+				return 'svws-ergebnis--good';
+			return 'svws-ergebnis--not-enough';
+		}
 		if (this.summeAnrechenbareKurse < 38)
 			return 'svws-ergebnis--not-enough';
 		if ((this.summeAnrechenbareKurse > 37) && (this.summeAnrechenbareKurse < 40))
@@ -232,6 +265,17 @@ export class LaufbahnplanungUiManager {
 		if ((this.summeAnrechenbareKurse > 39) && (this.summeAnrechenbareKurse < 43))
 			return 'svws-ergebnis--good';
 		return 'svws-ergebnis--more';
+	}
+
+	/**
+	 * Gibt den Text für den Tooltip der Wochenstunden zurück.
+	 *
+	 * @returns der Tooltip-Text
+	 */
+	public getTooltipWochenstunden(): string {
+		if (this.isAbi30ff.value)
+			return 'Die Anzahl der Wochenstunden.';
+		return 'Die Anzahl der Wochenstunden. Pro Halbjahr sollten etwa <strong>33—36</strong> Wochenstunden gewählt werden.';
 	}
 
 	/**
@@ -251,6 +295,8 @@ export class LaufbahnplanungUiManager {
 	 */
 	public getWochenstundenCSS(hj: GostHalbjahr): string {
 		const wst = this.getWochenstunden(hj);
+		if (this.isAbi30ff.value) // TODO G8 beachten
+			return '';
 		if (wst < 30)
 			return 'svws-ergebnis--not-enough';
 		if ((wst >= 30) && (wst < 33))
@@ -274,6 +320,8 @@ export class LaufbahnplanungUiManager {
 	 * @returns die CSS-Klasse zur Einstufung
 	 */
 	public getWochenstundenJahressummeCSS(): string {
+		if (this.isAbi30ff.value) // TODO G8 beachten
+			return '';
 		if (this.wochenstundenJahressumme < 100)
 			return 'svws-ergebnis--not-enough';
 		if ((this.wochenstundenJahressumme >= 100) && (this.wochenstundenJahressumme < 101))
@@ -281,6 +329,16 @@ export class LaufbahnplanungUiManager {
 		if ((this.wochenstundenJahressumme >= 101) && (this.wochenstundenJahressumme <= 106))
 			return 'svws-ergebnis--good';
 		return 'svws-ergebnis--more';
+	}
+
+
+	/**
+	 * Gibt zurück, ob die Zeile mit dem Wochenstundendurchschnitt angezeigt werden soll oder nicht.
+	 *
+	 * @returns true, wenn sie angezeigt werden soll, und ansonsten false
+	 */
+	public zeigeWochenstundenDurchschnitt(): boolean {
+		return !this.isAbi30ff.value;
 	}
 
 	/**

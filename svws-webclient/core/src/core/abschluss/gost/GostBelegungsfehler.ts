@@ -584,94 +584,99 @@ export class GostBelegungsfehler extends JavaEnum<GostBelegungsfehler> {
 	public static readonly VF_11: GostBelegungsfehler = new GostBelegungsfehler("VF_11", 113, "VF_11", GostBelegungsfehlerArt.BELEGUNG, "In der Qualifikationsphase können maximal zwei Vertiefungskurse belegt werden.", null);
 
 	/**
+	 * BelegungsfehlerArt VF_11_2
+	 */
+	public static readonly VF_11_2: GostBelegungsfehler = new GostBelegungsfehler("VF_11_2", 114, "VF_11_2", GostBelegungsfehlerArt.BELEGUNG, "In der Qualifikationsphase können maximal vier Vertiefungskurse belegt werden.", null);
+
+	/**
 	 * BelegungsfehlerArt WST_10
 	 */
-	public static readonly WST_10: GostBelegungsfehler = new GostBelegungsfehler("WST_10", 114, "WST_10", GostBelegungsfehlerArt.BELEGUNG, "Die Summe der durchschnittlichen Jahreskursstunden von EF.1 bis Q2.2 darf 100 nicht unterschreiten.", null);
+	public static readonly WST_10: GostBelegungsfehler = new GostBelegungsfehler("WST_10", 115, "WST_10", GostBelegungsfehlerArt.BELEGUNG, "Die Summe der durchschnittlichen Jahreskursstunden von EF.1 bis Q2.2 darf 100 nicht unterschreiten.", null);
 
 	/**
 	 * BelegungsfehlerArt WST_20
 	 */
-	public static readonly WST_20: GostBelegungsfehler = new GostBelegungsfehler("WST_20", 115, "WST_20", GostBelegungsfehlerArt.BELEGUNG, "Die durchschnittliche Wochenstundenzahl muss in der Einführungsphase mindestens 34 Stunden betragen.", null);
+	public static readonly WST_20: GostBelegungsfehler = new GostBelegungsfehler("WST_20", 116, "WST_20", GostBelegungsfehlerArt.BELEGUNG, "Die durchschnittliche Wochenstundenzahl muss in der Einführungsphase mindestens 34 Stunden betragen.", null);
 
 	/**
 	 * BelegungsfehlerArt WST_21
 	 */
-	public static readonly WST_21: GostBelegungsfehler = new GostBelegungsfehler("WST_21", 116, "WST_21", GostBelegungsfehlerArt.BELEGUNG, "Die durchschnittliche Wochenstundenzahl muss in der Qualifikationsphase mindestens 34 Stunden betragen.", null);
+	public static readonly WST_21: GostBelegungsfehler = new GostBelegungsfehler("WST_21", 117, "WST_21", GostBelegungsfehlerArt.BELEGUNG, "Die durchschnittliche Wochenstundenzahl muss in der Qualifikationsphase mindestens 34 Stunden betragen.", null);
 
 	/**
 	 * BelegungsfehlerArt ZK_10
 	 */
-	public static readonly ZK_10: GostBelegungsfehler = new GostBelegungsfehler("ZK_10", 117, "ZK_10", GostBelegungsfehlerArt.BELEGUNG, "Ein Zusatzkurs in Geschichte oder Sozialwissenschaften kann nur angewählt werden, wenn das Fach im vorangegangenen Halbjahr nicht belegt wurde.", null);
+	public static readonly ZK_10: GostBelegungsfehler = new GostBelegungsfehler("ZK_10", 118, "ZK_10", GostBelegungsfehlerArt.BELEGUNG, "Ein Zusatzkurs in Geschichte oder Sozialwissenschaften kann nur angewählt werden, wenn das Fach im vorangegangenen Halbjahr nicht belegt wurde.", null);
 
 	/**
 	 * BelegungsfehlerArt ZK_11
 	 */
-	public static readonly ZK_11: GostBelegungsfehler = new GostBelegungsfehler("ZK_11", 118, "ZK_11", GostBelegungsfehlerArt.BELEGUNG, "Ein Zusatzkurs in Geschichte oder Sozialwissenschaften muss in zwei aufeinanderfolgenden Halbjahren belegt werden.", null);
+	public static readonly ZK_11: GostBelegungsfehler = new GostBelegungsfehler("ZK_11", 119, "ZK_11", GostBelegungsfehlerArt.BELEGUNG, "Ein Zusatzkurs in Geschichte oder Sozialwissenschaften muss in zwei aufeinanderfolgenden Halbjahren belegt werden.", null);
 
 	/**
 	 * BelegungsfehlerArt ZK_12
 	 */
-	public static readonly ZK_12: GostBelegungsfehler = new GostBelegungsfehler("ZK_12", 119, "ZK_12", GostBelegungsfehlerArt.BELEGUNG, "Zusatzkurse dürfen maximal in zwei aufeinanderfolgenden Halbjahren belegt werden.", null);
+	public static readonly ZK_12: GostBelegungsfehler = new GostBelegungsfehler("ZK_12", 120, "ZK_12", GostBelegungsfehlerArt.BELEGUNG, "Zusatzkurse dürfen maximal in zwei aufeinanderfolgenden Halbjahren belegt werden.", null);
 
 	/**
 	 * BelegungsfehlerArt ZK_13
 	 */
-	public static readonly ZK_13: GostBelegungsfehler = new GostBelegungsfehler("ZK_13", 120, "ZK_13", GostBelegungsfehlerArt.BELEGUNG, "Zusatzkurse dürfen nur einmal pro Fach belegt werden und können nicht in einem bilingualen Fach gewählt werden.", null);
+	public static readonly ZK_13: GostBelegungsfehler = new GostBelegungsfehler("ZK_13", 121, "ZK_13", GostBelegungsfehlerArt.BELEGUNG, "Zusatzkurse dürfen nur einmal pro Fach belegt werden und können nicht in einem bilingualen Fach gewählt werden.", null);
 
 	/**
 	 * BelegungsfehlerArt ZK_14
 	 */
-	public static readonly ZK_14: GostBelegungsfehler = new GostBelegungsfehler("ZK_14", 121, "ZK_14", GostBelegungsfehlerArt.SCHULSPEZIFISCH, "Zusatzkurse in Geschichte werden in diesem Jahrgang nicht angeboten.", null);
+	public static readonly ZK_14: GostBelegungsfehler = new GostBelegungsfehler("ZK_14", 122, "ZK_14", GostBelegungsfehlerArt.SCHULSPEZIFISCH, "Zusatzkurse in Geschichte werden in diesem Jahrgang nicht angeboten.", null);
 
 	/**
 	 * BelegungsfehlerArt ZK_15
 	 */
-	public static readonly ZK_15: GostBelegungsfehler = new GostBelegungsfehler("ZK_15", 122, "ZK_15", GostBelegungsfehlerArt.SCHULSPEZIFISCH, "Zusatzkurse in Sozialwissenschaften werden in diesem Jahrgang nicht angeboten.", null);
+	public static readonly ZK_15: GostBelegungsfehler = new GostBelegungsfehler("ZK_15", 123, "ZK_15", GostBelegungsfehlerArt.SCHULSPEZIFISCH, "Zusatzkurse in Sozialwissenschaften werden in diesem Jahrgang nicht angeboten.", null);
 
 	/**
 	 * BelegungsfehlerArt ZK_16
 	 */
-	public static readonly ZK_16: GostBelegungsfehler = new GostBelegungsfehler("ZK_16", 123, "ZK_16", GostBelegungsfehlerArt.SCHULSPEZIFISCH, "Der Beginn des Zusatzkurses in Geschichte entspricht nicht der Einstellung in diesem Jahrgang.", null);
+	public static readonly ZK_16: GostBelegungsfehler = new GostBelegungsfehler("ZK_16", 124, "ZK_16", GostBelegungsfehlerArt.SCHULSPEZIFISCH, "Der Beginn des Zusatzkurses in Geschichte entspricht nicht der Einstellung in diesem Jahrgang.", null);
 
 	/**
 	 * BelegungsfehlerArt ZK_17
 	 */
-	public static readonly ZK_17: GostBelegungsfehler = new GostBelegungsfehler("ZK_17", 124, "ZK_17", GostBelegungsfehlerArt.SCHULSPEZIFISCH, "Der Beginn des Zusatzkurses in Sozialwissenschaften entspricht nicht der Einstellung in diesem Jahrgang.", null);
+	public static readonly ZK_17: GostBelegungsfehler = new GostBelegungsfehler("ZK_17", 125, "ZK_17", GostBelegungsfehlerArt.SCHULSPEZIFISCH, "Der Beginn des Zusatzkurses in Sozialwissenschaften entspricht nicht der Einstellung in diesem Jahrgang.", null);
 
 	/**
 	 * BelegungsfehlerArt ZK_18
 	 */
-	public static readonly ZK_18: GostBelegungsfehler = new GostBelegungsfehler("ZK_18", 125, "ZK_18", GostBelegungsfehlerArt.BELEGUNG, "Im Anschluss an zwei Zusatzkursbelegungen darf das Fach nicht weiter belegt werden.", null);
+	public static readonly ZK_18: GostBelegungsfehler = new GostBelegungsfehler("ZK_18", 126, "ZK_18", GostBelegungsfehlerArt.BELEGUNG, "Im Anschluss an zwei Zusatzkursbelegungen darf das Fach nicht weiter belegt werden.", null);
 
 	/**
 	 * BelegungsfehlerArt KOMBI_1
 	 */
-	public static readonly KOMBI_1: GostBelegungsfehler = new GostBelegungsfehler("KOMBI_1", 126, "KOMBI_1", GostBelegungsfehlerArt.SCHULSPEZIFISCH, "Es wurde eine in diesem Jahrgang nicht erlaubte Fächerkombination gewählt.", "Es wurde eine in diesem Jahrgang nicht erlaubte Fächerkombination gewählt.");
+	public static readonly KOMBI_1: GostBelegungsfehler = new GostBelegungsfehler("KOMBI_1", 127, "KOMBI_1", GostBelegungsfehlerArt.SCHULSPEZIFISCH, "Es wurde eine in diesem Jahrgang nicht erlaubte Fächerkombination gewählt.", "Es wurde eine in diesem Jahrgang nicht erlaubte Fächerkombination gewählt.");
 
 	/**
 	 * BelegungsfehlerArt KOMBI_2
 	 */
-	public static readonly KOMBI_2: GostBelegungsfehler = new GostBelegungsfehler("KOMBI_2", 127, "KOMBI_2", GostBelegungsfehlerArt.SCHULSPEZIFISCH, "Es wurde eine in diesem Jahrgang geforderte Fächerkombination nicht erfüllt.", "Es wurde eine in diesem Jahrgang geforderte Fächerkombination nicht erfüllt.");
+	public static readonly KOMBI_2: GostBelegungsfehler = new GostBelegungsfehler("KOMBI_2", 128, "KOMBI_2", GostBelegungsfehlerArt.SCHULSPEZIFISCH, "Es wurde eine in diesem Jahrgang geforderte Fächerkombination nicht erfüllt.", "Es wurde eine in diesem Jahrgang geforderte Fächerkombination nicht erfüllt.");
 
 	/**
 	 * BelegungsfehlerArt WAEHLBARKEIT_0
 	 */
-	public static readonly WAEHLBARKEIT_0: GostBelegungsfehler = new GostBelegungsfehler("WAEHLBARKEIT_0", 128, "WAEHLBARKEIT_0", GostBelegungsfehlerArt.SCHULSPEZIFISCH, "Es wurde ein Fach gewählt, welches in diesem Jahrgang nicht als Fach der gymnsialen Oberstufe vorhanden ist.", "Es wurde ein Fach gewählt, welches in diesem Jahrgang nicht als Fach der gymnsialen Oberstufe vorhanden ist.");
+	public static readonly WAEHLBARKEIT_0: GostBelegungsfehler = new GostBelegungsfehler("WAEHLBARKEIT_0", 129, "WAEHLBARKEIT_0", GostBelegungsfehlerArt.SCHULSPEZIFISCH, "Es wurde ein Fach gewählt, welches in diesem Jahrgang nicht als Fach der gymnsialen Oberstufe vorhanden ist.", "Es wurde ein Fach gewählt, welches in diesem Jahrgang nicht als Fach der gymnsialen Oberstufe vorhanden ist.");
 
 	/**
 	 * BelegungsfehlerArt WAEHLBARKEIT_1
 	 */
-	public static readonly WAEHLBARKEIT_1: GostBelegungsfehler = new GostBelegungsfehler("WAEHLBARKEIT_1", 129, "WAEHLBARKEIT_1", GostBelegungsfehlerArt.SCHULSPEZIFISCH, "Es wurde ein Fach gewählt, welches in diesem Jahrgang nicht wählbar ist.", "Es wurde ein Fach gewählt, welches in diesem Jahrgang nicht wählbar ist.");
+	public static readonly WAEHLBARKEIT_1: GostBelegungsfehler = new GostBelegungsfehler("WAEHLBARKEIT_1", 130, "WAEHLBARKEIT_1", GostBelegungsfehlerArt.SCHULSPEZIFISCH, "Es wurde ein Fach gewählt, welches in diesem Jahrgang nicht wählbar ist.", "Es wurde ein Fach gewählt, welches in diesem Jahrgang nicht wählbar ist.");
 
 	/**
 	 * BelegungsfehlerArt WAEHLBARKEIT_2
 	 */
-	public static readonly WAEHLBARKEIT_2: GostBelegungsfehler = new GostBelegungsfehler("WAEHLBARKEIT_2", 130, "WAEHLBARKEIT_2", GostBelegungsfehlerArt.SCHULSPEZIFISCH, "Es wurde ein Fach als Grundkurs im Abitur gewählt, welches in diesem Jahrgang nicht als Grundkurs im Abitur wählbar ist.", "Es wurde ein Fach als Grundkurs im Abitur gewählt, welches in diesem Jahrgang nicht als Grundkurs im Abitur wählbar ist.");
+	public static readonly WAEHLBARKEIT_2: GostBelegungsfehler = new GostBelegungsfehler("WAEHLBARKEIT_2", 131, "WAEHLBARKEIT_2", GostBelegungsfehlerArt.SCHULSPEZIFISCH, "Es wurde ein Fach als Grundkurs im Abitur gewählt, welches in diesem Jahrgang nicht als Grundkurs im Abitur wählbar ist.", "Es wurde ein Fach als Grundkurs im Abitur gewählt, welches in diesem Jahrgang nicht als Grundkurs im Abitur wählbar ist.");
 
 	/**
 	 * BelegungsfehlerArt WAEHLBARKEIT_3
 	 */
-	public static readonly WAEHLBARKEIT_3: GostBelegungsfehler = new GostBelegungsfehler("WAEHLBARKEIT_3", 131, "WAEHLBARKEIT_3", GostBelegungsfehlerArt.SCHULSPEZIFISCH, "Es wurde ein Fach als Leistungskurs im Abitur gewählt, welches in diesem Jahrgang nicht als Leistungskurs im Abitur wählbar ist.", "Es wurde ein Fach als Leistungskurs im Abitur gewählt, welches in diesem Jahrgang nicht als Leistungskurs im Abitur wählbar ist.");
+	public static readonly WAEHLBARKEIT_3: GostBelegungsfehler = new GostBelegungsfehler("WAEHLBARKEIT_3", 132, "WAEHLBARKEIT_3", GostBelegungsfehlerArt.SCHULSPEZIFISCH, "Es wurde ein Fach als Leistungskurs im Abitur gewählt, welches in diesem Jahrgang nicht als Leistungskurs im Abitur wählbar ist.", "Es wurde ein Fach als Leistungskurs im Abitur gewählt, welches in diesem Jahrgang nicht als Leistungskurs im Abitur wählbar ist.");
 
 	/**
 	 * Der eindeutige Code des Belegungsfehlers

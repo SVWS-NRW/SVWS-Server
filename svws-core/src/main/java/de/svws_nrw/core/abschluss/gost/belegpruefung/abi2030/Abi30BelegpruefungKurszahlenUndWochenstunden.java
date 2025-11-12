@@ -229,6 +229,13 @@ public final class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBele
 					blockIAnzahlAnrechenbar++;
 				}
 
+				// Für die Vertiefungskurse
+				if (halbjahr.istQualifikationsphase() && (kursart == GostKursart.VTF)) {
+					final Integer kurszahlAnrechenbar = kurszahlenAnrechenbar.get(halbjahr);
+					kurszahlenAnrechenbar.put(halbjahr, (kurszahlAnrechenbar == null) ? 1 : (kurszahlAnrechenbar + 1));
+					blockIAnzahlAnrechenbar++;
+				}
+
 				// Zähle die Wochenstunden
 				int stunden = 0;
 				switch (kursart.kuerzel) {
@@ -239,7 +246,7 @@ public final class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBele
 						stunden = 5;
 						break;
 					case "PJK":
-						stunden = (fachbelegungHalbjahr.wochenstunden == 3) ? 3 : 2;
+						stunden = 3;
 						break;
 					case "VTF":
 						stunden = 2;
@@ -415,8 +422,8 @@ public final class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBele
 		if (kurszahlenQualifikationsphase == null)
 			throw new NullPointerException();
 		final Integer kurszahlQ_VTF = kurszahlenQualifikationsphase.get(GostKursart.VTF);
-		if ((kurszahlQ_VTF != null) && (kurszahlQ_VTF > 2))
-			addFehler(GostBelegungsfehler.VF_11);
+		if ((kurszahlQ_VTF != null) && (kurszahlQ_VTF > 4))
+			addFehler(GostBelegungsfehler.VF_11_2);
 	}
 
 
@@ -426,7 +433,7 @@ public final class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBele
 	 */
 	private void pruefeAnrechenbareKurse() {
 		if (blockIAnzahlAnrechenbar < 36)
-			addFehler(GostBelegungsfehler.ANZ_12);
+			addFehler(GostBelegungsfehler.ANZ_12_2);
 	}
 
 
