@@ -12,7 +12,7 @@ import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.data.kurse.DataKurse;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
-import de.svws_nrw.module.reporting.types.kurs.ReportingKurs;
+import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKurs;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import org.thymeleaf.context.Context;
 

@@ -1,7 +1,7 @@
 package de.svws_nrw.module.reporting.sortierung;
 
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
-import de.svws_nrw.module.reporting.types.kurs.ReportingKurs;
+import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKurs;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 
@@ -53,7 +53,7 @@ public final class SortierungRegistryReportingKurs {
 	public static List<String> standardsortierung() {
 		final SortierungRegistry<ReportingKurs> reg = new SortierungRegistry<>();
 		final ArrayList<String> standardSort = new ArrayList<>();
-		standardSort.add(reg.methodeToString(ReportingKurs::fach) + "." + reg.methodeToString(ReportingKurs::sortierung));
+		standardSort.add(reg.methodeToString(ReportingKurs::fach) + "." + reg.methodeToString(ReportingFach::sortierung));
 		standardSort.add(reg.methodeToString(ReportingKurs::kursartAllg));
 		standardSort.add(reg.methodeToString(ReportingKurs::kuerzel));
 		standardSort.add(reg.methodeToString(ReportingKurs::id));

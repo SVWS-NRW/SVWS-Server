@@ -1,7 +1,8 @@
-package de.svws_nrw.module.reporting.proxytypes.kurs;
+package de.svws_nrw.module.reporting.types.lerngruppen;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -9,16 +10,11 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.asd.data.kurse.KursDaten;
-import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.data.kurse.DataKurse;
-import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKursLehrer;
 import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.module.reporting.proxytypes.lehrer.ProxyReportingLehrer;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
-import de.svws_nrw.module.reporting.types.kurs.ReportingKurs;
-import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 
@@ -39,24 +35,23 @@ public class ProxyReportingKurs extends ReportingKurs {
 	 * @param kursDaten Stammdaten-Objekt aus der DB.
 	 */
 	public ProxyReportingKurs(final ReportingRepository reportingRepository, final KursDaten kursDaten) {
-		super(ersetzeNullBlankTrim(kursDaten.bezeichnungZeugnis),
+		super(kursDaten.id,
 				null,
-				kursDaten.id,
+				ersetzeNullBlankTrim(kursDaten.kuerzel),
+				null,
+				new ArrayList<>(),
+				new HashMap<>(),
+				new ArrayList<>(),
+				kursDaten.sortierung,
+				kursDaten.wochenstunden,
+				ersetzeNullBlankTrim(kursDaten.bezeichnungZeugnis),
 				kursDaten.istEpochalunterricht,
 				kursDaten.istSichtbar,
 				new ArrayList<>(),
-				ersetzeNullBlankTrim(kursDaten.kuerzel),
 				ersetzeNullBlankTrim(kursDaten.kursartAllg),
 				kursDaten.schienen,
 				new ArrayList<>(),
-				new ArrayList<>(),
-				null,
-				null,
-				kursDaten.schulnummer,
-				kursDaten.sortierung,
-				kursDaten.wochenstunden,
-				new HashMap<>(),
-				new ArrayList<>());
+				kursDaten.schulnummer);
 
 		this.reportingRepository = reportingRepository;
 
@@ -74,26 +69,8 @@ public class ProxyReportingKurs extends ReportingKurs {
 			}
 		}
 
-		// Bestimme zunächst, ob es mehr als einen Lehrer für den Kurs gibt, und speichere sie dann ggf. in einer Map mit ihren Wochenstunden.
-		final List<DTOKursLehrer> dtoKursLehrer = this.reportingRepository.conn().queryList(DTOKursLehrer.QUERY_BY_KURS_ID, DTOKursLehrer.class, super.id);
-		Map<Long, Double> mapKursZusatzkraefte = new HashMap<>();
-		if (!dtoKursLehrer.isEmpty())
-			mapKursZusatzkraefte = dtoKursLehrer.stream().collect(Collectors.toMap(k -> k.Lehrer_ID, k -> k.Anteil));
-
-		// Erstelle die map zu den Wochenstunden. Prüfe, ob auch Kursleiter bei Zusatzkräften ist, und addiere hier die Wochenstunden der Kursleitung.
-		if (kursDaten.lehrer != null) {
-			if (mapKursZusatzkraefte.containsKey(kursDaten.lehrer)) {
-				super.wochenstundenLehrkraefte.put(kursDaten.lehrer, kursDaten.wochenstundenLehrer + mapKursZusatzkraefte.get(kursDaten.lehrer));
-			} else {
-				super.wochenstundenLehrkraefte.put(kursDaten.lehrer, kursDaten.wochenstundenLehrer);
-				if (!mapKursZusatzkraefte.isEmpty())
-					super.wochenstundenLehrkraefte.putAll(mapKursZusatzkraefte);
-			}
-		} else if (!mapKursZusatzkraefte.isEmpty())
-			super.wochenstundenLehrkraefte.putAll(mapKursZusatzkraefte);
-
-		// Lehrer-Stammdaten aller Kurslehrkräfte initialisieren
-		initLehrer(reportingRepository, kursDaten.lehrer);
+		// Kurslehrer initialisieren
+		initKurslehrer(kursDaten);
 
 		// Schüler setzen. Fülle nur die Liste der IDs. Die ReportingSchueler-Liste wird per lazy-Loading gefüllt, da nicht immer die Kursschüler benötigt werden.
 		if ((kursDaten.schueler != null) && !kursDaten.schueler.isEmpty()) {
@@ -101,37 +78,30 @@ public class ProxyReportingKurs extends ReportingKurs {
 		}
 	}
 
-	// Initialisiert alle Lehrer-Stammdaten des Kurses.
-	private void initLehrer(final ReportingRepository reportingRepository, final Long idKursleitung) {
-		if (super.wochenstundenLehrkraefte.keySet().stream().filter(Objects::nonNull).toList().isEmpty())
-			return;
+	private void initKurslehrer(final KursDaten kursDaten) {
+		// Bestimme zunächst, ob es mehr als einen Lehrer für den Kurs gibt, und speichere sie dann ggf. in einer Map mit ihren Wochenstunden.
+		final List<DTOKursLehrer> dtoKursLehrer = this.reportingRepository.conn().queryList(DTOKursLehrer.QUERY_BY_KURS_ID, DTOKursLehrer.class, super.id);
+		Map<Long, Double> mapZusatzKurslehrer = new LinkedHashMap<>();
+		if (!dtoKursLehrer.isEmpty())
+			mapZusatzKurslehrer = dtoKursLehrer.stream().filter(Objects::nonNull).collect(Collectors.toMap(k -> k.Lehrer_ID, k -> k.Anteil));
 
-		// Erstelle jetzt die Kursleitung und die Liste der zusätzlichen Lehrkräfte als Reporting-Lehrer.
-		for (final Long idLehrer : super.wochenstundenLehrkraefte.keySet().stream().filter(Objects::nonNull).toList()) {
-			if (this.reportingRepository.mapLehrerStammdaten().containsKey(idLehrer)) {
-				if (idLehrer.equals(idKursleitung))
-					super.kursleitung = new ProxyReportingLehrer(this.reportingRepository, this.reportingRepository.mapLehrerStammdaten().get(idLehrer));
-				else
-					super.zusatzLehrkraefte.add(
-							new ProxyReportingLehrer(this.reportingRepository, this.reportingRepository.mapLehrerStammdaten().get(idLehrer)));
+		// Wenn es einen Kursleiter gibt, prüfe, ob auch er bei den Zusatzkräften ist, und addiere hier seine beiden Wochenstunden.
+		final Map<Long, Double> mapKurslehrer = new LinkedHashMap<>();
+		if (kursDaten.lehrer != null) {
+			if (mapZusatzKurslehrer.containsKey(kursDaten.lehrer)) {
+				mapKurslehrer.put(kursDaten.lehrer, kursDaten.wochenstundenLehrer + mapZusatzKurslehrer.get(kursDaten.lehrer));
+				mapZusatzKurslehrer.remove(kursDaten.lehrer);
 			} else {
-				try {
-					final LehrerStammdaten lehrerStammdaten = new DataLehrerStammdaten(this.reportingRepository.conn()).getById(idLehrer);
-					final ReportingLehrer lehrer = new ProxyReportingLehrer(
-							this.reportingRepository,
-							this.reportingRepository.mapLehrerStammdaten().computeIfAbsent(idLehrer, l -> lehrerStammdaten));
-					if (idLehrer.equals(idKursleitung))
-						super.kursleitung = lehrer;
-					else
-						super.zusatzLehrkraefte.add(lehrer);
-				} catch (final ApiOperationException e) {
-					ReportingExceptionUtils.putStacktraceInLog(
-							"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Daten eines Lehrers.", e,
-							reportingRepository.logger(), LogLevel.INFO, 0);
-				}
+				mapKurslehrer.put(kursDaten.lehrer, kursDaten.wochenstundenLehrer);
 			}
 		}
+		if (!mapZusatzKurslehrer.isEmpty())
+			mapKurslehrer.putAll(mapZusatzKurslehrer);
+
+		// Erstelle jetzt alle Kurslehrer als Reporting-Lehrer.
+		super.lehrer = new ArrayList<>(this.reportingRepository.lehrer(mapKurslehrer.keySet().stream().toList(), false));
 	}
+
 
 
 	// ##### Hash und Equals Methoden #####
@@ -148,7 +118,7 @@ public class ProxyReportingKurs extends ReportingKurs {
 	/**
 	 * Equals der Klasse
 	 * @param obj Das Vergleichsobjekt
-	 * @return    True, falls es das gleiche Objekt ist, andernfalls false.
+	 * @return    Ergibt true, falls es das gleiche Objekt ist, andernfalls false.
 	 */
 	@Override
 	public boolean equals(final Object obj) {

@@ -5,7 +5,7 @@ import de.svws_nrw.core.adt.map.ListMap3DLongKeys;
 import de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag;
 import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
-import de.svws_nrw.module.reporting.types.klasse.ReportingKlasse;
+import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
@@ -732,6 +732,27 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 */
 	public String klassenart() {
 		return klassenart;
+	}
+
+	/**
+	 * Gibt die Leistungsdaten des Klassenunterrichts zurück. Klassenunterricht liegt vor, wenn kein Kurs eingetragen ist.
+	 *
+	 * @return Liste der Leistungsdaten des Klassenunterrichts
+	 */
+	public List<ReportingSchuelerLeistungsdaten> klassenunterricht() {
+		if (leistungsdaten() == null)
+			return new ArrayList<>();
+		// Unterrichte ohne Kurs haben die ID -1 in der ListMap im dritten Index (Kurs-ID)
+		return listMapLeistungsdaten.get3(-1);
+	}
+
+	/**
+	 * Gibt die Leistungsdaten des Kursunterrichts zurück. Kursunterricht liegt vor, wenn ein Kurs eingetragen ist.
+	 *
+	 * @return Liste der Leistungsdaten des Kursunterrichts
+	 */
+	public List<ReportingSchuelerLeistungsdaten> kursunterricht() {
+		return leistungsdaten().stream().filter(l -> (l.kurs() != null)).toList();
 	}
 
 	/**

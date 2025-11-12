@@ -17,8 +17,8 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.builders.ReportBuilderPdf;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplanungKurs;
-import de.svws_nrw.module.reporting.types.klasse.ReportingKlasse;
-import de.svws_nrw.module.reporting.types.kurs.ReportingKurs;
+import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
+import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKurs;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.person.ReportingPerson;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
@@ -328,14 +328,14 @@ public final class EmailFactory {
 				final ReportingKlasse klasse = reportingRepository.klasse(id);
 				if (klasse == null)
 					yield new ArrayList<>();
-				final List<ReportingLehrer> lehrer = (klasse.klassenleitungen() == null) ? new ArrayList<>() : klasse.klassenleitungen();
+				final List<ReportingLehrer> lehrer = (klasse.klassenlehrer() == null) ? new ArrayList<>() : klasse.klassenlehrer();
 				yield new ArrayList<>(lehrer);
 			}
 			case KURSLEHRER -> {
 				final ReportingKurs kurs = reportingRepository.mapKurse().get(id);
 				if (kurs == null)
 					yield new ArrayList<>();
-				final List<ReportingLehrer> lehrer = (kurs.lehrkraefte() == null) ? new ArrayList<>() : kurs.lehrkraefte();
+				final List<ReportingLehrer> lehrer = (kurs.kurslehrer() == null) ? new ArrayList<>() : kurs.kurslehrer();
 				yield new ArrayList<>(lehrer);
 			}
 			case GOSTKURSPLANUNG_KURSLEHRER -> {

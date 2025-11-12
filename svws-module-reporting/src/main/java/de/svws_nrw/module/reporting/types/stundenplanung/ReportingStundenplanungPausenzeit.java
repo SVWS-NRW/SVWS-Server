@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 import de.svws_nrw.core.adt.map.ListMap4DLongKeys;
 import de.svws_nrw.core.types.Wochentag;
-import de.svws_nrw.module.reporting.types.klasse.ReportingKlasse;
+import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
 
 
 /**

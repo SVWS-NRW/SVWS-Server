@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.klassen.KlassenDaten;
@@ -75,8 +76,8 @@ import de.svws_nrw.module.reporting.sortierung.ComparatorFactory;
 import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingLehrer;
 import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingSchueler;
 import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplanungKurs;
-import de.svws_nrw.module.reporting.types.klasse.ReportingKlasse;
-import de.svws_nrw.module.reporting.types.kurs.ReportingKurs;
+import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
+import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKurs;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ReportingErzieherArt;
@@ -915,54 +916,44 @@ public class ReportingRepository {
 	 * Fehlende Stammdaten werden bei Bedarf nachgeladen und zur weiteren Verarbeitung genutzt.
 	 *
 	 * @param idsLehrer Eine Liste der IDs der gewünschten Lehrer. Nullwerte oder IDs kleiner 0 werden ignoriert.
-	 * @return Eine gemäß den konfigurierten Reporting-Parametern sortierte Liste von ReportingLehrer-Objekten.
+	 *
+	 * @return Eine Liste von {@link ReportingLehrer}-Objekten, sortiert gemäß den vordefinierten oder standardmäßigen Sortierparametern,
+	 *         sofern definiert. Wenn keine Lehrer gefunden werden, wird eine leere Liste zurückgegeben.
 	 */
 	public List<ReportingLehrer> lehrer(final List<Long> idsLehrer) {
+		return lehrer(idsLehrer, true);
+	}
 
-		final List<ReportingLehrer> resultLehrer = new ArrayList<>();
+	/**
+	 * Diese Methode erstellt eine Liste von ReportingLehrer-Objekten basierend auf den übergebenen Lehrerkürzeln (IDs).
+	 * Fehlende Stammdaten werden bei Bedarf nachgeladen und zur weiteren Verarbeitung genutzt.
+	 *
+	 * @param idsLehrer Eine Liste der IDs der gewünschten Lehrer. Nullwerte oder IDs kleiner 0 werden ignoriert.
+	 * @param sortiereListe Legt fest, ob die definierte Sortierung auf die erzeugte Liste angewendet werden soll.
+	 *
+	 * @return Eine Liste von {@link ReportingLehrer}-Objekten, sortiert gemäß den vordefinierten oder standardmäßigen Sortierparametern,
+	 *         sofern definiert. Wenn keine Lehrer gefunden werden, wird eine leere Liste zurückgegeben.
+	 */
+	public List<ReportingLehrer> lehrer(final List<Long> idsLehrer, final boolean sortiereListe) {
+		final Optional<Comparator<ReportingLehrer>> optionalComparator = sortiereListe
+				? ComparatorFactory.buildOptionalComparator(this, ReportingLehrer.class.getSimpleName(),
+						SortierungRegistryReportingLehrer.sortierungRegistry(), SortierungRegistryReportingLehrer.standardsortierung())
+				: Optional.empty();
 
-		// Analog zu schueler(...): fehlende Stammdaten nachladen.
-		if ((idsLehrer == null) || idsLehrer.isEmpty())
-			return resultLehrer;
-
-		final List<Long> fehlendeLehrerIds = idsLehrer.stream()
-				.filter(Objects::nonNull)
-				.filter(id -> id >= 0)
-				.distinct()
-				.filter(id -> !mapLehrerStammdaten.containsKey(id))
-				.toList();
-
-		if (!fehlendeLehrerIds.isEmpty()) {
-			try {
-				final List<LehrerStammdaten> fehlendeLehrerstammdaten = new DataLehrerStammdaten(this.conn).getListByIDs(fehlendeLehrerIds);
-				for (final LehrerStammdaten l : fehlendeLehrerstammdaten) {
-					if (l != null)
-						mapLehrerStammdaten.put(l.id, l);
-				}
-			} catch (final ApiOperationException e) {
-				ReportingExceptionUtils.putStacktraceInLog(
-						"FEHLER: Fehler bei der Ermittlung der fehlenden Lehrerstammdaten einer Lehrerliste aus der Datenbank im ReportingRepository.", e,
-						this.logger(), LogLevel.ERROR, 0);
-				return resultLehrer;
-			}
-		}
-
-		// Sofern noch keine Reporting-Objekte der Lehrer existieren, erzeuge sie und speichere sie.
-		for (final Long idLehrer : idsLehrer) {
-			if ((idLehrer == null) || (idLehrer < 0))
-				continue;
-			if (mapLehrerStammdaten.containsKey(idLehrer))
-				resultLehrer.add(mapLehrer.computeIfAbsent(idLehrer, key -> new ProxyReportingLehrer(this, mapLehrerStammdaten.get(key))));
-		}
-
-		// Sortiere gemäß den Angaben in den ReportingParametern.
-		final Optional<Comparator<ReportingLehrer>> optionalComparator = ComparatorFactory.buildOptionalComparator(this, ReportingLehrer.class.getSimpleName(),
-				SortierungRegistryReportingLehrer.sortierungRegistry(),
-				SortierungRegistryReportingLehrer.standardsortierung());
-
-		return optionalComparator
-				.map(reportingLehrerComparator -> resultLehrer.stream().sorted(reportingLehrerComparator).toList())
-				.orElse(resultLehrer);
+		return erstelleReportingListe(idsLehrer, mapLehrerStammdaten, mapLehrer,
+				fehlendeIds -> {
+					try {
+						return new DataLehrerStammdaten(this.conn).getListByIDs(fehlendeIds);
+					} catch (final ApiOperationException e) {
+						ReportingExceptionUtils.putStacktraceInLog(
+								"FEHLER: Fehler bei der Ermittlung der fehlenden Lehrerstammdaten einer Lehrerliste aus der Datenbank im "
+										+ "ReportingRepository.",
+								e, this.logger(), LogLevel.ERROR, 0);
+						return new ArrayList<>();
+					}
+				},
+				key -> new ProxyReportingLehrer(this, mapLehrerStammdaten.get(key)),
+				optionalComparator);
 	}
 
 
@@ -973,9 +964,9 @@ public class ReportingRepository {
 	 * Falls die Schülerdaten nicht im lokalen Cache enthalten sind, werden sie aus der Datenbank abgerufen
 	 * und im Cache gespeichert. Tritt ein Fehler beim Abrufen auf, wird null zurückgegeben.
 	 *
-	 * @param idSchueler die ID des Schülers, dessen Reporting-Daten abgerufen werden sollen
+	 * @param idSchueler Die ID des Schülers, dessen Reporting-Daten abgerufen werden sollen
 	 *                   (muss positiv oder 0 sein, andernfalls wird null zurückgegeben).
-	 * @return ein ReportingSchueler-Objekt für den gegebenen Schüler,
+	 * @return Ein ReportingSchueler-Objekt für den gegebenen Schüler,
 	 *         falls die Daten erfolgreich abgerufen werden konnten; sonst null.
 	 */
 	public ReportingSchueler schueler(final long idSchueler) {
@@ -988,8 +979,8 @@ public class ReportingRepository {
 				mapSchuelerStammdaten.put(fehlendeSchulerstammdaten.id, fehlendeSchulerstammdaten);
 			} catch (final ApiOperationException e) {
 				ReportingExceptionUtils.putStacktraceInLog(
-						"FEHLER: Fehler bei der Ermittlung der fehlenden Schülerstammdaten eines Schülers aus der Datenbank im ReportingRepository.", e,
-						this.logger(), LogLevel.ERROR, 0);
+						"FEHLER: Fehler bei der Ermittlung der fehlenden Schülerstammdaten eines Schülers aus der Datenbank im ReportingRepository.",
+						e, this.logger(), LogLevel.ERROR, 0);
 				return null;
 			}
 		}
@@ -1008,61 +999,48 @@ public class ReportingRepository {
 	 *
 	 * @param idsSchueler Eine Liste von Schüler-IDs, für die {@link ReportingSchueler}-Objekte erstellt und/oder zurückgegeben werden sollen;
 	 *                    null oder eine leere Liste führt zu einer Rückgabe einer leeren Liste.
+	 *
 	 * @return Eine Liste von {@link ReportingSchueler}-Objekten, sortiert gemäß den vordefinierten oder standardmäßigen Sortierparametern,
 	 *         sofern definiert. Wenn keine Schüler gefunden werden, wird eine leere Liste zurückgegeben.
 	 */
 	public List<ReportingSchueler> schueler(final List<Long> idsSchueler) {
-
-		final List<ReportingSchueler> resultSchueler = new ArrayList<>();
-
-		// Sofern noch keine Schülerstammdaten für (einzelne) Schüler aus der DB geladen wurden, müssen diese nachgeladen werden, weil dann auch keine
-		// ReportingSchueler-Objekte vorhanden sein können.
-		if ((idsSchueler == null) || idsSchueler.isEmpty())
-			return resultSchueler;
-
-		// Bereinige die Liste der IDs und suche die heraus, zu denen noch keine Stammdaten vorhanden sind.
-		final List<Long> fehlendeSchuelerIds = idsSchueler.stream()
-				.filter(Objects::nonNull)
-				.filter(id -> id >= 0)
-				.distinct()
-				.filter(id -> !mapSchuelerStammdaten.containsKey(id))
-				.toList();
-
-		// Lade die fehlenden Schülerstammdaten aus der Datenbank nach.
-		if (!fehlendeSchuelerIds.isEmpty()) {
-			try {
-				final List<SchuelerStammdaten> fehlendeSchulerstammdaten = new DataSchuelerStammdaten(this.conn).getListByIds(fehlendeSchuelerIds);
-				for (final SchuelerStammdaten s : fehlendeSchulerstammdaten) {
-					if (s != null)
-						mapSchuelerStammdaten.put(s.id, s);
-				}
-			} catch (final ApiOperationException e) {
-				ReportingExceptionUtils.putStacktraceInLog(
-						"FEHLER: Fehler bei der Ermittlung der fehlenden Schülerstammdaten einer Schülerliste aus der Datenbank im ReportingRepository.", e,
-						this.logger(), LogLevel.ERROR, 0);
-				return resultSchueler;
-			}
-		}
-
-		// Sofern noch keine Reporting-Objekte der Schüler existieren, erzeuge sie und speichere sie.
-		for (final Long idSchueler : idsSchueler) {
-			if ((idSchueler == null) || (idSchueler < 0))
-				continue;
-			if (mapSchuelerStammdaten.containsKey(idSchueler))
-				resultSchueler.add(mapSchueler.computeIfAbsent(idSchueler, key -> new ProxyReportingSchueler(this, mapSchuelerStammdaten.get(key))));
-		}
-
-		// Sortiere gemäß den Angaben in den ReportingParametern.
-		final Optional<Comparator<ReportingSchueler>> optionalComparator =
-				ComparatorFactory.buildOptionalComparator(this, ReportingSchueler.class.getSimpleName(),
-						SortierungRegistryReportingSchueler.sortierungRegistry(), SortierungRegistryReportingSchueler.standardsortierung());
-
-		// Rückgabe der sortierten Liste oder der unsortierten Liste.
-		return optionalComparator
-				.map(reportingSchuelerComparator -> resultSchueler.stream().sorted(reportingSchuelerComparator).toList())
-				.orElse(resultSchueler);
+		return schueler(idsSchueler, true);
 	}
 
+	/**
+	 * Liefert eine Liste von {@link ReportingSchueler}-Objekten basierend auf einer gegebenen Liste von Schüler-IDs.
+	 * Diese Methode überprüft, ob die benötigten Stammdaten für die angegebenen Schüler-IDs bereits im Speicher vorhanden sind,
+	 * und lädt diese gegebenenfalls aus der Datenbank nach. Anschließend werden entsprechende {@link ReportingSchueler}-Objekte erstellt
+	 * und zurückgegeben.
+	 *
+	 * @param idsSchueler Eine Liste von Schüler-IDs, für die {@link ReportingSchueler}-Objekte erstellt und/oder zurückgegeben werden sollen;
+	 *                    null oder eine leere Liste führt zu einer Rückgabe einer leeren Liste.
+	 * @param sortiereListe Legt fest, ob die definierte Sortierung auf die erzeugte Liste angewendet werden soll.
+	 *
+	 * @return Eine Liste von {@link ReportingSchueler}-Objekten, auf Wunsch sortiert gemäß den vordefinierten oder standardmäßigen Sortierparametern,
+	 *         sofern definiert. Wenn keine Schüler gefunden werden, wird eine leere Liste zurückgegeben.
+	 */
+	public List<ReportingSchueler> schueler(final List<Long> idsSchueler, final boolean sortiereListe) {
+		final Optional<Comparator<ReportingSchueler>> optionalComparator = sortiereListe
+				? ComparatorFactory.buildOptionalComparator(this, ReportingSchueler.class.getSimpleName(),
+						SortierungRegistryReportingSchueler.sortierungRegistry(), SortierungRegistryReportingSchueler.standardsortierung())
+				: Optional.empty();
+
+		return erstelleReportingListe(idsSchueler, mapSchuelerStammdaten, mapSchueler,
+				fehlendeIds -> {
+					try {
+						return new DataSchuelerStammdaten(this.conn).getListByIds(fehlendeIds);
+					} catch (final ApiOperationException e) {
+						ReportingExceptionUtils.putStacktraceInLog(
+								"FEHLER: Fehler bei der Ermittlung der fehlenden Schülerstammdaten einer Schülerliste aus der Datenbank im "
+										+ "ReportingRepository.",
+								e, this.logger(), LogLevel.ERROR, 0);
+						return new ArrayList<>();
+					}
+				},
+				key -> new ProxyReportingSchueler(this, mapSchuelerStammdaten.get(key)),
+				optionalComparator);
+	}
 
 	// ##### Stundenpläne erzeugen und verwalten #####
 
@@ -1144,6 +1122,90 @@ public class ReportingRepository {
 		});
 
 		return this.mapStundenplanManager.get(idStundenplan);
+	}
+
+
+
+	// ##### Generische Hilfsmethode für Lehrer und Schüler #####
+
+	/**
+	 * Generische Hilfsmethode zum Laden und Erstellen einer Liste von Reporting-Objekten basierend auf IDs.
+	 *
+	 * @param <S> Der Typ der Stammdaten (z. B. LehrerStammdaten, SchülerStammdaten)
+	 * @param <R> Der Typ der Reporting-Objekte (z.B. ReportingLehrer, ReportingSchueler)
+	 * @param ids Die Liste der IDs, für die Reporting-Objekte erstellt werden sollen
+	 * @param mapStammdaten Die Map mit bereits geladenen Stammdaten
+	 * @param mapReportingObjekte Eine Map mit bereits erstellten Reporting-Objekten
+	 * @param stammdatenLoader Funktion zum Laden fehlender Stammdaten aus der DB
+	 * @param reportingObjektErsteller Funktion zum Erstellen eines Reporting-Objekts aus Stammdaten
+	 * @param comparatorOptional Optional: Comparator für die Sortierung
+	 *
+	 * @return Eine sortierte Liste von Reporting-Objekten
+	 */
+	private <S, R> List<R> erstelleReportingListe(final List<Long> ids, final Map<Long, S> mapStammdaten, final Map<Long, R> mapReportingObjekte,
+			final Function<List<Long>, List<S>> stammdatenLoader, final Function<Long, R> reportingObjektErsteller,
+			final Optional<Comparator<R>> comparatorOptional) {
+
+		final List<R> result = new ArrayList<>();
+
+		final String datentyp;
+		switch (mapReportingObjekte) {
+			case final ReportingLehrer l -> datentyp = "Lehrer";
+			case final ReportingSchueler s -> datentyp = "Schüler";
+			default -> datentyp = "";
+		}
+
+		if (ids == null)
+			return result;
+
+		final List<Long> idsNonNull = ids.stream().filter(Objects::nonNull).filter(id -> id >= 0).distinct().toList();
+
+		if (idsNonNull.isEmpty())
+			return result;
+
+		// Fehlende Stammdaten ermitteln
+		final List<Long> fehlendeIds = idsNonNull.stream().filter(id -> !mapStammdaten.containsKey(id)).toList();
+
+		if (!fehlendeIds.isEmpty()) {
+			try {
+				final List<S> fehlendeStammdaten = stammdatenLoader.apply(fehlendeIds);
+				for (final S stammdaten : fehlendeStammdaten) {
+					if (stammdaten != null) {
+						final Long id = getIdFromStammdaten(stammdaten);
+						if (id != null)
+							mapStammdaten.put(id, stammdaten);
+					}
+				}
+			} catch (final Exception e) {
+				ReportingExceptionUtils.putStacktraceInLog(
+						"FEHLER: Fehler bei der Ermittlung der fehlenden %sstammdaten einer %sliste aus der Datenbank im ReportingRepository."
+								.formatted(datentyp, datentyp),
+						e, this.logger(), LogLevel.ERROR, 0);
+				return result;
+			}
+		}
+
+		// Reporting-Objekte erstellen
+		idsNonNull.stream().filter(mapStammdaten::containsKey).forEach(id -> result.add(mapReportingObjekte.computeIfAbsent(id, reportingObjektErsteller)));
+
+		// Sortierung anwenden
+		return comparatorOptional
+				.map(comparator -> result.stream().sorted(comparator).toList())
+				.orElse(result);
+	}
+
+	/**
+	 * Eine Hilfsmethode zum Extrahieren der ID aus Stammdaten-Objekten.
+	 *
+	 * @param stammdaten Das Stammdaten-Objekt
+	 * @return Die ID des Stammdaten-Objekts
+	 */
+	private Long getIdFromStammdaten(final Object stammdaten) {
+		if (stammdaten instanceof final LehrerStammdaten l)
+			return l.id;
+		if (stammdaten instanceof final SchuelerStammdaten s)
+			return s.id;
+		return null;
 	}
 
 }

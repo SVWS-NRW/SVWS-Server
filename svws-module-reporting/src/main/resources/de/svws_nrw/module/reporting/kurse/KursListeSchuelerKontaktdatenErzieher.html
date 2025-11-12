@@ -12,7 +12,7 @@
 		<link th:if="${mediaPrint && !querformat && duplex}" rel="stylesheet" th:href="@{css/reporting-A4-hoch-duplex.css}" href="../css/reporting-A4-hoch-duplex.css" />
 		<link th:if="${mediaPrint && querformat && duplex}" rel="stylesheet" th:href="@{css/reporting-A4-quer-duplex.css}" href="../css/reporting-A4-quer-duplex.css" />
 		<link rel="stylesheet" th:href="@{css/reporting-styles.css}" href="../css/reporting-styles.css" />
-		<link rel="stylesheet" th:href="@{kurse/SchuelerListeKontaktdatenErzieher.css}" href="../kurse/KursListeSchuelerKontaktdatenErzieher.css" />
+		<link rel="stylesheet" th:href="@{kurse/KursListeSchuelerKontaktdatenErzieher.css}" href="../kurse/KursListeSchuelerKontaktdatenErzieher.css" />
 	</head>
 
 	<body th:with="mediaPrint = ${Parameter.ausgabeformat >= 2},
@@ -65,7 +65,7 @@
 							<td class="ta-lb bo-b-grey" style="width: 35%; font-size: 13pt; font-weight: bold;" th:text="${'Kursliste ' + kurs.kuerzel()}">
 								Kursliste GE-GK-2
 							</td>
-							<td class="ta-rb bo-b-grey" style="width: 65%; font-size: 9pt;" th:text="${((!kurs.auflistungJahrgaenge().isEmpty()) ? ((kurs.jahrgaenge().size() == 1) ? ('Jahrgangsstufe: ' + kurs.auflistungJahrgaenge() + ' - ') : ('Jahrgangsstufen: ' + kurs.auflistungJahrgaenge() + ' - ')) : '')  + ((kurs.lehrkraefte().size == 1) ? 'Lehrkraft: ' : 'Lehrkräfte: ') + kurs.auflistungLehrkraefte()}">
+							<td class="ta-rb bo-b-grey" style="width: 65%; font-size: 9pt;" th:text="${((!kurs.auflistungJahrgaenge().isEmpty()) ? ((kurs.jahrgaenge().size() == 1) ? ('Jahrgangsstufe: ' + kurs.auflistungJahrgaenge() + ' - ') : ('Jahrgangsstufen: ' + kurs.auflistungJahrgaenge() + ' - ')) : '')  + ((kurs.kurslehrer().size == 1) ? 'Lehrkraft: ' : 'Lehrkräfte: ') + kurs.auflistungKurslehrerkuerzel()}">
 								Jahrgangsstufe: EF - Lehrkräfte: ABC,DEF"
 							</td>
 						</tr>

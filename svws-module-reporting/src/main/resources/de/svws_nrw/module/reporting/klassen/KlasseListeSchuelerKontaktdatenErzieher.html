@@ -40,7 +40,7 @@
 			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
 			<th:block th:if="${mediaPrint}">
 				<div class="pageTopLeft" th:utext="${Schule.bezeichnungSchuleMehrzeiligHtml}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>
-				<div class="pageTopRight" th:utext="'Klasse: ' + ${klasse.kuerzel()} + '<br/>Klassenleitung: ' + ${(klasse.auflistungKlassenleitung() != '') ? klasse.auflistungKlassenleitung() : '---'} + '<br/>Schulnummer: ' + ${Schule.schulnummer()}">Klasse 06C<br/>Klassenleitung: ABC,DEF<br/>Schulnummer: 123456</div>
+				<div class="pageTopRight" th:utext="'Klasse: ' + ${klasse.kuerzel()} + '<br/>Klassenleitung: ' + ${(klasse.auflistungKlassenlehrerkuerzel() != '') ? klasse.auflistungKlassenlehrerkuerzel() : '---'} + '<br/>Schulnummer: ' + ${Schule.schulnummer()}">Klasse 06C<br/>Klassenleitung: ABC,DEF<br/>Schulnummer: 123456</div>
 				<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')} + ' von ' + ${Benutzer.benutzername()}">Gedruckt am 02.02.2022 von ABC</div>
 				<div class="pageBottomRight"><span class="page-nums-print">Seite </span></div>
 			</th:block>
@@ -63,7 +63,7 @@
 								<td class="ta-lb" style="width: 35%; font-size: 13pt; font-weight: bold;" th:text="${'Klassenliste ' + klasse.kuerzel()}">
 									Klassenliste 06C
 								</td>
-								<td class="f-bold ta-rb" style="width: 65%;" th:text="${((klasse.jahrgang() != null) ? ('Jahrgang ' + klasse.jahrgang().kuerzel() + ' - ') : '') + klasse.schueler().size() + ' Personen ' + klasse.statistikGeschlechter() + ' - Leitung: ' + klasse.auflistungKlassenleitung()}">
+								<td class="f-bold ta-rb" style="width: 65%;" th:text="${((klasse.jahrgang() != null) ? ('Jahrgang ' + klasse.jahrgang().kuerzel() + ' - ') : '') + klasse.schueler().size() + ' Personen ' + klasse.statistikGeschlechter() + ' - Leitung: ' + klasse.auflistungKlassenlehrerkuerzel()}">
 									Jahrgang 06 - 30 Personen - Leitung: ABC,DEF}"
 								</td>
 							</tr>

@@ -62,7 +62,7 @@ public class ProxyReportingSchuelerLeistungsdaten extends ReportingSchuelerLeist
 				ersetzeNullBlankTrim(schuelerLeistungsdaten.textFachbezogeneLernentwicklung),
 				ersetzeNullBlankTrim(schuelerLeistungsdaten.umfangLernstandsbericht),
 				new HashMap<>(),
-				(double) schuelerLeistungsdaten.wochenstunden,
+				schuelerLeistungsdaten.wochenstunden,
 				new ArrayList<>());
 
 		this.reportingRepository = reportingRepository;
@@ -84,27 +84,27 @@ public class ProxyReportingSchuelerLeistungsdaten extends ReportingSchuelerLeist
 
 		// Fachlehrkraft setzen. Dabei wird die eingetragene Fachlehrkraft immer genommen, auch wenn sie von einer evtl. Kursleitung abweicht.
 		if (schuelerLeistungsdaten.lehrerID != null) {
-			super.fachLehrkraft = new ProxyReportingLehrer(this.reportingRepository,
+			super.fachlehrer = new ProxyReportingLehrer(this.reportingRepository,
 					this.reportingRepository.mapLehrerStammdaten().get(schuelerLeistungsdaten.lehrerID));
-			super.wochenstundenLehrkraefte.put(schuelerLeistungsdaten.lehrerID, (double) schuelerLeistungsdaten.wochenstunden);
+			super.wochenstundenLehrer.put(schuelerLeistungsdaten.lehrerID, (double) schuelerLeistungsdaten.wochenstunden);
 		} else {
-			super.fachLehrkraft = null;
+			super.fachlehrer = null;
 		}
 		// Zusätzliche Lehrkräfte setzen
 		if (schuelerLeistungsdaten.zusatzkraftID != null) {
-			super.zusatzLehrkraefte.add(new ProxyReportingLehrer(this.reportingRepository,
+			super.zusatzLehrer.add(new ProxyReportingLehrer(this.reportingRepository,
 					this.reportingRepository.mapLehrerStammdaten().get(schuelerLeistungsdaten.zusatzkraftID)));
-			super.wochenstundenLehrkraefte.put(schuelerLeistungsdaten.zusatzkraftID, (double) schuelerLeistungsdaten.zusatzkraftWochenstunden);
+			super.wochenstundenLehrer.put(schuelerLeistungsdaten.zusatzkraftID, (double) schuelerLeistungsdaten.zusatzkraftWochenstunden);
 		} else
-			super.zusatzLehrkraefte = new ArrayList<>();
+			super.zusatzLehrer = new ArrayList<>();
 
 		if (schuelerLeistungsdaten.kursID != null) {
 			// Es liegt Kursunterricht vor. Ergänze alle Angaben entsprechend.
 			super.kurs = schuljahresabschnitt.kurs(schuelerLeistungsdaten.kursID);
-			if (super.fachLehrkraft == null)
-				super.fachLehrkraft = kurs.kursleitung();
-			super.zusatzLehrkraefte.addAll(kurs.zusatzLehrkraefte());
-			super.wochenstundenLehrkraefte.putAll(kurs.wochenstundenLehrkraefte());
+			if (super.fachlehrer == null)
+				super.fachlehrer = kurs.kursleitung();
+			super.zusatzLehrer.addAll(kurs.zusatzKurslehrer());
+			super.wochenstundenLehrer.putAll(kurs.wochenstundenLehrkraefte());
 		}
 	}
 

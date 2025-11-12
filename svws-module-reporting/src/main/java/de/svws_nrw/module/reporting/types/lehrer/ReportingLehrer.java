@@ -1,5 +1,6 @@
 package de.svws_nrw.module.reporting.types.lehrer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.svws_nrw.core.data.kataloge.OrtKatalogEintrag;
@@ -7,6 +8,8 @@ import de.svws_nrw.core.data.kataloge.OrtsteilKatalogEintrag;
 import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.core.types.PersonalTyp;
+import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlassenunterricht;
+import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKursunterricht;
 import de.svws_nrw.module.reporting.types.person.ReportingPerson;
 
 /**
@@ -17,7 +20,7 @@ public class ReportingLehrer extends ReportingPerson {
 	/** Ggf. die Amtsbezeichnung des Lehrers. */
 	protected String amtsbezeichnung;
 
-	/** Ggf. das Foto des Lehrers (jpg, Base64-kodiert des Lehrers.) */
+	/** Ggf. das Foto des Lehrers (jpg, Base64-kodiert des Lehrers). */
 	protected String foto;
 
 	/** Die ID des Lehrers. */
@@ -25,6 +28,18 @@ public class ReportingLehrer extends ReportingPerson {
 
 	/** Das Kürzel des Lehrers. */
 	protected String kuerzel;
+
+	/** Liste der Klassenunterrichte, in denen der Lehrer der Fachlehrer laut Leistungsdaten ist und für die Bewertung verantwortlich ist. */
+	protected List<ReportingKlassenunterricht> klassenunterrichtAlsFachlehrer = new ArrayList<>();
+
+	/** Liste der Klassenunterrichte, in denen der Lehrer als zusätzliche Lehrkraft eingetragen ist. */
+	protected List<ReportingKlassenunterricht> klassenunterrichtAlsZusatzlehrer = new ArrayList<>();
+
+	/** Liste der Kursunterrichte, in denen der Lehrer der Fachlehrer laut Leistungsdaten ist, in der Regel der Kursleiter. */
+	protected List<ReportingKursunterricht> kursunterrichtAlsFachlehrer = new ArrayList<>();
+
+	/** Liste der Kursunterrichte, in denen der Lehrer als zusätzliche Lehrkraft eingetragen ist. */
+	protected List<ReportingKursunterricht> kursunterrichtAlsZusatzlehrer = new ArrayList<>();
 
 	/** Eine Liste von Leitungsfunktionen, die der Lehrer besaß oder besitzt. */
 	protected List<ReportingLehrerLeitungsfunktion> leitungsfunktionen;
@@ -82,6 +97,8 @@ public class ReportingLehrer extends ReportingPerson {
 		this.kuerzel = kuerzel;
 		this.leitungsfunktionen = leitungsfunktionen;
 		this.personalTyp = personalTyp;
+
+		// Weitere Daten, wie die Unterrichtsdaten, werden per Lazy-loading nachgeladen.
 	}
 
 
@@ -236,6 +253,42 @@ public class ReportingLehrer extends ReportingPerson {
 	 */
 	public String kuerzel() {
 		return kuerzel;
+	}
+
+	/**
+	 * Liste der Klassenunterrichte, in denen der Lehrer als Fachlehrer in den Leistungsdaten eingetragen ist.
+	 *
+	 * @return Die Liste der Klassenunterrichte mit dem Lehrer als Fachlehrer.
+	 */
+	public List<ReportingKlassenunterricht> klassenunterrichtAlsFachlehrer() {
+		return klassenunterrichtAlsFachlehrer;
+	}
+
+	/**
+	 * Liste der Klassenunterrichte, in denen der Lehrer als zusätzliche Lehrkraft eingetragen ist.
+	 *
+	 * @return Die Liste der Klassenunterrichte mit dem Lehrer als Zusatzkraft.
+	 */
+	public List<ReportingKlassenunterricht> klassenunterrichtAlsZusatzlehrer() {
+		return klassenunterrichtAlsZusatzlehrer;
+	}
+
+	/**
+	 * Liste der Kursunterrichte, in denen der Lehrer der Fachlehrer laut Leistungsdaten ist, in der Regel der Kursleiter.
+	 *
+	 * @return Die Kursunterrichte mit dem Lehrer als Fachlehrer.
+	 */
+	public List<ReportingKursunterricht> kursunterrichtAlsFachlehrer() {
+		return kursunterrichtAlsFachlehrer;
+	}
+
+	/**
+	 * Liste der Kursunterrichte, in denen der Lehrer als zusätzliche Lehrkraft eingetragen ist.
+	 *
+	 * @return Die Kursunterrichte mit dem Lehrer als Zusatzkraft.
+	 */
+	public List<ReportingKursunterricht> kursunterrichtAlsZusatzlehrer() {
+		return kursunterrichtAlsZusatzlehrer;
 	}
 
 	/**

@@ -11,8 +11,8 @@ import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingStunde
 import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingStundenplanungLehrerStundenplan;
 import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingStundenplanungRaumStundenplan;
 import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingStundenplanungSchuelerStundenplan;
-import de.svws_nrw.module.reporting.types.klasse.ReportingKlasse;
-import de.svws_nrw.module.reporting.types.kurs.ReportingKurs;
+import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
+import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKurs;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungFachStundenplan;

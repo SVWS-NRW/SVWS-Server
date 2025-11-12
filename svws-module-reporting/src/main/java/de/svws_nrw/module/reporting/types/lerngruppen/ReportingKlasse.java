@@ -1,9 +1,9 @@
-package de.svws_nrw.module.reporting.types.klasse;
 
+package de.svws_nrw.module.reporting.types.lerngruppen;
+
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
@@ -12,9 +12,9 @@ import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 /**
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Klasse.
  */
-public class ReportingKlasse extends ReportingBaseType {
+public class ReportingKlasse extends ReportingSchuelergruppe {
 
-	/** Gibt am WBK an, ob die Klassen im Sommersemester angefangen hat. */
+	/** Gibt am WBK an, ob die Klasse im Sommersemester angefangen hat. */
 	protected boolean beginnSommersemester;
 
 	/** Eine zusätzliche Beschreibung zu der Klasse */
@@ -23,16 +23,13 @@ public class ReportingKlasse extends ReportingBaseType {
 	/** Die Folgeklasse dieser Klasse zur idFolgeklasse, sofern diese bereits vorhanden ist. */
 	protected ReportingKlasse folgeklasse;
 
-	/** Die ID der Klasse. */
-	protected long id;
-
 	/** Die ID für die Organisationsform der Klasse im allgemeinbildenden Bereich */
 	protected Long idAllgemeinbildendOrganisationsform;
 
 	/** Die ID für die Organisationsform der Klasse im berufsbildenden Bereich */
 	protected Long idBerufsbildendOrganisationsform;
 
-	/** Die ID der Fachklasse, falls es sich um eine Klasse an einem Berufskolleg handelt oder null */
+	/** Die ID der Fachklasse, falls es sich um eine Klasse an einem Berufskolleg handelt, oder null */
 	protected Long idFachklasse;
 
 	/** Die ID der Folgeklasse, sofern im Folgeabschnitt definiert - ansonsten null */
@@ -43,9 +40,6 @@ public class ReportingKlasse extends ReportingBaseType {
 
 	/** Die ID für Klassenart */
 	protected long idKlassenart;
-
-	/** Die Liste der IDs der Klassenleitungen der Klasse. */
-	protected List<Long> idsKlassenleitungen;
 
 	/** Die Liste der IDs der Schüler der Klasse. */
 	protected List<Long> idsSchueler;
@@ -62,12 +56,6 @@ public class ReportingKlasse extends ReportingBaseType {
 	/** Der Jahrgang, dem die Klasse zugeordnet ist. */
 	protected ReportingJahrgang jahrgang;
 
-	/** Die Liste der Klassenleitungen der Klasse. */
-	protected List<ReportingLehrer> klassenleitungen;
-
-	/** Das Kürzel der Klasse. */
-	protected String kuerzel;
-
 	/** Das Kürzel der Folgeklasse. */
 	protected String kuerzelFolgeklasse;
 
@@ -79,15 +67,6 @@ public class ReportingKlasse extends ReportingBaseType {
 
 	/** Die zugewiesene Prüfungsordnung, welche in Schild 3 genutzt wird. */
 	protected String pruefungsordnung;
-
-	/** Die Liste der Schüler der Klasse. */
-	protected List<ReportingSchueler> schueler;
-
-	/** Der Schuljahresabschnitt der Klasse. */
-	protected ReportingSchuljahresabschnitt schuljahresabschnitt;
-
-	/** Die Sortierreihenfolge des Jahrgangslisten-Eintrags. */
-	protected int sortierung;
 
 	/** Adressmerkmal des Teilstandorts für die Klasse */
 	protected String teilstandort;
@@ -102,134 +81,83 @@ public class ReportingKlasse extends ReportingBaseType {
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
 	 *
-	 * @param beginnSommersemester Gibt am WBK an, ob die Klassen im Sommersemester angefangen hat.
+	 * @param id Die ID der Klasse.
+	 * @param schuljahresabschnitt Der Schuljahresabschnitt der Klasse.
+	 * @param kuerzel Das Kürzel der Klasse.
+	 * @param schueler Die Liste der Schüler der Klasse.
+	 * @param sortierung Die Sortierreihenfolge des Jahrgangslisten-Eintrags.
+	 * @param beginnSommersemester Gibt am WBK an, ob die Klasse im Sommersemester angefangen hat.
 	 * @param beschreibung Eine zusätzliche Beschreibung zu der Klasse
 	 * @param folgeklasse Die Folgeklasse dieser Klasse zur idFolgeklasse, sofern diese bereits vorhanden ist.
-	 * @param id Die ID der Klasse.
 	 * @param idAllgemeinbildendOrganisationsform Die ID für die Organisationsform der Klasse im allgemeinbildenden Bereich
 	 * @param idBerufsbildendOrganisationsform Die ID für die Organisationsform der Klasse im berufsbildenden Bereich
-	 * @param idFachklasse Die ID der Fachklasse, falls es sich um eine Klasse an einem Berufskolleg handelt oder null
+	 * @param idFachklasse Die ID der Fachklasse, falls es sich um eine Klasse an einem Berufskolleg handelt, oder null
 	 * @param idFolgeklasse Die ID der Folgeklasse, sofern im Folgeabschnitt definiert - ansonsten null
 	 * @param idJahrgang Die ID des zugeordneten Jahrgangs, dem die Klasse zugeordnet ist
 	 * @param idKlassenart Die ID für Klassenart
-	 * @param idsKlassenleitungen Die Liste der IDs der Klassenleitungen der Klasse.
 	 * @param idsSchueler Die Liste der IDs der Schüler der Klasse.
 	 * @param idSchulgliederung Die ID für die Schulgliederung der Klasse
 	 * @param idVorgaengerklasse Die ID der Vorgängerklasse, sofern im vorigen Schuljahresabschnitt definiert - ansonsten null
 	 * @param idWeiterbildungOrganisationsform Die ID für die Organisationsform der Klasse im Weiterbildungsbereich
 	 * @param jahrgang Der Jahrgang, dem die Klasse zugeordnet ist.
-	 * @param klassenleitungen Die Liste der Klassenleitungen der Klasse.
-	 * @param kuerzel Das Kürzel der Klasse.
+	 * @param klassenleitungen Die Lehrer, die die Klasse leiten.
 	 * @param kuerzelFolgeklasse Das Kürzel der Folgeklasse.
 	 * @param kuerzelVorgaengerklasse Das Kürzel der Vorgängerklasse.
 	 * @param parallelitaet Das Kürzel für die Parallelität der Klasse innerhalb des Jahrgangs (A-Z).
 	 * @param pruefungsordnung Die zugewiesene Prüfungsordnung, welche in Schild 3 genutzt wird.
-	 * @param schueler Die Liste der Schüler der Klasse.
-	 * @param schuljahresabschnitt Der Schuljahresabschnitt der Klasse.
-	 * @param sortierung Die Sortierreihenfolge des Jahrgangslisten-Eintrags.
 	 * @param teilstandort Adressmerkmal des Teilstandorts für die Klasse
 	 * @param verwendungAnkreuzkompetenzen Gibt an, ob Ankreuzkompetenzen für die Klasse verwendet werden.
 	 * @param vorgaengerklasse Die Vorgängerklasse dieser Klasse zur idVorgaengerklasse.
 	 */
-	public ReportingKlasse(final boolean beginnSommersemester, final String beschreibung, final ReportingKlasse folgeklasse, final long id,
-			final Long idAllgemeinbildendOrganisationsform, final Long idBerufsbildendOrganisationsform, final Long idFachklasse, final Long idFolgeklasse,
-			final Long idJahrgang, final long idKlassenart, final List<Long> idsKlassenleitungen, final List<Long> idsSchueler, final long idSchulgliederung,
-			final Long idVorgaengerklasse, final Long idWeiterbildungOrganisationsform, final ReportingJahrgang jahrgang,
-			final List<ReportingLehrer> klassenleitungen, final String kuerzel, final String kuerzelFolgeklasse, final String kuerzelVorgaengerklasse,
-			final String parallelitaet, final String pruefungsordnung, final List<ReportingSchueler> schueler,
-			final ReportingSchuljahresabschnitt schuljahresabschnitt, final int sortierung, final String teilstandort,
-			final boolean verwendungAnkreuzkompetenzen, final ReportingKlasse vorgaengerklasse) {
+	public ReportingKlasse(final long id, final ReportingSchuljahresabschnitt schuljahresabschnitt, final String kuerzel,
+			final List<ReportingSchueler> schueler, final int sortierung, final boolean beginnSommersemester, final String beschreibung,
+			final ReportingKlasse folgeklasse, final Long idAllgemeinbildendOrganisationsform, final Long idBerufsbildendOrganisationsform,
+			final Long idFachklasse, final Long idFolgeklasse, final Long idJahrgang, final long idKlassenart, final List<ReportingLehrer> klassenleitungen,
+			final List<Long> idsSchueler, final long idSchulgliederung, final Long idVorgaengerklasse, final Long idWeiterbildungOrganisationsform,
+			final ReportingJahrgang jahrgang, final String kuerzelFolgeklasse, final String kuerzelVorgaengerklasse, final String parallelitaet,
+			final String pruefungsordnung, final String teilstandort, final boolean verwendungAnkreuzkompetenzen, final ReportingKlasse vorgaengerklasse) {
+		super(id, schuljahresabschnitt, kuerzel, klassenleitungen, schueler, sortierung);
 		this.beginnSommersemester = beginnSommersemester;
 		this.beschreibung = beschreibung;
 		this.folgeklasse = folgeklasse;
-		this.id = id;
 		this.idAllgemeinbildendOrganisationsform = idAllgemeinbildendOrganisationsform;
 		this.idBerufsbildendOrganisationsform = idBerufsbildendOrganisationsform;
 		this.idFachklasse = idFachklasse;
 		this.idFolgeklasse = idFolgeklasse;
 		this.idJahrgang = idJahrgang;
 		this.idKlassenart = idKlassenart;
-		this.idsKlassenleitungen = idsKlassenleitungen;
 		this.idsSchueler = idsSchueler;
 		this.idSchulgliederung = idSchulgliederung;
 		this.idVorgaengerklasse = idVorgaengerklasse;
 		this.idWeiterbildungOrganisationsform = idWeiterbildungOrganisationsform;
 		this.jahrgang = jahrgang;
-		this.klassenleitungen = klassenleitungen;
-		this.kuerzel = kuerzel;
 		this.kuerzelFolgeklasse = kuerzelFolgeklasse;
 		this.kuerzelVorgaengerklasse = kuerzelVorgaengerklasse;
 		this.parallelitaet = parallelitaet;
 		this.pruefungsordnung = pruefungsordnung;
-		this.schueler = schueler;
-		this.schuljahresabschnitt = schuljahresabschnitt;
-		this.sortierung = sortierung;
 		this.teilstandort = teilstandort;
 		this.verwendungAnkreuzkompetenzen = verwendungAnkreuzkompetenzen;
 		this.vorgaengerklasse = vorgaengerklasse;
 	}
 
 
+	// ##### Implementierung der abstrakten Methoden #####
 
 	/**
-	 * Hashcode der Klasse
-	 * @return Hashcode der Klasse
+	 * Gibt den Jahrgang der Klasse zurück.
+	 *
+	 * @return Liste mit dem Jahrgang der Klasse.
 	 */
 	@Override
-	public int hashCode() {
-		return 31 + Long.hashCode(id);
-	}
-
-	/**
-	 * Equals der Klasse
-	 * @param obj Das Vergleichsobjekt
-	 * @return	true, falls es das gleiche Objekt ist, andernfalls false.
-	 */
-	@Override
-	public boolean equals(final Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (!(obj instanceof final ReportingKlasse other))
-			return false;
-		return (id == other.id);
-	}
-
-
-	// ##### Berechnete Methoden #####
-
-	/**
-	 * Auflistung der Klassenleitungen als kommaseparierte Liste der Kürzel.
-	 *
-	 * @return		Kommaseparierte Liste der Klassenleitungen.
-	 */
-	public String auflistungKlassenleitung() {
-		if ((this.klassenleitungen() == null) || this.klassenleitungen().isEmpty())
-			return "";
-		return this.klassenleitungen().stream().map(ReportingLehrer::kuerzel).collect(Collectors.joining(","));
-	}
-
-	/**
-	 * Erstellt aus den Geschlechtern der Schüler eine Statistik in der Form (m/w/d) für diese Klasse.
-	 *
-	 * @return		Statistik in der Form (m/w/d).
-	 */
-	public String statistikGeschlechter() {
-		final List<ReportingSchueler> reportingSchueler = this.schueler();
-		if ((reportingSchueler == null) || reportingSchueler.isEmpty())
-			return "(0/0/0)";
-		final long anzahlM = reportingSchueler.stream().filter(s -> "m".equalsIgnoreCase(s.geschlecht().kuerzel)).count();
-		final long anzahlW = reportingSchueler.stream().filter(s -> "w".equalsIgnoreCase(s.geschlecht().kuerzel)).count();
-		final long anzahlD = reportingSchueler.stream().filter(s -> "d".equalsIgnoreCase(s.geschlecht().kuerzel)).count();
-		return String.format("(%d/%d/%d)", anzahlM, anzahlW, anzahlD);
+	public List<ReportingJahrgang> jahrgaenge() {
+		return (jahrgang == null) ? new ArrayList<>() : List.of(jahrgang);
 	}
 
 
 	// ##### Getter #####
 
 	/**
-	 * Gibt am WBK an, ob die Klassen im Sommersemester angefangen hat.
+	 * Gibt am WBK an, ob die Klasse im Sommersemester angefangen hat.
 	 *
 	 * @return Inhalt des Feldes beginnSommersemester
 	 */
@@ -240,7 +168,7 @@ public class ReportingKlasse extends ReportingBaseType {
 	/**
 	 * Eine zusätzliche Beschreibung zu der Klasse
 	 *
-	 * @return Inhalt des Feldes beschreibung
+	 * @return Inhalt des Feldes Beschreibung
 	 */
 	public String beschreibung() {
 		return beschreibung;
@@ -253,15 +181,6 @@ public class ReportingKlasse extends ReportingBaseType {
 	 */
 	public ReportingKlasse folgeklasse() {
 		return folgeklasse;
-	}
-
-	/**
-	 * Die ID der Klasse.
-	 *
-	 * @return Inhalt des Feldes id
-	 */
-	public long id() {
-		return id;
 	}
 
 	/**
@@ -283,7 +202,7 @@ public class ReportingKlasse extends ReportingBaseType {
 	}
 
 	/**
-	 * Die ID der Fachklasse, falls es sich um eine Klasse an einem Berufskolleg handelt oder null
+	 * Die ID der Fachklasse, falls es sich um eine Klasse an einem Berufskolleg handelt, oder null
 	 *
 	 * @return Inhalt des Feldes idFachklasse
 	 */
@@ -316,15 +235,6 @@ public class ReportingKlasse extends ReportingBaseType {
 	 */
 	public long idKlassenart() {
 		return idKlassenart;
-	}
-
-	/**
-	 * Die Liste der IDs der Klassenleitungen der Klasse.
-	 *
-	 * @return Inhalt des Feldes idsKlassenleitungen
-	 */
-	public List<Long> idsKlassenleitungen() {
-		return idsKlassenleitungen;
 	}
 
 	/**
@@ -366,28 +276,46 @@ public class ReportingKlasse extends ReportingBaseType {
 	/**
 	 * Der Jahrgang, dem die Klasse zugeordnet ist.
 	 *
-	 * @return Inhalt des Feldes jahrgang
+	 * @return Inhalt des Feldes Jahrgang
 	 */
 	public ReportingJahrgang jahrgang() {
 		return jahrgang;
 	}
 
 	/**
-	 * Die Liste der Klassenleitungen der Klasse.
+	 * Die Liste aller Klassenlehrer der Klasse.
 	 *
-	 * @return Inhalt des Feldes klassenleitungen
+	 * @return Alle Klassenlehrer der Klasse.
 	 */
-	public List<ReportingLehrer> klassenleitungen() {
-		return klassenleitungen;
+	public List<ReportingLehrer> klassenlehrer() {
+		return super.lehrer();
 	}
 
 	/**
-	 * Das Kürzel der Klasse.
+	 * Die Lehrkraft, die als erster Lehrer in der Liste der Klassenlehrer aufgeführt wird.
 	 *
-	 * @return Inhalt des Feldes kuerzel
+	 * @return Der erste Lehrer der Klassenlehrerliste.
 	 */
-	public String kuerzel() {
-		return kuerzel;
+	public ReportingLehrer klassenleitung() {
+		return leitenderLehrer();
+	}
+
+	/**
+	 * Weitere Lehrer der Klassenlehrerliste.
+	 *
+	 * @return Weitere Lehrer der Klassenlehrerliste.
+	 */
+	public List<ReportingLehrer> zusatzlicheKlassenlehrer() {
+		return zusatzLehrer();
+	}
+
+	/**
+	 * Auflistung der Kürzel der Klassenleitungen als kommaseparierte Liste der Kürzel.
+	 *
+	 * @return Kommaseparierte Liste der Kürzel der Klassenleitungen.
+	 */
+	public String auflistungKlassenlehrerkuerzel() {
+		return super.auflistungLehrerkuerzel();
 	}
 
 	/**
@@ -427,33 +355,6 @@ public class ReportingKlasse extends ReportingBaseType {
 	}
 
 	/**
-	 * Die Liste der Schüler der Klasse.
-	 *
-	 * @return Inhalt des Feldes schueler
-	 */
-	public List<ReportingSchueler> schueler() {
-		return schueler;
-	}
-
-	/**
-	 * Der Schuljahresabschnitt der Klasse.
-	 *
-	 * @return Inhalt des Feldes schuljahresabschnitt
-	 */
-	public ReportingSchuljahresabschnitt schuljahresabschnitt() {
-		return schuljahresabschnitt;
-	}
-
-	/**
-	 * Die Sortierreihenfolge des Jahrgangslisten-Eintrags.
-	 *
-	 * @return Inhalt des Feldes sortierung
-	 */
-	public int sortierung() {
-		return sortierung;
-	}
-
-	/**
 	 * Adressmerkmal des Teilstandorts für die Klasse
 	 *
 	 * @return Inhalt des Feldes teilstandort
@@ -474,7 +375,7 @@ public class ReportingKlasse extends ReportingBaseType {
 	/**
 	 * Die Vorgängerklasse dieser Klasse zur idVorgaengerklasse.
 	 *
-	 * @return Inhalt des Feldes vorgaengerklasse
+	 * @return Inhalt des Feldes vorgängerklasse
 	 */
 	public ReportingKlasse vorgaengerklasse() {
 		return vorgaengerklasse;

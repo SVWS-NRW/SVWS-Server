@@ -1,27 +1,23 @@
-package de.svws_nrw.module.reporting.proxytypes.klasse;
+package de.svws_nrw.module.reporting.types.lerngruppen;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
 import de.svws_nrw.asd.data.klassen.KlassenDaten;
-import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.data.jahrgaenge.DataJahrgangsdaten;
 import de.svws_nrw.data.klassen.DataKlassendaten;
-import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import de.svws_nrw.module.reporting.proxytypes.jahrgang.ProxyReportingJahrgang;
-import de.svws_nrw.module.reporting.proxytypes.lehrer.ProxyReportingLehrer;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
-import de.svws_nrw.module.reporting.types.klasse.ReportingKlasse;
-import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import jakarta.ws.rs.core.Response;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Proxy-Klasse im Rahmen des Reportings für Daten vom Typ Klasse und erweitert die Klasse {@link ReportingKlasse}.
@@ -40,31 +36,30 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 	 * @param klassenDaten Stammdaten-Objekt aus der DB.
 	 */
 	public ProxyReportingKlasse(final ReportingRepository reportingRepository, final KlassenDaten klassenDaten) {
-		super(klassenDaten.beginnSommersemester,
+		super(klassenDaten.id,
+				null,
+				ersetzeNullBlankTrim(klassenDaten.kuerzel),
+				new ArrayList<>(),
+				klassenDaten.sortierung,
+				klassenDaten.beginnSommersemester,
 				ersetzeNullBlankTrim(klassenDaten.beschreibung),
 				null,
-				klassenDaten.id,
 				klassenDaten.idAllgemeinbildendOrganisationsform,
 				klassenDaten.idBerufsbildendOrganisationsform,
 				klassenDaten.idFachklasse,
 				klassenDaten.idFolgeklasse,
 				klassenDaten.idJahrgang,
 				klassenDaten.idKlassenart,
-				klassenDaten.klassenLeitungen,
+				new ArrayList<>(reportingRepository.lehrer(klassenDaten.klassenLeitungen.stream().filter(Objects::nonNull).toList(), false)),
 				new ArrayList<>(),
 				klassenDaten.idSchulgliederung,
 				klassenDaten.idVorgaengerklasse,
 				klassenDaten.idWeiterbildungOrganisationsform,
 				null,
-				new ArrayList<>(),
-				ersetzeNullBlankTrim(klassenDaten.kuerzel),
 				ersetzeNullBlankTrim(klassenDaten.kuerzelFolgeklasse),
 				ersetzeNullBlankTrim(klassenDaten.kuerzelVorgaengerklasse),
 				ersetzeNullBlankTrim(klassenDaten.parallelitaet),
 				ersetzeNullBlankTrim(klassenDaten.pruefungsordnung),
-				new ArrayList<>(),
-				null,
-				klassenDaten.sortierung,
 				ersetzeNullBlankTrim(klassenDaten.teilstandort),
 				klassenDaten.verwendungAnkreuzkompetenzen,
 				null);
@@ -169,33 +164,6 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 		return super.jahrgang();
 	}
 
-	/**
-	 * Stellt eine Liste mit Lehrern in der Funktion der Klassenleitung der Klasse zur Verfügung.
-	 *
-	 * @return	Liste von Lehrern als Klassenleitungen
-	 */
-	@Override
-	public List<ReportingLehrer> klassenleitungen() {
-		if (super.klassenleitungen().isEmpty() && !super.idsKlassenleitungen().isEmpty()) {
-			super.klassenleitungen =
-					super.idsKlassenleitungen().stream()
-							.map(klId -> this.reportingRepository.mapLehrerStammdaten().computeIfAbsent(klId, l -> {
-								try {
-									return new DataLehrerStammdaten(this.reportingRepository.conn()).getById(klId);
-								} catch (final ApiOperationException e) {
-									ReportingExceptionUtils.putStacktraceInLog(
-											"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Lehrers.", e,
-											reportingRepository.logger(), LogLevel.INFO, 0);
-									return new LehrerStammdaten();
-								}
-							}))
-							.map(l -> (ReportingLehrer) new ProxyReportingLehrer(
-									this.reportingRepository,
-									l))
-							.toList();
-		}
-		return super.klassenleitungen();
-	}
 
 	/**
 	 * Stellt eine Liste mit Schülern der Klasse zur Verfügung.
@@ -205,22 +173,7 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 	@Override
 	public List<ReportingSchueler> schueler() {
 		if (super.schueler().isEmpty()) {
-			final KlassenDaten klassenDaten;
-			if (super.idsSchueler().isEmpty()) {
-				try {
-					klassenDaten = new DataKlassendaten(reportingRepository.conn()).getById(super.id());
-					if ((klassenDaten.schueler != null) && !klassenDaten.schueler.isEmpty())
-						idsSchueler.addAll(klassenDaten.schueler.stream().map(s -> s.id).toList());
-				} catch (final ApiOperationException e) {
-					ReportingExceptionUtils.putStacktraceInLog(
-							"FEHLER: Fehler bei der Ermittlung der Daten der Klasse %s in %s."
-									.formatted(super.kuerzel, super.schuljahresabschnitt.textSchuljahresabschnittKurz()),
-							e, reportingRepository.logger(), LogLevel.ERROR, 0);
-					return super.schueler();
-				}
-			}
-			if (!super.idsSchueler.isEmpty())
-				super.schueler = this.reportingRepository.schueler(idsSchueler);
+			super.schueler = this.reportingRepository.schueler(idsSchueler);
 		}
 		return super.schueler();
 	}
