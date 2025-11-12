@@ -6,7 +6,7 @@ import { CoreTypeData, cast_de_svws_nrw_asd_data_CoreTypeData } from '../../asd/
 export class CoreTypeDataNurSchulformen extends CoreTypeData {
 
 	/**
-	 * Die Kürzel der Schulformen, bei welchen der Jahrgang vorkommt.
+	 * Die Bezeichner der Schulformen, bei welchen der Jahrgang vorkommt.
 	 */
 	public schulformen: List<string> = new ArrayList<string>();
 
