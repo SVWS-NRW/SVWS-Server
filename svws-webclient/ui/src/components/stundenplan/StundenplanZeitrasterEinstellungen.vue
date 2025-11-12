@@ -9,7 +9,7 @@
 		<svws-ui-input-number placeholder="2. Pause nach Stunde" :model-value="settings.defaultVormittagspause2Nach" @change="updateSettings('Vormittagspause2Nach', $event)" :min="0" :max="99" />
 		<svws-ui-input-number placeholder="2. Pause Dauer" :model-value="settings.defaultVormittagspause2Dauer" @change="updateSettings('Vormittagspause2Dauer', $event)" :min="0" :max="99" />
 		<svws-ui-input-number placeholder="Mittagspause nach Stunde" :model-value="settings.defaultMittagspauseNach" @change="updateSettings('MittagspauseNach', $event)" :min="0" :max="99" />
-		<svws-ui-input-number placeholder="Mittagspause Dauer" :model-value="settings.defaultMittagspauseDauer" @change="updateSettings('MittagspauseNach', $event)" :min="0" :max="99" />
+		<svws-ui-input-number placeholder="Mittagspause Dauer" :model-value="settings.defaultMittagspauseDauer" @change="updateSettings('MittagspauseDauer', $event)" :min="0" :max="99" />
 		<slot />
 	</svws-ui-input-wrapper>
 </template>
