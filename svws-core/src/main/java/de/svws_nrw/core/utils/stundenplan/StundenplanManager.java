@@ -786,7 +786,7 @@ public class StundenplanManager {
 			if (u.idKurs != null)
 				continue;
 
-			// Ungueltig?
+			// Ungültig?
 			boolean ungueltig = false;
 			for (final long idKlasse : u.klassen)
 				ungueltig |= !_klassenunterricht_by_idKlasse_and_idFach.contains(idKlasse, u.idFach);

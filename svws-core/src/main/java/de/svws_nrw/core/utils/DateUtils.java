@@ -592,8 +592,8 @@ public final class DateUtils {
 		final @NotNull ArrayList<String> dateList = new ArrayList<>();
 
 		// Schleife über jedes Datum bis zum Enddatum
-		while (startDateArray[0] < endDateArray[0] || (startDateArray[0] == endDateArray[0]
-				&& (startDateArray[1] < endDateArray[1] || (startDateArray[1] == endDateArray[1] && startDateArray[2] <= endDateArray[2])))) {
+		while ((startDateArray[0] < endDateArray[0]) || ((startDateArray[0] == endDateArray[0])
+				&& ((startDateArray[1] < endDateArray[1]) || ((startDateArray[1] == endDateArray[1]) && (startDateArray[2] <= endDateArray[2]))))) {
 			// Füge das aktuelle Datum zur Liste hinzu
 			dateList.add(String.format("%04d-%02d-%02d", startDateArray[0], startDateArray[1], startDateArray[2]));
 
