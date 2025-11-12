@@ -20,6 +20,7 @@
 						<span class="icon i-ri-alert-line icon-ui-caution" />
 						<span>{{ konflikteTerminDragKlausur >= 0 ? konflikteTerminDragKlausur : 2 }}</span>
 					</span>
+					<span class="border rounded-md p-1 text-button" v-if="zeigeAlleJahrgaenge()">{{ GostHalbjahr.fromIDorException(termin().halbjahr).jahrgang }}</span>
 				</div>
 			</template>
 			<template #actions>
@@ -43,10 +44,8 @@
 <script setup lang="ts">
 
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
-	import type { GostHalbjahr, GostKlausurenCollectionSkrsKrsData, GostKlausurenUpdate } from "@core";
-	import { BenutzerKompetenz } from "@core";
-	import { GostKursklausur } from "@core";
-	import { type GostKlausurplanManager, type GostKlausurtermin, type List, Arrays, GostSchuelerklausurTermin } from "@core";
+	import type { GostKlausurenUpdate, GostKlausurplanManager, GostKlausurtermin, List } from "@core";
+	import { GostKursklausur, GostHalbjahr, BenutzerKompetenz, Arrays, GostSchuelerklausurTermin } from "@core";
 	import { computed } from 'vue';
 
 	const props = withDefaults(defineProps<{
@@ -66,6 +65,7 @@
 		updateKlausurblockung: (update: GostKlausurenUpdate) => Promise<void>;
 		gotoKalenderdatum: (datum: string | undefined, termin: GostKlausurtermin | undefined) => Promise<void>;
 		gotoRaumzeitTermin: (abiturjahr: number, halbjahr: GostHalbjahr, value: number) => Promise<void>;
+		zeigeAlleJahrgaenge: () => boolean;
 
 	}>(), {
 		loescheKlausurtermine: undefined,

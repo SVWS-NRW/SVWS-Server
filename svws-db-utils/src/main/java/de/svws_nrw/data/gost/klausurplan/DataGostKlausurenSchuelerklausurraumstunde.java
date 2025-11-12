@@ -395,7 +395,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde
 		final GostKlausurenCollectionSkrsKrsData result = new GostKlausurenCollectionSkrsKrsData();
 
 		for (final GostKlausurraumRich raum : zuteilungen) {
-			if (raum.schuelerklausurterminIDs == null || raum.schuelerklausurterminIDs.isEmpty())
+			if ((raum.schuelerklausurterminIDs == null) || raum.schuelerklausurterminIDs.isEmpty())
 				continue;
 
 			final List<GostSchuelerklausurTermin> neu =
@@ -428,16 +428,11 @@ public final class DataGostKlausurenSchuelerklausurraumstunde
 			throws ApiOperationException {
 		if (skts.isEmpty())
 			throw new ApiOperationException(Status.NOT_FOUND);
-
 		final GostKlausurenCollectionSkrsKrsData result = new GostKlausurenCollectionSkrsKrsData();
-
 		final GostKlausurplanManager manager = createKlausurManagerMitStundenplan(null, skts, null);
-
 		final Set<GostKlausurraum> raeume = skts.stream().map(manager::raumGetBySchuelerklausurtermin).filter(Objects::nonNull).collect(Collectors.toSet());
-
 		for (final GostKlausurraum raum : raeume)
 			result.addAll(recreateRaumstunden(new GostKlausurraumRich(raum, null), manager));
-
 		return result;
 	}
 
@@ -513,10 +508,10 @@ public final class DataGostKlausurenSchuelerklausurraumstunde
 						raumstundeVorhanden.id);
 				conn.transactionPersist(skRaumStundeNeu);
 				final GostSchuelerklausurterminraumstunde aktuell = map(skRaumStundeNeu);
-				if (!(vorhanden.contains(aktuell)))
-					ergebnis.raumdata.sktRaumstunden.add(aktuell);
-				else if (vorhanden.contains(aktuell))
+				if (vorhanden.contains(aktuell))
 					vorhanden.remove(aktuell);
+				else
+					ergebnis.raumdata.sktRaumstunden.add(aktuell);
 			}
 			ergebnis.schuelerklausurterminraumstundenGeloescht.addAll(vorhanden);
 		}

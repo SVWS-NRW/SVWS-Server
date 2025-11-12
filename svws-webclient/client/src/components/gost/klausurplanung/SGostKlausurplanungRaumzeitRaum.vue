@@ -92,15 +92,13 @@
 
 <script setup lang="ts">
 
-	import type { StundenplanRaum, GostKlausurplanManager, GostKlausurenCollectionSkrsKrsData, GostKlausurraum, GostKlausurtermin } from '@core';
-	import { BenutzerKompetenz } from '@core';
-	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from './SGostKlausurplanung';
-	import type { DataTableColumn } from "@ui";
-	import { GostKursklausur, GostHalbjahr } from '@core';
-	import { computed } from 'vue';
-	import { DateUtils } from "@core";
+import type { GostKlausurplanManager, GostKlausurraum, GostKlausurtermin, StundenplanRaum } from '@core';
+import { BenutzerKompetenz, DateUtils, GostHalbjahr, GostKursklausur } from '@core';
+import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from './SGostKlausurplanung';
+import type { DataTableColumn } from "@ui";
+import {computed} from 'vue';
 
-	const props = defineProps<{
+const props = defineProps<{
 		benutzerKompetenzen: Set<BenutzerKompetenz>,
 		raum: GostKlausurraum;
 		kMan: () => GostKlausurplanManager;

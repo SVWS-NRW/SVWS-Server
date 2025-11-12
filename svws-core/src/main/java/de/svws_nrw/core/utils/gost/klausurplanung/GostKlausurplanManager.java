@@ -2595,9 +2595,8 @@ public class GostKlausurplanManager {
 
 	private void schuelerklausurraumstundenmengeRemoveOhneUpdateByIdSchuelerklausurtermin(final long idSchuelerklausurtermin) {
 		final List<GostSchuelerklausurterminraumstunde> skrsList = _schuelerklausurraumstunde_by_idSchuelerklausurtermin_and_idRaumstunde.get1(idSchuelerklausurtermin);
-		if (skrsList != null)
-			for (final @NotNull GostSchuelerklausurterminraumstunde skrs : skrsList)
-				_schuelerklausurraumstunde_by_idSchuelerklausurtermin_and_idRaumstunde.removeSingleOrException(skrs.idSchuelerklausurtermin, skrs.idRaumstunde);
+		for (final @NotNull GostSchuelerklausurterminraumstunde skrs : skrsList)
+			_schuelerklausurraumstunde_by_idSchuelerklausurtermin_and_idRaumstunde.removeSingleOrException(skrs.idSchuelerklausurtermin, skrs.idRaumstunde);
 	}
 
 	/**
@@ -5422,44 +5421,6 @@ public class GostKlausurplanManager {
 		return ergebnis;
 	}
 
-//	/**
-//	 * Liefert die Id des {@link Schuljahresabschnitt}s zum übergebenen Abiturjahrgang und Halbjahr. Falls kein {@link Schuljahresabschnitt} gefunden wird, wird <code>null</code> zurückgegeben.
-//	 * @param abiJahrgang der Abiturjahrang
-//	 * @param halbjahr das {@link GostHalbjahr}
-//	 * @return die Id des {@link Schuljahresabschnitt}s zum übergebenen Abiturjahrgang und Halbjahr. Falls kein {@link Schuljahresabschnitt} gefunden wird, wird <code>null</code> zurückgegeben.
-//	 */
-//	public Long getSchuljahresabschnittIdByAbijahrAndHalbjahrOrNull(final int abiJahrgang, final @NotNull GostHalbjahr halbjahr) {
-//		return _schuljahresabschnitt_by_abijahr_and_halbjahr.getOrNull(abiJahrgang, halbjahr.id);
-//	}
-
-//	/**
-//	 * Liefert die Id des {@link Schuljahresabschnitt}s zum übergebenen Abiturjahrgang und Halbjahr. Falls kein {@link Schuljahresabschnitt} gefunden wird, wird eine <code>DeveloperNotificationException</code> geworfen.
-//	 * @param abiJahrgang der Abiturjahrang
-//	 * @param halbjahr das {@link GostHalbjahr}
-//	 * @return die Id des {@link Schuljahresabschnitt}s zum übergebenen Abiturjahrgang und Halbjahr. Falls kein {@link Schuljahresabschnitt} gefunden wird, wird eine <code>DeveloperNotificationException</code> geworfen.
-//	 */
-//	public long getSchuljahresabschnittIdByAbijahrAndHalbjahrOrException(final int abiJahrgang, final @NotNull GostHalbjahr halbjahr) {
-//		return _schuljahresabschnitt_by_abijahr_and_halbjahr.getOrException(abiJahrgang, halbjahr.id);
-//	}
-
-//	/**
-//	 * Liefert die Id des {@link Schuljahresabschnitt}s zum übergebenen {@link GostKlausurtermin}. Falls kein {@link Schuljahresabschnitt} gefunden wird, wird <code>null</code> zurückgegeben.
-//	 * @param termin der {@link GostKlausurtermin}
-//	 * @return die Id des {@link Schuljahresabschnitt}s zum übergebenen {@link GostKlausurtermin}. Falls kein {@link Schuljahresabschnitt} gefunden wird, wird <code>null</code> zurückgegeben.
-//	 */
-//	public Long getSchuljahresabschnittIdByTerminOrNull(final @NotNull GostKlausurtermin termin) {
-//		return getSchuljahresabschnittIdByAbijahrAndHalbjahrOrNull(termin.abijahr, GostHalbjahr.fromIDorException(termin.halbjahr));
-//	}
-
-//	/**
-//	 * Liefert die Id des {@link Schuljahresabschnitt}s zum übergebenen {@link GostKlausurtermin}. Falls kein {@link Schuljahresabschnitt} gefunden wird, wird eine <code>DeveloperNotificationException</code> geworfen.
-//	 * @param termin der {@link GostKlausurtermin}
-//	 * @return die Id des {@link Schuljahresabschnitt}s zum übergebenen {@link GostKlausurtermin}. Falls kein {@link Schuljahresabschnitt} gefunden wird, wird eine <code>DeveloperNotificationException</code> geworfen.
-//	 */
-//	public long getSchuljahresabschnittIdByTerminOrException(final @NotNull GostKlausurtermin termin) {
-//		return getSchuljahresabschnittIdByAbijahrAndHalbjahrOrException(termin.abijahr, GostHalbjahr.fromIDorException(termin.halbjahr));
-//	}
-
 	/**
 	 *	Fasst zwei Update-Methoden zusammen, um Laufzeit bei update_all() zu sparen.
 	 *  @param kursklausur die {@link GostKursklausur}, zu der die Attribute aktualisiert werden sollen
@@ -5506,8 +5467,7 @@ public class GostKlausurplanManager {
 		final @NotNull List<GostSchuelerklausurterminraumstunde> ergebnis = new ArrayList<>();
 		for (final @NotNull GostKlausurraumstunde stunde : raumStunden) {
 			final List<GostSchuelerklausurterminraumstunde> listStunden = _schuelerklausurraumstunde_by_idSchuelerklausurtermin_and_idRaumstunde.get2(stunde.id);
-			if (listStunden != null)
-				ergebnis.addAll(listStunden);
+			ergebnis.addAll(listStunden);
 		}
 		return ergebnis;
 	}

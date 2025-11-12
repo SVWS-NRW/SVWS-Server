@@ -92,18 +92,18 @@ public final class DataGostKlausurenRaum extends DataManagerRevised<Long, DTOGos
 			throws ApiOperationException {
 		switch (name) {
 			case "idTermin" -> {
-				dto.Termin_ID = JSONMapper.convertToLong(value, false);
+				dto.Termin_ID = JSONMapper.convertToLong(value, false, name);
 				if (conn.queryByKey(DTOGostKlausurenTermine.class, dto.Termin_ID) == null)
 					throw new ApiOperationException(Status.NOT_FOUND, "Klausurtermin mit ID %d existiert nicht.".formatted(dto.Termin_ID));
 			}
 			case "idStundenplanRaum" -> {
-				dto.Stundenplan_Raum_ID = JSONMapper.convertToLong(value, true);
-				if (dto.Stundenplan_Raum_ID != null && conn.queryByKey(DTOStundenplanRaum.class, dto.Stundenplan_Raum_ID) == null)
+				dto.Stundenplan_Raum_ID = JSONMapper.convertToLong(value, true, name);
+				if ((dto.Stundenplan_Raum_ID != null) && (conn.queryByKey(DTOStundenplanRaum.class, dto.Stundenplan_Raum_ID) == null))
 					throw new ApiOperationException(Status.BAD_REQUEST, "Stundenplanraum nicht gefunden, ID: " + dto.Stundenplan_Raum_ID);
 				dto.Stundenplan_Raum_Kuerzel = null;
 			}
 			case "bemerkung" -> dto.Bemerkungen =
-					DataGostKlausuren.convertEmptyStringToNull(JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Raeume.col_Bemerkungen.datenlaenge()));
+					DataGostKlausuren.convertEmptyStringToNull(JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Raeume.col_Bemerkungen.datenlaenge(), name));
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Das Patchen des Attributes %s wird nicht unterstützt.".formatted(name));
 		}
 	}

@@ -133,7 +133,8 @@
 							:update-klausurblockung
 							:show-schuelerklausuren="true"
 							:goto-kalenderdatum
-							:goto-raumzeit-termin />
+							:goto-raumzeit-termin
+							:zeige-alle-jahrgaenge />
 					</template>
 					<template v-else>
 						<div class="shadow-inner rounded-lg h-48" />

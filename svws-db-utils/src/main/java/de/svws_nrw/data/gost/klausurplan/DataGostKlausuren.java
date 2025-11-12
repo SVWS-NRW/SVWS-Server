@@ -102,7 +102,7 @@ public final class DataGostKlausuren {
 		final List<Long> missingSchuelerIds = jgs.stream().flatMap(jg -> jg.data.schuelerklausuren.stream()).map(sk -> sk.idSchueler)
 				.filter(item -> !schuelerNichtSenden.stream().map(s -> s.id).distinct().toList().contains(item)).toList();
 		if (!missingSchuelerIds.isEmpty()) {
-			jgs.getFirst().schueler = jgs.getFirst().schueler == null ? new ArrayList<>() : new ArrayList<>(jgs.getFirst().schueler);
+			jgs.getFirst().schueler = (jgs.getFirst().schueler == null) ? new ArrayList<>() : new ArrayList<>(jgs.getFirst().schueler);
 			jgs.getFirst().schueler.addAll(ladeSchuelerByIds(-1, conn, missingSchuelerIds));
 		}
 		data.lehrer.addAll(new DataLehrerliste(conn, null).getLehrerListe(false));
@@ -148,7 +148,7 @@ public final class DataGostKlausuren {
 		if ((sjaList == null) || (sjaList.size() != 1))
 			throw new ApiOperationException(Status.NOT_FOUND, "Noch kein Schuljahresabschnitt für dieses Halbjahr definiert.");
 
-		final DTOSchuljahresabschnitte sja = sjaList.get(0);
+		final DTOSchuljahresabschnitte sja = sjaList.getFirst();
 
 		// Kurse ermitteln
 		final List<DTOKurs> kurse =
@@ -200,9 +200,9 @@ public final class DataGostKlausuren {
 		retKlausuren.schuelerklausuren = new DataGostKlausurenSchuelerklausur(conn).mapList(schuelerklausuren);
 		retKlausuren.schuelerklausurtermine = new DataGostKlausurenSchuelerklausurTermin(conn).mapList(sktermine);
 		if (!missingVorgaben.isEmpty()) {
-			final String kursText = missingVorgaben.size() == 1 ? "den Kurs" : "die Kurse";
+			final String kursText = (missingVorgaben.size() == 1) ? "den Kurs" : "die Kurse";
 			final String kursListe = missingVorgaben.stream().map(k -> k.KurzBez).collect(Collectors.joining(", "));
-			final String wurdeText = missingVorgaben.size() > 1 ? "n" : "";
+			final String wurdeText = (missingVorgaben.size() > 1) ? "n" : "";
 			retKlausuren.description = String.format("Für %s %s wurde%s keine Klausur erzeugt, da die entsprechende Klausurvorgabe fehlt.",
 			    kursText, kursListe, wurdeText
 			);
@@ -377,7 +377,7 @@ public final class DataGostKlausuren {
 	 *         ansonsten der ursprüngliche String.
 	 */
 	public static String convertEmptyStringToNull(final String s) {
-		return (s == null || s.strip().isEmpty()) ? null : s.strip();
+		return ((s == null) || s.isBlank()) ? null : s.strip();
 	}
 
 }

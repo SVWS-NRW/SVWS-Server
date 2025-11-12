@@ -51,10 +51,8 @@ public final class DataGostKlausurenKursklausur extends DataManagerRevised<Long,
 	 *
 	 * @param conn                   die Datenbank-Verbindung für den
 	 *                               Datenbankzugriff
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public DataGostKlausurenKursklausur(final DBEntityManager conn) throws ApiOperationException {
+	public DataGostKlausurenKursklausur(final DBEntityManager conn) {
 		super(conn);
 		super.setAttributesNotPatchable("id", "idVorgabe", "idKurs");
 		super.setAttributesRequiredOnCreation("idVorgabe", "idKurs");
@@ -116,24 +114,28 @@ public final class DataGostKlausurenKursklausur extends DataManagerRevised<Long,
 	protected void mapAttribute(final DTOGostKlausurenKursklausuren dto, final String name, final Object value, final Map<String, Object> map)
 			throws ApiOperationException {
 		switch (name) {
-			case "idVorgabe" -> dto.Vorgabe_ID = JSONMapper.convertToLong(value, false);
-			case "idKurs" -> dto.Kurs_ID = JSONMapper.convertToLong(value, false);
+			case "idVorgabe" -> dto.Vorgabe_ID = JSONMapper.convertToLong(value, false, name);
+			case "idKurs" -> dto.Kurs_ID = JSONMapper.convertToLong(value, false, name);
 			case "idTermin" -> {
-				final Long newTermin = JSONMapper.convertToLong(value, true);
-				if (!Objects.equals(newTermin, dto.Termin_ID)) {
+				final Long newTerminId = JSONMapper.convertToLong(value, true, name);
+				if (!Objects.equals(newTerminId, dto.Termin_ID)) {
 					dto.Startzeit = null;
 					raumDataChanged = new DataGostKlausurenSchuelerklausurraumstunde(conn).loescheRaumZuSchuelerklausurenTransaction(getSchuelerklausurtermine(dto)); // Auch alle Raumzuweisungen werden gelöscht
 				}
-				if (newTermin != null) {
-					final DTOGostKlausurenTermine termin = conn.queryByKey(DTOGostKlausurenTermine.class, newTermin);
+				if (newTerminId != null) {
+					final DTOGostKlausurenTermine termin = conn.queryByKey(DTOGostKlausurenTermine.class, newTerminId);
+					if (termin == null)
+						throw new ApiOperationException(Status.NOT_FOUND, "Klausurtermin mit ID %d existiert nicht.".formatted(newTerminId));
 					final DTOGostKlausurenVorgaben vorgabe = conn.queryByKey(DTOGostKlausurenVorgaben.class, dto.Vorgabe_ID);
+					if (vorgabe == null)
+						throw new ApiOperationException(Status.NOT_FOUND, "Klausurvorgabe mit ID %d existiert nicht.".formatted(dto.Vorgabe_ID));
 					if ((termin.Quartal != 0) && !Objects.equals(termin.Quartal, vorgabe.Quartal))
 						throw new ApiOperationException(Status.CONFLICT, "Klausur-Quartal entspricht nicht Termin-Quartal.");
 				}
-				dto.Termin_ID = newTermin;
+				dto.Termin_ID = newTerminId;
 			}
 			case "startzeit" -> {
-				final Integer startzeitNeu = JSONMapper.convertToIntegerInRange(value, true, 0, 1440);
+				final Integer startzeitNeu = JSONMapper.convertToIntegerInRange(value, true, 0, 1440, name);
 				if (((startzeitNeu == null) && (dto.Startzeit != null)) || ((startzeitNeu != null) && !startzeitNeu.equals(dto.Startzeit))) {
 					dto.Startzeit = startzeitNeu;
 					conn.transactionPersist(dto);
@@ -141,7 +143,7 @@ public final class DataGostKlausurenKursklausur extends DataManagerRevised<Long,
 				}
 			}
 			case "bemerkung" -> dto.Bemerkungen =
-					DataGostKlausuren.convertEmptyStringToNull(JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Kursklausuren.col_Bemerkungen.datenlaenge()));
+					DataGostKlausuren.convertEmptyStringToNull(JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Kursklausuren.col_Bemerkungen.datenlaenge(), name));
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Das Patchen des Attributes %s wird nicht unterstützt.".formatted(name));
 		}
 	}
@@ -193,7 +195,7 @@ public final class DataGostKlausurenKursklausur extends DataManagerRevised<Long,
 	}
 
 	/**
-	 * Gibt die Liste der Kursklausuren zur übergeben Termin-ID zurück.
+	 * Gibt die Liste der Kursklausuren zur übergebenen Termin-ID zurück.
 	 *
 	 * @param idTermin 	 die ID des Klausurtermins
 	 *
@@ -216,8 +218,7 @@ public final class DataGostKlausurenKursklausur extends DataManagerRevised<Long,
 	 */
 	public List<GostKursklausur> getKursklausurenZuTerminids(final List<Long> idsTermin) throws ApiOperationException {
 		for (final long idTermin : idsTermin)
-			if (new DataGostKlausurenTermin(conn).getById(idTermin) == null)
-				throw new ApiOperationException(Status.NOT_FOUND, "Klausurtermin mit ID %d existiert nicht.".formatted(idTermin));
+			new DataGostKlausurenTermin(conn).getById(idTermin);
 		final List<DTOGostKlausurenKursklausuren> kursKlausurDTOs = conn.queryList(DTOGostKlausurenKursklausuren.QUERY_LIST_BY_TERMIN_ID,
 				DTOGostKlausurenKursklausuren.class, idsTermin);
 		return mapList(kursKlausurDTOs);

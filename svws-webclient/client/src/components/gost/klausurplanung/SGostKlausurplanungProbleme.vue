@@ -42,11 +42,27 @@
 			@update:is-open="(isOpen) => setCurrentAction('schuelerklausurmenge_abweichend', isOpen)">
 			<svws-ui-table :items="schuelerklausuren()" :columns="addStatusColumn(colsSchuelerklausuren)">
 				<template #cell(status)="{ rowData }">
-					<svws-ui-button v-if="rowData.id === -1" type="transparent" @click="erzeugeSchuelerklausuren(ListUtils.create1(rowData))" title="hinzufügen">
-						<span class="icon i-ri-add-line" /> hinzufügen
+					<svws-ui-button v-if="rowData.id === -1" type="icon" @click="async () => {
+						if (isAwaiting) return;
+						isAwaiting = true;
+						try {
+							await erzeugeSchuelerklausuren(ListUtils.create1(rowData));
+						} finally {
+							isAwaiting = false;
+						}
+					}" :disabled="isAwaiting">
+						<span class="icon i-ri-add-line" />
 					</svws-ui-button>
-					<svws-ui-button v-else type="transparent" @click="loescheSchuelerklausuren(ListUtils.create1(rowData))" title="löschen">
-						<span class="icon i-ri-delete-bin-line" /> löschen
+					<svws-ui-button v-else type="icon" @click="async () => {
+						if (isAwaiting) return;
+						isAwaiting = true;
+						try {
+							await loescheSchuelerklausuren(ListUtils.create1(rowData));
+						} finally {
+							isAwaiting = false;
+						}
+					}" :disabled="isAwaiting">
+						<span class="icon i-ri-delete-bin-line" />
 					</svws-ui-button>
 				</template>
 				<template #cell(name)="{ rowData }">
@@ -66,7 +82,15 @@
 			@update:is-open="(isOpen) => setCurrentAction('kursklausuren_fehlend', isOpen)">
 			<svws-ui-table :items="kursklausuren()" :columns="(kursklausuren().toArray() as GostKursklausur[]).some(kk => kk.id !== -1) ? addStatusColumn(colsKursklausuren) : colsKursklausuren">
 				<template #cell(status)="{ rowData }">
-					<svws-ui-button v-if="rowData.id !== -1" type="transparent" @click="loescheKursklausuren(ListUtils.create1(rowData))" title="löschen">
+					<svws-ui-button v-if="rowData.id !== -1" type="transparent" @click="async () => {
+						if (isAwaiting) return;
+						isAwaiting = true;
+						try {
+							await loescheKursklausuren(ListUtils.create1(rowData));
+						} finally {
+							isAwaiting = false;
+						}
+					}" title="löschen" :disabled="isAwaiting">
 						<span class="icon i-ri-delete-bin-line" /> löschen
 					</svws-ui-button>
 				</template>
@@ -317,8 +341,7 @@
 	import { ref, onMounted, computed } from 'vue';
 	import type { DataTableColumn } from "@ui";
 	import type { GostKlausurtermin, GostKursklausur } from "@core";
-	import { DateUtils, GostHalbjahr, ListUtils, OpenApiError, ValidatorFehlerart } from "@core";
-	import { Fach } from "@core";
+	import { DateUtils, Fach, GostHalbjahr, ListUtils, OpenApiError, ValidatorFehlerart } from "@core";
 	import type { GostKlausurplanungProblemeProps } from "./SGostKlausurplanungProblemeProps";
 
 	const props = defineProps<GostKlausurplanungProblemeProps>();
@@ -341,6 +364,7 @@
 		open: false,
 	});
 	const currentAction = ref<string>('');
+	const isAwaiting = ref(false);
 
 	const kwWarnLimit = computed<number>({
 		get: () => props.getConfigNumberValue("kwWarnLimit"),
@@ -409,7 +433,7 @@
 
 	function addStatusColumn(columns: DataTableColumn[], span: number = 0.2) {
 		const newColumns = Array.from(columns);
-		newColumns.push({ key: 'status', label: 'Korrektur', span, align: 'right' });
+		newColumns.push({ key: 'status', label: 'Korrektur', span, align: 'center' });
 		return newColumns;
 	}
 
