@@ -1,5 +1,5 @@
 {
-    "version": 1,
+    "version": 2,
     "daten": [
         {
             "bezeichner": "AB",
@@ -827,322 +827,317 @@
             ]
         },
         {
-            "version": 1,
-            "daten": [
+            "bezeichner": "PW",
+            "idStatistik": "56",
+            "historie": [
                 {
-                    "bezeichner": "PW",
-                    "idStatistik": "56",
-                    "historie": [
-                        {
-                            "id": 300056000,
-                            "schluessel": "PW",
-                            "kuerzel": "PW",
-                            "ebene": "3",
-                            "text": "Produktionswirtschaft",
-                            "gueltigVon": null,
-                            "gueltigBis": null
-                        }
-                    ]
-                },
+                    "id": 300056000,
+                    "schluessel": "PW",
+                    "kuerzel": "PW",
+                    "ebene": "3",
+                    "text": "Produktionswirtschaft",
+                    "gueltigVon": null,
+                    "gueltigBis": null
+                }
+            ]
+        },
+        {
+            "bezeichner": "RW",
+            "idStatistik": "57",
+            "historie": [
                 {
-                    "bezeichner": "RW",
-                    "idStatistik": "57",
-                    "historie": [
-                        {
-                            "id": 300057000,
-                            "schluessel": "RW",
-                            "kuerzel": "RW",
-                            "ebene": "3",
-                            "text": "Rechnungswesen",
-                            "gueltigVon": null,
-                            "gueltigBis": null
-                        }
-                    ]
-                },
+                    "id": 300057000,
+                    "schluessel": "RW",
+                    "kuerzel": "RW",
+                    "ebene": "3",
+                    "text": "Rechnungswesen",
+                    "gueltigVon": null,
+                    "gueltigBis": null
+                }
+            ]
+        },
+        {
+            "bezeichner": "RE",
+            "idStatistik": "58",
+            "historie": [
                 {
-                    "bezeichner": "RE",
-                    "idStatistik": "58",
-                    "historie": [
-                        {
-                            "id": 300058000,
-                            "schluessel": "RE",
-                            "kuerzel": "RE",
-                            "ebene": "3",
-                            "text": "Recht",
-                            "gueltigVon": null,
-                            "gueltigBis": null
-                        }
-                    ]
-                },
+                    "id": 300058000,
+                    "schluessel": "RE",
+                    "kuerzel": "RE",
+                    "ebene": "3",
+                    "text": "Recht",
+                    "gueltigVon": null,
+                    "gueltigBis": null
+                }
+            ]
+        },
+        {
+            "bezeichner": "RT",
+            "idStatistik": "59",
+            "historie": [
                 {
-                    "bezeichner": "RT",
-                    "idStatistik": "59",
-                    "historie": [
-                        {
-                            "id": 300059000,
-                            "schluessel": "RT",
-                            "kuerzel": "RT",
-                            "ebene": "3",
-                            "text": "Reiseverkehr/Touristik",
-                            "gueltigVon": null,
-                            "gueltigBis": null
-                        }
-                    ]
-                },
+                    "id": 300059000,
+                    "schluessel": "RT",
+                    "kuerzel": "RT",
+                    "ebene": "3",
+                    "text": "Reiseverkehr/Touristik",
+                    "gueltigVon": null,
+                    "gueltigBis": null
+                }
+            ]
+        },
+        {
+            "bezeichner": "AV",
+            "idStatistik": "60",
+            "historie": [
                 {
-                    "bezeichner": "AV",
-                    "idStatistik": "60",
-                    "historie": [
-                        {
-                            "id": 300060000,
-                            "schluessel": "AV",
-                            "kuerzel": "AV",
-                            "ebene": "3",
-                            "text": "Schüler/-innen in berufsvorb. Maßn. der AV u. fr. Träger",
-                            "gueltigVon": null,
-                            "gueltigBis": null
-                        }
-                    ]
-                },
+                    "id": 300060000,
+                    "schluessel": "AV",
+                    "kuerzel": "AV",
+                    "ebene": "3",
+                    "text": "Schüler/-innen in berufsvorb. Maßn. der AV u. fr. Träger",
+                    "gueltigVon": null,
+                    "gueltigBis": null
+                }
+            ]
+        },
+        {
+            "bezeichner": "AP",
+            "idStatistik": "61",
+            "historie": [
                 {
-                    "bezeichner": "AP",
-                    "idStatistik": "61",
-                    "historie": [
-                        {
-                            "id": 300061000,
-                            "schluessel": "AP",
-                            "kuerzel": "AP",
-                            "ebene": "3",
-                            "text": "Schüler/-innen m. Arbeitsverh. u. Praktikant.",
-                            "gueltigVon": null,
-                            "gueltigBis": null
-                        }
-                    ]
-                },
+                    "id": 300061000,
+                    "schluessel": "AP",
+                    "kuerzel": "AP",
+                    "ebene": "3",
+                    "text": "Schüler/-innen m. Arbeitsverh. u. Praktikant.",
+                    "gueltigVon": null,
+                    "gueltigBis": null
+                }
+            ]
+        },
+        {
+            "bezeichner": "OA",
+            "idStatistik": "62",
+            "historie": [
                 {
-                    "bezeichner": "OA",
-                    "idStatistik": "62",
-                    "historie": [
-                        {
-                            "id": 300062000,
-                            "schluessel": "OA",
-                            "kuerzel": "OA",
-                            "ebene": "3",
-                            "text": "Schüler/-innen ohne Arbeitsverhältnis",
-                            "gueltigVon": null,
-                            "gueltigBis": null
-                        }
-                    ]
-                },
+                    "id": 300062000,
+                    "schluessel": "OA",
+                    "kuerzel": "OA",
+                    "ebene": "3",
+                    "text": "Schüler/-innen ohne Arbeitsverhältnis",
+                    "gueltigVon": null,
+                    "gueltigBis": null
+                }
+            ]
+        },
+        {
+            "bezeichner": "SV",
+            "idStatistik": "63",
+            "historie": [
                 {
-                    "bezeichner": "SV",
-                    "idStatistik": "63",
-                    "historie": [
-                        {
-                            "id": 300063000,
-                            "schluessel": "SV",
-                            "kuerzel": "SV",
-                            "ebene": "3",
-                            "text": "Service",
-                            "gueltigVon": null,
-                            "gueltigBis": null
-                        }
-                    ]
-                },
+                    "id": 300063000,
+                    "schluessel": "SV",
+                    "kuerzel": "SV",
+                    "ebene": "3",
+                    "text": "Service",
+                    "gueltigVon": null,
+                    "gueltigBis": null
+                }
+            ]
+        },
+        {
+            "bezeichner": "SF",
+            "idStatistik": "64",
+            "historie": [
                 {
-                    "bezeichner": "SF",
-                    "idStatistik": "64",
-                    "historie": [
-                        {
-                            "id": 300064000,
-                            "schluessel": "SF",
-                            "kuerzel": "SF",
-                            "ebene": "3",
-                            "text": "Sport und Freizeit (Schulversuch)",
-                            "gueltigVon": null,
-                            "gueltigBis": null
-                        }
-                    ]
-                },
+                    "id": 300064000,
+                    "schluessel": "SF",
+                    "kuerzel": "SF",
+                    "ebene": "3",
+                    "text": "Sport und Freizeit (Schulversuch)",
+                    "gueltigVon": null,
+                    "gueltigBis": null
+                }
+            ]
+        },
+        {
+            "bezeichner": "ST",
+            "idStatistik": "65",
+            "historie": [
                 {
-                    "bezeichner": "ST",
-                    "idStatistik": "65",
-                    "historie": [
-                        {
-                            "id": 300065000,
-                            "schluessel": "ST",
-                            "kuerzel": "ST",
-                            "ebene": "3",
-                            "text": "Steuern",
-                            "gueltigVon": null,
-                            "gueltigBis": null
-                        }
-                    ]
-                },
+                    "id": 300065000,
+                    "schluessel": "ST",
+                    "kuerzel": "ST",
+                    "ebene": "3",
+                    "text": "Steuern",
+                    "gueltigVon": null,
+                    "gueltigBis": null
+                }
+            ]
+        },
+        {
+            "bezeichner": "TG",
+            "idStatistik": "66",
+            "historie": [
                 {
-                    "bezeichner": "TG",
-                    "idStatistik": "66",
-                    "historie": [
-                        {
-                            "id": 300066000,
-                            "schluessel": "TG",
-                            "kuerzel": "TG",
-                            "ebene": "3",
-                            "text": "Tagebautechnik",
-                            "gueltigVon": null,
-                            "gueltigBis": null
-                        }
-                    ]
-                },
+                    "id": 300066000,
+                    "schluessel": "TG",
+                    "kuerzel": "TG",
+                    "ebene": "3",
+                    "text": "Tagebautechnik",
+                    "gueltigVon": null,
+                    "gueltigBis": null
+                }
+            ]
+        },
+        {
+            "bezeichner": "TA",
+            "idStatistik": "67",
+            "historie": [
                 {
-                    "bezeichner": "TA",
-                    "idStatistik": "67",
-                    "historie": [
-                        {
-                            "id": 300067000,
-                            "schluessel": "TA",
-                            "kuerzel": "TA",
-                            "ebene": "3",
-                            "text": "Technische(r) Assistent(in) für Betriebsinformatik / AHR",
-                            "gueltigVon": null,
-                            "gueltigBis": null
-                        }
-                    ]
-                },
+                    "id": 300067000,
+                    "schluessel": "TA",
+                    "kuerzel": "TA",
+                    "ebene": "3",
+                    "text": "Technische(r) Assistent(in) für Betriebsinformatik / AHR",
+                    "gueltigVon": null,
+                    "gueltigBis": null
+                }
+            ]
+        },
+        {
+            "bezeichner": "TB",
+            "idStatistik": "68",
+            "historie": [
                 {
-                    "bezeichner": "TB",
-                    "idStatistik": "68",
-                    "historie": [
-                        {
-                            "id": 300068000,
-                            "schluessel": "TB",
-                            "kuerzel": "TB",
-                            "ebene": "3",
-                            "text": "Tiefbau",
-                            "gueltigVon": null,
-                            "gueltigBis": null
-                        }
-                    ]
-                },
+                    "id": 300068000,
+                    "schluessel": "TB",
+                    "kuerzel": "TB",
+                    "ebene": "3",
+                    "text": "Tiefbau",
+                    "gueltigVon": null,
+                    "gueltigBis": null
+                }
+            ]
+        },
+        {
+            "bezeichner": "TT",
+            "idStatistik": "69",
+            "historie": [
                 {
-                    "bezeichner": "TT",
-                    "idStatistik": "69",
-                    "historie": [
-                        {
-                            "id": 300069000,
-                            "schluessel": "TT",
-                            "kuerzel": "TT",
-                            "ebene": "3",
-                            "text": "Tiefbautechnik",
-                            "gueltigVon": null,
-                            "gueltigBis": null
-                        }
-                    ]
-                },
+                    "id": 300069000,
+                    "schluessel": "TT",
+                    "kuerzel": "TT",
+                    "ebene": "3",
+                    "text": "Tiefbautechnik",
+                    "gueltigVon": null,
+                    "gueltigBis": null
+                }
+            ]
+        },
+        {
+            "bezeichner": "UA",
+            "idStatistik": "70",
+            "historie": [
                 {
-                    "bezeichner": "UA",
-                    "idStatistik": "70",
-                    "historie": [
-                        {
-                            "id": 300070000,
-                            "schluessel": "UA",
-                            "kuerzel": "UA",
-                            "ebene": "3",
-                            "text": "Umwelttechnische(r) Assistent(in) / AHR",
-                            "gueltigVon": null,
-                            "gueltigBis": null
-                        }
-                    ]
-                },
+                    "id": 300070000,
+                    "schluessel": "UA",
+                    "kuerzel": "UA",
+                    "ebene": "3",
+                    "text": "Umwelttechnische(r) Assistent(in) / AHR",
+                    "gueltigVon": null,
+                    "gueltigBis": null
+                }
+            ]
+        },
+        {
+            "bezeichner": "WJ",
+            "idStatistik": "71",
+            "historie": [
                 {
-                    "bezeichner": "WJ",
-                    "idStatistik": "71",
-                    "historie": [
-                        {
-                            "id": 300071000,
-                            "schluessel": "WJ",
-                            "kuerzel": "WJ",
-                            "ebene": "3",
-                            "text": "Werkstattjahr",
-                            "gueltigVon": null,
-                            "gueltigBis": null
-                        }
-                    ]
-                },
+                    "id": 300071000,
+                    "schluessel": "WJ",
+                    "kuerzel": "WJ",
+                    "ebene": "3",
+                    "text": "Werkstattjahr",
+                    "gueltigVon": null,
+                    "gueltigBis": null
+                }
+            ]
+        },
+        {
+            "bezeichner": "WI",
+            "idStatistik": "72",
+            "historie": [
                 {
-                    "bezeichner": "WI",
-                    "idStatistik": "72",
-                    "historie": [
-                        {
-                            "id": 300072000,
-                            "schluessel": "WI",
-                            "kuerzel": "WI",
-                            "ebene": "3",
-                            "text": "Wirtschaftsinformatik",
-                            "gueltigVon": null,
-                            "gueltigBis": null
-                        }
-                    ]
-                },
+                    "id": 300072000,
+                    "schluessel": "WI",
+                    "kuerzel": "WI",
+                    "ebene": "3",
+                    "text": "Wirtschaftsinformatik",
+                    "gueltigVon": null,
+                    "gueltigBis": null
+                }
+            ]
+        },
+        {
+            "bezeichner": "A2",
+            "idStatistik": "73",
+            "historie": [
                 {
-                    "bezeichner": "A2",
-                    "idStatistik": "73",
-                    "historie": [
-                        {
-                            "id": 300073000,
-                            "schluessel": "A2",
-                            "kuerzel": "A2",
-                            "ebene": "3",
-                            "text": "Anerkannter Ausbildungsberuf (2-jährig)",
-                            "gueltigVon": null,
-                            "gueltigBis": null
-                        }
-                    ]
-                },
+                    "id": 300073000,
+                    "schluessel": "A2",
+                    "kuerzel": "A2",
+                    "ebene": "3",
+                    "text": "Anerkannter Ausbildungsberuf (2-jährig)",
+                    "gueltigVon": null,
+                    "gueltigBis": null
+                }
+            ]
+        },
+        {
+            "bezeichner": "A3",
+            "idStatistik": "74",
+            "historie": [
                 {
-                    "bezeichner": "A3",
-                    "idStatistik": "74",
-                    "historie": [
-                        {
-                            "id": 300074000,
-                            "schluessel": "A3",
-                            "kuerzel": "A3",
-                            "ebene": "3",
-                            "text": "Anerkannter Ausbildungsberuf (3-jährig)",
-                            "gueltigVon": null,
-                            "gueltigBis": null
-                        }
-                    ]
-                },
+                    "id": 300074000,
+                    "schluessel": "A3",
+                    "kuerzel": "A3",
+                    "ebene": "3",
+                    "text": "Anerkannter Ausbildungsberuf (3-jährig)",
+                    "gueltigVon": null,
+                    "gueltigBis": null
+                }
+            ]
+        },
+        {
+            "bezeichner": "A4",
+            "idStatistik": "75",
+            "historie": [
                 {
-                    "bezeichner": "A4",
-                    "idStatistik": "75",
-                    "historie": [
-                        {
-                            "id": 300075000,
-                            "schluessel": "A4",
-                            "kuerzel": "A4",
-                            "ebene": "3",
-                            "text": "Anerkannter Ausbildungsberuf (3 1/2-jährig)",
-                            "gueltigVon": null,
-                            "gueltigBis": null
-                        }
-                    ]
-                },
+                    "id": 300075000,
+                    "schluessel": "A4",
+                    "kuerzel": "A4",
+                    "ebene": "3",
+                    "text": "Anerkannter Ausbildungsberuf (3 1/2-jährig)",
+                    "gueltigVon": null,
+                    "gueltigBis": null
+                }
+            ]
+        },
+        {
+            "bezeichner": "MB",
+            "idStatistik": "76",
+            "historie": [
                 {
-                    "bezeichner": "MB",
-                    "idStatistik": "76",
-                    "historie": [
-                        {
-                            "id": 300076000,
-                            "schluessel": "MB",
-                            "kuerzel": "MB",
-                            "ebene": "3",
-                            "text": "Ausbildungsberuf für Menschen mit Behinderungen",
-                            "gueltigVon": null,
-                            "gueltigBis": null
-                        }
-                    ]
+                    "id": 300076000,
+                    "schluessel": "MB",
+                    "kuerzel": "MB",
+                    "ebene": "3",
+                    "text": "Ausbildungsberuf für Menschen mit Behinderungen",
+                    "gueltigVon": null,
+                    "gueltigBis": null
                 }
             ]
         }

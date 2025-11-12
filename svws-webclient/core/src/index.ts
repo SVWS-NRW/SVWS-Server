@@ -188,6 +188,7 @@ export { BeruflichesGymnasiumStundentafel } from './asd/data/schule/BeruflichesG
 export { BeruflichesGymnasiumStundentafelAbiturfaecherWahlmoeglichkeit } from './asd/data/schule/BeruflichesGymnasiumStundentafelAbiturfaecherWahlmoeglichkeit';
 export { BeruflichesGymnasiumStundentafelFach } from './asd/data/schule/BeruflichesGymnasiumStundentafelFach';
 export { BerufskollegAnlageKatalogEintrag } from './asd/data/schule/BerufskollegAnlageKatalogEintrag';
+export { BerufskollegBerufsebeneKatalogEintrag } from './asd/data/schule/BerufskollegBerufsebeneKatalogEintrag';
 export { BildungsgangTypKatalogEintrag } from './asd/data/schule/BildungsgangTypKatalogEintrag';
 export { BildungsstufeKatalogEintrag } from './asd/data/schule/BildungsstufeKatalogEintrag';
 export { EinwilligungsschluesselKatalogEintrag } from './asd/data/schule/EinwilligungsschluesselKatalogEintrag';
@@ -259,6 +260,9 @@ export { Uebergangsempfehlung } from './asd/types/schueler/Uebergangsempfehlung'
 export { AllgemeinbildendOrganisationsformen } from './asd/types/schule/AllgemeinbildendOrganisationsformen';
 export { BeruflichesGymnasiumPruefungsordnungAnlage } from './asd/types/schule/BeruflichesGymnasiumPruefungsordnungAnlage';
 export { BerufskollegAnlage } from './asd/types/schule/BerufskollegAnlage';
+export { BerufskollegBerufsebene1 } from './asd/types/schule/BerufskollegBerufsebene1';
+export { BerufskollegBerufsebene2 } from './asd/types/schule/BerufskollegBerufsebene2';
+export { BerufskollegBerufsebene3 } from './asd/types/schule/BerufskollegBerufsebene3';
 export { BerufskollegBildungsgangTyp } from './asd/types/schule/BerufskollegBildungsgangTyp';
 export { BerufskollegOrganisationsformen } from './asd/types/schule/BerufskollegOrganisationsformen';
 export { Bildungsstufe } from './asd/types/schule/Bildungsstufe';
@@ -653,7 +657,6 @@ export { Abteilung } from './core/data/schule/Abteilung';
 export { AbteilungKlassenzuordnung } from './core/data/schule/AbteilungKlassenzuordnung';
 export { AllgemeineMerkmaleKatalogEintrag } from './core/data/schule/AllgemeineMerkmaleKatalogEintrag';
 export { Aufsichtsbereich } from './core/data/schule/Aufsichtsbereich';
-export { BerufskollegBerufsebeneKatalogEintrag } from './core/data/schule/BerufskollegBerufsebeneKatalogEintrag';
 export { BerufskollegFachklassenKatalog } from './core/data/schule/BerufskollegFachklassenKatalog';
 export { BerufskollegFachklassenKatalogDaten } from './core/data/schule/BerufskollegFachklassenKatalogDaten';
 export { BerufskollegFachklassenKatalogEintrag } from './core/data/schule/BerufskollegFachklassenKatalogEintrag';
@@ -812,9 +815,6 @@ export { ReportingReportvorlage } from './core/types/reporting/ReportingReportvo
 export { ReportingVorlageParameterTyp } from './core/types/reporting/ReportingVorlageParameterTyp';
 export { SchildReportingAttributTyp } from './core/types/schild3/SchildReportingAttributTyp';
 export { AllgemeineMerkmale } from './core/types/schule/AllgemeineMerkmale';
-export { BerufskollegBerufsebene1 } from './core/types/schule/BerufskollegBerufsebene1';
-export { BerufskollegBerufsebene2 } from './core/types/schule/BerufskollegBerufsebene2';
-export { BerufskollegBerufsebene3 } from './core/types/schule/BerufskollegBerufsebene3';
 export { Herkunftsschulnummern } from './core/types/schule/Herkunftsschulnummern';
 export { PersonTyp } from './core/types/schule/PersonTyp';
 export { Pruefungsordnung } from './core/types/schule/Pruefungsordnung';

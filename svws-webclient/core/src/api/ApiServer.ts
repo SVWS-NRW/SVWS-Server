@@ -17,7 +17,7 @@ import { BenutzerKompetenzKatalogEintrag } from '../core/data/benutzer/BenutzerK
 import { BenutzerLehrerCredentials } from '../core/data/benutzer/BenutzerLehrerCredentials';
 import { BenutzerListeEintrag } from '../core/data/benutzer/BenutzerListeEintrag';
 import { BerufskollegAnlageKatalogEintrag } from '../asd/data/schule/BerufskollegAnlageKatalogEintrag';
-import { BerufskollegBerufsebeneKatalogEintrag } from '../core/data/schule/BerufskollegBerufsebeneKatalogEintrag';
+import { BerufskollegBerufsebeneKatalogEintrag } from '../asd/data/schule/BerufskollegBerufsebeneKatalogEintrag';
 import { BerufskollegFachklassenKatalog } from '../core/data/schule/BerufskollegFachklassenKatalog';
 import { Beschaeftigungsart } from '../core/data/betrieb/Beschaeftigungsart';
 import { BetriebAnsprechpartner } from '../core/data/betrieb/BetriebAnsprechpartner';

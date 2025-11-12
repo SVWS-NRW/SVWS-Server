@@ -53,6 +53,7 @@ import de.svws_nrw.asd.data.schueler.SchuelerStatusKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.UebergangsempfehlungKatalogEintrag;
 import de.svws_nrw.asd.data.schule.BeruflichesGymnasiumPruefungsordnungAnlageKatalogEintrag;
 import de.svws_nrw.asd.data.schule.BerufskollegAnlageKatalogEintrag;
+import de.svws_nrw.asd.data.schule.BerufskollegBerufsebeneKatalogEintrag;
 import de.svws_nrw.asd.data.schule.BildungsgangTypKatalogEintrag;
 import de.svws_nrw.asd.data.schule.EinwilligungsschluesselKatalogEintrag;
 import de.svws_nrw.asd.data.schule.FloskelgruppenartKatalogEintrag;
@@ -116,6 +117,9 @@ import de.svws_nrw.asd.types.schueler.Uebergangsempfehlung;
 import de.svws_nrw.asd.types.schule.AllgemeinbildendOrganisationsformen;
 import de.svws_nrw.asd.types.schule.BeruflichesGymnasiumPruefungsordnungAnlage;
 import de.svws_nrw.asd.types.schule.BerufskollegAnlage;
+import de.svws_nrw.asd.types.schule.BerufskollegBerufsebene1;
+import de.svws_nrw.asd.types.schule.BerufskollegBerufsebene2;
+import de.svws_nrw.asd.types.schule.BerufskollegBerufsebene3;
 import de.svws_nrw.asd.types.schule.BerufskollegBildungsgangTyp;
 import de.svws_nrw.asd.types.schule.BerufskollegOrganisationsformen;
 import de.svws_nrw.asd.types.schule.Einwilligungsschluessel;
@@ -514,6 +518,12 @@ public final class CoreTypeRessource<T extends CoreTypeData, U extends CoreType<
 				"de/svws_nrw/asd/types/schueler/HerkunftSonstige.json");
 		addSimple(Bildungsstufe.class, BildungsstufeKatalogEintrag.class,
 				"de/svws_nrw/asd/types/schule/Bildungsstufe.json");
+		addSimple(BerufskollegBerufsebene1.class, BerufskollegBerufsebeneKatalogEintrag.class,
+				"de/svws_nrw/asd/types/schule/BerufskollegBerufsebene1.json");
+		addSimple(BerufskollegBerufsebene2.class, BerufskollegBerufsebeneKatalogEintrag.class,
+				"de/svws_nrw/asd/types/schule/BerufskollegBerufsebene2.json");
+		addSimple(BerufskollegBerufsebene3.class, BerufskollegBerufsebeneKatalogEintrag.class,
+				"de/svws_nrw/asd/types/schule/BerufskollegBerufsebene3.json");
 	}
 
 }

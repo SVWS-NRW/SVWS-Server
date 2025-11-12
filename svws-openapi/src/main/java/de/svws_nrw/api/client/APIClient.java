@@ -510,6 +510,9 @@ public class APIClient {
 				case "Herkunftsarten" -> JsonReader.fromResource("de/svws_nrw/asd/types/schueler/Herkunftsarten.json");
 				case "HerkunftSonstige" -> JsonReader.fromResource("de/svws_nrw/asd/types/schueler/HerkunftSonstige.json");
 				case "HerkunftSchulform" -> JsonReader.fromResource("de/svws_nrw/asd/types/schueler/HerkunftSchulform.json");
+				case "BerufskollegBerufsebene1" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/BerufskollegBerufsebene1.json");
+				case "BerufskollegBerufsebene2" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/BerufskollegBerufsebene2.json");
+				case "BerufskollegBerufsebene3" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/BerufskollegBerufsebene3.json");
 				default -> null;
 			};
 			if (json == null)

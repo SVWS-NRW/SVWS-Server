@@ -129,6 +129,10 @@ import { HerkunftSchulform } from "../types/schueler/HerkunftSchulform";
 import { HerkunftSchulformKatalogEintrag } from "../data/schueler/HerkunftSchulformKatalogEintrag";
 import { Bildungsstufe } from "../types/schule/Bildungsstufe";
 import { BildungsstufeKatalogEintrag } from "../data/schule/BildungsstufeKatalogEintrag";
+import { BerufskollegBerufsebene1 } from "../types/schule/BerufskollegBerufsebene1";
+import { BerufskollegBerufsebene2 } from "../types/schule/BerufskollegBerufsebene2";
+import { BerufskollegBerufsebene3 } from "../types/schule/BerufskollegBerufsebene3";
+import { BerufskollegBerufsebeneKatalogEintrag } from "../data/schule/BerufskollegBerufsebeneKatalogEintrag";
 
 interface JsonCoreTypeEntry<T> {
 	bezeichner: string;
@@ -171,7 +175,7 @@ export class JsonCoreTypeReader {
 		"LehrerLehramtAnerkennung", "LehrerLehrbefaehigungAnerkennung", "LehrerLeitungsfunktion", "LehrerRechtsverhaeltnis", "LehrerZugangsgrund", "BilingualeSprache", "KAOABerufsfeld",
 		"KAOAMerkmaleOptionsarten", "KAOAZusatzmerkmaleOptionsarten", "KAOAEbene4", "KAOAZusatzmerkmal", "KAOAAnschlussoptionen", "KAOAKategorie", "KAOAMerkmal", "Klassenart", "Uebergangsempfehlung",
 		"ZulaessigeKursart", "Foerderschwerpunkt", "Termin", "Betreuungsart", "FormOffenerGanztag", "LehrerAnrechnungsgrund", "LehrerMehrleistungsarten", "LehrerMinderleistungsarten", "LehrerPflichtstundensollVollzeit", "Nationalitaeten", "ValidatorenFehlerartKontext",
-		"Floskelgruppenart", "Einwilligungsschluessel", "Herkunftsarten", "HerkunftSonstige", "HerkunftSchulform", "Bildungsstufe",
+		"Floskelgruppenart", "Einwilligungsschluessel", "Herkunftsarten", "HerkunftSonstige", "HerkunftSchulform", "Bildungsstufe", "BerufskollegBerufsebene1", "BerufskollegBerufsebene2", "BerufskollegBerufsebene3",
 	] as const;
 
 	public constructor(url?: string) {
@@ -603,6 +607,27 @@ export class JsonCoreTypeReader {
 		HerkunftSchulform.init(manager);
 	}
 
+	public readBerufskollegBerufsebene1() {
+		const data = this.read('BerufskollegBerufsebene1', (json) => BerufskollegBerufsebeneKatalogEintrag.transpilerFromJSON(json));
+		CoreTypeSimple.initValues(new BerufskollegBerufsebene1(), BerufskollegBerufsebene1.class, data.mapData);
+		const manager = new CoreTypeDataManager<BerufskollegBerufsebeneKatalogEintrag, BerufskollegBerufsebene1>(data.version, BerufskollegBerufsebene1.class, BerufskollegBerufsebene1.values(), data.mapData, data.mapStatistikIDs);
+		BerufskollegBerufsebene1.init(manager);
+	}
+
+	public readBerufskollegBerufsebene2() {
+		const data = this.read('BerufskollegBerufsebene2', (json) => BerufskollegBerufsebeneKatalogEintrag.transpilerFromJSON(json));
+		CoreTypeSimple.initValues(new BerufskollegBerufsebene2(), BerufskollegBerufsebene2.class, data.mapData);
+		const manager = new CoreTypeDataManager<BerufskollegBerufsebeneKatalogEintrag, BerufskollegBerufsebene2>(data.version, BerufskollegBerufsebene2.class, BerufskollegBerufsebene2.values(), data.mapData, data.mapStatistikIDs);
+		BerufskollegBerufsebene2.init(manager);
+	}
+
+	public readBerufskollegBerufsebene3() {
+		const data = this.read('BerufskollegBerufsebene3', (json) => BerufskollegBerufsebeneKatalogEintrag.transpilerFromJSON(json));
+		CoreTypeSimple.initValues(new BerufskollegBerufsebene3(), BerufskollegBerufsebene3.class, data.mapData);
+		const manager = new CoreTypeDataManager<BerufskollegBerufsebeneKatalogEintrag, BerufskollegBerufsebene3>(data.version, BerufskollegBerufsebene3.class, BerufskollegBerufsebene3.values(), data.mapData, data.mapStatistikIDs);
+		BerufskollegBerufsebene3.init(manager);
+	}
+
 	public readValidatorenFehlerartKontext() {
 		const name = "ValidatorenFehlerartKontext";
 		const json: string | undefined = this.mapCoreTypeNameJsonData.get(name);
@@ -701,6 +726,9 @@ export class JsonCoreTypeReader {
 			this.readHerkunftSonstige();
 			this.readHerkunftSchulform();
 			this.readBildungsstufe();
+			this.readBerufskollegBerufsebene1();
+			this.readBerufskollegBerufsebene2();
+			this.readBerufskollegBerufsebene3();
 		} catch (e) {
 			console.log(e);
 		}

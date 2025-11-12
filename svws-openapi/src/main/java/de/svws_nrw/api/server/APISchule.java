@@ -25,7 +25,7 @@ import de.svws_nrw.core.data.schule.AbgangsartKatalog;
 import de.svws_nrw.core.data.schule.AllgemeineMerkmaleKatalogEintrag;
 import de.svws_nrw.core.data.schule.Aufsichtsbereich;
 import de.svws_nrw.asd.data.schule.BerufskollegAnlageKatalogEintrag;
-import de.svws_nrw.core.data.schule.BerufskollegBerufsebeneKatalogEintrag;
+import de.svws_nrw.asd.data.schule.BerufskollegBerufsebeneKatalogEintrag;
 import de.svws_nrw.core.data.schule.BerufskollegFachklassenKatalog;
 import de.svws_nrw.core.data.schule.Einwilligungsart;
 import de.svws_nrw.asd.data.schule.FoerderschwerpunktKatalogEintrag;

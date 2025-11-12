@@ -79,7 +79,7 @@ public class JsonCoreTypeData<T extends CoreTypeData> {
 			final JsonNode idStatistik = eintrag.findValue("idStatistik");
 			if ((eintrag.size() != 3) || (bezeichner == null) || (idStatistik == null) || (historie == null) || (!historie.isArray()))
 				throw new IOException(
-						"Die JSON-Datei muss bei den Einträgen im Daten-Array jeweils ein Objekt mit zwei Attributen \"bezeichner\", \"idStatistik\" und \"historie\" haben, wobei die Historie eine Array von Objekten sein muss.");
+						"Die JSON-Datei muss bei den Einträgen im Daten-Array jeweils ein Objekt mit drei Attributen \"bezeichner\", \"idStatistik\" und \"historie\" haben, wobei die Historie eine Array von Objekten sein muss.");
 			final String tmpIdStatistik = idStatistik.asText();
 			if (idsStatistik.contains(tmpIdStatistik))
 				throw new IOException(
@@ -135,8 +135,8 @@ public class JsonCoreTypeData<T extends CoreTypeData> {
 	public String serialize() {
 		final OutputStream outputStream = new ByteArrayOutputStream();
 		// Identer mit Tab-Einrückung und Unix-LineFeed erstellen.
-		DefaultPrettyPrinter.Indenter indenter = new DefaultIndenter("\t", "\n");
-		Separators separators = new Separators(Separators.DEFAULT_ROOT_VALUE_SEPARATOR, //
+		final DefaultPrettyPrinter.Indenter indenter = new DefaultIndenter("\t", "\n");
+		final Separators separators = new Separators(Separators.DEFAULT_ROOT_VALUE_SEPARATOR, //
 				':', // objectFieldValueSeparator
 				Spacing.AFTER, // objectFieldValueSpacing
 				',', // objectEntrySeparator
@@ -146,7 +146,7 @@ public class JsonCoreTypeData<T extends CoreTypeData> {
 				Spacing.NONE, // arrayValueSpacing
 				Separators.DEFAULT_ARRAY_EMPTY_SEPARATOR);
 		// PerryPrinter erstellen und den Indenter zuweisen.
-		DefaultPrettyPrinter printer = new DefaultPrettyPrinter(separators);
+		final DefaultPrettyPrinter printer = new DefaultPrettyPrinter(separators);
 		printer.indentObjectsWith(indenter);
 		// Sorgt für einen formatierten Json-String mittels PrettyPrinter.
 		mapper.enable(SerializationFeature.INDENT_OUTPUT);
