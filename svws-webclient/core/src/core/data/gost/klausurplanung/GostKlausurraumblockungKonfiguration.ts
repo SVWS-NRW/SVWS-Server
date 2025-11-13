@@ -34,17 +34,17 @@ export class GostKlausurraumblockungKonfiguration extends JavaObject {
 	public _regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume: boolean = true;
 
 	/**
-	 * TRUE, dann müssen die selben Kursklausuren im selben Raum geschrieben werden.
+	 * TRUE, dann müssen dieselben Kursklausuren im selben Raum geschrieben werden.
 	 */
 	public _regel_forciere_selbe_kursklausur_im_selben_raum: boolean = true;
 
 	/**
-	 * TRUE, dann dürfen nur die selben Klausurdauern in einen Raum.
+	 * TRUE, dann dürfen nur dieselben Klausurdauern in einen Raum.
 	 */
 	public _regel_forciere_selbe_klausurdauer_pro_raum: boolean = false;
 
 	/**
-	 * TRUE, dann dürfen nur die selben Klausurstart-Zeiten in einen Raum.
+	 * TRUE, dann dürfen nur dieselben Klausurstart-Zeiten in einen Raum.
 	 */
 	public _regel_forciere_selben_klausurstart_pro_raum: boolean = true;
 

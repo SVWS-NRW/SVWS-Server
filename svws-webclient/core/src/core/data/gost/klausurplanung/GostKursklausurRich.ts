@@ -96,7 +96,7 @@ export class GostKursklausurRich extends JavaObject {
 	 * @return true, falls die Objekte identisch sind, sonst false
 	 */
 	public equals(another: unknown | null): boolean {
-		return (another !== null) && (((another instanceof JavaObject) && (another.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKursklausurRich')))) && (this.id === (another as unknown as GostKursklausurRich).id);
+		return (((another instanceof JavaObject) && (another.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKursklausurRich')))) && (this.id === (another as unknown as GostKursklausurRich).id);
 	}
 
 	/**

@@ -20,11 +20,12 @@ import { RouteDataGostKlausurplanung } from "~/router/apps/gost/klausurplanung/R
 
 import type { GostKlausurplanungAuswahlProps } from "~/components/gost/klausurplanung/SGostKlausurplanungAuswahlProps";
 import { routeError } from "~/router/error/RouteError";
-import { ConfigElement } from "../../../../../../ui/src/utils/Config";
+import { ConfigElement } from "@ui";
 import { api } from "~/router/Api";
 import type { GostKlausurplanungProps } from "~/components/gost/klausurplanung/SGostKlausurplanungProps";
 import { routeGostKlausurplanungProbleme } from "./RouteGostKlausurplanungProbleme";
 import type { TabData } from "@ui";
+import { CONFIG_KEY_GOST_KLAUSURPLAN_VORGABENTOIGNORE } from "~/components/gost/klausurplanung/SGostKlausurplanungVorgabenIgnoreManager";
 
 
 const SGostKlausurplanung = () => import("~/components/gost/klausurplanung/SGostKlausurplanung.vue");
@@ -63,6 +64,7 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 			new ConfigElement("gost.klausurplan.raumblockung_regel_forciere_selbe_kursklausur_im_selben_raum", "user", "true"),
 			new ConfigElement("gost.klausurplan.raumblockung_regel_forciere_selbe_klausurdauer_pro_raum", "user", "false"),
 			new ConfigElement("gost.klausurplan.raumblockung_regel_forciere_selben_klausurstart_pro_raum", "user", "true"),
+			new ConfigElement(CONFIG_KEY_GOST_KLAUSURPLAN_VORGABENTOIGNORE, "user", "[]"),
 		]);
 		this.isHidden = (params?: RouteParams) => {
 			return this.checkHidden(params);
@@ -165,6 +167,7 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 			halbjahr: this.data.halbjahr,
 			tabManager: () => this.createTabManagerByChildren(this.data.view.name, this.setTab),
 			getConfigNumberValue: routeGostKlausurplanung.data.getConfigNumberValue,
+			getObjectValue: api.config.getObjectValue.bind(api.config),
 		};
 	}
 

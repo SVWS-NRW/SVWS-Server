@@ -4907,19 +4907,40 @@ export class GostKlausurplanManager extends JavaObject {
 		return ergebnis;
 	}
 
+	private ignoreVorgabeMatches(v: GostKlausurvorgabe, i: GostKlausurvorgabe): boolean {
+		return (v.halbjahr === i.halbjahr) && (v.quartal === i.quartal) && (v.idFach === i.idFach) && JavaObject.equalsTranspiler(v.kursart, (i.kursart));
+	}
+
+	private vorgabeIsIgnored(vorgabe: GostKlausurvorgabe, ignoreVorgaben: List<GostKlausurvorgabe>): boolean {
+		for (const ign of ignoreVorgaben)
+			if (this.ignoreVorgabeMatches(vorgabe, ign))
+				return true;
+		return false;
+	}
+
 	/**
 	 * Liefert eine Liste von fehlenden {@link GostKlausurvorgabe}n zum übergebenen {@link GostHalbjahr} und Quartal
 	 *
 	 * @param abiJahrgang der Abitur-Jahrgang
 	 * @param halbjahr das {@link GostHalbjahr}
 	 * @param quartal die Nummer des Quartals, 0 für alle Quartale
+	 * @param ignoreVorgaben eine Liste von {@link GostKlausurvorgabe}n, die ignoriert werden sollen
 	 *
 	 * @return die Liste von fehlenden {@link GostKlausurvorgabe}n
 	 */
-	public vorgabefehlendGetMengeByHalbjahrAndQuartal(abiJahrgang: number, halbjahr: GostHalbjahr, quartal: number): List<GostKlausurvorgabe> {
+	public vorgabefehlendGetMengeByHalbjahrAndQuartal(abiJahrgang: number, halbjahr: GostHalbjahr, quartal: number, ignoreVorgaben: List<GostKlausurvorgabe> | null): List<GostKlausurvorgabe> {
+		let alle: List<GostKlausurvorgabe> | null;
 		if (quartal === 0)
-			return this._vorgabefehlend_by_abijahr_and_halbjahr_and_quartal_and_kursartAllg_and_idFach.getNonNullValuesOfMap3AsList(abiJahrgang, halbjahr.id);
-		return this._vorgabefehlend_by_abijahr_and_halbjahr_and_quartal_and_kursartAllg_and_idFach.getNonNullValuesOfMap4AsList(abiJahrgang, halbjahr.id, quartal);
+			alle = this._vorgabefehlend_by_abijahr_and_halbjahr_and_quartal_and_kursartAllg_and_idFach.getNonNullValuesOfMap3AsList(abiJahrgang, halbjahr.id);
+		else
+			alle = this._vorgabefehlend_by_abijahr_and_halbjahr_and_quartal_and_kursartAllg_and_idFach.getNonNullValuesOfMap4AsList(abiJahrgang, halbjahr.id, quartal);
+		if ((ignoreVorgaben === null) || ignoreVorgaben.isEmpty())
+			return alle;
+		const result: List<GostKlausurvorgabe> | null = new ArrayList<GostKlausurvorgabe>();
+		for (const vorgabe of alle)
+			if (!this.vorgabeIsIgnored(vorgabe, ignoreVorgaben))
+				result.add(vorgabe);
+		return result;
 	}
 
 	/**
@@ -4974,12 +4995,13 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @param halbjahr das {@link GostHalbjahr}
 	 * @param quartal die Nummer des Quartals, 0 für alle Quartale
 	 * @param kwErrorLimit das Errorlimit für die Anzahl der Klausuren pro Schüler und Woche
+	 * @param ignoreVorgaben eine Liste von {@link GostKlausurvorgabe}n, die bei der Zählung ignoriert werden sollen
 	 *
 	 * @return die Anzahl möglicher Probleme in der aktuellen Klausurplanung zum übergebenen {@link GostHalbjahr} und Quartal
 	 */
-	public planungsfehlerGetAnzahlByHalbjahrAndQuartal(abiJahrgang: number, halbjahr: GostHalbjahr, quartal: number, kwErrorLimit: number): number {
+	public planungsfehlerGetAnzahlByHalbjahrAndQuartal(abiJahrgang: number, halbjahr: GostHalbjahr, quartal: number, kwErrorLimit: number, ignoreVorgaben: List<GostKlausurvorgabe> | null): number {
 		let anzahl: number = 0;
-		anzahl += this.vorgabefehlendGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
+		anzahl += this.vorgabefehlendGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal, ignoreVorgaben).size();
 		anzahl += this.kursklausurfehlendGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
 		anzahl += this.kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
 		anzahl += this.schuelerklausurfehlendGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();

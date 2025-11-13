@@ -30,4 +30,6 @@ export interface GostKlausurplanungProblemeProps {
 	gotoStundenplan: () => Promise<void>;
 	getConfigNumberValue: (value: string) => number;
 	setConfigValue: (key: string, value: string | number) => Promise<void>;
+	setObjectValue: <T>(key: string, value: T | null, toJSON: (obj: T) => string) => Promise<void>;
+	getObjectValue: <T>(key: string, fromJSON: (json: string) => T) => T | null;
 }

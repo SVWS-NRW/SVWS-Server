@@ -34,13 +34,13 @@ public class GostKlausurraumblockungKonfiguration {
 	/** TRUE, dann werden wird auf die Räume gleichmäßig verteilt.*/
 	public boolean _regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume = true;
 
-	/** TRUE, dann müssen die selben Kursklausuren im selben Raum geschrieben werden. */
+	/** TRUE, dann müssen dieselben Kursklausuren im selben Raum geschrieben werden. */
 	public boolean _regel_forciere_selbe_kursklausur_im_selben_raum = true;
 
-	/** TRUE, dann dürfen nur die selben Klausurdauern in einen Raum. */
+	/** TRUE, dann dürfen nur dieselben Klausurdauern in einen Raum. */
 	public boolean _regel_forciere_selbe_klausurdauer_pro_raum = false;
 
-	/** TRUE, dann dürfen nur die selben Klausurstart-Zeiten in einen Raum. */
+	/** TRUE, dann dürfen nur dieselben Klausurstart-Zeiten in einen Raum. */
 	public boolean _regel_forciere_selben_klausurstart_pro_raum = true;
 
 	/**

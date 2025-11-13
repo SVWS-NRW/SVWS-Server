@@ -18,15 +18,34 @@
 			</template>
 		</ui-card>
 
-		<ui-card v-if="!vorgaben().isEmpty()" icon="i-ri-draft-line" title="Fehlende Klausurvorgaben" :fehler="ValidatorFehlerart.MUSS"
-			:subtitle="vorgaben().size() + ' fehlende Klausurvorgaben gefunden.'" :is-open="currentAction === 'vorgaben_fehlend'"
-			@update:is-open="(isOpen) => setCurrentAction('vorgaben_fehlend', isOpen)">
-			<svws-ui-table :items="vorgaben()" :columns="colsVorgaben">
+		<ui-card v-if="!kMan().vorgabefehlendGetMengeByHalbjahrAndQuartal(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value, null).isEmpty()" icon="i-ri-draft-line" title="Fehlende Klausurvorgaben" :fehler="vorgaben().size() > 0 ? ValidatorFehlerart.MUSS : ValidatorFehlerart.UNGENUTZT"
+			:subtitle="vorgaben().size() + ' fehlende Klausurvorgaben gefunden.'" :is-open="!vorgaben().isEmpty() && currentAction === 'vorgaben_fehlend'"
+			@update:is-open="(isOpen) => setCurrentAction('vorgaben_fehlend', isOpen)" :collapsible="!vorgaben().isEmpty()">
+			<template #title>
+				<div class="ui-card--header--title flex items-center gap-3">
+					Fehlende Klausurvorgaben
+					<div class="ml-2" @click.stop v-if="halbjahr.istEinfuehrungsphase()">
+						<svws-ui-button @click="ignoreVorgabenToggle = !ignoreVorgabenToggle" type="icon" :title="'Ignorierte Vorgaben ' + (ignoreVorgabenToggle ? 'anzeigen' : 'ausblenden')">
+							<span v-if="ignoreVorgabenToggle" class="icon i-ri-eye-off-line" />
+							<span v-else class="icon i-ri-eye-line" />
+						</svws-ui-button>
+					</div>
+				</div>
+			</template>
+			<svws-ui-table :items="vorgaben()" :columns="addStatusColumn(colsVorgaben, 0.2, '')">
 				<template #cell(idFach)="{ value }">
 					<span class="svws-ui-badge" :style="`color: var(--color-text-uistatic); background-color: ${getBgColor(kMan().getFaecherManager(jahrgangsdaten!.abiturjahr-1).get(value)?.kuerzel || null)}`">{{ kMan().getFaecherManager(jahrgangsdaten!.abiturjahr-1).get(value)?.bezeichnung }}</span>
 				</template>
 				<template #cell(quartal)="{ value }">
 					{{ value }}
+				</template>
+				<template #cell(status)="{ rowData }">
+					<svws-ui-button v-if="vorgabenIgnoreManager.contains(rowData)" @click="vorgabenIgnoreManager.remove(rowData)" type="icon" title="Vorgabe nicht mehr ignorieren">
+						<span class="icon i-ri-eye-off-line" />
+					</svws-ui-button>
+					<svws-ui-button v-else-if="rowData.halbjahr <= 1" @click="vorgabenIgnoreManager.add(rowData)" type="icon" title="Vorgabe ignorieren">
+						<span class="icon i-ri-eye-line" />
+					</svws-ui-button>
 				</template>
 			</svws-ui-table>
 			<template #buttonFooterLeft>
@@ -340,13 +359,20 @@
 <script setup lang="ts">
 	import { ref, onMounted, computed } from 'vue';
 	import type { DataTableColumn } from "@ui";
-	import type { GostKlausurtermin, GostKursklausur } from "@core";
-	import { DateUtils, Fach, GostHalbjahr, ListUtils, OpenApiError, ValidatorFehlerart } from "@core";
+	import { GostKlausurtermin, GostKursklausur, DateUtils, Fach, GostHalbjahr, ListUtils, OpenApiError, ValidatorFehlerart } from "@core";
 	import type { GostKlausurplanungProblemeProps } from "./SGostKlausurplanungProblemeProps";
+	import { SGostKlausurplanungVorgabenIgnoreManager } from "~/components/gost/klausurplanung/SGostKlausurplanungVorgabenIgnoreManager";
 
 	const props = defineProps<GostKlausurplanungProblemeProps>();
 
-	const vorgaben = () => props.kMan().vorgabefehlendGetMengeByHalbjahrAndQuartal(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value);
+	const vorgabenIgnoreManager = new SGostKlausurplanungVorgabenIgnoreManager(
+			props.getObjectValue,
+			props.setObjectValue
+	);
+
+	const ignoreVorgabenToggle = ref<boolean>(true);
+
+	const vorgaben = () => props.kMan().vorgabefehlendGetMengeByHalbjahrAndQuartal(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value, (ignoreVorgabenToggle.value ? vorgabenIgnoreManager.getAll() : null));
 	const kursklausuren = () => props.kMan().kursklausurfehlendGetMengeByHalbjahrAndQuartal(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value);
 	const kursklausurenNichtVerteilt = () => props.kMan().kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value);
 	const schuelerklausuren = () => props.kMan().schuelerklausurfehlendGetMengeByHalbjahrAndQuartal(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value);
@@ -431,9 +457,9 @@
 		{ key: 'klausuren', label: 'Klausuren', sortable: true },
 	];
 
-	function addStatusColumn(columns: DataTableColumn[], span: number = 0.2) {
+	function addStatusColumn(columns: DataTableColumn[], span: number = 0.2, label: string = 'Korrektur'): DataTableColumn[] {
 		const newColumns = Array.from(columns);
-		newColumns.push({ key: 'status', label: 'Korrektur', span, align: 'center' });
+		newColumns.push({ key: 'status', label, span, align: 'center' });
 		return newColumns;
 	}
 

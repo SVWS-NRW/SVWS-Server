@@ -13,4 +13,5 @@ export interface GostKlausurplanungProps {
 	halbjahr: GostHalbjahr;
 	tabManager: () => TabManager;
 	getConfigNumberValue: (value: string) => number;
+	getObjectValue: <T>(key: string, fromJSON: (json: string) => T) => T | null;
 }
