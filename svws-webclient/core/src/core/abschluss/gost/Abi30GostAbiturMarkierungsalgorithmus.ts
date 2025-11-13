@@ -1167,7 +1167,9 @@ export class Abi30GostAbiturMarkierungsalgorithmus extends JavaObject {
 			const newState: Abi30GostAbiturMarkierungsalgorithmus = new Abi30GostAbiturMarkierungsalgorithmus(this);
 			if (!newState.markiereHalbjahresbelegung(projektkurs, GostHalbjahr.Q21) || !newState.markiereHalbjahresbelegung(projektkurs, GostHalbjahr.Q22))
 				continue;
-			if (((this.markiert.getOrNull(referenzfach.id, GostHalbjahr.Q11.id) === null) && (!this.markiereHalbjahresbelegung(referenzfachBelegung, GostHalbjahr.Q11))) || ((this.markiert.getOrNull(referenzfach.id, GostHalbjahr.Q12.id) === null) && (!this.markiereHalbjahresbelegung(referenzfachBelegung, GostHalbjahr.Q12))))
+			if ((newState.markiert.getOrNull(referenzfach.id, GostHalbjahr.Q11.id) === null) && (!newState.markiereHalbjahresbelegung(referenzfachBelegung, GostHalbjahr.Q11)))
+				continue;
+			if ((newState.markiert.getOrNull(referenzfach.id, GostHalbjahr.Q12.id) === null) && (!newState.markiereHalbjahresbelegung(referenzfachBelegung, GostHalbjahr.Q12)))
 				continue;
 			if (newState.markiereWeitereKurse())
 				newStates.add(newState);

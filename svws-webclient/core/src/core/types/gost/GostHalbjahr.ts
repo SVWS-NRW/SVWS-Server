@@ -467,6 +467,20 @@ export class GostHalbjahr extends JavaEnum<GostHalbjahr> {
 	}
 
 	/**
+	 * Prüft, ob dieses Halbjahr einer der übergebenen Halbjahre ist.
+	 *
+	 * @param halbjahre    die Halbjahre
+	 *
+	 * @return true oder false
+	 */
+	public istIn(...halbjahre: Array<GostHalbjahr>): boolean {
+		for (const h of halbjahre)
+			if (h as unknown === this as unknown)
+				return true;
+		return false;
+	}
+
+	/**
 	 * Prüft anhand der übergebenen Halbjahre, ob es sich um die beiden Halbjahre
 	 * der Einführungsphase handelt.
 	 *

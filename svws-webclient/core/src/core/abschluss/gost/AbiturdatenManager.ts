@@ -2817,18 +2817,20 @@ export class AbiturdatenManager extends JavaObject {
 	 * sofern die Daten vollständig vorliegen. Ist dies nicht der Fall, so wird das Ergebnis soweit
 	 * wie möglich berechnet. Diese Methode setzt die vorherige Berechnung der Zulassung voraus.
 	 *
+	 * @param servermode                     der Mode, in welchem der Server betrieben wird
 	 * @param abidaten                       die Abiturdaten, welche zur Berechnung verwendet werden
 	 * @param berechnePflichtpruefungenNeu   gibt an, ob die Pflichtprüfungen neu berechnet/gesetzt werden sollen oder nicht
 	 *
 	 * @return true, wenn die Berechnung vollständig durchgeführt werden konnte
 	 */
-	public static berechnePruefungsergebnis(abidaten: Abiturdaten, berechnePflichtpruefungenNeu: boolean): boolean {
+	public static berechnePruefungsergebnis(servermode: ServerMode, abidaten: Abiturdaten, berechnePflichtpruefungenNeu: boolean): boolean {
 		const abiBelegungen: List<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 		for (const fachbelegung of abidaten.fachbelegungen)
 			if (fachbelegung.abiturFach !== null)
 				abiBelegungen.add(fachbelegung);
+		const istAbi30ff: boolean = AbiturdatenManager.nutzeExperimentellenCode(servermode, abidaten.abiturjahr);
 		const hatBLL: boolean = !JavaObject.equalsTranspiler("K", (abidaten.besondereLernleistung));
-		const faktor: number = hatBLL ? 4 : 5;
+		const faktor: number = (istAbi30ff || hatBLL) ? 4 : 5;
 		let summe: number = 0;
 		let defizite: number = 0;
 		let defiziteLK: number = 0;

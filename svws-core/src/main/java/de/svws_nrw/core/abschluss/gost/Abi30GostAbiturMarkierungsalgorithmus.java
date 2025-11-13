@@ -1286,14 +1286,14 @@ public final class Abi30GostAbiturMarkierungsalgorithmus {
 				continue;
 			}
 
-			// Prüfe die Belegung des Referenzfaches in der EF und Q1 und die Schrfitlichkeit in der Q1
+			// Prüfe die Belegung des Referenzfaches in der EF und Q1
 			if (!manager.pruefeBelegung(referenzfachBelegung, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12)) {
 				log("  Das Fach " + referenzfach.kuerzelAnzeige
 						+ " wurde nicht von EF.1 bis Q1.2 belegt und ist daher nicht als Referenzfach für einen Projektkurs zulässig.");
 				continue;
 			}
 
-			// Prüfe die Belegung des Referenzfaches in der EF und Q1 und die Schrfitlichkeit in der Q1
+			// Prüfe die schriftliche Belegung des Referenzfaches in der Q1
 			if (!manager.pruefeBelegungMitSchriftlichkeit(referenzfachBelegung, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12)) {
 				log("  Das Fach " + referenzfach.kuerzelAnzeige
 						+ " wurde in der Q1 nicht schriftlich belegt und ist daher nicht als Referenzfach für einen Projektkurs zulässig.");
@@ -1308,10 +1308,11 @@ public final class Abi30GostAbiturMarkierungsalgorithmus {
 				continue;
 
 			// ... und für das Referenzfach die beiden Halbjahre in der Q1, sofern sie nicht bereits vorher markiert wurden
-			if (((this.markiert.getOrNull(referenzfach.id, GostHalbjahr.Q11.id) == null)
-					&& (!markiereHalbjahresbelegung(referenzfachBelegung, GostHalbjahr.Q11)))
-					|| ((this.markiert.getOrNull(referenzfach.id, GostHalbjahr.Q12.id) == null)
-							&& (!markiereHalbjahresbelegung(referenzfachBelegung, GostHalbjahr.Q12))))
+			if ((newState.markiert.getOrNull(referenzfach.id, GostHalbjahr.Q11.id) == null)
+					&& (!newState.markiereHalbjahresbelegung(referenzfachBelegung, GostHalbjahr.Q11)))
+				continue;
+			if ((newState.markiert.getOrNull(referenzfach.id, GostHalbjahr.Q12.id) == null)
+					&& (!newState.markiereHalbjahresbelegung(referenzfachBelegung, GostHalbjahr.Q12)))
 				continue;
 
 			// Prüfe für diese Belegung des Referenzfaches die Belegung weiterer Kurse

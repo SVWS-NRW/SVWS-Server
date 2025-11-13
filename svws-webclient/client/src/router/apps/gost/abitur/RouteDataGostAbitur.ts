@@ -158,7 +158,7 @@ export class RouteDataGostAbitur extends RouteData<RouteStateDataGostAbitur> {
 		if (!found)
 			throw new DeveloperNotificationException("Die FachID ist in den Abiturdaten nicht als Belegung vorhanden.");
 		// Berechnen des Prüfungsergebnisses und Senden an den Server
-		AbiturdatenManager.berechnePruefungsergebnis(clone, berechnePflichtpruefungenNeu);
+		AbiturdatenManager.berechnePruefungsergebnis(api.mode, clone, berechnePflichtpruefungenNeu);
 		await api.server.patchGostSchuelerAbiturdaten(clone, api.schema, clone.schuelerID);
 		// Patchen der Originaldaten und dortige Berechnung des Prüfungsergebnisses nach erfolgreichem Senden an den Server
 		for (const tmpBelegung of orig.fachbelegungen) {
@@ -168,7 +168,7 @@ export class RouteDataGostAbitur extends RouteData<RouteStateDataGostAbitur> {
 			}
 		}
 		manager().pruefeZulassung();
-		AbiturdatenManager.berechnePruefungsergebnis(orig, berechnePflichtpruefungenNeu);
+		AbiturdatenManager.berechnePruefungsergebnis(api.mode, orig, berechnePflichtpruefungenNeu);
 		this.commit();
 	};
 

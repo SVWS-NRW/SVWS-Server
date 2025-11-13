@@ -3023,21 +3023,24 @@ public class AbiturdatenManager {
 	 * sofern die Daten vollständig vorliegen. Ist dies nicht der Fall, so wird das Ergebnis soweit
 	 * wie möglich berechnet. Diese Methode setzt die vorherige Berechnung der Zulassung voraus.
 	 *
+	 * @param servermode                     der Mode, in welchem der Server betrieben wird
 	 * @param abidaten                       die Abiturdaten, welche zur Berechnung verwendet werden
 	 * @param berechnePflichtpruefungenNeu   gibt an, ob die Pflichtprüfungen neu berechnet/gesetzt werden sollen oder nicht
 	 *
 	 * @return true, wenn die Berechnung vollständig durchgeführt werden konnte
 	 */
-	public static boolean berechnePruefungsergebnis(final @NotNull Abiturdaten abidaten, final boolean berechnePflichtpruefungenNeu) {
+	public static boolean berechnePruefungsergebnis(final @NotNull ServerMode servermode, final @NotNull Abiturdaten abidaten, final boolean berechnePflichtpruefungenNeu) {
 		// Bestimme die Fachbelegungen der Abiturfächer und sortiere diese
 		final @NotNull List<AbiturFachbelegung> abiBelegungen = new ArrayList<>();
 		for (final @NotNull AbiturFachbelegung fachbelegung : abidaten.fachbelegungen)
 			if (fachbelegung.abiturFach != null)
 				abiBelegungen.add(fachbelegung);
 
+		final boolean istAbi30ff = nutzeExperimentellenCode(servermode, abidaten.abiturjahr);
+
 		// Bestimme die Anzahl der Abiturfächer (BLL zählt ggf. als 5. Abiturfach), um die Punkte pro Notenpunkt festzulegen
 		final boolean hatBLL = !"K".equals(abidaten.besondereLernleistung);
-		final int faktor = hatBLL ? 4 : 5;
+		final int faktor = (istAbi30ff || hatBLL) ? 4 : 5;
 
 		// Bestimme die Prüfungsergebnisse in den Abiturfächern (erster Durchgang ohne mdl. Prüfungen im 1.-3. Fach)
 		int summe = 0;

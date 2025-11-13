@@ -450,6 +450,22 @@ public enum GostHalbjahr {
 
 
 	/**
+	 * Prüft, ob dieses Halbjahr einer der übergebenen Halbjahre ist.
+	 *
+	 * @param halbjahre    die Halbjahre
+	 *
+	 * @return true oder false
+	 */
+	@JsonIgnore
+	public boolean istIn(final GostHalbjahr... halbjahre) {
+		for (final @NotNull GostHalbjahr h : halbjahre)
+			if (h == this)
+				return true;
+		return false;
+	}
+
+
+	/**
 	 * Prüft anhand der übergebenen Halbjahre, ob es sich um die beiden Halbjahre
 	 * der Einführungsphase handelt.
 	 *
