@@ -4,7 +4,6 @@ import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import { AbiturdatenManager } from '../../../core/abschluss/gost/AbiturdatenManager';
 import { GostBelegpruefung } from '../../../core/abschluss/gost/GostBelegpruefung';
-import { UnsupportedOperationException } from '../../../java/lang/UnsupportedOperationException';
 
 export class Abi30GostAbiturMarkierungspruefung extends JavaObject {
 
@@ -23,7 +22,6 @@ export class Abi30GostAbiturMarkierungspruefung extends JavaObject {
 	 */
 	private constructor(manager: AbiturdatenManager, belegpruefungen: List<GostBelegpruefung>) {
 		super();
-		throw new UnsupportedOperationException()
 	}
 
 	/**

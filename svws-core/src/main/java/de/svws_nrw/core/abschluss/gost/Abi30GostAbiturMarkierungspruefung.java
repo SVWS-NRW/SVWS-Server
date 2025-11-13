@@ -33,7 +33,7 @@ public final class Abi30GostAbiturMarkierungspruefung {
 	 */
 	private Abi30GostAbiturMarkierungspruefung(final @NotNull AbiturdatenManager manager, final @NotNull List<GostBelegpruefung> belegpruefungen) {
 		// TODO implementation required
-		throw new UnsupportedOperationException();
+		// throw new UnsupportedOperationException();
 	}
 
 

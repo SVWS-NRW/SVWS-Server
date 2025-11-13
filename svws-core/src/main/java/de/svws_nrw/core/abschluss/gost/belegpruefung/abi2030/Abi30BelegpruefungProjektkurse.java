@@ -40,7 +40,7 @@ public final class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 	private @NotNull List<AbiturFachbelegung> projektkursBelegung = new ArrayList<>();
 
 	/** falls ein Projektkurs gültig gewählt wurde: Der Projektkurs, sonst: null */
-	private AbiturFachbelegung projektkurs;
+	private AbiturFachbelegung projektkurs = null;
 
 	/** ein Vektor, welcher die anrechenbaren Halbjahre eines gültig angewählten Projektkurses beinhaltet */
 	private @NotNull List<GostHalbjahr> projektkursHalbjahre = new ArrayList<>();
@@ -70,9 +70,8 @@ public final class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 				continue;
 
 			final GostFach fach = manager.getFach(fachbelegung);
-			if ((fach != null) && GostFachUtils.istProjektkurs(fach)) {
+			if ((fach != null) && GostFachUtils.istProjektkurs(fach))
 				projektkursBelegung.add(fachbelegung);
-			}
 		}
 	}
 

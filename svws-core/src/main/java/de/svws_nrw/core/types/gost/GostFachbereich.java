@@ -42,6 +42,9 @@ public enum GostFachbereich {
 	/** Fachbereich künstlerisch musikalisch */
 	KUNST_MUSIK(null, Fach.KU, Fach.MU),
 
+	/** Fachbereich künstlerisch musikalisch und literarisch */
+	KUNST_MUSIK_LITERATUR(null, Fach.KU, Fach.MU, Fach.LI),
+
 	/** Fachbereich Ersatz für literarisch künstlerisch */
 	LITERARISCH_KUENSTLERISCH_ERSATZ(null, Fach.LI, Fach.IN, Fach.VO),
 

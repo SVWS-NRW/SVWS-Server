@@ -52,9 +52,8 @@ export class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 			if (this.manager.zaehleBelegung(fachbelegung) <= 0)
 				continue;
 			const fach: GostFach | null = this.manager.getFach(fachbelegung);
-			if ((fach !== null) && GostFachUtils.istProjektkurs(fach)) {
+			if ((fach !== null) && GostFachUtils.istProjektkurs(fach))
 				this.projektkursBelegung.add(fachbelegung);
-			}
 		}
 	}
 
