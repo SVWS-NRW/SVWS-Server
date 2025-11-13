@@ -7,8 +7,11 @@
 		<div class="secondary-menu--content">
 			<svws-ui-table v-model="foerderschwerpunkte"
 				v-model:clicked="selectedFoerderschwerpunkt"
-				:items="props.manager().filtered()" :columns
+				:items="rowsFiltered" :columns
 				clickable :selectable="!readonly" count :focus-help-visible :focus-switching-enabled scroll-into-view filter-open>
+				<template #search>
+					<svws-ui-text-input v-model="searchTerm" type="search" placeholder="Suchen" removable />
+				</template>
 				<template #filterAdvanced>
 					<svws-ui-checkbox type="toggle" v-model="sichtbareFoerderschwerpunkte">Nur Sichtbare</svws-ui-checkbox>
 				</template>
@@ -36,7 +39,7 @@
 	import type { FoerderschwerpunktEintrag } from "@core";
 	import { BenutzerKompetenz, ServerMode } from "@core";
 	import { useRegionSwitch, ViewType } from "@ui";
-	import { computed } from "vue";
+	import { computed, ref } from "vue";
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 	const props = defineProps<FoerderschwerpunkteAuswahlProps>();
@@ -44,6 +47,25 @@
 	const isHinzufuegenView = computed<boolean>(() => props.activeViewType === ViewType.HINZUFUEGEN);
 	const isGruppenprozesseOrHinzufuegenView = computed<boolean>(() => (props.activeViewType === ViewType.GRUPPENPROZESSE) || isHinzufuegenView.value);
 	const noFilteredEntries = computed<boolean>(() => props.manager().filtered().size() === 0);
+	const searchTerm = ref<string>("");
+
+	const rowsFiltered = computed<FoerderschwerpunktEintrag[]>(() => {
+		const term = searchTerm.value.trim();
+		if (term === '')
+			return [...props.manager().filtered()];
+
+		const isNumber = /^\d+$/.test(searchTerm.value.trim());
+		const termLower = searchTerm.value.toLocaleLowerCase();
+
+		const arr = [];
+		for (const e of props.manager().filtered())
+			if ((isNumber && (e.id.toString().includes(term)))
+				|| e.kuerzel.toLocaleLowerCase().includes(termLower)
+				|| e.kuerzelStatistik.toLocaleLowerCase().includes(term)) {
+				arr.push(e);
+			}
+		return arr;
+	});
 
 	const foerderschwerpunkte = computed<FoerderschwerpunktEintrag[]>({
 		get: () => [...props.manager().liste.auswahl()],
