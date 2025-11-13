@@ -8,12 +8,12 @@ import { ViewType } from "@ui";
 import { api } from "~/router/Api";
 import { routeFoerderschwerpunkte } from "~/router/apps/schule/schulbezogen/foerderschwerpunkte/RouteFoerderschwerpunkte";
 
-const SFoerderschwerpunkteNeu = () => import("~/components/schule/schulbezogen/foerderschwerpunkte/FoerderschwerpunkteNeu.vue");
+const FoerderschwerpunkteNeu = () => import("~/components/schule/schulbezogen/foerderschwerpunkte/FoerderschwerpunkteNeu.vue");
 
 export class RouteFoerderschwerpunkteNeu extends RouteNode<any, RouteFoerderschwerpunkte> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.foerderschwerpunkte.neu", "neu", SFoerderschwerpunkteNeu);
+		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.foerderschwerpunkte.neu", "neu", FoerderschwerpunkteNeu);
 		super.types = new Set([ViewType.HINZUFUEGEN]);
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);

@@ -2,7 +2,6 @@ import { JavaObject } from '../../../../../core/src/java/lang/JavaObject';
 import type { JavaSet } from '../../../../../core/src/java/util/JavaSet';
 import type { Schulform } from '../../../../../core/src/asd/types/schule/Schulform';
 import { JavaString } from '../../../../../core/src/java/lang/JavaString';
-import { DeveloperNotificationException } from '../../../../../core/src/core/exceptions/DeveloperNotificationException';
 import type { SchuelerEinwilligungsartenZusammenfassung } from '../../../../../core/src/core/data/schueler/SchuelerEinwilligungsartenZusammenfassung';
 import type { Comparator } from '../../../../../core/src/java/util/Comparator';
 import { AuswahlManager } from '../../AuswahlManager';
@@ -13,7 +12,6 @@ import type { Einwilligungsart } from '../../../../../core/src/core/data/schule/
 import type { Runnable } from '../../../../../core/src/java/lang/Runnable';
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
 import type { List } from '../../../../../core/src/java/util/List';
-import { Class } from '../../../../../core/src/java/lang/Class';
 import { Arrays } from '../../../../../core/src/java/util/Arrays';
 import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
 import { HashSet } from '../../../../../core/src/java/util/HashSet';
@@ -54,13 +52,17 @@ export class EinwilligungsartenListeManager extends AuswahlManager<number, Einwi
 	 * Ein Default-Comparator für den Vergleich von Klassen in Klassenlisten.
 	 */
 	public static readonly comparator: Comparator<Einwilligungsart> = { compare: (a: Einwilligungsart, b: Einwilligungsart) => {
-		let cmp: number = a.sortierung - b.sortierung;
+		let cmp: number;
+		cmp = JavaInteger.compare(a.sortierung, b.sortierung);
 		if (cmp !== 0)
 			return cmp;
-		if ((a.bezeichnung === null) || (b.bezeichnung === null))
-			return JavaLong.compare(a.id, b.id);
 		cmp = JavaString.compareTo(a.bezeichnung, b.bezeichnung);
-		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
+		if (cmp !== 0)
+			return cmp;
+		cmp = a.anzahlEinwilligungen - b.anzahlEinwilligungen;
+		if (cmp !== 0)
+			return cmp;
+		return JavaLong.compare(a.id, b.id);
 	} };
 
 	/**
@@ -126,25 +128,6 @@ export class EinwilligungsartenListeManager extends AuswahlManager<number, Einwi
 		return updateEintrag;
 	}
 
-	/**
-	 * Gibt die aktuelle Filtereinstellung auf nur sichtbare Einwilligungsarten zurück.
-	 *
-	 * @return true, wenn nur sichtbare Einwilligungsarten angezeigt werden und ansonsten false
-	 */
-	public filterNurSichtbar(): boolean {
-		return this._filterNurSichtbar;
-	}
-
-	/**
-	 * Setzt die Filtereinstellung auf nur sichtbare Einwilligungsarten.
-	 *
-	 * @param value   true, wenn der Filter aktiviert werden soll, und ansonsten false
-	 */
-	public setFilterNurSichtbar(value: boolean): void {
-		this._filterNurSichtbar = value;
-		this._eventHandlerFilterChanged.run();
-	}
-
 	protected onMehrfachauswahlChanged(): void {
 		this.setEinwilligungsartenIDsMitSchuelern.clear();
 		for (const k of this.liste.auswahl())
@@ -161,40 +144,34 @@ export class EinwilligungsartenListeManager extends AuswahlManager<number, Einwi
 	 * @return das Ergebnis des Vergleichs (-1 kleine, 0 gleich und 1 größer)
 	 */
 	protected compareAuswahl(a: Einwilligungsart, b: Einwilligungsart): number {
-		for (const criteria of this._order) {
-			const field: string | null = criteria.a;
-			const asc: boolean = (criteria.b === null) || criteria.b;
-			let cmp: number = 0;
-			if (JavaObject.equalsTranspiler("einwilligungsart", (field))) {
-				cmp = EinwilligungsartenListeManager.comparator.compare(a, b);
-			} else
-				if (JavaObject.equalsTranspiler("schueleranzahl", (field))) {
-					cmp = JavaInteger.compare(a.anzahlEinwilligungen, b.anzahlEinwilligungen);
-				} else
-					throw new DeveloperNotificationException("Fehler bei der Sortierung. Das Sortierkriterium wird vom Manager nicht unterstützt.");
-			if (cmp === 0)
-				continue;
-			return asc ? cmp : -cmp;
-		}
-		return JavaLong.compare(a.id, b.id);
+		return EinwilligungsartenListeManager.comparator.compare(a, b);
 	}
 
-	protected checkFilter(): boolean {
+	protected checkFilter(eintrag: Einwilligungsart): boolean {
+		if (this._filterNurSichtbar && !eintrag.istSichtbar)
+			return false;
+
 		return true;
 	}
 
-	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.core.utils.einwilligungsart.EinwilligungsartenListeManager';
+	/**
+	 * Setzt die Filtereinstellung auf nur sichtbare Einwilligungsarten.
+	 *
+	 * @param value   true, wenn der Filter aktiviert werden soll, und ansonsten false
+	 */
+	public setFilterNurSichtbar(value: boolean): void {
+		this._filterNurSichtbar = value;
+		this._eventHandlerFilterChanged.run();
 	}
 
-	isTranspiledInstanceOf(name: string): boolean {
-		return ['de.svws_nrw.core.utils.AuswahlManager', 'de.svws_nrw.core.utils.einwilligungsart.EinwilligungsartenListeManager'].includes(name);
+	/**
+	 * Gibt die aktuelle Filtereinstellung auf nur sichtbare Einwilligungsarten zurück.
+	 *
+	 * @return true, wenn nur sichtbare Einwilligungsarten angezeigt werden und ansonsten false
+	 */
+	public filterNurSichtbar(): boolean {
+		return this._filterNurSichtbar;
 	}
-
-	public static class = new Class<EinwilligungsartenListeManager>('de.svws_nrw.core.utils.einwilligungsart.EinwilligungsartenListeManager');
 
 }
 
-export function cast_de_svws_nrw_core_utils_einwilligungsart_EinwilligungsartenListeManager(obj: unknown): EinwilligungsartenListeManager {
-	return obj as EinwilligungsartenListeManager;
-}

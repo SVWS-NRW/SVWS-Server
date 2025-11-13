@@ -1,7 +1,6 @@
 package de.svws_nrw.core.data.schule;
 
 import de.svws_nrw.transpiler.TranspilerDTO;
-import de.svws_nrw.core.types.schule.PersonTyp;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -32,9 +31,9 @@ public class Einwilligungsart {
 	@Schema(description = "Eine ausführliche Beschreibung der Einwilligungsart", example = "Einwilligung zur Verwendung von Fotos")
 	public String beschreibung = "";
 
-	/** Gibt an, für welche Personengruppe die Einwilligungsart relevant ist. */
-	@Schema(description = "gibt an, für welche Personengruppe die Einwilligungsart relevant ist", example = "2")
-	public int personTyp = PersonTyp.SCHUELER.id;
+	/** Die Id des PersonTyps der Einwilligungsart. */
+	@Schema(description = "Die Id des PersonTyps der Einwilligungsart.", example = "2")
+	public int idPersonTyp = -1;
 
 	/** Gibt an, für welche Personengruppe die Einwilligungsart relevant ist. */
 	@Schema(description = "gibt an wie viele Einwilligungen dem entsprechenden Einwilligungsart-Eintrag zugeordnet sind", example = "3")

@@ -9,14 +9,14 @@ import { api } from "~/router/Api";
 import { routeApp } from "~/router/apps/RouteApp";
 import { routeFoerderschwerpunkte } from "~/router/apps/schule/schulbezogen/foerderschwerpunkte/RouteFoerderschwerpunkte";
 
-const SFoerderschwerpunkteGruppenprozesse = () => import(
+const FoerderschwerpunkteGruppenprozesse = () => import(
 	"~/components/schule/schulbezogen/foerderschwerpunkte/gruppenprozesse/FoerderschwerpunkteGruppenprozesse.vue");
 
 export class RouteFoerderschwerpunkteGruppenprozesse extends RouteNode<any, RouteFoerderschwerpunkte> {
 
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN,
-			BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN], "schule.foerderschwerpunkte.gruppenprozesse", "gruppenprozesse", SFoerderschwerpunkteGruppenprozesse);
+			BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN], "schule.foerderschwerpunkte.gruppenprozesse", "gruppenprozesse", FoerderschwerpunkteGruppenprozesse);
 		super.types = new Set([ViewType.GRUPPENPROZESSE]);
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);

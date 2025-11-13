@@ -6,13 +6,13 @@ import { RouteNode } from "~/router/RouteNode";
 import { api } from "~/router/Api";
 import { routeFoerderschwerpunkte } from "~/router/apps/schule/schulbezogen/foerderschwerpunkte/RouteFoerderschwerpunkte";
 
-const SFoerderschwerpunkteDaten = () => import("~/components/schule/schulbezogen/foerderschwerpunkte/daten/FoerderschwerpunkteDaten.vue");
+const FoerderschwerpunkteDaten = () => import("~/components/schule/schulbezogen/foerderschwerpunkte/daten/FoerderschwerpunkteDaten.vue");
 
 export class RouteFoerderschwerpunkteDaten extends RouteNode<any, RouteFoerderschwerpunkte> {
 
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.foerderschwerpunkte.daten",
-			"daten", SFoerderschwerpunkteDaten);
+			"daten", FoerderschwerpunkteDaten);
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Förderschwerpunkte";

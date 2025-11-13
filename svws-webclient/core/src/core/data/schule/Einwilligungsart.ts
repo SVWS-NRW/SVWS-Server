@@ -1,5 +1,4 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { PersonTyp } from '../../../core/types/schule/PersonTyp';
 import { Class } from '../../../java/lang/Class';
 
 export class Einwilligungsart extends JavaObject {
@@ -25,9 +24,9 @@ export class Einwilligungsart extends JavaObject {
 	public beschreibung: string | null = "";
 
 	/**
-	 * Gibt an, für welche Personengruppe die Einwilligungsart relevant ist.
+	 * Die Id des PersonTyps der Einwilligungsart.
 	 */
-	public personTyp: number = PersonTyp.SCHUELER.id;
+	public idPersonTyp: number = -1;
 
 	/**
 	 * Gibt an, für welche Personengruppe die Einwilligungsart relevant ist.
@@ -75,9 +74,9 @@ export class Einwilligungsart extends JavaObject {
 			throw new Error('invalid json format, missing attribute schluessel');
 		result.schluessel = obj.schluessel;
 		result.beschreibung = (obj.beschreibung === undefined) ? null : obj.beschreibung === null ? null : obj.beschreibung;
-		if (obj.personTyp === undefined)
-			throw new Error('invalid json format, missing attribute personTyp');
-		result.personTyp = obj.personTyp;
+		if (obj.idPersonTyp === undefined)
+			throw new Error('invalid json format, missing attribute idPersonTyp');
+		result.idPersonTyp = obj.idPersonTyp;
 		if (obj.anzahlEinwilligungen === undefined)
 			throw new Error('invalid json format, missing attribute anzahlEinwilligungen');
 		result.anzahlEinwilligungen = obj.anzahlEinwilligungen;
@@ -96,7 +95,7 @@ export class Einwilligungsart extends JavaObject {
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		result += '"schluessel" : ' + JSON.stringify(obj.schluessel) + ',';
 		result += '"beschreibung" : ' + ((obj.beschreibung === null) ? 'null' : JSON.stringify(obj.beschreibung)) + ',';
-		result += '"personTyp" : ' + obj.personTyp.toString() + ',';
+		result += '"idPersonTyp" : ' + obj.idPersonTyp.toString() + ',';
 		result += '"anzahlEinwilligungen" : ' + obj.anzahlEinwilligungen.toString() + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
@@ -119,8 +118,8 @@ export class Einwilligungsart extends JavaObject {
 		if (obj.beschreibung !== undefined) {
 			result += '"beschreibung" : ' + ((obj.beschreibung === null) ? 'null' : JSON.stringify(obj.beschreibung)) + ',';
 		}
-		if (obj.personTyp !== undefined) {
-			result += '"personTyp" : ' + obj.personTyp.toString() + ',';
+		if (obj.idPersonTyp !== undefined) {
+			result += '"idPersonTyp" : ' + obj.idPersonTyp.toString() + ',';
 		}
 		if (obj.anzahlEinwilligungen !== undefined) {
 			result += '"anzahlEinwilligungen" : ' + obj.anzahlEinwilligungen.toString() + ',';

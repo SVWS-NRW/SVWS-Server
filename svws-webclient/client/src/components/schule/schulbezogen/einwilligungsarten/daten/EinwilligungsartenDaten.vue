@@ -2,13 +2,29 @@
 	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper>
-				<svws-ui-text-input class="contentFocusField" placeholder="Bezeichnung" :model-value="manager().auswahl().bezeichnung"
-					@change="bezeichnung => patch({ bezeichnung: bezeichnung ?? undefined })" :readonly required :min-len="1" :max-len="250" />
-				<svws-ui-text-input placeholder="Schlüssel" :model-value="manager().auswahl().schluessel"
-					@change="schluessel => patch({ schluessel: schluessel ?? undefined })" :readonly :max-len="20" />
-				<svws-ui-textarea-input placeholder="Beschreibung" :model-value="manager().auswahl().beschreibung"
-					@change="beschreibung => patch({ beschreibung: beschreibung ?? undefined })" :readonly />
-				<svws-ui-text-input placeholder="Personenart" :model-value="getPersonTypName(manager().auswahl().personTyp)" disabled />
+				<svws-ui-text-input placeholder="Bezeichnung" class="contentFocusField"
+					:model-value="manager().auswahl().bezeichnung"
+					@change="patchBezeichnung"
+					:valid="bezeichnungIsValid" :min-len="1" :max-len="250" required :readonly="!hatKompetenzUpdate" />
+				<ui-select label="ASD-Einwilligungsschlüssel"
+					v-model="selectedEinwilligungsschluessel"
+					:manager="einwilligungsschluesselCoreTypeManager"
+					searchable :removable="false" statistics required :readonly="!hatKompetenzUpdate" />
+				<svws-ui-textarea-input placeholder="Beschreibung"
+					:model-value="manager().auswahl().beschreibung"
+					@change="patchBeschreibung"
+					:readonly="!hatKompetenzUpdate" />
+				<svws-ui-text-input placeholder="Personenart"
+					:model-value="textPersonTyp(manager().auswahl().idPersonTyp)"
+					readonly />
+				<svws-ui-input-number placeholder="Sortierung"
+					:model-value="manager().daten().sortierung"
+					@change="patchSortierung"
+					:valid="sortierungIsValid" :min="0" :max="32000" :readonly="!hatKompetenzUpdate" />
+				<svws-ui-spacing />
+				<svws-ui-checkbox v-model="istSichtbar" :readonly="!hatKompetenzUpdate">
+					Sichtbar
+				</svws-ui-checkbox>
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 	</div>
@@ -17,17 +33,69 @@
 <script setup lang="ts">
 
 	import type { EinwilligungsartenDatenProps } from "./EinwilligungsartenDatenProps";
-	import { BenutzerKompetenz, PersonTyp } from "@core";
+	import type { EinwilligungsschluesselKatalogEintrag } from "@core";
+	import { BenutzerKompetenz, Einwilligungsschluessel, PersonTyp } from "@core";
 	import { computed } from "vue";
+	import { isUniqueInList, mandatoryInputIsValid, numberIsValid } from "~/util/validation/Validation";
+	import { CoreTypeSelectManager } from "@ui";
 
 	const props = defineProps<EinwilligungsartenDatenProps>();
-
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
-	const readonly = computed(() => !hatKompetenzUpdate.value);
 
-	const getPersonTypName = (personTypID: number | undefined): string => {
-		const personTyp = personTypID !== undefined ? PersonTyp.getByID(personTypID) : undefined;
-		return personTyp ? personTyp.bezeichnung : PersonTyp.SCHUELER.toString();
+	const einwilligungsschluesselCoreTypeManager = new CoreTypeSelectManager({
+		clazz: Einwilligungsschluessel.class,
+		schuljahr: props.schuljahr,
+		schulformen: props.schulform,
+		optionDisplayText: "text",
+		selectionDisplayText: "text",
+	});
+
+	const selectedEinwilligungsschluessel = computed<EinwilligungsschluesselKatalogEintrag | null>({
+		get: () => Einwilligungsschluessel.data().getEintragBySchuljahrUndSchluessel(props.schuljahr, props.manager().daten().schluessel),
+		set: (v: EinwilligungsschluesselKatalogEintrag | null) => void patchEinwilligungsschluessel(v?.schluessel ?? null),
+	});
+
+	const istSichtbar = computed<boolean>({
+		get: () => props.manager().daten().istSichtbar,
+		set: (v: boolean) => void patchSichtbar(v),
+	});
+
+	async function patchEinwilligungsschluessel(value: string | null): Promise<void> {
+		await props.patch({ schluessel: value ?? '' });
+	}
+
+	async function patchBezeichnung(bezeichnung: string | null) {
+		if (bezeichnungIsValid(bezeichnung))
+			await props.patch({ bezeichnung: bezeichnung ?? '' });
+	}
+
+	async function patchSichtbar(value: boolean): Promise<void> {
+		await props.patch({ istSichtbar: value });
+	}
+
+	async function patchSortierung(value: number | null): Promise<void> {
+		if (sortierungIsValid(value))
+			await props.patch({ sortierung: value === null ? 32000 : value });
+	}
+
+	async function patchBeschreibung(beschreibung: string | null) {
+		await props.patch({ beschreibung: beschreibung ?? undefined });
+	}
+
+	function sortierungIsValid(value: number | null): boolean {
+		return numberIsValid(value, true, 0, 32000);
+	}
+
+	function bezeichnungIsValid(value: string | null) {
+		if (!mandatoryInputIsValid(value, 250))
+			return false;
+
+		return isUniqueInList(value, props.manager().liste.list(), "bezeichnung", "id", props.manager().auswahlID() ?? undefined);
+	}
+
+	const textPersonTyp = (idPpersonTyp: number): string => {
+		const personTyp = PersonTyp.getByID(idPpersonTyp) ?? null;
+		return personTyp ? personTyp.bezeichnung : "";
 	};
 
 </script>

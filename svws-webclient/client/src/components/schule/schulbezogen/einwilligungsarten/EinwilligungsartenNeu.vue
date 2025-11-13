@@ -51,7 +51,7 @@
 
 	const selectedPersonTyp = computed<PersonTyp>({
 		get: () => PersonTyp.SCHUELER,
-		set: (value) => data.value.personTyp = value.id,
+		set: (value) => data.value.idPersonTyp = value.id,
 	});
 
 	function fieldIsValid(field: keyof Einwilligungsart | null): (v: string | null) => boolean {
@@ -109,6 +109,5 @@
 			return;
 		props.checkpoint.active = true;
 	}, { immediate: false, deep: true });
-
 
 </script>

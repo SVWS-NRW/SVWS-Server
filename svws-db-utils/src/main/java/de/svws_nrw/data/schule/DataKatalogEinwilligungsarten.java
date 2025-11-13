@@ -11,6 +11,7 @@ import de.svws_nrw.core.types.schule.PersonTyp;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.schild.erzieher.DTOErzieherDatenschutz;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogEinwilligungsart;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerDatenschutz;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerDatenschutz;
@@ -24,7 +25,7 @@ import jakarta.ws.rs.core.Response.Status;
 public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long, DTOKatalogEinwilligungsart, Einwilligungsart> {
 
 	private static final String BEZEICHNUNG = "bezeichnung";
-	private static final String PERSON_TYP = "personTyp";
+	private static final String ID_PERSON_TYP = "idPersonTyp";
 	private static final String SCHLUESSEL = "schluessel";
 
 	/**
@@ -34,7 +35,7 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 	 */
 	public DataKatalogEinwilligungsarten(final DBEntityManager conn) {
 		super(conn);
-		setAttributesRequiredOnCreation(BEZEICHNUNG, PERSON_TYP);
+		setAttributesRequiredOnCreation(BEZEICHNUNG, ID_PERSON_TYP);
 		setAttributesNotPatchable("id");
 	}
 
@@ -50,7 +51,7 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 		daten.bezeichnung = Objects.requireNonNullElse(dto.Bezeichnung, "");
 		daten.schluessel = Objects.requireNonNullElse(dto.Schluessel, "");
 		daten.beschreibung = Objects.requireNonNullElse(dto.Beschreibung, "");
-		daten.personTyp = (dto.personTyp == null) ? PersonTyp.SCHUELER.id : dto.personTyp.id;
+		daten.idPersonTyp = (dto.personTyp == null) ? -1 : dto.personTyp.id;
 		daten.anzahlEinwilligungen = getAnzahlEinwilligungen(dto);
 		daten.sortierung = dto.Sortierung;
 		daten.istSichtbar = Boolean.TRUE.equals(dto.Sichtbar);
@@ -91,13 +92,12 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 	protected Einwilligungsart addBasic(final Long newID, final Map<String, Object> initAttributes) throws ApiOperationException {
 		final Einwilligungsart ea = super.addBasic(newID, initAttributes);
 
-		if (ea.personTyp == PersonTyp.LEHRER.id)
+		if (ea.idPersonTyp == PersonTyp.LEHRER.id)
 			persistEinwilligungen("SELECT e.ID FROM DTOLehrer e", id -> new DTOLehrerDatenschutz(id, ea.id, false, false));
-		else if (ea.personTyp == PersonTyp.SCHUELER.id)
+		else if (ea.idPersonTyp == PersonTyp.SCHUELER.id)
 			persistEinwilligungen("SELECT e.ID FROM DTOSchueler e", id -> new DTOSchuelerDatenschutz(id, ea.id, false, false));
-		else
-			throw new ApiOperationException(Status.BAD_REQUEST, "Der PersonTyp %d ist unzulässig.".formatted(ea.personTyp));
-
+		else if (ea.idPersonTyp == PersonTyp.ERZIEHER.id)
+			persistEinwilligungen("SELECT e.ID FROM DTOSchuelerErzieherAdresse e", id -> new DTOErzieherDatenschutz(id, ea.id, false));
 		return ea;
 	}
 
@@ -115,7 +115,7 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 			case "id" -> validateId(dto, name, value);
 			case BEZEICHNUNG -> updateBezeichnung(dto, value, name);
 			case SCHLUESSEL -> updateSchluessel(dto, value, name);
-			case PERSON_TYP -> updatePersonTyp(dto, value, name);
+			case ID_PERSON_TYP -> updatePersonTyp(dto, value, name);
 			case "beschreibung" -> updateBeschreibung(dto, value, name);
 			case "istSichtbar" -> updateSichtbar(dto, value, name);
 			case "sortierung" -> updateSortierung(dto, value, name);
@@ -173,10 +173,7 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 		final int id = JSONMapper.convertToInteger(value, false, name);
 		final PersonTyp personTyp = PersonTyp.getByID(id);
 		if (personTyp == null)
-			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID %d ist für den Personentyp ungültig.".formatted(id));
-
-		if (personTypIsNotValid(personTyp))
-			throw new ApiOperationException(Status.BAD_REQUEST, "Die PersonTyp %s ist nicht zugelassen.".formatted(personTyp.bezeichnung));
+			throw new ApiOperationException(Status.NOT_FOUND, "Kein PersonTyp zur ID %d gefunden.".formatted(id));
 
 		dto.personTyp = personTyp;
 	}
@@ -192,7 +189,9 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 			case LEHRER -> conn
 					.queryList(DTOLehrerDatenschutz.QUERY_BY_DATENSCHUTZID, DTOLehrerDatenschutz.class, ea.ID)
 					.size();
-			default -> 0;
+			case ERZIEHER -> conn
+					.queryList(DTOErzieherDatenschutz.QUERY_BY_DATENSCHUTZID, DTOErzieherDatenschutz.class, ea.ID)
+					.size();
 		};
 	}
 
@@ -208,10 +207,6 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 
 	private static boolean noMatchingCoreTypeFound(final String schluessel) {
 		return (Einwilligungsschluessel.data().getWertBySchluessel(schluessel) == null);
-	}
-
-	private static boolean personTypIsNotValid(final PersonTyp personTyp) {
-		return (personTyp != PersonTyp.LEHRER) && (personTyp != PersonTyp.SCHUELER);
 	}
 
 	private static void updateSichtbar(final DTOKatalogEinwilligungsart dto, final Object value, final String name) throws ApiOperationException {

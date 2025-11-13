@@ -53,7 +53,7 @@ class DataKatalogEinwilligungsartenTest {
 	@DisplayName("setAttributesRequiredOnCreation: bezeichnung")
 	void setAttributesRequiredOnCreationBezeichnung() {
 		assertThatException()
-				.isThrownBy(() -> this.data.add(Map.of("personTyp", "test")))
+				.isThrownBy(() -> this.data.add(Map.of("idPersonTyp", "test")))
 				.isInstanceOf(ApiOperationException.class)
 				.withMessage("Es werden weitere Attribute (bezeichnung) benötigt, damit die Entität erstellt werden kann.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
@@ -65,7 +65,7 @@ class DataKatalogEinwilligungsartenTest {
 		assertThatException()
 				.isThrownBy(() -> this.data.add(Map.of("bezeichnung", "test")))
 				.isInstanceOf(ApiOperationException.class)
-				.withMessage("Es werden weitere Attribute (personTyp) benötigt, damit die Entität erstellt werden kann.")
+				.withMessage("Es werden weitere Attribute (idPersonTyp) benötigt, damit die Entität erstellt werden kann.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
@@ -151,14 +151,14 @@ class DataKatalogEinwilligungsartenTest {
 								.isInstanceOf(Einwilligungsart.class)
 								.hasFieldOrPropertyWithValue("id", 1L)
 								.hasFieldOrPropertyWithValue("bezeichnung", "bez1")
-								.hasFieldOrPropertyWithValue("personTyp", 3)
+								.hasFieldOrPropertyWithValue("idPersonTyp", 3)
 								.hasFieldOrPropertyWithValue("istSichtbar", true)
 								.hasFieldOrPropertyWithValue("sortierung", 1),
 						f2 -> assertThat(f2)
 								.isInstanceOf(Einwilligungsart.class)
 								.hasFieldOrPropertyWithValue("id", 2L)
 								.hasFieldOrPropertyWithValue("bezeichnung", "bez2")
-								.hasFieldOrPropertyWithValue("personTyp", 2)
+								.hasFieldOrPropertyWithValue("idPersonTyp", 2)
 								.hasFieldOrPropertyWithValue("istSichtbar", false)
 								.hasFieldOrPropertyWithValue("sortierung", 2)
 				);
@@ -186,7 +186,7 @@ class DataKatalogEinwilligungsartenTest {
 				.hasFieldOrPropertyWithValue("bezeichnung", dto.Bezeichnung)
 				.hasFieldOrPropertyWithValue("istSichtbar", dto.Sichtbar)
 				.hasFieldOrPropertyWithValue("sortierung", dto.Sortierung)
-				.hasFieldOrPropertyWithValue("personTyp", dto.personTyp.id)
+				.hasFieldOrPropertyWithValue("idPersonTyp", dto.personTyp.id)
 				.hasFieldOrPropertyWithValue("schluessel", dto.Schluessel)
 				.hasFieldOrPropertyWithValue("beschreibung", dto.Beschreibung);
 	}
@@ -234,7 +234,7 @@ class DataKatalogEinwilligungsartenTest {
 
 		assertThat(this.data.map(dto))
 				.isInstanceOf(Einwilligungsart.class)
-				.hasFieldOrPropertyWithValue("personTyp", PersonTyp.SCHUELER.id);
+				.hasFieldOrPropertyWithValue("idPersonTyp", -1);
 	}
 
 	@Test
@@ -256,7 +256,7 @@ class DataKatalogEinwilligungsartenTest {
 		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto);
 		when(this.conn.transactionPersist(any())).thenReturn(true);
 
-		this.data.addBasic(1L, Map.of("bezeichnung", "bezeichnung", "personTyp", 1));
+		this.data.addBasic(1L, Map.of("bezeichnung", "bezeichnung", "idPersonTyp", 1));
 
 		verify(this.conn, times(1)).queryList("SELECT e.ID FROM DTOLehrer e", Long.class);
 		verify(this.conn, times(1)).transactionPersistAll(any());
@@ -271,7 +271,7 @@ class DataKatalogEinwilligungsartenTest {
 		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto);
 		when(this.conn.transactionPersist(any())).thenReturn(true);
 
-		this.data.addBasic(1L, Map.of("bezeichnung", "bezeichnung", "personTyp", 1));
+		this.data.addBasic(1L, Map.of("bezeichnung", "bezeichnung", "idPersonTyp", 1));
 
 		verify(this.conn, times(1)).queryList("SELECT e.ID FROM DTOSchueler e", Long.class);
 		verify(this.conn, times(1)).transactionPersistAll(any());
@@ -279,18 +279,18 @@ class DataKatalogEinwilligungsartenTest {
 	}
 
 	@Test
-	@DisplayName("addBasic | other persontyp")
-	void addBasicEinwilligungOtherPersonTyp() {
+	@DisplayName("addBasic | erzieherEinwilligung")
+	void addBasicErzieherEinwilligung() throws ApiOperationException {
 		final var dto = new DTOKatalogEinwilligungsart(1L, "bezeichnung", true, 123);
 		dto.personTyp = PersonTyp.ERZIEHER;
 		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto);
 		when(this.conn.transactionPersist(any())).thenReturn(true);
 
-		assertThatException()
-				.isThrownBy(() -> this.data.addBasic(1L, Map.of("bezeichnung", "bezeichnung", "personTyp", 1)))
-				.isInstanceOf(ApiOperationException.class)
-				.withMessage("Der PersonTyp 3 ist unzulässig.")
-				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+		this.data.addBasic(1L, Map.of("bezeichnung", "bezeichnung", "idPersonTyp", 3));
+
+		verify(this.conn, times(1)).queryList("SELECT e.ID FROM DTOSchuelerErzieherAdresse e", Long.class);
+		verify(this.conn, times(1)).transactionPersistAll(any());
+		verify(this.conn, times(2)).transactionFlush();
 	}
 
 	@Test
@@ -595,12 +595,12 @@ class DataKatalogEinwilligungsartenTest {
 	void patchPersonTypIsNull() {
 		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(mock(DTOKatalogEinwilligungsart.class));
 		final var map = new HashMap<String, Object>();
-		map.put("personTyp", null);
+		map.put("idPersonTyp", null);
 
 		assertThatException()
 				.isThrownBy(() -> this.data.patch(1L, map))
 				.isInstanceOf(ApiOperationException.class)
-				.withMessage("Attribut personTyp: Der Wert null ist nicht erlaubt")
+				.withMessage("Attribut idPersonTyp: Der Wert null ist nicht erlaubt")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
@@ -610,10 +610,10 @@ class DataKatalogEinwilligungsartenTest {
 		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(mock(DTOKatalogEinwilligungsart.class));
 
 		assertThatException()
-				.isThrownBy(() -> this.data.patch(1L, Map.of("personTyp", -35)))
+				.isThrownBy(() -> this.data.patch(1L, Map.of("idPersonTyp", -35)))
 				.isInstanceOf(ApiOperationException.class)
-				.withMessage("Die ID -35 ist für den Personentyp ungültig.")
-				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+				.withMessage("Kein PersonTyp zur ID -35 gefunden.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.NOT_FOUND);
 	}
 
 	@Test
@@ -622,10 +622,10 @@ class DataKatalogEinwilligungsartenTest {
 		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(mock(DTOKatalogEinwilligungsart.class));
 
 		assertThatException()
-				.isThrownBy(() -> this.data.patch(1L, Map.of("personTyp", PersonTyp.ERZIEHER.id)))
+				.isThrownBy(() -> this.data.patch(1L, Map.of("idPersonTyp", 99)))
 				.isInstanceOf(ApiOperationException.class)
-				.withMessage("Die PersonTyp Erzieher ist nicht zugelassen.")
-				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+				.withMessage("Kein PersonTyp zur ID 99 gefunden.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.NOT_FOUND);
 	}
 
 	@Test
@@ -636,7 +636,7 @@ class DataKatalogEinwilligungsartenTest {
 		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto);
 		when(this.conn.transactionPersist(any())).thenReturn(true);
 
-		this.data.patch(1L, Map.of("personTyp", PersonTyp.SCHUELER.id));
+		this.data.patch(1L, Map.of("idPersonTyp", PersonTyp.SCHUELER.id));
 
 		assertThat(dto.personTyp).isEqualTo(PersonTyp.SCHUELER);
 	}
