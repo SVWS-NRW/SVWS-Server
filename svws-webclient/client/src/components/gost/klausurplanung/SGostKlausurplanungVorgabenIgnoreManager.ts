@@ -91,4 +91,18 @@ export class SGostKlausurplanungVorgabenIgnoreManager {
 				return true;
 		return false;
 	}
+
+	public countContained(vorgaben: Iterable<GostKlausurvorgabe>): number {
+		const ignored = this.getAll();
+		let count = 0;
+		for (const v of vorgaben) {
+			for (const i of ignored) {
+				if (this.equals(v, i)) {
+					count++;
+					break;
+				}
+			}
+		}
+		return count;
+	}
 }
