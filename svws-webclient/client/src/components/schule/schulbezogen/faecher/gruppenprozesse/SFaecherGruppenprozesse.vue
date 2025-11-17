@@ -64,8 +64,7 @@
 	import { computed, ref } from "vue";
 	import type { FaecherGruppenprozesseProps } from "./SFaecherGruppenprozesseProps";
 	import type { List, StundenplanListeEintrag } from "@core";
-	import { ArrayList } from "@core";
-	import { ServerMode, BenutzerKompetenz, ReportingParameter, DateUtils, ReportingReportvorlage } from "@core";
+	import { ServerMode, BenutzerKompetenz, ReportingParameter, DateUtils, ReportingReportvorlage, ArrayList } from "@core";
 
 	const props = defineProps<FaecherGruppenprozesseProps>();
 
@@ -95,7 +94,7 @@
 		if (newAction === oldAction.value.name && !open)
 			return;
 		oldAction.value.name = currentAction.value;
-		oldAction.value.open = (currentAction.value === "") ? false : true;
+		oldAction.value.open = (currentAction.value === "");
 		if (open === true)
 			currentAction.value = newAction;
 		else

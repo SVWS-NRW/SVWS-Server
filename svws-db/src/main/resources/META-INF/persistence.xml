@@ -248,7 +248,10 @@
         <class>de.svws_nrw.db.dto.current.katalog.DTOFloskelgruppen</class>
         <class>de.svws_nrw.db.dto.current.katalog.DTOFloskeln</class>
         <class>de.svws_nrw.db.dto.current.katalog.DTOFloskelnJahrgaenge</class>
-        <class>de.svws_nrw.db.dto.current.lehrer.DTOLehrerNotenmodulCredentials</class>
+        <class>de.svws_nrw.db.dto.current.notenmodul.DTONotenmodulCredentials</class>
+        <class>de.svws_nrw.db.dto.current.notenmodul.DTONotenmodulKonfigurationClient</class>
+        <class>de.svws_nrw.db.dto.current.notenmodul.DTONotenmodulKonfigurationServer</class>
+        <class>de.svws_nrw.db.dto.current.notenmodul.DTONotenmodulVerbindungen</class>
         <class>de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente</class>
         <class>de.svws_nrw.db.dto.current.schema.DTOSchemaCoreTypeVersion</class>
         <class>de.svws_nrw.db.dto.current.schema.DTOSchemaStatus</class>
@@ -433,7 +436,7 @@
         <class>de.svws_nrw.db.dto.current.svws.dav.DTODavRessourceCollectionsACL</class>
         <class>de.svws_nrw.db.dto.current.svws.dav.DTODavSyncTokenLehrer</class>
         <class>de.svws_nrw.db.dto.current.svws.dav.DTODavSyncTokenSchueler</class>
-        <class>de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsLehrerNotenmodulCredentials</class>
+        <class>de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsNotenmodulCredentials</class>
         <class>de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerAnkreuzkompetenzen</class>
         <class>de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLeistungsdaten</class>
         <class>de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLernabschnittsdaten</class>

@@ -153,3 +153,4 @@ export { ErzieherartListeManager } from './ui/managers/erzieherart/ErzieherartLi
 export { EinwilligungsartenListeManager } from './ui/managers/einwilligungsart/EinwilligungsartenListeManager';
 export { FloskelgruppenListeManager } from './ui/managers/schule/schulbezogen/FloskelgruppenListeManager';
 export { FloskelnListeManager } from './ui/managers/schule/schulbezogen/FloskelnListeManager';
+export { WenomAuswahlListeManager } from './components/enm/WenomAuswahlListeManager';

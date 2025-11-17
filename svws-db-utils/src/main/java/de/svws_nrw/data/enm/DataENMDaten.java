@@ -1,8 +1,6 @@
 package de.svws_nrw.data.enm;
 
 import java.io.InputStream;
-import java.net.http.HttpResponse;
-import java.net.http.HttpResponse.BodyHandlers;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -28,9 +26,8 @@ import de.svws_nrw.asd.types.schule.Floskelgruppenart;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.base.compression.CompressionException;
 import de.svws_nrw.base.crypto.Passwords;
-import de.svws_nrw.core.data.SimpleOperationResponse;
+import de.svws_nrw.core.data.benutzer.BenutzerConfigElement;
 import de.svws_nrw.core.data.enm.ENMAnkreuzkompetenz;
-import de.svws_nrw.core.data.enm.ENMConfigResponse;
 import de.svws_nrw.core.data.enm.ENMDaten;
 import de.svws_nrw.core.data.enm.ENMFach;
 import de.svws_nrw.core.data.enm.ENMFloskel;
@@ -44,19 +41,18 @@ import de.svws_nrw.core.data.enm.ENMLerngruppe;
 import de.svws_nrw.core.data.enm.ENMSchueler;
 import de.svws_nrw.core.data.enm.ENMSchuelerAnkreuzkompetenz;
 import de.svws_nrw.core.data.enm.ENMServerConfig;
+import de.svws_nrw.core.data.enm.ENMServerConfigElement;
 import de.svws_nrw.core.data.enm.ENMTeilleistung;
 import de.svws_nrw.core.data.enm.ENMTeilleistungsart;
-import de.svws_nrw.core.logger.LogConsumerList;
-import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
-import de.svws_nrw.core.types.oauth2.OAuth2ServerTyp;
 import de.svws_nrw.core.utils.enm.ENMDatenManager;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
-import de.svws_nrw.data.oauth2.OAuth2Client;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.katalog.DTOFloskelnJahrgaenge;
-import de.svws_nrw.db.dto.current.lehrer.DTOLehrerNotenmodulCredentials;
+import de.svws_nrw.db.dto.current.notenmodul.DTONotenmodulCredentials;
+import de.svws_nrw.db.dto.current.notenmodul.DTONotenmodulKonfigurationClient;
+import de.svws_nrw.db.dto.current.notenmodul.DTONotenmodulKonfigurationServer;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.grundschule.DTOAnkreuzdaten;
 import de.svws_nrw.db.dto.current.schild.grundschule.DTOAnkreuzfloskeln;
@@ -75,7 +71,7 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerPSFachBemerkungen;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerTeilleistung;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOTeilleistungsarten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
-import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsLehrerNotenmodulCredentials;
+import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsNotenmodulCredentials;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerAnkreuzkompetenzen;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLernabschnittsdaten;
@@ -870,17 +866,17 @@ public final class DataENMDaten extends DataManager<Long> {
 	}
 
 	private static Map<Long, String> getLehrerCredsListe(final DBEntityManager conn) {
-		final List<DTOLehrerNotenmodulCredentials> lehrer = conn.queryAll(DTOLehrerNotenmodulCredentials.class);
+		final List<DTONotenmodulCredentials> lehrer = conn.queryAll(DTONotenmodulCredentials.class);
 		if (lehrer.isEmpty())
 			return new HashMap<>();
-		return lehrer.stream().collect(Collectors.toMap(e -> e.Lehrer_ID, e -> e.PasswordHash));
+		return lehrer.stream().collect(Collectors.toMap(e -> e.idLehrer, e -> e.passwordHash));
 	}
 
 	private static Map<Long, String> getLehrerCredsTimstampsListe(final DBEntityManager conn) {
-		final List<DTOTimestampsLehrerNotenmodulCredentials> lehrer = conn.queryAll(DTOTimestampsLehrerNotenmodulCredentials.class);
+		final List<DTOTimestampsNotenmodulCredentials> lehrer = conn.queryAll(DTOTimestampsNotenmodulCredentials.class);
 		if (lehrer.isEmpty())
 			return new HashMap<>();
-		return lehrer.stream().collect(Collectors.toMap(e -> e.Lehrer_ID, e -> e.tsPasswordHash));
+		return lehrer.stream().collect(Collectors.toMap(e -> e.idLehrer, e -> e.tsPasswordHash));
 	}
 
 	private static Map<Long, DTOAnkreuzfloskeln> getAnkreuzkompetenzenListe(final DBEntityManager conn) {
@@ -1003,6 +999,64 @@ public final class DataENMDaten extends DataManager<Long> {
 		}
 	}
 
+
+	/**
+	 * Holt die lokalen Notenmodul-Konfiguration.
+	 *
+	 * @param conn   die Datenbank-Verbindung
+	 *
+	 * @return die HTTP-Response
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public static Response getNotenmodulLocalConfig(final DBEntityManager conn) throws ApiOperationException {
+		final ENMServerConfig res = new ENMServerConfig();
+		res.server.addAll(conn.queryAll(DTONotenmodulKonfigurationServer.class)
+				.stream().map(e -> new BenutzerConfigElement(e.schluessel, e.wert)).toList());
+		res.global.addAll(conn.queryAll(DTONotenmodulKonfigurationClient.class)
+				.stream().map(e -> new BenutzerConfigElement(e.schluessel, e.wert)).toList());
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(res).build();
+	}
+
+
+	/**
+	 * Schreibt ein Konfigurationselement in die Notenmodul-Konfiguration des Servers.
+	 *
+	 * @param conn   die Datenbank-Verbindung
+	 * @param elem   das Konfigurationselement
+	 *
+	 * @return die HTTP-Response
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public static Response setNotenmodulLocalConfigElement(final DBEntityManager conn, final ENMServerConfigElement elem) throws ApiOperationException {
+		if (elem == null)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Es wurde kein gültiges Konfigurationselement übergeben.");
+		// Füge den Konfiguationswert hinzu ...
+		if ("server".equals(elem.type)) {
+			// ... in der Server-Konfiguration
+			DTONotenmodulKonfigurationServer dto = conn.queryByKey(DTONotenmodulKonfigurationServer.class, elem.key);
+			if (dto == null) {
+				dto = new DTONotenmodulKonfigurationServer(elem.key, elem.value);
+			} else {
+				dto.wert = elem.value;
+			}
+			conn.transactionPersist(dto);
+		} else if ("global".equals(elem.type)) {
+			// ... in der allgemeinen Client-Konfiguration
+			DTONotenmodulKonfigurationClient dto = conn.queryByKey(DTONotenmodulKonfigurationClient.class, elem.key);
+			if (dto == null) {
+				dto = new DTONotenmodulKonfigurationClient(elem.key, elem.value);
+			} else {
+				dto.wert = elem.value;
+			}
+			conn.transactionPersist(dto);
+		} else
+			throw new ApiOperationException(Status.BAD_REQUEST, "Es wurde ein ungültiger Typ für das Konfigurations übergeben.");
+		return Response.status(Status.OK).build();
+	}
+
+
 	/**
 	 * Gibt für alle Lehrer, welche bei den ENM-Daten vorkommen die Initialkennwörter zurück.
 	 *
@@ -1019,11 +1073,11 @@ public final class DataENMDaten extends DataManager<Long> {
 		final List<ENMLehrerInitialKennwort> daten = new ArrayList<>();
 		final List<Long> idsLehrer = enmdaten.lehrer.stream().map(l -> l.id).toList();
 		if (!idsLehrer.isEmpty()) {
-			final List<DTOLehrerNotenmodulCredentials> dtos = conn.queryByKeyList(DTOLehrerNotenmodulCredentials.class, idsLehrer);
-			for (final DTOLehrerNotenmodulCredentials dto : dtos) {
+			final List<DTONotenmodulCredentials> dtos = conn.queryByKeyList(DTONotenmodulCredentials.class, idsLehrer);
+			for (final DTONotenmodulCredentials dto : dtos) {
 				final ENMLehrerInitialKennwort cred = new ENMLehrerInitialKennwort();
-				cred.id = dto.Lehrer_ID;
-				cred.initialKennwort = dto.Initialkennwort;
+				cred.id = dto.idLehrer;
+				cred.initialKennwort = dto.initialkennwort;
 				daten.add(cred);
 			}
 		}
@@ -1037,25 +1091,25 @@ public final class DataENMDaten extends DataManager<Long> {
 	 */
 	public static void generateInitialCredentials(final DBEntityManager conn) {
 		// Prüfe zunächst die existierenden Credentials auf Vollständigkeit
-		final List<DTOLehrerNotenmodulCredentials> existing = conn.queryAll(DTOLehrerNotenmodulCredentials.class);
-		for (final DTOLehrerNotenmodulCredentials cred : existing) {
-			final boolean hasInitial = (cred.Initialkennwort != null) && (!cred.Initialkennwort.isBlank());
-			final boolean hasHash = (cred.PasswordHash != null) && (!cred.PasswordHash.isBlank());
+		final List<DTONotenmodulCredentials> existing = conn.queryAll(DTONotenmodulCredentials.class);
+		for (final DTONotenmodulCredentials cred : existing) {
+			final boolean hasInitial = (cred.initialkennwort != null) && (!cred.initialkennwort.isBlank());
+			final boolean hasHash = (cred.passwordHash != null) && (!cred.passwordHash.isBlank());
 			if (hasInitial && hasHash)
 				continue;
 			if (!hasInitial)
-				cred.Initialkennwort = Passwords.generateRandomPasswordWithoutSpecialChars(10);
+				cred.initialkennwort = Passwords.generateRandomPasswordWithoutSpecialChars(10);
 			if (!hasHash)
-				cred.PasswordHash = BCrypt.hashpw(cred.Initialkennwort, BCrypt.gensalt());
+				cred.passwordHash = BCrypt.hashpw(cred.initialkennwort, BCrypt.gensalt());
 			conn.transactionPersist(cred);
 		}
 		// Erstelle dann die noch fehlenden Credentials
-		final Set<Long> idsExisting = existing.stream().map(c -> c.Lehrer_ID).collect(Collectors.toUnmodifiableSet());
+		final Set<Long> idsExisting = existing.stream().map(c -> c.idLehrer).collect(Collectors.toUnmodifiableSet());
 		final List<Long> ids = conn.queryAll(DTOLehrer.class).stream().map(l -> l.ID).filter(l -> !idsExisting.contains(l)).toList();
 		for (final long id : ids) {
 			final String initial = Passwords.generateRandomPasswordWithoutSpecialChars(10);
 			final String hash = BCrypt.hashpw(initial, BCrypt.gensalt());
-			conn.transactionPersist(new DTOLehrerNotenmodulCredentials(id, initial, hash));
+			conn.transactionPersist(new DTONotenmodulCredentials(id, initial, hash));
 		}
 		conn.transactionFlush();
 	}
@@ -1074,16 +1128,16 @@ public final class DataENMDaten extends DataManager<Long> {
 		final DTOLehrer dtoLehrer = conn.queryByKey(DTOLehrer.class, idLehrer);
 		if (dtoLehrer == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Ein Lehrer mit der ID %d konnte nicht gefunden werden.".formatted(idLehrer));
-		DTOLehrerNotenmodulCredentials cred = conn.queryByKey(DTOLehrerNotenmodulCredentials.class, idLehrer);
+		DTONotenmodulCredentials cred = conn.queryByKey(DTONotenmodulCredentials.class, idLehrer);
 		if (cred == null) {
 			final String initial = Passwords.generateRandomPasswordWithoutSpecialChars(10);
 			final String hash = BCrypt.hashpw(initial, BCrypt.gensalt());
-			cred = new DTOLehrerNotenmodulCredentials(idLehrer, initial, hash);
+			cred = new DTONotenmodulCredentials(idLehrer, initial, hash);
 		} else {
-			final boolean hasInitial = (cred.Initialkennwort != null) && (!cred.Initialkennwort.isBlank());
+			final boolean hasInitial = (cred.initialkennwort != null) && (!cred.initialkennwort.isBlank());
 			if (!hasInitial)
-				cred.Initialkennwort = Passwords.generateRandomPasswordWithoutSpecialChars(10);
-			cred.PasswordHash = BCrypt.hashpw(cred.Initialkennwort, BCrypt.gensalt());
+				cred.initialkennwort = Passwords.generateRandomPasswordWithoutSpecialChars(10);
+			cred.passwordHash = BCrypt.hashpw(cred.initialkennwort, BCrypt.gensalt());
 		}
 		conn.transactionPersist(cred);
 	}
@@ -1108,16 +1162,16 @@ public final class DataENMDaten extends DataManager<Long> {
 		if (dtoLehrer == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Ein Lehrer mit der ID %d konnte nicht gefunden werden.".formatted(idLehrer));
 		// Setze die Credentials und erzeuge bei Bedarf neue
-		DTOLehrerNotenmodulCredentials cred = conn.queryByKey(DTOLehrerNotenmodulCredentials.class, idLehrer);
+		DTONotenmodulCredentials cred = conn.queryByKey(DTONotenmodulCredentials.class, idLehrer);
 		final String hash = BCrypt.hashpw(password, BCrypt.gensalt());
 		if (cred == null) {
 			final String initial = Passwords.generateRandomPasswordWithoutSpecialChars(10);
-			cred = new DTOLehrerNotenmodulCredentials(idLehrer, initial, hash);
+			cred = new DTONotenmodulCredentials(idLehrer, initial, hash);
 		} else {
-			final boolean hasInitial = (cred.Initialkennwort != null) && (!cred.Initialkennwort.isBlank());
+			final boolean hasInitial = (cred.initialkennwort != null) && (!cred.initialkennwort.isBlank());
 			if (!hasInitial)
-				cred.Initialkennwort = Passwords.generateRandomPasswordWithoutSpecialChars(10);
-			cred.PasswordHash = hash;
+				cred.initialkennwort = Passwords.generateRandomPasswordWithoutSpecialChars(10);
+			cred.passwordHash = hash;
 		}
 		conn.transactionPersist(cred);
 	}
@@ -1178,23 +1232,23 @@ public final class DataENMDaten extends DataManager<Long> {
 		final Map<Long, DTOLehrer> mapLehrerDTOs = conn.queryByKeyList(DTOLehrer.class, idsLehrer).stream().collect(Collectors.toMap(l -> l.ID, l -> l));
 		if (mapLehrerDTOs.keySet().size() != idsLehrer.size())
 			throw new ApiOperationException(Status.NOT_FOUND, "Nicht alle Lehrer in den ENM-Daten konnten auch in der Datenbank gefunden werden.");
-		final Map<Long, DTOLehrerNotenmodulCredentials> mapLehrerCreds =
-				conn.queryByKeyList(DTOLehrerNotenmodulCredentials.class, idsLehrer).stream().collect(Collectors.toMap(c -> c.Lehrer_ID, c -> c));
-		final Map<Long, DTOTimestampsLehrerNotenmodulCredentials> mapLehrerCredsTimestamps =
-				conn.queryByKeyList(DTOTimestampsLehrerNotenmodulCredentials.class, idsLehrer).stream().collect(Collectors.toMap(t -> t.Lehrer_ID, t -> t));
+		final Map<Long, DTONotenmodulCredentials> mapLehrerCreds =
+				conn.queryByKeyList(DTONotenmodulCredentials.class, idsLehrer).stream().collect(Collectors.toMap(c -> c.idLehrer, c -> c));
+		final Map<Long, DTOTimestampsNotenmodulCredentials> mapLehrerCredsTimestamps =
+				conn.queryByKeyList(DTOTimestampsNotenmodulCredentials.class, idsLehrer).stream().collect(Collectors.toMap(t -> t.idLehrer, t -> t));
 		// Gehe die einzelnen Lehrer durch und aktualisiere ggf. die Credentials
 		for (final ENMLehrer enmLehrer : listEnmLehrer) {
 			final DTOLehrer dtoLehrer = mapLehrerDTOs.get(enmLehrer.id);
 			if (dtoLehrer == null)
 				throw new ApiOperationException(Status.NOT_FOUND,
 						"Der Lehrer in den ENM-Daten mit der ID %d konnte in der Datenbank nicht gefunden werden.".formatted(enmLehrer.id));
-			DTOLehrerNotenmodulCredentials cred = mapLehrerCreds.get(enmLehrer.id);
-			final DTOTimestampsLehrerNotenmodulCredentials credTS = mapLehrerCredsTimestamps.get(enmLehrer.id);
+			DTONotenmodulCredentials cred = mapLehrerCreds.get(enmLehrer.id);
+			final DTOTimestampsNotenmodulCredentials credTS = mapLehrerCredsTimestamps.get(enmLehrer.id);
 			if (isTimestampAfter(enmLehrer.tsPasswordHash, credTS == null ? null : credTS.tsPasswordHash)) {
 				if (cred == null)
-					cred = new DTOLehrerNotenmodulCredentials(enmLehrer.id, "", enmLehrer.passwordHash);
+					cred = new DTONotenmodulCredentials(enmLehrer.id, "", enmLehrer.passwordHash);
 				else
-					cred.PasswordHash = enmLehrer.passwordHash;
+					cred.passwordHash = enmLehrer.passwordHash;
 				conn.transactionPersist(cred);
 			}
 		}
@@ -1499,409 +1553,6 @@ public final class DataENMDaten extends DataManager<Long> {
 			return true;
 		final Timestamp tsOther = Timestamp.valueOf(LocalDateTime.parse(tsOtherStr, ofPattern));
 		return tsCheck.after(tsOther);
-	}
-
-
-	/**
-	 * Lädt die ENM-Daten über den gegebenen OAuthClient vom ENM-Server und mit dem gegebenen DataManager in die
-	 * Datenbank
-	 *
-	 * @param conn     die Datenbank-Verbindung
-	 * @param client   der OAuthClient
-	 * @param logger   der Logger
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	private static void downloadENMDaten(final DBEntityManager conn, final OAuth2Client client, final Logger logger) throws ApiOperationException {
-		logger.logLn("Sende die Anfrage zum Herunderladen der ENM-Daten von dem ENM-Server...");
-		final HttpResponse<byte[]> httpResponse = client.get("/api/secure/export", BodyHandlers.ofByteArray());
-		if (httpResponse.statusCode() != Status.OK.getStatusCode())
-			throw new ApiOperationException(Status.BAD_GATEWAY, httpResponse.body());
-		logger.logLn("Schreibe die neuen Daten aus ENM-Daten anhand der Zeitstempel in die Datenbank des SVWS-Servers...");
-		importDatenGZip(conn, httpResponse.body());
-	}
-
-
-	/**
-	 * Lädt die ENM-Daten beim ENM-Server hoch
-	 *
-	 * @param conn     die Datenbank-Verbindung
-	 * @param client   der OAuth-Client zur Verbindung mit dem ENM
-	 * @param logger   der Logger
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	private static void uploadENMDaten(final DBEntityManager conn, final OAuth2Client client, final Logger logger) throws ApiOperationException {
-		logger.logLn("Bestimme die ENM-Daten aus der Datenbank des SVWS-Servers...");
-		final byte[] daten = getAllGZIPBytes(conn);
-		logger.logLn("Sende die ENM-Daten an den ENM-Server...");
-		logger.modifyIndent(2);
-		final HttpResponse<String> response = client.postMultipart("/api/secure/import", "json.gz", daten, BodyHandlers.ofString());
-		logger.modifyIndent(-2);
-		if (response.statusCode() != Status.OK.getStatusCode())
-			throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
-		logger.logLn("ENM-Daten erfolgreich an den ENM-Server übertragen.");
-	}
-
-
-	/**
-	 * Synchronisiert die Daten des Externen Notenmoduls (ENM) mit dem ENM-Server und lädt
-	 * dabei diese als ZIP beim ENM hoch und anschließend wieder von diesem herunter und speichert
-	 * diese in der Datenbank.
-	 *
-	 * @param conn   die Datenbank-Verbindung
-	 *
-	 * @return die HTTP-Response
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public static Response synchronize(final DBEntityManager conn) throws ApiOperationException {
-		// Erstelle zunächst einen Logger für die Operation
-		final Logger logger = new Logger();
-		final LogConsumerList log = new LogConsumerList();
-		logger.addConsumer(log);
-		// Führe den Upload und dann den Download aus und gib den Erfolg der Operation als SimpleOperationResponse mit einem Log zurück
-		final SimpleOperationResponse sor = new SimpleOperationResponse();
-		Status status = Status.OK;
-		try {
-			logger.logLn("Führe eine Synchronisation der Daten durch...");
-			logger.modifyIndent(2);
-			final OAuth2Client client = new OAuth2Client(conn, logger, OAuth2ServerTyp.WENOM, true);
-			uploadENMDaten(conn, client, logger);
-			downloadENMDaten(conn, client, logger);
-			logger.logLn("Die Synchronisation wurde erfolgreich abgeschlossen.");
-			sor.success = true;
-			logger.setIndent(0);
-		} catch (final Exception e) {
-			status = Status.INTERNAL_SERVER_ERROR;
-			if (e instanceof final ApiOperationException aoe) {
-				status = aoe.getStatus();
-			}
-			logger.log("Fehler: " + e.getLocalizedMessage());
-			sor.success = false;
-			logger.setIndent(0);
-		}
-		// Gib den Erfolg der Operation als SimpleOperationResponse mit einem Log zurück
-		sor.log = log.getStrings();
-		return Response.status(status).type(MediaType.APPLICATION_JSON).entity(sor).build();
-	}
-
-
-	/**
-	 * Lädt die ENM-Daten aus der Datenbank zu dem ENM-Server hoch.
-	 *
-	 * @param conn   die Datenbank-Verbindung
-	 *
-	 * @return die HTTP-Response
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public static Response upload(final DBEntityManager conn) throws ApiOperationException {
-		// Erstelle zunächst einen Logger für die Operation
-		final Logger logger = new Logger();
-		final LogConsumerList log = new LogConsumerList();
-		logger.addConsumer(log);
-		// Führe den Upload aus und gib den Erfolg der Operation als SimpleOperationResponse mit einem Log zurück
-		final SimpleOperationResponse sor = new SimpleOperationResponse();
-		Status status = Status.OK;
-		try {
-			logger.logLn("Führe einen Upload der Daten durch...");
-			logger.modifyIndent(2);
-			final OAuth2Client client = new OAuth2Client(conn, logger, OAuth2ServerTyp.WENOM, true);
-			uploadENMDaten(conn, client, logger);
-			logger.logLn("Der Upload wurde erfolgreich abgeschlossen.");
-			sor.success = true;
-			logger.setIndent(0);
-		} catch (final Exception e) {
-			status = Status.INTERNAL_SERVER_ERROR;
-			if (e instanceof final ApiOperationException aoe) {
-				status = aoe.getStatus();
-			}
-			logger.log("Fehler: " + e.getLocalizedMessage());
-			sor.success = false;
-			logger.setIndent(0);
-		}
-		// Gib den Erfolg der Operation als SimpleOperationResponse mit einem Log zurück
-		sor.log = log.getStrings();
-		return Response.status(status).type(MediaType.APPLICATION_JSON).entity(sor).build();
-	}
-
-
-	/**
-	 * Importiert die ENM-Daten von dem ENM-Server und schreibt diese in die Datenbank.
-	 *
-	 * @param conn   die Datenbank-Verbindung
-	 *
-	 * @return die HTTP-Response
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public static Response download(final DBEntityManager conn) throws ApiOperationException {
-		// Erstelle zunächst einen Logger für die Operation
-		final Logger logger = new Logger();
-		final LogConsumerList log = new LogConsumerList();
-		logger.addConsumer(log);
-		// Führe den Download aus und gib den Erfolg der Operation als SimpleOperationResponse mit einem Log zurück
-		final SimpleOperationResponse sor = new SimpleOperationResponse();
-		Status status = Status.OK;
-		try {
-			logger.logLn("Führe einen Download der Daten durch...");
-			logger.modifyIndent(2);
-			final OAuth2Client client = new OAuth2Client(conn, logger, OAuth2ServerTyp.WENOM, true);
-			downloadENMDaten(conn, client, logger);
-			logger.logLn("Der Download wurde erfolgreich abgeschlossen.");
-			sor.success = true;
-			logger.setIndent(0);
-		} catch (final Exception e) {
-			status = Status.INTERNAL_SERVER_ERROR;
-			if (e instanceof final ApiOperationException aoe) {
-				status = aoe.getStatus();
-			}
-			logger.log("Fehler: " + e.getLocalizedMessage());
-			sor.success = false;
-			logger.setIndent(0);
-		}
-		// Gib den Erfolg der Operation als SimpleOperationResponse mit einem Log zurück
-		sor.log = log.getStrings();
-		return Response.status(status).type(MediaType.APPLICATION_JSON).entity(sor).build();
-	}
-
-
-	/**
-	 * Entfernt die ENM-Daten von dem ENM-Server. Dabei werden auch die Benutzerdaten auf dem Server entfernt.
-	 *
-	 * @param conn   die Datenbank-Verbindung
-	 *
-	 * @return die HTTP-Response
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public static Response truncate(final DBEntityManager conn) throws ApiOperationException {
-		// Erstelle zunächst einen Logger für die Operation
-		final Logger logger = new Logger();
-		final LogConsumerList log = new LogConsumerList();
-		logger.addConsumer(log);
-		// Führe den Truncate aus und gib den Erfolg der Operation als SimpleOperationResponse mit einem Log zurück
-		final SimpleOperationResponse sor = new SimpleOperationResponse();
-		Status status = Status.OK;
-		try {
-			logger.logLn("Führe ein Truncate auf dem Server durch...");
-			logger.modifyIndent(2);
-			final OAuth2Client client = new OAuth2Client(conn, logger, OAuth2ServerTyp.WENOM, true);
-			final HttpResponse<String> response = client.postEmpty("/api/secure/truncate", BodyHandlers.ofString());
-			if (response.statusCode() != Status.OK.getStatusCode())
-				throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
-			logger.logLn("Die Truncate-Operation wurde erfolgreich abgeschlossen.");
-			sor.success = true;
-			logger.setIndent(0);
-		} catch (final Exception e) {
-			status = Status.INTERNAL_SERVER_ERROR;
-			if (e instanceof final ApiOperationException aoe) {
-				status = aoe.getStatus();
-			}
-			logger.log("Fehler: " + e.getLocalizedMessage());
-			sor.success = false;
-			logger.setIndent(0);
-		}
-		// Gib den Erfolg der Operation als SimpleOperationResponse mit einem Log zurück
-		sor.log = log.getStrings();
-		return Response.status(status).type(MediaType.APPLICATION_JSON).entity(sor).build();
-	}
-
-	/**
-	 * Entfernt die ENM-Daten von dem ENM-Server.
-	 *
-	 * @param conn   die Datenbank-Verbindung
-	 *
-	 * @return die HTTP-Response
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public static Response reset(final DBEntityManager conn) throws ApiOperationException {
-		// Erstelle zunächst einen Logger für die Operation
-		final Logger logger = new Logger();
-		final LogConsumerList log = new LogConsumerList();
-		logger.addConsumer(log);
-		// Führe den Reset aus und gib den Erfolg der Operation als SimpleOperationResponse mit einem Log zurück
-		final SimpleOperationResponse sor = new SimpleOperationResponse();
-		Status status = Status.OK;
-		try {
-			logger.logLn("Führe ein Reset auf dem Server durch...");
-			logger.modifyIndent(2);
-			final OAuth2Client client = new OAuth2Client(conn, logger, OAuth2ServerTyp.WENOM, true);
-			final HttpResponse<String> response = client.postEmpty("/api/secure/reset", BodyHandlers.ofString());
-			if (response.statusCode() != Status.OK.getStatusCode())
-				throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
-			logger.logLn("Die Reset-Operation wurde erfolgreich abgeschlossen.");
-			sor.success = true;
-			logger.setIndent(0);
-		} catch (final Exception e) {
-			status = Status.INTERNAL_SERVER_ERROR;
-			if (e instanceof final ApiOperationException aoe) {
-				status = aoe.getStatus();
-			}
-			logger.log("Fehler: " + e.getLocalizedMessage());
-			sor.success = false;
-			logger.setIndent(0);
-		}
-		// Gib den Erfolg der Operation als SimpleOperationResponse mit einem Log zurück
-		sor.log = log.getStrings();
-		return Response.status(status).type(MediaType.APPLICATION_JSON).entity(sor).build();
-	}
-
-	/**
-	 * Prüft, ob der ENM-Server mit den hinterlegten Verbindungsdaten errichbar ist.
-	 *
-	 * @param conn   die Datenbank-Verbindung
-	 *
-	 * @return die HTTP-Response
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public static Response check(final DBEntityManager conn) throws ApiOperationException {
-		// Erstelle zunächst einen Logger für die Operation
-		final Logger logger = new Logger();
-		final LogConsumerList log = new LogConsumerList();
-		logger.addConsumer(log);
-		// Führe den Login aus und gib den Erfolg der Operation als SimpleOperationResponse mit einem Log zurück
-		final SimpleOperationResponse sor = new SimpleOperationResponse();
-		Status status = Status.OK;
-		try {
-			logger.logLn("Prüft, ob der Endpunkt für einen Verbindungstest erreichbar ist...");
-			logger.modifyIndent(2);
-			final OAuth2Client client = new OAuth2Client(conn, logger, OAuth2ServerTyp.WENOM, true);
-			final HttpResponse<String> response = client.get("/api/secure/check", BodyHandlers.ofString());
-			if (response.statusCode() != Status.OK.getStatusCode())
-				throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
-			logger.logLn("Der Verbindungstest wurde erfolgreich durchgeführt.");
-			sor.success = true;
-			logger.setIndent(0);
-		} catch (final Exception e) {
-			status = Status.INTERNAL_SERVER_ERROR;
-			if (e instanceof final ApiOperationException aoe) {
-				status = aoe.getStatus();
-			}
-			logger.log("Fehler: " + e.getLocalizedMessage());
-			sor.success = false;
-			logger.setIndent(0);
-		}
-		// Gib den Erfolg der Operation als SimpleOperationResponse mit einem Log zurück
-		sor.log = log.getStrings();
-		return Response.status(status).type(MediaType.APPLICATION_JSON).entity(sor).build();
-	}
-
-	/**
-	 * Holt die auf dem ENM-Server hintelegten Konfigurationselemente
-	 *
-	 * @param conn   die Datenbank-Verbindung
-	 *
-	 * @return die HTTP-Response
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public static Response getENMServerConfig(final DBEntityManager conn) throws ApiOperationException {
-		// Erstelle zunächst einen Logger für die Operation
-		final Logger logger = new Logger();
-		final LogConsumerList log = new LogConsumerList();
-		logger.addConsumer(log);
-		// Führe den Login aus und gib den Erfolg der Operation als ENMConfigResponse mit einem Log zurück
-		final ENMConfigResponse res = new ENMConfigResponse();
-		Status status = Status.OK;
-		try {
-			logger.logLn("Frage Serverkonfiguration an...");
-			logger.modifyIndent(2);
-			final OAuth2Client client = new OAuth2Client(conn, logger, OAuth2ServerTyp.WENOM, true);
-			final HttpResponse<String> response = client.get("/api/secure/serverconfig", BodyHandlers.ofString());
-			if (response.statusCode() != Status.OK.getStatusCode())
-				throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
-			logger.logLn("Die Serverkonfiguration wurde erfolgreich abgefragt.");
-			if (response.body() == null)
-				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Keine Daten vom Server erhalten.");
-			res.config = JSONMapper.toObject(response.body().getBytes(), ENMServerConfig.class);
-			res.success = true;
-		} catch (final Exception e) {
-			status = Status.INTERNAL_SERVER_ERROR;
-			if (e instanceof final ApiOperationException aoe) {
-				status = aoe.getStatus();
-			}
-			logger.log("Fehler: " + e.getLocalizedMessage());
-			res.success = false;
-		}
-		logger.setIndent(0);
-		// Gib den Erfolg der Operation als ENMConfigResponse mit einem Log zurück
-		res.log = log.getStrings();
-		return Response.status(status).type(MediaType.APPLICATION_JSON).entity(res).build();
-	}
-
-
-	/**
-	 * Prüft, ob der ENM-Server mit den hinterlegten Verbindungsdaten errichbar ist.
-	 *
-	 * @param conn   die Datenbank-Verbindung
-	 * @param is     der Input-Stream mit den Konfigurationsdaten
-	 *
-	 * @return die HTTP-Response
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public static Response setENMServerConfigElement(final DBEntityManager conn, final InputStream is) throws ApiOperationException {
-		// Erstelle zunächst einen Logger für die Operation
-		final Logger logger = new Logger();
-		final LogConsumerList log = new LogConsumerList();
-		logger.addConsumer(log);
-		// Führe den Login aus und gib den Erfolg der Operation als ENMConfigResponse mit einem Log zurück
-		final SimpleOperationResponse res = new SimpleOperationResponse();
-		Status status = Status.OK;
-		try {
-			logger.logLn("Schicke das Konfigurationselement an den Server...");
-			logger.modifyIndent(2);
-			final String element = JSONMapper.toJsonString(is);
-			final OAuth2Client client = new OAuth2Client(conn, logger, OAuth2ServerTyp.WENOM, true);
-			final HttpResponse<String> response = client.put("/api/secure/serverconfig", BodyHandlers.ofString(), element);
-			if (response.statusCode() != Status.OK.getStatusCode())
-				throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
-			logger.logLn("Das Konfigurationselement wurde erfolgreich gesetzt.");
-			res.success = true;
-		} catch (final Exception e) {
-			status = Status.INTERNAL_SERVER_ERROR;
-			if (e instanceof final ApiOperationException aoe) {
-				status = aoe.getStatus();
-			}
-			logger.log("Fehler: " + e.getLocalizedMessage());
-			res.success = false;
-		}
-		logger.setIndent(0);
-		// Gib den Erfolg der Operation als SimpleOperationResponse mit einem Log zurück
-		res.log = log.getStrings();
-		return Response.status(status).type(MediaType.APPLICATION_JSON).entity(res).build();
-	}
-
-	/**
-	 * Prüft, ob der ENM-Server bereits initialisiert ist und gleichzeitig, ob das TLS bekannt ist.
-	 *
-	 * @param conn   die Datenbank-Verbindung
-	 *
-	 * @return die HTTP-Response
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public static Response setup(final DBEntityManager conn) throws ApiOperationException {
-		// Erstelle zunächst einen Logger für die Operation
-		final Logger logger = new Logger();
-		try {
-			final OAuth2Client client = new OAuth2Client(conn, logger, OAuth2ServerTyp.WENOM, false);
-			final boolean isTrusted = client.checkCertificate();
-			if (!isTrusted)
-				return Response.status(Status.CONFLICT).entity("Dem Zertifikat wird aktuell nicht vertraut.").build();
-			final HttpResponse<String> response = client.getUnauthorized("/api/setup", BodyHandlers.ofString());
-			if ((response.statusCode() != Status.NO_CONTENT.getStatusCode()) && (response.statusCode() != Status.CONFLICT.getStatusCode()))
-				throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
-			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(response.statusCode() == Status.NO_CONTENT.getStatusCode()).build();
-		} catch (final Exception e) {
-			if (e instanceof final ApiOperationException aoe)
-				throw aoe;
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Unerwarteter Fehler aufgetreten: " + e.getMessage());
-		}
 	}
 
 }

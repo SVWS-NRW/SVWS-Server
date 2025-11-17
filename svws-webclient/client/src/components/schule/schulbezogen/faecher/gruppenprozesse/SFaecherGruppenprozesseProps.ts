@@ -1,5 +1,4 @@
-import type { Schulform, List, Schulgliederung, ServerMode, BenutzerKompetenz, ApiFile, ReportingParameter, StundenplanListeEintrag } from "@core";
-import type { ApiStatus } from "~/components/ApiStatus";
+import type { List, ServerMode, BenutzerKompetenz, ApiFile, ReportingParameter, StundenplanListeEintrag } from "@core";
 import type { FachListeManager } from "@ui";
 
 export interface FaecherGruppenprozesseProps {

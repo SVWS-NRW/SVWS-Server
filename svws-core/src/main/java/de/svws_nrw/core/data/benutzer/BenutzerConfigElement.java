@@ -29,4 +29,15 @@ public class BenutzerConfigElement {
 		// leer
 	}
 
+	/**
+	 * Erzeugt ein neues Konfigurationselement
+	 *
+	 * @param key     der Schlüssel des Konfigurationselements
+	 * @param value   der Wert des Konfigurationselements
+	 */
+	public BenutzerConfigElement(final @NotNull String key, final @NotNull String value) {
+		this.key = key;
+		this.value = value;
+	}
+
 }

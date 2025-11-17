@@ -1,6 +1,5 @@
 import type { ENMKlasse, ENMLeistung, ENMLeistungBemerkungen, ENMLernabschnitt, ENMTeilleistung } from "@core";
-import { ENMDaten, OpenApiError } from "@core";
-import { BenutzerKompetenz, BenutzerTyp, DeveloperNotificationException } from "@core";
+import { BenutzerKompetenz, BenutzerTyp, DeveloperNotificationException, ENMDaten, OpenApiError } from "@core";
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { routeNotenmodulLeistungen } from "./RouteNotenmodulLeistungen";
@@ -44,6 +43,9 @@ export class RouteDataNotenmodul extends RouteData<RouteStateNotenmodul> {
 	}
 
 	public async ladeDaten() {
+		// TODO dies verhindert anscheinend das korrekte Nachladen beim Entern der Route, obwohl bei leave ein Entfernen der Daten initiiert wird!
+		if (this._state.value.daten !== null)
+			return;
 		const patchedState = <Partial<RouteStateNotenmodul>>{ daten: null, manager: null, auswahlKlassen: [], auswahlLerngruppen: [] };
 		try {
 			if (!api.benutzerIstAdmin && !api.benutzerHatEineKompetenz([

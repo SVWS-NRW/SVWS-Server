@@ -49,6 +49,7 @@ public class Tabelle_LehrerNotenmodulCredentials extends SchemaTabelle {
 		setJavaSubPackage("lehrer");
 		setJavaClassName("DTOLehrerNotenmodulCredentials");
 		setJavaComment("Die Credentials einer Lehrkraft für die Nutzung des Notenmoduls");
+		setVeraltet(SchemaRevisionen.REV_53);
 	}
 
 }

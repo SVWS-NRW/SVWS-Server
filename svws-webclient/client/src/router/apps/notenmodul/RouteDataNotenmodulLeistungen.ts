@@ -1,6 +1,5 @@
-import type { ENMLerngruppe } from "@core";
-import { UnsupportedOperationException, type List, type SimpleOperationResponse } from "@core";
-import type { EnmLerngruppenAuswahlEintrag } from "@ui";
+import type { ENMLerngruppe, List, SimpleOperationResponse } from "@core";
+import { UnsupportedOperationException } from "@core";
 import { EnmLerngruppenAuswahlListeManager, ViewType } from "@ui";
 
 import { api } from "~/router/Api";

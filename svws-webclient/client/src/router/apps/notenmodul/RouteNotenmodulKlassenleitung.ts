@@ -63,7 +63,7 @@ export class RouteNotenmodulKlassenleitung extends RouteAuswahlNode<EnmKlassenle
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean): Promise<void | Error | RouteLocationRaw> {
-		if (isEntering && (!(from?.name.startsWith("notenmodul") ?? false)))
+		if (isEntering)
 			await routeNotenmodul.data.ladeDaten();
 		if (to.name === this.name)
 			return routeNotenmodulKlassenleitungData.getRoute();

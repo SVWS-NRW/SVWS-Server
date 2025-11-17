@@ -1,5 +1,5 @@
-import type { SimpleOperationResponse } from "@core";
-import { UnsupportedOperationException, type ENMKlasse, type List } from "@core";
+import type { SimpleOperationResponse, ENMKlasse, List } from "@core";
+import { UnsupportedOperationException } from "@core";
 import { EnmKlassenleitungAuswahlListeManager, ViewType } from "@ui";
 import { api } from "~/router/Api";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";

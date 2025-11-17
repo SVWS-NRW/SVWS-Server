@@ -516,6 +516,7 @@ export { ENMSchuelerAnkreuzkompetenz } from './core/data/enm/ENMSchuelerAnkreuzk
 export { ENMServerConfig } from './core/data/enm/ENMServerConfig';
 export { ENMServerConfigElement } from './core/data/enm/ENMServerConfigElement';
 export { ENMServerConfigSMTP } from './core/data/enm/ENMServerConfigSMTP';
+export { ENMServerConnection } from './core/data/enm/ENMServerConnection';
 export { ENMSprachenfolge } from './core/data/enm/ENMSprachenfolge';
 export { ENMTeilleistung } from './core/data/enm/ENMTeilleistung';
 export { ENMTeilleistungsart } from './core/data/enm/ENMTeilleistungsart';

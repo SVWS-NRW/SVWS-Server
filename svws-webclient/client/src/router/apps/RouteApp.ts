@@ -36,7 +36,6 @@ import { routeSchuleDatenaustauschUntis } from "./schule/datenaustausch/untis/Ro
 import { routeSchuleDatenaustauschENM } from "./schule/datenaustausch/enmNotenmanager/RouteSchuleDatenaustauschENM";
 import { routeSchuleDatenaustauschLaufbahnplanung } from "./schule/datenaustausch/laufbahnplanung/RouteSchuleDatenaustauschLupo";
 import { routeSchuleDatenaustauschSchulwechsel } from "./schule/datenaustausch/schulwechsel/RouteSchuleDatenaustauschSchulwechsel";
-import { routeSchuleDatenaustauschWenom } from "./schule/datenaustausch/webnotemanager/RouteSchuleDatenaustauschWenom";
 import { routeSchuleDatenaustauschLernplattformen } from "~/router/apps/schule/datenaustausch/lernplattformenExport/RouteSchuleDatenaustauschLernplattformen";
 import { routeSchuleStammdaten } from "./schule/schulbezogen/stammdaten/RouteSchuleStammdaten";
 import { routeSchuleReporting } from "./schule/reporting/RouteSchuleReporting";
@@ -54,13 +53,16 @@ import { routeHaltestellen } from "~/router/apps/schule/allgemein/haltestellen/R
 import { routeBeschaeftigungsarten } from "~/router/apps/schule/allgemein/beschaeftigungsarten/RouteBeschaeftigungsarten";
 import { routeFloskelgruppen } from "~/router/apps/schule/schulbezogen/floskelgruppen/RouteFloskelgruppen";
 import { routeFloskeln } from "~/router/apps/schule/schulbezogen/floskeln/RouteFloskeln";
+import { routeNotenmodulAdministration } from "./notenmodul/RouteNotenmodulAdministration";
+import { routeNotenmodulZugangsdaten } from "./notenmodul/RouteNotenmodulZugangsdaten";
+
 import SApp from "~/components/SApp.vue";
 
 
 export class RouteApp extends RouteNode<RouteDataApp, any> {
 
 	/** Die Knoten, welche im Haupt-Menu zur Verfügung gestellt werden */
-	private _menuMain: RouteNode<any, any>[];
+	private readonly _menuMain: RouteNode<any, any>[];
 
 	public menuHidden(): boolean[] {
 		return super.menu.map(c => c.hidden(routerManager.getRouteParams()) !== false);
@@ -68,7 +70,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 
 	/** Die Knoten, welche im Menu Einstellungen zur Verfügung gestellt werden */
 	// TODO in abstrahierter Form in RouteNode integrieren...
-	private _menuEinstellungen: RouteNode<any, any>[];
+	private readonly _menuEinstellungen: RouteNode<any, any>[];
 	public get menuEinstellungen(): RouteNode<any, any>[] {
 		const result: RouteNode<any, any>[] = [];
 		for (const node of this._menuEinstellungen) {
@@ -84,7 +86,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 
 	/** Die Knoten, welche im Menu Schule zur Verfügung gestellt werden */
 	// TODO in abstrahierter Form in RouteNode integrieren...
-	private _menuSchule: RouteNode<any, any>[];
+	private readonly _menuSchule: RouteNode<any, any>[];
 	public get menuSchule(): RouteNode<any, any>[] {
 		const result: RouteNode<any, any>[] = [];
 		for (const node of this._menuSchule) {
@@ -100,7 +102,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 
 	/** Die Knoten, welche im Menu Notenmodul zur Verfügung gestellt werden */
 	// TODO in abstrahierter Form in RouteNode integrieren...
-	private _menuNotenmodul: RouteNode<any, any>[];
+	private readonly _menuNotenmodul: RouteNode<any, any>[];
 	public get menuNotenmodul(): RouteNode<any, any>[] {
 		const result: RouteNode<any, any>[] = [];
 		for (const node of this._menuNotenmodul) {
@@ -115,7 +117,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	}
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.KEINE], "app", "/:schema?/:idSchuljahresabschnitt(\\d+)?", SApp, new RouteDataApp());
+		super(Schulform.values(), [BenutzerKompetenz.KEINE], "app", String.raw`/:schema?/:idSchuljahresabschnitt(\d+)?`, SApp, new RouteDataApp());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps();
 		super.text = "SVWS-Client";
@@ -162,7 +164,6 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeKatalogTelefonArten,
 			// Datenaustausch
 			routeSchuleDatenaustauschENM,
-			routeSchuleDatenaustauschWenom,
 			routeSchuleDatenaustauschSchulwechsel,
 			routeSchuleDatenaustauschLaufbahnplanung,
 			routeSchuleDatenaustauschKurs42,
@@ -172,6 +173,8 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeSchuleReporting,
 		];
 		this._menuNotenmodul = [
+			routeNotenmodulAdministration,
+			routeNotenmodulZugangsdaten,
 			routeNotenmodulLeistungen,
 			routeNotenmodulTeilleistungen,
 			routeNotenmodulKlassenleitung,
@@ -254,7 +257,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		return result;
 	}
 
-	private setApp = async (value: TabData) => {
+	private readonly setApp = async (value: TabData) => {
 		if (value.name === this.data.view.name)
 			return;
 		let node = RouteNode.getNodeByName(value.name);
@@ -288,19 +291,19 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		return this.createTabManager(super.menu, this.menuHidden(), this.data.view.name, this.setApp, ViewType.DEFAULT);
 	}
 
-	private getTabManagerEinstellungen = (): TabManager => {
+	private readonly getTabManagerEinstellungen = (): TabManager => {
 		return this.createTabManager(this.menuEinstellungen, this.menuEinstellungenHidden(), this.data.view.name, this.setTab, ViewType.DEFAULT);
 	};
 
-	private getTabManagerSchule = (): TabManager => {
+	private readonly getTabManagerSchule = (): TabManager => {
 		return this.createTabManager(this.menuSchule, this.menuSchuleHidden(), this.data.view.name, this.setTab, ViewType.DEFAULT);
 	};
 
-	private getTabManagerNotenmodul = (): TabManager => {
+	private readonly getTabManagerNotenmodul = (): TabManager => {
 		return this.createTabManager(this.menuNotenmodul, this.menuNotenmodulHidden(), this.data.view.name, this.setTab, ViewType.DEFAULT);
 	};
 
-	private setTab = async (value: TabData) => {
+	private readonly setTab = async (value: TabData) => {
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new DeveloperNotificationException("Unbekannte Route");
