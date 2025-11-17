@@ -55,7 +55,7 @@ public class DTOCreator {
 	private static File createPackageDirectory(final String baseDir) {
 		try {
 			// Erstelle das Verzeichnis für das Package
-			final String pack = Schema.javaPackage + "." + Schema.javaDTOPackage;
+			final String pack = Schema.JAVA_PACKAGE + "." + Schema.JAVA_DTO_PACKAGE;
 			logger.logLn("Erzeuge Package " + pack);
 			String packPath = pack.replace(".", "/");
 			if ((baseDir != null) && !baseDir.isEmpty())
@@ -160,7 +160,7 @@ public class DTOCreator {
 	 */
 	private static boolean createJavaCodeForView(final String baseDir, final long rev, final View view,
 			final StringBuilder codeDTOImports, final StringBuilder codeMapDTOName2DTOClass, final StringBuilder codeMapTablename2DTOClass) {
-		final String packagename = Schema.javaPackage + "." + Schema.javaDTOPackage + ((rev < 0) ? ".current" : ".dev") + ".";
+		final String packagename = Schema.JAVA_PACKAGE + "." + Schema.JAVA_DTO_PACKAGE + ((rev < 0) ? ".current" : ".dev") + ".";
 		logger.log("View " + view.name + ": ");
 		if ((rev == SchemaRevisionen.maxRevision.revision) || ((rev > SchemaRevisionen.maxRevision.revision) && (!view.brauchtDeveloperDTO()))) {
 			logger.logLn("- nicht benötigt");
@@ -241,7 +241,7 @@ public class DTOCreator {
 					return packageDir;
 		}
 
-		final String dtosCode = "package " + Schema.javaPackage + "." + Schema.javaDTOPackage + ";" + System.lineSeparator()
+		final String dtosCode = "package " + Schema.JAVA_PACKAGE + "." + Schema.JAVA_DTO_PACKAGE + ";" + System.lineSeparator()
 				+ "" + System.lineSeparator()
 				+ "import java.util.HashMap;" + System.lineSeparator()
 				+ "" + System.lineSeparator()
@@ -337,7 +337,7 @@ public class DTOCreator {
 	 */
 	private static void writeDTOHelper(final File packageDir) {
 		final File dtosFile = new File(packageDir, "DTOHelper.java");
-		final String dtosCode = "package " + Schema.javaPackage + "." + Schema.javaDTOPackage + ";" + System.lineSeparator()
+		final String dtosCode = "package " + Schema.JAVA_PACKAGE + "." + Schema.JAVA_DTO_PACKAGE + ";" + System.lineSeparator()
 				+ "" + System.lineSeparator()
 				+ "import de.svws_nrw.db.schema.SchemaRevisionen;" + System.lineSeparator()
 				+ "" + System.lineSeparator()

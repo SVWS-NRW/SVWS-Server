@@ -296,10 +296,10 @@ public final class Schema {
 	}
 
 	/** Das übergeordnete Java-Paket, welches die Klassen für die SVWS-Datenbank beinhaltet */
-	public static final String javaPackage = "de.svws_nrw.db";
+	public static final String JAVA_PACKAGE = "de.svws_nrw.db";
 
 	/** Das Java-Unterpaket, welches die Klassen für die generierten DTOs für den Datenbankzugriff beinhaltet */
-	public static final String javaDTOPackage = "dto";
+	public static final String JAVA_DTO_PACKAGE = "dto";
 
 	/** Eine Map von dem Namen der Tabelle auf die einzelnen Tabellen. */
 	private static final List<SchemaTabelle> _tabellen = new ArrayList<>();
