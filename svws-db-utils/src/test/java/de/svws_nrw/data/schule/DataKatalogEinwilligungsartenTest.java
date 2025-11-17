@@ -496,47 +496,6 @@ class DataKatalogEinwilligungsartenTest {
 	}
 
 	@Test
-	@DisplayName("patch | schluessel already used from same personTyp")
-	void patchSchluesselAlreadyUsedFromSamePersonTyp() {
-		final var dto1 = new DTOKatalogEinwilligungsart(1L, "test", true, 123);
-		dto1.personTyp = PersonTyp.SCHUELER;
-		dto1.Schluessel = "abc";
-		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto1);
-		final var dto2 = new DTOKatalogEinwilligungsart(2L, "test", true, 123);
-		dto2.personTyp = PersonTyp.SCHUELER;
-		final String schluessel = Einwilligungsschluessel.data().getWerte().getFirst().historie().getFirst().schluessel;
-		dto2.Schluessel = schluessel;
-		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto1);
-		when(this.conn.queryAll(DTOKatalogEinwilligungsart.class)).thenReturn(List.of(dto1, dto2));
-
-		assertThatException()
-				.isThrownBy(() -> this.data.patch(1L, Map.of("schluessel", schluessel)))
-				.isInstanceOf(ApiOperationException.class)
-				.withMessage("Der Schlüssel FOTO wird bereits beim PersonTyp SCHUELER verwendet.")
-				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
-	}
-
-	@Test
-	@DisplayName("patch | schluessel used from different personTyp")
-	void patchSchluesselAlreadyUsedFromDifferentPersonTyp() throws ApiOperationException {
-		final var dto1 = new DTOKatalogEinwilligungsart(1L, "test", true, 123);
-		dto1.personTyp = PersonTyp.SCHUELER;
-		dto1.Schluessel = "abc";
-		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto1);
-		final var dto2 = new DTOKatalogEinwilligungsart(2L, "test", true, 123);
-		dto2.personTyp = PersonTyp.LEHRER;
-		final String schluessel = Einwilligungsschluessel.data().getWerte().getFirst().historie().getFirst().schluessel;
-		dto2.Schluessel = schluessel;
-		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto1);
-		when(this.conn.queryAll(DTOKatalogEinwilligungsart.class)).thenReturn(List.of(dto1, dto2));
-		when(this.conn.transactionPersist(any())).thenReturn(true);
-
-		this.data.patch(1L, Map.of("schluessel", schluessel));
-
-		assertThat(dto1.Schluessel).isEqualTo(schluessel);
-	}
-
-	@Test
 	@DisplayName("patch | schluessel | coreType does not match")
 	void patchSchluesselCoreTypeDoesNotMatch() {
 		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(mock(DTOKatalogEinwilligungsart.class));

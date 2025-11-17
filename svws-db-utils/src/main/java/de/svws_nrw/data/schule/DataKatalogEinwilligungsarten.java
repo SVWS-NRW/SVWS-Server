@@ -146,8 +146,7 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 		dto.Bezeichnung = bezeichnung;
 	}
 
-	private void updateSchluessel(final DTOKatalogEinwilligungsart dto, final Object value, final String name)
-			throws ApiOperationException {
+	private void updateSchluessel(final DTOKatalogEinwilligungsart dto, final Object value, final String name) throws ApiOperationException {
 		final String schluessel = JSONMapper.convertToString(value, true, true, Schema.tab_K_Datenschutz.col_Schluessel.datenlaenge(), name);
 		if (schluessel == null) {
 			dto.Schluessel = null;
@@ -160,10 +159,6 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 		if (noMatchingCoreTypeFound(schluessel))
 			throw new ApiOperationException(Status.NOT_FOUND,
 					"Zum angegebenen Schlüssel %s wurde keine passende Einwilligungsart gefunden.".formatted(schluessel));
-
-		if (schluesselIsAlreadyUsed(dto.ID, dto.personTyp, schluessel))
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"Der Schlüssel %s wird bereits beim PersonTyp %s verwendet.".formatted(schluessel, dto.personTyp));
 
 		dto.Schluessel = schluessel;
 	}
@@ -198,11 +193,6 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 	private boolean bezeichnungIsAlreadyUsed(final Long id, final PersonTyp personTyp, final String bezeichnung) {
 		return this.conn.queryAll(DTOKatalogEinwilligungsart.class).stream()
 				.anyMatch(e -> (e.ID != id) && (e.personTyp == personTyp) && bezeichnung.equalsIgnoreCase(e.Bezeichnung));
-	}
-
-	private boolean schluesselIsAlreadyUsed(final Long id, final PersonTyp personTyp, final String schluessel) {
-		return this.conn.queryAll(DTOKatalogEinwilligungsart.class).stream()
-				.anyMatch(e -> (e.ID != id) && (e.personTyp == personTyp) && schluessel.equalsIgnoreCase(e.Schluessel));
 	}
 
 	private static boolean noMatchingCoreTypeFound(final String schluessel) {

@@ -6,10 +6,10 @@
 					:model-value="manager().auswahl().bezeichnung"
 					@change="patchBezeichnung"
 					:valid="bezeichnungIsValid" :min-len="1" :max-len="250" required :readonly="!hatKompetenzUpdate" />
-				<ui-select label="ASD-Einwilligungsschlüssel"
+				<ui-select label="Einwilligungsschlüssel"
 					v-model="selectedEinwilligungsschluessel"
 					:manager="einwilligungsschluesselCoreTypeManager"
-					searchable :removable="false" statistics required :readonly="!hatKompetenzUpdate" />
+					searchable :readonly="!hatKompetenzUpdate" />
 				<svws-ui-textarea-input placeholder="Beschreibung"
 					:model-value="manager().auswahl().beschreibung"
 					@change="patchBeschreibung"
@@ -51,7 +51,7 @@
 	});
 
 	const selectedEinwilligungsschluessel = computed<EinwilligungsschluesselKatalogEintrag | null>({
-		get: () => Einwilligungsschluessel.data().getEintragBySchuljahrUndSchluessel(props.schuljahr, props.manager().daten().schluessel),
+		get: () => Einwilligungsschluessel.data().getEintragBySchuljahrUndSchluessel(props.schuljahr, props.manager().daten().schluessel ?? ''),
 		set: (v: EinwilligungsschluesselKatalogEintrag | null) => void patchEinwilligungsschluessel(v?.schluessel ?? null),
 	});
 
@@ -61,7 +61,7 @@
 	});
 
 	async function patchEinwilligungsschluessel(value: string | null): Promise<void> {
-		await props.patch({ schluessel: value ?? '' });
+		await props.patch({ schluessel: value });
 	}
 
 	async function patchBezeichnung(bezeichnung: string | null) {
@@ -93,7 +93,7 @@
 		return isUniqueInList(value, props.manager().liste.list(), "bezeichnung", "id", props.manager().auswahlID() ?? undefined);
 	}
 
-	const textPersonTyp = (idPpersonTyp: number): string => {
+	function textPersonTyp(idPpersonTyp: number): string {
 		const personTyp = PersonTyp.getByID(idPpersonTyp) ?? null;
 		return personTyp ? personTyp.bezeichnung : "";
 	};

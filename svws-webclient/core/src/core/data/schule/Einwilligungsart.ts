@@ -16,7 +16,7 @@ export class Einwilligungsart extends JavaObject {
 	/**
 	 * Der Schlüssel der Einwilligungsart.
 	 */
-	public schluessel: string = "";
+	public schluessel: string | null = "";
 
 	/**
 	 * Eine ausführliche Beschreibung der Einwilligungsart.
@@ -70,9 +70,7 @@ export class Einwilligungsart extends JavaObject {
 		if (obj.bezeichnung === undefined)
 			throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
-		if (obj.schluessel === undefined)
-			throw new Error('invalid json format, missing attribute schluessel');
-		result.schluessel = obj.schluessel;
+		result.schluessel = (obj.schluessel === undefined) ? null : obj.schluessel === null ? null : obj.schluessel;
 		result.beschreibung = (obj.beschreibung === undefined) ? null : obj.beschreibung === null ? null : obj.beschreibung;
 		if (obj.idPersonTyp === undefined)
 			throw new Error('invalid json format, missing attribute idPersonTyp');
@@ -93,7 +91,7 @@ export class Einwilligungsart extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
-		result += '"schluessel" : ' + JSON.stringify(obj.schluessel) + ',';
+		result += '"schluessel" : ' + ((obj.schluessel === null) ? 'null' : JSON.stringify(obj.schluessel)) + ',';
 		result += '"beschreibung" : ' + ((obj.beschreibung === null) ? 'null' : JSON.stringify(obj.beschreibung)) + ',';
 		result += '"idPersonTyp" : ' + obj.idPersonTyp.toString() + ',';
 		result += '"anzahlEinwilligungen" : ' + obj.anzahlEinwilligungen.toString() + ',';
@@ -113,7 +111,7 @@ export class Einwilligungsart extends JavaObject {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		}
 		if (obj.schluessel !== undefined) {
-			result += '"schluessel" : ' + JSON.stringify(obj.schluessel) + ',';
+			result += '"schluessel" : ' + ((obj.schluessel === null) ? 'null' : JSON.stringify(obj.schluessel)) + ',';
 		}
 		if (obj.beschreibung !== undefined) {
 			result += '"beschreibung" : ' + ((obj.beschreibung === null) ? 'null' : JSON.stringify(obj.beschreibung)) + ',';

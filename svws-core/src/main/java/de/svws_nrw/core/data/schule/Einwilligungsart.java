@@ -24,7 +24,7 @@ public class Einwilligungsart {
 
 	/** Der Schlüssel der Einwilligungsart. */
 	@Schema(description = "der Schlüssel der Einwilligungsart", example = "FOTO")
-	public @NotNull String schluessel = "";
+	public String schluessel = "";
 
 
 	/** Eine ausführliche Beschreibung der Einwilligungsart. */
