@@ -32,11 +32,11 @@
 
 		<svws-ui-content-card title="Persönliche Daten" class="col-span-full">
 			<svws-ui-input-wrapper :grid="4">
-				<svws-ui-text-input placeholder="Name" required :model-value="data.nachname"
+				<svws-ui-text-input placeholder="Nachname" required :model-value="data.nachname"
 					@change="nachname => patchIfValid('nachname', nachname)" :valid="fieldIsValid('nachname')" :max-len="120" :readonly />
-				<svws-ui-text-input placeholder="Vorname" required :model-value="data.vorname"
+				<svws-ui-text-input placeholder="Rufname" required :model-value="data.vorname"
 					@change="vorname => patchIfValid('vorname', vorname)" :valid="fieldIsValid('vorname')" :max-len="120" :readonly />
-				<svws-ui-text-input placeholder="Weitere Vornamen" :model-value="data.alleVornamen"
+				<svws-ui-text-input placeholder="Alle Vornamen" :model-value="data.alleVornamen"
 					@change="alleVornamen => patch({ alleVornamen: alleVornamen ?? undefined }, data.id)" :valid="fieldIsValid('alleVornamen')" :max-len="120" :readonly />
 				<ui-select label="Geschlecht" :model-value="geschlecht" @update:model-value="setGeschlecht" :manager="geschlechtManager" :removable="false" :readonly />
 				<svws-ui-spacing />

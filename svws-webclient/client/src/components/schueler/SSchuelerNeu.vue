@@ -37,9 +37,9 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Persönliche Daten" class="col-span-full">
 			<svws-ui-input-wrapper :grid="4">
-				<svws-ui-text-input placeholder="Name" required v-model="data.nachname" :valid="fieldIsValid('nachname')" :max-len="120" />
-				<svws-ui-text-input placeholder="Vorname" required v-model="data.vorname" :valid="fieldIsValid('vorname')" :max-len="120" />
-				<svws-ui-text-input placeholder="Weitere Vornamen" v-model="data.alleVornamen" :valid="fieldIsValid('alleVornamen')" :max-len="120" />
+				<svws-ui-text-input placeholder="Nachname" required v-model="data.nachname" :valid="fieldIsValid('nachname')" :max-len="120" />
+				<svws-ui-text-input placeholder="Rufname" required v-model="data.vorname" :valid="fieldIsValid('vorname')" :max-len="120" />
+				<svws-ui-text-input placeholder="Alle Vornamen" v-model="data.alleVornamen" :valid="fieldIsValid('alleVornamen')" :max-len="120" />
 				<ui-select label="Geschlecht" v-model="geschlecht" :manager="geschlechtManager" :removable="false" required />
 				<svws-ui-text-input placeholder="Geburtsdatum" required type="date" v-model="data.geburtsdatum" :valid="istGeburtsdatumGueltig" />
 				<div v-if="!istGeburtsdatumGueltig(data.geburtsdatum)" class="flex my-auto">
