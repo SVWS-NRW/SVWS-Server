@@ -5,6 +5,7 @@
 				<div class="text-headline-md mb-4">Verbindung zum Webnotenmanager einrichten</div>
 				<svws-ui-input-wrapper>
 					<div>Adresse: {{ manager().auswahl().url }}</div>
+					<svws-ui-text-input :model-value="manager().auswahl().clientSecret" type="password" placeholder="Secret" @change="clientSecret => (clientSecret !== null) && updateServerConnection({ clientSecret })" />
 					<svws-ui-text-input :model-value="manager().auswahl().bezeichnung" type="text" placeholder="Bezeichnung" @change="bezeichnung => updateServerConnection({ bezeichnung: bezeichnung ?? null })" />
 					<svws-ui-button type="primary" @click="connect(manager().auswahl().id)">
 						Verbindungsdaten prüfen
