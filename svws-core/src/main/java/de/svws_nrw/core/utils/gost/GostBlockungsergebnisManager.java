@@ -1327,6 +1327,44 @@ public class GostBlockungsergebnisManager {
 		return ListUtils.getCountFiltered(_parent.daten().schueler, (final @NotNull Schueler schueler) -> getOfSchuelerHatStatusExtern(schueler.id));
 	}
 
+
+	/**
+	 * Liefert die Kursfrequenz als String, berechnet als (Summe aller Fachwahlen) / (interne Kurse).
+	 * <br>Hinweis: DummySuS werden ignoriert.
+	 * <br>Hinweis: Es werden 2 Nachkommastellen maximal angezeigt.
+	 *
+	 * @return die Kursfrequenz als String, berechnet als (Summe aller Fachwahlen) / (interne Kurse).
+	 */
+	public @NotNull String getKursfrequenz1AsString() {
+		int nKurse = _parent.kursGetAnzahlIntener();
+		if (nKurse == 0)
+			return "Kursfrequenz = ?";
+		// Berechne die 1. Formel
+		int nFachwahlen = _parent.fachwahlGetAnzahl();
+		double avg1 = ((nFachwahlen * 100) / nKurse) / 100.0;
+		return  ("" + avg1).replace('.', ',');
+	}
+
+	/**
+	 * Liefert die Kursfrequenz als String, berechnet als (Summe aller auf interne Kurse verteilten SuS) / (interne Kurse).
+	 * <br>Hinweis: DummySuS werden ignoriert.
+	 * <br>Hinweis: Es werden 2 Nachkommastellen maximal angezeigt.
+	 *
+	 * @return die Kursfrequenz als String, berechnet als (Summe aller auf interne Kurse verteilten SuS) / (interne Kurse).
+	 */
+	public @NotNull String getKursfrequenz2AsString() {
+		int nKurse = _parent.kursGetAnzahlIntener();
+		if (nKurse == 0)
+			return "Kursfrequenz = ?";
+		// Berechne die 2. Formel
+		int nVerteilt = 0;
+		for (final @NotNull GostBlockungKurs gKurs : _parent.daten().kurse)
+			if (!gKurs.istKoopKurs)
+				nVerteilt += getOfKursAnzahlSchueler(gKurs.id);
+		double avg2 = ((nVerteilt * 100) / nKurse) / 100.0;
+		return  ("" + avg2).replace('.', ',');
+	}
+
 	/**
 	 * Liefert die Anzahl an E-Schienen.
 	 *
@@ -1349,9 +1387,9 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert die Datenbank-ID der Blockungs. Das ist die ID des Elternteils.
+	 * Liefert die Datenbank-ID der Blockung. Das ist die ID des Elternteils.
 	 *
-	 * @return die Datenbank-ID der Blockungs. Das ist die ID des Elternteils.
+	 * @return die Datenbank-ID der Blockung. Das ist die ID des Elternteils.
 	 */
 	public long getBlockungsdatenID() {
 		return _ergebnis.blockungID;

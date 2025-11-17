@@ -51,7 +51,13 @@
 					</div>
 					<div role="row" class="svws-ui-tr select-none" :style="gridTemplateColumns">
 						<div role="columnheader" class="svws-ui-td svws-divider" :class="zeigeAufklappzeile ? 'col-span-7' : 'col-span-6'">
-							Schülerzahl
+							<div class="flex items-center justify-between w-full">
+								<span>Schülerzahl</span>
+								<span :title="'Kursfrequenz 1 = (Summe aller Fachwahlen) / (interne Kurse) / (interne Kurse) = ' + getErgebnismanager().getKursfrequenz1AsString()
+									+ '\nKursfrequenz 2 = (Summe aller auf interne Kurse verteilten SuS) / (interne Kurse) = ' + getErgebnismanager().getKursfrequenz2AsString()">
+									⌀ = {{ getErgebnismanager().getKursfrequenz2AsString() }}
+								</span>
+							</div>
 						</div>
 						<div role="columnheader" class="svws-ui-td svws-align-center !px-0" v-for="(s, index) in schienen" :key="s.id" :class="{'svws-divider': (index + 1) < schienen.size()}">
 							<template v-if="getAnzahlSchuelerSchiene(s.id) > 0">
@@ -86,7 +92,7 @@
 							</span>
 						</div>
 						<div role="columnheader" class="svws-ui-td">Lehrkraft</div>
-						<div class="svws-ui-td svws-align-center" title="Kooperation">Koop</div>
+						<div class="svws-ui-td svws-align-center" title="Kooperations-Kurs, welcher an einer anderen Schule unterrichtet wird.">Koop</div>
 						<div class="svws-ui-td svws-align-center" title="Fachwahlen">FW</div>
 						<div class="svws-ui-td svws-align-center svws-divider" title="Differenz">Diff</div>
 						<!--Schienen-->
@@ -838,16 +844,17 @@
 	function bgColor(fachwahl: { fachwahlen: GostStatistikFachwahl, kursart: GostKursart }): string {
 		if (fachwahl.fachwahlen.kuerzelStatistik === null)
 			return 'rgb(220,220,220)';
-		return Fach.getBySchluesselOrDefault(fachwahl.fachwahlen.kuerzelStatistik).getHMTLFarbeRGBA(schuljahr.value, 1.0);
+		return Fach.getBySchluesselOrDefault(fachwahl.fachwahlen.kuerzelStatistik).getHMTLFarbeRGBA(schuljahr.value, 1);
 	}
 
 	function toggleSchuelerFilterFachwahl(fachwahl: { fachwahlen: GostStatistikFachwahl, kursart: GostKursart }) {
 		const filter = props.schuelerFilter();
-		if (filter.fach !== fachwahl.fachwahlen.id) {
+		if (filter.fach === fachwahl.fachwahlen.id)
+			filter.reset();
+		else {
 			filter.kursart = fachwahl.kursart;
 			filter.fach = fachwahl.fachwahlen.id;
-		} else
-			filter.reset();
+		}
 	}
 
 	async function add_kurs(fachwahl: { fachwahlen: GostStatistikFachwahl, kursart: GostKursart }) {
@@ -959,10 +966,10 @@
 
 	function toggleKursAusgewaehlt(kurs: GostBlockungKurs) {
 		const filter = props.schuelerFilter();
-		if (filter.kurs?.id !== kurs.id)
-			filter.kurs = kurs;
-		else
+		if (filter.kurs?.id === kurs.id)
 			filter.reset();
+		else
+			filter.kurs = kurs;
 	}
 
 	const istKursGesperrtInSchiene = (kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) => computed<boolean>(() => {

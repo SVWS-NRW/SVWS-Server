@@ -5,7 +5,7 @@
 				<svws-ui-button type="icon" @click="routeLaufbahnplanung()" :title="`Zur Laufbahnplanung von ${schueler.vorname} ${schueler.nachname}`" size="small" class="mr-0.5 mt-0.5">
 					<span class="icon i-ri-link" />
 				</svws-ui-button>
-				<span class="text-headline-md">{{ schueler.vorname }} {{ schueler.nachname }}</span>
+				<span class="text-headline-md">{{ schueler.vorname }} {{ schueler.nachname }} ({{ fachbelegungen.size() }} {{ fachbelegungen.size() === 1 ? 'Fachwahl' : 'Fachwahlen' }})</span>
 			</div>
 		</div>
 		<!-- Anzeige der Umwahlansicht, falls Fächer belegt wurden ... -->

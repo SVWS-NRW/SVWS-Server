@@ -107,7 +107,7 @@ public class GostBlockungsdatenManager {
 	/** Eine interne Hashmap zum Multi-Key-Zugriff auf die Regeln eines bestimmten {@link GostKursblockungRegelTyp}. */
 	private final @NotNull HashMap<LongArrayKey, GostBlockungRegel> _map_multikey_regeln = new HashMap<>();
 
-	/** Eine interne Hashmap zum schnellen Zugriff auf die Schueler anhand ihrer Datenbank-ID. */
+	/** Eine interne Hashmap zum schnellen Zugriff auf die Schüler anhand ihrer Datenbank-ID. */
 	private final @NotNull HashMap<Long, Schueler> _map_idSchueler_schueler = new HashMap<>();
 
 	/** Schüler-ID --> List<Fachwahl> = Die Fachwahlen des Schülers der jeweiligen Fachart. */
@@ -1023,6 +1023,19 @@ public class GostBlockungsdatenManager {
 	 */
 	public int kursGetAnzahl() {
 		return _map_idKurs_kurs.size();
+	}
+
+	/**
+	 * Liefert die Anzahl an Kursen, die keine KOOP-Kurse sind.
+	 *
+	 * @return die Anzahl an Kursen, die keine KOOP-Kurse sind.
+	 */
+	public int kursGetAnzahlIntener() {
+		int nKurse = 0;
+		for (final @NotNull GostBlockungKurs k : _map_idKurs_kurs.values())
+			if (!k.istKoopKurs)
+				nKurse++;
+		return nKurse;
 	}
 
 	/**
