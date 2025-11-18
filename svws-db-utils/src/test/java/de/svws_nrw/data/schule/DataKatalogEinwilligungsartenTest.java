@@ -548,6 +548,43 @@ class DataKatalogEinwilligungsartenTest {
 	}
 
 	@Test
+	@DisplayName("patch | schluessel already used from same personTyp")
+	void patchSchluesselAlreadyUsedFromSamePersonTyp() {
+		final String schluessel = Einwilligungsschluessel.data().getWerte().getFirst().historie().getFirst().schluessel;
+		final int idPersonTyp = PersonTyp.SCHUELER.id;
+		final var dto = new DTOKatalogEinwilligungsart(1L, "test", true, 123);
+		dto.personTyp = PersonTyp.getByID(idPersonTyp);
+		dto.Schluessel = schluessel;
+		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(mock(DTOKatalogEinwilligungsart.class));
+		when(this.conn.queryAll(DTOKatalogEinwilligungsart.class)).thenReturn(List.of(dto));
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, Map.of("schluessel", schluessel, "idPersonTyp", idPersonTyp)))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Der Schlüssel %s wird bereits verwendet.".formatted(schluessel))
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("patch | schluessel used from different personTyp")
+	void patchSchluesselAlreadyUsedFromDifferentPersonTyp() throws ApiOperationException {
+		final String schluessel = Einwilligungsschluessel.data().getWerte().getFirst().historie().getFirst().schluessel;
+		final var dto = new DTOKatalogEinwilligungsart(1L, "test", true, 123);
+		dto.personTyp = PersonTyp.getByID(1);
+		dto.Schluessel = null;
+		final var dto2 = new DTOKatalogEinwilligungsart(2L, "test", true, 123);
+		dto2.personTyp = PersonTyp.getByID(2);
+		dto2.Schluessel = schluessel;
+		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto);
+		when(this.conn.queryAll(DTOKatalogEinwilligungsart.class)).thenReturn(List.of(dto, dto2));
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+
+		this.data.patch(1L, Map.of("schluessel", schluessel, "idPersonTyp", 1));
+
+		assertThat(dto.Schluessel).isEqualTo(schluessel);
+	}
+
+	@Test
 	@DisplayName("patch | schluessel")
 	void patchSchluessel() throws ApiOperationException {
 		final var dto = new DTOKatalogEinwilligungsart(1L, "test", true, 123);
@@ -617,7 +654,7 @@ class DataKatalogEinwilligungsartenTest {
 
 	@Test
 	@DisplayName("patch | personTyp wrong type")
-	void patchPersonTypWrongType()  {
+	void patchPersonTypWrongType() {
 		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(mock(DTOKatalogEinwilligungsart.class));
 
 		assertThatException()

@@ -124,7 +124,7 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 		switch (name) {
 			case "id" -> validateId(dto, name, value);
 			case BEZEICHNUNG -> updateBezeichnung(dto, value, name);
-			case SCHLUESSEL -> updateSchluessel(dto, value, name);
+			case SCHLUESSEL -> updateSchluessel(dto, value, name, map.get(ID_PERSON_TYP));
 			case ID_PERSON_TYP -> updatePersonTyp(dto, value, name);
 			case "beschreibung" -> updateBeschreibung(dto, value, name);
 			case "istSichtbar" -> updateSichtbar(dto, value, name);
@@ -156,7 +156,7 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 		dto.Bezeichnung = bezeichnung;
 	}
 
-	private void updateSchluessel(final DTOKatalogEinwilligungsart dto, final Object value, final String name) throws ApiOperationException {
+	private void updateSchluessel(final DTOKatalogEinwilligungsart dto, final Object value, final String name, final Object idPersonTyp) throws ApiOperationException {
 		final String schluessel = JSONMapper.convertToString(value, true, true, Schema.tab_K_Datenschutz.col_Schluessel.datenlaenge(), name);
 		if (schluessel == null) {
 			dto.Schluessel = null;
@@ -165,6 +165,9 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 
 		if (valueIsBlankOrHasNotChanged(dto.Schluessel, schluessel))
 			return;
+
+		if (schluesselIsAlreadyUsed(dto.ID, idPersonTyp, schluessel))
+			throw new ApiOperationException(Status.BAD_REQUEST, "Der Schlüssel %s wird bereits verwendet.".formatted(schluessel));
 
 		if (noMatchingCoreTypeFound(schluessel))
 			throw new ApiOperationException(Status.NOT_FOUND,
@@ -243,6 +246,15 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 		final String query = String.join("\nUNION\n", query1, query2, query3);
 		final List<Long> results = this.conn.query(query, Long.class).setParameter("ids", ids).getResultList();
 		return new HashSet<>(results);
+	}
+
+	private boolean schluesselIsAlreadyUsed(final Long id, final Object idPersonTyp, final String schluessel) throws ApiOperationException {
+		if (idPersonTyp == null)
+			return false;
+
+		final int personTyp = JSONMapper.convertToInteger(idPersonTyp, false);
+		return this.conn.queryAll(DTOKatalogEinwilligungsart.class).stream()
+				.anyMatch(e -> (e.ID != id) && (e.personTyp.id == personTyp) && schluessel.equalsIgnoreCase(e.Schluessel));
 	}
 
 }

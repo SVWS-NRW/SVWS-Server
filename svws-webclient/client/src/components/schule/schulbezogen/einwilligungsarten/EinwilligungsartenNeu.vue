@@ -41,8 +41,8 @@
 <script setup lang="ts">
 	import type { EinwilligungsartenNeuProps } from "~/components/schule/schulbezogen/einwilligungsarten/EinwilligungsartenNeuProps";
 	import { computed, ref, watch } from "vue";
-	import { BenutzerKompetenz, Einwilligungsart, Einwilligungsschluessel, PersonTyp } from "@core";
-	import type { EinwilligungsschluesselKatalogEintrag } from "@core";
+	import { ArrayList, BenutzerKompetenz, Einwilligungsart, Einwilligungsschluessel, PersonTyp } from "@core";
+	import type { EinwilligungsschluesselKatalogEintrag, List } from "@core";
 	import { isUniqueInList, mandatoryInputIsValid, numberIsValid } from "~/util/validation/Validation";
 	import { CoreTypeSelectManager, SelectManager } from "@ui";
 
@@ -51,13 +51,6 @@
 	const isLoading = ref<boolean>(false);
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 
-	const einwilligungsschluesselCoreTypeManager = new CoreTypeSelectManager({
-		clazz: Einwilligungsschluessel.class,
-		schuljahr: props.schuljahr,
-		schulformen: props.schulform,
-		optionDisplayText: "text",
-		selectionDisplayText: "text",
-	});
 	const selectedEinwilligungsschluessel = computed<EinwilligungsschluesselKatalogEintrag | null>({
 		get: () => Einwilligungsschluessel.data().getEintragBySchuljahrUndSchluessel(props.schuljahr, data.value.schluessel ?? ''),
 		set: (v: EinwilligungsschluesselKatalogEintrag | null) => data.value.schluessel = v?.schluessel ?? null,
@@ -120,5 +113,39 @@
 
 		props.checkpoint.active = true;
 	}, { immediate: false, deep: true });
+
+	const einwilligungsschluesselFilter = {
+		key: "isNotUsed",
+		apply: (options: List<EinwilligungsschluesselKatalogEintrag>) => {
+			const filtered = new ArrayList<EinwilligungsschluesselKatalogEintrag>();
+			for (const option of options)
+				if (!einwilligungsschluesselIsUsed(option))
+					filtered.add(option);
+			return filtered;
+		},
+	};
+
+	function einwilligungsschluesselIsUsed(einwilligungsschluessel: EinwilligungsschluesselKatalogEintrag) {
+		for (const einwilligungsart of props.manager().liste.list()) {
+			if (einwilligungsart.idPersonTyp === data.value.idPersonTyp
+				&& einwilligungsart.schluessel === einwilligungsschluessel.schluessel) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	const einwilligungsschluesselCoreTypeManager = new CoreTypeSelectManager({
+		filters: [einwilligungsschluesselFilter],
+		clazz: Einwilligungsschluessel.class,
+		schuljahr: props.schuljahr,
+		schulformen: props.schulform,
+		optionDisplayText: "text",
+		selectionDisplayText: "text",
+	});
+
+	watch(() => data.value.idPersonTyp, async () => {
+		einwilligungsschluesselCoreTypeManager.updateFilteredOptions();
+	}, { immediate: true });
 
 </script>
