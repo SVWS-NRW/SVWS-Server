@@ -29,11 +29,6 @@ export class Einwilligungsart extends JavaObject {
 	public idPersonTyp: number = -1;
 
 	/**
-	 * Gibt an, für welche Personengruppe die Einwilligungsart relevant ist.
-	 */
-	public anzahlEinwilligungen: number = 0;
-
-	/**
 	 * Gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an.
 	 */
 	public sortierung: number = 32000;
@@ -80,9 +75,6 @@ export class Einwilligungsart extends JavaObject {
 		if (obj.idPersonTyp === undefined)
 			throw new Error('invalid json format, missing attribute idPersonTyp');
 		result.idPersonTyp = obj.idPersonTyp;
-		if (obj.anzahlEinwilligungen === undefined)
-			throw new Error('invalid json format, missing attribute anzahlEinwilligungen');
-		result.anzahlEinwilligungen = obj.anzahlEinwilligungen;
 		if (obj.sortierung === undefined)
 			throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
@@ -100,7 +92,6 @@ export class Einwilligungsart extends JavaObject {
 		result += '"schluessel" : ' + ((obj.schluessel === null) ? 'null' : JSON.stringify(obj.schluessel)) + ',';
 		result += '"beschreibung" : ' + ((obj.beschreibung === null) ? 'null' : JSON.stringify(obj.beschreibung)) + ',';
 		result += '"idPersonTyp" : ' + obj.idPersonTyp.toString() + ',';
-		result += '"anzahlEinwilligungen" : ' + obj.anzahlEinwilligungen.toString() + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		result += '"referenziertInAnderenTabellen" : ' + ((obj.referenziertInAnderenTabellen === null) ? 'null' : obj.referenziertInAnderenTabellen.toString()) + ',';
@@ -125,9 +116,6 @@ export class Einwilligungsart extends JavaObject {
 		}
 		if (obj.idPersonTyp !== undefined) {
 			result += '"idPersonTyp" : ' + obj.idPersonTyp.toString() + ',';
-		}
-		if (obj.anzahlEinwilligungen !== undefined) {
-			result += '"anzahlEinwilligungen" : ' + obj.anzahlEinwilligungen.toString() + ',';
 		}
 		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung.toString() + ',';

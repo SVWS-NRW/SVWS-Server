@@ -29,9 +29,6 @@ export class EinwilligungsartenListeManager extends AuswahlManager<number, Einwi
 		cmp = JavaString.compareTo(a.bezeichnung, b.bezeichnung);
 		if (cmp !== 0)
 			return cmp;
-		cmp = a.anzahlEinwilligungen - b.anzahlEinwilligungen;
-		if (cmp !== 0)
-			return cmp;
 		return JavaLong.compare(a.id, b.id);
 	} };
 

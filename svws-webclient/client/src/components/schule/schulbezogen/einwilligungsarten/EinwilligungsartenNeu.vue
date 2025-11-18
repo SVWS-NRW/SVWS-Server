@@ -97,7 +97,7 @@
 
 		isLoading.value = true;
 		props.checkpoint.active = false;
-		const { id, anzahlEinwilligungen, referenziertInAnderenTabellen, ...partialData } = data.value;
+		const { id, referenziertInAnderenTabellen, ...partialData } = data.value;
 		await props.add(partialData);
 		isLoading.value = false;
 	}

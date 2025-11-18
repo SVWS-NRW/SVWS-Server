@@ -57,7 +57,6 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 		daten.schluessel = Objects.requireNonNullElse(dto.Schluessel, "");
 		daten.beschreibung = Objects.requireNonNullElse(dto.Beschreibung, "");
 		daten.idPersonTyp = (dto.personTyp == null) ? -1 : dto.personTyp.id;
-		daten.anzahlEinwilligungen = getAnzahlEinwilligungen(dto);
 		daten.sortierung = dto.Sortierung;
 		daten.istSichtbar = Boolean.TRUE.equals(dto.Sichtbar);
 		return daten;
@@ -184,23 +183,6 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 			throw new ApiOperationException(Status.NOT_FOUND, "Kein PersonTyp zur ID %d gefunden.".formatted(id));
 
 		dto.personTyp = personTyp;
-	}
-
-	private int getAnzahlEinwilligungen(final DTOKatalogEinwilligungsart ea) {
-		if (ea.personTyp == null)
-			return 0;
-
-		return switch (ea.personTyp) {
-			case SCHUELER -> conn
-					.queryList(DTOSchuelerDatenschutz.QUERY_BY_DATENSCHUTZ_ID, DTOSchuelerDatenschutz.class, ea.ID)
-					.size();
-			case LEHRER -> conn
-					.queryList(DTOLehrerDatenschutz.QUERY_BY_DATENSCHUTZID, DTOLehrerDatenschutz.class, ea.ID)
-					.size();
-			case ERZIEHER -> conn
-					.queryList(DTOErzieherDatenschutz.QUERY_BY_DATENSCHUTZID, DTOErzieherDatenschutz.class, ea.ID)
-					.size();
-		};
 	}
 
 	private boolean bezeichnungIsAlreadyUsed(final Long id, final PersonTyp personTyp, final String bezeichnung) {

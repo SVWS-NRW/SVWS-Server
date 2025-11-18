@@ -16,11 +16,6 @@
 					<template #filterAdvanced>
 						<svws-ui-checkbox type="toggle" v-model="sichtbareEinwilligungsarten">Nur Sichtbare</svws-ui-checkbox>
 					</template>
-					<template #cell(anzahlEinwilligungen)="{ value }">
-						<div class="inline-flex min-h-5">
-							<p class="w-8"> {{ value }} </p>
-						</div>
-					</template>
 					<template #actions v-if="!readonly">
 						<svws-ui-tooltip v-if="ServerMode.DEV.checkServerMode(serverMode)" position="bottom">
 							<svws-ui-button type="icon"
@@ -58,18 +53,18 @@
 
 	const rowsFiltered = computed<Einwilligungsart[]>(() => {
 		const term = searchTerm.value.trim();
-		if (term === '')
+		if (term === '') {
 			return [...props.manager().filtered()];
+		}
 
-		const isNumber = /^\d+$/.test(searchTerm.value.trim());
 		const termLower = searchTerm.value.toLocaleLowerCase();
 
 		const arr = [];
-		for (const e of props.manager().filtered())
-			if ((isNumber && (e.id.toString().includes(term) || e.anzahlEinwilligungen.toString().includes(term)))
-				|| e.bezeichnung.toLocaleLowerCase().includes(termLower)) {
+		for (const e of props.manager().filtered()) {
+			if (e.bezeichnung.toLocaleLowerCase().includes(termLower)) {
 				arr.push(e);
 			}
+		}
 		return arr;
 	});
 
@@ -96,7 +91,6 @@
 
 	const columns: DataTableColumn[] = [
 		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, defaultSort: "asc" },
-		{ key: "anzahlEinwilligungen", label: "Anzahl", sortable: true, defaultSort: "asc", span: 1, align: "right" },
 	];
 
 	function setAuswahl(einwilligungsarten: Einwilligungsart[]) {

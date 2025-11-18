@@ -35,10 +35,6 @@ public class Einwilligungsart {
 	@Schema(description = "Die Id des PersonTyps der Einwilligungsart.", example = "2")
 	public int idPersonTyp = -1;
 
-	/** Gibt an, für welche Personengruppe die Einwilligungsart relevant ist. */
-	@Schema(description = "gibt an wie viele Einwilligungen dem entsprechenden Einwilligungsart-Eintrag zugeordnet sind", example = "3")
-	public int anzahlEinwilligungen;
-
 	/** Gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an. */
 	@Schema(description = "gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an", example = "1")
 	public int sortierung = 32000;
