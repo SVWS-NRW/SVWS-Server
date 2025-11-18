@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
 
-	import type { EntlassgruendeDatenProps } from "~/components/schule/schulbezogen/entlassgruende/daten/SEntlassgruendeDatenProps";
+	import type { EntlassgruendeDatenProps } from "~/components/schule/schulbezogen/entlassgruende/daten/EntlassgruendeDatenProps";
 	import { BenutzerKompetenz } from "@core";
 	import { computed } from "vue";
 

@@ -35,7 +35,7 @@
 
 <script setup lang="ts">
 
-	import type { EntlassgruendeAppProps } from "~/components/schule/schulbezogen/entlassgruende/SEntlassgruendeAppProps";
+	import type { EntlassgruendeAppProps } from "~/components/schule/schulbezogen/entlassgruende/EntlassgruendeAppProps";
 	import { useRegionSwitch, ViewType } from "@ui";
 	import { computed } from "vue";
 

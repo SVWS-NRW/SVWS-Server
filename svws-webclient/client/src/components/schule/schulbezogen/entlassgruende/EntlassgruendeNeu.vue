@@ -29,7 +29,7 @@
 
 <script setup lang="ts">
 
-	import type { EntlassgruendeNeuProps } from "~/components/schule/schulbezogen/entlassgruende/SEntlassgruendeNeuProps";
+	import type { EntlassgruendeNeuProps } from "~/components/schule/schulbezogen/entlassgruende/EntlassgruendeNeuProps";
 	import { BenutzerKompetenz, KatalogEntlassgrund } from "@core";
 	import { ref, computed, watch } from "vue";
 	import { isUniqueInList, mandatoryInputIsValid } from "~/util/validation/Validation";

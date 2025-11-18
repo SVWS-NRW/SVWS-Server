@@ -21,7 +21,7 @@
 
 <script setup lang="ts">
 
-	import type { EntlassgruendeGruppenprozesseProps } from "~/components/schule/schulbezogen/entlassgruende/gruppenprozesse/SEntlassgruendeGruppenprozesseProps";
+	import type { EntlassgruendeGruppenprozesseProps } from "~/components/schule/schulbezogen/entlassgruende/gruppenprozesse/EntlassgruendeGruppenprozesseProps";
 	import type { List } from "@core";
 	import { BenutzerKompetenz, ServerMode } from "@core";
 	import { computed, ref } from "vue";

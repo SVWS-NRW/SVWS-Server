@@ -1,5 +1,5 @@
 import type { RouteLocationNormalized } from "vue-router";
-import type { EntlassgruendeNeuProps } from "~/components/schule/schulbezogen/entlassgruende/SEntlassgruendeNeuProps";
+import type { EntlassgruendeNeuProps } from "~/components/schule/schulbezogen/entlassgruende/EntlassgruendeNeuProps";
 import type { RouteEntlassgruende } from "~/router/apps/schule/schulbezogen/entlassgruende/RouteEntlassgruende";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteManager } from "~/router/RouteManager";
@@ -8,12 +8,12 @@ import { ViewType } from "@ui";
 import { routeEntlassgruende } from "~/router/apps/schule/schulbezogen/entlassgruende/RouteEntlassgruende";
 import { api } from "~/router/Api";
 
-const SEntlassgruendeNeu = () => import("~/components/schule/schulbezogen/entlassgruende/SEntlassgruendeNeu.vue");
+const EntlassgruendeNeu = () => import("~/components/schule/schulbezogen/entlassgruende/EntlassgruendeNeu.vue");
 
 export class RouteEntlassgruendeNeu extends RouteNode<any, RouteEntlassgruende> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.entlassgruende.neu", "neu", SEntlassgruendeNeu);
+		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.entlassgruende.neu", "neu", EntlassgruendeNeu);
 		super.types = new Set([ViewType.HINZUFUEGEN]);
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);

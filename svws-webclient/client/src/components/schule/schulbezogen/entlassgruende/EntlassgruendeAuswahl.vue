@@ -26,7 +26,7 @@
 
 <script setup lang="ts">
 
-	import type { EntlassgruendeAuswahlProps } from "~/components/schule/schulbezogen/entlassgruende/SEntlassgruendeAuswahlProps";
+	import type { EntlassgruendeAuswahlProps } from "~/components/schule/schulbezogen/entlassgruende/EntlassgruendeAuswahlProps";
 	import type { DataTableColumn } from "@ui";
 	import type { KatalogEntlassgrund } from "@core";
 	import { BenutzerKompetenz, ServerMode } from "@core";

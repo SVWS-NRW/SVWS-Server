@@ -10,14 +10,14 @@ import { routeEntlassgruendeDaten } from "~/router/apps/schule/schulbezogen/entl
 import { routeEntlassgruendeGruppenprozesse } from "~/router/apps/schule/schulbezogen/entlassgruende/RouteEntlassgruendeGruppenprozesse";
 import { routeEntlassgruendeNeu } from "~/router/apps/schule/schulbezogen/entlassgruende/RouteEntlassgruendeNeu";
 
-const SEntlassgruendeApp = () => import("~/components/schule/schulbezogen/entlassgruende/SEntlassgruendeApp.vue");
-const SEntlassgruendeAuswahl = () => import("~/components/schule/schulbezogen/entlassgruende/SEntlassgruendeAuswahl.vue");
+const EntlassgruendeApp = () => import("~/components/schule/schulbezogen/entlassgruende/EntlassgruendeApp.vue");
+const EntlassgruendeAuswahl = () => import("~/components/schule/schulbezogen/entlassgruende/EntlassgruendeAuswahl.vue");
 
 export class RouteEntlassgruende extends RouteAuswahlNode<EntlassgruendeListeManager, RouteDataEntlassgruende, RouteApp> {
 
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.entlassgruende",
-			"schule/entlassgruende/:id(\\d+)?", SEntlassgruendeApp, SEntlassgruendeAuswahl, new RouteDataEntlassgruende());
+			"schule/entlassgruende/:id(\\d+)?", EntlassgruendeApp, EntlassgruendeAuswahl, new RouteDataEntlassgruende());
 		super.mode = ServerMode.DEV;
 		super.text = "Entlassgründe";
 		super.menugroup = RouteSchuleMenuGroup.SCHULBEZOGEN;
