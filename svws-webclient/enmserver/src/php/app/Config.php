@@ -8,10 +8,10 @@
 	class Config {
 
 		// Der Root-Pfad für die Applikation
-		protected $app_root = null;
+		protected $appRoot = null;
 
 		// Default Speicherort von Datenbank/Secret/Server-Mode
-		protected static string $default_dbfolder = 'db';
+		protected static string $defaultDBFolder = 'db';
 
 		// Speicherort von Datenbank/Secret/Server-Mode
 		protected ?string $dbfolder = null;
@@ -41,31 +41,34 @@
 		 */
 		public function __construct() {
 			// Bestimme zunächst das Root-Verzeichnis der Anwendung
-			$this->app_root = Config::determineAppRoot();
+			$this->appRoot = Config::determineAppRoot();
 
 			// ersetze dbfolder durch $_SERVER['ENM_DB_DIR'] sofern gesetzt.
-			if (isset($_SERVER['ENM_DB_DIR']))
-				$this->dbfolder=$_SERVER['ENM_DB_DIR'];
-			else
-				$this->dbfolder=Config::$default_dbfolder;
+			if (isset($_SERVER['ENM_DB_DIR'])) {
+				$this->dbfolder = $_SERVER['ENM_DB_DIR'];
+			} else {
+				$this->dbfolder = Config::$defaultDBFolder;
+			}
 
-			// Lese das Client-Secret ein. Wenn nich keines existiert, dann erzeuge es zuvor 
-			$secretfile = $this->app_root."/".$this->dbfolder.'/'.Config::$secretfile;
+			// Lese das Client-Secret ein. Wenn nich keines existiert, dann erzeuge es zuvor
+			$secretfile = $this->appRoot."/".$this->dbfolder.'/'.Config::$secretfile;
 			if (!file_exists($secretfile)) {
 				// Versuche eine neues Secret anzulegen anzulegen...
 				$secret = Config::generateRandomSecret();
 				$success = file_put_contents($secretfile, $secret);
-				if ($success === false)
+				if ($success === false) {
 					Http::exit500("Es konnte kein Client-Secret unter $secretfile generiert werden. Überprüfen Sie, ob die, beim Web-Server, konfigurierten Rechte ausreichend sind, um diese Datei anzulegen.");
+				}
 			}
 			$this->secret = file_get_contents($secretfile);
 
 			// Setze den Server-Mode, welcher auch an den Client weitergegeben wird
-			$servermodefile = $this->app_root.'/'.$this->dbfolder.'/'.Config::$servermodefile;
+			$servermodefile = $this->appRoot.'/'.$this->dbfolder.'/'.Config::$servermodefile;
 			$serverMode = file_exists($servermodefile) ? file_get_contents($servermodefile) : 'stable';
 			$serverMode = strtolower($serverMode);
-			if ((strcmp($serverMode, 'stable') !== 0) && (strcmp($serverMode, 'beta') !== 0) && (strcmp($serverMode, 'alpha') !== 0) && (strcmp($serverMode, 'dev') !== 0))
+			if ((strcmp($serverMode, 'stable') !== 0) && (strcmp($serverMode, 'beta') !== 0) && (strcmp($serverMode, 'alpha') !== 0) && (strcmp($serverMode, 'dev') !== 0)) {
 				Http::exit500("Der konfigurierte Server-Mode ist ungültig. Überprüfen Sie, die Datei $servermodefile auf dem Web-Server");
+			}
 			$this->serverMode = $serverMode;
 
 			// Initialisiere Debugging-Einstellung anhand des Server-Mode
@@ -73,12 +76,11 @@
 			if ($this->debugMode) {
 				ini_set('display_errors', '1');
 			}
-
 		}
 
 		/**
 		 * Bestimmt das Verzeichnis, in dem sich die Applikation befindet
-		 * 
+		 *
 		 * @return string der absolute Pfad, wo sich die Applikation befindet
 		 */
 		protected static function determineAppRoot(): string {
@@ -90,25 +92,26 @@
 		 * das Client-Secret und die SQLite-Datenbank beide vorliegen.
 		 */
 		public static function isAppInitialized() : bool {
-			if (isset($_SERVER['ENM_DB_DIR']))
-				$dbfolder=$_SERVER['ENM_DB_DIR'];
-			else
-				$dbfolder=Config::$default_dbfolder;
+			if (isset($_SERVER['ENM_DB_DIR'])) {
+				$dbfolder = $_SERVER['ENM_DB_DIR'];
+			} else {
+				$dbfolder = Config::$defaultDBFolder;
+			}
 			return file_exists(Config::determineAppRoot().'/'.$dbfolder.'/'.Config::$secretfile) && file_exists(Config::determineAppRoot()."/".$dbfolder.'/'.Config::$dbfile);
 		}
 
 		/**
 		 * Gibt den Root-Pfad für die Applikation zurück
-		 * 
+		 *
 		 * @return string der root-Pfad
 		 */
 		public function getAppRoot(): string {
-			return $this->app_root;
+			return $this->appRoot;
 		}
 
 		/**
 		 * Gibt den Speicherort der SQLite-Datenbank zurück
-		 * 
+		 *
 		 * @return string der Speicherort
 		 */
 		public function getDatabaseFile(): string {
@@ -117,7 +120,7 @@
 
 		/**
 		 * Gibt den Modus zurück, in dem der Server betrieben wird.
-		 * 
+		 *
 		 * @return string der Modus 'stable', 'beta', 'alpha' oder 'dev'
 		 */
 		public function getServerMode(): string {
@@ -126,7 +129,7 @@
 
 		/**
 		 * Gibt das Client-Secret zurück.
-		 * 
+		 *
 		 * @return string das Client-Secret
 		 */
 		public function getClientSecret(): string {
@@ -135,7 +138,7 @@
 
 		/**
 		 * Erzeugt einen zufälligen, URL-sicheren String, der für Kennwörter verwendet werden kann.
-		 * 
+		 *
 		 * @return string das neue Kennwort
 		 */
 		public static function generateRandomSecret(): string {
@@ -154,23 +157,10 @@
 		 */
 		public static function validatePassword(string $password): bool {
 			// Prüft, ob die Länge des Passworts mindestens 16 Zeichen beträgt
-			if (strlen($password) < 16)
-				return false;
-
-			// Prüft, ob das Passwort mindestens einen Großbuchstaben enthält
-			if (!preg_match('/[A-Z]/', $password))
-				return false;
-
-			// Prüft, ob das Passwort mindestens einen Kleinbuchstaben enthält
-			if (!preg_match('/[a-z]/', $password))
-				return false;
-
-			// Prüft, ob das Passwort mindestens eine Zahl enthält
-			if (!preg_match('/[0-9]/', $password))
-				return false;
-
-			// Wenn alle Bedingungen erfüllt sind, geben wir true zurück
-			return true;
+			//   und mindestens einen Großbuchstaben enthält,
+			//   und mindestens einen Kleinbuchstaben enthält
+			//   und mindestens eine Zahl enthält
+			return (strlen($password) >= 16) && preg_match('/[A-Z]/', $password) && preg_match('/[a-z]/', $password) && preg_match('/\d/', $password);
 		}
 
 	}

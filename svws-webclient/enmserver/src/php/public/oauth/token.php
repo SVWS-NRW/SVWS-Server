@@ -23,8 +23,9 @@
 
 	// ... und erzeuge dann ein neues Token
 	$newToken = $db->createClientAccessToken($clientID);
-	if ($newToken == null)
+	if ($newToken == null) {
 		Http::exit403Forbidden();
+	}
 
 	// ... und gebe dieses zurück
 	header("Content-type: application/json; charset=utf-8");

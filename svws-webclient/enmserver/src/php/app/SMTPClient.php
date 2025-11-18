@@ -111,8 +111,9 @@
 		 */
 		public function __construct(?string $config) {
 			// Überprüfen, ob der Parameter null oder leer ist
-			if (empty($config))
+			if (empty($config)) {
 				Http::exit500("Keine SMTP-Konfiguration vorhanden.");
+			}
 
 			$smtpConfig = json_decode($config, true);
 
@@ -133,31 +134,35 @@
 		public function isValid(): bool {
 			// Überprüfe, ob alle erforderlichen Felder gefüllt sind
 			$requiredFields = [
-				$this->host, 
+				$this->host,
 				$this->port,
-				$this->username, 
+				$this->username,
 				$this->password,
-				$this->useTLS, 
+				$this->useTLS,
 				$this->fromEmail,
-				$this->fromName 
+				$this->fromName
 			];
 
 			foreach ($requiredFields as $field) {
-				if (empty($field))
+				if (empty($field)) {
 					return false;
+				}
 			}
 
 			// Überprüfe die Gültigkeit der Host-Adresse
-			if (!filter_var($this->host, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME) && !filter_var($this->host, FILTER_VALIDATE_IP))
+			if (!filter_var($this->host, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME) && !filter_var($this->host, FILTER_VALIDATE_IP)) {
 				return false;
+			}
 			
-				// Überprüfe die Gültigkeit des Ports (zwischen 1 und 65535)
-			if (!is_int($this->port) || $this->port < 1 || $this->port > 65535)
+			// Überprüfe die Gültigkeit des Ports (zwischen 1 und 65535)
+			if (!is_int($this->port) || ($this->port < 1) || ($this->port > 65535)) {
 				return false;
+			}
 			
 			// Überprüfe die Gültigkeit der E-Mail-Adresse
-			if (!filter_var($this->fromEmail, FILTER_VALIDATE_EMAIL))
+			if (!filter_var($this->fromEmail, FILTER_VALIDATE_EMAIL)) {
 				return false;
+			}
 			
 			return true;
 		}
@@ -171,16 +176,19 @@
 		 */
 		public function setEmail($to, $subject, $message): void {
 			// Überprüfe die Gültigkeit der E-Mail-Adresse $to
-			if (!filter_var($to, FILTER_VALIDATE_EMAIL))
+			if (!filter_var($to, FILTER_VALIDATE_EMAIL)) {
 				Http::exit500("Ungültige Empfänger E-Mail-Adresse.");
+			}
 
 			// Überprüfen, ob der Betreff gesetzt ist
-			if (empty($subject))
+			if (empty($subject)) {
 				Http::exit500("Es wurde kein Betreff angegeben");
+			}
 
 			// Überprüfen, ob der Nachrichtentext gesetzt ist
-			if (empty($message))
+			if (empty($message)) {
 				Http::exit500("Es wurde kein Nachrichtentext angegeben");
+			}
 
 			$this->to = $to;
 			$this->subject = $subject;
@@ -197,19 +205,22 @@
 			$timeout = 30;
 
 			// Verbindung basierend auf Port und TLS-Einstellung aufbauen
-			if ($this->useTLS)
-				if ($this->port == 465)
+			if ($this->useTLS) {
+				if ($this->port == 465) {
 					// SSL/TLS direkte Verbindung
 					$this->socket = stream_socket_client("ssl://$this->host:$this->port", $errno, $errstr, $timeout);
-				else
+				} else {
 					// Unverschlüsselte Verbindung, später STARTTLS aktivieren
 					$this->socket = fsockopen($this->host, $this->port, $errno, $errstr, $timeout);
-			else
+				}
+			} else {
 				// Unverschlüsselte Verbindung
 				$this->socket = fsockopen($this->host, $this->port, $errno, $errstr, $timeout);
+			}
 
-			if (!$this->socket)
+			if (!$this->socket) {
 				Http::exit500("Fehler beim Verbinden: $errstr ($errno)");
+			}
 
 			// Serverantwort lesen und auswerten
 			$this->checkResponse();
@@ -221,7 +232,7 @@
 			// Falls TLS aktiviert ist und der Port nicht 465 ist, dann STARTTLS starten
 			if ($this->useTLS && $this->port != 465) {
 				$this->checkResponse("STARTTLS\r\n");
-				stream_socket_enable_crypto($this->socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT);
+				stream_socket_enable_crypto($this->socket, true, STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT | STREAM_CRYPTO_METHOD_TLSv1_3_CLIENT);
 				$this->checkResponse("EHLO $hostname\r\n"); // Nach TLS erneut EHLO senden
 			}
 
@@ -242,7 +253,7 @@
 				"From: \"$this->fromName\" <$this->fromEmail>\r\n" .
 				"To: $this->to\r\n" .
 				"Content-Type: $contentType; " .
-				"charset=$charset\r\n" . 
+				"charset=$charset\r\n" .
 				"\r\n" . // Leerzeile zwischen Header und Body
 				"$this->message\r\n" .
 				".\r\n"; // Beendet die Nachricht
@@ -259,18 +270,20 @@
 		 * @param string|null $command Der Befehl, der an den Server gesendet wird (optional).
 		 */
 		private function checkResponse($command = null): void {
-			if (isset($command))
+			if (isset($command)) {
 				fwrite($this->socket, $command);
+			}
 			
 			$response = '';
 			while ($line = fgets($this->socket, 512)) {
 				$response .= $line;
-				if (substr($line, 3, 1) == ' ')
+				if (substr($line, 3, 1) == ' ') {
 					break;
+				}
 			}
 			
 			// Überprüfen, ob die Antwort gültig ist (2xx oder 3xx)
-			if (substr($response, 0, 1) != '2' && substr($response, 0, 1) != '3') {
+			if ((substr($response, 0, 1) != '2') && (substr($response, 0, 1) != '3')) {
 				// Standardfehlermeldung, wenn kein Befehl angegeben ist
 				$errorMessage = isset($command) ? "Fehler bei Befehl '" . trim($command) . "': " . trim($response) : "Fehler bei der Serverantwort: " . trim($response);
 				Http::exit500($errorMessage);
@@ -287,4 +300,5 @@
 		}
 
 	}
+
 ?>

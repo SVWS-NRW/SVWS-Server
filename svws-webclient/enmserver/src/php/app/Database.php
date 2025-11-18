@@ -29,8 +29,9 @@
 			} catch (PDOException $e) {
 				Http::exit500("Database (".$config->getDatabaseFile().") - Fehler beim Öffnen (".$e->getCode()."): ".$e->getMessage());
 			}
-			if (!$dbNeedsInitialization)
+			if (!$dbNeedsInitialization) {
 				$this->initDatabase();
+			}
 		}
 
 		/**
@@ -205,21 +206,21 @@
 		 * @return object der Client-Eintrag oder null, falls keiner gefunden wird
 		 */
 		public function getClientByAccessToken(string | null $token): object | null {
-			if ($token == null)
+			if ($token == null) {
 				return null;
+			}
 			try {
 				// Verwende $token nicht direkt, um SQL-Injection zu verhindern
 				$stmt = $this->conn->query("SELECT clientID, token, tokenTimestamp, tokenValidForSecs FROM OAuth", PDO::FETCH_OBJ);
 				foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as $row) {
-					if ($row->token == null)
-						continue;
-					if (strcmp($row->token, $token) == 0)
+					if (($row->token != null) && (strcmp($row->token, $token) == 0)) {
 						return $row;
+					}
 				}
-				return null;
 			} catch (PDOException $e) {
-				return null;
+				// do nothing
 			}
+			return null;
 		}
 
 		/**
@@ -451,24 +452,33 @@
 
 		private function importUpdateSchuelerGeneratePreparedStatement(mixed $alt, mixed $neu): PDOStatement {
 			$sql = "UPDATE Schueler SET ";
-			if ($alt->tsFehlstundenGesamt > $neu->tsFehlstundenGesamt)
+			if ($alt->tsFehlstundenGesamt > $neu->tsFehlstundenGesamt) {
 				$sql .= "tsFehlstundenGesamt=:tsFehlstundenGesamt,";
-			if ($alt->tsFehlstundenGesamtUnentschuldigt > $neu->tsFehlstundenGesamtUnentschuldigt)
+			}
+			if ($alt->tsFehlstundenGesamtUnentschuldigt > $neu->tsFehlstundenGesamtUnentschuldigt) {
 				$sql .= "tsFehlstundenGesamtUnentschuldigt=:tsFehlstundenGesamtUnentschuldigt,";
-			if ($alt->tsASV > $neu->tsASV)
+			}
+			if ($alt->tsASV > $neu->tsASV) {
 				$sql .= "tsASV=:tsASV,";
-			if ($alt->tsAUE > $neu->tsAUE)
+			}
+			if ($alt->tsAUE > $neu->tsAUE) {
 				$sql .= "tsAUE=:tsAUE,";
-			if ($alt->tsZB > $neu->tsZB)
+			}
+			if ($alt->tsZB > $neu->tsZB) {
 				$sql .= "tsZB=:tsZB,";
-			if ($alt->tsLELS > $neu->tsLELS)
+			}
+			if ($alt->tsLELS > $neu->tsLELS) {
 				$sql .= "tsLELS=:tsLELS,";
-			if ($alt->tsSchulformEmpf > $neu->tsSchulformEmpf)
+			}
+			if ($alt->tsSchulformEmpf > $neu->tsSchulformEmpf) {
 				$sql .= "tsSchulformEmpf=:tsSchulformEmpf,";
-			if ($alt->tsIndividuelleVersetzungsbemerkungen > $neu->tsIndividuelleVersetzungsbemerkungen)
+			}
+			if ($alt->tsIndividuelleVersetzungsbemerkungen > $neu->tsIndividuelleVersetzungsbemerkungen) {
 				$sql .= "tsIndividuelleVersetzungsbemerkungen=:tsIndividuelleVersetzungsbemerkungen,";
-			if ($alt->tsFoerderbemerkungen > $neu->tsFoerderbemerkungen)
+			}
+			if ($alt->tsFoerderbemerkungen > $neu->tsFoerderbemerkungen) {
 				$sql .= "tsFoerderbemerkungen=:tsFoerderbemerkungen,";
+			}
 			$sql .= "daten=:daten WHERE id=:id and ts=:ts";
 			return $this->prepareStatement($sql);
 		}
@@ -537,8 +547,9 @@
 			$this->dropFrom('Schueler', "ts < $ts AND (id, ts) NOT IN (SELECT a.id, a.ts FROM Schueler a JOIN Schueler b WHERE a.id = b.id AND a.ts < b.ts AND (a.tsFehlstundenGesamt <> b.tsFehlstundenGesamt OR a.tsFehlstundenGesamtUnentschuldigt <> b.tsFehlstundenGesamtUnentschuldigt OR a.tsASV <> b.tsASV OR a.tsAUE <> b.tsAUE OR a.tsZB <> b.tsZB OR a.tsLELS <> b.tsLELS OR a.tsSchulformEmpf <> b.tsSchulformEmpf OR a.tsIndividuelleVersetzungsbemerkungen <> b.tsIndividuelleVersetzungsbemerkungen OR a.tsFoerderbemerkungen <> b.tsFoerderbemerkungen))");
 			// Lese dann alle Daten mit dem alten Zeitstempel ein, da diese ggf. Änderungen beinhalten
 			$diffsOld = $this->queryAllOrNull("SELECT id, ts, idJahrgang, idKlasse, daten, tsFehlstundenGesamt, tsFehlstundenGesamtUnentschuldigt, tsASV, tsAUE, tsZB, tsLELS, tsSchulformEmpf, tsIndividuelleVersetzungsbemerkungen, tsFoerderbemerkungen FROM Schueler WHERE ts < $ts");
-			if ($diffsOld === null)
+			if ($diffsOld === null) {
 				return;
+			}
 			// Erstelle aus den alten Daten eine Map basierend auf der id und eine Liste der ids
 			$mapOld = [];
 			$idsArray = [];
@@ -546,8 +557,9 @@
 				$mapOld[$row->id] = $row;
 				$idsArray[] = $row->id;
 			}
-			if (empty($idsArray))
+			if (empty($idsArray)) {
 				return;
+			}
 			$ids = implode(",", $idsArray);
 			// Lese dann alle dazugehörigen Daten mit neuem Zeitstempel ein
 			$this->beginTransaction();
@@ -572,18 +584,24 @@
 
 		private function importUpdateLeistungenGeneratePreparedStatement(mixed $alt, mixed $neu) {
 			$sql = "UPDATE Leistungsdaten SET ";
-			if ($alt->tsNote > $neu->tsNote)
+			if ($alt->tsNote > $neu->tsNote) {
 				$sql .= "tsNote=:tsNote,";
-			if ($alt->tsNoteQuartal > $neu->tsNoteQuartal)
+			}
+			if ($alt->tsNoteQuartal > $neu->tsNoteQuartal) {
 				$sql .= "tsNoteQuartal=:tsNoteQuartal,";
-			if ($alt->tsFehlstundenFach > $neu->tsFehlstundenFach)
+			}
+			if ($alt->tsFehlstundenFach > $neu->tsFehlstundenFach) {
 				$sql .= "tsFehlstundenFach=:tsFehlstundenFach,";
-			if ($alt->tsFehlstundenUnentschuldigtFach > $neu->tsFehlstundenUnentschuldigtFach)
+			}
+			if ($alt->tsFehlstundenUnentschuldigtFach > $neu->tsFehlstundenUnentschuldigtFach) {
 				$sql .= "tsFehlstundenUnentschuldigtFach=:tsFehlstundenUnentschuldigtFach,";
-			if ($alt->tsFachbezogeneBemerkungen > $neu->tsFachbezogeneBemerkungen)
+			}
+			if ($alt->tsFachbezogeneBemerkungen > $neu->tsFachbezogeneBemerkungen) {
 				$sql .= "tsFachbezogeneBemerkungen=:tsFachbezogeneBemerkungen,";
-			if ($alt->tsIstGemahnt > $neu->tsIstGemahnt)
+			}
+			if ($alt->tsIstGemahnt > $neu->tsIstGemahnt) {
 				$sql .= "tsIstGemahnt=:tsIstGemahnt,";
+			}
 			$sql .= "daten=:daten WHERE id=:id and ts=:ts";
 			return $this->prepareStatement($sql);
 		}
@@ -638,8 +656,9 @@
 			$this->dropFrom('Leistungsdaten', "ts < $ts AND (id, ts) NOT IN (SELECT a.id, a.ts FROM Leistungsdaten a JOIN Leistungsdaten b WHERE a.id = b.id AND a.ts < b.ts AND (a.tsNote <> b.tsNote OR a.tsNoteQuartal <> b.tsNoteQuartal OR a.tsFehlstundenFach <> b.tsFehlstundenFach OR a.tsFehlstundenUnentschuldigtFach <> b.tsFehlstundenUnentschuldigtFach OR a.tsFachbezogeneBemerkungen <> b.tsFachbezogeneBemerkungen OR a.tsIstGemahnt <> b.tsIstGemahnt))");
 			// Lese dann alle Daten mit dem alten Zeitstempel ein, da diese ggf. Änderungen beinhalten
 			$diffsOld = $this->queryAllOrNull("SELECT id, ts, idSchueler, idLerngruppe, daten, tsNote, tsNoteQuartal, tsFehlstundenFach, tsFehlstundenUnentschuldigtFach, tsFachbezogeneBemerkungen, tsIstGemahnt FROM Leistungsdaten WHERE ts < $ts");
-			if ($diffsOld === null)
+			if ($diffsOld === null) {
 				return;
+			}
 			// Erstelle aus den alten Daten eine Map basierend auf der id und eine Liste der ids
 			$mapOld = [];
 			$idsArray = [];
@@ -647,8 +666,9 @@
 				$mapOld[$row->id] = $row;
 				$idsArray[] = $row->id;
 			}
-			if (empty($idsArray))
+			if (empty($idsArray)) {
 				return;
+			}
 			$ids = implode(",", $idsArray);
 			// Lese dann alle dazugehörigen Daten mit neuem Zeitstempel ein
 			$this->beginTransaction();
@@ -671,14 +691,18 @@
 
 		private function importUpdateTeilleistungenGeneratePreparedStatement(mixed $alt, mixed $neu): PDOStatement {
 			$sql = "UPDATE Teilleistungen SET ";
-			if ($alt->tsArtID > $neu->tsArtID)
+			if ($alt->tsArtID > $neu->tsArtID) {
 				$sql .= "tsArtID=:tsArtID,";
-			if ($alt->tsDatum > $neu->tsDatum)
+			}
+			if ($alt->tsDatum > $neu->tsDatum) {
 				$sql .= "tsDatum=:tsDatum,";
-			if ($alt->tsBemerkung > $neu->tsBemerkung)
+			}
+			if ($alt->tsBemerkung > $neu->tsBemerkung) {
 				$sql .= "tsBemerkung=:tsBemerkung,";
-			if ($alt->tsNote > $neu->tsNote)
+			}
+			if ($alt->tsNote > $neu->tsNote) {
 				$sql .= "tsNote=:tsNote,";
+			}
 			$sql .= "daten=:daten WHERE id=:id and ts=:ts";
 			return $this->prepareStatement($sql);
 		}
@@ -723,8 +747,9 @@
 			$this->dropFrom('Teilleistungen', "ts < $ts AND (id, ts) NOT IN (SELECT a.id, a.ts FROM Teilleistungen a JOIN Teilleistungen b WHERE a.id = b.id AND a.ts < b.ts AND (a.tsArtID <> b.tsArtID OR a.tsDatum <> b.tsDatum OR a.tsBemerkung <> b.tsBemerkung OR a.tsNote <> b.tsNote))");
 			// Lese dann alle Daten mit dem alten Zeitstempel ein, da diese ggf. Änderungen beinhalten
 			$diffsOld = $this->queryAllOrNull("SELECT id, ts, idLeistung, daten, tsArtID, tsDatum, tsBemerkung, tsNote FROM Teilleistungen WHERE ts < $ts");
-			if ($diffsOld === null)
+			if ($diffsOld === null) {
 				return;
+			}
 			// Erstelle aus den alten Daten eine Map basierend auf der id und eine Liste der ids
 			$mapOld = [];
 			$idsArray = [];
@@ -732,8 +757,9 @@
 				$mapOld[$row->id] = $row;
 				$idsArray[] = $row->id;
 			}
-			if (empty($idsArray))
+			if (empty($idsArray)) {
 				return;
+			}
 			$ids = implode(",", $idsArray);
 			// Lese dann alle dazugehörigen Daten mit neuem Zeitstempel ein
 			$this->beginTransaction();
@@ -760,8 +786,9 @@
 			$this->dropFrom('Ankreuzkompetenzen', "ts < $ts AND (id, ts) NOT IN (SELECT a.id, a.ts FROM Ankreuzkompetenzen a JOIN Ankreuzkompetenzen b WHERE a.id = b.id AND a.ts < b.ts AND (a.tsStufe <> b.tsStufe))");
 			// Lese dann alle Daten mit dem alten Zeitstempel ein, da diese ggf. Änderungen beinhalten
 			$diffsOld = $this->queryAllOrNull("SELECT id, ts, idSchueler, idKompetenz, daten, tsStufe FROM Ankreuzkompetenzen WHERE ts < $ts");
-			if ($diffsOld === null)
+			if ($diffsOld === null) {
 				return;
+			}
 			// Erstelle aus den alten Daten eine Map basierend auf der id und eine Liste der ids
 			$mapOld = [];
 			$idsArray = [];
@@ -769,8 +796,9 @@
 				$mapOld[$row->id] = $row;
 				$idsArray[] = $row->id;
 			}
-			if (empty($idsArray))
+			if (empty($idsArray)) {
 				return;
+			}
 			$ids = implode(",", $idsArray);
 			// Lese dann alle dazugehörigen Daten mit neuem Zeitstempel ein
 			$this->beginTransaction();
@@ -805,8 +833,9 @@
 			$this->dropFrom('Lehrer', "ts < $ts AND (id, ts) NOT IN (SELECT a.id, a.ts FROM Lehrer a JOIN Lehrer b WHERE a.id = b.id AND a.ts < b.ts AND (a.tsPasswordHash <> b.tsPasswordHash))");
 			// Lese dann alle Daten mit dem alten Zeitstempel ein, da diese ggf. Änderungen beinhalten
 			$diffsOld = $this->queryAllOrNull("SELECT id, ts, daten, eMailDienstlich, passwordHash, tsPasswordHash FROM Lehrer WHERE ts < $ts");
-			if ($diffsOld === null)
+			if ($diffsOld === null) {
 				return;
+			}
 			// Erstelle aus den alten Daten eine Map basierend auf der id und eine Liste der ids
 			$mapOld = [];
 			$idsArray = [];
@@ -814,8 +843,9 @@
 				$mapOld[$row->id] = $row;
 				$idsArray[] = $row->id;
 			}
-			if (empty($idsArray))
+			if (empty($idsArray)) {
 				return;
+			}
 			$ids = implode(",", $idsArray);
 			// Lese dann alle dazugehörigen Daten mit neuem Zeitstempel ein
 			$this->beginTransaction();
@@ -848,10 +878,9 @@
 		 */
 		public function getSMTPClient(): ?SMTPClient {
 			$result = $this->queryAllOrNull("SELECT wert AS value FROM ServerConfig WHERE schluessel='smtp'");
-			if ($result === null)
+			if (($result === null) || (count($result) !== 1)) {
 				return null;
-			if (count($result) !== 1)
-				return null;
+			}
 			$json = $result[0]->value;
 			$client = new SMTPClient($json);
 			// Prüfe noch, ob der Client eine vollständige und plausible Konfiguration hat
@@ -904,8 +933,9 @@
 			$result = $stmt->fetchAll(PDO::FETCH_OBJ);
 			$hatEintrag = (count($result) > 0);
 			// Wenn der Wert null ist und kein Eintrag vorliegt, dann ist ein Einfügen nicht nötig
-			if (!$hatEintrag && ($value === null))
+			if (!$hatEintrag && ($value === null)) {
 				return;
+			}
 			// Wenn der Wert null ist und ein Eintrag vorliegt, dann muss dieser entfernt werden
 			if ($hatEintrag && ($value === null)) {
 				$stmt = $this->prepareStatement("DELETE FROM $table WHERE schluessel = :schluessel");
@@ -945,8 +975,9 @@
 			$result = $stmt->fetchAll(PDO::FETCH_OBJ);
 			$hatEintrag = (count($result) > 0);
 			// Wenn der Wert null ist und kein Eintrag vorliegt, dann ist ein Einfügen nicht nötig
-			if (!$hatEintrag && ($value === null))
+			if (!$hatEintrag && ($value === null)) {
 				return;
+			}
 			// Wenn der Wert null ist und ein Eintrag vorliegt, dann muss dieser entfernt werden
 			if ($hatEintrag && ($value === null)) {
 				$stmt = $this->prepareStatement("DELETE FROM ClientLehrerConfig WHERE idLehrer = :idLehrer AND schluessel = :schluessel");
@@ -980,10 +1011,12 @@
 		 */
 		public function getJsonENMDaten(): object {
 			$results = $this->queryAllOrExit500("SELECT ts, daten FROM Daten", "Fehler Lesen der ENM-Daten");
-			if (count($results) === 0)
+			if (empty($results)) {
 				Http::exit404NotFound("Keine zu exportierenden Daten in der Datenbank vorhanden.");
-			if (count($results) > 1)
+			}
+			if (count($results) > 1) {
 				Http::exit500("Zu viele Einträge für ENM-Daten in den Datenbank vorhanden.");
+			}
 			return $results[0];
 		}
 
@@ -995,8 +1028,9 @@
 		public function getENMLehrerdaten(): array {
 			$results = $this->queryAllOrExit500("SELECT daten FROM Lehrer", "Fehler beim Lesen der Lehrer-Daten");
 			$result = [];
-			foreach ($results as $row)
+			foreach ($results as $row) {
 				$result[] = json_decode($row->daten);
+			}
 			return $result;
 		}
 
@@ -1010,8 +1044,9 @@
 			$results = $this->queryAllOrExit500("SELECT daten FROM Lehrer", "Fehler beim Lesen der Lehrer-Daten");
 			foreach ($results as $row) {
 				$tmp = json_decode($row->daten);
-				if (($tmp->eMailDienstlich !== null) && (strcasecmp($tmp->eMailDienstlich, $email) === 0))
+				if (($tmp->eMailDienstlich !== null) && (strcasecmp($tmp->eMailDienstlich, $email) === 0)) {
 					return $tmp;
+				}
 			}
 			return null;
 		}
@@ -1028,8 +1063,9 @@
 			$matchingCount = 0; // Zähler für passende Datensätze
 			foreach ($results as $row) {
 				$tmp = json_decode($row->daten);
-				if (($tmp->eMailDienstlich !== null) && (strcasecmp($tmp->eMailDienstlich, $email) === 0))
+				if (($tmp->eMailDienstlich !== null) && (strcasecmp($tmp->eMailDienstlich, $email) === 0)) {
 					$matchingCount++;
+				}
 			}
 			// Wenn genau ein Datensatz gefunden wurde, return true, sonst false
 			return $matchingCount === 1;
@@ -1097,11 +1133,13 @@
 		 * @return bool   true, wenn die beiden Werte unterschiedlich sind
 		 */
 		protected function diffStringNullable(string | null $a, string | null $b) : bool {
-			if (($a === null) && ($b === null))
+			if (($a === null) && ($b === null)) {
 				return false;
-			if (($a === null) || ($b === null))
+			}
+			if (($a === null) || ($b === null)) {
 				return true;
-			return (strcmp($a, $b) !== 0);
+			}
+			return strcmp($a, $b) !== 0;
 		}
 
 		/**
@@ -1114,11 +1152,14 @@
 		 * @return bool   true, wenn die beiden Arrays unterschiedlich sind
 		 */
 		protected function diffArraySimple(array $a, array $b) : bool {
-			if (count($a) !== count($b))
+			if (count($a) !== count($b)) {
 				return true;
-			foreach ($a as $k => $v)
-				if ((!array_key_exists($k, $b)) || ($b[$k] !== $v))
+			}
+			foreach ($a as $k => $v) {
+				if ((!array_key_exists($k, $b)) || ($b[$k] !== $v)) {
 					return true;
+				}
+			}
 			return false;
 		}
 
@@ -1137,30 +1178,34 @@
 			$update = "";
 			if (property_exists($patch, 'note') && $this->diffStringNullable($patch->note, $daten->note) && ($ts > $daten->tsNote)) {
 				$istNote = array_key_exists($patch->note, $mapNoten);
-				if (!$istNote && ($patch->note !== null))
+				if (!$istNote && ($patch->note !== null)) {
 					Http::exit400BadRequest("Der Patch-Methode wurde eine ungültige Note übergeben.");
+				}
 				$update .= "tsNote='$ts',";
 				$daten->note = $patch->note;
 				$daten->tsNote = $ts;
 			}
 			if (property_exists($patch, 'noteQuartal') && $this->diffStringNullable($patch->noteQuartal, $daten->noteQuartal) && ($ts > $daten->tsNoteQuartal)) {
 				$istNote = array_key_exists($patch->noteQuartal, $mapNoten);
-				if (!$istNote && ($patch->noteQuartal !== null))
+				if (!$istNote && ($patch->noteQuartal !== null)) {
 					Http::exit400BadRequest("Der Patch-Methode wurde eine ungültige Quartals-Note übergeben.");
+				}
 				$update .= "tsNoteQuartal='$ts',";
 				$daten->noteQuartal = $patch->noteQuartal;
 				$daten->tsNoteQuartal = $ts;
 			}
 			if (property_exists($patch, 'fehlstundenFach') && ($patch->fehlstundenFach !== $daten->fehlstundenFach) && ($ts > $daten->tsFehlstundenFach)) {
-				if (!is_int($patch->fehlstundenFach) or ($patch->fehlstundenFach < 0))
+				if (!is_int($patch->fehlstundenFach) || ($patch->fehlstundenFach < 0)) {
 					Http::exit400BadRequest("Es wurde eine fehlerhafter Wert für die Fehlstunden angegeben.");
+				}
 				$update .= "tsFehlstundenFach='$ts',";
 				$daten->fehlstundenFach = $patch->fehlstundenFach;
 				$daten->tsFehlstundenFach = $ts;
 			}
 			if (property_exists($patch, 'fehlstundenUnentschuldigtFach') && ($patch->fehlstundenUnentschuldigtFach !== $daten->fehlstundenUnentschuldigtFach) && ($ts > $daten->tsFehlstundenUnentschuldigtFach)) {
-				if (!is_int($patch->fehlstundenUnentschuldigtFach) or ($patch->fehlstundenUnentschuldigtFach < 0))
+				if (!is_int($patch->fehlstundenUnentschuldigtFach) || ($patch->fehlstundenUnentschuldigtFach < 0)) {
 					Http::exit400BadRequest("Es wurde eine fehlerhafter Wert für die unentschuldigten Fehlstunden angegeben.");
+				}
 				$update .= "tsFehlstundenUnentschuldigtFach='$ts',";
 				$daten->fehlstundenUnentschuldigtFach = $patch->fehlstundenUnentschuldigtFach;
 				$daten->tsFehlstundenUnentschuldigtFach = $ts;
@@ -1171,8 +1216,9 @@
 				$daten->tsFachbezogeneBemerkungen = $ts;
 			}
 			if (property_exists($patch, 'istGemahnt') && ($patch->istGemahnt !== $daten->istGemahnt) && ($ts > $daten->tsIstGemahnt)) {
-				if (($patch->istGemahnt !== null) and !is_bool($patch->istGemahnt))
+				if (($patch->istGemahnt !== null) && !is_bool($patch->istGemahnt)) {
 					Http::exit400BadRequest("Es wurde eine fehlerhafter Wert für das Feld istGemahnt angegeben.");
+				}
 				$update .= "tsIstGemahnt='$ts',";
 				$daten->istGemahnt = $patch->istGemahnt;
 				$daten->tsIstGemahnt = $ts;
@@ -1206,16 +1252,18 @@
 			$update = "";
 			if (property_exists($patch, 'fehlstundenGesamt') && ($ts > $daten->lernabschnitt->tsFehlstundenGesamt)
 					&& ($patch->fehlstundenGesamt !== $daten->lernabschnitt->fehlstundenGesamt)) {
-				if (!is_int($patch->fehlstundenGesamt) or ($patch->fehlstundenGesamt < 0))
+				if (!is_int($patch->fehlstundenGesamt) || ($patch->fehlstundenGesamt < 0)) {
 					Http::exit400BadRequest("Es wurde eine fehlerhafter Wert für Gesamt-Fehlstunden angegeben.");
+				}
 				$update .= "tsFehlstundenGesamt='$ts',";
 				$daten->lernabschnitt->fehlstundenGesamt = $patch->fehlstundenGesamt;
 				$daten->lernabschnitt->tsFehlstundenGesamt = $ts;
 			}
 			if (property_exists($patch, 'fehlstundenGesamtUnentschuldigt') && ($ts > $daten->lernabschnitt->tsFehlstundenGesamtUnentschuldigt)
 					&& ($patch->fehlstundenGesamtUnentschuldigt !== $daten->lernabschnitt->fehlstundenGesamtUnentschuldigt)) {
-				if (!is_int($patch->fehlstundenGesamtUnentschuldigt) or ($patch->fehlstundenGesamtUnentschuldigt < 0))
+				if (!is_int($patch->fehlstundenGesamtUnentschuldigt) || ($patch->fehlstundenGesamtUnentschuldigt < 0)) {
 					Http::exit400BadRequest("Es wurde eine fehlerhafter Wert für unentschuldigten Gesamt-Fehlstunden angegeben.");
+				}
 				$update .= "tsFehlstundenGesamtUnentschuldigt='$ts',";
 				$daten->lernabschnitt->fehlstundenGesamtUnentschuldigt = $patch->fehlstundenGesamtUnentschuldigt;
 				$daten->lernabschnitt->tsFehlstundenGesamtUnentschuldigt = $ts;
@@ -1338,8 +1386,9 @@
 			}
 			if (property_exists($patch, 'note') && $this->diffStringNullable($patch->note, $daten->note) && ($ts > $daten->tsNote)) {
 				$istNote = array_key_exists($patch->note, $mapNoten);
-				if (!$istNote && ($patch->note !== null))
+				if (!$istNote && ($patch->note !== null)) {
 					Http::exit400BadRequest("Der Patch-Methode wurde eine ungültige Note übergeben.");
+				}
 				$update .= "tsNote='$ts',";
 				$daten->note = $patch->note;
 				$daten->tsNote = $ts;
@@ -1370,9 +1419,11 @@
 		public function patchENMSchuelerAnkreuzkompetenzen(string $ts, object $daten, object $patch): void {
 			$update = "";
 			if (property_exists($patch, 'stufen') && $this->diffArraySimple($patch->stufen, $daten->stufen) && ($ts > $daten->tsStufe)) {
-				foreach ($patch->stufen as $index=>$stufe)
-					if (!is_bool($stufe))
+				foreach ($patch->stufen as $index=>$stufe) {
+					if (!is_bool($stufe)) {
 						Http::exit500("Fehler beim Ausführen des Patch-Statements. Stufe mit Index ".$index." in der Ankreuzkompetenz ist kein Boolean-Wert. Patch wurde abgebrochen.");
+					}
+				}
 				$update .= "tsStufe='$ts',";
 				$daten->stufen = $patch->stufen;
 				$daten->tsStufe = $ts;
@@ -1461,8 +1512,9 @@
 			$result = $stmt->fetchAll(PDO::FETCH_OBJ);
 
 			// Prüfen, ob ein Ergebnis vorliegt
-			if (empty($result))
+			if (empty($result)) {
 				return false;
+			}
 
 			// Das erste und einzige Ergebnis
 			$tokenObj = $result[0];
@@ -1474,8 +1526,9 @@
 				// Berechne, ob das Token noch gültig ist
 				$tokenExpiryTime = $tokenTimestamp + $tokenValidForSecs; // Ablaufzeit des Tokens
 				$currentTime = time(); // Aktuelle Zeit
-				if ($currentTime < $tokenExpiryTime)
+				if ($currentTime < $tokenExpiryTime) {
 					return true;
+				}
 			}
 			return false;
 		}

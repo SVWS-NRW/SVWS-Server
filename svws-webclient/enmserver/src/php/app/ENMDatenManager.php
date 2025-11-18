@@ -51,6 +51,15 @@
 		}
 
 		/**
+		 * Gibt das aktuelle Datum als formattierten String zurück.
+		 *
+		 * @return string   das aktuelle Datum als String
+		 */
+		public function now(): string {
+			return date('Y-m-d H:i:s.v', time());
+		}
+
+		/**
 		 * Erstellt ein neues Objekt mit den übergebenen ENM-Daten als JSON-String und stellt Methoden für
 		 * den Zugriff auf diese Daten zur Verfügung.
 		 *
@@ -59,8 +68,9 @@
 		 * @return ENMDatenManager   der initialisierte Manager
 		 */
 		public static function createFromJson(string $jsonEnmDaten): ENMDatenManager {
-			if ($jsonEnmDaten === null)
+			if ($jsonEnmDaten === null) {
 				Http::exit500("Fehler bei dem Dekodieren der JSON-Daten: Der JSON-String ist null.");
+			}
 			$manager = new ENMDatenManager();
 			$enmDaten = null;
 			try {
@@ -69,11 +79,13 @@
 				Http::exit400BadRequest("Fehler bei dem Dekodieren der JSON-Daten. Prüfen ie ggf. die php-Konfiguration. Ein zu niedriger Wert bei der Einstellung memory_limit kann evtl. dazu führen. Fehler ".$e->getCode().": ".$e->getMessage()."\n".$e->getTraceAsString());
 			}
 			// Prüfe zunächst die ENM-Revision
-			if ($enmDaten->enmRevision != $manager->enmRevisionRequired)
+			if ($enmDaten->enmRevision != $manager->enmRevisionRequired) {
 				Http::exit400BadRequest("Die Revision der ENM-Daten ist nicht $manager->enmRevisionRequired.");
+			}
 			// Prüfe, ob die Schulform gesetzt ist
-			if ($enmDaten->schulform == null)
+			if ($enmDaten->schulform == null) {
 				Http::exit400BadRequest("Es muss eine Schulform angegeben sein.");
+			}
 			// Speichere die Lehrer-Daten und die Schüler-Daten zwischen, da diese im ENM-Server veränderbare Daten beinhalten
 			$manager->enmLehrer = $enmDaten->lehrer;
 			$manager->enmSchueler = $enmDaten->schueler;
@@ -113,8 +125,9 @@
 			$dbEnmDaten = $db->queryAllOrNull("SELECT * FROM Daten WHERE schulnummer = $schulnummer", true);
 			$updateMode = ($dbEnmDaten != null) && (count($dbEnmDaten) != 0);
 			// Wenn nicht aktualisiert wird, dann leere zunächst alle Tabellen mit evtl. zuvor importierten ENM-Daten
-			if (!$updateMode)
+			if (!$updateMode) {
 				$db->clearENMDaten();
+			}
 			// Schreibe die allgemeinen ENM-Daten
 			$db->writeENMDaten($this->ts, $this->enmDaten);
 			// Schreibe die ENM-Daten für die Lehrer-Zugänge
@@ -159,8 +172,9 @@
 		public function getMapNoten(array $liste) : array {
 			if ($this->mapNoten === null) {
 				$this->mapNoten = [];
-				foreach ($this->enmDaten->noten as $note)
+				foreach ($this->enmDaten->noten as $note) {
 					$this->mapNoten[$note->kuerzel] = $note;
+				}
 			}
 			return $this->mapNoten;
 		}
@@ -175,10 +189,13 @@
 		public function getMapKlassen(object $lehrer) : array {
 			if ($this->mapKlassen === null) {
 				$this->mapKlassen = [];
-				foreach ($this->enmDaten->klassen as $klasse)
-					foreach ($klasse->klassenlehrer as $klid)
-						if ($klid === $lehrer->id)
+				foreach ($this->enmDaten->klassen as $klasse) {
+					foreach ($klasse->klassenlehrer as $klid) {
+						if ($klid === $lehrer->id) {
 							$this->mapKlassen[$klasse->id] = $klasse;
+						}
+					}
+				}
 			}
 			return $this->mapKlassen;
 		}
@@ -191,8 +208,9 @@
 		public function getMapLerngruppen() : array {
 			if ($this->mapLerngruppen === null) {
 				$this->mapLerngruppen = [];
-				foreach ($this->enmDaten->lerngruppen as $lerngruppe)
+				foreach ($this->enmDaten->lerngruppen as $lerngruppe) {
 					$this->mapLerngruppen[$lerngruppe->id] = $lerngruppe;
+				}
 			}
 			return $this->mapLerngruppen;
 		}
@@ -207,10 +225,13 @@
 		public function getMapLerngruppenFachlehrer(object $lehrer) : array {
 			if ($this->mapLerngruppenFachlehrer === null) {
 				$this->mapLerngruppenFachlehrer = [];
-				foreach ($this->enmDaten->lerngruppen as $lerngruppe)
-					foreach ($lerngruppe->lehrerID as $lid)
-						if ($lid === $lehrer->id)
+				foreach ($this->enmDaten->lerngruppen as $lerngruppe) {
+					foreach ($lerngruppe->lehrerID as $lid) {
+						if ($lid === $lehrer->id) {
 							$this->mapLerngruppenFachlehrer[$lerngruppe->id] = $lerngruppe;
+						}
+					}
+				}
 			}
 			return $this->mapLerngruppenFachlehrer;
 		}
@@ -223,8 +244,9 @@
 		public function getMapAnkreuzkompetenzen() : array {
 			if ($this->mapAnkreuzkompetenzen === null) {
 				$this->mapAnkreuzkompetenzen = [];
-				foreach ($this->enmDaten->ankreuzkompetenzen->kompetenzen as $kompetenz)
+				foreach ($this->enmDaten->ankreuzkompetenzen->kompetenzen as $kompetenz) {
 					$this->mapAnkreuzkompetenzen[$kompetenz->id] = $kompetenz;
+				}
 			}
 			return $this->mapAnkreuzkompetenzen;
 		}
@@ -302,24 +324,28 @@
 					if ($istFachlehrer || $istKlassenlehrer) {
 						$leistungen[] = $leistung;
 						$tmpLerngruppe = $mapLerngruppen[$leistung->lerngruppenID];
-						if ($tmpLerngruppe != null)
+						if ($tmpLerngruppe != null) {
 							$setFachIDs[$tmpLerngruppe->fachID] = $tmpLerngruppe->fachID;
+						}
 					}
 				}
 				// Bestimme die Ankreuzkompetenzen, die dem Lehrer über einen Leistungsdatensatz zugeordnet sind
 				$kompetenzen = [];
 				foreach ($schueler->ankreuzkompetenzen as $schuelerkompetenz) {
 					$kompetenzVorhanden = array_key_exists($schuelerkompetenz->kompetenzID, $mapAnkreuzkompetenzen);
-					if (!$kompetenzVorhanden)
+					if (!$kompetenzVorhanden) {
 						continue;
+					}
 					$kompetenz = $mapAnkreuzkompetenzen[$schuelerkompetenz->kompetenzID];
 					if ((($kompetenz->istFachkompetenz === true) && ($istKlassenlehrer))
-						|| (($kompetenz->fachID != null) && (array_key_exists($kompetenz->fachID, $setFachIDs))))
+						|| (($kompetenz->fachID != null) && (array_key_exists($kompetenz->fachID, $setFachIDs)))) {
 						$kompetenzen[] = $schuelerkompetenz;
+					}
 				}
 				// Prüfe, ob der Schüler zurückgegeben werden soll
-				if ((count($leistungen) === 0) && (count($kompetenzen) === 0))
+				if ((empty($leistungen)) && (empty($kompetenzen))) {
 					continue;
+				}
 				// Ersetze die Leistungsdaten und die Ankreuzkompetenzen
 				$schueler->leistungsdaten = $leistungen;
 				$schueler->ankreuzkompetenzen = $kompetenzen;
@@ -344,19 +370,22 @@
 		 */
 		public function patchENMLeistung(Database $db, object $lehrer, object $patch): void {
 			// Prüfe, ob eine ID für die Leistungsdaten im Patch vorhanden ist
-			if ($patch->id === null)
+			if ($patch->id === null) {
 				Http::exit400BadRequest("Es muss eine ID angegeben werden, damit die Leistungsdaten angepasst werden können.");
+			}
 			// Prüfe, ob Leistungsdaten für die ID vorhanden sind
 			$mapsSchueler = $this->getMapsSchueler();
-			if (!array_key_exists($patch->id, $mapsSchueler->leistungen))
-				Http::exit404NotFound("Es wurde keine Leistung mit der ID ".$patch->id." gefunden.");
+			if (!array_key_exists($patch->id, $mapsSchueler->leistungen)) {
+				Http::exit404NotFound("Es wurde keine Leistung mit der ID {$patch->id} gefunden.");
+			}
 			$leistung = $mapsSchueler->leistungen[$patch->id];
 			// Prüfe, ob der Lehrer Fachlehrer für die Lerngruppe der Leistungsdaten ist
 			$mapLerngruppenFachlehrer = $this->getMapLerngruppenFachlehrer($lehrer);
-			if (!array_key_exists($leistung->lerngruppenID, $mapLerngruppenFachlehrer))
-				Http::exit403Forbidden("Es wurde keine Lerngruppe für die ID ".$leistung->lerngruppenID." zu der Leistung mit der ID ".$patch->id." gefunden, wo der angemeldete Lehrer Fachlehrer ist.");
+			if (!array_key_exists($leistung->lerngruppenID, $mapLerngruppenFachlehrer)) {
+				Http::exit403Forbidden("Es wurde keine Lerngruppe für die ID {$leistung->lerngruppenID} zu der Leistung mit der ID {$patch->id} gefunden, wo der angemeldete Lehrer Fachlehrer ist.");
+			}
 			$mapNoten = $this->getMapNoten($this->enmDaten->noten);
-			$db->patchENMLeistung(date('Y-m-d H:i:s.v', time()), $leistung, $patch, $mapNoten);
+			$db->patchENMLeistung($this->now(), $leistung, $patch, $mapNoten);
 		}
 
 		/**
@@ -372,19 +401,22 @@
 		 */
 		public function patchENMSchuelerLernabschnitt(Database $db, object $lehrer, object $patch): void {
 			// Prüfe, ob eine ID für die Lernabschnittsdaten im Patch vorhanden ist
-			if ($patch->id === null)
+			if ($patch->id === null) {
 				Http::exit400BadRequest("Es muss eine ID angegeben werden, damit die Lernabschnittsdaten angepasst werden können.");
+			}
 			// Prüfe, ob Lernabschnittsdaten für die ID vorhanden sind
 			$mapsSchueler = $this->getMapsSchueler();
-			if (!array_key_exists($patch->id, $mapsSchueler->lernabschnitte) || !array_key_exists($patch->id, $mapsSchueler->lernabschnittSchueler))
-				Http::exit404NotFound("Es wurde kein Lernabschnitt mit der ID ".$patch->id." gefunden.");
+			if (!array_key_exists($patch->id, $mapsSchueler->lernabschnitte) || !array_key_exists($patch->id, $mapsSchueler->lernabschnittSchueler)) {
+				Http::exit404NotFound("Es wurde kein Lernabschnitt mit der ID {$patch->id} gefunden.");
+			}
 			$lernabschnitt = $mapsSchueler->lernabschnitte[$patch->id];
 			$schueler = $mapsSchueler->lernabschnittSchueler[$patch->id];
 			// Prüfe, ob der Lehrer Klassenlehrer für den Schüler des Lernabschnittes ist
 			$mapKlassen = $this->getMapKlassen($lehrer);
-			if (!array_key_exists($schueler->klasseID, $mapKlassen))
-				Http::exit403Forbidden("Der angemeldete Lehrer ist kein Klassenlehrer der Klasse mit der ID ".$schueler->klasseID.".");
-			$db->patchENMSchuelerLernabschnitt(date('Y-m-d H:i:s.v', time()), $schueler, $patch);
+			if (!array_key_exists($schueler->klasseID, $mapKlassen)) {
+				Http::exit403Forbidden("Der angemeldete Lehrer ist kein Klassenlehrer der Klasse mit der ID {$schueler->klasseID}.");
+			}
+			$db->patchENMSchuelerLernabschnitt($this->now(), $schueler, $patch);
 		}
 
 		/**
@@ -402,14 +434,16 @@
 		public function patchENMSchuelerBemerkungen(Database $db, object $lehrer, int $idSchueler, object $patch): void {
 			// Prüfe, ob Bemerkungen für die Schüler-ID vorhanden sind
 			$mapsSchueler = $this->getMapsSchueler();
-			if (!array_key_exists($idSchueler, $mapsSchueler->bemerkungen) || !array_key_exists($idSchueler, $mapsSchueler->schueler))
+			if (!array_key_exists($idSchueler, $mapsSchueler->bemerkungen) || !array_key_exists($idSchueler, $mapsSchueler->schueler)) {
 				Http::exit404NotFound("Es wurden kein Schüler mit der ID ".$idSchueler." bzw. Bemerkungen für einen solchen Schüler gefunden.");
+			}
 			$schueler = $mapsSchueler->schueler[$idSchueler];
 			// Prüfe, ob der Lehrer Klassenlehrer für den Schüler ist
 			$mapKlassen = $this->getMapKlassen($lehrer);
-			if (!array_key_exists($schueler->klasseID, $mapKlassen))
+			if (!array_key_exists($schueler->klasseID, $mapKlassen)) {
 				Http::exit403Forbidden("Der angemeldete Lehrer ist kein Klassenlehrer der Klasse mit der ID ".$schueler->klasseID.".");
-			$db->patchENMSchuelerBemerkungen(date('Y-m-d H:i:s.v', time()), $idSchueler, $schueler, $patch);
+			}
+			$db->patchENMSchuelerBemerkungen($this->now(), $idSchueler, $schueler, $patch);
 		}
 
 		/**
@@ -425,20 +459,23 @@
 		 */
 		public function patchENMTeilleistung(Database $db, object $lehrer, object $patch): void {
 			// Prüfe, ob eine ID für die Teilleistungen im Patch vorhanden ist
-			if ($patch->id === null)
+			if ($patch->id === null) {
 				Http::exit400BadRequest("Es muss eine ID angegeben werden, damit die Teilleistungen angepasst werden können.");
+			}
 			// Prüfe, ob Teilleistungen für die ID vorhanden sind
 			$mapsSchueler = $this->getMapsSchueler();
-			if (!array_key_exists($patch->id, $mapsSchueler->teilleistungen) || !array_key_exists($patch->id, $mapsSchueler->teilleistungLeistung))
+			if (!array_key_exists($patch->id, $mapsSchueler->teilleistungen) || !array_key_exists($patch->id, $mapsSchueler->teilleistungLeistung)) {
 				Http::exit404NotFound("Es wurde keine Teilleistung mit der ID ".$patch->id." gefunden.");
+			}
 			$teilleistung = $mapsSchueler->teilleistungen[$patch->id];
 			$teilleistungLeistung = $mapsSchueler->teilleistungLeistung[$patch->id];
 			// Prüfe, ob der Lehrer Fachlehrer für die Lerngruppe der Leistungsdaten ist
 			$mapLerngruppenFachlehrer = $this->getMapLerngruppenFachlehrer($lehrer);
-			if (!array_key_exists($teilleistungLeistung->lerngruppenID, $mapLerngruppenFachlehrer))
+			if (!array_key_exists($teilleistungLeistung->lerngruppenID, $mapLerngruppenFachlehrer)) {
 				Http::exit403Forbidden("Es wurde keine Lerngruppe für die ID ".$teilleistungLeistung->lerngruppenID." zu der Teilleistung mit der ID ".$patch->id." gefunden, wo der angemeldete Lehrer Fachlehrer ist.");
+			}
 			$mapNoten = $this->getMapNoten($this->enmDaten->noten);
-			$db->patchENMTeilleistung(date('Y-m-d H:i:s.v', time()), $teilleistung, $patch, $mapNoten);
+			$db->patchENMTeilleistung($this->now(), $teilleistung, $patch, $mapNoten);
 		}
 
 		/**
@@ -454,19 +491,22 @@
 		 */
 		public function patchENMSchuelerAnkreuzkompetenzen(Database $db, object $lehrer, object $patch): void {
 			// Prüfe, ob eine ID für die Ankreuzkompetenz im Patch vorhanden ist
-			if ($patch->id === null)
+			if ($patch->id === null) {
 				Http::exit400BadRequest("Es muss eine ID angegeben werden, damit die Ankreuzkompetenz angepasst werden kann.");
+			}
 			// Prüfe, ob eine Ankreuzkompetenz für die ID vorhanden sind
 			$mapsSchueler = $this->getMapsSchueler();
-			if (!array_key_exists($patch->id, $mapsSchueler->ankreuzkompetenzen) || !array_key_exists($patch->id, $mapsSchueler->ankreuzkompetenzSchueler))
+			if (!array_key_exists($patch->id, $mapsSchueler->ankreuzkompetenzen) || !array_key_exists($patch->id, $mapsSchueler->ankreuzkompetenzSchueler)) {
 				Http::exit404NotFound("Es wurden keine Ankreuzkompetenz mit der ID ".$patch->id." gefunden.");
+			}
 			$ankreuzkompetenz = $mapsSchueler->ankreuzkompetenzen[$patch->id];
 			$schueler = $mapsSchueler->ankreuzkompetenzSchueler[$patch->id];
 			// Prüfe, ob der Lehrer Klassenlehrer für den Schüler der Ankreuzkompetenz ist
 			$mapKlassen = $this->getMapKlassen($lehrer);
-			if (!array_key_exists($schueler->klasseID, $mapKlassen))
+			if (!array_key_exists($schueler->klasseID, $mapKlassen)) {
 				Http::exit403Forbidden("Der angemeldete Lehrer ist kein Klassenlehrer der Klasse mit der ID ".$schueler->klasseID.".");
-			$db->patchENMSchuelerAnkreuzkompetenzen(date('Y-m-d H:i:s.v', time()), $ankreuzkompetenz, $patch);
+			}
+			$db->patchENMSchuelerAnkreuzkompetenzen($this->now(), $ankreuzkompetenz, $patch);
 		}
 
 	}

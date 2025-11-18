@@ -34,17 +34,19 @@
 		public function __construct(Database $db, Config $config) {
 			$this->db = $db;
 			$this->config = $config;
-			if (!array_key_exists("HTTP_AUTHORIZATION", $_SERVER))
+			if (!array_key_exists("HTTP_AUTHORIZATION", $_SERVER)) {
 				Http::exit500("HTTP-Authorization-Header kann nicht gelesen werden. Überprüfen sie die Anfrage oder die Server-Konfiguration.");
+			}
 			$parts = explode(" ", $_SERVER["HTTP_AUTHORIZATION"], 2);
 			if (strcasecmp($parts[0], "Basic") == 0) {
 				$this->authMethod = "Basic";
 				$creds = explode(":", base64_decode($parts[1]));
-				if (count($creds) != 2)
+				if (count($creds) != 2) {
 					Http::exit500("Fehler bei dem HTTP-Authorization-Header. Die Kodierung von Benutzername und Kennwort ist fehlerhaft.");
+				}
 				$this->authUser = $creds[0];
 				$this->authPassword = $creds[1];
-			} else if (strcasecmp($parts[0], "Bearer") == 0) {
+			} elseif (strcasecmp($parts[0], "Bearer") == 0) {
 				$this->authMethod = "Bearer";
 				$this->authToken = $parts[1];
 			} else {
@@ -64,8 +66,9 @@
 		public function pruefeBasicAuth(string $username, string $password): void {
 			if ((strcmp($this->authMethod, "Basic") != 0)
 				|| (strcasecmp($this->authUser, $username) != 0)
-				|| (strcmp($this->authPassword, $password) != 0))
-				Http::exit401Unauthorized('WWW-Authenticate: Basic realm="ENM-Server", charset="UTF-8"');
+				|| (strcmp($this->authPassword, $password) != 0)) {
+				Http::exit401UnauthorizedRealm();
+			}
 		}
 
 		/**
@@ -76,13 +79,16 @@
 		 * @return object   das Lehrer-Objekt des angemeldeten Benutzer
 		 */
 		public function pruefeLehrerBasicAuth() : object {
-			if (strcmp($this->authMethod, "Basic") != 0)
-				Http::exit401Unauthorized('WWW-Authenticate: Basic realm="ENM-Server", charset="UTF-8"');
+			if (strcmp($this->authMethod, "Basic") != 0) {
+				Http::exit401UnauthorizedRealm();
+			}
 			$lehrer = $this->db->getENMLehrerByEmail($this->authUser);
-			if ($lehrer === null)
-				Http::exit401Unauthorized('WWW-Authenticate: Basic realm="ENM-Server", charset="UTF-8"');
-			if (!password_verify($this->authPassword, $lehrer->passwordHash))
-				Http::exit401Unauthorized('WWW-Authenticate: Basic realm="ENM-Server", charset="UTF-8"');
+			if ($lehrer === null) {
+				Http::exit401UnauthorizedRealm();
+			}
+			if (!password_verify($this->authPassword, $lehrer->passwordHash)) {
+				Http::exit401UnauthorizedRealm();
+			}
 			return $lehrer;
 		}
 
@@ -92,16 +98,20 @@
 		 * @return void
  		 */
 		public function pruefeAccessToken(): void {
-			if (strcmp($this->authMethod, "Bearer") != 0)
+			if (strcmp($this->authMethod, "Bearer") != 0) {
 				Http::exit401Unauthorized('WWW-Authenticate: Bearer realm="ENM-Server", error="invalid_request", error_description="An access token is required"');
+			}
 			$client = $this->db->getClientByAccessToken($this->authToken);
-			if ($client == null)
+			if ($client == null) {
 				Http::exit401Unauthorized('WWW-Authenticate: Bearer realm="ENM-Server", error="invalid_token", error_description="The access token is not valid"');
+			}
 			$elapsed = time() - $client->tokenTimestamp;
-			if ($elapsed < 0)
+			if ($elapsed < 0) {
 				Http::exit401Unauthorized('WWW-Authenticate: Bearer realm="ENM-Server", error="invalid_token", error_description="The access token has an invalid timestamp"');
-			if ($elapsed > $client->tokenValidForSecs)
+			}
+			if ($elapsed > $client->tokenValidForSecs) {
 				Http::exit401Unauthorized('WWW-Authenticate: Bearer realm="ENM-Server", error="invalid_token", error_description="The access token has expired"');
+			}
 		}
 
 		/**
@@ -112,16 +122,20 @@
 		 * @return int im Erfolgsfall wird die authorisierte Client-ID zurückgegeben
 		 */
 		public function pruefeClientSecret(): int {
-			if (strcmp($this->authMethod, "Basic") != 0)
+			if (strcmp($this->authMethod, "Basic") != 0) {
 				Http::exit401Unauthorized('WWW-Authenticate: Basic realm="ENM-Server", error="invalid_client", error_description="Client authentication is required"');
+			}
 			$clientID = intval($this->authUser);
-			if ($clientID <= 0)
+			if ($clientID <= 0) {
 				Http::exit401Unauthorized('WWW-Authenticate: Basic realm="ENM-Server", error="invalid_client", error_description="Client is unknown"');
+			}
 			$dbSecret = $this->config->getClientSecret();
-			if ($dbSecret == null)
+			if ($dbSecret == null) {
 				Http::exit401Unauthorized('WWW-Authenticate: Basic realm="ENM-Server", error="invalid_client", error_description="Client secret does not exist"');
-			if (strcmp($this->authPassword, $dbSecret) != 0)
+			}
+			if (strcmp($this->authPassword, $dbSecret) != 0) {
 				Http::exit401Unauthorized('WWW-Authenticate: Basic realm="ENM-Server", error="invalid_client", error_description="Invalid client secret"');
+			}
 			return $clientID;
 		}
 
@@ -140,11 +154,14 @@
  		 */
 		public function pruefeHTTPMethod(array $allowed): void {
 			$hasMethod = false;
-			foreach ($allowed as $tmp)
-				if (strcmp($_SERVER['REQUEST_METHOD'], $tmp) === 0)
+			foreach ($allowed as $tmp) {
+				if (strcmp($_SERVER['REQUEST_METHOD'], $tmp) === 0) {
 					$hasMethod = true;
-			if (!$hasMethod)
+				}
+			}
+			if (!$hasMethod) {
 				Http::exit403Forbidden();
+			}
 		}
 
 	}

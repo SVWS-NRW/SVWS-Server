@@ -25,8 +25,9 @@
 		 */
 		public static function getBody() : string {
 			$body = file_get_contents("php://input");
-			if ($body === false)
+			if ($body === false) {
 				Http::exit400BadRequest("Fehler beim Lesen des HTTP-Body.");
+			}
 			return $body;
 		}
 
@@ -39,13 +40,53 @@
 		public static function getBodyJsonObject() : object {
 			try {
 				$obj = json_decode(Http::getBody(), false);
-				if (!is_object($obj))
+				if (!is_object($obj)) {
 					Http::exit400BadRequest("Fehler beim Dekodieren des JSON-Strings des HTTP-Body.");
+				}
 				return $obj;
 			} catch (ValueError $e) {
 				Http::exit400BadRequest("Fehler beim Dekodieren des JSON-Strings des HTTP-Body (" + $e->getCode() + "): " + $e->getMessage());
 			}
 		}
+
+
+		/**
+		 * Gibt für den übergebenen Fehler eines Multipart-Uploads einen Fehlertext zurück.
+		 *
+		 * @param mixed   der Fehler
+		 *
+		 * @return string der Fehlertext
+		 */
+		private static function getUploadError(mixed $err) : string {
+			$str = "";
+			switch ($err) {
+				case 1: // UPLOAD_ERR_INI_SIZE
+					$str = "Fehler beim Upload der Datei: Die Datei ist größer als die maximal erlaubte Dateigröße. Der Wert sollte in der php.ini angepasst werden.";
+					break;
+				case 2: // UPLOAD_ERR_FORM_SIZE
+					$str = "Fehler beim Upload der Datei: Die Datei ist größer als die maximal erlaubte Dateigröße, welche in der HTML form als MAX_FILE_SIZE angegeben wurde.";
+					break;
+				case 3: // UPLOAD_ERR_PARTIAL
+					$str = "Fehler beim Upload der Datei: Die Datei wurde nur teilweise hochgeladen.";
+					break;
+				case 4: // UPLOAD_ERR_NO_FILE
+					$str = "Fehler beim Upload der Datei: Es wurde keine Datei hochgeladen.";
+					break;
+				case 6: // UPLOAD_ERR_NO_TMP_DIR
+					$str = "Fehler beim Upload der Datei: In der php.ini wurde kein temporäres Verzeichnis spezifiziert.";
+					break;
+				case 7: // UPLOAD_ERR_CANT_WRITE
+					$str = "Fehler beim Upload der Datei: Es konnte nicht auf das Dateisystem geschrieben werden.";
+					break;
+				case 8: // UPLOAD_ERR_EXTENSION
+					$str = "Fehler beim Upload der Datei: Die PHP extension hat den Upload gestoppt.";
+					break;
+				default:
+					$str = "Fehler beim Upload der Datei: Unbekannter Fehlercode {$err}.";
+			}
+			return $str;
+		}
+
 
 		/**
 		 * Ermittelt den Namen der temporären Datei, welche für einen Http-Request in einem Multipart
@@ -57,37 +98,24 @@
 		 */
 		public static function getMultipartTmpFilename(string $name) : string {
 			$contentType = $_SERVER["CONTENT_TYPE"];
-			if ($contentType == null)
+			if ($contentType == null) {
 				Http::exit400BadRequest("Fehler im HTTP-Header: Content Type ist nicht angegeben.");
+			}
 			$contentType = trim(explode(";", $contentType)[0]);
-			if (strcmp($contentType, "multipart/form-data") != 0)
+			if (strcmp($contentType, "multipart/form-data") != 0) {
 				Http::exit400BadRequest("Fehler im HTTP-Header: Content Type ist nicht 'multipart/form-data'.");
+			}
 
 			$file = $_FILES[$name];
-			if ($file == null)
+			if ($file == null) {
 				Http::exit400BadRequest("Fehler in der Anfrage: Die Anfrage muss einen Datei-Anhang mit dem Namen '$name' enthalten.");
-			switch ($file["error"]) {
-				case 0: // UPLOAD_ERROR_OK
-					break;
-				case 1: // UPLOAD_ERR_INI_SIZE
-					Http::exit400BadRequest("Fehler beim Upload der Datei: Die Datei ist größer als die maximal erlaubte Dateigröße. Der Wert sollte in der php.ini angepasst werden.");
-				case 2: // UPLOAD_ERR_FORM_SIZE
-					Http::exit400BadRequest("Fehler beim Upload der Datei: Die Datei ist größer als die maximal erlaubte Dateigröße, welche in der HTML form als MAX_FILE_SIZE angegeben wurde.");
-				case 3: // UPLOAD_ERR_PARTIAL
-					Http::exit400BadRequest("Fehler beim Upload der Datei: Die Datei wurde nur teilweise hochgeladen.");
-				case 4: // UPLOAD_ERR_NO_FILE
-					Http::exit400BadRequest("Fehler beim Upload der Datei: Es wurde keine Datei hochgeladen.");
-				case 6: // UPLOAD_ERR_NO_TMP_DIR
-					Http::exit400BadRequest("Fehler beim Upload der Datei: In der php.ini wurde kein temporäres Verzeichnis spezifiziert.");
-				case 7: // UPLOAD_ERR_CANT_WRITE
-					Http::exit400BadRequest("Fehler beim Upload der Datei: Es konnte nicht auf das Dateisystem geschrieben werden.");
-				case 8: // UPLOAD_ERR_EXTENSION
-					Http::exit400BadRequest("Fehler beim Upload der Datei: Die PHP extension hat den Upload gestoppt.");
-				default:
-					Http::exit400BadRequest("Fehler beim Upload der Datei: Unbekannter Fehlercode ".$file["error"].".");
 			}
-			if ($file["tmp_name"] == null)
+			if ($file["error"] !== 0) { // nicht UPLOAD_ERROR_OK -> Gib den Fehler zurück
+				Http::exit400BadRequest(Http::getUploadError($file["error"]));
+			}
+			if ($file["tmp_name"] == null) {
 				Http::exit400BadRequest("Fehler beim Upload der Datei: Es ist keine temporäre Datei vorhanden.");
+			}
 			return $file["tmp_name"];
 		}
 
@@ -103,15 +131,19 @@
 			$tmpFilename = Http::getMultipartTmpFilename($name);
 			$content = "";
 			$zd = gzopen($tmpFilename, "r");
-			if ($zd == false)
+			if ($zd == false) {
 				Http::exit400BadRequest("Fehler beim Upload der Datei: Die Datei ist nicht im gzip-Format.");
-			while (!gzeof($zd))
+			}
+			while (!gzeof($zd)) {
 				$content .= gzread($zd, 1000000);
-			if (strcmp($content, "") === 0)
+			}
+			if (strcmp($content, "") === 0) {
 				Http::exit400BadRequest("Fehler beim Upload der Datei: Die gzip-Datei konnte nicht gelesen werden.");
+			}
 			$success = gzclose($zd);
-			if ($success == false)
+			if (!$success) {
 				Http::exit500("Fehler beim Upload der Datei: Die gzip-Datei konnte nicht erfolgreich geschlossen werden.");
+			}
 			return $content;
 		}
 
@@ -123,10 +155,12 @@
 				$cors_sec_fetch_site = null;
 				$cors_sec_fetch_mode = null;
 				foreach (getallheaders() as $name => $value) {
-					if (strcasecmp($name, "Sec-Fetch-Mode") === 0)
+					if (strcasecmp($name, "Sec-Fetch-Mode") === 0) {
 						$cors_sec_fetch_mode = $value;
-					if (strcasecmp($name, "Sec-Fetch-Site") === 0)
+					}
+					if (strcasecmp($name, "Sec-Fetch-Site") === 0) {
 						$cors_sec_fetch_site = $value;
+					}
 				}
 				if (strcasecmp($cors_sec_fetch_mode, "cors") === 0) {
 					http_response_code(204);
@@ -154,9 +188,17 @@
 		 */
 		public static function exit401Unauthorized(?string $headerinfo = null) {
 			http_response_code(401);
-			if ($headerinfo != null)
+			if ($headerinfo != null) {
 				header($headerinfo);
+			}
 			exit;
+		}
+
+		/**
+		 * Gibt einen UNAUTHORIZED (401) zurück und beendet das PHP-Skript.
+		 */
+		public static function exit401UnauthorizedRealm() {
+			Http::exit401Unauthorized('WWW-Authenticate: Basic realm="ENM-Server", charset="UTF-8"');
 		}
 
 		/**
