@@ -102,7 +102,7 @@
 	import router from './router';
 	import type { PaneSplitterConfig } from './../ui/composables/usePaneSplitter';
 	import { usePaneSplitter } from './../ui/composables/usePaneSplitter';
-	import { SelectManager } from './../ui/controls/select/selectManager/SelectManager';
+	import { SelectManager } from '../ui/controls/select/manager/SelectManager';
 
 	const isDark = useDark({ selector: 'html' });
 

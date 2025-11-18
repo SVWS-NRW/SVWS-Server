@@ -1,4 +1,4 @@
-import { isRef, shallowRef, toRaw, toValue, triggerRef, watch, type MaybeRef, type ShallowRef } from "vue";
+import { isRef, shallowRef, toRaw, toValue, watch, type MaybeRef, type ShallowRef } from "vue";
 import { ArrayList } from "../../../../../../core/src/java/util/ArrayList";
 import type { List } from "../../../../../../core/src/java/util/List";
 import type { SelectFilter } from "./SelectFilter";

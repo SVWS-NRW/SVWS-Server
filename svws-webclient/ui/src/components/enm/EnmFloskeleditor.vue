@@ -92,7 +92,7 @@
 	import type { List } from '../../../../core/src/java/util/List';
 	import type { EnmManager, BemerkungenHauptgruppe, EnmLerngruppenAuswahlEintrag } from './EnmManager';
 	import { PairNN } from '../../../../core/src/asd/adt/PairNN';
-	import { SelectManager } from '../../ui/controls/select/selectManager/SelectManager';
+	import { SelectManager } from '../../ui/controls/select/manager/SelectManager';
 
 	type RowType = { gruppe: ENMFloskelgruppe, floskel: ENMFloskel | null };
 	type StrOrUndef = string | undefined;

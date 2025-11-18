@@ -27,7 +27,7 @@ export class SelectManager<T> extends BaseSelectManager<T> {
 		this.initSelectManager(config);
 	}
 
-	public setConfig(config?: SelectManagerConfig<T>, setDefaults?: boolean) {
+	public setConfig(config?: SelectManagerConfig<T>, setDefaults?: boolean): void {
 		super.setConfig(config, setDefaults);
 		this.initSelectManager(config, setDefaults);
 	}
@@ -39,10 +39,10 @@ export class SelectManager<T> extends BaseSelectManager<T> {
 	 * @param setDefaults   wenn true werden die Defaultwerte für alle Konfigurationen gesetzt, die nicht übergeben wurden. Andernfalls werden die alten
 	 * 					    beibehalten. Default ist false
 	 */
-	protected initSelectManager(config: SelectManagerConfig<T> | undefined, setDefaults: boolean = false) {
-		const newSelectionDisplayText = config?.selectionDisplayText ?? (setDefaults ? ((option) => option?.toString() ?? "") : this.selectionDisplayText);
+	protected initSelectManager(config: SelectManagerConfig<T> | undefined, setDefaults: boolean = false): void {
+		const newSelectionDisplayText = config?.selectionDisplayText ?? (setDefaults ? ((option): string => option?.toString() ?? "") : this.selectionDisplayText);
 		this._selectionDisplayText = this.initShallowRef(newSelectionDisplayText, v => v);
-		const newOptionDisplayText = config?.optionDisplayText ?? (setDefaults ? ((option) => option?.toString() ?? "") : this.optionDisplayText);
+		const newOptionDisplayText = config?.optionDisplayText ?? (setDefaults ? ((option): string => option?.toString() ?? "") : this.optionDisplayText);
 		this._optionDisplayText = this.initShallowRef(newOptionDisplayText, v => v);
 
 		/*
@@ -51,16 +51,11 @@ export class SelectManager<T> extends BaseSelectManager<T> {
 
 		this._watcher.push(
 			watch(() => config?.optionDisplayText, newDisplay => {
-				this.optionDisplayText = toValue(newDisplay ?? ((option) => option?.toString() ?? ""));
-			}, { deep: true }
-			)
-		);
-
-		this._watcher.push(
+				this.optionDisplayText = toValue(newDisplay ?? ((option): string => option?.toString() ?? ""));
+			}, { deep: true }),
 			watch(() => config?.selectionDisplayText, newDisplay => {
-				this.selectionDisplayText = toValue(newDisplay ?? ((option) => option?.toString() ?? ""));
-			}, { deep: true }
-			)
+				this.selectionDisplayText = toValue(newDisplay ?? ((option): string => option?.toString() ?? ""));
+			}, { deep: true })
 		);
 	}
 

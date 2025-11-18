@@ -1,9 +1,9 @@
 <template>
-	<div ref="uiSelect" @focusout="onFocusOut" class="ui-select relative rounded-md text-base inline-flex h-fit w-full group" v-bind="filteredAttributes">
+	<div ref="uiSelect" @focusout="onFocusOut" class="ui-select relative rounded-md text-base inline-flex h-fit w-full group" v-bind="filteredHtmlAttributes">
 		<!-- Combobox -->
-		<div :id="`uiSelectInput_${instanceId}`" ref="uiSelectCombobox" :tabindex="comboboxTabindex" :role="comboboxRole" v-bind="comboboxAriaAttrs"
-			:class="[comboboxClasses, 'relative outline-none ring-ui-neutral w-full rounded-md flex items-center gap-1 min-w-16 m-[0.2em] select-none group-focus-within:ring-2 hover:ring-2']"
-			@click.stop="handleComponentClick" @focus="handleDomFocus" @keydown.stop="onKeyDown">
+		<div :id="`uiSelectInput_${state.instanceId}`" ref="uiSelectCombobox" :tabindex="comboboxTabindex" :role="comboboxRole" v-bind="comboboxAriaAttrs"
+			:class="[comboboxClasses, { [focusClass]: !props.searchable }, 'relative outline-none ring-ui-neutral w-full rounded-md flex items-center gap-1 min-w-16 m-[0.2em] select-none group-focus-within:ring-2 hover:ring-2']"
+			@click.stop="handleComponentClick" @focus="focusSelect" @keydown.stop="handleKeyDown">
 			<div :class="[headlessPadding, 'flex']">
 				<!-- Expand-Icon + Clear-Button headless -->
 				<div v-if="headless && !readonly" class="flex items-center">
@@ -26,7 +26,7 @@
 						</svws-ui-tooltip>
 					</span>
 
-					<span :id="`uiSelectLabel_${instanceId}`" :class="[labelTextColorClass, 'overflow-hidden truncate']" aria-hidden="true">
+					<span :id="`uiSelectLabel_${state.instanceId}`" :class="[labelTextColorClass, 'overflow-hidden truncate']" aria-hidden="true">
 						{{ label }}
 					</span>
 					<span v-if="selectionLimitText !== null" class="h-5 leading-none content-center" :class="[getSecondaryTextColor(textColorClass)]">
@@ -92,10 +92,10 @@
 					</span>
 					<div v-if="searchable" class="relative grid grid-cols-1 grid-rows-1 flex-1 min-w-5 order-last text-base">
 						<!-- Such-Input -->
-						<input v-if="searchable && !disabled && !readonly" :id="`uiSelectinput_${instanceId}`" ref="uiSelectSearch" type="text" role="combobox"
-							:tabindex="searchInputTabindex" v-bind="searchAriaAttrs" v-model="search"
-							:class="[searchInputFocusClass, 'row-start-1 col-start-1 outline-none font-normal h-5']"
-							@focus="handleDomFocus" @blur="handleBlur" @input="handleInput">
+						<input v-if="searchable && !disabled && !readonly" :id="`uiSelectinput_${state.instanceId}`" ref="uiSelectSearch" type="text" role="combobox"
+							:tabindex="searchInputTabindex" v-bind="searchInputAriaAttrs" v-model="search"
+							:class="[focusClass, 'row-start-1 col-start-1 outline-none font-normal h-5']"
+							@focus="focusSelect" @blur="onFocusOut" @input="handleSearchInput">
 					</div>
 				</div>
 			</div>
@@ -111,16 +111,16 @@
 		</div>
 
 		<!-- Dropdown -->
-		<ul v-if="!disabled && !readonly" popover="manual" :aria-labelledby="`uiSelectLabel_${instanceId}`" :id="`uiSelectDropdown_${instanceId}`" ref="uiSelectDropdown" role="listbox"
+		<ul v-if="!disabled && !readonly" popover="manual" :aria-labelledby="`uiSelectLabel_${state.instanceId}`" :id="`uiSelectDropdown_${state.instanceId}`" ref="uiSelectDropdown" role="listbox"
 			class="overflow-auto bg-ui select-none scrollbar-thin p-1 rounded-md border border-ui font-normal" :style="dropdownPositionStyles">
-			<li v-if="manager.filteredOptions.isEmpty() || (searchFilteredOptions.size() === 0)" class="cursor-not-allowed p-2 hover:bg-ui-hover text-ui-secondary italic text-left">
+			<li v-if="manager.filteredOptions.isEmpty() || (optionsMatchingSearch.size() === 0)" class="cursor-not-allowed p-2 hover:bg-ui-hover text-ui-secondary italic text-left">
 				{{ "Keine passenden Einträge gefunden" }}
 			</li>
-			<li v-else :id="`uiSelectOption_${optionIndex}_${instanceId}`" v-for="(option, optionIndex) in searchFilteredOptions" :key="optionIndex"
+			<li v-else :id="`uiSelectOption_${optionIndex}_${state.instanceId}`" v-for="(option, optionIndex) in optionsMatchingSearch" :key="optionIndex"
 				role="option" :aria-selected="isSelected(option)"
-				:class="[optionClasses(option, optionIndex), 'cursor-pointer m-1 p-1 hover:bg-ui-hover hover:inset-ring-2 hover:inset-ring-ui-neutral rounded-lg text-left']"
+				:class="[getOptionClasses(option, optionIndex), 'cursor-pointer m-1 p-1 hover:bg-ui-hover hover:inset-ring-2 hover:inset-ring-ui-neutral rounded-lg text-left']"
 				@mousedown.stop="toggleSelection(option)">
-				<template v-for="(part, index) in splitText(manager.getOptionText(option))" :key="index">
+				<template v-for="(part, index) in splitTextIntoHits(manager.getOptionText(option))" :key="index">
 					<span v-if="part.hit" class="bg-ui-selected">{{ part.text }}</span>
 					<span v-else>{{ part.text }}</span>
 				</template>
@@ -131,13 +131,13 @@
 
 <script setup lang="ts" generic="T, V extends BasicValidator">
 
-	import { computed, ref, toRaw, useAttrs, watch } from 'vue';
-	import { useUiSelectUtils } from './selectManager/UiSelectUtils';
-	import type { BasicValidator } from '../../../../../core/src/asd/validate/BasicValidator';
-	import type { UiSelectMultiProps } from './selectManager/UiSelectProps';
-	import { SelectManager } from './selectManager/SelectManager';
+	import { computed, ref, toRaw, toRefs, useAttrs, watch } from 'vue';
+	import { useUiSelectUtils } from './utils/useUiSelectUtils';
+	import type { UiSelectMultiProps, UiSelectHTMLElements, UiSelectSelectionMethods, UiSelectState } from './manager/UiSelectTypes';
+	import { SelectManager } from './manager/SelectManager';
 	import { DeveloperNotificationException } from '../../../../../core/src/core/exceptions/DeveloperNotificationException';
 	import { ArrayList } from '../../../../../core/src/java/util/ArrayList';
+	import type { BasicValidator } from '../../../../../core/src/asd/validate/BasicValidator';
 
 	const props = withDefaults(defineProps<UiSelectMultiProps<T, V>>(), {
 		label: '',
@@ -224,9 +224,7 @@
 	const isValid = computed((): boolean => {
 		if (props.required && !hasSelection())
 			return false;
-		if (!minOptionsValid.value || !maxOptionsValid.value)
-			return false;
-		return true;
+		return minOptionsValid.value && maxOptionsValid.value;
 	});
 
 	/**
@@ -307,9 +305,8 @@
 			model.value = modelArray.value;
 		}
 		resetSearch();
-		handleDomFocus();
+		focusSelect();
 	}
-
 
 	/**
 	 * Deselektiert die komplette Selektion.
@@ -352,30 +349,68 @@
 		return diff ? newSelected : null;
 	}
 
-	// Helperklasse für einige Funktionen, die in Single- und Multi-Select-Komponenten benötigt werden.
-	const {
-		instanceId, filteredAttributes, textColorClass, iconColorClass, comboboxAriaAttrs, searchAriaAttrs, comboboxTabindex, searchInputTabindex,
-		comboboxRole, dropdownPositionStyles, onKeyDown, searchInputFocusClass, handleDomFocus, handleBlur, handleComponentClick, comboboxClasses,
-		headlessPadding, labelClasses, labelTextColorClass, labelIconClass, optionClasses, validatorErrorIcon, showLabel, showValidatorError, onFocusOut,
-		showValidatorErrorMessage, validatorErrorBgClasses, splitText, getSecondaryTextColor, handleInput, toggleSelection, searchFilteredOptions, resetSearch,
+	const destructedProps = toRefs(props);
 
-	} = useUiSelectUtils(
-		true,
-		props,
-		attrs,
-		isValid,
-		isValidatorValid,
-		uiSelect,
-		uiSelectCombobox,
-		uiSelectSearch,
-		uiSelectDropdown,
-		search,
-		selectOption,
-		deselectOption,
-		hasSelection,
-		isSelected,
-		deselectAllowed
-	);
+	const state = computed((): UiSelectState<T, V> => {
+		return {
+			instanceId: crypto.randomUUID(),
+			multi: true,
+			label: destructedProps.label.value,
+			manager: destructedProps.manager.value,
+			searchable: destructedProps.searchable.value,
+			deepSearchAttributes: destructedProps.deepSearchAttributes.value,
+			required: destructedProps.required.value,
+			removable: destructedProps.removable.value,
+			disabled: destructedProps.disabled.value,
+			readonly: destructedProps.readonly.value,
+			headless: destructedProps.headless.value,
+			validator: destructedProps.validator.value,
+			isValid: isValid.value,
+			isValidatorValid: isValidatorValid.value,
+			search: search.value,
+		};
+	});
+	const elements = { uiSelect, uiSelectCombobox, uiSelectSearch, uiSelectDropdown } as UiSelectHTMLElements;
+	const selectionMethods = { isSelected, deselectAllowed, deselectOption, selectOption, hasSelection } as UiSelectSelectionMethods<T>;
+
+	const {
+		// Dropdown
+		dropdownPositionStyles,
+		toggleSelection,
+		// Styles und Attribute
+		focusClass,
+		comboboxRole,
+		comboboxAriaAttrs,
+		comboboxClasses,
+		comboboxTabindex,
+		filteredHtmlAttributes,
+		headlessPadding,
+		iconColorClass,
+		labelClasses,
+		labelTextColorClass,
+		labelIconClass,
+		textColorClass,
+		getSecondaryTextColor,
+		searchInputTabindex,
+		searchInputAriaAttrs,
+		getOptionClasses,
+		validatorErrorIcon,
+		validatorErrorBgClasses,
+		// Anzeige
+		showValidatorError,
+		showValidatorErrorMessage,
+		showLabel,
+		// Suche
+		splitTextIntoHits,
+		resetSearch,
+		optionsMatchingSearch,
+		// Events
+		handleSearchInput,
+		focusSelect,
+		handleComponentClick,
+		onFocusOut,
+		handleKeyDown,
+	} = useUiSelectUtils(state, attrs, elements, search, selectionMethods);
 
 
 </script>

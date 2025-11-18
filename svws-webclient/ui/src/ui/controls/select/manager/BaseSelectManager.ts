@@ -84,9 +84,10 @@ export abstract class BaseSelectManager<T> {
 	 * @param setDefaults   wenn true werden die Defaultwerte für alle Konfigurationen gesetzt, die nicht übergeben wurden. Andernfalls werden die alten
 	 * 					    beibehalten. Default ist false
 	 */
-	public setConfig(config?: BaseSelectManagerConfig<T>, setDefaults?: boolean) {
+	public setConfig(config?: BaseSelectManagerConfig<T>, setDefaults?: boolean): void {
 		// Alte Watcher beenden
-		this._watcher.forEach(stop => stop());
+		for (const watcher of this._watcher)
+			watcher();
 		this._watcher = [];
 
 		this.initManager(config, setDefaults);
@@ -100,7 +101,7 @@ export abstract class BaseSelectManager<T> {
 	 * @param setDefaults   wenn true werden die Defaultwerte für alle Konfigurationen gesetzt, die nicht übergeben wurden. Andernfalls werden die alten
 	 * 					    beibehalten. Default ist false
 	 */
-	protected initManager(config: BaseSelectManagerConfig<T> | undefined, setDefaults: boolean = false) {
+	protected initManager(config: BaseSelectManagerConfig<T> | undefined, setDefaults: boolean = false): void {
 		const newOptions = config?.options ?? (setDefaults ? new ArrayList<T>() : this.unfilteredOptions);
 		this._unfilteredOptions = this.initShallowRef(newOptions, v => this.toList(v));
 
@@ -119,22 +120,13 @@ export abstract class BaseSelectManager<T> {
 		this._watcher.push(
 			watch(() => config?.options, newOptions => {
 				this.unfilteredOptions = (newOptions === undefined) ? new ArrayList() : this.getRawIterable(toValue(newOptions));
-			}, { deep: true }
-			)
-		);
-
-		this._watcher.push(
+			}, { deep: true }),
 			watch(() => config?.sort, sort => {
 				this.sort = toValue(sort) ?? null;
-			}, { deep: true }
-			)
-		);
-
-		this._watcher.push(
+			}, { deep: true }),
 			watch(() => config?.filters, filters => {
 				this.filters = toValue(filters) ?? new ArrayList();
-			}, { deep: true }
-			)
+			}, { deep: true })
 		);
 	}
 
@@ -231,19 +223,21 @@ export abstract class BaseSelectManager<T> {
 	 * 				   wird die gesamte Map aktualisiert.
 	 * @param remove   falls true, wird der Filter nur aus der Map gelöscht und es wird sonst nichts aktualisiert
 	 */
-	private updateFilterMap(filter: SelectFilter<T> | undefined, remove: boolean) {
-		if (filter !== undefined)
-			if (remove) {
-				this._filterMap.delete(filter.key);
-			} else
-				this._filterMap.set(filter.key, filter.apply(this.unfilteredOptions));
-		else {
+	private updateFilterMap(filter: SelectFilter<T> | undefined, remove: boolean): void {
+		if (filter === undefined) {
 			this._filterMap.clear();
-			for (const filter of this.filters) {
-				const filteredList = filter.apply(this.unfilteredOptions);
-				this._filterMap.set(filter.key, filteredList);
-			}
+			for (const filter of this.filters)
+				this._filterMap.set(filter.key, filter.apply(this.unfilteredOptions));
+
+			return;
 		}
+
+		if (remove) {
+			this._filterMap.delete(filter.key);
+			return;
+		}
+
+		this._filterMap.set(filter.key, filter.apply(this.unfilteredOptions));
 	}
 
 	/**
@@ -292,7 +286,7 @@ export abstract class BaseSelectManager<T> {
 	 *
 	 * @param newFilter   der neue Filter
 	 */
-	public addFilter(newFilter: SelectFilter<T>) {
+	public addFilter(newFilter: SelectFilter<T>): void {
 		for (const filter of this.filters)
 			if (filter.key === newFilter.key) {
 				this.removeFilter(newFilter);
@@ -308,7 +302,7 @@ export abstract class BaseSelectManager<T> {
 	 *
 	 * @param filter   Filter, der entfernt werden soll. Es kann der ganze Filter oder auch nur der key angegeben werden.
 	 */
-	public removeFilter(filter: SelectFilter<T> | string) {
+	public removeFilter(filter: SelectFilter<T> | string): void {
 		const filterToRemove = (typeof filter === "string") ? this.getFilterByKey(filter) : this.getFilterByKey(filter.key);
 		if (filterToRemove === null)
 			return;
@@ -346,7 +340,8 @@ export abstract class BaseSelectManager<T> {
 		const set2 = new Set(list2);
 
 		const intersection = set1.intersection(set2);
-		intersection.forEach((value) => result.add(value));
+		for (const value of intersection)
+			result.add(value);
 
 		return result;
 	}
@@ -438,11 +433,11 @@ export abstract class BaseSelectManager<T> {
 	public toComparator<T>(sort: Comparator<T> | ((a: T, b: T) => number) | null | undefined): Comparator<T> | null {
 		if (!sort)
 			return null;
-		if (typeof sort === "function") {
+		if (typeof sort === "function")
 			return {
 				compare: sort,
 			};
-		}
+
 		return sort;
 	}
 
@@ -450,7 +445,7 @@ export abstract class BaseSelectManager<T> {
 	/**
 	 * Aktualisiert die Sortierung der Optionen, der gefilterten Liste und der Selektion, falls eine Sortierfunktion definiert ist.
 	 */
-	public updateSort() {
+	public updateSort(): void {
 		if (!this.filteredOptions.isEmpty() && (this.sort !== null))
 			this.filteredOptions.sort(this.sort);
 

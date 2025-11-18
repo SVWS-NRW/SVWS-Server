@@ -8,6 +8,8 @@ import { BaseSelectManager, type BaseSelectManagerConfig } from "./BaseSelectMan
 import { ArrayList } from "../../../../../../core/src/java/util/ArrayList";
 import type { List } from "../../../../../../core/src/java/util/List";
 
+type SchulformTypes = Schulform | Iterable<Schulform> | null;
+type disyplayTypes<T> = "kuerzel" | "text" | "kuerzelText" | ((option: T) => string);
 
 /**
  * Config des Managers, die die BaseSelectManagerConfig<T> ohne `options` erweitert.
@@ -16,9 +18,9 @@ import type { List } from "../../../../../../core/src/java/util/List";
 export interface CoreTypeSelectManagerConfig<T extends CoreTypeData, U extends CoreType<T, U>> extends Omit<BaseSelectManagerConfig<T>, 'options'> {
 	clazz?: MaybeRef<Class<U> | null>;
 	schuljahr?: MaybeRef<number | null>;
-	schulformen?: MaybeRef<Schulform | Iterable<Schulform> | null>;
-	selectionDisplayText?: MaybeRef<"kuerzel" | "text" | "kuerzelText" | ((option: T) => string)>;
-	optionDisplayText?: MaybeRef<"kuerzel" | "text" | "kuerzelText" | ((option: T) => string)>;
+	schulformen?: MaybeRef<SchulformTypes>;
+	selectionDisplayText?: MaybeRef<disyplayTypes<T>>;
+	optionDisplayText?: MaybeRef<disyplayTypes<T>>;
 }
 
 /**
@@ -28,9 +30,9 @@ export interface CoreTypeSelectManagerConfig<T extends CoreTypeData, U extends C
  */
 export class CoreTypeSelectManager<T extends CoreTypeData, U extends CoreType<T, U>> extends BaseSelectManager<T> {
 
-	protected _selectionDisplayText = shallowRef<"kuerzel" | "text" | "kuerzelText" | (((option: T) => string))>("kuerzelText");
+	protected _selectionDisplayText = shallowRef<disyplayTypes<T>>("kuerzelText");
 
-	protected _optionDisplayText = shallowRef<"kuerzel" | "text" | "kuerzelText" | (((option: T) => string))>("kuerzelText");
+	protected _optionDisplayText = shallowRef<disyplayTypes<T>>("kuerzelText");
 
 	/**
 	 * Der CoreTypeDataManager für den Zugriff auf die Daten der CoreTypes.
@@ -54,7 +56,7 @@ export class CoreTypeSelectManager<T extends CoreTypeData, U extends CoreType<T,
 	 * Die Schulform, auf dessen Basis der Eintrag ermittelt wird.
 	 * Bei null werden alle Optionen für alle Schulformen angezeigt.
 	 */
-	protected _schulformen = shallowRef<Schulform | Iterable<Schulform> | null>(null);
+	protected _schulformen = shallowRef<SchulformTypes>(null);
 
 
 	public constructor(config?: CoreTypeSelectManagerConfig<T, U>) {
@@ -110,44 +112,27 @@ export class CoreTypeSelectManager<T extends CoreTypeData, U extends CoreType<T,
 		this._watcher.push(
 			watch(() => config?.clazz, newClazz => {
 				this.clazz = toValue(newClazz ?? null);
-			}, { deep: true }
-			)
-		);
-
-		this._watcher.push(
+			}, { deep: true }),
 			watch(() => config?.schuljahr, newSchuljahr => {
 				this.schuljahr = toValue(newSchuljahr ?? null);
-			}, { deep: true }
-			)
-		);
-
-		this._watcher.push(
+			}, { deep: true }),
 			watch(() => config?.schulformen, newSchulformen => {
 				this.schulformen = toValue(newSchulformen ?? null);
-			}, { deep: true }
-			)
-		);
-
-		this._watcher.push(
+			}, { deep: true }),
 			watch(() => config?.selectionDisplayText, newDisplay => {
 				this.selectionDisplayText = toValue(newDisplay ?? "kuerzelText");
-			}, { deep: true }
-			)
-		);
-
-		this._watcher.push(
+			}, { deep: true }),
 			watch(() => config?.optionDisplayText, newDisplay => {
 				this.optionDisplayText = toValue(newDisplay ?? "kuerzelText");
-			}, { deep: true }
-			)
+			}, { deep: true })
 		);
 	}
 
-	public get selectionDisplayText(): "kuerzel" | "text" | "kuerzelText" | (((option: T) => string)) {
+	public get selectionDisplayText(): disyplayTypes<T> {
 		return this._selectionDisplayText.value;
 	}
 
-	public set selectionDisplayText(value: "kuerzel" | "text" | "kuerzelText" | (((option: T) => string))) {
+	public set selectionDisplayText(value: disyplayTypes<T>) {
 		this._selectionDisplayText.value = value;
 		triggerRef(this._selectionDisplayText);
 	}
