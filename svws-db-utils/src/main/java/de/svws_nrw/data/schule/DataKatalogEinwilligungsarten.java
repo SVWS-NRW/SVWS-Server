@@ -1,9 +1,14 @@
 package de.svws_nrw.data.schule;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.types.schule.Einwilligungsschluessel;
 import de.svws_nrw.core.data.schule.Einwilligungsart;
@@ -60,9 +65,14 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 
 	@Override
 	public List<Einwilligungsart> getAll() {
-		return conn.queryAll(DTOKatalogEinwilligungsart.class)
+		final List<DTOKatalogEinwilligungsart> einwilligungsarten = this.conn.queryAll(DTOKatalogEinwilligungsart.class);
+		final Set<Long> idsEinwilligungsarten = this.mapToIds(einwilligungsarten);
+		final Set<Long> idsOfReferencedEinwilligungsarten = this.getIdsOfReferencedEinwilligungsarten(idsEinwilligungsarten);
+
+		return einwilligungsarten
 				.stream()
-				.map(this::map)
+				.map(e -> setReferencedFlag(e, idsOfReferencedEinwilligungsarten))
+				.sorted(Comparator.comparing(e -> e.id))
 				.toList();
 	}
 
@@ -209,6 +219,30 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 
 	private static boolean valueIsBlankOrHasNotChanged(final String oldValue, final String newValue) {
 		return Objects.equals(oldValue, newValue) || ((newValue != null) && newValue.isBlank());
+	}
+
+	private Set<Long> mapToIds(final List<DTOKatalogEinwilligungsart> einwilligungsarten) {
+		return einwilligungsarten.stream()
+				.map(f -> f.ID)
+				.collect(Collectors.toSet());
+	}
+
+	private Einwilligungsart setReferencedFlag(final DTOKatalogEinwilligungsart dto, final Set<Long> idsOfReferencedEinwilligungsarten) {
+		final Einwilligungsart einwilligungsart = this.map(dto);
+		einwilligungsart.referenziertInAnderenTabellen = idsOfReferencedEinwilligungsarten.contains(dto.ID);
+		return einwilligungsart;
+	}
+
+	private Set<Long> getIdsOfReferencedEinwilligungsarten(final Set<Long> ids) {
+		if (ids == null)
+			return Collections.emptySet();
+
+		final String query1 = "SELECT DISTINCT a.Datenschutz_ID FROM DTOSchuelerDatenschutz a WHERE a.Datenschutz_ID IN :ids";
+		final String query2 = "SELECT DISTINCT b.DatenschutzID FROM DTOLehrerDatenschutz b WHERE b.DatenschutzID IN :ids";
+		final String query3 = "SELECT DISTINCT c.DatenschutzID FROM DTOErzieherDatenschutz c WHERE c.DatenschutzID IN :ids";
+		final String query = String.join("\nUNION\n", query1, query2, query3);
+		final List<Long> results = this.conn.query(query, Long.class).setParameter("ids", ids).getResultList();
+		return new HashSet<>(results);
 	}
 
 }

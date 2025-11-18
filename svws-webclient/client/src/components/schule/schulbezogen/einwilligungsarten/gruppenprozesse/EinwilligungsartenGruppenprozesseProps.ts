@@ -1,11 +1,12 @@
-import type { Schulform, List, Schulgliederung, ServerMode, BenutzerKompetenz } from "@core";
+import type { Schulform, List, ServerMode, BenutzerKompetenz } from "@core";
 import type { EinwilligungsartenListeManager } from "@ui";
 
 export interface EinwilligungsartenGruppenprozesseProps {
 	serverMode: ServerMode;
 	schulform: Schulform;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
-	schulgliederungen: List<Schulgliederung>;
 	manager: () => EinwilligungsartenListeManager;
+	deleteCheck: () => [boolean, List<string>];
 	delete: () => Promise<[boolean, List<string | null>]>;
+	gotoDefaultView: (eintragId?: number | null) => Promise<void>;
 }

@@ -30,9 +30,10 @@ export class RouteEinwilligungsartenGruppenprozesse extends RouteNode<any, Route
 			serverMode: api.mode,
 			schulform: api.schulform,
 			benutzerKompetenzen: api.benutzerKompetenzen,
-			schulgliederungen: api.schulgliederungen,
-			manager: () => routeEinwilligungsarten.data.manager,
 			delete: routeEinwilligungsarten.data.delete,
+			deleteCheck: routeEinwilligungsarten.data.deleteCheck,
+			manager: () => routeEinwilligungsarten.data.manager,
+			gotoDefaultView: routeEinwilligungsarten.data.gotoDefaultView,
 		};
 	}
 

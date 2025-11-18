@@ -47,6 +47,10 @@ public class Einwilligungsart {
 	@Schema(description = "gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht", example = "true")
 	public boolean istSichtbar = true;
 
+	/** Gibt an, ob die Einwilligungsart in anderen Datenbanktabellen referenziert ist oder nicht. */
+	@Schema(description = "Gibt an, ob die Einwilligungsart in anderen Datenbanktabellen referenziert ist oder nicht.", example = "true", accessMode = Schema.AccessMode.READ_ONLY)
+	public Boolean referenziertInAnderenTabellen = false;
+
 	/**
 	 * Leerer Standardkonstruktor.
 	 */

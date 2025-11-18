@@ -642,7 +642,6 @@ export { SchildReportingSchuelerLeistungsdaten } from './core/data/schild3/repor
 export { SchildReportingSchuelerLernabschnitt } from './core/data/schild3/reporting/SchildReportingSchuelerLernabschnitt';
 export { SchildReportingSchuelerSprachpruefungen } from './core/data/schild3/reporting/SchildReportingSchuelerSprachpruefungen';
 export { SchuelerEinwilligung } from './core/data/schueler/SchuelerEinwilligung';
-export { SchuelerEinwilligungsartenZusammenfassung } from './core/data/schueler/SchuelerEinwilligungsartenZusammenfassung';
 export { SchuelerKAoADaten } from './core/data/schueler/SchuelerKAoADaten';
 export { SchuelerLernabschnittListeEintrag } from './core/data/schueler/SchuelerLernabschnittListeEintrag';
 export { SchuelerLernplattform } from './core/data/schueler/SchuelerLernplattform';

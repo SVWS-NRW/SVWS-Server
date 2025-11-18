@@ -170,7 +170,6 @@ import { Schild3KatalogEintragUnicodeUmwandlung } from '../core/data/schild3/Sch
 import { Schild3KatalogEintragVersetzungsvermerke } from '../core/data/schild3/Schild3KatalogEintragVersetzungsvermerke';
 import { SchuelerBetriebsdaten } from '../asd/data/schueler/SchuelerBetriebsdaten';
 import { SchuelerEinwilligung } from '../core/data/schueler/SchuelerEinwilligung';
-import { SchuelerEinwilligungsartenZusammenfassung } from '../core/data/schueler/SchuelerEinwilligungsartenZusammenfassung';
 import { SchuelerFoerderempfehlung } from '../asd/data/schueler/SchuelerFoerderempfehlung';
 import { SchuelerKAoADaten } from '../core/data/schueler/SchuelerKAoADaten';
 import { SchuelerLeistungsdaten } from '../asd/data/schueler/SchuelerLeistungsdaten';
@@ -14845,35 +14844,6 @@ export class ApiServer extends BaseApi {
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Aufsichtsbereich>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Aufsichtsbereich.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getSchuelerByEinwilligungsartID für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/einwilligungsart/{einwilligungsart : \d+}/schuelerinfos
-	 *
-	 * Erstellt eine Liste aller Schüler der angegebenen Einwilligungsart unter Angabe der ID.Es wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Eine Liste von Schüler-Listen-Einträgen
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<SchuelerEinwilligungsartenZusammenfassung>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schülerdaten anzusehen.
-	 *   Code 404: Keine Schüler-Einträge gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} einwilligungsart - der Pfad-Parameter einwilligungsart
-	 *
-	 * @returns Eine Liste von Schüler-Listen-Einträgen
-	 */
-	public async getSchuelerByEinwilligungsartID(schema : string, einwilligungsart : number) : Promise<List<SchuelerEinwilligungsartenZusammenfassung>> {
-		const path = "/db/{schema}/schule/einwilligungsart/{einwilligungsart : \\d+}/schuelerinfos"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{einwilligungsart\s*(:[^{}]+({[^{}]+})*)?}/g, einwilligungsart.toString());
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<SchuelerEinwilligungsartenZusammenfassung>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerEinwilligungsartenZusammenfassung.transpilerFromJSON(text)); });
 		return ret;
 	}
 

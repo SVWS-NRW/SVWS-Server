@@ -47,7 +47,7 @@
 	import { CoreTypeSelectManager, SelectManager } from "@ui";
 
 	const props = defineProps<EinwilligungsartenNeuProps>();
-	const data = ref<Einwilligungsart>(Object.assign(new Einwilligungsart(), { istSichtbar: true, idPersonTyp: 2 }));
+	const data = ref<Einwilligungsart>(Object.assign(new Einwilligungsart(), { istSichtbar: true, idPersonTyp: PersonTyp.SCHUELER.id }));
 	const isLoading = ref<boolean>(false);
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 
@@ -104,7 +104,7 @@
 
 		isLoading.value = true;
 		props.checkpoint.active = false;
-		const { id, anzahlEinwilligungen, ...partialData } = data.value;
+		const { id, anzahlEinwilligungen, referenziertInAnderenTabellen, ...partialData } = data.value;
 		await props.add(partialData);
 		isLoading.value = false;
 	}

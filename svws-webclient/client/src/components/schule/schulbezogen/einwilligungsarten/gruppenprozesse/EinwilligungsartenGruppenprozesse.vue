@@ -1,18 +1,21 @@
 <template>
 	<div class="page page-grid-cards">
-		<div v-if="ServerMode.DEV.checkServerMode(serverMode)" class="flex flex-col gap-y-16 lg:gap-y-16">
-			<ui-card v-if="hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen" subtitle="Ausgewählte Einwilligungsarten werden gelöscht."
-				:is-open="currentAction === 'delete'" @update:is-open="(isOpen) => setCurrentAction('delete', isOpen)">
+		<div v-if="!hatIrgendwelcheKompetenzen">
+			Für die Nutzung der Gruppenprozesse fehlen Benutzerkompetenzen.
+		</div>
+		<div v-if="ServerMode.DEV.checkServerMode(serverMode)" class="flex flex-col">
+			<ui-card v-if="hatKompetenzLoeschen" title="Löschen" subtitle="Ausgewählte Einwilligungsarten werden gelöscht." icon="i-ri-delete-bin-line">
 				<div>
-					<span v-if="alleEinwilligungsartenLeer">Alle ausgewählten Einwilligungsarten sind bereit zum Löschen.</span>
-					<div v-if="!alleEinwilligungsartenLeer">
-						<span class="text-ui-danger"> Diese Einwilligungsart ist noch Schülern/Lehrern zugeordnet. Wollen Sie es trotzdem löschen?  <br> </span>
-					</div>
+					<span v-if="preConditionCheck[0]">Alle ausgewählten Förderschwerpunkte sind bereit zum Löschen.</span>
+					<template v-else v-for="message in preConditionCheck[1]" :key="message">
+						<span class="text-ui-danger whitespace-pre-line"> {{ message }} <br> </span>
+					</template>
 				</div>
 				<template #buttonFooterLeft>
-					<svws-ui-button :disabled="loading"
-						title="Löschen" @click="entferneEinwilligungsarten" :is-loading="loading" class="mt-4">
-						<svws-ui-spinner v-if="loading" spinning />
+					<svws-ui-button title="Löschen" class="mt-4"
+						@click="toggleWarningModal"
+						:disabled="!props.manager().liste.auswahlExists()" :is-loading>
+						<svws-ui-spinner v-if="isLoading" spinning />
 						<span v-else class="icon i-ri-play-line" />
 						Löschen
 					</svws-ui-button>
@@ -20,14 +23,31 @@
 			</ui-card>
 			<log-box :logs :status>
 				<template #button>
-					<svws-ui-button v-if="status !== undefined" type="transparent" @click="clearLog" title="Log verwerfen">Log verwerfen</svws-ui-button>
+					<svws-ui-button v-if="status !== undefined" type="transparent"
+						@click="clearLog">
+						Log verwerfen
+					</svws-ui-button>
 				</template>
 			</log-box>
-		</div>
-		<div v-else>
-			<svws-ui-todo title="Einwilligungsarten - Gruppenprozesse">
-				Dieser Bereich ist noch in Entwicklung. Hier werden später Gruppenprozesse zu den Einwilligungsarten vorhanden sein.
-			</svws-ui-todo>
+			<svws-ui-modal v-model:show="warningModalIsShown"
+				:auto-close="false" :close-in-title="false"
+				size="small" type="danger">
+				<template #modalTitle>
+					<slot name="title">Daten gehen verloren</slot>
+				</template>
+				<template #modalDescription>
+					<div class="text-left">
+						<slot name="description">
+							Durch das Löschen der Einwilligungsarten werden alle auch referenzierten Einwilligungen endgültig gelöscht.<br>
+							Wollen Sie das Löschen wirklich durchführen?
+						</slot>
+					</div>
+				</template>
+				<template #modalActions>
+					<svws-ui-button type="secondary" @click="cancel">Nein</svws-ui-button>
+					<svws-ui-button type="danger" @click="deleteSelectedEinwilligungsarten">Ja</svws-ui-button>
+				</template>
+			</svws-ui-modal>
 		</div>
 	</div>
 </template>
@@ -36,49 +56,39 @@
 
 	import { ref, computed } from "vue";
 	import { BenutzerKompetenz, type List, ServerMode } from "@core";
-	import type {
-		EinwilligungsartenGruppenprozesseProps,
-	} from "~/components/schule/schulbezogen/einwilligungsarten/gruppenprozesse/EinwilligungsartenGruppenprozesseProps";
+	import type { EinwilligungsartenGruppenprozesseProps } from "~/components/schule/schulbezogen/einwilligungsarten/gruppenprozesse/EinwilligungsartenGruppenprozesseProps";
 
 	const props = defineProps<EinwilligungsartenGruppenprozesseProps>();
-
-	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
-
-	const currentAction = ref<string>('');
-	const oldAction = ref<{ name: string | undefined; open: boolean }>({
-		name: undefined,
-		open: false,
-	});
-	const loading = ref<boolean>(false);
+	const isLoading = ref<boolean>(false);
+	const warningModalIsShown = ref<boolean>(false);
 	const logs = ref<List<string | null> | undefined>();
 	const status = ref<boolean | undefined>();
+	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
+	const hatIrgendwelcheKompetenzen = computed<boolean>(() => hatKompetenzLoeschen.value);
+	const preConditionCheck = computed<[boolean, List<string>]>(() => props.deleteCheck());
 
-	const alleEinwilligungsartenLeer = computed(() => (currentAction.value === 'delete') && props.manager().getEinwilligungsartenIDsMitSchuelern().isEmpty());
+	function toggleWarningModal() {
+		warningModalIsShown.value = !warningModalIsShown.value;
+	}
 
-	function setCurrentAction(newAction: string, open: boolean) {
-		if (newAction === oldAction.value.name && !open)
-			return;
-		oldAction.value.name = currentAction.value;
-		oldAction.value.open = (currentAction.value !== "");
-		if (open)
-			currentAction.value = newAction;
-		else
-			currentAction.value = "";
+	async function deleteSelectedEinwilligungsarten() {
+		isLoading.value = true;
+		const [delStatus, logMessages] = await props.delete();
+		logs.value = logMessages;
+		status.value = delStatus;
+		isLoading.value = false;
+		toggleWarningModal();
 	}
 
 	function clearLog() {
-		loading.value = false;
+		isLoading.value = false;
 		logs.value = undefined;
 		status.value = undefined;
 	}
 
-	async function entferneEinwilligungsarten() {
-		loading.value = true;
-		const [delStatus, logMessages] = await props.delete();
-		logs.value = logMessages;
-		status.value = delStatus;
-		currentAction.value = '';
-		loading.value = false;
+	async function cancel(): Promise<void> {
+		await props.gotoDefaultView(null);
 	}
+
 
 </script>

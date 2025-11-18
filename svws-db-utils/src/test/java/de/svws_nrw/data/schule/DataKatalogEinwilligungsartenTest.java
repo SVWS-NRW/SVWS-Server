@@ -1,9 +1,12 @@
 package de.svws_nrw.data.schule;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import de.svws_nrw.asd.types.schule.Einwilligungsschluessel;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
@@ -12,6 +15,7 @@ import de.svws_nrw.core.types.schule.PersonTyp;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogEinwilligungsart;
 import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.core.Response;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeAll;
@@ -27,6 +31,8 @@ import static org.assertj.core.api.Assertions.assertThatException;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -141,8 +147,11 @@ class DataKatalogEinwilligungsartenTest {
 		dto1.personTyp = PersonTyp.ERZIEHER;
 		final var dto2 = new DTOKatalogEinwilligungsart(2L, "bez2", false, 2);
 		dto2.personTyp = PersonTyp.SCHUELER;
-
 		when(this.conn.queryAll(DTOKatalogEinwilligungsart.class)).thenReturn(List.of(dto1, dto2));
+		final TypedQuery<Long> queryMock = mock(TypedQuery.class);
+		when(queryMock.setParameter(eq("ids"), any())).thenReturn(queryMock);
+		when(queryMock.getResultList()).thenReturn(List.of(1L));
+		when(conn.query(anyString(), eq(Long.class))).thenReturn(queryMock);
 
 		assertThat(this.data.getAll())
 				.hasSize(2)
@@ -165,9 +174,40 @@ class DataKatalogEinwilligungsartenTest {
 	}
 
 	@Test
+	@DisplayName("getAll | referenced in other tabled")
+	void getAllReferencedInOtherTables() {
+		final var dto1 = new DTOKatalogEinwilligungsart(1L, "bez1", true, 1);
+		dto1.personTyp = PersonTyp.ERZIEHER;
+		final var dto2 = new DTOKatalogEinwilligungsart(2L, "bez2", false, 2);
+		dto2.personTyp = PersonTyp.SCHUELER;
+		when(this.conn.queryAll(DTOKatalogEinwilligungsart.class)).thenReturn(List.of(dto1, dto2));
+		final TypedQuery<Long> queryMock = mock(TypedQuery.class);
+		when(queryMock.setParameter(eq("ids"), any())).thenReturn(queryMock);
+		when(queryMock.getResultList()).thenReturn(List.of(1L));
+		when(conn.query(anyString(), eq(Long.class))).thenReturn(queryMock);
+
+		assertThat(this.data.getAll())
+				.hasSize(2)
+				.satisfiesExactly(
+						f1 -> assertThat(f1)
+								.isInstanceOf(Einwilligungsart.class)
+								.hasFieldOrPropertyWithValue("id", 1L)
+								.hasFieldOrPropertyWithValue("referenziertInAnderenTabellen", true),
+						f2 -> assertThat(f2)
+								.isInstanceOf(Einwilligungsart.class)
+								.hasFieldOrPropertyWithValue("id", 2L)
+								.hasFieldOrPropertyWithValue("referenziertInAnderenTabellen", false)
+				);
+	}
+
+	@Test
 	@DisplayName("getAll | Database empty")
 	void getAllEmpty() {
 		when(this.conn.queryAll(DTOKatalogEinwilligungsart.class)).thenReturn(Collections.emptyList());
+		final TypedQuery<Long> queryMock = mock(TypedQuery.class);
+		when(queryMock.setParameter(eq("ids"), any())).thenReturn(queryMock);
+		when(queryMock.getResultList()).thenReturn(List.of(1L));
+		when(conn.query(anyString(), eq(Long.class))).thenReturn(queryMock);
 
 		assertThat(this.data.getAll()).isEmpty();
 	}
@@ -664,6 +704,18 @@ class DataKatalogEinwilligungsartenTest {
 				.isInstanceOf(ApiOperationException.class)
 				.withMessage("Die Daten des Patches enthalten das unbekannte Attribut unknown.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("getIdsOfReferencedEinwilligungsarten | null")
+	void getIdsOfReferencedEinwilligungsartenIdsNull() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+		final Method method = DataKatalogEinwilligungsarten.class.getDeclaredMethod("getIdsOfReferencedEinwilligungsarten", Set.class);
+		method.setAccessible(true);
+		final Object result = method.invoke(this.data, (Object) null);
+
+		assertThat(result).isInstanceOf(Set.class).isNotNull();
+
+		verify(this.conn, never()).query(anyString(), any());
 	}
 
 }
