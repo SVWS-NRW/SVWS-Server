@@ -157,9 +157,11 @@
 				continue;
 			cols.push({ kuerzel: art.bezeichnung ?? "???", name: art.bezeichnung ?? "???", width: "4rem", hideable: true });
 		}
-		cols.push({ kuerzel: "Quartal", name: "Quartalsnote", width: "6rem", hideable: true });
-		cols.push({ kuerzel: "Note", name: "Note", width: "6rem", hideable: true });
-		cols.push({ kuerzel: "", name: "", width: "3.25rem", hideable: false });
+		cols.push(
+			{ kuerzel: "Quartal", name: "Quartalsnote", width: "6rem", hideable: true },
+			{ kuerzel: "Note", name: "Note", width: "6rem", hideable: true },
+			{ kuerzel: "", name: "", width: "3.25rem", hideable: false }
+		);
 		gridManager.setColumns(cols);
 	}, { immediate: true });
 

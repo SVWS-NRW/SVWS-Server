@@ -4,9 +4,10 @@ import { ArrayList, UnsupportedOperationException, OpenApiError, DeveloperNotifi
 import { WenomAuswahlListeManager, ViewType } from "@ui";
 import { api } from "~/router/Api";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
-import { routeNotenmodulKonfigurationData } from "./RouteNotenmodulKonfigurationData";
+import { routeNotenmodulKonfiguration } from "./RouteNotenmodulKonfiguration";
 import { routeNotenmodulKonfigurationNeu } from "./RouteNotenmodulKonfigurationNeu";
 import { routeNotenmodulKonfigurationGruppenprozesse } from "./RouteNotenmodulGruppenprozesse";
+import { routeNotenmodul } from "./RouteNotenmodul";
 
 
 interface RouteStateNotenmodulAdministration extends RouteStateAuswahlInterface<WenomAuswahlListeManager> {
@@ -16,6 +17,9 @@ interface RouteStateNotenmodulAdministration extends RouteStateAuswahlInterface<
 	mapENMServerConfigGlobal: JavaMap<string, string>;
 }
 
+export type MapLeistungenTabelleSpaltenanzeige = Map<"Kurs" | "Kursart" | "Lehrer" | "Quartal" | "Note" | "Mahnung" | "FS" | "FSU" | "Bemerkung", boolean>;
+
+export type MapTeilleistungenTabelleSpaltenanzeige = Map<number, boolean>;
 
 export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAuswahlListeManager, RouteStateNotenmodulAdministration> {
 
@@ -23,7 +27,7 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 		super(<RouteStateNotenmodulAdministration>{
 			idSchuljahresabschnitt: -1,
 			manager: new WenomAuswahlListeManager(-1, -1, new ArrayList(), null, new ArrayList()),
-			view: routeNotenmodulKonfigurationData,
+			view: routeNotenmodulKonfiguration,
 			activeViewType: ViewType.DEFAULT,
 			mapInitialKennwoerter: new HashMap<number, string>(),
 			connected: false,
@@ -44,6 +48,7 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 
 	public async setSchuljahresabschnitt(idSchuljahresabschnitt: number, isEntering: boolean): Promise<number | null> {
 		const result = await super.setSchuljahresabschnitt(idSchuljahresabschnitt, isEntering);
+		await routeNotenmodul.data.ladeDaten();
 		const arr = [];
 		for (const server of this.manager.filtered())
 			arr.push(this.connect(server.id));
@@ -97,10 +102,45 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 		return this._state.value.connected;
 	}
 
-	// TODO korrektes Laden der Server-Konfiguration, immer dann, wenn ein check erfolgreich war: await this.wenomGetServerConfig();
 	get mapEnmServerConfigServer(): JavaMap<string, string> {
 		return this._state.value.mapENMServerConfigServer;
 	}
+
+	get mapLeistungenTabelleSpaltenanzeige(): MapLeistungenTabelleSpaltenanzeige {
+		const res = api.config.getValue("notenmodul.leistungen.tabelle.spaltenanzeige");
+		const map = new Map();
+		const spalten: [string, boolean][] = JSON.parse(res);
+		for (const spalte of spalten) {
+			map.set(...spalte);
+		}
+		return map;
+	}
+
+	setMapLeistungenTabelleSpaltenanzeige = async (value: MapLeistungenTabelleSpaltenanzeige) => {
+		const json = JSON.stringify(value.entries());
+		await api.config.setValue("notenmodul.leistungen.tabelle.spaltenanzeige", json);
+	};
+
+	get mapTeilleistungenTabelleSpaltenanzeige(): MapTeilleistungenTabelleSpaltenanzeige {
+		const res = api.config.getValue("notenmodul.teilleistungen.tabelle.spaltenanzeige");
+		const map = new Map();
+		const spalten: [string, boolean][] | null = JSON.parse(res);
+		if (spalten === null) {
+			for (const id of routeNotenmodul.data.manager.mapTeilleistungsarten.keySet()) {
+				map.set(id, true);
+			}
+		} else {
+			for (const spalte of spalten) {
+				map.set(...spalte);
+			}
+		}
+		return map;
+	}
+
+	setMapTeilleistungenTabelleSpaltenanzeige = async (value: MapTeilleistungenTabelleSpaltenanzeige) => {
+		const json = JSON.stringify(value.entries());
+		await api.config.setValue("notenmodul.teilleistungen.tabelle.spaltenanzeige", json);
+	};
 
 	connect = async (id: number): Promise<void> => {
 		// Prüfe aug ein lokales Notenmodul mit einer negativer ID -1

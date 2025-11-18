@@ -5,12 +5,13 @@ import { RouteNotenmodulMenuGroup } from "./RouteNotenmodulMenuGroup";
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import type { RouteApp } from "../RouteApp";
 import { RouteDataNotenmodulAdministration } from "./RouteDataNotenmodulAdministration";
-import { routeNotenmodulKonfigurationData } from "./RouteNotenmodulKonfigurationData";
+import { routeNotenmodulKonfiguration } from "./RouteNotenmodulKonfiguration";
 import type { NotenmodulAdministrationAppProps } from "~/components/notenmodul/NotenmodulAdministrationAppProps";
 import type { NotenmodulAdministrationAuswahlProps } from "~/components/notenmodul/NotenmodulAdministrationAuswahlProps";
 import { routeNotenmodulSynchronisation } from "./RouteNotenmodulSynchronisation";
 import { routeNotenmodulKonfigurationNeu } from "./RouteNotenmodulKonfigurationNeu";
 import { routeNotenmodulKonfigurationGruppenprozesse } from "./RouteNotenmodulGruppenprozesse";
+import { routeNotenmodulVerbindung } from "./RouteNotenmodulVerbindung";
 
 const NotenmodulAdministrationApp = () => import("~/components/notenmodul/NotenmodulAdministrationApp.vue");
 const NotenmodulAdministrationAuswahl = () => import("~/components/notenmodul/NotenmodulAdministrationAuswahl.vue");
@@ -29,14 +30,15 @@ export class RouteNotenmodulAdministration extends RouteAuswahlNode<WenomAuswahl
 		super.getAuswahlProps = props => (<NotenmodulAdministrationAppProps>{
 			...props,
 		});
-		super.text = "Serverkonfiguration";
+		super.text = "Serververbindungen";
 		super.children = [
-			routeNotenmodulKonfigurationData,
+			routeNotenmodulVerbindung,
+			routeNotenmodulKonfiguration,
 			routeNotenmodulSynchronisation,
 			routeNotenmodulKonfigurationNeu,
 			routeNotenmodulKonfigurationGruppenprozesse,
 		];
-		super.defaultChild = routeNotenmodulKonfigurationData;
+		super.defaultChild = routeNotenmodulVerbindung;
 		super.menugroup = RouteNotenmodulMenuGroup.ADMINISTRATION;
 		super.updateIfTarget = this.doUpdateIfTarget;
 	}
