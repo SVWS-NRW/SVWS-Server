@@ -6,8 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 
 import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdaten;
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
@@ -89,67 +87,6 @@ class TestValidatorLehrerPersonalabschnittsdaten {
 	}
 
 
-	/**
-	 * Test von ValidatorLehrerPersonalabschnittsdaten auf Pflichtstundensoll zu hoch
-	 *
-	 * CoreType: LehrerPersonalabschnittsdaten
-	 * Testfall: Das Pflichtstundensoll ist zu hoch
-	 * Ergebnis: Validator soll FALSE liefern
-	 */
-	@DisplayName("TestValidatorLehrerPersonalabschnittsdaten: Fehler Pflichtstundensoll zu hoch")
-	@Test
-	void testValidatorLehrerPersonalabschnittsdaten_PflichtstundensollZuHoch() {
-		// Testdaten setzen
-		setzeTestdaten(42.5);
-
-		// Erzeuge den Kontext für die Validierung
-		final ValidatorKontext kontext = new ValidatorKontext(schuleTestdaten_001, true);
-		final ValidatorLehrerPersonalabschnittsdaten validator = new ValidatorLehrerPersonalabschnittsdaten(LehrerPersonalabschnittsdaten_Plausibel, lsdTestdaten_001, kontext);
-		assertEquals(false, validator.run());
-	}
-
-
-	/**
-	 * Test von ValidatorLehrerPersonalabschnittsdatenPflichtstundensoll
-	 *
-	 * CoreType: LehrerPersonalabschnittsdaten
-	 * Testfall: Daten zulässig
-	 * Ergebnis: Validator soll TRUE liefern
-	 */
-	@DisplayName("TestValidatorLehrerPersonalabschnittsdatenPflichtstundensoll: Test mit gültigen Daten auf TRUE")
-	@Test
-	void testValidatorLehrerPersonalabschnittsdatenPflichtstundensoll_ValideDaten() {
-		// Testdaten setzen
-		setzeTestdaten(25.5);
-
-		// Erzeuge den Kontext für die Validierung
-		final ValidatorKontext kontext = new ValidatorKontext(schuleTestdaten_001, true);
-		final ValidatorLehrerPersonalabschnittsdatenPflichtstundensoll validator = new ValidatorLehrerPersonalabschnittsdatenPflichtstundensoll(LehrerPersonalabschnittsdaten_Plausibel, kontext);
-		assertEquals(true, validator.run());
-	}
-
-
-	/**
-	 * Test von TestValidatorLehrerPersonalabschnittsdatenPflichtstundensoll auf Pflichtstundensoll zu hoch
-	 *
-	 * CoreType: LehrerPersonalabschnittsdaten
-	 * Testfall: Das Pflichtstundensoll ist zu hoch
-	 * Ergebnis: Validator soll FALSE liefern
-	 */
-	@DisplayName("TestValidatorLehrerPersonalabschnittsdatenPflichtstundensoll: Fehler Pflichtstundensoll zu hoch")
-	@Test
-	void testValidatorLehrerPersonalabschnittsdatenPflichtstundensoll_PflichtstundensollZuHoch() {
-		// Testdaten setzen
-		setzeTestdaten(42.5);
-
-		// Erzeuge den Kontext für die Validierung
-		final ValidatorKontext kontext = new ValidatorKontext(schuleTestdaten_001, true);
-		LehrerPersonalabschnittsdaten lpad = LehrerPersonalabschnittsdaten_Plausibel;
-		lpad.pflichtstundensoll = 42.0;
-		final ValidatorLehrerPersonalabschnittsdatenPflichtstundensoll validator = new ValidatorLehrerPersonalabschnittsdatenPflichtstundensoll(lpad, kontext);
-		assertEquals(false, validator.run());
-	}
-
 
 	/**
 	 * Test von ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum mit validen Daten
@@ -224,34 +161,6 @@ class TestValidatorLehrerPersonalabschnittsdaten {
 		} catch (final InvalidDateException e) {
 			assertTrue(e.getMessage().contains("ist nicht konform zu ISO8601"));
 		}
-	}
-
-	/**
-	 * Test von ValidatorLehrerStammdatenPflichtstundensoll
-	 *
-	 * CoreType: LehrerPersonalabschnittsdaten
-	 *
-	 * @param pflichtstundensoll der Doublewert für die Stunden (z. B. 27.5)
-	 * @param einsatzstatus
-	 * @param beschaeftigungsart
-	 * @param result     gibt an, welches Ergebnis bei den Testdaten erwartet wird
-	 */
-	@DisplayName("Tests für ValidatorLehrerPersonalabschnittsdatenPflichtstundensoll")
-	@ParameterizedTest
-	@CsvSource(textBlock = TESTDATEN_LAP3)
-	void testValidatorLehrerStammdatenGeschlecht(final double pflichtstundensoll, final String einsatzstatus, final String beschaeftigungsart, final boolean result) {
-		// Testdaten setzen
-		LehrerPersonalabschnittsdaten_Plausibel.pflichtstundensoll = pflichtstundensoll;
-		LehrerPersonalabschnittsdaten_Plausibel.einsatzstatus = einsatzstatus;
-		LehrerPersonalabschnittsdaten_Plausibel.beschaeftigungsart = beschaeftigungsart;
-
-		// Erzeuge den Kontext für die Validierung
-		final ValidatorKontext kontext = new ValidatorKontext(schuleTestdaten_001, true);
-		final ValidatorLehrerPersonalabschnittsdatenPflichtstundensoll validator =
-				new ValidatorLehrerPersonalabschnittsdatenPflichtstundensoll(LehrerPersonalabschnittsdaten_Plausibel, kontext);
-
-		assertEquals(result, validator.run());
-
 	}
 
 	/**

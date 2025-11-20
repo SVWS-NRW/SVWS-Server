@@ -1,6 +1,6 @@
 import { LehrerPersonaldaten } from '../../../asd/data/lehrer/LehrerPersonaldaten';
-import { ValidatorGesamtLehrerdatenDuplikate } from '../../../asd/validate/gesamt/ValidatorGesamtLehrerdatenDuplikate';
 import { LehrerStammdaten } from '../../../asd/data/lehrer/LehrerStammdaten';
+import { ValidatorGldGesamtLehrerdatenDuplikate } from '../../../asd/validate/gesamt/ValidatorGldGesamtLehrerdatenDuplikate';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
@@ -19,7 +19,7 @@ export class ValidatorGesamtLehrerdaten extends Validator {
 	 */
 	public constructor(listStammdaten: List<LehrerStammdaten>, listPersonaldaten: List<LehrerPersonaldaten>, kontext: ValidatorKontext) {
 		super(kontext);
-		this._validatoren.add(new ValidatorGesamtLehrerdatenDuplikate(listStammdaten, kontext));
+		this._validatoren.add(new ValidatorGldGesamtLehrerdatenDuplikate(listStammdaten, kontext));
 		this._validatoren.add(new ValidatorGesamtLehrerPersonaldatenLehramt(listPersonaldaten, kontext));
 	}
 

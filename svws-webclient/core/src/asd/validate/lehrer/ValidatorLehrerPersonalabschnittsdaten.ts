@@ -4,9 +4,10 @@ import { LehrerStammdaten } from '../../../asd/data/lehrer/LehrerStammdaten';
 import { ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnis } from '../../../asd/validate/lehrer/ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnis';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
+import { ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart } from '../../../asd/validate/lehrer/ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart';
 import { Validator } from '../../../asd/validate/Validator';
+import { ValidatorLppLehrerPersonalabschnittsdatenPflichtstundensoll } from '../../../asd/validate/lehrer/ValidatorLppLehrerPersonalabschnittsdatenPflichtstundensoll';
 import { ValidatorLabbLehrerPersonalabschnittsdatenBeschaeftigungsartBlockmodell } from '../../../asd/validate/lehrer/ValidatorLabbLehrerPersonalabschnittsdatenBeschaeftigungsartBlockmodell';
-import { ValidatorLehrerPersonalabschnittsdatenPflichtstundensoll } from '../../../asd/validate/lehrer/ValidatorLehrerPersonalabschnittsdatenPflichtstundensoll';
 
 export class ValidatorLehrerPersonalabschnittsdaten extends Validator {
 
@@ -20,7 +21,8 @@ export class ValidatorLehrerPersonalabschnittsdaten extends Validator {
 	 */
 	public constructor(daten: LehrerPersonalabschnittsdaten, stammdaten: LehrerStammdaten, kontext: ValidatorKontext) {
 		super(kontext);
-		this._validatoren.add(new ValidatorLehrerPersonalabschnittsdatenPflichtstundensoll(daten, kontext));
+		this._validatoren.add(new ValidatorLppLehrerPersonalabschnittsdatenPflichtstundensoll(daten, kontext));
+		this._validatoren.add(new ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(daten, kontext));
 		this._validatoren.add(new ValidatorLabbLehrerPersonalabschnittsdatenBeschaeftigungsartBlockmodell(daten, kontext));
 		try {
 			const geburtsdatum: DateManager = DateManager.from(stammdaten.geburtsdatum);

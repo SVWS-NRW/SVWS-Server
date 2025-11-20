@@ -24,7 +24,7 @@ public final class ValidatorGesamtLehrerdaten extends Validator {
 	public ValidatorGesamtLehrerdaten(final @NotNull List<LehrerStammdaten> listStammdaten, final @NotNull List<LehrerPersonaldaten> listPersonaldaten,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		_validatoren.add(new ValidatorGesamtLehrerdatenDuplikate(listStammdaten, kontext));
+		_validatoren.add(new ValidatorGldGesamtLehrerdatenDuplikate(listStammdaten, kontext));
 		_validatoren.add(new ValidatorGesamtLehrerPersonaldatenLehramt(listPersonaldaten, kontext));
 	}
 

@@ -8,7 +8,7 @@ import de.svws_nrw.asd.data.schule.SchuleStatistikdatenGesamt;
 import de.svws_nrw.asd.validate.gesamt.ValidatorGesamtLehrerdaten;
 import de.svws_nrw.asd.validate.lehrer.ValidatorLehrerPersonaldaten;
 import de.svws_nrw.asd.validate.lehrer.ValidatorLehrerStammdaten;
-import de.svws_nrw.asd.validate.schule.ValidatorSchuleStammdaten;
+import de.svws_nrw.asd.validate.schule.ValidatorSssSchuleStammdatenSchulform;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -27,7 +27,7 @@ public final class ValidatorGesamt extends Validator {
 	public ValidatorGesamt(final @NotNull SchuleStatistikdatenGesamt daten, final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		this.daten = daten;
-		_validatoren.add(new ValidatorSchuleStammdaten(kontext));
+		_validatoren.add(new ValidatorSssSchuleStammdatenSchulform(kontext));
 
 		final HashMap<Long, LehrerStammdaten> mapStammdaten = new HashMap<>();
 		for (final LehrerStammdaten lehrerStammdaten : daten.lehrerStammdaten) {

@@ -19,10 +19,10 @@ public final class ValidatorLehrerStammdaten extends Validator {
 	 */
 	public ValidatorLehrerStammdaten(final @NotNull LehrerStammdaten daten, final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		_validatoren.add(new ValidatorLehrerStammdatenNachname(daten, kontext));
-		_validatoren.add(new ValidatorLehrerStammdatenVorname(daten, kontext));
-		_validatoren.add(new ValidatorLehrerStammdatenGeburtsdatum(daten, kontext));
-		_validatoren.add(new ValidatorLehrerStammdatenGeschlecht(daten, kontext));
+		_validatoren.add(new ValidatorLsnLehrerStammdatenNachname(daten, kontext));
+		_validatoren.add(new ValidatorLsvLehrerStammdatenVorname(daten, kontext));
+		_validatoren.add(new ValidatorLsdLehrerStammdatenGeburtsdatum(daten, kontext));
+		_validatoren.add(new ValidatorLsgLehrerStammdatenGeschlecht(daten, kontext));
 		_validatoren.add(new ValidatorLskLehrerStammdatenKuerzel(daten, kontext));
 	}
 

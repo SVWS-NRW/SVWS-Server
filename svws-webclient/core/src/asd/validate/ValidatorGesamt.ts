@@ -1,6 +1,6 @@
 import { LehrerPersonaldaten } from '../../asd/data/lehrer/LehrerPersonaldaten';
-import { ValidatorSchuleStammdaten } from '../../asd/validate/schule/ValidatorSchuleStammdaten';
 import { HashMap } from '../../java/util/HashMap';
+import { ValidatorSssSchuleStammdatenSchulform } from '../../asd/validate/schule/ValidatorSssSchuleStammdatenSchulform';
 import { LehrerStammdaten } from '../../asd/data/lehrer/LehrerStammdaten';
 import { Class } from '../../java/lang/Class';
 import { ValidatorKontext } from '../../asd/validate/ValidatorKontext';
@@ -24,7 +24,7 @@ export class ValidatorGesamt extends Validator {
 	public constructor(daten: SchuleStatistikdatenGesamt, kontext: ValidatorKontext) {
 		super(kontext);
 		this.daten = daten;
-		this._validatoren.add(new ValidatorSchuleStammdaten(kontext));
+		this._validatoren.add(new ValidatorSssSchuleStammdatenSchulform(kontext));
 		const mapStammdaten: HashMap<number, LehrerStammdaten> | null = new HashMap<number, LehrerStammdaten>();
 		for (const lehrerStammdaten of daten.lehrerStammdaten) {
 			this._validatoren.add(new ValidatorLehrerStammdaten(lehrerStammdaten, kontext));

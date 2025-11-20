@@ -1,17 +1,11 @@
-import { JavaObject } from '../../../java/lang/JavaObject';
-import type { JavaSet } from '../../../java/util/JavaSet';
-import { java_util_Set_of } from '../../../java/util/JavaSet';
 import { LehrerPersonalabschnittsdaten } from '../../../asd/data/lehrer/LehrerPersonalabschnittsdaten';
+import { ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart } from '../../../asd/validate/lehrer/ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart';
+import { ValidatorLppb03LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart } from '../../../asd/validate/lehrer/ValidatorLppb03LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
 
 export class ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart extends Validator {
-
-	/**
-	 * Die Lehrer-Personalabschnittsdaten
-	 */
-	private readonly daten: LehrerPersonalabschnittsdaten;
 
 
 	/**
@@ -22,22 +16,12 @@ export class ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigu
 	 */
 	public constructor(daten: LehrerPersonalabschnittsdaten, kontext: ValidatorKontext) {
 		super(kontext);
-		this.daten = daten;
+		this._validatoren.add(new ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(daten, kontext));
+		this._validatoren.add(new ValidatorLppb03LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(daten, kontext));
 	}
 
 	protected pruefe(): boolean {
-		let success: boolean = true;
-		const beschaeftigungsart: string | null = this.daten.beschaeftigungsart;
-		const einsatzstatus: string | null = this.daten.einsatzstatus;
-		const setEinsatzstatus2: JavaSet<string> | null = java_util_Set_of("A", "B");
-		const fehlertext2: string | null = "Bei einer unentgeltlich beschäftigten Lehrkraft (Feld 'Beschäftigungsart' = 'Unentgeltlich Beschäftigte') dürfen im Feld 'Einsatzstatus' nicht die Einträge 'Stammschule, ganz oder teilweise auch an anderen Schulen tätig' oder 'nicht Stammschule, aber auch hier tätig' eingetragen sein.";
-		if (!this.exec(2, { getAsBoolean: () => (setEinsatzstatus2.contains(einsatzstatus)) && (JavaObject.equalsTranspiler("X", (beschaeftigungsart))) }, fehlertext2))
-			success = false;
-		const pflichtstundensoll: number | null = this.daten.pflichtstundensoll;
-		const fehlertext3: string | null = "Laut Ihren Angaben handelt es sich um eine voll abgeordnete Lehrkraft mit Gestellungsvertrag. Es ist zu erwarten, dass eine Lehrkraft mit Gestellungsvertrag Unterricht an Ihrer Schule erteilt. Bitte überprüfen Sie Ihre Angaben.";
-		if (!this.exec(3, { getAsBoolean: () => (JavaObject.equalsTranspiler("G", (beschaeftigungsart)) && JavaObject.equalsTranspiler("A", (einsatzstatus)) && pflichtstundensoll === 0) }, fehlertext3))
-			success = false;
-		return success;
+		return true;
 	}
 
 	transpilerCanonicalName(): string {

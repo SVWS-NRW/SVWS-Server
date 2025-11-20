@@ -1,12 +1,12 @@
-import { ValidatorLehrerStammdatenGeschlecht } from '../../../asd/validate/lehrer/ValidatorLehrerStammdatenGeschlecht';
-import { ValidatorLehrerStammdatenNachname } from '../../../asd/validate/lehrer/ValidatorLehrerStammdatenNachname';
+import { ValidatorLsgLehrerStammdatenGeschlecht } from '../../../asd/validate/lehrer/ValidatorLsgLehrerStammdatenGeschlecht';
 import { ValidatorLskLehrerStammdatenKuerzel } from '../../../asd/validate/lehrer/ValidatorLskLehrerStammdatenKuerzel';
-import { ValidatorLehrerStammdatenGeburtsdatum } from '../../../asd/validate/lehrer/ValidatorLehrerStammdatenGeburtsdatum';
+import { ValidatorLsdLehrerStammdatenGeburtsdatum } from '../../../asd/validate/lehrer/ValidatorLsdLehrerStammdatenGeburtsdatum';
 import { LehrerStammdaten } from '../../../asd/data/lehrer/LehrerStammdaten';
 import { Class } from '../../../java/lang/Class';
-import { ValidatorLehrerStammdatenVorname } from '../../../asd/validate/lehrer/ValidatorLehrerStammdatenVorname';
+import { ValidatorLsnLehrerStammdatenNachname } from '../../../asd/validate/lehrer/ValidatorLsnLehrerStammdatenNachname';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
+import { ValidatorLsvLehrerStammdatenVorname } from '../../../asd/validate/lehrer/ValidatorLsvLehrerStammdatenVorname';
 
 export class ValidatorLehrerStammdaten extends Validator {
 
@@ -19,10 +19,10 @@ export class ValidatorLehrerStammdaten extends Validator {
 	 */
 	public constructor(daten: LehrerStammdaten, kontext: ValidatorKontext) {
 		super(kontext);
-		this._validatoren.add(new ValidatorLehrerStammdatenNachname(daten, kontext));
-		this._validatoren.add(new ValidatorLehrerStammdatenVorname(daten, kontext));
-		this._validatoren.add(new ValidatorLehrerStammdatenGeburtsdatum(daten, kontext));
-		this._validatoren.add(new ValidatorLehrerStammdatenGeschlecht(daten, kontext));
+		this._validatoren.add(new ValidatorLsnLehrerStammdatenNachname(daten, kontext));
+		this._validatoren.add(new ValidatorLsvLehrerStammdatenVorname(daten, kontext));
+		this._validatoren.add(new ValidatorLsdLehrerStammdatenGeburtsdatum(daten, kontext));
+		this._validatoren.add(new ValidatorLsgLehrerStammdatenGeschlecht(daten, kontext));
 		this._validatoren.add(new ValidatorLskLehrerStammdatenKuerzel(daten, kontext));
 	}
 

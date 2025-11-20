@@ -24,7 +24,8 @@ public final class ValidatorLehrerPersonalabschnittsdaten extends Validator {
 	public ValidatorLehrerPersonalabschnittsdaten(final @NotNull LehrerPersonalabschnittsdaten daten, final @NotNull LehrerStammdaten stammdaten,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		_validatoren.add(new ValidatorLehrerPersonalabschnittsdatenPflichtstundensoll(daten, kontext));
+		_validatoren.add(new ValidatorLppLehrerPersonalabschnittsdatenPflichtstundensoll(daten, kontext));
+		_validatoren.add(new ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(daten, kontext));
 		_validatoren.add(new ValidatorLabbLehrerPersonalabschnittsdatenBeschaeftigungsartBlockmodell(daten, kontext));
 		// Die nachfolgenden Prüfungen sind nur durchführbar, wenn bei den Stammdaten ein Geburtsdatum gesetzt ist...
 		try {
