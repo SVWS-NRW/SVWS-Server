@@ -55,6 +55,7 @@ import de.svws_nrw.data.schueler.DataSchuelerTelefon;
 import de.svws_nrw.data.schueler.DataSchuelerVermerke;
 import de.svws_nrw.data.schueler.DataSchuelerliste;
 import de.svws_nrw.data.schueler.DataSchuelerFoerderempfehlung;
+import de.svws_nrw.data.schueler.DataSchuelerneuanlage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -255,7 +256,8 @@ public class APISchueler {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerStammdatenNeu.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataSchuelerStammdaten(conn, idSchuljahresabschnitt).createNewSchuelerWithLernabschnitt(is), request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
+				conn -> new DataSchuelerneuanlage(conn, idSchuljahresabschnitt, new DataSchuelerLernabschnittsdaten(conn)).addNewSchuelerWithLernabschnitt(is),
+				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
 	}
 
 	/**
