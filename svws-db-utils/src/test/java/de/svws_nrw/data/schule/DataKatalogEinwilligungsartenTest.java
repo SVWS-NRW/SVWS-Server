@@ -204,10 +204,6 @@ class DataKatalogEinwilligungsartenTest {
 	@DisplayName("getAll | Database empty")
 	void getAllEmpty() {
 		when(this.conn.queryAll(DTOKatalogEinwilligungsart.class)).thenReturn(Collections.emptyList());
-		final TypedQuery<Long> queryMock = mock(TypedQuery.class);
-		when(queryMock.setParameter(eq("ids"), any())).thenReturn(queryMock);
-		when(queryMock.getResultList()).thenReturn(List.of(1L));
-		when(conn.query(anyString(), eq(Long.class))).thenReturn(queryMock);
 
 		assertThat(this.data.getAll()).isEmpty();
 	}
@@ -750,7 +746,20 @@ class DataKatalogEinwilligungsartenTest {
 		method.setAccessible(true);
 		final Object result = method.invoke(this.data, (Object) null);
 
-		assertThat(result).isInstanceOf(Set.class).isNotNull();
+		assertThat((Set<Long>) result).isEmpty();
+
+		verify(this.conn, never()).query(anyString(), any());
+	}
+
+	@Test
+	@DisplayName("getIdsOfReferencedEinwilligungsarten | emptyList")
+	void getIdsOfReferencedEinwilligungsartenIdsEmpty() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+		final Method method = DataKatalogEinwilligungsarten.class.getDeclaredMethod("getIdsOfReferencedEinwilligungsarten", Set.class);
+		method.setAccessible(true);
+		final Set<Long> emptySet = Collections.emptySet();
+		final Object result = method.invoke(this.data, emptySet);
+
+		assertThat((Set<Long>) result).isEmpty();
 
 		verify(this.conn, never()).query(anyString(), any());
 	}

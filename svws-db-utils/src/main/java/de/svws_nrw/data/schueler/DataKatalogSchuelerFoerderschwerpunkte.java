@@ -11,6 +11,7 @@ import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response.Status;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -65,13 +66,11 @@ public final class DataKatalogSchuelerFoerderschwerpunkte extends DataManagerRev
 		final Set<Long> idsFoerderschwerpunkte = mapToIds(foerderschwerpunkte);
 		final Set<Long> idsOfReferencedFoerderschwerpunkte = this.getIdsOfReferencedFoerderschwerpunkte(idsFoerderschwerpunkte);
 
-		return foerderschwerpunkte.stream()
-				.map(f -> {
-					final FoerderschwerpunktEintrag foerderschwerpunkt = this.map(f);
-					foerderschwerpunkt.referenziertInAnderenTabellen = idsOfReferencedFoerderschwerpunkte.contains(f.ID);
-					return foerderschwerpunkt;
-				})
-				.sorted(Comparator.comparing(f -> f.id))
+		return foerderschwerpunkte
+				.stream()
+				.map(this::map)
+				.map(e -> setReferencedFlag(e, idsOfReferencedFoerderschwerpunkte))
+				.sorted(Comparator.comparing(e -> e.id))
 				.toList();
 	}
 
@@ -150,6 +149,9 @@ public final class DataKatalogSchuelerFoerderschwerpunkte extends DataManagerRev
 	}
 
 	private Set<Long> getIdsOfReferencedFoerderschwerpunkte(final Set<Long> ids) {
+		if ((ids == null) || ids.isEmpty())
+			return Collections.emptySet();
+
 		final String query1 = "SELECT DISTINCT f.Foerderschwerpunkt_ID FROM DTOSchuelerLernabschnittsdaten f WHERE f.Foerderschwerpunkt_ID IN :ids";
 		final String query2 = "SELECT DISTINCT g.Foerderschwerpunkt2_ID FROM DTOSchuelerLernabschnittsdaten g WHERE g.Foerderschwerpunkt2_ID IN :ids";
 		final String query = String.join("\nUNION\n", query1, query2);
@@ -181,6 +183,11 @@ public final class DataKatalogSchuelerFoerderschwerpunkte extends DataManagerRev
 
 	private static boolean valueIsBlankOrHasNotChanged(final String oldValue, final String newValue) {
 		return Objects.equals(oldValue, newValue) || ((newValue != null) && newValue.isBlank());
+	}
+
+	private FoerderschwerpunktEintrag setReferencedFlag(final FoerderschwerpunktEintrag foerderschwerpunkt, final Set<Long> idsOfReferencedEntlassgruende) {
+		foerderschwerpunkt.referenziertInAnderenTabellen = idsOfReferencedEntlassgruende.contains(foerderschwerpunkt.id);
+		return foerderschwerpunkt;
 	}
 
 }

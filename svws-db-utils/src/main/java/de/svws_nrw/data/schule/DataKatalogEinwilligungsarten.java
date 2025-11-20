@@ -70,6 +70,7 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 
 		return einwilligungsarten
 				.stream()
+				.map(this::map)
 				.map(e -> setReferencedFlag(e, idsOfReferencedEinwilligungsarten))
 				.sorted(Comparator.comparing(e -> e.id))
 				.toList();
@@ -212,14 +213,13 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 				.collect(Collectors.toSet());
 	}
 
-	private Einwilligungsart setReferencedFlag(final DTOKatalogEinwilligungsart dto, final Set<Long> idsOfReferencedEinwilligungsarten) {
-		final Einwilligungsart einwilligungsart = this.map(dto);
-		einwilligungsart.referenziertInAnderenTabellen = idsOfReferencedEinwilligungsarten.contains(dto.ID);
+	private Einwilligungsart setReferencedFlag(final Einwilligungsart einwilligungsart, final Set<Long> idsOfReferencedEinwilligungsarten) {
+		einwilligungsart.referenziertInAnderenTabellen = idsOfReferencedEinwilligungsarten.contains(einwilligungsart.id);
 		return einwilligungsart;
 	}
 
 	private Set<Long> getIdsOfReferencedEinwilligungsarten(final Set<Long> ids) {
-		if (ids == null)
+		if ((ids == null) || ids.isEmpty())
 			return Collections.emptySet();
 
 		final String query1 = "SELECT DISTINCT a.Datenschutz_ID FROM DTOSchuelerDatenschutz a WHERE a.Datenschutz_ID IN :ids";
