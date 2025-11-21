@@ -124,6 +124,26 @@ export type { EnmKlassenleitungProps } from "./components/enm/EnmKlassenleitungP
 export { AppMenuGroup } from "./ui/nav/AppMenuGroup";
 export { ViewType } from "./ui/nav/ViewType";
 
+// Validator Classes
+export { ValidatorBenutzerAnmeldenameNeu } from "./validation/ValidatorBenutzerAnmeldenameNeu";
+export { ValidatorEmail } from "./validation/ValidatorEmail";
+export { ValidatorKlassenKuerzel } from "./validation/ValidatorKlassenKuerzel";
+export { ValidatorKursKuerzel } from "./validation/ValidatorKursKuerzel";
+export { ValidatorLehrerKuerzel } from "./validation/ValidatorLehrerKuerzel";
+export { ValidatorSchemaNameMariaDB } from "./validation/ValidatorSchemaNameMariaDB";
+export { ValidatorSchuelerAnmeldedatum } from "./validation/ValidatorSchuelerAnmeldedatum";
+export { ValidatorSchuelerAufnahmedatum } from "./validation/ValidatorSchuelerAufnahmedatum";
+export { ValidatorSchuelerDatumBeginnBildungsgang } from "./validation/ValidatorSchuelerDatumBeginnBildungsgang";
+export { ValidatorSchuelerGeburtsdatum } from "./validation/ValidatorSchuelerGeburtsdatum";
+export { ValidatorSortierung } from "./validation/ValidatorSortierung";
+export { ValidatorStringEquals } from "./validation/ValidatorStringEquals";
+export { ValidatorStringExistsIn } from "./validation/ValidatorStringExistsIn";
+export { ValidatorStringHasNoWhitespaces } from "./validation/ValidatorStringHasNoWhitespaces";
+export { ValidatorStringLength } from "./validation/ValidatorStringLength";
+export { ValidatorStringNotEmpty } from "./validation/ValidatorStringNotEmpty";
+export { ValidatorStringNotIn } from "./validation/ValidatorStringNotIn";
+export { ValidatorTelefon } from "./validation/ValidatorTelefon";
+
 // Managers
 export { AuswahlManager } from "./ui/AuswahlManager";
 export { TelefonArtListeManager } from "./ui/managers/telefonart/TelefonArtListeManager";
