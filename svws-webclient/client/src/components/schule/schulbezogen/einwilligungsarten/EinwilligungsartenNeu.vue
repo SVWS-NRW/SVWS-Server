@@ -43,7 +43,7 @@
 	import { computed, ref, watch } from "vue";
 	import { ArrayList, BenutzerKompetenz, Einwilligungsart, Einwilligungsschluessel, PersonTyp } from "@core";
 	import type { EinwilligungsschluesselKatalogEintrag, List } from "@core";
-	import { isUniqueInList, mandatoryInputIsValid, numberIsValid } from "~/util/validation/Validation";
+	import { mandatoryInputIsValid, numberIsValid } from "~/util/validation/Validation";
 	import { CoreTypeSelectManager, SelectManager } from "@ui";
 
 	const props = defineProps<EinwilligungsartenNeuProps>();
@@ -83,7 +83,14 @@
 	function bezeichnungIsValid(value: string | null): boolean {
 		if (!mandatoryInputIsValid(value, 250))
 			return false;
-		return isUniqueInList(value, props.manager().liste.list(), 'bezeichnung');
+		if (data.value.idPersonTyp === -1)
+			return true;
+		for (const einwilligungsart of props.manager().liste.list()) {
+			if (einwilligungsart.idPersonTyp === data.value.idPersonTyp && einwilligungsart.bezeichnung.toLowerCase() === value?.toLowerCase()) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	function idPersonTypeIsValid(idPersonTyp: number) {

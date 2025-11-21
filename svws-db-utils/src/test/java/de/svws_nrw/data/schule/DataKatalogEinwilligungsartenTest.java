@@ -94,7 +94,10 @@ class DataKatalogEinwilligungsartenTest {
 
 		this.data.initDTO(dto, 2L, null);
 
-		assertThat(dto).hasFieldOrPropertyWithValue("ID", 2L);
+		assertThat(dto)
+				.hasFieldOrPropertyWithValue("ID", 2L)
+				.hasFieldOrPropertyWithValue("Sortierung", 32000)
+				.hasFieldOrPropertyWithValue("personTyp", null);
 	}
 
 	@Test
@@ -435,6 +438,65 @@ class DataKatalogEinwilligungsartenTest {
 				.isThrownBy(() -> this.data.patch(1L, Map.of("bezeichnung", "test")))
 				.isInstanceOf(ApiOperationException.class)
 				.withMessage("Die Bezeichnung test ist bereits vorhanden.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("patch | bezeichnung used with different personTyp")
+	void patchBezeichnungUsedWithDifferentPersonTyp() throws ApiOperationException {
+		final var differentDtoInDataBase = new DTOKatalogEinwilligungsart(2L, "test", true, 123);
+		differentDtoInDataBase.personTyp = PersonTyp.LEHRER;
+		final var dtoToPatch = new  DTOKatalogEinwilligungsart(1L, "dtoToPatch", true, 123);
+		when(this.conn.queryAll(DTOKatalogEinwilligungsart.class)).thenReturn(List.of(differentDtoInDataBase));
+		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dtoToPatch);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+
+		this.data.patch(1L, Map.of("bezeichnung", "test"));
+
+		assertThat(dtoToPatch.Bezeichnung).isEqualTo("test");
+	}
+
+	@Test
+	@DisplayName("patch | bezeichnung used with same personTyp")
+	void patchBezeichnungUsedWithSamePersonTyp() {
+		final var differentDtoInDataBase = new DTOKatalogEinwilligungsart(2L, "test", true, 123);
+		differentDtoInDataBase.personTyp = PersonTyp.LEHRER;
+		final var dto = new DTOKatalogEinwilligungsart(1L, "beforeChange", true, 123);
+		dto.personTyp = PersonTyp.LEHRER;
+		when(this.conn.queryAll(DTOKatalogEinwilligungsart.class)).thenReturn(List.of(differentDtoInDataBase, dto));
+		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto);
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, Map.of("bezeichnung", "test")))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Die Bezeichnung test ist bereits vorhanden.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("create | bezeichnung is unique | different PersonTyp")
+	void createBezeichnungIsUnique_DifferentPersonTyp() {
+		final var existingEntity = new DTOKatalogEinwilligungsart(1L, "doppelte Bezeichnung", true, 123);
+		existingEntity.personTyp = PersonTyp.SCHUELER;
+		when(this.conn.queryAll(DTOKatalogEinwilligungsart.class)).thenReturn(List.of(existingEntity));
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 0L)).thenReturn(mock(DTOKatalogEinwilligungsart.class));
+
+		assertThatNoException()
+				.isThrownBy(() -> this.data.add(Map.of("bezeichnung", "doppelte Bezeichnung", "idPersonTyp", PersonTyp.LEHRER.id)));
+	}
+
+	@Test
+	@DisplayName("create | bezeichnung is unique | same PersonTyp")
+	void createBezeichnungIsUnique_samePersonTyp() {
+		final var existingEntity = new DTOKatalogEinwilligungsart(1L, "doppelte Bezeichnung", true, 123);
+		existingEntity.personTyp = PersonTyp.LEHRER;
+		when(this.conn.queryAll(DTOKatalogEinwilligungsart.class)).thenReturn(List.of(existingEntity));
+
+		assertThatException()
+				.isThrownBy(() -> this.data.add(Map.of("bezeichnung", "doppelte Bezeichnung", "idPersonTyp", PersonTyp.LEHRER.id)))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Die Bezeichnung doppelte Bezeichnung ist bereits vorhanden.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 

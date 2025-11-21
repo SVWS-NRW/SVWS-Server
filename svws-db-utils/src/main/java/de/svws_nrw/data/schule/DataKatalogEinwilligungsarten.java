@@ -45,6 +45,11 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 	}
 
 	@Override
+	public void checkBeforeCreation(final Long newID, final Map<String, Object> initAttributes) throws ApiOperationException {
+		validateBezeichnungisUniqueForThisPersonTypOnCreation(newID, initAttributes);
+	}
+
+	@Override
 	protected long getLongId(final DTOKatalogEinwilligungsart dto) {
 		return dto.ID;
 	}
@@ -91,11 +96,7 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 	@Override
 	protected void initDTO(final DTOKatalogEinwilligungsart dto, final Long id, final Map<String, Object> initAttributes) {
 		dto.ID = id;
-		dto.Bezeichnung = "";
-		dto.Schluessel = "";
 		dto.Sortierung = 32000;
-		dto.Beschreibung = "";
-		dto.personTyp = PersonTyp.SCHUELER;
 	}
 
 	@Override
@@ -133,6 +134,16 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 		}
 	}
 
+	private void validateBezeichnungisUniqueForThisPersonTypOnCreation(final Long newID, final Map<String, Object> initAttributes) throws ApiOperationException {
+		final Integer idPersonTyp = JSONMapper.convertToInteger(initAttributes.get(ID_PERSON_TYP), false, ID_PERSON_TYP);
+		final PersonTyp personTyp = PersonTyp.getByID(idPersonTyp);
+		if (personTyp == null)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Für die idPersonTyp %d existiert kein PersonTyp".formatted(idPersonTyp));
+
+		final String bezeichnung = JSONMapper.convertToString(initAttributes.get(BEZEICHNUNG), false, false, Schema.tab_K_Datenschutz.col_Bezeichnung.datenlaenge(), BEZEICHNUNG);
+		validateBezeichnung(newID, personTyp, bezeichnung);
+	}
+
 	private static void updateBeschreibung(final DTOKatalogEinwilligungsart dto, final Object value, final String name) throws ApiOperationException {
 		dto.Beschreibung = JSONMapper.convertToString(value, true, true, null, name);
 	}
@@ -150,8 +161,7 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 		if (valueIsBlankOrHasNotChanged(dto.Bezeichnung, bezeichnung))
 			return;
 
-		if (bezeichnungIsAlreadyUsed(dto.ID, dto.personTyp, bezeichnung))
-			throw new ApiOperationException(Status.BAD_REQUEST, "Die Bezeichnung %s ist bereits vorhanden.".formatted(bezeichnung));
+		validateBezeichnung(dto.ID, dto.personTyp, bezeichnung);
 
 		dto.Bezeichnung = bezeichnung;
 	}
@@ -186,9 +196,11 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 		dto.personTyp = personTyp;
 	}
 
-	private boolean bezeichnungIsAlreadyUsed(final Long id, final PersonTyp personTyp, final String bezeichnung) {
-		return this.conn.queryAll(DTOKatalogEinwilligungsart.class).stream()
+	private void validateBezeichnung(final Long id, final PersonTyp personTyp, final String bezeichnung) throws ApiOperationException {
+		final boolean isAlreadyUsed = this.conn.queryAll(DTOKatalogEinwilligungsart.class).stream()
 				.anyMatch(e -> (e.ID != id) && (e.personTyp == personTyp) && bezeichnung.equalsIgnoreCase(e.Bezeichnung));
+		if (isAlreadyUsed)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die Bezeichnung %s ist bereits vorhanden.".formatted(bezeichnung));
 	}
 
 	private static boolean noMatchingCoreTypeFound(final String schluessel) {
