@@ -36,9 +36,9 @@
 
 	import { ref, computed } from "vue";
 	import { BenutzerKompetenz, type List, ServerMode } from "@core";
-	import type { SLernplattformenGruppenprozesseProps } from "~/components/schule/schulbezogen/lernplattformen/gruppenprozesse/SLernplattformenGruppenprozesseProps";
+	import type { LernplattformenGruppenprozesseProps } from "~/components/schule/schulbezogen/lernplattformen/gruppenprozesse/LernplattformenGruppenprozesseProps";
 
-	const props = defineProps<SLernplattformenGruppenprozesseProps>();
+	const props = defineProps<LernplattformenGruppenprozesseProps>();
 
 	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
 

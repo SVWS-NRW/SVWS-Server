@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 
-	import type { LernplattformenDatenProps } from "~/components/schule/schulbezogen/lernplattformen/daten/SLernplattformenDatenProps";
+	import type { LernplattformenDatenProps } from "~/components/schule/schulbezogen/lernplattformen/daten/LernplattformenDatenProps";
 	import { computed } from "vue";
 	import { BenutzerKompetenz } from "@core";
 

@@ -7,22 +7,22 @@ import { ViewType, LernplattformListeManager } from "@ui";
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
-import { routeKatalogLernplattformenDaten } from "~/router/apps/schule/schulbezogen/lernplattformen/RouteKatalogLernplattformenDaten";
-import { routeKatalogLernplattformenGruppenprozesse } from "~/router/apps/schule/schulbezogen/lernplattformen/RouteKatalogLernplattformenGruppenprozesse";
-import { routeKatalogLernplattformenNeu } from "~/router/apps/schule/schulbezogen/lernplattformen/RouteKatalogLernplattformenNeu";
+import { routeLernplattformenDaten } from "~/router/apps/schule/schulbezogen/lernplattformen/RouteLernplattformenDaten";
+import { routeLernplattformenGruppenprozesse } from "~/router/apps/schule/schulbezogen/lernplattformen/RouteLernplattformenGruppenprozesse";
+import { routeLernplattformenNeu } from "~/router/apps/schule/schulbezogen/lernplattformen/RouteLernplattformenNeu";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,
 	manager: new LernplattformListeManager(-1, -1, new ArrayList(), null, new ArrayList()),
-	view: routeKatalogLernplattformenDaten,
+	view: routeLernplattformenDaten,
 	activeViewType: ViewType.DEFAULT,
 	oldView: undefined,
 };
 
-export class RouteDataKatalogLernplattformen extends RouteDataAuswahl<LernplattformListeManager, RouteStateAuswahlInterface<LernplattformListeManager>> {
+export class RouteDataLernplattformen extends RouteDataAuswahl<LernplattformListeManager, RouteStateAuswahlInterface<LernplattformListeManager>> {
 
 	public constructor() {
-		super(defaultState, { gruppenprozesse: routeKatalogLernplattformenGruppenprozesse, hinzufuegen: routeKatalogLernplattformenNeu });
+		super(defaultState, { gruppenprozesse: routeLernplattformenGruppenprozesse, hinzufuegen: routeLernplattformenNeu });
 	}
 
 	public addID(param: RouteParamsRawGeneric, id: number): void {
@@ -38,6 +38,7 @@ export class RouteDataKatalogLernplattformen extends RouteDataAuswahl<Lernplattf
 	async ladeDaten(auswahl: Lernplattform | null): Promise<Lernplattform | null> {
 		if (auswahl === null)
 			return auswahl;
+
 		const lernplattform = await api.server.getLernplattform(api.schema, auswahl.id);
 		this.manager.getIdByEintrag(lernplattform);
 		return auswahl;

@@ -25,10 +25,10 @@
 <script setup lang="ts">
 	import { computed, ref, watch } from "vue";
 	import { BenutzerKompetenz, Lernplattform } from "@core";
-	import type { SLernplattformenNeuProps } from "~/components/schule/schulbezogen/lernplattformen/SLernplattformenNeuProps";
+	import type { LernplattformenNeuProps } from "~/components/schule/schulbezogen/lernplattformen/LernplattformenNeuProps";
 	import { isUniqueInList, mandatoryInputIsValid } from "~/util/validation/Validation";
 
-	const props = defineProps<SLernplattformenNeuProps>();
+	const props = defineProps<LernplattformenNeuProps>();
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const disabled = computed(() => !hatKompetenzUpdate.value);
 

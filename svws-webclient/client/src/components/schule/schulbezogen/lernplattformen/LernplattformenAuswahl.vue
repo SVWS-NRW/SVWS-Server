@@ -40,7 +40,7 @@
 	import { BenutzerKompetenz } from "@core";
 	import type { DataTableColumn } from "@ui";
 	import { useRegionSwitch, ViewType } from "@ui";
-	import type { LernplattformenAuswahlProps } from "~/components/schule/schulbezogen/lernplattformen/SLernplattformenAuswahlProps";
+	import type { LernplattformenAuswahlProps } from "~/components/schule/schulbezogen/lernplattformen/LernplattformenAuswahlProps";
 
 	const props = defineProps<LernplattformenAuswahlProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();

@@ -38,7 +38,7 @@
 
 	import { computed } from "vue";
 	import { useRegionSwitch, ViewType } from "@ui";
-	import type { LernplattformenAppProps } from "~/components/schule/schulbezogen/lernplattformen/SLernplattformenAppProps";
+	import type { LernplattformenAppProps } from "~/components/schule/schulbezogen/lernplattformen/LernplattformenAppProps";
 
 	const props = defineProps<LernplattformenAppProps>();
 

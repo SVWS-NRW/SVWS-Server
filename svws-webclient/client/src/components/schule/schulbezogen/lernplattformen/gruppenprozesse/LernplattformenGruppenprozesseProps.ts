@@ -1,7 +1,7 @@
 import type { Schulform, List, Schulgliederung, ServerMode, BenutzerKompetenz } from "@core";
 import type { LernplattformListeManager } from "@ui";
 
-export interface SLernplattformenGruppenprozesseProps {
+export interface LernplattformenGruppenprozesseProps {
 	serverMode: ServerMode;
 	schulform: Schulform;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;

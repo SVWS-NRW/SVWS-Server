@@ -9,7 +9,6 @@ import { AuswahlManager } from '../../AuswahlManager';
 import type { JavaFunction } from '../../../../../core/src/java/util/function/JavaFunction';
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
 import type { List } from '../../../../../core/src/java/util/List';
-import { Class } from '../../../../../core/src/java/lang/Class';
 import { Arrays } from '../../../../../core/src/java/util/Arrays';
 import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
 import { HashSet } from '../../../../../core/src/java/util/HashSet';
@@ -98,19 +97,5 @@ export class LernplattformListeManager extends AuswahlManager<number, Lernplattf
 	protected checkFilter(eintrag: Lernplattform): boolean {
 		return true;
 	}
-
-	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.core.utils.lernplattform.LernplattformListeManager';
-	}
-
-	isTranspiledInstanceOf(name: string): boolean {
-		return ['de.svws_nrw.core.utils.AuswahlManager', 'de.svws_nrw.core.utils.lernplattform.LernplattformListeManager'].includes(name);
-	}
-
-	public static class = new Class<LernplattformListeManager>('de.svws_nrw.core.utils.lernplattform.LernplattformListeManager');
-
 }
 
-export function cast_de_svws_nrw_core_utils_lernplattform_LernplattformListeManager(obj: unknown): LernplattformListeManager {
-	return obj as LernplattformListeManager;
-}
