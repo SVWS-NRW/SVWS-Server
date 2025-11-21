@@ -278,7 +278,7 @@
 	}
 
 	function istBeginnBildungsgangGueltig(strDate: string | null) {
-		if (strDate === null)
+		if (!schulenMitBKoderSK.value || (strDate === null))
 			return true;
 		const beginn = parseISOToDate(strDate);
 		if (beginn === null)
@@ -304,6 +304,8 @@
 	}
 
 	function defaultBeginnBildungsgang(abschnitt: { schuljahr: number, abschnitt: number }): string | null {
+		if (!schulenMitBKoderSK.value)
+			return null;
 		if (abschnitt.abschnitt === 1)
 			return `${abschnitt.schuljahr}-08-01`; // immer 1. August des Startjahres
 		if (abschnitt.abschnitt === 2)
