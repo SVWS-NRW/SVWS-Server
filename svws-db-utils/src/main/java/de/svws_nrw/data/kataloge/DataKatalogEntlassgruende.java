@@ -9,6 +9,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.kataloge.KatalogEntlassgrund;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
@@ -23,6 +24,8 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public final class DataKatalogEntlassgruende extends DataManagerRevised<Long, DTOEntlassarten, KatalogEntlassgrund> {
 
+	private static final String BEZEICHNUNG = "bezeichnung";
+
 	/**
 	 * Erstellt einen neuen {@link DataManagerRevised} mit der angegebenen Verbindung
 	 *
@@ -30,8 +33,8 @@ public final class DataKatalogEntlassgruende extends DataManagerRevised<Long, DT
 	 */
 	public DataKatalogEntlassgruende(final DBEntityManager conn) {
 		super(conn);
-		setAttributesNotPatchable("id");
-		setAttributesRequiredOnCreation("bezeichnung");
+		setAttributesNotPatchable("id", BEZEICHNUNG);
+		setAttributesRequiredOnCreation(BEZEICHNUNG);
 	}
 
 	@Override
@@ -84,11 +87,27 @@ public final class DataKatalogEntlassgruende extends DataManagerRevised<Long, DT
 			throws ApiOperationException {
 		switch (name) {
 			case "id" -> validateId(dto, name, value);
-			case "bezeichnung" -> updateBezeichnung(dto, value, name);
+			case BEZEICHNUNG -> updateBezeichnung(dto, value, name);
 			case "sortierung" -> updateSortierung(dto, value, name);
 			case "istSichtbar" -> updateSichtbar(dto, value, name);
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));
 		}
+	}
+
+	@Override
+	protected void checkBeforeDeletionWithSimpleOperationResponse(final List<DTOEntlassarten> entlassarten, final Map<Long, SimpleOperationResponse> responses) {
+		final Set<Long> idsOfReferencedEntlassarten = getIdsOfReferencedEntlassgruende(entlassarten);
+		entlassarten.stream()
+				.filter(e -> idsOfReferencedEntlassarten.contains(e.ID))
+				.forEach(e -> markResponseAsFailed(responses.get(e.ID), e.Bezeichnung));
+
+	}
+
+	private static void markResponseAsFailed(final SimpleOperationResponse response, final String bezeichnung) {
+		response.success = false;
+		response.log.add(
+				"Der Entlassgrund mit der Bezeichnung %s ist in der Datenbank referenziert und kann daher nicht gelöscht werden.".formatted(bezeichnung)
+		);
 	}
 
 	private static void validateId(final DTOEntlassarten dto, final String name, final Object value) throws ApiOperationException {
@@ -100,10 +119,10 @@ public final class DataKatalogEntlassgruende extends DataManagerRevised<Long, DT
 
 	private void updateBezeichnung(final DTOEntlassarten dto, final Object value, final String name) throws ApiOperationException {
 		final String bezeichnung = JSONMapper.convertToString(value, false, false, Schema.tab_K_EntlassGrund.col_Bezeichnung.datenlaenge(), name);
-		if (valueIsBlankOrHasNotChanged(dto.Bezeichnung, bezeichnung))
-			return;
+		if (bezeichnung.isBlank())
+			throw new ApiOperationException(Status.BAD_REQUEST, "Eine leere Bezeichnung ist nicht gestattet");
 
-		if (bezeichnungIsAlreadyUsed(dto.ID, bezeichnung))
+		if (bezeichnungIsAlreadyUsed(bezeichnung))
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die Bezeichnung %s ist bereits vorhanden.".formatted(value));
 
 		dto.Bezeichnung = bezeichnung;
@@ -116,7 +135,6 @@ public final class DataKatalogEntlassgruende extends DataManagerRevised<Long, DT
 	private static void updateSortierung(final DTOEntlassarten dto, final Object value, final String name) throws ApiOperationException {
 		dto.Sortierung = JSONMapper.convertToInteger(value, false, name);
 	}
-
 
 	private Set<Long> getIdsOfReferencedEntlassgruende(final List<DTOEntlassarten> entlassgruende) {
 		if ((entlassgruende == null) || entlassgruende.isEmpty())
@@ -155,14 +173,10 @@ public final class DataKatalogEntlassgruende extends DataManagerRevised<Long, DT
 				.collect(Collectors.toSet());
 	}
 
-	private static boolean valueIsBlankOrHasNotChanged(final String oldValue, final String newValue) {
-		return Objects.equals(oldValue, newValue) || ((newValue != null) && newValue.isBlank());
-	}
-
-	private boolean bezeichnungIsAlreadyUsed(final Long id, final String bezeichnung) {
+	private boolean bezeichnungIsAlreadyUsed(final String bezeichnung) {
 		return this.conn
 				.queryAll(DTOEntlassarten.class).stream()
-				.anyMatch(f -> (f.ID != id) && bezeichnung.equalsIgnoreCase(f.Bezeichnung));
+				.anyMatch(f -> bezeichnung.equalsIgnoreCase(f.Bezeichnung));
 	}
 
 }

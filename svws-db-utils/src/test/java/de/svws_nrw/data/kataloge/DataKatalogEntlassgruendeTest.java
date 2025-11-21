@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
+import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.kataloge.KatalogEntlassgrund;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOEntlassarten;
@@ -20,19 +21,20 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatException;
-import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -71,6 +73,18 @@ class DataKatalogEntlassgruendeTest {
 				.isThrownBy(() -> this.data.patch(1L, Map.of("id", "test")))
 				.isInstanceOf(ApiOperationException.class)
 				.withMessage("Folgende Attribute werden für ein Patch nicht zugelassen: id.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("setAttributesNotPatchable: bezeichnung")
+	void setAttributesNotPatchableBezeichnung() {
+		when(this.conn.queryByKey(DTOEntlassarten.class, 1L)).thenReturn(mock(DTOEntlassarten.class));
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, Map.of("bezeichnung", "test")))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Folgende Attribute werden für ein Patch nicht zugelassen: bezeichnung.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
@@ -227,134 +241,73 @@ class DataKatalogEntlassgruendeTest {
 	}
 
 	@Test
-	@DisplayName("patch | bezeichnung")
-	void patchbezeichnung() throws ApiOperationException {
-		final var dto = new DTOEntlassarten(1L, "bezeichnung");
-		when(this.conn.queryByKey(DTOEntlassarten.class, 1L)).thenReturn(dto);
-		when(this.conn.transactionPersist(any())).thenReturn(true);
-
-		this.data.patch(1L, Map.of("bezeichnung", "neu"));
-
-		assertThat(dto.Bezeichnung).isEqualTo("neu");
-	}
-
-	@Test
-	@DisplayName("patch | bezeichnung > 30 Zeichen")
-	void patchBezeichnungIsTooLong() {
-		final var dto = new DTOEntlassarten(1L, "bezeichnung");
-		when(this.conn.queryByKey(DTOEntlassarten.class, 1L)).thenReturn(dto);
-
-		assertThatException()
-				.isThrownBy(() -> this.data.patch(1L, Map.of("bezeichnung", RandomStringUtils.insecure().nextAscii(31))))
-				.isInstanceOf(ApiOperationException.class)
-				.withMessage("Attribut bezeichnung: Die Länge des Strings ist auf 30 Zeichen limitiert.")
-				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
-	}
-
-	@Test
-	@DisplayName("patch | bezeichnung Null")
-	void patchBezeichnungIsNull() {
-		when(this.conn.queryByKey(DTOEntlassarten.class, 1L)).thenReturn(mock(DTOEntlassarten.class));
+	@DisplayName("add | bezeichnung | null")
+	void addBezeichnungIsNull() {
 		final var map = new HashMap<String, Object>();
 		map.put("bezeichnung", null);
 
 		assertThatException()
-				.isThrownBy(() -> this.data.patch(1L, map))
+				.isThrownBy(() -> this.data.add(map))
 				.isInstanceOf(ApiOperationException.class)
 				.withMessage("Attribut bezeichnung: Der Wert null ist nicht erlaubt.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test
-	@DisplayName("patch | bezeichnung empty")
-	void patchBezeichnungIsEmpty() {
-		when(this.conn.queryByKey(DTOEntlassarten.class, 1L)).thenReturn(mock(DTOEntlassarten.class));
-
+	@DisplayName("add | bezeichnung | empy")
+	void addBezeichnungIsEmpty() {
 		assertThatException()
-				.isThrownBy(() -> this.data.patch(1L, Map.of("bezeichnung", "")))
+				.isThrownBy(() -> this.data.add(Map.of("bezeichnung", "")))
 				.isInstanceOf(ApiOperationException.class)
 				.withMessage("Attribut bezeichnung: Ein leerer String ist hier nicht erlaubt.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test
-	@DisplayName("patch | bezeichnung is blank")
-	void patchBezeichnungIsBlank() throws ApiOperationException {
-		final var dto = new DTOEntlassarten(1L, "bezeichnung");
-		when(this.conn.queryByKey(DTOEntlassarten.class, 1L)).thenReturn(dto);
-		when(this.conn.transactionPersist(any())).thenReturn(true);
-
-		this.data.patch(1L, Map.of("bezeichnung", "    "));
-
-		verify(this.conn, never()).queryAll(DTOEntlassarten.class);
-		assertThat(dto.Bezeichnung).isEqualTo("bezeichnung");
-	}
-
-	@Test
-	@DisplayName("patch | bezeichnung doesn't change")
-	void patchBezeichnungDoesNotChange() throws ApiOperationException {
-		final var dto = new DTOEntlassarten(1L, "bezeichnung");
-		when(this.conn.queryByKey(DTOEntlassarten.class, 1L)).thenReturn(dto);
-		when(this.conn.transactionPersist(any())).thenReturn(true);
-
-		this.data.patch(1L, Map.of("bezeichnung", "bezeichnung"));
-
-		verify(this.conn, never()).queryAll(DTOEntlassarten.class);
-		assertThat(dto.Bezeichnung).isEqualTo("bezeichnung");
-	}
-
-	@Test
-	@DisplayName("patch | bezeichnung already used")
-	void patchBezeichnungAlreadyUsed() {
-		when(this.conn.queryByKey(DTOEntlassarten.class, 1L)).thenReturn(mock(DTOEntlassarten.class));
-		when(this.conn.queryAll(DTOEntlassarten.class)).thenReturn(List.of(new DTOEntlassarten(2L, "test")));
-
+	@DisplayName("add | bezeichnung | blank")
+	void addBezeichnungIsBlank() {
 		assertThatException()
-				.isThrownBy(() -> this.data.patch(1L, Map.of("bezeichnung", "test")))
+				.isThrownBy(() -> this.data.add(Map.of("bezeichnung", "  ")))
 				.isInstanceOf(ApiOperationException.class)
-				.withMessage("Die Bezeichnung test ist bereits vorhanden.")
+				.withMessage("Eine leere Bezeichnung ist nicht gestattet")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test
-	@DisplayName("patch | bezeichnung already used different case")
-	void patchBezeichnungAlreadyUsedWithDifferentCase() {
-		when(this.conn.queryByKey(DTOEntlassarten.class, 1L)).thenReturn(mock(DTOEntlassarten.class));
-		when(this.conn.queryAll(DTOEntlassarten.class)).thenReturn(List.of(new DTOEntlassarten(2L, "TEST")));
-
+	@DisplayName("add | bezeichnung | blank")
+	void addBezeichnungTooManyCharacters() {
 		assertThatException()
-				.isThrownBy(() -> this.data.patch(1L, Map.of("bezeichnung", "test")))
+				.isThrownBy(() -> this.data.add(Map.of("bezeichnung", RandomStringUtils.insecure().nextAscii(31))))
 				.isInstanceOf(ApiOperationException.class)
-				.withMessage("Die Bezeichnung test ist bereits vorhanden.")
+				.withMessage("Attribut bezeichnung: Die Länge des Strings ist auf 30 Zeichen limitiert.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test
-	@DisplayName("patch | bezeichnung change case in same object")
-	void patchBezeichnungChangeCase() throws ApiOperationException {
-		final var dto = new DTOEntlassarten(1L, "test");
-		when(conn.queryAll(DTOEntlassarten.class)).thenReturn(List.of(dto));
-		final var newDto = new DTOEntlassarten(2L, "abc");
-		when(this.conn.queryByKey(DTOEntlassarten.class, 2L)).thenReturn(newDto);
-		when(this.conn.transactionPersist(any())).thenReturn(true);
+	@DisplayName("add | bezeichnung | already Used")
+	void addBezeichnungIsAlreadyUsed() {
+		final var dto = new DTOEntlassarten(1L, "alreadyUsed");
+		when(this.conn.queryAll(DTOEntlassarten.class)).thenReturn(List.of(dto));
 
-		this.data.patch(2L, Map.of("bezeichnung", "ABC"));
-
-		assertThat(newDto.Bezeichnung).isEqualTo("ABC");
+		assertThatException()
+				.isThrownBy(() -> this.data.add(Map.of("bezeichnung", "alreadyUsed")))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Die Bezeichnung alreadyUsed ist bereits vorhanden.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test
-	@DisplayName("patch | bezeichnung dto is null | make sure no Nullpointer is thrown in equalsIgnoreCase check")
-	void patchBezeichnungInDtoISNull() {
-		final var dto = new DTOEntlassarten(1L, "123");
-		dto.Bezeichnung = null;
-		when(conn.queryAll(DTOEntlassarten.class)).thenReturn(List.of(dto));
-		final var newDto = new DTOEntlassarten(2L, "abc");
-		when(this.conn.queryByKey(DTOEntlassarten.class, 2L)).thenReturn(newDto);
+	@DisplayName("add | bezeichnung")
+	void addBezeichnung() throws ApiOperationException {
 		when(this.conn.transactionPersist(any())).thenReturn(true);
+		when(this.conn.queryByKey(DTOEntlassarten.class, 0L)).thenReturn(mock(DTOEntlassarten.class));
 
-		assertThatNoException()
-				.isThrownBy(() -> this.data.patch(2L, Map.of("bezeichnung", "test")));
+		this.data.add(Map.of("bezeichnung", "neueBezeichnung"));
+
+		final ArgumentCaptor<DTOEntlassarten> captor = ArgumentCaptor.forClass(DTOEntlassarten.class);
+		verify(this.conn, times(1)).transactionPersist(captor.capture());
+		assertThat(captor.getValue())
+				.hasFieldOrPropertyWithValue("Bezeichnung", "neueBezeichnung");
 	}
 
 	@Test
@@ -484,6 +437,49 @@ class DataKatalogEntlassgruendeTest {
 		assertThat((Set<Long>) result).isEmpty();
 
 		verify(this.conn, never()).query(anyString(), any());
+	}
+
+	@Test
+	@DisplayName("checkBeforeDeletionWithSimpleOperationResponse")
+	void checkBeforeDeletionWithSimpleOperationResponse() {
+		@SuppressWarnings("unchecked")
+		final TypedQuery<String> queryMock = mock(TypedQuery.class);
+		when(queryMock.setParameter(eq("bezeichnungen"), any())).thenReturn(queryMock);
+		when(queryMock.getResultList()).thenReturn(List.of("abc"));
+		when(conn.query(anyString(), eq(String.class))).thenReturn(queryMock);
+		final var response = new SimpleOperationResponse();
+		response.id = 1L;
+		response.success = true;
+		final var responses = Map.of(response.id, response);
+		final var dto = new DTOEntlassarten(1L, "abc");
+
+		this.data.checkBeforeDeletionWithSimpleOperationResponse(List.of(dto), responses);
+
+		assertThat(responses.get(1L))
+				.hasFieldOrPropertyWithValue("success", false)
+				.extracting(r -> r.log.getFirst())
+				.isEqualTo("Der Entlassgrund mit der Bezeichnung abc ist in der Datenbank referenziert und kann daher nicht gelöscht werden.");
+	}
+
+	@Test
+	@DisplayName("checkBeforeDeletionWithSimpleOperationResponseTest | entlassgrund not referenced")
+	void checkBeforeDeletionWithSimpleOperationResponseEntlassgrundNotReferenced() {
+		@SuppressWarnings("unchecked")
+		final TypedQuery<String> queryMock = mock(TypedQuery.class);
+		when(queryMock.setParameter(eq("bezeichnungen"), any())).thenReturn(queryMock);
+		when(queryMock.getResultList()).thenReturn(List.of("cde"));
+		when(conn.query(anyString(), eq(String.class))).thenReturn(queryMock);
+		final var response = new SimpleOperationResponse();
+		response.id = 1L;
+		response.success = true;
+		final var responses = Map.of(response.id, response);
+		final var dto = new DTOEntlassarten(1L, "abc");
+
+		this.data.checkBeforeDeletionWithSimpleOperationResponse(List.of(dto), responses);
+
+		assertThat(response)
+				.hasFieldOrPropertyWithValue("success", true)
+				.satisfies(r -> assertThat(r.log).isEmpty());
 	}
 
 }

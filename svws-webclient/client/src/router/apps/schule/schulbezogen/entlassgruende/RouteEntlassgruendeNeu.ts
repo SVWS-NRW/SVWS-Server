@@ -24,7 +24,7 @@ export class RouteEntlassgruendeNeu extends RouteNode<any, RouteEntlassgruende> 
 	public getProps(to: RouteLocationNormalized): EntlassgruendeNeuProps {
 		return {
 			manager: () => routeEntlassgruende.data.manager,
-			addEntlassgrund: routeEntlassgruende.data.addEntlassgrund,
+			add: routeEntlassgruende.data.addEntlassgrund,
 			goToDefaultView: routeEntlassgruende.data.gotoDefaultView,
 			checkpoint: this.checkpoint,
 			benutzerKompetenzen: api.benutzerKompetenzen,

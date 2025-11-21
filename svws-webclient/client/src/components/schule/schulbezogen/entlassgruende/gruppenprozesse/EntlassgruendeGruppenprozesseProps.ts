@@ -6,5 +6,6 @@ export interface EntlassgruendeGruppenprozesseProps {
 	schulform: Schulform;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
 	manager: () => EntlassgruendeListeManager;
-	deleteEntlassgruende: () => Promise<[boolean, List<string | null>]>;
+	deleteCheck: () => [boolean, List<string>];
+	delete: () => Promise<[boolean, List<string | null>]>;
 }

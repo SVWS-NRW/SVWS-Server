@@ -1,18 +1,32 @@
 <template>
 	<div class="page page-grid-cards">
-		<div class="flex flex-col gap-4" v-if="ServerMode.DEV.checkServerMode(serverMode)">
-			<ui-card v-if="hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen" subtitle="Ausgewählte Entlassgründe werden gelöscht">
+		<div v-if="!hatIrgendwelcheKompetenzen">
+			Für die Nutzung der Gruppenprozesse fehlen Benutzerkompetenzen.
+		</div>
+		<div v-if="ServerMode.DEV.checkServerMode(serverMode)" class="flex flex-col gap-4">
+			<ui-card v-if="hatKompetenzLoeschen" title="Löschen" subtitle="Ausgewählte Entlassgründe werden gelöscht" icon="i-ri-delete-bin-line">
+				<div>
+					<span v-if="preConditionCheck[0]">Alle ausgewählten Entlassgründe sind bereit zum Löschen.</span>
+					<template v-else v-for="message in preConditionCheck[1]" :key="message">
+						<span class="text-ui-danger whitespace-pre-line"> {{ message }} <br> </span>
+					</template>
+				</div>
 				<template #buttonFooterLeft>
-					<svws-ui-button title="Löschen" @click="entferneEntlassgruende" :is-loading class="mt-4">
-						<svws-ui-spinner v-if="isLoading" spinning />
-						<span v-else class="icon i-ri-play-line" />
+					<svws-ui-button title="Löschen" class="mt-4"
+						@click="deleteSelectedEntlassgruende"
+						:disabled="!allEntriesDeletable || !props.manager().liste.auswahlExists()" :is-loading>
+						<svws-ui-spinner v-if="isLoading" spinning/>
+						<span v-else class="icon i-ri-play-line"/>
 						Löschen
 					</svws-ui-button>
 				</template>
 			</ui-card>
 			<log-box :logs :status>
 				<template #button>
-					<svws-ui-button v-if="status !== undefined" type="transparent" @click="clearLog">Log verwerfen</svws-ui-button>
+					<svws-ui-button v-if="status !== undefined" type="transparent"
+						@click="clearLog">
+						Log verwerfen
+					</svws-ui-button>
 				</template>
 			</log-box>
 		</div>
@@ -21,21 +35,23 @@
 
 <script setup lang="ts">
 
-	import type { EntlassgruendeGruppenprozesseProps } from "~/components/schule/schulbezogen/entlassgruende/gruppenprozesse/EntlassgruendeGruppenprozesseProps";
-	import type { List } from "@core";
-	import { BenutzerKompetenz, ServerMode } from "@core";
-	import { computed, ref } from "vue";
+	import type {EntlassgruendeGruppenprozesseProps} from "~/components/schule/schulbezogen/entlassgruende/gruppenprozesse/EntlassgruendeGruppenprozesseProps";
+	import type {List} from "@core";
+	import {BenutzerKompetenz, ServerMode} from "@core";
+	import {computed, ref} from "vue";
 
 	const props = defineProps<EntlassgruendeGruppenprozesseProps>();
-
-	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
 	const isLoading = ref<boolean>(false);
 	const logs = ref<List<string | null> | undefined>();
 	const status = ref<boolean | undefined>();
+	const hatKompetenzLoeschen = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
+	const hatIrgendwelcheKompetenzen = computed<boolean>(() => hatKompetenzLoeschen.value);
+	const preConditionCheck = computed<[boolean, List<string>]>(() => props.deleteCheck());
+	const allEntriesDeletable = computed<boolean>(() => props.manager().getIdsReferencedEntlassgruende().isEmpty());
 
-	async function entferneEntlassgruende() {
+	async function deleteSelectedEntlassgruende() {
 		isLoading.value = true;
-		const [delStatus, logMessages] = await props.deleteEntlassgruende();
+		const [delStatus, logMessages] = await props.delete();
 		logs.value = logMessages;
 		status.value = delStatus;
 		isLoading.value = false;

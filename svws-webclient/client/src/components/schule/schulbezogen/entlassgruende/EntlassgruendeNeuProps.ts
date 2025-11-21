@@ -4,7 +4,7 @@ import type { Checkpoint, EntlassgruendeListeManager } from "@ui";
 
 export interface EntlassgruendeNeuProps {
 	manager: () => EntlassgruendeListeManager;
-	addEntlassgrund: (patchObject: Partial<KatalogEntlassgrund>) => Promise<void>;
+	add: (patchObject: Partial<KatalogEntlassgrund>) => Promise<void>;
 	goToDefaultView: (idEintrag?: number | null) => Promise<void>;
 	checkpoint: Checkpoint;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;

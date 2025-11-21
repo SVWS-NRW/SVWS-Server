@@ -30,7 +30,8 @@ export class RouteEntlassgruendeGruppenprozesse extends RouteNode<any, RouteEntl
 			serverMode: api.mode,
 			schulform: api.schulform,
 			benutzerKompetenzen: api.benutzerKompetenzen,
-			deleteEntlassgruende: routeEntlassgruende.data.delete,
+			delete: routeEntlassgruende.data.delete,
+			deleteCheck: routeEntlassgruende.data.deleteCheck,
 			manager: () => routeEntlassgruende.data.manager,
 		};
 	}

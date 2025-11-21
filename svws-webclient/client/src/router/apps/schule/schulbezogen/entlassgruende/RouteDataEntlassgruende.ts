@@ -1,7 +1,6 @@
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
-import type { List, SimpleOperationResponse, KatalogEntlassgrund } from "@core";
-import { ArrayList } from "@core";
+import { List, SimpleOperationResponse, KatalogEntlassgrund, BenutzerKompetenz, ArrayList } from "@core";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
 import { ViewType, EntlassgruendeListeManager } from "@ui";
 import { api } from "~/router/Api";
@@ -56,6 +55,31 @@ export class RouteDataEntlassgruende extends RouteDataAuswahl<EntlassgruendeList
 		this.commit();
 		await this.gotoDefaultView(entlassgrund.id);
 	};
+
+	deleteCheck = (): [boolean, List<string>] => {
+		const errorLog = new ArrayList<string>();
+
+		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN))
+			errorLog.add('Es liegt keine Berechtigung zum Löschen von Entlassgründen vor.');
+
+		if (!this.manager.liste.auswahlExists())
+			errorLog.add('Es wurde kein Entlassgrund zum Löschen ausgewählt.');
+
+		if (!this.manager.getIdsReferencedEntlassgruende().isEmpty())
+			errorLog.add(this.getErrorMessageForReferencedEntlassgründe());
+
+		return [errorLog.isEmpty(), errorLog];
+	};
+
+	private getErrorMessageForReferencedEntlassgründe(): string {
+		let errorMessage = 'Die folgenden Entlassgründen sind an anderer Stelle referenziert und können daher nicht gelöscht werden:\n\n';
+		for (const id of this.manager.getIdsReferencedEntlassgruende()) {
+			const entlassgrund = this.manager.liste.get(id);
+			if (entlassgrund)
+				errorMessage += `- ${entlassgrund.bezeichnung} \n`;
+		}
+		return errorMessage;
+	}
 
 }
 

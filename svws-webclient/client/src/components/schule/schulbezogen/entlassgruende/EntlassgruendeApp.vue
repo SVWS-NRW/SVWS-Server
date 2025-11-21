@@ -46,7 +46,7 @@
 	const entlassgruendeSubline = computed(() => {
 		const list = props.manager().liste.auswahlSorted();
 		if (list.size() > 5)
-			return `${list.size()} Entlassgrund ausgewählt`;
+			return `${list.size()} Entlassgründe ausgewählt`;
 		return [...list].map(k => k.bezeichnung).join(', ');
 	});
 
