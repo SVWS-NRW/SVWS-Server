@@ -110,6 +110,7 @@
 	import { ArrayList } from '../../../../core/src/java/util/ArrayList';
 	import { Note } from '../../../../core/src/asd/types/Note';
 
+	type LocalElement = Element | ComponentPublicInstance<unknown> | null;
 	const props = defineProps<EnmTeilleistungenProps>();
 
 	const colsValidationTooltip = new Set(['Fach', 'Lehrer', 'Kurs', 'Kursart']);
@@ -169,7 +170,7 @@
 	function inputNoteTeilleistung(pair: PairNN<ENMLeistung, ENMSchueler>, teilleistung: ENMTeilleistung, col: number, index: number) {
 		const key = 'Teilleistung_' + teilleistung.id + '_' + pair.a.id + "_" + pair.b.id;
 		const setter = (value: string | null) => void props.patchTeilleistung(teilleistung, { note: value });
-		return (element: Element | ComponentPublicInstance<unknown> | null) => {
+		return (element: LocalElement) => {
 			const input = gridManager.applyInputNote(key, col, index, element, setter, props.enmManager().schuljahr);
 			if (input !== null)
 				gridManager.update(key, teilleistung.note);
@@ -179,7 +180,7 @@
 	function inputNoteQuartal(pair: PairNN<ENMLeistung, ENMSchueler>, col: number, index: number) {
 		const key = 'Quartalsnote_' + pair.a.id + "_" + pair.b.id;
 		const setter = (value: string | null) => void props.patchLeistung(pair.a, { noteQuartal: value });
-		return (element: Element | ComponentPublicInstance<unknown> | null) => {
+		return (element: LocalElement) => {
 			const input = gridManager.applyInputNote(key, col, index, element, setter, props.enmManager().schuljahr);
 			if (input !== null)
 				gridManager.update(key, pair.a.noteQuartal);
@@ -189,7 +190,7 @@
 	function inputNote(pair: PairNN<ENMLeistung, ENMSchueler>, col: number, index: number) {
 		const key = 'Note_' + pair.a.id + "_" + pair.b.id;
 		const setter = (value: string | null) => void props.patchLeistung(pair.a, { note: value });
-		return (element: Element | ComponentPublicInstance<unknown> | null) => {
+		return (element: LocalElement) => {
 			const input = gridManager.applyInputNote(key, col, index, element, setter, props.enmManager().schuljahr);
 			if (input !== null)
 				gridManager.update(key, pair.a.note);

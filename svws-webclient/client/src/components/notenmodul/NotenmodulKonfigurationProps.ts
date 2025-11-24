@@ -1,6 +1,6 @@
-import type { SimpleOperationResponse, JavaMap, ENMServerConfigElement, ENMServerConnection } from "@core";
+import type { SimpleOperationResponse, JavaMap, ENMServerConfigElement, ENMServerConnection, ENMTeilleistungsart } from "@core";
 import type { WenomAuswahlListeManager } from "@ui";
-import type { MapLeistungenTabelleSpaltenanzeige, MapTeilleistungenTabelleSpaltenanzeige } from "~/router/apps/notenmodul/RouteDataNotenmodulAdministration";
+import type { MapLeistungenTabelleSpaltenanzeige, MapTeilleistungenTabelleSpaltenanzeige, Spalte } from "~/router/apps/notenmodul/RouteDataNotenmodulAdministration";
 
 export interface NotenmodulKonfigurationProps {
 	manager: () => WenomAuswahlListeManager;
@@ -8,7 +8,8 @@ export interface NotenmodulKonfigurationProps {
 	setServerConfigElement: (config: ENMServerConfigElement) => Promise<SimpleOperationResponse>;
 	updateServerConnection: (data: Partial<ENMServerConnection>) => Promise<void>;
 	mapLeistungenTabelleSpaltenanzeige: () => MapLeistungenTabelleSpaltenanzeige;
-	setMapLeistungenTabelleSpaltenanzeige: (value: MapLeistungenTabelleSpaltenanzeige) => Promise<void>;
+	setMapLeistungenTabelleSpaltenanzeige: (key: Spalte, value: boolean) => Promise<void>;
 	mapTeilleistungenTabelleSpaltenanzeige: () => MapTeilleistungenTabelleSpaltenanzeige;
-	setMapTeilleistungenTabelleSpaltenanzeige: (value: MapTeilleistungenTabelleSpaltenanzeige) => Promise<void>;
+	setMapTeilleistungenTabelleSpaltenanzeige: (key: number, value: boolean) => Promise<void>;
+	mapTeilleistungsarten: JavaMap<number, ENMTeilleistungsart>;
 }

@@ -7,6 +7,7 @@ import type { NotenmodulKonfigurationProps } from "~/components/notenmodul/Noten
 import { api } from "~/router/Api";
 import { ConfigElement } from "@ui";
 import { routeError } from "~/router/error/RouteError";
+import { routeNotenmodul } from "./RouteNotenmodul";
 
 const NotenmodulKonfiguration = () => import("~/components/notenmodul/NotenmodulKonfiguration.vue");
 
@@ -21,7 +22,7 @@ export class RouteNotenmodulKonfiguration extends RouteNode<any, RouteNotenmodul
 		super.text = "Konfiguration";
 		this.isHidden = (params?: RouteParams) => this.checkHidden(params);
 		api.config.addElements([
-			new ConfigElement("notenmodul.leistungen.tabelle.spaltenanzeige", "global", `[["Kurs", "true"], ["Kursart", "true"], ["Lehrer", "true"], ["Quartal", "true"], ["Note", "true"], ["Mahnung", "true"], ["FS", "true"], ["FSU", "true"], ["Bemerkung", " true"]]`),
+			new ConfigElement("notenmodul.leistungen.tabelle.spaltenanzeige", "global", `[["Kurs", true], ["Kursart", true], ["Lehrer", true], ["Quartal", true], ["Note", true], ["Mahnung", true], ["FS", true], ["FSU", true], ["Bemerkung", true]]`),
 			new ConfigElement("notenmodul.teilleistungen.tabelle.spaltenanzeige", "global", "null"),
 		]);
 	}
@@ -29,7 +30,7 @@ export class RouteNotenmodulKonfiguration extends RouteNode<any, RouteNotenmodul
 	protected checkHidden(params?: RouteParams) {
 		try {
 			const { id } = (params === undefined) ? { id: undefined } : RouteNode.getIntParams(params, ["id"]);
-			if ((id !== undefined) && !routeNotenmodulAdministration.data.manager.getConnectionResponse(id).success)
+			if ((id !== -1) && (id !== undefined) && !routeNotenmodulAdministration.data.manager.getConnectionResponse(id).success)
 				return routeNotenmodulAdministration.getRouteDefaultChild({ id });
 			return false;
 		} catch (e) {
@@ -48,6 +49,7 @@ export class RouteNotenmodulKonfiguration extends RouteNode<any, RouteNotenmodul
 			setMapLeistungenTabelleSpaltenanzeige: routeNotenmodulAdministration.data.setMapLeistungenTabelleSpaltenanzeige,
 			mapTeilleistungenTabelleSpaltenanzeige: () => routeNotenmodulAdministration.data.mapTeilleistungenTabelleSpaltenanzeige,
 			setMapTeilleistungenTabelleSpaltenanzeige: routeNotenmodulAdministration.data.setMapTeilleistungenTabelleSpaltenanzeige,
+			mapTeilleistungsarten: routeNotenmodul.data.manager.mapTeilleistungsarten,
 		};
 	}
 

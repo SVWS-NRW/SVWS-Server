@@ -18,13 +18,20 @@
 				</svws-ui-input-wrapper>
 			</div>
 			<div>
+				<div class="text-headline-md mb-4">Vorgaben zur Anzeige von Spalten in den Übersichten zur Noteneingabe.</div>
+				<div>Alle Vorgaben können durch Benutzer individuell angepasst werden.</div>
 				<ul>
-					<li v-for="[spalte, value] of mapLeistungenTabelleSpaltenanzeige()" :key="spalte">{{ spalte }} / {{ value }}</li>
+					<li v-for="[spalte, value] of mapLeistungenTabelleSpaltenanzeige()" :key="spalte">
+						<svws-ui-checkbox :model-value="value" @update:model-value="setMapLeistungenTabelleSpaltenanzeige(spalte, !value)" /> {{ spalte }}
+					</li>
 				</ul>
 			</div>
 			<div>
+				Vorgaben zur Anzeige von Teilleistungen
 				<ul>
-					<li v-for="[spalte, value] of mapTeilleistungenTabelleSpaltenanzeige()" :key="spalte">{{ spalte }} / {{ value }}</li>
+					<li v-for="[spalte, value] of mapTeilleistungenTabelleSpaltenanzeige()" :key="spalte">
+						<svws-ui-checkbox :model-value="value" @update:model-value="setMapTeilleistungenTabelleSpaltenanzeige(spalte, !value)" /> {{ mapTeilleistungsarten.get(spalte)?.bezeichnung ?? '—' }}
+					</li>
 				</ul>
 			</div>
 		</div>

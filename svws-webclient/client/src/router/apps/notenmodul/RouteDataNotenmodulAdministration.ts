@@ -17,8 +17,8 @@ interface RouteStateNotenmodulAdministration extends RouteStateAuswahlInterface<
 	mapENMServerConfigGlobal: JavaMap<string, string>;
 }
 
-export type MapLeistungenTabelleSpaltenanzeige = Map<"Kurs" | "Kursart" | "Lehrer" | "Quartal" | "Note" | "Mahnung" | "FS" | "FSU" | "Bemerkung", boolean>;
-
+export type Spalte = "Kurs" | "Kursart" | "Lehrer" | "Quartal" | "Note" | "Mahnung" | "FS" | "FSU" | "Bemerkung";
+export type MapLeistungenTabelleSpaltenanzeige = Map<Spalte, boolean>;
 export type MapTeilleistungenTabelleSpaltenanzeige = Map<number, boolean>;
 
 export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAuswahlListeManager, RouteStateNotenmodulAdministration> {
@@ -109,41 +109,47 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 	get mapLeistungenTabelleSpaltenanzeige(): MapLeistungenTabelleSpaltenanzeige {
 		const res = api.config.getValue("notenmodul.leistungen.tabelle.spaltenanzeige");
 		const map = new Map();
-		const spalten: [string, boolean][] = JSON.parse(res);
+		const spalten: [string, string][] = JSON.parse(res);
 		for (const spalte of spalten) {
-			map.set(...spalte);
+			const [key, value] = spalte;
+			map.set(key, value);
 		}
 		return map;
 	}
 
-	setMapLeistungenTabelleSpaltenanzeige = async (value: MapLeistungenTabelleSpaltenanzeige) => {
-		const json = JSON.stringify(value.entries());
+	setMapLeistungenTabelleSpaltenanzeige = async (key: Spalte, value: boolean) => {
+		const map = this.mapLeistungenTabelleSpaltenanzeige;
+		map.set(key, value);
+		const json = JSON.stringify([...map.entries()]);
 		await api.config.setValue("notenmodul.leistungen.tabelle.spaltenanzeige", json);
 	};
 
 	get mapTeilleistungenTabelleSpaltenanzeige(): MapTeilleistungenTabelleSpaltenanzeige {
 		const res = api.config.getValue("notenmodul.teilleistungen.tabelle.spaltenanzeige");
 		const map = new Map();
-		const spalten: [string, boolean][] | null = JSON.parse(res);
+		const spalten: [string, string][] | null = JSON.parse(res);
 		if (spalten === null) {
 			for (const id of routeNotenmodul.data.manager.mapTeilleistungsarten.keySet()) {
 				map.set(id, true);
 			}
 		} else {
 			for (const spalte of spalten) {
-				map.set(...spalte);
+				const [key, value] = spalte;
+				map.set(key, value);
 			}
 		}
 		return map;
 	}
 
-	setMapTeilleistungenTabelleSpaltenanzeige = async (value: MapTeilleistungenTabelleSpaltenanzeige) => {
-		const json = JSON.stringify(value.entries());
+	setMapTeilleistungenTabelleSpaltenanzeige = async (key: number, value: boolean) => {
+		const map = this.mapTeilleistungenTabelleSpaltenanzeige;
+		map.set(key, value);
+		const json = JSON.stringify([...map.entries()]);
 		await api.config.setValue("notenmodul.teilleistungen.tabelle.spaltenanzeige", json);
 	};
 
 	connect = async (id: number): Promise<void> => {
-		// Prüfe aug ein lokales Notenmodul mit einer negativer ID -1
+		// Prüfe auf ein lokales Notenmodul mit einer negativer ID -1
 		if (id < 0)
 			return;
 		const manager = this.manager;
