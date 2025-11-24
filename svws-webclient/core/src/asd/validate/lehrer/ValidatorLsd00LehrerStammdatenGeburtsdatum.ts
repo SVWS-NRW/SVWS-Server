@@ -26,7 +26,6 @@ export class ValidatorLsd00LehrerStammdatenGeburtsdatum extends Validator {
 	}
 
 	protected pruefe(): boolean {
-		let success: boolean = true;
 		let geburtsdatum: DateManager | null = null;
 		let errorMsg: string = "";
 		try {
@@ -35,10 +34,11 @@ export class ValidatorLsd00LehrerStammdatenGeburtsdatum extends Validator {
 			errorMsg = e.getMessage();
 		}
 		const finalGeburtsdatum: DateManager | null = geburtsdatum;
-		success = this.exec(0, { getAsBoolean: () => finalGeburtsdatum === null }, "Das Geburtsdatum ist ungültig: " + errorMsg);
-		if (!success)
+		if (finalGeburtsdatum === null) {
+			this.addFehler(0, "Das Geburtsdatum ist ungültig: " + errorMsg);
 			return false;
-		return success;
+		}
+		return true;
 	}
 
 	transpilerCanonicalName(): string {

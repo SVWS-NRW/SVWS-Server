@@ -34,14 +34,14 @@ public final class ValidatorLsn01LehrerStammdatenNachname extends Validator {
 
 	@Override
 	protected boolean pruefe() {
-		boolean success = true;
 		final String nachname = daten.nachname;
 
-		success = exec(1, () -> nachname.trim().isBlank(), "Nachname der Lehrkraft: Der Nachname darf nicht nur aus Leerzeichen bestehen.");
-		if (!success)
+		if (nachname.trim().isBlank()) {
+			this.addFehler(1, "Nachname der Lehrkraft: Der Nachname darf nicht nur aus Leerzeichen bestehen.");
 			return false;
+		}
 
-		return success;
+		return true;
 	}
 
 }

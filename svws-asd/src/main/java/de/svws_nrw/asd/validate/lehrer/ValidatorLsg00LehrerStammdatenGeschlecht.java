@@ -30,16 +30,15 @@ public final class ValidatorLsg00LehrerStammdatenGeschlecht extends Validator {
 	@Override
 	protected boolean pruefe() {
 		Geschlecht geschlecht = null;
-		boolean success = true;
-
 		geschlecht = Geschlecht.fromValue(daten.geschlecht);
-
 		final Geschlecht finalGeschlecht = geschlecht;
 
-		success = exec(0, () -> finalGeschlecht == null,
-				"Unzulässiger Schlüssel '" + daten.geschlecht + "' im Feld 'Geschlecht'. Die gültigen Schlüssel entnehmen Sie bitte dem Pulldownmenü.");
+		if (finalGeschlecht == null) {
+			this.addFehler(0, "Unzulässiger Schlüssel '" + daten.geschlecht + "' im Feld 'Geschlecht'. Die gültigen Schlüssel entnehmen Sie bitte dem Pulldownmenü.");
+			return false;
+		}
 
-		return success;
+		return true;
 	}
 
 }

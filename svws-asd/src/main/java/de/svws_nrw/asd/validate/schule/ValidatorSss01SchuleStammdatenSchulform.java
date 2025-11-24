@@ -22,19 +22,16 @@ public final class ValidatorSss01SchuleStammdatenSchulform extends Validator {
 
 	@Override
 	protected boolean pruefe() {
-		boolean success = true;
 
 		final String schulformKrz = super.kontext().getSchuleStammdaten().schulform;
 		// Prüfe, ob die Schulform gültig gesetzt ist oder nicht
-		success = exec(1, () -> {
-			try {
-				return Schulform.data().getWertByKuerzel(schulformKrz) == null;
-			} catch (@SuppressWarnings("unused") final CoreTypeException e) {
-				return false;
-			}
-		}, "Das Kürzel für die Schulform ist ungültig.");
 
-		return success;
+		try {
+			return Schulform.data().getWertByKuerzel(schulformKrz) == null;
+		} catch (@SuppressWarnings("unused") final CoreTypeException e) {
+			this.addFehler(1, "Das Kürzel für die Schulform ist ungültig.");
+			return false;
+		}
 	}
 
 }

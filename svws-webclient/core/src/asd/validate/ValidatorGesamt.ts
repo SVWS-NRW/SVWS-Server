@@ -1,14 +1,14 @@
 import { LehrerPersonaldaten } from '../../asd/data/lehrer/LehrerPersonaldaten';
 import { HashMap } from '../../java/util/HashMap';
 import { ValidatorSssSchuleStammdatenSchulform } from '../../asd/validate/schule/ValidatorSssSchuleStammdatenSchulform';
+import { ValidatorLpLehrerPersonaldaten } from '../../asd/validate/lehrer/ValidatorLpLehrerPersonaldaten';
 import { LehrerStammdaten } from '../../asd/data/lehrer/LehrerStammdaten';
 import { Class } from '../../java/lang/Class';
 import { ValidatorKontext } from '../../asd/validate/ValidatorKontext';
-import { ValidatorLehrerPersonaldaten } from '../../asd/validate/lehrer/ValidatorLehrerPersonaldaten';
-import { ValidatorGesamtLehrerdaten } from '../../asd/validate/gesamt/ValidatorGesamtLehrerdaten';
 import { Validator, cast_de_svws_nrw_asd_validate_Validator } from '../../asd/validate/Validator';
 import { SchuleStatistikdatenGesamt } from '../../asd/data/schule/SchuleStatistikdatenGesamt';
-import { ValidatorLehrerStammdaten } from '../../asd/validate/lehrer/ValidatorLehrerStammdaten';
+import { ValidatorGlGesamtLehrerdaten } from '../../asd/validate/gesamt/ValidatorGlGesamtLehrerdaten';
+import { ValidatorLsLehrerStammdaten } from '../../asd/validate/lehrer/ValidatorLsLehrerStammdaten';
 
 export class ValidatorGesamt extends Validator {
 
@@ -27,16 +27,16 @@ export class ValidatorGesamt extends Validator {
 		this._validatoren.add(new ValidatorSssSchuleStammdatenSchulform(kontext));
 		const mapStammdaten: HashMap<number, LehrerStammdaten> | null = new HashMap<number, LehrerStammdaten>();
 		for (const lehrerStammdaten of daten.lehrerStammdaten) {
-			this._validatoren.add(new ValidatorLehrerStammdaten(lehrerStammdaten, kontext));
+			this._validatoren.add(new ValidatorLsLehrerStammdaten(lehrerStammdaten, kontext));
 			mapStammdaten.put(lehrerStammdaten.id, lehrerStammdaten);
 		}
 		for (const lehrerPersonaldaten of daten.lehrerPersonaldaten) {
 			const stammdaten: LehrerStammdaten | null = mapStammdaten.get(lehrerPersonaldaten.id);
 			if (stammdaten === null)
 				continue;
-			this._validatoren.add(new ValidatorLehrerPersonaldaten(lehrerPersonaldaten, stammdaten, kontext));
+			this._validatoren.add(new ValidatorLpLehrerPersonaldaten(lehrerPersonaldaten, stammdaten, kontext));
 		}
-		this._validatoren.add(new ValidatorGesamtLehrerdaten(daten.lehrerStammdaten, daten.lehrerPersonaldaten, kontext));
+		this._validatoren.add(new ValidatorGlGesamtLehrerdaten(daten.lehrerStammdaten, daten.lehrerPersonaldaten, kontext));
 	}
 
 	protected pruefe(): boolean {

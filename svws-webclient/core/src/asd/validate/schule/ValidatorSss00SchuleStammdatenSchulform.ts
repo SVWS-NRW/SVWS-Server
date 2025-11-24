@@ -18,12 +18,11 @@ export class ValidatorSss00SchuleStammdatenSchulform extends Validator {
 	}
 
 	protected pruefe(): boolean {
-		let success: boolean = true;
 		const schulformKrz: string | null = super.kontext().getSchuleStammdaten().schulform;
-		console.log(JSON.stringify("schulform:" + schulformKrz + "#"));
-		success = this.exec(0, { getAsBoolean: () => (schulformKrz === null) || (JavaString.isBlank(schulformKrz)) }, "Die Schulform muss gesetzt sein.");
-		if (!success)
+		if (schulformKrz === null || JavaString.isBlank(schulformKrz)) {
+			this.addFehler(0, "Die Schulform muss gesetzt sein.");
 			return false;
+		}
 		return true;
 	}
 

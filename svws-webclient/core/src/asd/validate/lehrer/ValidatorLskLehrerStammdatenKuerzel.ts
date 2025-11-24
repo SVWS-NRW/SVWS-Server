@@ -1,6 +1,6 @@
+import { ValidatorLsk00LehrerStammdatenKuerzel } from '../../../asd/validate/lehrer/ValidatorLsk00LehrerStammdatenKuerzel';
 import { LehrerStammdaten } from '../../../asd/data/lehrer/LehrerStammdaten';
 import { Class } from '../../../java/lang/Class';
-import { JavaString } from '../../../java/lang/JavaString';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
 
@@ -21,15 +21,11 @@ export class ValidatorLskLehrerStammdatenKuerzel extends Validator {
 	public constructor(daten: LehrerStammdaten, kontext: ValidatorKontext) {
 		super(kontext);
 		this.daten = daten;
+		this._validatoren.add(new ValidatorLsk00LehrerStammdatenKuerzel(daten, kontext));
 	}
 
 	protected pruefe(): boolean {
-		if ((this.daten.kuerzel === null) || JavaString.isBlank(this.daten.kuerzel))
-			return true;
-		let success: boolean = true;
-		if (this.exec(0, { getAsBoolean: () => JavaString.matches(this.daten.kuerzel, "^[A-ZÄÖÜ][A-ZÄÖÜ0-9\\-\\ ]{0,3}$") }, "Der Eintrag " + this.daten.kuerzel + " ist als Lehrerkürzel unzulässig. Zulässig sind: 1. Stelle: A-Z, Ä, Ö, Ü; 2.-4. Stelle: A-Z, Ä, Ö, Ü, -, 'kein Eintrag'. Buchstaben müssen großgeschrieben werden."))
-			success = false;
-		return success;
+		return true;
 	}
 
 	transpilerCanonicalName(): string {

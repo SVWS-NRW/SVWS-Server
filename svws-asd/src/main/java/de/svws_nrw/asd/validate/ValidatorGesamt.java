@@ -5,9 +5,9 @@ import java.util.HashMap;
 import de.svws_nrw.asd.data.lehrer.LehrerPersonaldaten;
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.asd.data.schule.SchuleStatistikdatenGesamt;
-import de.svws_nrw.asd.validate.gesamt.ValidatorGesamtLehrerdaten;
-import de.svws_nrw.asd.validate.lehrer.ValidatorLehrerPersonaldaten;
-import de.svws_nrw.asd.validate.lehrer.ValidatorLehrerStammdaten;
+import de.svws_nrw.asd.validate.gesamt.ValidatorGlGesamtLehrerdaten;
+import de.svws_nrw.asd.validate.lehrer.ValidatorLpLehrerPersonaldaten;
+import de.svws_nrw.asd.validate.lehrer.ValidatorLsLehrerStammdaten;
 import de.svws_nrw.asd.validate.schule.ValidatorSssSchuleStammdatenSchulform;
 import jakarta.validation.constraints.NotNull;
 
@@ -31,7 +31,7 @@ public final class ValidatorGesamt extends Validator {
 
 		final HashMap<Long, LehrerStammdaten> mapStammdaten = new HashMap<>();
 		for (final LehrerStammdaten lehrerStammdaten : daten.lehrerStammdaten) {
-			_validatoren.add(new ValidatorLehrerStammdaten(lehrerStammdaten, kontext));
+			_validatoren.add(new ValidatorLsLehrerStammdaten(lehrerStammdaten, kontext));
 			mapStammdaten.put(lehrerStammdaten.id, lehrerStammdaten);
 		}
 
@@ -39,10 +39,10 @@ public final class ValidatorGesamt extends Validator {
 			final LehrerStammdaten stammdaten = mapStammdaten.get(lehrerPersonaldaten.id);
 			if (stammdaten == null)
 				continue;
-			_validatoren.add(new ValidatorLehrerPersonaldaten(lehrerPersonaldaten, stammdaten, kontext));
+			_validatoren.add(new ValidatorLpLehrerPersonaldaten(lehrerPersonaldaten, stammdaten, kontext));
 		}
 
-		_validatoren.add(new ValidatorGesamtLehrerdaten(daten.lehrerStammdaten, daten.lehrerPersonaldaten, kontext));
+		_validatoren.add(new ValidatorGlGesamtLehrerdaten(daten.lehrerStammdaten, daten.lehrerPersonaldaten, kontext));
 	}
 
 	@Override

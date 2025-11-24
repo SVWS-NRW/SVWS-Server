@@ -27,13 +27,14 @@ public final class ValidatorLsn02LehrerStammdatenNachname extends Validator {
 
 	@Override
 	protected boolean pruefe() {
-		boolean success = true;
 		final String nachname = daten.nachname;
 
-		success = exec(2, () -> nachname.length() == 1,
-				"Nachname der Lehrkraft: Der Nachname besteht aus nur einem Zeichen. Bitte überprüfen sie Ihre Angaben.");
+		if (nachname.length() == 1) {
+			this.addFehler(1, "Nachname der Lehrkraft: Der Nachname besteht aus nur einem Zeichen. Bitte überprüfen sie Ihre Angaben.");
+			return false;
+		}
 
-		return success;
+		return true;
 	}
 
 }

@@ -57,7 +57,7 @@
 	import type { LehrerPersonaldatenProps } from './SLehrerPersonaldatenProps';
 	import type { LehrerBeschaeftigungsartKatalogEintrag, LehrerEinsatzstatusKatalogEintrag, LehrerRechtsverhaeltnisKatalogEintrag,
 		JavaSet, Validator } from "@core";
-	import { BenutzerKompetenz, DeveloperNotificationException, HashSet, ValidatorLehrerPersonalabschnittsdaten } from "@core";
+	import { BenutzerKompetenz, DeveloperNotificationException, HashSet, ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten } from "@core";
 	import { LehrerBeschaeftigungsart, LehrerEinsatzstatus, LehrerRechtsverhaeltnis } from "@core";
 	import { CoreTypeSelectManager, SelectManager } from "@ui";
 
@@ -172,10 +172,10 @@
 	});
 
 
-	const validatorPersonalabschnittsDaten = computed<ValidatorLehrerPersonalabschnittsdaten>(() => {
+	const validatorPersonalabschnittsDaten = computed<ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten>(() => {
 		const daten = personalabschnittsdaten();
 		if (daten !== null)
-			return new ValidatorLehrerPersonalabschnittsdaten(daten, props.lehrerListeManager().daten(), props.validatorKontext());
+			return new ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten(daten, props.lehrerListeManager().daten(), props.validatorKontext());
 		else
 			throw new DeveloperNotificationException("Keine Personalabschnittsdaten gefunden.");
 	});

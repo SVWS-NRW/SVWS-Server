@@ -23,11 +23,12 @@ export class ValidatorLsn03LehrerStammdatenNachname extends Validator {
 	}
 
 	protected pruefe(): boolean {
-		let success: boolean = true;
 		const nachname: string | null = this.daten.nachname;
-		if (!this.exec(3, { getAsBoolean: () => nachname.startsWith(" ") || nachname.startsWith("\t") }, "Nachname der Lehrkraft: Die Eintragung des Nachnamens muss linksbündig erfolgen (ohne vorangestellte Leerzeichen oder Tabs)."))
-			success = false;
-		return success;
+		if (nachname.startsWith(" ") || nachname.startsWith("\t")) {
+			this.addFehler(3, "Nachname der Lehrkraft: Die Eintragung des Nachnamens muss linksbündig erfolgen (ohne vorangestellte Leerzeichen oder Tabs).");
+			return false;
+		}
+		return true;
 	}
 
 	transpilerCanonicalName(): string {

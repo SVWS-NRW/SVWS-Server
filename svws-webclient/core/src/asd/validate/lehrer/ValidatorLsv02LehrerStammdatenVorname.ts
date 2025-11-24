@@ -23,10 +23,12 @@ export class ValidatorLsv02LehrerStammdatenVorname extends Validator {
 	}
 
 	protected pruefe(): boolean {
-		let success: boolean = true;
 		const vorname: string | null = this.daten.vorname;
-		success = this.exec(2, { getAsBoolean: () => vorname.length === 1 }, "Vorname der Lehrkraft: Der Vorname besteht aus nur einem Zeichen. Bitte überprüfen sie ihre Angaben.");
-		return success;
+		if (vorname.length === 1) {
+			this.addFehler(2, "Vorname der Lehrkraft: Der Vorname besteht aus nur einem Zeichen. Bitte überprüfen sie ihre Angaben.");
+			return false;
+		}
+		return true;
 	}
 
 	transpilerCanonicalName(): string {

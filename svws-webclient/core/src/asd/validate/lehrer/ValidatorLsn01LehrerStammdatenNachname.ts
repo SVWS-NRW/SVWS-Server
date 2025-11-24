@@ -38,12 +38,12 @@ export class ValidatorLsn01LehrerStammdatenNachname extends Validator {
 	}
 
 	protected pruefe(): boolean {
-		let success: boolean = true;
 		const nachname: string | null = this.daten.nachname;
-		success = this.exec(1, { getAsBoolean: () => JavaString.isBlank(nachname.trim()) }, "Nachname der Lehrkraft: Der Nachname darf nicht nur aus Leerzeichen bestehen.");
-		if (!success)
+		if (JavaString.isBlank(nachname.trim())) {
+			this.addFehler(1, "Nachname der Lehrkraft: Der Nachname darf nicht nur aus Leerzeichen bestehen.");
 			return false;
-		return success;
+		}
+		return true;
 	}
 
 	transpilerCanonicalName(): string {

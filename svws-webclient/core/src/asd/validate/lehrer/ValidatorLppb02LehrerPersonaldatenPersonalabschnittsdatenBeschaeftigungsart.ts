@@ -26,14 +26,15 @@ export class ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaefti
 	}
 
 	protected pruefe(): boolean {
-		let success: boolean = true;
 		const beschaeftigungsart: string | null = this.daten.beschaeftigungsart;
 		const einsatzstatus: string | null = this.daten.einsatzstatus;
 		const setEinsatzstatus2: JavaSet<string> | null = java_util_Set_of("A", "B");
 		const fehlertext2: string | null = "Bei einer unentgeltlich beschäftigten Lehrkraft (Feld 'Beschäftigungsart' = 'Unentgeltlich Beschäftigte') dürfen im Feld 'Einsatzstatus' nicht die Einträge 'Stammschule, ganz oder teilweise auch an anderen Schulen tätig' oder 'nicht Stammschule, aber auch hier tätig' eingetragen sein.";
-		if (!this.exec(2, { getAsBoolean: () => (setEinsatzstatus2.contains(einsatzstatus)) && (JavaObject.equalsTranspiler("X", (beschaeftigungsart))) }, fehlertext2))
-			success = false;
-		return success;
+		if (setEinsatzstatus2.contains(einsatzstatus) && JavaObject.equalsTranspiler("X", (beschaeftigungsart))) {
+			this.addFehler(2, fehlertext2);
+			return false;
+		}
+		return true;
 	}
 
 	transpilerCanonicalName(): string {

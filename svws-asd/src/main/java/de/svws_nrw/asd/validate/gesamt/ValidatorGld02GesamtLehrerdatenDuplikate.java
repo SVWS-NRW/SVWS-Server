@@ -45,18 +45,20 @@ public final class ValidatorGld02GesamtLehrerdatenDuplikate extends Validator {
 			final Geschlecht geschlecht = Geschlecht.fromValue(lehrer.geschlecht);
 			final @NotNull String key = lehrer.nachname + "__" + lehrer.vorname + "__" + ((lehrer.geburtsdatum == null) ? "" : lehrer.geburtsdatum)
 					+ "__" + ((geschlecht == null) ? lehrer.geschlecht : geschlecht.kuerzel);
-
-
 			// Füge die Lehrerstammdaten in die Map ein, damit dieser Datensatz zukünftig bei der Duplikaterkennung berücksichtigt wird
 			// In der Map bereits existierende Stammdaten mit dem gleichen Key werden dabei zurückgegeben.
 			final LehrerStammdaten other = keys.put(key, lehrer);
 			if (other == null)
 				continue;
 
-			success = exec(2, () -> true, "Lehrkäfte: Bei den IDs " + lehrer.id + " und " + other.id
+			final String fehlermeldung = "Lehrkäfte: Bei den IDs " + lehrer.id + " und " + other.id
 					+ " kommt die Kombination aus Nachname '" + lehrer.nachname + "', Vorname '" + lehrer.vorname + "', Geburtsdatum '" + lehrer.geburtsdatum
 					+ "' und Geschlecht '" + lehrer.geschlecht + "' mehrmals vor."
-					+ " Falls es sich hierbei um eine Person handelt, so fassen Sie die Datensätze bitte unter einer Lehrerabkürzung zusammen.");
+					+ " Falls es sich hierbei um eine Person handelt, so fassen Sie die Datensätze bitte unter einer Lehrerabkürzung zusammen.";
+
+			this.addFehler(2, fehlermeldung);
+			success = false;
+
 		}
 		return success;
 	}

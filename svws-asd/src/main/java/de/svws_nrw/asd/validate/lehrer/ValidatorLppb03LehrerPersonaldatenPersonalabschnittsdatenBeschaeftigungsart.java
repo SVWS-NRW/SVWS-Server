@@ -29,7 +29,6 @@ public final class ValidatorLppb03LehrerPersonaldatenPersonalabschnittsdatenBesc
 
 	@Override
 	protected boolean pruefe() {
-		boolean success = true;
 		final String beschaeftigungsart = daten.beschaeftigungsart;
 		final String einsatzstatus = daten.einsatzstatus;
 
@@ -37,10 +36,13 @@ public final class ValidatorLppb03LehrerPersonaldatenPersonalabschnittsdatenBesc
 		final Double pflichtstundensoll = daten.pflichtstundensoll;
 		final String fehlertext3 = "Laut Ihren Angaben handelt es sich um eine voll abgeordnete Lehrkraft mit Gestellungsvertrag. Es ist zu erwarten, "
 				+ "dass eine Lehrkraft mit Gestellungsvertrag Unterricht an Ihrer Schule erteilt. Bitte überprüfen Sie Ihre Angaben.";
-		if (!exec(3, () -> ("G".equals(beschaeftigungsart) && "A".equals(einsatzstatus) && pflichtstundensoll == 0), fehlertext3))
-			success = false;
 
-		return success;
+		if ("G".equals(beschaeftigungsart) && "A".equals(einsatzstatus) && pflichtstundensoll == 0) {
+			this.addFehler(3, fehlertext3);
+			return false;
+		}
+
+		return true;
 	}
 
 }

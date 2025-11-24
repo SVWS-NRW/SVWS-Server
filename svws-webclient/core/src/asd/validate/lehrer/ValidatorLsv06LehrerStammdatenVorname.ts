@@ -24,11 +24,13 @@ export class ValidatorLsv06LehrerStammdatenVorname extends Validator {
 	}
 
 	protected pruefe(): boolean {
-		let success: boolean = true;
 		const vorname: string | null = this.daten.vorname;
-		if (!this.exec(6, { getAsBoolean: () => (vorname.length > 2) && JavaCharacter.isUpperCase(vorname.charAt(2)) }, "Vorname der Lehrkraft: Die dritte Stelle des Vornamens ist mit einem Großbuchstaben besetzt. Bitte stellen sie sicher, dass nur der erste Buchstabe des Vornamens ein Großbuchstabe ist. Bitte schreiben Sie auf ihn folgende Buchstaben klein."))
-			success = false;
-		return success;
+		const fehlertext: string | null = "Vorname der Lehrkraft: Die dritte Stelle des Vornamens ist mit einem Großbuchstaben besetzt. Bitte stellen sie sicher, dass nur der erste Buchstabe des Vornamens ein Großbuchstabe ist. Bitte schreiben Sie auf ihn folgende Buchstaben klein.";
+		if (vorname.length > 2 && JavaCharacter.isUpperCase(vorname.charAt(2))) {
+			this.addFehler(6, fehlertext);
+			return false;
+		}
+		return true;
 	}
 
 	transpilerCanonicalName(): string {

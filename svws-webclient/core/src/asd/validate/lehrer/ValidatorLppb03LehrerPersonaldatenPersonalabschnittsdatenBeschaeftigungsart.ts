@@ -24,14 +24,15 @@ export class ValidatorLppb03LehrerPersonaldatenPersonalabschnittsdatenBeschaefti
 	}
 
 	protected pruefe(): boolean {
-		let success: boolean = true;
 		const beschaeftigungsart: string | null = this.daten.beschaeftigungsart;
 		const einsatzstatus: string | null = this.daten.einsatzstatus;
 		const pflichtstundensoll: number | null = this.daten.pflichtstundensoll;
 		const fehlertext3: string | null = "Laut Ihren Angaben handelt es sich um eine voll abgeordnete Lehrkraft mit Gestellungsvertrag. Es ist zu erwarten, dass eine Lehrkraft mit Gestellungsvertrag Unterricht an Ihrer Schule erteilt. Bitte überprüfen Sie Ihre Angaben.";
-		if (!this.exec(3, { getAsBoolean: () => (JavaObject.equalsTranspiler("G", (beschaeftigungsart)) && JavaObject.equalsTranspiler("A", (einsatzstatus)) && pflichtstundensoll === 0) }, fehlertext3))
-			success = false;
-		return success;
+		if (JavaObject.equalsTranspiler("G", (beschaeftigungsart)) && JavaObject.equalsTranspiler("A", (einsatzstatus)) && pflichtstundensoll === 0) {
+			this.addFehler(3, fehlertext3);
+			return false;
+		}
+		return true;
 	}
 
 	transpilerCanonicalName(): string {

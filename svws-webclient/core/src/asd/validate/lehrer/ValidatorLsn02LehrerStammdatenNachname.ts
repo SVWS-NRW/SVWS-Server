@@ -23,10 +23,12 @@ export class ValidatorLsn02LehrerStammdatenNachname extends Validator {
 	}
 
 	protected pruefe(): boolean {
-		let success: boolean = true;
 		const nachname: string | null = this.daten.nachname;
-		success = this.exec(2, { getAsBoolean: () => nachname.length === 1 }, "Nachname der Lehrkraft: Der Nachname besteht aus nur einem Zeichen. Bitte überprüfen sie Ihre Angaben.");
-		return success;
+		if (nachname.length === 1) {
+			this.addFehler(1, "Nachname der Lehrkraft: Der Nachname besteht aus nur einem Zeichen. Bitte überprüfen sie Ihre Angaben.");
+			return false;
+		}
+		return true;
 	}
 
 	transpilerCanonicalName(): string {

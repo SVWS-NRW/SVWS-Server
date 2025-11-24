@@ -64,7 +64,7 @@ class TestValidatorLpp01LehrerPersonalabschnittsdatenPflichtstundensoll {
 
 		// Erzeuge den Kontext für die Validierung
 		final ValidatorKontext kontext = new ValidatorKontext(schuleTestdaten_001, true);
-		final ValidatorLpp01LehrerPersonalabschnittsdatenPflichtstundensoll validator = new ValidatorLpp01LehrerPersonalabschnittsdatenPflichtstundensoll(LehrerPersonalabschnittsdaten_Plausibel, kontext);
+		final ValidatorLppp01LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll validator = new ValidatorLppp01LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(LehrerPersonalabschnittsdaten_Plausibel, kontext);
 		assertEquals(result, validator.run());
 	}
 

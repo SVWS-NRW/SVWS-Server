@@ -30,14 +30,14 @@ public final class ValidatorLsv04LehrerStammdatenVorname extends Validator {
 
 	@Override
 	protected boolean pruefe() {
-		boolean success = true;
 		final String vorname = daten.vorname;
 
-		if (!exec(4, () -> !Character.isUpperCase(vorname.charAt(0)),
-				"Vorname der Lehrkraft: Die erste Stelle des Vornamens muss mit einem Großbuchstaben besetzt sein."))
-			success = false;
+		if (!Character.isUpperCase(vorname.charAt(0))) {
+			this.addFehler(4, "Vorname der Lehrkraft: Die erste Stelle des Vornamens muss mit einem Großbuchstaben besetzt sein.");
+			return false;
+		}
 
-		return success;
+		return true;
 	}
 
 }

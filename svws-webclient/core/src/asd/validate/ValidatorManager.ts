@@ -394,26 +394,6 @@ export class ValidatorManager extends JavaObject {
 	}
 
 	/**
-	 * Prüft, ob der übergebene Prüfschritt des übergebenen Validators in dem angegebenen Schuljahr aktiv ist oder nicht.
-	 *
-	 * @param schuljahr      das Schuljahr
-	 * @param validator      der kanonische Name des Validators
-	 * @param pruefschritt   die Nummer des Prüfschrittes
-	 *
-	 * @return true, falls der Validator in dem Schuljahr aktiv ist.
-	 */
-	public isPruefschrittActiveInSchuljahr(schuljahr: number, validator: string, pruefschritt: number): boolean {
-		const mapValidator: HashMap<string, HashMap<number, ValidatorFehlerart>> = this.getValidatornameToFehlerartCache(schuljahr);
-		const mapPruefschritt: HashMap<number, ValidatorFehlerart> | null = mapValidator.get(validator);
-		if (mapPruefschritt === null)
-			return false;
-		let fa: ValidatorFehlerart | null = mapPruefschritt.get(pruefschritt);
-		if (fa === null)
-			fa = mapPruefschritt.get(-1);
-		return (fa !== null) && (fa as unknown !== ValidatorFehlerart.UNGENUTZT as unknown);
-	}
-
-	/**
 	 * Gibt das Fehlercode-Präfix eines Validators für das angegebene Schuljahr zurück.
 	 *
 	 * @param schuljahr      das Schuljahr

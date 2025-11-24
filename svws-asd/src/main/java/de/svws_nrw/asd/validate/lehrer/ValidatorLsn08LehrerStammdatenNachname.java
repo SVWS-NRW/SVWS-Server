@@ -26,16 +26,14 @@ public final class ValidatorLsn08LehrerStammdatenNachname extends Validator {
 	}
 
 	protected boolean pruefe() {
-		boolean success = true;
-		final String nachname = daten.nachname;
+		final String nLower = daten.nachname.toLowerCase();
 
-		if (!exec(8, () -> {
-			final String nLower = nachname.toLowerCase();
-			return nLower.startsWith("frau ") || nLower.startsWith("herr ");
-		}, "Nachname der Lehrkraft: Die Anrede (Frau oder Herr) gehört nicht in den Nachnamen."))
-			success = false;
+		if (nLower.startsWith("frau ") || nLower.startsWith("herr ")) {
+			this.addFehler(8, "Nachname der Lehrkraft: Die Anrede (Frau oder Herr) gehört nicht in den Nachnamen.");
+			return false;
+		}
 
-		return success;
+		return true;
 	}
 
 }

@@ -24,11 +24,12 @@ export class ValidatorLsv04LehrerStammdatenVorname extends Validator {
 	}
 
 	protected pruefe(): boolean {
-		let success: boolean = true;
 		const vorname: string | null = this.daten.vorname;
-		if (!this.exec(4, { getAsBoolean: () => !JavaCharacter.isUpperCase(vorname.charAt(0)) }, "Vorname der Lehrkraft: Die erste Stelle des Vornamens muss mit einem Großbuchstaben besetzt sein."))
-			success = false;
-		return success;
+		if (!JavaCharacter.isUpperCase(vorname.charAt(0))) {
+			this.addFehler(4, "Vorname der Lehrkraft: Die erste Stelle des Vornamens muss mit einem Großbuchstaben besetzt sein.");
+			return false;
+		}
+		return true;
 	}
 
 	transpilerCanonicalName(): string {

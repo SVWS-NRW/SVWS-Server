@@ -34,7 +34,9 @@ export class ValidatorGld02GesamtLehrerdatenDuplikate extends Validator {
 			const other: LehrerStammdaten | null = keys.put(key, lehrer);
 			if (other === null)
 				continue;
-			success = this.exec(2, { getAsBoolean: () => true }, "Lehrkäfte: Bei den IDs " + lehrer.id + " und " + other.id + " kommt die Kombination aus Nachname '" + lehrer.nachname + "', Vorname '" + lehrer.vorname + "', Geburtsdatum '" + lehrer.geburtsdatum + "' und Geschlecht '" + lehrer.geschlecht + "' mehrmals vor. Falls es sich hierbei um eine Person handelt, so fassen Sie die Datensätze bitte unter einer Lehrerabkürzung zusammen.");
+			const fehlermeldung: string | null = "Lehrkäfte: Bei den IDs " + lehrer.id + " und " + other.id + " kommt die Kombination aus Nachname '" + lehrer.nachname + "', Vorname '" + lehrer.vorname + "', Geburtsdatum '" + lehrer.geburtsdatum + "' und Geschlecht '" + lehrer.geschlecht + "' mehrmals vor. Falls es sich hierbei um eine Person handelt, so fassen Sie die Datensätze bitte unter einer Lehrerabkürzung zusammen.";
+			this.addFehler(2, fehlermeldung);
+			success = false;
 		}
 		return success;
 	}

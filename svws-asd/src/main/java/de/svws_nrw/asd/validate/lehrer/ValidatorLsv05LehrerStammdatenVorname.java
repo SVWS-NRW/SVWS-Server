@@ -30,14 +30,15 @@ public final class ValidatorLsv05LehrerStammdatenVorname extends Validator {
 
 	@Override
 	protected boolean pruefe() {
-		boolean success = true;
 		final String vorname = daten.vorname;
+		final String fehlertext = "Vorname der Lehrkraft: Die zweite Stelle des Vornamens ist mit einem Großbuchstaben besetzt. Bitte stellen sie sicher, dass nur der erste Buchstabe des Vornamens ein Großbuchstabe ist. Bitte schreiben Sie auf ihn folgende Buchstaben klein.";
 
-		if (!exec(5, () -> (vorname.length() > 1) && Character.isUpperCase(vorname.charAt(1)),
-				"Vorname der Lehrkraft: Die zweite Stelle des Vornamens ist mit einem Großbuchstaben besetzt. Bitte stellen sie sicher, dass nur der erste Buchstabe des Vornamens ein Großbuchstabe ist. Bitte schreiben Sie auf ihn folgende Buchstaben klein."))
-			success = false;
+		if (vorname.length() > 1 && Character.isUpperCase(vorname.charAt(1))) {
+			this.addFehler(5, fehlertext);
+			return false;
+		}
 
-		return success;
+		return true;
 	}
 
 }

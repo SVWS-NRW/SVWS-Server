@@ -31,7 +31,6 @@ public final class ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBesc
 
 	@Override
 	protected boolean pruefe() {
-		boolean success = true;
 		final String beschaeftigungsart = daten.beschaeftigungsart;
 		final String einsatzstatus = daten.einsatzstatus;
 
@@ -40,10 +39,13 @@ public final class ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBesc
 		final String fehlertext2 = "Bei einer unentgeltlich beschäftigten Lehrkraft (Feld 'Beschäftigungsart' = 'Unentgeltlich Beschäftigte') "
 				+ "dürfen im Feld 'Einsatzstatus' nicht die Einträge 'Stammschule, ganz oder teilweise auch an anderen Schulen tätig' oder "
 				+ "'nicht Stammschule, aber auch hier tätig' eingetragen sein.";
-		if (!exec(2, () -> (setEinsatzstatus2.contains(einsatzstatus)) && ("X".equals(beschaeftigungsart)), fehlertext2))
-			success = false;
 
-		return success;
+		if (setEinsatzstatus2.contains(einsatzstatus) && "X".equals(beschaeftigungsart)) {
+			this.addFehler(2, fehlertext2);
+			return false;
+		}
+
+		return true;
 	}
 
 }

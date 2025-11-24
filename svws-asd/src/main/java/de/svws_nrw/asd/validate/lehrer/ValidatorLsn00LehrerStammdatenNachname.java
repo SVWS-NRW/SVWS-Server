@@ -28,14 +28,14 @@ public final class ValidatorLsn00LehrerStammdatenNachname extends Validator {
 
 	@Override
 	protected boolean pruefe() {
-		boolean success = true;
 		final String nachname = daten.nachname;
 
-		success = exec(0, () -> (nachname == null) || (nachname.length() == 0), "Nachname der Lehrkraft: Kein Wert vorhanden.");
-		if (!success)
+		if (nachname == null || nachname.length() == 0) {
+			this.addFehler(0, "Nachname der Lehrkraft: Kein Wert vorhanden.");
 			return false;
+		}
 
-		return success;
+		return true;
 	}
 
 }

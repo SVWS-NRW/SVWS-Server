@@ -30,8 +30,6 @@ public final class ValidatorLsd01LehrerStammdatenGeburtsdatum extends Validator 
 
 	@Override
 	protected boolean pruefe() {
-		boolean success = true;
-
 		// Bestimme das Geburtsdatum
 		DateManager geburtsdatum = null;
 			try {
@@ -43,9 +41,12 @@ public final class ValidatorLsd01LehrerStammdatenGeburtsdatum extends Validator 
 		final DateManager finalGeburtsdatum = geburtsdatum; //wegen Lambda hier nochmal als final.
 
 		final int schuljahr = kontext().getSchuljahr();
-		success = exec(1, () -> finalGeburtsdatum == null || !finalGeburtsdatum.istInJahren(schuljahr - 80, schuljahr - 18),
-				"Unzulässige Eintragung im Feld Jahr (Geburtsdatum). Zulässig sind die Werte " + (schuljahr - 80) + " bis " + (schuljahr - 18) + ".");
-		return success;
+
+		if (finalGeburtsdatum == null || !finalGeburtsdatum.istInJahren(schuljahr - 80, schuljahr - 18)) {
+			this.addFehler(1, "Unzulässige Eintragung im Feld Jahr (Geburtsdatum). Zulässig sind die Werte " + (schuljahr - 80) + " bis " + (schuljahr - 18) + ".");
+			return false;
+		}
+		return true;
 	}
 
 }

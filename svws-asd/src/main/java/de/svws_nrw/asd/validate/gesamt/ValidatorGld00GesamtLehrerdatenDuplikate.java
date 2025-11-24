@@ -43,7 +43,10 @@ public final class ValidatorGld00GesamtLehrerdatenDuplikate extends Validator {
 
 			// Prüfe, ob in der Liste eine ID doppelt enthalten ist. Dies wäre eine Fehler bei der Zusammenstellung der Liste
 			final boolean istNeu = ids.add(lehrer.id);
-			success = exec(0, () -> !istNeu, "Lehrkäfte: Die ID " + lehrer.id + " kommt in der Liste mehrfach vor.");
+			if (!istNeu) {
+				this.addFehler(0, "Lehrkäfte: Die ID " + lehrer.id + " kommt in der Liste mehrfach vor.");
+				success = false;
+			}
 
 		}
 		return success;

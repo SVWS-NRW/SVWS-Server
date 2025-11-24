@@ -25,11 +25,13 @@ export class ValidatorLsg00LehrerStammdatenGeschlecht extends Validator {
 
 	protected pruefe(): boolean {
 		let geschlecht: Geschlecht | null = null;
-		let success: boolean = true;
 		geschlecht = Geschlecht.fromValue(this.daten.geschlecht);
 		const finalGeschlecht: Geschlecht | null = geschlecht;
-		success = this.exec(0, { getAsBoolean: () => finalGeschlecht === null }, "Unzulässiger Schlüssel '" + this.daten.geschlecht + "' im Feld 'Geschlecht'. Die gültigen Schlüssel entnehmen Sie bitte dem Pulldownmenü.");
-		return success;
+		if (finalGeschlecht === null) {
+			this.addFehler(0, "Unzulässiger Schlüssel '" + this.daten.geschlecht + "' im Feld 'Geschlecht'. Die gültigen Schlüssel entnehmen Sie bitte dem Pulldownmenü.");
+			return false;
+		}
+		return true;
 	}
 
 	transpilerCanonicalName(): string {

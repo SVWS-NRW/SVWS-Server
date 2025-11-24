@@ -37,15 +37,12 @@ public final class ValidatorLsv01LehrerStammdatenVorname extends Validator {
 
 	@Override
 	protected boolean pruefe() {
-		boolean success = true;
-		final String vorname = daten.vorname;
-
-		success = exec(1, () -> vorname.trim().isBlank(), "Vorname der Lehrkraft: Der Vorname darf nicht nur aus Leerzeichen bestehen.");
-		if (!success)
+		if (daten.vorname.trim().isBlank()) {
+			this.addFehler(1, "Vorname der Lehrkraft: Der Vorname darf nicht nur aus Leerzeichen bestehen.");
 			return false;
+		}
 
-
-		return success;
+		return true;
 	}
 
 }

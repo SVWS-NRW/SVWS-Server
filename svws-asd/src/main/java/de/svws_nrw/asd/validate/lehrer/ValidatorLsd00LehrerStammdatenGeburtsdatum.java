@@ -31,8 +31,6 @@ public final class ValidatorLsd00LehrerStammdatenGeburtsdatum extends Validator 
 
 	@Override
 	protected boolean pruefe() {
-		boolean success = true;
-
 		// Bestimme das Geburtsdatum
 		DateManager geburtsdatum = null;
 		@NotNull String errorMsg = "";
@@ -43,11 +41,12 @@ public final class ValidatorLsd00LehrerStammdatenGeburtsdatum extends Validator 
 		}
 		final DateManager finalGeburtsdatum = geburtsdatum; //wegen Lambda hier nochmal als final.
 
-		success = exec(0, () -> finalGeburtsdatum == null, "Das Geburtsdatum ist ungültig: " + errorMsg);
-		if (!success)
+		if (finalGeburtsdatum == null) {
+			this.addFehler(0, "Das Geburtsdatum ist ungültig: " + errorMsg);
 			return false;
+		}
 
-		return success;
+		return true;
 	}
 
 }

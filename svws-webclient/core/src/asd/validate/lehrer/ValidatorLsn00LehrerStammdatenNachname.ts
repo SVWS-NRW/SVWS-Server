@@ -25,12 +25,12 @@ export class ValidatorLsn00LehrerStammdatenNachname extends Validator {
 	}
 
 	protected pruefe(): boolean {
-		let success: boolean = true;
 		const nachname: string | null = this.daten.nachname;
-		success = this.exec(0, { getAsBoolean: () => (nachname === null) || (nachname.length === 0) }, "Nachname der Lehrkraft: Kein Wert vorhanden.");
-		if (!success)
+		if (nachname === null || nachname.length === 0) {
+			this.addFehler(0, "Nachname der Lehrkraft: Kein Wert vorhanden.");
 			return false;
-		return success;
+		}
+		return true;
 	}
 
 	transpilerCanonicalName(): string {

@@ -21,14 +21,13 @@ public final class ValidatorSss00SchuleStammdatenSchulform extends Validator {
 
 	@Override
 	protected boolean pruefe() {
-		boolean success = true;
-
 		// Prüfe, ob die Schulform überhaupt gesetzt ist oder nicht
 		final String schulformKrz = super.kontext().getSchuleStammdaten().schulform;
-		System.out.println("schulform:" + schulformKrz + "#");
-		success = exec(0, () -> (schulformKrz == null) || (schulformKrz.isBlank()), "Die Schulform muss gesetzt sein.");
-		if (!success)
+
+		if (schulformKrz == null || schulformKrz.isBlank()) {
+			this.addFehler(0, "Die Schulform muss gesetzt sein.");
 			return false;
+		}
 
 		return true;
 	}

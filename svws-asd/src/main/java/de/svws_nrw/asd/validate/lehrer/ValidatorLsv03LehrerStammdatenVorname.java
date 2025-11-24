@@ -30,13 +30,14 @@ public final class ValidatorLsv03LehrerStammdatenVorname extends Validator {
 
 	@Override
 	protected boolean pruefe() {
-		boolean success = true;
 		final String vorname = daten.vorname;
-		if (!exec(3, () -> vorname.startsWith(" ") || vorname.startsWith("\t"),
-				"Vorname der Lehrkraft: Die Eintragung des Vornamens muss linksbündig erfolgen (ohne vorangestellte Leerzeichen oder Tabs)."))
-			success = false;
 
-		return success;
+		if (vorname.startsWith(" ") || vorname.startsWith("\t")) {
+			this.addFehler(3, "Vorname der Lehrkraft: Die Eintragung des Vornamens muss linksbündig erfolgen (ohne vorangestellte Leerzeichen oder Tabs).");
+			return false;
+		}
+
+		return true;
 	}
 
 }

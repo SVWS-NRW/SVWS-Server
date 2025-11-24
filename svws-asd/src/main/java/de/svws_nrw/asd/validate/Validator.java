@@ -2,7 +2,6 @@ package de.svws_nrw.asd.validate;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BooleanSupplier;
 
 import jakarta.validation.constraints.NotNull;
 
@@ -97,33 +96,6 @@ public abstract class Validator extends BasicValidator {
 	 */
 	protected boolean pruefeAbschluss() {
 		// Diese Methode ist bei Bedarf zu überschreiben
-		return true;
-	}
-
-
-	/**
-	 * Diese Methode führt einen Prüfschritt aus, genau dann, wenn der Validator selbst und dieser explixite Schritt aktiv sind.
-	 * Das Lambda stellt die Fehlerbedingung da, die TRUE liefert, wenn ein Fehler vorliegt.
-	 *
-	 * @param schrittNummer     die Nummer des Prüfschrittes. Startet in der Regel mit 0
-	 * @param fehlerbedingung   die Prüfschrittbedingung als Lambda
-	 * @param error             die Fehlermeldung, falls der Prüfschritt fehlschlägt
-	 *
-	 * @return true, wenn der Prüfschritt erfolgreich ausgeführt wurde oder nicht aktiv ist und false, wenn ein Fehler beim Prüfschritt auftritt
-	 */
-	protected final boolean exec(final int schrittNummer, final @NotNull BooleanSupplier fehlerbedingung, final @NotNull String error) {
-		if (schrittNummer < 0)
-			throw new ValidatorException(
-					"Ein negativer Wert als Nummer für einen Validator-Prüfschritt ist nicht zulässig. Die -1 wird in Fehlercodes nur für interne Fehler verwendet.");
-		final boolean isActive =
-				_kontext.getValidatorManager().isPruefschrittActiveInSchuljahr(_kontext.getSchuljahr(), this.getClass().getCanonicalName(), schrittNummer);
-		if (!isActive)
-			return true;
-		final boolean result = fehlerbedingung.getAsBoolean();
-		if (result) {
-			this.addFehler(schrittNummer, error);
-			return false;
-		}
 		return true;
 	}
 

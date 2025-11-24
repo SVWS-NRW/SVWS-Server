@@ -29,7 +29,10 @@ export class ValidatorGld00GesamtLehrerdatenDuplikate extends Validator {
 		const ids: JavaSet<number> = new HashSet<number>();
 		for (const lehrer of this.listLehrerStammdaten) {
 			const istNeu: boolean = ids.add(lehrer.id);
-			success = this.exec(0, { getAsBoolean: () => !istNeu }, "Lehrkäfte: Die ID " + lehrer.id + " kommt in der Liste mehrfach vor.");
+			if (!istNeu) {
+				this.addFehler(0, "Lehrkäfte: Die ID " + lehrer.id + " kommt in der Liste mehrfach vor.");
+				success = false;
+			}
 		}
 		return success;
 	}

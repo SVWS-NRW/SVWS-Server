@@ -27,14 +27,14 @@ public final class ValidatorLsn03LehrerStammdatenNachname extends Validator {
 
 	@Override
 	protected boolean pruefe() {
-		boolean success = true;
 		final String nachname = daten.nachname;
 
-		if (!exec(3, () -> nachname.startsWith(" ") || nachname.startsWith("\t"),
-				"Nachname der Lehrkraft: Die Eintragung des Nachnamens muss linksbündig erfolgen (ohne vorangestellte Leerzeichen oder Tabs)."))
-			success = false;
+		if (nachname.startsWith(" ") || nachname.startsWith("\t")) {
+			this.addFehler(3, "Nachname der Lehrkraft: Die Eintragung des Nachnamens muss linksbündig erfolgen (ohne vorangestellte Leerzeichen oder Tabs).");
+			return false;
+		}
 
-		return success;
+		return true;
 	}
 
 }

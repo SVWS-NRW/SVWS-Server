@@ -24,11 +24,12 @@ export class ValidatorLsv07LehrerStammdatenVorname extends Validator {
 	}
 
 	protected pruefe(): boolean {
-		let success: boolean = true;
 		const vorname: string | null = this.daten.vorname;
-		if (!this.exec(7, { getAsBoolean: () => JavaString.contains(vorname, " -") || JavaString.contains(vorname, "- ") }, "Vorname der Lehrkraft: Der Vorname enthält überflüssige Leerzeichen vor und/oder nach dem Bindestrich."))
-			success = false;
-		return success;
+		if (JavaString.contains(vorname, " -") || JavaString.contains(vorname, "- ")) {
+			this.addFehler(7, "Vorname der Lehrkraft: Der Vorname enthält überflüssige Leerzeichen vor und/oder nach dem Bindestrich.");
+			return false;
+		}
+		return true;
 	}
 
 	transpilerCanonicalName(): string {

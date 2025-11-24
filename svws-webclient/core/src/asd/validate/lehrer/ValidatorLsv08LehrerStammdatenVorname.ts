@@ -23,14 +23,12 @@ export class ValidatorLsv08LehrerStammdatenVorname extends Validator {
 	}
 
 	protected pruefe(): boolean {
-		let success: boolean = true;
-		const vorname: string | null = this.daten.vorname;
-		if (!this.exec(8, { getAsBoolean: () => {
-			const nLower: string | null = vorname.toLowerCase();
-			return nLower.startsWith("frau ") || nLower.startsWith("herr ");
-		} }, "Vorname der Lehrkraft: Die Anrede (Frau oder Herr) gehört nicht in den Vornamen."))
-			success = false;
-		return success;
+		const nLower: string | null = this.daten.vorname.toLowerCase();
+		if (nLower.startsWith("frau ") || nLower.startsWith("herr ")) {
+			this.addFehler(8, "Vorname der Lehrkraft: Die Anrede (Frau oder Herr) gehört nicht in den Vornamen.");
+			return false;
+		}
+		return true;
 	}
 
 	transpilerCanonicalName(): string {

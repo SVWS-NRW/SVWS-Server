@@ -16,16 +16,13 @@ export class ValidatorSss01SchuleStammdatenSchulform extends Validator {
 	}
 
 	protected pruefe(): boolean {
-		let success: boolean = true;
 		const schulformKrz: string | null = super.kontext().getSchuleStammdaten().schulform;
-		success = this.exec(1, { getAsBoolean: () => {
-			try {
-				return Schulform.data().getWertByKuerzel(schulformKrz) === null;
-			} catch(e : any) {
-				return false;
-			}
-		} }, "Das Kürzel für die Schulform ist ungültig.");
-		return success;
+		try {
+			return Schulform.data().getWertByKuerzel(schulformKrz) === null;
+		} catch(e : any) {
+			this.addFehler(1, "Das Kürzel für die Schulform ist ungültig.");
+			return false;
+		}
 	}
 
 	transpilerCanonicalName(): string {

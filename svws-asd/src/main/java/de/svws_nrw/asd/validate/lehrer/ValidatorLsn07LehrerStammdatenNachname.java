@@ -27,14 +27,14 @@ public final class ValidatorLsn07LehrerStammdatenNachname extends Validator {
 
 	@Override
 	protected boolean pruefe() {
-		boolean success = true;
 		final String nachname = daten.nachname;
 
-		if (!exec(7, () -> nachname.contains(" -") || nachname.contains("- "),
-				"Nachname der Lehrkraft: Der Nachname enthält überflüssige Leerzeichen vor und/oder nach dem Bindestrich."))
-			success = false;
+		if (nachname.contains(" -") || nachname.contains("- ")) {
+			this.addFehler(7, "Nachname der Lehrkraft: Der Nachname enthält überflüssige Leerzeichen vor und/oder nach dem Bindestrich.");
+			return false;
+		}
 
-		return success;
+		return true;
 	}
 
 }

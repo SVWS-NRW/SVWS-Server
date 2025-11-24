@@ -16,7 +16,7 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
 /**
  * <p> Testklasse für die Validatoren
  * <ul>
- *   <li> {@link ValidatorLehrerStammdaten},
+ *   <li> {@link ValidatorLsLehrerStammdaten},
  * </ul>
  * </p>
  *
