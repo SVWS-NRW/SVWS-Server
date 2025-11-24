@@ -35,12 +35,7 @@ export class RouteDataLernplattformen extends RouteDataAuswahl<LernplattformList
 		return { manager };
 	}
 
-	async ladeDaten(auswahl: Lernplattform | null): Promise<Lernplattform | null> {
-		if (auswahl === null)
-			return auswahl;
-
-		const lernplattform = await api.server.getLernplattform(api.schema, auswahl.id);
-		this.manager.getIdByEintrag(lernplattform);
+	async ladeDaten(auswahl: Lernplattform): Promise<Lernplattform> {
 		return auswahl;
 	}
 

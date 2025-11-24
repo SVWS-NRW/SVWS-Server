@@ -21,23 +21,8 @@ public class Lernplattform {
 	@Schema(description = "Die Bezeichnung der Lernplattform", example = "IServ")
 	public @NotNull String bezeichnung = "";
 
-	/** Suffix für den Benutzernamen bei den Lehrern. */
-	@Schema(description = "Suffix für den Benutzernamen bei den Lehrern", example = "L_")
-	public String benutzernameSuffixLehrer = "";
+	/** Gibt an, ob die Lernplattform in anderen Datenbanktabellen referenziert ist oder nicht. */
+	@Schema(description = "Gibt an, ob die Lernplattform in anderen Datenbanktabellen referenziert ist oder nicht.", example = "true", accessMode = Schema.AccessMode.READ_ONLY)
+	public Boolean referenziertInAnderenTabellen = false;
 
-	/** Suffix für den Benutzernamen bei den Erziehern. */
-	@Schema(description = "Suffix für den Benutzernamen bei den Erziehern", example = "E_")
-	public String benutzernameSuffixErzieher = "";
-
-	/** Suffix für den Benutzernamen bei den Schülern. */
-	@Schema(description = "Suffix für den Benutzernamen bei den Schülern", example = "S_")
-	public String benutzernameSuffixSchueler = "";
-
-	/** Json-Objekt mit den Konfigurationseinstellungen der Accounterstellung für die Lernplattform. */
-	@Schema(description = "Json-Objekt mit den Konfigurationseinstellungen der Accounterstellung für die Lernplattform")
-	public String konfiguration = "";
-
-	/** Gibt an, für welche Personengruppe die Lernplattform relevant ist. */
-	@Schema(description = "Gibt an wie viele Einwilligungen dem entsprechenden Lernplattform-Eintrag zugeordnet sind", example = "3")
-	public int anzahlEinwilligungen;
 }

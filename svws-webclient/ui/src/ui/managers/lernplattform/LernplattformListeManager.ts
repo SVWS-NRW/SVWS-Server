@@ -72,10 +72,7 @@ export class LernplattformListeManager extends AuswahlManager<number, Lernplattf
 	}
 
 	protected onMehrfachauswahlChanged(): void {
-		this.setLernplattformIDsMitPersonen.clear();
-		for (const l of this.liste.auswahl())
-			if (l.anzahlEinwilligungen !== 0)
-				this.setLernplattformIDsMitPersonen.add(l.id);
+
 	}
 
 	protected compareAuswahl(a: Lernplattform, b: Lernplattform): number {

@@ -71,7 +71,7 @@
 	});
 
 	function isRemovable(rowData: Lernplattform) {
-		return props.manager().liste.auswahl().contains(rowData) && (rowData.anzahlEinwilligungen > 0);
+		return props.manager().liste.auswahl().contains(rowData);
 	}
 
 </script>

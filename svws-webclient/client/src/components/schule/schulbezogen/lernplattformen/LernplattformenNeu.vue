@@ -68,7 +68,7 @@
 
 		isLoading.value = true;
 		props.checkpoint.active = false;
-		const { id, anzahlEinwilligungen, ...partialData } = data.value;
+		const { id, ...partialData } = data.value;
 		await props.add(partialData);
 		isLoading.value = false;
 	}

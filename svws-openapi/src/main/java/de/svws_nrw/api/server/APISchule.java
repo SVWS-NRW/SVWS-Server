@@ -2719,30 +2719,6 @@ public class APISchule {
 	}
 
 	/**
-	 * Die OpenAPI-Methode für die Abfrage einer Lernplattform.
-	 *
-	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param id        die Datenbank-ID zur Identifikation der Lernplattform
-	 * @param request   die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die Daten zur Lernplattform
-	 */
-	@GET
-	@Path("/lernplattform/{id : \\d+}")
-	@Operation(summary = "Liefert zu der ID der Lernplattform die zugehörigen Daten.",
-			description = "Liest die Daten der Lernplattform zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogdaten besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die Daten der Lernplattform",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Lernplattform.class)))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalogdaten anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Keine Lernplattform mit der angegebenen ID gefunden")
-	public Response getLernplattform(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogLernplattformen(conn).getByIdAsResponse(id),
-				request, ServerMode.DEV,
-				BenutzerKompetenz.KEINE);
-	}
-
-	/**
 	 * Die OpenAPI-Methode für das Erstellen einer neuen Lernplattform.
 	 *
 	 * @param schema       das Datenbankschema, in welchem die Einwilligungsart erstellt wird
@@ -2752,7 +2728,7 @@ public class APISchule {
 	 * @return die HTTP-Antwort mit der neuen Lernplattform
 	 */
 	@POST
-	@Path("/lernplattform/new")
+	@Path("/lernplattformen/create")
 	@Operation(summary = "Erstellt eine neue Lernplattform und gibt sie zurück.",
 			description = "Erstellt eine neue Lernplattform und gibt sie zurück."
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Lernplattform besitzt.")
@@ -2781,7 +2757,7 @@ public class APISchule {
 	 * @return das Ergebnis der Patch-Operation
 	 */
 	@PATCH
-	@Path("/lernplattform/{id : \\d+}")
+	@Path("/lernplattformen/{id : \\d+}")
 	@Operation(summary = "Passt die zu der ID der Lernplattform zugehörigen Stammdaten an.",
 			description = "Passt die Lernplattform-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern der Daten der Lernplattform besitzt.")
@@ -2800,33 +2776,6 @@ public class APISchule {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogLernplattformen(conn).patchAsResponse(id, is),
 				request, ServerMode.DEV,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
-	}
-
-	/**
-	 * Die OpenAPI-Methode für das Entfernen einer Lernplattform der Schule.
-	 *
-	 * @param schema       das Datenbankschema
-	 * @param id           die ID der Lernplattform
-	 * @param request      die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die HTTP-Antwort mit dem Status und ggf. der gelöschten Lernplattform
-	 */
-	@DELETE
-	@Path("/lernplattform/{id : \\d+}")
-	@Operation(summary = "Entfernt eine Lernplattform der Schule.",
-			description = "Entfernt eine Lernplattform der Schule."
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.")
-	@ApiResponse(responseCode = "200", description = "Die Lernplattform wurde erfolgreich entfernt.",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Lernplattform.class)))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.")
-	@ApiResponse(responseCode = "404", description = "Lernplattform nicht vorhanden")
-	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
-	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response deleteLernplattform(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogLernplattformen(conn).deleteAsResponse(id),
-				request, ServerMode.DEV,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
 
 

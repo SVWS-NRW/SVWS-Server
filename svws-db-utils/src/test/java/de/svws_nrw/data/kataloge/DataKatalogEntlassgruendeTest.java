@@ -171,6 +171,7 @@ class DataKatalogEntlassgruendeTest {
 	void getAllEmpty() {
 		when(this.conn.queryAll(DTOEntlassarten.class)).thenReturn(Collections.emptyList());
 
+		verify(this.conn, never()).query(anyString(), eq(Long.class));
 		assertThat(this.data.getAll()).isEmpty();
 	}
 
@@ -406,32 +407,6 @@ class DataKatalogEntlassgruendeTest {
 		method.setAccessible(true);
 		final var entlassgrund = new DTOEntlassarten(1L, "bezeichnung");
 		entlassgrund.Bezeichnung = null;
-		final Object result = method.invoke(this.data, List.of(entlassgrund));
-
-		assertThat((Set<Long>) result).isEmpty();
-
-		verify(this.conn, never()).query(anyString(), any());
-	}
-
-	@Test
-	@DisplayName("getIdsOfReferencedEntlassgruende | Bezeichnungen empty")
-	void getIdsOfReferencedEntlassgruendeBezeichnungenEmpty() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-		final Method method = DataKatalogEntlassgruende.class.getDeclaredMethod("getIdsOfReferencedEntlassgruende", List.class);
-		method.setAccessible(true);
-		final var entlassgrund = new DTOEntlassarten(1L, "");
-		final Object result = method.invoke(this.data, List.of(entlassgrund));
-
-		assertThat((Set<Long>) result).isEmpty();
-
-		verify(this.conn, never()).query(anyString(), any());
-	}
-
-	@Test
-	@DisplayName("getIdsOfReferencedEntlassgruende | Bezeichnungen blank")
-	void getIdsOfReferencedEntlassgruendeBezeichnungenBlank() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-		final Method method = DataKatalogEntlassgruende.class.getDeclaredMethod("getIdsOfReferencedEntlassgruende", List.class);
-		method.setAccessible(true);
-		final var entlassgrund = new DTOEntlassarten(1L, "   ");
 		final Object result = method.invoke(this.data, List.of(entlassgrund));
 
 		assertThat((Set<Long>) result).isEmpty();

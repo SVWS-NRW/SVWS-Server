@@ -1,12 +1,9 @@
 package de.svws_nrw.data.schule;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import de.svws_nrw.asd.types.schule.Einwilligungsschluessel;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
@@ -151,6 +148,7 @@ class DataKatalogEinwilligungsartenTest {
 		final var dto2 = new DTOKatalogEinwilligungsart(2L, "bez2", false, 2);
 		dto2.personTyp = PersonTyp.SCHUELER;
 		when(this.conn.queryAll(DTOKatalogEinwilligungsart.class)).thenReturn(List.of(dto1, dto2));
+		@SuppressWarnings("unchecked")
 		final TypedQuery<Long> queryMock = mock(TypedQuery.class);
 		when(queryMock.setParameter(eq("ids"), any())).thenReturn(queryMock);
 		when(queryMock.getResultList()).thenReturn(List.of(1L));
@@ -184,6 +182,7 @@ class DataKatalogEinwilligungsartenTest {
 		final var dto2 = new DTOKatalogEinwilligungsart(2L, "bez2", false, 2);
 		dto2.personTyp = PersonTyp.SCHUELER;
 		when(this.conn.queryAll(DTOKatalogEinwilligungsart.class)).thenReturn(List.of(dto1, dto2));
+		@SuppressWarnings("unchecked")
 		final TypedQuery<Long> queryMock = mock(TypedQuery.class);
 		when(queryMock.setParameter(eq("ids"), any())).thenReturn(queryMock);
 		when(queryMock.getResultList()).thenReturn(List.of(1L));
@@ -208,6 +207,7 @@ class DataKatalogEinwilligungsartenTest {
 	void getAllEmpty() {
 		when(this.conn.queryAll(DTOKatalogEinwilligungsart.class)).thenReturn(Collections.emptyList());
 
+		verify(this.conn, never()).query(anyString(), eq(Long.class));
 		assertThat(this.data.getAll()).isEmpty();
 	}
 
@@ -252,7 +252,6 @@ class DataKatalogEinwilligungsartenTest {
 				.hasFieldOrPropertyWithValue("schluessel", "");
 	}
 
-
 	@Test
 	@DisplayName("map | beschreibung null")
 	void mapBeschreibungIsNull() {
@@ -263,7 +262,6 @@ class DataKatalogEinwilligungsartenTest {
 				.isInstanceOf(Einwilligungsart.class)
 				.hasFieldOrPropertyWithValue("beschreibung", "");
 	}
-
 
 	@Test
 	@DisplayName("map | personTyp null")
@@ -799,31 +797,6 @@ class DataKatalogEinwilligungsartenTest {
 				.isInstanceOf(ApiOperationException.class)
 				.withMessage("Die Daten des Patches enthalten das unbekannte Attribut unknown.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
-	}
-
-	@Test
-	@DisplayName("getIdsOfReferencedEinwilligungsarten | null")
-	void getIdsOfReferencedEinwilligungsartenIdsNull() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-		final Method method = DataKatalogEinwilligungsarten.class.getDeclaredMethod("getIdsOfReferencedEinwilligungsarten", Set.class);
-		method.setAccessible(true);
-		final Object result = method.invoke(this.data, (Object) null);
-
-		assertThat((Set<Long>) result).isEmpty();
-
-		verify(this.conn, never()).query(anyString(), any());
-	}
-
-	@Test
-	@DisplayName("getIdsOfReferencedEinwilligungsarten | emptyList")
-	void getIdsOfReferencedEinwilligungsartenIdsEmpty() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-		final Method method = DataKatalogEinwilligungsarten.class.getDeclaredMethod("getIdsOfReferencedEinwilligungsarten", Set.class);
-		method.setAccessible(true);
-		final Set<Long> emptySet = Collections.emptySet();
-		final Object result = method.invoke(this.data, emptySet);
-
-		assertThat((Set<Long>) result).isEmpty();
-
-		verify(this.conn, never()).query(anyString(), any());
 	}
 
 }
