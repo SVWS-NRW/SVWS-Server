@@ -98,8 +98,7 @@ public class DataLernplattformen {
 		final Schuljahresabschnitt schuljahresabschnitt = conn.getUser().schuleGetAbschnittById(idSchuljahresabschnitt);
 		if (schuljahresabschnitt == null)
 			throw new ApiOperationException(Response.Status.NOT_FOUND, "Schuljahresabschnitt mit ID %d nicht vorhanden.".formatted(idSchuljahresabschnitt));
-		final Map<Long, DTOSchueler> mapSchueler = getSchuelerMap();
-		final Map<Long, DTOLehrer> mapLehrer = getLehrerMap();
+		final Map<Long, DTOSchueler> mapSchueler = getSchuelerById();
 		final Map<Long, DTOCredentialsLernplattformen> mapLernplattformenCredentials = getLernplattformenCredentialsMap(idLernplattform);
 		final Map<Long, DTOSchuelerLernplattform> mapSchuelerLernplattformen = getSchuelerLernplattformenMap(idLernplattform);
 		final Map<Long, DTOLehrerLernplattform> mapLehrerLernplattformen = getLehrerLernplattformenMap(idLernplattform);
@@ -143,11 +142,8 @@ public class DataLernplattformen {
 			addSchuelerToExport(schuelerToExport, schuelerLernabschnitt, mapSchueler, mapSchuelerLernplattformen, mapLernplattformenCredentials);
 			addFaecherAndLerngruppenToExport(lerngruppenToExport, schuelerToExport, faecherToExport, schuelerLernabschnitt, mapSchuelerLeistungsdaten,
 					mapFaecher, mapSchueler, schuljahresabschnitt, lerngruppenIDZaehler, mapKurse);
-			addLerngruppenLehrerToExport(lerngruppenToExport, lehrerToExport, mapLehrer, mapLehrerLernplattformen, mapLernplattformenCredentials);
-
+			addLehrerToExport(lehrerToExport, mapLehrerLernplattformen, mapLernplattformenCredentials);
 			addKlasseToExport(klassenToExport, schuelerLernabschnitt, mapKlassen, mapKlassenleitungen);
-			addKlassenLehrerToExport(klassenToExport, lehrerToExport, mapLehrer, mapLehrerLernplattformen, mapLernplattformenCredentials);
-
 			addJahrgangToExport(jahrgaengeToExport, schuelerLernabschnitt, mapJahrgaenge);
 		}
 
@@ -381,60 +377,29 @@ public class DataLernplattformen {
 		klassenToExport.put(dtoKlasse.ID, lernplattformKlasse);
 	}
 
-	private void addLerngruppenLehrerToExport(final Map<String, LernplattformV1Lerngruppe> lerngruppenToExport,
-			final Map<Long, LernplattformV1Lehrer> lehrerToExport, final Map<Long, DTOLehrer> mapLehrer,
-			final Map<Long, DTOLehrerLernplattform> mapLehrerLernplattformen, final Map<Long, DTOCredentialsLernplattformen> mapLernplattformenCredentials)
-			throws ApiOperationException {
-		// Alle Lehrer aus den Lerngruppen sammeln
-		final Set<Long> idsLerngruppenlehrer = lerngruppenToExport.values().stream()
-				.flatMap(lerngruppe -> lerngruppe.idsLehrer.stream())
-				.collect(Collectors.toSet());
+	private void addLehrerToExport(final Map<Long, LernplattformV1Lehrer> lehrerToExport, final Map<Long, DTOLehrerLernplattform> mapLehrerLernplattformen,
+			final Map<Long, DTOCredentialsLernplattformen> mapLernplattformenCredentials) {
+		this.conn.queryAll(DTOLehrer.class)
+				.stream()
+				.forEach(lehrer -> {
+					final LernplattformV1Lehrer lernplattformLehrer = new LernplattformV1Lehrer();
+					lernplattformLehrer.id = lehrer.ID;
+					lernplattformLehrer.vorname = lehrer.Vorname;
+					lernplattformLehrer.nachname = lehrer.Nachname;
+					lernplattformLehrer.geschlecht = lehrer.Geschlecht.kuerzel;
+					lernplattformLehrer.kuerzel = lehrer.Kuerzel;
+					lernplattformLehrer.emailDienstlich = lehrer.eMailDienstlich;
 
-		// Lehrer aus den lerngruppen dem Export hinzufügen, falls nicht bereits enthalten
-		for (final Long idLehrer : idsLerngruppenlehrer) {
-			addLehrerToExport(idLehrer, mapLehrer, lehrerToExport, mapLehrerLernplattformen, mapLernplattformenCredentials);
-		}
-	}
+					final DTOLehrerLernplattform dtoLehrerLernplattform = mapLehrerLernplattformen.get(lernplattformLehrer.id);
+					final DTOCredentialsLernplattformen lehrerCredentials =
+							(dtoLehrerLernplattform != null) ? mapLernplattformenCredentials.get(dtoLehrerLernplattform.CredentialID) : null;
+					if (lehrerCredentials != null) {
+						lernplattformLehrer.lernplattformlogin.benutzername = lehrerCredentials.Benutzername;
+						lernplattformLehrer.lernplattformlogin.initialpasswort = lehrerCredentials.Initialkennwort;
+					}
 
-	private void addKlassenLehrerToExport(final Map<Long, LernplattformV1Klasse> klassenToExport, final Map<Long, LernplattformV1Lehrer> lehrerToExport,
-			final Map<Long, DTOLehrer> mapLehrer, final Map<Long, DTOLehrerLernplattform> mapLehrerLernplattformen,
-			final Map<Long, DTOCredentialsLernplattformen> mapLernplattformenCredentials) throws ApiOperationException {
-		// Alle Klassenlehrer aus den Klassen sammeln
-		final Set<Long> idsKlassenlehrer = klassenToExport.values().stream()
-				.flatMap(klasse -> klasse.idsKlassenlehrer.stream())
-				.collect(Collectors.toSet());
-
-		// Klassenlehrer dem Export hinzufügen, falls nicht bereits enthalten
-		for (final Long idKlassenlehrer : idsKlassenlehrer) {
-			addLehrerToExport(idKlassenlehrer, mapLehrer, lehrerToExport, mapLehrerLernplattformen, mapLernplattformenCredentials);
-		}
-	}
-
-	private void addLehrerToExport(final Long idLehrer, final Map<Long, DTOLehrer> mapLehrer, final Map<Long, LernplattformV1Lehrer> lehrerToExport,
-			final Map<Long, DTOLehrerLernplattform> mapLehrerLernplattformen, final Map<Long, DTOCredentialsLernplattformen> mapLernplattformenCredentials)
-			throws ApiOperationException {
-		final DTOLehrer lehrerDto = mapLehrer.get(idLehrer);
-		if (lehrerDto == null)
-			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR,
-					"Lehrer mit ID %d nicht vorhanden.".formatted(idLehrer));
-
-		final LernplattformV1Lehrer lernplattformLehrer = new LernplattformV1Lehrer();
-		lernplattformLehrer.id = lehrerDto.ID;
-		lernplattformLehrer.vorname = lehrerDto.Vorname;
-		lernplattformLehrer.nachname = lehrerDto.Nachname;
-		lernplattformLehrer.geschlecht = lehrerDto.Geschlecht.kuerzel;
-		lernplattformLehrer.kuerzel = lehrerDto.Kuerzel;
-		lernplattformLehrer.emailDienstlich = lehrerDto.eMailDienstlich;
-
-		final DTOLehrerLernplattform dtoLehrerLernplattform = mapLehrerLernplattformen.get(lernplattformLehrer.id);
-		final DTOCredentialsLernplattformen lehrerCredentials =
-				(dtoLehrerLernplattform != null) ? mapLernplattformenCredentials.get(dtoLehrerLernplattform.CredentialID) : null;
-		if (lehrerCredentials != null) {
-			lernplattformLehrer.lernplattformlogin.benutzername = lehrerCredentials.Benutzername;
-			lernplattformLehrer.lernplattformlogin.initialpasswort = lehrerCredentials.Initialkennwort;
-		}
-
-		lehrerToExport.put(lehrerDto.ID, lernplattformLehrer);
+					lehrerToExport.put(lehrer.ID, lernplattformLehrer);
+				});
 	}
 
 	private DTOLernplattformen getLernplattform(final Long idLernplattform) throws ApiOperationException {
@@ -456,16 +421,15 @@ public class DataLernplattformen {
 				.collect(Collectors.groupingBy(kl -> kl.Klassen_ID));
 	}
 
-	private Map<Long, DTOLehrer> getLehrerMap() {
-		final List<DTOLehrer> lehrer = conn.queryAll(DTOLehrer.class);
-		return lehrer.stream().collect(Collectors.toMap(e -> e.ID, e -> e));
-	}
-
-	private Map<Long, DTOSchueler> getSchuelerMap() {
+	private Map<Long, DTOSchueler> getSchuelerById() {
 		final Schuljahresabschnitt aktuellerSchuljahresabschnitt = conn.getUser().schuleGetSchuljahresabschnitt();
-		final List<DTOSchueler> schueler = conn.queryList(DTOSchueler.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOSchueler.class, aktuellerSchuljahresabschnitt.id);
-		return schueler.stream().filter(s -> (s.idStatus == SchuelerStatus.AKTIV.daten(aktuellerSchuljahresabschnitt.schuljahr).id)
-						|| (s.idStatus == SchuelerStatus.EXTERN.daten(aktuellerSchuljahresabschnitt.schuljahr).id))
+		return conn
+				.queryList(DTOSchueler.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOSchueler.class, aktuellerSchuljahresabschnitt.id)
+				.stream()
+				.filter(s -> (s.idStatus == SchuelerStatus.AKTIV.daten(aktuellerSchuljahresabschnitt.schuljahr).id)
+						|| (s.idStatus == SchuelerStatus.EXTERN.daten(aktuellerSchuljahresabschnitt.schuljahr).id)
+						|| (s.idStatus == SchuelerStatus.BEURLAUBT.daten(aktuellerSchuljahresabschnitt.schuljahr).id)
+				)
 				.collect(Collectors.toMap(s -> s.ID, s -> s));
 	}
 
