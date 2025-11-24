@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
+import type { RouteLocationRaw } from "vue-router";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
@@ -18,7 +18,7 @@ export class RouteLernplattformenGruppenprozesse extends RouteNode<any, RouteLer
 			"schule.lernplattformen.gruppenprozesse", "gruppenprozesse", LernplattformenGruppenprozesse);
 		super.types = new Set([ViewType.GRUPPENPROZESSE]);
 		super.mode = ServerMode.STABLE;
-		super.propHandler = (route) => this.getProps(route);
+		super.propHandler = () => this.getProps();
 		super.text = "Gruppenprozesse";
 	}
 
@@ -26,14 +26,15 @@ export class RouteLernplattformenGruppenprozesse extends RouteNode<any, RouteLer
 		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: "" } };
 	}
 
-	public getProps(to: RouteLocationNormalized): LernplattformenGruppenprozesseProps {
+	public getProps(): LernplattformenGruppenprozesseProps {
 		return {
 			serverMode: api.mode,
 			schulform: api.schulform,
 			benutzerKompetenzen: api.benutzerKompetenzen,
-			schulgliederungen: api.schulgliederungen,
 			manager: () => routeLernplattformen.data.manager,
 			delete: routeLernplattformen.data.delete,
+			deleteCheck: routeLernplattformen.data.deleteCheck,
+			gotoDefaultView: routeLernplattformen.data.gotoDefaultView,
 		};
 	}
 

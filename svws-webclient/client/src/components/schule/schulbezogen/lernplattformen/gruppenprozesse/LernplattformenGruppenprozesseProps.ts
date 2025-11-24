@@ -1,11 +1,12 @@
-import type { Schulform, List, Schulgliederung, ServerMode, BenutzerKompetenz } from "@core";
+import type { Schulform, List, ServerMode, BenutzerKompetenz } from "@core";
 import type { LernplattformListeManager } from "@ui";
 
 export interface LernplattformenGruppenprozesseProps {
 	serverMode: ServerMode;
 	schulform: Schulform;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
-	schulgliederungen: List<Schulgliederung>;
 	manager: () => LernplattformListeManager;
 	delete: () => Promise<[boolean, List<string | null>]>;
+	deleteCheck: () => [boolean, List<string>];
+	gotoDefaultView: (eintragId?: number | null) => Promise<void>;
 }

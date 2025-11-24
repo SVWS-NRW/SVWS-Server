@@ -1,97 +1,69 @@
-import { JavaObject } from '../../../../../core/src/java/lang/JavaObject';
 import type { JavaSet } from '../../../../../core/src/java/util/JavaSet';
 import type { Schulform } from '../../../../../core/src/asd/types/schule/Schulform';
 import type { Lernplattform } from '../../../../../core/src/core/data/schule/Lernplattform';
 import { JavaString } from '../../../../../core/src/java/lang/JavaString';
-import { DeveloperNotificationException } from '../../../../../core/src/core/exceptions/DeveloperNotificationException';
 import type { Comparator } from '../../../../../core/src/java/util/Comparator';
 import { AuswahlManager } from '../../AuswahlManager';
 import type { JavaFunction } from '../../../../../core/src/java/util/function/JavaFunction';
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
 import type { List } from '../../../../../core/src/java/util/List';
-import { Arrays } from '../../../../../core/src/java/util/Arrays';
-import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
+import { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
 import { HashSet } from '../../../../../core/src/java/util/HashSet';
-import { Pair } from '../../../../../core/src/asd/adt/Pair';
+import { ArrayList } from "../../../../../core/src/java/util/ArrayList";
 
 export class LernplattformListeManager extends AuswahlManager<number, Lernplattform, Lernplattform> {
 
-	/**
-	 * Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ
-	 */
 	private static readonly _lernplattformenToId: JavaFunction<Lernplattform, number> = { apply: (ea: Lernplattform) => ea.id };
-
-	/**
-	 * Sets mit Listen zur aktuellen Auswahl
-	 */
-	private readonly setLernplattformIDsMitPersonen: HashSet<number> = new HashSet<number>();
+	private readonly idsReferencedLernplattformen: HashSet<number> = new HashSet<number>();
 
 	/**
 	 * Ein Default-Comparator für den Vergleich von Lernplattformen in Lernplattformlisten.
 	 */
 	public static readonly comparator: Comparator<Lernplattform> = { compare: (a: Lernplattform, b: Lernplattform) => {
-		let cmp: number = (a.id - b.id);
-		if (cmp !== 0)
+		const cmp = JavaString.compareTo(a.bezeichnung, b.bezeichnung);
+		if (cmp !== 0) {
 			return cmp;
-		if ((a.bezeichnung === null) || (b.bezeichnung === null))
-			return JavaLong.compare(a.id, b.id);
-		cmp = JavaString.compareTo(a.bezeichnung, b.bezeichnung);
-		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
+		}
+		return JavaLong.compare(a.id, b.id);
 	} };
 
 
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
 	 *
-	 * @param schuljahresabschnitt         der Schuljahresabschnitt, auf den sich die Lernplattform bezieht
+	 * @param idSchuljahresabschnitt         der Schuljahresabschnitt, auf den sich die Lernplattform bezieht
 	 * @param schuljahresabschnitte        die Liste der Schuljahresabschnitte
-	 * @param schuljahresabschnittSchule   der Schuljahresabschnitt, in welchem sich die Schule aktuell befindet.
+	 * @param idSchuljahresabschnittSchule   der Schuljahresabschnitt, in welchem sich die Schule aktuell befindet.
 	 * @param schulform                    die Schulform der Schule
-	 * @param listLernplattform     	   die Liste der Lernplattform
+	 * @param lernplattformen     	   die Liste der Lernplattform
 	 */
-	public constructor(schuljahresabschnitt: number, schuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>, schulform: Schulform | null, listLernplattform: List<Lernplattform>) {
-		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, listLernplattform, LernplattformListeManager.comparator, LernplattformListeManager._lernplattformenToId, LernplattformListeManager._lernplattformenToId, Arrays.asList(new Pair("lernplattform", true)));
+	public constructor(idSchuljahresabschnitt: number, idSchuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>,
+		schulform: Schulform | null, lernplattformen: List<Lernplattform>) {
+		super(idSchuljahresabschnitt, idSchuljahresabschnittSchule, schuljahresabschnitte, schulform, lernplattformen, LernplattformListeManager.comparator,
+			LernplattformListeManager._lernplattformenToId, LernplattformListeManager._lernplattformenToId, ArrayList.of());
 	}
 
 	/**
-	 *Gibt das Set mit den LernplattformIds zurück, die in der Auswahl sind und Schüler oder Lehrer beinhalten
+	 *Gibt das Set mit den Ids der Lernplattformen zurück, die in der Auswahl sind und in anderen Datenbanktabellen referenziert werden
 	 *
-	 * @return Das Set mit IDs von Lernplattformen, die Schüler oder Lehrer haben
+	 * @return Das Set mit IDs von Lernplattformen, die in anderen Datenbanktabellen referenziert werden
 	 */
-	public getLernplattformIDsMitPersonen(): JavaSet<number> {
-		return this.setLernplattformIDsMitPersonen;
-	}
-
-	protected onSetDaten(eintrag: Lernplattform, daten: Lernplattform): boolean {
-		let updateEintrag: boolean = false;
-		if (!JavaObject.equalsTranspiler(daten.bezeichnung, (eintrag.bezeichnung))) {
-			eintrag.bezeichnung = daten.bezeichnung;
-			updateEintrag = true;
-		}
-		return updateEintrag;
+	public getIdsReferencedLernplattformen(): JavaSet<number> {
+		return this.idsReferencedLernplattformen;
 	}
 
 	protected onMehrfachauswahlChanged(): void {
-
+		this.idsReferencedLernplattformen.clear();
+		for (const l of this.liste.auswahl())
+			if ((l.referenziertInAnderenTabellen !== null) && l.referenziertInAnderenTabellen)
+				this.idsReferencedLernplattformen.add(l.id);
 	}
 
 	protected compareAuswahl(a: Lernplattform, b: Lernplattform): number {
-		for (const criteria of this._order) {
-			const field: string | null = criteria.a;
-			const asc: boolean = (criteria.b === null) || criteria.b;
-			let cmp: number = 0;
-			if (JavaObject.equalsTranspiler("lernplattform", (field))) {
-				cmp = LernplattformListeManager.comparator.compare(a, b);
-			} else
-				throw new DeveloperNotificationException("Fehler bei der Sortierung. Das Sortierkriterium wird vom Manager nicht unterstützt.");
-			if (cmp === 0)
-				continue;
-			return asc ? cmp : -cmp;
-		}
-		return JavaLong.compare(a.id, b.id);
+		return LernplattformListeManager.comparator.compare(a, b);
 	}
 
-	protected checkFilter(eintrag: Lernplattform): boolean {
+	protected checkFilter(): boolean {
 		return true;
 	}
 }

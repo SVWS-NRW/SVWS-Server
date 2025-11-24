@@ -1,5 +1,4 @@
-import type { List, SimpleOperationResponse, Lernplattform } from "@core";
-import { ArrayList } from "@core";
+import { List, SimpleOperationResponse, Lernplattform, BenutzerKompetenz, ArrayList } from "@core";
 
 import { api } from "~/router/Api";
 
@@ -52,6 +51,31 @@ export class RouteDataLernplattformen extends RouteDataAuswahl<LernplattformList
 		await this.setSchuljahresabschnitt(this._state.value.idSchuljahresabschnitt, true);
 		await this.gotoDefaultView(res.id);
 	};
+
+	deleteCheck = (): [boolean, List<string>] => {
+		const errorLog = new ArrayList<string>();
+
+		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN))
+			errorLog.add('Es liegt keine Berechtigung zum Löschen von Lernplattformen vor.');
+
+		if (!this.manager.liste.auswahlExists())
+			errorLog.add('Es wurden keine Lernplattformen zum Löschen ausgewählt.');
+
+		if (!this.manager.getIdsReferencedLernplattformen().isEmpty())
+			errorLog.add(this.getErrorMessageForReferencedLernplattformen());
+
+		return [errorLog.isEmpty(), errorLog];
+	};
+
+	private getErrorMessageForReferencedLernplattformen(): string {
+		let errorMessage = 'Die folgenden Lernplattformen sind an anderer Stelle referenziert:\n\n';
+		for (const id of this.manager.getIdsReferencedLernplattformen()) {
+			const lernplattform = this.manager.liste.get(id);
+			if (lernplattform)
+				errorMessage += `- ${lernplattform.bezeichnung} \n`;
+		}
+		return errorMessage;
+	}
 
 	protected deleteMessage(id: number, lernplattform: Lernplattform | null): string {
 		return `Lernplattform ${lernplattform?.bezeichnung ?? '???'} (ID: ${id}) wurde erfolgreich gelöscht.`;

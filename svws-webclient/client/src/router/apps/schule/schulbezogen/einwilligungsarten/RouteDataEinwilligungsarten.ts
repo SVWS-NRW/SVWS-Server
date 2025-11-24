@@ -59,7 +59,7 @@ export class RouteDataEinwilligungsarten extends RouteDataAuswahl<Einwilligungsa
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Einwilligungsarten vor.');
 
 		if (!this.manager.liste.auswahlExists())
-			errorLog.add('Es wurde kein Einwilligungsarten zum Löschen ausgewählt.');
+			errorLog.add('Es wurden keine Einwilligungsarten zum Löschen ausgewählt.');
 
 		if (!this.manager.getIdsReferencedEinwilligungsarten().isEmpty())
 			errorLog.add(this.getErrorMessageForReferencedEinwilligungsarten());

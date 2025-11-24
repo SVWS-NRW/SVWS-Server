@@ -6,20 +6,18 @@
 		<div class="secondary-menu--header" />
 		<div class="secondary-menu--content">
 			<div class="container">
-				<svws-ui-table clickable :clicked="clickedEintrag" @update:clicked="eintrag => gotoDefaultView(eintrag.id)" :items="props.manager().filtered()" :columns :selectable="hatKompetenzLoeschen"
-					:model-value="[...props.manager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)" scroll-into-view :focus-switching-enabled :focus-help-visible>
-					<template #cell(anzahlEinwilligungen)="{ value, rowData }">
-						<div class="inline-flex min-h-5">
-							<div v-if="isRemovable(rowData)" class="inline-flex">
-								<span class="icon i-ri-alert-line mx-0.5 mr-1" />
-								<p>verwendet</p>
-							</div>
-							<p class="w-8"> {{ value }} </p>
-						</div>
+				<svws-ui-table v-model="lernplattformen"
+					v-model:clicked="selectedLernplattformen"
+					:items="rowsFiltered" :columns
+					clickable :selectable="!readonly" count :focus-switching-enabled :focus-help-visible scroll-into-view filter-open>
+					<template #search>
+						<svws-ui-text-input v-model="searchTerm" type="search" placeholder="Suchen" removable />
 					</template>
-					<template #actions>
-						<svws-ui-tooltip v-if="hatKompetenzAendern" position="bottom">
-							<svws-ui-button :disabled="activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="gotoHinzufuegenView(true)" :has-focus="manager().filtered().isEmpty()">
+					<template #actions v-if="!readonly">
+						<svws-ui-tooltip v-if="ServerMode.DEV.checkServerMode(serverMode)" position="bottom">
+							<svws-ui-button type="icon"
+								@click="gotoHinzufuegenView(true)"
+								:has-focus="noFilteredEntries" :disabled="isHinzufuegenView">
 								<span class="icon i-ri-add-line" />
 							</svws-ui-button>
 							<template #content>
@@ -35,43 +33,70 @@
 
 <script setup lang="ts">
 
-	import { computed } from "vue";
+	import { computed, ref } from "vue";
 	import type { Lernplattform } from "@core";
-	import { BenutzerKompetenz } from "@core";
+	import { ServerMode, BenutzerKompetenz } from "@core";
 	import type { DataTableColumn } from "@ui";
 	import { useRegionSwitch, ViewType } from "@ui";
 	import type { LernplattformenAuswahlProps } from "~/components/schule/schulbezogen/lernplattformen/LernplattformenAuswahlProps";
 
 	const props = defineProps<LernplattformenAuswahlProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
+	const readonly = computed<boolean>(() => !props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const isHinzufuegenView = computed<boolean>(() => props.activeViewType === ViewType.HINZUFUEGEN);
+	const isGruppenprozesseOrHinzufuegenView = computed<boolean>(() => (props.activeViewType === ViewType.GRUPPENPROZESSE) || isHinzufuegenView.value);
+	const noFilteredEntries = computed<boolean>(() => props.manager().filtered().size() === 0);
+	const searchTerm = ref<string>("");
+
+	const rowsFiltered = computed<Lernplattform[]>(() => {
+		const term = searchTerm.value.trim();
+		if (term === '') {
+			return [...props.manager().filtered()];
+		}
+
+		const termLower = searchTerm.value.toLocaleLowerCase();
+
+		const arr = [];
+		for (const e of props.manager().filtered()) {
+			if (e.bezeichnung.toLocaleLowerCase().includes(termLower)) {
+				arr.push(e);
+			}
+		}
+		return arr;
+	});
+
+	const lernplattformen = computed<Lernplattform[]>({
+		get: () => [...props.manager().liste.auswahl()],
+		set: (v: Lernplattform[]) => {
+			setAuswahl(v);
+			void navigateToView();
+		},
+	});
+
+	const selectedLernplattformen = computed<Lernplattform | null>({
+		get: () => (!isGruppenprozesseOrHinzufuegenView.value && props.manager().hasDaten()) ? props.manager().auswahl() : null,
+		set: (v: Lernplattform | null) => void props.gotoDefaultView(v?.id ?? null),
+	});
 
 	const columns: DataTableColumn[] = [
 		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, defaultSort: "asc" },
-		{ key: "anzahlEinwilligungen", label: "Anzahl", sortable: true, defaultSort: "asc", span: 1, align: "right" },
 	];
 
-	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
-	const hatKompetenzLoeschen = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
-
-	async function setAuswahl(items: Lernplattform[]) {
+	function setAuswahl(lernplattformen: Lernplattform[]) {
 		props.manager().liste.auswahlClear();
-		for (const item of items)
-			if (props.manager().liste.hasValue(item))
-				props.manager().liste.auswahlAdd(item);
-		if (props.manager().liste.auswahlExists())
-			await props.gotoGruppenprozessView(true);
-		else
-			await props.gotoDefaultView(props.manager().getVorherigeAuswahl()?.id);
+		for (const lernplattform of lernplattformen) {
+			if (props.manager().liste.hasValue(lernplattform)) {
+				props.manager().liste.auswahlAdd(lernplattform);
+			}
+		}
 	}
 
-	const clickedEintrag = computed(() => {
-		if ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN))
-			return null;
-		return (props.manager().hasDaten()) ? props.manager().auswahl() : null;
-	});
-
-	function isRemovable(rowData: Lernplattform) {
-		return props.manager().liste.auswahl().contains(rowData);
+	async function navigateToView(): Promise<void> {
+		if (props.manager().liste.auswahlExists()) {
+			await props.gotoGruppenprozessView(true);
+		} else {
+			await props.gotoDefaultView(props.manager().getVorherigeAuswahl()?.id);
+		}
 	}
 
 </script>

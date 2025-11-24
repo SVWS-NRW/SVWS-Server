@@ -38,7 +38,7 @@
 				<template #modalDescription>
 					<div class="text-left">
 						<slot name="description">
-							Durch das Löschen der Einwilligungsarten werden alle auch referenzierten Einwilligungen endgültig gelöscht.<br>
+							Durch das Löschen der Einwilligungsarten werden auch alle referenzierenden Einwilligungen endgültig gelöscht.<br>
 							Wollen Sie das Löschen wirklich durchführen?
 						</slot>
 					</div>
