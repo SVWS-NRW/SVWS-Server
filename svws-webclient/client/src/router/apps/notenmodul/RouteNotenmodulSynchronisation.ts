@@ -26,6 +26,8 @@ export class RouteNotenmodulSynchronisation extends RouteNode<any, RouteNotenmod
 			const { id } = (params === undefined) ? { id: undefined } : RouteNode.getIntParams(params, ["id"]);
 			if (id === -1)
 				return routeNotenmodulAdministration.getRouteDefaultChild({ id });
+			if ((id !== undefined) && !routeNotenmodulAdministration.data.manager.getConnectionResponse(id).success)
+				return routeNotenmodulAdministration.getRouteDefaultChild({ id });
 			return false;
 		} catch (e) {
 			return routeError.getSimpleErrorRoute(e as DeveloperNotificationException);
