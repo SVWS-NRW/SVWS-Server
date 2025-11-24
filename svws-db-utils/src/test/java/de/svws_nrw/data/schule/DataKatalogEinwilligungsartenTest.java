@@ -316,18 +316,13 @@ class DataKatalogEinwilligungsartenTest {
 	}
 
 	@Test
-	@DisplayName("addBasic | erzieherEinwilligung")
-	void addBasicErzieherEinwilligung() throws ApiOperationException {
-		final var dto = new DTOKatalogEinwilligungsart(1L, "bezeichnung", true, 123);
-		dto.personTyp = PersonTyp.ERZIEHER;
-		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto);
-		when(this.conn.transactionPersist(any())).thenReturn(true);
-
-		this.data.addBasic(1L, Map.of("bezeichnung", "bezeichnung", "idPersonTyp", 3));
-
-		verify(this.conn, times(1)).queryList("SELECT e.ID FROM DTOSchuelerErzieherAdresse e", Long.class);
-		verify(this.conn, times(1)).transactionPersistAll(any());
-		verify(this.conn, times(2)).transactionFlush();
+	@DisplayName("addBasic | erzieherEinwilligung | not supported")
+	void addBasicErzieherEinwilligung() {
+		assertThatException()
+				.isThrownBy(() -> this.data.addBasic(1L, Map.of("bezeichnung", "bezeichnung", "idPersonTyp", 3)))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Der PersonTyp Erzieher wird derzeit nicht unterstützt.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test

@@ -56,7 +56,7 @@
 		set: (v: EinwilligungsschluesselKatalogEintrag | null) => data.value.schluessel = v?.schluessel ?? null,
 	});
 
-	const personTypManager = new SelectManager({	options: PersonTyp.values(), optionDisplayText: v => v.bezeichnung, selectionDisplayText: v => v.bezeichnung });
+	const personTypManager = new SelectManager({	options: [PersonTyp.SCHUELER, PersonTyp.LEHRER], optionDisplayText: v => v.bezeichnung, selectionDisplayText: v => v.bezeichnung });
 	const selectedPersonTyp = computed<PersonTyp>({
 		get: () => PersonTyp.getByID(data.value.idPersonTyp) ?? PersonTyp.SCHUELER,
 		set: (value: PersonTyp) => data.value.idPersonTyp = value.id,
@@ -94,7 +94,7 @@
 	}
 
 	function idPersonTypeIsValid(idPersonTyp: number) {
-		return (idPersonTyp === 1) || (idPersonTyp === 2) || (idPersonTyp === 3);
+		return (idPersonTyp === PersonTyp.LEHRER.id) || (idPersonTyp === PersonTyp.SCHUELER.id);
 	}
 
 

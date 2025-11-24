@@ -16,7 +16,6 @@ import de.svws_nrw.core.types.schule.PersonTyp;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.dto.current.schild.erzieher.DTOErzieherDatenschutz;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogEinwilligungsart;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerDatenschutz;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerDatenschutz;
@@ -107,8 +106,7 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 			persistEinwilligungen("SELECT e.ID FROM DTOLehrer e", id -> new DTOLehrerDatenschutz(id, ea.id, false, false));
 		else if (ea.idPersonTyp == PersonTyp.SCHUELER.id)
 			persistEinwilligungen("SELECT e.ID FROM DTOSchueler e", id -> new DTOSchuelerDatenschutz(id, ea.id, false, false));
-		else if (ea.idPersonTyp == PersonTyp.ERZIEHER.id)
-			persistEinwilligungen("SELECT e.ID FROM DTOSchuelerErzieherAdresse e", id -> new DTOErzieherDatenschutz(id, ea.id, false));
+
 		return ea;
 	}
 
@@ -192,6 +190,8 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 		final PersonTyp personTyp = PersonTyp.getByID(id);
 		if (personTyp == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Kein PersonTyp zur ID %d gefunden.".formatted(id));
+		if (personTyp == PersonTyp.ERZIEHER)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Der PersonTyp Erzieher wird derzeit nicht unterstützt.");
 
 		dto.personTyp = personTyp;
 	}
