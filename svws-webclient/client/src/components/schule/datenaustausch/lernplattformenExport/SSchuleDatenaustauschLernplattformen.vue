@@ -27,7 +27,7 @@
 
 	import { computed, ref } from "vue";
 	import type { SchuleDatenaustauschLernplattformenProps } from "~/components/schule/datenaustausch/lernplattformenExport/SSchuleDatenaustauschLernplattformenProps";
-	import type { Lernplattform } from "@core";
+	import type { Lernplattform, Schuljahresabschnitt } from "@core";
 	import { BenutzerKompetenz } from "@core";
 	import { SelectManager } from "@ui";
 
@@ -46,6 +46,8 @@
 
 	const hatKompetenzExport = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.IMPORT_EXPORT_LERNPLATTFORM));
 	const exportDisabled = computed<boolean>(() => (lernplattform.value === undefined) || !hatKompetenzExport.value || loading.value);
+	const abschnitt = computed<Schuljahresabschnitt>(() => props.schuljahresabschnitt);
+	const textSchuljahresabschnitt = `${abschnitt.value.schuljahr}.${abschnitt.value.abschnitt}`;
 
 	async function startExport() {
 		if (exportDisabled.value)
@@ -55,7 +57,7 @@
 		const blob = await props.export(lernplattform.value!, datenformat.value);
 		if (blob !== null) {
 			const url = URL.createObjectURL(blob);
-			let filename = `LernplattformExport-${lernplattform.value!.id}_${lernplattform.value!.bezeichnung}.json`;
+			let filename = `LernplattformExport-${lernplattform.value!.id}_${lernplattform.value!.bezeichnung}-${textSchuljahresabschnitt}.json`;
 			if (datenformat.value === 'GZIP')
 				filename += '.gzip';
 			const a = document.createElement("a");

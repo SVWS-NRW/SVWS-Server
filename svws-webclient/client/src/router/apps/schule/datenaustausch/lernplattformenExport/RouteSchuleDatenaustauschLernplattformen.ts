@@ -30,6 +30,7 @@ export class RouteSchuleDatenaustauschLernplattformen extends RouteNode<RouteDat
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			lernplattformen: this.data.lernplattformen,
 			export: this.data.export,
+			schuljahresabschnitt: api.abschnitt,
 		};
 	}
 }
