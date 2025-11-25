@@ -1,5 +1,8 @@
 import { BaseApi, type ApiFile } from '../api/BaseApi';
+import { ArrayList } from '../java/util/ArrayList';
+import { LernplattformV1 } from '../core/data/lernplattform/v1/LernplattformV1';
 import { LernplattformV1Export } from '../core/data/lernplattform/v1/LernplattformV1Export';
+import { List } from '../java/util/List';
 
 export class ApiExternal extends BaseApi {
 
@@ -14,6 +17,33 @@ export class ApiExternal extends BaseApi {
 	public constructor(url : string, username : string, password : string) {
 		super(url, username, password);
 	}
+
+	/**
+	 * Implementierung der GET-Methode getLernplattformen für den Zugriff auf die URL https://{hostname}/api/external/{schema}/v1/lernplattformen/
+	 *
+	 * Erstellt eine Liste aller vorhandenen Lernplattformen, insofer die notwendige Berechtigung vorliegen.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Eine Liste von Lernplattformen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<LernplattformV1>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lernplattformen anzusehen.
+	 *   Code 404: Keine Lernplattformen gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Eine Liste von Lernplattformen
+	 */
+	public async getLernplattformen(schema : string) : Promise<List<LernplattformV1>> {
+		const path = "/api/external/{schema}/v1/lernplattformen/"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<LernplattformV1>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LernplattformV1.transpilerFromJSON(text)); });
+		return ret;
+	}
+
 
 	/**
 	 * Implementierung der GET-Methode getLernplattformenExport für den Zugriff auf die URL https://{hostname}/api/external/{schema}/v1/lernplattformen/{idLernplattform : \d+}/{idSchuljahresabschnitt : \d+}

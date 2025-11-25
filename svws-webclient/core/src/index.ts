@@ -655,6 +655,7 @@ export { SchuelerblockungOutputFachwahlZuKurs } from './core/data/kursblockung/S
 export { LehrerEinwilligung } from './core/data/lehrer/LehrerEinwilligung';
 export { LehrerLernplattform } from './core/data/lehrer/LehrerLernplattform';
 export { LehrerListeEintrag } from './core/data/lehrer/LehrerListeEintrag';
+export { LernplattformV1 } from './core/data/lernplattform/v1/LernplattformV1';
 export { LernplattformV1Export } from './core/data/lernplattform/v1/LernplattformV1Export';
 export { LernplattformV1Fach } from './core/data/lernplattform/v1/LernplattformV1Fach';
 export { LernplattformV1Jahrgang } from './core/data/lernplattform/v1/LernplattformV1Jahrgang';

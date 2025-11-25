@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -16,6 +17,7 @@ import de.svws_nrw.asd.data.schule.SchuleStammdaten;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.kurse.ZulaessigeKursart;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
+import de.svws_nrw.core.data.lernplattform.v1.LernplattformV1;
 import de.svws_nrw.core.data.lernplattform.v1.LernplattformV1Fach;
 import de.svws_nrw.core.data.lernplattform.v1.LernplattformV1Jahrgang;
 import de.svws_nrw.core.data.lernplattform.v1.LernplattformV1Klasse;
@@ -23,7 +25,9 @@ import de.svws_nrw.core.data.lernplattform.v1.LernplattformV1Lehrer;
 import de.svws_nrw.core.data.lernplattform.v1.LernplattformV1Lerngruppe;
 import de.svws_nrw.core.data.lernplattform.v1.LernplattformV1Schueler;
 import de.svws_nrw.core.data.lernplattform.v1.LernplattformV1Export;
+import de.svws_nrw.core.data.schule.Lernplattform;
 import de.svws_nrw.data.JSONMapper;
+import de.svws_nrw.data.schule.DataKatalogLernplattformen;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
@@ -50,6 +54,7 @@ public class DataLernplattformen {
 
 	/** Die Datenbank-Verbindung zum Aggregieren der Informationen aus der DB und zum Schreiben der Informationen bzw. Teilinformationen */
 	private final @NotNull DBEntityManager conn;
+	private final DataKatalogLernplattformen dataKatalogLernplattformen;
 
 	/** Die ID des Schuljahresabschnitts zu dem die Lernplattform Daten ermittelt werden. */
 	private final int idSchuljahresabschnitt;
@@ -57,12 +62,14 @@ public class DataLernplattformen {
 	/**
 	 * Erstellt einen neuen Datenmanager mit der angegebenen Verbindung
 	 *
-	 * @param conn                    die Datenbank-Verbindung, welche vom Daten-Manager benutzt werden soll
-	 * @param idSchuljahresabschnitt  die ID des Schuljahresabschnitts
+	 * @param conn                   		die Datenbank-Verbindung, welche vom Daten-Manager benutzt werden soll
+	 * @param idSchuljahresabschnitt  		die ID des Schuljahresabschnitts
+	 * @param dataKatalogLernplattformen	DataKatalogLernplattformen
 	 */
-	public DataLernplattformen(final @NotNull DBEntityManager conn, final int idSchuljahresabschnitt) {
+	public DataLernplattformen(final @NotNull DBEntityManager conn, final int idSchuljahresabschnitt, final DataKatalogLernplattformen dataKatalogLernplattformen) {
 		this.conn = conn;
 		this.idSchuljahresabschnitt = idSchuljahresabschnitt;
+		this.dataKatalogLernplattformen = dataKatalogLernplattformen;
 	}
 
 	/**
@@ -87,6 +94,31 @@ public class DataLernplattformen {
 	 */
 	public Response getByIdAsGzipResponse(final long idLernplattform) throws ApiOperationException {
 		return JSONMapper.gzipFileResponseFromObject(getById(idLernplattform), "lernplattform.json.gz");
+	}
+
+	/**
+	 * Gibt eine Liste der Lernplattformen als Response zurück
+	 *
+	 * @return	eine Liste der Lernplattformen als Response
+	 */
+	public Response getAllAsResponse() {
+		final List<LernplattformV1> lernplattformen = Optional.ofNullable(this.dataKatalogLernplattformen.getAll())
+				.orElse(Collections.emptyList())
+				.stream()
+				.map(this::map)
+				.toList();
+		return Response
+				.status(Response.Status.OK)
+				.type(MediaType.APPLICATION_JSON)
+				.entity(lernplattformen)
+				.build();
+	}
+
+	private LernplattformV1 map(final Lernplattform dto) {
+		final LernplattformV1 result = new LernplattformV1();
+		result.id = dto.id;
+		result.bezeichnung = dto.bezeichnung;
+		return result;
 	}
 
 	private LernplattformV1Export getById(final long idLernplattform) throws ApiOperationException {
