@@ -61,7 +61,7 @@ public abstract class BasicValidator {
 	 */
 	protected void addFehler(final int pruefschritt, final @NotNull String fehlermeldung) {
 		_fehler.add(new ValidatorFehler(this, pruefschritt, fehlermeldung));
-		updateFehlerart(this.getValidatorFehlerart(pruefschritt));
+		updateFehlerart(this.getValidatorFehlerart());
 	}
 
 
@@ -91,11 +91,9 @@ public abstract class BasicValidator {
 	/**
 	 * Die Fehlerart, welche diesem speziellen Validator zugeordnet ist.
 	 *
-	 * @param pruefschritt   der Prüfschritt, bei welchem der Fehler aufgetreten ist
-	 *
 	 * @return die Fehlerart
 	 */
-	public @NotNull ValidatorFehlerart getValidatorFehlerart(final int pruefschritt) {
+	public @NotNull ValidatorFehlerart getValidatorFehlerart() {
 		return this._defaultValidatorFehlerart;
 	}
 

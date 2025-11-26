@@ -28,7 +28,7 @@ export abstract class Validator extends BasicValidator {
 	protected constructor(kontext: ValidatorKontext) {
 		super(ValidatorFehlerart.UNGENUTZT);
 		this._kontext = kontext;
-		this._defaultValidatorFehlerart = this.getValidatorFehlerart(-1);
+		this._defaultValidatorFehlerart = this.getValidatorFehlerart();
 	}
 
 	/**
@@ -105,12 +105,10 @@ export abstract class Validator extends BasicValidator {
 	/**
 	 * Die Fehlerart, welche diesem speziellen Validator zugeordnet ist.
 	 *
-	 * @param pruefschritt   der Prüfschritt, bei welchem der Fehler aufgetreten ist
-	 *
 	 * @return die Fehlerart
 	 */
-	public getValidatorFehlerart(pruefschritt: number): ValidatorFehlerart {
-		return this._kontext.getValidatorManager().getFehlerartBySchuljahrAndValidatorClassAndPruefschritt(this._kontext.getSchuljahr(), this.getClass(), pruefschritt);
+	public getValidatorFehlerart(): ValidatorFehlerart {
+		return this._kontext.getValidatorManager().getFehlerartBySchuljahrAndValidatorClass(this._kontext.getSchuljahr(), this.getClass());
 	}
 
 	/**

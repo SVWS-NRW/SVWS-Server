@@ -60,7 +60,7 @@ export abstract class BasicValidator extends JavaObject {
 	 */
 	protected addFehler(pruefschritt: number, fehlermeldung: string): void {
 		this._fehler.add(new ValidatorFehler(this, pruefschritt, fehlermeldung));
-		this.updateFehlerart(this.getValidatorFehlerart(pruefschritt));
+		this.updateFehlerart(this.getValidatorFehlerart());
 	}
 
 	/**
@@ -87,11 +87,9 @@ export abstract class BasicValidator extends JavaObject {
 	/**
 	 * Die Fehlerart, welche diesem speziellen Validator zugeordnet ist.
 	 *
-	 * @param pruefschritt   der Prüfschritt, bei welchem der Fehler aufgetreten ist
-	 *
 	 * @return die Fehlerart
 	 */
-	public getValidatorFehlerart(pruefschritt: number): ValidatorFehlerart {
+	public getValidatorFehlerart(): ValidatorFehlerart {
 		return this._defaultValidatorFehlerart;
 	}
 

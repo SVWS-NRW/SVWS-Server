@@ -119,7 +119,7 @@ public class ValidatorFehler {
 	 * @return die Fehlerart
 	 */
 	public @NotNull ValidatorFehlerart getFehlerart() {
-		return _validator.getValidatorFehlerart(_pruefschritt);
+		return _validator.getValidatorFehlerart();
 	}
 
 }

@@ -292,7 +292,6 @@ export { ValidatorException } from './asd/validate/ValidatorException';
 export { ValidatorFehler } from './asd/validate/ValidatorFehler';
 export { ValidatorFehlerart } from './asd/validate/ValidatorFehlerart';
 export { ValidatorFehlerartKontext } from './asd/validate/ValidatorFehlerartKontext';
-export { ValidatorFehlerartKontextPruefschritt } from './asd/validate/ValidatorFehlerartKontextPruefschritt';
 export { ValidatorGesamt } from './asd/validate/ValidatorGesamt';
 export { ValidatorKontext } from './asd/validate/ValidatorKontext';
 export { ValidatorManager } from './asd/validate/ValidatorManager';

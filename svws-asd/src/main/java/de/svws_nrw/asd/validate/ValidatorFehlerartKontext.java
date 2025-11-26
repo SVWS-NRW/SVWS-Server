@@ -28,9 +28,17 @@ public class ValidatorFehlerartKontext {
 	@Schema(description = "der Präfix-Teil des ASD-Fehlercodes")
 	public @NotNull String praefix = "";
 
-	/** Die Liste mit den Zuordnungen der Fehlerarten für die einzelnen Prüfschritte eines Validators */
-	@Schema(description = "die Liste mit den Zuordnungen der Fehlerarten für die einzelnen Prüfschritte eines Validators")
-	public @NotNull List<ValidatorFehlerartKontextPruefschritt> pruefschritte = new ArrayList<>();
+	/** Liste der Schulformen, in denen bei dem Prüfschritt ein Fehler vorliegt */
+	@Schema(description = "Liste der Schulformen, in denen bei dem Prüfschritt ein Fehler vorliegt")
+	public @NotNull List<String> muss = new ArrayList<>();
+
+	/** Liste der Schulformen, in denen bei dem Prüfschritt wahrscheinlich ein Fehler vorliegt */
+	@Schema(description = "Liste der Schulformen, in denen bei dem Prüfschritt wahrscheinlich ein Fehler vorliegt")
+	public @NotNull List<String> kann = new ArrayList<>();
+
+	/** Liste der Schulformen, in denen bei dem Prüfschritt ein Hinweis auf einen möglichen Fehler erfolgt */
+	@Schema(description = "Liste der Schulformen, in denen bei dem Prüfschritt ein Hinweis auf einen möglichen Fehler erfolgt")
+	public @NotNull List<String> hinweis = new ArrayList<>();
 
 	/** Gibt an, ab welchem Schuljahr die Laufeigenschaft des Validators gilt. Falls schon immer, so ist null gesetzt. */
 	@Schema(description = "gibt an, ab welchem Schuljahr der Fehlerart-Kontext des Validators gilt. Falls schon immer, so ist null gesetzt.", example = "null")
