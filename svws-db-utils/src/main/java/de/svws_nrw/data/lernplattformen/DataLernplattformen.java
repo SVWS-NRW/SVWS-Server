@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.kurse.ZulaessigeKursartKatalogEintrag;
@@ -130,10 +131,10 @@ public class DataLernplattformen {
 		final Schuljahresabschnitt schuljahresabschnitt = conn.getUser().schuleGetAbschnittById(idSchuljahresabschnitt);
 		if (schuljahresabschnitt == null)
 			throw new ApiOperationException(Response.Status.NOT_FOUND, "Schuljahresabschnitt mit ID %d nicht vorhanden.".formatted(idSchuljahresabschnitt));
-		final Map<Long, DTOSchueler> mapSchueler = getSchuelerById();
+		final Map<Long, DTOSchueler> schuelerById = getSchuelerById();
 		final Map<Long, DTOCredentialsLernplattformen> mapLernplattformenCredentials = getLernplattformenCredentialsMap(idLernplattform);
-		final Map<Long, DTOSchuelerLernplattform> mapSchuelerLernplattformen = getSchuelerLernplattformenMap(idLernplattform);
-		final Map<Long, DTOLehrerLernplattform> mapLehrerLernplattformen = getLehrerLernplattformenMap(idLernplattform);
+		final Map<Long, DTOSchuelerLernplattform> lernplattformByIdSchueler = getLernplattformByIdSchueler(idLernplattform);
+		final Map<Long, DTOLehrerLernplattform> lernplattformByIdLehrer = getLernplattformByIdLehrer(idLernplattform);
 		final Map<Long, DTOFach> mapFaecher = getFaecherMap();
 		final Map<Long, DTOJahrgang> mapJahrgaenge = getJahrgangsMap();
 		final Map<Long, DTOKlassen> mapKlassen = getKlassenMap(schuljahresabschnitt);
@@ -153,7 +154,7 @@ public class DataLernplattformen {
 		final List<DTOSchuelerLernabschnittsdaten> schuelerLernabschnitte =
 				conn.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.WechselNr = 0",
 								DTOSchuelerLernabschnittsdaten.class, schuljahresabschnitt.id).stream()
-						.filter(la -> mapSchueler.containsKey(la.Schueler_ID))
+						.filter(la -> schuelerById.containsKey(la.Schueler_ID))
 						.toList();
 		final Set<Long> idsLernabschnitte = schuelerLernabschnitte.stream().map(la -> la.ID).collect(Collectors.toSet());
 
@@ -167,16 +168,18 @@ public class DataLernplattformen {
 		// setze Headerdaten im Exportobjekt
 		addExportHeaderdaten(lernplattformExport, idLernplattform, schuljahresabschnitt);
 
+		addLehrerToExport(lehrerToExport, lernplattformByIdLehrer, mapLernplattformenCredentials);
+
 		for (final DTOSchuelerLernabschnittsdaten schuelerLernabschnitt : schuelerLernabschnitte) {
 			if ((schuelerLernabschnitt.Klassen_ID == null) || (schuelerLernabschnitt.Jahrgang_ID == null))
 				continue;
 
-			addSchuelerToExport(schuelerToExport, schuelerLernabschnitt, mapSchueler, mapSchuelerLernplattformen, mapLernplattformenCredentials);
 			addFaecherAndLerngruppenToExport(lerngruppenToExport, schuelerToExport, faecherToExport, schuelerLernabschnitt, mapSchuelerLeistungsdaten,
-					mapFaecher, mapSchueler, schuljahresabschnitt, lerngruppenIDZaehler, mapKurse);
-			addLehrerToExport(lehrerToExport, mapLehrerLernplattformen, mapLernplattformenCredentials);
+					mapFaecher, schuelerById, schuljahresabschnitt, lerngruppenIDZaehler, mapKurse);
 			addKlasseToExport(klassenToExport, schuelerLernabschnitt, mapKlassen, mapKlassenleitungen);
 			addJahrgangToExport(jahrgaengeToExport, schuelerLernabschnitt, mapJahrgaenge);
+			if (zustimmungSchuelerIstVorhanden(lernplattformByIdSchueler, schuelerLernabschnitt.Schueler_ID))
+				addSchuelerToExport(schuelerToExport, schuelerLernabschnitt, schuelerById, lernplattformByIdSchueler, mapLernplattformenCredentials);
 		}
 
 		// Alle Daten dem Exportobjekt hinzufügen
@@ -201,19 +204,21 @@ public class DataLernplattformen {
 		return lernplattformExport;
 	}
 
-	private Map<Long, DTOLehrerLernplattform> getLehrerLernplattformenMap(final long idLernplattform) {
-		return conn.queryList(DTOLehrerLernplattform.QUERY_LIST_BY_LERNPLATTFORMID, DTOLehrerLernplattform.class, List.of(idLernplattform)).stream()
+	private Map<Long, DTOLehrerLernplattform> getLernplattformByIdLehrer(final long idLernplattform) {
+		return conn
+				.queryList(DTOLehrerLernplattform.QUERY_BY_LERNPLATTFORMID, DTOLehrerLernplattform.class, idLernplattform)
+				.stream()
 				.collect(Collectors.toMap(lernplattform -> lernplattform.LehrerID, lernplattform -> lernplattform));
 	}
 
 	private Map<Long, DTOCredentialsLernplattformen> getLernplattformenCredentialsMap(final long idLernplattform) {
-		return conn.queryList(DTOCredentialsLernplattformen.QUERY_LIST_BY_LERNPLATTFORMID, DTOCredentialsLernplattformen.class, List.of(idLernplattform))
+		return conn.queryList(DTOCredentialsLernplattformen.QUERY_BY_LERNPLATTFORMID, DTOCredentialsLernplattformen.class, idLernplattform)
 				.stream()
 				.collect(Collectors.toMap(credentials -> credentials.ID, credentials -> credentials));
 	}
 
-	private Map<Long, DTOSchuelerLernplattform> getSchuelerLernplattformenMap(final long idLernplattform) {
-		return conn.queryList(DTOSchuelerLernplattform.QUERY_LIST_BY_LERNPLATTFORMID, DTOSchuelerLernplattform.class, List.of(idLernplattform)).stream()
+	private Map<Long, DTOSchuelerLernplattform> getLernplattformByIdSchueler(final long idLernplattform) {
+		return conn.queryList(DTOSchuelerLernplattform.QUERY_BY_LERNPLATTFORMID, DTOSchuelerLernplattform.class, idLernplattform).stream()
 				.collect(Collectors.toMap(lernplattform -> lernplattform.SchuelerID, lernplattform -> lernplattform));
 	}
 
@@ -409,30 +414,55 @@ public class DataLernplattformen {
 		klassenToExport.put(dtoKlasse.ID, lernplattformKlasse);
 	}
 
-	private void addLehrerToExport(final Map<Long, LernplattformV1Lehrer> lehrerToExport, final Map<Long, DTOLehrerLernplattform> mapLehrerLernplattformen,
+	private void addLehrerToExport(final Map<Long, LernplattformV1Lehrer> lehrerToExport,
+			final Map<Long, DTOLehrerLernplattform> lernplattformByLehrerId,
 			final Map<Long, DTOCredentialsLernplattformen> mapLernplattformenCredentials) {
-		this.conn.queryAll(DTOLehrer.class)
-				.stream()
-				.forEach(lehrer -> {
-					final LernplattformV1Lehrer lernplattformLehrer = new LernplattformV1Lehrer();
-					lernplattformLehrer.id = lehrer.ID;
-					lernplattformLehrer.vorname = lehrer.Vorname;
-					lernplattformLehrer.nachname = lehrer.Nachname;
-					lernplattformLehrer.geschlecht = lehrer.Geschlecht.kuerzel;
-					lernplattformLehrer.kuerzel = lehrer.Kuerzel;
-					lernplattformLehrer.emailDienstlich = lehrer.eMailDienstlich;
 
-					final DTOLehrerLernplattform dtoLehrerLernplattform = mapLehrerLernplattformen.get(lernplattformLehrer.id);
-					final DTOCredentialsLernplattformen lehrerCredentials =
-							(dtoLehrerLernplattform != null) ? mapLernplattformenCredentials.get(dtoLehrerLernplattform.CredentialID) : null;
-					if (lehrerCredentials != null) {
-						lernplattformLehrer.lernplattformlogin.benutzername = lehrerCredentials.Benutzername;
-						lernplattformLehrer.lernplattformlogin.initialpasswort = lehrerCredentials.Initialkennwort;
-					}
-
-					lehrerToExport.put(lehrer.ID, lernplattformLehrer);
-				});
+		this.conn
+				.queryList(DTOLehrer.QUERY_BY_SICHTBAR, DTOLehrer.class, true).stream()
+				.filter(zustimmungLehrerIstVorhanden(lernplattformByLehrerId))
+				.map(lehrer -> mapLehrer(lernplattformByLehrerId, mapLernplattformenCredentials, lehrer))
+				.forEach(lernplattformV1Lehrer -> lehrerToExport.put(lernplattformV1Lehrer.id, lernplattformV1Lehrer));
 	}
+
+	private static LernplattformV1Lehrer mapLehrer(final Map<Long, DTOLehrerLernplattform> lernplattformByLehrerId,
+			final Map<Long, DTOCredentialsLernplattformen> mapLernplattformenCredentials, final DTOLehrer lehrer) {
+		final LernplattformV1Lehrer lernplattformLehrer = new LernplattformV1Lehrer();
+		lernplattformLehrer.id = lehrer.ID;
+		lernplattformLehrer.vorname = lehrer.Vorname;
+		lernplattformLehrer.nachname = lehrer.Nachname;
+		lernplattformLehrer.geschlecht = lehrer.Geschlecht.kuerzel;
+		lernplattformLehrer.kuerzel = lehrer.Kuerzel;
+		lernplattformLehrer.emailDienstlich = lehrer.eMailDienstlich;
+
+		final DTOLehrerLernplattform dtoLehrerLernplattform = lernplattformByLehrerId.get(lernplattformLehrer.id);
+		final DTOCredentialsLernplattformen lehrerCredentials =
+				(dtoLehrerLernplattform != null) ? mapLernplattformenCredentials.get(dtoLehrerLernplattform.CredentialID) : null;
+		if (lehrerCredentials != null) {
+			lernplattformLehrer.lernplattformlogin.benutzername = lehrerCredentials.Benutzername;
+			lernplattformLehrer.lernplattformlogin.initialpasswort = lehrerCredentials.Initialkennwort;
+		}
+		return lernplattformLehrer;
+	}
+
+	private static Predicate<DTOLehrer> zustimmungLehrerIstVorhanden(final Map<Long, DTOLehrerLernplattform> lernplattformByLehrerId) {
+		return lehrer -> {
+			final DTOLehrerLernplattform dto = lernplattformByLehrerId.get(lehrer.ID);
+			if (dto == null)
+				return false;
+
+			return Boolean.TRUE.equals(dto.EinwilligungNutzung);
+		};
+	}
+
+	private static boolean zustimmungSchuelerIstVorhanden(final Map<Long, DTOSchuelerLernplattform> lernplattformBySchuelerId,	final Long idSchueler) {
+			final DTOSchuelerLernplattform dto = lernplattformBySchuelerId.get(idSchueler);
+			if (dto == null)
+				return false;
+
+			return Boolean.TRUE.equals(dto.EinwilligungNutzung);
+	}
+
 
 	private DTOLernplattformen getLernplattform(final Long idLernplattform) throws ApiOperationException {
 		final DTOLernplattformen dtoLernplattform = conn.queryByKey(DTOLernplattformen.class, idLernplattform);
