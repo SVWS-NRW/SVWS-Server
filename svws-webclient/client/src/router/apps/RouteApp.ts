@@ -41,7 +41,6 @@ import { routeSchuleStammdaten } from "./schule/schulbezogen/stammdaten/RouteSch
 import { routeSchuleReporting } from "./schule/reporting/RouteSchuleReporting";
 import { routeAbteilungen } from "~/router/apps/schule/schulbezogen/abteilungen/RouteAbteilungen";
 import { routeEntlassgruende } from "~/router/apps/schule/schulbezogen/entlassgruende/RouteEntlassgruende";
-import { routeMerkmale } from "~/router/apps/schule/schulbezogen/merkmale/RouteMerkmale";
 import { routeKindergaerten } from "~/router/apps/schule/allgemein/kindergaerten/RouteKindergaerten";
 import { routeFoerderschwerpunkte } from "~/router/apps/schule/schulbezogen/foerderschwerpunkte/RouteFoerderschwerpunkte";
 import { routeNotenmodul } from "./notenmodul/RouteNotenmodul";
@@ -151,7 +150,6 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeFoerderschwerpunkte,
 			routeJahrgaenge,
 			routeLernplattformen,
-			routeMerkmale,
 			routeKatalogVermerkarten,
 			// Allgemein
 			routeBeschaeftigungsarten,
