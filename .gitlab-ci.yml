@@ -62,7 +62,7 @@ test:integration-tests:
     dependencies:
         - build
     stage: test
-    interruptible: true
+    interruptible: false
     variables:
         USE_SYSTEM_NODE: "1" # Node aus dem Test-Runner Image wird verwendet und nicht erneut heruntergeladen
     before_script:
@@ -86,10 +86,13 @@ test:integration-tests:
 
 cleanup:integration-tests:
     stage: cleanup
+    needs:
+        - test:integration-tests
+    interruptible: false
     before_script:
         - chmod +x ./.gitlab/.script/*.sh
     script:
-        - ./.gitlab/.script/cleanup_integration_test_container.sh $CI_COMMIT_SHORT_SHA
+        - ./.gitlab/.script/cleanup_integration_test_container.sh ${CI_COMMIT_SHORT_SHA}
     when: always
     allow_failure: true
 

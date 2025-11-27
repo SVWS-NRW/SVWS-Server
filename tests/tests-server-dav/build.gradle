@@ -32,7 +32,7 @@ ext {
  */
 tasks.register('testAgainstDockerEnv', NpmRun) {
 	description = 'Startet die Integrationstests gegen die Docker Umgebung'
-	group = 'verification'
+	group = 'testing'
 	dependsOn ':svws-webclient:core:assemble'
 	dependsOn ':svws-webclient:client:assemble'
 	dependsOn 'starteDockerContainerMitTestUmgebung'
@@ -65,7 +65,7 @@ tasks.register('testAgainstDockerEnv', NpmRun) {
  * Starten der Tests gegen die lokale Applikation. Hier wird kein Docker gestartet.
  */
 tasks.register('no_auto_docker_test_DAV', NpmRun) {
-	group = 'verification'
+	group = 'testing'
 	dependsOn ':tests:checkIfLocalAppIsRunning'
 	dependsOn ':tests:checkIfLocalDatabaseIsRunning'
 
