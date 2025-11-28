@@ -380,6 +380,9 @@ export interface UntisGPU002 {
 	/** Zeilen-Unterrichtsgruppe */
 	zeilenUnterrichtsgruppe: string | null;
 
+	/** Studenten intergeschlechtlich */
+	studentenIntergeschlechtlich: number | null;
+
 	/** Ignorieren - Dummy für das Einlesen der Daten */
 	dummy: string | null;
 
@@ -450,6 +453,7 @@ export class UntisGPU002Csv extends UntisGPUCsv<UntisGPU002> {
 			{ name: 'jahresstunden', type: 'string', required: false },
 			{ name: 'zeilenUnterrichtsgruppe', type: 'string', required: false },
 			{ name: 'dummy', type: 'string', required: false },
+			{ name: 'studentenIntergeschlechtlich', type: 'number', required: false },
 		], csv);
 	}
 
