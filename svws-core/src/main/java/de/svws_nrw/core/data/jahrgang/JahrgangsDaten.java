@@ -38,13 +38,17 @@ public class JahrgangsDaten {
 	@Schema(description = "die Sortierreihenfolge des Jahrgangslisten-Eintrags", example = "1")
 	public int sortierung;
 
-	/** Die ID der Schulgliederung, der der Eintrag zugeordnet ist. */
-	@Schema(description = "die ID der Schulgliederung, der der Eintrag zugeordnet ist", example = "***")
+	/** Das Kürzel der Schulgliederung, der der Eintrag zugeordnet ist. */
+	@Schema(description = "Das Kürzel der Schulgliederung, der der Eintrag zugeordnet ist", example = "***")
 	public String kuerzelSchulgliederung;
 
 	/** Die ID des Folgejahrgangs, sofern einer definiert ist, ansonsten null */
 	@Schema(description = "die ID des Folgejahrgangs, sofern einer definiert ist", example = "4712")
 	public Long idFolgejahrgang;
+
+	/** Die ID der Bildungsstufe, sofern eine definiert ist, ansonsten null */
+	@Schema(description = "die ID der Bildungsstufe, sofern eine definiert ist", example = "1")
+	public Long idBildungsstufe;
 
 	/** Gibt die Anzahl der Restabschnitte bis zum Abschluss bei der Schulform an */
 	@Schema(description = "Gibt die Anzahl der Restabschnitte bis zum Abschluss bei der Schulform an", example = "null")

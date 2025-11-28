@@ -2,11 +2,14 @@ package de.svws_nrw.data.jahrgaenge;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import de.svws_nrw.asd.data.schule.BildungsstufeKatalogEintrag;
+import de.svws_nrw.asd.types.schule.Bildungsstufe;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
@@ -29,6 +32,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatException;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
@@ -161,7 +165,7 @@ class DataJahrgangsdatenTest {
 
 		assertThat(this.data.map(dtoJahrgang))
 				.isInstanceOf(JahrgangsDaten.class)
-				.hasFieldOrPropertyWithValue("istSichtbar", true)
+				.hasFieldOrPropertyWithValue("istSichtbar", false)
 				.hasFieldOrPropertyWithValue("sortierung", 32000);
 	}
 
@@ -185,7 +189,7 @@ class DataJahrgangsdatenTest {
 	@ParameterizedTest
 	@DisplayName("mapAttribute | erfolgreiches mapping")
 	@MethodSource("provideMappingAttributes")
-	void testMapAttribute(final String key, final Object value) throws ApiOperationException {
+	void testMapAttribute(final String key, final Object value) {
 		final var expectedDTO = new DTOJahrgang(2L);
 		switch (key) {
 			case "kuerzelStatistik" -> {
@@ -481,5 +485,49 @@ class DataJahrgangsdatenTest {
 				.isInstanceOf(ApiOperationException.class)
 				.hasMessage("Attribut kuerzel: Ein leerer String ist hier nicht erlaubt.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("patch | idBildungsstufe is Null")
+	void patchIdBildungsstufeIsNull() throws ApiOperationException {
+		final var dto = new DTOJahrgang(1L);
+		dto.Sekundarstufe = "beforePatch";
+		when(this.conn.queryByKey(DTOJahrgang.class, 1L)).thenReturn(dto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+		final var map = new HashMap<String, Object>();
+		map.put("idBildungsstufe", null);
+
+		this.data.patch(1L, map);
+
+		assertThat(dto.Sekundarstufe).isNull();
+	}
+
+	@Test
+	@DisplayName("patch | idBildungsstufe | wrong id")
+	void idBildungsstufeWrongId() {
+		when(this.conn.queryByKey(DTOJahrgang.class, 1L)).thenReturn(mock(DTOJahrgang.class));
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, Map.of("idBildungsstufe", -1L)))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Keine Bildungsstufe zur ID -1 gefunden.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("patch | idBildungsstufe")
+	void patchIdBildungsstufe() throws ApiOperationException {
+		final var dto = new DTOJahrgang(1L);
+		dto.Sekundarstufe = "beforePatch";
+		when(this.conn.queryByKey(DTOJahrgang.class, 1L)).thenReturn(dto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+		when(this.conn.getUser()).thenReturn(mock(Benutzer.class));
+		when(this.conn.getUser().schuleGetSchuljahr()).thenReturn(1);
+		final BildungsstufeKatalogEintrag bildungsstufe = Bildungsstufe.data().getWerte().getFirst().historie().getFirst();
+
+		this.data.patch(1L, Map.of("idBildungsstufe", bildungsstufe.id));
+
+		assertThat(dto.Sekundarstufe)
+				.isEqualTo(bildungsstufe.schluessel);
 	}
 }
