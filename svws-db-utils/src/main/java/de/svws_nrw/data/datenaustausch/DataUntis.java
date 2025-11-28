@@ -249,6 +249,13 @@ public final class DataUntis {
 				final long[] tmpKey = { klasse.ID, fach.id, u.idUnterricht, u.wochentag, u.stunde, wt };
 				final LongArrayKey key = new LongArrayKey(tmpKey);
 				if (mapUnterrichte.containsKey(key)) {
+					if (lehrer == null) {
+						logger.logLn(2,
+								"Unterricht mit der ID %d wurde für das Fach '%s' der Klasse '%s' mit der ID %d bereits für den Wochentag %d und der Stunde %d mit Wochentyp %d hinzugefügt und es wurde kein Lehrer eingetragen."
+										.formatted(u.idUnterricht, fach.kuerzel, klasse.Klasse, klasse.ID, u.wochentag, u.stunde, wt)
+										+ " Überspringe diesen Eintrag...");
+						continue;
+					}
 					// Prüfe, ob der Lehrer bereits dem Unterricht zugeordnet ist, wenn nicht, dann füge diesen als weiteren Lehrer hinzu
 					final long uid = mapUnterrichte.get(key);
 					final List<DTOStundenplanUnterrichtLehrer> listLehrer =
@@ -300,6 +307,12 @@ public final class DataUntis {
 				final long[] tmpKey = { kurs.id, u.idUnterricht, u.wochentag, u.stunde, wt };
 				final LongArrayKey key = new LongArrayKey(tmpKey);
 				if (mapUnterrichte.containsKey(key)) {
+					if (lehrer == null) {
+						logger.logLn(2,
+								"Unterricht mit der ID %d wurde für den Kurs '%s' mit der ID %d bereits für den Wochentag %d und der Stunde %d mit Wochentyp %d und es wurde kein Lehrer eingetragen."
+										.formatted(u.idUnterricht, kurs.kuerzel, kurs.id, u.wochentag, u.stunde, wt) + " Überspringe diesen Eintrag...");
+						continue;
+					}
 					// Prüfe, ob der Lehrer bereits dem Unterricht zugeordnet ist, wenn nicht, dann füge diesen als weiteren Lehrer hinzu
 					final long uid = mapUnterrichte.get(key);
 					final List<DTOStundenplanUnterrichtLehrer> listLehrer =
