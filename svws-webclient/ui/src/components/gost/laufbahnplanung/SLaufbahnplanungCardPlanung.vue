@@ -169,7 +169,7 @@
 
 <script setup lang="ts">
 
-	import { ref, onMounted } from "vue";
+	import { ref, onMounted, computed } from "vue";
 	import type { AbiturdatenManager } from "../../../../../core/src/core/abschluss/gost/AbiturdatenManager";
 	import type { GostJahrgangsdaten } from "../../../../../core/src/core/data/gost/GostJahrgangsdaten";
 	import { GostHalbjahr } from "../../../../../core/src/core/types/gost/GostHalbjahr";
@@ -222,18 +222,44 @@
 			faecherIds.push(fach.id);
 	});
 
+	const faecherFilteredIds = computed<Array<number>>(() => {
+		const result = new Array<number>();
+		for (const fach of props.manager.faecherGefiltert) {
+			result.push(fach.id);
+		}
+		return result;
+	});
+
+	function switchFocusDown() {
+		const index = getFachFilteredIndexById(activeFachId.value);
+		const isLast = (index === null) || (index === faecherFilteredIds.value.length - 1);
+		activeFachId.value = isLast
+			? faecherFilteredIds.value[0]
+			: faecherFilteredIds.value[index + 1];
+	}
+
+	function switchFocusUp() {
+		const index = getFachFilteredIndexById(activeFachId.value);
+		const isFirst = (index === null) || (index === 0);
+		activeFachId.value = isFirst
+			? faecherFilteredIds.value[faecherFilteredIds.value.length - 1]
+			: faecherFilteredIds.value[index - 1];
+	}
+
 	// Fokus setzen: Fach wechseln (hoch/runter) oder Halbjahr wechseln (links/rechts)
 	function switchFocus(event: KeyboardEvent) {
+		if (faecherFilteredIds.value.length === 0)
+			return;
 		if (!["ArrowDown", "ArrowUp", "ArrowRight", "ArrowLeft"].includes(event.key))
 			return;
 		activeDirection.value = event.key;
 		event.preventDefault();
 		switch (event.key) {
 			case "ArrowDown":
-				activeFachId.value = (activeFachId.value === faecherIds[faecherIds.length - 1]) ? faecherIds[0] : faecherIds[getFachIndexById(activeFachId.value) + 1];
+				switchFocusDown();
 				break;
 			case "ArrowUp":
-				activeFachId.value = (activeFachId.value === faecherIds[0]) ? faecherIds[faecherIds.length - 1] : faecherIds[getFachIndexById(activeFachId.value) - 1];
+				switchFocusUp();
 				break;
 			case "ArrowRight":
 				activeHalbjahrId.value = (activeHalbjahrId.value + 1) % (GostHalbjahr.values().length + 1);
@@ -248,11 +274,11 @@
 	function retryFocus(fachId: number, halbjahrId: number) {
 		switch (activeDirection.value) {
 			case "ArrowDown":
-				activeFachId.value = (fachId === faecherIds[faecherIds.length - 1]) ? faecherIds[0] : faecherIds[getFachIndexById(fachId) + 1];
+				switchFocusDown();
 				activeHalbjahrId.value = halbjahrId;
 				break;
 			case "ArrowUp":
-				activeFachId.value = (fachId === faecherIds[0]) ? faecherIds[faecherIds.length - 1] : faecherIds[getFachIndexById(fachId) - 1];
+				switchFocusUp();
 				activeHalbjahrId.value = halbjahrId;
 				break;
 			case "ArrowRight":
@@ -271,6 +297,13 @@
 			if (faecherIds[i] === fachId)
 				return i;
 		return -1;
+	}
+
+	function getFachFilteredIndexById(fachId: number): number | null {
+		for (let i = 0; i <= faecherFilteredIds.value.length; i++)
+			if (faecherFilteredIds.value[i] === fachId)
+				return i;
+		return null;
 	}
 
 </script>
