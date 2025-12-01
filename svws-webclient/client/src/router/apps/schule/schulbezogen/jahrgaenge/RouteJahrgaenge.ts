@@ -12,13 +12,13 @@ import { routeJahrgaengeNeu } from "~/router/apps/schule/schulbezogen/jahrgaenge
 import { routeJahrgaengeGruppenprozesse } from "~/router/apps/schule/schulbezogen/jahrgaenge/RouteJahrgaengeGruppenprozesse";
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 
-const SJahrgaengeAuswahl = () => import("~/components/schule/schulbezogen/jahrgaenge/SJahrgaengeAuswahl.vue");
-const SJahrgaengeApp = () => import("~/components/schule/schulbezogen/jahrgaenge/SJahrgaengeApp.vue");
+const JahrgaengeAuswahl = () => import("~/components/schule/schulbezogen/jahrgaenge/JahrgaengeAuswahl.vue");
+const JahrgaengeApp = () => import("~/components/schule/schulbezogen/jahrgaenge/JahrgaengeApp.vue");
 
 export class RouteJahrgaenge extends RouteAuswahlNode<JahrgaengeListeManager, RouteDataJahrgaenge, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.jahrgaenge", "schule/jahrgaenge/:id(\\d+)?", SJahrgaengeApp, SJahrgaengeAuswahl, new RouteDataJahrgaenge());
+		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.jahrgaenge", "schule/jahrgaenge/:id(\\d+)?", JahrgaengeApp, JahrgaengeAuswahl, new RouteDataJahrgaenge());
 		super.mode = ServerMode.DEV;
 		super.text = "Jahrgänge";
 		super.menugroup = RouteSchuleMenuGroup.SCHULBEZOGEN;

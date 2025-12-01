@@ -6,14 +6,14 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeApp } from "../../../RouteApp";
 import { ViewType } from "@ui";
 import { type RouteJahrgaenge, routeJahrgaenge } from "~/router/apps/schule/schulbezogen/jahrgaenge/RouteJahrgaenge";
-import type { SchuleJahrgangGruppenprozesseProps } from "~/components/schule/schulbezogen/jahrgaenge/gruppenprozesse/SJahrgaengeGruppenprozesseProps";
+import type { JahrgaengeGruppenprozesseProps } from "~/components/schule/schulbezogen/jahrgaenge/gruppenprozesse/JahrgaengeGruppenprozesseProps";
 
-const SJahrgaengeGruppenprozesse = () => import("~/components/schule/schulbezogen/jahrgaenge/gruppenprozesse/SJahrgaengeGruppenprozesse.vue");
+const JahrgaengeGruppenprozesse = () => import("~/components/schule/schulbezogen/jahrgaenge/gruppenprozesse/JahrgaengeGruppenprozesse.vue");
 
 export class RouteJahrgaengeGruppenprozesse extends RouteNode<any, RouteJahrgaenge> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN], "schule.jahrgaenge.gruppenprozesse", "gruppenprozesse", SJahrgaengeGruppenprozesse);
+		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN], "schule.jahrgaenge.gruppenprozesse", "gruppenprozesse", JahrgaengeGruppenprozesse);
 		super.types = new Set([ViewType.GRUPPENPROZESSE]);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
@@ -24,7 +24,7 @@ export class RouteJahrgaengeGruppenprozesse extends RouteNode<any, RouteJahrgaen
 		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: "" } };
 	}
 
-	public getProps(to: RouteLocationNormalized): SchuleJahrgangGruppenprozesseProps {
+	public getProps(to: RouteLocationNormalized): JahrgaengeGruppenprozesseProps {
 		return {
 			serverMode: api.mode,
 			manager: () => routeJahrgaenge.data.manager,

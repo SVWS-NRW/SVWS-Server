@@ -28,7 +28,6 @@ export class RouteEntlassgruendeGruppenprozesse extends RouteNode<any, RouteEntl
 	public getProps(to: RouteLocationNormalized): EntlassgruendeGruppenprozesseProps {
 		return {
 			serverMode: api.mode,
-			schulform: api.schulform,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			delete: routeEntlassgruende.data.delete,
 			deleteCheck: routeEntlassgruende.data.deleteCheck,

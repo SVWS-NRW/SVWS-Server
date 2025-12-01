@@ -5,15 +5,16 @@
 				<div class="svws-headline-wrapper">
 					<template v-if="activeViewType === ViewType.DEFAULT">
 						<h2 class="svws-headline">
-							<span>{{ manager().auswahl().bezeichnung }}</span>
+							<span>
+								{{ manager().auswahl().bezeichnung }}
+							</span>
 							<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
 								ID: {{ manager().auswahl().id }}
 							</svws-ui-badge>
 						</h2>
-						<span class="svws-subline">{{ manager().auswahl().kuerzel }}</span>
 					</template>
 					<template v-else-if="activeViewType === ViewType.HINZUFUEGEN">
-						<h2 class="svws-headline">Anlegen eines neuen Jahrgangs...</h2>
+						<h2 class="svws-headline">Anlegen eines neuen Jahrgangs</h2>
 					</template>
 					<template v-else-if="activeViewType === ViewType.GRUPPENPROZESSE">
 						<h2 class="svws-headline"> Gruppenprozesse </h2>
@@ -34,7 +35,7 @@
 
 <script setup lang="ts">
 
-	import type { JahrgaengeAppProps } from "./SJahrgaengeAppProps";
+	import type { JahrgaengeAppProps } from "./JahrgaengeAppProps";
 	import { useRegionSwitch, ViewType } from "@ui";
 	import { computed } from "vue";
 

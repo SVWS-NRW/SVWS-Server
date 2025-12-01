@@ -26,7 +26,7 @@ export class JahrgangsDaten extends JavaObject {
 	/**
 	 * Die dem Jahrgang zugeordnete schulinterne Bezeichnung.
 	 */
-	public bezeichnung: string = "";
+	public bezeichnung: string | null = null;
 
 	/**
 	 * Die Sortierreihenfolge des Jahrgangslisten-Eintrags.
@@ -100,9 +100,7 @@ export class JahrgangsDaten extends JavaObject {
 		result.kuerzel = (obj.kuerzel === undefined) ? null : obj.kuerzel === null ? null : obj.kuerzel;
 		result.kurzbezeichnung = (obj.kurzbezeichnung === undefined) ? null : obj.kurzbezeichnung === null ? null : obj.kurzbezeichnung;
 		result.kuerzelStatistik = (obj.kuerzelStatistik === undefined) ? null : obj.kuerzelStatistik === null ? null : obj.kuerzelStatistik;
-		if (obj.bezeichnung === undefined)
-			throw new Error('invalid json format, missing attribute bezeichnung');
-		result.bezeichnung = obj.bezeichnung;
+		result.bezeichnung = (obj.bezeichnung === undefined) ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
 		if (obj.sortierung === undefined)
 			throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
@@ -125,7 +123,7 @@ export class JahrgangsDaten extends JavaObject {
 		result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		result += '"kurzbezeichnung" : ' + ((obj.kurzbezeichnung === null) ? 'null' : JSON.stringify(obj.kurzbezeichnung)) + ',';
 		result += '"kuerzelStatistik" : ' + ((obj.kuerzelStatistik === null) ? 'null' : JSON.stringify(obj.kuerzelStatistik)) + ',';
-		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+		result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"kuerzelSchulgliederung" : ' + ((obj.kuerzelSchulgliederung === null) ? 'null' : JSON.stringify(obj.kuerzelSchulgliederung)) + ',';
 		result += '"idFolgejahrgang" : ' + ((obj.idFolgejahrgang === null) ? 'null' : obj.idFolgejahrgang.toString()) + ',';
@@ -155,7 +153,7 @@ export class JahrgangsDaten extends JavaObject {
 			result += '"kuerzelStatistik" : ' + ((obj.kuerzelStatistik === null) ? 'null' : JSON.stringify(obj.kuerzelStatistik)) + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+			result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		}
 		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung.toString() + ',';

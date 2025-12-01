@@ -61,19 +61,27 @@ export class RouteDataJahrgaenge extends RouteDataAuswahl<JahrgaengeListeManager
 
 	deleteCheck = (): [boolean, List<string>] => {
 		const errorLog = new ArrayList<string>();
+
 		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN))
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Jahrgängen vor.');
 
 		if (!this.manager.liste.auswahlExists())
 			errorLog.add('Es wurde kein Jahrgang zum Löschen ausgewählt.');
 
-		for (const id of this.manager.getIdsReferencedJahrgaenge()) {
-			const jahrgang = this.manager.liste.get(id);
-			if (jahrgang)
-				errorLog.add(`Der Jahrgang ${jahrgang.bezeichnung} (${jahrgang.kuerzelStatistik}) ist an anderer Stelle referenziert und kann daher nicht gelöscht werden.`);
-		}
+		if (!this.manager.getIdsReferencedJahrgaenge().isEmpty())
+			errorLog.add(this.getErrorMessageForReferencedJahrgaenge());
 
 		return [errorLog.isEmpty(), errorLog];
 	};
+
+	private getErrorMessageForReferencedJahrgaenge(): string {
+		let errorMessage = 'Die folgenden Jahrgänge sind an anderer Stelle referenziert und können daher nicht gelöscht werden:\n\n';
+		for (const id of this.manager.getIdsReferencedJahrgaenge()) {
+			const jahrgang = this.manager.liste.get(id);
+			if (jahrgang)
+				errorMessage += `- ${jahrgang.bezeichnung} \n`;
+		}
+		return errorMessage;
+	}
 
 }

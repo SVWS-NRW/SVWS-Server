@@ -38,7 +38,7 @@ public final class DataJahrgangsdaten extends DataManagerRevised<Long, DTOJahrga
 	public DataJahrgangsdaten(final DBEntityManager conn) {
 		super(conn);
 		setAttributesNotPatchable("id");
-		setAttributesRequiredOnCreation("kuerzel", "kuerzelStatistik");
+		setAttributesRequiredOnCreation("kuerzel", "bezeichnung", "kuerzelStatistik");
 	}
 
 	@Override
@@ -116,10 +116,10 @@ public final class DataJahrgangsdaten extends DataManagerRevised<Long, DTOJahrga
 			case "bezeichnung" -> updateBezeichnung(dto, name, value);
 			case "kurzbezeichnung" -> dto.Kurzbezeichnung =
 					JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule_Jahrgaenge.col_Spaltentitel.datenlaenge(), name);
-			case "sortierung" -> dto.Sortierung = JSONMapper.convertToIntegerInRange(value, true, 0, 32000, name);
+			case "sortierung" -> dto.Sortierung = JSONMapper.convertToIntegerInRange(value, true, 0, 32001, name);
 			case "kuerzelSchulgliederung" -> updateKuerzelSchulgliederung(dto, value, name);
 			case "idFolgejahrgang" -> updateIdFolgejahrgang(dto, value, name);
-			case "anzahlRestabschnitte" -> dto.AnzahlRestabschnitte = JSONMapper.convertToIntegerInRange(value, true, 0, 40, name);
+			case "anzahlRestabschnitte" -> dto.AnzahlRestabschnitte = JSONMapper.convertToIntegerInRange(value, true, 0, 41, name);
 			case "istSichtbar" -> dto.Sichtbar = JSONMapper.convertToBoolean(value, true, name);
 			case "gueltigVon" -> dto.GueltigVon = JSONMapper.convertToLong(value, true, name);
 			case "gueltigBis" -> dto.GueltigBis = JSONMapper.convertToLong(value, true, name);
