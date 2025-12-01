@@ -47,7 +47,7 @@ export class BeruflichesGymnasiumPruefungsordnungAnlageKatalogEintrag extends Co
 		return ['de.svws_nrw.asd.data.CoreTypeData', 'de.svws_nrw.asd.data.schule.BeruflichesGymnasiumPruefungsordnungAnlageKatalogEintrag'].includes(name);
 	}
 
-	public static class = new Class<BeruflichesGymnasiumPruefungsordnungAnlageKatalogEintrag>('de.svws_nrw.asd.data.schule.BeruflichesGymnasiumPruefungsordnungAnlageKatalogEintrag');
+	public static readonly class = new Class<BeruflichesGymnasiumPruefungsordnungAnlageKatalogEintrag>('de.svws_nrw.asd.data.schule.BeruflichesGymnasiumPruefungsordnungAnlageKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): BeruflichesGymnasiumPruefungsordnungAnlageKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<BeruflichesGymnasiumPruefungsordnungAnlageKatalogEintrag>;

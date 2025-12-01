@@ -45,7 +45,7 @@ export class GostKlausurenCollectionMetaData extends JavaObject {
 		return ['de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionMetaData'].includes(name);
 	}
 
-	public static class = new Class<GostKlausurenCollectionMetaData>('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionMetaData');
+	public static readonly class = new Class<GostKlausurenCollectionMetaData>('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionMetaData');
 
 	public static transpilerFromJSON(json: string): GostKlausurenCollectionMetaData {
 		const obj = JSON.parse(json) as Partial<GostKlausurenCollectionMetaData>;

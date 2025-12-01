@@ -39,7 +39,7 @@ export class GostBeratungslehrer extends JavaObject {
 		return ['de.svws_nrw.core.data.gost.GostBeratungslehrer'].includes(name);
 	}
 
-	public static class = new Class<GostBeratungslehrer>('de.svws_nrw.core.data.gost.GostBeratungslehrer');
+	public static readonly class = new Class<GostBeratungslehrer>('de.svws_nrw.core.data.gost.GostBeratungslehrer');
 
 	public static transpilerFromJSON(json: string): GostBeratungslehrer {
 		const obj = JSON.parse(json) as Partial<GostBeratungslehrer>;

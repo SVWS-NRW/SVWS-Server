@@ -58,7 +58,7 @@ export class ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverh
 		return ['de.svws_nrw.asd.validate.lehrer.ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis', 'de.svws_nrw.asd.validate.BasicValidator', 'de.svws_nrw.asd.validate.Validator'].includes(name);
 	}
 
-	public static class = new Class<ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis>('de.svws_nrw.asd.validate.lehrer.ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis');
+	public static readonly class = new Class<ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis>('de.svws_nrw.asd.validate.lehrer.ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis');
 
 }
 

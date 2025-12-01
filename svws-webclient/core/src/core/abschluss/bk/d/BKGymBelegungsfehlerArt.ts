@@ -104,7 +104,7 @@ export class BKGymBelegungsfehlerArt extends JavaEnum<BKGymBelegungsfehlerArt> {
 		return ['de.svws_nrw.core.abschluss.bk.d.BKGymBelegungsfehlerArt', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<BKGymBelegungsfehlerArt>('de.svws_nrw.core.abschluss.bk.d.BKGymBelegungsfehlerArt');
+	public static readonly class = new Class<BKGymBelegungsfehlerArt>('de.svws_nrw.core.abschluss.bk.d.BKGymBelegungsfehlerArt');
 
 }
 

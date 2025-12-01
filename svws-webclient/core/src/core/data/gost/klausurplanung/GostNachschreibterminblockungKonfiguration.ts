@@ -48,7 +48,7 @@ export class GostNachschreibterminblockungKonfiguration extends JavaObject {
 		return ['de.svws_nrw.core.data.gost.klausurplanung.GostNachschreibterminblockungKonfiguration'].includes(name);
 	}
 
-	public static class = new Class<GostNachschreibterminblockungKonfiguration>('de.svws_nrw.core.data.gost.klausurplanung.GostNachschreibterminblockungKonfiguration');
+	public static readonly class = new Class<GostNachschreibterminblockungKonfiguration>('de.svws_nrw.core.data.gost.klausurplanung.GostNachschreibterminblockungKonfiguration');
 
 	public static transpilerFromJSON(json: string): GostNachschreibterminblockungKonfiguration {
 		const obj = JSON.parse(json) as Partial<GostNachschreibterminblockungKonfiguration>;

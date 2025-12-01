@@ -39,7 +39,7 @@ export class Raum extends JavaObject {
 		return ['de.svws_nrw.core.data.schule.Raum'].includes(name);
 	}
 
-	public static class = new Class<Raum>('de.svws_nrw.core.data.schule.Raum');
+	public static readonly class = new Class<Raum>('de.svws_nrw.core.data.schule.Raum');
 
 	public static transpilerFromJSON(json: string): Raum {
 		const obj = JSON.parse(json) as Partial<Raum>;

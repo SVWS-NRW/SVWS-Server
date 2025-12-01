@@ -670,7 +670,7 @@ export class Note extends JavaEnum<Note> implements CoreType<NoteKatalogEintrag,
 		return ['de.svws_nrw.asd.types.Note', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<Note>('de.svws_nrw.asd.types.Note');
+	public static readonly class = new Class<Note>('de.svws_nrw.asd.types.Note');
 
 }
 

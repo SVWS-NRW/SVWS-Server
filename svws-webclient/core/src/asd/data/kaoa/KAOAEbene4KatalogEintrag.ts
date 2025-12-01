@@ -24,7 +24,7 @@ export class KAOAEbene4KatalogEintrag extends CoreTypeData {
 		return ['de.svws_nrw.asd.data.CoreTypeData', 'de.svws_nrw.asd.data.kaoa.KAOAEbene4KatalogEintrag'].includes(name);
 	}
 
-	public static class = new Class<KAOAEbene4KatalogEintrag>('de.svws_nrw.asd.data.kaoa.KAOAEbene4KatalogEintrag');
+	public static readonly class = new Class<KAOAEbene4KatalogEintrag>('de.svws_nrw.asd.data.kaoa.KAOAEbene4KatalogEintrag');
 
 	public static transpilerFromJSON(json: string): KAOAEbene4KatalogEintrag {
 		const obj = JSON.parse(json) as Partial<KAOAEbene4KatalogEintrag>;

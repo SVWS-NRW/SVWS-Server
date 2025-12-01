@@ -59,7 +59,7 @@ export class SchuldateiOrganisationseinheitMerkmal extends SchuldateiEintrag {
 		return ['de.svws_nrw.schulen.v1.data.SchuldateiOrganisationseinheitMerkmal', 'de.svws_nrw.schulen.v1.data.SchuldateiEintrag'].includes(name);
 	}
 
-	public static class = new Class<SchuldateiOrganisationseinheitMerkmal>('de.svws_nrw.schulen.v1.data.SchuldateiOrganisationseinheitMerkmal');
+	public static readonly class = new Class<SchuldateiOrganisationseinheitMerkmal>('de.svws_nrw.schulen.v1.data.SchuldateiOrganisationseinheitMerkmal');
 
 	public static transpilerFromJSON(json: string): SchuldateiOrganisationseinheitMerkmal {
 		const obj = JSON.parse(json) as Partial<SchuldateiOrganisationseinheitMerkmal>;

@@ -75,7 +75,7 @@ export class LogConsumerConsole extends JavaObject implements Consumer<LogData> 
 		return ['java.util.function.Consumer', 'de.svws_nrw.core.logger.LogConsumerConsole'].includes(name);
 	}
 
-	public static class = new Class<LogConsumerConsole>('de.svws_nrw.core.logger.LogConsumerConsole');
+	public static readonly class = new Class<LogConsumerConsole>('de.svws_nrw.core.logger.LogConsumerConsole');
 
 }
 

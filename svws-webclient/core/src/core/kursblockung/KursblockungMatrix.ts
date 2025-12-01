@@ -434,7 +434,7 @@ export class KursblockungMatrix extends JavaObject {
 		return ['de.svws_nrw.core.kursblockung.KursblockungMatrix'].includes(name);
 	}
 
-	public static class = new Class<KursblockungMatrix>('de.svws_nrw.core.kursblockung.KursblockungMatrix');
+	public static readonly class = new Class<KursblockungMatrix>('de.svws_nrw.core.kursblockung.KursblockungMatrix');
 
 }
 

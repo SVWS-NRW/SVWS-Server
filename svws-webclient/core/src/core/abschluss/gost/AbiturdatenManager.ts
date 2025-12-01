@@ -2987,7 +2987,7 @@ export class AbiturdatenManager extends JavaObject {
 		return ['de.svws_nrw.core.abschluss.gost.AbiturdatenManager'].includes(name);
 	}
 
-	public static class = new Class<AbiturdatenManager>('de.svws_nrw.core.abschluss.gost.AbiturdatenManager');
+	public static readonly class = new Class<AbiturdatenManager>('de.svws_nrw.core.abschluss.gost.AbiturdatenManager');
 
 }
 

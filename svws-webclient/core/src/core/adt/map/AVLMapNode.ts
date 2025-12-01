@@ -96,7 +96,7 @@ export class AVLMapNode<K, V> extends JavaObject implements JavaMapEntry<K, V> {
 		return ['java.util.Map.Entry', 'de.svws_nrw.core.adt.map.AVLMapNode'].includes(name);
 	}
 
-	public static class = new Class<AVLMapNode<any, any>>('de.svws_nrw.core.adt.map.AVLMapNode');
+	public static readonly class = new Class<AVLMapNode<any, any>>('de.svws_nrw.core.adt.map.AVLMapNode');
 
 }
 

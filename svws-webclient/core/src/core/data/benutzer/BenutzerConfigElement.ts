@@ -50,7 +50,7 @@ export class BenutzerConfigElement extends JavaObject {
 		return ['de.svws_nrw.core.data.benutzer.BenutzerConfigElement'].includes(name);
 	}
 
-	public static class = new Class<BenutzerConfigElement>('de.svws_nrw.core.data.benutzer.BenutzerConfigElement');
+	public static readonly class = new Class<BenutzerConfigElement>('de.svws_nrw.core.data.benutzer.BenutzerConfigElement');
 
 	public static transpilerFromJSON(json: string): BenutzerConfigElement {
 		const obj = JSON.parse(json) as Partial<BenutzerConfigElement>;

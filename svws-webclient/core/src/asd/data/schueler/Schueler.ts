@@ -54,7 +54,7 @@ export class Schueler extends JavaObject {
 		return ['de.svws_nrw.asd.data.schueler.Schueler'].includes(name);
 	}
 
-	public static class = new Class<Schueler>('de.svws_nrw.asd.data.schueler.Schueler');
+	public static readonly class = new Class<Schueler>('de.svws_nrw.asd.data.schueler.Schueler');
 
 	public static transpilerFromJSON(json: string): Schueler {
 		const obj = JSON.parse(json) as Partial<Schueler>;

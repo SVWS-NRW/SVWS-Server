@@ -39,7 +39,7 @@ export class StundenplanSchiene extends JavaObject {
 		return ['de.svws_nrw.core.data.stundenplan.StundenplanSchiene'].includes(name);
 	}
 
-	public static class = new Class<StundenplanSchiene>('de.svws_nrw.core.data.stundenplan.StundenplanSchiene');
+	public static readonly class = new Class<StundenplanSchiene>('de.svws_nrw.core.data.stundenplan.StundenplanSchiene');
 
 	public static transpilerFromJSON(json: string): StundenplanSchiene {
 		const obj = JSON.parse(json) as Partial<StundenplanSchiene>;

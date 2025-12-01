@@ -46,7 +46,7 @@ export class BKLernfeld extends JavaObject {
 		return ['de.svws_nrw.core.data.bk.BKLernfeld'].includes(name);
 	}
 
-	public static class = new Class<BKLernfeld>('de.svws_nrw.core.data.bk.BKLernfeld');
+	public static readonly class = new Class<BKLernfeld>('de.svws_nrw.core.data.bk.BKLernfeld');
 
 	public static transpilerFromJSON(json: string): BKLernfeld {
 		const obj = JSON.parse(json) as Partial<BKLernfeld>;

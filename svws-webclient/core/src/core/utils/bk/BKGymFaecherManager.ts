@@ -198,7 +198,7 @@ export class BKGymFaecherManager extends JavaObject {
 		return ['de.svws_nrw.core.utils.bk.BKGymFaecherManager'].includes(name);
 	}
 
-	public static class = new Class<BKGymFaecherManager>('de.svws_nrw.core.utils.bk.BKGymFaecherManager');
+	public static readonly class = new Class<BKGymFaecherManager>('de.svws_nrw.core.utils.bk.BKGymFaecherManager');
 
 }
 

@@ -41,7 +41,7 @@ export class BenutzergruppeDaten extends JavaObject {
 		return ['de.svws_nrw.core.data.benutzer.BenutzergruppeDaten'].includes(name);
 	}
 
-	public static class = new Class<BenutzergruppeDaten>('de.svws_nrw.core.data.benutzer.BenutzergruppeDaten');
+	public static readonly class = new Class<BenutzergruppeDaten>('de.svws_nrw.core.data.benutzer.BenutzergruppeDaten');
 
 	public static transpilerFromJSON(json: string): BenutzergruppeDaten {
 		const obj = JSON.parse(json) as Partial<BenutzergruppeDaten>;

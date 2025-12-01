@@ -49,7 +49,7 @@ export class GostSchuelerklausurterminraumstunde extends JavaObject {
 		return ['de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurterminraumstunde'].includes(name);
 	}
 
-	public static class = new Class<GostSchuelerklausurterminraumstunde>('de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurterminraumstunde');
+	public static readonly class = new Class<GostSchuelerklausurterminraumstunde>('de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurterminraumstunde');
 
 	public static transpilerFromJSON(json: string): GostSchuelerklausurterminraumstunde {
 		const obj = JSON.parse(json) as Partial<GostSchuelerklausurterminraumstunde>;

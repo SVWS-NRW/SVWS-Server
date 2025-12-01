@@ -76,7 +76,7 @@ export class UvStundentafel extends JavaObject {
 		return ['de.svws_nrw.core.data.uv.UvStundentafel'].includes(name);
 	}
 
-	public static class = new Class<UvStundentafel>('de.svws_nrw.core.data.uv.UvStundentafel');
+	public static readonly class = new Class<UvStundentafel>('de.svws_nrw.core.data.uv.UvStundentafel');
 
 	public static transpilerFromJSON(json: string): UvStundentafel {
 		const obj = JSON.parse(json) as Partial<UvStundentafel>;

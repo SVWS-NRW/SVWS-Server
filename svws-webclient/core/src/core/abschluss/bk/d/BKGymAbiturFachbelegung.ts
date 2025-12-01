@@ -101,7 +101,7 @@ export class BKGymAbiturFachbelegung extends JavaObject {
 		return ['de.svws_nrw.core.abschluss.bk.d.BKGymAbiturFachbelegung'].includes(name);
 	}
 
-	public static class = new Class<BKGymAbiturFachbelegung>('de.svws_nrw.core.abschluss.bk.d.BKGymAbiturFachbelegung');
+	public static readonly class = new Class<BKGymAbiturFachbelegung>('de.svws_nrw.core.abschluss.bk.d.BKGymAbiturFachbelegung');
 
 	public static transpilerFromJSON(json: string): BKGymAbiturFachbelegung {
 		const obj = JSON.parse(json) as Partial<BKGymAbiturFachbelegung>;

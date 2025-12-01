@@ -67,7 +67,7 @@ export class BKAnlageA01Abschluss extends Service {
 		return ['de.svws_nrw.core.Service', 'de.svws_nrw.core.abschluss.bk.a.BKAnlageA01Abschluss'].includes(name);
 	}
 
-	public static class = new Class<BKAnlageA01Abschluss>('de.svws_nrw.core.abschluss.bk.a.BKAnlageA01Abschluss');
+	public static readonly class = new Class<BKAnlageA01Abschluss>('de.svws_nrw.core.abschluss.bk.a.BKAnlageA01Abschluss');
 
 }
 

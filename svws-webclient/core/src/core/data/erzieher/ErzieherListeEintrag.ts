@@ -54,7 +54,7 @@ export class ErzieherListeEintrag extends JavaObject {
 		return ['de.svws_nrw.core.data.erzieher.ErzieherListeEintrag'].includes(name);
 	}
 
-	public static class = new Class<ErzieherListeEintrag>('de.svws_nrw.core.data.erzieher.ErzieherListeEintrag');
+	public static readonly class = new Class<ErzieherListeEintrag>('de.svws_nrw.core.data.erzieher.ErzieherListeEintrag');
 
 	public static transpilerFromJSON(json: string): ErzieherListeEintrag {
 		const obj = JSON.parse(json) as Partial<ErzieherListeEintrag>;

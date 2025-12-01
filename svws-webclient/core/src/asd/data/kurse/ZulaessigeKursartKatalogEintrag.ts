@@ -45,7 +45,7 @@ export class ZulaessigeKursartKatalogEintrag extends CoreTypeDataNurSchulformenU
 		return ['de.svws_nrw.asd.data.CoreTypeDataNurSchulformenUndSchulgliederungen', 'de.svws_nrw.asd.data.CoreTypeData', 'de.svws_nrw.asd.data.kurse.ZulaessigeKursartKatalogEintrag'].includes(name);
 	}
 
-	public static class = new Class<ZulaessigeKursartKatalogEintrag>('de.svws_nrw.asd.data.kurse.ZulaessigeKursartKatalogEintrag');
+	public static readonly class = new Class<ZulaessigeKursartKatalogEintrag>('de.svws_nrw.asd.data.kurse.ZulaessigeKursartKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): ZulaessigeKursartKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<ZulaessigeKursartKatalogEintrag>;

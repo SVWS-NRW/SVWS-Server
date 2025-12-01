@@ -55,7 +55,7 @@ export class Einwilligungsschluessel extends CoreTypeSimple<Einwilligungsschlues
 		return ['de.svws_nrw.asd.types.schule.Einwilligungsschluessel', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'de.svws_nrw.asd.types.CoreTypeSimple'].includes(name);
 	}
 
-	public static class = new Class<Einwilligungsschluessel>('de.svws_nrw.asd.types.schule.Einwilligungsschluessel');
+	public static readonly class = new Class<Einwilligungsschluessel>('de.svws_nrw.asd.types.schule.Einwilligungsschluessel');
 
 }
 

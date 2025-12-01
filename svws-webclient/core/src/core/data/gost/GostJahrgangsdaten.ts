@@ -98,7 +98,7 @@ export class GostJahrgangsdaten extends JavaObject {
 		return ['de.svws_nrw.core.data.gost.GostJahrgangsdaten'].includes(name);
 	}
 
-	public static class = new Class<GostJahrgangsdaten>('de.svws_nrw.core.data.gost.GostJahrgangsdaten');
+	public static readonly class = new Class<GostJahrgangsdaten>('de.svws_nrw.core.data.gost.GostJahrgangsdaten');
 
 	public static transpilerFromJSON(json: string): GostJahrgangsdaten {
 		const obj = JSON.parse(json) as Partial<GostJahrgangsdaten>;

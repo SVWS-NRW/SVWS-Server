@@ -44,7 +44,7 @@ export class SchuldateiOrganisationseinheitEigenschaft extends SchuldateiEintrag
 		return ['de.svws_nrw.schulen.v1.data.SchuldateiEintrag', 'de.svws_nrw.schulen.v1.data.SchuldateiOrganisationseinheitEigenschaft'].includes(name);
 	}
 
-	public static class = new Class<SchuldateiOrganisationseinheitEigenschaft>('de.svws_nrw.schulen.v1.data.SchuldateiOrganisationseinheitEigenschaft');
+	public static readonly class = new Class<SchuldateiOrganisationseinheitEigenschaft>('de.svws_nrw.schulen.v1.data.SchuldateiOrganisationseinheitEigenschaft');
 
 	public static transpilerFromJSON(json: string): SchuldateiOrganisationseinheitEigenschaft {
 		const obj = JSON.parse(json) as Partial<SchuldateiOrganisationseinheitEigenschaft>;

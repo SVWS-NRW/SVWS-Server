@@ -209,7 +209,7 @@ export class Herkunftsschulnummern extends JavaEnum<Herkunftsschulnummern> {
 		return ['de.svws_nrw.core.types.schule.Herkunftsschulnummern', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<Herkunftsschulnummern>('de.svws_nrw.core.types.schule.Herkunftsschulnummern');
+	public static readonly class = new Class<Herkunftsschulnummern>('de.svws_nrw.core.types.schule.Herkunftsschulnummern');
 
 }
 

@@ -63,7 +63,7 @@ export class Floskel extends JavaObject {
 		return ['de.svws_nrw.core.data.schule.Floskel'].includes(name);
 	}
 
-	public static class = new Class<Floskel>('de.svws_nrw.core.data.schule.Floskel');
+	public static readonly class = new Class<Floskel>('de.svws_nrw.core.data.schule.Floskel');
 
 	public static transpilerFromJSON(json: string): Floskel {
 		const obj = JSON.parse(json) as Partial<Floskel>;

@@ -130,7 +130,7 @@ export class FachDaten extends JavaObject {
 		return ['de.svws_nrw.core.data.fach.FachDaten'].includes(name);
 	}
 
-	public static class = new Class<FachDaten>('de.svws_nrw.core.data.fach.FachDaten');
+	public static readonly class = new Class<FachDaten>('de.svws_nrw.core.data.fach.FachDaten');
 
 	public static transpilerFromJSON(json: string): FachDaten {
 		const obj = JSON.parse(json) as Partial<FachDaten>;

@@ -99,7 +99,7 @@ export class ErzieherStammdaten extends JavaObject {
 		return ['de.svws_nrw.core.data.erzieher.ErzieherStammdaten'].includes(name);
 	}
 
-	public static class = new Class<ErzieherStammdaten>('de.svws_nrw.core.data.erzieher.ErzieherStammdaten');
+	public static readonly class = new Class<ErzieherStammdaten>('de.svws_nrw.core.data.erzieher.ErzieherStammdaten');
 
 	public static transpilerFromJSON(json: string): ErzieherStammdaten {
 		const obj = JSON.parse(json) as Partial<ErzieherStammdaten>;

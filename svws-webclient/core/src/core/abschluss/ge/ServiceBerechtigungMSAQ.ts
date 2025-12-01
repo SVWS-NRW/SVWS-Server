@@ -291,7 +291,7 @@ export class ServiceBerechtigungMSAQ extends Service {
 		return ['de.svws_nrw.core.Service', 'de.svws_nrw.core.abschluss.ge.ServiceBerechtigungMSAQ'].includes(name);
 	}
 
-	public static class = new Class<ServiceBerechtigungMSAQ>('de.svws_nrw.core.abschluss.ge.ServiceBerechtigungMSAQ');
+	public static readonly class = new Class<ServiceBerechtigungMSAQ>('de.svws_nrw.core.abschluss.ge.ServiceBerechtigungMSAQ');
 
 }
 

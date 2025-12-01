@@ -212,7 +212,7 @@ export class StundenplanblockungRegelTyp extends JavaEnum<StundenplanblockungReg
 		return ['de.svws_nrw.core.data.stundenplanblockung.StundenplanblockungRegelTyp', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<StundenplanblockungRegelTyp>('de.svws_nrw.core.data.stundenplanblockung.StundenplanblockungRegelTyp');
+	public static readonly class = new Class<StundenplanblockungRegelTyp>('de.svws_nrw.core.data.stundenplanblockung.StundenplanblockungRegelTyp');
 
 }
 

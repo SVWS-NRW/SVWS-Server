@@ -44,7 +44,7 @@ export class Fahrschuelerart extends JavaObject {
 		return ['de.svws_nrw.core.data.schule.Fahrschuelerart'].includes(name);
 	}
 
-	public static class = new Class<Fahrschuelerart>('de.svws_nrw.core.data.schule.Fahrschuelerart');
+	public static readonly class = new Class<Fahrschuelerart>('de.svws_nrw.core.data.schule.Fahrschuelerart');
 
 	public static transpilerFromJSON(json: string): Fahrschuelerart {
 		const obj = JSON.parse(json) as Partial<Fahrschuelerart>;

@@ -39,7 +39,7 @@ export class LehrerPersonalabschnittsdatenAnrechnungsstunden extends JavaObject 
 		return ['de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdatenAnrechnungsstunden'].includes(name);
 	}
 
-	public static class = new Class<LehrerPersonalabschnittsdatenAnrechnungsstunden>('de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdatenAnrechnungsstunden');
+	public static readonly class = new Class<LehrerPersonalabschnittsdatenAnrechnungsstunden>('de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdatenAnrechnungsstunden');
 
 	public static transpilerFromJSON(json: string): LehrerPersonalabschnittsdatenAnrechnungsstunden {
 		const obj = JSON.parse(json) as Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>;

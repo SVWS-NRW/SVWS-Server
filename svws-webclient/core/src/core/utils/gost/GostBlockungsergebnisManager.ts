@@ -5753,7 +5753,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		return ['de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager'].includes(name);
 	}
 
-	public static class = new Class<GostBlockungsergebnisManager>('de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager');
+	public static readonly class = new Class<GostBlockungsergebnisManager>('de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager');
 
 }
 

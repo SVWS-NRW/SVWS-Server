@@ -64,7 +64,7 @@ export class AVLMapSubCollectionIterator<K, V> extends JavaObject implements Jav
 		return ['java.util.Iterator', 'de.svws_nrw.core.adt.map.AVLMapSubCollectionIterator'].includes(name);
 	}
 
-	public static class = new Class<AVLMapSubCollectionIterator<any, any>>('de.svws_nrw.core.adt.map.AVLMapSubCollectionIterator');
+	public static readonly class = new Class<AVLMapSubCollectionIterator<any, any>>('de.svws_nrw.core.adt.map.AVLMapSubCollectionIterator');
 
 }
 

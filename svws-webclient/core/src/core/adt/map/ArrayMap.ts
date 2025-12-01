@@ -263,7 +263,7 @@ export class ArrayMap<K, V> extends JavaObject implements JavaMap<K, V> {
 		return ['java.util.Map', 'de.svws_nrw.core.adt.map.ArrayMap'].includes(name);
 	}
 
-	public static class = new Class<ArrayMap<any, any>>('de.svws_nrw.core.adt.map.ArrayMap');
+	public static readonly class = new Class<ArrayMap<any, any>>('de.svws_nrw.core.adt.map.ArrayMap');
 
 	public computeIfAbsent(key: K, mappingFunction: JavaFunction<K, V> ): V | null {
 		const v: V | null = this.get(key);

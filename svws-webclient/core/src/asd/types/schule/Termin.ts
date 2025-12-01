@@ -134,7 +134,7 @@ export class Termin extends JavaEnum<Termin> implements CoreType<TerminKatalogEi
 		return ['de.svws_nrw.asd.types.schule.Termin', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<Termin>('de.svws_nrw.asd.types.schule.Termin');
+	public static readonly class = new Class<Termin>('de.svws_nrw.asd.types.schule.Termin');
 
 }
 

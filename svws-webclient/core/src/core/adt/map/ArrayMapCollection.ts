@@ -109,7 +109,7 @@ export class ArrayMapCollection<K, V> extends JavaObject implements Collection<V
 		return ['de.svws_nrw.core.adt.map.ArrayMapCollection', 'java.util.Collection', 'java.lang.Iterable'].includes(name);
 	}
 
-	public static class = new Class<ArrayMapCollection<any, any>>('de.svws_nrw.core.adt.map.ArrayMapCollection');
+	public static readonly class = new Class<ArrayMapCollection<any, any>>('de.svws_nrw.core.adt.map.ArrayMapCollection');
 
 	public [Symbol.iterator](): Iterator<V> {
 		const iter: JavaIterator<V> = this.iterator();

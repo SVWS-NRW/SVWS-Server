@@ -62,7 +62,7 @@ export class AVLMapIntervall<K> extends JavaObject {
 		return ['de.svws_nrw.core.adt.map.AVLMapIntervall'].includes(name);
 	}
 
-	public static class = new Class<AVLMapIntervall<any>>('de.svws_nrw.core.adt.map.AVLMapIntervall');
+	public static readonly class = new Class<AVLMapIntervall<any>>('de.svws_nrw.core.adt.map.AVLMapIntervall');
 
 }
 

@@ -34,7 +34,7 @@ export class ValidatorSss00SchuleStammdatenSchulform extends Validator {
 		return ['de.svws_nrw.asd.validate.BasicValidator', 'de.svws_nrw.asd.validate.schule.ValidatorSss00SchuleStammdatenSchulform', 'de.svws_nrw.asd.validate.Validator'].includes(name);
 	}
 
-	public static class = new Class<ValidatorSss00SchuleStammdatenSchulform>('de.svws_nrw.asd.validate.schule.ValidatorSss00SchuleStammdatenSchulform');
+	public static readonly class = new Class<ValidatorSss00SchuleStammdatenSchulform>('de.svws_nrw.asd.validate.schule.ValidatorSss00SchuleStammdatenSchulform');
 
 }
 

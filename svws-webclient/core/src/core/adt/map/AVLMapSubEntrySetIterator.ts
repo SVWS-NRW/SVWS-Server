@@ -64,7 +64,7 @@ export class AVLMapSubEntrySetIterator<K, V> extends JavaObject implements JavaI
 		return ['java.util.Iterator', 'de.svws_nrw.core.adt.map.AVLMapSubEntrySetIterator'].includes(name);
 	}
 
-	public static class = new Class<AVLMapSubEntrySetIterator<any, any>>('de.svws_nrw.core.adt.map.AVLMapSubEntrySetIterator');
+	public static readonly class = new Class<AVLMapSubEntrySetIterator<any, any>>('de.svws_nrw.core.adt.map.AVLMapSubEntrySetIterator');
 
 }
 

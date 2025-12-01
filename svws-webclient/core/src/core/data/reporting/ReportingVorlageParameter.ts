@@ -35,7 +35,7 @@ export class ReportingVorlageParameter extends JavaObject {
 		return ['de.svws_nrw.core.data.reporting.ReportingVorlageParameter'].includes(name);
 	}
 
-	public static class = new Class<ReportingVorlageParameter>('de.svws_nrw.core.data.reporting.ReportingVorlageParameter');
+	public static readonly class = new Class<ReportingVorlageParameter>('de.svws_nrw.core.data.reporting.ReportingVorlageParameter');
 
 	public static transpilerFromJSON(json: string): ReportingVorlageParameter {
 		const obj = JSON.parse(json) as Partial<ReportingVorlageParameter>;

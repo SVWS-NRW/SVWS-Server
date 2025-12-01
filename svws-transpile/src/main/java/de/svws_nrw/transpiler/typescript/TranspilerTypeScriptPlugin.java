@@ -1923,7 +1923,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			transpiler.getTranspilerUnit(node).imports.put("Class", "java.lang");
 			final String typeParams = (node.getTypeParameters() == null) || (node.getTypeParameters().isEmpty())
 					? "" : node.getTypeParameters().stream().map(tp -> "any").collect(Collectors.joining(", ", "<", ">"));
-			return getIndent() + "public static class = new Class<" + te.getSimpleName() + typeParams + ">('" + te.getQualifiedName() + "');"
+			return getIndent() + "public static readonly class = new Class<" + te.getSimpleName() + typeParams + ">('" + te.getQualifiedName() + "');"
 					+ System.lineSeparator();
 		}
 		throw new TranspilerException("Transpiler Error: Type Element expected.");

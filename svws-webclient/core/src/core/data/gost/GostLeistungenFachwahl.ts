@@ -43,7 +43,7 @@ export class GostLeistungenFachwahl extends JavaObject {
 		return ['de.svws_nrw.core.data.gost.GostLeistungenFachwahl'].includes(name);
 	}
 
-	public static class = new Class<GostLeistungenFachwahl>('de.svws_nrw.core.data.gost.GostLeistungenFachwahl');
+	public static readonly class = new Class<GostLeistungenFachwahl>('de.svws_nrw.core.data.gost.GostLeistungenFachwahl');
 
 	public static transpilerFromJSON(json: string): GostLeistungenFachwahl {
 		const obj = JSON.parse(json) as Partial<GostLeistungenFachwahl>;

@@ -76,7 +76,7 @@ export class Fachkombinationen extends GostBelegpruefung {
 		return ['de.svws_nrw.core.abschluss.gost.belegpruefung.Fachkombinationen', 'de.svws_nrw.core.abschluss.gost.GostBelegpruefung'].includes(name);
 	}
 
-	public static class = new Class<Fachkombinationen>('de.svws_nrw.core.abschluss.gost.belegpruefung.Fachkombinationen');
+	public static readonly class = new Class<Fachkombinationen>('de.svws_nrw.core.abschluss.gost.belegpruefung.Fachkombinationen');
 
 }
 

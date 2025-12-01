@@ -129,7 +129,7 @@ export class GostFach extends JavaObject {
 		return ['de.svws_nrw.core.data.gost.GostFach'].includes(name);
 	}
 
-	public static class = new Class<GostFach>('de.svws_nrw.core.data.gost.GostFach');
+	public static readonly class = new Class<GostFach>('de.svws_nrw.core.data.gost.GostFach');
 
 	public static transpilerFromJSON(json: string): GostFach {
 		const obj = JSON.parse(json) as Partial<GostFach>;

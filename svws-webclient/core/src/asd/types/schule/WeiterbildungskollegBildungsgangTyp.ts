@@ -98,7 +98,7 @@ export class WeiterbildungskollegBildungsgangTyp extends JavaEnum<Weiterbildungs
 		return ['de.svws_nrw.asd.types.schule.WeiterbildungskollegBildungsgangTyp', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<WeiterbildungskollegBildungsgangTyp>('de.svws_nrw.asd.types.schule.WeiterbildungskollegBildungsgangTyp');
+	public static readonly class = new Class<WeiterbildungskollegBildungsgangTyp>('de.svws_nrw.asd.types.schule.WeiterbildungskollegBildungsgangTyp');
 
 }
 

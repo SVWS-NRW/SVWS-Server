@@ -100,7 +100,7 @@ export class LinkedCollectionElement<E> extends JavaObject {
 		return ['de.svws_nrw.core.adt.collection.LinkedCollectionElement'].includes(name);
 	}
 
-	public static class = new Class<LinkedCollectionElement<any>>('de.svws_nrw.core.adt.collection.LinkedCollectionElement');
+	public static readonly class = new Class<LinkedCollectionElement<any>>('de.svws_nrw.core.adt.collection.LinkedCollectionElement');
 
 }
 

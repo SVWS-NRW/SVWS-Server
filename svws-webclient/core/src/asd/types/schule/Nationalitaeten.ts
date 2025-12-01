@@ -167,7 +167,7 @@ export class Nationalitaeten extends CoreTypeSimple<NationalitaetenKatalogEintra
 		return ['de.svws_nrw.asd.types.schule.Nationalitaeten', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'de.svws_nrw.asd.types.CoreTypeSimple'].includes(name);
 	}
 
-	public static class = new Class<Nationalitaeten>('de.svws_nrw.asd.types.schule.Nationalitaeten');
+	public static readonly class = new Class<Nationalitaeten>('de.svws_nrw.asd.types.schule.Nationalitaeten');
 
 }
 

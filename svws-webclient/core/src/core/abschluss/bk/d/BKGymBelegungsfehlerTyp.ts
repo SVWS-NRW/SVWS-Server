@@ -221,7 +221,7 @@ export class BKGymBelegungsfehlerTyp extends JavaEnum<BKGymBelegungsfehlerTyp> {
 		return ['de.svws_nrw.core.abschluss.bk.d.BKGymBelegungsfehlerTyp', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<BKGymBelegungsfehlerTyp>('de.svws_nrw.core.abschluss.bk.d.BKGymBelegungsfehlerTyp');
+	public static readonly class = new Class<BKGymBelegungsfehlerTyp>('de.svws_nrw.core.abschluss.bk.d.BKGymBelegungsfehlerTyp');
 
 }
 

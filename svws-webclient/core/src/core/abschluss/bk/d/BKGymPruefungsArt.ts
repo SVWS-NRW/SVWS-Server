@@ -104,7 +104,7 @@ export class BKGymPruefungsArt extends JavaEnum<BKGymPruefungsArt> {
 		return ['de.svws_nrw.core.abschluss.bk.d.BKGymPruefungsArt', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<BKGymPruefungsArt>('de.svws_nrw.core.abschluss.bk.d.BKGymPruefungsArt');
+	public static readonly class = new Class<BKGymPruefungsArt>('de.svws_nrw.core.abschluss.bk.d.BKGymPruefungsArt');
 
 }
 

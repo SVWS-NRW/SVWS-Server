@@ -88,7 +88,7 @@ export class KursblockungAlgorithmusSMatchingW extends KursblockungAlgorithmusS 
 		return ['de.svws_nrw.core.kursblockung.KursblockungAlgorithmusS', 'de.svws_nrw.core.kursblockung.KursblockungAlgorithmusSMatchingW'].includes(name);
 	}
 
-	public static class = new Class<KursblockungAlgorithmusSMatchingW>('de.svws_nrw.core.kursblockung.KursblockungAlgorithmusSMatchingW');
+	public static readonly class = new Class<KursblockungAlgorithmusSMatchingW>('de.svws_nrw.core.kursblockung.KursblockungAlgorithmusSMatchingW');
 
 }
 

@@ -76,7 +76,7 @@ export class Abi30BelegpruefungFachkombinationen extends GostBelegpruefung {
 		return ['de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungFachkombinationen', 'de.svws_nrw.core.abschluss.gost.GostBelegpruefung'].includes(name);
 	}
 
-	public static class = new Class<Abi30BelegpruefungFachkombinationen>('de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungFachkombinationen');
+	public static readonly class = new Class<Abi30BelegpruefungFachkombinationen>('de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungFachkombinationen');
 
 }
 

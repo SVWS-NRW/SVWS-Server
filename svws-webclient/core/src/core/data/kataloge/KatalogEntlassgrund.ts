@@ -44,7 +44,7 @@ export class KatalogEntlassgrund extends JavaObject {
 		return ['de.svws_nrw.core.data.kataloge.KatalogEntlassgrund'].includes(name);
 	}
 
-	public static class = new Class<KatalogEntlassgrund>('de.svws_nrw.core.data.kataloge.KatalogEntlassgrund');
+	public static readonly class = new Class<KatalogEntlassgrund>('de.svws_nrw.core.data.kataloge.KatalogEntlassgrund');
 
 	public static transpilerFromJSON(json: string): KatalogEntlassgrund {
 		const obj = JSON.parse(json) as Partial<KatalogEntlassgrund>;

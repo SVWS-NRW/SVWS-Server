@@ -616,7 +616,7 @@ export class SprachendatenUtils extends JavaObject {
 		return ['de.svws_nrw.core.utils.schueler.SprachendatenUtils'].includes(name);
 	}
 
-	public static class = new Class<SprachendatenUtils>('de.svws_nrw.core.utils.schueler.SprachendatenUtils');
+	public static readonly class = new Class<SprachendatenUtils>('de.svws_nrw.core.utils.schueler.SprachendatenUtils');
 
 }
 

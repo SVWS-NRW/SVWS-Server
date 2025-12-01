@@ -554,7 +554,7 @@ export class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBelegpruef
 		return ['de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungKurszahlenUndWochenstunden', 'de.svws_nrw.core.abschluss.gost.GostBelegpruefung'].includes(name);
 	}
 
-	public static class = new Class<Abi30BelegpruefungKurszahlenUndWochenstunden>('de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungKurszahlenUndWochenstunden');
+	public static readonly class = new Class<Abi30BelegpruefungKurszahlenUndWochenstunden>('de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungKurszahlenUndWochenstunden');
 
 }
 

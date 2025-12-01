@@ -692,7 +692,7 @@ export class BKGymAbiturdatenManager extends JavaObject {
 		return ['de.svws_nrw.core.abschluss.bk.d.BKGymAbiturdatenManager'].includes(name);
 	}
 
-	public static class = new Class<BKGymAbiturdatenManager>('de.svws_nrw.core.abschluss.bk.d.BKGymAbiturdatenManager');
+	public static readonly class = new Class<BKGymAbiturdatenManager>('de.svws_nrw.core.abschluss.bk.d.BKGymAbiturdatenManager');
 
 }
 

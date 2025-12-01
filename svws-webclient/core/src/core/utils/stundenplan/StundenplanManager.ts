@@ -7951,7 +7951,7 @@ export class StundenplanManager extends JavaObject {
 		return ['de.svws_nrw.core.utils.stundenplan.StundenplanManager'].includes(name);
 	}
 
-	public static class = new Class<StundenplanManager>('de.svws_nrw.core.utils.stundenplan.StundenplanManager');
+	public static readonly class = new Class<StundenplanManager>('de.svws_nrw.core.utils.stundenplan.StundenplanManager');
 
 }
 

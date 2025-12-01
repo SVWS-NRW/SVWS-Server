@@ -54,7 +54,7 @@ export class BenutzerListeEintrag extends JavaObject {
 		return ['de.svws_nrw.core.data.benutzer.BenutzerListeEintrag'].includes(name);
 	}
 
-	public static class = new Class<BenutzerListeEintrag>('de.svws_nrw.core.data.benutzer.BenutzerListeEintrag');
+	public static readonly class = new Class<BenutzerListeEintrag>('de.svws_nrw.core.data.benutzer.BenutzerListeEintrag');
 
 	public static transpilerFromJSON(json: string): BenutzerListeEintrag {
 		const obj = JSON.parse(json) as Partial<BenutzerListeEintrag>;

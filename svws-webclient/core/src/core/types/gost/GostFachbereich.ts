@@ -388,7 +388,7 @@ export class GostFachbereich extends JavaEnum<GostFachbereich> {
 		return ['de.svws_nrw.core.types.gost.GostFachbereich', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<GostFachbereich>('de.svws_nrw.core.types.gost.GostFachbereich');
+	public static readonly class = new Class<GostFachbereich>('de.svws_nrw.core.types.gost.GostFachbereich');
 
 }
 

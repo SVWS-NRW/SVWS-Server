@@ -79,7 +79,7 @@ export class LongPair extends JavaObject {
 		return ['de.svws_nrw.core.data.uv.LongPair'].includes(name);
 	}
 
-	public static class = new Class<LongPair>('de.svws_nrw.core.data.uv.LongPair');
+	public static readonly class = new Class<LongPair>('de.svws_nrw.core.data.uv.LongPair');
 
 	public static transpilerFromJSON(json: string): LongPair {
 		const obj = JSON.parse(json) as Partial<LongPair>;

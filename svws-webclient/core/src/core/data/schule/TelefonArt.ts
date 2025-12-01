@@ -41,7 +41,7 @@ export class TelefonArt extends JavaObject {
 		return ['de.svws_nrw.core.data.schule.TelefonArt'].includes(name);
 	}
 
-	public static class = new Class<TelefonArt>('de.svws_nrw.core.data.schule.TelefonArt');
+	public static readonly class = new Class<TelefonArt>('de.svws_nrw.core.data.schule.TelefonArt');
 
 	public static transpilerFromJSON(json: string): TelefonArt {
 		const obj = JSON.parse(json) as Partial<TelefonArt>;

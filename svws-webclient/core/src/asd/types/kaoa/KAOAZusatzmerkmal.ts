@@ -724,7 +724,7 @@ export class KAOAZusatzmerkmal extends JavaEnum<KAOAZusatzmerkmal> implements Co
 		return ['de.svws_nrw.asd.types.kaoa.KAOAZusatzmerkmal', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<KAOAZusatzmerkmal>('de.svws_nrw.asd.types.kaoa.KAOAZusatzmerkmal');
+	public static readonly class = new Class<KAOAZusatzmerkmal>('de.svws_nrw.asd.types.kaoa.KAOAZusatzmerkmal');
 
 }
 

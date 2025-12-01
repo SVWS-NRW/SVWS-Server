@@ -28,7 +28,7 @@ export class LongAndStringLists extends JavaObject {
 		return ['de.svws_nrw.core.data.LongAndStringLists'].includes(name);
 	}
 
-	public static class = new Class<LongAndStringLists>('de.svws_nrw.core.data.LongAndStringLists');
+	public static readonly class = new Class<LongAndStringLists>('de.svws_nrw.core.data.LongAndStringLists');
 
 	public static transpilerFromJSON(json: string): LongAndStringLists {
 		const obj = JSON.parse(json) as Partial<LongAndStringLists>;

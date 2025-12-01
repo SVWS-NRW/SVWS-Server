@@ -36,7 +36,7 @@ export class BKAnlageAFaecher extends JavaObject {
 		return ['de.svws_nrw.core.abschluss.bk.a.BKAnlageAFaecher'].includes(name);
 	}
 
-	public static class = new Class<BKAnlageAFaecher>('de.svws_nrw.core.abschluss.bk.a.BKAnlageAFaecher');
+	public static readonly class = new Class<BKAnlageAFaecher>('de.svws_nrw.core.abschluss.bk.a.BKAnlageAFaecher');
 
 }
 

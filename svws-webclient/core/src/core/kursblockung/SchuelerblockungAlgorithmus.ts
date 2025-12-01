@@ -43,7 +43,7 @@ export class SchuelerblockungAlgorithmus extends Service {
 		return ['de.svws_nrw.core.Service', 'de.svws_nrw.core.kursblockung.SchuelerblockungAlgorithmus'].includes(name);
 	}
 
-	public static class = new Class<SchuelerblockungAlgorithmus>('de.svws_nrw.core.kursblockung.SchuelerblockungAlgorithmus');
+	public static readonly class = new Class<SchuelerblockungAlgorithmus>('de.svws_nrw.core.kursblockung.SchuelerblockungAlgorithmus');
 
 }
 

@@ -183,7 +183,7 @@ export class ServiceAbschlussHA9 extends Service {
 		return ['de.svws_nrw.core.abschluss.ge.ServiceAbschlussHA9', 'de.svws_nrw.core.Service'].includes(name);
 	}
 
-	public static class = new Class<ServiceAbschlussHA9>('de.svws_nrw.core.abschluss.ge.ServiceAbschlussHA9');
+	public static readonly class = new Class<ServiceAbschlussHA9>('de.svws_nrw.core.abschluss.ge.ServiceAbschlussHA9');
 
 }
 

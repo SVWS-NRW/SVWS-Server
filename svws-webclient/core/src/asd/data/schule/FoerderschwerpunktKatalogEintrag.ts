@@ -19,7 +19,7 @@ export class FoerderschwerpunktKatalogEintrag extends CoreTypeDataNurSchulformen
 		return ['de.svws_nrw.asd.data.CoreTypeData', 'de.svws_nrw.asd.data.schule.FoerderschwerpunktKatalogEintrag', 'de.svws_nrw.asd.data.CoreTypeDataNurSchulformen'].includes(name);
 	}
 
-	public static class = new Class<FoerderschwerpunktKatalogEintrag>('de.svws_nrw.asd.data.schule.FoerderschwerpunktKatalogEintrag');
+	public static readonly class = new Class<FoerderschwerpunktKatalogEintrag>('de.svws_nrw.asd.data.schule.FoerderschwerpunktKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): FoerderschwerpunktKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<FoerderschwerpunktKatalogEintrag>;

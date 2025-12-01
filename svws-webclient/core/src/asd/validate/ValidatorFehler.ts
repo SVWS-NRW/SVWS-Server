@@ -129,7 +129,7 @@ export class ValidatorFehler extends JavaObject {
 		return ['de.svws_nrw.asd.validate.ValidatorFehler'].includes(name);
 	}
 
-	public static class = new Class<ValidatorFehler>('de.svws_nrw.asd.validate.ValidatorFehler');
+	public static readonly class = new Class<ValidatorFehler>('de.svws_nrw.asd.validate.ValidatorFehler');
 
 }
 

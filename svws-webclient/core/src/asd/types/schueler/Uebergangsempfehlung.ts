@@ -113,7 +113,7 @@ export class Uebergangsempfehlung extends JavaEnum<Uebergangsempfehlung> impleme
 		return ['de.svws_nrw.asd.types.schueler.Uebergangsempfehlung', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<Uebergangsempfehlung>('de.svws_nrw.asd.types.schueler.Uebergangsempfehlung');
+	public static readonly class = new Class<Uebergangsempfehlung>('de.svws_nrw.asd.types.schueler.Uebergangsempfehlung');
 
 }
 

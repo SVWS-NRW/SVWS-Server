@@ -219,7 +219,7 @@ export class BeruflichesGymnasiumPruefungsordnungAnlage extends JavaEnum<Berufli
 		return ['de.svws_nrw.asd.types.schule.BeruflichesGymnasiumPruefungsordnungAnlage', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<BeruflichesGymnasiumPruefungsordnungAnlage>('de.svws_nrw.asd.types.schule.BeruflichesGymnasiumPruefungsordnungAnlage');
+	public static readonly class = new Class<BeruflichesGymnasiumPruefungsordnungAnlage>('de.svws_nrw.asd.types.schule.BeruflichesGymnasiumPruefungsordnungAnlage');
 
 }
 

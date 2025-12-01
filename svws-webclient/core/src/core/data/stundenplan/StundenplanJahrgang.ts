@@ -34,7 +34,7 @@ export class StundenplanJahrgang extends JavaObject {
 		return ['de.svws_nrw.core.data.stundenplan.StundenplanJahrgang'].includes(name);
 	}
 
-	public static class = new Class<StundenplanJahrgang>('de.svws_nrw.core.data.stundenplan.StundenplanJahrgang');
+	public static readonly class = new Class<StundenplanJahrgang>('de.svws_nrw.core.data.stundenplan.StundenplanJahrgang');
 
 	public static transpilerFromJSON(json: string): StundenplanJahrgang {
 		const obj = JSON.parse(json) as Partial<StundenplanJahrgang>;

@@ -66,7 +66,7 @@ export class BKGymBelegungsfehler extends JavaObject {
 		return ['de.svws_nrw.core.abschluss.bk.d.BKGymBelegungsfehler'].includes(name);
 	}
 
-	public static class = new Class<BKGymBelegungsfehler>('de.svws_nrw.core.abschluss.bk.d.BKGymBelegungsfehler');
+	public static readonly class = new Class<BKGymBelegungsfehler>('de.svws_nrw.core.abschluss.bk.d.BKGymBelegungsfehler');
 
 }
 

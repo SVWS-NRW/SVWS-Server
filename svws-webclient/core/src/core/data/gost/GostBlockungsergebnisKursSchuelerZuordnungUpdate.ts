@@ -38,7 +38,7 @@ export class GostBlockungsergebnisKursSchuelerZuordnungUpdate extends JavaObject
 		return ['de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchuelerZuordnungUpdate'].includes(name);
 	}
 
-	public static class = new Class<GostBlockungsergebnisKursSchuelerZuordnungUpdate>('de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchuelerZuordnungUpdate');
+	public static readonly class = new Class<GostBlockungsergebnisKursSchuelerZuordnungUpdate>('de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchuelerZuordnungUpdate');
 
 	public static transpilerFromJSON(json: string): GostBlockungsergebnisKursSchuelerZuordnungUpdate {
 		const obj = JSON.parse(json) as Partial<GostBlockungsergebnisKursSchuelerZuordnungUpdate>;

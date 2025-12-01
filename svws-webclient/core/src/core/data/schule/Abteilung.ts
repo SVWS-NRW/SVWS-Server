@@ -67,7 +67,7 @@ export class Abteilung extends JavaObject {
 		return ['de.svws_nrw.core.data.schule.Abteilung'].includes(name);
 	}
 
-	public static class = new Class<Abteilung>('de.svws_nrw.core.data.schule.Abteilung');
+	public static readonly class = new Class<Abteilung>('de.svws_nrw.core.data.schule.Abteilung');
 
 	public static transpilerFromJSON(json: string): Abteilung {
 		const obj = JSON.parse(json) as Partial<Abteilung>;

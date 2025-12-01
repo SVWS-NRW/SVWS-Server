@@ -104,7 +104,7 @@ export class SchulEintrag extends JavaObject {
 		return ['de.svws_nrw.core.data.kataloge.SchulEintrag'].includes(name);
 	}
 
-	public static class = new Class<SchulEintrag>('de.svws_nrw.core.data.kataloge.SchulEintrag');
+	public static readonly class = new Class<SchulEintrag>('de.svws_nrw.core.data.kataloge.SchulEintrag');
 
 	public static transpilerFromJSON(json: string): SchulEintrag {
 		const obj = JSON.parse(json) as Partial<SchulEintrag>;

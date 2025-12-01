@@ -55,7 +55,7 @@ export class HerkunftSchulform extends CoreTypeSimple<HerkunftSchulformKatalogEi
 		return ['de.svws_nrw.asd.types.schueler.HerkunftSchulform', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'de.svws_nrw.asd.types.CoreTypeSimple'].includes(name);
 	}
 
-	public static class = new Class<HerkunftSchulform>('de.svws_nrw.asd.types.schueler.HerkunftSchulform');
+	public static readonly class = new Class<HerkunftSchulform>('de.svws_nrw.asd.types.schueler.HerkunftSchulform');
 
 }
 

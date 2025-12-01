@@ -69,7 +69,7 @@ export class KursblockungAlgorithmusPermanentKFachgruppe extends KursblockungAlg
 		return ['de.svws_nrw.core.kursblockung.KursblockungAlgorithmusPermanentK', 'de.svws_nrw.core.kursblockung.KursblockungAlgorithmusPermanentKFachgruppe'].includes(name);
 	}
 
-	public static class = new Class<KursblockungAlgorithmusPermanentKFachgruppe>('de.svws_nrw.core.kursblockung.KursblockungAlgorithmusPermanentKFachgruppe');
+	public static readonly class = new Class<KursblockungAlgorithmusPermanentKFachgruppe>('de.svws_nrw.core.kursblockung.KursblockungAlgorithmusPermanentKFachgruppe');
 
 }
 

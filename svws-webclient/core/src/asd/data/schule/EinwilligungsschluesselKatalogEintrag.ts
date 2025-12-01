@@ -19,7 +19,7 @@ export class EinwilligungsschluesselKatalogEintrag extends CoreTypeData {
 		return ['de.svws_nrw.asd.data.CoreTypeData', 'de.svws_nrw.asd.data.schule.EinwilligungsschluesselKatalogEintrag'].includes(name);
 	}
 
-	public static class = new Class<EinwilligungsschluesselKatalogEintrag>('de.svws_nrw.asd.data.schule.EinwilligungsschluesselKatalogEintrag');
+	public static readonly class = new Class<EinwilligungsschluesselKatalogEintrag>('de.svws_nrw.asd.data.schule.EinwilligungsschluesselKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): EinwilligungsschluesselKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<EinwilligungsschluesselKatalogEintrag>;

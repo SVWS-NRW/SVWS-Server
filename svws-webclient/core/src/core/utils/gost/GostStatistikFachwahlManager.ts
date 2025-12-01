@@ -40,7 +40,7 @@ export class GostStatistikFachwahlManager extends JavaObject {
 		return ['de.svws_nrw.core.utils.gost.GostStatistikFachwahlManager'].includes(name);
 	}
 
-	public static class = new Class<GostStatistikFachwahlManager>('de.svws_nrw.core.utils.gost.GostStatistikFachwahlManager');
+	public static readonly class = new Class<GostStatistikFachwahlManager>('de.svws_nrw.core.utils.gost.GostStatistikFachwahlManager');
 
 }
 

@@ -97,7 +97,7 @@ export class GostAbiturjahrUtils extends JavaObject {
 		return ['de.svws_nrw.core.utils.gost.GostAbiturjahrUtils'].includes(name);
 	}
 
-	public static class = new Class<GostAbiturjahrUtils>('de.svws_nrw.core.utils.gost.GostAbiturjahrUtils');
+	public static readonly class = new Class<GostAbiturjahrUtils>('de.svws_nrw.core.utils.gost.GostAbiturjahrUtils');
 
 }
 

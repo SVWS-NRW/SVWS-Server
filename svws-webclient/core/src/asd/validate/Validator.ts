@@ -128,7 +128,7 @@ export abstract class Validator extends BasicValidator {
 		return ['de.svws_nrw.asd.validate.BasicValidator', 'de.svws_nrw.asd.validate.Validator'].includes(name);
 	}
 
-	public static class = new Class<Validator>('de.svws_nrw.asd.validate.Validator');
+	public static readonly class = new Class<Validator>('de.svws_nrw.asd.validate.Validator');
 
 }
 

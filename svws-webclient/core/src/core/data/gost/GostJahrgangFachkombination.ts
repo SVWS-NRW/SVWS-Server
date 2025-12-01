@@ -64,7 +64,7 @@ export class GostJahrgangFachkombination extends JavaObject {
 		return ['de.svws_nrw.core.data.gost.GostJahrgangFachkombination'].includes(name);
 	}
 
-	public static class = new Class<GostJahrgangFachkombination>('de.svws_nrw.core.data.gost.GostJahrgangFachkombination');
+	public static readonly class = new Class<GostJahrgangFachkombination>('de.svws_nrw.core.data.gost.GostJahrgangFachkombination');
 
 	public static transpilerFromJSON(json: string): GostJahrgangFachkombination {
 		const obj = JSON.parse(json) as Partial<GostJahrgangFachkombination>;

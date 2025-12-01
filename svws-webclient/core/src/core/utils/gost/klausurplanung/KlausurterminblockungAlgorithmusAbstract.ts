@@ -44,7 +44,7 @@ export abstract class KlausurterminblockungAlgorithmusAbstract extends JavaObjec
 		return ['de.svws_nrw.core.utils.gost.klausurplanung.KlausurterminblockungAlgorithmusAbstract'].includes(name);
 	}
 
-	public static class = new Class<KlausurterminblockungAlgorithmusAbstract>('de.svws_nrw.core.utils.gost.klausurplanung.KlausurterminblockungAlgorithmusAbstract');
+	public static readonly class = new Class<KlausurterminblockungAlgorithmusAbstract>('de.svws_nrw.core.utils.gost.klausurplanung.KlausurterminblockungAlgorithmusAbstract');
 
 }
 

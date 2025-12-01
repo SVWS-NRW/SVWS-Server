@@ -445,7 +445,7 @@ export class KursblockungDynFachart extends JavaObject {
 		return ['de.svws_nrw.core.kursblockung.KursblockungDynFachart'].includes(name);
 	}
 
-	public static class = new Class<KursblockungDynFachart>('de.svws_nrw.core.kursblockung.KursblockungDynFachart');
+	public static readonly class = new Class<KursblockungDynFachart>('de.svws_nrw.core.kursblockung.KursblockungDynFachart');
 
 }
 

@@ -49,7 +49,7 @@ export class Erzieherart extends JavaObject {
 		return ['de.svws_nrw.core.data.erzieher.Erzieherart'].includes(name);
 	}
 
-	public static class = new Class<Erzieherart>('de.svws_nrw.core.data.erzieher.Erzieherart');
+	public static readonly class = new Class<Erzieherart>('de.svws_nrw.core.data.erzieher.Erzieherart');
 
 	public static transpilerFromJSON(json: string): Erzieherart {
 		const obj = JSON.parse(json) as Partial<Erzieherart>;

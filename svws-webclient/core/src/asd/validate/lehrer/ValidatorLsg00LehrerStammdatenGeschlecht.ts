@@ -42,7 +42,7 @@ export class ValidatorLsg00LehrerStammdatenGeschlecht extends Validator {
 		return ['de.svws_nrw.asd.validate.BasicValidator', 'de.svws_nrw.asd.validate.lehrer.ValidatorLsg00LehrerStammdatenGeschlecht', 'de.svws_nrw.asd.validate.Validator'].includes(name);
 	}
 
-	public static class = new Class<ValidatorLsg00LehrerStammdatenGeschlecht>('de.svws_nrw.asd.validate.lehrer.ValidatorLsg00LehrerStammdatenGeschlecht');
+	public static readonly class = new Class<ValidatorLsg00LehrerStammdatenGeschlecht>('de.svws_nrw.asd.validate.lehrer.ValidatorLsg00LehrerStammdatenGeschlecht');
 
 }
 

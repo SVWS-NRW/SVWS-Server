@@ -29,7 +29,7 @@ export class SchulformSchulgliederung extends JavaObject {
 		return ['de.svws_nrw.asd.data.schule.SchulformSchulgliederung'].includes(name);
 	}
 
-	public static class = new Class<SchulformSchulgliederung>('de.svws_nrw.asd.data.schule.SchulformSchulgliederung');
+	public static readonly class = new Class<SchulformSchulgliederung>('de.svws_nrw.asd.data.schule.SchulformSchulgliederung');
 
 	public static transpilerFromJSON(json: string): SchulformSchulgliederung {
 		const obj = JSON.parse(json) as Partial<SchulformSchulgliederung>;

@@ -380,7 +380,7 @@ export class HashMap5D<K1, K2, K3, K4, K5, V> extends JavaObject {
 		return ['de.svws_nrw.core.adt.map.HashMap5D'].includes(name);
 	}
 
-	public static class = new Class<HashMap5D<any, any, any, any, any, any>>('de.svws_nrw.core.adt.map.HashMap5D');
+	public static readonly class = new Class<HashMap5D<any, any, any, any, any, any>>('de.svws_nrw.core.adt.map.HashMap5D');
 
 }
 

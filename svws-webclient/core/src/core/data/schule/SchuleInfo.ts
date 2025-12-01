@@ -59,7 +59,7 @@ export class SchuleInfo extends JavaObject {
 		return ['de.svws_nrw.core.data.schule.SchuleInfo'].includes(name);
 	}
 
-	public static class = new Class<SchuleInfo>('de.svws_nrw.core.data.schule.SchuleInfo');
+	public static readonly class = new Class<SchuleInfo>('de.svws_nrw.core.data.schule.SchuleInfo');
 
 	public static transpilerFromJSON(json: string): SchuleInfo {
 		const obj = JSON.parse(json) as Partial<SchuleInfo>;

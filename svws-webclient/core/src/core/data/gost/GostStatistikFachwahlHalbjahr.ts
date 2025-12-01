@@ -44,7 +44,7 @@ export class GostStatistikFachwahlHalbjahr extends JavaObject {
 		return ['de.svws_nrw.core.data.gost.GostStatistikFachwahlHalbjahr'].includes(name);
 	}
 
-	public static class = new Class<GostStatistikFachwahlHalbjahr>('de.svws_nrw.core.data.gost.GostStatistikFachwahlHalbjahr');
+	public static readonly class = new Class<GostStatistikFachwahlHalbjahr>('de.svws_nrw.core.data.gost.GostStatistikFachwahlHalbjahr');
 
 	public static transpilerFromJSON(json: string): GostStatistikFachwahlHalbjahr {
 		const obj = JSON.parse(json) as Partial<GostStatistikFachwahlHalbjahr>;

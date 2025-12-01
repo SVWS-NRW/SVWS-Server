@@ -698,7 +698,7 @@ export class LehrerFachrichtung extends JavaEnum<LehrerFachrichtung> implements 
 		return ['de.svws_nrw.asd.types.lehrer.LehrerFachrichtung', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<LehrerFachrichtung>('de.svws_nrw.asd.types.lehrer.LehrerFachrichtung');
+	public static readonly class = new Class<LehrerFachrichtung>('de.svws_nrw.asd.types.lehrer.LehrerFachrichtung');
 
 }
 

@@ -36,7 +36,7 @@ export class BeruflichesGymnasiumStundentafelAbiturfaecherWahlmoeglichkeit exten
 		return ['de.svws_nrw.asd.data.schule.BeruflichesGymnasiumStundentafelAbiturfaecherWahlmoeglichkeit'].includes(name);
 	}
 
-	public static class = new Class<BeruflichesGymnasiumStundentafelAbiturfaecherWahlmoeglichkeit>('de.svws_nrw.asd.data.schule.BeruflichesGymnasiumStundentafelAbiturfaecherWahlmoeglichkeit');
+	public static readonly class = new Class<BeruflichesGymnasiumStundentafelAbiturfaecherWahlmoeglichkeit>('de.svws_nrw.asd.data.schule.BeruflichesGymnasiumStundentafelAbiturfaecherWahlmoeglichkeit');
 
 	public static transpilerFromJSON(json: string): BeruflichesGymnasiumStundentafelAbiturfaecherWahlmoeglichkeit {
 		const obj = JSON.parse(json) as Partial<BeruflichesGymnasiumStundentafelAbiturfaecherWahlmoeglichkeit>;

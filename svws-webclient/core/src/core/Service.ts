@@ -50,7 +50,7 @@ export abstract class Service extends JavaObject {
 		return ['de.svws_nrw.core.Service'].includes(name);
 	}
 
-	public static class = new Class<Service>('de.svws_nrw.core.Service');
+	public static readonly class = new Class<Service>('de.svws_nrw.core.Service');
 
 }
 

@@ -30,7 +30,7 @@ export class RaumUtils extends JavaObject {
 		return ['de.svws_nrw.core.utils.raum.RaumUtils'].includes(name);
 	}
 
-	public static class = new Class<RaumUtils>('de.svws_nrw.core.utils.raum.RaumUtils');
+	public static readonly class = new Class<RaumUtils>('de.svws_nrw.core.utils.raum.RaumUtils');
 
 }
 

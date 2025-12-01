@@ -35,7 +35,7 @@ export class ValidatorGlGesamtLehrerdaten extends Validator {
 		return ['de.svws_nrw.asd.validate.BasicValidator', 'de.svws_nrw.asd.validate.gesamt.ValidatorGlGesamtLehrerdaten', 'de.svws_nrw.asd.validate.Validator'].includes(name);
 	}
 
-	public static class = new Class<ValidatorGlGesamtLehrerdaten>('de.svws_nrw.asd.validate.gesamt.ValidatorGlGesamtLehrerdaten');
+	public static readonly class = new Class<ValidatorGlGesamtLehrerdaten>('de.svws_nrw.asd.validate.gesamt.ValidatorGlGesamtLehrerdaten');
 
 }
 

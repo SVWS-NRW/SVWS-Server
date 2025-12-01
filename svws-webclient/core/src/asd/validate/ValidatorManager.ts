@@ -503,7 +503,7 @@ export class ValidatorManager extends JavaObject {
 		return ['de.svws_nrw.asd.validate.ValidatorManager'].includes(name);
 	}
 
-	public static class = new Class<ValidatorManager>('de.svws_nrw.asd.validate.ValidatorManager');
+	public static readonly class = new Class<ValidatorManager>('de.svws_nrw.asd.validate.ValidatorManager');
 
 }
 

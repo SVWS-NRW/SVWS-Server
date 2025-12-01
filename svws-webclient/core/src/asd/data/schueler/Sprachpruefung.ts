@@ -84,7 +84,7 @@ export class Sprachpruefung extends JavaObject {
 		return ['de.svws_nrw.asd.data.schueler.Sprachpruefung'].includes(name);
 	}
 
-	public static class = new Class<Sprachpruefung>('de.svws_nrw.asd.data.schueler.Sprachpruefung');
+	public static readonly class = new Class<Sprachpruefung>('de.svws_nrw.asd.data.schueler.Sprachpruefung');
 
 	public static transpilerFromJSON(json: string): Sprachpruefung {
 		const obj = JSON.parse(json) as Partial<Sprachpruefung>;

@@ -91,7 +91,7 @@ export class ReportingParameter extends JavaObject {
 		return ['de.svws_nrw.core.data.reporting.ReportingParameter'].includes(name);
 	}
 
-	public static class = new Class<ReportingParameter>('de.svws_nrw.core.data.reporting.ReportingParameter');
+	public static readonly class = new Class<ReportingParameter>('de.svws_nrw.core.data.reporting.ReportingParameter');
 
 	public static transpilerFromJSON(json: string): ReportingParameter {
 		const obj = JSON.parse(json) as Partial<ReportingParameter>;

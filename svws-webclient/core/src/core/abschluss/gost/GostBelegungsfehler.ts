@@ -793,7 +793,7 @@ export class GostBelegungsfehler extends JavaEnum<GostBelegungsfehler> {
 		return ['de.svws_nrw.core.abschluss.gost.GostBelegungsfehler', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<GostBelegungsfehler>('de.svws_nrw.core.abschluss.gost.GostBelegungsfehler');
+	public static readonly class = new Class<GostBelegungsfehler>('de.svws_nrw.core.abschluss.gost.GostBelegungsfehler');
 
 }
 

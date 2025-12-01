@@ -83,7 +83,7 @@ export class LehrerPersonaldaten extends JavaObject {
 		return ['de.svws_nrw.asd.data.lehrer.LehrerPersonaldaten'].includes(name);
 	}
 
-	public static class = new Class<LehrerPersonaldaten>('de.svws_nrw.asd.data.lehrer.LehrerPersonaldaten');
+	public static readonly class = new Class<LehrerPersonaldaten>('de.svws_nrw.asd.data.lehrer.LehrerPersonaldaten');
 
 	public static transpilerFromJSON(json: string): LehrerPersonaldaten {
 		const obj = JSON.parse(json) as Partial<LehrerPersonaldaten>;

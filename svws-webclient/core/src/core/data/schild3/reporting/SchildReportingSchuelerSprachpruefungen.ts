@@ -89,7 +89,7 @@ export class SchildReportingSchuelerSprachpruefungen extends JavaObject {
 		return ['de.svws_nrw.core.data.schild3.reporting.SchildReportingSchuelerSprachpruefungen'].includes(name);
 	}
 
-	public static class = new Class<SchildReportingSchuelerSprachpruefungen>('de.svws_nrw.core.data.schild3.reporting.SchildReportingSchuelerSprachpruefungen');
+	public static readonly class = new Class<SchildReportingSchuelerSprachpruefungen>('de.svws_nrw.core.data.schild3.reporting.SchildReportingSchuelerSprachpruefungen');
 
 	public static transpilerFromJSON(json: string): SchildReportingSchuelerSprachpruefungen {
 		const obj = JSON.parse(json) as Partial<SchildReportingSchuelerSprachpruefungen>;

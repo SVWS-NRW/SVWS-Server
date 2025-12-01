@@ -53,7 +53,7 @@ export class LehrerLehramtEintrag extends JavaObject {
 		return ['de.svws_nrw.asd.data.lehrer.LehrerLehramtEintrag'].includes(name);
 	}
 
-	public static class = new Class<LehrerLehramtEintrag>('de.svws_nrw.asd.data.lehrer.LehrerLehramtEintrag');
+	public static readonly class = new Class<LehrerLehramtEintrag>('de.svws_nrw.asd.data.lehrer.LehrerLehramtEintrag');
 
 	public static transpilerFromJSON(json: string): LehrerLehramtEintrag {
 		const obj = JSON.parse(json) as Partial<LehrerLehramtEintrag>;

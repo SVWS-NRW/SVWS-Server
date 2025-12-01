@@ -68,7 +68,7 @@ export class LinkedCollectionDescendingIterator<E> extends JavaObject implements
 		return ['java.util.Iterator', 'de.svws_nrw.core.adt.collection.LinkedCollectionDescendingIterator'].includes(name);
 	}
 
-	public static class = new Class<LinkedCollectionDescendingIterator<any>>('de.svws_nrw.core.adt.collection.LinkedCollectionDescendingIterator');
+	public static readonly class = new Class<LinkedCollectionDescendingIterator<any>>('de.svws_nrw.core.adt.collection.LinkedCollectionDescendingIterator');
 
 }
 

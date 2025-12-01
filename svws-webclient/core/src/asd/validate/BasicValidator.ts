@@ -129,7 +129,7 @@ export abstract class BasicValidator extends JavaObject {
 		return ['de.svws_nrw.asd.validate.BasicValidator'].includes(name);
 	}
 
-	public static class = new Class<BasicValidator>('de.svws_nrw.asd.validate.BasicValidator');
+	public static readonly class = new Class<BasicValidator>('de.svws_nrw.asd.validate.BasicValidator');
 
 }
 

@@ -144,7 +144,7 @@ export class SchuelerLeistungsdaten extends JavaObject {
 		return ['de.svws_nrw.asd.data.schueler.SchuelerLeistungsdaten'].includes(name);
 	}
 
-	public static class = new Class<SchuelerLeistungsdaten>('de.svws_nrw.asd.data.schueler.SchuelerLeistungsdaten');
+	public static readonly class = new Class<SchuelerLeistungsdaten>('de.svws_nrw.asd.data.schueler.SchuelerLeistungsdaten');
 
 	public static transpilerFromJSON(json: string): SchuelerLeistungsdaten {
 		const obj = JSON.parse(json) as Partial<SchuelerLeistungsdaten>;

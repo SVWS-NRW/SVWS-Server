@@ -433,7 +433,7 @@ export class KAOAAnschlussoptionen extends JavaEnum<KAOAAnschlussoptionen> imple
 		return ['de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'de.svws_nrw.asd.types.kaoa.KAOAAnschlussoptionen', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<KAOAAnschlussoptionen>('de.svws_nrw.asd.types.kaoa.KAOAAnschlussoptionen');
+	public static readonly class = new Class<KAOAAnschlussoptionen>('de.svws_nrw.asd.types.kaoa.KAOAAnschlussoptionen');
 
 }
 

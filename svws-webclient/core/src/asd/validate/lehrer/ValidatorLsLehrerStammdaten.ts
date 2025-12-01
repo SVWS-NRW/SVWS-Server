@@ -38,7 +38,7 @@ export class ValidatorLsLehrerStammdaten extends Validator {
 		return ['de.svws_nrw.asd.validate.BasicValidator', 'de.svws_nrw.asd.validate.lehrer.ValidatorLsLehrerStammdaten', 'de.svws_nrw.asd.validate.Validator'].includes(name);
 	}
 
-	public static class = new Class<ValidatorLsLehrerStammdaten>('de.svws_nrw.asd.validate.lehrer.ValidatorLsLehrerStammdaten');
+	public static readonly class = new Class<ValidatorLsLehrerStammdaten>('de.svws_nrw.asd.validate.lehrer.ValidatorLsLehrerStammdaten');
 
 }
 

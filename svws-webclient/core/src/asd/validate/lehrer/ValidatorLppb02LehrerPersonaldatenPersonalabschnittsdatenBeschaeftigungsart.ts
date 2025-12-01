@@ -45,7 +45,7 @@ export class ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaefti
 		return ['de.svws_nrw.asd.validate.lehrer.ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart', 'de.svws_nrw.asd.validate.BasicValidator', 'de.svws_nrw.asd.validate.Validator'].includes(name);
 	}
 
-	public static class = new Class<ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart>('de.svws_nrw.asd.validate.lehrer.ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart');
+	public static readonly class = new Class<ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart>('de.svws_nrw.asd.validate.lehrer.ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart');
 
 }
 

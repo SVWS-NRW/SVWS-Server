@@ -26,7 +26,7 @@ export class LehrerFachrichtungKatalogEintrag extends CoreTypeData {
 		return ['de.svws_nrw.asd.data.CoreTypeData', 'de.svws_nrw.asd.data.lehrer.LehrerFachrichtungKatalogEintrag'].includes(name);
 	}
 
-	public static class = new Class<LehrerFachrichtungKatalogEintrag>('de.svws_nrw.asd.data.lehrer.LehrerFachrichtungKatalogEintrag');
+	public static readonly class = new Class<LehrerFachrichtungKatalogEintrag>('de.svws_nrw.asd.data.lehrer.LehrerFachrichtungKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): LehrerFachrichtungKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<LehrerFachrichtungKatalogEintrag>;

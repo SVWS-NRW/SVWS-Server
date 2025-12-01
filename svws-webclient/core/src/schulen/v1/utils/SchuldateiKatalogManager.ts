@@ -429,7 +429,7 @@ export class SchuldateiKatalogManager extends JavaObject {
 		return ['de.svws_nrw.schulen.v1.utils.SchuldateiKatalogManager'].includes(name);
 	}
 
-	public static class = new Class<SchuldateiKatalogManager>('de.svws_nrw.schulen.v1.utils.SchuldateiKatalogManager');
+	public static readonly class = new Class<SchuldateiKatalogManager>('de.svws_nrw.schulen.v1.utils.SchuldateiKatalogManager');
 
 }
 

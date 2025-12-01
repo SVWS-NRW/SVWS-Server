@@ -32,7 +32,7 @@ export class StundenplanPausenaufsichtBereichUpdate extends JavaObject {
 		return ['de.svws_nrw.core.data.stundenplan.StundenplanPausenaufsichtBereichUpdate'].includes(name);
 	}
 
-	public static class = new Class<StundenplanPausenaufsichtBereichUpdate>('de.svws_nrw.core.data.stundenplan.StundenplanPausenaufsichtBereichUpdate');
+	public static readonly class = new Class<StundenplanPausenaufsichtBereichUpdate>('de.svws_nrw.core.data.stundenplan.StundenplanPausenaufsichtBereichUpdate');
 
 	public static transpilerFromJSON(json: string): StundenplanPausenaufsichtBereichUpdate {
 		const obj = JSON.parse(json) as Partial<StundenplanPausenaufsichtBereichUpdate>;

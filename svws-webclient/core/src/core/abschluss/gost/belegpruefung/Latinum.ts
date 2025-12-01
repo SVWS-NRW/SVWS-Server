@@ -51,7 +51,7 @@ export class Latinum extends GostBelegpruefung {
 		return ['de.svws_nrw.core.abschluss.gost.belegpruefung.Latinum', 'de.svws_nrw.core.abschluss.gost.GostBelegpruefung'].includes(name);
 	}
 
-	public static class = new Class<Latinum>('de.svws_nrw.core.abschluss.gost.belegpruefung.Latinum');
+	public static readonly class = new Class<Latinum>('de.svws_nrw.core.abschluss.gost.belegpruefung.Latinum');
 
 }
 

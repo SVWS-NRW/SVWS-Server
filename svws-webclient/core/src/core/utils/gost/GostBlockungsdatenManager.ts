@@ -2676,7 +2676,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		return ['de.svws_nrw.core.utils.gost.GostBlockungsdatenManager'].includes(name);
 	}
 
-	public static class = new Class<GostBlockungsdatenManager>('de.svws_nrw.core.utils.gost.GostBlockungsdatenManager');
+	public static readonly class = new Class<GostBlockungsdatenManager>('de.svws_nrw.core.utils.gost.GostBlockungsdatenManager');
 
 }
 

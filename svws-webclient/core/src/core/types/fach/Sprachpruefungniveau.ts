@@ -157,7 +157,7 @@ export class Sprachpruefungniveau extends JavaEnum<Sprachpruefungniveau> {
 		return ['de.svws_nrw.core.types.fach.Sprachpruefungniveau', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<Sprachpruefungniveau>('de.svws_nrw.core.types.fach.Sprachpruefungniveau');
+	public static readonly class = new Class<Sprachpruefungniveau>('de.svws_nrw.core.types.fach.Sprachpruefungniveau');
 
 }
 

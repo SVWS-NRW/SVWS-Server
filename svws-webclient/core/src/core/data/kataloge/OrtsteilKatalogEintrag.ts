@@ -49,7 +49,7 @@ export class OrtsteilKatalogEintrag extends JavaObject {
 		return ['de.svws_nrw.core.data.kataloge.OrtsteilKatalogEintrag'].includes(name);
 	}
 
-	public static class = new Class<OrtsteilKatalogEintrag>('de.svws_nrw.core.data.kataloge.OrtsteilKatalogEintrag');
+	public static readonly class = new Class<OrtsteilKatalogEintrag>('de.svws_nrw.core.data.kataloge.OrtsteilKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): OrtsteilKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<OrtsteilKatalogEintrag>;

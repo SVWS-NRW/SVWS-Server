@@ -55,7 +55,7 @@ export class Deutsch extends GostBelegpruefung {
 		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefung', 'de.svws_nrw.core.abschluss.gost.belegpruefung.Deutsch'].includes(name);
 	}
 
-	public static class = new Class<Deutsch>('de.svws_nrw.core.abschluss.gost.belegpruefung.Deutsch');
+	public static readonly class = new Class<Deutsch>('de.svws_nrw.core.abschluss.gost.belegpruefung.Deutsch');
 
 }
 

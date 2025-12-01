@@ -39,7 +39,7 @@ export class DatenbankVerbindungsdaten extends JavaObject {
 		return ['de.svws_nrw.core.data.schema.DatenbankVerbindungsdaten'].includes(name);
 	}
 
-	public static class = new Class<DatenbankVerbindungsdaten>('de.svws_nrw.core.data.schema.DatenbankVerbindungsdaten');
+	public static readonly class = new Class<DatenbankVerbindungsdaten>('de.svws_nrw.core.data.schema.DatenbankVerbindungsdaten');
 
 	public static transpilerFromJSON(json: string): DatenbankVerbindungsdaten {
 		const obj = JSON.parse(json) as Partial<DatenbankVerbindungsdaten>;

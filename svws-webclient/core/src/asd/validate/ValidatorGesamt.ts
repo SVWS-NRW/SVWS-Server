@@ -51,7 +51,7 @@ export class ValidatorGesamt extends Validator {
 		return ['de.svws_nrw.asd.validate.ValidatorGesamt', 'de.svws_nrw.asd.validate.BasicValidator', 'de.svws_nrw.asd.validate.Validator'].includes(name);
 	}
 
-	public static class = new Class<ValidatorGesamt>('de.svws_nrw.asd.validate.ValidatorGesamt');
+	public static readonly class = new Class<ValidatorGesamt>('de.svws_nrw.asd.validate.ValidatorGesamt');
 
 }
 

@@ -19,7 +19,7 @@ export class LehrerEinsatzstatusKatalogEintrag extends CoreTypeData {
 		return ['de.svws_nrw.asd.data.lehrer.LehrerEinsatzstatusKatalogEintrag', 'de.svws_nrw.asd.data.CoreTypeData'].includes(name);
 	}
 
-	public static class = new Class<LehrerEinsatzstatusKatalogEintrag>('de.svws_nrw.asd.data.lehrer.LehrerEinsatzstatusKatalogEintrag');
+	public static readonly class = new Class<LehrerEinsatzstatusKatalogEintrag>('de.svws_nrw.asd.data.lehrer.LehrerEinsatzstatusKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): LehrerEinsatzstatusKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<LehrerEinsatzstatusKatalogEintrag>;

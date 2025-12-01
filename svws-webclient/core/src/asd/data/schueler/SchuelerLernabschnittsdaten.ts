@@ -254,7 +254,7 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 		return ['de.svws_nrw.asd.data.schueler.SchuelerLernabschnittsdaten'].includes(name);
 	}
 
-	public static class = new Class<SchuelerLernabschnittsdaten>('de.svws_nrw.asd.data.schueler.SchuelerLernabschnittsdaten');
+	public static readonly class = new Class<SchuelerLernabschnittsdaten>('de.svws_nrw.asd.data.schueler.SchuelerLernabschnittsdaten');
 
 	public static transpilerFromJSON(json: string): SchuelerLernabschnittsdaten {
 		const obj = JSON.parse(json) as Partial<SchuelerLernabschnittsdaten>;

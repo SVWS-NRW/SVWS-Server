@@ -41,7 +41,7 @@ export class Beschaeftigungsart extends JavaObject {
 		return ['de.svws_nrw.core.data.betrieb.Beschaeftigungsart'].includes(name);
 	}
 
-	public static class = new Class<Beschaeftigungsart>('de.svws_nrw.core.data.betrieb.Beschaeftigungsart');
+	public static readonly class = new Class<Beschaeftigungsart>('de.svws_nrw.core.data.betrieb.Beschaeftigungsart');
 
 	public static transpilerFromJSON(json: string): Beschaeftigungsart {
 		const obj = JSON.parse(json) as Partial<Beschaeftigungsart>;

@@ -38,7 +38,7 @@ export class ReportingSortierungDefinition extends JavaObject {
 		return ['de.svws_nrw.core.data.reporting.ReportingSortierungDefinition'].includes(name);
 	}
 
-	public static class = new Class<ReportingSortierungDefinition>('de.svws_nrw.core.data.reporting.ReportingSortierungDefinition');
+	public static readonly class = new Class<ReportingSortierungDefinition>('de.svws_nrw.core.data.reporting.ReportingSortierungDefinition');
 
 	public static transpilerFromJSON(json: string): ReportingSortierungDefinition {
 		const obj = JSON.parse(json) as Partial<ReportingSortierungDefinition>;

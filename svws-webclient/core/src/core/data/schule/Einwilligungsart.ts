@@ -59,7 +59,7 @@ export class Einwilligungsart extends JavaObject {
 		return ['de.svws_nrw.core.data.schule.Einwilligungsart'].includes(name);
 	}
 
-	public static class = new Class<Einwilligungsart>('de.svws_nrw.core.data.schule.Einwilligungsart');
+	public static readonly class = new Class<Einwilligungsart>('de.svws_nrw.core.data.schule.Einwilligungsart');
 
 	public static transpilerFromJSON(json: string): Einwilligungsart {
 		const obj = JSON.parse(json) as Partial<Einwilligungsart>;

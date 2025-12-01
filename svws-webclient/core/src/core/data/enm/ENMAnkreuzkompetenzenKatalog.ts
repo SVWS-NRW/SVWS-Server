@@ -37,7 +37,7 @@ export class ENMAnkreuzkompetenzenKatalog extends JavaObject {
 		return ['de.svws_nrw.core.data.enm.ENMAnkreuzkompetenzenKatalog'].includes(name);
 	}
 
-	public static class = new Class<ENMAnkreuzkompetenzenKatalog>('de.svws_nrw.core.data.enm.ENMAnkreuzkompetenzenKatalog');
+	public static readonly class = new Class<ENMAnkreuzkompetenzenKatalog>('de.svws_nrw.core.data.enm.ENMAnkreuzkompetenzenKatalog');
 
 	public static transpilerFromJSON(json: string): ENMAnkreuzkompetenzenKatalog {
 		const obj = JSON.parse(json) as Partial<ENMAnkreuzkompetenzenKatalog>;

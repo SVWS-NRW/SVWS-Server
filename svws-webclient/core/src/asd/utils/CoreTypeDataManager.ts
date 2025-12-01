@@ -689,7 +689,7 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 		return ['de.svws_nrw.asd.utils.CoreTypeDataManager'].includes(name);
 	}
 
-	public static class = new Class<CoreTypeDataManager<any, any>>('de.svws_nrw.asd.utils.CoreTypeDataManager');
+	public static readonly class = new Class<CoreTypeDataManager<any, any>>('de.svws_nrw.asd.utils.CoreTypeDataManager');
 
 }
 

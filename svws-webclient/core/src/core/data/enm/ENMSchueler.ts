@@ -108,7 +108,7 @@ export class ENMSchueler extends JavaObject {
 		return ['de.svws_nrw.core.data.enm.ENMSchueler'].includes(name);
 	}
 
-	public static class = new Class<ENMSchueler>('de.svws_nrw.core.data.enm.ENMSchueler');
+	public static readonly class = new Class<ENMSchueler>('de.svws_nrw.core.data.enm.ENMSchueler');
 
 	public static transpilerFromJSON(json: string): ENMSchueler {
 		const obj = JSON.parse(json) as Partial<ENMSchueler>;

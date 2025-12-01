@@ -5174,7 +5174,7 @@ export class GostKlausurplanManager extends JavaObject {
 		return ['de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager'].includes(name);
 	}
 
-	public static class = new Class<GostKlausurplanManager>('de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager');
+	public static readonly class = new Class<GostKlausurplanManager>('de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager');
 
 }
 

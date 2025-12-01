@@ -264,7 +264,7 @@ export class Abi30BelegpruefungAbiFaecher extends GostBelegpruefung {
 		return ['de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungAbiFaecher', 'de.svws_nrw.core.abschluss.gost.GostBelegpruefung'].includes(name);
 	}
 
-	public static class = new Class<Abi30BelegpruefungAbiFaecher>('de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungAbiFaecher');
+	public static readonly class = new Class<Abi30BelegpruefungAbiFaecher>('de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungAbiFaecher');
 
 }
 

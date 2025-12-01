@@ -361,7 +361,7 @@ export class ServiceAbschlussMSA extends Service {
 		return ['de.svws_nrw.core.Service', 'de.svws_nrw.core.abschluss.ge.ServiceAbschlussMSA'].includes(name);
 	}
 
-	public static class = new Class<ServiceAbschlussMSA>('de.svws_nrw.core.abschluss.ge.ServiceAbschlussMSA');
+	public static readonly class = new Class<ServiceAbschlussMSA>('de.svws_nrw.core.abschluss.ge.ServiceAbschlussMSA');
 
 }
 

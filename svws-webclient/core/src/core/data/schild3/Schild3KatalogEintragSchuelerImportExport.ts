@@ -69,7 +69,7 @@ export class Schild3KatalogEintragSchuelerImportExport extends JavaObject {
 		return ['de.svws_nrw.core.data.schild3.Schild3KatalogEintragSchuelerImportExport'].includes(name);
 	}
 
-	public static class = new Class<Schild3KatalogEintragSchuelerImportExport>('de.svws_nrw.core.data.schild3.Schild3KatalogEintragSchuelerImportExport');
+	public static readonly class = new Class<Schild3KatalogEintragSchuelerImportExport>('de.svws_nrw.core.data.schild3.Schild3KatalogEintragSchuelerImportExport');
 
 	public static transpilerFromJSON(json: string): Schild3KatalogEintragSchuelerImportExport {
 		const obj = JSON.parse(json) as Partial<Schild3KatalogEintragSchuelerImportExport>;

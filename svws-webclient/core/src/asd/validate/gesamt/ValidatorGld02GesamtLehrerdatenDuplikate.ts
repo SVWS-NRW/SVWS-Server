@@ -49,7 +49,7 @@ export class ValidatorGld02GesamtLehrerdatenDuplikate extends Validator {
 		return ['de.svws_nrw.asd.validate.BasicValidator', 'de.svws_nrw.asd.validate.gesamt.ValidatorGld02GesamtLehrerdatenDuplikate', 'de.svws_nrw.asd.validate.Validator'].includes(name);
 	}
 
-	public static class = new Class<ValidatorGld02GesamtLehrerdatenDuplikate>('de.svws_nrw.asd.validate.gesamt.ValidatorGld02GesamtLehrerdatenDuplikate');
+	public static readonly class = new Class<ValidatorGld02GesamtLehrerdatenDuplikate>('de.svws_nrw.asd.validate.gesamt.ValidatorGld02GesamtLehrerdatenDuplikate');
 
 }
 

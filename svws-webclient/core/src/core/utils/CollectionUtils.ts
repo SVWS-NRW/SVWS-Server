@@ -76,7 +76,7 @@ export class CollectionUtils extends JavaObject {
 		return ['de.svws_nrw.core.utils.CollectionUtils'].includes(name);
 	}
 
-	public static class = new Class<CollectionUtils>('de.svws_nrw.core.utils.CollectionUtils');
+	public static readonly class = new Class<CollectionUtils>('de.svws_nrw.core.utils.CollectionUtils');
 
 }
 

@@ -407,7 +407,7 @@ export class DateManager extends JavaObject implements Comparable<DateManager> {
 		return ['de.svws_nrw.asd.validate.DateManager', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<DateManager>('de.svws_nrw.asd.validate.DateManager');
+	public static readonly class = new Class<DateManager>('de.svws_nrw.asd.validate.DateManager');
 
 }
 

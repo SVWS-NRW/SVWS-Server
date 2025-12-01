@@ -49,7 +49,7 @@ export class ValidatorLsd00LehrerStammdatenGeburtsdatum extends Validator {
 		return ['de.svws_nrw.asd.validate.BasicValidator', 'de.svws_nrw.asd.validate.lehrer.ValidatorLsd00LehrerStammdatenGeburtsdatum', 'de.svws_nrw.asd.validate.Validator'].includes(name);
 	}
 
-	public static class = new Class<ValidatorLsd00LehrerStammdatenGeburtsdatum>('de.svws_nrw.asd.validate.lehrer.ValidatorLsd00LehrerStammdatenGeburtsdatum');
+	public static readonly class = new Class<ValidatorLsd00LehrerStammdatenGeburtsdatum>('de.svws_nrw.asd.validate.lehrer.ValidatorLsd00LehrerStammdatenGeburtsdatum');
 
 }
 

@@ -60,7 +60,7 @@ export class CoreTypeData extends JavaObject {
 		return ['de.svws_nrw.asd.data.CoreTypeData'].includes(name);
 	}
 
-	public static class = new Class<CoreTypeData>('de.svws_nrw.asd.data.CoreTypeData');
+	public static readonly class = new Class<CoreTypeData>('de.svws_nrw.asd.data.CoreTypeData');
 
 	public static transpilerFromJSON(json: string): CoreTypeData {
 		const obj = JSON.parse(json) as Partial<CoreTypeData>;

@@ -71,7 +71,7 @@ export class KursblockungAlgorithmusPermanentKSchuelervorschlagSingle extends Ku
 		return ['de.svws_nrw.core.kursblockung.KursblockungAlgorithmusPermanentK', 'de.svws_nrw.core.kursblockung.KursblockungAlgorithmusPermanentKSchuelervorschlagSingle'].includes(name);
 	}
 
-	public static class = new Class<KursblockungAlgorithmusPermanentKSchuelervorschlagSingle>('de.svws_nrw.core.kursblockung.KursblockungAlgorithmusPermanentKSchuelervorschlagSingle');
+	public static readonly class = new Class<KursblockungAlgorithmusPermanentKSchuelervorschlagSingle>('de.svws_nrw.core.kursblockung.KursblockungAlgorithmusPermanentKSchuelervorschlagSingle');
 
 }
 

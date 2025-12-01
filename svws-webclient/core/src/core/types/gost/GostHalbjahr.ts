@@ -540,7 +540,7 @@ export class GostHalbjahr extends JavaEnum<GostHalbjahr> {
 		return ['de.svws_nrw.core.types.gost.GostHalbjahr', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<GostHalbjahr>('de.svws_nrw.core.types.gost.GostHalbjahr');
+	public static readonly class = new Class<GostHalbjahr>('de.svws_nrw.core.types.gost.GostHalbjahr');
 
 }
 

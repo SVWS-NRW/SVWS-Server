@@ -39,7 +39,7 @@ export class ValidatorLppp01LehrerPersonaldatenPersonalabschnittsdatenPflichtstu
 		return ['de.svws_nrw.asd.validate.BasicValidator', 'de.svws_nrw.asd.validate.lehrer.ValidatorLppp01LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll', 'de.svws_nrw.asd.validate.Validator'].includes(name);
 	}
 
-	public static class = new Class<ValidatorLppp01LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll>('de.svws_nrw.asd.validate.lehrer.ValidatorLppp01LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll');
+	public static readonly class = new Class<ValidatorLppp01LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll>('de.svws_nrw.asd.validate.lehrer.ValidatorLppp01LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll');
 
 }
 

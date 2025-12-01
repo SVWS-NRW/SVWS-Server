@@ -68,7 +68,7 @@ export class UvFach extends JavaObject {
 		return ['de.svws_nrw.core.data.uv.UvFach'].includes(name);
 	}
 
-	public static class = new Class<UvFach>('de.svws_nrw.core.data.uv.UvFach');
+	public static readonly class = new Class<UvFach>('de.svws_nrw.core.data.uv.UvFach');
 
 	public static transpilerFromJSON(json: string): UvFach {
 		const obj = JSON.parse(json) as Partial<UvFach>;

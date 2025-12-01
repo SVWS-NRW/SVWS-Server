@@ -19,7 +19,7 @@ export class BildungsgangTypKatalogEintrag extends CoreTypeData {
 		return ['de.svws_nrw.asd.data.schule.BildungsgangTypKatalogEintrag', 'de.svws_nrw.asd.data.CoreTypeData'].includes(name);
 	}
 
-	public static class = new Class<BildungsgangTypKatalogEintrag>('de.svws_nrw.asd.data.schule.BildungsgangTypKatalogEintrag');
+	public static readonly class = new Class<BildungsgangTypKatalogEintrag>('de.svws_nrw.asd.data.schule.BildungsgangTypKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): BildungsgangTypKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<BildungsgangTypKatalogEintrag>;

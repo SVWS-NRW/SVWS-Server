@@ -49,7 +49,7 @@ export class FoerderschwerpunktEintrag extends JavaObject {
 		return ['de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag'].includes(name);
 	}
 
-	public static class = new Class<FoerderschwerpunktEintrag>('de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag');
+	public static readonly class = new Class<FoerderschwerpunktEintrag>('de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag');
 
 	public static transpilerFromJSON(json: string): FoerderschwerpunktEintrag {
 		const obj = JSON.parse(json) as Partial<FoerderschwerpunktEintrag>;

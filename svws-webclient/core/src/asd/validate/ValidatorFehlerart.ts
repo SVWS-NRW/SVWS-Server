@@ -64,7 +64,7 @@ export class ValidatorFehlerart extends JavaEnum<ValidatorFehlerart> {
 		return ['de.svws_nrw.asd.validate.ValidatorFehlerart', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<ValidatorFehlerart>('de.svws_nrw.asd.validate.ValidatorFehlerart');
+	public static readonly class = new Class<ValidatorFehlerart>('de.svws_nrw.asd.validate.ValidatorFehlerart');
 
 }
 

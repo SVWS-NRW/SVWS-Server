@@ -19,7 +19,7 @@ export class OrganisationsformKatalogEintrag extends CoreTypeDataNurSchulformen 
 		return ['de.svws_nrw.asd.data.schule.OrganisationsformKatalogEintrag', 'de.svws_nrw.asd.data.CoreTypeData', 'de.svws_nrw.asd.data.CoreTypeDataNurSchulformen'].includes(name);
 	}
 
-	public static class = new Class<OrganisationsformKatalogEintrag>('de.svws_nrw.asd.data.schule.OrganisationsformKatalogEintrag');
+	public static readonly class = new Class<OrganisationsformKatalogEintrag>('de.svws_nrw.asd.data.schule.OrganisationsformKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): OrganisationsformKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<OrganisationsformKatalogEintrag>;

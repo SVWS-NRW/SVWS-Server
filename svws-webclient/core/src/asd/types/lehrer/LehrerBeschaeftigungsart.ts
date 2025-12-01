@@ -153,7 +153,7 @@ export class LehrerBeschaeftigungsart extends JavaEnum<LehrerBeschaeftigungsart>
 		return ['de.svws_nrw.asd.types.lehrer.LehrerBeschaeftigungsart', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<LehrerBeschaeftigungsart>('de.svws_nrw.asd.types.lehrer.LehrerBeschaeftigungsart');
+	public static readonly class = new Class<LehrerBeschaeftigungsart>('de.svws_nrw.asd.types.lehrer.LehrerBeschaeftigungsart');
 
 }
 

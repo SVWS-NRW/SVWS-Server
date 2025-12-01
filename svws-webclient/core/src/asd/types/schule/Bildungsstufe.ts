@@ -55,7 +55,7 @@ export class Bildungsstufe extends CoreTypeSimple<BildungsstufeKatalogEintrag, B
 		return ['de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'de.svws_nrw.asd.types.schule.Bildungsstufe', 'de.svws_nrw.asd.types.CoreTypeSimple'].includes(name);
 	}
 
-	public static class = new Class<Bildungsstufe>('de.svws_nrw.asd.types.schule.Bildungsstufe');
+	public static readonly class = new Class<Bildungsstufe>('de.svws_nrw.asd.types.schule.Bildungsstufe');
 
 }
 

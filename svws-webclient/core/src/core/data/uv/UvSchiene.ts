@@ -75,7 +75,7 @@ export class UvSchiene extends JavaObject {
 		return ['de.svws_nrw.core.data.uv.UvSchiene'].includes(name);
 	}
 
-	public static class = new Class<UvSchiene>('de.svws_nrw.core.data.uv.UvSchiene');
+	public static readonly class = new Class<UvSchiene>('de.svws_nrw.core.data.uv.UvSchiene');
 
 	public static transpilerFromJSON(json: string): UvSchiene {
 		const obj = JSON.parse(json) as Partial<UvSchiene>;

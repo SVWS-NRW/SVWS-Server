@@ -44,7 +44,7 @@ export class KatalogEintrag extends JavaObject {
 		return ['de.svws_nrw.core.data.kataloge.KatalogEintrag'].includes(name);
 	}
 
-	public static class = new Class<KatalogEintrag>('de.svws_nrw.core.data.kataloge.KatalogEintrag');
+	public static readonly class = new Class<KatalogEintrag>('de.svws_nrw.core.data.kataloge.KatalogEintrag');
 
 	public static transpilerFromJSON(json: string): KatalogEintrag {
 		const obj = JSON.parse(json) as Partial<KatalogEintrag>;

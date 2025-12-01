@@ -89,7 +89,7 @@ export class ENMLeistungBemerkungen extends JavaObject {
 		return ['de.svws_nrw.core.data.enm.ENMLeistungBemerkungen'].includes(name);
 	}
 
-	public static class = new Class<ENMLeistungBemerkungen>('de.svws_nrw.core.data.enm.ENMLeistungBemerkungen');
+	public static readonly class = new Class<ENMLeistungBemerkungen>('de.svws_nrw.core.data.enm.ENMLeistungBemerkungen');
 
 	public static transpilerFromJSON(json: string): ENMLeistungBemerkungen {
 		const obj = JSON.parse(json) as Partial<ENMLeistungBemerkungen>;

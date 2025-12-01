@@ -85,7 +85,7 @@ export class Naturwissenschaften extends GostBelegpruefung {
 		return ['de.svws_nrw.core.abschluss.gost.belegpruefung.Naturwissenschaften', 'de.svws_nrw.core.abschluss.gost.GostBelegpruefung'].includes(name);
 	}
 
-	public static class = new Class<Naturwissenschaften>('de.svws_nrw.core.abschluss.gost.belegpruefung.Naturwissenschaften');
+	public static readonly class = new Class<Naturwissenschaften>('de.svws_nrw.core.abschluss.gost.belegpruefung.Naturwissenschaften');
 
 }
 

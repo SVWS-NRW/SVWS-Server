@@ -44,7 +44,7 @@ export class Schuljahresabschnitt extends JavaObject {
 		return ['de.svws_nrw.asd.data.schule.Schuljahresabschnitt'].includes(name);
 	}
 
-	public static class = new Class<Schuljahresabschnitt>('de.svws_nrw.asd.data.schule.Schuljahresabschnitt');
+	public static readonly class = new Class<Schuljahresabschnitt>('de.svws_nrw.asd.data.schule.Schuljahresabschnitt');
 
 	public static transpilerFromJSON(json: string): Schuljahresabschnitt {
 		const obj = JSON.parse(json) as Partial<Schuljahresabschnitt>;

@@ -46,7 +46,7 @@ export class Haltestelle extends JavaObject {
 		return ['de.svws_nrw.core.data.schule.Haltestelle'].includes(name);
 	}
 
-	public static class = new Class<Haltestelle>('de.svws_nrw.core.data.schule.Haltestelle');
+	public static readonly class = new Class<Haltestelle>('de.svws_nrw.core.data.schule.Haltestelle');
 
 	public static transpilerFromJSON(json: string): Haltestelle {
 		const obj = JSON.parse(json) as Partial<Haltestelle>;

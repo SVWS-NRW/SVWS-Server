@@ -127,7 +127,7 @@ export class SchuelerListeEintrag extends JavaObject {
 		return ['de.svws_nrw.core.data.schueler.SchuelerListeEintrag'].includes(name);
 	}
 
-	public static class = new Class<SchuelerListeEintrag>('de.svws_nrw.core.data.schueler.SchuelerListeEintrag');
+	public static readonly class = new Class<SchuelerListeEintrag>('de.svws_nrw.core.data.schueler.SchuelerListeEintrag');
 
 	public static transpilerFromJSON(json: string): SchuelerListeEintrag {
 		const obj = JSON.parse(json) as Partial<SchuelerListeEintrag>;

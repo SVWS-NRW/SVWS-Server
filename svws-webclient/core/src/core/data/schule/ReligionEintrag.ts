@@ -49,7 +49,7 @@ export class ReligionEintrag extends JavaObject {
 		return ['de.svws_nrw.core.data.schule.ReligionEintrag'].includes(name);
 	}
 
-	public static class = new Class<ReligionEintrag>('de.svws_nrw.core.data.schule.ReligionEintrag');
+	public static readonly class = new Class<ReligionEintrag>('de.svws_nrw.core.data.schule.ReligionEintrag');
 
 	public static transpilerFromJSON(json: string): ReligionEintrag {
 		const obj = JSON.parse(json) as Partial<ReligionEintrag>;

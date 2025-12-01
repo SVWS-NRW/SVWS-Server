@@ -38,7 +38,7 @@ export class Sprachendaten extends JavaObject {
 		return ['de.svws_nrw.asd.data.schueler.Sprachendaten'].includes(name);
 	}
 
-	public static class = new Class<Sprachendaten>('de.svws_nrw.asd.data.schueler.Sprachendaten');
+	public static readonly class = new Class<Sprachendaten>('de.svws_nrw.asd.data.schueler.Sprachendaten');
 
 	public static transpilerFromJSON(json: string): Sprachendaten {
 		const obj = JSON.parse(json) as Partial<Sprachendaten>;

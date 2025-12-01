@@ -126,7 +126,7 @@ export class KlausurterminblockungModusKursarten extends JavaEnum<Klausurterminb
 		return ['de.svws_nrw.core.types.gost.klausurplanung.KlausurterminblockungModusKursarten', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<KlausurterminblockungModusKursarten>('de.svws_nrw.core.types.gost.klausurplanung.KlausurterminblockungModusKursarten');
+	public static readonly class = new Class<KlausurterminblockungModusKursarten>('de.svws_nrw.core.types.gost.klausurplanung.KlausurterminblockungModusKursarten');
 
 }
 

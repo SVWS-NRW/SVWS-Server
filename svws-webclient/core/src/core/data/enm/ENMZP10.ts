@@ -54,7 +54,7 @@ export class ENMZP10 extends JavaObject {
 		return ['de.svws_nrw.core.data.enm.ENMZP10'].includes(name);
 	}
 
-	public static class = new Class<ENMZP10>('de.svws_nrw.core.data.enm.ENMZP10');
+	public static readonly class = new Class<ENMZP10>('de.svws_nrw.core.data.enm.ENMZP10');
 
 	public static transpilerFromJSON(json: string): ENMZP10 {
 		const obj = JSON.parse(json) as Partial<ENMZP10>;

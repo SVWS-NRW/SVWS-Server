@@ -416,7 +416,7 @@ export class HashMap4D<K1, K2, K3, K4, V> extends JavaObject {
 		return ['de.svws_nrw.core.adt.map.HashMap4D'].includes(name);
 	}
 
-	public static class = new Class<HashMap4D<any, any, any, any, any>>('de.svws_nrw.core.adt.map.HashMap4D');
+	public static readonly class = new Class<HashMap4D<any, any, any, any, any>>('de.svws_nrw.core.adt.map.HashMap4D');
 
 }
 

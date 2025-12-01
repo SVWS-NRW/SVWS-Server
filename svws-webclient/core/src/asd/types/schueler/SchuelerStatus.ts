@@ -123,7 +123,7 @@ export class SchuelerStatus extends JavaEnum<SchuelerStatus> implements CoreType
 		return ['de.svws_nrw.asd.types.schueler.SchuelerStatus', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<SchuelerStatus>('de.svws_nrw.asd.types.schueler.SchuelerStatus');
+	public static readonly class = new Class<SchuelerStatus>('de.svws_nrw.asd.types.schueler.SchuelerStatus');
 
 }
 

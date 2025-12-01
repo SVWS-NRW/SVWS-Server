@@ -31,7 +31,7 @@ export class GostAbiturMarkierungspruefungErgebnis extends JavaObject {
 		return ['de.svws_nrw.core.abschluss.gost.GostAbiturMarkierungspruefungErgebnis'].includes(name);
 	}
 
-	public static class = new Class<GostAbiturMarkierungspruefungErgebnis>('de.svws_nrw.core.abschluss.gost.GostAbiturMarkierungspruefungErgebnis');
+	public static readonly class = new Class<GostAbiturMarkierungspruefungErgebnis>('de.svws_nrw.core.abschluss.gost.GostAbiturMarkierungspruefungErgebnis');
 
 	public static transpilerFromJSON(json: string): GostAbiturMarkierungspruefungErgebnis {
 		const obj = JSON.parse(json) as Partial<GostAbiturMarkierungspruefungErgebnis>;

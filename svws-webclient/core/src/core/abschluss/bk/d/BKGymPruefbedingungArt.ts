@@ -133,7 +133,7 @@ export class BKGymPruefbedingungArt extends JavaEnum<BKGymPruefbedingungArt> {
 		return ['de.svws_nrw.core.abschluss.bk.d.BKGymPruefbedingungArt', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<BKGymPruefbedingungArt>('de.svws_nrw.core.abschluss.bk.d.BKGymPruefbedingungArt');
+	public static readonly class = new Class<BKGymPruefbedingungArt>('de.svws_nrw.core.abschluss.bk.d.BKGymPruefbedingungArt');
 
 }
 

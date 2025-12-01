@@ -63,7 +63,7 @@ export class SetUtils extends JavaObject {
 		return ['de.svws_nrw.core.utils.SetUtils'].includes(name);
 	}
 
-	public static class = new Class<SetUtils>('de.svws_nrw.core.utils.SetUtils');
+	public static readonly class = new Class<SetUtils>('de.svws_nrw.core.utils.SetUtils');
 
 }
 

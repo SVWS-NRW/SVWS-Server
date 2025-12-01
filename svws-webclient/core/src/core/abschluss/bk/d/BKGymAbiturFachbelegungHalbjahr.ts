@@ -79,7 +79,7 @@ export class BKGymAbiturFachbelegungHalbjahr extends JavaObject {
 		return ['de.svws_nrw.core.abschluss.bk.d.BKGymAbiturFachbelegungHalbjahr'].includes(name);
 	}
 
-	public static class = new Class<BKGymAbiturFachbelegungHalbjahr>('de.svws_nrw.core.abschluss.bk.d.BKGymAbiturFachbelegungHalbjahr');
+	public static readonly class = new Class<BKGymAbiturFachbelegungHalbjahr>('de.svws_nrw.core.abschluss.bk.d.BKGymAbiturFachbelegungHalbjahr');
 
 	public static transpilerFromJSON(json: string): BKGymAbiturFachbelegungHalbjahr {
 		const obj = JSON.parse(json) as Partial<BKGymAbiturFachbelegungHalbjahr>;

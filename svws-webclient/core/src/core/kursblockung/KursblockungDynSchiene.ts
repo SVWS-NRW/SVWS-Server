@@ -198,7 +198,7 @@ export class KursblockungDynSchiene extends JavaObject {
 		return ['de.svws_nrw.core.kursblockung.KursblockungDynSchiene'].includes(name);
 	}
 
-	public static class = new Class<KursblockungDynSchiene>('de.svws_nrw.core.kursblockung.KursblockungDynSchiene');
+	public static readonly class = new Class<KursblockungDynSchiene>('de.svws_nrw.core.kursblockung.KursblockungDynSchiene');
 
 }
 

@@ -221,7 +221,7 @@ export class ListUtils extends JavaObject {
 		return ['de.svws_nrw.core.utils.ListUtils'].includes(name);
 	}
 
-	public static class = new Class<ListUtils>('de.svws_nrw.core.utils.ListUtils');
+	public static readonly class = new Class<ListUtils>('de.svws_nrw.core.utils.ListUtils');
 
 }
 

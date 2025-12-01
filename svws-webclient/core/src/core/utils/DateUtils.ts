@@ -658,7 +658,7 @@ export class DateUtils extends JavaObject {
 		return ['de.svws_nrw.core.utils.DateUtils'].includes(name);
 	}
 
-	public static class = new Class<DateUtils>('de.svws_nrw.core.utils.DateUtils');
+	public static readonly class = new Class<DateUtils>('de.svws_nrw.core.utils.DateUtils');
 
 }
 

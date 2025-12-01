@@ -29,7 +29,7 @@ export class BenutzerKennwort extends JavaObject {
 		return ['de.svws_nrw.core.data.BenutzerKennwort'].includes(name);
 	}
 
-	public static class = new Class<BenutzerKennwort>('de.svws_nrw.core.data.BenutzerKennwort');
+	public static readonly class = new Class<BenutzerKennwort>('de.svws_nrw.core.data.BenutzerKennwort');
 
 	public static transpilerFromJSON(json: string): BenutzerKennwort {
 		const obj = JSON.parse(json) as Partial<BenutzerKennwort>;

@@ -661,7 +661,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 		return ['de.svws_nrw.core.utils.gost.klausurplanung.KlausurterminblockungDynDaten'].includes(name);
 	}
 
-	public static class = new Class<KlausurterminblockungDynDaten>('de.svws_nrw.core.utils.gost.klausurplanung.KlausurterminblockungDynDaten');
+	public static readonly class = new Class<KlausurterminblockungDynDaten>('de.svws_nrw.core.utils.gost.klausurplanung.KlausurterminblockungDynDaten');
 
 }
 

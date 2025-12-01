@@ -19,7 +19,7 @@ export class ReligionKatalogEintrag extends CoreTypeData {
 		return ['de.svws_nrw.asd.data.schule.ReligionKatalogEintrag', 'de.svws_nrw.asd.data.CoreTypeData'].includes(name);
 	}
 
-	public static class = new Class<ReligionKatalogEintrag>('de.svws_nrw.asd.data.schule.ReligionKatalogEintrag');
+	public static readonly class = new Class<ReligionKatalogEintrag>('de.svws_nrw.asd.data.schule.ReligionKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): ReligionKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<ReligionKatalogEintrag>;

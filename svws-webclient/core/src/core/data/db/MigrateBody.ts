@@ -49,7 +49,7 @@ export class MigrateBody extends JavaObject {
 		return ['de.svws_nrw.core.data.db.MigrateBody'].includes(name);
 	}
 
-	public static class = new Class<MigrateBody>('de.svws_nrw.core.data.db.MigrateBody');
+	public static readonly class = new Class<MigrateBody>('de.svws_nrw.core.data.db.MigrateBody');
 
 	public static transpilerFromJSON(json: string): MigrateBody {
 		const obj = JSON.parse(json) as Partial<MigrateBody>;

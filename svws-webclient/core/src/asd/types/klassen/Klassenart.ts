@@ -256,7 +256,7 @@ export class Klassenart extends JavaEnum<Klassenart> implements CoreType<Klassen
 		return ['de.svws_nrw.asd.types.klassen.Klassenart', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<Klassenart>('de.svws_nrw.asd.types.klassen.Klassenart');
+	public static readonly class = new Class<Klassenart>('de.svws_nrw.asd.types.klassen.Klassenart');
 
 }
 

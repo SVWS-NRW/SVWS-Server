@@ -27,7 +27,7 @@ export class GostJahrgangFachwahlenHalbjahr extends JavaObject {
 		return ['de.svws_nrw.core.data.gost.GostJahrgangFachwahlenHalbjahr'].includes(name);
 	}
 
-	public static class = new Class<GostJahrgangFachwahlenHalbjahr>('de.svws_nrw.core.data.gost.GostJahrgangFachwahlenHalbjahr');
+	public static readonly class = new Class<GostJahrgangFachwahlenHalbjahr>('de.svws_nrw.core.data.gost.GostJahrgangFachwahlenHalbjahr');
 
 	public static transpilerFromJSON(json: string): GostJahrgangFachwahlenHalbjahr {
 		const obj = JSON.parse(json) as Partial<GostJahrgangFachwahlenHalbjahr>;

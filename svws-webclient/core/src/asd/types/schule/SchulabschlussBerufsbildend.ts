@@ -163,7 +163,7 @@ export class SchulabschlussBerufsbildend extends JavaEnum<SchulabschlussBerufsbi
 		return ['de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'de.svws_nrw.asd.types.schule.SchulabschlussBerufsbildend', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<SchulabschlussBerufsbildend>('de.svws_nrw.asd.types.schule.SchulabschlussBerufsbildend');
+	public static readonly class = new Class<SchulabschlussBerufsbildend>('de.svws_nrw.asd.types.schule.SchulabschlussBerufsbildend');
 
 }
 

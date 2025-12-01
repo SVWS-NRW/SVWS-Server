@@ -98,7 +98,7 @@ export class HerkunftsschulnummerKatalogEintrag extends JavaObject {
 		return ['de.svws_nrw.core.data.schule.HerkunftsschulnummerKatalogEintrag'].includes(name);
 	}
 
-	public static class = new Class<HerkunftsschulnummerKatalogEintrag>('de.svws_nrw.core.data.schule.HerkunftsschulnummerKatalogEintrag');
+	public static readonly class = new Class<HerkunftsschulnummerKatalogEintrag>('de.svws_nrw.core.data.schule.HerkunftsschulnummerKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): HerkunftsschulnummerKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<HerkunftsschulnummerKatalogEintrag>;

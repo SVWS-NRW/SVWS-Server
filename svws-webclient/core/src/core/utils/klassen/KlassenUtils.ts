@@ -35,7 +35,7 @@ export class KlassenUtils extends JavaObject {
 		return ['de.svws_nrw.core.utils.klassen.KlassenUtils'].includes(name);
 	}
 
-	public static class = new Class<KlassenUtils>('de.svws_nrw.core.utils.klassen.KlassenUtils');
+	public static readonly class = new Class<KlassenUtils>('de.svws_nrw.core.utils.klassen.KlassenUtils');
 
 }
 

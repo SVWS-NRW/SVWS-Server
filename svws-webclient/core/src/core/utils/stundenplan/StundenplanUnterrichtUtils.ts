@@ -112,7 +112,7 @@ export class StundenplanUnterrichtUtils extends JavaObject {
 		return ['de.svws_nrw.core.utils.stundenplan.StundenplanUnterrichtUtils'].includes(name);
 	}
 
-	public static class = new Class<StundenplanUnterrichtUtils>('de.svws_nrw.core.utils.stundenplan.StundenplanUnterrichtUtils');
+	public static readonly class = new Class<StundenplanUnterrichtUtils>('de.svws_nrw.core.utils.stundenplan.StundenplanUnterrichtUtils');
 
 }
 

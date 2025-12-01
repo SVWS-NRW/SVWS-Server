@@ -20,7 +20,7 @@ export class KlassenartKatalogEintrag extends CoreTypeDataNurSchulformenUndSchul
 		return ['de.svws_nrw.asd.data.CoreTypeDataNurSchulformenUndSchulgliederungen', 'de.svws_nrw.asd.data.klassen.KlassenartKatalogEintrag', 'de.svws_nrw.asd.data.CoreTypeData'].includes(name);
 	}
 
-	public static class = new Class<KlassenartKatalogEintrag>('de.svws_nrw.asd.data.klassen.KlassenartKatalogEintrag');
+	public static readonly class = new Class<KlassenartKatalogEintrag>('de.svws_nrw.asd.data.klassen.KlassenartKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): KlassenartKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<KlassenartKatalogEintrag>;

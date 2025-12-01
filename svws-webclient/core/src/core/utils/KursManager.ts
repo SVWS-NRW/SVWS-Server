@@ -175,7 +175,7 @@ export class KursManager extends JavaObject {
 		return ['de.svws_nrw.core.utils.KursManager'].includes(name);
 	}
 
-	public static class = new Class<KursManager>('de.svws_nrw.core.utils.KursManager');
+	public static readonly class = new Class<KursManager>('de.svws_nrw.core.utils.KursManager');
 
 }
 

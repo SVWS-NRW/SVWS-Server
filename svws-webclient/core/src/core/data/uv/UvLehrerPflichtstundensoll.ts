@@ -75,7 +75,7 @@ export class UvLehrerPflichtstundensoll extends JavaObject {
 		return ['de.svws_nrw.core.data.uv.UvLehrerPflichtstundensoll'].includes(name);
 	}
 
-	public static class = new Class<UvLehrerPflichtstundensoll>('de.svws_nrw.core.data.uv.UvLehrerPflichtstundensoll');
+	public static readonly class = new Class<UvLehrerPflichtstundensoll>('de.svws_nrw.core.data.uv.UvLehrerPflichtstundensoll');
 
 	public static transpilerFromJSON(json: string): UvLehrerPflichtstundensoll {
 		const obj = JSON.parse(json) as Partial<UvLehrerPflichtstundensoll>;

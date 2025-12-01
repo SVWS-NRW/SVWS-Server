@@ -68,7 +68,7 @@ export class GostLaufbahnplanungDatenSchueler extends JavaObject {
 		return ['de.svws_nrw.core.data.gost.GostLaufbahnplanungDatenSchueler'].includes(name);
 	}
 
-	public static class = new Class<GostLaufbahnplanungDatenSchueler>('de.svws_nrw.core.data.gost.GostLaufbahnplanungDatenSchueler');
+	public static readonly class = new Class<GostLaufbahnplanungDatenSchueler>('de.svws_nrw.core.data.gost.GostLaufbahnplanungDatenSchueler');
 
 	public static transpilerFromJSON(json: string): GostLaufbahnplanungDatenSchueler {
 		const obj = JSON.parse(json) as Partial<GostLaufbahnplanungDatenSchueler>;

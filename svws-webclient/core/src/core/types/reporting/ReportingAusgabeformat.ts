@@ -94,7 +94,7 @@ export class ReportingAusgabeformat extends JavaEnum<ReportingAusgabeformat> {
 		return ['de.svws_nrw.core.types.reporting.ReportingAusgabeformat', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<ReportingAusgabeformat>('de.svws_nrw.core.types.reporting.ReportingAusgabeformat');
+	public static readonly class = new Class<ReportingAusgabeformat>('de.svws_nrw.core.types.reporting.ReportingAusgabeformat');
 
 }
 

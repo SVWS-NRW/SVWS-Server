@@ -38,7 +38,7 @@ export abstract class SatSolver extends JavaObject implements JavaFunction<SatIn
 		return ['java.util.function.Function', 'de.svws_nrw.core.adt.sat.SatSolver'].includes(name);
 	}
 
-	public static class = new Class<SatSolver>('de.svws_nrw.core.adt.sat.SatSolver');
+	public static readonly class = new Class<SatSolver>('de.svws_nrw.core.adt.sat.SatSolver');
 
 }
 

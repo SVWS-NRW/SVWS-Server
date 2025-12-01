@@ -39,7 +39,7 @@ export class ENMNote extends JavaObject {
 		return ['de.svws_nrw.core.data.enm.ENMNote'].includes(name);
 	}
 
-	public static class = new Class<ENMNote>('de.svws_nrw.core.data.enm.ENMNote');
+	public static readonly class = new Class<ENMNote>('de.svws_nrw.core.data.enm.ENMNote');
 
 	public static transpilerFromJSON(json: string): ENMNote {
 		const obj = JSON.parse(json) as Partial<ENMNote>;

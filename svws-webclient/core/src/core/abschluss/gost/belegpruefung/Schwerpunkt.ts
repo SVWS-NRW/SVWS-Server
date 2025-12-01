@@ -91,7 +91,7 @@ export class Schwerpunkt extends GostBelegpruefung {
 		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefung', 'de.svws_nrw.core.abschluss.gost.belegpruefung.Schwerpunkt'].includes(name);
 	}
 
-	public static class = new Class<Schwerpunkt>('de.svws_nrw.core.abschluss.gost.belegpruefung.Schwerpunkt');
+	public static readonly class = new Class<Schwerpunkt>('de.svws_nrw.core.abschluss.gost.belegpruefung.Schwerpunkt');
 
 }
 

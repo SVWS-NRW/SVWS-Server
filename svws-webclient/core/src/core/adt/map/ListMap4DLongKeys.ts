@@ -1605,7 +1605,7 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 		return ['de.svws_nrw.core.adt.map.ListMap4DLongKeys'].includes(name);
 	}
 
-	public static class = new Class<ListMap4DLongKeys<any>>('de.svws_nrw.core.adt.map.ListMap4DLongKeys');
+	public static readonly class = new Class<ListMap4DLongKeys<any>>('de.svws_nrw.core.adt.map.ListMap4DLongKeys');
 
 }
 

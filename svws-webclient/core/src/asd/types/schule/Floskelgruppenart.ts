@@ -55,7 +55,7 @@ export class Floskelgruppenart extends CoreTypeSimple<FloskelgruppenartKatalogEi
 		return ['de.svws_nrw.asd.types.schule.Floskelgruppenart', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'de.svws_nrw.asd.types.CoreTypeSimple'].includes(name);
 	}
 
-	public static class = new Class<Floskelgruppenart>('de.svws_nrw.asd.types.schule.Floskelgruppenart');
+	public static readonly class = new Class<Floskelgruppenart>('de.svws_nrw.asd.types.schule.Floskelgruppenart');
 
 }
 

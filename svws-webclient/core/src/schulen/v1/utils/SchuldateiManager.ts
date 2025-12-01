@@ -229,7 +229,7 @@ export class SchuldateiManager extends JavaObject {
 		return ['de.svws_nrw.schulen.v1.utils.SchuldateiManager'].includes(name);
 	}
 
-	public static class = new Class<SchuldateiManager>('de.svws_nrw.schulen.v1.utils.SchuldateiManager');
+	public static readonly class = new Class<SchuldateiManager>('de.svws_nrw.schulen.v1.utils.SchuldateiManager');
 
 }
 

@@ -165,7 +165,7 @@ export class DTOUtils extends JavaObject {
 		return ['de.svws_nrw.core.utils.DTOUtils'].includes(name);
 	}
 
-	public static class = new Class<DTOUtils>('de.svws_nrw.core.utils.DTOUtils');
+	public static readonly class = new Class<DTOUtils>('de.svws_nrw.core.utils.DTOUtils');
 
 }
 

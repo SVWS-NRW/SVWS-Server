@@ -26,7 +26,7 @@ export class CoreTypeDataNurSchulformen extends CoreTypeData {
 		return ['de.svws_nrw.asd.data.CoreTypeData', 'de.svws_nrw.asd.data.CoreTypeDataNurSchulformen'].includes(name);
 	}
 
-	public static class = new Class<CoreTypeDataNurSchulformen>('de.svws_nrw.asd.data.CoreTypeDataNurSchulformen');
+	public static readonly class = new Class<CoreTypeDataNurSchulformen>('de.svws_nrw.asd.data.CoreTypeDataNurSchulformen');
 
 	public static transpilerFromJSON(json: string): CoreTypeDataNurSchulformen {
 		const obj = JSON.parse(json) as Partial<CoreTypeDataNurSchulformen>;

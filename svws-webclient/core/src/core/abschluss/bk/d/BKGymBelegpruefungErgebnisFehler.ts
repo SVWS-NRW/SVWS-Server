@@ -57,7 +57,7 @@ export class BKGymBelegpruefungErgebnisFehler extends JavaObject {
 		return ['de.svws_nrw.core.abschluss.bk.d.BKGymBelegpruefungErgebnisFehler'].includes(name);
 	}
 
-	public static class = new Class<BKGymBelegpruefungErgebnisFehler>('de.svws_nrw.core.abschluss.bk.d.BKGymBelegpruefungErgebnisFehler');
+	public static readonly class = new Class<BKGymBelegpruefungErgebnisFehler>('de.svws_nrw.core.abschluss.bk.d.BKGymBelegpruefungErgebnisFehler');
 
 	public static transpilerFromJSON(json: string): BKGymBelegpruefungErgebnisFehler {
 		const obj = JSON.parse(json) as Partial<BKGymBelegpruefungErgebnisFehler>;

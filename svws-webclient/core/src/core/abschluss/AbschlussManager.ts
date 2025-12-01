@@ -214,7 +214,7 @@ export class AbschlussManager extends JavaObject {
 		return ['de.svws_nrw.core.abschluss.AbschlussManager'].includes(name);
 	}
 
-	public static class = new Class<AbschlussManager>('de.svws_nrw.core.abschluss.AbschlussManager');
+	public static readonly class = new Class<AbschlussManager>('de.svws_nrw.core.abschluss.AbschlussManager');
 
 }
 

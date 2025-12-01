@@ -62,7 +62,7 @@ export class NamensManager extends JavaObject {
 		return ['de.svws_nrw.asd.validate.NamensManager'].includes(name);
 	}
 
-	public static class = new Class<NamensManager>('de.svws_nrw.asd.validate.NamensManager');
+	public static readonly class = new Class<NamensManager>('de.svws_nrw.asd.validate.NamensManager');
 
 }
 

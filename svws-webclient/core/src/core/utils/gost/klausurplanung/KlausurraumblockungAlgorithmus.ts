@@ -61,7 +61,7 @@ export class KlausurraumblockungAlgorithmus extends JavaObject {
 		return ['de.svws_nrw.core.utils.gost.klausurplanung.KlausurraumblockungAlgorithmus'].includes(name);
 	}
 
-	public static class = new Class<KlausurraumblockungAlgorithmus>('de.svws_nrw.core.utils.gost.klausurplanung.KlausurraumblockungAlgorithmus');
+	public static readonly class = new Class<KlausurraumblockungAlgorithmus>('de.svws_nrw.core.utils.gost.klausurplanung.KlausurraumblockungAlgorithmus');
 
 }
 

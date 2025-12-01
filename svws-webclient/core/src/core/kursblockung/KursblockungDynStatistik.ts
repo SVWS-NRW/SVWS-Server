@@ -542,7 +542,7 @@ export class KursblockungDynStatistik extends JavaObject {
 		return ['de.svws_nrw.core.kursblockung.KursblockungDynStatistik'].includes(name);
 	}
 
-	public static class = new Class<KursblockungDynStatistik>('de.svws_nrw.core.kursblockung.KursblockungDynStatistik');
+	public static readonly class = new Class<KursblockungDynStatistik>('de.svws_nrw.core.kursblockung.KursblockungDynStatistik');
 
 }
 

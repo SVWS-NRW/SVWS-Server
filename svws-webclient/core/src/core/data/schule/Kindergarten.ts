@@ -76,7 +76,7 @@ export class Kindergarten extends JavaObject {
 		return ['de.svws_nrw.core.data.schule.Kindergarten'].includes(name);
 	}
 
-	public static class = new Class<Kindergarten>('de.svws_nrw.core.data.schule.Kindergarten');
+	public static readonly class = new Class<Kindergarten>('de.svws_nrw.core.data.schule.Kindergarten');
 
 	public static transpilerFromJSON(json: string): Kindergarten {
 		const obj = JSON.parse(json) as Partial<Kindergarten>;

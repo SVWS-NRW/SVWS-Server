@@ -70,7 +70,7 @@ export class KursblockungAlgorithmusKFachwahlmatrix extends KursblockungAlgorith
 		return ['de.svws_nrw.core.kursblockung.KursblockungAlgorithmusKFachwahlmatrix', 'de.svws_nrw.core.kursblockung.KursblockungAlgorithmusK'].includes(name);
 	}
 
-	public static class = new Class<KursblockungAlgorithmusKFachwahlmatrix>('de.svws_nrw.core.kursblockung.KursblockungAlgorithmusKFachwahlmatrix');
+	public static readonly class = new Class<KursblockungAlgorithmusKFachwahlmatrix>('de.svws_nrw.core.kursblockung.KursblockungAlgorithmusKFachwahlmatrix');
 
 }
 

@@ -31,7 +31,7 @@ export class KAOAAnschlussoptionenKatalogEintrag extends CoreTypeData {
 		return ['de.svws_nrw.asd.data.kaoa.KAOAAnschlussoptionenKatalogEintrag', 'de.svws_nrw.asd.data.CoreTypeData'].includes(name);
 	}
 
-	public static class = new Class<KAOAAnschlussoptionenKatalogEintrag>('de.svws_nrw.asd.data.kaoa.KAOAAnschlussoptionenKatalogEintrag');
+	public static readonly class = new Class<KAOAAnschlussoptionenKatalogEintrag>('de.svws_nrw.asd.data.kaoa.KAOAAnschlussoptionenKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): KAOAAnschlussoptionenKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<KAOAAnschlussoptionenKatalogEintrag>;

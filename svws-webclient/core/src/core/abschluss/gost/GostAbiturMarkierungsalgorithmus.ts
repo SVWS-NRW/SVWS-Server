@@ -1244,7 +1244,7 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 		return ['de.svws_nrw.core.abschluss.gost.GostAbiturMarkierungsalgorithmus'].includes(name);
 	}
 
-	public static class = new Class<GostAbiturMarkierungsalgorithmus>('de.svws_nrw.core.abschluss.gost.GostAbiturMarkierungsalgorithmus');
+	public static readonly class = new Class<GostAbiturMarkierungsalgorithmus>('de.svws_nrw.core.abschluss.gost.GostAbiturMarkierungsalgorithmus');
 
 }
 

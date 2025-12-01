@@ -44,7 +44,7 @@ export class SchuldateiVersion extends JavaObject {
 		return ['de.svws_nrw.schulen.v1.data.SchuldateiVersion'].includes(name);
 	}
 
-	public static class = new Class<SchuldateiVersion>('de.svws_nrw.schulen.v1.data.SchuldateiVersion');
+	public static readonly class = new Class<SchuldateiVersion>('de.svws_nrw.schulen.v1.data.SchuldateiVersion');
 
 	public static transpilerFromJSON(json: string): SchuldateiVersion {
 		const obj = JSON.parse(json) as Partial<SchuldateiVersion>;

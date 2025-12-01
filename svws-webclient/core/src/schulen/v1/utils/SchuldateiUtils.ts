@@ -236,7 +236,7 @@ export class SchuldateiUtils extends JavaObject {
 		return ['de.svws_nrw.schulen.v1.utils.SchuldateiUtils'].includes(name);
 	}
 
-	public static class = new Class<SchuldateiUtils>('de.svws_nrw.schulen.v1.utils.SchuldateiUtils');
+	public static readonly class = new Class<SchuldateiUtils>('de.svws_nrw.schulen.v1.utils.SchuldateiUtils');
 
 }
 

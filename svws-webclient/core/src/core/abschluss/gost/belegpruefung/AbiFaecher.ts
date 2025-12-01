@@ -220,7 +220,7 @@ export class AbiFaecher extends GostBelegpruefung {
 		return ['de.svws_nrw.core.abschluss.gost.belegpruefung.AbiFaecher', 'de.svws_nrw.core.abschluss.gost.GostBelegpruefung'].includes(name);
 	}
 
-	public static class = new Class<AbiFaecher>('de.svws_nrw.core.abschluss.gost.belegpruefung.AbiFaecher');
+	public static readonly class = new Class<AbiFaecher>('de.svws_nrw.core.abschluss.gost.belegpruefung.AbiFaecher');
 
 }
 

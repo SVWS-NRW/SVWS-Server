@@ -64,7 +64,7 @@ export class ValidatorException extends RuntimeException {
 		return ['java.lang.Throwable', 'de.svws_nrw.asd.validate.ValidatorException', 'java.lang.RuntimeException', 'java.lang.Exception', 'java.io.Serializable'].includes(name);
 	}
 
-	public static class = new Class<ValidatorException>('de.svws_nrw.asd.validate.ValidatorException');
+	public static readonly class = new Class<ValidatorException>('de.svws_nrw.asd.validate.ValidatorException');
 
 }
 

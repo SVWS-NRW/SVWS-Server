@@ -69,7 +69,7 @@ export class BetriebAnsprechpartner extends JavaObject {
 		return ['de.svws_nrw.core.data.betrieb.BetriebAnsprechpartner'].includes(name);
 	}
 
-	public static class = new Class<BetriebAnsprechpartner>('de.svws_nrw.core.data.betrieb.BetriebAnsprechpartner');
+	public static readonly class = new Class<BetriebAnsprechpartner>('de.svws_nrw.core.data.betrieb.BetriebAnsprechpartner');
 
 	public static transpilerFromJSON(json: string): BetriebAnsprechpartner {
 		const obj = JSON.parse(json) as Partial<BetriebAnsprechpartner>;

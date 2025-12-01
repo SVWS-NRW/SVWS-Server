@@ -1261,7 +1261,7 @@ export class Abi30GostAbiturMarkierungsalgorithmus extends JavaObject {
 		return ['de.svws_nrw.core.abschluss.gost.Abi30GostAbiturMarkierungsalgorithmus'].includes(name);
 	}
 
-	public static class = new Class<Abi30GostAbiturMarkierungsalgorithmus>('de.svws_nrw.core.abschluss.gost.Abi30GostAbiturMarkierungsalgorithmus');
+	public static readonly class = new Class<Abi30GostAbiturMarkierungsalgorithmus>('de.svws_nrw.core.abschluss.gost.Abi30GostAbiturMarkierungsalgorithmus');
 
 }
 

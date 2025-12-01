@@ -198,7 +198,7 @@ export class AVLMapSubKeySet<K, V> extends JavaObject implements NavigableSet<K>
 		return ['java.util.SequencedSet', 'de.svws_nrw.core.adt.map.AVLMapSubKeySet', 'java.util.SortedSet', 'java.util.Collection', 'java.util.Set', 'java.util.NavigableSet', 'java.lang.Iterable', 'java.util.SequencedCollection'].includes(name);
 	}
 
-	public static class = new Class<AVLMapSubKeySet<any, any>>('de.svws_nrw.core.adt.map.AVLMapSubKeySet');
+	public static readonly class = new Class<AVLMapSubKeySet<any, any>>('de.svws_nrw.core.adt.map.AVLMapSubKeySet');
 
 	public reversed(): NavigableSet<K> {
 		return this.descendingSet();

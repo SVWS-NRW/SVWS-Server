@@ -97,7 +97,7 @@ export class AVLMapSubEntrySet<K, V> extends JavaObject implements JavaSet<JavaM
 		return ['de.svws_nrw.core.adt.map.AVLMapSubEntrySet', 'java.util.Collection', 'java.util.Set', 'java.lang.Iterable'].includes(name);
 	}
 
-	public static class = new Class<AVLMapSubEntrySet<any, any>>('de.svws_nrw.core.adt.map.AVLMapSubEntrySet');
+	public static readonly class = new Class<AVLMapSubEntrySet<any, any>>('de.svws_nrw.core.adt.map.AVLMapSubEntrySet');
 
 	public [Symbol.iterator](): Iterator<JavaMapEntry<any, any>> {
 		const iter: JavaIterator<JavaMapEntry<any, any>> = this.iterator();

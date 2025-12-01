@@ -19,7 +19,7 @@ export class KindergartenbesuchKatalogEintrag extends CoreTypeData {
 		return ['de.svws_nrw.asd.data.schule.KindergartenbesuchKatalogEintrag', 'de.svws_nrw.asd.data.CoreTypeData'].includes(name);
 	}
 
-	public static class = new Class<KindergartenbesuchKatalogEintrag>('de.svws_nrw.asd.data.schule.KindergartenbesuchKatalogEintrag');
+	public static readonly class = new Class<KindergartenbesuchKatalogEintrag>('de.svws_nrw.asd.data.schule.KindergartenbesuchKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): KindergartenbesuchKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<KindergartenbesuchKatalogEintrag>;

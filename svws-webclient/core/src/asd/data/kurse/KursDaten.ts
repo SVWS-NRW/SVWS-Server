@@ -113,7 +113,7 @@ export class KursDaten extends JavaObject {
 		return ['de.svws_nrw.asd.data.kurse.KursDaten'].includes(name);
 	}
 
-	public static class = new Class<KursDaten>('de.svws_nrw.asd.data.kurse.KursDaten');
+	public static readonly class = new Class<KursDaten>('de.svws_nrw.asd.data.kurse.KursDaten');
 
 	public static transpilerFromJSON(json: string): KursDaten {
 		const obj = JSON.parse(json) as Partial<KursDaten>;

@@ -24,7 +24,7 @@ export class BerufskollegBerufsebeneKatalogEintrag extends CoreTypeData {
 		return ['de.svws_nrw.asd.data.schule.BerufskollegBerufsebeneKatalogEintrag', 'de.svws_nrw.asd.data.CoreTypeData'].includes(name);
 	}
 
-	public static class = new Class<BerufskollegBerufsebeneKatalogEintrag>('de.svws_nrw.asd.data.schule.BerufskollegBerufsebeneKatalogEintrag');
+	public static readonly class = new Class<BerufskollegBerufsebeneKatalogEintrag>('de.svws_nrw.asd.data.schule.BerufskollegBerufsebeneKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): BerufskollegBerufsebeneKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<BerufskollegBerufsebeneKatalogEintrag>;

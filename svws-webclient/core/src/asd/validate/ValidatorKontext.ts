@@ -151,7 +151,7 @@ export class ValidatorKontext extends JavaObject {
 		return ['de.svws_nrw.asd.validate.ValidatorKontext'].includes(name);
 	}
 
-	public static class = new Class<ValidatorKontext>('de.svws_nrw.asd.validate.ValidatorKontext');
+	public static readonly class = new Class<ValidatorKontext>('de.svws_nrw.asd.validate.ValidatorKontext');
 
 }
 

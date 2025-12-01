@@ -55,7 +55,7 @@ export class BerufskollegBerufsebene1 extends CoreTypeSimple<BerufskollegBerufse
 		return ['de.svws_nrw.asd.types.schule.BerufskollegBerufsebene1', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'de.svws_nrw.asd.types.CoreTypeSimple'].includes(name);
 	}
 
-	public static class = new Class<BerufskollegBerufsebene1>('de.svws_nrw.asd.types.schule.BerufskollegBerufsebene1');
+	public static readonly class = new Class<BerufskollegBerufsebene1>('de.svws_nrw.asd.types.schule.BerufskollegBerufsebene1');
 
 }
 

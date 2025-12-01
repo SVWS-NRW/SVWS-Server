@@ -59,7 +59,7 @@ export class GostKlausurenKalenderinformation extends JavaObject {
 		return ['de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenKalenderinformation'].includes(name);
 	}
 
-	public static class = new Class<GostKlausurenKalenderinformation>('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenKalenderinformation');
+	public static readonly class = new Class<GostKlausurenKalenderinformation>('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenKalenderinformation');
 
 	public static transpilerFromJSON(json: string): GostKlausurenKalenderinformation {
 		const obj = JSON.parse(json) as Partial<GostKlausurenKalenderinformation>;

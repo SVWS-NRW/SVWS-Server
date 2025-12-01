@@ -698,7 +698,7 @@ export class Abi30GostAbiturMarkierungspruefung extends JavaObject {
 		return ['de.svws_nrw.core.abschluss.gost.Abi30GostAbiturMarkierungspruefung'].includes(name);
 	}
 
-	public static class = new Class<Abi30GostAbiturMarkierungspruefung>('de.svws_nrw.core.abschluss.gost.Abi30GostAbiturMarkierungspruefung');
+	public static readonly class = new Class<Abi30GostAbiturMarkierungspruefung>('de.svws_nrw.core.abschluss.gost.Abi30GostAbiturMarkierungspruefung');
 
 }
 

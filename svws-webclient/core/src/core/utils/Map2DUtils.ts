@@ -149,7 +149,7 @@ export class Map2DUtils extends JavaObject {
 		return ['de.svws_nrw.core.utils.Map2DUtils'].includes(name);
 	}
 
-	public static class = new Class<Map2DUtils>('de.svws_nrw.core.utils.Map2DUtils');
+	public static readonly class = new Class<Map2DUtils>('de.svws_nrw.core.utils.Map2DUtils');
 
 }
 

@@ -89,7 +89,7 @@ export class JahrgangsDaten extends JavaObject {
 		return ['de.svws_nrw.core.data.jahrgang.JahrgangsDaten'].includes(name);
 	}
 
-	public static class = new Class<JahrgangsDaten>('de.svws_nrw.core.data.jahrgang.JahrgangsDaten');
+	public static readonly class = new Class<JahrgangsDaten>('de.svws_nrw.core.data.jahrgang.JahrgangsDaten');
 
 	public static transpilerFromJSON(json: string): JahrgangsDaten {
 		const obj = JSON.parse(json) as Partial<JahrgangsDaten>;

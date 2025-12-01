@@ -22,7 +22,7 @@ export class BKGymBelegpruefungD10 extends BKGymBelegpruefung {
 		return ['de.svws_nrw.core.abschluss.bk.d.BKGymBelegpruefungD10', 'de.svws_nrw.core.abschluss.bk.d.BKGymBelegpruefung'].includes(name);
 	}
 
-	public static class = new Class<BKGymBelegpruefungD10>('de.svws_nrw.core.abschluss.bk.d.BKGymBelegpruefungD10');
+	public static readonly class = new Class<BKGymBelegpruefungD10>('de.svws_nrw.core.abschluss.bk.d.BKGymBelegpruefungD10');
 
 }
 

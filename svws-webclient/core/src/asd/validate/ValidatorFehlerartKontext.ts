@@ -61,7 +61,7 @@ export class ValidatorFehlerartKontext extends JavaObject {
 		return ['de.svws_nrw.asd.validate.ValidatorFehlerartKontext'].includes(name);
 	}
 
-	public static class = new Class<ValidatorFehlerartKontext>('de.svws_nrw.asd.validate.ValidatorFehlerartKontext');
+	public static readonly class = new Class<ValidatorFehlerartKontext>('de.svws_nrw.asd.validate.ValidatorFehlerartKontext');
 
 	public static transpilerFromJSON(json: string): ValidatorFehlerartKontext {
 		const obj = JSON.parse(json) as Partial<ValidatorFehlerartKontext>;

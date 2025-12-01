@@ -67,7 +67,7 @@ export class ENMServerConnection extends JavaObject {
 		return ['de.svws_nrw.core.data.enm.ENMServerConnection'].includes(name);
 	}
 
-	public static class = new Class<ENMServerConnection>('de.svws_nrw.core.data.enm.ENMServerConnection');
+	public static readonly class = new Class<ENMServerConnection>('de.svws_nrw.core.data.enm.ENMServerConnection');
 
 	public static transpilerFromJSON(json: string): ENMServerConnection {
 		const obj = JSON.parse(json) as Partial<ENMServerConnection>;

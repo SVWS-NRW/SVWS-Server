@@ -19,7 +19,7 @@ export class SprachreferenzniveauKatalogEintrag extends CoreTypeData {
 		return ['de.svws_nrw.asd.data.fach.SprachreferenzniveauKatalogEintrag', 'de.svws_nrw.asd.data.CoreTypeData'].includes(name);
 	}
 
-	public static class = new Class<SprachreferenzniveauKatalogEintrag>('de.svws_nrw.asd.data.fach.SprachreferenzniveauKatalogEintrag');
+	public static readonly class = new Class<SprachreferenzniveauKatalogEintrag>('de.svws_nrw.asd.data.fach.SprachreferenzniveauKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): SprachreferenzniveauKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<SprachreferenzniveauKatalogEintrag>;

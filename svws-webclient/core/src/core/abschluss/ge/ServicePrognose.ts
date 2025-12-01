@@ -122,7 +122,7 @@ export class ServicePrognose extends Service {
 		return ['de.svws_nrw.core.abschluss.ge.ServicePrognose', 'de.svws_nrw.core.Service'].includes(name);
 	}
 
-	public static class = new Class<ServicePrognose>('de.svws_nrw.core.abschluss.ge.ServicePrognose');
+	public static readonly class = new Class<ServicePrognose>('de.svws_nrw.core.abschluss.ge.ServicePrognose');
 
 }
 

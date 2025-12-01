@@ -19,7 +19,7 @@ export class KAOAZusatzmerkmaleOptionsartenKatalogEintrag extends CoreTypeData {
 		return ['de.svws_nrw.asd.data.CoreTypeData', 'de.svws_nrw.asd.data.kaoa.KAOAZusatzmerkmaleOptionsartenKatalogEintrag'].includes(name);
 	}
 
-	public static class = new Class<KAOAZusatzmerkmaleOptionsartenKatalogEintrag>('de.svws_nrw.asd.data.kaoa.KAOAZusatzmerkmaleOptionsartenKatalogEintrag');
+	public static readonly class = new Class<KAOAZusatzmerkmaleOptionsartenKatalogEintrag>('de.svws_nrw.asd.data.kaoa.KAOAZusatzmerkmaleOptionsartenKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): KAOAZusatzmerkmaleOptionsartenKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<KAOAZusatzmerkmaleOptionsartenKatalogEintrag>;

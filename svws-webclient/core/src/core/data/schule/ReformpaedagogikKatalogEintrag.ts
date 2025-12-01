@@ -88,7 +88,7 @@ export class ReformpaedagogikKatalogEintrag extends JavaObject {
 		return ['de.svws_nrw.core.data.schule.ReformpaedagogikKatalogEintrag'].includes(name);
 	}
 
-	public static class = new Class<ReformpaedagogikKatalogEintrag>('de.svws_nrw.core.data.schule.ReformpaedagogikKatalogEintrag');
+	public static readonly class = new Class<ReformpaedagogikKatalogEintrag>('de.svws_nrw.core.data.schule.ReformpaedagogikKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): ReformpaedagogikKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<ReformpaedagogikKatalogEintrag>;

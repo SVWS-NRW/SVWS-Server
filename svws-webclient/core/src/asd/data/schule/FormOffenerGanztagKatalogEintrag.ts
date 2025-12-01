@@ -19,7 +19,7 @@ export class FormOffenerGanztagKatalogEintrag extends CoreTypeDataNurSchulformen
 		return ['de.svws_nrw.asd.data.schule.FormOffenerGanztagKatalogEintrag', 'de.svws_nrw.asd.data.CoreTypeData', 'de.svws_nrw.asd.data.CoreTypeDataNurSchulformen'].includes(name);
 	}
 
-	public static class = new Class<FormOffenerGanztagKatalogEintrag>('de.svws_nrw.asd.data.schule.FormOffenerGanztagKatalogEintrag');
+	public static readonly class = new Class<FormOffenerGanztagKatalogEintrag>('de.svws_nrw.asd.data.schule.FormOffenerGanztagKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): FormOffenerGanztagKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<FormOffenerGanztagKatalogEintrag>;

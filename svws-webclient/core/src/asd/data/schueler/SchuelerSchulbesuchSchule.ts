@@ -69,7 +69,7 @@ export class SchuelerSchulbesuchSchule extends JavaObject {
 		return ['de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchSchule'].includes(name);
 	}
 
-	public static class = new Class<SchuelerSchulbesuchSchule>('de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchSchule');
+	public static readonly class = new Class<SchuelerSchulbesuchSchule>('de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchSchule');
 
 	public static transpilerFromJSON(json: string): SchuelerSchulbesuchSchule {
 		const obj = JSON.parse(json) as Partial<SchuelerSchulbesuchSchule>;

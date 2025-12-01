@@ -40,7 +40,7 @@ export class ValidatorLpLehrerPersonaldaten extends Validator {
 		return ['de.svws_nrw.asd.validate.BasicValidator', 'de.svws_nrw.asd.validate.lehrer.ValidatorLpLehrerPersonaldaten', 'de.svws_nrw.asd.validate.Validator'].includes(name);
 	}
 
-	public static class = new Class<ValidatorLpLehrerPersonaldaten>('de.svws_nrw.asd.validate.lehrer.ValidatorLpLehrerPersonaldaten');
+	public static readonly class = new Class<ValidatorLpLehrerPersonaldaten>('de.svws_nrw.asd.validate.lehrer.ValidatorLpLehrerPersonaldaten');
 
 }
 

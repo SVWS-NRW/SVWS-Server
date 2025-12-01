@@ -226,7 +226,7 @@ export class AVLSet<E> extends JavaObject implements NavigableSet<E> {
 		return ['java.util.SequencedSet', 'de.svws_nrw.core.adt.set.AVLSet', 'java.util.SortedSet', 'java.util.Collection', 'java.util.Set', 'java.util.NavigableSet', 'java.lang.Iterable', 'java.util.SequencedCollection'].includes(name);
 	}
 
-	public static class = new Class<AVLSet<any>>('de.svws_nrw.core.adt.set.AVLSet');
+	public static readonly class = new Class<AVLSet<any>>('de.svws_nrw.core.adt.set.AVLSet');
 
 	public reversed(): NavigableSet<E> {
 		return this.descendingSet();

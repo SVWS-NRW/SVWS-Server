@@ -803,7 +803,7 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 		return ['de.svws_nrw.core.adt.map.AVLMapSubMap', 'java.util.SequencedMap', 'java.util.Map', 'java.util.NavigableMap', 'java.util.SortedMap'].includes(name);
 	}
 
-	public static class = new Class<AVLMapSubMap<any, any>>('de.svws_nrw.core.adt.map.AVLMapSubMap');
+	public static readonly class = new Class<AVLMapSubMap<any, any>>('de.svws_nrw.core.adt.map.AVLMapSubMap');
 
 	public reversed(): NavigableMap<K, V> {
 		return this.descendingMap();

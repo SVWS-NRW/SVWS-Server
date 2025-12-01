@@ -29,7 +29,7 @@ export class BKAnlageAFach extends JavaObject {
 		return ['de.svws_nrw.core.abschluss.bk.a.BKAnlageAFach'].includes(name);
 	}
 
-	public static class = new Class<BKAnlageAFach>('de.svws_nrw.core.abschluss.bk.a.BKAnlageAFach');
+	public static readonly class = new Class<BKAnlageAFach>('de.svws_nrw.core.abschluss.bk.a.BKAnlageAFach');
 
 }
 

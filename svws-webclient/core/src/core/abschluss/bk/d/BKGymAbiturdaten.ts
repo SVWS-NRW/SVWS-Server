@@ -199,7 +199,7 @@ export class BKGymAbiturdaten extends JavaObject {
 		return ['de.svws_nrw.core.abschluss.bk.d.BKGymAbiturdaten'].includes(name);
 	}
 
-	public static class = new Class<BKGymAbiturdaten>('de.svws_nrw.core.abschluss.bk.d.BKGymAbiturdaten');
+	public static readonly class = new Class<BKGymAbiturdaten>('de.svws_nrw.core.abschluss.bk.d.BKGymAbiturdaten');
 
 	public static transpilerFromJSON(json: string): BKGymAbiturdaten {
 		const obj = JSON.parse(json) as Partial<BKGymAbiturdaten>;

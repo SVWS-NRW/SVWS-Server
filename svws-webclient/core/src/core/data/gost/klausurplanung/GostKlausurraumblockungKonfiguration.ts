@@ -64,7 +64,7 @@ export class GostKlausurraumblockungKonfiguration extends JavaObject {
 		return ['de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumblockungKonfiguration'].includes(name);
 	}
 
-	public static class = new Class<GostKlausurraumblockungKonfiguration>('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumblockungKonfiguration');
+	public static readonly class = new Class<GostKlausurraumblockungKonfiguration>('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumblockungKonfiguration');
 
 	public static transpilerFromJSON(json: string): GostKlausurraumblockungKonfiguration {
 		const obj = JSON.parse(json) as Partial<GostKlausurraumblockungKonfiguration>;

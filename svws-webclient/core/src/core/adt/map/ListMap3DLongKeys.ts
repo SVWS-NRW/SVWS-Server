@@ -750,7 +750,7 @@ export class ListMap3DLongKeys<V> extends JavaObject {
 		return ['de.svws_nrw.core.adt.map.ListMap3DLongKeys'].includes(name);
 	}
 
-	public static class = new Class<ListMap3DLongKeys<any>>('de.svws_nrw.core.adt.map.ListMap3DLongKeys');
+	public static readonly class = new Class<ListMap3DLongKeys<any>>('de.svws_nrw.core.adt.map.ListMap3DLongKeys');
 
 }
 

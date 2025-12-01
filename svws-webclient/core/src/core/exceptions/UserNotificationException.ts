@@ -34,7 +34,7 @@ export class UserNotificationException extends RuntimeException {
 		return ['java.lang.Throwable', 'java.lang.RuntimeException', 'java.lang.Exception', 'de.svws_nrw.core.exceptions.UserNotificationException', 'java.io.Serializable'].includes(name);
 	}
 
-	public static class = new Class<UserNotificationException>('de.svws_nrw.core.exceptions.UserNotificationException');
+	public static readonly class = new Class<UserNotificationException>('de.svws_nrw.core.exceptions.UserNotificationException');
 
 }
 

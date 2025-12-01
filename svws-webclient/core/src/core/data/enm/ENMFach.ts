@@ -44,7 +44,7 @@ export class ENMFach extends JavaObject {
 		return ['de.svws_nrw.core.data.enm.ENMFach'].includes(name);
 	}
 
-	public static class = new Class<ENMFach>('de.svws_nrw.core.data.enm.ENMFach');
+	public static readonly class = new Class<ENMFach>('de.svws_nrw.core.data.enm.ENMFach');
 
 	public static transpilerFromJSON(json: string): ENMFach {
 		const obj = JSON.parse(json) as Partial<ENMFach>;

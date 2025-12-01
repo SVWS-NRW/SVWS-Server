@@ -54,7 +54,7 @@ export class StundenplanblockungManagerLerngruppeStunde extends JavaObject {
 		return ['de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerLerngruppeStunde'].includes(name);
 	}
 
-	public static class = new Class<StundenplanblockungManagerLerngruppeStunde>('de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerLerngruppeStunde');
+	public static readonly class = new Class<StundenplanblockungManagerLerngruppeStunde>('de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerLerngruppeStunde');
 
 }
 

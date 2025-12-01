@@ -110,7 +110,7 @@ export class AVLMapSubCollection<K, V> extends JavaObject implements Collection<
 		return ['java.util.Collection', 'java.lang.Iterable', 'de.svws_nrw.core.adt.map.AVLMapSubCollection'].includes(name);
 	}
 
-	public static class = new Class<AVLMapSubCollection<any, any>>('de.svws_nrw.core.adt.map.AVLMapSubCollection');
+	public static readonly class = new Class<AVLMapSubCollection<any, any>>('de.svws_nrw.core.adt.map.AVLMapSubCollection');
 
 	public [Symbol.iterator](): Iterator<V> {
 		const iter: JavaIterator<V> = this.iterator();

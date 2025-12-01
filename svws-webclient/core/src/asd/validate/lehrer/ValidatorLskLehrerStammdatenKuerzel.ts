@@ -36,7 +36,7 @@ export class ValidatorLskLehrerStammdatenKuerzel extends Validator {
 		return ['de.svws_nrw.asd.validate.BasicValidator', 'de.svws_nrw.asd.validate.lehrer.ValidatorLskLehrerStammdatenKuerzel', 'de.svws_nrw.asd.validate.Validator'].includes(name);
 	}
 
-	public static class = new Class<ValidatorLskLehrerStammdatenKuerzel>('de.svws_nrw.asd.validate.lehrer.ValidatorLskLehrerStammdatenKuerzel');
+	public static readonly class = new Class<ValidatorLskLehrerStammdatenKuerzel>('de.svws_nrw.asd.validate.lehrer.ValidatorLskLehrerStammdatenKuerzel');
 
 }
 

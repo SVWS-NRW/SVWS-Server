@@ -36,7 +36,7 @@ export class KAOAMerkmalKatalogEintrag extends CoreTypeData {
 		return ['de.svws_nrw.asd.data.CoreTypeData', 'de.svws_nrw.asd.data.kaoa.KAOAMerkmalKatalogEintrag'].includes(name);
 	}
 
-	public static class = new Class<KAOAMerkmalKatalogEintrag>('de.svws_nrw.asd.data.kaoa.KAOAMerkmalKatalogEintrag');
+	public static readonly class = new Class<KAOAMerkmalKatalogEintrag>('de.svws_nrw.asd.data.kaoa.KAOAMerkmalKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): KAOAMerkmalKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<KAOAMerkmalKatalogEintrag>;

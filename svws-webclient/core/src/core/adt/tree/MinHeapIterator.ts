@@ -72,7 +72,7 @@ export class MinHeapIterator<T> extends JavaObject implements JavaIterator<T> {
 		return ['java.util.Iterator', 'de.svws_nrw.core.adt.tree.MinHeapIterator'].includes(name);
 	}
 
-	public static class = new Class<MinHeapIterator<any>>('de.svws_nrw.core.adt.tree.MinHeapIterator');
+	public static readonly class = new Class<MinHeapIterator<any>>('de.svws_nrw.core.adt.tree.MinHeapIterator');
 
 }
 

@@ -54,7 +54,7 @@ export class SchuelerVermerke extends JavaObject {
 		return ['de.svws_nrw.core.data.schueler.SchuelerVermerke'].includes(name);
 	}
 
-	public static class = new Class<SchuelerVermerke>('de.svws_nrw.core.data.schueler.SchuelerVermerke');
+	public static readonly class = new Class<SchuelerVermerke>('de.svws_nrw.core.data.schueler.SchuelerVermerke');
 
 	public static transpilerFromJSON(json: string): SchuelerVermerke {
 		const obj = JSON.parse(json) as Partial<SchuelerVermerke>;

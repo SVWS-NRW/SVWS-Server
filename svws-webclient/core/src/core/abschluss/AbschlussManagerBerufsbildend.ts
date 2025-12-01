@@ -95,7 +95,7 @@ export class AbschlussManagerBerufsbildend extends JavaObject {
 		return ['de.svws_nrw.core.abschluss.AbschlussManagerBerufsbildend'].includes(name);
 	}
 
-	public static class = new Class<AbschlussManagerBerufsbildend>('de.svws_nrw.core.abschluss.AbschlussManagerBerufsbildend');
+	public static readonly class = new Class<AbschlussManagerBerufsbildend>('de.svws_nrw.core.abschluss.AbschlussManagerBerufsbildend');
 
 }
 

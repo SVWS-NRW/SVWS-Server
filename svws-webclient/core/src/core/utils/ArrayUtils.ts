@@ -56,7 +56,7 @@ export class ArrayUtils extends JavaObject {
 		return ['de.svws_nrw.core.utils.ArrayUtils'].includes(name);
 	}
 
-	public static class = new Class<ArrayUtils>('de.svws_nrw.core.utils.ArrayUtils');
+	public static readonly class = new Class<ArrayUtils>('de.svws_nrw.core.utils.ArrayUtils');
 
 }
 

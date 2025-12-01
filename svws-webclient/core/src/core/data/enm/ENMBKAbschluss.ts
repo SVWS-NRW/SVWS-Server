@@ -87,7 +87,7 @@ export class ENMBKAbschluss extends JavaObject {
 		return ['de.svws_nrw.core.data.enm.ENMBKAbschluss'].includes(name);
 	}
 
-	public static class = new Class<ENMBKAbschluss>('de.svws_nrw.core.data.enm.ENMBKAbschluss');
+	public static readonly class = new Class<ENMBKAbschluss>('de.svws_nrw.core.data.enm.ENMBKAbschluss');
 
 	public static transpilerFromJSON(json: string): ENMBKAbschluss {
 		const obj = JSON.parse(json) as Partial<ENMBKAbschluss>;

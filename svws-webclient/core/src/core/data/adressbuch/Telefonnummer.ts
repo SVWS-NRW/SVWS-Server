@@ -29,7 +29,7 @@ export class Telefonnummer extends JavaObject {
 		return ['de.svws_nrw.core.data.adressbuch.Telefonnummer'].includes(name);
 	}
 
-	public static class = new Class<Telefonnummer>('de.svws_nrw.core.data.adressbuch.Telefonnummer');
+	public static readonly class = new Class<Telefonnummer>('de.svws_nrw.core.data.adressbuch.Telefonnummer');
 
 	public static transpilerFromJSON(json: string): Telefonnummer {
 		const obj = JSON.parse(json) as Partial<Telefonnummer>;

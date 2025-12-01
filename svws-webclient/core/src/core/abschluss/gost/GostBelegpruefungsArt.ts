@@ -99,7 +99,7 @@ export class GostBelegpruefungsArt extends JavaEnum<GostBelegpruefungsArt> {
 		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<GostBelegpruefungsArt>('de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt');
+	public static readonly class = new Class<GostBelegpruefungsArt>('de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt');
 
 }
 

@@ -48,7 +48,7 @@ export class SchuelerUtils extends JavaObject {
 		return ['de.svws_nrw.core.utils.schueler.SchuelerUtils'].includes(name);
 	}
 
-	public static class = new Class<SchuelerUtils>('de.svws_nrw.core.utils.schueler.SchuelerUtils');
+	public static readonly class = new Class<SchuelerUtils>('de.svws_nrw.core.utils.schueler.SchuelerUtils');
 
 }
 

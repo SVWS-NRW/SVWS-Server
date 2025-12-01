@@ -67,7 +67,7 @@ export class LiterarischKuenstlerisch extends GostBelegpruefung {
 		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefung', 'de.svws_nrw.core.abschluss.gost.belegpruefung.LiterarischKuenstlerisch'].includes(name);
 	}
 
-	public static class = new Class<LiterarischKuenstlerisch>('de.svws_nrw.core.abschluss.gost.belegpruefung.LiterarischKuenstlerisch');
+	public static readonly class = new Class<LiterarischKuenstlerisch>('de.svws_nrw.core.abschluss.gost.belegpruefung.LiterarischKuenstlerisch');
 
 }
 

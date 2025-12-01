@@ -549,7 +549,7 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefung', 'de.svws_nrw.core.abschluss.gost.belegpruefung.KurszahlenUndWochenstunden'].includes(name);
 	}
 
-	public static class = new Class<KurszahlenUndWochenstunden>('de.svws_nrw.core.abschluss.gost.belegpruefung.KurszahlenUndWochenstunden');
+	public static readonly class = new Class<KurszahlenUndWochenstunden>('de.svws_nrw.core.abschluss.gost.belegpruefung.KurszahlenUndWochenstunden');
 
 }
 

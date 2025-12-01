@@ -688,7 +688,7 @@ export class LehrerLehrbefaehigung extends JavaEnum<LehrerLehrbefaehigung> imple
 		return ['de.svws_nrw.asd.types.lehrer.LehrerLehrbefaehigung', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<LehrerLehrbefaehigung>('de.svws_nrw.asd.types.lehrer.LehrerLehrbefaehigung');
+	public static readonly class = new Class<LehrerLehrbefaehigung>('de.svws_nrw.asd.types.lehrer.LehrerLehrbefaehigung');
 
 }
 

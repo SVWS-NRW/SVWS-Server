@@ -91,7 +91,7 @@ export class GostLaufbahnplanungFachkombinationTyp extends JavaEnum<GostLaufbahn
 		return ['de.svws_nrw.core.types.gost.GostLaufbahnplanungFachkombinationTyp', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<GostLaufbahnplanungFachkombinationTyp>('de.svws_nrw.core.types.gost.GostLaufbahnplanungFachkombinationTyp');
+	public static readonly class = new Class<GostLaufbahnplanungFachkombinationTyp>('de.svws_nrw.core.types.gost.GostLaufbahnplanungFachkombinationTyp');
 
 }
 
