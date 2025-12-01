@@ -14,6 +14,8 @@ dependencies {
 			'**/svws_nrw/schuldatei/*/data/**/*.java',
 			'**/svws_nrw/schuldatei/*/utils/**/*.java'
 		], excludes: [
+			'**/svws_nrw/core/adt/map/AVL*.java',
+			'**/svws_nrw/core/adt/set/AVL*.java',
 			'**/svws_nrw/core/data/schild3/reporting/SchildReportingDate.java',
 			'**/svws_nrw/core/data/schild3/reporting/SchildReportingMemo.java'
 		])

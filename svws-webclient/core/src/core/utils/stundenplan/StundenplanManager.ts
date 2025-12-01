@@ -41,7 +41,6 @@ import type { JavaIterator } from '../../../java/util/JavaIterator';
 import { StundenplanUnterricht, cast_de_svws_nrw_core_data_stundenplan_StundenplanUnterricht } from '../../../core/data/stundenplan/StundenplanUnterricht';
 import { StundenplanKalenderwochenzuordnung } from '../../../core/data/stundenplan/StundenplanKalenderwochenzuordnung';
 import { HashMap3D } from '../../../core/adt/map/HashMap3D';
-import { AVLSet } from '../../../core/adt/set/AVLSet';
 import { StundenplanKonfiguration } from '../../../core/data/stundenplan/StundenplanKonfiguration';
 import { StundenplanZeitraster } from '../../../core/data/stundenplan/StundenplanZeitraster';
 import { StundenplanPausenzeit } from '../../../core/data/stundenplan/StundenplanPausenzeit';
@@ -2228,7 +2227,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private fachInfoByID(idFach: number): string {
-		let fach: StundenplanFach | null = this._fach_by_id.get(idFach);
+		const fach: StundenplanFach | null = this._fach_by_id.get(idFach);
 		return fach === null ? "Fach " + idFach + " ohne Referenz!" : StundenplanManager.fachInfo(fach);
 	}
 
@@ -4462,7 +4461,7 @@ export class StundenplanManager extends JavaObject {
 
 	private static pausenzeitCheckAttributes(pausenzeit: StundenplanPausenzeit): void {
 		DeveloperNotificationException.ifInvalidID("Ungültige ID bei " + StundenplanManager.pausenzeitInfo(pausenzeit), pausenzeit.id);
-		let length: number = Wochentag.values().length;
+		const length: number = Wochentag.values().length;
 		DeveloperNotificationException.ifTrue("Ungültiger Wochentag bei " + StundenplanManager.pausenzeitInfo(pausenzeit), (pausenzeit.wochentag < 1) || (pausenzeit.wochentag > length));
 		Wochentag.fromIDorException(pausenzeit.wochentag);
 		if ((pausenzeit.beginn !== null) && (pausenzeit.ende !== null))
@@ -6729,7 +6728,7 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public unterrichtGetByIDStringOfKlassen(idUnterricht: number): string {
 		const unterricht: StundenplanUnterricht = DeveloperNotificationException.ifMapGetIsNull(this._unterricht_by_id, idUnterricht);
-		const kuerzel: AVLSet<string> = new AVLSet<string>();
+		const kuerzel: HashSet<string> = new HashSet<string>();
 		for (const idKlasse of unterricht.klassen) {
 			const klasse: StundenplanKlasse = DeveloperNotificationException.ifMapGetIsNull(this._klasse_by_id, idKlasse);
 			kuerzel.add(klasse.kuerzel);
@@ -6766,7 +6765,7 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public unterrichtGetByIDStringOfSchienen(idUnterricht: number): string {
 		const unterricht: StundenplanUnterricht = DeveloperNotificationException.ifMapGetIsNull(this._unterricht_by_id, idUnterricht);
-		const kuerzel: AVLSet<string> = new AVLSet<string>();
+		const kuerzel: HashSet<string> = new HashSet<string>();
 		for (const idSchiene of unterricht.schienen) {
 			const schiene: StundenplanSchiene = DeveloperNotificationException.ifMapGetIsNull(this._schiene_by_id, idSchiene);
 			kuerzel.add(schiene.bezeichnung);
@@ -7087,7 +7086,7 @@ export class StundenplanManager extends JavaObject {
 
 	private static zeitrasterCheckAttributes(zeitraster: StundenplanZeitraster): void {
 		DeveloperNotificationException.ifInvalidID("Ungültige ID bei " + StundenplanManager.zeitrasterInfo(zeitraster), zeitraster.id);
-		let length: number = Wochentag.values().length;
+		const length: number = Wochentag.values().length;
 		DeveloperNotificationException.ifTrue("Ungültiger Wochentag bei " + StundenplanManager.zeitrasterInfo(zeitraster), (zeitraster.wochentag < 1) || (zeitraster.wochentag > length));
 		DeveloperNotificationException.ifTrue("Ungültige Unterrichtstunde bei " + StundenplanManager.zeitrasterInfo(zeitraster), (zeitraster.unterrichtstunde < 0) || (zeitraster.unterrichtstunde > 29));
 		if ((zeitraster.stundenbeginn !== null) && (zeitraster.stundenende !== null)) {

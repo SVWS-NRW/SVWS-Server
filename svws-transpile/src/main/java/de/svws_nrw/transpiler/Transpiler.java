@@ -181,12 +181,14 @@ public final class Transpiler extends AbstractProcessor {
 		final CompilationTask compilationTask = compiler.getTask(null, javaFileManager, diagnostics, options, null, javaFiles);
 		compilationTask.setProcessors(Arrays.asList(this));
 		if (Boolean.FALSE.equals(compilationTask.call())) {
-			System.out.println("Fehler beim Compilieren des Java-Codes!");
+			System.err.println("Fehler beim Compilieren des Java-Codes!");
 			// TODO further reactions on compiler errors
 			final List<Diagnostic<? extends JavaFileObject>> diags = diagnostics.getDiagnostics();
+			System.err.println("Compiler Diagnostics: " + diags.size());
 			for (final Diagnostic<? extends JavaFileObject> diag : diags) {
 				System.err.println(diag.getMessage(null));
 			}
+			System.exit(1);
 		}
 	}
 

@@ -13,7 +13,6 @@ import java.util.Set;
 import de.svws_nrw.core.adt.LongArrayKey;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.adt.map.HashMap3D;
-import de.svws_nrw.core.adt.set.AVLSet;
 import de.svws_nrw.core.data.stundenplan.Stundenplan;
 import de.svws_nrw.core.data.stundenplan.StundenplanAufsichtsbereich;
 import de.svws_nrw.core.data.stundenplan.StundenplanFach;
@@ -2398,7 +2397,7 @@ public class StundenplanManager {
 	}
 
 	private @NotNull String fachInfoByID(final long idFach) {
-		StundenplanFach fach = _fach_by_id.get(idFach);
+		final StundenplanFach fach = _fach_by_id.get(idFach);
 		return fach == null ? "Fach " + idFach + " ohne Referenz!" : fachInfo(fach);
 
 	}
@@ -4981,7 +4980,7 @@ public class StundenplanManager {
 		DeveloperNotificationException.ifInvalidID("Ungültige ID bei " + pausenzeitInfo(pausenzeit),
 				pausenzeit.id);
 
-		int length = Wochentag.values().length;
+		final int length = Wochentag.values().length;
 		DeveloperNotificationException.ifTrue("Ungültiger Wochentag bei " + pausenzeitInfo(pausenzeit),
 				(pausenzeit.wochentag < 1) || (pausenzeit.wochentag > length));
 
@@ -7544,7 +7543,7 @@ public class StundenplanManager {
 		final @NotNull StundenplanUnterricht unterricht = DeveloperNotificationException.ifMapGetIsNull(_unterricht_by_id, idUnterricht);
 
 		// Klassenkürzel sammeln und sortieren.
-		final @NotNull AVLSet<String> kuerzel = new AVLSet<>();
+		final @NotNull HashSet<String> kuerzel = new HashSet<>();
 
 		for (final long idKlasse : unterricht.klassen) {
 			final @NotNull StundenplanKlasse klasse = DeveloperNotificationException.ifMapGetIsNull(_klasse_by_id, idKlasse);
@@ -7590,7 +7589,7 @@ public class StundenplanManager {
 		final @NotNull StundenplanUnterricht unterricht = DeveloperNotificationException.ifMapGetIsNull(_unterricht_by_id, idUnterricht);
 
 		// Klassenkürzel sammeln und sortieren.
-		final @NotNull AVLSet<String> kuerzel = new AVLSet<>();
+		final @NotNull HashSet<String> kuerzel = new HashSet<>();
 		for (final long idSchiene : unterricht.schienen) {
 			final @NotNull StundenplanSchiene schiene = DeveloperNotificationException.ifMapGetIsNull(_schiene_by_id, idSchiene);
 			kuerzel.add(schiene.bezeichnung);
@@ -7966,7 +7965,7 @@ public class StundenplanManager {
 		DeveloperNotificationException.ifInvalidID("Ungültige ID bei " + zeitrasterInfo(zeitraster),
 				zeitraster.id);
 
-		int length = Wochentag.values().length;
+		final int length = Wochentag.values().length;
 		DeveloperNotificationException.ifTrue("Ungültiger Wochentag bei " + zeitrasterInfo(zeitraster),
 				(zeitraster.wochentag < 1) || (zeitraster.wochentag > length));
 
