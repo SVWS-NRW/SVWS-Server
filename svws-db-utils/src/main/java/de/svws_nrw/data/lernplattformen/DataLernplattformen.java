@@ -67,7 +67,8 @@ public class DataLernplattformen {
 	 * @param idSchuljahresabschnitt  		die ID des Schuljahresabschnitts
 	 * @param dataKatalogLernplattformen	DataKatalogLernplattformen
 	 */
-	public DataLernplattformen(final @NotNull DBEntityManager conn, final int idSchuljahresabschnitt, final DataKatalogLernplattformen dataKatalogLernplattformen) {
+	public DataLernplattformen(final @NotNull DBEntityManager conn, final int idSchuljahresabschnitt,
+			final DataKatalogLernplattformen dataKatalogLernplattformen) {
 		this.conn = conn;
 		this.idSchuljahresabschnitt = idSchuljahresabschnitt;
 		this.dataKatalogLernplattformen = dataKatalogLernplattformen;
@@ -174,12 +175,14 @@ public class DataLernplattformen {
 			if ((schuelerLernabschnitt.Klassen_ID == null) || (schuelerLernabschnitt.Jahrgang_ID == null))
 				continue;
 
+			if (zustimmungSchuelerIstVorhanden(lernplattformByIdSchueler, schuelerLernabschnitt.Schueler_ID))
+				addSchuelerToExport(schuelerToExport, schuelerLernabschnitt, schuelerById, lernplattformByIdSchueler, mapLernplattformenCredentials);
 			addFaecherAndLerngruppenToExport(lerngruppenToExport, schuelerToExport, faecherToExport, schuelerLernabschnitt, mapSchuelerLeistungsdaten,
 					mapFaecher, schuelerById, schuljahresabschnitt, lerngruppenIDZaehler, mapKurse);
 			addKlasseToExport(klassenToExport, schuelerLernabschnitt, mapKlassen, mapKlassenleitungen);
 			addJahrgangToExport(jahrgaengeToExport, schuelerLernabschnitt, mapJahrgaenge);
-			if (zustimmungSchuelerIstVorhanden(lernplattformByIdSchueler, schuelerLernabschnitt.Schueler_ID))
-				addSchuelerToExport(schuelerToExport, schuelerLernabschnitt, schuelerById, lernplattformByIdSchueler, mapLernplattformenCredentials);
+
+
 		}
 
 		// Alle Daten dem Exportobjekt hinzufügen
@@ -455,12 +458,12 @@ public class DataLernplattformen {
 		};
 	}
 
-	private static boolean zustimmungSchuelerIstVorhanden(final Map<Long, DTOSchuelerLernplattform> lernplattformBySchuelerId,	final Long idSchueler) {
-			final DTOSchuelerLernplattform dto = lernplattformBySchuelerId.get(idSchueler);
-			if (dto == null)
-				return false;
+	private static boolean zustimmungSchuelerIstVorhanden(final Map<Long, DTOSchuelerLernplattform> lernplattformBySchuelerId, final Long idSchueler) {
+		final DTOSchuelerLernplattform dto = lernplattformBySchuelerId.get(idSchueler);
+		if (dto == null)
+			return false;
 
-			return Boolean.TRUE.equals(dto.EinwilligungNutzung);
+		return Boolean.TRUE.equals(dto.EinwilligungNutzung);
 	}
 
 
