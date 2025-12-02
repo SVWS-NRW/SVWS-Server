@@ -38,6 +38,11 @@ public final class DataStundenplanZeitraster extends DataManagerRevised<Long, DT
 		setAttributesNotPatchable("id", "idStundenplan");
 	}
 
+	@Override
+	public Long getID(final Map<String, Object> attributes) throws ApiOperationException {
+		return JSONMapper.convertToLong(attributes.get("id"), false);
+	}
+
 	/**
 	 * Gibt die Daten eines Stundenplanzeitrasters zu dessen ID zurück.
 	 *
