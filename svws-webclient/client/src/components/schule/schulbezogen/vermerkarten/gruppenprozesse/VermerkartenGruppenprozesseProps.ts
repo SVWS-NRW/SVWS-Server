@@ -1,7 +1,7 @@
 import type { Schulform, List, Schulgliederung, ServerMode, BenutzerKompetenz } from "@core";
 import type { VermerkartenListeManager } from "@ui";
 
-export interface SchuleVermerkartenGruppenprozesseProps {
+export interface VermerkartenGruppenprozesseProps {
 	serverMode: ServerMode;
 	schulform: Schulform;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;

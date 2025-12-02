@@ -38,9 +38,9 @@
 
 	import { computed } from "vue";
 	import { useRegionSwitch, ViewType } from "@ui";
-	import type { VermerkeAppProps } from "./SVermerkartenAppProps";
+	import type { VermerkartenAppProps } from "./VermerkartenAppProps";
 
-	const props = defineProps<VermerkeAppProps>();
+	const props = defineProps<VermerkartenAppProps>();
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 

@@ -1,19 +1,20 @@
 import type { RouteLocationNormalized } from "vue-router";
-import type { VermerkartenDatenProps } from "~/components/schule/schulbezogen/vermerkarten/daten/SVermerkartenDatenProps";
+import type { VermerkartenDatenProps } from "~/components/schule/schulbezogen/vermerkarten/daten/VermerkartenDatenProps";
 import type { SchuelerVermerkartZusammenfassung } from "@core";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
-import { routeKatalogVermerkarten, type RouteKatalogVermerkarten } from "~/router/apps/schule/schulbezogen/vermerkarten/RouteKatalogVermerkarten";
+import { routeVermerkarten, type RouteVermerkarten } from "~/router/apps/schule/schulbezogen/vermerkarten/RouteVermerkarten";
 import { RouteManager } from "~/router/RouteManager";
 import { routeSchuelerVermerke } from "../../../schueler/vermerke/RouteSchuelerVermerke";
 import { api } from "~/router/Api";
 
-const SVermerkartenDaten = () => import("~/components/schule/schulbezogen/vermerkarten/daten/SVermerkartenDaten.vue");
+const VermerkartenDaten = () => import("~/components/schule/schulbezogen/vermerkarten/daten/VermerkartenDaten.vue");
 
-export class RouteKatalogVermerkartenDaten extends RouteNode<any, RouteKatalogVermerkarten> {
+export class RouteVermerkartenDaten extends RouteNode<any, RouteVermerkarten> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.vermerke.daten", "daten", SVermerkartenDaten);
+		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN],
+			"schule.vermerke.daten", "daten", VermerkartenDaten);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Vermerkart";
@@ -25,8 +26,8 @@ export class RouteKatalogVermerkartenDaten extends RouteNode<any, RouteKatalogVe
 
 	public getProps(to: RouteLocationNormalized): VermerkartenDatenProps {
 		return {
-			patch: routeKatalogVermerkarten.data.patch,
-			vermerkartenManager: () => routeKatalogVermerkarten.data.manager,
+			patch: routeVermerkarten.data.patch,
+			vermerkartenManager: () => routeVermerkarten.data.manager,
 			gotoSchueler: this.gotoSchueler,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
@@ -34,5 +35,5 @@ export class RouteKatalogVermerkartenDaten extends RouteNode<any, RouteKatalogVe
 
 }
 
-export const routeKatalogVermerkartenDaten = new RouteKatalogVermerkartenDaten();
+export const routeVermerkartenDaten = new RouteVermerkartenDaten();
 

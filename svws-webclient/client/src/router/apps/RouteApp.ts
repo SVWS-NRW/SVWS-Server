@@ -26,7 +26,7 @@ import { routeKonfessionen } from "~/router/apps/schule/allgemein/konfessionen/R
 import { routeKatalogSchulen } from "~/router/apps/schule/allgemein/schulen/RouteKatalogSchulen";
 import { routeKatalogTelefonArten } from "~/router/apps/schule/allgemein/telefonarten/RouteKatalogTelefonArten";
 import { routeKatalogErzieherarten } from "~/router/apps/schule/allgemein/erzieherarten/RouteKatalogErzieherarten";
-import { routeKatalogVermerkarten } from "~/router/apps/schule/schulbezogen/vermerkarten/RouteKatalogVermerkarten";
+import { routeVermerkarten } from "~/router/apps/schule/schulbezogen/vermerkarten/RouteVermerkarten";
 import { routeLernplattformen } from "~/router/apps/schule/schulbezogen/lernplattformen/RouteLernplattformen";
 import { routeEinstellungen } from "./einstellungen/RouteEinstellungen";
 import { routeEinstellungenBenutzer } from "~/router/apps/einstellungen/benutzer/RouteEinstellungenBenutzer";
@@ -150,7 +150,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeFoerderschwerpunkte,
 			routeJahrgaenge,
 			routeLernplattformen,
-			routeKatalogVermerkarten,
+			routeVermerkarten,
 			// Allgemein
 			routeBeschaeftigungsarten,
 			routeKatalogErzieherarten,

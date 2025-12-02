@@ -42,9 +42,9 @@
 	import { BenutzerKompetenz, type VermerkartEintrag } from "@core";
 	import type { DataTableColumn } from "@ui";
 	import { useRegionSwitch, ViewType } from "@ui";
-	import type { VermerkeAuswahlProps } from "./SVermerkartenAuswahlProps";
+	import type { VermerkartenAuswahlProps } from "./VermerkartenAuswahlProps";
 
-	const props = defineProps<VermerkeAuswahlProps>();
+	const props = defineProps<VermerkartenAuswahlProps>();
 	const readonly = computed<boolean>(() => !props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 

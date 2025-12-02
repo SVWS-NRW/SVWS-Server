@@ -36,10 +36,10 @@
 <script setup lang="ts">
 
 	import { ref, computed } from "vue";
-	import type { SchuleVermerkartenGruppenprozesseProps } from "./SVermerkartenGruppenprozesseProps";
+	import type { VermerkartenGruppenprozesseProps } from "./VermerkartenGruppenprozesseProps";
 	import { ArrayList, BenutzerKompetenz, type List, ServerMode } from "@core";
 
-	const props = defineProps<SchuleVermerkartenGruppenprozesseProps>();
+	const props = defineProps<VermerkartenGruppenprozesseProps>();
 
 	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
 

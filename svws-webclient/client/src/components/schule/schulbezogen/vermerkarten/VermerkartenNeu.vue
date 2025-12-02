@@ -29,11 +29,11 @@
 
 <script setup lang="ts">
 	import { computed, ref, watch } from "vue";
-	import type { SchuleVermerkartenNeuProps } from "./SVermerkartenNeuProps";
+	import type { VermerkartenNeuProps } from "./VermerkartenNeuProps";
 	import { BenutzerKompetenz, VermerkartEintrag } from "@core";
 	import { isUniqueInList, mandatoryInputIsValid } from "~/util/validation/Validation";
 
-	const props = defineProps<SchuleVermerkartenNeuProps>();
+	const props = defineProps<VermerkartenNeuProps>();
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const disabled = computed(() => !hatKompetenzUpdate.value);
 

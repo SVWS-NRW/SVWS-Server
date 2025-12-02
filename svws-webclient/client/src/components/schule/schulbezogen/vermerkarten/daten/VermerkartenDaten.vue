@@ -33,7 +33,7 @@
 <script setup lang="ts">
 
 	import type { DataTableColumn } from "@ui";
-	import type { VermerkartenDatenProps } from "./SVermerkartenDatenProps";
+	import type { VermerkartenDatenProps } from "./VermerkartenDatenProps";
 	import { computed } from "vue";
 	import { BenutzerKompetenz } from "@core";
 

@@ -4,23 +4,23 @@ import type { VermerkartEintrag, List, SimpleOperationResponse } from "@core";
 import { ArrayList } from "@core";
 import { api } from "~/router/Api";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
-import { routeKatalogVermerkartenDaten } from "./RouteKatalogVermerkartenDaten";
+import { routeVermerkartenDaten } from "./RouteVermerkartenDaten";
 import { ViewType, VermerkartenListeManager } from "@ui";
-import { routeKatalogVermerkartenGruppenprozesse } from "./RouteKatalogVermerkartenGruppenprozesse";
-import { routeKatalogVermerkartenNeu } from "./RouteKatalogVermerkartenNeu";
+import { routeVermerkartenGruppenprozesse } from "./RouteVermerkartenGruppenprozesse";
+import { routeVermerkartenNeu } from "./RouteVermerkartenNeu";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,
 	manager: new VermerkartenListeManager(-1, -1, new ArrayList(), null, new ArrayList(), new ArrayList()),
-	view: routeKatalogVermerkartenDaten,
+	view: routeVermerkartenDaten,
 	activeViewType: ViewType.DEFAULT,
 	oldView: undefined,
 };
 
-export class RouteDataKatalogVermerkarten extends RouteDataAuswahl<VermerkartenListeManager, RouteStateAuswahlInterface<VermerkartenListeManager>> {
+export class RouteDataVermerkarten extends RouteDataAuswahl<VermerkartenListeManager, RouteStateAuswahlInterface<VermerkartenListeManager>> {
 
 	public constructor() {
-		super(defaultState, { gruppenprozesse: routeKatalogVermerkartenGruppenprozesse, hinzufuegen: routeKatalogVermerkartenNeu });
+		super(defaultState, { gruppenprozesse: routeVermerkartenGruppenprozesse, hinzufuegen: routeVermerkartenNeu });
 	}
 
 	public addID(param: RouteParamsRawGeneric, id: number): void {
