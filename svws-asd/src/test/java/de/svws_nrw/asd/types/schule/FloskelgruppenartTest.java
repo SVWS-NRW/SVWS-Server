@@ -18,7 +18,7 @@ class FloskelgruppenartTest {
 	@Test
 	@DisplayName("Anzahl der Coretypes")
 	void anzahlCoretypesTest() {
-		assertThat(Floskelgruppenart.data().getWerte()).hasSize(9);
+		assertThat(Floskelgruppenart.data().getWerte()).hasSize(11);
 	}
 
 }
