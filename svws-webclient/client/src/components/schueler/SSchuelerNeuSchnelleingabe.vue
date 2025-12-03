@@ -1225,7 +1225,10 @@
 
 	const vermerkArten = computed(() => props.mapVermerkArten.values());
 
-	const VermerkArtManager = new SelectManager({ options: vermerkArten.value, optionDisplayText: i => i.bezeichnung, selectionDisplayText: i => i.bezeichnung });
+	const VermerkArtManager = new SelectManager({
+		options: vermerkArten.value,
+		optionDisplayText: i => i.bezeichnung ?? "",
+		selectionDisplayText: i => i.bezeichnung ?? "" });
 
 	const vermerkArt = computed<VermerkartEintrag | undefined>({
 		get: () => props.mapVermerkArten.get(newEntryVermerk.value.idVermerkart ?? -1),

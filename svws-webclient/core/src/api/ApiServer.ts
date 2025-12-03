@@ -16815,33 +16815,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getVermerkart für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/vermerkarten/{id : \d+}
-	 *
-	 * Liest die Daten der Vermerkart zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogdaten besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Daten der Vermerkart
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: VermerkartEintrag
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalogdaten anzusehen.
-	 *   Code 404: Keine Vermerkart mit der angegebenen ID gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Die Daten der Vermerkart
-	 */
-	public async getVermerkart(schema : string, id : number) : Promise<VermerkartEintrag> {
-		const path = "/db/{schema}/schule/vermerkarten/{id : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
-		const text = result;
-		return VermerkartEintrag.transpilerFromJSON(text);
-	}
-
-
-	/**
 	 * Implementierung der PATCH-Methode patchVermerkart für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/vermerkarten/{id : \d+}
 	 *
 	 * Passt die Vermerkart-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern der Daten der Vermerkart besitzt.
@@ -16864,35 +16837,6 @@ export class ApiServer extends BaseApi {
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = VermerkartEintrag.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
-	}
-
-
-	/**
-	 * Implementierung der DELETE-Methode deleteVermerkartEintrag für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/vermerkarten/{id : \d+}
-	 *
-	 * Entfernt einen Vermerkart-Katalog-Eintrag der Schule.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Vermerkart-Katalog-Eintrag wurde erfolgreich entfernt.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: VermerkartEintrag
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.
-	 *   Code 404: Kein Vermerkart-Katalog-Eintrag vorhanden
-	 *   Code 409: Die übergebenen Daten sind fehlerhaft
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Der Vermerkart-Katalog-Eintrag wurde erfolgreich entfernt.
-	 */
-	public async deleteVermerkartEintrag(schema : string, id : number) : Promise<VermerkartEintrag> {
-		const path = "/db/{schema}/schule/vermerkarten/{id : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
-		const text = result;
-		return VermerkartEintrag.transpilerFromJSON(text);
 	}
 
 

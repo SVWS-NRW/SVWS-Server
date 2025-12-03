@@ -4,17 +4,14 @@ import type { VermerkartEintrag } from '../../../../../../core/src/core/data/sch
 import type { Schulform } from '../../../../../../core/src/asd/types/schule/Schulform';
 import { SchuelerUtils } from '../../../../../../core/src/core/utils/schueler/SchuelerUtils';
 import { JavaString } from '../../../../../../core/src/java/lang/JavaString';
-import { DeveloperNotificationException } from '../../../../../../core/src/core/exceptions/DeveloperNotificationException';
 import type { SchuelerVermerkartZusammenfassung } from '../../../../../../core/src/core/data/schueler/SchuelerVermerkartZusammenfassung';
 import type { Comparator } from '../../../../../../core/src/java/util/Comparator';
 import { AuswahlManager } from '../../../AuswahlManager';
 import { AttributMitAuswahl } from '../../../AttributMitAuswahl';
-import { JavaInteger } from '../../../../../../core/src/java/lang/JavaInteger';
 import type { JavaFunction } from '../../../../../../core/src/java/util/function/JavaFunction';
 import type { Runnable } from '../../../../../../core/src/java/lang/Runnable';
 import { JavaLong } from '../../../../../../core/src/java/lang/JavaLong';
 import type { List } from '../../../../../../core/src/java/util/List';
-import { Class } from '../../../../../../core/src/java/lang/Class';
 import { Arrays } from '../../../../../../core/src/java/util/Arrays';
 import type { Schuljahresabschnitt } from '../../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
 import { HashSet } from '../../../../../../core/src/java/util/HashSet';
@@ -30,7 +27,7 @@ export class VermerkartenListeManager extends AuswahlManager<number, VermerkartE
 	private listSchuelerVermerkartZusammenfassung: AttributMitAuswahl<number, SchuelerVermerkartZusammenfassung>;
 
 	private static readonly _schuelerToId: JavaFunction<SchuelerVermerkartZusammenfassung, number> = { apply: (s: SchuelerVermerkartZusammenfassung) => s.id };
-
+	private readonly idsReferencedEinwilligungsarten: HashSet<number> = new HashSet<number>();
 	/**
 	 * Das Filter-Attribut auf nur sichtbare Vermerkarten
 	 */
@@ -135,10 +132,10 @@ export class VermerkartenListeManager extends AuswahlManager<number, VermerkartE
 	}
 
 	protected onMehrfachauswahlChanged(): void {
-		this.setVermerkartenIDsMitSchuelern.clear();
-		for (const k of this.liste.auswahl())
-			if (k.anzahlVermerke !== 0)
-				this.setVermerkartenIDsMitSchuelern.add(k.id);
+		this.idsReferencedEinwilligungsarten.clear();
+		for (const l of this.liste.auswahl())
+			if ((l.referenziertInAnderenTabellen !== null) && l.referenziertInAnderenTabellen)
+				this.idsReferencedEinwilligungsarten.add(l.id);
 	}
 
 	/**
@@ -156,11 +153,7 @@ export class VermerkartenListeManager extends AuswahlManager<number, VermerkartE
 			let cmp: number = 0;
 			if (JavaObject.equalsTranspiler("Vermerkart", (field))) {
 				cmp = VermerkartenListeManager.comparator.compare(a, b);
-			} else
-				if (JavaObject.equalsTranspiler("schueleranzahl", (field))) {
-					cmp = JavaInteger.compare(a.anzahlVermerke, b.anzahlVermerke);
-				} else
-					throw new DeveloperNotificationException("Fehler bei der Sortierung. Das Sortierkriterium wird vom Manager nicht unterstützt.");
+			}
 			if (cmp === 0)
 				continue;
 			return asc ? cmp : -cmp;
@@ -181,18 +174,5 @@ export class VermerkartenListeManager extends AuswahlManager<number, VermerkartE
 		this.setFilterNurSichtbar(srcManager.filterNurSichtbar());
 	}
 
-	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.core.utils.kataloge.vermerkart.VermerkartenListeManager';
-	}
-
-	isTranspiledInstanceOf(name: string): boolean {
-		return ['de.svws_nrw.core.utils.AuswahlManager', 'de.svws_nrw.core.utils.kataloge.vermerkart.VermerkartenListeManager'].includes(name);
-	}
-
-	public static class = new Class<VermerkartenListeManager>('de.svws_nrw.core.utils.kataloge.vermerkart.VermerkartenListeManager');
-
 }
 
-export function cast_de_svws_nrw_core_utils_kataloge_vermerkart_VermerkartenListeManager(obj: unknown): VermerkartenListeManager {
-	return obj as VermerkartenListeManager;
-}

@@ -79,7 +79,7 @@
 	});
 
 	function isRemovable(rowData: VermerkartEintrag) {
-		return [... props.manager().liste.auswahl()].includes(rowData) && (rowData.anzahlVermerke > 0);
+		return [... props.manager().liste.auswahl()].includes(rowData);
 	}
 
 </script>

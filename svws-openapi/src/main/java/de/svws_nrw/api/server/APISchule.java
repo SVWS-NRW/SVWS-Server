@@ -857,33 +857,6 @@ public class APISchule {
 
 
 	/**
-	 * Die OpenAPI-Methode für die Abfrage einer Vermerkart.
-	 *
-	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param id        die Datenbank-ID zur Identifikation der Vermerkart
-	 * @param request   die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die Daten zur Vermerkart
-	 */
-	@GET
-	@Path("/vermerkarten/{id : \\d+}")
-	@Operation(summary = "Liefert zu der ID der Vermerkarten die zugehörigen Daten.",
-			description = "Liest die Daten der Vermerkart zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogdaten "
-					+ "besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die Daten der Vermerkart",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = VermerkartEintrag.class)))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalogdaten anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Keine Vermerkart mit der angegebenen ID gefunden")
-	public Response getVermerkart(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataVermerkarten(conn).getByIdAsResponse(id),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KEINE);
-	}
-
-
-	/**
 	 * Die OpenAPI-Methode für das Erstellen einer neuen Vermerkart.
 	 *
 	 * @param schema       das Datenbankschema, in welchem die Vermerkart erstellt wird
@@ -944,35 +917,6 @@ public class APISchule {
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
 
-
-	/**
-	 * Die OpenAPI-Methode für das Entfernen eines Vermerkart-Katalog-Eintrags der Schule.
-	 *
-	 * @param schema       das Datenbankschema
-	 * @param id           die ID des Vermerkart-Katalog-Eintrags
-	 * @param request      die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die HTTP-Antwort mit dem Status und ggf. dem gelöschten Vermerkart-Katalog-Eintrag
-	 */
-	@DELETE
-	@Path("/vermerkarten/{id : \\d+}")
-	@Operation(summary = "Entfernt einen Vermerkart-Katalog-Eintrag der Schule.",
-			description = "Entfernt einen Vermerkart-Katalog-Eintrag der Schule."
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.")
-	@ApiResponse(responseCode = "200", description = "Der Vermerkart-Katalog-Eintrag wurde erfolgreich entfernt.",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = VermerkartEintrag.class)))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.")
-	@ApiResponse(responseCode = "404", description = "Kein Vermerkart-Katalog-Eintrag vorhanden")
-	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
-	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response deleteVermerkartEintrag(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataVermerkarten(conn).deleteAsResponse(id),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
-	}
-
-
 	/**
 	 * Die OpenAPI-Methode für das Entfernen mehrerer Vermerkart-Katalog-Einträge der Schule.
 	 *
@@ -998,7 +942,7 @@ public class APISchule {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataVermerkarten(conn).deleteMultipleAsResponse(JSONMapper.toListOfLong(is)),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataVermerkarten(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}

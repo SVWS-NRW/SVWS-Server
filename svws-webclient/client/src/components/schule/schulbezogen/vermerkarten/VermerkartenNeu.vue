@@ -5,14 +5,6 @@
 				<svws-ui-input-wrapper>
 					<svws-ui-text-input :valid="fieldIsValid('bezeichnung')" v-model="data.bezeichnung" placeholder="Bezeichnung"
 						required :min-len="1" :max-len="30" :disabled />
-					<div v-if="!isUniqueInList(data.bezeichnung, props.manager().liste.list(), 'bezeichnung')" class="flex my-auto">
-						<span class="icon i-ri-alert-line mx-0.5 mr-1 inline-flex" />
-						<p> Diese Bezeichnung wird bereits verwendet. </p>
-					</div>
-					<div v-if="data.bezeichnung.length > 30" class="flex my-auto">
-						<span class="icon i-ri-alert-line mx-0.5 mr-1 inline-flex" />
-						<p> Diese Bezeichnung verwendet zu viele Zeichen. </p>
-					</div>
 					<svws-ui-checkbox v-model="data.istSichtbar" :disabled="!bezeichnungIsValid || !hatKompetenzUpdate">
 						Sichtbar
 					</svws-ui-checkbox>
@@ -77,7 +69,7 @@
 
 		isLoading.value = true;
 		props.checkpoint.active = false;
-		const { id, anzahlVermerke, ...partialData } = data.value;
+		const { id, referenziertInAnderenTabellen, ...partialData } = data.value;
 		await props.add(partialData);
 		isLoading.value = false;
 	}
