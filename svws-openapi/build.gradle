@@ -58,13 +58,15 @@ task cleanTranspiled(type: Delete) {
 }
 
 task prepareTranspile {
+	def fileTranspilerApiFiles = file("$buildDir/transpiler-api-files.txt")
+	def configApi = configurations.api
 	doLast {
-		file("$buildDir/transpiler-api-files.txt").text = configurations.api.files.toString().replace("[", "").replace("]", "").trim()
+		fileTranspilerApiFiles.text = configApi.files.toString().replace("[", "").replace("]", "").trim()
 	}
 	group = "build"
 	dependsOn compileJava
-	inputs.files configurations.api
-	outputs.files "$buildDir/transpiler-api-files.txt"
+	inputs.files configApi
+	outputs.files fileTranspilerApiFiles
 }
 
 task transpile(type: JavaExec) {
@@ -75,9 +77,6 @@ task transpile(type: JavaExec) {
 	dependsOn project(":svws-core").tasks.assemble
 	dependsOn compileJava
 	dependsOn prepareTranspile
-	doFirst {
-		delete fileTree(dir: "$buildDir/tsapi"), fileTree(dir: "$buildDir/tmp/transpiler/tsapi", includes: ["**/*.class"])
-	}
 	inputs.files "$buildDir/transpiler-api-files.txt", configurations.api.files
 	outputs.dir "$buildDir/tsapi"
 	description = "Transpiliert den Java-Code nach Typescript"
@@ -90,6 +89,17 @@ task transpile(type: JavaExec) {
 	jvmArgs "--add-opens", "jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED"
 }
 
+task transpileDeleteExistingTSFiles(type: Delete) {
+	delete fileTree(dir: "$buildDir/tsapi"), fileTree(dir: "$buildDir/tmp/transpiler/tsapi", includes: ["**/*.class"])
+}
+
+// Falls transpile ausgeführt wird, dann soll zuerst transpileDeleteExistingTSFiles ausgeführt werden
+gradle.taskGraph.whenReady { taskGraph ->
+	if (taskGraph.hasTask(tasks.findByPath('transpile'))) {
+		tasks.findByPath('transpile').dependsOn tasks.findByPath('transpileDeleteExistingTSFiles')
+	}
+}
+
 task assembleTranspiled(type: Copy) {
 	group = "build"
 	dependsOn transpile
@@ -98,9 +108,6 @@ task assembleTranspiled(type: Copy) {
 	inputs.dir "$rootDir/svws-core/build/ts"
 	inputs.dir "$buildDir/tsapi"
 	outputs.dir "$rootDir/svws-webclient/core/src"
-	doFirst {
-		delete fileTree(dir: "$rootDir/svws-webclient/core/src", includes: [ "**/*.ts" ], excludes: [ "asd/utils/JsonCore*.ts", "**/*.test.ts", "test/**/*.ts" ])
-	}
 	from "$rootDir/svws-schulen/build/ts"
 	from "$rootDir/svws-asd/build/ts"
 	from "$rootDir/svws-core/build/ts"
@@ -108,10 +115,25 @@ task assembleTranspiled(type: Copy) {
 	into "$rootDir/svws-webclient/core/src"
 	include "**/*.ts"
 	exclude "index.ts"
+	def fileIndexCombined = new File("$rootDir/svws-webclient/core/src/index.ts")
+	def fileIndexSchule = file("$rootDir/svws-schulen/build/ts/index.ts")
+	def fileIndexASD = file("$rootDir/svws-asd/build/ts/index.ts")
+	def fileIndexCore = file("$rootDir/svws-core/build/ts/index.ts")
+	def fileIndexApi = file("$buildDir/tsapi/index.ts")
 	doLast {
-		(new File("$rootDir/svws-webclient/core/src/index.ts")).text = "export { JsonCoreTypeReader } from './asd/utils/JsonCoreTypeReader';\n" +
-			file("$rootDir/svws-schulen/build/ts/index.ts").getText() + file("$rootDir/svws-asd/build/ts/index.ts").getText() +
-			file("$rootDir/svws-core/build/ts/index.ts").getText() + file("$buildDir/tsapi/index.ts").getText()
+		fileIndexCombined.text = "export { JsonCoreTypeReader } from './asd/utils/JsonCoreTypeReader';\n" +
+			fileIndexSchule.getText() + fileIndexASD.getText() + fileIndexCore.getText() + fileIndexApi.getText()
+	}
+}
+
+task deleteExistingAssembledTSFiles(type: Delete) {
+	delete fileTree(dir: "$rootDir/svws-webclient/core/src", includes: [ "**/*.ts" ], excludes: [ "asd/utils/JsonCore*.ts", "**/*.test.ts", "test/**/*.ts" ])
+}
+
+// Falls assembleTranspiled ausgeführt wird, dann soll zuerst deleteExistingAssembledTSFiles ausgeführt werden
+gradle.taskGraph.whenReady { taskGraph ->
+	if (taskGraph.hasTask(tasks.findByPath('assembleTranspiled'))) {
+		tasks.findByPath('assembleTranspiled').dependsOn tasks.findByPath('deleteExistingAssembledTSFiles')
 	}
 }
 
@@ -132,8 +154,9 @@ task createVersionProperties() {
 	outputs.files "$projectDir/src/main/resources/config/version.properties"
 	def data = "svws.version=" + project.version.toString() + "\n" +
 		"schild.version=" + project.ext.schildMinVersion.toString() + "\n"
+	def fileVersionProperties = file("src/main/resources/config/version.properties")
 	doLast {
-		file("src/main/resources/config/version.properties").text = data
+		fileVersionProperties.text = data
 	}
 }
 

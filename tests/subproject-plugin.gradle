@@ -174,10 +174,13 @@ tasks.register('generateStartupScript') {
 tasks.register('erzeugeOrdnerFuerTestumgebung') {
 	description = 'Erstellt die Ordner für die Testumgebung bzw. die Docker Container'
 
+	def dirDocker = file("$buildDirPath/tempdocker")
+	def dirDockerInitScripts = file("$buildDirPath/tempdocker/init-scripts")
+	def dirDockerAppConf = file("$buildDirPath/tempdocker/appConf")
 	doFirst {
-		mkdir "$buildDirPath/tempdocker"
-		mkdir "$buildDirPath/tempdocker/init-scripts"
-		mkdir "$buildDirPath/tempdocker/appConf"
+		dirDocker.mkdirs() 
+		dirDockerInitScripts.mkdirs()
+		dirDockerAppConf.mkdirs()
 	}
 }
 

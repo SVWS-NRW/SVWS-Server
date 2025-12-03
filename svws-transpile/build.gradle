@@ -29,8 +29,9 @@ task testTranspilerCore(type: NpmRun) {
 		file("$projectDir/src/test/ts/package.json"), file("$projectDir/src/test/ts/tsconfig.json"), file("$projectDir/src/test/ts/vitest.config.ts")
 	outputs.dir file("$projectDir/build/coverage")
 	args = [ 'test:run' ]
+	def dirCoverage = file("$projectDir/build/coverage")
 	doFirst {
-		mkdir file("$projectDir/build/coverage")
+		dirCoverage.mkdirs()
 	}
 }
 
