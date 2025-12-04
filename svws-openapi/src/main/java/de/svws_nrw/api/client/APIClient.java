@@ -1,17 +1,21 @@
 package de.svws_nrw.api.client;
 
-import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Enumeration;
 
+import de.svws_nrw.api.common.ResourceCoreTypeJson;
 import de.svws_nrw.api.common.ResourceFile;
 import de.svws_nrw.api.common.ResourceFileManager;
-import de.svws_nrw.asd.utils.json.JsonReader;
-import de.svws_nrw.core.logger.Logger;
+import de.svws_nrw.base.compression.CompressionException;
+import de.svws_nrw.base.compression.GZip;
 import de.svws_nrw.db.utils.ApiOperationException;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -31,29 +35,71 @@ public class APIClient {
 	}
 
 	/**
+	 * Prüft, ob ein Accept-Encoding-Eintrag für GZIP vorhanden ist oder nicht.
+	 *
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return true, wenn gzip akzeptiert wird, und ansonsten false
+	 */
+	private static boolean checkZipAllowed(final HttpServletRequest request) {
+		final Enumeration<String> encodings = request.getHeaders("Accept-Encoding");
+		if (encodings == null)
+			return false;
+		while (encodings.hasMoreElements())
+			for (final String encoding : encodings.nextElement().split(","))
+				if ("gzip".equals(encoding.trim()))
+					return true;
+		return false;
+	}
+
+	/**
+	 * Erstellt für die übergebenen Daten die Response und wählt für das Content-Encoding ggf. gzip.
+	 *
+	 * @param data              die Daten
+	 * @param checkZipAllowed   gibt an, ob gzip verwendet werden soll oder nicht
+	 *
+	 * @return die Reponse
+	 *
+	 * @throws ApiOperationException   im Fehlerfall (INTERNAL_SERVER_ERROR)
+	 */
+	private static Response getZippedResponse(final byte[] data, final boolean checkZipAllowed) throws ApiOperationException {
+		try {
+			if (checkZipAllowed) {
+				final byte[] zip = GZip.encode(data);
+				return Response.ok(zip).header("Content-Encoding", "gzip").build();
+			}
+			return Response.ok(data).build();
+		} catch (final CompressionException e) {
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e);
+		}
+	}
+
+	/**
 	 * Greift auf die einzelne Dateien aus dem Resource-Verzeichnis des SVWS-Client zurück. Diese
 	 * Resourcen wurden beim Start des SVWS-Server gecacht und stehen über die Klasse
-	 * {@link ResourceFile} zur Verfügung.
+	 * {@link ResourceFile} zur Verfügung. Die Datei wird dabei mit GZIP komprimiert.
 	 *
 	 * @param filename   der Name der zurückzugebenden Datei
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Response mit der Datei oder {@link Status#NOT_FOUND}, falls die Datei
 	 *         nicht gefunden wurde
 	 */
-	private static Response getFile(final String filename) {
+	private static Response getFile(final String filename, final HttpServletRequest request) {
 		try {
 			final byte[] data = ResourceFileManager.client().getData(filename);
 			if ((data == null) || (data.length == 0))
 				throw new ApiOperationException(Status.NOT_FOUND);
-			return Response.ok(data).build();
+			return getZippedResponse(data, checkZipAllowed(request));
 		} catch (final ApiOperationException e) {
 			return e.getResponse();
 		}
 	}
 
-
 	/**
 	 * Gibt die "index.html"-Datei für das angegebene Schema zurück.
+	 *
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Response mit der Datei oder {@link Status#NOT_FOUND}, falls die Datei
 	 *         nicht gefunden wurde
@@ -61,15 +107,16 @@ public class APIClient {
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	@Path("/")
-	public Response getClientRoot() {
-		return getFile("index.html");
+	public Response getClientRoot(@Context final HttpServletRequest request) {
+		return getFile("index.html", request);
 	}
 
 
 	/**
 	 * Gibt eine html-Datei zurück, welche in den Ressourcen des SVWS-Clients vorhanden ist.
 	 *
-	 * @param name   der Name der Datei ohne ".html"
+	 * @param name      der Name der Datei ohne ".html"
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Response mit der Datei oder {@link Status#NOT_FOUND}, falls die Datei
 	 *         nicht gefunden wurde
@@ -77,15 +124,16 @@ public class APIClient {
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	@Path("/{name}.html")
-	public Response getClientHTML(@PathParam("name") final String name) {
-		return getFile(name + ".html");
+	public Response getClientHTML(@PathParam("name") final String name, @Context final HttpServletRequest request) {
+		return getFile(name + ".html", request);
 	}
 
 
 	/**
 	 * Gibt eine js-Datei zurück, welche in den Ressourcen des SVWS-Clients vorhanden ist.
 	 *
-	 * @param name   der Name der Datei ohne ".js"
+	 * @param name      der Name der Datei ohne ".js"
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Response mit der Datei oder {@link Status#NOT_FOUND}, falls die Datei
 	 *         nicht gefunden wurde
@@ -93,15 +141,16 @@ public class APIClient {
 	@GET
 	@Produces("text/javascript")
 	@Path("/{name}.js")
-	public Response getClientfileJS(@PathParam("name") final String name) {
-		return getFile(name + ".js");
+	public Response getClientfileJS(@PathParam("name") final String name, @Context final HttpServletRequest request) {
+		return getFile(name + ".js", request);
 	}
 
 
 	/**
 	 * Gibt eine js-Datei aus dem Ordner js zurück, welche in den Ressourcen des SVWS-Clients vorhanden ist.
 	 *
-	 * @param name   der Name der Datei ohne ".js"
+	 * @param name      der Name der Datei ohne ".js"
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Response mit der Datei oder {@link Status#NOT_FOUND}, falls die Datei
 	 *         nicht gefunden wurde
@@ -109,15 +158,16 @@ public class APIClient {
 	@GET
 	@Produces("text/javascript")
 	@Path("/js/{name}.js")
-	public Response getClientFileJSSubdir(@PathParam("name") final String name) {
-		return getFile("js/" + name + ".js");
+	public Response getClientFileJSSubdir(@PathParam("name") final String name, @Context final HttpServletRequest request) {
+		return getFile("js/" + name + ".js", request);
 	}
 
 
 	/**
 	 * Gibt eine js-Datei aus dem Ordner assets zurück, welche in den Ressourcen des SVWS-Clients vorhanden ist.
 	 *
-	 * @param name   der Name der Datei ohne ".js"
+	 * @param name      der Name der Datei ohne ".js"
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Response mit der Datei oder {@link Status#NOT_FOUND}, falls die Datei
 	 *         nicht gefunden wurde
@@ -125,15 +175,16 @@ public class APIClient {
 	@GET
 	@Produces("text/javascript")
 	@Path("/assets/{name}.js")
-	public Response getClientFileAssetsSubdir(@PathParam("name") final String name) {
-		return getFile("assets/" + name + ".js");
+	public Response getClientFileAssetsSubdir(@PathParam("name") final String name, @Context final HttpServletRequest request) {
+		return getFile("assets/" + name + ".js", request);
 	}
 
 
 	/**
 	 * Gibt eine js.map-Datei zurück, welche in den Ressourcen des SVWS-Clients vorhanden ist.
 	 *
-	 * @param name   der Name der Datei ohne ".js.map"
+	 * @param name      der Name der Datei ohne ".js.map"
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Response mit der Datei oder {@link Status#NOT_FOUND}, falls die Datei
 	 *         nicht gefunden wurde
@@ -141,15 +192,16 @@ public class APIClient {
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	@Path("/{name}.js.map")
-	public Response getClientFileJSMAP(@PathParam("name") final String name) {
-		return getFile(name + ".js.map");
+	public Response getClientFileJSMAP(@PathParam("name") final String name, @Context final HttpServletRequest request) {
+		return getFile(name + ".js.map", request);
 	}
 
 
 	/**
 	 * Gibt eine js.map-Datei aus dem Ordner js zurück, welche in den Ressourcen des SVWS-Clients vorhanden ist.
 	 *
-	 * @param name   der Name der Datei ohne ".js.map"
+	 * @param name      der Name der Datei ohne ".js.map"
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Response mit der Datei oder {@link Status#NOT_FOUND}, falls die Datei
 	 *         nicht gefunden wurde
@@ -157,15 +209,16 @@ public class APIClient {
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	@Path("/js/{name}.js.map")
-	public Response getClientFileJSMAPSubdir(@PathParam("name") final String name) {
-		return getFile("js/" + name + ".js.map");
+	public Response getClientFileJSMAPSubdir(@PathParam("name") final String name, @Context final HttpServletRequest request) {
+		return getFile("js/" + name + ".js.map", request);
 	}
 
 
 	/**
 	 * Gibt eine js.map-Datei aus dem Ordner assets zurück, welche in den Ressourcen des SVWS-Clients vorhanden ist.
 	 *
-	 * @param name   der Name der Datei ohne ".js.map"
+	 * @param name      der Name der Datei ohne ".js.map"
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Response mit der Datei oder {@link Status#NOT_FOUND}, falls die Datei
 	 *         nicht gefunden wurde
@@ -173,15 +226,16 @@ public class APIClient {
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	@Path("/assets/{name}.js.map")
-	public Response getClientFileAssetJSMAPSubdir(@PathParam("name") final String name) {
-		return getFile("assets/" + name + ".js.map");
+	public Response getClientFileAssetJSMAPSubdir(@PathParam("name") final String name, @Context final HttpServletRequest request) {
+		return getFile("assets/" + name + ".js.map", request);
 	}
 
 
 	/**
 	 * Gibt eine css-Datei zurück, welche in den Ressourcen des SVWS-Clients vorhanden ist.
 	 *
-	 * @param name   der Name der Datei ohne ".css"
+	 * @param name      der Name der Datei ohne ".css"
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Response mit der Datei oder {@link Status#NOT_FOUND}, falls die Datei
 	 *         nicht gefunden wurde
@@ -189,8 +243,8 @@ public class APIClient {
 	@GET
 	@Produces("text/css")
 	@Path("/{name}.css")
-	public Response getClientFileCSS(@PathParam("name") final String name) {
-		return getFile(name + ".css");
+	public Response getClientFileCSS(@PathParam("name") final String name, @Context final HttpServletRequest request) {
+		return getFile(name + ".css", request);
 	}
 
 
@@ -198,6 +252,7 @@ public class APIClient {
 	 * Gibt eine css-Datei aus dem Ordner css zurück, welche in den Ressourcen des SVWS-Clients vorhanden ist.
 	 *
 	 * @param name   der Name der Datei ohne ".css"
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Response mit der Datei oder {@link Status#NOT_FOUND}, falls die Datei
 	 *         nicht gefunden wurde
@@ -205,8 +260,8 @@ public class APIClient {
 	@GET
 	@Produces("text/css")
 	@Path("/css/{name}.css")
-	public Response getClientFileCSSSubdir(@PathParam("name") final String name) {
-		return getFile("css/" + name + ".css");
+	public Response getClientFileCSSSubdir(@PathParam("name") final String name, @Context final HttpServletRequest request) {
+		return getFile("css/" + name + ".css", request);
 	}
 
 
@@ -214,6 +269,7 @@ public class APIClient {
 	 * Gibt eine css-Datei aus dem Ordner assets zurück, welche in den Ressourcen des SVWS-Clients vorhanden ist.
 	 *
 	 * @param name   der Name der Datei ohne ".css"
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Response mit der Datei oder {@link Status#NOT_FOUND}, falls die Datei
 	 *         nicht gefunden wurde
@@ -221,8 +277,8 @@ public class APIClient {
 	@GET
 	@Produces("text/css")
 	@Path("/assets/{name}.css")
-	public Response getClientFileCSSAssetsSubdir(@PathParam("name") final String name) {
-		return getFile("assets/" + name + ".css");
+	public Response getClientFileCSSAssetsSubdir(@PathParam("name") final String name, @Context final HttpServletRequest request) {
+		return getFile("assets/" + name + ".css", request);
 	}
 
 
@@ -230,6 +286,7 @@ public class APIClient {
 	 * Gibt eine css.map-Datei zurück, welche in den Ressourcen des SVWS-Clients vorhanden ist.
 	 *
 	 * @param name   der Name der Datei ohne ".css.map"
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Response mit der Datei oder {@link Status#NOT_FOUND}, falls die Datei
 	 *         nicht gefunden wurde
@@ -237,8 +294,8 @@ public class APIClient {
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	@Path("/{name}.css.map")
-	public Response getClientFileCSSMAP(@PathParam("name") final String name) {
-		return getFile(name + ".css.map");
+	public Response getClientFileCSSMAP(@PathParam("name") final String name, @Context final HttpServletRequest request) {
+		return getFile(name + ".css.map", request);
 	}
 
 
@@ -246,6 +303,7 @@ public class APIClient {
 	 * Gibt eine css.map-Datei aus dem Ordner css zurück, welche in den Ressourcen des SVWS-Clients vorhanden ist.
 	 *
 	 * @param name   der Name der Datei ohne ".css.map"
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Response mit der Datei oder {@link Status#NOT_FOUND}, falls die Datei
 	 *         nicht gefunden wurde
@@ -253,8 +311,8 @@ public class APIClient {
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	@Path("/css/{name}.css.map")
-	public Response getClientFileCSSMAPSubdir(@PathParam("name") final String name) {
-		return getFile("css/" + name + ".css.map");
+	public Response getClientFileCSSMAPSubdir(@PathParam("name") final String name, @Context final HttpServletRequest request) {
+		return getFile("css/" + name + ".css.map", request);
 	}
 
 
@@ -262,6 +320,7 @@ public class APIClient {
 	 * Gibt eine css.map-Datei aus dem Ordner assets zurück, welche in den Ressourcen des SVWS-Clients vorhanden ist.
 	 *
 	 * @param name   der Name der Datei ohne ".css.map"
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Response mit der Datei oder {@link Status#NOT_FOUND}, falls die Datei
 	 *         nicht gefunden wurde
@@ -269,8 +328,8 @@ public class APIClient {
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	@Path("/assets/{name}.css.map")
-	public Response getClientFileAssetsCSSMAPSubdir(@PathParam("name") final String name) {
-		return getFile("assets/" + name + ".css.map");
+	public Response getClientFileAssetsCSSMAPSubdir(@PathParam("name") final String name, @Context final HttpServletRequest request) {
+		return getFile("assets/" + name + ".css.map", request);
 	}
 
 
@@ -278,6 +337,7 @@ public class APIClient {
 	 * Gibt eine css-Datei aus dem Ordner fonts zurück, welche in den Ressourcen des SVWS-Clients vorhanden ist.
 	 *
 	 * @param name   der Name der Datei ohne ".css"
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Response mit der Datei oder {@link Status#NOT_FOUND}, falls die Datei
 	 *         nicht gefunden wurde
@@ -285,8 +345,8 @@ public class APIClient {
 	@GET
 	@Produces("text/css")
 	@Path("/fonts/{name}.css")
-	public Response getClientFileFontsCSS(@PathParam("name") final String name) {
-		return getFile("fonts/" + name + ".css");
+	public Response getClientFileFontsCSS(@PathParam("name") final String name, @Context final HttpServletRequest request) {
+		return getFile("fonts/" + name + ".css", request);
 	}
 
 
@@ -294,6 +354,7 @@ public class APIClient {
 	 * Gibt eine woff2-Datei aus dem Ordner fonts zurück, welche in den Ressourcen des SVWS-Clients vorhanden ist.
 	 *
 	 * @param name   der Name der Datei ohne ".woff2"
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Response mit der Datei oder {@link Status#NOT_FOUND}, falls die Datei
 	 *         nicht gefunden wurde
@@ -301,8 +362,8 @@ public class APIClient {
 	@GET
 	@Produces("font/woff2")
 	@Path("/fonts/{name}.woff2")
-	public Response getClientFileFontsWoff2(@PathParam("name") final String name) {
-		return getFile("fonts/" + name + ".woff2");
+	public Response getClientFileFontsWoff2(@PathParam("name") final String name, @Context final HttpServletRequest request) {
+		return getFile("fonts/" + name + ".woff2", request);
 	}
 
 
@@ -310,6 +371,7 @@ public class APIClient {
 	 * Gibt eine ico-Datei zurück, welche in den Ressourcen des SVWS-Clients vorhanden ist.
 	 *
 	 * @param name   der Name der Datei ohne ".ico"
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Response mit der Datei oder {@link Status#NOT_FOUND}, falls die Datei
 	 *         nicht gefunden wurde
@@ -317,8 +379,8 @@ public class APIClient {
 	@GET
 	@Produces("image/x-icon")
 	@Path("/{name}.ico")
-	public Response getClientFileICO(@PathParam("name") final String name) {
-		return getFile(name + ".ico");
+	public Response getClientFileICO(@PathParam("name") final String name, @Context final HttpServletRequest request) {
+		return getFile(name + ".ico", request);
 	}
 
 
@@ -326,6 +388,7 @@ public class APIClient {
 	 * Gibt eine ico-Datei zurück, welche im Ordner assets in den Ressourcen des SVWS-Clients vorhanden ist.
 	 *
 	 * @param name   der Name der Datei ohne ".ico"
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Response mit der Datei oder {@link Status#NOT_FOUND}, falls die Datei
 	 *         nicht gefunden wurde
@@ -333,8 +396,8 @@ public class APIClient {
 	@GET
 	@Produces("image/x-icon")
 	@Path("/assets/{name}.ico")
-	public Response getClientFileAssetsICO(@PathParam("name") final String name) {
-		return getFile("assets/" + name + ".ico");
+	public Response getClientFileAssetsICO(@PathParam("name") final String name, @Context final HttpServletRequest request) {
+		return getFile("assets/" + name + ".ico", request);
 	}
 
 
@@ -342,6 +405,7 @@ public class APIClient {
 	 * Gibt eine png-Datei zurück, welche in den Ressourcen des SVWS-Clients vorhanden ist.
 	 *
 	 * @param name   der Name der Datei ohne ".png"
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Response mit der Datei oder {@link Status#NOT_FOUND}, falls die Datei
 	 *         nicht gefunden wurde
@@ -349,8 +413,8 @@ public class APIClient {
 	@GET
 	@Produces("image/png")
 	@Path("/{name}.png")
-	public Response getClientFilePNG(@PathParam("name") final String name) {
-		return getFile(name + ".png");
+	public Response getClientFilePNG(@PathParam("name") final String name, @Context final HttpServletRequest request) {
+		return getFile(name + ".png", request);
 	}
 
 
@@ -358,6 +422,7 @@ public class APIClient {
 	 * Gibt eine png-Datei aus dem Ordner "/img/icons" zurück, welche in den Ressourcen des SVWS-Clients vorhanden ist.
 	 *
 	 * @param name   der Name der Datei ohne ".png"
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Response mit der Datei oder {@link Status#NOT_FOUND}, falls die Datei
 	 *         nicht gefunden wurde
@@ -365,8 +430,8 @@ public class APIClient {
 	@GET
 	@Produces("image/png")
 	@Path("/img/icons/{name}.png")
-	public Response getClientFileImgIconsPNG(@PathParam("name") final String name) {
-		return getFile("img/icons/" + name + ".png");
+	public Response getClientFileImgIconsPNG(@PathParam("name") final String name, @Context final HttpServletRequest request) {
+		return getFile("img/icons/" + name + ".png", request);
 	}
 
 
@@ -374,6 +439,7 @@ public class APIClient {
 	 * Gibt eine png-Datei aus dem Ordner "/assets" zurück, welche in den Ressourcen des SVWS-Clients vorhanden ist.
 	 *
 	 * @param name   der Name der Datei ohne ".png"
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Response mit der Datei oder {@link Status#NOT_FOUND}, falls die Datei
 	 *         nicht gefunden wurde
@@ -381,8 +447,8 @@ public class APIClient {
 	@GET
 	@Produces("image/png")
 	@Path("/assets/{name}.png")
-	public Response getClientFileAssetsPNG(@PathParam("name") final String name) {
-		return getFile("assets/" + name + ".png");
+	public Response getClientFileAssetsPNG(@PathParam("name") final String name, @Context final HttpServletRequest request) {
+		return getFile("assets/" + name + ".png", request);
 	}
 
 
@@ -390,6 +456,7 @@ public class APIClient {
 	 * Gibt eine jpg-Datei aus dem Ordner "/assets" zurück, welche in den Ressourcen des SVWS-Clients vorhanden ist.
 	 *
 	 * @param name   der Name der Datei ohne ".jpg"
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Response mit der Datei oder {@link Status#NOT_FOUND}, falls die Datei
 	 *         nicht gefunden wurde
@@ -397,8 +464,8 @@ public class APIClient {
 	@GET
 	@Produces("image/jpeg")
 	@Path("/assets/{name}.jpg")
-	public Response getClientFileAssetsJPG(@PathParam("name") final String name) {
-		return getFile("assets/" + name + ".jpg");
+	public Response getClientFileAssetsJPG(@PathParam("name") final String name, @Context final HttpServletRequest request) {
+		return getFile("assets/" + name + ".jpg", request);
 	}
 
 
@@ -406,6 +473,7 @@ public class APIClient {
 	 * Gibt eine svg-Datei zurück, welche in den Ressourcen des SVWS-Clients vorhanden ist.
 	 *
 	 * @param name   der Name der Datei ohne ".svg"
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Response mit der Datei oder {@link Status#NOT_FOUND}, falls die Datei
 	 *         nicht gefunden wurde
@@ -413,8 +481,8 @@ public class APIClient {
 	@GET
 	@Produces("image/svg+xml")
 	@Path("/{name}.svg")
-	public Response getClientFileSVG(@PathParam("name") final String name) {
-		return getFile(name + ".svg");
+	public Response getClientFileSVG(@PathParam("name") final String name, @Context final HttpServletRequest request) {
+		return getFile(name + ".svg", request);
 	}
 
 
@@ -422,6 +490,7 @@ public class APIClient {
 	 * Gibt eine svg-Datei aus dem Ordner "/assets" zurück, welche in den Ressourcen des SVWS-Clients vorhanden ist.
 	 *
 	 * @param name   der Name der Datei ohne ".svg"
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Response mit der Datei oder {@link Status#NOT_FOUND}, falls die Datei
 	 *         nicht gefunden wurde
@@ -429,8 +498,8 @@ public class APIClient {
 	@GET
 	@Produces("image/svg+xml")
 	@Path("/assets/{name}.svg")
-	public Response getClientFileAssetsSVG(@PathParam("name") final String name) {
-		return getFile("assets/" + name + ".svg");
+	public Response getClientFileAssetsSVG(@PathParam("name") final String name, @Context final HttpServletRequest request) {
+		return getFile("assets/" + name + ".svg", request);
 	}
 
 
@@ -438,90 +507,20 @@ public class APIClient {
 	 * Gib eine JSON-Datei für die Core-Type-Daten zurück.
 	 *
 	 * @param name  der name des Core-Types
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Response mit dem JSON-Katalog des Core-Types
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/types/{name}.json")
-	public Response getJSONKatalog(@PathParam("name") final String name) {
+	public Response getJSONKatalog(@PathParam("name") final String name, @Context final HttpServletRequest request) {
 		try {
-			final String json = switch (name) {
-				case "Schulform" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/Schulform.json");
-				case "BerufskollegAnlage" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/BerufskollegAnlage.json");
-				case "AllgemeinbildendOrganisationsformen" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/AllgemeinbildendOrganisationsformen.json");
-				case "BerufskollegOrganisationsformen" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/BerufskollegOrganisationsformen.json");
-				case "WeiterbildungskollegOrganisationsformen" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/WeiterbildungskollegOrganisationsformen.json");
-				case "SchulabschlussAllgemeinbildend" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/SchulabschlussAllgemeinbildend.json");
-				case "SchulabschlussBerufsbildend" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/SchulabschlussBerufsbildend.json");
-				case "Einschulungsart" -> JsonReader.fromResource("de/svws_nrw/asd/types/schueler/Einschulungsart.json");
-				case "HerkunftBildungsgang" -> JsonReader.fromResource("de/svws_nrw/asd/types/schueler/HerkunftBildungsgang.json");
-				case "HerkunftBildungsgangTyp" -> JsonReader.fromResource("de/svws_nrw/asd/types/schueler/HerkunftBildungsgangTyp.json");
-				case "Jahrgaenge" -> JsonReader.fromResource("de/svws_nrw/asd/types/jahrgang/Jahrgaenge.json");
-				case "PrimarstufeSchuleingangsphaseBesuchsjahre" -> JsonReader.fromResource("de/svws_nrw/asd/types/jahrgang/PrimarstufeSchuleingangsphaseBesuchsjahre.json");
-				case "Religion" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/Religion.json");
-				case "Kindergartenbesuch" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/Kindergartenbesuch.json");
-				case "SchuelerStatus" -> JsonReader.fromResource("de/svws_nrw/asd/types/schueler/SchuelerStatus.json");
-				case "Note" -> JsonReader.fromResource("de/svws_nrw/asd/types/Note.json");
-				case "Sprachreferenzniveau" -> JsonReader.fromResource("de/svws_nrw/asd/types/fach/Sprachreferenzniveau.json");
-				case "BerufskollegBildungsgangTyp" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/BerufskollegBildungsgangTyp.json");
-				case "WeiterbildungskollegBildungsgangTyp" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/WeiterbildungskollegBildungsgangTyp.json");
-				case "Schulgliederung" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/Schulgliederung.json");
-				case "Verkehrssprache" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/Verkehrssprache.json");
-				case "Fachgruppe" -> JsonReader.fromResource("de/svws_nrw/asd/types/fach/Fachgruppe.json");
-				case "Fach" -> JsonReader.fromResource("de/svws_nrw/asd/types/fach/Fach.json");
-				case "LehrerAbgangsgrund" -> JsonReader.fromResource("de/svws_nrw/asd/types/lehrer/LehrerAbgangsgrund.json");
-				case "LehrerBeschaeftigungsart" -> JsonReader.fromResource("de/svws_nrw/asd/types/lehrer/LehrerBeschaeftigungsart.json");
-				case "LehrerEinsatzstatus" -> JsonReader.fromResource("de/svws_nrw/asd/types/lehrer/LehrerEinsatzstatus.json");
-				case "LehrerFachrichtung" -> JsonReader.fromResource("de/svws_nrw/asd/types/lehrer/LehrerFachrichtung.json");
-				case "LehrerLehrbefaehigung" -> JsonReader.fromResource("de/svws_nrw/asd/types/lehrer/LehrerLehrbefaehigung.json");
-				case "LehrerFachrichtungAnerkennung" -> JsonReader.fromResource("de/svws_nrw/asd/types/lehrer/LehrerFachrichtungAnerkennung.json");
-				case "LehrerLehramt" -> JsonReader.fromResource("de/svws_nrw/asd/types/lehrer/LehrerLehramt.json");
-				case "LehrerLehramtAnerkennung" -> JsonReader.fromResource("de/svws_nrw/asd/types/lehrer/LehrerLehramtAnerkennung.json");
-				case "LehrerLehrbefaehigungAnerkennung" -> JsonReader.fromResource("de/svws_nrw/asd/types/lehrer/LehrerLehrbefaehigungAnerkennung.json");
-				case "LehrerLeitungsfunktion" -> JsonReader.fromResource("de/svws_nrw/asd/types/lehrer/LehrerLeitungsfunktion.json");
-				case "LehrerRechtsverhaeltnis" -> JsonReader.fromResource("de/svws_nrw/asd/types/lehrer/LehrerRechtsverhaeltnis.json");
-				case "LehrerZugangsgrund" -> JsonReader.fromResource("de/svws_nrw/asd/types/lehrer/LehrerZugangsgrund.json");
-				case "BilingualeSprache" -> JsonReader.fromResource("de/svws_nrw/asd/types/fach/BilingualeSprache.json");
-				case "KAOABerufsfeld" -> JsonReader.fromResource("de/svws_nrw/asd/types/kaoa/KAOABerufsfeld.json");
-				case "KAOAMerkmaleOptionsarten" -> JsonReader.fromResource("de/svws_nrw/asd/types/kaoa/KAOAMerkmaleOptionsarten.json");
-				case "KAOAZusatzmerkmaleOptionsarten" -> JsonReader.fromResource("de/svws_nrw/asd/types/kaoa/KAOAZusatzmerkmaleOptionsarten.json");
-				case "KAOAEbene4" -> JsonReader.fromResource("de/svws_nrw/asd/types/kaoa/KAOAEbene4.json");
-				case "KAOAZusatzmerkmal" -> JsonReader.fromResource("de/svws_nrw/asd/types/kaoa/KAOAZusatzmerkmal.json");
-				case "KAOAAnschlussoptionen" -> JsonReader.fromResource("de/svws_nrw/asd/types/kaoa/KAOAAnschlussoptionen.json");
-				case "KAOAKategorie" -> JsonReader.fromResource("de/svws_nrw/asd/types/kaoa/KAOAKategorie.json");
-				case "KAOAMerkmal" -> JsonReader.fromResource("de/svws_nrw/asd/types/kaoa/KAOAMerkmal.json");
-				case "Klassenart" -> JsonReader.fromResource("de/svws_nrw/asd/types/klassen/Klassenart.json");
-				case "Uebergangsempfehlung" -> JsonReader.fromResource("de/svws_nrw/asd/types/schueler/Uebergangsempfehlung.json");
-				case "ZulaessigeKursart" -> JsonReader.fromResource("de/svws_nrw/asd/types/kurse/ZulaessigeKursart.json");
-				case "Foerderschwerpunkt" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/Foerderschwerpunkt.json");
-				case "Termin" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/Termin.json");
-				case "Betreuungsart" -> JsonReader.fromResource("de/svws_nrw/asd/types/schueler/Betreuungsart.json");
-				case "FormOffenerGanztag" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/FormOffenerGanztag.json");
-				case "LehrerAnrechnungsgrund" -> JsonReader.fromResource("de/svws_nrw/asd/types/lehrer/LehrerAnrechnungsgrund.json");
-				case "LehrerMehrleistungsarten" -> JsonReader.fromResource("de/svws_nrw/asd/types/lehrer/LehrerMehrleistungsarten.json");
-				case "LehrerMinderleistungsarten" -> JsonReader.fromResource("de/svws_nrw/asd/types/lehrer/LehrerMinderleistungsarten.json");
-				case "LehrerPflichtstundensollVollzeit" -> JsonReader.fromResource("de/svws_nrw/asd/types/lehrer/LehrerPflichtstundensollVollzeit.json");
-				case "Nationalitaeten" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/Nationalitaeten.json");
-				case "ValidatorenFehlerartKontext" -> JsonReader.fromResource("de/svws_nrw/asd/validate/ValidatorenFehlerartKontext.json");
-				case "Floskelgruppenart" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/Floskelgruppenart.json");
-				case "Einwilligungsschluessel" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/Einwilligungsschluessel.json");
-				case "Bildungsstufe" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/Bildungsstufe.json");
-				case "Herkunftsarten" -> JsonReader.fromResource("de/svws_nrw/asd/types/schueler/Herkunftsarten.json");
-				case "HerkunftSonstige" -> JsonReader.fromResource("de/svws_nrw/asd/types/schueler/HerkunftSonstige.json");
-				case "HerkunftSchulform" -> JsonReader.fromResource("de/svws_nrw/asd/types/schueler/HerkunftSchulform.json");
-				case "BerufskollegBerufsebene1" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/BerufskollegBerufsebene1.json");
-				case "BerufskollegBerufsebene2" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/BerufskollegBerufsebene2.json");
-				case "BerufskollegBerufsebene3" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/BerufskollegBerufsebene3.json");
-				default -> null;
-			};
-			if (json == null)
-				return Response.status(Status.NOT_FOUND).build();
-			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(json).build();
-		} catch (final IOException e) {
-			Logger.global().logLn("Fehler beim Einlesen der Core-Type-JSON-Kataloge!");
-			Logger.global().logLn(e.getMessage());
-			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+			final String json = ResourceCoreTypeJson.get(name);
+			final byte[] data = json.getBytes(StandardCharsets.UTF_8);
+			return getZippedResponse(data, checkZipAllowed(request));
+		} catch (final ApiOperationException e) {
+			return e.getResponse();
 		}
 	}
 

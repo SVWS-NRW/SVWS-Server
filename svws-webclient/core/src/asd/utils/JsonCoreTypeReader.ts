@@ -184,11 +184,6 @@ export class JsonCoreTypeReader {
 
 	mapCoreTypeNameJsonData = new Map<string, string>();
 
-	protected async loadJson(coreTypeName: string) {
-		const jsonData = await this.api.getJSON(`/types/${coreTypeName}.json`);
-		this.mapCoreTypeNameJsonData.set(coreTypeName, jsonData);
-	}
-
 	private read<T>(name: string, mapper: (json: string) => T): JsonCoreTypeDataResult<T> {
 		if (name === "")
 			throw new DeveloperNotificationException("Für das Einlesen eines Core-Types muss ein gültiger Name angegeben werden");
@@ -654,10 +649,14 @@ export class JsonCoreTypeReader {
 	}
 
 	public async loadAll(): Promise<Map<string, string>> {
-		const arr = [];
-		for (const key of this.keys)
-			arr.push(this.loadJson(key));
-		await Promise.all(arr);
+		const all = JSON.parse(await this.api.getJSON(`/types/allinone.json`));
+		for (const key of this.keys) {
+			const single = all[key];
+			if (single === undefined)
+				continue;
+			const json = JSON.stringify(single);
+			this.mapCoreTypeNameJsonData.set(key, json);
+		}
 		return this.mapCoreTypeNameJsonData;
 	}
 
