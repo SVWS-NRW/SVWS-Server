@@ -40,7 +40,12 @@ public final class DataStundenplanRaeume extends DataManagerRevised<Long, DTOStu
 		super(conn);
 		this.stundenplanID = stundenplanID;
 		setAttributesRequiredOnCreation("kuerzel", "groesse");
-		setAttributesNotPatchable("id", "idStundenplan");
+		setAttributesNotPatchable("idStundenplan");
+	}
+
+	@Override
+	public Long getID(final Map<String, Object> attributes) throws ApiOperationException {
+		return JSONMapper.convertToLong(attributes.get("id"), false, "id");
 	}
 
 	/**
@@ -83,7 +88,11 @@ public final class DataStundenplanRaeume extends DataManagerRevised<Long, DTOStu
 	protected void mapAttribute(final DTOStundenplanRaum dto, final String name, final Object value, final Map<String, Object> map)
 			throws ApiOperationException {
 		switch (name) {
-			case "id" -> dto.ID = JSONMapper.convertToLong(value, false);
+			case "id" -> {
+				final Long id = JSONMapper.convertToLong(value, false, name);
+				if ((id == null) || (id != dto.ID))
+					throw new ApiOperationException(Status.BAD_REQUEST, "Die ID des Patches stimmt nicht mit der ID des Objekts überein.");
+			}
 			case "kuerzel" -> {
 				dto.Kuerzel = JSONMapper.convertToString(value, false, false, 20).trim();
 				if ("".equals(dto.Kuerzel))
