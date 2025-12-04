@@ -1,11 +1,10 @@
-import type { Schulform, List, Schulgliederung, ServerMode, BenutzerKompetenz } from "@core";
+import type { List, ServerMode, BenutzerKompetenz } from "@core";
 import type { VermerkartenListeManager } from "@ui";
 
 export interface VermerkartenGruppenprozesseProps {
 	serverMode: ServerMode;
-	schulform: Schulform;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
-	schulgliederungen: List<Schulgliederung>;
 	manager: () => VermerkartenListeManager;
 	delete: () => Promise<[boolean, List<string | null>]>;
+	deleteCheck: () => [boolean, List<string>];
 }

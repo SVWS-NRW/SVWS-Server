@@ -2,18 +2,18 @@
 	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper>
-				<svws-ui-text-input class="contentFocusField" placeholder="Bezeichnung" :model-value="vermerkartenManager().auswahl().bezeichnung" :readonly
+				<svws-ui-text-input class="contentFocusField" placeholder="Bezeichnung" :model-value="manager().auswahl().bezeichnung" :readonly
 					@change="v => patch({ bezeichnung: v?.trim() ?? undefined })" />
 				<svws-ui-spacing />
-				<svws-ui-checkbox :model-value="vermerkartenManager().daten().istSichtbar" @update:model-value="istSichtbar => patch({ istSichtbar })" :readonly>
+				<svws-ui-checkbox :model-value="manager().daten().istSichtbar" @update:model-value="istSichtbar => patch({ istSichtbar })" :readonly>
 					Sichtbar
 				</svws-ui-checkbox>
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 
-		<svws-ui-content-card class="w-full" :title="'Alle Schüler mit der Vermerkart `' + vermerkartenManager().auswahl().bezeichnung + '`'"
-			v-if="vermerkartenManager().getListSchuelerVermerkartZusammenfassung().list().size() > 0">
-			<svws-ui-table class="w-full" :columns :items="vermerkartenManager().getListSchuelerVermerkartZusammenfassung().list()">
+		<svws-ui-content-card class="w-full" :title="'Alle Schüler mit der Vermerkart `' + manager().auswahl().bezeichnung + '`'"
+			v-if="manager().schuelerVermerkartZusammenfassungen.size() > 0">
+			<svws-ui-table class="w-full" :columns :items="manager().schuelerVermerkartZusammenfassungen">
 				<template #cell(status)="{ value }: { value: number}">
 					<span :class="{'opacity-25': value === 2}">{{ value }}</span>
 				</template>

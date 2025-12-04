@@ -6,23 +6,21 @@
 		<div class="secondary-menu--header" />
 		<div class="secondary-menu--content">
 			<div class="container">
-				<svws-ui-table clickable :clicked="clickedEintrag" @update:clicked="eintrag => gotoDefaultView(eintrag.id)" :items="props.manager().filtered()" :columns :selectable="!readonly"
-					:model-value="[...props.manager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)" scroll-into-view :focus-switching-enabled :focus-help-visible>
+				<svws-ui-table v-model="vermerkarten"
+					v-model:clicked="selectedVermerkarten"
+					:items="props.manager().filtered()" :columns
+					clickable :selectable="!readonly" count :focus-switching-enabled :focus-help-visible scroll-into-view filter-open>
+					<template #search>
+						<svws-ui-text-input v-model="searchTerm" type="search" placeholder="Suchen" removable />
+					</template>
 					<template #filterAdvanced>
-						<svws-ui-checkbox type="toggle" v-model="filterNurSichtbare">Nur Sichtbare</svws-ui-checkbox>
+						<svws-ui-checkbox type="toggle" v-model="showOnlyVisibleVermerkarten">Nur Sichtbare</svws-ui-checkbox>
 					</template>
-					<template #cell(anzahlVermerke)="{ value, rowData }">
-						<div class="inline-flex min-h-5">
-							<div v-if="isRemovable(rowData)" class="inline-flex">
-								<span class="icon i-ri-alert-line mx-0.5 mr-1" />
-								<p>verwendet</p>
-							</div>
-							<p class="w-8"> {{ value }} </p>
-						</div>
-					</template>
-					<template #actions>
-						<svws-ui-tooltip v-if="!readonly" position="bottom">
-							<svws-ui-button :disabled="activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="gotoHinzufuegenView(true)" :has-focus="manager().filtered().isEmpty()">
+					<template #actions v-if="!readonly">
+						<svws-ui-tooltip v-if="ServerMode.DEV.checkServerMode(serverMode)" position="bottom">
+							<svws-ui-button type="icon"
+								@click="gotoHinzufuegenView(true)"
+								:has-focus="noFilteredEntries" :disabled="isHinzufuegenView">
 								<span class="icon i-ri-add-line" />
 							</svws-ui-button>
 							<template #content>
@@ -39,47 +37,66 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import { BenutzerKompetenz, type VermerkartEintrag } from "@core";
+	import type { VermerkartEintrag } from "@core";
+	import { BenutzerKompetenz, ServerMode } from "@core";
 	import type { DataTableColumn } from "@ui";
 	import { useRegionSwitch, ViewType } from "@ui";
 	import type { VermerkartenAuswahlProps } from "./VermerkartenAuswahlProps";
 
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 	const props = defineProps<VermerkartenAuswahlProps>();
 	const readonly = computed<boolean>(() => !props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
-	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
+	const isHinzufuegenView = computed<boolean>(() => props.activeViewType === ViewType.HINZUFUEGEN);
+	const isGruppenprozesseOrHinzufuegenView = computed<boolean>(() => (props.activeViewType === ViewType.GRUPPENPROZESSE) || isHinzufuegenView.value);
+	const noFilteredEntries = computed<boolean>(() => props.manager().filtered().size() === 0);
+	const searchTerm = computed<string>({
+		get: () => props.manager().searchTerm,
+		set: (v: string) => {
+			props.manager().searchTerm = v;
+			void props.setFilter();
+		},
+	});
 
-	const columns: DataTableColumn[] = [
-		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, defaultSort: "asc", span: 2 },
-		{ key: "anzahlVermerke", label: "Anzahl", sortable: true, defaultSort: "asc", span: 1, align: "right" },
-	];
+	const vermerkarten = computed<VermerkartEintrag[]>({
+		get: () => [...props.manager().liste.auswahl()],
+		set: (v: VermerkartEintrag[]) => {
+			setAuswahl(v);
+			void navigateToView();
+		},
+	});
 
-	const filterNurSichtbare = computed<boolean>({
+	const showOnlyVisibleVermerkarten = computed<boolean>({
 		get: () => props.manager().filterNurSichtbar(),
-		set: (value) => {
+		set: (value: boolean) => {
 			props.manager().setFilterNurSichtbar(value);
 			void props.setFilter();
 		},
 	});
 
-	async function setAuswahl(items: VermerkartEintrag[]) {
-		props.manager().liste.auswahlClear();
-		for (const item of items)
-			if (props.manager().liste.hasValue(item) === true)
-				props.manager().liste.auswahlAdd(item);
-		if (props.manager().liste.auswahlExists() === true)
-			await props.gotoGruppenprozessView(true);
-		else
-			await props.gotoDefaultView(props.manager().getVorherigeAuswahl()?.id);
-	}
-
-	const clickedEintrag = computed(() => {
-		if ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN))
-			return null;
-		return (props.manager().hasDaten() === true) ? props.manager().auswahl() : null;
+	const selectedVermerkarten = computed<VermerkartEintrag | null>({
+		get: () => (!isGruppenprozesseOrHinzufuegenView.value && props.manager().hasDaten()) ? props.manager().auswahl() : null,
+		set: (v: VermerkartEintrag | null) => void props.gotoDefaultView(v?.id ?? null),
 	});
 
-	function isRemovable(rowData: VermerkartEintrag) {
-		return [... props.manager().liste.auswahl()].includes(rowData);
+	const columns: DataTableColumn[] = [
+		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, defaultSort: "asc", span: 2 },
+	];
+
+	function setAuswahl(vermerkarten: VermerkartEintrag[]): void {
+		props.manager().liste.auswahlClear();
+		for (const data of vermerkarten) {
+			if (props.manager().liste.hasValue(data)) {
+				props.manager().liste.auswahlAdd(data);
+			}
+		}
+	}
+
+	async function navigateToView(): Promise<void> {
+		if (props.manager().liste.auswahlExists()) {
+			await props.gotoGruppenprozessView(true);
+		} else {
+			await props.gotoDefaultView(props.manager().getVorherigeAuswahl()?.id);
+		}
 	}
 
 </script>

@@ -27,7 +27,7 @@ export class RouteVermerkartenDaten extends RouteNode<any, RouteVermerkarten> {
 	public getProps(to: RouteLocationNormalized): VermerkartenDatenProps {
 		return {
 			patch: routeVermerkarten.data.patch,
-			vermerkartenManager: () => routeVermerkarten.data.manager,
+			manager: () => routeVermerkarten.data.manager,
 			gotoSchueler: this.gotoSchueler,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 		};

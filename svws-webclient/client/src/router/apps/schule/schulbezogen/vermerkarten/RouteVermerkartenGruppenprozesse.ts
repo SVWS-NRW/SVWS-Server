@@ -28,11 +28,10 @@ export class RouteVermerkartenGruppenprozesse extends RouteNode<any, RouteVermer
 	public getProps(to: RouteLocationNormalized): VermerkartenGruppenprozesseProps {
 		return {
 			serverMode: api.mode,
-			schulform: api.schulform,
 			benutzerKompetenzen: api.benutzerKompetenzen,
-			schulgliederungen: api.schulgliederungen,
 			manager: () => routeVermerkarten.data.manager,
 			delete: routeVermerkarten.data.delete,
+			deleteCheck: routeVermerkarten.data.deleteCheck,
 		};
 	}
 

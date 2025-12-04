@@ -1,19 +1,21 @@
 <template>
 	<div class="page page-grid-cards">
-		<div v-if="ServerMode.DEV.checkServerMode(serverMode)" class="flex flex-col gap-y-16 lg:gap-y-16">
-			<ui-card v-if="hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen" subtitle="Ausgewählte Vermerkarten werden gelöscht"
-				:is-open="currentAction === 'delete'" @update:is-open="(isOpen) => setCurrentAction('delete', isOpen)">
+		<div v-if="hatkeineErforderlicheKompetenz">
+			Für die Nutzung der Gruppenprozesse fehlen Benutzerkompetenzen.
+		</div>
+		<div v-if="ServerMode.DEV.checkServerMode(serverMode)" class="flex flex-col gap-4">
+			<ui-card v-if="hatKompetenzLoeschen" title="Löschen" subtitle="Ausgewählte Vermerkarten werden gelöscht" icon="i-ri-delete-bin-line">
 				<div>
-					<span v-if="alleVermerkartenLeer">Alle ausgewählten Vermerkarten sind bereit zum Löschen.</span>
-					<span v-if="leereVermerkartenVorhanden">Einige Vermerkarten haben noch Schüler, leere Vermerkarten können gelöscht werden.</span>
-					<div v-if="!alleVermerkartenLeer">
-						<span v-for="message in nichtAlleVermerkartenLeer" :key="message" class="text-ui-danger"> {{ message }} <br> </span>
-					</div>
+					<span v-if="selectedAllowedToDelete">Alle ausgewählten Vermerkarten sind bereit zum Löschen.</span>
+					<template v-else v-for="message in deleteCheckErrors" :key="message">
+						<span class="text-ui-danger whitespace-pre-line"> {{ message }} <br> </span>
+					</template>
 				</div>
 				<template #buttonFooterLeft>
-					<svws-ui-button :disabled="manager().getVermerkartenIDsMitSchuelern().size() === manager().liste.auswahlSize() || loading"
-						title="Löschen" @click="entferneVermerkarten" :is-loading="loading" class="mt-4">
-						<svws-ui-spinner v-if="loading" spinning />
+					<svws-ui-button title="Löschen" class="mt-4"
+						@click="deleteSelectedVermerkarten"
+						:disabled="!selectedAllowedToDelete || !props.manager().liste.auswahlExists()" :is-loading>
+						<svws-ui-spinner v-if="isLoading" spinning />
 						<span v-else class="icon i-ri-play-line" />
 						Löschen
 					</svws-ui-button>
@@ -21,7 +23,10 @@
 			</ui-card>
 			<log-box :logs :status>
 				<template #button>
-					<svws-ui-button v-if="status !== undefined" type="transparent" @click="clearLog" title="Log verwerfen">Log verwerfen</svws-ui-button>
+					<svws-ui-button v-if="status !== undefined" type="transparent"
+						@click="clearLog">
+						Log verwerfen
+					</svws-ui-button>
 				</template>
 			</log-box>
 		</div>
@@ -37,59 +42,29 @@
 
 	import { ref, computed } from "vue";
 	import type { VermerkartenGruppenprozesseProps } from "./VermerkartenGruppenprozesseProps";
-	import { ArrayList, BenutzerKompetenz, type List, ServerMode } from "@core";
+	import { BenutzerKompetenz, type List, ServerMode } from "@core";
 
 	const props = defineProps<VermerkartenGruppenprozesseProps>();
-
-	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
-
-	const currentAction = ref<string>('');
-	const oldAction = ref<{ name: string | undefined; open: boolean }>({
-		name: undefined,
-		open: false,
-	});
-	const loading = ref<boolean>(false);
+	const isLoading = ref<boolean>(false);
 	const logs = ref<List<string | null> | undefined>();
 	const status = ref<boolean | undefined>();
+	const hatKompetenzLoeschen = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
+	const hatkeineErforderlicheKompetenz = computed<boolean>(() => !hatKompetenzLoeschen.value);
+	const deleteCheckErrors = computed<List<string>>(() => props.deleteCheck()[1]);
+	const selectedAllowedToDelete = computed<boolean>(() => props.deleteCheck()[0]);
 
-	const alleVermerkartenLeer = computed(() => (currentAction.value === 'delete') && props.manager().getVermerkartenIDsMitSchuelern().isEmpty());
-
-	const nichtAlleVermerkartenLeer = computed(() => {
-		const errorLog: List<string> = new ArrayList<string>();
-		if (alleVermerkartenLeer.value === false)
-			for (const vermerkart of props.manager().getVermerkartenIDsMitSchuelern())
-				errorLog.add(`Vermerkart ${props.manager().liste.get(vermerkart)?.bezeichnung ?? '???'} (ID: ${vermerkart}) kann nicht gelöscht werden, da ihr noch Schüler zugeordnet sind.`);
-		return errorLog;
-	});
-
-	const leereVermerkartenVorhanden = computed(() =>
-		(alleVermerkartenLeer.value === false) && (props.manager().getVermerkartenIDsMitSchuelern().size() !== props.manager().liste.auswahlSize()));
-
-	function setCurrentAction(newAction: string, open: boolean) {
-		if (newAction === oldAction.value.name && !open)
-			return;
-		oldAction.value.name = currentAction.value;
-		oldAction.value.open = (currentAction.value === "") ? false : true;
-		if (open === true)
-			currentAction.value = newAction;
-		else
-			currentAction.value = "";
-	}
-
-
-	function clearLog() {
-		loading.value = false;
-		logs.value = undefined;
-		status.value = undefined;
-	}
-
-	async function entferneVermerkarten() {
-		loading.value = true;
+	async function deleteSelectedVermerkarten() {
+		isLoading.value = true;
 		const [delStatus, logMessages] = await props.delete();
 		logs.value = logMessages;
 		status.value = delStatus;
-		currentAction.value = '';
-		loading.value = false;
+		isLoading.value = false;
+	}
+
+	function clearLog() {
+		isLoading.value = false;
+		logs.value = undefined;
+		status.value = undefined;
 	}
 
 </script>

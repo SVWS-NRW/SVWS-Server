@@ -3,7 +3,7 @@ import type { VermerkartenListeManager } from "@ui";
 
 export interface VermerkartenDatenProps {
 	patch: (data: Partial<VermerkartEintrag>) => Promise<void>;
-	vermerkartenManager: () => VermerkartenListeManager,
+	manager: () => VermerkartenListeManager,
 	gotoSchueler: (schuelerVermerkartZusammenfassung: SchuelerVermerkartZusammenfassung) => Promise<void>;
 	benutzerKompetenzen: Set<BenutzerKompetenz>,
 }

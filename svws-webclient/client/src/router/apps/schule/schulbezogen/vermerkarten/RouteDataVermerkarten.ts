@@ -1,7 +1,6 @@
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
-import type { VermerkartEintrag, List, SimpleOperationResponse } from "@core";
-import { ArrayList } from "@core";
+import { ArrayList, VermerkartEintrag, List, SimpleOperationResponse, BenutzerKompetenz } from "@core";
 import { api } from "~/router/Api";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
 import { routeVermerkartenDaten } from "./RouteVermerkartenDaten";
@@ -30,18 +29,12 @@ export class RouteDataVermerkarten extends RouteDataAuswahl<VermerkartenListeMan
 	protected async createManager(_: number): Promise<Partial<RouteStateAuswahlInterface<VermerkartenListeManager>>> {
 		const vermerkarten = await api.server.getVermerkarten(api.schema);
 		const manager = new VermerkartenListeManager(api.abschnitt.id, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte, api.schulform, vermerkarten, new ArrayList());
-		if (this._state.value.manager === undefined)
-			manager.setFilterNurSichtbar(true);
-		else
-			manager.useFilter(this._state.value.manager);
 		return { manager };
 	}
 
-	async ladeDaten(auswahl: VermerkartEintrag | null): Promise<VermerkartEintrag | null> {
-		if (auswahl === null)
-			return auswahl;
+	async ladeDaten(auswahl: VermerkartEintrag): Promise<VermerkartEintrag> {
 		const schueler = await api.server.getSchuelerByVermerkartID(api.schema, auswahl.id);
-		this.manager.setListSchuelerVermerkartZusammenfassung(schueler);
+		this.manager.schuelerVermerkartZusammenfassungen = schueler;
 		return auswahl;
 	}
 
@@ -61,6 +54,35 @@ export class RouteDataVermerkarten extends RouteDataAuswahl<VermerkartenListeMan
 
 	protected deleteMessage(id: number, vermerkart: VermerkartEintrag | null): string {
 		return `Vermerkart ${vermerkart?.bezeichnung ?? '???'} (ID: ${id}) wurde erfolgreich gelöscht.`;
+	}
+
+	deleteCheck = (): [boolean, List<string>] => {
+		const errorLog = new ArrayList<string>();
+
+		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
+			errorLog.add('Es liegt keine Berechtigung zum Löschen von Vermerkarten vor.');
+		}
+
+		if (!this.manager.liste.auswahlExists()) {
+			errorLog.add('Es wurde keine Vermerkart zum Löschen ausgewählt.');
+		}
+
+		if (!this.manager.idsReferencedEinwilligungsarten.isEmpty()) {
+			errorLog.add(this.getErrorMessageForReferencedVermerkarten());
+		}
+
+		return [errorLog.isEmpty(), errorLog];
+	};
+
+	private getErrorMessageForReferencedVermerkarten(): string {
+		let errorMessage = 'Die folgenden Vermerkarten sind an anderer Stelle referenziert und können daher nicht gelöscht werden:\n\n';
+		for (const id of this.manager.idsReferencedEinwilligungsarten) {
+			const jahrgang = this.manager.liste.get(id);
+			if (jahrgang) {
+				errorMessage += `- ${jahrgang.bezeichnung} \n`;
+			}
+		}
+		return errorMessage;
 	}
 
 }
