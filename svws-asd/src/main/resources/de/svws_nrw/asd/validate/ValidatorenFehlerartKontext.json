@@ -157,6 +157,138 @@
 			"gueltigBis": null
 		} ]
 	}, {
+		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLplk00LehrerPersonaldatenLehramtKombination",
+		"historie": [ {
+			"zebras": true,
+			"svws": true,
+			"praefix": "LPLK00",
+			"muss": [],
+			"kann": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+			"hinweis": [],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLplk01LehrerPersonaldatenLehramtKombination",
+		"historie": [ {
+			"zebras": true,
+			"svws": true,
+			"praefix": "LPLK01",
+			"muss": [],
+			"kann": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+			"hinweis": [],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLplk02LehrerPersonaldatenLehramtKombination",
+		"historie": [ {
+			"zebras": true,
+			"svws": true,
+			"praefix": "LPLK02",
+			"muss": [],
+			"kann": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+			"hinweis": [],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLplk03LehrerPersonaldatenLehramtKombination",
+		"historie": [ {
+			"zebras": true,
+			"svws": true,
+			"praefix": "LPLK03",
+			"muss": [],
+			"kann": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+			"hinweis": [],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLplk04LehrerPersonaldatenLehramtKombination",
+		"historie": [ {
+			"zebras": true,
+			"svws": true,
+			"praefix": "LPLK04",
+			"muss": [],
+			"kann": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+			"hinweis": [],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLplk05LehrerPersonaldatenLehramtKombination",
+		"historie": [ {
+			"zebras": true,
+			"svws": true,
+			"praefix": "LPLK05",
+			"muss": [],
+			"kann": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+			"hinweis": [],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLplk06LehrerPersonaldatenLehramtKombination",
+		"historie": [ {
+			"zebras": true,
+			"svws": true,
+			"praefix": "LPLK06",
+			"muss": [],
+			"kann": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+			"hinweis": [],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLplk07LehrerPersonaldatenLehramtKombination",
+		"historie": [ {
+			"zebras": true,
+			"svws": true,
+			"praefix": "LPLK07",
+			"muss": [],
+			"kann": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+			"hinweis": [],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLplk08LehrerPersonaldatenLehramtKombination",
+		"historie": [ {
+			"zebras": true,
+			"svws": true,
+			"praefix": "LPLK08",
+			"muss": [],
+			"kann": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+			"hinweis": [],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLplk09LehrerPersonaldatenLehramtKombination",
+		"historie": [ {
+			"zebras": true,
+			"svws": true,
+			"praefix": "LPLK09",
+			"muss": [],
+			"kann": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+			"hinweis": [],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLplk10LehrerPersonaldatenLehramtKombination",
+		"historie": [ {
+			"zebras": true,
+			"svws": true,
+			"praefix": "LPLK10",
+			"muss": [],
+			"kann": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+			"hinweis": [],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {	
 		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten",
 		"historie": [ {
 			"zebras": true,

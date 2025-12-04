@@ -308,6 +308,17 @@ export { ValidatorLpl01LehrerPersonaldatenLehramt } from './asd/validate/lehrer/
 export { ValidatorLpl02LehrerPersonaldatenLehramt } from './asd/validate/lehrer/ValidatorLpl02LehrerPersonaldatenLehramt';
 export { ValidatorLpl03LehrerPersonaldatenLehramt } from './asd/validate/lehrer/ValidatorLpl03LehrerPersonaldatenLehramt';
 export { ValidatorLplLehrerPersonaldatenLehramt } from './asd/validate/lehrer/ValidatorLplLehrerPersonaldatenLehramt';
+export { ValidatorLplk00LehrerPersonaldatenLehramtKombination } from './asd/validate/lehrer/ValidatorLplk00LehrerPersonaldatenLehramtKombination';
+export { ValidatorLplk01LehrerPersonaldatenLehramtKombination } from './asd/validate/lehrer/ValidatorLplk01LehrerPersonaldatenLehramtKombination';
+export { ValidatorLplk02LehrerPersonaldatenLehramtKombination } from './asd/validate/lehrer/ValidatorLplk02LehrerPersonaldatenLehramtKombination';
+export { ValidatorLplk03LehrerPersonaldatenLehramtKombination } from './asd/validate/lehrer/ValidatorLplk03LehrerPersonaldatenLehramtKombination';
+export { ValidatorLplk04LehrerPersonaldatenLehramtKombination } from './asd/validate/lehrer/ValidatorLplk04LehrerPersonaldatenLehramtKombination';
+export { ValidatorLplk05LehrerPersonaldatenLehramtKombination } from './asd/validate/lehrer/ValidatorLplk05LehrerPersonaldatenLehramtKombination';
+export { ValidatorLplk06LehrerPersonaldatenLehramtKombination } from './asd/validate/lehrer/ValidatorLplk06LehrerPersonaldatenLehramtKombination';
+export { ValidatorLplk07LehrerPersonaldatenLehramtKombination } from './asd/validate/lehrer/ValidatorLplk07LehrerPersonaldatenLehramtKombination';
+export { ValidatorLplk08LehrerPersonaldatenLehramtKombination } from './asd/validate/lehrer/ValidatorLplk08LehrerPersonaldatenLehramtKombination';
+export { ValidatorLplk09LehrerPersonaldatenLehramtKombination } from './asd/validate/lehrer/ValidatorLplk09LehrerPersonaldatenLehramtKombination';
+export { ValidatorLplk10LehrerPersonaldatenLehramtKombination } from './asd/validate/lehrer/ValidatorLplk10LehrerPersonaldatenLehramtKombination';
 export { ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten } from './asd/validate/lehrer/ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten';
 export { ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart } from './asd/validate/lehrer/ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart';
 export { ValidatorLppb03LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart } from './asd/validate/lehrer/ValidatorLppb03LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart';

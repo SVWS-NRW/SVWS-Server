@@ -33,6 +33,20 @@ public final class ValidatorLplLehrerPersonaldatenLehramt extends Validator {
 		_validatoren.add(new ValidatorLpl01LehrerPersonaldatenLehramt(lehrerPersonaldaten, kontext));
 		_validatoren.add(new ValidatorLpl02LehrerPersonaldatenLehramt(lehrerPersonaldaten, kontext));
 		_validatoren.add(new ValidatorLpl03LehrerPersonaldatenLehramt(lehrerPersonaldaten, geburtsdatum, kontext));
+
+		if (this.lehrerPersonaldaten.lehraemter != null && this.lehrerPersonaldaten.lehraemter.size() > 0) {
+			_validatoren.add(new ValidatorLplk00LehrerPersonaldatenLehramtKombination(lehrerPersonaldaten, kontext));
+			_validatoren.add(new ValidatorLplk01LehrerPersonaldatenLehramtKombination(lehrerPersonaldaten, kontext));
+			_validatoren.add(new ValidatorLplk02LehrerPersonaldatenLehramtKombination(lehrerPersonaldaten, kontext));
+			_validatoren.add(new ValidatorLplk03LehrerPersonaldatenLehramtKombination(lehrerPersonaldaten, kontext));
+			_validatoren.add(new ValidatorLplk04LehrerPersonaldatenLehramtKombination(lehrerPersonaldaten, kontext));
+			_validatoren.add(new ValidatorLplk05LehrerPersonaldatenLehramtKombination(lehrerPersonaldaten, kontext));
+			_validatoren.add(new ValidatorLplk06LehrerPersonaldatenLehramtKombination(lehrerPersonaldaten, kontext));
+			_validatoren.add(new ValidatorLplk07LehrerPersonaldatenLehramtKombination(lehrerPersonaldaten, kontext));
+			_validatoren.add(new ValidatorLplk08LehrerPersonaldatenLehramtKombination(lehrerPersonaldaten, kontext));
+			_validatoren.add(new ValidatorLplk09LehrerPersonaldatenLehramtKombination(lehrerPersonaldaten, kontext));
+			_validatoren.add(new ValidatorLplk10LehrerPersonaldatenLehramtKombination(lehrerPersonaldaten, kontext));
+		}
 	}
 
 	@Override
