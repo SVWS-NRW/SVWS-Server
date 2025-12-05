@@ -24,6 +24,9 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public final class DataSchuelerFoerderempfehlung extends DataManagerRevised<String, DTOSchuelerFoerderempfehlung, SchuelerFoerderempfehlung> {
 
+	private static final String ID_LERNABSCHNITT = "idLernabschnitt";
+	private static final String DATUM_ANGELEGT = "datumAngelegt";
+
 	/**
 	 * Erstellt einen neuen Datenmanager mit der angegebenen Verbindung
 	 *
@@ -32,9 +35,9 @@ public final class DataSchuelerFoerderempfehlung extends DataManagerRevised<Stri
 	public DataSchuelerFoerderempfehlung(final DBEntityManager conn) {
 		super(conn);
 		// Eine Änderung der GU_ID oder eine Neu-Zuweisung zu einem anderen Abschnitt ist nicht erlaubt
-		setAttributesNotPatchable("guid", "idLernabschnitt", "datumAngelegt");
+		setAttributesNotPatchable("guid", ID_LERNABSCHNITT, DATUM_ANGELEGT);
 		// Außer der GU_ID sind alle Attribute beim Erzeugen eines neuen Eintrags korrekt zu setzen
-		setAttributesRequiredOnCreation("datumAngelegt", "idLernabschnitt");
+		setAttributesRequiredOnCreation(DATUM_ANGELEGT, ID_LERNABSCHNITT);
 
 	}
 
@@ -54,7 +57,7 @@ public final class DataSchuelerFoerderempfehlung extends DataManagerRevised<Stri
 	@Override
 	public void checkBeforeCreation(final String newID, final Map<String, Object> initAttributes) throws ApiOperationException {
 		// Prüfe vor dem Erstellen, ob die verknüpfte Datensätze vorhanden sind.
-		final long abschnittID = JSONMapper.convertToLong(initAttributes.get("idLernabschnitt"), false);
+		final long abschnittID = JSONMapper.convertToLong(initAttributes.get(ID_LERNABSCHNITT), false, ID_LERNABSCHNITT);
 		pruefeExistenzAbschnitt(abschnittID);
 	}
 
@@ -97,11 +100,11 @@ public final class DataSchuelerFoerderempfehlung extends DataManagerRevised<Stri
 	protected void mapAttribute(final DTOSchuelerFoerderempfehlung dto, final String name, final Object value, final Map<String, Object> map)
 			throws ApiOperationException {
 		switch (name) {
-			case "idLernabschnitt" -> dto.Abschnitt_ID = JSONMapper.convertToLongInRange(value, false, 1L, null, name);
+			case ID_LERNABSCHNITT -> dto.Abschnitt_ID = JSONMapper.convertToLongInRange(value, false, 1L, null, name);
 			case "idKlasse" -> updateklassenID(dto, JSONMapper.convertToLongInRange(value, false, 1L, null, name));
 			case "idLehrer" -> updatelehrerID(dto, JSONMapper.convertToLongInRange(value, false, 1L, null, name));
-			case "datumAngelegt" -> dto.DatumAngelegt = JSONMapper.convertToString(value, true, true, null, name);
-			case "datumLetzteAenderung" -> dto.DatumAenderungSchild = JSONMapper.convertToString(value, true, true, null, name);
+			case DATUM_ANGELEGT -> dto.DatumAngelegt = JSONMapper.convertToString(value, true, true, null, name);
+			case "datumLetzteAenderung" -> updateDatumLetzteAenderung(dto, name, value);
 			case "diagnoseKompetenzenInhaltlichProzessbezogen" -> dto.Inhaltl_Prozessbez_Komp =
 					JSONMapper.convertToString(value, true, true, Schema.tab_SchuelerFoerderempfehlungen.col_Inhaltl_Prozessbez_Komp.datenlaenge(), name);
 			case "diagnoseKompetenzenMethodisch" -> dto.Methodische_Komp =
@@ -128,6 +131,16 @@ public final class DataSchuelerFoerderempfehlung extends DataManagerRevised<Stri
 			case "abgeschlossen" -> dto.Abgeschlossen = JSONMapper.convertToBoolean(value, false, name);
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));
 		}
+	}
+
+	private static void updateDatumLetzteAenderung(final DTOSchuelerFoerderempfehlung dto, final String name, final Object value) throws ApiOperationException {
+		final String datum = JSONMapper.convertToString(value, true, true, null, name);
+		if ((datum == null) || datum.isBlank() || datum.isEmpty()) {
+			dto.DatumAenderungSchild = null;
+			return;
+		}
+
+		dto.DatumAenderungSchild = datum;
 	}
 
 

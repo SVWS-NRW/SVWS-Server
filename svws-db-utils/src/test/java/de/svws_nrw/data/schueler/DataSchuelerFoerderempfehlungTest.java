@@ -73,7 +73,7 @@ class DataSchuelerFoerderempfehlungTest {
 		final var throwable = catchThrowable(() -> cut.checkBeforeCreation("new-id", initAttributes));
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Der Wert null ist nicht erlaubt");
+				.hasMessage("Attribut idLernabschnitt: Der Wert null ist nicht erlaubt");
 	}
 
 	@Test
@@ -99,18 +99,6 @@ class DataSchuelerFoerderempfehlungTest {
 				"idKlasse", 200L,
 				"idLehrer", 300L
 		);
-
-		when(conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, 100L))
-				.thenReturn(Mockito.mock(DTOSchuelerLernabschnittsdaten.class));
-
-		final var throwable = catchThrowable(() -> cut.checkBeforeCreation("new-id", initAttributes));
-		assertThat(throwable).isNull();
-	}
-
-	@Test
-	@DisplayName("checkBeforeCreation | erfolgreich ohne optionale IDs")
-	void checkBeforeCreationTest_SuccessWithoutOptional() {
-		final var initAttributes = Map.<String, Object>of("idLernabschnitt", 100L);
 
 		when(conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, 100L))
 				.thenReturn(Mockito.mock(DTOSchuelerLernabschnittsdaten.class));

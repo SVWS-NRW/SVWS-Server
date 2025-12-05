@@ -12,7 +12,9 @@ import { routeSchuelerLernabschnittVersetzungAbschluss } from "~/router/apps/sch
 import { routeSchuelerLernabschnittKonferenz } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnittKonferenz";
 import { routeSchuelerLernabschnittZeugnisdruck } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnittZeugnisdruck";
 import { routeSchuelerLernabschnittNachpruefung } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnittNachpruefung";
+import { routeSchuelerLernabschnittFoerderempfehlungen } from "./RouteSchuelerLernabschnittFoerderempfehlungen";
 import { RouteDataSchuelerLernabschnitte } from "~/router/apps/schueler/lernabschnitte/RouteDataSchuelerLernabschnitte";
+
 
 import type { SchuelerLernabschnitteProps } from "~/components/schueler/lernabschnitte/SSchuelerLernabschnitteProps";
 import { routeSchuelerLernabschnittGostKlausuren } from "./RouteSchuelerLernabschnittGostKlausuren";
@@ -36,6 +38,7 @@ export class RouteSchuelerLernabschnitte extends RouteNode<RouteDataSchuelerLern
 			routeSchuelerLernabschnittKonferenz,
 			routeSchuelerLernabschnittZeugnisdruck,
 			routeSchuelerLernabschnittNachpruefung,
+			routeSchuelerLernabschnittFoerderempfehlungen,
 		];
 		super.defaultChild = routeSchuelerLernabschnittLeistungen;
 	}
@@ -92,4 +95,3 @@ export class RouteSchuelerLernabschnitte extends RouteNode<RouteDataSchuelerLern
 }
 
 export const routeSchuelerLernabschnitte = new RouteSchuelerLernabschnitte();
-
