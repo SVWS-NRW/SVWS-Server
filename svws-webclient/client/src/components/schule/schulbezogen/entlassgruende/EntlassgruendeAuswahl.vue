@@ -3,7 +3,7 @@
 		<div class="secondary-menu--headline">
 			<h1>Entlassgründe</h1>
 		</div>
-		<div class="secondary-menu--header"/>
+		<div class="secondary-menu--header" />
 		<div class="secondary-menu--content">
 			<svws-ui-table v-model="entlassgruende"
 				v-model:clicked="selectedEntlassgrund"
@@ -12,18 +12,20 @@
 				<template #search>
 					<svws-ui-text-input type="search" placeholder="Suchen"
 						v-model="searchTerm"
-						removable/>
+						removable />
 				</template>
 				<template #filterAdvanced>
 					<svws-ui-checkbox type="toggle"
-						v-model="visibleEntlassgruende">Nur Sichtbare</svws-ui-checkbox>
+						v-model="visibleEntlassgruende">
+						Nur Sichtbare
+					</svws-ui-checkbox>
 				</template>
 				<template #actions>
 					<svws-ui-tooltip v-if="ServerMode.DEV.checkServerMode(serverMode)" position="bottom">
 						<svws-ui-button type="icon"
 							@click="gotoHinzufuegenView(true)"
 							:has-focus="noFilteredEntries" :disabled="isHinzufuegenView">
-							<span class="icon i-ri-add-line"/>
+							<span class="icon i-ri-add-line" />
 						</svws-ui-button>
 						<template #content>
 							Neuen Entlassgrund anlegen
@@ -39,10 +41,10 @@
 
 	import type { EntlassgruendeAuswahlProps } from "~/components/schule/schulbezogen/entlassgruende/EntlassgruendeAuswahlProps";
 	import type { DataTableColumn } from "@ui";
-	import type { KatalogEntlassgrund} from "@core";
+	import type { KatalogEntlassgrund } from "@core";
 	import { BenutzerKompetenz, ServerMode } from "@core";
 	import { useRegionSwitch, ViewType } from "@ui";
-	import {computed, ref} from "vue";
+	import { computed, ref } from "vue";
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 	const props = defineProps<EntlassgruendeAuswahlProps>();

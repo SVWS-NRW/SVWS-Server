@@ -10,7 +10,7 @@ import type {
 	GostSchuelerklausurTermin,
 	List,
 } from "@core";
-import type {WritableComputedRef} from "vue";
+import type { WritableComputedRef } from "vue";
 
 export interface GostKlausurplanungNachschreiberProps {
 	benutzerKompetenzen: Set<BenutzerKompetenz>,

@@ -1,6 +1,7 @@
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
-import { ArrayList, VermerkartEintrag, List, SimpleOperationResponse, BenutzerKompetenz } from "@core";
+import type { VermerkartEintrag, List, SimpleOperationResponse } from "@core";
+import { ArrayList, BenutzerKompetenz } from "@core";
 import { api } from "~/router/Api";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
 import { routeVermerkartenDaten } from "./RouteVermerkartenDaten";

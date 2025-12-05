@@ -24,7 +24,7 @@ export class RouteFloskelgruppenDaten extends RouteNode<any, RouteFloskelgruppen
 			schuljahr: api.abschnitt.schuljahr,
 			schulform: api.schulform,
 			benutzerKompetenzen: api.benutzerKompetenzen,
-			patch: routeFloskelgruppen.data.patch
+			patch: routeFloskelgruppen.data.patch,
 		};
 	}
 }

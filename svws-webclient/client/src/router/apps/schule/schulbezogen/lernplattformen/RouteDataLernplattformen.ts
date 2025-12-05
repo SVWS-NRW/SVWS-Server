@@ -1,4 +1,5 @@
-import { List, SimpleOperationResponse, Lernplattform, BenutzerKompetenz, ArrayList } from "@core";
+import type { List, SimpleOperationResponse, Lernplattform } from "@core";
+import { BenutzerKompetenz, ArrayList } from "@core";
 
 import { api } from "~/router/Api";
 

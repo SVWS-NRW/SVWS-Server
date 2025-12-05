@@ -1,5 +1,5 @@
-import { BenutzerKompetenz, Floskel, Schulform } from "@core";
-import { FloskelnListeManager } from "@ui";
+import type { BenutzerKompetenz, Floskel, Schulform } from "@core";
+import type { FloskelnListeManager } from "@ui";
 
 export interface FloskelnDatenProps {
 	manager: () => FloskelnListeManager;

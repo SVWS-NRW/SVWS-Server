@@ -193,9 +193,9 @@
 		GostKlausurterminblockungDaten,
 		KlausurterminblockungModusKursarten,
 		KlausurterminblockungModusQuartale,
-		DateUtils
+		DateUtils,
 	} from "@core";
-	import {computed, ref, onMounted, onUnmounted, shallowRef, watch} from 'vue';
+	import { computed, ref, onMounted, onUnmounted, shallowRef, watch } from 'vue';
 	import type { GostKlausurplanungSchienenProps } from './SGostKlausurplanungSchienenProps';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import type { DataTableColumn } from "@ui";

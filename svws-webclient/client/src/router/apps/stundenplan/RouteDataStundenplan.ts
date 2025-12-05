@@ -195,11 +195,11 @@ export class RouteDataStundenplan extends RouteDataAuswahl<StundenplanListeManag
 		await this.addAsCopy(partial, undefined);
 	};
 
-	getStundenplanListeEintragVorgaengerabschnitt = async() => {
+	getStundenplanListeEintragVorgaengerabschnitt = async () => {
 		if ((routeApp.data.aktAbschnitt.value.abschnitt < 2) || (routeApp.data.aktAbschnitt.value.idVorigerAbschnitt === null))
 			return new ArrayList<StundenplanListeEintrag>();
 		return new ArrayList<StundenplanListeEintrag>(await api.server.getStundenplanlisteFuerAbschnitt(api.schema, routeApp.data.aktAbschnitt.value.idVorigerAbschnitt));
-	}
+	};
 
 	addAsCopy = async (partial: Partial<Stundenplan>, idFromStundenplan: number | undefined): Promise<void> => {
 		let neu = null;

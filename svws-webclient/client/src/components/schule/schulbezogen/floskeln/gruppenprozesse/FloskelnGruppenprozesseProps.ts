@@ -1,5 +1,5 @@
 import type { BenutzerKompetenz, List, Schulform, ServerMode } from "@core";
-import { FloskelnListeManager } from "@ui";
+import type { FloskelnListeManager } from "@ui";
 
 export interface FloskelnGruppenprozesseProps {
 	serverMode: ServerMode;

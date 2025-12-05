@@ -38,7 +38,7 @@
 				<svws-ui-select title="Entlassjahrgang"
 					:items="manager().jahrgaengeById.values()"
 					v-model="entlassjahrgangEigeneSchule"
-					:readonly :item-text='j => j.bezeichnung ?? ""' removable />
+					:readonly :item-text="j => j.bezeichnung ?? ''" removable />
 				<svws-ui-select title="Entlassgrund" :items="manager().entlassgruendeById.values()" :item-text="v => v.bezeichnung" removable
 					:model-value="manager().getEntlassgrund('entlassungGrundID')" :readonly
 					@update:model-value="v => manager().patchEntlassgrund(v, 'entlassungGrundID')" />

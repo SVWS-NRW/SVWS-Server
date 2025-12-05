@@ -4,8 +4,9 @@ import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import { api } from "~/router/Api";
-import { routeFloskeln, RouteFloskeln } from "~/router/apps/schule/schulbezogen/floskeln/RouteFloskeln";
-import { FloskelnNeuProps } from "~/components/schule/schulbezogen/floskeln/FloskelnNeuProps";
+import type { RouteFloskeln } from "~/router/apps/schule/schulbezogen/floskeln/RouteFloskeln";
+import { routeFloskeln } from "~/router/apps/schule/schulbezogen/floskeln/RouteFloskeln";
+import type { FloskelnNeuProps } from "~/components/schule/schulbezogen/floskeln/FloskelnNeuProps";
 
 const FloskelnNeu = () => import("~/components/schule/schulbezogen/floskeln/FloskelnNeu.vue");
 

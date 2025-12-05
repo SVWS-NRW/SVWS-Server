@@ -19,7 +19,7 @@
 	import { computed } from "vue";
 	import { isUniqueInList, mandatoryInputIsValid } from "~/util/validation/Validation";
 	import { CoreTypeSelectManager } from "@ui";
-	import { FloskelgruppenDatenProps } from "./FloskelgruppenDatenProps";
+	import type { FloskelgruppenDatenProps } from "./FloskelgruppenDatenProps";
 
 	const props = defineProps<FloskelgruppenDatenProps>();
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));

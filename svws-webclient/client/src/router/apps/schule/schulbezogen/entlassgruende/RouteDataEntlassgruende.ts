@@ -1,6 +1,7 @@
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
-import { List, SimpleOperationResponse, KatalogEntlassgrund, BenutzerKompetenz, ArrayList } from "@core";
+import type { List, SimpleOperationResponse, KatalogEntlassgrund } from "@core";
+import { BenutzerKompetenz, ArrayList } from "@core";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
 import { ViewType, EntlassgruendeListeManager } from "@ui";
 import { api } from "~/router/Api";

@@ -25,13 +25,14 @@
 				<span>{{ vorgaben().size() }} fehlende Klausurvorgabe{{ vorgaben().size() === 1 ? "" : "n" }} gefunden.
 					<template v-if="halbjahr.istEinfuehrungsphase()">
 						<span v-if="vorgabenAnzahlAusgeblendet() > 0" class="inline-flex items-center italic"> ( {{ vorgabenAnzahlAusgeblendet() }} ausgeblendet
-							<span @click.stop >
+							<span @click.stop>
 								<svws-ui-button @click="ignoreVorgabenToggle = !ignoreVorgabenToggle; setCurrentAction('vorgaben_fehlend', true)" type="icon" :title="'Ignorierte Vorgaben ' + (ignoreVorgabenToggle ? 'anzeigen' : 'ausblenden')">
 									<span v-if="ignoreVorgabenToggle" class="icon i-ri-eye-off-line" />
 									<span v-else class="icon i-ri-eye-line" :class="vorgaben().size() > 0 ? 'icon-ui-ondanger' : ''" />
 								</svws-ui-button>
 							</span>
-						)</span>
+							)
+						</span>
 					</template>
 				</span>
 			</template>
@@ -383,19 +384,14 @@
 <script setup lang="ts">
 	import { ref, onMounted, computed } from 'vue';
 	import type { DataTableColumn } from "@ui";
-	import {
-		GostKlausurtermin, GostKursklausur, DateUtils, Fach, GostHalbjahr, ListUtils, OpenApiError, ValidatorFehlerart, GostSchuelerklausur,
-		GostSchuelerklausurTermin
-	} from "@core";
+	import type { GostKlausurtermin, GostKursklausur } from "@core";
+	import { DateUtils, Fach, GostHalbjahr, ListUtils, OpenApiError, ValidatorFehlerart, GostSchuelerklausur, GostSchuelerklausurTermin	} from "@core";
 	import type { GostKlausurplanungProblemeProps } from "./SGostKlausurplanungProblemeProps";
 	import { SGostKlausurplanungVorgabenIgnoreManager } from "~/components/gost/klausurplanung/SGostKlausurplanungVorgabenIgnoreManager";
 
 	const props = defineProps<GostKlausurplanungProblemeProps>();
 
-	const vorgabenIgnoreManager = new SGostKlausurplanungVorgabenIgnoreManager(
-			props.getObjectValue,
-			props.setObjectValue
-	);
+	const vorgabenIgnoreManager = new SGostKlausurplanungVorgabenIgnoreManager(props.getObjectValue, props.setObjectValue);
 
 	const ignoreVorgabenToggle = ref<boolean>(true);
 
@@ -518,21 +514,21 @@
 		return fach?.kuerzel ?? null;
 	}
 
-	type KursBadge = { text: string; farbe: string | null  };
-	const terminBezeichnung = (termin: GostKlausurtermin): KursBadge[] => 	{
+	type KursBadge = { text: string; farbe: string | null };
+	const terminBezeichnung = (termin: GostKlausurtermin): KursBadge[] => {
 		const wrap = (text: string): KursBadge => ({ text, farbe: null });
 		if (termin.bezeichnung !== null && termin.bezeichnung.length > 0)
-			return [ wrap(termin.bezeichnung) ];
+			return [wrap(termin.bezeichnung)];
 		if (!termin.istHaupttermin)
-			return [ wrap("Nachschreibtermin") ];
+			return [wrap("Nachschreibtermin")];
 		const menge = props.kMan().kursklausurGetMengeByTermin(termin);
 		if (menge.size() > 0) {
 			return [...menge].map(k => ({
 				text: props.kMan().kursKurzbezeichnungByKursklausur(k),
-				farbe: getBgColor(k)
+				farbe: getBgColor(k),
 			}));
 		}
-		return [ wrap("Leerer Klausurtermin") ];
+		return [wrap("Leerer Klausurtermin")];
 	};
 
 	const modalVorgaben = ref<boolean>(false);

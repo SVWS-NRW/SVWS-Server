@@ -2,15 +2,15 @@
 	<div class="page page-grid-cards">
 		<div class="flex flex-col gap-y-16 lg:gap-y-16">
 			<ui-card v-if="hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen" subtitle="Ausgewählte Stundenpläne werden gelöscht."
-					 :is-open="currentAction === 'delete'" @update:is-open="(isOpen) => setCurrentAction('delete', isOpen)">
+				:is-open="currentAction === 'delete'" @update:is-open="(isOpen) => setCurrentAction('delete', isOpen)">
 				<div class="w-full">
 					<span>Alle ausgewählten Stundenpläne sind bereit zum Löschen.</span>
 				</div>
 				<template #buttonFooterLeft>
 					<svws-ui-button :disabled="(stundenplanListeManager().liste.auswahlSize() === 0) || loading || !hatKompetenzLoeschen"
-									title="Löschen" @click="entferneStundenplaene" :is-loading="loading" class="mt-4">
-						<svws-ui-spinner v-if="loading" spinning/>
-						<span v-else class="icon i-ri-play-line"/>Löschen
+						title="Löschen" @click="entferneStundenplaene" :is-loading="loading" class="mt-4">
+						<svws-ui-spinner v-if="loading" spinning />
+						<span v-else class="icon i-ri-play-line" />Löschen
 					</svws-ui-button>
 				</template>
 			</ui-card>

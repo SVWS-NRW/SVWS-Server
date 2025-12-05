@@ -4,7 +4,7 @@
 			<svws-ui-input-wrapper>
 				<svws-ui-text-input class="contentFocusField" placeholder="Kürzel" :min-len="1" :max-len="10" v-model="data.kuerzel" :disabled required
 					:valid="fieldIsValid('kuerzel')" />
-				<svws-ui-text-input placeholder="Text" v-model="data.text" :disabled required :valid="fieldIsValid('text')"/>
+				<svws-ui-text-input placeholder="Text" v-model="data.text" :disabled required :valid="fieldIsValid('text')" />
 				<ui-select label="Floskelgruppe" v-model="selectedFloskelgruppe" :manager="floskelgruppenManager" :removable="false" searchable required />
 			</svws-ui-input-wrapper>
 			<div class="mt-7 flex flex-row gap-4 justify-end">

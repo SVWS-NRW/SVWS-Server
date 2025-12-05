@@ -4,7 +4,7 @@
 			<svws-ui-input-wrapper>
 				<svws-ui-text-input placeholder="Bezeichnung" class="contentFocusField"
 					:model-value="manager().daten().bezeichnung"
-					required readonly/>
+					required readonly />
 				<svws-ui-input-number placeholder="Sortierung"
 					:model-value="manager().daten().sortierung"
 					@change="patchSortierung"

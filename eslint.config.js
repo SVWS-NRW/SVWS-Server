@@ -68,7 +68,7 @@ export default tseslint.config(
 				"asyncArrow": "always",
 				"catch": "always"
 			}],
-			
+
 			// Operatoren und Keywords
 			"@stylistic/space-infix-ops": "error",
 			"@stylistic/space-unary-ops": ["error", {"words": true, "nonwords": false}],
@@ -80,13 +80,7 @@ export default tseslint.config(
 			"@stylistic/space-before-blocks": ["error", "always"],
 
 			// Typen
-			"@stylistic/type-annotation-spacing": ["error", {
-				"before": false,
-				"after": true,
-				"overrides": {
-					"arrow": { "before": true, "after": true }
-				}
-			}],
+			"@stylistic/type-annotation-spacing": ["error"],
 			"@stylistic/type-generic-spacing": ["error"],
 
 			// Kommata und Semikola
@@ -118,7 +112,7 @@ export default tseslint.config(
 
 			// Sonstiges
 			"@stylistic/max-len": "off",
-			
+
 			"@stylistic/brace-style": ["error", "1tbs", { "allowSingleLine": true }],
 
 			"require-await": "off",

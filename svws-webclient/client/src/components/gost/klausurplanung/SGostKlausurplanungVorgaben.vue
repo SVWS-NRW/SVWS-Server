@@ -12,7 +12,7 @@
 				:no-data-text="'Keine ' + (jahrgangsdaten?.abiturjahr === -1 ? 'Vorlagen für ' : '') + 'Klausurvorgaben für das ' + (quartalsauswahl.value !== 0 ? quartalsauswahl.value + '. Quartal im' : '') + ' Halbjahr ' + halbjahr.kuerzel + ' vorhanden.'">
 				<template #cell(checkBox)="{ rowData }">
 					<svws-ui-checkbox :title="kMan().istVorgabeVerwendetByKursklausur(rowData) ? 'Vorgabe wird in einer Kursklausur verwendet und kann nicht gelöscht werden.' : ''"
-									  :disabled="kMan().istVorgabeVerwendetByKursklausur(rowData)" :model-value="selected.contains(rowData)" @update:model-value="e => e ? selected.add(rowData) : selected.remove(rowData)" />
+						:disabled="kMan().istVorgabeVerwendetByKursklausur(rowData)" :model-value="selected.contains(rowData)" @update:model-value="e => e ? selected.add(rowData) : selected.remove(rowData)" />
 				</template>
 				<template #cell(idFach)="{ value }">
 					<span class="svws-ui-badge" :style="`color: var(--color-text-uistatic); background-color: ${getBgColor(kMan().getFaecherManager(jahrgangsdaten!.abiturjahr).get(value)?.kuerzel || null)}`">{{ kMan().getFaecherManager(jahrgangsdaten!.abiturjahr).get(value)?.bezeichnung }}</span>
@@ -114,9 +114,11 @@
 
 <script setup lang="ts">
 
-	import { Ref, watch, WritableComputedRef, computed, ref, onMounted, onUnmounted } from 'vue';
+	import type { Ref, WritableComputedRef } from 'vue';
+	import { watch, computed, ref, onMounted, onUnmounted } from 'vue';
 	import type { DataTableColumn } from "@ui";
-	import { BenutzerKompetenz, ArrayList, GostKlausurvorgabe, Fach, GostFach, ListUtils } from "@core";
+	import type { GostFach } from "@core";
+	import { BenutzerKompetenz, ArrayList, GostKlausurvorgabe, Fach, ListUtils } from "@core";
 	import type { GostKlausurplanungVorgabenProps } from "./SGostKlausurplanungVorgabenProps";
 
 	const props = defineProps<GostKlausurplanungVorgabenProps>();

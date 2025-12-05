@@ -27,7 +27,7 @@
 	import type { GostKlausurplanungProps } from "./SGostKlausurplanungProps";
 	import { computed, onMounted, ref } from "vue";
 	import { useRegionSwitch } from "@ui";
-	import {SGostKlausurplanungVorgabenIgnoreManager} from "~/components/gost/klausurplanung/SGostKlausurplanungVorgabenIgnoreManager";
+	import { SGostKlausurplanungVorgabenIgnoreManager } from "~/components/gost/klausurplanung/SGostKlausurplanungVorgabenIgnoreManager";
 
 	const props = defineProps<GostKlausurplanungProps>();
 
@@ -37,8 +37,8 @@
 	onMounted(() => isMounted.value = true);
 
 	const vorgabenIgnoreManager = new SGostKlausurplanungVorgabenIgnoreManager(
-			props.getObjectValue,
-			undefined
+		props.getObjectValue,
+		undefined
 	);
 
 	const numErrors = computed<number>(() => props.kMan().planungsfehlerGetAnzahlByHalbjahrAndQuartal(props.jahrgangsdaten!.abiturjahr, props.halbjahr, props.quartalsauswahl.value, props.getConfigNumberValue("kwErrorLimit"), vorgabenIgnoreManager.getAll()));

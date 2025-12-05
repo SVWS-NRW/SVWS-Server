@@ -1,4 +1,5 @@
-import { List, ArrayList, GostKlausurvorgabe } from "@core";
+import type { List } from "@core";
+import { ArrayList, GostKlausurvorgabe } from "@core";
 
 export const CONFIG_KEY_GOST_KLAUSURPLAN_VORGABENTOIGNORE = "gost.klausurplan.vorgabenToIgnore";
 
@@ -7,16 +8,16 @@ export class SGostKlausurplanungVorgabenIgnoreManager {
 	public static readonly CONFIG_KEY_IGNORE = CONFIG_KEY_GOST_KLAUSURPLAN_VORGABENTOIGNORE;
 
 	public constructor(
-			private readonly getObjectValue: <T>(
-					key: string,
-					fromJSON: (json: string) => T
-			) => T | null,
+		private readonly getObjectValue: <T>(
+			key: string,
+			fromJSON: (json: string) => T
+		) => T | null,
 
-			private readonly setObjectValue?: <T>(
-					key: string,
-					value: T | null,
-					toJSON: (obj: T) => string
-			) => Promise<void>
+		private readonly setObjectValue?: <T>(
+			key: string,
+			value: T | null,
+			toJSON: (obj: T) => string
+		) => Promise<void>
 	) {}
 
 	private equals(a: GostKlausurvorgabe, b: GostKlausurvorgabe): boolean {
@@ -29,7 +30,7 @@ export class SGostKlausurplanungVorgabenIgnoreManager {
 	private parse(json: string): GostKlausurvorgabe[] {
 		const arr = JSON.parse(json);
 		return arr.map((e: unknown) =>
-				GostKlausurvorgabe.transpilerFromJSON(JSON.stringify(e))
+			GostKlausurvorgabe.transpilerFromJSON(JSON.stringify(e))
 		);
 	}
 
@@ -39,8 +40,8 @@ export class SGostKlausurplanungVorgabenIgnoreManager {
 
 	public getAll(): List<GostKlausurvorgabe> {
 		const arr = this.getObjectValue(
-				SGostKlausurplanungVorgabenIgnoreManager.CONFIG_KEY_IGNORE,
-				(json) => this.parse(json)
+			SGostKlausurplanungVorgabenIgnoreManager.CONFIG_KEY_IGNORE,
+			(json) => this.parse(json)
 		) ?? [];
 		const list = new ArrayList<GostKlausurvorgabe>();
 		for (const e of arr)
@@ -62,9 +63,9 @@ export class SGostKlausurplanungVorgabenIgnoreManager {
 			for (const x of list)
 				arr.push(x);
 			await this.setObjectValue(
-					SGostKlausurplanungVorgabenIgnoreManager.CONFIG_KEY_IGNORE,
-					arr,
-					(obj) => this.stringify(obj)
+				SGostKlausurplanungVorgabenIgnoreManager.CONFIG_KEY_IGNORE,
+				arr,
+				(obj) => this.stringify(obj)
 			);
 		}
 	}
@@ -78,9 +79,9 @@ export class SGostKlausurplanungVorgabenIgnoreManager {
 			if (!this.equals(x, v))
 				newArr.push(x);
 		await this.setObjectValue(
-				SGostKlausurplanungVorgabenIgnoreManager.CONFIG_KEY_IGNORE,
-				newArr,
-				(obj) => this.stringify(obj)
+			SGostKlausurplanungVorgabenIgnoreManager.CONFIG_KEY_IGNORE,
+			newArr,
+			(obj) => this.stringify(obj)
 		);
 	}
 

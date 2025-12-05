@@ -10,7 +10,7 @@ import { JavaString } from '../../../../../../core/src/java/lang/JavaString';
 import type { Schuljahresabschnitt } from '../../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
 import type { Comparator } from '../../../../../../core/src/java/util/Comparator';
 import { HashSet } from "../../../../../../core/src/java/util/HashSet";
-import { JavaSet } from "../../../../../../core/src/java/util/JavaSet";
+import type { JavaSet } from "../../../../../../core/src/java/util/JavaSet";
 
 export class EntlassgruendeListeManager extends AuswahlManager<number, KatalogEntlassgrund, KatalogEntlassgrund> {
 
@@ -23,14 +23,14 @@ export class EntlassgruendeListeManager extends AuswahlManager<number, KatalogEn
 	 * Ein Default-Comparator für den Vergleich von Entlassgründen.
 	 */
 	public static readonly comparator: Comparator<KatalogEntlassgrund> = { compare: (a: KatalogEntlassgrund, b: KatalogEntlassgrund) => {
-			let cmp: number;
-			cmp = JavaInteger.compare(a.sortierung, b.sortierung);
-			if (cmp !== 0)
-				return cmp;
-			cmp = JavaString.compareTo(a.bezeichnung, b.bezeichnung);
-			if (cmp !== 0)
-				return cmp;
-			return JavaLong.compare(a.id, b.id);
+		let cmp: number;
+		cmp = JavaInteger.compare(a.sortierung, b.sortierung);
+		if (cmp !== 0)
+			return cmp;
+		cmp = JavaString.compareTo(a.bezeichnung, b.bezeichnung);
+		if (cmp !== 0)
+			return cmp;
+		return JavaLong.compare(a.id, b.id);
 	} };
 
 
@@ -44,9 +44,9 @@ export class EntlassgruendeListeManager extends AuswahlManager<number, KatalogEn
 	 * @param entlassgruende     			  die Liste der Entlassgründe
 	 */
 	public constructor(idSchuljahresabschnitt: number, idSchuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>,
-					   schulform: Schulform | null, entlassgruende: List<KatalogEntlassgrund>) {
+		schulform: Schulform | null, entlassgruende: List<KatalogEntlassgrund>) {
 		super(idSchuljahresabschnitt, idSchuljahresabschnittSchule, schuljahresabschnitte, schulform, entlassgruende, EntlassgruendeListeManager.comparator,
-				EntlassgruendeListeManager._entlassgrundToId, EntlassgruendeListeManager._entlassgrundToId, ArrayList.of());
+			EntlassgruendeListeManager._entlassgrundToId, EntlassgruendeListeManager._entlassgrundToId, ArrayList.of());
 	}
 
 	/**

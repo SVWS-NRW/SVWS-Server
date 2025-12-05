@@ -192,9 +192,7 @@
 					<svws-ui-dashboard-tile color="dark" number="30" number-label="Fehler zu korrigieren" />
 					<svws-ui-dashboard-tile span="full" color="transparent">
 						<svws-ui-spacing :size="2" />
-						<svws-ui-table :items="summenData" :columns="summenCols" :no-data="false">
-							
-						</svws-ui-table>
+						<svws-ui-table :items="summenData" :columns="summenCols" :no-data="false" />
 						<svws-ui-spacing :size="2" />
 						<div class="grid grid-cols-3 gap-4 text-sm">
 							<div>
@@ -251,10 +249,10 @@
 					<svws-ui-table :items="schipsData" :columns="schipsColumns" :no-data="false">
 						<template #footer>
 							<div class="svws-ui-tr" :style="`grid-template-columns: ${schipsColumns.map(c => '1fr').join(' ')}`">
-								<div class="svws-ui-td"></div>
+								<div class="svws-ui-td" />
 								<div class="svws-ui-td font-semibold">{{ totalSchueler }}</div>
-								<div class="svws-ui-td"></div>
-								<div class="svws-ui-td"></div>
+								<div class="svws-ui-td" />
+								<div class="svws-ui-td" />
 							</div>
 						</template>
 					</svws-ui-table>
@@ -272,7 +270,7 @@
 				<!-- Progress Bar -->
 				<div v-if="isLoading" class="mb-4">
 					<div class="w-full bg-gray-200 rounded-full h-4">
-						<div class="bg-blue-600 h-4 rounded-full transition-all duration-300" :style="{ width: progress + '%' }"></div>
+						<div class="bg-blue-600 h-4 rounded-full transition-all duration-300" :style="{ width: progress + '%' }" />
 					</div>
 					<p class="text-sm text-gray-600 mt-2">Daten werden übertragen... {{ progress }}%</p>
 				</div>

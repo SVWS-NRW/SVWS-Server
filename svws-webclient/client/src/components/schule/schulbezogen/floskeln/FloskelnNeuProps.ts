@@ -1,4 +1,4 @@
-import { BenutzerKompetenz, Floskel, Schulform } from "@core";
+import type { BenutzerKompetenz, Floskel, Schulform } from "@core";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 import type { Checkpoint, FloskelnListeManager } from "@ui";
 

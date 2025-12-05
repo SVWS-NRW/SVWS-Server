@@ -7,7 +7,7 @@ import { AuswahlManager } from '../../AuswahlManager';
 import type { JavaFunction } from '../../../../../core/src/java/util/function/JavaFunction';
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
 import type { List } from '../../../../../core/src/java/util/List';
-import { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
+import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
 import { HashSet } from '../../../../../core/src/java/util/HashSet';
 import { ArrayList } from "../../../../../core/src/java/util/ArrayList";
 

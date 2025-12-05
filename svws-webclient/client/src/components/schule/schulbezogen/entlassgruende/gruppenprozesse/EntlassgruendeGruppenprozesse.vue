@@ -15,8 +15,8 @@
 					<svws-ui-button title="Löschen" class="mt-4"
 						@click="deleteSelectedEntlassgruende"
 						:disabled="!allEntriesDeletable || !props.manager().liste.auswahlExists()" :is-loading>
-						<svws-ui-spinner v-if="isLoading" spinning/>
-						<span v-else class="icon i-ri-play-line"/>
+						<svws-ui-spinner v-if="isLoading" spinning />
+						<span v-else class="icon i-ri-play-line" />
 						Löschen
 					</svws-ui-button>
 				</template>

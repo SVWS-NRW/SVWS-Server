@@ -2,7 +2,7 @@ import type { Schuljahresabschnitt } from "../../../../../../core/src/asd/data/s
 import type { Schulform } from "../../../../../../core/src/asd/types/schule/Schulform";
 import type { Floskelgruppe } from "../../../../../../core/src/core/data/schule/Floskelgruppe";
 import { ArrayList } from "../../../../../../core/src/java/util/ArrayList";
-import { JavaFunction } from "../../../../../../core/src/java/util/function/JavaFunction";
+import type { JavaFunction } from "../../../../../../core/src/java/util/function/JavaFunction";
 import type { List } from "../../../../../../core/src/java/util/List";
 import { AuswahlManager } from "../../../AuswahlManager";
 

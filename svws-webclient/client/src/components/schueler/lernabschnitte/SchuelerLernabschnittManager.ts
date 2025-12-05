@@ -1,5 +1,5 @@
 import { Jahrgaenge, Note, JavaLong, KursUtils, HashMap, Fach, KlassenUtils, ArrayList,
-	DeveloperNotificationException, Schulgliederung, JavaString, HashSet, } from '@core';
+	DeveloperNotificationException, Schulgliederung, JavaString, HashSet } from '@core';
 import type { Schuljahresabschnitt, SchuelerLernabschnittsdaten, SchuelerLeistungsdaten, Schulform, JahrgangsDaten,
 	KlassenDaten, SchuelerListeEintrag, KursDaten, LehrerListeEintrag, FachDaten, FoerderschwerpunktEintrag, List,
 	Comparator, JavaMap, JavaSet } from '@core';

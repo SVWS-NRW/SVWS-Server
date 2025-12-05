@@ -4,10 +4,10 @@ import type { RouteNode } from "~/router/RouteNode";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import { RouteSchuleMenuGroup } from "~/router/apps/schule/RouteSchuleMenuGroup";
-import { FloskelnListeManager } from "../../../../../../../ui/src/ui/managers/schule/schulbezogen/FloskelnListeManager";
-import {routeFloskelnDaten} from "~/router/apps/schule/schulbezogen/floskeln/RouteFloskelnDaten";
-import {routeFloskelnNeu} from "~/router/apps/schule/schulbezogen/floskeln/RouteFloskelnNeu";
-import {routeFloskelnGruppenprozesse} from "~/router/apps/schule/schulbezogen/floskeln/RouteFloskelnGruppenprozesse";
+import type { FloskelnListeManager } from "../../../../../../../ui/src/ui/managers/schule/schulbezogen/FloskelnListeManager";
+import { routeFloskelnDaten } from "~/router/apps/schule/schulbezogen/floskeln/RouteFloskelnDaten";
+import { routeFloskelnNeu } from "~/router/apps/schule/schulbezogen/floskeln/RouteFloskelnNeu";
+import { routeFloskelnGruppenprozesse } from "~/router/apps/schule/schulbezogen/floskeln/RouteFloskelnGruppenprozesse";
 import { RouteDataFloskeln } from "~/router/apps/schule/schulbezogen/floskeln/RouteDataFloskeln";
 
 const FloskelnApp = () => import("~/components/schule/schulbezogen/floskeln/FloskelnApp.vue");
@@ -17,7 +17,7 @@ export class RouteFloskeln extends RouteAuswahlNode<FloskelnListeManager, RouteD
 
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.floskeln",
-				`schule/floskeln/:id(\\d+)?`, FloskelnApp, FloskelnAuswahl, new RouteDataFloskeln());
+			`schule/floskeln/:id(\\d+)?`, FloskelnApp, FloskelnAuswahl, new RouteDataFloskeln());
 		super.mode = ServerMode.DEV;
 		super.text = "Floskeln";
 		super.menugroup = RouteSchuleMenuGroup.SCHULBEZOGEN;

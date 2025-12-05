@@ -4,11 +4,12 @@ import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import { api } from "~/router/Api";
 import { routeApp } from "~/router/apps/RouteApp";
-import { routeFloskeln, RouteFloskeln } from "~/router/apps/schule/schulbezogen/floskeln/RouteFloskeln";
-import { FloskelnGruppenprozesseProps } from "~/components/schule/schulbezogen/floskeln/gruppenprozesse/FloskelnGruppenprozesseProps";
+import type { RouteFloskeln } from "~/router/apps/schule/schulbezogen/floskeln/RouteFloskeln";
+import { routeFloskeln } from "~/router/apps/schule/schulbezogen/floskeln/RouteFloskeln";
+import type { FloskelnGruppenprozesseProps } from "~/components/schule/schulbezogen/floskeln/gruppenprozesse/FloskelnGruppenprozesseProps";
 
 const FloskelnGruppenprozesse = () => import(
-		"~/components/schule/schulbezogen/floskeln/gruppenprozesse/FloskelnGruppenprozesse.vue");
+	"~/components/schule/schulbezogen/floskeln/gruppenprozesse/FloskelnGruppenprozesse.vue");
 
 export class RouteFloskelnGruppenprozesse extends RouteNode<any, RouteFloskeln> {
 

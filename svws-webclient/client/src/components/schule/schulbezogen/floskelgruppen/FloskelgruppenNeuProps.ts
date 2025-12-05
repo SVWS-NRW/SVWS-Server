@@ -1,7 +1,7 @@
-import { BenutzerKompetenz, Floskel, Schulform } from "@core";
+import type { BenutzerKompetenz, Floskel, Schulform } from "@core";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 import type { Checkpoint } from "@ui";
-import { FloskelgruppenListeManager } from "@ui";
+import type { FloskelgruppenListeManager } from "@ui";
 
 export interface FloskelgruppenNeuProps {
 	manager: () => FloskelgruppenListeManager;
