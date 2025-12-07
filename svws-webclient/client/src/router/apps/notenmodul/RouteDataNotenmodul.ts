@@ -59,9 +59,7 @@ export class RouteDataNotenmodul extends RouteData<RouteStateNotenmodul> {
 			if (api.benutzertyp === BenutzerTyp.LEHRER) {
 				patchedState.daten = await api.server.getLehrerENMDaten(api.schema, api.benutzerIDLehrer);
 			} else {
-				const file = await api.server.getENMDatenGZip(api.schema);
-				const blob = await new Response(file.data.stream().pipeThrough(new DecompressionStream("gzip"))).blob();
-				patchedState.daten = ENMDaten.transpilerFromJSON(await blob.text());
+				patchedState.daten = await api.server.getENMDaten(api.schema);
 			}
 			patchedState.manager = new EnmManager(patchedState.daten, patchedState.daten.lehrerID);
 			const lerngruppen = patchedState.manager.mapLerngruppenAuswahl.values();

@@ -1,13 +1,12 @@
 package de.svws_nrw.api.client;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Enumeration;
+
+import org.jboss.resteasy.annotations.GZIP;
 
 import de.svws_nrw.api.common.ResourceCoreTypeJson;
 import de.svws_nrw.api.common.ResourceFile;
 import de.svws_nrw.api.common.ResourceFileManager;
-import de.svws_nrw.base.compression.CompressionException;
-import de.svws_nrw.base.compression.GZip;
 import de.svws_nrw.db.utils.ApiOperationException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,46 +34,6 @@ public class APIClient {
 	}
 
 	/**
-	 * Prüft, ob ein Accept-Encoding-Eintrag für GZIP vorhanden ist oder nicht.
-	 *
-	 * @param request   die Informationen zur HTTP-Anfrage
-	 *
-	 * @return true, wenn gzip akzeptiert wird, und ansonsten false
-	 */
-	private static boolean checkZipAllowed(final HttpServletRequest request) {
-		final Enumeration<String> encodings = request.getHeaders("Accept-Encoding");
-		if (encodings == null)
-			return false;
-		while (encodings.hasMoreElements())
-			for (final String encoding : encodings.nextElement().split(","))
-				if ("gzip".equals(encoding.trim()))
-					return true;
-		return false;
-	}
-
-	/**
-	 * Erstellt für die übergebenen Daten die Response und wählt für das Content-Encoding ggf. gzip.
-	 *
-	 * @param data              die Daten
-	 * @param checkZipAllowed   gibt an, ob gzip verwendet werden soll oder nicht
-	 *
-	 * @return die Reponse
-	 *
-	 * @throws ApiOperationException   im Fehlerfall (INTERNAL_SERVER_ERROR)
-	 */
-	private static Response getZippedResponse(final byte[] data, final boolean checkZipAllowed) throws ApiOperationException {
-		try {
-			if (checkZipAllowed) {
-				final byte[] zip = GZip.encode(data);
-				return Response.ok(zip).header("Content-Encoding", "gzip").build();
-			}
-			return Response.ok(data).build();
-		} catch (final CompressionException e) {
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e);
-		}
-	}
-
-	/**
 	 * Greift auf die einzelne Dateien aus dem Resource-Verzeichnis des SVWS-Client zurück. Diese
 	 * Resourcen wurden beim Start des SVWS-Server gecacht und stehen über die Klasse
 	 * {@link ResourceFile} zur Verfügung. Die Datei wird dabei mit GZIP komprimiert.
@@ -90,7 +49,7 @@ public class APIClient {
 			final byte[] data = ResourceFileManager.client().getData(filename);
 			if ((data == null) || (data.length == 0))
 				throw new ApiOperationException(Status.NOT_FOUND);
-			return getZippedResponse(data, checkZipAllowed(request));
+			return Response.ok(data).build();
 		} catch (final ApiOperationException e) {
 			return e.getResponse();
 		}
@@ -105,6 +64,7 @@ public class APIClient {
 	 *         nicht gefunden wurde
 	 */
 	@GET
+	@GZIP
 	@Produces(MediaType.TEXT_HTML)
 	@Path("/")
 	public Response getClientRoot(@Context final HttpServletRequest request) {
@@ -122,6 +82,7 @@ public class APIClient {
 	 *         nicht gefunden wurde
 	 */
 	@GET
+	@GZIP
 	@Produces(MediaType.TEXT_HTML)
 	@Path("/{name}.html")
 	public Response getClientHTML(@PathParam("name") final String name, @Context final HttpServletRequest request) {
@@ -139,6 +100,7 @@ public class APIClient {
 	 *         nicht gefunden wurde
 	 */
 	@GET
+	@GZIP
 	@Produces("text/javascript")
 	@Path("/{name}.js")
 	public Response getClientfileJS(@PathParam("name") final String name, @Context final HttpServletRequest request) {
@@ -156,6 +118,7 @@ public class APIClient {
 	 *         nicht gefunden wurde
 	 */
 	@GET
+	@GZIP
 	@Produces("text/javascript")
 	@Path("/js/{name}.js")
 	public Response getClientFileJSSubdir(@PathParam("name") final String name, @Context final HttpServletRequest request) {
@@ -173,6 +136,7 @@ public class APIClient {
 	 *         nicht gefunden wurde
 	 */
 	@GET
+	@GZIP
 	@Produces("text/javascript")
 	@Path("/assets/{name}.js")
 	public Response getClientFileAssetsSubdir(@PathParam("name") final String name, @Context final HttpServletRequest request) {
@@ -190,6 +154,7 @@ public class APIClient {
 	 *         nicht gefunden wurde
 	 */
 	@GET
+	@GZIP
 	@Produces(MediaType.TEXT_PLAIN)
 	@Path("/{name}.js.map")
 	public Response getClientFileJSMAP(@PathParam("name") final String name, @Context final HttpServletRequest request) {
@@ -207,6 +172,7 @@ public class APIClient {
 	 *         nicht gefunden wurde
 	 */
 	@GET
+	@GZIP
 	@Produces(MediaType.TEXT_PLAIN)
 	@Path("/js/{name}.js.map")
 	public Response getClientFileJSMAPSubdir(@PathParam("name") final String name, @Context final HttpServletRequest request) {
@@ -224,6 +190,7 @@ public class APIClient {
 	 *         nicht gefunden wurde
 	 */
 	@GET
+	@GZIP
 	@Produces(MediaType.TEXT_PLAIN)
 	@Path("/assets/{name}.js.map")
 	public Response getClientFileAssetJSMAPSubdir(@PathParam("name") final String name, @Context final HttpServletRequest request) {
@@ -241,6 +208,7 @@ public class APIClient {
 	 *         nicht gefunden wurde
 	 */
 	@GET
+	@GZIP
 	@Produces("text/css")
 	@Path("/{name}.css")
 	public Response getClientFileCSS(@PathParam("name") final String name, @Context final HttpServletRequest request) {
@@ -258,6 +226,7 @@ public class APIClient {
 	 *         nicht gefunden wurde
 	 */
 	@GET
+	@GZIP
 	@Produces("text/css")
 	@Path("/css/{name}.css")
 	public Response getClientFileCSSSubdir(@PathParam("name") final String name, @Context final HttpServletRequest request) {
@@ -275,6 +244,7 @@ public class APIClient {
 	 *         nicht gefunden wurde
 	 */
 	@GET
+	@GZIP
 	@Produces("text/css")
 	@Path("/assets/{name}.css")
 	public Response getClientFileCSSAssetsSubdir(@PathParam("name") final String name, @Context final HttpServletRequest request) {
@@ -292,6 +262,7 @@ public class APIClient {
 	 *         nicht gefunden wurde
 	 */
 	@GET
+	@GZIP
 	@Produces(MediaType.TEXT_PLAIN)
 	@Path("/{name}.css.map")
 	public Response getClientFileCSSMAP(@PathParam("name") final String name, @Context final HttpServletRequest request) {
@@ -309,6 +280,7 @@ public class APIClient {
 	 *         nicht gefunden wurde
 	 */
 	@GET
+	@GZIP
 	@Produces(MediaType.TEXT_PLAIN)
 	@Path("/css/{name}.css.map")
 	public Response getClientFileCSSMAPSubdir(@PathParam("name") final String name, @Context final HttpServletRequest request) {
@@ -326,6 +298,7 @@ public class APIClient {
 	 *         nicht gefunden wurde
 	 */
 	@GET
+	@GZIP
 	@Produces(MediaType.TEXT_PLAIN)
 	@Path("/assets/{name}.css.map")
 	public Response getClientFileAssetsCSSMAPSubdir(@PathParam("name") final String name, @Context final HttpServletRequest request) {
@@ -343,6 +316,7 @@ public class APIClient {
 	 *         nicht gefunden wurde
 	 */
 	@GET
+	@GZIP
 	@Produces("text/css")
 	@Path("/fonts/{name}.css")
 	public Response getClientFileFontsCSS(@PathParam("name") final String name, @Context final HttpServletRequest request) {
@@ -360,6 +334,7 @@ public class APIClient {
 	 *         nicht gefunden wurde
 	 */
 	@GET
+	@GZIP
 	@Produces("font/woff2")
 	@Path("/fonts/{name}.woff2")
 	public Response getClientFileFontsWoff2(@PathParam("name") final String name, @Context final HttpServletRequest request) {
@@ -377,6 +352,7 @@ public class APIClient {
 	 *         nicht gefunden wurde
 	 */
 	@GET
+	@GZIP
 	@Produces("image/x-icon")
 	@Path("/{name}.ico")
 	public Response getClientFileICO(@PathParam("name") final String name, @Context final HttpServletRequest request) {
@@ -394,6 +370,7 @@ public class APIClient {
 	 *         nicht gefunden wurde
 	 */
 	@GET
+	@GZIP
 	@Produces("image/x-icon")
 	@Path("/assets/{name}.ico")
 	public Response getClientFileAssetsICO(@PathParam("name") final String name, @Context final HttpServletRequest request) {
@@ -411,6 +388,7 @@ public class APIClient {
 	 *         nicht gefunden wurde
 	 */
 	@GET
+	@GZIP
 	@Produces("image/png")
 	@Path("/{name}.png")
 	public Response getClientFilePNG(@PathParam("name") final String name, @Context final HttpServletRequest request) {
@@ -428,6 +406,7 @@ public class APIClient {
 	 *         nicht gefunden wurde
 	 */
 	@GET
+	@GZIP
 	@Produces("image/png")
 	@Path("/img/icons/{name}.png")
 	public Response getClientFileImgIconsPNG(@PathParam("name") final String name, @Context final HttpServletRequest request) {
@@ -445,6 +424,7 @@ public class APIClient {
 	 *         nicht gefunden wurde
 	 */
 	@GET
+	@GZIP
 	@Produces("image/png")
 	@Path("/assets/{name}.png")
 	public Response getClientFileAssetsPNG(@PathParam("name") final String name, @Context final HttpServletRequest request) {
@@ -462,6 +442,7 @@ public class APIClient {
 	 *         nicht gefunden wurde
 	 */
 	@GET
+	@GZIP
 	@Produces("image/jpeg")
 	@Path("/assets/{name}.jpg")
 	public Response getClientFileAssetsJPG(@PathParam("name") final String name, @Context final HttpServletRequest request) {
@@ -479,6 +460,7 @@ public class APIClient {
 	 *         nicht gefunden wurde
 	 */
 	@GET
+	@GZIP
 	@Produces("image/svg+xml")
 	@Path("/{name}.svg")
 	public Response getClientFileSVG(@PathParam("name") final String name, @Context final HttpServletRequest request) {
@@ -496,6 +478,7 @@ public class APIClient {
 	 *         nicht gefunden wurde
 	 */
 	@GET
+	@GZIP
 	@Produces("image/svg+xml")
 	@Path("/assets/{name}.svg")
 	public Response getClientFileAssetsSVG(@PathParam("name") final String name, @Context final HttpServletRequest request) {
@@ -512,13 +495,14 @@ public class APIClient {
 	 * @return die HTTP-Response mit dem JSON-Katalog des Core-Types
 	 */
 	@GET
+	@GZIP
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/types/{name}.json")
 	public Response getJSONKatalog(@PathParam("name") final String name, @Context final HttpServletRequest request) {
 		try {
 			final String json = ResourceCoreTypeJson.get(name);
 			final byte[] data = json.getBytes(StandardCharsets.UTF_8);
-			return getZippedResponse(data, checkZipAllowed(request));
+			return Response.ok(data).build();
 		} catch (final ApiOperationException e) {
 			return e.getResponse();
 		}

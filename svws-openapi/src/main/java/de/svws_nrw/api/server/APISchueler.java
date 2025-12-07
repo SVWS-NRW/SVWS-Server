@@ -5,6 +5,8 @@ import de.svws_nrw.core.data.schule.Fahrschuelerart;
 import de.svws_nrw.data.kataloge.DataKatalogFahrschuelerarten;
 import java.io.InputStream;
 
+import org.jboss.resteasy.annotations.GZIP;
+
 import de.svws_nrw.asd.data.schueler.SchuelerBetriebsdaten;
 import de.svws_nrw.asd.data.schueler.SchuelerLeistungsdaten;
 import de.svws_nrw.asd.data.schueler.SchuelerLernabschnittBemerkungen;
@@ -23,6 +25,7 @@ import de.svws_nrw.core.data.erzieher.ErzieherStammdaten;
 import de.svws_nrw.core.data.schueler.SchuelerKAoADaten;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittListeEintrag;
 import de.svws_nrw.core.data.schueler.SchuelerLernplattform;
+import de.svws_nrw.core.data.schueler.SchuelerListe;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
 import de.svws_nrw.core.data.schueler.SchuelerTelefon;
 import de.svws_nrw.core.data.schueler.SchuelerVermerke;
@@ -76,6 +79,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 
 /**
@@ -104,6 +108,7 @@ public class APISchueler {
 	 * @return die Liste mit den einzelnen Schülern
 	 */
 	@GET
+	@GZIP
 	@Path("/aktuell")
 	@Operation(summary = "Gibt eine sortierte Übersicht von allen Schülern des aktuellen Schuljahresabschnitts zurück.",
 			description = "Erstellt eine Liste aller im aktuellen Schuljahresabschnitt vorhanden Schüler unter Angabe der ID, des Vor- und Nachnamens, "
@@ -132,6 +137,7 @@ public class APISchueler {
 	 * @return die Liste mit den einzelnen Schülern
 	 */
 	@GET
+	@GZIP
 	@Path("/abschnitt/{abschnitt : \\d+}")
 	@Operation(summary = "Gibt eine sortierte Übersicht von allen Schülern zurück, zusammen mit deren Daten zum angegebenen Schuljahresabschnitt.",
 			description = "Erstellt eine Liste aller Schüler mit deren Daten zum angegebenen Schuljahresabschnitt u. a. unter Angabe der ID, des Vor- und "
@@ -161,22 +167,21 @@ public class APISchueler {
 	 * @return die GZip-komprimierten Daten zur Schüler-Auswahlliste
 	 */
 	@GET
-	@Produces(MediaType.APPLICATION_OCTET_STREAM)
+	@GZIP
+	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/abschnitt/{abschnitt : \\d+}/auswahlliste")
 	@Operation(
 			summary = "Gibt die Informationen zur Verwaltung einer Schüler-Auswahlliste mit Filterfunktionen in Bezug auf einen Schuljahresabschnitt zurück.",
 			description = "Gibt die Informationen zur Verwaltung einer Schüler-Auswahlliste mit Filterfunktionen in Bezug auf einen Schuljahresabschnitt zurück."
 					+ "Es wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die GZip-komprimierten Daten zur Schüler-Auswahlliste",
-			content = @Content(mediaType = MediaType.APPLICATION_OCTET_STREAM,
-					schema = @Schema(type = "string", format = "binary", description = "Die GZip-komprimierten Daten zur Schüler-Auswahlliste")))
+	@ApiResponse(responseCode = "200", description = "Eine Liste von Schüler-Listen-Einträgen",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchuelerListe.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schülerdaten anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Nicht alle Daten wurden gefunden, z.B. Schüler-Einträge")
 	public Response getSchuelerAuswahllisteFuerAbschnitt(@PathParam("schema") final String schema, @PathParam("abschnitt") final long abschnitt,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> JSONMapper.gzipFileResponseFromObject(DataSchuelerliste.getSchuelerListe(conn, abschnitt),
-						"auswahlliste_%d.json.gz".formatted(abschnitt)),
+				conn -> Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(DataSchuelerliste.getSchuelerListe(conn, abschnitt)).build(),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);
 	}
@@ -192,6 +197,7 @@ public class APISchueler {
 	 * @return die Stammdaten des Schülers
 	 */
 	@GET
+	@GZIP
 	@Path("/{id : \\d+}/stammdaten")
 	@Operation(summary = "Liefert zu der ID des Schülers die zugehörigen Stammdaten.",
 			description = "Liest die Stammdaten des Schülers zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
@@ -216,6 +222,7 @@ public class APISchueler {
 	 * @return die Stammdaten der Schüler
 	 */
 	@POST
+	@GZIP
 	@Path("/stammdaten")
 	@Operation(summary = "Liefert zu den Schüler IDs die zugehörigen Stammdaten.",
 			description = "Liest die Stammdaten der Schüler zu der angegebenen IDs aus der Datenbank und liefert diese zurück. "
@@ -1076,6 +1083,7 @@ public class APISchueler {
 	 * @return die Liste mit dem Katalog der Übergangsempfehlungen der Grundschule für die Sekundarstufe I.
 	 */
 	@GET
+	@GZIP
 	@Path("/allgemein/uebergangsempfehlung")
 	@Operation(summary = "Gibt den Katalog der Übergangsempfehlungen der Grundschule für die Sekundarstufe I zurück.",
 			description = "Erstellt eine Liste aller in dem Katalog vorhandenen Übergangsempfehlungen der Grundschule für die Sekundarstufe I. "
@@ -1100,6 +1108,7 @@ public class APISchueler {
 	 * @return die Liste mit dem Katalog der Herkünfte von Schülern.
 	 */
 	@GET
+	@GZIP
 	@Path("/allgemein/herkuenfte")
 	@Operation(summary = "Gibt den Katalog der Herkünfte von Schülern zurück.",
 			description = "Erstellt eine Liste aller in dem Katalog vorhandenen Herkünfte von Schülern. "
@@ -1124,6 +1133,7 @@ public class APISchueler {
 	 * @return die Liste mit dem Katalog der Herkunftsarten bei Schülern.
 	 */
 	@GET
+	@GZIP
 	@Path("/allgemein/herkunftsarten")
 	@Operation(summary = "Gibt den Katalog der Herkunftsarten bei Schülern zurück.",
 			description = "Erstellt eine Liste aller in dem Katalog vorhandenen Herkunftsarten bei Schülern. "
@@ -2012,6 +2022,7 @@ public class APISchueler {
 	 * @return die Liste mit dem Katalog der Fahrschülerarten
 	 */
 	@GET
+	@GZIP
 	@Path("fahrschuelerarten")
 	@Operation(summary = "Gibt den Katalog der Fahrschülerarten zurück.",
 			description = "Erstellt eine Liste aller in dem Katalog vorhanden Fahrschülerarten unter Angabe der ID, eines Kürzels und der Bezeichnung. "

@@ -2,6 +2,8 @@ package de.svws_nrw.api.server;
 
 import java.io.InputStream;
 
+import org.jboss.resteasy.annotations.GZIP;
+
 import de.svws_nrw.asd.data.fach.BilingualeSpracheKatalogEintrag;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.fach.FachDaten;
@@ -65,6 +67,7 @@ public class APIFaecher {
 	 * @return              die Liste der Fächer mit ID des Datenbankschemas
 	 */
 	@GET
+	@GZIP
 	@Path("/")
 	@Operation(summary = "Gibt eine Übersicht von allen Fächern zurück.",
 			description = "Erstellt eine Liste aller in der Datenbank vorhanden Fächer unter Angabe der ID, des Kürzels, "
@@ -228,6 +231,7 @@ public class APIFaecher {
 	 * @return              der Katalog der zulässigen Fächer
 	 */
 	@GET
+	@GZIP
 	@Path("/allgemein/faecher")
 	@Operation(summary = "Gibt den Katalog der zulässigen Fächer zurück.",
 			description = "Erstellt eine Liste aller in dem Katalog vorhanden zulässigen Fächer. "
@@ -252,6 +256,7 @@ public class APIFaecher {
 	 * @return der Katalog aller Fachgruppen aller Schulformen
 	 */
 	@GET
+	@GZIP
 	@Path("/allgemein/fachgruppen")
 	@Operation(summary = "Gibt den Katalog aller Fachgruppen aller Schulformen zurück.",
 			description = "Gibt den Katalog aller Fachgruppen aller Schulformen zurück. "
@@ -275,6 +280,7 @@ public class APIFaecher {
 	 * @return die Liste mit den Informationen zu den Fachgruppen für die Schulform dieser Schule
 	 */
 	@GET
+	@GZIP
 	@Path("/fachgruppen")
 	@Operation(summary = "Gibt den Katalog der Fachgruppen für die Schulform dieser Schule zurück.",
 			description = "Gibt den Katalog der Fachgruppen für die Schulform dieser Schule zurück. "
@@ -323,6 +329,7 @@ public class APIFaecher {
 	 * @return der Katalog aller bilingualen Sprachen aller Schulformen
 	 */
 	@GET
+	@GZIP
 	@Path("/allgemein/sprachen/bilingual/alle")
 	@Operation(summary = "Gibt den Katalog aller bilingualen Sprachen aller Schulformen zurück.",
 			description = "Gibt den Katalog aller bilingualen Sprachen aller Schulformen zurück. "
@@ -394,6 +401,7 @@ public class APIFaecher {
 	 * @return der Katalog der Sprachprüfungsniveaus
 	 */
 	@GET
+	@GZIP
 	@Path("/allgemein/sprachen/pruefungsniveaus")
 	@Operation(summary = "Gibt den Katalog der Sprachprüfungsniveaus zurück.",
 			description = "Gibt den Katalog der Sprachprüfungsniveaus zurück. "
@@ -418,6 +426,7 @@ public class APIFaecher {
 	 * @return der Katalog der Sprachreferenzniveaus
 	 */
 	@GET
+	@GZIP
 	@Path("/allgemein/sprachen/referenzniveaus")
 	@Operation(summary = "Gibt den Katalog der Sprachreferenzniveaus zurück.",
 			description = "Gibt den Katalog der Sprachreferenzniveaus zurück. "

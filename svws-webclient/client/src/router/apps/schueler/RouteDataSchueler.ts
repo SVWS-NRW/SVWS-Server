@@ -52,9 +52,7 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 
 	protected async createManager(idSchuljahresabschnitt: number): Promise<Partial<RouteStateSchueler>> {
 		// Lade die Daten von der API
-		const auswahllisteGzip = await api.server.getSchuelerAuswahllisteFuerAbschnitt(api.schema, idSchuljahresabschnitt);
-		const auswahllisteBlob = await new Response(auswahllisteGzip.data.stream().pipeThrough(new DecompressionStream("gzip"))).blob();
-		const schuelerListe: SchuelerListe = SchuelerListe.transpilerFromJSON(await auswahllisteBlob.text());
+		const schuelerListe: SchuelerListe = await api.server.getSchuelerAuswahllisteFuerAbschnitt(api.schema, idSchuljahresabschnitt);
 		const lehrer = await api.server.getLehrer(api.schema);
 
 		// Erstelle den Schüler-Liste-Manager

@@ -177,6 +177,7 @@ import { SchuelerLernabschnittBemerkungen } from '../asd/data/schueler/SchuelerL
 import { SchuelerLernabschnittListeEintrag } from '../core/data/schueler/SchuelerLernabschnittListeEintrag';
 import { SchuelerLernabschnittsdaten } from '../asd/data/schueler/SchuelerLernabschnittsdaten';
 import { SchuelerLernplattform } from '../core/data/schueler/SchuelerLernplattform';
+import { SchuelerListe } from '../core/data/schueler/SchuelerListe';
 import { SchuelerListeEintrag } from '../core/data/schueler/SchuelerListeEintrag';
 import { SchuelerSchulbesuchMerkmal } from '../asd/data/schueler/SchuelerSchulbesuchMerkmal';
 import { SchuelerSchulbesuchSchule } from '../asd/data/schueler/SchuelerSchulbesuchSchule';
@@ -12670,23 +12671,24 @@ export class ApiServer extends BaseApi {
 	 * Gibt die Informationen zur Verwaltung einer Schüler-Auswahlliste mit Filterfunktionen in Bezug auf einen Schuljahresabschnitt zurück.Es wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die GZip-komprimierten Daten zur Schüler-Auswahlliste
-	 *     - Mime-Type: application/octet-stream
-	 *     - Rückgabe-Typ: ApiFile
+	 *   Code 200: Eine Liste von Schüler-Listen-Einträgen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SchuelerListe
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schülerdaten anzusehen.
 	 *   Code 404: Nicht alle Daten wurden gefunden, z.B. Schüler-Einträge
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} abschnitt - der Pfad-Parameter abschnitt
 	 *
-	 * @returns Die GZip-komprimierten Daten zur Schüler-Auswahlliste
+	 * @returns Eine Liste von Schüler-Listen-Einträgen
 	 */
-	public async getSchuelerAuswahllisteFuerAbschnitt(schema : string, abschnitt : number) : Promise<ApiFile> {
+	public async getSchuelerAuswahllisteFuerAbschnitt(schema : string, abschnitt : number) : Promise<SchuelerListe> {
 		const path = "/db/{schema}/schueler/abschnitt/{abschnitt : \\d+}/auswahlliste"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, abschnitt.toString());
-		const data : ApiFile = await super.getOctetStream(path);
-		return data;
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return SchuelerListe.transpilerFromJSON(text);
 	}
 
 

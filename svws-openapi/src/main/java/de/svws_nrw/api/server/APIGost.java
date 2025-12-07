@@ -62,6 +62,8 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
+
+import org.jboss.resteasy.annotations.GZIP;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
@@ -344,6 +346,7 @@ public class APIGost {
 	 * @return              die Liste der Schüler - allerdings ohne Informationen zu Kursen
 	 */
 	@GET
+	@GZIP
 	@Path("/abiturjahrgang/{abiturjahr : -?\\d+}/schueler")
 	@Operation(summary = "Gibt eine Übersicht von allen Schülern des Abitur-Jahrganges der gymnasialen Oberstufe zurück.",
 			description = "Erstellt eine Liste aller Schüler, welche zu dem angegebenen Abitur-Jahrgang gehören (ohne Informationen zu Kursen). "
@@ -380,6 +383,7 @@ public class APIGost {
 	 * @return              die Liste der Fächer der gymnasialen Oberstufe mit der ID des Faches
 	 */
 	@GET
+	@GZIP
 	@Path("/abiturjahrgang/{abiturjahr : -?\\d+}/faecher")
 	@Operation(summary = "Gibt eine Übersicht von allen Fächern des Abitur-Jahrganges der gymnasialen Oberstufe zurück.",
 			description = "Erstellt eine Liste aller in der Datenbank vorhanden Fächer der gymnasialen Oberstufe, "
@@ -544,6 +548,7 @@ public class APIGost {
 	 * @return              die Liste der Fachwahlen der gymnasialen Oberstufe
 	 */
 	@GET
+	@GZIP
 	@Path("/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}/fachwahlen")
 	@Operation(summary = "Gibt eine Übersicht von allen Fachwahlen des Abitur-Jahrganges der gymnasialen Oberstufe zurück.",
 			description = "Erstellt eine Liste aller in der Datenbank für den angegebenen Abitur-Jahrgang vorhanden Fachwahlen der gymnasialen Oberstufe. "
@@ -581,6 +586,7 @@ public class APIGost {
 	 * @return              die Belegprüfungsergebnisse
 	 */
 	@GET
+	@GZIP
 	@Path("/abiturjahrgang/{abiturjahr : -?\\d+}/belegpruefung/gesamt")
 	@Operation(
 			summary = "Gibt die (Fehler-)Rückmeldungen der Gesamt-Belegprüfung zu den Schüler-Laufbahnen eines Abitur-Jahrganges der gymnasialen Oberstufe zurück.",
@@ -618,6 +624,7 @@ public class APIGost {
 	 * @return              die Belegprüfungsergebnisse
 	 */
 	@GET
+	@GZIP
 	@Path("/abiturjahrgang/{abiturjahr : -?\\d+}/belegpruefung/EF1")
 	@Operation(
 			summary = "Gibt die (Fehler-)Rückmeldungen der EF1-Belegprüfung zu den Schüler-Laufbahnen eines Abitur-Jahrganges der gymnasialen Oberstufe zurück.",
@@ -654,6 +661,7 @@ public class APIGost {
 	 * @return die Laufbahnplanungsdaten des Abiturjahrgangs
 	 */
 	@GET
+	@GZIP
 	@Path("/abiturjahrgang/{abiturjahr : -?\\d+}/laufbahnplanung")
 	@Operation(summary = "Liest die Laufbahnplanungsdaten für die gymnasiale Oberstufe zu dem Abiturjahrgang aus.",
 			description = "Liest die Laufbahnplanungsdaten für die gymnasiale Oberstufe zu dem Abiturjahrgang aus der Datenbank aus und liefert diese zurück. "
@@ -816,6 +824,7 @@ public class APIGost {
 	 * @return die Laufbahnplanungsdaten des Schülers
 	 */
 	@GET
+	@GZIP
 	@Path("/schueler/{id : \\d+}/laufbahnplanung")
 	@Operation(summary = "Liest die Laufbahnplanungsdaten für die gymnasiale Oberstufe zu dem Schüler mit der angegebenen ID aus.",
 			description = "Liest die Laufbahnplanungsdaten für die gymnasiale Oberstufe zu dem Schüler mit der angegebenen ID aus der Datenbank aus und "
@@ -851,6 +860,7 @@ public class APIGost {
 	 * @return die Laufbahndaten in der gymnasialen Oberstufe für alle Schüler des angegebenen Abiturjahrs
 	 */
 	@GET
+	@GZIP
 	@Path("/abiturjahrgang/{abiturjahr : -?\\d+}/laufbahndaten")
 	@Operation(summary = "Liefert zu dem Abiturjahrgang die zugehörigen Abiturdaten aus den Laufbahndaten der SVWS-DB.",
 			description = "Liefert zu dem Abiturjahrgang die zugehörigen Abiturdaten aus den Laufbahndaten und liefert diese zurück. "
@@ -1110,6 +1120,7 @@ public class APIGost {
 	 *         angegebenen ID und die Berechtigung des Datenbank-Users
 	 */
 	@GET
+	@GZIP
 	@Path("/schueler/{id : \\d+}/leistungsdaten")
 	@Operation(summary = "Liefert zu der ID des Schülers die zugehörigen Leistungsdaten in Bezug auf die gymnasiale Oberstufe.",
 			description = "Liest die Leistungsdaten in Bezug auf die gymnasiale Oberstufe des Schülers mit der angegebene ID aus der Datenbank und liefert "
@@ -1144,6 +1155,7 @@ public class APIGost {
 	 *         angegebenen ID und die Berechtigung des Datenbank-Users
 	 */
 	@GET
+	@GZIP
 	@Path("/schueler/{id : \\d+}/abiturdaten")
 	@Operation(summary = "Liefert zu der ID des Schülers die zugehörigen Abiturdaten aus den entsprechenden Abiturtabellen der SVWS-DB.",
 			description = "Liest die Abiturdaten aus den Abiturtabellen des Schülers mit der angegebene ID und liefert diese zurück. "
@@ -1180,6 +1192,7 @@ public class APIGost {
 	 * @return die Abiturdaten in der gymnasialen Oberstufe für alle Schüler des angegebenen Abiturjahrs
 	 */
 	@GET
+	@GZIP
 	@Path("/abiturjahrgang/{abiturjahr : -?\\d+}/abiturdaten")
 	@Operation(summary = "Liefert zu dem Abiturjahrgang die zugehörigen Abiturdaten aus den entsprechenden Abiturtabellen der SVWS-DB.",
 			description = "Liefert zu dem Abiturjahrgang die zugehörigen Abiturdaten aus den Abiturtabellen und liefert diese zurück. "
@@ -1271,6 +1284,7 @@ public class APIGost {
 	 * @return              das Ergebnis der Prüfung der Belegprüfung der Abiturdaten
 	 */
 	@POST
+	@GZIP
 	@Path("abitur/belegpruefung/gesamt")
 	@Operation(summary = "Führt eine Belegprüfung anhand der übergebenen Abiturdaten durch.",
 			description = "Prüft anhand der übergeben Abiturdaten, ob die Belegung in den Abiturdaten korrekt ist oder nicht. Es werden ggf. auch "
@@ -1311,6 +1325,7 @@ public class APIGost {
 	 * @return              das Ergebnis der Prüfung der Belegprüfung nur für die EF_1
 	 */
 	@POST
+	@GZIP
 	@Path("abitur/belegpruefung/EF1")
 	@Operation(summary = "Führt eine Belegprüfung nur für die EF.1 anhand der übergebenen Abiturdaten durch.",
 			description = "Prüft anhand der übergeben Abiturdaten, ob die Belegung in den Abiturdaten korrekt ist oder nicht. Es werden ggf. auch "

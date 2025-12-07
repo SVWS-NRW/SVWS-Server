@@ -48,6 +48,8 @@ import jakarta.ws.rs.core.Response;
 import java.io.InputStream;
 import java.util.List;
 
+import org.jboss.resteasy.annotations.GZIP;
+
 /**
  * Die Klasse spezifiziert die OpenAPI-Schnittstelle für den Zugriff auf die SVWS-Datenbank in Bezug auf die
  * Kursplanung für die gymnasiale Oberstufe.
@@ -164,6 +166,7 @@ public class APIGostKursplanung {
 	 * @return die Blockungsdaten
 	 */
 	@GET
+	@GZIP
 	@Path("/blockungen/{blockungsid : \\d+}")
 	@Operation(summary = "Liest für die angegebene Blockung der gymnasialen Oberstufe die grundlegenden Daten aus.",
 			description = "Liest für die angegebene Blockung der gymnasialen Oberstufe die grundlegenden Daten aus. "
@@ -1019,6 +1022,7 @@ public class APIGostKursplanung {
 	 * @return die Daten des Blockungsergebnisses
 	 */
 	@GET
+	@GZIP
 	@Path("/blockungen/zwischenergebnisse/{ergebnisid : \\d+}")
 	@Operation(summary = "Liest für das angegebene Blockungsergebnis einer Blockung der gymnasialen Oberstufe die Daten aus.",
 			description = "Liest für das angegebene Blockungsergebnis einer Blockung der gymnasialen Oberstufe die Daten aus. "

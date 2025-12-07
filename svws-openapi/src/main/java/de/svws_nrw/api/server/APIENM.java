@@ -2,6 +2,7 @@ package de.svws_nrw.api.server;
 
 import java.io.InputStream;
 
+import org.jboss.resteasy.annotations.GZIP;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 import de.svws_nrw.core.data.SimpleOperationResponse;
@@ -96,6 +97,7 @@ public class APIENM {
 	 * @return die ENM-Daten
 	 */
 	@GET
+	@GZIP
 	@Path("/alle")
 	@Operation(summary = "Liefert die Daten des Externen Notenmoduls (ENM).",
 			description = "Liest die Daten des Externen Notenmoduls (ENM) aus der Datenbank "
@@ -147,6 +149,7 @@ public class APIENM {
 	 * @return die Daten für das ENM des Lehrers
 	 */
 	@GET
+	@GZIP
 	@Path("/lehrer/{id : \\d+}")
 	@Operation(summary = "Liefert zu der ID des Lehrer die zugehörigen Daten des Externen Notenmoduls (ENM).",
 			description = "Liest die Daten des Externen Notenmoduls (ENM) des Lehrers zu der angegebenen ID aus der Datenbank "

@@ -39,6 +39,8 @@ import jakarta.ws.rs.core.Response;
 import java.io.InputStream;
 import java.util.List;
 
+import org.jboss.resteasy.annotations.GZIP;
+
 /**
  * Die Klasse spezifiziert die OpenAPI-Schnittstelle für den Zugriff auf die grundlegenden Betriebsdaten aus der SVWS-Datenbank.
  * Ein Zugriff erfolgt über den Pfad https://{Hostname}/db/{schema}/betrieb/...
@@ -65,6 +67,7 @@ public class APIBetrieb {
 	 * @return die Liste mit den einzelnen Betrieben
 	 */
 	@GET
+	@GZIP
 	@Path("/")
 	@Operation(summary = "Gibt eine Übersicht von allen Betrieben zurück.",
 			description = "Erstellt eine Liste aller in der Datenbank vorhandenen Betriebe unter Angabe der ID, der Betriebsart , " // TODO Beschreibung anpassen.
@@ -462,6 +465,7 @@ public class APIBetrieb {
 	* @return              die Liste der Beschäftigungsarten
 	*/
 	@GET
+	@GZIP
 	@Path("/beschaeftigungsarten")
 	@Operation(summary = "Gibt eine Übersicht der Beschäftigungsarten im Katalog zurück.",
 			description = "Gibt die Beschäftigungsarten zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.")
@@ -569,6 +573,7 @@ public class APIBetrieb {
 	 * @return              die Liste der Beschäftigungsarten mit ID des Datenbankschemas
 	 */
 	@GET
+	@GZIP
 	@Path("/betriebsart")
 	@Operation(summary = "Gibt eine Übersicht aller Betriebsarten im Katalog zurück.",
 			description = "Erstellt eine Liste aller in dem Katalog vorhandenen Betriebsarten unter Angabe der ID, eines Kürzels und der textuellen "
@@ -593,6 +598,7 @@ public class APIBetrieb {
 	 * @return              die Betriebsart mit ID des Datenbankschemas
 	 */
 	@GET
+	@GZIP
 	@Path("/betriebsart/{id : \\d+}")
 	@Operation(summary = "Liefert zu der ID der Betriebsart die zugehörigen Daten..",
 			description = "Liest die Daten der Betriebsart zu der angegebenen ID aus der Datenbank und liefert diese zurück. "

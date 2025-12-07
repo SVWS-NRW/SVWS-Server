@@ -1,0 +1,2 @@
+org.jboss.resteasy.plugins.interceptors.GZIPEncodingInterceptor
+org.jboss.resteasy.plugins.interceptors.GZIPDecodingInterceptor
