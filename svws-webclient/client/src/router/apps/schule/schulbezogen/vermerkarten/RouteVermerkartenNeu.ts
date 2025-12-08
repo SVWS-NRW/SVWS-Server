@@ -25,7 +25,7 @@ export class RouteVermerkartenNeu extends RouteNode<any, RouteVermerkarten> {
 		return {
 			manager: () => routeVermerkarten.data.manager,
 			add: routeVermerkarten.data.add,
-			gotoDefaultView: routeVermerkarten.data.gotoDefaultView,
+			goToDefaultView: routeVermerkarten.data.gotoDefaultView,
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
 			benutzerKompetenzen: api.benutzerKompetenzen,

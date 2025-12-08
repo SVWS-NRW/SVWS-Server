@@ -27,7 +27,7 @@ export class VermerkartenListeManager extends AuswahlManager<number, VermerkartE
 		if (cmp !== 0) {
 			return cmp;
 		}
-		if ((a.bezeichnung !== null) && (b.bezeichnung !== null)) {
+		if ((a.bezeichnung !== null) && b.bezeichnung !== null) {
 			cmp = JavaString.compareTo(a.bezeichnung, b.bezeichnung);
 			if (cmp !== 0) {
 				return cmp;

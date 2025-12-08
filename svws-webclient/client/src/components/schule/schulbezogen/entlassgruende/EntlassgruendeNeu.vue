@@ -1,8 +1,8 @@
 <template>
 	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Allgemein">
-			<svws-ui-input-wrapper>
-				<svws-ui-text-input placeholder="Bezeichnung"
+			<svws-ui-input-wrapper :grid="2">
+				<svws-ui-text-input placeholder="Bezeichnung" class="contentFocusField" span="2"
 					v-model="data.bezeichnung"
 					:valid="() => fieldIsValid('bezeichnung')" :min-len="1" :max-len="30" :disabled="!hatKompetenzAdd" required />
 				<svws-ui-input-number placeholder="Sortierung"
@@ -55,14 +55,16 @@
 	};
 
 	function bezeichnungIsValid(value: string | null) {
-		if (!mandatoryInputIsValid(value, 30))
+		if (!mandatoryInputIsValid(value, 30)) {
 			return false;
+		}
 		return isUniqueInList(value, props.manager().liste.list(), 'bezeichnung');
 	}
 
 	async function addEntlassgrund() {
-		if (isLoading.value)
+		if (isLoading.value) {
 			return;
+		}
 
 		props.checkpoint.active = false;
 		isLoading.value = true;
@@ -77,8 +79,9 @@
 	}
 
 	watch(() => data.value, async () => {
-		if (isLoading.value)
+		if (isLoading.value) {
 			return;
+		}
 
 		props.checkpoint.active = true;
 	}, { immediate: false, deep: true });

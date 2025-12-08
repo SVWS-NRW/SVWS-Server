@@ -1,8 +1,8 @@
 <template>
 	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Allgemein">
-			<svws-ui-input-wrapper>
-				<svws-ui-text-input placeholder="Bezeichnung" class="contentFocusField"
+			<svws-ui-input-wrapper :grid="2">
+				<svws-ui-text-input placeholder="Bezeichnung" class="contentFocusField" span="2"
 					:model-value="manager().daten().bezeichnung"
 					required readonly />
 				<svws-ui-input-number placeholder="Sortierung"
@@ -34,8 +34,9 @@
 	});
 
 	async function patchSortierung(value: number | null): Promise<void> {
-		if (sortierungIsValid(value))
+		if (sortierungIsValid(value)) {
 			await props.patch({ sortierung: value === null ? 32000 : value });
+		}
 	}
 
 	function sortierungIsValid(value: number | null): boolean {

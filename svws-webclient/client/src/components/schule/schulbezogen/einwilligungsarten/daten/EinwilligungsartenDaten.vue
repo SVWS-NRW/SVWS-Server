@@ -1,20 +1,20 @@
 <template>
 	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Allgemein">
-			<svws-ui-input-wrapper>
-				<svws-ui-text-input placeholder="Bezeichnung" class="contentFocusField"
+			<svws-ui-input-wrapper :grid="2">
+				<svws-ui-text-input placeholder="Bezeichnung" class="contentFocusField" span="2"
 					:model-value="manager().auswahl().bezeichnung"
 					@change="patchBezeichnung"
 					:valid="bezeichnungIsValid" :min-len="1" :max-len="250" required :readonly="!hatKompetenzUpdate" />
-				<ui-select label="Einwilligungsschlüssel"
+				<ui-select label="Einwilligungsschlüssel" class="col-span-full"
 					v-model="selectedEinwilligungsschluessel"
 					:manager="einwilligungsschluesselCoreTypeManager"
 					searchable :readonly="!hatKompetenzUpdate" />
-				<svws-ui-textarea-input placeholder="Beschreibung"
+				<svws-ui-textarea-input placeholder="Beschreibung" span="full"
 					:model-value="manager().auswahl().beschreibung"
 					@change="patchBeschreibung"
 					:readonly="!hatKompetenzUpdate" />
-				<svws-ui-text-input placeholder="Personenart"
+				<svws-ui-text-input placeholder="Personenart" span="2"
 					:model-value="textPersonTyp(manager().auswahl().idPersonTyp)"
 					readonly />
 				<svws-ui-input-number placeholder="Sortierung"
@@ -57,8 +57,9 @@
 	}
 
 	async function patchBezeichnung(bezeichnung: string | null) {
-		if (bezeichnungIsValid(bezeichnung))
+		if (bezeichnungIsValid(bezeichnung)) {
 			await props.patch({ bezeichnung: bezeichnung ?? '' });
+		}
 	}
 
 	async function patchSichtbar(value: boolean): Promise<void> {
@@ -66,8 +67,9 @@
 	}
 
 	async function patchSortierung(value: number | null): Promise<void> {
-		if (sortierungIsValid(value))
+		if (sortierungIsValid(value)) {
 			await props.patch({ sortierung: value === null ? 32000 : value });
+		}
 	}
 
 	async function patchBeschreibung(beschreibung: string | null) {
@@ -79,16 +81,18 @@
 	}
 
 	function bezeichnungIsValid(value: string | null) {
-		if (!mandatoryInputIsValid(value, 250))
+		if (!mandatoryInputIsValid(value, 250)) {
 			return false;
+		}
 
-		if (props.manager().daten().idPersonTyp === -1)
+		if (props.manager().daten().idPersonTyp === -1) {
 			return true;
+		}
 
 		for (const einwilligungsart of props.manager().liste.list()) {
-			if (einwilligungsart.id !== props.manager().daten().id
-				&& einwilligungsart.idPersonTyp === props.manager().daten().idPersonTyp
-				&& einwilligungsart.bezeichnung.toLowerCase() === value?.toLowerCase()) {
+			if ((einwilligungsart.id !== props.manager().daten().id)
+				&& (einwilligungsart.idPersonTyp === props.manager().daten().idPersonTyp)
+				&& (einwilligungsart.bezeichnung.toLowerCase() === value?.toLowerCase())) {
 				return false;
 			}
 		}
@@ -115,9 +119,9 @@
 
 	function einwilligungsschluesselIsUsed(einwilligungsschluessel: EinwilligungsschluesselKatalogEintrag) {
 		for (const einwilligungsart of props.manager().liste.list()) {
-			if (einwilligungsart.id !== props.manager().auswahl().id
-				&& einwilligungsart.idPersonTyp === props.manager().auswahl().idPersonTyp
-				&& einwilligungsart.schluessel === einwilligungsschluessel.schluessel) {
+			if ((einwilligungsart.id !== props.manager().auswahl().id)
+				&& (einwilligungsart.idPersonTyp === props.manager().auswahl().idPersonTyp)
+				&& (einwilligungsart.schluessel === einwilligungsschluessel.schluessel)) {
 				return true;
 			}
 		}

@@ -33,7 +33,10 @@ export class RouteDataVermerkarten extends RouteDataAuswahl<VermerkartenListeMan
 		return { manager };
 	}
 
-	async ladeDaten(auswahl: VermerkartEintrag): Promise<VermerkartEintrag> {
+	async ladeDaten(auswahl: VermerkartEintrag | null): Promise<VermerkartEintrag | null> {
+		if (auswahl === null) {
+			return null;
+		}
 		const schueler = await api.server.getSchuelerByVermerkartID(api.schema, auswahl.id);
 		this.manager.schuelerVermerkartZusammenfassungen = schueler;
 		return auswahl;
