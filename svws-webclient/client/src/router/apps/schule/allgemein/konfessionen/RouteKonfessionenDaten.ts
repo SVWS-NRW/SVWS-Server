@@ -4,16 +4,17 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 
-import type { KonfessionenDatenProps } from "~/components/schule/allgemein/konfessionen/daten/SKonfessionenDatenProps";
+import type { KonfessionenDatenProps } from "~/components/schule/allgemein/konfessionen/daten/KonfessionenDatenProps";
 import { api } from "~/router/Api";
 import { routeKonfessionen, type RouteKonfessionen } from "~/router/apps/schule/allgemein/konfessionen/RouteKonfessionen";
 
-const SKonfessionenDaten = () => import("~/components/schule/allgemein/konfessionen/daten/SKonfessionenDaten.vue");
+const KonfessionenDaten = () => import("~/components/schule/allgemein/konfessionen/daten/KonfessionenDaten.vue");
 
 export class RouteKonfessionenDaten extends RouteNode<any, RouteKonfessionen> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.konfessionen.daten", "daten", SKonfessionenDaten);
+		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.konfessionen.daten",
+			"daten", KonfessionenDaten);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Konfessionen";

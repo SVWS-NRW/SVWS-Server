@@ -10,16 +10,16 @@ import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import { routeKonfessionenGruppenprozesse } from "~/router/apps/schule/allgemein/konfessionen/RouteKonfessionenGruppenprozesse";
 import { routeKonfessionenNeu } from "~/router/apps/schule/allgemein/konfessionen/RouteKonfessionenNeu";
 import { routeApp } from "~/router/apps/RouteApp";
-import type { KonfessionenAuswahlProps } from "~/components/schule/allgemein/konfessionen/SKonfessionenAuswahlPops";
+import type { KonfessionenAuswahlProps } from "~/components/schule/allgemein/konfessionen/KonfessionenAuswahlPops";
 
-const SKonfessionenAuswahl = () => import("~/components/schule/allgemein/konfessionen/SKonfessionenAuswahl.vue");
-const SKonfessionenApp = () => import("~/components/schule/allgemein/konfessionen/SKonfessionenApp.vue");
+const KonfessionenAuswahl = () => import("~/components/schule/allgemein/konfessionen/KonfessionenAuswahl.vue");
+const KonfessionenApp = () => import("~/components/schule/allgemein/konfessionen/KonfessionenApp.vue");
 
 export class RouteKonfessionen extends RouteAuswahlNode<KonfessionenListeManager, RouteDataKonfessionen, RouteApp> {
 
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.konfessionen",
-			"schule/konfessionen/:id(\\d+)?", SKonfessionenApp, SKonfessionenAuswahl, new RouteDataKonfessionen());
+			"schule/konfessionen/:id(\\d+)?", KonfessionenApp, KonfessionenAuswahl, new RouteDataKonfessionen());
 		super.mode = ServerMode.STABLE;
 		super.text = "Konfessionen";
 		super.menugroup = RouteSchuleMenuGroup.ALLGEMEIN;

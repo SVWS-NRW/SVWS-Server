@@ -1,5 +1,5 @@
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import type { KonfessionenNeuProps } from "~/components/schule/allgemein/konfessionen/SKonfessionenNeuProps";
+import type { KonfessionenNeuProps } from "~/components/schule/allgemein/konfessionen/KonfessionenNeuProps";
 import type { RouteKonfessionen } from "~/router/apps/schule/allgemein/konfessionen/RouteKonfessionen";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
@@ -9,12 +9,12 @@ import { routeApp } from "../../../RouteApp";
 import { routeKonfessionen } from "~/router/apps/schule/allgemein/konfessionen/RouteKonfessionen";
 import { api } from "~/router/Api";
 
-const SKonfessionenNeu = () => import("~/components/schule/allgemein/konfessionen/SKonfessionenNeu.vue");
+const KonfessionenNeu = () => import("~/components/schule/allgemein/konfessionen/KonfessionenNeu.vue");
 
 export class RouteKonfessionenNeu extends RouteNode<any, RouteKonfessionen> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.konfessionen.neu", "neu", SKonfessionenNeu);
+		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.konfessionen.neu", "neu", KonfessionenNeu);
 		super.types = new Set([ViewType.HINZUFUEGEN]);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);

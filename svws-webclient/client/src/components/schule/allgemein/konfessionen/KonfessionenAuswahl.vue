@@ -31,7 +31,7 @@
 
 	import { computed } from "vue";
 	import { BenutzerKompetenz, type ReligionEintrag, ServerMode } from "@core";
-	import type { KonfessionenAuswahlProps } from "~/components/schule/allgemein/konfessionen/SKonfessionenAuswahlPops";
+	import type { KonfessionenAuswahlProps } from "~/components/schule/allgemein/konfessionen/KonfessionenAuswahlPops";
 	import { useRegionSwitch, ViewType } from "@ui";
 
 	const props = defineProps<KonfessionenAuswahlProps>();

@@ -34,7 +34,7 @@
 
 <script setup lang="ts">
 
-	import type { KonfessionenNeuProps } from "./SKonfessionenNeuProps";
+	import type { KonfessionenNeuProps } from "./KonfessionenNeuProps";
 	import { computed, ref, watch } from "vue";
 	import { BenutzerKompetenz, Religion, ReligionEintrag } from "@core";
 	import { isUniqueInList, mandatoryInputIsValid, optionalInputIsValid } from "~/util/validation/Validation";

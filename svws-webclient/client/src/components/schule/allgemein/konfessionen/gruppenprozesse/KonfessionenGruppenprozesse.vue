@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 
-	import type { KonfessionenGruppenprozesseProps } from "~/components/schule/allgemein/konfessionen/gruppenprozesse/SKonfessionenGruppenprozesseProps";
+	import type { KonfessionenGruppenprozesseProps } from "~/components/schule/allgemein/konfessionen/gruppenprozesse/KonfessionenGruppenprozesseProps";
 	import type { List } from "@core";
 	import { computed, ref } from "vue";
 	import { BenutzerKompetenz, ServerMode } from "@core";

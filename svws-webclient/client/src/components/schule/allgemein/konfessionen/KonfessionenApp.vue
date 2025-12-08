@@ -36,7 +36,7 @@
 
 	import { computed } from "vue";
 	import { useRegionSwitch, ViewType } from "@ui";
-	import type { KonfessionenAppProps } from "./SKonfessionenAppProps";
+	import type { KonfessionenAppProps } from "./KonfessionenAppProps";
 
 	const props = defineProps<KonfessionenAppProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();

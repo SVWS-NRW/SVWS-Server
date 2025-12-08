@@ -24,7 +24,7 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import type { KonfessionenDatenProps } from "./SKonfessionenDatenProps";
+	import type { KonfessionenDatenProps } from "./KonfessionenDatenProps";
 	import { BenutzerKompetenz, Religion } from "@core";
 
 	const props = defineProps<KonfessionenDatenProps>();

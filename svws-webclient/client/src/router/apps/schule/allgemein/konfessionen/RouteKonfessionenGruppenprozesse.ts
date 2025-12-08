@@ -7,14 +7,15 @@ import { routeApp } from "../../../RouteApp";
 import { ViewType } from "@ui";
 import { routeKonfessionen } from "~/router/apps/schule/allgemein/konfessionen/RouteKonfessionen";
 import type { RouteKonfessionen } from "~/router/apps/schule/allgemein/konfessionen/RouteKonfessionen";
-import type { KonfessionenGruppenprozesseProps } from "~/components/schule/allgemein/konfessionen/gruppenprozesse/SKonfessionenGruppenprozesseProps";
+import type { KonfessionenGruppenprozesseProps } from "~/components/schule/allgemein/konfessionen/gruppenprozesse/KonfessionenGruppenprozesseProps";
 
-const SKonfessionenGruppenprozesse = () => import("~/components/schule/allgemein/konfessionen/gruppenprozesse/SKonfessionenGruppenprozesse.vue");
+const KonfessionenGruppenprozesse = () => import("~/components/schule/allgemein/konfessionen/gruppenprozesse/KonfessionenGruppenprozesse.vue");
 
 export class RouteKonfessionenGruppenprozesse extends RouteNode<any, RouteKonfessionen> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN], "schule.konfessionen.gruppenprozesse", "gruppenprozesse", SKonfessionenGruppenprozesse);
+		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN],
+			"schule.konfessionen.gruppenprozesse", "gruppenprozesse", KonfessionenGruppenprozesse);
 		super.types = new Set([ViewType.GRUPPENPROZESSE]);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);

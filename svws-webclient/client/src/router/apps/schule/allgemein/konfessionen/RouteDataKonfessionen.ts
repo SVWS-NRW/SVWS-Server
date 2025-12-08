@@ -28,7 +28,8 @@ export class RouteDataKonfessionen extends RouteDataAuswahl<KonfessionenListeMan
 
 	protected async createManager(idSchuljahresabschnitt: number): Promise<Partial<RouteStateKonfessionen>> {
 		const konfessionen = await api.server.getReligionen(api.schema);
-		const manager = new KonfessionenListeManager(idSchuljahresabschnitt, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte, api.schulform, konfessionen);
+		const manager = new KonfessionenListeManager(idSchuljahresabschnitt, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,
+			api.schulform, konfessionen);
 		if (this._state.value.manager === undefined) {
 			manager.setFilterAuswahlPermitted(true);
 			manager.setFilterNurSichtbar(false);
