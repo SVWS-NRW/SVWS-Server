@@ -1,55 +1,28 @@
 import { JavaObject } from '../../../../java/lang/JavaObject';
+import type { JavaSet } from '../../../../java/util/JavaSet';
 import { HashMap } from '../../../../java/util/HashMap';
 import { ArrayList } from '../../../../java/util/ArrayList';
 import { DeveloperNotificationException } from '../../../../core/exceptions/DeveloperNotificationException';
-import { BKGymBelegpruefungD18 } from '../../../../core/abschluss/bk/d/BKGymBelegpruefungD18';
-import { BKGymBelegpruefungD19 } from '../../../../core/abschluss/bk/d/BKGymBelegpruefungD19';
-import { BKGymBelegpruefungD9 } from '../../../../core/abschluss/bk/d/BKGymBelegpruefungD9';
+import { BeruflichesGymnasiumStundentafelAbiturfaecherWahlmoeglichkeit } from '../../../../asd/data/schule/BeruflichesGymnasiumStundentafelAbiturfaecherWahlmoeglichkeit';
+import { BKGymAbiturdaten, cast_de_svws_nrw_core_abschluss_bk_d_BKGymAbiturdaten } from '../../../../core/abschluss/bk/d/BKGymAbiturdaten';
+import { BKGymBelegpruefungErgebnis } from '../../../../core/abschluss/bk/d/BKGymBelegpruefungErgebnis';
 import { BKGymFaecherManager } from '../../../../core/utils/bk/BKGymFaecherManager';
-import { BKGymBelegpruefungD7 } from '../../../../core/abschluss/bk/d/BKGymBelegpruefungD7';
-import { BKGymBelegpruefungD12 } from '../../../../core/abschluss/bk/d/BKGymBelegpruefungD12';
-import { BKGymBelegpruefungD8 } from '../../../../core/abschluss/bk/d/BKGymBelegpruefungD8';
-import { BKGymBelegpruefungD13 } from '../../../../core/abschluss/bk/d/BKGymBelegpruefungD13';
+import { BeruflichesGymnasiumPruefungsordnungAnlage } from '../../../../asd/types/schule/BeruflichesGymnasiumPruefungsordnungAnlage';
+import { GostHalbjahr } from '../../../../core/types/gost/GostHalbjahr';
+import { Schulgliederung } from '../../../../asd/types/schule/Schulgliederung';
 import type { List } from '../../../../java/util/List';
-import { BKGymBelegpruefungD10 } from '../../../../core/abschluss/bk/d/BKGymBelegpruefungD10';
-import { BKGymBelegpruefungD6 } from '../../../../core/abschluss/bk/d/BKGymBelegpruefungD6';
-import { BKGymBelegpruefungD3 } from '../../../../core/abschluss/bk/d/BKGymBelegpruefungD3';
-import { BKGymBelegpruefungD16 } from '../../../../core/abschluss/bk/d/BKGymBelegpruefungD16';
-import { BKGymBelegpruefungD4 } from '../../../../core/abschluss/bk/d/BKGymBelegpruefungD4';
-import { BKGymBelegpruefungD17 } from '../../../../core/abschluss/bk/d/BKGymBelegpruefungD17';
-import { BKGymBelegpruefungD1 } from '../../../../core/abschluss/bk/d/BKGymBelegpruefungD1';
-import { BKGymBelegpruefungD14 } from '../../../../core/abschluss/bk/d/BKGymBelegpruefungD14';
-import { BKGymBelegpruefungD2 } from '../../../../core/abschluss/bk/d/BKGymBelegpruefungD2';
-import { BKGymBelegpruefungD15 } from '../../../../core/abschluss/bk/d/BKGymBelegpruefungD15';
+import { BeruflichesGymnasiumStundentafelFach } from '../../../../asd/data/schule/BeruflichesGymnasiumStundentafelFach';
 import { BKGymBelegpruefungErgebnisFehler } from '../../../../core/abschluss/bk/d/BKGymBelegpruefungErgebnisFehler';
 import { HashSet } from '../../../../java/util/HashSet';
 import { BKGymFach } from '../../../../core/data/bk/abi/BKGymFach';
 import { GostAbiturFach } from '../../../../core/types/gost/GostAbiturFach';
-import { BKGymBelegpruefungD20 } from '../../../../core/abschluss/bk/d/BKGymBelegpruefungD20';
-import { BKGymBelegpruefungD15a } from '../../../../core/abschluss/bk/d/BKGymBelegpruefungD15a';
-import { BKGymBelegungsfehler } from '../../../../core/abschluss/bk/d/BKGymBelegungsfehler';
-import { BKGymBelegpruefungD23 } from '../../../../core/abschluss/bk/d/BKGymBelegpruefungD23';
-import { BKGymBelegpruefungD21 } from '../../../../core/abschluss/bk/d/BKGymBelegpruefungD21';
-import { Class } from '../../../../java/lang/Class';
-import { BKGymBelegpruefungD22 } from '../../../../core/abschluss/bk/d/BKGymBelegpruefungD22';
-import { BKGymBelegpruefungD27 } from '../../../../core/abschluss/bk/d/BKGymBelegpruefungD27';
-import type { JavaMap } from '../../../../java/util/JavaMap';
-import { BKGymBelegpruefungD28 } from '../../../../core/abschluss/bk/d/BKGymBelegpruefungD28';
-import { BKGymBelegpruefungD25 } from '../../../../core/abschluss/bk/d/BKGymBelegpruefungD25';
-import type { JavaSet } from '../../../../java/util/JavaSet';
-import { BeruflichesGymnasiumStundentafelAbiturfaecherWahlmoeglichkeit } from '../../../../asd/data/schule/BeruflichesGymnasiumStundentafelAbiturfaecherWahlmoeglichkeit';
-import { BKGymAbiturdaten, cast_de_svws_nrw_core_abschluss_bk_d_BKGymAbiturdaten } from '../../../../core/abschluss/bk/d/BKGymAbiturdaten';
-import { BKGymBelegpruefungErgebnis } from '../../../../core/abschluss/bk/d/BKGymBelegpruefungErgebnis';
-import { BeruflichesGymnasiumPruefungsordnungAnlage } from '../../../../asd/types/schule/BeruflichesGymnasiumPruefungsordnungAnlage';
-import { GostHalbjahr } from '../../../../core/types/gost/GostHalbjahr';
-import { Schulgliederung } from '../../../../asd/types/schule/Schulgliederung';
-import { BeruflichesGymnasiumStundentafelFach } from '../../../../asd/data/schule/BeruflichesGymnasiumStundentafelFach';
 import { BeruflichesGymnasiumPruefungsordnungAnlageKatalogEintrag } from '../../../../asd/data/schule/BeruflichesGymnasiumPruefungsordnungAnlageKatalogEintrag';
 import { BKGymAbiturFachbelegung } from '../../../../core/abschluss/bk/d/BKGymAbiturFachbelegung';
 import { BeruflichesGymnasiumStundentafel } from '../../../../asd/data/schule/BeruflichesGymnasiumStundentafel';
-import { BKGymBelegpruefungD17a } from '../../../../core/abschluss/bk/d/BKGymBelegpruefungD17a';
-import { BKGymBelegpruefungD3a } from '../../../../core/abschluss/bk/d/BKGymBelegpruefungD3a';
+import { BKGymBelegungsfehler } from '../../../../core/abschluss/bk/d/BKGymBelegungsfehler';
 import { BKGymBelegpruefung } from '../../../../core/abschluss/bk/d/BKGymBelegpruefung';
+import { Class } from '../../../../java/lang/Class';
+import type { JavaMap } from '../../../../java/util/JavaMap';
 
 export class BKGymAbiturdatenManager extends JavaObject {
 
@@ -262,66 +235,7 @@ export class BKGymAbiturdatenManager extends JavaObject {
 	 * @return der Belegprüfungsalgorithmus
 	 */
 	private getBelegpruefung(): BKGymBelegpruefung {
-		let _sevar_2058483433 : any;
-		const _seexpr_2058483433 = (this.anlage);
-		if (_seexpr_2058483433 === BeruflichesGymnasiumPruefungsordnungAnlage.D1) {
-			_sevar_2058483433 = new BKGymBelegpruefungD1(this);
-		} else if (_seexpr_2058483433 === BeruflichesGymnasiumPruefungsordnungAnlage.D2) {
-			_sevar_2058483433 = new BKGymBelegpruefungD2(this);
-		} else if (_seexpr_2058483433 === BeruflichesGymnasiumPruefungsordnungAnlage.D3) {
-			_sevar_2058483433 = new BKGymBelegpruefungD3(this);
-		} else if (_seexpr_2058483433 === BeruflichesGymnasiumPruefungsordnungAnlage.D3a) {
-			_sevar_2058483433 = new BKGymBelegpruefungD3a(this);
-		} else if (_seexpr_2058483433 === BeruflichesGymnasiumPruefungsordnungAnlage.D4) {
-			_sevar_2058483433 = new BKGymBelegpruefungD4(this);
-		} else if (_seexpr_2058483433 === BeruflichesGymnasiumPruefungsordnungAnlage.D6) {
-			_sevar_2058483433 = new BKGymBelegpruefungD6(this);
-		} else if (_seexpr_2058483433 === BeruflichesGymnasiumPruefungsordnungAnlage.D7) {
-			_sevar_2058483433 = new BKGymBelegpruefungD7(this);
-		} else if (_seexpr_2058483433 === BeruflichesGymnasiumPruefungsordnungAnlage.D8) {
-			_sevar_2058483433 = new BKGymBelegpruefungD8(this);
-		} else if (_seexpr_2058483433 === BeruflichesGymnasiumPruefungsordnungAnlage.D9) {
-			_sevar_2058483433 = new BKGymBelegpruefungD9(this);
-		} else if (_seexpr_2058483433 === BeruflichesGymnasiumPruefungsordnungAnlage.D10) {
-			_sevar_2058483433 = new BKGymBelegpruefungD10(this);
-		} else if (_seexpr_2058483433 === BeruflichesGymnasiumPruefungsordnungAnlage.D12) {
-			_sevar_2058483433 = new BKGymBelegpruefungD12(this);
-		} else if (_seexpr_2058483433 === BeruflichesGymnasiumPruefungsordnungAnlage.D13) {
-			_sevar_2058483433 = new BKGymBelegpruefungD13(this);
-		} else if (_seexpr_2058483433 === BeruflichesGymnasiumPruefungsordnungAnlage.D14) {
-			_sevar_2058483433 = new BKGymBelegpruefungD14(this);
-		} else if (_seexpr_2058483433 === BeruflichesGymnasiumPruefungsordnungAnlage.D15) {
-			_sevar_2058483433 = new BKGymBelegpruefungD15(this);
-		} else if (_seexpr_2058483433 === BeruflichesGymnasiumPruefungsordnungAnlage.D15a) {
-			_sevar_2058483433 = new BKGymBelegpruefungD15a(this);
-		} else if (_seexpr_2058483433 === BeruflichesGymnasiumPruefungsordnungAnlage.D16) {
-			_sevar_2058483433 = new BKGymBelegpruefungD16(this);
-		} else if (_seexpr_2058483433 === BeruflichesGymnasiumPruefungsordnungAnlage.D17) {
-			_sevar_2058483433 = new BKGymBelegpruefungD17(this);
-		} else if (_seexpr_2058483433 === BeruflichesGymnasiumPruefungsordnungAnlage.D17a) {
-			_sevar_2058483433 = new BKGymBelegpruefungD17a(this);
-		} else if (_seexpr_2058483433 === BeruflichesGymnasiumPruefungsordnungAnlage.D18) {
-			_sevar_2058483433 = new BKGymBelegpruefungD18(this);
-		} else if (_seexpr_2058483433 === BeruflichesGymnasiumPruefungsordnungAnlage.D19) {
-			_sevar_2058483433 = new BKGymBelegpruefungD19(this);
-		} else if (_seexpr_2058483433 === BeruflichesGymnasiumPruefungsordnungAnlage.D20) {
-			_sevar_2058483433 = new BKGymBelegpruefungD20(this);
-		} else if (_seexpr_2058483433 === BeruflichesGymnasiumPruefungsordnungAnlage.D21) {
-			_sevar_2058483433 = new BKGymBelegpruefungD21(this);
-		} else if (_seexpr_2058483433 === BeruflichesGymnasiumPruefungsordnungAnlage.D22) {
-			_sevar_2058483433 = new BKGymBelegpruefungD22(this);
-		} else if (_seexpr_2058483433 === BeruflichesGymnasiumPruefungsordnungAnlage.D23) {
-			_sevar_2058483433 = new BKGymBelegpruefungD23(this);
-		} else if (_seexpr_2058483433 === BeruflichesGymnasiumPruefungsordnungAnlage.D25) {
-			_sevar_2058483433 = new BKGymBelegpruefungD25(this);
-		} else if (_seexpr_2058483433 === BeruflichesGymnasiumPruefungsordnungAnlage.D27) {
-			_sevar_2058483433 = new BKGymBelegpruefungD27(this);
-		} else if (_seexpr_2058483433 === BeruflichesGymnasiumPruefungsordnungAnlage.D28) {
-			_sevar_2058483433 = new BKGymBelegpruefungD28(this);
-		} else {
-			throw new DeveloperNotificationException("Die Belegprüfung für die Schulgliederung " + this.gliederung.name() + " wird noch nicht unterstützt.");
-		}
-		return _sevar_2058483433;
+		return new BKGymBelegpruefung(this);
 	}
 
 	/**

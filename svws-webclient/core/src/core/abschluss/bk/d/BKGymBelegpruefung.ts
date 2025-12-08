@@ -19,7 +19,7 @@ import { Class } from '../../../../java/lang/Class';
 import type { JavaMap } from '../../../../java/util/JavaMap';
 import { BeruflichesGymnasiumStundentafelFach } from '../../../../asd/data/schule/BeruflichesGymnasiumStundentafelFach';
 
-export abstract class BKGymBelegpruefung extends JavaObject {
+export class BKGymBelegpruefung extends JavaObject {
 
 	/**
 	 * Die Abiturdaten-Manager
@@ -57,7 +57,7 @@ export abstract class BKGymBelegpruefung extends JavaObject {
 	 *
 	 * @param manager   der Manager für die Abiturdaten
 	 */
-	protected constructor(manager: BKGymAbiturdatenManager) {
+	public constructor(manager: BKGymAbiturdatenManager) {
 		super();
 		this.manager = manager;
 		this.stundentafeln = manager.getStundentafeln();
@@ -140,8 +140,6 @@ export abstract class BKGymBelegpruefung extends JavaObject {
 	 * Die Methode wird zur Durchführung der Belegprüfung aufgerufen.
 	 *
 	 * Sie führt zuerst die allgemeinen Prüfungen aus, die für alle Anlagen des beruflichen Gymnasiums identisch sind.
-	 * Im Anschluss werden dann ggf. die spezifischen Prüfungen für die jeweilige Anlage durchgeführt.
-	 * Hierzu ist bei Bedarf die Methode spezifischePruefungen in der Kindklasse zu implementieren.
 	 */
 	public pruefe(): void {
 		for (const tafel of this.stundentafeln) {
@@ -150,7 +148,6 @@ export abstract class BKGymBelegpruefung extends JavaObject {
 			const mapBelegungByFach: JavaMap<BeruflichesGymnasiumStundentafelFach, List<BKGymAbiturFachbelegung>> = this.manager.getMapBelegungenForTafelByFach(tafel);
 			this.bewegeBelegungZuWahlfach(tafel, mapFaecherByIndex, mapBelegungByFach);
 			this.allgemeinePruefungen(tafel, mapFaecherByIndex, mapBelegungByFach);
-			this.spezifischePruefungen(tafel, mapFaecherByIndex, mapBelegungByFach);
 		}
 	}
 
@@ -537,18 +534,6 @@ export abstract class BKGymBelegpruefung extends JavaObject {
 			this.addFehler(tafel, new BKGymBelegungsfehler(BKGymBelegungsfehlerTyp.AB_4));
 		if ((ab3 !== null) && (ab4 !== null) && !this.manager.pruefeAbiGrundkurswahl(tafel, ab3, ab4))
 			this.addFehler(tafel, new BKGymBelegungsfehler(BKGymBelegungsfehlerTyp.AB_5, this.manager.getFachkuerzelFromFachbelegung(ab3), this.manager.getFachkuerzelFromFachbelegung(ab4), this.manager.getGliederung().name(), this.manager.getFachklassenschluessel()));
-	}
-
-	/**
-	 * Führt die für eine Anlage spezifische Belegprüfung durch.
-	 * Diese Methode ist von jeder Kindklasse, welche spezifische Prüfungen hat, zu überschreiben.
-	 *
-	 * @param tafel                die zu überprüfende Stundentafel
-	 * @param mapFaecherByIndex    die Map mit den Fächern der Stundentafel
-	 * @param mapBelegungByIndex   die Map mit den Fächern der Belegungen
-	 */
-	protected spezifischePruefungen(tafel: BeruflichesGymnasiumStundentafel, mapFaecherByIndex: JavaMap<number, List<BeruflichesGymnasiumStundentafelFach>>, mapBelegungByIndex: JavaMap<BeruflichesGymnasiumStundentafelFach, List<BKGymAbiturFachbelegung>>): void {
-		// empty block
 	}
 
 	transpilerCanonicalName(): string {

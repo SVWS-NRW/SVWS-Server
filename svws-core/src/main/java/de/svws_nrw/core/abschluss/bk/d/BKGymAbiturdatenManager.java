@@ -193,39 +193,7 @@ public class BKGymAbiturdatenManager {
 	 * @return der Belegprüfungsalgorithmus
 	 */
 	private @NotNull BKGymBelegpruefung getBelegpruefung() {
-		return switch (anlage) {
-			case D1 -> new BKGymBelegpruefungD1(this);
-			case D2 -> new BKGymBelegpruefungD2(this);
-			case D3 -> new BKGymBelegpruefungD3(this);
-			case D3a -> new BKGymBelegpruefungD3a(this);
-			case D4 -> new BKGymBelegpruefungD4(this);
-			// case D5 -> new BKGymBelegpruefungD(this);
-			case D6 -> new BKGymBelegpruefungD6(this);
-			case D7 -> new BKGymBelegpruefungD7(this);
-			case D8 -> new BKGymBelegpruefungD8(this);
-			case D9 -> new BKGymBelegpruefungD9(this);
-			case D10 -> new BKGymBelegpruefungD10(this);
-			// case D11 -> new BKGymBelegpruefungD(this);
-			case D12 -> new BKGymBelegpruefungD12(this);
-			case D13 -> new BKGymBelegpruefungD13(this);
-			case D14 -> new BKGymBelegpruefungD14(this);
-			case D15 -> new BKGymBelegpruefungD15(this);
-			case D15a -> new BKGymBelegpruefungD15a(this);
-			case D16 -> new BKGymBelegpruefungD16(this);
-			case D17 -> new BKGymBelegpruefungD17(this);
-			case D17a -> new BKGymBelegpruefungD17a(this);
-			case D18 -> new BKGymBelegpruefungD18(this);
-			case D19 -> new BKGymBelegpruefungD19(this);
-			case D20 -> new BKGymBelegpruefungD20(this);
-			case D21 -> new BKGymBelegpruefungD21(this);
-			case D22 -> new BKGymBelegpruefungD22(this);
-			case D23 -> new BKGymBelegpruefungD23(this);
-			case D25 -> new BKGymBelegpruefungD25(this);
-			case D27 -> new BKGymBelegpruefungD27(this);
-			case D28 -> new BKGymBelegpruefungD28(this);
-			default ->
-				throw new DeveloperNotificationException("Die Belegprüfung für die Schulgliederung " + gliederung.name() + " wird noch nicht unterstützt.");
-		};
+		return new BKGymBelegpruefung(this);
 	}
 
 

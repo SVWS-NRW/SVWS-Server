@@ -17,7 +17,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Die abstrakte Klasse für die Belegprüfungen bei Bildungsgängen.
  */
-public abstract class BKGymBelegpruefung {
+public class BKGymBelegpruefung {
 	/** Die Abiturdaten-Manager */
 	protected final @NotNull BKGymAbiturdatenManager manager;
 
@@ -43,7 +43,7 @@ public abstract class BKGymBelegpruefung {
 	 *
 	 * @param manager   der Manager für die Abiturdaten
 	 */
-	protected BKGymBelegpruefung(final @NotNull BKGymAbiturdatenManager manager) {
+	public BKGymBelegpruefung(final @NotNull BKGymAbiturdatenManager manager) {
 		this.manager = manager;
 		stundentafeln = manager.getStundentafeln();
 		init();
@@ -131,8 +131,6 @@ public abstract class BKGymBelegpruefung {
 	 * Die Methode wird zur Durchführung der Belegprüfung aufgerufen.
 	 *
 	 * Sie führt zuerst die allgemeinen Prüfungen aus, die für alle Anlagen des beruflichen Gymnasiums identisch sind.
-	 * Im Anschluss werden dann ggf. die spezifischen Prüfungen für die jeweilige Anlage durchgeführt.
-	 * Hierzu ist bei Bedarf die Methode spezifischePruefungen in der Kindklasse zu implementieren.
 	 */
 	public void pruefe() {
 		for (final @NotNull BeruflichesGymnasiumStundentafel tafel : stundentafeln) {
@@ -142,7 +140,6 @@ public abstract class BKGymBelegpruefung {
 					manager.getMapBelegungenForTafelByFach(tafel);
 			bewegeBelegungZuWahlfach(tafel, mapFaecherByIndex, mapBelegungByFach);
 			allgemeinePruefungen(tafel, mapFaecherByIndex, mapBelegungByFach);
-			spezifischePruefungen(tafel, mapFaecherByIndex, mapBelegungByFach);
 		}
 	}
 
@@ -615,20 +612,4 @@ public abstract class BKGymBelegpruefung {
 			addFehler(tafel, new BKGymBelegungsfehler(BKGymBelegungsfehlerTyp.AB_5, manager.getFachkuerzelFromFachbelegung(ab3),
 					manager.getFachkuerzelFromFachbelegung(ab4), manager.getGliederung().name(), manager.getFachklassenschluessel()));
 	}
-
-
-	/**
-	 * Führt die für eine Anlage spezifische Belegprüfung durch.
-	 * Diese Methode ist von jeder Kindklasse, welche spezifische Prüfungen hat, zu überschreiben.
-	 *
-	 * @param tafel                die zu überprüfende Stundentafel
-	 * @param mapFaecherByIndex    die Map mit den Fächern der Stundentafel
-	 * @param mapBelegungByIndex   die Map mit den Fächern der Belegungen
-	 */
-	protected void spezifischePruefungen(@NotNull final BeruflichesGymnasiumStundentafel tafel,
-			@NotNull final Map<Integer, List<BeruflichesGymnasiumStundentafelFach>> mapFaecherByIndex,
-			@NotNull final Map<BeruflichesGymnasiumStundentafelFach, List<BKGymAbiturFachbelegung>> mapBelegungByIndex) {
-		// nichts zu tun
-	}
-
 }
