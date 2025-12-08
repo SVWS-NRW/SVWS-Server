@@ -45,16 +45,10 @@ task transpile(type: JavaExec) {
 		"--files", "$buildDir/transpiler-files.txt",
 		"--resources"
 	jvmArgs "--add-opens", "jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED"
-}
-
-task transpileDeleteExistingTSFiles(type: Delete) {
-	delete fileTree(dir: "$buildDir/ts"), fileTree(dir: "$buildDir/tmp/transpiler/ts", includes: ["**/*.class"])
-}
-
-// Falls transpile ausgeführt wird, dann soll zuerst transpileDeleteExistingTSFiles ausgeführt werden
-gradle.taskGraph.whenReady { taskGraph ->
-	if (taskGraph.hasTask(tasks.findByPath('transpile'))) {
-		tasks.findByPath('transpile').dependsOn tasks.findByPath('transpileDeleteExistingTSFiles')
+	doFirst {
+		def outputDir = file("$buildDir/ts")
+		if (outputDir.exists())
+			outputDir.deleteDir()
 	}
 }
 
