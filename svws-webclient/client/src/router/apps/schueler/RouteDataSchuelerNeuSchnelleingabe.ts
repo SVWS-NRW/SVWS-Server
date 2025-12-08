@@ -1,5 +1,7 @@
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-import type { Fahrschuelerart, Haltestelle, Kindergarten, ReligionEintrag, SchuelerListeEintrag, SchuelerStammdaten, SchulEintrag, SchulformKatalogEintrag, TelefonArt, EinschulungsartKatalogEintrag, Erzieherart, OrtKatalogEintrag, OrtsteilKatalogEintrag, SchuelerLernabschnittListeEintrag, VermerkartEintrag, SchuelerSchulbesuchsdaten, Merkmal, KatalogEntlassgrund, List } from "@core";
+import type { Fahrschuelerart, Haltestelle, Kindergarten, ReligionEintrag, SchuelerListeEintrag, SchuelerStammdaten, SchulEintrag,
+	SchulformKatalogEintrag, TelefonArt, EinschulungsartKatalogEintrag, Erzieherart, OrtKatalogEintrag, OrtsteilKatalogEintrag,
+	SchuelerLernabschnittListeEintrag, VermerkartEintrag, Merkmal, KatalogEntlassgrund, List } from "@core";
 import { ArrayList, DeveloperNotificationException, Schulform, SchuelerStammdatenNeu } from "@core";
 import { api } from "~/router/Api";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
@@ -46,57 +48,60 @@ export class RouteDataSchuelerNeuSchnelleingabe extends RouteData<RouteStateData
 	}
 
 	public async ladeKataloge(): Promise<void> {
-		const fahrschuelerarten = await api.server.getFahrschuelerarten(api.schema);
+		const [fahrschuelerarten, haltestellen, religionen, kindergaerten, telefonArten, erzieherarten, vermerkArten, einschulungsarten, orte, ortsteile, schulen] =
+			await Promise.all([
+				api.server.getFahrschuelerarten(api.schema),
+				api.server.getHaltestellen(api.schema),
+				api.server.getReligionen(api.schema),
+				api.server.getKindergaerten(api.schema),
+				api.server.getTelefonarten(api.schema),
+				api.server.getErzieherArten(api.schema),
+				api.server.getVermerkarten(api.schema),
+				api.server.getEinschulungsarten(api.schema),
+				api.server.getOrte(api.schema),
+				api.server.getOrtsteile(api.schema),
+				api.server.getSchulen(api.schema),
+			]);
 		const mapFahrschuelerarten = new Map();
 		for (const fa of fahrschuelerarten)
 			mapFahrschuelerarten.set(fa.id, fa);
 		// Lade den Katalog der Haltestellen
-		const haltestellen = await api.server.getHaltestellen(api.schema);
 		const mapHaltestellen = new Map();
 		for (const h of haltestellen)
 			mapHaltestellen.set(h.id, h);
 		// Lade den Katalog der Religionen
-		const religionen = await api.server.getReligionen(api.schema);
 		const mapReligionen = new Map();
 		for (const r of religionen)
 			mapReligionen.set(r.id, r);
 		// Lade den Katalog der Kindergärten
-		const kindergaerten = await api.server.getKindergaerten(api.schema);
 		const mapKindergaerten = new Map();
 		for (const k of kindergaerten)
 			mapKindergaerten.set(k.id, k);
 		// Lade den Katalog der TelefonArten
-		const telefonArten = await api.server.getTelefonarten(api.schema);
 		const mapTelefonArten = new Map();
 		for (const ta of telefonArten)
 			mapTelefonArten.set(ta.id, ta);
 		// Lade den Katalog der Erzieherarten
-		const erzieherarten = await api.server.getErzieherArten(api.schema);
 		const mapErzieherarten = new Map();
 		for (const ea of erzieherarten)
 			mapErzieherarten.set(ea.id, ea);
 		// Lade den Katalog der Vermerkarten
-		const vermerkArten = await api.server.getVermerkarten(api.schema);
 		const mapVermerkArten = new Map();
 		for (const va of vermerkArten)
 			mapVermerkArten.set(va.id, va);
 		// Lade den Katalog der Einschulungsarten
-		const einschulungsarten = await api.server.getEinschulungsarten(api.schema);
 		const mapEinschulungsarten = new Map();
 		for (const e of einschulungsarten)
 			mapEinschulungsarten.set(e.id, e);
 		// Lade den Katalog der Orte
-		const orte = await api.server.getOrte(api.schema);
 		const mapOrte = new Map();
 		for (const o of orte)
 			mapOrte.set(o.id, o);
 		// Lade den Katalog der Ortsteile
-		const ortsteile = await api.server.getOrtsteile(api.schema);
 		const mapOrtsteile = new Map();
 		for (const o of ortsteile)
 			mapOrtsteile.set(o.id, o);
 		// Ermittle den Katalog der Schulen, welche ein Kürzel haben und als Stammschulen für Schüler infrage kommen
-		const schulen = await api.server.getSchulen(api.schema);
 		const mapSchulen = new Map<string, SchulEintrag>();
 		for (const schule of schulen) {
 			if (schule.schulnummerStatistik === null)
@@ -111,12 +116,15 @@ export class RouteDataSchuelerNeuSchnelleingabe extends RouteData<RouteStateData
 	}
 
 	private async createSchuelerSchulbesuchManager(auswahl: SchuelerListeEintrag): Promise<SchuelerSchulbesuchManager> {
-		const schuelerSchulbesuchsdaten: SchuelerSchulbesuchsdaten = await api.server.getSchuelerSchulbesuch(api.schema, auswahl.id);
-		const kindergaerten = await api.server.getKindergaerten(api.schema);
+		const [schuelerSchulbesuchsdaten, kindergaerten, jahrgaenge] =
+			await Promise.all([
+				api.server.getSchuelerSchulbesuch(api.schema, auswahl.id),
+				api.server.getKindergaerten(api.schema),
+				api.server.getJahrgangsdaten(api.schema),
+			]);
 		const schulen = new ArrayList<SchulEintrag>();
 		const merkmale = new ArrayList<Merkmal>();
 		const entlassgruende = new ArrayList<KatalogEntlassgrund>();
-		const jahrgaenge = await api.server.getJahrgangsdaten(api.schema);
 		return new SchuelerSchulbesuchManager(schuelerSchulbesuchsdaten, auswahl, api.schuleStammdaten.abschnitte, schulen, merkmale, entlassgruende,
 			kindergaerten, jahrgaenge, routeSchuelerSchulbesuch.data.patch);
 	}
@@ -134,16 +142,18 @@ export class RouteDataSchuelerNeuSchnelleingabe extends RouteData<RouteStateData
 	public async ladeDaten(auswahl: SchuelerListeEintrag | null): Promise<SchuelerStammdaten | null> {
 		if (auswahl === null)
 			return null;
-		const schuelerStammdaten = await api.server.getSchuelerStammdaten(api.schema, auswahl.id);
-		const schuelerSchulbesuchManager = await this.createSchuelerSchulbesuchManager(auswahl);
-
-		let schuelerLernabschnittsManager: SchuelerLernabschnittManager | undefined = undefined;
-		const listAbschnitte = await api.server.getSchuelerLernabschnittsliste(api.schema, auswahl.id);
+		const [schuelerStammdaten, schuelerSchulbesuchManager, listAbschnitte] =
+			await Promise.all([
+				api.server.getSchuelerStammdaten(api.schema, auswahl.id),
+				this.createSchuelerSchulbesuchManager(auswahl),
+				api.server.getSchuelerLernabschnittsliste(api.schema, auswahl.id),
+			]);
 		// wähle bevorzugt einen Eintrag für den aktuellen Schuljahresabschnitt, WechselNr = 0, sonst letzten Eintrag
+		let schuelerLernabschnittsManager: SchuelerLernabschnittManager | undefined = undefined;
 		const found = this.selectBevorzugtenAbschnitt(listAbschnitte);
 		if (found !== null) {
-			const daten = await api.server.getSchuelerLernabschnittsdatenByID(api.schema, found.id);
-			const [listFaecher, listJahrgaenge] = await Promise.all([
+			const [daten, listFaecher, listJahrgaenge] = await Promise.all([
+				api.server.getSchuelerLernabschnittsdatenByID(api.schema, found.id),
 				api.server.getFaecher(api.schema),
 				api.server.getJahrgaenge(api.schema),
 			]);
@@ -165,19 +175,21 @@ export class RouteDataSchuelerNeuSchnelleingabe extends RouteData<RouteStateData
 		if (auswahl === null)
 			return null;
 		const schuelerDaten: SchuelerStammdatenNeu = new SchuelerStammdatenNeu();
-		const schuelerStammdaten = await api.server.getSchuelerStammdaten(api.schema, auswahl.id);
+		const [schuelerStammdaten, listAbschnitte] =
+			await Promise.all([
+				api.server.getSchuelerStammdaten(api.schema, auswahl.id),
+				api.server.getSchuelerLernabschnittsliste(api.schema, auswahl.id),
+			]);
 
 		schuelerDaten.anmeldedatum = schuelerStammdaten.anmeldedatum;
 		schuelerDaten.aufnahmedatum = schuelerStammdaten.aufnahmedatum;
 		schuelerDaten.beginnBildungsgang = schuelerStammdaten.beginnBildungsgang;
 		schuelerDaten.dauerBildungsgang = schuelerStammdaten.dauerBildungsgang;
 
-		const listAbschnitte = await api.server.getSchuelerLernabschnittsliste(api.schema, auswahl.id);
 		// wähle bevorzugt einen Eintrag für den aktuellen Schuljahresabschnitt, WechselNr = 0, sonst letzten Eintrag
 		const found = this.selectBevorzugtenAbschnitt(listAbschnitte);
 		if (found !== null) {
 			const daten = await api.server.getSchuelerLernabschnittsdatenByID(api.schema, found.id);
-
 			schuelerDaten.schuljahresabschnitt = daten.schuljahresabschnitt;
 			schuelerDaten.jahrgangID = daten.jahrgangID;
 			schuelerDaten.klassenID = daten.klassenID;

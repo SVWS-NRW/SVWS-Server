@@ -65,33 +65,35 @@ export class RouteDataSchuelerIndividualdaten extends RouteData<RouteStateDataSc
 	}
 
 	public async ladeListe() {
+		const [fahrschuelerarten, foerderschwerpunkte, haltestellen, religionen, telefonArten, schulen] = await Promise.all([
+			api.server.getFahrschuelerarten(api.schema),
+			api.server.getKatalogFoerderschwerpunkte(api.schema),
+			api.server.getHaltestellen(api.schema),
+			api.server.getReligionen(api.schema),
+			api.server.getTelefonarten(api.schema),
+			api.server.getSchulen(api.schema),
+		]);
 		// Lade den Katalog der Fahrschülerarten
-		const fahrschuelerarten = await api.server.getFahrschuelerarten(api.schema);
 		const mapFahrschuelerarten = new Map();
 		for (const fa of fahrschuelerarten)
 			mapFahrschuelerarten.set(fa.id, fa);
 		// Lade den Katalog der Förderschwerpunkte
-		const foerderschwerpunkte = await api.server.getKatalogFoerderschwerpunkte(api.schema);
 		const mapFoerderschwerpunkte = new Map();
 		for (const fs of foerderschwerpunkte)
 			mapFoerderschwerpunkte.set(fs.id, fs);
 		// Lade den Katalog der Haltestellen
-		const haltestellen = await api.server.getHaltestellen(api.schema);
 		const mapHaltestellen = new Map();
 		for (const h of haltestellen)
 			mapHaltestellen.set(h.id, h);
 		// Lade den Katalog der Religionen
-		const religionen = await api.server.getReligionen(api.schema);
 		const mapReligionen = new Map();
 		for (const r of religionen)
 			mapReligionen.set(r.id, r);
 		// Lade den Katalog der TelefonArten
-		const telefonArten = await api.server.getTelefonarten(api.schema);
 		const mapTelefonArten = new Map();
 		for (const ta of telefonArten)
 			mapTelefonArten.set(ta.id, ta);
 		// Ermittle den Katalog der Schulen, welche ein Kürzel haben und als Stammschulen für Schüler in Frage kommen
-		const schulen = await api.server.getSchulen(api.schema);
 		const mapSchulen = new Map<string, SchulEintrag>();
 		for (const schule of schulen) {
 			if (schule.schulnummerStatistik === null)

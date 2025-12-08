@@ -1,5 +1,5 @@
 import type { ApiFile, List, ReportingParameter, SchuelerListeEintrag, SchuelerStammdaten, SimpleOperationResponse, StundenplanListeEintrag, SchuelerTelefon, SchuelerSchulbesuchsdaten, ErzieherStammdaten, SchuelerStammdatenNeu, SchuelerLernabschnittsdaten, KlassenDaten, SchuelerVermerke } from "@core";
-import { BenutzerKompetenz, ArrayList, SchuelerListe, SchuelerStatus, ServerMode, UserNotificationException } from "@core";
+import { BenutzerKompetenz, ArrayList, SchuelerStatus, ServerMode, UserNotificationException } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
@@ -52,8 +52,10 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 
 	protected async createManager(idSchuljahresabschnitt: number): Promise<Partial<RouteStateSchueler>> {
 		// Lade die Daten von der API
-		const schuelerListe: SchuelerListe = await api.server.getSchuelerAuswahllisteFuerAbschnitt(api.schema, idSchuljahresabschnitt);
-		const lehrer = await api.server.getLehrer(api.schema);
+		const [schuelerListe, lehrer] = await Promise.all([
+			api.server.getSchuelerAuswahllisteFuerAbschnitt(api.schema, idSchuljahresabschnitt),
+			api.server.getLehrer(api.schema),
+		]);
 
 		// Erstelle den Schüler-Liste-Manager
 		const manager = new SchuelerListeManager(api.schulform, schuelerListe, lehrer, api.schuleStammdaten.abschnitte, api.schuleStammdaten.idSchuljahresabschnitt);
@@ -79,11 +81,12 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 	public async ladeDaten(auswahl: SchuelerListeEintrag | null, state: Partial<RouteStateSchueler>): Promise<SchuelerStammdaten | null> {
 		if (auswahl === null)
 			return null;
-		const res = await api.server.getSchuelerStammdaten(api.schema, auswahl.id);
-		const listSchuelerTelefoneintraege = await api.server.getSchuelerTelefone(api.schema, auswahl.id);
-		const listSchuelerErziehereintraege = await api.server.getSchuelerErzieher(api.schema, auswahl.id);
-		const listSchuelerVermerkeintraege = await api.server.getVermerkdaten(api.schema, auswahl.id);
-
+		const [res, listSchuelerTelefoneintraege, listSchuelerErziehereintraege, listSchuelerVermerkeintraege] = await Promise.all([
+			api.server.getSchuelerStammdaten(api.schema, auswahl.id),
+			api.server.getSchuelerTelefone(api.schema, auswahl.id),
+			api.server.getSchuelerErzieher(api.schema, auswahl.id),
+			api.server.getVermerkdaten(api.schema, auswahl.id),
+		]);
 		this.manager.schuelerstatus.auswahlAdd(SchuelerStatus.data().getWertByID(res.status));
 		this.setPatchedState({ listSchuelerErziehereintraege, listSchuelerTelefoneintraege, listSchuelerVermerkeintraege });
 		return res;

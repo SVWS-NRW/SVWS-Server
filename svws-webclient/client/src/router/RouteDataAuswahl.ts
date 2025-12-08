@@ -36,7 +36,7 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	/** Die Route für die Schnelleingabe */
 	private readonly _routeSchnelleingabe: RouteNode<any, any> | undefined;
 
-	private _pendingStateManagerRegistry: PendingStateManagerRegistry;
+	private readonly _pendingStateManagerRegistry: PendingStateManagerRegistry;
 
 	/**
 	 * Erzeugt ein neues Route-Daten-Objekt mit dem übergebenen Default-State.
