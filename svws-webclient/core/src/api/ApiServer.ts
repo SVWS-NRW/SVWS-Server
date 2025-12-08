@@ -20,6 +20,7 @@ import { BerufskollegAnlageKatalogEintrag } from '../asd/data/schule/Berufskolle
 import { BerufskollegBerufsebeneKatalogEintrag } from '../asd/data/schule/BerufskollegBerufsebeneKatalogEintrag';
 import { BerufskollegFachklassenKatalog } from '../core/data/schule/BerufskollegFachklassenKatalog';
 import { Beschaeftigungsart } from '../core/data/betrieb/Beschaeftigungsart';
+import { Betrieb } from '../core/data/schule/Betrieb';
 import { BetriebAnsprechpartner } from '../core/data/betrieb/BetriebAnsprechpartner';
 import { BetriebListeEintrag } from '../core/data/betrieb/BetriebListeEintrag';
 import { BetriebStammdaten } from '../core/data/betrieb/BetriebStammdaten';
@@ -14846,6 +14847,226 @@ export class ApiServer extends BaseApi {
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Aufsichtsbereich>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Aufsichtsbereich.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getBetriebeNeu für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/betriebe
+	 *
+	 * Gibt die Betriebe zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Eine Liste der Betriebe.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Betrieb>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Eine Liste der Betriebe.
+	 */
+	public async getBetriebeNeu(schema : string) : Promise<List<Betrieb>> {
+		const path = "/db/{schema}/schule/betriebe"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<Betrieb>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Betrieb.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchBetriebeNeu für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/betriebe/{id : \d+}
+	 *
+	 * Patched die Betriebe mit der angegebenen ID, insofern die notwendigen Berechtigungen vorliegen.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<Betrieb>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchBetriebeNeu(data : Partial<Betrieb>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/schule/betriebe/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = Betrieb.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addBetriebNeu für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/betriebe/create
+	 *
+	 * Erstellt einen neuen Betrieb, insofern die notwendigen Berechtigungen vorliegen
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Der Betrieb wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Betrieb
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Betriebe anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<Betrieb>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Betrieb wurde erfolgreich hinzugefügt.
+	 */
+	public async addBetriebNeu(data : Partial<Betrieb>, schema : string) : Promise<Betrieb> {
+		const path = "/db/{schema}/schule/betriebe/create"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = Betrieb.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return Betrieb.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteBetriebeNeu für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/betriebe/delete/multiple
+	 *
+	 * Entfernt mehrere Betriebe, insofern die notwendigen Berechtigungen vorhanden sind.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Lösch-Operationen wurden ausgeführt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Betriebe zu entfernen.
+	 *   Code 404: Betriebe nicht vorhanden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Lösch-Operationen wurden ausgeführt.
+	 */
+	public async deleteBetriebeNeu(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+		const path = "/db/{schema}/schule/betriebe/delete/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getBetriebeAnsprechpartnerNeu für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/betriebe-ansprechpartner
+	 *
+	 * Gibt die Ansprechpartner zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Eine Liste der Ansprechpartner.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Betrieb>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Eine Liste der Ansprechpartner.
+	 */
+	public async getBetriebeAnsprechpartnerNeu(schema : string) : Promise<List<Betrieb>> {
+		const path = "/db/{schema}/schule/betriebe-ansprechpartner"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<Betrieb>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Betrieb.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchBetriebeAnsprechpartnerNeu für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/betriebe-ansprechpartner/{id : \d+}
+	 *
+	 * Patched die Ansprechpartner mit der angegebenen ID, insofern die notwendigen Berechtigungen vorliegen.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<Betrieb>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchBetriebeAnsprechpartnerNeu(data : Partial<Betrieb>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/schule/betriebe-ansprechpartner/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = Betrieb.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addBetriebeAnsprechpartnerNeu für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/betriebe-ansprechpartner/create
+	 *
+	 * Erstellt einen neuen Betrieb, insofern die notwendigen Berechtigungen vorliegen
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Der Betrieb wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Betrieb
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Ansprechpartner anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<Betrieb>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Betrieb wurde erfolgreich hinzugefügt.
+	 */
+	public async addBetriebeAnsprechpartnerNeu(data : Partial<Betrieb>, schema : string) : Promise<Betrieb> {
+		const path = "/db/{schema}/schule/betriebe-ansprechpartner/create"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = Betrieb.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return Betrieb.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteBetriebeAnsprechpartnerNeu für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/betriebe-ansprechpartner/delete/multiple
+	 *
+	 * Entfernt mehrere Ansprechpartner, insofern die notwendigen Berechtigungen vorhanden sind.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Lösch-Operationen wurden ausgeführt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Ansprechpartner zu entfernen.
+	 *   Code 404: Ansprechpartner nicht vorhanden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Lösch-Operationen wurden ausgeführt.
+	 */
+	public async deleteBetriebeAnsprechpartnerNeu(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+		const path = "/db/{schema}/schule/betriebe-ansprechpartner/delete/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
 		return ret;
 	}
 

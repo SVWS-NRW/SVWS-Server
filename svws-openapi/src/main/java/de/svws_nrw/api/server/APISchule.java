@@ -1,11 +1,14 @@
 package de.svws_nrw.api.server;
 
 import de.svws_nrw.core.data.erzieher.Erzieherart;
+import de.svws_nrw.core.data.schule.Betrieb;
 import de.svws_nrw.core.data.schule.Floskel;
 import de.svws_nrw.core.data.schule.Floskelgruppe;
 import de.svws_nrw.core.data.schule.Lernplattform;
 import de.svws_nrw.core.data.schule.TelefonArt;
 import de.svws_nrw.data.erzieher.DataErzieherarten;
+import de.svws_nrw.data.schule.DataBetriebe;
+import de.svws_nrw.data.schule.DataBetriebeAnsprechpartner;
 import de.svws_nrw.data.schule.DataFloskelJahrgangZuordnung;
 import de.svws_nrw.data.schule.DataFloskelgruppen;
 import de.svws_nrw.data.schule.DataFloskeln;
@@ -3221,6 +3224,213 @@ public class APISchule {
 			array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
 				conn -> new DataFloskeln(conn, new DataFloskelJahrgangZuordnung(conn)).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Liste der Betriebe.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste der Betriebe
+	 */
+	@GET
+	@Path("/betriebe")
+	@Operation(summary = "Gibt eine Liste der Betriebe im Katalog zurück.",
+			description = "Gibt die Betriebe zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste der Betriebe.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Betrieb.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
+	public Response getBetriebeNeu(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataBetriebe(conn).getAllAsResponse(),
+				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Patchen einer Betriebe.
+	 *
+	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param id		die ID zur Identifikation der Betriebe
+	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/betriebe/{id : \\d+}")
+	@Operation(summary = "Patched die Betriebe mit der angegebenen ID",
+			description = "Patched die Betriebe mit der angegebenen ID, insofern die notwendigen Berechtigungen vorliegen.")
+	@ApiResponse(responseCode = "204", description = "Der Patch wurde erfolgreich integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Eintrag mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
+			+ " (z.B. eine negative ID)")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z. B. beim Datenbankzugriff)")
+	public Response patchBetriebeNeu(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@RequestBody(description = "Der Patch eines Betriebs", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Betrieb.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> new DataBetriebe(conn).patchAsResponse(id, is), request, ServerMode.STABLE,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Hinzufügen eines Betriebs.
+	 *
+	 * @param schema       das Datenbankschema
+	 * @param is           der Input-Stream mit den Daten des Betriebs
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem erstellten Betrieb
+	 */
+	@POST
+	@Path("/betriebe/create")
+	@Operation(summary = "Erstellt einen neuen Betrieb und gibt das erstellte Objekt zurück.",
+			description = "Erstellt einen neuen Betrieb, insofern die notwendigen Berechtigungen vorliegen")
+	@ApiResponse(responseCode = "201", description = "Der Betrieb wurde erfolgreich hinzugefügt.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Betrieb.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Betriebe anzulegen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response addBetriebNeu(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die Daten des zu erstellenden Betriebs.", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Betrieb.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> new DataBetriebe(conn).addAsResponse(is), request, ServerMode.STABLE,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Entfernen mehrerer Betriebe.
+	 *
+	 * @param schema    das Datenbankschema
+	 * @param is        der InputStream, mit der Liste der zu löschenden IDs
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
+	 */
+	@DELETE
+	@Path("/betriebe/delete/multiple")
+	@Operation(summary = "Entfernt mehrere Betriebe.", description = "Entfernt mehrere Betriebe, insofern die notwendigen Berechtigungen vorhanden sind.")
+	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Betriebe zu entfernen.")
+	@ApiResponse(responseCode = "404", description = "Betriebe nicht vorhanden")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteBetriebeNeu(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der zu löschenden Betriebe",
+			required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+			array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
+				conn -> new DataBetriebe(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Liste der Ansprechpartner.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste der Ansprechpartner
+	 */
+	@GET
+	@Path("/betriebe-ansprechpartner")
+	@Operation(summary = "Gibt eine Liste der Ansprechpartner im Katalog zurück.",
+			description = "Gibt die Ansprechpartner zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste der Ansprechpartner.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Betrieb.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
+	public Response getBetriebeAnsprechpartnerNeu(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataBetriebeAnsprechpartner(conn).getAllAsResponse(),
+				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Patchen einer Ansprechpartner.
+	 *
+	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param id		die ID zur Identifikation der Ansprechpartner
+	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/betriebe-ansprechpartner/{id : \\d+}")
+	@Operation(summary = "Patched die Ansprechpartner mit der angegebenen ID",
+			description = "Patched die Ansprechpartner mit der angegebenen ID, insofern die notwendigen Berechtigungen vorliegen.")
+	@ApiResponse(responseCode = "204", description = "Der Patch wurde erfolgreich integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Eintrag mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
+			+ " (z.B. eine negative ID)")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z. B. beim Datenbankzugriff)")
+	public Response patchBetriebeAnsprechpartnerNeu(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@RequestBody(description = "Der Patch eines Betriebs", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Betrieb.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> new DataBetriebeAnsprechpartner(conn).patchAsResponse(id, is), request, ServerMode.STABLE,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Hinzufügen eines Betriebs.
+	 *
+	 * @param schema       das Datenbankschema
+	 * @param is           der Input-Stream mit den Daten des Betriebs
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem erstellten Betrieb
+	 */
+	@POST
+	@Path("/betriebe-ansprechpartner/create")
+	@Operation(summary = "Erstellt einen neuen Betrieb und gibt das erstellte Objekt zurück.",
+			description = "Erstellt einen neuen Betrieb, insofern die notwendigen Berechtigungen vorliegen")
+	@ApiResponse(responseCode = "201", description = "Der Betrieb wurde erfolgreich hinzugefügt.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Betrieb.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Ansprechpartner anzulegen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response addBetriebeAnsprechpartnerNeu(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die Daten des zu erstellenden Betriebs.", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Betrieb.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> new DataBetriebeAnsprechpartner(conn).addAsResponse(is), request, ServerMode.STABLE,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Entfernen mehrerer Ansprechpartner.
+	 *
+	 * @param schema    das Datenbankschema
+	 * @param is        der InputStream, mit der Liste der zu löschenden IDs
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
+	 */
+	@DELETE
+	@Path("/betriebe-ansprechpartner/delete/multiple")
+	@Operation(summary = "Entfernt mehrere Ansprechpartner.", description = "Entfernt mehrere Ansprechpartner, insofern die notwendigen Berechtigungen vorhanden sind.")
+	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Ansprechpartner zu entfernen.")
+	@ApiResponse(responseCode = "404", description = "Ansprechpartner nicht vorhanden")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteBetriebeAnsprechpartnerNeu(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der zu löschenden "
+			+ "Ansprechpartner",
+			required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+			array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
+				conn -> new DataBetriebeAnsprechpartner(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}

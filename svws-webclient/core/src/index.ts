@@ -679,6 +679,8 @@ export { BerufskollegFachklassenKatalog } from './core/data/schule/BerufskollegF
 export { BerufskollegFachklassenKatalogDaten } from './core/data/schule/BerufskollegFachklassenKatalogDaten';
 export { BerufskollegFachklassenKatalogEintrag } from './core/data/schule/BerufskollegFachklassenKatalogEintrag';
 export { BerufskollegFachklassenKatalogIndex } from './core/data/schule/BerufskollegFachklassenKatalogIndex';
+export { Betrieb } from './core/data/schule/Betrieb';
+export { BetriebeAnsprechpartner } from './core/data/schule/BetriebeAnsprechpartner';
 export { Einwilligungsart } from './core/data/schule/Einwilligungsart';
 export { Fahrschuelerart } from './core/data/schule/Fahrschuelerart';
 export { Floskel } from './core/data/schule/Floskel';
