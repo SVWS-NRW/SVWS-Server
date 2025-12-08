@@ -36,7 +36,7 @@
 					</div>
 				</div>
 				<!-- Die Pausenzeiten -->
-				<template v-for="pause in pausenzeiten" :key="pause">
+				<template v-for="pause in pausenzeiten" :key="pause.id">
 					<div class="svws-ui-stundenplan--pause text-sm font-bold text-center justify-center" :style="posPause(pause)">
 						<div> {{ pause.bezeichnung }} </div>
 						<div> {{ ((pause.ende || 0) - (pause.beginn || 0)) }} Minuten </div>
@@ -67,7 +67,7 @@
 					<div v-else class="svws-ui-stundenplan--stunde flex-row relative bg-ui-warning-secondary text-center justify-center" :style="posZeitraster(wochentag.a, stunde)">Stundenplan fehlt</div>
 				</template>
 				<!-- Darstellung der Pausenzeiten und der zugehörigen Aufsichten -->
-				<template v-for="pause in getPausenzeitenWochentag(wochentag.a)" :key="pause">
+				<template v-for="pause in getPausenzeitenWochentag(wochentag.a)" :key="pause.id">
 					<div class="svws-ui-stundenplan--pause" :style="posPause(pause)">
 						<template v-for="pausenaufsicht in getPausenaufsichtenPausenzeit(pause)" :key="pausenaufsicht.id">
 							<div class="svws-ui-stundenplan--pausen-aufsicht" :class="{'svws-lehrkraft': mode === 'lehrer'}">

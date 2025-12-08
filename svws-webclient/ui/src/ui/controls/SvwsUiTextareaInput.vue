@@ -26,7 +26,7 @@
 				</svws-ui-tooltip>
 			</span>
 			<span>{{ placeholder }}</span>
-			<span v-if="(maxLen > 0) && (data !== null)" class="inline-flex gap-1" :class="maxLenValid ? 'opacity-50' : 'text-ui-danger'">
+			<span v-if="((maxLen !== undefined) && (maxLen > 0)) && (data !== null)" class="inline-flex gap-1" :class="maxLenValid ? 'opacity-50' : 'text-ui-danger'">
 				{{ `(${(data.toLocaleString().length > 0) ? data.toLocaleString().length + '/' : 'maximal '}${maxLen} Zeichen)` }}
 			</span>
 			<span v-if="required" class="icon-xs i-ri-asterisk textarea-input--placeholder--required textarea-input--state-icon" aria-hidden />

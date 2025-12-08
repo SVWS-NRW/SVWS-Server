@@ -22,7 +22,7 @@
 					</tr>
 				</thead>
 				<tbody class="svws-ui-tbody h-full overflow-y-auto" aria-label="Tabelleninhalt">
-					<template v-for="lehrer of lehrerListe" :key="lehrer">
+					<template v-for="lehrer of lehrerListe" :key="lehrer.id">
 						<tr class="svws-ui-tr" role="row" style="grid-template-columns: 1fr 5fr 5fr 3fr 1rem; min-height: auto;">
 							<td class="svws-ui-td">{{ lehrer.kuerzel }}</td>
 							<td class="svws-ui-td">{{ lehrer.nachname }}, {{ lehrer.vorname }}</td>

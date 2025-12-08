@@ -40,13 +40,13 @@
 					</span>
 					<span v-if="!isValidatorValid" class="cursor-cursor-pointer flex justify-center items-center">
 						<svws-ui-tooltip position="right">
-							<span v-if="!validator().getFehler().isEmpty()" class="pointer-events-auto flex justify-center items-center">
+							<span v-if="!validator?.().getFehler().isEmpty()" class="pointer-events-auto flex justify-center items-center">
 								<span :class="[validatorErrorIcon, 'icon']" />
 							</span>
 							<template #content>
 								<template v-if="showValidatorErrorMessage">
 									<div class="text-headline-sm text-center pt-1"> Validatorfehler </div>
-									<div v-for="fehler in validator().getFehler()" :key="fehler.getFehlermeldung() ?? '--'" class="pt-2 pb-2">
+									<div v-for="fehler in validator?.().getFehler()" :key="fehler.getFehlermeldung() ?? '--'" class="pt-2 pb-2">
 										<div :class="[validatorErrorBgClasses(fehler.getFehlerart()), 'rounded-sm pl-2']">
 											{{ fehler.getFehlerart() }}
 										</div>

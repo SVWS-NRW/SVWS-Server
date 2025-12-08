@@ -21,7 +21,7 @@
 						<ul class="min-w-[10rem] flex flex-col gap-0.5 pt-1">
 							<li v-for="(column, index) in columns.filter(col => (typeof col !== 'string') && !col.toggleInvisible)" :key="index">
 								<template v-if="typeof column !== 'string'">
-									<svws-ui-checkbox :model-value="!hiddenColumns.has(column.key)" :disabled="!column.toggle" @update:model-value="ok => updateHiddenColumns(column.key, ok)">
+									<svws-ui-checkbox :model-value="!hiddenColumns.has(column.key)" :disabled="!column.toggle" @update:model-value="(ok: boolean) => updateHiddenColumns(column.key, ok)">
 										{{ column.label }}
 									</svws-ui-checkbox>
 								</template>

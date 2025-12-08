@@ -24,7 +24,7 @@
 	</table>
 </template>
 
-<script setup lang="ts" generic="T,U">
+<script setup lang="ts" generic="T,U extends PropertyKey">
 
 	import { computed } from 'vue';
 	import type { Collection } from '../../../../../core/src/java/util/Collection';

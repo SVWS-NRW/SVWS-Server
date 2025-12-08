@@ -39,7 +39,7 @@
 				<!-- Die Pausenzeiten -->
 				<template v-if="!hideZeitachse && !hideZeitachsePausenzeiten && (modePausenaufsichten !== 'aus')">
 					<!--TODO: Pausenzeiten, wenn Zeitachse deaktiviert ist-->
-					<template v-for="pause in getPausenzeiten()" :key="pause">
+					<template v-for="pause in getPausenzeiten()" :key="pause.id">
 						<div class="svws-ui-stundenplan--pause text-sm text-center justify-center" :style="posPause(pause.id)">
 							<div> {{ pause.bezeichnung }} </div>
 							<div> {{ (pause.ende! - pause.beginn!) }} Minuten </div>
