@@ -20,7 +20,6 @@ import { routeError } from "../error/RouteError";
 import { routeSchule } from "~/router/apps/schule/RouteSchule";
 import { routeJahrgaenge } from "~/router/apps/schule/schulbezogen/jahrgaenge/RouteJahrgaenge";
 import { routeFaecher } from "~/router/apps/schule/schulbezogen/faecher/RouteFaecher";
-import { routeSchuleBetriebe } from "~/router/apps/schule/schulbezogen/betriebe/RouteSchuleBetriebe";
 import { routeEinwilligungsarten } from "~/router/apps/schule/schulbezogen/einwilligungsarten/RouteEinwilligungsarten";
 import { routeKonfessionen } from "~/router/apps/schule/allgemein/konfessionen/RouteKonfessionen";
 import { routeKatalogSchulen } from "~/router/apps/schule/allgemein/schulen/RouteKatalogSchulen";
@@ -141,7 +140,6 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			// Schulbezogen
 			routeSchuleStammdaten,
 			routeAbteilungen,
-			routeSchuleBetriebe,
 			routeEinwilligungsarten,
 			routeEntlassgruende,
 			routeFaecher,
