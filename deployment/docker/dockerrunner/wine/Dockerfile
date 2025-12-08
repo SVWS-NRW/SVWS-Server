@@ -1,4 +1,4 @@
-FROM 10.1.1.3/svwsnrw/docker-runner:21
+FROM harbor.svws-nrw.de/svwsnrw/docker-runner:21
 
 ENV DEBIAN_FRONTEND=noninteractive
 
