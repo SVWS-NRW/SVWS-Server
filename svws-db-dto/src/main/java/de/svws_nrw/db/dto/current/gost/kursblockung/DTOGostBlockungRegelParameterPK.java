@@ -15,7 +15,7 @@ public final class DTOGostBlockungRegelParameterPK implements Serializable {
 	/** ID des Regel-Parameters */
 	public long Regel_ID;
 
-	/** Die Nummer des Parameters der Regel, beginnend bei 1 */
+	/** Die Nummer des Parameters der Regel, beginnend bei 0 */
 	public int Nummer;
 
 	/**

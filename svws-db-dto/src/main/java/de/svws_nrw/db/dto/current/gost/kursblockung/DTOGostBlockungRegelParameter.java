@@ -56,7 +56,7 @@ public final class DTOGostBlockungRegelParameter {
 	@JsonProperty
 	public long Regel_ID;
 
-	/** Die Nummer des Parameters der Regel, beginnend bei 1 */
+	/** Die Nummer des Parameters der Regel, beginnend bei 0 */
 	@Id
 	@Column(name = "Nummer")
 	@JsonProperty
