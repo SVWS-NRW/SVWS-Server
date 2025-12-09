@@ -70,7 +70,7 @@ public class Tabelle_Katalog_Floskeln extends SchemaTabelle {
 	public Tabelle_Katalog_Floskeln() {
 		super("Katalog_Floskeln", SchemaRevisionen.REV_52);
 		setMigrate(false);
-		setImportExport(false);
+		setImportExport(true);
 		setPKAutoIncrement();
 		setJavaSubPackage("katalog");
 		setJavaClassName("DTOFloskeln");
