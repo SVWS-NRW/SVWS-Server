@@ -30,11 +30,6 @@
 				</template>
 			</log-box>
 		</div>
-		<div v-else>
-			<svws-ui-todo title="Vermerkarten - Gruppenprozesse">
-				Dieser Bereich ist noch in Entwicklung. Hier werden später Gruppenprozesse zu den Vermerkartenn vorhanden sein.
-			</svws-ui-todo>
-		</div>
 	</div>
 </template>
 

@@ -107,7 +107,7 @@ export class JahrgaengeListeManager extends AuswahlManager<number, JahrgangsDate
 	}
 
 	/**
-	 * Setzt die Filtereinstellung auf nur sichtbare Fächer.
+	 * Setzt die Filtereinstellung auf nur sichtbare Jahrgänge.
 	 *
 	 * @param value   true, wenn der Filter aktiviert werden soll, und ansonsten false
 	 */
@@ -117,9 +117,9 @@ export class JahrgaengeListeManager extends AuswahlManager<number, JahrgangsDate
 	}
 
 	/**
-	 * Gibt die aktuelle Filtereinstellung auf nur sichtbare Fächer zurück.
+	 * Gibt die aktuelle Filtereinstellung auf nur sichtbare Jahrgänge zurück.
 	 *
-	 * @return true, wenn nur sichtbare Fächer angezeigt werden und ansonsten false
+	 * @return true, wenn nur sichtbare Jahrgänge angezeigt werden und ansonsten false
 	 */
 	public filterNurSichtbar(): boolean {
 		return this._filterNurSichtbar;

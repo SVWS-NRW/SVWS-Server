@@ -58,15 +58,18 @@ export class RouteDataBetriebe extends RouteDataAuswahl<BetriebeListeManager, Ro
 	deleteCheck = (): [boolean, List<string>] => {
 		const errorLog = new ArrayList<string>();
 
-		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN))
+		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Betrieben vor.');
+		}
 
-		if (!this.manager.liste.auswahlExists())
+		if (!this.manager.liste.auswahlExists()) {
 			errorLog.add('Es wurde kein Betrieb zum Löschen ausgewählt.');
+		}
 
-		const idsReferencedBetriebe = this.manager.getIdsReferencedBetriebe();
-		if (!idsReferencedBetriebe.isEmpty())
-			errorLog.add(this.getErrorMessageForReferencedBetriebe(idsReferencedBetriebe));
+		const idsOfReferencedBetriebe = this.manager.idsOfReferencedBetriebe;
+		if (!idsOfReferencedBetriebe.isEmpty()) {
+			errorLog.add(this.getErrorMessageForReferencedBetriebe(idsOfReferencedBetriebe));
+		}
 
 		return [errorLog.isEmpty(), errorLog];
 	};
@@ -75,8 +78,9 @@ export class RouteDataBetriebe extends RouteDataAuswahl<BetriebeListeManager, Ro
 		let errorMessage = 'Die folgenden Betriebe sind an anderer Stelle referenziert und können daher nicht gelöscht werden:\n\n';
 		for (const id of idsOfReferencedBetriebe) {
 			const betrieb = this.manager.liste.get(id);
-			if (betrieb)
+			if (betrieb) {
 				errorMessage += `- ${betrieb.name} \n`;
+			}
 		}
 		return errorMessage;
 	}

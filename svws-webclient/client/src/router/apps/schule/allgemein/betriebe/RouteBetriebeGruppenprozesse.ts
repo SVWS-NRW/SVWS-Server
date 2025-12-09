@@ -26,14 +26,13 @@ export class RouteBetriebeGruppenprozesse extends RouteNode<any, RouteBetriebe> 
 		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: "" } };
 	}
 
-	public getProps(to: RouteLocationNormalized): BetriebeGruppenprozesseProps {
+	public getProps(_: RouteLocationNormalized): BetriebeGruppenprozesseProps {
 		return {
 			serverMode: api.mode,
 			manager: () => routeBetriebe.data.manager,
 			delete: routeBetriebe.data.delete,
 			deleteCheck: routeBetriebe.data.deleteCheck,
 			benutzerKompetenzen: api.benutzerKompetenzen,
-			gotoDefaultView: routeBetriebe.data.gotoDefaultView,
 		};
 	}
 

@@ -7,5 +7,4 @@ export interface BetriebeGruppenprozesseProps {
 	manager: () => BetriebeListeManager;
 	deleteCheck: () => [boolean, List<string>];
 	delete: () => Promise<[boolean, List<string | null>]>;
-	gotoDefaultView: (idBetrieb?: number | null) => Promise<void>;
 }
