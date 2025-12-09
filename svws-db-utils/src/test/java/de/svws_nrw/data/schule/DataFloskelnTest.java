@@ -77,6 +77,7 @@ class DataFloskelnTest {
 	void setAttributesDelayedOnCreation() throws NoSuchFieldException, IllegalAccessException {
 		final var field = this.data.getClass().getSuperclass().getDeclaredField("attributesDelayedOnCreation");
 		field.setAccessible(true);
+		@SuppressWarnings("unchecked")
 		final var attributes = (Set<String>) field.get(this.data);
 
 		assertThat(attributes).contains("idsJahrgaenge");
@@ -478,7 +479,7 @@ class DataFloskelnTest {
 		zuordnung.id = 0L;
 		zuordnung.idFloskel = 1L;
 		zuordnung.idJahrgang = 1L;
-		when(this.dataZuordnung.getAll()).thenReturn(List.of(zuordnung));
+		when(this.dataZuordnung.getListByIdFloskel(1L)).thenReturn(List.of(zuordnung));
 
 		this.data.patch(1L, Map.of("idsJahrgaenge", List.of(1, 2, 3)));
 
@@ -501,7 +502,7 @@ class DataFloskelnTest {
 		zuordnung2.id = 1L;
 		zuordnung2.idFloskel = 1L;
 		zuordnung2.idJahrgang = 2L;
-		when(this.dataZuordnung.getAll()).thenReturn(List.of(zuordnung1, zuordnung2));
+		when(this.dataZuordnung.getListByIdFloskel(1L)).thenReturn(List.of(zuordnung1, zuordnung2));
 
 		this.data.patch(1L, Map.of("idsJahrgaenge", List.of(1)));
 
@@ -537,7 +538,7 @@ class DataFloskelnTest {
 		zuordnung2.id = 1L;
 		zuordnung2.idFloskel = 1L;
 		zuordnung2.idJahrgang = 2L;
-		when(this.dataZuordnung.getAll())
+		when(this.dataZuordnung.getListByIdFloskel(1L))
 				.thenReturn(List.of(zuordnung1, zuordnung2));
 
 		this.data.patch(1L, Map.of("idsJahrgaenge", List.of(1, 3)));
@@ -556,7 +557,7 @@ class DataFloskelnTest {
 		final var zuordnung2 = new FloskelJahrgangZuordnung();
 		zuordnung1.idJahrgang = 1L;
 		zuordnung2.idJahrgang = 2L;
-		when(this.dataZuordnung.getAll())
+		when(this.dataZuordnung.getListByIdFloskel(1L))
 				.thenReturn(List.of(zuordnung1, zuordnung2));
 
 		this.data.patch(1L, Map.of("idsJahrgaenge", List.of(1, 2)));
