@@ -14,34 +14,42 @@
 			<h3 class="text-base font-semibold flex justify-start">Diagnose</h3>
 			<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 				<svws-ui-textarea-input placeholder="Inhaltliche prozessbezogene Kompetenzen" class="h-36 max-h-36 overflow-y-auto"
-					v-model="data.diagnoseKompetenzenInhaltlichProzessbezogen"
+					:model-value="data.diagnoseKompetenzenInhaltlichProzessbezogen"
+					@input="value => data.diagnoseKompetenzenInhaltlichProzessbezogen = value"
 					:rows="6" resizeable="none" />
 				<svws-ui-textarea-input placeholder="Methodische Kompetenzen" class="h-36 max-h-36 overflow-y-auto"
-					v-model="data.diagnoseKompetenzenMethodisch"
+					:model-value="data.diagnoseKompetenzenMethodisch"
+					@input="value => data.diagnoseKompetenzenMethodisch = value"
 					:rows="6" resizeable="none" />
 				<svws-ui-textarea-input placeholder="Lern- und Arbeitsverhalten" class="h-36 max-h-36 overflow-y-auto"
-					v-model="data.diagnoseLernUndArbeitsverhalten"
+					:model-value="data.diagnoseLernUndArbeitsverhalten"
+					@input="value => data.diagnoseLernUndArbeitsverhalten = value"
 					:rows="6" resizeable="none" />
 			</div>
 			<h3 class="text-base font-semibold flex justify-start">Maßnahme</h3>
 			<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 				<svws-ui-textarea-input placeholder="Inhaltliche prozessbezogene Kompetenzen" class="h-36 max-h-36 overflow-y-auto"
-					v-model="data.massnahmeKompetenzenInhaltlichProzessbezogen"
+					:model-value="data.massnahmeKompetenzenInhaltlichProzessbezogen"
+					@input="value => data.massnahmeKompetenzenInhaltlichProzessbezogen = value"
 					:rows="6" resizeable="none" />
 				<svws-ui-textarea-input placeholder="Methodische Kompetenzen" class="h-36 max-h-36 overflow-y-auto"
-					v-model="data.massnahmeKompetenzenMethodische"
+					:model-value="data.massnahmeKompetenzenMethodische"
+					@input="value => data.massnahmeKompetenzenMethodische = value"
 					:rows="6" resizeable="none" />
 				<svws-ui-textarea-input placeholder="Lern- und Arbeitsverhalten" class="h-36 max-h-36 overflow-y-auto"
-					v-model="data.massnahmeLernArbeitsverhalten"
+					:model-value="data.massnahmeLernArbeitsverhalten"
+					@input="value => data.massnahmeLernArbeitsverhalten = value"
 					:rows="6" resizeable="none" />
 			</div>
 			<h3 class="text-base font-semibold flex justify-start">Verantwortlichkeit</h3>
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 				<svws-ui-textarea-input placeholder="Schüler" class="h-36 max-h-36 overflow-y-auto"
-					v-model="data.verantwortlichkeitSchueler"
+					:model-value="data.verantwortlichkeitSchueler"
+					@input="value => data.verantwortlichkeitSchueler = value"
 					:rows="6" resizeable="none" />
 				<svws-ui-textarea-input placeholder="Erziehungsberechtigte" class="h-36 max-h-36 overflow-y-auto"
-					v-model="data.verantwortlichkeitEltern"
+					:model-value="data.verantwortlichkeitEltern"
+					@input="value => data.verantwortlichkeitEltern = value"
 					:rows="6" resizeable="none" />
 			</div>
 			<h3 class="text-base font-semibold flex justify-start">Weiteres Vorgehen</h3>
