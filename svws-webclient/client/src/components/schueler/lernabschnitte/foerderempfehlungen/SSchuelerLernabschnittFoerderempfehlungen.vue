@@ -2,7 +2,7 @@
 	<Teleport to=".svws-ui-header--actions" defer>
 		<svws-ui-modal-hilfe> <hilfe-schueler-lernabschnitt-foerderempfehlungen /> </svws-ui-modal-hilfe>
 	</Teleport>
-	<svws-ui-content-card class="w-full">
+	<svws-ui-content-card class="w-full pl-1">
 		<s-card-foerderempfehlungen-tabelle @open-modal="modalIsShown = true"
 			:foerderempfehlungen="sortedFoerderempfehlungen"
 			v-model:selected-foerderempfehlung="selectedFoerderempfehlung"
