@@ -18,15 +18,15 @@ import { routeStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
 import { routeLogin } from "~/router/login/RouteLogin";
 import { routeError } from "../error/RouteError";
 import { routeSchule } from "~/router/apps/schule/RouteSchule";
-import { routeJahrgaenge } from "~/router/apps/schule/schulbezogen/jahrgaenge/RouteJahrgaenge";
-import { routeFaecher } from "~/router/apps/schule/schulbezogen/faecher/RouteFaecher";
-import { routeEinwilligungsarten } from "~/router/apps/schule/schulbezogen/einwilligungsarten/RouteEinwilligungsarten";
-import { routeKonfessionen } from "~/router/apps/schule/allgemein/konfessionen/RouteKonfessionen";
-import { routeKatalogSchulen } from "~/router/apps/schule/allgemein/schulen/RouteKatalogSchulen";
-import { routeKatalogTelefonArten } from "~/router/apps/schule/allgemein/telefonarten/RouteKatalogTelefonArten";
-import { routeKatalogErzieherarten } from "~/router/apps/schule/allgemein/erzieherarten/RouteKatalogErzieherarten";
-import { routeVermerkarten } from "~/router/apps/schule/schulbezogen/vermerkarten/RouteVermerkarten";
-import { routeLernplattformen } from "~/router/apps/schule/schulbezogen/lernplattformen/RouteLernplattformen";
+import { routeJahrgaenge } from "~/router/apps/schule/kataloge/jahrgaenge/RouteJahrgaenge";
+import { routeFaecher } from "~/router/apps/schule/kataloge/faecher/RouteFaecher";
+import { routeEinwilligungsarten } from "~/router/apps/schule/kataloge/einwilligungsarten/RouteEinwilligungsarten";
+import { routeKonfessionen } from "~/router/apps/schule/kataloge/konfessionen/RouteKonfessionen";
+import { routeKatalogSchulen } from "~/router/apps/schule/kataloge/schulen/RouteKatalogSchulen";
+import { routeKatalogTelefonArten } from "~/router/apps/schule/kataloge/telefonarten/RouteKatalogTelefonArten";
+import { routeKatalogErzieherarten } from "~/router/apps/schule/kataloge/erzieherarten/RouteKatalogErzieherarten";
+import { routeVermerkarten } from "~/router/apps/schule/kataloge/vermerkarten/RouteVermerkarten";
+import { routeLernplattformen } from "~/router/apps/schule/kataloge/lernplattformen/RouteLernplattformen";
 import { routeEinstellungen } from "./einstellungen/RouteEinstellungen";
 import { routeEinstellungenBenutzer } from "~/router/apps/einstellungen/benutzer/RouteEinstellungenBenutzer";
 import { routeEinstellungenBenutzergruppe } from "~/router/apps/einstellungen/benutzergruppen/RouteEinstellungenBenutzergruppe";
@@ -36,24 +36,24 @@ import { routeSchuleDatenaustauschENM } from "./schule/datenaustausch/enmNotenma
 import { routeSchuleDatenaustauschLaufbahnplanung } from "./schule/datenaustausch/laufbahnplanung/RouteSchuleDatenaustauschLupo";
 import { routeSchuleDatenaustauschSchulwechsel } from "./schule/datenaustausch/schulwechsel/RouteSchuleDatenaustauschSchulwechsel";
 import { routeSchuleDatenaustauschLernplattformen } from "~/router/apps/schule/datenaustausch/lernplattformenExport/RouteSchuleDatenaustauschLernplattformen";
-import { routeSchuleStammdaten } from "./schule/schulbezogen/stammdaten/RouteSchuleStammdaten";
+import { routeSchuleStammdaten } from "~/router/apps/schule/kataloge/stammdaten/RouteSchuleStammdaten";
 import { routeSchuleReporting } from "./schule/reporting/RouteSchuleReporting";
-import { routeAbteilungen } from "~/router/apps/schule/schulbezogen/abteilungen/RouteAbteilungen";
-import { routeEntlassgruende } from "~/router/apps/schule/schulbezogen/entlassgruende/RouteEntlassgruende";
-import { routeKindergaerten } from "~/router/apps/schule/allgemein/kindergaerten/RouteKindergaerten";
-import { routeFoerderschwerpunkte } from "~/router/apps/schule/schulbezogen/foerderschwerpunkte/RouteFoerderschwerpunkte";
+import { routeAbteilungen } from "~/router/apps/schule/kataloge/abteilungen/RouteAbteilungen";
+import { routeEntlassgruende } from "~/router/apps/schule/kataloge/entlassgruende/RouteEntlassgruende";
+import { routeKindergaerten } from "~/router/apps/schule/kataloge/kindergaerten/RouteKindergaerten";
+import { routeFoerderschwerpunkte } from "~/router/apps/schule/kataloge/foerderschwerpunkte/RouteFoerderschwerpunkte";
 import { routeNotenmodul } from "./notenmodul/RouteNotenmodul";
 import { routeNotenmodulLeistungen } from "./notenmodul/RouteNotenmodulLeistungen";
 import { routeNotenmodulKlassenleitung } from "./notenmodul/RouteNotenmodulKlassenleitung";
 import { routeNotenmodulTeilleistungen } from "./notenmodul/RouteNotenmodulTeilleistungen";
-import { routeFahrschuelerarten } from "~/router/apps/schule/allgemein/fahrschuelerarten/RouteFahrschuelerarten";
-import { routeHaltestellen } from "~/router/apps/schule/allgemein/haltestellen/RouteHaltestellen";
-import { routeBeschaeftigungsarten } from "~/router/apps/schule/allgemein/beschaeftigungsarten/RouteBeschaeftigungsarten";
-import { routeFloskelgruppen } from "~/router/apps/schule/schulbezogen/floskelgruppen/RouteFloskelgruppen";
-import { routeFloskeln } from "~/router/apps/schule/schulbezogen/floskeln/RouteFloskeln";
+import { routeFahrschuelerarten } from "~/router/apps/schule/kataloge/fahrschuelerarten/RouteFahrschuelerarten";
+import { routeHaltestellen } from "~/router/apps/schule/kataloge/haltestellen/RouteHaltestellen";
+import { routeBeschaeftigungsarten } from "~/router/apps/schule/kataloge/beschaeftigungsarten/RouteBeschaeftigungsarten";
+import { routeFloskelgruppen } from "~/router/apps/schule/kataloge/floskelgruppen/RouteFloskelgruppen";
+import { routeFloskeln } from "~/router/apps/schule/kataloge/floskeln/RouteFloskeln";
 import { routeNotenmodulAdministration } from "./notenmodul/RouteNotenmodulAdministration";
 import { routeNotenmodulZugangsdaten } from "./notenmodul/RouteNotenmodulZugangsdaten";
-import { routeBetriebe } from "~/router/apps/schule/allgemein/betriebe/RouteBetriebe";
+import { routeBetriebe } from "~/router/apps/schule/kataloge/betriebe/RouteBetriebe";
 
 import SApp from "~/components/SApp.vue";
 
@@ -141,25 +141,24 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			// Schulbezogen
 			routeSchuleStammdaten,
 			routeAbteilungen,
+			routeBetriebe,
+			routeBeschaeftigungsarten,
 			routeEinwilligungsarten,
 			routeEntlassgruende,
+			routeKatalogErzieherarten,
 			routeFaecher,
+			routeFahrschuelerarten,
 			routeFloskelgruppen,
 			routeFloskeln,
 			routeFoerderschwerpunkte,
-			routeJahrgaenge,
-			routeLernplattformen,
-			routeVermerkarten,
-			// Allgemein
-			routeBeschaeftigungsarten,
-			routeBetriebe,
-			routeKatalogErzieherarten,
-			routeFahrschuelerarten,
 			routeHaltestellen,
+			routeJahrgaenge,
 			routeKindergaerten,
 			routeKonfessionen,
+			routeLernplattformen,
 			routeKatalogSchulen,
 			routeKatalogTelefonArten,
+			routeVermerkarten,
 			// Datenaustausch
 			routeSchuleDatenaustauschENM,
 			routeSchuleDatenaustauschSchulwechsel,

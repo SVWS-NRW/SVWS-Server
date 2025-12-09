@@ -22,6 +22,7 @@ test('Smoke Test für alte Gruppenprozesse, anhand des Jahrgänge Katalogs', asy
 
 	// Schule -> Jahrgänge Katalog aufrufen
 	await page.getByRole('link', { name: 'Schule' }).click();
+	await page.getByRole('row', { name: 'Kataloge' }).click();
 	await page.getByRole('link', { name: 'Jahrgänge' }).click();
 
 	// prüfen, ob Einzelansicht Individualdaten erscheint
