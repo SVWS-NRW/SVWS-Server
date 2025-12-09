@@ -52,8 +52,9 @@ build:
         reports:
             junit: ./**/build/test-results/test/**/TEST-*.xml
         paths:
-            - "./build/**"
             - "./**/build/**"
+        exclude:
+            - "./**/build/sonar/**"
         expire_in: "1 days"
     when: always
 
