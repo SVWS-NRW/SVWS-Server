@@ -42,6 +42,7 @@ export class RouteDataBetriebe extends RouteDataAuswahl<BetriebeListeManager, Ro
 	}
 
 	protected async doPatch(data: Partial<Betrieb>, id: number): Promise<void> {
+		await api.server.patchBetriebeNeu(data, api.schema, id);
 	}
 
 	protected async doDelete(ids: List<number>): Promise<List<SimpleOperationResponse>> {
@@ -49,6 +50,10 @@ export class RouteDataBetriebe extends RouteDataAuswahl<BetriebeListeManager, Ro
 	}
 
 	add = async (data: Partial<Betrieb>): Promise<void> => {
+		const result = await api.server.addBetriebNeu(data, api.schema);
+		this.manager.liste.add(result);
+		this.commit();
+		await this.gotoDefaultView(result.id);
 	};
 
 	protected deleteMessage(id: number, betrieb: Betrieb | null): string {

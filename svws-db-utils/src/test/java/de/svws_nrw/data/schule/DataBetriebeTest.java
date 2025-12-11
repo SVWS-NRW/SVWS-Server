@@ -464,7 +464,7 @@ class DataBetriebeTest {
 				arguments("belehrungNachISGErforderlich"),
 				arguments("erweitertesFuehrungszeugnisErforderlich"),
 				arguments("bietetPraktikumsplaetzeAn"),
-				arguments("istSichtbar")
+				arguments("isSichtbar")
 		);
 	}
 
@@ -485,7 +485,7 @@ class DataBetriebeTest {
 			case "belehrungNachISGErforderlich" -> assertThat(dto.BelehrungISG).isEqualTo(newValue);
 			case "erweitertesFuehrungszeugnisErforderlich" -> assertThat(dto.ErwFuehrungszeugnis).isEqualTo(newValue);
 			case "bietetPraktikumsplaetzeAn" -> assertThat(dto.bietetPraktika).isEqualTo(newValue);
-			case "istSichtbar" -> assertThat(dto.Sichtbar).isEqualTo(newValue);
+			case "isSichtbar" -> assertThat(dto.Sichtbar).isEqualTo(newValue);
 			default -> {
 				//
 			}
@@ -493,29 +493,29 @@ class DataBetriebeTest {
 	}
 
 	@Test
-	@DisplayName("patch | istSichtbar")
-	void patchIstSichtbar() throws ApiOperationException {
+	@DisplayName("patch | isSichtbar")
+	void patchIsSichtbar() throws ApiOperationException {
 		final var dto = new DTOKatalogAllgemeineAdresse(1L);
 		dto.Sichtbar = false;
 		when(this.conn.queryByKey(DTOKatalogAllgemeineAdresse.class, 1L)).thenReturn(dto);
 		when(this.conn.transactionPersist(any())).thenReturn(true);
 
-		this.data.patch(1L, Map.of("istSichtbar", true));
+		this.data.patch(1L, Map.of("isSichtbar", true));
 
 		assertThat(dto.Sichtbar).isTrue();
 	}
 
 	@Test
-	@DisplayName("patch | istSichtbar is null")
-	void patchIstSichtbarIsNull() {
+	@DisplayName("patch | isSichtbar is null")
+	void patchIsSichtbarIsNull() {
 		when(this.conn.queryByKey(DTOKatalogAllgemeineAdresse.class, 1L)).thenReturn(mock(DTOKatalogAllgemeineAdresse.class));
 		final var map = new HashMap<String, Object>();
-		map.put("istSichtbar", null);
+		map.put("isSichtbar", null);
 
 		assertThatException()
 				.isThrownBy(() -> this.data.patch(1L, map))
 				.isInstanceOf(ApiOperationException.class)
-				.withMessage("Attribut istSichtbar: Der Wert null ist nicht erlaubt")
+				.withMessage("Attribut isSichtbar: Der Wert null ist nicht erlaubt")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 

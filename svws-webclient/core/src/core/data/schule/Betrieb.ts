@@ -36,27 +36,27 @@ export class Betrieb extends JavaObject {
 	/**
 	 * Gibt an, ob es sich bei dem Betrieb um einen Ausbildungsbetrieb handelt.
 	 */
-	public isAusbildungsbetrieb: boolean | null = null;
+	public isAusbildungsbetrieb: boolean = false;
 
 	/**
 	 * Gibt an, ob es sich bei dem Betrieb um einen Maßnahmenträger handelt.
 	 */
-	public isMassnahmentraeger: boolean | null = null;
+	public isMassnahmentraeger: boolean = false;
 
 	/**
 	 * Gibt an, ob bei dem Betrieb eine Belehrung nach Infektionsschutzgesetz erforderlich ist.
 	 */
-	public belehrungNachISGErforderlich: boolean | null = null;
+	public belehrungNachISGErforderlich: boolean = false;
 
 	/**
 	 * Gibt an, ob bei dem Betrieb eine erweitertes Führungszeugnis erforderlich ist.
 	 */
-	public erweitertesFuehrungszeugnisErforderlich: boolean | null = null;
+	public erweitertesFuehrungszeugnisErforderlich: boolean = false;
 
 	/**
 	 * Gibt an, ob der Betrieb Praktikumsplätze anbietet.
 	 */
-	public bietetPraktikumsplaetzeAn: boolean | null = null;
+	public bietetPraktikumsplaetzeAn: boolean = false;
 
 	/**
 	 * Die Straße des Betriebs.
@@ -106,7 +106,7 @@ export class Betrieb extends JavaObject {
 	/**
 	 * Die Sortierreihenfolge des Betriebs.
 	 */
-	public sortierung: number | null = null;
+	public sortierung: number = 0;
 
 	/**
 	 * Gibt an, ob der Betrieb in anderen Datenbanktabellen referenziert ist oder nicht.
@@ -139,11 +139,21 @@ export class Betrieb extends JavaObject {
 		result.bemerkungen = (obj.bemerkungen === undefined) ? null : obj.bemerkungen === null ? null : obj.bemerkungen;
 		result.branche = (obj.branche === undefined) ? null : obj.branche === null ? null : obj.branche;
 		result.idBetriebsart = (obj.idBetriebsart === undefined) ? null : obj.idBetriebsart === null ? null : obj.idBetriebsart;
-		result.isAusbildungsbetrieb = (obj.isAusbildungsbetrieb === undefined) ? null : obj.isAusbildungsbetrieb === null ? null : obj.isAusbildungsbetrieb;
-		result.isMassnahmentraeger = (obj.isMassnahmentraeger === undefined) ? null : obj.isMassnahmentraeger === null ? null : obj.isMassnahmentraeger;
-		result.belehrungNachISGErforderlich = (obj.belehrungNachISGErforderlich === undefined) ? null : obj.belehrungNachISGErforderlich === null ? null : obj.belehrungNachISGErforderlich;
-		result.erweitertesFuehrungszeugnisErforderlich = (obj.erweitertesFuehrungszeugnisErforderlich === undefined) ? null : obj.erweitertesFuehrungszeugnisErforderlich === null ? null : obj.erweitertesFuehrungszeugnisErforderlich;
-		result.bietetPraktikumsplaetzeAn = (obj.bietetPraktikumsplaetzeAn === undefined) ? null : obj.bietetPraktikumsplaetzeAn === null ? null : obj.bietetPraktikumsplaetzeAn;
+		if (obj.isAusbildungsbetrieb === undefined)
+			throw new Error('invalid json format, missing attribute isAusbildungsbetrieb');
+		result.isAusbildungsbetrieb = obj.isAusbildungsbetrieb;
+		if (obj.isMassnahmentraeger === undefined)
+			throw new Error('invalid json format, missing attribute isMassnahmentraeger');
+		result.isMassnahmentraeger = obj.isMassnahmentraeger;
+		if (obj.belehrungNachISGErforderlich === undefined)
+			throw new Error('invalid json format, missing attribute belehrungNachISGErforderlich');
+		result.belehrungNachISGErforderlich = obj.belehrungNachISGErforderlich;
+		if (obj.erweitertesFuehrungszeugnisErforderlich === undefined)
+			throw new Error('invalid json format, missing attribute erweitertesFuehrungszeugnisErforderlich');
+		result.erweitertesFuehrungszeugnisErforderlich = obj.erweitertesFuehrungszeugnisErforderlich;
+		if (obj.bietetPraktikumsplaetzeAn === undefined)
+			throw new Error('invalid json format, missing attribute bietetPraktikumsplaetzeAn');
+		result.bietetPraktikumsplaetzeAn = obj.bietetPraktikumsplaetzeAn;
 		result.strasse = (obj.strasse === undefined) ? null : obj.strasse === null ? null : obj.strasse;
 		result.hausnummer = (obj.hausnummer === undefined) ? null : obj.hausnummer === null ? null : obj.hausnummer;
 		result.hausnummerZusatz = (obj.hausnummerZusatz === undefined) ? null : obj.hausnummerZusatz === null ? null : obj.hausnummerZusatz;
@@ -155,7 +165,9 @@ export class Betrieb extends JavaObject {
 		if (obj.isSichtbar === undefined)
 			throw new Error('invalid json format, missing attribute isSichtbar');
 		result.isSichtbar = obj.isSichtbar;
-		result.sortierung = (obj.sortierung === undefined) ? null : obj.sortierung === null ? null : obj.sortierung;
+		if (obj.sortierung === undefined)
+			throw new Error('invalid json format, missing attribute sortierung');
+		result.sortierung = obj.sortierung;
 		if (obj.referenziertInAnderenTabellen === undefined)
 			throw new Error('invalid json format, missing attribute referenziertInAnderenTabellen');
 		result.referenziertInAnderenTabellen = obj.referenziertInAnderenTabellen;
@@ -170,11 +182,11 @@ export class Betrieb extends JavaObject {
 		result += '"bemerkungen" : ' + ((obj.bemerkungen === null) ? 'null' : JSON.stringify(obj.bemerkungen)) + ',';
 		result += '"branche" : ' + ((obj.branche === null) ? 'null' : JSON.stringify(obj.branche)) + ',';
 		result += '"idBetriebsart" : ' + ((obj.idBetriebsart === null) ? 'null' : obj.idBetriebsart.toString()) + ',';
-		result += '"isAusbildungsbetrieb" : ' + ((obj.isAusbildungsbetrieb === null) ? 'null' : obj.isAusbildungsbetrieb.toString()) + ',';
-		result += '"isMassnahmentraeger" : ' + ((obj.isMassnahmentraeger === null) ? 'null' : obj.isMassnahmentraeger.toString()) + ',';
-		result += '"belehrungNachISGErforderlich" : ' + ((obj.belehrungNachISGErforderlich === null) ? 'null' : obj.belehrungNachISGErforderlich.toString()) + ',';
-		result += '"erweitertesFuehrungszeugnisErforderlich" : ' + ((obj.erweitertesFuehrungszeugnisErforderlich === null) ? 'null' : obj.erweitertesFuehrungszeugnisErforderlich.toString()) + ',';
-		result += '"bietetPraktikumsplaetzeAn" : ' + ((obj.bietetPraktikumsplaetzeAn === null) ? 'null' : obj.bietetPraktikumsplaetzeAn.toString()) + ',';
+		result += '"isAusbildungsbetrieb" : ' + obj.isAusbildungsbetrieb.toString() + ',';
+		result += '"isMassnahmentraeger" : ' + obj.isMassnahmentraeger.toString() + ',';
+		result += '"belehrungNachISGErforderlich" : ' + obj.belehrungNachISGErforderlich.toString() + ',';
+		result += '"erweitertesFuehrungszeugnisErforderlich" : ' + obj.erweitertesFuehrungszeugnisErforderlich.toString() + ',';
+		result += '"bietetPraktikumsplaetzeAn" : ' + obj.bietetPraktikumsplaetzeAn.toString() + ',';
 		result += '"strasse" : ' + ((obj.strasse === null) ? 'null' : JSON.stringify(obj.strasse)) + ',';
 		result += '"hausnummer" : ' + ((obj.hausnummer === null) ? 'null' : JSON.stringify(obj.hausnummer)) + ',';
 		result += '"hausnummerZusatz" : ' + ((obj.hausnummerZusatz === null) ? 'null' : JSON.stringify(obj.hausnummerZusatz)) + ',';
@@ -184,7 +196,7 @@ export class Betrieb extends JavaObject {
 		result += '"fax" : ' + ((obj.fax === null) ? 'null' : JSON.stringify(obj.fax)) + ',';
 		result += '"eMail" : ' + ((obj.eMail === null) ? 'null' : JSON.stringify(obj.eMail)) + ',';
 		result += '"isSichtbar" : ' + obj.isSichtbar.toString() + ',';
-		result += '"sortierung" : ' + ((obj.sortierung === null) ? 'null' : obj.sortierung.toString()) + ',';
+		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"referenziertInAnderenTabellen" : ' + obj.referenziertInAnderenTabellen.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -212,19 +224,19 @@ export class Betrieb extends JavaObject {
 			result += '"idBetriebsart" : ' + ((obj.idBetriebsart === null) ? 'null' : obj.idBetriebsart.toString()) + ',';
 		}
 		if (obj.isAusbildungsbetrieb !== undefined) {
-			result += '"isAusbildungsbetrieb" : ' + ((obj.isAusbildungsbetrieb === null) ? 'null' : obj.isAusbildungsbetrieb.toString()) + ',';
+			result += '"isAusbildungsbetrieb" : ' + obj.isAusbildungsbetrieb.toString() + ',';
 		}
 		if (obj.isMassnahmentraeger !== undefined) {
-			result += '"isMassnahmentraeger" : ' + ((obj.isMassnahmentraeger === null) ? 'null' : obj.isMassnahmentraeger.toString()) + ',';
+			result += '"isMassnahmentraeger" : ' + obj.isMassnahmentraeger.toString() + ',';
 		}
 		if (obj.belehrungNachISGErforderlich !== undefined) {
-			result += '"belehrungNachISGErforderlich" : ' + ((obj.belehrungNachISGErforderlich === null) ? 'null' : obj.belehrungNachISGErforderlich.toString()) + ',';
+			result += '"belehrungNachISGErforderlich" : ' + obj.belehrungNachISGErforderlich.toString() + ',';
 		}
 		if (obj.erweitertesFuehrungszeugnisErforderlich !== undefined) {
-			result += '"erweitertesFuehrungszeugnisErforderlich" : ' + ((obj.erweitertesFuehrungszeugnisErforderlich === null) ? 'null' : obj.erweitertesFuehrungszeugnisErforderlich.toString()) + ',';
+			result += '"erweitertesFuehrungszeugnisErforderlich" : ' + obj.erweitertesFuehrungszeugnisErforderlich.toString() + ',';
 		}
 		if (obj.bietetPraktikumsplaetzeAn !== undefined) {
-			result += '"bietetPraktikumsplaetzeAn" : ' + ((obj.bietetPraktikumsplaetzeAn === null) ? 'null' : obj.bietetPraktikumsplaetzeAn.toString()) + ',';
+			result += '"bietetPraktikumsplaetzeAn" : ' + obj.bietetPraktikumsplaetzeAn.toString() + ',';
 		}
 		if (obj.strasse !== undefined) {
 			result += '"strasse" : ' + ((obj.strasse === null) ? 'null' : JSON.stringify(obj.strasse)) + ',';
@@ -254,7 +266,7 @@ export class Betrieb extends JavaObject {
 			result += '"isSichtbar" : ' + obj.isSichtbar.toString() + ',';
 		}
 		if (obj.sortierung !== undefined) {
-			result += '"sortierung" : ' + ((obj.sortierung === null) ? 'null' : obj.sortierung.toString()) + ',';
+			result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		}
 		if (obj.referenziertInAnderenTabellen !== undefined) {
 			result += '"referenziertInAnderenTabellen" : ' + obj.referenziertInAnderenTabellen.toString() + ',';

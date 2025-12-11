@@ -80,11 +80,11 @@ public final class DataBetriebe extends DataManagerRevised<Long, DTOKatalogAllge
 		betrieb.bemerkungen = dto.bemerkungen;
 		betrieb.branche = dto.branche;
 		betrieb.idBetriebsart = dto.adressArt;
-		betrieb.isAusbildungsbetrieb = dto.ausbildungsbetrieb;
-		betrieb.isMassnahmentraeger = dto.Massnahmentraeger;
-		betrieb.belehrungNachISGErforderlich = dto.BelehrungISG;
-		betrieb.erweitertesFuehrungszeugnisErforderlich = dto.ErwFuehrungszeugnis;
-		betrieb.bietetPraktikumsplaetzeAn = dto.bietetPraktika;
+		betrieb.isAusbildungsbetrieb = Boolean.TRUE.equals(dto.ausbildungsbetrieb);
+		betrieb.isMassnahmentraeger = Boolean.TRUE.equals(dto.Massnahmentraeger);
+		betrieb.belehrungNachISGErforderlich = Boolean.TRUE.equals(dto.BelehrungISG);
+		betrieb.erweitertesFuehrungszeugnisErforderlich = Boolean.TRUE.equals(dto.ErwFuehrungszeugnis);
+		betrieb.bietetPraktikumsplaetzeAn = Boolean.TRUE.equals(dto.bietetPraktika);
 		betrieb.strasse = dto.strassenname;
 		betrieb.hausnummer = dto.hausnr;
 		betrieb.hausnummerZusatz = dto.hausnrzusatz;
@@ -94,7 +94,7 @@ public final class DataBetriebe extends DataManagerRevised<Long, DTOKatalogAllge
 		betrieb.fax = dto.fax;
 		betrieb.eMail = dto.email;
 		betrieb.isSichtbar = Boolean.TRUE.equals(dto.Sichtbar);
-		betrieb.sortierung = dto.sortierung;
+		betrieb.sortierung = Objects.requireNonNullElse(dto.sortierung, 32000);
 		return betrieb;
 	}
 
@@ -122,7 +122,7 @@ public final class DataBetriebe extends DataManagerRevised<Long, DTOKatalogAllge
 			case "erweitertesFuehrungszeugnisErforderlich" -> dto.ErwFuehrungszeugnis = JSONMapper.convertToBoolean(value, true, name);
 			case "bietetPraktikumsplaetzeAn" -> dto.bietetPraktika = JSONMapper.convertToBoolean(value, true, name);
 			case "sortierung" -> dto.sortierung = JSONMapper.convertToInteger(value, true, name);
-			case "istSichtbar" -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false, name);
+			case "isSichtbar" -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false, name);
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));
 		}
 	}

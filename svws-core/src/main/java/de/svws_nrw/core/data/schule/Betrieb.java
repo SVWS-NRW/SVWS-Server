@@ -40,23 +40,23 @@ public class Betrieb {
 
 	/** Gibt an, ob es sich bei dem Betrieb um einen Ausbildungsbetrieb handelt. */
 	@Schema(description = "Gibt an, ob es sich bei dem Betrieb um einen Ausbildungsbetrieb handelt.", example = "true")
-	public Boolean isAusbildungsbetrieb;
+	public boolean isAusbildungsbetrieb;
 
 	/** Gibt an, ob es sich bei dem Betrieb um einen Maßnahmenträger handelt. */
 	@Schema(description = "Gibt an, ob es sich bei dem Betrieb um einen Maßnahmenträger handelt.", example = "true")
-	public Boolean isMassnahmentraeger;
+	public boolean isMassnahmentraeger;
 
 	/** Gibt an, ob bei dem Betrieb eine Belehrung nach Infektionsschutzgesetz erforderlich ist. */
 	@Schema(description = "Gibt an, ob bei dem Betrieb eine Belehrung nach Infektionsschutzgesetz erforderlich ist.", example = "true")
-	public Boolean belehrungNachISGErforderlich;
+	public boolean belehrungNachISGErforderlich;
 
 	/** Gibt an, ob bei dem Betrieb eine erweitertes Führungszeugnis erforderlich ist. */
 	@Schema(description = "Gibt an, ob bei dem Betrieb eine erweitertes Führungszeugnis erforderlich ist.", example = "true")
-	public Boolean erweitertesFuehrungszeugnisErforderlich;
+	public boolean erweitertesFuehrungszeugnisErforderlich;
 
 	/** Gibt an, ob der Betrieb Praktikumsplätze anbietet. */
 	@Schema(description = "Gibt an, ob der Betrieb Praktikumsplätze anbietet.", example = "true")
-	public Boolean bietetPraktikumsplaetzeAn;
+	public boolean bietetPraktikumsplaetzeAn;
 
 	/** Die Straße des Betriebs. */
 	@Schema(description = "Die Straße des Betriebs.", example = "4711")
@@ -96,7 +96,7 @@ public class Betrieb {
 
 	/** Die Sortierreihenfolge des Betriebs. */
 	@Schema(description = "Die Sortierreihenfolge des Betriebs", example = "1")
-	public Integer sortierung;
+	public int sortierung;
 
 	/** Gibt an, ob der Betrieb in anderen Datenbanktabellen referenziert ist oder nicht. */
 	@Schema(description = "Gibt an, ob der Betrieb in anderen Datenbanktabellen referenziert ist oder nicht.", example = "true", accessMode = Schema.AccessMode.READ_ONLY)
