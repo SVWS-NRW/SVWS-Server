@@ -23,6 +23,7 @@ import { Beschaeftigungsart } from '../core/data/betrieb/Beschaeftigungsart';
 import { Betrieb } from '../core/data/schule/Betrieb';
 import { BetriebAnsprechpartner } from '../core/data/betrieb/BetriebAnsprechpartner';
 import { BetriebListeEintrag } from '../core/data/betrieb/BetriebListeEintrag';
+import { Betriebsart } from '../core/data/schule/Betriebsart';
 import { BetriebStammdaten } from '../core/data/betrieb/BetriebStammdaten';
 import { BilingualeSpracheKatalogEintrag } from '../asd/data/fach/BilingualeSpracheKatalogEintrag';
 import { BKGymAbiturdaten } from '../core/abschluss/bk/d/BKGymAbiturdaten';
@@ -105,7 +106,6 @@ import { KAOAEbene4KatalogEintrag } from '../asd/data/kaoa/KAOAEbene4KatalogEint
 import { KAOAKategorieKatalogEintrag } from '../asd/data/kaoa/KAOAKategorieKatalogEintrag';
 import { KAOAMerkmalKatalogEintrag } from '../asd/data/kaoa/KAOAMerkmalKatalogEintrag';
 import { KAOAZusatzmerkmalKatalogEintrag } from '../asd/data/kaoa/KAOAZusatzmerkmalKatalogEintrag';
-import { KatalogEintrag } from '../core/data/kataloge/KatalogEintrag';
 import { KatalogEintragOrte } from '../core/data/kataloge/KatalogEintragOrte';
 import { KatalogEintragOrtsteile } from '../core/data/kataloge/KatalogEintragOrtsteile';
 import { KatalogEintragStrassen } from '../core/data/kataloge/KatalogEintragStrassen';
@@ -1636,117 +1636,6 @@ export class ApiServer extends BaseApi {
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		await super.deleteJSON(path, body);
 		return;
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getKatalogBetriebsart für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/betriebsart
-	 *
-	 * Erstellt eine Liste aller in dem Katalog vorhandenen Betriebsarten unter Angabe der ID, eines Kürzels und der textuellen Beschreibung sowie der Information, ob der Eintrag in der Anwendung sichtbar bzw. änderbar sein soll, und gibt diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Eine Liste von Katalog-Einträgen zu den Betriebsarten.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<KatalogEintrag>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
-	 *   Code 404: Keine Katalog-Einträge gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Eine Liste von Katalog-Einträgen zu den Betriebsarten.
-	 */
-	public async getKatalogBetriebsart(schema : string) : Promise<List<KatalogEintrag>> {
-		const path = "/db/{schema}/betriebe/betriebsart"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<KatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KatalogEintrag.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getKatalogBetriebsartMitID für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/betriebsart/{id : \d+}
-	 *
-	 * Liest die Daten der Betriebsart zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Betriebsarten besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Katalog-Eintrag zu den Betriebsarten.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<KatalogEintrag>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
-	 *   Code 404: Keine Katalog-Einträge gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Katalog-Eintrag zu den Betriebsarten.
-	 */
-	public async getKatalogBetriebsartMitID(schema : string, id : number) : Promise<List<KatalogEintrag>> {
-		const path = "/db/{schema}/betriebe/betriebsart/{id : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<KatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KatalogEintrag.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
-	 * Implementierung der PATCH-Methode patchBetriebsart für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/betriebsart/{id : \d+}
-	 *
-	 * Passt die Beschäftigungsart-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern der Daten der Betriebssart besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Patch wurde erfolgreich in die Beschäftigungsart-Daten integriert.
-	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Beschäftigungsart-Daten zu ändern.
-	 *   Code 404: Keine Beschäftigungsart mit der angegebenen ID gefunden
-	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {Partial<KatalogEintrag>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 */
-	public async patchBetriebsart(data : Partial<KatalogEintrag>, schema : string, id : number) : Promise<void> {
-		const path = "/db/{schema}/betriebe/betriebsart/{id : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = KatalogEintrag.transpilerToJSONPatch(data);
-		return super.patchJSON(path, body);
-	}
-
-
-	/**
-	 * Implementierung der POST-Methode createBetriebsart für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/betriebsart/new
-	 *
-	 * Erstellt eine neue Betriebart und gibt den neuen Datensatz zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eine Betriebsart besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Betiebsart wurde erfolgreich angelegt.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: KatalogEintrag
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Betriebsart anzulegen.
-	 *   Code 404: Kein Betrieb  mit der angegebenen ID gefunden
-	 *   Code 409: Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {KatalogEintrag} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Betiebsart wurde erfolgreich angelegt.
-	 */
-	public async createBetriebsart(data : KatalogEintrag, schema : string) : Promise<KatalogEintrag> {
-		const path = "/db/{schema}/betriebe/betriebsart/new"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = KatalogEintrag.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
-		const text = result;
-		return KatalogEintrag.transpilerFromJSON(text);
 	}
 
 
@@ -15061,6 +14950,116 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteBetriebeAnsprechpartnerNeu(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/schule/betriebe-ansprechpartner/delete/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getBetriebsarten für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/betriebsarten
+	 *
+	 * Gibt die Betriebsarten zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Eine Liste der Betriebsarten.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Betriebsart>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Eine Liste der Betriebsarten.
+	 */
+	public async getBetriebsarten(schema : string) : Promise<List<Betriebsart>> {
+		const path = "/db/{schema}/schule/betriebsarten"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<Betriebsart>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Betriebsart.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchBetriebsart für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/betriebsarten/{id : \d+}
+	 *
+	 * Patched die Betriebsart mit der angegebenen ID, insofern die notwendigen Berechtigungen vorliegen.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<Betriebsart>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchBetriebsart(data : Partial<Betriebsart>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/schule/betriebsarten/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = Betriebsart.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addBetriebsart für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/betriebsarten/create
+	 *
+	 * Erstellt eine neue Betriebsart, insofern die notwendigen Berechtigungen vorliegen
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die Betriebsart wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Betriebsart
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Betriebsarten anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<Betriebsart>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Betriebsart wurde erfolgreich hinzugefügt.
+	 */
+	public async addBetriebsart(data : Partial<Betriebsart>, schema : string) : Promise<Betriebsart> {
+		const path = "/db/{schema}/schule/betriebsarten/create"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = Betriebsart.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return Betriebsart.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteBetriebsarten für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/betriebsarten/delete/multiple
+	 *
+	 * Entfernt mehrere Betriebsarten, insofern die notwendigen Berechtigungen vorhanden sind.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Lösch-Operationen wurden ausgeführt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Betriebsarten zu entfernen.
+	 *   Code 404: Betriebsarten nicht vorhanden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Lösch-Operationen wurden ausgeführt.
+	 */
+	public async deleteBetriebsarten(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+		const path = "/db/{schema}/schule/betriebsarten/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result : string = await super.deleteJSON(path, body);

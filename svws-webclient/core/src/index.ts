@@ -611,7 +611,6 @@ export { GostSchuelerklausurterminraumstunde } from './core/data/gost/klausurpla
 export { JahrgangsDaten } from './core/data/jahrgang/JahrgangsDaten';
 export { Kalender } from './core/data/kalender/Kalender';
 export { KalenderEintrag } from './core/data/kalender/KalenderEintrag';
-export { KatalogEintrag } from './core/data/kataloge/KatalogEintrag';
 export { KatalogEintragOrte } from './core/data/kataloge/KatalogEintragOrte';
 export { KatalogEintragOrtsteile } from './core/data/kataloge/KatalogEintragOrtsteile';
 export { KatalogEintragStrassen } from './core/data/kataloge/KatalogEintragStrassen';
@@ -681,6 +680,7 @@ export { BerufskollegFachklassenKatalogEintrag } from './core/data/schule/Berufs
 export { BerufskollegFachklassenKatalogIndex } from './core/data/schule/BerufskollegFachklassenKatalogIndex';
 export { Betrieb } from './core/data/schule/Betrieb';
 export { BetriebeAnsprechpartner } from './core/data/schule/BetriebeAnsprechpartner';
+export { Betriebsart } from './core/data/schule/Betriebsart';
 export { Einwilligungsart } from './core/data/schule/Einwilligungsart';
 export { Fahrschuelerart } from './core/data/schule/Fahrschuelerart';
 export { Floskel } from './core/data/schule/Floskel';

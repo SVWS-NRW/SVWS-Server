@@ -1,4 +1,4 @@
-import type { Erzieherart, KatalogEintrag, LehrerListeEintrag, Nationalitaeten, OrtKatalogEintrag, OrtsteilKatalogEintrag, Verkehrssprache, CoreTypeData, SchulenKatalogEintrag, SchulEintrag } from "@core";
+import type { Erzieherart, LehrerListeEintrag, Nationalitaeten, OrtKatalogEintrag, OrtsteilKatalogEintrag, Verkehrssprache, CoreTypeData, SchulenKatalogEintrag, SchulEintrag } from "@core";
 import { Schulform } from "@core";
 
 
@@ -91,30 +91,6 @@ export function nationalitaetenKatalogEintragFilter(items: Iterable<Nationalitae
 /** Sortierfunktion für Länder */
 export function nationalitaetenKatalogEintragSort(a: Nationalitaeten, b: Nationalitaeten) {
 	return a.historie().getLast().bezeichnung.localeCompare(b.historie().getLast().bezeichnung);
-}
-
-export function katalogEintragSort(a: KatalogEintrag | null, b: KatalogEintrag | null) {
-	if ((typeof a?.text === 'string') && (typeof b?.text === 'string'))
-		return a.text.localeCompare(b.text);
-	else if (a && !b)
-		return -1;
-	else if (!a && !b)
-		return 1;
-	return 0;
-}
-
-export function katalogEintragFilter(items: Iterable<KatalogEintrag> | undefined, search: string) {
-	const list: KatalogEintrag[] = [];
-	if (items === undefined)
-		return list;
-	for (const i of items)
-		if ((i.text !== null) && (i.kuerzel !== null)
-			&& (i.text.toLocaleLowerCase().includes(search.toLocaleLowerCase())
-				|| i.kuerzel
-					.toLocaleLowerCase()
-					.includes(search.toLocaleLowerCase())))
-			list.push(i);
-	return list;
 }
 
 export function ortsteilSort(a: OrtsteilKatalogEintrag, b: OrtsteilKatalogEintrag) {

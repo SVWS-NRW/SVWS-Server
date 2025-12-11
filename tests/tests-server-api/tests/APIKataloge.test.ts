@@ -11,7 +11,7 @@ describe("Kataloge Tests", () => {
 		});
 
 		test("getKatalogBetriebsart", async () => {
-			const result = await api.getKatalogBetriebsart(schema);
+			const result = await api.getBetriebsarten(schema);
 			expect(result).toMatchSnapshot();
 		});
 

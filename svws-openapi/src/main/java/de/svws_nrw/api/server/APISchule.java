@@ -2,6 +2,7 @@ package de.svws_nrw.api.server;
 
 import de.svws_nrw.core.data.erzieher.Erzieherart;
 import de.svws_nrw.core.data.schule.Betrieb;
+import de.svws_nrw.core.data.schule.Betriebsart;
 import de.svws_nrw.core.data.schule.Floskel;
 import de.svws_nrw.core.data.schule.Floskelgruppe;
 import de.svws_nrw.core.data.schule.Lernplattform;
@@ -9,6 +10,7 @@ import de.svws_nrw.core.data.schule.TelefonArt;
 import de.svws_nrw.data.erzieher.DataErzieherarten;
 import de.svws_nrw.data.schule.DataBetriebe;
 import de.svws_nrw.data.schule.DataBetriebeAnsprechpartner;
+import de.svws_nrw.data.schule.DataBetriebsarten;
 import de.svws_nrw.data.schule.DataFloskelJahrgangZuordnung;
 import de.svws_nrw.data.schule.DataFloskelgruppen;
 import de.svws_nrw.data.schule.DataFloskeln;
@@ -3431,6 +3433,110 @@ public class APISchule {
 			array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
 				conn -> new DataBetriebeAnsprechpartner(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Liste der Betriebsarten.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste der Betriebsarten
+	 */
+	@GET
+	@Path("/betriebsarten")
+	@Operation(summary = "Gibt eine Liste der Betriebsarten im Katalog zurück.",
+			description = "Gibt die Betriebsarten zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste der Betriebsarten.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Betriebsart.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
+	public Response getBetriebsarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataBetriebsarten(conn)
+						.getAllAsResponse(),
+				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Patchen einer Betriebsart.
+	 *
+	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param id		die ID zur Identifikation der Betriebsart
+	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/betriebsarten/{id : \\d+}")
+	@Operation(summary = "Patched die Betriebsart mit der angegebenen ID",
+			description = "Patched die Betriebsart mit der angegebenen ID, insofern die notwendigen Berechtigungen vorliegen.")
+	@ApiResponse(responseCode = "204", description = "Der Patch wurde erfolgreich integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Eintrag mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
+			+ " (z.B. eine negative ID)")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z. B. beim Datenbankzugriff)")
+	public Response patchBetriebsart(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@RequestBody(description = "Der Patch einer Betriebsart", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Betriebsart.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> new DataBetriebsarten(conn).patchAsResponse(id, is), request, ServerMode.STABLE,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Hinzufügen einer Betriebsart.
+	 *
+	 * @param schema       das Datenbankschema
+	 * @param is           der Input-Stream mit den Daten der Betriebsart
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit der erstellten Betriebsart
+	 */
+	@POST
+	@Path("/betriebsarten/create")
+	@Operation(summary = "Erstellt eine neue Betriebsart und gibt das erstellte Objekt zurück.",
+			description = "Erstellt eine neue Betriebsart, insofern die notwendigen Berechtigungen vorliegen")
+	@ApiResponse(responseCode = "201", description = "Die Betriebsart wurde erfolgreich hinzugefügt.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Betriebsart.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Betriebsarten anzulegen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response addBetriebsart(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die Daten der zu erstellenden Betriebsart.", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Betriebsart.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> new DataBetriebsarten(conn).addAsResponse(is), request, ServerMode.STABLE,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Entfernen mehrerer Betriebsarten.
+	 *
+	 * @param schema    das Datenbankschema
+	 * @param is        der InputStream, mit der Liste der zu löschenden IDs
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
+	 */
+	@DELETE
+	@Path("/betriebsarten/delete/multiple")
+	@Operation(summary = "Entfernt mehrere Betriebsarten.", description = "Entfernt mehrere Betriebsarten, insofern die notwendigen Berechtigungen vorhanden sind.")
+	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Betriebsarten zu entfernen.")
+	@ApiResponse(responseCode = "404", description = "Betriebsarten nicht vorhanden")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteBetriebsarten(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der zu löschenden Betriebsarten",
+			required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+			array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
+				conn -> new DataBetriebsarten(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}

@@ -287,8 +287,8 @@ describe("Server", () => {
 		const res = await server.getBeschaeftigungsarten(schema);
 		expect(res).matchSnapshot();
 	});
-	test.skip("getKatalogBetriebsart", async () => {
-		const res = await server.getKatalogBetriebsart(schema);
+	test.skip("getBetriebsarten", async () => {
+		const res = await server.getBetriebsarten(schema);
 		expect(res).matchSnapshot();
 	});
 	test.skip("getKatalogHaltestellen", async () => {
