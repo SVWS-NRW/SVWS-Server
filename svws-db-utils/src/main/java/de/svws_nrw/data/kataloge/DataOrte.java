@@ -1,26 +1,21 @@
 package de.svws_nrw.data.kataloge;
 
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+
 import de.svws_nrw.core.data.kataloge.OrtKatalogEintrag;
-import de.svws_nrw.data.DataManager;
+import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
-import de.svws_nrw.db.utils.ApiOperationException;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
-
-import java.io.InputStream;
-import java.util.List;
-import java.util.function.Function;
 
 /**
- * Diese Klasse erweitert den abstrakten {@link DataManager} für den
- * Core-DTO {@link OrtKatalogEintrag}.
+ * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für das Core-DTO {@link OrtKatalogEintrag}.
  */
-public final class DataOrte extends DataManager<Long> {
+public final class DataOrte extends DataManagerRevised<Long, DTOOrt, OrtKatalogEintrag> {
 
 	/**
-	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link OrtKatalogEintrag}.
+	 * Erstellt einen neuen {@link DataManagerRevised} für das Core-DTO {@link OrtKatalogEintrag}.
 	 *
 	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
 	 */
@@ -28,55 +23,29 @@ public final class DataOrte extends DataManager<Long> {
 		super(conn);
 	}
 
-	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOOrt} in einen Core-DTO {@link OrtKatalogEintrag}.
-	 */
-	private final Function<DTOOrt, OrtKatalogEintrag> dtoMapper = (final DTOOrt k) -> {
+	@Override
+	protected OrtKatalogEintrag map(final DTOOrt dto) {
 		final OrtKatalogEintrag daten = new OrtKatalogEintrag();
-		daten.id = k.ID;
-		daten.plz = k.PLZ;
-		daten.ortsname = k.Bezeichnung;
-		daten.kreis = k.Kreis;
-		daten.kuerzelBundesland = k.Land;
-		daten.sortierung = (k.Sortierung == null) ? 32000 : k.Sortierung;
-		daten.istSichtbar = k.Sichtbar;
-		daten.istAenderbar = k.Aenderbar;
+		daten.id = dto.ID;
+		daten.plz = dto.PLZ;
+		daten.ortsname = dto.Bezeichnung;
+		daten.kreis = dto.Kreis;
+		daten.kuerzelBundesland = dto.Land;
+		daten.sortierung = Objects.requireNonNullElse(dto.Sortierung, 32000);
+		daten.istSichtbar = Boolean.TRUE.equals(dto.Sichtbar);
+		daten.istAenderbar = Boolean.TRUE.equals(dto.Aenderbar);
 		return daten;
-	};
-
-	/**
-	 * Liest die Orte aus der Datenbank aus und gibt sie als Katalog zurück
-	 *
-	 * @return Liste der Orte als Katalog.
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public List<OrtKatalogEintrag> getOrte() throws ApiOperationException {
-		final List<DTOOrt> katalog = conn.queryAll(DTOOrt.class);
-		if (katalog == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Keine Orte gefunden.");
-		return katalog.stream().map(dtoMapper).toList();
 	}
 
 	@Override
-	public Response getAll() throws ApiOperationException {
-		final List<OrtKatalogEintrag> daten = this.getOrte();
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
-	}
+	public List<OrtKatalogEintrag> getAll() {
+		final List<DTOOrt> orte = conn.queryAll(DTOOrt.class);
 
-	@Override
-	public Response getList() throws ApiOperationException {
-		return this.getAll();
-	}
-
-	@Override
-	public Response get(final Long id) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public Response patch(final Long id, final InputStream is) {
-		throw new UnsupportedOperationException();
+		return orte
+				.stream()
+				.map(this::map)
+				.sorted(Comparator.comparing(v -> v.id))
+				.toList();
 	}
 
 }

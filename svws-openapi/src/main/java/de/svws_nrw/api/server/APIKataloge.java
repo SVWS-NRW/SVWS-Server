@@ -131,7 +131,7 @@ public class APIKataloge {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Ort-Katalog-Einträge gefunden")
 	public Response getOrte(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataOrte(conn).getAll(),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataOrte(conn).getAllAsResponse(),
 				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
 	}
 

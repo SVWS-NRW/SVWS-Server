@@ -329,7 +329,7 @@ public class ReportingRepository {
 					new DataKatalogSchuelerFoerderschwerpunkte(this.conn).getAll().stream().collect(Collectors.toMap(f -> f.id, f -> f));
 			this.logger.logLn(LogLevel.DEBUG, 8, "Katalog Förderschwerpunkte geladen.");
 
-			this.katalogOrte = new DataOrte(this.conn).getOrte().stream().collect(Collectors.toMap(o -> o.id, o -> o));
+			this.katalogOrte = new DataOrte(this.conn).getAll().stream().collect(Collectors.toMap(o -> o.id, o -> o));
 			this.logger.logLn(LogLevel.DEBUG, 8, "Katalog Orte geladen.");
 
 			this.katalogOrtsteile = new DataOrtsteile(this.conn).getOrtsteile().stream().collect(Collectors.toMap(o -> o.id, o -> o));
