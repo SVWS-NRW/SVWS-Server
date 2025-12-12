@@ -80,8 +80,8 @@ export class BetriebeListeManager extends AuswahlManager<number, Betrieb, Betrie
 		}
 	}
 
-	protected checkFilter(eintrag: any): boolean {
-		if (this._filterNurSichtbar && eintrag.istSichtbar === false) {
+	protected checkFilter(eintrag: Betrieb): boolean {
+		if (this._filterNurSichtbar && !eintrag.isSichtbar) {
 			return false;
 		}
 
