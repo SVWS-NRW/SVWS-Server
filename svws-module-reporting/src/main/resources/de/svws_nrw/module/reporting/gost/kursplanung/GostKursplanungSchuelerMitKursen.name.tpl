@@ -1,0 +1,1 @@
+GOSt-Blockungsergebnis-Schueler-Kurse_Abi[(${ GostBlockungsergebnis.abiturjahr() })]_[(${ #strings.replace(GostBlockungsergebnis.gostHalbjahr().kuerzel, '.', '') })]_(Erg-ID-[(${ GostBlockungsergebnis.id() })])

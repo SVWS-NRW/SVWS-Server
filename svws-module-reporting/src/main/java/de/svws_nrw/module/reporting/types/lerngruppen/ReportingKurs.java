@@ -21,6 +21,9 @@ import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
  */
 public class ReportingKurs extends ReportingLerngruppe {
 
+	/** Eine Map, die die Leistungsdaten zur ID des Schülers speichert. */
+	private final Map<Long, ReportingSchuelerLeistungsdaten> mapSchuelerLeistungsdaten = new HashMap<>();
+
 	/** Eine Map mit den individuellen Kursarten der Schüler zur ID des Schüler. */
 	private final Map<Long, String> mapSchuelerIndividuelleKursarten = new HashMap<>();
 
@@ -86,7 +89,7 @@ public class ReportingKurs extends ReportingLerngruppe {
 		this.jahrgaenge = jahrgaenge;
 		this.kursartAllg = kursartAllg;
 		this.schienen = schienen;
-		this.idsSchueler = (idsSchueler != null) ? idsSchueler.stream().filter(Objects::nonNull).toList() : new ArrayList<>();
+		this.idsSchueler = (idsSchueler != null) ? new ArrayList<>(idsSchueler.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
 		this.schulnummer = schulnummer;
 	}
 
@@ -101,6 +104,26 @@ public class ReportingKurs extends ReportingLerngruppe {
 		return jahrgaenge;
 	}
 
+
+	/**
+	 * Liefert die Leistungsdaten eines Schülers anhand der übergebenen Schüler-ID zurück.
+	 *
+	 * @param idSchueler Die eindeutige ID des Schülers, dessen Leistungsdaten abgefragt werden sollen. Wenn null übergeben wird, wird null zurückgegeben.
+	 *
+	 * @return Die Leistungsdaten des Schülers als {@link ReportingSchuelerLeistungsdaten} oder null wenn keine Daten vorhanden sind oder null übergeben wurde.
+	 */
+	@Override
+	public ReportingSchuelerLeistungsdaten leistungsdatenBySchueler(final Long idSchueler) {
+		if (this.mapSchuelerLeistungsdaten.isEmpty()) {
+			this.schueler().forEach(s -> this.mapSchuelerLeistungsdaten.computeIfAbsent(s.id(),
+					id -> s.aktiverLernabschnittInSchuljahresabschnitt(this.schuljahresabschnitt())
+							.leistungsdatenZurIdKurs(this.id())));
+		}
+
+		if ((idSchueler == null) || mapSchuelerLeistungsdaten.isEmpty())
+			return null;
+		return this.mapSchuelerLeistungsdaten.get(idSchueler);
+	}
 
 	/**
 	 * Gibt die individuelle Kursart für den angegebenen Schüler anhand seiner ID zurück.

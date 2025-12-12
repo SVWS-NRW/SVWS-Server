@@ -73,6 +73,16 @@ public enum ReportingReportvorlage {
 			erzeugeVorlageParameter("mitErzieherAnschrift", ReportingVorlageParameterTyp.BOOLEAN, "false"),
 			erzeugeVorlageParameter("mitErzieherEmailPrivat", ReportingVorlageParameterTyp.BOOLEAN, "false"))),
 
+	/** Report-Vorlage: Kurs - Liste - Schüler - Leistungsdaten */
+	KURSE_v_LISTE_SCHUELER_LEISTUNGSDATEN("Kurs-Liste-Schueler-Leistungsdaten", Arrays.asList(
+			erzeugeVorlageParameter("mitBemerkungen", ReportingVorlageParameterTyp.BOOLEAN, "false"))),
+
+	/** Report-Vorlage: Lehrer - Liste - Schüler - Leistungsdaten */
+	LEHRER_v_LISTE_SCHUELER_LEISTUNGSDATEN("Lehrer-Liste-Schueler-Leistungsdaten", Arrays.asList(
+			erzeugeVorlageParameter("mitKlassenunterricht", ReportingVorlageParameterTyp.BOOLEAN, "true"),
+	        erzeugeVorlageParameter("mitKursunterricht", ReportingVorlageParameterTyp.BOOLEAN, "true"),
+			erzeugeVorlageParameter("mitBemerkungen", ReportingVorlageParameterTyp.BOOLEAN, "false"))),
+
 	/** Report-Vorlage: Lehrer - Stammdaten - Liste */
 	LEHRER_v_STAMMDATENLISTE("Lehrer-Stammdatenliste", new ArrayList<>()),
 
@@ -223,6 +233,22 @@ public enum ReportingReportvorlage {
 			return null;
 		for (final ReportingReportvorlage rv : ReportingReportvorlage.values())
 			if (rv.bezeichnung.equals(bezeichnung))
+				return rv;
+		return null;
+	}
+
+	/**
+	 * Diese Methode ermittelt die Report-Vorlage anhand des übergebenen Namens. Der Vergleich ignoriert Groß- und Kleinschreibung.
+	 *
+	 * @param name Der Name der Report-Vorlage
+	 *
+	 * @return Die Report-Vorlage
+	 */
+	public static ReportingReportvorlage getByName(final @NotNull String name) {
+		if (name.isEmpty())
+			return null;
+		for (final ReportingReportvorlage rv : ReportingReportvorlage.values())
+			if (rv.name().equalsIgnoreCase(name))
 				return rv;
 		return null;
 	}

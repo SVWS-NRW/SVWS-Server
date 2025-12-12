@@ -118,8 +118,7 @@ public final class ReportBuilderHtml extends ReportBuilder<String> {
 
 		// Versuche, den Dateinamen aus der Vorlage zu generieren. Wenn dies misslingt, wird ein leerer String zurückgegeben und der statische Name verwendet.
 		final String generierterDateiname =
-				ReportBuilderUtils.generiereDateinameAusVorlage(builderContext.getHtmlTemplateEngine(), builderContext.getDateinamensvorlage(),
-						builderContext.getHtmlContexts());
+				ReportBuilderUtils.generiereDateinameAusVorlage(builderContext.getDateinamensvorlage(),	builderContext.getHtmlContexts());
 		if (!generierterDateiname.isBlank())
 			return generierterDateiname;
 

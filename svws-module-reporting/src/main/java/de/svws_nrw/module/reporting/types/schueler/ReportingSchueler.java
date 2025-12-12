@@ -336,7 +336,7 @@ public class ReportingSchueler extends ReportingPerson {
 	public ReportingSchuelerLernabschnitt aktiverLernabschnittInSchuljahresabschnitt(final ReportingSchuljahresabschnitt schuljahresabschnitt) {
 		if ((this.lernabschnitte() == null) || this.lernabschnitte().isEmpty())
 			return null;
-		return this.mapLernabschnitte().getSingle12OrNull(schuljahresabschnitt.id(), 0);
+		return this.mapLernabschnitte.getSingle12OrNull(schuljahresabschnitt.id(), 0);
 	}
 
 	/**
@@ -621,6 +621,19 @@ public class ReportingSchueler extends ReportingPerson {
 	}
 
 	/**
+	 * Daten des Lernabschnitts zur übergebenen ID des Lernabschnitts.
+	 *
+	 * @param id Die ID des Lernabschnitts.
+	 *
+	 * @return Der Lernabschnitt zur ID.
+	 */
+	public ReportingSchuelerLernabschnitt lernabschnittById(final long id) {
+		if ((this.lernabschnitte() == null) || this.lernabschnitte().isEmpty())
+			return null;
+		return mapLernabschnitte.getSingle3OrNull(id);
+	}
+
+	/**
 	 * Daten aller Lernabschnitte.
 	 *
 	 * @return Inhalt des Feldes lernabschnitte
@@ -630,12 +643,16 @@ public class ReportingSchueler extends ReportingPerson {
 	}
 
 	/**
-	 * Gibt eine Map mit den Lernabschnitten des Schülers nach Schuljahresabschnitt, WechselNr und LernabschnittsID zurück
+	 * Daten der Lernabschnitte zur übergebenen ID des Schuljahresabschnitts.
 	 *
-	 * @return Map der Lernabschnitte oder eine leere Liste.
+	 * @param id Die ID des Schuljahresabschnitts, dessen Lernabschnitte gesucht werden sollen.
+	 *
+	 * @return Die Lernabschnitte zur ID.
 	 */
-	public ListMap3DLongKeys<ReportingSchuelerLernabschnitt> mapLernabschnitte() {
-		return mapLernabschnitte;
+	public List<ReportingSchuelerLernabschnitt> lernabschnittBySchuljahresabschnittsId(final long id) {
+		if ((this.lernabschnitte() == null) || this.lernabschnitte().isEmpty())
+			return new ArrayList<>();
+		return mapLernabschnitte.get1(id);
 	}
 
 	/**

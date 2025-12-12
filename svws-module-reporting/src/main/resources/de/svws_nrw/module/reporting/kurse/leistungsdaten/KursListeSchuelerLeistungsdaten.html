@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head th:with="mediaPrint = ${Parameter.ausgabeformat >= 2}, duplex = ${Parameter.duplexdruck}">
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width" />
+	<title>Leistungsdaten</title>
+	<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-pdf.css}" href="../../css/reporting-pdf.css" />
+	<link th:if="${mediaPrint && !duplex}" rel="stylesheet" th:href="@{css/reporting-A4-hoch.css}" href="../../css/reporting-A4-hoch.css" />
+	<link th:if="${mediaPrint && duplex}" rel="stylesheet" th:href="@{css/reporting-A4-hoch-duplex.css}" href="../../css/reporting-A4-hoch-duplex.css" />
+	<link rel="stylesheet" th:href="@{css/reporting-styles.css}" href="../../css/reporting-styles.css" />
+	<link rel="stylesheet" th:href="@{kurse/leistungsdaten/KursListeSchuelerLeistungsdaten.css}" href="../../kurse/leistungsdaten/KursListeSchuelerLeistungsdaten.css" />
+</head>
+
+<body th:with="mediaPrint = ${Parameter.ausgabeformat >= 2}">
+
+<div class="reset-page-counter start-new-page" th:each="kurs,iterationVarKurs : ${Kurse}">
+	<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+	<th:block th:if="${mediaPrint}">
+		<div class="pageTopLeft" th:utext="${Schule.bezeichnungSchuleMehrzeiligHtml}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>
+		<div class="pageTopRight" th:utext="'Kurs: ' + ${kurs.kuerzel()} + '<br/>Kursleitung: ' + ${(kurs.kursleitung() != '') ? kurs.kursleitung().kuerzel() : '---'} + '<br/>Abschnitt: ' + ${Schule.auswahlSchuljahresabschnitt().schuljahr()} + '.' + ${Schule.auswahlSchuljahresabschnitt().abschnitt()} + '<br/>Schulnummer: ' + ${Schule.schulnummer()}">Kurs GE-GK2<br/>Kursleitung: ABC<br/>Abschnitt: 2025.2<br/>Schulnummer: 123456</div>
+		<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')} + ' von ' + ${Benutzer.benutzername()}">Gedruckt am 02.02.2022 von ABC</div>
+		<div class="pageBottomRight"><span class="page-nums-print">Seite </span></div>
+	</th:block>
+	<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+
+	<table class="fixed-100 mp-0">
+		<colgroup>
+			<col style="width: 7mm;"/> <!-- lfd. Nr. -->
+			<col style="width: 56mm;"/> <!-- Name. Vorname (Ges.) -->
+			<col style="width: 12mm;"/> <!-- Klasse -->
+			<col style="width: 12mm;"/> <!-- Kursart -->
+			<col style="width: 12mm;"/> <!-- Quartalsnote -->
+			<col style="width: 12mm;"/> <!-- Note -->
+			<col style="width: 12mm;"/> <!-- gemahnt -->
+			<col style="width: 12mm;"/> <!-- FS -->
+			<col style="width: 12mm;"/> <!-- FSU -->
+			<col /> <!-- Füllt auf 100% der Breite auf - fachbezogene Bemerkungen -->
+		</colgroup>
+
+		<thead>
+		<tr>
+			<td colspan="10">
+				<table class="fixed-100 mp-0">
+					<tr>
+						<td class="ta-lb bo-b-grey" style="width: 35%; font-size: 13pt; font-weight: bold;" th:text="${'Leistungsdaten ' + kurs.kuerzel()}">
+							Leistungsdaten GE-GK-2
+						</td>
+						<td class="ta-rb bo-b-grey" style="width: 65%; font-size: 9pt;" th:text="${((!kurs.auflistungJahrgaenge().isEmpty()) ? ((kurs.jahrgaenge().size() == 1) ? ('Jahrgangsstufe: ' + kurs.auflistungJahrgaenge() + ' - ') : ('Jahrgangsstufen: ' + kurs.auflistungJahrgaenge() + ' - ')) : '')  + ((kurs.kurslehrer().size == 1) ? 'Lehrkraft: ' : 'Lehrkräfte: ') + kurs.auflistungKurslehrerkuerzel()}">
+							Jahrgangsstufe: EF - Lehrkräfte: ABC,DEF"
+						</td>
+					</tr>
+					<tr>
+						<td class="ta-lt" style="width: 35%; font-size: 9pt;" th:text="${kurs.schueler().size() + ' Personen ' + kurs.statistikGeschlechter()}">
+							22 Personen (12/10/0)</td>
+						<td class="ta-rt" style="width: 65%; font-size: 9pt;" th:text="${'Klassen: ' + kurs.auflistungKlassen() + ' - Belegung: ' + kurs.statistikIndividuelleKursarten()}">
+							Klassen: EFA,EFB - Belegung: GKM: 12, GKS: 10"
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2" class="ta-lb" style="height: 2mm"></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td class="head-small-grey"></td>
+			<td class="head-small-grey">Name</td>
+			<td class="head-small-grey">Klasse</td>
+			<td class="head-small-grey">Art</td>
+			<td class="head-small-grey ta-c">Quartal</td>
+			<td class="head-small-grey ta-c">Note</td>
+			<td class="head-small-grey ta-c">Mahnung</td>
+			<td class="head-small-grey ta-r">FS</td>
+			<td class="head-small-grey ta-r">FSU</td>
+			<td class="head-small-grey">Bemerkung</td>
+		</tr>
+		</thead>
+		<tbody>
+		<tr th:each="schueler,iterationVarSchueler : ${kurs.schueler()}"
+			th:with="leistungsdaten = ${schueler.aktiverLernabschnittInSchuljahresabschnitt(kurs.schuljahresabschnitt()).leistungsdatenZurIdKurs(kurs.id())},
+				     bemerkung = ${leistungsdaten.textFachbezogeneLernentwicklung()}"
+			th:classappend="${iterationVarSchueler.odd} ? 'bg-lightgrey'">
+			<td class="f-small ta-r bo-t-grey p-tb-0 p-lr-1" th:text="${iterationVarSchueler.count + '. '}">1.</td>
+			<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${schueler.nachnameVorname()}">Mustermann, Max</td>
+			<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${schueler.auswahlLernabschnitt().klasse().kuerzel()}">10a</td>
+			<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${leistungsdaten.kursart()}">GKM</td>
+			<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-c" th:text="${leistungsdaten.noteQuartal()}">3+</td>
+			<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-c" th:text="${leistungsdaten.note()}">2-</td>
+			<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-c" th:text="${leistungsdaten.istGemahnt()} ? 'ja' : ''">ja</td>
+			<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-r" th:text="${leistungsdaten.fehlstundenGesamt()}">25</td>
+			<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-r" th:text="${leistungsdaten.fehlstundenUnentschuldigt()}">5</td>
+			<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${#strings.isEmpty(bemerkung) ? '' : 'ja'}">ja</td>
+		</tr>
+		</tbody>
+
+	</table>
+
+	<th:block th:if="${VorlageParameter.get('mitBemerkungen') && kurs.hatSchuelerMitFachbezogenerBemerkung()}">
+		<table class="fixed-100 mp-0 m-t-6">
+			<colgroup>
+				<col style="width: 7mm;"/> <!-- lfd. Nr. -->
+				<col style="width: 56mm;"/> <!-- Name, Vorname (Ges.) -->
+				<col/> <!-- Füllt auf 100% der Breite auf - fachbezogene Bemerkungen -->
+			</colgroup>
+			<thead>
+			<tr>
+				<td colspan="3">
+					<table class="fixed-100 mp-0">
+						<tr>
+							<td class="ta-lb bo-b-grey" style="width: 100%; font-size: 13pt; font-weight: bold;">
+								Fachbezogene Bemerkungen
+							</td>
+						</tr>
+						<tr>
+							<td class="ta-lb" style="height: 2mm"></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td class="head-small-grey">Nr.</td>
+				<td class="head-small-grey">Name</td>
+				<td class="head-small-grey">Bemerkung</td>
+			</tr>
+			</thead>
+			<tbody>
+			<th:block th:each="schueler,iterationVarSchueler : ${kurs.schueler()}"
+					  th:with="leistungsdaten = ${schueler.aktiverLernabschnittInSchuljahresabschnitt(kurs.schuljahresabschnitt()).leistungsdatenZurIdKurs(kurs.id())},
+							   bemerkung = ${leistungsdaten.textFachbezogeneLernentwicklung()}">
+				<tr th:if="${!#strings.isEmpty(bemerkung)}"	th:classappend="${iterationVarSchueler.odd} ? 'bg-lightgrey'">
+					<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-r" th:text="${iterationVarSchueler.count + '. '}">1.</td>
+					<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${schueler.nachnameVorname()}">Mustermann, Max</td>
+					<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${bemerkung}">fachbezogene Bemerkungen</td>
+				</tr>
+			</th:block>
+			</tbody>
+		</table>
+	</th:block>
+
+</div>
+</body>
+</html>
+

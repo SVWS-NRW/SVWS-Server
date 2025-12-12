@@ -3,6 +3,7 @@ package de.svws_nrw.module.reporting.types.lerngruppen;
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
+import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLeistungsdaten;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 import jakarta.validation.constraints.NotNull;
 
@@ -28,6 +29,9 @@ public abstract class ReportingLerngruppe extends ReportingSchuelergruppe {
 
 	/** Die Wochenstunden der Schüler. */
 	protected int wochenstundenSchueler;
+
+	/** Speichert zwischen, ob der Kursunterricht Schüler mit fachbezogenen Bemerkungen hat. 1 bedeutet mind. 1 Schüler, 0 bedeutet kein Schüler. */
+	private int minAnzahlSchuelerMitFachbezogenerBemerkung = -1;
 
 
 	/**
@@ -110,6 +114,26 @@ public abstract class ReportingLerngruppe extends ReportingSchuelergruppe {
 	}
 
 	/**
+	 * Gibt die Fachlehrer der Lerngruppe zurück. Die Liste enthält alle Fachlehrer dieser Lerngruppe, wobei der erste Lehrer
+	 * in der Liste für die Bewertung im Sinne der Leistungsdaten zuständig ist.
+	 *
+	 * @return Die Liste der Fachlehrer der Lerngruppe.
+	 */
+	public List<ReportingLehrer> fachlehrer() {
+		return lehrer;
+	}
+
+	/**
+	 * Gibt eine Auflistung der Fachlehrer der Lerngruppe als kommaseparierte Liste der Kürzel zurück.
+	 * Die Auflistung beginnt mit dem Lehrer, der für die Leitung verantwortlich ist.
+	 *
+	 * @return Eine kommaseparierte Liste der Kürzel der Fachlehrer.
+	 */
+	public String auflistungFachlehrerkuerzel() {
+		return auflistungLehrerkuerzel();
+	}
+
+	/**
 	 * Gibt die Wochenstunden der Lehrkräfte der Lerngruppe zurück. Der Schlüssel der Map repräsentiert die ID einer Lehrkraft, und der zugehörige Wert gibt
 	 * die Anzahl der Wochenstunden an, die dieser Lehrkraft zugeordnet sind.
 	 *
@@ -142,6 +166,31 @@ public abstract class ReportingLerngruppe extends ReportingSchuelergruppe {
 		return wochenstundenSchueler;
 	}
 
+	/**
+	 * Liefert die Leistungsdaten eines Schülers anhand der übergebenen Schüler-ID zurück.
+	 * Muss von den konkreten Unterklassen implementiert werden, da die Datenhaltung unterschiedlich sein kann.
+	 *
+	 * @param idSchueler Die eindeutige ID des Schülers.
+	 * @return Die Leistungsdaten des Schülers oder null.
+	 */
+	public abstract ReportingSchuelerLeistungsdaten leistungsdatenBySchueler(Long idSchueler);
+
+	/**
+	 * Prüft, ob es fachbezogene Bemerkungen für mindestens einen Schüler in dieser Lerngruppe gibt.
+	 *
+	 * @return True, wenn mindestens ein Schüler eine fachbezogene Bemerkung hat; false, wenn keine solche Bemerkung vorhanden ist.
+	 */
+	public boolean hatSchuelerMitFachbezogenerBemerkung() {
+		if (minAnzahlSchuelerMitFachbezogenerBemerkung == -1) {
+			minAnzahlSchuelerMitFachbezogenerBemerkung = (this.schueler().stream()
+					.anyMatch(s -> {
+						final ReportingSchuelerLeistungsdaten leistungsdaten = this.leistungsdatenBySchueler(s.id());
+						return (leistungsdaten != null) && !leistungsdaten.textFachbezogeneLernentwicklung().isEmpty();
+					})
+					? 1 : 0);
+		}
+		return minAnzahlSchuelerMitFachbezogenerBemerkung == 1;
+	}
 
 	// ##### Hash und Equals Methoden #####
 

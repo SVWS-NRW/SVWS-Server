@@ -11,6 +11,7 @@ import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -765,9 +766,73 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	}
 
 	/**
+	 * Liefert eine Liste von Schüler-Leistungsdaten, die Klassenunterricht darstellen.
+	 *
+	 * @return Liste von Schüler-Leistungsdaten, die Klassenunterricht darstellen.
+	 */
+	public List<ReportingSchuelerLeistungsdaten> leistungsdatenKlassenunterrichte() {
+		if (this.leistungsdaten() == null)
+			return new ArrayList<>();
+
+		// Klassenunterrichte haben keine Kurs-ID, also hat Key3den Wert -1.
+		return listMapLeistungsdaten.get3(-1);
+	}
+
+	/**
+	 * Liefert eine Liste von Schüler-Leistungsdaten, die Kursunterricht darstellen.
+	 *
+	 * @return Liste von Schüler-Leistungsdaten, die Kursunterricht darstellen.
+	 */
+	public List<ReportingSchuelerLeistungsdaten> leistungsdatenKursunterrichte() {
+		if (this.leistungsdaten() == null)
+			return new ArrayList<>();
+
+		// Kursunterrichte haben eine Kurs-ID, also hat Key3 einen Wert größer -1.
+		final List<ReportingSchuelerLeistungsdaten> leistungsdatenKursunterrichte = new ArrayList<>();
+		listMapLeistungsdaten.keySet3().stream().toList().stream().filter(idKurs -> (idKurs > -1))
+				.forEach(idKurs -> leistungsdatenKursunterrichte.addAll(listMapLeistungsdaten.get3(idKurs)));
+
+		return leistungsdatenKursunterrichte;
+	}
+
+	/**
+	 * Liefert den Eintrag der Schüler-Leistungsdaten, der dem Klassenunterricht zu den gegebenen IDs von Fach und Lehrer entspricht.
+	 *
+	 * @param idFach Die ID des Fachs, zu dem die Leistungsdaten abgefragt werden sollen.
+	 * @param idLehrer Die ID des Lehrers, der dem Unterricht zugeordnet ist.
+	 *
+	 * @return Der Eintrag aus den Schüler-Leistungsdaten, der dem Klassenunterricht zu den gegebenen IDs von Fach und Lehrer. Gibt es mehrere, so wird die
+	 * Kursart PUK oder leer gewählt. Wird kein Eintrag gefunden, so wird null zurückgegeben.
+	 */
+	public ReportingSchuelerLeistungsdaten leistungsdatenKlassenunterrichtZurIdFachIdLehrer(final long idFach, final long idLehrer) {
+		if ((idFach < 0) || (idLehrer < 0) || (this.leistungsdaten() == null))
+			return null;
+
+		// Klassenunterrichte haben keine Kurs-ID, also hat Key3den Wert -1.
+		final List<ReportingSchuelerLeistungsdaten> leistungsdatenZumFachUndLehrer =
+				listMapLeistungsdaten.get23(idFach, -1).stream().filter(l -> (l.fachlehrer().id() == idLehrer)).toList();
+
+		// Wenn es keinen Eintrag gibt, gebe null zurück.
+		if (leistungsdatenZumFachUndLehrer.isEmpty())
+			return null;
+
+		// Wenn nur ein Eintrag existiert, wird dieser zurückgegeben
+		if (leistungsdatenZumFachUndLehrer.size() == 1)
+			return leistungsdatenZumFachUndLehrer.getFirst();
+
+		// Wenn es mehrere Leistungsdatensätze ohne Kurs-ID, aber mit gleichem Fach und Lehrer gibt, muss noch die Kursart verschieden sein.
+		// Wähle dann die Kursart PUK zuerst und wenn das nicht hilft, die leere Kursart. Andernfalls null.
+		return leistungsdatenZumFachUndLehrer.stream()
+				.filter(l -> "PUK".equalsIgnoreCase(l.kursart) || "".equals(l.kursart))
+				.min(Comparator.comparingInt(l -> "PUK".equalsIgnoreCase(l.kursart) ? 0 : 1))
+				.orElse(null);
+	}
+
+	/**
 	 * Gibt die Leistungsdaten eines Schülers basierend auf der angegebenen ID zurück.
 	 *
 	 * @param id Die ID, die zur Identifikation der Leistungsdaten verwendet wird.
+	 *
 	 * @return Die Leistungsdaten des Schülers, wenn die ID vorhanden ist. Gibt null zurück, wenn keine
 	 *         entsprechenden Leistungsdaten gefunden werden.
 	 */
@@ -778,9 +843,10 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	}
 
 	/**
-	 * Liefert eine Liste von Schüler-Leistungsdaten, die zu einer angegebenen Fach-ID gehören.
+	 * Liefert eine Liste von Schüler-Leistungsdaten, die zu einer angegebenen Fach-ID und Lehrer-ID gehören und kein Kursunterricht sind.
 	 *
 	 * @param idFach Die ID des Fachs, zu dem die Leistungsdaten abgefragt werden sollen.
+	 *
 	 * @return Eine Liste von ReportingSchuelerLeistungsdaten, die zu der angegebenen Fach-ID gehören,
 	 * oder eine leere Liste, falls keine Daten gefunden wurden.
 	 */
@@ -794,6 +860,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * Methode, um die Leistungsdaten eines Schülers anhand der Kurs-ID abzurufen.
 	 *
 	 * @param idKurs Die eindeutige ID des Kurses, für den die Leistungsdaten abgerufen werden sollen.
+	 *
 	 * @return Ein Objekt vom Typ ReportingSchuelerLeistungsdaten, das die Leistungsdaten des Schülers zu dem angegebenen Kurs enthält,
 	 *         oder null, wenn keine entsprechenden Daten gefunden werden.
 	 */

@@ -96,11 +96,16 @@ public final class ReportingFactory {
 
 			// Validiere die Angaben zur Vorlage für den Report.
 			this.logger.logLn(LogLevel.DEBUG, 4, "Validiere Report-Vorlage.");
-			if (ReportingReportvorlage.getByBezeichnung(this.reportingParameter.reportvorlage) == null) {
+			final ReportingReportvorlage reportvorlage = ReportingReportvorlage.getByBezeichnung(this.reportingParameter.reportvorlage);
+			if (reportvorlage == null) {
 				this.logger.logLn(LogLevel.ERROR, 4, "FEHLER: Es wurde keine gültige Report-Vorlage für die Initialisierung der Reporting-Factory übergeben.");
 				throw new ApiOperationException(Status.BAD_REQUEST,
 						"### FEHLER: Es wurde keine gültige Report-Vorlage für die Initialisierung der Reporting-Factory übergeben.");
 			}
+
+			// Logge für einen evtl. späteren Fehlerfall das Format und das Template.
+			this.logger.logLn(LogLevel.DEBUG, 4, "Übergebenes und validiertes Ausgabeformat: " + reportingAusgabeformat.name());
+			this.logger.logLn(LogLevel.DEBUG, 4, "Übergebene und validierte Report-Vorlage: " + reportvorlage.getBezeichnung());
 
 			// Validiere Hauptdaten-Angabe
 			this.logger.logLn(LogLevel.DEBUG, 4, "Validiere Hauptdaten.");
