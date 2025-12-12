@@ -16,7 +16,7 @@ export class RouteNotenmodulKonfigurationNeu extends RouteNode<any, RouteNotenmo
 			BenutzerKompetenz.NOTENMODUL_ADMINISTRATION,
 		], "notenmodul.administration.neu", "neu", NotenmodulKonfigurationNeu);
 		super.types = new Set([ViewType.HINZUFUEGEN]);
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.ALPHA;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Konfiguration Neu";
 		super.setCheckpoint = true;

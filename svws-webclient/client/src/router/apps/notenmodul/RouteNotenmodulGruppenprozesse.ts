@@ -15,7 +15,7 @@ export class RouteNotenmodulKonfigurationGruppenprozesse extends RouteNode<any, 
 			BenutzerKompetenz.NOTENMODUL_ADMINISTRATION,
 		], "notenmodul.administration.gruppenprozesse", "gruppenprozesse", NotenmodulKonfigurationGruppenprozesse);
 		super.types = new Set([ViewType.GRUPPENPROZESSE]);
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.ALPHA;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Gruppenprozesse";
 	}

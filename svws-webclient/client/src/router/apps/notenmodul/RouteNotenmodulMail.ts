@@ -1,23 +1,22 @@
-import type { DeveloperNotificationException } from "@core";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode, type DeveloperNotificationException } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeNotenmodulAdministration, type RouteNotenmodulAdministration } from "./RouteNotenmodulAdministration";
 import type { RouteLocationNormalized, RouteParams } from "vue-router";
-import type { NotenmodulSynchronisationProps } from "~/components/notenmodul/NotenmodulSynchronisationProps";
+import type { NotenmodulMailProps } from "~/components/notenmodul/NotenmodulMailProps";
 import { routeError } from "~/router/error/RouteError";
 
-const NotenmodulSynchronisation = () => import("~/components/notenmodul/NotenmodulSynchronisation.vue");
+const NotenmodulMail = () => import("~/components/notenmodul/NotenmodulMail.vue");
 
-export class RouteNotenmodulSynchronisation extends RouteNode<any, RouteNotenmodulAdministration> {
+export class RouteNotenmodulMail extends RouteNode<any, RouteNotenmodulAdministration> {
 
 	public constructor() {
 		super(Schulform.values(), [
 			BenutzerKompetenz.NOTENMODUL_ADMINISTRATION,
-		], "notenmodul.administration.synchronisation", "synchronisation", NotenmodulSynchronisation);
+		], "notenmodul.administration.mail", "mail", NotenmodulMail);
 		super.mode = ServerMode.ALPHA;
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "Synchronisation";
+		super.text = "Mail";
 		this.isHidden = (params?: RouteParams) => this.checkHidden(params);
 	}
 
@@ -34,17 +33,16 @@ export class RouteNotenmodulSynchronisation extends RouteNode<any, RouteNotenmod
 		}
 	}
 
-	public getProps(to: RouteLocationNormalized): NotenmodulSynchronisationProps {
+
+	public getProps(to: RouteLocationNormalized): NotenmodulMailProps {
 		return {
 			manager: () => routeNotenmodulAdministration.data.manager,
-			synchronize: routeNotenmodulAdministration.data.wenomSynchronize,
-			download: routeNotenmodulAdministration.data.wenomDownload,
-			upload: routeNotenmodulAdministration.data.wenomUpload,
-			truncate: routeNotenmodulAdministration.data.wenomTruncate,
-			reset: routeNotenmodulAdministration.data.wenomReset,
+			serverConfig: () => routeNotenmodulAdministration.data.mapEnmServerConfigServer,
+			setServerConfigElement: routeNotenmodulAdministration.data.wenomSetServerConfigElement,
+			updateServerConnection: routeNotenmodulAdministration.data.wenomUpdateServerConnection,
 		};
 	}
 
 }
 
-export const routeNotenmodulSynchronisation = new RouteNotenmodulSynchronisation();
+export const routeNotenmodulMail = new RouteNotenmodulMail();

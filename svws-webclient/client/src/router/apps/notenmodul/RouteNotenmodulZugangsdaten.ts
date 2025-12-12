@@ -16,7 +16,7 @@ export class RouteNotenmodulZugangsdaten extends RouteNode<RouteDataNotenmodulZu
 		super(Schulform.values(), [
 			BenutzerKompetenz.NOTENMODUL_ADMINISTRATION,
 		], "notenmodul.zugangsdaten", "notenmodul/zugangsdaten", NotenmodulZugangsdaten, new RouteDataNotenmodulZugangsdaten());
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.ALPHA;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Zugangsdaten";
 		super.children = [];

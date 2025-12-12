@@ -12,6 +12,7 @@ import { routeNotenmodulSynchronisation } from "./RouteNotenmodulSynchronisation
 import { routeNotenmodulKonfigurationNeu } from "./RouteNotenmodulKonfigurationNeu";
 import { routeNotenmodulKonfigurationGruppenprozesse } from "./RouteNotenmodulGruppenprozesse";
 import { routeNotenmodulVerbindung } from "./RouteNotenmodulVerbindung";
+import { routeNotenmodulMail } from "./RouteNotenmodulMail";
 
 const NotenmodulAdministrationApp = () => import("~/components/notenmodul/NotenmodulAdministrationApp.vue");
 const NotenmodulAdministrationAuswahl = () => import("~/components/notenmodul/NotenmodulAdministrationAuswahl.vue");
@@ -21,8 +22,8 @@ export class RouteNotenmodulAdministration extends RouteAuswahlNode<WenomAuswahl
 	public constructor() {
 		super(Schulform.values(), [
 			BenutzerKompetenz.NOTENMODUL_ADMINISTRATION,
-		], "notenmodul.administration", String.raw`notenmodul/administration/:id(\d+)?`, NotenmodulAdministrationApp, NotenmodulAdministrationAuswahl, new RouteDataNotenmodulAdministration());
-		super.mode = ServerMode.DEV;
+		], "notenmodul.administration", String.raw`notenmodul/administration/:id(-?\d+)?`, NotenmodulAdministrationApp, NotenmodulAdministrationAuswahl, new RouteDataNotenmodulAdministration());
+		super.mode = ServerMode.ALPHA;
 		super.getAuswahlListProps = (props) => (<NotenmodulAdministrationAuswahlProps>{
 			...props,
 			manager: () => routeNotenmodulAdministration.data.manager,
@@ -34,6 +35,7 @@ export class RouteNotenmodulAdministration extends RouteAuswahlNode<WenomAuswahl
 		super.children = [
 			routeNotenmodulVerbindung,
 			routeNotenmodulKonfiguration,
+			routeNotenmodulMail,
 			routeNotenmodulSynchronisation,
 			routeNotenmodulKonfigurationNeu,
 			routeNotenmodulKonfigurationGruppenprozesse,

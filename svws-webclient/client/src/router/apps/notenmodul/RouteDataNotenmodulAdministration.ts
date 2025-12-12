@@ -1,6 +1,6 @@
 import type { RouteParamsRawGeneric } from "vue-router";
-import type { List, JavaMap, ENMServerConfigElement, ENMServerConnection } from "@core";
-import { ArrayList, UnsupportedOperationException, OpenApiError, DeveloperNotificationException, HashMap, SimpleOperationResponse, UserNotificationException } from "@core";
+import type { List, JavaMap, ENMServerConfigElement, ENMServerConnection, Abteilung } from "@core";
+import { ENMConfigKlasse, ArrayList, UnsupportedOperationException, OpenApiError, DeveloperNotificationException, HashMap, SimpleOperationResponse, UserNotificationException, ENMConfigSpalte, ENMAbteilung } from "@core";
 import { WenomAuswahlListeManager, ViewType } from "@ui";
 import { api } from "~/router/Api";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
@@ -8,6 +8,8 @@ import { routeNotenmodulKonfiguration } from "./RouteNotenmodulKonfiguration";
 import { routeNotenmodulKonfigurationNeu } from "./RouteNotenmodulKonfigurationNeu";
 import { routeNotenmodulKonfigurationGruppenprozesse } from "./RouteNotenmodulGruppenprozesse";
 import { routeNotenmodul } from "./RouteNotenmodul";
+import { NotenmodulConfigManagerSperrungen } from "./NotenmodulConfigManagerSperrungen";
+import { NotenmodulConfigManagerSichtbareSpalten } from "./NotenmodulConfigManagerSichtbareSpalten";
 
 
 interface RouteStateNotenmodulAdministration extends RouteStateAuswahlInterface<WenomAuswahlListeManager> {
@@ -15,11 +17,10 @@ interface RouteStateNotenmodulAdministration extends RouteStateAuswahlInterface<
 	connected: boolean;
 	mapENMServerConfigServer: JavaMap<string, string>;
 	mapENMServerConfigGlobal: JavaMap<string, string>;
+	mapAbteilungen: JavaMap<number, ENMAbteilung>;
+	managerSperrungen: NotenmodulConfigManagerSperrungen;
+	managerSichtbareSpalten: NotenmodulConfigManagerSichtbareSpalten;
 }
-
-export type Spalte = "Kurs" | "Kursart" | "Lehrer" | "Quartal" | "Note" | "Mahnung" | "FS" | "FSU" | "Bemerkung";
-export type MapLeistungenTabelleSpaltenanzeige = Map<Spalte, boolean>;
-export type MapTeilleistungenTabelleSpaltenanzeige = Map<number, boolean>;
 
 export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAuswahlListeManager, RouteStateNotenmodulAdministration> {
 
@@ -33,6 +34,9 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 			connected: false,
 			mapENMServerConfigServer: new HashMap<string, string>(),
 			mapENMServerConfigGlobal: new HashMap<string, string>(),
+			mapAbteilungen: new HashMap<number, ENMAbteilung>(),
+			managerSperrungen: new NotenmodulConfigManagerSperrungen(new ArrayList(), new HashMap(), new HashMap(), new HashMap(), new HashMap(), async () => {}),
+			managerSichtbareSpalten: new NotenmodulConfigManagerSichtbareSpalten(new ArrayList(), new HashMap(), async () => {}),
 		}, { gruppenprozesse: routeNotenmodulKonfigurationGruppenprozesse, hinzufuegen: routeNotenmodulKonfigurationNeu });
 	}
 
@@ -43,12 +47,35 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 			connected: false,
 			mapENMServerConfigServer: new HashMap<string, string>(),
 			mapENMServerConfigGlobal: new HashMap<string, string>(),
+			managerSperrungen: new NotenmodulConfigManagerSperrungen(new ArrayList(), new HashMap(), new HashMap(), new HashMap(), new HashMap(), async () => {}),
+			managerSichtbareSpalten: new NotenmodulConfigManagerSichtbareSpalten(new ArrayList(), new HashMap(), async () => {}),
 		});
+	}
+
+	private createMapAbteilungen(listAbteilungen: List<Abteilung>) {
+		const mapAbteilungen = new HashMap<number, ENMAbteilung>();
+		for (const abteilung of listAbteilungen) {
+			const enmAbteilung = new ENMAbteilung();
+			enmAbteilung.id = abteilung.id;
+			enmAbteilung.idAbteilungsleiter = abteilung.idAbteilungsleiter;
+			enmAbteilung.bezeichnung = abteilung.bezeichnung;
+			enmAbteilung.sortierung = abteilung.sortierung;
+			for (const klasse of abteilung.klassenzuordnungen) {
+				enmAbteilung.klassenzuordnungen.add(klasse.idKlasse);
+			}
+			mapAbteilungen.put(enmAbteilung.id, enmAbteilung);
+		}
+		return mapAbteilungen;
 	}
 
 	public async setSchuljahresabschnitt(idSchuljahresabschnitt: number, isEntering: boolean): Promise<number | null> {
 		const result = await super.setSchuljahresabschnitt(idSchuljahresabschnitt, isEntering);
 		await routeNotenmodul.data.ladeDaten();
+		const listAbteilungen = await api.server.getAbteilungenByIdJahresAbschnitt(api.schema, idSchuljahresabschnitt);
+		const mapAbteilungen = this.createMapAbteilungen(listAbteilungen);
+		const managerSperrungen = this.createSpaltenManager();
+		const managerSichtbareSpalten = this.createManagerSichtbareSpalten();
+		this.setPatchedState({ mapAbteilungen, managerSperrungen, managerSichtbareSpalten });
 		const arr = [];
 		for (const server of this.manager.filtered())
 			arr.push(this.connect(server.id));
@@ -61,6 +88,35 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 		const manager = new WenomAuswahlListeManager(api.schuleStammdaten.idSchuljahresabschnitt,
 			api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte, api.schulform, list);
 		return { manager };
+	}
+
+	protected createManagerSichtbareSpalten(): NotenmodulConfigManagerSichtbareSpalten {
+		const res = api.config.getValue("notenmodul.leistungen.tabelle.spalten.anzeige");
+		const liste = new ArrayList<ENMConfigSpalte>();
+		const configs: any[] | null = JSON.parse(res);
+		if (configs !== null) {
+			for (const config of configs) {
+				const spalte = ENMConfigSpalte.transpilerFromJSON(JSON.stringify(config));
+				liste.add(spalte);
+			}
+		}
+		const mapTeilleistungsarten = routeNotenmodul.data.manager.mapTeilleistungsarten;
+		return new NotenmodulConfigManagerSichtbareSpalten(liste, mapTeilleistungsarten, this.writeConfigSichtbareSpalten);
+	}
+
+	protected createSpaltenManager(): NotenmodulConfigManagerSperrungen {
+		const res = api.config.getValue("notenmodul.leistungen.tabelle.spalten.readonly");
+		const liste = new ArrayList<ENMConfigKlasse>();
+		const configs: any[] | null = JSON.parse(res);
+		if (configs !== null) {
+			for (const config of configs) {
+				const klasse = ENMConfigKlasse.transpilerFromJSON(JSON.stringify(config));
+				liste.add(klasse);
+			}
+		}
+		const { mapKlassen, mapTeilleistungsarten, mapJahrgaenge } = routeNotenmodul.data.manager;
+		const mapAbteilungen = this._state.value.mapAbteilungen;
+		return new NotenmodulConfigManagerSperrungen(liste, mapKlassen, mapTeilleistungsarten, mapJahrgaenge, mapAbteilungen, this.writeConfigSperrungen);
 	}
 
 	public addID(param: RouteParamsRawGeneric, id: number): void {
@@ -88,6 +144,10 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 		throw new UnsupportedOperationException("Die Methode ist nicht implementiert.");
 	}
 
+	get mapAbteilungen() {
+		return this._state.value.mapAbteilungen;
+	}
+
 	public get manager(): WenomAuswahlListeManager {
 		if (this._state.value.manager === undefined)
 			throw new DeveloperNotificationException("Die ENM-Daten wurden nicht geladen.");
@@ -106,46 +166,24 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 		return this._state.value.mapENMServerConfigServer;
 	}
 
-	get mapLeistungenTabelleSpaltenanzeige(): MapLeistungenTabelleSpaltenanzeige {
-		const res = api.config.getValue("notenmodul.leistungen.tabelle.spaltenanzeige");
-		const map = new Map();
-		const spalten: [string, string][] = JSON.parse(res);
-		for (const spalte of spalten) {
-			const [key, value] = spalte;
-			map.set(key, value);
-		}
-		return map;
+	get managerSperrungen(): NotenmodulConfigManagerSperrungen {
+		return this._state.value.managerSperrungen;
 	}
 
-	setMapLeistungenTabelleSpaltenanzeige = async (key: Spalte, value: boolean) => {
-		const map = this.mapLeistungenTabelleSpaltenanzeige;
-		map.set(key, value);
-		const json = JSON.stringify([...map.entries()]);
-		await api.config.setValue("notenmodul.leistungen.tabelle.spaltenanzeige", json);
+	get managerSichtbareSpalten(): NotenmodulConfigManagerSichtbareSpalten {
+		return this._state.value.managerSichtbareSpalten;
+	}
+
+	writeConfigSperrungen = async () => {
+		const managerSperrungen = this.managerSperrungen;
+		await api.config.setValue("notenmodul.leistungen.tabelle.spalten.readonly", managerSperrungen.json);
+		this.setPatchedState({ managerSperrungen });
 	};
 
-	get mapTeilleistungenTabelleSpaltenanzeige(): MapTeilleistungenTabelleSpaltenanzeige {
-		const res = api.config.getValue("notenmodul.teilleistungen.tabelle.spaltenanzeige");
-		const map = new Map();
-		const spalten: [string, string][] | null = JSON.parse(res);
-		if (spalten === null) {
-			for (const id of routeNotenmodul.data.manager.mapTeilleistungsarten.keySet()) {
-				map.set(id, true);
-			}
-		} else {
-			for (const spalte of spalten) {
-				const [key, value] = spalte;
-				map.set(key, value);
-			}
-		}
-		return map;
-	}
-
-	setMapTeilleistungenTabelleSpaltenanzeige = async (key: number, value: boolean) => {
-		const map = this.mapTeilleistungenTabelleSpaltenanzeige;
-		map.set(key, value);
-		const json = JSON.stringify([...map.entries()]);
-		await api.config.setValue("notenmodul.teilleistungen.tabelle.spaltenanzeige", json);
+	writeConfigSichtbareSpalten = async () => {
+		const managerSichtbareSpalten = this.managerSichtbareSpalten;
+		await api.config.setValue("notenmodul.leistungen.tabelle.spalten.anzeige", managerSichtbareSpalten.json);
+		this.setPatchedState({ managerSichtbareSpalten });
 	};
 
 	connect = async (id: number): Promise<void> => {
