@@ -52,6 +52,8 @@ Lehrer;Geburtsdatum;Geburtsdatum;D;;;;;ALLE
 Lehrer;Geschlecht;Geschlecht;S;;;;;ALLE
 Lehrer;Handy;Telefon (Mobil);S;;;;;ALLE
 Lehrer;Kuerzel;Kürzel;S;;;;;ALLE
+Lehrer;ID;Interne ID-Nummer;I;;;;;ALLE
+Lehrer;IdentNr1;Ident-Nr.;S;;;;;ALLE
 Lehrer;LBVNr;LBV-Nummer;S;;;;;ALLE
 Lehrer;Nachname;Nachname;S;;;;;ALLE
 Lehrer;PANr;Personalnummer;S;;;;;ALLE
@@ -200,7 +202,6 @@ Schueler;SchulwechselNr;Aufnehmende Schule: PLZ;S;;;PLZ;SELECT PLZ from K_Schule
 Schueler;SchulwechselNr;Aufnehmende Schule: Schulnr.;S;;;;;ALLE
 Schueler;SchulwechselNr;Aufnehmende Schule: Straße;S;;;Strasse;SELECT CONCAT(IFNULL(Strassenname,''),' ',IFNULL(HausNr,'')) as Strasse from K_Schule where SchulNr=%;ALLE
 Schueler;Schwerbehinderung;Schwerstbehinderung;B;;;;;ALLE
-Schueler;Sportbefreiung_ID;Sportbefreiung;S;;;Bezeichnung;SELECT Bezeichnung FROM K_Sportbefreiung WHERE ID=%;ALLE
 Schueler;StaatKrz;Staatsangehörigkeit (Klartext);S;;;mtblStaat.bezeichnung;codeDEStatis=%;ALLE
 Schueler;StaatKrz;Staatsangehörigkeit (Klartext, Adjektiv);S;;;mtblStaat.staatsangehoerigkeit;codeDEStatis=%;ALLE
 Schueler;StaatKrz;Staatsangehörigkeit (Schlüssel);S;;;;;ALLE
