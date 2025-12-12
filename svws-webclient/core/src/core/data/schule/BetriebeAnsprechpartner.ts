@@ -9,6 +9,11 @@ export class BetriebeAnsprechpartner extends JavaObject {
 	public id: number = 0;
 
 	/**
+	 * Die ID des Betriebs.
+	 */
+	public idBetrieb: number = 0;
+
+	/**
 	 * Das Anrede des Ansprechpartners.
 	 */
 	public anrede: string | null = null;
@@ -59,6 +64,9 @@ export class BetriebeAnsprechpartner extends JavaObject {
 		if (obj.id === undefined)
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
+		if (obj.idBetrieb === undefined)
+			throw new Error('invalid json format, missing attribute idBetrieb');
+		result.idBetrieb = obj.idBetrieb;
 		result.anrede = (obj.anrede === undefined) ? null : obj.anrede === null ? null : obj.anrede;
 		result.name = (obj.name === undefined) ? null : obj.name === null ? null : obj.name;
 		result.rufname = (obj.rufname === undefined) ? null : obj.rufname === null ? null : obj.rufname;
@@ -73,6 +81,7 @@ export class BetriebeAnsprechpartner extends JavaObject {
 	public static transpilerToJSON(obj: BetriebeAnsprechpartner): string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"idBetrieb" : ' + obj.idBetrieb.toString() + ',';
 		result += '"anrede" : ' + ((obj.anrede === null) ? 'null' : JSON.stringify(obj.anrede)) + ',';
 		result += '"name" : ' + ((obj.name === null) ? 'null' : JSON.stringify(obj.name)) + ',';
 		result += '"rufname" : ' + ((obj.rufname === null) ? 'null' : JSON.stringify(obj.rufname)) + ',';
@@ -88,6 +97,9 @@ export class BetriebeAnsprechpartner extends JavaObject {
 		let result = '{';
 		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id.toString() + ',';
+		}
+		if (obj.idBetrieb !== undefined) {
+			result += '"idBetrieb" : ' + obj.idBetrieb.toString() + ',';
 		}
 		if (obj.anrede !== undefined) {
 			result += '"anrede" : ' + ((obj.anrede === null) ? 'null' : JSON.stringify(obj.anrede)) + ',';

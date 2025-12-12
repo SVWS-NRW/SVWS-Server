@@ -173,3 +173,4 @@ export { EinwilligungsartenListeManager } from './ui/manager/kataloge/Einwilligu
 export { FloskelgruppenListeManager } from './ui/manager/kataloge/FloskelgruppenListeManager';
 export { FloskelnListeManager } from './ui/manager/kataloge/FloskelnListeManager';
 export { WenomAuswahlListeManager } from './components/enm/WenomAuswahlListeManager';
+export { BetriebeListeManager } from './ui/manager/kataloge/BetriebeListeManager';

@@ -2,6 +2,7 @@ package de.svws_nrw.api.server;
 
 import de.svws_nrw.core.data.erzieher.Erzieherart;
 import de.svws_nrw.core.data.schule.Betrieb;
+import de.svws_nrw.core.data.schule.BetriebeAnsprechpartner;
 import de.svws_nrw.core.data.schule.Betriebsart;
 import de.svws_nrw.core.data.schule.Floskel;
 import de.svws_nrw.core.data.schule.Floskelgruppe;
@@ -3346,7 +3347,7 @@ public class APISchule {
 	@Operation(summary = "Gibt eine Liste der Ansprechpartner im Katalog zurück.",
 			description = "Gibt die Ansprechpartner zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.")
 	@ApiResponse(responseCode = "200", description = "Eine Liste der Ansprechpartner.",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Betrieb.class))))
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = BetriebeAnsprechpartner.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
 	public Response getBetriebeAnsprechpartnerNeu(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
@@ -3377,7 +3378,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z. B. beim Datenbankzugriff)")
 	public Response patchBetriebeAnsprechpartnerNeu(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@RequestBody(description = "Der Patch eines Betriebs", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Betrieb.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BetriebeAnsprechpartner.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
 				conn -> new DataBetriebeAnsprechpartner(conn).patchAsResponse(id, is), request, ServerMode.STABLE,
@@ -3398,12 +3399,12 @@ public class APISchule {
 	@Operation(summary = "Erstellt einen neuen Betrieb und gibt das erstellte Objekt zurück.",
 			description = "Erstellt einen neuen Betrieb, insofern die notwendigen Berechtigungen vorliegen")
 	@ApiResponse(responseCode = "201", description = "Der Betrieb wurde erfolgreich hinzugefügt.",
-			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Betrieb.class)))
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BetriebeAnsprechpartner.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Ansprechpartner anzulegen.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response addBetriebeAnsprechpartnerNeu(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die Daten des zu erstellenden Betriebs.", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Betrieb.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BetriebeAnsprechpartner.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
 				conn -> new DataBetriebeAnsprechpartner(conn).addAsResponse(is), request, ServerMode.STABLE,
@@ -3427,8 +3428,8 @@ public class APISchule {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Ansprechpartner zu entfernen.")
 	@ApiResponse(responseCode = "404", description = "Ansprechpartner nicht vorhanden")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response deleteBetriebeAnsprechpartnerNeu(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der zu löschenden "
-			+ "Ansprechpartner",
+	public Response deleteBetriebeAnsprechpartnerNeu(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die IDs der zu löschenden Ansprechpartner",
 			required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 			array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(

@@ -1,5 +1,6 @@
 package de.svws_nrw.data.schule;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -9,6 +10,7 @@ import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.schule.BetriebeAnsprechpartner;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOAnsprechpartnerAllgemeineAdresse;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAllgemeineAdresse;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.core.Response;
@@ -36,6 +38,8 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @DisplayName("Diese Klasse testet die Klasse DataBetriebeAnsprechpartner")
@@ -60,11 +64,21 @@ class DataBetriebeAnsprechpartnerTest {
 
 	@Test
 	@DisplayName("setAttributesRequiredOnCreation: name")
-	void setAttributesRequiredOnCreationTest() {
+	void setAttributesRequiredOnCreationName() {
 		assertThatException()
-				.isThrownBy(() -> this.data.add(Map.of("test", "test")))
+				.isThrownBy(() -> this.data.add(Map.of("idBetrieb", "test")))
 				.isInstanceOf(ApiOperationException.class)
 				.withMessage("Es werden weitere Attribute (name) benötigt, damit die Entität erstellt werden kann.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("setAttributesRequiredOnCreation: idBetrieb")
+	void setAttributesRequiredOnCreationIdBetrieb() {
+		assertThatException()
+				.isThrownBy(() -> this.data.add(Map.of("name", "test")))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Es werden weitere Attribute (idBetrieb) benötigt, damit die Entität erstellt werden kann.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
@@ -172,6 +186,7 @@ class DataBetriebeAnsprechpartnerTest {
 		dto.Vorname = "test";
 		dto.Telefon = "test";
 		dto.Email = "test";
+		dto.Adresse_ID = 42L;
 
 		assertThat(this.data.map(dto))
 				.isInstanceOf(BetriebeAnsprechpartner.class)
@@ -180,6 +195,7 @@ class DataBetriebeAnsprechpartnerTest {
 				.hasFieldOrPropertyWithValue("name", dto.Name)
 				.hasFieldOrPropertyWithValue("rufname", dto.Vorname)
 				.hasFieldOrPropertyWithValue("telefon", dto.Telefon)
+				.hasFieldOrPropertyWithValue("idBetrieb", dto.Adresse_ID)
 				.hasFieldOrPropertyWithValue("eMail", dto.Email);
 	}
 
@@ -257,6 +273,60 @@ class DataBetriebeAnsprechpartnerTest {
 					.hasMessage("Die Daten des Patches enthalten das unbekannte Attribut unknown.")
 					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 		}
+	}
+
+	@Test
+	@DisplayName("patch | idBetrieb | null")
+	void patchIdBetriebIsNull() {
+		when(this.conn.queryByKey(DTOAnsprechpartnerAllgemeineAdresse.class, 1L)).thenReturn(mock(DTOAnsprechpartnerAllgemeineAdresse.class));
+		final var map =  new HashMap<String, Object>();
+		map.put("idBetrieb", null);
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, map))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Attribut idBetrieb: Der Wert null ist nicht erlaubt")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+
+	}
+
+	@Test
+	@DisplayName("patch | idBetrieb | no changes")
+	void patchIdBetriebNoChanges() throws ApiOperationException {
+		final var dto = new DTOAnsprechpartnerAllgemeineAdresse(1L, 1L);
+		dto.Adresse_ID = 42L;
+		when(this.conn.queryByKey(DTOAnsprechpartnerAllgemeineAdresse.class, 1L)).thenReturn(dto);
+
+		this.data.patch(1L, Map.of("idBetrieb", 42L));
+
+		verify(this.conn, never()).queryByKey(DTOKatalogAllgemeineAdresse.class, 42L);
+		assertThat(dto.Adresse_ID).isEqualTo(42L);
+	}
+
+	@Test
+	@DisplayName("patch | idBetrieb | wrong id")
+	void patchIdBetriebWrongId() {
+		when(this.conn.queryByKey(DTOAnsprechpartnerAllgemeineAdresse.class, 1L)).thenReturn(mock(DTOAnsprechpartnerAllgemeineAdresse.class));
+		when(this.conn.queryByKey(DTOKatalogAllgemeineAdresse.class, 42L)).thenReturn(null);
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, Map.of("idBetrieb", 42L)))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Kein Betrieb zur ID 42 gefunden.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("patch | idBetrieb")
+	void patchIdBetrieb() throws ApiOperationException {
+		final var dto = new DTOAnsprechpartnerAllgemeineAdresse(1L, 1L);
+		dto.Adresse_ID = 42L;
+		when(this.conn.queryByKey(DTOAnsprechpartnerAllgemeineAdresse.class, 1L)).thenReturn(dto);
+		when(this.conn.queryByKey(DTOKatalogAllgemeineAdresse.class, 12L)).thenReturn(mock(DTOKatalogAllgemeineAdresse.class));
+
+		this.data.patch(1L, Map.of("idBetrieb", 12L));
+
+		assertThat(dto.Adresse_ID).isEqualTo(12L);
 	}
 
 	@Test

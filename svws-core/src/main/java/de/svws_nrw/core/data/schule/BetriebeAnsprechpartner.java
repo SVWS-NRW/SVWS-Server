@@ -17,6 +17,10 @@ public class BetriebeAnsprechpartner {
 	@Schema(description = "Die ID des Ansprechpartners.", example = "4711", accessMode = Schema.AccessMode.READ_ONLY)
 	public long id;
 
+	/** Die ID des Betriebs. */
+	@Schema(description = "Die ID des Betriebs.", example = "4711")
+	public long idBetrieb;
+
 	/** Das Anrede des Ansprechpartners. */
 	@Schema(description = "Das Anrede des Ansprechpartners.", example = "Frau")
 	public String anrede;

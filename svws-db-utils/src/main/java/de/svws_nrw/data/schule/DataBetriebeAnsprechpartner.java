@@ -15,6 +15,7 @@ import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOAnsprechpartnerAllgemeineAdresse;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAllgemeineAdresse;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response;
 
@@ -30,7 +31,7 @@ public final class DataBetriebeAnsprechpartner extends DataManagerRevised<Long, 
 	 */
 	public DataBetriebeAnsprechpartner(final DBEntityManager conn) {
 		super(conn);
-		setAttributesRequiredOnCreation("name");
+		setAttributesRequiredOnCreation("idBetrieb", "name");
 		setAttributesNotPatchable("id");
 	}
 
@@ -73,6 +74,7 @@ public final class DataBetriebeAnsprechpartner extends DataManagerRevised<Long, 
 	protected BetriebeAnsprechpartner map(final DTOAnsprechpartnerAllgemeineAdresse dto) {
 		final BetriebeAnsprechpartner ansprechpartner = new BetriebeAnsprechpartner();
 		ansprechpartner.id = dto.ID;
+		ansprechpartner.idBetrieb = dto.Adresse_ID;
 		ansprechpartner.anrede = dto.Anrede;
 		ansprechpartner.name = dto.Name;
 		ansprechpartner.rufname = dto.Vorname;
@@ -86,6 +88,7 @@ public final class DataBetriebeAnsprechpartner extends DataManagerRevised<Long, 
 			throws ApiOperationException {
 		switch (name) {
 			case "id" -> validateId(dto, name, value);
+			case "idBetrieb" -> updateIdBetrieb(dto, name, value);
 			case "anrede" -> dto.Anrede = JSONMapper.convertToString(value, true, true, tab_AllgAdrAnsprechpartner.col_Anrede.datenlaenge(), name);
 			case "name" -> dto.Name = JSONMapper.convertToString(value, true, true, tab_AllgAdrAnsprechpartner.col_Name.datenlaenge(), name);
 			case "rufname" -> dto.Vorname = JSONMapper.convertToString(value, true, true, tab_AllgAdrAnsprechpartner.col_Vorname.datenlaenge(), name);
@@ -102,6 +105,18 @@ public final class DataBetriebeAnsprechpartner extends DataManagerRevised<Long, 
 		ansprechpartner.stream()
 				.filter(a -> idsOfReferencedAnsprechpartner.contains(a.ID))
 				.forEach(a -> markResponseAsFailed(responses.get(a.ID), a.Name));
+	}
+
+	private void updateIdBetrieb(final DTOAnsprechpartnerAllgemeineAdresse dto, final String name, final Object value) throws ApiOperationException {
+		final Long idBetrieb = JSONMapper.convertToLong(value, false, name);
+		if (idBetrieb.equals(dto.Adresse_ID))
+			return;
+
+		final DTOKatalogAllgemeineAdresse betrieb = this.conn.queryByKey(DTOKatalogAllgemeineAdresse.class, idBetrieb);
+		if (betrieb == null)
+			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Kein Betrieb zur ID %d gefunden.".formatted(idBetrieb));
+
+		dto.Adresse_ID =  idBetrieb;
 	}
 
 	private static void validateId(final DTOAnsprechpartnerAllgemeineAdresse dto, final String name, final Object value) throws ApiOperationException {

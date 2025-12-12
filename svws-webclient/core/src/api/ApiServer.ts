@@ -22,6 +22,7 @@ import { BerufskollegFachklassenKatalog } from '../core/data/schule/Berufskolleg
 import { Beschaeftigungsart } from '../core/data/betrieb/Beschaeftigungsart';
 import { Betrieb } from '../core/data/schule/Betrieb';
 import { BetriebAnsprechpartner } from '../core/data/betrieb/BetriebAnsprechpartner';
+import { BetriebeAnsprechpartner } from '../core/data/schule/BetriebeAnsprechpartner';
 import { BetriebListeEintrag } from '../core/data/betrieb/BetriebListeEintrag';
 import { Betriebsart } from '../core/data/schule/Betriebsart';
 import { BetriebStammdaten } from '../core/data/betrieb/BetriebStammdaten';
@@ -14858,7 +14859,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste der Ansprechpartner.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<Betrieb>
+	 *     - Rückgabe-Typ: List<BetriebeAnsprechpartner>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Katalog-Einträge gefunden
 	 *
@@ -14866,13 +14867,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste der Ansprechpartner.
 	 */
-	public async getBetriebeAnsprechpartnerNeu(schema : string) : Promise<List<Betrieb>> {
+	public async getBetriebeAnsprechpartnerNeu(schema : string) : Promise<List<BetriebeAnsprechpartner>> {
 		const path = "/db/{schema}/schule/betriebe-ansprechpartner"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<Betrieb>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Betrieb.transpilerFromJSON(text)); });
+		const ret = new ArrayList<BetriebeAnsprechpartner>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(BetriebeAnsprechpartner.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -14890,15 +14891,15 @@ export class ApiServer extends BaseApi {
 	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
 	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
 	 *
-	 * @param {Partial<Betrieb>} data - der Request-Body für die HTTP-Methode
+	 * @param {Partial<BetriebeAnsprechpartner>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchBetriebeAnsprechpartnerNeu(data : Partial<Betrieb>, schema : string, id : number) : Promise<void> {
+	public async patchBetriebeAnsprechpartnerNeu(data : Partial<BetriebeAnsprechpartner>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/schule/betriebe-ansprechpartner/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = Betrieb.transpilerToJSONPatch(data);
+		const body : string = BetriebeAnsprechpartner.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -14911,22 +14912,22 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 201: Der Betrieb wurde erfolgreich hinzugefügt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: Betrieb
+	 *     - Rückgabe-Typ: BetriebeAnsprechpartner
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Ansprechpartner anzulegen.
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
-	 * @param {Partial<Betrieb>} data - der Request-Body für die HTTP-Methode
+	 * @param {Partial<BetriebeAnsprechpartner>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
 	 * @returns Der Betrieb wurde erfolgreich hinzugefügt.
 	 */
-	public async addBetriebeAnsprechpartnerNeu(data : Partial<Betrieb>, schema : string) : Promise<Betrieb> {
+	public async addBetriebeAnsprechpartnerNeu(data : Partial<BetriebeAnsprechpartner>, schema : string) : Promise<BetriebeAnsprechpartner> {
 		const path = "/db/{schema}/schule/betriebe-ansprechpartner/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = Betrieb.transpilerToJSONPatch(data);
+		const body : string = BetriebeAnsprechpartner.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
-		return Betrieb.transpilerFromJSON(text);
+		return BetriebeAnsprechpartner.transpilerFromJSON(text);
 	}
 
 
