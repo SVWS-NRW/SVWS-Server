@@ -83,8 +83,6 @@ class JavaLibPlugin implements Plugin<Project> {
 		project.dependencies.add('pdf', 'io.github.openhtmltopdf:openhtmltopdf-core:' + openHtmlToPdfVersion);
 		project.dependencies.add('pdf', 'io.github.openhtmltopdf:openhtmltopdf-pdfbox:' + openHtmlToPdfVersion);
 		project.dependencies.add('pdf', 'io.github.openhtmltopdf:openhtmltopdf-svg-support:' + openHtmlToPdfVersion);
-		// vulnerability fix for: io.github.openhtmltopdf:openhtmltopdf-svg-support:1.1.22 -> pin commons-io:commons-io:2.17.0
-		// project.dependencies.add('pdf', 'commons-io:commons-io:2.17.0');
 	}
 
 

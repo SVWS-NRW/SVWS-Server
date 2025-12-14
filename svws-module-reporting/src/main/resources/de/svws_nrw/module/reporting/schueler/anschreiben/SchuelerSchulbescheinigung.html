@@ -36,7 +36,7 @@
 		<!--Ende: Definition des linken Seitenbereiches -->
 
 		<!-- WICHTIG: Absolut-positionierte Elemente müssen von einem relativen Element umschlossen sein, damit sie auf mehreren Seiten gedruckt werden! -->
-		<div style="position: relative;">
+		<div style="position: relative;" th:with="svgLogo = ${!Schule.schullogo().isBlank() && Schule.schullogo().startsWith('PD94')}">
 
 			<!-- Briefkopfbereich -->
 			<div th:if="${mitBildBriefkopf}" class="briefkopfbereich">
@@ -51,7 +51,7 @@
 
 			<!-- Schullogo -->
 			<div th:if="${!mitBildBriefkopf && mitSchullogo}" class="schullogo">
-				<img style="max-height: 100%; max-width: 100%; object-fit: scale-down;" th:src="@{'data:image/unknown;base64,'+${Schule.schullogo()}}" alt="Schullogo"/>
+				<img style="max-height: 100%; max-width: 100%; object-fit: scale-down;" th:src="@{${Schule.schullogoHtmlImageSource()}}" alt="Schullogo"/>
 			</div>
 
 			<!-- Rücksendeinformationen -->
