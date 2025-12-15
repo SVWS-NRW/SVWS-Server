@@ -17,6 +17,18 @@ export class NotenmodulConfigManagerSichtbareSpalten {
 	/** Ein Array mit den Namen aller ausblendbaren Spalten in den Ansichten des Notenmoduls */
 	private readonly spaltenAusblendbar = ["Kurs", "Kursart", "Lehrer", "Teilnoten", "Quartalsnoten", "Note", "Mahnung", "Fehlstunden", "FB", "ASV", "AUE", "ZB"];
 
+	/** Ein Array mit den allgemeinen Spalten */
+	public readonly spaltenAllgemein = ["Kurs", "Kursart", "Lehrer"];
+
+	/** Ein Array mit den Bemerkungs-Spalten */
+	public readonly spaltenBemerkungen = ["FB", "ASV", "AUE", "ZB"];
+
+	/** Ein Array mit den Spalten für Leistungsdaten */
+	public readonly spaltenLeistungsdaten = ["Quartalsnoten", "Note", "Mahnung", "Fehlstunden"];
+
+	/** Die Teilnoten-Spalte */
+	public readonly spalteTeilleistungen = "Teilnoten";
+
 	/** Die Map für den Zugriff auf die einzelnen Spalten der Konfiguration. Der Key kann entweder der Name einer ausblendbaren Spalte sein
 	 *  oder die ID im Falle von Teilleistungen auch die ID einer einzelnen Teilleistung, die ausgeblendet werden soll. */
 	private readonly mapConfigSpalte: JavaMap<number | string, ENMConfigSpalte>;
@@ -95,6 +107,33 @@ export class NotenmodulConfigManagerSichtbareSpalten {
 			return;
 		spalte.anzeigen = !spalte.anzeigen;
 		await this.writeConfig();
+	}
+
+	/**
+	 * Wechselt die Sichtbarkeit der Teilleistungen
+	 * @param colname		Der Name der Spalte
+	 */
+	public async toggleTeilleistung(colname: string) {
+		const istSichtbar = this.istSichtbar(this.spalteTeilleistungen);
+		await this.toggle(colname);
+		const teilleistungIstSichtbar = this.istSichtbar(colname);
+		if (!istSichtbar && teilleistungIstSichtbar) {
+			await this.toggle(this.spalteTeilleistungen);
+		}
+	}
+
+	/**
+	 * Prüft, ob nur eine Teilmende der Spalten sichtbar ist
+	 * @returns true, wenn nur teilweise sichtbar, um den intermediate State zu erzeugen
+	 */
+	public hatNurMancheTeilleistungen(): boolean {
+		const istSichtbar = this.istSichtbar(this.spalteTeilleistungen);
+		for (const col of this.spaltenTeilleistungen) {
+			if (this.istSichtbar(col) !== istSichtbar) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**

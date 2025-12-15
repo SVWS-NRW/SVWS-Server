@@ -1,4 +1,4 @@
-import { ref, shallowRef, triggerRef } from "vue";
+import { shallowRef, triggerRef } from "vue";
 import type { Comparator, ENMAbteilung, ENMJahrgang, ENMKlasse, ENMTeilleistungsart, JavaMap, List } from "@core";
 import { ArrayList, ENMConfigKlasse, ENMConfigKlasseSpalte, HashMap, HashMap2D, HashSet } from "@core";
 import { comparatorENMAbteilung, comparatorENMJahrgang, comparatorENMKlasse } from "./NotenmodulUtils";
@@ -11,7 +11,7 @@ export type NotenmodulConfigManagerSperrungenZeile = ENMConfigKlasse | Notenmodu
 export type NotenmodulConfigManagerSperrungenZelle = ENMConfigKlasseSpalte | NotenmodulConfigManagerSperrungenGruppeSpalte;
 
 /** Der Typ für die konkrete Gruppierung von Sperreinträgen bei der Eingabe */
-type NotenmodulConfigManagerSperrungenGruppierung = 'Keine' | 'Jahrgang' | 'Abteilung';
+export type NotenmodulConfigManagerSperrungenGruppierung = 'Keine' | 'Jahrgang' | 'Abteilung';
 
 export class NotenmodulConfigManagerSperrungenGruppeSpalte {
 
@@ -59,10 +59,12 @@ export class NotenmodulConfigManagerSperrungen {
 	private readonly spaltenSperrbar = ["Quartalsnoten", "Note", "Mahnung", "Fehlstunden", "FB", "ASV", "AUE", "ZB", "Teilnoten"];
 
 	/** Legt die Art der Gruppierung fest, welche vom Manager vorgenommen wird */
-	private readonly _gruppierung = ref<NotenmodulConfigManagerSperrungenGruppierung>('Keine');
+	private readonly _gruppierung = shallowRef<NotenmodulConfigManagerSperrungenGruppierung>('Keine');
+	/** Der Setter für die Festlegung der Gruppierung */
+	private readonly setGruppierung: (value: NotenmodulConfigManagerSperrungenGruppierung) => Promise<void>;
 
 	/** Legt fest, ob die einzelnen Teilnoten angezeigt werden sollen oder nur gruppiert */
-	private readonly _zeigeTeilnoten = ref<boolean>(false);
+	private readonly _zeigeTeilnoten = shallowRef<boolean>(false);
 
 	private readonly _mapKlassen: JavaMap<number, ENMKlasse>;
 	private readonly _mapJahrgaenge: JavaMap<number, ENMJahrgang>;
@@ -76,17 +78,20 @@ export class NotenmodulConfigManagerSperrungen {
 
 	private readonly _listJahrgaenge = new ArrayList<ENMJahrgang>();
 	private readonly _mapJahrgangKlassen = new HashMap<number, List<ENMConfigKlasse>>();
-	private readonly _showJahrgangsklassen = ref(new HashSet<number>());
+	private readonly _showJahrgangsklassen = shallowRef(new HashSet<number>());
 	private readonly _mapJahrgangGruppe = shallowRef(new HashMap<number, NotenmodulConfigManagerSperrungenGruppe>());
 	private readonly _mapJahrgangSpalte = new HashMap2D<number, string, NotenmodulConfigManagerSperrungenGruppeSpalte>();
 	private readonly _mapSpaltenKlassenToJahrgang = new HashMap2D<number, string, NotenmodulConfigManagerSperrungenGruppeSpalte>();
 
 	private readonly _listAbteilungen = new ArrayList<ENMAbteilung>();
 	private readonly _mapAbteilungKlassen = new HashMap<number, List<ENMConfigKlasse>>();
-	private readonly _showAbteilungsklassen = ref(new HashSet<number>());
+	private readonly _showAbteilungsklassen = shallowRef(new HashSet<number>());
 	private readonly _mapAbteilungGruppe = shallowRef(new HashMap<number, NotenmodulConfigManagerSperrungenGruppe>());
 	private readonly _mapAbteilungSpalte = new HashMap2D<number, string, NotenmodulConfigManagerSperrungenGruppeSpalte>();
 	private readonly _mapSpaltenKlassenToAbteilung = new HashMap2D<number, string, NotenmodulConfigManagerSperrungenGruppeSpalte>();
+
+	private readonly _configAlleKlassen = shallowRef(new NotenmodulConfigManagerSperrungenGruppe());
+	private readonly _mapAlleKlassenSpalte = new HashMap<string, NotenmodulConfigManagerSperrungenGruppeSpalte>();
 
 	/** Eine Callback-Methode, die bei einem Update der Konfiguration aufgerufen wird. */
 	private readonly writeConfig: () => Promise<void>;
@@ -101,15 +106,20 @@ export class NotenmodulConfigManagerSperrungen {
 	 * @param mapJahrgaenge           eine Map der Jahrgänge
 	 * @param mapAbteilungen          eine Map der Abteilungen
 	 * @param writeConfig             eine Callback-Methode, um das Schreiben der Konfiguration zu veranlassen
+	 * @param gruppierung							die gewählte Gruppierung
+	 * @param setGruppierung 					eine Callback-Methode, um das Schreiben der Gruppierung in der Konfiguration zu veranlassen
 	 */
 	constructor(listConfig: List<ENMConfigKlasse>, mapKlassen: JavaMap<number, ENMKlasse>,
 		mapTeilleistungsarten: JavaMap<number, ENMTeilleistungsart>, mapJahrgaenge: JavaMap<number, ENMJahrgang>,
-		mapAbteilungen: JavaMap<number, ENMAbteilung>, writeConfig: () => Promise<void>) {
+		mapAbteilungen: JavaMap<number, ENMAbteilung>, writeConfig: () => Promise<void>,
+		gruppierung: NotenmodulConfigManagerSperrungenGruppierung, setGruppierung: (value: NotenmodulConfigManagerSperrungenGruppierung) => Promise<void>) {
 		this._mapKlassen = mapKlassen;
 		this._mapJahrgaenge = mapJahrgaenge;
 		this._mapAbteilungen = mapAbteilungen;
 		this._mapTeilleistungsarten = mapTeilleistungsarten;
 		this._mapDefaultConfigKlasseSpalte = this.genDefaultMapConfigKlasseSpalte();
+		this._gruppierung.value = gruppierung;
+		this.setGruppierung = setGruppierung;
 
 		// Initialisiere die Konfigurationseinträge für die Klassen
 		this.initListKlassen(listConfig);
@@ -123,10 +133,14 @@ export class NotenmodulConfigManagerSperrungen {
 		// Initialisiere die Gruppen für Konfigurationseinträge (Jahrgänge und Abteilungen)
 		this.initJahrgaenge();
 		this.initAbteilungen();
+		this.initAlleKlassen();
 
 		this.writeConfig = writeConfig;
 	}
 
+	/**
+	 * Initialisiert die Jahrgänge mit den dazugehörigen Klassen
+	 */
 	private initJahrgaenge(): void {
 		this.initListJahrgaenge();
 		this.initMapJahrgangKlassen();
@@ -144,6 +158,9 @@ export class NotenmodulConfigManagerSperrungen {
 		}
 	}
 
+	/**
+	 * Initialisiert die Abteilungen mit den dazugehörigen Klassen
+	 * */
 	private initAbteilungen() {
 		this.initListAbteilungen();
 		this.initMapAbteilungKlassen();
@@ -161,14 +178,43 @@ export class NotenmodulConfigManagerSperrungen {
 		}
 	}
 
+	/**
+	 * Initialisiert die Gruppe für alle Klassen
+	 * */
+	private initAlleKlassen() {
+		this._configAlleKlassen.value = this.genGruppe(-1, this._listKlassen);
+		for (const spalte of this._configAlleKlassen.value.spalten) {
+			this._mapAlleKlassenSpalte.put(spalte.name, spalte);
+		}
+	}
+
+
+	/**
+	 * Gibt eine Klasse zurück
+	 *
+	 * @param id 		die ID der Klasse
+	 * @returns 		die Klasse oder null
+	 */
 	public getKlasse(id: number): ENMKlasse | null {
 		return this._mapKlassen.get(id);
 	}
 
+	/**
+	 * Gibt einen Jahrgang zurück
+	 *
+	 * @param id 		die ID des Jahrgang
+	 * @returns 		der Jahrgang oder null
+	 */
 	public getJahrgang(id: number): ENMJahrgang | null {
 		return this._mapJahrgaenge.get(id);
 	}
 
+	/**
+	 * Gibt eine Abteilung zurück
+	 *
+	 * @param id 		die ID der Abteilung
+	 * @returns 		die Abteilung oder null
+	 */
 	public getAbteilung(id: number): ENMAbteilung | null {
 		return this._mapAbteilungen.get(id);
 	}
@@ -226,7 +272,12 @@ export class NotenmodulConfigManagerSperrungen {
 		this._listAbteilungen.sort(comparatorENMAbteilung);
 	}
 
-
+	/**
+	 * Prüft eine Konfiguration und passt sie ggf. an
+	 *
+	 * @param klasse 		die Klassenkonfiguration
+	 * @returns 				gibt eine geprüfte Konbfiguration zurück, die aus allen Informationen, gespeichert in der DB und aus den ENM-Daten generiert wurde
+	 */
 	private checkConfigKlasse(klasse: ENMConfigKlasse): ENMConfigKlasse {
 		const list = new ArrayList<ENMConfigKlasseSpalte>();
 		const set = new HashSet<number | string>();
@@ -262,6 +313,11 @@ export class NotenmodulConfigManagerSperrungen {
 		return klasse;
 	}
 
+	/**
+	 * Generiert eine Standardkonfiguration für die Spalten einer Klass
+	 *
+	 * @returns gibt ein JavaMap mit den Spalten für eine Config-Klasse zurück
+	 */
 	private genDefaultMapConfigKlasseSpalte(): JavaMap<number | string, ENMConfigKlasseSpalte> {
 		const mapConfigKlasseSpalte = new HashMap<number | string, ENMConfigKlasseSpalte>();
 		for (const art of this._mapTeilleistungsarten.values()) {
@@ -278,6 +334,12 @@ export class NotenmodulConfigManagerSperrungen {
 		return mapConfigKlasseSpalte;
 	}
 
+	/**
+	 * Generiert eine Default-Klassenkonfiguration
+	 *
+	 * @param id 		die ID der Klasse
+	 * @returns 		gibt eine Klassenkonfiguration zurück
+	 */
 	public generateDefaultConfigKlasse(id: number): ENMConfigKlasse {
 		const config = new ENMConfigKlasse();
 		config.id = id;
@@ -287,17 +349,33 @@ export class NotenmodulConfigManagerSperrungen {
 		config.spalten.addAll(this._mapDefaultConfigKlasseSpalte.values());
 		return config;
 	}
-
+	/**
+	 * Generiert eine Jahrgang-Gruppe
+	 *
+	 * @param id 		die ID des Jahrgangs
+	 */
 	public genJahrgangGruppe(id: number): NotenmodulConfigManagerSperrungenGruppe {
 		const klassen = this._mapJahrgangKlassen.get(id) ?? new ArrayList<ENMConfigKlasse>();
 		return this.genGruppe(id, klassen);
 	}
 
+	/**
+	 * Generiert eine Abteilungs-Gruppe
+	 *
+	 * @param id 		die ID der Abteilung
+	 */
 	public genAbteilungGruppe(id: number): NotenmodulConfigManagerSperrungenGruppe {
 		const klassen = this._mapAbteilungKlassen.get(id) ?? new ArrayList<ENMConfigKlasse>();
 		return this.genGruppe(id, klassen);
 	}
 
+	/**
+	 * Generiert eine Gruppe für eine Abteilung etc.
+	 *
+	 * @param id 				die ID für die Gruppe, z.B. die einer Abteilung
+	 * @param klassen 	die zugehörigen Klassen
+	 * @returns 				gibt eine Gruppenkonfiguration zurück
+	 */
 	public genGruppe(id: number, klassen: List<ENMConfigKlasse>): NotenmodulConfigManagerSperrungenGruppe {
 		const config = new NotenmodulConfigManagerSperrungenGruppe();
 		config.id = id;
@@ -313,6 +391,13 @@ export class NotenmodulConfigManagerSperrungen {
 		return config;
 	}
 
+	/**
+	 * Generiert die Spalten für eine Gruppe
+	 *
+	 * @param spalte		 	die Spalte
+	 * @param klassen 		die Klassen
+	 * @returns 					die generierte Gruppenspalte
+	 */
 	public genGruppeSpalte(spalte: ENMConfigKlasseSpalte, klassen: List<ENMConfigKlasse>): NotenmodulConfigManagerSperrungenGruppeSpalte {
 		const val = new NotenmodulConfigManagerSperrungenGruppeSpalte();
 		val.idTeilleistung = spalte.idTeilleistung;
@@ -330,6 +415,9 @@ export class NotenmodulConfigManagerSperrungen {
 		return val;
 	}
 
+	/**
+	 * Initialisiert die Daten für die Jahrgänge
+	 */
 	private initMapJahrgangKlassen(): void {
 		for (const klasse of this._listKlassen) {
 			const idJahrgang = this._mapKlassen.get(klasse.id)?.idJahrgang ?? null;
@@ -348,6 +436,9 @@ export class NotenmodulConfigManagerSperrungen {
 		}
 	}
 
+	/**
+	 * initialisiert die Daten für die Abteilungen
+	 */
 	private initMapAbteilungKlassen(): void {
 		for (const abteilung of this._listAbteilungen) {
 			const list = new ArrayList<ENMConfigKlasse>();
@@ -373,8 +464,8 @@ export class NotenmodulConfigManagerSperrungen {
 	}
 
 	/** Liefert die Gruppierungsmöglichkeiten für die Anzeige der Klassen */
-	get gruppierungen(): Array<string> {
-		return ['Keine', 'Jahrgang', 'Abteilung'];
+	get gruppierungen(): Array<NotenmodulConfigManagerSperrungenGruppierung> {
+		return ['Keine', 'Jahrgang', 'Abteilung'] as const;
 	}
 
 	/** Liefert die aktuell ausgewählte Gruppierung für die Anzeige */
@@ -385,6 +476,7 @@ export class NotenmodulConfigManagerSperrungen {
 	/** Setzt die aktuell ausgewählte Gruppierung für die Anzeige */
 	set gruppierung(value: NotenmodulConfigManagerSperrungenGruppierung) {
 		this._gruppierung.value = value;
+		void this.setGruppierung(value);
 	}
 
 	/** Gibt zurück, ob die einzelnen Teilnoten angezeigt werden sollen oder nur gruppiert */
@@ -397,9 +489,7 @@ export class NotenmodulConfigManagerSperrungen {
 		this._zeigeTeilnoten.value = value;
 	}
 
-	/**
-	 * Wechselt den Zustand, ob die einzelnen Teilnoten angezeigt werden sollen oder nur gruppiert.
-	 */
+	/** Wechselt den Zustand, ob die einzelnen Teilnoten angezeigt werden sollen oder nur gruppiert. */
 	public toggleZeigeTeilnoten() {
 		this._zeigeTeilnoten.value = !this._zeigeTeilnoten.value;
 	}
@@ -419,20 +509,33 @@ export class NotenmodulConfigManagerSperrungen {
 		return (col.idTeilleistung !== null);
 	}
 
-	private getColumn(row: NotenmodulConfigManagerSperrungenZeile, colname: string): NotenmodulConfigManagerSperrungenZelle | null {
+	/**
+	 * Gibt die jeweilige Spalte für die Zeile und den Spaltennamen zurück
+	 *
+	 * @param row 			die Zeile
+	 * @param colname 	der Spaltenname
+	 * @returns					Entweder die Spalte oder null
+	 */
+	public getColumn(row: NotenmodulConfigManagerSperrungenZeile, colname: string): NotenmodulConfigManagerSperrungenZelle | null {
 		const rowIstGruppe = 'klassenzuordnungen' in row;
 		if (!rowIstGruppe) {
 			return this._mapKlassenSpalte.getOrNull(row.id, colname);
 		}
 		if (this._gruppierung.value === 'Jahrgang') {
 			return this._mapJahrgangSpalte.getOrNull(row.id, colname);
-		}
-		if (this._gruppierung.value === 'Abteilung') {
+		} else if (this._gruppierung.value === 'Abteilung') {
 			return this._mapAbteilungSpalte.getOrNull(row.id, colname);
 		}
-		return null;
+		return this._mapAlleKlassenSpalte.get(colname);
 	}
 
+	/**
+	 * Gibt zurück, ob eine Spalte für die übergebene Zeile sperrbar ist
+	 *
+	 * @param row 			die Zeile
+	 * @param colname 	der Spaltenname
+	 * @returns 				true, wenn diese Spalte gesperrt werden kann
+	 */
 	public istSperrbar(row: NotenmodulConfigManagerSperrungenZeile, colname: string): boolean {
 		const col = this.getColumn(row, colname);
 		if (col === null)
@@ -440,6 +543,11 @@ export class NotenmodulConfigManagerSperrungen {
 		return (col.idTeilleistung !== null) || (this.spaltenSperrbar.includes(colname));
 	}
 
+	/**
+	 * Gibt eine Liste mit den Zeilen für eine Jahrgangsansicht zurück
+	 *
+	 * @returns			Gibt eine Liste mit den Zeilen zurück
+	 */
 	private getZeilenJahrgangsGruppen(): ArrayList<NotenmodulConfigManagerSperrungenZeile> {
 		const list = new ArrayList<NotenmodulConfigManagerSperrungenZeile>();
 		for (const entry of this._mapJahrgangKlassen.entrySet()) {
@@ -452,7 +560,11 @@ export class NotenmodulConfigManagerSperrungen {
 		}
 		return list;
 	}
-
+	/**
+	 * Gibt eine Liste mit den Zeilen für eine Abteilungsansicht zurück
+	 *
+	 * @returns			Gibt eine Liste mit den Zeilen zurück
+	 */
 	private getZeilenAbteilungsGruppen(): ArrayList<NotenmodulConfigManagerSperrungenZeile> {
 		const list = new ArrayList<NotenmodulConfigManagerSperrungenZeile>();
 		for (const entry of this._mapAbteilungKlassen.entrySet()) {
@@ -475,13 +587,16 @@ export class NotenmodulConfigManagerSperrungen {
 	public zeilen(): List<NotenmodulConfigManagerSperrungenZeile> {
 		if (this._gruppierung.value === "Jahrgang") {
 			return this.getZeilenJahrgangsGruppen();
-		}
-		if (this._gruppierung.value === "Abteilung") {
+		} else if (this._gruppierung.value === "Abteilung") {
 			return this.getZeilenAbteilungsGruppen();
 		}
 		const list = new ArrayList<NotenmodulConfigManagerSperrungenZeile>();
 		list.addAll(this._listKlassen);
 		return list;
+	}
+
+	public zeileAlleKlassen(): NotenmodulConfigManagerSperrungenZeile {
+		return this._configAlleKlassen.value;
 	}
 
 	/**
@@ -494,8 +609,8 @@ export class NotenmodulConfigManagerSperrungen {
 		result.push(
 			{ kuerzel: "Gruppe", name: "Gruppe", width: "15rem" },
 			{ kuerzel: "Klasse", name: "Klasse", width: "5rem" },
-			{ kuerzel: "EingabeVon", name: "Eingabe von", width: "10rem" },
-			{ kuerzel: "EingabeBis", name: "Eingabe bis", width: "10rem" },
+			{ kuerzel: "EingabeVon", name: "Eingabe von", width: "15rem" },
+			{ kuerzel: "EingabeBis", name: "Eingabe bis", width: "15rem" },
 			{ kuerzel: "FSKlassenweise", name: "FS klassenweise", width: "5rem" }
 		);
 		for (const col of this.spaltenSperrbar) {
@@ -557,8 +672,7 @@ export class NotenmodulConfigManagerSperrungen {
 		if (this._gruppierung.value === "Jahrgang") {
 			const jahrgang = this.getJahrgang(row.id);
 			return jahrgang?.kuerzelAnzeige ?? '—';
-		}
-		if (this._gruppierung.value === "Abteilung") {
+		} else if (this._gruppierung.value === "Abteilung") {
 			const abteilung = this.getAbteilung(row.id);
 			return abteilung?.bezeichnung ?? '—';
 		}
@@ -577,8 +691,7 @@ export class NotenmodulConfigManagerSperrungen {
 			return true;
 		if (this._gruppierung.value === "Jahrgang") {
 			return this._showJahrgangsklassen.value.contains(row.id);
-		}
-		if (this._gruppierung.value === "Abteilung") {
+		} else if (this._gruppierung.value === "Abteilung") {
 			return this._showAbteilungsklassen.value.contains(row.id);
 		}
 		return false;
@@ -597,11 +710,13 @@ export class NotenmodulConfigManagerSperrungen {
 				this._showJahrgangsklassen.value.remove(row.id);
 			else
 				this._showJahrgangsklassen.value.add(row.id);
+			triggerRef(this._showJahrgangsklassen);
 		} else if (this._gruppierung.value === "Abteilung") {
 			if (this._showAbteilungsklassen.value.contains(row.id))
 				this._showAbteilungsklassen.value.remove(row.id);
 			else
 				this._showAbteilungsklassen.value.add(row.id);
+			triggerRef(this._showAbteilungsklassen);
 		}
 	}
 
@@ -650,12 +765,13 @@ export class NotenmodulConfigManagerSperrungen {
 			if (listJahrgangsklassen !== null) {
 				max = listJahrgangsklassen.size();
 			}
-		}
-		if (this._gruppierung.value === 'Abteilung') {
+		} else if (this._gruppierung.value === 'Abteilung') {
 			const jg = this.getAbteilung(row.id);
 			if (jg !== null) {
 				max = jg.klassenzuordnungen.size();
 			}
+		} else {
+			max = this._listKlassen.size();
 		}
 		return (col.gesperrt > 0) && (col.gesperrt < max);
 	}
@@ -668,18 +784,7 @@ export class NotenmodulConfigManagerSperrungen {
 	 */
 	private async toggleSperrungJahrgang(row: NotenmodulConfigManagerSperrungenGruppe, col: NotenmodulConfigManagerSperrungenGruppeSpalte) {
 		const klassen = this._mapJahrgangKlassen.get(row.id);
-		if (klassen === null)
-			return;
-		const max = klassen.size();
-		const newState = (col.gesperrt < max);
-		for (const klasse of klassen) {
-			const colKlasse = this._mapKlassenSpalte.getOrNull(klasse.id, col.name);
-			if (colKlasse !== null) {
-				colKlasse.gesperrt = newState;
-			}
-		}
-		col.gesperrt = newState ? max : 0;
-		await this.writeConfig();
+		await this.toggleSperrungGruppe(klassen, col);
 		triggerRef(this._mapJahrgangGruppe);
 	}
 
@@ -691,20 +796,39 @@ export class NotenmodulConfigManagerSperrungen {
 	 */
 	private async toggleSperrungAbteilung(row: NotenmodulConfigManagerSperrungenGruppe, col: NotenmodulConfigManagerSperrungenGruppeSpalte) {
 		const klassen = this._mapAbteilungKlassen.get(row.id);
-		if (klassen === null)
-			return;
-		const max = klassen.size();
-		const newState = (col.gesperrt < max);
-		for (const klasse of klassen) {
-			const colKlasse = this._mapKlassenSpalte.getOrNull(klasse.id, col.name);
-			if (colKlasse !== null) {
-				colKlasse.gesperrt = newState;
-			}
-		}
-		col.gesperrt = newState ? max : 0;
-		await this.writeConfig();
+		await this.toggleSperrungGruppe(klassen, col);
 		triggerRef(this._mapAbteilungGruppe);
 	}
+
+	/**
+	 * Schaltet den Wert für die Sperrung bei einer Abteilungsgruppe um.
+	 *
+	 * @param row   die Zeile, die angeklickt wurde
+	 * @param col   die Spalte, die angeklickt wurde
+	 */
+	private async toggleSperrungAlleKlassen(row: NotenmodulConfigManagerSperrungenGruppe, col: NotenmodulConfigManagerSperrungenGruppeSpalte) {
+		const klassen = this._listKlassen;
+		await this.toggleSperrungGruppe(klassen, col);
+		triggerRef(this._configAlleKlassen);
+	}
+
+	/**
+	 * Schaltet den Wert der Sperrung für Jahrgänge oder Abteilungen
+	 * @param klassen	die Klassen der jeweiligen Gruppe
+	 * @param col   	die Spalte, die angeklickt wurde
+	 */
+	private async toggleSperrungGruppe(klassen: List<ENMConfigKlasse> | null, col: NotenmodulConfigManagerSperrungenGruppeSpalte) {
+		if (klassen === null)
+			return;
+		const newState = col.gesperrt === 0;
+		for (const klasse of klassen) {
+			const colKlasse = this._mapKlassenSpalte.getOrException(klasse.id, col.name);
+			colKlasse.gesperrt = newState;
+		}
+		col.gesperrt = newState ? klassen.size() : 0;
+		await this.writeConfig();
+	}
+
 
 	/**
 	 * Schaltet den Wert für die Sperrung bei einer einzelnen Klasse um.
@@ -731,6 +855,14 @@ export class NotenmodulConfigManagerSperrungen {
 				gruppeAbteilung.gesperrt--;
 			triggerRef(this._mapAbteilungGruppe);
 		}
+		const gruppeAlleKlassen = this._mapAlleKlassenSpalte.get(col.name);
+		if (gruppeAlleKlassen !== null) {
+			if (col.gesperrt)
+				gruppeAlleKlassen.gesperrt++;
+			else
+				gruppeAlleKlassen.gesperrt--;
+			triggerRef(this._configAlleKlassen);
+		}
 		await this.writeConfig();
 	}
 
@@ -753,6 +885,8 @@ export class NotenmodulConfigManagerSperrungen {
 				await this.toggleSperrungJahrgang(row, col);
 			} else if (this._gruppierung.value === 'Abteilung') {
 				await this.toggleSperrungAbteilung(row, col);
+			} else {
+				await this.toggleSperrungAlleKlassen(row, col);
 			}
 		}
 	}

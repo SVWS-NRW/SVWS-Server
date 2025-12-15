@@ -8,7 +8,7 @@ import { routeNotenmodulKonfiguration } from "./RouteNotenmodulKonfiguration";
 import { routeNotenmodulKonfigurationNeu } from "./RouteNotenmodulKonfigurationNeu";
 import { routeNotenmodulKonfigurationGruppenprozesse } from "./RouteNotenmodulGruppenprozesse";
 import { routeNotenmodul } from "./RouteNotenmodul";
-import { NotenmodulConfigManagerSperrungen } from "./NotenmodulConfigManagerSperrungen";
+import { NotenmodulConfigManagerSperrungen, type NotenmodulConfigManagerSperrungenGruppierung } from "./NotenmodulConfigManagerSperrungen";
 import { NotenmodulConfigManagerSichtbareSpalten } from "./NotenmodulConfigManagerSichtbareSpalten";
 
 
@@ -35,10 +35,17 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 			mapENMServerConfigServer: new HashMap<string, string>(),
 			mapENMServerConfigGlobal: new HashMap<string, string>(),
 			mapAbteilungen: new HashMap<number, ENMAbteilung>(),
-			managerSperrungen: new NotenmodulConfigManagerSperrungen(new ArrayList(), new HashMap(), new HashMap(), new HashMap(), new HashMap(), async () => {}),
+			managerSperrungen: new NotenmodulConfigManagerSperrungen(new ArrayList(), new HashMap(), new HashMap(), new HashMap(), new HashMap(), async () => {}, 'Keine', async () => {}),
 			managerSichtbareSpalten: new NotenmodulConfigManagerSichtbareSpalten(new ArrayList(), new HashMap(), async () => {}),
 		}, { gruppenprozesse: routeNotenmodulKonfigurationGruppenprozesse, hinzufuegen: routeNotenmodulKonfigurationNeu });
 	}
+
+	get wrapperAuswahl(): NotenmodulConfigManagerSperrungenGruppierung {
+		return api.config.getValue("notenmodul.leistungen.tabelle.wrapper.auswahl") as NotenmodulConfigManagerSperrungenGruppierung;
+	}
+	setWrapperAuswahl = async (value: NotenmodulConfigManagerSperrungenGruppierung) => {
+		void api.config.setValue('notenmodul.leistungen.tabelle.wrapper.auswahl', value);
+	};
 
 	public async entferneDaten() {
 		this.setPatchedState({
@@ -47,7 +54,7 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 			connected: false,
 			mapENMServerConfigServer: new HashMap<string, string>(),
 			mapENMServerConfigGlobal: new HashMap<string, string>(),
-			managerSperrungen: new NotenmodulConfigManagerSperrungen(new ArrayList(), new HashMap(), new HashMap(), new HashMap(), new HashMap(), async () => {}),
+			managerSperrungen: new NotenmodulConfigManagerSperrungen(new ArrayList(), new HashMap(), new HashMap(), new HashMap(), new HashMap(), async () => {}, 'Keine', async () => {}),
 			managerSichtbareSpalten: new NotenmodulConfigManagerSichtbareSpalten(new ArrayList(), new HashMap(), async () => {}),
 		});
 	}
@@ -72,10 +79,10 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 		const result = await super.setSchuljahresabschnitt(idSchuljahresabschnitt, isEntering);
 		await routeNotenmodul.data.ladeDaten();
 		const listAbteilungen = await api.server.getAbteilungenByIdJahresAbschnitt(api.schema, idSchuljahresabschnitt);
-		const mapAbteilungen = this.createMapAbteilungen(listAbteilungen);
+		this._state.value.mapAbteilungen = this.createMapAbteilungen(listAbteilungen);
 		const managerSperrungen = this.createSpaltenManager();
 		const managerSichtbareSpalten = this.createManagerSichtbareSpalten();
-		this.setPatchedState({ mapAbteilungen, managerSperrungen, managerSichtbareSpalten });
+		this.setPatchedState({ managerSperrungen, managerSichtbareSpalten });
 		const arr = [];
 		for (const server of this.manager.filtered())
 			arr.push(this.connect(server.id));
@@ -116,7 +123,7 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 		}
 		const { mapKlassen, mapTeilleistungsarten, mapJahrgaenge } = routeNotenmodul.data.manager;
 		const mapAbteilungen = this._state.value.mapAbteilungen;
-		return new NotenmodulConfigManagerSperrungen(liste, mapKlassen, mapTeilleistungsarten, mapJahrgaenge, mapAbteilungen, this.writeConfigSperrungen);
+		return new NotenmodulConfigManagerSperrungen(liste, mapKlassen, mapTeilleistungsarten, mapJahrgaenge, mapAbteilungen, this.writeConfigSperrungen, this.wrapperAuswahl, this.setWrapperAuswahl);
 	}
 
 	public addID(param: RouteParamsRawGeneric, id: number): void {

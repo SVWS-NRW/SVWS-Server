@@ -1,7 +1,7 @@
 <template>
 	<label class="text-input-component"
 		:class="{
-			'text-input--filled': (`${data}`.length > 0 && data !== null) || type === 'date',
+			'text-input--filled': (`${data}`.length > 0 && data !== null) || (type === 'date') || (type === 'datetime-local'),
 			'text-input--invalid': (isValid === false),
 			'text-input--statistic-muss': (((validator !== undefined) && (!validator().getFehler().isEmpty()) && (validator().getFehlerart() === ValidatorFehlerart.MUSS)) || ((isValid === false) && (fehlerart === ValidatorFehlerart.MUSS))),
 			'text-input--statistic-kann': (((validator !== undefined) && (!validator().getFehler().isEmpty()) && (validator().getFehlerart() === ValidatorFehlerart.KANN)) || ((isValid === false) && (fehlerart === ValidatorFehlerart.KANN))),
@@ -11,7 +11,7 @@
 			'text-input--select': isSelectInput,
 			'text-input--statistics': statistics,
 			'text-input--search': type === 'search',
-			'text-input--date': type === 'date',
+			'text-input--date': (type === 'date') || (type === 'datetime-local'),
 			'text-input-component--headless': headless,
 			'col-span-full': span === 'full',
 			'col-span-2': span === '2',
@@ -25,7 +25,7 @@
 			v-focus
 			:class="{ 'text-input--control': !headless, 'text-input--headless': headless, 'text-input--rounded': rounded, 'text-input--prefix': url, }"
 			v-bind="{ ...$attrs }"
-			:type="type"
+			:type
 			:min="minDate"
 			:max="maxDate"
 			:value="data"
@@ -92,7 +92,7 @@
 			</span>
 			<span v-if="readonly && !isSelectInput" class="icon-xs i-ri-lock-line" />
 		</span>
-		<span v-if="removable && (type === 'date') && (!readonly)" @keydown.enter="updateData('')" @click.stop="updateData('')" class="svws-icon--remove icon i-ri-close-line" tabindex="0" />
+		<span v-if="removable && (type === 'date' || type === 'datetime-local') && (!readonly)" @keydown.enter="updateData('')" @click.stop="updateData('')" class="svws-icon--remove icon i-ri-close-line" tabindex="0" />
 		<span v-if="(type === 'date') && !firefox()" class="svws-icon icon i-ri-calendar-2-line" />
 		<span v-if="type === 'email'" class="svws-icon icon i-ri-at-line" />
 		<span v-if="type === 'tel'" class="svws-icon icon i-ri-phone-line" />
@@ -111,12 +111,12 @@
 	});
 
 	function firefox() {
-		return window.navigator.userAgent.includes('Firefox/');
+		return globalThis.navigator.userAgent.includes('Firefox/');
 	}
 	const input = ref<null | HTMLInputElement>(null);
 
 	const props = withDefaults(defineProps<{
-		type?: "text" | "date" | "email" | "search" | "tel" | "password";
+		type?: "text" | "date" | "email" | "search" | "tel" | "password" | "datetime-local";
 		minDate?: string;
 		maxDate?: string;
 		modelValue?: string | null;

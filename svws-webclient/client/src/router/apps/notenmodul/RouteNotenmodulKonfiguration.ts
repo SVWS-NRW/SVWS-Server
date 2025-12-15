@@ -10,6 +10,8 @@ import { routeError } from "~/router/error/RouteError";
 
 const NotenmodulKonfiguration = () => import("~/components/notenmodul/NotenmodulKonfiguration.vue");
 
+export type WrapperAuswahl = 'Keine' | 'Jahrgang' | 'Abteilung';
+
 export class RouteNotenmodulKonfiguration extends RouteNode<any, RouteNotenmodulAdministration> {
 
 	public constructor() {
@@ -21,8 +23,11 @@ export class RouteNotenmodulKonfiguration extends RouteNode<any, RouteNotenmodul
 		super.text = "Konfiguration";
 		this.isHidden = (params?: RouteParams) => this.checkHidden(params);
 		api.config.addElements([
+			// global
 			new ConfigElement("notenmodul.leistungen.tabelle.spalten.anzeige", "global", "null"),
 			new ConfigElement("notenmodul.leistungen.tabelle.spalten.readonly", "global", "null"),
+			// user
+			new ConfigElement("notenmodul.leistungen.tabelle.wrapper.auswahl", "user", "Keine"), // WrapperAuswahl
 		]);
 	}
 
