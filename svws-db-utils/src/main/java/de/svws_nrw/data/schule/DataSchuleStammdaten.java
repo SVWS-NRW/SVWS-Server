@@ -49,6 +49,7 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.dto.current.schild.schule.DTOTeilstandorte;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -89,14 +90,21 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 		daten.idSchuljahresabschnitt = schule.Schuljahresabschnitts_ID;
 		daten.anzJGS_Jahr = (schule.AnzJGS_Jahr == null) ? 1 : schule.AnzJGS_Jahr;
 		daten.schuleAbschnitte.anzahlAbschnitte = schule.AnzahlAbschnitte;
-		daten.schuleAbschnitte.abschnittBez = schule.AbschnittBez;
-		daten.schuleAbschnitte.bezAbschnitte.add(schule.BezAbschnitt1);
-		if (daten.schuleAbschnitte.anzahlAbschnitte >= 2)
-			daten.schuleAbschnitte.bezAbschnitte.add(schule.BezAbschnitt2);
-		if (daten.schuleAbschnitte.anzahlAbschnitte >= 3)
-			daten.schuleAbschnitte.bezAbschnitte.add(schule.BezAbschnitt3);
-		if (daten.schuleAbschnitte.anzahlAbschnitte >= 4)
-			daten.schuleAbschnitte.bezAbschnitte.add(schule.BezAbschnitt4);
+		daten.schuleAbschnitte.abschnittBez = ((schule.AbschnittBez == null) || (schule.AbschnittBez.isBlank())) ? "Halbjahr" : schule.AbschnittBez;
+		final @NotNull String bezAbschnitt1 = ((schule.BezAbschnitt1 == null) || (schule.BezAbschnitt1.isBlank())) ? "1. Halbjahr" : schule.BezAbschnitt1;
+		daten.schuleAbschnitte.bezAbschnitte.add(bezAbschnitt1);
+		if (daten.schuleAbschnitte.anzahlAbschnitte >= 2) {
+			final @NotNull String bezAbschnitt2 = ((schule.BezAbschnitt2 == null) || (schule.BezAbschnitt2.isBlank())) ? "2. Halbjahr" : schule.BezAbschnitt2;
+			daten.schuleAbschnitte.bezAbschnitte.add(bezAbschnitt2);
+		}
+		if (daten.schuleAbschnitte.anzahlAbschnitte >= 3) {
+			final @NotNull String bezAbschnitt3 = ((schule.BezAbschnitt3 == null) || (schule.BezAbschnitt3.isBlank())) ? "" : schule.BezAbschnitt3;
+			daten.schuleAbschnitte.bezAbschnitte.add(bezAbschnitt3);
+		}
+		if (daten.schuleAbschnitte.anzahlAbschnitte >= 4) {
+			final @NotNull String bezAbschnitt4 = ((schule.BezAbschnitt4 == null) || (schule.BezAbschnitt4.isBlank())) ? "" : schule.BezAbschnitt4;
+			daten.schuleAbschnitte.bezAbschnitte.add(bezAbschnitt4);
+		}
 		daten.dauerUnterrichtseinheit = (schule.DauerUnterrichtseinheit == null) ? 45 : schule.DauerUnterrichtseinheit;
 		return daten;
 	}
