@@ -33,7 +33,7 @@ abstract class NodePluginConfig {
 
 	NodePluginConfig(Project p) {
 		this.rootProjectDir = p.rootProject.projectDir
-		this.node_download_url = p.hasProperty('node_download_url') ? p.node_download_user : System.getenv("NODE_DOWNLOAD_URL")
+		this.node_download_url = p.hasProperty('node_download_url') ? p.node_download_url : System.getenv("NODE_DOWNLOAD_URL")
 		this.node_download_user = p.hasProperty('node_download_user') ? p.node_download_user : System.getenv("NODE_DOWNLOAD_USER")
 		this.node_download_passwd = p.hasProperty('node_download_passwd') ? p.node_download_passwd : System.getenv("NODE_DOWNLOAD_PASSWD")
 		url.convention('https://nodejs.org/dist/v')
@@ -95,6 +95,7 @@ abstract class NodePluginConfig {
 	}
 
 	URL getDownloadURL() {
+println "${this.node_download_url}${version.get()}/${getCompressedFilenameExt()}"
 		if (this.node_download_url != null)
 			return new URI("${this.node_download_url}${version.get()}/${getCompressedFilenameExt()}").toURL()
 		return new URI(url.get() + version.get() + "/" + getCompressedFilenameExt()).toURL()
