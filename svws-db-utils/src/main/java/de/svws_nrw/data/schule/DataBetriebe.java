@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.schule.Betrieb;
+import de.svws_nrw.core.data.schule.BetriebeAnsprechpartner;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
@@ -25,13 +26,17 @@ import static de.svws_nrw.db.schema.Schema.tab_K_AllgAdresse;
 /** Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für das CoreDTO {@link Betrieb} */
 public final class DataBetriebe extends DataManagerRevised<Long, DTOKatalogAllgemeineAdresse, Betrieb> {
 
+	private final DataBetriebeAnsprechpartner dataBetriebeAnsprechpartner;
+
 	/**
 	 * Erstellt einen neuen {@link DataManagerRevised} für das Core-DTO {@link Betrieb}.
 	 *
-	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
+	 * @param conn   						die Datenbank-Verbindung für den Datenbankzugriff
+	 * @param dataBetriebeAnsprechpartner   DataBetriebeAnsprechpartner
 	 */
-	public DataBetriebe(final DBEntityManager conn) {
+	public DataBetriebe(final DBEntityManager conn, final DataBetriebeAnsprechpartner dataBetriebeAnsprechpartner) {
 		super(conn);
+		this.dataBetriebeAnsprechpartner = dataBetriebeAnsprechpartner;
 		setAttributesRequiredOnCreation("name");
 		setAttributesNotPatchable("id");
 	}
@@ -62,11 +67,16 @@ public final class DataBetriebe extends DataManagerRevised<Long, DTOKatalogAllge
 	public List<Betrieb> getAll() {
 		final List<DTOKatalogAllgemeineAdresse> betriebe = this.conn.queryAll(DTOKatalogAllgemeineAdresse.class);
 		final Set<Long> idsOfReferencedBetriebe = this.getIdsOfReferencedBetriebe(mapToIds(betriebe));
+		final Map<Long, List<BetriebeAnsprechpartner>> ansprechpartnerByIdBetrieb = this.dataBetriebeAnsprechpartner
+				.getAll()
+				.stream()
+				.collect(Collectors.groupingBy(a -> a.idBetrieb));
 
 		return betriebe
 				.stream()
 				.map(this::map)
 				.map(b -> setReferenceFlag(b, idsOfReferencedBetriebe))
+				.map(b -> addAnsprechpartner(b, ansprechpartnerByIdBetrieb))
 				.sorted(Comparator.comparing(b -> b.id))
 				.toList();
 	}
@@ -208,6 +218,13 @@ public final class DataBetriebe extends DataManagerRevised<Long, DTOKatalogAllge
 
 	private Betrieb setReferenceFlag(final Betrieb betrieb, final Set<Long> idsOfReferencedBetriebe) {
 		betrieb.referenziertInAnderenTabellen = idsOfReferencedBetriebe.contains(betrieb.id);
+		return betrieb;
+	}
+
+	private Betrieb addAnsprechpartner(final Betrieb betrieb, final Map<Long, List<BetriebeAnsprechpartner>> ansprechpartnerByIdBetrieb) {
+		final List<BetriebeAnsprechpartner> result = ansprechpartnerByIdBetrieb.get(betrieb.id);
+		if (result != null)
+			betrieb.ansprechpartner = result;
 		return betrieb;
 	}
 

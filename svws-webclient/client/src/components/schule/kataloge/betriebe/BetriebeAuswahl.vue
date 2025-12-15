@@ -65,9 +65,9 @@
 	});
 
 	const showOnlyVisibleBetriebe = computed<boolean>({
-		get: () => props.manager().filterNurSichtbar(),
+		get: () => props.manager().filterNurSichtbar,
 		set: (value: boolean) => {
-			props.manager().setFilterNurSichtbar(value);
+			props.manager().filterNurSichtbar = value;
 			void props.setFilter();
 		},
 	});

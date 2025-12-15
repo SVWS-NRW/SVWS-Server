@@ -1,7 +1,5 @@
-import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
-import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
-import type { Betrieb, JavaSet, List, SimpleOperationResponse } from "@core";
+import type { Betrieb, BetriebeAnsprechpartner, JavaSet, List, SimpleOperationResponse } from "@core";
 import { ArrayList, BenutzerKompetenz } from "@core";
 import { ViewType } from "@ui";
 import { api } from "~/router/Api";
@@ -9,11 +7,12 @@ import { BetriebeListeManager } from "../../../../../../../ui/src/ui/manager/kat
 import { routeBetriebeGruppenprozesse } from "~/router/apps/schule/kataloge/betriebe/RouteBetriebeGruppenprozesse";
 import { routeBetriebeNeu } from "~/router/apps/schule/kataloge/betriebe/RouteBetriebeNeu";
 import { routeBetriebeDaten } from "~/router/apps/schule/kataloge/betriebe/RouteBetriebeDaten";
+import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,
-	manager: new BetriebeListeManager(-1, -1, new ArrayList(), null, new ArrayList()),
+	manager: new BetriebeListeManager(-1, -1, new ArrayList(), null, new ArrayList(), new ArrayList(), new ArrayList()),
 	view: routeBetriebeDaten,
 	activeViewType: ViewType.DEFAULT,
 	oldView: undefined,
@@ -31,9 +30,14 @@ export class RouteDataBetriebe extends RouteDataAuswahl<BetriebeListeManager, Ro
 	}
 
 	protected async createManager(_: number): Promise<Partial<RouteStateAuswahlInterface<BetriebeListeManager>>> {
-		const betriebe = await api.server.getBetriebeNeu(api.schema);
-		const manager = new BetriebeListeManager(api.abschnitt.id, api.schuleStammdaten.idSchuljahresabschnitt,
-			api.schuleStammdaten.abschnitte, api.schulform, betriebe);
+		const [betriebe, betriebsarten, orte] = await Promise.all([
+			api.server.getBetriebeNeu(api.schema),
+			api.server.getBetriebsarten(api.schema),
+			api.server.getOrte(api.schema),
+		]);
+
+		const manager = new BetriebeListeManager(api.abschnitt.id, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,
+			api.schulform, betriebe, betriebsarten, orte);
 		return { manager };
 	}
 
@@ -89,5 +93,25 @@ export class RouteDataBetriebe extends RouteDataAuswahl<BetriebeListeManager, Ro
 		}
 		return errorMessage;
 	}
+
+	addAnsprechpartner = async (data: Partial<BetriebeAnsprechpartner>): Promise<void> => {
+		const result = await api.server.addBetriebeAnsprechpartnerNeu(data, api.schema);
+		this.manager.addAnsprechpartner(result);
+		this.commit();
+	};
+
+	deleteAnsprechpartner = async (ids: List<number>): Promise<void> => {
+		await api.server.deleteBetriebeAnsprechpartnerNeu(ids, api.schema);
+		for (const id of ids)
+			this.manager.deleteAnsprechpartner(id);
+		this.commit();
+	};
+
+	patchAnsprechpartner = async (id: number, data: Partial<BetriebeAnsprechpartner>): Promise<void> => {
+		await api.server.patchBetriebeAnsprechpartnerNeu(data, api.schema, id);
+		this.manager.patchAnsprechpartner(id, data);
+		this.commit();
+	};
+
 
 }

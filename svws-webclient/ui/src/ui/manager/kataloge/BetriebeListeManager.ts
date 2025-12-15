@@ -10,6 +10,10 @@ import { JavaString } from '../../../../../core/src/java/lang/JavaString';
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
 import type { JavaFunction } from '../../../../../core/src/java/util/function/JavaFunction';
 import { HashSet } from "../../../../../core/src/java/util/HashSet";
+import type { BetriebeAnsprechpartner } from "../../../../../core/src/core/data/schule/BetriebeAnsprechpartner";
+import type { Betriebsart } from "../../../../../core/src/core/data/schule/Betriebsart";
+import type { OrtKatalogEintrag } from "../../../../../core/src/core/data/kataloge/OrtKatalogEintrag";
+
 
 
 export class BetriebeListeManager extends AuswahlManager<number, Betrieb, Betrieb> {
@@ -18,26 +22,28 @@ export class BetriebeListeManager extends AuswahlManager<number, Betrieb, Betrie
 	private readonly _idsOfReferencedBetriebe: HashSet<number> = new HashSet<number>();
 	private _filterNurSichtbar: boolean = true;
 	private _searchTerm: string = "";
+	private readonly _betriebsartenById: Map<number, Betriebsart> = new Map();
+	private readonly _orteById: Map<number, OrtKatalogEintrag> = new Map();
 
 	/**
 	 * Ein Default-Comparator für den Vergleich von Betrieben.
 	 */
-	public static readonly comparator: Comparator<Betrieb> = { compare: (a: Betrieb, b: Betrieb) => {
-		let cmp;
-		if ((a.sortierung !== null) && (b.sortierung !== null)) {
+	public static readonly comparator: Comparator<Betrieb> = {
+		compare: (a: Betrieb, b: Betrieb) => {
+			let cmp;
 			cmp = JavaInteger.compare(a.sortierung, b.sortierung);
 			if (cmp !== 0) {
 				return cmp;
 			}
-		}
-		if ((a.name !== null) && (b.name !== null)) {
-			cmp = JavaString.compareTo(a.name, b.name);
-			if (cmp !== 0) {
-				return cmp;
+			if ((a.name !== null) && (b.name !== null)) {
+				cmp = JavaString.compareTo(a.name, b.name);
+				if (cmp !== 0) {
+					return cmp;
+				}
 			}
-		}
-		return JavaLong.compare(a.id, b.id);
-	} };
+			return JavaLong.compare(a.id, b.id);
+		},
+	};
 
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
@@ -47,11 +53,25 @@ export class BetriebeListeManager extends AuswahlManager<number, Betrieb, Betrie
 	 * @param schuljahresabschnitte           	die Liste der Schuljahresabschnitte
 	 * @param schulform     				  	die Schulform der Schule
 	 * @param betriebe							die Liste der Betriebe
+	 * @param betriebsarten						die Liste der Betriebsarten
+	 * @param orte								die Liste der Orte
 	 */
 	public constructor(idSchuljahresabschnitt: number, idSchuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>,
-		schulform: Schulform | null, betriebe: List<Betrieb>) {
+		schulform: Schulform | null, betriebe: List<Betrieb>, betriebsarten: List<Betriebsart>, orte: List<OrtKatalogEintrag>) {
 		super(idSchuljahresabschnitt, idSchuljahresabschnittSchule, schuljahresabschnitte, schulform, betriebe,
 			BetriebeListeManager.comparator, BetriebeListeManager._betriebToId, BetriebeListeManager._betriebToId, ArrayList.of());
+		this.mapBetriebsarten(betriebsarten);
+		this.mapOrte(orte);
+	}
+
+	private mapBetriebsarten(betriebsarten: List<Betriebsart>) {
+		for (const betriebsart of betriebsarten)
+			this._betriebsartenById.set(betriebsart.id, betriebsart);
+	}
+
+	private mapOrte(orte: List<OrtKatalogEintrag>) {
+		for (const ort of orte)
+			this._orteById.set(ort.id, ort);
 	}
 
 	/**
@@ -93,22 +113,12 @@ export class BetriebeListeManager extends AuswahlManager<number, Betrieb, Betrie
 		return ((eintrag.name !== null) && eintrag.name.toLocaleLowerCase().includes(searchTermLower));
 	}
 
-	/**
-	 * Setzt die Filtereinstellung auf nur sichtbare Betriebe.
-	 *
-	 * @param value   true, wenn der Filter aktiviert werden soll, und ansonsten false
-	 */
-	public setFilterNurSichtbar(value: boolean): void {
+	set filterNurSichtbar(value: boolean) {
 		this._filterNurSichtbar = value;
 		this._eventHandlerFilterChanged.run();
 	}
 
-	/**
-	 * Gibt die aktuelle Filtereinstellung auf nur sichtbare Betriebe zurück.
-	 *
-	 * @return true, wenn nur sichtbare Betriebe angezeigt werden und ansonsten false
-	 */
-	public filterNurSichtbar(): boolean {
+	get filterNurSichtbar(): boolean {
 		return this._filterNurSichtbar;
 	}
 
@@ -121,4 +131,46 @@ export class BetriebeListeManager extends AuswahlManager<number, Betrieb, Betrie
 		this._eventHandlerFilterChanged.run();
 	}
 
+	// --- ansprechpartner ---
+
+	/** Fügt einen Ansprechpartner der Liste hinzu -> Wird zur Anzeige neu angelegter Einträge in der Tabelle benötigt */
+	public addAnsprechpartner(m: BetriebeAnsprechpartner) {
+		this.daten().ansprechpartner.add(m);
+	}
+
+	/** Eintrag der Ansprechpartner löschen */
+	public deleteAnsprechpartner(id: number) {
+		const index = this.getIndexAnsprechpartnerById(id);
+		if (index !== undefined) {
+			this.daten().ansprechpartner.removeElementAt(index);
+		}
+	}
+
+	/** Eintrag der Ansprechpartner patchen */
+	public patchAnsprechpartner(id: number, data: Partial<BetriebeAnsprechpartner>) {
+		const index = this.getIndexAnsprechpartnerById(id);
+		if (index === undefined) {
+			return;
+		}
+		const ansprechpartner = this.daten().ansprechpartner.get(index);
+		Object.assign(ansprechpartner, data);
+	}
+
+	private getIndexAnsprechpartnerById(id: number): number | undefined {
+		let index = 0;
+		for (const s of this.daten().ansprechpartner) {
+			if (s.id === id) {
+				return index;
+			}
+			index++;
+		}
+	}
+
+	get betriebsartenById(): Map<number, Betriebsart> {
+		return this._betriebsartenById;
+	}
+
+	get orteById(): Map<number, OrtKatalogEintrag> {
+		return this._orteById;
+	}
 }

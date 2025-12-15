@@ -25,6 +25,9 @@ export class RouteBetriebeDaten extends RouteNode<any, RouteBetriebe> {
 			manager: () => routeBetriebe.data.manager,
 			patch: routeBetriebe.data.patch,
 			benutzerKompetenzen: api.benutzerKompetenzen,
+			addAnsprechpartner: routeBetriebe.data.addAnsprechpartner,
+			deleteAnsprechpartner: routeBetriebe.data.deleteAnsprechpartner,
+			patchAnsprechpartner: routeBetriebe.data.patchAnsprechpartner
 		};
 	}
 

@@ -8,6 +8,7 @@ import java.util.stream.Stream;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.schule.Betrieb;
+import de.svws_nrw.core.data.schule.BetriebeAnsprechpartner;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAdressart;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAllgemeineAdresse;
@@ -17,6 +18,7 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.core.Response;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -51,6 +53,9 @@ class DataBetriebeTest {
 	@Mock
 	private DBEntityManager conn;
 
+	@Mock
+	private DataBetriebeAnsprechpartner dataBetriebeAnsprechpartner;
+
 	@InjectMocks
 	private DataBetriebe data;
 
@@ -63,7 +68,6 @@ class DataBetriebeTest {
 	void setUpEach() {
 		lenient().when(this.conn.transactionPersist(any())).thenReturn(true);
 	}
-
 
 	@Test
 	@DisplayName("setAttributesRequiredOnCreation: name")
@@ -144,6 +148,11 @@ class DataBetriebeTest {
 		final var dto1 = new DTOKatalogAllgemeineAdresse(1L);
 		final var dto2 = new DTOKatalogAllgemeineAdresse(2L);
 		when(this.conn.queryAll(DTOKatalogAllgemeineAdresse.class)).thenReturn(List.of(dto1, dto2));
+		final var ansprechpartner = new BetriebeAnsprechpartner();
+		ansprechpartner.id = 42L;
+		ansprechpartner.idBetrieb = 1L;
+		ansprechpartner.name = "test";
+		when(this.dataBetriebeAnsprechpartner.getAll()).thenReturn(List.of(ansprechpartner));
 		@SuppressWarnings("unchecked")
 		final TypedQuery<Long> queryMock = mock(TypedQuery.class);
 		when(queryMock.setParameter(eq("ids"), any())).thenReturn(queryMock);
@@ -155,7 +164,16 @@ class DataBetriebeTest {
 				.satisfiesExactly(
 						f1 -> assertThat(f1)
 								.isInstanceOf(Betrieb.class)
-								.hasFieldOrPropertyWithValue("referenziertInAnderenTabellen", true),
+								.hasFieldOrPropertyWithValue("referenziertInAnderenTabellen", true)
+								.extracting(e -> e.ansprechpartner)
+								.asInstanceOf(InstanceOfAssertFactories.LIST)
+								.hasSize(1)
+								.satisfiesExactly(
+										a -> assertThat(a)
+												.isInstanceOf(BetriebeAnsprechpartner.class)
+												.hasFieldOrPropertyWithValue("id", ansprechpartner.id)
+												.hasFieldOrPropertyWithValue("name", ansprechpartner.name)
+								),
 						f2 -> assertThat(f2)
 								.isInstanceOf(Betrieb.class)
 								.hasFieldOrPropertyWithValue("referenziertInAnderenTabellen", false)

@@ -1,6 +1,7 @@
 <template>
 	<div class="page page-grid-cards">
 		<svws-ui-input-wrapper :grid="1">
+			<!-- Allgemein -->
 			<svws-ui-content-card title="Allgemein">
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-text-input placeholder="Name" class="contentFocusField"
@@ -11,7 +12,10 @@
 						:model-value="manager().daten().nameZusatz"
 						@change="patchNameZusatz"
 						:valid="v => optionalInputIsValid(v, 50)" :max-len="50" :readonly="!hatKompetenzUpdate" />
-					<svws-ui-text-input placeholder="placeholder Betriebsart" readonly />
+					<ui-select label="Betriebsart"
+						v-model="selectedBetriebsart"
+						:manager="betriebsartenManager"
+						:readonly="!hatKompetenzUpdate" searchable />
 					<svws-ui-text-input placeholder="Branche"
 						:model-value="manager().daten().branche"
 						@change="patchBranche"
@@ -42,14 +46,18 @@
 					</div>
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
-			<svws-ui-spacing :size="2"/>
+			<svws-ui-spacing :size="2" />
+			<!-- Adresse -->
 			<svws-ui-content-card title="Adresse">
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-text-input placeholder="Straße"
 						:model-value="strasse"
 						@change="patchStrasse"
 						:valid="adresseIsValid" :max-len="50" :readonly="!hatKompetenzUpdate" />
-					<svws-ui-text-input placeholder="placeholder Wohnort" readonly />
+					<ui-select label="Wohnort"
+						v-model="selectedWohnort"
+						:manager="wohnortManager"
+						:readonly="!hatKompetenzUpdate" searchable />
 					<svws-ui-text-input placeholder="Telefon" type="tel"
 						:model-value="manager().daten().telefon1"
 						@change="patchTelefon1"
@@ -66,17 +74,23 @@
 						:model-value="manager().daten().fax"
 						@change="patchFax"
 						:valid="(v) => phoneNumberIsValid(v, 20)" :max-len="20" :readonly="!hatKompetenzUpdate" />
-					<svws-ui-spacing :size="2" />
-					<svws-ui-input-number placeholder="Sortierung"
-						:model-value="manager().daten().sortierung"
-						@change="patchSortierung"
-						:valid="sortierungIsValid" :min="0" :max="32000" :readonly="!hatKompetenzUpdate" :removable="false" />
-					<svws-ui-spacing />
-					<svws-ui-checkbox v-model="selectedIsSichtbar" :readonly="!hatKompetenzUpdate">
-						Sichtbar
-					</svws-ui-checkbox>
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
+			<svws-ui-spacing :size="2" />
+			<!-- Ansprechpartner -->
+			<betriebe-ansprechpartner :manager :add-ansprechpartner :patch-ansprechpartner :delete-ansprechpartner :hat-kompetenz-update />
+			<svws-ui-spacing :size="2" />
+			<!-- Sonstige -->
+			<svws-ui-input-wrapper :grid="2">
+				<svws-ui-input-number placeholder="Sortierung"
+					:model-value="manager().daten().sortierung"
+					@change="patchSortierung"
+					:valid="sortierungIsValid" :min="0" :max="32000" :readonly="!hatKompetenzUpdate" :removable="false" />
+				<svws-ui-spacing />
+				<svws-ui-checkbox v-model="selectedIsSichtbar" :readonly="!hatKompetenzUpdate">
+					Sichtbar
+				</svws-ui-checkbox>
+			</svws-ui-input-wrapper>
 		</svws-ui-input-wrapper>
 	</div>
 </template>
@@ -85,11 +99,37 @@
 
 	import type { BetriebeDatenProps } from "~/components/schule/kataloge/betriebe/daten/BetriebeDatenProps";
 	import { computed } from "vue";
+	import type { Betriebsart, OrtKatalogEintrag } from "@core";
 	import { AdressenUtils, BenutzerKompetenz } from "@core";
-	import { isUniqueInList, mandatoryInputIsValid, optionalInputIsValid, phoneNumberIsValid, emailIsValid, numberHasDecimals, numberIsValid } from "~/util/validation/Validation";
+	import { emailIsValid, isUniqueInList, mandatoryInputIsValid, numberHasDecimals, numberIsValid, optionalInputIsValid, phoneNumberIsValid } from "~/util/validation/Validation";
+	import { SelectManager } from "@ui";
 
 	const props = defineProps<BetriebeDatenProps>();
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+
+	const betriebsartenById = computed<Map<number, Betriebsart>>(() => props.manager().betriebsartenById);
+	const betriebsartenManager = new SelectManager({
+		options: betriebsartenById.value.values(),
+		optionDisplayText: v => v.bezeichnung ?? "",
+		selectionDisplayText: v => v.bezeichnung ?? "",
+	});
+
+	const orteById = computed<Map<number, OrtKatalogEintrag>>(() => props.manager().orteById);
+	const wohnortManager = new SelectManager({
+		options: orteById.value.values(),
+		optionDisplayText: v => v.plz + ' ' + v.ortsname,
+		selectionDisplayText: v => v.plz + ' ' + v.ortsname,
+	});
+
+	const selectedBetriebsart = computed<Betriebsart | null>({
+		get: () => betriebsartenById.value.get(props.manager().daten().idBetriebsart ?? -1) ?? null,
+		set: (v: Betriebsart | null) => void props.patch({ 'idBetriebsart': v?.id ?? null }),
+	});
+
+	const selectedWohnort = computed<OrtKatalogEintrag | null>({
+		get: () => orteById.value.get(props.manager().daten().idOrt ?? -1) ?? null,
+		set: (v: OrtKatalogEintrag | null) => void props.patch({ 'idOrt': v?.id ?? null }),
+	});
 
 	const selectedIsAusbildungsbetrieb = computed<boolean>({
 		get: () => props.manager().daten().isAusbildungsbetrieb,

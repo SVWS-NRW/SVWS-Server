@@ -1,4 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { BetriebeAnsprechpartner } from '../../../core/data/schule/BetriebeAnsprechpartner';
+import { ArrayList } from '../../../java/util/ArrayList';
+import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 
 export class Betrieb extends JavaObject {
@@ -113,6 +116,11 @@ export class Betrieb extends JavaObject {
 	 */
 	public referenziertInAnderenTabellen: boolean = false;
 
+	/**
+	 * Die Ansprechpartner des Betriebs.
+	 */
+	public ansprechpartner: List<BetriebeAnsprechpartner> = new ArrayList<BetriebeAnsprechpartner>();
+
 
 	public constructor() {
 		super();
@@ -171,6 +179,11 @@ export class Betrieb extends JavaObject {
 		if (obj.referenziertInAnderenTabellen === undefined)
 			throw new Error('invalid json format, missing attribute referenziertInAnderenTabellen');
 		result.referenziertInAnderenTabellen = obj.referenziertInAnderenTabellen;
+		if (obj.ansprechpartner !== undefined) {
+			for (const elem of obj.ansprechpartner) {
+				result.ansprechpartner.add(BetriebeAnsprechpartner.transpilerFromJSON(JSON.stringify(elem)));
+			}
+		}
 		return result;
 	}
 
@@ -198,6 +211,14 @@ export class Betrieb extends JavaObject {
 		result += '"isSichtbar" : ' + obj.isSichtbar.toString() + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"referenziertInAnderenTabellen" : ' + obj.referenziertInAnderenTabellen.toString() + ',';
+		result += '"ansprechpartner" : [ ';
+		for (let i = 0; i < obj.ansprechpartner.size(); i++) {
+			const elem = obj.ansprechpartner.get(i);
+			result += BetriebeAnsprechpartner.transpilerToJSON(elem);
+			if (i < obj.ansprechpartner.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -270,6 +291,16 @@ export class Betrieb extends JavaObject {
 		}
 		if (obj.referenziertInAnderenTabellen !== undefined) {
 			result += '"referenziertInAnderenTabellen" : ' + obj.referenziertInAnderenTabellen.toString() + ',';
+		}
+		if (obj.ansprechpartner !== undefined) {
+			result += '"ansprechpartner" : [ ';
+			for (let i = 0; i < obj.ansprechpartner.size(); i++) {
+				const elem = obj.ansprechpartner.get(i);
+				result += BetriebeAnsprechpartner.transpilerToJSON(elem);
+				if (i < obj.ansprechpartner.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

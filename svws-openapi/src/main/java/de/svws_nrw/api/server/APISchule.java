@@ -3248,7 +3248,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
 	public Response getBetriebeNeu(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataBetriebe(conn).getAllAsResponse(),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataBetriebe(conn, new DataBetriebeAnsprechpartner(conn)).getAllAsResponse(),
 				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
 	}
 
@@ -3278,7 +3278,7 @@ public class APISchule {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Betrieb.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataBetriebe(conn).patchAsResponse(id, is), request, ServerMode.STABLE,
+				conn -> new DataBetriebe(conn, new DataBetriebeAnsprechpartner(conn)).patchAsResponse(id, is), request, ServerMode.STABLE,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
 
@@ -3304,7 +3304,7 @@ public class APISchule {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Betrieb.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataBetriebe(conn).addAsResponse(is), request, ServerMode.STABLE,
+				conn -> new DataBetriebe(conn, new DataBetriebeAnsprechpartner(conn)).addAsResponse(is), request, ServerMode.STABLE,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
 
@@ -3329,7 +3329,7 @@ public class APISchule {
 			required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 			array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
-				conn -> new DataBetriebe(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
+				conn -> new DataBetriebe(conn, new DataBetriebeAnsprechpartner(conn)).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}

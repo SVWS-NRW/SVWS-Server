@@ -1,8 +1,13 @@
 package de.svws_nrw.core.data.schule;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.svws_nrw.transpiler.TranspilerDTO;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -101,4 +106,11 @@ public class Betrieb {
 	/** Gibt an, ob der Betrieb in anderen Datenbanktabellen referenziert ist oder nicht. */
 	@Schema(description = "Gibt an, ob der Betrieb in anderen Datenbanktabellen referenziert ist oder nicht.", example = "true", accessMode = Schema.AccessMode.READ_ONLY)
 	public boolean referenziertInAnderenTabellen;
+
+	/** Die Ansprechpartner des Betriebs. */
+	@ArraySchema(
+			schema = @Schema(implementation = BetriebeAnsprechpartner.class,
+			description = "Die Ansprechpartner des Betriebs.",
+			accessMode = Schema.AccessMode.READ_ONLY))
+	public @NotNull List<BetriebeAnsprechpartner> ansprechpartner = new ArrayList<>();
 }

@@ -9,7 +9,10 @@
 					<svws-ui-text-input placeholder="Namensergänzung"
 						v-model="data.nameZusatz"
 						:valid="() => fieldIsValid('nameZusatz')" :max-len="50" :disabled="!hatKompetenzAdd" />
-					<svws-ui-text-input placeholder="placeholder Betriebsart" readonly />
+					<ui-select label="Betriebsart"
+						v-model="selectedBetriebsart"
+						:manager="betriebsartenManager"
+						:disabled="!hatKompetenzAdd" searchable />
 					<svws-ui-text-input placeholder="Branche"
 						v-model="data.branche"
 						:valid="() => fieldIsValid('branche')" :max-len="50" :disabled="!hatKompetenzAdd" />
@@ -45,7 +48,10 @@
 					<svws-ui-text-input placeholder="Straße"
 						v-model="adresse"
 						:valid="() => fieldIsValid('strasse')" :max-len="50" :disabled="!hatKompetenzAdd" />
-					<svws-ui-text-input placeholder="placeholder Wohnort" readonly />
+					<ui-select label="Wohnort"
+						v-model="selectedWohnort"
+						:manager="wohnortManager"
+						:disabled="!hatKompetenzAdd" searchable />
 					<svws-ui-text-input placeholder="Telefon" type="tel"
 						v-model="data.telefon1"
 						:valid="() => fieldIsValid('telefon1')" :max-len="20" :disabled="!hatKompetenzAdd" />
@@ -84,9 +90,10 @@
 <script setup lang="ts">
 
 	import { computed, ref, watch } from "vue";
-	import { AdressenUtils, BenutzerKompetenz, Betrieb } from "@core";
+	import { AdressenUtils, BenutzerKompetenz, Betrieb, type Betriebsart, type OrtKatalogEintrag } from "@core";
 	import { emailIsValid, isUniqueInList, mandatoryInputIsValid, numberHasDecimals, numberIsValid, optionalInputIsValid, phoneNumberIsValid } from "~/util/validation/Validation";
 	import type { BetriebeNeuProps } from "~/components/schule/kataloge/betriebe/BetriebeNeuProps";
+	import { SelectManager } from "@ui";
 
 	const props = defineProps<BetriebeNeuProps>();
 	const data = ref<Betrieb>(Object.assign(new Betrieb(), { isSichtbar: true, sortierung: 32000, anzahlRestabschnitte: 0 }));
@@ -96,11 +103,34 @@
 	const adresse = computed({
 		get: () => AdressenUtils.combineStrasse(data.value.strasse, data.value.hausnummer, data.value.hausnummerZusatz),
 		set: (adresse: string | null) => {
-			const vals = AdressenUtils.splitStrasse(adresse);
-			data.value.strasse = vals[0];
-			data.value.hausnummer = vals[1];
-			data.value.hausnummerZusatz = vals[2];
+			const [strasse, hausnummer, hausnummerZusatz] = AdressenUtils.splitStrasse(adresse);
+			data.value.strasse = strasse;
+			data.value.hausnummer = hausnummer;
+			data.value.hausnummerZusatz = hausnummerZusatz;
 		},
+	});
+	const betriebsartenById = computed<Map<number, Betriebsart>>(() => props.manager().betriebsartenById);
+	const betriebsartenManager = new SelectManager({
+		options: betriebsartenById.value.values(),
+		optionDisplayText: v => v.bezeichnung ?? "",
+		selectionDisplayText: v => v.bezeichnung ?? "",
+	});
+
+	const orteById = computed<Map<number, OrtKatalogEintrag>>(() => props.manager().orteById);
+	const wohnortManager = new SelectManager({
+		options: orteById.value.values(),
+		optionDisplayText: v => v.plz + ' ' + v.ortsname,
+		selectionDisplayText: v => v.plz + ' ' + v.ortsname,
+	});
+
+	const selectedBetriebsart = computed<Betriebsart | null>({
+		get: () => betriebsartenById.value.get(data.value.idBetriebsart ?? -1) ?? null,
+		set: (v: Betriebsart | null) => data.value.idBetriebsart = v?.id ?? null,
+	});
+
+	const selectedWohnort = computed<OrtKatalogEintrag | null>({
+		get: () => orteById.value.get(data.value.idOrt ?? -1) ?? null,
+		set: (v: OrtKatalogEintrag | null) => data.value.idOrt = v?.id ?? null,
 	});
 
 	// --- validate ---
@@ -161,7 +191,7 @@
 
 		props.checkpoint.active = false;
 		isLoading.value = true;
-		const { id, referenziertInAnderenTabellen, ...partialData } = data.value;
+		const { id, referenziertInAnderenTabellen, ansprechpartner, ...partialData } = data.value;
 		await props.add(partialData);
 		isLoading.value = false;
 	}
