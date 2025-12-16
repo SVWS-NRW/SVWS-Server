@@ -3,6 +3,7 @@ package de.svws_nrw.transpiler.test;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import jakarta.validation.constraints.NotNull;
 
@@ -19,10 +20,13 @@ public class Utils {
 
 	/**
 	 * Eine Test-Methode für einen Supplier
+	 *
+	 * @return ein Supplier
 	 */
-	public static void testSupplier() {
+	public static Supplier<String> testSupplier() {
 		final @NotNull List<UtilClass> list = new ArrayList<>();
 		list.add(new UtilClass(() -> "42"));
+		return () -> "2*42";
 	}
 
 	/**

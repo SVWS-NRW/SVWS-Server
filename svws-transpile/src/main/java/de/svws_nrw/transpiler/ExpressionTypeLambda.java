@@ -12,12 +12,15 @@ import javax.lang.model.type.DeclaredType;
 
 import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.AssignmentTree;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ParameterizedTypeTree;
+import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 
@@ -134,6 +137,33 @@ public final class ExpressionTypeLambda extends ExpressionType {
 				throw new TranspilerException("Transpiler Error: Cannot retrieve the type information for the identifier " + at.getVariable().toString());
 			if (type instanceof final ExpressionClassType classType)
 				return classType.getFullQualifiedName();
+		}
+		if (parent instanceof final ReturnTree rt) {
+			Tree cur = rt;
+			while ((!(cur instanceof ClassTree)) && (!(cur instanceof final MethodTree)))
+				cur = transpiler.getParent(cur);
+			if (cur instanceof final MethodTree mt) {
+				final Tree varType = mt.getReturnType();
+				if (varType instanceof final ParameterizedTypeTree ptt) {
+					Tree baseType = ptt.getType();
+					if (baseType instanceof final AnnotatedTypeTree att)
+						baseType = att.getUnderlyingType();
+					if (baseType instanceof final IdentifierTree ident) {
+						final ExpressionType type = transpiler.getExpressionType(ident);
+						if (type == null)
+							throw new TranspilerException("Transpiler Error: Cannot retrieve the type information for the identifier "
+									+ ident.getName().toString());
+						if (type instanceof final ExpressionClassType classType)
+							return classType.getFullQualifiedName();
+					}
+				}
+				if (varType instanceof final IdentifierTree it) {
+					final Element e = transpiler.getElement(it);
+					if (e instanceof final TypeElement te)
+						return te.toString();
+					throw new TranspilerException("Transpiler Error: Unhandled functional interface : " + it.toString());
+				}
+			}
 		}
 		if (parent instanceof final NewClassTree nct) {
 			// determine the index in the parameter list where the lambda is used as parameter
