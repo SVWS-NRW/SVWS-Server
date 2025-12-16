@@ -1,5 +1,5 @@
 import { shallowRef, triggerRef } from "vue";
-import type { Comparator, ENMAbteilung, ENMJahrgang, ENMKlasse, ENMTeilleistungsart, JavaMap, List } from "@core";
+import type { Collection, Comparator, ENMAbteilung, ENMJahrgang, ENMKlasse, ENMTeilleistungsart, JavaMap, List } from "@core";
 import { ArrayList, ENMConfigKlasse, ENMConfigKlasseSpalte, HashMap, HashMap2D, HashSet } from "@core";
 import { comparatorENMAbteilung, comparatorENMJahrgang, comparatorENMKlasse } from "./NotenmodulUtils";
 import type { GridColumn } from "../../../../../ui/src/ui/controls/tablegrid/GridManager";
@@ -343,9 +343,9 @@ export class NotenmodulConfigManagerSperrungen {
 	public generateDefaultConfigKlasse(id: number): ENMConfigKlasse {
 		const config = new ENMConfigKlasse();
 		config.id = id;
-		const now = new Date();
-		config.tsEingabeAb = now.toISOString();
-		config.tsEingabeBis = now.toISOString();
+		const now = null; // new Date().toISOString().slice(0, -3).replace('T', ' ');
+		config.tsEingabeAb = now;
+		config.tsEingabeBis = now;
 		config.spalten.addAll(this._mapDefaultConfigKlasseSpalte.values());
 		return config;
 	}
@@ -379,9 +379,9 @@ export class NotenmodulConfigManagerSperrungen {
 	public genGruppe(id: number, klassen: List<ENMConfigKlasse>): NotenmodulConfigManagerSperrungenGruppe {
 		const config = new NotenmodulConfigManagerSperrungenGruppe();
 		config.id = id;
-		const now = new Date();
-		config.tsEingabeAb = now.toISOString();
-		config.tsEingabeBis = now.toISOString();
+		const now = null; // new Date().toISOString().slice(0, -3).replace('T', ' ');
+		config.tsEingabeAb = now;
+		config.tsEingabeBis = now;
 		for (const spalte of this._mapDefaultConfigKlasseSpalte.values()) {
 			config.spalten.add(this.genGruppeSpalte(spalte, klassen));
 		}
@@ -475,8 +475,12 @@ export class NotenmodulConfigManagerSperrungen {
 
 	/** Setzt die aktuell ausgewählte Gruppierung für die Anzeige */
 	set gruppierung(value: NotenmodulConfigManagerSperrungenGruppierung) {
+		if (value === this._gruppierung.value) {
+			return;
+		}
 		this._gruppierung.value = value;
 		void this.setGruppierung(value);
+		this.updateGruppierung(value);
 	}
 
 	/** Gibt zurück, ob die einzelnen Teilnoten angezeigt werden sollen oder nur gruppiert */
@@ -766,9 +770,9 @@ export class NotenmodulConfigManagerSperrungen {
 				max = listJahrgangsklassen.size();
 			}
 		} else if (this._gruppierung.value === 'Abteilung') {
-			const jg = this.getAbteilung(row.id);
-			if (jg !== null) {
-				max = jg.klassenzuordnungen.size();
+			const listAbteilungKlassen = this._mapAbteilungKlassen.get(row.id);
+			if (listAbteilungKlassen !== null) {
+				max = listAbteilungKlassen.size();
 			}
 		} else {
 			max = this._listKlassen.size();
@@ -829,6 +833,47 @@ export class NotenmodulConfigManagerSperrungen {
 		await this.writeConfig();
 	}
 
+	/**
+	 * Aktualisiert die übergebenen Gruppen aus der Collection
+	 *
+	 * @param gruppen die zu aktualisierenden Gruppen
+	 */
+	private updateGruppen(gruppen: Collection<NotenmodulConfigManagerSperrungenGruppe>) {
+		for (const gruppe of gruppen) {
+			for (const colGruppe of gruppe.spalten) {
+				colGruppe.gesperrt = 0;
+				for (const idKlasse of gruppe.klassenzuordnungen) {
+					const col = this._mapKlassenSpalte.getOrNull(idKlasse, colGruppe.name);
+					if (col === null) {
+						continue;
+					}
+					if (col.gesperrt) {
+						colGruppe.gesperrt++;
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Aktualisiert die Gruppen, die z.B. Jahrgänge zusammenfassen
+	 *
+	 * @param value		die Gruppierung, die aktualisiert werden soll
+	 */
+	private updateGruppierung(value: NotenmodulConfigManagerSperrungenGruppierung) {
+		if (value === 'Keine') {
+			const gruppen = new ArrayList<NotenmodulConfigManagerSperrungenGruppe>();
+			gruppen.add(this._configAlleKlassen.value);
+			this.updateGruppen(gruppen);
+			triggerRef(this._configAlleKlassen);
+		} else if (value === 'Jahrgang') {
+			this.updateGruppen(this._mapJahrgangGruppe.value.values());
+			triggerRef(this._mapJahrgangGruppe);
+		} else {
+			this.updateGruppen(this._mapAbteilungGruppe.value.values());
+			triggerRef(this._mapAbteilungGruppe);
+		}
+	}
 
 	/**
 	 * Schaltet den Wert für die Sperrung bei einer einzelnen Klasse um.
@@ -855,6 +900,7 @@ export class NotenmodulConfigManagerSperrungen {
 				gruppeAbteilung.gesperrt--;
 			triggerRef(this._mapAbteilungGruppe);
 		}
+		// Aktualisiere ggf. bei der Gruppe für Alle den Counter für die Anzahl Sperrungen...
 		const gruppeAlleKlassen = this._mapAlleKlassenSpalte.get(col.name);
 		if (gruppeAlleKlassen !== null) {
 			if (col.gesperrt)

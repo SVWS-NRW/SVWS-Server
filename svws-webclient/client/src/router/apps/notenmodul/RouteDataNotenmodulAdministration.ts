@@ -1,6 +1,6 @@
 import type { RouteParamsRawGeneric } from "vue-router";
-import type { List, JavaMap, ENMServerConfigElement, ENMServerConnection, Abteilung } from "@core";
-import { ENMConfigKlasse, ArrayList, UnsupportedOperationException, OpenApiError, DeveloperNotificationException, HashMap, SimpleOperationResponse, UserNotificationException, ENMConfigSpalte, ENMAbteilung } from "@core";
+import type { List, JavaMap, ENMServerConnection, Abteilung } from "@core";
+import { ENMServerConfigElement, ENMConfigKlasse, ArrayList, UnsupportedOperationException, OpenApiError, DeveloperNotificationException, HashMap, SimpleOperationResponse, UserNotificationException, ENMConfigSpalte, ENMAbteilung } from "@core";
 import { WenomAuswahlListeManager, ViewType } from "@ui";
 import { api } from "~/router/Api";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
@@ -15,8 +15,8 @@ import { NotenmodulConfigManagerSichtbareSpalten } from "./NotenmodulConfigManag
 interface RouteStateNotenmodulAdministration extends RouteStateAuswahlInterface<WenomAuswahlListeManager> {
 	mapInitialKennwoerter: JavaMap<number, string>;
 	connected: boolean;
-	mapENMServerConfigServer: JavaMap<string, string>;
-	mapENMServerConfigGlobal: JavaMap<string, string>;
+	mapNotenmodulConfigServer: JavaMap<string, string>;
+	mapNotenmodulConfigGlobal: JavaMap<string, string>;
 	mapAbteilungen: JavaMap<number, ENMAbteilung>;
 	managerSperrungen: NotenmodulConfigManagerSperrungen;
 	managerSichtbareSpalten: NotenmodulConfigManagerSichtbareSpalten;
@@ -32,19 +32,19 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 			activeViewType: ViewType.DEFAULT,
 			mapInitialKennwoerter: new HashMap<number, string>(),
 			connected: false,
-			mapENMServerConfigServer: new HashMap<string, string>(),
-			mapENMServerConfigGlobal: new HashMap<string, string>(),
+			mapNotenmodulConfigServer: new HashMap<string, string>(),
+			mapNotenmodulConfigGlobal: new HashMap<string, string>(),
 			mapAbteilungen: new HashMap<number, ENMAbteilung>(),
 			managerSperrungen: new NotenmodulConfigManagerSperrungen(new ArrayList(), new HashMap(), new HashMap(), new HashMap(), new HashMap(), async () => {}, 'Keine', async () => {}),
 			managerSichtbareSpalten: new NotenmodulConfigManagerSichtbareSpalten(new ArrayList(), new HashMap(), async () => {}),
 		}, { gruppenprozesse: routeNotenmodulKonfigurationGruppenprozesse, hinzufuegen: routeNotenmodulKonfigurationNeu });
 	}
 
-	get wrapperAuswahl(): NotenmodulConfigManagerSperrungenGruppierung {
-		return api.config.getValue("notenmodul.leistungen.tabelle.wrapper.auswahl") as NotenmodulConfigManagerSperrungenGruppierung;
+	get gruppierungAuswahl(): NotenmodulConfigManagerSperrungenGruppierung {
+		return api.config.getValue("notenmodul.konfiguration.tabelle.gruppierung") as NotenmodulConfigManagerSperrungenGruppierung;
 	}
-	setWrapperAuswahl = async (value: NotenmodulConfigManagerSperrungenGruppierung) => {
-		void api.config.setValue('notenmodul.leistungen.tabelle.wrapper.auswahl', value);
+	setGruppierungAuswahl = async (value: NotenmodulConfigManagerSperrungenGruppierung) => {
+		await api.config.setValue('notenmodul.konfiguration.tabelle.gruppierung', value);
 	};
 
 	public async entferneDaten() {
@@ -52,8 +52,8 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 			manager: undefined,
 			mapInitialKennwoerter: new HashMap<number, string>(),
 			connected: false,
-			mapENMServerConfigServer: new HashMap<string, string>(),
-			mapENMServerConfigGlobal: new HashMap<string, string>(),
+			mapNotenmodulConfigServer: new HashMap<string, string>(),
+			mapNotenmodulConfigGlobal: new HashMap<string, string>(),
 			managerSperrungen: new NotenmodulConfigManagerSperrungen(new ArrayList(), new HashMap(), new HashMap(), new HashMap(), new HashMap(), async () => {}, 'Keine', async () => {}),
 			managerSichtbareSpalten: new NotenmodulConfigManagerSichtbareSpalten(new ArrayList(), new HashMap(), async () => {}),
 		});
@@ -80,9 +80,6 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 		await routeNotenmodul.data.ladeDaten();
 		const listAbteilungen = await api.server.getAbteilungenByIdJahresAbschnitt(api.schema, idSchuljahresabschnitt);
 		this._state.value.mapAbteilungen = this.createMapAbteilungen(listAbteilungen);
-		const managerSperrungen = this.createSpaltenManager();
-		const managerSichtbareSpalten = this.createManagerSichtbareSpalten();
-		this.setPatchedState({ managerSperrungen, managerSichtbareSpalten });
 		const arr = [];
 		for (const server of this.manager.filtered())
 			arr.push(this.connect(server.id));
@@ -97,10 +94,22 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 		return { manager };
 	}
 
+	protected async createNotemnmodulManager() {
+		if (this.manager.auswahlIsKonfigurationLokal()) {
+			await this.notenmodulGetLocalConfig();
+		} else {
+			await this.wenomGetServerConfig();
+		}
+		const managerSperrungen = this.createSpaltenManager();
+		const managerSichtbareSpalten = this.createManagerSichtbareSpalten();
+		this.setPatchedState({ managerSperrungen, managerSichtbareSpalten });
+	}
+
 	protected createManagerSichtbareSpalten(): NotenmodulConfigManagerSichtbareSpalten {
-		const res = api.config.getValue("notenmodul.leistungen.tabelle.spalten.anzeige");
+		const key = "spalten.sichtbar";
+		const	res = this.mapEnmServerConfigGlobal.get(key);
 		const liste = new ArrayList<ENMConfigSpalte>();
-		const configs: any[] | null = JSON.parse(res);
+		const configs: any[] | null = JSON.parse(res ?? 'null');
 		if (configs !== null) {
 			for (const config of configs) {
 				const spalte = ENMConfigSpalte.transpilerFromJSON(JSON.stringify(config));
@@ -112,9 +121,10 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 	}
 
 	protected createSpaltenManager(): NotenmodulConfigManagerSperrungen {
-		const res = api.config.getValue("notenmodul.leistungen.tabelle.spalten.readonly");
+		const key = "noteneingabe.gesperrt";
+		const res = this.mapEnmServerConfigGlobal.get(key);
 		const liste = new ArrayList<ENMConfigKlasse>();
-		const configs: any[] | null = JSON.parse(res);
+		const configs: any[] | null = JSON.parse(res ?? 'null');
 		if (configs !== null) {
 			for (const config of configs) {
 				const klasse = ENMConfigKlasse.transpilerFromJSON(JSON.stringify(config));
@@ -123,7 +133,8 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 		}
 		const { mapKlassen, mapTeilleistungsarten, mapJahrgaenge } = routeNotenmodul.data.manager;
 		const mapAbteilungen = this._state.value.mapAbteilungen;
-		return new NotenmodulConfigManagerSperrungen(liste, mapKlassen, mapTeilleistungsarten, mapJahrgaenge, mapAbteilungen, this.writeConfigSperrungen, this.wrapperAuswahl, this.setWrapperAuswahl);
+		return new NotenmodulConfigManagerSperrungen(liste, mapKlassen, mapTeilleistungsarten, mapJahrgaenge, mapAbteilungen,
+			this.writeConfigSperrungen, this.gruppierungAuswahl, this.setGruppierungAuswahl);
 	}
 
 	public addID(param: RouteParamsRawGeneric, id: number): void {
@@ -132,6 +143,11 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 
 	public async ladeDaten(auswahl: ENMServerConnection, state: Partial<RouteStateNotenmodulAdministration>): Promise<ENMServerConnection> {
 		return auswahl;
+	}
+
+	protected async updateDaten(daten: ENMServerConnection | null) {
+		this.manager.setDaten(daten);
+		await this.createNotemnmodulManager();
 	}
 
 	protected async doPatch(data: Partial<ENMServerConnection>, id: number): Promise<void> {
@@ -169,8 +185,13 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 		return this._state.value.connected;
 	}
 
+	/** holt die Config für den enm-Server, d.h. smtp */
 	get mapEnmServerConfigServer(): JavaMap<string, string> {
-		return this._state.value.mapENMServerConfigServer;
+		return this._state.value.mapNotenmodulConfigServer;
+	}
+
+	get mapEnmServerConfigGlobal(): JavaMap<string, string> {
+		return this._state.value.mapNotenmodulConfigGlobal;
 	}
 
 	get managerSperrungen(): NotenmodulConfigManagerSperrungen {
@@ -183,14 +204,28 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 
 	writeConfigSperrungen = async () => {
 		const managerSperrungen = this.managerSperrungen;
-		await api.config.setValue("notenmodul.leistungen.tabelle.spalten.readonly", managerSperrungen.json);
-		this.setPatchedState({ managerSperrungen });
+		const element = new ENMServerConfigElement();
+		element.key = "noteneingabe.gesperrt";
+		element.value = managerSperrungen.json;
+		element.type = "global";
+		if (this.manager.auswahlIsKonfigurationLokal()) {
+			await this.notenmodulSetLocalConfigElement(element);
+		} else {
+			await this.wenomSetServerConfigElement(element);
+		}
 	};
 
 	writeConfigSichtbareSpalten = async () => {
 		const managerSichtbareSpalten = this.managerSichtbareSpalten;
-		await api.config.setValue("notenmodul.leistungen.tabelle.spalten.anzeige", managerSichtbareSpalten.json);
-		this.setPatchedState({ managerSichtbareSpalten });
+		const element = new ENMServerConfigElement();
+		element.key = "spalten.sichtbar";
+		element.value = managerSichtbareSpalten.json;
+		element.type = "global";
+		if (this.manager.auswahlIsKonfigurationLokal()) {
+			await this.notenmodulSetLocalConfigElement(element);
+		} else {
+			await this.wenomSetServerConfigElement(element);
+		}
 	};
 
 	connect = async (id: number): Promise<void> => {
@@ -256,6 +291,21 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 		this.setPatchedState({ manager });
 	};
 
+	notenmodulGetLocalConfig = api.call(async (): Promise<void> => {
+		try {
+			const config = await api.server.getNotenmodulLocalConfig(api.schema);
+			const mapENMServerConfigGlobal = new HashMap<string, string>();
+			const mapENMServerConfigServer = new HashMap<string, string>();
+			for (const element of config.global)
+				mapENMServerConfigGlobal.put(element.key, element.value);
+			for (const element of config.server)
+				mapENMServerConfigServer.put(element.key, element.value);
+			this.setPatchedState({ mapNotenmodulConfigServer: mapENMServerConfigServer, mapNotenmodulConfigGlobal: mapENMServerConfigGlobal });
+		} catch {
+			return;
+		}
+	});
+
 	wenomGetServerConfig = api.call(async (): Promise<void> => {
 		try {
 			const res = await api.server.getENMServerConfig(api.schema, this.manager.auswahl().id);
@@ -266,7 +316,7 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 					mapENMServerConfigGlobal.put(element.key, element.value);
 				for (const element of res.config.server)
 					mapENMServerConfigServer.put(element.key, element.value);
-				this.setPatchedState({ mapENMServerConfigGlobal, mapENMServerConfigServer });
+				this.setPatchedState({ mapNotenmodulConfigGlobal: mapENMServerConfigGlobal, mapNotenmodulConfigServer: mapENMServerConfigServer });
 			} else
 				throw new DeveloperNotificationException("Keine Konfiguration geladen");
 		} catch {
@@ -274,13 +324,24 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 		}
 	});
 
+	notenmodulSetLocalConfigElement = api.call(async (data: ENMServerConfigElement): Promise <void> => {
+		try {
+			const res = await api.server.setNotenmodulLocalConfig(data, api.schema);
+			if (data.type === 'server')
+				this._state.value.mapNotenmodulConfigServer.put(data.key, data.value);
+			else
+				this._state.value.mapNotenmodulConfigGlobal.put(data.key, data.value);
+			return res;
+		} catch { /* */ }
+	});
+
 	wenomSetServerConfigElement = api.call(async (data: ENMServerConfigElement): Promise <SimpleOperationResponse> => {
 		try {
 			const res = await api.server.setENMServerConfigElement(data, api.schema, this.manager.auswahl().id);
 			if (data.type === 'server')
-				this._state.value.mapENMServerConfigServer.put(data.key, data.value);
+				this._state.value.mapNotenmodulConfigServer.put(data.key, data.value);
 			else
-				this._state.value.mapENMServerConfigGlobal.put(data.key, data.value);
+				this._state.value.mapNotenmodulConfigGlobal.put(data.key, data.value);
 			return res;
 		} catch (e) {
 			if ((e instanceof OpenApiError) && (e.response instanceof Response)) {
