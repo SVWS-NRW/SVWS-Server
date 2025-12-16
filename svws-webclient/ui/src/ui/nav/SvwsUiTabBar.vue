@@ -109,12 +109,12 @@
 		});
 	}
 
-	function switchTab(event: KeyboardEvent) {
-		if (event.altKey && event.ctrlKey && !processingKeyboardEvent && !event.repeat && ((event.key === "ArrowLeft") || (event.key === "ArrowRight"))) {
+	async function switchTab(event: KeyboardEvent) {
+		if (!props.secondary && event.altKey && event.ctrlKey && !processingKeyboardEvent && !event.repeat && ((event.key === "ArrowLeft") || (event.key === "ArrowRight"))) {
 			processingKeyboardEvent = true;
 			const backwards = (event.key === "ArrowLeft");
 			const newTab = backwards ? props.tabManager().prevTab : props.tabManager().nextTab;
-			void props.tabManager().setTab(newTab);
+			await props.tabManager().setTab(newTab);
 			processingKeyboardEvent = false;
 		}
 	}
