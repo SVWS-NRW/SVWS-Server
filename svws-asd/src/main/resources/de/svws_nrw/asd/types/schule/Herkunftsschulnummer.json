@@ -10,7 +10,7 @@
             "schluessel": "999000",
             "kuerzel": "Sonstiges Ausland",
             "text": "Schule aus dem sonstigen Ausland",
-            "zulaessig": null,
+            "zulaessig": [],
             "gueltigVon": null,
             "gueltigBis": null
           }
@@ -25,7 +25,7 @@
             "schluessel": "980001",
             "kuerzel": "Schleswig Holstein",
             "text": "Schule aus Schleswig-Holstein",
-            "zulaessig": null,
+            "zulaessig": [],
             "gueltigVon": null,
             "gueltigBis": null
           }
@@ -40,7 +40,7 @@
             "schluessel": "980002",
             "kuerzel": "Hamburg",
             "text": "Schule aus Hamburg",
-            "zulaessig": null,
+            "zulaessig": [],
             "gueltigVon": null,
             "gueltigBis": null
           }
@@ -55,7 +55,7 @@
             "schluessel": "980003",
             "kuerzel": "Niedersachsen",
             "text": "Schule aus Niedersachsen",
-            "zulaessig": null,
+            "zulaessig": [],
             "gueltigVon": null,
             "gueltigBis": null
           }
@@ -70,7 +70,7 @@
             "schluessel": "980004",
             "kuerzel": "Bremen",
             "text": "Schule aus Bremen",
-            "zulaessig": null,
+            "zulaessig": [],
             "gueltigVon": null,
             "gueltigBis": null
           }
@@ -85,7 +85,7 @@
             "schluessel": "980006",
             "kuerzel": "Hessen",
             "text": "Schule aus Hessen",
-            "zulaessig": null,
+            "zulaessig": [],
             "gueltigVon": null,
             "gueltigBis": null
           }
@@ -100,7 +100,7 @@
             "schluessel": "980007",
             "kuerzel": "Rheinlandpfalz",
             "text": "Schule aus Rheinland-Pfalz",
-            "zulaessig": null,
+            "zulaessig": [],
             "gueltigVon": null,
             "gueltigBis": null
           }
@@ -115,7 +115,7 @@
             "schluessel": "980008",
             "kuerzel": "Baden Wuerttemberg",
             "text": "Schule aus Baden-Württemberg",
-            "zulaessig": null,
+            "zulaessig": [],
             "gueltigVon": null,
             "gueltigBis": null
           }
@@ -130,7 +130,7 @@
             "schluessel": "980009",
             "kuerzel": "Bayern",
             "text": "Schule aus Bayern",
-            "zulaessig": null,
+            "zulaessig": [],
             "gueltigVon": null,
             "gueltigBis": null
           }
@@ -145,7 +145,7 @@
             "schluessel": "980010",
             "kuerzel": "Saarland",
             "text": "Schule aus dem Saarland",
-            "zulaessig": null,
+            "zulaessig": [],
             "gueltigVon": null,
             "gueltigBis": null
           }
@@ -160,7 +160,7 @@
             "schluessel": "980011",
             "kuerzel": "Berlin",
             "text": "Schule aus Berlin",
-            "zulaessig": null,
+            "zulaessig": [],
             "gueltigVon": null,
             "gueltigBis": null
           }
@@ -175,7 +175,7 @@
             "schluessel": "980012",
             "kuerzel": "Brandenburg",
             "text": "Schule aus Brandenburg",
-            "zulaessig": null,
+            "zulaessig": [],
             "gueltigVon": null,
             "gueltigBis": null
           }
@@ -190,7 +190,7 @@
             "schluessel": "980013",
             "kuerzel": "Mecklenburg Vorpommern",
             "text": "Schule aus Mecklenburg-Vorpommern",
-            "zulaessig": null,
+            "zulaessig": [],
             "gueltigVon": null,
             "gueltigBis": null
           }
@@ -205,7 +205,7 @@
             "schluessel": "980014",
             "kuerzel": "Sachsen",
             "text": "Schule aus Sachsen",
-            "zulaessig": null,
+            "zulaessig": [],
             "gueltigVon": null,
             "gueltigBis": null
           }
@@ -220,7 +220,7 @@
             "schluessel": "980015",
             "kuerzel": "Sachsen Anhalt",
             "text": "Schule aus Sachsen-Anhalt",
-            "zulaessig": null,
+            "zulaessig": [],
             "gueltigVon": null,
             "gueltigBis": null
           }
@@ -235,7 +235,7 @@
             "schluessel": "980016",
             "kuerzel": "Thueringen",
             "text": "Schule aus Thüringen",
-            "zulaessig": null,
+            "zulaessig": [],
             "gueltigVon": null,
             "gueltigBis": null
           }
@@ -250,7 +250,7 @@
             "schluessel": "991000",
             "kuerzel": "Belgien",
             "text": "Schule aus Belgien",
-            "zulaessig": null,
+            "zulaessig": [],
             "gueltigVon": null,
             "gueltigBis": null
           }
@@ -265,7 +265,7 @@
             "schluessel": "992000",
             "kuerzel": "Luxemburg",
             "text": "Schule aus Luxemburg",
-            "zulaessig": null,
+            "zulaessig": [],
             "gueltigVon": null,
             "gueltigBis": null
           }
@@ -280,7 +280,7 @@
             "schluessel": "993000",
             "kuerzel": "Niederlande",
             "text": "Schule aus den Niederlanden",
-            "zulaessig": null,
+            "zulaessig": [],
             "gueltigVon": null,
             "gueltigBis": null
           }
@@ -295,7 +295,7 @@
             "schluessel": "980500",
             "kuerzel": "Sonstige",
             "text": "Sonstige/keine Schule",
-            "zulaessig": null,
+            "zulaessig": [],
             "gueltigVon": null,
             "gueltigBis": null
           }

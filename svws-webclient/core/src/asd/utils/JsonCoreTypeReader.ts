@@ -133,6 +133,10 @@ import { BerufskollegBerufsebene1 } from "../types/schule/BerufskollegBerufseben
 import { BerufskollegBerufsebene2 } from "../types/schule/BerufskollegBerufsebene2";
 import { BerufskollegBerufsebene3 } from "../types/schule/BerufskollegBerufsebene3";
 import { BerufskollegBerufsebeneKatalogEintrag } from "../data/schule/BerufskollegBerufsebeneKatalogEintrag";
+import { HerkunftsschulnummerKatalogEintrag } from "../data/schule/HerkunftsschulnummerKatalogEintrag";
+import { Herkunftsschulnummer } from "../types/schule/Herkunftsschulnummer";
+import { ReformpaedagogikKatalogEintrag } from "../data/schule/ReformpaedagogikKatalogEintrag";
+import { Reformpaedagogik } from "../types/schule/Reformpaedagogik";
 
 interface JsonCoreTypeEntry<T> {
 	bezeichner: string;
@@ -175,7 +179,7 @@ export class JsonCoreTypeReader {
 		"LehrerLehramtAnerkennung", "LehrerLehrbefaehigungAnerkennung", "LehrerLeitungsfunktion", "LehrerRechtsverhaeltnis", "LehrerZugangsgrund", "BilingualeSprache", "KAOABerufsfeld",
 		"KAOAMerkmaleOptionsarten", "KAOAZusatzmerkmaleOptionsarten", "KAOAEbene4", "KAOAZusatzmerkmal", "KAOAAnschlussoptionen", "KAOAKategorie", "KAOAMerkmal", "Klassenart", "Uebergangsempfehlung",
 		"ZulaessigeKursart", "Foerderschwerpunkt", "Termin", "Betreuungsart", "FormOffenerGanztag", "LehrerAnrechnungsgrund", "LehrerMehrleistungsarten", "LehrerMinderleistungsarten", "LehrerPflichtstundensollVollzeit", "Nationalitaeten", "ValidatorenFehlerartKontext",
-		"Floskelgruppenart", "Einwilligungsschluessel", "Herkunftsarten", "HerkunftSonstige", "HerkunftSchulform", "Bildungsstufe", "BerufskollegBerufsebene1", "BerufskollegBerufsebene2", "BerufskollegBerufsebene3",
+		"Floskelgruppenart", "Einwilligungsschluessel", "Herkunftsarten", "HerkunftSonstige", "HerkunftSchulform", "Bildungsstufe", "BerufskollegBerufsebene1", "BerufskollegBerufsebene2", "BerufskollegBerufsebene3", "Herkunftsschulnummer", "Reformpaedagogik",
 	] as const;
 
 	public constructor(url?: string) {
@@ -623,6 +627,20 @@ export class JsonCoreTypeReader {
 		BerufskollegBerufsebene3.init(manager);
 	}
 
+	public readHerkunftsschulnummer() {
+		const data = this.read('Herkunftsschulnummer', (json) => HerkunftsschulnummerKatalogEintrag.transpilerFromJSON(json));
+		CoreTypeSimple.initValues(new Herkunftsschulnummer(), Herkunftsschulnummer.class, data.mapData);
+		const manager = new CoreTypeDataManager<HerkunftsschulnummerKatalogEintrag, Herkunftsschulnummer>(data.version, Herkunftsschulnummer.class, Herkunftsschulnummer.values(), data.mapData, data.mapStatistikIDs);
+		Herkunftsschulnummer.init(manager);
+	}
+
+	public readReformpaedagogik() {
+		const data = this.read('Reformpaedagogik', (json) => ReformpaedagogikKatalogEintrag.transpilerFromJSON(json));
+		CoreTypeSimple.initValues(new Reformpaedagogik(), Reformpaedagogik.class, data.mapData);
+		const manager = new CoreTypeDataManager<ReformpaedagogikKatalogEintrag, Reformpaedagogik>(data.version, Reformpaedagogik.class, Reformpaedagogik.values(), data.mapData, data.mapStatistikIDs);
+		Reformpaedagogik.init(manager);
+	}
+
 	public readValidatorenFehlerartKontext() {
 		const name = "ValidatorenFehlerartKontext";
 		const json: string | undefined = this.mapCoreTypeNameJsonData.get(name);
@@ -728,6 +746,8 @@ export class JsonCoreTypeReader {
 			this.readBerufskollegBerufsebene1();
 			this.readBerufskollegBerufsebene2();
 			this.readBerufskollegBerufsebene3();
+			this.readHerkunftsschulnummer();
+			this.readReformpaedagogik();
 		} catch (e) {
 			console.log(e);
 		}

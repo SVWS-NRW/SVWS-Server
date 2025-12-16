@@ -34,14 +34,12 @@ import de.svws_nrw.asd.data.schule.BerufskollegBerufsebeneKatalogEintrag;
 import de.svws_nrw.core.data.schule.BerufskollegFachklassenKatalog;
 import de.svws_nrw.core.data.schule.Einwilligungsart;
 import de.svws_nrw.asd.data.schule.FoerderschwerpunktKatalogEintrag;
-import de.svws_nrw.core.data.schule.HerkunftsschulnummerKatalogEintrag;
 import de.svws_nrw.asd.data.schule.KindergartenbesuchKatalogEintrag;
 import de.svws_nrw.asd.data.schule.NationalitaetenKatalogEintrag;
 import de.svws_nrw.asd.data.NoteKatalogEintrag;
 import de.svws_nrw.asd.data.schule.OrganisationsformKatalogEintrag;
 import de.svws_nrw.core.data.schule.PruefungsordnungKatalogEintrag;
 import de.svws_nrw.core.data.schule.Raum;
-import de.svws_nrw.core.data.schule.ReformpaedagogikKatalogEintrag;
 import de.svws_nrw.core.data.schule.ReligionEintrag;
 import de.svws_nrw.core.data.schule.VermerkartEintrag;
 import de.svws_nrw.asd.data.schule.ReligionKatalogEintrag;
@@ -73,13 +71,11 @@ import de.svws_nrw.data.schule.DataKatalogBerufskollegFachklassen;
 import de.svws_nrw.data.schule.DataKatalogEinschulungsarten;
 import de.svws_nrw.data.schule.DataKatalogEinwilligungsarten;
 import de.svws_nrw.data.schule.DataKatalogFoerderschwerpunkte;
-import de.svws_nrw.data.schule.DataKatalogHerkunftsschulnummern;
 import de.svws_nrw.data.schule.DataKatalogKindergartenbesuch;
 import de.svws_nrw.data.schule.DataKatalogNationalitaeten;
 import de.svws_nrw.data.schule.DataKatalogNoten;
 import de.svws_nrw.data.schule.DataKatalogOrganisationsformen;
 import de.svws_nrw.data.schule.DataKatalogPruefungsordnungen;
-import de.svws_nrw.data.schule.DataKatalogReformpaedagogik;
 import de.svws_nrw.data.schule.DataKatalogReligionen;
 import de.svws_nrw.data.schule.DataKatalogSchulabschluesseAllgemeinbildend;
 import de.svws_nrw.data.schule.DataKatalogSchulabschluesseBerufsbildend;
@@ -1212,105 +1208,6 @@ public class APISchule {
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
 	public Response getKatalogSchuelerStatus(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.run(() -> new DataSchuelerStatus().getAll(),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KEINE);
-	}
-
-
-	/**
-	 * Die OpenAPI-Methode für die Abfrage des Kataloges der zusätzlichen Herkunftsschulnummern
-	 *
-	 * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param request       die Informationen zur HTTP-Anfrage
-	 *
-	 * @return der Katalog
-	 */
-	@GET
-	@Path("/allgemein/herkunftsschulnummern")
-	@Operation(summary = "Die Liste der Einträge aus dem Katalog der zusätzlichen Herkunftsschulnummern.",
-			description = "Die Liste der Einträge aus dem Katalog der zusätzlichen Herkunftsschulnummern. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
-	@ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen für den Katalog der zusätzlichen Herkunftsschulnummern",
-			content = @Content(mediaType = "application/json",
-					array = @ArraySchema(schema = @Schema(implementation = HerkunftsschulnummerKatalogEintrag.class))))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
-	public Response getKatalogHerkunftsschulnummern(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.run(() -> new DataKatalogHerkunftsschulnummern().getAll(),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KEINE);
-	}
-
-
-	/**
-	 * Die OpenAPI-Methode für die Abfrage des Reformpädagogik-Kataloges aller Schulformen.
-	 *
-	 * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param request       die Informationen zur HTTP-Anfrage
-	 *
-	 * @return der Reformpädagogik-Katalog aller Schulformen
-	 */
-	@GET
-	@Path("/allgemein/reformpaedagogik/alle")
-	@Operation(summary = "Gibt den Reformpädagogik-Katalog aller Schulformen zurück.",
-			description = "Gibt den Reformpädagogik-Katalog aller Schulformen zurück. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
-	@ApiResponse(responseCode = "200", description = "Der Reformpädagogik-Katalog aller Schulformen.",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ReformpaedagogikKatalogEintrag.class))))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
-	@ApiResponse(responseCode = "404", description = "Keine Fachgruppen gefunden.")
-	public Response getKatalogReformpaedagogikAlle(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogReformpaedagogik(conn).getAll(),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KEINE);
-	}
-
-
-	/**
-	 * Die OpenAPI-Methode für die Abfrage des Reformpädagogik-Kataloges für die Schulform dieser Schule.
-	 *
-	 * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param request       die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die Liste mit den Einträgen des Reformpädagogik-Kataloges für die Schulform dieser Schule
-	 */
-	@GET
-	@Path("/allgemein/reformpaedagogik")
-	@Operation(summary = "Gibt den Reformpädagogik-Katalog für die Schulform dieser Schule zurück.",
-			description = "Gibt den Reformpädagogik-Katalog für die Schulform dieser Schule zurück. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
-	@ApiResponse(responseCode = "200", description = "Der Reformpädagogik-Katalog für die Schulform dieser Schule.",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ReformpaedagogikKatalogEintrag.class))))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
-	@ApiResponse(responseCode = "404", description = "Keine Reformpädagogik-Einträge für die Schulform dieser Schule gefunden.")
-	public Response getKatalogReformpaedagogik(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogReformpaedagogik(conn).getList(),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KEINE);
-	}
-
-
-	/**
-	 * Die OpenAPI-Methode für die Abfrage des Reformpädagogik-Katalog-Eintrags für die angegebene ID.
-	 *
-	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param id        die ID des Reformpädagogik-Katalog-Eintrags
-	 * @param request   die Informationen zur HTTP-Anfrage
-	 *
-	 * @return der Reformpädagogik-Katalog-Eintrag
-	 */
-	@GET
-	@Path("/allgemein/reformpaedagogik/{id : \\d+}")
-	@Operation(summary = "Gibt den Reformpädagogik-Katalog-Eintrag für die angegebene ID zurück.",
-			description = "Gibt den Reformpädagogik-Katalog-Eintrag für die angegebene ID zurück. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
-	@ApiResponse(responseCode = "200", description = "Der Reformpädagogik-Katalog-Eintrag für die angegebene ID.",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ReformpaedagogikKatalogEintrag.class)))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
-	@ApiResponse(responseCode = "404", description = "Kein Reformpädagogik-Katalog-Eintrag für die angegebene ID gefunden.")
-	public Response getKatalogReformpaedagogikEintrag(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogReformpaedagogik(conn).get(id),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);
 	}

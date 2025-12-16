@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DisplayName("Teste den Core-Type Floskelgruppenart")
-class FloskelgruppenartTest {
+@DisplayName("Teste den Core-Type Reformpaedagogik")
+class TestReformpaedagogik {
 
 	@BeforeAll
 	static void setup() {
@@ -18,7 +18,8 @@ class FloskelgruppenartTest {
 	@Test
 	@DisplayName("Anzahl der Coretypes")
 	void anzahlCoretypesTest() {
-		assertThat(Floskelgruppenart.data().getWerte()).hasSize(11);
+		assertThat(Reformpaedagogik.data().getWerte()).hasSize(6);
 	}
 
 }
+

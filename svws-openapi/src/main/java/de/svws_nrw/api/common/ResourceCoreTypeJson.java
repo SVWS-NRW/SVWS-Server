@@ -84,7 +84,9 @@ public class ResourceCoreTypeJson {
 			Map.entry("HerkunftSchulform", "de/svws_nrw/asd/types/schueler/HerkunftSchulform.json"),
 			Map.entry("BerufskollegBerufsebene1", "de/svws_nrw/asd/types/schule/BerufskollegBerufsebene1.json"),
 			Map.entry("BerufskollegBerufsebene2", "de/svws_nrw/asd/types/schule/BerufskollegBerufsebene2.json"),
-			Map.entry("BerufskollegBerufsebene3", "de/svws_nrw/asd/types/schule/BerufskollegBerufsebene3.json")
+			Map.entry("BerufskollegBerufsebene3", "de/svws_nrw/asd/types/schule/BerufskollegBerufsebene3.json"),
+			Map.entry("Herkunftsschulnummer", "de/svws_nrw/asd/types/schule/Herkunftsschulnummer.json"),
+			Map.entry("Reformpaedagogik", "de/svws_nrw/asd/types/schule/Reformpaedagogik.json")
 	);
 
 

@@ -65,6 +65,8 @@ import HerkunftSchulform from "@json/schueler/HerkunftSchulform.json";
 import BerufskollegBerufsebene1 from "@json/schule/BerufskollegBerufsebene1.json";
 import BerufskollegBerufsebene2 from "@json/schule/BerufskollegBerufsebene2.json";
 import BerufskollegBerufsebene3 from "@json/schule/BerufskollegBerufsebene3.json";
+import Herkunftsschulnummer from "@json/schule/Herkunftsschulnummer.json";
+import Reformpaedagogik from "@json/schule/Reformpaedagogik.json";
 
 export class JsonCoreTypeReaderStatic extends JsonCoreTypeReader {
 
@@ -138,6 +140,8 @@ export class JsonCoreTypeReaderStatic extends JsonCoreTypeReader {
 		this.mapCoreTypeNameJsonDataImport.set("BerufskollegBerufsebene1", BerufskollegBerufsebene1);
 		this.mapCoreTypeNameJsonDataImport.set("BerufskollegBerufsebene2", BerufskollegBerufsebene2);
 		this.mapCoreTypeNameJsonDataImport.set("BerufskollegBerufsebene3", BerufskollegBerufsebene3);
+		this.mapCoreTypeNameJsonDataImport.set("Herkunftsschulnummer", Herkunftsschulnummer);
+		this.mapCoreTypeNameJsonDataImport.set("Reformpaedagogik", Reformpaedagogik);
 		for (const [k, v] of this.mapCoreTypeNameJsonDataImport.entries())
 			this.mapCoreTypeNameJsonData.set(k, JSON.stringify(v));
 	}

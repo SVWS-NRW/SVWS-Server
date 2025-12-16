@@ -16,13 +16,13 @@ import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.asd.types.fach.Fachgruppe;
 import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.asd.types.kurse.ZulaessigeKursart;
+import de.svws_nrw.asd.types.schule.Herkunftsschulnummer;
 import de.svws_nrw.asd.types.schule.Religion;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.base.CsvReader;
 import de.svws_nrw.core.data.kataloge.KatalogEintragOrte;
 import de.svws_nrw.core.data.schule.SchulenKatalogEintrag;
-import de.svws_nrw.core.types.schule.Herkunftsschulnummern;
 import de.svws_nrw.core.types.schule.PersonTyp;
 import de.svws_nrw.core.utils.AdressenUtils;
 import de.svws_nrw.data.DataManager;
@@ -637,17 +637,17 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 		conn.transactionPersistAll(dtoKonfession);
 		conn.transactionFlush();
 
-		// K_Schule mit Schulen aus dem sonstigen Ausland, den Bundesländern und Nachbarländern, Keine Schul und der eigenen Schule befüllen (Core-Type)
+		// K_Schule mit Schulen aus dem sonstigen Ausland, den Bundesländern und Nachbarländern, Keine Schule und der eigenen Schule befüllen (Core-Type)
 		final ArrayList<DTOSchuleNRW> dtoSchulen = new ArrayList<>();
 		i = 1;
-		for (final Herkunftsschulnummern snr : Herkunftsschulnummern.values()) {
+		for (final Herkunftsschulnummer snr : Herkunftsschulnummer.values()) {
 			final DTOSchuleNRW dto = new DTOSchuleNRW(i, "" + (200000 + i + 1));
-			dto.SchulNr_SIM = "" + snr.daten.schulnummer;
-			dto.Name = snr.daten.bezeichnung;
+			dto.SchulNr_SIM = "" + snr.daten(schuljahr).schluessel;
+			dto.Name = snr.daten(schuljahr).text;
 			dto.Sortierung = i;
 			dto.Sichtbar = true;
 			dto.Aenderbar = true;
-			dto.KurzBez = snr.daten.bezeichnung;
+			dto.KurzBez = snr.daten(schuljahr).text;
 			dtoSchulen.add(dto);
 			i++;
 		}

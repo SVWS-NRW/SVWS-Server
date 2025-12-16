@@ -9,9 +9,9 @@
 				<template #content>
 					Schulen außerhalb NRW und sonstige Herkünfte z.B. auch nicht staatl. anerkannte Schulen.
 				</template>
-				<svws-ui-select class="pb-4 w-full" title="Schulen außerhalb von NRW und Privatschulen" :items="Herkunftsschulnummern.all_values_by_name.values()"
-					:model-value="externalSchulnummer" @update:model-value="v => data.schulnummerStatistik = v?.daten.schulnummer.toString() ?? ''"
-					:item-text=" v => v.daten.bezeichnung" :disabled />
+				<svws-ui-select class="pb-4 w-full" title="Schulen außerhalb von NRW und Privatschulen" :items="Herkunftsschulnummer.data().getListBySchuljahrAndSchulform(schuljahr, schulform)"
+					:model-value="externalSchulnummer" @update:model-value="v => data.schulnummerStatistik = v?.daten(schuljahr)?.schluessel.toString() ?? ''"
+					:item-text=" v => v.daten(schuljahr)?.text ?? '_'" :disabled />
 			</svws-ui-tooltip>
 			<svws-ui-select v-if="isInternal" class="pb-4" title="Schulen innerhalb NRW" removable :items="schulenKatalogEintraege" autocomplete :disabled="isLoading || !hatKompetenzAdd"
 				:model-value="selectedSchule" :item-filter="filterSchulenKatalogEintraege" @update:model-value="updateData" :item-text="schulenKatalogEintragText" />
@@ -53,7 +53,7 @@
 <script setup lang="ts">
 
 	import { computed, ref, watch } from "vue";
-	import { JavaObject, JavaString, SchulEintrag, Schulform, AdressenUtils, Herkunftsschulnummern, BenutzerKompetenz } from "@core";
+	import { JavaObject, JavaString, SchulEintrag, Schulform, AdressenUtils, Herkunftsschulnummer, BenutzerKompetenz } from "@core";
 	import type { SchulenKatalogEintrag, List } from "@core";
 	import type { KatalogSchuleNeuProps } from "./SKatalogSchuleNeuProps";
 	import { filterSchulenKatalogEintraege } from "~/utils/helfer";
@@ -66,7 +66,7 @@
 	const data = ref<SchulEintrag>(Object.assign(new SchulEintrag(), { istSichtbar: true }));
 	const schulenKatalogEintraege = computed<List<SchulenKatalogEintrag>>(() => props.manager().getSchulenKatalogEintraege());
 	const selectedSchule = ref<SchulenKatalogEintrag>();
-	const externalSchulnummer = ref<Herkunftsschulnummern>();
+	const externalSchulnummer = ref<Herkunftsschulnummer>();
 	const schuljahr = computed<number>(() => props.manager().getSchuljahr());
 	const selectedSchulform = computed({
 		get: () => data.value.idSchulform !== null ? Schulform.data().getWertByID(data.value.idSchulform) : null,
