@@ -48,12 +48,12 @@ export class RouteDataKonfessionen extends RouteDataAuswahl<KonfessionenListeMan
 	}
 
 	protected async doDelete(ids: List<number>): Promise<List<SimpleOperationResponse>> {
-		return await api.server.deleteReligionEintraege(ids, api.schema);
+		return await api.server.deleteReligionen(ids, api.schema);
 	}
 
 	add = async (partial: Partial<ReligionEintrag>): Promise<void> => {
 		delete partial.id;
-		const konfession = await api.server.createReligion(partial, api.schema);
+		const konfession = await api.server.addReligion(partial, api.schema);
 		await this.setSchuljahresabschnitt(this._state.value.idSchuljahresabschnitt, true);
 		await this.gotoDefaultView(konfession.id);
 	};

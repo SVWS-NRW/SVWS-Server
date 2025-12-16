@@ -119,7 +119,6 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 
-
 /**
  * Die Klasse spezifiziert die OpenAPI-Schnittstelle für den Zugriff auf die grundlegenden Daten der Schule aus der SVWS-Datenbank.
  * Ein Zugriff erfolgt über den Pfad https://{Hostname}/db/{schema}/schule/...
@@ -644,31 +643,6 @@ public class APISchule {
 
 
 	/**
-	 * Die OpenAPI-Methode für die Abfrage einer Religion.
-	 *
-	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param id              die Datenbank-ID zur Identifikation der Religion
-	 * @param request    die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die Daten zur Religion
-	 */
-	@GET
-	@Path("/religionen/{id : \\d+}")
-	@Operation(summary = "Liefert zu der ID der Religion die zugehörigen Daten.",
-			description = "Liest die Daten der Religion zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogdaten besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die Daten der Religion",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ReligionEintrag.class)))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalogdaten anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Keine Religion mit der angegebenen ID gefunden")
-	public Response getReligion(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).getByIdAsResponse(id),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KEINE);
-	}
-
-	/**
 	 * Die OpenAPI-Methode für das Erstellen einer neuen Religion.
 	 *
 	 * @param schema       das Datenbankschema, in welchem die Religion erstellt wird
@@ -677,7 +651,7 @@ public class APISchule {
 	 * @return die HTTP-Antwort mit der neuen Religion
 	 */
 	@POST
-	@Path("/religionen/new")
+	@Path("/religionen/create")
 	@Operation(summary = "Erstellt eine neue Religion und gibt sie zurück.",
 			description = "Erstellt eine neue Religion und gibt sie zurück."
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Religion besitzt.")
@@ -687,7 +661,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "404", description = "Keine Religion  mit dem eingegebenen Kuerzel gefunden")
 	@ApiResponse(responseCode = "409", description = "Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response createReligion(@PathParam("schema") final String schema, @RequestBody(description = "Der Post für die Religion-Daten", required = true,
+	public Response addReligion(@PathParam("schema") final String schema, @RequestBody(description = "Der Post für die Religion-Daten", required = true,
 			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ReligionEintrag.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).addAsResponse(is),
@@ -749,36 +723,6 @@ public class APISchule {
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);
 	}
-
-
-	/**
-	 * Die OpenAPI-Methode für das Entfernen eines Religion-Katalog-Eintrags der Schule.
-	 *
-	 * @param schema       das Datenbankschema
-	 * @param id           die ID des Religion-Katalog-Eintrags
-	 * @param request      die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die HTTP-Antwort mit dem Status und ggf. dem gelöschten Religion-Katalog-Eintrag
-	 */
-	@DELETE
-	@Path("/religionen/{id : \\d+}")
-	@Operation(summary = "Entfernt einen Religion-Katalog-Eintrag der Schule.",
-			description = "Entfernt einen Religion-Katalog-Eintrag der Schule. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum "
-					+ "Bearbeiten von Katalogen hat.")
-	@ApiResponse(responseCode = "200", description = "Der Religion-Katalog-Eintrag wurde erfolgreich entfernt.",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ReligionEintrag.class)))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.")
-	@ApiResponse(responseCode = "404", description = "Kein Religion-Katalog-Eintrag vorhanden")
-	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
-	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response deleteReligionEintrag(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).deleteAsResponse(id),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
-	}
-
-
 	/**
 	 * Die OpenAPI-Methode für das Entfernen mehrerer Religion-Katalog-Einträge der Schule.
 	 *
@@ -799,7 +743,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "404", description = "Religion-Katalog-Einträge nicht vorhanden")
 	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response deleteReligionEintraege(@PathParam("schema") final String schema,
+	public Response deleteReligionen(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die IDs der zu löschenden Religion-Katalog-Einträge", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
