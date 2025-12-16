@@ -1,25 +1,25 @@
 <?php
-	/**
-	 * Endpunkt für das Fetchen der Schulform.
-	 *
-	 * @httpMethod GET
-	 * @auth (Basic) Lehrer Username und Kennwort benötigt
-	 *
-	 * @return string : kürzel der schulform
-	 * @responseCode 200
-	 */
+/**
+ * Endpunkt für das Fetchen der Schulform.
+ *
+ * @httpMethod GET
+ * @auth (Basic) Lehrer Username und Kennwort benötigt
+ *
+ * @return string : kürzel der schulform
+ * @responseCode 200
+ */
+require_once dirname(__DIR__).'/../autoload.php';
 
-	// Initialisierung
-	require_once $_SERVER['DOCUMENT_ROOT'].'/../app/init.php';
+use wenom\Application;
 
-	// Prüfe die HTTP-Methode
-	$auth->pruefeHTTPMethod([ "GET" ]);
+$app = new Application();
 
-	// Prüfe, ob eine Authentifizierung mit einem gültigen Lehrer-Kennwort vorliegt
-	$lehrer = $auth->pruefeLehrerBasicAuth();
+// Prüfe die HTTP-Methode
+$app->auth->pruefeHTTPMethod([ "GET" ]);
 
-	// Gib die Schulform zurück
-	$enmDaten = json_decode($db->getJsonENMDaten()->daten);
-	echo $enmDaten->schulform;
+// Prüfe, ob eine Authentifizierung mit einem gültigen Lehrer-Kennwort vorliegt
+$lehrer = $app->auth->pruefeLehrerBasicAuth();
 
-?>
+// Gib die Schulform zurück
+$enmDaten = json_decode($app->db->getJsonENMDaten()->daten);
+echo $enmDaten->schulform;
