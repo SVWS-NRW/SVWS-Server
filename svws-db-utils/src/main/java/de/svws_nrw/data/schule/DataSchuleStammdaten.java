@@ -32,7 +32,7 @@ import de.svws_nrw.db.dto.current.schild.berufskolleg.DTOBeschaeftigungsart;
 import de.svws_nrw.db.dto.current.schild.erzieher.DTOErzieherart;
 import de.svws_nrw.db.dto.current.schild.erzieher.DTOTelefonArt;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
-import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAdressart;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOBetriebsart;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogEinwilligungsart;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKonfession;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKursarten;
@@ -554,9 +554,9 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 		conn.transactionFlush();
 
 		// K_Adressart mit Betrieb füllen
-		final DTOKatalogAdressart addressart = new DTOKatalogAdressart(1L, "Betrieb");
-		addressart.Sortierung = 1;
-		conn.transactionPersist(addressart);
+		final DTOBetriebsart betriebsart = new DTOBetriebsart(1L, "Betrieb");
+		betriebsart.Sortierung = 1;
+		conn.transactionPersist(betriebsart);
 		conn.transactionFlush();
 
 		// K_Beschaeftigungsart mit Ausbildung und Praktikum füllen

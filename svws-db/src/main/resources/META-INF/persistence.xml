@@ -105,11 +105,11 @@
         <class>de.svws_nrw.db.dto.migration.schild.impexp.MigrationDTOEigeneImporteFelder</class>
         <class>de.svws_nrw.db.dto.migration.schild.impexp.MigrationDTOEigeneImporteTabellen</class>
         <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOAnsprechpartnerAllgemeineAdresse</class>
+        <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOBetriebsart</class>
         <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOFahrschuelerart</class>
         <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOFloskelgruppen</class>
         <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOFloskeln</class>
         <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOHaltestellen</class>
-        <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOKatalogAdressart</class>
         <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOKatalogAllgemeineAdresse</class>
         <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOKatalogEinwilligungsart</class>
         <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOKonfession</class>
@@ -302,9 +302,9 @@
         <class>de.svws_nrw.db.dto.current.schild.impexp.DTOEigeneImporteFelder</class>
         <class>de.svws_nrw.db.dto.current.schild.impexp.DTOEigeneImporteTabellen</class>
         <class>de.svws_nrw.db.dto.current.schild.katalog.DTOAnsprechpartnerAllgemeineAdresse</class>
+        <class>de.svws_nrw.db.dto.current.schild.katalog.DTOBetriebsart</class>
         <class>de.svws_nrw.db.dto.current.schild.katalog.DTOFahrschuelerart</class>
         <class>de.svws_nrw.db.dto.current.schild.katalog.DTOHaltestellen</class>
-        <class>de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAdressart</class>
         <class>de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAllgemeineAdresse</class>
         <class>de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAufsichtsbereich</class>
         <class>de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogEinwilligungsart</class>

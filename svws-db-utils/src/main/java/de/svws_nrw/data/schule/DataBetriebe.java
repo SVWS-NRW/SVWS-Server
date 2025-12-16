@@ -15,7 +15,7 @@ import de.svws_nrw.core.data.schule.BetriebeAnsprechpartner;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAdressart;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOBetriebsart;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAllgemeineAdresse;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
 import de.svws_nrw.db.utils.ApiOperationException;
@@ -173,7 +173,7 @@ public final class DataBetriebe extends DataManagerRevised<Long, DTOKatalogAllge
 		if (id.equals(dto.adressArt))
 			return;
 
-		final DTOKatalogAdressart betriebsart = this.conn.queryByKey(DTOKatalogAdressart.class, id);
+		final DTOBetriebsart betriebsart = this.conn.queryByKey(DTOBetriebsart.class, id);
 		if (betriebsart == null)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Keine Betriebsart zur id %d gefunden.".formatted(id));
 

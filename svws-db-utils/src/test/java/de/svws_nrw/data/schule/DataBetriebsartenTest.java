@@ -8,7 +8,7 @@ import java.util.Map;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.core.data.schule.Betriebsart;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAdressart;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOBetriebsart;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.core.Response;
@@ -62,7 +62,7 @@ class DataBetriebsartenTest {
 	@Test
 	@DisplayName("setAttributesNotPatchable: id")
 	void setAttributesNotPatchableId() {
-		when(this.conn.queryByKey(DTOKatalogAdressart.class, 1L)).thenReturn(mock(DTOKatalogAdressart.class));
+		when(this.conn.queryByKey(DTOBetriebsart.class, 1L)).thenReturn(mock(DTOBetriebsart.class));
 
 		assertThatException()
 				.isThrownBy(() -> this.data.patch(1L, Map.of("id", "test")))
@@ -74,7 +74,7 @@ class DataBetriebsartenTest {
 	@Test
 	@DisplayName("initDTO | Erfolg")
 	void initDTO() {
-		final var dto = new DTOKatalogAdressart(1L, "");
+		final var dto = new DTOBetriebsart(1L, "");
 
 		this.data.initDTO(dto, 2L, null);
 
@@ -86,7 +86,7 @@ class DataBetriebsartenTest {
 	@Test
 	@DisplayName("getLongId | Erfolg")
 	void getLongId() {
-		final var dto = new DTOKatalogAdressart(1L, "");
+		final var dto = new DTOBetriebsart(1L, "");
 
 		assertThat(this.data.getLongId(dto)).isEqualTo(1L);
 	}
@@ -94,9 +94,9 @@ class DataBetriebsartenTest {
 	@Test
 	@DisplayName("getById | Erfolg")
 	void getById() throws ApiOperationException {
-		final var dto = new DTOKatalogAdressart(1L, "");
+		final var dto = new DTOBetriebsart(1L, "");
 
-		when(this.conn.queryByKey(DTOKatalogAdressart.class, 1L)).thenReturn(dto);
+		when(this.conn.queryByKey(DTOBetriebsart.class, 1L)).thenReturn(dto);
 
 		assertThat(this.data.getById(1L))
 				.isInstanceOf(Betriebsart.class)
@@ -116,7 +116,7 @@ class DataBetriebsartenTest {
 	@Test
 	@DisplayName("getByID | id not found")
 	void getByIdNotFound() {
-		when(this.conn.queryByKey(DTOKatalogAdressart.class, 99L)).thenReturn(null);
+		when(this.conn.queryByKey(DTOBetriebsart.class, 99L)).thenReturn(null);
 
 		assertThatException()
 				.isThrownBy(() -> this.data.getById(99L))
@@ -128,9 +128,9 @@ class DataBetriebsartenTest {
 	@Test
 	@DisplayName("getAll | Erfolg")
 	void getAll() {
-		final var dto1 = new DTOKatalogAdressart(1L, "bez1");
-		final var dto2 = new DTOKatalogAdressart(2L, "bez2");
-		when(this.conn.queryAll(DTOKatalogAdressart.class)).thenReturn(List.of(dto1, dto2));
+		final var dto1 = new DTOBetriebsart(1L, "bez1");
+		final var dto2 = new DTOBetriebsart(2L, "bez2");
+		when(this.conn.queryAll(DTOBetriebsart.class)).thenReturn(List.of(dto1, dto2));
 		@SuppressWarnings("unchecked")
 		final TypedQuery<Long> queryMock = mock(TypedQuery.class);
 		when(queryMock.setParameter(eq("ids"), any())).thenReturn(queryMock);
@@ -156,7 +156,7 @@ class DataBetriebsartenTest {
 	@Test
 	@DisplayName("getAll | Database empty")
 	void getAllEmpty() {
-		when(this.conn.queryAll(DTOKatalogAdressart.class)).thenReturn(Collections.emptyList());
+		when(this.conn.queryAll(DTOBetriebsart.class)).thenReturn(Collections.emptyList());
 
 		verify(this.conn, never()).query(anyString(), eq(Long.class));
 		assertThat(this.data.getAll()).isEmpty();
@@ -165,7 +165,7 @@ class DataBetriebsartenTest {
 	@Test
 	@DisplayName("map | Erfolg")
 	void map() {
-		final var dto = new DTOKatalogAdressart(1L, "bezeichnung");
+		final var dto = new DTOBetriebsart(1L, "bezeichnung");
 		dto.Sortierung = 42;
 
 		assertThat(this.data.map(dto))
@@ -179,7 +179,7 @@ class DataBetriebsartenTest {
 	@Test
 	@DisplayName("map | bezeichnung null")
 	void mapBezeichnungIsNull() {
-		final var dto = new DTOKatalogAdressart(1L, "bezeichnung");
+		final var dto = new DTOBetriebsart(1L, "bezeichnung");
 		dto.Bezeichnung = null;
 
 		assertThat(this.data.map(dto))
@@ -190,7 +190,7 @@ class DataBetriebsartenTest {
 	@Test
 	@DisplayName("map | sichtbar null")
 	void mapSichtbarIsNull() {
-		final var dto = new DTOKatalogAdressart(1L, "bezeichnung");
+		final var dto = new DTOBetriebsart(1L, "bezeichnung");
 		dto.Sichtbar = null;
 
 		assertThat(this.data.map(dto))
@@ -202,7 +202,7 @@ class DataBetriebsartenTest {
 	@DisplayName("mapAttribute | idWrong")
 	void mapAttributeIdIsWrong() {
 		assertThatException()
-				.isThrownBy(() -> this.data.mapAttribute(mock(DTOKatalogAdressart.class), "id", 2L, null))
+				.isThrownBy(() -> this.data.mapAttribute(mock(DTOBetriebsart.class), "id", 2L, null))
 				.isInstanceOf(ApiOperationException.class)
 				.withMessage("Die ID 2 des Patches ist null oder stimmt nicht mit der ID 0 in der Datenbank überein.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
@@ -211,7 +211,7 @@ class DataBetriebsartenTest {
 	@Test
 	@DisplayName("mapAttribute | id")
 	void mapAttributeId() {
-		final var dto = new DTOKatalogAdressart(1L, "bezeichnung");
+		final var dto = new DTOBetriebsart(1L, "bezeichnung");
 
 		assertDoesNotThrow(() -> this.data.mapAttribute(dto, "id", 1L, null));
 	}
@@ -219,9 +219,9 @@ class DataBetriebsartenTest {
 	@Test
 	@DisplayName("patch | bezeichnung > 30 Zeichen")
 	void patchBezeichnungIsTooLong() {
-		final var dto = new DTOKatalogAdressart(1L, "bezeichnung");
+		final var dto = new DTOBetriebsart(1L, "bezeichnung");
 
-		when(this.conn.queryByKey(DTOKatalogAdressart.class, 1L)).thenReturn(dto);
+		when(this.conn.queryByKey(DTOBetriebsart.class, 1L)).thenReturn(dto);
 
 		assertThatException()
 				.isThrownBy(() -> this.data.patch(1L, Map.of("bezeichnung", RandomStringUtils.insecure().nextAscii(31))))
@@ -233,7 +233,7 @@ class DataBetriebsartenTest {
 	@Test
 	@DisplayName("patch | bezeichnung null")
 	void patchBezeichnungIsNull() {
-		when(this.conn.queryByKey(DTOKatalogAdressart.class, 1L)).thenReturn(mock(DTOKatalogAdressart.class));
+		when(this.conn.queryByKey(DTOBetriebsart.class, 1L)).thenReturn(mock(DTOBetriebsart.class));
 		final var map = new HashMap<String, Object>();
 		map.put("bezeichnung", null);
 
@@ -247,7 +247,7 @@ class DataBetriebsartenTest {
 	@Test
 	@DisplayName("patch | bezeichnung empty")
 	void patchBezeichnungIsEmpty() {
-		when(this.conn.queryByKey(DTOKatalogAdressart.class, 1L)).thenReturn(mock(DTOKatalogAdressart.class));
+		when(this.conn.queryByKey(DTOBetriebsart.class, 1L)).thenReturn(mock(DTOBetriebsart.class));
 
 		assertThatException()
 				.isThrownBy(() -> this.data.patch(1L, Map.of("bezeichnung", "")))
@@ -259,34 +259,34 @@ class DataBetriebsartenTest {
 	@Test
 	@DisplayName("patch | bezeichnung is blank")
 	void patchBezeichnungIsBlank() throws ApiOperationException {
-		final var dto = new DTOKatalogAdressart(1L, "bezeichnung");
-		when(this.conn.queryByKey(DTOKatalogAdressart.class, 1L)).thenReturn(dto);
+		final var dto = new DTOBetriebsart(1L, "bezeichnung");
+		when(this.conn.queryByKey(DTOBetriebsart.class, 1L)).thenReturn(dto);
 		when(this.conn.transactionPersist(any())).thenReturn(true);
 
 		this.data.patch(1L, Map.of("bezeichnung", "    "));
 
-		verify(this.conn, never()).queryAll(DTOKatalogAdressart.class);
+		verify(this.conn, never()).queryAll(DTOBetriebsart.class);
 		assertThat(dto.Bezeichnung).isEqualTo("bezeichnung");
 	}
 
 	@Test
 	@DisplayName("patch | bezeichnung doesn't change")
 	void patchBezeichnungDoesNotChange() throws ApiOperationException {
-		final var dto = new DTOKatalogAdressart(1L, "bezeichnung");
-		when(this.conn.queryByKey(DTOKatalogAdressart.class, 1L)).thenReturn(dto);
+		final var dto = new DTOBetriebsart(1L, "bezeichnung");
+		when(this.conn.queryByKey(DTOBetriebsart.class, 1L)).thenReturn(dto);
 		when(this.conn.transactionPersist(any())).thenReturn(true);
 
 		this.data.patch(1L, Map.of("bezeichnung", "bezeichnung"));
 
-		verify(this.conn, never()).queryAll(DTOKatalogAdressart.class);
+		verify(this.conn, never()).queryAll(DTOBetriebsart.class);
 		assertThat(dto.Bezeichnung).isEqualTo("bezeichnung");
 	}
 
 	@Test
 	@DisplayName("patch | bezeichnung already used")
 	void patchBezeichnungAlreadyUsed() {
-		when(this.conn.queryByKey(DTOKatalogAdressart.class, 1L)).thenReturn(mock(DTOKatalogAdressart.class));
-		when(this.conn.queryAll(DTOKatalogAdressart.class)).thenReturn(List.of(new DTOKatalogAdressart(1L, "test")));
+		when(this.conn.queryByKey(DTOBetriebsart.class, 1L)).thenReturn(mock(DTOBetriebsart.class));
+		when(this.conn.queryAll(DTOBetriebsart.class)).thenReturn(List.of(new DTOBetriebsart(1L, "test")));
 
 		assertThatException()
 				.isThrownBy(() -> this.data.patch(1L, Map.of("bezeichnung", "test")))
@@ -298,8 +298,8 @@ class DataBetriebsartenTest {
 	@Test
 	@DisplayName("patch | bezeichnung already used different case")
 	void patchBezeichnungAlreadyUsedWithDifferentCase() {
-		when(this.conn.queryByKey(DTOKatalogAdressart.class, 1L)).thenReturn(mock(DTOKatalogAdressart.class));
-		when(this.conn.queryAll(DTOKatalogAdressart.class)).thenReturn(List.of(new DTOKatalogAdressart(2L, "TEST")));
+		when(this.conn.queryByKey(DTOBetriebsart.class, 1L)).thenReturn(mock(DTOBetriebsart.class));
+		when(this.conn.queryAll(DTOBetriebsart.class)).thenReturn(List.of(new DTOBetriebsart(2L, "TEST")));
 
 		assertThatException()
 				.isThrownBy(() -> this.data.patch(1L, Map.of("bezeichnung", "test")))
@@ -311,10 +311,10 @@ class DataBetriebsartenTest {
 	@Test
 	@DisplayName("patch | bezeichnung change case in same object")
 	void patchBezeichnungChangeCase() throws ApiOperationException {
-		final var dto = new DTOKatalogAdressart(1L, "test");
-		when(conn.queryAll(DTOKatalogAdressart.class)).thenReturn(List.of(dto));
-		final var newDto = new DTOKatalogAdressart(2L, "abc");
-		when(this.conn.queryByKey(DTOKatalogAdressart.class, 2L)).thenReturn(newDto);
+		final var dto = new DTOBetriebsart(1L, "test");
+		when(conn.queryAll(DTOBetriebsart.class)).thenReturn(List.of(dto));
+		final var newDto = new DTOBetriebsart(2L, "abc");
+		when(this.conn.queryByKey(DTOBetriebsart.class, 2L)).thenReturn(newDto);
 		when(this.conn.transactionPersist(any())).thenReturn(true);
 
 		this.data.patch(2L, Map.of("bezeichnung", "ABC"));
@@ -325,11 +325,11 @@ class DataBetriebsartenTest {
 	@Test
 	@DisplayName("patch | bezeichnung dto is null | make sure no Nullpointer is thrown in equalsIgnoreCase check")
 	void patchBezeichnungInDtoISNull() {
-		final var dto = new DTOKatalogAdressart(1L, "123");
+		final var dto = new DTOBetriebsart(1L, "123");
 		dto.Bezeichnung = null;
-		when(conn.queryAll(DTOKatalogAdressart.class)).thenReturn(List.of(dto));
-		final var newDto = new DTOKatalogAdressart(2L, "abc");
-		when(this.conn.queryByKey(DTOKatalogAdressart.class, 2L)).thenReturn(newDto);
+		when(conn.queryAll(DTOBetriebsart.class)).thenReturn(List.of(dto));
+		final var newDto = new DTOBetriebsart(2L, "abc");
+		when(this.conn.queryByKey(DTOBetriebsart.class, 2L)).thenReturn(newDto);
 		when(this.conn.transactionPersist(any())).thenReturn(true);
 
 		assertThatNoException()
@@ -339,8 +339,8 @@ class DataBetriebsartenTest {
 	@Test
 	@DisplayName("patch | bezeichnung")
 	void patchBezeichnung() throws ApiOperationException {
-		final var dto = new DTOKatalogAdressart(1L, "bezeichnung");
-		when(this.conn.queryByKey(DTOKatalogAdressart.class, 1L)).thenReturn(dto);
+		final var dto = new DTOBetriebsart(1L, "bezeichnung");
+		when(this.conn.queryByKey(DTOBetriebsart.class, 1L)).thenReturn(dto);
 		when(this.conn.transactionPersist(any())).thenReturn(true);
 
 		this.data.patch(1L, Map.of("bezeichnung", "neu"));
@@ -351,7 +351,7 @@ class DataBetriebsartenTest {
 	@Test
 	@DisplayName("patch | istSichtbar is null")
 	void patchIstSichtbarIsNull() {
-		when(this.conn.queryByKey(DTOKatalogAdressart.class, 1L)).thenReturn(mock(DTOKatalogAdressart.class));
+		when(this.conn.queryByKey(DTOBetriebsart.class, 1L)).thenReturn(mock(DTOBetriebsart.class));
 		final var map = new HashMap<String, Object>();
 		map.put("istSichtbar", null);
 
@@ -365,9 +365,9 @@ class DataBetriebsartenTest {
 	@Test
 	@DisplayName("patch | istSichtbar")
 	void patchIstSichtbar() throws ApiOperationException {
-		final var dto = new DTOKatalogAdressart(1L, "bezeichnung");
+		final var dto = new DTOBetriebsart(1L, "bezeichnung");
 		dto.Sichtbar = false;
-		when(this.conn.queryByKey(DTOKatalogAdressart.class, 1L)).thenReturn(dto);
+		when(this.conn.queryByKey(DTOBetriebsart.class, 1L)).thenReturn(dto);
 		when(this.conn.transactionPersist(any())).thenReturn(true);
 
 		this.data.patch(1L, Map.of("istSichtbar", true));
@@ -378,7 +378,7 @@ class DataBetriebsartenTest {
 	@Test
 	@DisplayName("patch | sortierung is null")
 	void patchSortierungIsNull() {
-		when(this.conn.queryByKey(DTOKatalogAdressart.class, 1L)).thenReturn(mock(DTOKatalogAdressart.class));
+		when(this.conn.queryByKey(DTOBetriebsart.class, 1L)).thenReturn(mock(DTOBetriebsart.class));
 		final var map = new HashMap<String, Object>();
 		map.put("sortierung", null);
 
@@ -392,9 +392,9 @@ class DataBetriebsartenTest {
 	@Test
 	@DisplayName("patch | sortierung")
 	void patchSortierung() throws ApiOperationException {
-		final var dto = new DTOKatalogAdressart(1L, "bezeichnung");
+		final var dto = new DTOBetriebsart(1L, "bezeichnung");
 		dto.Sortierung = 123;
-		when(this.conn.queryByKey(DTOKatalogAdressart.class, 1L)).thenReturn(dto);
+		when(this.conn.queryByKey(DTOBetriebsart.class, 1L)).thenReturn(dto);
 		when(this.conn.transactionPersist(any())).thenReturn(true);
 
 		this.data.patch(1L, Map.of("sortierung", 345));
@@ -405,7 +405,7 @@ class DataBetriebsartenTest {
 	@Test
 	@DisplayName("patch | unknown argument")
 	void patchUnknownArgument() {
-		when(this.conn.queryByKey(DTOKatalogAdressart.class, 1L)).thenReturn(mock(DTOKatalogAdressart.class));
+		when(this.conn.queryByKey(DTOBetriebsart.class, 1L)).thenReturn(mock(DTOBetriebsart.class));
 
 		assertThatException()
 				.isThrownBy(() -> this.data.patch(1L, Map.of("unknown", "unknown")))

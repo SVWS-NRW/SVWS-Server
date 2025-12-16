@@ -10,7 +10,7 @@ import de.svws_nrw.core.data.betrieb.BetriebStammdaten;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAdressart;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOBetriebsart;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAllgemeineAdresse;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrtsteil;
 import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
@@ -205,8 +205,8 @@ public final class DataBetriebsStammdaten extends DataManager<Long> {
 						if (adressartID == null) {
 							betrieb.adressArt = null;
 						} else {
-							final DTOKatalogAdressart adressart = conn.queryByKey(DTOKatalogAdressart.class, adressartID);
-							if (adressart == null)
+							final DTOBetriebsart betriebsart = conn.queryByKey(DTOBetriebsart.class, adressartID);
+							if (betriebsart == null)
 								throw new ApiOperationException(Status.NOT_FOUND);
 							betrieb.adressArt = adressartID;
 						}

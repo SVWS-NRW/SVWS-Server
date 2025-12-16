@@ -27,67 +27,67 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_Adressart")
 @JsonPropertyOrder({"ID", "Bezeichnung", "Sortierung", "Sichtbar", "Aenderbar"})
-public final class DTOKatalogAdressart {
+public final class DTOBetriebsart {
 
 	/** Die Datenbankabfrage für alle DTOs */
-	public static final String QUERY_ALL = "SELECT e FROM DTOKatalogAdressart e";
+	public static final String QUERY_ALL = "SELECT e FROM DTOBetriebsart e";
 
 	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
-	public static final String QUERY_PK = "SELECT e FROM DTOKatalogAdressart e WHERE e.ID = ?1";
+	public static final String QUERY_PK = "SELECT e FROM DTOBetriebsart e WHERE e.ID = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
-	public static final String QUERY_LIST_PK = "SELECT e FROM DTOKatalogAdressart e WHERE e.ID IN ?1";
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOBetriebsart e WHERE e.ID IN ?1";
 
 	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
-	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOKatalogAdressart e WHERE e.ID IS NOT NULL";
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOBetriebsart e WHERE e.ID IS NOT NULL";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
-	public static final String QUERY_BY_ID = "SELECT e FROM DTOKatalogAdressart e WHERE e.ID = ?1";
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOBetriebsart e WHERE e.ID = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
-	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOKatalogAdressart e WHERE e.ID IN ?1";
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOBetriebsart e WHERE e.ID IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Bezeichnung */
-	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM DTOKatalogAdressart e WHERE e.Bezeichnung = ?1";
+	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM DTOBetriebsart e WHERE e.Bezeichnung = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bezeichnung */
-	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM DTOKatalogAdressart e WHERE e.Bezeichnung IN ?1";
+	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM DTOBetriebsart e WHERE e.Bezeichnung IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Sortierung */
-	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM DTOKatalogAdressart e WHERE e.Sortierung = ?1";
+	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM DTOBetriebsart e WHERE e.Sortierung = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sortierung */
-	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM DTOKatalogAdressart e WHERE e.Sortierung IN ?1";
+	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM DTOBetriebsart e WHERE e.Sortierung IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Sichtbar */
-	public static final String QUERY_BY_SICHTBAR = "SELECT e FROM DTOKatalogAdressart e WHERE e.Sichtbar = ?1";
+	public static final String QUERY_BY_SICHTBAR = "SELECT e FROM DTOBetriebsart e WHERE e.Sichtbar = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sichtbar */
-	public static final String QUERY_LIST_BY_SICHTBAR = "SELECT e FROM DTOKatalogAdressart e WHERE e.Sichtbar IN ?1";
+	public static final String QUERY_LIST_BY_SICHTBAR = "SELECT e FROM DTOBetriebsart e WHERE e.Sichtbar IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Aenderbar */
-	public static final String QUERY_BY_AENDERBAR = "SELECT e FROM DTOKatalogAdressart e WHERE e.Aenderbar = ?1";
+	public static final String QUERY_BY_AENDERBAR = "SELECT e FROM DTOBetriebsart e WHERE e.Aenderbar = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Aenderbar */
-	public static final String QUERY_LIST_BY_AENDERBAR = "SELECT e FROM DTOKatalogAdressart e WHERE e.Aenderbar IN ?1";
+	public static final String QUERY_LIST_BY_AENDERBAR = "SELECT e FROM DTOBetriebsart e WHERE e.Aenderbar IN ?1";
 
-	/** ID der Adressart */
+	/** ID der Betriebsart */
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
 	public long ID;
 
-	/** Bezeichnung der Adressart (Betrieb Kammer usw) */
+	/** Bezeichnung der Betriebsart */
 	@Column(name = "Bezeichnung")
 	@JsonProperty
 	public String Bezeichnung;
 
-	/** Sortierung der Adressart */
+	/** Sortierung der Betriebsart */
 	@Column(name = "Sortierung")
 	@JsonProperty
 	public Integer Sortierung;
 
-	/** Sichtbarkeit der Adressart */
+	/** Sichtbarkeit der Betriebsart */
 	@Column(name = "Sichtbar")
 	@JsonProperty
 	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
@@ -95,7 +95,7 @@ public final class DTOKatalogAdressart {
 	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
-	/** Adressart ist änderbar Ja Nein */
+	/** Betriebsart ist änderbar Ja Nein */
 	@Column(name = "Aenderbar")
 	@JsonProperty
 	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
@@ -104,18 +104,18 @@ public final class DTOKatalogAdressart {
 	public Boolean Aenderbar;
 
 	/**
-	 * Erstellt ein neues Objekt der Klasse DTOKatalogAdressart ohne eine Initialisierung der Attribute.
+	 * Erstellt ein neues Objekt der Klasse DTOBetriebsart ohne eine Initialisierung der Attribute.
 	 */
 	@SuppressWarnings("unused")
-	private DTOKatalogAdressart() {
+	private DTOBetriebsart() {
 	}
 
 	/**
-	 * Erstellt ein neues Objekt der Klasse DTOKatalogAdressart ohne eine Initialisierung der Attribute.
+	 * Erstellt ein neues Objekt der Klasse DTOBetriebsart ohne eine Initialisierung der Attribute.
 	 * @param ID   der Wert für das Attribut ID
 	 * @param Bezeichnung   der Wert für das Attribut Bezeichnung
 	 */
-	public DTOKatalogAdressart(final long ID, final String Bezeichnung) {
+	public DTOBetriebsart(final long ID, final String Bezeichnung) {
 		this.ID = ID;
 		if (Bezeichnung == null) {
 			throw new NullPointerException("Bezeichnung must not be null");
@@ -132,7 +132,7 @@ public final class DTOKatalogAdressart {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		DTOKatalogAdressart other = (DTOKatalogAdressart) obj;
+		DTOBetriebsart other = (DTOBetriebsart) obj;
 		return ID == other.ID;
 	}
 
@@ -152,7 +152,7 @@ public final class DTOKatalogAdressart {
 	 */
 	@Override
 	public String toString() {
-		return "DTOKatalogAdressart(ID=" + this.ID + ", Bezeichnung=" + this.Bezeichnung + ", Sortierung=" + this.Sortierung + ", Sichtbar=" + this.Sichtbar + ", Aenderbar=" + this.Aenderbar + ")";
+		return "DTOBetriebsart(ID=" + this.ID + ", Bezeichnung=" + this.Bezeichnung + ", Sortierung=" + this.Sortierung + ", Sichtbar=" + this.Sichtbar + ", Aenderbar=" + this.Aenderbar + ")";
 	}
 
 }

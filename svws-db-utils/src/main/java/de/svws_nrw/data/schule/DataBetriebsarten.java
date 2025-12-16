@@ -13,14 +13,14 @@ import de.svws_nrw.core.data.schule.Betriebsart;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAdressart;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOBetriebsart;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 
 import static jakarta.ws.rs.core.Response.Status;
 
 /** Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für das CoreDTO {@link Betriebsart} */
-public final class DataBetriebsarten extends DataManagerRevised<Long, DTOKatalogAdressart, Betriebsart> {
+public final class DataBetriebsarten extends DataManagerRevised<Long, DTOBetriebsart, Betriebsart> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManagerRevised} für das Core-DTO {@link Betriebsart}.
@@ -34,12 +34,12 @@ public final class DataBetriebsarten extends DataManagerRevised<Long, DTOKatalog
 	}
 
 	@Override
-	protected long getLongId(final DTOKatalogAdressart dto) {
+	protected long getLongId(final DTOBetriebsart dto) {
 		return dto.ID;
 	}
 
 	@Override
-	public Betriebsart map(final DTOKatalogAdressart dto) {
+	public Betriebsart map(final DTOBetriebsart dto) {
 		final Betriebsart daten = new Betriebsart();
 		daten.id = dto.ID;
 		daten.bezeichnung = dto.Bezeichnung;
@@ -53,7 +53,7 @@ public final class DataBetriebsarten extends DataManagerRevised<Long, DTOKatalog
 		if (id == null)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID der Betriebsart darf nicht null sein.");
 
-		final DTOKatalogAdressart betriebsart = conn.queryByKey(DTOKatalogAdressart.class, id);
+		final DTOBetriebsart betriebsart = conn.queryByKey(DTOBetriebsart.class, id);
 		if (betriebsart == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Die Betriebsart mit der ID %d wurde nicht gefunden.".formatted(id));
 
@@ -61,14 +61,14 @@ public final class DataBetriebsarten extends DataManagerRevised<Long, DTOKatalog
 	}
 
 	@Override
-	protected void initDTO(final DTOKatalogAdressart dto, final Long newId, final Map<String, Object> initAttributes) {
+	protected void initDTO(final DTOBetriebsart dto, final Long newId, final Map<String, Object> initAttributes) {
 		dto.ID = newId;
 		dto.Sortierung = 32000;
 	}
 
 	@Override
 	public List<Betriebsart> getAll() {
-		final List<DTOKatalogAdressart> betriebsarten = this.conn.queryAll(DTOKatalogAdressart.class);
+		final List<DTOBetriebsart> betriebsarten = this.conn.queryAll(DTOBetriebsart.class);
 		final Set<Long> idsBetriebsarten = this.mapToIds(betriebsarten);
 		final Set<Long> idsOfReferencedBetriebsarten = this.getIdsOfReferencedBetriebsarten(idsBetriebsarten);
 
@@ -81,7 +81,7 @@ public final class DataBetriebsarten extends DataManagerRevised<Long, DTOKatalog
 	}
 
 	@Override
-	protected void mapAttribute(final DTOKatalogAdressart dto, final String name, final Object value, final Map<String, Object> map) throws ApiOperationException {
+	protected void mapAttribute(final DTOBetriebsart dto, final String name, final Object value, final Map<String, Object> map) throws ApiOperationException {
 		switch (name) {
 			case "id" -> validateId(dto, name, value);
 			case "bezeichnung" -> updateBezeichnung(dto, value, name);
@@ -91,14 +91,14 @@ public final class DataBetriebsarten extends DataManagerRevised<Long, DTOKatalog
 		}
 	}
 
-	private static void validateId(final DTOKatalogAdressart dto, final String name, final Object value) throws ApiOperationException {
+	private static void validateId(final DTOBetriebsart dto, final String name, final Object value) throws ApiOperationException {
 		final Long id = JSONMapper.convertToLong(value, false, name);
 		if (!Objects.equals(dto.ID, id))
 			throw new ApiOperationException(Status.BAD_REQUEST,
 					"Die ID %d des Patches ist null oder stimmt nicht mit der ID %d in der Datenbank überein.".formatted(id, dto.ID));
 	}
 
-	private void updateBezeichnung(final DTOKatalogAdressart dto, final Object value, final String name) throws ApiOperationException {
+	private void updateBezeichnung(final DTOBetriebsart dto, final Object value, final String name) throws ApiOperationException {
 		final String bezeichnung = JSONMapper.convertToString(value, false, false, Schema.tab_K_Adressart.col_Bezeichnung.datenlaenge(), name);
 		if (valueIsBlankOrHasNotChanged(dto.Bezeichnung, bezeichnung))
 			return;
@@ -114,13 +114,13 @@ public final class DataBetriebsarten extends DataManagerRevised<Long, DTOKatalog
 
 	private void validateBezeichnung(final Long id, final String bezeichnung) throws ApiOperationException {
 		final boolean isAlreadyUsed = this.conn
-				.queryAll(DTOKatalogAdressart.class).stream()
+				.queryAll(DTOBetriebsart.class).stream()
 				.anyMatch(e -> (e.ID != id) && bezeichnung.equalsIgnoreCase(e.Bezeichnung));
 		if (isAlreadyUsed)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die Bezeichnung %s ist bereits vorhanden.".formatted(bezeichnung));
 	}
 
-	private Set<Long> mapToIds(final List<DTOKatalogAdressart> betriebsarten) {
+	private Set<Long> mapToIds(final List<DTOBetriebsart> betriebsarten) {
 		return betriebsarten.stream()
 				.map(f -> f.ID)
 				.collect(Collectors.toSet());

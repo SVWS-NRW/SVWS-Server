@@ -10,7 +10,7 @@ import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.schule.Betrieb;
 import de.svws_nrw.core.data.schule.BetriebeAnsprechpartner;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAdressart;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOBetriebsart;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAllgemeineAdresse;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOFoerderschwerpunkt;
@@ -636,7 +636,7 @@ class DataBetriebeTest {
 		final var dto = new DTOKatalogAllgemeineAdresse(1L);
 		dto.adressArt = 42L;
 		when(this.conn.queryByKey(DTOKatalogAllgemeineAdresse.class, 1L)).thenReturn(dto);
-		when(this.conn.queryByKey(DTOKatalogAdressart.class, 99L)).thenReturn(mock(DTOKatalogAdressart.class));
+		when(this.conn.queryByKey(DTOBetriebsart.class, 99L)).thenReturn(mock(DTOBetriebsart.class));
 
 		this.data.patch(1L, Map.of("idBetriebsart", 99L));
 
