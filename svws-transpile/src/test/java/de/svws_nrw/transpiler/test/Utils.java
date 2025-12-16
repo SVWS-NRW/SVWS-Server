@@ -1,5 +1,7 @@
 package de.svws_nrw.transpiler.test;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 
 import jakarta.validation.constraints.NotNull;
@@ -14,6 +16,14 @@ public class Utils {
 	private static final @NotNull Runnable runnable = () -> {
 		/* nicht zu tun */
 	};
+
+	/**
+	 * Eine Test-Methode für einen Supplier
+	 */
+	public static void testSupplier() {
+		final @NotNull List<UtilClass> list = new ArrayList<>();
+		list.add(new UtilClass(() -> "42"));
+	}
 
 	/**
 	 * Wendet die übergenene Aufgabe auf die übergebene Eingabe an.

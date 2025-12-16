@@ -16,6 +16,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
@@ -133,6 +134,18 @@ public final class ExpressionTypeLambda extends ExpressionType {
 				throw new TranspilerException("Transpiler Error: Cannot retrieve the type information for the identifier " + at.getVariable().toString());
 			if (type instanceof final ExpressionClassType classType)
 				return classType.getFullQualifiedName();
+		}
+		if (parent instanceof final NewClassTree nct) {
+			// determine the index in the parameter list where the lambda is used as parameter
+			final int index = nct.getArguments().indexOf(tree);
+			if (index < 0)
+				throw new TranspilerException("Transpiler Error: Lambda Expression is expected to be in the method invocation argument list.");
+			final ExecutableElement ee = transpiler.findExecutableElement(nct);
+			if ((ee == null) || (index >= ee.getParameters().size()))
+				throw new TranspilerException("Transpiler Error: Unexpected internal error.");
+			final VariableElement ve = ee.getParameters().get(index);
+			final Element type = ((DeclaredType) ve.asType()).asElement();
+			return type.toString();
 		}
 		// TODO improve type analyses to determine the name if lambdas are used in other situations
 		return "java.util.function.Consumer";
