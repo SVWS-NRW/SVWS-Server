@@ -10,7 +10,7 @@
 			"schluessel": "SBO 2.1",
 			"kategorie": "SBO_2",
 			"optionsart": "KEINE",
-			"bkAnlagen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
+			"bkGliederungen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -24,7 +24,7 @@
 			"schluessel": "SBO 2.2",
 			"kategorie": "SBO_2",
 			"optionsart": "KEINE",
-			"bkAnlagen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
+			"bkGliederungen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -38,7 +38,7 @@
 			"schluessel": "SBO 2.3",
 			"kategorie": "SBO_2",
 			"optionsart": "KEINE",
-			"bkAnlagen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
+			"bkGliederungen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -52,7 +52,7 @@
 			"schluessel": "SBO 2.4",
 			"kategorie": "SBO_2",
 			"optionsart": "KEINE",
-			"bkAnlagen": [],
+			"bkGliederungen": [],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -66,7 +66,7 @@
 			"schluessel": "SBO 2.5",
 			"kategorie": "SBO_2",
 			"optionsart": "KEINE",
-			"bkAnlagen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
+			"bkGliederungen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -80,7 +80,7 @@
 			"schluessel": "SBO 2.6",
 			"kategorie": "SBO_2",
 			"optionsart": "KEINE",
-			"bkAnlagen": [],
+			"bkGliederungen": [],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -94,7 +94,7 @@
 			"schluessel": "SBO 3.4",
 			"kategorie": "SBO_3",
 			"optionsart": "KEINE",
-			"bkAnlagen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
+			"bkGliederungen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -108,7 +108,7 @@
 			"schluessel": "SBO 4.1",
 			"kategorie": "SBO_4",
 			"optionsart": "KEINE",
-			"bkAnlagen": [],
+			"bkGliederungen": [],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -122,7 +122,7 @@
 			"schluessel": "SBO 4.2",
 			"kategorie": "SBO_4",
 			"optionsart": "KEINE",
-			"bkAnlagen": [],
+			"bkGliederungen": [],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -136,7 +136,7 @@
 			"schluessel": "SBO 4.3",
 			"kategorie": "SBO_4",
 			"optionsart": "KEINE",
-			"bkAnlagen": [],
+			"bkGliederungen": [],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -150,7 +150,7 @@
 			"schluessel": "SBO 4.4",
 			"kategorie": "SBO_4",
 			"optionsart": "KEINE",
-			"bkAnlagen": [],
+			"bkGliederungen": [],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -164,7 +164,7 @@
 			"schluessel": "SBO 4.5",
 			"kategorie": "SBO_4",
 			"optionsart": "KEINE",
-			"bkAnlagen": [],
+			"bkGliederungen": [],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -178,7 +178,7 @@
 			"schluessel": "SBO 5.1",
 			"kategorie": "SBO_5",
 			"optionsart": "KEINE",
-			"bkAnlagen": [],
+			"bkGliederungen": [],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -192,7 +192,7 @@
 			"schluessel": "SBO 5.2",
 			"kategorie": "SBO_5",
 			"optionsart": "KEINE",
-			"bkAnlagen": [],
+			"bkGliederungen": [],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -206,7 +206,7 @@
 			"schluessel": "SBO 5.3",
 			"kategorie": "SBO_5",
 			"optionsart": "KEINE",
-			"bkAnlagen": [],
+			"bkGliederungen": [],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -220,7 +220,7 @@
 			"schluessel": "SBO 5.4",
 			"kategorie": "SBO_5",
 			"optionsart": "KEINE",
-			"bkAnlagen": [],
+			"bkGliederungen": [],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -234,7 +234,7 @@
 			"schluessel": "SBO 6.1",
 			"kategorie": "SBO_6",
 			"optionsart": "KEINE",
-			"bkAnlagen": [],
+			"bkGliederungen": [],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -248,7 +248,7 @@
 			"schluessel": "SBO 6.2",
 			"kategorie": "SBO_6",
 			"optionsart": "KEINE",
-			"bkAnlagen": [],
+			"bkGliederungen": [],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -262,7 +262,7 @@
 			"schluessel": "SBO 6.3",
 			"kategorie": "SBO_6",
 			"optionsart": "KEINE",
-			"bkAnlagen": [],
+			"bkGliederungen": [],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -276,7 +276,7 @@
 			"schluessel": "SBO 6.4",
 			"kategorie": "SBO_6",
 			"optionsart": "KEINE",
-			"bkAnlagen": [],
+			"bkGliederungen": [],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -290,7 +290,7 @@
 			"schluessel": "SBO 6.5",
 			"kategorie": "SBO_6",
 			"optionsart": "KEINE",
-			"bkAnlagen": [],
+			"bkGliederungen": [],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -304,7 +304,7 @@
 			"schluessel": "SBO 6.6",
 			"kategorie": "SBO_6",
 			"optionsart": "KEINE",
-			"bkAnlagen": [],
+			"bkGliederungen": [],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -318,7 +318,7 @@
 			"schluessel": "SBO 7.1",
 			"kategorie": "SBO_7",
 			"optionsart": "KEINE",
-			"bkAnlagen": ["A12", "B06", "B07"],
+			"bkGliederungen": ["A12", "B06", "B07"],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -332,7 +332,7 @@
 			"schluessel": "SBO 8.1",
 			"kategorie": "SBO_8",
 			"optionsart": "KEINE",
-			"bkAnlagen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
+			"bkGliederungen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -346,7 +346,7 @@
 			"schluessel": "SBO 8.2",
 			"kategorie": "SBO_8",
 			"optionsart": "KEINE",
-			"bkAnlagen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
+			"bkGliederungen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -360,7 +360,7 @@
 			"schluessel": "SBO 9.1",
 			"kategorie": "SBO_9",
 			"optionsart": "KEINE",
-			"bkAnlagen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
+			"bkGliederungen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -374,7 +374,7 @@
 			"schluessel": "SBO 9.2",
 			"kategorie": "SBO_9",
 			"optionsart": "KEINE",
-			"bkAnlagen": ["C03", "C05", "C06", "D02"],
+			"bkGliederungen": ["C03", "C05", "C06", "D02"],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -388,7 +388,7 @@
 			"schluessel": "SBO 9.3",
 			"kategorie": "SBO_9",
 			"optionsart": "KEINE",
-			"bkAnlagen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
+			"bkGliederungen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -402,7 +402,7 @@
 			"schluessel": "SBO 10.1",
 			"kategorie": "SBO_10",
 			"optionsart": "KEINE",
-			"bkAnlagen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
+			"bkGliederungen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -416,7 +416,7 @@
 			"schluessel": "SBO 10.2",
 			"kategorie": "SBO_10",
 			"optionsart": "KEINE",
-			"bkAnlagen": [],
+			"bkGliederungen": [],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -430,7 +430,7 @@
 			"schluessel": "SBO 10.3",
 			"kategorie": "SBO_10",
 			"optionsart": "KEINE",
-			"bkAnlagen": [],
+			"bkGliederungen": [],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -444,7 +444,7 @@
 			"schluessel": "SBO 10.4",
 			"kategorie": "SBO_10",
 			"optionsart": "KEINE",
-			"bkAnlagen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
+			"bkGliederungen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -458,7 +458,7 @@
 			"schluessel": "SBO 10.5",
 			"kategorie": "SBO_10",
 			"optionsart": "KEINE",
-			"bkAnlagen": [],
+			"bkGliederungen": [],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -472,7 +472,7 @@
 			"schluessel": "SBO 10.6",
 			"kategorie": "SBO_10",
 			"optionsart": "KEINE",
-			"bkAnlagen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
+			"bkGliederungen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -486,7 +486,7 @@
 			"schluessel": "SBO 10.7",
 			"kategorie": "SBO_10",
 			"optionsart": "KEINE",
-			"bkAnlagen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
+			"bkGliederungen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]

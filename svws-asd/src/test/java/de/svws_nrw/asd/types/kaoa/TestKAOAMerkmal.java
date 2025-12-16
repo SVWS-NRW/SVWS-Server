@@ -74,7 +74,7 @@ class TestKAOAMerkmal {
 	@Test
 	@DisplayName("Teste CoreType KAOAMerkmal: Korrekte erste Anlage des ersten Eintrags für Merkmal SBO_2_1.")
 	void testKAOAMerkmal_BkanlageBeiSBO_2_1() {
-		assertEquals("A12", KAOAMerkmal.data().getHistorieByWert(KAOAMerkmal.SBO_2_1).getFirst().bkAnlagen.getFirst());
+		assertEquals("A12", KAOAMerkmal.data().getHistorieByWert(KAOAMerkmal.SBO_2_1).getFirst().bkGliederungen.getFirst());
 	}
 
 }
