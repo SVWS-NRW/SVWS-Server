@@ -140,7 +140,7 @@ public final class ExpressionTypeLambda extends ExpressionType {
 		}
 		if (parent instanceof final ReturnTree rt) {
 			Tree cur = rt;
-			while ((!(cur instanceof ClassTree)) && (!(cur instanceof final MethodTree)))
+			while ((!(cur instanceof ClassTree)) && (!(cur instanceof MethodTree)))
 				cur = transpiler.getParent(cur);
 			if (cur instanceof final MethodTree mt) {
 				final Tree varType = mt.getReturnType();
