@@ -1,5 +1,5 @@
 import type { RouteLocationNormalized } from "vue-router";
-import type { AbteilungenDatenProps } from "~/components/schule/kataloge/abteilungen/daten/SAbteilungenDatenProps";
+import type { AbteilungenDatenProps } from "~/components/schule/kataloge/abteilungen/daten/AbteilungenDatenProps";
 import type { RouteAbteilungen } from "~/router/apps/schule/kataloge/abteilungen/RouteAbteilungen";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
@@ -8,13 +8,13 @@ import { RouteManager } from "~/router/RouteManager";
 import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { api } from "~/router/Api";
 
-const SAbteilungenDaten = () => import("~/components/schule/kataloge/abteilungen/daten/SAbteilungenDaten.vue");
+const AbteilungenDaten = () => import("~/components/schule/kataloge/abteilungen/daten/AbteilungenDaten.vue");
 
 export class RouteAbteilungenDaten extends RouteNode<any, RouteAbteilungen> {
 
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.abteilungen.daten",
-			"daten", SAbteilungenDaten);
+			"daten", AbteilungenDaten);
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Abteilungen";

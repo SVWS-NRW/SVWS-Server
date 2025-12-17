@@ -39,7 +39,7 @@
 
 <script setup lang="ts">
 
-	import type { AbteilungenNeuProps } from "~/components/schule/kataloge/abteilungen/SAbteilungenNeuProps";
+	import type { AbteilungenNeuProps } from "~/components/schule/kataloge/abteilungen/AbteilungenNeuProps";
 	import type { DataTableColumn } from "@ui";
 	import type { KlassenDaten, LehrerListeEintrag, List } from "@core";
 	import { BenutzerKompetenz, Abteilung, AbteilungKlassenzuordnung, ArrayList } from "@core";

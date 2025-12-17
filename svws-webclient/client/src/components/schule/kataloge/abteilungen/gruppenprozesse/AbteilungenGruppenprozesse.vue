@@ -22,7 +22,7 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { AbteilungenGruppenprozesseProps } from "./SAbteilungenGruppenprozesseProps";
+	import type { AbteilungenGruppenprozesseProps } from "./AbteilungenGruppenprozesseProps";
 	import type { List } from "@core";
 	import { BenutzerKompetenz, ServerMode } from "@core";
 

@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-	import type { AbteilungenAuswahlProps } from "~/components/schule/kataloge/abteilungen/SAbteilungenAuswahlProps";
+	import type { AbteilungenAuswahlProps } from "~/components/schule/kataloge/abteilungen/AbteilungenAuswahlProps";
 	import type { DataTableColumn } from "@ui";
 	import type { Abteilung } from "@core";
 	import { BenutzerKompetenz, ServerMode } from "@core";

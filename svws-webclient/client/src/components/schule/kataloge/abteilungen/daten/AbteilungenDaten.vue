@@ -50,7 +50,7 @@
 
 <script setup lang="ts">
 
-	import type { AbteilungenDatenProps } from "~/components/schule/kataloge/abteilungen/daten/SAbteilungenDatenProps";
+	import type { AbteilungenDatenProps } from "~/components/schule/kataloge/abteilungen/daten/AbteilungenDatenProps";
 	import type { DataTableColumn } from "@ui";
 	import type { KlassenDaten, List } from "@core";
 	import { SelectManager } from "@ui";

@@ -1,5 +1,5 @@
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import type { AbteilungenGruppenprozesseProps } from "~/components/schule/kataloge/abteilungen/gruppenprozesse/SAbteilungenGruppenprozesseProps";
+import type { AbteilungenGruppenprozesseProps } from "~/components/schule/kataloge/abteilungen/gruppenprozesse/AbteilungenGruppenprozesseProps";
 import type { RouteAbteilungen } from "~/router/apps/schule/kataloge/abteilungen/RouteAbteilungen";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
@@ -8,14 +8,13 @@ import { routeAbteilungen } from "~/router/apps/schule/kataloge/abteilungen/Rout
 import { routeApp } from "../../../RouteApp";
 import { api } from "~/router/Api";
 
-const SAbteilungenGruppenprozesse = () =>
-	import("~/components/schule/kataloge/abteilungen/gruppenprozesse/SAbteilungenGruppenprozesse.vue");
+const AbteilungenGruppenprozesse = () => import("~/components/schule/kataloge/abteilungen/gruppenprozesse/AbteilungenGruppenprozesse.vue");
 
 export class RouteAbteilungenGruppenprozesse extends RouteNode<any, RouteAbteilungen> {
 
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN],
-			"schule.abteilungen.gruppenprozesse", "gruppenprozesse", SAbteilungenGruppenprozesse);
+			"schule.abteilungen.gruppenprozesse", "gruppenprozesse", AbteilungenGruppenprozesse);
 		super.types = new Set([ViewType.GRUPPENPROZESSE]);
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);

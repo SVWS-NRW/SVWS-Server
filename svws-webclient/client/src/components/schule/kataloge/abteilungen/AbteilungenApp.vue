@@ -35,7 +35,7 @@
 
 <script setup lang="ts">
 
-	import type { AbteilungenAppProps } from "~/components/schule/kataloge/abteilungen/SAbteilungenAppProps";
+	import type { AbteilungenAppProps } from "~/components/schule/kataloge/abteilungen/AbteilungenAppProps";
 	import { useRegionSwitch, ViewType } from "@ui";
 	import { computed } from "vue";
 

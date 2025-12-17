@@ -10,14 +10,14 @@ import { routeAbteilungenDaten } from "~/router/apps/schule/kataloge/abteilungen
 import { routeAbteilungenNeu } from "~/router/apps/schule/kataloge/abteilungen/RouteAbteilungenNeu";
 import { routeAbteilungenGruppenprozesse } from "~/router/apps/schule/kataloge/abteilungen/RouteAbteilungenGruppenprozesse";
 
-const SAbteilungenApp = () => import("~/components/schule/kataloge/abteilungen/SAbteilungenApp.vue");
-const SAbteilungenAuswahl = () => import("~/components/schule/kataloge/abteilungen/SAbteilungenAuswahl.vue");
+const AbteilungenApp = () => import("~/components/schule/kataloge/abteilungen/AbteilungenApp.vue");
+const AbteilungenAuswahl = () => import("~/components/schule/kataloge/abteilungen/AbteilungenAuswahl.vue");
 
 export class RouteAbteilungen extends RouteAuswahlNode<AbteilungenListeManager, RouteDataAbteilungen, RouteApp> {
 
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.abteilungen",
-			"schule/abteilungen/:id(\\d+)?", SAbteilungenApp, SAbteilungenAuswahl, new RouteDataAbteilungen());
+			"schule/abteilungen/:id(\\d+)?", AbteilungenApp, AbteilungenAuswahl, new RouteDataAbteilungen());
 		super.mode = ServerMode.DEV;
 		super.text = "Abteilungen";
 		super.menugroup = RouteSchuleMenuGroup.KATALOGE;

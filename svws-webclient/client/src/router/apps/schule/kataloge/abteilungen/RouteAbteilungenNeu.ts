@@ -1,5 +1,5 @@
 import type { RouteLocationNormalized } from "vue-router";
-import type { AbteilungenNeuProps } from "~/components/schule/kataloge/abteilungen/SAbteilungenNeuProps";
+import type { AbteilungenNeuProps } from "~/components/schule/kataloge/abteilungen/AbteilungenNeuProps";
 import type { RouteAbteilungen } from "~/router/apps/schule/kataloge/abteilungen/RouteAbteilungen";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteManager } from "~/router/RouteManager";
@@ -9,12 +9,12 @@ import { routeAbteilungen } from "~/router/apps/schule/kataloge/abteilungen/Rout
 import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { api } from "~/router/Api";
 
-const SAbteilungenNeu = () => import("~/components/schule/kataloge/abteilungen/SAbteilungenNeu.vue");
+const AbteilungenNeu = () => import("~/components/schule/kataloge/abteilungen/AbteilungenNeu.vue");
 
 export class RouteAbteilungenNeu extends RouteNode<any, RouteAbteilungen> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.LEHRERDATEN_AENDERN], "schule.abteilungen.neu", "neu", SAbteilungenNeu);
+		super(Schulform.values(), [BenutzerKompetenz.LEHRERDATEN_AENDERN], "schule.abteilungen.neu", "neu", AbteilungenNeu);
 		super.types = new Set([ViewType.HINZUFUEGEN]);
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
