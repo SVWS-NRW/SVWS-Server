@@ -1,7 +1,7 @@
 import type { List, BenutzerKompetenz } from "@core";
 import type { ErzieherartListeManager } from "@ui";
 
-export interface SErzieherartenGruppenprozesseProps {
+export interface ErzieherartenGruppenprozesseProps {
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
 	manager: () => ErzieherartListeManager;
 	delete: () => Promise<[boolean, List<string | null>]>;

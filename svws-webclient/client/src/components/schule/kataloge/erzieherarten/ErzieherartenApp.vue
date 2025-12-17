@@ -38,7 +38,7 @@
 
 	import { computed } from "vue";
 	import { useRegionSwitch, ViewType } from "@ui";
-	import type { ErzieherartenAppProps } from "~/components/schule/kataloge/erzieherarten/SErzieherartenAppProps";
+	import type { ErzieherartenAppProps } from "~/components/schule/kataloge/erzieherarten/ErzieherartenAppProps";
 
 	const props = defineProps<ErzieherartenAppProps>();
 

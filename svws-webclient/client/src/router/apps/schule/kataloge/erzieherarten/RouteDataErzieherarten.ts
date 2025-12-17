@@ -5,22 +5,22 @@ import { ViewType, ErzieherartListeManager } from "@ui";
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
-import { routeKatalogErzieherartenDaten } from "~/router/apps/schule/kataloge/erzieherarten/RouteKatalogErzieherartenDaten";
-import { routeKatalogErzieherartenGruppenprozesse } from "~/router/apps/schule/kataloge/erzieherarten/RouteKatalogErzieherartenGruppenprozesse";
-import { routeKatalogErzieherartenNeu } from "~/router/apps/schule/kataloge/erzieherarten/RouteKatalogErzieherartenNeu";
+import { routeErzieherartenDaten } from "~/router/apps/schule/kataloge/erzieherarten/RouteErzieherartenDaten";
+import { routeErzieherartenGruppenprozesse } from "~/router/apps/schule/kataloge/erzieherarten/RouteErzieherartenGruppenprozesse";
+import { routeErzieherartenNeu } from "~/router/apps/schule/kataloge/erzieherarten/RouteErzieherartenNeu";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,
 	manager: new ErzieherartListeManager(-1, -1, new ArrayList(), null, new ArrayList()),
-	view: routeKatalogErzieherartenDaten,
+	view: routeErzieherartenDaten,
 	activeViewType: ViewType.DEFAULT,
 	oldView: undefined,
 };
 
-export class RouteDataKatalogErzieherarten extends RouteDataAuswahl<ErzieherartListeManager, RouteStateAuswahlInterface<ErzieherartListeManager>> {
+export class RouteDataErzieherarten extends RouteDataAuswahl<ErzieherartListeManager, RouteStateAuswahlInterface<ErzieherartListeManager>> {
 
 	public constructor() {
-		super(defaultState, { gruppenprozesse: routeKatalogErzieherartenGruppenprozesse, hinzufuegen: routeKatalogErzieherartenNeu });
+		super(defaultState, { gruppenprozesse: routeErzieherartenGruppenprozesse, hinzufuegen: routeErzieherartenNeu });
 	}
 
 	public addID(param: RouteParamsRawGeneric, id: number): void {

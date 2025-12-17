@@ -29,9 +29,9 @@
 
 	import { ref, computed } from "vue";
 	import { ArrayList, BenutzerKompetenz, type List } from "@core";
-	import type { SErzieherartenGruppenprozesseProps } from "~/components/schule/kataloge/erzieherarten/gruppenprozesse/SErzieherartenGruppenprozesseProps";
+	import type { ErzieherartenGruppenprozesseProps } from "~/components/schule/kataloge/erzieherarten/gruppenprozesse/ErzieherartenGruppenprozesseProps";
 
-	const props = defineProps<SErzieherartenGruppenprozesseProps>();
+	const props = defineProps<ErzieherartenGruppenprozesseProps>();
 	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
 	const logs = ref<List<string | null> | undefined>();
 	const status = ref<boolean | undefined>();

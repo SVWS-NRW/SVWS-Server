@@ -24,12 +24,12 @@
 
 <script setup lang="ts">
 
-	import type { SErzieherartenNeuProps } from "~/components/schule/kataloge/erzieherarten/SErzieherartenNeuProps";
+	import type { ErzieherartenNeuProps } from "~/components/schule/kataloge/erzieherarten/ErzieherartenNeuProps";
 	import { computed, ref, watch } from "vue";
 	import { BenutzerKompetenz, Erzieherart } from "@core";
 	import { isUniqueInList, mandatoryInputIsValid } from "~/util/validation/Validation";
 
-	const props = defineProps<SErzieherartenNeuProps>();
+	const props = defineProps<ErzieherartenNeuProps>();
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const disabled = computed(() => !hatKompetenzUpdate.value);
 	const data = ref(new Erzieherart());

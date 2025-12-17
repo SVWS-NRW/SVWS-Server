@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 
-	import type { ErzieherartenDatenProps } from "~/components/schule/kataloge/erzieherarten/daten/SErzieherartenDatenProps";
+	import type { ErzieherartenDatenProps } from "~/components/schule/kataloge/erzieherarten/daten/ErzieherartenDatenProps";
 	import { computed } from "vue";
 	import { BenutzerKompetenz } from "@core";
 

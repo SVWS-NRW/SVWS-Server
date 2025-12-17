@@ -43,7 +43,7 @@
 	import { BenutzerKompetenz } from "@core";
 	import type { DataTableColumn } from "@ui";
 	import { useRegionSwitch, ViewType } from "@ui";
-	import type { ErzieherartenAuswahlProps } from "~/components/schule/kataloge/erzieherarten/SErzieherartenAuswahlProps";
+	import type { ErzieherartenAuswahlProps } from "~/components/schule/kataloge/erzieherarten/ErzieherartenAuswahlProps";
 
 	const props = defineProps<ErzieherartenAuswahlProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();

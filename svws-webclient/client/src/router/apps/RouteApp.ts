@@ -24,7 +24,7 @@ import { routeEinwilligungsarten } from "~/router/apps/schule/kataloge/einwillig
 import { routeKonfessionen } from "~/router/apps/schule/kataloge/konfessionen/RouteKonfessionen";
 import { routeKatalogSchulen } from "~/router/apps/schule/kataloge/schulen/RouteKatalogSchulen";
 import { routeKatalogTelefonArten } from "~/router/apps/schule/kataloge/telefonarten/RouteKatalogTelefonArten";
-import { routeKatalogErzieherarten } from "~/router/apps/schule/kataloge/erzieherarten/RouteKatalogErzieherarten";
+import { routeErzieherarten } from "~/router/apps/schule/kataloge/erzieherarten/RouteErzieherarten";
 import { routeVermerkarten } from "~/router/apps/schule/kataloge/vermerkarten/RouteVermerkarten";
 import { routeLernplattformen } from "~/router/apps/schule/kataloge/lernplattformen/RouteLernplattformen";
 import { routeEinstellungen } from "./einstellungen/RouteEinstellungen";
@@ -146,7 +146,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeBeschaeftigungsarten,
 			routeEinwilligungsarten,
 			routeEntlassgruende,
-			routeKatalogErzieherarten,
+			routeErzieherarten,
 			routeFaecher,
 			routeFahrschuelerarten,
 			routeFloskelgruppen,
