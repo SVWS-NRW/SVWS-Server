@@ -103,7 +103,6 @@
 
 		props.checkpoint.active = false;
 		isLoading.value = true;
-		data.value.idSchuljahresabschnitt = props.manager().getSchuljahresabschnittSchule().id;
 		const { id, klassenzuordnungen, ...partialData } = data.value;
 		const idAbteilung = await props.addAbteilung(partialData);
 		const zuordnungen = createKlassenzuordnungen(idAbteilung);

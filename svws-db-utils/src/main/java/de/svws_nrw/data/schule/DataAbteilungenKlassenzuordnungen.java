@@ -1,10 +1,7 @@
 package de.svws_nrw.data.schule;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.schule.AbteilungKlassenzuordnung;
 import de.svws_nrw.data.DataManagerRevised;
@@ -33,107 +30,74 @@ public final class DataAbteilungenKlassenzuordnungen extends DataManagerRevised<
 	}
 
 	@Override
-	protected void initDTO(final DTOAbteilungsKlassen dtoAbteilungsKlassen, final Long newID, final Map<String, Object> initAttributes)
-			throws ApiOperationException {
-		dtoAbteilungsKlassen.ID = newID;
-	}
-
-	@Override
-	public AbteilungKlassenzuordnung map(final DTOAbteilungsKlassen dtoAbteilungsKlassen) {
-		final AbteilungKlassenzuordnung abteilungKlassenzuordnung = new AbteilungKlassenzuordnung();
-		abteilungKlassenzuordnung.id = dtoAbteilungsKlassen.ID;
-		abteilungKlassenzuordnung.idAbteilung = dtoAbteilungsKlassen.Abteilung_ID;
-		abteilungKlassenzuordnung.idKlasse = dtoAbteilungsKlassen.Klassen_ID;
-		return abteilungKlassenzuordnung;
-	}
-
-	@Override
-	protected void mapAttribute(final DTOAbteilungsKlassen dtoAbteilungsKlassen, final String name, final Object value, final Map<String, Object> map)
-			throws ApiOperationException {
-		switch (name) {
-			case "id" -> {
-				final Long id = JSONMapper.convertToLong(value, false, "id");
-				if (id != dtoAbteilungsKlassen.ID)
-					throw new ApiOperationException(Status.BAD_REQUEST,
-							"Id %d der PatchMap ist ungleich der id %d vom Dto" .formatted(id, dtoAbteilungsKlassen.ID));
-			}
-			case "idAbteilung" -> {
-
-				final Long idAbteilung = JSONMapper.convertToLong(value, false, "idAbteilung");
-				if (checkIfAbteilungExistsById(idAbteilung).isPresent()) {
-					dtoAbteilungsKlassen.Abteilung_ID = idAbteilung;
-				} else {
-					throw new ApiOperationException(Status.BAD_REQUEST, "Für die %d wurde keine Abteilung gefunden" .formatted(idAbteilung));
-				}
-			}
-			case "idKlasse" -> {
-				final Long idKlasse = JSONMapper.convertToLong(value, false, "idKlasse");
-				if (checkIfKlasseExistsById(idKlasse).isPresent()) {
-					dtoAbteilungsKlassen.Klassen_ID = idKlasse;
-				} else {
-					throw new ApiOperationException(Status.BAD_REQUEST, "Für die %d wurde keine Klasse gefunden" .formatted(idKlasse));
-				}
-			}
-			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Das Patchen des Attributes %s wird nicht unterstützt." .formatted(name));
-		}
-	}
-
-	private Optional<DTOAbteilungen> checkIfAbteilungExistsById(final Long idAbteilung) {
-		return Optional.ofNullable(conn.queryByKey(DTOAbteilungen.class, idAbteilung));
-	}
-
-	private Optional<DTOKlassen> checkIfKlasseExistsById(final Long idKlassen) {
-		return Optional.ofNullable(conn.queryByKey(DTOKlassen.class, idKlassen));
+	protected void initDTO(final DTOAbteilungsKlassen dto, final Long newID, final Map<String, Object> initAttributes) {
+		dto.ID = newID;
 	}
 
 	@Override
 	public AbteilungKlassenzuordnung getById(final Long id) throws ApiOperationException {
-		final DTOAbteilungsKlassen zuordnung = conn.queryByKey(DTOAbteilungsKlassen.class, id);
-		if (zuordnung == null)
-			throw new ApiOperationException(Status.NOT_FOUND,
-					"Eine Zuordnung mit der ID %d von einer Klasse zu einer Abteilung konnte nicht gefunden werden." .formatted(id));
+		if (id == null) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID der Zuordnung darf nicht null sein.");
+		}
+		final DTOAbteilungsKlassen zuordnung = this.conn.queryByKey(DTOAbteilungsKlassen.class, id);
+		if (zuordnung == null) {
+			throw new ApiOperationException(Status.NOT_FOUND, "Die Zuordnung mit der ID %d wurde nicht gefunden.".formatted(id));
+		}
 		return map(zuordnung);
 	}
 
 	@Override
-	public List<AbteilungKlassenzuordnung> getAll() throws ApiOperationException {
-		return getListMappedToAbteilungsKlassenzuordnung(conn.queryList(DTOAbteilungsKlassen.QUERY_ALL, DTOAbteilungsKlassen.class));
+	public AbteilungKlassenzuordnung map(final DTOAbteilungsKlassen dto) {
+		final AbteilungKlassenzuordnung abteilungKlassenzuordnung = new AbteilungKlassenzuordnung();
+		abteilungKlassenzuordnung.id = dto.ID;
+		abteilungKlassenzuordnung.idAbteilung = dto.Abteilung_ID;
+		abteilungKlassenzuordnung.idKlasse = dto.Klassen_ID;
+		return abteilungKlassenzuordnung;
 	}
 
-	/**
-	 * Gibt eine Liste von {@link AbteilungKlassenzuordnung} zurück für die Id der Abteilung.
-	 * @param idAbteilung            Id für die Abteilung
-	 * @return Liste von AbteilungsKlassenZuordnungen
-	 */
-	public List<AbteilungKlassenzuordnung> getListByIdAbteilung(final Long idAbteilung) throws ApiOperationException {
-		if (idAbteilung == null)
-			throw new ApiOperationException(Status.BAD_REQUEST, "Für das Löschen muss eine ID angegeben werden. Null ist nicht zulässig.");
-
-		return getListMappedToAbteilungsKlassenzuordnung(conn.queryList(DTOAbteilungsKlassen.QUERY_BY_ABTEILUNG_ID, DTOAbteilungsKlassen.class, idAbteilung));
+	@Override
+	public List<AbteilungKlassenzuordnung> getAll() {
+		return this.conn.queryAll(DTOAbteilungsKlassen.class)
+				.stream()
+				.map(this::map)
+				.toList();
 	}
 
-	private List<AbteilungKlassenzuordnung> getListMappedToAbteilungsKlassenzuordnung(final List<DTOAbteilungsKlassen> dtoAbteilungsKlassen) {
-		final List<AbteilungKlassenzuordnung> result = new ArrayList<>();
-		for (final DTOAbteilungsKlassen zuordnung : dtoAbteilungsKlassen)
-			result.add(map(zuordnung));
-		return result;
+	@Override
+	protected void mapAttribute(final DTOAbteilungsKlassen dto, final String name, final Object value, final Map<String, Object> map)
+			throws ApiOperationException {
+		switch (name) {
+			case "id" -> validateId(dto, name, value);
+			case "idAbteilung" -> updateIdAbteilung(dto, value, name);
+			case "idKlasse" -> updateIdKlasse(dto, name, value);
+			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));
+		}
 	}
 
-	/**
-	 *  Diese Methode erstellt eine Liste von AbteilungKlassenzuordnungen zu deren zugehörigen Id´s der Abteilungen.
-	 *
-	 * @param conn					die Datenbankverbindung
-	 * @param idsAbteilungen		Id´s der Abteilungen zu denen die AbteilungenKlassenzuordnungen gemappt werden sollen
-	 * @return eine gemappte Liste von AbteilungKlassenzuordnungen zu der Id der Abteilungen
-	 */
-	public static Map<Long, List<AbteilungKlassenzuordnung>> getListsByListOfIdAbteilung(final DBEntityManager conn, final List<Long> idsAbteilungen) {
-		final List<DTOAbteilungsKlassen> dtosZuordnungen =
-				conn.queryList(DTOAbteilungsKlassen.QUERY_LIST_BY_ABTEILUNG_ID, DTOAbteilungsKlassen.class, idsAbteilungen);
-		final List<AbteilungKlassenzuordnung> zuordnungen = new ArrayList<>();
-		final DataAbteilungenKlassenzuordnungen dataAbteilungenKlassenzuordnungen = new DataAbteilungenKlassenzuordnungen(conn);
-		for (final DTOAbteilungsKlassen dtoZuordnung : dtosZuordnungen)
-			zuordnungen.add(dataAbteilungenKlassenzuordnungen.map(dtoZuordnung));
-		return zuordnungen.stream().collect(Collectors.groupingBy(z -> z.idAbteilung));
+	private static void validateId(final DTOAbteilungsKlassen dto, final String name, final Object value) throws ApiOperationException {
+		final Long id = JSONMapper.convertToLong(value, false, name);
+		if (id != dto.ID) {
+			throw new ApiOperationException(
+					Status.BAD_REQUEST, "Die ID %d des Patches ist null oder stimmt nicht mit der ID %d in der Datenbank überein.".formatted(id, dto.ID));
+		}
+	}
+
+	private void updateIdAbteilung(final DTOAbteilungsKlassen dto, final Object value, final String name) throws ApiOperationException {
+		final Long idAbteilung = JSONMapper.convertToLong(value, false, name);
+		final DTOAbteilungen abteilung = this.conn.queryByKey(DTOAbteilungen.class, idAbteilung);
+		if (abteilung == null) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Für die ID %d wurde keine Abteilung gefunden.".formatted(idAbteilung));
+		}
+		dto.Abteilung_ID = idAbteilung;
+	}
+
+	private void updateIdKlasse(final DTOAbteilungsKlassen dto, final String name, final Object value) throws ApiOperationException {
+		final Long idKlasse = JSONMapper.convertToLong(value, false, name);
+		final DTOKlassen klasse = this.conn.queryByKey(DTOKlassen.class, idKlasse);
+		if (klasse == null) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Für die ID %d wurde keine Klasse gefunden.".formatted(idKlasse));
+		}
+		dto.Klassen_ID = idKlasse;
 	}
 
 }

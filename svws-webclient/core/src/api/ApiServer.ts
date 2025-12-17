@@ -13778,35 +13778,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der DELETE-Methode deleteAbteilung für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/abteilungen/{id : \d+}
-	 *
-	 * Entfernt eine Abteilung. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen eines Abteilung hat.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Abteilung wurde erfolgreich entfernt.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: Abteilung
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
-	 *   Code 404: Keine Abteilung vorhanden
-	 *   Code 409: Die übergebenen Daten sind fehlerhaft)
-	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Die Abteilung wurde erfolgreich entfernt.
-	 */
-	public async deleteAbteilung(schema : string, id : number) : Promise<Abteilung> {
-		const path = "/db/{schema}/schule/abteilungen/{id : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
-		const text = result;
-		return Abteilung.transpilerFromJSON(text);
-	}
-
-
-	/**
 	 * Implementierung der GET-Methode getAbteilungenByIdJahresAbschnitt für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/abteilungen/{idSchuljahresabschnitt : \d+}
 	 *
 	 * Erstellt eine Liste aller in der Datenbank vorhanden Abteilungen für die angegebene Id des Schuljahresabschnittes unter Angabe der ID, der Bezeichnung, der ID des Schuljahresabschnitts, der Lehrer-ID des Abteilungsleiters, die Bezeichnung des Raums des Abteilungsleiters, die eMail-Adresse des Abteilungsleiters, die interne telefonische Durchwahl des Abteilungsleiters, einer Sortierreihenfolge und und die Zuordnungen der Klassen zu der Abteilung.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Abteilungen besitzt.
