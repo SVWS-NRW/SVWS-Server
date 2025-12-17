@@ -20,6 +20,7 @@ require_once dirname(__DIR__).'/../autoload.php';
 use wenom\Application;
 use wenom\Http;
 use wenom\Config;
+use wenom\PatchManager;
 
 $app = new Application();
 
@@ -61,7 +62,6 @@ if (!$app->db->checkENMLehrerByEmail($eMailDienstlich)) {
 }
 
 $lehrerDaten = $app->db->getENMLehrerByEmail($eMailDienstlich);
-$ts = date('Y-m-d H:i:s.v', time());
 $lehrerId = $lehrerDaten->id;
 $passwordHash = password_hash($password, PASSWORD_DEFAULT);
 $lehrerPatch = (object)[
@@ -71,7 +71,7 @@ $lehrerPatch = (object)[
 ];
 
 // Daten in die Datenbank zurückschreiben
-$app->db->patchENMLehrerPassword($ts, $lehrerDaten, $lehrerPatch);
+PatchManager::patchENMLehrerPassword($app->db->conn, $lehrerDaten, $lehrerPatch);
 $app->db->deleteENMLehrerToken($lehrerId);
 
 // HTTP-Statuscode 204 zurückgeben (keine Inhalte)

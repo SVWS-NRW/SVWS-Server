@@ -11,6 +11,7 @@
 require_once dirname(__DIR__).'/../../autoload.php';
 
 use wenom\Application;
+use wenom\ImportManager;
 
 $app = new Application();
 
@@ -21,6 +22,4 @@ $app->auth->pruefeHTTPMethod([ "POST" ]);
 $app->auth->pruefeAccessToken();
 
 // Entfernen aller ENM-Daten aus der Datenbank
-$app->db->clearENMDaten();
-
-
+ImportManager::clearENMDaten($app->db->conn);

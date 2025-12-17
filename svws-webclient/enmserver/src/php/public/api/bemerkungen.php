@@ -18,6 +18,7 @@ require_once dirname(__DIR__).'/../autoload.php';
 use wenom\Application;
 use wenom\Http;
 use wenom\ENMDatenManager;
+use wenom\PatchManager;
 
 $app = new Application();
 
@@ -29,7 +30,8 @@ $lehrer = $app->auth->pruefeLehrerBasicAuth();
 
 // Erstelle für die Durchführung ein ENMDaten-Objekt aus der Datenbank und rufe dieses auf
 $enmDatenManager = ENMDatenManager::createFromDatabase($app->db);
+$patchManager = new PatchManager($enmDatenManager);
 
 // Lese den Patch aus dem Request ein, hier liegt die ID als Attribut 'id' vor und der eigentliche Patch als Attribut 'patch'
 $patch = Http::getBodyJsonObject();
-$enmDatenManager->patchENMSchuelerBemerkungen($app->db, $lehrer, $patch->id, $patch->patch);
+$patchManager->patchENMSchuelerBemerkungen($lehrer, $patch->id, $patch->patch);

@@ -12,7 +12,7 @@ require_once dirname(__DIR__).'/../../autoload.php';
 
 use wenom\Application;
 use wenom\Http;
-use wenom\ENMDatenManager;
+use wenom\ImportManager;
 
 $app = new Application();
 
@@ -26,5 +26,5 @@ $app->auth->pruefeAccessToken();
 $content = Http::getMultipartGzipFileContent("file");
 
 // Erstelle für die Durchführung des Imports ein ENMDaten-Objekt und rufe diesen auf
-$enmDatenManager = ENMDatenManager::createFromJson($content);
-$enmDatenManager->doImport($app->db);
+$importManager = ImportManager::createFromJson($app->db->conn, $content);
+$importManager->doImport();

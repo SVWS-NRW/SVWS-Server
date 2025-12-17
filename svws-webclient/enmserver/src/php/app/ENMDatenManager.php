@@ -2,18 +2,16 @@
 
 namespace wenom;
 
-use \JsonException as JsonException;
-
 /**
  * Diese Klasse stellt Hilfsmethoden für den Umgang mit ENM-Daten zur Verfügung.
  */
 class ENMDatenManager {
 
+    /** Die Datenbank-Verbindung, welche zum Laden der ENM-Daten genutzt wurde */
+    public DBConnection $conn;
+
     /** Die ENM-Revision mit welcher diese Klasse arbeitet */
     public int $enmRevisionRequired = 1;
-
-    /** Der Zeitstempel, wann der Manager erzeugt wurde. Dies ist für den Import von Daten relevant, um die neuen Daten von den alten Daten zu unterscheiden */
-    protected int $ts;
 
     /** Die ENM-Daten ohne Lehrer und Schüler-Informationen */
     protected object $enmDaten;
@@ -45,58 +43,12 @@ class ENMDatenManager {
 
     /**
      * Erstellt einen neuen nicht initialisierten Manager zur Verfügung.
-     */
-    private function __construct() {
-        // empty - use static creators for further initialisization
-        $this->ts = time();
-    }
-
-    /**
-     * Gibt das aktuelle Datum als formattierten String zurück.
      *
-     * @return string   das aktuelle Datum als String
+     * @param DBConnection $conn   die Datenbank-Verbindung
      */
-    public function now(): string {
-        return date('Y-m-d H:i:s.v', time());
+    private function __construct(DBConnection $conn) {
+        $this->conn = $conn;
     }
-
-    /**
-     * Erstellt ein neues Objekt mit den übergebenen ENM-Daten als JSON-String und stellt Methoden für
-     * den Zugriff auf diese Daten zur Verfügung.
-     *
-     * @param string $jsonEnmDaten   die ENM-Daten
-     *
-     * @return ENMDatenManager   der initialisierte Manager
-     */
-    public static function createFromJson(string $jsonEnmDaten): ENMDatenManager {
-        if ($jsonEnmDaten === null) {
-            Http::exit500("Fehler bei dem Dekodieren der JSON-Daten: Der JSON-String ist null.");
-        }
-        $manager = new ENMDatenManager();
-        $enmDaten = null;
-        try {
-            $enmDaten = json_decode($jsonEnmDaten, false, 512, JSON_THROW_ON_ERROR);
-        } catch (JsonException $e) {
-            Http::exit400BadRequest("Fehler bei dem Dekodieren der JSON-Daten. Prüfen ie ggf. die php-Konfiguration. Ein zu niedriger Wert bei der Einstellung memory_limit kann evtl. dazu führen. Fehler ".$e->getCode().": ".$e->getMessage()."\n".$e->getTraceAsString());
-        }
-        // Prüfe zunächst die ENM-Revision
-        if ($enmDaten->enmRevision != $manager->enmRevisionRequired) {
-            Http::exit400BadRequest("Die Revision der ENM-Daten ist nicht $manager->enmRevisionRequired.");
-        }
-        // Prüfe, ob die Schulform gesetzt ist
-        if ($enmDaten->schulform == null) {
-            Http::exit400BadRequest("Es muss eine Schulform angegeben sein.");
-        }
-        // Speichere die Lehrer-Daten und die Schüler-Daten zwischen, da diese im ENM-Server veränderbare Daten beinhalten
-        $manager->enmLehrer = $enmDaten->lehrer;
-        $manager->enmSchueler = $enmDaten->schueler;
-        // Leere die Lehrer- und Schülerdaten in den ENM-Daten, da diese auf anderem Wege dem Client bereitgestellt werden müssen
-        $enmDaten->lehrer = [];
-        $enmDaten->schueler = [];
-        $manager->enmDaten = $enmDaten;
-        return $manager;
-    }
-
 
     /**
      * Erstellt ein neues Objekt aus der übergebenen Datenbank.
@@ -106,46 +58,12 @@ class ENMDatenManager {
      * @return ENMDatenManager   der initialisierte Manager
      */
     public static function createFromDatabase(Database $db): ENMDatenManager {
-        $manager = new ENMDatenManager();
+        $manager = new ENMDatenManager($db->conn);
         $enmDaten = $db->getJsonENMDaten();
-        $manager->ts = $enmDaten->ts;
         $manager->enmDaten = json_decode($enmDaten->daten);
         $manager->enmLehrer = $db->getENMLehrerdaten();
         $manager->enmSchueler = $db->getENMSchuelerdaten();
         return $manager;
-    }
-
-    /**
-     * Führt den Import der ENM-Daten in die Datenbank durch
-     *
-     * @param Database $db   das Objekt für den Datenbankzugriff
-     */
-    public function doImport(Database $db): void {
-        // Prüfe anhand der Schulnummer, ob bereits importierte Daten vorliegen
-        $schulnummer = $this->enmDaten->schulnummer;
-        $dbEnmDaten = $db->conn->queryAllOrNull("SELECT * FROM Daten WHERE schulnummer = $schulnummer", true);
-        $updateMode = ($dbEnmDaten != null) && (count($dbEnmDaten) != 0);
-        // Wenn nicht aktualisiert wird, dann leere zunächst alle Tabellen mit evtl. zuvor importierten ENM-Daten
-        if (!$updateMode) {
-            $db->clearENMDaten();
-        }
-        // Schreibe die allgemeinen ENM-Daten
-        $db->writeENMDaten($this->ts, $this->enmDaten);
-        // Schreibe die ENM-Daten für die Lehrer-Zugänge
-        $db->writeENMLehrer($this->ts, $this->enmLehrer);
-        // Schreibe die ENM-Daten für die Schüler
-        $db->writeENMSchueler($this->ts, $this->enmSchueler);
-        // Bei einem Update werden ggf. aus den vorhanden Daten aktuellere Informationen in die neuen übertragen
-        if ($updateMode) {
-            // Übertrage ggf. aktuellere Informationen aus den zuvor vorhandenen Daten in die neu importierten Daten
-            $db->importDiffSchueler($this->ts);
-            $db->importDiffLeistungen($this->ts);
-            $db->importDiffTeilleistungen($this->ts);
-            $db->importDiffAnkreuzkompetenzen($this->ts);
-            $db->importDiffLehrer($this->ts);
-        }
-        // Räume auf und entferne alle restlichen Daten, die nicht den neuen Zeitstempel haben
-        $db->retainENMDaten($this->ts);
     }
 
     /**
@@ -166,11 +84,9 @@ class ENMDatenManager {
     /**
      * Bestimme die Noten zugeordnet zu den Kürzeln.
      *
-     * @param object $liste   die Notenliste
-     *
      * @return array eine Map von dem Kürzel der Noten auf das zugehörige Notenobjekt
      */
-    public function getMapNoten(array $liste) : array {
+    public function getMapNoten() : array {
         if ($this->mapNoten === null) {
             $this->mapNoten = [];
             foreach ($this->enmDaten->noten as $note) {
@@ -355,159 +271,6 @@ class ENMDatenManager {
         $daten->schueler = $listSchueler;
         $daten->lehrerID = $lehrer->id;
         return json_encode($daten, JSON_UNESCAPED_SLASHES);
-    }
-
-
-    /**
-     * Führt einen Patch auf ENM-Leistungen durch. Dabei wird die ID aus dem Patch verwendet, um die
-     * zugehörigen Leistungsdaten aus der Datenbank zu ermitteln. Anschließend werden dies zusammen mit
-     * dem Patch an die Datenbank zur Durchführung der Update-Methode übergeben.
-     * Folgende Werte und Zeitstempel können durch das Patch Objekt überschrieben werden:
-     *   note, noteQuartal, fehlstundenFach, fehlstundenUnentschuldigtFach, fachbezogeneBemerkungen, istGemahnt
-     *
-     * @param Database $db     das Datenbank-Objekt
-     * @param object $lehrer   der angemeldete Lehrer
-     * @param object $patch    der Patch
-     */
-    public function patchENMLeistung(Database $db, object $lehrer, object $patch): void {
-        // Prüfe, ob eine ID für die Leistungsdaten im Patch vorhanden ist
-        if ($patch->id === null) {
-            Http::exit400BadRequest("Es muss eine ID angegeben werden, damit die Leistungsdaten angepasst werden können.");
-        }
-        // Prüfe, ob Leistungsdaten für die ID vorhanden sind
-        $mapsSchueler = $this->getMapsSchueler();
-        if (!array_key_exists($patch->id, $mapsSchueler->leistungen)) {
-            Http::exit404NotFound("Es wurde keine Leistung mit der ID {$patch->id} gefunden.");
-        }
-        $leistung = $mapsSchueler->leistungen[$patch->id];
-        // Prüfe, ob der Lehrer Fachlehrer für die Lerngruppe der Leistungsdaten ist
-        $mapLerngruppenFachlehrer = $this->getMapLerngruppenFachlehrer($lehrer);
-        if (!array_key_exists($leistung->lerngruppenID, $mapLerngruppenFachlehrer)) {
-            Http::exit403Forbidden("Es wurde keine Lerngruppe für die ID {$leistung->lerngruppenID} zu der Leistung mit der ID {$patch->id} gefunden, wo der angemeldete Lehrer Fachlehrer ist.");
-        }
-        $mapNoten = $this->getMapNoten($this->enmDaten->noten);
-        $db->patchENMLeistung($this->now(), $leistung, $patch, $mapNoten);
-    }
-
-    /**
-     * Führt einen Patch auf ENM-Lernabschnitte von Schülern durch. Dabei wird die ID aus dem Patch verwendet, um die
-     * zugehörigen Lernabschnittsdaten aus der Datenbank zu ermitteln. Anschließend werden dies zusammen mit
-     * dem Patch an die Datenbank zur Durchführung der Update-Methode übergeben.
-     * Folgende Werte und Zeitstempel können durch das Patch Objekt überschrieben werden:
-     *   fehlstundenGesamt, fehlstundenGesamtUnentschuldigt
-     *
-     * @param Database $db     das Datenbank-Objekt
-     * @param object $lehrer   der angemeldete Lehrer
-     * @param object $patch    der Patch
-     */
-    public function patchENMSchuelerLernabschnitt(Database $db, object $lehrer, object $patch): void {
-        // Prüfe, ob eine ID für die Lernabschnittsdaten im Patch vorhanden ist
-        if ($patch->id === null) {
-            Http::exit400BadRequest("Es muss eine ID angegeben werden, damit die Lernabschnittsdaten angepasst werden können.");
-        }
-        // Prüfe, ob Lernabschnittsdaten für die ID vorhanden sind
-        $mapsSchueler = $this->getMapsSchueler();
-        if (!array_key_exists($patch->id, $mapsSchueler->lernabschnitte) || !array_key_exists($patch->id, $mapsSchueler->lernabschnittSchueler)) {
-            Http::exit404NotFound("Es wurde kein Lernabschnitt mit der ID {$patch->id} gefunden.");
-        }
-        $lernabschnitt = $mapsSchueler->lernabschnitte[$patch->id];
-        $schueler = $mapsSchueler->lernabschnittSchueler[$patch->id];
-        // Prüfe, ob der Lehrer Klassenlehrer für den Schüler des Lernabschnittes ist
-        $mapKlassen = $this->getMapKlassen($lehrer);
-        if (!array_key_exists($schueler->klasseID, $mapKlassen)) {
-            Http::exit403Forbidden("Der angemeldete Lehrer ist kein Klassenlehrer der Klasse mit der ID {$schueler->klasseID}.");
-        }
-        $db->patchENMSchuelerLernabschnitt($this->now(), $schueler, $patch);
-    }
-
-    /**
-     * Führt einen Patch auf ENM-Bemerkungen von Schülern durch. Dabei muss die ID des Schülers mit dem Patch
-     * übergeben verwendet, um die zugehörigen Bemerkungen aus der Datenbank zu ermitteln.
-     * Anschließend werden dies zusammen mit dem Patch an die Datenbank zur Durchführung der Update-Methode übergeben.
-     * Folgende Werte und Zeitstempel können durch das Patch Objekt überschrieben werden:
-     *   ASV, AUE, ZB, LELS, schulformEmpf, individuelleVersetzungsbemerkungen, foerderbemerkungen
-     *
-     * @param Database $db      das Datenbank-Objekt
-     * @param object $lehrer    der angemeldete Lehrer
-     * @param int $idSchueler   die ID des Schülers
-     * @param object $patch     der Patch
-     */
-    public function patchENMSchuelerBemerkungen(Database $db, object $lehrer, int $idSchueler, object $patch): void {
-        // Prüfe, ob Bemerkungen für die Schüler-ID vorhanden sind
-        $mapsSchueler = $this->getMapsSchueler();
-        if (!array_key_exists($idSchueler, $mapsSchueler->bemerkungen) || !array_key_exists($idSchueler, $mapsSchueler->schueler)) {
-            Http::exit404NotFound("Es wurden kein Schüler mit der ID ".$idSchueler." bzw. Bemerkungen für einen solchen Schüler gefunden.");
-        }
-        $schueler = $mapsSchueler->schueler[$idSchueler];
-        // Prüfe, ob der Lehrer Klassenlehrer für den Schüler ist
-        $mapKlassen = $this->getMapKlassen($lehrer);
-        if (!array_key_exists($schueler->klasseID, $mapKlassen)) {
-            Http::exit403Forbidden("Der angemeldete Lehrer ist kein Klassenlehrer der Klasse mit der ID ".$schueler->klasseID.".");
-        }
-        $db->patchENMSchuelerBemerkungen($this->now(), $idSchueler, $schueler, $patch);
-    }
-
-    /**
-     * Führt einen Patch auf ENM-Teilleistungen durch. Dabei wird die ID aus dem Patch verwendet, um die
-     * zugehörigen Teilleistungen aus der Datenbank zu ermitteln. Anschließend werden dies zusammen mit
-     * dem Patch an die Datenbank zur Durchführung der Update-Methode übergeben.
-     * Folgende Werte und Zeitstempel können durch das Patch Objekt überschrieben werden:
-     *   datum, bemerkung, note
-     *
-     * @param Database $db     das Datenbank-Objekt
-     * @param object $lehrer   der angemeldete Lehrer
-     * @param object $patch    der Patch
-     */
-    public function patchENMTeilleistung(Database $db, object $lehrer, object $patch): void {
-        // Prüfe, ob eine ID für die Teilleistungen im Patch vorhanden ist
-        if ($patch->id === null) {
-            Http::exit400BadRequest("Es muss eine ID angegeben werden, damit die Teilleistungen angepasst werden können.");
-        }
-        // Prüfe, ob Teilleistungen für die ID vorhanden sind
-        $mapsSchueler = $this->getMapsSchueler();
-        if (!array_key_exists($patch->id, $mapsSchueler->teilleistungen) || !array_key_exists($patch->id, $mapsSchueler->teilleistungLeistung)) {
-            Http::exit404NotFound("Es wurde keine Teilleistung mit der ID ".$patch->id." gefunden.");
-        }
-        $teilleistung = $mapsSchueler->teilleistungen[$patch->id];
-        $teilleistungLeistung = $mapsSchueler->teilleistungLeistung[$patch->id];
-        // Prüfe, ob der Lehrer Fachlehrer für die Lerngruppe der Leistungsdaten ist
-        $mapLerngruppenFachlehrer = $this->getMapLerngruppenFachlehrer($lehrer);
-        if (!array_key_exists($teilleistungLeistung->lerngruppenID, $mapLerngruppenFachlehrer)) {
-            Http::exit403Forbidden("Es wurde keine Lerngruppe für die ID ".$teilleistungLeistung->lerngruppenID." zu der Teilleistung mit der ID ".$patch->id." gefunden, wo der angemeldete Lehrer Fachlehrer ist.");
-        }
-        $mapNoten = $this->getMapNoten($this->enmDaten->noten);
-        $db->patchENMTeilleistung($this->now(), $teilleistung, $patch, $mapNoten);
-    }
-
-    /**
-     * Führt einen Patch auf ENM-Ankreuzkompetenzen von Schülern durch. Dabei wird die ID aus dem Patch verwendet,
-     * um die zugehörigen Ankreuzkompetenzen aus der Datenbank zu ermitteln. Anschließend werden dies zusammen mit
-     * dem Patch an die Datenbank zur Durchführung der Update-Methode übergeben.
-     * Folgende Werte und Zeitstempel können durch das Patch Objekt überschrieben werden:
-     *   Stufen
-     *
-     * @param Database $db     das Datenbank-Objekt
-     * @param object $lehrer   der angemeldete Lehrer
-     * @param object $patch    der Patch
-     */
-    public function patchENMSchuelerAnkreuzkompetenzen(Database $db, object $lehrer, object $patch): void {
-        // Prüfe, ob eine ID für die Ankreuzkompetenz im Patch vorhanden ist
-        if ($patch->id === null) {
-            Http::exit400BadRequest("Es muss eine ID angegeben werden, damit die Ankreuzkompetenz angepasst werden kann.");
-        }
-        // Prüfe, ob eine Ankreuzkompetenz für die ID vorhanden sind
-        $mapsSchueler = $this->getMapsSchueler();
-        if (!array_key_exists($patch->id, $mapsSchueler->ankreuzkompetenzen) || !array_key_exists($patch->id, $mapsSchueler->ankreuzkompetenzSchueler)) {
-            Http::exit404NotFound("Es wurden keine Ankreuzkompetenz mit der ID ".$patch->id." gefunden.");
-        }
-        $ankreuzkompetenz = $mapsSchueler->ankreuzkompetenzen[$patch->id];
-        $schueler = $mapsSchueler->ankreuzkompetenzSchueler[$patch->id];
-        // Prüfe, ob der Lehrer Klassenlehrer für den Schüler der Ankreuzkompetenz ist
-        $mapKlassen = $this->getMapKlassen($lehrer);
-        if (!array_key_exists($schueler->klasseID, $mapKlassen)) {
-            Http::exit403Forbidden("Der angemeldete Lehrer ist kein Klassenlehrer der Klasse mit der ID ".$schueler->klasseID.".");
-        }
-        $db->patchENMSchuelerAnkreuzkompetenzen($this->now(), $ankreuzkompetenz, $patch);
     }
 
 }
