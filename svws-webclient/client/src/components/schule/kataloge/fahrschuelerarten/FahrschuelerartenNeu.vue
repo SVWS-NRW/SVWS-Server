@@ -77,7 +77,7 @@
 
 		props.checkpoint.active = false;
 		isLoading.value = true;
-		const { id, ...partialData } = data.value;
+		const { id, referenziertInAnderenTabellen, ...partialData } = data.value;
 		await props.addFahrschuelerart(partialData);
 		isLoading.value = false;
 	}

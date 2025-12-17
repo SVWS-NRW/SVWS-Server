@@ -11,6 +11,7 @@ import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOFahrschuelerart;
 import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -29,6 +30,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatNoException
 import static org.assertj.core.api.ThrowableAssert.catchThrowable;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -134,19 +137,28 @@ class DataFahrschuelerartenTest {
 
 	@Test
 	@DisplayName("getAll | Erfolg")
-	void getAllTest() {
-		final var dto1 = getDto();
-		final var dto2 = getDto();
+	void getAll() {
+		final var dto1 = new DTOFahrschuelerart(1L, "1");
+		final var dto2 = new DTOFahrschuelerart(2L, "2");
 		when(this.conn.queryAll(DTOFahrschuelerart.class)).thenReturn(List.of(dto1, dto2));
+		@SuppressWarnings("unchecked")
+		final TypedQuery<Long> queryMock = mock(TypedQuery.class);
+		when(queryMock.setParameter(eq("ids"), any())).thenReturn(queryMock);
+		when(queryMock.getResultList()).thenReturn(List.of(1L));
+		when(conn.query(anyString(), eq(Long.class))).thenReturn(queryMock);
 
 		assertThat(this.data.getAll())
-				.isInstanceOf(List.class)
-				.isNotNull()
-				.isNotEmpty()
 				.hasSize(2)
-				.allSatisfy(item -> assertThat(item)
-						.isInstanceOf(Fahrschuelerart.class)
-						.hasFieldOrProperty("id"));
+				.satisfiesExactly(
+						f1 -> assertThat(f1)
+								.isInstanceOf(Fahrschuelerart.class)
+								.hasFieldOrPropertyWithValue("id", 1L)
+								.hasFieldOrPropertyWithValue("referenziertInAnderenTabellen", true),
+						f2 -> assertThat(f2)
+								.isInstanceOf(Fahrschuelerart.class)
+								.hasFieldOrPropertyWithValue("id", 2L)
+								.hasFieldOrPropertyWithValue("referenziertInAnderenTabellen", false)
+				);
 	}
 
 	@Test
