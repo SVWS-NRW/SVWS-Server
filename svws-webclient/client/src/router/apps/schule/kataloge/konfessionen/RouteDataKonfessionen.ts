@@ -1,6 +1,6 @@
 import type { List, ReligionEintrag, SimpleOperationResponse } from "@core";
 import { BenutzerKompetenz, ArrayList } from "@core";
-import { KonfessionenListeManager } from "@ui";
+import { KonfessionenListeManager, ViewType } from "@ui";
 import { api } from "~/router/Api";
 import { routeKonfessionenDaten } from "./RouteKonfessionenDaten";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
@@ -14,6 +14,7 @@ const defaultState: RouteStateKonfessionen = {
 	idSchuljahresabschnitt: -1,
 	manager: undefined,
 	view: routeKonfessionenDaten,
+	activeViewType: ViewType.DEFAULT,
 };
 
 export class RouteDataKonfessionen extends RouteDataAuswahl<KonfessionenListeManager, RouteStateKonfessionen> {
@@ -30,12 +31,6 @@ export class RouteDataKonfessionen extends RouteDataAuswahl<KonfessionenListeMan
 		const konfessionen = await api.server.getReligionen(api.schema);
 		const manager = new KonfessionenListeManager(idSchuljahresabschnitt, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,
 			api.schulform, konfessionen);
-		if (this._state.value.manager === undefined) {
-			manager.setFilterAuswahlPermitted(true);
-			manager.setFilterNurSichtbar(false);
-		} else {
-			manager.useFilter(this._state.value.manager);
-		}
 		return { manager };
 	}
 
@@ -62,15 +57,29 @@ export class RouteDataKonfessionen extends RouteDataAuswahl<KonfessionenListeMan
 		return `Konfession ${konfession?.kuerzel} (ID: ${id.toString()}) wurde erfolgreich gelöscht.`;
 	}
 
-	public checkBeforeDelete = (): List<string> => {
+	public checkBeforeDeletion = (): [boolean, List<string>] => {
 		const errorLog = new ArrayList<string>();
-		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN))
+		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Konfessionen vor.');
-
-		if (!this.manager.liste.auswahlExists())
+		}
+		if (!this.manager.liste.auswahlExists()) {
 			errorLog.add('Es wurde keine Konfession zum Löschen ausgewählt.');
-
-		return errorLog;
+		}
+		if (!this.manager.idsReferencedKonfessionen.isEmpty()) {
+			errorLog.add(this.getErrorMessageForReferencedKonfessionen());
+		}
+		return [errorLog.isEmpty(), errorLog];
 	};
+
+	private getErrorMessageForReferencedKonfessionen(): string {
+		let errorMessage = 'Die folgenden Konfessionen sind an anderer Stelle referenziert:\n\n';
+		for (const id of this.manager.idsReferencedKonfessionen) {
+			const konfession = this.manager.liste.get(id);
+			if (konfession) {
+				errorMessage += `- ${konfession.bezeichnung} \n`;
+			}
+		}
+		return errorMessage;
+	}
 
 }

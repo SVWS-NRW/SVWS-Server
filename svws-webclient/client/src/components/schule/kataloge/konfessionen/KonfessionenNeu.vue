@@ -67,16 +67,16 @@
 	}
 
 	function bezeichnungIsValid(value: string | null) {
-		if (!mandatoryInputIsValid(value, 30))
+		if (!mandatoryInputIsValid(value, 30)) {
 			return false;
-
+		}
 		return isUniqueInList(value, props.manager().liste.list(), 'bezeichnung');
 	}
 
 	const bezeichnungZeugnisTooLong = computed(() => {
-		if (data.value.bezeichnungZeugnis === null)
+		if (data.value.bezeichnungZeugnis === null) {
 			return false;
-
+		}
 		return data.value.bezeichnungZeugnis.length > 50;
 	});
 
@@ -99,20 +99,20 @@
 	}
 
 	async function addKonfession() {
-		if (isLoading.value)
+		if (isLoading.value) {
 			return;
-
+		}
 		isLoading.value = true;
 		props.checkpoint.active = false;
-		const { id, ...partialData } = data.value;
+		const { id, referenziertInAnderenTabellen, ...partialData } = data.value;
 		await props.add(partialData);
 		isLoading.value = false;
 	}
 
 	watch(() => data.value, async () => {
-		if (isLoading.value)
+		if (isLoading.value) {
 			return;
-
+		}
 		props.checkpoint.active = true;
 	}, { immediate: false, deep: true });
 

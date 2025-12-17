@@ -30,8 +30,10 @@ export class RouteKonfessionenGruppenprozesse extends RouteNode<any, RouteKonfes
 		return {
 			serverMode: api.mode,
 			delete: routeKonfessionen.data.delete,
-			checkBeforeDelete: routeKonfessionen.data.checkBeforeDelete,
+			checkBeforeDeletion: routeKonfessionen.data.checkBeforeDeletion,
 			benutzerKompetenzen: api.benutzerKompetenzen,
+			manager: () => routeKonfessionen.data.manager,
+			gotoDefaultView: routeKonfessionen.data.gotoDefaultView,
 		};
 	}
 
