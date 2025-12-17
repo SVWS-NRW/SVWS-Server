@@ -14,7 +14,7 @@ import de.svws_nrw.core.data.schule.BetriebeAnsprechpartner;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.dto.current.schild.katalog.DTOAnsprechpartnerAllgemeineAdresse;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOBetriebeAnsprechpartner;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOBetrieb;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response;
@@ -22,7 +22,7 @@ import jakarta.ws.rs.core.Response;
 import static de.svws_nrw.db.schema.Schema.tab_AllgAdrAnsprechpartner;
 
 /** Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für das CoreDTO {@link BetriebeAnsprechpartner} */
-public final class DataBetriebeAnsprechpartner extends DataManagerRevised<Long, DTOAnsprechpartnerAllgemeineAdresse, BetriebeAnsprechpartner> {
+public final class DataBetriebeAnsprechpartner extends DataManagerRevised<Long, DTOBetriebeAnsprechpartner, BetriebeAnsprechpartner> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManagerRevised} für das Core-DTO {@link BetriebeAnsprechpartner}.
@@ -36,12 +36,12 @@ public final class DataBetriebeAnsprechpartner extends DataManagerRevised<Long, 
 	}
 
 	@Override
-	protected void initDTO(final DTOAnsprechpartnerAllgemeineAdresse dto, final Long newID, final Map<String, Object> initAttributes) {
+	protected void initDTO(final DTOBetriebeAnsprechpartner dto, final Long newID, final Map<String, Object> initAttributes) {
 		dto.ID = newID;
 	}
 
 	@Override
-	protected long getLongId(final DTOAnsprechpartnerAllgemeineAdresse dto) {
+	protected long getLongId(final DTOBetriebeAnsprechpartner dto) {
 		return dto.ID;
 	}
 
@@ -50,7 +50,7 @@ public final class DataBetriebeAnsprechpartner extends DataManagerRevised<Long, 
 		if (id == null)
 			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Die ID des Ansprechpartners darf nicht null sein.");
 
-		final DTOAnsprechpartnerAllgemeineAdresse dto = this.conn.queryByKey(DTOAnsprechpartnerAllgemeineAdresse.class, id);
+		final DTOBetriebeAnsprechpartner dto = this.conn.queryByKey(DTOBetriebeAnsprechpartner.class, id);
 		if (dto == null)
 			throw new ApiOperationException(Response.Status.NOT_FOUND, "Es wurde kein Ansprechpartner mit der ID %d gefunden.".formatted(id));
 
@@ -59,7 +59,7 @@ public final class DataBetriebeAnsprechpartner extends DataManagerRevised<Long, 
 
 	@Override
 	public List<BetriebeAnsprechpartner> getAll() {
-		final List<DTOAnsprechpartnerAllgemeineAdresse> ansprechpartner = this.conn.queryAll(DTOAnsprechpartnerAllgemeineAdresse.class);
+		final List<DTOBetriebeAnsprechpartner> ansprechpartner = this.conn.queryAll(DTOBetriebeAnsprechpartner.class);
 		final Set<Long> idsOfReferencedAnsprechpartner = this.getIdsOfReferencedAnsprechpartner(mapToIds(ansprechpartner));
 
 		return ansprechpartner
@@ -71,7 +71,7 @@ public final class DataBetriebeAnsprechpartner extends DataManagerRevised<Long, 
 	}
 
 	@Override
-	protected BetriebeAnsprechpartner map(final DTOAnsprechpartnerAllgemeineAdresse dto) {
+	protected BetriebeAnsprechpartner map(final DTOBetriebeAnsprechpartner dto) {
 		final BetriebeAnsprechpartner ansprechpartner = new BetriebeAnsprechpartner();
 		ansprechpartner.id = dto.ID;
 		ansprechpartner.idBetrieb = dto.Adresse_ID;
@@ -84,7 +84,7 @@ public final class DataBetriebeAnsprechpartner extends DataManagerRevised<Long, 
 	}
 
 	@Override
-	protected void mapAttribute(final DTOAnsprechpartnerAllgemeineAdresse dto, final String name, final Object value, final Map<String, Object> map)
+	protected void mapAttribute(final DTOBetriebeAnsprechpartner dto, final String name, final Object value, final Map<String, Object> map)
 			throws ApiOperationException {
 		switch (name) {
 			case "id" -> validateId(dto, name, value);
@@ -99,7 +99,7 @@ public final class DataBetriebeAnsprechpartner extends DataManagerRevised<Long, 
 	}
 
 	@Override
-	protected void checkBeforeDeletionWithSimpleOperationResponse(final List<DTOAnsprechpartnerAllgemeineAdresse> ansprechpartner,
+	protected void checkBeforeDeletionWithSimpleOperationResponse(final List<DTOBetriebeAnsprechpartner> ansprechpartner,
 			final Map<Long, SimpleOperationResponse> responses) {
 		final Set<Long> idsOfReferencedAnsprechpartner = getIdsOfReferencedAnsprechpartner(mapToIds(ansprechpartner));
 		ansprechpartner.stream()
@@ -107,7 +107,7 @@ public final class DataBetriebeAnsprechpartner extends DataManagerRevised<Long, 
 				.forEach(a -> markResponseAsFailed(responses.get(a.ID), a.Name));
 	}
 
-	private void updateIdBetrieb(final DTOAnsprechpartnerAllgemeineAdresse dto, final String name, final Object value) throws ApiOperationException {
+	private void updateIdBetrieb(final DTOBetriebeAnsprechpartner dto, final String name, final Object value) throws ApiOperationException {
 		final Long idBetrieb = JSONMapper.convertToLong(value, false, name);
 		if (idBetrieb.equals(dto.Adresse_ID))
 			return;
@@ -119,7 +119,7 @@ public final class DataBetriebeAnsprechpartner extends DataManagerRevised<Long, 
 		dto.Adresse_ID =  idBetrieb;
 	}
 
-	private static void validateId(final DTOAnsprechpartnerAllgemeineAdresse dto, final String name, final Object value) throws ApiOperationException {
+	private static void validateId(final DTOBetriebeAnsprechpartner dto, final String name, final Object value) throws ApiOperationException {
 		final Long id = JSONMapper.convertToLong(value, false, name);
 		if (!Objects.equals(dto.ID, id))
 			throw new ApiOperationException(Response.Status.BAD_REQUEST,
@@ -141,7 +141,7 @@ public final class DataBetriebeAnsprechpartner extends DataManagerRevised<Long, 
 		return new HashSet<>(results);
 	}
 
-	private static Set<Long> mapToIds(final List<DTOAnsprechpartnerAllgemeineAdresse> ansprechpartner) {
+	private static Set<Long> mapToIds(final List<DTOBetriebeAnsprechpartner> ansprechpartner) {
 		return ansprechpartner.stream()
 				.map(f -> f.ID)
 				.collect(Collectors.toSet());

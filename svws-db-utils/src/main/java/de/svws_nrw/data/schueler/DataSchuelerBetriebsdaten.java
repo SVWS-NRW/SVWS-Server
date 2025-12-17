@@ -12,7 +12,7 @@ import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
 import de.svws_nrw.db.dto.current.schild.berufskolleg.DTOBeschaeftigungsart;
-import de.svws_nrw.db.dto.current.schild.katalog.DTOAnsprechpartnerAllgemeineAdresse;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOBetriebeAnsprechpartner;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOBetrieb;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
@@ -145,7 +145,7 @@ public final class DataSchuelerBetriebsdaten extends DataManager<Long> {
 						if (a_id == null) {	//TODO Darf eine Beschäftigung ohne Ansprechpartner angeleget werden?
 							s_betrieb.Ansprechpartner_ID = null;
 						} else {
-							final DTOAnsprechpartnerAllgemeineAdresse ansprechpartner = conn.queryByKey(DTOAnsprechpartnerAllgemeineAdresse.class, a_id);
+							final DTOBetriebeAnsprechpartner ansprechpartner = conn.queryByKey(DTOBetriebeAnsprechpartner.class, a_id);
 							if (ansprechpartner == null)
 								throw new ApiOperationException(Status.NOT_FOUND);
 							s_betrieb.Ansprechpartner_ID = a_id;
@@ -262,7 +262,7 @@ public final class DataSchuelerBetriebsdaten extends DataManager<Long> {
 						if (a_id == null) {	//TODO Darf eine Beschäftigung ohne Ansprechpartner angeleget werden?
 							s_betrieb.Ansprechpartner_ID = null;
 						} else {
-							final DTOAnsprechpartnerAllgemeineAdresse ansprechpartner = conn.queryByKey(DTOAnsprechpartnerAllgemeineAdresse.class, a_id);
+							final DTOBetriebeAnsprechpartner ansprechpartner = conn.queryByKey(DTOBetriebeAnsprechpartner.class, a_id);
 							if (ansprechpartner == null)
 								throw new ApiOperationException(Status.NOT_FOUND);
 							s_betrieb.Ansprechpartner_ID = a_id;

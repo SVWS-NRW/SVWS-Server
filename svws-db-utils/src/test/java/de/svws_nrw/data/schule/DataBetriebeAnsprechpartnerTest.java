@@ -9,7 +9,7 @@ import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.schule.BetriebeAnsprechpartner;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.dto.current.schild.katalog.DTOAnsprechpartnerAllgemeineAdresse;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOBetriebeAnsprechpartner;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOBetrieb;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.persistence.TypedQuery;
@@ -85,7 +85,7 @@ class DataBetriebeAnsprechpartnerTest {
 	@Test
 	@DisplayName("setAttributesNotPatchable: id")
 	void setAttributesNotPatchableId() {
-		when(this.conn.queryByKey(DTOAnsprechpartnerAllgemeineAdresse.class, 1L)).thenReturn(mock(DTOAnsprechpartnerAllgemeineAdresse.class));
+		when(this.conn.queryByKey(DTOBetriebeAnsprechpartner.class, 1L)).thenReturn(mock(DTOBetriebeAnsprechpartner.class));
 
 		assertThatException()
 				.isThrownBy(() -> this.data.patch(1L, Map.of("id", "test")))
@@ -97,7 +97,7 @@ class DataBetriebeAnsprechpartnerTest {
 	@Test
 	@DisplayName("initDTO | Erfolg")
 	void initDTO() {
-		final var dto = new DTOAnsprechpartnerAllgemeineAdresse(1L, 1L);
+		final var dto = new DTOBetriebeAnsprechpartner(1L, 1L);
 
 		this.data.initDTO(dto, 2L, null);
 
@@ -107,7 +107,7 @@ class DataBetriebeAnsprechpartnerTest {
 	@Test
 	@DisplayName("getLongId | Erfolg")
 	void getLongId() {
-		final var dto = new DTOAnsprechpartnerAllgemeineAdresse(1L, 1L);
+		final var dto = new DTOBetriebeAnsprechpartner(1L, 1L);
 
 		assertThat(this.data.getLongId(dto)).isEqualTo(1L);
 	}
@@ -115,8 +115,8 @@ class DataBetriebeAnsprechpartnerTest {
 	@Test
 	@DisplayName("getById | Erfolg")
 	void getById() throws ApiOperationException {
-		final var dto = new DTOAnsprechpartnerAllgemeineAdresse(1L, 1L);
-		when(this.conn.queryByKey(DTOAnsprechpartnerAllgemeineAdresse.class, 1L)).thenReturn(dto);
+		final var dto = new DTOBetriebeAnsprechpartner(1L, 1L);
+		when(this.conn.queryByKey(DTOBetriebeAnsprechpartner.class, 1L)).thenReturn(dto);
 
 		assertThat(this.data.getById(1L))
 				.isInstanceOf(BetriebeAnsprechpartner.class)
@@ -136,7 +136,7 @@ class DataBetriebeAnsprechpartnerTest {
 	@Test
 	@DisplayName("getByID | id not found")
 	void getByIdNotFound() {
-		when(this.conn.queryByKey(DTOAnsprechpartnerAllgemeineAdresse.class, 99L)).thenReturn(null);
+		when(this.conn.queryByKey(DTOBetriebeAnsprechpartner.class, 99L)).thenReturn(null);
 
 		assertThatException()
 				.isThrownBy(() -> this.data.getById(99L))
@@ -148,9 +148,9 @@ class DataBetriebeAnsprechpartnerTest {
 	@Test
 	@DisplayName("getAll | Erfolg")
 	void getAll() {
-		final var dto1 = new DTOAnsprechpartnerAllgemeineAdresse(1L, 1L);
-		final var dto2 = new DTOAnsprechpartnerAllgemeineAdresse(2L, 2L);
-		when(this.conn.queryAll(DTOAnsprechpartnerAllgemeineAdresse.class)).thenReturn(List.of(dto1, dto2));
+		final var dto1 = new DTOBetriebeAnsprechpartner(1L, 1L);
+		final var dto2 = new DTOBetriebeAnsprechpartner(2L, 2L);
+		when(this.conn.queryAll(DTOBetriebeAnsprechpartner.class)).thenReturn(List.of(dto1, dto2));
 		@SuppressWarnings("unchecked")
 		final TypedQuery<Long> queryMock = mock(TypedQuery.class);
 		when(queryMock.setParameter(eq("ids"), any())).thenReturn(queryMock);
@@ -172,7 +172,7 @@ class DataBetriebeAnsprechpartnerTest {
 	@Test
 	@DisplayName("getAll | Database empty")
 	void getAllEmpty() {
-		when(this.conn.queryAll(DTOAnsprechpartnerAllgemeineAdresse.class)).thenReturn(emptyList());
+		when(this.conn.queryAll(DTOBetriebeAnsprechpartner.class)).thenReturn(emptyList());
 
 		assertThat(this.data.getAll()).isEmpty();
 	}
@@ -180,7 +180,7 @@ class DataBetriebeAnsprechpartnerTest {
 	@Test
 	@DisplayName("map | Erfolg")
 	void map() {
-		final var dto = new DTOAnsprechpartnerAllgemeineAdresse(1L, 2L);
+		final var dto = new DTOBetriebeAnsprechpartner(1L, 2L);
 		dto.Anrede = "test";
 		dto.Name = "test";
 		dto.Vorname = "test";
@@ -203,7 +203,7 @@ class DataBetriebeAnsprechpartnerTest {
 	@DisplayName("mapAttribute | idWrong")
 	void mapAttributeIdIsWrong() {
 		assertThatException()
-				.isThrownBy(() -> this.data.mapAttribute(mock(DTOAnsprechpartnerAllgemeineAdresse.class), "id", 2L, null))
+				.isThrownBy(() -> this.data.mapAttribute(mock(DTOBetriebeAnsprechpartner.class), "id", 2L, null))
 				.isInstanceOf(ApiOperationException.class)
 				.withMessage("Die ID 2 des Patches ist null oder stimmt nicht mit der ID 0 in der Datenbank überein.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
@@ -212,7 +212,7 @@ class DataBetriebeAnsprechpartnerTest {
 	@Test
 	@DisplayName("mapAttribute | id")
 	void mapAttributeId() {
-		final var dto  = new DTOAnsprechpartnerAllgemeineAdresse(1L, 2L);
+		final var dto  = new DTOBetriebeAnsprechpartner(1L, 2L);
 
 		assertDoesNotThrow(() -> this.data.mapAttribute(dto, "id", 1L, null));
 	}
@@ -231,7 +231,7 @@ class DataBetriebeAnsprechpartnerTest {
 	@MethodSource("patchStringAttributesTooManyCharacters")
 	@DisplayName("patch | String Attributes Too Long")
 	void patchAttributeTooLong(final String attributeName, final String expectedMessage) {
-		when(this.conn.queryByKey(DTOAnsprechpartnerAllgemeineAdresse.class, 1L)).thenReturn(mock(DTOAnsprechpartnerAllgemeineAdresse.class));
+		when(this.conn.queryByKey(DTOBetriebeAnsprechpartner.class, 1L)).thenReturn(mock(DTOBetriebeAnsprechpartner.class));
 
 		assertThatException()
 				.isThrownBy(() -> data.patch(1L, Map.of(attributeName, RandomStringUtils.insecure().nextAscii(121))))
@@ -255,8 +255,8 @@ class DataBetriebeAnsprechpartnerTest {
 	@MethodSource("patchStringAttributes")
 	@DisplayName("patch String attributes")
 	void patchStringAttributes(final String attributeName) {
-		final var dto = new DTOAnsprechpartnerAllgemeineAdresse(1L, 1L);
-		when(this.conn.queryByKey(DTOAnsprechpartnerAllgemeineAdresse.class, 1L)).thenReturn(dto);
+		final var dto = new DTOBetriebeAnsprechpartner(1L, 1L);
+		when(this.conn.queryByKey(DTOBetriebeAnsprechpartner.class, 1L)).thenReturn(dto);
 		lenient().when(this.conn.transactionPersist(any())).thenReturn(true);
 		final var newValue = "newValue";
 
@@ -278,7 +278,7 @@ class DataBetriebeAnsprechpartnerTest {
 	@Test
 	@DisplayName("patch | idBetrieb | null")
 	void patchIdBetriebIsNull() {
-		when(this.conn.queryByKey(DTOAnsprechpartnerAllgemeineAdresse.class, 1L)).thenReturn(mock(DTOAnsprechpartnerAllgemeineAdresse.class));
+		when(this.conn.queryByKey(DTOBetriebeAnsprechpartner.class, 1L)).thenReturn(mock(DTOBetriebeAnsprechpartner.class));
 		final var map =  new HashMap<String, Object>();
 		map.put("idBetrieb", null);
 
@@ -293,9 +293,9 @@ class DataBetriebeAnsprechpartnerTest {
 	@Test
 	@DisplayName("patch | idBetrieb | no changes")
 	void patchIdBetriebNoChanges() throws ApiOperationException {
-		final var dto = new DTOAnsprechpartnerAllgemeineAdresse(1L, 1L);
+		final var dto = new DTOBetriebeAnsprechpartner(1L, 1L);
 		dto.Adresse_ID = 42L;
-		when(this.conn.queryByKey(DTOAnsprechpartnerAllgemeineAdresse.class, 1L)).thenReturn(dto);
+		when(this.conn.queryByKey(DTOBetriebeAnsprechpartner.class, 1L)).thenReturn(dto);
 
 		this.data.patch(1L, Map.of("idBetrieb", 42L));
 
@@ -306,7 +306,7 @@ class DataBetriebeAnsprechpartnerTest {
 	@Test
 	@DisplayName("patch | idBetrieb | wrong id")
 	void patchIdBetriebWrongId() {
-		when(this.conn.queryByKey(DTOAnsprechpartnerAllgemeineAdresse.class, 1L)).thenReturn(mock(DTOAnsprechpartnerAllgemeineAdresse.class));
+		when(this.conn.queryByKey(DTOBetriebeAnsprechpartner.class, 1L)).thenReturn(mock(DTOBetriebeAnsprechpartner.class));
 		when(this.conn.queryByKey(DTOBetrieb.class, 42L)).thenReturn(null);
 
 		assertThatException()
@@ -319,9 +319,9 @@ class DataBetriebeAnsprechpartnerTest {
 	@Test
 	@DisplayName("patch | idBetrieb")
 	void patchIdBetrieb() throws ApiOperationException {
-		final var dto = new DTOAnsprechpartnerAllgemeineAdresse(1L, 1L);
+		final var dto = new DTOBetriebeAnsprechpartner(1L, 1L);
 		dto.Adresse_ID = 42L;
-		when(this.conn.queryByKey(DTOAnsprechpartnerAllgemeineAdresse.class, 1L)).thenReturn(dto);
+		when(this.conn.queryByKey(DTOBetriebeAnsprechpartner.class, 1L)).thenReturn(dto);
 		when(this.conn.queryByKey(DTOBetrieb.class, 12L)).thenReturn(mock(DTOBetrieb.class));
 
 		this.data.patch(1L, Map.of("idBetrieb", 12L));
@@ -341,7 +341,7 @@ class DataBetriebeAnsprechpartnerTest {
 		response.id = 1L;
 		response.success = true;
 		final var responses = Map.of(response.id, response);
-		final var dto = new DTOAnsprechpartnerAllgemeineAdresse(1L, 1L);
+		final var dto = new DTOBetriebeAnsprechpartner(1L, 1L);
 		dto.Name = "abc";
 
 		this.data.checkBeforeDeletionWithSimpleOperationResponse(List.of(dto), responses);
@@ -364,7 +364,7 @@ class DataBetriebeAnsprechpartnerTest {
 		response.id = 1L;
 		response.success = true;
 		final var responses = Map.of(response.id, response);
-		final var dto = new DTOAnsprechpartnerAllgemeineAdresse(1L, 1L);
+		final var dto = new DTOBetriebeAnsprechpartner(1L, 1L);
 
 		this.data.checkBeforeDeletionWithSimpleOperationResponse(List.of(dto), responses);
 

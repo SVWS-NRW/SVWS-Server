@@ -59,8 +59,8 @@ import de.svws_nrw.db.dto.migration.schild.grundschule.MigrationDTOSchuelerAnkre
 import de.svws_nrw.db.dto.migration.schild.impexp.MigrationDTOEigeneImporte;
 import de.svws_nrw.db.dto.migration.schild.impexp.MigrationDTOEigeneImporteFelder;
 import de.svws_nrw.db.dto.migration.schild.impexp.MigrationDTOEigeneImporteTabellen;
-import de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOAnsprechpartnerAllgemeineAdresse;
 import de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOBetrieb;
+import de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOBetriebeAnsprechpartner;
 import de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOBetriebsart;
 import de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOFahrschuelerart;
 import de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOFloskelgruppen;
@@ -256,8 +256,8 @@ public final class MigrationDTOs {
              mapDTOName2DTOClass.put(MigrationDTOEigeneImporte.class.getSimpleName(), MigrationDTOEigeneImporte.class);
              mapDTOName2DTOClass.put(MigrationDTOEigeneImporteFelder.class.getSimpleName(), MigrationDTOEigeneImporteFelder.class);
              mapDTOName2DTOClass.put(MigrationDTOEigeneImporteTabellen.class.getSimpleName(), MigrationDTOEigeneImporteTabellen.class);
-             mapDTOName2DTOClass.put(MigrationDTOAnsprechpartnerAllgemeineAdresse.class.getSimpleName(), MigrationDTOAnsprechpartnerAllgemeineAdresse.class);
              mapDTOName2DTOClass.put(MigrationDTOBetrieb.class.getSimpleName(), MigrationDTOBetrieb.class);
+             mapDTOName2DTOClass.put(MigrationDTOBetriebeAnsprechpartner.class.getSimpleName(), MigrationDTOBetriebeAnsprechpartner.class);
              mapDTOName2DTOClass.put(MigrationDTOBetriebsart.class.getSimpleName(), MigrationDTOBetriebsart.class);
              mapDTOName2DTOClass.put(MigrationDTOFahrschuelerart.class.getSimpleName(), MigrationDTOFahrschuelerart.class);
              mapDTOName2DTOClass.put(MigrationDTOFloskelgruppen.class.getSimpleName(), MigrationDTOFloskelgruppen.class);
@@ -448,8 +448,8 @@ public final class MigrationDTOs {
              mapTablename2DTOClass.put("ImpExp_EigeneImporte", MigrationDTOEigeneImporte.class);
              mapTablename2DTOClass.put("ImpExp_EigeneImporte_Felder", MigrationDTOEigeneImporteFelder.class);
              mapTablename2DTOClass.put("ImpExp_EigeneImporte_Tabellen", MigrationDTOEigeneImporteTabellen.class);
-             mapTablename2DTOClass.put("AllgAdrAnsprechpartner", MigrationDTOAnsprechpartnerAllgemeineAdresse.class);
              mapTablename2DTOClass.put("K_AllgAdresse", MigrationDTOBetrieb.class);
+             mapTablename2DTOClass.put("AllgAdrAnsprechpartner", MigrationDTOBetriebeAnsprechpartner.class);
              mapTablename2DTOClass.put("K_Adressart", MigrationDTOBetriebsart.class);
              mapTablename2DTOClass.put("K_FahrschuelerArt", MigrationDTOFahrschuelerart.class);
              mapTablename2DTOClass.put("Floskelgruppen", MigrationDTOFloskelgruppen.class);
