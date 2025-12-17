@@ -176,7 +176,7 @@ public final class DataOrtsteile extends DataManagerRevised<Long, DTOOrtsteil, O
 		final String lehrer = "SELECT DISTINCT a.Ortsteil_ID FROM DTOLehrer a WHERE a.Ortsteil_ID IN :ids";
 		final String schueler = "SELECT DISTINCT b.Ortsteil_ID FROM DTOSchueler b WHERE b.Ortsteil_ID IN :ids";
 		final String erzieher = "SELECT DISTINCT c.ErzOrtsteil_ID FROM DTOSchuelerErzieherAdresse c WHERE c.ErzOrtsteil_ID IN :ids";
-		final String betriebe = "SELECT DISTINCT d.ortsteil_id FROM DTOKatalogAllgemeineAdresse d WHERE d.ortsteil_id IN :ids";
+		final String betriebe = "SELECT DISTINCT d.ortsteil_id FROM DTOBetrieb d WHERE d.ortsteil_id IN :ids";
 		final String query = String.join("\nUNION ALL\n", lehrer, schueler, erzieher, betriebe);
 		final List<Long> results = this.conn.query(query, Long.class).setParameter("ids", ids).getResultList();
 		return new HashSet<>(results);
