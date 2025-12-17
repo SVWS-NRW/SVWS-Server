@@ -10,7 +10,7 @@ import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.schule.BetriebeAnsprechpartner;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOAnsprechpartnerAllgemeineAdresse;
-import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAllgemeineAdresse;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOBetrieb;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.core.Response;
@@ -299,7 +299,7 @@ class DataBetriebeAnsprechpartnerTest {
 
 		this.data.patch(1L, Map.of("idBetrieb", 42L));
 
-		verify(this.conn, never()).queryByKey(DTOKatalogAllgemeineAdresse.class, 42L);
+		verify(this.conn, never()).queryByKey(DTOBetrieb.class, 42L);
 		assertThat(dto.Adresse_ID).isEqualTo(42L);
 	}
 
@@ -307,7 +307,7 @@ class DataBetriebeAnsprechpartnerTest {
 	@DisplayName("patch | idBetrieb | wrong id")
 	void patchIdBetriebWrongId() {
 		when(this.conn.queryByKey(DTOAnsprechpartnerAllgemeineAdresse.class, 1L)).thenReturn(mock(DTOAnsprechpartnerAllgemeineAdresse.class));
-		when(this.conn.queryByKey(DTOKatalogAllgemeineAdresse.class, 42L)).thenReturn(null);
+		when(this.conn.queryByKey(DTOBetrieb.class, 42L)).thenReturn(null);
 
 		assertThatException()
 				.isThrownBy(() -> this.data.patch(1L, Map.of("idBetrieb", 42L)))
@@ -322,7 +322,7 @@ class DataBetriebeAnsprechpartnerTest {
 		final var dto = new DTOAnsprechpartnerAllgemeineAdresse(1L, 1L);
 		dto.Adresse_ID = 42L;
 		when(this.conn.queryByKey(DTOAnsprechpartnerAllgemeineAdresse.class, 1L)).thenReturn(dto);
-		when(this.conn.queryByKey(DTOKatalogAllgemeineAdresse.class, 12L)).thenReturn(mock(DTOKatalogAllgemeineAdresse.class));
+		when(this.conn.queryByKey(DTOBetrieb.class, 12L)).thenReturn(mock(DTOBetrieb.class));
 
 		this.data.patch(1L, Map.of("idBetrieb", 12L));
 

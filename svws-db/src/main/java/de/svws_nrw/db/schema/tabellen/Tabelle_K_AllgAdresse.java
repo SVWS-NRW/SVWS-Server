@@ -218,7 +218,7 @@ public class Tabelle_K_AllgAdresse extends SchemaTabelle {
 		setImportExport(true);
 		setPKAutoIncrement();
 		setJavaSubPackage("schild.katalog");
-		setJavaClassName("DTOKatalogAllgemeineAdresse");
+		setJavaClassName("DTOBetrieb");
 		setJavaComment("Katalog der weiteren Adressen und Betriebe");
 	}
 

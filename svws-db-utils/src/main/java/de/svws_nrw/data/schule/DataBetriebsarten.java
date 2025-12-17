@@ -130,7 +130,7 @@ public final class DataBetriebsarten extends DataManagerRevised<Long, DTOBetrieb
 		if ((ids == null) || ids.isEmpty())
 			return Collections.emptySet();
 
-		final String query = "SELECT DISTINCT a.adressArt FROM DTOKatalogAllgemeineAdresse a WHERE a.adressArt IN :ids";
+		final String query = "SELECT DISTINCT a.adressArt FROM DTOBetrieb a WHERE a.adressArt IN :ids";
 		final List<Long> results = this.conn.query(query, Long.class).setParameter("ids", ids).getResultList();
 		return new HashSet<>(results);
 	}

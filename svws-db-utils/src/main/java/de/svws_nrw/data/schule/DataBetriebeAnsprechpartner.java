@@ -15,7 +15,7 @@ import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOAnsprechpartnerAllgemeineAdresse;
-import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAllgemeineAdresse;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOBetrieb;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response;
 
@@ -112,7 +112,7 @@ public final class DataBetriebeAnsprechpartner extends DataManagerRevised<Long, 
 		if (idBetrieb.equals(dto.Adresse_ID))
 			return;
 
-		final DTOKatalogAllgemeineAdresse betrieb = this.conn.queryByKey(DTOKatalogAllgemeineAdresse.class, idBetrieb);
+		final DTOBetrieb betrieb = this.conn.queryByKey(DTOBetrieb.class, idBetrieb);
 		if (betrieb == null)
 			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Kein Betrieb zur ID %d gefunden.".formatted(idBetrieb));
 

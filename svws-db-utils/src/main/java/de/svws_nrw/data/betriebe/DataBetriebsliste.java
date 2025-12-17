@@ -10,7 +10,7 @@ import java.util.function.Function;
 import de.svws_nrw.core.data.betrieb.BetriebListeEintrag;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAllgemeineAdresse;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOBetrieb;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -32,9 +32,9 @@ public final class DataBetriebsliste extends DataManager<Long> {
 	}
 
 	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOKatalogAllgemeineAdresse} in einen Core-DTO {@link BetriebListeEintrag}.
+	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOBetrieb} in einen Core-DTO {@link BetriebListeEintrag}.
 	 */
-	private final Function<DTOKatalogAllgemeineAdresse, BetriebListeEintrag> dtoMapper = (final DTOKatalogAllgemeineAdresse b) -> {
+	private final Function<DTOBetrieb, BetriebListeEintrag> dtoMapper = (final DTOBetrieb b) -> {
 		final BetriebListeEintrag eintrag = new BetriebListeEintrag();
 		eintrag.id = b.ID;
 		eintrag.adressArt = b.adressArt;
@@ -62,7 +62,7 @@ public final class DataBetriebsliste extends DataManager<Long> {
 
 	@Override
 	public Response getList() throws ApiOperationException {
-		final List<DTOKatalogAllgemeineAdresse> betriebe = conn.queryAll(DTOKatalogAllgemeineAdresse.class);
+		final List<DTOBetrieb> betriebe = conn.queryAll(DTOBetrieb.class);
 		if (betriebe == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Betriebe vorhanden.");
 		final List<BetriebListeEintrag> daten = betriebe.stream().map(dtoMapper).sorted(dataComparator).toList();

@@ -45,11 +45,11 @@ public class Betrieb {
 
 	/** Gibt an, ob es sich bei dem Betrieb um einen Ausbildungsbetrieb handelt. */
 	@Schema(description = "Gibt an, ob es sich bei dem Betrieb um einen Ausbildungsbetrieb handelt.", example = "true")
-	public boolean isAusbildungsbetrieb;
+	public boolean istAusbildungsbetrieb;
 
 	/** Gibt an, ob es sich bei dem Betrieb um einen Maßnahmenträger handelt. */
 	@Schema(description = "Gibt an, ob es sich bei dem Betrieb um einen Maßnahmenträger handelt.", example = "true")
-	public boolean isMassnahmentraeger;
+	public boolean istMassnahmentraeger;
 
 	/** Gibt an, ob bei dem Betrieb eine Belehrung nach Infektionsschutzgesetz erforderlich ist. */
 	@Schema(description = "Gibt an, ob bei dem Betrieb eine Belehrung nach Infektionsschutzgesetz erforderlich ist.", example = "true")
@@ -97,7 +97,7 @@ public class Betrieb {
 
 	/** Gibt an, ob der Betrieb in der Anwendung sichtbar sein soll oder nicht. */
 	@Schema(description = "gibt an, ob der Betrieb in der Anwendung sichtbar sein soll oder nicht", example = "true")
-	public boolean isSichtbar;
+	public boolean istSichtbar;
 
 	/** Die Sortierreihenfolge des Betriebs. */
 	@Schema(description = "Die Sortierreihenfolge des Betriebs", example = "1")

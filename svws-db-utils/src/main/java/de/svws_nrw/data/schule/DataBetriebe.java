@@ -16,7 +16,7 @@ import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOBetriebsart;
-import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAllgemeineAdresse;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOBetrieb;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response.Status;
@@ -24,7 +24,7 @@ import jakarta.ws.rs.core.Response.Status;
 import static de.svws_nrw.db.schema.Schema.tab_K_AllgAdresse;
 
 /** Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für das CoreDTO {@link Betrieb} */
-public final class DataBetriebe extends DataManagerRevised<Long, DTOKatalogAllgemeineAdresse, Betrieb> {
+public final class DataBetriebe extends DataManagerRevised<Long, DTOBetrieb, Betrieb> {
 
 	private final DataBetriebeAnsprechpartner dataBetriebeAnsprechpartner;
 
@@ -42,12 +42,12 @@ public final class DataBetriebe extends DataManagerRevised<Long, DTOKatalogAllge
 	}
 
 	@Override
-	protected void initDTO(final DTOKatalogAllgemeineAdresse dto, final Long newID, final Map<String, Object> initAttributes) {
+	protected void initDTO(final DTOBetrieb dto, final Long newID, final Map<String, Object> initAttributes) {
 		dto.ID = newID;
 	}
 
 	@Override
-	protected long getLongId(final DTOKatalogAllgemeineAdresse dto) {
+	protected long getLongId(final DTOBetrieb dto) {
 		return dto.ID;
 	}
 
@@ -56,7 +56,7 @@ public final class DataBetriebe extends DataManagerRevised<Long, DTOKatalogAllge
 		if (id == null)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID des Betriebs darf nicht null sein.");
 
-		final DTOKatalogAllgemeineAdresse dto = this.conn.queryByKey(DTOKatalogAllgemeineAdresse.class, id);
+		final DTOBetrieb dto = this.conn.queryByKey(DTOBetrieb.class, id);
 		if (dto == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Betrieb mit der ID %d gefunden.".formatted(id));
 
@@ -65,7 +65,7 @@ public final class DataBetriebe extends DataManagerRevised<Long, DTOKatalogAllge
 
 	@Override
 	public List<Betrieb> getAll() {
-		final List<DTOKatalogAllgemeineAdresse> betriebe = this.conn.queryAll(DTOKatalogAllgemeineAdresse.class);
+		final List<DTOBetrieb> betriebe = this.conn.queryAll(DTOBetrieb.class);
 		final Set<Long> idsOfReferencedBetriebe = this.getIdsOfReferencedBetriebe(mapToIds(betriebe));
 		final Map<Long, List<BetriebeAnsprechpartner>> ansprechpartnerByIdBetrieb = this.dataBetriebeAnsprechpartner
 				.getAll()
@@ -82,7 +82,7 @@ public final class DataBetriebe extends DataManagerRevised<Long, DTOKatalogAllge
 	}
 
 	@Override
-	protected Betrieb map(final DTOKatalogAllgemeineAdresse dto) {
+	protected Betrieb map(final DTOBetrieb dto) {
 		final Betrieb betrieb = new Betrieb();
 		betrieb.id = dto.ID;
 		betrieb.name = dto.name1;
@@ -90,8 +90,8 @@ public final class DataBetriebe extends DataManagerRevised<Long, DTOKatalogAllge
 		betrieb.bemerkungen = dto.bemerkungen;
 		betrieb.branche = dto.branche;
 		betrieb.idBetriebsart = dto.adressArt;
-		betrieb.isAusbildungsbetrieb = Boolean.TRUE.equals(dto.ausbildungsbetrieb);
-		betrieb.isMassnahmentraeger = Boolean.TRUE.equals(dto.Massnahmentraeger);
+		betrieb.istAusbildungsbetrieb = Boolean.TRUE.equals(dto.ausbildungsbetrieb);
+		betrieb.istMassnahmentraeger = Boolean.TRUE.equals(dto.Massnahmentraeger);
 		betrieb.belehrungNachISGErforderlich = Boolean.TRUE.equals(dto.BelehrungISG);
 		betrieb.erweitertesFuehrungszeugnisErforderlich = Boolean.TRUE.equals(dto.ErwFuehrungszeugnis);
 		betrieb.bietetPraktikumsplaetzeAn = Boolean.TRUE.equals(dto.bietetPraktika);
@@ -103,13 +103,13 @@ public final class DataBetriebe extends DataManagerRevised<Long, DTOKatalogAllge
 		betrieb.telefon2 = dto.telefon2;
 		betrieb.fax = dto.fax;
 		betrieb.eMail = dto.email;
-		betrieb.isSichtbar = Boolean.TRUE.equals(dto.Sichtbar);
+		betrieb.istSichtbar = Boolean.TRUE.equals(dto.Sichtbar);
 		betrieb.sortierung = Objects.requireNonNullElse(dto.sortierung, 32000);
 		return betrieb;
 	}
 
 	@Override
-	protected void mapAttribute(final DTOKatalogAllgemeineAdresse dto, final String name, final Object value, final Map<String, Object> map)
+	protected void mapAttribute(final DTOBetrieb dto, final String name, final Object value, final Map<String, Object> map)
 			throws ApiOperationException {
 		switch (name) {
 			case "id" -> validateId(dto, name, value);
@@ -126,19 +126,19 @@ public final class DataBetriebe extends DataManagerRevised<Long, DTOKatalogAllge
 			case "telefon2" -> dto.telefon2 = JSONMapper.convertToString(value, true, true, tab_K_AllgAdresse.col_AllgAdrTelefon2.datenlaenge(), name);
 			case "fax" -> dto.fax = JSONMapper.convertToString(value, true, true, tab_K_AllgAdresse.col_AllgAdrFax.datenlaenge(), name);
 			case "eMail" -> dto.email = JSONMapper.convertToString(value, true, true, tab_K_AllgAdresse.col_AllgAdrEmail.datenlaenge(), name);
-			case "isAusbildungsbetrieb" -> dto.ausbildungsbetrieb = JSONMapper.convertToBoolean(value, true, name);
-			case "isMassnahmentraeger" -> dto.Massnahmentraeger = JSONMapper.convertToBoolean(value, true, name);
+			case "istAusbildungsbetrieb" -> dto.ausbildungsbetrieb = JSONMapper.convertToBoolean(value, true, name);
+			case "istMassnahmentraeger" -> dto.Massnahmentraeger = JSONMapper.convertToBoolean(value, true, name);
 			case "belehrungNachISGErforderlich" -> dto.BelehrungISG = JSONMapper.convertToBoolean(value, true, name);
 			case "erweitertesFuehrungszeugnisErforderlich" -> dto.ErwFuehrungszeugnis = JSONMapper.convertToBoolean(value, true, name);
 			case "bietetPraktikumsplaetzeAn" -> dto.bietetPraktika = JSONMapper.convertToBoolean(value, true, name);
 			case "sortierung" -> dto.sortierung = JSONMapper.convertToInteger(value, true, name);
-			case "isSichtbar" -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false, name);
+			case "istSichtbar" -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false, name);
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));
 		}
 	}
 
 	@Override
-	protected void checkBeforeDeletionWithSimpleOperationResponse(final List<DTOKatalogAllgemeineAdresse> betriebe,
+	protected void checkBeforeDeletionWithSimpleOperationResponse(final List<DTOBetrieb> betriebe,
 			final Map<Long, SimpleOperationResponse> responses) {
 		final Set<Long> idsOfReferencedBetriebe = getIdsOfReferencedBetriebe(mapToIds(betriebe));
 		betriebe.stream()
@@ -146,7 +146,7 @@ public final class DataBetriebe extends DataManagerRevised<Long, DTOKatalogAllge
 				.forEach(f -> markResponseAsFailed(responses.get(f.ID), f.name1));
 	}
 
-	private void updateIdOrt(final DTOKatalogAllgemeineAdresse dto, final String name, final Object value) throws ApiOperationException {
+	private void updateIdOrt(final DTOBetrieb dto, final String name, final Object value) throws ApiOperationException {
 		final Long id = JSONMapper.convertToLong(value, true, name);
 		if (id == null) {
 			dto.ort_id = null;
@@ -163,7 +163,7 @@ public final class DataBetriebe extends DataManagerRevised<Long, DTOKatalogAllge
 		dto.ort_id = id;
 	}
 
-	private void updateIdBetriebsart(final DTOKatalogAllgemeineAdresse dto, final String name, final Object value) throws ApiOperationException {
+	private void updateIdBetriebsart(final DTOBetrieb dto, final String name, final Object value) throws ApiOperationException {
 		final Long id = JSONMapper.convertToLong(value, true, name);
 		if (id == null) {
 			dto.adressArt = null;
@@ -180,7 +180,7 @@ public final class DataBetriebe extends DataManagerRevised<Long, DTOKatalogAllge
 		dto.adressArt = id;
 	}
 
-	private void updateName(final DTOKatalogAllgemeineAdresse dto, final String name, final Object value) throws ApiOperationException {
+	private void updateName(final DTOBetrieb dto, final String name, final Object value) throws ApiOperationException {
 		final String newName = JSONMapper.convertToString(value, false, false, tab_K_AllgAdresse.col_AllgAdrName1.datenlaenge(), name);
 		if (valueIsBlankOrHasNotChanged(dto.name1, newName))
 			return;
@@ -195,13 +195,13 @@ public final class DataBetriebe extends DataManagerRevised<Long, DTOKatalogAllge
 	}
 
 	private void validateNameIsUnique(final Long id, final String name) throws ApiOperationException {
-		final boolean isAlreadyUsed = this.conn.queryAll(DTOKatalogAllgemeineAdresse.class).stream()
+		final boolean isAlreadyUsed = this.conn.queryAll(DTOBetrieb.class).stream()
 				.anyMatch(b -> (b.ID != id) && name.equalsIgnoreCase(b.name1));
 		if (isAlreadyUsed)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Der Name %s ist bereits vorhanden.".formatted(name));
 	}
 
-	private static Set<Long> mapToIds(final List<DTOKatalogAllgemeineAdresse> betriebe) {
+	private static Set<Long> mapToIds(final List<DTOBetrieb> betriebe) {
 		return betriebe.stream()
 				.map(f -> f.ID)
 				.collect(Collectors.toSet());
@@ -234,7 +234,7 @@ public final class DataBetriebe extends DataManagerRevised<Long, DTOKatalogAllge
 				("Der Betrieb mit dem Name %s ist in der Datenbank referenziert und kann daher nicht gelöscht werden.").formatted(name));
 	}
 
-	private static void validateId(final DTOKatalogAllgemeineAdresse dto, final String name, final Object value) throws ApiOperationException {
+	private static void validateId(final DTOBetrieb dto, final String name, final Object value) throws ApiOperationException {
 		final Long id = JSONMapper.convertToLong(value, false, name);
 		if (!Objects.equals(dto.ID, id))
 			throw new ApiOperationException(Status.BAD_REQUEST,

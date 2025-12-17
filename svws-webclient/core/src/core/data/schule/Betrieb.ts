@@ -39,12 +39,12 @@ export class Betrieb extends JavaObject {
 	/**
 	 * Gibt an, ob es sich bei dem Betrieb um einen Ausbildungsbetrieb handelt.
 	 */
-	public isAusbildungsbetrieb: boolean = false;
+	public istAusbildungsbetrieb: boolean = false;
 
 	/**
 	 * Gibt an, ob es sich bei dem Betrieb um einen Maßnahmenträger handelt.
 	 */
-	public isMassnahmentraeger: boolean = false;
+	public istMassnahmentraeger: boolean = false;
 
 	/**
 	 * Gibt an, ob bei dem Betrieb eine Belehrung nach Infektionsschutzgesetz erforderlich ist.
@@ -104,7 +104,7 @@ export class Betrieb extends JavaObject {
 	/**
 	 * Gibt an, ob der Betrieb in der Anwendung sichtbar sein soll oder nicht.
 	 */
-	public isSichtbar: boolean = false;
+	public istSichtbar: boolean = false;
 
 	/**
 	 * Die Sortierreihenfolge des Betriebs.
@@ -147,12 +147,12 @@ export class Betrieb extends JavaObject {
 		result.bemerkungen = (obj.bemerkungen === undefined) ? null : obj.bemerkungen === null ? null : obj.bemerkungen;
 		result.branche = (obj.branche === undefined) ? null : obj.branche === null ? null : obj.branche;
 		result.idBetriebsart = (obj.idBetriebsart === undefined) ? null : obj.idBetriebsart === null ? null : obj.idBetriebsart;
-		if (obj.isAusbildungsbetrieb === undefined)
-			throw new Error('invalid json format, missing attribute isAusbildungsbetrieb');
-		result.isAusbildungsbetrieb = obj.isAusbildungsbetrieb;
-		if (obj.isMassnahmentraeger === undefined)
-			throw new Error('invalid json format, missing attribute isMassnahmentraeger');
-		result.isMassnahmentraeger = obj.isMassnahmentraeger;
+		if (obj.istAusbildungsbetrieb === undefined)
+			throw new Error('invalid json format, missing attribute istAusbildungsbetrieb');
+		result.istAusbildungsbetrieb = obj.istAusbildungsbetrieb;
+		if (obj.istMassnahmentraeger === undefined)
+			throw new Error('invalid json format, missing attribute istMassnahmentraeger');
+		result.istMassnahmentraeger = obj.istMassnahmentraeger;
 		if (obj.belehrungNachISGErforderlich === undefined)
 			throw new Error('invalid json format, missing attribute belehrungNachISGErforderlich');
 		result.belehrungNachISGErforderlich = obj.belehrungNachISGErforderlich;
@@ -170,9 +170,9 @@ export class Betrieb extends JavaObject {
 		result.telefon2 = (obj.telefon2 === undefined) ? null : obj.telefon2 === null ? null : obj.telefon2;
 		result.fax = (obj.fax === undefined) ? null : obj.fax === null ? null : obj.fax;
 		result.eMail = (obj.eMail === undefined) ? null : obj.eMail === null ? null : obj.eMail;
-		if (obj.isSichtbar === undefined)
-			throw new Error('invalid json format, missing attribute isSichtbar');
-		result.isSichtbar = obj.isSichtbar;
+		if (obj.istSichtbar === undefined)
+			throw new Error('invalid json format, missing attribute istSichtbar');
+		result.istSichtbar = obj.istSichtbar;
 		if (obj.sortierung === undefined)
 			throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
@@ -195,8 +195,8 @@ export class Betrieb extends JavaObject {
 		result += '"bemerkungen" : ' + ((obj.bemerkungen === null) ? 'null' : JSON.stringify(obj.bemerkungen)) + ',';
 		result += '"branche" : ' + ((obj.branche === null) ? 'null' : JSON.stringify(obj.branche)) + ',';
 		result += '"idBetriebsart" : ' + ((obj.idBetriebsart === null) ? 'null' : obj.idBetriebsart.toString()) + ',';
-		result += '"isAusbildungsbetrieb" : ' + obj.isAusbildungsbetrieb.toString() + ',';
-		result += '"isMassnahmentraeger" : ' + obj.isMassnahmentraeger.toString() + ',';
+		result += '"istAusbildungsbetrieb" : ' + obj.istAusbildungsbetrieb.toString() + ',';
+		result += '"istMassnahmentraeger" : ' + obj.istMassnahmentraeger.toString() + ',';
 		result += '"belehrungNachISGErforderlich" : ' + obj.belehrungNachISGErforderlich.toString() + ',';
 		result += '"erweitertesFuehrungszeugnisErforderlich" : ' + obj.erweitertesFuehrungszeugnisErforderlich.toString() + ',';
 		result += '"bietetPraktikumsplaetzeAn" : ' + obj.bietetPraktikumsplaetzeAn.toString() + ',';
@@ -208,7 +208,7 @@ export class Betrieb extends JavaObject {
 		result += '"telefon2" : ' + ((obj.telefon2 === null) ? 'null' : JSON.stringify(obj.telefon2)) + ',';
 		result += '"fax" : ' + ((obj.fax === null) ? 'null' : JSON.stringify(obj.fax)) + ',';
 		result += '"eMail" : ' + ((obj.eMail === null) ? 'null' : JSON.stringify(obj.eMail)) + ',';
-		result += '"isSichtbar" : ' + obj.isSichtbar.toString() + ',';
+		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"referenziertInAnderenTabellen" : ' + obj.referenziertInAnderenTabellen.toString() + ',';
 		result += '"ansprechpartner" : [ ';
@@ -244,11 +244,11 @@ export class Betrieb extends JavaObject {
 		if (obj.idBetriebsart !== undefined) {
 			result += '"idBetriebsart" : ' + ((obj.idBetriebsart === null) ? 'null' : obj.idBetriebsart.toString()) + ',';
 		}
-		if (obj.isAusbildungsbetrieb !== undefined) {
-			result += '"isAusbildungsbetrieb" : ' + obj.isAusbildungsbetrieb.toString() + ',';
+		if (obj.istAusbildungsbetrieb !== undefined) {
+			result += '"istAusbildungsbetrieb" : ' + obj.istAusbildungsbetrieb.toString() + ',';
 		}
-		if (obj.isMassnahmentraeger !== undefined) {
-			result += '"isMassnahmentraeger" : ' + obj.isMassnahmentraeger.toString() + ',';
+		if (obj.istMassnahmentraeger !== undefined) {
+			result += '"istMassnahmentraeger" : ' + obj.istMassnahmentraeger.toString() + ',';
 		}
 		if (obj.belehrungNachISGErforderlich !== undefined) {
 			result += '"belehrungNachISGErforderlich" : ' + obj.belehrungNachISGErforderlich.toString() + ',';
@@ -283,8 +283,8 @@ export class Betrieb extends JavaObject {
 		if (obj.eMail !== undefined) {
 			result += '"eMail" : ' + ((obj.eMail === null) ? 'null' : JSON.stringify(obj.eMail)) + ',';
 		}
-		if (obj.isSichtbar !== undefined) {
-			result += '"isSichtbar" : ' + obj.isSichtbar.toString() + ',';
+		if (obj.istSichtbar !== undefined) {
+			result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		}
 		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung.toString() + ',';

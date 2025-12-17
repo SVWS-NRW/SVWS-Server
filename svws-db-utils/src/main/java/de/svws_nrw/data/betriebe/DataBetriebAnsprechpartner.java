@@ -12,7 +12,7 @@ import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOAnsprechpartnerAllgemeineAdresse;
-import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAllgemeineAdresse;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOBetrieb;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
@@ -114,7 +114,7 @@ public final class DataBetriebAnsprechpartner extends DataManager<Long> {
 						final Long betrieb_id = JSONMapper.convertToLong(value, true);
 						if (betrieb_id == null)
 							throw new ApiOperationException(Status.BAD_REQUEST);
-						final DTOKatalogAllgemeineAdresse betrieb = conn.queryByKey(DTOKatalogAllgemeineAdresse.class, betrieb_id);
+						final DTOBetrieb betrieb = conn.queryByKey(DTOBetrieb.class, betrieb_id);
 						if (betrieb == null)
 							throw new ApiOperationException(Status.NOT_FOUND);
 						ansprechpartner.Adresse_ID = betrieb.ID;
@@ -162,7 +162,7 @@ public final class DataBetriebAnsprechpartner extends DataManager<Long> {
 			// Bestimme die ID des neuen Ansprechpartners
 			final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "AllgAdrAnsprechpartner");
 			final Long id = (lastID == null) ? 1 : (lastID.MaxID + 1);
-			final DTOKatalogAllgemeineAdresse betrieb = conn.queryByKey(DTOKatalogAllgemeineAdresse.class, betrieb_id);
+			final DTOBetrieb betrieb = conn.queryByKey(DTOBetrieb.class, betrieb_id);
 			if (betrieb == null)
 				throw new ApiOperationException(Status.NOT_FOUND, "Ein Betrieb mit der ID " + betrieb_id + " existiert in der Datenbank nicht.");
 			// Ansprechpartner anlegen

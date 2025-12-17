@@ -132,13 +132,13 @@
 	});
 
 	const selectedIsAusbildungsbetrieb = computed<boolean>({
-		get: () => props.manager().daten().isAusbildungsbetrieb,
-		set: (v: boolean) => void props.patch({ 'isAusbildungsbetrieb': v }),
+		get: () => props.manager().daten().istAusbildungsbetrieb,
+		set: (v: boolean) => void props.patch({ 'istAusbildungsbetrieb': v }),
 	});
 
 	const selectedIsMassnahmentraeger = computed<boolean>({
-		get: () => props.manager().daten().isMassnahmentraeger,
-		set: (v: boolean) => void props.patch({ 'isMassnahmentraeger': v }),
+		get: () => props.manager().daten().istMassnahmentraeger,
+		set: (v: boolean) => void props.patch({ 'istMassnahmentraeger': v }),
 	});
 
 	const selectedBelehrungNachISGErforderlich = computed<boolean>({
@@ -157,8 +157,8 @@
 	});
 
 	const selectedIsSichtbar = computed<boolean>({
-		get: () => props.manager().daten().isSichtbar,
-		set: (v: boolean) => void props.patch({ 'isSichtbar': v }),
+		get: () => props.manager().daten().istSichtbar,
+		set: (v: boolean) => void props.patch({ 'istSichtbar': v }),
 	});
 
 	const strasse = computed(() => AdressenUtils.combineStrasse(props.manager().daten().strasse ?? "",

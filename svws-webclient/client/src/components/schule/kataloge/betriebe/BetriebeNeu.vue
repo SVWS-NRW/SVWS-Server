@@ -23,10 +23,10 @@
 					<div>
 						<svws-ui-input-wrapper :grid="1">
 							<svws-ui-spacing />
-							<svws-ui-checkbox v-model="data.isAusbildungsbetrieb" :disabled="!hatKompetenzAdd">
+							<svws-ui-checkbox v-model="data.istAusbildungsbetrieb" :disabled="!hatKompetenzAdd">
 								Ausbildungsbetrieb
 							</svws-ui-checkbox>
-							<svws-ui-checkbox v-model="data.isMassnahmentraeger" :disabled="!hatKompetenzAdd">
+							<svws-ui-checkbox v-model="data.istMassnahmentraeger" :disabled="!hatKompetenzAdd">
 								Maßnahmenträger
 							</svws-ui-checkbox>
 							<svws-ui-checkbox v-model="data.belehrungNachISGErforderlich" :disabled="!hatKompetenzAdd">
@@ -69,7 +69,7 @@
 						v-model="data.sortierung"
 						:valid="() => fieldIsValid('sortierung')" :min="0" :max="32000" :disabled="!hatKompetenzAdd" :removable="false" />
 					<svws-ui-spacing />
-					<svws-ui-checkbox v-model="data.isSichtbar" :disabled="!hatKompetenzAdd">
+					<svws-ui-checkbox v-model="data.istSichtbar" :disabled="!hatKompetenzAdd">
 						Sichtbar
 					</svws-ui-checkbox>
 				</svws-ui-input-wrapper>
@@ -96,7 +96,7 @@
 	import { SelectManager } from "@ui";
 
 	const props = defineProps<BetriebeNeuProps>();
-	const data = ref<Betrieb>(Object.assign(new Betrieb(), { isSichtbar: true, sortierung: 32000, anzahlRestabschnitte: 0 }));
+	const data = ref<Betrieb>(Object.assign(new Betrieb(), { istSichtbar: true, sortierung: 32000, anzahlRestabschnitte: 0 }));
 	const isLoading = ref<boolean>(false);
 	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 
