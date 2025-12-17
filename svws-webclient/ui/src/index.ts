@@ -175,3 +175,4 @@ export { FloskelnListeManager } from './ui/manager/kataloge/FloskelnListeManager
 export { WenomAuswahlListeManager } from './components/enm/WenomAuswahlListeManager';
 export { BetriebeListeManager } from './ui/manager/kataloge/BetriebeListeManager';
 export { OrtsteileListeManager } from './ui/manager/kataloge/OrtsteileListeManager';
+export { OrteListeManager } from './ui/manager/kataloge/OrteListeManager';
