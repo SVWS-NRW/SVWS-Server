@@ -171,16 +171,94 @@ public class APIKataloge {
 	@GET
 	@Path("/ortsteile")
 	@Operation(summary = "Gibt eine Übersicht aller Ortsteile im Katalog zurück.",
-			description = "Erstellt eine Liste aller in dem Katalog vorhanden Ortsteile unter Angabe der ID, der zugehörigen"
-					+ "Ort-ID, dem Namen des Ortsteils, einer Sortierreihenfolge und ob sie in der Anwendung sichtbar bzw. änderbar sein sollen. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
-	@ApiResponse(responseCode = "200", description = "Eine Liste von Ortsteil-Katalog-Einträgen",
+			description = "Gibt die Ortsteile im Katalog zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste von Ortsteile",
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = OrtsteilKatalogEintrag.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Ortsteil-Katalog-Einträge gefunden")
 	public Response getOrtsteile(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataOrtsteile(conn).getAll(),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataOrtsteile(conn, new DataOrte(conn)).getAllAsResponse(),
 				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Patchen eines Ortsteils.
+	 *
+	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param id        die Datenbank-ID zur Identifikation des Ortsteils
+	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/ortsteile/{id : \\d+}")
+	@Operation(summary = "Patched den Ortsteil mit der angegebenen ID.",
+			description = "Patched den Ortsteil mit der angegebenen ID, insofern die notwendigen Berechtigungen vorliegen.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Eintrag mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
+			+ " (z.B. eine negative ID)")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z. B. beim Datenbankzugriff)")
+	public Response patchOrtsteil(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@RequestBody(description = "Der Patch eines Ortsteils", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = OrtsteilKatalogEintrag.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> new DataOrtsteile(conn, new DataOrte(conn)).patchAsResponse(id, is), request, ServerMode.STABLE,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Hinzufügen eines Ortsteils.
+	 *
+	 * @param schema       das Datenbankschema
+	 * @param is           der Input-Stream mit den Daten des Ortsteils
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem erstellten Ortsteil
+	 */
+	@POST
+	@Path("/ortsteile/create")
+	@Operation(summary = "Erstellt einen neuen Ortsteil und gibt das erstellte Objekt zurück.",
+			description = "Erstellt einen neuen Ortsteil, insofern die notwendigen Berechtigungen vorliegen")
+	@ApiResponse(responseCode = "201", description = "Der Ortsteil wurde erfolgreich hinzugefügt.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = OrtsteilKatalogEintrag.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Ortsteile anzulegen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response addOrtsteil(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die Daten des zu erstellenden Ortsteils ohne ID, da diese automatisch generiert wird", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = OrtsteilKatalogEintrag.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> new DataOrtsteile(conn, new DataOrte(conn)).addAsResponse(is), request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Entfernen mehrerer Ortsteile.
+	 *
+	 * @param schema    das Datenbankschema
+	 * @param is        der InputStream, mit der Liste der zu löschenden IDs
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
+	 */
+	@DELETE
+	@Path("/ortsteile/delete/multiple")
+	@Operation(summary = "Entfernt mehrere Ortsteile.", description = "Entfernt mehrere Ortsteile, insofern die notwendigen Berechtigungen vorhanden sind.")
+	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Ortsteile zu entfernen.")
+	@ApiResponse(responseCode = "404", description = "Ortsteile nicht vorhanden")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteOrtsteile(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der zu löschenden Ortsteile",
+			required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+			array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
+				conn -> new DataOrtsteile(conn, new DataOrte(conn)).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
+				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
 
 

@@ -11150,10 +11150,10 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der GET-Methode getOrtsteile für den Zugriff auf die URL https://{hostname}/db/{schema}/ortsteile
 	 *
-	 * Erstellt eine Liste aller in dem Katalog vorhanden Ortsteile unter Angabe der ID, der zugehörigenOrt-ID, dem Namen des Ortsteils, einer Sortierreihenfolge und ob sie in der Anwendung sichtbar bzw. änderbar sein sollen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * Gibt die Ortsteile im Katalog zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Eine Liste von Ortsteil-Katalog-Einträgen
+	 *   Code 200: Eine Liste von Ortsteile
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: List<OrtsteilKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
@@ -11161,7 +11161,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
-	 * @returns Eine Liste von Ortsteil-Katalog-Einträgen
+	 * @returns Eine Liste von Ortsteile
 	 */
 	public async getOrtsteile(schema : string) : Promise<List<OrtsteilKatalogEintrag>> {
 		const path = "/db/{schema}/ortsteile"
@@ -11170,6 +11170,89 @@ export class ApiServer extends BaseApi {
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<OrtsteilKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(OrtsteilKatalogEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchOrtsteil für den Zugriff auf die URL https://{hostname}/db/{schema}/ortsteile/{id : \d+}
+	 *
+	 * Patched den Ortsteil mit der angegebenen ID, insofern die notwendigen Berechtigungen vorliegen.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<OrtsteilKatalogEintrag>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchOrtsteil(data : Partial<OrtsteilKatalogEintrag>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/ortsteile/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = OrtsteilKatalogEintrag.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addOrtsteil für den Zugriff auf die URL https://{hostname}/db/{schema}/ortsteile/create
+	 *
+	 * Erstellt einen neuen Ortsteil, insofern die notwendigen Berechtigungen vorliegen
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Der Ortsteil wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: OrtsteilKatalogEintrag
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Ortsteile anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<OrtsteilKatalogEintrag>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Ortsteil wurde erfolgreich hinzugefügt.
+	 */
+	public async addOrtsteil(data : Partial<OrtsteilKatalogEintrag>, schema : string) : Promise<OrtsteilKatalogEintrag> {
+		const path = "/db/{schema}/ortsteile/create"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = OrtsteilKatalogEintrag.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return OrtsteilKatalogEintrag.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteOrtsteile für den Zugriff auf die URL https://{hostname}/db/{schema}/ortsteile/delete/multiple
+	 *
+	 * Entfernt mehrere Ortsteile, insofern die notwendigen Berechtigungen vorhanden sind.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Lösch-Operationen wurden ausgeführt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Ortsteile zu entfernen.
+	 *   Code 404: Ortsteile nicht vorhanden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Lösch-Operationen wurden ausgeführt.
+	 */
+	public async deleteOrtsteile(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+		const path = "/db/{schema}/ortsteile/delete/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
 		return ret;
 	}
 

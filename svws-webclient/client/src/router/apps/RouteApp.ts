@@ -54,6 +54,7 @@ import { routeFloskeln } from "~/router/apps/schule/kataloge/floskeln/RouteFlosk
 import { routeNotenmodulAdministration } from "./notenmodul/RouteNotenmodulAdministration";
 import { routeNotenmodulZugangsdaten } from "./notenmodul/RouteNotenmodulZugangsdaten";
 import { routeBetriebe } from "~/router/apps/schule/kataloge/betriebe/RouteBetriebe";
+import { routeOrtsteile } from "~/router/apps/schule/kataloge/ortsteile/RouteOrtsteile";
 
 import SApp from "~/components/SApp.vue";
 
@@ -156,6 +157,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeKindergaerten,
 			routeKonfessionen,
 			routeLernplattformen,
+			routeOrtsteile,
 			routeKatalogSchulen,
 			routeKatalogTelefonArten,
 			routeVermerkarten,

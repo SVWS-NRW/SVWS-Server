@@ -4,9 +4,9 @@
 			Für die Nutzung der Gruppenprozesse fehlen Benutzerkompetenzen.
 		</div>
 		<div v-if="ServerMode.DEV.checkServerMode(serverMode)" class="flex flex-col">
-			<ui-card v-if="hatKompetenzLoeschen" title="Löschen" subtitle="Ausgewählte Einwilligungsarten werden gelöscht." icon="i-ri-delete-bin-line">
+			<ui-card v-if="hatKompetenzLoeschen" title="Löschen" subtitle="Ausgewählte Ortsteile werden gelöscht." icon="i-ri-delete-bin-line">
 				<div>
-					<span v-if="preConditionCheck[0]">Alle ausgewählten Einwilligungsarten sind bereit zum Löschen.</span>
+					<span v-if="preConditionCheck[0]">Alle ausgewählten Ortsteile sind bereit zum Löschen.</span>
 					<template v-else v-for="message in preConditionCheck[1]" :key="message">
 						<span class="text-ui-danger whitespace-pre-line"> {{ message }} <br> </span>
 					</template>
@@ -38,14 +38,14 @@
 				<template #modalDescription>
 					<div class="text-left">
 						<slot name="description">
-							Durch das Löschen der Einwilligungsarten werden auch alle referenzierenden Einwilligungen endgültig gelöscht.<br>
+							Durch das Löschen des Ortsteil werden auch alle referenzierten Ortsteile endgültig gelöscht.<br>
 							Wollen Sie das Löschen wirklich durchführen?
 						</slot>
 					</div>
 				</template>
 				<template #modalActions>
 					<svws-ui-button type="secondary" @click="cancel">Nein</svws-ui-button>
-					<svws-ui-button type="danger" @click="deleteSelectedEinwilligungsarten">Ja</svws-ui-button>
+					<svws-ui-button type="danger" @click="deleteSelectedOrtsteile">Ja</svws-ui-button>
 				</template>
 			</svws-ui-modal>
 		</div>
@@ -56,9 +56,9 @@
 
 	import { ref, computed } from "vue";
 	import { BenutzerKompetenz, type List, ServerMode } from "@core";
-	import type { EinwilligungsartenGruppenprozesseProps } from "~/components/schule/kataloge/einwilligungsarten/gruppenprozesse/EinwilligungsartenGruppenprozesseProps";
+	import type { OrtsteileGruppenprozesseProps } from "~/components/schule/kataloge/ortsteile/gruppenprozesse/OrtsteileGruppenprozesseProps";
 
-	const props = defineProps<EinwilligungsartenGruppenprozesseProps>();
+	const props = defineProps<OrtsteileGruppenprozesseProps>();
 	const isLoading = ref<boolean>(false);
 	const warningModalIsShown = ref<boolean>(false);
 	const logs = ref<List<string | null> | undefined>();
@@ -71,7 +71,7 @@
 		warningModalIsShown.value = !warningModalIsShown.value;
 	}
 
-	async function deleteSelectedEinwilligungsarten() {
+	async function deleteSelectedOrtsteile() {
 		isLoading.value = true;
 		const [delStatus, logMessages] = await props.delete();
 		logs.value = logMessages;
@@ -87,8 +87,7 @@
 	}
 
 	async function cancel(): Promise<void> {
-		await props.gotoDefaultView(null);
+		await props.goToDefaultView(null);
 	}
-
 
 </script>

@@ -329,10 +329,11 @@ public class ReportingRepository {
 					new DataKatalogSchuelerFoerderschwerpunkte(this.conn).getAll().stream().collect(Collectors.toMap(f -> f.id, f -> f));
 			this.logger.logLn(LogLevel.DEBUG, 8, "Katalog Förderschwerpunkte geladen.");
 
-			this.katalogOrte = new DataOrte(this.conn).getAll().stream().collect(Collectors.toMap(o -> o.id, o -> o));
+			final DataOrte dataOrte = new DataOrte(this.conn);
+			this.katalogOrte = dataOrte.getAll().stream().collect(Collectors.toMap(o -> o.id, o -> o));
 			this.logger.logLn(LogLevel.DEBUG, 8, "Katalog Orte geladen.");
 
-			this.katalogOrtsteile = new DataOrtsteile(this.conn).getOrtsteile().stream().collect(Collectors.toMap(o -> o.id, o -> o));
+			this.katalogOrtsteile = new DataOrtsteile(this.conn, dataOrte).getAll().stream().collect(Collectors.toMap(o -> o.id, o -> o));
 			this.logger.logLn(LogLevel.DEBUG, 8, "Katalog Ortsteile geladen.");
 
 			this.katalogReligionen = new DataReligionen(this.conn).getAll().stream().collect(Collectors.toMap(r -> r.id, r -> r));
