@@ -1,5 +1,5 @@
 import type { RouteLocationNormalized } from "vue-router";
-import type { FahrschuelerartenNeuProps } from "~/components/schule/kataloge/fahrschuelerarten/SFahrschuelerartenNeuProps";
+import type { FahrschuelerartenNeuProps } from "~/components/schule/kataloge/fahrschuelerarten/FahrschuelerartenNeuProps";
 import type { RouteFahrschuelerarten } from "~/router/apps/schule/kataloge/fahrschuelerarten/RouteFahrschuelerarten";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteManager } from "~/router/RouteManager";
@@ -8,12 +8,12 @@ import { ViewType } from "@ui";
 import { api } from "~/router/Api";
 import { routeFahrschuelerarten } from "~/router/apps/schule/kataloge/fahrschuelerarten/RouteFahrschuelerarten";
 
-const SFahrschuelerartenNeu = () => import("~/components/schule/kataloge/fahrschuelerarten/SFahrschuelerartenNeu.vue");
+const FahrschuelerartenNeu = () => import("~/components/schule/kataloge/fahrschuelerarten/FahrschuelerartenNeu.vue");
 
 export class RouteFahrschuelerartenNeu extends RouteNode<any, RouteFahrschuelerarten> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.fahrschuelerarten.neu", "neu", SFahrschuelerartenNeu);
+		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.fahrschuelerarten.neu", "neu", FahrschuelerartenNeu);
 		super.types = new Set([ViewType.HINZUFUEGEN]);
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);

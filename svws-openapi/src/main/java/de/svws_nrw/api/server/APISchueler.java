@@ -2,7 +2,7 @@ package de.svws_nrw.api.server;
 
 import de.svws_nrw.asd.data.schueler.SchuelerStammdatenNeu;
 import de.svws_nrw.core.data.schule.Fahrschuelerart;
-import de.svws_nrw.data.kataloge.DataKatalogFahrschuelerarten;
+import de.svws_nrw.data.kataloge.DataFahrschuelerarten;
 import java.io.InputStream;
 
 import org.jboss.resteasy.annotations.GZIP;
@@ -2032,7 +2032,7 @@ public class APISchueler {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Fahrschülerart-Katalog-Einträge gefunden")
 	public Response getFahrschuelerarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogFahrschuelerarten(conn).getAllAsResponse(),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataFahrschuelerarten(conn).getAllAsResponse(),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);
 	}
@@ -2060,7 +2060,7 @@ public class APISchueler {
 			@RequestBody(description = "Die Daten der zu erstellenden Fahrschülerart ohne ID, da diese automatisch generiert wird", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Fahrschuelerart.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogFahrschuelerarten(conn).addAsResponse(is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataFahrschuelerarten(conn).addAsResponse(is),
 				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
 
@@ -2090,7 +2090,7 @@ public class APISchueler {
 			@RequestBody(description = "Der Patch für die Fahrschülerart", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Fahrschuelerart.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogFahrschuelerarten(conn).patchAsResponse(id, is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataFahrschuelerarten(conn).patchAsResponse(id, is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
@@ -2116,7 +2116,7 @@ public class APISchueler {
 	public Response deleteFahrschuelerarten(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die IDs der zu löschenden Fahrschülerarten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogFahrschuelerarten(conn).deleteMultipleAsSimpleResponseList(
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataFahrschuelerarten(conn).deleteMultipleAsSimpleResponseList(
 				JSONMapper.toListOfLong(is)), request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
 	/**

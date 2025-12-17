@@ -10,14 +10,14 @@ import { routeFahrschuelerartenDaten } from "~/router/apps/schule/kataloge/fahrs
 import { routeFahrschuelerartenNeu } from "~/router/apps/schule/kataloge/fahrschuelerarten/RouteFahrschuelerartenNeu";
 import { routeFahrschuelerartenGruppenprozesse } from "~/router/apps/schule/kataloge/fahrschuelerarten/RouteFahrschuelerartenGruppenprozesse";
 
-const SFahrschuelerartenApp = () => import("~/components/schule/kataloge/fahrschuelerarten/SFahrschuelerartenApp.vue");
-const SFahrschuelerartenAuswahl = () => import("~/components/schule/kataloge/fahrschuelerarten/SFahrschuelerartenAuswahl.vue");
+const FahrschuelerartenApp = () => import("~/components/schule/kataloge/fahrschuelerarten/FahrschuelerartenApp.vue");
+const FahrschuelerartenAuswahl = () => import("~/components/schule/kataloge/fahrschuelerarten/FahrschuelerartenAuswahl.vue");
 
 export class RouteFahrschuelerarten extends RouteAuswahlNode<FahrschuelerartenListeManager, RouteDataFahrschuelerarten, RouteApp> {
 
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.fahrschuelerarten",
-			"schule/fahrschuelerarten/:id(\\d+)?", SFahrschuelerartenApp, SFahrschuelerartenAuswahl, new RouteDataFahrschuelerarten());
+			"schule/fahrschuelerarten/:id(\\d+)?", FahrschuelerartenApp, FahrschuelerartenAuswahl, new RouteDataFahrschuelerarten());
 		super.mode = ServerMode.DEV;
 		super.text = "Fahrschülerarten";
 		super.menugroup = RouteSchuleMenuGroup.KATALOGE;

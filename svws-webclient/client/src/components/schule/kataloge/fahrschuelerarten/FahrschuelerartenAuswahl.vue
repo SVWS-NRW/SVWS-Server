@@ -27,7 +27,7 @@
 <script setup lang="ts">
 
 	import type { DataTableColumn } from "@ui";
-	import type { FahrschuelerartenAuswahlProps } from "~/components/schule/kataloge/fahrschuelerarten/SFahrschuelerartenAuswahlProps";
+	import type { FahrschuelerartenAuswahlProps } from "~/components/schule/kataloge/fahrschuelerarten/FahrschuelerartenAuswahlProps";
 	import { useRegionSwitch, ViewType } from "@ui";
 	import type { Fahrschuelerart } from "@core";
 	import { BenutzerKompetenz, ServerMode } from "@core";

@@ -33,16 +33,16 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
-/** Diese Klasse testet die Klasse {@link DataKatalogFahrschuelerarten}*/
+/** Diese Klasse testet die Klasse {@link DataFahrschuelerarten}*/
 @DisplayName("Diese Klasse testet die Klasse DataKatalogFahrschuelerarten")
 @ExtendWith(MockitoExtension.class)
-class DataKatalogFahrschuelerartenTest {
+class DataFahrschuelerartenTest {
 
 	@Mock
 	private DBEntityManager conn;
 
 	@InjectMocks
-	private DataKatalogFahrschuelerarten data;
+	private DataFahrschuelerarten data;
 
 	@BeforeAll
 	static void setup() {

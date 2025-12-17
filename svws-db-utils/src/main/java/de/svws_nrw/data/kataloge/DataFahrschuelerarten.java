@@ -15,14 +15,14 @@ import java.util.Objects;
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für das Core-DTO {@link Fahrschuelerart}.
  */
-public final class DataKatalogFahrschuelerarten extends DataManagerRevised<Long, DTOFahrschuelerart, Fahrschuelerart> {
+public final class DataFahrschuelerarten extends DataManagerRevised<Long, DTOFahrschuelerart, Fahrschuelerart> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManagerRevised} für das Core-DTO {@link Fahrschuelerart}.
 	 *
 	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
 	 */
-	public DataKatalogFahrschuelerarten(final DBEntityManager conn) {
+	public DataFahrschuelerarten(final DBEntityManager conn) {
 		super(conn);
 		setAttributesNotPatchable("id");
 		setAttributesRequiredOnCreation("bezeichnung");

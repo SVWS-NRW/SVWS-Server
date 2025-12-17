@@ -52,18 +52,5 @@ export class FahrschuelerartenListeManager extends AuswahlManager<number, Fahrsc
 		return FahrschuelerartenListeManager.comparator.compare(a, b);
 	}
 
-	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.core.utils.kataloge.fahrschuelerarten.FahrschuelerartenListeManager';
-	}
-
-	isTranspiledInstanceOf(name: string): boolean {
-		return ['de.svws_nrw.core.utils.AuswahlManager', 'de.svws_nrw.core.utils.kataloge.fahrschuelerarten.FahrschuelerartenListeManager'].includes(name);
-	}
-
-	public static class = new Class<FahrschuelerartenListeManager>('de.svws_nrw.core.utils.kataloge.fahrschuelerarten.FahrschuelerartenListeManager');
-
 }
 
-export function cast_de_svws_nrw_core_utils_kataloge_fahrschuelerarten_FahrschuelerartenListeManager(obj: unknown): FahrschuelerartenListeManager {
-	return obj as FahrschuelerartenListeManager;
-}

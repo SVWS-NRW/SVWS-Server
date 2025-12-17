@@ -27,7 +27,7 @@
 
 <script setup lang="ts">
 
-	import type { FahrschuelerartenNeuProps } from "~/components/schule/kataloge/fahrschuelerarten/SFahrschuelerartenNeuProps";
+	import type { FahrschuelerartenNeuProps } from "~/components/schule/kataloge/fahrschuelerarten/FahrschuelerartenNeuProps";
 	import { BenutzerKompetenz, Fahrschuelerart } from "@core";
 	import { computed, ref, watch } from "vue";
 	import { isUniqueInList, mandatoryInputIsValid } from "~/util/validation/Validation";

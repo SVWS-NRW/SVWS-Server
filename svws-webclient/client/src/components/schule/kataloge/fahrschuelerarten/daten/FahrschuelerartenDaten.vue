@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 
-	import type { FahrschuelerartenDatenProps } from "~/components/schule/kataloge/fahrschuelerarten/daten/SFahrschuelerartenDatenProps";
+	import type { FahrschuelerartenDatenProps } from "~/components/schule/kataloge/fahrschuelerarten/daten/FahrschuelerartenDatenProps";
 	import { BenutzerKompetenz } from "@core";
 	import { computed } from "vue";
 
