@@ -171,6 +171,26 @@ export class GostKlausurplanManager extends JavaObject {
 		return JavaLong.compare(a.id, b.id);
 	} };
 
+	private readonly _compSchuelerklausurByDatumHT: Comparator<GostSchuelerklausur> = { compare: (a: GostSchuelerklausur, b: GostSchuelerklausur) => {
+		const aV: GostKlausurvorgabe | null = this.vorgabeBySchuelerklausur(a);
+		const bV: GostKlausurvorgabe | null = this.vorgabeBySchuelerklausur(b);
+		const quartalComp: number = JavaInteger.compare(aV.quartal, bV.quartal);
+		if (quartalComp !== 0)
+			return quartalComp;
+		const aDatum: string | null = this.datumSchuelerklausurHT(a);
+		const bDatum: string | null = this.datumSchuelerklausurHT(b);
+		if ((aDatum === null) && (bDatum !== null))
+			return 1;
+		if ((aDatum !== null) && (bDatum === null))
+			return -1;
+		if (aDatum !== null) {
+			const datumComp: number = JavaString.compareTo(aDatum, bDatum);
+			if (datumComp !== 0)
+				return datumComp;
+		}
+		return this._compSchuelerklausur.compare(a, b);
+	} };
+
 	private readonly _compSchuelerklausurTermin: Comparator<GostSchuelerklausurTermin> = { compare: (a: GostSchuelerklausurTermin, b: GostSchuelerklausurTermin) => {
 		if ((a as unknown === b as unknown) || (a.id === b.id))
 			return 0;
@@ -3448,6 +3468,17 @@ export class GostKlausurplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert den {@link GostKlausurtermin} zu einer {@link GostSchuelerklausur}, sonst <code>null</code>, wenn noch kein Termin bestimmt wurde.
+	 *
+	 * @param sk die {@link GostSchuelerklausur}, zu der der Termin gesucht wird.
+	 *
+	 * @return den {@link GostKlausurtermin} oder <code>null</code>
+	 */
+	public terminOrNullBySchuelerklausur(sk: GostSchuelerklausur): GostKlausurtermin | null {
+		return this.terminOrNullByKursklausur(this.kursklausurBySchuelerklausur(sk));
+	}
+
+	/**
 	 * Liefert den {@link GostKlausurtermin} zu einer {@link GostKursklausur}. Wenn noch kein Termin bestimmt ist, wird eine <code>DeveloperNotificationException</code> geworfen.
 	 *
 	 * @param klausur die {@link GostKursklausur}, zu der der Termin gesucht wird.
@@ -4193,6 +4224,19 @@ export class GostKlausurplanManager extends JavaObject {
 				if (this.vorgabeBySchuelerklausurTermin(skt).abiJahrgang !== t.abijahr)
 					return true;
 		return false;
+	}
+
+	/**
+	 * Gibt das Datum des Vorgängertermins zum übergebenen {@link GostSchuelerklausurTermin}
+	 * zurück. Falls kein Vorgängertermin existiert, wird eine <code>DeveloperNotificationException</code> geworfen. Falls noch kein Termin oder kein Datum zugewiesen ist, wird <code>null</code> zurückgegeben.
+	 *
+	 * @param sk der {@link GostSchuelerklausurTermin}, dessen Vorgänger-Datum gesucht wird.
+	 *
+	 * @return das Datum des Vorgängertermins zum übergebenen {@link GostSchuelerklausurTermin}
+	 */
+	public datumSchuelerklausurHT(sk: GostSchuelerklausur): string | null {
+		const termin: GostKlausurtermin | null = this.terminOrNullBySchuelerklausur(sk);
+		return (termin === null) ? null : termin.datum;
 	}
 
 	/**
@@ -5164,6 +5208,18 @@ export class GostKlausurplanManager extends JavaObject {
 					ergebnis.add(zr);
 			}
 		return ergebnis;
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link GostSchuelerklausur}-Objekte. <br>
+	 * Laufzeit: O(1)
+	 *
+	 * @return eine Liste aller {@link GostSchuelerklausur}-Objekte.
+	 */
+	public schuelerklausurGetMengeAsListSortedByDatumHT(): List<GostSchuelerklausur> {
+		const sorted: List<GostSchuelerklausur> | null = new ArrayList<GostSchuelerklausur>(this._schuelerklausurmenge);
+		sorted.sort(this._compSchuelerklausurByDatumHT);
+		return sorted;
 	}
 
 	transpilerCanonicalName(): string {

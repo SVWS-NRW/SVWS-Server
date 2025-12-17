@@ -263,7 +263,9 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 	};
 
 	patchSchuelerklausurTermin = async (id: number, skt: Partial<GostSchuelerklausurTermin>) => {
+		const sktAlt = this.klausurManager.schuelerklausurterminGetByIdOrException(id);
 		await api.server.patchGostKlausurenSchuelerklausurtermin(skt, api.schema, id);
+		this.klausurManager.schuelerklausurterminPatchAttributes(Object.assign(sktAlt, skt));
 	};
 
 	gotoPlanung = async () => {
