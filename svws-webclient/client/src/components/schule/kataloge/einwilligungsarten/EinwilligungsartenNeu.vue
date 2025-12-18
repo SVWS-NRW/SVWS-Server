@@ -39,6 +39,7 @@
 </template>
 
 <script setup lang="ts">
+
 	import type { EinwilligungsartenNeuProps } from "~/components/schule/kataloge/einwilligungsarten/EinwilligungsartenNeuProps";
 	import { computed, ref, watch } from "vue";
 	import { ArrayList, BenutzerKompetenz, Einwilligungsart, Einwilligungsschluessel, PersonTyp } from "@core";

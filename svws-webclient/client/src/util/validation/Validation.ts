@@ -133,3 +133,15 @@ export function numberHasDecimals(value: number | null): boolean {
 	return value.toString().includes(".");
 }
 
+/**
+ * Prüft, ob der gegebene String ausschließlich Zahlen besiztz.
+ *
+ * @param value     Der zu prüfende Zahlenwert
+ */
+export function stringIsNumeric(value: string | null) {
+	if (value === null) {
+		return false;
+	}
+	return /^\d+$/.test(value);
+}
+

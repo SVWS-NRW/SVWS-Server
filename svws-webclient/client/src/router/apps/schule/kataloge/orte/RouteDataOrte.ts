@@ -40,14 +40,18 @@ export class RouteDataOrte extends RouteDataAuswahl<OrteListeManager, RouteState
 	}
 
 	protected async doPatch(data: Partial<OrtKatalogEintrag>, id: number): Promise<void> {
-
+		await api.server.patchOrt(data, api.schema, id);
 	}
 
 	protected async doDelete(ids: List<number>): Promise<List<SimpleOperationResponse>> {
-		return new ArrayList();
+		return await api.server.deleteOrte(ids, api.schema);
 	}
 
 	add = async (data: Partial<OrtKatalogEintrag>): Promise<void> => {
+		const result = await api.server.addOrt(data, api.schema);
+		this.manager.liste.add(result);
+		this.commit();
+		await this.gotoDefaultView(result.id);
 	};
 
 	protected deleteMessage(id: number, ort: OrtKatalogEintrag | null): string {
@@ -78,7 +82,7 @@ export class RouteDataOrte extends RouteDataAuswahl<OrteListeManager, RouteState
 		for (const id of idsOfReferencedOrte) {
 			const ort = this.manager.liste.get(id);
 			if (ort) {
-				errorMessage += `- ${ort.ortsname} \n`;
+				errorMessage += `- ${ort.plz} ${ort.ortsname} \n`;
 			}
 		}
 		return errorMessage;
