@@ -1,11 +1,9 @@
-import { JavaObject } from '../../../../../core/src/java/lang/JavaObject';
 import type { KlassenDaten } from '../../../../../core/src/asd/data/klassen/KlassenDaten';
 import type { Abteilung } from '../../../../../core/src/core/data/schule/Abteilung';
 import { HashMap } from '../../../../../core/src/java/util/HashMap';
 import type { Schulform } from '../../../../../core/src/asd/types/schule/Schulform';
 import { ArrayList } from '../../../../../core/src/java/util/ArrayList';
 import { JavaString } from '../../../../../core/src/java/lang/JavaString';
-import { DeveloperNotificationException } from '../../../../../core/src/core/exceptions/DeveloperNotificationException';
 import type { Comparator } from '../../../../../core/src/java/util/Comparator';
 import { AuswahlManager } from '../../AuswahlManager';
 import { JavaInteger } from '../../../../../core/src/java/lang/JavaInteger';
@@ -14,7 +12,6 @@ import type { LehrerListeEintrag } from '../../../../../core/src/core/data/lehre
 import type { AbteilungKlassenzuordnung } from '../../../../../core/src/core/data/schule/AbteilungKlassenzuordnung';
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
 import type { List } from '../../../../../core/src/java/util/List';
-import { Class } from '../../../../../core/src/java/lang/Class';
 import { Arrays } from '../../../../../core/src/java/util/Arrays';
 import type { JavaMap } from '../../../../../core/src/java/util/JavaMap';
 import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
@@ -22,10 +19,10 @@ import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schu
 export class AbteilungenListeManager extends AuswahlManager<number, Abteilung, Abteilung> {
 
 	private static readonly _abteilungToId: JavaFunction<Abteilung, number> = { apply: (a: Abteilung) => a.id };
-
+	private _filterNurSichtbar: boolean = true;
+	private _searchTerm: string = "";
 	private readonly _lehrerById: JavaMap<number, LehrerListeEintrag>;
-
-	private _klassenById: JavaMap<number, KlassenDaten>;
+	private readonly _klassenById: JavaMap<number, KlassenDaten>;
 
 	/**
 	 * Ein Default-Comparator für den Vergleich von Abteilungen.
@@ -39,15 +36,6 @@ export class AbteilungenListeManager extends AuswahlManager<number, Abteilung, A
 			return cmp;
 		return JavaLong.compare(a.id, b.id);
 	} };
-
-	private readonly comparatorKlassenzuordnung: Comparator<AbteilungKlassenzuordnung> = { compare: (a: AbteilungKlassenzuordnung, b: AbteilungKlassenzuordnung) => {
-		const firstClass: KlassenDaten | null = this._klassenById.get(a.idKlasse);
-		const secondClass: KlassenDaten | null = this._klassenById.get(b.idKlasse);
-		if ((firstClass === null) || (firstClass.kuerzel === null) || (secondClass === null) || (secondClass.kuerzel === null))
-			return 0;
-		return JavaString.compareTo(firstClass.kuerzel, secondClass.kuerzel);
-	} };
-
 
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
@@ -66,18 +54,33 @@ export class AbteilungenListeManager extends AuswahlManager<number, Abteilung, A
 		this._klassenById = AbteilungenListeManager.mapKlassen(klassen);
 	}
 
-	private static mapLehrer(lehrerListe: List<LehrerListeEintrag>): JavaMap<number, LehrerListeEintrag> {
-		const result: JavaMap<number, LehrerListeEintrag> | null = new HashMap<number, LehrerListeEintrag>();
-		for (const v of lehrerListe)
-			result.put(v.id, v);
+	/**
+	 * Ein Getter der Klassen für die aktuelle Auswahl
+	 *
+	 * @return klassen
+	 */
+	public getKlassenByAuswahl(): List<KlassenDaten> {
+		const result: List<KlassenDaten> | null = new ArrayList<KlassenDaten>();
+		if ((this._daten === null) || (this._daten.klassenzuordnungen.isEmpty()))
+			return result;
+		for (const a of this._daten.klassenzuordnungen) {
+			const klasse: KlassenDaten | null = this._klassenById.get(a.idKlasse);
+			if (klasse !== null)
+				result.add(klasse);
+		}
 		return result;
 	}
 
-	private static mapKlassen(klassen: List<KlassenDaten>): JavaMap<number, KlassenDaten> {
-		const result: JavaMap<number, KlassenDaten> | null = new HashMap<number, KlassenDaten>();
-		for (const v of klassen)
-			result.put(v.id, v);
-		return result;
+	/**
+	 * Fügt die Liste der AbteilungsKlassenzuordnungen der ausgewählten Abteilung hinzu
+	 *
+	 * @param zuordnungen    Liste der AbteilungsKlassenzuordnungen
+	 */
+	public addKlassenToAuswahl(zuordnungen: List<AbteilungKlassenzuordnung>): void {
+		if (this._daten !== null) {
+			this._daten.klassenzuordnungen.addAll(zuordnungen);
+			this._daten.klassenzuordnungen.sort(this.comparatorKlassenzuordnung);
+		}
 	}
 
 	/**
@@ -101,96 +104,70 @@ export class AbteilungenListeManager extends AuswahlManager<number, Abteilung, A
 		}
 	}
 
-	/**
-	 * Ein Getter für die Liste der Lehrer
-	 *
-	 * @return lehrer
-	 */
-	public getLehrer(): JavaMap<number, LehrerListeEintrag> {
-		return this._lehrerById;
-	}
+	private readonly comparatorKlassenzuordnung: Comparator<AbteilungKlassenzuordnung> = { compare: (a: AbteilungKlassenzuordnung, b: AbteilungKlassenzuordnung) => {
+		const firstClass: KlassenDaten | null = this._klassenById.get(a.idKlasse);
+		const secondClass: KlassenDaten | null = this._klassenById.get(b.idKlasse);
+		if ((firstClass === null) || (firstClass.kuerzel === null) || (secondClass === null) || (secondClass.kuerzel === null))
+			return 0;
+		return JavaString.compareTo(firstClass.kuerzel, secondClass.kuerzel);
+	} };
 
-	/**
-	 * Ein Getter für die Liste der klassen
-	 *
-	 * @return klassen
-	 */
-	public getKlassen(): JavaMap<number, KlassenDaten> {
-		return this._klassenById;
-	}
-
-	/**
-	 * Ein Getter der Klassen für die aktuelle Auswahl
-	 *
-	 * @return klassen
-	 */
-	public getKlassenByAuswahl(): List<KlassenDaten> {
-		const result: List<KlassenDaten> | null = new ArrayList<KlassenDaten>();
-		if ((this._daten === null) || (this._daten.klassenzuordnungen.isEmpty()))
-			return result;
-		for (const a of this._daten.klassenzuordnungen) {
-			const klasse: KlassenDaten | null = this._klassenById.get(a.idKlasse);
-			if (klasse !== null)
-				result.add(klasse);
-		}
+	private static mapLehrer(lehrerListe: List<LehrerListeEintrag>): JavaMap<number, LehrerListeEintrag> {
+		const result: JavaMap<number, LehrerListeEintrag> | null = new HashMap<number, LehrerListeEintrag>();
+		for (const v of lehrerListe)
+			result.put(v.id, v);
 		return result;
 	}
 
-	/**
-	 * Gibt einen Lehrer anhand der gegebenen ID zurück
-	 *
-	 * @param id	id des Lehrers
-	 *
-	 * @return		lehrer
-	 */
-	public getLehrerById(id: number): LehrerListeEintrag | null {
-		return this._lehrerById.get(id);
+	private static mapKlassen(klassen: List<KlassenDaten>): JavaMap<number, KlassenDaten> {
+		const result: JavaMap<number, KlassenDaten> | null = new HashMap<number, KlassenDaten>();
+		for (const v of klassen)
+			result.put(v.id, v);
+		return result;
 	}
 
-	/**
-	 * Fügt die Liste der AbteilungsKlassenzuordnungen der ausgewählten Abteilung hinzu
-	 *
-	 * @param zuordnungen    Liste der AbteilungsKlassenzuordnungen
-	 */
-	public addKlassenToAuswahl(zuordnungen: List<AbteilungKlassenzuordnung>): void {
-		if (this._daten !== null) {
-			this._daten.klassenzuordnungen.addAll(zuordnungen);
-			this._daten.klassenzuordnungen.sort(this.comparatorKlassenzuordnung);
+	protected checkFilter(eintrag: Abteilung): boolean {
+		if (this._filterNurSichtbar && !eintrag.istSichtbar) {
+			return false;
 		}
+
+		return this.entryMatchesSearchterm(eintrag);
 	}
 
-	protected checkFilter(eintrag: Abteilung | null): boolean {
-		return true;
+	private entryMatchesSearchterm(eintrag: Abteilung) {
+		const searchTermLower = this._searchTerm.toLocaleLowerCase();
+		return (eintrag.bezeichnung.toLocaleLowerCase().includes(searchTermLower));
 	}
 
 	protected compareAuswahl(a: Abteilung, b: Abteilung): number {
-		for (const criteria of this._order) {
-			const field: string | null = criteria.a;
-			const asc: boolean = (criteria.b === null) || criteria.b;
-			let cmp: number = 0;
-			if (JavaObject.equalsTranspiler("bezeichnung", (field)))
-				cmp = JavaString.compareTo(a.bezeichnung, b.bezeichnung);
-			else
-				throw new DeveloperNotificationException("Fehler bei der Sortierung. Das Sortierkriterium wird vom Manager nicht unterstützt.");
-			if (cmp === 0)
-				continue;
-			return asc ? cmp : -cmp;
-		}
 		return AbteilungenListeManager.comparator.compare(a, b);
 	}
 
-	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.core.utils.kataloge.abteilungen.AbteilungenListeManager';
+	get lehrerById(): JavaMap<number, LehrerListeEintrag> {
+		return this._lehrerById;
 	}
 
-	isTranspiledInstanceOf(name: string): boolean {
-		return ['de.svws_nrw.core.utils.AuswahlManager', 'de.svws_nrw.core.utils.kataloge.abteilungen.AbteilungenListeManager'].includes(name);
+	get klassenById(): JavaMap<number, KlassenDaten> {
+		return this._klassenById;
 	}
 
-	public static class = new Class<AbteilungenListeManager>('de.svws_nrw.core.utils.kataloge.abteilungen.AbteilungenListeManager');
+	get searchTerm(): string {
+		return this._searchTerm;
+	}
+
+	set searchTerm(value: string) {
+		this._searchTerm = value;
+		this._eventHandlerFilterChanged.run();
+	}
+
+	set filterNurSichtbar(value: boolean) {
+		this._filterNurSichtbar = value;
+		this._eventHandlerFilterChanged.run();
+	}
+
+	get filterNurSichtbar(): boolean {
+		return this._filterNurSichtbar;
+	}
 
 }
 
-export function cast_de_svws_nrw_core_utils_kataloge_abteilungen_AbteilungenListeManager(obj: unknown): AbteilungenListeManager {
-	return obj as AbteilungenListeManager;
-}

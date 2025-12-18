@@ -8,6 +8,8 @@ import { routeAbteilungenGruppenprozesse } from "~/router/apps/schule/kataloge/a
 import { routeAbteilungenDaten } from "~/router/apps/schule/kataloge/abteilungen/RouteAbteilungenDaten";
 import { routeAbteilungenNeu } from "~/router/apps/schule/kataloge/abteilungen/RouteAbteilungenNeu";
 import { api } from "~/router/Api";
+import { RouteManager } from "~/router/RouteManager";
+import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
 
 
 const defaultState = {
@@ -56,7 +58,6 @@ export class RouteDataAbteilungen extends RouteDataAuswahl<AbteilungenListeManag
 	addAbteilung = async (data: Partial<Abteilung>): Promise<number> => {
 		const abteilung = await api.server.addAbteilung(data, api.schema, api.schuleStammdaten.idSchuljahresabschnitt);
 		this.manager.liste.add(abteilung);
-		this.commit();
 		return abteilung.id;
 	};
 
@@ -71,6 +72,10 @@ export class RouteDataAbteilungen extends RouteDataAuswahl<AbteilungenListeManag
 		await api.server.deleteAbteilungKlassenzuordnung(ids, api.schema);
 		this.manager.deleteKlassenzuordnungen(ids);
 		this.commit();
+	};
+
+	goToLehrer = async (idLehrer: number) => {
+		await RouteManager.doRoute(routeLehrer.getRoute({ id: idLehrer }));
 	};
 
 }

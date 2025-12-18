@@ -4,8 +4,6 @@ import type { RouteAbteilungen } from "~/router/apps/schule/kataloge/abteilungen
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { routeAbteilungen } from "~/router/apps/schule/kataloge/abteilungen/RouteAbteilungen";
-import { RouteManager } from "~/router/RouteManager";
-import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { api } from "~/router/Api";
 
 const AbteilungenDaten = () => import("~/components/schule/kataloge/abteilungen/daten/AbteilungenDaten.vue");
@@ -20,13 +18,9 @@ export class RouteAbteilungenDaten extends RouteNode<any, RouteAbteilungen> {
 		super.text = "Abteilungen";
 	}
 
-	goToLehrer = async (idLehrer: number) => {
-		await RouteManager.doRoute(routeLehrer.getRoute({ id: idLehrer }));
-	};
-
 	public getProps(to: RouteLocationNormalized): AbteilungenDatenProps {
 		return {
-			goToLehrer: this.goToLehrer,
+			goToLehrer: routeAbteilungen.data.goToLehrer,
 			manager: () => routeAbteilungen.data.manager,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			patch: routeAbteilungen.data.patch,
