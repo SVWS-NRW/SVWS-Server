@@ -1,8 +1,8 @@
 import type { List, BenutzerKompetenz } from "@core";
-import type { TelefonArtListeManager } from "@ui";
+import type { TelefonartenListeManager } from "@ui";
 
-export interface STelefonArtenGruppenprozesseProps {
+export interface TelefonartenGruppenprozesseProps {
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
-	manager: () => TelefonArtListeManager;
+	manager: () => TelefonartenListeManager;
 	delete: () => Promise<[boolean, List<string | null>]>;
 }

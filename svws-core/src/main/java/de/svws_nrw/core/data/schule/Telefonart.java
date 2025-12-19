@@ -11,7 +11,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @Schema(description = "Ein Eintrag in dem Katalog der schulspezifischen Telefonarten.")
 @TranspilerDTO
-public class TelefonArt {
+public class Telefonart {
 
 	/** Die ID des Katalog-Eintrags. */
 	@Schema(description = "Die ID des Katalog-Eintrags", example = "2", accessMode = Schema.AccessMode.READ_ONLY)

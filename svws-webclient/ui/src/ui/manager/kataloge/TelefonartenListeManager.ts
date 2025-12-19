@@ -1,5 +1,5 @@
 import { JavaObject } from '../../../../../core/src/java/lang/JavaObject';
-import type { TelefonArt } from '../../../../../core/src/core/data/schule/TelefonArt';
+import type { Telefonart } from '../../../../../core/src/core/data/schule/Telefonart';
 import type { JavaSet } from '../../../../../core/src/java/util/JavaSet';
 import type { Schulform } from '../../../../../core/src/asd/types/schule/Schulform';
 import { JavaString } from '../../../../../core/src/java/lang/JavaString';
@@ -9,18 +9,17 @@ import { AuswahlManager } from '../../AuswahlManager';
 import type { JavaFunction } from '../../../../../core/src/java/util/function/JavaFunction';
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
 import type { List } from '../../../../../core/src/java/util/List';
-import { Class } from '../../../../../core/src/java/lang/Class';
 import { Arrays } from '../../../../../core/src/java/util/Arrays';
 import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
 import { HashSet } from '../../../../../core/src/java/util/HashSet';
 import { Pair } from '../../../../../core/src/asd/adt/Pair';
 
-export class TelefonArtListeManager extends AuswahlManager<number, TelefonArt, TelefonArt> {
+export class TelefonartenListeManager extends AuswahlManager<number, Telefonart, Telefonart> {
 
 	/**
 	 * Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ
 	 */
-	private static readonly _telefonArtenToId: JavaFunction<TelefonArt, number> = { apply: (ta: TelefonArt) => ta.id };
+	private static readonly _telefonArtenToId: JavaFunction<Telefonart, number> = { apply: (ta: Telefonart) => ta.id };
 
 	/**
 	 * Sets der Ids der Telefonarten, die von Personen verwendet und daher nicht gelöscht werden können.
@@ -30,7 +29,7 @@ export class TelefonArtListeManager extends AuswahlManager<number, TelefonArt, T
 	/**
 	 * Ein Default-Comparator für den Vergleich von Telefonarten in Telefonartlisten.
 	 */
-	public static readonly comparator: Comparator<TelefonArt> = { compare: (a: TelefonArt, b: TelefonArt) => {
+	public static readonly comparator: Comparator<Telefonart> = { compare: (a: Telefonart, b: Telefonart) => {
 		let cmp: number = JavaString.compareTo(a.bezeichnung, b.bezeichnung);
 		if (cmp === 0)
 			cmp = JavaLong.compare(a.id, b.id);
@@ -48,9 +47,9 @@ export class TelefonArtListeManager extends AuswahlManager<number, TelefonArt, T
 	 * @param telefonarten     	       die Liste der Telefonart
 	 */
 	public constructor(schuljahresabschnitt: number, schuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>,
-		schulform: Schulform | null, telefonarten: List<TelefonArt>) {
-		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, telefonarten, TelefonArtListeManager.comparator,
-			TelefonArtListeManager._telefonArtenToId, TelefonArtListeManager._telefonArtenToId, Arrays.asList(new Pair("telefonArt", true)));
+		schulform: Schulform | null, telefonarten: List<Telefonart>) {
+		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, telefonarten, TelefonartenListeManager.comparator,
+			TelefonartenListeManager._telefonArtenToId, TelefonartenListeManager._telefonArtenToId, Arrays.asList(new Pair("telefonArt", true)));
 	}
 
 	/**
@@ -62,7 +61,7 @@ export class TelefonArtListeManager extends AuswahlManager<number, TelefonArt, T
 		return this.idsVerwendeteTelefonarten;
 	}
 
-	protected onSetDaten(eintrag: TelefonArt, daten: TelefonArt): boolean {
+	protected onSetDaten(eintrag: Telefonart, daten: Telefonart): boolean {
 		if (JavaObject.equalsTranspiler(daten.bezeichnung, (eintrag.bezeichnung)))
 			return false;
 
@@ -77,13 +76,13 @@ export class TelefonArtListeManager extends AuswahlManager<number, TelefonArt, T
 				this.idsVerwendeteTelefonarten.add(t.id);
 	}
 
-	protected compareAuswahl(a: TelefonArt, b: TelefonArt): number {
+	protected compareAuswahl(a: Telefonart, b: Telefonart): number {
 		for (const criteria of this._order) {
 			const field: string | null = criteria.a;
 			const asc: boolean = (criteria.b === null) || criteria.b;
 			let cmp: number = 0;
 			if (JavaObject.equalsTranspiler("telefonArt", (field))) {
-				cmp = TelefonArtListeManager.comparator.compare(a, b);
+				cmp = TelefonartenListeManager.comparator.compare(a, b);
 			} else
 				throw new DeveloperNotificationException("Fehler bei der Sortierung. Das Sortierkriterium wird vom Manager nicht unterstützt.");
 			if (cmp === 0)
@@ -97,18 +96,4 @@ export class TelefonArtListeManager extends AuswahlManager<number, TelefonArt, T
 		return true;
 	}
 
-	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.core.utils.telefonart.TelefonArtListeManager';
-	}
-
-	isTranspiledInstanceOf(name: string): boolean {
-		return ['de.svws_nrw.core.utils.AuswahlManager', 'de.svws_nrw.core.utils.telefonart.TelefonArtListeManager'].includes(name);
-	}
-
-	public static class = new Class<TelefonArtListeManager>('de.svws_nrw.core.utils.telefonart.TelefonArtListeManager');
-
-}
-
-export function cast_de_svws_nrw_core_utils_telefonart_TelefonArtListeManager(obj: unknown): TelefonArtListeManager {
-	return obj as TelefonArtListeManager;
 }

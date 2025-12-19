@@ -1,5 +1,7 @@
 import type { SchuelerListeManager } from "@ui";
-import type { BenutzerKompetenz, EinschulungsartKatalogEintrag, Erzieherart, ErzieherStammdaten, Fahrschuelerart, Haltestelle, Kindergarten, KlassenDaten, List, OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, SchuelerLernabschnittsdaten, SchuelerSchulbesuchsdaten, SchuelerStammdaten, SchuelerTelefon, SchuelerVermerke, SchulEintrag, Schulform, Schuljahresabschnitt, ServerMode, TelefonArt, VermerkartEintrag } from "@core";
+import type { BenutzerKompetenz, EinschulungsartKatalogEintrag, Erzieherart, ErzieherStammdaten, Fahrschuelerart, Haltestelle, Kindergarten, KlassenDaten, List,
+	OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, SchuelerLernabschnittsdaten, SchuelerSchulbesuchsdaten, SchuelerStammdaten, SchuelerTelefon,
+	SchuelerVermerke, SchulEintrag, Schulform, Schuljahresabschnitt, ServerMode, Telefonart, VermerkartEintrag } from "@core";
 import type { SchuelerSchulbesuchManager } from "~/components/schueler/schulbesuch/SchuelerSchulbesuchManager";
 import type { SchuelerLernabschnittManager } from "~/components/schueler/lernabschnitte/SchuelerLernabschnittManager";
 
@@ -16,7 +18,7 @@ export interface SchuelerNeuSchnelleingabeProps {
 	mapHaltestellen: Map<number, Haltestelle>;
 	mapKindergaerten: Map<number, Kindergarten>;
 	mapEinschulungsarten: Map<number, EinschulungsartKatalogEintrag>;
-	mapTelefonArten: Map<number, TelefonArt>;
+	mapTelefonArten: Map<number, Telefonart>;
 	mapErzieherarten: Map<number, Erzieherart>;
 	mapVermerkArten: Map<number, VermerkartEintrag>;
 	getListSchuelerErziehereintraege: () => List<ErzieherStammdaten>;

@@ -218,7 +218,7 @@ import { StundenplanSchiene } from '../core/data/stundenplan/StundenplanSchiene'
 import { StundenplanUnterricht } from '../core/data/stundenplan/StundenplanUnterricht';
 import { StundenplanUnterrichtsverteilung } from '../core/data/stundenplan/StundenplanUnterrichtsverteilung';
 import { StundenplanZeitraster } from '../core/data/stundenplan/StundenplanZeitraster';
-import { TelefonArt } from '../core/data/schule/TelefonArt';
+import { Telefonart } from '../core/data/schule/Telefonart';
 import { UebergangsempfehlungKatalogEintrag } from '../asd/data/schueler/UebergangsempfehlungKatalogEintrag';
 import { UvFach } from '../core/data/uv/UvFach';
 import { UvKlasse } from '../core/data/uv/UvKlasse';
@@ -16821,7 +16821,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die Daten der Telefonart
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: TelefonArt
+	 *     - Rückgabe-Typ: Telefonart
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalogdaten anzusehen.
 	 *   Code 404: Keine Telefonart mit der angegebenen ID gefunden
 	 *
@@ -16830,13 +16830,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Daten der Telefonart
 	 */
-	public async getTelefonart(schema : string, id : number) : Promise<TelefonArt> {
+	public async getTelefonart(schema : string, id : number) : Promise<Telefonart> {
 		const path = "/db/{schema}/schule/telefonart/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
-		return TelefonArt.transpilerFromJSON(text);
+		return Telefonart.transpilerFromJSON(text);
 	}
 
 
@@ -16853,15 +16853,15 @@ export class ApiServer extends BaseApi {
 	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
-	 * @param {Partial<TelefonArt>} data - der Request-Body für die HTTP-Methode
+	 * @param {Partial<Telefonart>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchTelefonart(data : Partial<TelefonArt>, schema : string, id : number) : Promise<void> {
+	public async patchTelefonart(data : Partial<Telefonart>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/schule/Telefonart/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = TelefonArt.transpilerToJSONPatch(data);
+		const body : string = Telefonart.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -16874,23 +16874,23 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 201: Telefonart wurde erfolgreich angelegt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: TelefonArt
+	 *     - Rückgabe-Typ: Telefonart
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Telefonart anzulegen.
 	 *   Code 409: Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
-	 * @param {Partial<TelefonArt>} data - der Request-Body für die HTTP-Methode
+	 * @param {Partial<Telefonart>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
 	 * @returns Telefonart wurde erfolgreich angelegt.
 	 */
-	public async addTelefonart(data : Partial<TelefonArt>, schema : string) : Promise<TelefonArt> {
+	public async addTelefonart(data : Partial<Telefonart>, schema : string) : Promise<Telefonart> {
 		const path = "/db/{schema}/schule/telefonart/new"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = TelefonArt.transpilerToJSONPatch(data);
+		const body : string = Telefonart.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
-		return TelefonArt.transpilerFromJSON(text);
+		return Telefonart.transpilerFromJSON(text);
 	}
 
 
@@ -16902,7 +16902,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Katalog-Einträgen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<TelefonArt>
+	 *     - Rückgabe-Typ: List<Telefonart>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Katalog-Einträge gefunden
 	 *
@@ -16910,13 +16910,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen
 	 */
-	public async getTelefonarten(schema : string) : Promise<List<TelefonArt>> {
+	public async getTelefonarten(schema : string) : Promise<List<Telefonart>> {
 		const path = "/db/{schema}/schule/Telefonarten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<TelefonArt>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(TelefonArt.transpilerFromJSON(text)); });
+		const ret = new ArrayList<Telefonart>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Telefonart.transpilerFromJSON(text)); });
 		return ret;
 	}
 

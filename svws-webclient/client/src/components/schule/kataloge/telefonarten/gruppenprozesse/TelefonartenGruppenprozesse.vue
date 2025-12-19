@@ -27,12 +27,12 @@
 
 <script setup lang="ts">
 
-	import type { STelefonArtenGruppenprozesseProps } from "~/components/schule/kataloge/telefonarten/gruppenprozesse/STelefonArtenGruppenprozesseProps";
+	import type { TelefonartenGruppenprozesseProps } from "~/components/schule/kataloge/telefonarten/gruppenprozesse/TelefonartenGruppenprozesseProps";
 	import type { List } from "@core";
 	import { ref, computed } from "vue";
 	import { ArrayList, BenutzerKompetenz } from "@core";
 
-	const props = defineProps<STelefonArtenGruppenprozesseProps>();
+	const props = defineProps<TelefonartenGruppenprozesseProps>();
 	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
 	const logs = ref<List<string | null> | undefined>();
 	const status = ref<boolean | undefined>();

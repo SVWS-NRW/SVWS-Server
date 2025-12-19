@@ -6,7 +6,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.SimpleOperationResponse;
-import de.svws_nrw.core.data.schule.TelefonArt;
+import de.svws_nrw.core.data.schule.Telefonart;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
@@ -18,16 +18,16 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response;
 
 /**
- * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für das Core-DTO {@link TelefonArt}.
+ * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für das Core-DTO {@link Telefonart}.
  */
-public final class DataKatalogTelefonArten extends DataManagerRevised<Long, DTOTelefonArt, TelefonArt> {
+public final class DataTelefonarten extends DataManagerRevised<Long, DTOTelefonArt, Telefonart> {
 
 	/**
-	 * Erstellt einen neuen {@link DataManagerRevised} für das Core-DTO {@link TelefonArt}.
+	 * Erstellt einen neuen {@link DataManagerRevised} für das Core-DTO {@link Telefonart}.
 	 *
 	 * @param conn die Datenbank-Verbindung für den Datenbankzugriff
 	 */
-	public DataKatalogTelefonArten(final DBEntityManager conn) {
+	public DataTelefonarten(final DBEntityManager conn) {
 		super(conn);
 		setAttributesRequiredOnCreation("bezeichnung");
 		setAttributesNotPatchable("id");
@@ -39,8 +39,8 @@ public final class DataKatalogTelefonArten extends DataManagerRevised<Long, DTOT
 	}
 
 	@Override
-	public TelefonArt map(final DTOTelefonArt dto) {
-		final TelefonArt daten = new TelefonArt();
+	public Telefonart map(final DTOTelefonArt dto) {
+		final Telefonart daten = new Telefonart();
 		daten.id = dto.ID;
 		daten.bezeichnung = (dto.Bezeichnung == null) ? "" : dto.Bezeichnung;
 		daten.sortierung = (dto.Sortierung == null) ? 32000 : dto.Sortierung;
@@ -57,14 +57,14 @@ public final class DataKatalogTelefonArten extends DataManagerRevised<Long, DTOT
 	 *
 	 * @return Ein TelefonArt-Objekt, das aus dem DTOTelefonArt-Objekt konvertiert und mit der Anzahl der Telefonnummern gesetzt wurde.
 	 */
-	public TelefonArt map(final DTOTelefonArt dtoTelefonArt, final int anzahlTelefonnummern) {
-		final TelefonArt telefonart = map(dtoTelefonArt);
+	public Telefonart map(final DTOTelefonArt dtoTelefonArt, final int anzahlTelefonnummern) {
+		final Telefonart telefonart = map(dtoTelefonArt);
 		telefonart.anzahlTelefonnummern = anzahlTelefonnummern;
 		return telefonart;
 	}
 
 	@Override
-	public List<TelefonArt> getAll() throws ApiOperationException {
+	public List<Telefonart> getAll() throws ApiOperationException {
 		final List<DTOTelefonArt> telefonarten = conn.queryAll(DTOTelefonArt.class);
 		final Map<Long, Long> telefonartCountById =
 				conn.queryList(DTOSchuelerTelefon.QUERY_ALL.concat("  WHERE e.TelefonArt_ID IS NOT NULL"), DTOSchuelerTelefon.class).stream()
@@ -74,7 +74,7 @@ public final class DataKatalogTelefonArten extends DataManagerRevised<Long, DTOT
 	}
 
 	@Override
-	public TelefonArt getById(final Long id) throws ApiOperationException {
+	public Telefonart getById(final Long id) throws ApiOperationException {
 		if (id == null)
 			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Eine Anfrage zu einer Telefonart mit der ID null ist unzulässig.");
 

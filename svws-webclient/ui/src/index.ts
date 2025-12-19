@@ -146,7 +146,7 @@ export { ValidatorTelefon } from "./validation/ValidatorTelefon";
 
 // Manager
 export { AuswahlManager } from "./ui/AuswahlManager";
-export { TelefonArtListeManager } from "./ui/manager/kataloge/TelefonArtListeManager";
+export { TelefonartenListeManager } from "./ui/manager/kataloge/TelefonartenListeManager";
 export { StundenplanListeManager } from "./ui/manager/stundenplan/StundenplanListeManager";
 export { StundenplanUnterrichtListeManager } from "./ui/manager/stundenplan/StundenplanUnterrichtListeManager";
 export { KatalogSchuleListeManager } from "./ui/manager/kataloge/KatalogSchuleListeManager";

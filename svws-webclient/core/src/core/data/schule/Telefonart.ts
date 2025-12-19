@@ -1,7 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { Class } from '../../../java/lang/Class';
 
-export class TelefonArt extends JavaObject {
+export class Telefonart extends JavaObject {
 
 	/**
 	 * Die ID des Katalog-Eintrags.
@@ -34,18 +34,18 @@ export class TelefonArt extends JavaObject {
 	}
 
 	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.core.data.schule.TelefonArt';
+		return 'de.svws_nrw.core.data.schule.Telefonart';
 	}
 
 	isTranspiledInstanceOf(name: string): boolean {
-		return ['de.svws_nrw.core.data.schule.TelefonArt'].includes(name);
+		return ['de.svws_nrw.core.data.schule.Telefonart'].includes(name);
 	}
 
-	public static readonly class = new Class<TelefonArt>('de.svws_nrw.core.data.schule.TelefonArt');
+	public static readonly class = new Class<Telefonart>('de.svws_nrw.core.data.schule.Telefonart');
 
-	public static transpilerFromJSON(json: string): TelefonArt {
-		const obj = JSON.parse(json) as Partial<TelefonArt>;
-		const result = new TelefonArt();
+	public static transpilerFromJSON(json: string): Telefonart {
+		const obj = JSON.parse(json) as Partial<Telefonart>;
+		const result = new Telefonart();
 		if (obj.id === undefined)
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
@@ -64,7 +64,7 @@ export class TelefonArt extends JavaObject {
 		return result;
 	}
 
-	public static transpilerToJSON(obj: TelefonArt): string {
+	public static transpilerToJSON(obj: Telefonart): string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
@@ -76,7 +76,7 @@ export class TelefonArt extends JavaObject {
 		return result;
 	}
 
-	public static transpilerToJSONPatch(obj: Partial<TelefonArt>): string {
+	public static transpilerToJSONPatch(obj: Partial<Telefonart>): string {
 		let result = '{';
 		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id.toString() + ',';
@@ -100,6 +100,6 @@ export class TelefonArt extends JavaObject {
 
 }
 
-export function cast_de_svws_nrw_core_data_schule_TelefonArt(obj: unknown): TelefonArt {
-	return obj as TelefonArt;
+export function cast_de_svws_nrw_core_data_schule_Telefonart(obj: unknown): Telefonart {
+	return obj as Telefonart;
 }

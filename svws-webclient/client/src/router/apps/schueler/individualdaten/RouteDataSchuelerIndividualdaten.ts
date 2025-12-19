@@ -1,5 +1,5 @@
 import { Schulform } from "@core";
-import type { FoerderschwerpunktEintrag, ReligionEintrag, Fahrschuelerart, SchulEintrag, SchulformKatalogEintrag, TelefonArt, Haltestelle } from "@core";
+import type { FoerderschwerpunktEintrag, ReligionEintrag, Fahrschuelerart, SchulEintrag, SchulformKatalogEintrag, Telefonart, Haltestelle } from "@core";
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
@@ -12,7 +12,7 @@ interface RouteStateDataSchuelerIndividualdaten extends RouteStateInterface {
 	mapHaltestellen: Map<number, Haltestelle>;
 	mapReligionen: Map<number, ReligionEintrag>;
 	mapSchulen: Map<string, SchulEintrag>;
-	mapTelefonArten: Map<number, TelefonArt>;
+	mapTelefonArten: Map<number, Telefonart>;
 	pendingStateManager: PendingStateManagerSchuelerIndividualdaten | undefined;
 }
 
@@ -60,7 +60,7 @@ export class RouteDataSchuelerIndividualdaten extends RouteData<RouteStateDataSc
 		return this._state.value.mapSchulen;
 	}
 
-	get mapTelefonArten(): Map<number, TelefonArt> {
+	get mapTelefonArten(): Map<number, Telefonart> {
 		return this._state.value.mapTelefonArten;
 	}
 

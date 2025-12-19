@@ -1,6 +1,6 @@
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import type { Fahrschuelerart, Haltestelle, Kindergarten, ReligionEintrag, SchuelerListeEintrag, SchuelerStammdaten, SchulEintrag,
-	SchulformKatalogEintrag, TelefonArt, EinschulungsartKatalogEintrag, Erzieherart, OrtKatalogEintrag, OrtsteilKatalogEintrag,
+	SchulformKatalogEintrag, Telefonart, EinschulungsartKatalogEintrag, Erzieherart, OrtKatalogEintrag, OrtsteilKatalogEintrag,
 	SchuelerLernabschnittListeEintrag, VermerkartEintrag, Merkmal, KatalogEntlassgrund, List } from "@core";
 import { ArrayList, DeveloperNotificationException, Schulform, SchuelerStammdatenNeu } from "@core";
 import { api } from "~/router/Api";
@@ -15,7 +15,7 @@ interface RouteStateDataSchuelerNeuSchnelleingabe extends RouteStateInterface {
 	mapHaltestellen: Map<number, Haltestelle>;
 	mapReligionen: Map<number, ReligionEintrag>;
 	mapSchulen: Map<string, SchulEintrag>;
-	mapTelefonArten: Map<number, TelefonArt>;
+	mapTelefonArten: Map<number, Telefonart>;
 	mapErzieherarten: Map<number, Erzieherart>;
 	mapVermerkArten: Map<number, VermerkartEintrag>;
 	mapEinschulungsarten: Map<number, EinschulungsartKatalogEintrag>;
@@ -213,7 +213,7 @@ export class RouteDataSchuelerNeuSchnelleingabe extends RouteData<RouteStateData
 		return this._state.value.mapSchulen;
 	}
 
-	get mapTelefonArten(): Map<number, TelefonArt> {
+	get mapTelefonArten(): Map<number, Telefonart> {
 		return this._state.value.mapTelefonArten;
 	}
 

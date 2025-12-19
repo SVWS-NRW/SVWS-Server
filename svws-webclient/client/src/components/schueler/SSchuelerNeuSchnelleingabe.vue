@@ -318,7 +318,7 @@
 
 <script setup lang="ts">
 
-	import type { SchuelerStammdaten, TelefonArt, OrtsteilKatalogEintrag, EinschulungsartKatalogEintrag, NationalitaetenKatalogEintrag, SchuelerStatusKatalogEintrag, VerkehrsspracheKatalogEintrag, KlassenDaten, VermerkartEintrag } from "@core";
+	import type { SchuelerStammdaten, Telefonart, OrtsteilKatalogEintrag, EinschulungsartKatalogEintrag, NationalitaetenKatalogEintrag, SchuelerStatusKatalogEintrag, VerkehrsspracheKatalogEintrag, KlassenDaten, VermerkartEintrag } from "@core";
 	import { BenutzerKompetenz, SchuelerTelefon, ArrayList, ErzieherStammdaten, AdressenUtils, Geschlecht, Kindergartenbesuch, Nationalitaeten, SchuelerStatus, Schulform, Verkehrssprache, ServerMode, DateUtils, SchuelerVermerke } from "@core";
 	import { computed, ref, watch } from "vue";
 	import type { SchuelerNeuSchnelleingabeProps } from "~/components/schueler/SSchuelerNeuSchnelleingabeProps";
@@ -1140,7 +1140,7 @@
 
 	const telefonArtManager = new SelectManager({ options: telefonArten.value, optionDisplayText: i => i.bezeichnung, selectionDisplayText: i => i.bezeichnung });
 
-	const telefonArt = computed<TelefonArt | null>({
+	const telefonArt = computed<Telefonart | null>({
 		get: () => props.mapTelefonArten.get(newEntryTelefonnummer.value.idTelefonArt) ?? null,
 		set: (value) => newEntryTelefonnummer.value.idTelefonArt = value !== null ? value.id : -1,
 	});

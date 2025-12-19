@@ -39,13 +39,13 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import type { TelefonArt } from "@core";
+	import type { Telefonart } from "@core";
 	import { BenutzerKompetenz } from "@core";
 	import type { DataTableColumn } from "@ui";
 	import { useRegionSwitch, ViewType } from "@ui";
-	import type { TelefonArtenAuswahlProps } from "~/components/schule/kataloge/telefonarten/STelefonArtenAuswahlProps";
+	import type { TelefonartenAuswahlProps } from "~/components/schule/kataloge/telefonarten/TelefonartenAuswahlProps";
 
-	const props = defineProps<TelefonArtenAuswahlProps>();
+	const props = defineProps<TelefonartenAuswahlProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const columns: DataTableColumn[] = [
@@ -56,7 +56,7 @@
 	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const hatKompetenzLoeschen = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
 
-	async function setAuswahl(items: TelefonArt[]) {
+	async function setAuswahl(items: Telefonart[]) {
 		props.manager().liste.auswahlClear();
 		for (const item of items)
 			if (props.manager().liste.hasValue(item))
@@ -73,7 +73,7 @@
 		return (props.manager().hasDaten()) ? props.manager().auswahl() : null;
 	});
 
-	function isRemovable(rowData: TelefonArt) {
+	function isRemovable(rowData: Telefonart) {
 		return props.manager().liste.auswahl().contains(rowData) && (rowData.anzahlTelefonnummern > 0);
 	}
 

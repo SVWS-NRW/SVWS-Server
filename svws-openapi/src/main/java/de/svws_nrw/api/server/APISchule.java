@@ -7,7 +7,7 @@ import de.svws_nrw.core.data.schule.Betriebsart;
 import de.svws_nrw.core.data.schule.Floskel;
 import de.svws_nrw.core.data.schule.Floskelgruppe;
 import de.svws_nrw.core.data.schule.Lernplattform;
-import de.svws_nrw.core.data.schule.TelefonArt;
+import de.svws_nrw.core.data.schule.Telefonart;
 import de.svws_nrw.data.erzieher.DataErzieherarten;
 import de.svws_nrw.data.schule.DataBetriebe;
 import de.svws_nrw.data.schule.DataBetriebeAnsprechpartner;
@@ -16,7 +16,7 @@ import de.svws_nrw.data.schule.DataFloskelJahrgangZuordnung;
 import de.svws_nrw.data.schule.DataFloskelgruppen;
 import de.svws_nrw.data.schule.DataFloskeln;
 import de.svws_nrw.data.schule.DataKatalogLernplattformen;
-import de.svws_nrw.data.schule.DataKatalogTelefonArten;
+import de.svws_nrw.data.schule.DataTelefonarten;
 import java.io.InputStream;
 
 import de.svws_nrw.asd.data.schule.SchuleStammdaten;
@@ -2614,11 +2614,11 @@ public class APISchule {
 			description = "Erstellt eine Liste aller in dem Katalog vorhanden Telefonarten unter Angabe der ID und der Bezeichnung. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
 	@ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TelefonArt.class))))
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Telefonart.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
 	public Response getTelefonarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogTelefonArten(conn).getAllAsResponse(),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataTelefonarten(conn).getAllAsResponse(),
 				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
 	}
 
@@ -2637,11 +2637,11 @@ public class APISchule {
 			description = "Liest die Daten der Telefonart zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogdaten besitzt.")
 	@ApiResponse(responseCode = "200", description = "Die Daten der Telefonart",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = TelefonArt.class)))
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Telefonart.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalogdaten anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Telefonart mit der angegebenen ID gefunden")
 	public Response getTelefonart(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogTelefonArten(conn).getByIdAsResponse(id),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataTelefonarten(conn).getByIdAsResponse(id),
 				request, ServerMode.DEV,
 				BenutzerKompetenz.KEINE);
 	}
@@ -2661,15 +2661,15 @@ public class APISchule {
 			description = "Erstellt eine neue Telefonart und gibt sie zurück."
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Telefonart besitzt.")
 	@ApiResponse(responseCode = "201", description = "Telefonart wurde erfolgreich angelegt.",
-			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = TelefonArt.class)))
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Telefonart.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Telefonart anzulegen.")
 	@ApiResponse(responseCode = "409", description = "Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response addTelefonart(@PathParam("schema") final String schema,
 			@RequestBody(description = "Der initiale Patch für die neue Telefonart", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = TelefonArt.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Telefonart.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogTelefonArten(conn).addAsResponse(is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataTelefonarten(conn).addAsResponse(is),
 				request, ServerMode.DEV,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
@@ -2699,9 +2699,9 @@ public class APISchule {
 	public Response patchTelefonart(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@RequestBody(description = "Der Patch für die Telefonart", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							schema = @Schema(implementation = TelefonArt.class))) final InputStream is,
+							schema = @Schema(implementation = Telefonart.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogTelefonArten(conn).patchAsResponse(id, is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataTelefonarten(conn).patchAsResponse(id, is),
 				request, ServerMode.DEV,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
@@ -2729,7 +2729,7 @@ public class APISchule {
 	public Response deleteTelefonarten(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die IDs der zu löschenden Telefonarten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogTelefonArten(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataTelefonarten(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
 				request, ServerMode.DEV, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
 

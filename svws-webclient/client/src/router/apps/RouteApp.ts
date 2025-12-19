@@ -23,7 +23,7 @@ import { routeFaecher } from "~/router/apps/schule/kataloge/faecher/RouteFaecher
 import { routeEinwilligungsarten } from "~/router/apps/schule/kataloge/einwilligungsarten/RouteEinwilligungsarten";
 import { routeKonfessionen } from "~/router/apps/schule/kataloge/konfessionen/RouteKonfessionen";
 import { routeKatalogSchulen } from "~/router/apps/schule/kataloge/schulen/RouteKatalogSchulen";
-import { routeKatalogTelefonArten } from "~/router/apps/schule/kataloge/telefonarten/RouteKatalogTelefonArten";
+import { routeTelefonarten } from "~/router/apps/schule/kataloge/telefonarten/RouteTelefonarten";
 import { routeErzieherarten } from "~/router/apps/schule/kataloge/erzieherarten/RouteErzieherarten";
 import { routeVermerkarten } from "~/router/apps/schule/kataloge/vermerkarten/RouteVermerkarten";
 import { routeLernplattformen } from "~/router/apps/schule/kataloge/lernplattformen/RouteLernplattformen";
@@ -161,7 +161,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeOrte,
 			routeOrtsteile,
 			routeKatalogSchulen,
-			routeKatalogTelefonArten,
+			routeTelefonarten,
 			routeVermerkarten,
 			// Datenaustausch
 			routeSchuleDatenaustauschENM,

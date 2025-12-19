@@ -35,7 +35,7 @@ import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.asd.data.schueler.Sprachbelegung;
 import de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag;
 import de.svws_nrw.core.data.schule.ReligionEintrag;
-import de.svws_nrw.core.data.schule.TelefonArt;
+import de.svws_nrw.core.data.schule.Telefonart;
 import de.svws_nrw.core.data.stundenplan.Stundenplan;
 import de.svws_nrw.core.data.stundenplan.StundenplanListeEintrag;
 import de.svws_nrw.core.data.stundenplan.StundenplanPausenaufsicht;
@@ -55,7 +55,7 @@ import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.schueler.DataKatalogSchuelerFoerderschwerpunkte;
 import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
-import de.svws_nrw.data.schule.DataKatalogTelefonArten;
+import de.svws_nrw.data.schule.DataTelefonarten;
 import de.svws_nrw.data.schule.DataReligionen;
 import de.svws_nrw.data.schule.DataSchuleStammdaten;
 import de.svws_nrw.data.schule.DataSchulen;
@@ -144,7 +144,7 @@ public class ReportingRepository {
 	private Map<Long, SchulformKatalogEintrag> katalogSchulformen;
 
 	/** Stelle die Telefonnummer-Arten zu ihrer ID zur Verfügung. */
-	private Map<Long, TelefonArt> katalogTelefonnummerArten = new HashMap<>();
+	private Map<Long, Telefonart> katalogTelefonnummerArten = new HashMap<>();
 
 
 	/** Stellt die Daten aller bereits abgerufenen Leistungsdaten zur Schüler-, Lernabschnitts- und Leistungsdaten-ID zur Verfügung. */
@@ -348,7 +348,7 @@ public class ReportingRepository {
 			this.katalogSchulformen = schulformen.stream().collect(Collectors.toMap(sfke -> sfke.id, sfke -> sfke));
 			this.logger.logLn(LogLevel.DEBUG, 8, "Katalog Schulformen geladen.");
 
-			this.katalogTelefonnummerArten = new DataKatalogTelefonArten(this.conn).getAll().stream().collect(Collectors.toMap(ta -> ta.id, ta -> ta));
+			this.katalogTelefonnummerArten = new DataTelefonarten(this.conn).getAll().stream().collect(Collectors.toMap(ta -> ta.id, ta -> ta));
 			this.logger.logLn(LogLevel.DEBUG, 8, "Katalog TelefonnummerArten geladen.");
 
 			this.mapErzieherarten = new DataErzieherarten(this.conn).getAll().stream().collect(Collectors.toMap(a -> a.id,
@@ -607,7 +607,7 @@ public class ReportingRepository {
 	 *
 	 * @return Map der Telefonnummer-Arten
 	 */
-	public Map<Long, TelefonArt> katalogTelefonnummerArten() {
+	public Map<Long, Telefonart> katalogTelefonnummerArten() {
 		return katalogTelefonnummerArten;
 	}
 

@@ -8,7 +8,7 @@ import type {
 	Schulform,
 	ServerMode,
 	BenutzerKompetenz,
-	TelefonArt,
+	Telefonart,
 	SchuelerTelefon,
 	List,
 	Haltestelle,
@@ -29,7 +29,7 @@ export interface SchuelerIndividualdatenProps {
 	mapFoerderschwerpunkte: Map<number, FoerderschwerpunktEintrag>;
 	mapHaltestellen: Map<number, Haltestelle>
 	mapReligionen: Map<number, ReligionEintrag>;
-	mapTelefonArten: Map<number, TelefonArt>
+	mapTelefonArten: Map<number, Telefonart>
 	getListSchuelerTelefoneintraege: () => List<SchuelerTelefon>;
 	addSchuelerTelefoneintrag: (data: Partial<SchuelerTelefon>, idSchueler: number) => Promise<void>;
 	patchSchuelerTelefoneintrag: (data: Partial<SchuelerTelefon>, idEintrag: number) => Promise<void>;

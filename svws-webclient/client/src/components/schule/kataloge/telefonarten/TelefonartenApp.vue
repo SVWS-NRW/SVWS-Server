@@ -38,9 +38,9 @@
 
 	import { computed } from "vue";
 	import { useRegionSwitch, ViewType } from "@ui";
-	import type { TelefonArtenAppProps } from "~/components/schule/kataloge/telefonarten/STelefonArtenAppProps";
+	import type { TelefonartenAppProps } from "~/components/schule/kataloge/telefonarten/TelefonartenAppProps";
 
-	const props = defineProps<TelefonArtenAppProps>();
+	const props = defineProps<TelefonartenAppProps>();
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 

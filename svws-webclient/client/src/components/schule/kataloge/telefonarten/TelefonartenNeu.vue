@@ -14,7 +14,7 @@
 				</div>
 				<div class="mt-7 flex flex-row gap-4 justify-end">
 					<svws-ui-button type="secondary" @click="cancel">Abbrechen</svws-ui-button>
-					<svws-ui-button @click="addTelefonArt" :disabled="!formIsValid || !hatKompetenzUpdate">Speichern</svws-ui-button>
+					<svws-ui-button @click="addTelefonart" :disabled="!formIsValid || !hatKompetenzUpdate">Speichern</svws-ui-button>
 				</div>
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
@@ -24,19 +24,19 @@
 
 <script setup lang="ts">
 
-	import type { STelefonArtenNeuProps } from "~/components/schule/kataloge/telefonarten/STelefonArtenNeuProps";
-	import { BenutzerKompetenz, TelefonArt } from "@core";
+	import type { TelefonartenNeuProps } from "~/components/schule/kataloge/telefonarten/TelefonartenNeuProps";
+	import { BenutzerKompetenz, Telefonart } from "@core";
 	import { computed, ref, watch } from "vue";
 	import { isUniqueInList, mandatoryInputIsValid } from "~/util/validation/Validation";
 
-	const props = defineProps<STelefonArtenNeuProps>();
+	const props = defineProps<TelefonartenNeuProps>();
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const disabled = computed(() => !hatKompetenzUpdate.value);
-	const data = ref(new TelefonArt());
+	const data = ref(new Telefonart());
 	const isLoading = ref<boolean>(false);
 	const bezeichnungIsTooLong = computed(() => data.value.bezeichnung.length > 30);
 
-	function fieldIsValid(field: keyof TelefonArt | null): (v: string | null) => boolean {
+	function fieldIsValid(field: keyof Telefonart | null): (v: string | null) => boolean {
 		return (v: string | null) => {
 			switch (field) {
 				case 'bezeichnung':
@@ -50,8 +50,8 @@
 	const formIsValid = computed(() => {
 		// alle Felder auf validity prüfen
 		return Object.keys(data.value).every(field => {
-			const validateField = fieldIsValid(field as keyof TelefonArt);
-			const fieldValue = data.value[field as keyof TelefonArt] as string | null;
+			const validateField = fieldIsValid(field as keyof Telefonart);
+			const fieldValue = data.value[field as keyof Telefonart] as string | null;
 			return validateField(fieldValue);
 		});
 	});
@@ -63,7 +63,7 @@
 		return isUniqueInList(value, props.manager().liste.list(), 'bezeichnung');
 	}
 
-	async function addTelefonArt() {
+	async function addTelefonart() {
 		if (isLoading.value)
 			return;
 

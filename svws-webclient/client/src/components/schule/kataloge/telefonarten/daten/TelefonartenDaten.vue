@@ -11,11 +11,11 @@
 
 <script setup lang="ts">
 
-	import type { TelefonArtenDatenProps } from "~/components/schule/kataloge/telefonarten/daten/STelefonArtenDatenProps";
+	import type { TelefonartenDatenProps } from "~/components/schule/kataloge/telefonarten/daten/TelefonartenDatenProps";
 	import { computed } from "vue";
 	import { BenutzerKompetenz } from "@core";
 
-	const props = defineProps<TelefonArtenDatenProps>();
+	const props = defineProps<TelefonartenDatenProps>();
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const readonly = computed(() => !hatKompetenzUpdate.value);
 

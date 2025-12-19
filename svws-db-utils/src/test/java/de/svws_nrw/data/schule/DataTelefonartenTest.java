@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.core.data.SimpleOperationResponse;
-import de.svws_nrw.core.data.schule.TelefonArt;
+import de.svws_nrw.core.data.schule.Telefonart;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.erzieher.DTOTelefonArt;
 import de.svws_nrw.db.utils.ApiOperationException;
@@ -32,13 +32,13 @@ import static org.mockito.Mockito.when;
 
 @DisplayName("Diese Testklasse testet die Klasse DataKatalogTelefonArten")
 @ExtendWith(MockitoExtension.class)
-class DataKatalogTelefonArtenTest {
+class DataTelefonartenTest {
 
 	@Mock
 	private DBEntityManager conn;
 
 	@InjectMocks
-	private DataKatalogTelefonArten data;
+	private DataTelefonarten data;
 
 	@BeforeAll
 	static void setUp() {
@@ -48,7 +48,7 @@ class DataKatalogTelefonArtenTest {
 	@Test
 	@DisplayName("initDTO | setzt die Felder korrekt")
 	void initDTOTest() {
-		data = new DataKatalogTelefonArten(conn);
+		data = new DataTelefonarten(conn);
 		final DTOTelefonArt dto = getDTOTelefonArt();
 		final long id = 1L;
 		final Map<String, Object> initAttributes = new HashMap<>();
@@ -68,7 +68,7 @@ class DataKatalogTelefonArtenTest {
 		final DTOTelefonArt dto = getDTOTelefonArt();
 
 		assertThat(data.map(dto))
-				.isInstanceOf(TelefonArt.class)
+				.isInstanceOf(Telefonart.class)
 				.hasFieldOrPropertyWithValue("id", 1L)
 				.hasFieldOrPropertyWithValue("bezeichnung", "Mobilnummer")
 				.hasFieldOrPropertyWithValue("istSichtbar", true)
@@ -90,9 +90,9 @@ class DataKatalogTelefonArtenTest {
 
 		when(conn.queryAll(DTOTelefonArt.class)).thenReturn(dtoList);
 
-		final List<TelefonArt> result = data.getAll();
-		final TelefonArt expectedDto1 = result.stream().filter(lFirst -> lFirst.id == dto1.ID).findFirst().orElse(null);
-		final TelefonArt expectedDto2 = result.stream().filter(lSecond -> lSecond.id == dto2.ID).findFirst().orElse(null);
+		final List<Telefonart> result = data.getAll();
+		final Telefonart expectedDto1 = result.stream().filter(lFirst -> lFirst.id == dto1.ID).findFirst().orElse(null);
+		final Telefonart expectedDto2 = result.stream().filter(lSecond -> lSecond.id == dto2.ID).findFirst().orElse(null);
 
 		assertThat(expectedDto1)
 				.isNotNull()
