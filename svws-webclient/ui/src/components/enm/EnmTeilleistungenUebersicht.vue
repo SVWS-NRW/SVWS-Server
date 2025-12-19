@@ -62,7 +62,8 @@
 				<template v-for="teilleistung of enmManager().mapLeistungTeilleistungsartTeilleistung.getOrNull(pair.a.id, idArt) !== null ? [enmManager().mapLeistungTeilleistungsartTeilleistung.getOrNull(pair.a.id, idArt)!] : [ null ]" :key="teilleistung">
 					<template v-if="gridManager.isColVisible(enmManager().mapTeilleistungsarten.get(idArt)?.bezeichnung ?? '???') ?? true">
 						<td v-if="teilleistung === null" class="bg-ui-disabled" />
-						<td v-else-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID)" :ref="inputNoteTeilleistung(pair, teilleistung, indexArt + 6, index)" class="ui-table-grid-input"
+						<td v-else-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istTeilleistungseingabeErlaubt(pair.b.klasseID, idArt)"
+							:ref="inputNoteTeilleistung(pair, teilleistung, indexArt + 6, index)" class="ui-table-grid-input"
 							:class="{
 								'bg-ui-selected': (gridManager.focusColumn === indexArt + 6),
 								'text-ui-danger': Note.fromKuerzel(teilleistung.note).istDefizitSekII(),
@@ -73,7 +74,8 @@
 				</template>
 			</template>
 			<template v-if="gridManager.isColVisible('Quartal') ?? true">
-				<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID)" :ref="inputNoteQuartal(pair, setTeilleistungsarten.size() + 6, index)" class="ui-table-grid-input"
+				<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istSpalteneingabeErlaubt(pair.b.klasseID, 'Quartalsnoten')"
+					:ref="inputNoteQuartal(pair, setTeilleistungsarten.size() + 6, index)" class="ui-table-grid-input"
 					:class="{
 						'bg-ui-selected': (gridManager.focusColumn === setTeilleistungsarten.size() + 6),
 						'text-ui-danger': Note.fromKuerzel(pair.a.noteQuartal).istDefizitSekII(),
@@ -82,7 +84,8 @@
 				<td v-else :class="{ 'text-ui-danger': Note.fromKuerzel(pair.a.noteQuartal).istDefizitSekII() }">{{ pair.a.noteQuartal ?? "-" }}</td>
 			</template>
 			<template v-if="gridManager.isColVisible('Note') ?? true">
-				<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID)" :ref="inputNote(pair, setTeilleistungsarten.size() + 7, index)" class="ui-table-grid-input"
+				<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istSpalteneingabeErlaubt(pair.b.klasseID, 'Note')"
+					:ref="inputNote(pair, setTeilleistungsarten.size() + 7, index)" class="ui-table-grid-input"
 					:class="{
 						'bg-ui-selected': (gridManager.focusColumn === setTeilleistungsarten.size() + 7),
 						'text-ui-danger': Note.fromKuerzel(pair.a.note).istDefizitSekII(),

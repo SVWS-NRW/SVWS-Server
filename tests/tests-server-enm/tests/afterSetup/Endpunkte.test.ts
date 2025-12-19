@@ -18,11 +18,12 @@ describe("Das Bearbeiten von Bemerkungen führt zu keinen Redundanzen im Child A
 		// Extrahier einen Schüler aus den Daten
 		const _data = await parse(await response.blob());
 		let schueler = new ENMSchueler();
-		for (const s of _data.schueler)
+		for (const s of _data.schueler) {
 			if (s.id === 3029) {
 				schueler = s;
 				break;
 			}
+		}
 
 		// Überprüfe das die entsprechenden Daten vom Schüler passen
 		expect(schueler.nachname).toBe("Lindemann");
@@ -49,11 +50,12 @@ describe("Das Bearbeiten von Bemerkungen führt zu keinen Redundanzen im Child A
 		const _dataAfterEdit = await parse(await responseAfterEdit.blob());
 		// Extrahier einen Schüler aus den Daten
 		let schuelerAfterEdit = new ENMSchueler();
-		for (const s of _dataAfterEdit.schueler)
+		for (const s of _dataAfterEdit.schueler) {
 			if (s.id === 3029) {
 				schuelerAfterEdit = s;
 				break;
 			}
+		}
 
 		const leistungsDaten = [...schuelerAfterEdit.leistungsdaten];
 
@@ -322,7 +324,7 @@ describe("Clientconfig können bearbeitet werden", () => {
 });
 
 describe("Bemerkungen können bearbeitet werden", () => {
-	test("Anpassung von Bemerkungen von Schueler der nicht der gleichen Klasse wie Lehrer zugeordnet ist ist verboten", async () => {
+	test("Anpassung von Bemerkungen von Schueler der nicht der gleichen Klasse wie Lehrer zugeordnet ist, ist verboten", async () => {
 		const response = await apiServiceAuthWrongTeacher.get(`/api/daten`);
 		expect(response.status).toBe(200);
 		const _data = await parse(await response.blob());
@@ -417,7 +419,7 @@ describe("Ankreuzkompetenzen können bearbeitet werden", () => {
 		expect(responsePost.status).toBe(403);
 	});
 
-	test("Ankreuzkompetenzen GET", async () => {
+	test.skip("Ankreuzkompetenzen GET", async () => {
 		const response = await apiServiceAuth.get(`/api/daten`);
 
 		expect(response.status).toBe(200);

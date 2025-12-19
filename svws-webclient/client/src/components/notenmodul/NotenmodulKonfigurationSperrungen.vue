@@ -25,17 +25,23 @@
 						<td v-if="gridManager.isColVisible(col.name)" class="bg-ui-75">
 							<div v-if="col.name === 'Klasse'"> alle </div>
 							<template v-if="(col.name === 'Eingabe von')">
-								<svws-ui-text-input type="datetime-local" headless placeholder="Eingabe von" :model-value="manager().zeileAlleKlassen().tsEingabeAb"
-									@change="datum => manager().zeileAlleKlassen().tsEingabeAb = datum" />
-							<!-- TODO Änderung an den Manager Weitergeben und in die DB zurückschreiben -->
+								<!-- TODO Änderung an den Manager Weitergeben und in die DB zurückschreiben -->
+								<div class="border border-ui/0 hover:border-ui p-0.5 rounded-md cursor-pointer"
+									:class="[ manager().istNoteneingabeZeitlichGesperrt(manager().zeileAlleKlassen().tsEingabeAb, true) ? 'text-ui-danger' : '' ]">
+									{{ printDate(manager().zeileAlleKlassen().tsEingabeAb) }}
+								</div>
 							</template>
 							<template v-else-if="(col.name === 'Eingabe bis')">
-								<svws-ui-text-input type="datetime-local" headless placeholder="Eingabe bis" :model-value="manager().zeileAlleKlassen().tsEingabeBis"
-									@change="datum => manager().zeileAlleKlassen().tsEingabeBis = datum" />
-							<!-- TODO Änderung an den Manager Weitergeben und in die DB zurückschreiben -->
+								<!-- TODO Änderung an den Manager Weitergeben und in die DB zurückschreiben -->
+								<div class="border border-ui/0 hover:border-ui p-0.5 rounded-md cursor-pointer"
+									:class="[ manager().istNoteneingabeZeitlichGesperrt(manager().zeileAlleKlassen().tsEingabeBis, false) ? 'text-ui-danger' : '' ]">
+									{{ printDate(manager().zeileAlleKlassen().tsEingabeBis) }}
+								</div>
 							</template>
 							<template v-else-if="(col.name === 'FS klassenweise')">
-							<!-- TODO Hier eine Checkbox ergänzen -->
+								<svws-ui-checkbox :model-value="!manager().hatFehlstundeneingabeKlassenweise(manager().zeileAlleKlassen())"
+									:indeterminate="manager().hatFehlstundeneingabeKlassenweiseTeilweise(manager().zeileAlleKlassen())"
+									@update:model-value="manager().toggleFehlstundeneingabeKlassenweise(manager().zeileAlleKlassen())" />
 							</template>
 							<template v-else-if="manager().istSperrbar(manager().zeileAlleKlassen(), col.name)">
 								<svws-ui-checkbox :model-value="!manager().hatSperrung(manager().zeileAlleKlassen(), col.name)"
@@ -65,16 +71,16 @@
 						</template>
 						<template v-else-if="(col.name === 'Eingabe von')">
 							<svws-ui-text-input type="datetime-local" headless placeholder="Eingabe von" :model-value="row.tsEingabeAb"
-								@change="datum => row.tsEingabeAb = datum" />
-							<!-- TODO Änderung an den Manager Weitergeben und in die DB zurückschreiben -->
+								@change="datum => manager().setzeDatumNoteneingabe(row, datum, true)" />
 						</template>
 						<template v-else-if="(col.name === 'Eingabe bis')">
 							<svws-ui-text-input type="datetime-local" headless placeholder="Eingabe bis" :model-value="row.tsEingabeBis"
-								@change="datum => row.tsEingabeBis = datum" />
-							<!-- TODO Änderung an den Manager Weitergeben und in die DB zurückschreiben -->
+								@change="datum => manager().setzeDatumNoteneingabe(row, datum, false)" />
 						</template>
 						<template v-else-if="(col.name === 'FS klassenweise')">
-							<!-- TODO Hier eine Checkbox ergänzen -->
+							<svws-ui-checkbox :model-value="!manager().hatFehlstundeneingabeKlassenweise(row)"
+								:indeterminate="manager().hatFehlstundeneingabeKlassenweiseTeilweise(row)"
+								@update:model-value="manager().toggleFehlstundeneingabeKlassenweise(row)" />
 						</template>
 						<template v-else-if="manager().istSperrbar(row, col.name)">
 							<svws-ui-checkbox :model-value="!manager().hatSperrung(row, col.name)"
@@ -110,5 +116,10 @@
 			set: (value) => {},
 		}),
 	});
+
+	function printDate(isoDateTime: string | null) {
+		return (isoDateTime === null) ? '‒'
+			: new Date(isoDateTime).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+	}
 
 </script>

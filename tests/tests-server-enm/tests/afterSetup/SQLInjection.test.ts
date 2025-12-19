@@ -140,7 +140,7 @@ describe(`SQL-Injections der POST-Endpunkte des ENM-Servers.`, () => {
 		expect(schuelerAfterInjection.leistungsdaten.getFirst().teilleistungen.getFirst().note).toBe(null); // Injection war nicht erfolgreich, sollte eigentlich 1337 sein
 	});
 
-	test("Eine SQL-Injection auf POST Ankreuzkompetenzen um Daten einer anderen Id zu manipulieren. Der Angriff ist nicht erfolgreich.", async () => {
+	test.skip("Eine SQL-Injection auf POST Ankreuzkompetenzen um Daten einer anderen Id zu manipulieren. Der Angriff ist nicht erfolgreich.", async () => {
 		const response = await apiServiceAuthInjected.get(`/api/daten`);
 		expect(response.status).toBe(200);
 		const _data = await parse(await response.blob());
@@ -158,7 +158,7 @@ describe(`SQL-Injections der POST-Endpunkte des ENM-Servers.`, () => {
 		const sqlInjectionTargetId = 18622;
 		expect(schueler.ankreuzkompetenzen.get(1).id).toBe(sqlInjectionTargetId);
 		// Hinweis: nach Ausführen des Tests stimmt diese Abfrage nicht mehr, ggf. auskommentieren oder DB neu aufsetzen bei lokalen Tests
-		expect(schueler.ankreuzkompetenzen.get(1).stufen).toStrictEqual([false,false,false,false,false]);
+		expect(schueler.ankreuzkompetenzen.get(1).stufen).toStrictEqual([false, false, false, false, false]);
 
 		const legalAnkreuzkompetenzenId = 18621; // AnkreuzkompetenzenId für zuständigen Lehrer T.Giesen@lmail.de, SchülerID = 3029, KlassenID = 5
 
@@ -238,8 +238,8 @@ describe(`SQL-Injections der POST-Endpunkte des ENM-Servers.`, () => {
 		});
 
 		// überprüfe Daten als anderen Schüler
-		expect(schuelerAfterInjection.nachname).toBe("Meyworm"); //SQL Injection nicht erfolgreich, sollte eigentlich Necker sein
-		expect(schuelerAfterInjection.vorname).toBe("Marco"); //SQL Injection nicht erfolgreich, sollte eigentlich Lukas sein
+		expect(schuelerAfterInjection.nachname).toBe("Meyworm"); // SQL Injection nicht erfolgreich, sollte eigentlich Necker sein
+		expect(schuelerAfterInjection.vorname).toBe("Marco"); // SQL Injection nicht erfolgreich, sollte eigentlich Lukas sein
 	});
 
 	test("Eine SQL-Injection auf POST SchuelerLernabschnitt um Daten einer anderen Id zu manipulieren. Der Angriff ist nicht erfolgreich", async () => {

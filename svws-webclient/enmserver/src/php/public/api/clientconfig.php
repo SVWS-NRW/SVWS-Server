@@ -19,6 +19,7 @@
 require_once dirname(__DIR__).'/../autoload.php';
 
 use wenom\Application;
+use wenom\Database;
 use wenom\Http;
 
 $app = new Application();
@@ -32,7 +33,7 @@ $lehrer = $app->auth->pruefeLehrerBasicAuth();
 // Reagiere auf die Anfrage je nach HTTP-Methode
 if (strcmp($app->auth->getHTTPMethod(), "GET") === 0) {
     // Liefere die gesamte Konfiguration - benutzerspezifisch und global zurück
-    echo $app->db->getClientConfig($lehrer->id);
+    echo Database::getClientConfig($app->db->conn, $lehrer->id);
     exit;
 } elseif (strcmp($app->auth->getHTTPMethod(), "PUT") === 0) {
     // Setze den Eintrag bei der benutzerspezifischen Konfiguration

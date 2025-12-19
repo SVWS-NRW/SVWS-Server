@@ -20,6 +20,7 @@ import { HashSet } from "../../../../core/src/java/util/HashSet";
 import { PairNN } from "../../../../core/src/asd/adt/PairNN";
 import { HashMap2D } from "../../../../core/src/core/adt/map/HashMap2D";
 import { Note } from "../../../../core/src/asd/types/Note";
+import { EnmSperrManager } from "./EnmSperrManager";
 
 /**
  * Das Interface für die Einträge der Auswahlliste für die Lerngruppen
@@ -112,6 +113,9 @@ export class EnmManager {
 
 	/** Die Liste aller Klassen eines Klassenlehrers, sortiert nach Jahrgängen */
 	readonly listKlassenKlassenlehrer: List<ENMKlasse> = new ArrayList<ENMKlasse>();
+
+	/** Der Manager für die Konfiguration der Sperrung der Noteneingabe */
+	private managerSperrungen: EnmSperrManager = new EnmSperrManager("[]");
 
 	/**
 	 * Erstellt einen neue Enm-Manager für die übergebenen ENM-Daten
@@ -657,6 +661,25 @@ export class EnmManager {
 				&& (Number(leistung.fehlstundenUnentschuldigtFach) >= 0)
 				&& (!isNaN(Number(leistung.fehlstundenFach)))
 				&& (Number(leistung.fehlstundenUnentschuldigtFach) <= Number(leistung.fehlstundenFach));
+	}
+
+
+	/**
+	 * Setzt den Manager für Sperrungen bei der Noteneingabe auf den übergebenen Sperr-Manager.
+	 *
+	 * @param manager   der neue Manager
+	 */
+	public set sperrungen(manager: EnmSperrManager) {
+		this.managerSperrungen = manager;
+	}
+
+	/**
+	 * Holt den Manager für Sperrungen bei der Noteneingabe
+	 *
+	 * @returns der Manager
+	 */
+	public get sperrungen(): EnmSperrManager {
+		return this.managerSperrungen;
 	}
 
 }

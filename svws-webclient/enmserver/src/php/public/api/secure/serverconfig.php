@@ -19,6 +19,7 @@
 require_once dirname(__DIR__).'/../../autoload.php';
 
 use wenom\Application;
+use wenom\Database;
 use wenom\Http;
 
 $app = new Application();
@@ -32,7 +33,7 @@ $app->auth->pruefeAccessToken();
 // Reagiere auf die Anfrage je nach HTTP-Methode
 if (strcmp($app->auth->getHTTPMethod(), "GET") === 0) {
     // Liefere die gesamte Konfiguration - Server-spezifisch und global zurück
-    echo $app->db->getServerConfig();
+    echo Database::getServerConfig($app->db->conn);
     exit;
 } elseif (strcmp($app->auth->getHTTPMethod(), "PUT") === 0) {
     // Setze den Eintrag bei in der server-spezifischen oder der globalen Konfiguration

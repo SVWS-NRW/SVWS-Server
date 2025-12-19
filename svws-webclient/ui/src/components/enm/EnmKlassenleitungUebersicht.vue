@@ -64,21 +64,26 @@
 				{{ pair.b.nachname }}, {{ pair.b.vorname }} ({{ pair.b.geschlecht }})
 			</td>
 			<template v-if="gridManager.isColVisible('FS') ?? true">
-				<td :ref="inputFehlstunden(pair, 2, index)" class="ui-table-grid-input"
+				<td v-if="enmManager().sperrungen.istFehlstundeneingabeErlaubt(pair.b.klasseID, true)"
+					:ref="inputFehlstunden(pair, 2, index)" class="ui-table-grid-input"
 					:class="{
 						'bg-ui-selected': (gridManager.focusColumn === 2),
 						'contentFocusField': gridManager.isFocusLast(2, index),
 					}" />
+				<td v-else>{{ pair.b.lernabschnitt.fehlstundenGesamt ?? "-" }}</td>
 			</template>
 			<template v-if="gridManager.isColVisible('FSU') ?? true">
-				<td :ref="inputFehlstundenUnendschuldigt(pair, 3, index)" class="ui-table-grid-input"
+				<td v-if="enmManager().sperrungen.istFehlstundeneingabeErlaubt(pair.b.klasseID, true)"
+					:ref="inputFehlstundenUnendschuldigt(pair, 3, index)" class="ui-table-grid-input"
 					:class="{
 						'bg-ui-selected': (gridManager.focusColumn === 3),
 						'contentFocusField': gridManager.isFocusLast(3, index),
 					}" />
+				<td v-else>{{ pair.b.lernabschnitt.fehlstundenGesamtUnentschuldigt ?? "-" }}</td>
 			</template>
 			<template v-if="gridManager.isColVisible('ASV') ?? true">
-				<td :ref="inputASV(pair, 4, index)" class="ui-table-grid-button"
+				<td v-if="enmManager().sperrungen.istSpalteneingabeErlaubt(pair.b.klasseID, 'ASV')"
+					:ref="inputASV(pair, 4, index)" class="ui-table-grid-button"
 					:class="{
 						'bg-ui-selected': (gridManager.focusColumn === 4),
 						'contentFocusField': gridManager.isFocusLast(4, index),
@@ -91,9 +96,19 @@
 					</svws-ui-tooltip>
 					<span v-else class="text-ellipsis overflow-hidden whitespace-nowrap w-full">{{ pair.b.bemerkungen.ASV ?? "-" }}</span>
 				</td>
+				<td v-else>
+					<svws-ui-tooltip v-if="(pair.b.bemerkungen.ASV !== null) && (pair.b.bemerkungen.ASV.length > 20)" class="h-full w-full">
+						<span class="text-ellipsis overflow-hidden whitespace-nowrap w-full">{{ pair.b.bemerkungen.ASV ?? "-" }}</span>
+						<template #content>
+							{{ pair.b.bemerkungen.ASV }}
+						</template>
+					</svws-ui-tooltip>
+					<span v-else class="text-ellipsis overflow-hidden whitespace-nowrap w-full">{{ pair.b.bemerkungen.ASV ?? "-" }}</span>
+				</td>
 			</template>
 			<template v-if="gridManager.isColVisible('AUE') ?? true">
-				<td :ref="inputAUE(pair, 5, index)" class="ui-table-grid-button"
+				<td v-if="enmManager().sperrungen.istSpalteneingabeErlaubt(pair.b.klasseID, 'AUE')"
+					:ref="inputAUE(pair, 5, index)" class="ui-table-grid-button"
 					:class="{
 						'bg-ui-selected': (gridManager.focusColumn === 5),
 						'contentFocusField': gridManager.isFocusLast(5, index),
@@ -106,13 +121,32 @@
 					</svws-ui-tooltip>
 					<span v-else class="text-ellipsis overflow-hidden whitespace-nowrap w-full">{{ pair.b.bemerkungen.AUE ?? "-" }}</span>
 				</td>
+				<td v-else>
+					<svws-ui-tooltip v-if="(pair.b.bemerkungen.AUE !== null) && (pair.b.bemerkungen.AUE.length > 20)" class="h-full w-full">
+						<span class="text-ellipsis overflow-hidden whitespace-nowrap w-full">{{ pair.b.bemerkungen.AUE ?? "-" }}</span>
+						<template #content>
+							{{ pair.b.bemerkungen.AUE }}
+						</template>
+					</svws-ui-tooltip>
+					<span v-else class="text-ellipsis overflow-hidden whitespace-nowrap w-full">{{ pair.b.bemerkungen.AUE ?? "-" }}</span>
+				</td>
 			</template>
 			<template v-if="gridManager.isColVisible('ZB') ?? true">
-				<td :ref="inputZB(pair, 6, index)" class="ui-table-grid-button"
+				<td v-if="enmManager().sperrungen.istSpalteneingabeErlaubt(pair.b.klasseID, 'ZB')"
+					:ref="inputZB(pair, 6, index)" class="ui-table-grid-button"
 					:class="{
 						'bg-ui-selected': (gridManager.focusColumn === 6),
 						'contentFocusField': gridManager.isFocusLast(6, index),
 					}">
+					<svws-ui-tooltip v-if="(pair.b.bemerkungen.ZB !== null) && (pair.b.bemerkungen.ZB.length > 20)" class="h-full w-full">
+						<span class="text-ellipsis overflow-hidden whitespace-nowrap w-full">{{ pair.b.bemerkungen.ZB ?? "-" }}</span>
+						<template #content>
+							{{ pair.b.bemerkungen.ZB }}
+						</template>
+					</svws-ui-tooltip>
+					<span v-else class="text-ellipsis overflow-hidden whitespace-nowrap w-full">{{ pair.b.bemerkungen.ZB ?? "-" }}</span>
+				</td>
+				<td v-else>
 					<svws-ui-tooltip v-if="(pair.b.bemerkungen.ZB !== null) && (pair.b.bemerkungen.ZB.length > 20)" class="h-full w-full">
 						<span class="text-ellipsis overflow-hidden whitespace-nowrap w-full">{{ pair.b.bemerkungen.ZB ?? "-" }}</span>
 						<template #content>

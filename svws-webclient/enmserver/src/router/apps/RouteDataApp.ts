@@ -5,12 +5,15 @@ import type { ENMLeistung } from "@core/core/data/enm/ENMLeistung";
 import type { ENMLeistungBemerkungen } from "@core/core/data/enm/ENMLeistungBemerkungen";
 import type { ENMLernabschnitt } from "@core/core/data/enm/ENMLernabschnitt";
 import type { ENMTeilleistung } from "@core/core/data/enm/ENMTeilleistung";
-import type { ENMKlasse } from "@core/index";
-import { DeveloperNotificationException, ENMDaten, Schulform } from "@core/index";
+import type { ENMKlasse } from "@core/core/data/enm/ENMKlasse";
+import { ENMDaten } from "@core/core/data/enm/ENMDaten";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { Schulform } from "@core/asd/types/schule/Schulform";
 import { EnmManager } from "@ui/components/enm/EnmManager";
 import { type EnmLerngruppenAuswahlEintrag } from "@ui/components/enm/EnmManager";
 import { shallowRef } from "vue";
 import { Config, ConfigElement } from "@ui/utils/Config";
+import { EnmSperrManager } from "@ui/components/enm/EnmSperrManager";
 
 
 /**
@@ -62,11 +65,93 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 			view: routeLeistungen,
 			daten: null,
 			manager: null,
+			managerSperrungen: null,
 			config: null,
 			nonPersistentConfig: null,
 		});
 	}
 
+	private async ladeLehrerENMDaten(): Promise<ENMDaten> {
+		const file = await api.server.getLehrerENMDaten();
+		const blob = await new Response(file.data.stream().pipeThrough(new DecompressionStream("gzip"))).blob();
+		return ENMDaten.transpilerFromJSON(await blob.text());
+	}
+
+	private initAuswahl(manager: EnmManager) {
+		const lerngruppen = manager.mapLerngruppenAuswahl.values();
+		this._auswahlLerngruppe.value = lerngruppen.isEmpty() ? null : lerngruppen.iterator().next();
+		this._auswahlLerngruppen.value = [];
+		const klassen = manager.listKlassenKlassenlehrer;
+		this._auswahlKlasse.value = klassen.isEmpty() ? null : klassen.getFirst();
+		this._auswahlKlassen.value = [];
+	}
+
+	private async ladeConfig(): Promise<Config> {
+		// Laden der Konfiguration
+		const cfg = await api.server.getClientConfig();
+		const mapUser = new Map<string, string>();
+		for (const c of cfg.user)
+			mapUser.set(c.key, c.value);
+		const mapGlobal = new Map<string, string>();
+		for (const c of cfg.global)
+			mapGlobal.set(c.key, c.value);
+		// Persistente Config mit den geladenen Daten anlegen
+		const config = new Config(async (key: string, value: string): Promise<void> => {
+			// Schreiben der globalen Konfiguration
+			throw new DeveloperNotificationException("Die Anwendung unterstützt kein Schreiben der globalen Konfiguration.");
+		}, async (key: string, value: string): Promise<void> => {
+			// Schreiben der benutzerspezifischen Konfiguration
+			await api.server.setClientConfigUserKey(value, key);
+		});
+		config.mapGlobal = mapGlobal;
+		config.mapUser = mapUser;
+		config.addElements([
+			new ConfigElement("noteneingabe.gesperrt", "global", "[]"),
+			new ConfigElement("floskelEditorVisible", "user", 'true'),
+			new ConfigElement("leistungen.table.columns", "user", JSON.stringify([
+				["Klasse", null],
+				["Name", null],
+				["Fach", null],
+				["Kurs", true],
+				["Kursart", true],
+				["Lehrer", true],
+				["Quartal", true],
+				["Note", null],
+				["Mahnung", true],
+				["FS", true],
+				["FSU", true],
+				["Bemerkung", true],
+			])),
+			new ConfigElement("teilleistungen.table.columns", "user", JSON.stringify([
+				["Klasse", null],
+				["Name", null],
+				["Fach", null],
+				["Kurs", true],
+				["Kursart", true],
+				["Lehrer", true],
+				["Teilleistung", null],
+				["Quartal", true],
+				["Note", null],
+			])),
+			new ConfigElement("klassenleitung.table.columns", "user", JSON.stringify([
+				["Klasse", null],
+				["Name", null],
+				["FS", null],
+				["FSU", null],
+				["ASV", true],
+				["AUE", true],
+				["ZB", true],
+			])),
+		]);
+		return config;
+	}
+
+	private initNonPersistenConfig(): Config {
+		const config = new Config(async (_, __) => {}, async (_, __) => { });
+		config.mapGlobal = new Map<string, string>();
+		config.mapUser = new Map<string, string>();
+		return config;
+	}
 
 	/**
 	 * Lädt die ENM-Daten und erzeugt den zugehörigen ENM-Manager
@@ -74,79 +159,23 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	public async ladeDaten() {
 		try {
 			const newState = <Partial<RouteStateApp>>{};
-			// Lade auch die ENM-Daten vom Server...
-			const file = await api.server.getLehrerENMDaten();
-			const blob = await new Response(file.data.stream().pipeThrough(new DecompressionStream("gzip"))).blob();
-			newState.daten = ENMDaten.transpilerFromJSON(await blob.text());
+
+			// Lade die ENM-Daten vom Server...
+			newState.daten = await this.ladeLehrerENMDaten();
+
+			// Erstellen des Enm-Managers
 			newState.manager = new EnmManager(newState.daten, newState.daten.lehrerID ?? -1);
 
-			const lerngruppen = newState.manager.mapLerngruppenAuswahl.values();
-			this._auswahlLerngruppe.value = lerngruppen.isEmpty() ? null : lerngruppen.iterator().next();
-			this._auswahlLerngruppen.value = [];
-			const klassen = newState.manager.listKlassenKlassenlehrer;
-			this._auswahlKlasse.value = klassen.isEmpty() ? null : klassen.getFirst();
-			this._auswahlKlassen.value = [];
+			// Laden der persistenten Konfiguration
+			newState.config = await this.ladeConfig();
+			newState.manager.sperrungen = new EnmSperrManager(newState.config.getValue("noteneingabe.gesperrt"));
 
-			// Laden der Konfiguration
-			const cfg = await api.server.getClientConfig();
-			const mapUser = new Map<string, string>();
-			for (const c of cfg.user)
-				mapUser.set(c.key, c.value);
-			const mapGlobal = new Map<string, string>();
-			for (const c of cfg.global)
-				mapGlobal.set(c.key, c.value);
-			// Persistente Config mit den geladenen Daten anlegen
-			newState.config = new Config(async (key: string, value: string): Promise<void> => {
-				// Schreiben der globalen Konfiguration
-				throw new DeveloperNotificationException("Die Anwendung unterstützt kein Schreiben der globalen Konfiguration.");
-			}, async (key: string, value: string): Promise<void> => {
-				// Schreiben der benutzerspezifischen Konfiguration
-				await api.server.setClientConfigUserKey(value, key);
-			});
-			newState.config.mapGlobal = mapGlobal;
-			newState.config.mapUser = mapUser;
-			newState.config.addElements([
-				new ConfigElement("floskelEditorVisible", "user", 'true'),
-				new ConfigElement("leistungen.table.columns", "user", JSON.stringify([
-					["Klasse", null],
-					["Name", null],
-					["Fach", null],
-					["Kurs", true],
-					["Kursart", true],
-					["Lehrer", true],
-					["Quartal", true],
-					["Note", null],
-					["Mahnung", true],
-					["FS", true],
-					["FSU", true],
-					["Bemerkung", true],
-				])),
-				new ConfigElement("teilleistungen.table.columns", "user", JSON.stringify([
-					["Klasse", null],
-					["Name", null],
-					["Fach", null],
-					["Kurs", true],
-					["Kursart", true],
-					["Lehrer", true],
-					["Teilleistung", null],
-					["Quartal", true],
-					["Note", null],
-				])),
-				new ConfigElement("klassenleitung.table.columns", "user", JSON.stringify([
-					["Klasse", null],
-					["Name", null],
-					["FS", null],
-					["FSU", null],
-					["ASV", true],
-					["AUE", true],
-					["ZB", true],
-				])),
-			]);
 			// Nicht-persistente Config leer anlegen
-			newState.nonPersistentConfig = new Config(async (_, __) => {}, async (_, __) => { });
-			newState.nonPersistentConfig.mapGlobal = new Map<string, string>();
-			newState.nonPersistentConfig.mapUser = new Map<string, string>();
+			newState.nonPersistentConfig = this.initNonPersistenConfig();
 			this.setPatchedDefaultState(newState);
+
+			// Initialisiere die Auswahlen
+			this.initAuswahl(newState.manager);
 		} catch (e) {
 			this.entferneDaten();
 			// TODO Fehler beim Laden der Daten sollte benutzerfreundlicher gehandhabt werden...

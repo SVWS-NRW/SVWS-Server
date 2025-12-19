@@ -15,6 +15,9 @@ class PatchManager {
     /** Der Manager mit den, aus der WeNoM-Datenbank geladenen, ENM-Daten  */
     private ENMDatenManager $enmManager;
 
+    /** Eine Map von der Klassen-ID zu der jeweilgen Konfigurationen von Sperrungen für die Klasse */
+    private array $mapKlassenSperrkonfigurationen;
+
     /**
      * Erstellt einen neuen Patch-Manager
      *
@@ -23,6 +26,7 @@ class PatchManager {
     public function __construct(ENMDatenManager $enmManager) {
         $this->enmManager = $enmManager;
         $this->conn = $enmManager->conn;
+        $this->mapKlassenSperrkonfigurationen = Database::getConfigSperrungNoteneingabe($this->conn);
     }
 
 
@@ -72,6 +76,124 @@ class PatchManager {
             }
         }
         return false;
+    }
+
+
+    /**
+     * Bestimmt die Sperrkonfiguration für Klasse mit der übergebenen ID.
+     *
+     * @param int $idKlasse   die ID der Klasse
+     *
+     * @return ?object die Sperrkonfiguration oder null, falls keine existiert
+     */
+    private function getSperrkonfiguration(int $idKlasse): ?object {
+        if (array_key_exists($idKlasse, $this->mapKlassenSperrkonfigurationen)) {
+            return $this->mapKlassenSperrkonfigurationen[$idKlasse];
+        }
+        return null;
+    }
+
+    /**
+     * Prüfe, ob die zeitliche Eingabebeschränkung für den Eingabebeginn die Notenanpassung erlaubt oder nicht.
+     *
+     * @param object $config   die Konfiguration für die Klasse
+     * @param string $now      der aktuelle Zeitpunkt
+     */
+    private function pruefeEingabebeginn(object $config, string $now): void {
+        if (($config->tsEingabeAb !== null) && ($now < $config->tsEingabeAb)) {
+            Http::exit403Forbidden("Die Eingabe ist noch nicht freigegeben. (Das Datum für den Eingabebeginn liegt in der Zukunft).");
+        }
+    }
+
+
+    /**
+     * Prüfe, ob die zeitliche Eingabebeschränkung die Notenanpassung erlaubt oder nicht.
+     *
+     * @param object $config   die Konfiguration für die Klasse
+     * @param string $now      der aktuelle Zeitpunkt
+     */
+    private function pruefeEingabeende(object $config, string $now): void {
+        if (($config->tsEingabeBis !== null) && ($now > $config->tsEingabeBis)) {
+            Http::exit403Forbidden("Die Eingabe ist nicht mehr freigegeben. (Das Datum für das Eingabeende liegt in der Vergangenheit).");
+        }
+    }
+
+    private function pruefeSperrungSpalte(int $idKlasse, string $attr) {
+        $config = $this->getSperrkonfiguration($idKlasse);
+        if ($config === null) {
+            Http::exit403Forbidden("Es liegt keine Konfiguration für die Eingabe von Noten für die Klasse mit der ID {$idKlasse} vor.");
+        }
+
+        // Prüfe generelle Berechtigung bei der Eingabespalte
+        $allowed = false;
+        foreach ($config->spalten as $col) {
+            if ((strcmp($attr, $col->name) === 0) && (!$col->gesperrt)) {
+                $allowed = true;
+                break;
+            }
+        }
+        if ($allowed === false) {
+            Http::exit403Forbidden("Eine Änderung wurde nicht explizit für die Klasse mit der ID {$idKlasse} erlaubt.");
+        }
+
+        // Prüfe die zeitliche Einschränkung für die Eingabe, sofern eine gesetzt wurde
+        $now = $this->now();
+        $this->pruefeEingabebeginn($config, $now);
+        $this->pruefeEingabeende($config, $now);
+    }
+
+    private function pruefeSperrungSpalteFehlstunden(int $idKlasse, bool $istGesamtFS) {
+        $config = $this->getSperrkonfiguration($idKlasse);
+        if ($config === null) {
+            Http::exit403Forbidden("Es liegt keine Konfiguration für die Eingabe von Noten für die Klasse mit der ID {$idKlasse} vor.");
+        }
+        // Prüfe generelle Berechtigung bei der Eingabespalte
+        $allowed = false;
+        foreach ($config->spalten as $col) {
+            if ((strcmp("Fehlstunden" , $col->name) === 0) && (!$col->gesperrt)) {
+                $allowed = true;
+                break;
+            }
+        }
+        if ($allowed === false) {
+            Http::exit403Forbidden("Eine Änderung von Fehlstunden wurde nicht explizit für die Klasse mit der ID {$idKlasse} erlaubt.");
+        }
+
+        // TODO prüfe auch die Information, ob nur Gesamtfehlstunden eingegeben werden sollen oder auf Basis von Lerngruppen
+
+        // Prüfe die zeitliche Einschränkung für die Eingabe, sofern eine gesetzt wurde
+        $now = $this->now();
+        $this->pruefeEingabebeginn($config, $now);
+        $this->pruefeEingabeende($config, $now);
+    }
+
+    private function pruefeSperrungSpalteTeilleistung(int $idKlasse, int $idTeilleistungsart) {
+        $config = $this->getSperrkonfiguration($idKlasse);
+        if ($config === null) {
+            Http::exit403Forbidden("Es liegt keine Konfiguration für die Eingabe von Noten für die Klasse mit der ID {$idKlasse} vor.");
+        }
+
+        // Prüfe generelle Berechtigung bei der Eingabespalte
+        $allowed = false;
+        $allowedSpecial = false;
+        foreach ($config->spalten as $col) {
+            if ((strcmp("Teilnoten", $col->name) === 0) && (!$col->gesperrt)) {
+                $allowed = true;
+            } elseif (($col->idTeilleistung != null) && ($col->idTeilleistung == $idTeilleistungsart) && (!$col->gesperrt)) {
+                $allowedSpecial = true;
+            }
+        }
+        if (!$allowed) {
+            Http::exit403Forbidden("Eine Änderung von Teilleistungen wurde nicht explizit für die Klasse mit der ID {$idKlasse} erlaubt.");
+        }
+        if (!$allowedSpecial) {
+            Http::exit403Forbidden("Eine Änderung der Teilleistungsart mit der ID {$idTeilleistungsart} wurde nicht explizit für die Klasse mit der ID {$idKlasse} erlaubt.");
+        }
+
+        // Prüfe die zeitliche Einschränkung für die Eingabe, sofern eine gesetzt wurde
+        $now = $this->now();
+        $this->pruefeEingabebeginn($config, $now);
+        $this->pruefeEingabeende($config, $now);
     }
 
 
@@ -253,14 +375,16 @@ class PatchManager {
      * Folgende Werte und Zeitstempel können durch das Patch Objekt überschrieben werden:
      *   note, noteQuartal, fehlstundenFach, fehlstundenUnentschuldigtFach, fachbezogeneBemerkungen, istGemahnt
      *
-     * @param object $daten   die Daten aus der Datenbank
-     * @param object $patch   der Patch für die Daten
+     * @param object $daten     die Daten aus der Datenbank
+     * @param object $patch     der Patch für die Daten
      * @param array $mapNoten   eine Array, welches von dem Noten-Kürzel auf das Noten-Objekt der ENM-Daten verweist
      */
     protected function dbPatchENMLeistung(object $daten, object $patch, array $mapNoten): void {
+        $idKlasse = $this->enmManager->getKlassenIdByLeistungsdatenId($patch->id);
         $ts = PatchManager::now();
         $update = "";
         if (property_exists($patch, 'note') && PatchManager::diffStringNullable($patch->note, $daten->note) && ($ts > $daten->tsNote)) {
+            $this->pruefeSperrungSpalte($idKlasse, 'Note');
             $istNote = array_key_exists($patch->note, $mapNoten);
             if (!$istNote && ($patch->note !== null)) {
                 Http::exit400BadRequest("Der Patch-Methode wurde eine ungültige Note übergeben.");
@@ -270,6 +394,7 @@ class PatchManager {
             $daten->tsNote = $ts;
         }
         if (property_exists($patch, 'noteQuartal') && PatchManager::diffStringNullable($patch->noteQuartal, $daten->noteQuartal) && ($ts > $daten->tsNoteQuartal)) {
+            $this->pruefeSperrungSpalte($idKlasse, 'Quartalsnoten');
             $istNote = array_key_exists($patch->noteQuartal, $mapNoten);
             if (!$istNote && ($patch->noteQuartal !== null)) {
                 Http::exit400BadRequest("Der Patch-Methode wurde eine ungültige Quartals-Note übergeben.");
@@ -279,6 +404,7 @@ class PatchManager {
             $daten->tsNoteQuartal = $ts;
         }
         if (property_exists($patch, 'fehlstundenFach') && ($patch->fehlstundenFach !== $daten->fehlstundenFach) && ($ts > $daten->tsFehlstundenFach)) {
+            $this->pruefeSperrungSpalteFehlstunden($idKlasse, false);
             if (!is_int($patch->fehlstundenFach) || ($patch->fehlstundenFach < 0)) {
                 Http::exit400BadRequest("Es wurde eine fehlerhafter Wert für die Fehlstunden angegeben.");
             }
@@ -287,6 +413,7 @@ class PatchManager {
             $daten->tsFehlstundenFach = $ts;
         }
         if (property_exists($patch, 'fehlstundenUnentschuldigtFach') && ($patch->fehlstundenUnentschuldigtFach !== $daten->fehlstundenUnentschuldigtFach) && ($ts > $daten->tsFehlstundenUnentschuldigtFach)) {
+            $this->pruefeSperrungSpalteFehlstunden($idKlasse, false);
             if (!is_int($patch->fehlstundenUnentschuldigtFach) || ($patch->fehlstundenUnentschuldigtFach < 0)) {
                 Http::exit400BadRequest("Es wurde eine fehlerhafter Wert für die unentschuldigten Fehlstunden angegeben.");
             }
@@ -295,11 +422,13 @@ class PatchManager {
             $daten->tsFehlstundenUnentschuldigtFach = $ts;
         }
         if (property_exists($patch, 'fachbezogeneBemerkungen') && PatchManager::diffStringNullable($patch->fachbezogeneBemerkungen, $daten->fachbezogeneBemerkungen) && ($ts > $daten->tsFachbezogeneBemerkungen)) {
+            $this->pruefeSperrungSpalte($idKlasse, 'FB');
             $update .= "tsFachbezogeneBemerkungen='$ts',";
             $daten->fachbezogeneBemerkungen = $patch->fachbezogeneBemerkungen;
             $daten->tsFachbezogeneBemerkungen = $ts;
         }
         if (property_exists($patch, 'istGemahnt') && ($patch->istGemahnt !== $daten->istGemahnt) && ($ts > $daten->tsIstGemahnt)) {
+            $this->pruefeSperrungSpalte($idKlasse, 'Mahnung');
             if (($patch->istGemahnt !== null) && !is_bool($patch->istGemahnt)) {
                 Http::exit400BadRequest("Es wurde eine fehlerhafter Wert für das Feld istGemahnt angegeben.");
             }
@@ -332,10 +461,12 @@ class PatchManager {
      * @param object $patch   der Patch für die Daten
      */
     protected function dbPatchENMSchuelerLernabschnitt(object $daten, object $patch): void {
+        $idKlasse = $this->enmManager->getKlassenIdByLernabschnittsId($patch->id);
         $ts = PatchManager::now();
         $update = "";
         if (property_exists($patch, 'fehlstundenGesamt') && ($ts > $daten->lernabschnitt->tsFehlstundenGesamt)
                 && ($patch->fehlstundenGesamt !== $daten->lernabschnitt->fehlstundenGesamt)) {
+            $this->pruefeSperrungSpalteFehlstunden($idKlasse, true);
             if (!is_int($patch->fehlstundenGesamt) || ($patch->fehlstundenGesamt < 0)) {
                 Http::exit400BadRequest("Es wurde eine fehlerhafter Wert für Gesamt-Fehlstunden angegeben.");
             }
@@ -345,6 +476,7 @@ class PatchManager {
         }
         if (property_exists($patch, 'fehlstundenGesamtUnentschuldigt') && ($ts > $daten->lernabschnitt->tsFehlstundenGesamtUnentschuldigt)
                 && ($patch->fehlstundenGesamtUnentschuldigt !== $daten->lernabschnitt->fehlstundenGesamtUnentschuldigt)) {
+            $this->pruefeSperrungSpalteFehlstunden($idKlasse, true);
             if (!is_int($patch->fehlstundenGesamtUnentschuldigt) || ($patch->fehlstundenGesamtUnentschuldigt < 0)) {
                 Http::exit400BadRequest("Es wurde eine fehlerhafter Wert für unentschuldigten Gesamt-Fehlstunden angegeben.");
             }
@@ -379,46 +511,54 @@ class PatchManager {
      * @param object $patch     der Patch für die Daten
      */
     protected function dbPatchENMSchuelerBemerkungen(int $idSchueler, object $daten, object $patch): void {
+        $idKlasse = $this->enmManager->getKlassenIdBySchuelerId($idSchueler);
         $ts = PatchManager::now();
         $update = "";
         if (property_exists($patch, 'ASV') && ($ts > $daten->bemerkungen->tsASV)
                 && PatchManager::diffStringNullable($daten->bemerkungen->ASV, $patch->ASV)) {
+            $this->pruefeSperrungSpalte($idKlasse, 'ASV');
             $update .= "tsASV='$ts',";
             $daten->bemerkungen->ASV = $patch->ASV;
             $daten->bemerkungen->tsASV = $ts;
         }
         if (property_exists($patch, 'AUE') && ($ts > $daten->bemerkungen->tsAUE)
                 && PatchManager::diffStringNullable($daten->bemerkungen->AUE, $patch->AUE)) {
+            $this->pruefeSperrungSpalte($idKlasse, 'AUE');
             $update .= "tsAUE='$ts',";
             $daten->bemerkungen->AUE = $patch->AUE;
             $daten->bemerkungen->tsAUE = $ts;
         }
         if (property_exists($patch, 'ZB') && ($ts > $daten->bemerkungen->tsZB)
                 && PatchManager::diffStringNullable($daten->bemerkungen->ZB, $patch->ZB)) {
+            $this->pruefeSperrungSpalte($idKlasse, 'ZB');
             $update .= "tsZB='$ts',";
             $daten->bemerkungen->ZB = $patch->ZB;
             $daten->bemerkungen->tsZB = $ts;
         }
         if (property_exists($patch, 'LELS') && ($ts > $daten->bemerkungen->tsLELS)
                 && PatchManager::diffStringNullable($daten->bemerkungen->LELS, $patch->LELS)) {
+            $this->pruefeSperrungSpalte($idKlasse, 'LELS');
             $update .= "tsLELS='$ts',";
             $daten->bemerkungen->LELS = $patch->LELS;
             $daten->bemerkungen->tsLELS = $ts;
         }
         if (property_exists($patch, 'schulformEmpf') && ($ts > $daten->bemerkungen->tsSchulformEmpf)
                 && PatchManager::diffStringNullable($daten->bemerkungen->schulformEmpf, $patch->schulformEmpf)) {
+            $this->pruefeSperrungSpalte($idKlasse, 'SchulformEmpfehlung');
             $update .= "tsSchulformEmpf='$ts',";
             $daten->bemerkungen->schulformEmpf = $patch->schulformEmpf;
             $daten->bemerkungen->tsSchulformEmpf = $ts;
         }
         if (property_exists($patch, 'individuelleVersetzungsbemerkungen') && ($ts > $daten->bemerkungen->tsIndividuelleVersetzungsbemerkungen)
                 && PatchManager::diffStringNullable($daten->bemerkungen->individuelleVersetzungsbemerkungen, $patch->individuelleVersetzungsbemerkungen)) {
+            $this->pruefeSperrungSpalte($idKlasse, 'Versetzungsbemerkungen');
             $update .= "tsIndividuelleVersetzungsbemerkungen='$ts',";
             $daten->bemerkungen->individuelleVersetzungsbemerkungen = $patch->individuelleVersetzungsbemerkungen;
             $daten->bemerkungen->tsIndividuelleVersetzungsbemerkungen = $ts;
         }
         if (property_exists($patch, 'foerderbemerkungen') && ($ts > $daten->bemerkungen->tsFoerderbemerkungen)
                 && PatchManager::diffStringNullable($daten->bemerkungen->foerderbemerkungen, $patch->foerderbemerkungen)) {
+            $this->pruefeSperrungSpalte($idKlasse, 'Förderbemerkungen');
             $update .= "tsFoerderbemerkungen='$ts',";
             $daten->bemerkungen->foerderbemerkungen = $patch->foerderbemerkungen;
             $daten->bemerkungen->tsFoerderbemerkungen = $ts;
@@ -450,25 +590,26 @@ class PatchManager {
      * @param array $mapNoten   eine Array, welches von dem Noten-Kürzel auf das Noten-Objekt der ENM-Daten verweist
      */
     protected function dbPatchENMTeilleistung(object $daten, object $patch, array $mapNoten): void {
+        $idKlasse = $this->enmManager->getKlassenIdByTeilleistungId($patch->id);
         $ts = PatchManager::now();
         $update = "";
         if (property_exists($patch, 'artID') && ($patch->artID !== $daten->artID) && ($ts > $daten->tsArtID)) {
             Http::exit400BadRequest("Das Verändern der Teilleistungsart ist nicht erlaubt.");
-            $update .= "tsArtID='$ts',";
-            $daten->artID = $patch->artID;
-            $daten->tsArtID = $ts;
         }
         if (property_exists($patch, 'datum') && PatchManager::diffStringNullable($patch->datum, $daten->datum) && ($ts > $daten->tsDatum)) {
+            $this->pruefeSperrungSpalteTeilleistung($idKlasse, $daten->artID);
             $update .= "tsDatum='$ts',";
             $daten->datum = $patch->datum;
             $daten->tsDatum = $ts;
         }
         if (property_exists($patch, 'bemerkung') && PatchManager::diffStringNullable($patch->bemerkung, $daten->bemerkung) && ($ts > $daten->tsBemerkung)) {
+            $this->pruefeSperrungSpalteTeilleistung($idKlasse, $daten->artID);
             $update .= "tsBemerkung='$ts',";
             $daten->bemerkung = $patch->bemerkung;
             $daten->tsBemerkung = $ts;
         }
         if (property_exists($patch, 'note') && PatchManager::diffStringNullable($patch->note, $daten->note) && ($ts > $daten->tsNote)) {
+            $this->pruefeSperrungSpalteTeilleistung($idKlasse, $daten->artID);
             $istNote = array_key_exists($patch->note, $mapNoten);
             if (!$istNote && ($patch->note !== null)) {
                 Http::exit400BadRequest("Der Patch-Methode wurde eine ungültige Note übergeben.");
@@ -500,6 +641,8 @@ class PatchManager {
      *
      */
     protected function dbPatchENMSchuelerAnkreuzkompetenzen(object $daten, object $patch): void {
+        // TODO Sperr-Konfiguration um Ankreuzkompetenzen erweitern und nachfolge Zeile ersetzen und bei der Property den Spalten-Check ergänzen
+        Http::exit403Forbidden("Ankreuzkompetenzen werden aktuell noch nicht von der Konfiguration für Sperrungen unterstützt. Dies muss noch implementiert werden bevor patches erlaubt werden.");
         $ts = PatchManager::now();
         $update = "";
         if (property_exists($patch, 'stufen') && PatchManager::diffArraySimple($patch->stufen, $daten->stufen) && ($ts > $daten->tsStufe)) {

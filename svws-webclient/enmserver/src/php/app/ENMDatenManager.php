@@ -40,6 +40,15 @@ class ENMDatenManager {
     /** Ein Cache für die Schüler */
     protected object | null $mapsSchueler = null;
 
+    /** Ein Cache für die Teilleistungen */
+    protected object | null $mapsTeilleistungen = null;
+
+    /** Ein Cache für die Leistungsdaten */
+    protected object | null $mapsLeistungsdaten = null;
+
+    /** Ein Cache für die Lernabschnittsdaten */
+    protected object | null $mapsLernabschnittsdaten = null;
+
 
     /**
      * Erstellt einen neuen nicht initialisierten Manager zur Verfügung.
@@ -71,7 +80,7 @@ class ENMDatenManager {
      *
      * @return string die vollständigen, dh. zusammengesetzten ENM-Daten als php-Objekt
      */
-    public function doExport() : string {
+    public function doExport(): string {
         // Nehme die ENM-Daten ohne Lehrer- und Schülerdaten ...
         $daten = $this->enmDaten;
         // ... und integriere die Lehrer-Daten
@@ -86,7 +95,7 @@ class ENMDatenManager {
      *
      * @return array eine Map von dem Kürzel der Noten auf das zugehörige Notenobjekt
      */
-    public function getMapNoten() : array {
+    public function getMapNoten(): array {
         if ($this->mapNoten === null) {
             $this->mapNoten = [];
             foreach ($this->enmDaten->noten as $note) {
@@ -103,7 +112,7 @@ class ENMDatenManager {
      *
      * @return array eine Map von der ID der Klasse auf das zugehörige Klassenobjekt
      */
-    public function getMapKlassen(object $lehrer) : array {
+    public function getMapKlassen(object $lehrer): array {
         if ($this->mapKlassen === null) {
             $this->mapKlassen = [];
             foreach ($this->enmDaten->klassen as $klasse) {
@@ -122,7 +131,7 @@ class ENMDatenManager {
      *
      * @return array eine Map von der ID der Lerngruppe auf das zugehörige Lerngruppenobjekt
      */
-    public function getMapLerngruppen() : array {
+    public function getMapLerngruppen(): array {
         if ($this->mapLerngruppen === null) {
             $this->mapLerngruppen = [];
             foreach ($this->enmDaten->lerngruppen as $lerngruppe) {
@@ -139,7 +148,7 @@ class ENMDatenManager {
      *
      * @return array eine Map von der ID der Lerngruppe auf das zugehörige Lerngruppenobjekt
      */
-    public function getMapLerngruppenFachlehrer(object $lehrer) : array {
+    public function getMapLerngruppenFachlehrer(object $lehrer): array {
         if ($this->mapLerngruppenFachlehrer === null) {
             $this->mapLerngruppenFachlehrer = [];
             foreach ($this->enmDaten->lerngruppen as $lerngruppe) {
@@ -158,7 +167,7 @@ class ENMDatenManager {
      *
      * @return array die Map
      */
-    public function getMapAnkreuzkompetenzen() : array {
+    public function getMapAnkreuzkompetenzen(): array {
         if ($this->mapAnkreuzkompetenzen === null) {
             $this->mapAnkreuzkompetenzen = [];
             foreach ($this->enmDaten->ankreuzkompetenzen->kompetenzen as $kompetenz) {
@@ -171,44 +180,160 @@ class ENMDatenManager {
     /**
      * Erstelle Maps bezüglich der Schülerdaten, den Leistungsdaten, den Teilleistungen und den Ankreuzkompetenzen,
      * jeweils von deren IDs auf das jeweils zugehörige Objekt.
-     *
-     * @return object ein Objekt mit vier Maps unter den Attributen 'schueler', 'leistungen', 'teilleistungen',
-     *                und 'ankreuzkompetenzen'
      */
-    public function getMapsSchueler() : object {
-        if ($this->mapsSchueler === null) {
-            $this->mapsSchueler = (object)[
-                'schueler' => [],
-                'bemerkungen' => [],
-                'lernabschnitte' => [],
-                'lernabschnittSchueler' => [],
-                'leistungen' => [],
-                'teilleistungen' => [],
-                'teilleistungLeistung' => [],
-                'ankreuzkompetenzen' => [],
-                'ankreuzkompetenzSchueler' => [],
-            ];
-            foreach ($this->enmSchueler as $schueler) {
-                $this->mapsSchueler->schueler[$schueler->id] = $schueler;
-                $this->mapsSchueler->bemerkungen[$schueler->id] = $schueler->bemerkungen;
-                $this->mapsSchueler->lernabschnitte[$schueler->lernabschnitt->id] = $schueler->lernabschnitt;
-                $this->mapsSchueler->lernabschnittSchueler[$schueler->lernabschnitt->id] = $schueler;
-                foreach ($schueler->leistungsdaten as $leistung) {
-                    $this->mapsSchueler->leistungen[$leistung->id] = $leistung;
-                    foreach ($leistung->teilleistungen as $teilleistung) {
-                        $this->mapsSchueler->teilleistungen[$teilleistung->id] = $teilleistung;
-                        $this->mapsSchueler->teilleistungLeistung[$teilleistung->id] = $leistung;
-                    }
-                }
-                foreach ($schueler->ankreuzkompetenzen as $ankreuzkompetenz) {
-                    $this->mapsSchueler->ankreuzkompetenzen[$ankreuzkompetenz->id] = $ankreuzkompetenz;
-                    $this->mapsSchueler->ankreuzkompetenzSchueler[$ankreuzkompetenz->id] = $schueler;
+    private function initMapsSchueler(): void {
+        $this->mapsSchueler = (object)[
+            'schueler' => [],
+            'bemerkungen' => [],
+            'lernabschnitte' => [],
+            'lernabschnittSchueler' => [],
+            'leistungen' => [],
+            'teilleistungen' => [],
+            'teilleistungLeistung' => [],
+            'ankreuzkompetenzen' => [],
+            'ankreuzkompetenzSchueler' => [],
+        ];
+        $this->mapsLeistungsdaten = (object)[
+            'schueler' => [],
+        ];
+        $this->mapsTeilleistungen = (object)[
+            'schueler' => [],
+        ];
+        $this->mapsLernabschnittsdaten = (object)[
+            'schueler' => [],
+        ];
+        foreach ($this->enmSchueler as $schueler) {
+            $this->mapsSchueler->schueler[$schueler->id] = $schueler;
+            $this->mapsSchueler->bemerkungen[$schueler->id] = $schueler->bemerkungen;
+            $this->mapsSchueler->lernabschnitte[$schueler->lernabschnitt->id] = $schueler->lernabschnitt;
+            $this->mapsSchueler->lernabschnittSchueler[$schueler->lernabschnitt->id] = $schueler;
+            $this->mapsLernabschnittsdaten->schueler[$schueler->lernabschnitt->id] = $schueler;
+            foreach ($schueler->leistungsdaten as $leistung) {
+                $this->mapsSchueler->leistungen[$leistung->id] = $leistung;
+                $this->mapsLeistungsdaten->schueler[$leistung->id] = $schueler;
+                foreach ($leistung->teilleistungen as $teilleistung) {
+                    $this->mapsSchueler->teilleistungen[$teilleistung->id] = $teilleistung;
+                    $this->mapsSchueler->teilleistungLeistung[$teilleistung->id] = $leistung;
+                    $this->mapsTeilleistungen->schueler[$teilleistung->id] = $schueler;
                 }
             }
+            foreach ($schueler->ankreuzkompetenzen as $ankreuzkompetenz) {
+                $this->mapsSchueler->ankreuzkompetenzen[$ankreuzkompetenz->id] = $ankreuzkompetenz;
+                $this->mapsSchueler->ankreuzkompetenzSchueler[$ankreuzkompetenz->id] = $schueler;
+            }
+        }
+    }
+
+    /**
+     * Hole Maps bezüglich der Schülerdaten, den Leistungsdaten, den Teilleistungen und den Ankreuzkompetenzen,
+     * jeweils von deren IDs auf das jeweils zugehörige Objekt.
+     *
+     * @return object ein Objekt mit Maps unter den Attributen 'schueler', 'bemerkungen', 'lernabschnitte',
+     *                'lernabschnittSchueler', 'leistungen', 'teilleistungen', 'teilleistungLeistung',
+     *                'ankreuzkompetenzen', 'ankreuzkompetenzSchueler'
+     */
+    public function getMapsSchueler(): object {
+        if ($this->mapsSchueler === null) {
+            $this->initMapsSchueler();
         }
         return $this->mapsSchueler;
     }
 
+    /**
+     * Erstelle eine Map bezüglich der Teilleistungen von Schülern.
+     *
+     * @return object ein Objekt mit Maps unter den Attributen 'schueler'
+     */
+    public function getMapsTeilleistungen(): object {
+        if ($this->mapsTeilleistungen === null) {
+            $this->initMapsSchueler();
+        }
+        return $this->mapsTeilleistungen;
+    }
+
+    /**
+     * Erstelle eine Map bezüglich der Leistungsdaten von Schülern.
+     *
+     * @return object ein Objekt mit Maps unter den Attributen 'schueler'
+     */
+    public function getMapsLeistungsdaten(): object {
+        if ($this->mapsLeistungsdaten === null) {
+            $this->initMapsSchueler();
+        }
+        return $this->mapsLeistungsdaten;
+    }
+
+    /**
+     * Erstelle eine Map bezüglich der Lernabschnittsdaten von Schülern.
+     *
+     * @return object ein Objekt mit Maps unter den Attributen 'schueler'
+     */
+    public function getMapsLernabschnittsdaten(): object {
+        if ($this->mapsLernabschnittsdaten === null) {
+            $this->initMapsSchueler();
+        }
+        return $this->mapsLernabschnittsdaten;
+    }
+
+    /**
+     * Ermittelt die ID der Klasse des Schülers für eine ID von einer Teilleistung
+     *
+     * @param int $idTeilleistung   die ID der Teilleistung
+     *
+     * @return int   die ID der Klasse
+     */
+    public function getKlassenIdByTeilleistungId(int $idTeilleistung): int {
+        $map = $this->getMapsTeilleistungen();
+        if (!array_key_exists($idTeilleistung, $map->schueler)) {
+            Http::exit500("Die ENM-Daten sind inkonsistent. Zu der Teilleistungs-ID {$idTeilleistung} konnte kein Schüler bestimmt werden.");
+        }
+        return $map->schueler[$idTeilleistung]->klasseID;
+    }
+
+    /**
+     * Ermittelt die ID der Klasse des Schüler für eine ID von Leistungsdaten
+     *
+     * @param int $idLeistung   die ID der Leistungsdaten
+     *
+     * @return int   die ID der Klasse
+     */
+    public function getKlassenIdByLeistungsdatenId(int $idLeistung): int {
+        $map = $this->getMapsLeistungsdaten();
+        if (!array_key_exists($idLeistung, $map->schueler)) {
+            Http::exit500("Die ENM-Daten sind inkonsistent. Zu der Leistungsdaten-ID {$idLeistung} konnte kein Schüler bestimmt werden.");
+        }
+        return $map->schueler[$idLeistung]->klasseID;
+    }
+
+    /**
+     * Ermittelt die ID der Klasse des Schüler für eine ID von Lernabschnittsdaten
+     *
+     * @param int $idLernabschnitt   die ID der Lernabschnittsdaten
+     *
+     * @return int   die ID der Klasse
+     */
+    public function getKlassenIdByLernabschnittsId(int $idLernabschnitt): int {
+        $map = $this->getMapsLernabschnittsdaten();
+        if (!array_key_exists($idLernabschnitt, $map->schueler)) {
+            Http::exit500("Die ENM-Daten sind inkonsistent. Zu der Lernabschnitts-ID {$idLernabschnitt} konnte kein Schüler bestimmt werden.");
+        }
+        return $map->schueler[$idLernabschnitt]->klasseID;
+    }
+
+    /**
+     * Ermittelt die ID der Klasse des Schülers für eine ID des Schülers
+     *
+     * @param int $idSchueler   die ID des Schülers
+     *
+     * @return int   die ID der Klasse
+     */
+    public function getKlassenIdBySchuelerId(int $idSchueler): int {
+        $map = $this->getMapsSchueler();
+        if (!array_key_exists($idSchueler, $map->schueler)) {
+            Http::exit500("Die ENM-Daten sind inkonsistent. Zu der Schüler-ID {$idSchueler} konnte kein Schüler bestimmt werden.");
+        }
+        return $map->schueler[$idSchueler]->klasseID;
+    }
 
     /**
      * Erstellt die ENM-Daten angepasst für den den übergebenen Lehrer
@@ -217,7 +342,7 @@ class ENMDatenManager {
      *
      * @return string die für den Lehrer zusammengestellten ENM-Daten
      */
-    public function getENMDatenForLehrer(object $lehrer) : string {
+    public function getENMDatenForLehrer(object $lehrer): string {
         // Nehme die ENM-Daten ohne Lehrer- und Schülerdaten ...
         $daten = $this->enmDaten;
         // Bestimme die zu integrierenden Lehrer-Daten, entferne dabei die Informationen zu den Kennwörtern

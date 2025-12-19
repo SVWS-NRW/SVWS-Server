@@ -1,10 +1,12 @@
 package de.svws_nrw.data.enm;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,8 +28,11 @@ import de.svws_nrw.asd.types.schule.Floskelgruppenart;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.base.compression.CompressionException;
 import de.svws_nrw.base.crypto.Passwords;
+import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.data.benutzer.BenutzerConfigElement;
 import de.svws_nrw.core.data.enm.ENMAnkreuzkompetenz;
+import de.svws_nrw.core.data.enm.ENMConfigKlasse;
+import de.svws_nrw.core.data.enm.ENMConfigKlasseSpalte;
 import de.svws_nrw.core.data.enm.ENMDaten;
 import de.svws_nrw.core.data.enm.ENMFach;
 import de.svws_nrw.core.data.enm.ENMFloskel;
@@ -44,6 +49,7 @@ import de.svws_nrw.core.data.enm.ENMServerConfig;
 import de.svws_nrw.core.data.enm.ENMServerConfigElement;
 import de.svws_nrw.core.data.enm.ENMTeilleistung;
 import de.svws_nrw.core.data.enm.ENMTeilleistungsart;
+import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.utils.enm.ENMDatenManager;
 import de.svws_nrw.data.DataManager;
@@ -79,6 +85,7 @@ import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerTeilleist
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.ext.jbcrypt.BCrypt;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -88,6 +95,9 @@ import jakarta.ws.rs.core.Response.Status;
  * Core-DTO {@link ENMDaten}.
  */
 public final class DataENMDaten extends DataManager<Long> {
+
+	private static final DateTimeFormatter ofPattern =
+			new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd HH:mm:ss").appendFraction(ChronoField.MILLI_OF_SECOND, 0, 3, true).toFormatter();
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link ENMDaten}.
@@ -486,6 +496,162 @@ public final class DataENMDaten extends DataManager<Long> {
 	}
 
 
+	/**
+	 * Lädt die Konfiguration, inwiefern Anpassungen an den Daten für die Klasse zulässig ist oder nicht.
+	 *
+	 * @param idKlasse   die ID der Klasse, für welche die Konfiguation geladen werden soll
+	 *
+	 * @return die Konfigurationen für die Klasse oder null, falls keine existiert
+	 *
+	 * @throws ApiOperationException   falls ein Fehler beim Deserialisieren der Konfiguration auftritt
+	 */
+	private ENMConfigKlasse getKonfigurationErlaubt(final long idKlasse) throws ApiOperationException {
+		try {
+			final DTONotenmodulKonfigurationClient config = conn.queryByKey(DTONotenmodulKonfigurationClient.class, "noteneingabe.gesperrt");
+			if (config == null)
+				return null;
+			final List<ENMConfigKlasse> list = JSONMapper.mapper.readerForListOf(ENMConfigKlasse.class).readValue(config.wert);
+			if (list == null)
+				return null;
+			for (final ENMConfigKlasse cfg : list)
+				if (cfg.id == idKlasse)
+					return cfg;
+			return null;
+		} catch (final @NotNull IOException e) {
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Einlesen der Konfiguration.");
+		}
+	}
+
+
+	/**
+	 * Prüfe, ob die zeitliche Eingabebeschränkung für den Eingabebeginn die Notenanpassung erlaubt oder nicht.
+	 *
+	 * @param config  die Konfiguration für die Klasse
+	 * @param now     der aktuelle Zeitpunkt
+	 *
+	 * @throws ApiOperationException   falls die Eingabe von der Zeiteinschränkung her nicht erlaubt ist
+	 */
+	private static void pruefeEingabebeginn(final @NotNull ENMConfigKlasse config, final @NotNull Timestamp now) throws ApiOperationException {
+		if (config.tsEingabeAb == null)
+			return;
+		try {
+			final Timestamp beginn = getTimeStampFromIso(config.tsEingabeAb);
+			if (beginn == null)
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+						"Fehlerhaftes Datumsformat beim Eingabebeginn für die Klasse mit der ID " + config.id);
+			if (!now.after(beginn))
+				throw new ApiOperationException(Status.FORBIDDEN,
+						"Die Eingabe ist noch nicht freigegeben. (Das Datum für den Eingabebeginn liegt in der Zukunft).");
+		} catch (final DateTimeParseException e) {
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e,
+					"Fehlerhaftes Datumsformat beim Eingabebeginn für die Klasse mit der ID " + config.id);
+		}
+	}
+
+
+	/**
+	 * Prüfe, ob die zeitliche Eingabebeschränkung die Notenanpassung erlaubt oder nicht.
+	 *
+	 * @param config  die Konfiguration für die Klasse
+	 * @param now     der aktuelle Zeitpunkt
+	 *
+	 * @throws ApiOperationException   falls die Eingabe von der Zeiteinschränkung her nicht erlaubt ist
+	 */
+	private static void pruefeEingabeende(final @NotNull ENMConfigKlasse config, final @NotNull Timestamp now) throws ApiOperationException {
+		if (config.tsEingabeBis == null)
+			return;
+		try {
+			final Timestamp ende = getTimeStampFromIso(config.tsEingabeBis);
+			if (ende == null)
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+						"Fehlerhaftes Datumsformat beim Eingabeende für die Klasse mit der ID " + config.id);
+			if (!now.before(ende))
+				throw new ApiOperationException(Status.FORBIDDEN,
+						"Die Eingabe ist nicht mehr freigegeben. (Das Datum für das Eingabeende liegt in der Vergangenheit).");
+		} catch (final DateTimeParseException e) {
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e,
+					"Fehlerhaftes Datumsformat beim Eingabeende für die Klasse mit der ID " + config.id);
+		}
+	}
+
+
+	private void pruefeKonfigurationPatchErlaubt(final long idKlasse, final @NotNull String attribute) throws ApiOperationException {
+		// TODO if Entfernen, wenn das Feature auch außerhalb des DEV-Modes genutzt werden soll
+		if (SVWSKonfiguration.get().getServerMode() != ServerMode.DEV)
+			return;
+		final ENMConfigKlasse config = getKonfigurationErlaubt(idKlasse);
+		if (config == null)
+			throw new ApiOperationException(Status.FORBIDDEN, "Es liegt keine Konfiguration für die Eingabe von Noten für diese Klasse vor.");
+		// Prüfe generelle Berechtigung bei der Eingabespalte
+		boolean allowed = false;
+		for (final @NotNull ENMConfigKlasseSpalte col : config.spalten) {
+			if (attribute.equals(col.name) && (!col.gesperrt)) {
+				allowed = true;
+				break;
+			}
+		}
+		if (!allowed)
+			throw new ApiOperationException(Status.FORBIDDEN, "Eine Änderung wurde nicht explizit für diese Klasse erlaubt.");
+		// Prüfe die zeitliche Einschränkung für die Eingabe, sofern eine gesetzt wurde
+		final Timestamp now = getTimeStampNow();
+		pruefeEingabebeginn(config, now);
+		pruefeEingabeende(config, now);
+	}
+
+
+	private void pruefeKonfigurationPatchErlaubtFehlstunden(final long idKlasse, final boolean istGesamtFS) throws ApiOperationException {
+		// TODO if Entfernen, wenn das Feature auch außerhalb des DEV-Modes genutzt werden soll
+		if (SVWSKonfiguration.get().getServerMode() != ServerMode.DEV)
+			return;
+		final ENMConfigKlasse config = getKonfigurationErlaubt(idKlasse);
+		if (config == null)
+			throw new ApiOperationException(Status.FORBIDDEN, "Es liegt keine Konfiguration für die Eingabe von Noten für diese Klasse vor.");
+		// Prüfe generelle Berechtigung bei den Fehlstunden
+		boolean allowed = false;
+		for (final @NotNull ENMConfigKlasseSpalte col : config.spalten) {
+			if ("Fehlstunden".equals(col.name) && (!col.gesperrt)) {
+				allowed = true;
+				break;
+			}
+		}
+		if (!allowed)
+			throw new ApiOperationException(Status.FORBIDDEN, "Eine Änderung von Fehlstunden wurde nicht explizit für diese Klasse erlaubt.");
+
+		// TODO prüfe auch die Information, ob nur Gesamtfehlstunden eingegeben werden sollen oder auf Basis von Lerngruppen
+
+		// Prüfe die zeitliche Einschränkung für die Eingabe, sofern eine gesetzt wurde
+		final Timestamp now = getTimeStampNow();
+		pruefeEingabebeginn(config, now);
+		pruefeEingabeende(config, now);
+	}
+
+	private void pruefeKonfigurationPatchErlaubtTeilleistung(final long idKlasse, final long idTeilleistungsart) throws ApiOperationException {
+		// TODO if Entfernen, wenn das Feature auch außerhalb des DEV-Modes genutzt werden soll
+		if (SVWSKonfiguration.get().getServerMode() != ServerMode.DEV)
+			return;
+		final ENMConfigKlasse config = getKonfigurationErlaubt(idKlasse);
+		if (config == null)
+			throw new ApiOperationException(Status.FORBIDDEN, "Es liegt keine Konfiguration für die Eingabe von Noten für diese Klasse vor.");
+		// Prüfe generelle Berechtigung bei der Eingabespalte
+		boolean allowed = false;
+		boolean allowedSpecial = false;
+		for (final @NotNull ENMConfigKlasseSpalte col : config.spalten) {
+			if ("Teilnoten".equals(col.name) && (!col.gesperrt)) {
+				allowed = true;
+			} else if ((col.idTeilleistung != null) && (col.idTeilleistung == idTeilleistungsart) && (!col.gesperrt)) {
+				allowedSpecial = true;
+			}
+		}
+		if (!allowed)
+			throw new ApiOperationException(Status.FORBIDDEN, "Eine Änderung von Teilleistungen wurde nicht explizit für diese Klasse erlaubt.");
+		if (!allowedSpecial)
+			throw new ApiOperationException(Status.FORBIDDEN, "Eine Änderung der Teilleistungsart wurde nicht explizit für diese Klasse erlaubt.");
+		// Prüfe die zeitliche Einschränkung für die Eingabe, sofern eine gesetzt wurde
+		final Timestamp now = getTimeStampNow();
+		pruefeEingabebeginn(config, now);
+		pruefeEingabeende(config, now);
+	}
+
 
 	/**
 	 * Prüft, ob der angemeldete Benutzer eine Berechtigung zum Patchen von Leistungsdaten hat oder nicht.
@@ -583,38 +749,53 @@ public final class DataENMDaten extends DataManager<Long> {
 		if (leistung == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Für die ID %d konnten keine Leistungsdaten gefunden werden.".formatted(id));
 
+		// Bestimme den Lernabschnitt und die Klasse des Lernabschnittes
+		final DTOSchuelerLernabschnittsdaten lernabschnitt = conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, leistung.Abschnitt_ID);
+		if ((lernabschnitt == null) || (lernabschnitt.Klassen_ID == null))
+			throw new ApiOperationException(Status.NOT_FOUND,
+					"Für die Abschnitts-ID %d konnten keine Klassenzugehörigkeit bestimmt werden.".formatted(leistung.Abschnitt_ID));
+
 		// Prüfe die Berechtigung für das Patchen der Leistungsdaten
 		pruefeBerechtigungPatchLeistung(leistung); // final int berechtigung =
 
 		// Durchführen des Patches
-		// TODO Prüfe, ob die aktuelle Notenmodul-Konfiguration die jeweilige Änderung zulässt
 		// Die Umsetzung der Notenmodul-Konfiguration ist noch nicht erfolgt.
 		for (final Entry<String, Object> p : patch.entrySet()) {
 			switch (p.getKey()) {
 				case "id" -> {
 					/* do nothing */ }
 				case "noteQuartal" -> {
+					pruefeKonfigurationPatchErlaubt(lernabschnitt.Klassen_ID, "Quartalsnoten");
 					final String kuerzel = JSONMapper.convertToString(p.getValue(), true, false, null, "noteQuartal");
 					if ((kuerzel != null) && (Note.fromKuerzel(kuerzel) == Note.KEINE))
 						throw new ApiOperationException(Status.BAD_REQUEST, "Die Zeichenkette '%s' ist keine gültige Note.".formatted(kuerzel));
 					leistung.NotenKrzQuartal = kuerzel;
 				}
 				case "note" -> {
+					pruefeKonfigurationPatchErlaubt(lernabschnitt.Klassen_ID, "Note");
 					final String kuerzel = JSONMapper.convertToString(p.getValue(), true, false, null, "note");
 					if ((kuerzel != null) && (Note.fromKuerzel(kuerzel) == Note.KEINE))
 						throw new ApiOperationException(Status.BAD_REQUEST, "Die Zeichenkette '%s' ist keine gültige Note.".formatted(kuerzel));
 					leistung.NotenKrz = kuerzel;
 				}
-				case "fehlstundenFach" ->
+				case "fehlstundenFach" -> {
+					pruefeKonfigurationPatchErlaubtFehlstunden(lernabschnitt.Klassen_ID, false);
 					leistung.FehlStd = JSONMapper.convertToIntegerInRange(p.getValue(), true, 0, 1000, "fehlstundenFach");
-				case "fehlstundenUnentschuldigtFach" ->
+				}
+				case "fehlstundenUnentschuldigtFach" -> {
+					pruefeKonfigurationPatchErlaubtFehlstunden(lernabschnitt.Klassen_ID, false);
 					leistung.uFehlStd = JSONMapper.convertToIntegerInRange(p.getValue(), true, 0, 1000, "fehlstundenUnentschuldigtFach");
-				case "fachbezogeneBemerkungen" ->
+				}
+				case "fachbezogeneBemerkungen" -> {
+					pruefeKonfigurationPatchErlaubt(lernabschnitt.Klassen_ID, "FB");
 					leistung.Lernentw = JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLeistungsdaten.col_Lernentw.datenlaenge(),
 							"fachbezogeneBemerkungen");
+				}
 				case "istGemahnt" -> {
+					pruefeKonfigurationPatchErlaubt(lernabschnitt.Klassen_ID, "Mahnung");
 					if ((leistung.Warndatum != null) && (!"".equals(leistung.Warndatum.trim())))
-						throw new ApiOperationException(Status.BAD_REQUEST, "Patchen, ob gemahnt wurde, ist nicht erlaubt, da bereits ein Warndatum gesetzt ist.");
+						throw new ApiOperationException(Status.BAD_REQUEST,
+								"Patchen, ob gemahnt wurde, ist nicht erlaubt, da bereits ein Warndatum gesetzt ist.");
 					leistung.Warnung = JSONMapper.convertToBoolean(p.getValue(), true, p.getKey());
 				}
 				default ->
@@ -663,17 +844,23 @@ public final class DataENMDaten extends DataManager<Long> {
 			throw new ApiOperationException(Status.NOT_FOUND,
 					"Für die ID %d konnten keine Leistungsdaten gefunden werden.".formatted(teilleistung.Leistung_ID));
 
+		// Bestimme den Lernabschnitt und die Klasse des Lernabschnittes
+		final DTOSchuelerLernabschnittsdaten lernabschnitt = conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, leistung.Abschnitt_ID);
+		if ((lernabschnitt == null) || (lernabschnitt.Klassen_ID == null))
+			throw new ApiOperationException(Status.NOT_FOUND,
+					"Für die Abschnitts-ID %d konnten keine Klassenzugehörigkeit bestimmt werden.".formatted(leistung.Abschnitt_ID));
+
 		// Prüfe die Berechtigung für das Patchen der Teilleistungsdaten anhand der zugehörigen Leistungsdaten
 		pruefeBerechtigungPatchLeistung(leistung); // final int berechtigung =
 
 		// Durchführen des Patches
-		// TODO Prüfe, ob die aktuelle Notenmodul-Konfiguration die jeweilige Änderungen zulässt
 		// Die Umsetzung der Notenmodul-Konfiguration ist noch nicht erfolgt.
 		for (final Entry<String, Object> p : patch.entrySet()) {
 			switch (p.getKey()) {
 				case "id" -> {
 					/* do nothing */ }
 				case "note" -> {
+					pruefeKonfigurationPatchErlaubtTeilleistung(lernabschnitt.Klassen_ID, teilleistung.Art_ID);
 					final String kuerzel = JSONMapper.convertToString(p.getValue(), true, false, null, "note");
 					if ((kuerzel != null) && (Note.fromKuerzel(kuerzel) == Note.KEINE))
 						throw new ApiOperationException(Status.BAD_REQUEST, "Die Zeichenkette '%s' ist keine gültige Note.".formatted(kuerzel));
@@ -740,46 +927,65 @@ public final class DataENMDaten extends DataManager<Long> {
 			throw new ApiOperationException(Status.BAD_REQUEST, "In dem Patch sind keine Daten enthalten.");
 
 		// Bestimme den Lernabschnitt des Schülers im aktuellen Schuljahresabschnitt der Schule.
-		final DTOSchuelerLernabschnittsdaten sla = getLernabschnitt(id);
+		final DTOSchuelerLernabschnittsdaten lernabschnitt = getLernabschnitt(id);
 
 		// Prüfe die Berechtigung für das Patchen der Bemerkungen anhand des Lernabschnittes des Schülers
-		pruefeBerechtigungPatchLernabschnitt(sla); // final int berechtigung =
+		pruefeBerechtigungPatchLernabschnitt(lernabschnitt); // final int berechtigung =
 
 		// Bestimme die Bemerkungen, welche dem Schüler zugeordnet sind.
 		final List<DTOSchuelerPSFachBemerkungen> sbs =
-				conn.queryList(DTOSchuelerPSFachBemerkungen.QUERY_BY_ABSCHNITT_ID, DTOSchuelerPSFachBemerkungen.class, sla.ID);
+				conn.queryList(DTOSchuelerPSFachBemerkungen.QUERY_BY_ABSCHNITT_ID, DTOSchuelerPSFachBemerkungen.class, lernabschnitt.ID);
 		if (sbs.size() > 1)
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
-					"Es gibt mehrere Einträge für Fachbemekungen zu dem Lernabschnitt mit der ID %d.".formatted(sla.ID));
+					"Es gibt mehrere Einträge für Fachbemekungen zu dem Lernabschnitt mit der ID %d.".formatted(lernabschnitt.ID));
 		final DTOSchuelerPSFachBemerkungen sb;
 		if (sbs.isEmpty()) {
-			sb = new DTOSchuelerPSFachBemerkungen(conn.transactionGetNextID(DTOSchuelerPSFachBemerkungen.class), sla.ID);
+			sb = new DTOSchuelerPSFachBemerkungen(conn.transactionGetNextID(DTOSchuelerPSFachBemerkungen.class), lernabschnitt.ID);
 		} else {
 			sb = sbs.getFirst();
 		}
 
 		// Durchführen des Patches
-		// TODO Prüfe, ob die aktuelle Notenmodul-Konfiguration die jeweilige Änderungen zulässt
 		// Die Umsetzung der Notenmodul-Konfiguration ist noch nicht erfolgt.
 		for (final Entry<String, Object> p : patch.entrySet()) {
 			switch (p.getKey()) {
-				case "ASV" -> sb.ASV = JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLD_PSFachBem.col_ASV.datenlaenge(), p.getKey());
-				case "AUE" -> sb.AUE = JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLD_PSFachBem.col_AUE.datenlaenge(), p.getKey());
-				case "ZB" -> sla.ZeugnisBem =
-						JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLernabschnittsdaten.col_ZeugnisBem.datenlaenge(), p.getKey());
-				case "LELS" ->
+				case "ASV" -> {
+					pruefeKonfigurationPatchErlaubt(lernabschnitt.Klassen_ID, "ASV");
+					sb.ASV = JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLD_PSFachBem.col_ASV.datenlaenge(), p.getKey());
+				}
+				case "AUE" -> {
+					pruefeKonfigurationPatchErlaubt(lernabschnitt.Klassen_ID, "AUE");
+					sb.AUE = JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLD_PSFachBem.col_AUE.datenlaenge(), p.getKey());
+				}
+				case "ZB" -> {
+					pruefeKonfigurationPatchErlaubt(lernabschnitt.Klassen_ID, "ZB");
+					lernabschnitt.ZeugnisBem =
+							JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLernabschnittsdaten.col_ZeugnisBem.datenlaenge(),
+									p.getKey());
+				}
+				case "LELS" -> {
+					pruefeKonfigurationPatchErlaubt(lernabschnitt.Klassen_ID, "LELS");
 					sb.LELS = JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLD_PSFachBem.col_LELS.datenlaenge(), p.getKey());
-				case "schulformEmpf" ->
+				}
+				case "schulformEmpf" -> {
+					pruefeKonfigurationPatchErlaubt(lernabschnitt.Klassen_ID, "SchulformEmpfehlung");
 					sb.ESF = JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLD_PSFachBem.col_ESF.datenlaenge(), p.getKey());
-				case "individuelleVersetzungsbemerkungen" -> sb.BemerkungVersetzung =
-						JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLD_PSFachBem.col_BemerkungVersetzung.datenlaenge(), p.getKey());
-				case "foerderbemerkungen" -> sb.BemerkungFSP =
-						JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLD_PSFachBem.col_BemerkungFSP.datenlaenge(), p.getKey());
+				}
+				case "individuelleVersetzungsbemerkungen" -> {
+					pruefeKonfigurationPatchErlaubt(lernabschnitt.Klassen_ID, "Versetzungsbemerkungen");
+					sb.BemerkungVersetzung = JSONMapper.convertToString(p.getValue(), true, true,
+							Schema.tab_SchuelerLD_PSFachBem.col_BemerkungVersetzung.datenlaenge(), p.getKey());
+				}
+				case "foerderbemerkungen" -> {
+					pruefeKonfigurationPatchErlaubt(lernabschnitt.Klassen_ID, "Förderbemerkungen");
+					sb.BemerkungFSP =
+							JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLD_PSFachBem.col_BemerkungFSP.datenlaenge(), p.getKey());
+				}
 				default ->
 					throw new ApiOperationException(Status.BAD_REQUEST, "Das Attribut %s darf nicht im Patch enthalten sein.".formatted(p.getKey()));
 			}
 		}
-		conn.transactionPersist(sla);
+		conn.transactionPersist(lernabschnitt);
 		conn.transactionPersist(sb);
 		conn.transactionFlush();
 		return Response.status(Status.NO_CONTENT).build();
@@ -813,16 +1019,19 @@ public final class DataENMDaten extends DataManager<Long> {
 		pruefeBerechtigungPatchLernabschnitt(sla); // final int berechtigung =
 
 		// Durchführen des Patches
-		// TODO Prüfe, ob die aktuelle Notenmodul-Konfiguration die jeweilige Änderungen zulässt
 		// Die Umsetzung der Notenmodul-Konfiguration ist noch nicht erfolgt.
 		for (final Entry<String, Object> p : patch.entrySet()) {
 			switch (p.getKey()) {
 				case "id" -> {
 					/* do nothing */ }
-				case "fehlstundenGesamt" ->
+				case "fehlstundenGesamt" -> {
+					pruefeKonfigurationPatchErlaubtFehlstunden(sla.Klassen_ID, true);
 					sla.SumFehlStd = JSONMapper.convertToIntegerInRange(p.getValue(), true, 0, 1000, "fehlstundenGesamt");
-				case "fehlstundenGesamtUnentschuldigt" ->
+				}
+				case "fehlstundenGesamtUnentschuldigt" -> {
+					pruefeKonfigurationPatchErlaubtFehlstunden(sla.Klassen_ID, true);
 					sla.SumFehlStdU = JSONMapper.convertToIntegerInRange(p.getValue(), true, 0, 1000, "fehlstundenGesamtUnentschuldigt");
+				}
 				default ->
 					throw new ApiOperationException(Status.BAD_REQUEST, "Das Attribut %s darf nicht im Patch enthalten sein.".formatted(p.getKey()));
 			}
@@ -1535,6 +1744,30 @@ public final class DataENMDaten extends DataManager<Long> {
 
 
 	/**
+	 * Wandelt die im ISO-Format übergeben Zeitangabe in einen Timestamp um.
+	 *
+	 * @param iso   der ISO-String
+	 *
+	 * @return der Timestamp oder null, falls der ISO-String ungültig ist
+	 */
+	private static Timestamp getTimeStampFromIso(final String iso) {
+		if ((iso == null) || iso.isBlank())
+			return null;
+		return Timestamp.valueOf(LocalDateTime.parse(iso, ofPattern));
+	}
+
+
+	/**
+	 * Gibt den aktuellen Zeitpunkt als Timestamp zurück.
+	 *
+	 * @return der aktuelle Timestamp
+	 */
+	private static Timestamp getTimeStampNow() {
+		return Timestamp.valueOf(LocalDateTime.now());
+	}
+
+
+	/**
 	 * Prüft, ob der gegebene Timestamp-String tsCheckStr nach dem Timestamp-String tsOtherStr
 	 * liegt.
 	 *
@@ -1544,14 +1777,12 @@ public final class DataENMDaten extends DataManager<Long> {
 	 * @return true, wenn tsCheckStr nach tsOtherStr liegt
 	 */
 	private static boolean isTimestampAfter(final String tsCheckStr, final String tsOtherStr) {
-		if ((tsCheckStr == null) || tsCheckStr.isBlank())
+		final Timestamp tsCheck = getTimeStampFromIso(tsCheckStr);
+		if (tsCheck == null)
 			return false;
-		final DateTimeFormatter ofPattern = new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd HH:mm:ss")
-				.appendFraction(ChronoField.MILLI_OF_SECOND, 0, 3, true).toFormatter();
-		final Timestamp tsCheck = Timestamp.valueOf(LocalDateTime.parse(tsCheckStr, ofPattern));
-		if ((tsOtherStr == null) || tsOtherStr.isBlank())
+		final Timestamp tsOther = getTimeStampFromIso(tsOtherStr);
+		if (tsOther == null)
 			return true;
-		final Timestamp tsOther = Timestamp.valueOf(LocalDateTime.parse(tsOtherStr, ofPattern));
 		return tsCheck.after(tsOther);
 	}
 

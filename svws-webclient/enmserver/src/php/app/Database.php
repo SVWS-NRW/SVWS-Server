@@ -123,17 +123,41 @@ class Database {
         return $client->isValid() ? $client : null;
     }
 
+
+    /**
+     * Lädt die Konfiguration für die Sperrung der Noteneingabe aus der Datenbank.
+     *
+     * @param DBConnection $conn   die Datenbank-Verbindung
+     *
+     * @return array   die Konfiguration der einzelnen Klassen als Map von der ID auf den Konfigurationseintrag
+     */
+    public static function getConfigSperrungNoteneingabe(DBConnection $conn): array {
+        $result = $conn->queryAllOrNull("SELECT wert AS value FROM ClientConfig WHERE schluessel='noteneingabe.gesperrt'");
+        if (($result === null) || (count($result) !== 1)) {
+            return [];
+        }
+        $json = $result[0]->value;
+        $list = json_decode($json);
+        $map = [];
+        foreach ($list as $entry) {
+            $map[$entry->id] = $entry;
+        }
+        return $map;
+    }
+
+
     /**
      * Ermittelt die globale Konfiguration und die benutzerspezifische Konfiguration anhand der
      * übergebenen Lehrer-ID und gibt diese als JSON-String zurück.
      *
+     * @param DBConnection $conn   die Datenbank-Verbindung
      * @param int $idLehrer   die ID des Lehrers, dessen benutzerspezifische Konfiguration ermittelt wird
      *
      * @return string ein JSON mit der globalen und der benutzerspezifischen Konfiguration
      */
-    public function getClientConfig(int $idLehrer): string {
-        $configBenutzer = $this->conn->queryAllOrExit500("SELECT schluessel AS key, wert AS value FROM ClientLehrerConfig WHERE idLehrer=$idLehrer", "Fehler beim Lesen der benutzerspezifischen Konfigurationsdaten");
-        $configGlobal = $this->conn->queryAllOrExit500("SELECT schluessel AS key, wert AS value FROM ClientConfig", "Fehler beim Lesen der globalen Konfigurationsdaten");
+    public static function getClientConfig(DBConnection $conn, int $idLehrer): string {
+        $configBenutzer = $conn->queryAllOrExit500("SELECT schluessel AS key, wert AS value FROM ClientLehrerConfig WHERE idLehrer=$idLehrer", "Fehler beim Lesen der benutzerspezifischen Konfigurationsdaten");
+        $configGlobal = $conn->queryAllOrExit500("SELECT schluessel AS key, wert AS value FROM ClientConfig", "Fehler beim Lesen der globalen Konfigurationsdaten");
         $jsonBenutzer = json_encode($configBenutzer, JSON_UNESCAPED_SLASHES);
         $jsonGlobal = json_encode($configGlobal, JSON_UNESCAPED_SLASHES);
         return "{ \"user\": $jsonBenutzer, \"global\": $jsonGlobal }";
@@ -143,11 +167,13 @@ class Database {
      * Ermittelt die Konfiguration des Server, d.h. die Server-sepzifische Konfiguration und die globale Konfiguration für
      * den Client und gibt diese als JSON-String zurück.
      *
+     * @param DBConnection $conn   die Datenbank-Verbindung
+     *
      * @return string ein JSON mit den beiden Konfigurationen
      */
-    public function getServerConfig(): string {
-        $configServer = $this->conn->queryAllOrExit500("SELECT schluessel AS key, wert AS value FROM ServerConfig", "Fehler beim Lesen der Server-spezifischen Konfigurationsdaten");
-        $configGlobal = $this->conn->queryAllOrExit500("SELECT schluessel AS key, wert AS value FROM ClientConfig", "Fehler beim Lesen der globalen Konfigurationsdaten");
+    public static function getServerConfig(DBConnection $conn): string {
+        $configServer = $conn->queryAllOrExit500("SELECT schluessel AS key, wert AS value FROM ServerConfig", "Fehler beim Lesen der Server-spezifischen Konfigurationsdaten");
+        $configGlobal = $conn->queryAllOrExit500("SELECT schluessel AS key, wert AS value FROM ClientConfig", "Fehler beim Lesen der globalen Konfigurationsdaten");
         $jsonServer = json_encode($configServer, JSON_UNESCAPED_SLASHES);
         $jsonGlobal = json_encode($configGlobal, JSON_UNESCAPED_SLASHES);
         return "{ \"server\": $jsonServer, \"global\": $jsonGlobal }";

@@ -10,6 +10,7 @@ import { routeNotenmodulKonfigurationGruppenprozesse } from "./RouteNotenmodulGr
 import { routeNotenmodul } from "./RouteNotenmodul";
 import { NotenmodulConfigManagerSperrungen, type NotenmodulConfigManagerSperrungenGruppierung } from "./NotenmodulConfigManagerSperrungen";
 import { NotenmodulConfigManagerSichtbareSpalten } from "./NotenmodulConfigManagerSichtbareSpalten";
+import { EnmSperrManager } from "../../../../../ui/src/components/enm/EnmSperrManager";
 
 
 interface RouteStateNotenmodulAdministration extends RouteStateAuswahlInterface<WenomAuswahlListeManager> {
@@ -81,8 +82,9 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 		const listAbteilungen = await api.server.getAbteilungenByIdJahresAbschnitt(api.schema, idSchuljahresabschnitt);
 		this._state.value.mapAbteilungen = this.createMapAbteilungen(listAbteilungen);
 		const arr = [];
-		for (const server of this.manager.filtered())
+		for (const server of this.manager.filtered()) {
 			arr.push(this.connect(server.id));
+		}
 		await Promise.all(arr);
 		return result;
 	}
@@ -172,8 +174,9 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 	}
 
 	public get manager(): WenomAuswahlListeManager {
-		if (this._state.value.manager === undefined)
+		if (this._state.value.manager === undefined) {
 			throw new DeveloperNotificationException("Die ENM-Daten wurden nicht geladen.");
+		}
 		return this._state.value.manager;
 	}
 
@@ -210,6 +213,7 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 		element.type = "global";
 		if (this.manager.auswahlIsKonfigurationLokal()) {
 			await this.notenmodulSetLocalConfigElement(element);
+			routeNotenmodul.data.manager.sperrungen = new EnmSperrManager(element.value);
 		} else {
 			await this.wenomSetServerConfigElement(element);
 		}
@@ -230,8 +234,9 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 
 	connect = async (id: number): Promise<void> => {
 		// Prüfe auf ein lokales Notenmodul mit einer negativer ID -1
-		if (id < 0)
+		if (id < 0) {
 			return;
+		}
 		const manager = this.manager;
 		// Führe einen Verbindungstest für einen WeNoM-Server (externes Notenmodul) durch.
 		// ... zunächst ein Wenom-Setup
@@ -263,9 +268,11 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 		try {
 			const daten = await api.server.getENMLehrerInitialKennwoerter(api.schema);
 			const mapInitialKennwoerter = new HashMap<number, string>();
-			for (const eintrag of daten)
-				if (eintrag.initialKennwort !== null)
+			for (const eintrag of daten) {
+				if (eintrag.initialKennwort !== null) {
 					mapInitialKennwoerter.put(eintrag.id, eintrag.initialKennwort);
+				}
+			}
 			this.setPatchedState({ mapInitialKennwoerter });
 		} catch {
 			return;
@@ -296,10 +303,12 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 			const config = await api.server.getNotenmodulLocalConfig(api.schema);
 			const mapENMServerConfigGlobal = new HashMap<string, string>();
 			const mapENMServerConfigServer = new HashMap<string, string>();
-			for (const element of config.global)
+			for (const element of config.global) {
 				mapENMServerConfigGlobal.put(element.key, element.value);
-			for (const element of config.server)
+			}
+			for (const element of config.server) {
 				mapENMServerConfigServer.put(element.key, element.value);
+			}
 			this.setPatchedState({ mapNotenmodulConfigServer: mapENMServerConfigServer, mapNotenmodulConfigGlobal: mapENMServerConfigGlobal });
 		} catch {
 			return;
@@ -312,13 +321,16 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 			if (res.success && (res.config !== null)) {
 				const mapENMServerConfigGlobal = new HashMap<string, string>();
 				const mapENMServerConfigServer = new HashMap<string, string>();
-				for (const element of res.config.global)
+				for (const element of res.config.global) {
 					mapENMServerConfigGlobal.put(element.key, element.value);
-				for (const element of res.config.server)
+				}
+				for (const element of res.config.server) {
 					mapENMServerConfigServer.put(element.key, element.value);
+				}
 				this.setPatchedState({ mapNotenmodulConfigGlobal: mapENMServerConfigGlobal, mapNotenmodulConfigServer: mapENMServerConfigServer });
-			} else
+			} else {
 				throw new DeveloperNotificationException("Keine Konfiguration geladen");
+			}
 		} catch {
 			return;
 		}
@@ -327,10 +339,11 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 	notenmodulSetLocalConfigElement = api.call(async (data: ENMServerConfigElement): Promise <void> => {
 		try {
 			const res = await api.server.setNotenmodulLocalConfig(data, api.schema);
-			if (data.type === 'server')
+			if (data.type === 'server') {
 				this._state.value.mapNotenmodulConfigServer.put(data.key, data.value);
-			else
+			} else {
 				this._state.value.mapNotenmodulConfigGlobal.put(data.key, data.value);
+			}
 			return res;
 		} catch { /* */ }
 	});
@@ -338,10 +351,11 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 	wenomSetServerConfigElement = api.call(async (data: ENMServerConfigElement): Promise <SimpleOperationResponse> => {
 		try {
 			const res = await api.server.setENMServerConfigElement(data, api.schema, this.manager.auswahl().id);
-			if (data.type === 'server')
+			if (data.type === 'server') {
 				this._state.value.mapNotenmodulConfigServer.put(data.key, data.value);
-			else
+			} else {
 				this._state.value.mapNotenmodulConfigGlobal.put(data.key, data.value);
+			}
 			return res;
 		} catch (e) {
 			if ((e instanceof OpenApiError) && (e.response instanceof Response)) {
