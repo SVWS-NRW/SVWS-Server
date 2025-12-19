@@ -47,7 +47,7 @@
 	const ErzieherartenSubline = computed(() => {
 		const list = props.manager().liste.auswahlSorted();
 		if (list.size() > 5)
-			return `${list.size()} Erzieherart ausgewählt`;
+			return `${list.size()} Erzieherarten ausgewählt`;
 		return [...list].map(k => k.bezeichnung).join(', ');
 	});
 </script>

@@ -75,7 +75,7 @@ export class VermerkartenListeManager extends AuswahlManager<number, VermerkartE
 	}
 
 	/**
-	 * Setzt die Filtereinstellung auf nur sichtbare Fächer.
+	 * Setzt die Filtereinstellung auf nur sichtbare Vermerkarten.
 	 *
 	 * @param value   true, wenn der Filter aktiviert werden soll, und ansonsten false
 	 */
@@ -85,9 +85,9 @@ export class VermerkartenListeManager extends AuswahlManager<number, VermerkartE
 	}
 
 	/**
-	 * Gibt die aktuelle Filtereinstellung auf nur sichtbare Fächer zurück.
+	 * Gibt die aktuelle Filtereinstellung auf nur sichtbare Vermerkarten zurück.
 	 *
-	 * @return true, wenn nur sichtbare Fächer angezeigt werden und ansonsten false
+	 * @return true, wenn nur sichtbare Vermerkarten angezeigt werden und ansonsten false
 	 */
 	public filterNurSichtbar(): boolean {
 		return this._filterNurSichtbar;

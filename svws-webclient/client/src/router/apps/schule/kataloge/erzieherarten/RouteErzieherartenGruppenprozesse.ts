@@ -13,7 +13,8 @@ const ErzieherartenGruppenprozesse = () => import("~/components/schule/kataloge/
 export class RouteErzieherartenGruppenprozesse extends RouteNode<any, RouteErzieherarten> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN], "schule.erzieherarten.gruppenprozesse", "gruppenprozesse", ErzieherartenGruppenprozesse);
+		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN],
+			"schule.erzieherarten.gruppenprozesse", "gruppenprozesse", ErzieherartenGruppenprozesse);
 		super.types = new Set([ViewType.GRUPPENPROZESSE]);
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
@@ -26,9 +27,12 @@ export class RouteErzieherartenGruppenprozesse extends RouteNode<any, RouteErzie
 
 	public getProps(to: RouteLocationNormalized): ErzieherartenGruppenprozesseProps {
 		return {
+			serverMode: api.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			manager: () => routeErzieherarten.data.manager,
 			delete: routeErzieherarten.data.delete,
+			deleteCheck: routeErzieherarten.data.deleteCheck,
+			gotoDefaultView: routeErzieherarten.data.gotoDefaultView,
 		};
 	}
 }

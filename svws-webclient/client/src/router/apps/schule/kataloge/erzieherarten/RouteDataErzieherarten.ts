@@ -1,4 +1,4 @@
-import type { List, SimpleOperationResponse, Erzieherart } from "@core";
+import { List, SimpleOperationResponse, Erzieherart, BenutzerKompetenz, type JavaSet } from "@core";
 import { ArrayList } from "@core";
 import { api } from "~/router/Api";
 import { ViewType, ErzieherartListeManager } from "@ui";
@@ -34,8 +34,9 @@ export class RouteDataErzieherarten extends RouteDataAuswahl<ErzieherartListeMan
 	}
 
 	async ladeDaten(auswahl: Erzieherart | null): Promise<Erzieherart | null> {
-		if (auswahl === null)
+		if (auswahl === null) {
 			return auswahl;
+		}
 		const erzieherart = await api.server.getErzieherart(api.schema, auswahl.id);
 		this.manager.getIdByEintrag(erzieherart);
 		return auswahl;
@@ -57,5 +58,32 @@ export class RouteDataErzieherarten extends RouteDataAuswahl<ErzieherartListeMan
 
 	protected deleteMessage(id: number, erzieherart: Erzieherart | null): string {
 		return `Erzieherart ${erzieherart?.bezeichnung ?? '???'} (ID: ${id}) wurde erfolgreich gelöscht.`;
+	}
+
+	deleteCheck = (): [boolean, List<string>] => {
+		const errorLog = new ArrayList<string>();
+
+		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
+			errorLog.add('Es liegt keine Berechtigung zum Löschen von Erzieherarten vor.');
+		}
+		if (!this.manager.liste.auswahlExists()) {
+			errorLog.add('Es wurde keine Erzieherart zum Löschen ausgewählt.');
+		}
+		const idsOfReferencedErzieherarten = this.manager.idsReferencedErzieherarten;
+		if (!idsOfReferencedErzieherarten.isEmpty()) {
+			errorLog.add(this.getErrorMessageForReferencedErzieherarten(idsOfReferencedErzieherarten));
+		}
+		return [errorLog.isEmpty(), errorLog];
+	};
+
+	private getErrorMessageForReferencedErzieherarten(idsOfReferencedErzieherarten: JavaSet<number>): string {
+		let errorMessage = 'Die folgenden Erzieherarten sind an anderer Stelle referenziert: \n\n';
+		for (const id of idsOfReferencedErzieherarten) {
+			const erzieherart = this.manager.liste.get(id);
+			if (erzieherart) {
+				errorMessage += `- ${erzieherart.bezeichnung} \n`;
+			}
+		}
+		return errorMessage;
 	}
 }

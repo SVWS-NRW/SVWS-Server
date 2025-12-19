@@ -1,22 +1,29 @@
 <template>
 	<div class="page page-grid-cards">
-		<svws-ui-content-card title="Allgemein">
-			<svws-ui-input-wrapper>
-				<svws-ui-text-input placeholder="Bezeichnung" :max-len="30" :min-len="1" v-model="data.bezeichnung" :disabled
-					:valid="fieldIsValid('bezeichnung')" required />
-				<div v-if="!isUniqueInList(data.bezeichnung, props.manager().liste.list(), 'bezeichnung')" class="flex my-auto">
-					<span class="icon i-ri-alert-line mx-0.5 mr-1 inline-flex" />
-					<p> Diese Bezeichnung wird bereits verwendet. </p>
-				</div>
-				<div v-if="data.bezeichnung.length > 30" class="flex my-auto">
-					<span class="icon i-ri-alert-line mx-0.5 mr-1 inline-flex" />
-					<p> Diese Bezeichnung verwendet zu viele Zeichen. </p>
-				</div>
-				<div class="mt-7 flex flex-row gap-4 justify-end">
-					<svws-ui-button type="secondary" @click="cancel">Abbrechen</svws-ui-button>
-					<svws-ui-button @click="addErzieherart" :disabled="!formIsValid || !hatKompetenzUpdate">Speichern  </svws-ui-button>
-				</div>
-			</svws-ui-input-wrapper>
+		<svws-ui-content-card>
+			<svws-ui-content-card title="Allgemein">
+				<svws-ui-input-wrapper :grid="2">
+					<svws-ui-text-input placeholder="Bezeichnung" span="2"
+						v-model="data.bezeichnung"
+						:valid="() => fieldIsValid('bezeichnung')" :min-len="1" :max-len="30"  :disabled required />
+					<svws-ui-spacing/>
+					<svws-ui-input-number placeholder="Sortierung"
+						v-model="data.sortierung"
+						:valid="() => fieldIsValid('sortierung')" :min="0" :max="32000" :disabled="!hatKompetenzAdd" :removable="false" />
+					<svws-ui-spacing />
+					<svws-ui-checkbox v-model="data.istSichtbar" :disabled="!hatKompetenzAdd">
+						Sichtbar
+					</svws-ui-checkbox>
+				</svws-ui-input-wrapper>
+			</svws-ui-content-card>
+			<div class="mt-7 flex flex-row gap-4 justify-end">
+				<svws-ui-button type="secondary" @click="cancel">
+					Abbrechen
+				</svws-ui-button>
+				<svws-ui-button @click="addErzieherart" :disabled="!formIsValid">
+					Speichern
+				</svws-ui-button>
+			</div>
 		</svws-ui-content-card>
 		<svws-ui-checkpoint-modal :checkpoint :continue-routing="props.continueRoutingAfterCheckpoint" />
 	</div>
@@ -27,48 +34,48 @@
 	import type { ErzieherartenNeuProps } from "~/components/schule/kataloge/erzieherarten/ErzieherartenNeuProps";
 	import { computed, ref, watch } from "vue";
 	import { BenutzerKompetenz, Erzieherart } from "@core";
-	import { isUniqueInList, mandatoryInputIsValid } from "~/util/validation/Validation";
+	import { isUniqueInList, mandatoryInputIsValid, numberHasDecimals, numberIsValid } from "~/util/validation/Validation";
 
 	const props = defineProps<ErzieherartenNeuProps>();
-	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
-	const disabled = computed(() => !hatKompetenzUpdate.value);
-	const data = ref(new Erzieherart());
+	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const disabled = computed(() => !hatKompetenzAdd.value);
+	const data = ref<Erzieherart>(Object.assign(new Erzieherart(), { istSichtbar: true, sortierung: 32000 }));
+
 	const isLoading = ref<boolean>(false);
 
-	function fieldIsValid(field: keyof Erzieherart | null): (v: string | null) => boolean {
-		return (v: string | null) => {
-			switch (field) {
-				case 'bezeichnung':
-					return bezeichnungIsValid(data.value.bezeichnung);
-				default:
-					return true;
-			}
-		};
+	function bezeichnungIsValid(value: string | null) {
+		return mandatoryInputIsValid(value, 30)
+			&& isUniqueInList(value, props.manager().liste.list(), 'bezeichnung');
 	}
 
-	function bezeichnungIsValid(value: string | null) {
-		if (!mandatoryInputIsValid(value, 30))
-			return false;
-
-		return isUniqueInList(value, props.manager().liste.list(), 'bezeichnung');
+	function sortierungIsValid(sortierung: number): boolean {
+		return !numberHasDecimals(sortierung)
+			&& numberIsValid(sortierung, true, 0, 32000);
 	}
 
 	const formIsValid = computed(() => {
-		// alle Felder auf validity prüfen
-		return Object.keys(data.value).every(field => {
-			const validateField = fieldIsValid(field as keyof Erzieherart);
-			const fieldValue = data.value[field as keyof Erzieherart] as string | null;
-			return validateField(fieldValue);
-		});
+		return Object.keys(data.value)
+			.every((field: string) => fieldIsValid(field as keyof Erzieherart));
 	});
 
-	async function addErzieherart() {
-		if (isLoading.value === true)
-			return;
+	const fieldIsValid = (field: keyof Erzieherart): boolean => {
+		switch (field) {
+			case 'bezeichnung':
+				return bezeichnungIsValid(data.value.bezeichnung);
+			case 'sortierung':
+				return sortierungIsValid(data.value.sortierung);
+			default:
+				return true;
+		}
+	};
 
+	async function addErzieherart() {
+		if (isLoading.value === true) {
+			return;
+		}
 		isLoading.value = true;
 		props.checkpoint.active = false;
-		const { id, exportBez, anzahlErziehungsberechtigte, ...partialData } = data.value;
+		const { id, referenziertInAnderenTabellen, ...partialData } = data.value;
 		await props.add(partialData);
 		isLoading.value = false;
 	}
@@ -79,9 +86,9 @@
 	}
 
 	watch(() => data.value, async () => {
-		if (isLoading.value)
+		if (isLoading.value) {
 			return;
-
+		}
 		props.checkpoint.active = true;
 	}, { immediate: false, deep: true });
 
