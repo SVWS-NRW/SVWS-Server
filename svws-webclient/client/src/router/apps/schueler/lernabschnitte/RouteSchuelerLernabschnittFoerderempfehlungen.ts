@@ -3,14 +3,14 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { RouteLocation, RouteLocationNormalized, RouteParams } from "vue-router";
 import { api } from "~/router/Api";
 import { type RouteSchuelerLernabschnitte } from "./RouteSchuelerLernabschnitte";
-import type { SchuelerLernabschnittFoerderempfehlungenProps } from "~/components/schueler/lernabschnitte/foerderempfehlungen/SSchuelerLernabschnittFoerderempfehlungenProps";
+import type { SchuelerLernabschnittFoerderempfehlungenProps } from "~/components/schueler/lernabschnitte/foerderempfehlungen/SchuelerLernabschnittFoerderempfehlungenProps";
 import { RouteDataSchuelerLernabschnittFoerderempfehlungen } from "./RouteDataSchuelerLernabschnittFoerderempfehlungen";
 
-const SSchuelerLernabschnittFoerderempfehlungen = () => import("~/components/schueler/lernabschnitte/foerderempfehlungen/SSchuelerLernabschnittFoerderempfehlungen.vue");
+const SchuelerLernabschnittFoerderempfehlungen = () => import("~/components/schueler/lernabschnitte/foerderempfehlungen/SchuelerLernabschnittFoerderempfehlungen.vue");
 
 class RouteSchuelerLernabschnittFoerderempfehlungen extends RouteNode<RouteDataSchuelerLernabschnittFoerderempfehlungen, RouteSchuelerLernabschnitte> {
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN], "schueler.lernabschnitt.foerderempfehlungen", "foerderempfehlungen", SSchuelerLernabschnittFoerderempfehlungen, new RouteDataSchuelerLernabschnittFoerderempfehlungen);
+		super(Schulform.values(), [BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN], "schueler.lernabschnitt.foerderempfehlungen", "foerderempfehlungen", SchuelerLernabschnittFoerderempfehlungen, new RouteDataSchuelerLernabschnittFoerderempfehlungen);
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Förderempfehlungen";

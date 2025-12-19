@@ -12,10 +12,10 @@
 		</div>
 		<div class="mt-6">
 			<div class="flex items-center gap-2 cursor-pointer mb-3" @click="diagnoseCollapsed = !diagnoseCollapsed">
-				<span class="icon" :class="diagnoseCollapsed ? 'i-ri-arrow-right-s-line' : 'i-ri-arrow-down-s-line'" />
+				<span class="icon" :class="diagnoseCollapsed ? 'i-ri-arrow-down-s-line' : 'i-ri-arrow-right-s-line'" />
 				<h3 class="text-lg font-semibold">Diagnose</h3>
 			</div>
-			<div v-show="!diagnoseCollapsed" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+			<div v-if="diagnoseCollapsed" class="grid grid-cols-1 md:grid-cols-3 gap-4">
 				<svws-ui-textarea-input placeholder="Inhaltliche prozessbezogene Kompetenzen" class="h-26 max-h-26 overflow-y-auto"
 					:model-value="selectedFoerderempfehlung.diagnoseKompetenzenInhaltlichProzessbezogen ?? ''"
 					@change="v => patch({ diagnoseKompetenzenInhaltlichProzessbezogen: v }, selectedFoerderempfehlung.guid ?? '')"
@@ -32,10 +32,10 @@
 		</div>
 		<div class="mt-6">
 			<div class="flex items-center gap-2 cursor-pointer mb-3" @click="massnahmeCollapsed = !massnahmeCollapsed">
-				<span class="icon" :class="massnahmeCollapsed ? 'i-ri-arrow-right-s-line' : 'i-ri-arrow-down-s-line'" />
+				<span class="icon" :class="massnahmeCollapsed ? 'i-ri-arrow-down-s-line' : 'i-ri-arrow-right-s-line'" />
 				<h3 class="text-lg font-semibold">Empfehlung</h3>
 			</div>
-			<div v-show="!massnahmeCollapsed" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+			<div v-if="massnahmeCollapsed" class="grid grid-cols-1 md:grid-cols-3 gap-4">
 				<svws-ui-textarea-input placeholder="Inhaltliche prozessbezogene Kompetenzen" class="h-26 max-h-26 overflow-y-auto"
 					:model-value="selectedFoerderempfehlung.massnahmeKompetenzenInhaltlichProzessbezogen ?? ''"
 					@change="v => patch({ massnahmeKompetenzenInhaltlichProzessbezogen: v }, selectedFoerderempfehlung.guid ?? '')"
@@ -52,10 +52,10 @@
 		</div>
 		<div class="mt-6">
 			<div class="flex items-center gap-2 cursor-pointer mb-3" @click="verantwortlichkeitCollapsed = !verantwortlichkeitCollapsed">
-				<span class="icon" :class="verantwortlichkeitCollapsed ? 'i-ri-arrow-right-s-line' : 'i-ri-arrow-down-s-line'" />
+				<span class="icon" :class="verantwortlichkeitCollapsed ? 'i-ri-arrow-down-s-line' : 'i-ri-arrow-right-s-line'" />
 				<h3 class="text-lg font-semibold">Verantwortlichkeit</h3>
 			</div>
-			<div v-show="!verantwortlichkeitCollapsed" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+			<div v-if="verantwortlichkeitCollapsed" class="grid grid-cols-1 md:grid-cols-2 gap-4">
 				<svws-ui-textarea-input placeholder="Schüler" class="h-26 max-h-26 overflow-y-auto"
 					:model-value="selectedFoerderempfehlung.verantwortlichkeitSchueler ?? ''"
 					@change="v => patch({ verantwortlichkeitSchueler: v }, selectedFoerderempfehlung.guid ?? '')"

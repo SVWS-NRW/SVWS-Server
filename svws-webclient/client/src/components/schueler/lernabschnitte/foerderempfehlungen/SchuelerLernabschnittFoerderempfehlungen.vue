@@ -3,13 +3,13 @@
 		<svws-ui-modal-hilfe> <hilfe-schueler-lernabschnitt-foerderempfehlungen /> </svws-ui-modal-hilfe>
 	</Teleport>
 	<svws-ui-content-card class="w-full pl-1">
-		<s-card-foerderempfehlungen-tabelle @open-modal="modalIsShown = true"
+		<schueler-lernabschnitt-foerderempfehlungen-tabelle @open-modal="modalIsShown = true"
 			:foerderempfehlungen="sortedFoerderempfehlungen"
 			v-model:selected-foerderempfehlung="selectedFoerderempfehlung"
 			:delete="props.delete" />
-		<s-schueler-lernabschnitt-foerderempfehlungen-modal v-model:is-open="modalIsShown"
+		<schueler-lernabschnitt-foerderempfehlungen-neu-modal v-model:is-open="modalIsShown"
 			:add="props.add" />
-		<s-card-schueler-lernabschnitt-foerderempfehlungen v-if="selectedFoerderempfehlung !== undefined"
+		<schueler-lernabschnitt-foerderempfehlungen-daten v-if="selectedFoerderempfehlung !== undefined"
 			:selected-foerderempfehlung="selectedFoerderempfehlung"
 			:patch="patch" />
 	</svws-ui-content-card>
@@ -19,7 +19,7 @@
 
 	import { computed, onMounted, onUpdated, ref } from 'vue';
 	import { ArrayList, type SchuelerFoerderempfehlung, type Comparator } from '@core';
-	import type { SchuelerLernabschnittFoerderempfehlungenProps } from './SSchuelerLernabschnittFoerderempfehlungenProps';
+	import type { SchuelerLernabschnittFoerderempfehlungenProps } from './SchuelerLernabschnittFoerderempfehlungenProps';
 
 	const props = defineProps<SchuelerLernabschnittFoerderempfehlungenProps>();
 	const selectedFoerderempfehlung = ref<SchuelerFoerderempfehlung | undefined>(undefined);
