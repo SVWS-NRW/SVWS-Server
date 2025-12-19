@@ -53,18 +53,4 @@ export class HaltestellenListeManager extends AuswahlManager<number, Haltestelle
 		return HaltestellenListeManager.comparator.compare(a, b);
 	}
 
-	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.core.utils.kataloge.haltestellen.HaltestellenListeManager';
-	}
-
-	isTranspiledInstanceOf(name: string): boolean {
-		return ['de.svws_nrw.core.utils.AuswahlManager', 'de.svws_nrw.core.utils.kataloge.haltestellen.HaltestellenListeManager'].includes(name);
-	}
-
-	public static class = new Class<HaltestellenListeManager>('de.svws_nrw.core.utils.kataloge.haltestellen.HaltestellenListeManager');
-
-}
-
-export function cast_de_svws_nrw_core_utils_kataloge_haltestellen_HaltestellenListeManager(obj: unknown): HaltestellenListeManager {
-	return obj as HaltestellenListeManager;
 }

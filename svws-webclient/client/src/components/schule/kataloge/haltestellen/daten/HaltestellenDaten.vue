@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 
-	import type { HaltestellenDatenProps } from "~/components/schule/kataloge/haltestellen/daten/SHaltestellenDatenProps";
+	import type { HaltestellenDatenProps } from "~/components/schule/kataloge/haltestellen/daten/HaltestellenDatenProps";
 	import { BenutzerKompetenz } from "@core";
 	import { computed } from "vue";
 

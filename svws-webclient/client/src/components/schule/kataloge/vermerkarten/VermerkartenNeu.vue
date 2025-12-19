@@ -33,7 +33,7 @@
 	import { isUniqueInList, mandatoryInputIsValid, numberIsValid } from "~/util/validation/Validation";
 
 	const props = defineProps<VermerkartenNeuProps>();
-	const data = ref(new VermerkartEintrag());
+	const data = ref<VermerkartEintrag>(Object.assign(new VermerkartEintrag(), { istSichtbar: true, sortierung: 32000 }));
 	const isLoading = ref<boolean>(false);
 	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 

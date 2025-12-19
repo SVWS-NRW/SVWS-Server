@@ -17,14 +17,14 @@ export class RouteFahrschuelerartenNeu extends RouteNode<any, RouteFahrschuelera
 		super.types = new Set([ViewType.HINZUFUEGEN]);
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "Fahrschülerarten";
+		super.text = "Fahrschülerarten Neu";
 		super.setCheckpoint = true;
 	}
 
 	public getProps(to: RouteLocationNormalized): FahrschuelerartenNeuProps {
 		return {
 			manager: () => routeFahrschuelerarten.data.manager,
-			addFahrschuelerart: routeFahrschuelerarten.data.addFahrschuelerart,
+			add: routeFahrschuelerarten.data.add,
 			goToDefaultView: routeFahrschuelerarten.data.gotoDefaultView,
 			checkpoint: this.checkpoint,
 			benutzerKompetenzen: api.benutzerKompetenzen,

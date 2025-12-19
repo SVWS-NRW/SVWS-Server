@@ -35,7 +35,7 @@
 
 <script setup lang="ts">
 
-	import type { HaltestellenAppProps } from "~/components/schule/kataloge/haltestellen/SHaltestellenAppProps";
+	import type { HaltestellenAppProps } from "~/components/schule/kataloge/haltestellen/HaltestellenAppProps";
 	import { useRegionSwitch, ViewType } from "@ui";
 	import { computed } from "vue";
 

@@ -28,7 +28,7 @@
 
 <script setup lang="ts">
 
-	import type { HaltestellenNeuProps } from "~/components/schule/kataloge/haltestellen/SHaltestellenNeuProps";
+	import type { HaltestellenNeuProps } from "~/components/schule/kataloge/haltestellen/HaltestellenNeuProps";
 	import { BenutzerKompetenz, Haltestelle } from "@core";
 	import { computed, ref, watch } from "vue";
 	import { isUniqueInList, mandatoryInputIsValid } from "~/util/validation/Validation";

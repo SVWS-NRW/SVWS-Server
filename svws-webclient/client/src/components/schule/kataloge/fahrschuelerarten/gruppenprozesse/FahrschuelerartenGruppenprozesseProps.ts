@@ -6,5 +6,7 @@ export interface FahrschuelerartenGruppenprozesseProps {
 	schulform: Schulform;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
 	manager: () => FahrschuelerartenListeManager;
-	deleteFahrschuelerarten: () => Promise<[boolean, List<string | null>]>;
+	deleteCheck: () => [boolean, List<string>];
+	delete: () => Promise<[boolean, List<string | null>]>;
+	gotoDefaultView: (eintragId?: number | null) => Promise<void>;
 }

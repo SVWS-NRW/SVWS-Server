@@ -26,7 +26,7 @@
 
 <script setup lang="ts">
 
-	import type { HaltestellenAuswahlProps } from "~/components/schule/kataloge/haltestellen/SHaltestellenAuswahlProps";
+	import type { HaltestellenAuswahlProps } from "~/components/schule/kataloge/haltestellen/HaltestellenAuswahlProps";
 	import type { DataTableColumn } from "@ui";
 	import { useRegionSwitch, ViewType } from "@ui";
 	import { BenutzerKompetenz, ServerMode } from "@core";

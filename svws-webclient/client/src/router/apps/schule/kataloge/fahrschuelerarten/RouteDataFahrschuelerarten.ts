@@ -1,8 +1,8 @@
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
 import type { Fahrschuelerart, List, SimpleOperationResponse } from "@core";
+import { BenutzerKompetenz, ArrayList } from "@core";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
-import { ArrayList } from "@core";
 import { ViewType, FahrschuelerartenListeManager } from "@ui";
 import { api } from "~/router/Api";
 import { routeFahrschuelerartenGruppenprozesse } from "~/router/apps/schule/kataloge/fahrschuelerarten/RouteFahrschuelerartenGruppenprozesse";
@@ -50,10 +50,39 @@ export class RouteDataFahrschuelerarten extends RouteDataAuswahl<Fahrschuelerart
 		return `Fahrschülerart ${fahrschuelerart?.bezeichnung ?? '???'} (ID: ${id}) wurde erfolgreich gelöscht.`;
 	}
 
-	addFahrschuelerart = async (data: Partial<Fahrschuelerart>): Promise<void> => {
+	add = async (data: Partial<Fahrschuelerart>): Promise<void> => {
 		const result = await api.server.addFahrschuelerart(data, api.schema);
 		this.manager.liste.add(result);
 		this.commit();
 		await this.gotoDefaultView(result.id);
 	};
+
+	deleteCheck = (): [boolean, List<string>] => {
+		const errorLog = new ArrayList<string>();
+
+		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
+			errorLog.add('Es liegt keine Berechtigung zum Löschen von Fahrschülerarten vor.');
+		}
+
+		if (!this.manager.liste.auswahlExists()) {
+			errorLog.add('Es wurde kein Fahrschülerarten zum Löschen ausgewählt.');
+		}
+
+		if (!this.manager.idsReferencedFahrschuelerarten.isEmpty()) {
+			errorLog.add(this.getErrorMessageForReferencedFahrschuelerarten());
+		}
+
+		return [errorLog.isEmpty(), errorLog];
+	};
+
+	private getErrorMessageForReferencedFahrschuelerarten(): string {
+		let errorMessage = 'Die folgenden Fahrschülerarten sind an anderer Stelle referenziert und können daher nicht gelöscht werden:\n\n';
+		for (const id of this.manager.idsReferencedFahrschuelerarten) {
+			const fahrschuelerart = this.manager.liste.get(id);
+			if (fahrschuelerart) {
+				errorMessage += `- ${fahrschuelerart.bezeichnung} \n`;
+			}
+		}
+		return errorMessage;
+	}
 }

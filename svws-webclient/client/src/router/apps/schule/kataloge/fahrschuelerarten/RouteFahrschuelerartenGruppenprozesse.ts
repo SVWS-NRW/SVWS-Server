@@ -30,8 +30,10 @@ export class RouteFahrschuelerartenGruppenprozesse extends RouteNode<any, RouteF
 			serverMode: api.mode,
 			schulform: api.schulform,
 			benutzerKompetenzen: api.benutzerKompetenzen,
-			deleteFahrschuelerarten: routeFahrschuelerarten.data.delete,
+			deleteCheck: routeFahrschuelerarten.data.deleteCheck,
+			delete: routeFahrschuelerarten.data.delete,
 			manager: () => routeFahrschuelerarten.data.manager,
+			gotoDefaultView: routeFahrschuelerarten.data.gotoDefaultView,
 		};
 	}
 }

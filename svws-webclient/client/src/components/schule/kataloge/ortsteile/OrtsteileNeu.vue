@@ -39,7 +39,7 @@
 	import { SelectManager } from "@ui";
 
 	const props = defineProps<OrtsteileNeuProps>();
-	const data = ref<OrtsteilKatalogEintrag>(Object.assign(new OrtsteilKatalogEintrag(), { istSichtbar: true }));
+	const data = ref<OrtsteilKatalogEintrag>(Object.assign(new OrtsteilKatalogEintrag(), { istSichtbar: true, sortierung: 32000 }));
 	const isLoading = ref<boolean>(false);
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 

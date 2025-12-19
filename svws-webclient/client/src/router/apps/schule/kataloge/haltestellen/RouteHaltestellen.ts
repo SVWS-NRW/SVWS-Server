@@ -10,14 +10,14 @@ import { routeHaltestellenDaten } from "~/router/apps/schule/kataloge/haltestell
 import { routeHaltestellenNeu } from "~/router/apps/schule/kataloge/haltestellen/RouteHaltestellenNeu";
 import { routeHaltestellenGruppenprozesse } from "~/router/apps/schule/kataloge/haltestellen/RouteHaltestellenGruppenprozesse";
 
-const SHaltestellenApp = () => import("~/components/schule/kataloge/haltestellen/SHaltestellenApp.vue");
-const SHaltestellenAuswahl = () => import("~/components/schule/kataloge/haltestellen/SHaltestellenAuswahl.vue");
+const HaltestellenApp = () => import("~/components/schule/kataloge/haltestellen/HaltestellenApp.vue");
+const HaltestellenAuswahl = () => import("~/components/schule/kataloge/haltestellen/HaltestellenAuswahl.vue");
 
 export class RouteHaltestellen extends RouteAuswahlNode<HaltestellenListeManager, RouteDataHaltestellen, RouteApp> {
 
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.haltestellen",
-			"schule/haltestellen/:id(\\d+)?", SHaltestellenApp, SHaltestellenAuswahl, new RouteDataHaltestellen());
+			"schule/haltestellen/:id(\\d+)?", HaltestellenApp, HaltestellenAuswahl, new RouteDataHaltestellen());
 		super.mode = ServerMode.DEV;
 		super.text = "Haltestellen";
 		super.menugroup = RouteSchuleMenuGroup.KATALOGE;

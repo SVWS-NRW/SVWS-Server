@@ -1,9 +1,9 @@
 import { AuswahlManager } from "../../AuswahlManager";
-import  { OrtsteilKatalogEintrag } from '../../../../../core/src/core/data/kataloge/OrtsteilKatalogEintrag';
-import  { OrtKatalogEintrag } from '../../../../../core/src/core/data/kataloge/OrtKatalogEintrag';
+import type { OrtsteilKatalogEintrag } from '../../../../../core/src/core/data/kataloge/OrtsteilKatalogEintrag';
+import type { OrtKatalogEintrag } from '../../../../../core/src/core/data/kataloge/OrtKatalogEintrag';
 import type { List } from '../../../../../core/src/java/util/List';
-import  { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
-import  { Schulform } from '../../../../../core/src/asd/types/schule/Schulform';
+import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
+import type { Schulform } from '../../../../../core/src/asd/types/schule/Schulform';
 import { ArrayList } from '../../../../../core/src/java/util/ArrayList';
 import type { Comparator } from '../../../../../core/src/java/util/Comparator';
 import { JavaInteger } from '../../../../../core/src/java/lang/JavaInteger';

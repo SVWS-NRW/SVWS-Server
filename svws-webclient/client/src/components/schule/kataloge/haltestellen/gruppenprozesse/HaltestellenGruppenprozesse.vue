@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 
-	import type { HaltestellenGruppenprozesseProps } from "~/components/schule/kataloge/haltestellen/gruppenprozesse/SHaltestellenGruppenprozesseProps";
+	import type { HaltestellenGruppenprozesseProps } from "~/components/schule/kataloge/haltestellen/gruppenprozesse/HaltestellenGruppenprozesseProps";
 	import type { List } from "@core";
 	import { BenutzerKompetenz, ServerMode } from "@core";
 	import { computed, ref } from "vue";
