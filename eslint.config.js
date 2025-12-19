@@ -43,11 +43,6 @@ export default tseslint.config(
 			"@stylistic": eslintPluginStylistic,
 		},
 		rules: {
-			//TESTING:
-			curly: ["off", "multi"], // if und for als Einzeiler ohne Klammern
-
-			// Standard Regeln
-
 			// Objekte und Arrays
 			"@stylistic/object-curly-spacing": ["error", "always"],
 			"@stylistic/array-bracket-spacing": ["error", "never"],
@@ -78,6 +73,7 @@ export default tseslint.config(
 			// Blöcke
 			"@stylistic/block-spacing":["error", "always"],
 			"@stylistic/space-before-blocks": ["error", "always"],
+			curly: ["error", "all"], // if und for als Einzeiler ohne Klammern
 
 			// Typen
 			"@stylistic/type-annotation-spacing": ["error"],
@@ -113,7 +109,7 @@ export default tseslint.config(
 			// Sonstiges
 			"@stylistic/max-len": "off",
 
-			"@stylistic/brace-style": ["error", "1tbs", { "allowSingleLine": true }],
+			"@stylistic/brace-style": ["error", "1tbs"],
 
 			"require-await": "off",
 			"no-unused-vars": "off",
