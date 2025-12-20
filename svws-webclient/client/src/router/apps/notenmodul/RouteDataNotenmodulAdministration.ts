@@ -241,12 +241,16 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 		// Führe einen Verbindungstest für einen WeNoM-Server (externes Notenmodul) durch.
 		// ... zunächst ein Wenom-Setup
 		let result = await this.wenomSetup(id);
+		if (typeof result === "boolean") {
+			manager.setAuswahlSetupResponse(result);
+		} else {
+			manager.setAuswahlSetupResponse(null);
+		}
 		if ((result instanceof SimpleOperationResponse) && (result.id === null)) {
 			manager.setConnectionResponse(id, result);
 			this.setPatchedState({ manager });
 			return;
 		}
-
 		// ... Führe die eigentlich Überprüfung der Verbindung durch
 		result = await this.wenomCheck(id);
 		manager.setConnectionResponse(id, result);

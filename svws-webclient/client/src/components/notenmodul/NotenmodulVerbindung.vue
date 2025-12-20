@@ -5,7 +5,15 @@
 				<div class="text-headline-md mb-4">Verbindung zum Webnotenmanager einrichten</div>
 				<svws-ui-input-wrapper>
 					<div>Adresse: {{ manager().auswahl().url }}</div>
-					<svws-ui-text-input :model-value="manager().auswahl().clientSecret" type="password" placeholder="Secret" @change="clientSecret => (clientSecret !== null) && updateServerConnection({ clientSecret })" />
+					<svws-ui-notification v-if="manager().getAuswahlSetupResponse()" type="success">
+						Auf dem Websapce des ENM-Server wurde erfolgreich eine Datenbank und ein Secret erstellt. Bitte lesen Sie das Secret aus und geben Sie es unten in das Feld ein.
+						<br>Standardmäßig befindet sich das Secret in der Datei <span class="font-mono">php/db/client.sec</span> ihres Webspace.
+					</svws-ui-notification>
+					<svws-ui-notification v-if="(manager().getAuswahlSetupResponse() === false) && !manager().getAuswahlConnectionResponse().success" type="warning">
+						Um Daten mit dem ENM-Server austauschen zu können, muss das auf dem Webspace abgelegte Secret ausgelesen und in das unten angegebene Feld eingefügt werden.
+						<br>Standardmäßig befindet sich das Secret in der Datei <span class="font-mono">php/db/client.sec</span> ihres Webspace.
+					</svws-ui-notification>
+					<svws-ui-text-input v-if="manager().getAuswahlSetupResponse() !== null" :model-value="manager().auswahl().clientSecret" type="password" placeholder="Secret" @change="clientSecret => (clientSecret !== null) && updateServerConnection({ clientSecret })" required />
 					<svws-ui-text-input :model-value="manager().auswahl().bezeichnung" type="text" placeholder="Bezeichnung" @change="bezeichnung => updateServerConnection({ bezeichnung: bezeichnung ?? null })" />
 					<svws-ui-button type="primary" @click="connect(manager().auswahl().id)">
 						Verbindungsdaten prüfen
@@ -23,6 +31,10 @@
 						<div class="pl-4">von: {{ cert.validSince }}</div>
 						<div class="pl-4">bis: {{ cert.validUntil }}</div>
 					</div>
+					<svws-ui-notification v-if="(manager().getAuswahlSetupResponse() === null) && !manager().auswahl().serverTLSCertIsTrusted && (manager().auswahl().clientSecret === '')" type="warning">
+						Es wurde noch kein Secret gesetzt und dem Zertifikat wird nicht vertraut.
+						<br>Damit der ENM-Server ein Secret erzeugen kann, muss dem Zertifikat und damit der Verbindung vertraut werden.
+					</svws-ui-notification>
 					<svws-ui-checkbox :model-value="manager().auswahl().serverTLSCertIsTrusted" @update:model-value="value => trustCertificate(value)">
 						Zertifikat vertrauen?
 					</svws-ui-checkbox>
@@ -47,8 +59,9 @@
 
 	const cert = computed<TLSCertificate | null>(() => {
 		const connInfo = props.manager().auswahl();
-		if ((connInfo.serverTLSCertChain.size() < 1))
+		if ((connInfo.serverTLSCertChain.size() < 1)) {
 			return null;
+		}
 		return connInfo.serverTLSCertChain.getFirst();
 	});
 

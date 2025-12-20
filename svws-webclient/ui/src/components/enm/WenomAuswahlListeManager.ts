@@ -17,6 +17,7 @@ export class WenomAuswahlListeManager extends AuswahlManager<number, ENMServerCo
 
 	private static readonly _eintragToId: JavaFunction<ENMServerConnection, number> = { apply: (l: ENMServerConnection) => l.id };
 	private readonly _mapAvailability = new Map<number, SimpleOperationResponse | null>();
+	private readonly _mapSetupResponse = new Map<number, boolean | null>();
 
 	/** Ein Default-Comparator für den Vergleich von Servereinträgen. */
 	public static readonly comparator: Comparator<ENMServerConnection> = { compare: (a: ENMServerConnection, b: ENMServerConnection) => JavaLong.compare(a.id, b.id) };
@@ -29,16 +30,18 @@ export class WenomAuswahlListeManager extends AuswahlManager<number, ENMServerCo
 		this._konfigurationLokal = new ENMServerConnection();
 		this._konfigurationLokal.id = -1;
 		this._konfigurationLokal.bezeichnung = "Lokales Notenmodul";
-		for (const server of connections)
+		for (const server of connections) {
 			this._mapAvailability.set(server.id, null);
+		}
 	}
 
 	public getConnectionResponse(id: number): SimpleOperationResponse {
 		const res = this._mapAvailability.get(id);
-		if ((res === undefined) || (res === null))
+		if ((res === undefined) || (res === null)) {
 			return new SimpleOperationResponse();
-		else
+		} else {
 			return res;
+		}
 	}
 
 	public getAuswahlConnectionResponse(): SimpleOperationResponse {
@@ -52,8 +55,24 @@ export class WenomAuswahlListeManager extends AuswahlManager<number, ENMServerCo
 
 	public setAuswahlConnectionResponse(res: SimpleOperationResponse) {
 		const id = this.auswahl().id;
-		if (id >= 0)
+		if (id >= 0) {
 			this.setConnectionResponse(id, res);
+		}
+	}
+
+	public getAuswahlSetupResponse(): boolean | null {
+		const id = this.auswahlID();
+		if (id === null) {
+			return null;
+		}
+		return this._mapSetupResponse.get(id) ?? null;
+	}
+
+	public setAuswahlSetupResponse(res: boolean | null) {
+		const id = this.auswahlID();
+		if ((id !== null) && (id >= 0)) {
+			this._mapSetupResponse.set(id, res);
+		}
 	}
 
 	/**
@@ -76,15 +95,17 @@ export class WenomAuswahlListeManager extends AuswahlManager<number, ENMServerCo
 	public filtered(): List<ENMServerConnection> {
 		const hasCache = this._filtered !== null;
 		const filtered = super.filtered();
-		if (hasCache)
+		if (hasCache) {
 			return filtered;
+		}
 		filtered.addFirst(this._konfigurationLokal);
 		return filtered;
 	}
 
 	public auswahl(): ENMServerConnection {
-		if (this._daten?.id !== -1)
+		if (this._daten?.id !== -1) {
 			return super.auswahl();
+		}
 		return this._konfigurationLokal;
 	}
 

@@ -1,8 +1,7 @@
 <template>
 	<div class="page page-grid-cards">
 		<svws-ui-input-wrapper>
-			<svws-ui-text-input class="contentFocusField" v-model.trim="data.url" type="text" placeholder="URL" />
-			<svws-ui-text-input v-model.trim="data.clientSecret" type="text" placeholder="Secret" />
+			<svws-ui-text-input class="contentFocusField" v-model.trim="data.url" type="text" placeholder="URL" url />
 			<svws-ui-text-input v-model.trim="data.bezeichnung" type="text" placeholder="Bezeichnung" />
 			<div class="mt-7 flex flex-row gap-4 justify-end">
 				<svws-ui-button type="secondary" @click="cancel">Abbrechen</svws-ui-button>
@@ -35,7 +34,7 @@
 		validateAll();
 	}, { immediate: false, deep: true });
 
-	const validateAll = () => isValid.value = (data.value.url !== "") && (data.value.clientSecret !== "");
+	const validateAll = () => isValid.value = (data.value.url !== "");
 
 	async function cancel() {
 		props.checkpoint.active = false;
@@ -48,8 +47,8 @@
 		}
 		props.checkpoint.active = false;
 		isLoading.value = true;
-		const { url, clientSecret, bezeichnung } = data.value;
-		await props.addCredentials({ url, clientSecret, bezeichnung: bezeichnung === "" ? null : bezeichnung });
+		const { url, bezeichnung } = data.value;
+		await props.addCredentials({ url: `https://${url}`, bezeichnung: bezeichnung === "" ? null : bezeichnung });
 		isLoading.value = false;
 	}
 

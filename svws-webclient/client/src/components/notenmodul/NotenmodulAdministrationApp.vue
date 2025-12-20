@@ -10,7 +10,7 @@
 						<span class="svws-subline">{{ konfiguration.bezeichnung }}</span>
 					</template>
 					<template v-else-if="activeViewType === ViewType.HINZUFUEGEN">
-						<h2 class="svws-headline">Anlegen einer neuen Konfiguration...</h2>
+						<h2 class="svws-headline">Anlegen einer neuen Verbindung...</h2>
 					</template>
 					<template v-else-if="activeViewType === ViewType.GRUPPENPROZESSE">
 						<h2 class="svws-headline"> Gruppenprozesse </h2>
@@ -42,8 +42,9 @@
 
 	const subline = computed(() => {
 		const list = props.manager().liste.auswahlSorted();
-		if (list.size() > 5)
-			return `${list.size()} Konfigurationen ausgewählt`;
+		if (list.size() > 5) {
+			return `${list.size()} Verbindungen ausgewählt`;
+		}
 		return [...list].map(k => k.bezeichnung).join(', ');
 	});
 </script>

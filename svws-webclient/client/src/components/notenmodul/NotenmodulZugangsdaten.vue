@@ -79,24 +79,30 @@
 		result.sort({ compare: (a: ENMLehrer, b: ENMLehrer): number => {
 			if ((a.nachname !== null) && (b.nachname !== null)) {
 				let tmp = a.nachname.localeCompare(b.nachname);
-				if (tmp !== 0)
+				if (tmp !== 0) {
 					return tmp;
+				}
 				if ((a.vorname !== null) && (b.vorname !== null)) {
 					tmp = a.vorname.localeCompare(b.vorname);
-					if (tmp !== 0)
+					if (tmp !== 0) {
 						return tmp;
+					}
 					return a.id - b.id;
 				}
-				if (a.vorname === null)
+				if (a.vorname === null) {
 					return -1;
-				if (b.vorname === null)
+				}
+				if (b.vorname === null) {
 					return 1;
+				}
 				return a.id - b.id;
 			}
-			if (a.nachname === null)
+			if (a.nachname === null) {
 				return -1;
-			if (b.nachname === null)
+			}
+			if (b.nachname === null) {
 				return 1;
+			}
 			return a.id - b.id;
 		} });
 		return result;
@@ -106,12 +112,14 @@
 		const duplikate = new Set<string>();
 		const emails = new Set<string>();
 		for (const lehrer of lehrerListe.value) {
-			if ((lehrer.eMailDienstlich === null) || (lehrer.eMailDienstlich.trim().length === 0))
+			if ((lehrer.eMailDienstlich === null) || (lehrer.eMailDienstlich.trim().length === 0)) {
 				continue;
-			if (emails.has(lehrer.eMailDienstlich))
+			}
+			if (emails.has(lehrer.eMailDienstlich)) {
 				duplikate.add(lehrer.eMailDienstlich);
-			else
+			} else {
 				emails.add(lehrer.eMailDienstlich);
+			}
 		}
 		return duplikate;
 	});
@@ -119,10 +127,11 @@
 	async function copyToClipboard(idLehrer: number) {
 		try {
 			const kennwort = props.mapEnmInitialKennwoerter().get(idLehrer);
-			if (kennwort === null)
+			if (kennwort === null) {
 				throw new DeveloperNotificationException("Initial-Kennwort ist nicht vorhanden und kann daher nicht in die Zwischenablage kopiert werden.");
-			else
+			} else {
 				await navigator.clipboard.writeText(kennwort);
+			}
 		} catch {
 			throw new DeveloperNotificationException("Initial-Kennwort konnte nicht in die Zwischenablage kopiert werden.");
 		}
@@ -150,8 +159,9 @@
 				continue;
 			}
 			adressen.add(lehrer.eMailDienstlich);
-			if (!validatorEmail(lehrer.eMailDienstlich))
+			if (!validatorEmail(lehrer.eMailDienstlich)) {
 				emailFehlerhaft++;
+			}
 		}
 		lehrerOhneEmail.value = emailFehlt;
 		lehrerDoppelteEmail.value = emailDoppelt;
