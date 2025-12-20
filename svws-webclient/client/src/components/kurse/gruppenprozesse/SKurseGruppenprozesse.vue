@@ -82,7 +82,7 @@
 				:is-open="currentAction === 'delete'" @update:is-open="(isOpen) => setCurrentAction('delete', isOpen)">
 				<div>
 					<span v-if="preConditionCheck[0]">Alle ausgewählten Kurse sind bereit zum Löschen.</span>
-					<template v-else v-for="message in preConditionCheck[1]" :key="message">
+					<template v-else v-for="message, i in preConditionCheck[1]" :key="i">
 						<span class="text-ui-danger"> {{ message }} <br> </span>
 					</template>
 				</div>
@@ -154,14 +154,16 @@
 	const druckoptionListeSchuelerKontaktdatenErzieher = ref(1);
 
 	const preConditionCheck = computed(() => {
-		if (currentAction.value === 'delete')
+		if (currentAction.value === 'delete') {
 			return [true, []];
+		}
 		return [false, []];
 	});
 
 	function setCurrentAction(newAction: Action, open: boolean) {
-		if (newAction !== currentAction.value && !open)
+		if (newAction !== currentAction.value && !open) {
 			return;
+		}
 		option1.value = false;
 		option2.value = false;
 		option4.value = false;
@@ -204,8 +206,9 @@
 	async function downloadPDF() {
 		const reportingParameter = new ReportingParameter();
 		const listeIdsKurse = new ArrayList<number>();
-		for (const kurs of props.manager().liste.auswahl())
+		for (const kurs of props.manager().liste.auswahl()) {
 			listeIdsKurse.add(kurs.id);
+		}
 
 		if (currentAction.value === 'druckKursListeSchuelerKontaktdatenErzieher') {
 			reportingParameter.reportvorlage = ReportingReportvorlage.KURSE_v_LISTE_SCHUELER_KONTAKTDATENERZIEHER.getBezeichnung();
@@ -274,8 +277,9 @@
 	// E-Mail analog implementiert
 	async function sendPdfByEmail() {
 		const listeIdsKurse = new ArrayList<number>();
-		for (const kurs of props.manager().liste.auswahl())
+		for (const kurs of props.manager().liste.auswahl()) {
 			listeIdsKurse.add(kurs.id);
+		}
 
 		const reportingParameter = new ReportingParameter();
 		reportingParameter.ausgabeformat = ReportingAusgabeformat.EMAIL.getId();

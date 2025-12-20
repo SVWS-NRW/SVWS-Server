@@ -5,7 +5,7 @@
 				:is-open="currentAction === 'delete'" @update:is-open="(isOpen) => setCurrentAction('delete', isOpen)">
 				<div>
 					<span v-if="preConditionCheck[0]">Alle ausgewählten Verbindungen sind bereit zum Löschen.</span>
-					<template v-else v-for="message in preConditionCheck[1]" :key="message">
+					<template v-else v-for="message, i in preConditionCheck[1]" :key="i">
 						<span class="text-ui-danger"> {{ message }} <br> </span>
 					</template>
 				</div>

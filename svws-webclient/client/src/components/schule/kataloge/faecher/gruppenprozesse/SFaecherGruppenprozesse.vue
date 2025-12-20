@@ -31,7 +31,7 @@
 				:is-open="currentAction === 'delete'" @update:is-open="(isOpen) => setCurrentAction('delete', isOpen)">
 				<div>
 					<span v-if="preConditionCheck[0]">Alle ausgewählten Fächer sind bereit zum Löschen.</span>
-					<template v-else v-for="message in preConditionCheck[1]" :key="message">
+					<template v-else v-for="message, i in preConditionCheck[1]" :key="i">
 						<span class="text-ui-danger"> {{ message }} <br> </span>
 					</template>
 					<span v-if="loeschbareFaecherVorhanden">Einige Fächer sind noch an anderer Stelle referenziert, die Übrigen können gelöscht werden.</span>
@@ -85,20 +85,23 @@
 		!alleFaecherLoeschbar.value && (props.manager().getIdsReferenzierterFaecher().size() !== props.manager().liste.auswahlSize()));
 
 	const preConditionCheck = computed(() => {
-		if (currentAction.value === 'delete')
+		if (currentAction.value === 'delete') {
 			return props.deleteFaecherCheck();
+		}
 		return [true, []];
 	});
 
 	function setCurrentAction(newAction: string, open: boolean) {
-		if (newAction === oldAction.value.name && !open)
+		if (newAction === oldAction.value.name && !open) {
 			return;
+		}
 		oldAction.value.name = currentAction.value;
 		oldAction.value.open = (currentAction.value === "");
-		if (open === true)
+		if (open === true) {
 			currentAction.value = newAction;
-		else
+		} else {
 			currentAction.value = "";
+		}
 	}
 
 	function clearLog() {
@@ -123,8 +126,9 @@
 	const gruppe2 = ref(false);
 
 	async function downloadPDF() {
-		if (stundenplanAuswahl.value === undefined)
+		if (stundenplanAuswahl.value === undefined) {
 			return;
+		}
 		loading.value = true;
 		const reportingParameter = new ReportingParameter();
 		reportingParameter.reportvorlage = ReportingReportvorlage.STUNDENPLANUNG_v_FACH_STUNDENPLAN.getBezeichnung();
