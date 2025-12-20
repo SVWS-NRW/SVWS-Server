@@ -1,7 +1,7 @@
 import type { List } from "@core";
 import type { WenomAuswahlListeManager } from "@ui";
 
-export interface NotenmodulKonfigurationGruppenprozesseProps {
+export interface NotenmodulVerbindungGruppenprozesseProps {
 	manager: () => WenomAuswahlListeManager;
-	deleteKonfiguration: () => Promise<[boolean, List<string | null>]>;
+	deleteVerbindung: () => Promise<[boolean, List<string | null>]>;
 }

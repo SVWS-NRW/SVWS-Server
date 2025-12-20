@@ -5,8 +5,8 @@ import { WenomAuswahlListeManager, ViewType } from "@ui";
 import { api } from "~/router/Api";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { routeNotenmodulKonfiguration } from "./RouteNotenmodulKonfiguration";
-import { routeNotenmodulKonfigurationNeu } from "./RouteNotenmodulKonfigurationNeu";
-import { routeNotenmodulKonfigurationGruppenprozesse } from "./RouteNotenmodulGruppenprozesse";
+import { routeNotenmodulVerbindungNeu } from "./RouteNotenmodulVerbindungNeu";
+import { routeNotenmodulVerbindungGruppenprozesse } from "./RouteNotenmodulGruppenprozesse";
 import { routeNotenmodul } from "./RouteNotenmodul";
 import { NotenmodulConfigManagerSperrungen, type NotenmodulConfigManagerSperrungenGruppierung } from "./NotenmodulConfigManagerSperrungen";
 import { NotenmodulConfigManagerSichtbareSpalten } from "./NotenmodulConfigManagerSichtbareSpalten";
@@ -38,7 +38,7 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 			mapAbteilungen: new HashMap<number, ENMAbteilung>(),
 			managerSperrungen: new NotenmodulConfigManagerSperrungen(new ArrayList(), new HashMap(), new HashMap(), new HashMap(), new HashMap(), async () => {}, 'Keine', async () => {}),
 			managerSichtbareSpalten: new NotenmodulConfigManagerSichtbareSpalten(new ArrayList(), new HashMap(), async () => {}),
-		}, { gruppenprozesse: routeNotenmodulKonfigurationGruppenprozesse, hinzufuegen: routeNotenmodulKonfigurationNeu });
+		}, { gruppenprozesse: routeNotenmodulVerbindungGruppenprozesse, hinzufuegen: routeNotenmodulVerbindungNeu });
 	}
 
 	get gruppierungAuswahl(): NotenmodulConfigManagerSperrungenGruppierung {

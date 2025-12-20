@@ -9,8 +9,8 @@ import { routeNotenmodulKonfiguration } from "./RouteNotenmodulKonfiguration";
 import type { NotenmodulAdministrationAppProps } from "~/components/notenmodul/NotenmodulAdministrationAppProps";
 import type { NotenmodulAdministrationAuswahlProps } from "~/components/notenmodul/NotenmodulAdministrationAuswahlProps";
 import { routeNotenmodulSynchronisation } from "./RouteNotenmodulSynchronisation";
-import { routeNotenmodulKonfigurationNeu } from "./RouteNotenmodulKonfigurationNeu";
-import { routeNotenmodulKonfigurationGruppenprozesse } from "./RouteNotenmodulGruppenprozesse";
+import { routeNotenmodulVerbindungNeu } from "./RouteNotenmodulVerbindungNeu";
+import { routeNotenmodulVerbindungGruppenprozesse } from "./RouteNotenmodulGruppenprozesse";
 import { routeNotenmodulVerbindung } from "./RouteNotenmodulVerbindung";
 import { routeNotenmodulMail } from "./RouteNotenmodulMail";
 
@@ -37,8 +37,8 @@ export class RouteNotenmodulAdministration extends RouteAuswahlNode<WenomAuswahl
 			routeNotenmodulKonfiguration,
 			routeNotenmodulMail,
 			routeNotenmodulSynchronisation,
-			routeNotenmodulKonfigurationNeu,
-			routeNotenmodulKonfigurationGruppenprozesse,
+			routeNotenmodulVerbindungNeu,
+			routeNotenmodulVerbindungGruppenprozesse,
 		];
 		super.defaultChild = routeNotenmodulVerbindung;
 		super.menugroup = RouteNotenmodulMenuGroup.ADMINISTRATION;
@@ -46,8 +46,9 @@ export class RouteNotenmodulAdministration extends RouteAuswahlNode<WenomAuswahl
 	}
 
 	protected doUpdateIfTarget = async () => {
-		if (!this.data.manager.hasDaten())
+		if (!this.data.manager.hasDaten()) {
 			return;
+		}
 		return this.getRouteSelectedChild();
 	};
 

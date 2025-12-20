@@ -38,9 +38,11 @@ export class RouteDataNotenmodulZugangsdaten extends RouteData<RouteStateNotenmo
 		const mapInitialKennwoerter = new HashMap<number, string>();
 		try {
 			const daten = await api.server.getENMLehrerInitialKennwoerter(api.schema);
-			for (const eintrag of daten)
-				if (eintrag.initialKennwort !== null)
+			for (const eintrag of daten) {
+				if (eintrag.initialKennwort !== null) {
 					mapInitialKennwoerter.put(eintrag.id, eintrag.initialKennwort);
+				}
+			}
 		} catch (e) {
 			console.log(e);
 			mapInitialKennwoerter.clear();

@@ -3,17 +3,17 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import { routeNotenmodulAdministration, type RouteNotenmodulAdministration } from "./RouteNotenmodulAdministration";
-import type { NotenmodulKonfigurationGruppenprozesseProps } from "~/components/notenmodul/NotenmodulKonfigurationGruppenprozesseProps";
+import type { NotenmodulVerbindungGruppenprozesseProps } from "~/components/notenmodul/NotenmodulVerbindungGruppenprozesseProps";
 import { routeApp } from "../RouteApp";
 
-const NotenmodulKonfigurationGruppenprozesse = () => import("~/components/notenmodul/NotenmodulKonfigurationGruppenprozesse.vue");
+const NotenmodulVerbindungGruppenprozesse = () => import("~/components/notenmodul/NotenmodulVerbindungGruppenprozesse.vue");
 
-export class RouteNotenmodulKonfigurationGruppenprozesse extends RouteNode<any, RouteNotenmodulAdministration> {
+export class RouteNotenmodulVerbindungGruppenprozesse extends RouteNode<any, RouteNotenmodulAdministration> {
 
 	public constructor() {
 		super(Schulform.values(), [
 			BenutzerKompetenz.NOTENMODUL_ADMINISTRATION,
-		], "notenmodul.administration.gruppenprozesse", "gruppenprozesse", NotenmodulKonfigurationGruppenprozesse);
+		], "notenmodul.administration.gruppenprozesse", "gruppenprozesse", NotenmodulVerbindungGruppenprozesse);
 		super.types = new Set([ViewType.GRUPPENPROZESSE]);
 		super.mode = ServerMode.ALPHA;
 		super.propHandler = (route) => this.getProps(route);
@@ -24,14 +24,14 @@ export class RouteNotenmodulKonfigurationGruppenprozesse extends RouteNode<any, 
 		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: "" } };
 	}
 
-	public getProps(to: RouteLocationNormalized): NotenmodulKonfigurationGruppenprozesseProps {
+	public getProps(to: RouteLocationNormalized): NotenmodulVerbindungGruppenprozesseProps {
 		return {
 			manager: () => routeNotenmodulAdministration.data.manager,
-			deleteKonfiguration: routeNotenmodulAdministration.data.delete,
+			deleteVerbindung: routeNotenmodulAdministration.data.delete,
 		};
 	}
 
 }
 
-export const routeNotenmodulKonfigurationGruppenprozesse = new RouteNotenmodulKonfigurationGruppenprozesse();
+export const routeNotenmodulVerbindungGruppenprozesse = new RouteNotenmodulVerbindungGruppenprozesse();
 

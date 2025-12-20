@@ -4,8 +4,7 @@ import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { routeNotenmodulLeistungen } from "./RouteNotenmodulLeistungen";
 import type { EnmLerngruppenAuswahlEintrag } from "@ui";
-import { EnmManager } from "@ui";
-import { EnmSperrManager } from "../../../../../ui/src/components/enm/EnmSperrManager";
+import { EnmManager, EnmSperrManager } from "@ui";
 
 
 interface RouteStateNotenmodul extends RouteStateInterface {
@@ -45,8 +44,9 @@ export class RouteDataNotenmodul extends RouteData<RouteStateNotenmodul> {
 
 	public async ladeDaten() {
 		// TODO dies verhindert anscheinend das korrekte Nachladen beim Entern der Route, obwohl bei leave ein Entfernen der Daten initiiert wird!
-		if (this._state.value.daten !== null)
+		if (this._state.value.daten !== null) {
 			return;
+		}
 		const patchedState = <Partial<RouteStateNotenmodul>>{ daten: null, manager: null, auswahlKlassen: [], auswahlLerngruppen: [] };
 		try {
 			if (!api.benutzerIstAdmin && !api.benutzerHatEineKompetenz([
@@ -98,8 +98,9 @@ export class RouteDataNotenmodul extends RouteData<RouteStateNotenmodul> {
 	}
 
 	public get manager(): EnmManager {
-		if (this._state.value.manager === null)
+		if (this._state.value.manager === null) {
 			throw new DeveloperNotificationException("Die ENM-Daten wurden nicht geladen.");
+		}
 		return this._state.value.manager;
 	}
 
@@ -119,8 +120,9 @@ export class RouteDataNotenmodul extends RouteData<RouteStateNotenmodul> {
 	 * @returns die Lerngruppen-Auswahl
 	 */
 	get auswahlLerngruppen(): Array<EnmLerngruppenAuswahlEintrag> {
-		if (this._state.value.auswahlLerngruppe === null)
+		if (this._state.value.auswahlLerngruppe === null) {
 			return this._state.value.auswahlLerngruppen;
+		}
 		return [this._state.value.auswahlLerngruppe];
 	}
 
@@ -169,8 +171,9 @@ export class RouteDataNotenmodul extends RouteData<RouteStateNotenmodul> {
 	 * @returns die Klassen-Auswahl
 	 */
 	get auswahlKlassen(): Array<ENMKlasse> {
-		if (this._state.value.auswahlKlasse === null)
+		if (this._state.value.auswahlKlasse === null) {
 			return this._state.value.auswahlKlassen;
+		}
 		return [this._state.value.auswahlKlasse];
 	}
 

@@ -4,21 +4,21 @@ import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import { RouteManager } from "~/router/RouteManager";
 import { routeNotenmodulAdministration, type RouteNotenmodulAdministration } from "./RouteNotenmodulAdministration";
-import type { NotenmodulKonfigurationNeuProps } from "~/components/notenmodul/NotenmodulKonfigurationNeuProps";
+import type { NotenmodulVerbindungNeuProps } from "~/components/notenmodul/NotenmodulVerbindungNeuProps";
 import { routeApp } from "../RouteApp";
 
-const NotenmodulKonfigurationNeu = () => import("~/components/notenmodul/NotenmodulKonfigurationNeu.vue");
+const NotenmodulVerbindungNeu = () => import("~/components/notenmodul/NotenmodulVerbindungNeu.vue");
 
-export class RouteNotenmodulKonfigurationNeu extends RouteNode<any, RouteNotenmodulAdministration> {
+export class RouteNotenmodulVerbindungNeu extends RouteNode<any, RouteNotenmodulAdministration> {
 
 	public constructor() {
 		super(Schulform.values(), [
 			BenutzerKompetenz.NOTENMODUL_ADMINISTRATION,
-		], "notenmodul.administration.neu", "neu", NotenmodulKonfigurationNeu);
+		], "notenmodul.administration.neu", "neu", NotenmodulVerbindungNeu);
 		super.types = new Set([ViewType.HINZUFUEGEN]);
 		super.mode = ServerMode.ALPHA;
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "Konfiguration Neu";
+		super.text = "Verbindung Neu";
 		super.setCheckpoint = true;
 	}
 
@@ -26,7 +26,7 @@ export class RouteNotenmodulKonfigurationNeu extends RouteNode<any, RouteNotenmo
 		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: "" } };
 	}
 
-	public getProps(to: RouteLocationNormalized): NotenmodulKonfigurationNeuProps {
+	public getProps(to: RouteLocationNormalized): NotenmodulVerbindungNeuProps {
 		return {
 			manager: () => routeNotenmodulAdministration.data.manager,
 			addCredentials: routeNotenmodulAdministration.data.wenomAddCredentials,
@@ -37,4 +37,4 @@ export class RouteNotenmodulKonfigurationNeu extends RouteNode<any, RouteNotenmo
 	}
 }
 
-export const routeNotenmodulKonfigurationNeu = new RouteNotenmodulKonfigurationNeu();
+export const routeNotenmodulVerbindungNeu = new RouteNotenmodulVerbindungNeu();

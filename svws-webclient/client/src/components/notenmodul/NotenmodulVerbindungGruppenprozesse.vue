@@ -1,16 +1,16 @@
 <template>
 	<div class="page page-grid-cards">
 		<div class="flex flex-col gap-4">
-			<ui-card icon="i-ri-delete-bin-line" title="Löschen" subtitle="Ausgewählte Konfigurationen werden gelöscht."
+			<ui-card icon="i-ri-delete-bin-line" title="Löschen" subtitle="Ausgewählte Verbindungen werden gelöscht."
 				:is-open="currentAction === 'delete'" @update:is-open="(isOpen) => setCurrentAction('delete', isOpen)">
 				<div>
-					<span v-if="preConditionCheck[0]">Alle ausgewählten Konfigurationen sind bereit zum Löschen.</span>
+					<span v-if="preConditionCheck[0]">Alle ausgewählten Verbindungen sind bereit zum Löschen.</span>
 					<template v-else v-for="message in preConditionCheck[1]" :key="message">
 						<span class="text-ui-danger"> {{ message }} <br> </span>
 					</template>
 				</div>
 				<template #buttonFooterLeft>
-					<svws-ui-button class="mt-4" title="Löschen" @click="entferneKonfiguration" :is-loading="loading"
+					<svws-ui-button class="mt-4" title="Löschen" @click="entferneZugangsdaten" :is-loading="loading"
 						:disabled="loading">
 						<svws-ui-spinner v-if="loading" spinning />
 						<span v-else class="icon i-ri-play-line" />
@@ -31,9 +31,9 @@
 
 	import { computed, ref } from "vue";
 	import type { List } from "@core";
-	import type { NotenmodulKonfigurationGruppenprozesseProps } from "./NotenmodulKonfigurationGruppenprozesseProps";
+	import type { NotenmodulVerbindungGruppenprozesseProps } from "./NotenmodulVerbindungGruppenprozesseProps";
 
-	const props = defineProps<NotenmodulKonfigurationGruppenprozesseProps>();
+	const props = defineProps<NotenmodulVerbindungGruppenprozesseProps>();
 
 	const currentAction = ref<string>('');
 	const oldAction = ref<{ name: string | undefined; open: boolean }>({
@@ -49,14 +49,16 @@
 	});
 
 	function setCurrentAction(newAction: string, open: boolean) {
-		if (newAction === oldAction.value.name && !open)
+		if (newAction === oldAction.value.name && !open) {
 			return;
+		}
 		oldAction.value.name = currentAction.value;
 		oldAction.value.open = (currentAction.value !== "");
-		if (open === true)
+		if (open === true) {
 			currentAction.value = newAction;
-		else
+		} else {
 			currentAction.value = "";
+		}
 	}
 
 	function clearLog() {
@@ -65,10 +67,10 @@
 		status.value = undefined;
 	}
 
-	async function entferneKonfiguration() {
+	async function entferneZugangsdaten() {
 		loading.value = true;
 
-		const [delStatus, logMessages] = await props.deleteKonfiguration();
+		const [delStatus, logMessages] = await props.deleteVerbindung();
 		logs.value = logMessages;
 		status.value = delStatus;
 		currentAction.value = '';

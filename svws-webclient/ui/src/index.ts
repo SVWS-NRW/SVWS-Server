@@ -112,6 +112,7 @@ export { GridInputToggle } from "./ui/controls/tablegrid/GridInputToggle";
 export { PendingStateManager } from "./ui/wrapper/PendingStateManager";
 export { StateManager } from "./ui/StateManager";
 export { EnmManager } from "./components/enm/EnmManager";
+export { EnmSperrManager } from "./components/enm/EnmSperrManager";
 export { EnmLerngruppenAuswahlListeManager } from "./components/enm/EnmLerngruppenAuswahlListeManager";
 export { EnmKlassenleitungAuswahlListeManager } from "./components/enm/EnmKlassenleitungAuswahlListeManager";
 export type { EnmLerngruppenAuswahlEintrag } from "./components/enm/EnmManager";

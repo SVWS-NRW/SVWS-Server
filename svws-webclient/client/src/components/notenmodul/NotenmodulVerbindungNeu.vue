@@ -18,17 +18,18 @@
 
 	import { ref, watch } from "vue";
 	import { ENMServerConnection } from "@core";
-	import type { NotenmodulKonfigurationNeuProps } from "./NotenmodulKonfigurationNeuProps";
+	import type { NotenmodulVerbindungNeuProps } from "./NotenmodulVerbindungNeuProps";
 
-	const props = defineProps<NotenmodulKonfigurationNeuProps>();
+	const props = defineProps<NotenmodulVerbindungNeuProps>();
 
 	const data = ref<ENMServerConnection>(new ENMServerConnection());
 	const isLoading = ref<boolean>(false);
 	const isValid = ref<boolean>(false);
 
 	watch(() => data.value, async () => {
-		if (isLoading.value)
+		if (isLoading.value) {
 			return;
+		}
 
 		props.checkpoint.active = true;
 		validateAll();
@@ -42,8 +43,9 @@
 	}
 
 	async function updateCredentials() {
-		if (isLoading.value)
+		if (isLoading.value) {
 			return;
+		}
 		props.checkpoint.active = false;
 		isLoading.value = true;
 		const { url, clientSecret, bezeichnung } = data.value;
