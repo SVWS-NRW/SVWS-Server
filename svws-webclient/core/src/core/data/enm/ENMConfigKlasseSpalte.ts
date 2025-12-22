@@ -16,7 +16,7 @@ export class ENMConfigKlasseSpalte extends JavaObject {
 	/**
 	 * Gibt an, ob die Spalte gesperrt werden soll oder nicht.
 	 */
-	public gesperrt: boolean = false;
+	public gesperrt: boolean = true;
 
 
 	/**

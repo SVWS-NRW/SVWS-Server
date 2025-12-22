@@ -218,8 +218,9 @@ export class NotenmodulConfigManagerSperrungen {
 	/**
 	 * Gibt eine Klasse zurück
 	 *
-	 * @param id 		die ID der Klasse
-	 * @returns 		die Klasse oder null
+	 * @param id   die ID der Klasse
+	 *
+	 * @returns die Klasse oder null
 	 */
 	public getKlasse(id: number): ENMKlasse | null {
 		return this._mapKlassen.get(id);
@@ -228,8 +229,9 @@ export class NotenmodulConfigManagerSperrungen {
 	/**
 	 * Gibt einen Jahrgang zurück
 	 *
-	 * @param id 		die ID des Jahrgang
-	 * @returns 		der Jahrgang oder null
+	 * @param id   die ID des Jahrgang
+	 *
+	 * @returns der Jahrgang oder null
 	 */
 	public getJahrgang(id: number): ENMJahrgang | null {
 		return this._mapJahrgaenge.get(id);
@@ -238,8 +240,9 @@ export class NotenmodulConfigManagerSperrungen {
 	/**
 	 * Gibt eine Abteilung zurück
 	 *
-	 * @param id 		die ID der Abteilung
-	 * @returns 		die Abteilung oder null
+	 * @param id   die ID der Abteilung
+	 *
+	 * @returns die Abteilung oder null
 	 */
 	public getAbteilung(id: number): ENMAbteilung | null {
 		return this._mapAbteilungen.get(id);
@@ -302,8 +305,8 @@ export class NotenmodulConfigManagerSperrungen {
 	/**
 	 * Prüft eine Konfiguration und passt sie ggf. an
 	 *
-	 * @param klasse 		die Klassenkonfiguration
-	 * @returns 				gibt eine geprüfte Konbfiguration zurück, die aus allen Informationen, gespeichert in der DB und aus den ENM-Daten generiert wurde
+	 * @param klasse   die Klassenkonfiguration
+	 * @returns gibt eine geprüfte Konbfiguration zurück, die aus allen Informationen, gespeichert in der DB und aus den ENM-Daten generiert wurde
 	 */
 	private checkConfigKlasse(klasse: ENMConfigKlasse): ENMConfigKlasse {
 		const list = new ArrayList<ENMConfigKlasseSpalte>();
@@ -364,13 +367,13 @@ export class NotenmodulConfigManagerSperrungen {
 	/**
 	 * Generiert eine Default-Klassenkonfiguration
 	 *
-	 * @param id 		die ID der Klasse
-	 * @returns 		gibt eine Klassenkonfiguration zurück
+	 * @param id   die ID der Klasse
+	 * @returns gibt eine Klassenkonfiguration zurück
 	 */
 	public generateDefaultConfigKlasse(id: number): ENMConfigKlasse {
 		const config = new ENMConfigKlasse();
 		config.id = id;
-		const now = null; // new Date().toISOString().slice(0, -3).replace('T', ' ');
+		const now = null;
 		config.tsEingabeAb = now;
 		config.tsEingabeBis = now;
 		config.spalten.addAll(this._mapDefaultConfigKlasseSpalte.values());
@@ -379,7 +382,7 @@ export class NotenmodulConfigManagerSperrungen {
 	/**
 	 * Generiert eine Jahrgang-Gruppe
 	 *
-	 * @param id 		die ID des Jahrgangs
+	 * @param id   die ID des Jahrgangs
 	 */
 	public genJahrgangGruppe(id: number): NotenmodulConfigManagerSperrungenGruppe {
 		const klassen = this._mapJahrgangKlassen.get(id) ?? new ArrayList<ENMConfigKlasse>();
@@ -389,7 +392,7 @@ export class NotenmodulConfigManagerSperrungen {
 	/**
 	 * Generiert eine Abteilungs-Gruppe
 	 *
-	 * @param id 		die ID der Abteilung
+	 * @param id   die ID der Abteilung
 	 */
 	public genAbteilungGruppe(id: number): NotenmodulConfigManagerSperrungenGruppe {
 		const klassen = this._mapAbteilungKlassen.get(id) ?? new ArrayList<ENMConfigKlasse>();
@@ -399,9 +402,10 @@ export class NotenmodulConfigManagerSperrungen {
 	/**
 	 * Generiert eine Gruppe für eine Abteilung etc.
 	 *
-	 * @param id 				die ID für die Gruppe, z.B. die einer Abteilung
-	 * @param klassen 	die zugehörigen Klassen
-	 * @returns 				gibt eine Gruppenkonfiguration zurück
+	 * @param id        die ID für die Gruppe, z.B. die einer Abteilung
+	 * @param klassen   die zugehörigen Klassen
+	 *
+	 * @returns gibt eine Gruppenkonfiguration zurück
 	 */
 	public genGruppe(id: number, klassen: List<ENMConfigKlasse>): NotenmodulConfigManagerSperrungenGruppe {
 		const config = new NotenmodulConfigManagerSperrungenGruppe();
@@ -421,9 +425,10 @@ export class NotenmodulConfigManagerSperrungen {
 	/**
 	 * Generiert die Spalten für eine Gruppe
 	 *
-	 * @param spalte		 	die Spalte
-	 * @param klassen 		die Klassen
-	 * @returns 					die generierte Gruppenspalte
+	 * @param spalte    die Spalte
+	 * @param klassen   die Klassen
+	 *
+	 * @returns die generierte Gruppenspalte
 	 */
 	public genGruppeSpalte(spalte: ENMConfigKlasseSpalte, klassen: List<ENMConfigKlasse>): NotenmodulConfigManagerSperrungenGruppeSpalte {
 		const val = new NotenmodulConfigManagerSperrungenGruppeSpalte();
@@ -529,7 +534,7 @@ export class NotenmodulConfigManagerSperrungen {
 	/**
 	 * Aktualisiert die übergebenen Gruppen aus der Collection
 	 *
-	 * @param gruppen die zu aktualisierenden Gruppen
+	 * @param gruppen   die zu aktualisierenden Gruppen
 	 */
 	private updateGruppen(gruppen: Collection<NotenmodulConfigManagerSperrungenGruppe>) {
 		for (const gruppe of gruppen) {
@@ -575,7 +580,7 @@ export class NotenmodulConfigManagerSperrungen {
 	/**
 	 * Aktualisiert die Gruppen, die z.B. Jahrgänge zusammenfassen
 	 *
-	 * @param value		die Gruppierung, die aktualisiert werden soll
+	 * @param value   die Gruppierung, die aktualisiert werden soll
 	 */
 	private updateGruppierung(value: NotenmodulConfigManagerSperrungenGruppierung) {
 		if (value === 'Keine') {
@@ -611,9 +616,10 @@ export class NotenmodulConfigManagerSperrungen {
 	/**
 	 * Gibt die jeweilige Spalte für die Zeile und den Spaltennamen zurück
 	 *
-	 * @param row 			die Zeile
-	 * @param colname 	der Spaltenname
-	 * @returns					Entweder die Spalte oder null
+	 * @param row       die Zeile
+	 * @param colname   der Spaltenname
+	 *
+	 * @returns Entweder die Spalte oder null
 	 */
 	public getColumn(row: NotenmodulConfigManagerSperrungenZeile, colname: string): NotenmodulConfigManagerSperrungenZelle | null {
 		const rowIstGruppe = 'klassenzuordnungen' in row;
@@ -631,9 +637,10 @@ export class NotenmodulConfigManagerSperrungen {
 	/**
 	 * Gibt zurück, ob eine Spalte für die übergebene Zeile sperrbar ist
 	 *
-	 * @param row 			die Zeile
-	 * @param colname 	der Spaltenname
-	 * @returns 				true, wenn diese Spalte gesperrt werden kann
+	 * @param row       die Zeile
+	 * @param colname   der Spaltenname
+	 *
+	 * @returns true, wenn diese Spalte gesperrt werden kann
 	 */
 	public istSperrbar(row: NotenmodulConfigManagerSperrungenZeile, colname: string): boolean {
 		const col = this.getColumn(row, colname);
@@ -646,7 +653,7 @@ export class NotenmodulConfigManagerSperrungen {
 	/**
 	 * Gibt eine Liste mit den Zeilen für eine Jahrgangsansicht zurück
 	 *
-	 * @returns			Gibt eine Liste mit den Zeilen zurück
+	 * @returns Gibt eine Liste mit den Zeilen zurück
 	 */
 	private getZeilenJahrgangsGruppen(): ArrayList<NotenmodulConfigManagerSperrungenZeile> {
 		const list = new ArrayList<NotenmodulConfigManagerSperrungenZeile>();
@@ -662,10 +669,11 @@ export class NotenmodulConfigManagerSperrungen {
 		}
 		return list;
 	}
+
 	/**
 	 * Gibt eine Liste mit den Zeilen für eine Abteilungsansicht zurück
 	 *
-	 * @returns			Gibt eine Liste mit den Zeilen zurück
+	 * @returns Gibt eine Liste mit den Zeilen zurück
 	 */
 	private getZeilenAbteilungsGruppen(): ArrayList<NotenmodulConfigManagerSperrungenZeile> {
 		const list = new ArrayList<NotenmodulConfigManagerSperrungenZeile>();

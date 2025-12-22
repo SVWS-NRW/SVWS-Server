@@ -24,7 +24,7 @@ public class ENMConfigKlasseSpalte {
 
 	/** Gibt an, ob die Spalte gesperrt werden soll oder nicht. */
 	@Schema(description = "Gibt an, ob die Spalte gesperrt werden soll oder nicht.", example = "false")
-	public boolean gesperrt = false;
+	public boolean gesperrt = true;
 
 	/**
 	 * Leerer Standardkonstruktor.
