@@ -50,7 +50,7 @@
 	import { computed, ref, watch } from "vue";
 	import { BenutzerKompetenz, BilingualeSprache, Fach, FachDaten, GostFachbereich, JavaInteger, Schulform } from "@core";
 	import type { FachKatalogEintrag, CoreTypeData } from "@core";
-	import type { FaecherNeuProps } from "./SFaecherNeuProps";
+	import type { FaecherNeuProps } from "./FaecherNeuProps";
 	import { coreTypeDataFilter } from "~/utils/helfer";
 
 	const props = defineProps<FaecherNeuProps>();

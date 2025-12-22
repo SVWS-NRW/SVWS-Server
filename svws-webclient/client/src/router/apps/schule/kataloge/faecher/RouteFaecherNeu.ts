@@ -1,5 +1,5 @@
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import type { FaecherNeuProps } from "~/components/schule/kataloge/faecher/SFaecherNeuProps";
+import type { FaecherNeuProps } from "~/components/schule/kataloge/faecher/FaecherNeuProps";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
@@ -8,12 +8,12 @@ import { routeFaecher, type RouteFaecher } from "./RouteFaecher";
 import { routeApp } from "../../../RouteApp";
 import { api } from "~/router/Api";
 
-const SFaecherNeu = () => import("~/components/schule/kataloge/faecher/SFaecherNeu.vue");
+const FaecherNeu = () => import("~/components/schule/kataloge/faecher/FaecherNeu.vue");
 
 export class RouteFaecherNeu extends RouteNode<any, RouteFaecher> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.faecher.neu", "neu", SFaecherNeu);
+		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.faecher.neu", "neu", FaecherNeu);
 		super.types = new Set([ViewType.HINZUFUEGEN]);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);

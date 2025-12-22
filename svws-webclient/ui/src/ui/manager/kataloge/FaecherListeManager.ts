@@ -12,12 +12,11 @@ import type { JavaFunction } from '../../../../../core/src/java/util/function/Ja
 import type { FachDaten } from '../../../../../core/src/core/data/fach/FachDaten';
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
 import type { List } from '../../../../../core/src/java/util/List';
-import { Class } from '../../../../../core/src/java/lang/Class';
 import { Arrays } from '../../../../../core/src/java/util/Arrays';
 import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
 import { HashSet } from '../../../../../core/src/java/util/HashSet';
 
-export class FachListeManager extends AuswahlManager<number, FachDaten, FachDaten> {
+export class FaecherListeManager extends AuswahlManager<number, FachDaten, FachDaten> {
 
 	/**
 	 * Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ
@@ -65,7 +64,7 @@ export class FachListeManager extends AuswahlManager<number, FachDaten, FachDate
 	 * @param faecher       die Liste der Fächer
 	 */
 	public constructor(schuljahresabschnitt: number, schuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>, schulform: Schulform | null, faecher: List<FachDaten>) {
-		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, faecher, FachListeManager.comparator, FachListeManager._fachToId, FachListeManager._fachDatenToId, Arrays.asList());
+		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, faecher, FaecherListeManager.comparator, FaecherListeManager._fachToId, FaecherListeManager._fachDatenToId, Arrays.asList());
 		this.initFaecher();
 	}
 
@@ -138,7 +137,7 @@ export class FachListeManager extends AuswahlManager<number, FachDaten, FachDate
 				continue;
 			return asc ? cmp : -cmp;
 		}
-		return FachListeManager.comparator.compare(a, b);
+		return FaecherListeManager.comparator.compare(a, b);
 	}
 
 	protected onMehrfachauswahlChanged(): void {
@@ -244,23 +243,9 @@ export class FachListeManager extends AuswahlManager<number, FachDaten, FachDate
 	 *
 	 * @param srcManager Manager, aus dem die Filterinformationen übernommen werden
 	 */
-	public useFilter(srcManager: FachListeManager): void {
+	public useFilter(srcManager: FaecherListeManager): void {
 		this.setFilterAuswahlPermitted(srcManager.isFilterAuswahlPermitted());
 		this.setFilterNurSichtbar(srcManager.filterNurSichtbar());
 	}
 
-	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.core.utils.fach.FachListeManager';
-	}
-
-	isTranspiledInstanceOf(name: string): boolean {
-		return ['de.svws_nrw.core.utils.AuswahlManager', 'de.svws_nrw.core.utils.fach.FachListeManager'].includes(name);
-	}
-
-	public static class = new Class<FachListeManager>('de.svws_nrw.core.utils.fach.FachListeManager');
-
-}
-
-export function cast_de_svws_nrw_core_utils_fach_FachListeManager(obj: unknown): FachListeManager {
-	return obj as FachListeManager;
 }

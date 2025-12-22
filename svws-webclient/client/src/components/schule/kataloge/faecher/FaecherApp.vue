@@ -35,7 +35,7 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import type { FaecherAppProps } from "./SFaecherAppProps";
+	import type { FaecherAppProps } from "./FaecherAppProps";
 	import type { FachDaten } from "@core";
 	import { useRegionSwitch, ViewType } from "@ui";
 

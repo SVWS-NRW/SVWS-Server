@@ -86,7 +86,7 @@
 
 	import { computed } from "vue";
 	import { BilingualeSprache, Fach, Schulform, JavaInteger, BenutzerKompetenz } from "@core";
-	import type { FaecherDatenProps } from "./SFaecherDatenProps";
+	import type { FaecherDatenProps } from "./FaecherDatenProps";
 
 	const props = defineProps<FaecherDatenProps>();
 

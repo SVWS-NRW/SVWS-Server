@@ -16,9 +16,9 @@
 				</template>
 				<template #actions>
 					<template v-if="!readonly && (manager().liste.size() > 0) && (manager().schulform().daten(schuljahr)?.hatGymOb ?? false)">
-						<s-faecher-auswahl-sortierung-sek-i-i-modal v-slot="{ openModal }" :setze-default-sortierung-sek-i-i :set-filter>
+						<faecher-auswahl-sortierung-sek-i-i-modal v-slot="{ openModal }" :setze-default-sortierung-sek-i-i :set-filter>
 							<svws-ui-button type="secondary" @click="openModal">Standardsortierung Sek II anwenden …</svws-ui-button>
-						</s-faecher-auswahl-sortierung-sek-i-i-modal>
+						</faecher-auswahl-sortierung-sek-i-i-modal>
 					</template>
 					<svws-ui-tooltip position="bottom" v-if="!readonly">
 						<svws-ui-button :disabled="activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="gotoHinzufuegenView(true)" :has-focus="manager().filtered().size() === 0">
@@ -37,7 +37,7 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import type { FaecherAuswahlProps } from "./SFaecherAuswahlProps";
+	import type { FaecherAuswahlProps } from "./FaecherAuswahlProps";
 	import { useRegionSwitch, ViewType } from "@ui";
 	import type { FachDaten } from "@core";
 	import { BenutzerKompetenz } from "@core";

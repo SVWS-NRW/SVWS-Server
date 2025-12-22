@@ -168,7 +168,7 @@ export { HaltestellenListeManager } from './ui/manager/kataloge/HaltestellenList
 export { JahrgaengeListeManager } from './ui/manager/kataloge/JahrgaengeListeManager';
 export { KindergaertenListeManager } from './ui/manager/kataloge/KindergaertenListeManager';
 export { VermerkartenListeManager } from './ui/manager/kataloge/VermerkartenListeManager';
-export { FachListeManager } from './ui/manager/kataloge/FachListeManager';
+export { FaecherListeManager } from './ui/manager/kataloge/FaecherListeManager';
 export { ErzieherartListeManager } from './ui/manager/kataloge/ErzieherartListeManager';
 export { EinwilligungsartenListeManager } from './ui/manager/kataloge/EinwilligungsartenListeManager';
 export { FloskelgruppenListeManager } from './ui/manager/kataloge/FloskelgruppenListeManager';

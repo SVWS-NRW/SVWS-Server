@@ -8,10 +8,10 @@ import { routeFaecherGruppenprozesse } from "./RouteFaecherGruppenprozesse";
 import { routeFaecherNeu } from "./RouteFaecherNeu";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
-import { ViewType, FachListeManager } from "@ui";
+import { ViewType, FaecherListeManager } from "@ui";
 import type { RouteNode } from "~/router/RouteNode";
 
-interface RouteStateFaecher extends RouteStateAuswahlInterface<FachListeManager> {
+interface RouteStateFaecher extends RouteStateAuswahlInterface<FaecherListeManager> {
 	stundenplaeneById: Map<number, StundenplanListeEintrag>;
 	oldView?: RouteNode<any, any>;
 }
@@ -19,13 +19,13 @@ interface RouteStateFaecher extends RouteStateAuswahlInterface<FachListeManager>
 const defaultState: RouteStateFaecher = {
 	idSchuljahresabschnitt: -1,
 	stundenplaeneById: new Map(),
-	manager: new FachListeManager(-1, -1, new ArrayList(), null, new ArrayList()),
+	manager: new FaecherListeManager(-1, -1, new ArrayList(), null, new ArrayList()),
 	view: routeFaecherDaten,
 	oldView: undefined,
 	activeViewType: ViewType.DEFAULT,
 };
 
-export class RouteDataFaecher extends RouteDataAuswahl<FachListeManager, RouteStateFaecher> {
+export class RouteDataFaecher extends RouteDataAuswahl<FaecherListeManager, RouteStateFaecher> {
 
 	public constructor() {
 		super(defaultState, { gruppenprozesse: routeFaecherGruppenprozesse, hinzufuegen: routeFaecherNeu });
@@ -43,9 +43,9 @@ export class RouteDataFaecher extends RouteDataAuswahl<FachListeManager, RouteSt
 		return this._state.value.idSchuljahresabschnitt;
 	}
 
-	protected async createManager(idSchuljahresabschnitt: number): Promise<Partial<RouteStateAuswahlInterface<FachListeManager>>> {
+	protected async createManager(idSchuljahresabschnitt: number): Promise<Partial<RouteStateAuswahlInterface<FaecherListeManager>>> {
 		const faecher = await api.server.getFaecher(api.schema);
-		const manager = new FachListeManager(idSchuljahresabschnitt, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,	api.schulform, faecher);
+		const manager = new FaecherListeManager(idSchuljahresabschnitt, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,	api.schulform, faecher);
 		if (this._state.value.manager === undefined) {
 			manager.setFilterAuswahlPermitted(true);
 			manager.setFilterNurSichtbar(false);

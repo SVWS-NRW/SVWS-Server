@@ -62,7 +62,7 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { FaecherGruppenprozesseProps } from "./SFaecherGruppenprozesseProps";
+	import type { FaecherGruppenprozesseProps } from "./FaecherGruppenprozesseProps";
 	import type { List, StundenplanListeEintrag } from "@core";
 	import { ServerMode, BenutzerKompetenz, ReportingParameter, DateUtils, ReportingReportvorlage, ArrayList } from "@core";
 
