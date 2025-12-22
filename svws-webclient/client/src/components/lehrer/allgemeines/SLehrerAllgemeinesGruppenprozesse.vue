@@ -137,17 +137,19 @@
 	const istPrivateEmailAlternative = ref<boolean>(false);
 
 	async function downloadPDF() {
-		if (stundenplanAuswahl.value === undefined)
+		if (stundenplanAuswahl.value === undefined) {
 			return;
+		}
 
 		const listeIdsLehrer = new ArrayList<number>();
-		for (const lehrer of props.lehrerListeManager().liste.auswahl())
+		for (const lehrer of props.lehrerListeManager().liste.auswahl()) {
 			listeIdsLehrer.add(lehrer.id);
+		}
 
 		const reportingParameter = new ReportingParameter();
 		if (druckoptionLehrerStundenplan.value === 2) {
-			reportingParameter.reportvorlage = ReportingReportvorlage.STUNDENPLANUNG_v_LEHRER_STUNDENPLAN_KOMBINIERT.getBezeichnung();
-			reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.STUNDENPLANUNG_v_LEHRER_STUNDENPLAN_KOMBINIERT.getVorlageParameterList());
+			reportingParameter.reportvorlage = ReportingReportvorlage.STUNDENPLANUNG_V_LEHRER_STUNDENPLAN_KOMBINIERT.getBezeichnung();
+			reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.STUNDENPLANUNG_V_LEHRER_STUNDENPLAN_KOMBINIERT.getVorlageParameterList());
 			for (const vp of reportingParameter.vorlageParameter) {
 				switch (vp.name) {
 					case "mitPausenzeiten":
@@ -162,8 +164,8 @@
 				}
 			}
 		} else {
-			reportingParameter.reportvorlage = ReportingReportvorlage.STUNDENPLANUNG_v_LEHRER_STUNDENPLAN.getBezeichnung();
-			reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.STUNDENPLANUNG_v_LEHRER_STUNDENPLAN.getVorlageParameterList());
+			reportingParameter.reportvorlage = ReportingReportvorlage.STUNDENPLANUNG_V_LEHRER_STUNDENPLAN.getBezeichnung();
+			reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.STUNDENPLANUNG_V_LEHRER_STUNDENPLAN.getVorlageParameterList());
 			for (const vp of reportingParameter.vorlageParameter) {
 				switch (vp.name) {
 					case "mitPausenzeiten":
@@ -206,15 +208,17 @@
 	}
 
 	async function sendPdfByEmail() {
-		if (stundenplanAuswahl.value === undefined)
+		if (stundenplanAuswahl.value === undefined) {
 			return;
+		}
 
 		const listeIdsLehrer = new ArrayList<number>();
-		for (const lehrer of props.lehrerListeManager().liste.auswahl())
+		for (const lehrer of props.lehrerListeManager().liste.auswahl()) {
 			listeIdsLehrer.add(lehrer.id);
+		}
 
 		const reportingParameter = new ReportingParameter();
-		reportingParameter.reportvorlage = ReportingReportvorlage.STUNDENPLANUNG_v_LEHRER_STUNDENPLAN.getBezeichnung();
+		reportingParameter.reportvorlage = ReportingReportvorlage.STUNDENPLANUNG_V_LEHRER_STUNDENPLAN.getBezeichnung();
 		reportingParameter.ausgabeformat = ReportingAusgabeformat.EMAIL.getId();
 		reportingParameter.idsHauptdaten = ListUtils.create1(stundenplanAuswahl.value.id);
 		reportingParameter.idsDetaildaten = listeIdsLehrer;
@@ -227,7 +231,7 @@
 		emailDaten.betreff = (((emailBetreff.value.trim().length) !== 0) ? emailBetreff.value : ("Stundenplan " + stundenplanAuswahl.value.bezeichnung));
 		emailDaten.text = (((emailText.value.trim().length) !== 0) ? emailText.value : ("Im Anhang dieser E-Mail ist der Stundenplan " + stundenplanAuswahl.value.bezeichnung + " enthalten."));
 		reportingParameter.eMailDaten = emailDaten;
-		reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.STUNDENPLANUNG_v_LEHRER_STUNDENPLAN.getVorlageParameterList());
+		reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.STUNDENPLANUNG_V_LEHRER_STUNDENPLAN.getVorlageParameterList());
 		for (const vp of reportingParameter.vorlageParameter) {
 			switch (vp.name) {
 				case "mitPausenzeiten":
@@ -256,8 +260,9 @@
 	}
 
 	function setCurrentAction(newAction: Action, open: boolean) {
-		if ((newAction !== currentAction.value) && !open)
+		if ((newAction !== currentAction.value) && !open) {
 			return;
+		}
 
 		option2.value = false;
 		option4.value = false;

@@ -559,8 +559,8 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		const reportingParameter = new ReportingParameter();
 		reportingParameter.idSchuljahresabschnitt = routeApp.data.aktAbschnitt.value.id;
 		if (title.startsWith("Klausurplan", 0)) {
-			reportingParameter.reportvorlage = ReportingReportvorlage.GOST_KLAUSURPLANUNG_v_KLAUSURTERMINE_MIT_KURSEN.getBezeichnung()!;
-			reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.GOST_KLAUSURPLANUNG_v_KLAUSURTERMINE_MIT_KURSEN.getVorlageParameterList());
+			reportingParameter.reportvorlage = ReportingReportvorlage.GOST_KLAUSURPLANUNG_V_KLAUSURTERMINE_MIT_KURSEN.getBezeichnung()!;
+			reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.GOST_KLAUSURPLANUNG_V_KLAUSURTERMINE_MIT_KURSEN.getVorlageParameterList());
 			for (const vp of reportingParameter.vorlageParameter) {
 				switch (vp.name) {
 					case "mitKursklausuren":
@@ -575,8 +575,8 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 				}
 			}
 		} else {
-			reportingParameter.reportvorlage = ReportingReportvorlage.GOST_KLAUSURPLANUNG_v_SCHUELER_MIT_KLAUSUREN.getBezeichnung()!;
-			reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.GOST_KLAUSURPLANUNG_v_SCHUELER_MIT_KLAUSUREN.getVorlageParameterList());
+			reportingParameter.reportvorlage = ReportingReportvorlage.GOST_KLAUSURPLANUNG_V_SCHUELER_MIT_KLAUSUREN.getBezeichnung()!;
+			reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.GOST_KLAUSURPLANUNG_V_SCHUELER_MIT_KLAUSUREN.getVorlageParameterList());
 			// Keine Vorlagen spezifischen Parameter vorhanden.
 		}
 		if (title.indexOf(" alle ") <= 0) {

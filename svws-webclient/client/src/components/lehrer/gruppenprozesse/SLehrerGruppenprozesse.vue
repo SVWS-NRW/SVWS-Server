@@ -149,8 +149,8 @@
 		loading.value = true;
 		const reportingParameter = new ReportingParameter();
 		if (gruppe2.value === 2) {
-			reportingParameter.reportvorlage = ReportingReportvorlage.STUNDENPLANUNG_v_LEHRER_STUNDENPLAN_KOMBINIERT.getBezeichnung();
-			reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.STUNDENPLANUNG_v_LEHRER_STUNDENPLAN_KOMBINIERT.getVorlageParameterList());
+			reportingParameter.reportvorlage = ReportingReportvorlage.STUNDENPLANUNG_V_LEHRER_STUNDENPLAN_KOMBINIERT.getBezeichnung();
+			reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.STUNDENPLANUNG_V_LEHRER_STUNDENPLAN_KOMBINIERT.getVorlageParameterList());
 			for (const vp of reportingParameter.vorlageParameter) {
 				switch (vp.name) {
 					case "mitPausenaufsichten":
@@ -165,8 +165,8 @@
 				}
 			}
 		} else {
-			reportingParameter.reportvorlage = ReportingReportvorlage.STUNDENPLANUNG_v_LEHRER_STUNDENPLAN.getBezeichnung();
-			reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.STUNDENPLANUNG_v_LEHRER_STUNDENPLAN.getVorlageParameterList());
+			reportingParameter.reportvorlage = ReportingReportvorlage.STUNDENPLANUNG_V_LEHRER_STUNDENPLAN.getBezeichnung();
+			reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.STUNDENPLANUNG_V_LEHRER_STUNDENPLAN.getVorlageParameterList());
 			for (const vp of reportingParameter.vorlageParameter) {
 				switch (vp.name) {
 					case "mitPausenaufsichten":

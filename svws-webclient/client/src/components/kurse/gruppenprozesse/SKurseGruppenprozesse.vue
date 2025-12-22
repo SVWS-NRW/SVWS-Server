@@ -211,11 +211,11 @@
 		}
 
 		if (currentAction.value === 'druckKursListeSchuelerKontaktdatenErzieher') {
-			reportingParameter.reportvorlage = ReportingReportvorlage.KURSE_v_LISTE_SCHUELER_KONTAKTDATENERZIEHER.getBezeichnung();
+			reportingParameter.reportvorlage = ReportingReportvorlage.KURSE_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER.getBezeichnung();
 			reportingParameter.idsHauptdaten = listeIdsKurse;
 			reportingParameter.einzelausgabeHauptdaten = ((druckoptionListeSchuelerKontaktdatenErzieher.value === 2) || (druckoptionListeSchuelerKontaktdatenErzieher.value === 4));
 			reportingParameter.einzelausgabeDetaildaten = false;
-			reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.KURSE_v_LISTE_SCHUELER_KONTAKTDATENERZIEHER.getVorlageParameterList());
+			reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.KURSE_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER.getVorlageParameterList());
 			for (const vp of reportingParameter.vorlageParameter) {
 				switch (vp.name) {
 					case "mitSchuelerKlasse":
@@ -289,11 +289,11 @@
 		emailDaten.istPrivateEmailAlternative = istPrivateEmailAlternative.value;
 
 		if (currentAction.value === 'druckKursListeSchuelerKontaktdatenErzieher') {
-			reportingParameter.reportvorlage = ReportingReportvorlage.KURSE_v_LISTE_SCHUELER_KONTAKTDATENERZIEHER.getBezeichnung();
+			reportingParameter.reportvorlage = ReportingReportvorlage.KURSE_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER.getBezeichnung();
 			reportingParameter.idsHauptdaten = listeIdsKurse;
 			reportingParameter.einzelausgabeHauptdaten = true;
 			reportingParameter.einzelausgabeDetaildaten = false;
-			reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.KURSE_v_LISTE_SCHUELER_KONTAKTDATENERZIEHER.getVorlageParameterList());
+			reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.KURSE_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER.getVorlageParameterList());
 			for (const vp of reportingParameter.vorlageParameter) {
 				switch (vp.name) {
 					case "mitSchuelerKlasse":

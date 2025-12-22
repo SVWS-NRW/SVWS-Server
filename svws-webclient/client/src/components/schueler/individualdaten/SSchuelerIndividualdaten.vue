@@ -239,10 +239,12 @@
 	async function sendRequestTelefonnummer() {
 		const { id, idSchueler, ...partialDataWithoutId } = newEntryTelefonnummer.value;
 		const schuelerId = props.schuelerListeManager().daten().id;
-		if (currentMode.value === Mode.ADD)
+		if (currentMode.value === Mode.ADD) {
 			await props.addSchuelerTelefoneintrag(partialDataWithoutId, schuelerId);
-		if (currentMode.value === Mode.PATCH)
+		}
+		if (currentMode.value === Mode.PATCH) {
 			await props.patchSchuelerTelefoneintrag(partialDataWithoutId, newEntryTelefonnummer.value.id);
+		}
 		enterDefaultMode();
 	}
 
@@ -258,11 +260,13 @@
 	}
 
 	async function deleteTelefonnummern() {
-		if (selected.value.length === 0)
+		if (selected.value.length === 0) {
 			return;
+		}
 		const ids = new ArrayList<number>();
-		for (const s of selected.value)
+		for (const s of selected.value) {
 			ids.add(s.id);
+		}
 		await props.deleteSchuelerTelefoneintrage(ids);
 		selected.value = [];
 	}
@@ -290,8 +294,9 @@
 	}
 
 	function istGeburtsdatumGueltig(strDate: string | null) {
-		if (strDate === null || typeof strDate === 'number')
+		if (strDate === null || typeof strDate === 'number') {
 			return true;
+		}
 		try {
 			const date = DateUtils.extractFromDateISO8601(strDate);
 			const curDate = new Date();
@@ -326,9 +331,11 @@
 
 	const ortsteile = computed<Array<OrtsteilKatalogEintrag>>(() => {
 		const result: Array<OrtsteilKatalogEintrag> = [];
-		for (const ortsteil of props.mapOrtsteile.values())
-			if ((ortsteil.ort_id === null) || (ortsteil.ort_id === data.value.wohnortID))
+		for (const ortsteil of props.mapOrtsteile.values()) {
+			if ((ortsteil.ort_id === null) || (ortsteil.ort_id === data.value.wohnortID)) {
 				result.push(ortsteil);
+			}
+		}
 		return result;
 	});
 
@@ -416,13 +423,13 @@
 		const reportingParameter = new ReportingParameter();
 		const listeIdsSchueler = new ArrayList<number>();
 		listeIdsSchueler.add(props.schuelerListeManager().auswahlID());
-		reportingParameter.reportvorlage = ReportingReportvorlage.SCHUELER_v_SCHULBESCHEINIGUNG.getBezeichnung();
+		reportingParameter.reportvorlage = ReportingReportvorlage.SCHUELER_V_SCHULBESCHEINIGUNG.getBezeichnung();
 		reportingParameter.idsHauptdaten = listeIdsSchueler;
 		reportingParameter.einzelausgabeHauptdaten = true;
 		reportingParameter.einzelausgabeDetaildaten = false;
 		reportingParameter.sortierungHauptdaten = new ReportingSortierungDefinition();
 		reportingParameter.sortierungHauptdaten.verwendeStandardsortierung = true;
-		reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.SCHUELER_v_SCHULBESCHEINIGUNG.getVorlageParameterList());
+		reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.SCHUELER_V_SCHULBESCHEINIGUNG.getVorlageParameterList());
 		for (const vp of reportingParameter.vorlageParameter) {
 			switch (vp.name) {
 				case "fuerErzieher":

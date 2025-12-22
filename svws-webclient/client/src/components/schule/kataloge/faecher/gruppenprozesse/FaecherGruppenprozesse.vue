@@ -131,9 +131,9 @@
 		}
 		loading.value = true;
 		const reportingParameter = new ReportingParameter();
-		reportingParameter.reportvorlage = ReportingReportvorlage.STUNDENPLANUNG_v_FACH_STUNDENPLAN.getBezeichnung();
+		reportingParameter.reportvorlage = ReportingReportvorlage.STUNDENPLANUNG_V_FACH_STUNDENPLAN.getBezeichnung();
 		reportingParameter.einzelausgabeDetaildaten = gruppe2.value;
-		reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.STUNDENPLANUNG_v_FACH_STUNDENPLAN.getVorlageParameterList());
+		reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.STUNDENPLANUNG_V_FACH_STUNDENPLAN.getVorlageParameterList());
 		for (const vp of reportingParameter.vorlageParameter) {
 			if (vp.name === "mitPausenzeiten") {
 				vp.wert = option2.value.toString();

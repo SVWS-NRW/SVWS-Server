@@ -125,12 +125,12 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 		list.add(this.auswahl.id);
 		const reportingParameter = new ReportingParameter();
 		reportingParameter.idSchuljahresabschnitt = routeApp.data.aktAbschnitt.value.id;
-		reportingParameter.reportvorlage = ReportingReportvorlage.SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN.getBezeichnung();
+		reportingParameter.reportvorlage = ReportingReportvorlage.SCHUELER_V_GOST_LAUFBAHNPLANUNG_WAHLBOGEN.getBezeichnung();
 		reportingParameter.idsHauptdaten = list;
 		reportingParameter.einzelausgabeHauptdaten = false;
 		switch (title) {
 			case 'Laufbahnwahlbogen':
-				reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN.getVorlageParameterList());
+				reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.SCHUELER_V_GOST_LAUFBAHNPLANUNG_WAHLBOGEN.getVorlageParameterList());
 				for (const vp of reportingParameter.vorlageParameter) {
 					if (vp.name === "nurBelegteFaecher") {
 						vp.wert = false.toString();
@@ -138,7 +138,7 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 				}
 				return await api.server.pdfReport(reportingParameter, api.schema);
 			case 'Laufbahnwahlbogen (nur Belegung)':
-				reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN.getVorlageParameterList());
+				reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.SCHUELER_V_GOST_LAUFBAHNPLANUNG_WAHLBOGEN.getVorlageParameterList());
 				for (const vp of reportingParameter.vorlageParameter) {
 					if (vp.name === "nurBelegteFaecher") {
 						vp.wert = true.toString();

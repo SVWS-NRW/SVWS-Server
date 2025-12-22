@@ -264,11 +264,12 @@
 	async function downloadPDF() {
 		const reportingParameter = new ReportingParameter();
 		const listeIdsSchueler = new ArrayList<number>();
-		for (const schueler of props.schuelerListeManager().liste.auswahl())
+		for (const schueler of props.schuelerListeManager().liste.auswahl()) {
 			listeIdsSchueler.add(schueler.id);
+		}
 		switch (currentAction.value) {
 			case 'druckSchuelerListeKontaktdatenErzieher':
-				reportingParameter.reportvorlage = ReportingReportvorlage.SCHUELER_v_LISTE_KONTAKTDATENERZIEHER.getBezeichnung();
+				reportingParameter.reportvorlage = ReportingReportvorlage.SCHUELER_V_LISTE_KONTAKTDATENERZIEHER.getBezeichnung();
 				reportingParameter.idsHauptdaten = listeIdsSchueler;
 				reportingParameter.einzelausgabeHauptdaten = false;
 				reportingParameter.einzelausgabeDetaildaten = false;
@@ -285,7 +286,7 @@
 					reportingParameter.sortierungHauptdaten.attribute = attribute;
 
 				}
-				reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.SCHUELER_v_LISTE_KONTAKTDATENERZIEHER.getVorlageParameterList());
+				reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.SCHUELER_V_LISTE_KONTAKTDATENERZIEHER.getVorlageParameterList());
 				for (const vp of reportingParameter.vorlageParameter) {
 					switch (vp.name) {
 						case "mitSchuelerKlasse":
@@ -331,7 +332,7 @@
 				}
 				break;
 			case 'druckSchuelerSchulbescheinigung':
-				reportingParameter.reportvorlage = ReportingReportvorlage.SCHUELER_v_SCHULBESCHEINIGUNG.getBezeichnung();
+				reportingParameter.reportvorlage = ReportingReportvorlage.SCHUELER_V_SCHULBESCHEINIGUNG.getBezeichnung();
 				reportingParameter.idsHauptdaten = listeIdsSchueler;
 				reportingParameter.einzelausgabeHauptdaten = (druckoptionSchuelerSchulbescheinigung.value === 2);
 				reportingParameter.einzelausgabeDetaildaten = false;
@@ -347,7 +348,7 @@
 					attribute.add("id");
 					reportingParameter.sortierungHauptdaten.attribute = attribute;
 				}
-				reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.SCHUELER_v_SCHULBESCHEINIGUNG.getVorlageParameterList());
+				reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.SCHUELER_V_SCHULBESCHEINIGUNG.getVorlageParameterList());
 				for (const vp of reportingParameter.vorlageParameter) {
 					switch (vp.name) {
 						case "fuerErzieher":
@@ -372,9 +373,10 @@
 				}
 				break;
 			case 'druckSchuelerStundenplan':
-				if (stundenplanAuswahl.value === undefined)
+				if (stundenplanAuswahl.value === undefined) {
 					return;
-				reportingParameter.reportvorlage = ReportingReportvorlage.STUNDENPLANUNG_v_SCHUELER_STUNDENPLAN.getBezeichnung();
+				}
+				reportingParameter.reportvorlage = ReportingReportvorlage.STUNDENPLANUNG_V_SCHUELER_STUNDENPLAN.getBezeichnung();
 				reportingParameter.idsHauptdaten = ListUtils.create1(stundenplanAuswahl.value.id);
 				reportingParameter.idsDetaildaten = listeIdsSchueler;
 				reportingParameter.einzelausgabeHauptdaten = false;
@@ -392,7 +394,7 @@
 					attribute.add("schueler.id");
 					reportingParameter.sortierungDetaildaten.attribute = attribute;
 				}
-				reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.STUNDENPLANUNG_v_SCHUELER_STUNDENPLAN.getVorlageParameterList());
+				reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.STUNDENPLANUNG_V_SCHUELER_STUNDENPLAN.getVorlageParameterList());
 				for (const vp of reportingParameter.vorlageParameter) {
 					switch (vp.name) {
 						case "mitPausenzeiten":
@@ -430,15 +432,17 @@
 	const jobId = ref<number | null>(null);
 
 	async function sendPdfByEmail() {
-		if (stundenplanAuswahl.value === undefined)
+		if (stundenplanAuswahl.value === undefined) {
 			return;
+		}
 
 		const listeIdsSchueler = new ArrayList<number>();
-		for (const schueler of props.schuelerListeManager().liste.auswahl())
+		for (const schueler of props.schuelerListeManager().liste.auswahl()) {
 			listeIdsSchueler.add(schueler.id);
+		}
 
 		const reportingParameter = new ReportingParameter();
-		reportingParameter.reportvorlage = ReportingReportvorlage.STUNDENPLANUNG_v_SCHUELER_STUNDENPLAN.getBezeichnung();
+		reportingParameter.reportvorlage = ReportingReportvorlage.STUNDENPLANUNG_V_SCHUELER_STUNDENPLAN.getBezeichnung();
 		reportingParameter.ausgabeformat = ReportingAusgabeformat.EMAIL.getId();
 		reportingParameter.idsHauptdaten = ListUtils.create1(stundenplanAuswahl.value.id);
 		reportingParameter.idsDetaildaten = listeIdsSchueler;
@@ -452,7 +456,7 @@
 		emailDaten.text = (((emailText.value.trim().length) !== 0) ? emailText.value : ("Im Anhang dieser E-Mail ist der Stundenplan " + stundenplanAuswahl.value.bezeichnung + " enthalten."));
 		reportingParameter.eMailDaten = emailDaten;
 
-		reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.STUNDENPLANUNG_v_SCHUELER_STUNDENPLAN.getVorlageParameterList());
+		reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.STUNDENPLANUNG_V_SCHUELER_STUNDENPLAN.getVorlageParameterList());
 		for (const vp of reportingParameter.vorlageParameter) {
 			switch (vp.name) {
 				case "mitPausenzeiten":
@@ -473,8 +477,9 @@
 		reportingParameter.duplexdruck = ((druckoptionSchuelerStundenplan.value === 3) || (druckoptionSchuelerStundenplan.value === 4));
 		loading.value = true;
 		jobId.value = null;
-		if (logs.value === undefined)
+		if (logs.value === undefined) {
 			logs.value = new ArrayList();
+		}
 		const result = await props.sendEMail(reportingParameter);
 		jobId.value = result.id;
 		statusAction.value = result.success;
@@ -490,16 +495,18 @@
 	}
 
 	async function fetchStatus() {
-		if (jobId.value === null)
+		if (jobId.value === null) {
 			return;
+		}
 		const result = await props.fetchEMailJobStatus(jobId.value);
 		logs.value?.addAll(result.log);
 		logs.value?.add("");
 	}
 
 	async function fetchLog() {
-		if (jobId.value === null)
+		if (jobId.value === null) {
 			return;
+		}
 		const result = await props.fetchEMailJobLog(jobId.value);
 		logs.value?.addAll(result.log);
 		logs.value?.add("");
@@ -556,8 +563,9 @@
 	}
 
 	function setCurrentAction(newAction: Action, open: boolean) {
-		if ((newAction !== currentAction.value) && !open)
+		if ((newAction !== currentAction.value) && !open) {
 			return;
+		}
 		option1.value = false;
 		option2.value = false;
 		option4.value = false;

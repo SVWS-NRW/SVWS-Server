@@ -183,9 +183,11 @@
 
 	const nichtAlleKlassenLeer = computed(() => {
 		const errorLog: List<string> = new ArrayList<string>();
-		if (!alleKlassenLeer.value)
-			for (const klasse of props.manager().getKlassenIDsMitSchuelern())
+		if (!alleKlassenLeer.value) {
+			for (const klasse of props.manager().getKlassenIDsMitSchuelern()) {
 				errorLog.add(`Klasse ${props.manager().liste.get(klasse)?.kuerzel ?? '???'} (ID: ${klasse}) kann nicht gelöscht werden, da ihr noch Schüler zugeordnet sind.`);
+			}
+		}
 		return errorLog;
 	});
 
@@ -193,8 +195,9 @@
 		!alleKlassenLeer.value && (props.manager().getKlassenIDsMitSchuelern().size() !== props.manager().liste.auswahlSize()));
 
 	function setCurrentAction(newAction: Action, open: boolean) {
-		if (newAction !== currentAction.value && !open)
+		if (newAction !== currentAction.value && !open) {
 			return;
+		}
 		option2.value = false;
 		option4.value = false;
 		option8.value = false;
@@ -256,15 +259,16 @@
 	async function downloadPDF() {
 		const reportingParameter = new ReportingParameter();
 		const listeIdsKlassen = new ArrayList<number>();
-		for (const klasse of props.manager().liste.auswahl())
+		for (const klasse of props.manager().liste.auswahl()) {
 			listeIdsKlassen.add(klasse.id);
+		}
 		switch (currentAction.value) {
 			case 'druckKlasseListeSchuelerKontaktdatenErzieher':
-				reportingParameter.reportvorlage = ReportingReportvorlage.KLASSEN_v_LISTE_SCHUELER_KONTAKTDATENERZIEHER.getBezeichnung();
+				reportingParameter.reportvorlage = ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER.getBezeichnung();
 				reportingParameter.idsHauptdaten = listeIdsKlassen;
 				reportingParameter.einzelausgabeHauptdaten = ((druckoptionKlasseListeSchuelerKontaktdatenErzieher.value === 2) || (druckoptionKlasseListeSchuelerKontaktdatenErzieher.value === 4));
 				reportingParameter.einzelausgabeDetaildaten = false;
-				reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.KLASSEN_v_LISTE_SCHUELER_KONTAKTDATENERZIEHER.getVorlageParameterList());
+				reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER.getVorlageParameterList());
 				for (const vp of reportingParameter.vorlageParameter) {
 					switch (vp.name) {
 						case "nurSchuelerRufname":
@@ -307,14 +311,15 @@
 				}
 				break;
 			case 'druckKlasseStundenplan':
-				if (stundenplanAuswahl.value === undefined)
+				if (stundenplanAuswahl.value === undefined) {
 					return;
-				reportingParameter.reportvorlage = ReportingReportvorlage.STUNDENPLANUNG_v_KLASSEN_STUNDENPLAN.getBezeichnung();
+				}
+				reportingParameter.reportvorlage = ReportingReportvorlage.STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN.getBezeichnung();
 				reportingParameter.idsHauptdaten = ListUtils.create1(stundenplanAuswahl.value.id);
 				reportingParameter.idsDetaildaten = listeIdsKlassen;
 				reportingParameter.einzelausgabeHauptdaten = false;
 				reportingParameter.einzelausgabeDetaildaten = (druckoptionKlasseStundenplan.value === 2);
-				reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.STUNDENPLANUNG_v_KLASSEN_STUNDENPLAN.getVorlageParameterList());
+				reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN.getVorlageParameterList());
 				for (const vp of reportingParameter.vorlageParameter) {
 					switch (vp.name) {
 						case "mitPausenzeiten":
@@ -346,8 +351,9 @@
 
 	async function sendPdfByEmail() {
 		const listeIdsKlassen = new ArrayList<number>();
-		for (const klasse of props.manager().liste.auswahl())
+		for (const klasse of props.manager().liste.auswahl()) {
 			listeIdsKlassen.add(klasse.id);
+		}
 
 		const reportingParameter = new ReportingParameter();
 		reportingParameter.ausgabeformat = ReportingAusgabeformat.EMAIL.getId();
@@ -359,13 +365,13 @@
 
 		switch (currentAction.value) {
 			case 'druckKlasseListeSchuelerKontaktdatenErzieher':
-				reportingParameter.reportvorlage = ReportingReportvorlage.KLASSEN_v_LISTE_SCHUELER_KONTAKTDATENERZIEHER.getBezeichnung();
+				reportingParameter.reportvorlage = ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER.getBezeichnung();
 				reportingParameter.idsHauptdaten = listeIdsKlassen;
 				reportingParameter.einzelausgabeHauptdaten = true;
 				reportingParameter.einzelausgabeDetaildaten = false;
 				emailDaten.empfaengerTyp = ReportingEMailEmpfaengerTyp.KLASSENLEHRER.getId();
 				emailDaten.istPrivateEmailAlternative = istPrivateEmailAlternative.value;
-				reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.KLASSEN_v_LISTE_SCHUELER_KONTAKTDATENERZIEHER.getVorlageParameterList());
+				reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER.getVorlageParameterList());
 				for (const vp of reportingParameter.vorlageParameter) {
 					switch (vp.name) {
 						case "nurSchuelerRufname":
@@ -410,14 +416,15 @@
 				emailDaten.text = ((emailText.value.trim().length === 0) ? ("Im Anhang dieser E-Mail ist die Klassenliste mit Kontaktdaten enthalten.") : emailText.value);
 				break;
 			case 'druckKlasseStundenplan':
-				if (stundenplanAuswahl.value === undefined)
+				if (stundenplanAuswahl.value === undefined) {
 					return;
-				reportingParameter.reportvorlage = ReportingReportvorlage.STUNDENPLANUNG_v_KLASSEN_STUNDENPLAN.getBezeichnung();
+				}
+				reportingParameter.reportvorlage = ReportingReportvorlage.STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN.getBezeichnung();
 				reportingParameter.idsHauptdaten = ListUtils.create1(stundenplanAuswahl.value.id);
 				reportingParameter.idsDetaildaten = listeIdsKlassen;
 				reportingParameter.einzelausgabeHauptdaten = false;
 				reportingParameter.einzelausgabeDetaildaten = true;
-				reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.STUNDENPLANUNG_v_KLASSEN_STUNDENPLAN.getVorlageParameterList());
+				reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN.getVorlageParameterList());
 				for (const vp of reportingParameter.vorlageParameter) {
 					switch (vp.name) {
 						case "mitPausenzeiten":

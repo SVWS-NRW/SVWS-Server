@@ -10,6 +10,11 @@ export class ReportingVorlageParameter extends JavaObject {
 	public name: string = "";
 
 	/**
+	 * Die Bezeichnung des Vorlage-Parameters, wie er später in der Anzeige der GUI oder an ähnlichen Stellen dargestellt werden soll.
+	 */
+	public bezeichnung: string = "";
+
+	/**
 	 * Der Typ des Wertes des Vorlage-Parameters.
 	 */
 	public typ: number = ReportingVorlageParameterTyp.UNDEFINED.getId();
@@ -43,6 +48,9 @@ export class ReportingVorlageParameter extends JavaObject {
 		if (obj.name === undefined)
 			throw new Error('invalid json format, missing attribute name');
 		result.name = obj.name;
+		if (obj.bezeichnung === undefined)
+			throw new Error('invalid json format, missing attribute bezeichnung');
+		result.bezeichnung = obj.bezeichnung;
 		if (obj.typ === undefined)
 			throw new Error('invalid json format, missing attribute typ');
 		result.typ = obj.typ;
@@ -55,6 +63,7 @@ export class ReportingVorlageParameter extends JavaObject {
 	public static transpilerToJSON(obj: ReportingVorlageParameter): string {
 		let result = '{';
 		result += '"name" : ' + JSON.stringify(obj.name) + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		result += '"typ" : ' + obj.typ.toString() + ',';
 		result += '"wert" : ' + JSON.stringify(obj.wert) + ',';
 		result = result.slice(0, -1);
@@ -66,6 +75,9 @@ export class ReportingVorlageParameter extends JavaObject {
 		let result = '{';
 		if (obj.name !== undefined) {
 			result += '"name" : ' + JSON.stringify(obj.name) + ',';
+		}
+		if (obj.bezeichnung !== undefined) {
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		}
 		if (obj.typ !== undefined) {
 			result += '"typ" : ' + obj.typ.toString() + ',';

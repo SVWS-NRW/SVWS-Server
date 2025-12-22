@@ -149,10 +149,12 @@
 	const istVorlage = computed<boolean>(() => props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() === 1);
 	const vergangenheit = computed<boolean>(() => {
 		const jgdaten = props.jahrgangsdaten();
-		if (jgdaten.istAbgeschlossen)
+		if (jgdaten.istAbgeschlossen) {
 			return true;
-		if (aktuellesHalbjahr.value === null)
+		}
+		if (aktuellesHalbjahr.value === null) {
 			return false;
+		}
 		return props.halbjahr.id < aktuellesHalbjahr.value.id;
 	});
 	const persistiert = computed<boolean>(() => props.jahrgangsdaten().istBlockungFestgelegt[props.halbjahr.id]);
@@ -170,8 +172,9 @@
 	const dropdownList = computed(() => {
 		const actions = [{ text: "Schülerliste markierte Kurse", action: () => downloadPDF("Schülerliste markierte Kurse"), default: true }];
 
-		if (ServerMode.DEV.checkServerMode(props.serverMode))
+		if (ServerMode.DEV.checkServerMode(props.serverMode)) {
 			actions.push({ text: "E-Mail mit Schülerliste markierte Kurse", action: () => sendPdfByMail(), default: false });
+		}
 
 		actions.push({ text: "Kurse mit Statistikwerten", action: () => downloadPDF("Kurse mit Statistikwerten"), default: false });
 		actions.push({ text: "Kurse-Schienen-Zuordnung", action: () => downloadPDF("Kurse-Schienen-Zuordnung"), default: false });
@@ -197,7 +200,7 @@
 		const reportingParameter = new ReportingParameter();
 		reportingParameter.idSchuljahresabschnitt = routeApp.data.aktAbschnitt.value.id;
 		reportingParameter.ausgabeformat = ReportingAusgabeformat.EMAIL.getId();
-		reportingParameter.reportvorlage = ReportingReportvorlage.GOST_KURSPLANUNG_v_KURS_MIT_KURSSCHUELERN.getBezeichnung();
+		reportingParameter.reportvorlage = ReportingReportvorlage.GOST_KURSPLANUNG_V_KURS_MIT_KURSSCHUELERN.getBezeichnung();
 
 		const emailDaten = new ReportingEMailDaten();
 		emailDaten.empfaengerTyp = ReportingEMailEmpfaengerTyp.GOSTKURSPLANUNG_KURSLEHRER.getId();
@@ -230,8 +233,9 @@
 			let namen = "";
 			for (const k of props.getErgebnismanager().getOfFachKursmenge(filter.fach)) {
 				const kursart = filter.kursart;
-				if ((kursart !== undefined) && (k.kursart !== kursart.id))
+				if ((kursart !== undefined) && (k.kursart !== kursart.id)) {
 					continue;
+				}
 				idSet.add(k.id);
 				namen += props.getErgebnismanager().getOfKursName(k.id) + ', ';
 			}
@@ -291,8 +295,9 @@
 			const kurseSet = new HashSet<number>();
 			let namen = "";
 			for (const k of kurse) {
-				if ((kursart !== undefined) && (k.kursart !== kursart.id))
+				if ((kursart !== undefined) && (k.kursart !== kursart.id)) {
 					continue;
+				}
 				kurseSet.add(k.id);
 				namen += props.getErgebnismanager().getOfKursName(k.id) + ', ';
 			}

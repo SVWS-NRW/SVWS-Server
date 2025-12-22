@@ -773,38 +773,38 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			case "Schülerliste markierte Kurse":
 				for (const kurs of this.kursAuswahl)
 					list.add(kurs);
-				reportingParameter.reportvorlage = ReportingReportvorlage.GOST_KURSPLANUNG_v_KURS_MIT_KURSSCHUELERN.getBezeichnung();
+				reportingParameter.reportvorlage = ReportingReportvorlage.GOST_KURSPLANUNG_V_KURS_MIT_KURSSCHUELERN.getBezeichnung();
 				reportingParameter.idsDetaildaten = list;
 				break;
 			case "Kurse mit Statistikwerten":
 				for (const kurs of this.kursAuswahl)
 					list.add(kurs);
-				reportingParameter.reportvorlage = ReportingReportvorlage.GOST_KURSPLANUNG_v_KURSE_MIT_STATISTIKWERTEN.getBezeichnung();
+				reportingParameter.reportvorlage = ReportingReportvorlage.GOST_KURSPLANUNG_V_KURSE_MIT_STATISTIKWERTEN.getBezeichnung();
 				reportingParameter.idsDetaildaten = list;
 				break;
 			case "Kurse-Schienen-Zuordnung":
-				reportingParameter.reportvorlage = ReportingReportvorlage.GOST_KURSPLANUNG_v_SCHUELER_MIT_SCHIENEN_KURSEN.getBezeichnung();
+				reportingParameter.reportvorlage = ReportingReportvorlage.GOST_KURSPLANUNG_V_SCHUELER_MIT_SCHIENEN_KURSEN.getBezeichnung();
 				break;
 			case "Kurse-Schienen-Zuordnung markierter Schüler":
 				list.add(this.auswahlSchueler.id);
-				reportingParameter.reportvorlage = ReportingReportvorlage.GOST_KURSPLANUNG_v_SCHUELER_MIT_SCHIENEN_KURSEN.getBezeichnung();
+				reportingParameter.reportvorlage = ReportingReportvorlage.GOST_KURSPLANUNG_V_SCHUELER_MIT_SCHIENEN_KURSEN.getBezeichnung();
 				reportingParameter.idsDetaildaten = list;
 				break;
 			case "Kurse-Schienen-Zuordnung gefilterte Schüler":
 				for (const schueler of this.schuelerFilter.filtered.value)
 					list.add(schueler.id);
-				reportingParameter.reportvorlage = ReportingReportvorlage.GOST_KURSPLANUNG_v_SCHUELER_MIT_SCHIENEN_KURSEN.getBezeichnung();
+				reportingParameter.reportvorlage = ReportingReportvorlage.GOST_KURSPLANUNG_V_SCHUELER_MIT_SCHIENEN_KURSEN.getBezeichnung();
 				reportingParameter.idsDetaildaten = list;
 				break;
 			case "Kursbelegung markierter Schüler":
 				list.add(this.auswahlSchueler.id);
-				reportingParameter.reportvorlage = ReportingReportvorlage.GOST_KURSPLANUNG_v_SCHUELER_MIT_KURSEN.getBezeichnung();
+				reportingParameter.reportvorlage = ReportingReportvorlage.GOST_KURSPLANUNG_V_SCHUELER_MIT_KURSEN.getBezeichnung();
 				reportingParameter.idsDetaildaten = list;
 				break;
 			case "Kursbelegung gefilterte Schüler":
 				for (const schueler of this.schuelerFilter.filtered.value)
 					list.add(schueler.id);
-				reportingParameter.reportvorlage = ReportingReportvorlage.GOST_KURSPLANUNG_v_SCHUELER_MIT_KURSEN.getBezeichnung();
+				reportingParameter.reportvorlage = ReportingReportvorlage.GOST_KURSPLANUNG_V_SCHUELER_MIT_KURSEN.getBezeichnung();
 				reportingParameter.idsDetaildaten = list;
 				break;
 		}
