@@ -186,4 +186,10 @@ export default tseslint.config(
 			"@stylistic/indent": "off",
 		}
 	},
+	{
+		files: ['svws-webclient/core/src/**/*.ts'],
+		rules: {
+			curly: "off",
+		}
+	}
 );
