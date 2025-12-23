@@ -39,13 +39,13 @@ import static org.mockito.Mockito.when;
 
 @DisplayName("Diese Testklasse testet die Klasse DataKatalogEinwilligungsarten")
 @ExtendWith(MockitoExtension.class)
-class DataKatalogEinwilligungsartenTest {
+class DataEinwilligungsartenTest {
 
 	@Mock
 	private DBEntityManager conn;
 
 	@InjectMocks
-	private DataKatalogEinwilligungsarten data;
+	private DataEinwilligungsarten data;
 
 	@BeforeAll
 	static void setUp() {

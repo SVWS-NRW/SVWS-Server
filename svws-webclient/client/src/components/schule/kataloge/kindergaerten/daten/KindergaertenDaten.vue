@@ -30,7 +30,7 @@
 
 <script setup lang="ts">
 
-	import type { KindergaertenDatenProps } from "~/components/schule/kataloge/kindergaerten/daten/SKindergaertenDatenProps";
+	import type { KindergaertenDatenProps } from "~/components/schule/kataloge/kindergaerten/daten/KindergaertenDatenProps";
 	import { AdressenUtils, BenutzerKompetenz } from "@core";
 	import { computed } from "vue";
 	import { emailIsValid } from "~/util/validation/Validation";

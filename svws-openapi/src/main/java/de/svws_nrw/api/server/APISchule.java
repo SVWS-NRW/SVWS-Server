@@ -15,7 +15,7 @@ import de.svws_nrw.data.schule.DataBetriebsarten;
 import de.svws_nrw.data.schule.DataFloskelJahrgangZuordnung;
 import de.svws_nrw.data.schule.DataFloskelgruppen;
 import de.svws_nrw.data.schule.DataFloskeln;
-import de.svws_nrw.data.schule.DataKatalogLernplattformen;
+import de.svws_nrw.data.schule.DataLernplattformen;
 import de.svws_nrw.data.schule.DataTelefonarten;
 import java.io.InputStream;
 
@@ -69,7 +69,7 @@ import de.svws_nrw.data.schule.DataKatalogBerufskollegAnlagen;
 import de.svws_nrw.data.schule.DataKatalogBerufskollegBerufsebenen;
 import de.svws_nrw.data.schule.DataKatalogBerufskollegFachklassen;
 import de.svws_nrw.data.schule.DataKatalogEinschulungsarten;
-import de.svws_nrw.data.schule.DataKatalogEinwilligungsarten;
+import de.svws_nrw.data.schule.DataEinwilligungsarten;
 import de.svws_nrw.data.schule.DataKatalogFoerderschwerpunkte;
 import de.svws_nrw.data.schule.DataKatalogKindergartenbesuch;
 import de.svws_nrw.data.schule.DataKatalogNationalitaeten;
@@ -913,7 +913,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
 	public Response getEinwilligungsarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogEinwilligungsarten(conn).getAllAsResponse(),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataEinwilligungsarten(conn).getAllAsResponse(),
 				request, ServerMode.DEV, BenutzerKompetenz.KEINE);
 	}
 
@@ -938,7 +938,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "404", description = "Keine Einwilligungsart mit der angegebenen ID gefunden")
 	public Response getEinwilligungsart(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogEinwilligungsarten(conn).getByIdAsResponse(id),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataEinwilligungsarten(conn).getByIdAsResponse(id),
 				request, ServerMode.DEV,
 				BenutzerKompetenz.KEINE);
 	}
@@ -966,7 +966,7 @@ public class APISchule {
 			@RequestBody(description = "Der initiale Patch für die neue Einwilligungsart", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Einwilligungsart.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogEinwilligungsarten(conn).addAsResponse(is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataEinwilligungsarten(conn).addAsResponse(is),
 				request, ServerMode.DEV,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
@@ -999,7 +999,7 @@ public class APISchule {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							schema = @Schema(implementation = Einwilligungsart.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogEinwilligungsarten(conn).patchAsResponse(id, is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataEinwilligungsarten(conn).patchAsResponse(id, is),
 				request, ServerMode.DEV,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
@@ -1027,7 +1027,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteEinwilligungsart(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogEinwilligungsarten(conn).deleteAsResponse(id),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataEinwilligungsarten(conn).deleteAsResponse(id),
 				request, ServerMode.DEV,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
@@ -1058,7 +1058,7 @@ public class APISchule {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogEinwilligungsarten(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataEinwilligungsarten(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
 				request, ServerMode.DEV,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
@@ -2505,7 +2505,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
 	public Response getLernplattformen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogLernplattformen(conn).getAllAsResponse(),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLernplattformen(conn).getAllAsResponse(),
 				request, ServerMode.DEV, BenutzerKompetenz.KEINE);
 	}
 
@@ -2532,7 +2532,7 @@ public class APISchule {
 			@RequestBody(description = "Der initiale Patch für die neue Lernplattform", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Lernplattform.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogLernplattformen(conn).addAsResponse(is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLernplattformen(conn).addAsResponse(is),
 				request, ServerMode.DEV,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
@@ -2564,7 +2564,7 @@ public class APISchule {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							schema = @Schema(implementation = Lernplattform.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogLernplattformen(conn).patchAsResponse(id, is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLernplattformen(conn).patchAsResponse(id, is),
 				request, ServerMode.DEV,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
@@ -2595,7 +2595,7 @@ public class APISchule {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogLernplattformen(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLernplattformen(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
 				request, ServerMode.DEV,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}

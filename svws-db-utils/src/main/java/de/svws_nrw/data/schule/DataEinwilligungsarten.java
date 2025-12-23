@@ -26,7 +26,7 @@ import jakarta.ws.rs.core.Response.Status;
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für das Core-DTO {@link Einwilligungsart}.
  */
-public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long, DTOKatalogEinwilligungsart, Einwilligungsart> {
+public final class DataEinwilligungsarten extends DataManagerRevised<Long, DTOKatalogEinwilligungsart, Einwilligungsart> {
 
 	private static final String BEZEICHNUNG = "bezeichnung";
 	private static final String ID_PERSON_TYP = "idPersonTyp";
@@ -37,7 +37,7 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 	 *
 	 * @param conn die Datenbank-Verbindung für den Datenbankzugriff
 	 */
-	public DataKatalogEinwilligungsarten(final DBEntityManager conn) {
+	public DataEinwilligungsarten(final DBEntityManager conn) {
 		super(conn);
 		setAttributesRequiredOnCreation(BEZEICHNUNG, ID_PERSON_TYP);
 		setAttributesNotPatchable("id");

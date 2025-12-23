@@ -25,7 +25,7 @@ import de.svws_nrw.data.kataloge.DataOrte;
 import de.svws_nrw.data.kataloge.DataOrtsteile;
 import de.svws_nrw.data.kataloge.DataStrassen;
 import de.svws_nrw.data.schueler.DataKatalogSchuelerFoerderschwerpunkte;
-import de.svws_nrw.data.schule.DataKatalogKindergaerten;
+import de.svws_nrw.data.schule.DataKindergaerten;
 import de.svws_nrw.data.schule.DataMerkmale;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -561,7 +561,7 @@ public class APIKataloge {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
 	public Response getKindergaerten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogKindergaerten(conn).getAllAsResponse(),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKindergaerten(conn).getAllAsResponse(),
 				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
 	}
 
@@ -587,7 +587,7 @@ public class APIKataloge {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Kindergarten.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataKatalogKindergaerten(conn).addAsResponse(is), request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+				conn -> new DataKindergaerten(conn).addAsResponse(is), request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
 
 	/**
@@ -616,7 +616,7 @@ public class APIKataloge {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Kindergarten.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataKatalogKindergaerten(conn).patchAsResponse(id, is), request, ServerMode.STABLE,
+				conn -> new DataKindergaerten(conn).patchAsResponse(id, is), request, ServerMode.STABLE,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
 
@@ -641,7 +641,7 @@ public class APIKataloge {
 	public Response deleteKindergaerten(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die IDs der zu löschenden Kindergärten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogKindergaerten(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKindergaerten(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
 

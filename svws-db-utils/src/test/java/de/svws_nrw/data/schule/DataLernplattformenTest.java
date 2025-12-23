@@ -34,15 +34,15 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@DisplayName("Diese Testklasse testet die Klasse DataKatalogLernplattformen")
+@DisplayName("Diese Testklasse testet die Klasse DataLernplattformen")
 @ExtendWith(MockitoExtension.class)
-class DataKatalogLernplattformenTest {
+class DataLernplattformenTest {
 
 	@Mock
 	private DBEntityManager conn;
 
 	@InjectMocks
-	private DataKatalogLernplattformen data;
+	private DataLernplattformen data;
 
 	@BeforeAll
 	static void setUp() {

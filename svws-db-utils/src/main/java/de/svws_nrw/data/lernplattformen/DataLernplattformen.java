@@ -28,7 +28,6 @@ import de.svws_nrw.core.data.lernplattform.v1.LernplattformV1Schueler;
 import de.svws_nrw.core.data.lernplattform.v1.LernplattformV1Export;
 import de.svws_nrw.core.data.schule.Lernplattform;
 import de.svws_nrw.data.JSONMapper;
-import de.svws_nrw.data.schule.DataKatalogLernplattformen;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
@@ -55,7 +54,7 @@ public class DataLernplattformen {
 
 	/** Die Datenbank-Verbindung zum Aggregieren der Informationen aus der DB und zum Schreiben der Informationen bzw. Teilinformationen */
 	private final @NotNull DBEntityManager conn;
-	private final DataKatalogLernplattformen dataKatalogLernplattformen;
+	private final de.svws_nrw.data.schule.DataLernplattformen dataLernplattformen;
 
 	/** Die ID des Schuljahresabschnitts zu dem die Lernplattform Daten ermittelt werden. */
 	private final int idSchuljahresabschnitt;
@@ -63,15 +62,15 @@ public class DataLernplattformen {
 	/**
 	 * Erstellt einen neuen Datenmanager mit der angegebenen Verbindung
 	 *
-	 * @param conn                   		die Datenbank-Verbindung, welche vom Daten-Manager benutzt werden soll
-	 * @param idSchuljahresabschnitt  		die ID des Schuljahresabschnitts
-	 * @param dataKatalogLernplattformen	DataKatalogLernplattformen
+	 * @param conn                     die Datenbank-Verbindung, welche vom Daten-Manager benutzt werden soll
+	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
+	 * @param dataLernplattformen	   DataLernplattformen
 	 */
 	public DataLernplattformen(final @NotNull DBEntityManager conn, final int idSchuljahresabschnitt,
-			final DataKatalogLernplattformen dataKatalogLernplattformen) {
+			final de.svws_nrw.data.schule.DataLernplattformen dataLernplattformen) {
 		this.conn = conn;
 		this.idSchuljahresabschnitt = idSchuljahresabschnitt;
-		this.dataKatalogLernplattformen = dataKatalogLernplattformen;
+		this.dataLernplattformen = dataLernplattformen;
 	}
 
 	/**
@@ -104,7 +103,7 @@ public class DataLernplattformen {
 	 * @return	eine Liste der Lernplattformen als Response
 	 */
 	public Response getAllAsResponse() {
-		final List<LernplattformV1> lernplattformen = Optional.ofNullable(this.dataKatalogLernplattformen.getAll())
+		final List<LernplattformV1> lernplattformen = Optional.ofNullable(this.dataLernplattformen.getAll())
 				.orElse(Collections.emptyList())
 				.stream()
 				.map(this::map)

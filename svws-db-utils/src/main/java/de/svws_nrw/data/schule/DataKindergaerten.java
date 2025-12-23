@@ -16,14 +16,14 @@ import jakarta.ws.rs.core.Response;
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für das Core-DTO {@link Kindergarten}.
  */
-public final class DataKatalogKindergaerten extends DataManagerRevised<Long, DTOKindergarten, Kindergarten> {
+public final class DataKindergaerten extends DataManagerRevised<Long, DTOKindergarten, Kindergarten> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManagerRevised} für das Core-DTO {@link Kindergarten}.
 	 *
 	 * @param conn die Datenbank-Verbindung für den Datenbankzugriff
 	 */
-	public DataKatalogKindergaerten(final DBEntityManager conn) {
+	public DataKindergaerten(final DBEntityManager conn) {
 		super(conn);
 		setAttributesNotPatchable("id");
 		setAttributesRequiredOnCreation("bezeichnung");

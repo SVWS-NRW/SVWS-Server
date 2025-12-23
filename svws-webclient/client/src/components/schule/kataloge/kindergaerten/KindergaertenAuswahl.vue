@@ -26,7 +26,7 @@
 
 <script setup lang="ts">
 
-	import type { KindergaertenAuswahlProps } from "~/components/schule/kataloge/kindergaerten/SKindergaertenAuswahlProps";
+	import type { KindergaertenAuswahlProps } from "~/components/schule/kataloge/kindergaerten/KindergaertenAuswahlProps";
 	import type { DataTableColumn } from "@ui";
 	import type { Kindergarten } from "@core";
 	import { BenutzerKompetenz, ServerMode } from "@core";

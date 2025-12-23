@@ -37,7 +37,7 @@
 
 	import { useRegionSwitch, ViewType } from "@ui";
 	import { computed } from "vue";
-	import type { KindergaertenAppProps } from "~/components/schule/kataloge/kindergaerten/SKindergaertenAppProps";
+	import type { KindergaertenAppProps } from "~/components/schule/kataloge/kindergaerten/KindergaertenAppProps";
 
 	const props = defineProps<KindergaertenAppProps>();
 

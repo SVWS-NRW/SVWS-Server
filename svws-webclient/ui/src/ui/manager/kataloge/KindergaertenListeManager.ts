@@ -50,18 +50,4 @@ export class KindergaertenListeManager extends AuswahlManager<number, Kindergart
 		return KindergaertenListeManager.comparator.compare(a, b);
 	}
 
-	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.core.utils.kataloge.kindergaerten.KindergaertenListeManager';
-	}
-
-	isTranspiledInstanceOf(name: string): boolean {
-		return ['de.svws_nrw.core.utils.AuswahlManager', 'de.svws_nrw.core.utils.kataloge.kindergaerten.KindergaertenListeManager'].includes(name);
-	}
-
-	public static class = new Class<KindergaertenListeManager>('de.svws_nrw.core.utils.kataloge.kindergaerten.KindergaertenListeManager');
-
-}
-
-export function cast_de_svws_nrw_core_utils_kataloge_kindergaerten_KindergaertenListeManager(obj: unknown): KindergaertenListeManager {
-	return obj as KindergaertenListeManager;
 }

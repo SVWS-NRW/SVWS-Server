@@ -5,8 +5,7 @@ import de.svws_nrw.core.data.lernplattform.v1.LernplattformV1Export;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
-import de.svws_nrw.data.lernplattformen.DataLernplattformen;
-import de.svws_nrw.data.schule.DataKatalogLernplattformen;
+import de.svws_nrw.data.schule.DataLernplattformen;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -64,7 +63,7 @@ public class APILernplattformenV1 {
 	public Response getLernplattformenExport(@PathParam("schema") final String schema, @PathParam("idLernplattform") final long idLernplattform,
 			@PathParam("idSchuljahresabschnitt") final int idSchuljahresabschnitt, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn ->
-						new DataLernplattformen(conn, idSchuljahresabschnitt, new DataKatalogLernplattformen(conn)).getByIdAsResponse(idLernplattform),
+						new de.svws_nrw.data.lernplattformen.DataLernplattformen(conn, idSchuljahresabschnitt, new DataLernplattformen(conn)).getByIdAsResponse(idLernplattform),
 				request, ServerMode.STABLE, BenutzerKompetenz.IMPORT_EXPORT_LERNPLATTFORM);
 	}
 
@@ -93,7 +92,7 @@ public class APILernplattformenV1 {
 	public Response getLernplattformenExportAsGzip(@PathParam("schema") final String schema, @PathParam("idLernplattform") final long idLernplattform,
 			@PathParam("idSchuljahresabschnitt") final int idSchuljahresabschnitt, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn ->
-						new DataLernplattformen(conn, idSchuljahresabschnitt, new DataKatalogLernplattformen(conn)).getByIdAsGzipResponse(idLernplattform),
+						new de.svws_nrw.data.lernplattformen.DataLernplattformen(conn, idSchuljahresabschnitt, new DataLernplattformen(conn)).getByIdAsGzipResponse(idLernplattform),
 				request, ServerMode.STABLE, BenutzerKompetenz.IMPORT_EXPORT_LERNPLATTFORM);
 	}
 
@@ -115,7 +114,7 @@ public class APILernplattformenV1 {
 	@ApiResponse(responseCode = "404", description = "Keine Lernplattformen gefunden")
 	public Response getLernplattformen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataLernplattformen(conn, -1, new DataKatalogLernplattformen(conn)).getAllAsResponse(),
+				conn -> new de.svws_nrw.data.lernplattformen.DataLernplattformen(conn, -1, new DataLernplattformen(conn)).getAllAsResponse(),
 				request, ServerMode.DEV, BenutzerKompetenz.IMPORT_EXPORT_LERNPLATTFORM);
 	}
 

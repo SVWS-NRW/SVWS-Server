@@ -28,13 +28,13 @@ import static org.mockito.Mockito.when;
 
 @DisplayName("Diese Testklasse testet die Klasse DataKatalogKindergaerten")
 @ExtendWith(MockitoExtension.class)
-class DataKatalogKindergaertenTest {
+class DataKindergaertenTest {
 
 	@Mock
 	private DBEntityManager conn;
 
 	@InjectMocks
-	private DataKatalogKindergaerten data;
+	private DataKindergaerten data;
 
 	@BeforeAll
 	static void setUp() {

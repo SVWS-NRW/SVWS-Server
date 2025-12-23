@@ -11,14 +11,14 @@ import { routeKindergaertenNeu } from "~/router/apps/schule/kataloge/kindergaert
 import { routeKindergaertenGruppenprozesse } from "~/router/apps/schule/kataloge/kindergaerten/RouteKindergaertenGruppenprozesse";
 
 
-const SKindergartenApp = () => import("~/components/schule/kataloge/kindergaerten/SKindergaertenApp.vue");
-const SKindergaertenAuswahl = () => import("~/components/schule/kataloge/kindergaerten/SKindergaertenAuswahl.vue");
+const KindergartenApp = () => import("~/components/schule/kataloge/kindergaerten/KindergaertenApp.vue");
+const KindergaertenAuswahl = () => import("~/components/schule/kataloge/kindergaerten/KindergaertenAuswahl.vue");
 
 export class RouteKindergaerten extends RouteAuswahlNode<KindergaertenListeManager, RouteDataKindergaerten, RouteApp> {
 
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.kindergaerten",
-			"schule/kindergaerten/:id(\\d+)?", SKindergartenApp, SKindergaertenAuswahl, new RouteDataKindergaerten());
+			"schule/kindergaerten/:id(\\d+)?", KindergartenApp, KindergaertenAuswahl, new RouteDataKindergaerten());
 		super.mode = ServerMode.DEV;
 		super.text = "Kindergärten";
 		super.menugroup = RouteSchuleMenuGroup.KATALOGE;

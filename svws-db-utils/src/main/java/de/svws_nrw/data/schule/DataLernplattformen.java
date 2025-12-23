@@ -24,14 +24,14 @@ import jakarta.ws.rs.core.Response.Status;
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für das Core-DTO {@link Lernplattform}.
  */
-public final class DataKatalogLernplattformen extends DataManagerRevised<Long, DTOLernplattformen, Lernplattform> {
+public final class DataLernplattformen extends DataManagerRevised<Long, DTOLernplattformen, Lernplattform> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManagerRevised} für das Core-DTO {@link Lernplattform}.
 	 *
 	 * @param conn die Datenbank-Verbindung für den Datenbankzugriff
 	 */
-	public DataKatalogLernplattformen(final DBEntityManager conn) {
+	public DataLernplattformen(final DBEntityManager conn) {
 		super(conn);
 		setAttributesRequiredOnCreation("bezeichnung");
 		setAttributesNotPatchable("id");

@@ -41,7 +41,7 @@
 
 	import { AdressenUtils, BenutzerKompetenz, Kindergarten } from "@core";
 	import { computed, ref, watch } from "vue";
-	import type { KindergaertenNeuProps } from "~/components/schule/kataloge/kindergaerten/SKindergaertenNeuProps";
+	import type { KindergaertenNeuProps } from "~/components/schule/kataloge/kindergaerten/KindergaertenNeuProps";
 	import { emailIsValid, mandatoryInputIsValid, optionalInputIsValid, phoneNumberIsValid } from "~/util/validation/Validation";
 
 	const props = defineProps<KindergaertenNeuProps>();

@@ -1,5 +1,5 @@
 import type { RouteLocationNormalized } from "vue-router";
-import type { KindergaertenNeuProps } from "~/components/schule/kataloge/kindergaerten/SKindergaertenNeuProps";
+import type { KindergaertenNeuProps } from "~/components/schule/kataloge/kindergaerten/KindergaertenNeuProps";
 import type { RouteKindergaerten } from "~/router/apps/schule/kataloge/kindergaerten/RouteKindergaerten";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteManager } from "~/router/RouteManager";
@@ -8,12 +8,12 @@ import { ViewType } from "@ui";
 import { api } from "~/router/Api";
 import { routeKindergaerten } from "~/router/apps/schule/kataloge/kindergaerten/RouteKindergaerten";
 
-const SKindergaertenNeu = () => import("~/components/schule/kataloge/kindergaerten/SKindergaertenNeu.vue");
+const KindergaertenNeu = () => import("~/components/schule/kataloge/kindergaerten/KindergaertenNeu.vue");
 
 export class RouteKindergaertenNeu extends RouteNode<any, RouteKindergaerten> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.kindergaerten.neu", "neu", SKindergaertenNeu);
+		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.kindergaerten.neu", "neu", KindergaertenNeu);
 		super.types = new Set([ViewType.HINZUFUEGEN]);
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
