@@ -1,15 +1,15 @@
-# SVWS-Client
+# SVWS-Webclient
 
 Repository für den JavaScript-Client
 
 ## Projekt Setup
 
-https://doku.svws-nrw.de/Entwicklungsumgebungen/
+https://doku.svws-nrw.de/development/Entwicklungsumgebungen/
 
-Hier kann unter verschiedenen Betriebssystemen die Einrichtung der Entwicklungsumgebung nachgelesen werden.
+Hier wird die Einrichtung von Entwicklungsumgebungen unter verschiedenen Betriebssystemen beschrieben.
 
 ### Dokumentation
 
-https://doku.svws-nrw.de/SVWS-Server/svws-webclient/
+https://doku.svws-nrw.de/webclient/
 
-Eine grundsätzliche Erklärung zum WebClient gibt es unter diesem Link.
+Der Link führt zum Benutzerhandbuch des SVWS-Webclient.
