@@ -15,9 +15,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import de.svws_nrw.base.ResourceUtils;
-import de.svws_nrw.core.data.reporting.ReportingParameter;
 import de.svws_nrw.core.logger.LogLevel;
-import de.svws_nrw.core.types.reporting.ReportingReportvorlage;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.builders.ReportBuilderHtml;
 import de.svws_nrw.module.reporting.builders.ReportBuilderContextHtml;
@@ -37,6 +35,7 @@ import de.svws_nrw.module.reporting.html.contexts.HtmlContextStundenplanungKlass
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextStundenplanungLehrerStundenplan;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextStundenplanungRaumStundenplan;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextStundenplanungSchuelerStundenplan;
+import de.svws_nrw.module.reporting.parameter.ReportingParameterTypisiert;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.validierung.ReportingValidierung;
 import jakarta.ws.rs.core.Response;
@@ -55,7 +54,7 @@ public class HtmlFactory {
 	private final ReportingRepository reportingRepository;
 
 	/** Einstellungen und Daten zum Steuern der Report-Generierung. */
-	private final ReportingParameter reportingParameter;
+	private final ReportingParameterTypisiert reportingParameter;
 
 	/** Die Template-Definition für die Erstellung der HTML-Datei. */
 	private final HtmlTemplateDefinition htmlTemplateDefinition;
@@ -81,8 +80,7 @@ public class HtmlFactory {
 				">>> Beginn der Initialisierung der HTML-Factory und der Validierung der übergebenen Daten.");
 
 		// Validiere die Angaben zur HTML-Vorlage.
-		final ReportingReportvorlage rv = ReportingReportvorlage.getByBezeichnung(this.reportingParameter.reportvorlage);
-		this.htmlTemplateDefinition = HtmlTemplateDefinition.getByReportvorlage(rv);
+		this.htmlTemplateDefinition = this.reportingParameter.htmlTemplateDefinition();
 		if (this.htmlTemplateDefinition == null) {
 			this.reportingRepository.logger()
 					.logLn(LogLevel.ERROR, 4, "FEHLER: Die Template-Definitionen für die HTML-Factory sind inkonsistent.");
@@ -175,10 +173,10 @@ public class HtmlFactory {
 				((htmlTemplateDefinition == HtmlTemplateDefinition.SCHUELER_V_GOST_ABITUR_APO_ANLAGE_12_A3)
 						|| (htmlTemplateDefinition == HtmlTemplateDefinition.SCHUELER_V_GOST_ABITUR_APO_ANLAGE_12_A4));
 
-		ReportingValidierung.validiereDatenFuerSchueler(reportingRepository, reportingParameter.idsHauptdaten, istGostLaufbahnplanung, istGostAbitur);
+		ReportingValidierung.validiereDatenFuerSchueler(reportingRepository, reportingParameter.idsHauptdaten(), istGostLaufbahnplanung, istGostAbitur);
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
 				("Erzeuge Datenkontext Schüler für die HTML-Generierung - %d IDs von Schülern wurden übergeben für Template %s.")
-						.formatted(reportingParameter.idsHauptdaten.size(), htmlTemplateDefinition.name()));
+						.formatted(reportingParameter.idsHauptdaten().size(), htmlTemplateDefinition.name()));
 		final HtmlContextSchueler htmlContextSchueler = new HtmlContextSchueler(reportingRepository);
 		mapHtmlContexts.put("Schueler", htmlContextSchueler);
 	}
@@ -190,10 +188,10 @@ public class HtmlFactory {
 	 */
 	public void initContextKlassen() throws ApiOperationException {
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für Klassen für die HTML-Generierung.");
-		ReportingValidierung.validiereDatenFuerKlassen(reportingRepository, reportingParameter.idsHauptdaten);
+		ReportingValidierung.validiereDatenFuerKlassen(reportingRepository, reportingParameter.idsHauptdaten());
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
 				("Erzeuge Datenkontext Klassen für die HTML-Generierung - %d IDs von Klassen wurden übergeben für Template %s.")
-						.formatted(reportingParameter.idsHauptdaten.size(), htmlTemplateDefinition.name()));
+						.formatted(reportingParameter.idsHauptdaten().size(), htmlTemplateDefinition.name()));
 		final HtmlContextKlassen htmlContextKlassen = new HtmlContextKlassen(reportingRepository);
 		mapHtmlContexts.put("Klassen", htmlContextKlassen);
 	}
@@ -205,10 +203,10 @@ public class HtmlFactory {
 	 */
 	public void initContextKurse() throws ApiOperationException {
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für Kurse für die HTML-Generierung.");
-		ReportingValidierung.validiereDatenFuerKurse(reportingRepository, reportingParameter.idsHauptdaten);
+		ReportingValidierung.validiereDatenFuerKurse(reportingRepository, reportingParameter.idsHauptdaten());
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
 				("Erzeuge Datenkontext Kurse für die HTML-Generierung - %d IDs von Kursen wurden übergeben für Template %s.")
-						.formatted(reportingParameter.idsHauptdaten.size(), htmlTemplateDefinition.name()));
+						.formatted(reportingParameter.idsHauptdaten().size(), htmlTemplateDefinition.name()));
 		final HtmlContextKurse htmlContextKurse = new HtmlContextKurse(reportingRepository);
 		mapHtmlContexts.put("Kurse", htmlContextKurse);
 	}
@@ -220,10 +218,10 @@ public class HtmlFactory {
 	 */
 	public void initContextLehrer() throws ApiOperationException {
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für Lehrer für die HTML-Generierung.");
-		ReportingValidierung.validiereDatenFuerLehrer(reportingRepository, reportingParameter.idsHauptdaten);
+		ReportingValidierung.validiereDatenFuerLehrer(reportingRepository, reportingParameter.idsHauptdaten());
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
 				("Erzeuge Datenkontext Lehrer für die HTML-Generierung - %d IDs von Lehrern wurden übergeben für Template %s.")
-						.formatted(reportingParameter.idsHauptdaten.size(), htmlTemplateDefinition.name()));
+						.formatted(reportingParameter.idsHauptdaten().size(), htmlTemplateDefinition.name()));
 		final HtmlContextLehrer htmlContextLehrer = new HtmlContextLehrer(reportingRepository);
 		mapHtmlContexts.put("Lehrer", htmlContextLehrer);
 	}
@@ -255,8 +253,8 @@ public class HtmlFactory {
 		ReportingValidierung.validiereDatenFuerGostKursplanungBlockungsergebnis(reportingRepository);
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
 				"Erzeuge Datenkontext Gost-Kursplanung-Blockungsergebnis für die HTML-Generierung mit ID %s für Template %s."
-						.formatted(reportingParameter.idsHauptdaten.getFirst(), htmlTemplateDefinition.name()));
-		final List<Long> idsFilter = this.reportingRepository.reportingParameter().idsDetaildaten;
+						.formatted(reportingParameter.idsHauptdaten().getFirst(), htmlTemplateDefinition.name()));
+		final List<Long> idsFilter = this.reportingRepository.reportingParameter().idsDetaildaten();
 		final ReportingFilterDataType idsFilterDataType = switch (htmlTemplateDefinition) {
 			case GOST_KURSPLANUNG_V_KURS_MIT_KURSSCHUELERN -> ReportingFilterDataType.KURSE;
 			case GOST_KURSPLANUNG_V_SCHUELER_MIT_KURSEN, GOST_KURSPLANUNG_V_SCHUELER_MIT_SCHIENEN_KURSEN -> ReportingFilterDataType.SCHUELER;
@@ -277,7 +275,7 @@ public class HtmlFactory {
 		ReportingValidierung.validiereDatenFuerGostKlausurplanungKlausurplan(reportingRepository);
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
 				"Erzeuge Datenkontext Gost-Klausurplanung für die HTML-Generierung mit Template %s.".formatted(htmlTemplateDefinition.name()));
-		final List<Long> idsFilter = this.reportingRepository.reportingParameter().idsDetaildaten;
+		final List<Long> idsFilter = this.reportingRepository.reportingParameter().idsDetaildaten();
 		final ReportingFilterDataType idsFilterDataType = switch (htmlTemplateDefinition) {
 			case GOST_KLAUSURPLANUNG_V_SCHUELER_MIT_KLAUSUREN -> ReportingFilterDataType.SCHUELER;
 			default -> ReportingFilterDataType.UNDEFINED;
@@ -301,42 +299,42 @@ public class HtmlFactory {
 			case STUNDENPLANUNG_V_FACH_STUNDENPLAN -> {
 				final HtmlContextStundenplanungFachStundenplan htmlContextFachStundenplan =
 						new HtmlContextStundenplanungFachStundenplan(reportingRepository,
-								reportingRepository.stundenplan(reportingParameter.idsHauptdaten.getFirst()),
-								reportingParameter.idsDetaildaten);
+								reportingRepository.stundenplan(reportingParameter.idsHauptdaten().getFirst()),
+								reportingParameter.idsDetaildaten());
 				mapHtmlContexts.put("FaecherStundenplaene", htmlContextFachStundenplan);
 			}
 			case STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN -> {
 				reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten der Klassen für einen Stundenplan für die HTML-Generierung.");
-				ReportingValidierung.validiereDatenFuerKlassen(reportingRepository, reportingParameter.idsDetaildaten);
+				ReportingValidierung.validiereDatenFuerKlassen(reportingRepository, reportingParameter.idsDetaildaten());
 				final HtmlContextStundenplanungKlassenStundenplan htmlContextKlassenStundenplan =
 						new HtmlContextStundenplanungKlassenStundenplan(reportingRepository,
-								reportingRepository.stundenplan(reportingParameter.idsHauptdaten.getFirst()),
-								reportingParameter.idsDetaildaten);
+								reportingRepository.stundenplan(reportingParameter.idsHauptdaten().getFirst()),
+								reportingParameter.idsDetaildaten());
 				mapHtmlContexts.put("KlassenStundenplaene", htmlContextKlassenStundenplan);
 			}
 			case STUNDENPLANUNG_V_LEHRER_STUNDENPLAN, STUNDENPLANUNG_V_LEHRER_STUNDENPLAN_KOMBINIERT -> {
 				reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten der Lehrkräfte für einen Stundenplan für die HTML-Generierung.");
-				ReportingValidierung.validiereDatenFuerLehrer(reportingRepository, reportingParameter.idsDetaildaten);
+				ReportingValidierung.validiereDatenFuerLehrer(reportingRepository, reportingParameter.idsDetaildaten());
 				final HtmlContextStundenplanungLehrerStundenplan htmlContextLehrerStundenplan =
 						new HtmlContextStundenplanungLehrerStundenplan(reportingRepository,
-								reportingRepository.stundenplan(reportingParameter.idsHauptdaten.getFirst()),
-								reportingParameter.idsDetaildaten);
+								reportingRepository.stundenplan(reportingParameter.idsHauptdaten().getFirst()),
+								reportingParameter.idsDetaildaten());
 				mapHtmlContexts.put("LehrerStundenplaene", htmlContextLehrerStundenplan);
 			}
 			case STUNDENPLANUNG_V_RAUM_STUNDENPLAN -> {
 				final HtmlContextStundenplanungRaumStundenplan htmlContextRaeumeStundenplan =
 						new HtmlContextStundenplanungRaumStundenplan(reportingRepository,
-								reportingRepository.stundenplan(reportingParameter.idsHauptdaten.getFirst()),
-								reportingParameter.idsDetaildaten);
+								reportingRepository.stundenplan(reportingParameter.idsHauptdaten().getFirst()),
+								reportingParameter.idsDetaildaten());
 				mapHtmlContexts.put("RaeumeStundenplaene", htmlContextRaeumeStundenplan);
 			}
 			case STUNDENPLANUNG_V_SCHUELER_STUNDENPLAN -> {
 				reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten der Schüler für einen Stundenplan für die HTML-Generierung.");
-				ReportingValidierung.validiereDatenFuerSchueler(reportingRepository, reportingParameter.idsDetaildaten, false, false);
+				ReportingValidierung.validiereDatenFuerSchueler(reportingRepository, reportingParameter.idsDetaildaten(), false, false);
 				final HtmlContextStundenplanungSchuelerStundenplan htmlContextSchuelerStundenplan =
 						new HtmlContextStundenplanungSchuelerStundenplan(reportingRepository,
-								reportingRepository.stundenplan(reportingParameter.idsHauptdaten.getFirst()),
-								reportingParameter.idsDetaildaten);
+								reportingRepository.stundenplan(reportingParameter.idsHauptdaten().getFirst()),
+								reportingParameter.idsDetaildaten());
 				mapHtmlContexts.put("SchuelerStundenplaene", htmlContextSchuelerStundenplan);
 			}
 			default -> {
@@ -416,9 +414,9 @@ public class HtmlFactory {
 
 		final List<ReportBuilderHtml> htmlBuilders = new ArrayList<>();
 
-		if (reportingParameter.einzelausgabeHauptdaten)
+		if (reportingParameter.einzelausgabeHauptdaten())
 			erzeugeHauptEinzelContexts(htmlBuilders, htmlTemplateCode);
-		else if (reportingParameter.einzelausgabeDetaildaten)
+		else if (reportingParameter.einzelausgabeDetaildaten())
 			erzeugeDetailEinzelContexts(htmlBuilders, htmlTemplateCode);
 		else {
 			htmlBuilders.add(getReportBuilderHtml(htmlTemplateCode));

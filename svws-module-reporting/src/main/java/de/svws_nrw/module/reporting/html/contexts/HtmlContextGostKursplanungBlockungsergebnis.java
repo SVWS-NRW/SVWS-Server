@@ -103,7 +103,7 @@ public final class HtmlContextGostKursplanungBlockungsergebnis extends HtmlConte
 
 		if ((blockungsergebnis == null) || (this.datenManager == null)) {
 			try {
-				final Long idBlockungsergebnis = this.reportingRepository.reportingParameter().idsHauptdaten.getFirst();
+				final Long idBlockungsergebnis = this.reportingRepository.reportingParameter().idsHauptdaten().getFirst();
 				reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Die ID der Blockungsergebnisses wurde ermittelt: " + idBlockungsergebnis.toString());
 				this.blockungsergebnis = DataGostBlockungsergebnisse.getErgebnisFromID(this.reportingRepository.conn(), idBlockungsergebnis);
 				reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Das Blockungsergebnis wurde ermittelt.");

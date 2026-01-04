@@ -1,22 +1,15 @@
 <!DOCTYPE html>
-<html lang="de" xmlns:th="http://www.thymeleaf.org">
-	<head th:with="mediaPrint = ${Parameter.ausgabeformat >= 2}, duplex = ${Parameter.duplexdruck},
+<html lang="de" xmlns:th="http://www.thymeleaf.org" th:with="istDruckausgabe = ${Parameter.istDruckausgabe()}, duplex = ${Parameter.duplexdruck},
 				   querformat = ${(VorlageParameter.get('mitErzieher') || VorlageParameter.get('mitErzieherAnschrift') || VorlageParameter.get('mitErzieherEmailPrivat')) && (VorlageParameter.get('mitSchuelerTelefonPrivat') || VorlageParameter.get('mitSchuelerEmailSchule') || VorlageParameter.get('mitSchuelerEmailPrivat') || VorlageParameter.get('mitSpalteSchuelerTelefonKontakte'))}">
-				   <!-- querformat verwenden, wenn Erzieher plus eine weitere Datenart (Telefon, EMail, Kontakte) dargestellt werden sollen. -->
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
-		<title>Schülerliste mit Kontaktdaten und Erziehern der Schülerinnen und Schüler</title>
-		<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-pdf.css}" href="../../css/reporting-pdf.css" />
-		<link th:if="${mediaPrint && !querformat && !duplex}" rel="stylesheet" th:href="@{css/reporting-A4-hoch.css}" href="../../css/reporting-A4-hoch.css" />
-		<link th:if="${mediaPrint && querformat && !duplex}" rel="stylesheet" th:href="@{css/reporting-A4-quer.css}" href="../../css/reporting-A4-quer.css" />
-		<link th:if="${mediaPrint && !querformat && duplex}" rel="stylesheet" th:href="@{css/reporting-A4-hoch-duplex.css}" href="../../css/reporting-A4-hoch-duplex.css" />
-		<link th:if="${mediaPrint && querformat && duplex}" rel="stylesheet" th:href="@{css/reporting-A4-quer-duplex.css}" href="../../css/reporting-A4-quer-duplex.css" />
-		<link rel="stylesheet" th:href="@{css/reporting-styles.css}" href="../../css/reporting-styles.css" />
-		<link rel="stylesheet" th:href="@{schueler/listen/SchuelerListeKontaktdatenErzieher.css}" href="../../schueler/listen/SchuelerListeKontaktdatenErzieher.css" />
+	<!-- querformat verwenden, wenn Erzieher plus eine weitere Datenart (Telefon, EMail, Kontakte) dargestellt werden sollen. -->
+	<head th:replace="~{fragments/reportHtmlHead :: htmlHead(
+		title='Schülerliste mit Kontaktdaten und Erziehern der Schülerinnen und Schüler',
+		htmlTemplatePfad=${Parameter.htmlTemplateDefinition().getPfadHtmlTemplate()},
+		namePageCSS='reporting-A4' + (${querformat} ? '-quer' : '-hoch') + (${duplex} ? '-duplex' : '') + '.css')}">
+		<title></title>
 	</head>
 
-	<body th:with="mediaPrint = ${Parameter.ausgabeformat >= 2},
-				   schuljahr = ${Schule.auswahlSchuljahresabschnitt().schuljahr()},
+	<body th:with="schuljahr = ${Schule.auswahlSchuljahresabschnitt().schuljahr()},
 				   mitSchuelerKlasse = ${VorlageParameter.get('mitSchuelerKlasse')},
 				   nurSchuelerRufname = ${VorlageParameter.get('nurSchuelerRufname')},
 	               mitSchuelerGeschlecht = ${VorlageParameter.get('mitSchuelerGeschlecht')},
@@ -38,11 +31,9 @@
 	               fallNurAnschriftUndTelefonOderEmail = ${mitSchuelerAnschrift && !mitSpalteSchuelerTelefonKontakte && !mitSpalteErzieher && !(mitSchuelerTelefonPrivat && mitSchuelerEMail) && (mitSchuelerTelefonPrivat || mitSchuelerEMail)}">
 
 	<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
-	<th:block th:if="${mediaPrint}">
-		<div class="pageTopLeft" th:utext="${Schule.bezeichnungSchuleMehrzeiligHtml}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>
-		<div class="pageTopRight" th:utext="'Schülerliste<br/>Schulnummer: ' + ${Schule.schulnummer()}">Schülerliste<br/>Schulnummer: 123456</div>
-		<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')} + ' von ' + ${Benutzer.benutzername()}">Gedruckt am 02.02.2022 von ABC</div>
-		<div class="pageBottomRight"><span class="page-nums-print">Seite </span></div>
+	<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
+	<th:block th:replace="~{fragments/reportPageHeaderFooter :: pageHeaderFooter(
+		headerRight='Schülerliste')}">
 	</th:block>
 	<!--Ende: Definition Seitenköpfe und Seitenfüße -->
 
@@ -54,22 +45,21 @@
 			<col style="width: 58mm;" />    <!-- Telefonkontakte -->
 			<col />          				<!-- Füllt auf 100% der Breite auf. Ist leer im Hochformat oder nimmt Erzieher, Anschrift, E-Mail auf. -->
 		</colgroup>
-
 		<thead>
 		<tr>
-			<td colspan="5">
+			<th colspan="5">
 				<table class="fixed-100 mp-0">
 					<tr>
-						<td class="ta-lb" style="width: 35%; font-size: 13pt; font-weight: bold;">
+						<th class="ta-lb" style="width: 35%; font-size: 13pt; font-weight: bold;">
 							Schülerliste
-						</td>
-						<td class="f-bold ta-rb" style="width: 65%;"></td>
+						</th>
+						<th class="f-bold ta-rb" style="width: 65%;"></th>
 					</tr>
 					<tr>
 						<td colspan="2" class="ta-lb bo-t-grey" style="height: 2mm"></td>
 					</tr>
 				</table>
-			</td>
+			</th>
 		</tr>
 		<tr>
 			<!-- ###### Die Spaltenüberschriften dienen nur der groben Orientierung. Da die Spalten dynamische genutzt werden, um eine möglich geringe Zeilenhöhe zu haben, wird die Beschriftung entsprechend erstellt. -->
@@ -100,12 +90,12 @@
 				<td class="p-tb-05 p-lr-1 bo-b-grey">
 					<table class="fixed-100 mp-0">
 						<tr>
-							<td class="mp-0" th:text="${nurSchuelerRufname ? schueler.nachnameVorname() : schueler.nachnameVornamen()}">
+							<th class="mp-0" th:text="${nurSchuelerRufname ? schueler.nachnameVorname() : schueler.nachnameVornamen()}">
 								Mustermann, Maximilian Moritz
-							</td>
-							<td th:if="mitSchuelerKlasse" class="mp-0 ta-rt" style="width: 7mm" th:text="${mitSchuelerKlasse ? schueler.auswahlLernabschnitt().klasse().kuerzel() : ''}">
+							</th>
+							<th th:if="mitSchuelerKlasse" class="mp-0 ta-rt" style="width: 7mm" th:text="${mitSchuelerKlasse ? schueler.auswahlLernabschnitt().klasse().kuerzel() : ''}">
 								06C
-							</td>
+							</th>
 						</tr>
 						<tr th:if="${!fallNurBasisdaten && (mitSchuelerGeschlecht || mitSchuelerGebDat || mitSchuelerStaat)}" >
 							<td th:colspan="${mitSchuelerGeschlecht ? 2 : 1}" class="mp-0 bo-t-grey"
@@ -125,9 +115,9 @@
 				<td class="p-tb-05 p-lr-1 bo-b-grey">
 					<table class="fixed-100 mp-0">
 						<tr th:if="${mitSchuelerTelefonPrivat}">
-							<td	th:utext="${mitSchuelerTelefonPrivat ? (schueler.telefonPrivat() + ((!schueler.telefonPrivat().isEmpty() && !schueler.telefonPrivatMobil().isEmpty()) ? '<br/>' : '') + schueler.telefonPrivatMobil()) : ''}">
+							<th	th:utext="${mitSchuelerTelefonPrivat ? (schueler.telefonPrivat() + ((!schueler.telefonPrivat().isEmpty() && !schueler.telefonPrivatMobil().isEmpty()) ? '<br/>' : '') + schueler.telefonPrivatMobil()) : ''}">
 								01234/567890<br/>0123/4567890
-							</td>
+							</th>
 						</tr>
 						<tr th:if="${mitSchuelerEMail}">
 							<td	th:utext="${(mitSchuelerEmailSchule ? (schueler.emailSchule() + ((!schueler.emailSchule().isEmpty() && mitSchuelerEmailPrivat && !schueler.emailPrivat().isEmpty()) ? '<br/>' : '')) : '') + (mitSchuelerEmailPrivat ? schueler.emailPrivat() : '')}">
@@ -145,12 +135,12 @@
 					<td class="p-tb-05 p-lr-1 bo-b-grey">
 						<table class="fixed-100 mp-0">
 							<tr>
-								<td class="mp-0" th:text="${nurSchuelerRufname ? schueler.nachnameVorname() : schueler.nachnameVornamen()}">
+								<th class="mp-0" th:text="${nurSchuelerRufname ? schueler.nachnameVorname() : schueler.nachnameVornamen()}">
 									Mustermann, Maximilian Moritz
-								</td>
-								<td th:if="mitSchuelerKlasse" class="mp-0 ta-rt" style="width: 7mm" th:text="${mitSchuelerKlasse ? schueler.auswahlLernabschnitt().klasse().kuerzel() : ''}">
+								</th>
+								<th th:if="mitSchuelerKlasse" class="mp-0 ta-rt" style="width: 7mm" th:text="${mitSchuelerKlasse ? schueler.auswahlLernabschnitt().klasse().kuerzel() : ''}">
 									06C
-								</td>
+								</th>
 							</tr>
 							<tr th:if="${!fallNurBasisdaten && (mitSchuelerGeschlecht || mitSchuelerGebDat || mitSchuelerStaat)}" >
 								<td th:colspan="${mitSchuelerGeschlecht ? 2 : 1}" class="mp-0 bo-t-grey"
@@ -189,12 +179,12 @@
 					<td class="p-tb-05 p-lr-1 bo-b-grey">
 						<table class="fixed-100 mp-0">
 							<tr>
-								<td class="mp-0" th:text="${nurSchuelerRufname ? schueler.nachnameVorname() : schueler.nachnameVornamen()}">
+								<th class="mp-0" th:text="${nurSchuelerRufname ? schueler.nachnameVorname() : schueler.nachnameVornamen()}">
 									Mustermann, Maximilian Moritz
-								</td>
-								<td th:if="mitSchuelerKlasse" class="mp-0 ta-rt" style="width: 7mm" th:text="${mitSchuelerKlasse ? schueler.auswahlLernabschnitt().klasse().kuerzel() : ''}">
+								</th>
+								<th th:if="mitSchuelerKlasse" class="mp-0 ta-rt" style="width: 7mm" th:text="${mitSchuelerKlasse ? schueler.auswahlLernabschnitt().klasse().kuerzel() : ''}">
 									06C
-								</td>
+								</th>
 							</tr>
 							<tr th:if="${mitSchuelerGeschlecht || mitSchuelerGebDat || mitSchuelerStaat}" >
 								<td th:colspan="${mitSchuelerGeschlecht ? 2 : 1}" class="mp-0 bo-t-grey"
@@ -220,9 +210,9 @@
 					<td class="p-tb-05 p-lr-1 bo-b-grey">
 						<table class="fixed-100 mp-0">
 							<tr th:if="mitSchuelerTelefonPrivat">
-								<td class="mp-0" th:utext="${mitSchuelerTelefonPrivat ? (schueler.telefonPrivat() + ((!schueler.telefonPrivat().isEmpty() && !schueler.telefonPrivatMobil().isEmpty()) ? '<br/>' : '') + schueler.telefonPrivatMobil()) : ''}">
+								<th class="mp-0" th:utext="${mitSchuelerTelefonPrivat ? (schueler.telefonPrivat() + ((!schueler.telefonPrivat().isEmpty() && !schueler.telefonPrivatMobil().isEmpty()) ? '<br/>' : '') + schueler.telefonPrivatMobil()) : ''}">
 									01234/567890<br/>0123/4567890
-								</td>
+								</th>
 							</tr>
 							<!-- Wenn keine weiteren Daten gefordert werden, schiebe die E-Adressen in die nächste Spalte -->
 							<tr th:if="${!mitSchuelerTelefonPrivat || (mitSchuelerTelefonPrivat && (notwendigeSpaltenFlag != 1))}">
@@ -239,9 +229,9 @@
 					<td class="p-tb-05 p-lr-1 bo-b-grey">
 						<table class="fixed-100 mp-0">
 							<tr>
-								<td class="mp-0" th:utext="${(mitSchuelerEmailSchule ? (schueler.emailSchule() + ((!schueler.emailSchule().isEmpty() && mitSchuelerEmailPrivat && !schueler.emailPrivat().isEmpty()) ? '<br/>' : '')) : '') + (mitSchuelerEmailPrivat ? schueler.emailPrivat() : '')}">
+								<th class="mp-0" th:utext="${(mitSchuelerEmailSchule ? (schueler.emailSchule() + ((!schueler.emailSchule().isEmpty() && mitSchuelerEmailPrivat && !schueler.emailPrivat().isEmpty()) ? '<br/>' : '')) : '') + (mitSchuelerEmailPrivat ? schueler.emailPrivat() : '')}">
 									maximilian.mustermann@s.deineschule.de<br/>maxi.musti@birne.com
-								</td>
+								</th>
 							</tr>
 						</table>
 					</td>
@@ -252,8 +242,8 @@
 					<td class="p-tb-05 p-lr-1 bo-b-grey">
 						<table class="fixed-100 mp-0">
 							<tr th:each="telefonkontakt,iterationVarTelefonkontakt : ${schueler.telefonKontakte()}" th:if="${!telefonkontakt.istGesperrt()}">
-								<td class="p-tb-0 p-l-0 p-r-1" style="width: 55%" th:text="${(!telefonkontakt.bezeichnung().isEmpty ? telefonkontakt.bezeichnung() : '(unbekannt)') + ':'}">Mutter mobil:</td>
-								<td class="p-tb-0 p-l-1 p-r-0" style="width: 45%" th:text="${telefonkontakt.telefonnummer()}">0123/4567890</td>
+								<th class="p-tb-0 p-l-0 p-r-1" style="width: 55%" th:text="${(!telefonkontakt.bezeichnung().isEmpty ? telefonkontakt.bezeichnung() : '(unbekannt)') + ':'}">Mutter mobil:</th>
+								<th class="p-tb-0 p-l-1 p-r-0" style="width: 45%" th:text="${telefonkontakt.telefonnummer()}">0123/4567890</th>
 							</tr>
 						</table>
 					</td>
@@ -266,8 +256,8 @@
 						<table class="fixed-100 mp-0">
 							<th:block th:each="erziehergruppe,iterationVarErzieherGruppe : ${schueler.erzieherArtGruppenOhneVolljaehrigenSchueler()}">
 								<tr>
-									<td class="p-tb-0 p-l-0 p-r-1 bo-b-grey" style="width: 30mm;" th:text="${erziehergruppe.bezeichnung()}">Eltern</td>
-									<td class="p-tb-0 p-l-1 p-r-0 bo-b-grey" th:text="${erziehergruppe.vornameNachnameMitTitel()}">Dr. Erika und Norbert Mustermann</td>
+									<th class="p-tb-0 p-l-0 p-r-1 bo-b-grey" style="width: 30mm;" th:text="${erziehergruppe.bezeichnung()}">Eltern</th>
+									<th class="p-tb-0 p-l-1 p-r-0 bo-b-grey" th:text="${erziehergruppe.vornameNachnameMitTitel()}">Dr. Erika und Norbert Mustermann</th>
 								</tr>
 								<tr th:if="${mitErzieherAnschrift}">
 									<td class="p-tb-0 p-l-0 p-r-1" style="width: 30mm;"></td>

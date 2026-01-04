@@ -67,6 +67,7 @@ import de.svws_nrw.data.stundenplan.DataStundenplanUnterrichtsverteilung;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.parameter.ReportingParameterTypisiert;
 import de.svws_nrw.module.reporting.proxytypes.lehrer.ProxyReportingLehrer;
 import de.svws_nrw.module.reporting.proxytypes.schueler.ProxyReportingSchueler;
 import de.svws_nrw.module.reporting.proxytypes.schueler.erzieher.ProxyReportingErzieherArt;
@@ -102,7 +103,7 @@ public class ReportingRepository {
 	private final DBEntityManager conn;
 
 	/** Einstellungen und Daten zum Steuern der Report-Generierung. */
-	private final ReportingParameter reportingParameter;
+	private final ReportingParameterTypisiert reportingParameterTypisiert;
 
 	/** Logger, der den Ablauf protokolliert und Fehlerdaten sammelt. */
 	private final Logger logger;
@@ -269,7 +270,7 @@ public class ReportingRepository {
 			throw new ApiOperationException(Status.NOT_FOUND,
 					"FEHLER: Es wurden keine Daten Ausgabe im Report für die Initialisierung des Reporting-Repository übergeben.");
 		}
-		this.reportingParameter = reportingParameter;
+		this.reportingParameterTypisiert = new ReportingParameterTypisiert(this, reportingParameter);
 
 		// Ermittle die Daten der Schule. Wenn diese nicht gefunden wird oder sie keinen aktuellen Schuljahresabschnitt besitzt, dann wird ein Fehler geworfen.
 		this.logger.logLn(LogLevel.DEBUG, 8, "Ermittle Stammdaten und Abschnitte der Schule.");
@@ -284,7 +285,7 @@ public class ReportingRepository {
 			}
 
 			idAktuellerSchuljahresabschnitt = this.schulstammdaten.idSchuljahresabschnitt;
-			idAuswahlSchuljahresabschnitt = this.reportingParameter.idSchuljahresabschnitt;
+			idAuswahlSchuljahresabschnitt = this.reportingParameterTypisiert.schuljahresabschnitt().id();
 		} catch (final Exception e) {
 			ReportingExceptionUtils.putStacktraceInLog(
 					"FEHLER: Die Stamm- oder Abschnittsdaten der Schule konnten nicht ermittelt werden oder der Schuljahresabschnitt ist ungültig.",
@@ -461,10 +462,10 @@ public class ReportingRepository {
 	/**
 	 * Einstellungen und Daten zum Steuern der Report-Generierung.
 	 *
-	 * @return Inhalt des Feldes reportingParameter
+	 * @return Inhalt des Feldes reportingParameterTypisiert
 	 */
-	public ReportingParameter reportingParameter() {
-		return reportingParameter;
+	public ReportingParameterTypisiert reportingParameter() {
+		return reportingParameterTypisiert;
 	}
 
 

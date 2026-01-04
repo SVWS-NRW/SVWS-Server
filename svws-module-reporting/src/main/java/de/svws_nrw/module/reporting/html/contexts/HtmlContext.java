@@ -65,11 +65,11 @@ public abstract class HtmlContext<T> {
 		this.reportingRepository = reportingRepository;
 		this.istHauptdatenContext = istHauptdatenContext;
 		if (this.istHauptdatenContext) {
-			this.verwendeStandardsortierung = reportingRepository.reportingParameter().sortierungHauptdaten.verwendeStandardsortierung;
-			setSortierungAttribute(this.reportingRepository.reportingParameter().sortierungHauptdaten.attribute);
+			this.verwendeStandardsortierung = reportingRepository.reportingParameter().sortierungHauptdaten().verwendeStandardsortierung;
+			setSortierungAttribute(this.reportingRepository.reportingParameter().sortierungHauptdaten().attribute);
 		} else {
-			this.verwendeStandardsortierung = reportingRepository.reportingParameter().sortierungDetaildaten.verwendeStandardsortierung;
-			setSortierungAttribute(this.reportingRepository.reportingParameter().sortierungDetaildaten.attribute);
+			this.verwendeStandardsortierung = reportingRepository.reportingParameter().sortierungDetaildaten().verwendeStandardsortierung;
+			setSortierungAttribute(this.reportingRepository.reportingParameter().sortierungDetaildaten().attribute);
 		}
 	}
 

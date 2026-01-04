@@ -47,7 +47,7 @@ public final class HtmlContextKlassen extends HtmlContext<ReportingKlasse> {
 	public HtmlContextKlassen(final ReportingRepository reportingRepository) {
 		super(reportingRepository, true);
 		this.reportingRepository = reportingRepository;
-		erzeugeContextFromIds(this.reportingRepository.reportingParameter().idsHauptdaten);
+		erzeugeContextFromIds(this.reportingRepository.reportingParameter().idsHauptdaten());
 	}
 
 

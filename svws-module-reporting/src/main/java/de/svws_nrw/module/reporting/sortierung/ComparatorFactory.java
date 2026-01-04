@@ -39,7 +39,7 @@ public final class ComparatorFactory {
 			return Optional.empty();
 
 		// Prüfe, ob eine Definition für die Sortierung des angegebenen Typs vorhanden ist.
-		final ReportingSortierungDefinition reportingSortierungDefinition = reportingRepository.reportingParameter().sortierungDefinitionen.stream()
+		final ReportingSortierungDefinition reportingSortierungDefinition = reportingRepository.reportingParameter().sortierungDefinitionen().stream()
 				.filter(d -> typName.equals(d.typ))
 				.findFirst()
 				.orElse(null);

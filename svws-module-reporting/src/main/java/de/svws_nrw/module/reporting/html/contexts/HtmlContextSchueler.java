@@ -39,7 +39,7 @@ public final class HtmlContextSchueler extends HtmlContext<ReportingSchueler> {
 	public HtmlContextSchueler(final ReportingRepository reportingRepository) {
 		super(reportingRepository, true);
 		this.reportingRepository = reportingRepository;
-		erzeugeContextFromIds(this.reportingRepository.reportingParameter().idsHauptdaten);
+		erzeugeContextFromIds(this.reportingRepository.reportingParameter().idsHauptdaten());
 	}
 
 	/**

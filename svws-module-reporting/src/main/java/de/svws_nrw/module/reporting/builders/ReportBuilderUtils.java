@@ -8,6 +8,7 @@ import de.svws_nrw.module.reporting.html.dialects.ConvertExpressionDialect;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.templatemode.TemplateMode;
+import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import org.thymeleaf.templateresolver.StringTemplateResolver;
 
 /**
@@ -28,13 +29,25 @@ public final class ReportBuilderUtils {
 	 * @return TemplateEngine mit dem angegebenen Mode
 	 */
 	private static TemplateEngine createTemplateEngine(final TemplateMode templateMode) {
-		final StringTemplateResolver resolver = new StringTemplateResolver();
-		resolver.setTemplateMode(templateMode);
+		final ClassLoaderTemplateResolver classLoaderResolver = new ClassLoaderTemplateResolver();
+		classLoaderResolver.setTemplateMode(templateMode);
+		classLoaderResolver.setPrefix("de/svws_nrw/module/reporting/");
+		classLoaderResolver.setSuffix((templateMode == TemplateMode.HTML) ? ".html" : "");
+		classLoaderResolver.setCharacterEncoding("UTF-8");
+		classLoaderResolver.setOrder(1);
+		classLoaderResolver.setCheckExistence(true);
+
+		final StringTemplateResolver stringResolver = new StringTemplateResolver();
+		stringResolver.setTemplateMode(templateMode);
+		stringResolver.setOrder(2);
+
 		final TemplateEngine engine = new TemplateEngine();
-		engine.setTemplateResolver(resolver);
+		engine.addTemplateResolver(classLoaderResolver);
+		engine.addTemplateResolver(stringResolver);
 		engine.addDialect(new ConvertExpressionDialect());
 		return engine;
 	}
+
 
 	/**
 	 * Erstellt eine TemplateEngine für HTML-Report-Templates.
