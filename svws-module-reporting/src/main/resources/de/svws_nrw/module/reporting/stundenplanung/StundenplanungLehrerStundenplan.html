@@ -75,7 +75,7 @@
 											<th:block th:each="pausenaufsicht,iterationvarPausenaufsicht : ${pausenaufsichten}">
 												<tr>
 													<th class="f-tiny ta-lm"></th>
-													<th colspan="3" class="f-tiny f-bold ta-cm c-lightgrey" th:classappend="${!iterationvarPausenaufsicht.first ? ' bo-t-grey' : ''}" th:text="${pausenaufsicht.aufsichtsbereichKuerzel()}">Mensa</th>
+													<th colspan="3" class="f-tiny f-bold ta-cm bg-lightgrey" th:classappend="${!iterationvarPausenaufsicht.first ? ' bo-t-grey' : ''}" th:text="${pausenaufsicht.aufsichtsbereichKuerzel()}">Mensa</th>
 													<th class="f-tiny ta-rm"></th>
 												</tr>
 											</th:block>
@@ -117,7 +117,7 @@
 										<th:block th:if="${mitPausenaufsichten}" th:each="pausenaufsicht,iterationvarPausenaufsicht : ${pausenaufsichten}">
 											<tr>
 												<td class="f-tiny f-bold ta-lm"></td>
-												<td colspan="3" class="f-tiny f-bold ta-cm c-lightgrey" th:classappend="${(!iterationvarPausenaufsicht.first || unterrichte.size() > 0) ? ' bo-t-grey' : ''}" th:text="${pausenaufsicht.aufsichtsbereichKuerzel()}">Mensa</td>
+												<td colspan="3" class="f-tiny f-bold ta-cm bg-lightgrey" th:classappend="${(!iterationvarPausenaufsicht.first || unterrichte.size() > 0) ? ' bo-t-grey' : ''}" th:text="${pausenaufsicht.aufsichtsbereichKuerzel()}">Mensa</td>
 												<td class="f-tiny f-bold ta-rm"></td>
 											</tr>
 										</th:block>

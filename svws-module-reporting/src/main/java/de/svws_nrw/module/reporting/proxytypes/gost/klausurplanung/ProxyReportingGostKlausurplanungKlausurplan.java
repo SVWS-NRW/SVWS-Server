@@ -126,8 +126,7 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 		// 7. Sortiere alle Schülerklausuren, sowohl in der Gesamtliste als auch bei den Kursklausuren.
 		final Optional<Comparator<ReportingGostKlausurplanungSchuelerklausur>> optionalComparator =
 				ComparatorFactory.buildOptionalComparator(this.reportingRepository, ReportingGostKlausurplanungSchuelerklausur.class.getSimpleName(),
-						SortierungRegistryReportingGostKlausurplanungSchuelerklausur.sortierungRegistry(),
-						SortierungRegistryReportingGostKlausurplanungSchuelerklausur.standardsortierung());
+						SortierungRegistryReportingGostKlausurplanungSchuelerklausur.sortierungRegistry());
 
 		if (optionalComparator.isPresent()) {
 			super.schuelerklausuren.sort(optionalComparator.get());

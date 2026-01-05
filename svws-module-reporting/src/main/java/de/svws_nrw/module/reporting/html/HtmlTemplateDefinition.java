@@ -95,6 +95,13 @@ public enum HtmlTemplateDefinition {
 			"Kurs-Liste-Schueler-Kontaktdaten-Erzieher",
 			List.of(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)),
 
+	/** Report-Vorlage: Klasse - Liste - Schüler - Leistungsdaten */
+	KLASSEN_V_LISTE_SCHUELER_LEISTUNGSDATEN(
+			HauptdatenContextDefinition.KLASSEN,
+			"klassen/leistungsdaten/KlasseListeSchuelerLeistungsdaten.html",
+			"Klassen-Liste-Schueler-Leistungsdaten",
+			List.of(BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN)),
+
 	/** Report-Vorlage: Kurs - Liste - Schüler - Leistungsdaten */
 	KURSE_V_LISTE_SCHUELER_LEISTUNGSDATEN(
 			HauptdatenContextDefinition.KURSE,

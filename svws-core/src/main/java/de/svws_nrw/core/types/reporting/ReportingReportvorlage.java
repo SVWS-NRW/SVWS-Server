@@ -57,6 +57,23 @@ public enum ReportingReportvorlage {
 			erzeugeVorlageParameter("mitErzieherAnschrift", "mit Erzieher-Anschrift", ReportingVorlageParameterTyp.BOOLEAN, "false"),
 			erzeugeVorlageParameter("mitErzieherEmailPrivat", "mit Erzieher-E-Mail", ReportingVorlageParameterTyp.BOOLEAN, "false"))),
 
+	/** Report-Vorlage: Klasse - Liste - Schüler - Leistungsdaten */
+	KLASSEN_V_LISTE_SCHUELER_LEISTUNGSDATEN("Klasse-Liste-Schueler-Leistungsdaten", Arrays.asList(
+			erzeugeVorlageParameter("mitGesamtfehlstunden", "mit Gesamtfehlstunden", ReportingVorlageParameterTyp.BOOLEAN, "true"),
+			erzeugeVorlageParameter("mitIndividuellerKursart", "mit individueller Kursart", ReportingVorlageParameterTyp.BOOLEAN, "false"),
+			erzeugeVorlageParameter("mitPunktenStattNoten", "Punkte statt Noten ausgeben", ReportingVorlageParameterTyp.BOOLEAN, "false"),
+			erzeugeVorlageParameter("mitQuartalsnote", "Quartalsnoten statt Noten ausgeben", ReportingVorlageParameterTyp.BOOLEAN, "false"),
+			erzeugeVorlageParameter("mitFachbezogenenFehlstunden", "mit fachbezogenen Fehlstunden", ReportingVorlageParameterTyp.BOOLEAN, "false"),
+			erzeugeVorlageParameter("mitFachbezogenenBemerkungen", "mit fachbezogenen Bemerkungen", ReportingVorlageParameterTyp.BOOLEAN, "false"),
+			erzeugeVorlageParameter("mitLernentwicklung", "mit Angabe zur Lernentwicklung", ReportingVorlageParameterTyp.BOOLEAN, "false"),
+			erzeugeVorlageParameter("mitFoerderschwerpunkt", "mit Angaben zum Förderschwerpunkt", ReportingVorlageParameterTyp.BOOLEAN, "false"),
+			erzeugeVorlageParameter("mitASVBemerkung", "mit ASV-Bemerkungen", ReportingVorlageParameterTyp.BOOLEAN, "false"),
+			erzeugeVorlageParameter("mitAUEBemerkung", "mit AUE-Bemerkungen", ReportingVorlageParameterTyp.BOOLEAN, "false"),
+			erzeugeVorlageParameter("mitZeugnisbemerkung", "mit Zeugnisbemerkungen", ReportingVorlageParameterTyp.BOOLEAN, "false"),
+			erzeugeVorlageParameter("mitSchulformempfehlung", "mit Empfehlung der Schulform", ReportingVorlageParameterTyp.BOOLEAN, "false"),
+			erzeugeVorlageParameter("mitVersetzungAbschluss", "mit Versetzung und Abschluss", ReportingVorlageParameterTyp.BOOLEAN, "false"),
+			erzeugeVorlageParameter("mitVersetzungsentscheidung", "mit Text zur Versetzungsentscheidung", ReportingVorlageParameterTyp.BOOLEAN, "false"))),
+
 	/** Report-Vorlage: Kurs - Liste - Schüler - Kontaktdaten - Erzieher */
 	KURSE_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER("Kurs-Liste-Schueler-Kontaktdaten-Erzieher", Arrays.asList(
 			erzeugeVorlageParameter("mitSchuelerKlasse", "mit Klasse", ReportingVorlageParameterTyp.BOOLEAN, "false"),
@@ -75,13 +92,15 @@ public enum ReportingReportvorlage {
 
 	/** Report-Vorlage: Kurs - Liste - Schüler - Leistungsdaten */
 	KURSE_V_LISTE_SCHUELER_LEISTUNGSDATEN("Kurs-Liste-Schueler-Leistungsdaten", Arrays.asList(
-			erzeugeVorlageParameter("mitBemerkungen", "mit Bemerkungen", ReportingVorlageParameterTyp.BOOLEAN, "false"))),
+			erzeugeVorlageParameter("mitPunktenStattNoten", "Punkte statt Noten ausgeben", ReportingVorlageParameterTyp.BOOLEAN, "false"),
+			erzeugeVorlageParameter("mitBemerkungen", "mit fachbezogenen Bemerkungen", ReportingVorlageParameterTyp.BOOLEAN, "false"))),
 
 	/** Report-Vorlage: Lehrer - Liste - Schüler - Leistungsdaten */
 	LEHRER_V_LISTE_SCHUELER_LEISTUNGSDATEN("Lehrer-Liste-Schueler-Leistungsdaten", Arrays.asList(
 			erzeugeVorlageParameter("mitKlassenunterricht", "mit Klassenunterricht", ReportingVorlageParameterTyp.BOOLEAN, "true"),
 			erzeugeVorlageParameter("mitKursunterricht", "mit Kursunterricht", ReportingVorlageParameterTyp.BOOLEAN, "true"),
-			erzeugeVorlageParameter("mitBemerkungen", "mit Bemerkungen", ReportingVorlageParameterTyp.BOOLEAN, "false"))),
+			erzeugeVorlageParameter("mitPunktenStattNoten", "Punkte statt Noten ausgeben", ReportingVorlageParameterTyp.BOOLEAN, "false"),
+			erzeugeVorlageParameter("mitBemerkungen", "mit fachbezogenen Bemerkungen", ReportingVorlageParameterTyp.BOOLEAN, "false"))),
 
 	/** Report-Vorlage: Lehrer - Stammdaten - Liste */
 	LEHRER_V_STAMMDATENLISTE("Lehrer-Stammdatenliste", new ArrayList<>()),

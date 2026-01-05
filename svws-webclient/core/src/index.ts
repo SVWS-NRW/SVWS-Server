@@ -645,6 +645,9 @@ export { LernplattformV1Login } from './core/data/lernplattform/v1/Lernplattform
 export { LernplattformV1Schueler } from './core/data/lernplattform/v1/LernplattformV1Schueler';
 export { OAuth2ClientConnection } from './core/data/oauth2/OAuth2ClientConnection';
 export { ReportingEMailDaten } from './core/data/reporting/ReportingEMailDaten';
+export { ReportingFilterDefinition } from './core/data/reporting/ReportingFilterDefinition';
+export { ReportingFilterEintrag } from './core/data/reporting/ReportingFilterEintrag';
+export { ReportingFilterKriterium } from './core/data/reporting/ReportingFilterKriterium';
 export { ReportingParameter } from './core/data/reporting/ReportingParameter';
 export { ReportingSortierungDefinition } from './core/data/reporting/ReportingSortierungDefinition';
 export { ReportingVorlageParameter } from './core/data/reporting/ReportingVorlageParameter';
@@ -837,6 +840,8 @@ export { GostKursblockungRegelTyp } from './core/types/kursblockung/GostKursbloc
 export { OAuth2ServerTyp } from './core/types/oauth2/OAuth2ServerTyp';
 export { ReportingAusgabeformat } from './core/types/reporting/ReportingAusgabeformat';
 export { ReportingEMailEmpfaengerTyp } from './core/types/reporting/ReportingEMailEmpfaengerTyp';
+export { ReportingFilterOperation } from './core/types/reporting/ReportingFilterOperation';
+export { ReportingFilterVerknuepfung } from './core/types/reporting/ReportingFilterVerknuepfung';
 export { ReportingReportvorlage } from './core/types/reporting/ReportingReportvorlage';
 export { ReportingVorlageParameterTyp } from './core/types/reporting/ReportingVorlageParameterTyp';
 export { SchildReportingAttributTyp } from './core/types/schild3/SchildReportingAttributTyp';

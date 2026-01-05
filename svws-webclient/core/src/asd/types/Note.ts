@@ -595,6 +595,48 @@ export class Note extends JavaEnum<Note> implements CoreType<NoteKatalogEintrag,
 	}
 
 	/**
+	 * Gibt die Note als Kürzel wie '3+' zurück, z. B. für Leistungsdatenübersichten.
+	 *
+	 * @param schuljahr	Schuljahr, für das der Wert abgefragt wird.
+	 *
+	 * @return die Note als Kürzel oder im Fehlerfall null.
+	 */
+	public getNoteKuerzel(schuljahr: number): string | null {
+		const nke: NoteKatalogEintrag | null = this.daten(schuljahr);
+		if (nke === null)
+			return null;
+		return nke.kuerzel;
+	}
+
+	/**
+	 * Gibt die Note in ihrer Textdarstellung zurück, z. B. 'befriedigend (plus)'.
+	 *
+	 * @param schuljahr	Schuljahr, für das der Wert abgefragt wird.
+	 *
+	 * @return die Note in den Textdarstellungen oder im Fehlerfall null.
+	 */
+	public getNoteText(schuljahr: number): string | null {
+		const nke: NoteKatalogEintrag | null = this.daten(schuljahr);
+		if (nke === null)
+			return null;
+		return nke.text;
+	}
+
+	/**
+	 * Gibt die Note als Note ohne Tendenz in ihrer Textdarstellung zurück, z. B. für Zeugnisse.
+	 *
+	 * @param schuljahr	Schuljahr, für das der Wert abgefragt wird.
+	 *
+	 * @return die Note in der Textdarstellung 'sehr gut' bis 'ungenügend' oder im Fehlerfall null.
+	 */
+	public getNoteTextZeugnis(schuljahr: number): string | null {
+		const nke: NoteKatalogEintrag | null = this.daten(schuljahr);
+		if (nke === null)
+			return null;
+		return nke.textZeugnis;
+	}
+
+	/**
 	 * Gibt die Note als Notenpunkte der Sekundarstufe II als zweistelligen String zurück.
 	 *
 	 * @param schuljahr	Schuljahr, für das der Wert abgefragt wird.

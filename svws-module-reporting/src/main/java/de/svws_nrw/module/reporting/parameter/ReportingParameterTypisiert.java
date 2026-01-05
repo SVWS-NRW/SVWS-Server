@@ -3,6 +3,7 @@ package de.svws_nrw.module.reporting.parameter;
 import java.util.List;
 
 import de.svws_nrw.core.data.reporting.ReportingEMailDaten;
+import de.svws_nrw.core.data.reporting.ReportingFilterDefinition;
 import de.svws_nrw.core.data.reporting.ReportingParameter;
 import de.svws_nrw.core.data.reporting.ReportingSortierungDefinition;
 import de.svws_nrw.core.data.reporting.ReportingVorlageParameter;
@@ -148,6 +149,15 @@ public class ReportingParameterTypisiert {
 	 */
 	public List<ReportingSortierungDefinition> sortierungDefinitionen() {
 		return reportingParameter.sortierungDefinitionen;
+	}
+
+	/**
+	 * Gibt die Liste der Filterdefinitionen zurück.
+	 *
+	 * @return die Liste der Filterdefinitionen
+	 */
+	public List<ReportingFilterDefinition> filterDefinitionen() {
+		return reportingParameter.filterDefinitionen;
 	}
 
 	/**

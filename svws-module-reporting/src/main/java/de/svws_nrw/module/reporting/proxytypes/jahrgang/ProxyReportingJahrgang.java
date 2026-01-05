@@ -138,7 +138,7 @@ public class ProxyReportingJahrgang extends ReportingJahrgang {
 		if (super.schueler().isEmpty()) {
 			final Optional<Comparator<ReportingSchueler>> optionalComparator =
 					ComparatorFactory.buildOptionalComparator(this.reportingRepository, ReportingSchueler.class.getSimpleName(),
-							SortierungRegistryReportingSchueler.sortierungRegistry(), SortierungRegistryReportingSchueler.standardsortierung());
+							SortierungRegistryReportingSchueler.sortierungRegistry());
 			super.schueler = optionalComparator.map(
 					reportingSchuelerComparator -> klassen().stream().flatMap(k -> k.schueler().stream()).sorted(reportingSchuelerComparator).toList())
 					.orElseGet(() -> klassen().stream().flatMap(k -> k.schueler().stream()).toList());

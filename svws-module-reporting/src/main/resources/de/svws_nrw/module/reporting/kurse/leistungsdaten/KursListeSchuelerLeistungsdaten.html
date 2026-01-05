@@ -64,7 +64,7 @@
 						<td class="head-small-grey">Klasse</td>
 						<td class="head-small-grey">Art</td>
 						<td class="head-small-grey ta-c">Quartal</td>
-						<td class="head-small-grey ta-c">Note</td>
+						<td class="head-small-grey ta-c" th:text="${VorlageParameter.get('mitPunktenStattNoten') ? 'Punkte' : 'Note'}">Note</td>
 						<td class="head-small-grey ta-c">Mahnung</td>
 						<td class="head-small-grey ta-r">FS</td>
 						<td class="head-small-grey ta-r">FSU</td>
@@ -80,8 +80,8 @@
 						<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${schueler.nachnameVorname()}">Mustermann, Max</td>
 						<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${schueler.auswahlLernabschnitt().klasse().kuerzel()}">10a</td>
 						<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${leistungsdaten.kursart()}">GKM</td>
-						<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-c" th:text="${leistungsdaten.noteQuartal()}">3+</td>
-						<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-c" th:text="${leistungsdaten.note()}">2-</td>
+						<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-c" th:text="${VorlageParameter.get('mitPunktenStattNoten') ? leistungsdaten.noteQuartalPunkte() : leistungsdaten.noteQuartalKuerzel()}">3+</td>
+						<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-c" th:text="${VorlageParameter.get('mitPunktenStattNoten') ? leistungsdaten.notePunkte() : leistungsdaten.noteKuerzel()}">2-</td>
 						<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-c" th:text="${leistungsdaten.istGemahnt()} ? 'ja' : ''">ja</td>
 						<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-r" th:text="${leistungsdaten.fehlstundenGesamt()}">25</td>
 						<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-r" th:text="${leistungsdaten.fehlstundenUnentschuldigt()}">5</td>

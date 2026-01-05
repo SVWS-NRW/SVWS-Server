@@ -383,6 +383,48 @@ public enum Note implements @NotNull CoreType<NoteKatalogEintrag, Note> {
 	}
 
 	/**
+	 * Gibt die Note als Kürzel wie '3+' zurück, z. B. für Leistungsdatenübersichten.
+	 *
+	 * @param schuljahr	Schuljahr, für das der Wert abgefragt wird.
+	 *
+	 * @return die Note als Kürzel oder im Fehlerfall null.
+	 */
+	public String getNoteKuerzel(final int schuljahr) {
+		final NoteKatalogEintrag nke = this.daten(schuljahr);
+		if (nke == null)
+			return null;
+		return nke.kuerzel;
+	}
+
+	/**
+	 * Gibt die Note in ihrer Textdarstellung zurück, z. B. 'befriedigend (plus)'.
+	 *
+	 * @param schuljahr	Schuljahr, für das der Wert abgefragt wird.
+	 *
+	 * @return die Note in den Textdarstellungen oder im Fehlerfall null.
+	 */
+	public String getNoteText(final int schuljahr) {
+		final NoteKatalogEintrag nke = this.daten(schuljahr);
+		if (nke == null)
+			return null;
+		return nke.text;
+	}
+
+	/**
+	 * Gibt die Note als Note ohne Tendenz in ihrer Textdarstellung zurück, z. B. für Zeugnisse.
+	 *
+	 * @param schuljahr	Schuljahr, für das der Wert abgefragt wird.
+	 *
+	 * @return die Note in der Textdarstellung 'sehr gut' bis 'ungenügend' oder im Fehlerfall null.
+	 */
+	public String getNoteTextZeugnis(final int schuljahr) {
+		final NoteKatalogEintrag nke = this.daten(schuljahr);
+		if (nke == null)
+			return null;
+		return nke.textZeugnis;
+	}
+
+	/**
 	 * Gibt die Note als Notenpunkte der Sekundarstufe II als zweistelligen String zurück.
 	 *
 	 * @param schuljahr	Schuljahr, für das der Wert abgefragt wird.

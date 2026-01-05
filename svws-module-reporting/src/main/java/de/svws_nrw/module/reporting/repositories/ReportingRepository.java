@@ -1,5 +1,6 @@
 package de.svws_nrw.module.reporting.repositories;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -8,6 +9,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.klassen.KlassenDaten;
@@ -28,11 +30,13 @@ import de.svws_nrw.core.data.kataloge.OrtKatalogEintrag;
 import de.svws_nrw.core.data.kataloge.OrtsteilKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.data.kataloge.SchulEintrag;
+import de.svws_nrw.core.data.reporting.ReportingFilterDefinition;
 import de.svws_nrw.core.data.reporting.ReportingParameter;
 import de.svws_nrw.asd.data.schueler.SchuelerLeistungsdaten;
 import de.svws_nrw.asd.data.schueler.SchuelerLernabschnittsdaten;
 import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.asd.data.schueler.Sprachbelegung;
+import de.svws_nrw.core.data.reporting.ReportingSortierungDefinition;
 import de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag;
 import de.svws_nrw.core.data.schule.ReligionEintrag;
 import de.svws_nrw.core.data.schule.Telefonart;
@@ -67,6 +71,7 @@ import de.svws_nrw.data.stundenplan.DataStundenplanUnterrichtsverteilung;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.filterung.FilterRegistry;
 import de.svws_nrw.module.reporting.parameter.ReportingParameterTypisiert;
 import de.svws_nrw.module.reporting.proxytypes.lehrer.ProxyReportingLehrer;
 import de.svws_nrw.module.reporting.proxytypes.schueler.ProxyReportingSchueler;
@@ -939,7 +944,7 @@ public class ReportingRepository {
 	public List<ReportingLehrer> lehrer(final List<Long> idsLehrer, final boolean sortiereListe) {
 		final Optional<Comparator<ReportingLehrer>> optionalComparator = sortiereListe
 				? ComparatorFactory.buildOptionalComparator(this, ReportingLehrer.class.getSimpleName(),
-						SortierungRegistryReportingLehrer.sortierungRegistry(), SortierungRegistryReportingLehrer.standardsortierung())
+						SortierungRegistryReportingLehrer.sortierungRegistry())
 				: Optional.empty();
 
 		return erstelleReportingListe(idsLehrer, mapLehrerStammdaten, mapLehrer,
@@ -1025,7 +1030,7 @@ public class ReportingRepository {
 	public List<ReportingSchueler> schueler(final List<Long> idsSchueler, final boolean sortiereListe) {
 		final Optional<Comparator<ReportingSchueler>> optionalComparator = sortiereListe
 				? ComparatorFactory.buildOptionalComparator(this, ReportingSchueler.class.getSimpleName(),
-						SortierungRegistryReportingSchueler.sortierungRegistry(), SortierungRegistryReportingSchueler.standardsortierung())
+						SortierungRegistryReportingSchueler.sortierungRegistry())
 				: Optional.empty();
 
 		return erstelleReportingListe(idsSchueler, mapSchuelerStammdaten, mapSchueler,
@@ -1208,6 +1213,131 @@ public class ReportingRepository {
 		if (stammdaten instanceof final SchuelerStammdaten s)
 			return s.id;
 		return null;
+	}
+
+
+	// ##### Hilfsmethoden, um die Sortierungsattribute aus den Reporting-Parametern zu laden und aufbereitet für eine Klasse zurückzugeben. #####
+
+	/**
+	 * Ermittelt die Sortierattribute für einen bestimmten Typ aus den Reporting-Parametern. Dabei werden die Attribute bereinigt (Leerzeichen, Klammern).
+	 * Falls keine benutzerdefinierte Sortierung vorliegt oder die Standardsortierung gewählt wurde, wird (je nach Parameter) die im System für diesen Typ
+	 * definierte Standardsortierung zurückgegeben.
+	 *
+	 * @param typ                                Der Name des Typs (z. B. "ReportingSchueler"), welcher bspw. über class.getSimpleName() ermittelt werden kann.
+	 * @param nutzeStandardsortierungAlsFallback Gibt an, ob die Standardsortierung bei fehlenden/fehlerhaften Attributen geladen werden soll.
+	 *
+	 * @return Eine Liste der bereinigten Attributnamen.
+	 */
+	public List<String> getSortierungsAttribute(final String typ, final boolean nutzeStandardsortierungAlsFallback) {
+		ReportingSortierungDefinition reportingSortierungDefinition =
+				((this.reportingParameterTypisiert == null) || (this.reportingParameterTypisiert.sortierungDefinitionen() == null))
+						? null
+						: this.reportingParameterTypisiert.sortierungDefinitionen().stream()
+								.filter(d -> (d != null) && Objects.equals(typ, d.typ))
+								.findFirst()
+								.orElse(null);
+
+		// Falls keine typspezifische Definition in den Sortierdefinitionen gefunden wurde, prüfe die Haupt- oder Detailsortierung als Fallback.
+		if ((reportingSortierungDefinition == null) && (this.reportingParameterTypisiert != null)) {
+			if (Objects.equals(typ, this.reportingParameterTypisiert.sortierungHauptdaten().typ))
+				reportingSortierungDefinition = this.reportingParameterTypisiert.sortierungHauptdaten();
+			else if (Objects.equals(typ, this.reportingParameterTypisiert.sortierungDetaildaten().typ))
+				reportingSortierungDefinition = this.reportingParameterTypisiert.sortierungDetaildaten();
+		}
+
+		// 1. Fall: Es gibt eine explizite benutzerdefinierte Sortierung mit vorhandenen Attributen
+		if ((reportingSortierungDefinition != null) && Boolean.FALSE.equals(reportingSortierungDefinition.verwendeStandardsortierung)
+				&& (reportingSortierungDefinition.attribute != null) && !reportingSortierungDefinition.attribute.isEmpty()) {
+			return reportingSortierungDefinition.attribute.stream()
+					.filter(Objects::nonNull)
+					.map(sa -> sa.replace("()", "").trim())
+					.filter(sa -> !sa.isBlank())
+					.toList();
+		}
+
+		// 2. Fall: Es besteht der explizite Wunsch nach Standardsortierung in den Parametern ODER Fallback bei fehlender Definition
+		if (((reportingSortierungDefinition != null) && Boolean.TRUE.equals(reportingSortierungDefinition.verwendeStandardsortierung))
+				|| ((reportingSortierungDefinition == null) && nutzeStandardsortierungAlsFallback))
+			return getStandardsortierungByTyp(typ);
+
+		// 3. Fall: Keine Sortierung gewünscht oder zulässig
+		return new ArrayList<>();
+	}
+
+	/**
+	 * Eine Hilfsmethode, um die Standardsortierung eines Typs automatisch aus der zuständigen Registry zu laden. Nutzt Reflection, um die statische Methode
+	 * 'standardsortierung()' der Klasse 'de.svws_nrw.module.reporting.sortierung.SortierungRegistry<Typ>' aufzurufen.
+	 *
+	 * @param typ Der Name des Reporting-Typs (z. B. "ReportingSchueler"), welcher bspw. über class.getSimpleName() ermittelt werden kann.
+	 *
+	 * @return Die Liste der Standard-Sortierattribute oder eine leere Liste, falls keine Registry gefunden wurde.
+	 */
+	@SuppressWarnings("unchecked")
+	private List<String> getStandardsortierungByTyp(final String typ) {
+		if ((typ == null) || typ.isBlank())
+			return new ArrayList<>();
+		try {
+			final String className = "de.svws_nrw.module.reporting.sortierung.SortierungRegistry" + typ;
+			final Class<?> clazz = Class.forName(className);
+			final Method method = clazz.getMethod("standardsortierung");
+			return (List<String>) method.invoke(null);
+		} catch (final Exception e) {
+			// Falls keine Registry oder Methode existiert, wird ein Hinweis geloggt und eine leere Liste geliefert.
+			this.logger.logLn(LogLevel.DEBUG, 8, "### HINWEIS: Keine SortierungRegistry oder Standardsortierung für Typ '" + typ + "' gefunden.");
+			return new ArrayList<>();
+		}
+	}
+
+	/**
+	 * Erstellt einen Filter (Predicate) für einen bestimmten Typ basierend auf den Filterdefinitionen in den Reporting-Parametern.
+	 *
+	 * @param <T>                Der Typ der zu filternden Objekte.
+	 * @param typ                Der Name des Typs (z. B. "ReportingFach"), welcher bspw. über class.getSimpleName() ermittelt werden kann.
+	 * @param validierungsfehler Eine Liste, in der unbekannte Attribute während der Filtererstellung gesammelt werden (darf null sein).
+	 *
+	 * @return Ein {@link Predicate}, das die Filterkriterien anwendet. Falls keine Definition vorhanden ist, wird ein Filter zurückgegeben, der alles akzeptiert.
+	 */
+	public <T> Predicate<T> getFilter(final String typ, final List<String> validierungsfehler) {
+		final ReportingFilterDefinition reportingFilterDefinition =
+				((this.reportingParameterTypisiert == null) || (this.reportingParameterTypisiert.filterDefinitionen() == null) || this.reportingParameterTypisiert.filterDefinitionen().isEmpty())
+						? null
+						: this.reportingParameterTypisiert.filterDefinitionen().stream()
+								.filter(d -> (d != null) && Objects.equals(typ, d.typ))
+								.findFirst()
+								.orElse(null);
+
+		if (reportingFilterDefinition == null)
+			return t -> true;
+
+		final FilterRegistry<T> registry = getFilterRegistryByTyp(typ);
+		if (registry == null)
+			return t -> true;
+
+		return registry.erstelleFilter(reportingFilterDefinition, validierungsfehler);
+	}
+
+	/**
+	 * Eine Hilfsmethode, um die FilterRegistry eines Typs automatisch zu laden. Nutzt Reflection, um die statische Methode
+	 * 'filterRegistry()' der Klasse 'de.svws_nrw.module.reporting.filterung.FilterRegistry<Typ>' aufzurufen.
+	 *
+	 * @param <T> Der Typ der Registry.
+	 * @param typ Der Name des Reporting-Typs (z. B. "ReportingFach").
+	 *
+	 * @return Die FilterRegistry oder null, falls keine gefunden wurde.
+	 */
+	@SuppressWarnings("unchecked")
+	private <T> FilterRegistry<T> getFilterRegistryByTyp(final String typ) {
+		if ((typ == null) || typ.isBlank())
+			return null;
+		try {
+			final String className = "de.svws_nrw.module.reporting.filterung.FilterRegistry" + typ;
+			final Class<?> clazz = Class.forName(className);
+			final Method method = clazz.getMethod("filterRegistry");
+			return (FilterRegistry<T>) method.invoke(null);
+		} catch (final Exception e) {
+			this.logger.logLn(LogLevel.DEBUG, 8, "### HINWEIS: Keine FilterRegistry für Typ '" + typ + "' gefunden.");
+			return null;
+		}
 	}
 
 }

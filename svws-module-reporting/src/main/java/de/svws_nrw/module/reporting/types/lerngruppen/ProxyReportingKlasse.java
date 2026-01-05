@@ -8,6 +8,8 @@ import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.data.jahrgaenge.DataJahrgangsdaten;
 import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ProxyReportingSchuelerLeistungsdatenMatrix;
+import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLeistungsdatenMatrix;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import de.svws_nrw.module.reporting.proxytypes.jahrgang.ProxyReportingJahrgang;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
@@ -164,6 +166,15 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 		return super.jahrgang();
 	}
 
+	/**
+	 * Erstellt eine Leistungsdaten-Matrix für die Schüler dieser Gruppe basierend auf dem Schuljahresabschnitt der Gruppe.
+	 *
+	 * @return Die Leistungsdaten-Matrix für diese Schülergruppe.
+	 */
+	@Override
+	public ReportingSchuelerLeistungsdatenMatrix schuelerLeistungsdatenMatrix() {
+		return new ProxyReportingSchuelerLeistungsdatenMatrix(this.reportingRepository, this.schueler(), this.schuljahresabschnitt());
+	}
 
 	/**
 	 * Stellt eine Liste mit Schülern der Klasse zur Verfügung.

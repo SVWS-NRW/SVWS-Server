@@ -10,6 +10,7 @@ import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
+import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLeistungsdatenMatrix;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLernabschnitt;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 
@@ -32,6 +33,9 @@ public abstract class ReportingSchuelergruppe extends ReportingBaseType {
 
 	/** Die Liste der Lehrer, die die Schülergruppe betreuen (Klassen- oder Kurslehrer). Die erste Lehrkraft wird als Gruppenleitung interpretiert. */
 	protected List<ReportingLehrer> lehrer;
+
+	/** Eine Matrix mit Leistungsdaten für die Schüler der Gruppe basierend auf dem Schuljahresabschnitt. */
+	protected ReportingSchuelerLeistungsdatenMatrix schuelerLeistungsdatenMatrix = null;
 
 	/** Die Liste der Schüler der Schülergruppe. */
 	protected List<ReportingSchueler> schueler;
@@ -260,6 +264,19 @@ public abstract class ReportingSchuelergruppe extends ReportingBaseType {
 		if (listeJahrgaenge.isEmpty())
 			return "";
 		return listeJahrgaenge.stream().filter(Objects::nonNull).map(ReportingJahrgang::kuerzel).collect(Collectors.joining(","));
+	}
+
+
+	/**
+	 * Erstellt eine Leistungsdaten-Matrix für die Schüler dieser Gruppe basierend auf dem Schuljahresabschnitt der Gruppe.
+	 * Es werden die Standardsortierungen für Fächer und Schüler verwendet und alle Fächer einbezogen.
+	 *
+	 * @return Die Leistungsdaten-Matrix für diese Schülergruppe.
+	 */
+	public ReportingSchuelerLeistungsdatenMatrix schuelerLeistungsdatenMatrix() {
+		if (this.schuelerLeistungsdatenMatrix == null)
+			this.schuelerLeistungsdatenMatrix = new ReportingSchuelerLeistungsdatenMatrix(this.schueler(), this.schuljahresabschnitt(), null, null, null);
+		return schuelerLeistungsdatenMatrix;
 	}
 
 

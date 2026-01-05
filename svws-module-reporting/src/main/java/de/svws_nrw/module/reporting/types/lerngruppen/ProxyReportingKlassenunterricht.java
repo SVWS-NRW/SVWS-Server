@@ -13,7 +13,6 @@ import jakarta.validation.constraints.NotNull;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Proxy-Klasse für einen Klassenunterricht im Rahmen des Reportings.
@@ -64,9 +63,9 @@ public class ProxyReportingKlassenunterricht extends ReportingKlassenunterricht 
 	public List<ReportingSchueler> schueler() {
 		final List<ReportingSchueler> schueler = super.schueler();
 		final Comparator<ReportingSchueler> comparator = ComparatorFactory.buildOptionalComparator(reportingRepository, ReportingSchueler.class.getSimpleName(),
-				SortierungRegistryReportingSchueler.sortierungRegistry(), SortierungRegistryReportingSchueler.standardsortierung()).orElse(null);
+				SortierungRegistryReportingSchueler.sortierungRegistry()).orElse(null);
 		if (comparator != null)
-			return schueler.stream().sorted(comparator).collect(Collectors.toList());
+			return schueler.stream().sorted(comparator).toList();
 		return schueler;
 	}
 

@@ -20,7 +20,7 @@
 							'<br/>Abitur ' + ${GostBlockungsergebnis.abiturjahr()} + ' - ' + ${GostBlockungsergebnis.gostHalbjahr().kuerzel} +
 							'<br/>Gesamt: ' + ${GostBlockungsergebnis.anzahlSchueler()} + ' SuS' + (${zeigeExtDummy} ? ', davon ' + ${GostBlockungsergebnis.anzahlExterne()} + '/' + ${GostBlockungsergebnis.anzahlDummy()} + ' Externe/Platzhalter' : ''),
 						footerCenter=${GostBlockungsergebnis.bezeichnung()} + ' (Erg-ID ' + ${GostBlockungsergebnis.id()} + ') - Angaben zu SuS in den Kursen: Gesamt (Schriftlich,Abiturfach) (Externe,Platzhalter)',
-						footerRight=${#lists.size(KursplanungSchueler) > 0} ? ('Druck ' + ${iterationVarSchueler.count} + '/' + ${#lists.size(KursplanungSchueler)}))}">
+						footerRight=${'Kurse-Schienen-Zuordnung'})}">
 					</th:block>
 					<!--Ende: Definition Seitenköpfe und Seitenfüße -->
 
@@ -70,12 +70,15 @@
 					th:each="schueler,iterationVarSchueler : ${KursplanungSchueler}">
 
 					<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
-					<div class="pageTopLeft" th:utext="${Schule.bezeichnungSchuleMehrzeiligHtml}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>
-					<div class="pageTopRight">Kurse-Schienen-Zuordnung<br/>Abitur <span th:text="${GostBlockungsergebnis.abiturjahr()}">2023</span> - <span th:text="${GostBlockungsergebnis.gostHalbjahr().kuerzel}">Q1.2</span><br/>Gesamt: <span th:text="${GostBlockungsergebnis.anzahlSchueler()}">123</span> SuS<span th:if="${zeigeExtDummy}">, davon <span th:text="${GostBlockungsergebnis.anzahlExterne()}">35</span>/<span th:text="${GostBlockungsergebnis.anzahlDummy()}">40</span> Externe/Platzhalter</span></div>
-					<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')}">Gedruckt am: 02.02.2022</div>
-					<div class="pageBottomCenter" th:text="${GostBlockungsergebnis.bezeichnung() + ' (Erg-ID ' + GostBlockungsergebnis.id() + ') - Angaben zu SuS in den Kursen: Gesamt (Schriftlich,Abiturfach) (Externe,Platzhalter)'}">A23 - Q1.2 (Erg-ID 4) - Angaben zu SuS in den Kursen: Gesamt (Schriftlich, Abiturfach)</div>
-					<div class="pageBottomRight"><span class="page-nums-print" th:text="${#lists.size(KursplanungSchueler) > 0} ? ('Druck ' + ${iterationVarSchueler.count} + '/' + ${#lists.size(KursplanungSchueler)} + ' - Seite ') : 'Seite '">Druck 13/57 - Seite </span></div>
-					<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+					<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
+					<th:block th:replace="~{fragments/reportPageHeaderFooter :: pageHeaderFooter(
+						headerRight='Kurse-Schienen-Zuordnung' +
+							'<br/>Abitur ' + ${GostBlockungsergebnis.abiturjahr()} + ' - ' + ${GostBlockungsergebnis.gostHalbjahr().kuerzel} +
+							'<br/>Gesamt: ' + ${GostBlockungsergebnis.anzahlSchueler()} + ' SuS' + (${zeigeExtDummy} ? ', davon ' + ${GostBlockungsergebnis.anzahlExterne()} + '/' + ${GostBlockungsergebnis.anzahlDummy()} + ' Externe/Platzhalter' : ''),
+						footerCenter=${GostBlockungsergebnis.bezeichnung()} + ' (Erg-ID ' + ${GostBlockungsergebnis.id()} + ') - Angaben zu SuS in den Kursen: Gesamt (Schriftlich,Abiturfach) (Externe,Platzhalter)',
+						footerRight=${#lists.size(KursplanungSchueler) > 0 ? 'Druck ' + iterationVarSchueler.count + '/' + #lists.size(KursplanungSchueler) : 'Kurse-Schienen-Zuordnung'})}">
+					</th:block>
+
 
 					<table class="fixed-100 p-0">
 						<tr>

@@ -369,12 +369,52 @@ public class ReportingSchuelerLeistungsdaten extends ReportingBaseType {
 	}
 
 	/**
-	 * Das Kürzel der erteilten Note - es können auch Pseudonoten eingetragen werden (z.B. AT).
+	 * Die erteilte Note.
 	 *
 	 * @return Inhalt des Feldes note
 	 */
 	public Note note() {
 		return note;
+	}
+
+	/**
+	 * Das Kürzel der erteilten Note wie zum Beispiel '3+'
+	 *
+	 * @return Das Kürzel der Note.
+	 */
+	public String noteKuerzel() {
+		final String result = (this.note == null) ? null : this.note.getNoteKuerzel(this.lernabschnitt().schuljahresabschnitt().schuljahr());
+		return (result != null) ? result : "";
+	}
+
+	/**
+	 * Die Punkte (zweistellig) der erteilten Note wie zum Beispiel '09'
+	 *
+	 * @return Die Punkte der Note.
+	 */
+	public String notePunkte() {
+		final String result = (this.note == null) ? null : this.note.getNotenpunkteZweistellig(this.lernabschnitt().schuljahresabschnitt().schuljahr());
+		return (result != null) ? result : "";
+	}
+
+	/**
+	 * Der Text der erteilten Note mit Tendenz.
+	 *
+	 * @return Der Text der Note.
+	 */
+	public String noteText() {
+		final String result = (this.note == null) ? null : this.note.getNoteText(this.lernabschnitt().schuljahresabschnitt().schuljahr());
+		return (result != null) ? result : "";
+	}
+
+	/**
+	 * Der Text der erteilten Note als ganze Note, z. B. für Zeugnisse.
+	 *
+	 * @return Der Text der ganzen Note
+	 */
+	public String noteTextZeugnis() {
+		final String result = (this.note == null) ? null : this.note.getNoteTextZeugnis(this.lernabschnitt().schuljahresabschnitt().schuljahr());
+		return (result != null) ? result : "";
 	}
 
 	/**
@@ -387,12 +427,92 @@ public class ReportingSchuelerLeistungsdaten extends ReportingBaseType {
 	}
 
 	/**
+	 * Das Kürzel der Berufsabschlussnote wie zum Beispiel '3+'
+	 *
+	 * @return Das Kürzel der Note.
+	 */
+	public String noteBerufsabschlussKuerzel() {
+		final String result = (this.noteBerufsabschluss == null) ? null : this.noteBerufsabschluss.getNoteKuerzel(this.lernabschnitt().schuljahresabschnitt().schuljahr());
+		return (result != null) ? result : "";
+	}
+
+	/**
+	 * Die Punkte (zweistellig) der erteilten Berufsabschlussnote wie zum Beispiel '09'
+	 *
+	 * @return Die Punkte der Note.
+	 */
+	public String noteBerufsabschlussPunkte() {
+		final String result = (this.noteBerufsabschluss == null) ? null : this.noteBerufsabschluss.getNotenpunkteZweistellig(this.lernabschnitt().schuljahresabschnitt().schuljahr());
+		return (result != null) ? result : "";
+	}
+
+	/**
+	 * Der Text der Berufsabschlussnote mit Tendenz.
+	 *
+	 * @return Der Text der Note.
+	 */
+	public String noteBerufsabschlussText() {
+		final String result = (this.noteBerufsabschluss == null) ? null : this.noteBerufsabschluss.getNoteText(this.lernabschnitt().schuljahresabschnitt().schuljahr());
+		return (result != null) ? result : "";
+	}
+
+	/**
+	 * Der Text der Berufsabschlussnote als ganze Note, z. B. für Zeugnisse.
+	 *
+	 * @return Der Text der ganzen Note
+	 */
+	public String noteBerufsabschlussTextZeugnis() {
+		final String result = (this.noteBerufsabschluss == null) ? null : this.noteBerufsabschluss.getNoteTextZeugnis(this.lernabschnitt().schuljahresabschnitt().schuljahr());
+		return (result != null) ? result : "";
+	}
+
+	/**
 	 * Das Kürzel der erteilten Quartalsnote - es können auch Pseudonoten eingetragen werden (z.B. AT).
 	 *
 	 * @return Inhalt des Feldes noteQuartal
 	 */
 	public Note noteQuartal() {
 		return noteQuartal;
+	}
+
+	/**
+	 * Das Kürzel der Quartalsnote wie zum Beispiel '3+'
+	 *
+	 * @return Das Kürzel der Note.
+	 */
+	public String noteQuartalKuerzel() {
+		final String result = (this.noteQuartal == null) ? null : this.noteQuartal.getNoteKuerzel(this.lernabschnitt().schuljahresabschnitt().schuljahr());
+		return (result != null) ? result : "";
+	}
+
+	/**
+	 * Die Punkte (zweistellig) der erteilten Quartalsnote wie zum Beispiel '09'
+	 *
+	 * @return Die Punkte der Note.
+	 */
+	public String noteQuartalPunkte() {
+		final String result = (this.noteQuartal == null) ? null : this.noteQuartal.getNotenpunkteZweistellig(this.lernabschnitt().schuljahresabschnitt().schuljahr());
+		return (result != null) ? result : "";
+	}
+
+	/**
+	 * Der Text der Quartalsnote mit Tendenz.
+	 *
+	 * @return Der Text der Note.
+	 */
+	public String noteQuartalText() {
+		final String result = (this.noteQuartal == null) ? null : this.noteQuartal.getNoteText(this.lernabschnitt().schuljahresabschnitt().schuljahr());
+		return (result != null) ? result : "";
+	}
+
+	/**
+	 * Der Text der Quartalsnote als ganze Note, z. B. für Zeugnisse.
+	 *
+	 * @return Der Text der ganzen Note
+	 */
+	public String noteQuartalTextZeugnis() {
+		final String result = (this.noteQuartal == null) ? null : this.noteQuartal.getNoteTextZeugnis(this.lernabschnitt().schuljahresabschnitt().schuljahr());
+		return (result != null) ? result : "";
 	}
 
 	/**

@@ -16,6 +16,8 @@ import de.svws_nrw.db.dto.current.schild.kurse.DTOKursLehrer;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
+import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ProxyReportingSchuelerLeistungsdatenMatrix;
+import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLeistungsdatenMatrix;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 
 /**
@@ -135,6 +137,16 @@ public class ProxyReportingKurs extends ReportingKurs {
 		return reportingRepository;
 	}
 
+
+	/**
+	 * Erstellt eine Leistungsdaten-Matrix für die Schüler dieser Gruppe basierend auf dem Schuljahresabschnitt der Gruppe.
+	 *
+	 * @return Die Leistungsdaten-Matrix für diese Schülergruppe.
+	 */
+	@Override
+	public ReportingSchuelerLeistungsdatenMatrix schuelerLeistungsdatenMatrix() {
+		return new ProxyReportingSchuelerLeistungsdatenMatrix(this.reportingRepository, this.schueler(), this.schuljahresabschnitt());
+	}
 
 	/**
 	 * Stellt eine Liste mit Schülern des Kurses zur Verfügung.

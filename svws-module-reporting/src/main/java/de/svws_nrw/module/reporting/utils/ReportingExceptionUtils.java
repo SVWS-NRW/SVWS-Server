@@ -120,6 +120,21 @@ public final class ReportingExceptionUtils {
 	 */
 	public static void putStacktraceInLog(final String beschreibung, final Exception exception, final Logger logger, final LogLevel loglevel,
 			final int relativeIndent) {
+		putStacktraceInLog(beschreibung, exception, logger, loglevel, relativeIndent, null);
+	}
+
+	/**
+	 * Erzeugt Log-Einträge für die Inhalte des StackTrace der übergebenen Exception
+	 *
+	 * @param beschreibung		Optionale Beschreibung, die dem Stacktrace im Log vorangestellt wird.
+	 * @param exception 		Die Exception, die geworfen wurde.
+	 * @param logger 			Logger, der den Ablauf protokolliert und Fehlerdaten gesammelt hat
+	 * @param loglevel			Das Level des Logging, auf dem der Eintrag erfolgen soll.
+	 * @param relativeIndent 	Einschub der Meldung gegenüber dem bisherigen Logger Einschub (positive und negative Werte möglich)
+	 * @param removeTextForLog	Optionaler Text, der aus dem Stacktrace entfernt werden soll.
+	 */
+	public static void putStacktraceInLog(final String beschreibung, final Exception exception, final Logger logger, final LogLevel loglevel,
+			final int relativeIndent, final String removeTextForLog) {
 		logger.modifyIndent(relativeIndent);
 		if ((beschreibung != null) && !beschreibung.isEmpty())
 			logger.logLn(loglevel, beschreibung);
@@ -127,8 +142,21 @@ public final class ReportingExceptionUtils {
 
 		final Writer stringWriter = new StringWriter();
 		exception.printStackTrace(new PrintWriter(stringWriter));
-		final BufferedReader stacktrace = new BufferedReader(new StringReader(stringWriter.toString()));
-		stacktrace.lines().forEach(l -> logger.logLn(loglevel, l));
+		String fullStacktrace = stringWriter.toString();
+
+		// Sonderfall Thymeleaf-Meldung: Der Template-Code wird mit '(template: "' eingeleitet, woran direkt der erste HTML-Tag anschließend, leider ohne
+		// Zeilenumbruch. Ergänze daher zwischen '(template: "' und dem ersten HTML-Tag einen Zeilenumbruch.
+		fullStacktrace = fullStacktrace.replace("(template: \"<", "(template: \"\n<");
+
+		// Ersetzung auf dem gesamten String durchführen, damit mehrzeilige Blöcke erkannt werden
+		if ((removeTextForLog != null) && !removeTextForLog.isEmpty()) {
+			fullStacktrace = fullStacktrace.replace(removeTextForLog, "[REMOVED FROM LOG]");
+		}
+
+		// Den bereinigten Gesamt-String nun zeilenweise in den Logger schreiben
+		final BufferedReader reader = new BufferedReader(new StringReader(fullStacktrace));
+		reader.lines().forEach(l -> logger.logLn(loglevel, l));
+
 		logger.modifyIndent(-4);
 	}
 
