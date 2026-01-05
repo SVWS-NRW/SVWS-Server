@@ -13,6 +13,7 @@
 @import "../../ui/SvwsUiNotification.css";
 @import "../../ui/SvwsUiSpinner.css";
 @import "../../ui/SvwsUiTooltip.css";
+@import "../../ui/UiValidationTooltip.css";
 @import "../../ui/controls/SvwsUiButton.css";
 @import "../../ui/controls/SvwsUiCheckbox.css";
 @import "../../ui/controls/SvwsUiDropdownList.css";

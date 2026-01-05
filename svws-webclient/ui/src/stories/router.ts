@@ -11,6 +11,7 @@ const routes = [
 	{ path: '/ui/ToDo', component: () => import('../ui/SvwsUiTodo.story.vue') },
 	{ path: '/ui/Badge', component: () => import('../ui/SvwsUiBadge.story.vue') },
 	{ path: '/ui/Tooltip', component: () => import('../ui/SvwsUiTooltip.story.vue') },
+	{ path: '/ui/ValidationTooltip', component: () => import('../ui/UiValidationTooltip.story.vue') },
 	{ path: '/ui/Spinner', component: () => import('../ui/SvwsUiSpinner.story.vue') },
 	{ path: '/ui/Avatar', component: () => import('../ui/SvwsUiAvatar.story.vue') },
 	{ path: '/ui/Notifications', component: () => import('../ui/SvwsUiNotifications.story.vue') },

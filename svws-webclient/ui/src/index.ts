@@ -85,12 +85,13 @@ export { default as SvwsUiTextInput } from "./ui/controls/SvwsUiTextInput.vue";
 export { default as SvwsUiTodo } from "./ui/SvwsUiTodo.vue";
 export { default as SvwsUiToggle } from "./ui/controls/SvwsUiToggle.vue";
 export { default as SvwsUiTooltip } from "./ui/SvwsUiTooltip.vue";
+export { default as UiValidationTooltip } from "./ui/UiValidationTooltip.vue";
 
 // Use exports
 export { useRegionSwitch } from "./ui/composables/useRegionSwitch";
 export { usePaneSplitter } from "./ui/composables/usePaneSplitter";
 
-// Type exorts
+// Type exports
 export type { DataTableColumn, SortByAndOrder } from "./types";
 export type { TabData } from "./ui/nav/TabData";
 
@@ -126,6 +127,7 @@ export { AppMenuGroup } from "./ui/nav/AppMenuGroup";
 export { ViewType } from "./ui/nav/ViewType";
 
 // Validator Classes
+export { ValidationResult } from "./validation/ValidationResult";
 export { ValidatorBenutzerAnmeldenameNeu } from "./validation/ValidatorBenutzerAnmeldenameNeu";
 export { ValidatorEmail } from "./validation/ValidatorEmail";
 export { ValidatorKlassenKuerzel } from "./validation/ValidatorKlassenKuerzel";
