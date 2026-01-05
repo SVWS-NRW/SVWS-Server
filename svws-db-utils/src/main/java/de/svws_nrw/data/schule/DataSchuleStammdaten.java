@@ -647,7 +647,7 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 			dto.Sortierung = i;
 			dto.Sichtbar = true;
 			dto.Aenderbar = true;
-			dto.KurzBez = snr.daten(schuljahr).text;
+			dto.KurzBez = snr.daten(schuljahr).kuerzel;
 			dtoSchulen.add(dto);
 			i++;
 		}
