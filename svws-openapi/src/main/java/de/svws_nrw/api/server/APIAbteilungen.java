@@ -73,7 +73,7 @@ public class APIAbteilungen {
 	public Response getAbteilungenByIdJahresAbschnitt(@PathParam("schema") final String schema, @PathParam("idSchuljahresabschnitt") final long idSchuljahresabschnitt,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn ->  new DataAbteilungen(conn, idSchuljahresabschnitt, new DataAbteilungenKlassenzuordnungen(conn)).getListAsResponse(),
-				request, ServerMode.DEV, BenutzerKompetenz.SCHULBEZOGENE_DATEN_ANSEHEN);
+				request, ServerMode.STABLE, BenutzerKompetenz.SCHULBEZOGENE_DATEN_ANSEHEN);
 	}
 
 	/**
