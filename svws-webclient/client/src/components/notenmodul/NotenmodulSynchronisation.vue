@@ -34,7 +34,7 @@
 			<div class="text-headline-md mb-4">Zurücksetzen der Daten</div>
 			<svws-ui-input-wrapper>
 				<div>
-					<div> Entfernt alle Daten des Lernabschnittes vom Webnotenmanager. Die Benutzerdaten bleiben erhalten.</div>
+					<div> Entfernt alle Daten des Lernabschnittes vom Webnotenmanager. Die Benutzerdaten bleiben auf dem Server des Webnotenmanagers zwar erhalten, eine Anmeldung am Client des Webnotenmanagers ist danach aber nicht mehr möglich da keine Leistungsdaten vorhanden sind.</div>
 					<svws-ui-button type="primary" @click="call(reset)">
 						Daten zurücksetzen
 					</svws-ui-button>
