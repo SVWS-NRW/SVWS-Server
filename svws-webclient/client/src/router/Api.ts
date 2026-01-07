@@ -192,9 +192,11 @@ class Api {
 	 */
 	public benutzerHatEineKompetenz(kompetenzen: Iterable<BenutzerKompetenz>): boolean {
 		const setKompetenzen = this.benutzerKompetenzen;
-		for (const kompetenz of kompetenzen)
-			if (setKompetenzen.has(kompetenz))
+		for (const kompetenz of kompetenzen) {
+			if (setKompetenzen.has(kompetenz)) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -228,8 +230,9 @@ class Api {
 	 */
 	public get benutzertyp(): BenutzerTyp {
 		const typ = BenutzerTyp.getByID(this.benutzerdaten.typ);
-		if (typ === null)
+		if (typ === null) {
 			throw new DeveloperNotificationException("Der Typ des Benutzers ist ungültig.");
+		}
 		return typ;
 	}
 
@@ -240,8 +243,9 @@ class Api {
 	 * @throws {Error} falls kein Benutzer angemeldet ist oder der Benutzer-Typ ungültig oder kein Lehrer ist
 	 */
 	public get benutzerIDLehrer(): number {
-		if (this.benutzertyp !== BenutzerTyp.LEHRER)
+		if (this.benutzertyp !== BenutzerTyp.LEHRER) {
 			throw new DeveloperNotificationException("Der Benutzer ist kein Lehrer, weshalb keine Lehrer-ID ermittelt werden kann.");
+		}
 		return this.benutzerdaten.typID;
 	}
 
@@ -289,8 +293,9 @@ class Api {
 	 */
 	public get schulform(): Schulform {
 		const schulform = Schulform.data().getWertByKuerzel(this.conn.schuleStammdaten.schulform);
-		if (schulform === null)
+		if (schulform === null) {
 			throw new DeveloperNotificationException("In den Schul-Stammdaten ist eine ungültige Schulform eingetragen.");
+		}
 		return schulform;
 	}
 
@@ -311,8 +316,9 @@ class Api {
 	 */
 	public mapAbschnitte = computed<Map<number, Schuljahresabschnitt>>(() => {
 		const mapAbschnitte = new Map<number, Schuljahresabschnitt>();
-		for (const a of this.schuleStammdaten.abschnitte)
+		for (const a of this.schuleStammdaten.abschnitte) {
 			mapAbschnitte.set(a.id, a);
+		}
 		return mapAbschnitte;
 	});
 
@@ -323,8 +329,9 @@ class Api {
 	 */
 	public get abschnitt(): Schuljahresabschnitt {
 		const abschnitt = this.mapAbschnitte.value.get(this.schuleStammdaten.idSchuljahresabschnitt);
-		if (abschnitt === undefined)
+		if (abschnitt === undefined) {
 			throw new DeveloperNotificationException("Der aktuelle Schuljahresabschnitt der Schule existiert nicht in der Liste der Schuljahresabschnitte.");
+		}
 		return abschnitt;
 	}
 
@@ -388,8 +395,9 @@ class Api {
 	public async getSchuelerListeAktuell(idSchuljahresabschnitt: number): Promise<Map<number, SchuelerListeEintrag>> {
 		const listSchueler = await this.server.getSchuelerFuerAbschnitt(this.schema, idSchuljahresabschnitt);
 		const mapSchueler = new Map<number, SchuelerListeEintrag>();
-		for (const l of listSchueler)
+		for (const l of listSchueler) {
 			mapSchueler.set(l.id, l);
+		}
 		return mapSchueler;
 	}
 
@@ -402,8 +410,9 @@ class Api {
 	public async getLehrerListeAktuell(): Promise<Map<number, LehrerListeEintrag>> {
 		const listLehrer = await this.server.getLehrer(this.schema);
 		const mapLehrer = new Map<number, LehrerListeEintrag>();
-		for (const l of listLehrer)
+		for (const l of listLehrer) {
 			mapLehrer.set(l.id, l);
+		}
 		return mapLehrer;
 	}
 
@@ -418,8 +427,9 @@ class Api {
 	public async getKlassenListe(idSchuljahresabschnitt: number): Promise<Map<number, KlassenDaten>> {
 		const listKlassen = await this.server.getKlassenFuerAbschnitt(this.schema, idSchuljahresabschnitt);
 		const mapKlassen = new Map<number, KlassenDaten>();
-		for (const k of listKlassen)
+		for (const k of listKlassen) {
 			mapKlassen.set(k.id, k);
+		}
 		return mapKlassen;
 	}
 
@@ -434,8 +444,9 @@ class Api {
 	public async getKursListe(idSchuljahresabschnitt: number): Promise<Map<number, KursDaten>> {
 		const listKurse = await this.server.getKurseFuerAbschnitt(this.schema, idSchuljahresabschnitt);
 		const mapKurse: Map<number, KursDaten> = new Map();
-		for (const k of listKurse)
+		for (const k of listKurse) {
 			mapKurse.set(k.id, k);
+		}
 		return mapKurse;
 	}
 
@@ -449,8 +460,9 @@ class Api {
 		// aktualisiere die Jahrgänge und erstelle Map
 		const listJahrgaenge = await this.server.getJahrgaenge(this.schema);
 		const mapJahrgaenge: Map<number, JahrgangsDaten> = new Map();
-		for (const j of listJahrgaenge)
+		for (const j of listJahrgaenge) {
 			mapJahrgaenge.set(j.id, j);
+		}
 		return mapJahrgaenge;
 	}
 

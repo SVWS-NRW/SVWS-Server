@@ -90,11 +90,13 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 		// Laden der Konfiguration
 		const cfg = await api.server.getClientConfig();
 		const mapUser = new Map<string, string>();
-		for (const c of cfg.user)
+		for (const c of cfg.user) {
 			mapUser.set(c.key, c.value);
+		}
 		const mapGlobal = new Map<string, string>();
-		for (const c of cfg.global)
+		for (const c of cfg.global) {
 			mapGlobal.set(c.key, c.value);
+		}
 		// Persistente Config mit den geladenen Daten anlegen
 		const config = new Config(async (key: string, value: string): Promise<void> => {
 			// Schreiben der globalen Konfiguration
@@ -204,8 +206,9 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	 * @returns die ENM-Daten
 	 */
 	get daten(): ENMDaten {
-		if (this._state.value.daten === null)
+		if (this._state.value.daten === null) {
 			throw new DeveloperNotificationException("Es wurden noch keine ENM-Daten geladen - Ein Zugriff auf diese Methode darf daher zu diesem Zeitpunkt nicht erfolgen");
+		}
 		return this._state.value.daten;
 	}
 
@@ -215,8 +218,9 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	 * @returns der ENM-Manager
 	 */
 	get manager(): EnmManager {
-		if (this._state.value.manager === null)
+		if (this._state.value.manager === null) {
 			throw new DeveloperNotificationException("Es wurden noch keine ENM-Daten geladen - Ein Zugriff auf diese Methode darf daher zu diesem Zeitpunkt nicht erfolgen");
+		}
 		return this._state.value.manager;
 	}
 
@@ -226,8 +230,9 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	 * @returns die persistente Konfiguration
 	 */
 	get config(): Config {
-		if (this._state.value.config === null)
+		if (this._state.value.config === null) {
 			throw new DeveloperNotificationException("Die persistente Konfiguration wurde noch nicht geladen - Ein Zugriff auf diese Methode darf daher zu diesem Zeitpunkt nicht erfolgen");
+		}
 		return this._state.value.config;
 	}
 
@@ -237,8 +242,9 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	 * @returns die nicht persistente Konfiguration
 	 */
 	get nonPersistentConfig(): Config {
-		if (this._state.value.nonPersistentConfig === null)
+		if (this._state.value.nonPersistentConfig === null) {
 			throw new DeveloperNotificationException("Die nicht persistente Konfiguration wurde noch nicht erzeugt - Ein Zugriff auf diese Methode darf daher zu diesem Zeitpunkt nicht erfolgen");
+		}
 		return this._state.value.nonPersistentConfig;
 	}
 
@@ -248,11 +254,13 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	 * @returns die Schulform
 	 */
 	public get schulform(): Schulform {
-		if (this.daten.schulform === null)
+		if (this.daten.schulform === null) {
 			throw new DeveloperNotificationException("In den ENM-Daten ist keine Schulform eingetragen.");
+		}
 		const schulform = Schulform.data().getWertByKuerzel(this.daten.schulform);
-		if (schulform === null)
+		if (schulform === null) {
 			throw new DeveloperNotificationException("In den ENM-Daten ist eine ungültige Schulform eingetragen.");
+		}
 		return schulform;
 	}
 
@@ -354,8 +362,9 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	 * @returns die Lerngruppen-Auswahl
 	 */
 	get auswahlLerngruppen(): Array<EnmLerngruppenAuswahlEintrag> {
-		if (this._auswahlLerngruppe.value === null)
+		if (this._auswahlLerngruppe.value === null) {
 			return this._auswahlLerngruppen.value;
+		}
 		return [this._auswahlLerngruppe.value];
 	}
 
@@ -402,8 +411,9 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	 * @returns die Klassen-Auswahl
 	 */
 	get auswahlKlassen(): Array<ENMKlasse> {
-		if (this._auswahlKlasse.value === null)
+		if (this._auswahlKlasse.value === null) {
 			return this._auswahlKlassen.value;
+		}
 		return [this._auswahlKlasse.value];
 	}
 
