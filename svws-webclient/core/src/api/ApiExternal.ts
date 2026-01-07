@@ -3,6 +3,7 @@ import { ArrayList } from '../java/util/ArrayList';
 import { LernplattformV1 } from '../core/data/lernplattform/v1/LernplattformV1';
 import { LernplattformV1Export } from '../core/data/lernplattform/v1/LernplattformV1Export';
 import { List } from '../java/util/List';
+import { SchuljahresabschnittV1 } from '../core/data/schuljahresabschnitt/v1/SchuljahresabschnittV1';
 
 export class ApiExternal extends BaseApi {
 
@@ -99,6 +100,33 @@ export class ApiExternal extends BaseApi {
 			.replace(/{idSchuljahresabschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, idSchuljahresabschnitt.toString());
 		const data : ApiFile = await super.getOctetStream(path);
 		return data;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getSchuljahresabschnitte für den Zugriff auf die URL https://{hostname}/api/external/{schema}/v1/schuljahresabschnitte/
+	 *
+	 * Erstellt eine Liste aller vorhandenen Schuljahresabschnitte, insofern die notwendige Berechtigung vorliegt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Eine Liste von Schuljahresabschnitten
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SchuljahresabschnittV1>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schuljahresabschnitte anzusehen.
+	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Eine Liste von Schuljahresabschnitten
+	 */
+	public async getSchuljahresabschnitte(schema : string) : Promise<List<SchuljahresabschnittV1>> {
+		const path = "/api/external/{schema}/v1/schuljahresabschnitte/"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SchuljahresabschnittV1>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuljahresabschnittV1.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 

@@ -727,6 +727,7 @@ export { SchultraegerKatalogEintrag } from './core/data/schule/SchultraegerKatal
 export { Telefonart } from './core/data/schule/Telefonart';
 export { VermerkartEintrag } from './core/data/schule/VermerkartEintrag';
 export { WiedervorlageEintrag } from './core/data/schule/WiedervorlageEintrag';
+export { SchuljahresabschnittV1 } from './core/data/schuljahresabschnitt/v1/SchuljahresabschnittV1';
 export { Stundenplan } from './core/data/stundenplan/Stundenplan';
 export { StundenplanAufsichtsbereich } from './core/data/stundenplan/StundenplanAufsichtsbereich';
 export { StundenplanFach } from './core/data/stundenplan/StundenplanFach';
