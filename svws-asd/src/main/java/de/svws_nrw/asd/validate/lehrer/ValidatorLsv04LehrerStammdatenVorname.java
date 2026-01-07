@@ -1,6 +1,7 @@
 package de.svws_nrw.asd.validate.lehrer;
 
-import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
+import java.util.function.Supplier;
+
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
 import jakarta.validation.constraints.NotNull;
@@ -11,16 +12,16 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class ValidatorLsv04LehrerStammdatenVorname extends Validator {
 
-	/** Die Lehrer-Stammdaten */
-	private final @NotNull LehrerStammdaten daten;
+	/** Der Vorname des Lehrers */
+	private final @NotNull Supplier<String> daten;
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param daten     die Daten des Validators
+	 * @param daten     der Vorname des Lehrers
 	 * @param kontext   der Kontext des Validators
 	 */
-	public ValidatorLsv04LehrerStammdatenVorname(final @NotNull LehrerStammdaten daten,
+	public ValidatorLsv04LehrerStammdatenVorname(final @NotNull Supplier<String> daten,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		this.daten = daten;
@@ -30,10 +31,10 @@ public final class ValidatorLsv04LehrerStammdatenVorname extends Validator {
 
 	@Override
 	protected boolean pruefe() {
-		final String vorname = daten.vorname;
+		final String vorname = daten.get();
 
 		if (!Character.isUpperCase(vorname.charAt(0))) {
-			this.addFehler(4, "Vorname der Lehrkraft: Die erste Stelle des Vornamens muss mit einem Großbuchstaben besetzt sein.");
+			addFehler(4, "Vorname der Lehrkraft: Die erste Stelle des Vornamens muss mit einem Großbuchstaben besetzt sein.");
 			return false;
 		}
 

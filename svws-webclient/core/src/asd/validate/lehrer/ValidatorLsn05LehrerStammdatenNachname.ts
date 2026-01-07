@@ -1,6 +1,6 @@
 import { JavaCharacter } from '../../../java/lang/JavaCharacter';
 import { NamensManager } from '../../../asd/validate/NamensManager';
-import { LehrerStammdaten } from '../../../asd/data/lehrer/LehrerStammdaten';
+import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
@@ -8,27 +8,26 @@ import { Validator } from '../../../asd/validate/Validator';
 export class ValidatorLsn05LehrerStammdatenNachname extends Validator {
 
 	/**
-	 * Die Lehrer-Stammdaten
+	 * Der Lehrer-Nachname
 	 */
-	private readonly daten: LehrerStammdaten;
+	private readonly daten: Supplier<string>;
 
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param daten     die Daten des Validators
+	 * @param daten     der Nachname des Lehrers
 	 * @param kontext   der Kontext des Validators
 	 */
-	public constructor(daten: LehrerStammdaten, kontext: ValidatorKontext) {
+	public constructor(daten: Supplier<string>, kontext: ValidatorKontext) {
 		super(kontext);
 		this.daten = daten;
 	}
 
 	protected pruefe(): boolean {
-		const nachname: string | null = this.daten.nachname;
-		const nachnameOhneZusatz: string = NamensManager.getOhneZusatz(nachname);
+		const nachnameOhneZusatz: string = NamensManager.getOhneZusatz(this.daten.get());
 		const fehlertext5: string | null = "Nachname der Lehrkraft: Die zweite Stelle des Nachnamens ist mit einem Großbuchstaben besetzt. Bitte stellen sie sicher, dass nur der erste Buchstabe des Nachnamens ein Großbuchstabe ist. Bitte schreiben Sie auf ihn folgende Buchstaben klein.";
-		if ((nachnameOhneZusatz.length > 1) && JavaCharacter.isUpperCase(nachnameOhneZusatz.charAt(1))) {
+		if (nachnameOhneZusatz.length > 1 && JavaCharacter.isUpperCase(nachnameOhneZusatz.charAt(1))) {
 			this.addFehler(5, fehlertext5);
 			return false;
 		}

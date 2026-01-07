@@ -1,13 +1,14 @@
 package de.svws_nrw.asd.validate.lehrer;
 
 import java.util.List;
+import java.util.function.Supplier;
 
-import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdaten;
 import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdatenAnrechnungsstunden;
 import de.svws_nrw.asd.types.lehrer.LehrerBeschaeftigungsart;
 import de.svws_nrw.asd.types.lehrer.LehrerEinsatzstatus;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
+import de.svws_nrw.transpiler.annotations.AllowNull;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -24,20 +25,39 @@ import jakarta.validation.constraints.NotNull;
 public final class ValidatorLppbb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell extends Validator {
 
 	/** Die Lehrer-Personalabschnittsdaten, die geprüft werden. */
-	private final @NotNull LehrerPersonalabschnittsdaten daten;
+	private final @NotNull Supplier<@AllowNull Double> pflichtstundensoll;
+	private final @NotNull Supplier<@AllowNull String> beschaeftigungsart;
+	private final @NotNull Supplier<@AllowNull String> einsatzstatus;
+	private final @NotNull Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> mehrleistungen;
+	private final @NotNull Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> minderleistungen;
 
 	/**
 	 * Erstellt einen neuen Validator.
 	 *
-	 * @param daten    die Abschnittsdaten der Lehrkraft
+	 * @param pflichtstundensoll   der Pflichtstundensoll
+	 * @param beschaeftigungsart   die Beschäftigungsart
+	 * @param einsatzstatus        der Einsatz-Status
+	 * @param mehrleistungen       die Liste mit den Einträgen zu Mehrleistungen
+	 * @param minderleistungen     die Liste mit den Einträgen zu Minderleistungen
+	 *
 	 * @param kontext  der Kontext der Validierung
 	 */
 	public ValidatorLppbb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell(
-			final @NotNull LehrerPersonalabschnittsdaten daten,
+			final @NotNull Supplier<@AllowNull Double> pflichtstundensoll,
+			final @NotNull Supplier<@AllowNull String> beschaeftigungsart,
+			final @NotNull Supplier<@AllowNull String> einsatzstatus,
+			final @NotNull Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> mehrleistungen,
+			final @NotNull Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> minderleistungen,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		this.daten = daten;
+		this.pflichtstundensoll = pflichtstundensoll;
+		this.beschaeftigungsart = beschaeftigungsart;
+		this.einsatzstatus = einsatzstatus;
+		this.mehrleistungen = mehrleistungen;
+		this.minderleistungen = minderleistungen;
 	}
+
+
 
 	/**
 	 * Prüft, ob eine Liste von Anrechnungsstunden einen bestimmten Grund enthält.
@@ -71,21 +91,27 @@ public final class ValidatorLppbb01LehrerPersonaldatenPersonalabschnittsdatenBes
 	 */
 	@Override
 	protected boolean pruefe() {
-		final Double pss = daten.pflichtstundensoll;
+		final Double pss = pflichtstundensoll.get();
 		if (pss == null || pss <= 0.0)
 			return true;
 
-		final String ba = daten.beschaeftigungsart == null ? "" : daten.beschaeftigungsart.trim();
+		String ba = beschaeftigungsart.get();
+		if (ba == null)
+			ba = "";
+		ba = ba.trim();
 		if (LehrerBeschaeftigungsart.data().getWertBySchluessel(ba) != LehrerBeschaeftigungsart.TS)
 			return true;
 
-		final String es = daten.einsatzstatus == null ? "" : daten.einsatzstatus;
+		String es = einsatzstatus.get();
+		if (es == null)
+			es = "";
+		es = es.trim();
 		if (!"".equals(es.trim()) && LehrerEinsatzstatus.data().getWertBySchluessel(es) != LehrerEinsatzstatus.A)
 			return true;
 
-		final boolean hatMehr100 = hatGrund(daten.mehrleistung, 100L);
-		final boolean hatMinder240 = hatGrund(daten.minderleistung, 240L);
-		final boolean hatMinder290 = hatGrund(daten.minderleistung, 290L);
+		final boolean hatMehr100 = hatGrund(mehrleistungen.get(), 100L);
+		final boolean hatMinder240 = hatGrund(minderleistungen.get(), 240L);
+		final boolean hatMinder290 = hatGrund(minderleistungen.get(), 290L);
 
 		final boolean hatMehrMinderGrund = hatMehr100 || hatMinder240 || hatMinder290;
 

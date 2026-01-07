@@ -1,6 +1,7 @@
 package de.svws_nrw.asd.validate.lehrer;
 
-import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
+import java.util.function.Supplier;
+
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
 import jakarta.validation.constraints.NotNull;
@@ -11,25 +12,26 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class ValidatorLsn08LehrerStammdatenNachname extends Validator {
 
-	/** Die Lehrer-Stammdaten */
-	private final @NotNull LehrerStammdaten daten;
+	/** Der Lehrer-Nachname */
+	private final @NotNull Supplier<String> daten;
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param daten     die Daten des Validators
+	 * @param daten     der Nachname des Lehrers
 	 * @param kontext   der Kontext des Validators
 	 */
-	public ValidatorLsn08LehrerStammdatenNachname(final @NotNull LehrerStammdaten daten, final @NotNull ValidatorKontext kontext) {
+	public ValidatorLsn08LehrerStammdatenNachname(final @NotNull Supplier<String> daten, final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		this.daten = daten;
 	}
 
+	@Override
 	protected boolean pruefe() {
-		final String nLower = daten.nachname.toLowerCase();
+		final String nLower = daten.get().toLowerCase();
 
 		if (nLower.startsWith("frau ") || nLower.startsWith("herr ")) {
-			this.addFehler(8, "Nachname der Lehrkraft: Die Anrede (Frau oder Herr) gehört nicht in den Nachnamen.");
+			addFehler(8, "Nachname der Lehrkraft: Die Anrede (Frau oder Herr) gehört nicht in den Nachnamen.");
 			return false;
 		}
 

@@ -1,6 +1,7 @@
 package de.svws_nrw.asd.validate.lehrer;
 
-import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
+import java.util.function.Supplier;
+
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
 import jakarta.validation.constraints.NotNull;
@@ -11,26 +12,26 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class ValidatorLsn07LehrerStammdatenNachname extends Validator {
 
-	/** Die Lehrer-Stammdaten */
-	private final @NotNull LehrerStammdaten daten;
+	/** Der Lehrer-Nachname */
+	private final @NotNull Supplier<String> daten;
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param daten     die Daten des Validators
+	 * @param daten     der Nachname des Lehrers
 	 * @param kontext   der Kontext des Validators
 	 */
-	public ValidatorLsn07LehrerStammdatenNachname(final @NotNull LehrerStammdaten daten, final @NotNull ValidatorKontext kontext) {
+	public ValidatorLsn07LehrerStammdatenNachname(final @NotNull Supplier<String> daten, final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		this.daten = daten;
 	}
 
 	@Override
 	protected boolean pruefe() {
-		final String nachname = daten.nachname;
+		final String nachname = daten.get();
 
 		if (nachname.contains(" -") || nachname.contains("- ")) {
-			this.addFehler(7, "Nachname der Lehrkraft: Der Nachname enthält überflüssige Leerzeichen vor und/oder nach dem Bindestrich.");
+			addFehler(7, "Nachname der Lehrkraft: Der Nachname enthält überflüssige Leerzeichen vor und/oder nach dem Bindestrich.");
 			return false;
 		}
 

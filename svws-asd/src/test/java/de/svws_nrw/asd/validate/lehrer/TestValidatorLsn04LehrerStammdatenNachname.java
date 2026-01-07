@@ -79,7 +79,7 @@ class TestValidatorLsn04LehrerStammdatenNachname {
 
 		// Erzeuge den Kontext für die Validierung
 		final ValidatorKontext kontext = new ValidatorKontext(schuleTestdaten_001, true);
-		final ValidatorLsn04LehrerStammdatenNachname validator = new ValidatorLsn04LehrerStammdatenNachname(lehrerTestdaten_001, kontext);
+		final ValidatorLsn04LehrerStammdatenNachname validator = new ValidatorLsn04LehrerStammdatenNachname(() -> lehrerTestdaten_001.nachname, kontext);
 		assertEquals(result, validator.run());
 	}
 

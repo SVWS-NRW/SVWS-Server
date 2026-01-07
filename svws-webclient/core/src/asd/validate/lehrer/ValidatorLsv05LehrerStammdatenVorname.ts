@@ -1,5 +1,5 @@
 import { JavaCharacter } from '../../../java/lang/JavaCharacter';
-import { LehrerStammdaten } from '../../../asd/data/lehrer/LehrerStammdaten';
+import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
@@ -9,7 +9,7 @@ export class ValidatorLsv05LehrerStammdatenVorname extends Validator {
 	/**
 	 * Die Lehrer-Stammdaten
 	 */
-	private readonly daten: LehrerStammdaten;
+	private readonly daten: Supplier<string>;
 
 
 	/**
@@ -18,13 +18,13 @@ export class ValidatorLsv05LehrerStammdatenVorname extends Validator {
 	 * @param daten     die Daten des Validators
 	 * @param kontext   der Kontext des Validators
 	 */
-	public constructor(daten: LehrerStammdaten, kontext: ValidatorKontext) {
+	public constructor(daten: Supplier<string>, kontext: ValidatorKontext) {
 		super(kontext);
 		this.daten = daten;
 	}
 
 	protected pruefe(): boolean {
-		const vorname: string | null = this.daten.vorname;
+		const vorname: string | null = this.daten.get();
 		const fehlertext: string | null = "Vorname der Lehrkraft: Die zweite Stelle des Vornamens ist mit einem Großbuchstaben besetzt. Bitte stellen sie sicher, dass nur der erste Buchstabe des Vornamens ein Großbuchstabe ist. Bitte schreiben Sie auf ihn folgende Buchstaben klein.";
 		if (vorname.length > 1 && JavaCharacter.isUpperCase(vorname.charAt(1))) {
 			this.addFehler(5, fehlertext);

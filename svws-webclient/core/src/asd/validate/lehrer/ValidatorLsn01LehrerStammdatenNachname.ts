@@ -1,9 +1,9 @@
 import { ValidatorLsn08LehrerStammdatenNachname } from '../../../asd/validate/lehrer/ValidatorLsn08LehrerStammdatenNachname';
 import { ValidatorLsn02LehrerStammdatenNachname } from '../../../asd/validate/lehrer/ValidatorLsn02LehrerStammdatenNachname';
-import { LehrerStammdaten } from '../../../asd/data/lehrer/LehrerStammdaten';
+import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
-import { ValidatorLsn03LehrerStammdatenNachname } from '../../../asd/validate/lehrer/ValidatorLsn03LehrerStammdatenNachname';
 import { JavaString } from '../../../java/lang/JavaString';
+import { ValidatorLsn03LehrerStammdatenNachname } from '../../../asd/validate/lehrer/ValidatorLsn03LehrerStammdatenNachname';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { ValidatorLsn04LehrerStammdatenNachname } from '../../../asd/validate/lehrer/ValidatorLsn04LehrerStammdatenNachname';
 import { ValidatorLsn05LehrerStammdatenNachname } from '../../../asd/validate/lehrer/ValidatorLsn05LehrerStammdatenNachname';
@@ -14,18 +14,18 @@ import { ValidatorLsn06LehrerStammdatenNachname } from '../../../asd/validate/le
 export class ValidatorLsn01LehrerStammdatenNachname extends Validator {
 
 	/**
-	 * Die Lehrer-Stammdaten
+	 * Der Lehrer-Nachname
 	 */
-	private readonly daten: LehrerStammdaten;
+	private readonly daten: Supplier<string>;
 
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param daten     die Daten des Validators
+	 * @param daten     der Nachname des Lehrers
 	 * @param kontext   der Kontext des Validators
 	 */
-	public constructor(daten: LehrerStammdaten, kontext: ValidatorKontext) {
+	public constructor(daten: Supplier<string>, kontext: ValidatorKontext) {
 		super(kontext);
 		this.daten = daten;
 		this._validatoren.add(new ValidatorLsn02LehrerStammdatenNachname(daten, kontext));
@@ -38,8 +38,8 @@ export class ValidatorLsn01LehrerStammdatenNachname extends Validator {
 	}
 
 	protected pruefe(): boolean {
-		const nachname: string | null = this.daten.nachname;
-		if (JavaString.isBlank(nachname.trim())) {
+		const nachname: string = this.daten.get();
+		if (JavaString.isBlank(nachname)) {
 			this.addFehler(1, "Nachname der Lehrkraft: Der Nachname darf nicht nur aus Leerzeichen bestehen.");
 			return false;
 		}

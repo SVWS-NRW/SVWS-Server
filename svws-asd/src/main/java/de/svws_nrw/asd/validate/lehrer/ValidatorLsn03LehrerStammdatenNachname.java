@@ -1,6 +1,7 @@
 package de.svws_nrw.asd.validate.lehrer;
 
-import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
+import java.util.function.Supplier;
+
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
 import jakarta.validation.constraints.NotNull;
@@ -12,25 +13,25 @@ import jakarta.validation.constraints.NotNull;
 public final class ValidatorLsn03LehrerStammdatenNachname extends Validator {
 
 	/** Die Lehrer-Stammdaten */
-	private final @NotNull LehrerStammdaten daten;
+	private final @NotNull Supplier<String> daten;
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param daten     die Daten des Validators
+	 * @param daten     der Nachname des Lehrers
 	 * @param kontext   der Kontext des Validators
 	 */
-	public ValidatorLsn03LehrerStammdatenNachname(final @NotNull LehrerStammdaten daten, final @NotNull ValidatorKontext kontext) {
+	public ValidatorLsn03LehrerStammdatenNachname(final @NotNull Supplier<String> daten, final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		this.daten = daten;
 	}
 
 	@Override
 	protected boolean pruefe() {
-		final String nachname = daten.nachname;
+		final String nachname = daten.get();
 
 		if (nachname.startsWith(" ") || nachname.startsWith("\t")) {
-			this.addFehler(3, "Nachname der Lehrkraft: Die Eintragung des Nachnamens muss linksbündig erfolgen (ohne vorangestellte Leerzeichen oder Tabs).");
+			addFehler(3, "Nachname der Lehrkraft: Die Eintragung des Nachnamens muss linksbündig erfolgen (ohne vorangestellte Leerzeichen oder Tabs).");
 			return false;
 		}
 

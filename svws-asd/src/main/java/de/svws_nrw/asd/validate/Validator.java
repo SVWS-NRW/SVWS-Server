@@ -2,7 +2,9 @@ package de.svws_nrw.asd.validate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
+import de.svws_nrw.transpiler.annotations.AllowNull;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -27,6 +29,23 @@ public abstract class Validator extends BasicValidator {
 		super(ValidatorFehlerart.UNGENUTZT);
 		this._kontext = kontext;
 		this._defaultValidatorFehlerart = this.getValidatorFehlerart();
+	}
+
+
+	/**
+	 * Wandelt einen Supplier für Strings in einen Supplier für Strings zurück, welcher keine null-Werte liefert,
+	 * sondern nur leere Strings.
+	 *
+	 * @param supplier   der Supplier, welcher auch null-Werte für Strings liefern kann
+	 *
+	 * @return ein Supplier, welcher keine Null-Werte liefert.
+	 */
+	@SuppressWarnings("static-method")
+	protected final @NotNull Supplier<String> getNotNullSupplier(final @NotNull Supplier<@AllowNull String> supplier) {
+		return () -> {
+			final String value = supplier.get();
+			return (value == null) ? "" : value;
+		};
 	}
 
 

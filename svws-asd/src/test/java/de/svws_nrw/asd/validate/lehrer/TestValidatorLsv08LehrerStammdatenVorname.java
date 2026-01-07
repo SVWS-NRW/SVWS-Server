@@ -7,7 +7,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.asd.data.schule.SchuleStammdaten;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.asd.utils.json.JsonReader;
@@ -45,10 +44,6 @@ class TestValidatorLsv08LehrerStammdatenVorname {
 			'Anna'        , true
 		""";
 
-	/** Stammdaten des Lehrers */
-	static final LehrerStammdaten lehrerTestdaten_001 =
-			JsonReader.fromResource("de/svws_nrw/asd/validate/lehrer/Testdaten_001_LehrerStammdaten.json", LehrerStammdaten.class);
-
 	/** Stammdaten der Schule */
 	static final SchuleStammdaten schuleTestdaten_001 =
 			JsonReader.fromResource("de/svws_nrw/asd/validate/schule/Testdaten_001_SchuleStammdaten.json", SchuleStammdaten.class);
@@ -75,12 +70,10 @@ class TestValidatorLsv08LehrerStammdatenVorname {
 	@ParameterizedTest
 	@CsvSource(textBlock = TESTDATEN_VORNAME_ANREDE_FEHLERHAFT)
 	void testValidatorLehrerStammdatenVorname(final String vorname, final boolean result) {
-		// Testdaten setzen
-		lehrerTestdaten_001.vorname = vorname;
 
 		// Erzeuge den Kontext für die Validierung
 		final ValidatorKontext kontext = new ValidatorKontext(schuleTestdaten_001, true);
-		final ValidatorLsv08LehrerStammdatenVorname validator = new ValidatorLsv08LehrerStammdatenVorname(lehrerTestdaten_001, kontext);
+		final ValidatorLsv08LehrerStammdatenVorname validator = new ValidatorLsv08LehrerStammdatenVorname(() -> vorname, kontext);
 		assertEquals(result, validator.run());
 	}
 

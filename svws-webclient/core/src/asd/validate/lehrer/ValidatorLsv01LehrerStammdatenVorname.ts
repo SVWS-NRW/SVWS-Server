@@ -3,9 +3,9 @@ import { ValidatorLsv08LehrerStammdatenVorname } from '../../../asd/validate/leh
 import { ValidatorLsv04LehrerStammdatenVorname } from '../../../asd/validate/lehrer/ValidatorLsv04LehrerStammdatenVorname';
 import { ValidatorLsv02LehrerStammdatenVorname } from '../../../asd/validate/lehrer/ValidatorLsv02LehrerStammdatenVorname';
 import { ValidatorLsv03LehrerStammdatenVorname } from '../../../asd/validate/lehrer/ValidatorLsv03LehrerStammdatenVorname';
-import { LehrerStammdaten } from '../../../asd/data/lehrer/LehrerStammdaten';
 import { ValidatorLsv06LehrerStammdatenVorname } from '../../../asd/validate/lehrer/ValidatorLsv06LehrerStammdatenVorname';
 import { ValidatorLsv07LehrerStammdatenVorname } from '../../../asd/validate/lehrer/ValidatorLsv07LehrerStammdatenVorname';
+import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { JavaString } from '../../../java/lang/JavaString';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
@@ -14,18 +14,18 @@ import { Validator } from '../../../asd/validate/Validator';
 export class ValidatorLsv01LehrerStammdatenVorname extends Validator {
 
 	/**
-	 * Die Lehrer-Stammdaten
+	 * Der Lehrer-Vorname
 	 */
-	private readonly daten: LehrerStammdaten;
+	private readonly daten: Supplier<string>;
 
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param daten     die Daten des Validators
+	 * @param daten     der Vorname des Lehrers
 	 * @param kontext   der Kontext des Validators
 	 */
-	public constructor(daten: LehrerStammdaten, kontext: ValidatorKontext) {
+	public constructor(daten: Supplier<string>, kontext: ValidatorKontext) {
 		super(kontext);
 		this.daten = daten;
 		this._validatoren.add(new ValidatorLsv02LehrerStammdatenVorname(daten, kontext));
@@ -38,7 +38,7 @@ export class ValidatorLsv01LehrerStammdatenVorname extends Validator {
 	}
 
 	protected pruefe(): boolean {
-		if (JavaString.isBlank(this.daten.vorname.trim())) {
+		if (JavaString.isBlank(this.daten.get().trim())) {
 			this.addFehler(1, "Vorname der Lehrkraft: Der Vorname darf nicht nur aus Leerzeichen bestehen.");
 			return false;
 		}

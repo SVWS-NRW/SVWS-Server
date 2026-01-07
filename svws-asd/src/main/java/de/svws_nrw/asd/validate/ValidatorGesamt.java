@@ -31,7 +31,7 @@ public final class ValidatorGesamt extends Validator {
 
 		final HashMap<Long, LehrerStammdaten> mapStammdaten = new HashMap<>();
 		for (final LehrerStammdaten lehrerStammdaten : daten.lehrerStammdaten) {
-			_validatoren.add(new ValidatorLsLehrerStammdaten(lehrerStammdaten, kontext));
+			_validatoren.add(new ValidatorLsLehrerStammdaten(() -> lehrerStammdaten, kontext));
 			mapStammdaten.put(lehrerStammdaten.id, lehrerStammdaten);
 		}
 

@@ -82,7 +82,13 @@ class TestValidatorLppbb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigu
 
 		// Erzeuge den Kontext für die Validierung
 		final ValidatorKontext kontext = new ValidatorKontext(schuleTestdaten_001, true);
-		final var validator = new ValidatorLppbb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell(LehrerPersonalabschnittsdaten_Plausibel, kontext);
+		final var validator = new ValidatorLppbb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell(
+				() -> LehrerPersonalabschnittsdaten_Plausibel.pflichtstundensoll,
+				() -> LehrerPersonalabschnittsdaten_Plausibel.beschaeftigungsart,
+				() -> LehrerPersonalabschnittsdaten_Plausibel.einsatzstatus,
+				() -> LehrerPersonalabschnittsdaten_Plausibel.mehrleistung,
+				() -> LehrerPersonalabschnittsdaten_Plausibel.minderleistung,
+				kontext);
 		assertEquals(result, validator.run());
 	}
 }

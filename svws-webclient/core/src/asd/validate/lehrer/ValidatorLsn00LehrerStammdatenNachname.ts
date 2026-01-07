@@ -1,32 +1,33 @@
 import { ValidatorLsn01LehrerStammdatenNachname } from '../../../asd/validate/lehrer/ValidatorLsn01LehrerStammdatenNachname';
-import { LehrerStammdaten } from '../../../asd/data/lehrer/LehrerStammdaten';
+import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
+import { JavaString } from '../../../java/lang/JavaString';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
 
 export class ValidatorLsn00LehrerStammdatenNachname extends Validator {
 
 	/**
-	 * Die Lehrer-Stammdaten
+	 * Der Lehrer-Nachname
 	 */
-	private readonly daten: LehrerStammdaten;
+	private readonly daten: Supplier<string | null>;
 
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param daten     die Daten des Validators
+	 * @param daten     der Nachname des Lehrers
 	 * @param kontext   der Kontext des Validators
 	 */
-	public constructor(daten: LehrerStammdaten, kontext: ValidatorKontext) {
+	public constructor(daten: Supplier<string | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this.daten = daten;
-		this._validatoren.add(new ValidatorLsn01LehrerStammdatenNachname(daten, kontext));
+		this._validatoren.add(new ValidatorLsn01LehrerStammdatenNachname(this.getNotNullSupplier(daten), kontext));
 	}
 
 	protected pruefe(): boolean {
-		const nachname: string | null = this.daten.nachname;
-		if (nachname === null || nachname.length === 0) {
+		const nachname: string | null = this.daten.get();
+		if ((nachname === null) || (JavaString.isEmpty(nachname))) {
 			this.addFehler(0, "Nachname der Lehrkraft: Kein Wert vorhanden.");
 			return false;
 		}

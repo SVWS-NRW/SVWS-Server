@@ -2,6 +2,7 @@ import { ValidatorLsgLehrerStammdatenGeschlecht } from '../../../asd/validate/le
 import { ValidatorLskLehrerStammdatenKuerzel } from '../../../asd/validate/lehrer/ValidatorLskLehrerStammdatenKuerzel';
 import { ValidatorLsdLehrerStammdatenGeburtsdatum } from '../../../asd/validate/lehrer/ValidatorLsdLehrerStammdatenGeburtsdatum';
 import { LehrerStammdaten } from '../../../asd/data/lehrer/LehrerStammdaten';
+import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorLsnLehrerStammdatenNachname } from '../../../asd/validate/lehrer/ValidatorLsnLehrerStammdatenNachname';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
@@ -17,13 +18,13 @@ export class ValidatorLsLehrerStammdaten extends Validator {
 	 * @param daten     die Daten des Validators
 	 * @param kontext   der Kontext des Validators
 	 */
-	public constructor(daten: LehrerStammdaten, kontext: ValidatorKontext) {
+	public constructor(daten: Supplier<LehrerStammdaten>, kontext: ValidatorKontext) {
 		super(kontext);
-		this._validatoren.add(new ValidatorLsnLehrerStammdatenNachname(daten, kontext));
-		this._validatoren.add(new ValidatorLsvLehrerStammdatenVorname(daten, kontext));
-		this._validatoren.add(new ValidatorLsdLehrerStammdatenGeburtsdatum(daten, kontext));
-		this._validatoren.add(new ValidatorLsgLehrerStammdatenGeschlecht(daten, kontext));
-		this._validatoren.add(new ValidatorLskLehrerStammdatenKuerzel(daten, kontext));
+		this._validatoren.add(new ValidatorLsnLehrerStammdatenNachname({ get: () => daten.get().nachname }, kontext));
+		this._validatoren.add(new ValidatorLsvLehrerStammdatenVorname({ get: () => daten.get().vorname }, kontext));
+		this._validatoren.add(new ValidatorLsdLehrerStammdatenGeburtsdatum(daten.get(), kontext));
+		this._validatoren.add(new ValidatorLsgLehrerStammdatenGeschlecht(daten.get(), kontext));
+		this._validatoren.add(new ValidatorLskLehrerStammdatenKuerzel(daten.get(), kontext));
 	}
 
 	protected pruefe(): boolean {

@@ -4,6 +4,7 @@ import { BasicValidator } from '../../asd/validate/BasicValidator';
 import { ArrayList } from '../../java/util/ArrayList';
 import { ValidatorFehler } from '../../asd/validate/ValidatorFehler';
 import type { List } from '../../java/util/List';
+import type { Supplier } from '../../java/util/function/Supplier';
 import { Class } from '../../java/lang/Class';
 import { ValidatorKontext } from '../../asd/validate/ValidatorKontext';
 
@@ -29,6 +30,21 @@ export abstract class Validator extends BasicValidator {
 		super(ValidatorFehlerart.UNGENUTZT);
 		this._kontext = kontext;
 		this._defaultValidatorFehlerart = this.getValidatorFehlerart();
+	}
+
+	/**
+	 * Wandelt einen Supplier für Strings in einen Supplier für Strings zurück, welcher keine null-Werte liefert,
+	 * sondern nur leere Strings.
+	 *
+	 * @param supplier   der Supplier, welcher auch null-Werte für Strings liefern kann
+	 *
+	 * @return ein Supplier, welcher keine Null-Werte liefert.
+	 */
+	protected getNotNullSupplier(supplier: Supplier<string | null>): Supplier<string> {
+		return { get: () => {
+			const value: string | null = supplier.get();
+			return (value === null) ? "" : value;
+		} };
 	}
 
 	/**

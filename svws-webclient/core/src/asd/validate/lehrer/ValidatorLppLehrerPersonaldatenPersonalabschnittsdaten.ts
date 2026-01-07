@@ -23,7 +23,7 @@ export class ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten extends Vali
 		super(kontext);
 		this._validatoren.add(new ValidatorLpppLehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(daten, kontext));
 		this._validatoren.add(new ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(daten, kontext));
-		this._validatoren.add(new ValidatorLppbbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell(daten, kontext));
+		this._validatoren.add(new ValidatorLppbbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell({ get: () => daten.pflichtstundensoll }, { get: () => daten.beschaeftigungsart }, { get: () => daten.einsatzstatus }, { get: () => daten.mehrleistung }, { get: () => daten.minderleistung }, kontext));
 		try {
 			const geburtsdatum: DateManager = DateManager.from(stammdaten.geburtsdatum);
 			this._validatoren.add(new ValidatorLpprLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(daten, geburtsdatum, kontext));

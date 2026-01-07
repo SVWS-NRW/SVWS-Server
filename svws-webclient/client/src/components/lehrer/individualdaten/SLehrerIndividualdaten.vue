@@ -87,7 +87,7 @@
 
 	const props = defineProps<LehrerIndividualdatenProps>();
 
-	const validatorNachname = computed(() => new ValidatorLsnLehrerStammdatenNachname(props.lehrerListeManager().daten(), props.validatorKontext()));
+	const validatorNachname = computed(() => new ValidatorLsnLehrerStammdatenNachname({ get: () => props.lehrerListeManager().daten().nachname }, props.validatorKontext()));
 	function validateNachname(validator: ValidatorLsnLehrerStammdatenNachname, value: string | null): boolean {
 		const name = props.lehrerListeManager().daten().nachname;
 		props.lehrerListeManager().daten().nachname = value ?? "";
@@ -96,7 +96,7 @@
 		return res;
 	};
 
-	const validatorVorname = computed(() => new ValidatorLsvLehrerStammdatenVorname(props.lehrerListeManager().daten(), props.validatorKontext()));
+	const validatorVorname = computed(() => new ValidatorLsvLehrerStammdatenVorname({ get: () => props.lehrerListeManager().daten().vorname }, props.validatorKontext()));
 	function validateVorname(validator: ValidatorLsvLehrerStammdatenVorname, value: string | null): boolean {
 		const name = props.lehrerListeManager().daten().vorname;
 		props.lehrerListeManager().daten().vorname = value ?? "";

@@ -27,7 +27,7 @@ export class ValidatorGesamt extends Validator {
 		this._validatoren.add(new ValidatorSssSchuleStammdatenSchulform(kontext));
 		const mapStammdaten: HashMap<number, LehrerStammdaten> | null = new HashMap<number, LehrerStammdaten>();
 		for (const lehrerStammdaten of daten.lehrerStammdaten) {
-			this._validatoren.add(new ValidatorLsLehrerStammdaten(lehrerStammdaten, kontext));
+			this._validatoren.add(new ValidatorLsLehrerStammdaten({ get: () => lehrerStammdaten }, kontext));
 			mapStammdaten.put(lehrerStammdaten.id, lehrerStammdaten);
 		}
 		for (const lehrerPersonaldaten of daten.lehrerPersonaldaten) {

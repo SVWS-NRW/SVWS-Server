@@ -1,7 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { LehrerBeschaeftigungsart } from '../../../asd/types/lehrer/LehrerBeschaeftigungsart';
-import { LehrerPersonalabschnittsdaten } from '../../../asd/data/lehrer/LehrerPersonalabschnittsdaten';
 import { LehrerPersonalabschnittsdatenAnrechnungsstunden } from '../../../asd/data/lehrer/LehrerPersonalabschnittsdatenAnrechnungsstunden';
+import type { Supplier } from '../../../java/util/function/Supplier';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import { LehrerEinsatzstatus } from '../../../asd/types/lehrer/LehrerEinsatzstatus';
@@ -13,18 +13,35 @@ export class ValidatorLppbb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeft
 	/**
 	 * Die Lehrer-Personalabschnittsdaten, die geprüft werden.
 	 */
-	private readonly daten: LehrerPersonalabschnittsdaten;
+	private readonly pflichtstundensoll: Supplier<number | null>;
+
+	private readonly beschaeftigungsart: Supplier<string | null>;
+
+	private readonly einsatzstatus: Supplier<string | null>;
+
+	private readonly mehrleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>;
+
+	private readonly minderleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>;
 
 
 	/**
 	 * Erstellt einen neuen Validator.
 	 *
-	 * @param daten    die Abschnittsdaten der Lehrkraft
+	 * @param pflichtstundensoll   der Pflichtstundensoll
+	 * @param beschaeftigungsart   die Beschäftigungsart
+	 * @param einsatzstatus        der Einsatz-Status
+	 * @param mehrleistungen       die Liste mit den Einträgen zu Mehrleistungen
+	 * @param minderleistungen     die Liste mit den Einträgen zu Minderleistungen
+	 *
 	 * @param kontext  der Kontext der Validierung
 	 */
-	public constructor(daten: LehrerPersonalabschnittsdaten, kontext: ValidatorKontext) {
+	public constructor(pflichtstundensoll: Supplier<number | null>, beschaeftigungsart: Supplier<string | null>, einsatzstatus: Supplier<string | null>, mehrleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, minderleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, kontext: ValidatorKontext) {
 		super(kontext);
-		this.daten = daten;
+		this.pflichtstundensoll = pflichtstundensoll;
+		this.beschaeftigungsart = beschaeftigungsart;
+		this.einsatzstatus = einsatzstatus;
+		this.mehrleistungen = mehrleistungen;
+		this.minderleistungen = minderleistungen;
 	}
 
 	/**
@@ -58,18 +75,24 @@ export class ValidatorLppbb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeft
 	 * @return {@code true}, wenn die Regel erfüllt oder nicht anwendbar ist, sonst {@code false}
 	 */
 	protected pruefe(): boolean {
-		const pss: number | null = this.daten.pflichtstundensoll;
+		const pss: number | null = this.pflichtstundensoll.get();
 		if (pss === null || pss <= 0.0)
 			return true;
-		const ba: string | null = this.daten.beschaeftigungsart === null ? "" : this.daten.beschaeftigungsart.trim();
+		let ba: string | null = this.beschaeftigungsart.get();
+		if (ba === null)
+			ba = "";
+		ba = ba.trim();
 		if (LehrerBeschaeftigungsart.data().getWertBySchluessel(ba) as unknown !== LehrerBeschaeftigungsart.TS as unknown)
 			return true;
-		const es: string | null = this.daten.einsatzstatus === null ? "" : this.daten.einsatzstatus;
+		let es: string | null = this.einsatzstatus.get();
+		if (es === null)
+			es = "";
+		es = es.trim();
 		if (!JavaObject.equalsTranspiler("", (es.trim())) && LehrerEinsatzstatus.data().getWertBySchluessel(es) as unknown !== LehrerEinsatzstatus.A as unknown)
 			return true;
-		const hatMehr100: boolean = ValidatorLppbb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell.hatGrund(this.daten.mehrleistung, 100);
-		const hatMinder240: boolean = ValidatorLppbb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell.hatGrund(this.daten.minderleistung, 240);
-		const hatMinder290: boolean = ValidatorLppbb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell.hatGrund(this.daten.minderleistung, 290);
+		const hatMehr100: boolean = ValidatorLppbb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell.hatGrund(this.mehrleistungen.get(), 100);
+		const hatMinder240: boolean = ValidatorLppbb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell.hatGrund(this.minderleistungen.get(), 240);
+		const hatMinder290: boolean = ValidatorLppbb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell.hatGrund(this.minderleistungen.get(), 290);
 		const hatMehrMinderGrund: boolean = hatMehr100 || hatMinder240 || hatMinder290;
 		const fehlertext: string | null = "\"Bei einer Lehrkraft mit 'Beschäftigungsart' = TS (Teilzeitbeschäftigung im Blockmodell) muss entweder der Mehrleistungsgrund '100' Ansparphase, Phase mit erhöhter Arbeitszeit \"Teilzeitbeschäftigung im Blockmodell\" (§ 65 LBG) (vormals Sabbatjahr) oder der Minderleistungsgrund '290' (Ermäßigungs-/Freistellungsphase 'Teilzeitbeschäftigung im Blockmodell') eingetragen sein.\"))";
 		if (!hatMehrMinderGrund) {

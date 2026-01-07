@@ -1,5 +1,7 @@
 package de.svws_nrw.asd.validate.lehrer;
 
+import java.util.function.Supplier;
+
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
@@ -17,13 +19,13 @@ public final class ValidatorLsLehrerStammdaten extends Validator {
 	 * @param daten     die Daten des Validators
 	 * @param kontext   der Kontext des Validators
 	 */
-	public ValidatorLsLehrerStammdaten(final @NotNull LehrerStammdaten daten, final @NotNull ValidatorKontext kontext) {
+	public ValidatorLsLehrerStammdaten(final @NotNull Supplier<LehrerStammdaten> daten, final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		_validatoren.add(new ValidatorLsnLehrerStammdatenNachname(daten, kontext));
-		_validatoren.add(new ValidatorLsvLehrerStammdatenVorname(daten, kontext));
-		_validatoren.add(new ValidatorLsdLehrerStammdatenGeburtsdatum(daten, kontext));
-		_validatoren.add(new ValidatorLsgLehrerStammdatenGeschlecht(daten, kontext));
-		_validatoren.add(new ValidatorLskLehrerStammdatenKuerzel(daten, kontext));
+		_validatoren.add(new ValidatorLsnLehrerStammdatenNachname(() -> daten.get().nachname, kontext));
+		_validatoren.add(new ValidatorLsvLehrerStammdatenVorname(() -> daten.get().vorname, kontext));
+		_validatoren.add(new ValidatorLsdLehrerStammdatenGeburtsdatum(daten.get(), kontext));
+		_validatoren.add(new ValidatorLsgLehrerStammdatenGeschlecht(daten.get(), kontext));
+		_validatoren.add(new ValidatorLskLehrerStammdatenKuerzel(daten.get(), kontext));
 	}
 
 	@Override

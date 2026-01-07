@@ -1,5 +1,5 @@
-import { LehrerStammdaten } from '../../../asd/data/lehrer/LehrerStammdaten';
 import { ValidatorLsv00LehrerStammdatenVorname } from '../../../asd/validate/lehrer/ValidatorLsv00LehrerStammdatenVorname';
+import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
@@ -13,7 +13,7 @@ export class ValidatorLsvLehrerStammdatenVorname extends Validator {
 	 * @param daten     die Daten des Validators
 	 * @param kontext   der Kontext des Validators
 	 */
-	public constructor(daten: LehrerStammdaten, kontext: ValidatorKontext) {
+	public constructor(daten: Supplier<string | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._validatoren.add(new ValidatorLsv00LehrerStammdatenVorname(daten, kontext));
 	}

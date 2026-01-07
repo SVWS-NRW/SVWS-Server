@@ -1,6 +1,7 @@
 package de.svws_nrw.asd.validate.lehrer;
 
-import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
+import java.util.function.Supplier;
+
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
 import jakarta.validation.constraints.NotNull;
@@ -12,7 +13,7 @@ import jakarta.validation.constraints.NotNull;
 public final class ValidatorLsv05LehrerStammdatenVorname extends Validator {
 
 	/** Die Lehrer-Stammdaten */
-	private final @NotNull LehrerStammdaten daten;
+	private final @NotNull Supplier<String> daten;
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
@@ -20,7 +21,7 @@ public final class ValidatorLsv05LehrerStammdatenVorname extends Validator {
 	 * @param daten     die Daten des Validators
 	 * @param kontext   der Kontext des Validators
 	 */
-	public ValidatorLsv05LehrerStammdatenVorname(final @NotNull LehrerStammdaten daten,
+	public ValidatorLsv05LehrerStammdatenVorname(final @NotNull Supplier<String> daten,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		this.daten = daten;
@@ -30,11 +31,12 @@ public final class ValidatorLsv05LehrerStammdatenVorname extends Validator {
 
 	@Override
 	protected boolean pruefe() {
-		final String vorname = daten.vorname;
-		final String fehlertext = "Vorname der Lehrkraft: Die zweite Stelle des Vornamens ist mit einem Großbuchstaben besetzt. Bitte stellen sie sicher, dass nur der erste Buchstabe des Vornamens ein Großbuchstabe ist. Bitte schreiben Sie auf ihn folgende Buchstaben klein.";
+		final String vorname = daten.get();
+		final String fehlertext =
+				"Vorname der Lehrkraft: Die zweite Stelle des Vornamens ist mit einem Großbuchstaben besetzt. Bitte stellen sie sicher, dass nur der erste Buchstabe des Vornamens ein Großbuchstabe ist. Bitte schreiben Sie auf ihn folgende Buchstaben klein.";
 
 		if (vorname.length() > 1 && Character.isUpperCase(vorname.charAt(1))) {
-			this.addFehler(5, fehlertext);
+			addFehler(5, fehlertext);
 			return false;
 		}
 

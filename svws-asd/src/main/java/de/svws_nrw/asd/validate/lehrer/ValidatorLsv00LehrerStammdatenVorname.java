@@ -1,8 +1,10 @@
 package de.svws_nrw.asd.validate.lehrer;
 
-import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
+import java.util.function.Supplier;
+
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
+import de.svws_nrw.transpiler.annotations.AllowNull;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -11,8 +13,8 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class ValidatorLsv00LehrerStammdatenVorname extends Validator {
 
-	/** Die Lehrer-Stammdaten */
-	private final @NotNull LehrerStammdaten daten;
+	/** Der Lehrer-Vorname */
+	private final @NotNull Supplier<@AllowNull String> daten;
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
@@ -20,21 +22,21 @@ public final class ValidatorLsv00LehrerStammdatenVorname extends Validator {
 	 * @param daten     die Daten des Validators
 	 * @param kontext   der Kontext des Validators
 	 */
-	public ValidatorLsv00LehrerStammdatenVorname(final @NotNull LehrerStammdaten daten,
+	public ValidatorLsv00LehrerStammdatenVorname(final @NotNull Supplier<@AllowNull String> daten,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		this.daten = daten;
-		_validatoren.add(new ValidatorLsv01LehrerStammdatenVorname(daten, kontext));
+		_validatoren.add(new ValidatorLsv01LehrerStammdatenVorname(getNotNullSupplier(daten), kontext));
 
 	}
 
 
 	@Override
 	protected boolean pruefe() {
-		final String vorname = daten.vorname;
+		final String vorname = daten.get();
 
-		if ((vorname == null) || (vorname.length() == 0)) {
-			this.addFehler(0, "Vorname der Lehrkraft: Kein Wert vorhanden.");
+		if (vorname == null || vorname.length() == 0) {
+			addFehler(0, "Vorname der Lehrkraft: Kein Wert vorhanden.");
 			return false;
 		}
 

@@ -1,27 +1,27 @@
 import { ValidatorLppbb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell } from '../../../asd/validate/lehrer/ValidatorLppbb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell';
-import { LehrerPersonalabschnittsdaten } from '../../../asd/data/lehrer/LehrerPersonalabschnittsdaten';
+import { LehrerPersonalabschnittsdatenAnrechnungsstunden } from '../../../asd/data/lehrer/LehrerPersonalabschnittsdatenAnrechnungsstunden';
+import type { Supplier } from '../../../java/util/function/Supplier';
+import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
 
 export class ValidatorLppbbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell extends Validator {
 
-	/**
-	 * Die Lehrer-Personalabschnittsdaten, die geprüft werden.
-	 */
-	private readonly daten: LehrerPersonalabschnittsdaten;
-
 
 	/**
 	 * Erstellt einen neuen Validator.
 	 *
-	 * @param daten    die Abschnittsdaten der Lehrkraft
+	 * @param pflichtstundensoll   der Pflichtstundensoll
+	 * @param beschaeftigungsart   die Beschäftigungsart
+	 * @param einsatzstatus        der Einsatz-Status
+	 * @param mehrleistungen       die Liste mit den Einträgen zu Mehrleistungen
+	 * @param minderleistungen     die Liste mit den Einträgen zu Minderleistungen
 	 * @param kontext  der Kontext der Validierung
 	 */
-	public constructor(daten: LehrerPersonalabschnittsdaten, kontext: ValidatorKontext) {
+	public constructor(pflichtstundensoll: Supplier<number | null>, beschaeftigungsart: Supplier<string | null>, einsatzstatus: Supplier<string | null>, mehrleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, minderleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, kontext: ValidatorKontext) {
 		super(kontext);
-		this.daten = daten;
-		this._validatoren.add(new ValidatorLppbb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell(daten, kontext));
+		this._validatoren.add(new ValidatorLppbb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell(pflichtstundensoll, beschaeftigungsart, einsatzstatus, mehrleistungen, minderleistungen, kontext));
 	}
 
 	protected pruefe(): boolean {

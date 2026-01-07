@@ -1,6 +1,7 @@
 package de.svws_nrw.asd.validate.lehrer;
 
-import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
+import java.util.function.Supplier;
+
 import de.svws_nrw.asd.validate.NamensManager;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
@@ -12,16 +13,16 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class ValidatorLsn04LehrerStammdatenNachname extends Validator {
 
-	/** Die Lehrer-Stammdaten */
-	private final @NotNull LehrerStammdaten daten;
+	/** Der Lehrer-Nachname */
+	private final @NotNull Supplier<String> daten;
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param daten     die Daten des Validators
+	 * @param daten     der Nachname des Lehrers
 	 * @param kontext   der Kontext des Validators
 	 */
-	public ValidatorLsn04LehrerStammdatenNachname(final @NotNull LehrerStammdaten daten, final @NotNull ValidatorKontext kontext) {
+	public ValidatorLsn04LehrerStammdatenNachname(final @NotNull Supplier<String> daten, final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		this.daten = daten;
 	}
@@ -29,12 +30,11 @@ public final class ValidatorLsn04LehrerStammdatenNachname extends Validator {
 
 	@Override
 	protected boolean pruefe() {
-		final String nachname = daten.nachname;
-
-		final @NotNull String nachnameOhneZusatz = NamensManager.getOhneZusatz(nachname);
+		final @NotNull String nachnameOhneZusatz = NamensManager.getOhneZusatz(daten.get());
 
 		if (!Character.isUpperCase(nachnameOhneZusatz.charAt(0))) {
-			this.addFehler(4, "Nachname der Lehrkraft: Die erste Stelle des Nachnamens muss - ggf. im Anschluss an einen Namenszusatz, wie z.B. \"von\" -  mit einem Großbuchstaben besetzt sein.");
+			addFehler(4,
+					"Nachname der Lehrkraft: Die erste Stelle des Nachnamens muss - ggf. im Anschluss an einen Namenszusatz, wie z.B. \"von\" -  mit einem Großbuchstaben besetzt sein.");
 			return false;
 		}
 
