@@ -96,8 +96,9 @@ export class LehrerListeManager extends AuswahlManager<number, LehrerListeEintra
 			this._mapKlasseIstSichtbar.put(l.istSichtbar, l.id, l);
 			this._mapLehrerIstStatistikrelevant.put(l.istRelevantFuerStatistik, l.id, l);
 			const personalTyp: PersonalTyp | null = PersonalTyp.fromKuerzel(l.personTyp);
-			if (personalTyp !== null)
+			if (personalTyp !== null) {
 				this._mapKlasseHatPersonaltyp.put(personalTyp, l.id, l);
+			}
 		}
 	}
 
@@ -110,8 +111,9 @@ export class LehrerListeManager extends AuswahlManager<number, LehrerListeEintra
 	 * @param daten     das neue Daten-Objekt zu der Auswahl
 	 */
 	protected onSetDaten(eintrag: LehrerListeEintrag, daten: LehrerStammdaten): boolean {
-		if ((this._personaldaten !== null) && (this._personaldaten.id !== eintrag.id))
+		if ((this._personaldaten !== null) && (this._personaldaten.id !== eintrag.id)) {
 			this.clearPersonalDaten();
+		}
 		let updateEintrag: boolean = false;
 		if (!JavaObject.equalsTranspiler(daten.kuerzel, (eintrag.kuerzel))) {
 			eintrag.kuerzel = daten.kuerzel;
@@ -142,8 +144,9 @@ export class LehrerListeManager extends AuswahlManager<number, LehrerListeEintra
 	 * @return der Personaltyp
 	 */
 	public datenGetPersonalTyp(): PersonalTyp | null {
-		if ((this._daten === null) || (this._daten.personalTyp === null))
+		if ((this._daten === null) || (this._daten.personalTyp === "")) {
 			return null;
+		}
 		return PersonalTyp.fromKuerzel(this._daten.personalTyp);
 	}
 
@@ -206,10 +209,12 @@ export class LehrerListeManager extends AuswahlManager<number, LehrerListeEintra
 				} else
 					if (JavaObject.equalsTranspiler("vorname", (field))) {
 						cmp = JavaString.compareTo(a.vorname, b.vorname);
-					} else
+					} else {
 						throw new DeveloperNotificationException("Fehler bei der Sortierung. Das Sortierkriterium wird vom Manager nicht unterstützt.");
-			if (cmp === 0)
+					}
+			if (cmp === 0) {
 				continue;
+			}
 			return asc ? cmp : -cmp;
 		}
 		return JavaLong.compare(a.id, b.id);
@@ -217,9 +222,11 @@ export class LehrerListeManager extends AuswahlManager<number, LehrerListeEintra
 
 	protected onMehrfachauswahlChanged(): void {
 		this.idsReferenzierterLehrer.clear();
-		for (const l of this.liste.auswahl())
-			if ((l.referenziertInAnderenTabellen !== null) && l.referenziertInAnderenTabellen)
+		for (const l of this.liste.auswahl()) {
+			if ((l.referenziertInAnderenTabellen !== null) && l.referenziertInAnderenTabellen) {
 				this.idsReferenzierterLehrer.add(l.id);
+			}
+		}
 	}
 
 	/**
@@ -232,16 +239,20 @@ export class LehrerListeManager extends AuswahlManager<number, LehrerListeEintra
 	}
 
 	protected checkFilter(eintrag: LehrerListeEintrag): boolean {
-		if (this._filterNurSichtbar && !eintrag.istSichtbar)
+		if (this._filterNurSichtbar && !eintrag.istSichtbar) {
 			return false;
-		if (this._filterNurStatistikrelevant && !eintrag.istRelevantFuerStatistik)
+		}
+		if (this._filterNurStatistikrelevant && !eintrag.istRelevantFuerStatistik) {
 			return false;
+		}
 		if (this.personaltypen.auswahlExists()) {
-			if ((eintrag.personTyp === null) || (JavaString.isEmpty(eintrag.personTyp)))
+			if ((eintrag.personTyp === "") || (JavaString.isEmpty(eintrag.personTyp))) {
 				return false;
+			}
 			const personalTyp: PersonalTyp | null = PersonalTyp.fromKuerzel(eintrag.personTyp);
-			if ((personalTyp === null) || (!this.personaltypen.auswahlHas(personalTyp)))
+			if ((personalTyp === null) || (!this.personaltypen.auswahlHas(personalTyp))) {
 				return false;
+			}
 		}
 		return true;
 	}
@@ -271,8 +282,9 @@ export class LehrerListeManager extends AuswahlManager<number, LehrerListeEintra
 	 * @return die Personal-Daten
 	 */
 	public personalDaten(): LehrerPersonaldaten {
-		if (this._personaldaten === null)
+		if (this._personaldaten === null) {
 			throw new DeveloperNotificationException("Es exitsieren derzeit keine Personal-Daten");
+		}
 		return this._personaldaten;
 	}
 
@@ -343,7 +355,7 @@ export class LehrerListeManager extends AuswahlManager<number, LehrerListeEintra
 		return ['de.svws_nrw.core.utils.AuswahlManager', 'de.svws_nrw.core.utils.lehrer.LehrerListeManager'].includes(name);
 	}
 
-	public static class = new Class<LehrerListeManager>('de.svws_nrw.core.utils.lehrer.LehrerListeManager');
+	public static readonly class = new Class<LehrerListeManager>('de.svws_nrw.core.utils.lehrer.LehrerListeManager');
 
 }
 

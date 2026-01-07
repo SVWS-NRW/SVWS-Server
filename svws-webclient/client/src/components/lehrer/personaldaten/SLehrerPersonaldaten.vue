@@ -57,8 +57,8 @@
 	import type { LehrerPersonaldatenProps } from './SLehrerPersonaldatenProps';
 	import type { LehrerBeschaeftigungsartKatalogEintrag, LehrerEinsatzstatusKatalogEintrag, LehrerRechtsverhaeltnisKatalogEintrag,
 		JavaSet, Validator } from "@core";
-	import { BenutzerKompetenz, DeveloperNotificationException, HashSet, ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten } from "@core";
-	import { LehrerBeschaeftigungsart, LehrerEinsatzstatus, LehrerRechtsverhaeltnis } from "@core";
+	import { BenutzerKompetenz, HashSet, ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten,
+		LehrerBeschaeftigungsart, LehrerEinsatzstatus, LehrerRechtsverhaeltnis, LehrerPersonalabschnittsdaten } from "@core";
 	import { CoreTypeSelectManager, SelectManager } from "@ui";
 
 	const props = defineProps<LehrerPersonaldatenProps>();
@@ -82,8 +82,9 @@
 		},
 		set(val: LehrerRechtsverhaeltnisKatalogEintrag | undefined) {
 			const daten = personalabschnittsdaten();
-			if (daten !== null)
+			if (daten !== null) {
 				void props.patchAbschnittsdaten({ rechtsverhaeltnis: val?.schluessel }, daten.id);
+			}
 		},
 	});
 
@@ -99,8 +100,9 @@
 		},
 		set(val: LehrerBeschaeftigungsartKatalogEintrag | undefined) {
 			const daten = personalabschnittsdaten();
-			if (daten !== null)
+			if (daten !== null) {
 				void props.patchAbschnittsdaten({ beschaeftigungsart: val?.schluessel }, daten.id);
+			}
 		},
 	});
 
@@ -116,8 +118,9 @@
 		},
 		set(val: LehrerEinsatzstatusKatalogEintrag | undefined) {
 			const daten = personalabschnittsdaten();
-			if (daten !== null)
+			if (daten !== null) {
 				void props.patchAbschnittsdaten({ einsatzstatus: val?.schluessel }, daten.id);
+			}
 		},
 	});
 
@@ -127,15 +130,18 @@
 	const moeglicheStammschulnummern = computed<JavaSet<string>>(() => {
 		// Füge zunächst alle Schulnummern mit eingetragenen Kürzeln im Schul-Katalog hinzu
 		const result = new HashSet<string>();
-		for (const schule of props.mapSchulen().values())
-			if (schule.schulnummerStatistik !== null)
+		for (const schule of props.mapSchulen().values()) {
+			if (schule.schulnummerStatistik !== null) {
 				result.add(schule.schulnummerStatistik);
+			}
+		}
 		// Ergänze die eigene Schule, sofern diese nicht bereits im Katalog enthalten ist
 		result.add(eigeneSchulnummer.value);
 		// Ergänze ggf. noch den Eintrag aus der Datenbank
 		const daten = personalabschnittsdaten();
-		if ((daten === null) || (daten.stammschulnummer === null))
+		if ((daten === null) || (daten.stammschulnummer === null)) {
 			return result;
+		}
 		result.add(daten.stammschulnummer);
 		return result;
 	});
@@ -143,14 +149,16 @@
 	function getSchulnummerText(schulnummer: string): string {
 		const eintrag = props.mapSchulen().get(schulnummer);
 		const istEigene = (eigeneSchulnummer.value === schulnummer);
-		if (istEigene && (eintrag !== undefined))
+		if (istEigene && (eintrag !== undefined)) {
 			return `Eigene Schule - ${eintrag.kuerzel} - ${schulnummer}`;
-		else if (istEigene)
+		}
+		if (istEigene) {
 			return `Eigene Schule - ${schulnummer}`;
-		else if (eintrag !== undefined)
+		}
+		if (eintrag !== undefined) {
 			return `${eintrag.kuerzel} - ${schulnummer}`;
-		else
-			return schulnummer;
+		}
+		return schulnummer;
 	}
 
 	const stammschuleSelectManager = new SelectManager({ options: moeglicheStammschulnummern.value, selectionDisplayText: getSchulnummerText,
@@ -163,21 +171,27 @@
 		set(val: string | null | undefined) {
 			// Bugfix: Wenn dieser Check auf undefined nicht vorhanden ist, dann kommt es zu einem Fehler, wenn die Schulnummer nicht
 			//         im Katalog enthalten ist und zu einem anderen Lehrer gewechselt wird
-			if (val === undefined)
+			if (val === undefined) {
 				return;
+			}
 			const daten = personalabschnittsdaten();
-			if (daten !== null)
+			if (daten !== null) {
 				void props.patchAbschnittsdaten({ stammschulnummer: val }, daten.id);
+			}
 		},
 	});
 
 
 	const validatorPersonalabschnittsDaten = computed<ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten>(() => {
-		const daten = personalabschnittsdaten();
-		if (daten !== null)
-			return new ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten(daten, props.lehrerListeManager().daten(), props.validatorKontext());
-		else
-			throw new DeveloperNotificationException("Keine Personalabschnittsdaten gefunden.");
+		let daten = personalabschnittsdaten();
+		if (daten === null) {
+			// Erstelle Pseudo-Daten, die für die Validierung genutzt werden
+			daten = new LehrerPersonalabschnittsdaten();
+			daten.id = -1;
+			daten.idLehrer = props.lehrerListeManager().auswahl().id;
+			daten.idSchuljahresabschnitt = props.aktAbschnitt.id;
+		}
+		return new ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten(daten, props.lehrerListeManager().daten(), props.validatorKontext());
 	});
 
 	function validatePersonalabschnittDaten(validator: Validator): boolean {
@@ -185,18 +199,19 @@
 	};
 
 	async function patchPflichtstundenSoll(input: number | null) {
-		if (pflichtstundenSollHasAMaximumOf2DecimalPlaces(input))
+		if (pflichtstundenSollHasAMaximumOf2DecimalPlaces(input)) {
 			await props.patchAbschnittsdaten({ pflichtstundensoll: input }, personalabschnittsdaten()?.id ?? -1);
+		}
 	}
 
 	function pflichtstundenSollHasAMaximumOf2DecimalPlaces(pflichtstundenSoll: number | null) {
-		if (pflichtstundenSoll === null)
+		if (pflichtstundenSoll === null) {
 			return true;
-
+		}
 		const pflichtstundenSollParts = String(pflichtstundenSoll).split('.');
-		if ((pflichtstundenSollParts.length === 2) && (pflichtstundenSollParts[1].length > 2))
+		if ((pflichtstundenSollParts.length === 2) && (pflichtstundenSollParts[1].length > 2)) {
 			return false;
-
+		}
 		return true;
 	}
 
