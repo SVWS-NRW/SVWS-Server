@@ -31,7 +31,9 @@ export class RouteStatistik extends RouteNode<any, RouteApp> {
 
 	protected getAuswahlComputedProperty(): WritableComputedRef<undefined> {
 		// TODO
-		return computed({ get(): undefined { return undefined }, set(value: undefined) { } });
+		return computed({ get(): undefined {
+			return undefined;
+		}, set(value: undefined) { } });
 	}
 
 	public getProps(to: RouteLocationNormalized): StatistikAppProps {

@@ -1,5 +1,5 @@
 import type { RouteParamsRawGeneric } from "vue-router";
-import { ArrayList, BenutzerKompetenz, JavaSet, List, OrtKatalogEintrag, SimpleOperationResponse } from "@core";
+import { type JavaSet, type List, type OrtKatalogEintrag, type SimpleOperationResponse, ArrayList, BenutzerKompetenz } from "@core";
 import { ViewType } from "@ui";
 import { api } from "~/router/Api";
 import { OrteListeManager } from "../../../../../../../ui/src/ui/manager/kataloge/OrteListeManager";

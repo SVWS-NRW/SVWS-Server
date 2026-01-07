@@ -457,7 +457,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 */
 	public set selectedChildRecord(record: RouteRecordRaw | undefined) {
 		this._selectedChild.value = (record?.name === undefined)
-			? undefined : this._selectedChild.value = RouteNode.mapNodesByName.get(record.name.toString());
+			? undefined : RouteNode.mapNodesByName.get(record.name.toString());
 	}
 
 	/**

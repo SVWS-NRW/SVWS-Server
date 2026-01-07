@@ -1,4 +1,3 @@
-import type { RouteParams } from "vue-router";
 import type { GostJahrgang, GostJahrgangsdaten, JahrgangsDaten, GostFach } from "@core";
 import { DeveloperNotificationException, GostAbiturjahrUtils, Schulgliederung, GostFaecherManager, ArrayList, Jahrgaenge } from "@core";
 
@@ -67,8 +66,9 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 
 	get selectedTabFromConfig(): TabData {
 		const tab = api.config.getValue("gost.tab.selected");
-		if (tab.length === 0)
+		if (tab.length === 0) {
 			return { name: this.defaultView.name, text: this.defaultView.text };
+		}
 		return JSON.parse(tab) as TabData;
 	}
 
@@ -85,57 +85,64 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 	}
 
 	private firstAbiturjahrgang(mapAbiturjahrgaenge: Map<number, GostJahrgang>): GostJahrgang | undefined {
-		if (mapAbiturjahrgaenge.size === 0)
+		if (mapAbiturjahrgaenge.size === 0) {
 			return undefined;
+		}
 		return mapAbiturjahrgaenge.values().next().value;
 	}
 
 	private async ladeAbiturjahrgaenge(idSchuljahresabschnitt: number): Promise<Map<number, GostJahrgang>> {
 		const listAbiturjahrgaenge = await api.server.getGostAbiturjahrgaengeFuerAbschnitt(api.schema, idSchuljahresabschnitt);
 		const mapAbiturjahrgaenge = new Map<number, GostJahrgang>();
-		for (const l of listAbiturjahrgaenge)
+		for (const l of listAbiturjahrgaenge) {
 			mapAbiturjahrgaenge.set(l.abiturjahr, l);
+		}
 		return mapAbiturjahrgaenge;
 	}
 
 	private ladeJahrgaengeOhneAbiJahrgang(mapAbiturjahrgaenge: Map<number, GostJahrgang>, mapJahrgaenge: Map<number, JahrgangsDaten>): Map<number, JahrgangsDaten> {
 		const jahrgaengeMitAbiturjahrgang = new Set();
-		for (const j of mapAbiturjahrgaenge.values())
+		for (const j of mapAbiturjahrgaenge.values()) {
 			jahrgaengeMitAbiturjahrgang.add(j.jahrgang);
+		}
 		const map = new Map<number, JahrgangsDaten>();
-		for (const j of mapJahrgaenge.values())
+		for (const j of mapJahrgaenge.values()) {
 			if (!jahrgaengeMitAbiturjahrgang.has(j.kuerzel)) {
 				const abiturjahr = this.getAbiturjahrFuerJahrgangMitMap(j.id, mapJahrgaenge);
-				if (abiturjahr !== null)
+				if (abiturjahr !== null) {
 					map.set(j.id, j);
+				}
 			}
+		}
 		return map;
 	}
 
 	private async ladeJahrgaenge(idSchuljahresabschnitt: number): Promise<Map<number, JahrgangsDaten>> {
 		// Lade die Liste der Jahrgänge, für welche Abiturjahrgänge ggf. angelegt werden können.
 		let schuljahresabschnitt = api.mapAbschnitte.value.get(idSchuljahresabschnitt);
-		if (schuljahresabschnitt === undefined)
-			schuljahresabschnitt = api.abschnitt;
+		schuljahresabschnitt ??= api.abschnitt;
 		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
 		const mapJahrgaenge = new Map<number, JahrgangsDaten>();
 		for (const j of listJahrgaenge) {
 			const jg: Jahrgaenge | null = (j.kuerzelStatistik === null) ? null : Jahrgaenge.data().getWertByKuerzel(j.kuerzelStatistik);
-			if ((jg !== null) && (jg.hatSchulform(schuljahresabschnitt.schuljahr, api.schulform)))
+			if (jg?.hatSchulform(schuljahresabschnitt.schuljahr, api.schulform) ?? false) {
 				mapJahrgaenge.set(j.id, j);
+			}
 		}
 		return mapJahrgaenge;
 	}
 
 	private async ladeJahrgangsdaten(auswahl: GostJahrgang | undefined) {
-		if (auswahl === undefined)
+		if (auswahl === undefined) {
 			return;
+		}
 		return await api.server.getGostAbiturjahrgang(api.schema, auswahl.abiturjahr);
 	}
 
 	private async ladeFaecherManager(auswahl: GostJahrgang | undefined): Promise<GostFaecherManager | undefined> {
-		if (auswahl === undefined)
+		if (auswahl === undefined) {
 			return;
+		}
 		const listFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, auswahl.abiturjahr);
 		return new GostFaecherManager(auswahl.abiturjahr - 1, listFaecher);
 	}
@@ -173,8 +180,9 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 	}
 
 	get jahrgangsdaten(): GostJahrgangsdaten {
-		if (this._state.value.jahrgangsdaten === undefined)
+		if (this._state.value.jahrgangsdaten === undefined) {
 			throw new DeveloperNotificationException("Unerwarteter Fehler: Jahrgangsdaten nicht initialisiert");
+		}
 		return this._state.value.jahrgangsdaten;
 	}
 
@@ -225,13 +233,12 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 	};
 
 	addAbiturjahrgang = async (idJahrgang: number) => {
-		const abiturjahr: number | null = await api.server.createGostAbiturjahrgang(api.schema, this._state.value.idSchuljahresabschnitt, idJahrgang);
-		if (abiturjahr === null)
-			throw new DeveloperNotificationException("Abiturjahrgang konnte nicht erstellt werden.");
+		const abiturjahr = await api.server.createGostAbiturjahrgang(api.schema, this._state.value.idSchuljahresabschnitt, idJahrgang);
 		let daten: Partial<RouteStateGost> = await this.ladeDatenFuerSchuljahresabschnitt(this._state.value.idSchuljahresabschnitt);
 		const jahrgang: GostJahrgang | undefined = daten.mapAbiturjahrgaenge?.get(abiturjahr);
-		if (jahrgang === undefined)
+		if (jahrgang === undefined) {
 			throw new DeveloperNotificationException("Der neu erstelle Abiturjahrgang konnte nicht geladen werden.");
+		}
 		daten = await this.ladeDatenFuerAbiturjahrgang(jahrgang, daten, true);
 		daten.creationModeEnabled = false;
 		this.setPatchedDefaultState(daten);
@@ -241,83 +248,94 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 	patchFach = async (data: Partial<GostFach>, fach_id: number) => {
 		await api.server.patchGostAbiturjahrgangFach(data, api.schema, this.jahrgangsdaten.abiturjahr, fach_id);
 		const fach = this.faecherManager.get(fach_id);
-		if (fach !== null)
+		if (fach !== null) {
 			Object.assign(fach, data);
+		}
 		this.setPatchedState({ faecherManager: this.faecherManager });
-		return;
 	};
 
 	private async ladeDatenFuerAbiturjahrgang(jahrgang: GostJahrgang | undefined, curState: Partial<RouteDataGost>, isEntering: boolean): Promise<Partial<RouteDataGost>> {
-		if (jahrgang && (jahrgang.abiturjahr === curState.auswahl?.abiturjahr) && (curState.jahrgangsdaten !== undefined) && !isEntering)
+		if (jahrgang && (jahrgang.abiturjahr === curState.auswahl?.abiturjahr) && (curState.jahrgangsdaten !== undefined) && !isEntering) {
 			return curState;
-		if ((jahrgang === undefined) || (this.mapJahrgaenge.size === 0))
-			return Object.assign({ ... this._defaultState }, { idSchuljahresabschnitt: this._state.value.idSchuljahresabschnitt });
+		}
+		if ((jahrgang === undefined) || (this.mapJahrgaenge.size === 0)) {
+			return { ...this._defaultState, idSchuljahresabschnitt: this._state.value.idSchuljahresabschnitt };
+		}
 		let auswahl: GostJahrgang | undefined = jahrgang;
-		if (curState.mapAbiturjahrgaenge?.get(jahrgang.abiturjahr) === undefined)
-			if (curState.mapAbiturjahrgaenge?.size === 0)
+		if (curState.mapAbiturjahrgaenge?.get(jahrgang.abiturjahr) === undefined) {
+			if (curState.mapAbiturjahrgaenge?.size === 0) {
 				auswahl = undefined;
-			else
-				[auswahl] = curState.mapAbiturjahrgaenge !== undefined ? curState.mapAbiturjahrgaenge.values() : [undefined];
+			} else {
+				[auswahl] = (curState.mapAbiturjahrgaenge === undefined) ? [undefined] : curState.mapAbiturjahrgaenge.values();
+			}
+		}
 		const jahrgangsdaten = await this.ladeJahrgangsdaten(auswahl);
 		const faecherManager = await this.ladeFaecherManager(auswahl);
-		return Object.assign({ ... curState }, {
+		return { ...curState,
 			auswahl,
 			jahrgangsdaten,
 			faecherManager,
 			view: this._state.value.view,
 			creationModeEnabled: this.creationModeEnabled,
 			gruppenprozesseEnabled: this.gruppenprozesseEnabled,
-		});
+		};
 	}
 
 	setAbiturjahrgang = async (jahrgang: GostJahrgang | undefined, isEntering: boolean) => {
 		const daten = await this.ladeDatenFuerAbiturjahrgang(jahrgang, this._state.value, isEntering);
-		if ((jahrgang?.abiturjahr !== undefined) && this.mapAbiturjahrgaenge.has(jahrgang.abiturjahr))
+		if ((jahrgang?.abiturjahr !== undefined) && this.mapAbiturjahrgaenge.has(jahrgang.abiturjahr)) {
 			await this.setAbiturjahrToConfig(jahrgang.abiturjahr);
+		}
 		this.setPatchedDefaultState(daten);
 	};
 
 	gotoAbiturjahrgang = async (value: GostJahrgang | undefined) => {
-		if (value === undefined)
+		if (value === undefined) {
 			// TODO: Das ist ein Bug in der Tabelle, die bei gleicher Auswahl undefined schickt
 			// await RouteManager.doRoute(routeGost.getRoute());
 			return;
+		}
 		this._state.value.creationModeEnabled = false;
 		this._state.value.gruppenprozesseEnabled = false;
 		const redirect_name: string = ((routeGost.selectedChild === undefined) || (routeGost.selectedChild.name === routeGostAbiturjahrNeu.name) || (routeGost.selectedChild.name === routeGostGruppenprozesse.name)) ? routeGostBeratung.name : routeGost.selectedChild.name;
 		const node = RouteNode.getNodeByName(redirect_name);
-		if (node !== undefined)
+		if (node !== undefined) {
 			await RouteManager.doRoute(node.getRoute({ abiturjahr: value.abiturjahr }));
+		}
 	};
 
 	private getAbiturjahrFuerJahrgangMitMap(idJahrgang: number, mapJahrgaenge: Map<number, JahrgangsDaten>): number | null {
 		const jahrgang = mapJahrgaenge.get(idJahrgang);
-		if (jahrgang === undefined)
+		if (jahrgang === undefined) {
 			throw new DeveloperNotificationException("Konnte den Jahrgang für die ID " + idJahrgang + " nicht bestimmen.");
+		}
 		const schulgliederung: Schulgliederung | null = (jahrgang.kuerzelSchulgliederung === null) ? null : Schulgliederung.data().getWertByKuerzel(jahrgang.kuerzelSchulgliederung);
-		if (schulgliederung === null)
+		if (schulgliederung === null) {
 			throw new DeveloperNotificationException("Dem Jahrgang mit der ID " + idJahrgang + " ist eine unbekannte Schulgliederung " + jahrgang.kuerzelSchulgliederung + " zugeordnet.");
+		}
 		const abiturjahr = (jahrgang.kuerzelStatistik === null) ? null
 			: GostAbiturjahrUtils.getGostAbiturjahr(api.schulform, schulgliederung, routeApp.data.aktAbschnitt.value.schuljahr, jahrgang.kuerzelStatistik);
-		if (abiturjahr === null)
-			return null;
-		return abiturjahr;
+		return abiturjahr ?? null;
 	}
 
 	getAbiturjahrFuerJahrgang = (idJahrgang: number) => {
 		const abiturjahr = this.getAbiturjahrFuerJahrgangMitMap(idJahrgang, this._state.value.mapJahrgaenge);
-		if (abiturjahr === null)
+		if (abiturjahr === null) {
 			throw new DeveloperNotificationException(`Dem Jahrgang mit der ID ${idJahrgang} konnte kein Abiturjahr zugeordnet werden.`);
+		}
 		return abiturjahr;
 	};
 
 	public removeAbiturjahrgaengeCheck = (): [boolean, ArrayList<string>] => {
 		const errorLog: ArrayList<string> = new ArrayList();
-		if (this.selected.length === 0)
+		if (this.selected.length === 0) {
 			errorLog.add('Es wurde kein Abiturjahrgang zum Löschen ausgewählt.');
-		for (const abiturjahrgang of this.selected)
-			if (abiturjahrgang.istBlockungFestgelegt.some(jg => (jg === true)))
+		}
+		for (const abiturjahrgang of this.selected) {
+			if (abiturjahrgang.istBlockungFestgelegt.some(jg => (jg === true))) {
 				errorLog.add(`Der Abiturjahrgang ${abiturjahrgang.abiturjahr} kann nicht gelöscht werden, da ihm bereits Kurse zugeordnet sind.`);
+			}
+		}
 		return [errorLog.isEmpty(), errorLog];
 	};
 
@@ -332,30 +350,34 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 	};
 
 	gotoCreationMode = async (navigate: boolean) => {
-		if (this._state.value.creationModeEnabled || (this._state.value.view === routeGostAbiturjahrNeu))
+		if (this._state.value.creationModeEnabled || (this._state.value.view === routeGostAbiturjahrNeu)) {
 			return;
+		}
 		this._state.value.creationModeEnabled = true;
 		this._state.value.gruppenprozesseEnabled = false;
 		this._state.value.oldView = this._state.value.view;
-		if (navigate)
+		if (navigate) {
 			await RouteManager.doRoute(routeGostAbiturjahrNeu.getRoute());
+		}
 		this._state.value.view = routeGostAbiturjahrNeu;
 	};
 
 	gotoGruppenprozess = async (navigate: boolean) => {
-		if (this._state.value.gruppenprozesseEnabled || (this._state.value.view === routeGostGruppenprozesse))
+		if (this._state.value.gruppenprozesseEnabled || (this._state.value.view === routeGostGruppenprozesse)) {
 			return;
+		}
 		this._state.value.gruppenprozesseEnabled = true;
 		this._state.value.creationModeEnabled = false;
 		this._state.value.oldView = this._state.value.view;
-		if (navigate)
+		if (navigate) {
 			await RouteManager.doRoute(routeGostGruppenprozesse.getRoute());
+		}
 		this._state.value.view = routeGostGruppenprozesse;
 	};
 
 	cancelCreationMode = async () => {
 		this._state.value.creationModeEnabled = false;
-		const route = this._state.value.oldView !== undefined ? this._state.value.oldView.getRoute() : routeGost.getRoute();
+		const route = (this._state.value.oldView === undefined) ? routeGost.getRoute() : this._state.value.oldView.getRoute();
 		await RouteManager.doRoute(route);
 	};
 

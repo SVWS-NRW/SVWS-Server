@@ -27,7 +27,7 @@ export class RouteBetriebeDaten extends RouteNode<any, RouteBetriebe> {
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			addAnsprechpartner: routeBetriebe.data.addAnsprechpartner,
 			deleteAnsprechpartner: routeBetriebe.data.deleteAnsprechpartner,
-			patchAnsprechpartner: routeBetriebe.data.patchAnsprechpartner
+			patchAnsprechpartner: routeBetriebe.data.patchAnsprechpartner,
 		};
 	}
 

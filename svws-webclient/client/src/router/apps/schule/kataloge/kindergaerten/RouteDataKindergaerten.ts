@@ -1,6 +1,6 @@
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
-import { ArrayList, List, SimpleOperationResponse, Kindergarten, BenutzerKompetenz } from "@core";
+import { ArrayList, type List, type SimpleOperationResponse, type Kindergarten, BenutzerKompetenz } from "@core";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
 import { ViewType, KindergaertenListeManager } from "@ui";
 import { api } from "~/router/Api";

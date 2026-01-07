@@ -22,16 +22,16 @@ export class RouteManager {
 	/** Gibt an, ob aktuell ein Routing stattfindet und eine Ereignisbehandlung durchgeführt wird. */
 	protected active = false;
 
-	private _errorstate = reactive<RouteStateError>({
+	private readonly _errorstate = reactive<RouteStateError>({
 		code: undefined,
 		error: undefined,
 	});
 
 	/**
-     * Erstellt die Instanz des Managers für die übergebene Route
-     *
-     * @param router   der Router, welcher dem Manager zugeordnet wird
-     */
+	 * Erstellt die Instanz des Managers für die übergebene Route
+	 *
+	 * @param router   der Router, welcher dem Manager zugeordnet wird
+	 */
 	private constructor(router: Router) {
 		this.router = router;
 		this.active = false;
@@ -70,26 +70,29 @@ export class RouteManager {
 	 */
 	public static async doRoute(to: RouteLocationRaw) {
 		const manager = RouteManager._instance;
-		if (manager === undefined)
+		if (manager === undefined) {
 			throw new Error("Unzulässiger Zugriff auf den RouteManager bevor eine Instanz erzeugt wurde.");
+		}
 		// Ignoriere Aufruf, wenn der manager bereits in einem Routing-Vorgang ist. Dies kann sonst das aktuelle Routing canceln
 		// und zu ungültigen Zuständen führen
-		if (manager.active)
+		if (manager.active) {
 			return;
+		}
 		// Führe das Routing durch...
 		await manager.router.push(to);
 	}
 
 	/**
-     * Erstellt die Instanz des Managers für den übergebenen Route
-     *
-     * @param router   der Router, welcher dem Manager zugeordnet wird
-     *
-     * @returns die Instanz des Managers
-     */
+	 * Erstellt die Instanz des Managers für den übergebenen Route
+	 *
+	 * @param router   der Router, welcher dem Manager zugeordnet wird
+	 *
+	 * @returns die Instanz des Managers
+	 */
 	public static create(router: Router): RouteManager {
-		if (RouteManager._instance !== undefined)
+		if (RouteManager._instance !== undefined) {
 			throw new Error("Es sind keine zwei Instanzen des Route-Managers erlaubt.");
+		}
 		RouteManager._instance = new RouteManager(router);
 		return RouteManager._instance;
 	}
@@ -101,8 +104,9 @@ export class RouteManager {
 	 */
 	public static isActive(): boolean {
 		const manager = RouteManager._instance;
-		if (manager === undefined)
+		if (manager === undefined) {
 			return false;
+		}
 		return manager.active;
 	}
 
@@ -112,7 +116,7 @@ export class RouteManager {
 	 * Schlägt der Navigation-Guard fehl, dann gibt es zwei mögliche Antworten:
 	 *   1. false, d.h. die Route ist ungültig
 	 *   2. ein neues Routing-Ziel, so dass es zu einem Redirect kommt, wodurch das Routing noch nicht abgeschlossen ist und
-	 * 	    der beforeEach-Handler über die neue Route erneut aufgerufen wird.
+	 *      der beforeEach-Handler über die neue Route erneut aufgerufen wird.
 	 * Der beforeEach-Handler erezugt zunächst das Ereignis beforeEach nur bei der Zielroute (vollständiger Pfad).
 	 * Dann erzeugt er die Ereignisse enter, update und leaveBefore. Diese werden entsprechend auf alle
 	 * Teile des Pfades getriggert und es werden auch Ereignisse bei den entsrpechenden Teilrouten/Parents getriggert.
@@ -124,87 +128,105 @@ export class RouteManager {
 	 */
 	protected async beforeEach(to: RouteLocationNormalized, from: RouteLocationNormalized): Promise<boolean | void | Error | RouteLocationRaw> {
 		// Prüfe, ob bereits ein Routing-Vorgang durchgeführt wird. Ist dies der Fall, so wird der neue Vorgang ignoriert
-		if ((this.active) && (to.redirectedFrom === undefined))
+		if ((this.active) && (to.redirectedFrom === undefined)) {
 			return false;
+		}
 		this.active = true; // Setze, dass ein Routing-Vorgang bearbeitet wird
 		// Bestimme die Knoten, für die Quelle und das Ziel der Route
 		const to_node: RouteNode<unknown, any> | undefined = RouteNode.getNodeByName(to.name?.toString());
 		const from_node: RouteNode<unknown, any> | undefined = RouteNode.getNodeByName(from.name?.toString());
-		if (to_node === undefined)
+		if (to_node === undefined) {
 			return false;
-		if ((from_node === undefined) && (from.fullPath !== "/"))
+		}
+		if ((from_node === undefined) && (from.fullPath !== "/")) {
 			return false;
+		}
 		// Rufe die beforeEach-Methode bei der Ziel-Route auf und prüfe, ob die Route abgelehnt oder umgeleitet wird...
 		let result: any = await to_node.doBeforeEach(to_node, to.params, from_node, from.params);
-		if (result !== true)
+		if (result !== true) {
 			return result;
+		}
 		// Ereignisbehandlung: Sende die entsprechenden Nachrichten enter, update, leave zur Aktualisierung an die Knoten
 		if (from.fullPath === "/") {
 			// Die Analyse der Quell-Route ist nicht erheblich - die Ereignisse für die Ziel-Route sind aber wichtig
 			const to_predecessors: RouteNode<unknown, any>[] = to_node.getPredecessors();
 			for (const node of to_predecessors) {
 				result = await node.doEnter(to_node, to.params);
-				if (result !== undefined)
+				if (result !== undefined) {
 					return result;
+				}
 				result = await node.doUpdate(to_node, to.params);
-				if (result !== undefined)
+				if (result !== undefined) {
 					return result;
+				}
 			}
 			result = await to_node.doEnter(to_node, to.params);
-			if (result !== undefined)
+			if (result !== undefined) {
 				return result;
+			}
 			result = await to_node.doUpdate(to_node, to.params);
-			if (result !== undefined)
+			if (result !== undefined) {
 				return result;
+			}
 		} else {
 			// Bestimme den Knoten, der Route, die zuvor ausgewählt war - diese muss ja auch gültig sein...
-			if (from_node === undefined)
+			if (from_node === undefined) {
 				return false;
+			}
 			// Prüfe, ob die Knoten Nachfolger bzw. Vorgänger voneinander sind
 			const equals = (to_node.name === from_node.name);
 			const to_is_successor = to_node.checkSuccessorOf(from_node);
 			const from_is_successor = from_node.checkSuccessorOf(to_node);
 			const to_predecessors_all: RouteNode<unknown, any>[] = to_node.getPredecessors();
-			if (to_is_successor) {
+			if (to_is_successor !== false) {
 				for (const node of to_predecessors_all) {
 					if (to_is_successor.includes(node) && (node.name !== from_node.name)) {
 						result = await node.doEnter(to_node, to.params);
-						if (result !== undefined)
+						if (result !== undefined) {
 							return result;
+						}
 					}
 					result = await node.doUpdate(to_node, to.params);
-					if (result !== undefined)
+					if (result !== undefined) {
 						return result;
+					}
 				}
 				result = await to_node.doEnter(to_node, to.params);
-				if (result !== undefined)
+				if (result !== undefined) {
 					return result;
+				}
 				result = await to_node.doUpdate(to_node, to.params);
-				if (result !== undefined)
+				if (result !== undefined) {
 					return result;
-			} else if (from_is_successor) {
+				}
+			} else if (from_is_successor !== false) {
 				for (const node of from_is_successor.slice(1).reverse()) {
 					result = await node.doLeaveBefore(from_node, from.params);
-					if (result !== undefined)
+					if (result !== undefined) {
 						return result;
+					}
 				}
 				for (const node of to_predecessors_all) {
 					result = await node.doUpdate(to_node, to.params);
-					if (result !== undefined)
+					if (result !== undefined) {
 						return result;
+					}
 				}
 				result = await to_node.doUpdate(to_node, to.params);
-				if (result !== undefined)
+				if (result !== undefined) {
 					return result;
+				}
 			} else if (equals) {
 				for (const node of to_predecessors_all) {
 					result = await node.doUpdate(to_node, to.params);
-					if (result !== undefined)
+					if (result !== undefined) {
 						return result;
+					}
 				}
 				result = await to_node.doUpdate(to_node, to.params);
-				if (result !== undefined)
+				if (result !== undefined) {
 					return result;
+				}
 			} else {
 				let from_predecessors: RouteNode<unknown, any>[] = from_node.getPredecessors();
 				let to_predecessors: RouteNode<unknown, any>[] = [...to_predecessors_all];
@@ -214,29 +236,35 @@ export class RouteManager {
 					to_predecessors = to_predecessors.slice(1);
 				}
 				result = await from_node.doLeaveBefore(from_node, from.params);
-				if (result !== undefined)
+				if (result !== undefined) {
 					return result;
+				}
 				for (const node of [...from_predecessors].reverse()) {
 					result = await node.doLeaveBefore(from_node, from.params);
-					if (result !== undefined)
+					if (result !== undefined) {
 						return result;
+					}
 				}
 				for (const node of to_predecessors_all) {
 					if (to_predecessors.includes(node)) {
 						result = await node.doEnter(to_node, to.params);
-						if (result !== undefined)
+						if (result !== undefined) {
 							return result;
+						}
 					}
 					result = await node.doUpdate(to_node, to.params);
-					if (result !== undefined)
+					if (result !== undefined) {
 						return result;
+					}
 				}
 				result = await to_node.doEnter(to_node, to.params);
-				if (result !== undefined)
+				if (result !== undefined) {
 					return result;
+				}
 				result = await to_node.doUpdate(to_node, to.params);
-				if (result !== undefined)
+				if (result !== undefined) {
 					return result;
+				}
 			}
 		}
 		// Akzeptiere die Route...
@@ -263,12 +291,13 @@ export class RouteManager {
 					// Prüfe, ob die Knoten Nachfolger bzw. Vorgänger voneinander sind
 					const equals = (to_node.name === from_node.name);
 					const to_is_successor = to_node.checkSuccessorOf(from_node);
-					if (!to_is_successor) {
+					if (to_is_successor === false) {
 						const from_is_successor = from_node.checkSuccessorOf(to_node);
 						const to_predecessors_all: RouteNode<unknown, any>[] = to_node.getPredecessors();
-						if (from_is_successor) {
-							for (const node of from_is_successor.slice(1).reverse())
+						if (from_is_successor !== false) {
+							for (const node of from_is_successor.slice(1).reverse()) {
 								await node.leave(from_node, from.params);
+							}
 						} else if (!equals) {
 							let from_predecessors: RouteNode<unknown, any>[] = from_node.getPredecessors();
 							let to_predecessors: RouteNode<unknown, any>[] = [...to_predecessors_all];
@@ -278,8 +307,9 @@ export class RouteManager {
 								to_predecessors = to_predecessors.slice(1);
 							}
 							await from_node.leave(from_node, from.params);
-							for (const node of [...from_predecessors].reverse())
+							for (const node of [...from_predecessors].reverse()) {
 								await node.leave(from_node, from.params);
+							}
 						}
 					}
 				}

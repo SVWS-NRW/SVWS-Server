@@ -1,4 +1,4 @@
-import { List, SimpleOperationResponse, Erzieherart, BenutzerKompetenz, type JavaSet } from "@core";
+import { BenutzerKompetenz, type JavaSet, type List, type SimpleOperationResponse, type Erzieherart } from "@core";
 import { ArrayList } from "@core";
 import { api } from "~/router/Api";
 import { ViewType, ErzieherartListeManager } from "@ui";

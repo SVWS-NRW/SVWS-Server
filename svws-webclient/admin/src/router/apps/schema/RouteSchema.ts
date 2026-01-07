@@ -34,25 +34,32 @@ export class RouteSchema extends RouteNode<RouteDataSchema, RouteApp> {
 	}
 
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams, isEntering: boolean): Promise<void | Error | RouteLocationRaw> {
-		if (to_params.schema instanceof Array)
+		if (Array.isArray(to_params.schema)) {
 			return routeError.getRoute(new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein"));
+		}
 		// Prüfe, ob bereits ein Schema ausgewählt wurde. Wenn nicht, dann lade die Liste vom Server und wähle ein Default-Schema aus
 		const auswahl = this.data.auswahl;
 		if (auswahl === undefined) {
 			await this.data.init(to_params.schema, !isEntering);
 			// Prüfe, ob ein Schema in der neu geladenen Liste vorhanden ist
-			if (this.data.auswahl !== undefined)
+			if (this.data.auswahl !== undefined) {
 				return this.getChildRoute(this.data.auswahl.name);
+			}
 			return;
 		}
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		const schemaNeu = (to_params.schema === undefined) ? undefined : this.data.mapSchema.get(to_params.schema.toLocaleLowerCase());
 		await this.data.setSchema(schemaNeu);
-		if (to.name === this.name)
+		if (to.name === this.name) {
 			return this.getChildRoute(to_params.schema);
-		if (!to.name.startsWith(this.data.view.name))
-			for (const child of this.children)
-				if (to.name.startsWith(child.name))
+		}
+		if (!to.name.startsWith(this.data.view.name)) {
+			for (const child of this.children) {
+				if (to.name.startsWith(child.name)) {
 					await this.data.setView(child);
+				}
+			}
+		}
 	}
 
 	protected async leaveBefore(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void | Error | RouteLocationRaw> {
@@ -103,17 +110,20 @@ export class RouteSchema extends RouteNode<RouteDataSchema, RouteApp> {
 
 	private getTabs(): TabData[] {
 		const result: TabData[] = [];
-		for (const { name, text } of this.children)
+		for (const { name, text } of this.children) {
 			result.push({ name, text });
+		}
 		return result;
 	}
 
-	private setTab = async (value: TabData) => {
-		if (value.name === this.data.view.name)
+	private readonly setTab = async (value: TabData) => {
+		if (value.name === this.data.view.name) {
 			return;
+		}
 		const node = RouteNode.getNodeByName(value.name);
-		if (node === undefined)
+		if (node === undefined) {
 			throw new Error("Unbekannte Route");
+		}
 		await RouteManager.doRoute({ name: value.name, params: { schema: this.data.auswahl?.name } });
 		await this.data.setView(node);
 	};

@@ -221,7 +221,7 @@ export class RouteManager {
 		if ((from_node === undefined) && (from.fullPath !== "/")) {
 			return false;
 		}
-		if (api.authenticated && api.benutzerIstAdmin && (to.name?.toString().startsWith("init") ?? false)) {
+		if (api.authenticated && api.benutzerIstAdmin && ((to.name?.toString().startsWith("init")) ?? false)) {
 			return await to_node.doUpdate(to_node, to.params, from_node, from.params, true, nodeRedirected);
 		}
 		// Prüfe zunächst, ob die Ziel-Route für den angemeldeten Benutzer und die Schulform der Schule erlaubt ist oder nicht
@@ -356,7 +356,7 @@ export class RouteManager {
 				if (api.mode !== ServerMode.STABLE) {
 					console.log("Completed routing '" + from.fullPath + "' --> '" + to.fullPath + "'"); // + "': " + from_node?.name + " " + JSON.stringify(from.params) +  " --> " + to_node?.name + " " + JSON.stringify(to.params)
 				}
-				if ((to_node !== undefined) && (from_node !== undefined) && (from.fullPath !== "/") && api.authenticated && (!(to.name?.toString().startsWith("init") ?? false))) {
+				if ((to_node !== undefined) && (from_node !== undefined) && (from.fullPath !== "/") && api.authenticated && (!((to.name?.toString().startsWith("init")) ?? false))) {
 					// Prüfe, ob die Knoten Nachfolger bzw. Vorgänger voneinander sind
 					const equals = (to_node.name === from_node.name);
 					const to_is_successor = to_node.checkSuccessorOf(from_node);

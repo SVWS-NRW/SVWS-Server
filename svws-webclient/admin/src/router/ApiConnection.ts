@@ -12,7 +12,7 @@ export class ApiConnection {
 	protected _authenticated = ref<boolean>(false);
 
 	// Der Hostname (evtl. mit Port) des Servers, bei dem der Login stattfindet
-	protected _hostname = ref<string>(window.location.hostname + ":" + window.location.port);
+	protected _hostname = ref<string>(globalThis.location.hostname + ":" + globalThis.location.port);
 
 	// Die URL mit welcher der Server verbunden ist
 	protected _url: string | undefined = undefined;
@@ -41,15 +41,17 @@ export class ApiConnection {
 
 	// Gibt die Server-API zurück.
 	get api(): ApiServer {
-		if (this._api === undefined)
+		if (this._api === undefined) {
 			throw new Error("Es wurde kein Api-Objekt angelegt - Verbindungen zum Server können nicht erfolgen");
+		}
 		return this._api;
 	}
 
 	// Gibt die API für den priviligierten Schema-Zugriff zurück.
 	get api_privileged(): ApiPrivileged {
-		if (this._schema_api_privileged === undefined)
+		if (this._schema_api_privileged === undefined) {
 			throw new Error("Es wurde kein Api-Objekt angelegt - Verbindungen zum Server können für den priviligierten Schema-Zugriff nicht erfolgen");
+		}
 		return this._schema_api_privileged;
 	}
 
@@ -146,8 +148,9 @@ export class ApiConnection {
 	 */
 	login = async (username: string, password: string): Promise<boolean> => {
 		try {
-			if (this._url === undefined)
+			if (this._url === undefined) {
 				throw new Error("Keine gültige URL für einen Login verfügbar.");
+			}
 			const api_priv = new ApiPrivileged(this._url, username, password);
 			const data = new BenutzerKennwort();
 			data.user = username;
@@ -155,14 +158,15 @@ export class ApiConnection {
 			await api_priv.getSchemaListe();
 			try {
 				const isPrivilegedRoot = await api_priv.checkDBPassword(data);
-				if ((isPrivilegedRoot === null) || (isPrivilegedRoot === false))
+				if ((isPrivilegedRoot === false)) {
 					throw new UserNotificationException("Der Datenbank-Benutzer besitzt nicht die nötigen Privilegien.");
+				}
 				this._hasRootPrivileges = true;
 			} catch (error) {
 				this._hasRootPrivileges = false;
 			}
 			try {
-				this._isServerAdmin = await api_priv.isPrivilegedUser() ?? false;
+				this._isServerAdmin = await api_priv.isPrivilegedUser();
 			} catch (error) {
 				this._isServerAdmin = false;
 			}
