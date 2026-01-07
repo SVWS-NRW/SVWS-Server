@@ -44,7 +44,7 @@
 	import { computed, ref, watch } from "vue";
 	import { ArrayList, BenutzerKompetenz, Einwilligungsart, Einwilligungsschluessel, PersonTyp } from "@core";
 	import type { EinwilligungsschluesselKatalogEintrag, List } from "@core";
-	import { mandatoryInputIsValid, numberIsValid} from "~/util/validation/Validation";
+	import { mandatoryInputIsValid, numberIsValid } from "~/util/validation/Validation";
 	import { CoreTypeSelectManager, SelectManager } from "@ui";
 
 	const props = defineProps<EinwilligungsartenNeuProps>();

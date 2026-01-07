@@ -17,7 +17,8 @@ const KindergaertenAuswahl = () => import("~/components/schule/kataloge/kinderga
 export class RouteKindergaerten extends RouteAuswahlNode<KindergaertenListeManager, RouteDataKindergaerten, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.kindergaerten",
+		super([Schulform.G, Schulform.PS, Schulform.S, Schulform.V, Schulform.FW, Schulform.WF],
+			[BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.kindergaerten",
 			"schule/kindergaerten/:id(\\d+)?", KindergartenApp, KindergaertenAuswahl, new RouteDataKindergaerten());
 		super.mode = ServerMode.DEV;
 		super.text = "Kindergärten";
@@ -32,8 +33,9 @@ export class RouteKindergaerten extends RouteAuswahlNode<KindergaertenListeManag
 	}
 
 	protected doUpdateIfTarget = async (to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined) => {
-		if (!this.data.manager.hasDaten())
+		if (!this.data.manager.hasDaten()) {
 			return;
+		}
 		return this.getRouteSelectedChild();
 	};
 }
