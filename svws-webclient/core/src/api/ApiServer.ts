@@ -27,7 +27,7 @@ import { BetriebListeEintrag } from '../core/data/betrieb/BetriebListeEintrag';
 import { Betriebsart } from '../core/data/schule/Betriebsart';
 import { BetriebStammdaten } from '../core/data/betrieb/BetriebStammdaten';
 import { BilingualeSpracheKatalogEintrag } from '../asd/data/fach/BilingualeSpracheKatalogEintrag';
-import { BKGymAbiturdaten } from '../core/abschluss/bk/d/BKGymAbiturdaten';
+import { BKGymAbiturdaten } from '../core/data/bk/abi/BKGymAbiturdaten';
 import { BKGymLeistungen } from '../core/data/bk/abi/BKGymLeistungen';
 import { DatenbankVerbindungsdaten } from '../core/data/schema/DatenbankVerbindungsdaten';
 import { DBSchemaListeEintrag } from '../core/data/db/DBSchemaListeEintrag';

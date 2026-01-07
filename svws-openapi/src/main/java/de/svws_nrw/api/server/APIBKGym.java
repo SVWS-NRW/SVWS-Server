@@ -1,6 +1,6 @@
 package de.svws_nrw.api.server;
 
-import de.svws_nrw.core.abschluss.bk.d.BKGymAbiturdaten;
+import de.svws_nrw.core.data.bk.abi.BKGymAbiturdaten;
 import de.svws_nrw.core.data.bk.abi.BKGymLeistungen;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;

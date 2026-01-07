@@ -4,12 +4,12 @@ import { BKGymAbiturdatenManager } from '../../../../core/abschluss/bk/d/BKGymAb
 import { GostAbiturFach } from '../../../../core/types/gost/GostAbiturFach';
 import { HashMap } from '../../../../java/util/HashMap';
 import { ArrayList } from '../../../../java/util/ArrayList';
-import { BKGymAbiturFachbelegung } from '../../../../core/abschluss/bk/d/BKGymAbiturFachbelegung';
-import { BKGymAbiturFachbelegungHalbjahr } from '../../../../core/abschluss/bk/d/BKGymAbiturFachbelegungHalbjahr';
+import { BKGymAbiturFachbelegung } from '../../../../core/data/bk/abi/BKGymAbiturFachbelegung';
+import { BKGymAbiturFachbelegungHalbjahr } from '../../../../core/data/bk/abi/BKGymAbiturFachbelegungHalbjahr';
 import { BeruflichesGymnasiumStundentafel } from '../../../../asd/data/schule/BeruflichesGymnasiumStundentafel';
 import { JavaString } from '../../../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../../core/exceptions/DeveloperNotificationException';
-import { BKGymBelegungsfehlerTyp } from '../../../../core/abschluss/bk/d/BKGymBelegungsfehlerTyp';
+import { BKGymBelegungsfehlerTyp } from '../../../../core/types/bk/BKGymBelegungsfehlerTyp';
 import { BKGymBelegungsfehler } from '../../../../core/abschluss/bk/d/BKGymBelegungsfehler';
 import { JavaInteger } from '../../../../java/lang/JavaInteger';
 import type { JavaIterator } from '../../../../java/util/JavaIterator';
@@ -342,7 +342,7 @@ export class BKGymBelegpruefung extends JavaObject {
 	 * @return Die Liste der Belegungen für das Wahlfach
 	 */
 	private getBelegungenWahlfach(tafel: BeruflichesGymnasiumStundentafel, mapBelegungByTafelfach: JavaMap<BeruflichesGymnasiumStundentafelFach, List<BKGymAbiturFachbelegung>>): List<BKGymAbiturFachbelegung> {
-		const tafelWahlfach: BeruflichesGymnasiumStundentafelFach | null = this.mapStundentafelFachByTafelAndFachbezeichnung.getOrNull(tafel, this.manager.wahlfach);
+		const tafelWahlfach: BeruflichesGymnasiumStundentafelFach | null = this.mapStundentafelFachByTafelAndFachbezeichnung.getOrNull(tafel, BKGymAbiturdatenManager.WAHLFACH);
 		let wahlfachBelegungen: List<BKGymAbiturFachbelegung> | null = null;
 		if (tafelWahlfach !== null)
 			wahlfachBelegungen = mapBelegungByTafelfach.computeIfAbsent(tafelWahlfach, { apply: (k: BeruflichesGymnasiumStundentafelFach | null) => new ArrayList() });
@@ -516,7 +516,7 @@ export class BKGymBelegpruefung extends JavaObject {
 		const lk2: BKGymAbiturFachbelegung | null = this.manager.getAbiFachbelegung(GostAbiturFach.LK2);
 		if (lk2 === null)
 			this.addFehler(tafel, new BKGymBelegungsfehler(BKGymBelegungsfehlerTyp.LK_2));
-		if (lk1 !== null && lk2 !== null && !(this.manager.isValidKursartFachbelegung(tafel, lk1, GostAbiturFach.LK1) && this.manager.isValidKursartFachbelegung(tafel, lk2, GostAbiturFach.LK2)))
+		if (lk1 !== null && lk2 !== null && !(this.manager.istGueltigeKursartFachbelegung(tafel, lk1, GostAbiturFach.LK1) && this.manager.istGueltigeKursartFachbelegung(tafel, lk2, GostAbiturFach.LK2)))
 			this.addFehler(tafel, new BKGymBelegungsfehler(BKGymBelegungsfehlerTyp.LK_3, this.manager.getFachkuerzelFromFachbelegung(lk1), this.manager.getFachkuerzelFromFachbelegung(lk2), this.manager.getGliederung().name(), this.manager.getFachklassenschluessel()));
 	}
 

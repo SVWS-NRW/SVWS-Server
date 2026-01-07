@@ -46,5 +46,4 @@ public class BKGymBelegpruefungErgebnisFehler {
 	@SuppressWarnings("unused")
 	private BKGymBelegpruefungErgebnisFehler() {
 	}
-
 }

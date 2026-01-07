@@ -668,6 +668,26 @@ export class Note extends JavaEnum<Note> implements CoreType<NoteKatalogEintrag,
 	}
 
 	/**
+	 * Gibt zu einem Notenkürzel die entsprechenden Notenpunkte zurück
+	 *
+	 * @param notenkuerzel   das Notenkürzel
+	 * @param schuljahr      das Schuljahr
+	 *
+	 * @return -1, wenn es sich nicht um eine reguläre Note von 1+ bis 6 handelt, sonst die Notenpunkte von 0 bis 15
+	 */
+	public static getPunkteFromNotenkuerzel(notenkuerzel: string, schuljahr: number): number | null {
+		const note: Note = Note.fromKuerzel(notenkuerzel);
+		if (!note.istNote(schuljahr))
+			return null;
+		const nke: NoteKatalogEintrag | null = note.daten(schuljahr);
+		if (nke === null)
+			return null;
+		if (nke.notenpunkte === null)
+			return null;
+		return nke.notenpunkte;
+	}
+
+	/**
 	 * Returns an array with enumeration values.
 	 *
 	 * @returns the array with enumeration values

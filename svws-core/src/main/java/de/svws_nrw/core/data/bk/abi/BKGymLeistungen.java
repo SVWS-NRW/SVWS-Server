@@ -48,5 +48,4 @@ public class BKGymLeistungen {
 	public BKGymLeistungen() {
 		// leer
 	}
-
 }
