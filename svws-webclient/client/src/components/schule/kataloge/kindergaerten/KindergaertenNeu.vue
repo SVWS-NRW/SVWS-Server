@@ -29,7 +29,7 @@
 				<svws-ui-text-input placeholder="Ort" v-model="data.ort" :valid="fieldIsValid('ort')" :max-len="30" :disabled />
 				<div class="mt-7 flex flex-row gap-4 justify end">
 					<svws-ui-button type="secondary" @click="cancel">Abbrechen</svws-ui-button>
-					<svws-ui-button @click="add" :disabled="!formIsValid || !hatKompetenzAdd">Speichern</svws-ui-button>
+					<svws-ui-button @click="addKindergarten" :disabled="!formIsValid || !hatKompetenzAdd">Speichern</svws-ui-button>
 				</div>
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
@@ -98,14 +98,15 @@
 		});
 	});
 
-	async function add() {
-		if (isLoading.value)
+	async function addKindergarten() {
+		if (isLoading.value) {
 			return;
+		}
 
 		props.checkpoint.active = false;
 		isLoading.value = true;
-		const { id, ...partialData } = data.value;
-		await props.addKindergarten(partialData);
+		const { id, referenziertInAnderenTabellen, ...partialData } = data.value;
+		await props.add(partialData);
 		isLoading.value = false;
 	}
 
@@ -115,8 +116,9 @@
 	}
 
 	watch(() => data.value, async () => {
-		if (isLoading.value)
+		if (isLoading.value) {
 			return;
+		}
 
 		props.checkpoint.active = true;
 	}, { immediate: false, deep: true });

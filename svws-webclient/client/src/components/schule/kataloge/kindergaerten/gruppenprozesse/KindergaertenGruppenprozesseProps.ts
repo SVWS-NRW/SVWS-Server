@@ -6,5 +6,7 @@ export interface KindergaertenGruppenprozesseProps {
 	schulform: Schulform;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
 	manager: () => KindergaertenListeManager;
-	deleteKindergaerten: () => Promise<[boolean, List<string | null>]>;
+	deleteCheck: () => [boolean, List<string>];
+	delete: () => Promise<[boolean, List<string | null>]>;
+	gotoDefaultView: (eintragId?: number | null) => Promise<void>;
 }

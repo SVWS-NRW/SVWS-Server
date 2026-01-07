@@ -95,16 +95,19 @@
 
 	function setAuswahl(einwilligungsarten: Einwilligungsart[]) {
 		props.manager().liste.auswahlClear();
-		for (const einwilligungsart of einwilligungsarten)
-			if (props.manager().liste.hasValue(einwilligungsart))
+		for (const einwilligungsart of einwilligungsarten) {
+			if (props.manager().liste.hasValue(einwilligungsart)) {
 				props.manager().liste.auswahlAdd(einwilligungsart);
+			}
+		}
 	}
 
 	async function navigateToView(): Promise<void> {
-		if (props.manager().liste.auswahlExists())
+		if (props.manager().liste.auswahlExists()) {
 			await props.gotoGruppenprozessView(true);
-		else
+		} else {
 			await props.gotoDefaultView(props.manager().getVorherigeAuswahl()?.id);
+		}
 	}
 
 </script>

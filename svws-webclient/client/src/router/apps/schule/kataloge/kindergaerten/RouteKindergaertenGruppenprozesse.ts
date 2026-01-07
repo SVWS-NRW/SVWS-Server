@@ -30,8 +30,10 @@ export class RouteKindergaertenGruppenprozesse extends RouteNode<any, RouteKinde
 			serverMode: api.mode,
 			schulform: api.schulform,
 			benutzerKompetenzen: api.benutzerKompetenzen,
-			deleteKindergaerten: routeKindergaerten.data.delete,
+			delete: routeKindergaerten.data.delete,
+			deleteCheck: routeKindergaerten.data.deleteCheck,
 			manager: () => routeKindergaerten.data.manager,
+			gotoDefaultView: routeKindergaerten.data.gotoDefaultView,
 		};
 	}
 }

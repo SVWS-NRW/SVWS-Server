@@ -24,7 +24,7 @@ export class RouteKindergaertenNeu extends RouteNode<any, RouteKindergaerten> {
 	public getProps(to: RouteLocationNormalized): KindergaertenNeuProps {
 		return {
 			manager: () => routeKindergaerten.data.manager,
-			addKindergarten: routeKindergaerten.data.addKindergarten,
+			add: routeKindergaerten.data.add,
 			goToDefaultView: routeKindergaerten.data.gotoDefaultView,
 			checkpoint: this.checkpoint,
 			benutzerKompetenzen: api.benutzerKompetenzen,

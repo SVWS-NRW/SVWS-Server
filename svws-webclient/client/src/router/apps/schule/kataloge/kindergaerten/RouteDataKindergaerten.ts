@@ -1,7 +1,6 @@
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
-import type { List, SimpleOperationResponse, Kindergarten } from "@core";
-import { ArrayList } from "@core";
+import { ArrayList, List, SimpleOperationResponse, Kindergarten, BenutzerKompetenz } from "@core";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
 import { ViewType, KindergaertenListeManager } from "@ui";
 import { api } from "~/router/Api";
@@ -25,8 +24,8 @@ export class RouteDataKindergaerten extends RouteDataAuswahl<KindergaertenListeM
 
 	protected async createManager(_: number): Promise<Partial<RouteStateAuswahlInterface<KindergaertenListeManager>>> {
 		const kindergaerten = await api.server.getKindergaerten(api.schema);
-		const manager = new KindergaertenListeManager(api.abschnitt.id, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,
-			api.schulform, kindergaerten);
+		const manager = new KindergaertenListeManager(api.abschnitt.id, api.schuleStammdaten.idSchuljahresabschnitt,
+			api.schuleStammdaten.abschnitte, api.schulform, kindergaerten);
 		return { manager };
 	}
 
@@ -34,11 +33,11 @@ export class RouteDataKindergaerten extends RouteDataAuswahl<KindergaertenListeM
 		param.id = id;
 	}
 
-	public ladeDaten(auswahl: any): Promise<Kindergarten> {
+	async ladeDaten(auswahl: Kindergarten): Promise<Kindergarten> {
 		return auswahl;
 	}
 
-	protected async doPatch(data: Partial<any>, id: number): Promise<void> {
+	protected async doPatch(data: Partial<Kindergarten>, id: number): Promise<void> {
 		await api.server.patchKindergarten(data, api.schema, id);
 	}
 
@@ -46,15 +45,40 @@ export class RouteDataKindergaerten extends RouteDataAuswahl<KindergaertenListeM
 		return await api.server.deleteKindergaerten(ids, api.schema);
 	}
 
-	protected deleteMessage(id: number, kindergarten: Kindergarten | null): string {
-		return `Kindergarten ${kindergarten?.bezeichnung ?? '???'} (ID: ${id}) wurde erfolgreich gelöscht.`;
-	}
-
-	addKindergarten = async (data: Partial<Kindergarten>): Promise<void> => {
+	add = async (data: Partial<Kindergarten>): Promise<void> => {
 		const result = await api.server.addKindergarten(data, api.schema);
 		this.manager.liste.add(result);
 		this.commit();
 		await this.gotoDefaultView(result.id);
 	};
+
+	deleteCheck = (): [boolean, List<string>] => {
+		const errorLog = new ArrayList<string>();
+		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
+			errorLog.add('Es liegt keine Berechtigung zum Löschen von Kindergärten vor.');
+		}
+		if (!this.manager.liste.auswahlExists()) {
+			errorLog.add('Es wurden keine Kindergärten zum Löschen ausgewählt.');
+		}
+		if (!this.manager.idsOfReferencedKindergaerten.isEmpty()) {
+			errorLog.add(this.getErrorMessageForReferencedKindergaerten());
+		}
+		return [errorLog.isEmpty(), errorLog];
+	};
+
+	private getErrorMessageForReferencedKindergaerten(): string {
+		let errorMessage = 'Die folgenden Kindergärten sind an anderer Stelle referenziert:\n\n';
+		for (const id of this.manager.idsOfReferencedKindergaerten) {
+			const kindergarten = this.manager.liste.get(id);
+			if (kindergarten) {
+				errorMessage += `- ${kindergarten.bezeichnung} \n`;
+			}
+		}
+		return errorMessage;
+	}
+
+	protected deleteMessage(id: number, kindergarten: Kindergarten | null): string {
+		return `Kindergarten ${kindergarten?.bezeichnung ?? '???'} (ID: ${id}) wurde erfolgreich gelöscht.`;
+	}
 
 }

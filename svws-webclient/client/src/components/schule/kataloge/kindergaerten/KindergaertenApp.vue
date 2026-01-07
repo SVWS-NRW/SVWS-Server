@@ -46,7 +46,7 @@
 	const kindergaertenSubline = computed(() => {
 		const list = props.manager().liste.auswahlSorted();
 		if (list.size() > 5)
-			return `${list.size()} Kindergarten ausgewählt`;
+			return `${list.size()} Kindergärten ausgewählt`;
 		return [...list].map(k => k.bezeichnung).join(', ');
 	});
 

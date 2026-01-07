@@ -73,9 +73,9 @@ export class ErzieherartListeManager extends AuswahlManager<number, Erzieherart,
 		return this.entryMatchesSearchterm(eintrag);
 	}
 
-	private entryMatchesSearchterm(eintrag: Erzieherart) {
+	private entryMatchesSearchterm(eintrag: Erzieherart): boolean {
 		const searchTermLower = this._searchTerm.toLocaleLowerCase();
-		return ((eintrag.bezeichnung !== null) && eintrag.bezeichnung.toLocaleLowerCase().includes(searchTermLower));
+		return eintrag.bezeichnung.toLocaleLowerCase().includes(searchTermLower);
 	}
 
 	get filterNurSichtbar(): boolean {
