@@ -14,6 +14,7 @@ import { type EnmLerngruppenAuswahlEintrag } from "@ui/components/enm/EnmManager
 import { shallowRef } from "vue";
 import { Config, ConfigElement } from "@ui/utils/Config";
 import { EnmSperrManager } from "@ui/components/enm/EnmSperrManager";
+import { EnmSpaltenManager } from "@ui/components/enm/EnmSpaltenManager";
 
 
 /**
@@ -109,41 +110,10 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 		config.mapUser = mapUser;
 		config.addElements([
 			new ConfigElement("noteneingabe.gesperrt", "global", "[]"),
-			new ConfigElement("floskelEditorVisible", "user", 'true'),
-			new ConfigElement("leistungen.table.columns", "user", JSON.stringify([
-				["Klasse", null],
-				["Name", null],
-				["Fach", null],
-				["Kurs", true],
-				["Kursart", true],
-				["Lehrer", true],
-				["Quartal", true],
-				["Note", null],
-				["Mahnung", true],
-				["FS", true],
-				["FSU", true],
-				["Bemerkung", true],
-			])),
-			new ConfigElement("teilleistungen.table.columns", "user", JSON.stringify([
-				["Klasse", null],
-				["Name", null],
-				["Fach", null],
-				["Kurs", true],
-				["Kursart", true],
-				["Lehrer", true],
-				["Teilleistung", null],
-				["Quartal", true],
-				["Note", null],
-			])),
-			new ConfigElement("klassenleitung.table.columns", "user", JSON.stringify([
-				["Klasse", null],
-				["Name", null],
-				["FS", null],
-				["FSU", null],
-				["ASV", true],
-				["AUE", true],
-				["ZB", true],
-			])),
+			new ConfigElement("table.columns", "global", "[]"),
+			new ConfigElement("leistungen.table.columns", "user", "null"),
+			new ConfigElement("teilleistungen.table.columns", "user", "null"),
+			new ConfigElement("klassenleitung.table.columns", "user", "null"),
 		]);
 		return config;
 	}
@@ -171,6 +141,7 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 			// Laden der persistenten Konfiguration
 			newState.config = await this.ladeConfig();
 			newState.manager.sperrungen = new EnmSperrManager(newState.config.getValue("noteneingabe.gesperrt"));
+			newState.manager.spalten = new EnmSpaltenManager(newState.config.getValue("table.columns"));
 
 			// Nicht-persistente Config leer anlegen
 			newState.nonPersistentConfig = this.initNonPersistenConfig();
@@ -272,7 +243,11 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	 * @return eine Map, welche vom Spalten-Kürzel auf einen boolean-Wert oder null abbildet
 	 */
 	get klassenleitungColumnsVisible(): Map<string, boolean | null> {
-		return new Map<string, boolean | null>(JSON.parse(this.config.getValue("klassenleitung.table.columns")));
+		const config = JSON.parse(this.config.getValue("klassenleitung.table.columns"));
+		if (config === null) {
+			return this.manager.spalten.mapSpaltenKlassenleitung;
+		}
+		return new Map<string, boolean | null>(config);
 	}
 
 	/**
@@ -292,7 +267,11 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	 * @return eine Map, welche vom Spalten-Kürzel auf einen boolean-Wert oder null abbildet
 	 */
 	get leistungenColumnsVisible(): Map<string, boolean | null> {
-		return new Map<string, boolean | null>(JSON.parse(this.config.getValue("leistungen.table.columns")));
+		const config = JSON.parse(this.config.getValue("leistungen.table.columns"));
+		if (config === null) {
+			return this.manager.spalten.mapSpaltenLeistungen;
+		}
+		return new Map<string, boolean | null>(config);
 	}
 
 	/**
@@ -312,7 +291,11 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	 * @return eine Map, welche vom Spalten-Kürzel auf einen boolean-Wert oder null abbildet
 	 */
 	get teilleistungenColumnsVisible(): Map<string, boolean | null> {
-		return new Map<string, boolean | null>(JSON.parse(this.config.getValue("teilleistungen.table.columns")));
+		const config = JSON.parse(this.config.getValue("teilleistungen.table.columns"));
+		if (config === null) {
+			return this.manager.spalten.mapSpaltenTeilleistungen;
+		}
+		return new Map<string, boolean | null>(config);
 	}
 
 	/**
@@ -322,27 +305,6 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	 */
 	setTeilleistungenColumnsVisible = async (value: Map<string, boolean | null>) => {
 		await this.config.setValue('teilleistungen.table.columns', JSON.stringify([...value]));
-		this.commit();
-	};
-
-	/**
-	 * Gibt die Information aus der benutzerspezifischen Konfiguration zurück, ob
-	 * der Floskel-Editor angezeigt werden soll oder nicht.
-	 *
-	 * @returns true, wenn der Floskel-Editor angezeigt werden soll, und ansonsten false
-	 */
-	get floskelEditorVisible(): boolean {
-		return (this.config.getValue("floskelEditorVisible") === 'true');
-	}
-
-	/**
-	 * Setzt die Information in der benutzerspezifischen Konfiguration, ob der Floskel-Editor
-	 * angezeigt werden soll oder nicht.
-	 *
-	 * @param value   true, wenn der Floskel-Editor angezeigt werden soll, und ansonsten false
-	 */
-	setFloskelEditorVisible = async (value: boolean) => {
-		await this.config.setValue('floskelEditorVisible', value ? 'true' : 'false');
 		this.commit();
 	};
 

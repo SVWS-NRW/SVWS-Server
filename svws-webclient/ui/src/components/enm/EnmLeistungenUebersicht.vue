@@ -192,8 +192,9 @@
 			const result = new ArrayList<PairNN<ENMLeistung, ENMSchueler>>();
 			for (const lerngruppenAuswahl of props.auswahl()) {
 				const leistungen = props.enmManager().mapLerngruppeLeistungen.get(lerngruppenAuswahl.id);
-				if ((leistungen === null))
+				if ((leistungen === null)) {
 					continue;
+				}
 				result.addAll(leistungen);
 			}
 			return result;
@@ -220,8 +221,9 @@
 		}),
 	});
 	gridManager.onFocusInput = (input: GridInput<any, any> | null) => {
-		if ((input === null) || (input.row >= gridManager.daten.size()))
+		if ((input === null) || (input.row >= gridManager.daten.size())) {
 			return;
+		}
 		const pair = gridManager.daten.get(input.row);
 		void props.focusFloskelEditor(pair.b, pair.a, input.row, false);
 	};
@@ -234,8 +236,9 @@
 		const setter = (value: string | null) => void props.patchLeistung(pair.a, { noteQuartal: value });
 		return (element: Element | ComponentPublicInstance<unknown> | null) => {
 			const input = gridManager.applyInputNote(key, col, index, element, setter, props.enmManager().schuljahr);
-			if (input !== null)
+			if (input !== null) {
 				gridManager.update(key, pair.a.noteQuartal);
+			}
 		};
 	}
 
@@ -244,8 +247,9 @@
 		const setter = (value: string | null) => void props.patchLeistung(pair.a, { note: value });
 		return (element: Element | ComponentPublicInstance<unknown> | null) => {
 			const input = gridManager.applyInputNote(key, col, index, element, setter, props.enmManager().schuljahr);
-			if (input !== null)
+			if (input !== null) {
 				gridManager.update(key, pair.a.note);
+			}
 		};
 	}
 
@@ -254,8 +258,9 @@
 		const setter = (value: boolean) => void props.patchLeistung(pair.a, { istGemahnt: value });
 		return (element: Element | ComponentPublicInstance<unknown> | null) => {
 			const input = gridManager.applyInputToggle(key, col, index, element, setter);
-			if (input !== null)
+			if (input !== null) {
 				watchEffect(() => gridManager.update(key, pair.a.istGemahnt ?? false));
+			}
 		};
 	}
 
@@ -267,15 +272,17 @@
 			if (inputFSU !== null) {
 				const inputFSUTyped = inputFSU as GridInputIntegerDiv<string>;
 				inputFSUTyped.max = value ?? 0;
-				if ((patch.fehlstundenUnentschuldigtFach ?? 0) > (value ?? 0))
+				if ((patch.fehlstundenUnentschuldigtFach ?? 0) > (value ?? 0)) {
 					patch.fehlstundenUnentschuldigtFach = (value ?? 0);
+				}
 			}
 			void props.patchLeistung(pair.a, { fehlstundenFach: value });
 		};
 		return (element: Element | ComponentPublicInstance<unknown> | null) => {
 			const input = gridManager.applyInputIntegerDiv(key, col, index, element, 999, setter);
-			if (input !== null)
+			if (input !== null) {
 				watchEffect(() => gridManager.update(key, pair.a.fehlstundenFach));
+			}
 		};
 	}
 
@@ -284,8 +291,9 @@
 		const setter = (value: number | null) => void props.patchLeistung(pair.a, { fehlstundenUnentschuldigtFach: value });
 		return (element: Element | ComponentPublicInstance<unknown> | null) => {
 			const input = gridManager.applyInputIntegerDiv(key, col, index, element, pair.a.fehlstundenFach ?? 0, setter);
-			if (input !== null)
+			if (input !== null) {
 				watchEffect(() => gridManager.update(key, pair.a.fehlstundenUnentschuldigtFach));
+			}
 		};
 	}
 

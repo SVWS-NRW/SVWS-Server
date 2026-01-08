@@ -108,7 +108,7 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 	}
 
 	protected createManagerSichtbareSpalten(): NotenmodulConfigManagerSichtbareSpalten {
-		const key = "spalten.sichtbar";
+		const key = "table.columns";
 		const	res = this.mapEnmServerConfigGlobal.get(key);
 		const liste = new ArrayList<ENMConfigSpalte>();
 		const configs: any[] | null = JSON.parse(res ?? 'null');
@@ -222,7 +222,7 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 	writeConfigSichtbareSpalten = async () => {
 		const managerSichtbareSpalten = this.managerSichtbareSpalten;
 		const element = new ENMServerConfigElement();
-		element.key = "spalten.sichtbar";
+		element.key = "table.columns";
 		element.value = managerSichtbareSpalten.json;
 		element.type = "global";
 		if (this.manager.auswahlIsKonfigurationLokal()) {

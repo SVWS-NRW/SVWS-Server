@@ -103,8 +103,9 @@ export class NotenmodulConfigManagerSichtbareSpalten {
 	 */
 	public async toggle(spaltenname: string) {
 		const spalte = this.mapConfigSpalteByName.get(spaltenname);
-		if (spalte === null)
+		if (spalte === null) {
 			return;
+		}
 		spalte.anzeigen = !spalte.anzeigen;
 		await this.writeConfig();
 	}
@@ -142,8 +143,9 @@ export class NotenmodulConfigManagerSichtbareSpalten {
 	 */
 	public async toggleAlleTeilleistungen() {
 		const spalte = this.mapConfigSpalteByName.get("Teilnoten");
-		if (spalte === null)
+		if (spalte === null) {
 			return;
+		}
 		spalte.anzeigen = !spalte.anzeigen;
 		for (const col of this.mapConfigSpalte.values()) {
 			if (col.idTeilleistung !== null) {

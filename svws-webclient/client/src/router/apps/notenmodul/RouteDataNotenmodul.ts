@@ -5,6 +5,7 @@ import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { routeNotenmodulLeistungen } from "./RouteNotenmodulLeistungen";
 import type { EnmLerngruppenAuswahlEintrag } from "@ui";
 import { EnmManager, EnmSperrManager } from "@ui";
+import { EnmSpaltenManager } from "../../../../../ui/src/components/enm/EnmSpaltenManager";
 
 
 interface RouteStateNotenmodul extends RouteStateInterface {
@@ -70,12 +71,16 @@ export class RouteDataNotenmodul extends RouteData<RouteStateNotenmodul> {
 
 			const config = await api.server.getNotenmodulLocalConfig(api.schema);
 			let jsonSperrungen = "[]";
+			let jsonSpalten = "[]";
 			for (const element of config.global) {
 				if (element.key === "noteneingabe.gesperrt") {
 					jsonSperrungen = element.value;
+				}	else if (element.key === "table.columns") {
+					jsonSpalten = element.value;
 				}
 			}
 			patchedState.manager.sperrungen = new EnmSperrManager(jsonSperrungen);
+			patchedState.manager.spalten = new EnmSpaltenManager(jsonSpalten);
 
 		} catch (error) {
 			if ((error instanceof OpenApiError) && (error.response instanceof Response) && (error.response.status === 404)) {

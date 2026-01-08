@@ -74,8 +74,9 @@ export class EnmSperrManager {
 	 */
 	public istEingabeErlaubt(idKlasse: number): boolean {
 		const config = this.mapSperrungen.get(idKlasse);
-		if (config === null)
+		if (config === null) {
 			return false;
+		}
 
 		if (config.tsEingabeAb !== null) {
 			if (this.now() < config.tsEingabeAb) {

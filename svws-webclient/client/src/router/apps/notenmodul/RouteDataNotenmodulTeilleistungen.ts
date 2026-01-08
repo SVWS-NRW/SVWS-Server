@@ -59,7 +59,11 @@ export class RouteDataNotenmodulTeilleistungen extends RouteDataAuswahl<EnmLerng
 	}
 
 	get columnsVisible(): Map<string, boolean | null> {
-		return new Map<string, boolean | null>(JSON.parse(api.config.getValue("notenmodul.teilleistungen.table.columns")));
+		const config = JSON.parse(api.config.getValue("notenmodul.teilleistungen.table.columns"));
+		if (config === null) {
+			return routeNotenmodul.data.manager.spalten.mapSpaltenTeilleistungen;
+		}
+		return new Map<string, boolean | null>(config);
 	}
 
 	setColumnsVisible = async (value: Map<string, boolean | null>) => {

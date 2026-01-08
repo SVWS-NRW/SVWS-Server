@@ -60,19 +60,15 @@ export class RouteDataNotenmodulLeistungen extends RouteDataAuswahl<EnmLerngrupp
 	}
 
 	get columnsVisible(): Map<string, boolean | null> {
-		return new Map<string, boolean | null>(JSON.parse(api.config.getValue("notenmodul.leistungen.table.columns")));
+		const config = JSON.parse(api.config.getValue("notenmodul.leistungen.table.columns"));
+		if (config === null) {
+			return routeNotenmodul.data.manager.spalten.mapSpaltenLeistungen;
+		}
+		return new Map<string, boolean | null>(config);
 	}
 
 	setColumnsVisible = async (value: Map<string, boolean | null>) => {
 		await api.config.setValue('notenmodul.leistungen.table.columns', JSON.stringify([...value]));
-	};
-
-	get floskelEditorVisible(): boolean {
-		return (api.config.getValue("notenmodul.leistungen.floskelEditorVisible") === 'true');
-	}
-
-	setFloskelEditorVisible = async (value: boolean) => {
-		await api.config.setValue('notenmodul.leistungen.floskelEditorVisible', value ? 'true' : 'false');
 	};
 
 }
