@@ -422,7 +422,7 @@
 		set: (value) => {
 			if (value > kwErrorLimit.value)
 				kwErrorLimit.value = value;
-			props.setConfigValue("kwWarnLimit", value);
+			void props.setConfigValue("kwWarnLimit", value);
 		},
 	});
 
@@ -431,7 +431,7 @@
 		set: (value) => {
 			if (value < kwWarnLimit.value)
 				kwWarnLimit.value = value;
-			props.setConfigValue("kwErrorLimit", value);
+			void props.setConfigValue("kwErrorLimit", value);
 		},
 	});
 
@@ -489,7 +489,7 @@
 
 	function getBgColor(input: string | number | null | GostKursklausur | GostSchuelerklausur | GostSchuelerklausurTermin): string {
 		const kuerzel = resolveFachkuerzel(input);
-		if (!kuerzel)
+		if (kuerzel === null)
 			return "rgb(220,220,220)";
 		return Fach.getBySchluesselOrDefault(kuerzel).getHMTLFarbeRGBA(props.jahrgangsdaten!.abiturjahr - 1, 1);
 	}

@@ -267,9 +267,9 @@
 	}
 
 	const wechselBevorstehend = ref<boolean>(false);
-
+	const options = computed(() => props.manager().entlassgruendeById.values());
 	const schulwechselGrundSelectManager = new SelectManager({
-		options: props.manager().entlassgruendeById.values(),
+		options: options,
 		optionDisplayText: (option) => option.bezeichnung,
 		selectionDisplayText: (option) => option.bezeichnung,
 	});

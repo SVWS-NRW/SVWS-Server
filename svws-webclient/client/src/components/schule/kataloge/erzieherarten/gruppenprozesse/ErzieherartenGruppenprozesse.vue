@@ -56,7 +56,7 @@
 
 	import { ref, computed } from "vue";
 	import { BenutzerKompetenz, type List, ServerMode } from "@core";
-	import { ErzieherartenGruppenprozesseProps } from "~/components/schule/kataloge/erzieherarten/gruppenprozesse/ErzieherartenGruppenprozesseProps";
+	import type { ErzieherartenGruppenprozesseProps } from "~/components/schule/kataloge/erzieherarten/gruppenprozesse/ErzieherartenGruppenprozesseProps";
 
 	const props = defineProps<ErzieherartenGruppenprozesseProps>();
 	const isLoading = ref<boolean>(false);

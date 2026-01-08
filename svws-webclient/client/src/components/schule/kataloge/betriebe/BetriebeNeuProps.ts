@@ -1,6 +1,6 @@
 import type { BetriebeListeManager } from "../../../../../../ui/src/ui/manager/kataloge/BetriebeListeManager";
 import type { Checkpoint } from "@ui";
-import { BenutzerKompetenz, Betrieb } from "@core";
+import type { BenutzerKompetenz, Betrieb } from "@core";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 
 export interface BetriebeNeuProps {

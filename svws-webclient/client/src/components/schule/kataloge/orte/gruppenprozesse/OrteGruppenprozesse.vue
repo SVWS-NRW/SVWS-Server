@@ -37,7 +37,7 @@
 
 	import { ref, computed } from "vue";
 	import { BenutzerKompetenz, type List, ServerMode } from "@core";
-	import { OrteGruppenprozesseProps } from "~/components/schule/kataloge/orte/gruppenprozesse/OrteGruppenprozesseProps";
+	import type { OrteGruppenprozesseProps } from "~/components/schule/kataloge/orte/gruppenprozesse/OrteGruppenprozesseProps";
 
 	const props = defineProps<OrteGruppenprozesseProps>();
 	const isLoading = ref<boolean>(false);

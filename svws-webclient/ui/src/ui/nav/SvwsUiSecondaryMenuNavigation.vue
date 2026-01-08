@@ -38,11 +38,13 @@
 	}>();
 
 	// Eine Map, welche für die Tab-Gruppen festlegt, ob diese zusammengeklappt sind oder nicht.
+	// eslint-disable-next-line vue/no-setup-props-reactivity-loss
 	const isCollapsed = ref<Set<string>>(new Set<string>(props.tabManager().tabgroups));
+
 
 	onMounted(() => {
 		openFirstTab();
-	})
+	});
 
 	function openFirstTab() {
 		if (props.tabManager().tabgroups.length > 0) {

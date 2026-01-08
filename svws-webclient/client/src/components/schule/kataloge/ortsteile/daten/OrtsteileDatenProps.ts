@@ -1,5 +1,5 @@
-import { BenutzerKompetenz, OrtsteilKatalogEintrag } from "@core";
-import { OrtsteileListeManager } from "@ui";
+import type { BenutzerKompetenz, OrtsteilKatalogEintrag } from "@core";
+import type { OrtsteileListeManager } from "@ui";
 
 export interface OrtsteileDatenProps {
 	manager: () => OrtsteileListeManager,

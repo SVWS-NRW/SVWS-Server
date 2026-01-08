@@ -29,6 +29,7 @@
 	}>();
 
 	const show = ref<boolean>(false);
+	// eslint-disable-next-line vue/no-setup-props-reactivity-loss
 	const wochentage = ref<Wochentag[]>(props.stundenplanManager().zeitrasterGetWochentageAlsEnumRange());
 
 	const klassen = ref<number[]>([]);

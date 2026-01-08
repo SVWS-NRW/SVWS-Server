@@ -30,7 +30,9 @@
 	const show = ref<boolean>(false);
 
 	onMounted(() => {
-		props.checkpoint.callback = async () => { show.value = true };
+		props.checkpoint.callback = async () => {
+			show.value = true;
+		};
 	});
 
 	function cancel() {

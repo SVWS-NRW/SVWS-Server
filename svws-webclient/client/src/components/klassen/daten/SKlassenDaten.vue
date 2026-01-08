@@ -121,13 +121,17 @@
 
 <script setup lang="ts">
 
-	import { computed, ref } from "vue";
+	import { computed, ref, watch } from "vue";
 	import type { DataTableColumn } from "@ui";
 	import type { KlassenDatenProps } from "./SKlassenDatenProps";
 	import type { LehrerListeEintrag, KlassenDaten, JahrgangsDaten, List } from "@core";
 	import { SchuelerStatus, Schulform, Schulgliederung, Klassenart, AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen, WeiterbildungskollegOrganisationsformen, ArrayList, BenutzerKompetenz, Jahrgaenge } from "@core";
 
 	const props = defineProps<KlassenDatenProps>();
+
+	watch(() => props.manager().daten().klassenLeitungen, () => {
+		klassenleitungClicked.value = null;
+	});
 
 	const schuljahr = computed<number>(() => props.manager().getSchuljahr());
 
@@ -136,7 +140,7 @@
 	// TODO auch UNTERRICHTSVERTEILUNG_FUNKTIONSBEZOGEN_AENDERN berücksichtigen in Bezug auf Abteilungsleitungen / Koordinationen (API muss dafür noch erweitert werden)
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN));
 
-	const klassenleitungClicked = ref(props.manager().getAuswahlKlassenLeitung());
+	const klassenleitungClicked = ref<LehrerListeEintrag | null>(null);
 
 	function setKlassenleitungClicked(value: LehrerListeEintrag | null) {
 		props.manager().setAuswahlKlassenLeitung(value);

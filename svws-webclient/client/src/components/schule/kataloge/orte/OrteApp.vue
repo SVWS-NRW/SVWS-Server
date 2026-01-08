@@ -37,7 +37,7 @@
 
 	import { useRegionSwitch, ViewType } from "@ui";
 	import { computed } from "vue";
-	import { OrteAppProps } from "~/components/schule/kataloge/orte/OrteAppProps";
+	import type { OrteAppProps } from "~/components/schule/kataloge/orte/OrteAppProps";
 
 	const props = defineProps<OrteAppProps>();
 

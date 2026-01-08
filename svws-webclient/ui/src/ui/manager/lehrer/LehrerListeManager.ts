@@ -246,7 +246,7 @@ export class LehrerListeManager extends AuswahlManager<number, LehrerListeEintra
 			return false;
 		}
 		if (this.personaltypen.auswahlExists()) {
-			if ((eintrag.personTyp === "") || (JavaString.isEmpty(eintrag.personTyp))) {
+			if (JavaString.isEmpty(eintrag.personTyp)) {
 				return false;
 			}
 			const personalTyp: PersonalTyp | null = PersonalTyp.fromKuerzel(eintrag.personTyp);

@@ -91,7 +91,7 @@
 						<svws-ui-spacing :size="2" />
 						<svws-ui-table :items="[]" :no-data="false" :columns="cols">
 							<template #body>
-								<div role="row" class="svws-ui-tr" v-for="(item, index) in schuelerFehler" :key="item.id">
+								<div role="row" class="svws-ui-tr" v-for="(item) in schuelerFehler" :key="item.id">
 									<div role="cell" class="svws-ui-td">{{ item.id }}</div>
 									<div role="cell" class="svws-ui-td">---</div>
 									<div role="cell" class="svws-ui-td">{{ item.details?.fehler }}</div>
@@ -125,7 +125,7 @@
 						<svws-ui-table :items="[]" :no-data="false" :columns="cols">
 							<template #body>
 								<template v-if="tabManager().tab.name === 'Lehrer'">
-									<div role="row" class="svws-ui-tr" v-for="(item, index) in lehrerFehler" :key="item.id">
+									<div role="row" class="svws-ui-tr" v-for="(item) in lehrerFehler" :key="item.id">
 										<div role="cell" class="svws-ui-td">{{ item.id }}</div>
 										<div role="cell" class="svws-ui-td">{{ item.kuerzel }}</div>
 										<div role="cell" class="svws-ui-td">{{ item.details?.fehler }}</div>
@@ -159,7 +159,7 @@
 						<svws-ui-spacing :size="2" />
 						<svws-ui-table :items="[]" :no-data="false" :columns="cols">
 							<template #body>
-								<div role="row" class="svws-ui-tr" v-for="(item, index) in unterrichtFehler" :key="item.id">
+								<div role="row" class="svws-ui-tr" v-for="(item) in unterrichtFehler" :key="item.id">
 									<div role="cell" class="svws-ui-td">{{ item.id }}</div>
 									<div role="cell" class="svws-ui-td">---</div>
 									<div role="cell" class="svws-ui-td">{{ item.details?.fehler }}</div>

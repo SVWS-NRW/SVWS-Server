@@ -148,9 +148,9 @@
 	}
 
 	async function patch_blockung(value: string, idBlockung: number) {
-		const result = await props.patchBlockung({ name: value.toString() }, idBlockung);
+		const result = await props.patchBlockung({ name: value }, idBlockung);
 		if (result && props.auswahlBlockung)
-			props.auswahlBlockung.name = value.toString();
+			props.auswahlBlockung.name = value;
 		edit_blockungsname.value = false;
 	}
 

@@ -25,7 +25,9 @@
 
 	const inputHatZusatzkursGE = computed<boolean>({
 		get: () => props.jahrgangsdaten().hatZusatzkursGE,
-		set: (value) => { void props.patchJahrgangsdaten({ hatZusatzkursGE: value }, props.jahrgangsdaten().abiturjahr) },
+		set: (value) => {
+			void props.patchJahrgangsdaten({ hatZusatzkursGE: value }, props.jahrgangsdaten().abiturjahr);
+		},
 	});
 
 	const inputBeginnZusatzkursGE = computed<GostHalbjahr>({

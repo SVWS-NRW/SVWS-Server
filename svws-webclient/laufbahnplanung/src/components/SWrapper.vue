@@ -22,7 +22,7 @@
 					<p v-for="log in error.log.log" :key="log || ''" v-text="log" />
 				</template>
 				<template #stack v-if="error.stack !== ''">
-					<pre v-html="error.stack" />
+					<pre>{{ Array.isArray(error.stack) ? error.stack.join('\n') : error.stack }}</pre>
 				</template>
 			</svws-ui-notification>
 		</template>

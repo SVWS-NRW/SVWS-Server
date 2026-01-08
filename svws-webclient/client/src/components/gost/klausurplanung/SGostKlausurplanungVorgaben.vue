@@ -231,8 +231,8 @@
 		if (vE !== null && vT !== null &&
 			!vT.contains(e.target as Node) &&
 			!vE.contains(e.target as Node) &&
-			!(e.target as HTMLElement).parentElement?.parentElement?.classList.contains("svws-ui-dropdown-list") &&
-			!(e.target as HTMLElement).parentElement?.parentElement?.parentElement?.classList.contains("svws-ui-dropdown-list")
+			!(((e.target as HTMLElement).parentElement?.parentElement?.classList.contains("svws-ui-dropdown-list")) ?? false) &&
+			!(((e.target as HTMLElement).parentElement?.parentElement?.parentElement?.classList.contains("svws-ui-dropdown-list")) ?? false)
 		) {
 			activeVorgabe.value = new GostKlausurvorgabe();
 			selectedVorgabeRow.value = undefined;

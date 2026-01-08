@@ -23,24 +23,22 @@
 				<!-- Termin(e) -->
 				<template #cell(termin)="{ rowData }">
 					<div v-if="kMan().terminKursklausurBySchuelerklausur(rowData) !== null && kMan().terminKursklausurBySchuelerklausur(rowData)!.datum !== null" class="pl-4 border-l border-slate-300 space-y-2">
-						<svws-ui-table
-								:items="kMan().schuelerklausurterminGetMengeBySchuelerklausur(rowData)"
-								:columns="colsTermine"
-								disable-header
-								class="bg-transparent [&_.svws-ui-td]:items-center! [&_.svws-ui-td]:py-1!"
-						>
+						<svws-ui-table :items="kMan().schuelerklausurterminGetMengeBySchuelerklausur(rowData)"
+							:columns="colsTermine"
+							disable-header
+							class="bg-transparent [&_.svws-ui-td]:items-center! [&_.svws-ui-td]:py-1!">
 							<!-- Datum -->
 							<template #cell(datum)="{ rowData: termin }">
 								<span class="text-sm font-mono text-slate-600">
 									{{ kMan().terminOrNullBySchuelerklausurTermin(termin) !== null
-												? (
-														kMan().terminOrExceptionBySchuelerklausurTermin(termin).datum !== null
-																? DateUtils.gibDatumGermanFormat(
-																		kMan().terminOrExceptionBySchuelerklausurTermin(termin).datum!
-																)
-																: 'N.N.'
+										? (
+											kMan().terminOrExceptionBySchuelerklausurTermin(termin).datum !== null
+												? DateUtils.gibDatumGermanFormat(
+													kMan().terminOrExceptionBySchuelerklausurTermin(termin).datum!
 												)
-												: 'N.N.' }}
+												: 'N.N.'
+										)
+										: 'N.N.' }}
 								</span>
 							</template>
 							<!-- Aktionen / Bemerkung -->
@@ -65,7 +63,7 @@
 									</svws-ui-button>
 								</div>
 								<div v-else class="max-w-sm">
-									<svws-ui-textarea-input class="-mt-1 -mb-1" size="small" :disabled="!patchSchuelerklausurTermin" :rows="1" resizeable="none" autoresize :placeholder=" (termin.bemerkung === null || termin.bemerkung!.trim().length === 0) ? 'Kein Grund angegeben' : ''" :model-value="termin.bemerkung" @change="bemerkung => patchSchuelerklausurTermin(termin.id, { bemerkung })"/>
+									<svws-ui-textarea-input class="-mt-1 -mb-1" size="small" :disabled="!patchSchuelerklausurTermin" :rows="1" resizeable="none" autoresize :placeholder=" (termin.bemerkung === null || termin.bemerkung!.trim().length === 0) ? 'Kein Grund angegeben' : ''" :model-value="termin.bemerkung" @change="bemerkung => patchSchuelerklausurTermin(termin.id, { bemerkung })" />
 								</div>
 							</template>
 						</svws-ui-table>

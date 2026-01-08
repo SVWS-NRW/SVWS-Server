@@ -57,7 +57,7 @@ export class OrteListeManager extends AuswahlManager<number, OrtKatalogEintrag, 
 	protected onMehrfachauswahlChanged(): void {
 		this._idsReferencedOrte.clear();
 		for (const o of this.liste.auswahl()) {
-			if ((o.referenziertInAnderenTabellen !== null) && o.referenziertInAnderenTabellen === true) {
+			if (o.referenziertInAnderenTabellen === true) {
 				this._idsReferencedOrte.add(o.id);
 			}
 		}

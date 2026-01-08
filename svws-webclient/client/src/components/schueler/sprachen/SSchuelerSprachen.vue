@@ -318,7 +318,9 @@
 			return Jahrgaenge.getListBySchuljahrAndSchulform(schuljahr.value, schulform);
 		const jahrgaenge = new ArrayList<Jahrgaenge>(Jahrgaenge.getListBySchuljahrAndSchulform(schuljahr.value, schulform));
 		jahrgaenge.addAll(Jahrgaenge.getListBySchuljahrAndSchulform(schuljahr.value, Schulform.R));
-		jahrgaenge.sort({ compare(a, b) { return a.ordinal() - b.ordinal() } });
+		jahrgaenge.sort({ compare(a, b) {
+			return a.ordinal() - b.ordinal();
+		} });
 		return jahrgaenge;
 	});
 

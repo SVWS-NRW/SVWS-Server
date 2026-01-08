@@ -1,5 +1,5 @@
-import { Checkpoint, OrtsteileListeManager } from "@ui";
-import { BenutzerKompetenz, OrtsteilKatalogEintrag } from "@core";
+import type { Checkpoint, OrtsteileListeManager } from "@ui";
+import type { BenutzerKompetenz, OrtsteilKatalogEintrag } from "@core";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 
 export interface OrtsteileNeuProps {

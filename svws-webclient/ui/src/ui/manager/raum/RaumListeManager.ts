@@ -43,8 +43,7 @@ export class RaumListeManager extends AuswahlManager<number, Raum, Raum> {
 	protected onMehrfachauswahlChanged(): void {
 		this._mapRaumByKuerzel.clear();
 		for (const f of this.liste.list()) {
-			if (f.kuerzel !== null)
-				this._mapRaumByKuerzel.put(f.kuerzel, f);
+			this._mapRaumByKuerzel.put(f.kuerzel, f);
 		}
 	}
 

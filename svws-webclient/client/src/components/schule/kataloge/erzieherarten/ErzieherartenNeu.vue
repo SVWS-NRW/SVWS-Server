@@ -5,8 +5,8 @@
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-text-input placeholder="Bezeichnung" span="2"
 						v-model="data.bezeichnung"
-						:valid="() => fieldIsValid('bezeichnung')" :min-len="1" :max-len="30"  :disabled required />
-					<svws-ui-spacing/>
+						:valid="() => fieldIsValid('bezeichnung')" :min-len="1" :max-len="30" :disabled required />
+					<svws-ui-spacing />
 					<svws-ui-input-number placeholder="Sortierung"
 						v-model="data.sortierung"
 						:valid="() => fieldIsValid('sortierung')" :min="0" :max="32000" :disabled="!hatKompetenzAdd" :removable="false" />

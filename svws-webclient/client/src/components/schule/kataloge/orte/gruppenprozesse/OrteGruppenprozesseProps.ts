@@ -1,5 +1,5 @@
 import type { List, ServerMode, BenutzerKompetenz } from "@core";
-import { OrteListeManager } from "@ui";
+import type { OrteListeManager } from "@ui";
 
 export interface OrteGruppenprozesseProps {
 	serverMode: ServerMode;

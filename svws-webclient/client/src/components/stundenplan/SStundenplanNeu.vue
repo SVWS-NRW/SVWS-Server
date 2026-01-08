@@ -46,6 +46,7 @@
 
 	type PartialExcept<T, K extends keyof T> = Partial<T> & Required<Pick<T, K>>;
 
+	// eslint-disable-next-line vue/no-setup-props-reactivity-loss
 	const copyOf = ref<StundenplanListeEintrag>(props.manager().getStundenplanVorlage());
 	const alleStundenplaene = ref<StundenplanListeEintrag[]>([]);
 

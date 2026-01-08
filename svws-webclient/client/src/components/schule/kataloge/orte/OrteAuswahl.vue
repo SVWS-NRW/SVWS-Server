@@ -40,7 +40,7 @@
 	import { useRegionSwitch, ViewType } from "@ui";
 	import { BenutzerKompetenz, ServerMode } from "@core";
 	import type { OrtKatalogEintrag } from "@core";
-	import { OrteAuswahlProps } from "~/components/schule/kataloge/orte/OrteAuswahlProps";
+	import type { OrteAuswahlProps } from "~/components/schule/kataloge/orte/OrteAuswahlProps";
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 	const props = defineProps<OrteAuswahlProps>();

@@ -248,7 +248,9 @@
 					abiFaecher.add(belegung.abiturFach);
 					tmp.add(belegung);
 				}
-				tmp.sort(<Comparator<AbiturFachbelegung>>{ compare(a, b) { return a.abiturFach! - b.abiturFach! } });
+				tmp.sort(<Comparator<AbiturFachbelegung>>{ compare(a, b) {
+					return a.abiturFach! - b.abiturFach!;
+				} });
 				for (const belegung of tmp) {
 					if (belegung.abiturFach === null)
 						continue;

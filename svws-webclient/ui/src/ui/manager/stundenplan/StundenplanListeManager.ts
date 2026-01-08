@@ -30,8 +30,7 @@ export class StundenplanListeManager extends AuswahlManager<number, StundenplanL
 		cmp = (a.aktiv === b.aktiv) ? 0 : (a.aktiv ? -1 : 1);
 		if (cmp !== 0)
 			return cmp;
-		if ((a.gueltigAb !== null) && (b.gueltigAb !== null))
-			cmp = JavaString.compareTo(a.gueltigAb, b.gueltigAb);
+		cmp = JavaString.compareTo(a.gueltigAb, b.gueltigAb);
 		return cmp !== 0 ? cmp : JavaLong.compare(a.id, b.id);
 	} };
 

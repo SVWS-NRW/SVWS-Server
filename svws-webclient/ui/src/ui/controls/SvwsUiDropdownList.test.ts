@@ -374,8 +374,9 @@ describe.concurrent("Tests für Exposed-Variablen", () => {
 		const wrapper = mount(SvwsUiDropdownList, { props: default_props });
 
 		// Zugriff auf die exposed ref 'floating'
-		expect(wrapper.vm.floating).toBeDefined();
-		expect(wrapper.vm.floating?.innerText).toContain("Keine Einträge gefunden");
+		const floating = await wrapper.findComponent({ name: "SvwsUiDropdownList" }).vm.floating;
+		expect(floating).not.toBeNull();
+		expect(floating!.innerText).toContain("Keine Einträge gefunden");
 
 		// Aktualisiere 'floating' manuell
 		const newFloatingElement = document.createElement("div");
