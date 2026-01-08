@@ -82,7 +82,9 @@ public final class EmailFactory {
 			final String body = buildEMailHTMLBody(parameter);
 
 			final @NotNull EmailJobManagerContext context = DataEmailJobs.getDefaultJobManagerContext(reportingRepository.conn());
-			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "SMTP Sitzung erstellt.");
+			// E-Mail-Context Einstellungen abseits der Standardwerte setzen: Keine E-Mails ohne Anhang versenden.
+			context.withFilterMailsWithoutAttachments(true);
+			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "EmailJobManagerContext mit SMTP Sitzung erstellt.");
 
 			final String absenderEmail = ermittleAbsenderEmail();
 			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Absender-E-Mail-Adresse ermittelt.");
@@ -245,13 +247,13 @@ public final class EmailFactory {
 			for (final ReportBuilderPdf pdfBuilder : pdfBuilders) {
 				try {
 					attachments.add(new EmailJobAttachment(pdfBuilder.getDateinameMitEndung(), pdfBuilder.generate(), "application/pdf"));
-				} catch (final RuntimeException runtimeException) {
+				} catch (final Exception e) {
 					reportingRepository.logger().logLn(LogLevel.ERROR, 4,
 							"### FEHLER: PDF-Datei '" + pdfBuilder.getDateiname() + "' für ID " + id + " konnte nicht generiert werden: "
-									+ runtimeException.getMessage());
-					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, runtimeException,
+									+ e.getMessage());
+					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e,
 							"### FEHLER: PDF-Datei '" + pdfBuilder.getDateiname() + "' für ID " + id + " konnte nicht generiert werden: "
-									+ runtimeException.getMessage());
+									+ e.getMessage());
 				}
 			}
 
@@ -385,7 +387,8 @@ public final class EmailFactory {
 			simple.log.add("Abbruch fehlgeschlagen für Job: " + idJob);
 			return Response.status(Status.CONFLICT).type(MediaType.APPLICATION_JSON).entity(simple).build();
 		}
-		if ((job.getStatus() == EmailJobStatus.COMPLETED) || (job.getStatus() == EmailJobStatus.FAILED) || (job.getStatus() == EmailJobStatus.CANCELED))
+		if ((job.getStatus() == EmailJobStatus.COMPLETED_SUCCESSFULLY) || (job.getStatus() == EmailJobStatus.COMPLETED_WITH_ERRORS)
+				|| (job.getStatus() == EmailJobStatus.FAILED) || (job.getStatus() == EmailJobStatus.CANCELED))
 			simple.log.add("Job war bereits beendet (Status=" + job.getStatus() + ").");
 		else
 			simple.log.add("Abbruch wurde veranlasst.");

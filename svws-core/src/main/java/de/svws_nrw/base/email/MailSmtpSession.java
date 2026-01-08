@@ -137,7 +137,7 @@ public class MailSmtpSession {
 	 * @param to           die Adresse, zu der die Mail gesendet wird.
 	 * @param subject      der Betreff der Nachricht.
 	 * @param text         der Text der Nachricht.
-	 * @param attachment   die Informationen zum Email-Attachement
+	 * @param attachment   die Informationen zum E-Mail-Attachment
 	 *
 	 * @throws MessagingException   falls ein Fehler bei dem Versenden der Nachricht auftritt.
 	 */

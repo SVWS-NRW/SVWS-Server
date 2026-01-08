@@ -2,7 +2,6 @@ package de.svws_nrw.base.email;
 
 import jakarta.validation.constraints.NotNull;
 
-import java.time.Duration;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
@@ -138,10 +137,12 @@ public final class EmailJobManager {
 
 		// Entferne den Job auch aus der Queue und markiere ihn auch als abgebrochen
 		if (jobs.remove(job)) {
-			job.logSkipped.add("- Hinweis: Job " + idJob + " wurde vor dem Start abgebrochen.");
+			job.logError.add("- ABBRUCH: Job " + idJob + " wurde vor dem Start abgebrochen.");
 			completedJobs.add(job, EmailJobStatus.CANCELED);
-		} else
-			job.logSkipped.add("- Fehler: Job " + idJob + " konnte vor dem Start nicht abgebrochen werden.");
+		} else {
+			job.logError.add("- FEHLER: Job " + idJob + " konnte vor dem Start nicht abgebrochen werden.");
+			completedJobs.add(job, EmailJobStatus.FAILED);
+		}
 		return true;
 	}
 
@@ -177,7 +178,7 @@ public final class EmailJobManager {
 	/**
 	 * Bearbeitet den übergebenen Job und startet das Versenden der Emails.
 	 *
-	 * @param job   der abzuarbeitenden Job des Managers
+	 * @param job   der abzuarbeitende Job des Managers
 	 */
 	private void processJob(final EmailJob job) {
 		// Wenn der Job als abgebrochen markiert wurde, dann kann er auch nicht weiter bearbeitet werden und der Status wird aus CANCELED gesetzt
@@ -190,19 +191,28 @@ public final class EmailJobManager {
 		job.setStatus(EmailJobStatus.SENDING);
 		try {
 			// ... und versende alle Mails des Jobs
-			this.sendAll(job);
+			final boolean allSuccessful = this.sendAll(job);
 
-			// Wenn der Job nicht vorher abgebrochen wurde, dann markiere ihn als abgeschlossen und setze den Status auf COMPLETED.
+			// Wenn der Job nicht vorher abgebrochen wurde, prüfe, ob alle Mails erfolgreich versandt wurden.
 			if (!job.hasCancellationRequest()) {
-				completedJobs.add(job, EmailJobStatus.COMPLETED);
+				if (allSuccessful && job.logError.isEmpty() && job.logSkipped.isEmpty()) {
+					// Der Job ist nur erfolgreich, wenn alle Mails erfolgreich versendet wurden und kein Fehler aufgetreten ist.
+					completedJobs.add(job, EmailJobStatus.COMPLETED_SUCCESSFULLY);
+				} else {
+					if (job.getEmailsSent() > 0)
+						completedJobs.add(job, EmailJobStatus.COMPLETED_WITH_ERRORS);
+					else
+						completedJobs.add(job, EmailJobStatus.FAILED);
+				}
 			}
 		} catch (@SuppressWarnings("unused") final EmailJobCanceledException e) {
 			// Diese Exception wird in dem Fall aufgerufen, dass der Job unterbrochen wurde -> Status CANCELED
-			job.logSkipped.add("- Hinweis: Versand wurde abgebrochen.");
+			job.logError.add("- ABBRUCH: Job " + job.getId() + " wurde während des Versands abgebrochen.");
 			completedJobs.add(job, EmailJobStatus.CANCELED);
 		} catch (final Exception e) {
 			// Bei einem unerwarteten Fehler wird der Status des Jobs auf FAILED gesetzt
-			job.logError.add("- Fehler: Unerwarteter Fehler: " + (e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName()));
+			job.logError.add("- FEHLER: Unerwarteter Fehler während des Versands von Job " + job.getId() + ": "
+					+ (e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName()));
 			completedJobs.add(job, EmailJobStatus.FAILED);
 		}
 	}
@@ -216,7 +226,7 @@ public final class EmailJobManager {
 	 */
 	private void awaitRateLimit() {
 		// Die Größe des Zeitfensters für den Versand: Anzahl an Millisekunden für eine Minute
-		final long zeitfenster = Duration.ofMinutes(1).toMillis();
+		final long zeitfenster = context.getRateLimitTimeframeMs();
 
 		// Synchronisiert den Zugriff auf der Deque bei dem Zugriff durch mehrere Threads. wait und notifyAll benötigen dieselbe Monitor-Instanz.
 		synchronized (sendTimestamps) {
@@ -260,10 +270,17 @@ public final class EmailJobManager {
 	 * ggf. für einen Zeitraum ausgesetzt.
 	 *
 	 * @param job   der Email-Job
+	 *
+	 * @return true, wenn alle E-Mails erfolgreich versendet wurden, andernfalls false
 	 */
-	private void sendAll(final EmailJob job) {
-		for (final EmailJobRecipient recipient : job.getRecipients())
-			sendToRecipient(job, recipient);
+	private boolean sendAll(final EmailJob job) {
+		boolean allSuccessful = true;
+		for (final EmailJobRecipient recipient : job.getRecipients()) {
+			if (!sendToRecipient(job, recipient)) {
+				allSuccessful = false;
+			}
+		}
+		return allSuccessful;
 	}
 
 
@@ -273,29 +290,45 @@ public final class EmailJobManager {
 	 *
 	 * @param job         der Email-Job
 	 * @param recipient   der Empfänger der Email mit den zugehörigen Anhängen
+	 *
+	 * @return true, wenn alle E-Mails erfolgreich versendet wurden, andernfalls false
 	 */
-	private void sendToRecipient(final @NotNull EmailJob job, final @NotNull EmailJobRecipient recipient) {
-		// Prüfe, ob die Anhänge direkt versendet werden können, da kein Größen-Limit gesetzt ist
-		if (context.getMaxAttachementSize() <= 0) {
-			sendInternal(job, recipient, recipient.attachments);
-			return;
-		}
-
-		// Wenn ein Größen-Limit gesetzt ist, dann unterteile die Anhänge, bilde geignete Pakete ...
-		final List<List<Integer>> pakete = groupAttachements(job, recipient.attachments, recipient.email);
-		if (pakete.isEmpty()) {
+	private boolean sendToRecipient(final @NotNull EmailJob job, final @NotNull EmailJobRecipient recipient) {
+		// Prüfe, ob E-Mails ohne Anhänge herausgefiltert werden sollen und der Empfänger keine Anhänge erhält.
+		if (recipient.attachments.isEmpty() && context.isFilterMailsWithoutAttachments()) {
 			job.logSkipped.add("- Für Empfänger %s konnten keine versendbaren Anhänge ermittelt werden. Er wird beim Versand übersprungen."
 					.formatted(recipient.email));
-			return;
+			return false;
+		}
+
+		// Prüfe, ob die Anhänge direkt versendet werden können, da kein Größen-Limit gesetzt ist
+		if (context.getMaxAttachmentSize() <= 0) {
+			return sendInternal(job, recipient, recipient.attachments);
+		}
+
+		// Wenn ein Größen-Limit gesetzt ist, dann unterteile die Anhänge, bilde geeignete Pakete ...
+		final List<List<Integer>> pakete = groupAttachments(job, recipient.attachments, recipient.email);
+		if (pakete.isEmpty()) {
+			if (context.isFilterMailsWithoutAttachments()) {
+				job.logSkipped.add("- Für Empfänger %s konnten keine versendbaren Anhänge ermittelt werden. Er wird beim Versand übersprungen."
+						.formatted(recipient.email));
+				return false;
+			} else {
+				return sendInternal(job, recipient, new ArrayList<>());
+			}
 		}
 
 		// ... und versende diese in einzelnen Emails
+		boolean allSuccessful = true;
 		for (final List<Integer> paket : pakete) {
 			final List<EmailJobAttachment> paketData = new ArrayList<>(paket.size());
 			for (final Integer index : paket)
 				paketData.add(recipient.attachments.get(index));
-			sendInternal(job, recipient, paketData);
+			if (!sendInternal(job, recipient, paketData)) {
+				allSuccessful = false;
+			}
 		}
+		return allSuccessful;
 	}
 
 
@@ -339,35 +372,36 @@ public final class EmailJobManager {
 	 * @return eine Liste von Listen mit Indizes, welche jeweils Gruppen von Anhängen darstellen, die gemeinsam
 	 *         versendet werden. Die Indizes beziehen sich dabei auf die übergebene Liste von Datei-Anhängen.
 	 */
-	private @NotNull List<List<Integer>> groupAttachements(final @NotNull EmailJob job, final @NotNull List<EmailJobAttachment> attachments,
+	private @NotNull List<List<Integer>> groupAttachments(final @NotNull EmailJob job, final @NotNull List<EmailJobAttachment> attachments,
 			final @NotNull String recipient) {
 		// Erstellt die Ergebnis-Liste für die Gruppen
 		final List<List<Integer>> groups = new ArrayList<>();
-		if (attachments.isEmpty() || (context.getMaxAttachementSize() <= 0))
+		if (attachments.isEmpty() || (context.getMaxAttachmentSize() <= 0))
 			return groups;
 
 		// Lese die maximale Anhangsgröße aus der Job-Definition aus
-		final long maxSize = context.getMaxAttachementSize();
+		final long maxSize = context.getMaxAttachmentSize();
 
 		// Bestimme die Größen der Anhänge und speichere diese in einem Array für den schnellen Zugriff auf die Größen
-		final int[] attachementSizes = new int[attachments.size()];
+		final int[] attachmentSizes = new int[attachments.size()];
 		for (int i = 0; i < attachments.size(); i++)
-			attachementSizes[i] = Optional.of(attachments.get(i)).map(d -> d.data.length).orElse(0);
+			attachmentSizes[i] = Optional.of(attachments.get(i)).map(d -> d.data.length).orElse(0);
 
 		// Erstelle für die spätere Gruppenbildung zunächst eine Liste mit den Indizes, welche anhand der Größe der Anhänge sortiert ist
 		final List<Integer> sortedAttachmentIndizes =
-				IntStream.range(0, attachments.size()).boxed().sorted((a, b) -> Integer.compare(attachementSizes[b], attachementSizes[a])).toList();
+				IntStream.range(0, attachments.size()).boxed().sorted((a, b) -> Integer.compare(attachmentSizes[b], attachmentSizes[a])).toList();
 
 		// Befülle die Gruppen einzeln mit den Anhängen, versuche dabei immer mit den nächstgrößeren Anhängen die zuerst erzeugten Gruppen weiter zu befüllen
 		final List<Long> groupSizes = new ArrayList<>();
 		for (final int index : sortedAttachmentIndizes) {
-			final long size = attachementSizes[index];
+			final long size = attachmentSizes[index];
 
 			// Fall 1: Die Größe überschreitet das Limit und dies ist laut Job-Konfiguration untersagt
-			if ((size > maxSize) && (context.isForceMaxAttachementSize())) {
+			if ((size > maxSize) && (context.isForceMaxAttachmentSize())) {
 				// Die maximale Paketgröße darf nicht überschritten werden, verwerfe daher den Anhang und logge das Problem.
-				job.logError.add("- Fehler: Anhang wurde nicht an %s versendet, da er das maximale Größenlimit des Anhangs überschreitet."
-						.formatted(recipient));
+				job.logSkipped
+						.add(("- Für Empfänger %s wurde ein Anhang nicht versendet. Grund: Der Anhang überschreitet die maximale Größe für E-Mail-Anhänge.")
+								.formatted(recipient));
 				continue;
 			}
 
@@ -381,7 +415,7 @@ public final class EmailJobManager {
 			}
 
 			// Fall 3: Versuche den aktuellen Anhang in einer bestehenden Gruppe unterzubringen
-			final OptionalInt indexGroup = IntStream.range(0, groups.size()).filter(i -> (groupSizes.get(i) + size <= maxSize)).findFirst();
+			final OptionalInt indexGroup = IntStream.range(0, groups.size()).filter(i -> ((groupSizes.get(i) + size) <= maxSize)).findFirst();
 			if (indexGroup.isPresent()) {
 				final int i = indexGroup.getAsInt();
 				groups.get(i).add(index);
