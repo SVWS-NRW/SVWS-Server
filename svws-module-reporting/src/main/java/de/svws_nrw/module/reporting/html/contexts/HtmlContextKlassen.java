@@ -88,7 +88,7 @@ public final class HtmlContextKlassen extends HtmlContext<ReportingKlasse> {
 					klassenDaten = new DataKlassendaten(reportingRepository.conn()).getById(idKlasse);
 					mapKlassen.put(idKlasse, this.reportingRepository.schuljahresabschnitt(klassenDaten.idSchuljahresabschnitt).klasse(idKlasse));
 				} catch (final ApiOperationException e) {
-					ReportingExceptionUtils.putStacktraceInLog(
+					ReportingExceptionUtils.logException(
 							"FEHLER: Fehler bei der Ermittlung der Daten für des Klassen %s.".formatted(idKlasse), e, reportingRepository.logger(),
 							LogLevel.ERROR,
 							0);

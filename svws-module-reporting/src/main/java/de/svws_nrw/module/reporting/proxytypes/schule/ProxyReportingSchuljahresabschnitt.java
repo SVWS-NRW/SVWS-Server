@@ -110,7 +110,7 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 				this.reportingRepository.logger().logLn(LogLevel.DEBUG, 8, "Ermittle die Klassendaten.");
 				klassendaten = new DataKlassendaten(this.reportingRepository.conn()).getListBySchuljahresabschnittID(this.id(), true);
 			} catch (final Exception e) {
-				ReportingExceptionUtils.putStacktraceInLog(
+				ReportingExceptionUtils.logException(
 						"FEHLER: Fehler bei der Erstellung der Klassenliste für den Schuljahresabschnitt %s.".formatted(this.textSchuljahresabschnittKurz()), e,
 						reportingRepository.logger(), LogLevel.ERROR, 0);
 			}
@@ -141,7 +141,7 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 				this.reportingRepository.logger().logLn(LogLevel.DEBUG, 8, "Ermittle die Kursdaten.");
 				kurseDaten = new DataKurse(this.reportingRepository.conn()).getListBySchuljahresabschnittID(this.id(), true);
 			} catch (final Exception e) {
-				ReportingExceptionUtils.putStacktraceInLog(
+				ReportingExceptionUtils.logException(
 						"FEHLER: Fehler bei der Erstellung der Liste der Kurse für den Schuljahresabschnitt %s.".formatted(this.textSchuljahresabschnittKurz()),
 						e, reportingRepository.logger(), LogLevel.ERROR, 0);
 			}

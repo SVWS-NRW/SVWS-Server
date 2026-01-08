@@ -45,7 +45,7 @@ Definitionen body: Festlegen der Schrift mit Unicode Unterstützung.
 */
 body {
 	/*noinspection CssNoGenericFontName*/
-	font-family: 'liberation';
+	font-family: 'liberation', sans-serif;
 	font-weight: normal;
 	font-size: 9pt;
 	margin: 0;
@@ -578,22 +578,22 @@ th.head-small-grey {
 	font-size: 0.8em;
 	font-weight: normal;
 	color: white;
-	background-color: #808080;
+	background-color: #757575;
 	padding-left: 1mm;
 	padding-right: 1mm;
-	border-top: 0.5px solid #808080;
-	border-bottom: 0.5px solid #808080;
+	border-top: 0.5px solid #757575;
+	border-bottom: 0.5px solid #757575;
 }
 
 td.head-small-grey {
 	font-size: 0.8em;
 	font-weight: normal;
 	color: white;
-	background-color: #808080;
+	background-color: #757575;
 	padding-left: 1mm;
 	padding-right: 1mm;
-	border-top: 0.5px solid #808080;
-	border-bottom: 0.5px solid #808080;
+	border-top: 0.5px solid #757575;
+	border-bottom: 0.5px solid #757575;
 }
 
 th.head-black-lines {

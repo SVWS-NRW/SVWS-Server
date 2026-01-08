@@ -115,7 +115,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 									try {
 										return new DataLehrerStammdaten(reportingRepository.conn()).getById(l.id);
 									} catch (final ApiOperationException e) {
-										ReportingExceptionUtils.putStacktraceInLog(
+										ReportingExceptionUtils.logException(
 												"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Lehrers.", e,
 												reportingRepository.logger(), LogLevel.INFO, 0);
 										return new LehrerStammdaten();
@@ -163,7 +163,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 						fachwahlSchriftlich = gostFachwahl.istSchriftlich;
 					}
 				} catch (final Exception e) {
-					ReportingExceptionUtils.putStacktraceInLog(
+					ReportingExceptionUtils.logException(
 							"INFO: Fehler mit definiertem Rückgabewert abgefangen aufgrund fehlender Fachwahl eines Schülers bei dessen Kursplanungskursbelegung.",
 							e, reportingRepository.logger(), LogLevel.INFO, 0);
 				}
@@ -227,7 +227,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 													this.ergebnisManager))));
 				}
 			} catch (final ApiOperationException e) {
-				ReportingExceptionUtils.putStacktraceInLog(
+				ReportingExceptionUtils.logException(
 						"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der GOSt-Fachwahlstatistik.", e,
 						reportingRepository.logger(), LogLevel.INFO, 0);
 			}

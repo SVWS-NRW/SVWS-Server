@@ -122,7 +122,7 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 				try {
 					klassenDaten = new DataKlassendaten(reportingRepository.conn()).getByIdOhneSchueler(super.idFolgeklasse());
 				} catch (final ApiOperationException e) {
-					ReportingExceptionUtils.putStacktraceInLog(
+					ReportingExceptionUtils.logException(
 							"FEHLER: Fehler bei der Ermittlung der Daten für die Folgeklasse der Klasse %s in %s."
 									.formatted(super.kuerzel, super.schuljahresabschnitt.textSchuljahresabschnittKurz()),
 							e, reportingRepository.logger(), LogLevel.ERROR, 0);
@@ -156,7 +156,7 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 										throw new ApiOperationException(Response.Status.BAD_REQUEST, "Keine ID für den Jahrgang übergeben.");
 									return dataJahrgangsdaten.getById(idJahrgang);
 								} catch (final ApiOperationException e) {
-									ReportingExceptionUtils.putStacktraceInLog(
+									ReportingExceptionUtils.logException(
 											"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Daten eines Jahrgangs.", e,
 											reportingRepository.logger(), LogLevel.INFO, 0);
 									return new JahrgangsDaten();
@@ -204,7 +204,7 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 				try {
 					klassenDaten = new DataKlassendaten(reportingRepository.conn()).getByIdOhneSchueler(super.idVorgaengerklasse());
 				} catch (final ApiOperationException e) {
-					ReportingExceptionUtils.putStacktraceInLog(
+					ReportingExceptionUtils.logException(
 							"FEHLER: Fehler bei der Ermittlung der Daten für die Vorgängerklasse der Klasse %s in %s."
 									.formatted(super.kuerzel, super.schuljahresabschnitt.textSchuljahresabschnittKurz()),
 							e, reportingRepository.logger(), LogLevel.ERROR, 0);

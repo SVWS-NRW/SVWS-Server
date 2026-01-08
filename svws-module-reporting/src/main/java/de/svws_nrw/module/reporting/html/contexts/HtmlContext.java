@@ -290,7 +290,7 @@ public abstract class HtmlContext<T> {
 		if (comparator == null) {
 			if (validierungsfehler.isEmpty())
 				validierungsfehler.add("- keine -");
-			ReportingExceptionUtils.putInfoInLog(
+			ReportingExceptionUtils.logInfo(
 					("INFO: Es konnte kein Comparator für %s erstellt werden. Zudem wurden folgende Attribute zur Sortierung "
 							+ "übergeben, die nicht in der Registry definiert wurden: %s.")
 							.formatted(typeName, String.join(", ", validierungsfehler)),
@@ -302,7 +302,7 @@ public abstract class HtmlContext<T> {
 
 		// Falls Attribute ungültig waren, werden diese ins Log geschrieben.
 		if (!validierungsfehler.isEmpty()) {
-			ReportingExceptionUtils.putInfoInLog(
+			ReportingExceptionUtils.logInfo(
 					"INFO: Es wurden folgende Attribute zur Sortierung übergeben, die nicht in der Registry definiert wurden: "
 							+ String.join(", ", validierungsfehler),
 					reportingRepository.logger(), LogLevel.INFO, 4);

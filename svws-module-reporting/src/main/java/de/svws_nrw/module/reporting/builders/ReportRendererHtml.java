@@ -52,7 +52,7 @@ public final class ReportRendererHtml {
 			return templateEngine.process(htmlTemplate, finalContext);
 		} catch (final Exception e) {
 			if (logger != null)
-				ReportingExceptionUtils.putStacktraceInLog("### FEHLER: Das HTML konnte nicht gerendert werden.",	e, logger, LogLevel.ERROR, 0, htmlTemplate);
+				ReportingExceptionUtils.logException("### FEHLER: Das HTML konnte nicht gerendert werden.",	e, logger, LogLevel.ERROR, 0);
 			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "### FEHLER: Das HTML konnte nicht gerendert werden.");
 		}
 	}

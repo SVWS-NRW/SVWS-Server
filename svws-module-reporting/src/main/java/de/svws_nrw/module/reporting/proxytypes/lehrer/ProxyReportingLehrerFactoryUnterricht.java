@@ -193,7 +193,7 @@ public class ProxyReportingLehrerFactoryUnterricht {
 
 			return listmapLeistungsdaten;
 		} catch (final Exception e) {
-			ReportingExceptionUtils.putStacktraceInLog(
+			ReportingExceptionUtils.logException(
 					("FEHLER: Fehler bei der Ermittlung von Unterrichtsdaten aus den Schülerleistungsdaten für Lehrer %s.").formatted(factoryLehrer.kuerzel()),
 					e, reportingRepository.logger(), LogLevel.ERROR, 0);
 			return new ListMap3DLongKeys<>();

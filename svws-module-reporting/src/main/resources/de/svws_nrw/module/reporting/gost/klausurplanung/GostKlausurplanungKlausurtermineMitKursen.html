@@ -117,9 +117,10 @@
 					<table th:if="${mitNachschreibern && !termin.schuelerklausurenNachschreibtermin().isEmpty()}" class="fixed-100 p-0">
 						<colgroup>
 							<col style="width: 6%;"/>
-							<col style="width: 14%;"/>
-							<col style="width: 14%;"/>
-							<col style="width: 14%;"/>
+							<col style="width: 12%;"/>
+							<col style="width: 12%;"/>
+							<col style="width: 6%;"/>
+							<col style="width: 12%;"/>
 							<col style="width: 11%;"/>
 							<col style="width: 11%;"/>
 							<col style="width: 11%;"/>
@@ -127,8 +128,8 @@
 							<col style="width: 8%;"/>
 						</colgroup>
 						<thead>
-							<tr th:if="${(termin.kursklausuren().isEmpty() || !mitKursklausuren) && iterationVarTermin.first}">
-								<th colspan="7" class="p-t-25of100 bo-b-grey"><h3 th:text="${#convert.toWochentagDE(datum)} + ', ' + ${#convert.toDateDE(datum)}">15.03.2024</h3></th>
+							<tr th:if="${termin.kursklausuren().isEmpty() || !mitKursklausuren}">
+								<th colspan="8" class="p-t-25of100 bo-b-grey"><h3 th:text="${#convert.toWochentagDE(datum)} + ', ' + ${#convert.toDateDE(datum)}">15.03.2024</h3></th>
 								<th colspan="2" class="p-t-25of100 bo-b-grey ta-r"><h3 th:text="${'KW' + #convert.toKalenderwocheDE(datum)}">KW23</h3></th>
 							</tr>
 							<tr>
@@ -137,26 +138,27 @@
 							<tr th:if="${(termin.kursklausuren().isEmpty() || !mitKursklausuren)}">
 								<td class="f-bold bo-b-grey" th:text="${termin.gostHalbjahr().kuerzel}">Q2.2</td>
 								<td colspan="2" class="f-bold bo-b-grey" th:text="${termin.startuhrzeit() + ' Uhr'}">08:00 Uhr</td>
-								<td colspan="7" class="f-bold bo-b-grey" th:text="${termin.bezeichnung()}">Kursgruppe M-PH</td>
+								<td colspan="8" class="f-bold bo-b-grey" th:text="${termin.bezeichnung()}">Kursgruppe M-PH</td>
 							</tr>
 							<tr th:if="${(termin.kursklausuren().isEmpty() || !mitKursklausuren) && !termin.raeumeUndStunden().isEmpty()}">
 								<td></td>
-								<td colspan="8" class="bo-b-grey cell-small-grey" th:text="${'Räume und Stunden:' + termin.raeumeUndStunden()}">Räume und Stunden: 1.02 (1.-4.), 2.13 (3.-4.)</td>
+								<td colspan="9" class="bo-b-grey cell-small-grey" th:text="${'Räume und Stunden:' + termin.raeumeUndStunden()}">Räume und Stunden: 1.02 (1.-4.), 2.13 (3.-4.)</td>
 							</tr>
 							<tr th:if="${(termin.kursklausuren().isEmpty() || !mitKursklausuren) && termin.bemerkung() != null && !termin.bemerkung().isEmpty()}">
 								<td></td>
-								<td colspan="8"  class="cell-small-grey" th:text="${'Bemerkung: ' + termin.bemerkung()}">Bemerkung: Der Text mit Bemerkungen zum Klausurtermin</td>
+								<td colspan="9"  class="cell-small-grey" th:text="${'Bemerkung: ' + termin.bemerkung()}">Bemerkung: Der Text mit Bemerkungen zum Klausurtermin</td>
 							</tr>
 							<tr>
-								<td colspan="9" style="height: 2mm"></td>
+								<td colspan="10" style="height: 2mm"></td>
 							</tr>
 							<tr>
 								<td></td>
-								<td colspan="8" class="f-bold">Schülerklausuren:</td>
+								<td colspan="9" class="f-bold">Schülerklausuren:</td>
 							</tr>
 							<tr>
 								<td></td>
 								<td colspan="2" class="head-small-grey">Schülerin / Schüler</td>
+								<td class="head-small-grey">Stufe</td>
 								<td class="head-small-grey">Kurs</td>
 								<td class="head-small-grey">Lehrkraft</td>
 								<td class="head-small-grey">Raum</td>
@@ -165,10 +167,12 @@
 								<td class="head-small-grey ta-r">Medien</td>
 							</tr>
 						</thead>
-						<tbody th:each="schuelerklausur,iterationVarSchuelerklausur : ${termin.schuelerklausurenNachschreibtermin()}">
+						<tbody>
+						<th:block th:each="schuelerklausur,iterationVarSchuelerklausur : ${termin.schuelerklausurenNachschreibtermin()}">
 							<tr>
 								<td></td>
 								<td colspan="2" class="bo-t-grey p-tb-0 p-lr-1" th:text="${schuelerklausur.schueler().nachname() + ', ' + schuelerklausur.schueler().vorname()}">Mustermann, Max</td>
+								<td class="bo-t-grey p-tb-0 p-lr-1" th:text="${schuelerklausur.schueler().auswahlLernabschnitt().jahrgang().kuerzel()}">EF</td>
 								<td class="bo-t-grey p-tb-0 p-lr-1" th:text="${schuelerklausur.kursklausur().kurs().kuerzel()}">GE-GK2</td>
 								<td class="bo-t-grey p-tb-0 p-lr-1" th:text="${schuelerklausur.kursklausur().kurs().kursleitung().kuerzel()}">ABC</td>
 								<td class="bo-t-grey p-tb-0 p-lr-1" th:text="${((schuelerklausur.klausurraum() == null) || (schuelerklausur.klausurraum().raumdaten() == null)) ? '' : schuelerklausur.klausurraum().raumdaten().kuerzel()}">A2.13</td>
@@ -179,13 +183,14 @@
 							<tr th:if="${schuelerklausur.kursklausur().istMdlPruefung()}">
 								<td></td>
 								<td class="cell-small-grey p-tb-0 p-lr-1 ta-l"></td>
-								<td colspan="7" class="cell-small-grey p-tb-0 p-lr-1 ta-l">Hinweis: Mündliche Prüfung.</td>
+								<td colspan="8" class="cell-small-grey p-tb-0 p-lr-1 ta-l">Hinweis: Mündliche Prüfung.</td>
 							</tr>
 							<tr th:if="${(schuelerklausur.bemerkung() != null && !schuelerklausur.bemerkung().isEmpty())}">
 								<td></td>
 								<td></td>
-								<td colspan="7" class="cell-small-grey p-tb-0 p-lr-1 ta-l" th:text="${'Bemerkung: ' + schuelerklausur.bemerkung()}">Bemerkungen zur Klausur des Kurses.</td>
+								<td colspan="8" class="cell-small-grey p-tb-0 p-lr-1 ta-l" th:text="${'Bemerkung: ' + schuelerklausur.bemerkung()}">Bemerkungen zur Klausur des Kurses.</td>
 							</tr>
+						</th:block>
 						</tbody>
 					</table>
 				</th:block>

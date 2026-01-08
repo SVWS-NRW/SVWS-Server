@@ -163,7 +163,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 				try {
 					klassenDaten = new DataKlassendaten(reportingRepository.conn()).getByIdOhneSchueler(super.idFolgeklasse());
 				} catch (final ApiOperationException e) {
-					ReportingExceptionUtils.putStacktraceInLog(
+					ReportingExceptionUtils.logException(
 							"FEHLER: Fehler bei der Ermittlung der Daten für die Folgeklasse des Schülers %s in %s."
 									.formatted(super.schueler().id(), super.schuljahresabschnitt.textSchuljahresabschnittKurz()),
 							e, reportingRepository.logger(), LogLevel.ERROR, 0);
@@ -242,7 +242,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 								try {
 									return new DataLehrerStammdaten(reportingRepository.conn()).getById(super.idSonderpaedagoge());
 								} catch (final ApiOperationException e) {
-									ReportingExceptionUtils.putStacktraceInLog(
+									ReportingExceptionUtils.logException(
 											"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Lehrers.", e,
 											reportingRepository.logger(), LogLevel.INFO, 0);
 									return new LehrerStammdaten();
@@ -267,7 +267,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 								try {
 									return new DataLehrerStammdaten(reportingRepository.conn()).getById(super.idTutor());
 								} catch (final ApiOperationException e) {
-									ReportingExceptionUtils.putStacktraceInLog(
+									ReportingExceptionUtils.logException(
 											"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Lehrers.", e,
 											reportingRepository.logger(), LogLevel.INFO, 0);
 									return new LehrerStammdaten();

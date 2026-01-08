@@ -292,7 +292,7 @@ public class ReportingRepository {
 			idAktuellerSchuljahresabschnitt = this.schulstammdaten.idSchuljahresabschnitt;
 			idAuswahlSchuljahresabschnitt = this.reportingParameterTypisiert.schuljahresabschnitt().id();
 		} catch (final Exception e) {
-			ReportingExceptionUtils.putStacktraceInLog(
+			ReportingExceptionUtils.logException(
 					"FEHLER: Die Stamm- oder Abschnittsdaten der Schule konnten nicht ermittelt werden oder der Schuljahresabschnitt ist ungültig.",
 					e, this.logger(), LogLevel.ERROR, 8);
 			throw new ApiOperationException(Status.NOT_FOUND,
@@ -875,7 +875,7 @@ public class ReportingRepository {
 				klassenDaten = new DataKlassendaten(this.conn()).getById(idKlasse);
 				this.schuljahresabschnitt(klassenDaten.idSchuljahresabschnitt).klasse(idKlasse);
 			} catch (final ApiOperationException e) {
-				ReportingExceptionUtils.putStacktraceInLog(
+				ReportingExceptionUtils.logException(
 						"FEHLER: Fehler bei der Ermittlung der Daten für des Klassen %s.".formatted(idKlasse), e, this.logger(),
 						LogLevel.ERROR,
 						0);
@@ -905,7 +905,7 @@ public class ReportingRepository {
 				final LehrerStammdaten fehlendeLehrerstammdaten = new DataLehrerStammdaten(this.conn).getById(idLehrer);
 				mapLehrerStammdaten.put(fehlendeLehrerstammdaten.id, fehlendeLehrerstammdaten);
 			} catch (final ApiOperationException e) {
-				ReportingExceptionUtils.putStacktraceInLog(
+				ReportingExceptionUtils.logException(
 						"FEHLER: Fehler bei der Ermittlung der fehlenden Lehrerstammdaten einer Lehrkraft aus der Datenbank im ReportingRepository.", e,
 						this.logger(), LogLevel.ERROR, 0);
 				return null;
@@ -952,7 +952,7 @@ public class ReportingRepository {
 					try {
 						return new DataLehrerStammdaten(this.conn).getListByIDs(fehlendeIds);
 					} catch (final ApiOperationException e) {
-						ReportingExceptionUtils.putStacktraceInLog(
+						ReportingExceptionUtils.logException(
 								"FEHLER: Fehler bei der Ermittlung der fehlenden Lehrerstammdaten einer Lehrerliste aus der Datenbank im "
 										+ "ReportingRepository.",
 								e, this.logger(), LogLevel.ERROR, 0);
@@ -985,7 +985,7 @@ public class ReportingRepository {
 				final SchuelerStammdaten fehlendeSchulerstammdaten = new DataSchuelerStammdaten(this.conn).getById(idSchueler);
 				mapSchuelerStammdaten.put(fehlendeSchulerstammdaten.id, fehlendeSchulerstammdaten);
 			} catch (final ApiOperationException e) {
-				ReportingExceptionUtils.putStacktraceInLog(
+				ReportingExceptionUtils.logException(
 						"FEHLER: Fehler bei der Ermittlung der fehlenden Schülerstammdaten eines Schülers aus der Datenbank im ReportingRepository.",
 						e, this.logger(), LogLevel.ERROR, 0);
 				return null;
@@ -1038,7 +1038,7 @@ public class ReportingRepository {
 					try {
 						return new DataSchuelerStammdaten(this.conn).getListByIds(fehlendeIds);
 					} catch (final ApiOperationException e) {
-						ReportingExceptionUtils.putStacktraceInLog(
+						ReportingExceptionUtils.logException(
 								"FEHLER: Fehler bei der Ermittlung der fehlenden Schülerstammdaten einer Schülerliste aus der Datenbank im "
 										+ "ReportingRepository.",
 								e, this.logger(), LogLevel.ERROR, 0);
@@ -1184,7 +1184,7 @@ public class ReportingRepository {
 					}
 				}
 			} catch (final Exception e) {
-				ReportingExceptionUtils.putStacktraceInLog(
+				ReportingExceptionUtils.logException(
 						"FEHLER: Fehler bei der Ermittlung der fehlenden %sstammdaten einer %sliste aus der Datenbank im ReportingRepository."
 								.formatted(datentyp, datentyp),
 						e, this.logger(), LogLevel.ERROR, 0);

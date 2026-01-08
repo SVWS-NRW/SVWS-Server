@@ -45,7 +45,7 @@ public final class ComparatorFactory {
 		final Comparator<T> comparator = ComparatorBuilder.build(sortierungRegistry, attribute, validierungsfehler);
 
 		if (!validierungsfehler.isEmpty()) {
-			ReportingExceptionUtils.putInfoInLog(
+			ReportingExceptionUtils.logInfo(
 					"INFO: Es wurden folgende Attribute zur Sortierung übergeben, die nicht in der Registry definiert wurden: "
 							+ String.join(", ", validierungsfehler),
 					reportingRepository.logger(), LogLevel.INFO, 4);

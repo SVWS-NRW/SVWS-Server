@@ -88,7 +88,7 @@ public final class HtmlContextKurse extends HtmlContext<ReportingKurs> {
 					kursDaten = DataKurse.getKursdaten(reportingRepository.conn(), idKurs);
 					mapKurse.put(idKurs, this.reportingRepository.schuljahresabschnitt(kursDaten.idSchuljahresabschnitt).kurs(idKurs));
 				} catch (final ApiOperationException e) {
-					ReportingExceptionUtils.putStacktraceInLog(
+					ReportingExceptionUtils.logException(
 							"FEHLER: Fehler bei der Ermittlung der Daten des Kurses %s.".formatted(idKurs), e, reportingRepository.logger(), LogLevel.ERROR,
 							0);
 				}

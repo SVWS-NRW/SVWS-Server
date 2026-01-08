@@ -163,7 +163,7 @@ public class ProxyReportingKurs extends ReportingKurs {
 					if ((kursDaten.schueler != null) && !kursDaten.schueler.isEmpty())
 						idsSchueler.addAll(kursDaten.schueler.stream().map(s -> s.id).toList());
 				} catch (final ApiOperationException e) {
-					ReportingExceptionUtils.putStacktraceInLog(
+					ReportingExceptionUtils.logException(
 							"FEHLER: Fehler bei der Ermittlung der Daten des Kurses %s in %s."
 									.formatted(super.kuerzel, super.schuljahresabschnitt.textSchuljahresabschnittKurz()),
 							e, reportingRepository.logger(), LogLevel.ERROR, 0);
