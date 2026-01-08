@@ -1,32 +1,38 @@
 <template>
 	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Allgemein">
-			<svws-ui-input-wrapper>
-				<svws-ui-select label="ASD-Statistik-Konfession" v-model="selectedKonfession" :items="Religion.data().getListBySchuljahrAndSchulform(schuljahr, schulform)" :disabled statistics
-					:item-text="konfessionText" required :valid="fieldIsValid('kuerzel')" />
-				<svws-ui-text-input v-model="data.bezeichnung" placeholder="Bezeichnung" :disabled :min-len="1" :max-len="30" required
-					:valid="fieldIsValid('bezeichnung')" />
-				<div v-if="!isUniqueInList(data.bezeichnung, props.manager().liste.list(), 'bezeichnung')" class="flex my-auto">
-					<span class="icon i-ri-alert-line mx-0.5 mr-1 inline-flex" />
-					<p> Diese Bezeichnung wird bereits verwendet. </p>
-				</div>
-				<div v-if="data.bezeichnung.length > 30" class="flex my-auto">
-					<span class="icon i-ri-alert-line mx-0.5 mr-1 inline-flex" />
-					<p> Diese Bezeichnung verwendet zu viele Zeichen. </p>
-				</div>
-				<svws-ui-text-input v-model="data.bezeichnungZeugnis" placeholder="Zeugnisbezeichnung" :disabled :max-len="50"
-					:valid="fieldIsValid('bezeichnungZeugnis')" />
-				<div v-if="bezeichnungZeugnisTooLong" class="flex my-auto">
-					<span class="icon i-ri-alert-line mx-0.5 mr-1 inline-flex" />
-					<p> Diese Bezeichnung verwendet zu viele Zeichen. </p>
-				</div>
-				<svws-ui-input-number placeholder="Sortierung" v-model="data.sortierung" :disabled :min="0" :max="32000" />
-				<svws-ui-checkbox v-model="data.istSichtbar" :disabled>Sichtbar</svws-ui-checkbox>
-				<div class="mt-7 flex flex-row gap-4 justify-end">
-					<svws-ui-button type="secondary" @click="cancel">Abbrechen</svws-ui-button>
-					<svws-ui-button @click="addKonfession()" :disabled="!formIsValid || !hatKompetenzUpdate">Speichern</svws-ui-button>
-				</div>
+			<svws-ui-input-wrapper :grid="2">
+				<ui-select label="Konfession ASD-Kürzel"
+					v-model="selectedKonfession"
+					:manager="konfessionKuerzelSelectManager"
+					:valid="fieldIsValid('kuerzel')" statistics :disabled="!hatKompetenzUpdate" required :removable="false" />
+				<ui-select label="Konfession ASD-Text"
+					v-model="selectedKonfession"
+					:manager="konfessionTextSelectManager"
+					:valid="fieldIsValid('kuerzel')" statistics :disabled="!hatKompetenzUpdate" required :removable="false" />
+				<svws-ui-text-input placeholder="Interne Bezeichnung"
+					v-model="data.bezeichnung"
+					:valid="() => fieldIsValid('bezeichnung')" :min-len="1" :max-len="30" :disabled="!hatKompetenzUpdate" required />
+				<svws-ui-text-input placeholder="Zeugnisbezeichnung"
+					v-model="data.bezeichnungZeugnis"
+					:valid="() => fieldIsValid('bezeichnungZeugnis')" :max-len="50" :disabled="!hatKompetenzUpdate" />
+				<svws-ui-spacing />
+				<svws-ui-input-number placeholder="Sortierung"
+					v-model="data.sortierung"
+					:valid="() => fieldIsValid('sortierung')" :min="0" :max="32000" :disabled="!hatKompetenzUpdate" :removable="false" />
+				<svws-ui-spacing />
+				<svws-ui-checkbox v-model="data.istSichtbar" :disabled="!hatKompetenzUpdate">
+					Sichtbar
+				</svws-ui-checkbox>
 			</svws-ui-input-wrapper>
+			<div class="mt-7 flex flex-row gap-4 justify-end">
+				<svws-ui-button type="secondary" @click="cancel">
+					Abbrechen
+				</svws-ui-button>
+				<svws-ui-button @click="addKonfession" :disabled="!hatKompetenzUpdate || !formIsValid">
+					Speichern
+				</svws-ui-button>
+			</div>
 		</svws-ui-content-card>
 		<svws-ui-checkpoint-modal :checkpoint :continue-routing="props.continueRoutingAfterCheckpoint" />
 	</div>
@@ -36,66 +42,79 @@
 
 	import type { KonfessionenNeuProps } from "./KonfessionenNeuProps";
 	import { computed, ref, watch } from "vue";
+	import type { ReligionKatalogEintrag } from "@core";
 	import { BenutzerKompetenz, Religion, ReligionEintrag } from "@core";
-	import { isUniqueInList, mandatoryInputIsValid, optionalInputIsValid } from "~/util/validation/Validation";
+	import { isUniqueInList, mandatoryInputIsValid, numberHasDecimals, numberIsValid, optionalInputIsValid } from "~/util/validation/Validation";
+	import { CoreTypeSelectManager } from "@ui";
 
 	const props = defineProps<KonfessionenNeuProps>();
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
-	const disabled = computed(() => !hatKompetenzUpdate.value);
 	const schuljahr = computed<number>(() => props.manager().getSchuljahr());
 	const isLoading = ref<boolean>(false);
-	const data = ref<ReligionEintrag>(new ReligionEintrag());
+	const data = ref<ReligionEintrag>(Object.assign(new ReligionEintrag(), { istSichtbar: true, sortierung: 32000 }));
 
-	const selectedKonfession = computed({
-		get: () => Religion.data().getWertBySchluessel(data.value.kuerzel ?? ''),
-		set: (v: Religion | null) => data.value.kuerzel = v?.daten(props.manager().getSchuljahr())?.schluessel ?? '',
+	const konfessionKuerzelSelectManager = new CoreTypeSelectManager({
+		clazz: Religion.class,
+		schuljahr: schuljahr.value,
+		schulformen: props.schulform,
+		optionDisplayText: "kuerzel",
+		selectionDisplayText: "kuerzel",
 	});
 
-	function fieldIsValid(field: keyof ReligionEintrag | null): (v: string | null) => boolean {
-		return (v: string | null) => {
-			switch (field) {
-				case 'kuerzel':
-					return data.value.kuerzel !== null;
-				case 'bezeichnung':
-					return bezeichnungIsValid(data.value.bezeichnung);
-				case 'bezeichnungZeugnis':
-					return optionalInputIsValid(data.value.bezeichnungZeugnis, 50);
-				default:
-					return true;
-			}
-		};
-	}
-
-	function bezeichnungIsValid(value: string | null) {
-		if (!mandatoryInputIsValid(value, 30)) {
-			return false;
-		}
-		return isUniqueInList(value, props.manager().liste.list(), 'bezeichnung');
-	}
-
-	const bezeichnungZeugnisTooLong = computed(() => {
-		if (data.value.bezeichnungZeugnis === null) {
-			return false;
-		}
-		return data.value.bezeichnungZeugnis.length > 50;
+	const konfessionTextSelectManager = new CoreTypeSelectManager({
+		clazz: Religion.class,
+		schuljahr: schuljahr.value,
+		schulformen: props.schulform,
+		optionDisplayText: "text",
+		selectionDisplayText: "text",
 	});
+
+	const selectedKonfession = computed<ReligionKatalogEintrag | null>({
+		get: () => Religion.data().getEintragBySchuljahrUndSchluessel(schuljahr.value, data.value.kuerzel ?? ""),
+		set: (value: ReligionKatalogEintrag | null) => data.value.kuerzel = value?.schluessel ?? null,
+	});
+
+	// ---validate---
 
 	const formIsValid = computed(() => {
-		// alle Felder auf validity prüfen
-		return Object.keys(data.value).every(field => {
-			const validateField = fieldIsValid(field as keyof ReligionEintrag);
-			const fieldValue = data.value[field as keyof ReligionEintrag] as string | null;
-			return validateField(fieldValue);
-		});
+		return Object.keys(data.value)
+			.every((field: string) => fieldIsValid(field as keyof ReligionEintrag));
 	});
 
+	const fieldIsValid = (field: keyof ReligionEintrag): boolean => {
+		switch (field) {
+			case 'kuerzel':
+				return (data.value.kuerzel !== null) && (data.value.kuerzel !== "");
+			case 'bezeichnung':
+				return bezeichnungIsValid();
+			case 'bezeichnungZeugnis':
+				return bezeichnungZeugnisIsValid();
+			case 'sortierung':
+				return sortierungIsValid(data.value.sortierung);
+			default:
+				return true;
+		}
+	};
+
+	function bezeichnungIsValid() {
+		return mandatoryInputIsValid(data.value.bezeichnung, 30)
+			&& isUniqueInList(data.value.bezeichnung, props.manager().liste.list(), 'bezeichnung');
+	}
+
+	function bezeichnungZeugnisIsValid() {
+		return optionalInputIsValid(data.value.bezeichnungZeugnis, 50)
+			&& isUniqueInList(data.value.bezeichnungZeugnis, props.manager().liste.list(), 'bezeichnungZeugnis');
+	}
+
+	function sortierungIsValid(sortierung: number): boolean {
+		return !numberHasDecimals(sortierung)
+			&& numberIsValid(sortierung, true, 0, 32000);
+	}
+
+	// --- util ---
 	async function cancel() {
 		props.checkpoint.active = false;
 		await props.gotoDefaultView(null);
-	}
-
-	function konfessionText(r: Religion) {
-		return (r.daten(schuljahr.value)?.kuerzel ?? '—') + ' : ' + (r.daten(schuljahr.value)?.text ?? '—');
 	}
 
 	async function addKonfession() {

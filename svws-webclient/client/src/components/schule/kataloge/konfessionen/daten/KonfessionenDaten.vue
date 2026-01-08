@@ -99,7 +99,7 @@
 	// Validierung
 
 	function bezeichnungIsValid(bezeichnung: string | null) {
-		return mandatoryInputIsValid(bezeichnung, 50)
+		return mandatoryInputIsValid(bezeichnung, 30)
 			&& isUniqueInList(bezeichnung, props.manager().liste.list(), "bezeichnung", "id", props.manager().auswahlID() ?? undefined);
 	}
 
