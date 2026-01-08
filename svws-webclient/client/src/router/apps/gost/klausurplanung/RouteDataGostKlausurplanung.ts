@@ -247,12 +247,11 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 
 	reloadFehlendData = async () => {
 		if (this.abiturjahr !== -1) {
-			await api.server.getGostKlausurenCollectionAllIssuesGZip(api.schema, this.abiturjahr, this._state.value.halbjahr.id).then(async (fehlendDataGzip) => {
-				const fehlendDataBlob = await new Response(fehlendDataGzip.data.stream().pipeThrough(new DecompressionStream("gzip"))).blob();
-				const fehlendData = GostKlausurenCollectionHjData.transpilerFromJSON(await fehlendDataBlob.text());
-				this.manager.setKlausurDataFehlend(fehlendData);
-				this.commit();
-			});
+			const fehlendDataGzip = await api.server.getGostKlausurenCollectionAllIssuesGZip(api.schema, this.abiturjahr, this._state.value.halbjahr.id);
+			const fehlendDataBlob = await new Response(fehlendDataGzip.data.stream().pipeThrough(new DecompressionStream("gzip"))).blob();
+			const fehlendData = GostKlausurenCollectionHjData.transpilerFromJSON(await fehlendDataBlob.text());
+			this.manager.setKlausurDataFehlend(fehlendData);
+			this.commit();
 		}
 	};
 
