@@ -31,7 +31,7 @@ export interface UiSelectState<T, V extends BasicValidator> {
 	instanceId: string;
 	multi: boolean;
 	label: string;
-	manager?: BaseSelectManager<T>;
+	manager: BaseSelectManager<T>;
 	searchable: boolean;
 	search: string;
 	deepSearchAttributes: string[];

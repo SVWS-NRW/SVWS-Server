@@ -1,4 +1,4 @@
-import { toValue, triggerRef, watch, type MaybeRef, type ShallowRef, isRef, shallowRef, toRaw } from "vue";
+import { triggerRef, watch, type MaybeRef, type ShallowRef, isRef, shallowRef, toRaw, toValue } from "vue";
 import type { List } from "../../../../../../core/src/java/util/List";
 import { ArrayList } from "../../../../../../core/src/java/util/ArrayList";
 import type { Comparator } from "../../../../../../core/src/java/util/Comparator";
@@ -28,7 +28,7 @@ export abstract class BaseSelectManager<T> {
 	protected _unfilteredOptions = shallowRef<List<T>>(new ArrayList<T>());
 
 	/**
-	 * Die gefilterte und sortierte Liste der Optionen, die im Dropdwon angezeigt werden.
+	 * Die gefilterte und sortierte Liste der Optionen, die im Dropdown angezeigt werden.
 	 */
 	protected _filteredOptions = shallowRef<List<T>>(new ArrayList<T>());
 
@@ -56,7 +56,7 @@ export abstract class BaseSelectManager<T> {
 	protected abstract _selectionDisplayText: ShallowRef<unknown>;
 
 	/**
-	 * Definiert, wie die Optionen im Dropdown dargestellt werden
+	 * Definiert, wie die Optionen im Dropdown dargestellt werden.
 	 * Der genaue Datentyp wird in den konkreten, abgeleiteten Klassen festgelegt.
 	 */
 	protected abstract _optionDisplayText: ShallowRef<unknown>;
@@ -86,8 +86,9 @@ export abstract class BaseSelectManager<T> {
 	 */
 	public setConfig(config?: BaseSelectManagerConfig<T>, setDefaults?: boolean): void {
 		// Alte Watcher beenden
-		for (const watcher of this._watcher)
+		for (const watcher of this._watcher) {
 			watcher();
+		}
 		this._watcher = [];
 
 		this.initManager(config, setDefaults);
@@ -101,7 +102,7 @@ export abstract class BaseSelectManager<T> {
 	 * @param setDefaults   wenn true werden die Defaultwerte für alle Konfigurationen gesetzt, die nicht übergeben wurden. Andernfalls werden die alten
 	 * 					    beibehalten. Default ist false
 	 */
-	protected initManager(config: BaseSelectManagerConfig<T> | undefined, setDefaults: boolean = false): void {
+	private initManager(config: BaseSelectManagerConfig<T> | undefined, setDefaults: boolean = false): void {
 		const newOptions = config?.options ?? (setDefaults ? new ArrayList<T>() : this.unfilteredOptions);
 		this._unfilteredOptions = this.initShallowRef(newOptions, v => this.toList(v));
 
@@ -117,17 +118,30 @@ export abstract class BaseSelectManager<T> {
 		 * Die Watcher beobachten Änderungen der reaktiven Werte der Konfiguration, um diese intern weiterzuleiten.
 		 */
 
-		this._watcher.push(
-			watch(() => config?.options, newOptions => {
-				this.unfilteredOptions = (newOptions === undefined) ? new ArrayList() : this.getRawIterable(toValue(newOptions));
-			}, { deep: true }),
-			watch(() => config?.sort, sort => {
-				this.sort = toValue(sort) ?? null;
-			}, { deep: true }),
-			watch(() => config?.filters, filters => {
-				this.filters = toValue(filters) ?? new ArrayList();
-			}, { deep: true })
-		);
+		if (isRef(config?.options)) {
+			this._watcher.push(
+				watch(config.options, newOptions => {
+					this.unfilteredOptions = this.getRawIterable(toValue(newOptions));
+				}, { deep: true }
+				)
+			);
+		}
+
+		if (isRef(config?.sort)) {
+			this._watcher.push(
+				watch(config.sort, sort => {
+					this.sort = sort;
+				}, { deep: true })
+			);
+		}
+
+		if (isRef(config?.filters)) {
+			this._watcher.push(
+				watch(config.filters, filters => {
+					this.filters = filters;
+				}, { deep: true })
+			);
+		}
 	}
 
 	/**
@@ -145,7 +159,7 @@ export abstract class BaseSelectManager<T> {
 	 * Erzeugt ein ShallowRef aus dem übergebenen Objekt. Es berücksichtigt dabei, ob das Objekt bereits ein Ref ist und wandelt es ggf. um.
 	 *
 	 * @param source	  Die Quelle des ShallowRef. Das muss entweder bereits ein Ref sein oder ein Wert.
-	 * @param transform   eine Funktion zur Transformation des Werts der Source. Dadurch kann der Wert von source noch Mal vorher manipuliert werden.
+	 * @param transform   eine Funktion zur Transformation des Werts der Source. Dadurch kann der Wert von source noch mal vorher manipuliert werden.
 	 * 					  Beispiel: `v => this.toList(v)` wandelt den Itereator von source vor der Speicherung als ShallowRef noch in eine Liste um
 	 * @returns ein ShallowRef mit dem Wert der source
 	 */
@@ -187,10 +201,11 @@ export abstract class BaseSelectManager<T> {
 	 *
 	 * @param value   neue sortierte Liste der gefilterten Optionen
 	 */
-	public set filteredOptions(value: Iterable<T>) {
+	private set filteredOptions(value: Iterable<T>) {
 		const filteredList = this.toList(value);
-		if (this.sort !== null)
+		if (this.sort !== null) {
 			filteredList.sort(this.sort);
+		}
 		this._filteredOptions.value = filteredList;
 		triggerRef(this._filteredOptions);
 	}
@@ -205,13 +220,14 @@ export abstract class BaseSelectManager<T> {
 		this.updateFilterMap(filter, remove);
 
 		if (this._filterMap.size === 0) {
-			this.filteredOptions = this.unfilteredOptions;
+			this.filteredOptions = [...this.unfilteredOptions];
 			return;
 		}
 
 		let result = this._filterMap.values().toArray()[0];
-		for (const filteredOptions of this._filterMap.values().filter((_, idx) => idx > 0))
+		for (const filteredOptions of this._filterMap.values().filter((_, idx) => idx > 0)) {
 			result = this.intersect(result, filteredOptions);
+		}
 
 		this.filteredOptions = result;
 	}
@@ -226,8 +242,9 @@ export abstract class BaseSelectManager<T> {
 	private updateFilterMap(filter: SelectFilter<T> | undefined, remove: boolean): void {
 		if (filter === undefined) {
 			this._filterMap.clear();
-			for (const filter of this.filters)
+			for (const filter of this.filters) {
 				this._filterMap.set(filter.key, filter.apply(this.unfilteredOptions));
+			}
 
 			return;
 		}
@@ -248,13 +265,16 @@ export abstract class BaseSelectManager<T> {
 	 */
 	public toList<U>(iterable: Iterable<U> | null | undefined): List<U> {
 		const rawIterable = toRaw(iterable);
-		if (rawIterable instanceof ArrayList)
+		if (rawIterable instanceof ArrayList) {
 			return rawIterable;
+		}
 		const tmpList = new ArrayList<U>();
-		if ((rawIterable === undefined) || (rawIterable === null))
+		if ((rawIterable === undefined) || (rawIterable === null)) {
 			return tmpList;
-		for (const item of rawIterable)
+		}
+		for (const item of rawIterable) {
 			tmpList.add(item);
+		}
 		return tmpList;
 	}
 
@@ -287,11 +307,12 @@ export abstract class BaseSelectManager<T> {
 	 * @param newFilter   der neue Filter
 	 */
 	public addFilter(newFilter: SelectFilter<T>): void {
-		for (const filter of this.filters)
+		for (const filter of this.filters) {
 			if (filter.key === newFilter.key) {
 				this.removeFilter(newFilter);
 				break;
 			}
+		}
 		this._filters.value.add(newFilter);
 		triggerRef(this._filters);
 		this.updateFilteredOptions(newFilter);
@@ -304,8 +325,9 @@ export abstract class BaseSelectManager<T> {
 	 */
 	public removeFilter(filter: SelectFilter<T> | string): void {
 		const filterToRemove = (typeof filter === "string") ? this.getFilterByKey(filter) : this.getFilterByKey(filter.key);
-		if (filterToRemove === null)
+		if (filterToRemove === null) {
 			return;
+		}
 
 		this._filters.value.remove(filterToRemove);
 		triggerRef(this._filters);
@@ -320,9 +342,11 @@ export abstract class BaseSelectManager<T> {
 	 * @returns den passenden Filter. null, wenn keiner gefunden werden konnte.
 	 */
 	public getFilterByKey(filterKey: string): SelectFilter<T> | null {
-		for (const filter of this.filters)
-			if (filter.key === filterKey)
+		for (const filter of this.filters) {
+			if (filter.key === filterKey) {
 				return filter;
+			}
+		}
 		return null;
 	}
 
@@ -340,8 +364,9 @@ export abstract class BaseSelectManager<T> {
 		const set2 = new Set(list2);
 
 		const intersection = set1.intersection(set2);
-		for (const value of intersection)
+		for (const value of intersection) {
 			result.add(value);
+		}
 
 		return result;
 	}
@@ -367,10 +392,12 @@ export abstract class BaseSelectManager<T> {
 	 * @returns den Text der Option.
 	 */
 	public getSelectionText(option: T | null): string {
-		if (option === null)
+		if (option === null) {
 			return "";
-		if (typeof this.selectionDisplayText === "function")
+		}
+		if (typeof this.selectionDisplayText === "function") {
 			return this.selectionDisplayText(option);
+		}
 
 		return "";
 	}
@@ -397,10 +424,12 @@ export abstract class BaseSelectManager<T> {
 	 * @returns den Text der Option.
 	 */
 	public getOptionText(option: T | null): string {
-		if (option === null)
+		if (option === null) {
 			return "";
-		if (typeof this.optionDisplayText === "function")
+		}
+		if (typeof this.optionDisplayText === "function") {
 			return this.optionDisplayText(option);
+		}
 		return "";
 	}
 
@@ -431,12 +460,14 @@ export abstract class BaseSelectManager<T> {
 	 * @returns die Sortierung als Comparator oder null, falls keine Sortierung verwendet wird.
 	 */
 	public toComparator<T>(sort: Comparator<T> | ((a: T, b: T) => number) | null | undefined): Comparator<T> | null {
-		if (!sort)
+		if (!sort) {
 			return null;
-		if (typeof sort === "function")
+		}
+		if (typeof sort === "function") {
 			return {
 				compare: sort,
 			};
+		}
 
 		return sort;
 	}
@@ -446,8 +477,10 @@ export abstract class BaseSelectManager<T> {
 	 * Aktualisiert die Sortierung der Optionen, der gefilterten Liste und der Selektion, falls eine Sortierfunktion definiert ist.
 	 */
 	public updateSort(): void {
-		if (!this.filteredOptions.isEmpty() && (this.sort !== null))
-			this.filteredOptions.sort(this.sort);
+		if (this.filteredOptions.isEmpty() || (this.sort === null)) {
+			return;
+		}
+		this.filteredOptions.sort(this.sort);
 
 		triggerRef(this._filteredOptions);
 	}

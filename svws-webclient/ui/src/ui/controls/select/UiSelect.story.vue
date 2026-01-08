@@ -138,14 +138,12 @@
 						v-model="mussValidatorSelection"
 						:manager="sMussValidatorSelectManager"
 						:validator="() => validatorMuss"
-						:do-validate="validateSelect"
 						:searchable="state.searchable" :removable="state.removable" :disabled="state.disabled" :statistics="state.statistics"
 						:headless="state.headless" :readonly="state.readonly" :required="state.required" />
 					<ui-select label="SelectManager mit Kann-Validator" :class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]"
 						v-model="kannValidatorSelection"
 						:manager="sKannValidatorSelectManager"
 						:validator="() => validatorKann"
-						:do-validate="validateSelect"
 						:searchable="state.searchable" :removable="state.removable" :disabled="state.disabled" :statistics="state.statistics"
 						:headless="state.headless" :readonly="state.readonly" :required="state.required" />
 					<ui-select label="SelectManager mit Hinweis-Validator" :class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]"
@@ -279,19 +277,23 @@
 
 	const filter1 = computed<Fachgruppe[]>(() => {
 		const result: Fachgruppe[] = [];
-		if (filterState1.fremdsprache)
+		if (filterState1.fremdsprache) {
 			result.push(Fachgruppe.FG_FS);
-		if (filterState1.musikUndKunst1)
+		}
+		if (filterState1.musikUndKunst1) {
 			result.push(Fachgruppe.FG_MS);
+		}
 		return result;
 	});
 
 	const filter2 = computed<Fachgruppe[]>(() => {
 		const result: Fachgruppe[] = [];
-		if (filterState2.deutsch)
+		if (filterState2.deutsch) {
 			result.push(Fachgruppe.FG_D);
-		if (filterState2.musikUndKunst2)
+		}
+		if (filterState2.musikUndKunst2) {
 			result.push(Fachgruppe.FG_MS);
+		}
 		return result;
 	});
 
@@ -304,26 +306,32 @@
 	});
 
 	const sortById = (a: LehrerRechtsverhaeltnisKatalogEintrag, b: LehrerRechtsverhaeltnisKatalogEintrag): number => {
-		if (a.id < b.id)
+		if (a.id < b.id) {
 			return -1;
-		if (a.id > b.id)
+		}
+		if (a.id > b.id) {
 			return 1;
+		}
 		return 0;
 	};
 
 	const sortByKuerzel = (a: LehrerRechtsverhaeltnisKatalogEintrag, b: LehrerRechtsverhaeltnisKatalogEintrag): number => {
-		if (a.kuerzel < b.kuerzel)
+		if (a.kuerzel < b.kuerzel) {
 			return -1;
-		if (a.kuerzel > b.kuerzel)
+		}
+		if (a.kuerzel > b.kuerzel) {
 			return 1;
+		}
 		return 0;
 	};
 
 	const sortByText = (a: LehrerRechtsverhaeltnisKatalogEintrag, b: LehrerRechtsverhaeltnisKatalogEintrag): number => {
-		if (a.text < b.text)
+		if (a.text < b.text) {
 			return -1;
-		if (a.text > b.text)
+		}
+		if (a.text > b.text) {
 			return 1;
+		}
 		return 0;
 	};
 
@@ -365,8 +373,9 @@
 		}
 		protected pruefe(): boolean {
 			const result = this.testfn();
-			if (result !== null)
+			if (result !== null) {
 				this.addFehler(0, result);
+			}
 			return (result === null);
 		}
 	}
@@ -374,10 +383,6 @@
 	const validatorHinweis = computed(() => new ValidatorTest(() => (hinweisValidatorSelection.value === "Anna") ? null : "Hier ist die Eintragung von Anna gewünscht.", ValidatorFehlerart.HINWEIS));
 	const validatorKann = computed(() => new ValidatorTest(() => (kannValidatorSelection.value === "20 Pflichtstunden") ? null : "Der Pflichstundensoll sollte eingetragen werden. Ein zu hoher Wert ist nicht plausibel.", ValidatorFehlerart.KANN));
 	const validatorMuss = computed(() => new ValidatorTest(() => (mussValidatorSelection.value === "Müller") ? null : "In diesem Feld ist es verpflichtend, dass Müller ausgewählt wird. Alles andere führt zu einem Fehler.", ValidatorFehlerart.MUSS));
-
-	function validateSelect(validator: BasicValidator, value: string | Iterable<string> | null): boolean {
-		return validator.run();
-	}
 
 	function getSourceString(): string {
 		return `<ui-select

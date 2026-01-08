@@ -1,4 +1,4 @@
-import { shallowRef, toValue, triggerRef, watch, type MaybeRef } from "vue";
+import { isRef, shallowRef, triggerRef, watch, type MaybeRef } from "vue";
 import { BaseSelectManager, type BaseSelectManagerConfig } from "./BaseSelectManager";
 
 /**
@@ -18,9 +18,10 @@ export interface SelectManagerConfig<T> extends BaseSelectManagerConfig<T> {
  */
 export class SelectManager<T> extends BaseSelectManager<T> {
 
-	protected _selectionDisplayText = shallowRef<((option: T) => string)>((option) => option?.toString() ?? "");
+	protected _selectionDisplayText = shallowRef<((option: T) => string)>(String);
 
-	protected _optionDisplayText = shallowRef<((option: T) => string)>((option) => option?.toString() ?? "");
+	protected _optionDisplayText = shallowRef<((option: T) => string)>(String);
+
 
 	public constructor(config?: SelectManagerConfig<T>) {
 		super(config);
@@ -35,28 +36,35 @@ export class SelectManager<T> extends BaseSelectManager<T> {
 	/**
 	 * Initialisierung bzw. Neukonfiguration des Selects.
 	 *
-	 * @param config   die (neue) Konfiguration des Selects
+	 * @param config        die (neue) Konfiguration des Selects
 	 * @param setDefaults   wenn true werden die Defaultwerte für alle Konfigurationen gesetzt, die nicht übergeben wurden. Andernfalls werden die alten
 	 * 					    beibehalten. Default ist false
 	 */
-	protected initSelectManager(config: SelectManagerConfig<T> | undefined, setDefaults: boolean = false): void {
-		const newSelectionDisplayText = config?.selectionDisplayText ?? (setDefaults ? ((option): string => option?.toString() ?? "") : this.selectionDisplayText);
+	private initSelectManager(config: SelectManagerConfig<T> | undefined, setDefaults: boolean = false): void {
+		const newSelectionDisplayText = config?.selectionDisplayText ?? (setDefaults ? String : this.selectionDisplayText);
 		this._selectionDisplayText = this.initShallowRef(newSelectionDisplayText, v => v);
-		const newOptionDisplayText = config?.optionDisplayText ?? (setDefaults ? ((option): string => option?.toString() ?? "") : this.optionDisplayText);
+		const newOptionDisplayText = config?.optionDisplayText ?? (setDefaults ? String : this.optionDisplayText);
 		this._optionDisplayText = this.initShallowRef(newOptionDisplayText, v => v);
 
 		/*
 		 * Die Watcher beobachten Änderungen der reaktiven Werte der Konfiguration, um diese intern weiterzuleiten.
 		 */
 
-		this._watcher.push(
-			watch(() => config?.optionDisplayText, newDisplay => {
-				this.optionDisplayText = toValue(newDisplay ?? ((option): string => option?.toString() ?? ""));
-			}, { deep: true }),
-			watch(() => config?.selectionDisplayText, newDisplay => {
-				this.selectionDisplayText = toValue(newDisplay ?? ((option): string => option?.toString() ?? ""));
-			}, { deep: true })
-		);
+		if (isRef(config?.selectionDisplayText)) {
+			this._watcher.push(
+				watch(config.selectionDisplayText, newDisplay => {
+					this.selectionDisplayText = newDisplay;
+				}, { deep: true })
+			);
+		}
+
+		if (isRef(config?.optionDisplayText)) {
+			this._watcher.push(
+				watch(config.optionDisplayText, newDisplay => {
+					this.optionDisplayText = newDisplay;
+				}, { deep: true })
+			);
+		}
 	}
 
 	public get selectionDisplayText(): (((option: T) => string)) {

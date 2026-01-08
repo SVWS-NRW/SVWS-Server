@@ -1,12 +1,12 @@
 <template>
 	<div ref="uiSelect" @focusout="onFocusOut" class="ui-select relative rounded-md text-base inline-flex h-fit w-full group" v-bind="filteredHtmlAttributes">
 		<!-- Combobox -->
-		<div :id="`uiSelectInput_${state.instanceId}`" ref="uiSelectCombobox" :tabindex="comboboxTabindex" :role="comboboxRole" v-bind="comboboxAriaAttrs"
-			:class="[comboboxClasses, {[focusClass]: !props.searchable}, 'relative outline-none ring-ui-neutral w-full rounded-md flex items-center gap-1 min-w-16 m-[0.2em] select-none group-focus-within:ring-2 hover:ring-2']"
+		<div :id="`uiSelect_${state.instanceId}`" ref="uiSelectCombobox" :tabindex="comboboxTabindex" :role="comboboxRole" v-bind="comboboxAriaAttrs"
+			:class="[comboboxClasses, {[focusClass]: !props.searchable}, 'ui-select--combobox relative outline-none ring-ui-neutral w-full rounded-md flex items-center gap-1 min-w-16 m-[0.2em] select-none group-focus-within:ring-2 hover:ring-2']"
 			@click.stop="handleComponentClick" @focus="focusSelect" @keydown.stop="handleKeyDown">
 			<div :class="[headlessPadding, 'flex']">
 				<!-- Expand-Icon + Clear-Button headless -->
-				<div v-if="headless && !readonly" class="flex items-center">
+				<div v-if="headless && !readonly" class="ui-select--icons-left flex items-center">
 					<span :class="[iconColorClass, 'icon-sm i-ri-expand-up-down-line cursor-pointer']" />
 					<button v-if="removable" type="button" :disabled aria-label="Auswahl löschen" @click.stop="clearSelection"
 						@keydown.enter.stop="clearSelection"
@@ -16,8 +16,8 @@
 				</div>
 				<!-- Label -->
 				<div v-if="showLabel"
-					:class="[labelClasses, 'absolute transition-all duration-100 ease-in-out pointer-events-none rounded left-2 whitespace-nowrap max-w-fit flex justify-center items-center gap-1 px-1 -translate-y-1/2']">
-					<span v-if="statistics" class="cursor-pointer flex">
+					:class="[labelClasses, 'ui-select--label absolute transition-all duration-100 ease-in-out pointer-events-none rounded whitespace-nowrap max-w-fit flex justify-center items-center gap-1 px-1 -translate-y-1/2']">
+					<span v-if="statistics" class="ui-select--label--statistics cursor-pointer flex">
 						<svws-ui-tooltip position="right">
 							<span :class="[disabled ? 'icon-ui-disabled' : 'icon-ui-statistic', 'icon i-ri-bar-chart-2-line pointer-events-auto']"
 								aria-label="Relevant für die Statistik" />
@@ -27,10 +27,10 @@
 						</svws-ui-tooltip>
 					</span>
 
-					<span :id="`uiSelectLabel_${state.instanceId}`" :class="[labelTextColorClass, 'overflow-hidden truncate']" aria-hidden="true">
+					<span :id="`uiSelectLabel_${state.instanceId}`" :class="[labelTextColorClass, 'ui-select--label--text overflow-hidden truncate']" aria-hidden="true">
 						{{ label }}
 					</span>
-					<span v-if="required" class="cursor-pointer flex items-end" aria-label="erforderlich">
+					<span v-if="required" class="ui-select--label--required cursor-pointer flex items-end" aria-label="erforderlich">
 						<span :class="[iconColorClass, 'icon-xs i-ri-asterisk font-normal relative -top-0.5']" />
 					</span>
 					<span v-if="showValidatorError" class="cursor-pointer flex items-end justify-center">
@@ -57,8 +57,8 @@
 							</template>
 						</svws-ui-tooltip>
 					</span>
-					<svws-ui-tooltip position="right" v-if="readonly" class="cursor-pointer pointer-events-auto">
-						<span :class="[labelIconClass, 'icon-xs i-ri-lock-line flex-shrink-0']" aria-label="schreibgeschützt" />
+					<svws-ui-tooltip position="right" v-if="readonly" class="ui-select--label--readonly cursor-pointer pointer-events-auto">
+						<span :class="[labelIconClass, 'icon-xs i-ri-lock-line shrink-0']" aria-label="schreibgeschützt" />
 						<template #content>
 							Schreibgeschützt
 						</template>
@@ -66,31 +66,31 @@
 				</div>
 
 				<!-- Wrapper für die aktuelle Selektion und das Suchfeld -->
-				<div class="flex flex-wrap items-center gap-x-1 flex-1 min-w-0">
+				<div class="ui-select--selection-search-wrapper flex flex-wrap items-center gap-x-1 flex-1 min-w-0">
 					<!-- Wrapper für das Such-Input und aktuelle Selektion -->
 					<div class="relative grid grid-cols-1 grid-rows-1 flex-1 min-w-5 order-last text-base">
 						<!-- Aktuelle Selektion -->
-						<div v-if="hasSelection()" class="flex items-center overflow-hidden row-start-1 col-start-1">
+						<div v-if="(model !== undefined) && (model !== null)" class="ui-select--selection flex items-center overflow-hidden row-start-1 col-start-1">
 							<svws-ui-tooltip position="top" :indicator="false" class="truncate">
 								<template #content>
-									{{ manager.getSelectionText(model ?? null) }}
+									{{ manager.getSelectionText(model) }}
 								</template>
 								<div v-if="showSelection" :class="[selectionTextColor, 'truncate z-0 cursor-pointer font-medium inline-block align-middle leading-none h-5 mt-1']">
-									{{ manager.getSelectionText(model ?? null) }}
+									{{ manager.getSelectionText(model) }}
 								</div>
 							</svws-ui-tooltip>
 						</div>
 						<!-- Such-Input -->
-						<input v-if="searchable && !disabled && !readonly" :id="`uiSelectinput_${state.instanceId}`" ref="uiSelectSearch" type="text" role="combobox"
-							:tabindex="searchInputTabindex" v-bind="searchInputAriaAttrs" v-model="search"
-							:class="[focusClass, 'row-start-1 col-start-1 outline-none font-normal h-5']"
+						<input v-if="searchable && !disabled && !readonly" :id="`uiSelectInput_${state.instanceId}`" ref="uiSelectSearch" type="text" role="combobox"
+							tabindex="0" v-bind="searchInputAriaAttrs" v-model="search"
+							:class="[focusClass, 'ui-select--search row-start-1 col-start-1 outline-none font-normal h-5']"
 							@focus="focusSelect" @blur="unfocusInput" @input="handleSearchInput">
 					</div>
 				</div>
 			</div>
 
 			<!-- Expand-Icon + Clear-Button -->
-			<div v-if="!headless && !readonly" class="ml-auto flex items-center h-fit">
+			<div v-if="!headless && !readonly" class="ui-select--icons-right ml-auto flex items-center h-fit">
 				<button v-if="removable && !readonly" type="button" :disabled aria-label="Auswahl löschen" @click.stop="clearSelection"
 					@keydown.enter.stop="clearSelection"
 					class="hover:bg-ui-hover flex focus:ring-2 ring-ui-neutral outline-none rounded-sm">
@@ -102,7 +102,7 @@
 
 		<!-- Dropdown -->
 		<ul v-if="!disabled && !readonly" popover="manual" :aria-labelledby="`uiSelectLabel_${state.instanceId}`" :id="`uiSelectDropdown_${state.instanceId}`" ref="uiSelectDropdown" role="listbox"
-			class="overflow-auto bg-ui select-none scrollbar-thin p-1 rounded-md border border-ui font-normal" :style="dropdownPositionStyles">
+			class="ui-select--dropdown overflow-auto bg-ui select-none scrollbar-thin p-1 rounded-md border border-ui font-normal" :style="dropdownPositionStyles">
 			<li v-if="manager.filteredOptions.isEmpty() || (optionsMatchingSearch.size() === 0)" class="cursor-not-allowed p-2 hover:bg-ui-hover text-ui-secondary italic text-left">
 				{{ "Keine passenden Einträge gefunden" }}
 			</li>
@@ -124,9 +124,9 @@
 	import { computed, ref, toRaw, toRefs, useAttrs, watch } from 'vue';
 	import { useUiSelectUtils } from './utils/useUiSelectUtils';
 	import type { UiSelectHTMLElements, UiSelectSelectionMethods, UiSelectSingleProps, UiSelectState } from './manager/UiSelectTypes';
+	import type { BasicValidator } from '../../../../../core/src/asd/validate/BasicValidator';
 	import { SelectManager } from './manager/SelectManager';
 	import { DeveloperNotificationException } from '../../../../../core/src/core/exceptions/DeveloperNotificationException';
-	import type { BasicValidator } from '../../../../../core/src/asd/validate/BasicValidator';
 
 	const props = withDefaults(defineProps<UiSelectSingleProps<T, V>>(), {
 		label: '',
@@ -156,27 +156,31 @@
 		() => model.value,
 		(newSelection) => {
 			if ((newSelection === undefined) || (newSelection === null)) {
-				if (!props.nullable)
+				if (!props.nullable) {
 					throw new DeveloperNotificationException("Ungültiges v-model: null oder undefined bei nullable = false");
+				}
 				return;
 			}
-			if (!props.manager.filteredOptions.contains(toRaw(newSelection)))
-				model.value = undefined;
-		}
+			if (!props.manager.filteredOptions.contains(toRaw(newSelection))) {
+				throw new DeveloperNotificationException(`Ungültiges v-model: ${JSON.stringify(newSelection)} ist keine gültige Selektion`);
+			}
+		}, { immediate: true }
 	);
 
 	/**
 	 * Watcher auf die gefilterten Optionen.
-	 * Falls diese sich ändern muss geprüft werden, ob die Selektion noch valide ist. Falls nicht wird diese angepasst.
+	 * Falls diese sich ändern muss geprüft werden, ob die Selektion noch valide ist. Falls nicht, wird diese angepasst.
 	 */
 	watch(
 		() => props.manager.filteredOptions,
 		(newOptions) => {
-			if ((model.value === undefined) || (model.value === null))
+			if ((model.value === undefined) || (model.value === null)) {
 				return;
-			if (!newOptions.contains(toRaw(model.value)))
+			}
+			if (!newOptions.contains(toRaw(model.value))) {
 				model.value = undefined;
-		}
+			}
+		}, { immediate: true }
 	);
 
 	// Die Vererbung der Attribute wird abgestellt, damit diese manuell an die richtigen Stellen weitergeleitet werden kann
@@ -220,8 +224,9 @@
 	 * @param option
 	 */
 	function isSelected(option: T): boolean {
-		if (model.value === undefined)
+		if (model.value === undefined) {
 			return false;
+		}
 		return toRaw(model.value) === option;
 	}
 
@@ -233,11 +238,11 @@
 	 * @throws DeveloperNotificationException, wenn die Option bereits selektiert ist
 	 */
 	function selectOption(option: T): void {
-		if (isSelected(option))
+		if (isSelected(option)) {
 			throw new DeveloperNotificationException(`Die Option ${props.manager.getOptionText(option)} ist bereits selektiert.`);
+		}
 
 		model.value = option;
-		resetSearch();
 	}
 
 	/**
@@ -246,10 +251,12 @@
 	 * @throws DeveloperNotificationException, wenn ein Löschen der Selektion durch removable = false nicht erlaubt ist.
 	 */
 	function clearSelection(): void {
-		if (!props.removable)
+		if (!props.removable) {
 			throw new DeveloperNotificationException("Das Select ist auf removable=false gesetzt, daher kann der Eintrag nicht deselektiert werden");
+		}
 		model.value = undefined;
 		resetSearch();
+		closeDropdown();
 	}
 
 	/**
@@ -267,7 +274,7 @@
 	}
 
 	const selectionTextColor = computed((): string =>
-		((uiSelectSearch.value !== null) && (focusOnInput.value)) ? getSecondaryTextColor(textColorClass.value) : textColorClass.value
+		(props.searchable && focusOnInput.value) ? getSecondaryTextColor(textColorClass.value) : textColorClass.value
 	);
 
 	const destructedProps = toRefs(props);
@@ -298,6 +305,7 @@
 		// Dropdown
 		dropdownPositionStyles,
 		toggleSelection,
+		closeDropdown,
 		// Styles und Attribute
 		focusClass,
 		comboboxRole,
@@ -312,7 +320,6 @@
 		labelIconClass,
 		textColorClass,
 		getSecondaryTextColor,
-		searchInputTabindex,
 		searchInputAriaAttrs,
 		getOptionClasses,
 		validatorErrorIcon,

@@ -19,6 +19,7 @@ export function useUiSelectUtils<T, V extends BasicValidator>(
 	// Dropdown
 	dropdownPositionStyles: ComputedRef<{ top: string; left: string; width: string; maxHeight: string; }>,
 	toggleSelection: (option: T) => void,
+	closeDropdown: () => void,
 	// Styles und Attribute
 	focusClass: ComputedRef<"" | "contentFocusField" | "subNavigationFocusField">,
 	comboboxRole: ComputedRef<string | undefined>,
@@ -33,8 +34,6 @@ export function useUiSelectUtils<T, V extends BasicValidator>(
 	labelIconClass: ComputedRef<string>,
 	textColorClass: ComputedRef<string>,
 	getSecondaryTextColor: (color: string) => string,
-	// searchInput
-	searchInputTabindex: ComputedRef,
 	searchInputAriaAttrs: ComputedRef,
 	getOptionClasses: (option: T, optionIndex: number) => string[],
 	validatorErrorIcon: ComputedRef<string[] | null>,
@@ -66,7 +65,7 @@ export function useUiSelectUtils<T, V extends BasicValidator>(
 	const heightComboBox = ref(0);
 	const { height: windowHeight } = useWindowSize();
 
-	// Index des visuell hervorghobenen Dropdownlistenelements bei Tastennavigation
+	// Index des visuell hervorgehobenen Dropdownlistenelements bei Tastennavigation
 	const highlightedIndex = ref(-1);
 
 	// Composables
@@ -106,7 +105,6 @@ export function useUiSelectUtils<T, V extends BasicValidator>(
 		labelIconClass,
 		textColorClass,
 		getSecondaryTextColor,
-		searchInputTabindex,
 		searchInputAriaAttrs,
 		getOptionClasses,
 		validatorErrorIcon,
@@ -122,31 +120,35 @@ export function useUiSelectUtils<T, V extends BasicValidator>(
 	});
 
 	const dropdownPositionStyles = computed(() => ({
-		top: dropdownTopPosition.value,
+		top: dropdownTopPosition.value + 'px',
 		left: distanceWindowLeftToComboboxLeft.value + 'px',
 		width: widthComboBox.value + 'px',
 		maxHeight: dropdownMaxHeight.value + 'px',
 	}));
 
 	const dropdownTopPosition = computed(() => {
+		if (elements.uiSelectDropdown.value === null) {
+			return 0;
+		}
 		if (dropdownShouldBeDisplayedAboveComboBox.value) {
-			const dropdownScrollHeight = elements.uiSelectDropdown.value?.scrollHeight ?? dropdownMaxHeight.value;
-			const dropdownHeight = Math.min(dropdownMaxHeight.value, dropdownScrollHeight);
-			return `${distanceWindowTopToComboboxTop.value - dropdownHeight - 2}px`;
-		} else
-			return `${distanceWindowTopToComboboxTop.value + heightComboBox.value + 3}px`;
-
+			const dropdownHeight = Math.min(dropdownMaxHeight.value, elements.uiSelectDropdown.value.scrollHeight);
+			return `${distanceWindowTopToComboboxTop.value - dropdownHeight - 2}`;
+		} else {
+			return `${distanceWindowTopToComboboxTop.value + heightComboBox.value + 3}`;
+		}
 	});
 
 	const dropdownShouldBeDisplayedAboveComboBox = computed(() => {
-		if (!dropdownIsOpen.value)
+		if (!dropdownIsOpen.value) {
 			return false;
+		}
 
 		const freeSpaceBelowCombobox = windowHeight.value - distanceWindowTopToComboboxBottom.value;
 		const freeSpaceAboveCombobox = distanceWindowTopToComboboxTop.value;
 		const minimumSpace = 100;
-		if (freeSpaceBelowCombobox > minimumSpace)
+		if (freeSpaceBelowCombobox > minimumSpace) {
 			return false;
+		}
 
 		return (freeSpaceBelowCombobox < freeSpaceAboveCombobox);
 	});
@@ -157,17 +159,19 @@ export function useUiSelectUtils<T, V extends BasicValidator>(
 	 */
 	const dropdownMaxHeight = computed(() => {
 		let maxHeight;
-		if (dropdownShouldBeDisplayedAboveComboBox.value)
+		if (dropdownShouldBeDisplayedAboveComboBox.value) {
 			maxHeight = distanceWindowTopToComboboxTop.value - 5;
-		else
+		} else {
 			maxHeight = windowHeight.value - distanceWindowTopToComboboxBottom.value - 5;
+		}
 		return Math.min(235, maxHeight);
 	});
 
 	function updateDropdownSizeAndPosition(): void {
 		const rect = elements.uiSelectCombobox.value?.getBoundingClientRect();
-		if (!rect)
+		if (rect === undefined) {
 			return;
+		}
 
 		distanceWindowTopToComboboxTop.value = rect.top;
 		distanceWindowTopToComboboxBottom.value = rect.bottom;
@@ -177,29 +181,33 @@ export function useUiSelectUtils<T, V extends BasicValidator>(
 	}
 
 	function toggleDropdown(): void {
-		if (dropdownIsOpen.value)
+		if (dropdownIsOpen.value) {
 			closeDropdown();
-		else
+		} else {
 			openDropdown();
+		}
 	}
 
 	function openDropdown(): void {
-		if ((elements.uiSelectDropdown.value === null) || dropdownIsOpen.value)
+		if ((elements.uiSelectDropdown.value === null) || dropdownIsOpen.value) {
 			return;
+		}
 
 		updateDropdownSizeAndPosition();
 		focusSelect();
 		elements.uiSelectDropdown.value.showPopover();
 		dropdownIsOpen.value = true;
-		if (!hasHighlightedOption())
+		if (!hasHighlightedOption()) {
 			scrollDropdownToTop();
+		}
 
 		window.addEventListener('resize', () => closeDropdown());
 	}
 
 	function closeDropdown(): void {
-		if (!dropdownIsOpen.value)
+		if (!dropdownIsOpen.value) {
 			return;
+		}
 		dropdownIsOpen.value = false;
 		elements.uiSelectDropdown.value?.hidePopover();
 		removeOptionHighlighting();
@@ -207,15 +215,17 @@ export function useUiSelectUtils<T, V extends BasicValidator>(
 	}
 
 	function scrollDropdownToTop(): void {
-		if (elements.uiSelectDropdown.value)
+		if (elements.uiSelectDropdown.value) {
 			elements.uiSelectDropdown.value.scrollTop = 0;
+		}
 	}
 
 	function scrollDropdownToHighlightedElement(): void {
-		if (!elements.uiSelectDropdown.value)
+		if (!elements.uiSelectDropdown.value) {
 			return;
-
-		const highlightedElement = document.getElementById(`uiSelectOption_${highlightedIndex.value}_${state.value.instanceId}`);
+		}
+		const id = `uiSelect${state.value.multi ? "Multi" : ""}Option_${highlightedIndex.value}_${state.value.instanceId}`;
+		const highlightedElement = document.getElementById(id);
 		if (!highlightedElement) {
 			scrollDropdownToTop();
 			return;
@@ -226,12 +236,13 @@ export function useUiSelectUtils<T, V extends BasicValidator>(
 		const dropdownTop = elements.uiSelectDropdown.value.scrollTop;
 		const dropdownBottom = dropdownTop + elements.uiSelectDropdown.value.clientHeight;
 
-		if (highlightedElementBottom > dropdownBottom)
+		if (highlightedElementBottom > dropdownBottom) {
 			// Falls das Element unten rausgeht → Liste nach unten scrollen
 			elements.uiSelectDropdown.value.scrollTop = highlightedElementBottom - elements.uiSelectDropdown.value.clientHeight;
-		else if (highlightedElementTop < dropdownTop)
+		} else if (highlightedElementTop < dropdownTop) {
 			// Falls das Element oben rausgeht → Liste nach oben scrollen
 			elements.uiSelectDropdown.value.scrollTop = highlightedElementTop;
+		}
 
 	}
 
@@ -248,14 +259,15 @@ export function useUiSelectUtils<T, V extends BasicValidator>(
 	}
 
 	function removeOptionHighlighting(): void {
-		if (hasHighlightedOption())
+		if (hasHighlightedOption()) {
 			highlightedIndex.value = -1;
-
+		}
 	}
 
 	function selectHighlightedOption(filteredOptions: List<T>): void {
-		if (!hasHighlightedOption())
+		if (!hasHighlightedOption()) {
 			return;
+		}
 
 		const option = filteredOptions.get(highlightedIndex.value);
 		toggleSelection(option);
@@ -274,31 +286,31 @@ export function useUiSelectUtils<T, V extends BasicValidator>(
 		// Suche nach einer Option, die mit dem übergebenen String beginnt
 		for (let i = startIndex; i < numberOfOptionsInDropdown + startIndex; i++) {
 			const index = i % numberOfOptionsInDropdown; // Um auf den Index am Anfang der Liste zurückzukommen
-			if (optionMatchesSearch(index, search)) {
+			if (optionStartMatchesSearch(index, search)) {
 				highlightedIndex.value = index;
 				return;
 			}
 		}
-		// Wurde keine passende Option gefunden, dann wird nichts mehr hervorghoben
+		// Wurde keine passende Option gefunden, dann wird nichts mehr hervorgehoben
 		removeOptionHighlighting();
 	}
 
-	function optionMatchesSearch(index: number, search: string): boolean {
-		if (state.value.manager === undefined)
-			return false;
-
+	function optionStartMatchesSearch(index: number, search: string): boolean {
 		const option = state.value.manager.filteredOptions.get(index);
-		return stringContainsIgnoreCase(state.value.manager.getOptionText(option), search);
+		return stringStartsWithIgnoreCase(state.value.manager.getOptionText(option), search);
 	}
 
 	function toggleSelection(option: T): void {
-		if (!state.value.multi)
+		if (!state.value.multi) {
 			closeDropdown();
+		}
 
-		if (selectionMethods.isSelected(option) && selectionMethods.deselectAllowed())
-			selectionMethods.deselectOption(option);
-		else
+		if (!selectionMethods.isSelected(option)) {
 			selectionMethods.selectOption(option);
+		} else if (selectionMethods.deselectAllowed()) {
+			selectionMethods.deselectOption(option);
+		}
+
 		resetSearch();
 		// Bei der Selektion landet der Fokus auf dem Body und muss ggf. wieder auf die Combobox gesetzt werden
 		requestAnimationFrame(() => {
@@ -311,6 +323,7 @@ export function useUiSelectUtils<T, V extends BasicValidator>(
 		// Dropdown
 		dropdownPositionStyles,
 		toggleSelection,
+		closeDropdown,
 		// Styles und Attribute
 		focusClass,
 		comboboxRole,
@@ -325,7 +338,6 @@ export function useUiSelectUtils<T, V extends BasicValidator>(
 		labelIconClass,
 		textColorClass,
 		getSecondaryTextColor,
-		searchInputTabindex,
 		searchInputAriaAttrs,
 		getOptionClasses,
 		validatorErrorIcon,
@@ -347,10 +359,9 @@ export function useUiSelectUtils<T, V extends BasicValidator>(
 		handleKeyDown,
 		focusOnInput,
 	};
-
 }
 
-function stringContainsIgnoreCase(string: string, substring: string): boolean {
-	return string.toLocaleLowerCase("de-DE").includes(substring.toLocaleLowerCase("de-DE"));
+function stringStartsWithIgnoreCase(string: string, substring: string): boolean {
+	return string.toLocaleLowerCase("de-DE").startsWith(substring.toLocaleLowerCase("de-DE"));
 }
 

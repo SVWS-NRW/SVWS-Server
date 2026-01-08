@@ -1,4 +1,4 @@
-import { watch, toValue, triggerRef, shallowRef, type MaybeRef } from "vue";
+import { watch, toValue, triggerRef, shallowRef, type MaybeRef, isRef } from "vue";
 import type { Class } from "../../../../../../core/src/java/lang/Class";
 import type { CoreType } from "../../../../../../core/src/asd/types/CoreType";
 import type { CoreTypeData } from "../../../../../../core/src/asd/data/CoreTypeData";
@@ -8,8 +8,7 @@ import { BaseSelectManager, type BaseSelectManagerConfig } from "./BaseSelectMan
 import { ArrayList } from "../../../../../../core/src/java/util/ArrayList";
 import type { List } from "../../../../../../core/src/java/util/List";
 
-type SchulformTypes = Schulform | Iterable<Schulform> | null;
-type disyplayTypes<T> = "kuerzel" | "text" | "kuerzelText" | ((option: T) => string);
+type DisplayMode<T> = "kuerzel" | "text" | "kuerzelText" | ((option: T) => string);
 
 /**
  * Config des Managers, die die BaseSelectManagerConfig<T> ohne `options` erweitert.
@@ -18,9 +17,9 @@ type disyplayTypes<T> = "kuerzel" | "text" | "kuerzelText" | ((option: T) => str
 export interface CoreTypeSelectManagerConfig<T extends CoreTypeData, U extends CoreType<T, U>> extends Omit<BaseSelectManagerConfig<T>, 'options'> {
 	clazz?: MaybeRef<Class<U> | null>;
 	schuljahr?: MaybeRef<number | null>;
-	schulformen?: MaybeRef<SchulformTypes>;
-	selectionDisplayText?: MaybeRef<disyplayTypes<T>>;
-	optionDisplayText?: MaybeRef<disyplayTypes<T>>;
+	schulformen?: MaybeRef<Schulform | Iterable<Schulform> | null>;
+	selectionDisplayText?: MaybeRef<DisplayMode<T>>;
+	optionDisplayText?: MaybeRef<DisplayMode<T>>;
 }
 
 /**
@@ -30,9 +29,9 @@ export interface CoreTypeSelectManagerConfig<T extends CoreTypeData, U extends C
  */
 export class CoreTypeSelectManager<T extends CoreTypeData, U extends CoreType<T, U>> extends BaseSelectManager<T> {
 
-	protected _selectionDisplayText = shallowRef<disyplayTypes<T>>("kuerzelText");
+	protected _selectionDisplayText = shallowRef<DisplayMode<T>>("kuerzelText");
 
-	protected _optionDisplayText = shallowRef<disyplayTypes<T>>("kuerzelText");
+	protected _optionDisplayText = shallowRef<DisplayMode<T>>("kuerzelText");
 
 	/**
 	 * Der CoreTypeDataManager für den Zugriff auf die Daten der CoreTypes.
@@ -47,7 +46,7 @@ export class CoreTypeSelectManager<T extends CoreTypeData, U extends CoreType<T,
 	protected _manager: CoreTypeDataManager<T, U> | null = null;
 
 	/**
-	 * Das Schuljahr, auf deren Basis der Eintrag ermittelt wird
+	 * Das Schuljahr, auf deren Basis der Eintrag ermittelt wird.
 	 * Bei null werden keine Optionen im Select angezeigt.
 	 */
 	protected _schuljahr = shallowRef<number | null>(null);
@@ -56,7 +55,7 @@ export class CoreTypeSelectManager<T extends CoreTypeData, U extends CoreType<T,
 	 * Die Schulform, auf dessen Basis der Eintrag ermittelt wird.
 	 * Bei null werden alle Optionen für alle Schulformen angezeigt.
 	 */
-	protected _schulformen = shallowRef<SchulformTypes>(null);
+	protected _schulformen = shallowRef<Schulform | Iterable<Schulform> | null>(null);
 
 
 	public constructor(config?: CoreTypeSelectManagerConfig<T, U>) {
@@ -70,8 +69,9 @@ export class CoreTypeSelectManager<T extends CoreTypeData, U extends CoreType<T,
 	}
 
 	public setConfig(config?: CoreTypeSelectManagerConfig<T, U>, setDefaults?: boolean) {
-		if (config === undefined)
+		if (config === undefined) {
 			super.setConfig(config, setDefaults);
+		}
 
 		const baseConfig: BaseSelectManagerConfig<T> = {
 			sort: config?.sort,
@@ -85,11 +85,11 @@ export class CoreTypeSelectManager<T extends CoreTypeData, U extends CoreType<T,
 	/**
 	 * Initialisierung bzw. Neukonfiguration des Selects.
 	 *
-	 * @param config   die (neue) Konfiguration des Selects
+	 * @param config        die (neue) Konfiguration des Selects
 	 * @param setDefaults   wenn true werden die Defaultwerte für alle Konfigurationen gesetzt, die nicht übergeben wurden. Andernfalls werden die alten
 	 * 					    beibehalten. Default ist false
 	 */
-	protected initCoreTypeSelectManager(config?: CoreTypeSelectManagerConfig<T, U>, setDefaults: boolean = false) {
+	private initCoreTypeSelectManager(config?: CoreTypeSelectManagerConfig<T, U>, setDefaults: boolean = false) {
 		const clazzValue = toValue(config?.clazz);
 		this._manager = ((clazzValue !== undefined) && (clazzValue !== null)) ? CoreTypeDataManager.getManager(clazzValue) : null;
 		const newSelectionDisplayText = config?.selectionDisplayText ?? (setDefaults ? "kuerzelText" : this.selectionDisplayText);
@@ -109,30 +109,53 @@ export class CoreTypeSelectManager<T extends CoreTypeData, U extends CoreType<T,
 		 * Die Watcher beobachten Änderungen der reaktiven Werte der Konfiguration, um diese intern weiterzuleiten.
 		 */
 
-		this._watcher.push(
-			watch(() => config?.clazz, newClazz => {
-				this.clazz = toValue(newClazz ?? null);
-			}, { deep: true }),
-			watch(() => config?.schuljahr, newSchuljahr => {
-				this.schuljahr = toValue(newSchuljahr ?? null);
-			}, { deep: true }),
-			watch(() => config?.schulformen, newSchulformen => {
-				this.schulformen = toValue(newSchulformen ?? null);
-			}, { deep: true }),
-			watch(() => config?.selectionDisplayText, newDisplay => {
-				this.selectionDisplayText = toValue(newDisplay ?? "kuerzelText");
-			}, { deep: true }),
-			watch(() => config?.optionDisplayText, newDisplay => {
-				this.optionDisplayText = toValue(newDisplay ?? "kuerzelText");
-			}, { deep: true })
-		);
+		if (isRef(config?.clazz)) {
+			this._watcher.push(
+				watch(config.clazz, newClazz => {
+					this.clazz = newClazz;
+				}, { deep: true })
+			);
+		}
+
+		if (isRef(config?.schuljahr)) {
+			this._watcher.push(
+				watch(config.schuljahr, newSchuljahr => {
+					this.schuljahr = newSchuljahr;
+				}, { deep: true })
+			);
+		}
+
+		if (isRef(config?.schulformen)) {
+			this._watcher.push(
+				watch(config.schulformen, newSchulformen => {
+					this.schulformen = newSchulformen;
+				}, { deep: true })
+			);
+		}
+
+		if (isRef(config?.selectionDisplayText)) {
+			this._watcher.push(
+				watch(config.selectionDisplayText, newDisplay => {
+					this.selectionDisplayText = newDisplay;
+				}, { deep: true })
+			);
+		}
+
+		if (isRef(config?.optionDisplayText)) {
+			this._watcher.push(
+				watch(config.optionDisplayText, newDisplay => {
+					this.optionDisplayText = newDisplay;
+				}, { deep: true })
+			);
+		}
+
 	}
 
-	public get selectionDisplayText(): disyplayTypes<T> {
+	public get selectionDisplayText(): DisplayMode<T> {
 		return this._selectionDisplayText.value;
 	}
 
-	public set selectionDisplayText(value: disyplayTypes<T>) {
+	public set selectionDisplayText(value: DisplayMode<T>) {
 		this._selectionDisplayText.value = value;
 		triggerRef(this._selectionDisplayText);
 	}
@@ -141,18 +164,23 @@ export class CoreTypeSelectManager<T extends CoreTypeData, U extends CoreType<T,
 	 * Generiert den Anzeigetext von selektierten Elementen. Dieser kann eine Standardanzeige sein ("kuerzel" | "text" | "kuerzelText") oder eine selbst
 	 * definierte Anzeige.
 	 *
-	 * @param option   die seletierte Option, deren Text berechnet werden soll.
+	 * @param option   die selektierte Option, deren Text berechnet werden soll.
+	 *
 	 * @returns den Anzeigetext der Selektion
 	 */
 	public getSelectionText(option: T | null): string {
-		if (option === null)
+		if (option === null) {
 			return "";
-		if (typeof this.selectionDisplayText === "function")
+		}
+		if (typeof this.selectionDisplayText === "function") {
 			return this.selectionDisplayText(option);
-		if (this.selectionDisplayText === "kuerzel")
+		}
+		if (this.selectionDisplayText === "kuerzel") {
 			return option.kuerzel;
-		if (this.selectionDisplayText === "text")
+		}
+		if (this.selectionDisplayText === "text") {
 			return option.text;
+		}
 		return `${option.kuerzel} - ${option.text}`;
 	}
 
@@ -172,14 +200,18 @@ export class CoreTypeSelectManager<T extends CoreTypeData, U extends CoreType<T,
 	 * @returns den Anzeigetext der Option
 	 */
 	public getOptionText(option: T | null): string {
-		if (option === null)
+		if (option === null) {
 			return "";
-		if (typeof this.optionDisplayText === "function")
+		}
+		if (typeof this.optionDisplayText === "function") {
 			return this.optionDisplayText(option);
-		if (this.optionDisplayText === "kuerzel")
+		}
+		if (this.optionDisplayText === "kuerzel") {
 			return option.kuerzel;
-		if (this.optionDisplayText === "text")
+		}
+		if (this.optionDisplayText === "text") {
 			return option.text;
+		}
 		return `${option.kuerzel} - ${option.text}`;
 	}
 
@@ -217,8 +249,9 @@ export class CoreTypeSelectManager<T extends CoreTypeData, U extends CoreType<T,
 	 * @param value   die neue Klasse
 	 */
 	public set clazz(value: Class<U> | null | undefined) {
-		if (value === this.clazz)
+		if (value === this.clazz) {
 			return;
+		}
 		this._clazz.value = toValue(value ?? null);
 		triggerRef(this._clazz);
 		this.manager = ((value === undefined) || (value === null)) ? null : CoreTypeDataManager.getManager(value);
@@ -240,8 +273,9 @@ export class CoreTypeSelectManager<T extends CoreTypeData, U extends CoreType<T,
 	 * @param value   das neue Schuljahr
 	 */
 	public set schuljahr(value: number | null) {
-		if (value === this.schuljahr)
+		if (value === this.schuljahr) {
 			return;
+		}
 		this._schuljahr.value = value;
 		triggerRef(this._schuljahr);
 		this.updateOptions();
@@ -262,20 +296,34 @@ export class CoreTypeSelectManager<T extends CoreTypeData, U extends CoreType<T,
 	 * @param value   die neue Schulform
 	 */
 	public set schulformen(value: Schulform | Iterable<Schulform> | null) {
-		if (value === this.schulformen)
+		if (value === this.schulformen) {
 			return;
+		}
 		this._schulformen.value = value;
 		triggerRef(this._schulformen);
 		this.updateOptions();
 	}
 
 	/**
-	 * Aktualisiert die (ungefiltereten und gefilterten) Optionen basierend auf dem Manager, dem Schuljahr und den Schulformen.
+	 * Überschreibt die Sichtbarkeit der Methode, da außerhalb des Managers die Optionen nur durch clazz, schuljahr und schulformen beeinflusst werden darf
+	 */
+	private set unfilteredOptions(value: Iterable<T>) {
+		super.unfilteredOptions = value;
+	}
+
+	public get unfilteredOptions(): List<T> {
+		return super.unfilteredOptions;
+	}
+
+	/**
+	 * Aktualisiert die (ungefilterten und gefilterten) Optionen basierend auf dem Manager, dem Schuljahr und den Schulformen.
 	 * Ist kein Manager oder Schuljahr gegeben, werden die Optionen auf eine leere Liste gesetzt.
 	 */
 	private updateOptions() {
-		if ((this.manager === null) || (this.schuljahr === null))
-			return new ArrayList<T>();
+		if ((this.manager === null) || (this.schuljahr === null)) {
+			this.unfilteredOptions = new ArrayList<T>();
+			return;
+		}
 
 		let werte: List<U>;
 		if (this.schulformen === null) {
@@ -286,16 +334,19 @@ export class CoreTypeSelectManager<T extends CoreTypeData, U extends CoreType<T,
 			const result = new ArrayList<U>();
 			for (const schulform of this.schulformen) {
 				const list = this.manager.getListBySchuljahrAndSchulform(this.schuljahr, schulform);
-				for (const item of list)
-					if (!result.contains(item))
+				for (const item of list) {
+					if (!result.contains(item)) {
 						result.add(item);
+					}
+				}
 			}
 			werte = result;
 		}
 
 		const eintraege = new ArrayList<T>();
-		for (const coreType of werte)
+		for (const coreType of werte) {
 			eintraege.add(this.manager.getEintragBySchuljahrUndWert(this.schuljahr, coreType));
+		}
 
 		this.unfilteredOptions = eintraege;
 	}

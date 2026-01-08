@@ -17,7 +17,6 @@ export function useUiSelectStyles<T, V extends BasicValidator>(
 	comboboxAriaAttrs: ComputedRef,
 	searchInputAriaAttrs: ComputedRef,
 	comboboxTabindex: ComputedRef,
-	searchInputTabindex: ComputedRef,
 	headlessPadding: ComputedRef<string>,
 	comboboxRole: ComputedRef<string | undefined>,
 	comboboxClasses: ComputedRef<string[]>,
@@ -42,8 +41,8 @@ export function useUiSelectStyles<T, V extends BasicValidator>(
 		const result = { ...attrs };
 		const stringClass = result.class;
 		if (typeof stringClass === 'string') {
-			const excludedClasses = new Set(['contentFocusField', 'subNavigationFocusField', 'icon-ui-']);
-			result.class = stringClass.split(' ').filter(c => !excludedClasses.has(c)).join(' ');
+			const excludedClasses = ['contentFocusField', 'subNavigationFocusField', 'icon-ui-', 'bg-ui-'];
+			result.class = stringClass.split(' ').filter(c => !excludedClasses.some(prefix => c.startsWith(prefix))).join(' ');
 		}
 		return result;
 	});
@@ -54,106 +53,55 @@ export function useUiSelectStyles<T, V extends BasicValidator>(
 	 */
 	const backgroundColorClass = computed(() => {
 		const classString = attrs.class;
-		if (typeof classString !== "string")
+		if (typeof classString !== "string") {
 			return state.value.headless ? "" : "bg-ui";
+		}
 		const classes = classString.split(' ');
 
 		const backgroundClass = findFirstBackgroundClass(classes);
 		return backgroundClass ?? (state.value.headless ? "" : "bg-ui");
 	});
 
-	/**
-	 * Berechnet die Textfarbe. Wird von außen eine gesetzt, dann wird diese verwendet. Andernfalls text-ui. Für Sekundärfarben wird dann automatisch
-	 * die sekundäre Variante der übergebenen Farbe verwendet.
-	 */
-	const textColorClass = computed(() => {
-		if (state.value.disabled)
-			return "text-ui-disabled";
-
-		if (!state.value.isValid)
-			return "text-ui-danger";
-
-		if (!state.value.isValidatorValid)
-			switch (state.value.validator!().getFehlerart()) {
-				case (ValidatorFehlerart.HINWEIS):
-					return "text-ui-warning";
-				case (ValidatorFehlerart.KANN):
-					return "text-ui-caution";
-				case (ValidatorFehlerart.MUSS):
-					return "text-ui-danger";
+	function getColorClass(prefix: 'text' | 'icon' | 'border') {
+		return computed(() => {
+			if (state.value.disabled) {
+				return `${prefix}-ui-disabled`;
+			}
+			if (!state.value.isValid) {
+				return `${prefix}-ui-danger`;
+			}
+			if (!state.value.isValidatorValid) {
+				switch (state.value.validator!().getFehlerart()) {
+					case ValidatorFehlerart.HINWEIS:
+						return `${prefix}-ui-warning`;
+					case ValidatorFehlerart.KANN:
+						return `${prefix}-ui-caution`;
+					case ValidatorFehlerart.MUSS:
+						return `${prefix}-ui-danger`;
+				}
 			}
 
-		if (state.value.required && !selectionMethods.hasSelection())
-			return "text-ui-danger";
-
-		const classString = attrs.class;
-		if (typeof classString !== "string")
-			return "text-ui";
-
-		const classes = classString.split(' ');
-
-		// Nach erster text-ui* Klasse suchen
-		const match = classes.find(c => c.startsWith('text-ui'));
-		return match ?? 'text-ui';
-	});
-
-	/**
-	 * Berechnet die Iconfarbe. Wird von außen eine gesetzt, dann wird diese verwendet. Andernfalls icon-ui.
-	 */
-	const iconColorClass = computed(() => {
-		if (state.value.disabled)
-			return "icon-ui-disabled";
-		if (!state.value.isValid)
-			return "icon-ui-danger";
-		if (!state.value.isValidatorValid)
-			switch (state.value.validator!().getFehlerart()) {
-				case (ValidatorFehlerart.HINWEIS):
-					return "icon-ui-warning";
-				case (ValidatorFehlerart.KANN):
-					return "icon-ui-caution";
-				case (ValidatorFehlerart.MUSS):
-					return "icon-ui-danger";
-			}
-		const classString = attrs.class;
-		if (typeof classString !== "string")
-			return "icon-ui";
-		const classes = classString.split(' ');
-
-		// Nach erster icon-ui* Klasse suchen
-		const match = classes.find(c => c.startsWith('icon-ui'));
-		return match ?? 'icon-ui';
-	});
-
-	/**
-	 * Berechnet die Borderfarbe der Combobox. Wird von außen eine gesetzt, dann wird diese verwendet. Andernfalls bg-ui-neutral.
-	 */
-	const borderColorClass = computed(() => {
-		if (!state.value.isValid)
-			return "border-ui-danger";
-		if (!state.value.isValidatorValid)
-			switch (state.value.validator!().getFehlerart()) {
-				case (ValidatorFehlerart.HINWEIS):
-					return "border-ui-warning";
-				case (ValidatorFehlerart.KANN):
-					return "border-ui-caution";
-				case (ValidatorFehlerart.MUSS):
-					return "border-ui-danger";
+			const classString = attrs.class;
+			if (typeof classString !== 'string') {
+				return `${prefix}-ui`;
 			}
 
-		const classString = attrs.class;
-		if (typeof classString !== "string")
-			return "border-ui";
-		const classes = classString.split(' ');
+			const classes = classString.split(' ');
+			const match = classes.find(c => c.startsWith(`${prefix}-ui`));
+			return match ?? `${prefix}-ui`;
+		});
+	}
 
-		// Nach erster border-ui* Klasse suchen
-		const match = classes.find(c => c.startsWith('border-ui'));
-		return match ?? 'border-ui';
-	});
+	const textColorClass = getColorClass("text");
+	const iconColorClass = getColorClass("icon");
+	const borderColorClass = getColorClass("border");
 
 	const comboboxAriaAttrs = computed(() => {
-		const isEditable = !state.value.readonly || !state.value.disabled;
-		if (state.value.searchable && !isEditable)
+		const isEditable = !state.value.readonly && !state.value.disabled;
+		if (state.value.searchable && isEditable) {
+			// Aria Attribute werden am Input gesetzt
 			return {};
+		}
 		return {
 			'aria-labelledby': `uiSelectLabel_${state.value.instanceId}`,
 			'aria-controls': isEditable ? `uiSelectDropdown_${state.value.instanceId}` : undefined,
@@ -177,10 +125,6 @@ export function useUiSelectStyles<T, V extends BasicValidator>(
 		(state.value.searchable || state.value.disabled || state.value.readonly) ? -1 : 0
 	);
 
-	const searchInputTabindex = computed((): number =>
-		(state.value.disabled || state.value.readonly) ? -1 : 0
-	);
-
 	const headlessPadding = computed((): string =>
 		state.value.headless ? 'py-0' : 'py-1'
 	);
@@ -194,8 +138,7 @@ export function useUiSelectStyles<T, V extends BasicValidator>(
 	);
 
 	const comboboxClasses = computed(() => {
-		const paddingAndHeight = state.value.headless ? 'pl-1 min-h-6' : 'border mt-[0.8em] pl-3 pr-1 min-h-9';
-		const border = state.value.disabled ? 'border-ui-disabled' : borderColorClass.value;
+		const headlessClasses = state.value.headless ? 'pl-1 min-h-6' : 'border mt-[0.8em] pl-3 pr-1 min-h-9';
 		const pointer = state.value.disabled ? 'pointer-events-none' : '';
 		let cursor: string;
 		switch (true) {
@@ -208,19 +151,21 @@ export function useUiSelectStyles<T, V extends BasicValidator>(
 			default:
 				cursor = 'cursor-pointer';
 		}
-		return [paddingAndHeight, border, pointer, cursor, backgroundColorClass.value];
+		return [headlessClasses, borderColorClass.value, pointer, cursor, backgroundColorClass.value];
 	});
 
 	const labelClasses = computed((): string[] => {
 		let right = 'right-6';
-		if (moveLabel.value)
+		if (moveLabel.value) {
 			right = 'right-2';
-		else if (state.value.removable)
+		} else if (state.value.removable) {
 			right = 'right-11';
+		}
 
-		let left = '';
-		if (state.value.headless)
+		let left = 'left-2';
+		if (state.value.headless) {
 			left = state.value.removable ? 'left-10' : 'left-6';
+		}
 
 		const position = moveLabel.value ? 'absolute -top-0.5 text-xs' : 'absolute top-1/2 font-normal';
 
@@ -228,11 +173,11 @@ export function useUiSelectStyles<T, V extends BasicValidator>(
 	});
 
 	const labelTextColorClass = computed((): string =>
-		moveLabel.value ? textColorClass.value : getSecondaryTextColor(textColorClass.value)
+		(state.value.disabled || moveLabel.value) ? textColorClass.value : getSecondaryTextColor(textColorClass.value)
 	);
 
 	const labelIconClass = computed((): string =>
-		moveLabel.value ? iconColorClass.value : getSecondaryIconColor(iconColorClass.value)
+		(state.value.disabled || moveLabel.value) ? iconColorClass.value : getSecondaryIconColor(iconColorClass.value)
 	);
 
 	function getOptionClasses(option: T, optionIndex: number): string[] {
@@ -243,8 +188,9 @@ export function useUiSelectStyles<T, V extends BasicValidator>(
 
 
 	const validatorErrorIcon = computed(() => {
-		if (!state.value.validator)
+		if (!state.value.validator) {
 			return null;
+		}
 		const fehlerart = state.value.validator().getFehlerart();
 
 		switch (fehlerart) {
@@ -262,7 +208,7 @@ export function useUiSelectStyles<T, V extends BasicValidator>(
 	const moveLabel = computed(() => selectionMethods.hasSelection() || (state.value.search !== '' && state.value.searchable));
 
 	const showLabel = computed((): boolean =>
-		state.value.label !== '' && ((state.value.headless && !moveLabel.value) || !state.value.headless)
+		!state.value.headless || !moveLabel.value
 	);
 
 	const showValidatorError = computed((): boolean =>
@@ -271,8 +217,9 @@ export function useUiSelectStyles<T, V extends BasicValidator>(
 
 	const showValidatorErrorMessage = computed(() => {
 		const validator = state.value.validator;
-		if (validator === undefined)
+		if (validator === undefined) {
 			return false;
+		}
 
 		const hasFehler = !validator().getFehler().isEmpty();
 		const fehlerart = validator().getFehlerart();
@@ -282,8 +229,9 @@ export function useUiSelectStyles<T, V extends BasicValidator>(
 
 
 	function validatorErrorBgClasses(fehler: ValidatorFehlerart): {} {
-		if (state.value.validator === undefined)
+		if (state.value.validator === undefined) {
 			return {};
+		}
 
 		switch (fehler) {
 			case ValidatorFehlerart.MUSS:
@@ -300,11 +248,13 @@ export function useUiSelectStyles<T, V extends BasicValidator>(
 	const focusClass = computed(() => {
 		const result = { ...attrs };
 		const stringClass = result.class;
-		if (typeof stringClass === 'string')
-			if (stringClass.includes('contentFocusField'))
+		if (typeof stringClass === 'string') {
+			if (stringClass.includes('contentFocusField')) {
 				return 'contentFocusField';
-			else if (stringClass.includes('subNavigationFocusField'))
+			} else if (stringClass.includes('subNavigationFocusField')) {
 				return 'subNavigationFocusField';
+			}
+		}
 		return '';
 	});
 
@@ -317,7 +267,6 @@ export function useUiSelectStyles<T, V extends BasicValidator>(
 		comboboxAriaAttrs,
 		searchInputAriaAttrs,
 		comboboxTabindex,
-		searchInputTabindex,
 		headlessPadding,
 		comboboxRole,
 		comboboxClasses,
@@ -339,11 +288,12 @@ export function useUiSelectStyles<T, V extends BasicValidator>(
 /**
  * Generiert die passende sekundäre Iconfarbe für gesetzte Iconfarben von außen.
  *
- * @param color    die Iconfarbe, dessen Sekundärfarbe ermittlet werden soll.
+ * @param color    die Iconfarbe, dessen Sekundärfarbe ermittelt werden soll.
  */
 function getSecondaryIconColor(color: string): string {
-	if (color.startsWith("icon-uistatic"))
+	if (color.startsWith("icon-uistatic")) {
 		return "icon-uistatic-25";
+	}
 	switch (color) {
 		case "icon-ui":
 			return "icon-ui-secondary";
@@ -391,11 +341,12 @@ function getSecondaryIconColor(color: string): string {
 /**
  * Generiert die passende sekundäre Textfarbe für gesetzte Textfarben von außen.
  *
- * @param color    die Textfarbe, dessen Sekundärfarbe ermittlet werden soll.
+ * @param color    die Textfarbe, dessen Sekundärfarbe ermittelt werden soll.
  */
 function getSecondaryTextColor(color: string): string {
-	if (color.startsWith("text-uistatic"))
+	if (color.startsWith("text-uistatic")) {
 		return "text-uistatic-25";
+	}
 	switch (color) {
 		case "text-ui":
 			return "text-ui-secondary";

@@ -21,14 +21,16 @@ export function useUiSelectFocusHandler<T, V extends BasicValidator>(
 	 * Je nachdem, ob das Select durchsuchbar ist (searchable = true), wird der Dom-Fokus auf die Combobox oder das darin befindliche Suchfeld gesetzt.
 	 */
 	function focusSelect(): void {
-		if (state.value.readonly || state.value.disabled)
+		if (state.value.readonly || state.value.disabled) {
 			return;
+		}
 
 		if (state.value.searchable) {
 			elements.uiSelectSearch.value?.focus();
 			focusOnInput.value = true;
-		} else
+		} else {
 			elements.uiSelectCombobox.value?.focus();
+		}
 
 		document.addEventListener('click', handleClickOutside);
 	}
@@ -36,9 +38,9 @@ export function useUiSelectFocusHandler<T, V extends BasicValidator>(
 	function onFocusOut(): void {
 		// Bei einem Fokuswechsel ist der Fokus kurz auf dem Body. Das muss hiermit abgewartet werden
 		requestAnimationFrame(() => {
-			if (!((elements.uiSelectCombobox.value?.contains(document.activeElement)) ?? false))
+			if (!((elements.uiSelectCombobox.value?.contains(document.activeElement)) ?? false)) {
 				deactivateSelect();
-
+			}
 		});
 	}
 
@@ -48,7 +50,7 @@ export function useUiSelectFocusHandler<T, V extends BasicValidator>(
 
 	/**
 	 * Wird die Komponente geklickt, dann wird automatisch das richtige Element fokussiert (Combobox oder Suchfeld je nach Wert von searchable). Dabei wird
-	 * außerdem auch das Dropdown geöffnet oder geschlossen. Das ist insbesondere relavant, wenn der Benutzer in das Suchfeld schreiben möchte, aber dieses
+	 * außerdem auch das Dropdown geöffnet oder geschlossen. Das ist insbesondere relevant, wenn der Benutzer in das Suchfeld schreiben möchte, aber dieses
 	 * nicht beim Klick getroffen hat, weil es nicht die gesamte Combobox ausfüllt.
 	 */
 	function handleComponentClick(): void {
@@ -57,9 +59,9 @@ export function useUiSelectFocusHandler<T, V extends BasicValidator>(
 	}
 
 	function handleClickOutside(event: MouseEvent): void {
-		if ((elements.uiSelect.value !== null) && !elements.uiSelect.value.contains(event.target as Node))
+		if (!((elements.uiSelect.value?.contains(event.target as Node)) ?? false)) {
 			deactivateSelect();
-
+		}
 	}
 
 	function deactivateSelect(): void {

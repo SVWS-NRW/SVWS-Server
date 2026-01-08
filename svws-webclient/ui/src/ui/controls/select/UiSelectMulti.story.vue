@@ -26,7 +26,7 @@
 			<svws-ui-input-wrapper>
 				In diesem Beispiel werden zwei Filter an das Select übergeben. Jeder Filter hat 2 Fachgruppen, die ausgewählt werden können. Solange kein
 				Filter gesetzt ist, werden alle Optionen angezeigt. Sobald ein Filter gesetzt wird, werden nur noch dazu passende Optionen zur Verfügung
-				gestellt. Gesetzte Fachgruppen in einem Filter ergänzen sich dabei. Wird jedoch in beiden Filtern eine Fachruppe gesetzt, dann werden nur
+				gestellt. Gesetzte Fachgruppen in einem Filter ergänzen sich dabei. Wird jedoch in beiden Filtern eine Fachgruppe gesetzt, dann werden nur
 				Optionen angezeigt, die zu beiden Fachgruppen passen.
 				<strong>Filter 1</strong>
 				<svws-ui-checkbox v-model="filterState1.fremdsprache">
@@ -37,7 +37,7 @@
 				</svws-ui-checkbox>
 				<strong>Filter 2</strong>
 				<svws-ui-checkbox v-model="filterState2.deutsch">
-					Deustch
+					Deutsch
 				</svws-ui-checkbox>
 				<svws-ui-checkbox v-model="filterState2.musikUndKunst2">
 					Musik und Kunst
@@ -265,19 +265,23 @@
 
 	const filter1 = computed<Fachgruppe[]>(() => {
 		const result: Fachgruppe[] = [];
-		if (filterState1.fremdsprache)
+		if (filterState1.fremdsprache) {
 			result.push(Fachgruppe.FG_FS);
-		if (filterState1.musikUndKunst1)
+		}
+		if (filterState1.musikUndKunst1) {
 			result.push(Fachgruppe.FG_MS);
+		}
 		return result;
 	});
 
 	const filter2 = computed<Fachgruppe[]>(() => {
 		const result: Fachgruppe[] = [];
-		if (filterState2.deutsch)
+		if (filterState2.deutsch) {
 			result.push(Fachgruppe.FG_D);
-		if (filterState2.musikUndKunst2)
+		}
+		if (filterState2.musikUndKunst2) {
 			result.push(Fachgruppe.FG_MS);
+		}
 		return result;
 	});
 
@@ -290,26 +294,32 @@
 	});
 
 	const sortById = (a: LehrerRechtsverhaeltnisKatalogEintrag, b: LehrerRechtsverhaeltnisKatalogEintrag): number => {
-		if (a.id < b.id)
+		if (a.id < b.id) {
 			return -1;
-		if (a.id > b.id)
+		}
+		if (a.id > b.id) {
 			return 1;
+		}
 		return 0;
 	};
 
 	const sortByKuerzel = (a: LehrerRechtsverhaeltnisKatalogEintrag, b: LehrerRechtsverhaeltnisKatalogEintrag): number => {
-		if (a.kuerzel < b.kuerzel)
+		if (a.kuerzel < b.kuerzel) {
 			return -1;
-		if (a.kuerzel > b.kuerzel)
+		}
+		if (a.kuerzel > b.kuerzel) {
 			return 1;
+		}
 		return 0;
 	};
 
 	const sortByText = (a: LehrerRechtsverhaeltnisKatalogEintrag, b: LehrerRechtsverhaeltnisKatalogEintrag): number => {
-		if (a.text < b.text)
+		if (a.text < b.text) {
 			return -1;
-		if (a.text > b.text)
+		}
+		if (a.text > b.text) {
 			return 1;
+		}
 		return 0;
 	};
 
