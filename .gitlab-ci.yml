@@ -29,6 +29,7 @@ cache: &global_cache
 
 stages:
     - build
+    - lint
     - test
     - cleanup
     - analyze
@@ -36,6 +37,58 @@ stages:
     - build_installer
     - sign
     - publish
+
+lint:eslint:full:
+    image: ${REGISTRY_HOST}/dockerhub_proxy/node:24-slim
+    stage: lint
+    needs: []
+    interruptible: true
+    before_script:
+        - apt-get update
+        - apt-get install -y git
+        - rm -rf /var/lib/apt/lists/*
+
+        - npm ci
+    script:
+        - time echo -e "svws-webclient/admin\nsvws-webclient/client\nsvws-webclient/ui\nsvws-webclient/enmserver\nsvws-webclient/laufbahnplanung" \
+            | xargs -P5 -I{} npm --workspace {} run lint
+    allow_failure: true
+    rules:
+        - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+          when: never
+        - if: '$CI_COMMIT_BRANCH == "dev"'
+        - when: manual
+
+lint:eslint:changed:
+    image: ${REGISTRY_HOST}/dockerhub_proxy/node:24-slim
+    stage: lint
+    needs: []
+    interruptible: true
+    variables:
+        GIT_DEPTH: "0"
+    before_script:
+        - apt-get update
+        - apt-get install -y git
+        - rm -rf /var/lib/apt/lists/*
+
+        - npm ci
+    script:
+        - git fetch origin dev
+        - BASE=$(git merge-base HEAD origin/dev)
+        - CHANGED_FILES=$(git diff --name-only "$BASE" HEAD | grep -E '\.ts$|\.vue$' || true)
+        - |
+            if [ -n "$CHANGED_FILES" ]; then
+              echo "Starte ESLint für geänderte Dateien:"
+              echo "$CHANGED_FILES"
+              npx eslint --ignore-pattern '**/svws-webclient/core/**/*' $CHANGED_FILES
+            else
+              echo "Keine Änderungen an .ts/.vue Dateien – Skip ESLint"
+              exit 0
+            fi
+    except:
+        - dev
+        - master
+    allow_failure: true
 
 build:
     stage: build

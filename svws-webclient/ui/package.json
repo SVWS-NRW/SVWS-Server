@@ -6,7 +6,7 @@
 	"version": "1.2.0-SNAPSHOT",
 	"scripts": {
 		"dev": "vite dev --config vite.config.story.ts",
-		"lint": "eslint 'src/**/*.{ts,vue}' --cache",
+		"lint": "eslint \"src/**/*.{ts,vue}\" --cache",
 		"lint-tsc": "vue-tsc --noEmit",
 		"test": "vitest",
 		"test:run": "vitest run --coverage --coverage.include=src/ui/**/*.vue --coverage.exclude=src/ui/**/*.story.*",
