@@ -12,7 +12,7 @@
 					<span class="icon-sm i-ri-checkbox-circle-line" /> Alles freischalten
 				</svws-ui-button>
 				<svws-ui-button v-if="!istLokal" type="transparent" @click.stop="setzeKonfigurationLokal()" title="Synchronisiert die Konfiguration für die Noteneingaben und die Sichtbarkeit mit dem lokalen Notenmodul." class="text-ui-100 subNavigationFocusField">
-					<span class="icon-sm i-ri-loop-left-line" /> Synchronisation
+					<span class="icon-sm i-ri-loop-left-line" /> Übernahme der lokalen Konfiguration
 				</svws-ui-button>
 			</svws-ui-sub-nav>
 		</Teleport>
