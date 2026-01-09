@@ -1,7 +1,7 @@
 <template>
 	<div class="w-full h-fit">
-		<div class="text-headline-md mb-4">Voreinstellung für die Anzeige der Spalten bei den Notenübersichten</div>
-		<div class="max-w-4xl input-wrapper input-wrapper--4">
+		<div class="text-headline-md mb-4">Voreinstellung für die Anzeige der Spalten bei der Noteneingabe</div>
+		<div class="pl-4 max-w-4xl input-wrapper input-wrapper--4">
 			<div class="w-full">
 				<div class="text-headline-sm">Allgemein</div>
 				<div v-for="col of manager().spaltenAllgemein" :key="col">

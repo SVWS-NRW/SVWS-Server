@@ -891,6 +891,35 @@ export class NotenmodulConfigManagerSperrungen {
 		return (row.istFehlstundenEingabeKlassenweise > 0) && (row.istFehlstundenEingabeKlassenweise < max);
 	}
 
+	/**
+	 * Setzt die Default-Konfiguration bei der die Noteneingabe gesperrt ist.
+	 */
+	public async setConfigDefault() {
+		for (const klasse of this._listKlassen) {
+			klasse.tsEingabeAb = null;
+			klasse.tsEingabeBis = null;
+			for (const col of klasse.spalten) {
+				col.gesperrt = true;
+			}
+		}
+		this.updateGruppierung(this._gruppierung.value);
+		await this.writeConfig();
+	}
+
+	/**
+	 * Setzt die Konfiguration bei die Noteneingabe komplett freigeschaltet ist.
+	 */
+	public async setConfigAllowAll() {
+		for (const klasse of this._listKlassen) {
+			klasse.tsEingabeAb = null;
+			klasse.tsEingabeBis = null;
+			for (const col of klasse.spalten) {
+				col.gesperrt = false;
+			}
+		}
+		this.updateGruppierung(this._gruppierung.value);
+		await this.writeConfig();
+	}
 
 	/**
 	 * Schaltet den Wert bei einer Jahrgangsgruppe um, ob eine klassenweise Fehlstundeneingabe vorliegt oder nicht.
