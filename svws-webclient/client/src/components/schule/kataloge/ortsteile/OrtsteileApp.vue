@@ -45,8 +45,9 @@
 
 	const ortsteileSubline = computed(() => {
 		const ortsteile = props.manager().liste.auswahlSorted();
-		if (ortsteile.size() > 5)
+		if (ortsteile.size() > 5) {
 			return `${ortsteile.size()} Ortsteile ausgewählt`;
+		}
 		return [...ortsteile].map(k => k.ortsteil).join(', ');
 	});
 

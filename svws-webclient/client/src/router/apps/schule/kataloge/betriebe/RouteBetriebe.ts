@@ -33,8 +33,9 @@ export class RouteBetriebe extends RouteAuswahlNode<BetriebeListeManager, RouteD
 	}
 
 	protected doUpdateIfTarget = async (to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined) => {
-		if (!this.data.manager.hasDaten())
+		if (!this.data.manager.hasDaten()) {
 			return;
+		}
 		return this.getRouteSelectedChild();
 	};
 }

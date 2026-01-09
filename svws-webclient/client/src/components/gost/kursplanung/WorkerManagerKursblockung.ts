@@ -93,10 +93,12 @@ export class WorkerManagerKursblockung {
 	 * und mit dem Manager kommunizieren.
 	 */
 	public set interval(value: number) {
-		if (value < 100)
+		if (value < 100) {
 			throw new DeveloperNotificationException("Das Intervall sollte mindestens 100 Millisekunden betragen.");
-		if (value > 5000)
+		}
+		if (value > 5000) {
 			throw new DeveloperNotificationException("Das Intervall sollte nicht zu groß gewählt werden (mehr als 5 Sekunden ist definitiv sehr groß und sorgt für eine kaum reagierendes UI.");
+		}
 		this._interval.value = value;
 	}
 
@@ -111,22 +113,26 @@ export class WorkerManagerKursblockung {
 	 * Setzt die Anzahl der zu nutzenden Worker-Threads.
 	 */
 	public set threads(value: number) {
-		if (value < 1)
+		if (value < 1) {
 			throw new DeveloperNotificationException("Die Anzahl der genutzten Worker-Thread darf nicht kleiner als 1 sein.");
-		if (value > WorkerManagerKursblockung.MAX_WORKER)
+		}
+		if (value > WorkerManagerKursblockung.MAX_WORKER) {
 			throw new DeveloperNotificationException("Die Anzahl der genutzten Worker-Threads darf WorkerManagerKursblockung.MAX_WORKER nicht überschreiten.");
+		}
 		const oldValue = this.usedWorkerThreads.value;
-		if (oldValue === value)
+		if (oldValue === value) {
 			return;
+		}
 		this.usedWorkerThreads.value = value;
 		// Prüfe zunächst, ob bereits ein Worker initialisiert wurde. Ist dies der Fall, so müssen ggf. neue Worker initialisiert und ggf. gestartet werden
 		if ((this.workerInitialized[0] === true) && (value > oldValue)) {
 			// Initialisiere oder starte zusätzlich genutzte Worker-Threads (nicht mehr genutzte Threads laufen automatisch aus)
 			for (let i = oldValue; i < value; i++) {
-				if (this.workerInitialized[i])
+				if (this.workerInitialized[i]) {
 					this.requestNext(i);
-				else
+				} else {
 					this.initWorker(i);
+				}
 			}
 		}
 	}
@@ -183,12 +189,15 @@ export class WorkerManagerKursblockung {
 	 * Initialisiert den Kursblockungsalgorithmus mit den Blockungsdaten
 	 */
 	public init() {
-		if (this.initialized.value === true)
+		if (this.initialized.value === true) {
 			throw new DeveloperNotificationException("Der Worker-Thread für den Kursblockungsalgorithmus wurde bereits initialisiert.");
-		if (this.terminated.value === true)
+		}
+		if (this.terminated.value === true) {
 			throw new DeveloperNotificationException("Der Worker-Thread für den Kursblockungsalgorithmus wurde bereits terminiert. Dieser kann nicht erneut initialisiert werden.");
-		for (let i = 0; i < this.threads; i++)
+		}
+		for (let i = 0; i < this.threads; i++) {
 			this.initWorker(i);
+		}
 	}
 
 	/**
@@ -197,8 +206,9 @@ export class WorkerManagerKursblockung {
 	public start() {
 		if (this.terminated.value === false) {
 			this.running.value = true;
-			for (let i = 0; i < this.threads; i++)
+			for (let i = 0; i < this.threads; i++) {
 				this.requestNext(i);
+			}
 		}
 	}
 
@@ -219,8 +229,9 @@ export class WorkerManagerKursblockung {
 	 */
 	public getErgebnisManager(): List<GostBlockungsergebnisManager> {
 		const result = new ArrayList<GostBlockungsergebnisManager>();
-		for (const ergebnis of this.getErgebnisse())
+		for (const ergebnis of this.getErgebnisse()) {
 			result.add(new GostBlockungsergebnisManager(this.datenManager, ergebnis));
+		}
 		return result;
 	}
 
@@ -256,9 +267,11 @@ export class WorkerManagerKursblockung {
 	 * @returns true, falls alle genutzten Worker initialisiert wurden, und ansonsten false
 	 */
 	protected checkAllUsedWorkerInitialized(): boolean {
-		for (let i = 0; i < this.threads; i++)
-			if (!this.workerInitialized[i])
+		for (let i = 0; i < this.threads; i++) {
+			if (!this.workerInitialized[i]) {
 				return false;
+			}
+		}
 		return true;
 	}
 
@@ -272,8 +285,9 @@ export class WorkerManagerKursblockung {
 	 */
 	protected requestInit(index: number, faecherListe: List<GostFach>, blockung: GostBlockungsdaten, mapCoreTypeNameJsonData: Map<string, string>) {
 		const faecher = new Array<string>();
-		for (const f of faecherListe)
+		for (const f of faecherListe) {
 			faecher.push(GostFach.transpilerToJSON(f));
+		}
 		const blockungsdaten = GostBlockungsdaten.transpilerToJSON(blockung);
 		this.worker[index].postMessage(<WorkerKursblockungRequestInit>{ cmd: "init", faecher, blockungsdaten, mapCoreTypeNameJsonData });
 	}
@@ -288,8 +302,9 @@ export class WorkerManagerKursblockung {
 		this.workerInitialized[index] = data.initialized;
 		this.initialized.value = this.checkAllUsedWorkerInitialized();
 		// Starte ggf. den neuen Thread
-		if (this.isRunning())
+		if (this.isRunning()) {
 			this.requestNext(index);
+		}
 	}
 
 	/**
@@ -311,11 +326,13 @@ export class WorkerManagerKursblockung {
 	 */
 	protected handleNextReply(index: number, data: WorkerKursblockungReplyNext) {
 		// Starte das nächste Berechnungsintervall, solange nicht abgebrochen wurde
-		if ((this.workerInitialized[index] === true) && (this.running.value === true) && (index < this.threads))
+		if ((this.workerInitialized[index] === true) && (this.running.value === true) && (index < this.threads)) {
 			this.requestNext(index);
+		}
 		// Wenn Daten vorliegen, dann frage die neuen Ergebnisse ab
-		if ((data.hasUpdate === true) && (this.running.value === true))
+		if ((data.hasUpdate === true) && (this.running.value === true)) {
 			this.queryErgebnisse(index);
+		}
 	}
 
 	/**
@@ -346,11 +363,13 @@ export class WorkerManagerKursblockung {
 		}
 		this.workerErgebnisse[index] = workerErgebnisse;
 		const ergebnisse = new ArrayList<GostBlockungsergebnis>();
-		for (let i = 0; i < this.worker.length; i++)
+		for (let i = 0; i < this.worker.length; i++) {
 			ergebnisse.addAll(this.workerErgebnisse[i]);
+		}
 		ergebnisse.sort(new GostBlockungsergebnisComparator());
-		for (let i = ergebnisse.size() - 1; i >= this.maxErgebnisse.value; i--)
+		for (let i = ergebnisse.size() - 1; i >= this.maxErgebnisse.value; i--) {
 			ergebnisse.removeElementAt(i);
+		}
 		this.ergebnisse.value = ergebnisse;
 		// löse das Promise auf, nachdem das Ergebnis in die Liste eingearbeitet wurde
 		// Beim Eingang des letzten Ergebnis kann das Listen-Promise mit allSettled aufgelöst werden

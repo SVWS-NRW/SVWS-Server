@@ -444,8 +444,9 @@
 
 	const ortsteileFiltered = computed(() => {
 		const wohnortID = auswahlWohnortID.value;
-		if (wohnortID === null)
+		if (wohnortID === null) {
 			return ortsteile.value;
+		}
 		return ortsteile.value.filter(o => o.ort_id === wohnortID);
 	});
 
@@ -680,8 +681,9 @@
 
 	const dauerKindergarten = computed({
 		get: () => {
-			if (dauerKindergartenbesuchID.value === null)
+			if (dauerKindergartenbesuchID.value === null) {
 				return null;
+			}
 			return Kindergartenbesuch.data().getEintragByID(dauerKindergartenbesuchID.value) ?? null;
 		},
 		set: (value) => {
@@ -730,28 +732,33 @@
 		const v = (value === undefined) ? null : value;
 		switch (field) {
 			case 'nachname':
-				if (!mandatoryInputIsValid(v ?? null, 120))
+				if (!mandatoryInputIsValid(v ?? null, 120)) {
 					return;
+				}
 				await props.patch({ nachname: v ?? undefined }, data.value.id);
 				return;
 			case 'vorname':
-				if (!mandatoryInputIsValid(v ?? null, 120))
+				if (!mandatoryInputIsValid(v ?? null, 120)) {
 					return;
+				}
 				await props.patch({ vorname: v ?? undefined }, data.value.id);
 				return;
 			case 'telefon':
-				if ((v !== null) && (v.length > 0) && !phoneNumberIsValid(v, 20))
+				if ((v !== null) && (v.length > 0) && !phoneNumberIsValid(v, 20)) {
 					return;
+				}
 				await props.patch({ telefon: v ?? null }, data.value.id);
 				return;
 			case 'telefonMobil':
-				if ((v !== null) && (v.length > 0) && !phoneNumberIsValid(v, 20))
+				if ((v !== null) && (v.length > 0) && !phoneNumberIsValid(v, 20)) {
 					return;
+				}
 				await props.patch({ telefonMobil: v ?? null }, data.value.id);
 				return;
 			case 'emailPrivat':
-				if ((v !== null) && (v.length > 0) && !emailIsValid(v, 100))
+				if ((v !== null) && (v.length > 0) && !emailIsValid(v, 100)) {
 					return;
+				}
 				await props.patch({ emailPrivat: v ?? null }, data.value.id);
 				return;
 			default:
@@ -770,8 +777,9 @@
 	}
 
 	function parseISOToDate(strDate: string | null) {
-		if (strDate === null)
+		if (strDate === null) {
 			return null;
+		}
 		try {
 			const d = DateUtils.extractFromDateISO8601(strDate);
 			return new Date(d[0], d[1] - 1, d[2]);
@@ -781,11 +789,13 @@
 	}
 
 	function istAnmeldedatumGueltig(strDate: string | null) {
-		if (strDate === null)
+		if (strDate === null) {
 			return true;
+		}
 		const d = parseISOToDate(strDate);
-		if (d === null)
+		if (d === null) {
 			return false;
+		}
 		const today = new Date();
 		// Datum darf nicht in der Zukunft liegen (heutige Datum ist erlaubt)
 		return d.getTime() <= new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
@@ -801,15 +811,18 @@
 	}
 
 	function istAufnahmedatumGueltig(strDate: string | null) {
-		if (strDate === null)
+		if (strDate === null) {
 			return true;
+		}
 		const aufnahme = parseISOToDate(strDate);
-		if (aufnahme === null)
+		if (aufnahme === null) {
 			return false;
+		}
 		// Aufnahmedatum darf nicht vor Anmeldedatum liegen
 		const anmeld = parseISOToDate(data.value.anmeldedatum);
-		if (anmeld !== null)
+		if (anmeld !== null) {
 			return aufnahme.getTime() >= anmeld.getTime();
+		}
 		return true;
 	}
 
@@ -823,15 +836,18 @@
 	}
 
 	function istBeginnBildungsgangGueltig(strDate: string | null) {
-		if (strDate === null)
+		if (strDate === null) {
 			return true;
+		}
 		const beginn = parseISOToDate(strDate);
-		if (beginn === null)
+		if (beginn === null) {
 			return false;
+		}
 		// Beginn des Bildungsgangs darf nicht vor Aufnahmedatum liegen
 		const aufnahme = parseISOToDate(data.value.aufnahmedatum);
-		if (aufnahme !== null)
+		if (aufnahme !== null) {
 			return beginn.getTime() >= aufnahme.getTime();
+		}
 		return true;
 	}
 
@@ -845,8 +861,9 @@
 	}
 
 	function istGeburtsdatumGueltig(strDate: string | null) {
-		if (strDate === null)
+		if (strDate === null) {
 			return true;
+		}
 		try {
 			const date = DateUtils.extractFromDateISO8601(strDate);
 			const curDate = new Date();
@@ -877,8 +894,9 @@
 		return list.sort((a, b) => {
 			const ersteErzId = Math.floor(a.id / 10);
 			const zweiteErzId = Math.floor(b.id / 10);
-			if (ersteErzId !== zweiteErzId)
+			if (ersteErzId !== zweiteErzId) {
 				return ersteErzId - zweiteErzId;
+			}
 			return a.id - b.id;
 		});
 	});
@@ -900,8 +918,9 @@
 		get: () => props.mapErzieherarten.get(erzieher.value?.idErzieherArt ?? -1) ?? null,
 		set: (value) => {
 			const id = value?.id ?? undefined;
-			if (erzieher.value === undefined)
+			if (erzieher.value === undefined) {
 				return;
+			}
 			erzieher.value.idErzieherArt = id ?? null;
 			void props.patchSchuelerErziehereintrag({ idErzieherArt: id ?? null }, erzieher.value.id);
 		},
@@ -910,8 +929,9 @@
 	const erzWohnort = computed({
 		get: () => props.mapOrte.get(erzieher.value?.wohnortID ?? -1) ?? null,
 		set: (value) => {
-			if (erzieher.value === undefined)
+			if (erzieher.value === undefined) {
 				return;
+			}
 			erzieher.value.wohnortID = value?.id ?? -1;
 			void props.patchSchuelerErziehereintrag({ wohnortID: value?.id }, erzieher.value.id);
 		},
@@ -923,8 +943,9 @@
 			return Nationalitaeten.getByISO3(iso3)?.daten(schuljahr.value) ?? null;
 		},
 		set: (value) => {
-			if (erzieher.value === undefined)
+			if (erzieher.value === undefined) {
 				return;
+			}
 			const iso3 = value?.iso3 ?? null;
 			erzieher.value.staatsangehoerigkeitID = iso3;
 			void props.patchSchuelerErziehereintrag({ staatsangehoerigkeitID: iso3 }, erzieher.value.id);
@@ -937,16 +958,18 @@
 			return Nationalitaeten.getByISO3(iso3)?.daten(schuljahr.value) ?? null;
 		},
 		set: (value) => {
-			if (erzieher.value === undefined)
+			if (erzieher.value === undefined) {
 				return;
+			}
 			zweiterErz.value.staatsangehoerigkeitID = value?.iso3 ?? null;
 		},
 	});
 
 	const erzOrtsteileFiltered = computed(() => {
 		const wohnortID = erzieher.value?.wohnortID;
-		if (wohnortID === null)
+		if (wohnortID === null) {
 			return ortsteile.value;
+		}
 		return ortsteile.value.filter(o => o.ort_id === wohnortID);
 	});
 
@@ -961,8 +984,9 @@
 			return props.mapOrtsteile.get(id) ?? null;
 		},
 		set: (value: OrtsteilKatalogEintrag | null) => {
-			if (erzieher.value === undefined)
+			if (erzieher.value === undefined) {
 				return;
+			}
 			erzieher.value.ortsteilID = value?.id ?? null;
 			void props.patchSchuelerErziehereintrag({ ortsteilID: value?.id ?? null }, erzieher.value.id);
 		},
@@ -1107,21 +1131,24 @@
 	}
 
 	async function deleteErzieherRequest() {
-		if (selectedErz.value.length === 0)
+		if (selectedErz.value.length === 0) {
 			return;
+		}
 		const ids = new ArrayList<number>();
-		for (const s of selectedErz.value)
+		for (const s of selectedErz.value) {
 			ids.add(s.id);
+		}
 		await props.deleteSchuelerErziehereintrage(ids);
 		selectedErz.value = [];
 		erzieher.value = undefined;
 	}
 
 	watch(() => props.getListSchuelerErziehereintraege(), (neu) => {
-		if (neu.isEmpty())
+		if (neu.isEmpty()) {
 			erzieher.value = undefined;
-		else
+		} else {
 			erzieher.value = neu.getFirst();
+		}
 	}, { immediate: true });
 
 	// Anlegen von Telefonnummern
@@ -1175,11 +1202,13 @@
 	}
 
 	async function deleteTelefonnummern() {
-		if (selected.value.length === 0)
+		if (selected.value.length === 0) {
 			return;
+		}
 		const ids = new ArrayList<number>();
-		for (const s of selected.value)
+		for (const s of selected.value) {
 			ids.add(s.id);
+		}
 		await props.deleteSchuelerTelefoneintrage(ids);
 		selected.value = [];
 	}
@@ -1245,10 +1274,12 @@
 		const { id, datum, angelegtVon, geaendertVon, ...partialDataWithoutId } = newEntryVermerk.value;
 		partialDataWithoutId.idSchueler = data.value.id;
 		showModalVermerke.value = false;
-		if (currentMode.value === Mode.ADD)
+		if (currentMode.value === Mode.ADD) {
 			await props.addSchuelerVermerkeintrag(partialDataWithoutId);
-		if (currentMode.value === Mode.PATCH)
+		}
+		if (currentMode.value === Mode.PATCH) {
 			await props.patchSchuelerVermerkeintrag(partialDataWithoutId, newEntryVermerk.value.id);
+		}
 		enterDefaultMode();
 	}
 
@@ -1262,11 +1293,13 @@
 	}
 
 	async function deleteVermerke() {
-		if (selectedVermerk.value.length === 0)
+		if (selectedVermerk.value.length === 0) {
 			return;
+		}
 		const ids = new ArrayList<number>();
-		for (const s of selectedVermerk.value)
+		for (const s of selectedVermerk.value) {
 			ids.add(s.id);
+		}
 		await props.deleteSchuelerVermerkeintraege(ids);
 		selectedVermerk.value = [];
 	}

@@ -47,8 +47,9 @@
 
 	const faecherSubline = computed(() => {
 		const auswahlFaecherList = props.manager().liste.auswahlSorted();
-		if (auswahlFaecherList.size() > 5)
+		if (auswahlFaecherList.size() > 5) {
 			return `${auswahlFaecherList.size()} Fächer ausgewählt`;
+		}
 		return [...auswahlFaecherList].map(k => k.kuerzel).join(', ');
 	});
 

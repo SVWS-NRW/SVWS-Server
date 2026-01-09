@@ -65,20 +65,23 @@ export class RouteStundenplan extends RouteAuswahlNode<StundenplanListeManager, 
 	}
 
 	protected doUpdateIfTarget = async (to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined) => {
-		if (!this.data.manager.hasDaten())
+		if (!this.data.manager.hasDaten()) {
 			return;
+		}
 		return this.getRouteSelectedChild();
 	};
 
 	public static katalogeCheckHidden(isKatalog: boolean, node: RouteNode<any, any>, params?: RouteParams) {
-		if (params === undefined)
+		if (params === undefined) {
 			return false;
+		}
 		try {
 			const { id } = RouteNode.getIntParams(params, ["id"]);
-			if (isKatalog && id !== -1)
+			if (isKatalog && id !== -1) {
 				return { name: routeStundenplanDaten.name, params };
-			else if (!isKatalog && id === -1)
+			} else if (!isKatalog && id === -1) {
 				return { name: routeKatalogZeitraster.name, params };
+			}
 			return false;
 		} catch (e) {
 			return routeError.getSimpleErrorRoute(e as DeveloperNotificationException);

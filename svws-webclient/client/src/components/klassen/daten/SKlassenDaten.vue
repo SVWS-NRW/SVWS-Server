@@ -150,12 +150,15 @@
 	const data = computed<KlassenDaten>(() => props.manager().daten());
 
 	function textJahrgang(jg: JahrgangsDaten): string {
-		if (jg.kuerzel === null)
+		if (jg.kuerzel === null) {
 			return 'JU - Jahrgangsübergreifend';
-		if (jg.kuerzel === 'E1')
+		}
+		if (jg.kuerzel === 'E1') {
 			return '1E' + ' - ' + jg.bezeichnung;
-		if (jg.kuerzel === 'E2')
+		}
+		if (jg.kuerzel === 'E2') {
 			return '2E' + ' - ' + jg.bezeichnung;
+		}
 		return jg.kuerzel + ' - ' + jg.bezeichnung;
 	}
 
@@ -168,8 +171,9 @@
 	);
 
 	const showPfeilHoch = computed<boolean>(() => {
-		if (!klassenleitungClicked.value)
+		if (!klassenleitungClicked.value) {
 			return false;
+		}
 
 		return (listeKlassenlehrer.value.length > 0)
 			&& (klassenleitungClicked.value.id !== ersteKlassenleitungId.value)
@@ -177,8 +181,9 @@
 	});
 
 	const showPfeilRunter = computed<boolean>(() => {
-		if (!klassenleitungClicked.value)
+		if (!klassenleitungClicked.value) {
 			return false;
+		}
 
 		return (listeKlassenlehrer.value.length > 0)
 			&& (klassenleitungClicked.value.id !== letzteKlassenleitungId.value)
@@ -193,54 +198,66 @@
 	]);
 
 	function istSemesterBetrieb(): boolean {
-		if (props.schulform === Schulform.WB)
+		if (props.schulform === Schulform.WB) {
 			return true;
+		}
 		const jgdaten = jahrgang.value;
-		if ((jgdaten === null) || (jgdaten.kuerzelStatistik === null))
+		if ((jgdaten === null) || (jgdaten.kuerzelStatistik === null)) {
 			return false;
+		}
 		const jg = Jahrgaenge.data().getWertBySchluessel(jgdaten.kuerzelStatistik);
-		if (jg === null)
+		if (jg === null) {
 			return false;
+		}
 		return jgWBK.has(jg);
 	}
 
 	function zeigeVorgaengerklassen(): boolean {
-		if (listeVorgaengerklassen.value.isEmpty())
+		if (listeVorgaengerklassen.value.isEmpty()) {
 			return false;
-		if (istSemesterBetrieb())
+		}
+		if (istSemesterBetrieb()) {
 			return true;
+		}
 		const sja = props.manager().getSchuljahresabschnittAuswahl();
-		if (sja === null)
+		if (sja === null) {
 			return false;
+		}
 		return (sja.abschnitt === 1);
 	}
 
 	function zeigeFolgeklassen(): boolean {
-		if (listeFolgeklassen.value.isEmpty())
+		if (listeFolgeklassen.value.isEmpty()) {
 			return false;
-		if (istSemesterBetrieb())
+		}
+		if (istSemesterBetrieb()) {
 			return true;
+		}
 		const sja = props.manager().getSchuljahresabschnittAuswahl();
-		if (sja === null)
+		if (sja === null) {
 			return false;
+		}
 		return (sja.abschnitt === 2);
 	}
 
 	async function removeKlassenleitungHandler(rowData: LehrerListeEintrag): Promise<void> {
 		await props.removeKlassenleitung(rowData);
-		if ((klassenleitungClicked.value !== null) && (klassenleitungClicked.value.id === rowData.id))
+		if ((klassenleitungClicked.value !== null) && (klassenleitungClicked.value.id === rowData.id)) {
 			klassenleitungClicked.value = null;
+		}
 	}
 
 	async function erhoeheReihenfolge(): Promise<void> {
-		if (!klassenleitungClicked.value)
+		if (!klassenleitungClicked.value) {
 			return;
+		}
 		await props.updateReihenfolgeKlassenleitung(klassenleitungClicked.value.id, true);
 	}
 
 	async function reduziereReihenfolge(): Promise<void> {
-		if (!klassenleitungClicked.value)
+		if (!klassenleitungClicked.value) {
 			return;
+		}
 		await props.updateReihenfolgeKlassenleitung(klassenleitungClicked.value.id, false);
 	}
 
@@ -251,9 +268,13 @@
 
 	const jahrgaenge = computed<List<JahrgangsDaten>>(() => {
 		const result = new ArrayList<JahrgangsDaten>();
-		for (const jg of props.manager().jahrgaenge.list())
-			if (jg.kuerzel !== "E3") // Das dritte Jahr der Schuleingangsphase sollte nicht für einen Jahrgang einer Klasse verwendet werden, da es Schüler-spezifisch ist
+		for (const jg of props.manager().jahrgaenge.list()) {
+			// Das dritte Jahr der Schuleingangsphase sollte nicht für einen Jahrgang einer Klasse verwendet werden, da es Schüler-spezifisch ist
+
+			if (jg.kuerzel !== "E3") {
 				result.add(jg);
+			}
+		}
 		return result;
 	});
 
@@ -262,8 +283,9 @@
 		get: () => [...props.manager().schuelerstatus.auswahl()],
 		set: (value) => {
 			props.manager().schuelerstatus.auswahlClear();
-			for (const v of value)
+			for (const v of value) {
 				props.manager().schuelerstatus.auswahlAdd(v);
+			}
 			void props.setFilter();
 		},
 	});
@@ -271,16 +293,19 @@
 	const listeFolgeklassen = computed<List<KlassenDaten>>(() => {
 		const result = new ArrayList<KlassenDaten>();
 		if (data.value.idJahrgang === null) {
-			for (const kl of props.mapKlassenFolgenderAbschnitt().values())
+			for (const kl of props.mapKlassenFolgenderAbschnitt().values()) {
 				result.add(kl);
+			}
 			return result;
 		}
 		const jg = props.manager().jahrgaenge.get(data.value.idJahrgang);
-		if (jg === null)
+		if (jg === null) {
 			return result;
+		}
 		const tmpJg = (jg.kuerzelStatistik === null) ? null : Jahrgaenge.data().getWertBySchluessel(jg.kuerzelStatistik);
-		if (tmpJg === null)
+		if (tmpJg === null) {
 			return result;
+		}
 		let schulgliederung: Schulgliederung | null = null;
 		if (jg.kuerzelSchulgliederung === null) {
 			schulgliederung = Schulgliederung.getDefault(props.manager().schulform());
@@ -293,10 +318,12 @@
 			} else {
 				const jgKl = props.manager().jahrgaenge.get(kl.idJahrgang);
 				const tmpJgKl = (jgKl === null) || (jgKl.kuerzelStatistik === null) ? null : Jahrgaenge.data().getWertBySchluessel(jgKl.kuerzelStatistik);
-				if (tmpJgKl === null)
+				if (tmpJgKl === null) {
 					continue;
-				if (tmpJgKl.isNachfolgerVon(props.manager().getSchuljahr(), tmpJg, props.manager().schulform(), schulgliederung))
+				}
+				if (tmpJgKl.isNachfolgerVon(props.manager().getSchuljahr(), tmpJg, props.manager().schulform(), schulgliederung)) {
 					result.add(kl);
+				}
 			}
 		}
 		return result;
@@ -305,16 +332,19 @@
 	const listeVorgaengerklassen = computed<List<KlassenDaten>>(() => {
 		const result = new ArrayList<KlassenDaten>();
 		if (data.value.idJahrgang === null) {
-			for (const kl of props.mapKlassenVorigerAbschnitt().values())
+			for (const kl of props.mapKlassenVorigerAbschnitt().values()) {
 				result.add(kl);
+			}
 			return result;
 		}
 		const jg = props.manager().jahrgaenge.get(data.value.idJahrgang);
-		if (jg === null)
+		if (jg === null) {
 			return result;
+		}
 		const tmpJg = (jg.kuerzelStatistik === null) ? null : Jahrgaenge.data().getWertBySchluessel(jg.kuerzelStatistik);
-		if (tmpJg === null)
+		if (tmpJg === null) {
 			return result;
+		}
 		let schulgliederung: Schulgliederung | null = null;
 		if (jg.kuerzelSchulgliederung === null) {
 			schulgliederung = Schulgliederung.getDefault(props.manager().schulform());
@@ -327,10 +357,12 @@
 			} else {
 				const jgKl = props.manager().jahrgaenge.get(kl.idJahrgang);
 				const tmpJgKl = (jgKl === null) || (jgKl.kuerzelStatistik === null) ? null : Jahrgaenge.data().getWertBySchluessel(jgKl.kuerzelStatistik);
-				if (tmpJgKl === null)
+				if (tmpJgKl === null) {
 					continue;
-				if (tmpJgKl.isVorgaengerVon(props.manager().getSchuljahr(), tmpJg, props.manager().schulform(), schulgliederung))
+				}
+				if (tmpJgKl.isVorgaengerVon(props.manager().getSchuljahr(), tmpJg, props.manager().schulform(), schulgliederung)) {
 					result.add(kl);
+				}
 			}
 		}
 		return result;
@@ -340,8 +372,9 @@
 		const a: LehrerListeEintrag[] = [];
 		for (const klassenLeitung of props.manager().daten().klassenLeitungen) {
 			const lehrer: LehrerListeEintrag | null = props.manager().lehrer.get(klassenLeitung);
-			if (lehrer !== null)
+			if (lehrer !== null) {
 				a.push(lehrer);
+			}
 		}
 		return a;
 	});
@@ -352,8 +385,9 @@
 		result.push({ key: "kuerzel", label: "Kürzel", span: 1, sortable: false, statistic: true });
 		result.push({ key: "nachname", label: "Nachname", span: 2, sortable: false });
 		result.push({ key: "vorname", label: "Vorname", span: 2, sortable: false });
-		if (hatKompetenzUpdate.value)
+		if (hatKompetenzUpdate.value) {
 			result.push({ key: "aktionen", label: "", span: 2, sortable: false, align: "right" });
+		}
 		return result;
 	});
 
@@ -370,8 +404,9 @@
 	const validateSortierung = (sortierung: number | null): boolean => props.manager().validateSortierung(sortierung);
 
 	async function patchPartial(data: Partial<KlassenDaten>, isValid?: boolean) {
-		if (isValid === undefined || isValid)
+		if (isValid === undefined || isValid) {
 			await props.patch(data);
+		}
 	}
 
 </script>

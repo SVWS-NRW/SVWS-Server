@@ -75,8 +75,9 @@
 	});
 
 	async function addFloskel() {
-		if (isLoading.value)
+		if (isLoading.value) {
 			return;
+		}
 
 		props.checkpoint.active = false;
 		isLoading.value = true;
@@ -91,8 +92,9 @@
 	}
 
 	watch(() => data.value, async () => {
-		if (isLoading.value)
+		if (isLoading.value) {
 			return;
+		}
 
 		props.checkpoint.active = true;
 	}, { immediate: false, deep: true });

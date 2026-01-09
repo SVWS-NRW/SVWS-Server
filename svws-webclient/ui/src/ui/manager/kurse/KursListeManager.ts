@@ -93,8 +93,9 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 
 	private readonly _schulgliederungToId: JavaFunction<Schulgliederung, string> = { apply: (sg: Schulgliederung) => {
 		const sglke: SchulgliederungKatalogEintrag | null = sg.daten(this.getSchuljahr());
-		if (sglke === null)
+		if (sglke === null) {
 			throw new IllegalArgumentException(JavaString.format("Die Schulgliederung %s ist in dem Schuljahr %d nicht gültig.", sg.name(), this.getSchuljahr()));
+		}
 		return sglke.kuerzel;
 	} };
 
@@ -107,8 +108,9 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 
 	private readonly _schuelerstatusToId: JavaFunction<SchuelerStatus, number> = { apply: (s: SchuelerStatus) => {
 		const sske: SchuelerStatusKatalogEintrag | null = s.daten(this.getSchuljahr());
-		if (sske === null)
+		if (sske === null) {
 			throw new IllegalArgumentException(JavaString.format("Der Schülerstatus %s ist in dem Schuljahr %d nicht gültig.", s.name(), this.getSchuljahr()));
+		}
 		return JavaInteger.parseInt(sske.kuerzel);
 	} };
 
@@ -119,8 +121,9 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 	 */
 	public static readonly comparatorFaecherListe: Comparator<FachDaten> = { compare: (a: FachDaten, b: FachDaten) => {
 		let cmp: number = a.sortierung - b.sortierung;
-		if (cmp !== 0)
+		if (cmp !== 0) {
 			return cmp;
+		}
 		cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
 		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
 	} };
@@ -173,17 +176,21 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 				const j: JahrgangsDaten | null = this.jahrgaenge.getOrException(idJahrgang);
 				if (j.kuerzelSchulgliederung !== null) {
 					const gliederung: Schulgliederung | null = this.schulgliederungen.get(j.kuerzelSchulgliederung);
-					if (gliederung !== null)
+					if (gliederung !== null) {
 						this._mapKursInSchulgliederung.put(j.kuerzelSchulgliederung, k.id, k);
+					}
 				}
 			}
-			for (const s of k.schueler)
+			for (const s of k.schueler) {
 				this._mapKursHatSchueler.put(s.id, k.id, k);
-			if (k.lehrer !== null)
+			}
+			if (k.lehrer !== null) {
 				this._mapLehrerInKurs.put(k.lehrer, k.id, k);
+			}
 			this._mapKursHatFach.put(k.idFach, k.id, k);
-			for (const idJahrgang of k.idJahrgaenge)
+			for (const idJahrgang of k.idJahrgaenge) {
 				this._mapKursByKuerzelAndJahrgang.put(k.kuerzel, idJahrgang, k);
+			}
 		}
 	}
 
@@ -210,12 +217,14 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 	 */
 	public datenGetSchulgliederung(): List<Schulgliederung> {
 		const result: List<Schulgliederung> = new ArrayList<Schulgliederung>();
-		if ((this._daten === null) || (this._daten.idJahrgaenge.isEmpty()))
+		if ((this._daten === null) || (this._daten.idJahrgaenge.isEmpty())) {
 			return result;
+		}
 		for (const idJahrgang of this._daten.idJahrgaenge) {
 			const j: JahrgangsDaten | null = this.jahrgaenge.getOrException(idJahrgang);
-			if (j.kuerzelSchulgliederung !== null)
+			if (j.kuerzelSchulgliederung !== null) {
 				result.add(this.schulgliederungen.get(j.kuerzelSchulgliederung));
+			}
 		}
 		return result;
 	}
@@ -267,16 +276,17 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 							} else {
 								const la: LehrerListeEintrag | null = this.lehrer.get(a.lehrer);
 								const lb: LehrerListeEintrag | null = this.lehrer.get(b.lehrer);
-								if ((la === null) && (lb === null))
+								if ((la === null) && (lb === null)) {
 									cmp = 0;
-								else
-									if (la === null)
+								} else
+									if (la === null) {
 										cmp = -1;
-									else
-										if (lb === null)
+									} else
+										if (lb === null) {
 											cmp = 1;
-										else
+										} else {
 											cmp = LehrerUtils.comparator.compare(la, lb);
+										}
 							}
 				} else
 					if (JavaObject.equalsTranspiler("idJahrgaenge", (field))) {
@@ -291,24 +301,27 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 								} else {
 									const ja: JahrgangsDaten | null = this.jahrgaenge.get(a.idJahrgaenge.get(0));
 									const jb: JahrgangsDaten | null = this.jahrgaenge.get(b.idJahrgaenge.get(0));
-									if ((ja === null) && (jb === null))
+									if ((ja === null) && (jb === null)) {
 										cmp = 0;
-									else
-										if (ja === null)
+									} else
+										if (ja === null) {
 											cmp = -1;
-										else
-											if (jb === null)
+										} else
+											if (jb === null) {
 												cmp = 1;
-											else
+											} else {
 												cmp = JahrgaengeListeManager.comparator.compare(ja, jb);
+											}
 								}
 					} else
 						if (JavaObject.equalsTranspiler("schueler", (field))) {
 							cmp = JavaInteger.compare(a.schueler.size(), b.schueler.size());
-						} else
+						} else {
 							throw new DeveloperNotificationException("Fehler bei der Sortierung. Das Sortierkriterium wird vom Manager nicht unterstützt.");
-			if (cmp === 0)
+						}
+			if (cmp === 0) {
 				continue;
+			}
 			return asc ? cmp : -cmp;
 		}
 		return JavaLong.compare(a.id, b.id);
@@ -316,34 +329,44 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 
 	protected checkFilter(eintrag: KursDaten): boolean {
 		this._filteredSchuelerListe = null;
-		if (this._filterNurSichtbar && !eintrag.istSichtbar)
+		if (this._filterNurSichtbar && !eintrag.istSichtbar) {
 			return false;
-		if (this.faecher.auswahlExists() && !this.faecher.auswahlHasKey(eintrag.idFach))
+		}
+		if (this.faecher.auswahlExists() && !this.faecher.auswahlHasKey(eintrag.idFach)) {
 			return false;
+		}
 		if (this.jahrgaenge.auswahlExists()) {
 			let hatEinenJahrgang: boolean = false;
-			for (const idJahrgang of eintrag.idJahrgaenge)
-				if (this.jahrgaenge.auswahlHasKey(idJahrgang))
+			for (const idJahrgang of eintrag.idJahrgaenge) {
+				if (this.jahrgaenge.auswahlHasKey(idJahrgang)) {
 					hatEinenJahrgang = true;
-			if (!hatEinenJahrgang)
+				}
+			}
+			if (!hatEinenJahrgang) {
 				return false;
+			}
 		}
 		if (this.lehrer.auswahlExists()) {
 			const hatEinenLehrer: boolean = (eintrag.lehrer !== null) && (this.lehrer.auswahlHasKey(eintrag.lehrer));
-			if (!hatEinenLehrer)
+			if (!hatEinenLehrer) {
 				return false;
+			}
 		}
 		if (this.schueler.auswahlExists()) {
 			let hatEinenSchueler: boolean = false;
-			for (const s of eintrag.schueler)
-				if (this.schueler.auswahlHasKey(s.id))
+			for (const s of eintrag.schueler) {
+				if (this.schueler.auswahlHasKey(s.id)) {
 					hatEinenSchueler = true;
-			if (!hatEinenSchueler)
+				}
+			}
+			if (!hatEinenSchueler) {
 				return false;
+			}
 		}
 		if (this.schulgliederungen.auswahlExists()) {
-			if (eintrag.idJahrgaenge.isEmpty())
+			if (eintrag.idJahrgaenge.isEmpty()) {
 				return false;
+			}
 			let hatEineSchulglierung: boolean = false;
 			for (const idJahrgang of eintrag.idJahrgaenge) {
 				const j: JahrgangsDaten | null = this.jahrgaenge.getOrException(idJahrgang);
@@ -352,8 +375,9 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 					break;
 				}
 			}
-			if (!hatEineSchulglierung)
+			if (!hatEineSchulglierung) {
 				return false;
+			}
 		}
 		return true;
 	}
@@ -367,10 +391,13 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 	public getSchuelerListe(): List<Schueler> {
 		if (this._filteredSchuelerListe === null) {
 			this._filteredSchuelerListe = new ArrayList();
-			if (this._daten !== null)
-				for (const s of this._daten.schueler)
-					if (!this.schuelerstatus.auswahlExists() || this.schuelerstatus.auswahlHasKey(s.status))
+			if (this._daten !== null) {
+				for (const s of this._daten.schueler) {
+					if (!this.schuelerstatus.auswahlExists() || this.schuelerstatus.auswahlHasKey(s.status)) {
 						this._filteredSchuelerListe.add(s);
+					}
+				}
+			}
 		}
 		return this._filteredSchuelerListe;
 	}

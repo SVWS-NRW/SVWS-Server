@@ -151,16 +151,18 @@
 	const jahrgaenge = computed(() => {
 		const list = props.manager().daten().jahrgangGetMengeAsList();
 		const a = [];
-		for (const j of list)
+		for (const j of list) {
 			a.push(j.id);
+		}
 		return a;
 	});
 
 	async function updateJahrgaenge(id: number) {
-		if (jahrgaenge.value.includes(id))
+		if (jahrgaenge.value.includes(id)) {
 			await props.removeJahrgang(id);
-		else
+		} else {
 			await props.addJahrgang(id);
+		}
 	}
 
 	function validateGueltigAb(gueltigAb: string | null): boolean {
@@ -177,33 +179,40 @@
 		gueltigData.value.aktiv = aktiv;
 		const patch: Partial<Stundenplan> = { aktiv };
 		if (!aktiv) {
-			if (props.manager().validateGueltigBis(gueltigData.value.gueltigAb, gueltigData.value.gueltigBis, aktiv, false, false))
+			if (props.manager().validateGueltigBis(gueltigData.value.gueltigAb, gueltigData.value.gueltigBis, aktiv, false, false)) {
 				patch.gueltigBis = gueltigData.value.gueltigBis;
-			if (props.manager().validateGueltigAb(gueltigData.value.gueltigAb, gueltigData.value.gueltigBis, aktiv, false, false))
+			}
+			if (props.manager().validateGueltigAb(gueltigData.value.gueltigAb, gueltigData.value.gueltigBis, aktiv, false, false)) {
 				patch.gueltigAb = gueltigData.value.gueltigAb;
+			}
 		}
 		await props.patch(patch);
 	}
 
 	async function handleChangeGueltigAb(gueltigAb: string | null) {
-		if (gueltigAb === null || gueltigAb === gueltigData.value.gueltigAb)
+		if (gueltigAb === null || gueltigAb === gueltigData.value.gueltigAb) {
 			return;
+		}
 		gueltigData.value.gueltigAb = gueltigAb;
-		if (validAb.value === true && validBis.value === true)
+		if (validAb.value === true && validBis.value === true) {
 			await props.patch({ gueltigAb, gueltigBis: gueltigData.value.gueltigBis });
+		}
 	}
 
 	async function handleChangeGueltigBis(gueltigBis: string | null) {
-		if (gueltigBis === null || gueltigBis === gueltigData.value.gueltigBis)
+		if (gueltigBis === null || gueltigBis === gueltigData.value.gueltigBis) {
 			return;
+		}
 		gueltigData.value.gueltigBis = gueltigBis;
-		if (validAb.value === true && validBis.value === true)
+		if (validAb.value === true && validBis.value === true) {
 			await props.patch({ gueltigAb: gueltigData.value.gueltigAb, gueltigBis });
+		}
 	}
 
 	async function doPatch(wochenTypModell: number | null | undefined) {
-		if ((wochenTypModell === null) || (wochenTypModell === undefined) || (wochenTypModell === 1))
+		if ((wochenTypModell === null) || (wochenTypModell === undefined) || (wochenTypModell === 1)) {
 			return;
+		}
 		if (((props.manager().daten().stundenplanGetWochenTypModellSimulation(wochenTypModell) === 0)) || (wtmOK.value === true)) {
 			await props.patch({ wochenTypModell });
 			// wtmOK.value === undefined;
@@ -263,8 +272,9 @@
 
 	async function patchPausenKlassen(ids: number[], id: number) {
 		const klassen = new ArrayList<number>();
-		for (const klassenID of ids)
+		for (const klassenID of ids) {
 			klassen.add(klassenID);
+		}
 		await props.patchPausenzeit({ klassen }, id);
 	}
 
@@ -280,9 +290,11 @@
 
 	const listPausenzeitenRest = computed(() => {
 		const moeglich = new ArrayList<StundenplanPausenzeit>();
-		for (const e of props.listPausenzeiten())
-			if (!props.manager().daten().pausenzeitExistsByWochentagAndBeginnAndEnde(e.wochentag, e.beginn, e.ende))
+		for (const e of props.listPausenzeiten()) {
+			if (!props.manager().daten().pausenzeitExistsByWochentagAndBeginnAndEnde(e.wochentag, e.beginn, e.ende)) {
 				moeglich.add(e);
+			}
+		}
 		return moeglich;
 	});
 
@@ -290,8 +302,9 @@
 
 	const pausenzeitenSorted = computed(() => {
 		const temp = sortByAndOrder.value;
-		if (temp === undefined)
+		if (temp === undefined) {
 			return itemsPausenzeit.value;
+		}
 		const arr = [...itemsPausenzeit.value];
 		arr.sort((a, b) => {
 			switch (temp.key) {

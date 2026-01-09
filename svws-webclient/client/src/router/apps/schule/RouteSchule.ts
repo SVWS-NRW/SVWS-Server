@@ -21,8 +21,9 @@ export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 	}
 
 	protected async update(to: RouteNode<any, any>) {
-		if (to.name === this.name)
+		if (to.name === this.name) {
 			return routeSchuleStammdaten.getRoute();
+		}
 	}
 
 	public async leave(): Promise<void> {

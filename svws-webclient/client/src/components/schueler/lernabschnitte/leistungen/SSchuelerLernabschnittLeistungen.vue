@@ -133,13 +133,15 @@
 
 	const columns = computed(() => {
 		const result = [];
-		if (hatUpdateKompetenz.value)
+		if (hatUpdateKompetenz.value) {
 			result.push({ key: "auswahl", label: "Auswahl", fixedWidth: 1.5 });
+		}
 		result.push({ key: "fachID", label: "Fach", span: 3, sortable: false, minWidth: 10 });
 		result.push({ key: "kursID", label: "Kurs", span: 1, sortable: false, minWidth: 10 });
 		result.push({ key: "kursart", label: "Kursart", span: 1, sortable: false, fixedWidth: 6 });
-		if (istGymOb.value)
+		if (istGymOb.value) {
 			result.push({ key: "abifach", label: "Abifach", span: 1, sortable: false, fixedWidth: 3 });
+		}
 		result.push({ key: "lehrerID", label: "Lehrer", span: 2, sortable: false, minWidth: 10 });
 		result.push({ key: "noteQuartal", label: "Quartalsnote", tooltip: "Quartalsnote", sortable: false, fixedWidth: 5 });
 		result.push({ key: "note", label: "Note", sortable: false, fixedWidth: 5 });
@@ -153,14 +155,17 @@
 	 */
 	const hatUpdateKompetenz = computed<boolean>(() => {
 		// Wenn der Benutzer generelle Rechte hat Leistungsdaten zu ändern, dann ist hier keine weitere Prüfung nötig, er hat die allgemeine Update-Kompetenz
-		if (props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN))
+		if (props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN)) {
 			return true;
+		}
 		// Wenn der Benutzer auch keine funktionsbezogenen Rechte hat, dann hat er keine allgemeine Update-Kompetenz
-		if (!props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN))
+		if (!props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN)) {
 			return false;
+		}
 		// Wenn er keine funktionsbezogenen Rechte auf die Klasse hat, dann hat er keine allgemeine Update-Kompetenz
-		if (!props.benutzerKompetenzenKlassen.has(props.schuelerListeManager().auswahl().idKlasse))
+		if (!props.benutzerKompetenzenKlassen.has(props.schuelerListeManager().auswahl().idKlasse)) {
 			return false;
+		}
 		// Wenn der Lernabschnitt nicht der aktuelle der Schule ist oder in der Zukunft liegt, dann hat er keine allgemeine Update-Kompetenz
 		const schuleSchuljahresabschnitt = props.schuleSchuljahresabschnitt();
 		const leistungSchuljahresabschnitt = props.manager().schuljahresabschnittGet();
@@ -180,11 +185,13 @@
 	 */
 	function hatFachlehrerKompetenz(idFachlehrer: number | null): boolean {
 		// Prüfe, ob der Benutzer sowieso eine übergeordnete funktionsbezogene Kompetenz hat
-		if (hatUpdateKompetenz.value)
+		if (hatUpdateKompetenz.value) {
 			return true;
+		}
 		// Prüfe, ob es sich um das aktuelle Schuljahr handelt. Wenn nicht, so hat ein Fachlehrer keine besonderen Kompetenzen
-		if (props.schule.idSchuljahresabschnitt !== props.manager().lernabschnittGet().schuljahresabschnitt)
+		if (props.schule.idSchuljahresabschnitt !== props.manager().lernabschnittGet().schuljahresabschnitt) {
 			return false;
+		}
 		// Prüfe, ob der aktuelle Benutzer der Fachlehrer mit der übergebenen ID ist
 		return (props.benutzerdaten.typ === BenutzerTyp.LEHRER.id) && (props.benutzerdaten.typID === idFachlehrer);
 	}
@@ -196,16 +203,19 @@
 	watch(leistungen, (newLeistungen, oldLeistungen) => {
 		if (newLeistungen.size() === oldLeistungen.size()) {
 			const tmpSetIDs = new Set<number>();
-			for (const l of oldLeistungen)
+			for (const l of oldLeistungen) {
 				tmpSetIDs.add(l.id);
+			}
 			let changed: boolean = false;
-			for (const l of newLeistungen)
+			for (const l of newLeistungen) {
 				if (!tmpSetIDs.has(l.id)) {
 					changed = true;
 					break;
 				}
-			if (!changed)
+			}
+			if (!changed) {
 				return;
+			}
 		}
 		auswahl.value.clear();
 	});
@@ -213,8 +223,9 @@
 	const auswahl = ref<Set<SchuelerLeistungsdaten>>(new Set());
 
 	function textLehrer(lehrer: LehrerListeEintrag | null): string {
-		if (lehrer === null)
+		if (lehrer === null) {
 			return '—';
+		}
 		return lehrer.kuerzel + ' (' + lehrer.nachname + ', ' + lehrer.vorname + ')';
 	}
 
@@ -223,8 +234,9 @@
 		if (allSelected) {
 			auswahl.value.clear();
 		} else {
-			for (const leistung of leistungen.value)
+			for (const leistung of leistungen.value) {
 				auswahl.value.add(leistung);
+			}
 		}
 	}
 
@@ -233,11 +245,13 @@
 	}
 
 	const deleteAuswahl = async () => {
-		if (auswahl.value.size === 0)
+		if (auswahl.value.size === 0) {
 			return;
+		}
 		const leistungenIDs = new ArrayList<number>();
-		for (const leistung of auswahl.value)
+		for (const leistung of auswahl.value) {
 			leistungenIDs.add(leistung.id);
+		}
 		await props.deleteLeistungen(leistungenIDs);
 	};
 
@@ -275,8 +289,9 @@
 			await props.patchLeistung({ fachID: fach.id, kursID: null, kursart: ZulaessigeKursart.PJK.daten(schuljahr.value)?.kuerzel }, leistung.id);
 		} else { // Allgemeiner Fall: Entfernen des Kurses und setzen einer speziellen Kursart, wenn die kursart der Leistung null ist
 			let kursart = (leistung.kursart === null) ? null : ZulaessigeKursart.data().getWertByKuerzel(leistung.kursart);
-			if (kursart === null)
+			if (kursart === null) {
 				kursart = ZulaessigeKursart.PUK;
+			}
 			await props.patchLeistung({ fachID: fach.id, kursID: null, kursart: kursart.daten(schuljahr.value)?.kuerzel }, leistung.id);
 		}
 	}
@@ -299,19 +314,23 @@
 				neueKursart = ZulaessigeKursart.G;
 			} else if (kurs.kursartAllg === ZulaessigeKursart.GKM.daten(schuljahr.value)?.kuerzelAllg) { // Spezialfall Gymnasiale Oberstufe GK -> Berücksichtige Abiturfach, Default GKM
 				neueKursart = ZulaessigeKursart.GKM;
-				if ((leistung.abifach === 1) || (leistung.abifach === 2))
+				if ((leistung.abifach === 1) || (leistung.abifach === 2)) {
 					neuesAbifach = null;
-				if (leistung.abifach === 3)
+				}
+				if (leistung.abifach === 3) {
 					neueKursart = ZulaessigeKursart.AB3;
-				else if (leistung.abifach === 4)
+				} else if (leistung.abifach === 4) {
 					neueKursart = ZulaessigeKursart.AB4;
+				}
 			} else if (kurs.kursartAllg === ZulaessigeKursart.LK1.daten(schuljahr.value)?.kuerzelAllg) { // Spezialfall Gymnasiale Oberstufe LK -> Berücksichtige Abiturfach, Default LK1
 				// TODO Prüfen, ob das Fach für LK1 zulässig ist -> wenn nicht immer LK2, ansonsten prüfen, ob LK1 bereits bei den Lernabschnittsdaten zugeordnet ist und LK2 nicht. Ist dies der Fall -> LK2, sonst LK1
 				neueKursart = ZulaessigeKursart.LK1;
-				if (leistung.abifach === 2)
+				if (leistung.abifach === 2) {
 					neueKursart = ZulaessigeKursart.LK2;
-				if (leistung.abifach === null)
+				}
+				if (leistung.abifach === null) {
 					neuesAbifach = 1;
+				}
 			} else {
 				neueKursart = kursarten.isEmpty() ? null : kursarten.get(0);
 			}
@@ -333,8 +352,9 @@
 	const gridcolumns = computed<string>(() => {
 		let result = hatUpdateKompetenz.value ? "1.5rem " : "";
 		result += "minmax(10rem, 3fr) minmax(10rem, 1fr) 6rem ";
-		if (istGymOb.value)
+		if (istGymOb.value) {
 			result += "3rem ";
+		}
 		result += "minmax(10rem, 2fr) 5rem 5rem";
 		return result;
 	});

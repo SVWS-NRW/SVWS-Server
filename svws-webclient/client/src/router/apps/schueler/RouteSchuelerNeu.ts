@@ -33,10 +33,12 @@ export class RouteSchuelerNeu extends RouteNode<any, RouteSchueler> {
 	protected checkHidden(params?: RouteParams) {
 		try {
 			const { id } = (params !== undefined) ? RouteNode.getIntParams(params, ["id"]) : { id: undefined };
-			if (!routeSchueler.data.manager.hasDaten())
+			if (!routeSchueler.data.manager.hasDaten()) {
 				return false;
-			if (api.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN))
+			}
+			if (api.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN)) {
 				return false;
+			}
 			return routeSchueler.getRouteDefaultChild({ id });
 		} catch (e) {
 			return routeError.getSimpleErrorRoute(e as DeveloperNotificationException);
@@ -58,8 +60,9 @@ export class RouteSchuelerNeu extends RouteNode<any, RouteSchueler> {
 		if (from === routeSchuelerNeuSchnelleingabe) {
 			const idSchueler = routeSchueler.data.manager.daten().id;
 			await this.getSchuelerDaten(idSchueler);
-		} else
+		} else {
 			this.clearInitialeSchuelerDaten();
+		}
 	}
 
 	public addRouteParamsFromState(): RouteParamsRawGeneric {

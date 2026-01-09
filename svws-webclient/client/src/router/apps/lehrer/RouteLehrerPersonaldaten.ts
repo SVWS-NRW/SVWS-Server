@@ -24,11 +24,13 @@ export class RouteLehrerPersonaldaten extends RouteNode<any, RouteLehrer> {
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams): Promise<void | Error | RouteLocationRaw> {
 		try {
-			if (!routeLehrer.data.manager.hasDaten())
+			if (!routeLehrer.data.manager.hasDaten()) {
 				return routeLehrer.getRoute();
+			}
 			const { id } = RouteNode.getIntParams(to_params, ["id"]);
-			if ((!routeLehrer.data.manager.hasPersonalDaten()) || (id !== routeLehrer.data.manager.personalDaten().id))
+			if ((!routeLehrer.data.manager.hasPersonalDaten()) || (id !== routeLehrer.data.manager.personalDaten().id)) {
 				await routeLehrer.data.loadPersonaldaten();
+			}
 		} catch (e) {
 			return await routeError.getErrorRoute(e as DeveloperNotificationException);
 		}

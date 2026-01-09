@@ -21,12 +21,14 @@ export class HaltestellenListeManager extends AuswahlManager<number, Haltestelle
 	public static readonly comparator: Comparator<Haltestelle> = { compare: (a: Haltestelle, b: Haltestelle) => {
 		let cmp: number;
 		cmp = JavaInteger.compare(a.sortierung, b.sortierung);
-		if (cmp !== 0)
+		if (cmp !== 0) {
 			return cmp;
+		}
 		if ((a.bezeichnung !== null) && (b.bezeichnung !== null)) {
 			cmp = JavaString.compareTo(a.bezeichnung, b.bezeichnung);
-			if (cmp !== 0)
+			if (cmp !== 0) {
 				return cmp;
+			}
 		}
 		return JavaLong.compare(a.id, b.id);
 	} };

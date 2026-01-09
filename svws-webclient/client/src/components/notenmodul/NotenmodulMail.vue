@@ -33,8 +33,9 @@
 
 	const smtpConfig = computed(() => {
 		const json = props.serverConfig().get('smtp');
-		if (json !== null)
+		if (json !== null) {
 			return ENMServerConfigSMTP.transpilerFromJSON(json);
+		}
 		return new ENMServerConfigSMTP();
 	});
 

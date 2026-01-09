@@ -31,14 +31,16 @@ export class ValidatorSchuelerAnmeldedatum extends BasicValidator {
 	 */
 	protected pruefe(): boolean {
 		const strAnmeldedatum = this.datumAnmeldung();
-		if ((strAnmeldedatum === undefined) || (strAnmeldedatum === null))
+		if ((strAnmeldedatum === undefined) || (strAnmeldedatum === null)) {
 			return true;
+		}
 		let datumAnmeldung: DateManager | null = null;
 		try {
 			datumAnmeldung = DateManager.from(strAnmeldedatum);
 		} catch (e) {
-			if (e instanceof InvalidDateException)
+			if (e instanceof InvalidDateException) {
 				this.addFehler(0, "Das Format des Anmeldedatums ist fehlerhaft: " + e.getMessage());
+			}
 			return false;
 		}
 

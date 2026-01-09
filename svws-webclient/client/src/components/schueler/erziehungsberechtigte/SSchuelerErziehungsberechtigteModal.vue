@@ -154,8 +154,9 @@
 
 	const erzOrtsteileFiltered = computed(() => {
 		const wohnortID = props.ersterErz.wohnortID;
-		if (wohnortID === null)
+		if (wohnortID === null) {
 			return ortsteile.value;
+		}
 		return ortsteile.value.filter(o => o.ort_id === wohnortID);
 	});
 
@@ -194,8 +195,9 @@
 	}
 
 	function stringIsValid(input: string | null, mandatory: boolean, maxLength: number) {
-		if (mandatory)
+		if (mandatory) {
 			return (input !== null) && (!JavaString.isBlank(input)) && (input.length <= maxLength);
+		}
 		return (input === null) || (input.length <= maxLength);
 	}
 

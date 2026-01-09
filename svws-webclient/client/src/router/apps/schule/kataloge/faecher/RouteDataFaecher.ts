@@ -57,8 +57,9 @@ export class RouteDataFaecher extends RouteDataAuswahl<FaecherListeManager, Rout
 	}
 
 	public async ladeDaten(auswahl: FachDaten | null): Promise<FachDaten | null> {
-		if (auswahl === null)
+		if (auswahl === null) {
 			return null;
+		}
 
 		return await api.server.getFach(api.schema, auswahl.id);
 	}
@@ -66,8 +67,9 @@ export class RouteDataFaecher extends RouteDataAuswahl<FaecherListeManager, Rout
 	public async updateMapStundenplaene() {
 		const listStundenplaene = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, this.idSchuljahresabschnitt);
 		const mapStundenplaene = new Map<number, StundenplanListeEintrag>();
-		for (const l of listStundenplaene)
+		for (const l of listStundenplaene) {
 			mapStundenplaene.set(l.id, l);
+		}
 		this.setPatchedState({ stundenplaeneById: mapStundenplaene });
 	}
 
@@ -85,21 +87,25 @@ export class RouteDataFaecher extends RouteDataAuswahl<FaecherListeManager, Rout
 
 	deleteFaecherCheck = (): [boolean, List<string>] => {
 		const errorLog = new ArrayList<string>();
-		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN))
+		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
 			errorLog.add('Es kiegt keine Berechtigung zum Löschen von Fächern vor.');
-		if (!this.manager.liste.auswahlExists())
+		}
+		if (!this.manager.liste.auswahlExists()) {
 			errorLog.add('Es wurde kein Fach zum Löschen ausgewählt.');
+		}
 		for (const id of this.manager.getIdsReferenzierterFaecher()) {
 			const fach = this.manager.liste.get(id);
-			if (fach)
+			if (fach) {
 				errorLog.add(`Das Fach ${fach.bezeichnung} mit dem Kürzel ${fach.kuerzel} ist an anderer Stelle referenziert und kann daher nicht gelöscht werden.`);
+			}
 		}
 		return [errorLog.isEmpty(), errorLog];
 	};
 
 	setzeDefaultSortierungSekII = async () => {
-		if (this.manager.liste.list().isEmpty())
+		if (this.manager.liste.list().isEmpty()) {
 			return;
+		}
 		const idSchuljahresabschnitt = this._state.value.idSchuljahresabschnitt;
 		const idAuswahl = this.manager.auswahl().id;
 		await api.server.setFaecherSortierungSekII(api.schema);
@@ -114,12 +120,14 @@ export class RouteDataFaecher extends RouteDataAuswahl<FaecherListeManager, Rout
 	};
 
 	getPDF = api.call(async (reportingParameter: ReportingParameter, idStundenplan: number): Promise<ApiFile> => {
-		if (!this.manager.liste.auswahlExists())
+		if (!this.manager.liste.auswahlExists()) {
 			throw new DeveloperNotificationException("Dieser Stundenplan kann nur gedruckt werden, wenn mindestens ein Fach ausgewählt ist.");
+		}
 		reportingParameter.idSchuljahresabschnitt = this.idSchuljahresabschnitt;
 		reportingParameter.idsHauptdaten.add(idStundenplan);
-		for (const l of this.manager.liste.auswahl())
+		for (const l of this.manager.liste.auswahl()) {
 			reportingParameter.idsDetaildaten.add(l.id);
+		}
 		return await api.server.pdfReport(reportingParameter, api.schema);
 	});
 

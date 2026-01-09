@@ -61,8 +61,9 @@
 	onMounted(() => doFocus());
 
 	function doFocus() {
-		if (props.autofocus)
+		if (props.autofocus) {
 			input.value?.focus();
+		}
 	}
 
 	const emit = defineEmits<{
@@ -72,8 +73,9 @@
 	const checked = computed<boolean>({
 		get: () => props.modelValue,
 		set: (value) =>	{
-			if (props.readonly === false)
+			if (props.readonly === false) {
 				emit("update:modelValue", value);
+			}
 		},
 	});
 

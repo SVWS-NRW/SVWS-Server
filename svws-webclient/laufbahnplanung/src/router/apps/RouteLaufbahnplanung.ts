@@ -20,10 +20,12 @@ export class RouteLaufbahnplanung extends RouteNode<unknown, RouteApp> {
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<void | Error | RouteLocationRaw> {
-		if (this.parent === undefined)
+		if (this.parent === undefined) {
 			return routeError.getRoute(new Error("Fehler: Die Route ist ungültig - Parent ist nicht definiert"));
-		if (!routeApp.data.hatAuswahl)
+		}
+		if (!routeApp.data.hatAuswahl) {
 			return routeLadeDaten.getRoute();
+		}
 	}
 
 	public async leave(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void> {

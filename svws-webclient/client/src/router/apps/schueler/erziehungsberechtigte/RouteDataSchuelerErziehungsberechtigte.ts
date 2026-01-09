@@ -23,35 +23,40 @@ export class RouteDataSchuelerErziehungsberechtigte extends RouteData<RouteState
 	}
 
 	get daten(): List<ErzieherStammdaten> {
-		if (this._state.value.daten === undefined)
+		if (this._state.value.daten === undefined) {
 			throw new DeveloperNotificationException("Beim Zugriff auf die Daten sind noch keine gültigen Daten geladen.");
+		}
 		return this._state.value.daten;
 	}
 
 	get idSchueler(): number {
-		if (this._state.value.idSchueler === undefined)
+		if (this._state.value.idSchueler === undefined) {
 			throw new DeveloperNotificationException("Beim Zugriff auf die Daten sind noch keine gültigen Daten geladen.");
+		}
 		return this._state.value.idSchueler;
 	}
 
 	public async setEintrag(idSchueler?: number) {
-		if (idSchueler === undefined || idSchueler === this._state.value.idSchueler)
+		if (idSchueler === undefined || idSchueler === this._state.value.idSchueler) {
 			return;
+		}
 		const daten = await api.server.getSchuelerErzieher(api.schema, idSchueler);
 		this.setPatchedState({ idSchueler, daten });
 	}
 
 	public get mapErzieherarten(): Map<number, Erzieherart> {
-		if (this._state.value.mapErzieherarten.size === 0)
+		if (this._state.value.mapErzieherarten.size === 0) {
 			throw new DeveloperNotificationException("Zugriff auf den Katalog der Erzieherarten, bevor dieser geladen werden konnte.");
+		}
 		return this._state.value.mapErzieherarten;
 	}
 
 	public async ladeListe() {
 		const listErzieherarten = await api.server.getErzieherArten(api.schema);
 		const mapErzieherarten = new Map<number, Erzieherart>();
-		for (const e of listErzieherarten)
+		for (const e of listErzieherarten) {
 			mapErzieherarten.set(e.id, e);
+		}
 		this.setPatchedDefaultState({ mapErzieherarten });
 	}
 

@@ -73,32 +73,40 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean): Promise<void | Error | RouteLocationRaw> {
 		try {
 			if (isEntering || (this.data.idSchuljahresabschnitt !== routeApp.data.aktAbschnitt.value.id)) {
-				if (isEntering && (to === this) && (this.data.oldView !== undefined))
+				if (isEntering && (to === this) && (this.data.oldView !== undefined)) {
 					return this.data.oldView.getRoute(to_params);
+				}
 				await this.data.setSchuljahresabschnitt(routeApp.data.aktAbschnitt.value.id);
 			}
-			if (to === this)
+			if (to === this) {
 				return this.getRouteDefaultChild();
+			}
 			let cur: RouteNode<any, any> = to;
-			while (cur.parent !== this)
+			while (cur.parent !== this) {
 				cur = cur.parent;
-			if (cur !== this.data.view)
+			}
+			if (cur !== this.data.view) {
 				this.data.setView(cur, this.children);
+			}
 			const { abiturjahr } = RouteNode.getIntParams(to_params, ["abiturjahr"]);
 			if (abiturjahr === undefined) {
-				if ((this.selectedChild === undefined) || (this.selectedChild.hidden({ abiturjahr: "-1" }) !== false))
+				if ((this.selectedChild === undefined) || (this.selectedChild.hidden({ abiturjahr: "-1" }) !== false)) {
 					return this.getRouteDefaultChild();
+				}
 				return this.getRouteSelectedChild();
 			}
 			let eintrag = this.data.mapAbiturjahrgaenge.get(abiturjahr);
-			if ((eintrag === undefined) && (this.data.mapAbiturjahrgaenge.size > 0))
+			if ((eintrag === undefined) && (this.data.mapAbiturjahrgaenge.size > 0)) {
 				eintrag = this.data.mapAbiturjahrgaenge.get(-1);
+			}
 			await this.data.setAbiturjahrgang(eintrag, isEntering);
-			if (this.name !== to.name)
+			if (this.name !== to.name) {
 				return;
+			}
 			const redirect: RouteNode<any, any> = (this.selectedChild === undefined) ? this.defaultChild! : this.selectedChild;
-			if (redirect.hidden({ abiturjahr: abiturjahr.toString() }) !== false)
+			if (redirect.hidden({ abiturjahr: abiturjahr.toString() }) !== false) {
 				return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr } };
+			}
 		} catch (e) {
 			return await routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
@@ -148,22 +156,27 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 	}
 
 	private getType(): ViewType {
-		if (this.data.gruppenprozesseEnabled)
+		if (this.data.gruppenprozesseEnabled) {
 			return ViewType.GRUPPENPROZESSE;
-		if (this.data.creationModeEnabled)
+		}
+		if (this.data.creationModeEnabled) {
 			return ViewType.HINZUFUEGEN;
+		}
 		return ViewType.DEFAULT;
 	}
 
 	private setTab = async (value: TabData) => {
-		if (value.name === this.data.view.name)
+		if (value.name === this.data.view.name) {
 			return;
+		}
 		const node = RouteNode.getNodeByName(value.name);
-		if (node === undefined)
+		if (node === undefined) {
 			throw new DeveloperNotificationException("Unbekannte Route");
+		}
 		const previousTab = this.data.selectedTabFromConfig;
-		if (value.name !== previousTab.name)
+		if (value.name !== previousTab.name) {
 			await this.data.setSelectedTabToConfig(value);
+		}
 		await RouteManager.doRoute(node.getRoute());
 		this.data.setView(node, this.children);
 	};

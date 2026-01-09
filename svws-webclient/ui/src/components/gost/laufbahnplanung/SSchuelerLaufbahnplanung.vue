@@ -45,8 +45,9 @@
 	const manager = computed<LaufbahnplanungUiManager>(() => new LaufbahnplanungUiManager(props.serverMode, props.abiturdatenManager, props.config, () => props.gostJahrgangsdaten, props.setWahl, { faecherZeigen: "app.schueler.laufbahnplanung.faecher.anzeigen", modus: "app.schueler.laufbahnplanung.modus" }));
 
 	const hatUpdateKompetenz = computed<boolean>(() => {
-		if ((props.benutzerKompetenzen === undefined) || (props.benutzerKompetenzenAbiturjahrgaenge === undefined) || (props.schueler.abiturjahrgang === null))
+		if ((props.benutzerKompetenzen === undefined) || (props.benutzerKompetenzenAbiturjahrgaenge === undefined) || (props.schueler.abiturjahrgang === null)) {
 			return false;
+		}
 		return props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN)
 			|| (props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN) && props.benutzerKompetenzenAbiturjahrgaenge.has(props.schueler.abiturjahrgang));
 	});
@@ -63,10 +64,11 @@
 			updated.value = false;
 			curId.value = undefined;
 		}
-		if ((neu2 !== alt2) && (updated.value === false) && (curId.value === props.schueler.id))
+		if ((neu2 !== alt2) && (updated.value === false) && (curId.value === props.schueler.id)) {
 			updated.value = true;
-		else
+		} else {
 			curId.value = props.schueler.id;
+		}
 	});
 
 	async function doPatchBeratungsdaten(data: Partial<GostLaufbahnplanungBeratungsdaten>) {

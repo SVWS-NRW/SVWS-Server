@@ -83,15 +83,18 @@
 
 	async function terminQuartalWechseln() {
 		const terminQuartal = props.kMan().quartalGetByTermin(props.termin());
-		if (props.termin().quartal === 0)
-			if (terminQuartal > 0)
+		if (props.termin().quartal === 0) {
+			if (terminQuartal > 0) {
 				await props.patchKlausurtermin(props.termin().id, { quartal: terminQuartal });
-			else
-				return; // TODO Fehlermeldung, Klausuren mit unterschiedlichen Quartale enthalten
-		else if (props.termin().quartal > 0 && props.kMan().schuelerklausurterminGetMengeByTermin(props.termin()).size() > 0)
+			} else {
+				// TODO Fehlermeldung, Klausuren mit unterschiedlichen Quartale enthalten
+				return;
+			}
+		} else if (props.termin().quartal > 0 && props.kMan().schuelerklausurterminGetMengeByTermin(props.termin()).size() > 0) {
 			await props.patchKlausurtermin(props.termin().id, { quartal: 0 });
-		else
+		} else {
 			await props.patchKlausurtermin(props.termin().id, { quartal: (props.termin().quartal + 1) % 3 });
+		}
 	}
 
 	function isDropZone(termin: GostKlausurtermin): boolean {
@@ -106,15 +109,17 @@
 	}
 
 	function checkDropZone(event: DragEvent, termin: GostKlausurtermin) {
-		if (isDropZone(termin))
+		if (isDropZone(termin)) {
 			event.preventDefault();
+		}
 	}
 
 	const konflikteTerminDragKlausur = computed(() => {
 		if (props.dragData instanceof GostSchuelerklausurTermin) {
 			return props.kMan().konfliktPaarGetMengeTerminAndSchuelerklausurtermin(props.termin(), props.dragData).size();
-		} else
+		} else {
 			return -1;
+		}
 	});
 
 </script>

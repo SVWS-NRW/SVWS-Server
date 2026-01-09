@@ -32,8 +32,9 @@ export class RouteDataSchule extends RouteData<RouteStateSchule> {
 
 	public async ladeDaten() {
 		let smtpServerKonfiguration = new SMTPServerKonfiguration();
-		if (api.benutzerIstAdmin || api.benutzerHatKompetenz(BenutzerKompetenz.SCHULBEZOGENE_DATEN_ANSEHEN))
+		if (api.benutzerIstAdmin || api.benutzerHatKompetenz(BenutzerKompetenz.SCHULBEZOGENE_DATEN_ANSEHEN)) {
 			smtpServerKonfiguration = await api.server.getSMTPServerKonfiguration(api.schema);
+		}
 		this.setPatchedState({ smtpServerKonfiguration });
 	}
 
@@ -63,8 +64,9 @@ export class RouteDataSchule extends RouteData<RouteStateSchule> {
 			}
 			const result = new SimpleOperationResponse();
 			result.log.add("Fehler bei der Server-Anfrage. ");
-			if (e instanceof Error)
+			if (e instanceof Error) {
 				result.log.add("  " + e.message);
+			}
 			return result;
 		}
 	};

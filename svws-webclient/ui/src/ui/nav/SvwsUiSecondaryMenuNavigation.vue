@@ -65,8 +65,9 @@
 	}
 
 	async function setTab(tab: TabData) {
-		if (!isCurrent(tab))
+		if (!isCurrent(tab)) {
 			await props.tabManager().setTab(tab);
+		}
 	}
 
 </script>

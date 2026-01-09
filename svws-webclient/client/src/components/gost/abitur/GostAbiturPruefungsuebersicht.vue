@@ -33,25 +33,31 @@
 
 	const schuelerInPruefung = computed<List<SchuelerListeEintrag>>(() => {
 		const result = new ArrayList<SchuelerListeEintrag>();
-		for (const schueler of props.schuelerListe)
-			if ((props.managerMap().get(schueler.id) !== null) && (props.managerMap().get(schueler.id)?.daten().block1Zulassung === true))
+		for (const schueler of props.schuelerListe) {
+			if ((props.managerMap().get(schueler.id) !== null) && (props.managerMap().get(schueler.id)?.daten().block1Zulassung === true)) {
 				result.add(schueler);
+			}
+		}
 		return result;
 	});
 
 	const schuelerOhneZulassung = computed<List<SchuelerListeEintrag>>(() => {
 		const result = new ArrayList<SchuelerListeEintrag>();
-		for (const schueler of props.schuelerListe)
-			if ((props.managerMap().get(schueler.id) !== null) && (props.managerMap().get(schueler.id)?.daten().block1Zulassung !== true))
+		for (const schueler of props.schuelerListe) {
+			if ((props.managerMap().get(schueler.id) !== null) && (props.managerMap().get(schueler.id)?.daten().block1Zulassung !== true)) {
 				result.add(schueler);
+			}
+		}
 		return result;
 	});
 
 	const schuelerOhneZulassungsberechnung = computed<List<SchuelerListeEintrag>>(() => {
 		const result = new ArrayList<SchuelerListeEintrag>();
-		for (const schueler of props.schuelerListe)
-			if (props.managerMap().get(schueler.id) === null)
+		for (const schueler of props.schuelerListe) {
+			if (props.managerMap().get(schueler.id) === null) {
 				result.add(schueler);
+			}
+		}
 		return result;
 	});
 

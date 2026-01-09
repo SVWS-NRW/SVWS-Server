@@ -29,8 +29,9 @@
 
 	function getFirst(): ENMKlasse | null {
 		const list = props.enmManager().listKlassenKlassenlehrer;
-		if (list.isEmpty())
+		if (list.isEmpty()) {
 			return null;
+		}
 		return list.getFirst();
 	}
 

@@ -56,16 +56,18 @@
 
 	const rowsFiltered = computed<KatalogEntlassgrund[]>(() => {
 		const term = searchTerm.value.trim();
-		if (term === '')
+		if (term === '') {
 			return [...props.manager().filtered()];
+		}
 
 		const termLower = searchTerm.value.toLocaleLowerCase();
 
 		const arr = [];
-		for (const e of props.manager().filtered())
+		for (const e of props.manager().filtered()) {
 			if (e.bezeichnung.toLocaleLowerCase().includes(termLower)) {
 				arr.push(e);
 			}
+		}
 		return arr;
 	});
 
@@ -96,16 +98,19 @@
 
 	function setAuswahl(entlassgruende: KatalogEntlassgrund[]): void {
 		props.manager().liste.auswahlClear();
-		for (const entlassgrund of entlassgruende)
-			if (props.manager().liste.hasValue(entlassgrund))
+		for (const entlassgrund of entlassgruende) {
+			if (props.manager().liste.hasValue(entlassgrund)) {
 				props.manager().liste.auswahlAdd(entlassgrund);
+			}
+		}
 	}
 
 	async function navigateToView(): Promise<void> {
-		if (props.manager().liste.auswahlExists())
+		if (props.manager().liste.auswahlExists()) {
 			await props.gotoGruppenprozessView(true);
-		else
+		} else {
 			await props.gotoDefaultView(props.manager().getVorherigeAuswahl()?.id);
+		}
 	}
 
 </script>

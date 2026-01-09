@@ -124,15 +124,17 @@
 
 	const listBlockungen = computed(() => {
 		const list: List<GostBlockungListeneintrag> = new ArrayList();
-		for (const i of props.mapBlockungen().values())
+		for (const i of props.mapBlockungen().values()) {
 			list.add(i);
+		}
 		BlockungsUtils.sortGostBlockungListeneintrag(list);
 		return list;
 	});
 
 	async function select_blockungauswahl(blockung: GostBlockungListeneintrag | null) {
-		if ((blockung === null) || props.apiStatus.pending)
+		if ((blockung === null) || props.apiStatus.pending) {
 			return;
+		}
 		await props.gotoBlockung(blockung);
 	}
 
@@ -142,15 +144,17 @@
 
 	async function do_create_blockungsergebnisse() {
 		const id = props.auswahlBlockung?.id;
-		if (id === undefined)
+		if (id === undefined) {
 			return;
+		}
 		await props.rechneGostBlockung();
 	}
 
 	async function patch_blockung(value: string, idBlockung: number) {
 		const result = await props.patchBlockung({ name: value }, idBlockung);
-		if (result && props.auswahlBlockung)
+		if (result && props.auswahlBlockung) {
 			props.auswahlBlockung.name = value;
+		}
 		edit_blockungsname.value = false;
 	}
 

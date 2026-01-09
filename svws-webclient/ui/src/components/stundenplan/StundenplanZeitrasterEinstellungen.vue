@@ -29,8 +29,9 @@
 	const settings = computed(() => props.manager().stundenplanKonfigGet());
 
 	async function updateSettings(action: string, value: number | null): Promise<void> {
-		if (value === null)
+		if (value === null) {
 			return;
+		}
 		console.log(action);
 		switch (action) {
 			case 'Unterrichtsbeginn':
@@ -63,8 +64,9 @@
 			default:
 				break;
 		}
-		if (props.setSettingsDefaults !== undefined)
+		if (props.setSettingsDefaults !== undefined) {
 			await props.setSettingsDefaults(props.manager().stundenplanKonfigGet());
+		}
 	}
 
 </script>

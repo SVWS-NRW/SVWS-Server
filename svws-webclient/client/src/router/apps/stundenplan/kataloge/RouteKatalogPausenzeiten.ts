@@ -31,13 +31,16 @@ export class RouteKatalogPausenzeiten extends RouteNode<RouteDataKatalogPausenze
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean): Promise<void | Error | RouteLocationRaw> {
 		try {
 			const { idPausenzeiten } = RouteNode.getIntParams(to_params, ["idPausenzeiten"]);
-			if (isEntering)
+			if (isEntering) {
 				await this.data.ladeListe();
-			if (this.data.stundenplanManager.pausenzeitGetMengeAsList().isEmpty())
+			}
+			if (this.data.stundenplanManager.pausenzeitGetMengeAsList().isEmpty()) {
 				return;
+			}
 			let eintrag: StundenplanPausenzeit | null = null;
-			if ((idPausenzeiten === undefined) && this.data.auswahl)
+			if ((idPausenzeiten === undefined) && this.data.auswahl) {
 				return this.getRoute();
+			}
 			if (idPausenzeiten === undefined) {
 				eintrag = this.data.stundenplanManager.pausenzeitGetMengeAsList().getFirst();
 				return this.getRoute({ id: eintrag.id });

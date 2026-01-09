@@ -60,12 +60,14 @@
 		const lastValidStundenplan = props.manager().getLastAktivStundenplan();
 		const abschnitt = props.manager().getSchuljahresabschnittAuswahl();
 
-		if (abschnitt === null)
+		if (abschnitt === null) {
 			throw new DeveloperNotificationException("SchuljahresabschnittAuswahl ist null");
+		}
 
 		watch(() => data.value, async () => {
-			if (isLoading.value)
+			if (isLoading.value) {
 				return;
+			}
 
 			props.checkpoint.active = true;
 		}, { immediate: false, deep: true });
@@ -83,16 +85,21 @@
 			...Array.from(await props.getStundenplanListeEintragVorgaengerabschnitt()),
 			...Array.from(props.manager().alle()),
 		].sort((a, b) => {
-			if (a.id === -1)
+			if (a.id === -1) {
 				return -1;
-			if (b.id === -1)
+			}
+			if (b.id === -1) {
 				return 1;
-			if (a.gueltigAb !== b.gueltigAb)
+			}
+			if (a.gueltigAb !== b.gueltigAb) {
 				return a.gueltigAb > b.gueltigAb ? -1 : 1;
-			if (a.aktiv && !b.aktiv)
+			}
+			if (a.aktiv && !b.aktiv) {
 				return -1;
-			if (!a.aktiv && b.aktiv)
+			}
+			if (!a.aktiv && b.aktiv) {
 				return 1;
+			}
 			return 0;
 		});
 	});
@@ -118,8 +125,9 @@
 	}
 
 	async function addStundenplan() {
-		if (isLoading.value === true)
+		if (isLoading.value === true) {
 			return;
+		}
 
 		isLoading.value = true;
 		props.checkpoint.active = false;

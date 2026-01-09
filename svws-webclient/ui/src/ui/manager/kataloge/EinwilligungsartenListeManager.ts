@@ -24,11 +24,13 @@ export class EinwilligungsartenListeManager extends AuswahlManager<number, Einwi
 	public static readonly comparator: Comparator<Einwilligungsart> = { compare: (a: Einwilligungsart, b: Einwilligungsart) => {
 		let cmp: number;
 		cmp = JavaInteger.compare(a.sortierung, b.sortierung);
-		if (cmp !== 0)
+		if (cmp !== 0) {
 			return cmp;
+		}
 		cmp = JavaString.compareTo(a.bezeichnung, b.bezeichnung);
-		if (cmp !== 0)
+		if (cmp !== 0) {
 			return cmp;
+		}
 		return JavaLong.compare(a.id, b.id);
 	} };
 
@@ -58,9 +60,11 @@ export class EinwilligungsartenListeManager extends AuswahlManager<number, Einwi
 
 	protected onMehrfachauswahlChanged(): void {
 		this.idsReferencedEinwilligungsarten.clear();
-		for (const l of this.liste.auswahl())
-			if ((l.referenziertInAnderenTabellen !== null) && l.referenziertInAnderenTabellen)
+		for (const l of this.liste.auswahl()) {
+			if ((l.referenziertInAnderenTabellen !== null) && l.referenziertInAnderenTabellen) {
 				this.idsReferencedEinwilligungsarten.add(l.id);
+			}
+		}
 	}
 
 	protected compareAuswahl(a: Einwilligungsart, b: Einwilligungsart): number {
@@ -68,8 +72,9 @@ export class EinwilligungsartenListeManager extends AuswahlManager<number, Einwi
 	}
 
 	protected checkFilter(eintrag: Einwilligungsart): boolean {
-		if (this._filterNurSichtbar && !eintrag.istSichtbar)
+		if (this._filterNurSichtbar && !eintrag.istSichtbar) {
 			return false;
+		}
 
 		return true;
 	}

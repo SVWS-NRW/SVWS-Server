@@ -51,19 +51,21 @@
 
 	const rowsFiltered = computed<FoerderschwerpunktEintrag[]>(() => {
 		const term = searchTerm.value.trim();
-		if (term === '')
+		if (term === '') {
 			return [...props.manager().filtered()];
+		}
 
 		const isNumber = /^\d+$/.test(searchTerm.value.trim());
 		const termLower = searchTerm.value.toLocaleLowerCase();
 
 		const arr = [];
-		for (const e of props.manager().filtered())
+		for (const e of props.manager().filtered()) {
 			if ((isNumber && (e.id.toString().includes(term)))
 				|| e.kuerzel.toLocaleLowerCase().includes(termLower)
 				|| e.kuerzelStatistik.toLocaleLowerCase().includes(term)) {
 				arr.push(e);
 			}
+		}
 		return arr;
 	});
 
@@ -95,16 +97,19 @@
 
 	function setAuswahl(foerderschwerpunkte: FoerderschwerpunktEintrag[]): void {
 		props.manager().liste.auswahlClear();
-		for (const foerderschwerpunkt of foerderschwerpunkte)
-			if (props.manager().liste.hasValue(foerderschwerpunkt))
+		for (const foerderschwerpunkt of foerderschwerpunkte) {
+			if (props.manager().liste.hasValue(foerderschwerpunkt)) {
 				props.manager().liste.auswahlAdd(foerderschwerpunkt);
+			}
+		}
 	}
 
 	async function navigateToView(): Promise<void> {
-		if (props.manager().liste.auswahlExists())
+		if (props.manager().liste.auswahlExists()) {
 			await props.gotoGruppenprozessView(true);
-		else
+		} else {
 			await props.gotoDefaultView(props.manager().getVorherigeAuswahl()?.id);
+		}
 	}
 
 </script>

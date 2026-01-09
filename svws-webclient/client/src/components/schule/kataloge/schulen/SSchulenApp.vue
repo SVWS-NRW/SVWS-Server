@@ -45,8 +45,9 @@
 
 	const schulenSubline = computed(() => {
 		const auswahlSchulenList = props.manager().liste.auswahlSorted();
-		if (auswahlSchulenList.size() > 5)
+		if (auswahlSchulenList.size() > 5) {
 			return `${auswahlSchulenList.size()} Schulen ausgewählt`;
+		}
 		return [...auswahlSchulenList].map(k => k.schulnummerStatistik).join(', ');
 	});
 

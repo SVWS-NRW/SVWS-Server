@@ -78,10 +78,11 @@
 	const show = ref<boolean>(false);
 
 	watchEffect(() => {
-		if (show.value)
+		if (show.value) {
 			emit('modal', true);
-		else
+		} else {
 			emit('modal', false);
+		}
 	});
 
 	const terminSelected = ref<GostSchuelerklausurTermin>(new GostSchuelerklausurTermin());

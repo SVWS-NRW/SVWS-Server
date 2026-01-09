@@ -36,11 +36,13 @@ export class SchuelerKAoAManager extends AuswahlManager<number, SchuelerKAoADate
 	 */
 	public static readonly comparator: Comparator<SchuelerKAoADaten> = { compare: (a: SchuelerKAoADaten, b: SchuelerKAoADaten) => {
 		let cmp: number = JavaLong.compare(a.idSchuljahresabschnitt, b.idSchuljahresabschnitt);
-		if (cmp !== 0)
+		if (cmp !== 0) {
 			return cmp;
+		}
 		cmp = JavaLong.compare(a.idKategorie, b.idKategorie);
-		if (cmp !== 0)
+		if (cmp !== 0) {
 			return cmp;
+		}
 		return JavaLong.compare(a.id, b.id);
 	} };
 
@@ -51,8 +53,9 @@ export class SchuelerKAoAManager extends AuswahlManager<number, SchuelerKAoADate
 
 	private readonly _kategorieToId: JavaFunction<KAOAKategorie, number> = { apply: (kategorie: KAOAKategorie) => {
 		const ke: KAOAKategorieKatalogEintrag | null = kategorie.daten(this.getSchuljahr());
-		if (ke === null)
+		if (ke === null) {
 			throw new IllegalArgumentException(JavaString.format("Die KAOA-Kategorie %s ist in dem Schuljahr %d nicht gültig.", kategorie.name(), this.getSchuljahr()));
+		}
 		return ke.id;
 	} };
 
@@ -60,8 +63,9 @@ export class SchuelerKAoAManager extends AuswahlManager<number, SchuelerKAoADate
 
 	private readonly _merkmalToId: JavaFunction<KAOAMerkmal, number> = { apply: (merkmal: KAOAMerkmal) => {
 		const ke: KAOAMerkmalKatalogEintrag | null = merkmal.daten(this.getSchuljahr());
-		if (ke === null)
+		if (ke === null) {
 			throw new IllegalArgumentException(JavaString.format("Die KAOA-Merkmal %s ist in dem Schuljahr %d nicht gültig.", merkmal.name(), this.getSchuljahr()));
+		}
 		return ke.id;
 	} };
 
@@ -69,8 +73,9 @@ export class SchuelerKAoAManager extends AuswahlManager<number, SchuelerKAoADate
 
 	private readonly _zusatzmerkmalToId: JavaFunction<KAOAZusatzmerkmal, number> = { apply: (zusatzmerkmal: KAOAZusatzmerkmal) => {
 		const ke: KAOAZusatzmerkmalKatalogEintrag | null = zusatzmerkmal.daten(this.getSchuljahr());
-		if (ke === null)
+		if (ke === null) {
 			throw new IllegalArgumentException(JavaString.format("Die KAOA-Zusatzmerkmal %s ist in dem Schuljahr %d nicht gültig.", zusatzmerkmal.name(), this.getSchuljahr()));
+		}
 		return ke.id;
 	} };
 
@@ -78,8 +83,9 @@ export class SchuelerKAoAManager extends AuswahlManager<number, SchuelerKAoADate
 
 	private readonly _anschlussoptionToId: JavaFunction<KAOAAnschlussoptionen, number> = { apply: (anschlussoption: KAOAAnschlussoptionen) => {
 		const ke: KAOAAnschlussoptionenKatalogEintrag | null = anschlussoption.daten(this.getSchuljahr());
-		if (ke === null)
+		if (ke === null) {
 			throw new IllegalArgumentException(JavaString.format("Die KAOA-Anschlussoption %s ist in dem Schuljahr %d nicht gültig.", anschlussoption.name(), this.getSchuljahr()));
+		}
 		return ke.id;
 	} };
 
@@ -87,8 +93,9 @@ export class SchuelerKAoAManager extends AuswahlManager<number, SchuelerKAoADate
 
 	private readonly _ebene4ToId: JavaFunction<KAOAEbene4, number> = { apply: (ebene4: KAOAEbene4) => {
 		const ke: KAOAEbene4KatalogEintrag | null = ebene4.daten(this.getSchuljahr());
-		if (ke === null)
+		if (ke === null) {
 			throw new IllegalArgumentException(JavaString.format("Die KAOA-Ebene 4 %s ist in dem Schuljahr %d nicht gültig.", ebene4.name(), this.getSchuljahr()));
+		}
 		return ke.id;
 	} };
 
@@ -161,14 +168,18 @@ export class SchuelerKAoAManager extends AuswahlManager<number, SchuelerKAoADate
 	 * @return true, wenn der Eintrag den Filter passiert, und ansonsten false
 	 */
 	protected checkFilter(eintrag: SchuelerKAoADaten): boolean {
-		if (this._kategorien.auswahlExists() && !this._kategorien.auswahlHasKey(eintrag.idKategorie))
+		if (this._kategorien.auswahlExists() && !this._kategorien.auswahlHasKey(eintrag.idKategorie)) {
 			return false;
-		if (this._merkmale.auswahlExists() && !this._merkmale.auswahlHasKey(eintrag.idMerkmal))
+		}
+		if (this._merkmale.auswahlExists() && !this._merkmale.auswahlHasKey(eintrag.idMerkmal)) {
 			return false;
-		if (this._zusatzmerkmale.auswahlExists() && !this._zusatzmerkmale.auswahlHasKey(eintrag.idZusatzmerkmal))
+		}
+		if (this._zusatzmerkmale.auswahlExists() && !this._zusatzmerkmale.auswahlHasKey(eintrag.idZusatzmerkmal)) {
 			return false;
-		if ((eintrag.idAnschlussoption !== null) && this._anschlussoptionen.auswahlExists() && !this._anschlussoptionen.auswahlHasKey(eintrag.idAnschlussoption))
+		}
+		if ((eintrag.idAnschlussoption !== null) && this._anschlussoptionen.auswahlExists() && !this._anschlussoptionen.auswahlHasKey(eintrag.idAnschlussoption)) {
 			return false;
+		}
 		return ((eintrag.idEbene4 !== null) && this._ebene4.auswahlExists() && !this._ebene4.auswahlHasKey(eintrag.idEbene4));
 	}
 
@@ -184,11 +195,13 @@ export class SchuelerKAoAManager extends AuswahlManager<number, SchuelerKAoADate
 		for (const criteria of this._order) {
 			const field: string | null = criteria.a;
 			const asc: boolean = (criteria.b === null) || criteria.b;
-			if (!(JavaObject.equalsTranspiler("schuljahr", (field)) || JavaObject.equalsTranspiler("kategorie", (field))))
+			if (!(JavaObject.equalsTranspiler("schuljahr", (field)) || JavaObject.equalsTranspiler("kategorie", (field)))) {
 				throw new DeveloperNotificationException("Fehler bei der Sortierung. Das Sortierkriterium wird vom SchuelerKAoAManager nicht unterstützt.");
+			}
 			const cmp: number = SchuelerKAoAManager.comparator.compare(a, b);
-			if (cmp === 0)
+			if (cmp === 0) {
 				continue;
+			}
 			return asc ? cmp : -cmp;
 		}
 		return JavaLong.compare(a.id, b.id);
@@ -217,24 +230,30 @@ export class SchuelerKAoAManager extends AuswahlManager<number, SchuelerKAoADate
 		const availableKuerzelJahrgang: JavaSet<string> | null = new HashSet<string>();
 		for (const kategorie of this._kategorien.list()) {
 			const daten: KAOAKategorieKatalogEintrag | null = kategorie.daten(this.getSchuljahr());
-			if (daten === null)
+			if (daten === null) {
 				return;
-			for (const jahrgang of daten.jahrgaenge)
+			}
+			for (const jahrgang of daten.jahrgaenge) {
 				availableKuerzelJahrgang.add(jahrgang.substring(jahrgang.length - 2));
+			}
 		}
 		const filteredEintraege: List<SchuelerLernabschnittListeEintrag> | null = new ArrayList<SchuelerLernabschnittListeEintrag>();
 		for (const lernabschnitt of this._lernabschnitteAuswahl) {
-			if (availableKuerzelJahrgang.contains(lernabschnitt.jahrgang))
+			if (availableKuerzelJahrgang.contains(lernabschnitt.jahrgang)) {
 				filteredEintraege.add(lernabschnitt);
+			}
 		}
-		if (filteredEintraege.isEmpty())
+		if (filteredEintraege.isEmpty()) {
 			return;
+		}
 		const schuljahresabschnittIDs: JavaSet<number> | null = new HashSet<number>();
-		for (const lernabschnitt of filteredEintraege)
+		for (const lernabschnitt of filteredEintraege) {
 			schuljahresabschnittIDs.add(lernabschnitt.schuljahresabschnitt);
+		}
 		for (const schuljahresabschnitt of this.schuljahresabschnitte.list()) {
-			if (schuljahresabschnittIDs.contains(schuljahresabschnitt.id))
+			if (schuljahresabschnittIDs.contains(schuljahresabschnitt.id)) {
 				this._schuljahresabschnitteFiltered.add(schuljahresabschnitt);
+			}
 		}
 	}
 
@@ -247,8 +266,9 @@ export class SchuelerKAoAManager extends AuswahlManager<number, SchuelerKAoADate
 	 */
 	public getKuerzelJahrgangBySchuljahr(schuljahr: number): string {
 		for (const eintrag of this._lernabschnitteAuswahl) {
-			if ((eintrag.schuljahr === schuljahr))
+			if ((eintrag.schuljahr === schuljahr)) {
 				return eintrag.jahrgang;
+			}
 		}
 		throw new DeveloperNotificationException(JavaString.format("Kein Jahrgang für das Schuljahr %d gefunden.", schuljahr));
 	}

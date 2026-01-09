@@ -24,8 +24,9 @@ export class RouteSchuleStammdaten extends RouteNode<any, RouteSchule> {
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean): Promise<void | Error | RouteLocationRaw> {
-		if (isEntering)
+		if (isEntering) {
 			await routeSchule.data.ladeDaten();
+		}
 	}
 
 	public async leave(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {

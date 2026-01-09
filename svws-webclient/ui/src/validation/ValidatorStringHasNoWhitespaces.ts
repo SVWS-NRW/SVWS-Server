@@ -31,8 +31,9 @@ export class ValidatorStringHasNoWhitespaces extends BasicValidator {
 		const data = this.data();
 
 		// Ist der String nicht definiert
-		if ((data === undefined) || (data === null))
+		if ((data === undefined) || (data === null)) {
 			return false;
+		}
 
 		// Prüft auf Whitespace Character
 		if (/\s/.exec(data) !== null) {

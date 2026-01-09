@@ -83,15 +83,17 @@
 	}
 
 	function kuerzelIsValid(value: string | null): boolean {
-		if (!mandatoryInputIsValid(value, 50))
+		if (!mandatoryInputIsValid(value, 50)) {
 			return false;
+		}
 
 		return isUniqueInList(value, props.manager().liste.list(), "kuerzel");
 	}
 
 	async function addFoerderschwerpunkt(): Promise<void> {
-		if (isLoading.value)
+		if (isLoading.value) {
 			return;
+		}
 
 		props.checkpoint.active = false;
 		isLoading.value = true;
@@ -106,8 +108,9 @@
 	}
 
 	watch(() => data.value, async () => {
-		if (isLoading.value)
+		if (isLoading.value) {
 			return;
+		}
 
 		props.checkpoint.active = true;
 	}, { immediate: false, deep: true });

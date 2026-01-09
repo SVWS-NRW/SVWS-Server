@@ -94,8 +94,9 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 
 	private readonly _schulgliederungToId: JavaFunction<Schulgliederung, string> = { apply: (sg: Schulgliederung) => {
 		const sglke: SchulgliederungKatalogEintrag | null = sg.daten(this.getSchuljahr());
-		if (sglke === null)
+		if (sglke === null) {
 			throw new IllegalArgumentException(JavaString.format("Die Schulgliederung %s ist in dem Schuljahr %d nicht gültig.", sg.name(), this.getSchuljahr()));
+		}
 		return sglke.kuerzel;
 	} };
 
@@ -108,8 +109,9 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 
 	private readonly _schuelerstatusToId: JavaFunction<SchuelerStatus, number> = { apply: (s: SchuelerStatus) => {
 		const sske: SchuelerStatusKatalogEintrag | null = s.daten(this.getSchuljahr());
-		if (sske === null)
+		if (sske === null) {
 			throw new IllegalArgumentException(JavaString.format("Der Schülerstatus %s ist in dem Schuljahr %d nicht gültig.", s.name(), this.getSchuljahr()));
+		}
 		return JavaInteger.parseInt(sske.kuerzel);
 	} };
 
@@ -158,16 +160,20 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 				const j: JahrgangsDaten | null = this.jahrgaenge.getOrException(k.idJahrgang);
 				if (j.kuerzelSchulgliederung !== null) {
 					const gliederung: Schulgliederung | null = this.schulgliederungen.get(j.kuerzelSchulgliederung);
-					if (gliederung !== null)
+					if (gliederung !== null) {
 						this._mapKlasseInSchulgliederung.put(j.kuerzelSchulgliederung, k.id, k);
+					}
 				}
 			}
-			for (const s of k.schueler)
+			for (const s of k.schueler) {
 				this._mapKlasseHatSchueler.put(s.id, k.id, k);
-			for (const l of k.klassenLeitungen)
+			}
+			for (const l of k.klassenLeitungen) {
 				this._mapKlassenlehrerInKlasse.put(l, k.id, k);
-			if (k.kuerzel !== null)
+			}
+			if (k.kuerzel !== null) {
 				this._mapKlasseByKuerzel.put(k.kuerzel, k);
+			}
 		}
 	}
 
@@ -191,8 +197,9 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 	 * @return die Schulgliederung der Klasse
 	 */
 	public datenGetSchulgliederung(): Schulgliederung | null {
-		if ((this._daten === null) || (this._daten.idJahrgang === null))
+		if ((this._daten === null) || (this._daten.idJahrgang === null)) {
 			return null;
+		}
 		const j: JahrgangsDaten | null = this.jahrgaenge.getOrException(this._daten.idJahrgang);
 		return (j.kuerzelSchulgliederung === null) ? null : this.schulgliederungen.get(j.kuerzelSchulgliederung);
 	}
@@ -215,10 +222,12 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 			} else
 				if (JavaObject.equalsTranspiler("schueleranzahl", (field))) {
 					cmp = JavaInteger.compare(a.schueler.size(), b.schueler.size());
-				} else
+				} else {
 					throw new DeveloperNotificationException("Fehler bei der Sortierung. Das Sortierkriterium wird vom Manager nicht unterstützt.");
-			if (cmp === 0)
+				}
+			if (cmp === 0) {
 				continue;
+			}
 			return asc ? cmp : -cmp;
 		}
 		return JavaLong.compare(a.id, b.id);
@@ -226,29 +235,37 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 
 	protected onMehrfachauswahlChanged(): void {
 		this.setKlassenIDsMitSchuelern.clear();
-		for (const k of this.liste.auswahl())
-			if (!k.schueler.isEmpty())
+		for (const k of this.liste.auswahl()) {
+			if (!k.schueler.isEmpty()) {
 				this.setKlassenIDsMitSchuelern.add(k.id);
+			}
+		}
 	}
 
 	protected checkFilter(eintrag: KlassenDaten): boolean {
 		this._filteredSchuelerListe = null;
-		if (this.jahrgaenge.auswahlExists() && ((eintrag.idJahrgang === null) || (!this.jahrgaenge.auswahlHasKey(eintrag.idJahrgang))))
+		if (this.jahrgaenge.auswahlExists() && ((eintrag.idJahrgang === null) || (!this.jahrgaenge.auswahlHasKey(eintrag.idJahrgang)))) {
 			return false;
+		}
 		if (this.lehrer.auswahlExists()) {
 			let hatEinenLehrer: boolean = false;
-			for (const idLehrer of eintrag.klassenLeitungen)
-				if (this.lehrer.auswahlHasKey(idLehrer))
+			for (const idLehrer of eintrag.klassenLeitungen) {
+				if (this.lehrer.auswahlHasKey(idLehrer)) {
 					hatEinenLehrer = true;
-			if (!hatEinenLehrer)
+				}
+			}
+			if (!hatEinenLehrer) {
 				return false;
+			}
 		}
 		if (this.schulgliederungen.auswahlExists()) {
-			if (eintrag.idJahrgang === null)
+			if (eintrag.idJahrgang === null) {
 				return false;
+			}
 			const j: JahrgangsDaten | null = this.jahrgaenge.getOrException(eintrag.idJahrgang);
-			if ((j.kuerzelSchulgliederung === null) || (!this.schulgliederungen.auswahlHasKey(j.kuerzelSchulgliederung)))
+			if ((j.kuerzelSchulgliederung === null) || (!this.schulgliederungen.auswahlHasKey(j.kuerzelSchulgliederung))) {
 				return false;
+			}
 		}
 		return true;
 	}
@@ -262,10 +279,13 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 	public getSchuelerListe(): List<Schueler> {
 		if (this._filteredSchuelerListe === null) {
 			this._filteredSchuelerListe = new ArrayList();
-			if (this._daten !== null)
-				for (const s of this._daten.schueler)
-					if (!this.schuelerstatus.auswahlExists() || this.schuelerstatus.auswahlHasKey(s.status))
+			if (this._daten !== null) {
+				for (const s of this._daten.schueler) {
+					if (!this.schuelerstatus.auswahlExists() || this.schuelerstatus.auswahlHasKey(s.status)) {
 						this._filteredSchuelerListe.add(s);
+					}
+				}
+			}
 		}
 		return this._filteredSchuelerListe;
 	}
@@ -324,21 +344,25 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 	 * @throws DeveloperNotificationException wenn die Klassen-Daten oder die übergebene Lehrer-ID ungültig sind
 	 */
 	public static updateReihenfolgeKlassenleitung(klassenleitungen: List<number>, lehrerId: number, erhoehe: boolean): boolean {
-		if (klassenleitungen.size() === 1)
+		if (klassenleitungen.size() === 1) {
 			return false;
+		}
 		const posLehrer: number = klassenleitungen.indexOf(lehrerId);
-		if (posLehrer < 0)
+		if (posLehrer < 0) {
 			throw new DeveloperNotificationException("Es wurde keine Klassenleitung mit der angegebenen Klassen- und Lehrer-ID gefunden.");
+		}
 		if (erhoehe) {
-			if (posLehrer === 0)
+			if (posLehrer === 0) {
 				return false;
+			}
 			const lehrerIdVorgaenger: number = klassenleitungen.get(posLehrer - 1).valueOf();
 			klassenleitungen.set(posLehrer, lehrerIdVorgaenger);
 			klassenleitungen.set(posLehrer - 1, lehrerId);
 			return true;
 		}
-		if ((posLehrer + 1) >= klassenleitungen.size())
+		if ((posLehrer + 1) >= klassenleitungen.size()) {
 			return false;
+		}
 		const lehrerIdNachfolger: number = klassenleitungen.get(posLehrer + 1).valueOf();
 		klassenleitungen.set(posLehrer, lehrerIdNachfolger);
 		klassenleitungen.set(posLehrer + 1, lehrerId);
@@ -354,11 +378,14 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 	 * @return <code>true</code> wenn Kürzel der Klasse gültig ist, ansonsten <code>false</code>
 	 */
 	public validateKuerzel(kuerzel: string | null): boolean {
-		if ((kuerzel === null) || JavaString.isBlank(kuerzel) || (kuerzel.trim().length > 15))
+		if ((kuerzel === null) || JavaString.isBlank(kuerzel) || (kuerzel.trim().length > 15)) {
 			return false;
-		for (const klasse of this.liste.list())
-			if ((this.auswahlID() !== klasse.id) && JavaObject.equalsTranspiler(klasse.kuerzel, (kuerzel.trim())))
+		}
+		for (const klasse of this.liste.list()) {
+			if ((this.auswahlID() !== klasse.id) && JavaObject.equalsTranspiler(klasse.kuerzel, (kuerzel.trim()))) {
 				return false;
+			}
+		}
 		return true;
 	}
 
@@ -370,8 +397,9 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 	 * @return <code>true</code> wenn Beschreibung der Klasse gültig ist, ansonsten <code>false</code>
 	 */
 	public validateBeschreibung(beschreibung: string | null): boolean {
-		if (beschreibung === null)
+		if (beschreibung === null) {
 			return true;
+		}
 		return beschreibung.trim().length <= 150;
 	}
 

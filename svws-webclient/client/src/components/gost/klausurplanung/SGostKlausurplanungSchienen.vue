@@ -221,10 +221,12 @@
 
 	function getDatum(klausur: GostKursklausur) {
 		const termin = props.kMan().terminOrNullByKursklausur(klausur);
-		if (termin !== null && termin.datum !== null)
+		if (termin !== null && termin.datum !== null) {
 			return DateUtils.gibDatumGermanFormat(termin.datum);
-		if (props.terminSelected.value !== undefined && props.terminSelected.value.datum !== null)
+		}
+		if (props.terminSelected.value !== undefined && props.terminSelected.value.datum !== null) {
 			return DateUtils.gibDatumGermanFormat(props.terminSelected.value.datum);
+		}
 		return "N.N.";
 	}
 
@@ -246,19 +248,23 @@
 
 	const klausurKonflikte = () => {
 		if (dragData.value !== undefined && props.terminSelected.value !== undefined && dragData.value instanceof GostKursklausur) {
-			if (props.kMan().vorgabeByKursklausur(dragData.value).quartal === props.terminSelected.value.quartal || props.terminSelected.value.quartal === 0)
+			if (props.kMan().vorgabeByKursklausur(dragData.value).quartal === props.terminSelected.value.quartal || props.terminSelected.value.quartal === 0) {
 				return props.kMan().konflikteNeuMapKursklausurSchueleridsByTerminAndKursklausur(props.terminSelected.value, dragData.value).entrySet();
-		} else if (props.terminSelected.value !== undefined)
+			}
+		} else if (props.terminSelected.value !== undefined) {
 			return props.kMan().konflikteMapKursklausurSchueleridsByTermin(props.terminSelected.value).entrySet();
+		}
 		return new HashSet<JavaMapEntry<GostKursklausur, JavaSet<number>>>();
 	};
 
 	const anzahlProKwKonflikte = (threshold: number) => {
 		if (dragData.value !== undefined && props.terminSelected.value !== undefined && dragData.value instanceof GostKursklausur) {
-			if (props.kMan().vorgabeByKursklausur(dragData.value).quartal === props.terminSelected.value.quartal || props.terminSelected.value.quartal === 0)
+			if (props.kMan().vorgabeByKursklausur(dragData.value).quartal === props.terminSelected.value.quartal || props.terminSelected.value.quartal === 0) {
 				return props.kMan().klausurenProSchueleridExceedingKWThresholdByTerminAndKursklausurAndThreshold(props.terminSelected.value, dragData.value, threshold).entrySet();
-		} else if (props.terminSelected.value !== undefined)
+			}
+		} else if (props.terminSelected.value !== undefined) {
 			return props.kMan().klausurenProSchueleridExceedingKWThresholdByTerminAndThreshold(props.terminSelected.value, threshold).entrySet();
+		}
 		return new HashSet<JavaMapEntry<number, List<GostSchuelerklausurTermin>>>();
 	};
 
@@ -278,9 +284,9 @@
 
 	async function verschiebeKlausurTrotzRaumzuweisung() {
 		if (klausurMoveDragData instanceof GostKursklausur) {
-			if (klausurMoveDropZone === undefined && klausurMoveDragData.idTermin !== null)
+			if (klausurMoveDropZone === undefined && klausurMoveDragData.idTermin !== null) {
 				await props.patchKlausur(klausurMoveDragData, { idTermin: null });
-			else if (klausurMoveDropZone instanceof GostKlausurtermin) {
+			} else if (klausurMoveDropZone instanceof GostKlausurtermin) {
 				const termin = klausurMoveDropZone;
 				if (termin.id !== klausurMoveDragData.idTermin) {
 					await props.patchKlausur(klausurMoveDragData, { idTermin: termin.id });
@@ -333,8 +339,9 @@
 		isMounted.value = true;
 		if (props.terminSelected.value) {
 			const scrollToElement = document.getElementById("termin" + props.terminSelected.value.id);
-			if (scrollToElement)
+			if (scrollToElement) {
 				scrollToElement.scrollIntoView({ behavior: 'smooth', block: "nearest" });
+			}
 		}
 		window.addEventListener('click', handleClick);
 	});
@@ -351,8 +358,9 @@
 			{ key: "dauer", label: "Dauer", tooltip: "Dauer in Minuten", span: 0.5, align: "right", minWidth: 3.25 },
 			{ key: "kursSchiene", label: "S", tooltip: "Schiene", span: 0.25, align: "right", minWidth: 2.75 },
 		];
-		if (props.quartalsauswahl.value === 0)
+		if (props.quartalsauswahl.value === 0) {
 			cols.push({ key: "quartal", label: "Q", tooltip: "Quartal", span: 0.25, align: "right", minWidth: 2.75 });
+		}
 		return cols;
 	}
 
@@ -360,8 +368,9 @@
 		+ ((props.quartalsauswahl.value === 0) ? " minmax(2.75rem, 0.25fr)" : ""));
 
 	function handleClick(e: MouseEvent) {
-		if (props.terminSelected.value === undefined)
+		if (props.terminSelected.value === undefined) {
 			return;
+		}
 		let target = e.target as HTMLElement | null;
 		let isInsideTermin = false;
 		while (target) {

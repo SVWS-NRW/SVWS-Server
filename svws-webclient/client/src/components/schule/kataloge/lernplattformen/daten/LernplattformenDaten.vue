@@ -22,13 +22,15 @@
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 
 	async function patchBezeichnung(bezeichnung: string | null) {
-		if (bezeichnungIsValid(bezeichnung))
+		if (bezeichnungIsValid(bezeichnung)) {
 			await props.patch({ bezeichnung: bezeichnung ?? '' });
+		}
 	}
 
 	function bezeichnungIsValid(value: string | null) {
-		if (!mandatoryInputIsValid(value, 255))
+		if (!mandatoryInputIsValid(value, 255)) {
 			return false;
+		}
 
 		return isUniqueInList(value, props.manager().liste.list(), 'bezeichnung', 'id', props.manager().auswahlID() ?? undefined);
 	}

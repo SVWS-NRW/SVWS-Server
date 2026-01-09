@@ -85,9 +85,11 @@
 	const regeln = computed(() => {
 		const list: List<GostBlockungRegel> = new ArrayList();
 		if (props.nurRegelverletzungen) {
-			for (const r of props.getDatenmanager().regelGetListeOfTyp(props.regelTyp))
-				if (verletzungen.value.get(r.id) !== null)
+			for (const r of props.getDatenmanager().regelGetListeOfTyp(props.regelTyp)) {
+				if (verletzungen.value.get(r.id) !== null) {
 					list.add(r);
+				}
+			}
 			return list;
 		}
 		list.addAll(props.getDatenmanager().regelGetListeOfTyp(props.regelTyp));
@@ -95,8 +97,9 @@
 	});
 
 	function abbrechen() {
-		if (props.apiStatus.pending)
+		if (props.apiStatus.pending) {
 			return;
+		}
 		emit('update:modelValue', undefined);
 	}
 

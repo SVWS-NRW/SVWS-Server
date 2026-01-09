@@ -32,8 +32,9 @@ export class RouteDataSchuelerVermerke extends RouteData<RouteStateSchuelerVerme
 	};
 
 	get auswahl(): SchuelerListeEintrag {
-		if (this._state.value.auswahl === undefined)
+		if (this._state.value.auswahl === undefined) {
 			throw new DeveloperNotificationException("Unerwarteter Fehler: Schülerauswahl nicht festgelegt, es können keine Informationen zu Vermerk-Daten abgerufen oder eingegeben werden.");
+		}
 		return this._state.value.auswahl;
 	}
 
@@ -48,9 +49,11 @@ export class RouteDataSchuelerVermerke extends RouteData<RouteStateSchuelerVerme
 	patch = async (data: Partial<SchuelerVermerke>, idVermerk: number) => {
 		api.status.start();
 		await api.server.patchSchuelerVermerke(data, api.schema, idVermerk);
-		for (const vermerk of this.schuelerVermerke)
-			if (vermerk.id === idVermerk)
+		for (const vermerk of this.schuelerVermerke) {
+			if (vermerk.id === idVermerk) {
 				Object.assign(vermerk, data);
+			}
+		}
 		this.commit();
 		api.status.stop();
 	};
@@ -85,8 +88,9 @@ export class RouteDataSchuelerVermerke extends RouteData<RouteStateSchuelerVerme
 			const schuelerVermerke = await api.server.getVermerkdaten(api.schema, auswahl.id);
 			const vermerkArten = await api.server.getVermerkarten(api.schema);
 			const mapVermerkArten = new Map();
-			for (const va of vermerkArten)
+			for (const va of vermerkArten) {
 				mapVermerkArten.set(va.id, va);
+			}
 			this.setPatchedDefaultState({ auswahl, schuelerVermerke, mapVermerkArten });
 		}
 	}

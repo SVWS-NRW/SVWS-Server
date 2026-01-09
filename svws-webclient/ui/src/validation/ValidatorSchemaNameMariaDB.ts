@@ -45,8 +45,9 @@ export class ValidatorSchemaNameMariaDB extends BasicValidator {
 		}
 
 		// Prüfe die Zeichen, welche im Schema-Namen verwendet wurden.
-		if (/[^0-9,a-z,A-Z$_]/.test(data))
+		if (/[^0-9,a-z,A-Z$_]/.test(data)) {
 			return true;
+		}
 		this.addFehler(0, "Der Schema-Name enthält unerlaubte Zeichen.");
 		return false;
 	};

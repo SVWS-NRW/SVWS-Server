@@ -16,15 +16,17 @@
 	const props = defineProps<PausenzeitenProps>();
 
 	async function patchBeginn(start: string | null) {
-		if (start === null)
+		if (start === null) {
 			return;
+		}
 		const beginn = DateUtils.gibMinutenOfZeitAsString(start);
 		await props.patch({ beginn });
 	}
 
 	async function patchEnde(stop: string | null) {
-		if (stop === null)
+		if (stop === null) {
 			return;
+		}
 		const ende = DateUtils.gibMinutenOfZeitAsString(stop);
 		await props.patch({ ende });
 	}

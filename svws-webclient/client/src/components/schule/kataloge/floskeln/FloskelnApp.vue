@@ -46,8 +46,9 @@
 
 	const floskelnSubline = computed(() => {
 		const list = props.manager().liste.auswahlSorted();
-		if (list.size() > 5)
+		if (list.size() > 5) {
 			return `${list.size()} Floskeln ausgewählt`;
+		}
 		return [...list].map((f: Floskel) => f.kuerzel).join(', ');
 	});
 

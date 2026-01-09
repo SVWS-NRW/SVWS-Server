@@ -34,8 +34,9 @@ export class RouteDataTelefonarten extends RouteDataAuswahl<TelefonartenListeMan
 	}
 
 	async ladeDaten(auswahl: Telefonart | null): Promise<Telefonart | null> {
-		if (auswahl === null)
+		if (auswahl === null) {
 			return auswahl;
+		}
 		const TelefonArt = await api.server.getTelefonart(api.schema, auswahl.id);
 		this.manager.getIdByEintrag(TelefonArt);
 		return auswahl;

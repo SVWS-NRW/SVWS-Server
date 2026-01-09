@@ -57,8 +57,9 @@
 
 	async function patchStrasse(value: string | null) {
 		const vals = AdressenUtils.splitStrasse(value);
-		if (adresseIsValid(vals))
+		if (adresseIsValid(vals)) {
 			await props.patch({ strassenname: vals[0], hausnummer: vals[1], zusatzHausnummer: vals[2] });
+		}
 	}
 
 </script>

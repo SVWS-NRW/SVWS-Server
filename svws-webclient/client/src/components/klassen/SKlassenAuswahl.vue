@@ -78,9 +78,11 @@
 
 	function find(items: Iterable<LehrerListeEintrag | JahrgangsDaten>, search: string) {
 		const list = [];
-		for (const i of items)
-			if ((i.kuerzel !== null) && i.kuerzel.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
+		for (const i of items) {
+			if ((i.kuerzel !== null) && i.kuerzel.toLocaleLowerCase().includes(search.toLocaleLowerCase())) {
 				list.push(i);
+			}
+		}
 		return list;
 	}
 
@@ -92,8 +94,9 @@
 		get: () => [...props.manager().schulgliederungen.auswahl()],
 		set: (value) => {
 			props.manager().schulgliederungen.auswahlClear();
-			for (const v of value)
+			for (const v of value) {
 				props.manager().schulgliederungen.auswahlAdd(v);
+			}
 			void props.setFilter();
 		},
 	});
@@ -102,8 +105,9 @@
 		get: () => [...props.manager().jahrgaenge.auswahl()],
 		set: (value) => {
 			props.manager().jahrgaenge.auswahlClear();
-			for (const v of value)
+			for (const v of value) {
 				props.manager().jahrgaenge.auswahlAdd(v);
+			}
 			void props.setFilter();
 		},
 	});
@@ -112,8 +116,9 @@
 		get: () => [...props.manager().lehrer.auswahl()],
 		set: (value) => {
 			props.manager().lehrer.auswahlClear();
-			for (const v of value)
+			for (const v of value) {
 				props.manager().lehrer.auswahlAdd(v);
+			}
 			void props.setFilter();
 		},
 	});
@@ -122,9 +127,11 @@
 
 	const rowsFiltered = computed<KlassenDaten[]>(() => {
 		const arr = [];
-		for (const e of props.manager().filtered())
-			if ((e.kuerzel !== null) && e.kuerzel.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()))
+		for (const e of props.manager().filtered()) {
+			if ((e.kuerzel !== null) && e.kuerzel.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
 				arr.push(e);
+			}
+		}
 		arr.sort((a, b) => a.sortierung - b.sortierung);
 		return arr;
 	});
@@ -143,33 +150,40 @@
 	}
 
 	const clickedEintrag = computed(() => {
-		if ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN))
+		if ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN)) {
 			return null;
+		}
 		return props.manager().hasDaten() ? props.manager().auswahl() : null;
 	});
 
 	async function setAuswahl(items: KlassenDaten[]) {
 		props.manager().liste.auswahlClear();
-		for (const item of items)
-			if (props.manager().liste.hasValue(item))
+		for (const item of items) {
+			if (props.manager().liste.hasValue(item)) {
 				props.manager().liste.auswahlAdd(item);
-		if (props.manager().liste.auswahlExists())
+			}
+		}
+		if (props.manager().liste.auswahlExists()) {
 			await props.gotoGruppenprozessView(true);
-		else
+		} else {
 			await props.gotoDefaultView(props.manager().getVorherigeAuswahl()?.id);
+		}
 	}
 
 	function lehrerkuerzel(list: number[]) {
 		let s = '';
-		if (props.manager().hasDaten())
+		if (props.manager().hasDaten()) {
 			for (const id of list) {
 				const lehrer = props.manager().lehrer.get(id);
-				if (lehrer !== null)
-					if (s.length > 0)
+				if (lehrer !== null) {
+					if (s.length > 0) {
 						s += `, ${lehrer.kuerzel}`;
-					else
+					} else {
 						s = lehrer.kuerzel;
+					}
+				}
 			}
+		}
 		return s;
 	}
 

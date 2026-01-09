@@ -17,8 +17,9 @@ export class RouteFaecherDaten extends RouteNode<any, RouteFaecher> {
 	}
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams): Promise<void | Error | RouteLocationRaw> {
-		if (routeFaecher.data.manager.auswahlID() === null)
+		if (routeFaecher.data.manager.auswahlID() === null) {
 			return routeFaecher.getRoute();
+		}
 	}
 
 	public getProps(to: RouteLocationNormalized): FaecherDatenProps {

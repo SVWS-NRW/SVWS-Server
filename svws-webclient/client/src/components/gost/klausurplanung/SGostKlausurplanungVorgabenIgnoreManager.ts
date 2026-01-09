@@ -44,24 +44,29 @@ export class SGostKlausurplanungVorgabenIgnoreManager {
 			(json) => this.parse(json)
 		) ?? [];
 		const list = new ArrayList<GostKlausurvorgabe>();
-		for (const e of arr)
+		for (const e of arr) {
 			list.add(e);
+		}
 		return list;
 	}
 
 	public async add(v: GostKlausurvorgabe): Promise<void> {
-		if (!this.setObjectValue)
+		if (!this.setObjectValue) {
 			throw new Error("Write operation not allowed: setObjectValue is undefined.");
+		}
 		const list = this.getAll();
 		let exists = false;
-		for (const x of list)
-			if (this.equals(x, v))
+		for (const x of list) {
+			if (this.equals(x, v)) {
 				exists = true;
+			}
+		}
 		if (!exists) {
 			list.add(v);
 			const arr: GostKlausurvorgabe[] = [];
-			for (const x of list)
+			for (const x of list) {
 				arr.push(x);
+			}
 			await this.setObjectValue(
 				SGostKlausurplanungVorgabenIgnoreManager.CONFIG_KEY_IGNORE,
 				arr,
@@ -71,13 +76,16 @@ export class SGostKlausurplanungVorgabenIgnoreManager {
 	}
 
 	public async remove(v: GostKlausurvorgabe): Promise<void> {
-		if (!this.setObjectValue)
+		if (!this.setObjectValue) {
 			throw new Error("Write operation not allowed: setObjectValue is undefined.");
+		}
 		const list = this.getAll();
 		const newArr: GostKlausurvorgabe[] = [];
-		for (const x of list)
-			if (!this.equals(x, v))
+		for (const x of list) {
+			if (!this.equals(x, v)) {
 				newArr.push(x);
+			}
+		}
 		await this.setObjectValue(
 			SGostKlausurplanungVorgabenIgnoreManager.CONFIG_KEY_IGNORE,
 			newArr,
@@ -87,9 +95,11 @@ export class SGostKlausurplanungVorgabenIgnoreManager {
 
 	public contains(v: GostKlausurvorgabe): boolean {
 		const list = this.getAll();
-		for (const x of list)
-			if (this.equals(x, v))
+		for (const x of list) {
+			if (this.equals(x, v)) {
 				return true;
+			}
+		}
 		return false;
 	}
 

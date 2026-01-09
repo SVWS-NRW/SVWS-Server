@@ -20,14 +20,15 @@ export function usePaneSplitter({ defaultSplit = 80, minSplit = 20, maxSplit = 8
 	const currentSplit = ref(defaultSplit);
 
 	const boundSplit = computed(() => {
-		if (currentSplit.value < minSplit)
+		if (currentSplit.value < minSplit) {
 			return minSplit;
-		else if (currentSplit.value > maxSplit)
+		} else if (currentSplit.value > maxSplit) {
 			return maxSplit;
-		else if (currentSplit.value >= (maxSplit * (snap / 100)))
+		} else if (currentSplit.value >= (maxSplit * (snap / 100))) {
 			return maxSplit;
-		else
+		} else {
 			return currentSplit.value;
+		}
 	});
 
 	const thisStyle = computed(() => `${mode === 'vertical' ? 'width' : 'height'}: ${boundSplit.value}%;`);

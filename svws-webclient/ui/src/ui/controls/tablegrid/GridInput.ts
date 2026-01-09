@@ -52,8 +52,9 @@ export abstract class GridInput<KEY, DATA> {
 		this._row = row;
 		this._elem = elem;
 		// Setze den Tab-Index ggf. auf 0, sofern dieser bereits 0 oder nicht gesetzt ist
-		if (elem.tabIndex !== 0)
+		if (elem.tabIndex !== 0) {
 			elem.setAttribute("tabindex", "0");
+		}
 		elem.addEventListener("focus", () => this.handleFocus());
 		elem.addEventListener("blur", () => this.handleBlur());
 		elem.addEventListener("keydown", (event) => this.handleKeyDown(event));
@@ -93,8 +94,9 @@ export abstract class GridInput<KEY, DATA> {
 	 * Wichtig: Diese Methode darf nur vom zugehörigen Grid-Manager aufgerufen werden.
 	 */
 	public setCol(value: number) {
-		if (value < 0)
+		if (value < 0) {
 			throw new DeveloperNotificationException("Eine Spaltennummer kleiner 0 ist unzulässig.");
+		}
 		this._col = value;
 	}
 
@@ -103,8 +105,9 @@ export abstract class GridInput<KEY, DATA> {
 	 * Wichtig: Diese Methode darf nur vom zugehörigen Grid-Manager aufgerufen werden.
 	 */
 	public setRow(value: number) {
-		if (value < 0)
+		if (value < 0) {
 			throw new DeveloperNotificationException("Eine Zeilennummer kleiner 0 ist unzulässig.");
+		}
 		this._row = value;
 	}
 
@@ -162,8 +165,9 @@ export abstract class GridInput<KEY, DATA> {
 	 * @param event   das Tastaturereignis
 	 */
 	private handleKeyDown(event: KeyboardEvent): void {
-		if (this.onKeyDown(event))
+		if (this.onKeyDown(event)) {
 			this._isNewFocus.value = false;
+		}
 	}
 
 	/**
@@ -185,8 +189,9 @@ export abstract class GridInput<KEY, DATA> {
 	 * @param event   das Mausereignis
 	 */
 	private handleClick(event: MouseEvent): void {
-		if (this.onClick(event))
+		if (this.onClick(event)) {
 			this._isNewFocus.value = false;
+		}
 	}
 
 	/**

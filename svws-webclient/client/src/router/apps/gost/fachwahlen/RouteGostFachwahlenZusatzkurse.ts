@@ -38,8 +38,9 @@ export class RouteGostFachwahlenZusatzkurse extends RouteNode<any, RouteGost> {
 	public checkHidden(params?: RouteParams) {
 		try {
 			const { abiturjahr } = params ? RouteNode.getIntParams(params, ["abiturjahr"]) : { abiturjahr: null };
-			if ((abiturjahr === null) || (abiturjahr === -1))
+			if ((abiturjahr === null) || (abiturjahr === -1)) {
 				return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr } };
+			}
 			return false;
 		} catch (e) {
 			return routeError.getSimpleErrorRoute(e as DeveloperNotificationException);

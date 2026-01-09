@@ -29,8 +29,9 @@ export class RouteSchuelerVermerke extends RouteNode<RouteDataSchuelerVermerke, 
 	protected checkHidden(to_params?: RouteParams) {
 		try {
 			const { id } = (to_params !== undefined) ? RouteNode.getIntParams(to_params, ["id"]) : { id: undefined };
-			if (id === undefined)
+			if (id === undefined) {
 				throw new DeveloperNotificationException("Fehler: Die Parameter der Route sind nicht gültig gesetzt.");
+			}
 			return routeSchueler.data.manager.hasDaten() ? false : routeSchueler.getRouteDefaultChild({ id });
 		} catch (e) {
 			return routeError.getSimpleErrorRoute(e as DeveloperNotificationException);
@@ -39,13 +40,15 @@ export class RouteSchuelerVermerke extends RouteNode<RouteDataSchuelerVermerke, 
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams): Promise<void | Error | RouteLocationRaw> {
 		try {
-			if (this.parent === undefined)
+			if (this.parent === undefined) {
 				throw new DeveloperNotificationException("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
+			}
 			const { id } = RouteNode.getIntParams(to_params, ["id"]);
-			if (id === undefined)
+			if (id === undefined) {
 				await this.data.ladeDaten(null);
-			else
+			} else {
 				await this.data.ladeDaten(routeSchueler.data.manager.liste.get(id));
+			}
 		} catch (e) {
 			return await routeError.getErrorRoute(e as DeveloperNotificationException);
 		}

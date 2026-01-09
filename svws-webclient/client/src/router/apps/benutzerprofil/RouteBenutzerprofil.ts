@@ -21,8 +21,9 @@ export class RouteBenutzerprofil extends RouteNode<RouteDataBenutzerprofil, Rout
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams): Promise<void | Error | RouteLocationRaw> {
 		const { id } = RouteNode.getIntParams(to_params, ["id"]);
-		if (this.data.benutzerEMailDaten.id !== id)
+		if (this.data.benutzerEMailDaten.id !== id) {
 			await this.data.ladeDaten();
+		}
 	}
 
 	public getProps(to: RouteLocationNormalized): BenutzerprofilAppProps {

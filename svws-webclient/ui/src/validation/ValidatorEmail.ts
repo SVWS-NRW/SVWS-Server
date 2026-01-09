@@ -41,8 +41,9 @@ export class ValidatorEmail extends BasicValidator {
 
 		// Prüfe, ob eine Email-Adresse angegeben wurde
 		if ((data === undefined) || (data === null) || (data === '')) {
-			if (this.allowEmpty)
+			if (this.allowEmpty) {
 				return true;
+			}
 			this.addFehler(0, "Eine Email-Adresse muss angegeben werden.");
 			return false;
 		}
@@ -56,8 +57,9 @@ export class ValidatorEmail extends BasicValidator {
 
 		// Prüfe das Format der Email-Adresse
 		if (/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))[^@]?$/.test(data) ||
-			/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(data))
+			/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(data)) {
 			return true;
+		}
 		this.addFehler(0, "Die angegebene Email-Adresse hat ein ungültiges Format.");
 		return false;
 	};

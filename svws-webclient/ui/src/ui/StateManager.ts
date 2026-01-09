@@ -51,10 +51,11 @@ export abstract class StateManager<State extends Record<string, any>> {
 	 * @param patch   der Patch, welcher auf den aktuellen State angewendet wird.
 	 */
 	protected setPatchedState(patch: Partial<State>, newobj: boolean = true) {
-		if (newobj)
+		if (newobj) {
 			this._state.value = { ...this._state.value, ...patch };
-		else
+		} else {
 			this._state.value = Object.assign(this._state.value, patch);
+		}
 	}
 
 	/**

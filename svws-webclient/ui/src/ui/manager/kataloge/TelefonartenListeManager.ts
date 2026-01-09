@@ -31,8 +31,9 @@ export class TelefonartenListeManager extends AuswahlManager<number, Telefonart,
 	 */
 	public static readonly comparator: Comparator<Telefonart> = { compare: (a: Telefonart, b: Telefonart) => {
 		let cmp: number = JavaString.compareTo(a.bezeichnung, b.bezeichnung);
-		if (cmp === 0)
+		if (cmp === 0) {
 			cmp = JavaLong.compare(a.id, b.id);
+		}
 		return cmp;
 	} };
 
@@ -62,8 +63,9 @@ export class TelefonartenListeManager extends AuswahlManager<number, Telefonart,
 	}
 
 	protected onSetDaten(eintrag: Telefonart, daten: Telefonart): boolean {
-		if (JavaObject.equalsTranspiler(daten.bezeichnung, (eintrag.bezeichnung)))
+		if (JavaObject.equalsTranspiler(daten.bezeichnung, (eintrag.bezeichnung))) {
 			return false;
+		}
 
 		eintrag.bezeichnung = daten.bezeichnung;
 		return true;
@@ -71,9 +73,11 @@ export class TelefonartenListeManager extends AuswahlManager<number, Telefonart,
 
 	protected onMehrfachauswahlChanged(): void {
 		this.idsVerwendeteTelefonarten.clear();
-		for (const t of this.liste.auswahl())
-			if (t.anzahlTelefonnummern !== 0)
+		for (const t of this.liste.auswahl()) {
+			if (t.anzahlTelefonnummern !== 0) {
 				this.idsVerwendeteTelefonarten.add(t.id);
+			}
+		}
 	}
 
 	protected compareAuswahl(a: Telefonart, b: Telefonart): number {
@@ -83,10 +87,12 @@ export class TelefonartenListeManager extends AuswahlManager<number, Telefonart,
 			let cmp: number = 0;
 			if (JavaObject.equalsTranspiler("telefonArt", (field))) {
 				cmp = TelefonartenListeManager.comparator.compare(a, b);
-			} else
+			} else {
 				throw new DeveloperNotificationException("Fehler bei der Sortierung. Das Sortierkriterium wird vom Manager nicht unterstützt.");
-			if (cmp === 0)
+			}
+			if (cmp === 0) {
 				continue;
+			}
 			return asc ? cmp : -cmp;
 		}
 		return JavaLong.compare(a.id, b.id);

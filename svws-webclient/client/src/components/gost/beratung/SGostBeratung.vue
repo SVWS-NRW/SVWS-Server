@@ -61,11 +61,12 @@
 
 	const hatUpdateKompetenz = computed<boolean>(() => {
 		let beratungslehrer = false;
-		for (const b of props.beratungslehrer())
+		for (const b of props.beratungslehrer()) {
 			if (b.id === props.benutzerdaten.id) {
 				beratungslehrer = true;
 				break;
 			}
+		}
 		return props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN)
 			|| (props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)
 				&& props.benutzerdaten.typ === BenutzerTyp.LEHRER.id && beratungslehrer);
@@ -91,8 +92,9 @@
 
 	const lehrer = computed<Map<number, LehrerListeEintrag>>(() => {
 		const map = new Map<number, LehrerListeEintrag>(props.mapLehrer);
-		for (const l of props.beratungslehrer())
+		for (const l of props.beratungslehrer()) {
 			map.delete(l.id);
+		}
 		return map;
 	});
 

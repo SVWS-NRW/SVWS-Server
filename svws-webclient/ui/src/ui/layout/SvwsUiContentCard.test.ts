@@ -33,8 +33,9 @@ test("Rendert HTML korrekt", async () => {
 });
 
 test("Teste die default-Werte der props", () => {
-	for (const [prop, expectedValue] of Object.entries(defaultProps))
+	for (const [prop, expectedValue] of Object.entries(defaultProps)) {
 		expect(wrapper.props()[prop as keyof typeof defaultProps]).toBe(expectedValue);
+	}
 });
 
 describe("Tests für die CSS-Props", () => {

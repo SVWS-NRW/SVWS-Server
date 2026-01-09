@@ -29,11 +29,13 @@ export class AbteilungenListeManager extends AuswahlManager<number, Abteilung, A
 	 */
 	public static readonly comparator: Comparator<Abteilung> = { compare: (a: Abteilung, b: Abteilung) => {
 		let cmp: number = JavaInteger.compare(a.sortierung, b.sortierung);
-		if (cmp !== 0)
+		if (cmp !== 0) {
 			return cmp;
+		}
 		cmp = JavaString.compareTo(a.bezeichnung, b.bezeichnung);
-		if (cmp !== 0)
+		if (cmp !== 0) {
 			return cmp;
+		}
 		return JavaLong.compare(a.id, b.id);
 	} };
 
@@ -61,12 +63,14 @@ export class AbteilungenListeManager extends AuswahlManager<number, Abteilung, A
 	 */
 	public getKlassenByAuswahl(): List<KlassenDaten> {
 		const result: List<KlassenDaten> | null = new ArrayList<KlassenDaten>();
-		if ((this._daten === null) || (this._daten.klassenzuordnungen.isEmpty()))
+		if ((this._daten === null) || (this._daten.klassenzuordnungen.isEmpty())) {
 			return result;
+		}
 		for (const a of this._daten.klassenzuordnungen) {
 			const klasse: KlassenDaten | null = this._klassenById.get(a.idKlasse);
-			if (klasse !== null)
+			if (klasse !== null) {
 				result.add(klasse);
+			}
 		}
 		return result;
 	}
@@ -89,8 +93,9 @@ export class AbteilungenListeManager extends AuswahlManager<number, Abteilung, A
 	 * @param ids    Ids der Klassenzuordnungen
 	 */
 	public deleteKlassenzuordnungen(ids: List<number>): void {
-		if (this._daten === null)
+		if (this._daten === null) {
 			return;
+		}
 		for (const id of ids) {
 			let toBeDeleted: AbteilungKlassenzuordnung | null = null;
 			for (const v of this._daten.klassenzuordnungen) {
@@ -99,30 +104,34 @@ export class AbteilungenListeManager extends AuswahlManager<number, Abteilung, A
 					break;
 				}
 			}
-			if (toBeDeleted !== null)
+			if (toBeDeleted !== null) {
 				this._daten.klassenzuordnungen.remove(toBeDeleted);
+			}
 		}
 	}
 
 	private readonly comparatorKlassenzuordnung: Comparator<AbteilungKlassenzuordnung> = { compare: (a: AbteilungKlassenzuordnung, b: AbteilungKlassenzuordnung) => {
 		const firstClass: KlassenDaten | null = this._klassenById.get(a.idKlasse);
 		const secondClass: KlassenDaten | null = this._klassenById.get(b.idKlasse);
-		if ((firstClass === null) || (firstClass.kuerzel === null) || (secondClass === null) || (secondClass.kuerzel === null))
+		if ((firstClass === null) || (firstClass.kuerzel === null) || (secondClass === null) || (secondClass.kuerzel === null)) {
 			return 0;
+		}
 		return JavaString.compareTo(firstClass.kuerzel, secondClass.kuerzel);
 	} };
 
 	private static mapLehrer(lehrerListe: List<LehrerListeEintrag>): JavaMap<number, LehrerListeEintrag> {
 		const result: JavaMap<number, LehrerListeEintrag> | null = new HashMap<number, LehrerListeEintrag>();
-		for (const v of lehrerListe)
+		for (const v of lehrerListe) {
 			result.put(v.id, v);
+		}
 		return result;
 	}
 
 	private static mapKlassen(klassen: List<KlassenDaten>): JavaMap<number, KlassenDaten> {
 		const result: JavaMap<number, KlassenDaten> | null = new HashMap<number, KlassenDaten>();
-		for (const v of klassen)
+		for (const v of klassen) {
 			result.put(v.id, v);
+		}
 		return result;
 	}
 

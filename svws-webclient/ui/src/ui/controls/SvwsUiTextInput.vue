@@ -176,8 +176,9 @@
 
 	const vFocus = {
 		mounted: (el: HTMLInputElement) => {
-			if (props.focus)
+			if (props.focus) {
 				el.focus();
+			}
 		},
 	};
 
@@ -197,16 +198,21 @@
 
 	const isValid = computed((): boolean => {
 		let tmpIsValid = true;
-		if (props.required && ((data.value === null) || (data.value === '')))
+		if (props.required && ((data.value === null) || (data.value === ''))) {
 			tmpIsValid = false;
-		if (props.validator !== undefined)
+		}
+		if (props.validator !== undefined) {
 			return props.doValidate(props.validator(), data.value);
-		if (tmpIsValid && (!minLenValid.value || !maxLenValid.value))
+		}
+		if (tmpIsValid && (!minLenValid.value || !maxLenValid.value)) {
 			tmpIsValid = false;
-		if (tmpIsValid && props.type === "email")
+		}
+		if (tmpIsValid && props.type === "email") {
 			tmpIsValid = validatorEmail(data.value ?? '');
-		if (tmpIsValid)
+		}
+		if (tmpIsValid) {
 			tmpIsValid = props.valid(data.value);
+		}
 		return tmpIsValid;
 	});
 
@@ -218,32 +224,37 @@
 	}
 
 	const minLenValid = computed((): boolean => {
-		if ((props.minLen === undefined) || ((data.value === null) && (props.minLen <= 0)))
+		if ((props.minLen === undefined) || ((data.value === null) && (props.minLen <= 0))) {
 			return true;
+		}
 		return (data.value !== null) && (data.value.toLocaleString().length >= props.minLen);
 	});
 
 	const maxLenValid = computed((): boolean => {
-		if ((props.maxLen === undefined) || (data.value === null))
+		if ((props.maxLen === undefined) || (data.value === null)) {
 			return true;
+		}
 		return data.value.toLocaleString().length <= props.maxLen;
 	});
 
 	function onInput(event: Event) {
 		const value = (event.target as HTMLInputElement).value;
-		if (value !== data.value)
+		if (value !== data.value) {
 			updateData(value);
+		}
 	}
 
 	function onBlur(event: Event) {
-		if (props.modelValue !== data.value)
+		if (props.modelValue !== data.value) {
 			emit("change", data.value);
+		}
 		emit("blur", data.value);
 	}
 
 	function onKeyEnter(event: Event) {
-		if (props.modelValue !== data.value)
+		if (props.modelValue !== data.value) {
 			emit("change", data.value);
+		}
 	}
 
 	function reset() {

@@ -49,14 +49,16 @@
 	}
 
 	async function patchKuerzel(value: string | null) {
-		if (kuerzelIsValid(value))
+		if (kuerzelIsValid(value)) {
 			await props.patch({ kuerzel: value?.trim() });
+		}
 
 	}
 
 	async function patchBezeichnung(value: string | null) {
-		if (mandatoryInputIsValid(value, 50))
+		if (mandatoryInputIsValid(value, 50)) {
 			await props.patch({ bezeichnung: value?.trim() });
+		}
 	}
 
 

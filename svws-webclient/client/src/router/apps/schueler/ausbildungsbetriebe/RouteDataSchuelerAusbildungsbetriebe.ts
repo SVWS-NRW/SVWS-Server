@@ -73,27 +73,32 @@ export class RouteDataSchuelerAusbildungsbetriebe extends RouteData<RouteStateDa
 	public async ladeListe() {
 		const listBeschaeftigungsarten = await api.server.getBeschaeftigungsarten(api.schema);
 		const mapBeschaeftigungsarten = new Map<number, Beschaeftigungsart>();
-		for (const ba of listBeschaeftigungsarten)
+		for (const ba of listBeschaeftigungsarten) {
 			mapBeschaeftigungsarten.set(ba.id, ba);
+		}
 		const listLehrer = await api.server.getLehrer(api.schema);
 		const mapLehrer = new Map<number, LehrerListeEintrag>();
-		for (const l of listLehrer)
+		for (const l of listLehrer) {
 			mapLehrer.set(l.id, l);
+		}
 		const listBetriebe = await api.server.getBetriebe(api.schema);
 		const mapBetriebe = new Map<number, BetriebListeEintrag>();
-		for (const b of listBetriebe)
+		for (const b of listBetriebe) {
 			mapBetriebe.set(b.id, b);
+		}
 		const listAnsprechpartner = await api.server.getBetriebeAnsprechpartner(api.schema);
 		const mapAnsprechpartner = new Map<number, BetriebAnsprechpartner>();
-		for (const a of listAnsprechpartner)
+		for (const a of listAnsprechpartner) {
 			mapAnsprechpartner.set(a.id, a);
+		}
 		this.setPatchedDefaultState({ mapBeschaeftigungsarten, mapLehrer, mapBetriebe, listAnsprechpartner, mapAnsprechpartner });
 	}
 
 	public async setSchueler(idSchueler?: number) {
 
-		if (idSchueler === undefined || idSchueler === this._state.value.idSchueler)
+		if (idSchueler === undefined || idSchueler === this._state.value.idSchueler) {
 			return;
+		}
 		const listSchuelerbetriebe = await api.server.getSchuelerBetriebe(api.schema, idSchueler);
 		this.setPatchedState({ idSchueler, listSchuelerbetriebe });
 	}
@@ -146,8 +151,9 @@ export class RouteDataSchuelerAusbildungsbetriebe extends RouteData<RouteStateDa
 	};
 
 	createAnsprechpartner = async (data: BetriebAnsprechpartner) => {
-		if (this.daten === undefined)
+		if (this.daten === undefined) {
 			throw new DeveloperNotificationException("Es ist kein gültiger Betrieb für das Anlegen eines Ansprechpartners ausgewählt.");
+		}
 		const ansprechpartner = await api.server.createBetriebansprechpartner(data, api.schema, this.daten.id);
 		const listAnsprechpartner = new ArrayList<BetriebAnsprechpartner>();
 		for (const value of this.listAnsprechpartner) {

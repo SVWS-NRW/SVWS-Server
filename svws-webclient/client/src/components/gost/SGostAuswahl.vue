@@ -60,22 +60,25 @@
 
 	const unselectable = computed(() => {
 		const set = new Set<GostJahrgang>();
-		for (const j of items.value)
-			if (j.abiturjahr < 0)
+		for (const j of items.value) {
+			if (j.abiturjahr < 0) {
 				set.add(j);
+			}
+		}
 		return set;
 	});
 
 	async function setAuswahl(list: GostJahrgang[]) {
 		props.setSelected(list);
-		if (props.selected().length > 0)
+		if (props.selected().length > 0) {
 			await props.gotoGruppenprozess(true);
-		else {
+		} else {
 			let auswahl;
-			if (props.auswahl !== undefined)
+			if (props.auswahl !== undefined) {
 				auswahl = props.auswahl;
-			else
+			} else {
 				[auswahl] = items.value;
+			}
 			await props.gotoAbiturjahrgang(auswahl);
 		}
 	}

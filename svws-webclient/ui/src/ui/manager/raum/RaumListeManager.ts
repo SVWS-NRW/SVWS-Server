@@ -87,10 +87,12 @@ export class RaumListeManager extends AuswahlManager<number, Raum, Raum> {
 				} else
 					if (JavaObject.equalsTranspiler("groesse", (field))) {
 						cmp = JavaLong.compare(a.groesse, b.groesse);
-					} else
+					} else {
 						throw new DeveloperNotificationException("Fehler bei der Sortierung. Das Sortierkriterium wird vom Manager nicht unterstützt.");
-			if (cmp === 0)
+					}
+			if (cmp === 0) {
 				continue;
+			}
 			return asc ? cmp : -cmp;
 		}
 		return RaumUtils.comparator.compare(a, b);

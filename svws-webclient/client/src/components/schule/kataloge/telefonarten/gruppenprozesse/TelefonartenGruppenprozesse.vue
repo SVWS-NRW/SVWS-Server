@@ -43,11 +43,13 @@
 
 	const nonDeletableLogs = computed(() => {
 		const logs = new ArrayList<string>();
-		if (allDeletable.value)
+		if (allDeletable.value) {
 			return logs;
+		}
 
-		for (const idTelefonart of props.manager().getIdsVerwendeteTelefonarten())
+		for (const idTelefonart of props.manager().getIdsVerwendeteTelefonarten()) {
 			logs.add(`Die Telefonart "${props.manager().liste.get(idTelefonart)?.bezeichnung ?? '???'}" kann nicht gelöscht werden, da sie noch Personen zugeordnet ist.`);
+		}
 		return logs;
 	});
 

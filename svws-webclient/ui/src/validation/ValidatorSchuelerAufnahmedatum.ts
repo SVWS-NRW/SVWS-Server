@@ -36,20 +36,23 @@ export class ValidatorSchuelerAufnahmedatum extends BasicValidator {
 	 */
 	protected pruefe(): boolean {
 		const strAufnahmedatum = this.datumAufnahme();
-		if ((strAufnahmedatum === undefined) || (strAufnahmedatum === null))
+		if ((strAufnahmedatum === undefined) || (strAufnahmedatum === null)) {
 			return true;
+		}
 		let datumAufnahme: DateManager | null = null;
 		try {
 			datumAufnahme = DateManager.from(strAufnahmedatum);
 		} catch (e) {
-			if (e instanceof InvalidDateException)
+			if (e instanceof InvalidDateException) {
 				this.addFehler(0, "Das Format des Aufnahmedatums ist fehlerhaft: " + e.getMessage());
+			}
 			return false;
 		}
 
 		const strAnmeldedatum = this.datumAnmeldung();
-		if ((strAnmeldedatum === undefined) || (strAnmeldedatum === null))
+		if ((strAnmeldedatum === undefined) || (strAnmeldedatum === null)) {
 			return true;
+		}
 
 		let datumAnmeldung: DateManager | null = null;
 		try {

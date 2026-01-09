@@ -47,8 +47,9 @@ export class FaecherListeManager extends AuswahlManager<number, FachDaten, FachD
 	 */
 	public static readonly comparator: Comparator<FachDaten> = { compare: (a: FachDaten, b: FachDaten) => {
 		let cmp: number = a.sortierung - b.sortierung;
-		if (cmp !== 0)
+		if (cmp !== 0) {
 			return cmp;
+		}
 		cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
 		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
 	} };
@@ -131,10 +132,12 @@ export class FaecherListeManager extends AuswahlManager<number, FachDaten, FachD
 			} else
 				if (JavaObject.equalsTranspiler("bezeichnung", (field))) {
 					cmp = JavaString.compareTo(a.bezeichnung, b.bezeichnung);
-				} else
+				} else {
 					throw new DeveloperNotificationException("Fehler bei der Sortierung. Das Sortierkriterium wird vom Manager nicht unterstützt.");
-			if (cmp === 0)
+				}
+			if (cmp === 0) {
 				continue;
+			}
 			return asc ? cmp : -cmp;
 		}
 		return FaecherListeManager.comparator.compare(a, b);
@@ -142,9 +145,11 @@ export class FaecherListeManager extends AuswahlManager<number, FachDaten, FachD
 
 	protected onMehrfachauswahlChanged(): void {
 		this.idsReferenzierterFaecher.clear();
-		for (const f of this.liste.auswahl())
-			if ((f.referenziertInAnderenTabellen !== null) && f.referenziertInAnderenTabellen)
+		for (const f of this.liste.auswahl()) {
+			if ((f.referenziertInAnderenTabellen !== null) && f.referenziertInAnderenTabellen) {
 				this.idsReferenzierterFaecher.add(f.id);
+			}
+		}
 	}
 
 	/**
@@ -157,8 +162,9 @@ export class FaecherListeManager extends AuswahlManager<number, FachDaten, FachD
 	}
 
 	protected checkFilter(eintrag: FachDaten): boolean {
-		if (this._filterNurSichtbar && !eintrag.istSichtbar)
+		if (this._filterNurSichtbar && !eintrag.istSichtbar) {
 			return false;
+		}
 		return true;
 	}
 
@@ -183,11 +189,13 @@ export class FaecherListeManager extends AuswahlManager<number, FachDaten, FachD
 	 * @return <code>true</code> wenn das Kürzel gültig ist, ansonsten <code>false</code>
 	 */
 	public validateKuerzel(kuerzel: string | null): boolean {
-		if ((kuerzel === null) || JavaString.isBlank(kuerzel) || (kuerzel.trim().length > 20))
+		if ((kuerzel === null) || JavaString.isBlank(kuerzel) || (kuerzel.trim().length > 20)) {
 			return false;
+		}
 		for (const listeEintrag of this.liste.list()) {
-			if (JavaObject.equalsTranspiler(listeEintrag.kuerzel, (kuerzel)))
+			if (JavaObject.equalsTranspiler(listeEintrag.kuerzel, (kuerzel))) {
 				return false;
+			}
 		}
 		return true;
 	}
@@ -201,11 +209,13 @@ export class FaecherListeManager extends AuswahlManager<number, FachDaten, FachD
 	 * @return <code>true</code> wenn die Bezeichnung gültig ist, ansonsten <code>false</code>
 	 */
 	public validateBezeichnung(bezeichnung: string | null): boolean {
-		if ((bezeichnung === null) || JavaString.isBlank(bezeichnung) || (bezeichnung.trim().length > 255))
+		if ((bezeichnung === null) || JavaString.isBlank(bezeichnung) || (bezeichnung.trim().length > 255)) {
 			return false;
+		}
 		for (const listeEintrag of this.liste.list()) {
-			if (JavaObject.equalsTranspiler(listeEintrag.bezeichnung, (bezeichnung)))
+			if (JavaObject.equalsTranspiler(listeEintrag.bezeichnung, (bezeichnung))) {
 				return false;
+			}
 		}
 		return true;
 	}
@@ -219,8 +229,9 @@ export class FaecherListeManager extends AuswahlManager<number, FachDaten, FachD
 	 * @return <code>true</code> wenn die maxZeichenInFachbemerkungen gültig sind, ansonsten <code>false</code>
 	 */
 	public validateMaxZeichenInFachbemerkungen(maxZeichenInFachbemerkungen: number | null): boolean {
-		if (maxZeichenInFachbemerkungen === null)
+		if (maxZeichenInFachbemerkungen === null) {
 			return true;
+		}
 		return (maxZeichenInFachbemerkungen > 0);
 	}
 
@@ -233,8 +244,9 @@ export class FaecherListeManager extends AuswahlManager<number, FachDaten, FachD
 	 * @return <code>true</code> wenn die sortierung gültig ist, ansonsten <code>false</code>
 	 */
 	public validateSortierung(sortierung: number | null): boolean {
-		if (sortierung === null)
+		if (sortierung === null) {
 			return false;
+		}
 		return (sortierung > 0) && (sortierung < JavaInteger.MAX_VALUE);
 	}
 

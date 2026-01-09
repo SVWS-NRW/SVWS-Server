@@ -35,8 +35,9 @@ export class ValidatorStringNotIn extends BasicValidator {
 	 */
 	protected pruefe(): boolean {
 		const data = this.data();
-		if ((data === undefined) || (data === null))
+		if ((data === undefined) || (data === null)) {
 			return true;
+		}
 		if (this.menge.has(data)) {
 			this.addFehler(0, "'" + data + "' ist nicht zulässig.");
 			return false;

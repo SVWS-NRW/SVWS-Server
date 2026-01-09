@@ -24,8 +24,9 @@ export class ValidatorBenutzerAnmeldenameNeu extends BasicValidator {
 	constructor(data: () => string | null | undefined, list: Iterable<BenutzerListeEintrag>) {
 		super(ValidatorFehlerart.MUSS);
 		this.data = data;
-		for (const b of list)
+		for (const b of list) {
 			this.menge.add(b.name.toLocaleLowerCase('de'));
+		}
 		this.run();
 	}
 

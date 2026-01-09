@@ -185,10 +185,12 @@
 			const result = new ArrayList<PairNN<ENMKlasse, ENMSchueler>>();
 			for (const klasse of props.auswahl()) {
 				const listSchueler = props.enmManager().mapKlassenSchueler.get(klasse.id);
-				if ((listSchueler === null))
+				if ((listSchueler === null)) {
 					continue;
-				for (const schueler of listSchueler)
+				}
+				for (const schueler of listSchueler) {
 					result.add(new PairNN<ENMKlasse, ENMSchueler>(klasse, schueler));
+				}
 			}
 			return result;
 		}),
@@ -209,8 +211,9 @@
 		}),
 	});
 	gridManager.onFocusInput = (input: GridInput<any, any> | null) => {
-		if ((input === null) || (input.row >= gridManager.daten.size()))
+		if ((input === null) || (input.row >= gridManager.daten.size())) {
 			return;
+		}
 		const pair = gridManager.daten.get(input.row);
 		void props.focusFloskelEditor(null, pair.b, pair.a, input.row, false);
 	};
@@ -224,15 +227,17 @@
 			if (inputFSU !== null) {
 				const inputFSUTyped = inputFSU as GridInputIntegerDiv<string>;
 				inputFSUTyped.max = value ?? 0;
-				if ((patch.fehlstundenGesamtUnentschuldigt ?? 0) > (value ?? 0))
+				if ((patch.fehlstundenGesamtUnentschuldigt ?? 0) > (value ?? 0)) {
 					patch.fehlstundenGesamtUnentschuldigt = (value ?? 0);
+				}
 			}
 			void props.patchLernabschnitt(pair.b.lernabschnitt, { fehlstundenGesamt: value });
 		};
 		return (element: Element | ComponentPublicInstance<unknown> | null) => {
 			const input = gridManager.applyInputIntegerDiv(key, col, index, element, 999, setter);
-			if (input !== null)
+			if (input !== null) {
 				watchEffect(() => gridManager.update(key, pair.b.lernabschnitt.fehlstundenGesamt));
+			}
 		};
 	}
 
@@ -241,8 +246,9 @@
 		const setter = (value: number | null) => void props.patchLernabschnitt(pair.b.lernabschnitt, { fehlstundenGesamtUnentschuldigt: value });
 		return (element: Element | ComponentPublicInstance<unknown> | null) => {
 			const input = gridManager.applyInputIntegerDiv(key, col, index, element, pair.b.lernabschnitt.fehlstundenGesamt ?? 0, setter);
-			if (input !== null)
+			if (input !== null) {
 				watchEffect(() => gridManager.update(key, pair.b.lernabschnitt.fehlstundenGesamtUnentschuldigt));
+			}
 		};
 	}
 

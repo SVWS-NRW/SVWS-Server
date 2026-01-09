@@ -75,33 +75,40 @@ export class RouteDataSchuelerIndividualdaten extends RouteData<RouteStateDataSc
 		]);
 		// Lade den Katalog der Fahrschülerarten
 		const mapFahrschuelerarten = new Map();
-		for (const fa of fahrschuelerarten)
+		for (const fa of fahrschuelerarten) {
 			mapFahrschuelerarten.set(fa.id, fa);
+		}
 		// Lade den Katalog der Förderschwerpunkte
 		const mapFoerderschwerpunkte = new Map();
-		for (const fs of foerderschwerpunkte)
+		for (const fs of foerderschwerpunkte) {
 			mapFoerderschwerpunkte.set(fs.id, fs);
+		}
 		// Lade den Katalog der Haltestellen
 		const mapHaltestellen = new Map();
-		for (const h of haltestellen)
+		for (const h of haltestellen) {
 			mapHaltestellen.set(h.id, h);
+		}
 		// Lade den Katalog der Religionen
 		const mapReligionen = new Map();
-		for (const r of religionen)
+		for (const r of religionen) {
 			mapReligionen.set(r.id, r);
+		}
 		// Lade den Katalog der TelefonArten
 		const mapTelefonArten = new Map();
-		for (const ta of telefonArten)
+		for (const ta of telefonArten) {
 			mapTelefonArten.set(ta.id, ta);
+		}
 		// Ermittle den Katalog der Schulen, welche ein Kürzel haben und als Stammschulen für Schüler in Frage kommen
 		const mapSchulen = new Map<string, SchulEintrag>();
 		for (const schule of schulen) {
-			if (schule.schulnummerStatistik === null)
+			if (schule.schulnummerStatistik === null) {
 				continue;
+			}
 			const sfEintrag: SchulformKatalogEintrag | null = schule.idSchulform === null ? null : Schulform.data().getEintragByID(schule.idSchulform);
 			const sf: Schulform | null = sfEintrag === null ? null : Schulform.data().getWertBySchluessel(sfEintrag.schluessel);
-			if (sf === api.schulform)
+			if (sf === api.schulform) {
 				mapSchulen.set(schule.schulnummerStatistik, schule);
+			}
 		}
 		this.setPatchedDefaultState({ mapFahrschuelerarten, mapFoerderschwerpunkte, mapHaltestellen, mapReligionen, mapSchulen, mapTelefonArten });
 	}

@@ -58,18 +58,22 @@
 
 	async function setAuswahl(items: Telefonart[]) {
 		props.manager().liste.auswahlClear();
-		for (const item of items)
-			if (props.manager().liste.hasValue(item))
+		for (const item of items) {
+			if (props.manager().liste.hasValue(item)) {
 				props.manager().liste.auswahlAdd(item);
-		if (props.manager().liste.auswahlExists())
+			}
+		}
+		if (props.manager().liste.auswahlExists()) {
 			await props.gotoGruppenprozessView(true);
-		else
+		} else {
 			await props.gotoDefaultView(props.manager().getVorherigeAuswahl()?.id);
+		}
 	}
 
 	const clickedEintrag = computed(() => {
-		if ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN))
+		if ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN)) {
 			return null;
+		}
 		return (props.manager().hasDaten()) ? props.manager().auswahl() : null;
 	});
 

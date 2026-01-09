@@ -62,8 +62,9 @@
 	const isValid = ref<boolean>(false);
 
 	watch(() => data.value, async () => {
-		if (isLoading.value)
+		if (isLoading.value) {
 			return;
+		}
 
 		props.checkpoint.active = true;
 		validateAll();
@@ -87,8 +88,9 @@
 	const selectedStatistikFach = computed({
 		get: () => {
 			const wert = Fach.data().getWertByKuerzel(data.value.kuerzelStatistik);
-			if (wert === null)
+			if (wert === null) {
 				return null;
+			}
 			return Fach.data().getEintragBySchuljahrUndWert(schuljahr.value, wert);
 		},
 		set: (eintrag: FachKatalogEintrag) => {
@@ -109,8 +111,9 @@
 		get: () => data.value.bilingualeSprache !== null ? BilingualeSprache.data().getWertByKuerzel(data.value.bilingualeSprache) : null,
 		set: (val: BilingualeSprache) => {
 			const eintrag = BilingualeSprache.data().getEintragBySchuljahrUndWert(schuljahr.value, val);
-			if (eintrag !== null)
+			if (eintrag !== null) {
 				data.value.bilingualeSprache = eintrag.kuerzel;
+			}
 		},
 	});
 
@@ -124,8 +127,9 @@
 	}
 
 	async function addFachDaten() {
-		if (isLoading.value)
+		if (isLoading.value) {
 			return;
+		}
 
 		props.checkpoint.active = false;
 		isLoading.value = true;

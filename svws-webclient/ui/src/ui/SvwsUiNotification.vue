@@ -91,8 +91,9 @@
 	}
 
 	async function copyToClipboard() {
-		if (props.toCopy === undefined)
+		if (props.toCopy === undefined) {
 			return;
+		}
 		try {
 			await navigator.clipboard.writeText(props.toCopy);
 		} catch (e) {
@@ -103,8 +104,9 @@
 
 	function close() {
 		isOpen.value = false;
-		if (props.id > 0)
+		if (props.id > 0) {
 			emit('click', props.id);
+		}
 	}
 
 	defineExpose({

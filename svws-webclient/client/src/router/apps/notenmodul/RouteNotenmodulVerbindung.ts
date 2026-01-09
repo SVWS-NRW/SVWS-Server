@@ -24,8 +24,9 @@ export class RouteNotenmodulVerbindung extends RouteNode<any, RouteNotenmodulAdm
 	protected checkHidden(params?: RouteParams) {
 		try {
 			const { id } = (params === undefined) ? { id: undefined } : RouteNode.getIntParams(params, ["id"]);
-			if (id === -1)
+			if (id === -1) {
 				return routeNotenmodulKonfiguration.getRoute({ id });
+			}
 			return false;
 		} catch (e) {
 			return routeError.getSimpleErrorRoute(e as DeveloperNotificationException);

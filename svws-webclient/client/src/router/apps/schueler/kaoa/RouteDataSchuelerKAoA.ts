@@ -24,15 +24,17 @@ export class RouteDataSchuelerKAoA extends RouteData<RouteStateSchuelerKAoA> {
 	}
 
 	get auswahl(): SchuelerListeEintrag {
-		if (this._state.value.auswahl === undefined)
+		if (this._state.value.auswahl === undefined) {
 			throw new DeveloperNotificationException("Unerwarteter Fehler: Schülerauswahl nicht festgelegt, es können keine Informationen zu KAoA-Daten abgerufen oder eingegeben werden.");
+		}
 		return this._state.value.auswahl;
 	}
 
 
 	get schuelerKaoaManager(): SchuelerKAoAManager {
-		if (this._state.value.schuelerKAoAManager === undefined)
+		if (this._state.value.schuelerKAoAManager === undefined) {
 			throw new DeveloperNotificationException("Unerwarteter Fehler: Schüler-KAoA Daten nicht initialisiert");
+		}
 		return this._state.value.schuelerKAoAManager;
 	}
 
@@ -67,11 +69,12 @@ export class RouteDataSchuelerKAoA extends RouteData<RouteStateSchuelerKAoA> {
 
 
 	public async ladeDaten(auswahl: SchuelerListeEintrag | null) {
-		if (auswahl === this._state.value.auswahl)
+		if (auswahl === this._state.value.auswahl) {
 			return;
-		if (auswahl === null)
+		}
+		if (auswahl === null) {
 			this.setDefaultState();
-		else {
+		} else {
 			try {
 				const lernabschnitteAuswahl: List<SchuelerLernabschnittListeEintrag> = await api.server.getSchuelerLernabschnittsliste(api.schema, auswahl.id);
 				const data: List<SchuelerKAoADaten> = await api.server.getKAoAdaten(api.schema, auswahl.id);

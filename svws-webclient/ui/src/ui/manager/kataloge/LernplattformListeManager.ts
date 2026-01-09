@@ -54,9 +54,11 @@ export class LernplattformListeManager extends AuswahlManager<number, Lernplattf
 
 	protected onMehrfachauswahlChanged(): void {
 		this.idsReferencedLernplattformen.clear();
-		for (const l of this.liste.auswahl())
-			if ((l.referenziertInAnderenTabellen !== null) && l.referenziertInAnderenTabellen)
+		for (const l of this.liste.auswahl()) {
+			if ((l.referenziertInAnderenTabellen !== null) && l.referenziertInAnderenTabellen) {
 				this.idsReferencedLernplattformen.add(l.id);
+			}
+		}
 	}
 
 	protected compareAuswahl(a: Lernplattform, b: Lernplattform): number {

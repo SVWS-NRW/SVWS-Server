@@ -40,8 +40,9 @@ export class RouteGostLaufbahnfehler extends RouteNode<RouteDataGostLaufbahnfehl
 	public checkHidden(params?: RouteParams) {
 		try {
 			const { abiturjahr } = params ? RouteNode.getIntParams(params, ["abiturjahr"]) : { abiturjahr: null };
-			if ((abiturjahr === null) || (abiturjahr === -1))
+			if ((abiturjahr === null) || (abiturjahr === -1)) {
 				return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr } };
+			}
 			return false;
 		} catch (e) {
 			return routeError.getSimpleErrorRoute(e as DeveloperNotificationException);
@@ -51,8 +52,9 @@ export class RouteGostLaufbahnfehler extends RouteNode<RouteDataGostLaufbahnfehl
 	public async beforeEach(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams): Promise<boolean | void | Error | RouteLocationRaw> {
 		try {
 			if (to.name === this.name) {
-				if (this.parent === undefined)
+				if (this.parent === undefined) {
 					throw new DeveloperNotificationException("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
+				}
 				const { abiturjahr } = RouteNode.getIntParams(to_params, ["abiturjahr"]);
 				if (abiturjahr === undefined || abiturjahr === -1) {
 					const [alternativ] = this.parent.data.mapAbiturjahrgaenge.values();
@@ -67,11 +69,13 @@ export class RouteGostLaufbahnfehler extends RouteNode<RouteDataGostLaufbahnfehl
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams): Promise<void | Error | RouteLocationRaw> {
 		try {
-			if (this.parent === undefined)
+			if (this.parent === undefined) {
 				throw new DeveloperNotificationException("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
+			}
 			const { abiturjahr } = RouteNode.getIntParams(to_params, ["abiturjahr"]);
-			if (abiturjahr === undefined)
+			if (abiturjahr === undefined) {
 				throw new DeveloperNotificationException("Fehler: Das Abiturjahr darf an dieser Stelle nicht undefined sein.");
+			}
 			await this.data.setAbiturjahr(abiturjahr);
 		} catch (e) {
 			return await routeError.getErrorRoute(e as DeveloperNotificationException);

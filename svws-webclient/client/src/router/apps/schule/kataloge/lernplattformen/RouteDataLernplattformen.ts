@@ -56,14 +56,17 @@ export class RouteDataLernplattformen extends RouteDataAuswahl<LernplattformList
 	deleteCheck = (): [boolean, List<string>] => {
 		const errorLog = new ArrayList<string>();
 
-		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN))
+		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Lernplattformen vor.');
+		}
 
-		if (!this.manager.liste.auswahlExists())
+		if (!this.manager.liste.auswahlExists()) {
 			errorLog.add('Es wurden keine Lernplattformen zum Löschen ausgewählt.');
+		}
 
-		if (!this.manager.getIdsReferencedLernplattformen().isEmpty())
+		if (!this.manager.getIdsReferencedLernplattformen().isEmpty()) {
 			errorLog.add(this.getErrorMessageForReferencedLernplattformen());
+		}
 
 		return [errorLog.isEmpty(), errorLog];
 	};
@@ -72,8 +75,9 @@ export class RouteDataLernplattformen extends RouteDataAuswahl<LernplattformList
 		let errorMessage = 'Die folgenden Lernplattformen sind an anderer Stelle referenziert:\n\n';
 		for (const id of this.manager.getIdsReferencedLernplattformen()) {
 			const lernplattform = this.manager.liste.get(id);
-			if (lernplattform)
+			if (lernplattform) {
 				errorMessage += `- ${lernplattform.bezeichnung} \n`;
+			}
 		}
 		return errorMessage;
 	}

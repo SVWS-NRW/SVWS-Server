@@ -42,8 +42,9 @@ export class ValidatorTelefon extends BasicValidator {
 
 		// Prüfe, ob eine Email-Adresse angegeben wurde
 		if ((data === undefined) || (data === null) || JavaString.isBlank(data)) {
-			if (this.allowEmpty)
+			if (this.allowEmpty) {
 				return true;
+			}
 			this.addFehler(0, "Eine Telefonnummer muss angegeben werden.");
 			return false;
 		}
@@ -56,8 +57,9 @@ export class ValidatorTelefon extends BasicValidator {
 		}
 
 		// Prüfe das Format der Telefonnummer
-		if (/^\+?\d+([-/]?\d+)*$/.test(data))
+		if (/^\+?\d+([-/]?\d+)*$/.test(data)) {
 			return true;
+		}
 		this.addFehler(0, "Die angegebene Telefonnummer hat ein ungültiges Format.");
 		return false;
 	};

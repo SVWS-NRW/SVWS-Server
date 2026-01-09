@@ -43,20 +43,24 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 
 		// Lade den Katalog der Orte
 		const mapOrte = new Map();
-		for (const o of orte)
+		for (const o of orte) {
 			mapOrte.set(o.id, o);
+		}
 		// Lade den Katalog der Ortsteile
 		const mapOrtsteile = new Map();
-		for (const o of ortsteile)
+		for (const o of ortsteile) {
 			mapOrtsteile.set(o.id, o);
+		}
 		// Lade den Katalog der Kindergärten
 		const mapKindergaerten = new Map();
-		for (const k of kindergaerten)
+		for (const k of kindergaerten) {
 			mapKindergaerten.set(k.id, k);
+		}
 		// Lade den Katalog der Einschulungsarten
 		const mapEinschulungsarten = new Map();
-		for (const e of einschulungsarten)
+		for (const e of einschulungsarten) {
 			mapEinschulungsarten.set(e.id, e);
+		}
 		// Und aktualisiere den internen State
 		this.setPatchedDefaultStateKeepView({ mapOrte, mapOrtsteile, mapKindergaerten, mapEinschulungsarten });
 	}
@@ -98,8 +102,9 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	 */
 	public async setSchuljahresabschnitt(idSchuljahresabschnitt: number) {
 		// Prüfe, ob sich der Schuljahresabschnitt geändert hat.
-		if (this._state.value.idSchuljahresabschnitt === idSchuljahresabschnitt)
+		if (this._state.value.idSchuljahresabschnitt === idSchuljahresabschnitt) {
 			return;
+		}
 		// Setze den Schuljahresabschnitt
 		this.setPatchedState({ idSchuljahresabschnitt });
 	}

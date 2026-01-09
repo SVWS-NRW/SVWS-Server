@@ -39,8 +39,9 @@ export class RouteDataFaecherStundenplan extends RouteData<RouteStateFachDataStu
 	}
 
 	get idFach(): number {
-		if (this._state.value.idFach === undefined)
+		if (this._state.value.idFach === undefined) {
 			throw new DeveloperNotificationException("Unerwarteter Fehler: Fach-ID nicht festgelegt, es können keine Informationen zum Stundenplan abgerufen oder eingegeben werden.");
+		}
 		return this._state.value.idFach;
 	}
 
@@ -57,8 +58,9 @@ export class RouteDataFaecherStundenplan extends RouteData<RouteStateFachDataStu
 	}
 
 	get auswahl(): StundenplanListeEintrag {
-		if (this._state.value.auswahl === undefined)
+		if (this._state.value.auswahl === undefined) {
 			throw new DeveloperNotificationException("Unerwarteter Fehler: Stundenplaneintrag nicht festgelegt, es können keine Informationen zum Stundenplan abgerufen oder eingegeben werden.");
+		}
 		return this._state.value.auswahl;
 	}
 
@@ -67,8 +69,9 @@ export class RouteDataFaecherStundenplan extends RouteData<RouteStateFachDataStu
 	}
 
 	get manager(): StundenplanManager {
-		if (this._state.value.manager === undefined)
+		if (this._state.value.manager === undefined) {
 			throw new DeveloperNotificationException("Unerwarteter Fehler: Stundenplan-Manager nicht vorhanden, es können keine Informationen zum Stundenplan abgerufen oder eingegeben werden.");
+		}
 		return this._state.value.manager;
 	}
 
@@ -86,13 +89,15 @@ export class RouteDataFaecherStundenplan extends RouteData<RouteStateFachDataStu
 
 	public async ladeListe(): Promise<boolean> {
 		const idSchuljahresabschnitt = routeApp.data.aktAbschnitt.value.id;
-		if (idSchuljahresabschnitt === this._state.value.idSchuljahresabschnitt)
+		if (idSchuljahresabschnitt === this._state.value.idSchuljahresabschnitt) {
 			return false;
+		}
 		const listStundenplaene = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, idSchuljahresabschnitt);
 		const mapStundenplaene = new Map<number, StundenplanListeEintrag>();
 		const auswahl = listStundenplaene.size() > 0 ? listStundenplaene.get(0) : undefined;
-		for (const l of listStundenplaene)
+		for (const l of listStundenplaene) {
 			mapStundenplaene.set(l.id, l);
+		}
 		this.setPatchedDefaultState({ idSchuljahresabschnitt, auswahl, mapStundenplaene });
 		return true;
 	}
@@ -106,8 +111,9 @@ export class RouteDataFaecherStundenplan extends RouteData<RouteStateFachDataStu
 			result.kalenderwoche = undefined;
 			result.wochentyp = wochentyp;
 		}
-		if ((result.wochentyp < 0) || (result.wochentyp > manager.getWochenTypModell()))
+		if ((result.wochentyp < 0) || (result.wochentyp > manager.getWochenTypModell())) {
 			throw new DeveloperNotificationException("Der Wochentyp " + result.wochentyp.toString() + " passt nicht zum Wochentyp-Modell " + this.manager.getWochenTypModell().toString() + " des Stundenplans");
+		}
 		return result;
 	}
 
@@ -162,8 +168,9 @@ export class RouteDataFaecherStundenplan extends RouteData<RouteStateFachDataStu
 	};
 
 	getPDF = api.call(async (reportingParameter: ReportingParameter): Promise<ApiFile> => {
-		if (!this.hatAuswahl)
+		if (!this.hatAuswahl) {
 			throw new DeveloperNotificationException("Dieser Stundenplan kann nur gedruckt werden, wenn mindestens ein Fach ausgewählt ist.");
+		}
 		reportingParameter.idSchuljahresabschnitt = this.idSchuljahresabschnitt;
 		return await api.server.pdfReport(reportingParameter, api.schema);
 	});

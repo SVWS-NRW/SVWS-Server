@@ -25,11 +25,13 @@ export class FoerderschwerpunkteListeManager extends AuswahlManager<number, Foer
 	public static readonly comparator: Comparator<FoerderschwerpunktEintrag> = { compare: (a: FoerderschwerpunktEintrag, b: FoerderschwerpunktEintrag) => {
 		let cmp: number;
 		cmp = JavaInteger.compare(a.sortierung, b.sortierung);
-		if (cmp !== 0)
+		if (cmp !== 0) {
 			return cmp;
+		}
 		cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
-		if (cmp !== 0)
+		if (cmp !== 0) {
 			return cmp;
+		}
 		return JavaLong.compare(a.id, b.id);
 	} };
 
@@ -60,14 +62,17 @@ export class FoerderschwerpunkteListeManager extends AuswahlManager<number, Foer
 
 	protected onMehrfachauswahlChanged(): void {
 		this.idsReferencedFoerderschwerpunkte.clear();
-		for (const l of this.liste.auswahl())
-			if ((l.referenziertInAnderenTabellen !== null) && l.referenziertInAnderenTabellen)
+		for (const l of this.liste.auswahl()) {
+			if ((l.referenziertInAnderenTabellen !== null) && l.referenziertInAnderenTabellen) {
 				this.idsReferencedFoerderschwerpunkte.add(l.id);
+			}
+		}
 	}
 
 	protected checkFilter(eintrag: FoerderschwerpunktEintrag): boolean {
-		if (this._filterNurSichtbar && !eintrag.istSichtbar)
+		if (this._filterNurSichtbar && !eintrag.istSichtbar) {
 			return false;
+		}
 
 		return true;
 	}

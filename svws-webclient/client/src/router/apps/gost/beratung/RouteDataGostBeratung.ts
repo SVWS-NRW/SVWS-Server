@@ -41,8 +41,9 @@ export class RouteDataGostBeratung extends RouteData<RouteStateDataGostBeratung>
 	// }
 
 	get auswahl(): number {
-		if (this._state.value.auswahl === undefined)
+		if (this._state.value.auswahl === undefined) {
 			throw new DeveloperNotificationException("Unerwarteter Fehler: Abiturjahrgang nicht initialisiert");
+		}
 		return this._state.value.auswahl;
 	}
 
@@ -70,8 +71,9 @@ export class RouteDataGostBeratung extends RouteData<RouteStateDataGostBeratung>
 	}
 
 	get abiturdatenManager(): AbiturdatenManager {
-		if (this._state.value.abiturdatenManager === undefined)
+		if (this._state.value.abiturdatenManager === undefined) {
 			throw new DeveloperNotificationException("Unerwarteter Fehler: Abiturdaten-Manager nicht initialisiert");
+		}
 		return this._state.value.abiturdatenManager;
 	}
 	set abiturdatenManager(abiturdatenManager: AbiturdatenManager | undefined) {
@@ -85,23 +87,28 @@ export class RouteDataGostBeratung extends RouteData<RouteStateDataGostBeratung>
 
 	createAbiturdatenmanager = async (daten?: Abiturdaten): Promise<AbiturdatenManager | undefined> => {
 		const abiturdaten = daten || this._state.value.abiturdaten;
-		if (abiturdaten === undefined)
+		if (abiturdaten === undefined) {
 			return;
+		}
 		const art = this.gostBelegpruefungsArt;
-		if (art === 'ef1')
+		if (art === 'ef1') {
 			return new AbiturdatenManager(api.mode, abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.EF1);
-		if (art === 'gesamt')
+		}
+		if (art === 'gesamt') {
 			return new AbiturdatenManager(api.mode, abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.GESAMT);
+		}
 		const abiturdatenManager = new AbiturdatenManager(api.mode, abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.GESAMT);
-		if (abiturdatenManager.pruefeBelegungExistiert(abiturdatenManager.getFachbelegungen(), GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))
+		if (abiturdatenManager.pruefeBelegungExistiert(abiturdatenManager.getFachbelegungen(), GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)) {
 			return abiturdatenManager;
+		}
 		return new AbiturdatenManager(api.mode, abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.EF1);
 	};
 
 	setGostBelegpruefungErgebnis = async () => {
 		const abiturdatenManager = await this.createAbiturdatenmanager();
-		if (abiturdatenManager === undefined)
+		if (abiturdatenManager === undefined) {
 			return;
+		}
 		const gostBelegpruefungErgebnis = abiturdatenManager.getBelegpruefungErgebnis();
 		this.setPatchedState({ abiturdatenManager, gostBelegpruefungErgebnis });
 	};
@@ -115,8 +122,9 @@ export class RouteDataGostBeratung extends RouteData<RouteStateDataGostBeratung>
 
 	get gostBelegpruefungsArt(): 'ef1' | 'gesamt' | 'auto' {
 		const s = api.config.getValue("app.gost.belegpruefungsart");
-		if (s === 'ef1' || s === 'gesamt' || s === 'auto')
+		if (s === 'ef1' || s === 'gesamt' || s === 'auto') {
 			return s;
+		}
 		void api.config.setValue("app.gost.belegpruefungsart", 'auto');
 		throw new DeveloperNotificationException("Es wurde eine fehlerhafte Belegpruefungsart als Standardauswahl hinterlegt");
 	}
@@ -127,9 +135,9 @@ export class RouteDataGostBeratung extends RouteData<RouteStateDataGostBeratung>
 	};
 
 	public async ladeDaten(auswahl: number, isEntering: boolean) {
-		if ((auswahl === this._state.value.auswahl) && !isEntering)
+		if ((auswahl === this._state.value.auswahl) && !isEntering) {
 			return;
-		else {
+		} else {
 			const gostJahrgang = new GostJahrgang();
 			gostJahrgang.abiturjahr = auswahl;
 			gostJahrgang.jahrgang = GostHalbjahr.EF1.jahrgang; // Gehe bei der Vorlage von einer Planung ab EF.1 ohne vorhandene/vergangene Daten aus
@@ -142,8 +150,9 @@ export class RouteDataGostBeratung extends RouteData<RouteStateDataGostBeratung>
 				faecherManager.addFachkombinationenAll(listFachkombinationen);
 				const listLehrer = await api.server.getLehrer(api.schema);
 				const mapLehrer = new Map<number, LehrerListeEintrag>();
-				for (const l of listLehrer)
+				for (const l of listLehrer) {
 					mapLehrer.set(l.id, l);
+				}
 				this.setPatchedState({ auswahl, abiturdaten, gostJahrgang, gostJahrgangsdaten, faecherManager, mapLehrer });
 				await this.setGostBelegpruefungErgebnis();
 			} catch (error) {
@@ -173,8 +182,9 @@ export class RouteDataGostBeratung extends RouteData<RouteStateDataGostBeratung>
 			await api.server.removeGostAbiturjahrgangBeratungslehrer(eintrag.id, api.schema, this.gostJahrgangsdaten.abiturjahr);
 			for (let i = 0; i < this.gostJahrgangsdaten.beratungslehrer.size() ; i++) {
 				const b = this.gostJahrgangsdaten.beratungslehrer.get(i);
-				if (b.id === eintrag.id)
+				if (b.id === eintrag.id) {
 					this.gostJahrgangsdaten.beratungslehrer.removeElementAt(i);
+				}
 			}
 		}
 		this.setPatchedState({ gostJahrgangsdaten: this._state.value.gostJahrgangsdaten });

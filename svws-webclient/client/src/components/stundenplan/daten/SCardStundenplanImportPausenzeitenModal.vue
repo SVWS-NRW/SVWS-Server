@@ -103,10 +103,12 @@
 
 	function klassenbezeichnungen(klassen: number[]) {
 		const str = [];
-		if (klassen.length === 0)
+		if (klassen.length === 0) {
 			return "";
-		for (const k of klassen)
+		}
+		for (const k of klassen) {
 			str.push(props.manager().daten().klasseGetByIdOrException(k).kuerzel);
+		}
 		return str.join(', ');
 	}
 

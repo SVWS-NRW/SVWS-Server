@@ -31,10 +31,11 @@
 	}>();
 
 	async function add() {
-		if (props.spalteLinks)
+		if (props.spalteLinks) {
 			await props.addBenutzerToBenutzergruppe(props.benutzer);
-		else
+		} else {
 			await props.removeBenutzerFromBenutzergruppe(props.benutzer);
+		}
 	}
 
 </script>

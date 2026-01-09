@@ -55,8 +55,9 @@
 	watch(() => props.focus, () => doFocus());
 
 	function doFocus() {
-		if (props.focus && menuLink.value)
+		if (props.focus && menuLink.value) {
 			menuLink.value.focus();
+		}
 	}
 
 	function onClick(event: MouseEvent) {
@@ -67,8 +68,9 @@
 
 	const hatlabel = computed(() => {
 		const label = slots.label?.();
-		if ((label !== undefined) && (label.length > 0) && (typeof label[0].children === 'string'))
+		if ((label !== undefined) && (label.length > 0) && (typeof label[0].children === 'string')) {
 			return label[0].children;
+		}
 		return "";
 	});
 

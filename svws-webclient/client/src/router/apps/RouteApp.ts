@@ -75,8 +75,9 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	public get menuEinstellungen(): RouteNode<any, any>[] {
 		const result: RouteNode<any, any>[] = [];
 		for (const node of this._menuEinstellungen) {
-			if (api.authenticated && (!node.mode.checkServerMode(api.mode) || !node.hatSchulform() || !node.hatEineKompetenz()))
+			if (api.authenticated && (!node.mode.checkServerMode(api.mode) || !node.hatSchulform() || !node.hatEineKompetenz())) {
 				continue;
+			}
 			result.push(node);
 		}
 		return result;
@@ -91,8 +92,9 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	public get menuSchule(): RouteNode<any, any>[] {
 		const result: RouteNode<any, any>[] = [];
 		for (const node of this._menuSchule) {
-			if (api.authenticated && (!node.mode.checkServerMode(api.mode) || !node.hatSchulform() || !node.hatEineKompetenz()))
+			if (api.authenticated && (!node.mode.checkServerMode(api.mode) || !node.hatSchulform() || !node.hatEineKompetenz())) {
 				continue;
+			}
 			result.push(node);
 		}
 		return result;
@@ -107,8 +109,9 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	public get menuNotenmodul(): RouteNode<any, any>[] {
 		const result: RouteNode<any, any>[] = [];
 		for (const node of this._menuNotenmodul) {
-			if (api.authenticated && (!node.mode.checkServerMode(api.mode) || !node.hatSchulform() || !node.hatEineKompetenz()))
+			if (api.authenticated && (!node.mode.checkServerMode(api.mode) || !node.hatSchulform() || !node.hatEineKompetenz())) {
 				continue;
+			}
 			result.push(node);
 		}
 		return result;
@@ -192,20 +195,24 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean): Promise<void | Error | RouteLocationRaw> {
 		try {
-			if (isEntering)
+			if (isEntering) {
 				await this.data.init();
+			}
 			const { idSchuljahresabschnitt } = RouteNode.getIntParams(to_params, ["idSchuljahresabschnitt"]);
 			// Prüfe, ob der Schuljahresabschnitt gültig gesetzt ist
-			if (idSchuljahresabschnitt === undefined)
+			if (idSchuljahresabschnitt === undefined) {
 				return this.getRouteDefaultChild({ idSchuljahresabschnitt: this.data.aktAbschnitt.value.id });
+			}
 			// Prüfe, ob der Schuljahresabschnitt gesetzt werden soll
 			await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
 			// Prüfe, ob die View aktualisiert werden muss
 			let cur: RouteNode<any, any> = to;
-			while (cur.parent !== this)
+			while (cur.parent !== this) {
 				cur = cur.parent;
-			if (cur !== this.data.view)
+			}
+			if (cur !== this.data.view) {
 				this.data.setView(cur, this.children);
+			}
 		} catch (e) {
 			return await routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
@@ -252,39 +259,48 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	private getApps(): TabData[] {
 		const result: TabData[] = [];
 		for (const c of super.menu) {
-			if (c.hatEineKompetenz() && c.hatSchulform())
+			if (c.hatEineKompetenz() && c.hatSchulform()) {
 				result.push({ name: c.name, text: c.text });
+			}
 		}
 		return result;
 	}
 
 	private readonly setApp = async (value: TabData) => {
-		if (value.name === this.data.view.name)
+		if (value.name === this.data.view.name) {
 			return;
+		}
 		let node = RouteNode.getNodeByName(value.name);
-		if (node === undefined)
+		if (node === undefined) {
 			throw new DeveloperNotificationException("Unbekannte Route");
-		if (node === routeEinstellungen)
+		}
+		if (node === routeEinstellungen) {
 			node = this.menuEinstellungen.at(0);
-		else if (node === routeSchule)
+		} else if (node === routeSchule) {
 			node = this.menuSchule.at(0);
-		else if (node === routeNotenmodul)
+		} else if (node === routeNotenmodul) {
 			node = this.menuNotenmodul.at(0);
-		if (node === undefined)
+		}
+		if (node === undefined) {
 			return;
+		}
 		const result = await RouteManager.doRoute(node.getRoute());
-		if (result === RoutingStatus.SUCCESS)
+		if (result === RoutingStatus.SUCCESS) {
 			this.data.setView(node, this.children);
+		}
 	};
 
 	private getMenuManager(): AppMenuManager {
 		const submenuManager = new Array<{ name: string, manager: TabManager }>();
-		if (routeSchule.hidden() === false)
+		if (routeSchule.hidden() === false) {
 			submenuManager.push({ name: "schule", manager: this.getTabManagerSchule() });
-		if ((routeNotenmodul.hidden() === false) && ((api.mode === ServerMode.DEV) || (api.mode === ServerMode.ALPHA)))
+		}
+		if ((routeNotenmodul.hidden() === false) && ((api.mode === ServerMode.DEV) || (api.mode === ServerMode.ALPHA))) {
 			submenuManager.push({ name: "notenmodul", manager: this.getTabManagerNotenmodul() });
-		if (routeEinstellungen.hidden() === false)
+		}
+		if (routeEinstellungen.hidden() === false) {
 			submenuManager.push({ name: "einstellungen", manager: this.getTabManagerEinstellungen() });
+		}
 		return new AppMenuManager(this.getTabManager(), submenuManager, this.getApp());
 	}
 
@@ -306,11 +322,13 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 
 	private readonly setTab = async (value: TabData) => {
 		const node = RouteNode.getNodeByName(value.name);
-		if (node === undefined)
+		if (node === undefined) {
 			throw new DeveloperNotificationException("Unbekannte Route");
+		}
 		const routingStatus = await RouteManager.doRoute(node.getRoute());
-		if (routingStatus === RoutingStatus.SUCCESS)
+		if (routingStatus === RoutingStatus.SUCCESS) {
 			this.data.setView(node, this.children);
+		}
 	};
 
 }

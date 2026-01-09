@@ -23,10 +23,12 @@ export class RouteNotenmodulMail extends RouteNode<any, RouteNotenmodulAdministr
 	protected checkHidden(params?: RouteParams) {
 		try {
 			const { id } = (params === undefined) ? { id: undefined } : RouteNode.getIntParams(params, ["id"]);
-			if (id === -1)
+			if (id === -1) {
 				return routeNotenmodulAdministration.getRouteDefaultChild({ id });
-			if ((id !== undefined) && !routeNotenmodulAdministration.data.manager.getConnectionResponse(id).success)
+			}
+			if ((id !== undefined) && !routeNotenmodulAdministration.data.manager.getConnectionResponse(id).success) {
 				return routeNotenmodulAdministration.getRouteDefaultChild({ id });
+			}
 			return false;
 		} catch (e) {
 			return routeError.getSimpleErrorRoute(e as DeveloperNotificationException);

@@ -27,8 +27,9 @@ export class ValidatorLehrerKuerzel extends BasicValidator {
 		this.data = data;
 		for (const l of menge) {
 			// Filtere den Lehrer mit der eigenen ID, sofern diese angegeben wurde und alle Einträge mit leerem Kürzel
-			if (((id !== null) && (l.id === id)) || (JavaString.isBlank(l.kuerzel)))
+			if (((id !== null) && (l.id === id)) || (JavaString.isBlank(l.kuerzel))) {
 				continue;
+			}
 			this.menge.add(l.kuerzel);
 		}
 		this.run();

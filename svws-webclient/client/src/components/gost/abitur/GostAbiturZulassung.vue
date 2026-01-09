@@ -66,14 +66,17 @@
 		const result = new HashMap<number, List<GostBelegpruefungErgebnisFehler>>();
 		for (const schueler of props.schuelerListe) {
 			const ergebnisBelegpruefung = props.ergebnisBelegpruefungMap().get(schueler.id);
-			if (ergebnisBelegpruefung === null)
+			if (ergebnisBelegpruefung === null) {
 				continue;
+			}
 			const res = new ArrayList<GostBelegpruefungErgebnisFehler>();
-			for (const fehler of ergebnisBelegpruefung.fehlercodes)
+			for (const fehler of ergebnisBelegpruefung.fehlercodes) {
 				if (GostBelegungsfehlerArt.fromKuerzel(fehler.art) === GostBelegungsfehlerArt.BELEGUNG
 					|| GostBelegungsfehlerArt.fromKuerzel(fehler.art) === GostBelegungsfehlerArt.SCHRIFTLICHKEIT
-					|| GostBelegungsfehlerArt.fromKuerzel(fehler.art) === GostBelegungsfehlerArt.SCHULSPEZIFISCH)
+					|| GostBelegungsfehlerArt.fromKuerzel(fehler.art) === GostBelegungsfehlerArt.SCHULSPEZIFISCH) {
 					res.add(fehler);
+				}
+			}
 			result.put(schueler.id, res);
 		}
 		return result;

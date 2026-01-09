@@ -49,8 +49,9 @@ export class GridInputInnerText<KEY, DATA> extends GridInput<KEY, DATA> {
 	 */
 	public onBlur(): void {
 		if (this._autoCommit) {
-			if (!this._isNewFocus.value)
+			if (!this._isNewFocus.value) {
 				this.commit();
+			}
 		}
 	}
 

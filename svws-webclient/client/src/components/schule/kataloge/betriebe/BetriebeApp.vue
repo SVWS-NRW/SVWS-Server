@@ -45,8 +45,9 @@
 
 	const betriebeSubline = computed(() => {
 		const betriebe = props.manager().liste.auswahlSorted();
-		if (betriebe.size() > 5)
+		if (betriebe.size() > 5) {
 			return `${betriebe.size()} Betriebe ausgewählt`;
+		}
 		return [...betriebe].map(k => k.name).join(', ');
 	});
 

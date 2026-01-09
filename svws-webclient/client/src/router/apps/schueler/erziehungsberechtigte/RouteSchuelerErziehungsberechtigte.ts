@@ -25,8 +25,9 @@ export class RouteSchuelerErziehungsberechtigte extends RouteNode<RouteDataSchue
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean): Promise<void | Error | RouteLocationRaw> {
 		try {
-			if (isEntering)
+			if (isEntering) {
 				await this.data.ladeListe();
+			}
 			const { id } = RouteNode.getIntParams(to_params, ["id"]);
 			await this.data.setEintrag(id);
 		} catch (e) {

@@ -63,53 +63,65 @@ export class RouteDataSchuelerNeuSchnelleingabe extends RouteData<RouteStateData
 				api.server.getSchulen(api.schema),
 			]);
 		const mapFahrschuelerarten = new Map();
-		for (const fa of fahrschuelerarten)
+		for (const fa of fahrschuelerarten) {
 			mapFahrschuelerarten.set(fa.id, fa);
+		}
 		// Lade den Katalog der Haltestellen
 		const mapHaltestellen = new Map();
-		for (const h of haltestellen)
+		for (const h of haltestellen) {
 			mapHaltestellen.set(h.id, h);
+		}
 		// Lade den Katalog der Religionen
 		const mapReligionen = new Map();
-		for (const r of religionen)
+		for (const r of religionen) {
 			mapReligionen.set(r.id, r);
+		}
 		// Lade den Katalog der Kindergärten
 		const mapKindergaerten = new Map();
-		for (const k of kindergaerten)
+		for (const k of kindergaerten) {
 			mapKindergaerten.set(k.id, k);
+		}
 		// Lade den Katalog der TelefonArten
 		const mapTelefonArten = new Map();
-		for (const ta of telefonArten)
+		for (const ta of telefonArten) {
 			mapTelefonArten.set(ta.id, ta);
+		}
 		// Lade den Katalog der Erzieherarten
 		const mapErzieherarten = new Map();
-		for (const ea of erzieherarten)
+		for (const ea of erzieherarten) {
 			mapErzieherarten.set(ea.id, ea);
+		}
 		// Lade den Katalog der Vermerkarten
 		const mapVermerkArten = new Map();
-		for (const va of vermerkArten)
+		for (const va of vermerkArten) {
 			mapVermerkArten.set(va.id, va);
+		}
 		// Lade den Katalog der Einschulungsarten
 		const mapEinschulungsarten = new Map();
-		for (const e of einschulungsarten)
+		for (const e of einschulungsarten) {
 			mapEinschulungsarten.set(e.id, e);
+		}
 		// Lade den Katalog der Orte
 		const mapOrte = new Map();
-		for (const o of orte)
+		for (const o of orte) {
 			mapOrte.set(o.id, o);
+		}
 		// Lade den Katalog der Ortsteile
 		const mapOrtsteile = new Map();
-		for (const o of ortsteile)
+		for (const o of ortsteile) {
 			mapOrtsteile.set(o.id, o);
+		}
 		// Ermittle den Katalog der Schulen, welche ein Kürzel haben und als Stammschulen für Schüler infrage kommen
 		const mapSchulen = new Map<string, SchulEintrag>();
 		for (const schule of schulen) {
-			if (schule.schulnummerStatistik === null)
+			if (schule.schulnummerStatistik === null) {
 				continue;
+			}
 			const sfEintrag: SchulformKatalogEintrag | null = schule.idSchulform === null ? null : Schulform.data().getEintragByID(schule.idSchulform);
 			const sf: Schulform | null = sfEintrag === null ? null : Schulform.data().getWertBySchluessel(sfEintrag.schluessel);
-			if (sf === api.schulform)
+			if (sf === api.schulform) {
 				mapSchulen.set(schule.schulnummerStatistik, schule);
+			}
 		}
 		this.setPatchedState({ mapFahrschuelerarten, mapKindergaerten, mapHaltestellen, mapReligionen, mapTelefonArten, mapSchulen, mapErzieherarten, mapEinschulungsarten, mapOrte, mapOrtsteile, mapVermerkArten });
 
@@ -131,17 +143,20 @@ export class RouteDataSchuelerNeuSchnelleingabe extends RouteData<RouteStateData
 
 	private selectBevorzugtenAbschnitt(listAbschnitte: List<SchuelerLernabschnittListeEintrag>): SchuelerLernabschnittListeEintrag | null {
 		for (const a of listAbschnitte) {
-			if ((a.schuljahresabschnitt === routeSchueler.data.idSchuljahresabschnitt) && (a.wechselNr === 0))
+			if ((a.schuljahresabschnitt === routeSchueler.data.idSchuljahresabschnitt) && (a.wechselNr === 0)) {
 				return a;
+			}
 		}
-		if (!listAbschnitte.isEmpty())
+		if (!listAbschnitte.isEmpty()) {
 			return listAbschnitte.get(listAbschnitte.size() - 1);
+		}
 		return null;
 	}
 
 	public async ladeDaten(auswahl: SchuelerListeEintrag | null): Promise<SchuelerStammdaten | null> {
-		if (auswahl === null)
+		if (auswahl === null) {
 			return null;
+		}
 		const [schuelerStammdaten, schuelerSchulbesuchManager, listAbschnitte] =
 			await Promise.all([
 				api.server.getSchuelerStammdaten(api.schema, auswahl.id),
@@ -172,8 +187,9 @@ export class RouteDataSchuelerNeuSchnelleingabe extends RouteData<RouteStateData
 	}
 
 	public async ladeInitialeDatenFuerWeiterenSchueler(auswahl: SchuelerListeEintrag | null): Promise<SchuelerStammdatenNeu | null> {
-		if (auswahl === null)
+		if (auswahl === null) {
 			return null;
+		}
 		const schuelerDaten: SchuelerStammdatenNeu = new SchuelerStammdatenNeu();
 		const [schuelerStammdaten, listAbschnitte] =
 			await Promise.all([
@@ -242,14 +258,16 @@ export class RouteDataSchuelerNeuSchnelleingabe extends RouteData<RouteStateData
 	}
 
 	get schuelerLernabschnittManager(): SchuelerLernabschnittManager {
-		if (this._state.value.schuelerLernabschnittsManager === undefined)
+		if (this._state.value.schuelerLernabschnittsManager === undefined) {
 			throw new DeveloperNotificationException("Unerwarteter Fehler: Schüler-Lernabschnittsdaten nicht initialisiert");
+		}
 		return this._state.value.schuelerLernabschnittsManager;
 	}
 
 	get schuelerSchulbesuchManager(): SchuelerSchulbesuchManager {
-		if (this._state.value.schuelerSchulbesuchManager === undefined)
+		if (this._state.value.schuelerSchulbesuchManager === undefined) {
 			throw new DeveloperNotificationException("SchülerSchulbesuchManager nicht initialisiert.");
+		}
 		return this._state.value.schuelerSchulbesuchManager;
 	}
 }

@@ -37,8 +37,9 @@
 	const numberInput = ref<ComponentExposed<typeof SvwsUiInputNumber>>();
 
 	const first = computed(() => {
-		if (props.stundenplanManager().getListZeitrasterZuStunde(props.selected).isEmpty())
+		if (props.stundenplanManager().getListZeitrasterZuStunde(props.selected).isEmpty()) {
 			return new StundenplanZeitraster();
+		}
 		return props.stundenplanManager().getListZeitrasterZuStunde(props.selected).get(0);
 	});
 
@@ -67,8 +68,9 @@
 	});
 
 	async function patchStunde(stunde: number | null) {
-		if ((stunde === null) || (stunde < 0) || (stunde > 14))
+		if ((stunde === null) || (stunde < 0) || (stunde > 14)) {
 			return;
+		}
 		const list = new ArrayList<StundenplanZeitraster>();
 		for (const zeitraster of props.stundenplanManager().getListZeitrasterZuStunde(props.selected)) {
 			if (!props.stundenplanManager().zeitrasterExistsByWochentagAndStunde(zeitraster.wochentag, stunde)) {
@@ -76,9 +78,9 @@
 				list.add(zeitraster);
 			}
 		}
-		if (list.isEmpty())
+		if (list.isEmpty()) {
 			numberInput.value?.reset();
-		else {
+		} else {
 			await props.patchZeitraster(list);
 			props.setSelection(stunde);
 		}
@@ -103,9 +105,11 @@
 
 	const fehlendeZeitraster = computed<Wochentag[]>(() => {
 		const arr = [];
-		for (const w of props.stundenplanManager().zeitrasterGetWochentageAlsEnumRange())
-			if (props.stundenplanManager().zeitrasterGetByWochentagAndStundeOrNull(w.id, props.selected) === null)
+		for (const w of props.stundenplanManager().zeitrasterGetWochentageAlsEnumRange()) {
+			if (props.stundenplanManager().zeitrasterGetByWochentagAndStundeOrNull(w.id, props.selected) === null) {
 				arr.push(w);
+			}
+		}
 		return arr;
 	});
 

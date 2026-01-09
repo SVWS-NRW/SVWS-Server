@@ -154,9 +154,11 @@ describe("Bedingtes Rendern mit CSS-Prüfung ", () => {
 		await wrapper.setProps({
 			filteredList: items,
 			itemText: (value: item) => {
-				for (const v of items)
-					if (value.text === v.text)
+				for (const v of items) {
+					if (value.text === v.text) {
 						return v.text;
+					}
+				}
 				return "";
 			},
 		});

@@ -30,8 +30,9 @@ export class RouteDataSchuleDatenaustauschUntis extends RouteData<RouteStateDate
 			}
 			const result = new SimpleOperationResponse();
 			result.log.add("Fehler bei der Server-Anfrage. ");
-			if (e instanceof Error)
+			if (e instanceof Error) {
 				result.log.add("  " + e.message);
+			}
 			return result;
 		}
 	}
@@ -49,8 +50,9 @@ export class RouteDataSchuleDatenaustauschUntis extends RouteData<RouteStateDate
 			const apifile = await api.server.exportUntisKlassenGPU003(api.schema, routeApp.data.aktAbschnitt.value.id);
 			return [await apifile.data.text()];
 		} catch (e) {
-			if ((e instanceof OpenApiError) && (e.response instanceof Response) && (e.response.status === 404))
+			if ((e instanceof OpenApiError) && (e.response instanceof Response) && (e.response.status === 404)) {
 				return [];
+			}
 			throw e;
 		}
 	};
@@ -60,8 +62,9 @@ export class RouteDataSchuleDatenaustauschUntis extends RouteData<RouteStateDate
 			const apifile = await api.server.exportUntisLehrerGPU004(api.schema, routeApp.data.aktAbschnitt.value.id);
 			return [await apifile.data.text()];
 		} catch (e) {
-			if ((e instanceof OpenApiError) && (e.response instanceof Response) && (e.response.status === 404))
+			if ((e instanceof OpenApiError) && (e.response instanceof Response) && (e.response.status === 404)) {
 				return [];
+			}
 			throw e;
 		}
 	};
@@ -76,8 +79,9 @@ export class RouteDataSchuleDatenaustauschUntis extends RouteData<RouteStateDate
 			const apifile = await api.server.exportUntisSchuelerGPU010(api.schema, routeApp.data.aktAbschnitt.value.id, sidvariante);
 			return [await apifile.data.text()];
 		} catch (e) {
-			if ((e instanceof OpenApiError) && (e.response instanceof Response) && (e.response.status === 404))
+			if ((e instanceof OpenApiError) && (e.response instanceof Response) && (e.response.status === 404)) {
 				return [];
+			}
 			throw e;
 		}
 	};
@@ -104,8 +108,9 @@ export class RouteDataSchuleDatenaustauschUntis extends RouteData<RouteStateDate
 		const abschnitt = routeApp.data.aktAbschnitt.value.abschnitt;
 		for (const abiturjahr of abijahrgaenge) {
 			const idHalbjahr = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abiturjahr, schuljahr, abschnitt)?.id ?? null;
-			if (idHalbjahr !== null)
+			if (idHalbjahr !== null) {
 				all.push(api.server.getGostAbiturjahrgangBlockungsliste(api.schema, abiturjahr, idHalbjahr));
+			}
 		}
 		return await Promise.all(all);
 	};
@@ -114,8 +119,9 @@ export class RouteDataSchuleDatenaustauschUntis extends RouteData<RouteStateDate
 		const data = new LongAndStringLists();
 		const tmp = JSON.stringify(gpu002);
 		data.strings.add(tmp.substring(1, tmp.length - 1));
-		for (const idBlockungsergegbnis of blockungsergebnisse)
+		for (const idBlockungsergegbnis of blockungsergebnisse) {
 			data.numbers.add(idBlockungsergegbnis);
+		}
 		return [... await api.server.exportUntisBlockungGPU002GPU015GPU019(data, api.schema, routeApp.data.aktAbschnitt.value.id, sidvariante)];
 	};
 

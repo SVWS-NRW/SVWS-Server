@@ -111,22 +111,25 @@
 		const split = route.path.split('/');
 		split.shift();
 		const key = split.shift();
-		if (key === undefined)
+		if (key === undefined) {
 			continue;
-		if ((split.length === 0))
+		}
+		if ((split.length === 0)) {
 			groups.get('default')?.push(route);
-		else
-			if (groups.has(key))
+		} else
+			if (groups.has(key)) {
 				groups.get(key)?.push(route);
-			else
+			} else {
 				groups.set(key, [route]);
+			}
 	}
 
 	function cmp(a: RouteRecord, b: RouteRecord) {
-		if (a.path < b.path)
+		if (a.path < b.path) {
 			return -1;
-		else if (a.path > b.path)
+		} else if (a.path > b.path) {
 			return 1;
+		}
 		return 0;
 	}
 	const clicked = ref<RouteRecord>(router.getRoutes().find(r => r.path === router.currentRoute.value.path) || router.getRoutes()[0]);
@@ -141,17 +144,19 @@
 	const visible = ref<'events' | 'docs' | 'controls'>('controls');
 
 	watchEffect(() => {
-		if ((visible.value === 'events') && (storyManager.events.length > 0))
+		if ((visible.value === 'events') && (storyManager.events.length > 0)) {
 			initialEventCounter.value = storyManager.events.length;
+		}
 	});
 
 	const initialEventCounter = ref(storyManager.events.length);
 
 	const eventCounter = computed(() => {
-		if (visible.value !== 'events')
+		if (visible.value !== 'events') {
 			return storyManager.events.length - initialEventCounter.value;
-		else
+		} else {
 			return 0;
+		}
 	});
 
 	const color = computed({

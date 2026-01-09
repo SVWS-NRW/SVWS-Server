@@ -236,11 +236,13 @@
 	}
 
 	function onSelect(value: GPU): void {
-		if ((aktuell.value === value) && (!((aktuell.value === 'stundenplanGPU001') && (bezeichnung.value === ''))))
+		if ((aktuell.value === value) && (!((aktuell.value === 'stundenplanGPU001') && (bezeichnung.value === '')))) {
 			return;
+		}
 		aktuell.value = value;
-		if (['stundenplanGPU001', 'stundenplanGPU001002', 'stundenplanGPP002GPU014'].includes(aktuell.value))
+		if (['stundenplanGPU001', 'stundenplanGPU001002', 'stundenplanGPP002GPU014'].includes(aktuell.value)) {
 			initStundenplanParameter();
+		}
 		status.value = null;
 	}
 
@@ -267,29 +269,34 @@
 	}
 
 	async function setWochentypBezeichner(wt: number, value: string | null) {
-		if (value === null)
+		if (value === null) {
 			return;
+		}
 		wochentypen.value[wt - 1] = value;
 		await updateStundenplanGPU001002();
 	}
 
 	async function importStundenplanGPU001002(gpu: number, event: Event) {
 		const target = event.target as HTMLInputElement;
-		if ((target.files === null) || (target.files.length === 0))
+		if ((target.files === null) || (target.files.length === 0)) {
 			return;
+		}
 		const file = target.files.item(0);
-		if (file === null)
+		if (file === null) {
 			return;
-		if (gpu === 1)
+		}
+		if (gpu === 1) {
 			tmpGPU001.value = new UntisGPU001Csv(await file.text());
-		else if (gpu === 2)
+		} else if (gpu === 2) {
 			tmpGPU002.value = new UntisGPU002Csv(await file.text());
+		}
 		await updateStundenplanGPU001002();
 	}
 
 	async function importStundenplanGPU001Berechnet() {
-		if (resultGPU001.value === null)
+		if (resultGPU001.value === null) {
 			return;
+		}
 		status.value = null;
 		loading.value = true;
 		const entry = new StundenplanListeEintragMinimal();
@@ -307,27 +314,33 @@
 
 	async function importStundenplanGPP002GPU014(gpu: number, event: Event) {
 		const target = event.target as HTMLInputElement;
-		if ((target.files === null) || (target.files.length === 0))
+		if ((target.files === null) || (target.files.length === 0)) {
 			return;
+		}
 		const file = target.files.item(0);
-		if (file === null)
+		if (file === null) {
 			return;
-		if (gpu === 1)
+		}
+		if (gpu === 1) {
 			tmpGPP002.value = new UntisGPP002Csv(await file.text());
-		else if (gpu === 2)
+		} else if (gpu === 2) {
 			tmpGPU014.value = new UntisGPU014Csv(await file.text());
+		}
 		await updateStundenplanGPP002GPU014();
 	}
 
 	async function importStundenplanGPU001(event: Event) {
 		const target = event.target as HTMLInputElement;
-		if ((target.files === null) || (target.files.length === 0))
+		if ((target.files === null) || (target.files.length === 0)) {
 			return;
+		}
 		const file = target.files.item(0);
-		if (file === null)
+		if (file === null) {
 			return;
-		if (bezeichnung.value.length < 1)
+		}
+		if (bezeichnung.value.length < 1) {
 			return;
+		}
 		status.value = null;
 		loading.value = true;
 		const entry = new StundenplanListeEintragMinimal();
@@ -345,11 +358,13 @@
 
 	async function importRauemeGPU005(event: Event) {
 		const target = event.target as HTMLInputElement;
-		if ((target.files === null) || (target.files.length === 0))
+		if ((target.files === null) || (target.files.length === 0)) {
 			return;
+		}
 		const file = target.files.item(0);
-		if (file === null)
+		if (file === null) {
 			return;
+		}
 		status.value = null;
 		loading.value = true;
 		const formData = new FormData();

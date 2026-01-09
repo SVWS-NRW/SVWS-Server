@@ -61,13 +61,15 @@
 	}
 
 	async function patchSortierung(value: number | null): Promise<void> {
-		if (sortierungIsValid(value))
+		if (sortierungIsValid(value)) {
 			await props.patch({ sortierung: value === null ? 32000 : value });
+		}
 	}
 
 	async function patchKuerzel(value: string | null): Promise<void> {
-		if (kuerzelIsValid(value))
+		if (kuerzelIsValid(value)) {
 			await props.patch({ kuerzel: value ?? '' });
+		}
 	}
 
 	async function patchSichtbar(value: boolean): Promise<void> {
@@ -75,8 +77,9 @@
 	}
 
 	function kuerzelIsValid(value: string | null): boolean {
-		if (!mandatoryInputIsValid(value, 50))
+		if (!mandatoryInputIsValid(value, 50)) {
 			return false;
+		}
 
 		return isUniqueInList(value, props.manager().liste.list(), "kuerzel", "id", props.manager().auswahlID() ?? undefined);
 	}

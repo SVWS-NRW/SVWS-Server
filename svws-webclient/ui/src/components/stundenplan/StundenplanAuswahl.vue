@@ -46,8 +46,9 @@
 
 	const stundenplan_auswahl = computed<StundenplanListeEintrag>({
 		get: () => {
-			if (props.stundenplan === undefined)
+			if (props.stundenplan === undefined) {
 				throw new DeveloperNotificationException("Unerwarteter Fehler: Kein Stundenplan an dieser Stelle definiert.");
+			}
 			return props.stundenplan;
 		},
 		set: (value) => {
@@ -57,11 +58,13 @@
 
 	function wochentypen(): List<number> {
 		let modell = props.manager().getWochenTypModell();
-		if (modell <= 1)
+		if (modell <= 1) {
 			modell = 0;
+		}
 		const result = new ArrayList<number>();
-		for (let n = 0; n <= modell; n++)
+		for (let n = 0; n <= modell; n++) {
 			result.add(n);
+		}
 		return result;
 	}
 
@@ -80,8 +83,9 @@
 	}
 
 	function getKalenderwochenString(kw: StundenplanKalenderwochenzuordnung | undefined): string {
-		if (kw === undefined)
+		if (kw === undefined) {
 			return "—";
+		}
 		return props.manager().kalenderwochenzuordnungGetWocheAsString(kw);
 	}
 

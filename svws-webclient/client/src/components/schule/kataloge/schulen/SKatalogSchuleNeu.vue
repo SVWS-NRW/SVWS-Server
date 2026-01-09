@@ -71,11 +71,13 @@
 	const selectedSchulform = computed({
 		get: () => data.value.idSchulform !== null ? Schulform.data().getWertByID(data.value.idSchulform) : null,
 		set: (val: Schulform | null) => {
-			if (val === null)
+			if (val === null) {
 				return;
+			}
 			const eintrag = Schulform.data().getEintragBySchuljahrUndWert(schuljahr.value, val);
-			if (eintrag !== null)
+			if (eintrag !== null) {
 				data.value.idSchulform = eintrag.id;
+			}
 		},
 	});
 	const adresse = computed({
@@ -118,8 +120,9 @@
 	// ---buttons---
 
 	async function addSchule() {
-		if (isLoading.value)
+		if (isLoading.value) {
 			return;
+		}
 
 		isLoading.value = true;
 		props.checkpoint.active = false;
@@ -148,14 +151,16 @@
 		props.checkpoint.active = false;
 		const schuleintrag = findSchuleByPredicate((schuleintrag: SchulEintrag) =>
 			JavaObject.equalsTranspiler(schuleintrag.schulnummerStatistik, selectedSchule.value?.SchulNr));
-		if (schuleintrag)
+		if (schuleintrag) {
 			await props.gotoDefaultView(schuleintrag.id);
+		}
 	}
 
 	function findSchuleByPredicate(predicate: (schuleintrag: any) => boolean) {
 		for (const schuleintrag of props.manager().liste.list()) {
-			if (predicate(schuleintrag))
+			if (predicate(schuleintrag)) {
 				return schuleintrag;
+			}
 		}
 		return null;
 	}
@@ -163,8 +168,9 @@
 	const isLoading = ref<boolean>(false);
 
 	watch(() => data.value, async () => {
-		if (isLoading.value)
+		if (isLoading.value) {
 			return;
+		}
 		props.checkpoint.active = true;
 	}, { immediate: false, deep: true });
 
@@ -222,18 +228,22 @@
 	}
 
 	function optionalNumberIsValid(input: string | null, maxLength: number) {
-		if (input === null || JavaString.isBlank(input))
+		if (input === null || JavaString.isBlank(input)) {
 			return true;
-		if (input.length > maxLength)
+		}
+		if (input.length > maxLength) {
 			return false;
+		}
 		return /^\d+$/.test(input);
 	}
 
 	function kuerzelIsValid(kuerzel: string | null) {
-		if ((kuerzel === null) || (JavaString.isBlank(kuerzel)))
+		if ((kuerzel === null) || (JavaString.isBlank(kuerzel))) {
 			return true;
-		if (kuerzel.length > 10)
+		}
+		if (kuerzel.length > 10) {
 			return false;
+		}
 		return findSchuleByPredicate(schuleintrag => JavaObject.equalsTranspiler(schuleintrag.kuerzel, kuerzel)) === null;
 	}
 

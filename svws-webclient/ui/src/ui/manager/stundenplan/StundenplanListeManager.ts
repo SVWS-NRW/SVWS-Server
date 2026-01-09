@@ -22,14 +22,17 @@ export class StundenplanListeManager extends AuswahlManager<number, StundenplanL
 	 */
 	public static readonly comparator: Comparator<StundenplanListeEintrag> = { compare: (a: StundenplanListeEintrag, b: StundenplanListeEintrag) => {
 		let cmp: number = a.schuljahr - b.schuljahr;
-		if (cmp !== 0)
+		if (cmp !== 0) {
 			return cmp;
+		}
 		cmp = a.abschnitt - b.abschnitt;
-		if (cmp !== 0)
+		if (cmp !== 0) {
 			return cmp;
+		}
 		cmp = (a.aktiv === b.aktiv) ? 0 : (a.aktiv ? -1 : 1);
-		if (cmp !== 0)
+		if (cmp !== 0) {
 			return cmp;
+		}
 		cmp = JavaString.compareTo(a.gueltigAb, b.gueltigAb);
 		return cmp !== 0 ? cmp : JavaLong.compare(a.id, b.id);
 	} };
@@ -66,42 +69,51 @@ export class StundenplanListeManager extends AuswahlManager<number, StundenplanL
 	 */
 	public constructor(schuljahresabschnitt: number, schuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>, schulform: Schulform | null, stundenplanListe: List<StundenplanListeEintrag>, createVorlage: boolean) {
 		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, stundenplanListe, StundenplanListeManager.comparator, StundenplanListeManager._listeEintragToId, StundenplanListeManager._stundenplanToId, Arrays.asList());
-		if (createVorlage)
+		if (createVorlage) {
 			this.addStundenplanVorlage();
+		}
 	}
 
 	protected checkFilter(eintrag: StundenplanListeEintrag): boolean {
-		if (this._filterNurAktiv && !eintrag.aktiv)
+		if (this._filterNurAktiv && !eintrag.aktiv) {
 			return false;
+		}
 		return true;
 	}
 
 	protected compareAuswahl(a: StundenplanListeEintrag, b: StundenplanListeEintrag): number {
 		let cmp: number = a.schuljahr - b.schuljahr;
-		if (cmp !== 0)
+		if (cmp !== 0) {
 			return cmp;
+		}
 		cmp = a.abschnitt - b.abschnitt;
-		if (cmp !== 0)
+		if (cmp !== 0) {
 			return cmp;
-		if (a as unknown === this._stundenplanVorlage as unknown)
+		}
+		if (a as unknown === this._stundenplanVorlage as unknown) {
 			return -1;
-		if (b as unknown === this._stundenplanVorlage as unknown)
+		}
+		if (b as unknown === this._stundenplanVorlage as unknown) {
 			return 1;
+		}
 		cmp = (a.aktiv === b.aktiv) ? 0 : (a.aktiv ? -1 : 1);
-		if (cmp !== 0)
+		if (cmp !== 0) {
 			return cmp;
+		}
 		for (const criteria of this._order) {
 			const field: string | null = criteria.a;
 			const asc: boolean = (criteria.b === null) || criteria.b;
-			if (JavaObject.equalsTranspiler("gueltigAb", (field)))
+			if (JavaObject.equalsTranspiler("gueltigAb", (field))) {
 				cmp = JavaString.compareTo(a.gueltigAb, b.gueltigAb);
-			else
-				if (JavaObject.equalsTranspiler("bezeichnung", (field)))
+			} else
+				if (JavaObject.equalsTranspiler("bezeichnung", (field))) {
 					cmp = JavaString.compareTo(a.bezeichnung, b.bezeichnung);
-				else
+				} else {
 					throw new DeveloperNotificationException("Fehler bei der Sortierung. Das Sortierkriterium wird vom Manager nicht unterstützt.");
-			if (cmp === 0)
+				}
+			if (cmp === 0) {
 				continue;
+			}
 			return asc ? cmp : -cmp;
 		}
 		return JavaLong.compare(a.id, b.id);
@@ -116,10 +128,12 @@ export class StundenplanListeManager extends AuswahlManager<number, StundenplanL
 	public filtered(): List<StundenplanListeEintrag> {
 		const hasCache: boolean = this._filtered !== null;
 		const filtered: List<StundenplanListeEintrag> | null = super.filtered();
-		if (hasCache)
+		if (hasCache) {
 			return filtered;
-		if (this._stundenplanVorlage !== null)
+		}
+		if (this._stundenplanVorlage !== null) {
 			filtered.addFirst(this._stundenplanVorlage);
+		}
 		return filtered;
 	}
 
@@ -132,8 +146,9 @@ export class StundenplanListeManager extends AuswahlManager<number, StundenplanL
 		if (this._filtered === null || this._aktive === null) {
 			this._aktive = new ArrayList();
 			for (const stundenplan of this.liste.list()) {
-				if (stundenplan.aktiv)
+				if (stundenplan.aktiv) {
 					this._aktive.add(stundenplan);
+				}
 			}
 		}
 		return this._aktive;
@@ -174,10 +189,12 @@ export class StundenplanListeManager extends AuswahlManager<number, StundenplanL
 	 * @throws DeveloperNotificationException wenn keine gültige Auswahl vorliegt
 	 */
 	public auswahl(): StundenplanListeEintrag {
-		if (this._daten === null || this._daten.stundenplanGetID() !== -1)
+		if (this._daten === null || this._daten.stundenplanGetID() !== -1) {
 			return super.auswahl();
-		if (this._stundenplanVorlage === null)
+		}
+		if (this._stundenplanVorlage === null) {
 			throw new DeveloperNotificationException("Es existiert kein Vorlagen-Stundenplan.");
+		}
 		return this._stundenplanVorlage;
 	}
 
@@ -189,8 +206,9 @@ export class StundenplanListeManager extends AuswahlManager<number, StundenplanL
 	 * @return <code>true</code> wenn die Bezeichnung des Stundenplans gültig ist, ansonsten <code>false</code>
 	 */
 	public static validateBezeichnung(bezeichnung: string | null): boolean {
-		if (bezeichnung === null)
+		if (bezeichnung === null) {
 			return false;
+		}
 		return bezeichnung.trim().length <= 150;
 	}
 
@@ -207,15 +225,20 @@ export class StundenplanListeManager extends AuswahlManager<number, StundenplanL
 	 * @return <code>true</code> wenn das Datum gültig ist, ansonsten <code>false</code>
 	 */
 	public validateGueltigAb(gueltigAb: string | null, gueltigBis: string | null, aktiv: boolean, warn: boolean, neu: boolean): boolean {
-		if (gueltigAb === null || !DateUtils.isValidDate(gueltigAb))
+		if (gueltigAb === null || !DateUtils.isValidDate(gueltigAb)) {
 			return false;
+		}
 		const gueltigBisComputed: string = (gueltigBis ?? this.auswahl().gueltigBis);
-		if (JavaString.compareTo(gueltigAb, gueltigBisComputed) > 0)
+		if (JavaString.compareTo(gueltigAb, gueltigBisComputed) > 0) {
 			return false;
-		if (aktiv || warn)
-			for (const stundenplan of this.aktive())
-				if ((!this.hasDaten() || stundenplan.id !== this.auswahl().id || neu) && (JavaString.compareTo(stundenplan.gueltigAb, gueltigAb) <= 0) && (JavaString.compareTo(stundenplan.gueltigBis, gueltigAb) >= 0))
+		}
+		if (aktiv || warn) {
+			for (const stundenplan of this.aktive()) {
+				if ((!this.hasDaten() || stundenplan.id !== this.auswahl().id || neu) && (JavaString.compareTo(stundenplan.gueltigAb, gueltigAb) <= 0) && (JavaString.compareTo(stundenplan.gueltigBis, gueltigAb) >= 0)) {
 					return false;
+				}
+			}
+		}
 		return true;
 	}
 
@@ -232,15 +255,20 @@ export class StundenplanListeManager extends AuswahlManager<number, StundenplanL
 	 * @return <code>true</code> wenn das Datum gültig ist, ansonsten <code>false</code>
 	 */
 	public validateGueltigBis(gueltigAb: string | null, gueltigBis: string | null, aktiv: boolean, warn: boolean, neu: boolean): boolean {
-		if (gueltigBis === null || !DateUtils.isValidDate(gueltigBis))
+		if (gueltigBis === null || !DateUtils.isValidDate(gueltigBis)) {
 			return false;
+		}
 		const gueltigAbComputed: string = (gueltigAb ?? this.auswahl().gueltigAb);
-		if (JavaString.compareTo(gueltigBis, gueltigAbComputed) < 0)
+		if (JavaString.compareTo(gueltigBis, gueltigAbComputed) < 0) {
 			return false;
-		if (aktiv || warn)
-			for (const stundenplan of this.aktive())
-				if ((!this.hasDaten() || stundenplan.id !== this.auswahl().id || neu) && (JavaString.compareTo(stundenplan.gueltigAb, gueltigBis) <= 0) && (JavaString.compareTo(stundenplan.gueltigBis, gueltigBis) >= 0))
+		}
+		if (aktiv || warn) {
+			for (const stundenplan of this.aktive()) {
+				if ((!this.hasDaten() || stundenplan.id !== this.auswahl().id || neu) && (JavaString.compareTo(stundenplan.gueltigAb, gueltigBis) <= 0) && (JavaString.compareTo(stundenplan.gueltigBis, gueltigBis) >= 0)) {
 					return false;
+				}
+			}
+		}
 		return true;
 	}
 
@@ -255,9 +283,11 @@ export class StundenplanListeManager extends AuswahlManager<number, StundenplanL
 	 * @return <code>true</code> wenn es eine Überschneidung gibt, ansonsten <code>false</code>
 	 */
 	public istKonfliktfreiZuAktivenStundenplaenen(gueltigAb: string | null, gueltigBis: string | null, neu: boolean = false): boolean {
-		for (const sp of this.aktive())
-			if ((!this.hasDaten() || this.auswahl().id !== sp.id || neu) && (DateUtils.berechneGemeinsameTage((gueltigAb ?? this.auswahl().gueltigAb), (gueltigBis ?? this.auswahl().gueltigBis), sp.gueltigAb, sp.gueltigBis).length > 0))
+		for (const sp of this.aktive()) {
+			if ((!this.hasDaten() || this.auswahl().id !== sp.id || neu) && (DateUtils.berechneGemeinsameTage((gueltigAb ?? this.auswahl().gueltigAb), (gueltigBis ?? this.auswahl().gueltigBis), sp.gueltigAb, sp.gueltigBis).length > 0)) {
 				return false;
+			}
+		}
 		return true;
 	}
 
@@ -286,8 +316,9 @@ export class StundenplanListeManager extends AuswahlManager<number, StundenplanL
 	 * @throws DeveloperNotificationException wenn kein Vorlagen-Stundenplan gesetzt ist.
 	 */
 	public getStundenplanVorlage(): StundenplanListeEintrag {
-		if (this._stundenplanVorlage === null)
+		if (this._stundenplanVorlage === null) {
 			throw new DeveloperNotificationException("Kein Vorlagen-Stundenplan gesetzt.");
+		}
 		return this._stundenplanVorlage;
 	}
 

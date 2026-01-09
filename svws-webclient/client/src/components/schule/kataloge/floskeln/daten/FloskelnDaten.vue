@@ -43,8 +43,9 @@
 	}
 
 	async function patchKuerzel(value: string | null) {
-		if (kuerzelIsValid(value))
+		if (kuerzelIsValid(value)) {
 			await props.patch({ kuerzel: value?.trim() });
+		}
 	}
 
 	function textIsValid(value: string | null): boolean {
@@ -52,8 +53,9 @@
 	}
 
 	async function patchText(value: string | null) {
-		if (textIsValid(value))
+		if (textIsValid(value)) {
 			await props.patch({ text: value?.trim() });
+		}
 	}
 
 </script>

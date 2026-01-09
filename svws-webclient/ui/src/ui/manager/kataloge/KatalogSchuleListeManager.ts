@@ -31,8 +31,9 @@ export class KatalogSchuleListeManager extends AuswahlManager<number, SchulEintr
 	 */
 	public static readonly _defaultComparator: Comparator<SchulEintrag> = { compare: (a: SchulEintrag, b: SchulEintrag) => {
 		let cmp: number = a.sortierung - b.sortierung;
-		if (cmp !== 0)
+		if (cmp !== 0) {
 			return cmp;
+		}
 		if ((a.kuerzel === null) && (b.kuerzel !== null)) {
 			return 1;
 		} else
@@ -123,10 +124,12 @@ export class KatalogSchuleListeManager extends AuswahlManager<number, SchulEintr
 							if ((a.kurzbezeichnung !== null)) {
 								cmp = JavaString.compareTo(a.kurzbezeichnung, b.kurzbezeichnung);
 							}
-				} else
+				} else {
 					throw new DeveloperNotificationException("Fehler bei der Sortierung. Das Sortierkriterium wird vom Manager nicht unterstützt.");
-			if (cmp === 0)
+				}
+			if (cmp === 0) {
 				continue;
+			}
 			return asc ? cmp : -cmp;
 		}
 		return KatalogSchuleListeManager._defaultComparator.compare(a, b);

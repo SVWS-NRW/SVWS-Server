@@ -31,8 +31,9 @@ export class RouteVermerkarten extends RouteAuswahlNode<VermerkartenListeManager
 	}
 
 	protected doUpdateIfTarget = async (to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined) => {
-		if (this.data.manager.hasDaten() === false)
+		if (this.data.manager.hasDaten() === false) {
 			return;
+		}
 		return this.getRouteSelectedChild();
 	};
 }

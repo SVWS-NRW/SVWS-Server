@@ -40,8 +40,9 @@
 	const folgeklasse = computed<KlassenDaten | undefined>({
 		get: () => {
 			const id = props.manager().lernabschnittGet().folgeklassenID;
-			if (id === null)
+			if (id === null) {
 				return undefined;
+			}
 			return props.manager().klasseGetByIdOrException(id);
 		},
 		set: (value) => void props.patch({ folgeklassenID: (value === undefined) ? null : value.id }),

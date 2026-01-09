@@ -128,12 +128,14 @@ export class StundenplanUnterrichtListeManager extends AuswahlManager<number, St
 		this.kurse = new AttributMitAuswahl(stundenplanManager.kursGetMengeVerwendetAsList(), StundenplanUnterrichtListeManager._kursToId, StundenplanUnterrichtUtils.comparatorKurse, this._eventHandlerFilterChanged);
 		this.wochentage = new AttributMitAuswahl(Arrays.asList(...stundenplanManager.zeitrasterGetWochentageAlsEnumRange()), StundenplanUnterrichtListeManager._wochentagToId, StundenplanUnterrichtUtils.comparatorWochentage, this._eventHandlerFilterChanged);
 		const tmpStunden: List<number> = new ArrayList<number>();
-		for (const s of stundenplanManager.zeitrasterGetStundenRange())
+		for (const s of stundenplanManager.zeitrasterGetStundenRange()) {
 			tmpStunden.add(s);
+		}
 		this.stunden = new AttributMitAuswahl(tmpStunden, StundenplanUnterrichtListeManager._stundeToStunde, StundenplanUnterrichtUtils.comparatorStunden, this._eventHandlerFilterChanged);
 		const tmpWochentypen: List<number> = new ArrayList<number>();
-		for (let w: number = 0; w <= stundenplanManager.getWochenTypModell(); w++)
+		for (let w: number = 0; w <= stundenplanManager.getWochenTypModell(); w++) {
 			tmpWochentypen.add(w);
+		}
 		this.wochentypen = new AttributMitAuswahl(tmpWochentypen, StundenplanUnterrichtListeManager._wochentypToWochentyp, StundenplanUnterrichtUtils.comparatorWochentypen, this._eventHandlerFilterChanged);
 		this.raeume = new AttributMitAuswahl(stundenplanManager.raumGetMengeVerwendetAsList(), StundenplanUnterrichtListeManager._raumToId, StundenplanUnterrichtUtils.comparatorRaeume, this._eventHandlerFilterChanged);
 		this.schienen = new AttributMitAuswahl(stundenplanManager.schieneGetMengeVerwendetAsList(), StundenplanUnterrichtListeManager._schieneToId, StundenplanUnterrichtUtils.comparatorSchienen, this._eventHandlerFilterChanged);
@@ -166,42 +168,57 @@ export class StundenplanUnterrichtListeManager extends AuswahlManager<number, St
 	}
 
 	private static checkContains<T>(attr: AttributMitAuswahl<number, T>, list: List<number>): boolean {
-		if (!attr.auswahlExists())
+		if (!attr.auswahlExists()) {
 			return true;
-		for (const id of list)
-			if (attr.auswahlHasKey(id))
+		}
+		for (const id of list) {
+			if (attr.auswahlHasKey(id)) {
 				return true;
+			}
+		}
 		return false;
 	}
 
 	protected checkFilter(eintrag: StundenplanUnterricht): boolean {
-		if (this.faecher.auswahlExists() && (!this.faecher.auswahlHasKey(eintrag.idFach)))
+		if (this.faecher.auswahlExists() && (!this.faecher.auswahlHasKey(eintrag.idFach))) {
 			return false;
-		if (this.kurse.auswahlExists() && ((eintrag.idKurs === null) || (!this.kurse.auswahlHasKey(eintrag.idKurs))))
+		}
+		if (this.kurse.auswahlExists() && ((eintrag.idKurs === null) || (!this.kurse.auswahlHasKey(eintrag.idKurs)))) {
 			return false;
-		if (this.zeitraster.auswahlExists() && (!this.zeitraster.auswahlHasKey(eintrag.idZeitraster)))
+		}
+		if (this.zeitraster.auswahlExists() && (!this.zeitraster.auswahlHasKey(eintrag.idZeitraster))) {
 			return false;
-		if (this.wochentypen.auswahlExists() && (!this.wochentypen.auswahlHasKey(eintrag.wochentyp)))
+		}
+		if (this.wochentypen.auswahlExists() && (!this.wochentypen.auswahlHasKey(eintrag.wochentyp))) {
 			return false;
+		}
 		const zeitraster: StundenplanZeitraster = this.stundenplanManager.zeitrasterGetByIdOrException(eintrag.idZeitraster);
-		if (this.wochentage.auswahlExists() && (!this.wochentage.auswahlHasKey(zeitraster.wochentag)))
+		if (this.wochentage.auswahlExists() && (!this.wochentage.auswahlHasKey(zeitraster.wochentag))) {
 			return false;
-		if (this.stunden.auswahlExists() && (!this.stunden.auswahlHasKey(zeitraster.unterrichtstunde)))
+		}
+		if (this.stunden.auswahlExists() && (!this.stunden.auswahlHasKey(zeitraster.unterrichtstunde))) {
 			return false;
-		if (!StundenplanUnterrichtListeManager.checkContains(this.klassen, eintrag.klassen))
+		}
+		if (!StundenplanUnterrichtListeManager.checkContains(this.klassen, eintrag.klassen)) {
 			return false;
-		if (!StundenplanUnterrichtListeManager.checkContains(this.lehrer, eintrag.lehrer))
+		}
+		if (!StundenplanUnterrichtListeManager.checkContains(this.lehrer, eintrag.lehrer)) {
 			return false;
-		if (!StundenplanUnterrichtListeManager.checkContains(this.raeume, eintrag.raeume))
+		}
+		if (!StundenplanUnterrichtListeManager.checkContains(this.raeume, eintrag.raeume)) {
 			return false;
-		if (!StundenplanUnterrichtListeManager.checkContains(this.schienen, eintrag.schienen))
+		}
+		if (!StundenplanUnterrichtListeManager.checkContains(this.schienen, eintrag.schienen)) {
 			return false;
+		}
 		const listeSchueler: List<StundenplanSchueler> = this.stundenplanManager.schuelerGetMengeByUnterrichtIdAsList(eintrag.id);
 		const listIdSchueler: List<number> = new ArrayList<number>();
-		for (const s of listeSchueler)
+		for (const s of listeSchueler) {
 			listIdSchueler.add(s.id);
-		if (!StundenplanUnterrichtListeManager.checkContains(this.schueler, listIdSchueler))
+		}
+		if (!StundenplanUnterrichtListeManager.checkContains(this.schueler, listIdSchueler)) {
 			return false;
+		}
 		return true;
 	}
 

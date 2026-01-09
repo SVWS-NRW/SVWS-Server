@@ -21,8 +21,9 @@ export class RouteKonfessionenDaten extends RouteNode<any, RouteKonfessionen> {
 	}
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams): Promise<void | Error | RouteLocationRaw> {
-		if (routeKonfessionen.data.manager.auswahlID() === null)
+		if (routeKonfessionen.data.manager.auswahlID() === null) {
 			return routeKonfessionen.getRoute();
+		}
 	}
 
 	public getProps(to: RouteLocationNormalized): KonfessionenDatenProps {

@@ -218,8 +218,9 @@
 
 	onMounted(() => {
 		// Fächer-IDs zu statischer Liste hinzufügen um Fächer durchschalten zu können
-		for (const fach of props.manager.alleFaecher)
+		for (const fach of props.manager.alleFaecher) {
 			faecherIds.push(fach.id);
+		}
 	});
 
 	const faecherFilteredIds = computed<Array<number>>(() => {
@@ -248,10 +249,12 @@
 
 	// Fokus setzen: Fach wechseln (hoch/runter) oder Halbjahr wechseln (links/rechts)
 	function switchFocus(event: KeyboardEvent) {
-		if (faecherFilteredIds.value.length === 0)
+		if (faecherFilteredIds.value.length === 0) {
 			return;
-		if (!["ArrowDown", "ArrowUp", "ArrowRight", "ArrowLeft"].includes(event.key))
+		}
+		if (!["ArrowDown", "ArrowUp", "ArrowRight", "ArrowLeft"].includes(event.key)) {
 			return;
+		}
 		activeDirection.value = event.key;
 		event.preventDefault();
 		switch (event.key) {
@@ -293,16 +296,20 @@
 	}
 
 	function getFachIndexById(fachId: number): number {
-		for (let i = 0; i <= faecherIds.length; i++)
-			if (faecherIds[i] === fachId)
+		for (let i = 0; i <= faecherIds.length; i++) {
+			if (faecherIds[i] === fachId) {
 				return i;
+			}
+		}
 		return -1;
 	}
 
 	function getFachFilteredIndexById(fachId: number): number | null {
-		for (let i = 0; i <= faecherFilteredIds.value.length; i++)
-			if (faecherFilteredIds.value[i] === fachId)
+		for (let i = 0; i <= faecherFilteredIds.value.length; i++) {
+			if (faecherFilteredIds.value[i] === fachId) {
 				return i;
+			}
+		}
 		return null;
 	}
 

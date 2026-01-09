@@ -36,12 +36,14 @@
 
 	async function removeRegeln() {
 		const update = new GostBlockungRegelUpdate();
-		for (const regel of selected.value)
+		for (const regel of selected.value) {
 			update.listEntfernen.add(regel);
+		}
 		show.value = false;
 
-		if (!update.listEntfernen.isEmpty())
+		if (!update.listEntfernen.isEmpty()) {
 			await props.regelnUpdate(update);
+		}
 		selected.value = [];
 	}
 

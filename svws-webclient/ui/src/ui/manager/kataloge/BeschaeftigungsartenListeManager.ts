@@ -20,12 +20,14 @@ export class BeschaeftigungsartenListeManager extends AuswahlManager<number, Bes
 	 */
 	public static readonly comparator: Comparator<Beschaeftigungsart> = { compare: (a: Beschaeftigungsart, b: Beschaeftigungsart) => {
 		let cmp: number = JavaInteger.compare(a.sortierung, b.sortierung);
-		if (cmp !== 0)
+		if (cmp !== 0) {
 			return cmp;
+		}
 		if ((a.bezeichnung !== null) && (b.bezeichnung !== null)) {
 			cmp = JavaString.compareTo(a.bezeichnung, b.bezeichnung);
-			if (cmp !== 0)
+			if (cmp !== 0) {
 				return cmp;
+			}
 		}
 		return JavaLong.compare(a.id, b.id);
 	} };

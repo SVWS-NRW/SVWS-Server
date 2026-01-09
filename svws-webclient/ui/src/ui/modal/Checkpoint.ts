@@ -75,8 +75,9 @@ export class Checkpoint {
 	public async doCheckpoint(destination: RouteLocationRaw) {
 		this._active = false;
 		this._originallyDestinationRoute = destination;
-		if (this._callback !== undefined)
+		if (this._callback !== undefined) {
 			await this._callback();
+		}
 	}
 
 }

@@ -81,14 +81,16 @@
 	const schuljahr = computed<number>(() => props.faecherManager.getSchuljahr());
 
 	function getBgColor(fws: GostStatistikFachwahl): string {
-		if (fws.kuerzelStatistik === null)
+		if (fws.kuerzelStatistik === null) {
 			return 'rgb(220,220,220)';
+		}
 		return Fach.getBySchluesselOrDefault(fws.kuerzelStatistik).getHMTLFarbeRGBA(schuljahr.value, 1.0);
 	}
 
 	async function selectData(row: GostStatistikFachwahl | undefined, bereich: string) {
-		if ((row !== undefined) && (!isSelectable(row, bereich).value))
+		if ((row !== undefined) && (!isSelectable(row, bereich).value)) {
 			return;
+		}
 		// Lade die neue Auswahl
 		const fach_id = (row === undefined) ? undefined : row.id;
 		const halbjahr = GostHalbjahr.fromKuerzel(bereich); // nur für GKs
@@ -104,8 +106,9 @@
 				await props.doSelect(fach_id, "Abi");
 				break;
 			default:
-				if (halbjahr !== null)
+				if (halbjahr !== null) {
 					await props.doSelect(fach_id, "Halbjahr", halbjahr);
+				}
 				break;
 		}
 	}
@@ -114,46 +117,58 @@
 		const selected = props.selected();
 		if (selected.idFach === undefined) {
 			// Prüfe, ob alle Fächer ausgewählt sind. In diesem Fall wird keine Auswahl angezeigt
-			if (selected.bereich === "Fach")
+			if (selected.bereich === "Fach") {
 				return false;
+			}
 			// Prüfe, ob eine Spalte ausgewählt ist. In diesem Fall werden alle Zellen der Spalte hervorgehoben
 			return (selected.bereich === bereich);
 		} else {
 			// Prüfe, ob ein Zeile, d.h. ein Fach ausgewählt ist
-			if ((selected.idFach === row?.id) && (selected.bereich === "Fach"))
+			if ((selected.idFach === row?.id) && (selected.bereich === "Fach")) {
 				return true;
+			}
 			// Prüfe, ob die jeweilige Zelle ausgewählt ist
 			return ((selected.idFach === row?.id) && (props.selected().bereich === bereich));
 		}
 	});
 
 	const isSelectable = (row: GostStatistikFachwahl, bereich: string) => computed<boolean>(() => {
-		if (bereich === "Fach")
+		if (bereich === "Fach") {
 			return true;
-		if (bereich === "Abitur")
+		}
+		if (bereich === "Abitur") {
 			return (row.wahlenAB3 !== 0) || (row.wahlenAB4 !== 0);
-		if (bereich === "ZK")
+		}
+		if (bereich === "ZK") {
 			return getData(row, "ZK", "") !== "";
-		if (bereich === "LK")
+		}
+		if (bereich === "LK") {
 			return getData(row, "LK", "") !== "";
+		}
 		const hj = GostHalbjahr.fromKuerzel(bereich);
-		if (hj === null)
+		if (hj === null) {
 			return false;
+		}
 		const fw = <GostStatistikFachwahlHalbjahr | null>row.fachwahlen[hj.id];
-		if (fw === null)
+		if (fw === null) {
 			return false;
+		}
 		return (fw.wahlenGK !== 0);
 	});
 
 	function getData(row: GostStatistikFachwahl, bereich: string, item: string): string | number {
-		if ((bereich === "Fach") && (item === "Kürzel"))
+		if ((bereich === "Fach") && (item === "Kürzel")) {
 			return row.kuerzel ?? "???";
-		if ((bereich === "Fach") && (item === "Fach"))
+		}
+		if ((bereich === "Fach") && (item === "Fach")) {
 			return row.bezeichnung ?? "???";
-		if ((bereich === "Abitur") && (item === "3"))
+		}
+		if ((bereich === "Abitur") && (item === "3")) {
 			return row.wahlenAB3 > 0 ? row.wahlenAB3 : "";
-		if ((bereich === "Abitur") && (item === "4"))
+		}
+		if ((bereich === "Abitur") && (item === "4")) {
 			return row.wahlenAB4 > 0 ? row.wahlenAB4 : "";
+		}
 		if ((bereich === "ZK") && (item === "")) {
 			const maxZK = Math.max(row.fachwahlen[2].wahlenZK, row.fachwahlen[3].wahlenZK, row.fachwahlen[4].wahlenZK, row.fachwahlen[5].wahlenZK);
 			return maxZK === 0 ? "" : maxZK;
@@ -163,11 +178,13 @@
 			return maxLK === 0 ? "" : maxLK;
 		}
 		const hj = GostHalbjahr.fromKuerzel(bereich);
-		if (hj === null)
+		if (hj === null) {
 			return "";
+		}
 		const fw = <GostStatistikFachwahlHalbjahr | null>row.fachwahlen[hj.id];
-		if (fw === null)
+		if (fw === null) {
 			return "";
+		}
 		switch (item) {
 			case "S": return (fw.wahlenGKSchriftlich === 0 ? "" : fw.wahlenGKSchriftlich);
 			case "GK": return fw.wahlenGK === 0 ? "" : fw.wahlenGK;

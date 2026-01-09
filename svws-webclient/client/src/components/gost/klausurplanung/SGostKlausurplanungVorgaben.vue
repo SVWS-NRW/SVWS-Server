@@ -144,8 +144,9 @@
 			return fach === null ? undefined : fach;
 		},
 		set(val) {
-			if (val !== undefined)
+			if (val !== undefined) {
 				activeVorgabe.value.idFach = val.id;
+			}
 		},
 	});
 
@@ -219,8 +220,9 @@
 	];
 
 	function getBgColor(kuerzel: string | null) {
-		if (kuerzel === null)
+		if (kuerzel === null) {
 			return 'rgb(220,220,220)';
+		}
 		return Fach.getBySchluesselOrDefault(kuerzel).getHMTLFarbeRGBA(props.jahrgangsdaten!.abiturjahr - 1, 1.0);
 	}
 

@@ -65,13 +65,15 @@ export class BetriebeListeManager extends AuswahlManager<number, Betrieb, Betrie
 	}
 
 	private mapBetriebsarten(betriebsarten: List<Betriebsart>) {
-		for (const betriebsart of betriebsarten)
+		for (const betriebsart of betriebsarten) {
 			this._betriebsartenById.set(betriebsart.id, betriebsart);
+		}
 	}
 
 	private mapOrte(orte: List<OrtKatalogEintrag>) {
-		for (const ort of orte)
+		for (const ort of orte) {
 			this._orteById.set(ort.id, ort);
+		}
 	}
 
 	/**

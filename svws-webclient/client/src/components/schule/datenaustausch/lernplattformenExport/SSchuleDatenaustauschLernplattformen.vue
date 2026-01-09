@@ -50,16 +50,18 @@
 	const textSchuljahresabschnitt = `${abschnitt.value.schuljahr}.${abschnitt.value.abschnitt}`;
 
 	async function startExport() {
-		if (exportDisabled.value)
+		if (exportDisabled.value) {
 			return;
+		}
 
 		loading.value = true;
 		const blob = await props.export(lernplattform.value!, datenformat.value);
 		if (blob !== null) {
 			const url = URL.createObjectURL(blob);
 			let filename = `LernplattformExport-${lernplattform.value!.id}_${lernplattform.value!.bezeichnung}-${textSchuljahresabschnitt}.json`;
-			if (datenformat.value === 'GZIP')
+			if (datenformat.value === 'GZIP') {
 				filename += '.gzip';
+			}
 			const a = document.createElement("a");
 			a.href = url;
 			a.download = filename;

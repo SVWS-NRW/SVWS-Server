@@ -119,8 +119,9 @@
 	}
 
 	async function remove_ergebnis() {
-		if (!props.auswahlErgebnis)
+		if (!props.auswahlErgebnis) {
 			return;
+		}
 		await props.removeErgebnisse([props.auswahlErgebnis]);
 	}
 

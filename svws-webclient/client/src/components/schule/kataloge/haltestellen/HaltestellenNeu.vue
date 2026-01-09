@@ -40,8 +40,9 @@
 	const disabled = computed(() => !hatKompetenzAdd.value);
 
 	const bezeichnungIsTooLong = computed(() => {
-		if (data.value.bezeichnung === null)
+		if (data.value.bezeichnung === null) {
 			return false;
+		}
 
 		return data.value.bezeichnung.length > 30;
 	});
@@ -67,15 +68,17 @@
 	});
 
 	function bezeichnungIsValid(value: string | null) {
-		if (!mandatoryInputIsValid(value, 30))
+		if (!mandatoryInputIsValid(value, 30)) {
 			return false;
+		}
 
 		return isUniqueInList(value, props.manager().liste.list(), 'bezeichnung');
 	}
 
 	async function add() {
-		if (isLoading.value)
+		if (isLoading.value) {
 			return;
+		}
 
 		props.checkpoint.active = false;
 		isLoading.value = true;
@@ -90,8 +93,9 @@
 	}
 
 	watch(() => data.value, async () => {
-		if (isLoading.value)
+		if (isLoading.value) {
 			return;
+		}
 
 		props.checkpoint.active = true;
 	}, { immediate: false, deep: true });

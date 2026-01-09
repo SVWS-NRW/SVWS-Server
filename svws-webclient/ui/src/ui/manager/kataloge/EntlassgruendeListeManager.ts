@@ -25,11 +25,13 @@ export class EntlassgruendeListeManager extends AuswahlManager<number, KatalogEn
 	public static readonly comparator: Comparator<KatalogEntlassgrund> = { compare: (a: KatalogEntlassgrund, b: KatalogEntlassgrund) => {
 		let cmp: number;
 		cmp = JavaInteger.compare(a.sortierung, b.sortierung);
-		if (cmp !== 0)
+		if (cmp !== 0) {
 			return cmp;
+		}
 		cmp = JavaString.compareTo(a.bezeichnung, b.bezeichnung);
-		if (cmp !== 0)
+		if (cmp !== 0) {
 			return cmp;
+		}
 		return JavaLong.compare(a.id, b.id);
 	} };
 
@@ -60,14 +62,17 @@ export class EntlassgruendeListeManager extends AuswahlManager<number, KatalogEn
 
 	protected onMehrfachauswahlChanged(): void {
 		this.idsReferencedEntlassgruende.clear();
-		for (const e of this.liste.auswahl())
-			if ((e.referenziertInAnderenTabellen !== null) && e.referenziertInAnderenTabellen)
+		for (const e of this.liste.auswahl()) {
+			if ((e.referenziertInAnderenTabellen !== null) && e.referenziertInAnderenTabellen) {
 				this.idsReferencedEntlassgruende.add(e.id);
+			}
+		}
 	}
 
 	protected checkFilter(eintrag: KatalogEntlassgrund): boolean {
-		if (this._filterNurSichtbar && !eintrag.istSichtbar)
+		if (this._filterNurSichtbar && !eintrag.istSichtbar) {
 			return false;
+		}
 
 		return true;
 	}

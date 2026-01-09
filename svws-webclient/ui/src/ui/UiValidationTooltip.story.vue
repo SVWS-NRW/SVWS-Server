@@ -137,23 +137,29 @@
 	const activeValidatorClasses = computed<(new () => BasicValidator)[]>(() => {
 		const classes: (new () => BasicValidator)[] = [];
 
-		if (state.statistikMuss)
+		if (state.statistikMuss) {
 			classes.push(ASDMussValidatorMock);
+		}
 
-		if (state.statistikKann)
+		if (state.statistikKann) {
 			classes.push(ASDKannValidatorMock);
+		}
 
-		if (state.statistikHinweis)
+		if (state.statistikHinweis) {
 			classes.push(ASDHinweisValidatorMock);
+		}
 
-		if (state.nonStatistikMuss)
+		if (state.nonStatistikMuss) {
 			classes.push(MussValidatorMock);
+		}
 
-		if (state.nonStatistikKann)
+		if (state.nonStatistikKann) {
 			classes.push(KannValidatorMock);
+		}
 
-		if (state.nonStatistikHinweis)
+		if (state.nonStatistikHinweis) {
 			classes.push(HinweisValidatorMock);
+		}
 
 		return classes;
 	});

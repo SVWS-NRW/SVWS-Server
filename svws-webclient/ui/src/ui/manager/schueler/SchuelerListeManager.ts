@@ -109,8 +109,9 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 
 	private readonly _schulgliederungToId: JavaFunction<Schulgliederung, string> = { apply: (sg: Schulgliederung) => {
 		const sglke: SchulgliederungKatalogEintrag | null = sg.daten(this.getSchuljahr());
-		if (sglke === null)
+		if (sglke === null) {
 			throw new IllegalArgumentException(JavaString.format("Die Schulgliederung %s ist in dem Schuljahr %d nicht gültig.", sg.name(), this.getSchuljahr()));
+		}
 		return sglke.kuerzel;
 	} };
 
@@ -123,8 +124,9 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 
 	private readonly _schuelerstatusToId: JavaFunction<SchuelerStatus, number> = { apply: (s: SchuelerStatus) => {
 		const sske: SchuelerStatusKatalogEintrag | null = s.daten(this.getSchuljahr());
-		if (sske === null)
+		if (sske === null) {
 			throw new IllegalArgumentException(JavaString.format("Der Schülerstatus %s ist in dem Schuljahr %d nicht gültig.", s.name(), this.getSchuljahr()));
+		}
 		return JavaInteger.parseInt(sske.kuerzel);
 	} };
 
@@ -150,8 +152,9 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 		const aktuelleKlassen: List<KlassenDaten> = new ArrayList<KlassenDaten>();
 		for (const klasse of daten.klassen) {
 			this._mapKlassenAlle.put(klasse.id, klasse);
-			if (klasse.idSchuljahresabschnitt === daten.idSchuljahresabschnitt)
+			if (klasse.idSchuljahresabschnitt === daten.idSchuljahresabschnitt) {
 				aktuelleKlassen.add(klasse);
+			}
 		}
 		this.klassen = new AttributMitAuswahl(aktuelleKlassen, SchuelerListeManager._klasseToId, KlassenUtils.comparator, this._eventHandlerFilterChanged);
 		this.jahrgaenge = new AttributMitAuswahl(daten.jahrgaenge, SchuelerListeManager._jahrgangToId, JahrgaengeListeManager.comparator, this._eventHandlerFilterChanged);
@@ -169,21 +172,29 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 		for (const s of this.liste.list()) {
 			this._mapSchuelerMitStatus.put(s.status, s.id, s);
 			const klasse: KlassenDaten | null = this._mapKlassenAlle.get(s.idKlasse);
-			if (s.idJahrgang >= 0)
+			if (s.idJahrgang >= 0) {
 				this._mapSchuelerInJahrgang.put(s.idJahrgang, s.id, s);
-			if (s.idKlasse >= 0)
+			}
+			if (s.idKlasse >= 0) {
 				this._mapSchuelerInKlasse.put(s.idKlasse, s.id, s);
-			for (const idKurs of s.kurse)
+			}
+			for (const idKurs of s.kurse) {
 				this._mapSchuelerInKurs.put(idKurs, s.id, s);
-			if (s.idSchuljahresabschnitt >= 0)
+			}
+			if (s.idSchuljahresabschnitt >= 0) {
 				this._mapSchuelerInSchuljahresabschnitt.put(s.idSchuljahresabschnitt, s.id, s);
-			if (s.abiturjahrgang !== null)
+			}
+			if (s.abiturjahrgang !== null) {
 				this._mapSchuelerInAbiturjahrgang.put(s.abiturjahrgang, s.id, s);
-			if (!JavaString.isBlank(s.schulgliederung))
+			}
+			if (!JavaString.isBlank(s.schulgliederung)) {
 				this._mapSchuelerInSchulgliederung.put(s.schulgliederung, s.id, s);
-			if (klasse !== null)
-				for (const idKlassenlehrer of klasse.klassenLeitungen)
+			}
+			if (klasse !== null) {
+				for (const idKlassenlehrer of klasse.klassenLeitungen) {
 					this._mapKlassenlehrerInSchueler.put(s.id, idKlassenlehrer, this.lehrer.getOrException(idKlassenlehrer));
+				}
+			}
 		}
 	}
 
@@ -240,10 +251,12 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 	 * @throws DeveloperNotificationException   falls kein Schüler ausgewählt ist oder die Klassen-ID nicht zulässig ist
 	 */
 	public updateKlassenID(idKlasse: number | null): void {
-		if (this._daten === null)
+		if (this._daten === null) {
 			throw new DeveloperNotificationException(JavaString.format("Für das Setzen der Klassen-ID %d muss ein Schüler ausgewählt sein.", idKlasse));
-		if ((idKlasse !== null) && (idKlasse >= 0) && (!this.klassen.has(idKlasse)))
+		}
+		if ((idKlasse !== null) && (idKlasse >= 0) && (!this.klassen.has(idKlasse))) {
 			throw new DeveloperNotificationException(JavaString.format("Die Klassen-ID %d muss zu dem aktuell ausgewählten Schuljahresabschnitt passen.", idKlasse));
+		}
 		const eintrag: SchuelerListeEintrag = this.liste.getOrException(this._daten.id);
 		eintrag.idKlasse = ((idKlasse === null) || (idKlasse < 0)) ? -1 : idKlasse;
 		this.orderSet(this.orderGet());
@@ -282,34 +295,44 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 				} else
 					if (JavaObject.equalsTranspiler("vorname", (field))) {
 						cmp = JavaString.compareTo(a.vorname, b.vorname);
-					} else
+					} else {
 						throw new DeveloperNotificationException("Fehler bei der Sortierung. Das Sortierkriterium wird vom Manager nicht unterstützt.");
-			if (cmp === 0)
+					}
+			if (cmp === 0) {
 				continue;
+			}
 			return asc ? cmp : -cmp;
 		}
 		return JavaLong.compare(a.id, b.id);
 	}
 
 	protected checkFilter(eintrag: SchuelerListeEintrag): boolean {
-		if (this._filterNurMitLernabschitt && (!this.istSchuljahresabschnittAktuell()) && (eintrag.idSchuljahresabschnitt !== this._schuljahresabschnitt))
+		if (this._filterNurMitLernabschitt && (!this.istSchuljahresabschnittAktuell()) && (eintrag.idSchuljahresabschnitt !== this._schuljahresabschnitt)) {
 			return false;
-		if (this.jahrgaenge.auswahlExists() && ((eintrag.idJahrgang < 0) || (!this.jahrgaenge.auswahlHasKey(eintrag.idJahrgang))))
+		}
+		if (this.jahrgaenge.auswahlExists() && ((eintrag.idJahrgang < 0) || (!this.jahrgaenge.auswahlHasKey(eintrag.idJahrgang)))) {
 			return false;
-		if (this.klassen.auswahlExists() && ((eintrag.idKlasse < 0) || (eintrag.idSchuljahresabschnitt !== this._schuljahresabschnitt) || (!this.klassen.auswahlHasKey(eintrag.idKlasse))))
+		}
+		if (this.klassen.auswahlExists() && ((eintrag.idKlasse < 0) || (eintrag.idSchuljahresabschnitt !== this._schuljahresabschnitt) || (!this.klassen.auswahlHasKey(eintrag.idKlasse)))) {
 			return false;
+		}
 		if (this.kurse.auswahlExists()) {
 			let hatEinenKurs: boolean = false;
-			for (const idKurs of eintrag.kurse)
-				if (this.kurse.auswahlHasKey(idKurs))
+			for (const idKurs of eintrag.kurse) {
+				if (this.kurse.auswahlHasKey(idKurs)) {
 					hatEinenKurs = true;
-			if (!hatEinenKurs)
+				}
+			}
+			if (!hatEinenKurs) {
 				return false;
+			}
 		}
-		if (this.schulgliederungen.auswahlExists() && ((JavaString.isBlank(eintrag.schulgliederung)) || (!this.schulgliederungen.auswahlHasKey(eintrag.schulgliederung))))
+		if (this.schulgliederungen.auswahlExists() && ((JavaString.isBlank(eintrag.schulgliederung)) || (!this.schulgliederungen.auswahlHasKey(eintrag.schulgliederung)))) {
 			return false;
-		if (this.schuelerstatus.auswahlExists() && (this.istSchuljahresabschnittAktuell()) && (!this.schuelerstatus.auswahlHasKey(eintrag.status)))
+		}
+		if (this.schuelerstatus.auswahlExists() && (this.istSchuljahresabschnittAktuell()) && (!this.schuelerstatus.auswahlHasKey(eintrag.status))) {
 			return false;
+		}
 		return true;
 	}
 
@@ -347,11 +370,13 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 	 */
 	public schuelerSchuljahresabschnittAsString(idSchueler: number): string {
 		const schueler: SchuelerListeEintrag | null = this.liste.get(idSchueler);
-		if (schueler === null)
+		if (schueler === null) {
 			return "----.-";
+		}
 		const schuljahresabschnitt: Schuljahresabschnitt | null = this.schuljahresabschnitte.get(schueler.idSchuljahresabschnittSchueler);
-		if (schuljahresabschnitt === null)
+		if (schuljahresabschnitt === null) {
 			return "----.-";
+		}
 		return schuljahresabschnitt.schuljahr + "." + schuljahresabschnitt.abschnitt;
 	}
 
@@ -364,11 +389,13 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 	 */
 	public schuelerGetSchuljahrByIdOrException(idSchueler: number): number {
 		const schueler: SchuelerListeEintrag | null = this.liste.get(idSchueler);
-		if (schueler === null)
+		if (schueler === null) {
 			throw new DeveloperNotificationException("");
+		}
 		const schuljahresabschnitt: Schuljahresabschnitt | null = this.schuljahresabschnitte.get(schueler.idSchuljahresabschnitt);
-		if (schuljahresabschnitt === null)
+		if (schuljahresabschnitt === null) {
 			throw new DeveloperNotificationException("");
+		}
 		return schuljahresabschnitt.schuljahr;
 	}
 
@@ -379,8 +406,9 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 	 */
 	public schuelerGetSchuljahrOrException(): number {
 		const schuljahresabschnitt: Schuljahresabschnitt | null = this.schuljahresabschnitte.get(this.auswahl().idSchuljahresabschnitt);
-		if (schuljahresabschnitt === null)
+		if (schuljahresabschnitt === null) {
 			throw new DeveloperNotificationException("Der Schuljahresabschnitt des Schülers fehlt.");
+		}
 		return schuljahresabschnitt.schuljahr;
 	}
 

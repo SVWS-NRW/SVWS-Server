@@ -420,8 +420,9 @@
 	const kwWarnLimit = computed<number>({
 		get: () => props.getConfigNumberValue("kwWarnLimit"),
 		set: (value) => {
-			if (value > kwErrorLimit.value)
+			if (value > kwErrorLimit.value) {
 				kwErrorLimit.value = value;
+			}
 			void props.setConfigValue("kwWarnLimit", value);
 		},
 	});
@@ -429,21 +430,24 @@
 	const kwErrorLimit = computed<number>({
 		get: () => props.getConfigNumberValue("kwErrorLimit"),
 		set: (value) => {
-			if (value < kwWarnLimit.value)
+			if (value < kwWarnLimit.value) {
 				kwWarnLimit.value = value;
+			}
 			void props.setConfigValue("kwErrorLimit", value);
 		},
 	});
 
 	function setCurrentAction(newAction: string, open: boolean) {
-		if (newAction === oldAction.value.name && !open)
+		if (newAction === oldAction.value.name && !open) {
 			return;
+		}
 		oldAction.value.name = currentAction.value;
 		oldAction.value.open = currentAction.value !== "";
-		if (open)
+		if (open) {
 			currentAction.value = newAction;
-		else
+		} else {
 			currentAction.value = "";
+		}
 	}
 
 	const isMounted = ref(false);
@@ -489,27 +493,31 @@
 
 	function getBgColor(input: string | number | null | GostKursklausur | GostSchuelerklausur | GostSchuelerklausurTermin): string {
 		const kuerzel = resolveFachkuerzel(input);
-		if (kuerzel === null)
+		if (kuerzel === null) {
 			return "rgb(220,220,220)";
+		}
 		return Fach.getBySchluesselOrDefault(kuerzel).getHMTLFarbeRGBA(props.jahrgangsdaten!.abiturjahr - 1, 1);
 	}
 
 	function resolveFachkuerzel(input: string | number | null | GostKursklausur | GostSchuelerklausur | GostSchuelerklausurTermin): string | null {
-		if (input === null)
+		if (input === null) {
 			return null;
-		if (typeof input === "string")
+		}
+		if (typeof input === "string") {
 			return input;
+		}
 		if (typeof input === "number") {
 			const fach = props.kMan().getFaecherManager(props.jahrgangsdaten!.abiturjahr - 1).get(input);
 			return fach?.kuerzel ?? null;
 		}
 		let vorgabe;
-		if (input instanceof GostSchuelerklausur)
+		if (input instanceof GostSchuelerklausur) {
 			vorgabe = props.kMan().vorgabeBySchuelerklausur(input);
-		else if (input instanceof GostSchuelerklausurTermin)
+		} else if (input instanceof GostSchuelerklausurTermin) {
 			vorgabe = props.kMan().vorgabeBySchuelerklausurTermin(input);
-		else
+		} else {
 			vorgabe = props.kMan().vorgabeByKursklausur(input);
+		}
 		const fach = props.kMan().getFaecherManager(props.jahrgangsdaten!.abiturjahr - 1).get(vorgabe.idFach);
 		return fach?.kuerzel ?? null;
 	}
@@ -517,10 +525,12 @@
 	type KursBadge = { text: string; farbe: string | null };
 	const terminBezeichnung = (termin: GostKlausurtermin): KursBadge[] => {
 		const wrap = (text: string): KursBadge => ({ text, farbe: null });
-		if (termin.bezeichnung !== null && termin.bezeichnung.length > 0)
+		if (termin.bezeichnung !== null && termin.bezeichnung.length > 0) {
 			return [wrap(termin.bezeichnung)];
-		if (!termin.istHaupttermin)
+		}
+		if (!termin.istHaupttermin) {
 			return [wrap("Nachschreibtermin")];
+		}
 		const menge = props.kMan().kursklausurGetMengeByTermin(termin);
 		if (menge.size() > 0) {
 			return [...menge].map(k => ({
@@ -541,8 +551,9 @@
 			if (err instanceof OpenApiError) {
 				modalError.value = await err.response?.text();
 				modalVorgaben.value = true;
-			} else
+			} else {
 				throw err;
+			}
 		}
 	}
 

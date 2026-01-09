@@ -177,8 +177,10 @@
 	const istJahrgangAllgemein = computed<boolean>(() => props.abiturjahr < 0);
 
 	const textPJKLeitfaecher = computed<string>(() => {
-		if (AbiturdatenManager.nutzeExperimentellenCode(props.serverMode, props.abiturjahr)) // experimenteller Code
+		// experimenteller Code
+		if (AbiturdatenManager.nutzeExperimentellenCode(props.serverMode, props.abiturjahr)) {
 			return "Referenzfächer";
+		}
 		return "Leitfächer";
 	});
 
@@ -211,23 +213,28 @@
 
 	function istMoeglichQ1(fach: GostFach): boolean {
 		const fg = Fach.getBySchluesselOrDefault(fach.kuerzel).getFachgruppe(schuljahr.value);
-		if (AbiturdatenManager.nutzeExperimentellenCode(props.serverMode, props.abiturjahr)) // experimenteller Code
+		// experimenteller Code
+		if (AbiturdatenManager.nutzeExperimentellenCode(props.serverMode, props.abiturjahr)) {
 			return (fg !== Fachgruppe.FG_PX);
+		}
 		return true;
 	}
 
 	function istMoeglichAbiGK(fach: GostFach): boolean {
 		const fg = Fach.getBySchluesselOrDefault(fach.kuerzel).getFachgruppe(schuljahr.value);
-		if (AbiturdatenManager.nutzeExperimentellenCode(props.serverMode, props.abiturjahr)) // experimenteller Code
+		// experimenteller Code
+		if (AbiturdatenManager.nutzeExperimentellenCode(props.serverMode, props.abiturjahr)) {
 			return (fg !== Fachgruppe.FG_ME) && (fg !== Fachgruppe.FG_VX);
+		}
 		return (fg !== Fachgruppe.FG_ME) && (fg !== Fachgruppe.FG_VX) && (fg !== Fachgruppe.FG_PX);
 	}
 
 	function istMoeglichAbiLK(fach: GostFach): boolean {
 		const f = Fach.getBySchluesselOrDefault(fach.kuerzel);
 		if ((f.getJahrgangAb(schuljahr.value) === Jahrgaenge.EF) ||
-			((fach.biliSprache !== null) && (fach.biliSprache !== "D")))
+			((fach.biliSprache !== null) && (fach.biliSprache !== "D"))) {
 			return false;
+		}
 		const fg = f.getFachgruppe(schuljahr.value);
 		return (fg !== Fachgruppe.FG_ME) && (fg !== Fachgruppe.FG_VX) && (fg !== Fachgruppe.FG_PX);
 	}
@@ -238,22 +245,25 @@
 	}
 
 	function getLeitfach1(fach: GostFach): GostFach | undefined {
-		if (fach.projektKursLeitfach1ID === null)
+		if (fach.projektKursLeitfach1ID === null) {
 			return undefined;
+		}
 		return props.faecherManager().get(fach.projektKursLeitfach1ID) ?? undefined;
 	}
 
 	function getLeitfach2(fach: GostFach): GostFach | undefined {
-		if (fach.projektKursLeitfach2ID === null)
+		if (fach.projektKursLeitfach2ID === null) {
 			return undefined;
+		}
 		return props.faecherManager().get(fach.projektKursLeitfach2ID) ?? undefined;
 	}
 
 	function getLeitfaecher1(fach: GostFach): List<GostFach> {
 		const leitfaecher = props.faecherManager().getLeitfaecher();
 		const leitfach2 = getLeitfach2(fach);
-		if (leitfach2 === undefined)
+		if (leitfach2 === undefined) {
 			return leitfaecher;
+		}
 		const result = new ArrayList<GostFach>(leitfaecher);
 		result.removeElementAt(result.indexOf(leitfach2));
 		return result;
@@ -262,22 +272,26 @@
 	function getLeitfaecher2(fach: GostFach): List<GostFach> {
 		const leitfaecher = props.faecherManager().getLeitfaecher();
 		const leitfach1 = getLeitfach1(fach);
-		if (leitfach1 === undefined)
+		if (leitfach1 === undefined) {
 			return leitfaecher;
+		}
 		const result = new ArrayList<GostFach>(leitfaecher);
 		result.removeElementAt(result.indexOf(leitfach1));
 		return result;
 	}
 
 	function hatWahlProjektkursStunden(fach: GostFach): boolean {
-		if (AbiturdatenManager.nutzeExperimentellenCode(props.serverMode, props.abiturjahr)) // experimenteller Code
+		// experimenteller Code
+		if (AbiturdatenManager.nutzeExperimentellenCode(props.serverMode, props.abiturjahr)) {
 			return false;
+		}
 		return istPJK(fach);
 	}
 
 	async function setProjektkursStunden(fach: GostFach) {
-		if (!istPJK(fach))
+		if (!istPJK(fach)) {
 			return;
+		}
 		await props.patchFach({ wochenstundenQualifikationsphase: fach.wochenstundenQualifikationsphase === 2 ? 3 : 2 }, fach.id);
 	}
 

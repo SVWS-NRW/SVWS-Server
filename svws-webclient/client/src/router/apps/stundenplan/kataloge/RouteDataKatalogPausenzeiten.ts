@@ -28,8 +28,9 @@ export class RouteDataKatalogPausenzeiten extends RouteData<RouteStateKatalogPau
 	}
 
 	get stundenplanManager(): StundenplanManager {
-		if (this._state.value.stundenplanManager === undefined)
+		if (this._state.value.stundenplanManager === undefined) {
 			throw new DeveloperNotificationException("Unerwarteter Fehler: Stundenplandaten nicht initialisiert");
+		}
 		return this._state.value.stundenplanManager;
 	}
 
@@ -55,14 +56,16 @@ export class RouteDataKatalogPausenzeiten extends RouteData<RouteStateKatalogPau
 	addPausenzeiten = async (eintraege: Iterable<Partial<StundenplanPausenzeit>>) => {
 		const list = new ArrayList<Partial<StundenplanPausenzeit>>();
 		for (const eintrag of eintraege) {
-			if ((eintrag.wochentag === undefined) || (eintrag.beginn === undefined) || (eintrag.ende === undefined) || this.stundenplanManager.pausenzeitExistsByWochentagAndBeginnAndEnde(eintrag.wochentag, eintrag.beginn, eintrag.ende))
+			if ((eintrag.wochentag === undefined) || (eintrag.beginn === undefined) || (eintrag.ende === undefined) || this.stundenplanManager.pausenzeitExistsByWochentagAndBeginnAndEnde(eintrag.wochentag, eintrag.beginn, eintrag.ende)) {
 				throw new UserNotificationException('Eine Pausenzeit existiert bereits an diesem Tag und zu dieser Zeit');
+			}
 			delete eintrag.id;
 			delete eintrag.klassen;
 			list.add(eintrag);
 		}
-		if (list.isEmpty())
+		if (list.isEmpty()) {
 			return;
+		}
 		const pausenzeiten = await api.server.addPausenzeiten(list, api.schema);
 		const stundenplanManager = this.stundenplanManager;
 		stundenplanManager.pausenzeitAddAll(pausenzeiten);
@@ -74,10 +77,12 @@ export class RouteDataKatalogPausenzeiten extends RouteData<RouteStateKatalogPau
 	deleteEintraege = async (eintraege: Iterable<StundenplanPausenzeit>) => {
 		const stundenplanManager = this.stundenplanManager;
 		const listID = new ArrayList<number>();
-		for (const eintrag of eintraege)
+		for (const eintrag of eintraege) {
 			listID.add(eintrag.id);
-		if (listID.isEmpty())
+		}
+		if (listID.isEmpty()) {
 			return;
+		}
 		const pausenzeiten = await api.server.deletePausenzeiten(listID, api.schema);
 		stundenplanManager.pausenzeitRemoveAll(pausenzeiten);
 		const list = stundenplanManager.pausenzeitGetMengeAsList();
@@ -87,8 +92,9 @@ export class RouteDataKatalogPausenzeiten extends RouteData<RouteStateKatalogPau
 	};
 
 	patch = async (eintrag: Partial<StundenplanPausenzeit>) => {
-		if (this.auswahl === undefined)
+		if (this.auswahl === undefined) {
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+		}
 		await api.server.patchPausenzeit(eintrag, api.schema, this.auswahl.id);
 		const auswahl = this.auswahl;
 		Object.assign(auswahl, eintrag);
@@ -99,22 +105,25 @@ export class RouteDataKatalogPausenzeiten extends RouteData<RouteStateKatalogPau
 
 	setKatalogPausenzeitenImportJSON = api.call(async (formData: FormData) => {
 		const jsonFile = formData.get("data");
-		if (!(jsonFile instanceof File))
+		if (!(jsonFile instanceof File)) {
 			return;
+		}
 		const json = await jsonFile.text();
 		const pausenzeiten: Partial<StundenplanPausenzeit>[] = JSON.parse(json);
 		const list = new ArrayList<Partial<StundenplanPausenzeit>>();
-		for (const item of pausenzeiten)
+		for (const item of pausenzeiten) {
 			if ((item.wochentag !== undefined) && (item.beginn !== undefined) && (item.ende !== undefined) && !this.stundenplanManager.pausenzeitExistsByWochentagAndBeginnAndEnde(item.wochentag, item.beginn, item.ende)) {
-				// Muss nach JSON umgewandelt werden und zurück nach Pausenzeit, weil das reguläre JSON.parse ein Array als Array einliest.
+			// Muss nach JSON umgewandelt werden und zurück nach Pausenzeit, weil das reguläre JSON.parse ein Array als Array einliest.
 				const p = JSON.stringify(item);
 				const pp: Partial<StundenplanPausenzeit> = StundenplanPausenzeit.transpilerFromJSON(p);
 				delete pp.id;
 				delete pp.klassen;
 				list.add(pp);
 			}
-		if (list.isEmpty())
+		}
+		if (list.isEmpty()) {
 			return;
+		}
 		const res = await api.server.addPausenzeiten(list, api.schema);
 		this.stundenplanManager.pausenzeitAddAll(res);
 		await routeStundenplan.data.reloadVorlagen();

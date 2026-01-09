@@ -31,15 +31,17 @@
 	const isLoading = ref<boolean>(false);
 
 	function bezeichnungIsValid(value: string | null) {
-		if (!mandatoryInputIsValid(value, 255))
+		if (!mandatoryInputIsValid(value, 255)) {
 			return false;
+		}
 
 		return isUniqueInList(value, props.manager().liste.list(), 'bezeichnung');
 	}
 
 	async function addLernplatfform() {
-		if (isLoading.value === true)
+		if (isLoading.value === true) {
 			return;
+		}
 
 		isLoading.value = true;
 		props.checkpoint.active = false;
@@ -54,8 +56,9 @@
 	}
 
 	watch(() => data.value, async () => {
-		if (isLoading.value)
+		if (isLoading.value) {
 			return;
+		}
 
 		props.checkpoint.active = true;
 	}, { immediate: false, deep: true });

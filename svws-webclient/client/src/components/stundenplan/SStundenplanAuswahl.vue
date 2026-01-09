@@ -84,8 +84,9 @@
 
 	const rowsFiltered = computed<StundenplanListeEintrag[]>(() => {
 		const arr = [];
-		for (const e of props.manager().filtered())
+		for (const e of props.manager().filtered()) {
 			arr.push(e);
+		}
 		return arr;
 	});
 
@@ -112,35 +113,40 @@
 	}
 
 	const clickedEintrag = computed(() => {
-		if ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN))
+		if ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN)) {
 			return null;
+		}
 		return props.manager().hasDaten() ? props.manager().auswahl() : null;
 	});
 
 	async function setAuswahl(items: StundenplanListeEintrag[]) {
 		props.manager().liste.auswahlClear();
-		for (const item of items)
-			if (props.manager().liste.hasValue(item))
+		for (const item of items) {
+			if (props.manager().liste.hasValue(item)) {
 				props.manager().liste.auswahlAdd(item);
-		if (props.manager().liste.auswahlExists())
+			}
+		}
+		if (props.manager().liste.auswahlExists()) {
 			await props.gotoGruppenprozessView(true);
-		else
+		} else {
 			await props.gotoDefaultView(props.manager().getVorherigeAuswahl()?.stundenplanGetID());
+		}
 	}
 
 	const sortByAndOrder = computed<SortByAndOrder | undefined>({
 		get: () => {
 			const list = props.manager().orderGet();
-			if (list.isEmpty())
+			if (list.isEmpty()) {
 				return undefined;
-			else {
+			} else {
 				const { a: key, b: order } = list.get(0);
 				return { key, order };
 			}
 		},
 		set: (value) => {
-			if ((value === undefined) || (value.key === null))
+			if ((value === undefined) || (value.key === null)) {
 				return;
+			}
 			props.manager().orderUpdate(value.key, value.order);
 			void props.setFilter();
 		},

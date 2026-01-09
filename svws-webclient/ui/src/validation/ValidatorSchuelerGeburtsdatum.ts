@@ -53,8 +53,9 @@ export class ValidatorSchuelerGeburtsdatum extends BasicValidator {
 		try {
 			geburtsdatum = DateManager.from(strGeburtsdatum);
 		} catch (e) {
-			if (e instanceof InvalidDateException)
+			if (e instanceof InvalidDateException) {
 				this.addFehler(0, "Das Format des Geburtsdatums ist fehlerhaft: " + e.getMessage());
+			}
 			return false;
 		}
 

@@ -727,8 +727,9 @@ describe("Events laufen korrekt", () => {
 		await wrapper.setProps({ isOpen: true });
 		emittedEvents = wrapper.emitted("update:isOpen");
 		expect(emittedEvents).toBeTruthy();
-		if ((emittedEvents === undefined) || (emittedEvents[0].length === 0))
+		if ((emittedEvents === undefined) || (emittedEvents[0].length === 0)) {
 			fail("Kein Event wurde emitted");
+		}
 		expect(emittedEvents[0][0]).toBe(true);
 		expect((wrapper.vm as any).isActive).toBe(true);
 	});
@@ -740,8 +741,9 @@ describe("Events laufen korrekt", () => {
 		// update:isOpen = true wird beim Mounten emittet
 		let emittedEvents = wrapper.emitted("update:isOpen");
 		expect(emittedEvents).toBeTruthy();
-		if ((emittedEvents === undefined) || (emittedEvents[0].length === 0))
+		if ((emittedEvents === undefined) || (emittedEvents[0].length === 0)) {
 			fail("Kein Event wurde emitted");
+		}
 		expect(emittedEvents[0][0]).toBe(true);
 
 		// Card schließen
@@ -750,8 +752,9 @@ describe("Events laufen korrekt", () => {
 		body.dispatchEvent(new Event('transitionend'));
 		emittedEvents = wrapper.emitted("update:isOpen");
 		expect(emittedEvents).toBeTruthy();
-		if ((emittedEvents === undefined) || (emittedEvents[0].length === 0))
+		if ((emittedEvents === undefined) || (emittedEvents[0].length === 0)) {
 			fail("Kein Event wurde emitted");
+		}
 		// prüft, ob das zweite Event überhaupt emittet wurde
 		expect(emittedEvents[1]).toBeDefined();
 		// prüft, dass beim zweiten mal update:isOpen = false emittet wurde
@@ -1472,8 +1475,9 @@ describe("Übergebene Button-Funktionen werden korrekt ausgeführt", async () =>
 
 		const wrapper = mount(UiCard, { props: { onEdit: onEditFunction }, attachTo: document.body });
 		const button = wrapper.find(".ui-card--buttons").findAll("button").find(button => button.text() === "Bearbeiten");
-		if (button === undefined)
+		if (button === undefined) {
 			fail("Button darf nicht undefined sein");
+		}
 		await button.trigger("click");
 
 		expect(onEditFunction).toHaveBeenCalled();
@@ -1484,8 +1488,9 @@ describe("Übergebene Button-Funktionen werden korrekt ausgeführt", async () =>
 
 		const wrapper = mount(UiCard, { props: { onSave: onSaveFunction }, attachTo: document.body });
 		const button = wrapper.find(".ui-card--buttons").findAll("button").find(button => button.text() === "Speichern");
-		if (button === undefined)
+		if (button === undefined) {
 			fail("Button darf nicht undefined sein");
+		}
 		await button.trigger("click");
 
 		expect(onSaveFunction).toHaveBeenCalled();
@@ -1496,8 +1501,9 @@ describe("Übergebene Button-Funktionen werden korrekt ausgeführt", async () =>
 
 		const wrapper = mount(UiCard, { props: { onDelete: onDeleteFunction }, attachTo: document.body });
 		const button = wrapper.find(".ui-card--buttons").findAll("button").find(button => button.text() === "Löschen");
-		if (button === undefined)
+		if (button === undefined) {
 			fail("Button darf nicht undefined sein");
+		}
 		await button.trigger("click");
 
 		expect(onDeleteFunction).toHaveBeenCalled();
@@ -1508,8 +1514,9 @@ describe("Übergebene Button-Funktionen werden korrekt ausgeführt", async () =>
 
 		const wrapper = mount(UiCard, { props: { onCancel: onCancelFunction }, attachTo: document.body });
 		const button = wrapper.find(".ui-card--buttons").findAll("button").find(button => button.text() === "Abbrechen");
-		if (button === undefined)
+		if (button === undefined) {
 			fail("Button darf nicht undefined sein");
+		}
 		await button.trigger("click");
 
 		expect(onCancelFunction).toHaveBeenCalled();

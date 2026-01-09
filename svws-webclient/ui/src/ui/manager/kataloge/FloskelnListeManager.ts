@@ -22,8 +22,9 @@ export class FloskelnListeManager extends AuswahlManager<number, Floskel, Floske
 	public static readonly comparator = {
 		compare: (a: Floskel, b: Floskel) => {
 			const cmp = a.kuerzel?.localeCompare(b.kuerzel ?? "") ?? 0;
-			if (cmp !== 0)
+			if (cmp !== 0) {
 				return cmp;
+			}
 
 			return a.id - b.id;
 		},
@@ -39,8 +40,9 @@ export class FloskelnListeManager extends AuswahlManager<number, Floskel, Floske
 
 	private mapFloskelgruppen(floskelgruppen: List<Floskelgruppe>) {
 		const result = new Map<number, Floskelgruppe>();
-		for (const f of floskelgruppen)
+		for (const f of floskelgruppen) {
 			result.set(f.id, f);
+		}
 		return result;
 	}
 

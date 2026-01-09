@@ -17,12 +17,14 @@ export class FloskelgruppenListeManager extends AuswahlManager<number, Floskelgr
 	public static readonly comparator = {
 		compare: (a: Floskelgruppe, b: Floskelgruppe) => {
 			let cmp = a.bezeichnung?.localeCompare(b.bezeichnung ?? "") ?? 0;
-			if (cmp !== 0)
+			if (cmp !== 0) {
 				return cmp;
+			}
 
 			cmp = a.kuerzel?.localeCompare(b.kuerzel ?? "") ?? 0;
-			if (cmp !== 0)
+			if (cmp !== 0) {
 				return cmp;
+			}
 
 			return a.id - b.id;
 		},

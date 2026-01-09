@@ -48,18 +48,22 @@
 	defineSlots();
 
 	const log = computed(() => {
-		if (props.logs === undefined)
+		if (props.logs === undefined) {
 			return;
+		}
 		let result = "";
-		for (const s of props.logs)
-			if (s !== null)
+		for (const s of props.logs) {
+			if (s !== null) {
 				result += s + "\n";
+			}
+		}
 		return result;
 	});
 
 	async function copyToClipboard() {
-		if (log.value === undefined)
+		if (log.value === undefined) {
 			return;
+		}
 		try {
 			await navigator.clipboard.writeText("```\n" + log.value + "\n```");
 		} catch (e) {

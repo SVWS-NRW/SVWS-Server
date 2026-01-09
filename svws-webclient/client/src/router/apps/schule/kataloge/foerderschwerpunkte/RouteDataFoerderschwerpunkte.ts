@@ -60,14 +60,17 @@ export class RouteDataFoerderschwerpunkte extends RouteDataAuswahl<Foerderschwer
 	deleteCheck = (): [boolean, List<string>] => {
 		const errorLog = new ArrayList<string>();
 
-		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN))
+		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Förderschwerpunkten vor.');
+		}
 
-		if (!this.manager.liste.auswahlExists())
+		if (!this.manager.liste.auswahlExists()) {
 			errorLog.add('Es wurde kein Förderschwerpunkt zum Löschen ausgewählt.');
+		}
 
-		if (!this.manager.getIdsReferencedFoerderschwerpunkte().isEmpty())
+		if (!this.manager.getIdsReferencedFoerderschwerpunkte().isEmpty()) {
 			errorLog.add(this.getErrorMessageForReferencedFoerderschwerpunkte());
+		}
 
 		return [errorLog.isEmpty(), errorLog];
 	};
@@ -76,8 +79,9 @@ export class RouteDataFoerderschwerpunkte extends RouteDataAuswahl<Foerderschwer
 		let errorMessage = 'Die folgenden Förderschwerpunkte sind an anderer Stelle referenziert und können daher nicht gelöscht werden:\n\n';
 		for (const id of this.manager.getIdsReferencedFoerderschwerpunkte()) {
 			const foerderschwerpunkt = this.manager.liste.get(id);
-			if (foerderschwerpunkt)
+			if (foerderschwerpunkt) {
 				errorMessage += `- ${foerderschwerpunkt.kuerzelStatistik}: ${foerderschwerpunkt.kuerzel} \n`;
+			}
 		}
 		return errorMessage;
 	}

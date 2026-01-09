@@ -37,8 +37,9 @@
 	const props = defineProps<FloskelnAuswahlProps>();
 	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const selectedEntry = computed(() => {
-		if ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN))
+		if ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN)) {
 			return null;
+		}
 		return (props.manager().hasDaten()) ? props.manager().auswahl() : null;
 	});
 	const columns: DataTableColumn[] = [
@@ -48,13 +49,16 @@
 
 	async function setAuswahl(floskeln: Floskel[]) {
 		props.manager().liste.auswahlClear();
-		for (const floskel of floskeln)
-			if (props.manager().liste.hasValue(floskel))
+		for (const floskel of floskeln) {
+			if (props.manager().liste.hasValue(floskel)) {
 				props.manager().liste.auswahlAdd(floskel);
-		if (props.manager().liste.auswahlExists())
+			}
+		}
+		if (props.manager().liste.auswahlExists()) {
 			await props.gotoGruppenprozessView(true);
-		else
+		} else {
 			await props.gotoDefaultView(props.manager().getVorherigeAuswahl()?.id);
+		}
 	}
 
 </script>

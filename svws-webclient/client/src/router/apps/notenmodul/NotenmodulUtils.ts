@@ -7,15 +7,19 @@ import type { Comparator } from "../../../../../core/src/java/util/Comparator";
 export const comparatorENMKlasse = <Comparator<ENMKlasse>>{ compare: (a: ENMKlasse, b: ENMKlasse): number => {
 	// Vergleiche zuerst anhand der gesetzten Sortierung der Klasse...
 	const tmp = a.sortierung - b.sortierung;
-	if (tmp !== 0)
+	if (tmp !== 0) {
 		return tmp;
+	}
 	// ... und ansonsten anhand des Anzeige-Kürzels der Klassen
-	if ((a.kuerzelAnzeige !== null) && (b.kuerzelAnzeige !== null))
+	if ((a.kuerzelAnzeige !== null) && (b.kuerzelAnzeige !== null)) {
 		return a.kuerzelAnzeige.localeCompare(b.kuerzelAnzeige);
-	if (a.kuerzelAnzeige === null)
+	}
+	if (a.kuerzelAnzeige === null) {
 		return -1;
-	if (b.kuerzelAnzeige === null)
+	}
+	if (b.kuerzelAnzeige === null) {
 		return 1;
+	}
 	return 0;
 } };
 
@@ -23,8 +27,9 @@ export const comparatorENMKlasse = <Comparator<ENMKlasse>>{ compare: (a: ENMKlas
 export const comparatorENMAbteilung = <Comparator<ENMAbteilung>>{ compare: (a: ENMAbteilung, b: ENMAbteilung): number => {
 	// Vergleiche zuerst anhand der gesetzten Sortierung der Abteilung...
 	const tmp = a.sortierung - b.sortierung;
-	if (tmp !== 0)
+	if (tmp !== 0) {
 		return tmp;
+	}
 	return a.bezeichnung.localeCompare(b.bezeichnung);
 } };
 
@@ -32,13 +37,17 @@ export const comparatorENMAbteilung = <Comparator<ENMAbteilung>>{ compare: (a: E
 export const comparatorENMJahrgang = <Comparator<ENMJahrgang>>{ compare: (a: ENMJahrgang, b: ENMJahrgang): number => {
 	// Vergleiche zuerst anhand der gesetzten Sortierung der Jahrgänge...
 	const tmp = a.sortierung - b.sortierung;
-	if (tmp !== 0)
+	if (tmp !== 0) {
 		return tmp;
-	if ((a.kuerzelAnzeige !== null) && (b.kuerzelAnzeige !== null))
+	}
+	if ((a.kuerzelAnzeige !== null) && (b.kuerzelAnzeige !== null)) {
 		return a.kuerzelAnzeige.localeCompare(b.kuerzelAnzeige);
-	if (a.kuerzelAnzeige === null)
+	}
+	if (a.kuerzelAnzeige === null) {
 		return -1;
-	if (b.kuerzelAnzeige === null)
+	}
+	if (b.kuerzelAnzeige === null) {
 		return 1;
+	}
 	return 0;
 } };

@@ -48,16 +48,18 @@
 
 	const raum = computed<StundenplanRaum | undefined>({
 		get: () => {
-			if (_raum.value !== undefined)
+			if (_raum.value !== undefined) {
 				try {
 					return props.stundenplanManager().raumGetByIdOrException(_raum.value.id);
 				} catch (e) {
 					return undefined;
 				}
-			if (props.stundenplanManager().raumGetMengeVerwendetAsList().size() > 0)
+			}
+			if (props.stundenplanManager().raumGetMengeVerwendetAsList().size() > 0) {
 				return props.stundenplanManager().raumGetMengeVerwendetAsList().get(0);
-			else
+			} else {
 				return undefined;
+			}
 		},
 		set: (value) => _raum.value = value,
 	});
@@ -69,11 +71,13 @@
 
 	function wochentypen(): List<number> {
 		let modell = props.stundenplanManager().getWochenTypModell();
-		if (modell <= 1)
+		if (modell <= 1) {
 			modell = 0;
+		}
 		const result = new ArrayList<number>();
-		for (let n = 0; n <= modell; n++)
+		for (let n = 0; n <= modell; n++) {
 			result.add(n);
+		}
 		return result;
 	}
 

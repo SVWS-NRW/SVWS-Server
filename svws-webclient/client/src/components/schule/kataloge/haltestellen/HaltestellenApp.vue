@@ -45,8 +45,9 @@
 
 	const haltestellenSubline = computed(() => {
 		const list = props.manager().liste.auswahlSorted();
-		if (list.size() > 5)
+		if (list.size() > 5) {
 			return `${list.size()} Haltestellen ausgewählt`;
+		}
 		return [...list].map(k => k.bezeichnung).join(', ');
 	});
 

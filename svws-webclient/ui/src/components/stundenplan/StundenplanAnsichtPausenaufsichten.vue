@@ -75,8 +75,9 @@
 	function getPausenaufsichtenString(idPausenzeit: number) {
 		let text = "";
 		for (const pausenaufsicht of props.getPausenaufsichten(idPausenzeit)) {
-			if (text !== '')
+			if (text !== '') {
 				text += ', ';
+			}
 			text += props.manager().lehrerGetByIdOrException(pausenaufsicht.idLehrer).kuerzel;
 		}
 		return text;
@@ -86,8 +87,9 @@
 		let result = "";
 		for (const zuordnung of pausenaufsicht.bereiche) {
 			const bereich = props.manager().aufsichtsbereichGetByIdOrException(zuordnung.idAufsichtsbereich);
-			if (result !== "")
+			if (result !== "") {
 				result += ",";
+			}
 			result += bereich.kuerzel;
 		}
 		return result;

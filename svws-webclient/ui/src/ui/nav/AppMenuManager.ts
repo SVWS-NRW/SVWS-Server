@@ -40,11 +40,14 @@ export class AppMenuManager {
 		this._current = current;
 		// Erstelle eine Map von den Namen der Einträge zu den zugehörigen Hauptmenü-Einträgen
 		this._mapMainmenu = new Map<string, TabData>();
-		for (const t of this._menu.tabs)
+		for (const t of this._menu.tabs) {
 			this._mapMainmenu.set(t.name, t);
-		for (const s of submenuManager)
-			for (const t of s.manager.tabs)
+		}
+		for (const s of submenuManager) {
+			for (const t of s.manager.tabs) {
 				this._mapMainmenu.set(t.name, this._menu.getTab(s.name));
+			}
+		}
 	}
 
 	/**
@@ -54,8 +57,9 @@ export class AppMenuManager {
 	 */
 	public get benutzerprofil(): TabData | null {
 		const tabs = this._menu.getTabsOfGroup(AppMenuGroup.BENUTZERPROFIL);
-		if (tabs.length > 1)
+		if (tabs.length > 1) {
 			throw new DeveloperNotificationException("Es wurde mehr als ein Eintrag für das Benutzerprofil definiert. Dies wird nicht unterstützt.");
+		}
 		return (tabs.length === 1) ? tabs[0] : null;
 	}
 
@@ -73,8 +77,9 @@ export class AppMenuManager {
 	 */
 	public get einstellungen(): TabData | null {
 		const tabs = this._menu.getTabsOfGroup(AppMenuGroup.EINSTELLUNGEN);
-		if (tabs.length > 1)
+		if (tabs.length > 1) {
 			throw new DeveloperNotificationException("Es wurde mehr als ein Eintrag für die Einstellungen definiert. Dies wird nicht unterstützt.");
+		}
 		return (tabs.length === 1) ? tabs[0] : null;
 	}
 

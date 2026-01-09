@@ -69,8 +69,9 @@ export class GridInputToggle<KEY> extends GridInput<KEY, boolean> {
 	 * @returns true   es hat aufgrund des Tastaturereignisses eine Änderung am Zustand des Inputs stattgefunden
 	 */
 	public onKeyDown(event: KeyboardEvent): boolean {
-		if (super.onKeyDownNavigation(event))
+		if (super.onKeyDownNavigation(event)) {
 			return false;
+		}
 		if ((event.key === "Delete") || (event.key === "Backspace")) {
 			this.clear();
 			event.preventDefault();
@@ -85,10 +86,11 @@ export class GridInputToggle<KEY> extends GridInput<KEY, boolean> {
 		if (event.key === "Enter") {
 			this._value.value = !this._value.value;
 			this.commit();
-			if (this.navigateOnEnter === "DOWN")
+			if (this.navigateOnEnter === "DOWN") {
 				this.navigateDown();
-			else if (this.navigateOnEnter === "RIGHT")
+			} else if (this.navigateOnEnter === "RIGHT") {
 				this.navigateRight();
+			}
 			event.preventDefault();
 			return true;
 		}

@@ -37,8 +37,9 @@
 	const props = defineProps<BeschaeftigungsartenAuswahlProps>();
 	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const selectedEntry = computed(() => {
-		if ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN))
+		if ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN)) {
 			return null;
+		}
 		return (props.manager().hasDaten()) ? props.manager().auswahl() : null;
 	});
 	const columns: DataTableColumn[] = [
@@ -47,13 +48,16 @@
 
 	async function setAuswahl(beschaeftigungsarten: Beschaeftigungsart[]) {
 		props.manager().liste.auswahlClear();
-		for (const beschaeftigungsart of beschaeftigungsarten)
-			if (props.manager().liste.hasValue(beschaeftigungsart))
+		for (const beschaeftigungsart of beschaeftigungsarten) {
+			if (props.manager().liste.hasValue(beschaeftigungsart)) {
 				props.manager().liste.auswahlAdd(beschaeftigungsart);
-		if (props.manager().liste.auswahlExists())
+			}
+		}
+		if (props.manager().liste.auswahlExists()) {
 			await props.gotoGruppenprozessView(true);
-		else
+		} else {
 			await props.gotoDefaultView(props.manager().getVorherigeAuswahl()?.id);
+		}
 	}
 
 </script>

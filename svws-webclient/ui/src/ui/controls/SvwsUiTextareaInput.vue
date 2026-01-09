@@ -107,12 +107,15 @@
 
 	const isValid = computed(() => {
 		let tmpIsValid = true;
-		if (props.required && ((data.value === null) || (data.value === '')))
+		if (props.required && ((data.value === null) || (data.value === ''))) {
 			return false;
-		if (!maxLenValid.value)
+		}
+		if (!maxLenValid.value) {
 			tmpIsValid = false;
-		if (tmpIsValid)
+		}
+		if (tmpIsValid) {
 			tmpIsValid = props.valid(data.value);
+		}
 		return tmpIsValid;
 	});
 
@@ -124,8 +127,9 @@
 	}
 
 	const maxLenValid = computed(() => {
-		if ((props.maxLen === undefined) || (data.value === null))
+		if ((props.maxLen === undefined) || (data.value === null)) {
 			return true;
+		}
 		return data.value.toLocaleString().length <= props.maxLen;
 	});
 
@@ -139,13 +143,15 @@
 	function onInput(event: Event) {
 		const value = (event.target as HTMLInputElement).value;
 		emit("input", value);
-		if (value !== data.value)
+		if (value !== data.value) {
 			updateData(value);
+		}
 	}
 
 	function onBlur() {
-		if (props.modelValue !== data.value)
+		if (props.modelValue !== data.value) {
 			emit("change", data.value);
+		}
 		emit("blur", data.value);
 	}
 

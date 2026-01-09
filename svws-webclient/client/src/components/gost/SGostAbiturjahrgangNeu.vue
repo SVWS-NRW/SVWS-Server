@@ -28,16 +28,18 @@
 	const jahrgaenge = ref(new Set<number>());
 
 	function updateMap(id: number, ok: boolean) {
-		if (ok)
+		if (ok) {
 			jahrgaenge.value.add(id);
-		else
+		} else {
 			jahrgaenge.value.delete(id);
+		}
 	}
 
 	async function clickAddAbiturjahrgang() {
 		spinning.value = true;
-		for (const id of jahrgaenge.value.values())
+		for (const id of jahrgaenge.value.values()) {
 			await props.addAbiturjahrgang(id);
+		}
 		jahrgaenge.value.clear();
 		spinning.value = false;
 	}

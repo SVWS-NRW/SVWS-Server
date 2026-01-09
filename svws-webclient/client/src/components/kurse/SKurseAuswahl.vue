@@ -63,25 +63,28 @@
 
 	const sortByMulti = computed<Map<string, boolean>>(() => {
 		const map = new Map<string, boolean>();
-		for (const pair of props.manager().orderGet())
-			if (pair.b !== null)
+		for (const pair of props.manager().orderGet()) {
+			if (pair.b !== null) {
 				map.set(pair.a === "kuerzel" ? "kurse" : pair.a, pair.b);
+			}
+		}
 		return map;
 	});
 
 	const sortByAndOrder = computed<SortByAndOrder | undefined>({
 		get: () => {
 			const list = props.manager().orderGet();
-			if (list.isEmpty())
+			if (list.isEmpty()) {
 				return undefined;
-			else {
+			} else {
 				const { a: key, b: order } = list.get(0);
 				return { key, order };
 			}
 		},
 		set: (value) => {
-			if ((value === undefined) || (value.key === null))
+			if ((value === undefined) || (value.key === null)) {
 				return;
+			}
 			props.manager().orderUpdate(value.key, value.order);
 			void props.setFilter();
 		},
@@ -93,9 +96,11 @@
 
 	function find(items: Iterable<LehrerListeEintrag | JahrgangsDaten | FachDaten>, search: string) {
 		const list = [];
-		for (const i of items)
-			if ((i.kuerzel !== null) && i.kuerzel.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
+		for (const i of items) {
+			if ((i.kuerzel !== null) && i.kuerzel.toLocaleLowerCase().includes(search.toLocaleLowerCase())) {
 				list.push(i);
+			}
+		}
 		return list;
 	}
 
@@ -105,9 +110,11 @@
 
 	const findSchueler = (items: Iterable<SchuelerListeEintrag>, search: string) => {
 		const list = [];
-		for (const i of items)
-			if ((i.nachname.toLocaleLowerCase().includes(search.toLocaleLowerCase())) || (i.vorname.toLocaleLowerCase().includes(search.toLocaleLowerCase())))
+		for (const i of items) {
+			if ((i.nachname.toLocaleLowerCase().includes(search.toLocaleLowerCase())) || (i.vorname.toLocaleLowerCase().includes(search.toLocaleLowerCase()))) {
 				list.push(i);
+			}
+		}
 		return list;
 	};
 
@@ -128,8 +135,9 @@
 		get: () => [...props.manager().schulgliederungen.auswahl()],
 		set: (value) => {
 			props.manager().schulgliederungen.auswahlClear();
-			for (const v of value)
+			for (const v of value) {
 				props.manager().schulgliederungen.auswahlAdd(v);
+			}
 			void props.setFilter();
 		},
 	});
@@ -138,8 +146,9 @@
 		get: () => [...props.manager().jahrgaenge.auswahl()],
 		set: (value) => {
 			props.manager().jahrgaenge.auswahlClear();
-			for (const v of value)
+			for (const v of value) {
 				props.manager().jahrgaenge.auswahlAdd(v);
+			}
 			void props.setFilter();
 		},
 	});
@@ -148,8 +157,9 @@
 		get: () => [...props.manager().faecher.auswahl()],
 		set: (value) => {
 			props.manager().faecher.auswahlClear();
-			for (const v of value)
+			for (const v of value) {
 				props.manager().faecher.auswahlAdd(v);
+			}
 			void props.setFilter();
 		},
 	});
@@ -158,8 +168,9 @@
 		get: () => [...props.manager().lehrer.auswahl()],
 		set: (value) => {
 			props.manager().lehrer.auswahlClear();
-			for (const v of value)
+			for (const v of value) {
 				props.manager().lehrer.auswahlAdd(v);
+			}
 			void props.setFilter();
 		},
 	});
@@ -168,8 +179,9 @@
 		get: () => [...props.manager().schueler.auswahl()],
 		set: (value) => {
 			props.manager().schueler.auswahlClear();
-			for (const v of value)
+			for (const v of value) {
 				props.manager().schueler.auswahlAdd(v);
+			}
 			void props.setFilter();
 		},
 	});
@@ -179,9 +191,11 @@
 
 	const rowsFiltered = computed<KursDaten[]>(() => {
 		const arr = [];
-		for (const e of props.manager().filtered())
-			if (e.kuerzel.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()))
+		for (const e of props.manager().filtered()) {
+			if (e.kuerzel.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
 				arr.push(e);
+			}
+		}
 		return arr;
 	});
 
@@ -203,28 +217,33 @@
 	}
 
 	const clickedEintrag = computed(() => {
-		if ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN))
+		if ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN)) {
 			return null;
+		}
 		return props.manager().hasDaten() ? props.manager().auswahl() : null;
 	});
 
 	async function setAuswahl(items: KursDaten[]) {
 		props.manager().liste.auswahlClear();
-		for (const item of items)
-			if (props.manager().liste.hasValue(item))
+		for (const item of items) {
+			if (props.manager().liste.hasValue(item)) {
 				props.manager().liste.auswahlAdd(item);
-		if (props.manager().liste.auswahlExists())
+			}
+		}
+		if (props.manager().liste.auswahlExists()) {
 			await props.gotoGruppenprozessView(true);
-		else
+		} else {
 			await props.gotoDefaultView(props.manager().getVorherigeAuswahl()?.id);
+		}
 	}
 
 
 	// TODO komma-separierte Liste mit Zusatzkräften
 	function getLehrerKuerzel(idLehrer: number) {
 		const lehrer = props.manager().lehrer.get(idLehrer);
-		if (lehrer === null)
+		if (lehrer === null) {
 			return "---";
+		}
 		return lehrer.kuerzel;
 	}
 

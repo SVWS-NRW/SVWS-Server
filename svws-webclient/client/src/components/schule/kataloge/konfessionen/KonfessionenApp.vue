@@ -43,8 +43,9 @@
 
 	const konfessionenSubline = computed(() => {
 		const auswahl = props.manager().liste.auswahlSorted();
-		if (auswahl.size() > 5)
+		if (auswahl.size() > 5) {
 			return `${auswahl.size()} Konfessionen ausgewählt`;
+		}
 		return [...auswahl].map(k => k.kuerzel).join(', ');
 	});
 

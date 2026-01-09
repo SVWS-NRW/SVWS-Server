@@ -43,16 +43,19 @@ export class RouteGostAbitur extends RouteNode<RouteDataGostAbitur, RouteGost> {
 	protected checkHidden(params?: RouteParams) {
 		try {
 			const { abiturjahr } = (params !== undefined) ? RouteNode.getIntParams(params, ["abiturjahr"]) : { abiturjahr: undefined };
-			if (abiturjahr === undefined)
+			if (abiturjahr === undefined) {
 				return false;
+			}
 			const eintrag = routeGost.data.mapAbiturjahrgaenge.get(abiturjahr);
-			if (eintrag === undefined)
+			if (eintrag === undefined) {
 				return false;
+			}
 			if ((eintrag.abiturjahr !== -1)
 				&& (api.benutzerHatKompetenz(BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN)
 					|| (api.benutzerHatKompetenz(BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN) && api.benutzerKompetenzenAbiturjahrgaenge.has(eintrag.abiturjahr)))
-				&& ((eintrag.jahrgang === 'Q1') || (eintrag.jahrgang === 'Q2')))
+				&& ((eintrag.jahrgang === 'Q1') || (eintrag.jahrgang === 'Q2'))) {
 				return false;
+			}
 			return routeGost.getRouteDefaultChild({ abiturjahr });
 		} catch (e) {
 			return routeError.getSimpleErrorRoute(e as DeveloperNotificationException);
@@ -62,22 +65,28 @@ export class RouteGostAbitur extends RouteNode<RouteDataGostAbitur, RouteGost> {
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean): Promise<void | Error | RouteLocationRaw> {
 		try {
 			const { abiturjahr } = RouteNode.getIntParams(to_params, ["abiturjahr"]);
-			if (abiturjahr === undefined)
+			if (abiturjahr === undefined) {
 				throw new DeveloperNotificationException("Fehler: Kein Abiturjahrgang in der URL angegeben.");
+			}
 			const eintrag = routeGost.data.mapAbiturjahrgaenge.get(abiturjahr);
-			if (eintrag === undefined)
+			if (eintrag === undefined) {
 				return routeGost.getRoute({ abiturjahr });
+			}
 			try {
 				await this.data.setAbiturjahr(eintrag, isEntering);
 			} catch (error) {
 				return routeGost.getRoute({ abiturjahr });
 			}
-			if (to === this)
+			if (to === this) {
 				return this.getRouteView(this.data.view);
-			if (!to.name.startsWith(this.data.view.name))
-				for (const child of this.children)
-					if (to.name.startsWith(child.name))
+			}
+			if (!to.name.startsWith(this.data.view.name)) {
+				for (const child of this.children) {
+					if (to.name.startsWith(child.name)) {
 						this.data.setView(child, this.children);
+					}
+				}
+			}
 		} catch (e) {
 			return await routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
@@ -94,11 +103,13 @@ export class RouteGostAbitur extends RouteNode<RouteDataGostAbitur, RouteGost> {
 	}
 
 	private setTab = async (value: TabData) => {
-		if (value.name === this.data.view.name)
+		if (value.name === this.data.view.name) {
 			return;
+		}
 		const node = RouteNode.getNodeByName(value.name);
-		if (node === undefined)
+		if (node === undefined) {
 			throw new DeveloperNotificationException("Unbekannte Route");
+		}
 		await RouteManager.doRoute(this.getRouteView(node));
 		this.data.setView(node, this.children);
 	};

@@ -29,8 +29,9 @@ export class RouteDataSchuleDatenaustauschKurs42 extends RouteData<RouteStateDat
 			}
 			const result = new SimpleOperationResponse();
 			result.log.add("Fehler bei der Server-Anfrage. ");
-			if (e instanceof Error)
+			if (e instanceof Error) {
 				result.log.add("  " + e.message);
+			}
 			return result;
 		}
 	};
@@ -45,8 +46,9 @@ export class RouteDataSchuleDatenaustauschKurs42 extends RouteData<RouteStateDat
 			}
 			const result = new SimpleOperationResponse();
 			result.log.add("Fehler bei der Server-Anfrage. ");
-			if (e instanceof Error)
+			if (e instanceof Error) {
 				result.log.add("  " + e.message);
+			}
 			return result;
 		}
 	};

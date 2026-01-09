@@ -55,14 +55,17 @@ export class RouteDataEinwilligungsarten extends RouteDataAuswahl<Einwilligungsa
 	deleteCheck = (): [boolean, List<string>] => {
 		const errorLog = new ArrayList<string>();
 
-		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN))
+		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Einwilligungsarten vor.');
+		}
 
-		if (!this.manager.liste.auswahlExists())
+		if (!this.manager.liste.auswahlExists()) {
 			errorLog.add('Es wurden keine Einwilligungsarten zum Löschen ausgewählt.');
+		}
 
-		if (!this.manager.getIdsReferencedEinwilligungsarten().isEmpty())
+		if (!this.manager.getIdsReferencedEinwilligungsarten().isEmpty()) {
 			errorLog.add(this.getErrorMessageForReferencedEinwilligungsarten());
+		}
 
 		return [errorLog.isEmpty(), errorLog];
 	};
@@ -71,8 +74,9 @@ export class RouteDataEinwilligungsarten extends RouteDataAuswahl<Einwilligungsa
 		let errorMessage = 'Die folgenden Einwilligungsarten sind an anderer Stelle referenziert:\n\n';
 		for (const id of this.manager.getIdsReferencedEinwilligungsarten()) {
 			const einwilligungsart = this.manager.liste.get(id);
-			if (einwilligungsart)
+			if (einwilligungsart) {
 				errorMessage += `- ${einwilligungsart.bezeichnung}: ${einwilligungsart.schluessel} \n`;
+			}
 		}
 		return errorMessage;
 	}

@@ -107,10 +107,11 @@
 	const actionZeitraster = ref<boolean>(false);
 
 	function updateSelected(event: Wochentag | number | StundenplanZeitraster | StundenplanPausenzeit) {
-		if (event === props.selected)
+		if (event === props.selected) {
 			props.setSelection(undefined);
-		else
+		} else {
 			props.setSelection(event);
+		}
 	}
 
 	const beginn = computed(() => {
@@ -158,10 +159,12 @@
 		if (wochentag !== undefined) {
 			const z = props.manager().zeitrasterGetByWochentagAndStundeOrNull(wochentag.id, stunde);
 			if (z !== null) {
-				if (z.stundenbeginn !== null)
+				if (z.stundenbeginn !== null) {
 					zbeginn = z.stundenbeginn;
-				if (z.stundenende !== null)
+				}
+				if (z.stundenende !== null) {
 					zende = z.stundenende;
+				}
 			}
 		}
 		const rowStart = (zbeginn - beginn.value) / 5;
@@ -203,8 +206,9 @@
 
 	async function exportJSON() {
 		const arr = [];
-		for (const e of props.manager().getListZeitraster())
+		for (const e of props.manager().getListZeitraster()) {
 			arr.push(StundenplanZeitraster.transpilerToJSON(e));
+		}
 		const blob = new Blob(['[' + arr.toString() + ']'], { type: "application/json" });
 		const link = document.createElement("a");
 		link.href = URL.createObjectURL(blob);

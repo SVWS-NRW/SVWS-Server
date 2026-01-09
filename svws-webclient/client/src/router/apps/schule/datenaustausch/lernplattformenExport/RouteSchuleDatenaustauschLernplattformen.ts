@@ -21,8 +21,9 @@ export class RouteSchuleDatenaustauschLernplattformen extends RouteNode<RouteDat
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean, redirected: RouteNode<any, any> | undefined): Promise<void | Error | RouteLocationRaw> {
-		if (isEntering)
+		if (isEntering) {
 			await this.data.init();
+		}
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuleDatenaustauschLernplattformenProps {

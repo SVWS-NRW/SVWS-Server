@@ -35,10 +35,12 @@ export class ValidatorStringExistsIn extends BasicValidator {
 	 */
 	protected pruefe(): boolean {
 		const data = this.data();
-		if ((data === undefined) || (data === null))
+		if ((data === undefined) || (data === null)) {
 			return false;
-		if (this.menge.has(data))
+		}
+		if (this.menge.has(data)) {
 			return true;
+		}
 		this.addFehler(0, "'" + data + "' ist unzulässig.");
 		return false;
 	}

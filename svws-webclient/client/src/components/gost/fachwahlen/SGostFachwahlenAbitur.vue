@@ -66,8 +66,9 @@
 	const schuljahr = computed<number>(() => props.faecherManager.getSchuljahr());
 
 	function getBgColor(fws: GostStatistikFachwahl): string {
-		if (fws.kuerzelStatistik === null)
+		if (fws.kuerzelStatistik === null) {
 			return 'rgb(220,220,220)';
+		}
 		return Fach.getBySchluesselOrDefault(fws.kuerzelStatistik).getHMTLFarbeRGBA(schuljahr.value, 1.0);
 	}
 
@@ -79,16 +80,19 @@
 		const result = new ArrayList<SchuelerListeEintrag>();
 		for (const id of props.fachwahlenManager.schuelerGetMengeByFachAndAbifachAsListOrException(idFach, abifach)) {
 			const schueler = props.mapSchueler.get(id);
-			if (schueler !== undefined)
+			if (schueler !== undefined) {
 				result.add(schueler);
+			}
 		}
 		result.sort({ compare(a: SchuelerListeEintrag, b: SchuelerListeEintrag): number {
 			let cmp = a.nachname.localeCompare(b.nachname);
-			if (cmp !== 0)
+			if (cmp !== 0) {
 				return cmp;
+			}
 			cmp = a.vorname.localeCompare(b.vorname);
-			if (cmp !== 0)
+			if (cmp !== 0) {
 				return cmp;
+			}
 			return b.id - a.id;
 		} });
 		return result;
@@ -97,8 +101,9 @@
 	function hatAbiFachwahl(fws: GostStatistikFachwahl): boolean {
 		if ((props.fachwahlenManager.schuelerGetMengeByFachAndAbifachAsListOrException(fws.id, GostAbiturFach.LK1).isEmpty())
 			&& (props.fachwahlenManager.schuelerGetMengeByFachAndAbifachAsListOrException(fws.id, GostAbiturFach.AB3).isEmpty())
-			&& (props.fachwahlenManager.schuelerGetMengeByFachAndAbifachAsListOrException(fws.id, GostAbiturFach.AB4).isEmpty()))
+			&& (props.fachwahlenManager.schuelerGetMengeByFachAndAbifachAsListOrException(fws.id, GostAbiturFach.AB4).isEmpty())) {
 			return false;
+		}
 		return true;
 	}
 

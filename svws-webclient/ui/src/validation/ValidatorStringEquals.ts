@@ -34,10 +34,12 @@ export class ValidatorStringEquals extends BasicValidator {
 	 */
 	protected pruefe(): boolean {
 		const data = this.data();
-		if ((data === undefined) || (data === null))
+		if ((data === undefined) || (data === null)) {
 			return false;
-		if (data === this.other)
+		}
+		if (data === this.other) {
 			return true;
+		}
 		this.addFehler(0, "Die beiden Werte stimmen nicht überein");
 		return false;
 	}

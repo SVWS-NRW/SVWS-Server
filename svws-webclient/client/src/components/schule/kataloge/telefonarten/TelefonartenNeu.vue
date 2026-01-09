@@ -57,15 +57,17 @@
 	});
 
 	function bezeichnungIsValid(value: string | null) {
-		if (!mandatoryInputIsValid(value, 30))
+		if (!mandatoryInputIsValid(value, 30)) {
 			return false;
+		}
 
 		return isUniqueInList(value, props.manager().liste.list(), 'bezeichnung');
 	}
 
 	async function addTelefonart() {
-		if (isLoading.value)
+		if (isLoading.value) {
 			return;
+		}
 
 		isLoading.value = true;
 		props.checkpoint.active = false;
@@ -80,8 +82,9 @@
 	}
 
 	watch(() => data.value, async () => {
-		if (isLoading.value)
+		if (isLoading.value) {
 			return;
+		}
 
 		props.checkpoint.active = true;
 	}, { immediate: false, deep: true });

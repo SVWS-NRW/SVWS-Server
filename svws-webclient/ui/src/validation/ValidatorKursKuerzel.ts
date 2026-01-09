@@ -27,8 +27,9 @@ export class ValidatorKursKuerzel extends BasicValidator {
 		this.data = data;
 		for (const k of menge) {
 			// Filtere den Kurs mit der eigenen ID, sofern diese angegeben wurde und alle Einträge mit leerem Kürzel
-			if (((id !== null) && (k.id === id)) || (JavaString.isBlank(k.kuerzel)))
+			if (((id !== null) && (k.id === id)) || (JavaString.isBlank(k.kuerzel))) {
 				continue;
+			}
 			this.menge.add(k.kuerzel.toLocaleLowerCase('de'));
 		}
 		this.run();

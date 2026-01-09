@@ -102,8 +102,9 @@ export class RouteDataBetriebe extends RouteDataAuswahl<BetriebeListeManager, Ro
 
 	deleteAnsprechpartner = async (ids: List<number>): Promise<void> => {
 		await api.server.deleteBetriebeAnsprechpartnerNeu(ids, api.schema);
-		for (const id of ids)
+		for (const id of ids) {
 			this.manager.deleteAnsprechpartner(id);
+		}
 		this.commit();
 	};
 

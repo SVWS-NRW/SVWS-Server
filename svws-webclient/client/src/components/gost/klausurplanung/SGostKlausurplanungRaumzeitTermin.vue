@@ -155,8 +155,9 @@
 
 	function mapIDs(skts: List<GostSchuelerklausurTermin | GostSchuelerklausurTerminRich>) {
 		const numList = new ArrayList<number>();
-		for (const skt of skts)
+		for (const skt of skts) {
 			numList.add(skt.id);
+		}
 		return numList;
 	}
 
@@ -177,8 +178,9 @@
 		await props.setzeRaumZuSchuelerklausuren(ListUtils.create1(raumAlleSkts), true);
 		await props.setzeRaumZuSchuelerklausuren(config.raeume, false);
 		loading.value = false;
-		if (nichtVerteilt > 0)
+		if (nichtVerteilt > 0) {
 			showModalNichtVerteilt.value = true;
+		}
 		_showModalAutomatischVerteilen.value = false;
 	}
 

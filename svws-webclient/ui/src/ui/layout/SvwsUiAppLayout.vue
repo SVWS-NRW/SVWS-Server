@@ -91,13 +91,15 @@
 	});
 
 	onMounted(() => {
-		if (appMenu.value !== null)
+		if (appMenu.value !== null) {
 			scrollbarObserver.observe(appMenu.value);
+		}
 	});
 
 	onBeforeUnmount(() => {
-		if (appMenu.value !== null)
+		if (appMenu.value !== null) {
 			scrollbarObserver.unobserve(appMenu.value);
+		}
 	});
 
 	function updateSidebarExpanded(): void {

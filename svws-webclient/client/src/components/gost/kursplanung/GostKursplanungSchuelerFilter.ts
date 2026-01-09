@@ -53,8 +53,9 @@ export class GostKursplanungSchuelerFilter {
 
 	set fach(value: number | undefined) {
 		this._fach.value = value;
-		if (value !== undefined)
+		if (value !== undefined) {
 			this._kurs.value = undefined;
+		}
 	}
 
 	get kursart(): GostKursart | undefined {
@@ -138,17 +139,21 @@ export class GostKursplanungSchuelerFilter {
 		if (value && (this.faecher.size() > 0)) {
 			this.kurs = this.getKurse().get(0);
 			this.setFachFilter(false);
-		} else
+		} else {
 			this.kurs = undefined;
+		}
 	}
 
 	public get radio_filter() {
-		if (this.kollisionen.value && this.nichtwahlen.value)
+		if (this.kollisionen.value && this.nichtwahlen.value) {
 			return 'kollisionen_nichtwahlen';
-		if (this.kollisionen.value)
+		}
+		if (this.kollisionen.value) {
 			return 'kollisionen';
-		if (this.nichtwahlen.value)
+		}
+		if (this.nichtwahlen.value) {
 			return 'nichtwahlen';
+		}
 		return 'alle';
 	}
 

@@ -123,8 +123,9 @@
 		const result = new HashSet<number>();
 		for (const lerngruppe of props.auswahl()) {
 			const arten = props.enmManager().mapLerngruppeTeilleistungsarten.get(lerngruppe.id);
-			if (arten !== null)
+			if (arten !== null) {
 				result.addAll(arten);
+			}
 		}
 		return result;
 	});
@@ -134,8 +135,9 @@
 			const result = new ArrayList<PairNN<ENMLeistung, ENMSchueler>>();
 			for (const lerngruppenAuswahl of props.auswahl()) {
 				const leistungen = props.enmManager().mapLerngruppeLeistungen.get(lerngruppenAuswahl.id);
-				if ((leistungen === null))
+				if ((leistungen === null)) {
 					continue;
+				}
 				result.addAll(leistungen);
 			}
 			return result;
@@ -157,8 +159,9 @@
 		];
 		for (const idArt of teilleistungsarten) {
 			const art = props.enmManager().mapTeilleistungsarten.get(idArt);
-			if (art === null)
+			if (art === null) {
 				continue;
+			}
 			cols.push({ kuerzel: art.bezeichnung ?? "???", name: art.bezeichnung ?? "???", width: "4rem", hideable: true });
 		}
 		cols.push(
@@ -175,8 +178,9 @@
 		const setter = (value: string | null) => void props.patchTeilleistung(teilleistung, { note: value });
 		return (element: LocalElement) => {
 			const input = gridManager.applyInputNote(key, col, index, element, setter, props.enmManager().schuljahr);
-			if (input !== null)
+			if (input !== null) {
 				gridManager.update(key, teilleistung.note);
+			}
 		};
 	}
 
@@ -185,8 +189,9 @@
 		const setter = (value: string | null) => void props.patchLeistung(pair.a, { noteQuartal: value });
 		return (element: LocalElement) => {
 			const input = gridManager.applyInputNote(key, col, index, element, setter, props.enmManager().schuljahr);
-			if (input !== null)
+			if (input !== null) {
 				gridManager.update(key, pair.a.noteQuartal);
+			}
 		};
 	}
 
@@ -195,8 +200,9 @@
 		const setter = (value: string | null) => void props.patchLeistung(pair.a, { note: value });
 		return (element: LocalElement) => {
 			const input = gridManager.applyInputNote(key, col, index, element, setter, props.enmManager().schuljahr);
-			if (input !== null)
+			if (input !== null) {
 				gridManager.update(key, pair.a.note);
+			}
 		};
 	}
 

@@ -36,20 +36,23 @@ export class ValidatorSchuelerDatumBeginnBildungsgang extends BasicValidator {
 	 */
 	protected pruefe(): boolean {
 		const strBeginnBildungsgang = this.datumBeginnBildungsgang();
-		if ((strBeginnBildungsgang === undefined) || (strBeginnBildungsgang === null))
+		if ((strBeginnBildungsgang === undefined) || (strBeginnBildungsgang === null)) {
 			return true;
+		}
 		let datumBeginnBildungsgang: DateManager | null = null;
 		try {
 			datumBeginnBildungsgang = DateManager.from(strBeginnBildungsgang);
 		} catch (e) {
-			if (e instanceof InvalidDateException)
+			if (e instanceof InvalidDateException) {
 				this.addFehler(0, "Das Format des Datums für den Beginn des Bildungsganges bei dem Schüler ist fehlerhaft: " + e.getMessage());
+			}
 			return false;
 		}
 
 		const strAufnahmedatum = this.datumAufnahme();
-		if ((strAufnahmedatum === undefined) || (strAufnahmedatum === null))
+		if ((strAufnahmedatum === undefined) || (strAufnahmedatum === null)) {
 			return true;
+		}
 		let datumAufnahme: DateManager | null = null;
 		try {
 			datumAufnahme = DateManager.from(strAufnahmedatum);

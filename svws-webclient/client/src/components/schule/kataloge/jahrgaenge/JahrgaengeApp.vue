@@ -45,8 +45,9 @@
 
 	const jahrgaengeSubline = computed(() => {
 		const auswahlJahrgaengeList = props.manager().liste.auswahlSorted();
-		if (auswahlJahrgaengeList.size() > 5)
+		if (auswahlJahrgaengeList.size() > 5) {
 			return `${auswahlJahrgaengeList.size()} Jahrgänge ausgewählt`;
+		}
 		return [...auswahlJahrgaengeList].map(k => k.kuerzel).join(', ');
 	});
 

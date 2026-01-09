@@ -60,14 +60,17 @@ export class RouteDataEntlassgruende extends RouteDataAuswahl<EntlassgruendeList
 	deleteCheck = (): [boolean, List<string>] => {
 		const errorLog = new ArrayList<string>();
 
-		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN))
+		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Entlassgründen vor.');
+		}
 
-		if (!this.manager.liste.auswahlExists())
+		if (!this.manager.liste.auswahlExists()) {
 			errorLog.add('Es wurde kein Entlassgrund zum Löschen ausgewählt.');
+		}
 
-		if (!this.manager.getIdsReferencedEntlassgruende().isEmpty())
+		if (!this.manager.getIdsReferencedEntlassgruende().isEmpty()) {
 			errorLog.add(this.getErrorMessageForReferencedEntlassgründe());
+		}
 
 		return [errorLog.isEmpty(), errorLog];
 	};
@@ -76,8 +79,9 @@ export class RouteDataEntlassgruende extends RouteDataAuswahl<EntlassgruendeList
 		let errorMessage = 'Die folgenden Entlassgründen sind an anderer Stelle referenziert und können daher nicht gelöscht werden:\n\n';
 		for (const id of this.manager.getIdsReferencedEntlassgruende()) {
 			const entlassgrund = this.manager.liste.get(id);
-			if (entlassgrund)
+			if (entlassgrund) {
 				errorMessage += `- ${entlassgrund.bezeichnung} \n`;
+			}
 		}
 		return errorMessage;
 	}
