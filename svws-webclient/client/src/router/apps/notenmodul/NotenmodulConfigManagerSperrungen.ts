@@ -1,6 +1,6 @@
 import { shallowRef, triggerRef } from "vue";
 import type { Collection, Comparator, ENMAbteilung, ENMJahrgang, ENMKlasse, ENMTeilleistungsart, JavaMap, List } from "@core";
-import { ArrayList, ENMConfigKlasse, ENMConfigKlasseSpalte, HashMap, HashMap2D, HashSet } from "@core";
+import { ArrayList, ENMConfigKlasse, ENMConfigKlasseSpalte, HashMap, HashMap2D, HashSet, JavaString } from "@core";
 import { comparatorENMAbteilung, comparatorENMJahrgang, comparatorENMKlasse } from "./NotenmodulUtils";
 import type { GridColumn } from "../../../../../ui/src/ui/controls/tablegrid/GridManager";
 
@@ -1155,7 +1155,7 @@ export class NotenmodulConfigManagerSperrungen {
 	 * @param istBeginn   gibt an, ob der Beginn oder das Ende gesetzt wird
 	 */
 	public async setzeDatumNoteneingabe(row: NotenmodulConfigManagerSperrungenZeile, value: string | null, istBeginn: boolean) {
-		const date = (value === null) ? null : (value.replace('T', ' ') + ":00.0");
+		const date = (value === null) || (JavaString.isBlank(value)) ? null : (value.replace('T', ' ') + ":00.0");
 		const rowIstGruppe = 'klassenzuordnungen' in row;
 		if (!rowIstGruppe) {
 			await this.setzeDatumNoteneingabeKlasse(row, date, istBeginn);
