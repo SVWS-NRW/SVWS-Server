@@ -223,8 +223,6 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 				configSperrungen = element.value;
 			}
 		}
-		configSichtbarkeit ??= "";
-		configSperrungen ??= "";
 
 		// Schreibe die Konfigurationselemente auf den Server
 		await this.wenomSetServerConfigElement(<ENMServerConfigElement>{

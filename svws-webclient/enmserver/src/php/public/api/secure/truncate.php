@@ -15,10 +15,10 @@ use wenom\Application;
 $app = new Application();
 
 // Prüfe die HTTP-Methode
-$auth->pruefeHTTPMethod([ "POST" ]);
+$app->auth->pruefeHTTPMethod([ "POST" ]);
 
 // Prüfe, ob eine Authentifizierung mit einem gültigen Bearer-Token vorliegt
-$auth->pruefeAccessToken();
+$app->auth->pruefeAccessToken();
 
 // Entfernen aller ENM-Daten aus der Datenbank
-$db->reinitDatbase();
+$app->db->reinitDatbase();

@@ -54,7 +54,10 @@ class Database {
      * Reinitialisiert die Datenbank, indem das Client-Secret neu gesetzt wird und die vorhanden ENM-Daten gelöscht werden.
      */
     public function reinitDatbase(): void {
-        $this->clearENMDaten();
+        ImportManager::clearENMDaten($this->conn);
+        $this->conn->clearTable('ServerConfig');
+        $this->conn->clearTable('ClientConfig');
+        $this->conn->clearTable('ClientLehrerConfig');
         $this->conn->clearTable('OAuth');
         $this->conn->insertInto('OAuth', "INSERT INTO OAuth(clientID, token, tokenTimestamp, tokenValidForSecs) VALUES (1, NULL, NULL, NULL)");
     }

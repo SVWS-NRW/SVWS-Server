@@ -66,14 +66,16 @@ public final class HttpENMServerConnection {
 	/**
 	 * Erzeugt eine neuen Verbindung zu einem Notenmodul-Server und erneuert ggf. das aktuelle Token.
 	 *
-	 * @param conn          die Datenbankverbindung zur SVWS-DB, um die aktuell gespeicherten Verindungsdaten abzufragen
-	 * @param logger        ein Logger für das Loggen der Kommunikation
-	 * @param id            die ID der Verbindung zu dem Notenmodul-Server
-	 * @param updateToken   gibt an, ob das Token überprüft und ggf. erneuert werden soll
+	 * @param conn            die Datenbankverbindung zur SVWS-DB, um die aktuell gespeicherten Verindungsdaten abzufragen
+	 * @param logger          ein Logger für das Loggen der Kommunikation
+	 * @param id              die ID der Verbindung zu dem Notenmodul-Server
+	 * @param updateToken     gibt an, ob das Token überprüft und ggf. erneuert werden soll
+	 * @param forceNewToken   gibt an, ob das Token bei einer Prüfung immer erneuert werden soll
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	private HttpENMServerConnection(final DBEntityManager conn, final Logger logger, final long id, final boolean updateToken) throws ApiOperationException {
+	private HttpENMServerConnection(final DBEntityManager conn, final Logger logger, final long id, final boolean updateToken,
+			final boolean forceNewToken) throws ApiOperationException {
 		this.conn = conn;
 		this.logger = logger;
 
@@ -91,12 +93,17 @@ public final class HttpENMServerConnection {
 				throw new ApiOperationException(Status.NOT_FOUND, "Bei der Verbindung wurde kein Client-Secret für die Authentifizierung angegeben.");
 			logger.logLn("Generiere den HTTP-Header für Basic-Auth bestehen aus der Client-ID als User und dem Client-Secret als Kennwort...");
 			final String basicAuth = Base64.getEncoder().encodeToString((dto.clientID + ":" + dto.clientSecret).getBytes());
-			logger.logLn("Prüfe, ob ein bestehendes Token wiederverwendet werden kann...");
-			if (isTokenValid()) {
-				logger.logLn("Das Token ist noch gültig und wird erneut verwendet.");
-			} else {
-				logger.logLn("Es existiert kein gültiges Token und ein neues Token muss angefordert werden...");
+			if (forceNewToken) {
+				logger.logLn("Ignoriere ein ggf. existierendes Token und fordere ein neues Token an...");
 				requestToken(basicAuth, logger);
+			} else {
+				logger.logLn("Prüfe, ob ein bestehendes Token wiederverwendet werden kann...");
+				if (isTokenValid()) {
+					logger.logLn("Das Token ist noch gültig und wird erneut verwendet.");
+				} else {
+					logger.logLn("Es existiert kein gültiges Token und ein neues Token muss angefordert werden...");
+					requestToken(basicAuth, logger);
+				}
 			}
 		}
 	}
@@ -382,7 +389,7 @@ public final class HttpENMServerConnection {
 		try {
 			logger.logLn("Führe eine Synchronisation der Daten durch...");
 			logger.modifyIndent(2);
-			final HttpENMServerConnection client = new HttpENMServerConnection(conn, logger, idVerbindung, true);
+			final HttpENMServerConnection client = new HttpENMServerConnection(conn, logger, idVerbindung, true, false);
 			uploadENMDaten(conn, client, logger);
 			downloadENMDaten(conn, client, logger);
 			logger.logLn("Die Synchronisation wurde erfolgreich abgeschlossen.");
@@ -424,7 +431,7 @@ public final class HttpENMServerConnection {
 		try {
 			logger.logLn("Führe einen Upload der Daten durch...");
 			logger.modifyIndent(2);
-			final HttpENMServerConnection client = new HttpENMServerConnection(conn, logger, idVerbindung, true);
+			final HttpENMServerConnection client = new HttpENMServerConnection(conn, logger, idVerbindung, true, false);
 			uploadENMDaten(conn, client, logger);
 			logger.logLn("Der Upload wurde erfolgreich abgeschlossen.");
 			sor.success = true;
@@ -465,7 +472,7 @@ public final class HttpENMServerConnection {
 		try {
 			logger.logLn("Führe einen Download der Daten durch...");
 			logger.modifyIndent(2);
-			final HttpENMServerConnection client = new HttpENMServerConnection(conn, logger, idVerbindung, true);
+			final HttpENMServerConnection client = new HttpENMServerConnection(conn, logger, idVerbindung, true, false);
 			downloadENMDaten(conn, client, logger);
 			logger.logLn("Der Download wurde erfolgreich abgeschlossen.");
 			sor.success = true;
@@ -506,8 +513,13 @@ public final class HttpENMServerConnection {
 		try {
 			logger.logLn("Führe ein Truncate auf dem Server durch...");
 			logger.modifyIndent(2);
-			final HttpENMServerConnection client = new HttpENMServerConnection(conn, logger, idVerbindung, true);
-			final HttpResponse<String> response = client.postEmpty("/api/secure/truncate", BodyHandlers.ofString());
+			HttpENMServerConnection client = new HttpENMServerConnection(conn, logger, idVerbindung, true, false);
+			HttpResponse<String> response = client.postEmpty("/api/secure/truncate", BodyHandlers.ofString());
+			if (response.statusCode() == Status.UNAUTHORIZED.getStatusCode()) {
+				logger.logLn("Das Token wurde vom Server abgelehnt. Erstelle eine Verbindung mit einem neuen Token.");
+				client = new HttpENMServerConnection(conn, logger, idVerbindung, true, true);
+				response = client.postEmpty("/api/secure/truncate", BodyHandlers.ofString());
+			}
 			if (response.statusCode() != Status.OK.getStatusCode())
 				throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
 			logger.logLn("Die Truncate-Operation wurde erfolgreich abgeschlossen.");
@@ -548,8 +560,13 @@ public final class HttpENMServerConnection {
 		try {
 			logger.logLn("Führe ein Reset auf dem Server durch...");
 			logger.modifyIndent(2);
-			final HttpENMServerConnection client = new HttpENMServerConnection(conn, logger, idVerbindung, true);
-			final HttpResponse<String> response = client.postEmpty("/api/secure/reset", BodyHandlers.ofString());
+			HttpENMServerConnection client = new HttpENMServerConnection(conn, logger, idVerbindung, true, false);
+			HttpResponse<String> response = client.postEmpty("/api/secure/reset", BodyHandlers.ofString());
+			if (response.statusCode() == Status.UNAUTHORIZED.getStatusCode()) {
+				logger.logLn("Das Token wurde vom Server abgelehnt. Erstelle eine Verbindung mit einem neuen Token.");
+				client = new HttpENMServerConnection(conn, logger, idVerbindung, true, true);
+				response = client.postEmpty("/api/secure/reset", BodyHandlers.ofString());
+			}
 			if (response.statusCode() != Status.OK.getStatusCode())
 				throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
 			logger.logLn("Die Reset-Operation wurde erfolgreich abgeschlossen.");
@@ -590,8 +607,13 @@ public final class HttpENMServerConnection {
 		try {
 			logger.logLn("Prüft, ob der Endpunkt für einen Verbindungstest erreichbar ist...");
 			logger.modifyIndent(2);
-			final HttpENMServerConnection client = new HttpENMServerConnection(conn, logger, idVerbindung, true);
-			final HttpResponse<String> response = client.get("/api/secure/check", BodyHandlers.ofString());
+			HttpENMServerConnection client = new HttpENMServerConnection(conn, logger, idVerbindung, true, false);
+			HttpResponse<String> response = client.get("/api/secure/check", BodyHandlers.ofString());
+			if (response.statusCode() == Status.UNAUTHORIZED.getStatusCode()) {
+				logger.logLn("Das Token wurde vom Server abgelehnt. Erstelle eine Verbindung mit einem neuen Token.");
+				client = new HttpENMServerConnection(conn, logger, idVerbindung, true, true);
+				response = client.get("/api/secure/check", BodyHandlers.ofString());
+			}
 			if (response.statusCode() != Status.OK.getStatusCode())
 				throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
 			logger.logLn("Der Verbindungstest wurde erfolgreich durchgeführt.");
@@ -632,7 +654,7 @@ public final class HttpENMServerConnection {
 		try {
 			logger.logLn("Frage Serverkonfiguration an...");
 			logger.modifyIndent(2);
-			final HttpENMServerConnection client = new HttpENMServerConnection(conn, logger, idVerbindung, true);
+			final HttpENMServerConnection client = new HttpENMServerConnection(conn, logger, idVerbindung, true, false);
 			final HttpResponse<String> response = client.get("/api/secure/serverconfig", BodyHandlers.ofString());
 			if (response.statusCode() != Status.OK.getStatusCode())
 				throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
@@ -680,7 +702,7 @@ public final class HttpENMServerConnection {
 			logger.logLn("Schicke das Konfigurationselement an den Server...");
 			logger.modifyIndent(2);
 			final String element = JSONMapper.toJsonString(is);
-			final HttpENMServerConnection client = new HttpENMServerConnection(conn, logger, idVerbindung, true);
+			final HttpENMServerConnection client = new HttpENMServerConnection(conn, logger, idVerbindung, true, false);
 			final HttpResponse<String> response = client.put("/api/secure/serverconfig", BodyHandlers.ofString(), element);
 			if (response.statusCode() != Status.OK.getStatusCode())
 				throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
@@ -772,7 +794,7 @@ public final class HttpENMServerConnection {
 		// Erstelle zunächst einen Logger für die Operation
 		final Logger logger = new Logger();
 		try {
-			final HttpENMServerConnection client = new HttpENMServerConnection(conn, logger, idVerbindung, false);
+			final HttpENMServerConnection client = new HttpENMServerConnection(conn, logger, idVerbindung, false, false);
 			final boolean isTrusted = client.checkCertificate();
 			if (!isTrusted)
 				return Response.status(Status.CONFLICT).entity("Dem Zertifikat wird aktuell nicht vertraut.").build();
