@@ -24,7 +24,7 @@ export class RouteHaltestellenNeu extends RouteNode<any, RouteHaltestellen> {
 	public getProps(to: RouteLocationNormalized): HaltestellenNeuProps {
 		return {
 			manager: () => routeHaltestellen.data.manager,
-			addHaltestelle: routeHaltestellen.data.addHaltestelle,
+			add: routeHaltestellen.data.add,
 			goToDefaultView: routeHaltestellen.data.gotoDefaultView,
 			checkpoint: this.checkpoint,
 			benutzerKompetenzen: api.benutzerKompetenzen,

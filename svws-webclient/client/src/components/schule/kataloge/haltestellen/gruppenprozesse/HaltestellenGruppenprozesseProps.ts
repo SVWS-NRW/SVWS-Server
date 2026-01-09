@@ -5,6 +5,8 @@ export interface HaltestellenGruppenprozesseProps {
 	serverMode: ServerMode;
 	schulform: Schulform;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
+	delete: () => Promise<[boolean, List<string | null>]>;
+	deleteCheck: () => [boolean, List<string>];
 	manager: () => HaltestellenListeManager;
-	deleteHaltestellen: () => Promise<[boolean, List<string | null>]>;
+	gotoDefaultView: (eintragId?: number | null) => Promise<void>;
 }

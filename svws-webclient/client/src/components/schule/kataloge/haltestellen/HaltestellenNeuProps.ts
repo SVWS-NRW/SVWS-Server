@@ -4,7 +4,7 @@ import type { Checkpoint, HaltestellenListeManager } from "@ui";
 
 export interface HaltestellenNeuProps {
 	manager: () => HaltestellenListeManager;
-	addHaltestelle: (patchObject: Partial<Haltestelle>) => Promise<void>;
+	add: (patchObject: Partial<Haltestelle>) => Promise<void>;
 	goToDefaultView: (idEintrag?: number | null) => Promise<void>;
 	checkpoint: Checkpoint;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;

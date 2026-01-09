@@ -30,8 +30,10 @@ export class RouteHaltestellenGruppenprozesse extends RouteNode<any, RouteHaltes
 			serverMode: api.mode,
 			schulform: api.schulform,
 			benutzerKompetenzen: api.benutzerKompetenzen,
-			deleteHaltestellen: routeHaltestellen.data.delete,
+			delete: routeHaltestellen.data.delete,
+			deleteCheck: routeHaltestellen.data.deleteCheck,
 			manager: () => routeHaltestellen.data.manager,
+			gotoDefaultView: routeHaltestellen.data.gotoDefaultView,
 		};
 	}
 }

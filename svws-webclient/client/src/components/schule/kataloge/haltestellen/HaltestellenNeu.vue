@@ -1,26 +1,30 @@
 <template>
 	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Allgemein">
-			<svws-ui-input-wrapper>
-				<svws-ui-text-input placeholder="Bezeichnung" :max-len="30" :min-len="1" v-model="data.bezeichnung" :disabled required
-					:valid="fieldIsValid('bezeichnung')" />
-				<div v-if="!isUniqueInList(data.bezeichnung, props.manager().liste.list(), 'bezeichnung')" class="flex my-auto">
-					<span class="icon i-ri-alert-line mx-0.5 mr-1 inline-flex" />
-					<p> Diese Bezeichnung wird bereits verwendet. </p>
-				</div>
-				<div v-if="bezeichnungIsTooLong" class="flex my-auto">
-					<span class="icon i-ri-alert-line mx-0.5 mr-1 inline-flex" />
-					<p> Diese Bezeichnung verwendet zu viele Zeichen. </p>
-				</div>
-				<svws-ui-input-number placeholder="Entfernung zur Schule" v-model="data.entfernungSchule" :disabled :min="0" :max="32000" />
-				<svws-ui-input-number placeholder="Sortierung" v-model="data.sortierung" :disabled :min="0" :max="32000" />
+			<svws-ui-input-wrapper :grid="2">
+				<svws-ui-text-input placeholder="Bezeichnung" class="contentFocusField" span="2"
+					v-model="data.bezeichnung"
+					:valid="() => fieldIsValid('bezeichnung')" :min-len="1" :max-len="30" :disabled="!hatKompetenzAdd" required />
+				<svws-ui-input-number placeholder="Entfernung zur Schule"
+					v-model="data.entfernungSchule"
+					:valid="() => fieldIsValid('entfernungSchule')" :min="0" :disabled="!hatKompetenzAdd" />
 				<svws-ui-spacing />
-				<svws-ui-checkbox v-model="data.istSichtbar" :disabled>Sichtbar</svws-ui-checkbox>
-				<div class="mt-7 flex flex-row gap-4 justify end">
-					<svws-ui-button type="secondary" @click="cancel">Abbrechen</svws-ui-button>
-					<svws-ui-button @click="add" :disabled="!formIsValid || !hatKompetenzAdd">Speichern</svws-ui-button>
-				</div>
+				<svws-ui-input-number placeholder="Sortierung"
+					v-model="data.sortierung"
+					:valid="() => fieldIsValid('sortierung')" :min="0" :max="32000" :disabled="!hatKompetenzAdd" :removable="false" />
+				<svws-ui-spacing />
+				<svws-ui-checkbox v-model="data.istSichtbar" :disabled="!hatKompetenzAdd">
+					Sichtbar
+				</svws-ui-checkbox>
 			</svws-ui-input-wrapper>
+			<div class="mt-7 flex flex-row gap-4 justify-end">
+				<svws-ui-button type="secondary" @click="cancel">
+					Abbrechen
+				</svws-ui-button>
+				<svws-ui-button @click="addHaltestelle" :disabled="!formIsValid || !hatKompetenzAdd">
+					Speichern
+				</svws-ui-button>
+			</div>
 		</svws-ui-content-card>
 		<svws-ui-checkpoint-modal :checkpoint :continue-routing="props.continueRoutingAfterCheckpoint" />
 	</div>
@@ -31,59 +35,57 @@
 	import type { HaltestellenNeuProps } from "~/components/schule/kataloge/haltestellen/HaltestellenNeuProps";
 	import { BenutzerKompetenz, Haltestelle } from "@core";
 	import { computed, ref, watch } from "vue";
-	import { isUniqueInList, mandatoryInputIsValid } from "~/util/validation/Validation";
+	import { isUniqueInList, mandatoryInputIsValid, numberHasDecimals, numberIsValid } from "~/util/validation/Validation";
 
 	const props = defineProps<HaltestellenNeuProps>();
-	const data = ref<Haltestelle>(Object.assign(new Haltestelle(), { istSichtbar: true, entfernungSchule: 0 }));
+	const data = ref<Haltestelle>(Object.assign(new Haltestelle(), { sortierung: 32000, istSichtbar: true, entfernungSchule: 0 }));
 	const isLoading = ref<boolean>(false);
 	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
-	const disabled = computed(() => !hatKompetenzAdd.value);
 
-	const bezeichnungIsTooLong = computed(() => {
-		if (data.value.bezeichnung === null) {
-			return false;
-		}
-
-		return data.value.bezeichnung.length > 30;
-	});
-
-	function fieldIsValid(field: keyof Haltestelle | null): (v: string | null) => boolean {
-		return (v: string | null) => {
-			switch (field) {
-				case 'bezeichnung':
-					return bezeichnungIsValid(data.value.bezeichnung);
-				default:
-					return true;
-			}
-		};
-	}
-
+	// ---validate---
 	const formIsValid = computed(() => {
-		// alle Felder auf validity prüfen
-		return Object.keys(data.value).every(field => {
-			const validateField = fieldIsValid(field as keyof Haltestelle);
-			const fieldValue = data.value[field as keyof Haltestelle] as string | null;
-			return validateField(fieldValue);
-		});
+		return Object.keys(data.value)
+			.every((field: string) => fieldIsValid(field as keyof Haltestelle));
 	});
+
+	const fieldIsValid = (field: keyof Haltestelle | null): boolean => {
+		switch (field) {
+			case 'bezeichnung':
+				return bezeichnungIsValid(data.value.bezeichnung);
+			case 'sortierung':
+				return sortierungIsValid(data.value.sortierung);
+			case 'entfernungSchule':
+				return entfernungSchuleIsValid(data.value.entfernungSchule);
+			default:
+				return true;
+		}
+	};
 
 	function bezeichnungIsValid(value: string | null) {
-		if (!mandatoryInputIsValid(value, 30)) {
-			return false;
-		}
-
-		return isUniqueInList(value, props.manager().liste.list(), 'bezeichnung');
+		return mandatoryInputIsValid(value, 30)
+			&& isUniqueInList(value, props.manager().liste.list(), "bezeichnung");
 	}
 
-	async function add() {
+	function sortierungIsValid(sortierung: number | null): boolean {
+		return !numberHasDecimals(sortierung)
+			&& numberIsValid(sortierung, true, 0, 32000);
+	}
+
+	function entfernungSchuleIsValid(entfernung: number | null): boolean {
+		return !numberHasDecimals(entfernung)
+			&& numberIsValid(entfernung, true, 0);
+	}
+
+	// --- util ---
+	async function addHaltestelle() {
 		if (isLoading.value) {
 			return;
 		}
 
 		props.checkpoint.active = false;
 		isLoading.value = true;
-		const { id, ...partialData } = data.value;
-		await props.addHaltestelle(partialData);
+		const { id, referenziertInAnderenTabellen, ...partialData } = data.value;
+		await props.add(partialData);
 		isLoading.value = false;
 	}
 

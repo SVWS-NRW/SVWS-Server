@@ -1,8 +1,8 @@
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
 import type { Haltestelle, List, SimpleOperationResponse } from "@core";
+import { BenutzerKompetenz, ArrayList } from "@core";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
-import { ArrayList } from "@core";
 import { ViewType, HaltestellenListeManager } from "@ui";
 import { api } from "~/router/Api";
 import { routeHaltestellenDaten } from "~/router/apps/schule/kataloge/haltestellen/RouteHaltestellenDaten";
@@ -50,11 +50,36 @@ export class RouteDataHaltestellen extends RouteDataAuswahl<HaltestellenListeMan
 		return `Haltestelle ${haltestelle?.bezeichnung ?? '???'} (ID: ${id}) wurde erfolgreich gelöscht.`;
 	}
 
-	addHaltestelle = async (data: Partial<Haltestelle>): Promise<void> => {
+	add = async (data: Partial<Haltestelle>): Promise<void> => {
 		const result = await api.server.addHaltestelle(data, api.schema);
 		this.manager.liste.add(result);
 		this.commit();
 		await this.gotoDefaultView(result.id);
 	};
+
+	deleteCheck = (): [boolean, List<string>] => {
+		const errorLog = new ArrayList<string>();
+		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
+			errorLog.add('Es liegt keine Berechtigung zum Löschen von Haltestellen vor.');
+		}
+		if (!this.manager.liste.auswahlExists()) {
+			errorLog.add('Es wurden keine Haltestellen zum Löschen ausgewählt.');
+		}
+		if (!this.manager.idsReferencedHaltestellen.isEmpty()) {
+			errorLog.add(this.getErrorMessageForReferencedHaltestellen());
+		}
+		return [errorLog.isEmpty(), errorLog];
+	};
+
+	private getErrorMessageForReferencedHaltestellen(): string {
+		let errorMessage = 'Die folgenden Haltestellen sind an anderer Stelle referenziert:\n\n';
+		for (const id of this.manager.idsReferencedHaltestellen) {
+			const haltestelle = this.manager.liste.get(id);
+			if (haltestelle) {
+				errorMessage += `- ${haltestelle.bezeichnung} \n`;
+			}
+		}
+		return errorMessage;
+	}
 }
 
