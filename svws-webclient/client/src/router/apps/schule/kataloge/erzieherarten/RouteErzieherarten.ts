@@ -17,7 +17,7 @@ export class RouteErzieherarten extends RouteAuswahlNode<ErzieherartListeManager
 
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.erzieherarten", "schule/erzieherarten/:id(\\d+)?", ErzieherartenApp, ErzieherartenAuswahl, new RouteDataErzieherarten());
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.text = "Erzieherarten";
 		super.menugroup = RouteSchuleMenuGroup.KATALOGE;
 		super.children = [

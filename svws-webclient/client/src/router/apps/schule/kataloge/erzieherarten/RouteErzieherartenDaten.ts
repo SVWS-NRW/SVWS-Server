@@ -12,7 +12,7 @@ export class RouteErzieherartenDaten extends RouteNode<any, RouteErzieherarten> 
 
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.erzieherarten.daten", "daten", ErzieherartenDaten);
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Erzieherarten";
 	}

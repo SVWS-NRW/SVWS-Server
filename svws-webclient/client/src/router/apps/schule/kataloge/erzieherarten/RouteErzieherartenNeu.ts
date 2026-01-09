@@ -15,7 +15,7 @@ export class RouteErzieherartenNeu extends RouteNode<any, RouteErzieherarten> {
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.erzieherarten.neu", "neu", ErzieherartenNeu);
 		super.types = new Set([ViewType.HINZUFUEGEN]);
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Erzieherarten Neu";
 		super.setCheckpoint = true;

@@ -16,7 +16,7 @@ export class RouteErzieherartenGruppenprozesse extends RouteNode<any, RouteErzie
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN],
 			"schule.erzieherarten.gruppenprozesse", "gruppenprozesse", ErzieherartenGruppenprozesse);
 		super.types = new Set([ViewType.GRUPPENPROZESSE]);
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Gruppenprozesse";
 	}
