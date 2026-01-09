@@ -41,7 +41,6 @@ stages:
 lint:eslint:full:
     image: ${REGISTRY_HOST}/dockerhub_proxy/node:24-slim
     stage: lint
-    needs: []
     interruptible: true
     before_script:
         - apt-get update
@@ -62,7 +61,6 @@ lint:eslint:full:
 lint:eslint:changed:
     image: ${REGISTRY_HOST}/dockerhub_proxy/node:24-slim
     stage: lint
-    needs: []
     interruptible: true
     variables:
         GIT_DEPTH: "0"
