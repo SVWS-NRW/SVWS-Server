@@ -1,8 +1,12 @@
 package de.svws_nrw.core.abschluss.bk.d;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -15,6 +19,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 
+import com.fasterxml.jackson.core.util.DefaultIndenter;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+
 import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.base.ResourceUtils;
@@ -26,6 +35,7 @@ import de.svws_nrw.core.data.bk.abi.BKGymFach;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.utils.bk.BKGymAbiturUtils;
 import de.svws_nrw.core.utils.bk.BKGymFaecherManager;
+
 
 /**
  * Diese Klasse enthält die Testroutinen für den Markierungsalgorithmus
@@ -43,6 +53,8 @@ class TestBKGymMarkierungsalgorithmus {
 	/** Eine Map mit den Markierungsergebnissen von Schülern des beruflichen Gymnasiums aus den zugehörigen JSON-Dateien mit den Testfällen */
 	static HashMap<String, HashMap<String, BKGymAbiturMarkierungsalgorithmusErgebnis>> testErgebnisseMarkierungsalgorihmus = new HashMap<>();
 
+	/** Der Pfad zum Resource-Verzeichnis mit den Testdaten */
+	static String pfadTestdaten = "";
 
 	/**
 	 * Initialisiert den Test und lädt dafür die Jahrgänge und die Aiturdaten aus den
@@ -52,6 +64,14 @@ class TestBKGymMarkierungsalgorithmus {
 	 */
 	@BeforeAll
 	static void setup() throws IOException {
+		Path projectRoot;
+		try {
+			projectRoot = Paths.get("").toAbsolutePath();
+		} catch (final Exception e) {
+			throw new IOException("Fehler beim Ermitteln des Projektpfades!", e);
+		}
+		pfadTestdaten = projectRoot.resolve("src/test/resources/de/svws_nrw/core/abschluss/bk/d/").toString();
+
 		ASDCoreTypeUtils.initAll();
 		System.out.println("- Lade die Fächer der Jahrgänge aus den JSON-Resourcen...");
 		final Map<String, BKGymFach[]> tempTestJahrgaengeFaecher =
@@ -80,7 +100,7 @@ class TestBKGymMarkierungsalgorithmus {
 
 		System.out.println("- Lade die Ergebnisse des Markierungsalgorithmus aus den JSON-Resourcen und ordne sie den Jahrgängen zu...");
 		final Map<String, BKGymAbiturMarkierungsalgorithmusErgebnis> tempTestErgebnisseMarkierungsalgorithmus =
-				ResourceUtils.json2Classes("de.svws_nrw.abschluss.bk.d", "Jahrgang_", "_Markierungsalgorithmus",
+				ResourceUtils.json2Classes("de.svws_nrw.core.abschluss.bk.d", "Jahrgang_", "_Markierungsalgorithmus",
 						BKGymAbiturMarkierungsalgorithmusErgebnis.class);
 		if ((tempTestErgebnisseMarkierungsalgorithmus == null) || (tempTestErgebnisseMarkierungsalgorithmus.size() == 0))
 			return;
@@ -110,6 +130,11 @@ class TestBKGymMarkierungsalgorithmus {
 	@TestFactory
 	@DisplayName("Teste Markierungsalgorithmus im Beruflichen Gymnasium...")
 	Stream<DynamicTest> testMarkierungsalgorithmus() {
+		final ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+		final DefaultPrettyPrinter pp = new DefaultPrettyPrinter();
+		pp.indentArraysWith(DefaultIndenter.SYSTEM_LINEFEED_INSTANCE);
+		pp.indentObjectsWith(DefaultIndenter.SYSTEM_LINEFEED_INSTANCE);
+
 		final ArrayList<DynamicTest> tests = new ArrayList<>();
 		testAbiturdaten.forEach((jahrgang, mapSchuelerJahrgang) -> {
 			mapSchuelerJahrgang.forEach((schueler_id, abidaten) -> {
@@ -118,12 +143,8 @@ class TestBKGymMarkierungsalgorithmus {
 				assert bkGymFaecher != null : "Fehler bei den Testfällen: Für den Abiturjahrgang '" + jahrgang + "' der Test-Abiturdaten '" + schueler_id
 						+ "' wurden keine Test-Fächerdaten des beruflichen Gymnasiums gefunden.";
 				// Lese Ergebnis des Abitur-Markierungsergebnis ein, sofern eines vorhanden ist.
-//				final var testJahrgangErgebnisseMarkierungsalgorihmus = testErgebnisseMarkierungsalgorihmus.get(jahrgang);
-//				if (testJahrgangErgebnisseMarkierungsalgorihmus == null)
-//					return;
-//				final var vergleichErgebnisMarkierungsalgorihmus = testJahrgangErgebnisseMarkierungsalgorihmus.get(schueler_id);
-//				if (vergleichErgebnisMarkierungsalgorihmus == null)
-//					return;
+				final var testJahrgangErgebnisseMarkierungsalgorithmus = testErgebnisseMarkierungsalgorihmus.get(jahrgang);
+				final var vergleichErgebnisMarkierungsalgorithmus = testJahrgangErgebnisseMarkierungsalgorithmus == null ? null : testJahrgangErgebnisseMarkierungsalgorithmus.get(schueler_id);
 				// Füge Test für den Abitur-Markierungsalgorithmus hinzu
 				tests.add(DynamicTest.dynamicTest(
 						"Testjahrgang " + jahrgang + " - Abiturdaten " + schueler_id + " - Markierungsalgorithmus",
@@ -141,17 +162,23 @@ class TestBKGymMarkierungsalgorithmus {
 									System.out.println("	" + text);
 							}
 
-							// Prüfe den Erfolg der Markierung
-//							assertEquals(vergleichErgebnisMarkierungsalgorihmus.erfolgreich, ergebnis.erfolgreich, ergebnis.erfolgreich
-//									? "Fehler: Der Markierungsalgorithmus war erfolgreich, obwohl der Testfall vorgibt, dass sie fehlschlagen muss!"
-//									: "Fehler: Der Markierungsalgorithmus war nicht erfolgreich, obwohl der Testfall vorgibt, dass sie erfolgreich sein muss!");
-//
-//							// Prüfe, ob sich die dokumentierten Markierungen des Testfalls von den gefundenen unterscheiden.
-//							final String vergleichsergebnis = vergleicheMarkierungsergebnisse(new ArrayList<>(vergleichErgebnisMarkierungsalgorihmus.markierungen),
-//									new ArrayList<>(ergebnis.markierungen), faecherManager);
-//							if (!vergleichsergebnis.isEmpty())
-//								fail("Fehler: Die Markierung des Markierungsalgorithmus stimmen nicht mit dem Testfall überein: " + System.lineSeparator() + vergleichsergebnis);
+							if (vergleichErgebnisMarkierungsalgorithmus == null) {
+								//erzeuge JSON mit Markierungsergebnis
+								mapper.writer(pp).writeValue(new File(pfadTestdaten + "/Jahrgang_" + jahrgang + "_" + schueler_id + "_Markierungsalgorithmus.json"), ergebnis);
+								System.out.println("Neuer Testfall " + jahrgang + "_" + schueler_id + ": Das Ergebnis des Markierungsalgorithmus wurde erstmalig erzeugt. Bitte prüfen und ggfs. korrigieren");
+								fail("Neuer Testfall: Das Ergebnis des Markierungsalgorithmus wurde erstmalig erzeugt. Bitte prüfen und ggfs. korrigieren: " + System.lineSeparator());
+							} else {
+								// Prüfe den Erfolg der Markierung
+								assertEquals(vergleichErgebnisMarkierungsalgorithmus.erfolgreich, ergebnis.erfolgreich, ergebnis.erfolgreich
+										? "Fehler: Der Markierungsalgorithmus war erfolgreich, obwohl der Testfall vorgibt, dass sie fehlschlagen muss!"
+										: "Fehler: Der Markierungsalgorithmus war nicht erfolgreich, obwohl der Testfall vorgibt, dass sie erfolgreich sein muss!");
 
+								// Prüfe, ob sich die dokumentierten Markierungen des Testfalls von den gefundenen unterscheiden.
+								final String vergleichsergebnis = vergleicheMarkierungsergebnisse(new ArrayList<>(vergleichErgebnisMarkierungsalgorithmus.markierungen),
+										new ArrayList<>(ergebnis.markierungen), faecherManager);
+								if (!vergleichsergebnis.isEmpty())
+									fail("Fehler: Die Markierung des Markierungsalgorithmus stimmen nicht mit dem Testfall überein: " + System.lineSeparator() + vergleichsergebnis);
+							}
 							System.out.println("  Test erfolgreich beendet.");
 						}));
 			});

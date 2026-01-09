@@ -119,7 +119,7 @@ export class BKGymAbiturdatenManager extends JavaObject {
 	/**
 	 * Das Ergebnis des Markierungsalgorithmus
 	 */
-	private readonly ergebnisMarkierungsalgorithmus: BKGymAbiturMarkierungsalgorithmusErgebnis = new BKGymAbiturMarkierungsalgorithmusErgebnis();
+	private ergebnisMarkierungsalgorithmus: BKGymAbiturMarkierungsalgorithmusErgebnis | null = null;
 
 	/**
 	 * Eine Map, welche von der Nummer des Abiturfaches auf die Fachbelegung der Abiturdaten verweist.
@@ -143,13 +143,13 @@ export class BKGymAbiturdatenManager extends JavaObject {
 		this.fks = fks;
 		this.faecherManager = faecherManager;
 		this.bisHalbjahr = bisHalbjahr;
-		this.zweiteFremdspracheID = this.ermittleZweiteFremdspracheID();
 		this.zweiteFremdspracheInSekIErfuellt = this.istZweiteFremdspracheInSekIErfuellt();
 		this.anlage = this.bestimmeAnlage();
+		this.istFacharbeitLK = this.pruefeIstFacharbeitLK();
 		this.belegpruefung = this.getBelegpruefung();
 		this.markieren = new BKGymAbiturMarkierungsalgorithmus(this);
-		this.istFacharbeitLK = this.pruefeIstFacharbeitLK();
 		this.init();
+		this.zweiteFremdspracheID = this.ermittleZweiteFremdspracheID();
 	}
 
 	/**
@@ -206,7 +206,7 @@ export class BKGymAbiturdatenManager extends JavaObject {
 	 */
 	private zulassungsPruefung(): void {
 		if (this.istBewertetQualifikationsPhase()) {
-			this.markieren.berechne();
+			this.ergebnisMarkierungsalgorithmus = this.markieren.berechne();
 		}
 	}
 
@@ -465,6 +465,8 @@ export class BKGymAbiturdatenManager extends JavaObject {
 	 */
 	public getErgebnisMarkierungsalgorithmus(): BKGymAbiturMarkierungsalgorithmusErgebnis {
 		this.zulassungsPruefung();
+		if (this.ergebnisMarkierungsalgorithmus === null)
+			return new BKGymAbiturMarkierungsalgorithmusErgebnis();
 		return this.ergebnisMarkierungsalgorithmus;
 	}
 
@@ -816,7 +818,7 @@ export class BKGymAbiturdatenManager extends JavaObject {
 	 * @return die ID der zweiten Fremdsprache oder null
 	 */
 	private ermittleZweiteFremdspracheID(): number | null {
-		for (const entry of this.mapAbiturfachbelegungen.entrySet()) {
+		for (const entry of this.mapFachbelegungenByFachbezeichnung.entrySet()) {
 			const fach: BKGymFach | null = this.faecherManager.get(entry.getValue().fachID);
 			if ((fach !== null) && fach.istFremdsprache && !JavaObject.equalsTranspiler(fach.bezeichnung, ("Englisch")))
 				return fach.id;

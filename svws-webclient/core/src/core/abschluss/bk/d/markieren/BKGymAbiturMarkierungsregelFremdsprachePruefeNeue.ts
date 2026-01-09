@@ -48,7 +48,7 @@ export class BKGymAbiturMarkierungsregelFremdsprachePruefeNeue extends BKGymAbit
 		if (verbleibend === 0)
 			variante.addLogEintrag(1, "Alle Kurshalbjahre in der Qualifikationsphase mit mindestens einem Punkt abgeschlossen.");
 		else {
-			variante.addLogEintrag(1, "Fehler: Nur " + (this.anzahl - verbleibend) + " von " + this.anzahl + "Kursen haben mehr als 0 Punkte.");
+			variante.addLogEintrag(1, "Fehler: Nur " + (this.anzahl - verbleibend) + " von " + this.anzahl + " Kursen haben mehr als 0 Punkte.");
 			variante.setHatZulassung(false);
 		}
 	}

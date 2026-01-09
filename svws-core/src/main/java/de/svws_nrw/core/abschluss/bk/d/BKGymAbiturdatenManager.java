@@ -87,7 +87,7 @@ public class BKGymAbiturdatenManager {
 	private boolean belegpruefungErfolgreich = false;
 
 	/** Das Ergebnis des Markierungsalgorithmus */
-	private final @NotNull BKGymAbiturMarkierungsalgorithmusErgebnis ergebnisMarkierungsalgorithmus = new BKGymAbiturMarkierungsalgorithmusErgebnis();
+	private BKGymAbiturMarkierungsalgorithmusErgebnis ergebnisMarkierungsalgorithmus = null;
 
 	// Datenstrukturen zum schnellen Zugriff auf Fachbelegungen
 
@@ -112,13 +112,13 @@ public class BKGymAbiturdatenManager {
 		this.fks = fks;
 		this.faecherManager = faecherManager;
 		this.bisHalbjahr = bisHalbjahr;
-		this.zweiteFremdspracheID = ermittleZweiteFremdspracheID();
 		this.zweiteFremdspracheInSekIErfuellt = istZweiteFremdspracheInSekIErfuellt();
 		this.anlage = bestimmeAnlage();
+		this.istFacharbeitLK = pruefeIstFacharbeitLK();
 		this.belegpruefung = getBelegpruefung();
 		this.markieren = new BKGymAbiturMarkierungsalgorithmus(this);
-		this.istFacharbeitLK = pruefeIstFacharbeitLK();
 		init();
+		this.zweiteFremdspracheID = ermittleZweiteFremdspracheID();
 	}
 
 
@@ -184,7 +184,7 @@ public class BKGymAbiturdatenManager {
 	 */
 	private void zulassungsPruefung() {
 		if (istBewertetQualifikationsPhase()) {
-			markieren.berechne();
+			this.ergebnisMarkierungsalgorithmus = markieren.berechne();
 		}
 	}
 
@@ -429,6 +429,8 @@ public class BKGymAbiturdatenManager {
 	 */
 	public @NotNull BKGymAbiturMarkierungsalgorithmusErgebnis getErgebnisMarkierungsalgorithmus() {
 		zulassungsPruefung();
+		if (this.ergebnisMarkierungsalgorithmus == null)
+			return new BKGymAbiturMarkierungsalgorithmusErgebnis();
 		return this.ergebnisMarkierungsalgorithmus;
 	}
 
@@ -809,7 +811,7 @@ public class BKGymAbiturdatenManager {
 	 */
 	private Long ermittleZweiteFremdspracheID() {
 		// Durchwandere alle belegten Fächer und schaue nach Fremdsprache
-		for (final Entry<Integer, BKGymAbiturFachbelegung> entry : mapAbiturfachbelegungen.entrySet()) {
+		for (final Entry<String, BKGymAbiturFachbelegung> entry : mapFachbelegungenByFachbezeichnung.entrySet()) {
 			final BKGymFach fach = faecherManager.get(entry.getValue().fachID);
 			if ((fach != null) && fach.istFremdsprache && !fach.bezeichnung.equals("Englisch"))
 				return fach.id;
