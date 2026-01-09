@@ -28,8 +28,8 @@ cache: &global_cache
         - .gradle
 
 stages:
-    - build
     - lint
+    - build
     - test
     - cleanup
     - analyze
@@ -88,7 +88,6 @@ lint:eslint:changed:
     except:
         - dev
         - master
-    allow_failure: true
 
 build:
     stage: build
