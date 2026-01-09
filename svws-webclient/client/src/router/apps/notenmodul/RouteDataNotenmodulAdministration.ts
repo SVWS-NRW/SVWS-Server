@@ -96,7 +96,7 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 		return { manager };
 	}
 
-	protected async createNotemnmodulManager() {
+	protected async createNotenmodulManager() {
 		if (this.manager.auswahlIsKonfigurationLokal()) {
 			await this.notenmodulGetLocalConfig();
 		} else {
@@ -149,7 +149,7 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 
 	protected async updateDaten(daten: ENMServerConnection | null) {
 		this.manager.setDaten(daten);
-		await this.createNotemnmodulManager();
+		await this.createNotenmodulManager();
 	}
 
 	protected async doPatch(data: Partial<ENMServerConnection>, id: number): Promise<void> {
@@ -204,6 +204,43 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 	get managerSichtbareSpalten(): NotenmodulConfigManagerSichtbareSpalten {
 		return this._state.value.managerSichtbareSpalten;
 	}
+
+	syncWithLocalConfig = async () => {
+		// Prüfe, ob es sich um die lokale Notenmodul-Konfiguration handelt. Wenn ja, dann ergibt der Aufruf keinen Sinn...
+		if (this.manager.auswahlIsKonfigurationLokal()) {
+			return;
+		}
+
+		// Bestimme die Lokale Notenmodul-Konfiguration und kopiere Einträge in die WeNoM-Server-Konfiguration
+		const config = await api.server.getNotenmodulLocalConfig(api.schema);
+		let configSperrungen = null;
+		let configSichtbarkeit = null;
+		for (const element of config.global) {
+			if (element.key === "table.columns") {
+				configSichtbarkeit = element.value;
+			}
+			if (element.key === "noteneingabe.gesperrt") {
+				configSperrungen = element.value;
+			}
+		}
+		configSichtbarkeit ??= "";
+		configSperrungen ??= "";
+
+		// Schreibe die Konfigurationselemente auf den Server
+		await this.wenomSetServerConfigElement(<ENMServerConfigElement>{
+			key: "table.columns",
+			value: configSichtbarkeit,
+			type: "global",
+		});
+		await this.wenomSetServerConfigElement(<ENMServerConfigElement>{
+			key: "noteneingabe.gesperrt",
+			value: configSperrungen,
+			type: "global",
+		});
+
+		// Lade die Daten neu, so dass die Datenstrukturen aktualisiert werden und damit auch die Anzeige
+		await this.createNotenmodulManager();
+	};
 
 	writeConfigSperrungen = async () => {
 		const managerSperrungen = this.managerSperrungen;

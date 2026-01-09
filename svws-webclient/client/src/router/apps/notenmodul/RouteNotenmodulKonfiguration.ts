@@ -39,6 +39,8 @@ export class RouteNotenmodulKonfiguration extends RouteNode<any, RouteNotenmodul
 
 	public getProps(to: RouteLocationNormalized): NotenmodulKonfigurationProps {
 		return {
+			istLokal: (routeNotenmodulAdministration.data.manager.auswahlID() === -1),
+			syncWithLocalConfig: routeNotenmodulAdministration.data.syncWithLocalConfig,
 			managerSperrungen: () => routeNotenmodulAdministration.data.managerSperrungen,
 			managerSichtbareSpalten: () => routeNotenmodulAdministration.data.managerSichtbareSpalten,
 		};

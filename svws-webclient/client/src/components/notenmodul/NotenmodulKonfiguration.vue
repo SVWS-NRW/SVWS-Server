@@ -11,6 +11,9 @@
 				<svws-ui-button type="transparent" @click.stop="setzeKonfigurationAllesErlauben()" title="Erlaubt in der Konfiguration alle Noteneingaben." class="text-ui-100 subNavigationFocusField">
 					<span class="icon-sm i-ri-checkbox-circle-line" /> Alles freischalten
 				</svws-ui-button>
+				<svws-ui-button v-if="!istLokal" type="transparent" @click.stop="setzeKonfigurationLokal()" title="Synchronisiert die Konfiguration für die Noteneingaben und die Sichtbarkeit mit dem lokalen Notenmodul." class="text-ui-100 subNavigationFocusField">
+					<span class="icon-sm i-ri-loop-left-line" /> Synchronisation
+				</svws-ui-button>
 			</svws-ui-sub-nav>
 		</Teleport>
 		<div class="overflow-y-scroll">
@@ -41,6 +44,10 @@
 
 	async function setzeKonfigurationAllesErlauben() {
 		await props.managerSperrungen().setConfigAllowAll();
+	}
+
+	async function setzeKonfigurationLokal() {
+		await props.syncWithLocalConfig();
 	}
 
 </script>
