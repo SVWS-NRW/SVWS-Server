@@ -389,7 +389,7 @@
 		return klassenFuerAbschnitt.value.length > 0 ? klassenFuerAbschnitt.value : global;
 	});
 
-	const klassenManager = new SelectManager({ options: klassen.value, optionDisplayText: i => i.kuerzel ?? '', selectionDisplayText: i => i.kuerzel ?? '' });
+	const klassenManager = new SelectManager({ options: klassen, optionDisplayText: i => i.kuerzel ?? '', selectionDisplayText: i => i.kuerzel ?? '' });
 
 	const klasse = computed({
 		get: () => {
