@@ -28,6 +28,7 @@ import de.svws_nrw.core.data.lernplattform.v1.LernplattformV1Schueler;
 import de.svws_nrw.core.data.lernplattform.v1.LernplattformV1Export;
 import de.svws_nrw.core.data.schule.Lernplattform;
 import de.svws_nrw.data.JSONMapper;
+import de.svws_nrw.data.schule.DataLernplattformen;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
@@ -50,11 +51,11 @@ import jakarta.ws.rs.core.Response;
 /**
  * Diese Klasse ist der DataManager für die Lernplattformen und stellt die gesammelten Daten bereit. Das zugehörige Core-DTO ist {@link LernplattformV1Export}.
  */
-public class DataLernplattformen {
+public class DataLernplattformenV1 {
 
 	/** Die Datenbank-Verbindung zum Aggregieren der Informationen aus der DB und zum Schreiben der Informationen bzw. Teilinformationen */
 	private final @NotNull DBEntityManager conn;
-	private final de.svws_nrw.data.schule.DataLernplattformen dataLernplattformen;
+	private final DataLernplattformen dataLernplattformen;
 
 	/** Die ID des Schuljahresabschnitts zu dem die Lernplattform Daten ermittelt werden. */
 	private final int idSchuljahresabschnitt;
@@ -66,8 +67,8 @@ public class DataLernplattformen {
 	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
 	 * @param dataLernplattformen	   DataLernplattformen
 	 */
-	public DataLernplattformen(final @NotNull DBEntityManager conn, final int idSchuljahresabschnitt,
-			final de.svws_nrw.data.schule.DataLernplattformen dataLernplattformen) {
+	public DataLernplattformenV1(final @NotNull DBEntityManager conn, final int idSchuljahresabschnitt,
+			final DataLernplattformen dataLernplattformen) {
 		this.conn = conn;
 		this.idSchuljahresabschnitt = idSchuljahresabschnitt;
 		this.dataLernplattformen = dataLernplattformen;
@@ -309,6 +310,7 @@ public class DataLernplattformen {
 			lernplattformLerngruppe.kursartKuerzel = kursartAllg;
 			lernplattformLerngruppe.bilingualeSprache = fachDto.Unterrichtssprache;
 			lernplattformLerngruppe.wochenstunden = (schuelerLeistungsdaten.Wochenstunden == null) ? null : schuelerLeistungsdaten.Wochenstunden;
+			lernplattformLerngruppe.idsLehrer.add(schuelerLeistungsdaten.Fachlehrer_ID);
 		} else {
 			final DTOKurs kurs = mapKurse.get(schuelerLeistungsdaten.Kurs_ID);
 			if (kurs == null)
@@ -322,9 +324,9 @@ public class DataLernplattformen {
 			lernplattformLerngruppe.kursartKuerzel = kursartAllg;
 			lernplattformLerngruppe.bilingualeSprache = fachDto.Unterrichtssprache;
 			lernplattformLerngruppe.wochenstunden = kurs.WochenStd;
+			lernplattformLerngruppe.idsLehrer.add(kurs.Lehrer_ID);
 		}
 
-		lernplattformLerngruppe.idsLehrer.add(schuelerLeistungsdaten.Fachlehrer_ID);
 		lerngruppenToExport.put(lerngruppenID, lernplattformLerngruppe);
 
 		return lernplattformLerngruppe;
