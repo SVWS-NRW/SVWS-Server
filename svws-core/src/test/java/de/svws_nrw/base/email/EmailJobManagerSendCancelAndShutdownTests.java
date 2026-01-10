@@ -17,23 +17,29 @@ class EmailJobManagerSendCancelAndShutdownTests extends AbstractEmailJobManagerS
 	}
 
 	@Test
-	@DisplayName("Cancel vor Start markiert Job als CANCELED")
-	void testCancelBeforeStart() {
+	@DisplayName("Cancel eines wartenden Jobs vor Start markiert Job als CANCELED")
+	void testCancelWhileQueued() {
 		// Verlangsame den Versand, damit ein Cancel auch vor dem Start erfolgen kann.
-		smtpMockHelper.setDelayMs(500);
+		smtpMockHelper.setDelayMs(100);
 
-		final EmailJob job = createSimpleJob("to_a@example.org");
-		final long id = manager.enqueue(job);
+		// Erstelle einen laufenden Job.
+		final EmailJob jobToRun = createSimpleJob("to_a@example.org");
+		final long idToRun = manager.enqueue(jobToRun);
+
+		// Erstelle einen weiteren Job, der in die Queue eingereiht und dann sofort abgebrochen wird.
+		final EmailJob jobToCancel = createSimpleJob("to_b@example.org");
+		final long idToCancel = manager.enqueue(jobToCancel);
 
 		// Breche den Job sofort ab und warte auf den entsprechenden Status.
-		assertTrue(manager.cancelJob(id));
-		awaitJobStatus(id, EmailJobStatus.CANCELED);
+		assertTrue(manager.cancelJob(idToCancel));
+		awaitJobStatus(idToCancel, EmailJobStatus.CANCELED);
 
-		// Prüfe, ob keine Mail versendet worden ist.
-		assertSmtpSentMailCount(0);
+		// Prüfe, ob genau eine Mail versendet worden ist, nämlich die aus dem laufenden Job.
+		awaitJobStatus(idToRun, EmailJobStatus.COMPLETED_SUCCESSFULLY);
+		assertSmtpSentMailCount(1);
 
-		// Der Abbruch sollte im Log festgehalten worden sein.
-		assertJobLogErrorContains(id, "ABBRUCH");
+		// Der Abbruch des anderen Jobs sollte im Log festgehalten worden sein.
+		assertJobLogErrorContains(idToCancel, "ABBRUCH");
 	}
 
 	@Test
