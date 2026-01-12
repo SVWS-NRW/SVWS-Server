@@ -1,4 +1,4 @@
-import { shallowRef, triggerRef } from "vue";
+import { computed, ref, shallowRef, triggerRef, type ComputedRef } from "vue";
 import type { Collection, Comparator, ENMAbteilung, ENMJahrgang, ENMKlasse, ENMTeilleistungsart, JavaMap, List } from "@core";
 import { ArrayList, ENMConfigKlasse, ENMConfigKlasseSpalte, HashMap, HashMap2D, HashSet, JavaString } from "@core";
 import { comparatorENMAbteilung, comparatorENMJahrgang, comparatorENMKlasse } from "./NotenmodulUtils";
@@ -54,6 +54,9 @@ export class NotenmodulConfigManagerSperrungenGruppe {
  * und den ENM-Daten fest, welche Spalten in der Matrix angezeigt werden für die Auswahl
  */
 export class NotenmodulConfigManagerSperrungen {
+
+	/** Das aktuelle Datum, das einmal pro Minute aktualisiert wird */
+	private readonly datum = ref<Date>(new Date());
 
 	/** Ein Array mit den Namen aller sperrbaren Spalten in den Ansichten des Notenmoduls */
 	private readonly spaltenSperrbar = ["Quartalsnoten", "Note", "Mahnung", "Fehlstunden", "FB", "ASV", "AUE", "ZB", "Teilnoten"];
@@ -132,6 +135,8 @@ export class NotenmodulConfigManagerSperrungen {
 			}
 		}
 
+		setInterval(() => this.datum.value = new Date(), 60_000);
+
 		// Initialisiere die Gruppen für Konfigurationseinträge (Jahrgänge und Abteilungen)
 		this.initJahrgaenge();
 		this.initAbteilungen();
@@ -141,9 +146,8 @@ export class NotenmodulConfigManagerSperrungen {
 		this.writeConfig = writeConfig;
 	}
 
-	private now(): string {
-		const now = new Date();
-		return now.toLocaleString('en-CA', {
+	private now(datum: Date): string {
+		return datum.toLocaleString('en-CA', {
 			timeZone: 'Europe/Berlin',
 			year: 'numeric',
 			month: '2-digit',
@@ -1206,14 +1210,25 @@ export class NotenmodulConfigManagerSperrungen {
 	 *
 	 * @returns true, wenn die Noteneingabe gesperrt, d.h. nicht erlaubt ist, und ansonsten false
 	 */
-	public istNoteneingabeZeitlichGesperrt(datetime: string | null, istBeginn: boolean): boolean {
-		if (datetime === null) {
+	public istNoteneingabeZeitlichGesperrt(datetime: string | null, istBeginn: boolean): ComputedRef<boolean> {
+		return computed(() => {
+			if (datetime === null) {
+				return false;
+			}
+			if ((istBeginn && (this.now(this.datum.value) < datetime)) || (!istBeginn && (this.now(this.datum.value) > datetime))) {
+				return true;
+			}
+			return false;
+		});
+	}
+
+	public istNoteneingabeZeitlichUnmoeglich(datetime: string | null, datetime2: string | null): boolean {
+		if (datetime === null || datetime2 === null) {
 			return false;
 		}
-		if ((istBeginn && (this.now() < datetime)) || (!istBeginn && (this.now() > datetime))) {
-			return true;
-		}
-		return false;
+		const a = new Date(datetime);
+		const b = new Date(datetime2);
+		return a > b;
 	}
 
 	/**

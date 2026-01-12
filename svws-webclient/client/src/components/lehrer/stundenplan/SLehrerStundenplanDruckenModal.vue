@@ -34,8 +34,7 @@
 	import { ref } from 'vue';
 	import type { ApiStatus } from '~/components/ApiStatus';
 	import type { StundenplanListeEintrag, ApiFile } from '@core';
-	import { ArrayList } from '@core';
-	import { DateUtils, ReportingParameter, ReportingReportvorlage } from '@core';
+	import { DateUtils, ReportingParameter, ReportingReportvorlage, ArrayList } from '@core';
 
 	const props = defineProps<{
 		mapStundenplaene: Map<number, StundenplanListeEintrag>;

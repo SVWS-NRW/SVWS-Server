@@ -23,21 +23,27 @@
 					</template>
 					<template v-else-if="manager().gruppierung === 'Keine'">
 						<template v-for="col of gridManager.cols.values()" :key="col.name">
-							<td v-if="gridManager.isColVisible(col.name)" class="bg-ui-75">
+							<td v-if="gridManager.isColVisible(col.name)" class="bg-ui-75 content-center">
 								<div v-if="col.name === 'Klasse'"> alle </div>
 								<template v-if="(col.name === 'Eingabe von')">
-									<!-- TODO Änderung an den Manager Weitergeben und in die DB zurückschreiben -->
-									<div class="border border-ui/0 hover:border-ui p-0.5 rounded-md cursor-pointer"
-										:class="[ manager().istNoteneingabeZeitlichGesperrt(manager().zeileAlleKlassen().tsEingabeAb, true) ? 'text-ui-danger' : '' ]">
-										{{ printDate(manager().zeileAlleKlassen().tsEingabeAb) }}
-									</div>
+									<notenmodul-konfiguration-sperrungen-datum-modal v-slot="{ openModal }" :manager modus="ab" :row="() => manager().zeileAlleKlassen()">
+										<div @click="openModal" class="border border-ui/0 hover:border-ui p-0.5 rounded-md cursor-pointer">
+											<span v-if="manager().istNoteneingabeZeitlichGesperrt(manager().zeileAlleKlassen().tsEingabeAb, true).value"
+												class="icon-ui-danger icon i-ri-alert-line align-middle" title="Das Eingabebeginn liegt in der Zukunft, alle Eingaben sind gesperrt." />
+											<span v-if="manager().istNoteneingabeZeitlichUnmoeglich(manager().zeileAlleKlassen().tsEingabeAb, manager().zeileAlleKlassen().tsEingabeBis)"
+												class="icon-ui-danger icon i-ri-alert-line align-middle" title="Der Eingabebeginn liegt nach dem Eingabeende" />
+											{{ printDate(manager().zeileAlleKlassen().tsEingabeAb) }}
+										</div>
+									</notenmodul-konfiguration-sperrungen-datum-modal>
 								</template>
 								<template v-else-if="(col.name === 'Eingabe bis')">
-									<!-- TODO Änderung an den Manager Weitergeben und in die DB zurückschreiben -->
-									<div class="border border-ui/0 hover:border-ui p-0.5 rounded-md cursor-pointer"
-										:class="[ manager().istNoteneingabeZeitlichGesperrt(manager().zeileAlleKlassen().tsEingabeBis, false) ? 'text-ui-danger' : '' ]">
-										{{ printDate(manager().zeileAlleKlassen().tsEingabeBis) }}
-									</div>
+									<notenmodul-konfiguration-sperrungen-datum-modal v-slot="{ openModal }" :manager modus="bis" :row="() => manager().zeileAlleKlassen()">
+										<div @click="openModal" class="border border-ui/0 hover:border-ui p-0.5 rounded-md cursor-pointer">
+											<span v-if="manager().istNoteneingabeZeitlichGesperrt(manager().zeileAlleKlassen().tsEingabeBis, false).value"
+												class="icon-ui-danger icon i-ri-alert-line align-middle" title="Das Eingabeende liegt bereits in der Vergangenheit, alle Eingaben sind gesperrt." />
+											{{ printDate(manager().zeileAlleKlassen().tsEingabeBis) }}
+										</div>
+									</notenmodul-konfiguration-sperrungen-datum-modal>
 								</template>
 								<template v-else-if="(col.name === 'FS klassenweise')">
 									<svws-ui-checkbox :model-value="!manager().hatFehlstundeneingabeKlassenweise(manager().zeileAlleKlassen())"
@@ -58,11 +64,11 @@
 						<td v-if="gridManager.isColVisible(col.name)"
 							:class="[
 								manager().istGruppe(row) || manager().istTeilleistung(row, col.name) ? 'bg-ui-75' : '',
-								(col.name === 'Gruppe') ? 'text-left' : ''
+								(col.name === 'Gruppe') ? 'text-left' : '', 'content-center'
 							]">
 							<template v-if="(col.name === 'Gruppe') && manager().istGruppe(row)">
 								<div @click.stop="manager().toggleZeigeGruppenKlassen(row)" class="cursor-pointer">
-									<span class="icon-ui-brand icon align-middle"
+									<span class="icon-ui-brand icon"
 										:class="[manager().zeigeGruppenKlassen(row) ? 'i-ri-arrow-down-s-line' : 'i-ri-arrow-right-s-line']" />
 									{{ manager().getGruppenBezeichnung(row) }}
 								</div>
@@ -71,12 +77,24 @@
 								{{ manager().getKlassenBezeichnung(row) }}
 							</template>
 							<template v-else-if="(col.name === 'Eingabe von')">
-								<svws-ui-text-input type="datetime-local" headless placeholder="Eingabe von" :model-value="row.tsEingabeAb"
-									@change="datum => manager().setzeDatumNoteneingabe(row, datum, true)" />
+								<notenmodul-konfiguration-sperrungen-datum-modal v-slot="{ openModal }" :manager modus="ab" :row="() => row">
+									<div @click="openModal" class="border border-ui/0 hover:border-ui rounded-md cursor-pointer">
+										<span v-if="manager().istNoteneingabeZeitlichGesperrt(row.tsEingabeAb, true).value"
+											class="icon-ui-danger icon i-ri-alert-line align-middle" title="Das Eingabebeginn liegt in der Zukunft, alle Eingaben sind gesperrt." />
+										<span v-if="manager().istNoteneingabeZeitlichUnmoeglich(row.tsEingabeAb, row.tsEingabeBis)"
+											class="icon-ui-danger icon i-ri-alert-line align-middle" title="Der Eingabebeginn liegt nach dem Eingabeende" />
+										{{ printDate(row.tsEingabeAb) }}
+									</div>
+								</notenmodul-konfiguration-sperrungen-datum-modal>
 							</template>
 							<template v-else-if="(col.name === 'Eingabe bis')">
-								<svws-ui-text-input type="datetime-local" headless placeholder="Eingabe bis" :model-value="row.tsEingabeBis"
-									@change="datum => manager().setzeDatumNoteneingabe(row, datum, false)" />
+								<notenmodul-konfiguration-sperrungen-datum-modal v-slot="{ openModal }" :manager modus="bis" :row="() => row">
+									<div @click="openModal" class="border border-ui/0 hover:border-ui rounded-md cursor-pointer">
+										<span v-if="manager().istNoteneingabeZeitlichGesperrt(row.tsEingabeBis, false).value"
+											class="icon-ui-danger icon i-ri-alert-line align-middle" title="Das Eingabeende liegt bereits in der Vergangenheit, alle Eingaben sind gesperrt." />
+										{{ printDate(row.tsEingabeBis) }}
+									</div>
+								</notenmodul-konfiguration-sperrungen-datum-modal>
 							</template>
 							<template v-else-if="(col.name === 'FS klassenweise')">
 								<svws-ui-checkbox :model-value="!manager().hatFehlstundeneingabeKlassenweise(row)"
@@ -99,8 +117,8 @@
 <script setup lang="ts">
 
 	import { computed } from 'vue';
-	import type { List } from '@core';
 	import { GridManager, SelectManager } from '@ui';
+	import type { List } from '@core';
 	import type { NotenmodulConfigManagerSperrungen, NotenmodulConfigManagerSperrungenZeile } from "~/router/apps/notenmodul/NotenmodulConfigManagerSperrungen";
 
 	const props = defineProps<{
