@@ -137,10 +137,10 @@
 
 	import { computed, ref, shallowRef } from "vue";
 	import type { List, LehrerLehramtKatalogEintrag, JavaSet, LehrerLehrbefaehigungKatalogEintrag, LehrerFachrichtungKatalogEintrag } from "@core";
-	import { Arrays, ArrayList, HashSet } from "@core";
-	import { LehrerLehramt, LehrerLehrbefaehigung, LehrerFachrichtung } from "@core";
-	import { LehrerLehramtEintrag, LehrerLehrbefaehigungEintrag, LehrerFachrichtungEintrag } from "@core";
-	import { LehrerLehramtAnerkennung, LehrerLehrbefaehigungAnerkennung, LehrerFachrichtungAnerkennung } from "@core";
+	import { Arrays, ArrayList, HashSet,
+		LehrerLehramt, LehrerLehrbefaehigung, LehrerFachrichtung,
+		LehrerLehramtEintrag, LehrerLehrbefaehigungEintrag, LehrerFachrichtungEintrag,
+		LehrerLehramtAnerkennung, LehrerLehrbefaehigungAnerkennung, LehrerFachrichtungAnerkennung } from "@core";
 	import type { LehrerListeManager } from "@ui";
 	import { CoreTypeSelectManager, GridManager } from "@ui";
 

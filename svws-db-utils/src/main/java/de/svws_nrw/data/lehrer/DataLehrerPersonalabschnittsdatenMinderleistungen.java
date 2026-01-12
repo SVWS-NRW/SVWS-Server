@@ -92,12 +92,9 @@ public final class DataLehrerPersonalabschnittsdatenMinderleistungen
 			throw new ApiOperationException(Status.NOT_FOUND,
 					"Die Lehrerabschnittdaten konnten für die ID %d nicht gefunden werden.".formatted(dto.Abschnitt_ID));
 		final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(dtoAbschnitt.Schuljahresabschnitts_ID);
+		// Ermittle die Art des Grundes. Ist dieser nicht gültig für das Halbjahr, so wird keine Fehlermeldung ausgegeben, sonder der Grund auf null gesetzt.
 		final LehrerMinderleistungsartKatalogEintrag artEintrag = (art == null) ? null : art.daten(abschnitt.schuljahr);
-		if (artEintrag == null)
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"Das Kürzel für die Art der Minderleistung, welches in der Datenbank gespeichert ist, ist im Schuljahr %d nicht gültig."
-							.formatted(abschnitt.schuljahr));
-		daten.idGrund = artEintrag.id;
+		daten.idGrund = (artEintrag == null) ? null : artEintrag.id;
 		daten.anzahl = (dto.EntlastungStd == null) ? 0.0 : dto.EntlastungStd;
 		return daten;
 	}

@@ -88,11 +88,19 @@
 
 	const comparatorEintrag: Comparator<Eintrag> = {
 		compare: (a: Eintrag, b: Eintrag): number => {
-			if (a.data.idGrund < b.data.idGrund) {
+			if ((a.data.idGrund === null) && (b.data.idGrund !== null)) {
 				return -1;
 			}
-			if (a.data.idGrund > b.data.idGrund) {
+			if ((a.data.idGrund !== null) && (b.data.idGrund === null)) {
 				return 1;
+			}
+			if ((a.data.idGrund !== null) && (b.data.idGrund !== null)) {
+				if (a.data.idGrund < b.data.idGrund) {
+					return -1;
+				}
+				if (a.data.idGrund > b.data.idGrund) {
+					return 1;
+				}
 			}
 			if (a.typ > b.typ) {
 				return -1;
@@ -174,9 +182,16 @@
 	}
 
 	function getGrundText(row: Eintrag): string {
-		const data = (row.typ === 'mehrleistung') ? LehrerMehrleistungsarten.data().getEintragByID(row.data.idGrund)
-			: (row.typ === 'minderleistung') ? LehrerMinderleistungsarten.data().getEintragByID(row.data.idGrund)
-				: LehrerAnrechnungsgrund.data().getEintragByID(row.data.idGrund);
+		let data = null;
+		if (row.data.idGrund !== null) {
+			if (row.typ === 'mehrleistung') {
+				data = LehrerMehrleistungsarten.data().getEintragByID(row.data.idGrund);
+			} else if (row.typ === 'minderleistung') {
+				data = LehrerMinderleistungsarten.data().getEintragByID(row.data.idGrund);
+			} else {
+				data = LehrerAnrechnungsgrund.data().getEintragByID(row.data.idGrund);
+			}
+		}
 		return (data === null) ? "???" : data.kuerzel + " - " + data.text;
 	}
 
@@ -218,7 +233,9 @@
 			return vorhanden;
 		}
 		for (const mehrleistung of abschnittsdaten.mehrleistung) {
-			vorhanden.add(mehrleistung.idGrund);
+			if (mehrleistung.idGrund !== null) {
+				vorhanden.add(mehrleistung.idGrund);
+			}
 		}
 		return vorhanden;
 	});
@@ -240,7 +257,9 @@
 			return vorhanden;
 		}
 		for (const minderleistung of abschnittsdaten.minderleistung) {
-			vorhanden.add(minderleistung.idGrund);
+			if (minderleistung.idGrund !== null) {
+				vorhanden.add(minderleistung.idGrund);
+			}
 		}
 		return vorhanden;
 	});
@@ -262,7 +281,9 @@
 			return vorhanden;
 		}
 		for (const anrechnung of abschnittsdaten.anrechnungen) {
-			vorhanden.add(anrechnung.idGrund);
+			if (anrechnung.idGrund !== null) {
+				vorhanden.add(anrechnung.idGrund);
+			}
 		}
 		return vorhanden;
 	});
