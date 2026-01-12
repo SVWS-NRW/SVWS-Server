@@ -59,10 +59,11 @@ public enum ReportingReportvorlage {
 
 	/** Report-Vorlage: Klasse - Liste - Schüler - Leistungsdaten */
 	KLASSEN_V_LISTE_SCHUELER_LEISTUNGSDATEN("Klasse-Liste-Schueler-Leistungsdaten", Arrays.asList(
-			erzeugeVorlageParameter("mitGesamtfehlstunden", "mit Gesamtfehlstunden", ReportingVorlageParameterTyp.BOOLEAN, "true"),
-			erzeugeVorlageParameter("mitIndividuellerKursart", "mit individueller Kursart", ReportingVorlageParameterTyp.BOOLEAN, "false"),
 			erzeugeVorlageParameter("mitPunktenStattNoten", "Punkte statt Noten ausgeben", ReportingVorlageParameterTyp.BOOLEAN, "false"),
 			erzeugeVorlageParameter("mitQuartalsnote", "Quartalsnoten statt Noten ausgeben", ReportingVorlageParameterTyp.BOOLEAN, "false"),
+			erzeugeVorlageParameter("mitIndividuellerKursart", "mit individueller Kursart", ReportingVorlageParameterTyp.BOOLEAN, "false"),
+			erzeugeVorlageParameter("mitZuweisung", "mit Zuweisungen", ReportingVorlageParameterTyp.BOOLEAN, "false"),
+			erzeugeVorlageParameter("mitGesamtfehlstunden", "mit Gesamtfehlstunden", ReportingVorlageParameterTyp.BOOLEAN, "true"),
 			erzeugeVorlageParameter("mitFachbezogenenFehlstunden", "mit fachbezogenen Fehlstunden", ReportingVorlageParameterTyp.BOOLEAN, "false"),
 			erzeugeVorlageParameter("mitFachbezogenenBemerkungen", "mit fachbezogenen Bemerkungen", ReportingVorlageParameterTyp.BOOLEAN, "false"),
 			erzeugeVorlageParameter("mitLernentwicklung", "mit Angabe zur Lernentwicklung", ReportingVorlageParameterTyp.BOOLEAN, "false"),

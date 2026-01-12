@@ -432,7 +432,8 @@ public class ReportingSchuelerLeistungsdaten extends ReportingBaseType {
 	 * @return Das Kürzel der Note.
 	 */
 	public String noteBerufsabschlussKuerzel() {
-		final String result = (this.noteBerufsabschluss == null) ? null : this.noteBerufsabschluss.getNoteKuerzel(this.lernabschnitt().schuljahresabschnitt().schuljahr());
+		final String result =
+				(this.noteBerufsabschluss == null) ? null : this.noteBerufsabschluss.getNoteKuerzel(this.lernabschnitt().schuljahresabschnitt().schuljahr());
 		return (result != null) ? result : "";
 	}
 
@@ -442,7 +443,8 @@ public class ReportingSchuelerLeistungsdaten extends ReportingBaseType {
 	 * @return Die Punkte der Note.
 	 */
 	public String noteBerufsabschlussPunkte() {
-		final String result = (this.noteBerufsabschluss == null) ? null : this.noteBerufsabschluss.getNotenpunkteZweistellig(this.lernabschnitt().schuljahresabschnitt().schuljahr());
+		final String result = (this.noteBerufsabschluss == null) ? null
+				: this.noteBerufsabschluss.getNotenpunkteZweistellig(this.lernabschnitt().schuljahresabschnitt().schuljahr());
 		return (result != null) ? result : "";
 	}
 
@@ -452,7 +454,8 @@ public class ReportingSchuelerLeistungsdaten extends ReportingBaseType {
 	 * @return Der Text der Note.
 	 */
 	public String noteBerufsabschlussText() {
-		final String result = (this.noteBerufsabschluss == null) ? null : this.noteBerufsabschluss.getNoteText(this.lernabschnitt().schuljahresabschnitt().schuljahr());
+		final String result =
+				(this.noteBerufsabschluss == null) ? null : this.noteBerufsabschluss.getNoteText(this.lernabschnitt().schuljahresabschnitt().schuljahr());
 		return (result != null) ? result : "";
 	}
 
@@ -462,7 +465,8 @@ public class ReportingSchuelerLeistungsdaten extends ReportingBaseType {
 	 * @return Der Text der ganzen Note
 	 */
 	public String noteBerufsabschlussTextZeugnis() {
-		final String result = (this.noteBerufsabschluss == null) ? null : this.noteBerufsabschluss.getNoteTextZeugnis(this.lernabschnitt().schuljahresabschnitt().schuljahr());
+		final String result = (this.noteBerufsabschluss == null) ? null
+				: this.noteBerufsabschluss.getNoteTextZeugnis(this.lernabschnitt().schuljahresabschnitt().schuljahr());
 		return (result != null) ? result : "";
 	}
 
@@ -491,7 +495,8 @@ public class ReportingSchuelerLeistungsdaten extends ReportingBaseType {
 	 * @return Die Punkte der Note.
 	 */
 	public String noteQuartalPunkte() {
-		final String result = (this.noteQuartal == null) ? null : this.noteQuartal.getNotenpunkteZweistellig(this.lernabschnitt().schuljahresabschnitt().schuljahr());
+		final String result =
+				(this.noteQuartal == null) ? null : this.noteQuartal.getNotenpunkteZweistellig(this.lernabschnitt().schuljahresabschnitt().schuljahr());
 		return (result != null) ? result : "";
 	}
 
@@ -567,5 +572,21 @@ public class ReportingSchuelerLeistungsdaten extends ReportingBaseType {
 	 */
 	public List<ReportingLehrer> zusatzLehrer() {
 		return zusatzLehrer;
+	}
+
+	/**
+	 * Liefert die zugewiesene Kursart für dieses Fach.
+	 *
+	 * @return Die Kursart der Zuweisung oder einen leeren String.
+	 */
+	public String zuweisungKursart() {
+		if ((this.fach() == null) || (this.lernabschnitt() == null))
+			return "";
+
+		return this.lernabschnitt().zuweisungen().stream()
+				.filter(z -> ((z.fach() != null) && (z.fach().id() == this.fach().id())))
+				.map(ReportingSchuelerZuweisung::kursart)
+				.findFirst()
+				.orElse("");
 	}
 }

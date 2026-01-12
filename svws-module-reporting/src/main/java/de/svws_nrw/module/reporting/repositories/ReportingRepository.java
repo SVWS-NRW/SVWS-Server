@@ -87,6 +87,7 @@ import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKurs;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ReportingErzieherArt;
+import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerZuweisung;
 import de.svws_nrw.module.reporting.types.schueler.telefon.ReportingSchuelerTelefonkontakt;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungStundenplan;
@@ -224,6 +225,9 @@ public class ReportingRepository {
 
 	/** Stellt die Liste aller Schüler über eine Map zur Schüler-ID zur Verfügung */
 	private final Map<Long, List<ReportingSchuelerTelefonkontakt>> mapSchuelerTelefonkontakte = new HashMap<>();
+
+	/** Stellt die Zuweisungen von bereits abgerufenen Zuweisungen über eine Map zur Lernabschnitts-ID zur Verfügung */
+	private final Map<Long, List<ReportingSchuelerZuweisung>> mapSchuelerZuweisungen = new HashMap<>();
 
 	/** Stellt die Liste aller Schuljahresabschnitte über eine Map zur Schulabschnitts-ID zur Verfügung */
 	private final Map<Long, ReportingSchuljahresabschnitt> mapSchuljahresabschnitte = new HashMap<>();
@@ -795,6 +799,15 @@ public class ReportingRepository {
 	 */
 	public Map<Long, List<Sprachbelegung>> mapSchuelerSprachbelegungen() {
 		return mapSchuelerSprachbelegungen;
+	}
+
+	/**
+	 * Stellt bereits abgerufene Zuweisungen über eine Map zur Lernabschnitts-ID zur Verfügung.
+	 *
+	 * @return Inhalt des Feldes mapSchuelerZuweisungen
+	 */
+	public Map<Long, List<ReportingSchuelerZuweisung>> mapSchuelerZuweisungen() {
+		return mapSchuelerZuweisungen;
 	}
 
 	/**

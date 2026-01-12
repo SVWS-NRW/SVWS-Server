@@ -14,6 +14,7 @@
 				   mitQuartalsnote = ${VorlageParameter.get('mitQuartalsnote')},
 				   mitPunktenStattNoten = ${VorlageParameter.get('mitPunktenStattNoten')},
 				   mitIndividuellerKursart = ${VorlageParameter.get('mitIndividuellerKursart')},
+				   mitZuweisung = ${VorlageParameter.get('mitZuweisung')},
 				   mitGesamtfehlstunden = ${VorlageParameter.get('mitGesamtfehlstunden')},
 				   mitFachbezogenenFehlstunden = ${VorlageParameter.get('mitFachbezogenenFehlstunden')},
 				   mitFachbezogenenBemerkungen = ${VorlageParameter.get('mitFachbezogenenBemerkungen')},
@@ -73,24 +74,24 @@
 					  th:with="lernabschnitt = ${matrix.schuelerLernabschnitt(schueler)},
 							   defizitpunktzahl = ${schueler.istSchuelerInSek2OderWB(lernabschnitt.schuljahresabschnitt()) ? '04' : '03'}">
 				<tr th:classappend="${itSchueler.even} ? 'bg-lightgrey'">
-					<!-- Name und Wiederholung -->
+					<!-- Nummer -->
 					<td class="ta-ct bo-t-grey p-tb-05 p-lr-1">
 						<span th:text="${itSchueler.count + '.'}">1.</span>
-						<span th:if="${lernabschnitt != null && lernabschnitt.istWiederholung()}" class="displayblock f-very-tiny f-bold" >(Wdh.)</span>
 					</td>
 					<!-- Name und weitere Angaben -->
 					<td class="ta-lt bo-t-grey p-tb-05 p-lr-1">
 						<span th:text="${schueler.nachnameVorname()}">Mustermann, Max</span>
 						<span th:if="${mitFoerderschwerpunkt && lernabschnitt != null && (lernabschnitt.foerderschwerpunkt1() != null || lernabschnitt.foerderschwerpunkt2() != null)}" class="displayblock f-tiny" th:text="${'Förderschwerpunkt: ' + lernabschnitt.foerderschwerpunkt1().kuerzel + ((lernabschnitt.foerderschwerpunkt1() != null && lernabschnitt.foerderschwerpunkt2() != null) ? '/' : '' ) + lernabschnitt.foerderschwerpunkt2().kuerzel}">S</span>
 						<span th:if="${mitVersetzungAbschluss && lernabschnitt != null}" class="displayblock f-tiny" th:text="${!lernabschnitt.versetzungsvermerkKuerzel().isEmpty() ? 'Versetzung: ' + lernabschnitt.versetzungsvermerkKuerzel() : 'Versetzung: -----'}">Versetzung: V</span>
-						<span th:if="${mitVersetzungAbschluss && lernabschnitt != null}" class="displayblock f-tiny" th:text="${!lernabschnitt.abschluss().isEmpty() ? 'Abschl.: ' + lernabschnitt.abschluss() : 'Abschl.: -----'}">Abschl.: MSA</span>
+						<span th:if="${mitVersetzungAbschluss && lernabschnitt != null}" class="displayblock f-tiny" th:text="${(lernabschnitt.istAbschlussPrognose() ? 'Progn.: ' : 'Abschl.: ') + (!lernabschnitt.abschluss().isEmpty() ? lernabschnitt.abschluss() : '-----')}">Abschl.: MSA</span>
 					</td>
 
-					<!-- Fehlstunden -->
+					<!-- Fehlstunden und Wiederholung-->
 					<td th:if="${mitGesamtfehlstunden}" class="ta-ct bo-t-grey bo-l-grey p-tb-05 p-lr-1">
 						<th:block th:if="${lernabschnitt != null}">
 							<span class="displayblock" th:text="${lernabschnitt.fehlstundenGesamt()}">0</span>
 							<span class="displayblock" th:classappend="${(lernabschnitt.fehlstundenGesamt() < lernabschnitt.fehlstundenUnentschuldigt()) ? 'bg-lightorange' : ''}" th:text="${lernabschnitt.fehlstundenUnentschuldigt()}">0</span>
+							<span th:if="${lernabschnitt != null && lernabschnitt.istWiederholung()}" class="displayblock f-very-tiny f-bold" >(Wdh.)</span>
 						</th:block>
 					</td>
 
@@ -119,9 +120,12 @@
 											<span class="mp-0" th:classappend="${istGemahnt ? 'bg-red' : ''}" th:text="${leistung.istEpochal() ? '\u25D0' : ' '}"></span>
 										</td>
 									</tr>
-									<!-- Kursart -->
-									<tr th:if="${mitIndividuellerKursart}">
+									<!-- Kursart und Zuweisung-->
+									<tr th:if="${mitIndividuellerKursart && !mitZuweisung}">
 										<td colspan="3" class="ta-ct f-very-tiny f-ital" th:utext="${leistung.kursart() != null && !leistung.kursart().isEmpty() ? leistung.kursart() : '&nbsp;'}">GKM</td>
+									</tr>
+									<tr th:if="${mitZuweisung}">
+										<td colspan="3" class="ta-ct f-very-tiny f-ital" th:utext="${(leistung.kursart() != null && !leistung.kursart().isEmpty() ? leistung.kursart() : '&nbsp;') + (!leistung.zuweisungKursart().isEmpty() ? ' &rarr; ' + leistung.zuweisungKursart() : '')}">E &rarr; G</td>
 									</tr>
 									<!-- Lehrer -->
 									<tr>

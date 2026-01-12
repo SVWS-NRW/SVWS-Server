@@ -196,6 +196,9 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	/** Der Text für Zeugnisbemerkungen zur Lernentwicklung in Grundschulen. */
 	protected String zeugnisLELSText;
 
+	/** Die Zuweisungen des Schülers in diesem Lernabschnitt. */
+	protected List<ReportingSchuelerZuweisung> zuweisungen;
+
 	/** Die Leistungsdaten des Schülers in diesem Lernabschnitt. */
 	private List<ReportingSchuelerLeistungsdaten> leistungsdaten;
 
@@ -1057,6 +1060,15 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 */
 	public String zeugnisLELSText() {
 		return zeugnisLELSText;
+	}
+
+	/**
+	 * Die Zuweisungen des Schülers in diesem Lernabschnitt.
+	 *
+	 * @return Inhalt des Feldes zuweisungen
+	 */
+	public List<ReportingSchuelerZuweisung> zuweisungen() {
+		return zuweisungen;
 	}
 
 
