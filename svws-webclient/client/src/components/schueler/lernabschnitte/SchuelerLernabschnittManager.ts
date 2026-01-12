@@ -73,7 +73,9 @@ export class SchuelerLernabschnittManager {
 		if (cmp !== 0) {
 			return cmp;
 		}
-		cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
+		if ((a.kuerzel !== null) && (b.kuerzel !== null)) {
+			cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
+		};
 		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
 	} };
 
@@ -470,7 +472,7 @@ export class SchuelerLernabschnittManager {
 		if (fachDaten === null) {
 			return "rgb(220,220,220)";
 		}
-		return Fach.getBySchluesselOrDefault(fachDaten.kuerzelStatistik).getHMTLFarbeRGB(this._schuljahresabschnitt.schuljahr);
+		return Fach.getBySchluesselOrDefault(fachDaten.kuerzelStatistik ?? "").getHMTLFarbeRGB(this._schuljahresabschnitt.schuljahr);
 	}
 
 	/**

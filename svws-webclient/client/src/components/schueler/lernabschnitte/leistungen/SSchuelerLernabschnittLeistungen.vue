@@ -282,7 +282,7 @@
 			return;
 		}
 		// Spezialfälle
-		const f: Fach = Fach.getBySchluesselOrDefault(fach.kuerzelStatistik);
+		const f: Fach = Fach.getBySchluesselOrDefault(fach.kuerzelStatistik ?? "");
 		if (f === Fach.VX) { // Speziallfall Gymnasiale Oberstufe - Vertiefungsfach
 			await props.patchLeistung({ fachID: fach.id, kursID: null, kursart: ZulaessigeKursart.VTF.daten(schuljahr.value)?.kuerzel }, leistung.id);
 		} else if (f === Fach.PX) { // Speziallfall Gymnasiale Oberstufe - Projektkursfach

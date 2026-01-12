@@ -10,7 +10,7 @@
 				<svws-ui-select title="Lehrer" :disabled v-model="idLehrer" :items="manager().lehrer.list()"
 					:item-text="l => l.vorname + ' ' + l.nachname" removable statistics />
 				<svws-ui-select title="Fach" :disabled v-model="idFach" required :valid="fieldIsValid('idFach')" :items="manager().faecher.list()"
-					:item-text="f => f.bezeichnung" statistics />
+					:item-text="f => f.bezeichnung ?? ''" statistics />
 				<svws-ui-select title="Kursart" :disabled removable statistics :items="kursarten.keys()" v-model="data.kursartAllg" required
 					:item-text="k => k + ' (' + (kursarten.get(k) ?? '???') + ')'" />
 				<svws-ui-input-number placeholder="Wochenstunden" :disabled statistics v-model="data.wochenstunden" />

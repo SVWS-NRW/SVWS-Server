@@ -22,7 +22,7 @@ FachDaten {
   "kuerzel": "D",
   "kuerzelStatistik": "D",
   "maxZeichenInFachbemerkungen": 2147483647,
-  "referenziertInAnderenTabellen": null,
+  "referenziertInAnderenTabellen": false,
   "sortierung": 10,
 }
 `;
