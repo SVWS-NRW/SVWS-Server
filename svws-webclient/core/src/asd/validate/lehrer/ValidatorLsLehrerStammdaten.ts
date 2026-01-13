@@ -22,9 +22,9 @@ export class ValidatorLsLehrerStammdaten extends Validator {
 		super(kontext);
 		this._validatoren.add(new ValidatorLsnLehrerStammdatenNachname({ get: () => daten.get().nachname }, kontext));
 		this._validatoren.add(new ValidatorLsvLehrerStammdatenVorname({ get: () => daten.get().vorname }, kontext));
-		this._validatoren.add(new ValidatorLsdLehrerStammdatenGeburtsdatum(daten.get(), kontext));
-		this._validatoren.add(new ValidatorLsgLehrerStammdatenGeschlecht(daten.get(), kontext));
-		this._validatoren.add(new ValidatorLskLehrerStammdatenKuerzel(daten.get(), kontext));
+		this._validatoren.add(new ValidatorLsdLehrerStammdatenGeburtsdatum({ get: () => daten.get().geburtsdatum }, kontext));
+		this._validatoren.add(new ValidatorLsgLehrerStammdatenGeschlecht({ get: () => daten.get().geschlecht }, kontext));
+		this._validatoren.add(new ValidatorLskLehrerStammdatenKuerzel({ get: () => daten.get().kuerzel }, kontext));
 	}
 
 	protected pruefe(): boolean {

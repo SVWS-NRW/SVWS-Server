@@ -1,5 +1,5 @@
 import { ValidatorLsg00LehrerStammdatenGeschlecht } from '../../../asd/validate/lehrer/ValidatorLsg00LehrerStammdatenGeschlecht';
-import { LehrerStammdaten } from '../../../asd/data/lehrer/LehrerStammdaten';
+import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
@@ -10,10 +10,10 @@ export class ValidatorLsgLehrerStammdatenGeschlecht extends Validator {
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param daten     die Daten des Validators
+	 * @param daten     das Geschlecht des Lehrers
 	 * @param kontext   der Kontext des Validators
 	 */
-	public constructor(daten: LehrerStammdaten, kontext: ValidatorKontext) {
+	public constructor(daten: Supplier<number>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._validatoren.add(new ValidatorLsg00LehrerStammdatenGeschlecht(daten, kontext));
 	}

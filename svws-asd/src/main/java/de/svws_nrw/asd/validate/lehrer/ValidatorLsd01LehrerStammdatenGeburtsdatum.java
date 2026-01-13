@@ -1,6 +1,7 @@
 package de.svws_nrw.asd.validate.lehrer;
 
-import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
+import java.util.function.Supplier;
+
 import de.svws_nrw.asd.validate.DateManager;
 import de.svws_nrw.asd.validate.InvalidDateException;
 import de.svws_nrw.asd.validate.Validator;
@@ -14,15 +15,15 @@ import jakarta.validation.constraints.NotNull;
 public final class ValidatorLsd01LehrerStammdatenGeburtsdatum extends Validator {
 
 	/** Die Lehrer-Stammdaten */
-	private final @NotNull LehrerStammdaten daten;
+	private final @NotNull Supplier<String> daten;
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param daten     die Daten des Validators
+	 * @param daten     das Geburtsdatum des Lehrers
 	 * @param kontext   der Kontext des Validators
 	 */
-	public ValidatorLsd01LehrerStammdatenGeburtsdatum(final @NotNull LehrerStammdaten daten,
+	public ValidatorLsd01LehrerStammdatenGeburtsdatum(final @NotNull Supplier<String> daten,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		this.daten = daten;
@@ -33,7 +34,7 @@ public final class ValidatorLsd01LehrerStammdatenGeburtsdatum extends Validator 
 		// Bestimme das Geburtsdatum
 		DateManager geburtsdatum = null;
 			try {
-				geburtsdatum = DateManager.from(daten.geburtsdatum);
+				geburtsdatum = DateManager.from(daten.get());
 			} catch (InvalidDateException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

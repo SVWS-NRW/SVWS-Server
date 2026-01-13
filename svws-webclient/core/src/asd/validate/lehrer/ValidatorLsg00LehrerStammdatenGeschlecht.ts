@@ -1,4 +1,4 @@
-import { LehrerStammdaten } from '../../../asd/data/lehrer/LehrerStammdaten';
+import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { Geschlecht } from '../../../asd/types/Geschlecht';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
@@ -9,26 +9,26 @@ export class ValidatorLsg00LehrerStammdatenGeschlecht extends Validator {
 	/**
 	 * Die Lehrer-Stammdaten
 	 */
-	private readonly daten: LehrerStammdaten;
+	private readonly daten: Supplier<number | null>;
 
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param daten     die Daten des Validators
+	 * @param daten     das Geschlecht des Lehrers
 	 * @param kontext   der Kontext des Validators
 	 */
-	public constructor(daten: LehrerStammdaten, kontext: ValidatorKontext) {
+	public constructor(daten: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this.daten = daten;
 	}
 
 	protected pruefe(): boolean {
 		let geschlecht: Geschlecht | null = null;
-		geschlecht = Geschlecht.fromValue(this.daten.geschlecht);
+		geschlecht = Geschlecht.fromValue(this.daten.get());
 		const finalGeschlecht: Geschlecht | null = geschlecht;
 		if (finalGeschlecht === null) {
-			this.addFehler(0, "Unzulässiger Schlüssel '" + this.daten.geschlecht + "' im Feld 'Geschlecht'. Die gültigen Schlüssel entnehmen Sie bitte dem Pulldownmenü.");
+			this.addFehler(0, "Unzulässiger Schlüssel '" + geschlecht + "' im Feld 'Geschlecht'. Die gültigen Schlüssel entnehmen Sie bitte dem Pulldownmenü.");
 			return false;
 		}
 		return true;

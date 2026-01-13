@@ -1,4 +1,4 @@
-import { LehrerStammdaten } from '../../../asd/data/lehrer/LehrerStammdaten';
+import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { JavaString } from '../../../java/lang/JavaString';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
@@ -9,7 +9,7 @@ export class ValidatorLsk00LehrerStammdatenKuerzel extends Validator {
 	/**
 	 * Die Lehrer-Stammdaten
 	 */
-	private readonly daten: LehrerStammdaten;
+	private readonly daten: Supplier<string | null>;
 
 
 	/**
@@ -18,16 +18,17 @@ export class ValidatorLsk00LehrerStammdatenKuerzel extends Validator {
 	 * @param daten     die Daten des Validators
 	 * @param kontext   der Kontext des Validators
 	 */
-	public constructor(daten: LehrerStammdaten, kontext: ValidatorKontext) {
+	public constructor(daten: Supplier<string | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this.daten = daten;
 	}
 
 	protected pruefe(): boolean {
-		if ((this.daten.kuerzel === null) || JavaString.isBlank(this.daten.kuerzel))
+		const kuerzel: string | null = this.daten.get();
+		if ((kuerzel === null) || JavaString.isBlank(kuerzel.trim()))
 			return true;
-		let fehlertext0: string | null = "Der Eintrag " + this.daten.kuerzel + " ist als Lehrerkürzel unzulässig. Zulässig sind: 1. Stelle: A-Z, Ä, Ö, Ü; 2.-4. Stelle: A-Z, Ä, Ö, Ü, -, 'kein Eintrag'. Buchstaben müssen großgeschrieben werden.";
-		if (!JavaString.matches(this.daten.kuerzel, "^[A-ZÄÖÜ][A-ZÄÖÜ0-9\\-\\ ]{0,3}$")) {
+		let fehlertext0: string | null = "Der Eintrag " + kuerzel + " ist als Lehrerkürzel unzulässig. Zulässig sind: 1. Stelle: A-Z, Ä, Ö, Ü; 2.-4. Stelle: A-Z, Ä, Ö, Ü, -, 'kein Eintrag'. Buchstaben müssen großgeschrieben werden.";
+		if (!JavaString.matches(kuerzel, "^[A-ZÄÖÜ][A-ZÄÖÜ0-9\\-\\ ]{0,3}$")) {
 			this.addFehler(0, fehlertext0);
 			return false;
 		}

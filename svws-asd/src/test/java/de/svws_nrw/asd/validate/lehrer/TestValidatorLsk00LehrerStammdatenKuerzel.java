@@ -10,7 +10,6 @@ import org.junit.jupiter.params.provider.CsvSource;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.asd.data.schule.SchuleStammdaten;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.asd.utils.json.JsonReader;
@@ -53,10 +52,6 @@ class TestValidatorLsk00LehrerStammdatenKuerzel {
 			'hgft'  , false
 			""";
 
-	/** Stammdaten des Lehrers */
-	static final LehrerStammdaten lehrerTestdaten_001 =
-			JsonReader.fromResource("de/svws_nrw/asd/validate/lehrer/Testdaten_001_LehrerStammdaten.json", LehrerStammdaten.class);
-
 	/** Stammdaten der Schule */
 	static final SchuleStammdaten schuleTestdaten_001 =
 			JsonReader.fromResource("de/svws_nrw/asd/validate/schule/Testdaten_001_SchuleStammdaten.json", SchuleStammdaten.class);
@@ -86,12 +81,10 @@ class TestValidatorLsk00LehrerStammdatenKuerzel {
 	@ParameterizedTest
 	@CsvSource(textBlock = TESTDATEN_KUERZEL)
 	void testValidatorLehrerStammdatenGeschlecht(final String kuerzel, final boolean result) {
-		// Testdaten setzen
-		lehrerTestdaten_001.kuerzel = kuerzel;
 
 		// Erzeuge den Kontext für die Validierung
 		final ValidatorKontext kontext = new ValidatorKontext(schuleTestdaten_001, true);
-		final ValidatorLsk00LehrerStammdatenKuerzel validator = new ValidatorLsk00LehrerStammdatenKuerzel(lehrerTestdaten_001, kontext);
+		final ValidatorLsk00LehrerStammdatenKuerzel validator = new ValidatorLsk00LehrerStammdatenKuerzel(() -> kuerzel, kontext);
 
 		assertEquals(result, validator.run());
 	}

@@ -1,9 +1,11 @@
 package de.svws_nrw.asd.validate.lehrer;
 
-import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
+import java.util.function.Supplier;
+
 import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
+import de.svws_nrw.transpiler.annotations.AllowNull;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -13,15 +15,15 @@ import jakarta.validation.constraints.NotNull;
 public final class ValidatorLsg00LehrerStammdatenGeschlecht extends Validator {
 
 	/** Die Lehrer-Stammdaten */
-	private final @NotNull LehrerStammdaten daten;
+	private final @NotNull Supplier<@AllowNull Integer> daten;
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param daten     die Daten des Validators
+	 * @param daten     das Geschlecht des Lehrers
 	 * @param kontext   der Kontext des Validators
 	 */
-	public ValidatorLsg00LehrerStammdatenGeschlecht(final @NotNull LehrerStammdaten daten,
+	public ValidatorLsg00LehrerStammdatenGeschlecht(final @NotNull Supplier<@AllowNull Integer> daten,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		this.daten = daten;
@@ -30,11 +32,11 @@ public final class ValidatorLsg00LehrerStammdatenGeschlecht extends Validator {
 	@Override
 	protected boolean pruefe() {
 		Geschlecht geschlecht = null;
-		geschlecht = Geschlecht.fromValue(daten.geschlecht);
+		geschlecht = Geschlecht.fromValue(daten.get());
 		final Geschlecht finalGeschlecht = geschlecht;
 
 		if (finalGeschlecht == null) {
-			this.addFehler(0, "Unzulässiger Schlüssel '" + daten.geschlecht + "' im Feld 'Geschlecht'. Die gültigen Schlüssel entnehmen Sie bitte dem Pulldownmenü.");
+			this.addFehler(0, "Unzulässiger Schlüssel '" + geschlecht + "' im Feld 'Geschlecht'. Die gültigen Schlüssel entnehmen Sie bitte dem Pulldownmenü.");
 			return false;
 		}
 

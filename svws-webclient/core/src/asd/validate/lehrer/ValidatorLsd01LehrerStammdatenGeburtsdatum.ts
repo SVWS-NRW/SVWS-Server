@@ -1,5 +1,5 @@
 import { DateManager } from '../../../asd/validate/DateManager';
-import { LehrerStammdaten } from '../../../asd/data/lehrer/LehrerStammdaten';
+import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
@@ -9,16 +9,16 @@ export class ValidatorLsd01LehrerStammdatenGeburtsdatum extends Validator {
 	/**
 	 * Die Lehrer-Stammdaten
 	 */
-	private readonly daten: LehrerStammdaten;
+	private readonly daten: Supplier<string>;
 
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param daten     die Daten des Validators
+	 * @param daten     das Geburtsdatum des Lehrers
 	 * @param kontext   der Kontext des Validators
 	 */
-	public constructor(daten: LehrerStammdaten, kontext: ValidatorKontext) {
+	public constructor(daten: Supplier<string>, kontext: ValidatorKontext) {
 		super(kontext);
 		this.daten = daten;
 	}
@@ -26,7 +26,7 @@ export class ValidatorLsd01LehrerStammdatenGeburtsdatum extends Validator {
 	protected pruefe(): boolean {
 		let geburtsdatum: DateManager | null = null;
 		try {
-			geburtsdatum = DateManager.from(this.daten.geburtsdatum);
+			geburtsdatum = DateManager.from(this.daten.get());
 		} catch(e : any) {
 			e.printStackTrace();
 		}

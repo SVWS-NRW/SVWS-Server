@@ -23,9 +23,9 @@ public final class ValidatorLsLehrerStammdaten extends Validator {
 		super(kontext);
 		_validatoren.add(new ValidatorLsnLehrerStammdatenNachname(() -> daten.get().nachname, kontext));
 		_validatoren.add(new ValidatorLsvLehrerStammdatenVorname(() -> daten.get().vorname, kontext));
-		_validatoren.add(new ValidatorLsdLehrerStammdatenGeburtsdatum(daten.get(), kontext));
-		_validatoren.add(new ValidatorLsgLehrerStammdatenGeschlecht(daten.get(), kontext));
-		_validatoren.add(new ValidatorLskLehrerStammdatenKuerzel(daten.get(), kontext));
+		_validatoren.add(new ValidatorLsdLehrerStammdatenGeburtsdatum(() -> daten.get().geburtsdatum, kontext));
+		_validatoren.add(new ValidatorLsgLehrerStammdatenGeschlecht(() -> daten.get().geschlecht, kontext));
+		_validatoren.add(new ValidatorLskLehrerStammdatenKuerzel(() -> daten.get().kuerzel, kontext));
 	}
 
 	@Override

@@ -1,8 +1,10 @@
 package de.svws_nrw.asd.validate.lehrer;
 
-import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
+import java.util.function.Supplier;
+
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
+import de.svws_nrw.transpiler.annotations.AllowNull;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -12,7 +14,7 @@ import jakarta.validation.constraints.NotNull;
 public final class ValidatorLskLehrerStammdatenKuerzel extends Validator {
 
 	/** Die Lehrer-Stammdaten */
-	private final @NotNull LehrerStammdaten daten;
+	private final @NotNull Supplier<@AllowNull String> daten;
 
 
 	/**
@@ -21,7 +23,7 @@ public final class ValidatorLskLehrerStammdatenKuerzel extends Validator {
 	 * @param daten     die Daten des Validators
 	 * @param kontext   der Kontext des Validators
 	 */
-	public ValidatorLskLehrerStammdatenKuerzel(final @NotNull LehrerStammdaten daten,
+	public ValidatorLskLehrerStammdatenKuerzel(final @NotNull Supplier<@AllowNull String> daten,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		this.daten = daten;

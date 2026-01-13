@@ -1,6 +1,6 @@
 import { DateManager } from '../../../asd/validate/DateManager';
 import { ValidatorLsd01LehrerStammdatenGeburtsdatum } from '../../../asd/validate/lehrer/ValidatorLsd01LehrerStammdatenGeburtsdatum';
-import { LehrerStammdaten } from '../../../asd/data/lehrer/LehrerStammdaten';
+import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
@@ -10,7 +10,7 @@ export class ValidatorLsd00LehrerStammdatenGeburtsdatum extends Validator {
 	/**
 	 * Die Lehrer-Stammdaten
 	 */
-	private readonly daten: LehrerStammdaten;
+	private readonly daten: Supplier<string | null>;
 
 
 	/**
@@ -19,17 +19,17 @@ export class ValidatorLsd00LehrerStammdatenGeburtsdatum extends Validator {
 	 * @param daten     die Daten des Validators
 	 * @param kontext   der Kontext des Validators
 	 */
-	public constructor(daten: LehrerStammdaten, kontext: ValidatorKontext) {
+	public constructor(daten: Supplier<string | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this.daten = daten;
-		this._validatoren.add(new ValidatorLsd01LehrerStammdatenGeburtsdatum(daten, kontext));
+		this._validatoren.add(new ValidatorLsd01LehrerStammdatenGeburtsdatum(this.getNotNullSupplier(daten), kontext));
 	}
 
 	protected pruefe(): boolean {
 		let geburtsdatum: DateManager | null = null;
 		let errorMsg: string = "";
 		try {
-			geburtsdatum = DateManager.from(this.daten.geburtsdatum);
+			geburtsdatum = DateManager.from(this.daten.get());
 		} catch(e : any) {
 			errorMsg = e.getMessage();
 		}
