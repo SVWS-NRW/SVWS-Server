@@ -27,7 +27,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 		super(schulformenGymOb, [
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
-		], "gost.kursplanung", "kursplanung/:halbjahr([0-5])?/:idblockung(\\d+)?/:idergebnis(\\d+)?", SGostKursplanung, new RouteDataGostKursplanung());
+		], "gost.kursplanung", String.raw`kursplanung/:halbjahr([0-5])?/:idblockung(\d+)?/:idergebnis(\d+)?`, SGostKursplanung, new RouteDataGostKursplanung());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.setView("gost_child_auswahl", SGostKursplanungAuswahl, (route) => this.getAuswahlProps(route));
@@ -97,10 +97,8 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			// Prüfe das Halbjahr und setzte dieses ggf.
 			if ((abiturjahrwechsel) || (halbjahr === null)) {
 				let hj = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abiturjahr, routeApp.data.aktAbschnitt.value.schuljahr, routeApp.data.aktAbschnitt.value.abschnitt);
-				if (hj === null) {
-					// In zwei Fällen existiert kein Halbjahr, z.B. weil der Abiturjahrgang abgeschlossen ist oder noch in der Sek I ist.
-					hj = (abiturjahr < routeApp.data.aktAbschnitt.value.schuljahr + routeApp.data.aktAbschnitt.value.abschnitt) ? GostHalbjahr.Q22 : GostHalbjahr.EF1;
-				}
+				// In zwei Fällen existiert kein Halbjahr, z.B. weil der Abiturjahrgang abgeschlossen ist oder noch in der Sek I ist.
+				hj ??= (abiturjahr < routeApp.data.aktAbschnitt.value.schuljahr + routeApp.data.aktAbschnitt.value.abschnitt) ? GostHalbjahr.Q22 : GostHalbjahr.EF1;
 				return this.getRouteHalbjahr(abiturjahr, hj.id);
 			}
 			const changedHalbjahr: boolean = await this.data.setHalbjahr(halbjahr);
@@ -160,9 +158,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 							break;
 						}
 					}
-					if (ergebnis === undefined) {
-						ergebnis = this.data.datenmanager.ergebnisGetListeSortiertNachBewertung().get(0);
-					}
+					ergebnis ??= this.data.datenmanager.ergebnisGetListeSortiertNachBewertung().get(0);
 					return this.getRouteErgebnis(abiturjahr, halbjahr.id, idBlockung, ergebnis.id);
 				}
 				if ((this.data.hatBlockung) && (this.data.ergebnisse.size() <= 0)) {
@@ -172,7 +168,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			}
 			try {
 				ergebnis = routeGostKursplanung.data.datenmanager.ergebnisGet(idErgebnis);
-			} catch (e) {
+			} catch {
 			// ...wenn die Ergebnis-ID ungültig ist, dann setze ggf. das erste Ergebnis und route dahin
 				if (this.data.ergebnisse.size() <= 0) {
 					throw new DeveloperNotificationException("Fehler bei der Blockung. Es muss bei einer Blockung immer mindestens das Vorlagen-Ergebnis vorhanden sein.");
@@ -254,7 +250,6 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			getDatenmanager: () => this.data.datenmanager,
 			getErgebnismanager: () => this.data.ergebnismanager,
 			patchErgebnis: this.data.patchErgebnis,
-			rechneGostBlockung: this.data.rechneGostBlockung,
 			removeErgebnisse: this.data.removeErgebnisse,
 			gotoErgebnis: this.data.gotoErgebnis,
 			hatBlockung: this.data.hatBlockung && this.data.hatErgebnis,

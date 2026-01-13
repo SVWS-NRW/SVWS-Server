@@ -6,7 +6,7 @@
 		</div>
 		<div class="secondary-menu--header" />
 		<svws-ui-table :clicked="auswahl" clickable :model-value="selected()" @update:model-value="setAuswahl" :selectable="hatUpdateKompetenz" :unselectable
-			@update:clicked="gotoAbiturjahrgang" :items :columns :filter-open="false" scroll-into-view :focus-switching-enabled :focus-help-visible>
+			@update:clicked="gotoAbiturjahrgang" :items :columns :filter-open="false" scroll-into-view :focus-switching-enabled :focus-help-visible allow-arrow-key-selection>
 			<template #filterAdvanced>
 				<div class="col-span-full flex flex-wrap gap-x-5">
 					<svws-ui-checkbox type="toggle" :model-value="filterNurAktuelle()" @update:model-value="setFilterNurAktuelle">Nur Aktuelle Jahrgänge</svws-ui-checkbox>
@@ -74,10 +74,10 @@
 			await props.gotoGruppenprozess(true);
 		} else {
 			let auswahl;
-			if (props.auswahl !== undefined) {
-				auswahl = props.auswahl;
-			} else {
+			if (props.auswahl === undefined) {
 				[auswahl] = items.value;
+			} else {
+				auswahl = props.auswahl;
 			}
 			await props.gotoAbiturjahrgang(auswahl);
 		}
