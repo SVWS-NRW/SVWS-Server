@@ -155,7 +155,7 @@
 
 	const erzieherarten = computed(() => props.mapErzieherarten.values());
 
-	const erzieherartenManager = new SelectManager({ options: erzieherarten.value, sort: erzieherArtSort, optionDisplayText: i => i.bezeichnung, selectionDisplayText: i => i.bezeichnung });
+	const erzieherartenManager = new SelectManager({ options: erzieherarten, sort: erzieherArtSort, optionDisplayText: i => i.bezeichnung, selectionDisplayText: i => i.bezeichnung });
 
 	const erzieherart = computed({
 		get: () => props.mapErzieherarten.get(erzieher.value?.idErzieherArt ?? -1),
@@ -171,7 +171,7 @@
 
 	const orte = computed(() => props.mapOrte.values());
 
-	const wohnortManager = new SelectManager({ options: orte.value, optionDisplayText: i => `${i.plz} ${i.ortsname}`, sort: orte_sort, selectionDisplayText: i => `${i.plz} ${i.ortsname}` });
+	const wohnortManager = new SelectManager({ options: orte, optionDisplayText: i => `${i.plz} ${i.ortsname}`, sort: orte_sort, selectionDisplayText: i => `${i.plz} ${i.ortsname}` });
 
 	const erzWohnort = computed({
 		get: () => props.mapOrte.get(erzieher.value?.wohnortID ?? -1) ?? null,

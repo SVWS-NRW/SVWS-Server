@@ -110,15 +110,17 @@
 		},
 	});
 	const betriebsartenById = computed<Map<number, Betriebsart>>(() => props.manager().betriebsartenById);
+	const betriebsarten = computed(() => betriebsartenById.value.values());
 	const betriebsartenManager = new SelectManager({
-		options: betriebsartenById.value.values(),
+		options: betriebsarten,
 		optionDisplayText: v => v.bezeichnung ?? "",
 		selectionDisplayText: v => v.bezeichnung ?? "",
 	});
 
 	const orteById = computed<Map<number, OrtKatalogEintrag>>(() => props.manager().orteById);
+	const orte = computed(() => orteById.value.values());
 	const wohnortManager = new SelectManager({
-		options: orteById.value.values(),
+		options: orte,
 		optionDisplayText: v => v.plz + ' ' + v.ortsname,
 		selectionDisplayText: v => v.plz + ' ' + v.ortsname,
 	});

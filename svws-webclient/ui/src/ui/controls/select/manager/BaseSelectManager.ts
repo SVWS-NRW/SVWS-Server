@@ -9,8 +9,11 @@ import type { SelectFilter } from "../filter/SelectFilter";
  * Alle Werte können als Ref übergeben werden, wenn der Manager reaktiv auf Änderungen reagieren soll.
  */
 export interface BaseSelectManagerConfig<T> {
+	/** Um die Reaktivität zu gewährleisten, Refs nur ohne den Zusatz `.value` übergeben. */
 	options?: MaybeRef<Iterable<T>>;
+	/** Um die Reaktivität zu gewährleisten, Refs nur ohne den Zusatz `.value` übergeben. */
 	sort?: MaybeRef<Comparator<T> | ((a: T, b: T) => number) | null>;
+	/** Um die Reaktivität zu gewährleisten, Refs nur ohne den Zusatz `.value` übergeben. */
 	filters?: MaybeRef<Iterable<SelectFilter<T>>>;
 }
 

@@ -161,7 +161,7 @@
 		return schulnummer;
 	}
 
-	const stammschuleSelectManager = new SelectManager({ options: moeglicheStammschulnummern.value, selectionDisplayText: getSchulnummerText,
+	const stammschuleSelectManager = new SelectManager({ options: moeglicheStammschulnummern, selectionDisplayText: getSchulnummerText,
 		optionDisplayText: getSchulnummerText });
 
 	const stammschulnummer = computed<string | null | undefined>({

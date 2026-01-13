@@ -33,8 +33,9 @@
 	const props = defineProps<OrtsteileDatenProps>();
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const orteById = computed<Map<number, OrtKatalogEintrag>>(() => props.manager().orteById);
+	const orte = computed(() => orteById.value.values());
 	const ortSelectManager = new SelectManager({
-		options: orteById.value.values(),
+		options: orte,
 		optionDisplayText: v => v.plz + ' ' + v.ortsname,
 		selectionDisplayText: v => v.plz + ' ' + v.ortsname,
 	});

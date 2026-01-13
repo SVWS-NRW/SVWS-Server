@@ -349,7 +349,7 @@
 
 	const schuljahresabschnitte = computed(() => Array.from(props.schuelerListeManager().schuljahresabschnitte.list()));
 
-	const schuljahresabschnittsManager = new SelectManager({ options: schuljahresabschnitte.value, optionDisplayText: i => `${i.schuljahr}/${(i.schuljahr + 1) % 100}.${i.abschnitt}`, selectionDisplayText: i => `${i.schuljahr}/${(i.schuljahr + 1) % 100}.${i.abschnitt}` });
+	const schuljahresabschnittsManager = new SelectManager({ options: schuljahresabschnitte, optionDisplayText: i => `${i.schuljahr}/${(i.schuljahr + 1) % 100}.${i.abschnitt}`, selectionDisplayText: i => `${i.schuljahr}/${(i.schuljahr + 1) % 100}.${i.abschnitt}` });
 
 	const schuljahresabschnitt = computed({
 		get: () => {
@@ -364,7 +364,7 @@
 
 	const jahrgaenge = computed(() => Array.from(props.schuelerListeManager().jahrgaenge.list()));
 
-	const jahrgangManager = new SelectManager({ options: jahrgaenge.value, optionDisplayText: i => i.kuerzel ?? '', selectionDisplayText: i => i.kuerzel ?? '' });
+	const jahrgangManager = new SelectManager({ options: jahrgaenge, optionDisplayText: i => i.kuerzel ?? '', selectionDisplayText: i => i.kuerzel ?? '' });
 
 	const jahrgang = computed({
 		get: () => {
@@ -407,7 +407,7 @@
 
 	const kindergaerten = computed(() => props.mapKindergaerten.values());
 
-	const nameKindergartenManager = new SelectManager({ options: kindergaerten.value, optionDisplayText: i => i.bezeichnung, selectionDisplayText: i => i.bezeichnung });
+	const nameKindergartenManager = new SelectManager({ options: kindergaerten, optionDisplayText: i => i.bezeichnung, selectionDisplayText: i => i.bezeichnung });
 
 	const auswahlKindergartenID = ref(dataSchulbesuchsdaten.value.idKindergarten);
 
@@ -424,7 +424,7 @@
 
 	const orte = computed(() => props.mapOrte.values());
 
-	const wohnortManager = new SelectManager({ options: orte.value, optionDisplayText: i => `${i.plz} ${i.ortsname}`, sort: orte_sort, selectionDisplayText: i => `${i.plz} ${i.ortsname}` });
+	const wohnortManager = new SelectManager({ options: orte, optionDisplayText: i => `${i.plz} ${i.ortsname}`, sort: orte_sort, selectionDisplayText: i => `${i.plz} ${i.ortsname}` });
 
 	const auswahlWohnortID = ref(data.value.wohnortID ?? null);
 
@@ -484,9 +484,9 @@
 		await props.patch({ geschlecht: value?.id }, data.value.id);
 	}
 
-	const einschulungsarten = computed(() => props.mapEinschulungsarten);
+	const einschulungsarten = computed(() => props.mapEinschulungsarten.values());
 
-	const einschulungsartManager = new SelectManager({ options: einschulungsarten.value.values(), optionDisplayText: i => i.text, selectionDisplayText: i => i.text });
+	const einschulungsartManager = new SelectManager({ options: einschulungsarten, optionDisplayText: i => i.text, selectionDisplayText: i => i.text });
 
 	const auswahlEinschulungsart = ref(dataSchulbesuchsdaten.value.grundschuleEinschulungsartID);
 
@@ -562,7 +562,7 @@
 
 	const religionen = computed(() => props.mapReligionen.values());
 
-	const religionManager = new SelectManager({ options: religionen.value, optionDisplayText: i => i.bezeichnungZeugnis ?? '', selectionDisplayText: i => i.bezeichnungZeugnis ?? '' });
+	const religionManager = new SelectManager({ options: religionen, optionDisplayText: i => i.bezeichnungZeugnis ?? '', selectionDisplayText: i => i.bezeichnungZeugnis ?? '' });
 
 	const auswahlReligionID = ref(data.value.religionID);
 
@@ -632,7 +632,7 @@
 
 	const externeIDNummern = computed(() => props.mapSchulen.values());
 
-	const externeIDNrManager = new SelectManager({ options: externeIDNummern.value, optionDisplayText: i => i.kuerzel ?? i.schulnummerStatistik ?? i.kurzbezeichnung ?? i.name,
+	const externeIDNrManager = new SelectManager({ options: externeIDNummern, optionDisplayText: i => i.kuerzel ?? i.schulnummerStatistik ?? i.kurzbezeichnung ?? i.name,
 		selectionDisplayText: i => i.kuerzel ?? i.schulnummerStatistik ?? i.kurzbezeichnung ?? i.name });
 
 	const auswahlExterneIDNr = ref(data.value.externeSchulNr ?? null);
@@ -647,7 +647,7 @@
 
 	const fahrschuelerarten = computed(() => props.mapFahrschuelerarten.values());
 
-	const fahrschuelerartManager = new SelectManager({ options: fahrschuelerarten.value, optionDisplayText: i => i.bezeichnung ?? '', selectionDisplayText: i => i.bezeichnung ?? '' });
+	const fahrschuelerartManager = new SelectManager({ options: fahrschuelerarten, optionDisplayText: i => i.bezeichnung ?? '', selectionDisplayText: i => i.bezeichnung ?? '' });
 
 	const auswahlfahrschuelerartID = ref(data.value.fahrschuelerArtID ?? null);
 
@@ -662,7 +662,7 @@
 
 	const haltestellen = computed(() => props.mapHaltestellen.values());
 
-	const haltestellenManager = new SelectManager({ options: haltestellen.value, optionDisplayText: i => i.bezeichnung ?? '', selectionDisplayText: i => i.bezeichnung ?? '' });
+	const haltestellenManager = new SelectManager({ options: haltestellen, optionDisplayText: i => i.bezeichnung ?? '', selectionDisplayText: i => i.bezeichnung ?? '' });
 
 	const auswahlHaltestellenID = ref(data.value.haltestelleID ?? null);
 
@@ -912,7 +912,7 @@
 
 	const erzieherarten = computed(() => props.mapErzieherarten.values());
 
-	const erzieherartenManager = new SelectManager({ options: erzieherarten.value, sort: erzieherArtSort, optionDisplayText: i => i.bezeichnung, selectionDisplayText: i => i.bezeichnung });
+	const erzieherartenManager = new SelectManager({ options: erzieherarten, sort: erzieherArtSort, optionDisplayText: i => i.bezeichnung, selectionDisplayText: i => i.bezeichnung });
 
 	const erzieherart = computed({
 		get: () => props.mapErzieherarten.get(erzieher.value?.idErzieherArt ?? -1) ?? null,
@@ -1165,7 +1165,7 @@
 
 	const telefonArten = computed(() => props.mapTelefonArten.values());
 
-	const telefonArtManager = new SelectManager({ options: telefonArten.value, optionDisplayText: i => i.bezeichnung, selectionDisplayText: i => i.bezeichnung });
+	const telefonArtManager = new SelectManager({ options: telefonArten, optionDisplayText: i => i.bezeichnung, selectionDisplayText: i => i.bezeichnung });
 
 	const telefonArt = computed<Telefonart | null>({
 		get: () => props.mapTelefonArten.get(newEntryTelefonnummer.value.idTelefonArt) ?? null,
@@ -1255,7 +1255,7 @@
 	const vermerkArten = computed(() => props.mapVermerkArten.values());
 
 	const VermerkArtManager = new SelectManager({
-		options: vermerkArten.value,
+		options: vermerkArten,
 		optionDisplayText: i => i.bezeichnung ?? "",
 		selectionDisplayText: i => i.bezeichnung ?? "" });
 

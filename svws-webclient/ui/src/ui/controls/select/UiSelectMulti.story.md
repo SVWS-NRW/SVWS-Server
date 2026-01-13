@@ -107,11 +107,11 @@ Manager übernehmen die Logik des Selects. Sie kümmern sich um folgende Punkte:
 #### BaseSelectManagerConfig\<T>
 Alle Parameter der Config sind optional und können entweder direkt angegeben werden oder in einem Ref. Werden sie in einem Ref angegeben, dann reagierte der Manager auf Änderungen dieses Refs und aktualisiert sich automatisch.
 
-| Parameter | Typ                                                       | Definition                                     |
-|-----------|-----------------------------------------------------------|------------------------------------------------|
-| options   | `MaybeRef<Iterable<T>>`                                   | Alle Optionen, die das Dropdown beinhaltet.    |
-| sort      | `MaybeRef<Comparator<T>\|((a: T, b: T) => number)\|null>` | Gibt eine Sortierfunktion an                   |
-| filters   | `MaybeRef<Iterable<SelectFilter<T>>>`                     | Setzt die aktiven Filter für die Optionenliste |
+| Parameter | Typ                                                       | Definition                                                                                                                             |
+|-----------|-----------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------|
+| options   | `MaybeRef<Iterable<T>>`                                   | Alle Optionen, die das Dropdown beinhaltet. <br/>Um die Reaktivität zu gewährleisten, Refs nur ohne den Zusatz `.value` übergeben.     |
+| sort      | `MaybeRef<Comparator<T>\|((a: T, b: T) => number)\|null>` | Gibt eine Sortierfunktion an. <br/>Um die Reaktivität zu gewährleisten, Refs nur ohne den Zusatz `.value` übergeben.                   |
+| filters   | `MaybeRef<Iterable<SelectFilter<T>>>`                     | Setzt die aktiven Filter für die Optionenliste. <br/>Um die Reaktivität zu gewährleisten, Refs nur ohne den Zusatz `.value` übergeben. |
 
 ### SelectManager\<T>
 Der `SelectManager<T>` ist ein einfacher, allgemeiner Manager für Selects, der für die verschiedensten Datentypen wie `string`, `number` oder auch Custom-Objekte verwendet werden kann. Er beinhaltet die Logik der Komponente basierend auf dem Datentyp der Optionen in Dropdown.
@@ -121,10 +121,10 @@ Für das Erzeugen eines SelectManagers wird dem Konstruktor eine `SelectManagerC
 #### SelectManagerConfig\<T>
 Leitet von der Config `BaseSelectManagerConfig\<T>` ab und erweitert sie. Alle Parameter der Config sind optional und können entweder direkt angegeben werden oder in einem Ref. Werden sie in einem Ref angegeben, dann reagierte der Manager auf Änderungen dieses Refs und aktualisiert sich automatisch.
 
-| Parameter            | Typ                                 | Definition                                                       |
-|----------------------|-------------------------------------|------------------------------------------------------------------|
-| selectionDisplayText | `MaybeRef<((option: U) => string)>` | Gibt an, wie der Selektionstext angezeigt werden soll.           |
-| optionDisplayText    | `MaybeRef<((option: U) => string)>` | Gibt an, wie der Optionentext in Dropdown angezeigt werden soll. |
+| Parameter            | Typ                                 | Definition                                                                                                                                              |
+|----------------------|-------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
+| selectionDisplayText | `MaybeRef<((option: U) => string)>` | Gibt an, wie der Selektionstext angezeigt werden soll. <br/>Um die Reaktivität zu gewährleisten, Refs nur ohne den Zusatz `.value` übergeben.           |
+| optionDisplayText    | `MaybeRef<((option: U) => string)>` | Gibt an, wie der Optionentext in Dropdown angezeigt werden soll. <br/>Um die Reaktivität zu gewährleisten, Refs nur ohne den Zusatz `.value` übergeben. |
 
 
 ### CoreTypeSelectManager\<T>
@@ -133,13 +133,13 @@ Dieser Manager generiert seine Liste an Optionen selbst, basierend auf Angaben z
 ### CoreTypeSelectManagerConfig\<T>
 Diese Config erweitert die `BaseSelectManagerConfig<T>`, implementiert aber nicht den Parameter `options`, da diese selbst berechnet werden. Die Optionen der Liste sind dabei vom Typ `CoreTypeData`. Für diese Berechnung ist mindestens die Angabe von `clazz` und `schuljahr` erforderlich. Ohne diese bleibt die Optionenliste leer. Alle Parameter der Config sind optional und können entweder direkt angegeben werden oder in einem Ref. Werden sie in einem Ref angegeben, dann reagierte der Manager auf Änderungen dieses Refs und aktualisiert sich automatisch.
 
-| Parameter            | Typ                                                                         | Definition                                                                                                                                                                             |
-|----------------------|-----------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| clazz                | `MaybeRef<Class<T>>`                                                        | Die Klasse des CoreTypes                                                                                                                                                               |
-| schuljahr            | `MaybeRef<number \| null>`                                                  | Das Schuljahr, nach dem gefiltert wird. Bei null erhält die Komponente nur eine leere Liste an Optionen.                                                                               |
-| schulformen          | `MaybeRef<Schulform \| Schulform[] \| null>`                                | Die Schulformen, nach denen gefiltert wird. Sie beinhaltet alle Daten, die in mindestens einer der Schulformen vorkommen. Bei `null` werden alle Daten unabhägig der Schulform geladen |
-| selectionDisplayText | `MaybeRef<"kuerzel" \| "text" \| "kuerzelText" \| ((option: U) => string)>` | Gibt an, wie der Selektionstext angezeigt werden soll. `kuerzel`, `text` und `kuerzelText` sind defaults, die verwendet werden können.                                                 |
-| optionDisplayText    | `MaybeRef<"kuerzel" \| "text" \| "kuerzelText" \| ((option: U) => string)>` | Gibt an, wie der Optionentext in Dropdown angezeigt werden soll. `kuerzel`, `text` und `kuerzelText` sind defaults, die verwendet werden können.                                       |
+| Parameter            | Typ                                                                         | Definition                                                                                                                                                                                                                                                                     |
+|----------------------|-----------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| clazz                | `MaybeRef<Class<T>>`                                                        | Die Klasse des CoreTypes. <br/>Um die Reaktivität zu gewährleisten, Refs nur ohne den Zusatz `.value` übergeben.                                                                                                                                                               |
+| schuljahr            | `MaybeRef<number \| null>`                                                  | Das Schuljahr, nach dem gefiltert wird. Bei null erhält die Komponente nur eine leere Liste an Optionen. <br/>Um die Reaktivität zu gewährleisten, Refs nur ohne den Zusatz `.value` übergeben.                                                                                |
+| schulformen          | `MaybeRef<Schulform \| Schulform[] \| null>`                                | Die Schulformen, nach denen gefiltert wird. Sie beinhaltet alle Daten, die in mindestens einer der Schulformen vorkommen. Bei `null` werden alle Daten unabhägig der Schulform geladen. <br/>Um die Reaktivität zu gewährleisten, Refs nur ohne den Zusatz `.value` übergeben. |
+| selectionDisplayText | `MaybeRef<"kuerzel" \| "text" \| "kuerzelText" \| ((option: U) => string)>` | Gibt an, wie der Selektionstext angezeigt werden soll. `kuerzel`, `text` und `kuerzelText` sind defaults, die verwendet werden können. <br/>Um die Reaktivität zu gewährleisten, Refs nur ohne den Zusatz `.value` übergeben.                                                  |
+| optionDisplayText    | `MaybeRef<"kuerzel" \| "text" \| "kuerzelText" \| ((option: U) => string)>` | Gibt an, wie der Optionentext in Dropdown angezeigt werden soll. `kuerzel`, `text` und `kuerzelText` sind defaults, die verwendet werden können. <br/>Um die Reaktivität zu gewährleisten, Refs nur ohne den Zusatz `.value` übergeben.                                        |
 
 ## Filter
 Optionen in einem UiSelect können gefiltert werden. Damit mehrere Filter kombiniert werden können, existiert das Interface `SelectFilter`, auf dem basierend die Filter definiert werden. Diese Filter können anschließend an den `Manager` übergeben werden. \
@@ -149,7 +149,7 @@ Die angezeigten Optionen im Dropdown des Selects sind ausschließlich Optionen, 
 ### FachSelectFilter
 Ein spezieller Filter, der Optionen vom Typ `Fach` nach `Fachgruppen` filtert. Es können mehrere Fachgruppen angegeben werden. Der Filter gibt dann alle Fächer zurück, die mit min. einer Fachgruppe übereinstimmen.
 #### Konstruktor
-| Parameter   | Typ                          | Definition                                                                                                  |
-|-------------|------------------------------|-------------------------------------------------------------------------------------------------------------|
-| key         | `string`                     | Ein eindeutiger Key zur Identifikation des Filters. Der Key muss nur innerhalb des Managers eindeutig sein. |
-| fachgruppen | `MaybeRef<List<Fachgruppe>>` | Eine Liste der Fachgruppen, nach denen gefiltert wird.                                                      |
+| Parameter   | Typ                          | Definition                                                                                                                                    |
+|-------------|------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
+| key         | `string`                     | Ein eindeutiger Key zur Identifikation des Filters. Der Key muss nur innerhalb des Managers eindeutig sein.                                   |
+| fachgruppen | `MaybeRef<List<Fachgruppe>>` | Eine Liste der Fachgruppen, nach denen gefiltert wird. <br/>Um die Reaktivität zu gewährleisten, Refs nur ohne den Zusatz `.value` übergeben. |

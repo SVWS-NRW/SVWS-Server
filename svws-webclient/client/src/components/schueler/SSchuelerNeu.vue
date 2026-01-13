@@ -237,7 +237,7 @@
 	});
 
 	const einschulungsarten = computed(() => props.mapEinschulungsarten.values());
-	const einschulungsartManager = new SelectManager({ options: einschulungsarten.value, optionDisplayText: i => i.text, selectionDisplayText: i => i.text });
+	const einschulungsartManager = new SelectManager({ options: einschulungsarten, optionDisplayText: i => i.text, selectionDisplayText: i => i.text });
 
 	const einschulungsart = computed({
 		get: () => props.mapEinschulungsarten.get(dataSchulbesuchsdaten.value.grundschuleEinschulungsartID ?? -1) ?? null,

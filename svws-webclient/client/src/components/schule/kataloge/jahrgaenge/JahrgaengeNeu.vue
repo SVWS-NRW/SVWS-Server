@@ -74,7 +74,7 @@
 
 	const jahrgaenge = computed<JahrgangsDaten[]>(() => [...props.manager().liste.list()]);
 	const folgeJahrgangManager = new SelectManager({
-		options: jahrgaenge.value,
+		options: jahrgaenge,
 		optionDisplayText: v => v.bezeichnung ?? "",
 		selectionDisplayText: v => v.bezeichnung ?? "",
 	});

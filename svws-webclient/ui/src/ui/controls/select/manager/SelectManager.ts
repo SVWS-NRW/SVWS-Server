@@ -6,7 +6,9 @@ import { BaseSelectManager, type BaseSelectManagerConfig } from "./BaseSelectMan
  * Alle Werte können als Ref übergeben werden, wenn der Manager reaktiv auf Änderungen reagieren soll.
  */
 export interface SelectManagerConfig<T> extends BaseSelectManagerConfig<T> {
+	/** Um die Reaktivität zu gewährleisten, Refs nur ohne den Zusatz `.value` übergeben. */
 	selectionDisplayText?: MaybeRef<((option: T) => string)>;
+	/** Um die Reaktivität zu gewährleisten, Refs nur ohne den Zusatz `.value` übergeben. */
 	optionDisplayText?: MaybeRef<((option: T) => string)>;
 }
 

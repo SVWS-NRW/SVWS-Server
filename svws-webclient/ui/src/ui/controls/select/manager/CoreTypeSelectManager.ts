@@ -15,10 +15,15 @@ type DisplayMode<T> = "kuerzel" | "text" | "kuerzelText" | ((option: T) => strin
  * Alle Werte können als Ref übergeben werden, wenn der Manager reaktiv auf Änderungen reagieren soll.
  */
 export interface CoreTypeSelectManagerConfig<T extends CoreTypeData, U extends CoreType<T, U>> extends Omit<BaseSelectManagerConfig<T>, 'options'> {
+	/** Um die Reaktivität zu gewährleisten, Refs nur ohne den Zusatz `.value` übergeben. */
 	clazz?: MaybeRef<Class<U> | null>;
+	/** Um die Reaktivität zu gewährleisten, Refs nur ohne den Zusatz `.value` übergeben. */
 	schuljahr?: MaybeRef<number | null>;
+	/** Um die Reaktivität zu gewährleisten, Refs nur ohne den Zusatz `.value` übergeben. */
 	schulformen?: MaybeRef<Schulform | Iterable<Schulform> | null>;
+	/** Um die Reaktivität zu gewährleisten, Refs nur ohne den Zusatz `.value` übergeben. */
 	selectionDisplayText?: MaybeRef<DisplayMode<T>>;
+	/** Um die Reaktivität zu gewährleisten, Refs nur ohne den Zusatz `.value` übergeben. */
 	optionDisplayText?: MaybeRef<DisplayMode<T>>;
 }
 

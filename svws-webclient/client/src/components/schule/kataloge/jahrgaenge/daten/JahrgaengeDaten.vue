@@ -109,7 +109,7 @@
 
 	const availableFolgejahrgaenge = computed<JahrgangsDaten[]>(() => [...props.manager().liste.list()].filter(j => j.id !== props.manager().daten().id));
 	const folgeJahrgangManager = new SelectManager({
-		options: availableFolgejahrgaenge.value,
+		options: availableFolgejahrgaenge,
 		optionDisplayText: v => v.bezeichnung ?? "",
 		selectionDisplayText: v => v.bezeichnung ?? "",
 	});

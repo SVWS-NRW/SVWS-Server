@@ -188,11 +188,13 @@
 	};
 
 	const auswahlKurs = shallowRef<KursDaten | null>(null);
-	const kursSelectManager = computed<SelectManager<KursDaten>>(() => new SelectManager({ options: alleKurse.value.keySet(),
+	const auswahlKursKeys = computed(() => alleKurse.value.keySet());
+	const kursSelectManager = computed<SelectManager<KursDaten>>(() => new SelectManager({ options: auswahlKursKeys,
 		optionDisplayText: k => k.kuerzel, selectionDisplayText: k => k.kuerzel	}));
 
 	const auswahlPruefer = shallowRef<LehrerListeEintrag | null>(null);
-	const prueferSelectManager = computed<SelectManager<LehrerListeEintrag>>(() => new SelectManager({ options: allePruefer.value.keySet(),
+	const auswahlPrueferKeys = computed(() => allePruefer.value.keySet());
+	const prueferSelectManager = computed<SelectManager<LehrerListeEintrag>>(() => new SelectManager({ options: auswahlPrueferKeys,
 		optionDisplayText: l => l.kuerzel, selectionDisplayText: l => l.kuerzel	}));
 
 	const auswahlAbiturfach = shallowRef<GostAbiturFach | null>(null);

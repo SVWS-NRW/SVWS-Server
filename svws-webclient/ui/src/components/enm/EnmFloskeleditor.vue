@@ -228,12 +228,12 @@
 	}).value;
 
 	const jahrgangManager = computed(() => new SelectManager({
-		options: jahrgangSet.value,
+		options: jahrgangSet,
 		optionDisplayText: id => props.enmManager().mapJahrgaenge.get(id)?.kuerzel ?? '???',
 		selectionDisplayText: id => props.enmManager().mapJahrgaenge.get(id)?.kuerzel ?? '???',
 	}));
 
-	const niveauManager = computed(() => new SelectManager({ options: niveauSet.value }));
+	const niveauManager = computed(() => new SelectManager({ options: niveauSet }));
 	const niveauSelected = ref<number>();
 
 	const jahrgangSelectedMemo = ref<number>();

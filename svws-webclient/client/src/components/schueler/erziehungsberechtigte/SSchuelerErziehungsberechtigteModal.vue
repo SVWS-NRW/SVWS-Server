@@ -102,7 +102,7 @@
 
 	const erzieherarten = computed(() => props.mapErzieherarten.values());
 
-	const erzieherartenManager = new SelectManager({ options: erzieherarten.value, sort: erzieherArtSort, optionDisplayText: i => i.bezeichnung, selectionDisplayText: i => i.bezeichnung });
+	const erzieherartenManager = new SelectManager({ options: erzieherarten, sort: erzieherArtSort, optionDisplayText: i => i.bezeichnung, selectionDisplayText: i => i.bezeichnung });
 
 	const selectedErzieherart = computed<Erzieherart | null>({
 		get: () => props.mapErzieherarten.get(props.ersterErz.idErzieherArt ?? -1) ?? null,
@@ -143,7 +143,7 @@
 
 	const orte = computed(() => props.mapOrte.values());
 
-	const wohnortManager = new SelectManager({ options: orte.value, sort: orte_sort, optionDisplayText: i => `${i.plz} ${i.ortsname}`, selectionDisplayText: i => `${i.plz} ${i.ortsname}` });
+	const wohnortManager = new SelectManager({ options: orte, sort: orte_sort, optionDisplayText: i => `${i.plz} ${i.ortsname}`, selectionDisplayText: i => `${i.plz} ${i.ortsname}` });
 
 	const wohnort = computed<OrtKatalogEintrag | undefined>({
 		get: () => ((props.ersterErz.wohnortID === null)) ? undefined : props.mapOrte.get(props.ersterErz.wohnortID),
