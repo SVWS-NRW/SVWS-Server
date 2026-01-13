@@ -4,6 +4,7 @@ import type { JavaSet } from '../../../../../core/src/java/util/JavaSet';
 import { HashMap } from '../../../../../core/src/java/util/HashMap';
 import type { Schulform } from '../../../../../core/src/asd/types/schule/Schulform';
 import { JavaString } from '../../../../../core/src/java/lang/JavaString';
+import { DeveloperNotificationException } from '../../../../../core/src/core/exceptions/DeveloperNotificationException';
 import type { Comparator } from '../../../../../core/src/../../core/src/java/util/Comparator';
 import { AuswahlManager } from '../../AuswahlManager';
 import { JavaInteger } from '../../../../../core/src/java/lang/JavaInteger';
@@ -49,12 +50,7 @@ export class FaecherListeManager extends AuswahlManager<number, FachDaten, FachD
 		if (cmp !== 0) {
 			return cmp;
 		}
-		if ((a.bezeichnung !== null) && (b.bezeichnung !== null)) {
-			cmp = JavaString.compareTo(a.bezeichnung, b.bezeichnung);
-		};
-		if ((a.kuerzel !== null) && (b.kuerzel !== null)) {
-			cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
-		};
+		cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
 		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
 	} };
 
@@ -76,9 +72,7 @@ export class FaecherListeManager extends AuswahlManager<number, FachDaten, FachD
 	private initFaecher(): void {
 		for (const f of this.liste.list()) {
 			this._mapFachIstSichtbar.put(f.istSichtbar, f.id, f);
-			if (f.kuerzel !== null) {
-				this._mapFachByKuerzel.put(f.kuerzel, f);
-			}
+			this._mapFachByKuerzel.put(f.kuerzel, f);
 		}
 	}
 
@@ -129,13 +123,30 @@ export class FaecherListeManager extends AuswahlManager<number, FachDaten, FachD
 	 * @return das Ergebnis des Vergleichs (-1 kleine, 0 gleich und 1 größer)
 	 */
 	protected compareAuswahl(a: FachDaten, b: FachDaten): number {
+		for (const criteria of this._order) {
+			const field: string | null = criteria.a;
+			const asc: boolean = (criteria.b === null) || criteria.b;
+			let cmp: number = 0;
+			if (JavaObject.equalsTranspiler("kuerzel", (field))) {
+				cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
+			} else
+				if (JavaObject.equalsTranspiler("bezeichnung", (field))) {
+					cmp = JavaString.compareTo(a.bezeichnung, b.bezeichnung);
+				} else {
+					throw new DeveloperNotificationException("Fehler bei der Sortierung. Das Sortierkriterium wird vom Manager nicht unterstützt.");
+				}
+			if (cmp === 0) {
+				continue;
+			}
+			return asc ? cmp : -cmp;
+		}
 		return FaecherListeManager.comparator.compare(a, b);
 	}
 
 	protected onMehrfachauswahlChanged(): void {
 		this.idsReferenzierterFaecher.clear();
 		for (const f of this.liste.auswahl()) {
-			if (f.referenziertInAnderenTabellen) {
+			if ((f.referenziertInAnderenTabellen !== null) && f.referenziertInAnderenTabellen) {
 				this.idsReferenzierterFaecher.add(f.id);
 			}
 		}

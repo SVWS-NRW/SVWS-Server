@@ -124,9 +124,7 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 		if (cmp !== 0) {
 			return cmp;
 		}
-		if ((a.kuerzel !== null) && (b.kuerzel !== null)) {
-			cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
-		}
+		cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
 		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
 	} };
 

@@ -4,13 +4,13 @@
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input class="contentFocusField" placeholder="Kürzel" :model-value="manager().daten().kuerzel"
 					@change="kuerzel => patch({ kuerzel: kuerzel ?? undefined })" :readonly />
-				<svws-ui-select title="Statistik-Fach" :model-value="Fach.getBySchluesselOrDefault(manager().daten().kuerzelStatistik ?? '')" statistics
+				<svws-ui-select title="Statistik-Fach" :model-value="Fach.getBySchluesselOrDefault(manager().daten().kuerzelStatistik)" statistics
 					@update:model-value="value => patch({ kuerzelStatistik: (value === undefined) || (value === null) ? undefined : value.daten(schuljahr)?.schluessel })"
 					:items="Fach.data().getListBySchuljahrAndSchulform(schuljahr, schulform)" :item-text="(z: Fach) => z.daten(schuljahr)?.schluessel + ' : ' + z.daten(schuljahr)?.text" :readonly />
 				<svws-ui-text-input placeholder="Bezeichnung" :model-value="manager().daten().bezeichnung" statistics
 					@change="bezeichnung => patch({ bezeichnung: bezeichnung ?? undefined })" :readonly />
 				<svws-ui-text-input placeholder="Fachgruppe" statistics :readonly disabled
-					:model-value="Fach.getBySchluesselOrDefault(manager().daten().kuerzelStatistik ?? '').getFachgruppe(schuljahr)?.daten(schuljahr)?.text ?? '—'" />
+					:model-value="Fach.getBySchluesselOrDefault(manager().daten().kuerzelStatistik).getFachgruppe(schuljahr)?.daten(schuljahr)?.text ?? '—'" />
 				<svws-ui-select title="Bilinguale Sachfachsprache" statistics :readonly
 					:model-value="(manager().daten().bilingualeSprache === null) ? null : BilingualeSprache.data().getWertByKuerzel(manager().daten().bilingualeSprache!)"
 					@update:model-value="value => patch({ bilingualeSprache: value?.daten(schuljahr)?.kuerzel ?? null })"

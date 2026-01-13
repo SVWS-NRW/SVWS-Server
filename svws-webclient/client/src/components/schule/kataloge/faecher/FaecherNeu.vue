@@ -78,7 +78,7 @@
 
 	const disabled = computed(() => (data.value.kuerzelStatistik === "") || !hatKompetenzUpdate.value);
 
-	const fachgruppe = computed(() => Fach.getBySchluesselOrDefault(data.value.kuerzelStatistik ?? '').getFachgruppe(schuljahr.value)?.daten(schuljahr.value)?.text ?? '—');
+	const fachgruppe = computed(() => Fach.getBySchluesselOrDefault(data.value.kuerzelStatistik).getFachgruppe(schuljahr.value)?.daten(schuljahr.value)?.text ?? '—');
 
 	const statistikFachEintraege = computed(() => {
 		const list = Fach.data().getListBySchuljahrAndSchulform(schuljahr.value, props.manager().schulform());
@@ -87,7 +87,7 @@
 
 	const selectedStatistikFach = computed({
 		get: () => {
-			const wert = Fach.data().getWertByKuerzel(data.value.kuerzelStatistik ?? '');
+			const wert = Fach.data().getWertByKuerzel(data.value.kuerzelStatistik);
 			if (wert === null) {
 				return null;
 			}
