@@ -2,7 +2,7 @@ import { computed, nextTick, ref, watch, type ComputedRef, type Ref } from 'vue'
 import type { UiSelectDropdown, UiSelectHTMLElements, UiSelectSelectionMethods, UiSelectState } from "../manager/UiSelectTypes";
 import type { BasicValidator } from "../../../../../../core/src/asd/validate/BasicValidator";
 import type { List } from "../../../../../../core/src/java/util/List";
-import { useWindowSize } from "@vueuse/core";
+import { useElementBounding, useWindowSize } from "@vueuse/core";
 import { useUiSelectFocusHandler } from "./useUiSelectFocusHandler";
 import { useUiSelectInputHandler } from "./useUiSelectInputHandler";
 import { useUiSelectStyles } from "./useUiSelectStyles";
@@ -64,6 +64,18 @@ export function useUiSelectUtils<T, V extends BasicValidator>(
 	const widthComboBox = ref(0);
 	const heightComboBox = ref(0);
 	const { height: windowHeight } = useWindowSize();
+	const bounding = useElementBounding(elements.uiSelectCombobox);
+	const justOpened = ref(false);
+
+	// Beobachtet Größe und Position der Combobox, um bei Änderungen das Dropdown zu schließen
+	watch(
+		[bounding.x, bounding.y, bounding.height, bounding.width],
+		() => {
+			if (!justOpened.value) {
+				closeDropdown();
+			}
+		}
+	);
 
 	// Index des visuell hervorgehobenen Dropdownlistenelements bei Tastennavigation
 	const highlightedIndex = ref(-1);
@@ -168,16 +180,11 @@ export function useUiSelectUtils<T, V extends BasicValidator>(
 	});
 
 	function updateDropdownSizeAndPosition(): void {
-		const rect = elements.uiSelectCombobox.value?.getBoundingClientRect();
-		if (rect === undefined) {
-			return;
-		}
-
-		distanceWindowTopToComboboxTop.value = rect.top;
-		distanceWindowTopToComboboxBottom.value = rect.bottom;
-		distanceWindowLeftToComboboxLeft.value = rect.left;
-		widthComboBox.value = rect.width;
-		heightComboBox.value = rect.height;
+		distanceWindowTopToComboboxTop.value = bounding.top.value;
+		distanceWindowTopToComboboxBottom.value = bounding.bottom.value;
+		distanceWindowLeftToComboboxLeft.value = bounding.left.value;
+		widthComboBox.value = bounding.width.value;
+		heightComboBox.value = bounding.height.value;
 	}
 
 	function toggleDropdown(): void {
@@ -192,7 +199,7 @@ export function useUiSelectUtils<T, V extends BasicValidator>(
 		if ((elements.uiSelectDropdown.value === null) || dropdownIsOpen.value) {
 			return;
 		}
-
+		justOpened.value = true;
 		updateDropdownSizeAndPosition();
 		focusSelect();
 		elements.uiSelectDropdown.value.showPopover();
@@ -202,6 +209,11 @@ export function useUiSelectUtils<T, V extends BasicValidator>(
 		}
 
 		window.addEventListener('resize', () => closeDropdown());
+		// Manchmal verschiebt sich das Select, wenn reingeklickt wird. Dieses Flag soll verhindern, dass es in dem Fall
+		// sofort wieder geschlossen wird
+		requestAnimationFrame(() => {
+			justOpened.value = false;
+		});
 	}
 
 	function closeDropdown(): void {

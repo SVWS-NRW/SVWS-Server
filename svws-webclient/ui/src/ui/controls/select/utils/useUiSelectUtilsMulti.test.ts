@@ -1,12 +1,45 @@
+import { type Ref, ref } from "vue";
 import type { VueWrapper } from "@vue/test-utils";
 import { mount } from "@vue/test-utils";
-import { afterEach, beforeAll, describe, expect, test, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import UiSelectMulti from "../UiSelectMulti.vue";
 import { SelectManager } from "../manager/SelectManager";
 import type { BasicValidator } from "../../../../../../core/src/asd/validate/BasicValidator";
 
+type MockBounding = {
+	x: Ref<number>;
+	y: Ref<number>;
+	width: Ref<number>;
+	height: Ref<number>;
+	top: Ref<number>;
+	left: Ref<number>;
+	right: Ref<number>;
+	bottom: Ref<number>;
+};
 
-beforeAll(() => {
+let mockBounding: MockBounding;
+
+const createMockBounding = () => ({
+	x: ref(0),
+	y: ref(0),
+	width: ref(0),
+	height: ref(0),
+	top: ref(0),
+	left: ref(0),
+	right: ref(0),
+	bottom: ref(0),
+});
+
+vi.mock('@vueuse/core', async () => {
+	const actual = vi.importActual('@vueuse/core');
+	return {
+		...await actual,
+		useElementBounding: () => mockBounding,
+	};
+});
+
+beforeEach(() => {
+	mockBounding = createMockBounding();
 	HTMLElement.prototype.showPopover = vi.fn(function(this: HTMLElement) {
 		this.dataset.popoverOpen = 'true';
 	});
@@ -19,7 +52,6 @@ beforeAll(() => {
 
 describe("UiSelectMulti Utils", () => {
 	const { manager, singleSelection, multiSelection } = createTestData();
-	let getBoundingClientRectSpy: ReturnType<typeof vi.spyOn>;
 	let scrollHeightSpy: ReturnType<typeof vi.spyOn>;
 	let scrollTopSpy: ReturnType<typeof vi.spyOn>;
 
@@ -128,9 +160,6 @@ describe("UiSelectMulti Utils", () => {
 	describe("Dropdown Styles", () => {
 
 		afterEach(() => {
-			if (getBoundingClientRectSpy !== undefined) {
-				getBoundingClientRectSpy.mockRestore();
-			}
 			if (scrollHeightSpy !== undefined) {
 				scrollHeightSpy.mockRestore();
 			}
@@ -140,22 +169,19 @@ describe("UiSelectMulti Utils", () => {
 		});
 
 		test("Das Dropdown wird unter dem Select angezeigt, wenn Platz da ist", async () => {
-			const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+			mockBounding.x.value = 150;
+			mockBounding.y.value = 100;
+			mockBounding.width.value = 200;
+			mockBounding.height.value = 40;
+			mockBounding.top.value = 50;
+			mockBounding.left.value = 150;
+			mockBounding.right.value = 200;
+			mockBounding.bottom.value = 90;
 
-			getBoundingClientRectSpy = vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({
-				width: 200,
-				height: 40,
-				top: 50,
-				left: 150,
-				right: 200,
-				bottom: 90,
-				x: 150,
-				y: 100,
-				toJSON: () => {},
-			});
+			const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+			const { combobox, vm } = getElements(wrapper);
 
 			// Dropdown öffnen
-			const { combobox, vm } = getElements(wrapper);
 			await combobox.trigger('click');
 
 			const positionStyles = vm.dropdownPositionStyles;
@@ -167,17 +193,14 @@ describe("UiSelectMulti Utils", () => {
 		});
 
 		test("Das Dropdown wird über dem Select angezeigt, wenn unten zu wenig Platz ist", async () => {
-			getBoundingClientRectSpy = vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({
-				width: 200,
-				height: 40,
-				top: 900,
-				left: 150,
-				right: 200,
-				bottom: 940,
-				x: 150,
-				y: 100,
-				toJSON: () => {},
-			});
+			mockBounding.x.value = 150;
+			mockBounding.y.value = 900;
+			mockBounding.width.value = 200;
+			mockBounding.height.value = 40;
+			mockBounding.top.value = 900;
+			mockBounding.left.value = 150;
+			mockBounding.right.value = 200;
+			mockBounding.bottom.value = 940;
 
 			scrollHeightSpy = vi.spyOn(HTMLElement.prototype, 'scrollHeight', 'get').mockReturnValue(800);
 
@@ -197,17 +220,15 @@ describe("UiSelectMulti Utils", () => {
 		});
 
 		test("Das Dropdown ist maximal 235px hoch", async () => {
-			getBoundingClientRectSpy = vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({
-				width: 200,
-				height: 40,
-				top: 50,
-				left: 150,
-				right: 200,
-				bottom: 90,
-				x: 150,
-				y: 100,
-				toJSON: () => {},
-			});
+			mockBounding.x.value = 150;
+			mockBounding.y.value = 50;
+			mockBounding.width.value = 200;
+			mockBounding.height.value = 40;
+			mockBounding.top.value = 50;
+			mockBounding.left.value = 150;
+			mockBounding.right.value = 200;
+			mockBounding.bottom.value = 90;
+
 			scrollHeightSpy = vi.spyOn(HTMLElement.prototype, 'scrollHeight', 'get').mockReturnValue(800);
 
 			const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
@@ -225,23 +246,20 @@ describe("UiSelectMulti Utils", () => {
 		});
 
 		test("Das Dropdown nimmt nur den vorhandenen Platz ein", async () => {
-			getBoundingClientRectSpy = vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({
-				width: 200,
-				height: 40,
-				top: 800,
-				left: 150,
-				right: 200,
-				bottom: 840,
-				x: 150,
-				y: 100,
-				toJSON: () => {},
-			});
+			mockBounding.x.value = 150;
+			mockBounding.y.value = 800;
+			mockBounding.width.value = 200;
+			mockBounding.height.value = 40;
+			mockBounding.top.value = 800;
+			mockBounding.left.value = 150;
+			mockBounding.right.value = 200;
+			mockBounding.bottom.value = 840;
 			scrollHeightSpy = vi.spyOn(HTMLElement.prototype, 'scrollHeight', 'get').mockReturnValue(800);
 
 			const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+			const { combobox, vm } = getElements(wrapper);
 
 			// Dropdown öffnen
-			const { combobox, vm } = getElements(wrapper);
 			await combobox.trigger('click');
 
 			const positionStyles = vm.dropdownPositionStyles;
@@ -318,12 +336,9 @@ describe("UiSelectMulti Utils", () => {
 		});
 	});
 
-	describe.concurrent("Dropdown Sichtbarkeit", () => {
+	describe("Dropdown Sichtbarkeit", () => {
 
 		afterEach(() => {
-			if (getBoundingClientRectSpy !== undefined) {
-				getBoundingClientRectSpy.mockRestore();
-			}
 			if (scrollHeightSpy !== undefined) {
 				scrollHeightSpy.mockRestore();
 			}
@@ -348,20 +363,17 @@ describe("UiSelectMulti Utils", () => {
 		});
 
 		test("Beim Öffnen des Dropdowns wird dessen Position und Größe neu berechnet", async () => {
+			mockBounding.x.value = 150;
+			mockBounding.y.value = 50;
+			mockBounding.width.value = 200;
+			mockBounding.height.value = 40;
+			mockBounding.top.value = 50;
+			mockBounding.left.value = 150;
+			mockBounding.right.value = 200;
+			mockBounding.bottom.value = 90;
+
 			const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
 			const { combobox } = getElements(wrapper);
-
-			getBoundingClientRectSpy = vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({
-				width: 200,
-				height: 40,
-				top: 50,
-				left: 150,
-				right: 200,
-				bottom: 90,
-				x: 150,
-				y: 100,
-				toJSON: () => {},
-			});
 
 			const oldPositionStyles = wrapper.findComponent({ name: "UiSelectMulti" }).vm.dropdownPositionStyles;
 
@@ -416,11 +428,38 @@ describe("UiSelectMulti Utils", () => {
 			const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
 			const { combobox, dropdown } = getElements(wrapper);
 
-
 			// Dropdown öffnen
 			await combobox.trigger('click');
 
 			window.dispatchEvent(new Event("resize"));
+
+			expect(dropdown.attributes("data-popover-open")).toBeUndefined();
+		});
+
+		test("Das Dropdown schließt sich nicht, wenn sich die Position verändert, aber das Dropdown gerade geöffnet wurde", async () => {
+			const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+			const { combobox, dropdown, vm } = getElements(wrapper);
+
+			// Dropdown öffnen
+			await combobox.trigger('click');
+
+			mockBounding.x.value = 50;
+			mockBounding.left.value = 50;
+			await vm.$nextTick();
+
+			expect(dropdown.attributes("data-popover-open")).toBe("true");
+		});
+
+		test("Das Dropdown schließt sich, wenn sich die Position verändert, aber das Dropdown schon offen war", async () => {
+			const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+			const { combobox, dropdown, vm } = getElements(wrapper);
+			vi.useFakeTimers();
+			// Dropdown öffnen
+			await combobox.trigger('click');
+			vi.runAllTimers();
+
+			mockBounding.x.value = 50;
+			await vm.$nextTick();
 
 			expect(dropdown.attributes("data-popover-open")).toBeUndefined();
 		});
