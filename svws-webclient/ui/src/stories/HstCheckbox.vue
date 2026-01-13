@@ -17,7 +17,7 @@
 	});
 
 	const emit = defineEmits<{
-		(e: 'update:modelValue', event: boolean): void;
+		'update:modelValue': [value: boolean];
 	}>();
 
 	const checked = computed<boolean>({

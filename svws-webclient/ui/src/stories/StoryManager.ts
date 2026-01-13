@@ -47,10 +47,10 @@ export class Story {
 	}
 	setVariantById(id: string) {
 		const variant = this.mapVariants.get(id);
-		if (variant !== undefined) {
-			this._variant = variant;
-		} else {
+		if (variant === undefined) {
 			this._variant = new Variant();
+		} else {
+			this._variant = variant;
 		}
 	}
 

@@ -5,8 +5,8 @@
 			<div class="flex flex-col h-full bg-ui-75">
 				<div class="px-4 h-16 flex items-center gap-2 flex-none">
 					<div class="py-3 sm:py-4 flex-1 h-full flex items-center pr-2 cursor-pointer" @click="router.push({path: '/'})">
-						<img src="/src/assets/img/histoire-svws-dark.svg" width="50%" class="hidden dark:block">
-						<img src="/src/assets/img/histoire-svws.svg" width="50%" class="block dark:hidden">
+						<img src="/src/assets/img/histoire-svws-dark.svg" width="50%" class="hidden dark:block" alt="Logo für den Dark-Mode">
+						<img src="/src/assets/img/histoire-svws.svg" width="50%" class="block dark:hidden" alt="Logo für den Light-Mode">
 					</div>
 					<div class="ml-auto flex-none flex" />
 				</div>
@@ -32,7 +32,7 @@
 						<div class="text-ui-caution font-bold">
 							Zur alten Histoire-Version der Doku geht es hier: <a href="https://eloquent-baklava-d6aa9d.netlify.app/">Link</a>
 						</div>
-						<div class="w-60"> <SvwsUiButton type="icon" @click="isDark = !isDark"><span class="icon" :class="!isDark ? 'i-ri-sun-line':'i-ri-moon-line'" /> </SvwsUiButton> </div>
+						<ui-color-mode />
 						<div class="w-60"><SvwsUiButton type="transparent" @click="gridView = (gridView === 'single') ? 'grid':'single'">{{ gridView === 'single' ? 'Single':'Grid' }} aktiviert</SvwsUiButton></div>
 						<div class="w-60">
 							<ui-select label="Hintergrundfarbe" v-model="color" :manager="colorSelectManager" searchable headless />
@@ -48,7 +48,6 @@
 							<RouterView />
 						</div>
 					</div>
-					<!-- <div class="dragger absolute z-100 hover:bg-ui-brand-hover transition-colors duration-150 delay-150 top-0 bottom-0 cursor-ew-resize w-4" @mousedown.prevent="dragStart2" /> -->
 				</div>
 				<div class="relative bottom-0 right-0 flex isolate overflow-auto flex-col portrait h-full" :style="rightStyle1" ref="dragger2">
 					<div class="dragger absolute z-100 top-0 bottom-0 cursor-ew-resize w-1.5" @mousedown.prevent="dragStart1" />
@@ -94,17 +93,13 @@
 
 <script setup lang="ts">
 
-	import { computed, onUnmounted, reactive, ref, watchEffect } from 'vue';
-	import { useDark } from "@vueuse/core";
+	import { computed, onUnmounted, ref, watchEffect } from 'vue';
 	import type { RouteRecord } from 'vue-router';
 	import type { ColorPreset } from './StoryManager';
 	import storyManager from './StoryManager';
 	import router from './router';
-	import type { PaneSplitterConfig } from './../ui/composables/usePaneSplitter';
 	import { usePaneSplitter } from './../ui/composables/usePaneSplitter';
 	import { SelectManager } from '../ui/controls/select/manager/SelectManager';
-
-	const isDark = useDark({ selector: 'html' });
 
 	const groups = new Map<string, RouteRecord[]>([['default', []]]);
 	for (const route of router.getRoutes()) {
@@ -138,7 +133,6 @@
 	async function routeTo(option: RouteRecord) {
 		clicked.value = option;
 		await router.push({ path: option.path });
-		// storyManager.setStoryByID('default');
 	}
 
 	const visible = ref<'events' | 'docs' | 'controls'>('controls');
@@ -152,10 +146,10 @@
 	const initialEventCounter = ref(storyManager.events.length);
 
 	const eventCounter = computed(() => {
-		if (visible.value !== 'events') {
-			return storyManager.events.length - initialEventCounter.value;
-		} else {
+		if (visible.value === 'events') {
 			return 0;
+		} else {
+			return storyManager.events.length - initialEventCounter.value;
 		}
 	});
 
@@ -215,8 +209,6 @@
 	const colorSelectManager = new SelectManager({
 		options: backgroundPresets, optionDisplayText: option => option.label,	selectionDisplayText: option => option.label,
 	});
-
-	const configH = reactive<PaneSplitterConfig>({ minSplit: 20, maxSplit: 80, mode: 'horizontal', defaultSplit: 50 });
 
 	const { removeDragListeners, dragStart: dragStart1, thisStyle: leftStyle1, thatStyle: rightStyle1, dragger: dragger1 } = usePaneSplitter();
 	const { dragStart: dragStart2, thisStyle: upperStyle1, thatStyle: lowerStyle1, dragger: dragger2 } = usePaneSplitter({ mode: 'horizontal' });

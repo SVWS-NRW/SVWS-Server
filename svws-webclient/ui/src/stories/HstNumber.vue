@@ -17,7 +17,7 @@
 	});
 
 	const emit = defineEmits<{
-		(e: 'update:modelValue', event: number | undefined): void;
+		'update:modelValue': [value: number | undefined];
 	}>();
 
 	const checked = computed<number | null>({

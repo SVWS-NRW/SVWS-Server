@@ -12,6 +12,7 @@
 
 	import { computed } from 'vue';
 
+	type Value = object | number | string | boolean;
 
 	interface Options {
 		label: string;
@@ -19,10 +20,10 @@
 	}
 
 	const emit = defineEmits<{
-		(e: 'update:modelValue', value: object | number | string | boolean): void,
+		'update:modelValue': [value: Value];
 	}>();
 
-	const checked = computed<object | number | boolean | string>({
+	const checked = computed<Value>({
 		get: () => props.modelValue,
 		set: (value) => emit('update:modelValue', value),
 	});
@@ -30,7 +31,7 @@
 	const props = withDefaults(defineProps<{
 		title?: string;
 		options: Options[];
-		modelValue: object | number | string | boolean;
+		modelValue: Value;
 	}>(), {
 		title: '',
 	});
