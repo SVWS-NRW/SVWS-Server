@@ -73,7 +73,7 @@ lint:eslint:changed:
     script:
         - git fetch origin dev
         - BASE=$(git merge-base HEAD origin/dev)
-        - CHANGED_FILES=$(git diff --name-only "$BASE" HEAD | grep -E '\.ts$|\.vue$' || true)
+        - CHANGED_FILES=$(git diff --diff-filter=d --name-only "$BASE" HEAD | grep -E '\.ts$|\.vue$' || true)
         - |
             if [ -n "$CHANGED_FILES" ]; then
               echo "Starte ESLint für geänderte Dateien:"
