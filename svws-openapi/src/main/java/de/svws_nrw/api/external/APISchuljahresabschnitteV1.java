@@ -57,7 +57,7 @@ public class APISchuljahresabschnitteV1 {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z. B. beim Datenbankzugriff)")
 	public Response getSchuljahresabschnitte(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuljahresabschnitteV1(new DataSchuljahresabschnitte(conn)).getAllAsResponse(),
-				request, ServerMode.DEV, BenutzerKompetenz.KEINE);
+				request, ServerMode.STABLE, BenutzerKompetenz.IMPORT_EXPORT_LERNPLATTFORM);
 	}
 
 }
