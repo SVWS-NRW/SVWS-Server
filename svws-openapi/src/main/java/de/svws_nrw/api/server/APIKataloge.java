@@ -284,9 +284,8 @@ public class APIKataloge {
 			@RequestBody(description = "Der Patch eines Ortsteils", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = OrtsteilKatalogEintrag.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataOrtsteile(conn, new DataOrte(conn)).patchAsResponse(id, is), request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataOrtsteile(conn, new DataOrte(conn)).patchAsResponse(id, is),
+				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
 
 	/**
@@ -310,8 +309,8 @@ public class APIKataloge {
 			@RequestBody(description = "Die Daten des zu erstellenden Ortsteils ohne ID, da diese automatisch generiert wird", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = OrtsteilKatalogEintrag.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataOrtsteile(conn, new DataOrte(conn)).addAsResponse(is), request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataOrtsteile(conn, new DataOrte(conn)).addAsResponse(is),
+				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
 
 	/**
@@ -334,8 +333,7 @@ public class APIKataloge {
 	public Response deleteOrtsteile(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der zu löschenden Ortsteile",
 			required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 			array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
-				conn -> new DataOrtsteile(conn, new DataOrte(conn)).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
+		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(conn -> new DataOrtsteile(conn, new DataOrte(conn)).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
 

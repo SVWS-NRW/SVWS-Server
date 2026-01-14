@@ -17,7 +17,7 @@ export class RouteOrtsteileNeu extends RouteNode<any, RouteOrtsteile> {
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.ortsteile.neu", "neu", OrtsteileNeu);
 		super.types = new Set([ViewType.HINZUFUEGEN]);
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Ortsteil Neu";
 		super.setCheckpoint = true;

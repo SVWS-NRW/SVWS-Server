@@ -20,7 +20,7 @@ export class RouteOrtsteile extends RouteAuswahlNode<OrtsteileListeManager, Rout
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN],
 			"schule.ortsteile", "schule/ortsteile/:id(\\d+)?", OrtsteileApp, OrtsteileAuswahl, new RouteDataOrtsteile());
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.text = "Ortsteile";
 		super.menugroup = RouteSchuleMenuGroup.KATALOGE;
 		super.children = [
