@@ -20,7 +20,7 @@ export class RouteOrte extends RouteAuswahlNode<OrteListeManager, RouteDataOrte,
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN],
 			"schule.orte", "schule/orte/:id(\\d+)?", OrteApp, OrteAuswahl, new RouteDataOrte());
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.text = "Orte";
 		super.menugroup = RouteSchuleMenuGroup.KATALOGE;
 		super.children = [
