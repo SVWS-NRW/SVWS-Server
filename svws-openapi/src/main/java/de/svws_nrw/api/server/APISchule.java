@@ -3096,9 +3096,8 @@ public class APISchule {
 			@RequestBody(description = "Der Patch eines Betriebs", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Betrieb.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataBetriebe(conn, new DataBetriebeAnsprechpartner(conn)).patchAsResponse(id, is), request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataBetriebe(conn, new DataBetriebeAnsprechpartner(conn)).patchAsResponse(id, is),
+				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
 
 	/**
@@ -3122,9 +3121,8 @@ public class APISchule {
 			@RequestBody(description = "Die Daten des zu erstellenden Betriebs.", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Betrieb.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataBetriebe(conn, new DataBetriebeAnsprechpartner(conn)).addAsResponse(is), request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataBetriebe(conn, new DataBetriebeAnsprechpartner(conn)).addAsResponse(is),
+				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
 
 	/**
@@ -3149,8 +3147,7 @@ public class APISchule {
 			array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
 				conn -> new DataBetriebe(conn, new DataBetriebeAnsprechpartner(conn)).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
+				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
 
 	/**

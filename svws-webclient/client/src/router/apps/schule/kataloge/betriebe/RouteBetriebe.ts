@@ -20,7 +20,7 @@ export class RouteBetriebe extends RouteAuswahlNode<BetriebeListeManager, RouteD
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN],
 			"schule.betriebe", "schule/betriebe/:id(\\d+)?", BetriebeApp, BetriebeAuswahl, new RouteDataBetriebe());
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.text = "Betriebe";
 		super.menugroup = RouteSchuleMenuGroup.KATALOGE;
 		super.children = [
