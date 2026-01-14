@@ -18,7 +18,7 @@ export class RouteVermerkarten extends RouteAuswahlNode<VermerkartenListeManager
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.vermerkarten",
 			"schule/vermerkarten/:id(\\d+)?", VermerkartenApp, VermerkartenAuswahl, new RouteDataVermerkarten());
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.text = "Vermerkarten";
 		super.menugroup = RouteSchuleMenuGroup.KATALOGE;
 		super.children = [

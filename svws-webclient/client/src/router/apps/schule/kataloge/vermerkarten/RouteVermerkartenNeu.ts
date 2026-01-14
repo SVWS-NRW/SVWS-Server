@@ -15,7 +15,7 @@ export class RouteVermerkartenNeu extends RouteNode<any, RouteVermerkarten> {
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.vermerkarten.neu", "neu", VermerkartenNeu);
 		super.types = new Set([ViewType.HINZUFUEGEN]);
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Vermerkart Neu";
 		super.setCheckpoint = true;
