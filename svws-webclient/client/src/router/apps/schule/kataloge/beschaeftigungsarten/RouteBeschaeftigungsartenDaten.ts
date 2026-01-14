@@ -1,4 +1,4 @@
-import type { BeschaeftigungsartenDatenProps } from "~/components/schule/kataloge/beschaeftigungsarten/daten/SBeschaeftigungsartenDatenProps";
+import type { BeschaeftigungsartenDatenProps } from "~/components/schule/kataloge/beschaeftigungsarten/daten/BeschaeftigungsartenDatenProps";
 import type { RouteLocationNormalized } from "vue-router";
 import type { RouteBeschaeftigungsarten } from "~/router/apps/schule/kataloge/beschaeftigungsarten/RouteBeschaeftigungsarten";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
@@ -6,13 +6,13 @@ import { RouteNode } from "~/router/RouteNode";
 import { api } from "~/router/Api";
 import { routeBeschaeftigungsarten } from "~/router/apps/schule/kataloge/beschaeftigungsarten/RouteBeschaeftigungsarten";
 
-const SBeschaeftigungsartenDaten = () => import("~/components/schule/kataloge/beschaeftigungsarten/daten/SBeschaeftigungsartenDaten.vue");
+const BeschaeftigungsartenDaten = () => import("~/components/schule/kataloge/beschaeftigungsarten/daten/BeschaeftigungsartenDaten.vue");
 
 export class RouteBeschaeftigungsartenDaten extends RouteNode<any, RouteBeschaeftigungsarten> {
 
 	public constructor() {
 		super([Schulform.BK, Schulform.SB, Schulform.WB], [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.beschaeftigungsarten.daten",
-			"daten", SBeschaeftigungsartenDaten);
+			"daten", BeschaeftigungsartenDaten);
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Beschäftigungsart";

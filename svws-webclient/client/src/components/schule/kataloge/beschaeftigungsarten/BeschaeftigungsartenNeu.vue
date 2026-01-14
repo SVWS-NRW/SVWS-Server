@@ -29,8 +29,8 @@
 
 <script setup lang="ts">
 
-	import type { BeschaeftigungsartenNeuProps } from "~/components/schule/kataloge/beschaeftigungsarten/SBeschaeftigungsartenNeuProps";
-	import { BenutzerKompetenz, Beschaeftigungsart, JavaString } from "@core";
+	import type { BeschaeftigungsartenNeuProps } from "~/components/schule/kataloge/beschaeftigungsarten/BeschaeftigungsartenNeuProps";
+	import { BenutzerKompetenz, Beschaeftigungsart } from "@core";
 	import { computed, ref, watch } from "vue";
 	import { isUniqueInList, mandatoryInputIsValid } from "~/util/validation/Validation";
 

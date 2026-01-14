@@ -26,7 +26,7 @@
 
 <script setup lang="ts">
 
-	import type { BeschaeftigungsartenAuswahlProps } from "~/components/schule/kataloge/beschaeftigungsarten/SBeschaeftigungsartenAuswahlProps";
+	import type { BeschaeftigungsartenAuswahlProps } from "~/components/schule/kataloge/beschaeftigungsarten/BeschaeftigungsartenAuswahlProps";
 	import type { DataTableColumn } from "@ui";
 	import type { Beschaeftigungsart } from "@core";
 	import { useRegionSwitch, ViewType } from "@ui";

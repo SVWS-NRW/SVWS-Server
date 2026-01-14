@@ -1,4 +1,4 @@
-import type { BenutzerKompetenz, List, Schulform, ServerMode } from "@core";
+import type { BenutzerKompetenz, List, ServerMode } from "@core";
 import type { BeschaeftigungsartenListeManager } from "@ui";
 
 export interface BeschaeftigungsartenGruppenprozesseProps {

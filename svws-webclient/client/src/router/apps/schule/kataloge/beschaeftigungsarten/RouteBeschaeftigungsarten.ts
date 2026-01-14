@@ -10,14 +10,14 @@ import { routeBeschaeftigungsartenDaten } from "~/router/apps/schule/kataloge/be
 import { routeBeschaeftigungsartenNeu } from "~/router/apps/schule/kataloge/beschaeftigungsarten/RouteBeschaeftigungsartenNeu";
 import { routeBeschaeftigungsartenGruppenprozesse } from "~/router/apps/schule/kataloge/beschaeftigungsarten/RouteBeschaeftigungsartenGruppenprozesse";
 
-const SBeschaeftigungsartenApp = () => import("~/components/schule/kataloge/beschaeftigungsarten/SBeschaeftigungsartenApp.vue");
-const SBeschaeftigungsartenAuswahl = () => import("~/components/schule/kataloge/beschaeftigungsarten/SBeschaeftigungsartenAuswahl.vue");
+const BeschaeftigungsartenApp = () => import("~/components/schule/kataloge/beschaeftigungsarten/BeschaeftigungsartenApp.vue");
+const BeschaeftigungsartenAuswahl = () => import("~/components/schule/kataloge/beschaeftigungsarten/BeschaeftigungsartenAuswahl.vue");
 
 export class RouteBeschaeftigungsarten extends RouteAuswahlNode<BeschaeftigungsartenListeManager, RouteDataBeschaeftigungsarten, RouteApp> {
 
 	public constructor() {
 		super([Schulform.BK, Schulform.SB, Schulform.WB], [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.beschaeftigungsarten",
-			"schule/beschaeftigungsarten/:id(\\d+)?", SBeschaeftigungsartenApp, SBeschaeftigungsartenAuswahl, new RouteDataBeschaeftigungsarten());
+			"schule/beschaeftigungsarten/:id(\\d+)?", BeschaeftigungsartenApp, BeschaeftigungsartenAuswahl, new RouteDataBeschaeftigungsarten());
 		super.mode = ServerMode.DEV;
 		super.text = "Beschäftigungsarten";
 		super.menugroup = RouteSchuleMenuGroup.KATALOGE;

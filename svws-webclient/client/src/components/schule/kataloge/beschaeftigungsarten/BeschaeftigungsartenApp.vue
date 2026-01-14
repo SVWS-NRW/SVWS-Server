@@ -37,7 +37,7 @@
 
 	import { useRegionSwitch, ViewType } from "@ui";
 	import { computed } from "vue";
-	import type { BeschaeftigungsartenAppProps } from "~/components/schule/kataloge/beschaeftigungsarten/SBeschaeftigungsartenAppProps";
+	import type { BeschaeftigungsartenAppProps } from "~/components/schule/kataloge/beschaeftigungsarten/BeschaeftigungsartenAppProps";
 
 	const props = defineProps<BeschaeftigungsartenAppProps>();
 

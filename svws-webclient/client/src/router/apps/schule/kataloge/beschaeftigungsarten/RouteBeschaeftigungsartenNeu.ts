@@ -6,14 +6,14 @@ import { ViewType } from "@ui";
 import { api } from "~/router/Api";
 import type { RouteBeschaeftigungsarten } from "~/router/apps/schule/kataloge/beschaeftigungsarten/RouteBeschaeftigungsarten";
 import { routeBeschaeftigungsarten } from "~/router/apps/schule/kataloge/beschaeftigungsarten/RouteBeschaeftigungsarten";
-import type { BeschaeftigungsartenNeuProps } from "~/components/schule/kataloge/beschaeftigungsarten/SBeschaeftigungsartenNeuProps";
+import type { BeschaeftigungsartenNeuProps } from "~/components/schule/kataloge/beschaeftigungsarten/BeschaeftigungsartenNeuProps";
 
-const SBeschaeftigungsartenNeu = () => import("~/components/schule/kataloge/beschaeftigungsarten/SBeschaeftigungsartenNeu.vue");
+const BeschaeftigungsartenNeu = () => import("~/components/schule/kataloge/beschaeftigungsarten/BeschaeftigungsartenNeu.vue");
 
 export class RouteBeschaeftigungsartenNeu extends RouteNode<any, RouteBeschaeftigungsarten> {
 
 	public constructor() {
-		super([Schulform.BK, Schulform.SB, Schulform.WB], [BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.beschaeftigungsarten.neu", "neu", SBeschaeftigungsartenNeu);
+		super([Schulform.BK, Schulform.SB, Schulform.WB], [BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.beschaeftigungsarten.neu", "neu", BeschaeftigungsartenNeu);
 		super.types = new Set([ViewType.HINZUFUEGEN]);
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);

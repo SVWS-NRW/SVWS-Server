@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 
-	import type { BeschaeftigungsartenDatenProps } from "~/components/schule/kataloge/beschaeftigungsarten/daten/SBeschaeftigungsartenDatenProps";
+	import type { BeschaeftigungsartenDatenProps } from "~/components/schule/kataloge/beschaeftigungsarten/daten/BeschaeftigungsartenDatenProps";
 	import { BenutzerKompetenz } from "@core";
 	import { computed } from "vue";
 
