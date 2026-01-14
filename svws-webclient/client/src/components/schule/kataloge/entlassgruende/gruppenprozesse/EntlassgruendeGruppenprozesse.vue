@@ -3,7 +3,7 @@
 		<div v-if="!hatIrgendwelcheKompetenzen">
 			Für die Nutzung der Gruppenprozesse fehlen Benutzerkompetenzen.
 		</div>
-		<div v-if="ServerMode.DEV.checkServerMode(serverMode)" class="flex flex-col gap-4">
+		<div class="flex flex-col gap-4">
 			<ui-card v-if="hatKompetenzLoeschen" title="Löschen" subtitle="Ausgewählte Entlassgründe werden gelöscht" icon="i-ri-delete-bin-line">
 				<div>
 					<span v-if="preConditionCheck[0]">Alle ausgewählten Entlassgründe sind bereit zum Löschen.</span>

@@ -15,7 +15,7 @@ export class RouteEntlassgruendeNeu extends RouteNode<any, RouteEntlassgruende> 
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.entlassgruende.neu", "neu", EntlassgruendeNeu);
 		super.types = new Set([ViewType.HINZUFUEGEN]);
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Entlassgründe";
 		super.setCheckpoint = true;

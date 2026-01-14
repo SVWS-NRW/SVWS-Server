@@ -18,7 +18,7 @@ export class RouteEntlassgruende extends RouteAuswahlNode<EntlassgruendeListeMan
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.entlassgruende",
 			"schule/entlassgruende/:id(\\d+)?", EntlassgruendeApp, EntlassgruendeAuswahl, new RouteDataEntlassgruende());
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.text = "Entlassgründe";
 		super.menugroup = RouteSchuleMenuGroup.KATALOGE;
 		super.children = [

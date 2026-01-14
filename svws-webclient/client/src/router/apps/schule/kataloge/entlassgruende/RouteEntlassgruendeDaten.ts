@@ -13,7 +13,7 @@ export class RouteEntlassgruendeDaten extends RouteNode<any, RouteEntlassgruende
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.entlassgruende.daten",
 			"daten", EntlassgruendeDaten);
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Entlassgründe";
 	}
