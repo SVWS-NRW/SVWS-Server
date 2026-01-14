@@ -80,7 +80,7 @@ class EmailJobTests {
 		// Bei der Initialisierung des Jobs werden der Status und der Zeitstempel schon gesetzt. Speichere diesen zwischen.
 		final long t1 = job.getTimeLastChanged();
 		// Warte kurz, bevor Änderungen vorgenommen werden.
-		await().pollDelay(Duration.ofMillis(5)).atMost(Duration.ofMillis(6)).untilAsserted(() -> { });
+		await().pollDelay(Duration.ofMillis(100)).atMost(Duration.ofMillis(200)).untilAsserted(() -> { });
 		// Ändere den Status, dabei muss auch der Zeitstempel neu gesetzt werden.
 		job.setStatus(EmailJobStatus.SENDING);
 		final long t2 = job.getTimeLastChanged();
