@@ -47,6 +47,11 @@
 	const isGruppenprozesseOrHinzufuegenView = computed<boolean>(() => (props.activeViewType === ViewType.GRUPPENPROZESSE) || isHinzufuegenView.value);
 	const noFilteredEntries = computed<boolean>(() => props.manager().filtered().size() === 0);
 
+	const columns = [
+		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc" },
+		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 3 },
+	];
+
 	const searchTerm = computed<string>({
 		get: () => props.manager().searchTerm,
 		set: (v: string) => {
@@ -76,10 +81,7 @@
 		set: (v: ReligionEintrag | null) => void props.gotoDefaultView(v?.id ?? null),
 	});
 
-	const columns = [
-		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc" },
-		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 3 },
-	];
+
 
 	function setAuswahl(konfessionen: ReligionEintrag[]): void {
 		props.manager().liste.auswahlClear();

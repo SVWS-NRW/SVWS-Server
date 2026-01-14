@@ -2609,7 +2609,7 @@ public class APISchule {
 	 * @return          die Liste mit dem Katalog der Telefonarten
 	 */
 	@GET
-	@Path("/Telefonarten")
+	@Path("/telefonarten")
 	@Operation(summary = "Gibt eine Übersicht aller Telefonarten im Katalog zurück.",
 			description = "Erstellt eine Liste aller in dem Katalog vorhanden Telefonarten unter Angabe der ID und der Bezeichnung. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
@@ -2622,29 +2622,6 @@ public class APISchule {
 				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
 	}
 
-	/**
-	 * Die OpenAPI-Methode für die Abfrage einer Telefonart.
-	 *
-	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param id        die Datenbank-ID zur Identifikation der Telefonart
-	 * @param request   die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die Daten zur Telefonart
-	 */
-	@GET
-	@Path("/telefonart/{id : \\d+}")
-	@Operation(summary = "Liefert zu der ID der Telefonart die zugehörigen Daten.",
-			description = "Liest die Daten der Telefonart zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogdaten besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die Daten der Telefonart",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Telefonart.class)))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalogdaten anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Keine Telefonart mit der angegebenen ID gefunden")
-	public Response getTelefonart(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataTelefonarten(conn).getByIdAsResponse(id),
-				request, ServerMode.DEV,
-				BenutzerKompetenz.KEINE);
-	}
 
 	/**
 	 * Die OpenAPI-Methode für das Erstellen einer neuen Telefonart.
@@ -2656,7 +2633,7 @@ public class APISchule {
 	 * @return die HTTP-Antwort mit der neuen Telefonart
 	 */
 	@POST
-	@Path("/telefonart/new")
+	@Path("/telefonarten/create")
 	@Operation(summary = "Erstellt eine neue Telefonart und gibt sie zurück.",
 			description = "Erstellt eine neue Telefonart und gibt sie zurück."
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Telefonart besitzt.")
@@ -2685,7 +2662,7 @@ public class APISchule {
 	 * @return das Ergebnis der Patch-Operation
 	 */
 	@PATCH
-	@Path("/Telefonart/{id : \\d+}")
+	@Path("/telefonarten/{id : \\d+}")
 	@Operation(summary = "Passt die zu der ID der Telefonart zugehörigen Stammdaten an.",
 			description = "Passt die Telefonart-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern der Daten der Telefonart besitzt.")

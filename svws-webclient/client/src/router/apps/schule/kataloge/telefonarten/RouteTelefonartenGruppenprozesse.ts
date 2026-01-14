@@ -27,9 +27,12 @@ export class RouteTelefonartenGruppenprozesse extends RouteNode<any, RouteTelefo
 
 	public getProps(to: RouteLocationNormalized): TelefonartenGruppenprozesseProps {
 		return {
+			serverMode: api.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			manager: () => routeTelefonarten.data.manager,
 			delete: routeTelefonarten.data.delete,
+			deleteCheck: routeTelefonarten.data.deleteCheck,
+			gotoDefaultView: routeTelefonarten.data.gotoDefaultView,
 		};
 	}
 }

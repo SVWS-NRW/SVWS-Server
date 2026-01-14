@@ -68,10 +68,6 @@ export class KonfessionenListeManager extends AuswahlManager<number, ReligionEin
 		return KonfessionenListeManager.comparator.compare(a, b);
 	}
 
-	get idsOfReferencedBetriebe(): HashSet<number> {
-		return this._idsOfReferencedKonfessionen;
-	}
-
 	protected onMehrfachauswahlChanged(): void {
 		this._idsOfReferencedKonfessionen.clear();
 		for (const b of this.liste.auswahl()) {

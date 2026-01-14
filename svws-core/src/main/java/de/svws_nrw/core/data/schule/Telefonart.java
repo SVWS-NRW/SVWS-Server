@@ -23,13 +23,13 @@ public class Telefonart {
 
 	/** Gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an. */
 	@Schema(description = "Gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an", example = "1")
-	public int sortierung = 1;
+	public int sortierung;
 
 	/** Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. */
 	@Schema(description = "Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht", example = "true")
-	public boolean istSichtbar = true;
+	public boolean istSichtbar;
 
-	/** Gibt an wie viele Telefonnummern der entsprechenden Telefonart zugeordnet sind. */
-	@Schema(description = "Gibt an wie viele Telefonnummern der entsprechenden Telefonart zugeordnet sind", example = "3")
-	public int anzahlTelefonnummern;
+	/** Gibt an, ob die Telefonart in anderen Datenbanktabellen referenziert ist oder nicht. */
+	@Schema(description = "Gibt an, ob die Telefonart in anderen Datenbanktabellen referenziert ist oder nicht.", example = "true", accessMode = Schema.AccessMode.READ_ONLY)
+	public boolean referenziertInAnderenTabellen;
 }

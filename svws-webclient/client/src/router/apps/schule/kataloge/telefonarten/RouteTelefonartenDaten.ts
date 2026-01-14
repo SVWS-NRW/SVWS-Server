@@ -21,7 +21,7 @@ export class RouteTelefonartenDaten extends RouteNode<any, RouteTelefonarten> {
 	public getProps(to: RouteLocationNormalized): TelefonartenDatenProps {
 		return {
 			patch: routeTelefonarten.data.patch,
-			telefonArtListeManager: () => routeTelefonarten.data.manager,
+			manager: () => routeTelefonarten.data.manager,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}

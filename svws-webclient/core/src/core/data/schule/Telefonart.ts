@@ -16,17 +16,17 @@ export class Telefonart extends JavaObject {
 	/**
 	 * Gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an.
 	 */
-	public sortierung: number = 1;
+	public sortierung: number = 0;
 
 	/**
 	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.
 	 */
-	public istSichtbar: boolean = true;
+	public istSichtbar: boolean = false;
 
 	/**
-	 * Gibt an wie viele Telefonnummern der entsprechenden Telefonart zugeordnet sind.
+	 * Gibt an, ob die Telefonart in anderen Datenbanktabellen referenziert ist oder nicht.
 	 */
-	public anzahlTelefonnummern: number = 0;
+	public referenziertInAnderenTabellen: boolean = false;
 
 
 	public constructor() {
@@ -58,9 +58,9 @@ export class Telefonart extends JavaObject {
 		if (obj.istSichtbar === undefined)
 			throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
-		if (obj.anzahlTelefonnummern === undefined)
-			throw new Error('invalid json format, missing attribute anzahlTelefonnummern');
-		result.anzahlTelefonnummern = obj.anzahlTelefonnummern;
+		if (obj.referenziertInAnderenTabellen === undefined)
+			throw new Error('invalid json format, missing attribute referenziertInAnderenTabellen');
+		result.referenziertInAnderenTabellen = obj.referenziertInAnderenTabellen;
 		return result;
 	}
 
@@ -70,7 +70,7 @@ export class Telefonart extends JavaObject {
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
-		result += '"anzahlTelefonnummern" : ' + obj.anzahlTelefonnummern.toString() + ',';
+		result += '"referenziertInAnderenTabellen" : ' + obj.referenziertInAnderenTabellen.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -90,8 +90,8 @@ export class Telefonart extends JavaObject {
 		if (obj.istSichtbar !== undefined) {
 			result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		}
-		if (obj.anzahlTelefonnummern !== undefined) {
-			result += '"anzahlTelefonnummern" : ' + obj.anzahlTelefonnummern.toString() + ',';
+		if (obj.referenziertInAnderenTabellen !== undefined) {
+			result += '"referenziertInAnderenTabellen" : ' + obj.referenziertInAnderenTabellen.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

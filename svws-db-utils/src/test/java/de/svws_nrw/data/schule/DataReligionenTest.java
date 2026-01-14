@@ -134,7 +134,7 @@ class DataReligionenTest {
 		final TypedQuery<Long> queryMock = mock(TypedQuery.class);
 		when(queryMock.setParameter(eq("ids"), any())).thenReturn(queryMock);
 		when(queryMock.getResultList()).thenReturn(List.of(1L));
-		when(conn.query(anyString(), eq(Long.class))).thenReturn((queryMock));
+		when(conn.query(anyString(), eq(Long.class))).thenReturn(queryMock);
 
 		assertThat(this.data.getAll())
 				.hasSize(2)

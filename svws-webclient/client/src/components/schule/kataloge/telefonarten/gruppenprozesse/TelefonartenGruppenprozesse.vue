@@ -1,27 +1,51 @@
 <template>
 	<div class="page page-grid-cards">
-		<svws-ui-input-wrapper>
+		<div v-if="hatKeineErforderlicheKompetenz">
+			Für die Nutzung der Gruppenprozesse fehlen die Benutzerkompetenzen.
+		</div>
+		<div v-if="ServerMode.DEV.checkServerMode(serverMode)" class="flex flex-col gap-4">
 			<ui-card v-if="hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen" subtitle="Ausgewählte Telefonarten werden gelöscht.">
 				<div>
-					<span v-if="nonSelected">Keine Telefonarten ausgewählt.</span>
-					<span v-else-if="allDeletable">Alle ausgewählten Telefonarten sind bereit zum Löschen.</span>
-					<span v-else-if="someDeletable">Einige Telefonarten sind noch Personen zugeordnet. Die Übrigen können gelöscht werden.</span>
-					<div v-if="nonDeletableLogs.size() !== 0">
-						<div v-for="log in nonDeletableLogs" :key="log" class="text-ui-danger"> {{ log }} </div>
-					</div>
+					<span v-if="selectedAreNotReferenced">Alle ausgewählten Telefonarten sind bereit zum Löschen.</span>
+					<template v-else v-for="message in deleteCheckErrors" :key="message">
+						<span class="text-ui-danger whitespace-pre-line"> {{ message }} <br> </span>
+					</template>
 				</div>
 				<template #buttonFooterLeft>
-					<svws-ui-button title="Löschen" :disabled="(!allDeletable && !someDeletable) || props.manager().liste.auswahlSize() === 0" @click="entferneTelefonArten">
+					<svws-ui-button title="Löschen" class="mt-4"
+						@click="handleDeleteClick"
+						:disabled="!props.manager().liste.auswahlExists()" :is-loading>
+						<svws-ui-spinner v-if="isLoading" spinning />
+						<span v-else class="icon i-ri-play-line" />
 						Löschen
 					</svws-ui-button>
 				</template>
 			</ui-card>
 			<log-box :logs :status>
 				<template #button>
-					<svws-ui-button v-if="status !== undefined" type="transparent" @click="clearLog" title="Log verwerfen">Log verwerfen</svws-ui-button>
+					<svws-ui-button v-if="status !== undefined" type="transparent" @click="clearLog">Log verwerfen</svws-ui-button>
 				</template>
 			</log-box>
-		</svws-ui-input-wrapper>
+			<svws-ui-modal v-model:show="warningModalIsShown"
+				:auto-close="false" :close-in-title="false"
+				size="small" type="danger">
+				<template #modalTitle>
+					<slot name="title">Daten gehen verloren</slot>
+				</template>
+				<template #modalDescription>
+					<div class="text-left">
+						<slot name="description">
+							Durch das Löschen der Telefonarten werden auch alle Referenzen auf diese Einträge endgültig gelöscht.<br>
+							Wollen Sie das Löschen wirklich durchführen?
+						</slot>"
+					</div>
+				</template>
+				<template #modalActions>
+					<svws-ui-button type="secondary" @click="cancel">Nein</svws-ui-button>
+					<svws-ui-button type="danger" @click="deleteSelectedTelefonarten">Ja</svws-ui-button>
+				</template>
+			</svws-ui-modal>
+		</div>
 	</div>
 </template>
 
@@ -30,38 +54,52 @@
 	import type { TelefonartenGruppenprozesseProps } from "~/components/schule/kataloge/telefonarten/gruppenprozesse/TelefonartenGruppenprozesseProps";
 	import type { List } from "@core";
 	import { ref, computed } from "vue";
-	import { ArrayList, BenutzerKompetenz } from "@core";
+	import { BenutzerKompetenz, ServerMode } from "@core";
 
 	const props = defineProps<TelefonartenGruppenprozesseProps>();
-	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
+	const isLoading = ref<boolean>(false);
 	const logs = ref<List<string | null> | undefined>();
 	const status = ref<boolean | undefined>();
-	const nonSelected = computed(() => props.manager().liste.auswahlSize() === 0);
-	const allDeletable = computed(() => props.manager().getIdsVerwendeteTelefonarten().isEmpty());
-	const someDeletable = computed(() =>
-		(!allDeletable.value) && (props.manager().getIdsVerwendeteTelefonarten().size() !== props.manager().liste.auswahlSize()));
+	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
+	const hatKeineErforderlicheKompetenz = computed(() => !hatKompetenzLoeschen.value);
+	const deleteCheckErrors = computed<List<string>>(() => props.deleteCheck()[1]);
+	const selectedAreNotReferenced = computed<boolean>(() => props.deleteCheck()[0]);
+	const warningModalIsShown = ref<boolean>(false);
 
-	const nonDeletableLogs = computed(() => {
-		const logs = new ArrayList<string>();
-		if (allDeletable.value) {
-			return logs;
-		}
+	function openWarningModal() {
+		warningModalIsShown.value = true;
+	}
 
-		for (const idTelefonart of props.manager().getIdsVerwendeteTelefonarten()) {
-			logs.add(`Die Telefonart "${props.manager().liste.get(idTelefonart)?.bezeichnung ?? '???'}" kann nicht gelöscht werden, da sie noch Personen zugeordnet ist.`);
+	function closeWarningModal() {
+		warningModalIsShown.value = false;
+	}
+
+	function handleDeleteClick() {
+		if (selectedAreNotReferenced.value) {
+			void deleteSelectedTelefonarten();
+		} else {
+			openWarningModal();
 		}
-		return logs;
-	});
+	}
+
+	async function deleteSelectedTelefonarten() {
+		isLoading.value = true;
+		const [delStatus, logMessages] = await props.delete();
+		logs.value = logMessages;
+		status.value = delStatus;
+		isLoading.value = false;
+		closeWarningModal();
+	}
 
 	function clearLog() {
+		isLoading.value = false;
 		logs.value = undefined;
 		status.value = undefined;
 	}
 
-	async function entferneTelefonArten() {
-		const [delStatus, logMessages] = await props.delete();
-		logs.value = logMessages;
-		status.value = delStatus;
+	async function cancel(): Promise<void> {
+		closeWarningModal();
+		await props.gotoDefaultView(null);
 	}
 
 </script>

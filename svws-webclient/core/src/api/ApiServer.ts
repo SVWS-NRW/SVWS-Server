@@ -16814,34 +16814,34 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getTelefonart für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/telefonart/{id : \d+}
+	 * Implementierung der GET-Methode getTelefonarten für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/telefonarten
 	 *
-	 * Liest die Daten der Telefonart zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogdaten besitzt.
+	 * Erstellt eine Liste aller in dem Katalog vorhanden Telefonarten unter Angabe der ID und der Bezeichnung. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Daten der Telefonart
+	 *   Code 200: Eine Liste von Katalog-Einträgen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: Telefonart
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalogdaten anzusehen.
-	 *   Code 404: Keine Telefonart mit der angegebenen ID gefunden
+	 *     - Rückgabe-Typ: List<Telefonart>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
 	 *
-	 * @returns Die Daten der Telefonart
+	 * @returns Eine Liste von Katalog-Einträgen
 	 */
-	public async getTelefonart(schema : string, id : number) : Promise<Telefonart> {
-		const path = "/db/{schema}/schule/telefonart/{id : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+	public async getTelefonarten(schema : string) : Promise<List<Telefonart>> {
+		const path = "/db/{schema}/schule/telefonarten"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
-		const text = result;
-		return Telefonart.transpilerFromJSON(text);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<Telefonart>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Telefonart.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 
 	/**
-	 * Implementierung der PATCH-Methode patchTelefonart für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/Telefonart/{id : \d+}
+	 * Implementierung der PATCH-Methode patchTelefonart für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/telefonarten/{id : \d+}
 	 *
 	 * Passt die Telefonart-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern der Daten der Telefonart besitzt.
 	 *
@@ -16858,7 +16858,7 @@ export class ApiServer extends BaseApi {
 	 * @param {number} id - der Pfad-Parameter id
 	 */
 	public async patchTelefonart(data : Partial<Telefonart>, schema : string, id : number) : Promise<void> {
-		const path = "/db/{schema}/schule/Telefonart/{id : \\d+}"
+		const path = "/db/{schema}/schule/telefonarten/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = Telefonart.transpilerToJSONPatch(data);
@@ -16867,7 +16867,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode addTelefonart für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/telefonart/new
+	 * Implementierung der POST-Methode addTelefonart für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/telefonarten/create
 	 *
 	 * Erstellt eine neue Telefonart und gibt sie zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Telefonart besitzt.
 	 *
@@ -16885,39 +16885,12 @@ export class ApiServer extends BaseApi {
 	 * @returns Telefonart wurde erfolgreich angelegt.
 	 */
 	public async addTelefonart(data : Partial<Telefonart>, schema : string) : Promise<Telefonart> {
-		const path = "/db/{schema}/schule/telefonart/new"
+		const path = "/db/{schema}/schule/telefonarten/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = Telefonart.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return Telefonart.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getTelefonarten für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/Telefonarten
-	 *
-	 * Erstellt eine Liste aller in dem Katalog vorhanden Telefonarten unter Angabe der ID und der Bezeichnung. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Eine Liste von Katalog-Einträgen
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<Telefonart>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
-	 *   Code 404: Keine Katalog-Einträge gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Eine Liste von Katalog-Einträgen
-	 */
-	public async getTelefonarten(schema : string) : Promise<List<Telefonart>> {
-		const path = "/db/{schema}/schule/Telefonarten"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<Telefonart>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Telefonart.transpilerFromJSON(text)); });
-		return ret;
 	}
 
 

@@ -1,17 +1,16 @@
 package de.svws_nrw.data.schule;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
-import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.schule.Telefonart;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.erzieher.DTOTelefonArt;
 import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.core.Response;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -26,8 +25,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatException;
 import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @DisplayName("Diese Testklasse testet die Klasse DataKatalogTelefonArten")
@@ -57,7 +61,7 @@ class DataTelefonartenTest {
 
 		assertThat(dto)
 				.hasFieldOrPropertyWithValue("ID", id)
-				.hasFieldOrPropertyWithValue("Bezeichnung", "")
+				.hasFieldOrPropertyWithValue("Bezeichnung", "Mobilnummer")
 				.hasFieldOrPropertyWithValue("Sichtbar", true)
 				.hasFieldOrPropertyWithValue("Sortierung", 32000);
 	}
@@ -72,64 +76,89 @@ class DataTelefonartenTest {
 				.hasFieldOrPropertyWithValue("id", 1L)
 				.hasFieldOrPropertyWithValue("bezeichnung", "Mobilnummer")
 				.hasFieldOrPropertyWithValue("istSichtbar", true)
-				.hasFieldOrPropertyWithValue("sortierung", 32000)
-				.hasFieldOrPropertyWithValue("anzahlTelefonnummern", 0);
+				.hasFieldOrPropertyWithValue("sortierung", 32000);
 	}
 
 	@Test
 	@DisplayName("getAll | Erfolg")
-	void getAllTest() throws ApiOperationException {
+	void getAllTest() {
 		final DTOTelefonArt dto1 = getDTOTelefonArt();
 		final DTOTelefonArt dto2 = getDTOTelefonArt();
 		dto2.ID = 2L;
 		dto2.Bezeichnung = "Testbezeichnung2";
 
-		final List<DTOTelefonArt> dtoList = new ArrayList<>();
-		dtoList.add(dto1);
-		dtoList.add(dto2);
+		when(conn.queryAll(DTOTelefonArt.class)).thenReturn(List.of(dto1, dto2));
 
-		when(conn.queryAll(DTOTelefonArt.class)).thenReturn(dtoList);
+		final TypedQuery<Long> queryMock = mock(TypedQuery.class);
+		when(queryMock.setParameter(eq("ids"), any())).thenReturn(queryMock);
+		when(queryMock.getResultList()).thenReturn(List.of(1L));
+		when(conn.query(anyString(), eq(Long.class))).thenReturn(queryMock);
 
-		final List<Telefonart> result = data.getAll();
-		final Telefonart expectedDto1 = result.stream().filter(lFirst -> lFirst.id == dto1.ID).findFirst().orElse(null);
-		final Telefonart expectedDto2 = result.stream().filter(lSecond -> lSecond.id == dto2.ID).findFirst().orElse(null);
-
-		assertThat(expectedDto1)
-				.isNotNull()
-				.hasFieldOrPropertyWithValue("id", dto1.ID)
-				.hasFieldOrPropertyWithValue("bezeichnung", dto1.Bezeichnung)
-				.hasFieldOrPropertyWithValue("istSichtbar", dto1.Sichtbar)
-				.hasFieldOrPropertyWithValue("sortierung", dto1.Sortierung)
-				.hasFieldOrPropertyWithValue("anzahlTelefonnummern", 0);
-
-		assertThat(expectedDto2)
-				.isNotNull()
-				.hasFieldOrPropertyWithValue("id", dto2.ID)
-				.hasFieldOrPropertyWithValue("bezeichnung", dto2.Bezeichnung)
-				.hasFieldOrPropertyWithValue("istSichtbar", dto2.Sichtbar)
-				.hasFieldOrPropertyWithValue("sortierung", dto2.Sortierung)
-				.hasFieldOrPropertyWithValue("anzahlTelefonnummern", 0);
+		assertThat(this.data.getAll())
+				.hasSize(2)
+				.satisfiesExactly(
+						t1 -> assertThat(t1)
+								.isInstanceOf(Telefonart.class)
+								.hasFieldOrPropertyWithValue("id", dto1.ID)
+								.hasFieldOrPropertyWithValue("bezeichnung", dto1.Bezeichnung)
+								.hasFieldOrPropertyWithValue("istSichtbar", dto1.Sichtbar)
+								.hasFieldOrPropertyWithValue("sortierung", dto1.Sortierung),
+						t2 -> assertThat(t2)
+								.isInstanceOf(Telefonart.class)
+								.hasFieldOrPropertyWithValue("id", dto2.ID)
+								.hasFieldOrPropertyWithValue("bezeichnung", dto2.Bezeichnung)
+								.hasFieldOrPropertyWithValue("istSichtbar", dto2.Sichtbar)
+								.hasFieldOrPropertyWithValue("sortierung", dto2.Sortierung)
+				);
 	}
 
 	@Test
-	@DisplayName("getById | TelefonArt null")
+	@DisplayName("getAll | referenced in other table")
+	void getAllReferencedInOtherTables() {
+		final DTOTelefonArt dto1 = getDTOTelefonArt();
+		final DTOTelefonArt dto2 = getDTOTelefonArt();
+		dto2.ID = 2L;
+
+		when(this.conn.queryAll(DTOTelefonArt.class)).thenReturn(List.of(dto1, dto2));
+
+		final TypedQuery<Long> queryMock = mock(TypedQuery.class);
+		when(queryMock.setParameter(eq("ids"), any())).thenReturn(queryMock);
+		when(queryMock.getResultList()).thenReturn(List.of(1L));
+		when(conn.query(anyString(), eq(Long.class))).thenReturn(queryMock);
+
+		assertThat(this.data.getAll())
+				.hasSize(2)
+				.satisfiesExactly(
+						t1 -> assertThat(t1)
+								.isInstanceOf(Telefonart.class)
+								.hasFieldOrPropertyWithValue("id", 1L)
+								.hasFieldOrPropertyWithValue("referenziertInAnderenTabellen", true),
+						t2 -> assertThat(t2)
+								.isInstanceOf(Telefonart.class)
+								.hasFieldOrPropertyWithValue("id", 2L)
+								.hasFieldOrPropertyWithValue("referenziertInAnderenTabellen", false)
+				);
+	}
+
+	@Test
+	@DisplayName("getById | TelefonArt mit ID existiert nicht.")
 	void getByIdTest_notFound() {
 		when(conn.queryByKey(DTOTelefonArt.class, 1L)).thenReturn(null);
-		final var throwable = catchThrowable(() -> data.getById(1L));
 
-		assertThat(throwable)
+		assertThatException()
+				.isThrownBy(() -> this.data.getById(1L))
 				.isInstanceOf(ApiOperationException.class)
-				.hasMessageContaining("Die Telefonart mit der ID 1 wurde nicht gefunden.");
+				.withMessage("Die Telefonart mit der ID 1 wurde nicht gefunden.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.NOT_FOUND);
 	}
 
 	@Test
-	@DisplayName("getById | id null")
+	@DisplayName("getById | ID darf nicht null sein.")
 	void getByIdTest_idNull() {
-		final var throwable = catchThrowable(() -> data.getById(null));
-
-		assertThat(throwable)
+		assertThatException()
+				.isThrownBy(() -> this.data.getById(null))
 				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Eine Anfrage zu einer Telefonart mit der ID null ist unzulässig.")
+				.withMessage("Eine Anfrage zu einer Telefonart mit der ID null ist unzulässig.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
@@ -137,6 +166,7 @@ class DataTelefonartenTest {
 	@DisplayName("getById")
 	void getByIdTest() throws ApiOperationException {
 		final DTOTelefonArt dto = getDTOTelefonArt();
+
 		when(conn.queryByKey(DTOTelefonArt.class, 1L)).thenReturn(dto);
 
 		assertThat(data.getById(dto.ID))
@@ -144,9 +174,7 @@ class DataTelefonartenTest {
 				.hasFieldOrPropertyWithValue("id", 1L)
 				.hasFieldOrPropertyWithValue("bezeichnung", "Mobilnummer")
 				.hasFieldOrPropertyWithValue("istSichtbar", true)
-				.hasFieldOrPropertyWithValue("sortierung", 32000)
-				.hasFieldOrPropertyWithValue("anzahlTelefonnummern", 0);
-
+				.hasFieldOrPropertyWithValue("sortierung", 32000);
 	}
 
 	private static Stream<Arguments> provideMappingAttributes() {
@@ -217,26 +245,6 @@ class DataTelefonartenTest {
 		this.data.mapAttribute(newDto, "bezeichnung", "test", null);
 
 		assertThat(newDto.Bezeichnung).isEqualTo("test");
-	}
-
-	@Test
-	@DisplayName("checkBeforeDeletionWithSimpleOperationResponse")
-	void checkBeforeDeletionWithSimpleOperationResponseTest() {
-		final var response1 = new SimpleOperationResponse();
-		response1.success = true;
-		final var response2 = new SimpleOperationResponse();
-		response2.success = true;
-		when(this.conn.queryList(
-				"SELECT t.TelefonArt_ID, COUNT(t) FROM DTOSchuelerTelefon t WHERE t.TelefonArt_ID IN ?1 GROUP BY t.TelefonArt_ID", Object[].class, List.of(1L, 2L)
-				)).thenReturn(List.of(new Object[]{1L, 2L}, new Object[]{2L, 0L}));
-		this.data.checkBeforeDeletionWithSimpleOperationResponse(
-				List.of(new DTOTelefonArt(1L, "abc"), new DTOTelefonArt(2L, "123")),
-				Map.of(1L, response1, 2L, response2)
-		);
-
-		assertThat(response1.success).isFalse();
-		assertThat(response1.log).anyMatch(msg -> msg.contains("abc"));
-		assertThat(response2.success).isTrue();
 	}
 
 	private DTOTelefonArt getDTOTelefonArt() {
