@@ -12,7 +12,7 @@ export class RouteEinwilligungsartenDaten extends RouteNode<any, RouteEinwilligu
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN],
 			"schule.einwilligungsarten.daten", "daten", EinwilligungsartenDaten);
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Einwilligungsart";
 	}

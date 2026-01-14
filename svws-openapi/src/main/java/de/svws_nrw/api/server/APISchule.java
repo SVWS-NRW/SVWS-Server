@@ -914,7 +914,8 @@ public class APISchule {
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
 	public Response getEinwilligungsarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataEinwilligungsarten(conn).getAllAsResponse(),
-				request, ServerMode.DEV, BenutzerKompetenz.KEINE);
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.KEINE);
 	}
 
 	/**
@@ -939,7 +940,7 @@ public class APISchule {
 	public Response getEinwilligungsart(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataEinwilligungsarten(conn).getByIdAsResponse(id),
-				request, ServerMode.DEV,
+				request, ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);
 	}
 
@@ -967,7 +968,7 @@ public class APISchule {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Einwilligungsart.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataEinwilligungsarten(conn).addAsResponse(is),
-				request, ServerMode.DEV,
+				request, ServerMode.STABLE,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
 
@@ -1000,7 +1001,7 @@ public class APISchule {
 							schema = @Schema(implementation = Einwilligungsart.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataEinwilligungsarten(conn).patchAsResponse(id, is),
-				request, ServerMode.DEV,
+				request, ServerMode.STABLE,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
 
@@ -1028,7 +1029,7 @@ public class APISchule {
 	public Response deleteEinwilligungsart(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataEinwilligungsarten(conn).deleteAsResponse(id),
-				request, ServerMode.DEV,
+				request, ServerMode.STABLE,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
 
@@ -1059,7 +1060,7 @@ public class APISchule {
 							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataEinwilligungsarten(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
-				request, ServerMode.DEV,
+				request, ServerMode.STABLE,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
 

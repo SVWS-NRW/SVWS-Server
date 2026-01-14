@@ -15,7 +15,7 @@ export class RouteEinwilligungsartenNeu extends RouteNode<any, RouteEinwilligung
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.einwilligungsarten.neu", "neu", EinwilligungsartenNeu);
 		super.types = new Set([ViewType.HINZUFUEGEN]);
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Einwilligungsart Neu";
 		super.setCheckpoint = true;

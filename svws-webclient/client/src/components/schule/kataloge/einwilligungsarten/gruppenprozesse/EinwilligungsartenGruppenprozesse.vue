@@ -3,7 +3,7 @@
 		<div v-if="!hatIrgendwelcheKompetenzen">
 			Für die Nutzung der Gruppenprozesse fehlen Benutzerkompetenzen.
 		</div>
-		<div v-if="ServerMode.DEV.checkServerMode(serverMode)" class="flex flex-col">
+		<div class="flex flex-col">
 			<ui-card v-if="hatKompetenzLoeschen" title="Löschen" subtitle="Ausgewählte Einwilligungsarten werden gelöscht." icon="i-ri-delete-bin-line">
 				<div>
 					<span v-if="preConditionCheck[0]">Alle ausgewählten Einwilligungsarten sind bereit zum Löschen.</span>

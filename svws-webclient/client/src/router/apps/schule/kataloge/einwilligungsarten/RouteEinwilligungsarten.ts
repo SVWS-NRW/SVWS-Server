@@ -18,7 +18,7 @@ export class RouteEinwilligungsarten extends RouteAuswahlNode<Einwilligungsarten
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.einwilligungsarten",
 			"schule/einwilligungsarten/:id(\\d+)?", EinwilligungsartenApp, EinwilligungsartenAuswahl, new RouteDataEinwilligungsarten());
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.text = "Einwilligungsarten";
 		super.menugroup = RouteSchuleMenuGroup.KATALOGE;
 		super.children = [
