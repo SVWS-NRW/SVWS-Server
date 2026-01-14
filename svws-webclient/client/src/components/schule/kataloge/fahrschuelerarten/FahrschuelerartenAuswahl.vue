@@ -22,7 +22,7 @@
 						</svws-ui-checkbox>
 					</template>
 					<template #actions v-if="hatKompetenzAendern">
-						<svws-ui-tooltip v-if="ServerMode.DEV.checkServerMode(serverMode)" position="bottom">
+						<svws-ui-tooltip position="bottom">
 							<svws-ui-button type="icon"
 								@click="gotoHinzufuegenView(true)"
 								:has-focus="noFilteredEntries" :disabled="isHinzufuegenView">

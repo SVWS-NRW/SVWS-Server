@@ -18,7 +18,7 @@ export class RouteFahrschuelerarten extends RouteAuswahlNode<FahrschuelerartenLi
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.fahrschuelerarten",
 			"schule/fahrschuelerarten/:id(\\d+)?", FahrschuelerartenApp, FahrschuelerartenAuswahl, new RouteDataFahrschuelerarten());
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.text = "Fahrschülerarten";
 		super.menugroup = RouteSchuleMenuGroup.KATALOGE;
 		super.children = [

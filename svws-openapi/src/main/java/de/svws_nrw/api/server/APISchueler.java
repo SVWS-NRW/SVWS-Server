@@ -2023,7 +2023,7 @@ public class APISchueler {
 	 */
 	@GET
 	@GZIP
-	@Path("fahrschuelerarten")
+	@Path("/fahrschuelerarten")
 	@Operation(summary = "Gibt den Katalog der Fahrschülerarten zurück.",
 			description = "Erstellt eine Liste aller in dem Katalog vorhanden Fahrschülerarten unter Angabe der ID, eines Kürzels und der Bezeichnung. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
@@ -2033,8 +2033,7 @@ public class APISchueler {
 	@ApiResponse(responseCode = "404", description = "Keine Fahrschülerart-Katalog-Einträge gefunden")
 	public Response getFahrschuelerarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataFahrschuelerarten(conn).getAllAsResponse(),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KEINE);
+				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
 	}
 
 
@@ -2091,8 +2090,7 @@ public class APISchueler {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Fahrschuelerart.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataFahrschuelerarten(conn).patchAsResponse(id, is),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
 
 	/**
@@ -2116,8 +2114,9 @@ public class APISchueler {
 	public Response deleteFahrschuelerarten(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die IDs der zu löschenden Fahrschülerarten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataFahrschuelerarten(conn).deleteMultipleAsSimpleResponseList(
-				JSONMapper.toListOfLong(is)), request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> new DataFahrschuelerarten(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
+				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
 	/**
 	 * Die OpenAPI-Methode für die Abfrage der Förderempfehlungen eines Schüler-Lernabschnitts.
