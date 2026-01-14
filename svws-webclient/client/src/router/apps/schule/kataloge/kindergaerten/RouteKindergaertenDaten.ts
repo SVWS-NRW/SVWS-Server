@@ -13,7 +13,7 @@ export class RouteKindergaertenDaten extends RouteNode<any, RouteKindergaerten> 
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.kindergaerten.daten",
 			"daten", KindergaertenDaten);
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Kindergaerten";
 	}

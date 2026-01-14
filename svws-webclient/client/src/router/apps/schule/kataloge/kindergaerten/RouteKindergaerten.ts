@@ -20,7 +20,7 @@ export class RouteKindergaerten extends RouteAuswahlNode<KindergaertenListeManag
 		super([Schulform.G, Schulform.PS, Schulform.S, Schulform.V, Schulform.FW, Schulform.WF],
 			[BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.kindergaerten",
 			"schule/kindergaerten/:id(\\d+)?", KindergartenApp, KindergaertenAuswahl, new RouteDataKindergaerten());
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.text = "Kindergärten";
 		super.menugroup = RouteSchuleMenuGroup.KATALOGE;
 		super.children = [

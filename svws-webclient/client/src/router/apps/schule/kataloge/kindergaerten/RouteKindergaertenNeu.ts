@@ -15,7 +15,7 @@ export class RouteKindergaertenNeu extends RouteNode<any, RouteKindergaerten> {
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.kindergaerten.neu", "neu", KindergaertenNeu);
 		super.types = new Set([ViewType.HINZUFUEGEN]);
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Kindergaerten";
 		super.setCheckpoint = true;

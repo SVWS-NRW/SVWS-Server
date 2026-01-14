@@ -3,7 +3,7 @@
 		<div v-if="hatkeineErforderlicheKompetenz">
 			Für die Nutzung der Gruppenprozesse fehlen Benutzerkompetenzen.
 		</div>
-		<div v-if="ServerMode.DEV.checkServerMode(serverMode)" class="flex flex-col gap-4">
+		<div class="flex flex-col gap-4">
 			<ui-card v-if="hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen" subtitle="Ausgewählte Kindergärten werden gelöscht">
 				<div>
 					<span v-if="selectedAreNotReferenced">Alle ausgewählten Kindergärten sind bereit zum Löschen.</span>
