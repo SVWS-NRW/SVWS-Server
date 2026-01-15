@@ -173,11 +173,14 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 			this._mapKursIstSichtbar.put(k.istSichtbar, k.id, k);
 			for (const idJahrgang of k.idJahrgaenge) {
 				this._mapKursInJahrgang.put(idJahrgang, k.id, k);
-				const j: JahrgangsDaten | null = this.jahrgaenge.getOrException(idJahrgang);
-				if (j.kuerzelSchulgliederung !== null) {
-					const gliederung: Schulgliederung | null = this.schulgliederungen.get(j.kuerzelSchulgliederung);
-					if (gliederung !== null) {
-						this._mapKursInSchulgliederung.put(j.kuerzelSchulgliederung, k.id, k);
+				const j = this.jahrgaenge.get(idJahrgang);
+				// einige Schulen haben ungültige Jahrgänge gespeichert, diese müssen herausgefiltert werden
+				if (j !== null) {
+					if (j.kuerzelSchulgliederung !== null) {
+						const gliederung = this.schulgliederungen.get(j.kuerzelSchulgliederung);
+						if (gliederung !== null) {
+							this._mapKursInSchulgliederung.put(j.kuerzelSchulgliederung, k.id, k);
+						}
 					}
 				}
 			}
@@ -338,7 +341,8 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 		if (this.jahrgaenge.auswahlExists()) {
 			let hatEinenJahrgang: boolean = false;
 			for (const idJahrgang of eintrag.idJahrgaenge) {
-				if (this.jahrgaenge.auswahlHasKey(idJahrgang)) {
+				// prüfen, ob ein ungültiger Jahrgang in der Liste ist
+				if (this.jahrgaenge.has(idJahrgang) && this.jahrgaenge.auswahlHasKey(idJahrgang)) {
 					hatEinenJahrgang = true;
 				}
 			}
