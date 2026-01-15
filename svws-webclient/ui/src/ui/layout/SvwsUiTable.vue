@@ -303,7 +303,6 @@
 		"update:hiddenColumns": [keys: Set<string>];
 	}>();
 
-	// const attrs = useAttrs();
 	const itemRefs = ref(new Map());
 	const selectionRefs = ref(new Map());
 
@@ -572,7 +571,7 @@
 	}
 
 	const win11FForMacOS = computed<boolean>(() => {
-		const userAgent = window.navigator.userAgent;
+		const userAgent = globalThis.navigator.userAgent;
 		if (userAgent.includes("Mac")) {
 			return true;
 		}

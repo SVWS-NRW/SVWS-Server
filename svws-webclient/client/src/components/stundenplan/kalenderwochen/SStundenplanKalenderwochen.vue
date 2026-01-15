@@ -13,7 +13,7 @@
 		</Teleport>
 		<div class="min-w-fit max-w-280 h-full overflow-hidden">
 			<div v-if="hatUpdateKompetenz">Zum Ändern der Kalenderwoche die jeweilige Zeile anklicken</div>
-			<svws-ui-table :items :columns :clickable="hatUpdateKompetenz" @update:clicked="toggleWochentyp" scroll />
+			<svws-ui-table :items :columns :clickable="hatUpdateKompetenz" @update:clicked="toggleWochentyp" scroll focus-first-element allow-arrow-key-selection focus-switching-enabled />
 		</div>
 		<div class="min-w-fit max-w-140 h-full overflow-auto">
 			<svws-ui-table :items="summen" />

@@ -9,6 +9,7 @@
 		'svws-removable': removable,
 		'svws-readonly': readonly,
 	}" v-bind="$attrs">
+		<!-- Sonarqube kommt mit den props nicht zurecht, der Fehler ist ein SQ-Problem -->
 		<svws-ui-text-input ref="inputEl"
 			:model-value="dynModelValue"
 			:readonly="!autocomplete || readonly"
@@ -40,10 +41,10 @@
 			@keydown.tab="onTab"
 			:focus="autofocus"
 			:class="{ 'contentFocusField': focusClassContent, 'subNavigationFocusField': focusClassSubNav }" />
-		<button v-if="removable && hasSelected && !readonly" role="button" @click.stop="removeItem" class="svws-remove">
+		<button v-if="removable && hasSelected && !readonly" @click.stop="removeItem" class="svws-remove">
 			<span class="icon i-ri-close-line svws-ui-select--icon" />
 		</button>
-		<button v-if="!readonly" role="button" class="svws-dropdown-icon" tabindex="-1">
+		<button v-if="!readonly" class="svws-dropdown-icon" tabindex="-1">
 			<span class="icon i-ri-expand-up-down-line svws-ui-select--icon" v-if="headless" />
 			<span class="icon i-ri-expand-up-down-fill svws-ui-select--icon" v-else />
 		</button>
@@ -113,8 +114,15 @@
 	});
 
 	const emit = defineEmits<{
-		(e: "update:modelValue", items: SelectDataType): void;
+		'update:modelValue': [value: SelectDataType];
 	}>();
+
+	onMounted(() => {
+		isMounted.value = true;
+		if (props.autofocus) {
+			doFocus();
+		}
+	});
 
 	const refList = ref<ComponentExposed<typeof SvwsUiDropdownList> | null | undefined>(null);
 	const showList = ref(false);
@@ -123,7 +131,6 @@
 	const searchText = ref("");
 	const listIdPrefix = useId();
 	const isMounted = ref(false);
-	onMounted(() => isMounted.value = true);
 
 	function onInputFocus() {
 		hasFocus.value = true;
@@ -156,12 +163,12 @@
 				if ((refList.value !== undefined) && (refList.value !== null)) {
 					let index = 0;
 					if (activeItem !== undefined) {
-						const tmpIndex = filteredList.value.findIndex(item => item === activeItem);
+						const tmpIndex = filteredList.value.indexOf(activeItem);
 						if (tmpIndex >= 0) {
 							index = tmpIndex;
 						}
 					} else if ((selectedItem.value !== null) && (selectedItem.value !== undefined)) {
-						const tmpIndex = filteredList.value.findIndex(item => item === selectedItem.value);
+						const tmpIndex = filteredList.value.indexOf(selectedItem.value);
 						if (tmpIndex >= 0) {
 							index = tmpIndex;
 						}
@@ -285,7 +292,7 @@
 				return;
 			}
 			if ((selectedItem.value !== null) && (selectedItem.value !== undefined)) {
-				refList.value.activeItemIndex = filteredList.value.findIndex(item => item === selectedItem.value);
+				refList.value.activeItemIndex = filteredList.value.indexOf(selectedItem.value);
 			} else {
 				refList.value.activeItemIndex = 0;
 			}
@@ -343,10 +350,10 @@
 
 	function onSpace(e: KeyboardEvent) {
 		if (!props.autocomplete) {
-			if (!showList.value) {
-				openListbox();
-			} else {
+			if (showList.value) {
 				selectCurrentActiveItem();
+			} else {
+				openListbox();
 			}
 			e.preventDefault();
 		}

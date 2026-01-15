@@ -1,10 +1,10 @@
 <template>
 	<div class="page page-flex-row select-none">
-		<Teleport to=".svws-sub-nav-target" v-if="isMounted">
+		<Teleport to=".svws-sub-nav-target" defer>
 			<svws-ui-sub-nav :focus-switching-enabled :focus-help-visible>
 				<div class="ml-4 flex gap-0.5 items-center leading-none select-none">
 					<div class="text-button font-bold mr-1 -mt-px">Klasse:</div>
-					<svws-ui-select headless title="Klasse" v-model="klasse" :items="stundenplanManager().klasseGetMengeAsList()" :item-text="i => i.kuerzel" autocomplete
+					<svws-ui-select headless v-model="klasse" :items="stundenplanManager().klasseGetMengeAsList()" :item-text="i => i.kuerzel" autocomplete autofocus
 						:item-filter="(i, text) => i.filter(k=>k.kuerzel.includes(text.toLocaleLowerCase()))" :item-sort="() => 0" type="transparent" removable focus-class-sub-nav />
 				</div>
 			</svws-ui-sub-nav>
@@ -87,7 +87,7 @@
 
 <script setup lang="ts">
 
-	import { computed, onMounted, ref } from "vue";
+	import { computed, ref } from "vue";
 	import type { Wochentag, List, StundenplanPausenzeit, StundenplanKlasse, StundenplanPausenaufsicht, StundenplanLehrer } from "@core";
 	import { StundenplanPausenaufsichtBereich, StundenplanPausenaufsichtBereichUpdate, HashMap3D, ArrayList, BenutzerKompetenz } from "@core";
 	import { useRegionSwitch } from "@ui";
@@ -98,9 +98,6 @@
 	const props = defineProps<StundenplanPausenProps>();
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
-
-	const isMounted = ref(false);
-	onMounted(() => isMounted.value = true);
 
 	const _klasse = ref<StundenplanKlasse>();
 	const dragLehrer = ref<StundenplanLehrer>();
@@ -265,10 +262,10 @@
 	});
 
 	const getPausenzeitenWochentag = (wochentag: Wochentag) => computed<StundenplanPausenzeit[]>(() => {
-		if (klasse.value !== undefined) {
-			return [...props.stundenplanManager().pausenzeitGetMengeByKlasseIdAndWochentagAsList(klasse.value.id, wochentag.id)];
-		} else {
+		if (klasse.value === undefined) {
 			return [...props.stundenplanManager().pausenzeitGetMengeByWochentagOrEmptyList(wochentag.id)];
+		} else {
+			return [...props.stundenplanManager().pausenzeitGetMengeByKlasseIdAndWochentagAsList(klasse.value.id, wochentag.id)];
 		}
 	});
 

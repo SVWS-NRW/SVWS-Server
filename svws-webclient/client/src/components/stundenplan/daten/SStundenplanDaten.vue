@@ -4,8 +4,15 @@
 			<div class="content-card" v-if="manager().hasDaten()">
 				<div class="content-card--header content-card--headline">Allgemein</div>
 				<div class="content-card--content input-wrapper grid-cols-2">
-					<div class="flex gap-1"><svws-ui-checkbox :readonly type="toggle" :disabled="(!manager().auswahl().aktiv && (!validAb || !validBis || !manager().istKonfliktfreiZuAktivenStundenplaenen(gueltigData.gueltigAb, gueltigData.gueltigBis)))" :model-value="manager().daten().isAktiv()" @update:model-value="handleChangeAktiv" />Stundenplan aktiv <span v-if="validateGueltigAb(gueltigData.gueltigAb) && validateGueltigBis(gueltigData.gueltigBis) && !manager().istKonfliktfreiZuAktivenStundenplaenen(gueltigData.gueltigAb, gueltigData.gueltigBis, false)" class="text-ui-caution"><span class="icon icon-ui-caution i-ri-alert-line" /> Konflikt mit anderem Stundenplan</span></div>
-					<svws-ui-text-input class="contentFocusField" :readonly placeholder="Bezeichnung" :model-value="manager().daten().getBezeichnungStundenplan()" :valid="StundenplanListeManager.validateBezeichnung" @change="bezeichnungStundenplan=> bezeichnungStundenplan && patch({ bezeichnungStundenplan })" />
+					<div class="flex gap-1">
+						<svws-ui-checkbox autofocus :readonly type="toggle" :disabled="(!manager().auswahl().aktiv && (!validAb || !validBis || !manager().istKonfliktfreiZuAktivenStundenplaenen(gueltigData.gueltigAb, gueltigData.gueltigBis)))"
+							:model-value="manager().daten().isAktiv()" @update:model-value="handleChangeAktiv" />
+						Stundenplan aktiv
+						<span v-if="validateGueltigAb(gueltigData.gueltigAb) && validateGueltigBis(gueltigData.gueltigBis) && !manager().istKonfliktfreiZuAktivenStundenplaenen(gueltigData.gueltigAb, gueltigData.gueltigBis, false)" class="text-ui-caution">
+							<span class="icon icon-ui-caution i-ri-alert-line" /> Konflikt mit anderem Stundenplan
+						</span>
+					</div>
+					<svws-ui-text-input :readonly placeholder="Bezeichnung" :model-value="manager().daten().getBezeichnungStundenplan()" :valid="StundenplanListeManager.validateBezeichnung" @change="bezeichnungStundenplan=> bezeichnungStundenplan && patch({ bezeichnungStundenplan })" />
 					<div :class="{'flex gap-2': showExtraWTM}">
 						<svws-ui-select :readonly title="Wochentypmodell" :items="[0,2,3,4,5]" :item-text="i=> wochenTypModell[i] || ''" :model-value="manager().daten().getWochenTypModell()" @update:model-value="modell => doPatch(modell)" ref="select" />
 						<svws-ui-input-number :readonly v-if="showExtraWTM" placeholder="Wochentypmodell" :model-value="manager().daten().getWochenTypModell() < 5 ? 5 : manager().daten().getWochenTypModell()" @change="modell => doPatch(modell)" :min="5" :max="100" />

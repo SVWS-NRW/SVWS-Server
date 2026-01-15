@@ -51,7 +51,7 @@
 		</div>
 		<div title="Unterrichtsliste" class="min-w-fit h-full overflow-y-auto w-full flex flex-col gap-4">
 			<div class="text-headline-sm">Unterrichtsliste</div>
-			<svws-ui-table :items="stundenplanUnterrichtListeManager().filtered()" :columns :no-data="false" has-background scoll>
+			<svws-ui-table :items="stundenplanUnterrichtListeManager().filtered()" :columns :no-data="false" has-background scoll allow-arrow-key-selection focus-first-element>
 				<template #cell(idZeitraster)="{ value }">
 					{{ wochentage[stundenplanManager().zeitrasterGetByIdOrException(value).wochentag] }} {{ stundenplanManager().zeitrasterGetByIdOrException(value).unterrichtstunde }}.
 				</template>
@@ -122,7 +122,7 @@
 	import { computed, ref } from "vue";
 	import type { StundenplanUnterrichteProps } from "./SStundenplanUnterrichteProps";
 	import type { List, StundenplanKlasse, StundenplanKurs, StundenplanRaum, StundenplanSchiene, StundenplanSchueler, StundenplanZeitraster, Wochentag, StundenplanLehrer, StundenplanFach, StundenplanUnterricht } from "@core";
-	import { ArrayList, ListUtils, Fach, BenutzerKompetenz } from "@core";
+	import { ListUtils, Fach, BenutzerKompetenz } from "@core";
 
 	type FokusType = { type: 'lehrer' | 'klassen' | 'raeume' | 'schienen' | null, id: number | null };
 
@@ -167,7 +167,7 @@
 		if (kuerzel === null) {
 			return 'rgb(220,220,220)';
 		}
-		return Fach.getBySchluesselOrDefault(kuerzel).getHMTLFarbeRGBA(schuljahr.value, 1.0);
+		return Fach.getBySchluesselOrDefault(kuerzel).getHMTLFarbeRGBA(schuljahr.value, 1);
 	}
 
 	const filtered = computed(() => {
@@ -280,22 +280,22 @@
 		},
 	});
 
-	function filterWochentag(wochentag: Wochentag) {
+	async function filterWochentag(wochentag: Wochentag) {
 		props.stundenplanUnterrichtListeManager().wochentage.auswahlToggle(wochentag);
-		void props.setFilter();
+		await props.setFilter();
 	}
 
-	function filterStunde(stunde: number) {
+	async function filterStunde(stunde: number) {
 		props.stundenplanUnterrichtListeManager().stunden.auswahlToggle(stunde);
-		void props.setFilter();
+		await props.setFilter();
 	}
 
-	function filterZeiraster(zeitraster: StundenplanZeitraster | null) {
+	async function filterZeiraster(zeitraster: StundenplanZeitraster | null) {
 		if (zeitraster === null) {
 			return;
 		}
 		props.stundenplanUnterrichtListeManager().zeitraster.auswahlToggle(zeitraster);
-		void props.setFilter();
+		await props.setFilter();
 	}
 
 	function modelValueLehrer(list: List<number>) {
