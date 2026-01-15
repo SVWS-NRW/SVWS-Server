@@ -268,7 +268,7 @@ echo "Lade Abhängigkeiten ..."
 # Paketliste aktualisieren ohne Ausgabe
 apt update
 # Installieren von Abhängigkeiten in ruhigem Modus (-qq)
-apt-get -y install gettext unzip wget curl software-properties-common dirmngr gnupg2 apt-transport-https sed grep
+apt-get -y install gettext unzip wget curl dirmngr gnupg2 apt-transport-https sed grep
 mkdir -p /etc/apt/keyrings
 wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public | tee /etc/apt/keyrings/adoptium.asc
 osrelease=$(awk -F= '/^NAME/{print$2}' /etc/os-release)
