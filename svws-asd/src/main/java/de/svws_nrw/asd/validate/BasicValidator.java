@@ -42,12 +42,14 @@ public abstract class BasicValidator {
 	public boolean run() {
 		boolean success = true;
 		_fehler.clear();
+		_fehlerart = ValidatorFehlerart.UNGENUTZT;
 		// Berücksichtige auch Exceptions bei der Prüfung dieses Validators
 		try {
 			if (!this.pruefe())
 				success = false;
 		} catch (final Exception e) {
 			addFehler(-1, "Unerwarteter Fehler bei der Validierung: " + e.getMessage());
+			success = false;
 		}
 		return success;
 	}

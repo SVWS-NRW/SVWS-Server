@@ -43,11 +43,13 @@ export abstract class BasicValidator extends JavaObject {
 	public run(): boolean {
 		let success: boolean = true;
 		this._fehler.clear();
+		this._fehlerart = ValidatorFehlerart.UNGENUTZT;
 		try {
 			if (!this.pruefe())
 				success = false;
 		} catch(e : any) {
 			this.addFehler(-1, "Unerwarteter Fehler bei der Validierung: " + e.getMessage());
+			success = false;
 		}
 		return success;
 	}
