@@ -141,8 +141,8 @@ public final class DataHaltestellen extends DataManagerRevised<Long, DTOHalteste
 				.collect(Collectors.toSet());
 	}
 
-	private static Haltestelle setReferenceFlag(final Haltestelle haltestelle, final Set<Long> idsOfReferencedErzieherarten) {
-		haltestelle.referenziertInAnderenTabellen = idsOfReferencedErzieherarten.contains(haltestelle.id);
+	private static Haltestelle setReferenceFlag(final Haltestelle haltestelle, final Set<Long> idsOfReferencedHaltestellen) {
+		haltestelle.referenziertInAnderenTabellen = idsOfReferencedHaltestellen.contains(haltestelle.id);
 		return haltestelle;
 	}
 
