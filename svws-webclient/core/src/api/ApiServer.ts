@@ -5164,6 +5164,38 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode addGostBlockungErgebnis für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/{blockungsid : \d+}/addergebnis
+	 *
+	 * Fügt ein einzelnes Ergebnis zu einer Blockung der Gymnasialen Oberstufe hinzu. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen von Ergebnissen hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Das Ergebnis wurde erfolgreich der Blockung hinzugefügt
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostBlockungsergebnis
+	 *   Code 400: Die Daten sind nicht konsistent (z.B. bei einer nicht passenden Blockungs-ID im Ergebnis).
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Ergebnisse hinzuzufügen.
+	 *   Code 404: Keine Blockung vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {GostBlockungsergebnis} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} blockungsid - der Pfad-Parameter blockungsid
+	 *
+	 * @returns Das Ergebnis wurde erfolgreich der Blockung hinzugefügt
+	 */
+	public async addGostBlockungErgebnis(data : GostBlockungsergebnis, schema : string, blockungsid : number) : Promise<GostBlockungsergebnis> {
+		const path = "/db/{schema}/gost/blockungen/{blockungsid : \\d+}/addergebnis"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{blockungsid\s*(:[^{}]+({[^{}]+})*)?}/g, blockungsid.toString());
+		const body : string = GostBlockungsergebnis.transpilerToJSON(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return GostBlockungsergebnis.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode addGostBlockungErgebnisse für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/{blockungsid : \d+}/addergebnisse
 	 *
 	 * Fügt mehrere Ergebnisse zu einer Blockung der Gymnasialen Oberstufe hinzu.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen von Ergebnissen hat.

@@ -1,5 +1,18 @@
 package de.svws_nrw.data.gost;
 
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.asd.data.schueler.Schueler;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
@@ -45,19 +58,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
@@ -1264,17 +1264,58 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public Response addErgebnisse(final long idBlockung, final List<GostBlockungsergebnis> ergebnisse) throws ApiOperationException {
+		final DTOGostBlockung blockung = pruefeGymnasialeOberstufeAndGetBlockung(idBlockung);
+
+		ergebnisseToDB(idBlockung, blockung, ergebnisse);
+
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(ergebnisse).build();
+	}
+
+
+	/**
+	 * Fügt ein einzelnes Ergebnis zu der Blockung mit der angegebenen ID hinzu.
+	 *
+	 * @param idBlockung   die ID der Blockung
+	 * @param ergebnis     das Ergebnis, das hinzugefügt werden sollen.
+	 *
+	 * @return die HTTP-Response mit dem hinzugefügten Ergebnis, welches dann die Datenbank-ID
+	 *         des persistierten Ergebnisses beinhaltet.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public Response addErgebnis(final long idBlockung, final GostBlockungsergebnis ergebnis) throws ApiOperationException {
+		final DTOGostBlockung blockung = pruefeGymnasialeOberstufeAndGetBlockung(idBlockung);
+
+		final List<GostBlockungsergebnis> list = new ArrayList<>();
+		list.add(ergebnis);
+		ergebnisseToDB(idBlockung, blockung, list);
+
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(list.getFirst()).build();
+	}
+
+
+	private DTOGostBlockung pruefeGymnasialeOberstufeAndGetBlockung(final long idBlockung) throws ApiOperationException {
 		// Prüfe, ob die Schule eine gymnasiale Oberstufe hat
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
+
 		// Prüfe, Bestimme die Blockung
 		final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, idBlockung);
-		if (blockung == null)
+		if (blockung == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Die Blockung mit der ID %d konnte nicht gefunden werden".formatted(idBlockung));
+		}
+
+		return blockung;
+	}
+
+
+	private void ergebnisseToDB(final long idBlockung, final DTOGostBlockung blockung, final List<GostBlockungsergebnis> ergebnisse)
+			throws ApiOperationException {
 		final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, Schema.tab_Gost_Blockung_Zwischenergebnisse.name());
 		long ergebnisID = (lastID == null) ? 1 : (lastID.MaxID + 1);
 		for (final GostBlockungsergebnis ergebnis : ergebnisse) {
-			if ((ergebnis.blockungID != idBlockung) || (ergebnis.gostHalbjahr != blockung.Halbjahr.id))
+			if ((ergebnis.blockungID != idBlockung) || (ergebnis.gostHalbjahr != blockung.Halbjahr.id)) {
 				throw new ApiOperationException(Status.BAD_REQUEST);
+			}
 			// Schreibe das Ergebnis in die Datenbank.
 			final DTOGostBlockungZwischenergebnis erg = new DTOGostBlockungZwischenergebnis(ergebnisID, idBlockung, false);
 			conn.transactionPersist(erg);
@@ -1286,11 +1327,13 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 					// Ergänze die Kurs-Schienen-Zuordnung
 					conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchiene(ergebnisID, kurs.id, schiene.id));
 					// Ergänze die Schülerzuordnung, falls diese nicht bereits durch den Kurs zuvor ergänzt wurde
-					if (kursIDs.contains(kurs.id))
+					if (kursIDs.contains(kurs.id)) {
 						continue;
+					}
 					kursIDs.add(kurs.id);
-					for (final long idSchueler : kurs.schueler)
+					for (final long idSchueler : kurs.schueler) {
 						conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchueler(ergebnisID, kurs.id, idSchueler));
+					}
 				}
 			}
 			conn.transactionFlush();
@@ -1298,7 +1341,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 			ergebnis.id = ergebnisID;
 			ergebnisID++;
 		}
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(ergebnisse).build();
 	}
+
 
 }
