@@ -1,10 +1,6 @@
 import type { List, Raum, JahrgangsDaten, LehrerListeEintrag, StundenplanPausenaufsichtBereichUpdate, StundenplanKalenderwochenzuordnung, SimpleOperationResponse, StundenplanListeEintrag, ApiFile, ReportingParameter } from "@core";
-import { Stundenplan } from "@core";
-import { StundenplanUnterrichtListeManager } from "@ui";
-import { StundenplanManager } from "@core";
-import { StundenplanListeManager } from "@ui";
-import { StundenplanKonfiguration } from "@core";
-import { StundenplanPausenaufsicht, Wochentag, StundenplanRaum, StundenplanAufsichtsbereich, StundenplanPausenzeit, StundenplanUnterricht, StundenplanZeitraster, DeveloperNotificationException, ArrayList, StundenplanJahrgang, UserNotificationException } from "@core";
+import { StundenplanUnterrichtListeManager, StundenplanListeManager, ViewType } from "@ui";
+import { Stundenplan, StundenplanManager, StundenplanKonfiguration, StundenplanPausenaufsicht, Wochentag, StundenplanRaum, StundenplanAufsichtsbereich, StundenplanPausenzeit, StundenplanUnterricht, StundenplanZeitraster, DeveloperNotificationException, ArrayList, StundenplanJahrgang, UserNotificationException } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -20,7 +16,6 @@ import { routeKatalogRaeume } from "./kataloge/RouteKatalogRaeume";
 import { routeApp } from "../RouteApp";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
-import { ViewType } from "@ui";
 
 interface RouteStateStundenplan extends RouteStateAuswahlInterface<StundenplanListeManager> {
 	stundenplanUnterrichtListeManager: StundenplanUnterrichtListeManager | undefined;
@@ -62,16 +57,17 @@ export class RouteDataStundenplan extends RouteDataAuswahl<StundenplanListeManag
 		const manager = new StundenplanListeManager(idSchuljahresabschnitt, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,
 			api.schulform, listStundenplaene, true);
 		const auswahl = (listStundenplaene.size() > 0) ? listStundenplaene.get(0) : manager.getStundenplanVorlage();
-		manager.setDaten(await this.ladeDaten(auswahl));
 		const katalogDaten = await this.ladeVorlagenInternal();
-		return { manager, ...katalogDaten };
+		const state = <Partial<RouteStateStundenplan>>{ manager, ...katalogDaten };
+		manager.setDaten(await this.ladeDaten(auswahl, state));
+		return state;
 	}
 
 	public addID(param: RouteParamsRawGeneric, id: number): void {
 		param.id = id;
 	}
 
-	public async ladeDaten(auswahl: StundenplanListeEintrag | null): Promise<StundenplanManager | null> {
+	public async ladeDaten(auswahl: StundenplanListeEintrag | null, state: Partial<RouteStateStundenplan>): Promise<StundenplanManager | null> {
 		if (auswahl === null) {
 			return null;
 		} else if (auswahl.id < 0) {
@@ -96,7 +92,7 @@ export class RouteDataStundenplan extends RouteDataAuswahl<StundenplanListeManag
 		if (this._state.value.stundenplanUnterrichtListeManager !== undefined) {
 			stundenplanUnterrichtListeManager.useFilter(this._state.value.stundenplanUnterrichtListeManager);
 		}
-		this.setPatchedState({ stundenplanUnterrichtListeManager }, false);
+		state.stundenplanUnterrichtListeManager = stundenplanUnterrichtListeManager;
 		return stundenplanManager;
 	}
 

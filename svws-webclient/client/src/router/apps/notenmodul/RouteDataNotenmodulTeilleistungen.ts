@@ -1,4 +1,3 @@
-import type { EnmLerngruppenAuswahlEintrag } from "@ui";
 import { EnmLerngruppenAuswahlListeManager, ViewType } from "@ui";
 import { api } from "~/router/Api";
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
