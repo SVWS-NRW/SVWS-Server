@@ -48,7 +48,7 @@ export APP_PORT=8443
 
 export SVWS_TLS_KEYSTORE_PATH=$CONF_PATH/keystore
 export SVWS_TLS_KEYSTORE_PASSWORD=${password2}
-export SVWS_TLS_KEY_ALIAS=
+export SVWS_TLS_KEY_ALIAS=svws
 
 
 
@@ -177,10 +177,10 @@ else
     		echo "Keystore für TLS:"
     		read -p "SVWS_TLS_KEYSTORE_PATH (default: '$CONF_PATH/keystore'): " SVWS_TLS_KEYSTORE_PATH
     		export SVWS_TLS_KEYSTORE_PATH=${SVWS_TLS_KEYSTORE_PATH:-$CONF_PATH/keystore}
-    		read -p "SVWS_TLS_KEYSTORE_PASSWORD (default: 'test123'): " SVWS_TLS_KEYSTORE_PASSWORD
-    		export SVWS_TLS_KEYSTORE_PASSWORD=${SVWS_TLS_KEYSTORE_PASSWORD:-test123}
-    		read -p "SVWS_TLS_KEY_ALIAS (default: 'alias1'): " SVWS_TLS_KEY_ALIAS
-    		export SVWS_TLS_KEY_ALIAS=${SVWS_TLS_KEY_ALIAS:-alias1}
+    		read -p "SVWS_TLS_KEYSTORE_PASSWORD (default: '${password2}'): " SVWS_TLS_KEYSTORE_PASSWORD
+    		export SVWS_TLS_KEYSTORE_PASSWORD=${SVWS_TLS_KEYSTORE_PASSWORD:-${password2}}
+    		read -p "SVWS_TLS_KEY_ALIAS (default: 'svws'): " SVWS_TLS_KEY_ALIAS
+    		export SVWS_TLS_KEY_ALIAS=${SVWS_TLS_KEY_ALIAS:-svws}
 			echo "Bitte geben Sie die folgenden Informationen für den Distinguished Name (dname) an,"
             echo "Umlaute, Sonderzeichen und Leerzeichen sind nicht erlaubt:"
 			read -p "Common NAME (CN): " INPUT_COMMON_NAME
@@ -267,7 +267,7 @@ fi
 echo "Lade Abhängigkeiten ..."
 # Paketliste aktualisieren ohne Ausgabe
 apt update
-# Installieren von Abhängigkeiten in ruhigem Modus (-qq)
+# Installieren von Abhängigkeiten
 apt-get -y install gettext unzip wget curl dirmngr gnupg2 apt-transport-https sed grep
 mkdir -p /etc/apt/keyrings
 wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public | tee /etc/apt/keyrings/adoptium.asc
