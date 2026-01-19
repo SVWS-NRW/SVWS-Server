@@ -222,7 +222,6 @@
 		}
 		if (((props.manager().daten().stundenplanGetWochenTypModellSimulation(wochenTypModell) === 0)) || (wtmOK.value === true)) {
 			await props.patch({ wochenTypModell });
-			// wtmOK.value === undefined;
 			newWTM.value = -1;
 		} else if (wtmOK.value === false) {
 			select.value?.reset(true);
