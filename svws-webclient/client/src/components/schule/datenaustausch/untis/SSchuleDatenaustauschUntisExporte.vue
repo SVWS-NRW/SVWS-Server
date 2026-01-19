@@ -162,7 +162,11 @@
 		sidvariante.value = parseInt(value);
 		if (gpusBrauchenGPU002.includes(aktuell.value)) {
 			if (gpu002.value !== null) {
-				daten.value = await aktuell.value.export(gpu002.value);
+				if (aktuell.value === blockungGPUs) {
+					daten.value = await aktuell.value.export(gpu002.value, blockungsergebnisse.value);
+				} else {
+					daten.value = await aktuell.value.export(gpu002.value);
+				}
 			}
 		} else {
 			daten.value = await aktuell.value.export();
@@ -211,7 +215,7 @@
 
 	function isVisible(gpu: GPU) {
 		if (gpu === blockungGPUs) {
-			return Schulform.getListMitGymOb(props.schuljahresabschnitt().schuljahr).contains(props.schulform.daten(props.schuljahresabschnitt().schuljahr));
+			return Schulform.getListMitGymOb(props.schuljahresabschnitt().schuljahr).contains(props.schulform);
 		}
 		return true;
 	}
