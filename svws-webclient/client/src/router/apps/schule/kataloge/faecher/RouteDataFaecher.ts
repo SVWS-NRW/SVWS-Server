@@ -57,11 +57,7 @@ export class RouteDataFaecher extends RouteDataAuswahl<FaecherListeManager, Rout
 	}
 
 	public async ladeDaten(auswahl: FachDaten | null): Promise<FachDaten | null> {
-		if (auswahl === null) {
-			return null;
-		}
-
-		return await api.server.getFach(api.schema, auswahl.id);
+		return auswahl;
 	}
 
 	public async updateMapStundenplaene() {

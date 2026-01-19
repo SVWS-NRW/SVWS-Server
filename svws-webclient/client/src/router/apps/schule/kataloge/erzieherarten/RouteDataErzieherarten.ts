@@ -34,11 +34,6 @@ export class RouteDataErzieherarten extends RouteDataAuswahl<ErzieherartListeMan
 	}
 
 	async ladeDaten(auswahl: Erzieherart | null): Promise<Erzieherart | null> {
-		if (auswahl === null) {
-			return auswahl;
-		}
-		const erzieherart = await api.server.getErzieherart(api.schema, auswahl.id);
-		this.manager.getIdByEintrag(erzieherart);
 		return auswahl;
 	}
 

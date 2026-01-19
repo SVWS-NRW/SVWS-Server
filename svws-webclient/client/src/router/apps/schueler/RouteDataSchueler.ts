@@ -90,7 +90,9 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 			api.server.getVermerkdaten(api.schema, auswahl.id),
 		]);
 		this.manager.schuelerstatus.auswahlAdd(SchuelerStatus.data().getWertByID(res.status));
-		this.setPatchedState({ listSchuelerErziehereintraege, listSchuelerTelefoneintraege, listSchuelerVermerkeintraege });
+		state.listSchuelerErziehereintraege = listSchuelerErziehereintraege;
+		state.listSchuelerTelefoneintraege = listSchuelerTelefoneintraege;
+		state.listSchuelerVermerkeintraege = listSchuelerVermerkeintraege;
 		return res;
 	}
 
