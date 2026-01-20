@@ -348,7 +348,15 @@
 		}
 		// Fall StundenplanUnterricht -> undefined
 		if ((dragData.value instanceof StundenplanUnterricht) && (zone === undefined)) {
-			return await props.removeUnterrichte([dragData.value]);
+			const arr = [dragData.value];
+			// wenn der Doppelstundenmodus aktiviert ist und am gleichen Tag, in der nächsten Stunde ebenfalls ein Unterricht des selben Fachs vorliegt, ebenfalls löschen
+			if (doppelstundenModus.value) {
+				const next = props.stundenplanManager().unterrichtGetByIdFolgePartnerOrNull(dragData.value.id);
+				if (next !== null) {
+					arr.push(next);
+				}
+			}
+			return await props.removeUnterrichte(arr);
 		}
 		// TODO Fall StundenplanKurs -> StundenplanZeitraster
 		if ((dragData.value instanceof StundenplanKurs) && (zone instanceof StundenplanZeitraster) && (wochentyp !== undefined) && props.stundenplanManager().kursDarfInZelle(dragData.value, zone.wochentag, zone.unterrichtstunde, wochentyp)) {

@@ -6841,7 +6841,6 @@ public class StundenplanManager {
 
 	/**
 	 * Liefert das {@link StundenplanUnterricht}-Objekt zur übergebenen ID.
-	 * <br>Hinweis: Unnötige Methode, denn man bekommt die Objekte über Zeitraster-Abfragen.
 	 *
 	 * @param idUnterricht  Die Datenbank-ID des Unterrichts.
 	 *
@@ -6849,6 +6848,27 @@ public class StundenplanManager {
 	 */
 	public @NotNull StundenplanUnterricht unterrichtGetByIdOrException(final long idUnterricht) {
 		return DeveloperNotificationException.ifMapGetIsNull(_unterricht_by_id, idUnterricht);
+	}
+
+	/**
+	 * Liefert das Partner-{@link StundenplanUnterricht}-Objekt zur übergebenen ID, welches im Stundenplan danach kommt, oder NULL.
+	 *
+	 * @param idUnterricht  Die Datenbank-ID des Unterrichts, dessen Nachfolger (Folgestunde am selben Tag) man sucht.
+	 *
+	 * @return das Partner-{@link StundenplanUnterricht}-Objekt zur übergebenen ID, welches im Stundenplan danach kommt, oder NULL.
+	 */
+	public StundenplanUnterricht unterrichtGetByIdFolgePartnerOrNull(final long idUnterricht) {
+		final @NotNull StundenplanUnterricht uVorher = DeveloperNotificationException.ifMapGetIsNull(_unterricht_by_id, idUnterricht);
+		final @NotNull StundenplanZeitraster zVorher = DeveloperNotificationException.ifMapGetIsNull(_zeitraster_by_id, uVorher.idZeitraster);
+
+		for (final @NotNull StundenplanUnterricht uNachher : unterrichtGetMengeByUnterrichtId(idUnterricht)) {
+			final @NotNull StundenplanZeitraster zNachher = DeveloperNotificationException.ifMapGetIsNull(_zeitraster_by_id, uNachher.idZeitraster);
+			if ((zNachher.wochentag == zVorher.wochentag) && (zNachher.unterrichtstunde == zVorher.unterrichtstunde + 1)) {
+				return uNachher;
+			}
+		}
+
+		return null;
 	}
 
 	/**
