@@ -9,4 +9,6 @@ export interface StundenplanKlasseProps {
 	addUnterrichte: (data: Iterable<Partial<StundenplanUnterricht>>) => Promise<void>;
 	removeUnterrichte: (unterrichte: Iterable<StundenplanUnterricht>) => Promise<void>;
 	mergeUnterrichte: (list: Iterable<List<StundenplanUnterricht>>) => Promise<void>;
+	doppelstundenmodus: () => boolean;
+	setDoppelstundenmodus: (value: boolean) => Promise<void>;
 }

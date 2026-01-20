@@ -192,6 +192,14 @@ export class RouteDataStundenplan extends RouteDataAuswahl<StundenplanListeManag
 		await api.config.setValue('stundenplan.settings.defaults', json);
 	};
 
+	get doppelstundenmodus(): boolean {
+		return api.config.getValue("stundenplan.klassen.doppelstundenmodus") === 'true';
+	}
+
+	setDoppelstundenmodus = async (value: boolean) => {
+		await api.config.setValue('stundenplan.klassen.doppelstundenmodus', value ? 'true' : 'false');
+	};
+
 	public setSelection = (selected: Wochentag | number | StundenplanZeitraster | StundenplanPausenzeit | undefined) => {
 		this.setPatchedState({ selected });
 	};
@@ -288,9 +296,7 @@ export class RouteDataStundenplan extends RouteDataAuswahl<StundenplanListeManag
 		api.status.start();
 		const raum = this.manager.daten().raumGetByIdOrException(id);
 		// setze das Kürzel auf das bisherige, damit kein Fehler geworfen wird.
-		if (data.kuerzel === undefined) {
-			data.kuerzel = raum.kuerzel;
-		}
+		data.kuerzel ??= raum.kuerzel;
 		delete data.id;
 		await api.server.patchStundenplanRaum(data, api.schema, id);
 		this.manager.daten().raumPatchAttributes(Object.assign(raum, data));
@@ -529,9 +535,7 @@ export class RouteDataStundenplan extends RouteDataAuswahl<StundenplanListeManag
 		}
 		api.status.start();
 		const _aufsichtsbereich = this.manager.daten().aufsichtsbereichGetByIdOrException(id);
-		if (aufsichtsbereich.kuerzel === undefined) {
-			aufsichtsbereich.kuerzel = _aufsichtsbereich.kuerzel;
-		}
+		aufsichtsbereich.kuerzel ??= _aufsichtsbereich.kuerzel;
 		await api.server.patchStundenplanAufsichtsbereich(aufsichtsbereich, api.schema, id);
 		this.manager.daten().aufsichtsbereichPatchAttributes(Object.assign(_aufsichtsbereich, aufsichtsbereich));
 		this.commit();
@@ -765,11 +769,6 @@ export class RouteDataStundenplan extends RouteDataAuswahl<StundenplanListeManag
 				return await RouteManager.doRoute(routeKatalogRaeume.getRoute({ id: -1 }));
 		}
 	};
-
-	// setFilter = async () => {
-	// 	this.stundenplanUnterrichtListeManager.filterInvalidateCache();
-	// 	this.setPatchedState({ stundenplanUnterrichtListeManager: this.stundenplanUnterrichtListeManager });
-	// }
 
 	get ganzerStundenplanRaum(): boolean {
 		return api.config.getValue("stundenplan.raeume.ganzerStundenplan") === 'true';

@@ -11,8 +11,8 @@
 						<svws-ui-select headless title="Wochentyp" v-model="wochentypAnzeige" :items="wochentypen()" class="print:!hidden" type="transparent"
 							:disabled="wochentypen().size() <= 0" :item-text="wt => stundenplanManager().stundenplanGetWochenTypAsString(wt)" />
 					</template>
-					<svws-ui-button v-if="!readonly" type="transparent" @click.stop="doppelstundenModus = !doppelstundenModus" title="Doppelstundenmodus ein- und ausschalten" class="text-ui-100">
-						{{ doppelstundenModus ? 'Doppelstundenmodus' : 'Einzelstundenmodus' }}
+					<svws-ui-button v-if="!readonly" type="transparent" @click.stop="setDoppelstundenmodus(!doppelstundenmodus())" title="Doppelstundenmodus ein- und ausschalten" class="text-ui-100">
+						{{ doppelstundenmodus() ? 'Doppelstundenmodus' : 'Einzelstundenmodus' }}
 					</svws-ui-button>
 					<template v-if="(stundenplanManager().unterrichtsgruppenMergeableGet().size() > 0) || (stundenplanManager().unterrichtGetMengeUngueltigAsList().size() > 0) && !readonly">
 						<span class="ml-4">Unterricht:</span>
@@ -177,7 +177,6 @@
 
 	const _klasse = shallowRef<StundenplanKlasse | undefined>(undefined);
 	const wochentypAnzeige = shallowRef<number>(0);
-	const doppelstundenModus = shallowRef<boolean>(false);
 	const schienSortierung = shallowRef<boolean>(true);
 	const auswahl = ref<StundenplanKlassenunterricht | StundenplanUnterricht | StundenplanKurs | undefined>();
 
@@ -337,7 +336,7 @@
 			const stunde = { idZeitraster: zone.id, wochentyp, idKurs: null, idFach: dragData.value.idFach, klassen, lehrer: dragData.value.lehrer, schienen: dragData.value.schienen };
 			const arr = [];
 			arr.push(stunde);
-			if (doppelstundenModus.value && (props.stundenplanManager().klassenunterrichtGetWochenstundenREST(klasse.value.id, dragData.value.idFach) >= 2)) {
+			if (props.doppelstundenmodus() && (props.stundenplanManager().klassenunterrichtGetWochenstundenREST(klasse.value.id, dragData.value.idFach) >= 2)) {
 				const next = props.stundenplanManager().getZeitrasterNext(zone);
 				if (next !== null) {
 					arr.push({ idZeitraster: next.id, wochentyp, idKurs: null, idFach: dragData.value.idFach, klassen, lehrer: dragData.value.lehrer, schienen: dragData.value.schienen });
@@ -350,7 +349,7 @@
 		if ((dragData.value instanceof StundenplanUnterricht) && (zone === undefined)) {
 			const arr = [dragData.value];
 			// wenn der Doppelstundenmodus aktiviert ist und am gleichen Tag, in der nächsten Stunde ebenfalls ein Unterricht des selben Fachs vorliegt, ebenfalls löschen
-			if (doppelstundenModus.value) {
+			if (props.doppelstundenmodus()) {
 				const next = props.stundenplanManager().unterrichtGetByIdFolgePartnerOrNull(dragData.value.id);
 				if (next !== null) {
 					arr.push(next);
@@ -369,7 +368,7 @@
 			const arr = [];
 			arr.push(stunde);
 			// stundenplanManager().klassenunterrichtGetWochenstundenIST(ku.idKlasse, ku.idFach) }}/{{ stundenplanManager().klassenunterrichtGetWochenstundenSOLL(ku.idKlasse, ku.idFach)
-			if (doppelstundenModus.value === true && props.stundenplanManager().kursGetWochenstundenREST(dragData.value.id) >= 2) {
+			if (props.doppelstundenmodus() && (props.stundenplanManager().kursGetWochenstundenREST(dragData.value.id) >= 2)) {
 				const next = props.stundenplanManager().getZeitrasterNext(zone);
 				if (next && props.stundenplanManager().kursDarfInZelle(dragData.value, zone.wochentag, next.unterrichtstunde, wochentyp)) {
 					arr.push({ idZeitraster: next.id, wochentyp, idKurs: dragData.value.id, idFach: dragData.value.idFach, klassen: new ArrayList(klassen), schienen: dragData.value.schienen, lehrer: dragData.value.lehrer });
@@ -390,7 +389,7 @@
 					}
 					const stunde = { idZeitraster: zone.id, wochentyp, idKurs: kurs.id, idFach: kurs.idFach, klassen: new ArrayList(klassen), schienen: kurs.schienen, lehrer: kurs.lehrer };
 					arr.push(stunde);
-					if ((doppelstundenModus.value === true) && (props.stundenplanManager().kursGetWochenstundenREST(kurs.id) >= 2)) {
+					if (props.doppelstundenmodus() && (props.stundenplanManager().kursGetWochenstundenREST(kurs.id) >= 2)) {
 						const next = props.stundenplanManager().getZeitrasterNext(zone);
 						if (next && (props.stundenplanManager().kursDarfInZelle(kurs, zone.wochentag, next.unterrichtstunde, wochentyp))) {
 							arr.push({ idZeitraster: next.id, wochentyp, idKurs: kurs.id, idFach: kurs.idFach, klassen: new ArrayList(klassen), schienen: kurs.schienen, lehrer: kurs.lehrer });
