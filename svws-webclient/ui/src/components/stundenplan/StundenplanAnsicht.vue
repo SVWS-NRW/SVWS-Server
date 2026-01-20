@@ -77,6 +77,11 @@
 										</div>
 									</template>
 								</div>
+								<svws-ui-tooltip :keep-open="true" v-if="!isDropZoneZeitrasterList.isEmpty() && isDragOverPosition(wochentag, stunde)">
+									<template #content>
+										<div v-for="text of isDropZoneZeitrasterList" :key="text">{{ text }}</div>
+									</template>
+								</svws-ui-tooltip>
 							</div>
 							<!-- Passe die Darstellung je nach ausgewähltem Wochentyp an... -->
 							<!-- Allgemeiner Wochentyp ausgewählt -->
@@ -187,6 +192,7 @@
 	import { HashMap3D } from "../../../../core/src/core/adt/map/HashMap3D";
 	import { HashMap4D } from "../../../../core/src/core/adt/map/HashMap4D";
 	import type { StundenplanPausenzeit } from "../../../../core/src/core/data/stundenplan/StundenplanPausenzeit";
+	import { ListUtils } from "../../../../core/src/core/utils/ListUtils";
 
 	const props = withDefaults(defineProps<StundenplanAnsichtProps>(), {
 		showSchienen: false,
@@ -670,6 +676,41 @@
 		}
 		return true;
 	}
+
+
+	/**
+	 * Prüfe, ob die aktuelle Daten eines Drag&Drop-Vorgangs einen Bezug zu einem Unterricht bei dem Zeitraster haben,
+	 * welcher ein Drop verhindert. Bei der Entscheidung wird der Wochentyp miteinbezogen.
+	 *
+	 * @param wochentag   der Wochentag für das Zeitraster-Element
+	 * @param stunde      die Stunde für das Zeitraster-Element
+	 * @param wt          der zu prüfende Wochentyp
+	 */
+	const isDropZoneZeitrasterList = computed(() => {
+		const data = draggedData.value;
+		const { wochentag, stunde, wochentyp } = dragOverPos.value;
+		if ((data === undefined) || (data instanceof StundenplanPausenaufsicht) || (wochentag === undefined) || (stunde === undefined) || (wochentyp === undefined)) {
+			return new ArrayList<string>();
+		}
+		// Prüfe, ob das drag-Objekt die Plazierung in einem Zeitraster-Element und einem Wochentyp erlaubt
+		if (data.isTranspiledInstanceOf('de.svws_nrw.core.data.stundenplan.StundenplanKlassenunterricht')) {
+			return props.manager().getDropKollisionsbeschreibungZurZelle(ListUtils.create1(cast_de_svws_nrw_core_data_stundenplan_StundenplanKlassenunterricht(data)), new ArrayList(), new ArrayList(), wochentag, stunde, wochentyp);
+		}
+		if (data.isTranspiledInstanceOf('de.svws_nrw.core.data.stundenplan.StundenplanKurs')) {
+			return props.manager().getDropKollisionsbeschreibungZurZelle(new ArrayList(), ListUtils.create1(cast_de_svws_nrw_core_data_stundenplan_StundenplanKurs(data)), new ArrayList(), wochentag, stunde, wochentyp);
+		}
+		if (data.isTranspiledInstanceOf('de.svws_nrw.core.data.stundenplan.StundenplanUnterricht')) {
+			return props.manager().getDropKollisionsbeschreibungZurZelle(new ArrayList(), new ArrayList(), ListUtils.create1(cast_de_svws_nrw_core_data_stundenplan_StundenplanUnterricht(data)), wochentag, stunde, wochentyp);
+		}
+		if (data.isTranspiledInstanceOf('java.util.List')) {
+			return props.manager().getDropKollisionsbeschreibungZurZelle(new ArrayList(), new ArrayList(), cast_java_util_ArrayList<StundenplanUnterricht>(data), wochentag, stunde, wochentyp);
+		}
+		// if (data.isTranspiledInstanceOf('de.svws_nrw.core.data.stundenplan.StundenplanSchiene'))
+		// 	return isDropZoneZeitrasterSchiene(cast_de_svws_nrw_core_data_stundenplan_StundenplanSchiene(data), wochentag, stunde, wt);
+		return new ArrayList<string>();
+	});
+
+
 
 	function hatUnterrichtGemeinsamerTyp(a: StundenplanUnterricht, b: StundenplanUnterricht) {
 		if (a.id === b.id) {

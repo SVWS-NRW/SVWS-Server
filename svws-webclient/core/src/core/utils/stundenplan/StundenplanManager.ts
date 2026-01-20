@@ -3113,10 +3113,18 @@ export class StundenplanManager extends JavaObject {
 			dragSchueler.addAll(ku.schueler);
 		}
 		for (const u of listU) {
+			const z: StundenplanZeitraster = this.zeitrasterGetByIdOrException(u.idZeitraster);
+			if ((z.wochentag === wochentag) && (z.unterrichtstunde === stunde)) {
+				continue;
+			}
 			dragLehrer.addAll(u.lehrer);
-			dragKlassen.addAll(u.klassen);
-			for (const schueler of this.schuelerGetMengeByUnterrichtIdAsList(u.id))
-				dragSchueler.add(schueler.id);
+			if (u.idKurs === null) {
+				dragKlassen.addAll(u.klassen);
+			} else {
+				for (const schueler of this.schuelerGetMengeByUnterrichtIdAsList(u.id)) {
+					dragSchueler.add(schueler.id);
+				}
+			}
 			dragRaeume.addAll(u.raeume);
 		}
 		for (const idLehrkraft of dragLehrer)
@@ -3151,22 +3159,10 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Liste aller Kollisionen des {@link StundenplanKlassenunterricht}-Objekte in Bezug auf eine bestimmte Zelle.
 	 */
 	public klassenunterrichtGetDropKollisionsbeschreibungZurZelle(klassenU: StundenplanKlassenunterricht, wochentag: number, stunde: number, wochentyp: number): List<string> {
-		const beschreibungen: List<string> = new ArrayList<string>();
-		for (const idLehrkraft of klassenU.lehrer)
-			for (const u2 of this.unterrichtGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idLehrkraft, wochentag, stunde, wochentyp, true))
-				beschreibungen.add("Lehrkraft " + this.lehrerGetBeschreibungKuerzel(idLehrkraft) + " kollidert mit " + this.unterrichtGetByID_StringOfFaLeKl(u2.id));
-		for (const u2 of this.unterrichtGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(klassenU.idKlasse, wochentag, stunde, wochentyp, true))
-			beschreibungen.add("Klasse " + klassenU.bezeichnung + " kollidert mit " + this.unterrichtGetByID_StringOfFaLeKl(u2.id));
-		for (const idSchueler of klassenU.schueler) {
-			const listS: List<string> = new ArrayList<string>();
-			for (const u2 of this.unterrichtGetMengeBySchuelerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idSchueler, wochentag, stunde, wochentyp, true))
-				listS.add("Schueler " + this.schuelerGetBeschreibungVornameNachname(idSchueler) + " kollidert mit " + this.unterrichtGetByID_StringOfFaLeKl(u2.id));
-			if (listS.size() === 1)
-				beschreibungen.add(ListUtils.getNonNullElementAtOrException(listS, 0));
-			if (listS.size() >= 2)
-				beschreibungen.add(ListUtils.getNonNullElementAtOrException(listS, 0) + " [... und " + (listS.size() - 1) + " weitere SuS]");
-		}
-		return beschreibungen;
+		const listKl: List<StundenplanKlassenunterricht> = ListUtils.create1(klassenU);
+		const listKu: List<StundenplanKurs> = new ArrayList<StundenplanKurs>();
+		const listU: List<StundenplanUnterricht> = new ArrayList<StundenplanUnterricht>();
+		return this.getDropKollisionsbeschreibungZurZelle(listKl, listKu, listU, wochentag, stunde, wochentyp);
 	}
 
 	/**
@@ -3444,20 +3440,10 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Liste aller Kollisionen des {@link StundenplanKurs}-Objekte in Bezug auf eine bestimmte Zelle.
 	 */
 	public kursGetDropKollisionsbeschreibungZurZelle(kurs: StundenplanKurs, wochentag: number, stunde: number, wochentyp: number): List<string> {
-		const beschreibungen: List<string> = new ArrayList<string>();
-		for (const idLehrkraft of kurs.lehrer)
-			for (const u2 of this.unterrichtGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idLehrkraft, wochentag, stunde, wochentyp, true))
-				beschreibungen.add("Lehrkraft " + this.lehrerGetBeschreibungKuerzel(idLehrkraft) + " kollidert mit " + this.unterrichtGetByID_StringOfFaLeKl(u2.id));
-		for (const idSchueler of kurs.schueler) {
-			const listS: List<string> = new ArrayList<string>();
-			for (const u2 of this.unterrichtGetMengeBySchuelerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idSchueler, wochentag, stunde, wochentyp, true))
-				listS.add("Schueler " + this.schuelerGetBeschreibungVornameNachname(idSchueler) + " kollidert mit " + this.unterrichtGetByID_StringOfFaLeKl(u2.id));
-			if (listS.size() === 1)
-				beschreibungen.add(ListUtils.getNonNullElementAtOrException(listS, 0));
-			if (listS.size() >= 2)
-				beschreibungen.add(ListUtils.getNonNullElementAtOrException(listS, 0) + " [... und " + (listS.size() - 1) + " weitere SuS]");
-		}
-		return beschreibungen;
+		const listKl: List<StundenplanKlassenunterricht> = new ArrayList<StundenplanKlassenunterricht>();
+		const listKu: List<StundenplanKurs> = ListUtils.create1(kurs);
+		const listU: List<StundenplanUnterricht> = new ArrayList<StundenplanUnterricht>();
+		return this.getDropKollisionsbeschreibungZurZelle(listKl, listKu, listU, wochentag, stunde, wochentyp);
 	}
 
 	/**

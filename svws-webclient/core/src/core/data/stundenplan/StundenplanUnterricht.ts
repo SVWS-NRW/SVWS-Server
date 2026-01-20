@@ -36,8 +36,8 @@ export class StundenplanUnterricht extends JavaObject {
 	public lehrer: List<number> = new ArrayList<number>();
 
 	/**
-	 * Die IDs der Klassen, die dieser Unterrichtseinheit zugeordnet sind. Diese Liste ist leer, falls idKurs definiert ist.
-	 *   Dann müssen die Klassen über die Schüler des Kurses aggregiert werden!
+	 * Die IDs der Klassen, die dieser Unterrichtseinheit zugeordnet sind.
+	 *   Vorsicht: Auch Kurs-Unterricht kann eine definierte Klasse haben, ABER dort muss man dann über die Schüler des Kurses aggregieren!
 	 */
 	public klassen: List<number> = new ArrayList<number>();
 

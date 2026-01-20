@@ -3429,10 +3429,21 @@ public class StundenplanManager {
 			// Räume existieren nicht
 		}
 		for (final StundenplanUnterricht u : listU) {
+			// Ignoriere Unterrichte, wenn DRAG-DROP-ZELLE identisch.
+			final @NotNull StundenplanZeitraster z = zeitrasterGetByIdOrException(u.idZeitraster);
+			if ((z.wochentag == wochentag) && (z.unterrichtstunde == stunde)) {
+				continue;
+			}
 			dragLehrer.addAll(u.lehrer);
-			dragKlassen.addAll(u.klassen);
-			for (final @NotNull StundenplanSchueler schueler : schuelerGetMengeByUnterrichtIdAsList(u.id))
-				dragSchueler.add(schueler.id);
+			if (u.idKurs == null) {
+				// Klassenunterricht. Kollision über die Klasse bestimmen.
+				dragKlassen.addAll(u.klassen);
+			} else {
+				// Kursunterricht. Kollision über die SuS bestimmen.
+				for (final @NotNull StundenplanSchueler schueler : schuelerGetMengeByUnterrichtIdAsList(u.id)) {
+					dragSchueler.add(schueler.id);
+				}
+			}
 			dragRaeume.addAll(u.raeume);
 		}
 
@@ -3477,30 +3488,10 @@ public class StundenplanManager {
 	 */
 	public @NotNull List<String> klassenunterrichtGetDropKollisionsbeschreibungZurZelle(
 			final @NotNull StundenplanKlassenunterricht klassenU, final int wochentag, final int stunde, final int wochentyp) {
-
-		final @NotNull List<String> beschreibungen = new ArrayList<>();
-
-		// Iteriere über alle Lehrkräfte des Klassenunterrichts und hole den Unterricht, der kollidiert.
-		for (final long idLehrkraft : klassenU.lehrer)
-			for (final @NotNull StundenplanUnterricht u2 : unterrichtGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idLehrkraft, wochentag, stunde, wochentyp, true))
-				beschreibungen.add("Lehrkraft " + lehrerGetBeschreibungKuerzel(idLehrkraft) + " kollidert mit " + unterrichtGetByID_StringOfFaLeKl(u2.id));
-
-		// Iteriere über alle Klassen des Klassenunterrichts (nur eine!) und hole den Unterricht, der kollidiert.
-		for (final @NotNull StundenplanUnterricht u2 : unterrichtGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(klassenU.idKlasse, wochentag, stunde, wochentyp, true))
-			beschreibungen.add("Klasse " + klassenU.bezeichnung + " kollidert mit " + unterrichtGetByID_StringOfFaLeKl(u2.id));
-
-		// Iteriere über alle SuS des Klassenunterrichts und hole den Unterricht, der kollidiert.
-		for (final long idSchueler : klassenU.schueler) {
-			final @NotNull List<String> listS = new ArrayList<>();
-			for (final @NotNull StundenplanUnterricht u2 : unterrichtGetMengeBySchuelerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idSchueler, wochentag, stunde, wochentyp, true))
-				listS.add("Schueler " + schuelerGetBeschreibungVornameNachname(idSchueler) + " kollidert mit " + unterrichtGetByID_StringOfFaLeKl(u2.id));
-			if (listS.size() == 1)
-				beschreibungen.add(ListUtils.getNonNullElementAtOrException(listS, 0));
-			if (listS.size() >= 2)
-				beschreibungen.add(ListUtils.getNonNullElementAtOrException(listS, 0) + " [... und " + (listS.size() - 1) + " weitere SuS]");
-		}
-
-		return beschreibungen;
+		final @NotNull List<StundenplanKlassenunterricht> listKl = ListUtils.create1(klassenU);
+		final @NotNull List<StundenplanKurs> listKu = new ArrayList<>();
+		final @NotNull List<StundenplanUnterricht> listU = new ArrayList<>();
+		return getDropKollisionsbeschreibungZurZelle(listKl, listKu, listU, wochentag, stunde, wochentyp);
 	}
 
 	/**
@@ -3813,26 +3804,10 @@ public class StundenplanManager {
 	 */
 	public @NotNull List<String> kursGetDropKollisionsbeschreibungZurZelle(
 			final @NotNull StundenplanKurs kurs, final int wochentag, final int stunde, final int wochentyp) {
-
-		final @NotNull List<String> beschreibungen = new ArrayList<>();
-
-		// Iteriere über alle Lehrkräfte des Kursunterrichts und hole den Unterricht, der kollidiert.
-		for (final long idLehrkraft : kurs.lehrer)
-			for (final @NotNull StundenplanUnterricht u2 : unterrichtGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idLehrkraft, wochentag, stunde, wochentyp, true))
-				beschreibungen.add("Lehrkraft " + lehrerGetBeschreibungKuerzel(idLehrkraft) + " kollidert mit " + unterrichtGetByID_StringOfFaLeKl(u2.id));
-
-		// Iteriere über alle SuS des Kursunterrichts und hole den Unterricht, der kollidiert.
-		for (final long idSchueler : kurs.schueler) {
-			final @NotNull List<String> listS = new ArrayList<>();
-			for (final @NotNull StundenplanUnterricht u2 : unterrichtGetMengeBySchuelerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idSchueler, wochentag, stunde, wochentyp, true))
-				listS.add("Schueler " + schuelerGetBeschreibungVornameNachname(idSchueler) + " kollidert mit " + unterrichtGetByID_StringOfFaLeKl(u2.id));
-			if (listS.size() == 1)
-				beschreibungen.add(ListUtils.getNonNullElementAtOrException(listS, 0));
-			if (listS.size() >= 2)
-				beschreibungen.add(ListUtils.getNonNullElementAtOrException(listS, 0) + " [... und " + (listS.size() - 1) + " weitere SuS]");
-		}
-
-		return beschreibungen;
+		final @NotNull List<StundenplanKlassenunterricht> listKl = new ArrayList<>();
+		final @NotNull List<StundenplanKurs> listKu = ListUtils.create1(kurs);
+		final @NotNull List<StundenplanUnterricht> listU = new ArrayList<>();
+		return getDropKollisionsbeschreibungZurZelle(listKl, listKu, listU, wochentag, stunde, wochentyp);
 	}
 
 	/**

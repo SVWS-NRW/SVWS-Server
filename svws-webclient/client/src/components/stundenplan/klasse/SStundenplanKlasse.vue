@@ -165,12 +165,11 @@
 <script setup lang="ts">
 
 	import { computed, ref, shallowRef, toRaw, watch } from "vue";
-	import { useRegionSwitch, type DataTableColumn } from "@ui";
-	import type { StundenplanAnsichtDragData, StundenplanAnsichtDropZone } from "@ui";
+	import type { StundenplanAnsichtDragData, StundenplanAnsichtDropZone, DataTableColumn } from "@ui";
+	import { useRegionSwitch } from "@ui";
 	import type { StundenplanKlasseProps } from "./SStundenplanKlasseProps";
 	import type { List, StundenplanRaum } from "@core";
-	import { StundenplanKlasse } from "@core";
-	import { ArrayList, StundenplanKurs, StundenplanKlassenunterricht, Fach, StundenplanUnterricht, StundenplanZeitraster, HashSet, StundenplanSchiene, BenutzerKompetenz, ListUtils, Wochentag } from "@core";
+	import { ArrayList, StundenplanKurs, StundenplanKlassenunterricht, Fach, StundenplanUnterricht, StundenplanZeitraster, HashSet, StundenplanSchiene, BenutzerKompetenz, ListUtils, Wochentag, StundenplanKlasse } from "@core";
 
 	const props = defineProps<StundenplanKlasseProps>();
 
@@ -181,7 +180,6 @@
 	const doppelstundenModus = shallowRef<boolean>(false);
 	const schienSortierung = shallowRef<boolean>(true);
 	const auswahl = ref<StundenplanKlassenunterricht | StundenplanUnterricht | StundenplanKurs | undefined>();
-	const refSelect = ref();
 
 	const readonly = computed<boolean>(() => !props.benutzerKompetenzen.has(BenutzerKompetenz.STUNDENPLAN_AENDERN));
 
@@ -192,7 +190,7 @@
 			if (_klasse.value !== undefined) {
 				try {
 					return props.stundenplanManager().klasseGetByIdOrException(_klasse.value.id);
-				} catch (e) { /* empty */ }
+				} catch { /* empty */ }
 			}
 			return props.stundenplanManager().klasseGetMengeAsList().isEmpty() ? new StundenplanKlasse() : props.stundenplanManager().klasseGetMengeAsList().get(0);
 		},
@@ -269,14 +267,6 @@
 		return result;
 	}
 
-	function getListOfUnterrichte(unterricht: StundenplanUnterricht) {
-		const liste = new ArrayList<number>();
-		for (const u of props.stundenplanManager().unterrichtGetMengeByUnterrichtId(unterricht.id)) {
-			liste.add(u.id);
-		}
-		return liste;
-	}
-
 	async function patchUnterrichtRaeume(liste: List<StundenplanUnterricht>, raeume: Iterable<StundenplanRaum>) {
 		disabled.value = true;
 		const ids = new ArrayList<number>();
@@ -347,9 +337,9 @@
 			const stunde = { idZeitraster: zone.id, wochentyp, idKurs: null, idFach: dragData.value.idFach, klassen, lehrer: dragData.value.lehrer, schienen: dragData.value.schienen };
 			const arr = [];
 			arr.push(stunde);
-			if (doppelstundenModus.value === true && props.stundenplanManager().klassenunterrichtGetWochenstundenREST(klasse.value.id, dragData.value.idFach) >= 2) {
+			if (doppelstundenModus.value && (props.stundenplanManager().klassenunterrichtGetWochenstundenREST(klasse.value.id, dragData.value.idFach) >= 2)) {
 				const next = props.stundenplanManager().getZeitrasterNext(zone);
-				if (next && props.stundenplanManager().klassenunterrichtDarfInZelle(dragData.value, zone.wochentag, next.unterrichtstunde, wochentyp)) {
+				if (next !== null) {
 					arr.push({ idZeitraster: next.id, wochentyp, idKurs: null, idFach: dragData.value.idFach, klassen, lehrer: dragData.value.lehrer, schienen: dragData.value.schienen });
 				}
 			}

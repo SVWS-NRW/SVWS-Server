@@ -43,8 +43,8 @@ public class StundenplanUnterricht {
 			schema = @Schema(implementation = Long.class, description = "Ein Array mit den IDs der Lehrer, die dieser Unterrichtseinheit zugeordnet sind."))
 	public @NotNull List<Long> lehrer = new ArrayList<>();
 
-	/** Die IDs der Klassen, die dieser Unterrichtseinheit zugeordnet sind. Diese Liste ist leer, falls idKurs definiert ist.
-	 *  Dann müssen die Klassen über die Schüler des Kurses aggregiert werden!*/
+	/** Die IDs der Klassen, die dieser Unterrichtseinheit zugeordnet sind.
+	 *  Vorsicht: Auch Kurs-Unterricht kann eine definierte Klasse haben, ABER dort muss man dann über die Schüler des Kurses aggregieren!*/
 	@ArraySchema(
 			schema = @Schema(implementation = Long.class, description = "Ein Array mit den IDs der Klassen, die dieser Unterrichtseinheit zugeordnet sind."))
 	public @NotNull List<Long> klassen = new ArrayList<>();
