@@ -5,32 +5,37 @@ import type { Schulform } from '../../../../../core/src/asd/types/schule/Schulfo
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
 import { ArrayList } from '../../../../../core/src/java/util/ArrayList';
 import type { List } from '../../../../../core/src/java/util/List';
-import { Class } from '../../../../../core/src/java/lang/Class';
 import { JavaString } from '../../../../../core/src/java/lang/JavaString';
 import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
 import type { Beschaeftigungsart } from '../../../../../core/src/core/data/betrieb/Beschaeftigungsart';
 import type { Comparator } from '../../../../../core/src/java/util/Comparator';
+import { HashSet, type JavaSet } from "../../../../../core/src";
 
 export class BeschaeftigungsartenListeManager extends AuswahlManager<number, Beschaeftigungsart, Beschaeftigungsart> {
 
 	private static readonly _beschaeftigungsartToId: JavaFunction<Beschaeftigungsart, number> = { apply: (a: Beschaeftigungsart) => a.id };
+	private readonly _idsReferencedBeschaeftigungsarten: HashSet<number> = new HashSet<number>();
+	private _filterNurSichtbar: boolean = true;
+	private _searchTerm: string = "";
 
 	/**
 	 * Ein Default-Comparator für den Vergleich von Beschäftigungsarten.
 	 */
-	public static readonly comparator: Comparator<Beschaeftigungsart> = { compare: (a: Beschaeftigungsart, b: Beschaeftigungsart) => {
-		let cmp: number = JavaInteger.compare(a.sortierung, b.sortierung);
-		if (cmp !== 0) {
-			return cmp;
-		}
-		if ((a.bezeichnung !== null) && (b.bezeichnung !== null)) {
-			cmp = JavaString.compareTo(a.bezeichnung, b.bezeichnung);
+	public static readonly comparator: Comparator<Beschaeftigungsart> = {
+		compare: (a: Beschaeftigungsart, b: Beschaeftigungsart) => {
+			let cmp: number = JavaInteger.compare(a.sortierung, b.sortierung);
 			if (cmp !== 0) {
 				return cmp;
 			}
-		}
-		return JavaLong.compare(a.id, b.id);
-	} };
+			if ((a.bezeichnung !== null) && (b.bezeichnung !== null)) {
+				cmp = JavaString.compareTo(a.bezeichnung, b.bezeichnung);
+				if (cmp !== 0) {
+					return cmp;
+				}
+			}
+			return JavaLong.compare(a.id, b.id);
+		},
+	};
 
 
 	/**
@@ -46,26 +51,51 @@ export class BeschaeftigungsartenListeManager extends AuswahlManager<number, Bes
 		super(idSchuljahresabschnitt, idSchuljahresabschnittSchule, schuljahresabschnitte, schulform, beschaeftigungsarten, BeschaeftigungsartenListeManager.comparator, BeschaeftigungsartenListeManager._beschaeftigungsartToId, BeschaeftigungsartenListeManager._beschaeftigungsartToId, ArrayList.of());
 	}
 
-	protected checkFilter(eintrag: Beschaeftigungsart | null): boolean {
-		return true;
-	}
-
 	protected compareAuswahl(a: Beschaeftigungsart, b: Beschaeftigungsart): number {
 		return BeschaeftigungsartenListeManager.comparator.compare(a, b);
 	}
 
-	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.core.utils.kataloge.beschaeftigungsarten.BeschaeftigungsartenListeManager';
+	protected checkFilter(eintrag: Beschaeftigungsart): boolean {
+		if (this._filterNurSichtbar && !eintrag.istSichtbar) {
+			return false;
+		}
+
+		return this.entryMatchesSearchterm(eintrag);
 	}
 
-	isTranspiledInstanceOf(name: string): boolean {
-		return ['de.svws_nrw.core.utils.AuswahlManager', 'de.svws_nrw.core.utils.kataloge.beschaeftigungsarten.BeschaeftigungsartenListeManager'].includes(name);
+	private entryMatchesSearchterm(eintrag: Beschaeftigungsart): boolean {
+		const searchTermLower = this._searchTerm.toLowerCase();
+		return eintrag.bezeichnung?.toLocaleLowerCase().includes(searchTermLower) ?? false;
 	}
 
-	public static class = new Class<BeschaeftigungsartenListeManager>('de.svws_nrw.core.utils.kataloge.beschaeftigungsarten.BeschaeftigungsartenListeManager');
+	protected onMehrfachauswahlChanged(): void {
+		this._idsReferencedBeschaeftigungsarten.clear();
+		for (const l of this.liste.auswahl()) {
+			if (l.referenziertInAnderenTabellen) {
+				this._idsReferencedBeschaeftigungsarten.add(l.id);
+			}
+		}
+	}
 
-}
+	get filterNurSichtbar(): boolean {
+		return this._filterNurSichtbar;
+	}
 
-export function cast_de_svws_nrw_core_utils_kataloge_beschaeftigungsarten_BeschaeftigungsartenListeManager(obj: unknown): BeschaeftigungsartenListeManager {
-	return obj as BeschaeftigungsartenListeManager;
+	set filterNurSichtbar(value: boolean) {
+		this._filterNurSichtbar = value;
+		this._eventHandlerFilterChanged.run();
+	}
+
+	get searchTerm(): string {
+		return this._searchTerm;
+	}
+
+	set searchTerm(value: string) {
+		this._searchTerm = value;
+		this._eventHandlerFilterChanged.run();
+	}
+
+	get idsReferencedBeschaeftigungsarten(): JavaSet<number> {
+		return this._idsReferencedBeschaeftigungsarten;
+	}
 }
