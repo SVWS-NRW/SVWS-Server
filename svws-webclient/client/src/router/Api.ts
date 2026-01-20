@@ -120,6 +120,18 @@ class Api {
 	};
 
 	/**
+	 * Versucht einen gespeicherten Login wiederherzustellen.
+	 *
+	 * @returns true, falls der Login erfolgreich rekonstruiert werden konnte
+	 */
+	restoreSession = async (): Promise<boolean> => {
+		const restored = await this.conn.restoreSession();
+		if (!restored)
+			return false;
+		return await this.init();
+	};
+
+	/**
 	 * Initialialisiert die Daten, die beim Login geladen )erden sollen
 	 *
 	 * @returns {Promise<boolean>} true beim erfolgreichen Laden der Daten und ansonsten false

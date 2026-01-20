@@ -27,6 +27,6 @@ while true; do
   echo "Cleaning old backups..."
   ls -1tr /backups/*.sql | head -n -10 | xargs -r rm -f
 
-  echo "Next backup in 5 minutes..."
-  sleep 300
+  echo "Next backup in 1 week..."
+  sleep 604800
 done

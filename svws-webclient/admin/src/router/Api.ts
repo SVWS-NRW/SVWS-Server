@@ -104,6 +104,15 @@ class Api {
 	};
 
 	/**
+	 * Versucht einen gespeicherten Login wiederherzustellen.
+	 *
+	 * @returns true, falls der Login erfolgreich rekonstruiert wurde
+	 */
+	restoreSession = async (): Promise<boolean> => {
+		return await this.conn.restoreSession();
+	};
+
+	/**
 	 * Meldet den angemeldeten Benutzer bei der Api ab.
 	 */
 	logout = async (): Promise<void> => {

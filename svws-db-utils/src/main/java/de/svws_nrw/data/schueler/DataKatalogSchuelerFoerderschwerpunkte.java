@@ -12,6 +12,7 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response.Status;
 
 import java.util.Comparator;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -63,7 +64,9 @@ public final class DataKatalogSchuelerFoerderschwerpunkte extends DataManagerRev
 	public List<FoerderschwerpunktEintrag> getAll() {
 		final List<DTOFoerderschwerpunkt> foerderschwerpunkte = this.conn.queryAll(DTOFoerderschwerpunkt.class);
 		final Set<Long> idsFoerderschwerpunkte = mapToIds(foerderschwerpunkte);
-		final Set<Long> idsOfReferencedFoerderschwerpunkte = this.getIdsOfReferencedFoerderschwerpunkte(idsFoerderschwerpunkte);
+		final Set<Long> idsOfReferencedFoerderschwerpunkte = idsFoerderschwerpunkte.isEmpty()
+				? Collections.emptySet()
+				: this.getIdsOfReferencedFoerderschwerpunkte(idsFoerderschwerpunkte);
 
 		return foerderschwerpunkte.stream()
 				.map(f -> {
@@ -150,6 +153,8 @@ public final class DataKatalogSchuelerFoerderschwerpunkte extends DataManagerRev
 	}
 
 	private Set<Long> getIdsOfReferencedFoerderschwerpunkte(final Set<Long> ids) {
+		if ((ids == null) || ids.isEmpty())
+			return new HashSet<>();
 		final String query1 = "SELECT DISTINCT f.Foerderschwerpunkt_ID FROM DTOSchuelerLernabschnittsdaten f WHERE f.Foerderschwerpunkt_ID IN :ids";
 		final String query2 = "SELECT DISTINCT g.Foerderschwerpunkt2_ID FROM DTOSchuelerLernabschnittsdaten g WHERE g.Foerderschwerpunkt2_ID IN :ids";
 		final String query = String.join("\nUNION\n", query1, query2);
