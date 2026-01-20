@@ -5,6 +5,15 @@ import { BenutzerKennwort } from "@core/core/data/BenutzerKennwort";
 import { UserNotificationException } from "@core/core/exceptions/UserNotificationException";
 import { ServerMode } from "@core/core/types/ServerMode";
 
+const ADMIN_LOGIN_STORAGE_KEY = "SVWS-Admin AutoLogin";
+const LOGIN_STORAGE_MAX_AGE = 60 * 60 * 1000;
+
+interface PersistedAdminLoginData {
+	hostname: string;
+	username: string;
+	password: string;
+	timestamp: number;
+}
 
 export class ApiConnection {
 
@@ -172,6 +181,7 @@ export class ApiConnection {
 			this._authenticated.value = true;
 			this._api = new ApiServer(this._url, "", "");
 			this._serverMode.value = ServerMode.getByText(await this._api.getServerModus());
+			this.persistLoginSession(username, password);
 			return true;
 		} catch (error) {
 			// TODO Anmelde-Fehler wird nur in der App angezeigt. Der konkrete Fehler könnte ggf. geloggt werden...
@@ -194,7 +204,72 @@ export class ApiConnection {
 		this._api = undefined;
 		this._schema_api_privileged = undefined;
 		this._isServerAdmin = false;
+		this.clearPersistedLoginSession();
 	};
 
-}
+	/**
+	 * Versucht einen gespeicherten Login für die Administrative Verwaltung wiederherzustellen.
+	 *
+	 * @returns true, falls der Login erfolgreich rekonstruiert wurde
+	 */
+	restoreSession = async (): Promise<boolean> => {
+		const persisted = this.getPersistedLoginSession();
+		if (persisted === null)
+			return false;
+		this._hostname.value = persisted.hostname;
+		this._url = `https://${persisted.hostname}`;
+		await this.login(persisted.username, persisted.password);
+		if (!this.authenticated) {
+			this.clearPersistedLoginSession();
+			return false;
+		}
+		return true;
+	};
 
+	private persistLoginSession(username: string, password: string): void {
+		try {
+			const hostname = this._hostname.value;
+			if ((hostname === undefined) || (hostname.length === 0))
+				return;
+			const data: PersistedAdminLoginData = {
+				hostname,
+				username,
+				password,
+				timestamp: Date.now(),
+			};
+			localStorage.setItem(ADMIN_LOGIN_STORAGE_KEY, JSON.stringify(data));
+		} catch (error) {
+			console.warn("Persistenter Admin-Login konnte nicht gespeichert werden:", error);
+		}
+	}
+
+	private clearPersistedLoginSession(): void {
+		try {
+			localStorage.removeItem(ADMIN_LOGIN_STORAGE_KEY);
+		} catch (error) {
+			console.warn("Persistenter Admin-Login konnte nicht entfernt werden:", error);
+		}
+	}
+
+	private getPersistedLoginSession(): PersistedAdminLoginData | null {
+		try {
+			const raw = localStorage.getItem(ADMIN_LOGIN_STORAGE_KEY);
+			if (raw === null)
+				return null;
+			const data = JSON.parse(raw) as PersistedAdminLoginData;
+			if ((data.hostname === undefined) || (data.username === undefined) || (data.password === undefined) || (data.timestamp === undefined)) {
+				this.clearPersistedLoginSession();
+				return null;
+			}
+			if ((Date.now() - data.timestamp) > LOGIN_STORAGE_MAX_AGE) {
+				this.clearPersistedLoginSession();
+				return null;
+			}
+			return data;
+		} catch (error) {
+			this.clearPersistedLoginSession();
+			return null;
+		}
+	}
+
+}

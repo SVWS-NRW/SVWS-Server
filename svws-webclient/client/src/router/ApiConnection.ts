@@ -1,11 +1,22 @@
 import { ref, shallowRef } from "vue";
 
 import type { BenutzerDaten, DBSchemaListeEintrag, List, SchuleStammdaten } from "@core";
-import { ValidatorKontext, ApiSchema, ApiServer, ApiExternal, BenutzerKompetenz, ServerMode, DeveloperNotificationException, UserNotificationException, OpenApiError } from "@core";
+import { ValidatorKontext, ApiSchema, ApiServer, ApiExternal, BenutzerKompetenz, ServerMode, DeveloperNotificationException, UserNotificationException, OpenApiError, JsonCoreTypeReader } from "@core";
 
 import { Config } from "../../../ui/src/utils/Config";
 import { AES } from "~/utils/crypto/aes";
 import { AESAlgo } from "~/utils/crypto/aesAlgo";
+
+const LOGIN_STORAGE_KEY = "SVWS-Client AutoLogin";
+const LOGIN_STORAGE_MAX_AGE = 60 * 60 * 1000; // 1 Stunde
+
+interface PersistedLoginData {
+	hostname: string;
+	schema: string;
+	username: string;
+	password: string;
+	timestamp: number;
+}
 
 export class ApiConnection {
 
@@ -452,6 +463,7 @@ export class ApiConnection {
 			this._kompetenzenAbiturjahrgaenge.value = this.getKompetenzenAbiturjahrgaenge(this._benutzerdaten.value);
 			this._serverMode.value = ServerMode.getByText(await this._api.getServerModus());
 			await this.initConfig();
+			this.persistLoginSession(schema, username, password);
 		} catch (error) {
 			// Wenn Status 404, dann ist das Schema noch nicht initialisiert
 			if ((error instanceof OpenApiError) && (error.response?.status === 404))
@@ -499,7 +511,83 @@ export class ApiConnection {
 		this.config.mapUser = new Map();
 		this.nonPersistentConfig.mapGlobal = new Map();
 		this.nonPersistentConfig.mapUser = new Map();
+		this.clearPersistedLoginSession();
 	};
+
+	/**
+	 * Versucht einen zuvor gespeicherten Login wiederherzustellen.
+	 *
+	 * @returns true, falls der Login erfolgreich rekonstruiert werden konnte.
+	 */
+	restoreSession = async (): Promise<boolean> => {
+		const persisted = this.getPersistedLoginSession();
+		if (persisted === null)
+			return false;
+		this._hostname.value = persisted.hostname;
+		this._url = `https://${persisted.hostname}`;
+		try {
+			const reader = new JsonCoreTypeReader(this._url);
+			await reader.loadAll();
+			reader.readAll();
+			this.mapCoreTypeNameJsonData = reader.mapCoreTypeNameJsonData;
+		} catch (error) {
+			this.clearPersistedLoginSession();
+			return false;
+		}
+		await this.login(persisted.schema, persisted.username, persisted.password);
+		if (!this.authenticated) {
+			this.clearPersistedLoginSession();
+			return false;
+		}
+		return true;
+	};
+
+	private persistLoginSession(schema: string, username: string, password: string): void {
+		try {
+			const hostname = this._hostname.value;
+			if ((hostname === undefined) || (hostname.length === 0))
+				return;
+			const data: PersistedLoginData = {
+				hostname,
+				schema,
+				username,
+				password,
+				timestamp: Date.now(),
+			};
+			localStorage.setItem(LOGIN_STORAGE_KEY, JSON.stringify(data));
+		} catch (error) {
+			console.warn("Persistenter Login konnte nicht gespeichert werden:", error);
+		}
+	}
+
+	private clearPersistedLoginSession(): void {
+		try {
+			localStorage.removeItem(LOGIN_STORAGE_KEY);
+		} catch (error) {
+			console.warn("Persistenter Login konnte nicht entfernt werden:", error);
+		}
+	}
+
+	private getPersistedLoginSession(): PersistedLoginData | null {
+		try {
+			const raw = localStorage.getItem(LOGIN_STORAGE_KEY);
+			if (raw === null)
+				return null;
+			const data = JSON.parse(raw) as PersistedLoginData;
+			if ((data.hostname === undefined) || (data.schema === undefined) || (data.username === undefined) || (data.password === undefined) || (data.timestamp === undefined)) {
+				this.clearPersistedLoginSession();
+				return null;
+			}
+			if ((Date.now() - data.timestamp) > LOGIN_STORAGE_MAX_AGE) {
+				this.clearPersistedLoginSession();
+				return null;
+			}
+			return data;
+		} catch (error) {
+			this.clearPersistedLoginSession();
+			return null;
+		}
+	}
 
 	/**
 	 * Informiert die Api-Verbindung, dass ihre Daten, z.B. die Stammdaten der Schule angepasst wurden
@@ -509,4 +597,3 @@ export class ApiConnection {
 	};
 
 }
-

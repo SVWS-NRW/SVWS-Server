@@ -41,6 +41,9 @@ export class RouteManager {
 		text: undefined,
 	});
 
+	/** Gibt an, ob bereits versucht wurde einen gespeicherten Login wiederherzustellen */
+	private sessionRestoreAttempted = false;
+
 	/**
 	 * Erstellt die Instanz des Managers für die übergebene Route
 	 *
@@ -190,6 +193,14 @@ export class RouteManager {
 			return false;
 		this.active = true; // Setze, dass ein Routing-Vorgang bearbeitet wird
 		api.status.start();
+		if (!api.authenticated && !this.sessionRestoreAttempted) {
+			this.sessionRestoreAttempted = true;
+			try {
+				await api.restoreSession();
+			} catch (e) {
+				console.warn("Automatische Anmeldung konnte nicht durchgeführt werden:", e);
+			}
+		}
 		// Ist der Benutzer nicht authentifiziert, so wird er zur Login-Seite weitergeleitet
 		if (!api.authenticated && (to.name !== "login")) {
 			routeLogin.routepath = to.fullPath;
