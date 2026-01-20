@@ -1,12 +1,17 @@
 <template>
 	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Allgemein">
-			<svws-ui-input-wrapper>
-				<svws-ui-text-input class="contentFocusField" placeholder="Bezeichnung" :model-value="manager().daten().bezeichnung"
-					:readonly :max-len="100" :min-len="1" @change="v => patch({ bezeichnung: v?.trim() ?? undefined })" />
-				<svws-ui-input-number placeholder="Sortierung" :model-value="manager().daten().sortierung" :readonly :min="0" :max="32000"
-					@change="value => patch({ sortierung: value === null ? 32000 : value })" />
-				<svws-ui-checkbox :model-value="manager().daten().istSichtbar" @update:model-value="istSichtbar => patch({ istSichtbar })" :readonly>
+			<svws-ui-input-wrapper :grid="2">
+				<svws-ui-text-input placeholder="Bezeichnung" class="contentFocusField" span="2"
+					:model-value="manager().auswahl().bezeichnung"
+					@change="patchBezeichnung"
+					:valid="bezeichnungIsValid" :min-len="1" :max-len="100" required :readonly="!hatKompetenzUpdate" />
+				<svws-ui-input-number placeholder="Sortierung"
+					:model-value="manager().auswahl().sortierung"
+					@change="patchSortierung"
+					:valid="sortierungIsValid" :min="0" :max="32000" :readonly="!hatKompetenzUpdate" :removable="false" />
+				<svws-ui-spacing />
+				<svws-ui-checkbox v-model="istSichtbar" :readonly="!hatKompetenzUpdate">
 					Sichtbar
 				</svws-ui-checkbox>
 			</svws-ui-input-wrapper>
@@ -19,9 +24,41 @@
 	import type { BeschaeftigungsartenDatenProps } from "~/components/schule/kataloge/beschaeftigungsarten/daten/BeschaeftigungsartenDatenProps";
 	import { BenutzerKompetenz } from "@core";
 	import { computed } from "vue";
+	import { isUniqueInList, mandatoryInputIsValid, numberHasDecimals, numberIsValid } from "~/util/validation/Validation";
 
 	const props = defineProps<BeschaeftigungsartenDatenProps>();
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
-	const readonly = computed<boolean>(() => !hatKompetenzUpdate.value);
+
+	const istSichtbar = computed<boolean>({
+		get: () => props.manager().auswahl().istSichtbar,
+		set: (v: boolean) => void patchSichtbar(v),
+	});
+
+	async function patchBezeichnung(bezeichnung: string | null) {
+		if (bezeichnungIsValid(bezeichnung)) {
+			await props.patch({ bezeichnung: bezeichnung ?? '' });
+		}
+	}
+
+	async function patchSortierung(value: number | null): Promise<void> {
+		if (sortierungIsValid(value)) {
+			await props.patch({ sortierung: value === null ? 32000 : value });
+		}
+	}
+
+	async function patchSichtbar(value: boolean): Promise<void> {
+		await props.patch({ istSichtbar: value });
+	}
+
+	// ---validate---
+	function bezeichnungIsValid(bezeichnung: string | null) {
+		return mandatoryInputIsValid(bezeichnung, 100)
+			&& isUniqueInList(bezeichnung, props.manager().liste.list(), "bezeichnung", "id", props.manager().auswahlID() ?? undefined);
+	}
+
+	function sortierungIsValid(sortierung: number | null): boolean {
+		return !numberHasDecimals(sortierung)
+			&& numberIsValid(sortierung, true, 0, 32000);
+	}
 
 </script>
