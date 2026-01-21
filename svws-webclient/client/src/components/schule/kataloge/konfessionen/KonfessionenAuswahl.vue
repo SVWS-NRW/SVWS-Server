@@ -16,7 +16,7 @@
 					<svws-ui-checkbox type="toggle" v-model="showOnlyVisibleKonfessionen">Nur Sichtbare</svws-ui-checkbox>
 				</template>
 				<template #actions>
-					<svws-ui-tooltip position="bottom" v-if="ServerMode.DEV.checkServerMode(serverMode)">
+					<svws-ui-tooltip position="bottom">
 						<svws-ui-button type="icon"
 							@click="gotoHinzufuegenView(true)"
 							:has-focus="noFilteredEntries"
@@ -36,7 +36,7 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import { BenutzerKompetenz, type ReligionEintrag, ServerMode } from "@core";
+	import { BenutzerKompetenz, type ReligionEintrag } from "@core";
 	import type { KonfessionenAuswahlProps } from "~/components/schule/kataloge/konfessionen/KonfessionenAuswahlPops";
 	import { useRegionSwitch, ViewType } from "@ui";
 

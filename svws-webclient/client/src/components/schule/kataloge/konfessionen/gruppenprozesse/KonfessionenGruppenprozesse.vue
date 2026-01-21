@@ -3,7 +3,7 @@
 		<div v-if="hatkeineErforderlicheKompetenz">
 			Für die Nutzung der Gruppenprozesse fehlen Benutzerkompetenzen.
 		</div>
-		<div v-if="ServerMode.DEV.checkServerMode(serverMode)" class="flex flex-col gap-4">
+		<div class="flex flex-col gap-4">
 			<ui-card icon="i-ri-delete-bin-line" title="Löschen" subtitle="Ausgewählte Konfessionen werden gelöscht." v-if="hatKompetenzLoeschen">
 				<div>
 					<span v-if="selectedAllowedToDelete">Alle ausgewählten Konfessionen sind bereit zum Löschen.</span>
@@ -57,7 +57,7 @@
 	import type { KonfessionenGruppenprozesseProps } from "~/components/schule/kataloge/konfessionen/gruppenprozesse/KonfessionenGruppenprozesseProps";
 	import type { List } from "@core";
 	import { computed, ref } from "vue";
-	import { BenutzerKompetenz, ServerMode } from "@core";
+	import { BenutzerKompetenz } from "@core";
 
 	const props = defineProps<KonfessionenGruppenprozesseProps>();
 	const isLoading = ref<boolean>(false);
@@ -91,7 +91,6 @@
 		logs.value = logMessages;
 		status.value = delStatus;
 		isLoading.value = false;
-		await props.gotoDefaultView(null);
 	}
 
 	function clearLog() {
