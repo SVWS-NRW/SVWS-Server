@@ -102,7 +102,7 @@
 				<svws-ui-select title="2. Staatsangehörigkeit" :readonly v-model="staatsangehoerigkeit2" autocomplete removable
 					:items="Nationalitaeten.values()" :item-text="i => i.historie().getLast().staatsangehoerigkeit"
 					:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter" />
-				<svws-ui-select title="Konfession" :readonly v-model="religion" :items="mapReligionen" :item-text="i => i.bezeichnungZeugnis ?? ''" required statistics />
+				<svws-ui-select title="Konfession" :readonly v-model="religion" :items="mapReligionen" :item-text="i => i.bezeichnung ?? ''" required statistics />
 				<div class="flex items-center pl-2">
 					<svws-ui-checkbox v-model="druckeKonfessionAufZeugnisse" :readonly>Konfession aufs Zeugnis</svws-ui-checkbox>
 				</div>
