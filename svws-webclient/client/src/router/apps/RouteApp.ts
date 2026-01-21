@@ -58,6 +58,7 @@ import { routeOrte } from "~/router/apps/schule/kataloge/orte/RouteOrte";
 import { routeOrtsteile } from "~/router/apps/schule/kataloge/ortsteile/RouteOrtsteile";
 
 import SApp from "~/components/SApp.vue";
+import { routeBetriebsarten } from "./schule/kataloge/betriebsarten/RouteBetriebsarten";
 
 
 export class RouteApp extends RouteNode<RouteDataApp, any> {
@@ -148,6 +149,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeAbteilungen,
 			routeBetriebe,
 			routeBeschaeftigungsarten,
+			routeBetriebsarten,
 			routeEinwilligungsarten,
 			routeEntlassgruende,
 			routeErzieherarten,

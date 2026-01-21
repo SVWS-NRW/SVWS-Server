@@ -3,6 +3,7 @@ package de.svws_nrw.core.data.schule;
 
 import de.svws_nrw.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -20,7 +21,7 @@ public class Betriebsart {
 
 	/** Die Bezeichnung der Betriebsart. */
 	@Schema(description = "Die Bezeichnung der Betriebsart.", example = "Einzelhandel")
-	public String bezeichnung;
+	public @NotNull String bezeichnung = "";
 
 	/** Gibt an, ob die Betriebsart in der Anwendung sichtbar sein soll oder nicht. */
 	@Schema(description = "Gibt an, ob die Betriebsart in der Anwendung sichtbar sein soll oder nicht.", example = "true")

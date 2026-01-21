@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
+import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.schule.Betriebsart;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOBetriebsart;
@@ -17,6 +18,10 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import java.util.stream.Stream;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -60,6 +65,24 @@ class DataBetriebsartenTest {
 	}
 
 	@Test
+	@DisplayName("add | Erfolg")
+	void add() throws ApiOperationException {
+		final var dto = new DTOBetriebsart(1L, "TestBetriebsart");
+		dto.Sortierung = 32000;
+		when(this.conn.queryByKey(DTOBetriebsart.class, 1L)).thenReturn(dto);
+		when(this.conn.transactionGetNextID(DTOBetriebsart.class)).thenReturn(1L);
+		when(this.conn.transactionPersist(any(DTOBetriebsart.class))).thenReturn(true);
+
+		final var result = this.data.add(Map.of("bezeichnung", "TestBetriebsart"));
+
+		assertThat(result)
+				.isInstanceOf(Betriebsart.class)
+				.hasFieldOrPropertyWithValue("id", 1L)
+				.hasFieldOrPropertyWithValue("bezeichnung", "TestBetriebsart")
+				.hasFieldOrPropertyWithValue("sortierung", 32000);
+	}
+
+	@Test
 	@DisplayName("setAttributesNotPatchable: id")
 	void setAttributesNotPatchableId() {
 		when(this.conn.queryByKey(DTOBetriebsart.class, 1L)).thenReturn(mock(DTOBetriebsart.class));
@@ -68,6 +91,18 @@ class DataBetriebsartenTest {
 				.isThrownBy(() -> this.data.patch(1L, Map.of("id", "test")))
 				.isInstanceOf(ApiOperationException.class)
 				.withMessage("Folgende Attribute werden für ein Patch nicht zugelassen: id.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("setAttributesNotPatchable: referenziertInAnderenTabellen")
+	void setAttributesNotPatchableReferenziertInAnderenTabellen() {
+		when(this.conn.queryByKey(DTOBetriebsart.class, 1L)).thenReturn(mock(DTOBetriebsart.class));
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, Map.of("referenziertInAnderenTabellen", "test")))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Folgende Attribute werden für ein Patch nicht zugelassen: referenziertInAnderenTabellen.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
@@ -230,17 +265,26 @@ class DataBetriebsartenTest {
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
-	@Test
-	@DisplayName("patch | bezeichnung null")
-	void patchBezeichnungIsNull() {
+	static Stream<Arguments> patchAttributeIsNullArguments() {
+		return Stream.of(
+				Arguments.of("bezeichnung", "Attribut bezeichnung: Der Wert null ist nicht erlaubt."),
+				Arguments.of("istSichtbar", "Attribut istSichtbar: Der Wert null ist nicht erlaubt"),
+				Arguments.of("sortierung", "Attribut sortierung: Der Wert null ist nicht erlaubt")
+		);
+	}
+
+	@ParameterizedTest(name = "patch | {0} is null")
+	@MethodSource("patchAttributeIsNullArguments")
+	@DisplayName("patch | attribute is null")
+	void patchAttributeIsNull(final String attribute, final String expectedMessage) {
 		when(this.conn.queryByKey(DTOBetriebsart.class, 1L)).thenReturn(mock(DTOBetriebsart.class));
 		final var map = new HashMap<String, Object>();
-		map.put("bezeichnung", null);
+		map.put(attribute, null);
 
 		assertThatException()
 				.isThrownBy(() -> this.data.patch(1L, map))
 				.isInstanceOf(ApiOperationException.class)
-				.withMessage("Attribut bezeichnung: Der Wert null ist nicht erlaubt.")
+				.withMessage(expectedMessage)
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
@@ -349,20 +393,6 @@ class DataBetriebsartenTest {
 	}
 
 	@Test
-	@DisplayName("patch | istSichtbar is null")
-	void patchIstSichtbarIsNull() {
-		when(this.conn.queryByKey(DTOBetriebsart.class, 1L)).thenReturn(mock(DTOBetriebsart.class));
-		final var map = new HashMap<String, Object>();
-		map.put("istSichtbar", null);
-
-		assertThatException()
-				.isThrownBy(() -> this.data.patch(1L, map))
-				.isInstanceOf(ApiOperationException.class)
-				.withMessage("Attribut istSichtbar: Der Wert null ist nicht erlaubt")
-				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
-	}
-
-	@Test
 	@DisplayName("patch | istSichtbar")
 	void patchIstSichtbar() throws ApiOperationException {
 		final var dto = new DTOBetriebsart(1L, "bezeichnung");
@@ -373,20 +403,6 @@ class DataBetriebsartenTest {
 		this.data.patch(1L, Map.of("istSichtbar", true));
 
 		assertThat(dto.Sichtbar).isTrue();
-	}
-
-	@Test
-	@DisplayName("patch | sortierung is null")
-	void patchSortierungIsNull() {
-		when(this.conn.queryByKey(DTOBetriebsart.class, 1L)).thenReturn(mock(DTOBetriebsart.class));
-		final var map = new HashMap<String, Object>();
-		map.put("sortierung", null);
-
-		assertThatException()
-				.isThrownBy(() -> this.data.patch(1L, map))
-				.isInstanceOf(ApiOperationException.class)
-				.withMessage("Attribut sortierung: Der Wert null ist nicht erlaubt")
-				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test
@@ -412,6 +428,49 @@ class DataBetriebsartenTest {
 				.isInstanceOf(ApiOperationException.class)
 				.withMessage("Die Daten des Patches enthalten das unbekannte Attribut unknown.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("checkBeforeDeletionWithSimpleOperationResponse | referenziert")
+	void checkBeforeDeletionWithSimpleOperationResponseReferenziert() {
+		@SuppressWarnings("unchecked")
+		final TypedQuery<Long> queryMock = mock(TypedQuery.class);
+		when(queryMock.setParameter(eq("ids"), any())).thenReturn(queryMock);
+		when(queryMock.getResultList()).thenReturn(List.of(1L));
+		when(conn.query(anyString(), eq(Long.class))).thenReturn(queryMock);
+		final var response = new SimpleOperationResponse();
+		response.id = 1L;
+		response.success = true;
+		final var responses = Map.of(response.id, response);
+		final var dto = new DTOBetriebsart(1L, "abc");
+
+		this.data.checkBeforeDeletionWithSimpleOperationResponse(List.of(dto), responses);
+
+		assertThat(responses.get(1L))
+				.hasFieldOrPropertyWithValue("success", false)
+				.extracting(r -> r.log.getFirst())
+				.isEqualTo("Die Betriebsart mit dem Name abc ist in der Datenbank referenziert und kann daher nicht gelöscht werden.");
+	}
+
+	@Test
+	@DisplayName("checkBeforeDeletionWithSimpleOperationResponse | nicht referenziert")
+	void checkBeforeDeletionWithSimpleOperationResponseNichtReferenziert() {
+		@SuppressWarnings("unchecked")
+		final TypedQuery<Long> queryMock = mock(TypedQuery.class);
+		when(queryMock.setParameter(eq("ids"), any())).thenReturn(queryMock);
+		when(queryMock.getResultList()).thenReturn(Collections.emptyList());
+		when(conn.query(anyString(), eq(Long.class))).thenReturn(queryMock);
+		final var response = new SimpleOperationResponse();
+		response.id = 1L;
+		response.success = true;
+		final var responses = Map.of(response.id, response);
+		final var dto = new DTOBetriebsart(1L, "abc");
+
+		this.data.checkBeforeDeletionWithSimpleOperationResponse(List.of(dto), responses);
+
+		assertThat(responses.get(1L))
+				.hasFieldOrPropertyWithValue("success", true);
+		assertThat(responses.get(1L).log).isEmpty();
 	}
 
 }

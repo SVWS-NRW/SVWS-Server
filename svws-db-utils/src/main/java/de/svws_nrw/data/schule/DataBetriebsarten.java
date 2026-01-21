@@ -9,6 +9,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.schule.Betriebsart;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
@@ -16,6 +17,8 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOBetriebsart;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 import static jakarta.ws.rs.core.Response.Status;
 
@@ -30,7 +33,7 @@ public final class DataBetriebsarten extends DataManagerRevised<Long, DTOBetrieb
 	public DataBetriebsarten(final DBEntityManager conn) {
 		super(conn);
 		setAttributesRequiredOnCreation("bezeichnung");
-		setAttributesNotPatchable("id");
+		setAttributesNotPatchable("id", "referenziertInAnderenTabellen");
 	}
 
 	@Override
@@ -50,13 +53,13 @@ public final class DataBetriebsarten extends DataManagerRevised<Long, DTOBetrieb
 
 	@Override
 	public Betriebsart getById(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID der Betriebsart darf nicht null sein.");
-
+		}
 		final DTOBetriebsart betriebsart = conn.queryByKey(DTOBetriebsart.class, id);
-		if (betriebsart == null)
+		if (betriebsart == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Die Betriebsart mit der ID %d wurde nicht gefunden.".formatted(id));
-
+		}
 		return map(betriebsart);
 	}
 
@@ -91,33 +94,39 @@ public final class DataBetriebsarten extends DataManagerRevised<Long, DTOBetrieb
 		}
 	}
 
+	@Override
+	protected void checkBeforeDeletionWithSimpleOperationResponse(final List<DTOBetriebsart> betriebsarten,
+			final Map<Long, SimpleOperationResponse> responses) {
+		final Set<Long> idsOfReferencedBetriebsarten = getIdsOfReferencedBetriebsarten(mapToIds(betriebsarten));
+		betriebsarten.stream()
+				.filter(f -> idsOfReferencedBetriebsarten.contains(f.ID))
+				.forEach(f -> markResponseAsFailed(responses.get(f.ID), f.Bezeichnung));
+	}
+
 	private static void validateId(final DTOBetriebsart dto, final String name, final Object value) throws ApiOperationException {
 		final Long id = JSONMapper.convertToLong(value, false, name);
-		if (!Objects.equals(dto.ID, id))
+		if (!Objects.equals(dto.ID, id)) {
 			throw new ApiOperationException(Status.BAD_REQUEST,
 					"Die ID %d des Patches ist null oder stimmt nicht mit der ID %d in der Datenbank überein.".formatted(id, dto.ID));
+		}
 	}
 
 	private void updateBezeichnung(final DTOBetriebsart dto, final Object value, final String name) throws ApiOperationException {
 		final String bezeichnung = JSONMapper.convertToString(value, false, false, Schema.tab_K_Adressart.col_Bezeichnung.datenlaenge(), name);
-		if (valueIsBlankOrHasNotChanged(dto.Bezeichnung, bezeichnung))
+		if (StringUtils.isBlank(bezeichnung) || Strings.CS.equals(dto.Bezeichnung, bezeichnung)) {
 			return;
-
+		}
 		validateBezeichnung(dto.ID, bezeichnung);
-
 		dto.Bezeichnung = bezeichnung;
-	}
-
-	private static boolean valueIsBlankOrHasNotChanged(final String oldValue, final String newValue) {
-		return Objects.equals(oldValue, newValue) || ((newValue != null) && newValue.isBlank());
 	}
 
 	private void validateBezeichnung(final Long id, final String bezeichnung) throws ApiOperationException {
 		final boolean isAlreadyUsed = this.conn
 				.queryAll(DTOBetriebsart.class).stream()
-				.anyMatch(e -> (e.ID != id) && bezeichnung.equalsIgnoreCase(e.Bezeichnung));
-		if (isAlreadyUsed)
+				.anyMatch(e -> (e.ID != id) && Strings.CI.equals(bezeichnung, e.Bezeichnung));
+		if (isAlreadyUsed) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die Bezeichnung %s ist bereits vorhanden.".formatted(bezeichnung));
+		}
 	}
 
 	private Set<Long> mapToIds(final List<DTOBetriebsart> betriebsarten) {
@@ -127,9 +136,9 @@ public final class DataBetriebsarten extends DataManagerRevised<Long, DTOBetrieb
 	}
 
 	private Set<Long> getIdsOfReferencedBetriebsarten(final Set<Long> ids) {
-		if ((ids == null) || ids.isEmpty())
+		if ((ids == null) || ids.isEmpty()) {
 			return Collections.emptySet();
-
+		}
 		final String query = "SELECT DISTINCT a.adressArt FROM DTOBetrieb a WHERE a.adressArt IN :ids";
 		final List<Long> results = this.conn.query(query, Long.class).setParameter("ids", ids).getResultList();
 		return new HashSet<>(results);
@@ -138,6 +147,12 @@ public final class DataBetriebsarten extends DataManagerRevised<Long, DTOBetrieb
 	private Betriebsart setReferenceFlag(final Betriebsart betriebsart, final Set<Long> idsOfReferencedBetriebsarten) {
 		betriebsart.referenziertInAnderenTabellen = idsOfReferencedBetriebsarten.contains(betriebsart.id);
 		return betriebsart;
+	}
+
+	private static void markResponseAsFailed(final SimpleOperationResponse response, final String name) {
+		response.success = false;
+		response.log.add(
+				("Die Betriebsart mit dem Name %s ist in der Datenbank referenziert und kann daher nicht gelöscht werden.").formatted(name));
 	}
 
 }

@@ -163,6 +163,7 @@ export { KursListeManager } from "./ui/manager/kurse/KursListeManager";
 export { KlassenListeManager } from "./ui/manager/klassen/KlassenListeManager";
 export { AbteilungenListeManager } from './ui/manager/kataloge/AbteilungenListeManager';
 export { BeschaeftigungsartenListeManager } from './ui/manager/kataloge/BeschaeftigungsartenListeManager';
+export { BetriebsartenListeManager } from './ui/manager/kataloge/BetriebsartenListeManager';
 export { EntlassgruendeListeManager } from './ui/manager/kataloge/EntlassgruendeListeManager';
 export { FahrschuelerartenListeManager } from './ui/manager/kataloge/FahrschuelerartenListeManager';
 export { FoerderschwerpunkteListeManager } from './ui/manager/kataloge/FoerderschwerpunkteListeManager';
