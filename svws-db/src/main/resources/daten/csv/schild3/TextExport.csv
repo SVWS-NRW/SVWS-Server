@@ -114,7 +114,7 @@ Schueler;Geloescht;Gelöscht?;B;;;;;ALLE
 Schueler;Geschlecht;Anrede;S;"3;4;5;6";"Herr;Frau;Hallo;Hallo";;;ALLE
 Schueler;Geschlecht;Briefanrede;S;"3;4;5;6";"Sehr geehrter Herr;Sehr geehrte Frau;Guten Tag;Guten Tag";;;ALLE
 Schueler;Geschlecht;Geschlecht;S;"3;4;5;6";"m;w;d;oA";;;ALLE
-Schueler;Haltestelle_ID;Haltestelle;S;;;Bezeichnung;SELECT Bezeichnung FROM K_Haltstelle WHERE ID=%;ALLE
+Schueler;Haltestelle_ID;Haltestelle;S;;;Bezeichnung;SELECT Bezeichnung FROM K_Haltestelle WHERE ID=%;ALLE
 Schueler;Hausnr;Hausnummer;S;;;;;ALLE
 Schueler;ID;ASV;S;;;ASV;SELECT L.ASV, A.ID FROM SchuelerLD_PSFachBem L, SchuelerLernabschnittsdaten A, Schueler S WHERE S.ID=% AND A.Schueler_ID=S.ID AND A.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID AND L.Abschnitt_ID=A.ID;ALLE
 Schueler;ID;Aktuelles Halbjahr;I;;;AktHalbjahr;SELECT (SJA.Jahr*10+SJA.Abschnitt) as AktHalbjahr from Schuljahresabschnitte SJA, Schueler S where S.ID=% AND SJA.ID=S.Schuljahresabschnitts_ID;ALLE
