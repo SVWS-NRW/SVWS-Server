@@ -111,8 +111,8 @@
 	const betriebsarten = computed(() => betriebsartenById.value.values());
 	const betriebsartenManager = new SelectManager({
 		options: betriebsarten,
-		optionDisplayText: v => v.bezeichnung ?? "",
-		selectionDisplayText: v => v.bezeichnung ?? "",
+		optionDisplayText: v => v.bezeichnung,
+		selectionDisplayText: v => v.bezeichnung,
 	});
 
 	const orteById = computed<Map<number, OrtKatalogEintrag>>(() => props.manager().orteById);
