@@ -34,7 +34,6 @@ export class RouteFaecher extends RouteAuswahlNode<FaecherListeManager, RouteDat
 		super.updateIfTarget = this.doUpdateIfTarget;
 		super.getAuswahlListProps = (props) => (<FaecherAuswahlProps>{
 			...props,
-			setzeDefaultSortierungSekII: this.data.setzeDefaultSortierungSekII,
 		});
 	}
 

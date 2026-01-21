@@ -98,17 +98,6 @@ export class RouteDataFaecher extends RouteDataAuswahl<FaecherListeManager, Rout
 		return [errorLog.isEmpty(), errorLog];
 	};
 
-	setzeDefaultSortierungSekII = async () => {
-		if (this.manager.liste.list().isEmpty()) {
-			return;
-		}
-		const idSchuljahresabschnitt = this._state.value.idSchuljahresabschnitt;
-		const idAuswahl = this.manager.auswahl().id;
-		await api.server.setFaecherSortierungSekII(api.schema);
-		await this.setSchuljahresabschnitt(idSchuljahresabschnitt, true);
-		await this.setDaten(this.manager.liste.get(idAuswahl));
-	};
-
 	add = async (data: Partial<FachDaten>): Promise<void> => {
 		const fach = await api.server.addFach(data, api.schema);
 		await this.setSchuljahresabschnitt(this._state.value.idSchuljahresabschnitt, true);

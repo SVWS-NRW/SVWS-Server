@@ -15,11 +15,6 @@
 					<svws-ui-checkbox type="toggle" v-model="filterNurSichtbare">Nur Sichtbare</svws-ui-checkbox>
 				</template>
 				<template #actions>
-					<template v-if="!readonly && (manager().liste.size() > 0) && (manager().schulform().daten(schuljahr)?.hatGymOb ?? false)">
-						<faecher-auswahl-sortierung-sek-i-i-modal v-slot="{ openModal }" :setze-default-sortierung-sek-i-i :set-filter>
-							<svws-ui-button type="secondary" @click="openModal">Standardsortierung Sek II anwenden …</svws-ui-button>
-						</faecher-auswahl-sortierung-sek-i-i-modal>
-					</template>
 					<svws-ui-tooltip position="bottom" v-if="!readonly">
 						<svws-ui-button :disabled="activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="gotoHinzufuegenView(true)" :has-focus="manager().filtered().size() === 0">
 							<span class="icon i-ri-add-line" />
@@ -47,8 +42,6 @@
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const readonly = computed<boolean>(() => !props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
-
-	const schuljahr = computed(() => props.schuljahresabschnittsauswahl().aktuell.schuljahr);
 
 	const columns = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: 'asc' },
