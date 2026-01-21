@@ -146,7 +146,7 @@ export class FaecherListeManager extends AuswahlManager<number, FachDaten, FachD
 	protected onMehrfachauswahlChanged(): void {
 		this.idsReferenzierterFaecher.clear();
 		for (const f of this.liste.auswahl()) {
-			if ((f.referenziertInAnderenTabellen !== null) && f.referenziertInAnderenTabellen) {
+			if (f.referenziertInAnderenTabellen) {
 				this.idsReferenzierterFaecher.add(f.id);
 			}
 		}
