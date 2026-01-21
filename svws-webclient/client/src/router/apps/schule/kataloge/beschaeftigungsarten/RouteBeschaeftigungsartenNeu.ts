@@ -24,7 +24,7 @@ export class RouteBeschaeftigungsartenNeu extends RouteNode<any, RouteBeschaefti
 	public getProps(to: RouteLocationNormalized): BeschaeftigungsartenNeuProps {
 		return {
 			manager: () => routeBeschaeftigungsarten.data.manager,
-			addBeschaeftigungsart: routeBeschaeftigungsarten.data.addBeschaeftigungsart,
+			add: routeBeschaeftigungsarten.data.add,
 			goToDefaultView: routeBeschaeftigungsarten.data.gotoDefaultView,
 			checkpoint: this.checkpoint,
 			benutzerKompetenzen: api.benutzerKompetenzen,

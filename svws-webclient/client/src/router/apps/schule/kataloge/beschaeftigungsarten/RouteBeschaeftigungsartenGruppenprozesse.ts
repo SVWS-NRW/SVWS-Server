@@ -30,7 +30,8 @@ export class RouteBeschaeftigungsartenGruppenprozesse extends RouteNode<any, Rou
 		return {
 			serverMode: api.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
-			deleteBeschaeftigungsarten: routeBeschaeftigungsarten.data.delete,
+			delete: routeBeschaeftigungsarten.data.delete,
+			deleteCheck: routeBeschaeftigungsarten.data.deleteCheck,
 			manager: () => routeBeschaeftigungsarten.data.manager,
 		};
 	}

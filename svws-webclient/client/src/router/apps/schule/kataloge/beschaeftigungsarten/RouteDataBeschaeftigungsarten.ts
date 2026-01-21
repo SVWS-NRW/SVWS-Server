@@ -1,8 +1,8 @@
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
 import type { Beschaeftigungsart, List, SimpleOperationResponse } from "@core";
+import { ArrayList, BenutzerKompetenz } from "@core";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
-import { ArrayList } from "@core";
 import { ViewType, BeschaeftigungsartenListeManager } from "@ui";
 import { api } from "~/router/Api";
 import { routeBeschaeftigungsartenDaten } from "~/router/apps/schule/kataloge/beschaeftigungsarten/RouteBeschaeftigungsartenDaten";
@@ -46,14 +46,43 @@ export class RouteDataBeschaeftigungsarten extends RouteDataAuswahl<Beschaeftigu
 		return await api.server.deleteBeschaeftigungsarten(ids, api.schema);
 	}
 
-	protected deleteMessage(id: number, beschaeftigungsart: Beschaeftigungsart | null): string {
-		return `Beschäftigungsart ${beschaeftigungsart?.bezeichnung ?? '???'} (ID: ${id}) wurde erfolgreich gelöscht.`;
-	}
-
-	addBeschaeftigungsart = async (data: Partial<Beschaeftigungsart>): Promise<void> => {
+	add = async (data: Partial<Beschaeftigungsart>): Promise<void> => {
 		const result = await api.server.addBeschaeftigungsart(data, api.schema);
 		this.manager.liste.add(result);
 		this.commit();
 		await this.gotoDefaultView(result.id);
 	};
+
+	protected deleteMessage(id: number, beschaeftigungsart: Beschaeftigungsart | null): string {
+		return `Beschäftigungsart ${beschaeftigungsart?.bezeichnung ?? '???'} (ID: ${id}) wurde erfolgreich gelöscht.`;
+	}
+
+	deleteCheck = (): [boolean, List<string>] => {
+		const errorLog = new ArrayList<string>();
+
+		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
+			errorLog.add('Es liegt keine Berechtigung zum Löschen von Beschäftigungsarten vor.');
+		}
+
+		if (!this.manager.liste.auswahlExists()) {
+			errorLog.add('Es wurde kein Beschäftigungsart zum Löschen ausgewählt.');
+		}
+
+		if (!this.manager.idsReferencedBeschaeftigungsarten.isEmpty()) {
+			errorLog.add(this.getErrorMessageForReferencedBeschaeftigungsarten());
+		}
+
+		return [errorLog.isEmpty(), errorLog];
+	};
+
+	private getErrorMessageForReferencedBeschaeftigungsarten(): string {
+		let errorMessage = 'Die folgenden Beschäftigungsarten sind an anderer Stelle referenziert und können daher nicht gelöscht werden:\n\n';
+		for (const id of this.manager.idsReferencedBeschaeftigungsarten) {
+			const beschaeftigungsart = this.manager.liste.get(id);
+			if (beschaeftigungsart) {
+				errorMessage += `- ${beschaeftigungsart.bezeichnung} \n`;
+			}
+		}
+		return errorMessage;
+	}
 }
