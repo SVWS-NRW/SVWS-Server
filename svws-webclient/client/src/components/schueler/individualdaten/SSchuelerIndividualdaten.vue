@@ -132,7 +132,7 @@
 				<template #modalContent>
 					<svws-ui-input-wrapper :grid="2" class="text-left">
 						<svws-ui-select title="Telefonart" :items="mapTelefonArten.values()" v-model="selectedTelefonArt" :item-text="i => i.bezeichnung" />
-						<svws-ui-text-input v-model="newEntryTelefonnummer.telefonnummer" type="text" placeholder="Telefonnummer" :max-len="20" />
+						<svws-ui-text-input v-model="newEntryTelefonnummer.telefonnummer" type="tel" placeholder="Telefonnummer" :max-len="20" />
 						<svws-ui-tooltip class="col-span-full">
 							<svws-ui-text-input v-model="newEntryTelefonnummer.bemerkung" type="text" placeholder="Bemerkung" />
 							<template #content>
@@ -209,7 +209,7 @@
 	const newEntryTelefonnummer = ref<SchuelerTelefon>(new SchuelerTelefon());
 
 	const columns: DataTableColumn[] = [
-		{ key: "idTelefonArt", label: "Ansprechpartner" },
+		{ key: "idTelefonArt", label: "Telefonart" },
 		{ key: "telefonnummer", label: "Telefonnummern" },
 		{ key: "bemerkung", label: "Bemerkung", span: 2 },
 		{ key: "istGesperrt", label: "Gesperrt", span: 1, align: "right" },
