@@ -1,6 +1,8 @@
 package de.svws_nrw.data.schule;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
@@ -22,10 +24,14 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatException;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
@@ -49,8 +55,50 @@ class DataSchulenTest {
 	}
 
 	@Test
-	@DisplayName("initDTO | erfolgreiches Update der ID")
-	void initDTOTest() throws ApiOperationException {
+	@DisplayName("setAttributesNotPatchable: id")
+	void setAttributesNotPatchableId() {
+		when(this.conn.queryByKey(DTOSchuleNRW.class, 1L)).thenReturn(mock(DTOSchuleNRW.class));
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, Map.of("id", 1L)))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Folgende Attribute werden für ein Patch nicht zugelassen: id.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("setAttributesRequiredOnCreation: schulnummerStatistik")
+	void setAttributesRequiredOnCreationSchulnummerStatistik() {
+		assertThatException()
+				.isThrownBy(() -> this.data.add(Map.of("schulnummerStatistik", "1234")))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Es werden weitere Attribute (kurzbezeichnung,name) benötigt, damit die Entität erstellt werden kann.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("setAttributesRequiredOnCreation: kurzbezeichnung")
+	void setAttributesRequiredOnCreationKurzbezeichnung() {
+		assertThatException()
+				.isThrownBy(() -> this.data.add(Map.of("kurzbezeichnung", "Lemgo")))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Es werden weitere Attribute (name,schulnummerStatistik) benötigt, damit die Entität erstellt werden kann.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("setAttributesRequiredOnCreation: name")
+	void setAttributesRequiredOnCreationName() {
+		assertThatException()
+				.isThrownBy(() -> this.data.add(Map.of("name", "Mustermann Gymnasium")))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Es werden weitere Attribute (kurzbezeichnung,schulnummerStatistik) benötigt, damit die Entität erstellt werden kann.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("initDTO | Erfolgreiches Update der ID")
+	void initDTOSuccess() throws ApiOperationException {
 		final var dtoSchuleNRW = new DTOSchuleNRW(1L, "");
 
 		this.data.initDTO(dtoSchuleNRW, 2L, null);
@@ -60,22 +108,41 @@ class DataSchulenTest {
 
 	@Test
 	@DisplayName("getAll")
-	void getAllTest() {
-		when(this.conn.queryAll(DTOSchuleNRW.class)).thenReturn(List.of(new DTOSchuleNRW(1L, "123"), new DTOSchuleNRW(3L, "123")));
+	void getAllSuccess() {
+		final var dtoSchuleNRW1 = new DTOSchuleNRW(1L, "123");
+		final var dtoSchuleNRW2 = new DTOSchuleNRW(3L, "123");
+		when(this.conn.queryAll(DTOSchuleNRW.class)).thenReturn(List.of(dtoSchuleNRW1, dtoSchuleNRW2));
 
 		final var result = this.data.getAll();
 
-		assertThat(result).hasSize(2)
-				.isInstanceOf(List.class)
-				.hasOnlyElementsOfType(SchulEintrag.class);
+		assertThat(result)
+				.hasSize(2)
+				.satisfiesExactly(
+						f1 -> assertThat(f1)
+								.isInstanceOf(SchulEintrag.class)
+								.hasFieldOrPropertyWithValue("id", 1L),
+						f2 -> assertThat(f2)
+								.isInstanceOf(SchulEintrag.class)
+								.hasFieldOrPropertyWithValue("id", 3L)
+				);
 	}
 
 	@Test
-	@DisplayName("getList")
+	@DisplayName("getAll | Datenbank leer")
+	void getAllEmpty() {
+		when(this.conn.queryAll(DTOSchuleNRW.class)).thenReturn(Collections.emptyList());
+
+		verify(this.conn, never()).query(anyString(), eq(Long.class));
+		assertThat(this.data.getAll()).isEmpty();
+	}
+
+	@Test
+	@DisplayName("getList | Erfolg")
 	void getListTest() {
 		final var dtoWithKuerzel = new DTOSchuleNRW(1L, "123");
 		dtoWithKuerzel.Kuerzel = "abc";
-		when(this.conn.queryAll(DTOSchuleNRW.class)).thenReturn(List.of(dtoWithKuerzel, new DTOSchuleNRW(3L, "123")));
+		final var dtoWithoutKuerzel = new DTOSchuleNRW(3L, "123");
+		when(this.conn.queryAll(DTOSchuleNRW.class)).thenReturn(List.of(dtoWithKuerzel, dtoWithoutKuerzel));
 
 		final var result = this.data.getList();
 
@@ -97,11 +164,9 @@ class DataSchulenTest {
 	}
 
 	@Test
-	@DisplayName("getById | wrong Id")
-	void getByIdTest_wrongId() {
-		when(this.conn.queryByKey(any(), any())).thenReturn(null);
-
-		final var throwable = catchThrowable(() -> data.getById(1L));
+	@DisplayName("getById | Kein Eintrag mit der Id")
+	void getByIdNotFound() {
+		final Throwable throwable = catchThrowable(() -> data.getById(1L));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
@@ -110,8 +175,19 @@ class DataSchulenTest {
 	}
 
 	@Test
-	@DisplayName("map | erfolgreiches mapping")
-	void mapTest() {
+	@DisplayName("getById | ID null")
+	void getByIdTestIdNull() {
+		final Throwable throwable = catchThrowable(() -> data.getById(null));
+
+		assertThat(throwable)
+				.isInstanceOf(ApiOperationException.class)
+				.hasMessage("Keine ID für die Schule übergeben.")
+				.hasFieldOrPropertyWithValue("Status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("map | Erfolgreiches mapping")
+	void mapSuccess() {
 		final var dtoSchuleNRW = getDtoSchuleNRW();
 		when(this.conn.getUser()).thenReturn(mock(Benutzer.class));
 
@@ -135,7 +211,7 @@ class DataSchulenTest {
 
 	@Test
 	@DisplayName("map | erfolgreiches mapping, einige Werte bewusst null")
-	void mapTest_someValuesNull() {
+	void mapSomeValuesNull() {
 		final var dtoSchuleNRW = new DTOSchuleNRW(1L, "");
 		dtoSchuleNRW.SchulformNr = null;
 		dtoSchuleNRW.Name = null;
@@ -147,7 +223,20 @@ class DataSchulenTest {
 				.hasFieldOrPropertyWithValue("idSchulform", null)
 				.hasFieldOrPropertyWithValue("name", "")
 				.hasFieldOrPropertyWithValue("sortierung", 32000)
-				.hasFieldOrPropertyWithValue("istSichtbar", true);
+				.hasFieldOrPropertyWithValue("istSichtbar", false);
+	}
+
+	@Test
+	@DisplayName("map | SchulformNr unbekannt")
+	void mapSchulformNrIsNull() {
+		final var dto = new DTOSchuleNRW(1L, "123");
+		dto.SchulformNr = "UNGUELTIG";
+
+		final SchulEintrag result = this.data.map(dto);
+
+		assertThat(result)
+				.isInstanceOf(SchulEintrag.class)
+				.hasFieldOrPropertyWithValue("idSchulform", null);
 	}
 
 	private static Stream<Arguments> provideMappingAttributes() {
