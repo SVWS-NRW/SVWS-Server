@@ -13,7 +13,7 @@
 			'col-span-full': span === 'full',
 			'grow': span === 'grow'
 		}">
-		<textarea ref="textarea" v-model="dataOrEmpty" @input="onInput" @blur="onBlur" class="textarea-input--control" :disabled :required :rows v-bind="$attrs" :class="{ 'contentFocusField': isContentFocusField }" />
+		<textarea ref="textarea" v-model="input" @input="onInput" @blur="onBlur" class="textarea-input--control" :disabled :required :rows v-bind="$attrs" :class="{ 'contentFocusField': isContentFocusField }" />
 		<span :id="idPlaceholder" v-if="placeholder.length > 0" class="textarea-input--placeholder">
 			<span :id="idStatistics" v-if="statistics" class="cursor-pointer">
 				<svws-ui-tooltip position="right">
@@ -44,6 +44,7 @@
 <script setup lang="ts">
 
 	import { ref, computed, watch, useId } from 'vue';
+	import { useTextareaAutosize } from '@vueuse/core';
 
 	type ResizableOption = "both" | "horizontal" | "vertical" | "none";
 
@@ -101,7 +102,7 @@
 		set: (value) => data.value = (value === '') ? null : value,
 	});
 
-	const textarea = ref<HTMLTextAreaElement | null>(null);
+	const { textarea, input } = useTextareaAutosize({ input: dataOrEmpty });
 
 	watch(() => props.modelValue, (value: string | null) => updateData(value), { immediate: false });
 
@@ -132,13 +133,6 @@
 		}
 		return data.value.toLocaleString().length <= props.maxLen;
 	});
-
-	watch(data, () => {
-		if (textarea.value !== null) {
-			textarea.value.style.height = 'auto';
-			textarea.value.style.height = `${textarea.value.scrollHeight + 12}px`;
-		}
-	}, { immediate: true });
 
 	function onInput(event: Event) {
 		const value = (event.target as HTMLInputElement).value;
