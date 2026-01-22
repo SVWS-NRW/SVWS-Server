@@ -38,7 +38,7 @@
 				</div>
 				<template #buttonFooterLeft>
 					<svws-ui-button class="mt-4" title="Löschen" @click="entferneFaecher" :is-loading="loading"
-						:disabled="manager().getIdsReferenzierterFaecher().size() === manager().liste.auswahlSize() || loading || !hatKompetenzLoeschen">
+						:disabled="manager().idsReferencedFaecher.size() === manager().liste.auswahlSize() || loading || !hatKompetenzLoeschen">
 						<svws-ui-spinner v-if="loading" spinning />
 						<span v-else class="icon i-ri-play-line" />
 						Löschen
@@ -80,9 +80,9 @@
 	const logs = ref<List<string | null> | undefined>();
 	const status = ref<boolean | undefined>();
 
-	const alleFaecherLoeschbar = computed(() => (currentAction.value === 'delete') && props.manager().getIdsReferenzierterFaecher().isEmpty());
+	const alleFaecherLoeschbar = computed(() => (currentAction.value === 'delete') && props.manager().idsReferencedFaecher.isEmpty());
 	const loeschbareFaecherVorhanden = computed(() =>
-		!alleFaecherLoeschbar.value && (props.manager().getIdsReferenzierterFaecher().size() !== props.manager().liste.auswahlSize()));
+		!alleFaecherLoeschbar.value && (props.manager().idsReferencedFaecher.size() !== props.manager().liste.auswahlSize()));
 
 	const preConditionCheck = computed(() => {
 		if (currentAction.value === 'delete') {

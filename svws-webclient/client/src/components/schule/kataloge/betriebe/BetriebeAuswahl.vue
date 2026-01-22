@@ -38,7 +38,7 @@
 
 	import { computed } from "vue";
 	import { useRegionSwitch, ViewType } from "@ui";
-	import { BenutzerKompetenz, ServerMode } from "@core";
+	import { BenutzerKompetenz } from "@core";
 	import type { Betrieb } from "@core";
 	import type { BetriebeAuswahlProps } from "~/components/schule/kataloge/betriebe/BetriebeAuswahlProps";
 

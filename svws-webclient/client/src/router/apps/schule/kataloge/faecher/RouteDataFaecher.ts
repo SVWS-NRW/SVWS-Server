@@ -46,13 +46,6 @@ export class RouteDataFaecher extends RouteDataAuswahl<FaecherListeManager, Rout
 	protected async createManager(idSchuljahresabschnitt: number): Promise<Partial<RouteStateAuswahlInterface<FaecherListeManager>>> {
 		const faecher = await api.server.getFaecher(api.schema);
 		const manager = new FaecherListeManager(idSchuljahresabschnitt, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,	api.schulform, faecher);
-		if (this._state.value.manager === undefined) {
-			manager.setFilterAuswahlPermitted(true);
-			manager.setFilterNurSichtbar(false);
-		} else {
-			manager.useFilter(this._state.value.manager);
-		}
-
 		return { manager };
 	}
 
@@ -89,7 +82,7 @@ export class RouteDataFaecher extends RouteDataAuswahl<FaecherListeManager, Rout
 		if (!this.manager.liste.auswahlExists()) {
 			errorLog.add('Es wurde kein Fach zum Löschen ausgewählt.');
 		}
-		for (const id of this.manager.getIdsReferenzierterFaecher()) {
+		for (const id of this.manager.idsReferencedFaecher) {
 			const fach = this.manager.liste.get(id);
 			if (fach) {
 				errorLog.add(`Das Fach ${fach.bezeichnung} mit dem Kürzel ${fach.kuerzel} ist an anderer Stelle referenziert und kann daher nicht gelöscht werden.`);

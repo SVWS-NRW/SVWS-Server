@@ -2,14 +2,14 @@
 	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input placeholder="Kürzel" required :max-len="20" :valid="(v) => manager().validateKuerzel(v)" v-model="data.kuerzel" :disabled />
+				<svws-ui-text-input placeholder="Kürzel" required :max-len="20" v-model="data.kuerzel" :disabled />
 				<svws-ui-select title="Statistik-Fach" required :items="statistikFachEintraege" :item-filter="coreTypeDataFilter"
 					v-model="selectedStatistikFach" :item-text="getStatistikfachText" autocomplete />
-				<svws-ui-text-input placeholder="Bezeichnung" required :max-len="255" :valid="(v) => manager().validateBezeichnung(v)" v-model="data.bezeichnung" :disabled />
+				<svws-ui-text-input placeholder="Bezeichnung" required :max-len="255"  v-model="data.bezeichnung" :disabled />
 				<svws-ui-text-input placeholder="Fachgruppe" :model-value="fachgruppe" disabled />
 				<svws-ui-select removable title="Bilinguale Sachfachsprache" :items="BilingualeSprache.values()" v-model="selectedBilingualeSprache"
 					:item-text="b => b.daten(schuljahr)?.text ?? '—'" :disabled />
-				<svws-ui-input-number placeholder="Sortierung" :valid="(v) => manager().validateSortierung(v)" v-model="data.sortierung" :disabled />
+				<svws-ui-input-number placeholder="Sortierung"  v-model="data.sortierung" :disabled />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Zeugnis">
@@ -34,11 +34,12 @@
 					<svws-ui-checkbox v-model="data.holeAusAltenLernabschnitten" :disabled>Berücksichtigen beim Holen von abgeschlossenen Fächern</svws-ui-checkbox>
 				</template>
 				<svws-ui-input-number placeholder="maximale Zeichenanzahl in Fachbemerkungen" v-model="data.maxZeichenInFachbemerkungen" :min="0"
-					:max="JavaInteger.MAX_VALUE" :valid="(v) => manager().validateMaxZeichenInFachbemerkungen(v)" :disabled />
+					:max="JavaInteger.MAX_VALUE" :disabled />
 			</svws-ui-input-wrapper>
 			<div class="mt-7 flex flex-row gap-4 justify-end">
 				<svws-ui-button type="secondary" @click="cancel">Abbrechen</svws-ui-button>
-				<svws-ui-button @click="addFachDaten" :disabled="!isValid || !hatKompetenzUpdate">Speichern</svws-ui-button>
+				Das Hinzufügen von Fächern ist kurzzeitig deaktiviert
+				<svws-ui-button disabled @click="addFachDaten">Speichern</svws-ui-button>
 			</div>
 		</svws-ui-content-card>
 		<svws-ui-checkpoint-modal :checkpoint :continue-routing="continueRoutingAfterCheckpoint" />
@@ -70,11 +71,7 @@
 		validateAll();
 	}, { immediate: false, deep: true });
 
-	const validateAll = () => isValid.value = (data.value.kuerzelStatistik !== "") &&
-		props.manager().validateKuerzel(data.value.kuerzel) &&
-		props.manager().validateBezeichnung(data.value.bezeichnung) &&
-		props.manager().validateMaxZeichenInFachbemerkungen(data.value.maxZeichenInFachbemerkungen) &&
-		props.manager().validateSortierung(data.value.sortierung);
+	const validateAll = () => isValid.value = (data.value.kuerzelStatistik !== "");
 
 	const disabled = computed(() => (data.value.kuerzelStatistik === "") || !hatKompetenzUpdate.value);
 
