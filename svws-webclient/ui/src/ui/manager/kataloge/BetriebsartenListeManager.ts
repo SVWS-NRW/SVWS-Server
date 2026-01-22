@@ -10,7 +10,7 @@ export class BetriebsartenListeManager extends AuswahlManager<number, Betriebsar
      */
 	private static readonly _betriebsartenToId: JavaFunction<Betriebsart, number> = { apply: (ba: Betriebsart) => ba.id };
 	private readonly _idsOfReferencedBetriebsarten: HashSet<number> = new HashSet<number>();
-	private _filterNurSichtbar: boolean = false;
+	private _filterNurSichtbar: boolean = true;
 	private _searchTerm: string = "";
 
 	/**
