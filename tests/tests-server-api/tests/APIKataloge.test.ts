@@ -29,10 +29,5 @@ describe("Kataloge Tests", () => {
 			const result = await api.getKatalogOrtsteile(schema);
 			expect(result).toMatchSnapshot();
 		});
-
-		test("getKatalogReligionen", async () => {
-			const result = await api.getKatalogReligionen(schema);
-			expect(result).toMatchSnapshot();
-		});
 	});
 });

@@ -42,7 +42,7 @@
 
 	import type { KonfessionenNeuProps } from "./KonfessionenNeuProps";
 	import { computed, ref, watch } from "vue";
-	import type { ReligionKatalogEintrag } from "@core";
+	import type { CoreTypeData } from "@core";
 	import { BenutzerKompetenz, Religion, ReligionEintrag } from "@core";
 	import { isUniqueInList, mandatoryInputIsValid, numberHasDecimals, numberIsValid, optionalInputIsValid } from "~/util/validation/Validation";
 	import { CoreTypeSelectManager } from "@ui";
@@ -69,9 +69,9 @@
 		selectionDisplayText: "text",
 	});
 
-	const selectedKonfession = computed<ReligionKatalogEintrag | null>({
+	const selectedKonfession = computed<CoreTypeData | null>({
 		get: () => Religion.data().getEintragBySchuljahrUndSchluessel(schuljahr.value, data.value.kuerzel ?? ""),
-		set: (value: ReligionKatalogEintrag | null) => data.value.kuerzel = value?.schluessel ?? null,
+		set: (value: CoreTypeData | null) => data.value.kuerzel = value?.schluessel ?? null,
 	});
 
 	// ---validate---

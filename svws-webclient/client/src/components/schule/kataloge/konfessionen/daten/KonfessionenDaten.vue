@@ -38,7 +38,7 @@
 	import { computed } from "vue";
 	import type { KonfessionenDatenProps } from "./KonfessionenDatenProps";
 	import { BenutzerKompetenz, Religion } from "@core";
-	import type { ReligionKatalogEintrag } from "@core";
+	import type { CoreTypeData } from "@core";
 	import { CoreTypeSelectManager } from "@ui";
 	import { isUniqueInList, mandatoryInputIsValid, numberHasDecimals, numberIsValid, optionalInputIsValid } from "~/util/validation/Validation";
 
@@ -62,9 +62,9 @@
 		selectionDisplayText: "text",
 	});
 
-	const selectedKonfession = computed<ReligionKatalogEintrag | null>({
+	const selectedKonfession = computed<CoreTypeData | null>({
 		get: () => Religion.data().getEintragBySchuljahrUndSchluessel(schuljahr.value, props.manager().daten().kuerzel ?? ""),
-		set: (value: ReligionKatalogEintrag | null) => void props.patch({ kuerzel: value?.schluessel ?? "" }),
+		set: (value: CoreTypeData | null) => void props.patch({ kuerzel: value?.schluessel ?? "" }),
 	});
 
 	const istSichtbar = computed<boolean>({

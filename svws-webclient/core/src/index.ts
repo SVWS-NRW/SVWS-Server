@@ -200,7 +200,6 @@ export { KindergartenbesuchKatalogEintrag } from './asd/data/schule/Kindergarten
 export { NationalitaetenKatalogEintrag } from './asd/data/schule/NationalitaetenKatalogEintrag';
 export { OrganisationsformKatalogEintrag } from './asd/data/schule/OrganisationsformKatalogEintrag';
 export { ReformpaedagogikKatalogEintrag } from './asd/data/schule/ReformpaedagogikKatalogEintrag';
-export { ReligionKatalogEintrag } from './asd/data/schule/ReligionKatalogEintrag';
 export { SchulabschlussAllgemeinbildendKatalogEintrag } from './asd/data/schule/SchulabschlussAllgemeinbildendKatalogEintrag';
 export { SchulabschlussBerufsbildendKatalogEintrag } from './asd/data/schule/SchulabschlussBerufsbildendKatalogEintrag';
 export { SchuleAbschnitte } from './asd/data/schule/SchuleAbschnitte';

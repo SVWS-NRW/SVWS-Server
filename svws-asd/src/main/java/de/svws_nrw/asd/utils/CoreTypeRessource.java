@@ -63,7 +63,6 @@ import de.svws_nrw.asd.data.schule.KindergartenbesuchKatalogEintrag;
 import de.svws_nrw.asd.data.schule.NationalitaetenKatalogEintrag;
 import de.svws_nrw.asd.data.schule.OrganisationsformKatalogEintrag;
 import de.svws_nrw.asd.data.schule.ReformpaedagogikKatalogEintrag;
-import de.svws_nrw.asd.data.schule.ReligionKatalogEintrag;
 import de.svws_nrw.asd.data.schule.SchulabschlussAllgemeinbildendKatalogEintrag;
 import de.svws_nrw.asd.data.schule.SchulabschlussBerufsbildendKatalogEintrag;
 import de.svws_nrw.asd.data.schule.SchulformKatalogEintrag;
@@ -420,7 +419,7 @@ public final class CoreTypeRessource<T extends CoreTypeData, U extends CoreType<
 		add(PrimarstufeSchuleingangsphaseBesuchsjahre.class, PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag.class,
 				PrimarstufeSchuleingangsphaseBesuchsjahre.values(),
 				"de/svws_nrw/asd/types/jahrgang/PrimarstufeSchuleingangsphaseBesuchsjahre.json");
-		add(Religion.class, ReligionKatalogEintrag.class, Religion.values(),
+		add(Religion.class, CoreTypeData.class, Religion.values(),
 				"de/svws_nrw/asd/types/schule/Religion.json");
 		add(Kindergartenbesuch.class, KindergartenbesuchKatalogEintrag.class, Kindergartenbesuch.values(),
 				"de/svws_nrw/asd/types/schule/Kindergartenbesuch.json");
