@@ -37,11 +37,11 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { KatalogSchuleGruppenprozesseProps } from "./SKatalogSchuleGruppenprozesseProps";
+	import type { SchulenGruppenprozesseProps } from "./SchulenGruppenprozesseProps";
 	import type { List } from "@core";
 	import { BenutzerKompetenz, ServerMode } from "@core";
 
-	const props = defineProps<KatalogSchuleGruppenprozesseProps>();
+	const props = defineProps<SchulenGruppenprozesseProps>();
 
 	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
 	const hatIrgendwelcheKompetenzen = computed(() => hatKompetenzLoeschen.value);

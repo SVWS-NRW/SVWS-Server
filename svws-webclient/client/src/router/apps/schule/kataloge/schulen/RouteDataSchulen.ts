@@ -2,25 +2,25 @@ import type { List, SchulEintrag, SimpleOperationResponse } from "@core";
 import type { RouteParamsRawGeneric } from "vue-router";
 import { ArrayList } from "@core";
 import { api } from "~/router/Api";
-import { routeKatalogSchuleDaten } from "./RouteKatalogSchuleDaten";
+import { routeSchulenDaten } from "./RouteSchulenDaten";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
-import { ViewType, KatalogSchuleListeManager } from "@ui";
-import { routeKatalogSchuleGruppenprozesse } from "~/router/apps/schule/kataloge/schulen/RouteKatalogSchuleGruppenprozesse";
-import { routeKatalogSchuleNeu } from "~/router/apps/schule/kataloge/schulen/RouteKatalogSchuleNeu";
+import { ViewType, SchulenListeManager } from "@ui";
+import { routeSchulenGruppenprozesse } from "~/router/apps/schule/kataloge/schulen/RouteSchulenGruppenprozesse";
+import { routeSchulenNeu } from "~/router/apps/schule/kataloge/schulen/RouteSchulenNeu";
 
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,
-	manager: new KatalogSchuleListeManager(-1, -1, new ArrayList(), null, new ArrayList(), new ArrayList()),
-	view: routeKatalogSchuleDaten,
+	manager: new SchulenListeManager(-1, -1, new ArrayList(), null, new ArrayList(), new ArrayList()),
+	view: routeSchulenDaten,
 	activeViewType: ViewType.DEFAULT,
 	oldView: undefined,
 };
 
-export class RouteDataKatalogSchulen extends RouteDataAuswahl<KatalogSchuleListeManager, RouteStateAuswahlInterface<KatalogSchuleListeManager>> {
+export class RouteDataSchulen extends RouteDataAuswahl<SchulenListeManager, RouteStateAuswahlInterface<SchulenListeManager>> {
 
 	public constructor() {
-		super(defaultState, { gruppenprozesse: routeKatalogSchuleGruppenprozesse, hinzufuegen: routeKatalogSchuleNeu });
+		super(defaultState, { gruppenprozesse: routeSchulenGruppenprozesse, hinzufuegen: routeSchulenNeu });
 	}
 
 
@@ -28,10 +28,10 @@ export class RouteDataKatalogSchulen extends RouteDataAuswahl<KatalogSchuleListe
 		param.id = id;
 	}
 
-	protected async createManager(_: number): Promise<Partial<RouteStateAuswahlInterface<KatalogSchuleListeManager>>> {
+	protected async createManager(_: number): Promise<Partial<RouteStateAuswahlInterface<SchulenListeManager>>> {
 		const schulen = await api.server.getSchulen(api.schema);
 		const katalogSchulen = await api.server.getKatalogSchulen(api.schema);
-		const manager = new KatalogSchuleListeManager(
+		const manager = new SchulenListeManager(
 			api.abschnitt.id, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte, api.schulform, schulen, katalogSchulen);
 		return { manager };
 	}

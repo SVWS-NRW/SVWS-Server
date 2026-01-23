@@ -1,10 +1,10 @@
 import type { BenutzerKompetenz, SchulEintrag, Schulform } from "@core";
-import type { KatalogSchuleListeManager } from "@ui";
+import type { SchulenListeManager } from "@ui";
 
-export interface SchuleDatenProps {
+export interface SchulenDatenProps {
 	schuljahr: number;
 	patch: (data: Partial<SchulEintrag>) => Promise<void>;
-	manager: () => KatalogSchuleListeManager;
+	manager: () => SchulenListeManager;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
 	schulform: Schulform;
 }

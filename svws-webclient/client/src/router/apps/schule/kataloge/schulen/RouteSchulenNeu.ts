@@ -1,20 +1,20 @@
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import type { KatalogSchuleNeuProps } from "~/components/schule/kataloge/schulen/SKatalogSchuleNeuProps";
-import type { RouteKatalogSchulen } from "~/router/apps/schule/kataloge/schulen/RouteKatalogSchulen";
+import type { SchulenNeuProps } from "~/components/schule/kataloge/schulen/SchulenNeuProps";
+import type { RouteSchulen } from "~/router/apps/schule/kataloge/schulen/RouteSchulen";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import { RouteManager } from "~/router/RouteManager";
 import { routeApp } from "../../../RouteApp";
-import { routeKatalogSchulen } from "~/router/apps/schule/kataloge/schulen/RouteKatalogSchulen";
+import { routeSchulen } from "~/router/apps/schule/kataloge/schulen/RouteSchulen";
 import { api } from "~/router/Api";
 
-const SKatalogSchuleNeu = () => import("~/components/schule/kataloge/schulen/SKatalogSchuleNeu.vue");
+const SchulenNeu = () => import("~/components/schule/kataloge/schulen/SchulenNeu.vue");
 
-export class RouteKatalogSchuleNeu extends RouteNode<any, RouteKatalogSchulen> {
+export class RouteSchulenNeu extends RouteNode<any, RouteSchulen> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.schulen.neu", "neu", SKatalogSchuleNeu);
+		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.schulen.neu", "neu", SchulenNeu);
 		super.types = new Set([ViewType.HINZUFUEGEN]);
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
@@ -26,11 +26,11 @@ export class RouteKatalogSchuleNeu extends RouteNode<any, RouteKatalogSchulen> {
 		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: "" } };
 	}
 
-	public getProps(to: RouteLocationNormalized): KatalogSchuleNeuProps {
+	public getProps(to: RouteLocationNormalized): SchulenNeuProps {
 		return {
-			manager: () => routeKatalogSchulen.data.manager,
-			add: routeKatalogSchulen.data.add,
-			gotoDefaultView: routeKatalogSchulen.data.gotoDefaultView,
+			manager: () => routeSchulen.data.manager,
+			add: routeSchulen.data.add,
+			gotoDefaultView: routeSchulen.data.gotoDefaultView,
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
 			benutzerKompetenzen: api.benutzerKompetenzen,
@@ -39,4 +39,4 @@ export class RouteKatalogSchuleNeu extends RouteNode<any, RouteKatalogSchulen> {
 	}
 }
 
-export const routeKatalogSchuleNeu = new RouteKatalogSchuleNeu();
+export const routeSchulenNeu = new RouteSchulenNeu();

@@ -36,11 +36,11 @@
 
 <script setup lang="ts">
 
-	import type { KatalogSchulenAppProps } from "./SSchulenAppProps";
+	import type { SchulenAppProps } from "./SchulenAppProps";
 	import { useRegionSwitch, ViewType } from "@ui";
 	import { computed } from "vue";
 
-	const props = defineProps<KatalogSchulenAppProps>();
+	const props = defineProps<SchulenAppProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const schulenSubline = computed(() => {

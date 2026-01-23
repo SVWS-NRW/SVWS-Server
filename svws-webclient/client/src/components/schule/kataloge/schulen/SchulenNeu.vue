@@ -55,11 +55,11 @@
 	import { computed, ref, watch } from "vue";
 	import { JavaObject, JavaString, SchulEintrag, Schulform, AdressenUtils, Herkunftsschulnummer, BenutzerKompetenz } from "@core";
 	import type { SchulenKatalogEintrag, List } from "@core";
-	import type { KatalogSchuleNeuProps } from "./SKatalogSchuleNeuProps";
+	import type { SchulenNeuProps } from "./SchulenNeuProps";
 	import { filterSchulenKatalogEintraege } from "~/utils/helfer";
 	import { emailIsValid, mandatoryInputIsValid, optionalInputIsValid, phoneNumberIsValid } from "~/util/validation/Validation";
 
-	const props = defineProps<KatalogSchuleNeuProps>();
+	const props = defineProps<SchulenNeuProps>();
 	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const disabled = computed(() => !hatKompetenzAdd.value);
 	const isInternal = ref<boolean>(true);

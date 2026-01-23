@@ -9,12 +9,11 @@ import type { SchulenKatalogEintrag } from '../../../../../core/src/core/data/sc
 import type { JavaFunction } from '../../../../../core/src/java/util/function/JavaFunction';
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
 import type { List } from '../../../../../core/src/java/util/List';
-import { Class } from '../../../../../core/src/java/lang/Class';
 import type { SchulEintrag } from '../../../../../core/src/core/data/kataloge/SchulEintrag';
 import { Arrays } from '../../../../../core/src/java/util/Arrays';
 import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
 
-export class KatalogSchuleListeManager extends AuswahlManager<number, SchulEintrag, SchulEintrag> {
+export class SchulenListeManager extends AuswahlManager<number, SchulEintrag, SchulEintrag> {
 
 	/**
 	 * Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ
@@ -58,7 +57,7 @@ export class KatalogSchuleListeManager extends AuswahlManager<number, SchulEintr
 	 * @param schulenKatalogEintraege        die Liste der Schulen aus Gesamt-NRW
 	 */
 	public constructor(schuljahresabschnitt: number, schuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>, schulform: Schulform | null, schulen: List<SchulEintrag>, schulenKatalogEintraege: List<SchulenKatalogEintrag>) {
-		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, schulen, KatalogSchuleListeManager._defaultComparator, KatalogSchuleListeManager._schuleToId, KatalogSchuleListeManager._schuleToId, Arrays.asList());
+		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, schulen, SchulenListeManager._defaultComparator, SchulenListeManager._schuleToId, SchulenListeManager._schuleToId, Arrays.asList());
 		this.schulenKatalogEintraege = schulenKatalogEintraege;
 	}
 
@@ -132,25 +131,10 @@ export class KatalogSchuleListeManager extends AuswahlManager<number, SchulEintr
 			}
 			return asc ? cmp : -cmp;
 		}
-		return KatalogSchuleListeManager._defaultComparator.compare(a, b);
+		return SchulenListeManager._defaultComparator.compare(a, b);
 	}
 
 	protected checkFilter(eintrag: SchulEintrag): boolean {
 		return true;
 	}
-
-	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.core.utils.schule.KatalogSchuleListeManager';
-	}
-
-	isTranspiledInstanceOf(name: string): boolean {
-		return ['de.svws_nrw.core.utils.AuswahlManager', 'de.svws_nrw.core.utils.schule.KatalogSchuleListeManager'].includes(name);
-	}
-
-	public static class = new Class<KatalogSchuleListeManager>('de.svws_nrw.core.utils.schule.KatalogSchuleListeManager');
-
-}
-
-export function cast_de_svws_nrw_core_utils_schule_KatalogSchuleListeManager(obj: unknown): KatalogSchuleListeManager {
-	return obj as KatalogSchuleListeManager;
 }

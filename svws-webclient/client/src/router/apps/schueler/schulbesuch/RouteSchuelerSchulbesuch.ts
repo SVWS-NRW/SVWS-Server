@@ -11,7 +11,7 @@ import { RouteDataSchuelerSchulbesuch } from "~/router/apps/schueler/schulbesuch
 import type { SchuelerSchulbesuchProps } from "~/components/schueler/schulbesuch/SSchuelerSchulbesuchProps";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
-import { routeKatalogSchulen } from "~/router/apps/schule/kataloge/schulen/RouteKatalogSchulen";
+import { routeSchulen } from "~/router/apps/schule/kataloge/schulen/RouteSchulen";
 
 const SSchuelerSchulbesuch = () => import("~/components/schueler/schulbesuch/SSchuelerSchulbesuch.vue");
 
@@ -36,7 +36,7 @@ export class RouteSchuelerSchulbesuch extends RouteNode<RouteDataSchuelerSchulbe
 	}
 
 	goToSchule = async (idSchule: number) => {
-		await RouteManager.doRoute(routeKatalogSchulen.getRoute({ id: idSchule }));
+		await RouteManager.doRoute(routeSchulen.getRoute({ id: idSchule }));
 	};
 
 	public getProps(to: RouteLocationNormalized): SchuelerSchulbesuchProps {

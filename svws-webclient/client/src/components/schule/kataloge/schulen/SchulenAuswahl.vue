@@ -30,7 +30,7 @@
 <script setup lang="ts">
 
 	import { computed } from 'vue';
-	import type { SchulenAuswahlProps } from './SSchulenAuswahlProps';
+	import type { SchulenAuswahlProps } from './SchulenAuswahlProps';
 	import { BenutzerKompetenz, type SchulEintrag, ServerMode } from "@core";
 	import { useRegionSwitch, ViewType } from "@ui";
 

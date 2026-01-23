@@ -22,7 +22,7 @@ import { routeJahrgaenge } from "~/router/apps/schule/kataloge/jahrgaenge/RouteJ
 import { routeFaecher } from "~/router/apps/schule/kataloge/faecher/RouteFaecher";
 import { routeEinwilligungsarten } from "~/router/apps/schule/kataloge/einwilligungsarten/RouteEinwilligungsarten";
 import { routeKonfessionen } from "~/router/apps/schule/kataloge/konfessionen/RouteKonfessionen";
-import { routeKatalogSchulen } from "~/router/apps/schule/kataloge/schulen/RouteKatalogSchulen";
+import { routeSchulen } from "~/router/apps/schule/kataloge/schulen/RouteSchulen";
 import { routeTelefonarten } from "~/router/apps/schule/kataloge/telefonarten/RouteTelefonarten";
 import { routeErzieherarten } from "~/router/apps/schule/kataloge/erzieherarten/RouteErzieherarten";
 import { routeVermerkarten } from "~/router/apps/schule/kataloge/vermerkarten/RouteVermerkarten";
@@ -165,7 +165,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeLernplattformen,
 			routeOrte,
 			routeOrtsteile,
-			routeKatalogSchulen,
+			routeSchulen,
 			routeTelefonarten,
 			routeVermerkarten,
 			// Datenaustausch

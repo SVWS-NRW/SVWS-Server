@@ -152,7 +152,7 @@ export { AuswahlManager } from "./ui/AuswahlManager";
 export { TelefonartenListeManager } from "./ui/manager/kataloge/TelefonartenListeManager";
 export { StundenplanListeManager } from "./ui/manager/stundenplan/StundenplanListeManager";
 export { StundenplanUnterrichtListeManager } from "./ui/manager/stundenplan/StundenplanUnterrichtListeManager";
-export { KatalogSchuleListeManager } from "./ui/manager/kataloge/KatalogSchuleListeManager";
+export { SchulenListeManager } from "./ui/manager/kataloge/SchulenListeManager";
 export { SchuelerListeManager } from "./ui/manager/schueler/SchuelerListeManager";
 export { SchuelerKAoAManager } from "./ui/manager/schueler/SchuelerKAoAManager";
 export { KonfessionenListeManager } from "./ui/manager/kataloge/KonfessionenListeManager";
