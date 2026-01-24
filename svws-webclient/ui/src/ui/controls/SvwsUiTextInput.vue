@@ -102,7 +102,7 @@
 
 <script setup lang="ts" generic="V extends BasicValidator">
 
-	import { ref, computed, watch, onBeforeMount, onMounted, onBeforeUnmount, useId } from "vue";
+	import { ref, computed, watch, onBeforeMount, onMounted, onBeforeUnmount, useId, type InputTypeHTMLAttribute } from "vue";
 	import type { BasicValidator } from "../../../../core/src/asd/validate/BasicValidator";
 	import { ValidatorFehlerart } from "../../../../core/src/asd/validate/ValidatorFehlerart";
 
@@ -116,7 +116,7 @@
 	const input = ref<null | HTMLInputElement>(null);
 
 	const props = withDefaults(defineProps<{
-		type?: "text" | "date" | "email" | "search" | "tel" | "password" | "datetime-local";
+		type?: InputTypeHTMLAttribute
 		minDate?: string;
 		maxDate?: string;
 		modelValue?: string | null;
