@@ -7,7 +7,7 @@ import java.io.IOException;
  */
 public class CommandLineException extends IOException {
 
-	/// Die eindeutige ID der Exception
+	/** Die eindeutige ID der Exception. */
 	private static final long serialVersionUID = -8848580827404924284L;
 
 

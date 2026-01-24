@@ -13,10 +13,10 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class Schwerpunkt extends GostBelegpruefung {
 
-	/// Gibt an, ob ein ein fremdsprachlicher Schwerpunkt vorliegt oder nicht
+	/** Gibt an, ob ein ein fremdsprachlicher Schwerpunkt vorliegt oder nicht. */
 	private boolean _hatSchwerpunktFremdsprachen;
 
-	/// Gibt an, ob ein ein naturwissenschaftlicher Schwerpunkt vorliegt oder nicht
+	/** Gibt an, ob ein ein naturwissenschaftlicher Schwerpunkt vorliegt oder nicht. */
 	private boolean _hatSchwerpunktNaturwissenschaften;
 
 	/**

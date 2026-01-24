@@ -80,7 +80,7 @@ class GostBlockungsergebnisManagerTest {
 		final GostBlockungsdatenManager input = k42Converter.gibKursblockungInput();
 		final GostBlockungsergebnisManager out = new GostBlockungsergebnisManager(input, 1L);
 
-		/// GostBlockungsergebnisManager dynamisch testen.
+		// GostBlockungsergebnisManager dynamisch testen.
 		teste_in_out(input, out);
 	}
 
@@ -107,7 +107,7 @@ class GostBlockungsergebnisManagerTest {
 		final GostBlockungsdatenManager input = k42Converter.gibKursblockungInput();
 		final GostBlockungsergebnisManager out = new GostBlockungsergebnisManager(input, 1L);
 
-		/// GostBlockungsergebnisManager dynamisch testen.
+		// GostBlockungsergebnisManager dynamisch testen.
 		teste_in_out(input, out);
 	}
 

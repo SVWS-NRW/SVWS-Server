@@ -11,6 +11,9 @@ import { GostBelegungsfehler } from '../../../../../core/abschluss/gost/GostBele
 
 export class Abi30BelegpruefungSport extends GostBelegpruefung {
 
+	/**
+	 * Die Belegungen für das Fach Sport.
+	 */
 	private _sport: List<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 
 

@@ -6,16 +6,16 @@ package de.svws_nrw.base.shell;
  */
 public class CommandLineOption {
 
-	/// Die kurze Bezeichnung für die Option (wird mit einem einfachen Bindestrich verwendet), z.B. -o
+	/** Die kurze Bezeichnung für die Option (wird mit einem einfachen Bindestrich verwendet), z.B. -o. */
 	private final String shortTag;
 
-	/// Die lange Bezeichnung für die Option (wird mit zwei einfachen Bindestrichen verwendet), z.B. --option
+	/** Die lange Bezeichnung für die Option (wird mit zwei einfachen Bindestrichen verwendet), z.B. --option. */
 	private final String longTag;
 
-	/// Gibt an, ob nach der Bezeichnung für die Option ein Argument folgen muss oder nicht
+	/** Gibt an, ob nach der Bezeichnung für die Option ein Argument folgen muss oder nicht. */
 	private final boolean hasArgument;
 
-	/// Eine textuelle Beschreibung dieser Option
+	/** Eine textuelle Beschreibung dieser Option. */
 	private final String description;
 
 

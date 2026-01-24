@@ -22,28 +22,28 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class AbiFaecher extends GostBelegpruefung {
 
-	/// Eine ArrayMap für den schnellen Zugriff auf die 4 Abiturfachbelegungen, sofern diese zugeordnet sind
+	/** Eine ArrayMap für den schnellen Zugriff auf die 4 Abiturfachbelegungen, sofern diese zugeordnet sind. */
 	private ArrayMap<GostAbiturFach, AbiturFachbelegung> mapAbiturFachbelegungen;
 
-	/// Die Anzahl der belegten Abitur-Fächer (sollten 4 sein)
+	/** Die Anzahl der belegten Abitur-Fächer (sollten 4 sein). */
 	private int anzahlAbiFaecher;
 
-	/// Die Anzahl der Abiturfächer im Bereich Deutsch, Mathematik oder Fremdsprache (muss mindestens 2 sein)
+	/** Die Anzahl der Abiturfächer im Bereich Deutsch, Mathematik oder Fremdsprache (muss mindestens 2 sein). */
 	private int anzahlDeutschMatheFremdsprache;
 
-	/// Die Anzahl der Fremdsprachen
+	/** Die Anzahl der Fremdsprachen. */
 	private int anzahlFremdsprachen;
 
-	/// Die Anzahl der Abiturfächer im Bereich Sport und Religion (darf maximal 1 sein)
+	/** Die Anzahl der Abiturfächer im Bereich Sport und Religion (darf maximal 1 sein). */
 	private int anzahlSportReligion;
 
-	/// Gibt an, ob das AufgabenFeld I abgedeckt ist.
+	/** Gibt an, ob das AufgabenFeld I abgedeckt ist. */
 	private boolean hatAufgabenfeldI;
 
-	/// Gibt an, ob das AufgabenFeld II abgedeckt ist.
+	/** Gibt an, ob das AufgabenFeld II abgedeckt ist. */
 	private boolean hatAufgabenfeldII;
 
-	/// Gibt an, ob das AufgabenFeld III abgedeckt ist.
+	/** Gibt an, ob das AufgabenFeld III abgedeckt ist. */
 	private boolean hatAufgabenfeldIII;
 
 

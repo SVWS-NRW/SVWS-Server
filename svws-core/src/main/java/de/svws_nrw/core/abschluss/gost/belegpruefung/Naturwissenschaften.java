@@ -18,16 +18,16 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class Naturwissenschaften extends GostBelegpruefung {
 
-	/// Die Belegungen für alle Fächer der Naturwissenschaften
+	/** Die Belegungen für alle Fächer der Naturwissenschaften. */
 	private List<AbiturFachbelegung> _naturwissenschaften;
 
-	/// Die Belegungen für alle Fächer der klassischen Naturwissenschaften
+	/** Die Belegungen für alle Fächer der klassischen Naturwissenschaften. */
 	private List<AbiturFachbelegung> _naturwissenschaftenKlassisch;
 
-	// Die Anzahl der durchgehenden bzw. potentiell durchgehenden Belegungen - mündlich und schriftlich (für die Schwerpunktberechnung)
+	/** Die Anzahl der durchgehenden bzw. potentiell durchgehenden Belegungen - mündlich und schriftlich (für die Schwerpunktberechnung). */
 	private int _anzahlDurchgehend;
 
-	// Die Anzahl der durchgehenden bzw. potentiell durchgehenden Belegungen - nur schriftlich (für die Schwerpunktberechnung)
+	/** Die Anzahl der durchgehenden bzw. potentiell durchgehenden Belegungen - nur schriftlich (für die Schwerpunktberechnung). */
 	private int _anzahlDurchgehendSchriftlich;
 
 

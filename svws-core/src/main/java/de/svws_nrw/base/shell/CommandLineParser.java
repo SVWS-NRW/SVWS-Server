@@ -12,23 +12,22 @@ import jakarta.validation.constraints.NotNull;
  */
 public class CommandLineParser {
 
-	/// Gibt an, ob die Kommandozeile bereits in Bezug auf die angegebenen Optionen untersucht wurde
+	/** Gibt an, ob die Kommandozeile bereits in Bezug auf die angegebenen Optionen untersucht wurde. */
 	private boolean parsed = false;
 
-	/// Die Kommandozeilen-Parameter als String-Array
+	/** Die Kommandozeilen-Parameter als String-Array. */
 	private final String[] args;
 
-	/// Der Logger für die Ausgabe von Rückmeldungen des Parsers
+	/** Der Logger für die Ausgabe von Rückmeldungen des Parsers. */
 	private final @NotNull Logger logger;
 
-
-	/// Eine Hashmap mit allen Kommandozeilenoptionen, welche ihren Short-Tags zugeordnet sind
+	/** Eine Hashmap mit allen Kommandozeilenoptionen, welche ihren Short-Tags zugeordnet sind. */
 	private final HashMap<String, CommandLineOption> options = new HashMap<>();
 
-	/// Eine Hashmap mit allen Kommandozeilenoptionen, welche ihren Long-Tags zugeordnet sind
+	/** Eine Hashmap mit allen Kommandozeilenoptionen, welche ihren Long-Tags zugeordnet sind. */
 	private final HashMap<String, CommandLineOption> optionsLong = new HashMap<>();
 
-	/// Eine Hashmap, welche dem short tag einer Option den Wert zuordnet, der über den Parser eingelesen wurde
+	/** Eine Hashmap, welche dem short tag einer Option den Wert zuordnet, der über den Parser eingelesen wurde. */
 	private final HashMap<String, String> values = new HashMap<>();
 
 

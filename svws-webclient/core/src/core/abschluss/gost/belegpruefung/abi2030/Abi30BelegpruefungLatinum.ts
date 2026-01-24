@@ -9,6 +9,9 @@ import { GostBelegungsfehler } from '../../../../../core/abschluss/gost/GostBele
 
 export class Abi30BelegpruefungLatinum extends GostBelegpruefung {
 
+	/**
+	 * Die Belegung für das Fach Latein.
+	 */
 	private latein: AbiturFachbelegung | null = null;
 
 

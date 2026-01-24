@@ -18,17 +18,29 @@ import { GostBelegungsfehler } from '../../../../../core/abschluss/gost/GostBele
 
 export class Abi30BelegpruefungFremdsprachen extends GostBelegpruefung {
 
+	/**
+	 * Die Belegungen für alle Fächer der Fremdsprachen.
+	 */
 	private _fremdsprachen: List<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 
+	/**
+	 * Die Belegungen für alle neu einsetzenden Fremdsprachen.
+	 */
 	private _fremdsprachenNeu: List<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 
+	/**
+	 * Die Belegungen für alle fortgeführten Fremdsprachen.
+	 */
 	private _fremdsprachenFortgefuehrt: List<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 
+	/**
+	 * Die Belegungen von bilingualen Sachfächern.
+	 */
 	private _biliSachfaecher: List<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 
 	/**
 	 * Die Anzahl der durchgehenden bzw. potenziell durchgehenden Belegungen - nur schriftlich (für die Schwerpunktberechnung
-	 *  - hier zählt auch ein bilinguales Sachfach, wo die Fremdsprache der Unterrichtsprache aus der Sek I nicht fortgeführt wurde)
+	 *  - hier zählt auch ein bilinguales Sachfach, wo die Fremdsprache der Unterrichtsprache aus der Sek I nicht fortgeführt wurde).
 	 */
 	private _anzahlDurchgehendSchriftlich: number = 0;
 

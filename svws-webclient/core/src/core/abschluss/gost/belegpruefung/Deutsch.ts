@@ -10,6 +10,9 @@ import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegun
 
 export class Deutsch extends GostBelegpruefung {
 
+	/**
+	 * Die Belegung für das Fach Deutsch.
+	 */
 	private _deutsch: AbiturFachbelegung | null = null;
 
 

@@ -8,8 +8,14 @@ import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegun
 
 export class Schwerpunkt extends GostBelegpruefung {
 
+	/**
+	 * Gibt an, ob ein ein fremdsprachlicher Schwerpunkt vorliegt oder nicht.
+	 */
 	private _hatSchwerpunktFremdsprachen: boolean = false;
 
+	/**
+	 * Gibt an, ob ein ein naturwissenschaftlicher Schwerpunkt vorliegt oder nicht.
+	 */
 	private _hatSchwerpunktNaturwissenschaften: boolean = false;
 
 
