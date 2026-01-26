@@ -126,7 +126,8 @@ export type { EnmKlassenleitungProps } from "./components/enm/EnmKlassenleitungP
 export { AppMenuGroup } from "./ui/nav/AppMenuGroup";
 export { ViewType } from "./ui/nav/ViewType";
 
-// Validator Classes
+// Validierung
+export { ModelProxy, type ModelProxyConfiguration } from "./model/ModelProxy";
 export { ValidationResult } from "./validation/ValidationResult";
 export { ValidatorBenutzerAnmeldenameNeu } from "./validation/ValidatorBenutzerAnmeldenameNeu";
 export { ValidatorEmail } from "./validation/ValidatorEmail";
