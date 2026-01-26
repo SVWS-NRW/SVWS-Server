@@ -352,7 +352,7 @@
 	 * die zweite sucht nach dem Muster #tag
 	 * ?: verhindert das Erzeugen von Gruppen, die erste RegexGruppe wäre also Vorname
 	 *  */
-	const query = /(?:\$(?:(Vorname)|(Name|Nachname)|(weibl)|(ein)|(Anrede)|(\S+%\S+))\$)|(#\S+)/;
+	const query = /(?:[$|&](?:(Vorname)|(Name|Nachname)|(weibl)|(ein)|(Anrede)|(\S+%\S+))[$|&])|(#\S+)/;
 	const templateRegexGlobal = new RegExp(query, 'gi');
 	const templateRegex = new RegExp(query, 'i');
 	const every = ref(3);
