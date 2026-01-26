@@ -37,9 +37,15 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Persönliche Daten" class="col-span-full">
 			<svws-ui-input-wrapper :grid="4">
-				<svws-ui-text-input placeholder="Nachname" required v-model="data.nachname" :valid="fieldIsValid('nachname')" :max-len="120" />
-				<svws-ui-text-input placeholder="Rufname" required v-model="data.vorname" :valid="fieldIsValid('vorname')" :max-len="120" />
-				<svws-ui-text-input placeholder="Alle Vornamen" v-model="data.alleVornamen" :valid="fieldIsValid('alleVornamen')" :max-len="120" />
+				<svws-ui-text-input placeholder="Nachname"
+					v-model="data.nachname"
+					:valid="fieldIsValid('nachname')" :min-len="1" :max-len="120" required />
+				<svws-ui-text-input placeholder="Rufname"
+					v-model="data.vorname"
+					:valid="fieldIsValid('vorname')" :min-len="1" :max-len="80" required />
+				<svws-ui-text-input placeholder="Alle Vornamen"
+					v-model="data.alleVornamen"
+					:valid="fieldIsValid('alleVornamen')" :max-len="255" />
 				<ui-select label="Geschlecht" v-model="geschlecht" :manager="geschlechtManager" :removable="false" required />
 				<svws-ui-text-input placeholder="Geburtsdatum" required type="date" v-model="data.geburtsdatum" :valid="istGeburtsdatumGueltig" />
 				<div v-if="!istGeburtsdatumGueltig(data.geburtsdatum)" class="flex my-auto">
@@ -119,9 +125,9 @@
 				case 'nachname':
 					return mandatoryInputIsValid(data.value.nachname, 120);
 				case 'vorname':
-					return mandatoryInputIsValid(data.value.vorname, 120);
+					return mandatoryInputIsValid(data.value.vorname, 80);
 				case 'alleVornamen':
-					return optionalInputIsValid(data.value.alleVornamen, 120);
+					return optionalInputIsValid(data.value.alleVornamen, 255);
 				case 'anmeldedatum':
 					return istAnmeldedatumGueltig(data.value.anmeldedatum);
 				case 'aufnahmedatum':

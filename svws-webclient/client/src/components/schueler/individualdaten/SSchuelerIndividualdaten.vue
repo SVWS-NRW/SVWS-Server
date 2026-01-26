@@ -6,12 +6,18 @@
 	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input class="contentFocusField" v-autofocus placeholder="Nachname" :readonly :model-value="schuelerListeManager().daten().nachname"
-					@change="nachname => patch({ nachname: nachname ?? undefined })" type="text" />
-				<svws-ui-text-input placeholder="Rufname" :readonly :model-value="schuelerListeManager().daten().vorname"
-					@change="vorname => patch({ vorname: vorname ?? undefined })" type="text" />
-				<svws-ui-text-input placeholder="Alle Vornamen" :readonly :model-value="schuelerListeManager().daten().alleVornamen"
-					@change="alleVornamen => patch({ alleVornamen: alleVornamen ?? undefined })" type="text" />
+				<svws-ui-text-input placeholder="Nachname" class="contentFocusField"
+					:model-value="schuelerListeManager().daten().nachname"
+					@change="patchNachname"
+					:valid="v => mandatoryInputIsValid(v, 120)" :min-len="1" :max-len="120" required :readonly v-autofocus />
+				<svws-ui-text-input placeholder="Rufname"
+					:model-value="schuelerListeManager().daten().vorname"
+					@change="patchVorname"
+					:valid="v => mandatoryInputIsValid(v, 80)" :min-len="1" :max-len="80" required :readonly />
+				<svws-ui-text-input placeholder="Alle Vornamen"
+					:model-value="schuelerListeManager().daten().alleVornamen"
+					@change="patchAlleVornamen"
+					:valid="v => optionalInputIsValid(v, 255)" :max-len="255" :readonly />
 				<svws-ui-spacing />
 				<svws-ui-select title="Geschlecht" :readonly v-model="geschlecht" :items="Geschlecht.values()"
 					statistics :item-text="(i: Geschlecht)=>i.text" />
@@ -190,6 +196,7 @@
 	import { verkehrsspracheKatalogEintragFilter, verkehrsspracheKatalogEintragSort, nationalitaetenKatalogEintragFilter, nationalitaetenKatalogEintragSort,
 		staatsangehoerigkeitKatalogEintragSort, staatsangehoerigkeitKatalogEintragFilter, orte_sort, orte_filter, ortsteilSort, ortsteilFilter } from "~/utils/helfer";
 	import type { DataTableColumn } from "@ui";
+	import { mandatoryInputIsValid, optionalInputIsValid } from "~/util/validation/Validation";
 
 	const props = defineProps<SchuelerIndividualdatenProps>();
 
@@ -461,5 +468,24 @@
 		URL.revokeObjectURL(link.href);
 		loading.value = false;
 	}
+
+	async function patchVorname(vorname: string | null) {
+		if (mandatoryInputIsValid(vorname, 80)) {
+			await props.patch({ vorname: vorname ?? undefined });
+		}
+	}
+
+	async function patchNachname(nachname: string | null) {
+		if (mandatoryInputIsValid(nachname, 120)) {
+			await props.patch({ nachname: nachname ?? undefined });
+		}
+	}
+
+	async function patchAlleVornamen(alleVornamen: string | null) {
+		if (optionalInputIsValid(alleVornamen, 255)) {
+			await props.patch({ alleVornamen: alleVornamen ?? undefined });
+		}
+	}
+
 
 </script>

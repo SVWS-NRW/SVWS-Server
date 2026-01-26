@@ -32,12 +32,18 @@
 
 		<svws-ui-content-card title="Persönliche Daten" class="col-span-full">
 			<svws-ui-input-wrapper :grid="4">
-				<svws-ui-text-input placeholder="Nachname" required :model-value="data().nachname"
-					@change="nachname => patchIfValid('nachname', nachname)" :valid="fieldIsValid('nachname')" :max-len="120" :readonly />
-				<svws-ui-text-input placeholder="Rufname" required :model-value="data().vorname"
-					@change="vorname => patchIfValid('vorname', vorname)" :valid="fieldIsValid('vorname')" :max-len="120" :readonly />
-				<svws-ui-text-input placeholder="Alle Vornamen" :model-value="data().alleVornamen"
-					@change="alleVornamen => patch({ alleVornamen: alleVornamen ?? undefined }, data().id)" :valid="fieldIsValid('alleVornamen')" :max-len="120" :readonly />
+				<svws-ui-text-input placeholder="Nachname"
+					:model-value="data().nachname"
+					@change="nachname => patchIfValid('nachname', nachname)"
+					:valid="fieldIsValid('nachname')" :min-len="1" :max-len="120" :readonly required />
+				<svws-ui-text-input placeholder="Rufname"
+					:model-value="data().vorname"
+					@change="vorname => patchIfValid('vorname', vorname)"
+					:valid="fieldIsValid('vorname')" :min-len="1" :max-len="80" :readonly required />
+				<svws-ui-text-input placeholder="Alle Vornamen"
+					:model-value="data().alleVornamen"
+					@change="alleVornamen => patchIfValid('alleVornamen', alleVornamen)"
+					:valid="fieldIsValid('alleVornamen')" :max-len="255" :readonly />
 				<ui-select label="Geschlecht" :model-value="geschlecht" @update:model-value="setGeschlecht" :manager="geschlechtManager" :removable="false" :readonly />
 				<svws-ui-spacing />
 				<svws-ui-text-input placeholder="Straße" type="text" :model-value="strasseSchueler" @change="patchStrasse" :valid="fieldIsValid('strassenname')" :max-len="55" :readonly />
@@ -703,9 +709,9 @@
 				case 'nachname':
 					return mandatoryInputIsValid(data().nachname, 120);
 				case 'vorname':
-					return mandatoryInputIsValid(data().vorname, 120);
+					return mandatoryInputIsValid(data().vorname, 80);
 				case 'alleVornamen':
-					return optionalInputIsValid(data().alleVornamen, 120);
+					return optionalInputIsValid(data().alleVornamen, 255);
 				case 'geschlecht':
 					return Geschlecht.fromValue(data().geschlecht) !== null;
 				case 'strassenname':
@@ -743,6 +749,12 @@
 				}
 				await props.patch({ vorname: v ?? undefined }, data().id);
 				return;
+			case 'alleVornamen': {
+				if (optionalInputIsValid(v, 255)) {
+					await props.patch({ alleVornamen: v ?? undefined }, data().id);
+				}
+				return;
+			}
 			case 'telefon':
 				if ((v !== null) && (v.length > 0) && !phoneNumberIsValid(v, 20)) {
 					return;
