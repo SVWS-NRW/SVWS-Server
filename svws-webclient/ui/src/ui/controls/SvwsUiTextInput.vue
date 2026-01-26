@@ -50,7 +50,7 @@
 				</svws-ui-tooltip>
 			</span>
 			<span>{{ placeholder }}</span>
-			<span v-if="(maxLen !== undefined) || (minLen !== undefined)" class="inline-flex gap-1" :class="{'text-ui-danger': !maxLenValid || !minLenValid, 'opacity-50': maxLenValid && minLenValid}">
+			<span v-if="((maxLen !== undefined) || (minLen !== undefined)) && !disabled" class="inline-flex gap-1" :class="{'text-ui-danger': !maxLenValid || !minLenValid, 'opacity-50': maxLenValid && minLenValid}">
 				{{ (maxLen !== undefined) && (minLen === undefined) ? ` (max. ${maxLen} Zeichen)` : '' }}
 				{{ (minLen !== undefined) && (maxLen === undefined) ? ` (mind. ${minLen} Zeichen)` : '' }}
 				{{ (minLen !== undefined) && (maxLen !== undefined) && (minLen !== maxLen) ? ` (zwischen ${minLen} und ${maxLen} Zeichen)` : '' }}
