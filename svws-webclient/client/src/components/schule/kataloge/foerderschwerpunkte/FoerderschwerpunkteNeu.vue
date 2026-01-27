@@ -2,13 +2,15 @@
 	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper :grid="2">
-				<ui-select label="ASD-Statistik-Förderschwerpunkt"
+				<ui-select label="Förderschwerpunkt ASD-Kürzel"
 					v-model="selectedFoerderschwerpunkt"
-					:manager="foerderschwerpunktCoreTypeManager"
+					:manager="foerderschwerpunktKuerzelManager"
+					:valid="fieldIsValid('kuerzel')" statistics
+					:disabled="!hatKompetenzAdd" searchable required :removable="false" />
+				<ui-select label="Förderschwerpunkt ASD-Text"
+					v-model="selectedFoerderschwerpunkt"
+					:manager="foerderschwerpunktTextManager"
 					:valid="fieldIsValid('kuerzelStatistik')" searchable :removable="false" statistics :disabled="!hatKompetenzAdd" required />
-				<svws-ui-text-input placeholder="Statistik-Kürzel"
-					:model-value="data.kuerzelStatistik"
-					statistics readonly />
 				<svws-ui-text-input placeholder="Interne Bezeichnung" span="2"
 					v-model="data.kuerzel"
 					:valid="() => fieldIsValid('kuerzel')" :min-len="1" :max-len="50" :disabled="!hatKompetenzAdd" required />
@@ -57,7 +59,15 @@
 			.every((field: string) => fieldIsValid(field as keyof FoerderschwerpunktEintrag));
 	});
 
-	const foerderschwerpunktCoreTypeManager = new CoreTypeSelectManager({
+	const foerderschwerpunktKuerzelManager = new CoreTypeSelectManager({
+		clazz: Foerderschwerpunkt.class,
+		schuljahr: props.schuljahr,
+		schulformen: props.schulform,
+		optionDisplayText: "kuerzel",
+		selectionDisplayText: "kuerzel",
+	});
+
+	const foerderschwerpunktTextManager = new CoreTypeSelectManager({
 		clazz: Foerderschwerpunkt.class,
 		schuljahr: props.schuljahr,
 		schulformen: props.schulform,

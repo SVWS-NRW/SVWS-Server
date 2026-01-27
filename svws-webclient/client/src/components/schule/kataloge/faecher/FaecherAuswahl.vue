@@ -38,7 +38,8 @@
 
 	import { computed } from "vue";
 	import { useRegionSwitch, ViewType } from "@ui";
-	import { BenutzerKompetenz, FachDaten } from "@core";
+	import type { FachDaten } from "@core";
+	import { BenutzerKompetenz } from "@core";
 	import type { FaecherAuswahlProps } from "~/components/schule/kataloge/faecher/FaecherAuswahlProps";
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();

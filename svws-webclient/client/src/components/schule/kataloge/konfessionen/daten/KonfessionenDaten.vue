@@ -5,11 +5,11 @@
 				<ui-select label="Konfession ASD-Kürzel"
 					v-model="selectedKonfession"
 					:manager="konfessionKuerzelSelectManager"
-					statistics :readonly="!hatKompetenzUpdate" :removable="false" />
+					searchable statistics :readonly="!hatKompetenzUpdate" :removable="false" />
 				<ui-select label="Konfession ASD-Text"
 					v-model="selectedKonfession"
 					:manager="konfessionTextSelectManager"
-					statistics :readonly="!hatKompetenzUpdate" :removable="false" />
+					searchable statistics :readonly="!hatKompetenzUpdate" :removable="false" />
 				<svws-ui-text-input placeholder="Interne Bezeichnung"
 					:model-value="manager().daten().bezeichnung"
 					@change="patchBezeichnung"

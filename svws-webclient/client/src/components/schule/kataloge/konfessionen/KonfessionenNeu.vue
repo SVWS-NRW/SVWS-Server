@@ -5,11 +5,11 @@
 				<ui-select label="Konfession ASD-Kürzel"
 					v-model="selectedKonfession"
 					:manager="konfessionKuerzelSelectManager"
-					:valid="fieldIsValid('kuerzel')" statistics :disabled="!hatKompetenzUpdate" required :removable="false" />
+					:valid="fieldIsValid('kuerzel')" searchable statistics :disabled="!hatKompetenzUpdate" required :removable="false" />
 				<ui-select label="Konfession ASD-Text"
 					v-model="selectedKonfession"
 					:manager="konfessionTextSelectManager"
-					:valid="fieldIsValid('kuerzel')" statistics :disabled="!hatKompetenzUpdate" required :removable="false" />
+					:valid="fieldIsValid('kuerzel')" searchable statistics :disabled="!hatKompetenzUpdate" required :removable="false" />
 				<svws-ui-text-input placeholder="Interne Bezeichnung"
 					v-model="data.bezeichnung"
 					:valid="() => fieldIsValid('bezeichnung')" :min-len="1" :max-len="30" :disabled="!hatKompetenzUpdate" required />

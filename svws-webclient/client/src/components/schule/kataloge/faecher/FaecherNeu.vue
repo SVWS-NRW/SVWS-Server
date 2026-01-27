@@ -5,11 +5,11 @@
 				<svws-ui-text-input placeholder="Kürzel" required :max-len="20" v-model="data.kuerzel" :disabled />
 				<svws-ui-select title="Statistik-Fach" required :items="statistikFachEintraege" :item-filter="coreTypeDataFilter"
 					v-model="selectedStatistikFach" :item-text="getStatistikfachText" autocomplete />
-				<svws-ui-text-input placeholder="Bezeichnung" required :max-len="255"  v-model="data.bezeichnung" :disabled />
+				<svws-ui-text-input placeholder="Bezeichnung" required :max-len="255" v-model="data.bezeichnung" :disabled />
 				<svws-ui-text-input placeholder="Fachgruppe" :model-value="fachgruppe" disabled />
 				<svws-ui-select removable title="Bilinguale Sachfachsprache" :items="BilingualeSprache.values()" v-model="selectedBilingualeSprache"
 					:item-text="b => b.daten(schuljahr)?.text ?? '—'" :disabled />
-				<svws-ui-input-number placeholder="Sortierung"  v-model="data.sortierung" :disabled />
+				<svws-ui-input-number placeholder="Sortierung" v-model="data.sortierung" :disabled />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Zeugnis">

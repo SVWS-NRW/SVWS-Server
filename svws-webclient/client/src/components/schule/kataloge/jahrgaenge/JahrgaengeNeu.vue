@@ -18,19 +18,19 @@
 				<ui-select label="Schulgliederung ASD-Kürzel"
 					v-model="selectedSchulgliederung"
 					:manager="schulgliederungKuerzelSelectManager"
-					statistics :disabled="!hatKompetenzAdd" />
+					searchable statistics :disabled="!hatKompetenzAdd" />
 				<ui-select label="Schulgliederung ASD-Text"
 					v-model="selectedSchulgliederung"
 					:manager="schulgliederungTextSelectManager"
-					statistics :disabled="!hatKompetenzAdd" />
+					searchable statistics :disabled="!hatKompetenzAdd" />
 				<ui-select label="Jahrgang ASD-Kürzel"
 					:manager="jahrgangKuerzelSelectManager"
 					v-model="selectedStatistikJahrgang"
-					:valid="fieldIsValid('kuerzelStatistik')" statistics :disabled="!hatKompetenzAdd" required :removable="false" />
+					:valid="fieldIsValid('kuerzelStatistik')" searchable statistics :disabled="!hatKompetenzAdd" required :removable="false" />
 				<ui-select label="Jahrgang ASD-Text"
 					:manager="jahrgangTextSelectManager"
 					v-model="selectedStatistikJahrgang"
-					statistics :disabled="!hatKompetenzAdd" required :removable="false" />
+					statistics searchable :disabled="!hatKompetenzAdd" required :removable="false" />
 				<svws-ui-input-number placeholder="Anzahl der Restabschnitte"
 					v-model="data.anzahlRestabschnitte"
 					:valid="() => fieldIsValid('anzahlRestabschnitte')" :min="0" :max="40" :disabled="!hatKompetenzAdd" />
