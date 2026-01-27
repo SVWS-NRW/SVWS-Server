@@ -64,7 +64,7 @@
 	const disabled = computed(() => !hatKompetenzAdd.value);
 	const isInternal = ref<boolean>(true);
 	const data = ref<SchulEintrag>(Object.assign(new SchulEintrag(), { istSichtbar: true }));
-	const schulenKatalogEintraege = computed<List<SchulenKatalogEintrag>>(() => props.manager().getSchulenKatalogEintraege());
+	const schulenKatalogEintraege = computed<List<SchulenKatalogEintrag>>(() => props.manager().schulenKatalogEintraege);
 	const selectedSchule = ref<SchulenKatalogEintrag>();
 	const externalSchulnummer = ref<Herkunftsschulnummer>();
 	const schuljahr = computed<number>(() => props.manager().getSchuljahr());
