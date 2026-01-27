@@ -37,6 +37,9 @@ import de.svws_nrw.data.gost.DataGostJahrgangFachkombinationen;
 import de.svws_nrw.data.gost.DataGostJahrgangsdaten;
 import de.svws_nrw.data.gost.DataGostSchuelerLaufbahnplanungBeratungsdaten;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
+import de.svws_nrw.data.schule.DataEinwilligungsarten;
+import de.svws_nrw.data.schule.DataLernplattformen;
+import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import jakarta.validation.constraints.NotNull;
@@ -292,7 +295,8 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 					this.reportingRepository,
 					this.reportingRepository.mapLehrerStammdaten().computeIfAbsent(gostBeratungsdaten.beratungslehrerID, l -> {
 						try {
-							return new DataLehrerStammdaten(this.reportingRepository.conn()).getById(gostBeratungsdaten.beratungslehrerID);
+							final DBEntityManager conn = this.reportingRepository.conn();
+							return new DataLehrerStammdaten(conn, new DataLernplattformen(conn), new DataEinwilligungsarten(conn)).getById(gostBeratungsdaten.beratungslehrerID);
 						} catch (final ApiOperationException e) {
 							ReportingExceptionUtils.logException(
 									"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Lehrers.", e,
@@ -309,7 +313,9 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 						this.reportingRepository,
 						this.reportingRepository.mapLehrerStammdaten().computeIfAbsent(lehrkraft.id, l -> {
 							try {
-								return new DataLehrerStammdaten(this.reportingRepository.conn()).getById(lehrkraft.id);
+								final DBEntityManager conn = this.reportingRepository.conn();
+								return new DataLehrerStammdaten(conn, new DataLernplattformen(conn),
+										new DataEinwilligungsarten(conn)).getById(lehrkraft.id);
 							} catch (final ApiOperationException e) {
 								ReportingExceptionUtils.logException(
 										"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Lehrers.", e,

@@ -14,6 +14,9 @@ import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 
 import de.svws_nrw.data.schueler.DataSchuelerLeistungsdaten;
+import de.svws_nrw.data.schule.DataEinwilligungsarten;
+import de.svws_nrw.data.schule.DataLernplattformen;
+import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.berufskolleg.DTOSchuelerZuweisung;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLeistungsdaten;
@@ -242,7 +245,8 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 							reportingRepository,
 							reportingRepository.mapLehrerStammdaten().computeIfAbsent(super.idSonderpaedagoge(), l -> {
 								try {
-									return new DataLehrerStammdaten(reportingRepository.conn()).getById(super.idSonderpaedagoge());
+									final DBEntityManager conn = reportingRepository.conn();
+									return new DataLehrerStammdaten(conn, new DataLernplattformen(conn), new DataEinwilligungsarten(conn)).getById(super.idSonderpaedagoge());
 								} catch (final ApiOperationException e) {
 									ReportingExceptionUtils.logException(
 											"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Lehrers.", e,
@@ -267,7 +271,8 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 							reportingRepository,
 							reportingRepository.mapLehrerStammdaten().computeIfAbsent(super.idTutor(), l -> {
 								try {
-									return new DataLehrerStammdaten(reportingRepository.conn()).getById(super.idTutor());
+									final DBEntityManager conn = reportingRepository.conn();
+									return new DataLehrerStammdaten(conn, new DataLernplattformen(conn), new DataEinwilligungsarten(conn)).getById(super.idTutor());
 								} catch (final ApiOperationException e) {
 									ReportingExceptionUtils.logException(
 											"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Lehrers.", e,

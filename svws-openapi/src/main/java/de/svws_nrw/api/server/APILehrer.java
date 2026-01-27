@@ -2,8 +2,6 @@ package de.svws_nrw.api.server;
 
 import java.io.InputStream;
 
-import org.jboss.resteasy.annotations.GZIP;
-
 import de.svws_nrw.asd.data.lehrer.LehrerAbgangsgrundKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerAnrechnungsgrundKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerBeschaeftigungsartKatalogEintrag;
@@ -20,17 +18,17 @@ import de.svws_nrw.asd.data.lehrer.LehrerLehrbefaehigungKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerLeitungsfunktionKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerMehrleistungsartKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerMinderleistungsartKatalogEintrag;
-import de.svws_nrw.asd.data.lehrer.LehrerRechtsverhaeltnisKatalogEintrag;
-import de.svws_nrw.asd.data.lehrer.LehrerZugangsgrundKatalogEintrag;
-import de.svws_nrw.core.data.SimpleOperationResponse;
-import de.svws_nrw.core.data.lehrer.LehrerLernplattform;
-import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdaten;
 import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdatenAnrechnungsstunden;
 import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdatenLehrerfunktion;
 import de.svws_nrw.asd.data.lehrer.LehrerPersonaldaten;
+import de.svws_nrw.asd.data.lehrer.LehrerRechtsverhaeltnisKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
+import de.svws_nrw.asd.data.lehrer.LehrerZugangsgrundKatalogEintrag;
+import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.lehrer.LehrerEinwilligung;
+import de.svws_nrw.core.data.lehrer.LehrerLernplattform;
+import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.JSONMapper;
@@ -63,6 +61,8 @@ import de.svws_nrw.data.lehrer.DataLehrerPersonalabschnittsdatenMinderleistungen
 import de.svws_nrw.data.lehrer.DataLehrerPersonaldaten;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.lehrer.DataLehrerliste;
+import de.svws_nrw.data.schule.DataEinwilligungsarten;
+import de.svws_nrw.data.schule.DataLernplattformen;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -82,6 +82,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.jboss.resteasy.annotations.GZIP;
 
 
 /**
@@ -206,7 +207,7 @@ public class APILehrer {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Kein Lehrer-Eintrag mit der angegebenen ID gefunden")
 	public Response getLehrerStammdaten(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerStammdaten(conn).getByIdAsResponse(id),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerStammdaten(conn, new DataLernplattformen(conn), new DataEinwilligungsarten(conn)).getByIdAsResponse(id),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.LEHRERDATEN_ANSEHEN);
 	}
@@ -235,7 +236,7 @@ public class APILehrer {
 			content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerStammdaten(conn).getListByIdsAsResponse(JSONMapper.toListOfLong(is)),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerStammdaten(conn, new DataLernplattformen(conn), new DataEinwilligungsarten(conn)).getListByIdsAsResponse(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_ANSEHEN);
 	}
 
@@ -262,10 +263,8 @@ public class APILehrer {
 			@RequestBody(description = "Die Daten der zu erstellenden LehrerStammdaten ohne ID, da diese automatisch generiert wird", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = LehrerStammdaten.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataLehrerStammdaten(conn).addAsResponse(is), request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_AENDERN);
+		return DBBenutzerUtils.runWithTransaction(conn ->  new DataLehrerStammdaten(conn, new DataLernplattformen(conn), new DataEinwilligungsarten(conn)).addAsResponse(is), request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_AENDERN);
 	}
-
 
 	/**
 	 * Die OpenAPI-Methode für das Patchen der Stammdaten eines Lehrers.
@@ -293,7 +292,7 @@ public class APILehrer {
 			@RequestBody(description = "Der Patch für die Lehrer-Stammdaten", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = LehrerStammdaten.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerStammdaten(conn).patchAsResponse(id, is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerStammdaten(conn, new DataLernplattformen(conn), new DataEinwilligungsarten(conn)).patchAsResponse(id, is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.LEHRERDATEN_AENDERN);
 	}

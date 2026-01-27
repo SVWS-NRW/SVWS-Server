@@ -13,6 +13,9 @@ import de.svws_nrw.core.utils.gost.GostBlockungsdatenManager;
 import de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager;
 import de.svws_nrw.data.gost.DataGostAbiturjahrgangFachwahlen;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
+import de.svws_nrw.data.schule.DataEinwilligungsarten;
+import de.svws_nrw.data.schule.DataLernplattformen;
+import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.filterung.ReportingFilterDataType;
 import de.svws_nrw.module.reporting.proxytypes.gost.ProxyReportingGostFachwahlstatistikHalbjahr;
@@ -113,7 +116,9 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 								reportingRepository,
 								reportingRepository.mapLehrerStammdaten().computeIfAbsent(l.id, ls -> {
 									try {
-										return new DataLehrerStammdaten(reportingRepository.conn()).getById(l.id);
+										final DBEntityManager conn = reportingRepository.conn();
+										return new DataLehrerStammdaten(conn, new DataLernplattformen(conn),
+												new DataEinwilligungsarten(conn)).getById(l.id);
 									} catch (final ApiOperationException e) {
 										ReportingExceptionUtils.logException(
 												"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Lehrers.", e,

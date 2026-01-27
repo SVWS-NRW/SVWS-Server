@@ -59,6 +59,8 @@ import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.schueler.DataKatalogSchuelerFoerderschwerpunkte;
 import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
+import de.svws_nrw.data.schule.DataEinwilligungsarten;
+import de.svws_nrw.data.schule.DataLernplattformen;
 import de.svws_nrw.data.schule.DataTelefonarten;
 import de.svws_nrw.data.schule.DataReligionen;
 import de.svws_nrw.data.schule.DataSchuleStammdaten;
@@ -395,7 +397,7 @@ public class ReportingRepository {
 	private void initLehrerStammdaten() throws ApiOperationException {
 		try {
 			this.logger.logLn(LogLevel.DEBUG, 8, "Ermittle die Lehrerstammdaten.");
-			this.mapLehrerStammdaten = new DataLehrerStammdaten(this.conn).getAll().stream()
+			this.mapLehrerStammdaten = new DataLehrerStammdaten(this.conn, new DataLernplattformen(conn), new DataEinwilligungsarten(conn)).getAll().stream()
 					.collect(Collectors.toMap(l -> l.id, l -> l));
 		} catch (final Exception e) {
 			this.mapLehrerStammdaten = new HashMap<>();
@@ -915,7 +917,8 @@ public class ReportingRepository {
 		// Lade ggf. fehlende Lehrerstammdaten analog zum Vorgehen bei Schülern nach.
 		if (!mapLehrerStammdaten.containsKey(idLehrer)) {
 			try {
-				final LehrerStammdaten fehlendeLehrerstammdaten = new DataLehrerStammdaten(this.conn).getById(idLehrer);
+				final LehrerStammdaten fehlendeLehrerstammdaten = new DataLehrerStammdaten(this.conn, new DataLernplattformen(conn),
+						new DataEinwilligungsarten(conn)).getById(idLehrer);
 				mapLehrerStammdaten.put(fehlendeLehrerstammdaten.id, fehlendeLehrerstammdaten);
 			} catch (final ApiOperationException e) {
 				ReportingExceptionUtils.logException(
@@ -963,7 +966,7 @@ public class ReportingRepository {
 		return erstelleReportingListe(idsLehrer, mapLehrerStammdaten, mapLehrer,
 				fehlendeIds -> {
 					try {
-						return new DataLehrerStammdaten(this.conn).getListByIDs(fehlendeIds);
+						return new DataLehrerStammdaten(this.conn, new DataLernplattformen(conn), new DataEinwilligungsarten(conn)).getListByIDs(fehlendeIds);
 					} catch (final ApiOperationException e) {
 						ReportingExceptionUtils.logException(
 								"FEHLER: Fehler bei der Ermittlung der fehlenden Lehrerstammdaten einer Lehrerliste aus der Datenbank im "

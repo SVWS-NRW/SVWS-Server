@@ -6,6 +6,9 @@ import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
+import de.svws_nrw.data.schule.DataEinwilligungsarten;
+import de.svws_nrw.data.schule.DataLernplattformen;
+import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
@@ -59,7 +62,9 @@ public class ProxyReportingGostAbiturFachbelegung extends ReportingGostAbiturFac
 							this.reportingRepository,
 							this.reportingRepository.mapLehrerStammdaten().computeIfAbsent(abiturFachbelegung.block2Pruefer, l -> {
 								try {
-									return new DataLehrerStammdaten(this.reportingRepository.conn()).getById(abiturFachbelegung.block2Pruefer);
+									final DBEntityManager conn = this.reportingRepository.conn();
+									return new DataLehrerStammdaten(conn, new DataLernplattformen(conn),
+											new DataEinwilligungsarten(conn)).getById(abiturFachbelegung.block2Pruefer);
 								} catch (final ApiOperationException e) {
 									ReportingExceptionUtils.logException(
 											"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Lehrers.", e,

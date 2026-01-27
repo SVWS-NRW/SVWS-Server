@@ -3,16 +3,22 @@ package de.svws_nrw.data.lehrer;
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.schule.Nationalitaeten;
+import de.svws_nrw.core.data.schule.Einwilligungsart;
+import de.svws_nrw.core.data.schule.Lernplattform;
 import de.svws_nrw.core.types.PersonalTyp;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
+import de.svws_nrw.data.schule.DataEinwilligungsarten;
+import de.svws_nrw.data.schule.DataLernplattformen;
 import de.svws_nrw.data.schule.DataSchulleitung;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrtsteil;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
+import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerDatenschutz;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerFoto;
+import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerLernplattform;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
@@ -33,13 +39,20 @@ import java.util.stream.Collectors;
  */
 public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehrer, LehrerStammdaten> {
 
+	private final DataLernplattformen dataLernplattformen;
+	private final DataEinwilligungsarten dataEinwilligungsarten;
 	/**
 	 * Erstellt einen neuen {@link DataManager} für das Core-DTO {@link LehrerStammdaten}.
 	 *
-	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
+	 * @param conn die Datenbank-Verbindung für den Datenbankzugriff
+	 * @param dataLernplattformen {@link DataLernplattformen} Lernplattform Service
+	 * @param dataEinwilligungsarten {@link DataEinwilligungsarten} Einwilligungsarten Service
 	 */
-	public DataLehrerStammdaten(final DBEntityManager conn) {
+	public DataLehrerStammdaten(final DBEntityManager conn, final DataLernplattformen dataLernplattformen,
+			final DataEinwilligungsarten dataEinwilligungsarten) {
 		super(conn);
+		this.dataLernplattformen = dataLernplattformen;
+		this.dataEinwilligungsarten = dataEinwilligungsarten;
 		setAttributesNotPatchable("id");
 		setAttributesRequiredOnCreation("kuerzel", "vorname", "nachname", "geschlecht", "personalTyp");
 	}
@@ -57,6 +70,44 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 
 		return map(lehrer);
 	}
+
+	/**
+	 * Legt einen Lehrer an und initialisiert die nötigen Lernplattformen.
+	 * @param initAttributes initialer Payload as Map
+	 * @return {@link LehrerStammdaten}
+	 * @throws ApiOperationException - im Fehlerfall
+	 */
+	@Override
+	public LehrerStammdaten add(final Map<String, Object> initAttributes) throws ApiOperationException {
+		final LehrerStammdaten newLehrer = addBasic(getNextID(null, initAttributes), initAttributes);
+		createLehrerLernPlattformen(newLehrer);
+		createLehrerDatenschutz(newLehrer);
+		conn.transactionFlush();
+
+		return newLehrer;
+	}
+
+	private void createLehrerLernPlattformen(final LehrerStammdaten newLehrer) {
+		final List<Lernplattform> availableLernPlattformen = dataLernplattformen.getAll();
+
+		final List<DTOLehrerLernplattform> initialLehrerLernPlattformen = availableLernPlattformen.stream()
+				.map(l ->  new DTOLehrerLernplattform(newLehrer.id, l.id, false, false, false, false))
+				.toList();
+
+		conn.transactionPersistAll(initialLehrerLernPlattformen);
+	}
+
+	private void createLehrerDatenschutz(final LehrerStammdaten newLehrer) {
+		final List<Einwilligungsart> availableEinwilligungsarten = dataEinwilligungsarten.getAll();
+
+		final List<DTOLehrerDatenschutz> initialLehrerDatenschutzSaetze = availableEinwilligungsarten.stream()
+				.map(e -> new DTOLehrerDatenschutz(newLehrer.id, e.id, false, false))
+				.toList();
+
+		conn.transactionPersistAll(initialLehrerDatenschutzSaetze);
+	}
+
+
 
 	/**
 	 * Liefert eine Response mit einer Liste mit {@link LehrerStammdaten} Objekten zu den übergebenen IDs.
