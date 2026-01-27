@@ -1,10 +1,14 @@
 package de.svws_nrw.data.schule;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-import de.svws_nrw.asd.data.RGBFarbe;
 import de.svws_nrw.asd.types.schule.Floskelgruppenart;
 import de.svws_nrw.core.data.schule.Floskelgruppe;
 import de.svws_nrw.data.DataManagerRevised;
@@ -13,6 +17,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.katalog.DTOFloskelgruppen;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
+import org.apache.commons.lang3.Strings;
 
 import static jakarta.ws.rs.core.Response.Status;
 
@@ -29,7 +34,7 @@ public final class DataFloskelgruppen extends DataManagerRevised<Long, DTOFloske
 	public DataFloskelgruppen(final DBEntityManager conn) {
 		super(conn);
 		setAttributesNotPatchable("id");
-		setAttributesRequiredOnCreation("kuerzel");
+		setAttributesRequiredOnCreation("kuerzel", "bezeichnung");
 	}
 
 	@Override
@@ -43,32 +48,37 @@ public final class DataFloskelgruppen extends DataManagerRevised<Long, DTOFloske
 	}
 
 	@Override
-	public Floskelgruppe getById(final Long id) throws ApiOperationException {
-		if (id == null)
-			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für die Floskelgruppe darf nicht null sein.");
+	public List<Floskelgruppe> getAll() {
+		final List<DTOFloskelgruppen> floskelgruppen = conn.queryAll(DTOFloskelgruppen.class);
+		final Set<Long> idsFloskelgruppen = this.mapToIds(floskelgruppen);
+		final Set<Long> idsOfReferencedFloskelgruppen = this.getIdsOfReferencedFloskelgruppen(idsFloskelgruppen);
 
-		final DTOFloskelgruppen dto = conn.queryByKey(DTOFloskelgruppen.class, id);
-		if (dto == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine Floskelgruppe mit der ID %d gefunden.".formatted(id));
-
-		return map(dto);
+		return floskelgruppen.stream()
+				.map(this::map)
+				.map(floskelgruppe -> setReferenceFlag(floskelgruppe, idsOfReferencedFloskelgruppen))
+				.sorted(Comparator.comparing(floskelgruppe -> floskelgruppe.id))
+				.toList();
 	}
 
 	@Override
-	public List<Floskelgruppe> getAll() {
-		return conn.queryAll(DTOFloskelgruppen.class).stream()
-				.map(this::map)
-				.toList();
+	public Floskelgruppe getById(final Long id) throws ApiOperationException {
+		if (id == null) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einer Floskelgruppe mit der ID null ist unzulässig.");
+		}
+		final DTOFloskelgruppen dto = conn.queryByKey(DTOFloskelgruppen.class, id);
+		if (dto == null) {
+			throw new ApiOperationException(Status.NOT_FOUND, "Die Floskelgruppe mit der ID %d wurde nicht gefunden.".formatted(id));
+		}
+		return map(dto);
 	}
 
 	@Override
 	protected Floskelgruppe map(final DTOFloskelgruppen dto) {
 		final Floskelgruppe floskelgruppe = new Floskelgruppe();
 		floskelgruppe.id = dto.ID;
-		floskelgruppe.kuerzel = dto.Kuerzel;
-		floskelgruppe.bezeichnung = dto.Bezeichnung;
+		floskelgruppe.kuerzel = Objects.requireNonNullElse(dto.Kuerzel, "");
+		floskelgruppe.bezeichnung = Objects.requireNonNullElse(dto.Bezeichnung, "");
 		floskelgruppe.idFloskelgruppenart = dto.Hauptgruppe_ID;
-		floskelgruppe.farbe = (dto.Farbe == null) ? null : new RGBFarbe(dto.Farbe);
 		return floskelgruppe;
 	}
 
@@ -76,31 +86,39 @@ public final class DataFloskelgruppen extends DataManagerRevised<Long, DTOFloske
 	protected void mapAttribute(final DTOFloskelgruppen dto, final String name, final Object value, final Map<String, Object> map)
 			throws ApiOperationException {
 		switch (name) {
-			case "kuerzel" -> updateKuerzel(dto, value, name);
+			case "id" -> validateId(dto, name, value);
+			case "kuerzel" -> updateKuerzel(dto, name, value);
 			case "bezeichnung" -> updateBezeichnung(dto, name, value);
 			case "idFloskelgruppenart" -> updateFloskelgruppenart(dto, name, value);
-			case "farbe" -> updateFarbe(dto, value);
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));
 		}
 	}
 
-	private static void updateBezeichnung(final DTOFloskelgruppen dto, final String name, final Object value) throws ApiOperationException {
-		dto.Bezeichnung =
-				JSONMapper.convertToString(value, false, false, Schema.tab_Katalog_Floskeln_Gruppen.col_Bezeichnung.datenlaenge(), name);
+	private static void validateId(final DTOFloskelgruppen dto, final String name, final Object value) throws ApiOperationException {
+		final Long id = JSONMapper.convertToLong(value, false, name);
+		if (!Objects.equals(dto.ID, id)) {
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					"Die ID %d des Patches ist null oder stimmt nicht mit der ID %d in der Datenbank überein.".formatted(id, dto.ID));
+		}
 	}
 
-	private void updateKuerzel(final DTOFloskelgruppen dto, final Object value, final String name) throws ApiOperationException {
-		final String kuerzel = JSONMapper.convertToString(value, false, false, Schema.tab_Katalog_Floskeln_Gruppen.col_Kuerzel.datenlaenge(), name);
-		if (Objects.equals(dto.Kuerzel, kuerzel) || kuerzel.isBlank())
+	private void updateBezeichnung(final DTOFloskelgruppen dto, final String name, final Object value) throws ApiOperationException {
+		final String bezeichnung = JSONMapper.convertToString(value, false, false, Schema.tab_Floskelgruppen.col_Bezeichnung.datenlaenge(), name);
+		if (valueIsBlankOrHasNotChanged(dto.Bezeichnung, bezeichnung)) {
 			return;
+		}
 
-		final boolean alreadyUsed = this.conn
-				.queryAll(DTOFloskelgruppen.class).stream()
-				.anyMatch(f -> (f.ID != dto.ID) && kuerzel.equalsIgnoreCase(f.Kuerzel));
+		validateBezeichnung(dto.ID, bezeichnung);
+		dto.Bezeichnung = bezeichnung;
+	}
 
-		if (alreadyUsed)
-			throw new ApiOperationException(Status.BAD_REQUEST, "Das Kürzel %s wird bereits verwendet.".formatted(kuerzel));
+	private void updateKuerzel(final DTOFloskelgruppen dto, final String name, final Object value) throws ApiOperationException {
+		final String kuerzel = JSONMapper.convertToString(value, false, false, Schema.tab_Katalog_Floskeln_Gruppen.col_Kuerzel.datenlaenge(), name);
+		if (valueIsBlankOrHasNotChanged(dto.Kuerzel, kuerzel)) {
+			return;
+		}
 
+		validateKuerzel(dto.ID, kuerzel);
 		dto.Kuerzel = kuerzel;
 	}
 
@@ -110,11 +128,12 @@ public final class DataFloskelgruppen extends DataManagerRevised<Long, DTOFloske
 			dto.Hauptgruppe_ID = null;
 			return;
 		}
-		if (Objects.equals(idFloskelgruppenart, dto.Hauptgruppe_ID))
+		if (Objects.equals(idFloskelgruppenart, dto.Hauptgruppe_ID)) {
 			return;
-
-		if (matchingFloskelgruppenartNotFound(idFloskelgruppenart))
+		}
+		if (matchingFloskelgruppenartNotFound(idFloskelgruppenart)) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine Floskelgruppenart zur ID %d gefunden.".formatted(idFloskelgruppenart));
+		}
 
 		dto.Hauptgruppe_ID = idFloskelgruppenart;
 	}
@@ -123,16 +142,54 @@ public final class DataFloskelgruppen extends DataManagerRevised<Long, DTOFloske
 		return Floskelgruppenart.data().getEintragByID(id) == null;
 	}
 
-	private static void updateFarbe(final DTOFloskelgruppen dto, final Object value) throws ApiOperationException {
-		try {
-			if (value == null) {
-				dto.Farbe = null;
-				return;
-			}
-			final RGBFarbe farbe = JSONMapper.mapper.convertValue(value, RGBFarbe.class);
-			dto.Farbe = farbe.asDecimal();
-		} catch (final IllegalArgumentException e) {
-			throw new ApiOperationException(Status.BAD_REQUEST, "Die Farbe entspricht nicht dem richtigen Datentyp: %s.".formatted(e.getMessage()));
+	private Set<Long> mapToIds(final List<DTOFloskelgruppen> floskelgruppen) {
+		return floskelgruppen
+				.stream()
+				.map(floskelgruppe -> floskelgruppe.ID)
+				.collect(Collectors.toSet());
+	}
+
+	private Set<Long> getIdsOfReferencedFloskelgruppen(final Set<Long> ids) {
+		if ((ids == null) || ids.isEmpty()) {
+			return Collections.emptySet();
+		}
+
+		final String query = "SELECT DISTINCT f.Gruppe_ID FROM DTOFloskeln f WHERE f.Gruppe_ID IN :ids";
+		final List<Long> results = this.conn
+				.query(query, Long.class)
+				.setParameter("ids", ids)
+				.getResultList();
+		return new HashSet<>(results);
+	}
+
+	private Floskelgruppe setReferenceFlag(final Floskelgruppe floskelgruppe, final Set<Long> idsOfReferencedFloskelgruppen) {
+		floskelgruppe.referenziertInAnderenTabellen = idsOfReferencedFloskelgruppen.contains(floskelgruppe.id);
+		return floskelgruppe;
+	}
+
+	private static boolean valueIsBlankOrHasNotChanged(final String oldValue, final String newValue) {
+		return Objects.equals(oldValue, newValue) || ((newValue != null) && newValue.isBlank());
+	}
+
+	private void validateKuerzel(final Long id, final String kuerzel) throws ApiOperationException {
+		final boolean kuerzelAlreadyUsed = this.conn
+				.queryAll(DTOFloskelgruppen.class)
+				.stream()
+				.anyMatch(f -> (f.ID != id) && Strings.CI.equals(kuerzel, f.Kuerzel));
+
+		if (kuerzelAlreadyUsed) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Das Kürzel %s ist bereits vorhanden.".formatted(kuerzel));
+		}
+	}
+
+	private void validateBezeichnung(final Long id, final String bezeichnung) throws ApiOperationException {
+		final boolean bezeichnungAlreadyUsed = this.conn
+				.queryAll(DTOFloskelgruppen.class)
+				.stream()
+				.anyMatch(f -> (f.ID != id) && Strings.CI.equals(bezeichnung, f.Bezeichnung));
+
+		if (bezeichnungAlreadyUsed) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die Bezeichnung %s ist bereits vorhanden.".formatted(bezeichnung));
 		}
 	}
 
