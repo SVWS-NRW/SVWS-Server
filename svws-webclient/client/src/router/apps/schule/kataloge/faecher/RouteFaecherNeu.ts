@@ -33,6 +33,8 @@ export class RouteFaecherNeu extends RouteNode<any, RouteFaecher> {
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
 			benutzerKompetenzen: api.benutzerKompetenzen,
+			schuljahr: api.abschnitt.schuljahr,
+			schulform: api.schulform,
 		};
 	}
 }

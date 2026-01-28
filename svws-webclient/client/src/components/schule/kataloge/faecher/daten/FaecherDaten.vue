@@ -1,37 +1,37 @@
 <template>
 	<div class="page page-grid-cards">
-		<svws-ui-input-wrapper>
+		<svws-ui-content-card>
 			<svws-ui-content-card title="Allgemein">
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-text-input placeholder="Kürzel" class="contentFocusField"
 						:model-value="manager().daten().kuerzel"
 						@change="patchKuerzel"
-						:valid="v => mandatoryInputIsValid(v, 20)"
+						:valid="kuerzelIsValid"
 						:min-len="1" :max-len="20" required :readonly />
 					<svws-ui-text-input placeholder="Bezeichnung"
 						:model-value="manager().daten().bezeichnung"
 						@change="patchBezeichnung"
-						:valid="v => mandatoryInputIsValid(v, 255)"
+						:valid="bezeichnungIsValid"
 						:min-len="1" :max-len="255" required :readonly />
 					<ui-select label="Fach ASD-Kürzel"
 						v-model="selectedFach"
 						:manager="fachKuerzelSelectManager"
-						:readonly required :removable="false" statistics />
+						:readonly required :removable="false" statistics searchable />
 					<ui-select label="Fach ASD-Text"
 						v-model="selectedFach"
 						:manager="fachTextSelectManager"
-						:readonly required :removable="false" statistics />
+						:readonly required :removable="false" statistics searchable />
 					<ui-select label="Bilinguale Sachfachsprache"
 						v-model="selectedSachfachsprache"
 						:manager="sachfachspracheManager"
-						:readonly statistics />
+						:readonly statistics searchable />
 					<svws-ui-text-input placeholder="Fachgruppe"
 						:model-value="fachgruppe"
 						readonly />
 					<ui-select label="Aufgabenfeld" v-if="istBerufskolleg"
 						v-model="selectedAufgabenfeld"
 						:manager="aufgabenfeldManager"
-						:readonly />
+						:readonly searchable />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<svws-ui-spacing :size="2" />
@@ -99,7 +99,7 @@
 					</svws-ui-input-wrapper>
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
-		</svws-ui-input-wrapper>
+		</svws-ui-content-card>
 	</div>
 </template>
 
@@ -109,7 +109,7 @@
 	import type { BilingualeSpracheKatalogEintrag, FachKatalogEintrag } from "@core";
 	import { BilingualeSprache, Fach, Schulform, JavaInteger, BenutzerKompetenz } from "@core";
 	import type { FaecherDatenProps } from "./FaecherDatenProps";
-	import { mandatoryInputIsValid, numberHasDecimals, numberIsValid, optionalInputIsValid } from "~/util/validation/Validation";
+	import { isUniqueInList, mandatoryInputIsValid, numberHasDecimals, numberIsValid, optionalInputIsValid } from "~/util/validation/Validation";
 	import { CoreTypeSelectManager, SelectManager } from "@ui";
 
 	const props = defineProps<FaecherDatenProps>();
@@ -226,7 +226,7 @@
 	// --- patch ---
 
 	async function patchKuerzel(kuerzel: string | null) {
-		if (mandatoryInputIsValid(kuerzel, 20)) {
+		if (kuerzelIsValid(kuerzel)) {
 			await props.patch({ kuerzel: kuerzel });
 		}
 	}
@@ -238,7 +238,7 @@
 	}
 
 	async function patchBezeichnung(bezeichnung: string | null) {
-		if (mandatoryInputIsValid(bezeichnung, 255)) {
+		if (bezeichnungIsValid(bezeichnung)) {
 			await props.patch({ bezeichnung: bezeichnung });
 		}
 	}
@@ -268,6 +268,16 @@
 	}
 
 	// --- validate ---
+
+	function kuerzelIsValid(kuerzel: string | null): kuerzel is string {
+		return mandatoryInputIsValid(kuerzel, 20)
+			&& isUniqueInList(kuerzel, props.manager().liste.list(), "kuerzel", "id", props.manager().auswahlID() ?? undefined);
+	}
+
+	function bezeichnungIsValid(bezeichnung: string | null): bezeichnung is string {
+		return mandatoryInputIsValid(bezeichnung, 255)
+			&& isUniqueInList(bezeichnung, props.manager().liste.list(), "bezeichnung", "id", props.manager().auswahlID() ?? undefined);
+	}
 
 	function maxZeichenInFachbemerkungenIsValid(value: number | null): boolean {
 		return !numberHasDecimals(value)

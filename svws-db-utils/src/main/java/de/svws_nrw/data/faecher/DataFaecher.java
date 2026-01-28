@@ -122,9 +122,9 @@ public final class DataFaecher extends DataManagerRevised<Long, DTOFach, FachDat
 					JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule_Faecher.col_Unterichtssprache.datenlaenge(), name);
 			case "aufZeugnis" -> dto.AufZeugnis = JSONMapper.convertToBoolean(value, true, name);
 			case "bezeichnungZeugnis" -> dto.BezeichnungZeugnis =
-					JSONMapper.convertToString(value, false, true, Schema.tab_EigeneSchule_Faecher.col_ZeugnisBez.datenlaenge(), name);
+					JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule_Faecher.col_ZeugnisBez.datenlaenge(), name);
 			case "bezeichnungUeberweisungszeugnis" -> dto.BezeichnungUeberweisungsZeugnis =
-					JSONMapper.convertToString(value, false, true, Schema.tab_EigeneSchule_Faecher.col_UeZeugnisBez.datenlaenge(), name);
+					JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule_Faecher.col_UeZeugnisBez.datenlaenge(), name);
 			case "istOberstufenFach" -> dto.IstOberstufenFach = JSONMapper.convertToBoolean(value, true, name);
 			case "istPruefungsordnungsRelevant" -> dto.IstPruefungsordnungsRelevant = JSONMapper.convertToBoolean(value, true, name);
 			case "istFremdsprache" -> dto.IstFremdsprache = JSONMapper.convertToBoolean(value, true, name);
