@@ -2,11 +2,18 @@
 	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper>
-				<svws-ui-text-input class="contentFocusField" placeholder="Kürzel" :model-value="manager().daten().kuerzel"
-					:readonly :min-len="1" :max-len="10" @change="patchKuerzel" :valid="kuerzelIsValid" />
-				<svws-ui-text-input placeholder="Bezeichnung" :model-value="manager().daten().bezeichnung"
-					:readonly :min-len="1" :max-len="50" @change="patchBezeichnung" :valid="v => (mandatoryInputIsValid(v, 50))" />
-				<ui-select label="Floskelgruppenart" v-model="selectedFloskelgruppenart" :manager="floskelgruppenartManager" :removable="true" searchable />
+				<svws-ui-text-input placeholder="Kürzel" class="contentFocusField"
+					:model-value="manager().auswahl().kuerzel"
+					@change="patchKuerzel"
+					:valid="kuerzelIsValid" :readonly :min-len="1" :max-len="10" />
+				<svws-ui-text-input placeholder="Bezeichnung"
+					:model-value="manager().auswahl().bezeichnung"
+					@change="patchBezeichnung"
+					:valid="bezeichnungIsValid"	:readonly :min-len="1" :max-len="50" />
+				<ui-select label="Floskelgruppenart"
+					v-model="selectedFloskelgruppenart"
+					:manager="floskelgruppenartManager"
+					:removable="false" searchable required />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 	</div>
@@ -24,6 +31,7 @@
 	const props = defineProps<FloskelgruppenDatenProps>();
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const readonly = computed<boolean>(() => !hatKompetenzUpdate.value);
+
 	const floskelgruppenartManager = new CoreTypeSelectManager({
 		clazz: Floskelgruppenart.class,
 		schuljahr: props.schuljahr,
@@ -34,32 +42,39 @@
 
 	const selectedFloskelgruppenart = computed<FloskelgruppenartKatalogEintrag | null>({
 		get: (): FloskelgruppenartKatalogEintrag | null => {
-			return Floskelgruppenart.data()
-				.getWertByIDOrNull(props.manager().auswahl().idFloskelgruppenart ?? -1)
-				?.daten(props.schuljahr) ?? null;
+			return Floskelgruppenart.data().getWertByIDOrNull(props.manager().auswahl().idFloskelgruppenart ?? -1)?.daten(props.schuljahr) ?? null;
 		},
-		set: (value: FloskelgruppenartKatalogEintrag | null) => {
-			void props.patch({ idFloskelgruppenart: value?.id ?? null });
-		},
+		set: (value: FloskelgruppenartKatalogEintrag | null) => void patchFloskelgruppenart(value?.id),
 	});
 
-	function kuerzelIsValid(value: string | null): boolean {
-		return (mandatoryInputIsValid(value, 10) &&
-			isUniqueInList(value, props.manager().liste.list(), "kuerzel", "id", props.manager().auswahlID()));
-	}
-
+	// patch
 	async function patchKuerzel(value: string | null) {
 		if (kuerzelIsValid(value)) {
-			await props.patch({ kuerzel: value?.trim() });
+			await props.patch({ kuerzel: value.trim() });
 		}
-
 	}
 
 	async function patchBezeichnung(value: string | null) {
-		if (mandatoryInputIsValid(value, 50)) {
+		if (bezeichnungIsValid(value)) {
 			await props.patch({ bezeichnung: value.trim() });
 		}
 	}
 
+	async function patchFloskelgruppenart(value: number | undefined): Promise<void> {
+		if (value !== undefined) {
+			await props.patch({ idFloskelgruppenart: value });
+		}
+	}
+
+	// validate
+	function kuerzelIsValid(value: string | null): value is string {
+		return mandatoryInputIsValid(value, 10)
+			&& isUniqueInList(value, props.manager().liste.list(), 'kuerzel', 'id', props.manager().auswahlID() ?? undefined);
+	}
+
+	function bezeichnungIsValid(value: string | null): value is string {
+		return mandatoryInputIsValid(value, 50)
+			&& isUniqueInList(value, props.manager().liste.list(), 'bezeichnung', 'id', props.manager().auswahlID() ?? undefined);
+	}
 
 </script>
