@@ -471,13 +471,13 @@
 
 	async function patchVorname(vorname: string | null) {
 		if (mandatoryInputIsValid(vorname, 80)) {
-			await props.patch({ vorname: vorname ?? undefined });
+			await props.patch({ vorname: vorname });
 		}
 	}
 
 	async function patchNachname(nachname: string | null) {
 		if (mandatoryInputIsValid(nachname, 120)) {
-			await props.patch({ nachname: nachname ?? undefined });
+			await props.patch({ nachname: nachname });
 		}
 	}
 
