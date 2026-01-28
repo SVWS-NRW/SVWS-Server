@@ -16,7 +16,7 @@
 					<svws-ui-text-input placeholder="Branche"
 						v-model="data.branche"
 						:valid="() => fieldIsValid('branche')" :max-len="50" :disabled="!hatKompetenzAdd" />
-					<svws-ui-textarea-input placeholder="Bemerkungen" class="h-42 max-h-42 overflow-y-auto"
+					<svws-ui-textarea-input placeholder="Bemerkungen"
 						:model-value="data.bemerkungen"
 						@input="value => data.bemerkungen = value"
 						:valid="() => fieldIsValid('bemerkungen')" resizeable="none" :max-len="255" />

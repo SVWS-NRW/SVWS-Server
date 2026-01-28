@@ -20,7 +20,7 @@
 						:model-value="manager().daten().branche"
 						@change="patchBranche"
 						:valid="v => optionalInputIsValid(v, 50)" :max-len="50" :readonly="!hatKompetenzUpdate" />
-					<svws-ui-textarea-input placeholder="Bemerkungen" class="h-42 max-h-42 overflow-y-auto"
+					<svws-ui-textarea-input placeholder="Bemerkungen"
 						:model-value="manager().daten().bemerkungen"
 						@change="patchBemerkungen"
 						:valid="v => optionalInputIsValid(v, 255)" resizeable="none" :max-len="255" />

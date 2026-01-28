@@ -102,7 +102,7 @@
 		set: (value) => data.value = (value === '') ? null : value,
 	});
 
-	const { textarea, input } = useTextareaAutosize({ input: dataOrEmpty });
+	const { textarea, input } = useTextareaAutosize({ input: dataOrEmpty, styleProp: 'minHeight' });
 
 	watch(() => props.modelValue, (value: string | null) => updateData(value), { immediate: false });
 
