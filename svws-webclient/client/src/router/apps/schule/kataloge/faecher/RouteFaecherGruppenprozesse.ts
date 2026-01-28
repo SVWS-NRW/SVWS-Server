@@ -37,6 +37,8 @@ export class RouteFaecherGruppenprozesse extends RouteNode<any, RouteFaecher> {
 			manager: () => routeFaecher.data.manager,
 			deleteFaecher: routeFaecher.data.delete,
 			deleteFaecherCheck: routeFaecher.data.deleteFaecherCheck,
+			sortFaecher: routeFaecher.data.sortFaecher,
+			schuljahr: api.abschnitt.schuljahr,
 		};
 	}
 

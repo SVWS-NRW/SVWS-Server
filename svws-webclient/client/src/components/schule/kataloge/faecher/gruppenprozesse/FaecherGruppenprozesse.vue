@@ -45,6 +45,30 @@
 					</svws-ui-button>
 				</template>
 			</ui-card>
+			<ui-card v-if="hatKompetenzUpdate && hatGymnasialeOberstufe"
+				icon="icon i-ri-arrow-up-down-line" title="Standardsortierung Sekundarstufe II anwenden"
+				subtitle="Die Sortierung wird auf alle Fächer angewendet, nicht nur auf die markierten."
+				:is-open="currentAction === 'sort'" @update:is-open="(isOpen) => setCurrentAction('sort', isOpen)">
+				<template #buttonFooterLeft>
+					<svws-ui-button class="mt-4" @click="sortModalIsOpen = true">
+						<span class="icon i-ri-play-line" />
+						Standardsortierung Sek II anwenden
+					</svws-ui-button>
+					<svws-ui-modal v-model:show="sortModalIsOpen"
+						:auto-close="false" :close-in-title="false"
+						size="medium" type="danger">
+						<template #modalTitle>Standardsortierung für die Sekundarstufe II anwenden</template>
+						<template #modalContent>
+							Sollen alle Fächer nach der Standardsortierung für die Sekundarstufe II sortiert werden? <br>
+							Dabei geht die aktuell hinterlegte Sortierreihenfolge verloren.
+						</template>
+						<template #modalActions>
+							<svws-ui-button type="secondary" @click="sortModalIsOpen = false"> Nein </svws-ui-button>
+							<svws-ui-button type="danger" @click="sort"> Ja </svws-ui-button>
+						</template>
+					</svws-ui-modal>
+				</template>
+			</ui-card>
 			<log-box :logs :status>
 				<template #button>
 					<svws-ui-button v-if="status !== undefined" type="transparent" @click="clearLog" title="Log verwerfen">Log verwerfen</svws-ui-button>
@@ -70,7 +94,10 @@
 
 	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
 	const hatKompetenzDrucken = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN));
+	const hatKompetenzUpdate = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const hatGymnasialeOberstufe = computed(() => props.manager().schulform().daten(props.schuljahr)?.hatGymOb ?? false);
 
+	const sortModalIsOpen = ref<boolean>(false);
 	const currentAction = ref<string>('');
 	const oldAction = ref<{ name: string | undefined; open: boolean }>({
 		name: undefined,
@@ -97,7 +124,7 @@
 		}
 		oldAction.value.name = currentAction.value;
 		oldAction.value.open = (currentAction.value === "");
-		if (open === true) {
+		if (open) {
 			currentAction.value = newAction;
 		} else {
 			currentAction.value = "";
@@ -119,6 +146,15 @@
 		currentAction.value = '';
 
 		loading.value = false;
+	}
+
+	async function sort() {
+		await props.sortFaecher();
+		const log = new ArrayList<string>();
+		log.add("Standardsortierung für die Sekundarstufe II wurde erfolgreich angewendet.");
+		logs.value = log;
+		status.value = true;
+		sortModalIsOpen.value = false;
 	}
 
 	const stundenplanAuswahl = ref<StundenplanListeEintrag>();

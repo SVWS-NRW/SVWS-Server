@@ -109,4 +109,13 @@ export class RouteDataFaecher extends RouteDataAuswahl<FaecherListeManager, Rout
 		return await api.server.pdfReport(reportingParameter, api.schema);
 	});
 
+	sortFaecher = async () => {
+		if (this.manager.liste.list().isEmpty()) {
+			return;
+		}
+		const idSchuljahresabschnitt = this._state.value.idSchuljahresabschnitt;
+		await api.server.setFaecherSortierungSekII(api.schema);
+		await this.setSchuljahresabschnitt(idSchuljahresabschnitt, true);
+	};
+
 }

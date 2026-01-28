@@ -9,4 +9,6 @@ export interface FaecherGruppenprozesseProps {
 	manager: () => FaecherListeManager;
 	deleteFaecher: () => Promise<[boolean, List<string | null>]>;
 	deleteFaecherCheck: () => [boolean, List<string>];
+	sortFaecher: () => Promise<void>;
+	schuljahr: number,
 }
