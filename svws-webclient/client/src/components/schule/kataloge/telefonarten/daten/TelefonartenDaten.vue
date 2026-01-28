@@ -6,7 +6,6 @@
 					:model-value="manager().auswahl().bezeichnung"
 					@change="patchBezeichnung"
 					:valid="bezeichnungIsValid"	:readonly required :min-len="1" :max-len="30" />
-				<svws-ui-spacing />
 				<svws-ui-input-number placeholder="Sortierung"
 					:model-value="manager().auswahl().sortierung"
 					@change="patchSortierung"

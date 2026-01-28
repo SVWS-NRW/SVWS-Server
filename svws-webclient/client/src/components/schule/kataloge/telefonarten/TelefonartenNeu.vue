@@ -8,10 +8,11 @@
 				<svws-ui-input-number placeholder="Sortierung"
 					v-model="data.sortierung"
 					:valid="() => fieldIsValid('sortierung')" :min="0" :max="32000" :disabled :removable="false" />
-				<svws-ui-input-wrapper />
+				<svws-ui-spacing />
 				<svws-ui-checkbox v-model="data.istSichtbar" :disabled>
 					Sichtbar
 				</svws-ui-checkbox>
+				<svws-ui-input-wrapper />
 			</svws-ui-input-wrapper>
 			<div class="mt-7 flex flex-row gap-4 justify-end">
 				<svws-ui-button type="secondary" @click="cancel">
