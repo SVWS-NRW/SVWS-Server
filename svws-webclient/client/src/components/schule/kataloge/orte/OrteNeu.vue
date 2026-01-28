@@ -56,7 +56,7 @@
 		}
 
 		for (const ort of props.manager().liste.list()) {
-			if ((ort.plz === data.value.plz) && (ort.ortsname !== null) && (ort.ortsname.toLowerCase() === value?.toLowerCase())) {
+			if ((ort.plz === data.value.plz) && (ort.ortsname !== null) && (ort.ortsname.toLowerCase() === value.toLowerCase())) {
 				return false;
 			}
 		}

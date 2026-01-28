@@ -97,7 +97,7 @@ export class FachDaten extends JavaObject {
 	/**
 	 * Gibt die maximale Anzahl an Zeichen an, die in Fachbemerkungen genutzt werden dürfen.
 	 */
-	public maxZeichenInFachbemerkungen: number = 0;
+	public maxZeichenInFachbemerkungen: number | null = null;
 
 	/**
 	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.
@@ -178,9 +178,7 @@ export class FachDaten extends JavaObject {
 		if (obj.holeAusAltenLernabschnitten === undefined)
 			throw new Error('invalid json format, missing attribute holeAusAltenLernabschnitten');
 		result.holeAusAltenLernabschnitten = obj.holeAusAltenLernabschnitten;
-		if (obj.maxZeichenInFachbemerkungen === undefined)
-			throw new Error('invalid json format, missing attribute maxZeichenInFachbemerkungen');
-		result.maxZeichenInFachbemerkungen = obj.maxZeichenInFachbemerkungen;
+		result.maxZeichenInFachbemerkungen = (obj.maxZeichenInFachbemerkungen === undefined) ? null : obj.maxZeichenInFachbemerkungen === null ? null : obj.maxZeichenInFachbemerkungen;
 		if (obj.istSichtbar === undefined)
 			throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
@@ -213,7 +211,7 @@ export class FachDaten extends JavaObject {
 		result += '"istSchriftlichBA" : ' + obj.istSchriftlichBA.toString() + ',';
 		result += '"istFHRFach" : ' + obj.istFHRFach.toString() + ',';
 		result += '"holeAusAltenLernabschnitten" : ' + obj.holeAusAltenLernabschnitten.toString() + ',';
-		result += '"maxZeichenInFachbemerkungen" : ' + obj.maxZeichenInFachbemerkungen.toString() + ',';
+		result += '"maxZeichenInFachbemerkungen" : ' + ((obj.maxZeichenInFachbemerkungen === null) ? 'null' : obj.maxZeichenInFachbemerkungen.toString()) + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"referenziertInAnderenTabellen" : ' + obj.referenziertInAnderenTabellen.toString() + ',';
@@ -279,7 +277,7 @@ export class FachDaten extends JavaObject {
 			result += '"holeAusAltenLernabschnitten" : ' + obj.holeAusAltenLernabschnitten.toString() + ',';
 		}
 		if (obj.maxZeichenInFachbemerkungen !== undefined) {
-			result += '"maxZeichenInFachbemerkungen" : ' + obj.maxZeichenInFachbemerkungen.toString() + ',';
+			result += '"maxZeichenInFachbemerkungen" : ' + ((obj.maxZeichenInFachbemerkungen === null) ? 'null' : obj.maxZeichenInFachbemerkungen.toString()) + ',';
 		}
 		if (obj.istSichtbar !== undefined) {
 			result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';

@@ -102,7 +102,7 @@
 			if ((ort.id !== props.manager().daten().id)
 				&& (ort.plz === props.manager().daten().plz)
 				&& (ort.ortsname !== null)
-				&& (ort.ortsname.toLowerCase() === v?.toLowerCase())) {
+				&& (ort.ortsname.toLowerCase() === v.toLowerCase())) {
 				return false;
 			}
 		}

@@ -57,7 +57,7 @@
 
 	async function patchBezeichnung(value: string | null) {
 		if (mandatoryInputIsValid(value, 50)) {
-			await props.patch({ bezeichnung: value?.trim() });
+			await props.patch({ bezeichnung: value.trim() });
 		}
 	}
 

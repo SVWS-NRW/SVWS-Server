@@ -92,7 +92,7 @@
 		for (const einwilligungsart of props.manager().liste.list()) {
 			if ((einwilligungsart.id !== props.manager().daten().id)
 				&& (einwilligungsart.idPersonTyp === props.manager().daten().idPersonTyp)
-				&& (einwilligungsart.bezeichnung.toLowerCase() === value?.toLowerCase())) {
+				&& (einwilligungsart.bezeichnung.toLowerCase() === value.toLowerCase())) {
 				return false;
 			}
 		}

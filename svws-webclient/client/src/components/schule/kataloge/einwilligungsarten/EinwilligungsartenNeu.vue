@@ -89,7 +89,7 @@
 			return true;
 		}
 		for (const einwilligungsart of props.manager().liste.list()) {
-			if (einwilligungsart.idPersonTyp === data.value.idPersonTyp && einwilligungsart.bezeichnung.toLowerCase() === value?.toLowerCase()) {
+			if (einwilligungsart.idPersonTyp === data.value.idPersonTyp && einwilligungsart.bezeichnung.toLowerCase() === value.toLowerCase()) {
 				return false;
 			}
 		}

@@ -92,7 +92,7 @@ public class FachDaten {
 
 	/** Gibt die maximale Anzahl an Zeichen an, die in Fachbemerkungen genutzt werden dürfen. */
 	@Schema(description = "Gibt die maximale Anzahl an Zeichen an, die in Fachbemerkungen genutzt werden dürfen.", example = "100000")
-	public int maxZeichenInFachbemerkungen;
+	public Integer maxZeichenInFachbemerkungen;
 
 	/** Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. */
 	@Schema(description = "Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.", example = "true")
