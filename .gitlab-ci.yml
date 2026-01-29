@@ -37,6 +37,7 @@ stages:
     - build_installer
     - sign
     - publish
+    - scheduled
 
 lint:eslint:full:
     image: ${REGISTRY_HOST}/dockerhub_proxy/node:24-slim
@@ -53,10 +54,11 @@ lint:eslint:full:
             | xargs -P5 -I{} npm --workspace {} run lint
     allow_failure: true
     rules:
-        - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+        - if: $CI_COMMIT_BRANCH == 'dev' || $CI_COMMIT_BRANCH == 'master' #
+        - if: $CI_PIPELINE_SOURCE == 'merge_request_event' # läuft in MR-Pipeline
+        - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS # läuft nicht in Branch Pipeline, wenn bereits ein offener MR existiert
           when: never
-        - if: '$CI_COMMIT_BRANCH == "dev"'
-        - when: manual
+        - when: manual # läuft sonst nur manuell
 
 lint:eslint:changed:
     image: ${REGISTRY_HOST}/dockerhub_proxy/node:24-slim
@@ -71,10 +73,16 @@ lint:eslint:changed:
 
         - npm ci
     script:
-        - git fetch origin dev
-        - BASE=$(git merge-base HEAD origin/dev)
-        - CHANGED_FILES=$(git diff --diff-filter=d --name-only "$BASE" HEAD | grep -E '\.ts$|\.vue$' || true)
         - |
+            git fetch origin dev
+            BASE=$(git merge-base HEAD origin/dev)
+            # 1. Diff Files zwischen Branch Head <-> origin/dev Head ermitteln
+            # 2. *.ts & *.vue Files inkludieren
+            # 3. *.test.ts Files exkludieren
+            CHANGED_FILES=$(git diff --diff-filter=d --name-only "$BASE" HEAD \
+                | grep -E '\.ts$|\.vue$' \
+                | grep -vE '\.test\.ts$' || true)
+
             if [ -n "$CHANGED_FILES" ]; then
               echo "Starte ESLint für geänderte Dateien:"
               echo "$CHANGED_FILES"
@@ -83,9 +91,11 @@ lint:eslint:changed:
               echo "Keine Änderungen an .ts/.vue Dateien – Skip ESLint"
               exit 0
             fi
-    except:
-        - dev
-        - master
+    rules:
+        - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS # läuft nicht in Branch Pipeline, wenn bereits ein offener MR existiert
+          when: never
+        - if: $CI_COMMIT_BRANCH && $CI_COMMIT_BRANCH != 'dev' && $CI_COMMIT_BRANCH != 'master' # läuft in Branch Pipelines außer "dev" oder "master"
+        - when: never # läuft sonst nicht
 
 build:
     stage: build
@@ -106,6 +116,13 @@ build:
         exclude:
             - "./**/build/sonar/**"
         expire_in: "1 days"
+    rules:
+        - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/' # läuft in Release Pipeline
+        - if: $CI_PIPELINE_SOURCE == 'merge_request_event' # läuft in MR-Pipeline
+        - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS # läuft nicht in Branch Pipeline, wenn bereits ein offener MR existiert
+          when: never
+        - if: $CI_COMMIT_BRANCH # läuft in Branch Pipeline
+        - when: never # läuft sonst nicht
 
 test:integration-tests:
     image: ${REGISTRY_HOST}/svws-ci/test-runner:jdk21-node24-playwright1.56
@@ -130,9 +147,16 @@ test:integration-tests:
         when: always
         expire_in: "7 days"
         paths:
-            - ./tests/tests-e2e-*/build/test-results
+            - "**/tests/**/build/test-results/**"
         reports:
-            junit: ./tests/**/build/test-results/**/*.xml
+            junit: "**/tests/**/build/test-results/**/*.xml"
+    rules:
+        - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/' # läuft in Release Pipeline
+        - if: $CI_PIPELINE_SOURCE == 'merge_request_event' # läuft in MR-Pipeline
+        - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS # läuft nicht in Branch Pipeline, wenn bereits ein offener MR existiert
+          when: never
+        - if: $CI_COMMIT_BRANCH # läuft in Branch Pipeline
+        - when: never # läuft sonst nicht
 
 cleanup:integration-tests:
     stage: cleanup
@@ -143,17 +167,62 @@ cleanup:integration-tests:
         - chmod +x ./.gitlab/.script/*.sh
     script:
         - ./.gitlab/.script/cleanup_integration_test_container.sh ${CI_COMMIT_SHORT_SHA}
-    when: always
     allow_failure: true
+    rules:
+        - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/' # läuft in Release Pipeline
+        - if: $CI_PIPELINE_SOURCE == 'merge_request_event' # läuft in MR-Pipeline
+        - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS # läuft nicht in Branch Pipeline, wenn bereits ein offener MR existiert
+          when: never
+        - if: $CI_COMMIT_BRANCH # läuft in Branch Pipeline
+        - when: never # läuft sonst nicht
 
 analyze:sonarqube:
     stage: analyze
     interruptible: true
-    only:
-        - dev
+    needs:
+        - job: build
+          artifacts: true # benötigt sources und test-results
+        - job: test:integration-tests
+          artifacts: true # benötigt integration test-results
+    variables:
+        SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
+        GIT_DEPTH: "0"
     script:
-        - ./gradlew sonar -Dsonar.projectKey=svws-server -Dsonar.host.url=$SONAR_URL -Dsonar.token=$SONAR_TOKEN --full-stacktrace
-    when: manual
+        - |
+            if [[ "$CI_PIPELINE_SOURCE" == "merge_request_event" ]]; then
+                echo "Running SonarQube MR analysis for MR $CI_MERGE_REQUEST_IID"
+
+                ./gradlew sonar \
+                    -Dsonar.projectKey=svws-server \
+                    -Dsonar.host.url=$SONAR_URL \
+                    -Dsonar.token=$SONAR_TOKEN \
+                    -Dsonar.pullrequest.key=$CI_MERGE_REQUEST_IID \
+                    -Dsonar.pullrequest.branch=$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME \
+                    -Dsonar.pullrequest.base=$CI_MERGE_REQUEST_TARGET_BRANCH_NAME \
+                    -Dsonar.gradle.skipCompile=true \
+                    -Dsonar.qualitygate.wait=true
+            else
+                echo "Running SonarQube branch analysis for Branch $CI_COMMIT_BRANCH"
+
+                ./gradlew sonar \
+                    -Dsonar.projectKey=svws-server \
+                    -Dsonar.host.url=$SONAR_URL \
+                    -Dsonar.token=$SONAR_TOKEN \
+                    -Dsonar.branch.name=$CI_COMMIT_BRANCH \
+                    -Dsonar.gradle.skipCompile=true \
+                    -Dsonar.qualitygate.wait=true
+            fi
+    cache:
+        key: "${CI_JOB_NAME}"
+        paths:
+            - .sonar/cache
+    rules:
+        - if: $CI_COMMIT_BRANCH == 'dev' || $CI_COMMIT_BRANCH == 'master' # läuft in dev & master Pipeline
+        - if: $CI_PIPELINE_SOURCE == 'merge_request_event' # läuft in MR-Pipeline
+        - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS # läuft nicht in Branch Pipeline, wenn bereits ein offener MR existiert
+          when: never
+        - when: manual # läuft sonst nur manuell
+    allow_failure: true
 
 build_snapshot_windows:
     stage: build_snapshot_installer
@@ -170,7 +239,11 @@ build_snapshot_windows:
     artifacts:
         paths:
             - artifacts_windows/
-    when: manual
+    allow_failure: true
+    rules:
+        - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS # läuft nicht in Branch Pipeline, wenn bereits ein offener MR existiert
+          when: never
+        - when: manual # läuft sonst nur manuell
 
 build_linux:
     stage: build_installer
@@ -290,3 +363,12 @@ publish_github:
         - chmod +x ./deployment/setupVersion.sh
         - ./deployment/setupVersion.sh
         - ./gradlew :deployment:githubRelease
+
+scheduled:cleanup-sonarqube:
+    stage: scheduled
+    before_script:
+        - chmod +x ./.gitlab/.script/cleanup_orphan_sonarqube_mr_analyses.sh
+    script:
+        - ./.gitlab/.script/cleanup_orphan_sonarqube_mr_analyses.sh
+    rules:
+        - if: '$CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB_NAME == "cleanup-sonarqube"'

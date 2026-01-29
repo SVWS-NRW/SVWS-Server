@@ -6,7 +6,6 @@
 	"type": "module",
 	"scripts": {
 		"installPlaywright": "playwright install && playwright install-deps",
-		"test:local" : "playwright test",
 		"test" : "playwright test",
 		"show": "playwright show-report",
 		"ui": "playwright test --ui",
