@@ -12,26 +12,29 @@ export class ValidatorKlassenKuerzel extends BasicValidator {
 	private readonly data: () => string | null | undefined;
 
 	/** Eine Menge der Klassenkürzel, wo das Kürzel der zu validierenden Klasse nicht mehr enthalten ist. */
-	private readonly menge: Set<string> = new Set<string>();
+	private readonly menge: () => Iterable<KlassenDaten>;
+
+	/** Die ID der Klasse oder null, falls eine neue Klasse erstellt wird */
+	private readonly id: () => number | null;
 
 
 	/**
-	 * Erzeugt einen neuen Validator mit der Funktion zum Zugriff auf den String
+	 * Erzeugt einen neuen Validator zum Prüfen des Klassenkürzels
+	 *
+	 * Geprüft wird:
+	 *   - leerer String, undefined, null,
+	 *   - maximale Länge von 15
+	 *   - keine Duplikate in anderen Klassen
 	 *
 	 * @param data    die Funktion zum Zugriff auf die Daten
 	 * @param menge   die Liste der Klassen mit ihren Kürzeln
 	 * @param id      die ID der zu validierenden Klasse, sofern diese in der Liste der Klassen enthalten ist
 	 */
-	constructor(data: () => string | null | undefined, menge: Iterable<KlassenDaten>, id: number | null = null) {
+	constructor(data: () => string | null | undefined, menge: () => Iterable<KlassenDaten>, id: () => number | null = () => null) {
 		super(ValidatorFehlerart.MUSS);
 		this.data = data;
-		for (const kl of menge) {
-			// Filtere die Klasse mit der eigenen ID, sofern diese angegeben wurde und alle Einträge mit leerem Kürzel
-			if (((id !== null) && (kl.id === id)) || (kl.kuerzel === null) || (JavaString.isBlank(kl.kuerzel))) {
-				continue;
-			}
-			this.menge.add(kl.kuerzel);
-		}
+		this.menge = menge;
+		this.id = id;
 		this.run();
 	}
 
@@ -53,7 +56,19 @@ export class ValidatorKlassenKuerzel extends BasicValidator {
 			return false;
 		}
 
-		if (this.menge.has(data.trim())) {
+		let foundKuerzel = false;
+		const id = this.id();
+		for (const kl of this.menge()) {
+			// Filtere die Klasse mit der eigenen ID, sofern diese angegeben wurde und alle Einträge mit leerem Kürzel
+			if (((id !== null) && (kl.id === id)) || (kl.kuerzel === null) || (JavaString.isBlank(kl.kuerzel))) {
+				continue;
+			}
+			if (kl.kuerzel === data.trim()) {
+				foundKuerzel = true;
+				break;
+			}
+		}
+		if (foundKuerzel) {
 			this.addFehler(0, "Das Kürzel '" + data + "' wurde bereits für eine andere Klasse verwendet.");
 			return false;
 		}

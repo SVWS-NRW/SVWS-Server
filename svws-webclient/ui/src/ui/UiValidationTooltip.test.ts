@@ -141,7 +141,7 @@ describe("UiValidationTooltip", () => {
 		// Prüfe Fehlertexte
 		const fehlergruppenItems = wrapper.findAll(".fehlergruppe-item");
 		expect(fehlergruppenItems.length).toBe(12);
-		expect(fehlergruppenItems.flatMap(t => t.findAll('.fehler-arrow-icon')).length).toBe(12);
+		expect(fehlergruppenItems.flatMap(t => t.findAll('.fehler-icon')).length).toBe(6);
 		expect(fehlergruppenItems.map(t => t.find(".fehler-text").text())).toEqual(
 			[
 				"Dies ist ein Test Muss Fehler (1)",
@@ -161,7 +161,7 @@ describe("UiValidationTooltip", () => {
 
 		// Prüfe Prüfcodes
 		expect(fehlergruppenItems.map(t => {
-			const badge = t.find(".svws-ui-badge");
+			const badge = t.find(".fehler-badge");
 			const badgeText = badge.exists() ? badge.text() : "";
 			return badgeText;
 		})).toEqual([

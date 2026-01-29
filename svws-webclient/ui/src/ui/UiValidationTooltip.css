@@ -1,4 +1,4 @@
-.validation-tooltip-icon { 
+.validation-tooltip-icon {
 	@apply cursor-pointer pointer-events-auto;
 
 	&.disabled {
@@ -15,28 +15,24 @@
 	.fehlergruppe-headline-muss {
 		@apply rounded-sm px-2 bg-ui-danger text-ui-ondanger;
 	}
-	
+
 	.fehlergruppe-headline-kann {
 		@apply rounded-sm px-2 bg-ui-caution text-ui-oncaution;
 	}
-	
+
 	.fehlergruppe-headline-hinweis {
 		@apply rounded-sm px-2 bg-ui-warning text-ui-onwarning;
 	}
-	
-	.fehlergruppe-item {
-		@apply flex items-center pt-1.5 ps-1 pe-2;
 
-		.fehler-text {
-			@apply items-center;
-		}
+	.fehlergruppe-item {
+		@apply flex items-start mt-2;
+
+		.fehler-badge {
+			@apply mr-2 min-w-15 mt-1 bg-ui-selected border-ui-selected text-ui-onselected border font-mono text-xs px-1 mx-1 rounded-sm	}
 	}
-	
-	.fehler-arrow-icon {
-		@apply icon-ui-brand-hover i-ri-arrow-right-s-line mt-[3px] mr-0.5 min-w-[12px] min-h-[12px] w-[12px] h-[12px] self-start;
+
+	.fehler-icon {
+		@apply icon-ui-onselected i-ri-checkbox-blank-circle-fill icon-xs mt-1.5 mr-2;
 	}
-	
-	.fehler-pruefcode {
-		@apply bg-ui-selected border-ui-selected text-ui-onselected border font-bold text-sm px-1 mx-1 rounded-sm;
-	}
+
 }

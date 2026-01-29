@@ -349,6 +349,13 @@
 	mask-position: center;
 }
 
+@utility i-ri-checkbox-blank-circle-fill {
+	mask-image: url(@icons/System/checkbox-blank-circle-fill.svg);
+	-webkit-mask-image: url(@icons/System/checkbox-blank-circle-fill.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
 @utility i-ri-checkbox-circle-fill {
 	mask-image: url(@icons/System/checkbox-circle-fill.svg);
 	-webkit-mask-image: url(@icons/System/checkbox-circle-fill.svg);

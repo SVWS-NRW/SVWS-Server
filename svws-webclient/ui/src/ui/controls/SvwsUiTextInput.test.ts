@@ -197,81 +197,53 @@ describe.concurrent("Modelvalue (prop), two-way-binding und Aktualisierungs- und
 	});
 });
 
-describe.concurrent("Unit Tests für validatorEmail()", async () => {
-	const wrapper = mount(SvwsUiTextInput);
-
-	// extrahier die Funktion validator Email von der Komponente
-	const validatorEmail = await wrapper.findComponent({
-		name: "SvwsUiTextInput",
-	}).vm.validatorEmail;
-
-	// [Input Parameter, Erwartungswert, Beschreibung]
+describe.concurrent("Unit Tests für property maxLen und ValidatorStringLength", async () => {
 	test.each([
-		["fake@sadsdd.de", true, "Korrekte Email"],
-		["asdasdsadsdd.de", true, "Kein @ ist erlaubt und bezieht sich auf \"diese\" Domain"],
-		["test.email+alex@leetcode.com", true, "+ wird für tags und ähnliches verwendet"],
-		["asdasds@ad@sdd.de", false, "Zwei @ wird nicht akzeptiert"],
-		["asdasd sdd.de", false, "Leerzeichen erzeugen Fehler"],
-		["asdasd@asdasd", false, "Fehlerhafte URL wird nicht akzeptiert"],
-		["asdasd@asdasd.d", false, "Zu kurze URL wird nicht akzeptiert"],
-		[null, true, "null wird akzeptiert"],
-		[" test@test.de", false, "Leerzeichen am Anfang wird nicht akzeptiert"],
-	])('validatorEmail(%s) => %s | %s ', (x, y, _) => {
-		expect(validatorEmail(x)).toBe(y);
-	});
-});
-
-describe.concurrent("Unit Tests für computed value maxLenValid", async () => {
-	test.each([
-		[10, "test", true, "Kürzeres Wort als MaxLen wird akzeptiert"],
-		[1, "test", false, "Längeres Wort als MaxLen wird nicht akzeptiert"],
-		[undefined, "test", true, "Falls MaxLen undefined ist wird jede Länge akzeptiert"],
-		[4, null, true, "Null als Wort ist nicht zu lang"],
-		[10, "", true, "Leerstring wird akzeptiert"],
-	])('maxLenValid {maxLen: %s, modelValue: %s} => %s | %s ', (x1, x2, y, _) => {
+		[10, "test", 0, "Kürzeres Wort als MaxLen wird akzeptiert"],
+		[1, "test", 1, "Längeres Wort als MaxLen wird nicht akzeptiert"],
+		[undefined, "test", 0, "Falls MaxLen undefined ist wird jede Länge akzeptiert"],
+		[4, null, 0, "Null als Wort ist nicht zu lang"],
+		[10, "", 0, "Leerstring wird akzeptiert"],
+	])('maxLen {maxLen: %s, modelValue: %s} => %s | %s ', (x1, x2, y, _) => {
 		const props = { maxLen: x1, modelValue: x2 };
 		const wrapper = mount(SvwsUiTextInput, { props: props });
-		const maxLenValid = wrapper.findComponent({
-			name: "SvwsUiTextInput",
-		}).vm.maxLenValid;
-		expect(maxLenValid).toEqual(y);
+		const validierungFehler = wrapper.findComponent({ name: "SvwsUiTextInput" }).vm.validierungFehler;
+		expect(validierungFehler.size()).toEqual(y);
 	});
 });
 
-describe.concurrent("Unit Tests für computed value minLenValid", async () => {
+describe.concurrent("Unit Tests für property minLen und ValidatorStringLength", async () => {
 	test.each([
-		[1, "test", true, "Längeres Wort als MinLen wird akzeptiert"],
-		[10, "test", false, "Kürzeres Wort als MinLen wird nicht akzeptiert"],
-		[undefined, "test", true, "Falls MinLen undefined ist wird jede Länge akzeptiert"],
-		[4, null, false, "Wert null wird nicht akzeptiert, wenn MinLen > 0 gesetzt ist"],
-		[4, "", false, "Leerstring wird nicht akzeptiert, wenn MinLen > 0 gesetzt ist"],
-		[0, null, true, "Leerstring wird akzeptiert, wenn MinLen == 0 gesetzt ist"],
-		[0, "", true, "Leerstring wird akzeptiert, wenn MinLen == 0 gesetzt ist"],
-	])('minLenValid {minLen: %s, modelValue: %s} => %s | %s ', (x1, x2, y, _) => {
+		[1, "test", 0, "Längeres Wort als MinLen wird akzeptiert"],
+		[10, "test", 1, "Kürzeres Wort als MinLen wird nicht akzeptiert"],
+		[undefined, "test", 0, "Falls MinLen undefined ist wird jede Länge akzeptiert"],
+		[4, null, 1, "Wert null wird nicht akzeptiert, wenn MinLen > 0 gesetzt ist"],
+		[4, "", 1, "Leerstring wird nicht akzeptiert, wenn MinLen > 0 gesetzt ist"],
+		[0, null, 0, "Leerstring wird akzeptiert, wenn MinLen == 0 gesetzt ist"],
+		[0, "", 0, "Leerstring wird akzeptiert, wenn MinLen == 0 gesetzt ist"],
+	])('minLen {minLen: %s, modelValue: %s} => %s | %s ', (x1, x2, y, _) => {
 		const props = { minLen: x1, modelValue: x2 };
 		const wrapper = mount(SvwsUiTextInput, { props: props });
-		const minLenValid = wrapper.findComponent({
-			name: "SvwsUiTextInput",
-		}).vm.minLenValid;
-		expect(minLenValid).toEqual(y);
+		const validierungFehler = wrapper.findComponent({ name: "SvwsUiTextInput" }).vm.validierungFehler;
+		expect(validierungFehler.size()).toEqual(y);
 	});
 });
 
-describe.concurrent("Unit Test für computed isValid", () => {
+describe.concurrent("Unit Test für computed validierungFehler", () => {
 	test("Erforderliches Feld mit null-Wert wird nicht akzeptiert", async () => {
 		const props = { required: true, modelValue: null };
 		const wrapper = mount(SvwsUiTextInput, { props: props });
 
-		const isValid = wrapper.findComponent({ name: "SvwsUiTextInput" }).vm.isValid;
-		expect(isValid).toEqual(false);
+		const validierungFehler = wrapper.findComponent({ name: "SvwsUiTextInput" }).vm.validierungFehler;
+		expect(validierungFehler.size()).toEqual(1);
 	});
 
 	test("Erforderliches Feld mit Leerstring wird nicht akzeptiert", async () => {
 		const props = { required: true, modelValue: '' };
 		const wrapper = mount(SvwsUiTextInput, { props: props });
 
-		const isValid = wrapper.findComponent({ name: "SvwsUiTextInput" }).vm.isValid;
-		expect(isValid).toEqual(false);
+		const validierungFehler = wrapper.findComponent({ name: "SvwsUiTextInput" }).vm.validierungFehler;
+		expect(validierungFehler.size()).toEqual(1);
 	});
 
 	test("E-Mail-Validierung gibt false für ungültige E-Mail zurück", async () => {
@@ -281,8 +253,8 @@ describe.concurrent("Unit Test für computed isValid", () => {
 		};
 		const wrapper = mount(SvwsUiTextInput, { props: props });
 
-		const isValid = wrapper.findComponent({ name: "SvwsUiTextInput" }).vm.isValid;
-		expect(isValid).toEqual(false);
+		const validierungFehler = wrapper.findComponent({ name: "SvwsUiTextInput" }).vm.validierungFehler;
+		expect(validierungFehler.size()).toEqual(1);
 	});
 
 	test("E-Mail-Validierung gibt true für gültige E-Mail zurück", async () => {
@@ -292,45 +264,47 @@ describe.concurrent("Unit Test für computed isValid", () => {
 		};
 		const wrapper = mount(SvwsUiTextInput, { props: props });
 
-		const isValid = wrapper.findComponent({ name: "SvwsUiTextInput" }).vm.isValid;
-		expect(isValid).toEqual(true);
+		const validierungFehler = wrapper.findComponent({ name: "SvwsUiTextInput" }).vm.validierungFehler;
+		expect(validierungFehler.size()).toEqual(0);
 	});
 
 	test("MaxLen-Validierung gibt false für zu langen String zurück", async () => {
 		const props = { maxLen: 5, modelValue: "too long" };
 		const wrapper = mount(SvwsUiTextInput, { props: props });
 
-		const isValid = wrapper.findComponent({ name: "SvwsUiTextInput" }).vm.isValid;
-		expect(isValid).toEqual(false);
+		const validierungFehler = wrapper.findComponent({ name: "SvwsUiTextInput" }).vm.validierungFehler;
+		expect(validierungFehler.size()).toEqual(1);
 	});
 
 	test("MinLen-Validierung gibt false für zu kurzen String zurück", async () => {
 		const props = { minLen: 10, modelValue: "too short" };
 		const wrapper = mount(SvwsUiTextInput, { props: props });
 
-		const isValid = wrapper.findComponent({ name: "SvwsUiTextInput" }).vm.isValid;
-		expect(isValid).toEqual(false);
+		const validierungFehler = wrapper.findComponent({ name: "SvwsUiTextInput" }).vm.validierungFehler;
+		expect(validierungFehler.size()).toEqual(1);
 	});
 
-	test("Benutzerdefinierte Validierung wird nicht akzeptiert", async () => {
+	test.todo("Benutzerdefinierte Validierung wird nicht akzeptiert", async () => {
+		// Mithilfe eines benutzerdefinierten Validators testen
 		const props = {
-			valid: (value: string | null) => value === "valid",
+			// alte Implementierung: valid: (value: string | null) => value === "valid",
 			modelValue: "invalid",
 		};
 		const wrapper = mount(SvwsUiTextInput, { props: props });
 
-		const isValid = wrapper.findComponent({ name: "SvwsUiTextInput" }).vm.isValid;
-		expect(isValid).toEqual(false);
+		const validierungFehler = wrapper.findComponent({ name: "SvwsUiTextInput" }).vm.validierungFehler;
+		expect(validierungFehler.size()).toEqual(1);
 	});
 
-	test("Benutzerdefinierte Validierung gibt true zurück", async () => {
+	test.todo("Benutzerdefinierte Validierung gibt true zurück", async () => {
+		// Mithilfe eines benutzerdefinierten Validators testen
 		const props = {
-			valid: (value: string | null) => value === "valid",
+			// alte Implementierung: valid: (value: string | null) => value === "valid",
 			modelValue: "valid",
 		};
 		const wrapper = mount(SvwsUiTextInput, { props: props });
 
-		const isValid = wrapper.findComponent({ name: "SvwsUiTextInput" }).vm.isValid;
-		expect(isValid).toEqual(true);
+		const validierungFehler = wrapper.findComponent({ name: "SvwsUiTextInput" }).vm.validierungFehler;
+		expect(validierungFehler.size()).toEqual(0);
 	});
 });

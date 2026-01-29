@@ -27,7 +27,7 @@
 		<Variant title="Invalid/Required" id="Invalid">
 			<div class="p-4 flex flex-col gap-10">
 				<svws-ui-input-wrapper>
-					<svws-ui-text-input type="text" model-value="Text Input Value" placeholder="Invalid Input" :valid="(v)=>false" @input="onInput" />
+					<svws-ui-text-input type="text" model-value="Text Input Value" placeholder="Invalid Input" :validation="validate" @input="onInput" />
 				</svws-ui-input-wrapper>
 				<svws-ui-input-wrapper>
 					<svws-ui-text-input type="text" model-value="" placeholder="Required" required @input="onInput" :max-len="5" :min-len="2" />
@@ -92,8 +92,16 @@
 
 <script setup lang="ts">
 
+	import { ValidatorStringLength } from '../../validation/ValidatorStringLength';
 	import { logEvent } from '../../stories/helper';
+	import type { List } from '../../../../core/src/java/util/List';
+	import type { ValidatorFehler } from '../../../../core/src/asd/validate/ValidatorFehler';
 
+	const validator = new ValidatorStringLength(() => "Die ist ein zu langer Text.", 5);
+	function validate(): List<ValidatorFehler> {
+		validator.run();
+		return validator.getFehler();
+	}
 
 	function onInput(event: Event) {
 		logEvent('input', event);
