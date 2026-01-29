@@ -1,27 +1,35 @@
 <template>
 	<div class="page page-grid-cards">
-		<svws-ui-content-card title="Allgemein">
-			<svws-ui-input-wrapper :grid="2">
-				<ui-select label="Förderschwerpunkt ASD-Kürzel"
-					v-model="selectedFoerderschwerpunkt"
-					:manager="foerderschwerpunktKuerzelManager"
-					:valid="fieldIsValid('kuerzel')" statistics
-					:disabled="!hatKompetenzAdd" searchable required :removable="false" />
-				<ui-select label="Förderschwerpunkt ASD-Text"
-					v-model="selectedFoerderschwerpunkt"
-					:manager="foerderschwerpunktTextManager"
-					:valid="fieldIsValid('kuerzelStatistik')" searchable :removable="false" statistics :disabled="!hatKompetenzAdd" required />
-				<svws-ui-text-input placeholder="Interne Bezeichnung" span="2"
-					v-model="data.kuerzel"
-					:valid="() => fieldIsValid('kuerzel')" :min-len="1" :max-len="50" :disabled="!hatKompetenzAdd" required />
-				<svws-ui-input-number placeholder="Sortierung"
-					v-model="data.sortierung"
-					:valid="() => fieldIsValid('sortierung')" :min="0" :max="32000" :disabled="!hatKompetenzAdd" />
-				<svws-ui-spacing />
-				<svws-ui-checkbox v-model="data.istSichtbar" :disabled="!hatKompetenzAdd">
-					Sichtbar
-				</svws-ui-checkbox>
-			</svws-ui-input-wrapper>
+		<svws-ui-content-card>
+			<svws-ui-content-card title="Allgemein">
+				<svws-ui-input-wrapper :grid="2">
+					<ui-select label="Förderschwerpunkt ASD-Kürzel"
+						v-model="selectedFoerderschwerpunkt"
+						:manager="foerderschwerpunktKuerzelManager"
+						:valid="fieldIsValid('kuerzel')" statistics
+						:disabled="!hatKompetenzAdd" searchable required :removable="false" />
+					<ui-select label="Förderschwerpunkt ASD-Text"
+						v-model="selectedFoerderschwerpunkt"
+						:manager="foerderschwerpunktTextManager"
+						:valid="fieldIsValid('kuerzelStatistik')" searchable :removable="false" statistics :disabled="!hatKompetenzAdd" required />
+					<svws-ui-text-input placeholder="Interne Bezeichnung" span="2"
+						v-model="data.kuerzel"
+						:valid="() => fieldIsValid('kuerzel')" :min-len="1" :max-len="50" :disabled="!hatKompetenzAdd" required />
+				</svws-ui-input-wrapper>
+			</svws-ui-content-card>
+			<svws-ui-spacing :size="2" />
+			<svws-ui-content-card title="Ansicht & Sortierung">
+				<svws-ui-input-wrapper :grid="2">
+					<svws-ui-input-number placeholder="Sortierung"
+						v-model="data.sortierung"
+						:valid="() => fieldIsValid('sortierung')" :min="0" :max="32000" :disabled="!hatKompetenzAdd" />
+					<svws-ui-spacing />
+					<svws-ui-checkbox v-model="data.istSichtbar" :disabled="!hatKompetenzAdd">
+						Sichtbar
+					</svws-ui-checkbox>
+				</svws-ui-input-wrapper>
+			</svws-ui-content-card>
+
 			<div class="mt-7 flex flex-row gap-4 justify-end">
 				<svws-ui-button type="secondary" @click="cancel">
 					Abbrechen

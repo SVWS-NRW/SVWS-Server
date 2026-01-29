@@ -10,7 +10,7 @@
 					:model-value="manager().daten().raum"
 					@change="patchRaum"
 					:valid="raumIsValid" :max-len="20" :readonly="!hatKompetenzUpdate" />
-				<svws-ui-text-input placeholder="Email" type="email"
+				<svws-ui-text-input placeholder="E-Mail-Adresse" type="email"
 					:model-value="manager().daten().email"
 					@change="patchEmail"
 					:valid="v => emailIsValid(v, 100)" :max-len="100" :readonly="!hatKompetenzUpdate" />
@@ -29,15 +29,17 @@
 						<span class="icon i-ri-link" /> Zum Lehrer
 					</svws-ui-button>
 				</div>
-				<svws-ui-spacing />
-				<svws-ui-input-number placeholder="Sortierung"
-					:model-value="manager().daten().sortierung"
-					@change="patchSortierung"
-					:valid="sortierungIsValid" :min="0" :max="32000" :readonly="!hatKompetenzUpdate" :removable="false" />
-				<svws-ui-spacing />
-				<svws-ui-checkbox v-model="selectedIsSichtbar" :readonly="!hatKompetenzUpdate">
-					Sichtbar
-				</svws-ui-checkbox>
+				<svws-ui-spacing :size="2" />
+				<svws-ui-content-card title="Ansicht & Sortierung">
+					<svws-ui-input-number placeholder="Sortierung"
+						:model-value="manager().daten().sortierung"
+						@change="patchSortierung"
+						:valid="sortierungIsValid" :min="0" :max="32000" :readonly="!hatKompetenzUpdate" :removable="false" />
+					<svws-ui-spacing />
+					<svws-ui-checkbox v-model="selectedIsSichtbar" :readonly="!hatKompetenzUpdate">
+						Sichtbar
+					</svws-ui-checkbox>
+				</svws-ui-content-card>
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Zugeordnete Klassen">

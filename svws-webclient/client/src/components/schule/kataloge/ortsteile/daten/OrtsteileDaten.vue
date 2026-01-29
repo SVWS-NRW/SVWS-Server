@@ -1,24 +1,31 @@
 <template>
 	<div class="page page-grid-cards">
-		<svws-ui-content-card title="Allgemein">
-			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input placeholder="Ortsteil"
-					:model-value="manager().daten().ortsteil"
-					@change="patchOrtsteil"
-					:valid="ortsteilIsValid" :min-len="1" :max-len="30" required :disabled="!hatKompetenzUpdate" />
-				<ui-select label="Wohnort"
-					v-model="selectedOrt"
-					:manager="ortSelectManager"
-					:readonly="!hatKompetenzUpdate" searchable required :removable="false" />
-				<svws-ui-input-number placeholder="Sortierung"
-					:model-value="manager().daten().sortierung"
-					@change="patchSortierung"
-					:valid="sortierungIsValid" :min="0" :max="32000" :readonly="!hatKompetenzUpdate" :removable="false" />
-				<svws-ui-spacing />
-				<svws-ui-checkbox v-model="selectedIstSichtbar" :readonly="!hatKompetenzUpdate">
-					Sichtbar
-				</svws-ui-checkbox>
-			</svws-ui-input-wrapper>
+		<svws-ui-content-card>
+			<svws-ui-content-card title="Allgemein">
+				<svws-ui-input-wrapper :grid="2">
+					<svws-ui-text-input placeholder="Ortsteil"
+						:model-value="manager().daten().ortsteil"
+						@change="patchOrtsteil"
+						:valid="ortsteilIsValid" :min-len="1" :max-len="30" required :disabled="!hatKompetenzUpdate" />
+					<ui-select label="Wohnort"
+						v-model="selectedOrt"
+						:manager="ortSelectManager"
+						:readonly="!hatKompetenzUpdate" searchable required :removable="false" />
+				</svws-ui-input-wrapper>
+			</svws-ui-content-card>
+			<svws-ui-spacing :size="2" />
+			<svws-ui-content-card title="Ansicht & Sortierung">
+				<svws-ui-input-wrapper :grid="2">
+					<svws-ui-input-number placeholder="Sortierung"
+						:model-value="manager().daten().sortierung"
+						@change="patchSortierung"
+						:valid="sortierungIsValid" :min="0" :max="32000" :readonly="!hatKompetenzUpdate" :removable="false" />
+					<svws-ui-spacing />
+					<svws-ui-checkbox v-model="selectedIstSichtbar" :readonly="!hatKompetenzUpdate">
+						Sichtbar
+					</svws-ui-checkbox>
+				</svws-ui-input-wrapper>
+			</svws-ui-content-card>
 		</svws-ui-content-card>
 	</div>
 </template>

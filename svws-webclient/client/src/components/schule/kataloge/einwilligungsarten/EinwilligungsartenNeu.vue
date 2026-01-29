@@ -1,30 +1,37 @@
 <template>
 	<div class="page page-grid-cards">
-		<svws-ui-content-card title="Allgemein">
-			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input placeholder="Bezeichnung" span="2"
-					v-model="data.bezeichnung"
-					:valid="() => fieldIsValid('bezeichnung')" :min-len="1" :max-len="250" required :disabled="!hatKompetenzUpdate" />
-				<ui-select label="Einwilligungsschlüssel" class="col-span-full"
-					v-model="selectedEinwilligungsschluessel"
-					:manager="einwilligungsschluesselCoreTypeManager"
-					searchable :disabled="!hatKompetenzUpdate" />
-				<svws-ui-textarea-input placeholder="Beschreibung" span="full"
-					v-model="data.beschreibung"
-					@change="value => data.beschreibung = value"
-					:disabled="!hatKompetenzUpdate" />
-				<ui-select label="Personenart" class="col-span-full"
-					v-model="selectedPersonTyp"
-					:manager="personTypManager"
-					:disabled="!hatKompetenzUpdate" :removable="false" />
-				<svws-ui-input-number placeholder="Sortierung"
-					v-model="data.sortierung"
-					:valid="() => fieldIsValid('sortierung')" :min="0" :max="32000" :disabled="!hatKompetenzUpdate" />
-				<svws-ui-spacing />
-				<svws-ui-checkbox v-model="data.istSichtbar" :disabled="!hatKompetenzUpdate">
-					Sichtbar
-				</svws-ui-checkbox>
-			</svws-ui-input-wrapper>
+		<svws-ui-content-card>
+			<svws-ui-content-card title="Allgemein">
+				<svws-ui-input-wrapper :grid="2">
+					<svws-ui-text-input placeholder="Bezeichnung" span="2"
+						v-model="data.bezeichnung"
+						:valid="() => fieldIsValid('bezeichnung')" :min-len="1" :max-len="250" required :disabled="!hatKompetenzUpdate" />
+					<ui-select label="Einwilligungsschlüssel" class="col-span-full"
+						v-model="selectedEinwilligungsschluessel"
+						:manager="einwilligungsschluesselCoreTypeManager"
+						searchable :disabled="!hatKompetenzUpdate" />
+					<svws-ui-textarea-input placeholder="Beschreibung" span="full"
+						v-model="data.beschreibung"
+						@change="value => data.beschreibung = value"
+						:disabled="!hatKompetenzUpdate" />
+					<ui-select label="Personenart" class="col-span-full"
+						v-model="selectedPersonTyp"
+						:manager="personTypManager"
+						:disabled="!hatKompetenzUpdate" :removable="false" />
+				</svws-ui-input-wrapper>
+			</svws-ui-content-card>
+			<svws-ui-spacing :size="2" />
+			<svws-ui-content-card title="Ansicht & Sortierung">
+				<svws-ui-input-wrapper :grid="2">
+					<svws-ui-input-number placeholder="Sortierung"
+						v-model="data.sortierung"
+						:valid="() => fieldIsValid('sortierung')" :min="0" :max="32000" :disabled="!hatKompetenzUpdate" />
+					<svws-ui-spacing />
+					<svws-ui-checkbox v-model="data.istSichtbar" :disabled="!hatKompetenzUpdate">
+						Sichtbar
+					</svws-ui-checkbox>
+				</svws-ui-input-wrapper>
+			</svws-ui-content-card>
 			<div class="mt-7 flex flex-row gap-4 justify-end">
 				<svws-ui-button type="secondary" @click="cancel">
 					Abbrechen

@@ -19,6 +19,11 @@
 						:model-value="manager().daten().kuerzelBundesland"
 						@change="patchBundesland"
 						:valid="v => optionalInputIsValid(v, 2)" :max-len="2" :disabled="!hatKompetenzUpdate" />
+				</svws-ui-input-wrapper>
+			</svws-ui-content-card>
+			<svws-ui-spacing :size="2" />
+			<svws-ui-content-card title="Ansicht & Sortierung">
+				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-input-number placeholder="Sortierung"
 						:model-value="manager().daten().sortierung"
 						@change="patchSortierung"

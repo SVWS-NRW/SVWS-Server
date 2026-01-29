@@ -80,17 +80,19 @@
 			<!-- Ansprechpartner -->
 			<betriebe-ansprechpartner :manager :add-ansprechpartner :patch-ansprechpartner :delete-ansprechpartner :hat-kompetenz-update />
 			<svws-ui-spacing :size="2" />
-			<!-- Sonstige -->
-			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-input-number placeholder="Sortierung"
-					:model-value="manager().daten().sortierung"
-					@change="patchSortierung"
-					:valid="sortierungIsValid" :min="0" :max="32000" :readonly="!hatKompetenzUpdate" :removable="false" />
-				<svws-ui-spacing />
-				<svws-ui-checkbox v-model="selectedIsSichtbar" :readonly="!hatKompetenzUpdate">
-					Sichtbar
-				</svws-ui-checkbox>
-			</svws-ui-input-wrapper>
+			<!-- Ansicht & Sortierung -->
+			<svws-ui-content-card title="Ansicht & Sortierung">
+				<svws-ui-input-wrapper :grid="2">
+					<svws-ui-input-number placeholder="Sortierung"
+						:model-value="manager().daten().sortierung"
+						@change="patchSortierung"
+						:valid="sortierungIsValid" :min="0" :max="32000" :readonly="!hatKompetenzUpdate" :removable="false" />
+					<svws-ui-spacing />
+					<svws-ui-checkbox v-model="selectedIsSichtbar" :readonly="!hatKompetenzUpdate">
+						Sichtbar
+					</svws-ui-checkbox>
+				</svws-ui-input-wrapper>
+			</svws-ui-content-card>
 		</svws-ui-input-wrapper>
 	</div>
 </template>
