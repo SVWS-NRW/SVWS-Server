@@ -1,6 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { LehrerPersonaldaten } from '../../../asd/data/lehrer/LehrerPersonaldaten';
 import { Schulform } from '../../../asd/types/schule/Schulform';
+import { LehrerStatistikGesamt } from '../../../asd/data/statistik/LehrerStatistikGesamt';
+import type { Supplier } from '../../../java/util/function/Supplier';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
@@ -11,28 +12,29 @@ export class ValidatorGlpl00GesamtLehrerPersonaldatenLehramt extends Validator {
 	/**
 	 * Die Lehrer-Personalabschnittsdaten
 	 */
-	private readonly listPersonaldaten: List<LehrerPersonaldaten>;
+	private readonly listLehrer: Supplier<List<LehrerStatistikGesamt>>;
 
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param listPersonaldaten   die Liste der Lehrer-Personaldaten, die geprüft werden sollen
+	 * @param listLehrer          die Liste der Lehrer-Personaldaten, die geprüft werden sollen
 	 * @param kontext             der Kontext des Validators
 	 */
-	public constructor(listPersonaldaten: List<LehrerPersonaldaten>, kontext: ValidatorKontext) {
+	public constructor(listLehrer: Supplier<List<LehrerStatistikGesamt>>, kontext: ValidatorKontext) {
 		super(kontext);
-		this.listPersonaldaten = listPersonaldaten;
+		this.listLehrer = listLehrer;
 	}
 
 	protected pruefe(): boolean {
 		let success: boolean = true;
+		const list: List<LehrerStatistikGesamt> = this.listLehrer.get();
 		const schulform: Schulform = this.kontext().getSchulform();
 		const istFW: boolean = JavaObject.equalsTranspiler(Schulform.FW, (schulform));
-		for (const lp of this.listPersonaldaten) {
-			const anzahlLehraemter: number = lp.lehraemter.size();
+		for (const ls of list) {
+			const anzahlLehraemter: number = ls.lehraemter.size();
 			if (!istFW && anzahlLehraemter === 0) {
-				this.addFehler(0, "Zu Jeder Lehrkraft muss mindest ein Lehramt vorliegen. Lehrer ID: " + lp.id);
+				this.addFehler(0, "Zu Jeder Lehrkraft muss mindest ein Lehramt vorliegen. Lehrer ID: " + ls.id);
 				success = false;
 			}
 		}

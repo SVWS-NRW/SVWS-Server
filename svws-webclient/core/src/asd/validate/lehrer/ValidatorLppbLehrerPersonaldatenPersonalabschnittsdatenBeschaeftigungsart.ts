@@ -1,6 +1,6 @@
-import { LehrerPersonalabschnittsdaten } from '../../../asd/data/lehrer/LehrerPersonalabschnittsdaten';
 import { ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart } from '../../../asd/validate/lehrer/ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart';
 import { ValidatorLppb03LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart } from '../../../asd/validate/lehrer/ValidatorLppb03LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart';
+import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
@@ -11,13 +11,15 @@ export class ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigu
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param daten     die Daten des Validators
-	 * @param kontext   der Kontext des Validators
+	 * @param beschaeftigungsart    die Beschäftigungsart
+	 * @param einsatzstatus     	der Einsatzstatus
+	 * @param pflichtstundensoll    das Pflichtstundensoll
+	 * @param kontext   			der Kontext des Validators
 	 */
-	public constructor(daten: LehrerPersonalabschnittsdaten, kontext: ValidatorKontext) {
+	public constructor(beschaeftigungsart: Supplier<string>, einsatzstatus: Supplier<string>, pflichtstundensoll: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
-		this._validatoren.add(new ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(daten, kontext));
-		this._validatoren.add(new ValidatorLppb03LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(daten, kontext));
+		this._validatoren.add(new ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(beschaeftigungsart, einsatzstatus, kontext));
+		this._validatoren.add(new ValidatorLppb03LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(beschaeftigungsart, einsatzstatus, pflichtstundensoll, kontext));
 	}
 
 	protected pruefe(): boolean {

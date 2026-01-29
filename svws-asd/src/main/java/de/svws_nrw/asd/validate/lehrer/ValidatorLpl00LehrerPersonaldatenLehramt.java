@@ -1,6 +1,9 @@
 package de.svws_nrw.asd.validate.lehrer;
 
-import de.svws_nrw.asd.data.lehrer.LehrerPersonaldaten;
+import java.util.List;
+import java.util.function.Supplier;
+
+import de.svws_nrw.asd.data.lehrer.LehrerLehramtEintrag;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
@@ -12,18 +15,27 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class ValidatorLpl00LehrerPersonaldatenLehramt extends Validator {
 
-	/** Die Lehrer-Personalabschnittsdaten */
-	private final @NotNull LehrerPersonaldaten lehrerPersonaldaten;
+	/** Die Lehrämter */
+	private final @NotNull Supplier<List<LehrerLehramtEintrag>> lehraemter;
+
+	/** Die LehrerId */
+	private final @NotNull Supplier<Long> lehrerId;
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param lehrerPersonaldaten   die Lehrer-Personaldaten, die geprüft werden sollen
+	 * @param lehraemter   			die Lehrämter, die geprüft werden sollen
+	 * @param lehrerId   			die LehrerId
 	 * @param kontext               der Kontext des Validators
 	 */
-	public ValidatorLpl00LehrerPersonaldatenLehramt(final @NotNull LehrerPersonaldaten lehrerPersonaldaten, final @NotNull ValidatorKontext kontext) {
+	public ValidatorLpl00LehrerPersonaldatenLehramt(
+			final @NotNull Supplier<List<LehrerLehramtEintrag>> lehraemter,
+			final @NotNull Supplier<Long> lehrerId,
+			final @NotNull ValidatorKontext
+			kontext) {
 		super(kontext);
-		this.lehrerPersonaldaten = lehrerPersonaldaten;
+		this.lehraemter = lehraemter;
+		this.lehrerId = lehrerId;
 	}
 
 	@Override
@@ -31,11 +43,11 @@ public final class ValidatorLpl00LehrerPersonaldatenLehramt extends Validator {
 		// Fehlerkürzel: LPL00 Zu jeder Lehrkraft muss mindestens ein Lehramt vorliegen.
 		final @NotNull Schulform schulform = kontext().getSchulform();
 		final boolean istFW = Schulform.FW.equals(schulform);
-		final int anzahlLehraemter = lehrerPersonaldaten.lehraemter.size();
+		final int anzahlLehraemter = this.lehraemter.get().size();
 
 		// Alle Schulformen außer FW: MINDESTENS ein Lehramt erforderlich
 		if (!istFW && anzahlLehraemter == 0) {
-			this.addFehler(0, "Zu jeder Lehrkraft muss mindest ein Lehramt vorliegen. Lehrer ID: " + lehrerPersonaldaten.id);
+			this.addFehler(0, "Zu jeder Lehrkraft muss mindest ein Lehramt vorliegen. Lehrer ID: " + this.lehrerId.get());
 			return false;
 		}
 

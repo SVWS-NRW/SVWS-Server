@@ -1,14 +1,16 @@
 package de.svws_nrw.asd.validate.lehrer;
 
+import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
 
 import de.svws_nrw.asd.data.CoreTypeException;
 import de.svws_nrw.asd.data.lehrer.LehrerLehramtEintrag;
-import de.svws_nrw.asd.data.lehrer.LehrerPersonaldaten;
 import de.svws_nrw.asd.types.lehrer.LehrerLehramt;
 import de.svws_nrw.asd.validate.DateManager;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
+import de.svws_nrw.transpiler.annotations.AllowNull;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -17,11 +19,11 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class ValidatorLpl03LehrerPersonaldatenLehramt extends Validator {
 
-	/** Die Lehrer-Personalabschnittsdaten */
-	private final @NotNull LehrerPersonaldaten lehrerPersonaldaten;
+	/** Die Lehrämter */
+	private final @NotNull Supplier<List<LehrerLehramtEintrag>> lehraemter;
 
 	/** Das Geburtsdatum des Lehrers */
-	private final @NotNull DateManager geburtsdatum;
+	private final @NotNull Supplier<@AllowNull DateManager> geburtsdatum;
 
 	private @NotNull Set<LehrerLehramt> regulaereLehraemter = Set.of(LehrerLehramt.ID_00, LehrerLehramt.ID_01, LehrerLehramt.ID_02, LehrerLehramt.ID_04, LehrerLehramt.ID_08,
 			LehrerLehramt.ID_09, LehrerLehramt.ID_10, LehrerLehramt.ID_11, LehrerLehramt.ID_12, LehrerLehramt.ID_14, LehrerLehramt.ID_15, LehrerLehramt.ID_16,
@@ -32,22 +34,29 @@ public final class ValidatorLpl03LehrerPersonaldatenLehramt extends Validator {
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param lehrerPersonaldaten   die Lehrer-Personaldaten, die geprüft werden sollen
+	 * @param lehraemter   			die Lehrämter, die geprüft werden sollen
 	 * @param geburtsdatum          das Geburtsdatum des Lehrers
 	 * @param kontext               der Kontext des Validators
 	 */
-	public ValidatorLpl03LehrerPersonaldatenLehramt(final @NotNull LehrerPersonaldaten lehrerPersonaldaten, final @NotNull DateManager geburtsdatum, final @NotNull ValidatorKontext kontext) {
+	public ValidatorLpl03LehrerPersonaldatenLehramt(
+			final @NotNull Supplier<List<LehrerLehramtEintrag>> lehraemter,
+			final @NotNull Supplier<@AllowNull DateManager> geburtsdatum,
+			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		this.lehrerPersonaldaten = lehrerPersonaldaten;
+		this.lehraemter = lehraemter;
 		this.geburtsdatum = geburtsdatum;
 	}
 
 	@Override
 	protected boolean pruefe() {
+		// Prüfe nur, wenn ein gültiges Geburtsdatum gesetzt ist
+		final DateManager datum = this.geburtsdatum.get();
+		if (datum == null)
+			return true;
 
 		// Fehlerkürzel: LPL3 Überprüfung, ob bei einer jungen Lehrerkraft ein 'reguläres' Lehramt vorliegt
-		if (geburtsdatum.getJahr() >= 2003 && geburtsdatum.getJahr() <= 2006) {
-			for (final LehrerLehramtEintrag lehrerLehramtEintrag2 : lehrerPersonaldaten.lehraemter) {
+		if (datum.getJahr() >= 2003 && datum.getJahr() <= 2006) {
+			for (final LehrerLehramtEintrag lehrerLehramtEintrag2 : this.lehraemter.get()) {
 				final LehrerLehramt lehrerLehramt2 = LehrerLehramt.data().getWertByIDOrNull(lehrerLehramtEintrag2.idKatalogLehramt);
 				if (lehrerLehramt2 == null)
 					continue;

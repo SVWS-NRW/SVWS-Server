@@ -1,6 +1,8 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { LehrerPersonaldaten } from '../../../asd/data/lehrer/LehrerPersonaldaten';
+import { LehrerLehramtEintrag } from '../../../asd/data/lehrer/LehrerLehramtEintrag';
 import { Schulform } from '../../../asd/types/schule/Schulform';
+import type { Supplier } from '../../../java/util/function/Supplier';
+import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
@@ -8,28 +10,35 @@ import { Validator } from '../../../asd/validate/Validator';
 export class ValidatorLpl00LehrerPersonaldatenLehramt extends Validator {
 
 	/**
-	 * Die Lehrer-Personalabschnittsdaten
+	 * Die Lehrämter
 	 */
-	private readonly lehrerPersonaldaten: LehrerPersonaldaten;
+	private readonly lehraemter: Supplier<List<LehrerLehramtEintrag>>;
+
+	/**
+	 * Die LehrerId
+	 */
+	private readonly lehrerId: Supplier<number>;
 
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param lehrerPersonaldaten   die Lehrer-Personaldaten, die geprüft werden sollen
+	 * @param lehraemter   			die Lehrämter, die geprüft werden sollen
+	 * @param lehrerId   			die LehrerId
 	 * @param kontext               der Kontext des Validators
 	 */
-	public constructor(lehrerPersonaldaten: LehrerPersonaldaten, kontext: ValidatorKontext) {
+	public constructor(lehraemter: Supplier<List<LehrerLehramtEintrag>>, lehrerId: Supplier<number>, kontext: ValidatorKontext) {
 		super(kontext);
-		this.lehrerPersonaldaten = lehrerPersonaldaten;
+		this.lehraemter = lehraemter;
+		this.lehrerId = lehrerId;
 	}
 
 	protected pruefe(): boolean {
 		const schulform: Schulform = this.kontext().getSchulform();
 		const istFW: boolean = JavaObject.equalsTranspiler(Schulform.FW, (schulform));
-		const anzahlLehraemter: number = this.lehrerPersonaldaten.lehraemter.size();
+		const anzahlLehraemter: number = this.lehraemter.get().size();
 		if (!istFW && anzahlLehraemter === 0) {
-			this.addFehler(0, "Zu jeder Lehrkraft muss mindest ein Lehramt vorliegen. Lehrer ID: " + this.lehrerPersonaldaten.id);
+			this.addFehler(0, "Zu jeder Lehrkraft muss mindest ein Lehramt vorliegen. Lehrer ID: " + this.lehrerId.get());
 			return false;
 		}
 		return true;

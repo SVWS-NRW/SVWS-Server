@@ -1,6 +1,7 @@
 package de.svws_nrw.asd.validate.lehrer;
 
-import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdaten;
+import java.util.function.Supplier;
+
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.lehrer.LehrerRechtsverhaeltnis;
 import de.svws_nrw.asd.validate.DateManager;
@@ -14,36 +15,44 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis extends Validator {
 
-	/** Die Lehrer-Personalabschnittdaten */
-	private final @NotNull LehrerPersonalabschnittsdaten daten;
-
 	/** Das Geburtsdatum des Lehrers */
-	private final @NotNull DateManager geburtsdatum;
+	private final @NotNull Supplier<DateManager> geburtsdatum;
+
+	/** Die ID des Schuljahresabschnittes */
+	private final @NotNull Supplier<Long> idSchuljahresabschnitt;
+
+	/** Das Rechtsverhältnis */
+	private final @NotNull Supplier<String> rechtsverhaeltnis;
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param daten          die Personalabschnittsdaten für den Validator
-	 * @param geburtsdatum   das Geburtsdatum des Lehrers
-	 * @param kontext        der Kontext des Validators
+	 * @param idSchuljahresabschnitt  die ID des Schuljahresabschnittes
+	 * @param rechtsverhaeltnis       das Rechtsverhältnis
+	 * @param geburtsdatum            das Geburtsdatum des Lehrers
+	 * @param kontext                 der Kontext des Validators
 	 */
-	public ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(final @NotNull LehrerPersonalabschnittsdaten daten,
-			final @NotNull DateManager geburtsdatum, final @NotNull ValidatorKontext kontext) {
+	public ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(
+			final @NotNull Supplier<Long> idSchuljahresabschnitt,
+			final @NotNull Supplier<String> rechtsverhaeltnis,
+			final @NotNull Supplier<DateManager> geburtsdatum,
+			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		this.daten = daten;
+		this.idSchuljahresabschnitt = idSchuljahresabschnitt;
+		this.rechtsverhaeltnis = rechtsverhaeltnis;
 		this.geburtsdatum = geburtsdatum;
 	}
 
 	@Override
 	protected boolean pruefe() {
 		// Bestimme das Schuljahr über den Schuljahresabschnitt. Treten dabei Fehler auf, so ist dieser durch einen übergeordneten Validator zu prüfen.
-		final Schuljahresabschnitt schuljahresabschnitt = kontext().getSchuljahresabschnittByID(daten.idSchuljahresabschnitt);
+		final Schuljahresabschnitt schuljahresabschnitt = kontext().getSchuljahresabschnittByID(this.idSchuljahresabschnitt.get());
 		if (schuljahresabschnitt == null)
 			return false;
 		final int schuljahr = schuljahresabschnitt.schuljahr;
 
 		// Bestimme das Rechtsverhältnis. Ist dieses nicht angegeben, so wird im Folgenden von einem sonstigen Rechtsverhältnis ausgegangen
-		final LehrerRechtsverhaeltnis rv = LehrerRechtsverhaeltnis.getBySchluessel(daten.rechtsverhaeltnis);
+		final LehrerRechtsverhaeltnis rv = LehrerRechtsverhaeltnis.getBySchluessel(this.rechtsverhaeltnis.get());
 
 		// Prüfe das Geburtsdatum bzw. das Alter bei den folgenden Rechtsverhältnissen...
 		if (rv.equals(LehrerRechtsverhaeltnis.P))  {
@@ -51,7 +60,7 @@ public final class ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRech
 			final int minJahr = schuljahr - 55; // das erste akzeptierte Geburtsjahr: vor 55 Jahren
 			final int maxJahr = schuljahr - 20; // das letzte akzeptierte Geburtsjahr: vor 20 Jahren
 
-			if (!geburtsdatum.istInJahren(minJahr, maxJahr)) {
+			if (!geburtsdatum.get().istInJahren(minJahr, maxJahr)) {
 				this.addFehler(2, "Der Wert für das Geburtsjahr sollte bei Beamten/-innen auf Probe (Rechtsverhältnis = P)"
 						+ " zwischen " + minJahr + " und " + maxJahr + " liegen. Bitte prüfen!");
 			}

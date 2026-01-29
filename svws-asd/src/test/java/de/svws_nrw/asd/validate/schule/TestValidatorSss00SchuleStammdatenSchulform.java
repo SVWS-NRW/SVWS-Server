@@ -7,7 +7,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import de.svws_nrw.asd.data.schule.SchuleStammdaten;
+import de.svws_nrw.asd.data.statistik.StatistikGesamt;
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.asd.utils.json.JsonReader;
 import de.svws_nrw.asd.validate.ValidatorKontext;
@@ -26,8 +27,9 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
 @DisplayName("Teste den Validator zu Sss00SchuleStammdatenSchulform")
 class TestValidatorSss00SchuleStammdatenSchulform {
 
-	/** Stammdaten der Schule */
-	static final SchuleStammdaten testdaten_001 = JsonReader.fromResource("de/svws_nrw/asd/validate/schule/Testdaten_001_SchuleStammdaten.json", SchuleStammdaten.class);
+	/** Statistikdaten der Schule*/
+	static final StatistikGesamt testdaten_001 =
+			JsonReader.fromResource("de/svws_nrw/asd/validate/Testdaten_001_StatistikGesamt.json", StatistikGesamt.class);
 
 	private static final String TESTDATEN_SSS00 = """
 			'GY'  , true
@@ -54,12 +56,12 @@ class TestValidatorSss00SchuleStammdatenSchulform {
 	@CsvSource(textBlock = TESTDATEN_SSS00)
 
 	void testValidatorSchuleStammdaten_ValideDaten(final String schulform, final boolean result) {
-		// Testdaten setzen
-		testdaten_001.schulform = schulform;
 
 		// Erzeuge den Kontext für die Validierung
-		final ValidatorKontext kontext = new ValidatorKontext(testdaten_001, true);
-		final ValidatorSss00SchuleStammdatenSchulform validator = new ValidatorSss00SchuleStammdatenSchulform(kontext);
+		final ValidatorKontext kontext =
+				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
+						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
+		final ValidatorSss00SchuleStammdatenSchulform validator = new ValidatorSss00SchuleStammdatenSchulform(() -> schulform, kontext);
 
 		assertEquals(result, validator.run());
 	}

@@ -1,4 +1,4 @@
-import { LehrerPersonalabschnittsdaten } from '../../../asd/data/lehrer/LehrerPersonalabschnittsdaten';
+import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
@@ -6,24 +6,24 @@ import { Validator } from '../../../asd/validate/Validator';
 export class ValidatorLppp01LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll extends Validator {
 
 	/**
-	 * Die Lehrer-Personalabschnittsdaten
+	 * Das Pflichtstundensoll
 	 */
-	private readonly daten: LehrerPersonalabschnittsdaten;
+	private readonly pflichtstundensoll: Supplier<number | null>;
 
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param daten     die Daten des Validators
-	 * @param kontext   der Kontext des Validators
+	 * @param pflichtstundensoll    das Pflichtstundensoll
+	 * @param kontext   			der Kontext des Validators
 	 */
-	public constructor(daten: LehrerPersonalabschnittsdaten, kontext: ValidatorKontext) {
+	public constructor(pflichtstundensoll: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
-		this.daten = daten;
+		this.pflichtstundensoll = pflichtstundensoll;
 	}
 
 	protected pruefe(): boolean {
-		const pflichtstundensoll: number | null = this.daten.pflichtstundensoll;
+		const pflichtstundensoll: number | null = this.pflichtstundensoll.get();
 		if (pflichtstundensoll !== null && (pflichtstundensoll < 0.0 || pflichtstundensoll > 41.0)) {
 			this.addFehler(1, "Unzulässiger Wert im Feld 'pflichtstundensoll'. Zulässig sind im Stundenmodell Werte im Bereich von 0,00 bis 41,00 Wochenstunden. Im Minutenmodell zwischen 0,00 und 1845,00 Minuten.");
 			return false;

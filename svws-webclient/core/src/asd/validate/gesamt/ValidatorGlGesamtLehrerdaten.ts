@@ -1,6 +1,6 @@
-import { LehrerPersonaldaten } from '../../../asd/data/lehrer/LehrerPersonaldaten';
-import { LehrerStammdaten } from '../../../asd/data/lehrer/LehrerStammdaten';
+import { LehrerStatistikGesamt } from '../../../asd/data/statistik/LehrerStatistikGesamt';
 import { ValidatorGldGesamtLehrerdatenDuplikate } from '../../../asd/validate/gesamt/ValidatorGldGesamtLehrerdatenDuplikate';
+import type { Supplier } from '../../../java/util/function/Supplier';
 import type { List } from '../../../java/util/List';
 import { ValidatorGlplGesamtLehrerPersonaldatenLehramt } from '../../../asd/validate/gesamt/ValidatorGlplGesamtLehrerPersonaldatenLehramt';
 import { Class } from '../../../java/lang/Class';
@@ -13,14 +13,13 @@ export class ValidatorGlGesamtLehrerdaten extends Validator {
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param listStammdaten      die Liste aller Lehrerstammdaten
-	 * @param listPersonaldaten   die Liste aller Lehrerpersonaldaten
+	 * @param listLehrer          die Liste aller Lehrerdaten
 	 * @param kontext             der Kontext des Validators
 	 */
-	public constructor(listStammdaten: List<LehrerStammdaten>, listPersonaldaten: List<LehrerPersonaldaten>, kontext: ValidatorKontext) {
+	public constructor(listLehrer: Supplier<List<LehrerStatistikGesamt>>, kontext: ValidatorKontext) {
 		super(kontext);
-		this._validatoren.add(new ValidatorGldGesamtLehrerdatenDuplikate(listStammdaten, kontext));
-		this._validatoren.add(new ValidatorGlplGesamtLehrerPersonaldatenLehramt(listPersonaldaten, kontext));
+		this._validatoren.add(new ValidatorGldGesamtLehrerdatenDuplikate(listLehrer, kontext));
+		this._validatoren.add(new ValidatorGlplGesamtLehrerPersonaldatenLehramt(listLehrer, kontext));
 	}
 
 	protected pruefe(): boolean {

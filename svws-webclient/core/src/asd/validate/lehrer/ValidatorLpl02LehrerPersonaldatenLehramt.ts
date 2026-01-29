@@ -1,7 +1,8 @@
-import { LehrerPersonaldaten } from '../../../asd/data/lehrer/LehrerPersonaldaten';
 import { LehrerLehramtEintrag } from '../../../asd/data/lehrer/LehrerLehramtEintrag';
 import { HashMap } from '../../../java/util/HashMap';
 import { LehrerLehramt } from '../../../asd/types/lehrer/LehrerLehramt';
+import type { Supplier } from '../../../java/util/function/Supplier';
+import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import type { JavaMap } from '../../../java/util/JavaMap';
@@ -10,25 +11,25 @@ import { Validator } from '../../../asd/validate/Validator';
 export class ValidatorLpl02LehrerPersonaldatenLehramt extends Validator {
 
 	/**
-	 * Die Lehrer-Personalabschnittsdaten
+	 * Die Lehrämter
 	 */
-	private readonly lehrerPersonaldaten: LehrerPersonaldaten;
+	private readonly lehraemter: Supplier<List<LehrerLehramtEintrag>>;
 
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param lehrerPersonaldaten   die Lehrer-Personaldaten, die geprüft werden sollen
+	 * @param lehraemter   			die Lehrämter, die geprüft werden sollen
 	 * @param kontext               der Kontext des Validators
 	 */
-	public constructor(lehrerPersonaldaten: LehrerPersonaldaten, kontext: ValidatorKontext) {
+	public constructor(lehraemter: Supplier<List<LehrerLehramtEintrag>>, kontext: ValidatorKontext) {
 		super(kontext);
-		this.lehrerPersonaldaten = lehrerPersonaldaten;
+		this.lehraemter = lehraemter;
 	}
 
 	protected pruefe(): boolean {
 		const lehramtMap: JavaMap<number, LehrerLehramtEintrag> = new HashMap<number, LehrerLehramtEintrag>();
-		for (const lehrerLehramtEintrag of this.lehrerPersonaldaten.lehraemter) {
+		for (const lehrerLehramtEintrag of this.lehraemter.get()) {
 			if (lehramtMap.put(lehrerLehramtEintrag.idKatalogLehramt, lehrerLehramtEintrag) !== null) {
 				try {
 					this.addFehler(2, "Das Lehramt '" + LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).text + "' ist mehrfach eingetragen. Bitte löschen Sie die überflüssigen Einträge.");

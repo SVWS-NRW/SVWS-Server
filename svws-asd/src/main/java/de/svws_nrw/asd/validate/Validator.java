@@ -37,6 +37,26 @@ public abstract class Validator extends BasicValidator {
 	 * sondern nur leere Strings.
 	 *
 	 * @param supplier   der Supplier, welcher auch null-Werte für Strings liefern kann
+	 * @param <T>        der Datentyp, der vom Supplier geliefert wird
+	 *
+	 * @return ein Supplier, welcher keine Null-Werte liefert.
+	 */
+	@SuppressWarnings("static-method")
+	protected final <T> @NotNull Supplier<T> getNotNullObjectSupplier(final @NotNull Supplier<@AllowNull T> supplier) {
+		return () -> {
+			final T value = supplier.get();
+			if (value == null)
+				throw new NullPointerException();
+			return value;
+		};
+	}
+
+
+	/**
+	 * Wandelt einen Supplier für Strings in einen Supplier für Strings zurück, welcher keine null-Werte liefert,
+	 * sondern nur leere Strings.
+	 *
+	 * @param supplier   der Supplier, welcher auch null-Werte für Strings liefern kann
 	 *
 	 * @return ein Supplier, welcher keine Null-Werte liefert.
 	 */
@@ -45,6 +65,29 @@ public abstract class Validator extends BasicValidator {
 		return () -> {
 			final String value = supplier.get();
 			return (value == null) ? "" : value;
+		};
+	}
+
+
+	/**
+	 * Wandelt einen Supplier für Strings in einen Supplier für Strings zurück, welcher keine null-Werte liefert,
+	 * sondern nur leere Strings.
+	 *
+	 * @param supplier   der Supplier, welcher auch null-Werte für Strings liefern kann
+	 *
+	 * @return ein Supplier, welcher keine Null-Werte liefert.
+	 */
+	@SuppressWarnings("static-method")
+	protected final @NotNull Supplier<@AllowNull DateManager> getDateManagerSupplier(final @NotNull Supplier<@AllowNull String> supplier) {
+		return () -> {
+			final String value = supplier.get();
+			if (value == null)
+				return null;
+			try {
+				return DateManager.from(value);
+			} catch (@SuppressWarnings("unused") final InvalidDateException e) {
+				return null;
+			}
 		};
 	}
 

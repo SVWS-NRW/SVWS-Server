@@ -1,7 +1,7 @@
 import { ref, shallowRef } from "vue";
 
 import type { BenutzerDaten, DBSchemaListeEintrag, List, SchuleStammdaten } from "@core";
-import { ValidatorKontext, ApiSchema, ApiServer, ApiExternal, BenutzerKompetenz, ServerMode, DeveloperNotificationException, UserNotificationException, OpenApiError } from "@core";
+import { ValidatorKontext, ApiSchema, ApiServer, ApiExternal, BenutzerKompetenz, ServerMode, DeveloperNotificationException, UserNotificationException, OpenApiError, Schulform } from "@core";
 
 import { Config } from "../../../ui/src/utils/Config";
 import { AES } from "~/utils/crypto/aes";
@@ -282,7 +282,7 @@ export class ApiConnection {
 				localStorage.setItem("SVWS-Client Port", url.port);
 			}
 			return list;
-		} catch (error) {
+		} catch {
 			console.log(`Verbindung zum SVWS-Server unter https://${host} fehlgeschlagen`);
 		}
 		const hostname = url.hostname;
@@ -290,7 +290,7 @@ export class ApiConnection {
 			console.log(`Verbinde zum SVWS-Server unter https://${hostname}...`);
 			try {
 				return await this.connect(hostname);
-			} catch (error) {
+			} catch {
 				console.log(`Verbindung zum SVWS-Server unter https://${hostname} fehlgeschlagen.`);
 			}
 		}
@@ -299,7 +299,7 @@ export class ApiConnection {
 			console.log(`Verbinde zum SVWS-Server unter https://${hostname}:${port}...`);
 			try {
 				return await this.connect(`${hostname}:${port}`);
-			} catch (error) {
+			} catch {
 				console.log(`Verbindung zum SVWS-Server unter https://${hostname}:${port} fehlgeschlagen.`);
 			}
 		}
@@ -409,11 +409,13 @@ export class ApiConnection {
 		try {
 			if ((this._api !== undefined) && (this._schema !== undefined)) {
 				const stammdaten = await this._api.getSchuleStammdaten(this._schema);
-				const kontext = new ValidatorKontext(stammdaten, false);
+				const schulform = Schulform.data().getWertByKuerzelOrException(stammdaten.schulform);
+				const kontext = new ValidatorKontext(stammdaten.schulNr, schulform, stammdaten.abschnitte,
+					stammdaten.idSchuljahresabschnitt, false);
 				this._stammdaten.value = { stammdaten, kontext };
 			}
 			return true;
-		} catch (error) {
+		} catch {
 			this._stammdaten.value = { stammdaten: undefined, kontext: undefined };
 		}
 		return false;

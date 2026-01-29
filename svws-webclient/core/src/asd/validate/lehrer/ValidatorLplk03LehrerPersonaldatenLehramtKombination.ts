@@ -1,6 +1,8 @@
-import { LehrerPersonaldaten } from '../../../asd/data/lehrer/LehrerPersonaldaten';
+import { LehrerLehramtEintrag } from '../../../asd/data/lehrer/LehrerLehramtEintrag';
 import { LehrerLehramt } from '../../../asd/types/lehrer/LehrerLehramt';
 import { LehrerLehramtKatalogEintrag } from '../../../asd/data/lehrer/LehrerLehramtKatalogEintrag';
+import type { Supplier } from '../../../java/util/function/Supplier';
+import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
@@ -8,20 +10,20 @@ import { Validator } from '../../../asd/validate/Validator';
 export class ValidatorLplk03LehrerPersonaldatenLehramtKombination extends Validator {
 
 	/**
-	 * Die Lehrer-Personaldaten
+	 * Die Lehrämter
 	 */
-	private readonly lehrerPersonaldaten: LehrerPersonaldaten;
+	private readonly lehraemter: Supplier<List<LehrerLehramtEintrag>>;
 
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param lehrerPersonaldaten   die Lehrer-Personaldaten, die geprüft werden sollen
+	 * @param lehraemter   			die Lehrämter, die geprüft werden sollen
 	 * @param kontext               der Kontext des Validators
 	 */
-	public constructor(lehrerPersonaldaten: LehrerPersonaldaten, kontext: ValidatorKontext) {
+	public constructor(lehraemter: Supplier<List<LehrerLehramtEintrag>>, kontext: ValidatorKontext) {
 		super(kontext);
-		this.lehrerPersonaldaten = lehrerPersonaldaten;
+		this.lehraemter = lehraemter;
 	}
 
 	protected pruefe(): boolean {
@@ -29,7 +31,7 @@ export class ValidatorLplk03LehrerPersonaldatenLehramtKombination extends Valida
 		let anderesLehramtVorhanden: boolean = false;
 		let lehrerLehramtKatalogEintrag: LehrerLehramtKatalogEintrag | null = LehrerLehramt.ID_98.daten(this.kontext().getSchuljahr());
 		if (lehrerLehramtKatalogEintrag !== null) {
-			for (const lehrerLehramtEintrag of this.lehrerPersonaldaten.lehraemter) {
+			for (const lehrerLehramtEintrag of this.lehraemter.get()) {
 				if (lehrerLehramtKatalogEintrag.id === LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).id)
 					lehramtId98Vorhanden = true;
 				else

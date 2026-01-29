@@ -1,5 +1,6 @@
 import { HashMap } from '../../../java/util/HashMap';
-import { LehrerStammdaten } from '../../../asd/data/lehrer/LehrerStammdaten';
+import { LehrerStatistikGesamt } from '../../../asd/data/statistik/LehrerStatistikGesamt';
+import type { Supplier } from '../../../java/util/function/Supplier';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import { Geschlecht } from '../../../asd/types/Geschlecht';
@@ -9,29 +10,30 @@ import { Validator } from '../../../asd/validate/Validator';
 
 export class ValidatorGld02GesamtLehrerdatenDuplikate extends Validator {
 
-	private readonly listLehrerStammdaten: List<LehrerStammdaten>;
+	private readonly listLehrer: Supplier<List<LehrerStatistikGesamt>>;
 
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param listLehrerStammdaten      die Liste aller Lehrerstammdaten
-	 * @param kontext             		der Kontext des Validators
+	 * @param listLehrer          die Liste aller Lehrerstammdaten
+	 * @param kontext             der Kontext des Validators
 	 */
-	public constructor(listLehrerStammdaten: List<LehrerStammdaten>, kontext: ValidatorKontext) {
+	public constructor(listLehrer: Supplier<List<LehrerStatistikGesamt>>, kontext: ValidatorKontext) {
 		super(kontext);
-		this.listLehrerStammdaten = listLehrerStammdaten;
+		this.listLehrer = listLehrer;
 	}
 
 	protected pruefe(): boolean {
 		let success: boolean = true;
-		if (this.listLehrerStammdaten.isEmpty())
+		const list: List<LehrerStatistikGesamt> = this.listLehrer.get();
+		if (list.isEmpty())
 			return success;
-		const keys: JavaMap<string, LehrerStammdaten> = new HashMap<string, LehrerStammdaten>();
-		for (const lehrer of this.listLehrerStammdaten) {
+		const keys: JavaMap<string, LehrerStatistikGesamt> = new HashMap<string, LehrerStatistikGesamt>();
+		for (const lehrer of list) {
 			const geschlecht: Geschlecht | null = Geschlecht.fromValue(lehrer.geschlecht);
 			const key: string = lehrer.nachname + "__" + lehrer.vorname + "__" + ((lehrer.geburtsdatum === null) ? "" : lehrer.geburtsdatum) + "__" + ((geschlecht === null) ? lehrer.geschlecht : geschlecht.kuerzel);
-			const other: LehrerStammdaten | null = keys.put(key, lehrer);
+			const other: LehrerStatistikGesamt | null = keys.put(key, lehrer);
 			if (other === null)
 				continue;
 			const fehlermeldung: string | null = "Lehrkäfte: Bei den IDs " + lehrer.id + " und " + other.id + " kommt die Kombination aus Nachname '" + lehrer.nachname + "', Vorname '" + lehrer.vorname + "', Geburtsdatum '" + lehrer.geburtsdatum + "' und Geschlecht '" + lehrer.geschlecht + "' mehrmals vor. Falls es sich hierbei um eine Person handelt, so fassen Sie die Datensätze bitte unter einer Lehrerabkürzung zusammen.";

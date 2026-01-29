@@ -1,8 +1,8 @@
 package de.svws_nrw.asd.validate.lehrer;
 
 import java.util.Set;
+import java.util.function.Supplier;
 
-import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdaten;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
 import jakarta.validation.constraints.NotNull;
@@ -13,26 +13,33 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart extends Validator {
 
-	/** Die Lehrer-Personalabschnittsdaten */
-	private final @NotNull LehrerPersonalabschnittsdaten daten;
+	/** Die Beschäftigungsart */
+	private final @NotNull Supplier<String> beschaeftigungsart;
+
+	/** Der Einsatzstatus */
+	private final @NotNull Supplier<String> einsatzstatus;
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param daten     die Daten des Validators
+	 * @param beschaeftigungsart     die Beschäftigungsart
+	 * @param einsatzstatus     der Einsatzstatus
 	 * @param kontext   der Kontext des Validators
 	 */
-	public ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(final @NotNull LehrerPersonalabschnittsdaten daten,
+	public ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(
+			final @NotNull Supplier<String> beschaeftigungsart,
+			final @NotNull Supplier<String> einsatzstatus,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		this.daten = daten;
+		this.beschaeftigungsart = beschaeftigungsart;
+		this.einsatzstatus = einsatzstatus;
 	}
 
 
 	@Override
 	protected boolean pruefe() {
-		final String beschaeftigungsart = daten.beschaeftigungsart;
-		final String einsatzstatus = daten.einsatzstatus;
+		final String beschaeftigungsart = this.beschaeftigungsart.get();
+		final String einsatzstatus = this.einsatzstatus.get();
 
 		// LPPB2 ex BI7
 		final Set<String> setEinsatzstatus2 = Set.of("A", "B");

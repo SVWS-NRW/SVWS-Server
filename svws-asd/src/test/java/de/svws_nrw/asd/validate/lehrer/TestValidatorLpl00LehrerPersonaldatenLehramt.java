@@ -12,7 +12,8 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import de.svws_nrw.asd.data.lehrer.LehrerLehramtEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerPersonaldaten;
-import de.svws_nrw.asd.data.schule.SchuleStammdaten;
+import de.svws_nrw.asd.data.statistik.StatistikGesamt;
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.asd.utils.json.JsonReader;
 import de.svws_nrw.asd.validate.ValidatorKontext;
@@ -23,27 +24,20 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
  *   <li> {@link ValidatorLplLehrerPersonaldatenLehramt},
  * </ul>
  * </p>
- *
- * <p> Testdaten:
- *   <ul>
- *     <li> de/svws_nrw/asd/validate/schule/Testdaten_001_SchuleStammdaten.json
- *   </ul>
- * </p>
- *
  */
 @DisplayName("Tests für ValidatorLplLehrerPersonaldatenLehramt")
 class TestValidatorLpl00LehrerPersonaldatenLehramt {
 
-	// id (Lehramt), idLehrer, idKatalogLehramt, Geburtsjahr, Schulform, result
+	// id (Lehramt), idLehrer, idKatalogLehramt, Schulform, result
 	// bei den ids 555,556,666 und 667 wird getestet, ob ein überhaupt ein Lehramt vorliegt
 	private static final String TESTDATEN_LEHRAMT_MEHRMALS = """
-			111,   1,     90,   1999,  GY,	true
-			667,   1,    667,   2005,  GY,	false
+			111,   1,     90,    GY,	true
+			667,   1,    667,    GY,	false
 		""";
 
 	/** Stammdaten der Schule */
-	static final SchuleStammdaten schuleTestdaten_001 =
-			JsonReader.fromResource("de/svws_nrw/asd/validate/schule/Testdaten_001_SchuleStammdaten.json", SchuleStammdaten.class);
+	static final StatistikGesamt testdaten_001 =
+			JsonReader.fromResource("de/svws_nrw/asd/validate/Testdaten_001_StatistikGesamt.json", StatistikGesamt.class);
 
 	/**
 	 * Initialisiert die Core-Types, damit die Tests ausgeführt werden können.
@@ -61,19 +55,18 @@ class TestValidatorLpl00LehrerPersonaldatenLehramt {
 	 * @param id   				die Id des Lehramt-Eintrages
 	 * @param idLehrer			die Id des Lehrers
 	 * @param idKatalogLehramt	die Katalog-ID des Lehramts, welche bei den eingelesenen Testdaten ersetzt wird
-	 * @param geburtsjahr       geburtsjahr
 	 * @param schulform       	schulform
 	 * @param result			gibt an, welches Ergebnis bei den Testdaten erwartet wird
 	 */
 	@DisplayName("Tests für ValidatorLplLehrerPersonaldatenLehramt")
 	@ParameterizedTest
 	@CsvSource(textBlock = TESTDATEN_LEHRAMT_MEHRMALS)
-	void testValidatorLplLehrerPersonaldatenLehramt(final long id, final long idLehrer, final long idKatalogLehramt, final int geburtsjahr, final String schulform, final boolean result) {
+	void testValidatorLplLehrerPersonaldatenLehramt(final long id, final long idLehrer, final long idKatalogLehramt, final String schulform, final boolean result) {
 
 		// Testdaten setzen
 		LehrerPersonaldaten lehrerPersonaldaten = new LehrerPersonaldaten();
 		lehrerPersonaldaten.id = 1;
-		schuleTestdaten_001.schulform = schulform;
+		testdaten_001.schule.schulform = schulform;
 
 		LehrerLehramtEintrag lehrerLehramtEintrag1 = new LehrerLehramtEintrag();
 		LehrerLehramtEintrag lehrerLehramtEintrag2 = new LehrerLehramtEintrag();
@@ -106,8 +99,9 @@ class TestValidatorLpl00LehrerPersonaldatenLehramt {
 		lehrerPersonaldaten.lehraemter.addAll(listLehrerLehramtEintrag);
 
 		// Erzeuge den Kontext für die Validierung
-		final ValidatorKontext kontext = new ValidatorKontext(schuleTestdaten_001, true);
-		final ValidatorLpl00LehrerPersonaldatenLehramt validator = new ValidatorLpl00LehrerPersonaldatenLehramt(lehrerPersonaldaten, kontext);
+		final ValidatorKontext kontext = new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
+				testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
+		final ValidatorLpl00LehrerPersonaldatenLehramt validator = new ValidatorLpl00LehrerPersonaldatenLehramt(() -> listLehrerLehramtEintrag, () -> idLehrer, kontext);
 		assertEquals(result, validator.run());
 	}
 

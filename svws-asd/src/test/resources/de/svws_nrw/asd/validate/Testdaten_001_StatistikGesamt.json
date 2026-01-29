@@ -1,5 +1,5 @@
 {
-  "stammdaten": {
+  "schule": {
     "schulNr": 168890,
     "schulform": "GY",
     "bezeichnung1": "Gymnasium",
@@ -15,15 +15,6 @@
     "email": "none@schule.nrw.de",
     "webAdresse": null,
     "idSchuljahresabschnitt": 1,
-    "anzJGS_Jahr": 1,
-    "schuleAbschnitte": {
-      "anzahlAbschnitte": 2,
-      "abschnittBez": "Halbjahr",
-      "bezAbschnitte": [
-        "1. Hj.",
-        "2. Hj."
-      ]
-    },
     "dauerUnterrichtseinheit": 45,
     "abschnitte": [
       {
@@ -157,109 +148,22 @@
         "schuljahr": 2019,
         "abschnitt": 1,
         "idVorigerAbschnitt": 1,
+        "idFolgeAbschnitt": 20
+      },
+      {
+        "id": 20,
+        "schuljahr": 2024,
+        "abschnitt": 2,
+        "idVorigerAbschnitt": 19,
         "idFolgeAbschnitt": null
       }
     ]
-    },
-    "lehrerStammdaten": [
-    {
-  	  "id": 1,
-      "kuerzel": "KRZ",
-      "personalTyp": "LEHRKRAFT",
-      "anrede": "Frau",
-      "titel": "",
-      "amtsbezeichnung": "OStR",
-      "nachname": "Müller",
-      "vorname": "Frauke",
-      "geschlecht": 4,
-      "geburtsdatum": "1994-05-04",
-      "staatsangehoerigkeitID": "000",
-      "strassenname": "Völklinger Straße",
-      "hausnummer": "49",
-      "hausnummerZusatz": null,
-      "wohnortID": null,
-      "ortsteilID": null,
-      "telefon": "0211 5867 40",
-      "telefonMobil": null,
-      "emailPrivat": "frauke.mueller@web.de",
-      "emailDienstlich": "frauke.mueller@schule.nrw.de",
-      "foto": null,
-      "istSichtbar": true,
-      "istRelevantFuerStatistik": true,
-      "leitungsfunktionen": [ { 
-		   "id": 1,
-		   "idLeitungsfunktion": 1,
-		   "bezeichnung": "Schulleiter",
-		   "idLehrer": 4711,
-		   "beginn": "2024-08-01",
-		   "ende": "2025-07-31"
-    	} ]
-	},
-	{
-  	  "id": 2,
-      "kuerzel": "KRZ",
-      "personalTyp": "LEHRKRAFT",
-      "anrede": "Herr",
-      "titel": "",
-      "amtsbezeichnung": "OStR",
-      "nachname": "Gertner",
-      "vorname": "Klars",
-      "geschlecht": 3,
-      "geburtsdatum": "1980-04-14",
-      "staatsangehoerigkeitID": "000",
-      "strassenname": "Völklinger Straße",
-      "hausnummer": "49",
-      "hausnummerZusatz": null,
-      "wohnortID": null,
-      "ortsteilID": null,
-      "telefon": "0211 5867 40",
-      "telefonMobil": null,
-      "emailPrivat": "klars.gertner@web.de",
-      "emailDienstlich": "klars.gertner@schule.nrw.de",
-      "foto": null,
-      "istSichtbar": true,
-      "istRelevantFuerStatistik": true,
-      "leitungsfunktionen": [ { 
-		   "id": 1,
-		   "idLeitungsfunktion": 1,
-		   "bezeichnung": "Schulleiter",
-		   "idLehrer": 4711,
-		   "beginn": "2024-08-01",
-		   "ende": "2025-07-31"
-    	} ]
-	},
-	{
-  	  "id": 3,
-      "kuerzel": "KRZ",
-      "personalTyp": "LEHRKRAFT",
-      "anrede": "Herr",
-      "titel": "",
-      "amtsbezeichnung": "OStR",
-      "nachname": "Knioba",
-      "vorname": "Franze",
-      "geschlecht": 3,
-      "geburtsdatum": "2000-12-07",
-      "staatsangehoerigkeitID": "000",
-      "strassenname": "Völklinger Straße",
-      "hausnummer": "49",
-      "hausnummerZusatz": null,
-      "wohnortID": null,
-      "ortsteilID": null,
-      "telefon": "0211 5867 40",
-      "telefonMobil": null,
-      "emailPrivat": "franze.knioba@web.de",
-      "emailDienstlich": "franze.knioba@schule.nrw.de",
-      "foto": null,
-      "istSichtbar": true,
-      "istRelevantFuerStatistik": true,
-      "leitungsfunktionen": [ { 
-		   "id": 1,
-		   "idLeitungsfunktion": 1,
-		   "bezeichnung": "Schulleiter",
-		   "idLehrer": 4711,
-		   "beginn": "2024-08-01",
-		   "ende": "2025-07-31"
-    	} ]
-	}
-    ]
+  },
+  "lehrer": [],
+  "klassen": [],
+  "schueler": [],
+  "jahrgaenge": [],
+  "orte": [],
+  "foederschwerpunkte": [],
+  "religionen": []
 }

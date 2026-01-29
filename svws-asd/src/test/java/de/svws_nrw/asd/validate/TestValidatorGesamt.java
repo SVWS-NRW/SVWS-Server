@@ -6,7 +6,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import de.svws_nrw.asd.data.schule.SchuleStatistikdatenGesamt;
+import de.svws_nrw.asd.data.statistik.StatistikGesamt;
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.asd.utils.json.JsonReader;
 
@@ -24,8 +25,8 @@ import de.svws_nrw.asd.utils.json.JsonReader;
 class TestValidatorGesamt {
 
 	/** Statistikdaten der Schule */
-	static final SchuleStatistikdatenGesamt testdaten_001 =
-			JsonReader.fromResource("de/svws_nrw/asd/validate/Testdaten_001_SchuleStatistikdatenGesamt.json", SchuleStatistikdatenGesamt.class);
+	static final StatistikGesamt testdaten_001 =
+			JsonReader.fromResource("de/svws_nrw/asd/validate/Testdaten_001_StatistikGesamt.json", StatistikGesamt.class);
 
 	/**
 	 * Initialisiert die Core-Types, damit die Tests ausgeführt werden können.
@@ -49,8 +50,10 @@ class TestValidatorGesamt {
 	@DisplayName("Teste CoreType Note: Anzahl der vorhandenen Werte.")
 	void test001() {
 		// Erzeuge den Kontext für die Validierung
-		final ValidatorKontext kontext = new ValidatorKontext(testdaten_001.stammdaten, true);
-		final ValidatorGesamt validator = new ValidatorGesamt(testdaten_001, kontext);
+		final ValidatorKontext kontext =
+				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
+						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
+		final ValidatorGesamt validator = new ValidatorGesamt(() -> testdaten_001, kontext);
 		assertEquals(true, validator.run());
 	}
 

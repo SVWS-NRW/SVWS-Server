@@ -1,8 +1,11 @@
-import { ValidatorFehlerart } from '../../asd/validate/ValidatorFehlerart';
 import { ValidatorManager } from '../../asd/validate/ValidatorManager';
 import { BasicValidator } from '../../asd/validate/BasicValidator';
 import { ArrayList } from '../../java/util/ArrayList';
 import { ValidatorFehler } from '../../asd/validate/ValidatorFehler';
+import { Exception } from '../../java/lang/Exception';
+import { ValidatorFehlerart } from '../../asd/validate/ValidatorFehlerart';
+import { DateManager } from '../../asd/validate/DateManager';
+import { NullPointerException } from '../../java/lang/NullPointerException';
 import type { List } from '../../java/util/List';
 import type { Supplier } from '../../java/util/function/Supplier';
 import { Class } from '../../java/lang/Class';
@@ -37,6 +40,24 @@ export abstract class Validator extends BasicValidator {
 	 * sondern nur leere Strings.
 	 *
 	 * @param supplier   der Supplier, welcher auch null-Werte für Strings liefern kann
+	 * @param <T>        der Datentyp, der vom Supplier geliefert wird
+	 *
+	 * @return ein Supplier, welcher keine Null-Werte liefert.
+	 */
+	protected getNotNullObjectSupplier<T>(supplier: Supplier<T | null>): Supplier<T> {
+		return { get: () => {
+			const value: T | null = supplier.get();
+			if (value === null)
+				throw new NullPointerException()
+			return value;
+		} };
+	}
+
+	/**
+	 * Wandelt einen Supplier für Strings in einen Supplier für Strings zurück, welcher keine null-Werte liefert,
+	 * sondern nur leere Strings.
+	 *
+	 * @param supplier   der Supplier, welcher auch null-Werte für Strings liefern kann
 	 *
 	 * @return ein Supplier, welcher keine Null-Werte liefert.
 	 */
@@ -44,6 +65,27 @@ export abstract class Validator extends BasicValidator {
 		return { get: () => {
 			const value: string | null = supplier.get();
 			return (value === null) ? "" : value;
+		} };
+	}
+
+	/**
+	 * Wandelt einen Supplier für Strings in einen Supplier für Strings zurück, welcher keine null-Werte liefert,
+	 * sondern nur leere Strings.
+	 *
+	 * @param supplier   der Supplier, welcher auch null-Werte für Strings liefern kann
+	 *
+	 * @return ein Supplier, welcher keine Null-Werte liefert.
+	 */
+	protected getDateManagerSupplier(supplier: Supplier<string | null>): Supplier<DateManager | null> {
+		return { get: () => {
+			const value: string | null = supplier.get();
+			if (value === null)
+				return null;
+			try {
+				return DateManager.from(value);
+			} catch(e : any) {
+				return null;
+			}
 		} };
 	}
 

@@ -1,5 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { LehrerPersonalabschnittsdaten } from '../../../asd/data/lehrer/LehrerPersonalabschnittsdaten';
+import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
@@ -7,26 +7,42 @@ import { Validator } from '../../../asd/validate/Validator';
 export class ValidatorLppb03LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart extends Validator {
 
 	/**
-	 * Die Lehrer-Personalabschnittsdaten
+	 * Die Beschäftigungsart
 	 */
-	private readonly daten: LehrerPersonalabschnittsdaten;
+	private readonly beschaeftigungsart: Supplier<string>;
+
+	/**
+	 * Der Einsatzstatus
+	 */
+	private readonly einsatzstatus: Supplier<string>;
+
+	/**
+	 * Das Pflichtstundensoll
+	 */
+	private readonly pflichtstundensoll: Supplier<number | null>;
 
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param daten     die Daten des Validators
-	 * @param kontext   der Kontext des Validators
+	 * @param beschaeftigungsart     	die Beschäftigungsart
+	 * @param einsatzstatus     		der Einsatzstatus
+	 * @param pflichtstundensoll     	das Pflichtstundensoll
+	 * @param kontext   				der Kontext des Validators
 	 */
-	public constructor(daten: LehrerPersonalabschnittsdaten, kontext: ValidatorKontext) {
+	public constructor(beschaeftigungsart: Supplier<string>, einsatzstatus: Supplier<string>, pflichtstundensoll: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
-		this.daten = daten;
+		this.beschaeftigungsart = beschaeftigungsart;
+		this.einsatzstatus = einsatzstatus;
+		this.pflichtstundensoll = pflichtstundensoll;
 	}
 
 	protected pruefe(): boolean {
-		const beschaeftigungsart: string | null = this.daten.beschaeftigungsart;
-		const einsatzstatus: string | null = this.daten.einsatzstatus;
-		const pflichtstundensoll: number | null = this.daten.pflichtstundensoll;
+		const beschaeftigungsart: string | null = this.beschaeftigungsart.get();
+		const einsatzstatus: string | null = this.einsatzstatus.get();
+		const pflichtstundensoll: number | null = this.pflichtstundensoll.get();
+		if (pflichtstundensoll === null)
+			return true;
 		const fehlertext3: string | null = "Laut Ihren Angaben handelt es sich um eine voll abgeordnete Lehrkraft mit Gestellungsvertrag. Es ist zu erwarten, dass eine Lehrkraft mit Gestellungsvertrag Unterricht an Ihrer Schule erteilt. Bitte überprüfen Sie Ihre Angaben.";
 		if (JavaObject.equalsTranspiler("G", (beschaeftigungsart)) && JavaObject.equalsTranspiler("A", (einsatzstatus)) && pflichtstundensoll === 0) {
 			this.addFehler(3, fehlertext3);

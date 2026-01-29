@@ -7,7 +7,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import de.svws_nrw.asd.data.schule.SchuleStammdaten;
+import de.svws_nrw.asd.data.statistik.StatistikGesamt;
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.asd.utils.json.JsonReader;
 import de.svws_nrw.asd.validate.ValidatorKontext;
@@ -18,14 +19,6 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
  *   <li> {@link ValidatorLsv07LehrerStammdatenVorname},
  * </ul>
  * </p>
- *
- * <p> Testdaten:
- *   <ul>
- *     <li> de/svws_nrw/asd/validate/schule/Testdaten_001_SchuleStammdaten.json
- *     <li> de/svws_nrw/asd/validate/lehrer/Testdaten_001_LehrerStammdaten.json
- *   </ul>
- * </p>
- *
  * Die Testdaten sind fehlerfrei und werden mit Jackson in die entsprechende statische Datenstruktur eingelesen.
  *
  * Für jeden Testfall ist eine Methode vorgesehen, in der mittels setzeTestdaten(...) die zugehörigen Testfälle erzeugt werden.
@@ -43,8 +36,8 @@ class TestValidatorLsv07LehrerStammdatenVorname {
 		""";
 
 	/** Stammdaten der Schule */
-	static final SchuleStammdaten schuleTestdaten_001 =
-			JsonReader.fromResource("de/svws_nrw/asd/validate/schule/Testdaten_001_SchuleStammdaten.json", SchuleStammdaten.class);
+	static final StatistikGesamt testdaten_001 =
+			JsonReader.fromResource("de/svws_nrw/asd/validate/Testdaten_001_StatistikGesamt.json", StatistikGesamt.class);
 
 	/**
 	 * Initialisiert die Core-Types, damit die Tests ausgeführt werden können.
@@ -68,7 +61,8 @@ class TestValidatorLsv07LehrerStammdatenVorname {
 	void testValidatorLehrerStammdaten(final String vorname, final boolean result) {
 
 		// Erzeuge den Kontext für die Validierung
-		final ValidatorKontext kontext = new ValidatorKontext(schuleTestdaten_001, true);
+		final ValidatorKontext kontext = new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
+				testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 		final ValidatorLsv07LehrerStammdatenVorname validator = new ValidatorLsv07LehrerStammdatenVorname(() -> vorname, kontext);
 		assertEquals(result, validator.run());
 	}

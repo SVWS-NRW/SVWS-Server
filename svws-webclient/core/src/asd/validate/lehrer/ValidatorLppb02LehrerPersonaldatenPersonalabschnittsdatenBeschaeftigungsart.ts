@@ -1,7 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import type { JavaSet } from '../../../java/util/JavaSet';
 import { java_util_Set_of } from '../../../java/util/JavaSet';
-import { LehrerPersonalabschnittsdaten } from '../../../asd/data/lehrer/LehrerPersonalabschnittsdaten';
+import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
@@ -9,25 +9,32 @@ import { Validator } from '../../../asd/validate/Validator';
 export class ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart extends Validator {
 
 	/**
-	 * Die Lehrer-Personalabschnittsdaten
+	 * Die Beschäftigungsart
 	 */
-	private readonly daten: LehrerPersonalabschnittsdaten;
+	private readonly beschaeftigungsart: Supplier<string>;
+
+	/**
+	 * Der Einsatzstatus
+	 */
+	private readonly einsatzstatus: Supplier<string>;
 
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param daten     die Daten des Validators
+	 * @param beschaeftigungsart     die Beschäftigungsart
+	 * @param einsatzstatus     der Einsatzstatus
 	 * @param kontext   der Kontext des Validators
 	 */
-	public constructor(daten: LehrerPersonalabschnittsdaten, kontext: ValidatorKontext) {
+	public constructor(beschaeftigungsart: Supplier<string>, einsatzstatus: Supplier<string>, kontext: ValidatorKontext) {
 		super(kontext);
-		this.daten = daten;
+		this.beschaeftigungsart = beschaeftigungsart;
+		this.einsatzstatus = einsatzstatus;
 	}
 
 	protected pruefe(): boolean {
-		const beschaeftigungsart: string | null = this.daten.beschaeftigungsart;
-		const einsatzstatus: string | null = this.daten.einsatzstatus;
+		const beschaeftigungsart: string | null = this.beschaeftigungsart.get();
+		const einsatzstatus: string | null = this.einsatzstatus.get();
 		const setEinsatzstatus2: JavaSet<string> | null = java_util_Set_of("A", "B");
 		const fehlertext2: string | null = "Bei einer unentgeltlich beschäftigten Lehrkraft (Feld 'Beschäftigungsart' = 'Unentgeltlich Beschäftigte') dürfen im Feld 'Einsatzstatus' nicht die Einträge 'Stammschule, ganz oder teilweise auch an anderen Schulen tätig' oder 'nicht Stammschule, aber auch hier tätig' eingetragen sein.";
 		if (setEinsatzstatus2.contains(einsatzstatus) && JavaObject.equalsTranspiler("X", (beschaeftigungsart))) {

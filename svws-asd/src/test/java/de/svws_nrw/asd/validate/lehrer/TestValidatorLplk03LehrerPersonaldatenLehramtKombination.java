@@ -12,7 +12,8 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import de.svws_nrw.asd.data.lehrer.LehrerLehramtEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerPersonaldaten;
-import de.svws_nrw.asd.data.schule.SchuleStammdaten;
+import de.svws_nrw.asd.data.statistik.StatistikGesamt;
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.asd.utils.json.JsonReader;
 import de.svws_nrw.asd.validate.ValidatorKontext;
@@ -37,14 +38,14 @@ class TestValidatorLplk03LehrerPersonaldatenLehramtKombination {
 	// id1 (Lehramt), idLehrer1, idKatalogLehramt1, id2 (Lehramt), idLehrer2, idKatalogLehramt2, id3 (Lehramt), idLehrer3, idKatalogLehramt3, result
 	// idKatalogLehramt = 120 entspricht ID_98
 	private static final String TESTDATEN_LEHRAMT_KOMBINATIONEN = """
-			111,   1,    119,	112,   1,    120,	113,   1,    120,	false
-			111,   1,    119,	112,   1,    122,	113,   1,    124,	true
-			111,   1,    120,	112,   1,    120,	113,   1,    120,	true
-		""";
+	111,   1,    119,	112,   1,    120,	113,   1,    120,	false
+	111,   1,    119,	112,   1,    122,	113,   1,    124,	true
+	111,   1,    120,	112,   1,    120,	113,   1,    120,	true
+""";
 
 	/** Stammdaten der Schule */
-	static final SchuleStammdaten schuleTestdaten_001 =
-			JsonReader.fromResource("de/svws_nrw/asd/validate/schule/Testdaten_001_SchuleStammdaten.json", SchuleStammdaten.class);
+	static final StatistikGesamt testdaten_001 =
+			JsonReader.fromResource("de/svws_nrw/asd/validate/Testdaten_001_StatistikGesamt.json", StatistikGesamt.class);
 
 	/**
 	 * Initialisiert die Core-Types, damit die Tests ausgeführt werden können.
@@ -99,8 +100,11 @@ class TestValidatorLplk03LehrerPersonaldatenLehramtKombination {
 		lehrerPersonaldaten.lehraemter.addAll(listLehrerLehramtEintrag);
 
 		// Erzeuge den Kontext für die Validierung
-		final ValidatorKontext kontext = new ValidatorKontext(schuleTestdaten_001, true);
-		final ValidatorLplk03LehrerPersonaldatenLehramtKombination validator = new ValidatorLplk03LehrerPersonaldatenLehramtKombination(lehrerPersonaldaten, kontext);
+		final ValidatorKontext kontext = new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
+				testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
+		final ValidatorLplk03LehrerPersonaldatenLehramtKombination validator = new ValidatorLplk03LehrerPersonaldatenLehramtKombination(
+				() -> listLehrerLehramtEintrag,
+				kontext);
 		assertEquals(result, validator.run());
 	}
 

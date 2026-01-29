@@ -2,13 +2,17 @@ package de.svws_nrw.asd.validate.gesamt;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
-import de.svws_nrw.asd.data.schule.SchuleStatistikdatenGesamt;
+import de.svws_nrw.asd.data.statistik.LehrerStatistikGesamt;
+import de.svws_nrw.asd.data.statistik.StatistikGesamt;
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.asd.utils.json.JsonReader;
 import de.svws_nrw.asd.validate.ValidatorKontext;
@@ -19,9 +23,9 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
 @DisplayName("Teste den Validator Gld02 für die Duplikatprüfung bei Lehrerdaten von Schulen")
 class TestValidatorGld02GesamtLehrerdatenDuplikate {
 
-	/** Statistikdaten der Schule für ValidatorGesamtLehrerdatenDuplikate*/
-	static final SchuleStatistikdatenGesamt testdaten_001_Lehrerduplikate =
-			JsonReader.fromResource("de/svws_nrw/asd/validate/Testdaten_001_SchuleStatistikdatenGesamt_Lehrerduplikate.json", SchuleStatistikdatenGesamt.class);
+	/** Statistikdaten der Schule*/
+	static final StatistikGesamt testdaten_001 =
+			JsonReader.fromResource("de/svws_nrw/asd/validate/Testdaten_001_StatistikGesamt.json", StatistikGesamt.class);
 
 	private static final String TESTDATEN_LEHRERDATEN_DUPLIKATE = """
 			1  ,'Müller'   ,'Frauke'   ,'1994-05-04'	,4,	false
@@ -35,12 +39,6 @@ class TestValidatorGld02GesamtLehrerdatenDuplikate {
 			4  ,'Knioba'   ,'Franze'   ,'1992-12-07'	,3,	true
 			4  ,'Knioba'   ,'Franze'   ,'2000-12-07'	,4,	true
 		""";
-
-
-
-	/** JSON-Testdatei mit drei Lehrerstammdatensätzen, welche jeweils um den einzelnen zu prüfenden Testfall erweitert wird */
-	private SchuleStatistikdatenGesamt testdaten_001_LehrerduplikateErweitert;
-
 
 	/**
 	 * Initialisiert die Core-Types, damit die Tests ausgeführt werden können.
@@ -70,22 +68,59 @@ class TestValidatorGld02GesamtLehrerdatenDuplikate {
 	@CsvSource(textBlock = TESTDATEN_LEHRERDATEN_DUPLIKATE)
 	void testValidatorGld02GesamtLehrerdatenDuplikate(final long id, final String nachname, final String vorname, final String geburtsdatum,
 			final int geschlecht, final boolean result) {
-		// Testdatensatz setzen
-		final LehrerStammdaten lehrerTestdaten_001 = new LehrerStammdaten();
-		lehrerTestdaten_001.id = id;
-		lehrerTestdaten_001.nachname = nachname;
-		lehrerTestdaten_001.vorname = vorname;
-		lehrerTestdaten_001.geburtsdatum = geburtsdatum;
-		lehrerTestdaten_001.geschlecht = geschlecht;
 
-		testdaten_001_LehrerduplikateErweitert = JsonReader
-				.fromResource("de/svws_nrw/asd/validate/Testdaten_001_SchuleStatistikdatenGesamt_Lehrerduplikate.json", SchuleStatistikdatenGesamt.class);
-		testdaten_001_LehrerduplikateErweitert.lehrerStammdaten.add(lehrerTestdaten_001);
+		// 1. Statische Basis-Daten erstellen
+		final LehrerStatistikGesamt lehrerStatistikGesamt1 = new LehrerStatistikGesamt();
+		final LehrerStatistikGesamt lehrerStatistikGesamt2 = new LehrerStatistikGesamt();
+		final LehrerStatistikGesamt lehrerStatistikGesamt3 = new LehrerStatistikGesamt();
 
-		// Erzeuge den Kontext für die Validierung
-		final ValidatorKontext kontext = new ValidatorKontext(testdaten_001_LehrerduplikateErweitert.stammdaten, true);
+		// Lehrer 1
+		lehrerStatistikGesamt1.id = 1;
+		lehrerStatistikGesamt1.nachname = "Müller";
+		lehrerStatistikGesamt1.vorname = "Frauke";
+		lehrerStatistikGesamt1.geburtsdatum = "1994-05-04";
+		lehrerStatistikGesamt1.geschlecht = 4;
+
+		// Lehrer 2
+		lehrerStatistikGesamt2.id = 2;
+		lehrerStatistikGesamt2.nachname = "Gertner";
+		lehrerStatistikGesamt2.vorname = "Klars";
+		lehrerStatistikGesamt2.geburtsdatum = "1980-04-14";
+		lehrerStatistikGesamt2.geschlecht = 3;
+
+		// Lehrer 3
+		lehrerStatistikGesamt3.id = 3;
+		lehrerStatistikGesamt3.nachname = "Knioba";
+		lehrerStatistikGesamt3.vorname = "Franze";
+		lehrerStatistikGesamt3.geburtsdatum = "2000-12-07";
+		lehrerStatistikGesamt3.geschlecht = 3;
+
+		// Test-Objekt aus Parametern erstellen
+		final LehrerStatistikGesamt lehrerTest = new LehrerStatistikGesamt();
+		lehrerTest.id = id;
+		lehrerTest.nachname = nachname;
+		lehrerTest.vorname = vorname;
+		lehrerTest.geburtsdatum = geburtsdatum;
+		lehrerTest.geschlecht = geschlecht;
+
+		// 3. Liste befüllen
+		final List<LehrerStatistikGesamt> listLehrerStatistikGesamt = new ArrayList<>();
+		listLehrerStatistikGesamt.add(lehrerStatistikGesamt1);
+		listLehrerStatistikGesamt.add(lehrerStatistikGesamt2);
+		listLehrerStatistikGesamt.add(lehrerStatistikGesamt3);
+
+		// Das Test-Objekt hinzufügen, um zu prüfen, ob es Duplikate auslöst
+		listLehrerStatistikGesamt.add(lehrerTest);
+
+		final ValidatorKontext kontext =
+				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
+						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
+
 		final ValidatorGld02GesamtLehrerdatenDuplikate validator =
-				new ValidatorGld02GesamtLehrerdatenDuplikate(testdaten_001_LehrerduplikateErweitert.lehrerStammdaten, kontext);
+				new ValidatorGld02GesamtLehrerdatenDuplikate(
+						() -> listLehrerStatistikGesamt,
+						kontext);
+
 		assertEquals(result, validator.run());
 	}
 

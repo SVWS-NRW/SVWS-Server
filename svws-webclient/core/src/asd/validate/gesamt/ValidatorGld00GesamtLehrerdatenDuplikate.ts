@@ -1,5 +1,6 @@
 import type { JavaSet } from '../../../java/util/JavaSet';
-import { LehrerStammdaten } from '../../../asd/data/lehrer/LehrerStammdaten';
+import { LehrerStatistikGesamt } from '../../../asd/data/statistik/LehrerStatistikGesamt';
+import type { Supplier } from '../../../java/util/function/Supplier';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
@@ -8,26 +9,27 @@ import { HashSet } from '../../../java/util/HashSet';
 
 export class ValidatorGld00GesamtLehrerdatenDuplikate extends Validator {
 
-	private readonly listLehrerStammdaten: List<LehrerStammdaten>;
+	private readonly listLehrer: Supplier<List<LehrerStatistikGesamt>>;
 
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param listLehrerStammdaten      die Liste aller Lehrerstammdaten
-	 * @param kontext             		der Kontext des Validators
+	 * @param listLehrer          die Liste aller Lehrerstammdaten
+	 * @param kontext             der Kontext des Validators
 	 */
-	public constructor(listLehrerStammdaten: List<LehrerStammdaten>, kontext: ValidatorKontext) {
+	public constructor(listLehrer: Supplier<List<LehrerStatistikGesamt>>, kontext: ValidatorKontext) {
 		super(kontext);
-		this.listLehrerStammdaten = listLehrerStammdaten;
+		this.listLehrer = listLehrer;
 	}
 
 	protected pruefe(): boolean {
 		let success: boolean = true;
-		if (this.listLehrerStammdaten.isEmpty())
+		const list: List<LehrerStatistikGesamt> = this.listLehrer.get();
+		if (list.isEmpty())
 			return success;
 		const ids: JavaSet<number> = new HashSet<number>();
-		for (const lehrer of this.listLehrerStammdaten) {
+		for (const lehrer of list) {
 			const istNeu: boolean = ids.add(lehrer.id);
 			if (!istNeu) {
 				this.addFehler(0, "Lehrkäfte: Die ID " + lehrer.id + " kommt in der Liste mehrfach vor.");

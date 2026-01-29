@@ -13,7 +13,7 @@ export class ValidatorLsgLehrerStammdatenGeschlecht extends Validator {
 	 * @param daten     das Geschlecht des Lehrers
 	 * @param kontext   der Kontext des Validators
 	 */
-	public constructor(daten: Supplier<number>, kontext: ValidatorKontext) {
+	public constructor(daten: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._validatoren.add(new ValidatorLsg00LehrerStammdatenGeschlecht(daten, kontext));
 	}

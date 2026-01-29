@@ -1,11 +1,12 @@
 package de.svws_nrw.asd.validate.lehrer;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import de.svws_nrw.asd.data.CoreTypeException;
 import de.svws_nrw.asd.data.lehrer.LehrerLehramtEintrag;
-import de.svws_nrw.asd.data.lehrer.LehrerPersonaldaten;
 import de.svws_nrw.asd.types.lehrer.LehrerLehramt;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
@@ -17,18 +18,18 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class ValidatorLpl02LehrerPersonaldatenLehramt extends Validator {
 
-	/** Die Lehrer-Personalabschnittsdaten */
-	private final @NotNull LehrerPersonaldaten lehrerPersonaldaten;
+	/** Die Lehrämter */
+	private final @NotNull Supplier<List<LehrerLehramtEintrag>> lehraemter;
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param lehrerPersonaldaten   die Lehrer-Personaldaten, die geprüft werden sollen
+	 * @param lehraemter   			die Lehrämter, die geprüft werden sollen
 	 * @param kontext               der Kontext des Validators
 	 */
-	public ValidatorLpl02LehrerPersonaldatenLehramt(final @NotNull LehrerPersonaldaten lehrerPersonaldaten, final @NotNull ValidatorKontext kontext) {
+	public ValidatorLpl02LehrerPersonaldatenLehramt(final @NotNull Supplier<List<LehrerLehramtEintrag>> lehraemter, final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		this.lehrerPersonaldaten = lehrerPersonaldaten;
+		this.lehraemter = lehraemter;
 	}
 
 	@Override
@@ -37,7 +38,7 @@ public final class ValidatorLpl02LehrerPersonaldatenLehramt extends Validator {
 		// Fehlerkürzel: LPL2 Überprüfung, ob bei einer Lehrerkraft ein Lehramt mehrmals eingetragen wurde
 		final @NotNull Map<Long, LehrerLehramtEintrag> lehramtMap = new HashMap<>();
 
-		for (final @NotNull LehrerLehramtEintrag lehrerLehramtEintrag : lehrerPersonaldaten.lehraemter) {
+		for (final @NotNull LehrerLehramtEintrag lehrerLehramtEintrag : this.lehraemter.get()) {
 			// Ermittlung des aktuell gültigen Lehramtstextes aus der LehrerLehramt.json-Datei
 			if (lehramtMap.put(lehrerLehramtEintrag.idKatalogLehramt, lehrerLehramtEintrag) != null) {
 				try {

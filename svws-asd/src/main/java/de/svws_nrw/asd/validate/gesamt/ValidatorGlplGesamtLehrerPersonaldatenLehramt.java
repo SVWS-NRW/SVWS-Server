@@ -1,8 +1,9 @@
 package de.svws_nrw.asd.validate.gesamt;
 
 import java.util.List;
+import java.util.function.Supplier;
 
-import de.svws_nrw.asd.data.lehrer.LehrerPersonaldaten;
+import de.svws_nrw.asd.data.statistik.LehrerStatistikGesamt;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
 import jakarta.validation.constraints.NotNull;
@@ -16,13 +17,15 @@ public final class ValidatorGlplGesamtLehrerPersonaldatenLehramt extends Validat
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param listPersonaldaten   die Liste der Lehrer-Personaldaten, die geprüft werden sollen
+	 * @param listLehrer          die Liste der Lehrer-Personaldaten, die geprüft werden sollen
 	 * @param kontext             der Kontext des Validators
 	 */
-	public ValidatorGlplGesamtLehrerPersonaldatenLehramt(final @NotNull List<LehrerPersonaldaten> listPersonaldaten, final @NotNull ValidatorKontext kontext) {
+	public ValidatorGlplGesamtLehrerPersonaldatenLehramt(
+			final @NotNull Supplier<List<LehrerStatistikGesamt>> listLehrer,
+			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		_validatoren.add(new ValidatorGlpl00GesamtLehrerPersonaldatenLehramt(listPersonaldaten, kontext));
-		_validatoren.add(new ValidatorGlpl01GesamtLehrerPersonaldatenLehramt(listPersonaldaten, kontext));
+		_validatoren.add(new ValidatorGlpl00GesamtLehrerPersonaldatenLehramt(listLehrer, kontext));
+		_validatoren.add(new ValidatorGlpl01GesamtLehrerPersonaldatenLehramt(listLehrer, kontext));
 	}
 
 	@Override

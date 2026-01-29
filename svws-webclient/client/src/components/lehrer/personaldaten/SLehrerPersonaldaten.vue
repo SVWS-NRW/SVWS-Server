@@ -191,7 +191,21 @@
 			daten.idLehrer = props.lehrerListeManager().auswahl().id;
 			daten.idSchuljahresabschnitt = props.aktAbschnitt.id;
 		}
-		return new ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten(daten, props.lehrerListeManager().daten(), props.validatorKontext());
+
+		// Zugriff auf Lehrer-Stammdaten für das Geburtsdatum
+		const stammdaten = props.lehrerListeManager().daten();
+
+		return new ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten(
+			{ get: () => daten.idSchuljahresabschnitt },
+			{ get: () => daten.rechtsverhaeltnis },
+			{ get: () => daten.pflichtstundensoll },
+			{ get: () => daten.einsatzstatus },
+			{ get: () => daten.beschaeftigungsart },
+			{ get: () => stammdaten.geburtsdatum }, // Geburtsdatum aus Stammdaten holen
+			{ get: () => daten.mehrleistung }, // Listenfeld im DTO heißt 'mehrleistung' (Singular)
+			{ get: () => daten.minderleistung }, // Listenfeld im DTO heißt 'minderleistung' (Singular)
+			props.validatorKontext()
+		);
 	});
 
 	function validatePersonalabschnittDaten(validator: Validator): boolean {

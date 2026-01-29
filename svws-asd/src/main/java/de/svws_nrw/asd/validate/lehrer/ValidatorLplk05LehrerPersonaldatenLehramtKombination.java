@@ -1,8 +1,10 @@
 package de.svws_nrw.asd.validate.lehrer;
 
+import java.util.List;
+import java.util.function.Supplier;
+
 import de.svws_nrw.asd.data.lehrer.LehrerLehramtEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerLehramtKatalogEintrag;
-import de.svws_nrw.asd.data.lehrer.LehrerPersonaldaten;
 import de.svws_nrw.asd.types.lehrer.LehrerLehramt;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
@@ -14,18 +16,18 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class ValidatorLplk05LehrerPersonaldatenLehramtKombination extends Validator {
 
-	/** Die Lehrer-Personaldaten */
-	private final @NotNull LehrerPersonaldaten lehrerPersonaldaten;
+	/** Die Lehrämter */
+	private final @NotNull Supplier<List<LehrerLehramtEintrag>> lehraemter;
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param lehrerPersonaldaten   die Lehrer-Personaldaten, die geprüft werden sollen
+	 * @param lehraemter   			die Lehrämter, die geprüft werden sollen
 	 * @param kontext               der Kontext des Validators
 	 */
-	public ValidatorLplk05LehrerPersonaldatenLehramtKombination(final @NotNull LehrerPersonaldaten lehrerPersonaldaten, final @NotNull ValidatorKontext kontext) {
+	public ValidatorLplk05LehrerPersonaldatenLehramtKombination(final @NotNull Supplier<List<LehrerLehramtEintrag>> lehraemter, final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		this.lehrerPersonaldaten = lehrerPersonaldaten;
+		this.lehraemter = lehraemter;
 	}
 
 	@Override
@@ -38,7 +40,7 @@ public final class ValidatorLplk05LehrerPersonaldatenLehramtKombination extends 
 		LehrerLehramtKatalogEintrag lehrerLehramtKatalogEintrag62 = LehrerLehramt.ID_62.daten(this.kontext().getSchuljahr());
 
 		if (lehrerLehramtKatalogEintrag59 != null && lehrerLehramtKatalogEintrag62 != null) {
-			for (final @NotNull LehrerLehramtEintrag lehrerLehramtEintrag : lehrerPersonaldaten.lehraemter) {
+			for (final @NotNull LehrerLehramtEintrag lehrerLehramtEintrag : this.lehraemter.get()) {
 				if (lehrerLehramtKatalogEintrag59.id == LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).id)
 					lehramtId59Vorhanden = true;
 				else if (lehrerLehramtKatalogEintrag62.id == LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).id)

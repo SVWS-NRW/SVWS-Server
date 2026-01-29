@@ -1,8 +1,10 @@
 package de.svws_nrw.asd.validate.lehrer;
 
-import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdaten;
+import java.util.function.Supplier;
+
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
+import de.svws_nrw.transpiler.annotations.AllowNull;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -15,13 +17,18 @@ public final class ValidatorLpppLehrerPersonaldatenPersonalabschnittsdatenPflich
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param daten     die Daten des Validators
-	 * @param kontext   der Kontext des Validators
+	 * @param pflichtstundensoll    das Pflichtstundensoll
+	 * @param einsatzstatus    		der Einsatzstatus
+	 * @param beschaeftigungsart    Die Beschaeftigungsart
+	 * @param kontext   			der Kontext des Validators
 	 */
-	public ValidatorLpppLehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(final @NotNull LehrerPersonalabschnittsdaten daten,
+	public ValidatorLpppLehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(
+			final @NotNull Supplier<@AllowNull Double> pflichtstundensoll,
+			final @NotNull Supplier<@AllowNull String> einsatzstatus,
+			final @NotNull Supplier<@AllowNull String> beschaeftigungsart,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		_validatoren.add(new ValidatorLppp00LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(daten, kontext));
+		_validatoren.add(new ValidatorLppp00LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensoll, einsatzstatus, beschaeftigungsart, kontext));
 	}
 
 

@@ -25,8 +25,8 @@ public final class ValidatorLppbbLehrerPersonaldatenPersonalabschnittsdatenBesch
 	 * @param kontext  der Kontext der Validierung
 	 */
 	public ValidatorLppbbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell(
-			final @NotNull Supplier<@AllowNull Double> pflichtstundensoll,
 			final @NotNull Supplier<@AllowNull String> beschaeftigungsart,
+			final @NotNull Supplier<@AllowNull Double> pflichtstundensoll,
 			final @NotNull Supplier<@AllowNull String> einsatzstatus,
 			final @NotNull Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> mehrleistungen,
 			final @NotNull Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> minderleistungen,

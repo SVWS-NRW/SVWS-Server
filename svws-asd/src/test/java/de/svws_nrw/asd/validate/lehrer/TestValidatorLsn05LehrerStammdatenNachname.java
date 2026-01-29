@@ -7,8 +7,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
-import de.svws_nrw.asd.data.schule.SchuleStammdaten;
+import de.svws_nrw.asd.data.statistik.StatistikGesamt;
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.asd.utils.json.JsonReader;
 import de.svws_nrw.asd.validate.ValidatorKontext;
@@ -18,13 +18,6 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
  * <ul>
  *   <li> {@link ValidatorLsn05LehrerStammdatenNachname}
  * </ul>
- * </p>
- *
- * <p> Testdaten:
- *   <ul>
- *     <li> de/svws_nrw/asd/validate/schule/Testdaten_001_SchuleStammdaten.json
- *     <li> de/svws_nrw/asd/validate/lehrer/Testdaten_001_LehrerStammdaten.json
- *   </ul>
  * </p>
  *
  * Die Testdaten sind fehlerfrei und werden mit Jackson in die entsprechende statische Datenstruktur eingelesen.
@@ -41,14 +34,9 @@ class TestValidatorLsn05LehrerStammdatenNachname {
 			'MÜller'    , false
 		""";
 
-
-	/** Stammdaten des Lehrers */
-	static final LehrerStammdaten lehrerTestdaten_001 =
-			JsonReader.fromResource("de/svws_nrw/asd/validate/lehrer/Testdaten_001_LehrerStammdaten.json", LehrerStammdaten.class);
-
 	/** Stammdaten der Schule */
-	static final SchuleStammdaten schuleTestdaten_001 =
-			JsonReader.fromResource("de/svws_nrw/asd/validate/schule/Testdaten_001_SchuleStammdaten.json", SchuleStammdaten.class);
+	static final StatistikGesamt testdaten_001 =
+			JsonReader.fromResource("de/svws_nrw/asd/validate/Testdaten_001_StatistikGesamt.json", StatistikGesamt.class);
 
 	/**
 	 * Initialisiert die Core-Types, damit die Tests ausgeführt werden können.
@@ -72,12 +60,11 @@ class TestValidatorLsn05LehrerStammdatenNachname {
 	@ParameterizedTest
 	@CsvSource(textBlock = TESTDATEN_NACHNAME)
 	void testValidatorLehrerStammdatenNachname(final String nachname, final boolean result) {
-		// Testdaten setzen
-		lehrerTestdaten_001.nachname = nachname;
 
 		// Erzeuge den Kontext für die Validierung
-		final ValidatorKontext kontext = new ValidatorKontext(schuleTestdaten_001, true);
-		final ValidatorLsn05LehrerStammdatenNachname validator = new ValidatorLsn05LehrerStammdatenNachname(() -> lehrerTestdaten_001.nachname, kontext);
+		final ValidatorKontext kontext = new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
+				testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
+		final ValidatorLsn05LehrerStammdatenNachname validator = new ValidatorLsn05LehrerStammdatenNachname(() -> nachname, kontext);
 		assertEquals(result, validator.run());
 	}
 

@@ -4,6 +4,7 @@ import java.util.function.Supplier;
 
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
+import de.svws_nrw.transpiler.annotations.AllowNull;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -18,7 +19,7 @@ public final class ValidatorLsgLehrerStammdatenGeschlecht extends Validator {
 	 * @param daten     das Geschlecht des Lehrers
 	 * @param kontext   der Kontext des Validators
 	 */
-	public ValidatorLsgLehrerStammdatenGeschlecht(final @NotNull Supplier<Integer> daten,
+	public ValidatorLsgLehrerStammdatenGeschlecht(final @NotNull Supplier<@AllowNull Integer> daten,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		_validatoren.add(new ValidatorLsg00LehrerStammdatenGeschlecht(daten, kontext));
