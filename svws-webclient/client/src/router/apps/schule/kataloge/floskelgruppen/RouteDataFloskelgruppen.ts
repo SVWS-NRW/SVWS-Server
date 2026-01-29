@@ -15,7 +15,6 @@ const defaultState = {
 	manager: new FloskelgruppenListeManager(-1, -1, new ArrayList(), null, new ArrayList()),
 	view: routeFloskelgruppenDaten,
 	activeViewType: ViewType.DEFAULT,
-	oldView: undefined,
 };
 
 export class RouteDataFloskelgruppen extends RouteDataAuswahl<FloskelgruppenListeManager, RouteStateAuswahlInterface<FloskelgruppenListeManager>> {
@@ -24,15 +23,15 @@ export class RouteDataFloskelgruppen extends RouteDataAuswahl<FloskelgruppenList
 		super(defaultState, { gruppenprozesse: routeFloskelgruppenGruppenprozesse, hinzufuegen: routeFloskelgruppenNeu });
 	}
 
+	public addID(param: RouteParamsRawGeneric, id: number): void {
+		param.id = id;
+	}
+
 	protected async createManager(_: number): Promise<Partial<RouteStateAuswahlInterface<FloskelgruppenListeManager>>> {
 		const floskelgruppen = await api.server.getFloskelgruppen(api.schema);
 		const manager = new FloskelgruppenListeManager(api.abschnitt.id, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,
 			api.schulform, floskelgruppen);
 		return { manager };
-	}
-
-	public addID(param: RouteParamsRawGeneric, id: number): void {
-		param.id = id;
 	}
 
 	public ladeDaten(auswahl: any): Promise<Floskelgruppe> {

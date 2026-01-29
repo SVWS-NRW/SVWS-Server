@@ -5,11 +5,13 @@
 				<svws-ui-text-input placeholder="Kürzel" class="contentFocusField"
 					:model-value="manager().auswahl().kuerzel"
 					@change="patchKuerzel"
-					:valid="kuerzelIsValid" :readonly :min-len="1" :max-len="10" />
+					:valid="kuerzelIsValid"
+					:min-len="1" :max-len="10" :readonly />
 				<svws-ui-text-input placeholder="Bezeichnung"
 					:model-value="manager().auswahl().bezeichnung"
 					@change="patchBezeichnung"
-					:valid="bezeichnungIsValid"	:readonly :min-len="1" :max-len="50" />
+					:valid="bezeichnungIsValid"
+					:min-len="1" :max-len="50" :readonly />
 				<ui-select label="Floskelgruppenart"
 					v-model="selectedFloskelgruppenart"
 					:manager="floskelgruppenartManager"
