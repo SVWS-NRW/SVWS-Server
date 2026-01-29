@@ -299,10 +299,6 @@ describe("Server", () => {
 		const res = await server.getKatalogOrte(schema);
 		expect(res).matchSnapshot();
 	});
-	test.skip("getKatalogOrtsteile", async () => {
-		const res = await server.getKatalogOrtsteile(schema);
-		expect(res).matchSnapshot();
-	});
 	test.skip("getKlasse", async () => {
 		const res = await server.getKlasse(schema, 10);
 		expect(res).matchSnapshot();

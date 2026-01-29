@@ -24,10 +24,5 @@ describe("Kataloge Tests", () => {
 			const result = await api.getKatalogOrte(schema);
 			expect(result).toMatchSnapshot();
 		});
-
-		test("getKatalogOrtsteile", async () => {
-			const result = await api.getKatalogOrtsteile(schema);
-			expect(result).toMatchSnapshot();
-		});
 	});
 });

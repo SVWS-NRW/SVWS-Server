@@ -645,7 +645,6 @@ export { JahrgangsDaten } from './core/data/jahrgang/JahrgangsDaten';
 export { Kalender } from './core/data/kalender/Kalender';
 export { KalenderEintrag } from './core/data/kalender/KalenderEintrag';
 export { KatalogEintragOrte } from './core/data/kataloge/KatalogEintragOrte';
-export { KatalogEintragOrtsteile } from './core/data/kataloge/KatalogEintragOrtsteile';
 export { KatalogEintragStrassen } from './core/data/kataloge/KatalogEintragStrassen';
 export { KatalogEntlassgrund } from './core/data/kataloge/KatalogEntlassgrund';
 export { OrtKatalogEintrag } from './core/data/kataloge/OrtKatalogEintrag';
