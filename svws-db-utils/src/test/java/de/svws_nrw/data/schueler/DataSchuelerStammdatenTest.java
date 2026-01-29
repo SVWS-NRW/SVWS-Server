@@ -20,6 +20,7 @@ import de.svws_nrw.db.dto.current.schild.katalog.DTOOrtsteil;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerFoto;
 import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.annotation.Nonnull;
 import jakarta.ws.rs.core.Response;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.assertj.core.api.InstanceOfAssertFactories;
@@ -614,83 +615,114 @@ class DataSchuelerStammdatenTest {
 
 
 	@Test
-	void mapSchuelerFotoWithIdenticalFoto() throws ApiOperationException {
-		final DTOSchuelerFoto oldDtoSchuelerFoto = new DTOSchuelerFoto(1L);
-		oldDtoSchuelerFoto.FotoBase64 = "Base64TestFoto";
+	void updateSchuelerFotoWithIdenticalFoto() throws ApiOperationException {
+		final DTOSchuelerFoto oldDtoSchuelerFoto = getDtoSchuelerFoto();
 		when(conn.queryByKey(DTOSchuelerFoto.class, 1L)).thenReturn(oldDtoSchuelerFoto);
 		final DTOSchueler schuelerDto = createDTOSchuelerSimple();
 
-		cut.mapSchuelerFoto(schuelerDto, "Base64TestFoto");
+		cut.updateSchuelerFoto(schuelerDto, "Base64TestFoto");
 
 		verify(conn, times(0)).transactionPersist(any());
+		verify(conn, times(0)).transactionRemove(any());
 	}
 
 	@Test
-	void mapSchuelerFotoWithDifferentFoto() throws ApiOperationException {
-		final DTOSchuelerFoto oldDtoSchuelerFoto = new DTOSchuelerFoto(1L);
-		oldDtoSchuelerFoto.FotoBase64 = "Base64TestFoto";
+	void updateSchuelerFotoWithDifferentFoto() throws ApiOperationException {
+		final DTOSchuelerFoto oldDtoSchuelerFoto = getDtoSchuelerFoto();
 		when(conn.queryByKey(DTOSchuelerFoto.class, 1L)).thenReturn(oldDtoSchuelerFoto);
 		final DTOSchueler schuelerDto = createDTOSchuelerSimple();
 
-		cut.mapSchuelerFoto(schuelerDto, "Base64TestFotoNew");
+		cut.updateSchuelerFoto(schuelerDto, "Base64TestFotoNew");
 
 		verify(conn, times(1)).transactionPersist(
 				argThat(o -> o.equals(oldDtoSchuelerFoto)
 						&& (o instanceof final DTOSchuelerFoto foto)
 						&& foto.FotoBase64.equals("Base64TestFotoNew")
 						&& (foto.Schueler_ID == 1L)));
+		verify(conn, times(0)).transactionRemove(any());
 	}
 
 	@Test
-	void mapSchuelerFotoWithDifferentFotoAndNoOldFoto() throws ApiOperationException {
+	void updateSchuelerFotoWithDifferentFotoAndNoOldFoto() throws ApiOperationException {
 		when(conn.queryByKey(DTOSchuelerFoto.class, 1L)).thenReturn(null);
 		final DTOSchueler schuelerDto = createDTOSchuelerSimple();
 
-		cut.mapSchuelerFoto(schuelerDto, "Base64TestFotoNew");
+		cut.updateSchuelerFoto(schuelerDto, "Base64TestFotoNew");
 
 		verify(conn, times(1)).transactionPersist(
 				argThat(o -> (o instanceof final DTOSchuelerFoto foto)
 						&& foto.FotoBase64.equals("Base64TestFotoNew")
 						&& (foto.Schueler_ID == 1L)));
+		verify(conn, times(0)).transactionRemove(any());
 	}
 
 	@Test
-	void mapSchuelerFotoWithValueIsEmptyString() throws ApiOperationException {
-		final DTOSchuelerFoto oldDtoSchuelerFoto = new DTOSchuelerFoto(1L);
-		oldDtoSchuelerFoto.FotoBase64 = "Base64TestFoto";
+	void updateSchuelerFotoWithValueIsEmptyString() throws ApiOperationException {
+		final DTOSchuelerFoto oldDtoSchuelerFoto = getDtoSchuelerFoto();
 		when(conn.queryByKey(DTOSchuelerFoto.class, 1L)).thenReturn(oldDtoSchuelerFoto);
 		final DTOSchueler schuelerDto = createDTOSchuelerSimple();
 
-		cut.mapSchuelerFoto(schuelerDto, "");
+		cut.updateSchuelerFoto(schuelerDto, "");
 
 		verify(conn, times(1)).transactionPersist(
 				argThat(o -> o.equals(oldDtoSchuelerFoto)
 						&& (o instanceof final DTOSchuelerFoto foto)
 						&& foto.FotoBase64.isEmpty()
 						&& (foto.Schueler_ID == 1L)));
+		verify(conn, times(0)).transactionRemove(any());
+	}
+
+	@Nonnull
+	private static DTOSchuelerFoto getDtoSchuelerFoto() {
+		final DTOSchuelerFoto oldDtoSchuelerFoto = new DTOSchuelerFoto(1L);
+		oldDtoSchuelerFoto.FotoBase64 = "Base64TestFoto";
+		return oldDtoSchuelerFoto;
 	}
 
 	@Test
-	void mapSchuelerFotoWithValueIsEmptyStringAndNoOldFoto() throws ApiOperationException {
+	void updateSchuelerFotoWithValueIsEmptyStringAndNoOldFoto() throws ApiOperationException {
 		when(conn.queryByKey(DTOSchuelerFoto.class, 1L)).thenReturn(null);
 		final DTOSchueler schuelerDto = createDTOSchuelerSimple();
 
-		cut.mapSchuelerFoto(schuelerDto, "");
+		cut.updateSchuelerFoto(schuelerDto, "");
 
 		verify(conn, times(1)).transactionPersist(
 				argThat(o -> (o instanceof final DTOSchuelerFoto foto)
 						&& foto.FotoBase64.isEmpty()
 						&& (foto.Schueler_ID == 1L)));
+		verify(conn, times(0)).transactionRemove(any());
 	}
 
 	@Test
-	void mapSchuelerFotoWithValueIsNull() throws ApiOperationException {
+	void updateSchuelerFotoWithValueIsNull() throws ApiOperationException {
 		when(conn.queryByKey(DTOSchuelerFoto.class, 1L)).thenReturn(null);
 		final DTOSchueler schuelerDto = createDTOSchuelerSimple();
 
-		cut.mapSchuelerFoto(schuelerDto, null);
+		cut.updateSchuelerFoto(schuelerDto, null);
 
 		verify(conn, times(0)).transactionPersist(any());
+		verify(conn, times(0)).transactionRemove(any());
+	}
+
+	@Test
+	void updateSchuelerFotoExistsWithValueIsNull() throws ApiOperationException {
+		final DTOSchuelerFoto oldDtoSchuelerFoto = getOldDtoSchuelerFoto();
+		oldDtoSchuelerFoto.FotoBase64 = "Base64TestFoto";
+		when(conn.queryByKey(DTOSchuelerFoto.class, 1L)).thenReturn(oldDtoSchuelerFoto);
+		final DTOSchueler schuelerDto = createDTOSchuelerSimple();
+
+		cut.updateSchuelerFoto(schuelerDto, null);
+
+		verify(conn, times(0)).transactionPersist(any());
+		verify(conn, times(1)).transactionRemove(
+				argThat(o -> (o instanceof final DTOSchuelerFoto foto)
+						&& (foto.Schueler_ID == oldDtoSchuelerFoto.Schueler_ID)
+				));
+	}
+
+	@Nonnull
+	private static DTOSchuelerFoto getOldDtoSchuelerFoto() {
+		return new DTOSchuelerFoto(1L);
 	}
 
 
