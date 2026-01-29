@@ -1,4 +1,4 @@
-import type { ApiFile, FachDaten, List, ReportingParameter, SimpleOperationResponse, StundenplanListeEintrag } from "@core";
+import type { ApiFile, FachDaten, List, ReportingParameter, SimpleOperationResponse } from "@core";
 import { ArrayList, BenutzerKompetenz, DeveloperNotificationException } from "@core";
 
 import { api } from "~/router/Api";
@@ -9,23 +9,16 @@ import { routeFaecherNeu } from "./RouteFaecherNeu";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
 import { ViewType, FaecherListeManager } from "@ui";
-import type { RouteNode } from "~/router/RouteNode";
 
-interface RouteStateFaecher extends RouteStateAuswahlInterface<FaecherListeManager> {
-	stundenplaeneById: Map<number, StundenplanListeEintrag>;
-	oldView?: RouteNode<any, any>;
-}
-
-const defaultState: RouteStateFaecher = {
+const defaultState = {
 	idSchuljahresabschnitt: -1,
-	stundenplaeneById: new Map(),
-	manager: new FaecherListeManager(-1, -1, new ArrayList(), null, new ArrayList()),
+	manager: new FaecherListeManager(-1, -1, new ArrayList(), null, new ArrayList(), new ArrayList()),
 	view: routeFaecherDaten,
 	oldView: undefined,
 	activeViewType: ViewType.DEFAULT,
 };
 
-export class RouteDataFaecher extends RouteDataAuswahl<FaecherListeManager, RouteStateFaecher> {
+export class RouteDataFaecher extends RouteDataAuswahl<FaecherListeManager, RouteStateAuswahlInterface<FaecherListeManager>> {
 
 	public constructor() {
 		super(defaultState, { gruppenprozesse: routeFaecherGruppenprozesse, hinzufuegen: routeFaecherNeu });
@@ -35,31 +28,22 @@ export class RouteDataFaecher extends RouteDataAuswahl<FaecherListeManager, Rout
 		param.id = id;
 	}
 
-	get stundenplaeneById(): Map<number, StundenplanListeEintrag> {
-		return this._state.value.stundenplaeneById;
-	}
-
 	get idSchuljahresabschnitt(): number {
 		return this._state.value.idSchuljahresabschnitt;
 	}
 
 	protected async createManager(idSchuljahresabschnitt: number): Promise<Partial<RouteStateAuswahlInterface<FaecherListeManager>>> {
-		const faecher = await api.server.getFaecher(api.schema);
-		const manager = new FaecherListeManager(idSchuljahresabschnitt, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,	api.schulform, faecher);
+		const [faecher, stundenplaene] = await Promise.all([
+			api.server.getFaecher(api.schema),
+			api.server.getStundenplanlisteFuerAbschnitt(api.schema, idSchuljahresabschnitt),
+		]);
+		const manager = new FaecherListeManager(idSchuljahresabschnitt, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,
+			api.schulform, faecher, stundenplaene);
 		return { manager };
 	}
 
 	public async ladeDaten(auswahl: FachDaten | null): Promise<FachDaten | null> {
 		return auswahl;
-	}
-
-	public async updateMapStundenplaene() {
-		const listStundenplaene = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, this.idSchuljahresabschnitt);
-		const mapStundenplaene = new Map<number, StundenplanListeEintrag>();
-		for (const l of listStundenplaene) {
-			mapStundenplaene.set(l.id, l);
-		}
-		this.setPatchedState({ stundenplaeneById: mapStundenplaene });
 	}
 
 	protected async doPatch(data: Partial<FachDaten>, id: number): Promise<void> {

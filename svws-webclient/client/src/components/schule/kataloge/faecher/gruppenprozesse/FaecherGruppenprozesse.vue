@@ -20,7 +20,9 @@
 					</div>
 				</svws-ui-input-wrapper>
 				<template #buttonFooterLeft>
-					<svws-ui-button class="mt-4" :disabled="(stundenplanAuswahl === undefined) || !hatKompetenzDrucken" @click="downloadPDF" :is-loading="loading">
+					<svws-ui-button class="mt-4"
+						:disabled="(stundenplanAuswahl === undefined) || !hatKompetenzDrucken || manager().liste.auswahl().isEmpty()"
+						@click="downloadPDF" :is-loading="loading">
 						<svws-ui-spinner v-if="loading" spinning />
 						<span v-else class="icon i-ri-play-line" />
 						Drucken
@@ -96,6 +98,7 @@
 	const hatKompetenzDrucken = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN));
 	const hatKompetenzUpdate = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const hatGymnasialeOberstufe = computed(() => props.manager().schulform().daten(props.schuljahr)?.hatGymOb ?? false);
+	const stundenplaeneById = computed(() => props.manager().stundenplaeneById);
 
 	const sortModalIsOpen = ref<boolean>(false);
 	const currentAction = ref<string>('');

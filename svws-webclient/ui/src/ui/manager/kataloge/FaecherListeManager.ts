@@ -10,12 +10,14 @@ import type { List } from '../../../../../core/src/java/util/List';
 import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
 import { HashSet } from '../../../../../core/src/java/util/HashSet';
 import { ArrayList } from "../../../../../core/src/java/util/ArrayList";
+import type { StundenplanListeEintrag } from "../../../../../core/src/core/data/stundenplan/StundenplanListeEintrag";
 
 
 export class FaecherListeManager extends AuswahlManager<number, FachDaten, FachDaten> {
 
 	private static readonly _faecherToId: JavaFunction<FachDaten, number> = { apply: (ea: FachDaten) => ea.id };
 	private readonly _idsReferencedFaecher: HashSet<number> = new HashSet<number>();
+	private readonly _stundenplaeneById: Map<number, StundenplanListeEintrag> = new Map();
 	private _filterNurSichtbar: boolean = true;
 	private _searchTerm: string = "";
 
@@ -48,12 +50,20 @@ export class FaecherListeManager extends AuswahlManager<number, FachDaten, FachD
 	 * @param schuljahresabschnitte       		die Liste der Schuljahresabschnitte
 	 * @param idSchuljahresabschnittSchule  	der Schuljahresabschnitt, in welchem sich die Schule aktuell befindet.
 	 * @param schulform     					die Schulform der Schule
-	 * @param faecher     							die Liste der Fächer
+	 * @param faecher     						die Liste der Fächer
+	 * @param stundenplaene						die Liste der Stundenpläne
 	 */
 	public constructor(idSchuljahresabschnitt: number, idSchuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>,
-		schulform: Schulform | null, faecher: List<FachDaten>) {
+		schulform: Schulform | null, faecher: List<FachDaten>, stundenplaene: List<StundenplanListeEintrag>) {
 		super(idSchuljahresabschnitt, idSchuljahresabschnittSchule, schuljahresabschnitte, schulform, faecher, FaecherListeManager.comparator,
 			FaecherListeManager._faecherToId, FaecherListeManager._faecherToId, ArrayList.of());
+		this.mapStundenplaene(stundenplaene);
+	}
+
+	private mapStundenplaene(stundenplaene: List<StundenplanListeEintrag>) {
+		for (const stundenplan of stundenplaene) {
+			this._stundenplaeneById.set(stundenplan.id, stundenplan);
+		}
 	}
 
 	protected onMehrfachauswahlChanged(): void {
@@ -103,5 +113,9 @@ export class FaecherListeManager extends AuswahlManager<number, FachDaten, FachD
 	set searchTerm(value: string) {
 		this._searchTerm = value;
 		this._eventHandlerFilterChanged.run();
+	}
+
+	get stundenplaeneById(): Map<number, StundenplanListeEintrag> {
+		return this._stundenplaeneById;
 	}
 }
