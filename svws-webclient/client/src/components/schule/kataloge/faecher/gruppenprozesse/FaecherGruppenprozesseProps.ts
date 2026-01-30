@@ -6,8 +6,8 @@ export interface FaecherGruppenprozesseProps {
 	serverMode: ServerMode;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
 	manager: () => FaecherListeManager;
-	deleteFaecher: () => Promise<[boolean, List<string | null>]>;
-	deleteFaecherCheck: () => [boolean, List<string>];
+	delete: () => Promise<[boolean, List<string | null>]>;
+	deleteCheck: () => [boolean, List<string>];
 	sortFaecher: () => Promise<void>;
 	schuljahr: number,
 }

@@ -1,4 +1,4 @@
-import type { ApiFile, FachDaten, List, ReportingParameter, SimpleOperationResponse } from "@core";
+import type { ApiFile, FachDaten, JavaSet, List, ReportingParameter, SimpleOperationResponse } from "@core";
 import { ArrayList, BenutzerKompetenz, DeveloperNotificationException } from "@core";
 
 import { api } from "~/router/Api";
@@ -58,22 +58,35 @@ export class RouteDataFaecher extends RouteDataAuswahl<FaecherListeManager, Rout
 		return `Fach ${fach?.kuerzel ?? '???'} (ID: ${id}) wurde erfolgreich gelöscht.`;
 	}
 
-	deleteFaecherCheck = (): [boolean, List<string>] => {
+	deleteCheck = (): [boolean, List<string>] => {
 		const errorLog = new ArrayList<string>();
+
 		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
-			errorLog.add('Es kiegt keine Berechtigung zum Löschen von Fächern vor.');
+			errorLog.add('Es liegt keine Berechtigung zum Löschen von Fächern vor.');
 		}
+
 		if (!this.manager.liste.auswahlExists()) {
 			errorLog.add('Es wurde kein Fach zum Löschen ausgewählt.');
 		}
-		for (const id of this.manager.idsReferencedFaecher) {
-			const fach = this.manager.liste.get(id);
-			if (fach) {
-				errorLog.add(`Das Fach ${fach.bezeichnung} mit dem Kürzel ${fach.kuerzel} ist an anderer Stelle referenziert und kann daher nicht gelöscht werden.`);
-			}
+
+		const idsOfReferencedFaecher = this.manager.idsReferencedFaecher;
+		if (!idsOfReferencedFaecher.isEmpty()) {
+			errorLog.add(this.getErrorMessageForReferencedFaecher(idsOfReferencedFaecher));
 		}
+
 		return [errorLog.isEmpty(), errorLog];
 	};
+
+	private getErrorMessageForReferencedFaecher(idsOfReferencedFaecher: JavaSet<number>): string {
+		let errorMessage = 'Die folgenden Fächer sind an anderer Stelle referenziert und können daher nicht gelöscht werden:\n\n';
+		for (const id of idsOfReferencedFaecher) {
+			const fach = this.manager.liste.get(id);
+			if (fach) {
+				errorMessage += `- ${fach.bezeichnung} \n`;
+			}
+		}
+		return errorMessage;
+	}
 
 	add = async (data: Partial<FachDaten>): Promise<void> => {
 		const fach = await api.server.addFach(data, api.schema);

@@ -24,14 +24,14 @@ export class RouteFaecherGruppenprozesse extends RouteNode<any, RouteFaecher> {
 		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: "" } };
 	}
 
-	public getProps(to: RouteLocationNormalized): FaecherGruppenprozesseProps {
+	public getProps(_: RouteLocationNormalized): FaecherGruppenprozesseProps {
 		return {
 			getPDF: routeFaecher.data.getPDF,
 			serverMode: api.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			manager: () => routeFaecher.data.manager,
-			deleteFaecher: routeFaecher.data.delete,
-			deleteFaecherCheck: routeFaecher.data.deleteFaecherCheck,
+			delete: routeFaecher.data.delete,
+			deleteCheck: routeFaecher.data.deleteCheck,
 			sortFaecher: routeFaecher.data.sortFaecher,
 			schuljahr: api.abschnitt.schuljahr,
 		};
