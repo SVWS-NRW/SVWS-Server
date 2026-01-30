@@ -13,7 +13,7 @@
 	"include": [
 		"*.ts",
 		"src/**/*",
-		"src/**/*.vue",
+		"test/**/*",
 		"components.d.ts",
 		"../ui/src/",
 		"../components/src/"
