@@ -32,6 +32,7 @@ export class RouteFloskelgruppenGruppenprozesse extends RouteNode<any, RouteFlos
 			schulform: api.schulform,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			delete: routeFloskelgruppen.data.delete,
+			deleteCheck: routeFloskelgruppen.data.deleteCheck,
 			manager: () => routeFloskelgruppen.data.manager,
 		};
 	}

@@ -2,7 +2,7 @@ import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
 import type { Floskelgruppe, List, SimpleOperationResponse } from "@core";
-import { ArrayList } from "@core";
+import { BenutzerKompetenz, ArrayList } from "@core";
 import { ViewType, FloskelgruppenListeManager } from "@ui";
 import { api } from "~/router/Api";
 import { routeFloskelgruppenDaten } from "~/router/apps/schule/kataloge/floskelgruppen/RouteFloskelgruppenDaten";
@@ -42,6 +42,13 @@ export class RouteDataFloskelgruppen extends RouteDataAuswahl<FloskelgruppenList
 		await api.server.patchFloskelgruppe(data, api.schema, id);
 	}
 
+	add = async (data: Partial<Floskelgruppe>): Promise<void> => {
+		const result = await api.server.addFloskelgruppe(data, api.schema);
+		this.manager.liste.add(result);
+		this.commit();
+		await this.gotoDefaultView(result.id);
+	};
+
 	protected async doDelete(ids: List<number>): Promise<List<SimpleOperationResponse>> {
 		return api.server.deleteFloskelgruppen(ids, api.schema);
 	}
@@ -50,11 +57,33 @@ export class RouteDataFloskelgruppen extends RouteDataAuswahl<FloskelgruppenList
 		return `Die Floskelgruppe ${floskelgruppe?.bezeichnung ?? '???'} (ID: ${id}) wurde erfolgreich gelöscht.`;
 	}
 
-	add = async (data: Partial<Floskelgruppe>): Promise<void> => {
-		const result = await api.server.addFloskelgruppe(data, api.schema);
-		this.manager.liste.add(result);
-		this.commit();
-		await this.gotoDefaultView(result.id);
+	public deleteCheck = (): [boolean, List<string>] => {
+		const errorLog = new ArrayList<string>();
+
+		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
+			errorLog.add('Es liegt keine Berechtigung zum Löschen von Floskelgruppen vor.');
+		}
+
+		if (!this.manager.liste.auswahlExists()) {
+			errorLog.add('Es wurde keine Floskelgruppe zum Löschen ausgewählt.');
+		}
+
+		if (!this.manager.idsOfReferencedFloskelgruppen.isEmpty()) {
+			errorLog.add(this.getErrorMessageForReferencedFloskelgruppen());
+		}
+
+		return [errorLog.isEmpty(), errorLog];
 	};
+
+	private getErrorMessageForReferencedFloskelgruppen(): string {
+		let errorMessage = 'Die folgenden Floskelgruppen sind an anderer Stelle referenziert und können daher nicht gelöscht werden:\n\n';
+		for (const id of this.manager.idsOfReferencedFloskelgruppen) {
+			const fg = this.manager.liste.get(id);
+			if (fg) {
+				errorMessage += `- ${fg.bezeichnung} \n`;
+			}
+		}
+		return errorMessage;
+	}
 
 }
