@@ -10,7 +10,7 @@
 						Ist sichtbar
 					</svws-ui-checkbox>
 					<svws-ui-checkbox :readonly v-model="data.istRelevantFuerStatistik" statistics>
-						Ist Relevant für Statistik
+						Ist relevant für Statistik
 					</svws-ui-checkbox>
 				</svws-ui-input-wrapper>
 				<svws-ui-text-input placeholder="Kürzel" :readonly v-model="data.kuerzel" statistics required focus />
@@ -29,7 +29,7 @@
 					:item-text="i => i.historie().getLast().staatsangehoerigkeit" :item-sort="staatsangehoerigkeitKatalogEintragSort"
 					:item-filter="staatsangehoerigkeitKatalogEintragFilter" required autocomplete statistics />
 				<svws-ui-spacing />
-				<svws-ui-text-input placeholder="Akadademischer Grad" :readonly v-model="data.titel" type="text" />
+				<svws-ui-text-input placeholder="Akademischer Grad" :readonly v-model="data.titel" type="text" />
 				<svws-ui-text-input placeholder="Amtsbezeichnung" :readonly v-model="data.amtsbezeichnung" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>

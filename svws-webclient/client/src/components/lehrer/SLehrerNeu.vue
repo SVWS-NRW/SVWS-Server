@@ -4,7 +4,7 @@
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-input-wrapper>
 					<svws-ui-checkbox v-model="data.istSichtbar" :disabled>Ist Sichtbar</svws-ui-checkbox>
-					<svws-ui-checkbox v-model="data.istRelevantFuerStatistik" :disabled>Ist Relevant für Statistik</svws-ui-checkbox>
+					<svws-ui-checkbox v-model="data.istRelevantFuerStatistik" :disabled>Ist relevant für Statistik</svws-ui-checkbox>
 				</svws-ui-input-wrapper>
 				<svws-ui-text-input placeholder="Kürzel" required :max-len="10" :valid="fieldIsValid('kuerzel')" v-model="data.kuerzel" statistics :disabled />
 				<svws-ui-select title="Personal-Typ" required :items="PersonalTyp.values()" :item-text="i => i.bezeichnung" :disabled
