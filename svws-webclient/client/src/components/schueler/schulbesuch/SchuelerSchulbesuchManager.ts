@@ -10,10 +10,10 @@ interface ManagerStateDataSchuelerSchulbesuch {
 	daten: SchuelerSchulbesuchsdaten;
 }
 
-const defaultState = <ManagerStateDataSchuelerSchulbesuch> {
+const createDefaultState = (): ManagerStateDataSchuelerSchulbesuch => ({
 	auswahl: new SchuelerListeEintrag(),
 	daten: new SchuelerSchulbesuchsdaten(),
-};
+});
 
 /** Ein Manager für die Verwaltung von Schulbesuchsdaten */
 export class SchuelerSchulbesuchManager extends StateManager<ManagerStateDataSchuelerSchulbesuch> {
@@ -59,7 +59,7 @@ export class SchuelerSchulbesuchManager extends StateManager<ManagerStateDataSch
 	public constructor(daten: SchuelerSchulbesuchsdaten, auswahl: SchuelerListeEintrag, schuljahresabschnitte: List<Schuljahresabschnitt>,
 		schulen: List<SchulEintrag>, merkmale: List<Merkmal>, entlassgruende: List<KatalogEntlassgrund>, kindergaerten: List<Kindergarten>,
 		jahrgaenge: List<JahrgangsDaten>, patch: (data: Partial<SchuelerSchulbesuchsdaten>) => Promise<void>) {
-		super(defaultState);
+		super(createDefaultState());
 		this._state.value.daten = daten;
 		this._state.value.auswahl = auswahl;
 		this._patch = patch;
@@ -165,7 +165,7 @@ export class SchuelerSchulbesuchManager extends StateManager<ManagerStateDataSch
 			return null;
 		}
 		const entry = Schulform.data().getEintragBySchuljahrUndWert(this.schuljahr, value);
-		return (entry !== null) ? entry.text : null;
+		return entry?.text ?? null;
 	}
 
 	/** Gibt eine Liste der Jahrgaenge zurück, die in der gegebenen Schulform möglich sind */
@@ -326,7 +326,7 @@ export class SchuelerSchulbesuchManager extends StateManager<ManagerStateDataSch
 			}
 			index++;
 		}
-		return;
+		return index;
 	}
 
 	private getIndexMerkmalById(id: number): number | undefined {
@@ -337,7 +337,7 @@ export class SchuelerSchulbesuchManager extends StateManager<ManagerStateDataSch
 			}
 			index++;
 		}
-		return;
+		return index;
 	}
 
 	private calcSchuljahr(): number {

@@ -2,7 +2,7 @@ import type { BenutzerKompetenz, SchuelerKAoADaten, SchuelerListeEintrag } from 
 import type { SchuelerKAoAManager } from "@ui";
 
 export interface SchuelerKAoAProps {
-	schuelerKaoaManager: () => SchuelerKAoAManager;
+	manager: () => SchuelerKAoAManager;
 	auswahl: () => SchuelerListeEintrag;
 	add: (data: Partial<SchuelerKAoADaten>, id: number) => Promise<void>;
 	patch: (data: Partial<SchuelerKAoADaten>, idKaoaEntry: number) => Promise<void>;
