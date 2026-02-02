@@ -60,7 +60,7 @@
 	const columns: DataTableColumn[] = [
 		{ key: "linkToSchueler", label: " ", fixedWidth: 1.75, align: "center" },
 		{ key: "nachname", label: "Nachname", sortable: true },
-		{ key: "vorname", label: "Vorname", sortable: true },
+		{ key: "vorname", label: "Rufname", sortable: true },
 		{ key: "anzahlVermerke", label: "Anzahl", fixedWidth: 8.75, sortable: true, span: 0.5 },
 	];
 

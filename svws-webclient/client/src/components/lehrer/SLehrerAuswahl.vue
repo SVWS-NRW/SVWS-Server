@@ -57,7 +57,7 @@
 	const columns = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc" },
 		{ key: "nachname", label: "Nachname", sortable: true, span: 2 },
-		{ key: "vorname", label: "Vorname", sortable: true, span: 2 },
+		{ key: "vorname", label: "Rufname", sortable: true, span: 2 },
 	];
 
 	function textPersonaltyp(personaltyp: PersonalTyp): string {

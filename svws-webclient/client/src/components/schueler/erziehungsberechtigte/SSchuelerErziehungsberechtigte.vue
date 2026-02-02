@@ -58,7 +58,7 @@
 					<svws-ui-spacing />
 					<svws-ui-text-input placeholder="Name" :model-value="erzieher?.nachname" @change="nachname=>(erzieher !== undefined) &&
 						patchErzieher({ nachname }, erzieher.id)" type="text" :readonly />
-					<svws-ui-text-input placeholder="Vorname" :model-value="erzieher?.vorname" @change="vorname=>(erzieher !== undefined) &&
+					<svws-ui-text-input placeholder="Rufname" :model-value="erzieher?.vorname" @change="vorname=>(erzieher !== undefined) &&
 						patchErzieher({ vorname }, erzieher.id)" type="text" :readonly />
 					<svws-ui-text-input placeholder="E-Mail Adresse" :model-value="erzieher?.eMail" @change="eMail=>(erzieher !== undefined) &&
 						patchErzieher({ eMail }, erzieher.id)" type="email" verify-email :readonly />
@@ -80,7 +80,7 @@
 					<svws-ui-input-wrapper :grid="2" class="text-left">
 						<svws-ui-text-input placeholder="Anrede" v-model="zweiterErz.anrede" type="text" :readonly />
 						<svws-ui-text-input placeholder="Titel" v-model="zweiterErz.titel" type="text" :readonly />
-						<svws-ui-text-input placeholder="Vorname" v-model="zweiterErz.vorname" type="text" required :readonly />
+						<svws-ui-text-input placeholder="Rufname" v-model="zweiterErz.vorname" type="text" required :readonly />
 						<svws-ui-text-input placeholder="Nachname" v-model="zweiterErz.nachname" type="text" required :readonly />
 						<svws-ui-text-input placeholder="E-Mail Adresse" v-model="zweiterErz.eMail" type="email" verify-email :readonly />
 						<ui-select label="Staatsangehörigkeit" v-model="zweiteErzStaatsangehoerigkeit" :manager="staatsangehoerigkeitenManager" :readonly searchable />

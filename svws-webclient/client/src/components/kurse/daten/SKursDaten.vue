@@ -222,7 +222,7 @@
 	const colsSchueler: DataTableColumn[] = [
 		{ key: "linkToSchueler", label: " ", fixedWidth: 1.75, align: "center" },
 		{ key: "nachname", label: "Nachname", sortable: true },
-		{ key: "vorname", label: "Vorname", sortable: true },
+		{ key: "vorname", label: "Rufname", sortable: true },
 		{ key: "status", label: "Status", sortable: true, span: 0.5 },
 	];
 
@@ -241,7 +241,7 @@
 	const weitereLehrer = computed(() => [...props.manager().daten().weitereLehrer]);
 	const columnsKursLehrer: DataTableColumn[] = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true },
-		{ key: "vorname", label: "Vorname", sortable: true },
+		{ key: "vorname", label: "Rufname", sortable: true },
 		{ key: "nachname", label: "Nachname", sortable: true },
 		{ key: "wochenstundenLehrer", label: "Wochenstunden", sortable: true },
 	];
@@ -325,7 +325,7 @@
 	}
 
 	// --- Mode ---
-	enum Mode { ADD, PATCH, DEFAULT };
+	enum Mode { ADD, PATCH, DEFAULT }
 	const currentMode = ref<Mode>(Mode.DEFAULT);
 	function setMode(newMode: Mode) {
 		currentMode.value = newMode;

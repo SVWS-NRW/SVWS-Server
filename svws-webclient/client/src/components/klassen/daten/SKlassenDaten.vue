@@ -425,7 +425,7 @@
 			{ key: "linkToLehrer", label: " ", fixedWidth: 1.75, align: "center" },
 			{ key: "kuerzel", label: "Kürzel", span: 1, sortable: false, statistic: true },
 			{ key: "nachname", label: "Nachname", span: 2, sortable: false },
-			{ key: "vorname", label: "Vorname", span: 2, sortable: false });
+			{ key: "vorname", label: "Rufname", span: 2, sortable: false });
 		if (hatKompetenzUpdate.value) {
 			result.push({ key: "aktionen", label: "", span: 2, sortable: false, align: "right" });
 		}
@@ -436,7 +436,7 @@
 	const colsSchueler: DataTableColumn[] = [
 		{ key: "linkToSchueler", label: " ", fixedWidth: 1.75, align: "center" },
 		{ key: "nachname", label: "Nachname", span: 1, sortable: true },
-		{ key: "vorname", label: "Vorname", span: 1, sortable: true },
+		{ key: "vorname", label: "Rufname", span: 1, sortable: true },
 		{ key: "status", label: "Status", sortable: true, span: 0.5 },
 	];
 
