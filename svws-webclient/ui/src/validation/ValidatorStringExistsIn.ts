@@ -19,10 +19,18 @@ export class ValidatorStringExistsIn extends BasicValidator {
 	 * @param data    die Funktion zum Zugriff auf die Daten
 	 * @param menge   eine Menge von Strings, wo die Daten mit einem Element übereinstimmen müssen
 	 */
-	constructor(data: () => string | null | undefined, menge: Iterable<string> = new Array<string>) {
+	constructor(data: () => string | null | undefined, menge: Iterable<string> = new Array<string>, verwendeKleinschreibung: boolean = false) {
 		super(ValidatorFehlerart.MUSS);
-		this.data = data;
-		this.menge = new Set<string>(menge);
+		if (verwendeKleinschreibung) {
+			this.menge = new Set<string>();
+			this.data = () => data()?.toLocaleLowerCase();
+			for (const i of menge) {
+				this.menge.add(i.toLocaleLowerCase());
+			}
+		} else {
+			this.data = data;
+			this.menge = new Set<string>(menge);
+		}
 		this.run();
 	}
 
