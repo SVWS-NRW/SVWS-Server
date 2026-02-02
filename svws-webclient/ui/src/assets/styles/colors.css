@@ -50,7 +50,7 @@
 		--color-text-ui-neutral-secondary: light-dark(var(--color-palette-neutral-700), var(--color-palette-neutral-600));
 		--color-text-ui-neutral-secondary-hover: light-dark(var(--color-palette-neutral-600), var(--color-palette-neutral-500));
 		--color-text-ui-disabled: light-dark(var(--color-palette-neutral-500), var(--color-palette-neutral-750));
-		--color-text-ui-disabled-secondary: light-dark(var(--color-palette-neutral-750), var(--color-palette-neutral-900));
+		--color-text-ui-disabled-secondary: light-dark(var(--color-palette-neutral-400), var(--color-palette-neutral-900));
 		--color-text-ui-onbrand: light-dark(var(--color-palette-neutral-100), var(--color-palette-neutral-100));
 		--color-text-ui-onbrand-hover: light-dark(var(--color-palette-neutral-200), var(--color-palette-neutral-200));
 		--color-text-ui-onbrand-secondary: light-dark(var(--color-palette-brand-200), var(--color-palette-brand-200));
@@ -128,7 +128,7 @@
 		--color-icon-ui-neutral-secondary: light-dark(var(--color-palette-neutral-700), var(--color-palette-neutral-600));
 		--color-icon-ui-neutral-secondary-hover: light-dark(var(--color-palette-neutral-600), var(--color-palette-neutral-500));
 		--color-icon-ui-disabled: light-dark(var(--color-palette-neutral-500), var(--color-palette-neutral-750));
-		--color-icon-ui-disabled-secondary: light-dark(var(--color-palette-neutral-750), var(--color-palette-neutral-900));
+		--color-icon-ui-disabled-secondary: light-dark(var(--color-palette-neutral-400), var(--color-palette-neutral-900));
 		--color-icon-ui-onbrand: light-dark(var(--color-palette-neutral-100), var(--color-palette-neutral-100));
 		--color-icon-ui-onbrand-hover: light-dark(var(--color-palette-neutral-200), var(--color-palette-neutral-200));
 		--color-icon-ui-onbrand-secondary: light-dark(var(--color-palette-brand-200), var(--color-palette-brand-200));
@@ -227,7 +227,7 @@
 		--color-border-ui-caution-hover: light-dark(var(--color-palette-caution-800), var(--color-palette-caution-600));
 		--color-border-ui-neutral: light-dark(var(--color-palette-neutral-500), var(--color-palette-neutral-700));
 		--color-border-ui-neutral-hover: light-dark(var(--color-palette-neutral-600), var(--color-palette-neutral-500));
-		--color-border-ui-disabled: light-dark(var(--color-palette-neutral-750), var(--color-palette-neutral-750));
+		--color-border-ui-disabled: light-dark(var(--color-palette-neutral-400), var(--color-palette-neutral-750));
 		--color-border-uistatic: var(--color-palette-neutral-900);
 		--color-border-uistatic-0: var(--color-palette-neutral-100);
 		--color-border-uistatic-10: var(--color-palette-neutral-300);
