@@ -1,89 +1,174 @@
 <template>
 	<div class="page page-grid-cards">
-		<svws-ui-input-wrapper :grid="1">
-			<div class="pb-4">
-				<svws-ui-radio-option v-model="isInternal" :value="true" label=" Schule aus NRW erstellen " :disabled />
-				<svws-ui-radio-option class="pb-4" v-model="isInternal" :value="false" label=" Externe Schule erstellen " :disabled />
-			</div>
-			<svws-ui-tooltip v-if="!isInternal" color="primary" :show-arrow="false" :indicator="false">
-				<template #content>
-					Schulen außerhalb NRW und sonstige Herkünfte z.B. auch nicht staatl. anerkannte Schulen.
-				</template>
-				<svws-ui-select class="pb-4 w-full" title="Schulen außerhalb von NRW und Privatschulen" :items="Herkunftsschulnummer.data().getListBySchuljahrAndSchulform(schuljahr, schulform)"
-					:model-value="externalSchulnummer" @update:model-value="v => data.schulnummerStatistik = v?.daten(schuljahr)?.schluessel.toString() ?? ''"
-					:item-text=" v => v.daten(schuljahr)?.text ?? '_'" :disabled />
-			</svws-ui-tooltip>
-			<svws-ui-select v-if="isInternal" class="pb-4" title="Schulen innerhalb NRW" removable :items="schulenKatalogEintraege" autocomplete :disabled="isLoading || !hatKompetenzAdd"
-				:model-value="selectedSchule" :item-filter="filterSchulenKatalogEintraege" @update:model-value="updateData" :item-text="schulenKatalogEintragText" />
-			<div v-if="!schuleAlreadyCreated">
-				<svws-ui-content-card title="Schulangaben" />
-				<svws-ui-input-wrapper :grid="2">
-					<svws-ui-checkbox v-model="data.istSichtbar" :disabled="schuleAlreadyCreated || !hatKompetenzAdd">Ist Sichtbar</svws-ui-checkbox>
-					<svws-ui-input-number placeholder="Sortierung" v-model="data.sortierung" :disabled="schuleAlreadyCreated || hatKompetenzAdd" />
-					<svws-ui-select title="Schulform" :items="Schulform.data().getListBySchuljahrAndSchulform(schuljahr, schulform)" :item-text="i => i.daten(schuljahr)?.text?? '_'" removable
-						v-model="selectedSchulform" />
-					<svws-ui-text-input placeholder="Statistik-Schulnummer" required :valid="fieldIsValid('schulnummerStatistik')" readonly
-						:model-value="data.schulnummerStatistik" :disabled />
-					<svws-ui-text-input placeholder="Kürzel" :max-len="10" :valid="fieldIsValid('kuerzel')" v-model="data.kuerzel" :disabled />
-					<svws-ui-text-input placeholder="Schulname" required :max-len="120" :valid="fieldIsValid('name')" v-model="data.name" :disabled />
-					<svws-ui-text-input placeholder="Kurzbezeichnung" required :max-len="40" :valid="fieldIsValid('kurzbezeichnung')" :disabled
-						v-model="data.kurzbezeichnung" />
-					<svws-ui-text-input placeholder="Schulleitung" :max-len="40" :valid="fieldIsValid('schulleiter')" v-model="data.schulleiter" :disabled />
-					<svws-ui-text-input placeholder="Straße" :max-len="55" :valid="fieldIsValid('strassenname')" v-model="adresse" :disabled />
-					<svws-ui-text-input placeholder="PLZ" :max-len="10" :valid="fieldIsValid('plz')" v-model="data.plz" :disabled />
-					<svws-ui-text-input placeholder="Ort" :max-len="50" :valid="fieldIsValid('ort')" v-model="data.ort" :disabled />
-					<svws-ui-text-input placeholder="Telefon" :max-len="20" :valid="fieldIsValid('telefon')" v-model="data.telefon" type="tel" :disabled />
-					<svws-ui-text-input placeholder="Fax" :max-len="20" :valid="fieldIsValid('fax')" type="tel" v-model="data.fax" :disabled />
-					<svws-ui-text-input placeholder="E-Mail-Adresse" :max-len="40" :valid="fieldIsValid('email')" type="email" v-model="data.email" :disabled />
-				</svws-ui-input-wrapper>
-				<div class="mt-7 flex flex-row gap-4 justify end">
-					<svws-ui-button type="secondary" @click="cancel">Abbrechen</svws-ui-button>
-					<svws-ui-button @click="addSchule" :disabled="!formIsValid || !hatKompetenzAdd">Speichern</svws-ui-button>
+		<svws-ui-content-card>
+			<svws-ui-input-wrapper :grid="1">
+				<div class="pb-4 flex flex-row gap-6 items-center">
+					<svws-ui-radio-option label=" Schule aus NRW erstellen "
+						v-model="isInternal"
+						:value="true" :disabled="!hatKompetenzAdd" />
+					<svws-ui-radio-option label=" Externe Schule erstellen "
+						v-model="isInternal"
+						:value="false" :disabled="!hatKompetenzAdd" />
 				</div>
+				<svws-ui-tooltip v-if="!isInternal" color="primary" :show-arrow="false" :indicator="false">
+					<template #content>
+						Schulen außerhalb NRW und sonstige Herkünfte z.B. auch nicht staatl. anerkannte Schulen.
+					</template>
+					<ui-select label="Schulen außerhalb von NRW und Privatschulen" class="pb-4 w-full"
+						:manager="externeSchulenSelectManager"
+						v-model="selectedExterneSchulen"
+						:disabled="!hatKompetenzAdd" />
+				</svws-ui-tooltip>
+				<ui-select v-if="isInternal"
+					label="Schulen innerhalb NRW" class="pb-4 w-full"
+					:manager="schulenNRWSelectManager"
+					v-model="selectedSchule"
+					:disabled="isLoading || !hatKompetenzAdd" searchable />
+				<div v-if="!schuleAlreadyCreated">
+					<svws-ui-content-card title="Schulangaben" />
+					<svws-ui-input-wrapper :grid="2">
+						<ui-select label="Schulform"
+							:manager="schulformenSelectManager"
+							v-model="selectedSchulformen"
+							:disabled="!hatKompetenzAdd" />
+						<svws-ui-text-input placeholder="Statistik-Schulnummer"
+							:model-value="data.schulnummerStatistik"
+							:valid="() => fieldIsValid('schulnummerStatistik')" :disabled="!hatKompetenzAdd" readonly required />
+						<svws-ui-text-input placeholder="Kürzel"
+							v-model="data.kuerzel"
+							:valid="() => fieldIsValid('kuerzel')" :max-len="10" :disabled="!hatKompetenzAdd" />
+						<svws-ui-text-input placeholder="Schulname"
+							v-model="data.name"
+							:valid="() => fieldIsValid('name')" :min-len="1" :max-len="120" :disabled="!hatKompetenzAdd" required />
+						<svws-ui-text-input placeholder="Kurzbezeichnung"
+							v-model="data.kurzbezeichnung"
+							:valid="() => fieldIsValid('kurzbezeichnung')" :min-len="1" :max-len="40" :disabled="!hatKompetenzAdd" required />
+						<svws-ui-text-input placeholder="Schulleitung"
+							v-model="data.schulleiter"
+							:valid="() => fieldIsValid('schulleiter')" :max-len="40" :disabled="!hatKompetenzAdd" />
+						<svws-ui-text-input placeholder="Straße"
+							v-model="strasse"
+							:valid="() => fieldIsValid('strassenname')" :max-len="55" :disabled="!hatKompetenzAdd" />
+						<svws-ui-text-input placeholder="PLZ"
+							v-model="data.plz"
+							:valid="() => fieldIsValid('plz')" :max-len="10" :disabled="!hatKompetenzAdd" />
+						<svws-ui-text-input placeholder="Ort"
+							v-model="data.ort"
+							:valid="() => fieldIsValid('ort')" :max-len="50" :disabled="!hatKompetenzAdd" />
+						<svws-ui-text-input placeholder="Telefon" type="tel"
+							v-model="data.telefon"
+							:valid="() => fieldIsValid('telefon')" :max-len="20" :disabled="!hatKompetenzAdd" />
+						<svws-ui-text-input placeholder="Fax" type="tel"
+							v-model="data.fax"
+							:valid="() => fieldIsValid('fax')" :max-len="20" :disabled="!hatKompetenzAdd" />
+						<svws-ui-text-input placeholder="E-Mail-Adresse" type="email"
+							v-model="data.email"
+							:valid="() => fieldIsValid('email')" :max-len="40" :disabled="!hatKompetenzAdd" />
+					</svws-ui-input-wrapper>
+					<svws-ui-spacing :size="2" />
+					<svws-ui-content-card title="Ansicht & Sortierung">
+						<svws-ui-input-wrapper :grid="2">
+							<svws-ui-input-number placeholder="Sortierung"
+								v-model="data.sortierung"
+								:valid="() => fieldIsValid('sortierung')" :min="0" :max="32000" :disabled="schuleAlreadyCreated || !hatKompetenzAdd" :removable="false" />
+							<svws-ui-spacing />
+							<svws-ui-checkbox v-model="data.istSichtbar" :disabled="schuleAlreadyCreated || !hatKompetenzAdd">
+								Sichtbar
+							</svws-ui-checkbox>
+						</svws-ui-input-wrapper>
+					</svws-ui-content-card>
+				</div>
+				<div v-else-if="schuleAlreadyCreated">
+					<p class="pb-4">Diese Schule wurde bereits angelegt:</p>
+					<svws-ui-button @click="navigateToSelectedSchule"> Zur Schule </svws-ui-button>
+				</div>
+			</svws-ui-input-wrapper>
+			<div v-if="!schuleAlreadyCreated" class="mt-7 flex flex-row gap-4 justify-end w-full">
+				<svws-ui-button type="secondary" @click="cancel">
+					Abbrechen
+				</svws-ui-button>
+				<svws-ui-button @click="addSchule" :disabled="!formIsValid || !hatKompetenzAdd">
+					Speichern
+				</svws-ui-button>
 			</div>
-			<div v-else-if="schuleAlreadyCreated">
-				<p class="pb-4">Diese Schule wurde bereits angelegt:</p>
-				<svws-ui-button @click="navigateToSelectedSchule"> Zur Schule </svws-ui-button>
-			</div>
-			<svws-ui-checkpoint-modal :checkpoint :continue-routing="props.continueRoutingAfterCheckpoint" />
-		</svws-ui-input-wrapper>
+		</svws-ui-content-card>
+		<svws-ui-checkpoint-modal :checkpoint :continue-routing="props.continueRoutingAfterCheckpoint" />
 	</div>
 </template>
 
 <script setup lang="ts">
 
 	import { computed, ref, watch } from "vue";
-	import { JavaObject, JavaString, SchulEintrag, Schulform, AdressenUtils, Herkunftsschulnummer, BenutzerKompetenz } from "@core";
-	import type { SchulenKatalogEintrag, List } from "@core";
+	import { JavaObject, SchulEintrag, Schulform, AdressenUtils, Herkunftsschulnummer, BenutzerKompetenz } from "@core";
+	import type { SchulenKatalogEintrag, HerkunftsschulnummerKatalogEintrag, SchulformKatalogEintrag } from "@core";
 	import type { SchulenNeuProps } from "./SchulenNeuProps";
-	import { filterSchulenKatalogEintraege } from "~/utils/helfer";
-	import { emailIsValid, mandatoryInputIsValid, optionalInputIsValid, phoneNumberIsValid } from "~/util/validation/Validation";
+	import { emailIsValid, isUniqueInList, mandatoryInputIsValid, numberHasDecimals, numberIsValid, optionalInputIsValid, phoneNumberIsValid } from "~/util/validation/Validation";
+	import { CoreTypeSelectManager, SelectManager } from "@ui";
 
 	const props = defineProps<SchulenNeuProps>();
+	const data = ref<SchulEintrag>(Object.assign(new SchulEintrag(), { sortierung: 32000, istSichtbar: true }));
+	const isLoading = ref<boolean>(false);
 	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
-	const disabled = computed(() => !hatKompetenzAdd.value);
 	const isInternal = ref<boolean>(true);
-	const data = ref<SchulEintrag>(Object.assign(new SchulEintrag(), { istSichtbar: true }));
-	const schulenKatalogEintraege = computed<List<SchulenKatalogEintrag>>(() => props.manager().schulenKatalogEintraege);
-	const selectedSchule = ref<SchulenKatalogEintrag>();
-	const externalSchulnummer = ref<Herkunftsschulnummer>();
+	const selectedSchulenKatalogEintrag = ref<SchulenKatalogEintrag>();
 	const schuljahr = computed<number>(() => props.manager().getSchuljahr());
 	const selectedSchulform = computed({
-		get: () => data.value.idSchulform !== null ? Schulform.data().getWertByID(data.value.idSchulform) : null,
-		set: (val: Schulform | null) => {
-			if (val === null) {
+		get: () => Schulform.data().getWertByID(data.value.idSchulform ?? -1),
+		set: (value: Schulform | null) => {
+			if (value === null) {
 				return;
 			}
-			const eintrag = Schulform.data().getEintragBySchuljahrUndWert(schuljahr.value, val);
+			const eintrag = Schulform.data().getEintragBySchuljahrUndWert(schuljahr.value, value);
 			if (eintrag !== null) {
 				data.value.idSchulform = eintrag.id;
 			}
 		},
 	});
-	const adresse = computed({
+
+	const externeSchulenSelectManager = new CoreTypeSelectManager({
+		clazz: Herkunftsschulnummer.class,
+		schuljahr: props.schuljahr,
+		schulformen: props.schulform,
+		optionDisplayText: "text",
+		selectionDisplayText: "text",
+	});
+
+	const schulenNRWSelectManager = new SelectManager<SchulenKatalogEintrag>({
+		options: computed(() => props.manager().schulenKatalogEintraege),
+		optionDisplayText: (s) => schulenKatalogEintragText(s),
+		selectionDisplayText: (s) => schulenKatalogEintragText(s),
+	});
+
+	const schulformenSelectManager = new CoreTypeSelectManager({
+		clazz: Schulform.class,
+		schuljahr: props.schuljahr,
+		schulformen: props.schulform,
+		optionDisplayText: "text",
+		selectionDisplayText: "text",
+	});
+
+	const selectedExterneSchulen = computed<HerkunftsschulnummerKatalogEintrag | null>({
+		get: () => Herkunftsschulnummer.data().getEintragBySchuljahrUndSchluessel(props.schuljahr, data.value.schulnummerStatistik ?? ""),
+		set: (value: HerkunftsschulnummerKatalogEintrag | null) => data.value.schulnummerStatistik = value?.schluessel ?? null,
+	});
+
+	const selectedSchule = computed<SchulenKatalogEintrag | null>({
+		get: () => selectedSchulenKatalogEintrag.value ?? null,
+		set: (value) => {
+			selectedSchulenKatalogEintrag.value = value ?? undefined;
+			updateData(value);
+		},
+	});
+
+	const selectedSchulformen = computed<SchulformKatalogEintrag | null>({
+		get: () => Schulform.data().getEintragByID(data.value.idSchulform ?? -1),
+		set: (value: SchulformKatalogEintrag | null) => data.value.idSchulform = value?.id ?? null,
+	});
+
+	const strasse = computed({
 		get: () => AdressenUtils.combineStrasse(data.value.strassenname, data.value.hausnummer, data.value.zusatzHausnummer),
-		set: (adresse: string | null) => {
-			const vals = AdressenUtils.splitStrasse(adresse);
+		set: (strasse: string | null) => {
+			const vals = AdressenUtils.splitStrasse(strasse);
 			data.value.strassenname = vals[0];
 			data.value.hausnummer = vals[1];
 			data.value.zusatzHausnummer = vals[2];
@@ -97,13 +182,13 @@
 			resetForm();
 			return;
 		}
-		selectedSchule.value = schule;
+		selectedSchulenKatalogEintrag.value = schule;
 		// Felder füllen
-		data.value.kurzbezeichnung = schule.KurzBez ?? "";
+		data.value.kurzbezeichnung = schule.KurzBez;
 		data.value.schulnummerStatistik = schule.SchulNr;
 		data.value.name = (schule.ABez1 ?? "") + (schule.ABez2 ?? "") + (schule.ABez3 ?? "");
 		selectedSchulform.value = Schulform.data().getWertBySchluessel(schule.SF ?? "");
-		adresse.value = schule.Strasse;
+		strasse.value = schule.Strasse;
 		data.value.plz = schule.PLZ;
 		data.value.ort = schule.Ort;
 		data.value.telefon = schule.Telefon;
@@ -114,7 +199,10 @@
 	// ---Bezeichnungen---
 
 	function schulenKatalogEintragText(i: SchulenKatalogEintrag) {
-		return (i.KurzBez !== null) ? `${i.SchulNr}: ${i.KurzBez}` : `${i.SchulNr}: Schule ohne Name`;
+		if (i.KurzBez === null) {
+			return `${i.SchulNr}: Schule ohne Name`;
+		}
+		return `${i.SchulNr}: ${i.KurzBez}`;
 	}
 
 	// ---buttons---
@@ -144,7 +232,7 @@
 
 	function resetForm() {
 		data.value = Object.assign(new SchulEintrag(), { istSichtbar: true });
-		selectedSchule.value = undefined;
+		selectedSchulenKatalogEintrag.value = undefined;
 	}
 
 	async function navigateToSelectedSchule() {
@@ -165,8 +253,6 @@
 		return null;
 	}
 
-	const isLoading = ref<boolean>(false);
-
 	watch(() => data.value, async () => {
 		if (isLoading.value) {
 			return;
@@ -179,72 +265,87 @@
 		resetForm();
 	});
 
-	// ---validation logic---
-
-	function fieldIsValid(field: keyof SchulEintrag | null): (v: string | null) => boolean {
-		return (v: string | null) => {
-			switch (field) {
-				case 'kuerzel':
-					return kuerzelIsValid(data.value.kuerzel);
-				case 'kurzbezeichnung':
-					return mandatoryInputIsValid(data.value.kurzbezeichnung, 40);
-				case 'schulnummerStatistik':
-					return mandatoryInputIsValid(data.value.schulnummerStatistik, 6);
-				case 'name':
-					return mandatoryInputIsValid(data.value.name, 120);
-				case 'schulleiter':
-					return optionalInputIsValid(data.value.schulleiter, 40);
-				case 'strassenname':
-					return adresseIsValid();
-				case 'plz':
-					return optionalNumberIsValid(data.value.plz, 10);
-				case 'ort':
-					return optionalInputIsValid(data.value.ort, 50);
-				case 'telefon':
-					return phoneNumberIsValid(data.value.telefon, 20);
-				case "fax":
-					return phoneNumberIsValid(data.value.fax, 20);
-				case "email":
-					return emailIsValid(data.value.email, 40);
-				default:
-					return true;
-			}
-		};
-	}
-
+	// ---validate---
 	const formIsValid = computed(() => {
-		// alle Felder auf validity prüfen
-		return Object.keys(data.value).every(field => {
-			const validateField = fieldIsValid(field as keyof SchulEintrag);
-			const fieldValue = data.value[field as keyof SchulEintrag] as string | null;
-			return validateField(fieldValue);
-		});
+		return Object.keys(data.value)
+			.every((field: string) => fieldIsValid(field as keyof SchulEintrag));
 	});
 
-	function adresseIsValid() {
+	const fieldIsValid = (field: keyof SchulEintrag | null): boolean => {
+		switch (field) {
+			case 'kuerzel':
+				return kuerzelIsValid(data.value.kuerzel);
+			case 'name':
+				return schulnameIsValid(data.value.name);
+			case 'kurzbezeichnung':
+				return kurzbezeichnungIsValid(data.value.kurzbezeichnung);
+			case 'schulleiter':
+				return schulleiterIsValid(data.value.schulleiter);
+			case 'schulnummerStatistik':
+				return schulnummerStatistikIsValid(data.value.schulnummerStatistik);
+			case 'strassenname':
+				return strasseIsValid();
+			case 'plz':
+				return plzIsValid(data.value.plz);
+			case 'ort':
+				return ortIsValid(data.value.ort);
+			case 'telefon':
+				return phoneNumberIsValid(data.value.telefon, 20);
+			case "fax":
+				return phoneNumberIsValid(data.value.fax, 20);
+			case "email":
+				return emailIsValid(data.value.email, 40);
+			case 'sortierung':
+				return sortierungIsValid(data.value.sortierung);
+			default:
+				return true;
+		}
+	};
+
+	function kuerzelIsValid(kuerzel: string | null): boolean {
+		return optionalInputIsValid(kuerzel, 10)
+			&& isUniqueInList(kuerzel, props.manager().liste.list(), "kuerzel", "id", data.value.id);
+	}
+
+	function schulnameIsValid(schulname: string | null): schulname is string {
+		return schulname !== null
+			&& mandatoryInputIsValid(schulname, 120)
+			&& isUniqueInList(schulname, props.manager().liste.list(), "name", "id", data.value.id);
+	}
+
+	function kurzbezeichnungIsValid(kurzbezeichnung: string | null): kurzbezeichnung is string {
+		return kurzbezeichnung !== null
+			&& mandatoryInputIsValid(kurzbezeichnung, 40)
+			&& isUniqueInList(kurzbezeichnung, props.manager().liste.list(), "kurzbezeichnung", "id", data.value.id);
+	}
+
+	function schulleiterIsValid(schulleiter: string | null): boolean {
+		return optionalInputIsValid(schulleiter, 40);
+	}
+
+	function schulnummerStatistikIsValid(schulnummer: string | null): schulnummer is string {
+		return (schulnummer !== null)
+			&& mandatoryInputIsValid(schulnummer, 6);
+	}
+
+	function strasseIsValid() {
 		return optionalInputIsValid(data.value.strassenname, 55) &&
 			optionalInputIsValid(data.value.hausnummer, 10) &&
 			optionalInputIsValid(data.value.zusatzHausnummer, 30);
 	}
 
-	function optionalNumberIsValid(input: string | null, maxLength: number) {
-		if (input === null || JavaString.isBlank(input)) {
-			return true;
-		}
-		if (input.length > maxLength) {
-			return false;
-		}
-		return /^\d+$/.test(input);
+	function plzIsValid(plz: string | null): boolean {
+		return optionalInputIsValid(plz, 10);
 	}
 
-	function kuerzelIsValid(kuerzel: string | null) {
-		if ((kuerzel === null) || (JavaString.isBlank(kuerzel))) {
-			return true;
-		}
-		if (kuerzel.length > 10) {
-			return false;
-		}
-		return findSchuleByPredicate(schuleintrag => JavaObject.equalsTranspiler(schuleintrag.kuerzel, kuerzel)) === null;
+	function ortIsValid(plz: string | null): boolean {
+		return optionalInputIsValid(plz, 50);
+	}
+
+	function sortierungIsValid(sortierung: number | null): sortierung is number {
+		return sortierung !== null
+			&& !numberHasDecimals(sortierung)
+			&& numberIsValid(sortierung, true, 0, 32000);
 	}
 
 </script>

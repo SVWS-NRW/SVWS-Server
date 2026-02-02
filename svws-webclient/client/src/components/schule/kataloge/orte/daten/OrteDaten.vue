@@ -43,7 +43,7 @@
 	import type { OrteDatenProps } from "~/components/schule/kataloge/orte/daten/OrteDatenProps";
 	import { computed } from "vue";
 	import { BenutzerKompetenz } from "@core";
-	import { mandatoryInputIsValid, numberHasDecimals, numberIsValid, optionalInputIsValid, stringIsNumeric } from "~/util/validation/Validation";
+	import { mandatoryInputIsValid, numberHasDecimals, numberIsValid, optionalInputIsValid } from "~/util/validation/Validation";
 
 	const props = defineProps<OrteDatenProps>();
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
@@ -55,13 +55,13 @@
 
 	async function patchPlz(v: string | null) {
 		if (plzIsValid(v) && ortsnameIsValid(props.manager().daten().ortsname)) {
-			await props.patch({ plz: v?.trim() ?? null });
+			await props.patch({ plz: v.trim() });
 		}
 	}
 
 	async function patchOrtsname(v: string | null) {
 		if (ortsnameIsValid(v)) {
-			await props.patch({ ortsname: v?.trim() ?? null });
+			await props.patch({ ortsname: v.trim() });
 		}
 	}
 
@@ -79,27 +79,16 @@
 
 	async function patchSortierung(sortierung: number | null) {
 		if (sortierungIsValid(sortierung)) {
-			await props.patch({ sortierung: sortierung ?? undefined });
+			await props.patch({ sortierung: sortierung });
 		}
 	}
 
 	// validierung
-	function plzIsValid(v: string | null): boolean {
-		if (!mandatoryInputIsValid(v, 10) || !stringIsNumeric(v)) {
-			return false;
-		}
-		for (const ort of props.manager().liste.list()) {
-			if ((ort.id !== props.manager().daten().id)
-				&& (ort.plz === v)
-				&& (ort.ortsname !== null)
-				&& (ort.ortsname.toLowerCase() === props.manager().daten().ortsname?.toLowerCase())) {
-				return false;
-			}
-		}
-		return true;
+	function plzIsValid(v: string | null): v is string {
+		return mandatoryInputIsValid(v, 10);
 	}
 
-	function ortsnameIsValid(v: string | null): boolean {
+	function ortsnameIsValid(v: string | null): v is string {
 		if (!mandatoryInputIsValid(v, 50)) {
 			return false;
 		}
@@ -114,8 +103,9 @@
 		return true;
 	}
 
-	function sortierungIsValid(sortierung: number | null): boolean {
-		return !numberHasDecimals(sortierung) && numberIsValid(sortierung, true, 0, 32000);
+	function sortierungIsValid(sortierung: number | null): sortierung is number {
+		return !numberHasDecimals(sortierung)
+			&& numberIsValid(sortierung, true, 0, 32000);
 	}
 
 </script>

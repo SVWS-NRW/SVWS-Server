@@ -34,6 +34,7 @@ export class RouteSchulenNeu extends RouteNode<any, RouteSchulen> {
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
 			benutzerKompetenzen: api.benutzerKompetenzen,
+			schuljahr: routeApp.data.aktAbschnitt.value.schuljahr,
 			schulform: api.schulform,
 		};
 	}

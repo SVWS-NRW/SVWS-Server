@@ -9,5 +9,6 @@ export interface SchulenNeuProps {
 	checkpoint: Checkpoint;
 	continueRoutingAfterCheckpoint: () => Promise<RoutingStatus>;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
+	schuljahr: number;
 	schulform: Schulform;
 }

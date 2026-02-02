@@ -47,7 +47,7 @@
 	import type { OrteNeuProps } from "~/components/schule/kataloge/orte/OrteNeuProps";
 	import { computed, ref, watch } from "vue";
 	import { BenutzerKompetenz, OrtKatalogEintrag } from "@core";
-	import { mandatoryInputIsValid, numberHasDecimals, numberIsValid, optionalInputIsValid, stringIsNumeric } from "~/util/validation/Validation";
+	import { mandatoryInputIsValid, numberHasDecimals, numberIsValid, optionalInputIsValid } from "~/util/validation/Validation";
 
 	const props = defineProps<OrteNeuProps>();
 	const data = ref<OrtKatalogEintrag>(Object.assign(new OrtKatalogEintrag(), { istSichtbar: true, sortierung: 32000 }));
@@ -61,14 +61,16 @@
 		}
 
 		for (const ort of props.manager().liste.list()) {
-			if ((ort.plz === data.value.plz) && (ort.ortsname !== null) && (ort.ortsname.toLowerCase() === value.toLowerCase())) {
+			if ((ort.plz === data.value.plz)
+				&& (ort.ortsname !== null)
+				&& (ort.ortsname.toLowerCase() === value.toLowerCase())) {
 				return false;
 			}
 		}
 		return true;
 	}
 
-	function sortierungIsValid(sortierung: number): boolean {
+	function sortierungIsValid(sortierung: number): sortierung is number {
 		return !numberHasDecimals(sortierung)
 			&& numberIsValid(sortierung, true, 0, 32000);
 	}
@@ -78,15 +80,14 @@
 			.every((field: string) => fieldIsValid(field as keyof OrtKatalogEintrag));
 	});
 
-	function plzIsValid() {
-		return mandatoryInputIsValid(data.value.plz, 10)
-			&& stringIsNumeric(data.value.plz);
+	function plzIsValid(plz: string | null): plz is string {
+		return mandatoryInputIsValid(plz, 10);
 	}
 
 	const fieldIsValid = (field: keyof OrtKatalogEintrag): boolean => {
 		switch (field) {
 			case 'plz':
-				return plzIsValid();
+				return plzIsValid(data.value.plz);
 			case 'ortsname':
 				return ortsnameIsValid(data.value.ortsname);
 			case 'kreis':

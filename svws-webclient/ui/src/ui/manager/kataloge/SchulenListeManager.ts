@@ -33,6 +33,12 @@ export class SchulenListeManager extends AuswahlManager<number, SchulEintrag, Sc
 			if (cmp !== 0) {
 				return cmp;
 			}
+			if (a.kuerzel === null && b.kuerzel !== null) {
+				return 1;
+			}
+			if (a.kuerzel !== null && b.kuerzel === null) {
+				return -1;
+			}
 			if (a.kuerzel !== null && b.kuerzel !== null) {
 				cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
 				if (cmp !== 0) {

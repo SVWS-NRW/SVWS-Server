@@ -53,6 +53,8 @@ export class RouteDataSchulen extends RouteDataAuswahl<SchulenListeManager, Rout
 	add = async (data: Partial<SchulEintrag>): Promise<void> => {
 		const schule = await api.server.addSchuleZuKatalog(data, api.schema);
 		await this.setSchuljahresabschnitt(this._state.value.idSchuljahresabschnitt, true);
+		this.manager.liste.add(schule);
+		this.commit();
 		await this.gotoDefaultView(schule.id);
 	};
 
