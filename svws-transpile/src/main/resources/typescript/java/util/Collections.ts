@@ -22,6 +22,16 @@ export class Collections extends JavaObject {
 		return Collections.EMPTY_LIST as List<T>;
 	}
 
+	public static reverse(list: List<unknown>): void {
+		const size = list.size();
+		for (let i = 0; i < Math.floor(size / 2); i++) {
+			const front = list.get(i);
+			const back = list.get(size - 1 - i);
+			list.set(i, back);
+			list.set(size - 1 - i, front);
+		}
+	}
+
 	public transpilerCanonicalName(): string {
 		return 'java.util.Collections';
 	}
