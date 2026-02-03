@@ -2,6 +2,7 @@ package de.svws_nrw.core.utils.bk;
 
 import java.util.Comparator;
 
+import de.svws_nrw.asd.data.schule.BeruflichesGymnasiumStundentafelFach;
 import de.svws_nrw.core.data.bk.abi.BKGymAbiturMarkierungsalgorithmusMarkierung;
 import jakarta.validation.constraints.NotNull;
 
@@ -36,5 +37,15 @@ public final class BKGymAbiturUtils {
 				if (ltmp > 0)
 					return 1;
 				return a.halbjahrID - b.halbjahrID;
+			};
+
+	/**
+	 * Comparator für das DTO BeruflichesGymnasiumStundentafelFach
+	 * Es wird nach höchster Punktzahl, FachID, Halbjahr verglichen, so dass
+	 * die Verwendung des Comparators in sort zu einer eindeutigen Sortierreihenfolge führt.
+	 */
+	public static final @NotNull Comparator<BeruflichesGymnasiumStundentafelFach> comparatorStundentafelFach =
+			(final @NotNull BeruflichesGymnasiumStundentafelFach a, final @NotNull BeruflichesGymnasiumStundentafelFach b) -> {
+				return a.sortierung - b.sortierung;
 			};
 }

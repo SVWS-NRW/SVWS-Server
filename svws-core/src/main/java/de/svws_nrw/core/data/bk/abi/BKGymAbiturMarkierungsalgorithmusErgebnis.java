@@ -22,9 +22,30 @@ public class BKGymAbiturMarkierungsalgorithmusErgebnis {
 	@Schema(description = "gibt an, ob der Algorithmus erfolgreich durchgeführt wurde.", example = "true")
 	public boolean erfolgreich = false;
 
+	/** die Anzahl der eingebrachten Kurse */
+	@Schema(description = "die Anzahl der eingebrachten Kurse.", example = "40")
+	public int eingebrachteKurse = 0;
+
+	/** die Anzahl der Defizite insgesamt */
+	@Schema(description = "die Anzahl der Defizite insgesamt.", example = "3")
+	public int gesamtDefizite = 0;
+
+	/** die Anzahl der Defizite in den Leistungskursen */
+	@Schema(description = "die Anzahl der Defizite in den Leistungskursen.", example = "1")
+	public int lkDefizite = 0;
+
+	/** die Punktanzahl normiert auf 40 Kurse, nur bei Zulassung gesetzt*/
+	@Schema(description = "die Punktanzahl normiert auf 40 Kurse.", example = "421")
+	public int punkteBlockI = 0;
+
+	/** eine Liste von Hinweisen und Meldungen zu verletzten Zulassungsbedingungen*/
+	@ArraySchema(schema = @Schema(implementation = BKGymAbiturMarkierungsalgorithmusMarkierung.class,
+			description = "eine Liste von Hinweisen und Meldungen zu verletzten Zulassungsbedingungen."))
+	public @NotNull List<String> fehlerLog = new ArrayList<>();
+
 	/** eine Liste der vorgenommenen Markierungen von Halbjahres-Belegungen in der Qualifikationsphase */
 	@ArraySchema(schema = @Schema(implementation = BKGymAbiturMarkierungsalgorithmusMarkierung.class,
-			description = "eine Liste der vorgenommenen Markierungen von Halbjahres-Belegungen in der Qualifikationsphase."))
+			description = "eine Liste der vorgenommenen Markierungen von Halbjahres-Belegungen in der Qualifikationsphase"))
 	public @NotNull List<BKGymAbiturMarkierungsalgorithmusMarkierung> markierungen = new ArrayList<>();
 
 	/** Ein Log, der den Ablauf des Markierungsalgorithmus verdeutlicht */

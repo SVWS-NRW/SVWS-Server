@@ -1,6 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { IllegalStateException } from '../../../java/lang/IllegalStateException';
 import { Class } from '../../../java/lang/Class';
+import { BeruflichesGymnasiumStundentafelFach } from '../../../asd/data/schule/BeruflichesGymnasiumStundentafelFach';
 import type { Comparator } from '../../../java/util/Comparator';
 import { BKGymAbiturMarkierungsalgorithmusMarkierung } from '../../../core/data/bk/abi/BKGymAbiturMarkierungsalgorithmusMarkierung';
 
@@ -25,6 +26,15 @@ export class BKGymAbiturUtils extends JavaObject {
 		if (ltmp > 0)
 			return 1;
 		return a.halbjahrID - b.halbjahrID;
+	} };
+
+	/**
+	 *  Comparator für das DTO BeruflichesGymnasiumStundentafelFach
+	 *  Es wird nach höchster Punktzahl, FachID, Halbjahr verglichen, so dass
+	 *  die Verwendung des Comparators in sort zu einer eindeutigen Sortierreihenfolge führt.
+	 */
+	public static readonly comparatorStundentafelFach: Comparator<BeruflichesGymnasiumStundentafelFach> = { compare: (a: BeruflichesGymnasiumStundentafelFach, b: BeruflichesGymnasiumStundentafelFach) => {
+		return a.sortierung - b.sortierung;
 	} };
 
 

@@ -38,11 +38,11 @@ public class BKGymAbiturMarkierungsregelFremdsprachePruefeNeue extends BKGymAbit
 	 */
 	@Override
 	public void markiere(final @NotNull BKGymAbiturMarkierungsVariante variante) {
-		if (variante.varianten.manager.getZweiteFremdspracheInSekIErfuellt()) {
+		if (variante.varianten.abiturdatenManager.getZweiteFremdspracheInSekIErfuellt()) {
 			variante.addLogEintrag(1, "Ausreichende Belegung einer zweiten Fremdsprache in der SekI liegt vor.");
 			return;
 		}
-		final Long zweiteFremdspracheID = variante.varianten.manager.getZweiteFremdspracheID();
+		final Long zweiteFremdspracheID = variante.varianten.abiturdatenManager.getFachbelegungManager().getZweiteFremdspracheID();
 		if (zweiteFremdspracheID == null) {
 			variante.addLogEintrag(1, "Fehler: Es fehlt die Belegung der zweiten Fremdsprache, da nicht in der SekI abgedeckt.");
 			variante.setHatZulassung(false);

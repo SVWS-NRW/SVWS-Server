@@ -12,7 +12,7 @@ export class BKGymAbiturMarkierungsVarianten extends JavaObject {
 	/**
 	 * Der Manager für die Fächer des beruflichen Gymnasiums
 	 */
-	public readonly manager: BKGymAbiturdatenManager;
+	public readonly abiturdatenManager: BKGymAbiturdatenManager;
 
 	/**
 	 * Die verschiedenen Markierungsergebnisse, aus denen das beste Ergebnis gewählt wird.
@@ -32,7 +32,7 @@ export class BKGymAbiturMarkierungsVarianten extends JavaObject {
 	 */
 	public constructor(manager: BKGymAbiturdatenManager) {
 		super();
-		this.manager = manager;
+		this.abiturdatenManager = manager;
 		this.init();
 	}
 
@@ -53,13 +53,18 @@ export class BKGymAbiturMarkierungsVarianten extends JavaObject {
 	 * @param root   die Markierungsvariante
 	 */
 	private reportDoppelteFaecher(root: BKGymAbiturMarkierungsVariante): void {
-		for (const fach of this.manager.getDoppelteFaecher())
-			root.addLogEintrag(0, "Das Fach " + fach + " ist im Fächerkatalog nicht eindeutig bestimmbar. Bitte die Bezeichnungen der Fächer eindeutig festlegen.");
+		for (const fach of this.abiturdatenManager.getFaecherManager().getDoppelteFaecher())
+			root.addLogEintrag(0, "Hinweis: Das Fach " + fach + " ist im Fächerkatalog nicht eindeutig bestimmbar. Bitte die Bezeichnungen der Fächer eindeutig festlegen.");
 	}
 
+	/**
+	 * gibt den Hinweis aus, wenn das der Facharbeit zugeordnete Fach kein Leistungskurs ist
+	 *
+	 * @param root   die Markierungsvariante
+	 */
 	private reportFehlerFacharbeit(root: BKGymAbiturMarkierungsVariante): void {
-		if (!this.manager.getIstFacharbeitLK())
-			root.addLogEintrag(0, "Die Facharbeit ist nicht einem der beiden Leistungkursfächer zugeordnet.");
+		if (!this.abiturdatenManager.getFachbelegungManager().getIstFacharbeitLK())
+			root.addLogEintrag(0, "Hinweis: Die Facharbeit ist nicht einem der beiden Leistungkursfächer zugeordnet.");
 	}
 
 	/**

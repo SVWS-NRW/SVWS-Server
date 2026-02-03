@@ -1,0 +1,11 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [
+    {
+      "code" : "AB_5",
+      "art" : "BELEGUNG",
+      "beschreibung" : "Die gewählte Kombination aus 3. Abiturfach (Biologie) und 4. Abiturfach (Englisch) ist in dem Bildungsgang D0110900 nicht zulässig."
+    }
+  ],
+  "log" : [ ]
+}

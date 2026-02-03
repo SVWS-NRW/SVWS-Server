@@ -1,0 +1,31 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [
+    {
+      "code" : "ST_6",
+      "art" : "BELEGUNG",
+      "beschreibung" : "Das Fach Zweite Fremdsprache der Stundentafel wurde im Halbjahr Q1.1 nicht belegt."
+    },
+    {
+      "code" : "ST_6",
+      "art" : "BELEGUNG",
+      "beschreibung" : "Das Fach Zweite Fremdsprache der Stundentafel wurde im Halbjahr Q1.2 nicht belegt."
+    },
+    {
+      "code" : "ST_6",
+      "art" : "BELEGUNG",
+      "beschreibung" : "Das Fach Zweite Fremdsprache der Stundentafel wurde im Halbjahr Q2.1 nicht belegt."
+    },
+    {
+      "code" : "ST_6",
+      "art" : "BELEGUNG",
+      "beschreibung" : "Das Fach Zweite Fremdsprache der Stundentafel wurde im Halbjahr Q2.2 nicht belegt."
+    },
+    {
+      "code" : "ST_3",
+      "art" : "BELEGUNG",
+      "beschreibung" : "Das Fach Zweite Fremdsprache der Stundentafel wurde nicht im nötigen Stundenumfang belegt."
+    }
+  ],
+  "log" : [ ]
+}

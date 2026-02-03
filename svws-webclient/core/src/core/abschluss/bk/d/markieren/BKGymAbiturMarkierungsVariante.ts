@@ -34,6 +34,11 @@ export class BKGymAbiturMarkierungsVariante extends JavaObject {
 	private hatZulassung: boolean = false;
 
 	/**
+	 * Markierung stoppen
+	 */
+	private gestoppt: boolean = false;
+
+	/**
 	 * Die Summe der Notenpunkte aller Markierungen, LKs sind doppelt gezählt
 	 */
 	private summeNotenpunkte: number = 0;
@@ -79,8 +84,8 @@ export class BKGymAbiturMarkierungsVariante extends JavaObject {
 	 */
 	public static readonly comparator: Comparator<BKGymAbiturMarkierungsVariante> = { compare: (a: BKGymAbiturMarkierungsVariante, b: BKGymAbiturMarkierungsVariante) => {
 		if (a.istErfolgreich() !== b.istErfolgreich())
-			return a.istErfolgreich() ? 1 : -1;
-		return a.getPunktzahlBlockI() - b.getPunktzahlBlockI();
+			return a.istErfolgreich() ? -1 : 1;
+		return b.getPunktzahlBlockI() - a.getPunktzahlBlockI();
 	} };
 
 
@@ -119,6 +124,7 @@ export class BKGymAbiturMarkierungsVariante extends JavaObject {
 			const kennung: string = __param1;
 			const facharbeit: boolean = __param2 as boolean;
 			this.varianten = other.varianten;
+			this.gestoppt = other.gestoppt;
 			this.kennung = other.kennung + "#" + kennung;
 			this.summeNotenpunkte = other.summeNotenpunkte;
 			this.anzahlKurse = other.anzahlKurse;
@@ -126,11 +132,11 @@ export class BKGymAbiturMarkierungsVariante extends JavaObject {
 			this.defiziteGK = other.defiziteGK;
 			if (facharbeit) {
 				this.facharbeitEinbeziehen = true;
-				const punkte: number | null = this.varianten.manager.getAbidaten().facharbeitNotenpunkte;
+				const punkte: number | null = this.varianten.abiturdatenManager.getAbidaten().facharbeitNotenpunkte;
 				this.anzahlKurse += 2;
 				if (punkte !== null)
 					this.summeNotenpunkte += 2 * punkte;
-				if (!this.varianten.manager.getIstFacharbeitLK())
+				if (!this.varianten.abiturdatenManager.getFachbelegungManager().getIstFacharbeitLK())
 					this.setHatZulassung(false);
 			} else {
 				this.facharbeitEinbeziehen = other.facharbeitEinbeziehen;
@@ -148,9 +154,10 @@ export class BKGymAbiturMarkierungsVariante extends JavaObject {
 	 * absteigend nach erreichter Punktzahl
 	 */
 	public init(): void {
-		const fachbelegungen: List<BKGymAbiturFachbelegung> = this.varianten.manager.getAbidaten().fachbelegungen;
-		const schuljahr: number = this.varianten.manager.getSchuljahrAbitur();
+		const fachbelegungen: List<BKGymAbiturFachbelegung> = this.varianten.abiturdatenManager.getAbidaten().fachbelegungen;
+		const schuljahr: number = this.varianten.abiturdatenManager.getSchuljahrAbitur();
 		this.hatZulassung = true;
+		this.gestoppt = false;
 		this.summeNotenpunkte = 0;
 		this.anzahlKurse = 0;
 		this.defiziteLK = 0;
@@ -189,6 +196,23 @@ export class BKGymAbiturMarkierungsVariante extends JavaObject {
 	 */
 	public getKennung(): string | null {
 		return this.kennung;
+	}
+
+	/**
+	 * Setter für gestoppt
+	 * @param gestoppt   ob fortgesetzt werden soll oder nicht.
+	 */
+	public setGestoppt(gestoppt: boolean): void {
+		this.gestoppt = gestoppt;
+	}
+
+	/**
+	 * Getter für gestoppt
+	 *
+	 * @return gestoppt
+	 */
+	public istGestoppt(): boolean {
+		return this.gestoppt;
 	}
 
 	/**
@@ -231,8 +255,8 @@ export class BKGymAbiturMarkierungsVariante extends JavaObject {
 		this.markiert.add(markierung);
 		this.anzahlKurse++;
 		this.summeNotenpunkte += (markierung.punkte === null ? 0 : markierung.punkte);
-		const fachIDLK1: number | null = this.varianten.manager.getAbiFachID(GostAbiturFach.LK1);
-		const fachIDLK2: number | null = this.varianten.manager.getAbiFachID(GostAbiturFach.LK2);
+		const fachIDLK1: number | null = this.varianten.abiturdatenManager.getFachbelegungManager().getAbiFachID(GostAbiturFach.LK1);
+		const fachIDLK2: number | null = this.varianten.abiturdatenManager.getFachbelegungManager().getAbiFachID(GostAbiturFach.LK2);
 		if ((markierung.punkte !== null) && (((fachIDLK1 !== null) && (fachIDLK1 === markierung.fachID)) || ((fachIDLK2 !== null) && (fachIDLK2 === markierung.fachID)))) {
 			this.anzahlKurse++;
 			this.summeNotenpunkte += markierung.punkte;
@@ -251,6 +275,8 @@ export class BKGymAbiturMarkierungsVariante extends JavaObject {
 	 * @return die Anzahl verbleibender Kurse, die nicht markiert werden konnte
 	 */
 	public markiereKursanzahl(kursanzahl: number, bedingung: Predicate<BKGymAbiturMarkierungsalgorithmusMarkierung> | null): number {
+		if (kursanzahl === 0)
+			return kursanzahl;
 		if (bedingung === null)
 			return kursanzahl;
 		let verbleibend: number = kursanzahl;
@@ -280,6 +306,9 @@ export class BKGymAbiturMarkierungsVariante extends JavaObject {
 		if (bedingung === null)
 			return kursanzahl;
 		let verbleibend: number = kursanzahl;
+		for (const marked of this.markiert)
+			if ((verbleibend > 0) && bedingung.test(marked))
+				verbleibend--;
 		for (const unmarked of this.unmarkiert)
 			if ((verbleibend > 0) && bedingung.test(unmarked))
 				verbleibend--;
@@ -385,11 +414,12 @@ export class BKGymAbiturMarkierungsVariante extends JavaObject {
 
 	/**
 	 * Berechnet die normierte Punktezahl in Block I.
+	 * ab 0.5 wird aufgerundet.
 	 *
 	 * @return die Punktanzahl
 	 */
 	public getPunktzahlBlockI(): number {
-		return (this.getDurchschnitt() * 40) as number;
+		return (this.getDurchschnitt() * 40 + 0.5) as number;
 	}
 
 	/**
@@ -400,9 +430,36 @@ export class BKGymAbiturMarkierungsVariante extends JavaObject {
 	public getErgebnis(): BKGymAbiturMarkierungsalgorithmusErgebnis | null {
 		const ergebnis: BKGymAbiturMarkierungsalgorithmusErgebnis | null = new BKGymAbiturMarkierungsalgorithmusErgebnis();
 		ergebnis.erfolgreich = this.istErfolgreich();
+		ergebnis.eingebrachteKurse = this.anzahlEingebrachteKurse();
+		ergebnis.gesamtDefizite = this.getDefizite();
+		ergebnis.lkDefizite = this.defiziteLK;
+		ergebnis.punkteBlockI = this.getPunktzahlBlockI();
+		this.erzeugeFehlerlog(ergebnis.fehlerLog);
 		ergebnis.log.addAll(this.log);
 		ergebnis.markierungen.addAll(this.markiert);
 		return ergebnis;
+	}
+
+	/**
+	 * Extrahiert die Fehlermeldungen aus dem log
+	 * Einträge, die mit Hinweis: beginnen, werden übernommen
+	 * Einträge, die mit Fehler: beginnen, werden übernommen und zusätzlich die Zeile davor.
+	 * 	 *
+	 * @param fehlerLog   die Liste, in die die Fehler eingetragen werden
+	 */
+	private erzeugeFehlerlog(fehlerLog: List<string>): void {
+		let vorherigeZeile: string = "";
+		for (const zeile of this.log) {
+			if (zeile.startsWith("Hinweis:"))
+				fehlerLog.add(zeile);
+			else
+				if (JavaString.contains(zeile, "Fehler:")) {
+					fehlerLog.add(vorherigeZeile);
+					fehlerLog.add(zeile);
+				}
+			if (zeile.startsWith("Regel"))
+				vorherigeZeile = zeile;
+		}
 	}
 
 	/**

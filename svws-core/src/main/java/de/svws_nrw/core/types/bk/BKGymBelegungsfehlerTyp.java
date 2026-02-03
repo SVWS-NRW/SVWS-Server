@@ -8,14 +8,14 @@ import jakarta.validation.constraints.NotNull;
  */
 public enum BKGymBelegungsfehlerTyp {
 
-	/** BelegungsfehlerArt LK_1 */
-	LK_1("LK_1", BKGymBelegungsfehlerArt.BELEGUNG, 10, "Es muss ein erster Leistungskurs gewählt werden."),
+	/** BelegungsfehlerArt LK_1 | Parameter: Fachbezeichnung */
+	LK_1("LK_1", BKGymBelegungsfehlerArt.BELEGUNG, 10, "Das Fach %s ist nicht der erste Leistungskurs."),
 
-	/** BelegungsfehlerArt LK_2 */
-	LK_2("LK_2", BKGymBelegungsfehlerArt.BELEGUNG, 10, "Es muss ein zweiter Leistungskurs gewählt werden."),
+	/** BelegungsfehlerArt LK_2 | Parameter: Fachbezeichnung */
+	LK_2("LK_2", BKGymBelegungsfehlerArt.BELEGUNG, 10, "Das Fach %s ist nicht der zweite Leistungskurs."),
 
-	/** BelegungsfehlerArt LK_3 | Parameter: Fachkürzel von LK1, Fachkürzel von LK2, Gliederung, Fachklassenschlüssel*/
-	LK_3("LK_3", BKGymBelegungsfehlerArt.BELEGUNG, 5, "Die Kombination aus erstem LK (%s) und zweiten LK (%s) ist für den Bildungsgang %s%s nicht zulässig."),
+	/** BelegungsfehlerArt LK_3 | Parameter: Fachbezeichnung */
+	LK_3("LK_3", BKGymBelegungsfehlerArt.BELEGUNG, 10, "Das Grundkursfach %s ist als Leistungskurs markiert."),
 
 	/** BelegungsfehlerArt AB_3 */
 	AB_3("AB_3", BKGymBelegungsfehlerArt.BELEGUNG, 10, "Es muss ein drittes Abiturfach gewählt werden."),
@@ -24,7 +24,7 @@ public enum BKGymBelegungsfehlerTyp {
 	AB_4("AB_4", BKGymBelegungsfehlerArt.BELEGUNG, 10, "Es muss ein viertes Abiturfach gewählt werden."),
 
 	/** BelegungsfehlerArt AB_5 | Parameter: Fachkürzel von AB3, Fachkürzel von AB4, Gliederung, Fachklassenschlüssel*/
-	AB_5("AB_5", BKGymBelegungsfehlerArt.BELEGUNG, 5, "Die gewählte Kombination aus 3. Abiturfach (%s) und 4. Abiturfach (%s& ist in dem Bildungsgang %s%s nicht zulässig."),
+	AB_5("AB_5", BKGymBelegungsfehlerArt.BELEGUNG, 5, "Die gewählte Kombination aus 3. Abiturfach (%s) und 4. Abiturfach (%s) ist in dem Bildungsgang %s%s nicht zulässig."),
 
 	/** BelegungsfehlerArt ST_1 | Parameter: Fachbezeichnung */
 	ST_1("ST_1", BKGymBelegungsfehlerArt.BELEGUNG, 5, "Das Fach %s der Stundentafel wurde mehrfach belegt."),
@@ -54,7 +54,16 @@ public enum BKGymBelegungsfehlerTyp {
 	KL_3("KL_3", BKGymBelegungsfehlerArt.SCHRIFTLICHKEIT, 2, "In der Fremdsprache %s fehlt die Klausurbelegung im Halbjahr %s."),
 
 	/** BelegungsfehlerArt KL_4 Klausur | Parameter: Fachbezeichnung, Halbjahr */
-	KL_4("KL_4", BKGymBelegungsfehlerArt.SCHRIFTLICHKEIT, 2, "Im Abiturfach %s fehlt die Klausurbelegung im Halbjahr %s.");
+	KL_4("KL_4", BKGymBelegungsfehlerArt.SCHRIFTLICHKEIT, 2, "Im Abiturfach %s fehlt die Klausurbelegung im Halbjahr %s."),
+
+	/** BelegungsfehlerArt KL_1_INFO Klausur | Parameter: Fachbezeichnung, Halbjahr */
+	KL_1_INFO("KL_1_INFO", BKGymBelegungsfehlerArt.SCHRIFTLICHKEIT, 0, "Hinweis: Im Fach %s fehlt die Klausurbelegung im Halbjahr %s."),
+
+	/** BelegungsfehlerArt KL_3_INFO Klausur | Parameter: Fachbezeichnung, Halbjahr */
+	KL_3_INFO("KL_3_INFO", BKGymBelegungsfehlerArt.SCHRIFTLICHKEIT, 0, "Hinweis: In der Fremdsprache %s fehlt die Klausurbelegung im Halbjahr %s."),
+
+	/** BelegungsfehlerArt HJ_1_INFO Belegung | Parameter: Halbjahr */
+	HJ_1_INFO("KL_3_INFO", BKGymBelegungsfehlerArt.BELEGUNG, 0, "Hinweis: Das Halbjahr %s ist nicht bewertet. Bedingungen müssen manuell geprüft werden.");
 
 
 	/** Der eindeutige Code des Belegungsfehlers */

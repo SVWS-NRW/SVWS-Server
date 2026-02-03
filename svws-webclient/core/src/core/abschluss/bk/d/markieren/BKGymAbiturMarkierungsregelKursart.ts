@@ -43,7 +43,7 @@ export class BKGymAbiturMarkierungsregelKursart extends BKGymAbiturMarkierungsre
 		const abifach: GostAbiturFach | null = GostAbiturFach.fromKuerzel(this.kursart);
 		if (abifach === null)
 			throw new DeveloperNotificationException("Die Prüfbedingung " + this.kuerzel + " enthält die unzulässige Kursart '" + this.kursart + "'.")
-		const abiFachID: number | null = variante.varianten.manager.getAbiFachID(abifach);
+		const abiFachID: number | null = variante.varianten.abiturdatenManager.getFachbelegungManager().getAbiFachID(abifach);
 		if (abiFachID === null) {
 			variante.addLogEintrag(1, "Fehler: Eine entsprechende Belegung konnte nicht gefunden werden.");
 			variante.setHatZulassung(false);

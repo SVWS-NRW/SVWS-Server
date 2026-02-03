@@ -60,6 +60,8 @@ public abstract class BKGymAbiturMarkierungsregel {
 	 * @param variante   die zu bearbeitende Variante
 	 */
 	public void exec(final @NotNull BKGymAbiturMarkierungsVariante variante) {
+		if (variante.istGestoppt())
+			return;
 		if ((kennungVariante != null) && !kennungVariante.equals(variante.getKennung()))
 			return;
 		variante.addLogEintrag(0, "Regel " + kuerzel + ": " + hinweis + " entsprechend " + bezugAPOBK);
@@ -76,7 +78,7 @@ public abstract class BKGymAbiturMarkierungsregel {
 	 * @param variante          die Variante auf der markiert wird
 	 */
 	public static void markiereFach(final @NotNull String fachbezeichnung, final int anzahl, final @NotNull BKGymAbiturMarkierungsVariante variante) {
-		final Long fachID = variante.varianten.manager.getFachIDByBezeichnung(fachbezeichnung);
+		final Long fachID = variante.varianten.abiturdatenManager.getFachbelegungManager().getFachIDByBezeichnung(fachbezeichnung);
 		if (fachID == null) {
 			variante.addLogEintrag(1, "Fehler: Eine entsprechende Belegung konnte nicht gefunden werden.");
 			variante.setHatZulassung(false);

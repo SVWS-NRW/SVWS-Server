@@ -3,6 +3,7 @@ package de.svws_nrw.core.abschluss.bk.d.markieren;
 import java.util.ArrayList;
 import java.util.function.Predicate;
 
+import de.svws_nrw.core.abschluss.bk.d.BKGymFachbelegungManager;
 import de.svws_nrw.core.data.bk.abi.BKGymAbiturMarkierungsalgorithmusMarkierung;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.bk.BKGymAufgabenfeld;
@@ -126,11 +127,12 @@ public class BKGymAbiturMarkierungsregelFachgruppe extends BKGymAbiturMarkierung
 	 */
 	private static @NotNull ArrayList<@NotNull Long> moeglicheFaecherAusFachgruppe(final @NotNull BKGymAufgabenfeld gruppe, final String seitHalbjahr,
 			final @NotNull BKGymAbiturMarkierungsVariante variante) {
+		final @NotNull BKGymFachbelegungManager fachbelegungManager = variante.varianten.abiturdatenManager.getFachbelegungManager();
 		// prüfe gegebenenfalls die Belegung in der Einführungsphase
 		final @NotNull ArrayList<@NotNull Long> result = new ArrayList<>();
 		if ((seitHalbjahr == null) || seitHalbjahr.isEmpty()) {
 			for (final @NotNull String fach : gruppe.getFaecher()) {
-				result.add(variante.varianten.manager.getFachIDByBezeichnung(fach));
+				result.add(fachbelegungManager.getFachIDByBezeichnung(fach));
 			}
 			return result;
 		}
@@ -138,9 +140,17 @@ public class BKGymAbiturMarkierungsregelFachgruppe extends BKGymAbiturMarkierung
 		if (hj == null)
 			throw new DeveloperNotificationException("Die Prüfbedingung enthält ein ungültiges GostHalbjahr '" + seitHalbjahr + "'.");
 
+		final @NotNull GostHalbjahr @NotNull [] hje = GostHalbjahr.getHalbjahreAbHalbjahr(hj);
+		final @NotNull ArrayList<GostHalbjahr> leereHje = new ArrayList<>();
+		for (final @NotNull GostHalbjahr h : hje)
+			if (!variante.varianten.abiturdatenManager.istBewertet(h))
+				leereHje.add(h);
+		if (!leereHje.isEmpty())
+			variante.addLogEintrag(1, "HINWEIS: Nicht alle Halbjahre bewertet. Bitte die erforderliche Belegung der Fachgruppe '" + gruppe.name() + "' prüfen!");
 		for (final @NotNull String fach : gruppe.getFaecher())
-			if (variante.varianten.manager.pruefeBelegung(variante.varianten.manager.getFachbelegungByBezeichnung(fach), GostHalbjahr.getHalbjahreAbHalbjahr(hj)))
-				result.add(variante.varianten.manager.getFachIDByBezeichnung(fach));
+			if (fachbelegungManager.pruefeBelegung(fachbelegungManager.getFachbelegungByBezeichnung(fach), leereHje, hje))
+				result.add(fachbelegungManager.getFachIDByBezeichnung(fach));
+
 		return result;
 	}
 }

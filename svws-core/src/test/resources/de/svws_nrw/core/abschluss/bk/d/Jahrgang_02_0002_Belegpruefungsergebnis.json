@@ -1,21 +1,36 @@
 {
   "erfolgreich" : false,
-  "fehlercodes" : [ {
-      "code" : "ST_2",
+  "fehlercodes" : [
+    {
+      "code" : "ST_5_INFO",
+      "art" : "HINWEIS",
+      "beschreibung" : "Der Stundenumfang des Fachs Bauplanungstechnik ist in der Summe erfüllt, aber nicht in allen Halbjahren."
+    },
+    {
+      "code" : "ST_6",
       "art" : "BELEGUNG",
-      "beschreibung" : "Das Fach Chemie weist im Halbjahr Q1.1 keine Note auf, obwohl es belegt werden muss."
-    }, {
-      "code" : "ST_2",
+      "beschreibung" : "Das Fach Chemie der Stundentafel wurde im Halbjahr Q1.1 nicht belegt."
+    },
+    {
+      "code" : "ST_6",
       "art" : "BELEGUNG",
-      "beschreibung" : "Das Fach Chemie weist im Halbjahr Q1.2 keine Note auf, obwohl es belegt werden muss."
-    }, {
-      "code" : "ST_3",
-      "art" : "BELEGUNG",
-      "beschreibung" : "Das Fach Chemie der Stundentafel wurde nicht im nötigen Stundenumfang belegt."
-    }, {
+      "beschreibung" : "Das Fach Chemie der Stundentafel wurde im Halbjahr Q1.2 nicht belegt."
+    },
+    {
+      "code" : "ST_5_INFO",
+      "art" : "HINWEIS",
+      "beschreibung" : "Der Stundenumfang des Fachs Chemie ist in der Summe erfüllt, aber nicht in allen Halbjahren."
+    },
+    {
       "code" : "ST_5_INFO",
       "art" : "HINWEIS",
       "beschreibung" : "Der Stundenumfang des Fachs Wirtschaftslehre ist in der Summe erfüllt, aber nicht in allen Halbjahren."
-    } ],
+    },
+    {
+      "code" : "ST_3",
+      "art" : "BELEGUNG",
+      "beschreibung" : "Das Fach Französisch der Stundentafel wurde nicht im nötigen Stundenumfang belegt."
+    }
+  ],
   "log" : [ ]
 }

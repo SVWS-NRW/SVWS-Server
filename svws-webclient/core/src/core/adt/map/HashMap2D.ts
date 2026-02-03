@@ -17,8 +17,43 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 	/**
 	 * Konstruktor.
 	 */
-	public constructor() {
+	public constructor();
+
+	/**
+	 * Copy-Konstruktor.
+	 *
+	 * @param other Die andere HashMap2D, welche kopiert werden soll.
+	 */
+	public constructor(other: HashMap2D<K1, K2, V>);
+
+	/**
+	 * Implementation for method overloads of 'constructor'
+	 */
+	public constructor(__param0?: HashMap2D<K1, K2, V>) {
 		super();
+		if ((__param0 === undefined)) {
+			// empty method body
+		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.adt.map.HashMap2D'))) || (__param0 === null))) {
+			const other: HashMap2D<K1, K2, V> = cast_de_svws_nrw_core_adt_map_HashMap2D(__param0);
+			for (const entry1 of other._map.entrySet()) {
+				const key1: K1 | null = entry1.getKey();
+				if (key1 === null)
+					throw new NullPointerException()
+				const map2: JavaMap<K2, V> | null = this._map.computeIfAbsent(key1, { apply: (k: K1 | null) => new HashMap() });
+				if (map2 === null)
+					throw new NullPointerException()
+				const otherMap2: JavaMap<K2, V> | null = entry1.getValue();
+				if (otherMap2 === null)
+					throw new NullPointerException()
+				for (const entry2 of otherMap2.entrySet()) {
+					const key2: K2 | null = entry2.getKey();
+					if (key2 === null)
+						throw new NullPointerException()
+					const value: V | null = entry2.getValue();
+					map2.put(key2, value);
+				}
+			}
+		} else throw new Error('invalid method overload');
 	}
 
 	/**

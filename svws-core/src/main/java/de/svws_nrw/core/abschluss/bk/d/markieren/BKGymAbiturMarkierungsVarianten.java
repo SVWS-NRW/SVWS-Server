@@ -20,7 +20,7 @@ import jakarta.validation.constraints.NotNull;
 public class BKGymAbiturMarkierungsVarianten {
 
 	/** Der Manager für die Fächer des beruflichen Gymnasiums */
-	public final @NotNull BKGymAbiturdatenManager manager;
+	public final @NotNull BKGymAbiturdatenManager abiturdatenManager;
 
 	/** Die verschiedenen Markierungsergebnisse, aus denen das beste Ergebnis gewählt wird. */
 	private final @NotNull List<BKGymAbiturMarkierungsVariante> ergebnisse = new ArrayList<>();
@@ -35,7 +35,7 @@ public class BKGymAbiturMarkierungsVarianten {
 	 * @param manager   der Manager für die Abiturdaten
 	 */
 	public BKGymAbiturMarkierungsVarianten(final @NotNull BKGymAbiturdatenManager manager) {
-		this.manager = manager;
+		this.abiturdatenManager = manager;
 		init();
 	}
 
@@ -58,15 +58,19 @@ public class BKGymAbiturMarkierungsVarianten {
 	 * @param root   die Markierungsvariante
 	 */
 	private void reportDoppelteFaecher(@NotNull final BKGymAbiturMarkierungsVariante root) {
-		for (final @NotNull String fach : manager.getDoppelteFaecher())
-			root.addLogEintrag(0, "Das Fach " + fach + " ist im Fächerkatalog nicht eindeutig bestimmbar. Bitte die Bezeichnungen der Fächer eindeutig festlegen.");
+		for (final @NotNull String fach : abiturdatenManager.getFaecherManager().getDoppelteFaecher())
+			root.addLogEintrag(0, "Hinweis: Das Fach " + fach + " ist im Fächerkatalog nicht eindeutig bestimmbar. Bitte die Bezeichnungen der Fächer eindeutig festlegen.");
 	}
 
 
-	// prüfe auf Fehler
+	/**
+	 * gibt den Hinweis aus, wenn das der Facharbeit zugeordnete Fach kein Leistungskurs ist
+	 *
+	 * @param root   die Markierungsvariante
+	 */
 	private void reportFehlerFacharbeit(@NotNull final BKGymAbiturMarkierungsVariante root) {
-		if (!manager.getIstFacharbeitLK())
-			root.addLogEintrag(0, "Die Facharbeit ist nicht einem der beiden Leistungkursfächer zugeordnet.");
+		if (!abiturdatenManager.getFachbelegungManager().getIstFacharbeitLK())
+			root.addLogEintrag(0, "Hinweis: Die Facharbeit ist nicht einem der beiden Leistungkursfächer zugeordnet.");
 	}
 
 

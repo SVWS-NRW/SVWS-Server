@@ -31,11 +31,11 @@ export class BKGymAbiturMarkierungsregelFremdspracheZweiteNeu extends BKGymAbitu
 	 * von mindestens vier Jahren erhalten haben.
 	 */
 	public markiere(variante: BKGymAbiturMarkierungsVariante): void {
-		if (variante.varianten.manager.getZweiteFremdspracheInSekIErfuellt()) {
+		if (variante.varianten.abiturdatenManager.getZweiteFremdspracheInSekIErfuellt()) {
 			variante.addLogEintrag(1, "Die Belegung der zweiten Fremdsprache in der SekI sind ausreichend.");
 			return;
 		}
-		const zweiteFremdsprache: string | null = variante.varianten.manager.getZweiteFremdspracheBezeichnung();
+		const zweiteFremdsprache: string | null = variante.varianten.abiturdatenManager.getFachbelegungManager().getZweiteFremdspracheBezeichnung();
 		if (zweiteFremdsprache === null) {
 			variante.addLogEintrag(1, "Fehler: Eine zweite Fremdsprache wurde nicht belegt.");
 			variante.setHatZulassung(false);

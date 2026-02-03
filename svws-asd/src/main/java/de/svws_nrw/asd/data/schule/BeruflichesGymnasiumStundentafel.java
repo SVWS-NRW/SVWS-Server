@@ -34,5 +34,4 @@ public class BeruflichesGymnasiumStundentafel {
 	public BeruflichesGymnasiumStundentafel() {
 		// leer
 	}
-
 }

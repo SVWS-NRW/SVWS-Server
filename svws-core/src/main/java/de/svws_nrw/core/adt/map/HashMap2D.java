@@ -31,6 +31,33 @@ public class HashMap2D<K1, K2, V> {
 	}
 
 	/**
+	 * Copy-Konstruktor.
+	 *
+	 * @param other Die andere HashMap2D, welche kopiert werden soll.
+	 */
+	public HashMap2D(final @NotNull HashMap2D<K1, K2, V> other) {
+		for (final Map.Entry<K1, Map<K2, V>> entry1 : other._map.entrySet()) {
+			final K1 key1 = entry1.getKey();
+			if (key1 == null)
+				throw new NullPointerException();
+			final Map<K2, V> map2 = _map.computeIfAbsent(key1, k -> new HashMap<>());
+			if (map2 == null)
+				throw new NullPointerException();
+			final Map<K2, V> otherMap2 = entry1.getValue();
+			if (otherMap2 == null)
+				throw new NullPointerException();
+			for (final Map.Entry<K2, V> entry2 : otherMap2.entrySet()) {
+				final K2 key2 = entry2.getKey();
+				if (key2 == null)
+					throw new NullPointerException();
+				final V value = entry2.getValue();
+				map2.put(key2, value);
+			}
+		}
+	}
+
+
+	/**
 	 * Fügt die Zuordnung der Map hinzu.
 	 * Falls es den Pfad (key1) oder (key1, key2) nicht gibt, wird er erzeugt.
 	 *

@@ -392,12 +392,16 @@ export { BKGymAbiturdatenManager } from './core/abschluss/bk/d/BKGymAbiturdatenM
 export { BKGymBelegpruefung } from './core/abschluss/bk/d/BKGymBelegpruefung';
 export { BKGymBelegpruefungErgebnisFehler } from './core/abschluss/bk/d/BKGymBelegpruefungErgebnisFehler';
 export { BKGymBelegungsfehler } from './core/abschluss/bk/d/BKGymBelegungsfehler';
+export { BKGymFachbelegungManager } from './core/abschluss/bk/d/BKGymFachbelegungManager';
+export { BKGymFachbelegungZuStundentafelfachManager } from './core/abschluss/bk/d/BKGymFachbelegungZuStundentafelfachManager';
+export { BKGymStundentafelManager } from './core/abschluss/bk/d/BKGymStundentafelManager';
 export { BKGymAbiturMarkierungsVariante } from './core/abschluss/bk/d/markieren/BKGymAbiturMarkierungsVariante';
 export { BKGymAbiturMarkierungsVarianten } from './core/abschluss/bk/d/markieren/BKGymAbiturMarkierungsVarianten';
 export { BKGymAbiturMarkierungsalgorithmus } from './core/abschluss/bk/d/markieren/BKGymAbiturMarkierungsalgorithmus';
 export { BKGymAbiturMarkierungsregel } from './core/abschluss/bk/d/markieren/BKGymAbiturMarkierungsregel';
 export { BKGymAbiturMarkierungsregelAufgabenfeld } from './core/abschluss/bk/d/markieren/BKGymAbiturMarkierungsregelAufgabenfeld';
 export { BKGymAbiturMarkierungsregelDefizite } from './core/abschluss/bk/d/markieren/BKGymAbiturMarkierungsregelDefizite';
+export { BKGymAbiturMarkierungsregelDefizitePruefeLK } from './core/abschluss/bk/d/markieren/BKGymAbiturMarkierungsregelDefizitePruefeLK';
 export { BKGymAbiturMarkierungsregelFach } from './core/abschluss/bk/d/markieren/BKGymAbiturMarkierungsregelFach';
 export { BKGymAbiturMarkierungsregelFachgruppe } from './core/abschluss/bk/d/markieren/BKGymAbiturMarkierungsregelFachgruppe';
 export { BKGymAbiturMarkierungsregelFremdspracheErste } from './core/abschluss/bk/d/markieren/BKGymAbiturMarkierungsregelFremdspracheErste';
@@ -409,6 +413,7 @@ export { BKGymAbiturMarkierungsregelKursart } from './core/abschluss/bk/d/markie
 export { BKGymAbiturMarkierungsregelMaxAnzahlkurse } from './core/abschluss/bk/d/markieren/BKGymAbiturMarkierungsregelMaxAnzahlkurse';
 export { BKGymAbiturMarkierungsregelMinAnzahlkurse } from './core/abschluss/bk/d/markieren/BKGymAbiturMarkierungsregelMinAnzahlkurse';
 export { BKGymAbiturMarkierungsregelMinAnzahlpunkte } from './core/abschluss/bk/d/markieren/BKGymAbiturMarkierungsregelMinAnzahlpunkte';
+export { BKGymAbiturMarkierungsregelPruefeVorraussetzung } from './core/abschluss/bk/d/markieren/BKGymAbiturMarkierungsregelPruefeVorraussetzung';
 export { AbschlussFaecherGruppe } from './core/abschluss/ge/AbschlussFaecherGruppe';
 export { AbschlussFaecherGruppen } from './core/abschluss/ge/AbschlussFaecherGruppen';
 export { ServiceAbschlussHA10 } from './core/abschluss/ge/ServiceAbschlussHA10';
