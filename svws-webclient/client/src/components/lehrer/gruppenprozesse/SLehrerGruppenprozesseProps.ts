@@ -12,5 +12,5 @@ export interface LehrerGruppenprozesseProps {
 	schulgliederungen: List<Schulgliederung>;
 	lehrerListeManager: () => LehrerListeManager;
 	deleteLehrer: () => Promise<[boolean, List<string | null>]>;
-	deleteLehrerCheck: () => [boolean, List<string>];
+	deleteCheck: () => { success: boolean, logs: Iterable<string> };
 }

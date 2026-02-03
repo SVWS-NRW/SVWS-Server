@@ -92,8 +92,8 @@
 				subtitle="Setze einen Löschvermerk bei den ausgewählten Lehrkräften." :is-open="currentAction === 'delete'"
 				@update:is-open="(isOpen) => setCurrentAction('delete', isOpen)">
 				<div>
-					<span v-if="deleteLehrerCheck().success">Bereit zum Löschen.</span>
-					<template v-else v-for="message in deleteLehrerCheck().logs" :key="message">
+					<span v-if="deleteCheck().success">Bereit zum Löschen.</span>
+					<template v-else v-for="message in deleteCheck().logs" :key="message">
 						<span class="text-ui-danger"> {{ message }} <br> </span>
 					</template>
 				</div>
@@ -134,7 +134,7 @@
 	const isPrintDisabled = computed<boolean>(() => !props.lehrerListeManager().liste.auswahlExists() || loading.value);
 	const isPrintStundenplanDisabled = computed<boolean>(() => isPrintDisabled.value || stundenplanAuswahl.value === undefined);
 	const isEmailStundenplanDisabled = computed<boolean>(() => isPrintStundenplanDisabled.value || ((emailBetreff.value.trim().length) === 0) || ((emailText.value.trim().length) === 0));
-	const isDeleteDisabled = computed<boolean>(() => !hatKompetenzLoeschen.value || !props.lehrerListeManager().liste.auswahlExists() || !props.deleteLehrerCheck().success || loading.value);
+	const isDeleteDisabled = computed<boolean>(() => !hatKompetenzLoeschen.value || !props.lehrerListeManager().liste.auswahlExists() || !props.deleteCheck().success || loading.value);
 
 	const stundenplanAuswahl = ref<StundenplanListeEintrag>();
 	const currentAction = ref<Action>('');
@@ -262,8 +262,8 @@
 		const emailDaten = new ReportingEMailDaten();
 		emailDaten.empfaengerTyp = ReportingEMailEmpfaengerTyp.LEHRER.getId();
 		emailDaten.istPrivateEmailAlternative = istPrivateEmailAlternative.value;
-		emailDaten.betreff = (((emailBetreff.value.trim().length) !== 0) ? emailBetreff.value : ("Stundenplan " + stundenplanAuswahl.value.bezeichnung));
-		emailDaten.text = (((emailText.value.trim().length) !== 0) ? emailText.value : ("Im Anhang dieser E-Mail ist der Stundenplan " + stundenplanAuswahl.value.bezeichnung + " enthalten."));
+		emailDaten.betreff = (((emailBetreff.value.trim().length) === 0) ? ("Stundenplan " + stundenplanAuswahl.value.bezeichnung) : emailBetreff.value);
+		emailDaten.text = (((emailText.value.trim().length) === 0) ? ("Im Anhang dieser E-Mail ist der Stundenplan " + stundenplanAuswahl.value.bezeichnung + " enthalten.") : emailText.value);
 		reportingParameter.eMailDaten = emailDaten;
 		reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.STUNDENPLANUNG_V_LEHRER_STUNDENPLAN.getVorlageParameterList());
 		for (const vp of reportingParameter.vorlageParameter) {

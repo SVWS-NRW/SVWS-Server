@@ -46,8 +46,8 @@
 	const status = ref<boolean | undefined>();
 	const hatKompetenzLoeschen = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
 	const hatkeineErforderlicheKompetenz = computed<boolean>(() => !hatKompetenzLoeschen.value);
-	const deleteCheckErrors = computed<List<string>>(() => props.deleteCheck()[1]);
-	const selectedAllowedToDelete = computed<boolean>(() => props.deleteCheck()[0]);
+	const selectedAllowedToDelete = computed<boolean>(() => props.deleteCheck().success);
+	const deleteCheckErrors = computed<Iterable<string>>(() => props.deleteCheck().logs);
 
 	async function deleteSelectedJahrgaenge() {
 		isLoading.value = true;

@@ -66,7 +66,7 @@ export class RouteDataOrtsteile extends RouteDataAuswahl<OrtsteileListeManager, 
 		return `Ortsteil ${ortsteil?.ortsteil ?? '???'} (ID: ${id}) wurde erfolgreich gelöscht.`;
 	}
 
-	deleteCheck = (): [boolean, List<string>] => {
+	deleteCheck = (): { success: boolean, logs: Iterable<string> } => {
 		const errorLog = new ArrayList<string>();
 
 		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
@@ -82,7 +82,7 @@ export class RouteDataOrtsteile extends RouteDataAuswahl<OrtsteileListeManager, 
 			errorLog.add(this.getErrorMessageForReferencedOrtsteile(idsOfReferencedOrtsteile));
 		}
 
-		return [errorLog.isEmpty(), errorLog];
+		return { success: errorLog.isEmpty(), logs: errorLog };
 	};
 
 	private getErrorMessageForReferencedOrtsteile(idsOfReferencedOrtsteile: JavaSet<number>): string {

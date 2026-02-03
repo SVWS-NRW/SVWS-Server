@@ -57,7 +57,7 @@ export class RouteDataKonfessionen extends RouteDataAuswahl<KonfessionenListeMan
 		return `Konfession ${konfession?.kuerzel} (ID: ${id.toString()}) wurde erfolgreich gelöscht.`;
 	}
 
-	public checkBeforeDeletion = (): [boolean, List<string>] => {
+	public deleteCheck = (): { success: boolean, logs: Iterable<string> } => {
 		const errorLog = new ArrayList<string>();
 		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Konfessionen vor.');
@@ -68,7 +68,7 @@ export class RouteDataKonfessionen extends RouteDataAuswahl<KonfessionenListeMan
 		if (!this.manager.idsReferencedKonfessionen.isEmpty()) {
 			errorLog.add(this.getErrorMessageForReferencedKonfessionen());
 		}
-		return [errorLog.isEmpty(), errorLog];
+		return { success: errorLog.isEmpty(), logs: errorLog };
 	};
 
 	private getErrorMessageForReferencedKonfessionen(): string {

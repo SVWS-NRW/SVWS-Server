@@ -57,7 +57,7 @@ export class RouteDataHaltestellen extends RouteDataAuswahl<HaltestellenListeMan
 		await this.gotoDefaultView(result.id);
 	};
 
-	deleteCheck = (): [boolean, List<string>] => {
+	deleteCheck = (): { success: boolean, logs: Iterable<string> } => {
 		const errorLog = new ArrayList<string>();
 		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Haltestellen vor.');
@@ -68,7 +68,7 @@ export class RouteDataHaltestellen extends RouteDataAuswahl<HaltestellenListeMan
 		if (!this.manager.idsReferencedHaltestellen.isEmpty()) {
 			errorLog.add(this.getErrorMessageForReferencedHaltestellen());
 		}
-		return [errorLog.isEmpty(), errorLog];
+		return { success: errorLog.isEmpty(), logs: errorLog };
 	};
 
 	private getErrorMessageForReferencedHaltestellen(): string {

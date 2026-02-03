@@ -4,8 +4,8 @@
 			<ui-card icon="i-ri-delete-bin-line" title="Löschen" subtitle="Ausgewählte Verbindungen werden gelöscht."
 				:is-open="currentAction === 'delete'" @update:is-open="(isOpen) => setCurrentAction('delete', isOpen)">
 				<div>
-					<span v-if="preConditionCheck[0]">Alle ausgewählten Verbindungen sind bereit zum Löschen.</span>
-					<template v-else v-for="message, i in preConditionCheck[1]" :key="i">
+					<span v-if="preConditionCheck.success">Alle ausgewählten Verbindungen sind bereit zum Löschen.</span>
+					<template v-else v-for="message, i in preConditionCheck.logs" :key="i">
 						<span class="text-ui-danger"> {{ message }} <br> </span>
 					</template>
 				</div>
@@ -45,7 +45,7 @@
 	const status = ref<boolean | undefined>();
 
 	const preConditionCheck = computed(() => {
-		return [true, []];
+		return { success: true, logs: [] };
 	});
 
 	function setCurrentAction(newAction: string, open: boolean) {

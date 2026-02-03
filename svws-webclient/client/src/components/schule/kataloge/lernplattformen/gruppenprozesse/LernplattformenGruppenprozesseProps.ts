@@ -7,6 +7,6 @@ export interface LernplattformenGruppenprozesseProps {
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
 	manager: () => LernplattformListeManager;
 	delete: () => Promise<[boolean, List<string | null>]>;
-	deleteCheck: () => [boolean, List<string>];
+	deleteCheck: () => { success: boolean, logs: Iterable<string> };
 	gotoDefaultView: (eintragId?: number | null) => Promise<void>;
 }

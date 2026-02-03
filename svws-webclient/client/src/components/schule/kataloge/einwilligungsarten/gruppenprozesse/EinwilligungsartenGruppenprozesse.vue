@@ -6,8 +6,8 @@
 		<div class="flex flex-col">
 			<ui-card v-if="hatKompetenzLoeschen" title="Löschen" subtitle="Ausgewählte Einwilligungsarten werden gelöscht." icon="i-ri-delete-bin-line">
 				<div>
-					<span v-if="preConditionCheck[0]">Alle ausgewählten Einwilligungsarten sind bereit zum Löschen.</span>
-					<template v-else v-for="message in preConditionCheck[1]" :key="message">
+					<span v-if="preConditionCheck.success">Alle ausgewählten Einwilligungsarten sind bereit zum Löschen.</span>
+					<template v-else v-for="message in preConditionCheck.logs" :key="message">
 						<span class="text-ui-danger whitespace-pre-line"> {{ message }} <br> </span>
 					</template>
 				</div>
@@ -65,7 +65,7 @@
 	const status = ref<boolean | undefined>();
 	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
 	const hatIrgendwelcheKompetenzen = computed<boolean>(() => hatKompetenzLoeschen.value);
-	const preConditionCheck = computed<[boolean, List<string>]>(() => props.deleteCheck());
+	const preConditionCheck = computed<{ success: boolean, logs: Iterable<string> }>(() => props.deleteCheck());
 
 	function toggleWarningModal() {
 		warningModalIsShown.value = !warningModalIsShown.value;

@@ -57,7 +57,7 @@ export class RouteDataFoerderschwerpunkte extends RouteDataAuswahl<Foerderschwer
 		await this.gotoDefaultView(result.id);
 	};
 
-	deleteCheck = (): [boolean, List<string>] => {
+	deleteCheck = (): { success: boolean, logs: Iterable<string> } => {
 		const errorLog = new ArrayList<string>();
 
 		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
@@ -72,7 +72,7 @@ export class RouteDataFoerderschwerpunkte extends RouteDataAuswahl<Foerderschwer
 			errorLog.add(this.getErrorMessageForReferencedFoerderschwerpunkte());
 		}
 
-		return [errorLog.isEmpty(), errorLog];
+		return { success: errorLog.isEmpty(), logs: errorLog };
 	};
 
 	private getErrorMessageForReferencedFoerderschwerpunkte(): string {

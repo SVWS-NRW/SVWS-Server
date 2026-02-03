@@ -55,7 +55,7 @@ export class RouteDataErzieherarten extends RouteDataAuswahl<ErzieherartListeMan
 		return `Erzieherart ${erzieherart?.bezeichnung ?? '???'} (ID: ${id}) wurde erfolgreich gelöscht.`;
 	}
 
-	deleteCheck = (): [boolean, List<string>] => {
+	deleteCheck = (): { success: boolean, logs: Iterable<string> } => {
 		const errorLog = new ArrayList<string>();
 
 		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
@@ -68,7 +68,7 @@ export class RouteDataErzieherarten extends RouteDataAuswahl<ErzieherartListeMan
 		if (!idsOfReferencedErzieherarten.isEmpty()) {
 			errorLog.add(this.getErrorMessageForReferencedErzieherarten(idsOfReferencedErzieherarten));
 		}
-		return [errorLog.isEmpty(), errorLog];
+		return { success: errorLog.isEmpty(), logs: errorLog };
 	};
 
 	private getErrorMessageForReferencedErzieherarten(idsOfReferencedErzieherarten: JavaSet<number>): string {

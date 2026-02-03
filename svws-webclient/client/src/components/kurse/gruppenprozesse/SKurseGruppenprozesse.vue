@@ -110,13 +110,13 @@
 			<ui-card v-if="ServerMode.DEV.checkServerMode(serverMode) && hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen" subtitle="Ausgewählte Kurse werden gelöscht."
 				:is-open="currentAction === 'delete'" @update:is-open="(isOpen) => setCurrentAction('delete', isOpen)">
 				<div>
-					<span v-if="preConditionCheck[0]">Alle ausgewählten Kurse sind bereit zum Löschen.</span>
-					<template v-else v-for="message, i in preConditionCheck[1]" :key="i">
+					<span v-if="preConditionCheck.success">Alle ausgewählten Kurse sind bereit zum Löschen.</span>
+					<template v-else v-for="message, i in preConditionCheck.logs" :key="i">
 						<span class="text-ui-danger"> {{ message }} <br> </span>
 					</template>
 				</div>
 				<template #buttonFooterLeft>
-					<svws-ui-button :disabled="!preConditionCheck[0] || loading" title="Löschen" @click="entferneKurse" :is-loading="loading" class="mt-4">
+					<svws-ui-button :disabled="!preConditionCheck.success || loading" title="Löschen" @click="entferneKurse" :is-loading="loading" class="mt-4">
 						<svws-ui-spinner v-if="loading" spinning />
 						<span v-else class="icon i-ri-play-line" />
 						Löschen
@@ -143,10 +143,6 @@
 	const props = defineProps<KurseGruppenprozesseProps>();
 
 	const currentAction = ref<Action>('');
-	const oldAction = ref<{ name: string | undefined; open: boolean }>({
-		name: undefined,
-		open: false,
-	});
 	const loading = ref<boolean>(false);
 	const logs = ref<List<string | null> | undefined>();
 	const status = ref<boolean | undefined>();
@@ -188,9 +184,9 @@
 
 	const preConditionCheck = computed(() => {
 		if (currentAction.value === 'delete') {
-			return [true, []];
+			return { success: true, logs: new ArrayList<string>() };
 		}
-		return [false, []];
+		return { success: false, logs: new ArrayList<string>() };
 	});
 
 	function setCurrentAction(newAction: Action, open: boolean) {

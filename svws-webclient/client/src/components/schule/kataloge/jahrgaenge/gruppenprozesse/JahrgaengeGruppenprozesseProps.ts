@@ -5,6 +5,6 @@ export interface JahrgaengeGruppenprozesseProps {
 	serverMode: ServerMode;
 	manager: () => JahrgaengeListeManager;
 	delete: () => Promise<[boolean, List<string | null>]>;
-	deleteCheck: () => [boolean, List<string>];
+	deleteCheck: () => { success: boolean, logs: Iterable<string> };
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
 }

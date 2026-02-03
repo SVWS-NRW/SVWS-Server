@@ -64,7 +64,7 @@ export class RouteDataBetriebe extends RouteDataAuswahl<BetriebeListeManager, Ro
 		return `Betrieb ${betrieb?.name ?? '???'} (ID: ${id}) wurde erfolgreich gelöscht.`;
 	}
 
-	deleteCheck = (): [boolean, List<string>] => {
+	deleteCheck = (): { success: boolean, logs: Iterable<string> } => {
 		const errorLog = new ArrayList<string>();
 
 		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
@@ -80,7 +80,7 @@ export class RouteDataBetriebe extends RouteDataAuswahl<BetriebeListeManager, Ro
 			errorLog.add(this.getErrorMessageForReferencedBetriebe(idsOfReferencedBetriebe));
 		}
 
-		return [errorLog.isEmpty(), errorLog];
+		return { success: errorLog.isEmpty(), logs: errorLog };
 	};
 
 	private getErrorMessageForReferencedBetriebe(idsOfReferencedBetriebe: JavaSet<number>): string {

@@ -4,7 +4,7 @@ import type { KonfessionenListeManager } from "@ui";
 export interface KonfessionenGruppenprozesseProps {
 	serverMode: ServerMode;
 	delete: () => Promise<[boolean, List<string | null>]>;
-	checkBeforeDeletion: () => [boolean, List<string>]
+	deleteCheck: () => { success: boolean, logs: Iterable<string> };
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
 	manager: () => KonfessionenListeManager;
 	gotoDefaultView: (eintragId?: number | null) => Promise<void>;

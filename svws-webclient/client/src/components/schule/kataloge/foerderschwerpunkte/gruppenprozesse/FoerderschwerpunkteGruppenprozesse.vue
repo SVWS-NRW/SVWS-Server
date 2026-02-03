@@ -6,8 +6,8 @@
 		<div v-if="ServerMode.DEV.checkServerMode(serverMode)" class="flex flex-col gap-4">
 			<ui-card v-if="hatKompetenzLoeschen" title="Löschen" subtitle="Ausgewählte Förderschwerpunkte werden gelöscht" icon="i-ri-delete-bin-line">
 				<div>
-					<span v-if="preConditionCheck[0]">Alle ausgewählten Förderschwerpunkte sind bereit zum Löschen.</span>
-					<template v-else v-for="message in preConditionCheck[1]" :key="message">
+					<span v-if="preConditionCheck.success">Alle ausgewählten Förderschwerpunkte sind bereit zum Löschen.</span>
+					<template v-else v-for="message in preConditionCheck.logs" :key="message">
 						<span class="text-ui-danger whitespace-pre-line"> {{ message }} <br> </span>
 					</template>
 				</div>
@@ -45,7 +45,7 @@
 	const status = ref<boolean | undefined>();
 	const hatKompetenzLoeschen = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
 	const hatIrgendwelcheKompetenzen = computed<boolean>(() => hatKompetenzLoeschen.value);
-	const preConditionCheck = computed<[boolean, List<string>]>(() => props.deleteCheck());
+	const preConditionCheck = computed<{ success: boolean, logs: Iterable<string> }>(() => props.deleteCheck());
 	const allEntriesDeletable = computed<boolean>(() => props.manager().getIdsReferencedFoerderschwerpunkte().isEmpty());
 
 	async function deleteSelectedFoerderschwerpunkte(): Promise<void> {
