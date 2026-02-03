@@ -106,7 +106,6 @@ import { KAOAEbene4KatalogEintrag } from '../asd/data/kaoa/KAOAEbene4KatalogEint
 import { KAOAKategorieKatalogEintrag } from '../asd/data/kaoa/KAOAKategorieKatalogEintrag';
 import { KAOAMerkmalKatalogEintrag } from '../asd/data/kaoa/KAOAMerkmalKatalogEintrag';
 import { KAOAZusatzmerkmalKatalogEintrag } from '../asd/data/kaoa/KAOAZusatzmerkmalKatalogEintrag';
-import { KatalogEintragOrte } from '../core/data/kataloge/KatalogEintragOrte';
 import { KatalogEintragStrassen } from '../core/data/kataloge/KatalogEintragStrassen';
 import { KatalogEntlassgrund } from '../core/data/kataloge/KatalogEntlassgrund';
 import { Kindergarten } from '../core/data/schule/Kindergarten';
@@ -382,34 +381,6 @@ export class ApiServer extends BaseApi {
 		const body : string = FoerderschwerpunktEintrag.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
-
-
-	/**
-	 * Implementierung der GET-Methode getKatalogOrte für den Zugriff auf die URL https://{hostname}/db/{schema}/allgemein/orte
-	 *
-	 * Erstellt eine Liste aller in dem Katalog vorhandenen Orte. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Eine Liste von Orts-Katalog-Einträgen
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<KatalogEintragOrte>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
-	 *   Code 404: Keine Orts-Katalog-Einträge gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Eine Liste von Orts-Katalog-Einträgen
-	 */
-	public async getKatalogOrte(schema : string) : Promise<List<KatalogEintragOrte>> {
-		const path = "/db/{schema}/allgemein/orte"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<KatalogEintragOrte>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KatalogEintragOrte.transpilerFromJSON(text)); });
-		return ret;
-	}
-
 
 	/**
 	 * Implementierung der GET-Methode getKatalogStrassen für den Zugriff auf die URL https://{hostname}/db/{schema}/allgemein/strassen
