@@ -186,6 +186,14 @@ class DataSchulenTest {
 	}
 
 	@Test
+	@DisplayName("getLongId | Erfolg")
+	void getLongId() {
+		final var dto = getDtoSchuleNRW();
+
+		assertThat(this.data.getLongId(dto)).isEqualTo(1L);
+	}
+
+	@Test
 	@DisplayName("map | Erfolgreiches mapping")
 	void mapSuccess() {
 		final var dtoSchuleNRW = getDtoSchuleNRW();

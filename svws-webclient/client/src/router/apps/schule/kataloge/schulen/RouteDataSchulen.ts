@@ -1,4 +1,4 @@
-import type { List, SchulEintrag, SimpleOperationResponse } from "@core";
+import { BenutzerKompetenz, List, SchulEintrag, SimpleOperationResponse } from "@core";
 import type { RouteParamsRawGeneric } from "vue-router";
 import { ArrayList } from "@core";
 import { api } from "~/router/Api";
@@ -45,9 +45,7 @@ export class RouteDataSchulen extends RouteDataAuswahl<SchulenListeManager, Rout
 	}
 
 	protected async doDelete(ids: List<number>): Promise<List<SimpleOperationResponse>> {
-		//  TODO: anpassen auf SimpleOperationResponse
-		// return await api.server.deleteJahrgaenge(ids, api.schema);
-		return new ArrayList();
+		return await api.server.deleteSchulenVonKatalog(ids, api.schema);
 	}
 
 	add = async (data: Partial<SchulEintrag>): Promise<void> => {
@@ -58,8 +56,22 @@ export class RouteDataSchulen extends RouteDataAuswahl<SchulenListeManager, Rout
 		await this.gotoDefaultView(schule.id);
 	};
 
+	deleteCheck = (): [boolean, List<string>] => {
+		const errorLog = new ArrayList<string>();
+
+		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
+			errorLog.add('Es liegt keine Berechtigung zum Löschen von Schulen vor.');
+		}
+
+		if (!this.manager.liste.auswahlExists()) {
+			errorLog.add('Es wurde keine Schule zum Löschen ausgewählt.');
+		}
+
+		return [errorLog.isEmpty(), errorLog];
+	};
+
 	protected deleteMessage(id: number, schule: SchulEintrag | null): string {
-		return `Schule ${schule?.kuerzel ?? '???'} (ID: ${id}) wurde erfolgreich gelöscht.`;
+		return `Schule ${schule?.name ?? '???'} (ID: ${id}) wurde erfolgreich gelöscht.`;
 	}
 }
 

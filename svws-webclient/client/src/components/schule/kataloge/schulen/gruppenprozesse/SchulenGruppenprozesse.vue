@@ -1,20 +1,21 @@
 <template>
 	<div class="page page-grid-cards">
-		<div v-if="!hatIrgendwelcheKompetenzen">
+		<div v-if="hatkeineErforderlicheKompetenz">
 			Für die Nutzung der Gruppenprozesse fehlen Benutzerkompetenzen.
 		</div>
-		<div v-if="ServerMode.DEV.checkServerMode(serverMode)" class="flex flex-col gap-y-16 lg:gap-y-16">
-			<ui-card v-if="hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen" subtitle="Ausgewählte Schulen werden gelöscht.">
+		<div v-if="ServerMode.DEV.checkServerMode(serverMode)" class="flex flex-col gap-4">
+			<ui-card v-if="hatKompetenzLoeschen" title="Löschen" subtitle="Ausgewählte Schulen werden gelöscht." icon="i-ri-delete-bin-line">
 				<div>
-					<!-- TODO: Vollständige Vorbedingungsprüfung für das Löschen einbauen -->
-					<span v-if="false">Alle ausgewählten Schulen sind bereit zum Löschen.</span>
-					<template v-else v-for="message in []" :key="message">
-						<span class="text-ui-danger"> {{ message }} <br> </span>
+					<span v-if="selectedAllowedToDelete">Alle ausgewählten Schulen sind bereit zum Löschen.</span>
+					<template v-else v-for="message in deleteCheckErrors" :key="message">
+						<span class="text-ui-danger whitespace-pre-line"> {{ message }} <br> </span>
 					</template>
 				</div>
 				<template #buttonFooterLeft>
-					<svws-ui-button :disabled="true" title="Löschen" @click="deleteSchulen" :is-loading="loading" class="mt-4">
-						<svws-ui-spinner v-if="loading" spinning />
+					<svws-ui-button title="Löschen" class="mt-4"
+						@click="deleteSelectedSchulen"
+						:disabled="!selectedAllowedToDelete || !props.manager().liste.auswahlExists()" :is-loading>
+						<svws-ui-spinner v-if="isLoading" spinning />
 						<span v-else class="icon i-ri-play-line" />
 						Löschen
 					</svws-ui-button>
@@ -22,14 +23,12 @@
 			</ui-card>
 			<log-box :logs :status>
 				<template #button>
-					<svws-ui-button v-if="status !== undefined" type="transparent" @click="clearLog" title="Log verwerfen">Log verwerfen</svws-ui-button>
+					<svws-ui-button v-if="status !== undefined" type="transparent"
+						@click="clearLog" title="Log verwerfen">
+						Log verwerfen
+					</svws-ui-button>
 				</template>
 			</log-box>
-		</div>
-		<div v-else>
-			<svws-ui-todo title="Schulen - Gruppenprozesse">
-				Dieser Bereich ist noch in Entwicklung. Hier werden später Gruppenprozesse zu den Schulen vorhanden sein.
-			</svws-ui-todo>
 		</div>
 	</div>
 </template>
@@ -42,29 +41,27 @@
 	import { BenutzerKompetenz, ServerMode } from "@core";
 
 	const props = defineProps<SchulenGruppenprozesseProps>();
-
 	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
-	const hatIrgendwelcheKompetenzen = computed(() => hatKompetenzLoeschen.value);
-
-	const loading = ref<boolean>(false);
+	const hatkeineErforderlicheKompetenz = computed<boolean>(() => !hatKompetenzLoeschen.value);
+	const isLoading = ref<boolean>(false);
 	const logs = ref<List<string | null> | undefined>();
 	const status = ref<boolean | undefined>();
+	const deleteCheckErrors = computed<List<string>>(() => props.deleteCheck()[1]);
+	const selectedAllowedToDelete = computed<boolean>(() => props.deleteCheck()[0]);
 
 
-	function clearLog() {
-		loading.value = false;
-		logs.value = undefined;
-		status.value = undefined;
-	}
-
-	async function deleteSchulen() {
-		loading.value = true;
-
+	async function deleteSelectedSchulen() {
+		isLoading.value = true;
 		const [delStatus, logMessages] = await props.delete();
 		logs.value = logMessages;
 		status.value = delStatus;
+		isLoading.value = false;
+	}
 
-		loading.value = false;
+	function clearLog() {
+		isLoading.value = false;
+		logs.value = undefined;
+		status.value = undefined;
 	}
 
 </script>

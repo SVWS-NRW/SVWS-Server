@@ -72,6 +72,11 @@ public final class DataSchulen extends DataManagerRevised<Long, DTOSchuleNRW, Sc
 	}
 
 	@Override
+	protected long getLongId(final DTOSchuleNRW sto) {
+		return sto.ID;
+	}
+
+	@Override
 	public SchulEintrag map(final DTOSchuleNRW dto) {
 		final SchulEintrag schule = new SchulEintrag();
 		schule.id = dto.ID;
