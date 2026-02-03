@@ -8,7 +8,9 @@
 			{{ value ? DateUtils.gibDatumGermanFormat(value) : "-" }}
 		</template>
 		<template #cell(faecher)="{ value }">
-			{{ value || '-' }}
+			<div class="break-all line-clamp-3">
+				{{ value || '-' }}
+			</div>
 		</template>
 		<template #cell(datumUeberpruefung)="{ value }">
 			{{ value ? DateUtils.gibDatumGermanFormat(value) : "-" }}
@@ -69,10 +71,10 @@
 	});
 
 	const columns: DataTableColumn[] = [
-		{ key: "datumAngelegt", label: "Angelegt am" },
-		{ key: "faecher", label: "Fächer" },
-		{ key: "datumUeberpruefung", label: "Überprüfung bis" },
-		{ key: "abgeschlossen", label: "Empfehlung abgeschlossen" },
+		{ key: "datumAngelegt", label: "Angelegt am", fixedWidth: 8, align: "center" },
+		{ key: "faecher", label: "Fächer", fixedWidth: 30 },
+		{ key: "datumUeberpruefung", label: "Überprüfung bis", fixedWidth: 10, align: "center" },
+		{ key: "abgeschlossen", label: "Empfehlung abgeschlossen", fixedWidth: 13, align: "center" },
 	];
 
 	async function deleteAuswahl() {
