@@ -14,7 +14,7 @@
 		"dev": "vite",
 		"build": "vite build",
 		"serve": "vite preview",
-		"lint": "eslint \"src/**/*.{ts,vue}\" --cache",
+		"lint": "eslint \"src/**/*.{ts,vue}\" --cache --max-warnings=0",
 		"lint-tsc": "vue-tsc --noEmit"
 	},
 	"dependencies": {

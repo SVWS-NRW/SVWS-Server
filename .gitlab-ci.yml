@@ -38,76 +38,31 @@ stages:
     - publish
     - scheduled
 
-.schedule:
-    rules:
-        - if: '$CI_PIPELINE_SOURCE == "schedule"'
-
-.no_schedule:
-    rules:
-        - if: '$CI_PIPELINE_SOURCE != "schedule"'
-
-lint:eslint:full:
+lint:eslint:
     image: ${REGISTRY_HOST}/dockerhub_proxy/node:24-slim
     stage: lint
-    extends: .no_schedule
     interruptible: true
     before_script:
         - apt-get update
         - apt-get install -y git
         - rm -rf /var/lib/apt/lists/*
-
         - npm ci
     script:
         - time echo -e "svws-webclient/admin\nsvws-webclient/client\nsvws-webclient/ui\nsvws-webclient/enmserver\nsvws-webclient/laufbahnplanung" \
             | xargs -P5 -I{} npm --workspace {} run lint
     rules:
-        - if: $CI_COMMIT_BRANCH == 'dev' || $CI_COMMIT_BRANCH == 'master' # läuft in dev & master Pipeline
+        - if: '$CI_PIPELINE_SOURCE == "schedule"' # läuft nicht in Scheduled Pipeline
+          when: never
+        - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/' # läuft nicht in Release Pipeline
+          when: never
         - if: $CI_PIPELINE_SOURCE == 'merge_request_event' # läuft in MR-Pipeline
         - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS # läuft nicht in Branch Pipeline, wenn bereits ein offener MR existiert
           when: never
-        - when: manual # läuft sonst nur manuell
-
-lint:eslint:changed:
-    image: ${REGISTRY_HOST}/dockerhub_proxy/node:24-slim
-    stage: lint
-    extends: .no_schedule
-    interruptible: true
-    variables:
-        GIT_DEPTH: "0"
-    before_script:
-        - apt-get update
-        - apt-get install -y git
-        - rm -rf /var/lib/apt/lists/*
-
-        - npm ci
-    script:
-        - |
-            git fetch origin dev
-            BASE=$(git merge-base HEAD origin/dev)
-            # 1. Diff Files zwischen Branch Head <-> origin/dev Head ermitteln
-            # 2. *.ts & *.vue Files inkludieren
-            # 3. *.test.ts Files exkludieren
-            CHANGED_FILES=$(git diff --diff-filter=d --name-only "$BASE" HEAD \
-                | grep -E '\.ts$|\.vue$' \
-                | grep -vE '\.test\.ts$' || true)
-
-            if [ -n "$CHANGED_FILES" ]; then
-              echo "Starte ESLint für geänderte Dateien:"
-              echo "$CHANGED_FILES"
-              npx eslint --ignore-pattern '**/svws-webclient/core/**/*' $CHANGED_FILES
-            else
-              echo "Keine Änderungen an .ts/.vue Dateien – Skip ESLint"
-              exit 0
-            fi
-    rules:
-        - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS # läuft nicht in Branch Pipeline, wenn bereits ein offener MR existiert
-          when: never
-        - if: $CI_COMMIT_BRANCH && $CI_COMMIT_BRANCH != 'dev' && $CI_COMMIT_BRANCH != 'master' # läuft in Branch Pipelines außer "dev" oder "master"
+        - if: $CI_COMMIT_BRANCH # läuft in Branch Pipeline
         - when: never # läuft sonst nicht
 
 build:
     stage: build
-    extends: .no_schedule
     interruptible: true
     cache:
         <<: *global_cache
@@ -126,6 +81,8 @@ build:
             - "./**/build/sonar/**"
         expire_in: "1 days"
     rules:
+        - if: '$CI_PIPELINE_SOURCE == "schedule"' # läuft nicht in Scheduled Pipeline
+          when: never
         - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/' # läuft in Release Pipeline
         - if: $CI_PIPELINE_SOURCE == 'merge_request_event' # läuft in MR-Pipeline
         - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS # läuft nicht in Branch Pipeline, wenn bereits ein offener MR existiert
@@ -138,7 +95,6 @@ test:integration-tests:
     stage: test
     dependencies:
         - build
-    extends: .no_schedule
     interruptible: false
     variables:
         USE_SYSTEM_NODE: "1" # Node aus dem Test-Runner Image wird verwendet und nicht erneut heruntergeladen
@@ -161,6 +117,8 @@ test:integration-tests:
         reports:
             junit: "**/tests/**/build/test-results/**/*.xml"
     rules:
+        - if: '$CI_PIPELINE_SOURCE == "schedule"' # läuft nicht in Scheduled Pipeline
+          when: never
         - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/' # läuft in Release Pipeline
         - if: $CI_PIPELINE_SOURCE == 'merge_request_event' # läuft in MR-Pipeline
         - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS # läuft nicht in Branch Pipeline, wenn bereits ein offener MR existiert
@@ -172,13 +130,14 @@ cleanup:integration-tests:
     stage: cleanup
     needs:
         - test:integration-tests
-    extends: .no_schedule
     interruptible: false
     before_script:
         - chmod +x ./.gitlab/.script/*.sh
     script:
         - ./.gitlab/.script/cleanup_integration_test_container.sh ${CI_COMMIT_SHORT_SHA}
     rules:
+        - if: '$CI_PIPELINE_SOURCE == "schedule"' # läuft nicht in Scheduled Pipeline
+          when: never
         - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/' # läuft in Release Pipeline
         - if: $CI_PIPELINE_SOURCE == 'merge_request_event' # läuft in MR-Pipeline
         - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS # läuft nicht in Branch Pipeline, wenn bereits ein offener MR existiert
@@ -194,7 +153,6 @@ analyze:sonarqube:
           artifacts: true # benötigt sources und test-results
         - job: test:integration-tests
           artifacts: true # benötigt integration test-results
-    extends: .no_schedule
     interruptible: true
     variables:
         SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
@@ -229,6 +187,8 @@ analyze:sonarqube:
         paths:
             - .sonar/cache
     rules:
+        - if: '$CI_PIPELINE_SOURCE == "schedule"' # läuft nicht in Scheduled Pipeline
+          when: never
         - if: $CI_COMMIT_BRANCH == 'dev' || $CI_COMMIT_BRANCH == 'master' # läuft in dev & master Pipeline
         - if: $CI_PIPELINE_SOURCE == 'merge_request_event' # läuft in MR-Pipeline
         - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS # läuft nicht in Branch Pipeline, wenn bereits ein offener MR existiert
@@ -242,7 +202,6 @@ package:installer:snapshot:win:
     needs:
         - build
         - test:integration-tests
-    extends: .no_schedule
     before_script:
         - chmod +x ./deployment/setupVersion.sh
         - ./deployment/setupVersion.sh
@@ -258,6 +217,8 @@ package:installer:snapshot:win:
         paths:
             - artifacts_windows/
     rules:
+        - if: '$CI_PIPELINE_SOURCE == "schedule"' # läuft nicht in Scheduled Pipeline
+          when: never
         - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS # läuft nicht in Branch Pipeline, wenn bereits ein offener MR existiert
           when: never
         - when: manual # läuft sonst nur manuell
@@ -268,7 +229,6 @@ package:installer:release:win:
     stage: package
     needs:
         - build
-    extends: .no_schedule
     before_script:
         - chmod +x ./deployment/setupVersion.sh
         - ./deployment/setupVersion.sh
@@ -284,6 +244,8 @@ package:installer:release:win:
         paths:
             - artifacts_windows/
     rules:
+        - if: '$CI_PIPELINE_SOURCE == "schedule"' # läuft nicht in Scheduled Pipeline
+          when: never
         - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/' # läuft in Release Pipeline
         - when: never # läuft sonst nicht
 
@@ -291,7 +253,6 @@ package:installer:release:linux:
     stage: package
     needs:
         - build
-    extends: .no_schedule
     before_script:
         - chmod +x ./deployment/setupVersion.sh
         - ./deployment/setupVersion.sh
@@ -307,6 +268,8 @@ package:installer:release:linux:
         paths:
             - artifacts_linux/
     rules:
+        - if: '$CI_PIPELINE_SOURCE == "schedule"' # läuft nicht in Scheduled Pipeline
+          when: never
         - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/' # läuft in Release Pipeline
         - when: never # läuft sonst nicht
 
@@ -317,7 +280,6 @@ sign:jars-and-installer:release:
         - build
         - package:installer:release:win
         - package:installer:release:linux
-    extends: .no_schedule
     before_script:
         - chmod u+x config/signing/*.sh
     script:
@@ -333,6 +295,8 @@ sign:jars-and-installer:release:
             - "./build/signing/**/*"
             - "./build/signing"
     rules:
+        - if: '$CI_PIPELINE_SOURCE == "schedule"' # läuft nicht in Scheduled Pipeline
+          when: never
         - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/' # läuft in Release Pipeline
         - when: never # läuft sonst nicht
 
@@ -341,7 +305,6 @@ publish:all:release:
     needs:
         - build
         - sign:jars-and-installer:release
-    extends: .no_schedule
     variables:
         SECURE_FILES_DOWNLOAD_PATH: '/'
     before_script:
@@ -353,6 +316,8 @@ publish:all:release:
     script:
         - ./gradlew publishReleaseAll
     rules:
+        - if: '$CI_PIPELINE_SOURCE == "schedule"' # läuft nicht in Scheduled Pipeline
+          when: never
         - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/' # läuft in Release Pipeline
         - when: never # läuft sonst nicht
 
@@ -361,7 +326,6 @@ publish:maven:release:
     needs:
         - build
         - sign:jars-and-installer:release
-    extends: .no_schedule
     variables:
         SECURE_FILES_DOWNLOAD_PATH: '/'
     before_script:
@@ -373,6 +337,8 @@ publish:maven:release:
     script:
         - ./gradlew publishAllPublicationsToSonatypeRepository closeAndReleaseSonatypeStagingRepository
     rules:
+        - if: '$CI_PIPELINE_SOURCE == "schedule"' # läuft nicht in Scheduled Pipeline
+          when: never
         - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/' # läuft in Release Pipeline
         - when: never # läuft sonst nicht
 
@@ -381,7 +347,6 @@ publish:dockerhub:release:
     needs:
         - build
         - sign:jars-and-installer:release
-    extends: .no_schedule
     variables:
         SECURE_FILES_DOWNLOAD_PATH: '/'
     before_script:
@@ -395,6 +360,8 @@ publish:dockerhub:release:
     script:
         - ./gradlew :deployment:docker:dockerPushAllDockerhub
     rules:
+        - if: '$CI_PIPELINE_SOURCE == "schedule"' # läuft nicht in Scheduled Pipeline
+          when: never
         - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/' # läuft in Release Pipeline
         - when: never # läuft sonst nicht
 
@@ -403,7 +370,6 @@ publish:github:release:
     needs:
         - build
         - sign:jars-and-installer:release
-    extends: .no_schedule
     variables:
         SECURE_FILES_DOWNLOAD_PATH: '/'
     before_script:
@@ -415,16 +381,17 @@ publish:github:release:
     script:
         - ./gradlew :deployment:githubRelease
     rules:
+        - if: '$CI_PIPELINE_SOURCE == "schedule"' # läuft nicht in Scheduled Pipeline
+          when: never
         - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/' # läuft in Release Pipeline
         - when: never # läuft sonst nicht
 
 scheduled:cleanup-sonarqube:
     stage: scheduled
-    extends: .schedule
     before_script:
         - chmod +x ./.gitlab/.script/cleanup_orphan_sonarqube_mr_analyses.sh
     script:
         - ./.gitlab/.script/cleanup_orphan_sonarqube_mr_analyses.sh
     rules:
-        - if: $SCHEDULED_JOB_NAME == "cleanup-sonarqube" # läuft nur als schedule Pipeline mit "cleanup-sonarqube" Flag
+        - if: '$CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB_NAME == "cleanup-sonarqube"' # läuft nur als Scheduled Pipeline mit Variable SCHEDULED_JOB_NAME="cleanup-sonarqube"
         - when: never # läuft sonst nicht

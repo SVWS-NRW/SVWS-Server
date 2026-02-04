@@ -15,7 +15,7 @@
 		"test:sync": "vitest run ./tests/sync --mode allowDestructiveTests --outputFile build/test-results/sync-test-results.xml",
 		"test:afterSetup": "vitest run ./tests/afterSetup --mode allowDestructiveTests --outputFile build/test-results/after-setup-test-results.xml",
 		"test:tempDockerEnv": "vitest run ./tests --mode allowDestructiveTests ",
-		"lint": "eslint 'tests/**/*.{ts,vue}' --cache",
+		"lint": "eslint 'tests/**/*.{ts,vue}' --cache --max-warnings=0",
 		"lint-fix": "eslint 'tests/**/*.{ts,vue}' --cache --fix",
 		"build": "tsc",
 		"check-licenses": "license-checker-rseidelsohn --summary --unknown"

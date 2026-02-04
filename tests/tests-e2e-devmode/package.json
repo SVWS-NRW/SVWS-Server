@@ -9,7 +9,7 @@
 		"test" : "playwright test",
 		"show": "playwright show-report",
 		"ui": "playwright test --ui",
-		"lint": "eslint 'src_old/**/*.ts' --cache",
+		"lint": "eslint 'tests/**/*.ts' --cache --max-warnings=0",
 		"codegen": "playwright codegen https://localhost -o build/codegen/gen_test.ts --ignore-https-errors"
 	},
 	"keywords": [],

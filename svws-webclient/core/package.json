@@ -12,7 +12,7 @@
 		"test": "vitest",
 		"test:run": "vitest run --coverage",
 		"test:runAgainstTestEnv": "vitest run --coverage.reporter=html",
-		"lint": "eslint \"src/**/*.{ts,vue}\" --cache",
+		"lint": "eslint \"src/**/*.{ts,vue}\" --cache --max-warnings=0",
 		"build": "tsc"
 	},
 	"exports": {

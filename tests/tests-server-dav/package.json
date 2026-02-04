@@ -13,7 +13,7 @@
 	"scripts": {
 		"test:local": "vitest run ./tests",
 		"test:tempDockerEnv": "vitest run ./tests --mode allowDestructiveTests ",
-		"lint": "eslint 'tests/**/*.{ts,vue}' --cache",
+		"lint": "eslint 'tests/**/*.{ts,vue}' --cache --max-warnings=0",
 		"lint-fix": "eslint 'tests/**/*.{ts,vue}' --cache --fix",
 		"build": "tsc",
 		"check-licenses": "license-checker-rseidelsohn --summary --unknown"

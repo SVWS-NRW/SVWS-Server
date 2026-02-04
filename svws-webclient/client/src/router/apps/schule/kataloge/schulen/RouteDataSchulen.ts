@@ -1,6 +1,6 @@
-import { BenutzerKompetenz, List, SchulEintrag, SimpleOperationResponse } from "@core";
+import type { List, SchulEintrag, SimpleOperationResponse } from "@core";
+import { ArrayList, BenutzerKompetenz } from "@core";
 import type { RouteParamsRawGeneric } from "vue-router";
-import { ArrayList } from "@core";
 import { api } from "~/router/Api";
 import { routeSchulenDaten } from "./RouteSchulenDaten";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
