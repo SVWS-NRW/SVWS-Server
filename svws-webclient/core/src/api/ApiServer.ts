@@ -382,6 +382,7 @@ export class ApiServer extends BaseApi {
 		return super.patchJSON(path, body);
 	}
 
+
 	/**
 	 * Implementierung der GET-Methode getKatalogStrassen für den Zugriff auf die URL https://{hostname}/db/{schema}/allgemein/strassen
 	 *
