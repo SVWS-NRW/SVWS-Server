@@ -85,10 +85,14 @@
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input class="contentFocusField" placeholder="Straße" :readonly :model-value="strasse"
 					@change="patchStrasse" type="text" span="full" />
-				<svws-ui-select title="Wohnort" :readonly v-model="wohnortID" :items="mapOrte"
-					:item-filter="orte_filter" :item-sort="orte_sort" :item-text="i => `${i.plz} ${i.ortsname}`" autocomplete statistics />
-				<svws-ui-select title="Ortsteil" :readonly v-model="ortsteilID" :items="ortsteile"
-					:item-text="i => i.ortsteil ?? ''" :item-sort="ortsteilSort" :item-filter="ortsteilFilter" removable />
+				<ui-select label="Wohnort"
+					v-model="selectedOrt"
+					:manager="orteManager"
+					searchable :readonly statistics :removable="false" />
+				<ui-select label="Ortsteil"
+					v-model="selectedOrtsteil"
+					:manager="ortsteilManager"
+					searchable :readonly statistics :disabled="selectedOrt === null" />
 				<svws-ui-spacing />
 				<svws-ui-text-input placeholder="Telefon" :readonly :model-value="schuelerListeManager().daten().telefon"
 					@change="telefon => patch({ telefon })" type="tel" :max-len="20" />
@@ -163,7 +167,7 @@
 		<svws-ui-content-card title="Migrationshintergrund" v-if="hatKompetenzAnsehen">
 			<template #actions>
 				<svws-ui-checkbox :readonly class="mt-3 xl:mt-0" :model-value="hatMigrationshintergrund" statistics
-					@update:model-value="hatMigrationshintergrund => patch({hatMigrationshintergrund})" focus-class-content>
+					@update:model-value="value => patch({hatMigrationshintergrund: value})" focus-class-content>
 					Migrationshintergrund vorhanden
 				</svws-ui-checkbox>
 			</template>
@@ -192,10 +196,12 @@
 	import { computed, ref } from "vue";
 	import type { SchuelerIndividualdatenProps } from "./SSchuelerIndividualdatenProps";
 	import type { OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, SchulEintrag, Telefonart, Haltestelle, Fahrschuelerart } from "@core";
-	import { SchuelerStatus, Schulform, Nationalitaeten, Geschlecht, AdressenUtils, Verkehrssprache, BenutzerKompetenz, DateUtils, SchuelerTelefon, ServerMode, ArrayList, ReportingParameter, ReportingSortierungDefinition, ReportingReportvorlage } from "@core";
+	import { SchuelerStatus, Schulform, Nationalitaeten, Geschlecht, AdressenUtils, Verkehrssprache, BenutzerKompetenz, DateUtils, SchuelerTelefon, ServerMode,
+		ArrayList, ReportingParameter, ReportingSortierungDefinition, ReportingReportvorlage } from "@core";
 	import { verkehrsspracheKatalogEintragFilter, verkehrsspracheKatalogEintragSort, nationalitaetenKatalogEintragFilter, nationalitaetenKatalogEintragSort,
-		staatsangehoerigkeitKatalogEintragSort, staatsangehoerigkeitKatalogEintragFilter, orte_sort, orte_filter, ortsteilSort, ortsteilFilter } from "~/utils/helfer";
+		staatsangehoerigkeitKatalogEintragSort, staatsangehoerigkeitKatalogEintragFilter, orte_sort, ortsteilSort } from "~/utils/helfer";
 	import type { DataTableColumn } from "@ui";
+	import { SelectManager } from "@ui";
 	import { mandatoryInputIsValid, optionalInputIsValid } from "~/util/validation/Validation";
 
 	const props = defineProps<SchuelerIndividualdatenProps>();
@@ -205,6 +211,16 @@
 	const hatKompetenzAnsehen = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN));
 	const readonly = computed<boolean>(() => !props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
 	const hatKompetenzDrucken = computed(() => (props.benutzerKompetenzen.has(BenutzerKompetenz.BERICHTE_ALLE_FORMULARE_DRUCKEN) || props.benutzerKompetenzen.has(BenutzerKompetenz.BERICHTE_STANDARDFORMULARE_DRUCKEN)));
+	const orte = computed(() => props.mapOrte.values());
+	const ortsteile = computed(() => {
+		const filtered = new ArrayList<OrtsteilKatalogEintrag>();
+		for (const ortsteil of props.mapOrtsteile.values()) {
+			if (ortsteil.ort_id === props.schuelerListeManager().daten().wohnortID) {
+				filtered.add(ortsteil);
+			}
+		}
+		return filtered;
+	});
 
 	function enterDefaultMode() {
 		setMode(Mode.DEFAULT);
@@ -287,7 +303,7 @@
 	}
 
 	function setMode(newMode: Mode) {
-		return currentMode.value = newMode;
+		currentMode.value = newMode;
 	}
 
 	function resetTelefonnummer() {
@@ -299,7 +315,7 @@
 	}
 
 	function istGeburtsdatumGueltig(strDate: string | null) {
-		if (strDate === null || typeof strDate === 'number') {
+		if (strDate === null) {
 			return true;
 		}
 		try {
@@ -325,33 +341,6 @@
 			await props.patch({ strassenname: vals[0], hausnummer: vals[1], hausnummerZusatz: vals[2] });
 		}
 	}
-
-	const wohnortID = computed<OrtKatalogEintrag | undefined>({
-		get: () => {
-			const id = props.schuelerListeManager().daten().wohnortID;
-			return id === null ? undefined : props.mapOrte.get(id);
-		},
-		set: (value) => void props.patch({ wohnortID: value === undefined ? null : value.id }),
-	});
-
-	const ortsteile = computed<Array<OrtsteilKatalogEintrag>>(() => {
-		const result: Array<OrtsteilKatalogEintrag> = [];
-		for (const ortsteil of props.mapOrtsteile.values()) {
-			if ((ortsteil.ort_id === null) || (ortsteil.ort_id === props.schuelerListeManager().daten().wohnortID)) {
-				result.push(ortsteil);
-			}
-		}
-		return result;
-	});
-
-	const ortsteilID = computed<OrtsteilKatalogEintrag | undefined>({
-		get: () => {
-			const id = props.schuelerListeManager().daten().ortsteilID;
-			return id === null ? undefined : props.mapOrtsteile.get(id);
-		},
-		set: (value) => void props.patch({ ortsteilID: value === undefined ? null : value.id }),
-	});
-
 
 	const staatsangehoerigkeit = computed<Nationalitaeten>({
 		get: () => Nationalitaeten.getByISO3(props.schuelerListeManager().daten().staatsangehoerigkeitID) ?? Nationalitaeten.getDEU(),
@@ -420,6 +409,36 @@
 			return id === null ? undefined : props.mapHaltestellen.get(id);
 		},
 		set: (value) => void props.patch({ haltestelleID: value === undefined ? null : value.id }),
+	});
+
+	const selectedOrt = computed<OrtKatalogEintrag | null>({
+		get: () => {
+			const id = props.schuelerListeManager().daten().wohnortID;
+			return props.mapOrte.get(id ?? -1) ?? null;
+		},
+		set: (value: OrtKatalogEintrag | null) => void props.patch({ wohnortID: value?.id ?? null }),
+	});
+
+	const selectedOrtsteil = computed<OrtsteilKatalogEintrag | null>({
+		get: () => {
+			const id = props.schuelerListeManager().daten().ortsteilID;
+			return props.mapOrtsteile.get(id ?? -1) ?? null;
+		},
+		set: (value: OrtsteilKatalogEintrag | null) => void props.patch({ ortsteilID: value?.id ?? null }),
+	});
+
+	const orteManager = new SelectManager({
+		options: orte,
+		sort: orte_sort,
+		optionDisplayText: v => v.plz + ' ' + v.ortsname,
+		selectionDisplayText: v => v.plz + ' ' + v.ortsname,
+	});
+
+	const ortsteilManager = new SelectManager({
+		options: ortsteile,
+		sort: ortsteilSort,
+		optionDisplayText: v => v.ortsteil ?? '',
+		selectionDisplayText: v => v.ortsteil ?? '',
 	});
 
 	const loading = ref<boolean>(false);

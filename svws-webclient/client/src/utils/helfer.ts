@@ -109,7 +109,7 @@ export function nationalitaetenKatalogEintragSort(a: Nationalitaeten, b: Nationa
 
 export function ortsteilSort(a: OrtsteilKatalogEintrag, b: OrtsteilKatalogEintrag) {
 	if ((a.ortsteil !== null) && (b.ortsteil !== null)) {
-		a.ortsteil.localeCompare(b.ortsteil);
+		return a.ortsteil.localeCompare(b.ortsteil);
 	} else if ((a.ortsteil !== null) && (b.ortsteil === null)) {
 		return -1;
 	} else if ((a.ortsteil === null) && (b.ortsteil === null)) {
