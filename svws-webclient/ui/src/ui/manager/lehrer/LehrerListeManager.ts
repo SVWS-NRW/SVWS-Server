@@ -19,7 +19,6 @@ import { AuswahlManager } from '../../AuswahlManager';
 import { AttributMitAuswahl } from '../../AttributMitAuswahl';
 import { LehrerUtils } from '../../../../../core/src/core/utils/lehrer/LehrerUtils';
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
-import { Class } from '../../../../../core/src/java/lang/Class';
 import { Arrays } from '../../../../../core/src/java/util/Arrays';
 import type { JavaMap } from '../../../../../core/src/java/util/JavaMap';
 import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
@@ -347,18 +346,4 @@ export class LehrerListeManager extends AuswahlManager<number, LehrerListeEintra
 		this.setFilterAuswahlPermitted(srcManager.isFilterAuswahlPermitted());
 	}
 
-	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.core.utils.lehrer.LehrerListeManager';
-	}
-
-	isTranspiledInstanceOf(name: string): boolean {
-		return ['de.svws_nrw.core.utils.AuswahlManager', 'de.svws_nrw.core.utils.lehrer.LehrerListeManager'].includes(name);
-	}
-
-	public static readonly class = new Class<LehrerListeManager>('de.svws_nrw.core.utils.lehrer.LehrerListeManager');
-
-}
-
-export function cast_de_svws_nrw_core_utils_lehrer_LehrerListeManager(obj: unknown): LehrerListeManager {
-	return obj as LehrerListeManager;
 }

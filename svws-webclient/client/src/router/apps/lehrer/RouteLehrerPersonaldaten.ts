@@ -11,12 +11,12 @@ import { routeApp } from "../RouteApp";
 import { routeError } from "~/router/error/RouteError";
 import { api } from "~/router/Api";
 
-const SLehrerPersonaldaten = () => import("~/components/lehrer/personaldaten/SLehrerPersonaldaten.vue");
+const LehrerPersonaldaten = () => import("~/components/lehrer/personaldaten/LehrerPersonaldaten.vue");
 
 export class RouteLehrerPersonaldaten extends RouteNode<any, RouteLehrer> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.LEHRER_PERSONALDATEN_ANSEHEN], "lehrer.personaldaten", "personaldaten", SLehrerPersonaldaten);
+		super(Schulform.values(), [BenutzerKompetenz.LEHRER_PERSONALDATEN_ANSEHEN], "lehrer.personaldaten", "personaldaten", LehrerPersonaldaten);
 		super.mode = ServerMode.ALPHA;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Personaldaten";
@@ -40,7 +40,7 @@ export class RouteLehrerPersonaldaten extends RouteNode<any, RouteLehrer> {
 		await routeLehrer.data.unloadPersonaldaten();
 	}
 
-	public getProps(to: RouteLocationNormalized): LehrerPersonaldatenProps {
+	public getProps(_: RouteLocationNormalized): LehrerPersonaldatenProps {
 		return {
 			validatorKontext: () => api.validatorKontext,
 			schulform: api.schulform,
