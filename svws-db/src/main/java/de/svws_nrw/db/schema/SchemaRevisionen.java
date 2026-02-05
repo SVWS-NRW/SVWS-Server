@@ -282,21 +282,26 @@ public enum SchemaRevisionen {
 	REV_52(52, "2025-10-14"),
 
 	/** Notenmodul: Anlegen von Tabellen zur Verwaltung der Konfiguration und von Verbindungen zu externen Servern */
-	REV_53(53, "2025-10-29");
+	REV_53(53, "2025-10-29"),
+
+	/** Sprachenfolge bzw. -prüfungen: Ergänzen einer Feldes für die Zeugnisbezeichnungen und eines Sprachnachweises am Weiterbildungskolleg */
+	REV_54(54, "2026-02-05");
+
 
 	/**
 	 * Gibt die größte Revisionsnummer an, die in dieser Enumeration definiert wurde und
 	 * bis zu welcher alle Schema-Revision als stabil gelten und ab Version 1.0 des SVWS-Servers
 	 * nicht mehr verändert werden.
 	 */
-	public static final SchemaRevisionen maxRevision = REV_53;
+	public static final SchemaRevisionen maxRevision = REV_54;
 
 	/**
 	 * Gibt die größte Revisions-Nummer an, welche in diese Enumeration definiert wurde.
 	 * Dies dient dazu Revisionen als Entwickler-Revisionen zu kennzeichnen, die noch nicht
 	 * stabil sind. Dieser Wert ist also größer oder gleich {@link SchemaRevisionen#maxRevision}.
 	 */
-	public static final SchemaRevisionen maxDeveloperRevision = REV_53;
+	public static final SchemaRevisionen maxDeveloperRevision = REV_54;
+
 
 	/** Eine Map, welche von der Revisionsnummer auf das Objekt der Aufzählung abbildet. */
 	private static Map<Long, SchemaRevisionen> _mapByNumber = null;
