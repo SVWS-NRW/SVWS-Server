@@ -53,8 +53,6 @@ lint:eslint:
     rules:
         - if: '$CI_PIPELINE_SOURCE == "schedule"' # läuft nicht in Scheduled Pipeline
           when: never
-        - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/' # läuft nicht in Release Pipeline
-          when: never
         - if: $CI_PIPELINE_SOURCE == 'merge_request_event' # läuft in MR-Pipeline
         - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS # läuft nicht in Branch Pipeline, wenn bereits ein offener MR existiert
           when: never
@@ -189,6 +187,8 @@ analyze:sonarqube:
     rules:
         - if: '$CI_PIPELINE_SOURCE == "schedule"' # läuft nicht in Scheduled Pipeline
           when: never
+        - if: $CI_COMMIT_TAG # läuft nicht in Tag Pipeline
+          when: never
         - if: $CI_COMMIT_BRANCH == 'dev' || $CI_COMMIT_BRANCH == 'master' # läuft in dev & master Pipeline
         - if: $CI_PIPELINE_SOURCE == 'merge_request_event' # läuft in MR-Pipeline
         - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS # läuft nicht in Branch Pipeline, wenn bereits ein offener MR existiert
@@ -218,6 +218,8 @@ package:installer:snapshot:win:
             - artifacts_windows/
     rules:
         - if: '$CI_PIPELINE_SOURCE == "schedule"' # läuft nicht in Scheduled Pipeline
+          when: never
+        - if: $CI_COMMIT_TAG # läuft nicht in Tag Pipeline
           when: never
         - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS # läuft nicht in Branch Pipeline, wenn bereits ein offener MR existiert
           when: never
