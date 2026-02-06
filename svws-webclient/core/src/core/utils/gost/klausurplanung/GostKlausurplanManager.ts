@@ -2669,10 +2669,10 @@ export class GostKlausurplanManager extends JavaObject {
 
 	private gruppiereUeberschneidungen(termine: List<GostKlausurtermin>): List<List<GostKlausurtermin>> {
 		const ergebnis: List<List<GostKlausurtermin>> = new ArrayList<List<GostKlausurtermin>>();
-		let added: boolean = false;
 		for (const terminToAdd of termine) {
+			let added: boolean = false;
 			for (const listToCheck of ergebnis) {
-				for (const terminInListe of termine) {
+				for (const terminInListe of listToCheck) {
 					if (this.checkTerminUeberschneidung(terminInListe, terminToAdd)) {
 						listToCheck.add(terminToAdd);
 						added = true;

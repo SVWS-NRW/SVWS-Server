@@ -2857,14 +2857,14 @@ public class GostKlausurplanManager {
 	private @NotNull List<List<GostKlausurtermin>> gruppiereUeberschneidungen(
 			final @NotNull List<GostKlausurtermin> termine) {
 		final @NotNull List<List<GostKlausurtermin>> ergebnis = new ArrayList<>();
-		boolean added = false;
 		// Teste alle übergebenen Termine
 		for (final @NotNull GostKlausurtermin terminToAdd : termine) {
+			boolean added = false;
 			// Not supported by transpiler outerloop:
 			// Teste alle bereits gefundenen gruppierten Terminlisten
 			for (final @NotNull List<GostKlausurtermin> listToCheck : ergebnis) {
 				// Teste jeden Termin innerhalb einer gruppierten Terminliste
-				for (final @NotNull GostKlausurtermin terminInListe : termine) {
+				for (final @NotNull GostKlausurtermin terminInListe : listToCheck) {
 					if (checkTerminUeberschneidung(terminInListe, terminToAdd)) {
 						listToCheck.add(terminToAdd);
 						// Not supported by transpiler break outerloop;
