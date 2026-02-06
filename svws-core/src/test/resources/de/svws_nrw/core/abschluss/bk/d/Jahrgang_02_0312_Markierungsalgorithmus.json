@@ -50,26 +50,6 @@
       "punkte" : 5
     },
     {
-      "fachID" : 11,
-      "halbjahrID" : 3,
-      "punkte" : 11
-    },
-    {
-      "fachID" : 11,
-      "halbjahrID" : 4,
-      "punkte" : 9
-    },
-    {
-      "fachID" : 11,
-      "halbjahrID" : 2,
-      "punkte" : 8
-    },
-    {
-      "fachID" : 11,
-      "halbjahrID" : 5,
-      "punkte" : 7
-    },
-    {
       "fachID" : 22,
       "halbjahrID" : 5,
       "punkte" : 12
@@ -88,6 +68,26 @@
       "fachID" : 22,
       "halbjahrID" : 4,
       "punkte" : 5
+    },
+    {
+      "fachID" : 11,
+      "halbjahrID" : 3,
+      "punkte" : 11
+    },
+    {
+      "fachID" : 11,
+      "halbjahrID" : 4,
+      "punkte" : 9
+    },
+    {
+      "fachID" : 11,
+      "halbjahrID" : 2,
+      "punkte" : 8
+    },
+    {
+      "fachID" : 11,
+      "halbjahrID" : 5,
+      "punkte" : 7
     },
     {
       "fachID" : 87,

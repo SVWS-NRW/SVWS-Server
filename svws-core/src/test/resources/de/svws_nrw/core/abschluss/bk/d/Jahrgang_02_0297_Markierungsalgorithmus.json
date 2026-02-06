@@ -1,18 +1,18 @@
 {
   "erfolgreich" : false,
-  "eingebrachteKurse" : 39,
+  "eingebrachteKurse" : 37,
   "gesamtDefizite" : 9,
   "lkDefizite" : 0,
-  "punkteBlockI" : 311,
+  "punkteBlockI" : 309,
   "fehlerLog" : [
     "Hinweis: Das Fach Spanisch ist im Fächerkatalog nicht eindeutig bestimmbar. Bitte die Bezeichnungen der Fächer eindeutig festlegen.",
     "Hinweis: Das Fach Französisch ist im Fächerkatalog nicht eindeutig bestimmbar. Bitte die Bezeichnungen der Fächer eindeutig festlegen.",
     "Regel M_WK_DEF8: Markiere bis zu 40 Kursen um 8 Defizite tolerieren zu können, entsprechend APO-BK AnlageD § 15 Abs. 2 Nr. 3c",
-    "    Fehler: Die Mindestpunktzahl konnte auch nicht durch Markieren weiterer Kurse erreicht werden.",
+    "    Fehler: Die Defizitregel konnte auch nicht durch Markieren weiterer Kurse erfüllt werden.",
     "Regel M_WK_DEF7: Markiere weitere Kurse, falls mehr als 7 Defizite bei bis zu 37 eingebrachten Kursen vorhanden sind, entsprechend APO-BK AnlageD § 15 Abs. 2 Nr. 3b",
-    "    Fehler: Die Mindestpunktzahl konnte auch nicht durch Markieren weiterer Kurse erreicht werden.",
+    "    Fehler: Die Defizitregel konnte auch nicht durch Markieren weiterer Kurse erfüllt werden.",
     "Regel M_WK_DEF6: Markiere weitere Kurse, falls mehr als 6 Defizite bei 32 eingebrachten Kursen vorhanden sind, entsprechend APO-BK AnlageD § 15 Abs. 2 Nr. 3a",
-    "    Fehler: Die Mindestpunktzahl konnte auch nicht durch Markieren weiterer Kurse erreicht werden."
+    "    Fehler: Die Defizitregel konnte auch nicht durch Markieren weiterer Kurse erfüllt werden."
   ],
   "markierungen" : [
     {
@@ -161,11 +161,6 @@
       "punkte" : 11
     },
     {
-      "fachID" : 70,
-      "halbjahrID" : 3,
-      "punkte" : 10
-    },
-    {
       "fachID" : 71,
       "halbjahrID" : 5,
       "punkte" : 10
@@ -174,11 +169,6 @@
       "fachID" : 88,
       "halbjahrID" : 4,
       "punkte" : 10
-    },
-    {
-      "fachID" : 70,
-      "halbjahrID" : 4,
-      "punkte" : 8
     },
     {
       "fachID" : 71,
@@ -244,15 +234,15 @@
     "    Erforderliche Anzahl von 32 Kursen konnten eingebracht werden.",
     "Regel M_KOPIE: Erstelle Markierungsvariante für Facharbeit, entsprechend APO-BK Anlage D § 8 Abs. 2",
     "Regel M_WK_MAX_FS: Markiere weitere Kurse um bestes Ergebnis zu erreichen (2. FS), entsprechend APO-BK AnlageD § 15 Abs. 2 Nr. 1b (V2)",
-    "    Es konnten 7 weitere Kurse zur Verbesserung markiert werden.",
+    "    Es konnten 5 weitere Kurse zur Verbesserung markiert werden.",
     "Regel M_WK_MAX: Markiere weitere Kurse um mindestens 200 Punkte im Block I zu erreichen, entsprechend APO-BK AnlageD § 15 Abs. 2 Nr. 2",
     "    Die Mindestpunktzahl ist bereits erreicht.",
     "Regel M_WK_DEF8: Markiere bis zu 40 Kursen um 8 Defizite tolerieren zu können, entsprechend APO-BK AnlageD § 15 Abs. 2 Nr. 3c",
-    "    Fehler: Die Mindestpunktzahl konnte auch nicht durch Markieren weiterer Kurse erreicht werden.",
+    "    Fehler: Die Defizitregel konnte auch nicht durch Markieren weiterer Kurse erfüllt werden.",
     "Regel M_WK_DEF7: Markiere weitere Kurse, falls mehr als 7 Defizite bei bis zu 37 eingebrachten Kursen vorhanden sind, entsprechend APO-BK AnlageD § 15 Abs. 2 Nr. 3b",
-    "    Fehler: Die Mindestpunktzahl konnte auch nicht durch Markieren weiterer Kurse erreicht werden.",
+    "    Fehler: Die Defizitregel konnte auch nicht durch Markieren weiterer Kurse erfüllt werden.",
     "Regel M_WK_DEF6: Markiere weitere Kurse, falls mehr als 6 Defizite bei 32 eingebrachten Kursen vorhanden sind, entsprechend APO-BK AnlageD § 15 Abs. 2 Nr. 3a",
-    "    Fehler: Die Mindestpunktzahl konnte auch nicht durch Markieren weiterer Kurse erreicht werden.",
+    "    Fehler: Die Defizitregel konnte auch nicht durch Markieren weiterer Kurse erfüllt werden.",
     "Regel M_PR_DEFLK: Prüfe auf maximal erlaubte Anzahl von drei Defiziten im LK-Bereich, entsprechend APO-BK AnlageD § 15 Abs. 2 Nr. 3 Nachsatz",
     "    Defizite im LK-Bereich: Erlaubt=3 Ist=0."
   ]

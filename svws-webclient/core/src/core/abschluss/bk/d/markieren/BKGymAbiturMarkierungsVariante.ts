@@ -39,6 +39,11 @@ export class BKGymAbiturMarkierungsVariante extends JavaObject {
 	private gestoppt: boolean = false;
 
 	/**
+	 * Defizitregeln abschließend geprüft
+	 */
+	private defizitregelnAbgeschlossen: boolean = false;
+
+	/**
 	 * Die Summe der Notenpunkte aller Markierungen, LKs sind doppelt gezählt
 	 */
 	private summeNotenpunkte: number = 0;
@@ -118,6 +123,7 @@ export class BKGymAbiturMarkierungsVariante extends JavaObject {
 			this.varianten = v;
 			this.kennung = "Root";
 			this.facharbeitEinbeziehen = false;
+			this.defizitregelnAbgeschlossen = false;
 			this.init();
 		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.abschluss.bk.d.markieren.BKGymAbiturMarkierungsVariante')))) && ((__param1 !== undefined) && (typeof __param1 === "string")) && ((__param2 !== undefined) && typeof __param2 === "boolean")) {
 			const other: BKGymAbiturMarkierungsVariante = cast_de_svws_nrw_core_abschluss_bk_d_markieren_BKGymAbiturMarkierungsVariante(__param0);
@@ -125,6 +131,7 @@ export class BKGymAbiturMarkierungsVariante extends JavaObject {
 			const facharbeit: boolean = __param2 as boolean;
 			this.varianten = other.varianten;
 			this.gestoppt = other.gestoppt;
+			this.defizitregelnAbgeschlossen = other.defizitregelnAbgeschlossen;
 			this.kennung = other.kennung + "#" + kennung;
 			this.summeNotenpunkte = other.summeNotenpunkte;
 			this.anzahlKurse = other.anzahlKurse;
@@ -216,6 +223,24 @@ export class BKGymAbiturMarkierungsVariante extends JavaObject {
 	}
 
 	/**
+	 *Getter für defizitregelnAbgeschlossen
+	 *
+	 * @return defizitregelnAbgeschlossen
+	 */
+	public sindDefizitregelnAbgeschlossen(): boolean {
+		return this.defizitregelnAbgeschlossen;
+	}
+
+	/**
+	 * Setter für defizitregelnAbgeschlossen
+	 *
+	 * @param defizitregelnAbgeschlossen   ob die Defizitregeln bereits geprüft wurden
+	 */
+	public setDefizitregelnAbgeschlossen(defizitregelnAbgeschlossen: boolean): void {
+		this.defizitregelnAbgeschlossen = defizitregelnAbgeschlossen;
+	}
+
+	/**
 	 * Liefert die Gesamtanzahl der eingebrachten Defizite
 	 *
 	 * @return Anzahl der eingebrachten Defizite
@@ -275,8 +300,8 @@ export class BKGymAbiturMarkierungsVariante extends JavaObject {
 	 * @return die Anzahl verbleibender Kurse, die nicht markiert werden konnte
 	 */
 	public markiereKursanzahl(kursanzahl: number, bedingung: Predicate<BKGymAbiturMarkierungsalgorithmusMarkierung> | null): number {
-		if (kursanzahl === 0)
-			return kursanzahl;
+		if (kursanzahl <= 0)
+			return 0;
 		if (bedingung === null)
 			return kursanzahl;
 		let verbleibend: number = kursanzahl;

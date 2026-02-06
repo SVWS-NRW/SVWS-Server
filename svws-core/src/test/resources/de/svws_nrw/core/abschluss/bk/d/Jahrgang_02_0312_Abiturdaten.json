@@ -119,7 +119,7 @@
         {
             "fachID": 11,
             "letzteKursart": "GK",
-            "abiturFach": 3,
+            "abiturFach": 4,
             "istFSNeu": false,
             "block1PunktSumme": null,
             "block1NotenpunkteDurchschnitt": null,
@@ -206,7 +206,7 @@
                 {
                     "halbjahrKuerzel": "Q2.2",
                     "kursartKuerzel": "GK",
-                    "schriftlich": true,
+                    "schriftlich": false,
                     "biliSprache": null,
                     "idKurs": null,
                     "lehrer": null,
@@ -428,7 +428,7 @@
         {
             "fachID": 22,
             "letzteKursart": "GK",
-            "abiturFach": 4,
+            "abiturFach": 3,
             "istFSNeu": false,
             "block1PunktSumme": null,
             "block1NotenpunkteDurchschnitt": null,
@@ -515,7 +515,7 @@
                 {
                     "halbjahrKuerzel": "Q2.2",
                     "kursartKuerzel": "GK",
-                    "schriftlich": false,
+                    "schriftlich": true,
                     "biliSprache": null,
                     "idKurs": null,
                     "lehrer": null,

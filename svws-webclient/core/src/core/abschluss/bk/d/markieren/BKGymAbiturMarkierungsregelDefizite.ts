@@ -36,16 +36,28 @@ export class BKGymAbiturMarkierungsregelDefizite extends BKGymAbiturMarkierungsr
 	 * Markiert weitere Kurse wenn zu viele Defizite vorhanden sind
 	 */
 	public markiere(variante: BKGymAbiturMarkierungsVariante): void {
+		if (variante.sindDefizitregelnAbgeschlossen()) {
+			variante.addLogEintrag(1, "Die Defizitregel wurde bereits erfüllt.");
+			return;
+		}
 		if (variante.getDefizite() < this.erlaubteDefizite) {
 			variante.addLogEintrag(1, "Die erlaubte Anzahl von " + this.erlaubteDefizite + " Defiziten wurde nicht überschritten.");
 			return;
 		}
-		const bedingung: Predicate<BKGymAbiturMarkierungsalgorithmusMarkierung> = { test: (markierung: BKGymAbiturMarkierungsalgorithmusMarkierung | null) => true };
-		if (variante.getDefizite() === this.erlaubteDefizite)
-			variante.markiereKursanzahl(this.anzahlKurse, bedingung);
+		if (variante.getDefizite() === this.erlaubteDefizite) {
+			variante.setDefizitregelnAbgeschlossen(true);
+			if (variante.anzahlEingebrachteKurse() >= this.anzahlKurse) {
+				variante.addLogEintrag(1, "Die erlaubte Anzahl von " + this.erlaubteDefizite + " Defiziten wurde nicht überschritten.");
+				return;
+			}
+			const bedingung: Predicate<BKGymAbiturMarkierungsalgorithmusMarkierung> = { test: (markierung: BKGymAbiturMarkierungsalgorithmusMarkierung | null) => true };
+			variante.markiereKursanzahl(this.anzahlKurse - variante.anzahlEingebrachteKurse(), bedingung);
+		}
 		if (variante.getDefizite() > this.erlaubteDefizite) {
-			variante.addLogEintrag(1, "Fehler: Die Mindestpunktzahl konnte auch nicht durch Markieren weiterer Kurse erreicht werden.");
+			variante.addLogEintrag(1, "Fehler: Die Defizitregel konnte auch nicht durch Markieren weiterer Kurse erfüllt werden.");
 			variante.setHatZulassung(false);
+		} else {
+			variante.addLogEintrag(1, "Die Defizitregel konnte durch Markieren weiterer Kurse erfüllt werden.");
 		}
 	}
 

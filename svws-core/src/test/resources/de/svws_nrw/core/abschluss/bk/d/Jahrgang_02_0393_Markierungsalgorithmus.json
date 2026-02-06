@@ -1,9 +1,9 @@
 {
   "erfolgreich" : true,
-  "eingebrachteKurse" : 32,
-  "gesamtDefizite" : 0,
-  "lkDefizite" : 0,
-  "punkteBlockI" : 446,
+  "eingebrachteKurse" : 38,
+  "gesamtDefizite" : 8,
+  "lkDefizite" : 2,
+  "punkteBlockI" : 357,
   "fehlerLog" : [
     "Hinweis: Das Fach Spanisch ist im Fächerkatalog nicht eindeutig bestimmbar. Bitte die Bezeichnungen der Fächer eindeutig festlegen.",
     "Hinweis: Das Fach Französisch ist im Fächerkatalog nicht eindeutig bestimmbar. Bitte die Bezeichnungen der Fächer eindeutig festlegen."
@@ -11,13 +11,13 @@
   "markierungen" : [
     {
       "fachID" : 50,
-      "halbjahrID" : 4,
-      "punkte" : 15
+      "halbjahrID" : 3,
+      "punkte" : 14
     },
     {
       "fachID" : 50,
-      "halbjahrID" : 2,
-      "punkte" : 12
+      "halbjahrID" : 4,
+      "punkte" : 14
     },
     {
       "fachID" : 50,
@@ -26,28 +26,33 @@
     },
     {
       "fachID" : 50,
-      "halbjahrID" : 3,
-      "punkte" : 9
+      "halbjahrID" : 2,
+      "punkte" : 4
     },
     {
       "fachID" : 8,
       "halbjahrID" : 4,
-      "punkte" : 15
+      "punkte" : 14
     },
     {
       "fachID" : 8,
       "halbjahrID" : 5,
-      "punkte" : 15
-    },
-    {
-      "fachID" : 8,
-      "halbjahrID" : 2,
-      "punkte" : 12
+      "punkte" : 13
     },
     {
       "fachID" : 8,
       "halbjahrID" : 3,
       "punkte" : 12
+    },
+    {
+      "fachID" : 8,
+      "halbjahrID" : 2,
+      "punkte" : 4
+    },
+    {
+      "fachID" : 87,
+      "halbjahrID" : 4,
+      "punkte" : 15
     },
     {
       "fachID" : 87,
@@ -57,67 +62,87 @@
     {
       "fachID" : 87,
       "halbjahrID" : 2,
-      "punkte" : 10
+      "punkte" : 12
     },
     {
       "fachID" : 87,
       "halbjahrID" : 3,
-      "punkte" : 7
-    },
-    {
-      "fachID" : 87,
-      "halbjahrID" : 4,
-      "punkte" : 7
-    },
-    {
-      "fachID" : 81,
-      "halbjahrID" : 3,
-      "punkte" : 10
+      "punkte" : 12
     },
     {
       "fachID" : 81,
       "halbjahrID" : 2,
-      "punkte" : 9
+      "punkte" : 13
     },
     {
       "fachID" : 81,
       "halbjahrID" : 5,
-      "punkte" : 9
+      "punkte" : 13
     },
     {
       "fachID" : 81,
+      "halbjahrID" : 3,
+      "punkte" : 12
+    },
+    {
+      "fachID" : 81,
+      "halbjahrID" : 4,
+      "punkte" : 12
+    },
+    {
+      "fachID" : 88,
+      "halbjahrID" : 3,
+      "punkte" : 4
+    },
+    {
+      "fachID" : 88,
+      "halbjahrID" : 2,
+      "punkte" : 3
+    },
+    {
+      "fachID" : 14,
+      "halbjahrID" : 2,
+      "punkte" : 4
+    },
+    {
+      "fachID" : 14,
+      "halbjahrID" : 3,
+      "punkte" : 4
+    },
+    {
+      "fachID" : 14,
+      "halbjahrID" : 4,
+      "punkte" : 3
+    },
+    {
+      "fachID" : 14,
+      "halbjahrID" : 5,
+      "punkte" : 2
+    },
+    {
+      "fachID" : 22,
+      "halbjahrID" : 2,
+      "punkte" : 5
+    },
+    {
+      "fachID" : 22,
+      "halbjahrID" : 3,
+      "punkte" : 5
+    },
+    {
+      "fachID" : 22,
       "halbjahrID" : 4,
       "punkte" : 5
     },
     {
-      "fachID" : 88,
-      "halbjahrID" : 4,
-      "punkte" : 14
-    },
-    {
-      "fachID" : 88,
-      "halbjahrID" : 3,
-      "punkte" : 12
-    },
-    {
-      "fachID" : 14,
-      "halbjahrID" : 2,
-      "punkte" : 7
-    },
-    {
-      "fachID" : 14,
+      "fachID" : 22,
       "halbjahrID" : 5,
-      "punkte" : 7
+      "punkte" : 5
     },
     {
-      "fachID" : 14,
-      "halbjahrID" : 3,
-      "punkte" : 6
-    },
-    {
-      "fachID" : 14,
-      "halbjahrID" : 4,
-      "punkte" : 6
+      "fachID" : 72,
+      "halbjahrID" : 2,
+      "punkte" : 14
     },
     {
       "fachID" : 72,
@@ -126,48 +151,53 @@
     },
     {
       "fachID" : 72,
+      "halbjahrID" : 4,
+      "punkte" : 13
+    },
+    {
+      "fachID" : 72,
       "halbjahrID" : 5,
       "punkte" : 12
     },
     {
-      "fachID" : 72,
-      "halbjahrID" : 4,
-      "punkte" : 11
-    },
-    {
-      "fachID" : 72,
+      "fachID" : 71,
       "halbjahrID" : 2,
-      "punkte" : 8
+      "punkte" : 6
     },
     {
-      "fachID" : 22,
+      "fachID" : 90,
+      "halbjahrID" : 3,
+      "punkte" : 6
+    },
+    {
+      "fachID" : 90,
       "halbjahrID" : 4,
-      "punkte" : 14
+      "punkte" : 6
     },
     {
       "fachID" : 71,
       "halbjahrID" : 3,
-      "punkte" : 14
+      "punkte" : 5
     },
     {
-      "fachID" : 89,
+      "fachID" : 71,
+      "halbjahrID" : 4,
+      "punkte" : 5
+    },
+    {
+      "fachID" : 71,
       "halbjahrID" : 5,
-      "punkte" : 14
+      "punkte" : 5
     },
     {
-      "fachID" : 90,
+      "fachID" : 83,
       "halbjahrID" : 2,
-      "punkte" : 13
+      "punkte" : 5
     },
     {
-      "fachID" : 90,
+      "fachID" : 83,
       "halbjahrID" : 3,
-      "punkte" : 12
-    },
-    {
-      "fachID" : 22,
-      "halbjahrID" : 2,
-      "punkte" : 10
+      "punkte" : 5
     }
   ],
   "log" : [
@@ -196,23 +226,24 @@
     "Regel M_FS2NEU: Prüfe bei nicht vorhandener 2. FS in SEKI, dass alle 4 Kurse mit > 0 Punkten absolviert wurden, entsprechend APO-BK AnlageD § 15 Abs. 2 Nr. 4",
     "    Alle Kurshalbjahre in der Qualifikationsphase mit mindestens einem Punkt abgeschlossen.",
     "Regel M_KOPIE: Erstelle Markierungsvariante für Fremdsprachenoptionen, entsprechend APO-BK AnlageD § 15 Abs. 2 Nr. 4 und Abs. 3 Nr. 2 b),f)",
-    "    Die Variante Root#2FS wurde erzeugt.",
-    "Regel M_FS2: Markiere Fremdsprachen Variante 2: 4 Kurse der zweiten Fremdsprache, entsprechend APO-BK AnlageD § 15 Abs. 2 Nr. 4 und Abs. 3 Nr. 2 b), f)",
+    "Regel M_FS1: Markiere Fremdsprachen Variante 1: 4 Kurse der 1. Fremdsprache (2. FS folgt ggfs.), entsprechend APO-BK AnlageD § 15 Abs. 2 Nr. 4 und Abs. 3 Nr. 2 b)",
     "    Erforderliche Anzahl von 4 Kursen konnten eingebracht werden.",
+    "Regel M_FS12: Markiere Fremdsprachen Variante 1: 2 Kurse der neu einsetzenden 2. Fremdsprache, entsprechend APO-BK AnlageD § 15 Abs. 2 Nr. 4 und Abs. 3 Nr. 2 f)",
+    "    Erforderliche Anzahl von 2 Kursen konnten eingebracht werden.",
     "Regel M_WK_MIN: Markiere mindestens 32 Kurse, entsprechend APO-BK AnlageD § 15 Abs. 2 Nr. 1a",
     "    Erforderliche Anzahl von 32 Kursen konnten eingebracht werden.",
     "Regel M_KOPIE: Erstelle Markierungsvariante für Facharbeit, entsprechend APO-BK Anlage D § 8 Abs. 2",
-    "Regel M_WK_MAX_FS: Markiere weitere Kurse um bestes Ergebnis zu erreichen (2. FS), entsprechend APO-BK AnlageD § 15 Abs. 2 Nr. 1b (V2)",
+    "Regel M_WK_MAX: Markiere weitere Kurse um bestes Ergebnis zu erreichen (1. FS), entsprechend APO-BK AnlageD § 15 Abs. 2 Nr. 1b (V1)",
     "    Weitere Kurse wurden nicht markiert, da dadurch keine Verbesserung erreicht wird.",
     "Regel M_WK_MAX: Markiere weitere Kurse um mindestens 200 Punkte im Block I zu erreichen, entsprechend APO-BK AnlageD § 15 Abs. 2 Nr. 2",
     "    Die Mindestpunktzahl ist bereits erreicht.",
     "Regel M_WK_DEF8: Markiere bis zu 40 Kursen um 8 Defizite tolerieren zu können, entsprechend APO-BK AnlageD § 15 Abs. 2 Nr. 3c",
-    "    Die erlaubte Anzahl von 8 Defiziten wurde nicht überschritten.",
+    "    Die Defizitregel konnte durch Markieren weiterer Kurse erfüllt werden.",
     "Regel M_WK_DEF7: Markiere weitere Kurse, falls mehr als 7 Defizite bei bis zu 37 eingebrachten Kursen vorhanden sind, entsprechend APO-BK AnlageD § 15 Abs. 2 Nr. 3b",
-    "    Die erlaubte Anzahl von 7 Defiziten wurde nicht überschritten.",
+    "    Die Defizitregel wurde bereits erfüllt.",
     "Regel M_WK_DEF6: Markiere weitere Kurse, falls mehr als 6 Defizite bei 32 eingebrachten Kursen vorhanden sind, entsprechend APO-BK AnlageD § 15 Abs. 2 Nr. 3a",
-    "    Die erlaubte Anzahl von 6 Defiziten wurde nicht überschritten.",
+    "    Die Defizitregel wurde bereits erfüllt.",
     "Regel M_PR_DEFLK: Prüfe auf maximal erlaubte Anzahl von drei Defiziten im LK-Bereich, entsprechend APO-BK AnlageD § 15 Abs. 2 Nr. 3 Nachsatz",
-    "    Defizite im LK-Bereich: Erlaubt=3 Ist=0."
+    "    Defizite im LK-Bereich: Erlaubt=3 Ist=2."
   ]
 }

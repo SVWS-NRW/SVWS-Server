@@ -3,7 +3,7 @@
   "eingebrachteKurse" : 37,
   "gesamtDefizite" : 5,
   "lkDefizite" : 4,
-  "punkteBlockI" : 327,
+  "punkteBlockI" : 318,
   "fehlerLog" : [
     "Hinweis: Das Fach Spanisch ist im Fächerkatalog nicht eindeutig bestimmbar. Bitte die Bezeichnungen der Fächer eindeutig festlegen.",
     "Hinweis: Das Fach Französisch ist im Fächerkatalog nicht eindeutig bestimmbar. Bitte die Bezeichnungen der Fächer eindeutig festlegen.",
@@ -157,16 +157,6 @@
       "punkte" : 14
     },
     {
-      "fachID" : 70,
-      "halbjahrID" : 4,
-      "punkte" : 12
-    },
-    {
-      "fachID" : 70,
-      "halbjahrID" : 3,
-      "punkte" : 11
-    },
-    {
       "fachID" : 90,
       "halbjahrID" : 3,
       "punkte" : 11
@@ -177,24 +167,34 @@
       "punkte" : 10
     },
     {
-      "fachID" : 70,
-      "halbjahrID" : 2,
-      "punkte" : 10
-    },
-    {
       "fachID" : 88,
       "halbjahrID" : 4,
       "punkte" : 10
     },
     {
-      "fachID" : 70,
-      "halbjahrID" : 5,
-      "punkte" : 9
-    },
-    {
       "fachID" : 71,
       "halbjahrID" : 2,
       "punkte" : 9
+    },
+    {
+      "fachID" : 29,
+      "halbjahrID" : 3,
+      "punkte" : 8
+    },
+    {
+      "fachID" : 71,
+      "halbjahrID" : 3,
+      "punkte" : 8
+    },
+    {
+      "fachID" : 90,
+      "halbjahrID" : 2,
+      "punkte" : 8
+    },
+    {
+      "fachID" : 90,
+      "halbjahrID" : 5,
+      "punkte" : 8
     }
   ],
   "log" : [

@@ -68,7 +68,7 @@
                     "wochenstunden": 3,
                     "fehlstundenGesamt": 0,
                     "fehlstundenUnentschuldigt": 0,
-                    "notenkuerzel": "2-",
+                    "notenkuerzel": "2+",
                     "block1gewertet": null,
                     "block1kursAufZeugnis": null
                 },
@@ -82,7 +82,7 @@
                     "wochenstunden": 3,
                     "fehlstundenGesamt": 0,
                     "fehlstundenUnentschuldigt": 0,
-                    "notenkuerzel": "3-",
+                    "notenkuerzel": "2+",
                     "block1gewertet": null,
                     "block1kursAufZeugnis": null
                 },
@@ -96,7 +96,7 @@
                     "wochenstunden": 3,
                     "fehlstundenGesamt": 0,
                     "fehlstundenUnentschuldigt": 0,
-                    "notenkuerzel": "3-",
+                    "notenkuerzel": "1+",
                     "block1gewertet": null,
                     "block1kursAufZeugnis": null
                 },
@@ -171,7 +171,7 @@
                     "wochenstunden": 2,
                     "fehlstundenGesamt": 0,
                     "fehlstundenUnentschuldigt": 0,
-                    "notenkuerzel": "3-",
+                    "notenkuerzel": "4-",
                     "block1gewertet": null,
                     "block1kursAufZeugnis": null
                 },
@@ -185,7 +185,7 @@
                     "wochenstunden": 2,
                     "fehlstundenGesamt": 0,
                     "fehlstundenUnentschuldigt": 0,
-                    "notenkuerzel": "4+",
+                    "notenkuerzel": "4-",
                     "block1gewertet": null,
                     "block1kursAufZeugnis": null
                 },
@@ -199,7 +199,7 @@
                     "wochenstunden": 2,
                     "fehlstundenGesamt": 0,
                     "fehlstundenUnentschuldigt": 0,
-                    "notenkuerzel": "4+",
+                    "notenkuerzel": "5+",
                     "block1gewertet": null,
                     "block1kursAufZeugnis": null
                 },
@@ -213,7 +213,7 @@
                     "wochenstunden": 2,
                     "fehlstundenGesamt": 0,
                     "fehlstundenUnentschuldigt": 0,
-                    "notenkuerzel": "3-",
+                    "notenkuerzel": "5",
                     "block1gewertet": null,
                     "block1kursAufZeugnis": null
                 }
@@ -274,7 +274,7 @@
                     "wochenstunden": 5,
                     "fehlstundenGesamt": 0,
                     "fehlstundenUnentschuldigt": 0,
-                    "notenkuerzel": "2+",
+                    "notenkuerzel": "4-",
                     "block1gewertet": null,
                     "block1kursAufZeugnis": null
                 },
@@ -302,7 +302,7 @@
                     "wochenstunden": 5,
                     "fehlstundenGesamt": 0,
                     "fehlstundenUnentschuldigt": 0,
-                    "notenkuerzel": "1+",
+                    "notenkuerzel": "1",
                     "block1gewertet": null,
                     "block1kursAufZeugnis": null
                 },
@@ -316,7 +316,7 @@
                     "wochenstunden": 5,
                     "fehlstundenGesamt": 0,
                     "fehlstundenUnentschuldigt": 0,
-                    "notenkuerzel": "1+",
+                    "notenkuerzel": "1-",
                     "block1gewertet": null,
                     "block1kursAufZeugnis": null
                 }
@@ -377,7 +377,7 @@
                     "wochenstunden": 5,
                     "fehlstundenGesamt": 0,
                     "fehlstundenUnentschuldigt": 0,
-                    "notenkuerzel": "2+",
+                    "notenkuerzel": "4-",
                     "block1gewertet": null,
                     "block1kursAufZeugnis": null
                 },
@@ -391,7 +391,7 @@
                     "wochenstunden": 5,
                     "fehlstundenGesamt": 0,
                     "fehlstundenUnentschuldigt": 0,
-                    "notenkuerzel": "3+",
+                    "notenkuerzel": "1",
                     "block1gewertet": null,
                     "block1kursAufZeugnis": null
                 },
@@ -405,7 +405,7 @@
                     "wochenstunden": 5,
                     "fehlstundenGesamt": 0,
                     "fehlstundenUnentschuldigt": 0,
-                    "notenkuerzel": "1+",
+                    "notenkuerzel": "1",
                     "block1gewertet": null,
                     "block1kursAufZeugnis": null
                 },
@@ -480,7 +480,7 @@
                     "wochenstunden": 3,
                     "fehlstundenGesamt": 0,
                     "fehlstundenUnentschuldigt": 0,
-                    "notenkuerzel": "3",
+                    "notenkuerzel": "4",
                     "block1gewertet": null,
                     "block1kursAufZeugnis": null
                 },
@@ -494,7 +494,7 @@
                     "wochenstunden": 3,
                     "fehlstundenGesamt": 0,
                     "fehlstundenUnentschuldigt": 0,
-                    "notenkuerzel": "2-",
+                    "notenkuerzel": "4",
                     "block1gewertet": null,
                     "block1kursAufZeugnis": null
                 },
@@ -508,7 +508,7 @@
                     "wochenstunden": 3,
                     "fehlstundenGesamt": 0,
                     "fehlstundenUnentschuldigt": 0,
-                    "notenkuerzel": "3",
+                    "notenkuerzel": "4",
                     "block1gewertet": null,
                     "block1kursAufZeugnis": null
                 },
@@ -522,7 +522,7 @@
                     "wochenstunden": 3,
                     "fehlstundenGesamt": 0,
                     "fehlstundenUnentschuldigt": 0,
-                    "notenkuerzel": "3+",
+                    "notenkuerzel": "4",
                     "block1gewertet": null,
                     "block1kursAufZeugnis": null
                 }
@@ -583,7 +583,7 @@
                     "wochenstunden": 3,
                     "fehlstundenGesamt": 0,
                     "fehlstundenUnentschuldigt": 0,
-                    "notenkuerzel": "2-",
+                    "notenkuerzel": "4",
                     "block1gewertet": null,
                     "block1kursAufZeugnis": null
                 },
@@ -597,7 +597,7 @@
                     "wochenstunden": 3,
                     "fehlstundenGesamt": 0,
                     "fehlstundenUnentschuldigt": 0,
-                    "notenkuerzel": "3+",
+                    "notenkuerzel": "4",
                     "block1gewertet": null,
                     "block1kursAufZeugnis": null
                 },
@@ -611,7 +611,7 @@
                     "wochenstunden": 3,
                     "fehlstundenGesamt": 0,
                     "fehlstundenUnentschuldigt": 0,
-                    "notenkuerzel": "1",
+                    "notenkuerzel": "4",
                     "block1gewertet": null,
                     "block1kursAufZeugnis": null
                 },
@@ -625,7 +625,7 @@
                     "wochenstunden": 3,
                     "fehlstundenGesamt": 0,
                     "fehlstundenUnentschuldigt": 0,
-                    "notenkuerzel": "3",
+                    "notenkuerzel": "4",
                     "block1gewertet": null,
                     "block1kursAufZeugnis": null
                 }
@@ -686,7 +686,7 @@
                     "wochenstunden": 2,
                     "fehlstundenGesamt": 0,
                     "fehlstundenUnentschuldigt": 0,
-                    "notenkuerzel": "3+",
+                    "notenkuerzel": "1-",
                     "block1gewertet": null,
                     "block1kursAufZeugnis": null
                 },
@@ -700,7 +700,7 @@
                     "wochenstunden": 2,
                     "fehlstundenGesamt": 0,
                     "fehlstundenUnentschuldigt": 0,
-                    "notenkuerzel": "2-",
+                    "notenkuerzel": "2+",
                     "block1gewertet": null,
                     "block1kursAufZeugnis": null
                 },
@@ -714,7 +714,7 @@
                     "wochenstunden": 2,
                     "fehlstundenGesamt": 0,
                     "fehlstundenUnentschuldigt": 0,
-                    "notenkuerzel": "4",
+                    "notenkuerzel": "2+",
                     "block1gewertet": null,
                     "block1kursAufZeugnis": null
                 },
@@ -728,7 +728,7 @@
                     "wochenstunden": 2,
                     "fehlstundenGesamt": 0,
                     "fehlstundenUnentschuldigt": 0,
-                    "notenkuerzel": "3+",
+                    "notenkuerzel": "1-",
                     "block1gewertet": null,
                     "block1kursAufZeugnis": null
                 }
@@ -789,7 +789,7 @@
                     "wochenstunden": 2,
                     "fehlstundenGesamt": 0,
                     "fehlstundenUnentschuldigt": 0,
-                    "notenkuerzel": "3+",
+                    "notenkuerzel": "4+",
                     "block1gewertet": null,
                     "block1kursAufZeugnis": null
                 },
@@ -803,7 +803,7 @@
                     "wochenstunden": 2,
                     "fehlstundenGesamt": 0,
                     "fehlstundenUnentschuldigt": 0,
-                    "notenkuerzel": "1",
+                    "notenkuerzel": "4",
                     "block1gewertet": null,
                     "block1kursAufZeugnis": null
                 },
@@ -817,7 +817,7 @@
                     "wochenstunden": 2,
                     "fehlstundenGesamt": 0,
                     "fehlstundenUnentschuldigt": 0,
-                    "notenkuerzel": "2-",
+                    "notenkuerzel": "4",
                     "block1gewertet": null,
                     "block1kursAufZeugnis": null
                 },
@@ -831,7 +831,7 @@
                     "wochenstunden": 2,
                     "fehlstundenGesamt": 0,
                     "fehlstundenUnentschuldigt": 0,
-                    "notenkuerzel": "2-",
+                    "notenkuerzel": "4",
                     "block1gewertet": null,
                     "block1kursAufZeugnis": null
                 }
@@ -892,7 +892,7 @@
                     "wochenstunden": 2,
                     "fehlstundenGesamt": 0,
                     "fehlstundenUnentschuldigt": 0,
-                    "notenkuerzel": "3-",
+                    "notenkuerzel": "5+",
                     "block1gewertet": null,
                     "block1kursAufZeugnis": null
                 },
@@ -906,7 +906,7 @@
                     "wochenstunden": 2,
                     "fehlstundenGesamt": 0,
                     "fehlstundenUnentschuldigt": 0,
-                    "notenkuerzel": "2+",
+                    "notenkuerzel": "4-",
                     "block1gewertet": null,
                     "block1kursAufZeugnis": null
                 },
@@ -920,7 +920,7 @@
                     "wochenstunden": 2,
                     "fehlstundenGesamt": 0,
                     "fehlstundenUnentschuldigt": 0,
-                    "notenkuerzel": "1",
+                    "notenkuerzel": "5+",
                     "block1gewertet": null,
                     "block1kursAufZeugnis": null
                 },
@@ -934,7 +934,7 @@
                     "wochenstunden": 2,
                     "fehlstundenGesamt": 0,
                     "fehlstundenUnentschuldigt": 0,
-                    "notenkuerzel": "4",
+                    "notenkuerzel": "5",
                     "block1gewertet": null,
                     "block1kursAufZeugnis": null
                 }
@@ -1009,7 +1009,7 @@
                     "wochenstunden": 2,
                     "fehlstundenGesamt": 0,
                     "fehlstundenUnentschuldigt": 0,
-                    "notenkuerzel": "4+",
+                    "notenkuerzel": "4",
                     "block1gewertet": null,
                     "block1kursAufZeugnis": null
                 },
@@ -1023,7 +1023,7 @@
                     "wochenstunden": 2,
                     "fehlstundenGesamt": 0,
                     "fehlstundenUnentschuldigt": 0,
-                    "notenkuerzel": "3+",
+                    "notenkuerzel": "4",
                     "block1gewertet": null,
                     "block1kursAufZeugnis": null
                 },
@@ -1037,7 +1037,7 @@
                     "wochenstunden": 2,
                     "fehlstundenGesamt": 0,
                     "fehlstundenUnentschuldigt": 0,
-                    "notenkuerzel": "1",
+                    "notenkuerzel": "4",
                     "block1gewertet": null,
                     "block1kursAufZeugnis": null
                 }
@@ -1098,7 +1098,7 @@
                     "wochenstunden": 2,
                     "fehlstundenGesamt": 0,
                     "fehlstundenUnentschuldigt": 0,
-                    "notenkuerzel": "1-",
+                    "notenkuerzel": "4",
                     "block1gewertet": null,
                     "block1kursAufZeugnis": null
                 },
@@ -1112,7 +1112,7 @@
                     "wochenstunden": 2,
                     "fehlstundenGesamt": 0,
                     "fehlstundenUnentschuldigt": 0,
-                    "notenkuerzel": "2+",
+                    "notenkuerzel": "4+",
                     "block1gewertet": null,
                     "block1kursAufZeugnis": null
                 },
@@ -1126,7 +1126,7 @@
                     "wochenstunden": 2,
                     "fehlstundenGesamt": 0,
                     "fehlstundenUnentschuldigt": 0,
-                    "notenkuerzel": "3-",
+                    "notenkuerzel": "4+",
                     "block1gewertet": null,
                     "block1kursAufZeugnis": null
                 },
@@ -1140,7 +1140,7 @@
                     "wochenstunden": 2,
                     "fehlstundenGesamt": 0,
                     "fehlstundenUnentschuldigt": 0,
-                    "notenkuerzel": "3+",
+                    "notenkuerzel": "4",
                     "block1gewertet": null,
                     "block1kursAufZeugnis": null
                 }
@@ -1201,7 +1201,7 @@
                     "wochenstunden": 4,
                     "fehlstundenGesamt": 0,
                     "fehlstundenUnentschuldigt": 0,
-                    "notenkuerzel": "3",
+                    "notenkuerzel": "1",
                     "block1gewertet": null,
                     "block1kursAufZeugnis": null
                 },
@@ -1229,7 +1229,7 @@
                     "wochenstunden": 4,
                     "fehlstundenGesamt": 0,
                     "fehlstundenUnentschuldigt": 0,
-                    "notenkuerzel": "2",
+                    "notenkuerzel": "1-",
                     "block1gewertet": null,
                     "block1kursAufZeugnis": null
                 },

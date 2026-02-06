@@ -1,9 +1,9 @@
 {
   "erfolgreich" : true,
-  "eingebrachteKurse" : 39,
+  "eingebrachteKurse" : 36,
   "gesamtDefizite" : 2,
   "lkDefizite" : 0,
-  "punkteBlockI" : 361,
+  "punkteBlockI" : 355,
   "fehlerLog" : [
     "Hinweis: Das Fach Spanisch ist im Fächerkatalog nicht eindeutig bestimmbar. Bitte die Bezeichnungen der Fächer eindeutig festlegen.",
     "Hinweis: Das Fach Französisch ist im Fächerkatalog nicht eindeutig bestimmbar. Bitte die Bezeichnungen der Fächer eindeutig festlegen."
@@ -155,19 +155,9 @@
       "punkte" : 14
     },
     {
-      "fachID" : 70,
-      "halbjahrID" : 4,
-      "punkte" : 12
-    },
-    {
       "fachID" : 71,
       "halbjahrID" : 4,
       "punkte" : 12
-    },
-    {
-      "fachID" : 70,
-      "halbjahrID" : 3,
-      "punkte" : 11
     },
     {
       "fachID" : 71,
@@ -192,11 +182,6 @@
     {
       "fachID" : 46,
       "halbjahrID" : 5,
-      "punkte" : 10
-    },
-    {
-      "fachID" : 70,
-      "halbjahrID" : 2,
       "punkte" : 10
     },
     {
@@ -240,7 +225,7 @@
     "    Erforderliche Anzahl von 32 Kursen konnten eingebracht werden.",
     "Regel M_KOPIE: Erstelle Markierungsvariante für Facharbeit, entsprechend APO-BK Anlage D § 8 Abs. 2",
     "Regel M_WK_MAX: Markiere weitere Kurse um bestes Ergebnis zu erreichen (1. FS), entsprechend APO-BK AnlageD § 15 Abs. 2 Nr. 1b (V1)",
-    "    Es konnten 7 weitere Kurse zur Verbesserung markiert werden.",
+    "    Es konnten 4 weitere Kurse zur Verbesserung markiert werden.",
     "Regel M_WK_MAX: Markiere weitere Kurse um mindestens 200 Punkte im Block I zu erreichen, entsprechend APO-BK AnlageD § 15 Abs. 2 Nr. 2",
     "    Die Mindestpunktzahl ist bereits erreicht.",
     "Regel M_WK_DEF8: Markiere bis zu 40 Kursen um 8 Defizite tolerieren zu können, entsprechend APO-BK AnlageD § 15 Abs. 2 Nr. 3c",

@@ -35,6 +35,9 @@ public class BKGymAbiturMarkierungsVariante {
 	/** Markierung stoppen */
 	private boolean gestoppt;
 
+	/** Defizitregeln abschließend geprüft */
+	private boolean defizitregelnAbgeschlossen;
+
 	/** Die Summe der Notenpunkte aller Markierungen, LKs sind doppelt gezählt */
 	private int summeNotenpunkte;
 
@@ -71,6 +74,7 @@ public class BKGymAbiturMarkierungsVariante {
 		this.varianten = v;
 		this.kennung = "Root";
 		this.facharbeitEinbeziehen = false;
+		this.defizitregelnAbgeschlossen = false;
 		init();
 	}
 
@@ -87,6 +91,7 @@ public class BKGymAbiturMarkierungsVariante {
 			final boolean facharbeit) {
 		this.varianten = other.varianten;
 		this.gestoppt = other.gestoppt;
+		this.defizitregelnAbgeschlossen = other.defizitregelnAbgeschlossen;
 		this.kennung = other.kennung + "#" + kennung;
 		this.summeNotenpunkte = other.summeNotenpunkte;
 		this.anzahlKurse = other.anzahlKurse;
@@ -180,6 +185,23 @@ public class BKGymAbiturMarkierungsVariante {
 		return gestoppt;
 	}
 
+	/** Getter für defizitregelnAbgeschlossen
+	 *
+	 * @return defizitregelnAbgeschlossen
+	 */
+	public boolean sindDefizitregelnAbgeschlossen() {
+		return defizitregelnAbgeschlossen;
+	}
+
+	/**
+	 * Setter für defizitregelnAbgeschlossen
+	 *
+	 * @param defizitregelnAbgeschlossen   ob die Defizitregeln bereits geprüft wurden
+	 */
+	public void setDefizitregelnAbgeschlossen(final boolean defizitregelnAbgeschlossen) {
+		this.defizitregelnAbgeschlossen = defizitregelnAbgeschlossen;
+	}
+
 	/**
 	 * Liefert die Gesamtanzahl der eingebrachten Defizite
 	 *
@@ -246,8 +268,8 @@ public class BKGymAbiturMarkierungsVariante {
 	 * @return die Anzahl verbleibender Kurse, die nicht markiert werden konnte
 	 */
 	public int markiereKursanzahl(final int kursanzahl, final Predicate<BKGymAbiturMarkierungsalgorithmusMarkierung> bedingung) {
-		if (kursanzahl == 0)
-			return kursanzahl;
+		if (kursanzahl <= 0)
+			return 0;
 		if (bedingung == null)
 			return kursanzahl;
 		int verbleibend = kursanzahl;

@@ -1,9 +1,9 @@
 {
   "erfolgreich" : true,
-  "eingebrachteKurse" : 32,
+  "eingebrachteKurse" : 33,
   "gesamtDefizite" : 1,
   "lkDefizite" : 1,
-  "punkteBlockI" : 328,
+  "punkteBlockI" : 334,
   "fehlerLog" : [
     "Hinweis: Das Fach Spanisch ist im Fächerkatalog nicht eindeutig bestimmbar. Bitte die Bezeichnungen der Fächer eindeutig festlegen.",
     "Hinweis: Das Fach Französisch ist im Fächerkatalog nicht eindeutig bestimmbar. Bitte die Bezeichnungen der Fächer eindeutig festlegen."
@@ -145,29 +145,34 @@
       "punkte" : 11
     },
     {
-      "fachID" : 89,
-      "halbjahrID" : 3,
-      "punkte" : 11
-    },
-    {
-      "fachID" : 89,
-      "halbjahrID" : 4,
-      "punkte" : 11
-    },
-    {
-      "fachID" : 90,
-      "halbjahrID" : 3,
-      "punkte" : 11
-    },
-    {
-      "fachID" : 90,
-      "halbjahrID" : 4,
-      "punkte" : 11
-    },
-    {
-      "fachID" : 46,
+      "fachID" : 78,
       "halbjahrID" : 2,
-      "punkte" : 8
+      "punkte" : 11
+    },
+    {
+      "fachID" : 78,
+      "halbjahrID" : 3,
+      "punkte" : 11
+    },
+    {
+      "fachID" : 89,
+      "halbjahrID" : 3,
+      "punkte" : 11
+    },
+    {
+      "fachID" : 89,
+      "halbjahrID" : 4,
+      "punkte" : 11
+    },
+    {
+      "fachID" : 90,
+      "halbjahrID" : 3,
+      "punkte" : 11
+    },
+    {
+      "fachID" : 90,
+      "halbjahrID" : 4,
+      "punkte" : 11
     }
   ],
   "log" : [
@@ -204,7 +209,7 @@
     "    Erforderliche Anzahl von 32 Kursen konnten eingebracht werden.",
     "Regel M_KOPIE: Erstelle Markierungsvariante für Facharbeit, entsprechend APO-BK Anlage D § 8 Abs. 2",
     "Regel M_WK_MAX: Markiere weitere Kurse um bestes Ergebnis zu erreichen (1. FS), entsprechend APO-BK AnlageD § 15 Abs. 2 Nr. 1b (V1)",
-    "    Weitere Kurse wurden nicht markiert, da dadurch keine Verbesserung erreicht wird.",
+    "    Es konnten 1 weitere Kurse zur Verbesserung markiert werden.",
     "Regel M_WK_MAX: Markiere weitere Kurse um mindestens 200 Punkte im Block I zu erreichen, entsprechend APO-BK AnlageD § 15 Abs. 2 Nr. 2",
     "    Die Mindestpunktzahl ist bereits erreicht.",
     "Regel M_WK_DEF8: Markiere bis zu 40 Kursen um 8 Defizite tolerieren zu können, entsprechend APO-BK AnlageD § 15 Abs. 2 Nr. 3c",

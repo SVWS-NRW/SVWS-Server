@@ -1,11 +1,5 @@
 {
-  "erfolgreich" : false,
-  "fehlercodes" : [
-    {
-      "code" : "KL_4",
-      "art" : "SCHRIFTLICHKEIT",
-      "beschreibung" : "Im Abiturfach Deutsch fehlt die Klausurbelegung im Halbjahr Q2.1."
-    }
-  ],
+  "erfolgreich" : true,
+  "fehlercodes" : [ ],
   "log" : [ ]
 }

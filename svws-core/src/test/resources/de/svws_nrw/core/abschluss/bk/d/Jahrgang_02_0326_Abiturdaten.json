@@ -89,7 +89,7 @@
                 {
                     "halbjahrKuerzel": "Q2.1",
                     "kursartKuerzel": "GK",
-                    "schriftlich": false,
+                    "schriftlich": true,
                     "biliSprache": null,
                     "idKurs": null,
                     "lehrer": null,
