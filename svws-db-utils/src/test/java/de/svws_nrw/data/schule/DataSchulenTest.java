@@ -6,11 +6,13 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
+import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.kataloge.SchulEintrag;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOSchuleNRW;
 import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -27,6 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatException;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -110,8 +113,13 @@ class DataSchulenTest {
 	@DisplayName("getAll")
 	void getAllSuccess() {
 		final var dtoSchuleNRW1 = new DTOSchuleNRW(1L, "123");
-		final var dtoSchuleNRW2 = new DTOSchuleNRW(3L, "123");
+		final var dtoSchuleNRW2 = new DTOSchuleNRW(3L, "456");
 		when(this.conn.queryAll(DTOSchuleNRW.class)).thenReturn(List.of(dtoSchuleNRW1, dtoSchuleNRW2));
+		@SuppressWarnings("unchecked")
+		final TypedQuery<String> mockQuery = mock(TypedQuery.class);
+		when(mockQuery.setParameter(eq("schulnummern"), any())).thenReturn(mockQuery);
+		when(mockQuery.getResultList()).thenReturn(List.of("123"));
+		when(conn.query(anyString(), eq(String.class))).thenReturn(mockQuery);
 
 		final var result = this.data.getAll();
 
@@ -120,10 +128,10 @@ class DataSchulenTest {
 				.satisfiesExactly(
 						f1 -> assertThat(f1)
 								.isInstanceOf(SchulEintrag.class)
-								.hasFieldOrPropertyWithValue("id", 1L),
+								.hasFieldOrPropertyWithValue("referenziertInAnderenTabellen", true),
 						f2 -> assertThat(f2)
 								.isInstanceOf(SchulEintrag.class)
-								.hasFieldOrPropertyWithValue("id", 3L)
+								.hasFieldOrPropertyWithValue("referenziertInAnderenTabellen", false)
 				);
 	}
 
@@ -141,8 +149,13 @@ class DataSchulenTest {
 	void getListTest() {
 		final var dtoWithKuerzel = new DTOSchuleNRW(1L, "123");
 		dtoWithKuerzel.Kuerzel = "abc";
-		final var dtoWithoutKuerzel = new DTOSchuleNRW(3L, "123");
+		final var dtoWithoutKuerzel = new DTOSchuleNRW(3L, "456");
 		when(this.conn.queryAll(DTOSchuleNRW.class)).thenReturn(List.of(dtoWithKuerzel, dtoWithoutKuerzel));
+		@SuppressWarnings("unchecked")
+		final TypedQuery<String> mockQuery = mock(TypedQuery.class);
+		when(conn.query(anyString(), eq(String.class))).thenReturn(mockQuery);
+		when(mockQuery.setParameter(anyString(), any())).thenReturn(mockQuery);
+		when(mockQuery.getResultList()).thenReturn(Collections.emptyList());
 
 		final var result = this.data.getList();
 
@@ -423,10 +436,55 @@ class DataSchulenTest {
 		assertThat(schule.Kuerzel).isNull();
 	}
 
+	@Test
+	@DisplayName("checkBeforeDeletionWithSimpleOperationResponse | referenziert")
+	void checkBeforeDeletionWithSimpleOperationResponseReferenziert() {
+		@SuppressWarnings("unchecked")
+		final TypedQuery<String> queryMock = mock(TypedQuery.class);
+		when(queryMock.setParameter(eq("schulnummern"), any())).thenReturn(queryMock);
+		when(queryMock.getResultList()).thenReturn(List.of("456"));
+		when(conn.query(anyString(), eq(String.class))).thenReturn(queryMock);
+		final var response = new SimpleOperationResponse();
+		response.id = 1L;
+		response.success = true;
+		final var responses = Map.of(response.id, response);
+		final var dto = getDtoSchuleNRW();
+
+		this.data.checkBeforeDeletionWithSimpleOperationResponse(List.of(dto), responses);
+
+		assertThat(responses.get(1L))
+				.hasFieldOrPropertyWithValue("success", false)
+				.extracting(r -> r.log.getFirst())
+				.isEqualTo("Die Schule mit der Kurzbezeichnung Herder Schule ist in der Datenbank referenziert und kann daher nicht gelöscht werden");
+	}
+
+	@Test
+	@DisplayName("checkBeforeDeletionWithSimpleOperationResponse | nicht referenziert")
+	void checkBeforeDeletionWithSimpleOperationResponseNichtReferenziert() {
+		@SuppressWarnings("unchecked")
+		final TypedQuery<String> queryMock = mock(TypedQuery.class);
+		when(queryMock.setParameter(eq("schulnummern"), any())).thenReturn(queryMock);
+		when(queryMock.getResultList()).thenReturn(Collections.emptyList());
+		when(conn.query(anyString(), eq(String.class))).thenReturn(queryMock);
+		final var response = new SimpleOperationResponse();
+		response.id = 1L;
+		response.success = true;
+		final var responses = Map.of(response.id, response);
+		final var dto = getDtoSchuleNRW();
+
+		this.data.checkBeforeDeletionWithSimpleOperationResponse(List.of(dto), responses);
+
+		assertThat(responses.get(1L))
+				.hasFieldOrPropertyWithValue("success", true);
+		assertThat(responses.get(1L).log).isEmpty();
+	}
+
 	private static DTOSchuleNRW getDtoSchuleNRW() {
 		final var dtoSchuleNRW = new DTOSchuleNRW(1L, "123");
+		dtoSchuleNRW.SchulNr = "456";
 		dtoSchuleNRW.SchulNr_SIM = "456";
 		dtoSchuleNRW.Name = "Schöne Schule";
+		dtoSchuleNRW.KurzBez = "Herder Schule";
 		dtoSchuleNRW.SchulformNr = "10";
 		dtoSchuleNRW.Strassenname = "RollercoasterRoad";
 		dtoSchuleNRW.HausNr = "42";

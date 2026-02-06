@@ -83,6 +83,10 @@ public class SchulEintrag {
 	@Schema(description = "gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht", example = "true")
 	public boolean istSichtbar;
 
+	/** Gibt an, ob der Eintrag in anderen Datenbanktabellen referenziert ist oder nicht. */
+	@Schema(description = "Gibt an, ob der Eintrag in anderen Datenbanktabellen referenziert ist oder nicht.", example = "true", accessMode = Schema.AccessMode.READ_ONLY)
+	public boolean referenziertInAnderenTabellen;
+
 	/**
 	 * Leerer Standardkonstruktor.
 	 */

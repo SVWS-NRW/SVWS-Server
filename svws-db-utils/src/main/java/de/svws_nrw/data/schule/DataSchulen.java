@@ -1,10 +1,15 @@
 package de.svws_nrw.data.schule;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
+import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.kataloge.SchulEintrag;
 import de.svws_nrw.asd.data.schule.SchulformKatalogEintrag;
 import de.svws_nrw.asd.types.schule.Schulform;
@@ -52,10 +57,14 @@ public final class DataSchulen extends DataManagerRevised<Long, DTOSchuleNRW, Sc
 	}
 
 	private List<SchulEintrag> getSchulenFiltered(final Predicate<DTOSchuleNRW> filter) {
-		return conn.queryAll(DTOSchuleNRW.class)
+		final List<DTOSchuleNRW> schulen = this.conn.queryAll(DTOSchuleNRW.class);
+		final Set<Long> idsOfReferencedSchulen = this.getIdsOfReferencedSchulen(schulen);
+		return schulen
 				.stream()
 				.filter(dto -> (filter == null) || filter.test(dto))
 				.map(this::map)
+				.map(s -> setReferencedFlag(s, idsOfReferencedSchulen))
+				.sorted(Comparator.comparing(s -> s.id))
 				.toList();
 	}
 
@@ -122,6 +131,15 @@ public final class DataSchulen extends DataManagerRevised<Long, DTOSchuleNRW, Sc
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));
 		}
 	}
+
+	@Override
+	protected void checkBeforeDeletionWithSimpleOperationResponse(final List<DTOSchuleNRW> schulen, final Map<Long, SimpleOperationResponse> mapResponses) {
+		final Set<Long> referencedIds = getIdsOfReferencedSchulen(schulen);
+		schulen.stream()
+				.filter(s -> referencedIds.contains(s.ID))
+				.forEach(s -> markResponseAsFailed(mapResponses.get(s.ID), s.KurzBez));
+	}
+
 
 	private Long mapIdSchulform(final String schulformNr) {
 		if (schulformNr == null) {
@@ -249,6 +267,52 @@ public final class DataSchulen extends DataManagerRevised<Long, DTOSchuleNRW, Sc
 
 	private static void updateSichtbar(final DTOSchuleNRW dto, final String name, final Object value) throws ApiOperationException {
 		dto.Sichtbar = JSONMapper.convertToBoolean(value, false, name);
+	}
+
+	private static void markResponseAsFailed(final SimpleOperationResponse response, final String kurzbezeichnung) {
+		response.success = false;
+		response.log
+				.add("Die Schule mit der Kurzbezeichnung %s ist in der Datenbank referenziert und kann daher nicht gelöscht werden".formatted(kurzbezeichnung));
+	}
+
+	private Set<Long> getIdsOfReferencedSchulen(final List<DTOSchuleNRW> schulen) {
+		if ((schulen == null) || schulen.isEmpty()) {
+			return Collections.emptySet();
+		}
+
+		final Map<String, Long> schulNrByIdSchule = getSchulNrByIdSchule(schulen);
+
+		if (schulNrByIdSchule.isEmpty()) {
+			return Collections.emptySet();
+		}
+
+		final Set<String> schulnummern = schulNrByIdSchule.keySet();
+
+		final String queryLetzteSchule = "SELECT DISTINCT a.LSSchulNr FROM DTOSchueler a WHERE a.LSSchulNr IN :schulnummern";
+		final String queryAufnehmendeSchule = "SELECT DISTINCT b.SchulwechselNr FROM DTOSchueler b WHERE b.SchulwechselNr IN :schulnummern";
+
+		final String query = String.join("\nUNION ALL\n", queryLetzteSchule, queryAufnehmendeSchule);
+		return conn.query(query, String.class)
+				.setParameter("schulnummern", schulnummern)
+				.getResultList()
+				.stream()
+				.map(schulNrByIdSchule::get)
+				.filter(Objects::nonNull)
+				.collect(Collectors.toSet());
+	}
+
+	private static Map<String, Long> getSchulNrByIdSchule(final List<DTOSchuleNRW> schulen) {
+		return schulen
+				.stream()
+				.filter(Objects::nonNull)
+				.collect(Collectors.toMap(
+						s -> s.SchulNr,
+						s -> s.ID));
+	}
+
+	private SchulEintrag setReferencedFlag(final SchulEintrag schuleintrag, final Set<Long> idsOfReferencedSchulen) {
+		schuleintrag.referenziertInAnderenTabellen = idsOfReferencedSchulen.contains(schuleintrag.id);
+		return schuleintrag;
 	}
 
 }

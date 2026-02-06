@@ -1,5 +1,5 @@
 import type { List, SchulEintrag, SimpleOperationResponse } from "@core";
-import { ArrayList, BenutzerKompetenz } from "@core";
+import { BenutzerKompetenz, ArrayList } from "@core";
 import type { RouteParamsRawGeneric } from "vue-router";
 import { api } from "~/router/Api";
 import { routeSchulenDaten } from "./RouteSchulenDaten";
@@ -67,11 +67,26 @@ export class RouteDataSchulen extends RouteDataAuswahl<SchulenListeManager, Rout
 			errorLog.add('Es wurde keine Schule zum Löschen ausgewählt.');
 		}
 
+		if (!this.manager.idsReferencedSchulen.isEmpty()) {
+			errorLog.add(this.getErrorMessageForReferencedSchulen());
+		}
+
 		return [errorLog.isEmpty(), errorLog];
 	};
 
+	private getErrorMessageForReferencedSchulen(): string {
+		let errorMessage = 'Die folgenden Schulen sind an anderer Stelle referenziert und können daher nicht gelöscht werden:\n\n';
+		for (const id of this.manager.idsReferencedSchulen) {
+			const schule = this.manager.liste.get(id);
+			if (schule) {
+				errorMessage += `- ${schule.name} \n`;
+			}
+		}
+		return errorMessage;
+	}
+
 	protected deleteMessage(id: number, schule: SchulEintrag | null): string {
-		return `Schule ${schule?.name ?? '???'} (ID: ${id}) wurde erfolgreich gelöscht.`;
+		return `Schule ${schule?.kurzbezeichnung ?? '???'} (ID: ${id}) wurde erfolgreich gelöscht.`;
 	}
 }
 

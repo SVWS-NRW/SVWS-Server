@@ -9,6 +9,7 @@ import type { List } from '../../../../../core/src/java/util/List';
 import type { SchulEintrag } from '../../../../../core/src/core/data/kataloge/SchulEintrag';
 import { Arrays } from '../../../../../core/src/java/util/Arrays';
 import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
+import { HashSet } from "../../../../../core/src";
 
 export class SchulenListeManager extends AuswahlManager<number, SchulEintrag, SchulEintrag> {
 
@@ -16,6 +17,7 @@ export class SchulenListeManager extends AuswahlManager<number, SchulEintrag, Sc
 	 * Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ
 	 */
 	private static readonly _schuleToId: JavaFunction<SchulEintrag, number> = { apply: (schulEintrag: SchulEintrag) => schulEintrag.id };
+	private readonly _idsReferencedSchulen: HashSet<number> = new HashSet<number>();
 	private _filterNurSichtbar: boolean = true;
 	private _searchTerm: string = "";
 
@@ -94,6 +96,15 @@ export class SchulenListeManager extends AuswahlManager<number, SchulEintrag, Sc
 		);
 	}
 
+	protected onMehrfachauswahlChanged(): void {
+		this._idsReferencedSchulen.clear();
+		for (const l of this.liste.auswahl()) {
+			if (l.referenziertInAnderenTabellen) {
+				this._idsReferencedSchulen.add(l.id);
+			}
+		}
+	}
+
 	get schulenKatalogEintraege(): List<SchulenKatalogEintrag> {
 		return this._schulenKatalogEintraege;
 	}
@@ -114,5 +125,9 @@ export class SchulenListeManager extends AuswahlManager<number, SchulEintrag, Sc
 	set searchTerm(value: string) {
 		this._searchTerm = value;
 		this._eventHandlerFilterChanged.run();
+	}
+
+	get idsReferencedSchulen(): HashSet<number> {
+		return this._idsReferencedSchulen;
 	}
 }
