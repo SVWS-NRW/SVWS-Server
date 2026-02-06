@@ -341,6 +341,8 @@ final class StundenplanCopyHelper {
 	 */
 	static Map<Long, Long> getKursMappings(final DBEntityManager conn,
 			final Collection<Long> kursIdsAlt, final long abschnittNeu) {
+		if (kursIdsAlt.isEmpty())
+			return new HashMap<>();
 		final Map<Long, DTOKurs> kurseAlleAlt = conn.queryList(DTOKurs.QUERY_LIST_BY_ID,
 				DTOKurs.class, kursIdsAlt).stream()
 				.collect(Collectors.toMap(k -> k.ID, k -> k));
@@ -404,6 +406,8 @@ final class StundenplanCopyHelper {
 	 * @return eine Map von alten zu neuen Klassen-IDs
 	 */
 	static Map<Long, Long> getKlassenMappings(final DBEntityManager conn, final Collection<Long> klassenIdsAlt, final long abschnittNeu) {
+		if (klassenIdsAlt.isEmpty())
+			return new HashMap<>();
 		final Map<Long, DTOKlassen> klassenAlleAlt = conn.queryList(DTOKlassen.QUERY_LIST_BY_ID,
 				DTOKlassen.class, klassenIdsAlt).stream().collect(Collectors.toMap(k -> k.ID, k -> k));
 		final Map<String, DTOKlassen> klassenAlleNeu = conn.queryList(DTOKlassen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID,
