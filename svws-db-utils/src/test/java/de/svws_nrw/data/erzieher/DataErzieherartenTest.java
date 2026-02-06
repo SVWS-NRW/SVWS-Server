@@ -366,6 +366,7 @@ class DataErzieherartenTest {
 		response.success = true;
 		final var responses = Map.of(response.id, response);
 		final var dto = new DTOErzieherart(1L, "bezeichnung");
+		dto.Aenderbar = false;
 
 		this.data.checkBeforeDeletionWithSimpleOperationResponse(List.of(dto), responses);
 
@@ -383,8 +384,11 @@ class DataErzieherartenTest {
 		response.success = true;
 		final var responses = Map.of(response.id, response);
 		final var dto = new DTOErzieherart(6L, "bezeichnung");
+		dto.Aenderbar = true;
+		final var dto2 = new DTOErzieherart(3L, "bezeichnung3");
+		dto2.Aenderbar = null;
 
-		this.data.checkBeforeDeletionWithSimpleOperationResponse(List.of(dto), responses);
+		this.data.checkBeforeDeletionWithSimpleOperationResponse(List.of(dto, dto2), responses);
 
 		assertThat(response)
 				.hasFieldOrPropertyWithValue("success", true)
