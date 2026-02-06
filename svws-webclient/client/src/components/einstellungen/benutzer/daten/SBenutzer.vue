@@ -96,9 +96,9 @@
 	const kennwort1 = ref();
 	const kennwort2 = ref();
 
-	function setPwd() {
+	async function setPwd() {
 		if (kennwort1.value === kennwort2.value) {
-			void props.setPassword(kennwort1.value);
+			await props.setPassword(kennwort1.value);
 		} else {
 			alert("Kennwörter stimmen nicht überein");
 		}

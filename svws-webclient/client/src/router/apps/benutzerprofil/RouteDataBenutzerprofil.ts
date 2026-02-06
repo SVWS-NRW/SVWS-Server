@@ -39,7 +39,7 @@ export class RouteDataBenutzerprofil extends RouteData<RouteStateBenutzerprofil>
 		try {
 			await api.server.setPassword(password, api.schema, api.benutzerdaten.id);
 			return true;
-		} catch (e) {
+		} catch {
 			return false;
 		}
 	};
@@ -52,7 +52,7 @@ export class RouteDataBenutzerprofil extends RouteData<RouteStateBenutzerprofil>
 		try {
 			await api.server.setENMLehrerPassword(password, api.schema, api.benutzerIDLehrer);
 			return true;
-		} catch (e) {
+		} catch {
 			return false;
 		}
 	};
@@ -64,7 +64,7 @@ export class RouteDataBenutzerprofil extends RouteData<RouteStateBenutzerprofil>
 			}
 			await api.server.resetENMLehrerPasswordToInitial(api.schema, api.benutzerIDLehrer);
 			return true;
-		} catch (e) {
+		} catch {
 			return false;
 		}
 	};

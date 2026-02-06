@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric, RouteRecordRaw } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
 
 import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
 
@@ -22,7 +22,7 @@ const SBenutzergruppeApp = () => import("~/components/einstellungen/benutzergrup
 export class RouteEinstellungenBenutzergruppe extends RouteNode<RouteDataEinstellungenBenutzergruppe, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.ADMIN], "einstellungen.benutzergruppen", "einstellungen/benutzergruppe/:id(\\d+)?", SBenutzergruppeApp, new RouteDataEinstellungenBenutzergruppe());
+		super(Schulform.values(), [BenutzerKompetenz.ADMIN], "einstellungen.benutzergruppen", String.raw`einstellungen/benutzergruppe/:id(\d+)?`, SBenutzergruppeApp, new RouteDataEinstellungenBenutzergruppe());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Benutzergruppen";
@@ -63,7 +63,7 @@ export class RouteEinstellungenBenutzergruppe extends RouteNode<RouteDataEinstel
 			if (id !== undefined && !this.data.mapBenutzergruppe.has(id)) {
 				return this.getRouteDefaultChild({ id: this.data.mapBenutzergruppe.values().next().value?.id });
 			}
-			const eintrag = (id !== undefined) ? this.data.mapBenutzergruppe.get(id) : undefined;
+			const eintrag = this.data.mapBenutzergruppe.get(id ?? -1);
 			await this.data.setBenutzergruppe(eintrag);
 		} catch (e) {
 			return await routeError.getErrorRoute(e as DeveloperNotificationException);
@@ -71,7 +71,7 @@ export class RouteEinstellungenBenutzergruppe extends RouteNode<RouteDataEinstel
 	}
 
 	public addRouteParamsFromState(): RouteParamsRawGeneric {
-		const id = (this.data.auswahl !== undefined) ? this.data.auswahl.id : undefined;
+		const id = (this.data.auswahl === undefined) ? undefined : this.data.auswahl.id;
 		return { id };
 	}
 
@@ -93,7 +93,7 @@ export class RouteEinstellungenBenutzergruppe extends RouteNode<RouteDataEinstel
 		};
 	}
 
-	private setTab = async (value: TabData) => {
+	private readonly setTab = async (value: TabData) => {
 		if (value.name === this.data.view.name) {
 			return;
 		}
