@@ -364,6 +364,11 @@ public final class DataGostKlausurenSchuelerklausurraumstunde
 	 * @return das {@link GostKlausurenCollectionSkrsKrsData}-Objekt mit den geänderten Raumdaten
 	 */
 	public GostKlausurenCollectionSkrsKrsData updateRaeumeZuKlausurtermin(final GostKlausurtermin termin) throws ApiOperationException {
+		if ((termin.datum == null) || (termin.startzeit == null)) {
+			final List<GostSchuelerklausurTermin> skts =
+					new DataGostKlausurenSchuelerklausurTermin(conn).getSchuelerklausurtermineZuTerminIds(ListUtils.create1(termin.id));
+			return loescheRaumZuSchuelerklausurenTransaction(skts);
+		}
 
 		final List<GostKlausurraum> raeume = new DataGostKlausurenRaum(conn).getKlausurraeumeZuTerminen(ListUtils.create1(termin));
 		final GostKlausurplanManager manager = createKlausurManagerMitStundenplan(ListUtils.create1(termin), null, null);

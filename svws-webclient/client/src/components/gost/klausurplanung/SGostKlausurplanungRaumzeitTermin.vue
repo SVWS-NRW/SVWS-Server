@@ -119,7 +119,7 @@
 		createKlausurraum: (raum: Partial<GostKlausurraum>) => Promise<void>;
 		loescheKlausurraum: (id: number) => Promise<boolean>;
 		patchKlausurraum: (id: number, raum: Partial<GostKlausurraum>) => Promise<boolean>;
-		patchKlausur: (klausur: GostKursklausur, patch: Partial<GostKursklausur>) => Promise<void>;
+		patchKlausur: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur>) => Promise<void>;
 		dragData: () => GostKlausurplanungDragData;
 		onDrag: (event: DragEvent, data: GostKlausurplanungDragData) => void;
 		onDrop: (zone: GostKlausurplanungDropZone) => void;

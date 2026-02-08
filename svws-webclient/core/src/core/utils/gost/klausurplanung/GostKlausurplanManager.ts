@@ -4423,6 +4423,23 @@ export class GostKlausurplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert die Menge aller {@link GostKursklausur}en zurück, die in einem {@link GostKlausurraum} geschrieben werden, wenn es sich um Nachschreibklausuren handelt.
+	 *
+	 * @param raum  der {@link GostKlausurraum}
+	 *
+	 * @return die Menge aller {@link GostKursklausur}en zurück, die in einem {@link GostKlausurraum} geschrieben werden, wenn es sich um Nachschreibklausuren handelt.
+	 */
+	public nachschreiberGetMengeByRaum(raum: GostKlausurraum): JavaSet<GostKursklausur> {
+		const kursklausuren: JavaSet<GostKursklausur> | null = new HashSet<GostKursklausur>();
+		if (!this._schuelerklausurterminaktuellmenge_by_idRaum_and_idKursklausur.containsKey1(raum.id))
+			return kursklausuren;
+		for (const skt of this._schuelerklausurterminaktuellmenge_by_idRaum_and_idKursklausur.get1(raum.id))
+			if (skt.folgeNr > 0)
+				kursklausuren.add(this.kursklausurBySchuelerklausurTermin(skt));
+		return kursklausuren;
+	}
+
+	/**
 	 * Liefert die Menge aller {@link GostSchuelerklausurTermin}e zurück, die in einem {@link GostKlausurraum} geschrieben werden und zu einer {@link GostKursklausur} gehören.
 	 *
 	 * @param raum der {@link GostKlausurraum}

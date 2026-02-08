@@ -1,8 +1,6 @@
-
 import type {
 	GostHalbjahr,
 	GostJahrgangsdaten,
-	GostKlausurenCollectionSkrsKrsData,
 	GostKlausurraum,
 	GostKlausurraumRich,
 	GostKlausurtermin,
@@ -10,7 +8,7 @@ import type {
 	GostKlausurplanManager,
 	List,
 	BenutzerKompetenz,
-	Schuljahresabschnitt,
+	Schuljahresabschnitt, GostSchuelerklausurTermin,
 } from "@core";
 import type { WritableComputedRef } from "vue";
 
@@ -26,7 +24,7 @@ export interface GostKlausurplanungRaumzeitProps {
 	loescheKlausurraum: (id: number) => Promise<boolean>;
 	patchKlausurraum: (id: number, raum: Partial<GostKlausurraum>) => Promise<boolean>;
 	setzeRaumZuSchuelerklausuren: (raeume: List<GostKlausurraumRich>, deleteFromRaeume: boolean) => Promise<void>;
-	patchKlausur: (klausur: GostKursklausur, patch: Partial<GostKursklausur>) => Promise<void>;
+	patchKlausur: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur>) => Promise<void>;
 	patchKlausurtermin: (id: number, termin: Partial<GostKlausurtermin>) => Promise<void>;
 	quartalsauswahl: WritableComputedRef<0 | 1 | 2>;
 	setRaumTermin: (termin: GostKlausurtermin | null) => void;

@@ -4739,6 +4739,23 @@ public class GostKlausurplanManager {
 	}
 
 	/**
+	 * Liefert die Menge aller {@link GostKursklausur}en zurück, die in einem {@link GostKlausurraum} geschrieben werden, wenn es sich um Nachschreibklausuren handelt.
+	 *
+	 * @param raum  der {@link GostKlausurraum}
+	 *
+	 * @return die Menge aller {@link GostKursklausur}en zurück, die in einem {@link GostKlausurraum} geschrieben werden, wenn es sich um Nachschreibklausuren handelt.
+	 */
+	public @NotNull Set<GostKursklausur> nachschreiberGetMengeByRaum(final @NotNull GostKlausurraum raum) {
+		final Set<GostKursklausur> kursklausuren = new HashSet<>();
+		if (!_schuelerklausurterminaktuellmenge_by_idRaum_and_idKursklausur.containsKey1(raum.id))
+			return kursklausuren;
+		for (final GostSchuelerklausurTermin skt : _schuelerklausurterminaktuellmenge_by_idRaum_and_idKursklausur.get1(raum.id))
+			if (skt.folgeNr > 0)
+				kursklausuren.add(kursklausurBySchuelerklausurTermin(skt));
+		return kursklausuren;
+	}
+
+	/**
 	 * Liefert die Menge aller {@link GostSchuelerklausurTermin}e zurück, die in einem {@link GostKlausurraum} geschrieben werden und zu einer {@link GostKursklausur} gehören.
 	 *
 	 * @param raum der {@link GostKlausurraum}
