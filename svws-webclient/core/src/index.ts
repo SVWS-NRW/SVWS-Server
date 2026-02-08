@@ -680,6 +680,7 @@ export { ReportingFilterKriterium } from './core/data/reporting/ReportingFilterK
 export { ReportingParameter } from './core/data/reporting/ReportingParameter';
 export { ReportingSortierungDefinition } from './core/data/reporting/ReportingSortierungDefinition';
 export { ReportingVorlageParameter } from './core/data/reporting/ReportingVorlageParameter';
+export { ReportingVorlageParameterGruppe } from './core/data/reporting/ReportingVorlageParameterGruppe';
 export { DatenbankVerbindungsdaten } from './core/data/schema/DatenbankVerbindungsdaten';
 export { Schild3KatalogEintragAbiturInfos } from './core/data/schild3/Schild3KatalogEintragAbiturInfos';
 export { Schild3KatalogEintragDQRNiveaus } from './core/data/schild3/Schild3KatalogEintragDQRNiveaus';
@@ -877,6 +878,7 @@ export { ReportingEMailEmpfaengerTyp } from './core/types/reporting/ReportingEMa
 export { ReportingFilterOperation } from './core/types/reporting/ReportingFilterOperation';
 export { ReportingFilterVerknuepfung } from './core/types/reporting/ReportingFilterVerknuepfung';
 export { ReportingReportvorlage } from './core/types/reporting/ReportingReportvorlage';
+export { ReportingUIKomponentenTyp } from './core/types/reporting/ReportingUIKomponentenTyp';
 export { ReportingVorlageParameterTyp } from './core/types/reporting/ReportingVorlageParameterTyp';
 export { SchildReportingAttributTyp } from './core/types/schild3/SchildReportingAttributTyp';
 export { AllgemeineMerkmale } from './core/types/schule/AllgemeineMerkmale';

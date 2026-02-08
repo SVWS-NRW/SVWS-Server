@@ -11,7 +11,7 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ProxyReportingSchuelerLeistungsdatenMatrix;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLeistungsdatenMatrix;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
-import de.svws_nrw.module.reporting.proxytypes.jahrgang.ProxyReportingJahrgang;
+import de.svws_nrw.module.reporting.types.jahrgang.ProxyReportingJahrgang;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
