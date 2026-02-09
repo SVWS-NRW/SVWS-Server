@@ -4,18 +4,22 @@ import { RouteNode } from "~/router/RouteNode";
 
 import { type RouteApp } from "~/router/apps/RouteApp";
 
-import { RouteDataSchule } from "~/router/apps/schule/kataloge/stammdaten/RouteDataSchule";
-import { routeSchuleStammdaten } from "~/router/apps/schule/kataloge/stammdaten/RouteSchuleStammdaten";
+import { RouteDataSchule } from "~/router/apps/schule/RouteDataSchule";
+import { routeSchuleStammdaten } from "~/router/apps/schule/stammdaten/RouteSchuleStammdaten";
 import { AppMenuGroup } from "@ui";
-
 
 export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.KEINE], "schule", "schule", undefined, new RouteDataSchule());
+		super(Schulform.values(),
+			[BenutzerKompetenz.KEINE],
+			"schule",
+			"schule",
+			undefined,
+			new RouteDataSchule()
+		);
 		super.text = "Schule";
 		super.mode = ServerMode.STABLE;
-		super.propHandler = (route) => this.getNoProps(route);
 		super.menugroup = AppMenuGroup.MAIN;
 		super.icon = "i-ri-school-line";
 	}

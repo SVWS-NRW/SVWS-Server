@@ -1,6 +1,6 @@
-import type { BenutzerKompetenz, SMTPServerKonfiguration, SchuleStammdaten } from "@core";
+import type { BenutzerKompetenz, SchuleStammdaten, SMTPServerKonfiguration } from "@core";
 
-export interface SchuleAppProps {
+export interface SchuleAdressdatenProps {
 	schule: () => SchuleStammdaten;
 	patch: (data: Partial<SchuleStammdaten>) => Promise<void>;
 	smptServerKonfiguration: () => SMTPServerKonfiguration;

@@ -1,8 +1,7 @@
-import type { SchuleStammdaten } from "@core";
 import { BenutzerKompetenz, OpenApiError, SimpleOperationResponse, SMTPServerKonfiguration } from "@core";
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-import { routeFaecher } from "../faecher/RouteFaecher";
+import { routeFaecher } from "./kataloge/faecher/RouteFaecher";
 import { AES } from "~/utils/crypto/aes";
 import { AESAlgo } from "~/utils/crypto/aesAlgo";
 
@@ -21,14 +20,6 @@ export class RouteDataSchule extends RouteData<RouteStateSchule> {
 	public constructor() {
 		super(defaultState);
 	}
-
-	patch = async (data: Partial<SchuleStammdaten>) => {
-		const stammdaten = api.schuleStammdaten;
-		await api.server.patchSchuleStammdaten(data, api.schema);
-		Object.assign(stammdaten, data);
-		api.updatedApiData();
-		this.commit();
-	};
 
 	public async ladeDaten() {
 		let smtpServerKonfiguration = new SMTPServerKonfiguration();

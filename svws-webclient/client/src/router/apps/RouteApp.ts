@@ -36,7 +36,7 @@ import { routeSchuleDatenaustauschENM } from "./schule/datenaustausch/enmNotenma
 import { routeSchuleDatenaustauschLaufbahnplanung } from "./schule/datenaustausch/laufbahnplanung/RouteSchuleDatenaustauschLupo";
 import { routeSchuleDatenaustauschSchulwechsel } from "./schule/datenaustausch/schulwechsel/RouteSchuleDatenaustauschSchulwechsel";
 import { routeSchuleDatenaustauschLernplattformen } from "~/router/apps/schule/datenaustausch/lernplattformenExport/RouteSchuleDatenaustauschLernplattformen";
-import { routeSchuleStammdaten } from "~/router/apps/schule/kataloge/stammdaten/RouteSchuleStammdaten";
+import { routeSchuleStammdaten } from "~/router/apps/schule/stammdaten/RouteSchuleStammdaten";
 import { routeSchuleReporting } from "./schule/reporting/RouteSchuleReporting";
 import { routeAbteilungen } from "~/router/apps/schule/kataloge/abteilungen/RouteAbteilungen";
 import { routeEntlassgruende } from "~/router/apps/schule/kataloge/entlassgruende/RouteEntlassgruende";
@@ -144,8 +144,9 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeEinstellungenBenutzergruppe,
 		];
 		this._menuSchule = [
-			// Schulbezogen
+			// Stammdaten
 			routeSchuleStammdaten,
+			// Kataloge
 			routeAbteilungen,
 			routeBetriebe,
 			routeBeschaeftigungsarten,
