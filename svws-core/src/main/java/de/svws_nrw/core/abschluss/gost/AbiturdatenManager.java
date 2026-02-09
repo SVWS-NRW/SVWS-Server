@@ -2881,7 +2881,7 @@ public class AbiturdatenManager {
 				punktSummeEinfach += nke.notenpunkte;
 				final int notenpunkte = nke.notenpunkte * (istLK ? 2 : 1);
 				fachbelegung.block1PunktSumme += notenpunkte;
-				summeKurseFach++;
+				summeKurseFach += 1.0;
 				abidaten.block1AnzahlKurse++;
 				if (istLK) {
 					abidaten.block1PunktSummeLK += notenpunkte;

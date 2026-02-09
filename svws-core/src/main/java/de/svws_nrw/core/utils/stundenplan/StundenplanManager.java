@@ -2103,7 +2103,7 @@ public class StundenplanManager {
 				continue;
 
 			double wert = _wertPausenaufsichtAnzahl_by_idLehrkraft_and_wochentyp.getOrException(pa.idLehrer, pab.wochentyp);
-			wert++;
+			wert += 1.0;
 			_wertPausenaufsichtAnzahl_by_idLehrkraft_and_wochentyp.put(pa.idLehrer, pab.wochentyp, wert);
 		}
 

@@ -2686,7 +2686,7 @@ export class AbiturdatenManager extends JavaObject {
 				punktSummeEinfach += nke.notenpunkte;
 				const notenpunkte: number = nke.notenpunkte * (istLK ? 2 : 1);
 				fachbelegung.block1PunktSumme += notenpunkte;
-				summeKurseFach++;
+				summeKurseFach += 1.0;
 				this.abidaten.block1AnzahlKurse++;
 				if (istLK) {
 					this.abidaten.block1PunktSummeLK += notenpunkte;

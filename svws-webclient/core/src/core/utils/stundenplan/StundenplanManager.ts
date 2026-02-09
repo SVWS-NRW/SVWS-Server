@@ -1984,7 +1984,7 @@ export class StundenplanManager extends JavaObject {
 			if (pz.ende === null)
 				continue;
 			let wert: number = this._wertPausenaufsichtAnzahl_by_idLehrkraft_and_wochentyp.getOrException(pa.idLehrer, pab.wochentyp).valueOf();
-			wert++;
+			wert += 1.0;
 			this._wertPausenaufsichtAnzahl_by_idLehrkraft_and_wochentyp.put(pa.idLehrer, pab.wochentyp, wert);
 		}
 		for (const lehrer of this._lehrermenge_sortiert) {
