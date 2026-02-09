@@ -23,6 +23,9 @@ interface ModelProxyConfigurationComplete<T extends object> {
 	/** Eine optionale Methode, um bei Änderungen an dem Pending-State automatisch einen Patch abzusetzen. */
 	patch?: (data: Partial<T>) => Promise<boolean>;
 
+	/** Gibt an, welche Props automatisch gepatcht werden sollen bei einer Änderung */
+	listOfAutopatchProps: Iterable<keyof T>;
+
 	/** Gibt an, ob vor dem ausführen eines Patches geprüft wird, ob der Pending-State valide ist. */
 	checkValidBeforePatch: boolean;
 
@@ -47,7 +50,7 @@ export type ModelProxyConfiguration<T extends object> = Partial<ModelProxyConfig
  */
 export class ModelProxy<T extends object> {
 
-	/** Die Konfiguration des Model_Proxies */
+	/** Die Konfiguration des ModelProxies */
 	private readonly _config: ModelProxyConfigurationComplete<T>;
 
 	/** Die Klasse für die Validierung des Models */
@@ -59,8 +62,11 @@ export class ModelProxy<T extends object> {
 	/** Das Proxy-Objekt zu den Daten, welches die "Original"-Daten mit dem Partial des Pending-States kombiniert */
 	private readonly _proxy: ShallowRef<T>;
 
-	/** Eine Referenz auf den aktuellen Pending-State, der in diesem Model Proxy verwaltet wird */
+	/** Eine Referenz auf den aktuellen Pending-State, der in diesem ModelProxy verwaltet wird */
 	private readonly _pending: Ref<Partial<T>>;
+
+	/** Die Menge an props, die automatisch gepatched werden */
+	private readonly setOfAutopatchProps: Set<keyof T>;
 
 
 	/**
@@ -74,9 +80,13 @@ export class ModelProxy<T extends object> {
 			data: config.data,
 			autoRevalidate: config.autoRevalidate ?? false,
 			patch: config.patch,
+			listOfAutopatchProps: config.listOfAutopatchProps ?? [],
 			checkValidBeforePatch: config.checkValidBeforePatch ?? false,
 			listOfDisabledPropValidations: config.listOfDisabledPropValidations ?? [],
 		};
+
+		// das Set mit den automatisch zu patchenden Props wird hier initialisiert
+		this.setOfAutopatchProps = new Set(this._config.listOfAutopatchProps);
 
 		// Zunächst wird ein Objekt für die Validierung erzeugt. Diesem können mit der Methode addValidator Validatoren hinzugefügt werden
 		this._validation = new ModelProxyValidation<T>(this._config.autoRevalidate, this._config.listOfDisabledPropValidations);
@@ -159,7 +169,9 @@ export class ModelProxy<T extends object> {
 
 	/**
 	 * Aktualisiert den Pending-State und führt die Validierungen für dieses DTO aus.
-	 * Ist eine Patch-Methode konfiguriert, so wird nach der Validierung der Patch ausgeführt
+	 * Ist eine Patch-Methode konfiguriert, so wird nach der Validierung der Patch ausgeführt,
+	 * wenn es sich um einen von außen eingespieltes Update handelt oder auf eine einzelne Prop wirkt
+	 * und die in der Liste der Autopatch-Props vorkommt.
 	 *
 	 * @param update   das Update für den Pending-State
 	 * @param prop     das Attribut auf welches sich die Änderung im update bezieht, sofern es
@@ -171,7 +183,9 @@ export class ModelProxy<T extends object> {
 		}
 		this._pending.value = { ...this._pending.value, ...update };
 		this._validation.validate(prop);
-		await this.patch();
+		if ((prop === undefined) || this.setOfAutopatchProps.has(prop)) {
+			await this.patch();
+		}
 	}
 
 

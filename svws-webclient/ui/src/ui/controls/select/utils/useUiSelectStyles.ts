@@ -72,7 +72,6 @@ export function useUiSelectStyles<T>(
 					return `${prefix}-ui-danger`;
 			}
 
-
 			if (!state.value.isValid) {
 				return `${prefix}-ui-danger`;
 			}

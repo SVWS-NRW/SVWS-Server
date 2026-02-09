@@ -1,5 +1,5 @@
-import type { ValidatorKontext, LehrerRechtsverhaeltnisKatalogEintrag } from "@core";
-import { LehrerPersonalabschnittsdaten, LehrerRechtsverhaeltnis, ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten } from "@core";
+import type { ValidatorKontext, LehrerRechtsverhaeltnisKatalogEintrag, LehrerEinsatzstatusKatalogEintrag, LehrerBeschaeftigungsartKatalogEintrag } from "@core";
+import { LehrerBeschaeftigungsart, LehrerEinsatzstatus, LehrerPersonalabschnittsdaten, LehrerRechtsverhaeltnis, ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart, ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten, ValidatorLpppLehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll } from "@core";
 import { ModelProxy, type LehrerListeManager } from "@ui";
 import { computed } from "vue";
 
@@ -45,13 +45,33 @@ export class LehrerPersonalabschnittsdatenModelProxy extends ModelProxy<LehrerPe
 			{ get: () => this.proxy.mehrleistung }, // Listenfeld im DTO heißt 'mehrleistung' (Singular)
 			{ get: () => this.proxy.minderleistung }, // Listenfeld im DTO heißt 'minderleistung' (Singular)
 			validatorKontext()), "rechtsverhaeltnis");
+		this.addValidator(new ValidatorLpppLehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(
+			{ get: () => this.proxy.pflichtstundensoll },
+			{ get: () => this.proxy.einsatzstatus },
+			{ get: () => this.proxy.beschaeftigungsart },
+			validatorKontext()), "pflichtstundensoll");
+		this.addValidator(new ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(
+			{ get: () => this.proxy.beschaeftigungsart ?? "" },
+			{ get: () => this.proxy.einsatzstatus ?? "" },
+			{ get: () => this.proxy.pflichtstundensoll },
+			validatorKontext()), "beschaeftigungsart");
 		this.validate();
 	}
 
-	rechtsverhaeltnis = computed<LehrerRechtsverhaeltnisKatalogEintrag | undefined>({
+	rechtsverhaeltnis = computed<LehrerRechtsverhaeltnisKatalogEintrag | null>({
 		get: () => LehrerRechtsverhaeltnis.values().map(r => r.daten(this.manager().getSchuljahr()) ?? undefined)
-			.find(d => d?.schluessel === this.proxy.rechtsverhaeltnis),
-		set: (val) => this.proxy.rechtsverhaeltnis = val?.schluessel ?? null,
+			.find(d => d?.schluessel === this.proxy.rechtsverhaeltnis) ?? null,
+		set: (value) => this.proxy.rechtsverhaeltnis = value?.schluessel ?? null,
+	});
+
+	einsatzstatus = computed<LehrerEinsatzstatusKatalogEintrag | null>({
+		get: () => LehrerEinsatzstatus.data().getEintragBySchuljahrUndSchluessel(this.manager().getSchuljahr(), this.proxy.einsatzstatus ?? ''),
+		set: (value: LehrerEinsatzstatusKatalogEintrag | null) => this.proxy.einsatzstatus = value?.schluessel ?? null,
+	});
+
+	beschaeftigungsart = computed<LehrerBeschaeftigungsartKatalogEintrag | null>({
+		get: () => LehrerBeschaeftigungsart.data().getEintragBySchuljahrUndSchluessel(this.manager().getSchuljahr(), this.proxy.beschaeftigungsart ?? ''),
+		set: (value: LehrerBeschaeftigungsartKatalogEintrag | null) => this.proxy.beschaeftigungsart = value?.schluessel ?? null,
 	});
 
 }

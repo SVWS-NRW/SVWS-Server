@@ -146,6 +146,7 @@ export { ValidatorStringHasNoWhitespaces } from "./validation/ValidatorStringHas
 export { ValidatorStringLength } from "./validation/ValidatorStringLength";
 export { ValidatorStringNotEmpty } from "./validation/ValidatorStringNotEmpty";
 export { ValidatorStringNotIn } from "./validation/ValidatorStringNotIn";
+export { ValidatorNumberLengthDecPlaces } from "./validation/ValidatorNumberLengthDecPlaces";
 export { ValidatorTelefon } from "./validation/ValidatorTelefon";
 
 // Manager
