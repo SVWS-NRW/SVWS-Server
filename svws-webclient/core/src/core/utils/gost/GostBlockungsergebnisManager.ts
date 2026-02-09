@@ -2252,7 +2252,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			return false;
 		if ((konfliktTyp === 3) && ((!this.getOfSchuelerHatKollision(idSchueler)) && (!this.getOfSchuelerHatNichtwahl(idSchueler))))
 			return false;
-		if ((subString.length > 0) && (!this.getOfSchuelerHatImNamenSubstring(idSchueler, subString)))
+		if (!JavaString.isEmpty(subString) && (!this.getOfSchuelerHatImNamenSubstring(idSchueler, subString)))
 			return false;
 		if ((geschlecht !== null) && (this.getOfSchuelerGeschlechtOrException(idSchueler).id !== geschlecht.id))
 			return false;

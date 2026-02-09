@@ -2453,7 +2453,7 @@ public class GostBlockungsergebnisManager {
 		if ((konfliktTyp == 3) && ((!getOfSchuelerHatKollision(idSchueler)) && (!getOfSchuelerHatNichtwahl(idSchueler))))
 			return false;
 
-		if ((subString.length() > 0) && (!getOfSchuelerHatImNamenSubstring(idSchueler, subString)))
+		if (!subString.isEmpty() && (!getOfSchuelerHatImNamenSubstring(idSchueler, subString)))
 			return false;
 
 		if ((geschlecht != null) && (getOfSchuelerGeschlechtOrException(idSchueler).id != geschlecht.id))
