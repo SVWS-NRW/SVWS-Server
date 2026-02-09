@@ -203,7 +203,7 @@ public class AbschlussFaecherGruppe {
 		final @NotNull StringBuilder sb = new StringBuilder();
 		for (final @NotNull GEAbschlussFach fach : faecher) {
 			if (filter.test(fach)) {
-				if (sb.length() > 0)
+				if (!sb.isEmpty())
 					sb.append(", ");
 				sb.append(fach.kuerzel);
 			}
@@ -221,7 +221,7 @@ public class AbschlussFaecherGruppe {
 	public @NotNull String toString() {
 		final @NotNull StringBuilder sb = new StringBuilder();
 		for (final @NotNull GEAbschlussFach fach : faecher) {
-			if (sb.length() > 0)
+			if (!sb.isEmpty())
 				sb.append(", ");
 			@NotNull String diffkursinfo = "";
 			if ((fach.kursart == null) || (fach.kuerzel == null))
