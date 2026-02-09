@@ -95,7 +95,7 @@ export class SchuelerStatistikGesamt extends JavaObject {
 	/**
 	 * Die Schulnr der vorher besuchten Schule.
 	 */
-	public vorherigeSchuleNr: number | null = null;
+	public vorherigeSchuleNr: string | null = null;
 
 	/**
 	 * Die allgemeine Herkunftsart des Schüler in Bezug auf die schulform der zuvor besuchten Schule.
@@ -245,7 +245,7 @@ export class SchuelerStatistikGesamt extends JavaObject {
 				result += ',';
 		}
 		result += ' ]' + ',';
-		result += '"vorherigeSchuleNr" : ' + ((obj.vorherigeSchuleNr === null) ? 'null' : obj.vorherigeSchuleNr.toString()) + ',';
+		result += '"vorherigeSchuleNr" : ' + ((obj.vorherigeSchuleNr === null) ? 'null' : JSON.stringify(obj.vorherigeSchuleNr)) + ',';
 		result += '"vorigeAllgHerkunft" : ' + ((obj.vorigeAllgHerkunft === null) ? 'null' : JSON.stringify(obj.vorigeAllgHerkunft)) + ',';
 		result += '"vorigeArtLetzteVersetzung" : ' + ((obj.vorigeArtLetzteVersetzung === null) ? 'null' : JSON.stringify(obj.vorigeArtLetzteVersetzung)) + ',';
 		result += '"idVorigeAbschlussart" : ' + ((obj.idVorigeAbschlussart === null) ? 'null' : JSON.stringify(obj.idVorigeAbschlussart)) + ',';
@@ -323,7 +323,7 @@ export class SchuelerStatistikGesamt extends JavaObject {
 			result += ' ]' + ',';
 		}
 		if (obj.vorherigeSchuleNr !== undefined) {
-			result += '"vorherigeSchuleNr" : ' + ((obj.vorherigeSchuleNr === null) ? 'null' : obj.vorherigeSchuleNr.toString()) + ',';
+			result += '"vorherigeSchuleNr" : ' + ((obj.vorherigeSchuleNr === null) ? 'null' : JSON.stringify(obj.vorherigeSchuleNr)) + ',';
 		}
 		if (obj.vorigeAllgHerkunft !== undefined) {
 			result += '"vorigeAllgHerkunft" : ' + ((obj.vorigeAllgHerkunft === null) ? 'null' : JSON.stringify(obj.vorigeAllgHerkunft)) + ',';

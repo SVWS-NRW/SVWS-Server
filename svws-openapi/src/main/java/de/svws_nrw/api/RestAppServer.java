@@ -2,6 +2,8 @@ package de.svws_nrw.api;
 
 import java.util.Set;
 
+import de.svws_nrw.api.common.ApiOperationExceptionMapper;
+import de.svws_nrw.api.common.GenericExceptionMapper;
 import de.svws_nrw.api.common.OpenAPICorsFilter;
 import de.svws_nrw.api.common.PathUtils;
 import de.svws_nrw.api.server.APIAbteilungen;
@@ -34,6 +36,7 @@ import de.svws_nrw.api.server.APISchema;
 import de.svws_nrw.api.server.APISchild;
 import de.svws_nrw.api.server.APISchueler;
 import de.svws_nrw.api.server.APISchule;
+import de.svws_nrw.api.server.APIStatistik;
 import de.svws_nrw.api.server.APIStundenplan;
 import de.svws_nrw.api.server.APIUnterrichtsverteilung;
 import de.svws_nrw.api.server.APIWiedervorlage;
@@ -87,6 +90,9 @@ public final class RestAppServer extends Application {
 			APIReporting.class,
 			APIWiedervorlage.class,
 			APIAbteilungen.class,
+			APIStatistik.class,
+			ApiOperationExceptionMapper.class,
+			GenericExceptionMapper.class,
 			OpenAPICorsFilter.class,
 			OpenApiServer.class);
 

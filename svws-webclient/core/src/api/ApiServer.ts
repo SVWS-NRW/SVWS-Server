@@ -200,6 +200,7 @@ import { Sprachbelegung } from '../asd/data/schueler/Sprachbelegung';
 import { Sprachpruefung } from '../asd/data/schueler/Sprachpruefung';
 import { SprachpruefungsniveauKatalogEintrag } from '../core/data/fach/SprachpruefungsniveauKatalogEintrag';
 import { SprachreferenzniveauKatalogEintrag } from '../asd/data/fach/SprachreferenzniveauKatalogEintrag';
+import { StatistikGesamt } from '../asd/data/statistik/StatistikGesamt';
 import { Stundenplan } from '../core/data/stundenplan/Stundenplan';
 import { StundenplanAufsichtsbereich } from '../core/data/stundenplan/StundenplanAufsichtsbereich';
 import { StundenplanKalenderwochenzuordnung } from '../core/data/stundenplan/StundenplanKalenderwochenzuordnung';
@@ -17234,6 +17235,30 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<StundenplanZeitraster>).map(d => StundenplanZeitraster.transpilerToJSONPatch(d)).join() + "]";
 		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getStatistikGesamt für den Zugriff auf die URL https://{hostname}/db/{schema}/statistik/gesamt
+	 *
+	 * Gibt die Statistikdaten für die Schule zurück.Es wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Statistikdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Statistikdaten
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: StatistikGesamt
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Statistikdaten anzusehen.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Statistikdaten
+	 */
+	public async getStatistikGesamt(schema : string) : Promise<StatistikGesamt> {
+		const path = "/db/{schema}/statistik/gesamt"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return StatistikGesamt.transpilerFromJSON(text);
 	}
 
 

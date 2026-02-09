@@ -9,7 +9,7 @@ import jakarta.ws.rs.core.Response.Status;
  * Eine Exception, welche im Verlauf einer Operation von der OpenAPI
  * erzeugt wird.
  */
-public class ApiOperationException extends Exception {
+public class ApiOperationException extends RuntimeException {
 
 	private static final long serialVersionUID = -7737733085773788685L;
 

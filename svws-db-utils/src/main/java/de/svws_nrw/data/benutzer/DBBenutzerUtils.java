@@ -24,6 +24,7 @@ import de.svws_nrw.db.utils.ApiUtils;
 import de.svws_nrw.ext.jbcrypt.BCrypt;
 import jakarta.persistence.PersistenceException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.container.ContainerRequestFilter;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -229,6 +230,25 @@ public final class DBBenutzerUtils {
 
 
 	/**
+	 * Diese Methode setzt das Attribut "connection" bei dem übergebenen Request.
+	 *
+	 * TODO Perspektivisch soll diese Methode an dieser Stelle überflüssig werden. Dafür müsste aber die
+	 * Funktionalität bezüglich der Benutzer aus dieser Klasse in einen Filter ausgelagert werden,
+	 * was ein größerer Umbau wäre. Siehe hierfür auch {@link ContainerRequestFilter}.
+	 *
+	 *
+	 * @param request    der HTTP-request
+	 * @param conn       die zu hinterlegende Datenbank-Verbindung
+	 */
+	private static void setRequestAttributeConnection(final HttpServletRequest request, final DBEntityManager conn) {
+		if (request.getAttribute("connection") != null) {
+			throw new IllegalStateException("Dem Request ist bereits eine Datenbank-Verbindung zugewiesen. Eine doppelte Zuweisung ist nicht zulässig.");
+		}
+		request.setAttribute("connection", conn);
+	}
+
+
+	/**
 	 * Ermittelt den aktuellen SVWS-Benutzer anhand des HTTP-Requests und überprüft, ob der Benutzer
 	 * entweder Admin-Rechte oder eine der übergebenen Kompetenzen besitzt. Anschließend wird eine
 	 * {@link DBEntityManager} Instanz für den Datenbankzugriff zurückgegeben.
@@ -245,7 +265,9 @@ public final class DBBenutzerUtils {
 	public static DBEntityManager getDBConnection(final HttpServletRequest request, final ServerMode mode, final BenutzerKompetenz... kompetenzen)
 			throws ApiOperationException {
 		try {
-			return getSVWSUser(request, mode, kompetenzen).getEntityManager();
+			final var conn = getSVWSUser(request, mode, kompetenzen).getEntityManager();
+			setRequestAttributeConnection(request, conn);
+			return conn;
 		} catch (final DBException e) {
 			throw new ApiOperationException(Status.FORBIDDEN, e, "Fehler beim Aufbau der Datenbank-Verbindung.");
 		}
@@ -271,7 +293,9 @@ public final class DBBenutzerUtils {
 	public static DBEntityManager getDBConnectionAllowSelf(final HttpServletRequest request, final ServerMode mode, final long user_id,
 			final BenutzerKompetenz... kompetenzen) throws ApiOperationException {
 		try {
-			return getSVWSUserAllowSelf(request, mode, user_id, kompetenzen).getEntityManager();
+			final var conn = getSVWSUserAllowSelf(request, mode, user_id, kompetenzen).getEntityManager();
+			setRequestAttributeConnection(request, conn);
+			return conn;
 		} catch (final DBException e) {
 			throw new ApiOperationException(Status.FORBIDDEN, e, "Fehler beim Aufbau der Datenbank-Verbindung.");
 		}
@@ -297,7 +321,9 @@ public final class DBBenutzerUtils {
 	public static DBEntityManager getDBConnectionAllowSelfLehrer(final HttpServletRequest request, final ServerMode mode, final long idLehrer,
 			final BenutzerKompetenz... kompetenzen) throws ApiOperationException {
 		try {
-			return getSVWSUserAllowSelfLehrer(request, mode, idLehrer, kompetenzen).getEntityManager();
+			final var conn = getSVWSUserAllowSelfLehrer(request, mode, idLehrer, kompetenzen).getEntityManager();
+			setRequestAttributeConnection(request, conn);
+			return conn;
 		} catch (final DBException e) {
 			throw new ApiOperationException(Status.FORBIDDEN, e, "Fehler beim Aufbau der Datenbank-Verbindung.");
 		}
