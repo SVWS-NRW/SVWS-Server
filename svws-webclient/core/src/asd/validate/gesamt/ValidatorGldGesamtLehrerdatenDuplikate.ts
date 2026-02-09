@@ -1,5 +1,5 @@
-import { ValidatorGld02GesamtLehrerdatenDuplikate } from '../../../asd/validate/gesamt/ValidatorGld02GesamtLehrerdatenDuplikate';
-import { ValidatorGld00GesamtLehrerdatenDuplikate } from '../../../asd/validate/gesamt/ValidatorGld00GesamtLehrerdatenDuplikate';
+import { ValidatorGld11GesamtLehrerdatenDuplikate } from '../../../asd/validate/gesamt/ValidatorGld11GesamtLehrerdatenDuplikate';
+import { ValidatorGld10GesamtLehrerdatenDuplikate } from '../../../asd/validate/gesamt/ValidatorGld10GesamtLehrerdatenDuplikate';
 import { LehrerStatistikGesamt } from '../../../asd/data/statistik/LehrerStatistikGesamt';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import type { List } from '../../../java/util/List';
@@ -18,8 +18,8 @@ export class ValidatorGldGesamtLehrerdatenDuplikate extends Validator {
 	 */
 	public constructor(listLehrer: Supplier<List<LehrerStatistikGesamt>>, kontext: ValidatorKontext) {
 		super(kontext);
-		this._validatoren.add(new ValidatorGld00GesamtLehrerdatenDuplikate(listLehrer, kontext));
-		this._validatoren.add(new ValidatorGld02GesamtLehrerdatenDuplikate(listLehrer, kontext));
+		this._validatoren.add(new ValidatorGld10GesamtLehrerdatenDuplikate(listLehrer, kontext));
+		this._validatoren.add(new ValidatorGld11GesamtLehrerdatenDuplikate(listLehrer, kontext));
 	}
 
 	protected pruefe(): boolean {

@@ -25,8 +25,8 @@ public final class ValidatorGldGesamtLehrerdatenDuplikate extends Validator {
 			final @NotNull Supplier<List<LehrerStatistikGesamt>> listLehrer,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		_validatoren.add(new ValidatorGld00GesamtLehrerdatenDuplikate(listLehrer, kontext));
-		_validatoren.add(new ValidatorGld02GesamtLehrerdatenDuplikate(listLehrer, kontext));
+		_validatoren.add(new ValidatorGld10GesamtLehrerdatenDuplikate(listLehrer, kontext));
+		_validatoren.add(new ValidatorGld11GesamtLehrerdatenDuplikate(listLehrer, kontext));
 	}
 
 

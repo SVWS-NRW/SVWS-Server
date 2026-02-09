@@ -31,9 +31,9 @@ public final class ValidatorLppp00LehrerPersonaldatenPersonalabschnittsdatenPfli
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		this.pflichtstundensoll = pflichtstundensoll;
-		_validatoren.add(new ValidatorLppp01LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensoll, kontext));
+		_validatoren.add(new ValidatorLppp10LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensoll, kontext));
 		_validatoren.add(new ValidatorLppp02LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensoll, einsatzstatus, kontext));
-		_validatoren.add(new ValidatorLppp03LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensoll, einsatzstatus, beschaeftigungsart, kontext));
+		_validatoren.add(new ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensoll, einsatzstatus, beschaeftigungsart, kontext));
 	}
 
 

@@ -2,7 +2,6 @@ import { LehrerStatistikGesamt } from '../../../asd/data/statistik/LehrerStatist
 import { ValidatorGldGesamtLehrerdatenDuplikate } from '../../../asd/validate/gesamt/ValidatorGldGesamtLehrerdatenDuplikate';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import type { List } from '../../../java/util/List';
-import { ValidatorGlplGesamtLehrerPersonaldatenLehramt } from '../../../asd/validate/gesamt/ValidatorGlplGesamtLehrerPersonaldatenLehramt';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
@@ -19,7 +18,6 @@ export class ValidatorGlGesamtLehrerdaten extends Validator {
 	public constructor(listLehrer: Supplier<List<LehrerStatistikGesamt>>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._validatoren.add(new ValidatorGldGesamtLehrerdatenDuplikate(listLehrer, kontext));
-		this._validatoren.add(new ValidatorGlplGesamtLehrerPersonaldatenLehramt(listLehrer, kontext));
 	}
 
 	protected pruefe(): boolean {

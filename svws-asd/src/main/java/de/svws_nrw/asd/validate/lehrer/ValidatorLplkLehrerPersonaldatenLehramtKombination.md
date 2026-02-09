@@ -129,7 +129,7 @@ i = beliebiger Lehramtseintrag einer Lehrkraft; j = beliebiger Lehramtseintrag e
 
 ---
 
-**Fehlerkürzel:** LPLK10 <br>
+**Fehlerkürzel:** LPLK20 <br>
 **Altes-Fehlerkürzel:** AD426 <br>
 **SVWS/ZeBrAS**: Default <br>
 **Fehlerhärte:** Default <br> 

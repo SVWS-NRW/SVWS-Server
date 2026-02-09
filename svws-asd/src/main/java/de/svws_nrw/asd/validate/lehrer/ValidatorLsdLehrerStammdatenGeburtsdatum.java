@@ -22,7 +22,7 @@ public final class ValidatorLsdLehrerStammdatenGeburtsdatum extends Validator {
 	public ValidatorLsdLehrerStammdatenGeburtsdatum(final @NotNull Supplier<@AllowNull String> daten,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		_validatoren.add(new ValidatorLsd00LehrerStammdatenGeburtsdatum(daten, kontext));
+		_validatoren.add(new ValidatorLsd01LehrerStammdatenGeburtsdatum(daten, kontext));
 	}
 
 	@Override

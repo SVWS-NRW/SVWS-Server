@@ -29,25 +29,28 @@ public final class ValidatorLplk10LehrerPersonaldatenLehramtKombination extends 
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		this.lehraemter = lehraemter;
+
 	}
 
 	@Override
 	protected boolean pruefe() {
 
-		// Fehlerkürzel: LPLK10 Neben dem Lehramtseintrag 'Studierende' sollten keine weiteren Lehramtseinträge vorliegen. Bitte korrigieren Sie Ihre Angaben.
-		boolean lehramtId90Vorhanden = false;
+		// Fehlerkürzel: LPLK10 Neben dem Lehramtseintrag 'Schulverwaltungsassistenten/-innen' sollten keine weiteren Lehramtseinträge vorliegen.
+		boolean lehramtId70Vorhanden = false;
 		boolean anderesLehramtVorhanden = false;
-		final LehrerLehramtKatalogEintrag lehrerLehramtKatalogEintrag = LehrerLehramt.ID_90.daten(kontext().getSchuljahr());
+		final LehrerLehramtKatalogEintrag lehrerLehramtKatalogEintrag = LehrerLehramt.ID_70.daten(this.kontext().getSchuljahr());
 
 		if (lehrerLehramtKatalogEintrag != null)
-			for (final @NotNull LehrerLehramtEintrag lehrerLehramtEintrag : lehraemter.get())
-				if (lehrerLehramtKatalogEintrag.id == LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).id)
-					lehramtId90Vorhanden = true;
+			for (final @NotNull LehrerLehramtEintrag lehrerLehramtEintrag : this.lehraemter.get())
+				if (lehrerLehramtKatalogEintrag.id == LehrerLehramt.data()
+						.getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).id)
+					lehramtId70Vorhanden = true;
 				else
 					anderesLehramtVorhanden = true;
 
-		if (lehramtId90Vorhanden && anderesLehramtVorhanden) {
-			addFehler(10, "Neben dem Lehramtseintrag 'Studierende' sollten keine weiteren Lehramtseinträge vorliegen. Bitte korrigieren Sie Ihre Angaben.");
+		if (lehramtId70Vorhanden && anderesLehramtVorhanden) {
+			this.addFehler(0,
+					"Neben dem Lehramtseintrag 'Schulverwaltungsassistenten/-innen' sollten keine weiteren Lehramtseinträge vorliegen. Bitte korrigieren Sie Ihre Angaben.");
 			return false;
 		}
 

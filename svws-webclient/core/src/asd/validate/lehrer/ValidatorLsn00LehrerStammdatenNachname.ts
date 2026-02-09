@@ -1,9 +1,9 @@
-import { ValidatorLsn01LehrerStammdatenNachname } from '../../../asd/validate/lehrer/ValidatorLsn01LehrerStammdatenNachname';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { JavaString } from '../../../java/lang/JavaString';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
+import { ValidatorLsn10LehrerStammdatenNachname } from '../../../asd/validate/lehrer/ValidatorLsn10LehrerStammdatenNachname';
 
 export class ValidatorLsn00LehrerStammdatenNachname extends Validator {
 
@@ -22,7 +22,7 @@ export class ValidatorLsn00LehrerStammdatenNachname extends Validator {
 	public constructor(daten: Supplier<string | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this.daten = daten;
-		this._validatoren.add(new ValidatorLsn01LehrerStammdatenNachname(this.getNotNullSupplier(daten), kontext));
+		this._validatoren.add(new ValidatorLsn10LehrerStammdatenNachname(this.getNotNullSupplier(daten), kontext));
 	}
 
 	protected pruefe(): boolean {

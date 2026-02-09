@@ -27,17 +27,17 @@ export class ValidatorLplk10LehrerPersonaldatenLehramtKombination extends Valida
 	}
 
 	protected pruefe(): boolean {
-		let lehramtId90Vorhanden: boolean = false;
+		let lehramtId70Vorhanden: boolean = false;
 		let anderesLehramtVorhanden: boolean = false;
-		const lehrerLehramtKatalogEintrag: LehrerLehramtKatalogEintrag | null = LehrerLehramt.ID_90.daten(this.kontext().getSchuljahr());
+		const lehrerLehramtKatalogEintrag: LehrerLehramtKatalogEintrag | null = LehrerLehramt.ID_70.daten(this.kontext().getSchuljahr());
 		if (lehrerLehramtKatalogEintrag !== null)
 			for (const lehrerLehramtEintrag of this.lehraemter.get())
 				if (lehrerLehramtKatalogEintrag.id === LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).id)
-					lehramtId90Vorhanden = true;
+					lehramtId70Vorhanden = true;
 				else
 					anderesLehramtVorhanden = true;
-		if (lehramtId90Vorhanden && anderesLehramtVorhanden) {
-			this.addFehler(10, "Neben dem Lehramtseintrag 'Studierende' sollten keine weiteren Lehramtseinträge vorliegen. Bitte korrigieren Sie Ihre Angaben.");
+		if (lehramtId70Vorhanden && anderesLehramtVorhanden) {
+			this.addFehler(0, "Neben dem Lehramtseintrag 'Schulverwaltungsassistenten/-innen' sollten keine weiteren Lehramtseinträge vorliegen. Bitte korrigieren Sie Ihre Angaben.");
 			return false;
 		}
 		return true;

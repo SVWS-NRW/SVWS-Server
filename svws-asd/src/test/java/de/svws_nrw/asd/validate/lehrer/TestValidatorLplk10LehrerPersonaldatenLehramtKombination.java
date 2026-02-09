@@ -7,70 +7,102 @@ import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import de.svws_nrw.asd.data.lehrer.LehrerLehramtEintrag;
+import de.svws_nrw.asd.data.lehrer.LehrerPersonaldaten;
 import de.svws_nrw.asd.data.statistik.StatistikGesamt;
-import de.svws_nrw.asd.types.lehrer.LehrerLehramt;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.asd.utils.json.JsonReader;
 import de.svws_nrw.asd.validate.ValidatorKontext;
 
-@DisplayName("TestValidatorLplk10: Prüfung der Lehramtskombinationen")
+/**
+ * <p> Testklasse für die Validatoren
+ * <ul>
+ *   <li> {@link TestValidatorLplk10LehrerPersonaldatenLehramtKombination},
+ * </ul>
+ * </p>
+ */
+@DisplayName("Tests für TestValidatorLplk10LehrerPersonaldatenLehramtKombination")
 class TestValidatorLplk10LehrerPersonaldatenLehramtKombination {
 
-	/** Stammdaten der Schule */
-	static StatistikGesamt testdaten_001 = JsonReader.fromResource("de/svws_nrw/asd/validate/Testdaten_001_StatistikGesamt.json", StatistikGesamt.class);
+	// id1 (Lehramt), idLehrer1, idKatalogLehramt1, id2 (Lehramt), idLehrer2, idKatalogLehramt2, id3 (Lehramt), idLehrer3, idKatalogLehramt3, result
+	// idKatalogLehramt = 122 entspricht ID_70
+	private static final String TESTDATEN_LEHRAMT_KOMBINATIONEN = """
+	111,   1,    119,	112,   1,    120,	113,   1,    122,	false
+	111,   1,    119,	112,   1,    120,	113,   1,    124,	true
+	111,   1,    122,	112,   1,    122,	113,   1,    122,	true
+""";
 
+
+	/** Stammdaten der Schule */
+	static final StatistikGesamt testdaten_001 =
+			JsonReader.fromResource("de/svws_nrw/asd/validate/Testdaten_001_StatistikGesamt.json", StatistikGesamt.class);
+
+	/**
+	 * Initialisiert die Core-Types, damit die Tests ausgeführt werden können.
+	 * Beim Laden der Core-Type-Daten werden die JSON-Dateien auf Plausibilität
+	 * geprüft.
+	 */
 	@BeforeAll
 	static void setup() {
 		ASDCoreTypeUtils.initAll();
-		// Schuljahr auf 2024 (ID 20 im JSON), damit die Core-Types sicher existieren
-		testdaten_001.schule.idSchuljahresabschnitt = 20;
 	}
 
 	/**
-	 * Hilfsmethode zur Durchführung der Validierung.
-	 * @param result  Das erwartete Ergebnis (true = kein Fehler, false = Fehler gefunden)
-	 * @param typen     Liste der Lehrämter, die der Lehrer hat (als Array)
+	 * Test von ValidatorLplk10LehrerPersonaldatenLehramt
+	 *
+	 * @param id1   			die Id des ersten Lehramt-Eintrages
+	 * @param idLehrer1			die Id des ersten Lehrers
+	 * @param idKatalogLehramt1	die Katalog-ID des ersten Lehramts, welche bei den eingelesenen Testdaten ersetzt wird
+	 * @param id2 			die Id des zweiten Lehramt-Eintrages
+	 * @param idLehrer2			die Id des zweiten Lehrers
+	 * @param idKatalogLehramt2	die Katalog-ID des zweiten Lehramts, welche bei den eingelesenen Testdaten ersetzt wird
+	 * @param id3   			die Id des dritten Lehramt-Eintrages
+	 * @param idLehrer3			die Id des dritten Lehrers
+	 * @param idKatalogLehramt3	die Katalog-ID des dritten Lehramts, welche bei den eingelesenen Testdaten ersetzt wird
+	 * @param result			gibt an, welches Ergebnis bei den Testdaten erwartet wird
 	 */
-	private static void teste(final boolean result, final LehrerLehramt[] typen) {
-		final List<LehrerLehramtEintrag> liste = new ArrayList<>();
-		for (final LehrerLehramt typ : typen) {
-			final LehrerLehramtEintrag e = new LehrerLehramtEintrag();
-			e.idKatalogLehramt = typ.daten(2024).id;
-			liste.add(e);
-		}
+	@DisplayName("Tests für ValidatorLplk10LehrerPersonaldatenLehramtKombination")
+	@ParameterizedTest
+	@CsvSource(textBlock = TESTDATEN_LEHRAMT_KOMBINATIONEN)
+	void testValidatorLplk10LehrerPersonaldatenLehramtKombination(final long id1, final long idLehrer1, final long idKatalogLehramt1, final long id2,
+			final long idLehrer2, final long idKatalogLehramt2, final long id3, final long idLehrer3, final long idKatalogLehramt3, final boolean result) {
 
+		// Testdaten setzen
+		final LehrerPersonaldaten lehrerPersonaldaten = new LehrerPersonaldaten();
+		lehrerPersonaldaten.id = 1;
+
+		final LehrerLehramtEintrag lehrerLehramtEintrag1 = new LehrerLehramtEintrag();
+		final LehrerLehramtEintrag lehrerLehramtEintrag2 = new LehrerLehramtEintrag();
+		final LehrerLehramtEintrag lehrerLehramtEintrag3 = new LehrerLehramtEintrag();
+
+		lehrerLehramtEintrag1.idKatalogLehramt = idKatalogLehramt1;
+
+		lehrerLehramtEintrag2.idKatalogLehramt = idKatalogLehramt2;
+		lehrerLehramtEintrag2.idLehrer = idLehrer2;
+
+		lehrerLehramtEintrag3.idKatalogLehramt = idKatalogLehramt3;
+		lehrerLehramtEintrag3.idLehrer = idLehrer3;
+
+		final List<LehrerLehramtEintrag> listLehrerLehramtEintrag = new ArrayList<>();
+		listLehrerLehramtEintrag.add(lehrerLehramtEintrag1);
+		listLehrerLehramtEintrag.add(lehrerLehramtEintrag2);
+		listLehrerLehramtEintrag.add(lehrerLehramtEintrag3);
+
+		lehrerPersonaldaten.lehraemter.addAll(listLehrerLehramtEintrag);
+
+		// Erzeuge den Kontext für die Validierung
 		final ValidatorKontext kontext =
 				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
-
-		final ValidatorLplk10LehrerPersonaldatenLehramtKombination validator =
-				new ValidatorLplk10LehrerPersonaldatenLehramtKombination(() -> liste, kontext);
-
+		final ValidatorLplk10LehrerPersonaldatenLehramtKombination validator = new ValidatorLplk10LehrerPersonaldatenLehramtKombination(
+				() -> listLehrerLehramtEintrag,
+				kontext);
 		assertEquals(result, validator.run());
 	}
 
-	@Test
-	@DisplayName("Nur normales Lehramt ist ERLAUBT")
-	void testNurNormalesLehramt() {
-		// ID_25 (Gymnasium) - Explizites Array statt Varargs
-		teste(true, new LehrerLehramt[] { LehrerLehramt.ID_25 });
-	}
 
-	@Test
-	@DisplayName("Nur Lehramt 'Studierende' ist ERLAUBT")
-	void testNurStudierende() {
-		// ID_90 (Studierende) - Explizites Array statt Varargs
-		teste(true, new LehrerLehramt[] { LehrerLehramt.ID_90 });
-	}
-
-	@Test
-	@DisplayName("'Studierende' (ID_90) + normales Lehramt ist VERBOTEN")
-	void testStudierendeUndAnderes() {
-		// ID_90 (Studierende) + ID_25 (Gymnasium) - Explizites Array statt Varargs
-		teste(false, new LehrerLehramt[] { LehrerLehramt.ID_90, LehrerLehramt.ID_25 });
-	}
 }

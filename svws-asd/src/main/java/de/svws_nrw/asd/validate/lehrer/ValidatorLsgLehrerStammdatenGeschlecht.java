@@ -22,7 +22,7 @@ public final class ValidatorLsgLehrerStammdatenGeschlecht extends Validator {
 	public ValidatorLsgLehrerStammdatenGeschlecht(final @NotNull Supplier<@AllowNull Integer> daten,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		_validatoren.add(new ValidatorLsg00LehrerStammdatenGeschlecht(daten, kontext));
+		_validatoren.add(new ValidatorLsg01LehrerStammdatenGeschlecht(daten, kontext));
 	}
 
 	@Override

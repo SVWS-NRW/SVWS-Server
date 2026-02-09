@@ -57,7 +57,7 @@ class TestValidatorLpp01LehrerPersonalabschnittsdatenPflichtstundensoll {
 		// Erzeuge den Kontext für die Validierung
 		final ValidatorKontext kontext = new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
 				testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
-		final ValidatorLppp01LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll validator = new ValidatorLppp01LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(
+		final ValidatorLppp10LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll validator = new ValidatorLppp10LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(
 				() -> pflichtstundensoll,
 				kontext);
 		assertEquals(result, validator.run());
