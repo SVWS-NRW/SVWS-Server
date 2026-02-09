@@ -5,40 +5,38 @@
 		</div>
 		<div class="secondary-menu--header" />
 		<div class="secondary-menu--content">
-			<div class="container">
-				<svws-ui-table v-model="einwilligungsarten"
-					v-model:clicked="selectedEinwilligungsarten"
-					:items="rowsFiltered" :columns
-					clickable :selectable="!readonly" count :focus-switching-enabled :focus-help-visible scroll-into-view filter-open>
-					<template #search>
-						<svws-ui-text-input v-model="searchTerm" type="search" placeholder="Suchen" removable />
-					</template>
-					<template #filterAdvanced>
-						<svws-ui-checkbox type="toggle" v-model="sichtbareEinwilligungsarten">Nur Sichtbare</svws-ui-checkbox>
-					</template>
-					<template #actions v-if="!readonly">
-						<svws-ui-tooltip position="bottom">
-							<svws-ui-button type="icon"
-								@click="gotoHinzufuegenView(true)"
-								:has-focus="noFilteredEntries" :disabled="isHinzufuegenView">
-								<span class="icon i-ri-add-line" />
-							</svws-ui-button>
-							<template #content>
-								Neue Einwilligungsart anlegen
-							</template>
-						</svws-ui-tooltip>
-					</template>
-				</svws-ui-table>
-			</div>
+			<svws-ui-table v-model="einwilligungsarten"
+				v-model:clicked="selectedEinwilligungsarten"
+				:items="rowsFiltered" :columns
+				clickable :selectable="!readonly" count :focus-switching-enabled :focus-help-visible scroll scroll-into-view filter-open>
+				<template #search>
+					<svws-ui-text-input v-model="searchTerm" type="search" placeholder="Suchen" removable />
+				</template>
+				<template #filterAdvanced>
+					<svws-ui-checkbox type="toggle" v-model="sichtbareEinwilligungsarten">Nur Sichtbare</svws-ui-checkbox>
+				</template>
+				<template #actions v-if="!readonly">
+					<svws-ui-tooltip position="bottom">
+						<svws-ui-button type="icon"
+							@click="gotoHinzufuegenView(true)"
+							:has-focus="noFilteredEntries" :disabled="isHinzufuegenView">
+							<span class="icon i-ri-add-line" />
+						</svws-ui-button>
+						<template #content>
+							Neue Einwilligungsart anlegen
+						</template>
+					</svws-ui-tooltip>
+				</template>
+			</svws-ui-table>
 		</div>
-	</div>
+	</div>>
 </template>
 
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
 	import type { Einwilligungsart } from "@core";
-	import { ServerMode, BenutzerKompetenz } from "@core";
+	import { BenutzerKompetenz } from "@core";
 	import type { DataTableColumn } from "@ui";
 	import { useRegionSwitch, ViewType } from "@ui";
 	import type { EinwilligungenAuswahlProps } from "./EinwilligungsartenAuswahlProps";

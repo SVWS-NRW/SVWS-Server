@@ -8,7 +8,7 @@
 			<svws-ui-table v-model="foerderschwerpunkte"
 				v-model:clicked="selectedFoerderschwerpunkt"
 				:items="rowsFiltered" :columns
-				clickable :selectable="!readonly" count :focus-help-visible :focus-switching-enabled scroll-into-view filter-open>
+				clickable :selectable="!readonly" count :focus-help-visible :focus-switching-enabled scroll scroll-into-view filter-open>
 				<template #search>
 					<svws-ui-text-input v-model="searchTerm" type="search" placeholder="Suchen" removable />
 				</template>

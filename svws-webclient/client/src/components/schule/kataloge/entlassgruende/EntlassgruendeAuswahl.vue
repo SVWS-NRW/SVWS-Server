@@ -8,7 +8,7 @@
 			<svws-ui-table v-model="entlassgruende"
 				v-model:clicked="selectedEntlassgrund"
 				:items="rowsFiltered" :columns
-				clickable :selectable="!readonly" count :focus-help-visible :focus-switching-enabled scroll-into-view filter-open>
+				clickable :selectable="!readonly" count :focus-help-visible :focus-switching-enabled scroll scroll-into-view filter-open>
 				<template #search>
 					<svws-ui-text-input type="search" placeholder="Suchen"
 						v-model="searchTerm"
@@ -42,7 +42,7 @@
 	import type { EntlassgruendeAuswahlProps } from "~/components/schule/kataloge/entlassgruende/EntlassgruendeAuswahlProps";
 	import type { DataTableColumn } from "@ui";
 	import type { KatalogEntlassgrund } from "@core";
-	import { BenutzerKompetenz, ServerMode } from "@core";
+	import { BenutzerKompetenz } from "@core";
 	import { useRegionSwitch, ViewType } from "@ui";
 	import { computed, ref } from "vue";
 

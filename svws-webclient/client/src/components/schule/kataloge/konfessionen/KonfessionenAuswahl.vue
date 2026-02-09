@@ -8,7 +8,7 @@
 			<svws-ui-table v-model="konfessionen"
 				v-model:clicked="selectedKonfession"
 				:items="manager().filtered()" :columns
-				clickable :selectable="!readonly" count :focus-switching-enabled :focus-help-visible scroll-into-view filter-open>
+				clickable :selectable="!readonly" count :focus-switching-enabled :focus-help-visible scroll scroll-into-view filter-open>
 				<template #search>
 					<svws-ui-text-input v-model="searchTerm" type="search" placeholder="Suchen" removable />
 				</template>

@@ -8,7 +8,7 @@
 			<svws-ui-table v-model="schulen"
 				v-model:clicked="selectedSchulen"
 				:items="manager().filtered()" :columns
-				clickable :selectable="hatKompetenzAendern" count :focus-help-visible :focus-switching-enabled scroll-into-view filter-open>
+				clickable :selectable="hatKompetenzAendern" count :focus-help-visible :focus-switching-enabled scroll scroll-into-view filter-open>
 				<template #search>
 					<svws-ui-text-input type="search" placeholder="Suchen (Ort, Schulnr., Kürzel, Kurzbez.)"
 						v-model="searchTerm"

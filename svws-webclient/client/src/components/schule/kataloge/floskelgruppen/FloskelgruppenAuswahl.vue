@@ -8,7 +8,7 @@
 			<svws-ui-table v-model="floskelgruppen"
 				v-model:clicked="selectedFloskelgruppe"
 				:items="manager().filtered()" :columns
-				clickable :selectable="!readonly" count :focus-switching-enabled :focus-help-visible scroll-into-view filter-open>
+				clickable :selectable="!readonly" count :focus-switching-enabled :focus-help-visible scroll scroll-into-view filter-open>
 				<template #search>
 					<svws-ui-text-input placeholder="Suchen" v-model="searchTerm" type="search" removable />
 				</template>

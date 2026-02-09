@@ -8,7 +8,7 @@
 			<svws-ui-table v-model="kindergaerten"
 				v-model:clicked="selectedKindergaerten"
 				:items="rowsFiltered" :columns
-				clickable :selectable="!readonly" count :focus-switching-enabled :focus-help-visible scroll-into-view filter-open>
+				clickable :selectable="!readonly" count :focus-switching-enabled :focus-help-visible scroll scroll-into-view filter-open>
 				<template #search>
 					<svws-ui-text-input v-model="searchTerm" type="search" placeholder="Suchen" removable />
 				</template>
@@ -37,7 +37,7 @@
 	import type { KindergaertenAuswahlProps } from "~/components/schule/kataloge/kindergaerten/KindergaertenAuswahlProps";
 	import type { DataTableColumn } from "@ui";
 	import type { Kindergarten } from "@core";
-	import { BenutzerKompetenz, ServerMode } from "@core";
+	import { BenutzerKompetenz } from "@core";
 	import { useRegionSwitch, ViewType } from "@ui";
 	import { computed, ref } from "vue";
 

@@ -5,36 +5,34 @@
 		</div>
 		<div class="secondary-menu--header" />
 		<div class="secondary-menu--content">
-			<div class="container">
-				<svws-ui-table v-model="fahrschuelerarten"
-					v-model:clicked="selectedFahrschuelerarten"
-					:items="props.manager().filtered()" :columns
-					clickable :selectable="hatKompetenzAendern" count :focus-help-visible :focus-switching-enabled scroll-into-view filter-open>
-					<template #search>
-						<svws-ui-text-input type="search" placeholder="Suchen"
-							v-model="searchTerm"
-							removable />
-					</template>
-					<template #filterAdvanced>
-						<svws-ui-checkbox type="toggle"
-							v-model="visibleFahrschuelerarten">
-							Nur Sichtbare
-						</svws-ui-checkbox>
-					</template>
-					<template #actions v-if="hatKompetenzAendern">
-						<svws-ui-tooltip position="bottom">
-							<svws-ui-button type="icon"
-								@click="gotoHinzufuegenView(true)"
-								:has-focus="noFilteredEntries" :disabled="isHinzufuegenView">
-								<span class="icon i-ri-add-line" />
-							</svws-ui-button>
-							<template #content>
-								Neue Fahrschülerart anlegen
-							</template>
-						</svws-ui-tooltip>
-					</template>
-				</svws-ui-table>
-			</div>
+			<svws-ui-table v-model="fahrschuelerarten"
+				v-model:clicked="selectedFahrschuelerarten"
+				:items="props.manager().filtered()" :columns
+				clickable :selectable="hatKompetenzAendern" count :focus-help-visible :focus-switching-enabled scroll scroll-into-view filter-open>
+				<template #search>
+					<svws-ui-text-input type="search" placeholder="Suchen"
+						v-model="searchTerm"
+						removable />
+				</template>
+				<template #filterAdvanced>
+					<svws-ui-checkbox type="toggle"
+						v-model="visibleFahrschuelerarten">
+						Nur Sichtbare
+					</svws-ui-checkbox>
+				</template>
+				<template #actions v-if="hatKompetenzAendern">
+					<svws-ui-tooltip position="bottom">
+						<svws-ui-button type="icon"
+							@click="gotoHinzufuegenView(true)"
+							:has-focus="noFilteredEntries" :disabled="isHinzufuegenView">
+							<span class="icon i-ri-add-line" />
+						</svws-ui-button>
+						<template #content>
+							Neue Fahrschülerart anlegen
+						</template>
+					</svws-ui-tooltip>
+				</template>
+			</svws-ui-table>
 		</div>
 	</div>
 </template>
@@ -45,7 +43,7 @@
 	import type { FahrschuelerartenAuswahlProps } from "~/components/schule/kataloge/fahrschuelerarten/FahrschuelerartenAuswahlProps";
 	import { useRegionSwitch, ViewType } from "@ui";
 	import type { Fahrschuelerart } from "@core";
-	import { BenutzerKompetenz, ServerMode } from "@core";
+	import { BenutzerKompetenz } from "@core";
 	import { computed } from "vue";
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
