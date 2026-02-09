@@ -191,9 +191,9 @@
 	}
 
 	// other
-	function cancel() {
+	async function cancel() {
 		props.checkpoint.active = false;
-		void props.gotoDefaultView(null);
+		await props.gotoDefaultView(null);
 	}
 
 </script>

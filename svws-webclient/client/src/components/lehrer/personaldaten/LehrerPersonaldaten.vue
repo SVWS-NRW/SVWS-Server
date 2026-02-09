@@ -49,10 +49,10 @@
 		<svws-ui-content-card title="Beschäftigungsdaten">
 			<svws-ui-input-wrapper :grid="2">
 				<ui-select label="Rechtsverhältnis" class="contentFocusField"
-					v-model="rechtsverhaeltnis"
+					v-model="personalabschnittsdatenProxy.rechtsverhaeltnis.value"
 					:manager="rechtsverhaeltnisSelectManager"
-					:validator="() => validatorPersonalabschnittsDaten" :do-validate="validatePersonalabschnittDaten"
-					:removable="false" required :readonly statistics />
+					:validation="() => personalabschnittsdatenProxy.getFehler('rechtsverhaeltnis')"
+					:removable="false" :readonly required statistics />
 				<ui-select label="Beschäftigungsart"
 					v-model="beschaeftigungsart"
 					:manager="beschaeftigungsartSelectManager"
@@ -96,14 +96,13 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import type { LehrerPersonaldatenProps } from './SLehrerPersonaldatenProps';
-	import type { LehrerBeschaeftigungsartKatalogEintrag, LehrerEinsatzstatusKatalogEintrag, LehrerRechtsverhaeltnisKatalogEintrag, JavaSet, Validator,
-		LehrerZugangsgrundKatalogEintrag, LehrerAbgangsgrundKatalogEintrag } from "@core";
-	import { LehrerZugangsgrund, LehrerAbgangsgrund } from "@core";
-	import { BenutzerKompetenz, HashSet, ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten, LehrerBeschaeftigungsart, LehrerEinsatzstatus,
-		LehrerRechtsverhaeltnis, LehrerPersonalabschnittsdaten } from "@core";
+	import type { LehrerPersonaldatenProps } from './LehrerPersonaldatenProps';
+	import type { LehrerBeschaeftigungsartKatalogEintrag, LehrerEinsatzstatusKatalogEintrag, JavaSet,
+		LehrerZugangsgrundKatalogEintrag, LehrerAbgangsgrundKatalogEintrag, LehrerPersonaldaten } from "@core";
+	import { LehrerZugangsgrund, LehrerAbgangsgrund, BenutzerKompetenz, HashSet, LehrerBeschaeftigungsart, LehrerEinsatzstatus, LehrerRechtsverhaeltnis } from "@core";
 	import { CoreTypeSelectManager, SelectManager } from "@ui";
 	import { optionalInputIsValid } from "~/util/validation/Validation";
+	import { LehrerPersonalabschnittsdatenModelProxy } from "./LehrerPersonalabschnittsdatenModelProxy";
 
 	const props = defineProps<LehrerPersonaldatenProps>();
 	const personaldaten = () => props.lehrerListeManager().personalDaten();
@@ -135,10 +134,16 @@
 		set: (value: LehrerAbgangsgrundKatalogEintrag | null) => void patchAbgangsgrund(value?.kuerzel ?? null),
 	});
 
-	const rechtsverhaeltnis = computed<LehrerRechtsverhaeltnisKatalogEintrag | null>({
-		get: () => LehrerRechtsverhaeltnis.data().getEintragBySchuljahrUndSchluessel(schuljahr.value, getPersonalabschnittsdaten()?.rechtsverhaeltnis ?? ''),
-		set: (v: LehrerRechtsverhaeltnisKatalogEintrag | null) => void patchRechtsverhaeltnis(v?.schluessel ?? null),
-	});
+	const personalabschnittsdaten = () => props.lehrerListeManager().getAbschnittBySchuljahresabschnittsId(props.aktAbschnitt.id);
+
+	async function patchMethod(data: Partial<LehrerPersonaldaten>): Promise<boolean> {
+		const id = personalabschnittsdaten()?.id ?? null;
+		if (id !== null) {
+			await props.patchAbschnittsdaten(data, id);
+		}
+		return true;
+	}
+	const personalabschnittsdatenProxy = new LehrerPersonalabschnittsdatenModelProxy(personalabschnittsdaten, () => props.validatorKontext(), () => props.lehrerListeManager(), patchMethod);
 
 	const beschaeftigungsart = computed<LehrerBeschaeftigungsartKatalogEintrag | null>({
 		get: () => LehrerBeschaeftigungsart.data().getEintragBySchuljahrUndSchluessel(schuljahr.value, getPersonalabschnittsdaten()?.beschaeftigungsart ?? ''),
@@ -302,36 +307,6 @@
 	}
 
 	// --- validate ---
-
-	const validatorPersonalabschnittsDaten = computed<ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten>(() => {
-		let daten = getPersonalabschnittsdaten();
-		if (daten === null) {
-			// Erstelle Pseudo-Daten, die für die Validierung genutzt werden
-			daten = new LehrerPersonalabschnittsdaten();
-			daten.id = -1;
-			daten.idLehrer = props.lehrerListeManager().auswahl().id;
-			daten.idSchuljahresabschnitt = props.aktAbschnitt.id;
-		}
-
-		// Zugriff auf Lehrer-Stammdaten für das Geburtsdatum
-		const stammdaten = props.lehrerListeManager().daten();
-
-		return new ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten(
-			{ get: () => daten.idSchuljahresabschnitt },
-			{ get: () => daten.rechtsverhaeltnis },
-			{ get: () => daten.pflichtstundensoll },
-			{ get: () => daten.einsatzstatus },
-			{ get: () => daten.beschaeftigungsart },
-			{ get: () => stammdaten.geburtsdatum }, // Geburtsdatum aus Stammdaten holen
-			{ get: () => daten.mehrleistung }, // Listenfeld im DTO heißt 'mehrleistung' (Singular)
-			{ get: () => daten.minderleistung }, // Listenfeld im DTO heißt 'minderleistung' (Singular)
-			props.validatorKontext()
-		);
-	});
-
-	function validatePersonalabschnittDaten(validator: Validator): boolean {
-		return validator.run();
-	}
 
 	function pflichtstundenSollHasAMaximumOf2DecimalPlaces(pflichtstundenSoll: number | null) {
 		if (pflichtstundenSoll === null) {

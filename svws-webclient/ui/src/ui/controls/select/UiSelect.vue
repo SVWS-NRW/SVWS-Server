@@ -36,26 +36,8 @@
 					<span v-if="showValidatorError" class="cursor-pointer flex items-end justify-center">
 						<span :class="[iconColorClass, 'icon i-ri-alert-line']" />
 					</span>
-					<span v-if="!isValidatorValid" class="cursor-pointer flex justify-center items-center">
-						<svws-ui-tooltip position="right">
-							<span v-if="!validator?.().getFehler().isEmpty()" class="pointer-events-auto flex justify-center items-center">
-								<span :class="[validatorErrorIcon, 'icon']" />
-							</span>
-							<template #content>
-								<template v-if="showValidatorErrorMessage">
-									<div class="text-headline-sm text-center pt-1"> Validatorfehler </div>
-									<div v-for="fehler in validator?.().getFehler()" :key="fehler.getFehlermeldung() ?? '--'" class="pt-2 pb-2">
-										<div :class="[validatorErrorBgClasses(fehler.getFehlerart()), 'rounded-sm pl-2']">
-											{{ fehler.getFehlerart() }}
-										</div>
-										<div class="pl-2"> {{ fehler.getFehlermeldung() }} </div>
-									</div>
-								</template>
-								<template v-else>
-									<div class="text-headline-sm text-center"> Relevant für die Statistik </div>
-								</template>
-							</template>
-						</svws-ui-tooltip>
+					<span v-if="!validation().isEmpty()" class="cursor-pointer flex justify-center items-center">
+						<ui-validation-tooltip :validation-result />
 					</span>
 					<svws-ui-tooltip position="right" v-if="readonly" class="ui-select--label--readonly cursor-pointer pointer-events-auto">
 						<span :class="[labelIconClass, 'icon-xs i-ri-lock-line shrink-0']" aria-label="schreibgeschützt" />
@@ -119,16 +101,19 @@
 	</div>
 </template>
 
-<script setup lang="ts" generic="T, V extends BasicValidator">
+<script setup lang="ts" generic="T">
 
 	import { computed, ref, toRaw, toRefs, useAttrs, watch } from 'vue';
 	import { useUiSelectUtils } from './utils/useUiSelectUtils';
 	import type { UiSelectHTMLElements, UiSelectSelectionMethods, UiSelectSingleProps, UiSelectState } from './manager/UiSelectTypes';
-	import type { BasicValidator } from '../../../../../core/src/asd/validate/BasicValidator';
 	import { SelectManager } from './manager/SelectManager';
 	import { DeveloperNotificationException } from '../../../../../core/src/core/exceptions/DeveloperNotificationException';
+	import type { List } from '../../../../../core/src/java/util/List';
+	import type { ValidatorFehler } from '../../../../../core/src/asd/validate/ValidatorFehler';
+	import { ArrayList } from '../../../../../core/src/java/util/ArrayList';
+	import { ValidationResult } from "../../../validation/ValidationResult";
 
-	const props = withDefaults(defineProps<UiSelectSingleProps<T, V>>(), {
+	const props = withDefaults(defineProps<UiSelectSingleProps<T>>(), {
 		label: '',
 		manager: () => new SelectManager<T>(),
 		searchable: false,
@@ -140,8 +125,7 @@
 		disabled: false,
 		statistics: false,
 		headless: false,
-		validator: undefined,
-		doValidate: (validator: V): boolean => validator.run(),
+		validation: (): List<ValidatorFehler> => new ArrayList<ValidatorFehler>(),
 	});
 
 	// model mit der aktuellen Selektion
@@ -203,13 +187,7 @@
 		return !props.required || hasSelection();
 	});
 
-
-	/**
-	 * Prüft, ob Eingaben abhänig von den Validatoren valide sind
-	 */
-	const isValidatorValid = computed((): boolean =>
-		(props.validator === undefined) ? true : props.doValidate(props.validator(), toRaw(model.value) ?? null)
-	);
+	const validationResult = computed(() => new ValidationResult(props.validation()));
 
 	/**
 	 * Die aktuelle Selektion wird nicht angezeigt, falls gerade ein Suchbegriff eingegeben ist
@@ -279,7 +257,7 @@
 
 	const destructedProps = toRefs(props);
 
-	const state = computed((): UiSelectState<T, V> => {
+	const state = computed((): UiSelectState<T> => {
 		return {
 			instanceId: crypto.randomUUID(),
 			multi: false,
@@ -292,9 +270,8 @@
 			disabled: destructedProps.disabled.value,
 			readonly: destructedProps.readonly.value,
 			headless: destructedProps.headless.value,
-			validator: destructedProps.validator.value,
 			isValid: isValid.value,
-			isValidatorValid: isValidatorValid.value,
+			validationResult: validationResult.value,
 			search: search.value,
 		};
 	});
@@ -322,11 +299,8 @@
 		getSecondaryTextColor,
 		searchInputAriaAttrs,
 		getOptionClasses,
-		validatorErrorIcon,
-		validatorErrorBgClasses,
 		// Anzeige
 		showValidatorError,
-		showValidatorErrorMessage,
 		showLabel,
 		// Suche
 		splitTextIntoHits,

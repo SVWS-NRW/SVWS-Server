@@ -4,7 +4,6 @@ import { mount } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import UiSelectMulti from "../../../../../src/ui/controls/select/UiSelectMulti.vue";
 import { SelectManager } from "../../../../../src/ui/controls/select/manager/SelectManager";
-import type { BasicValidator } from "../../../../../../core/src/asd/validate/BasicValidator";
 
 type MockBounding = {
 	x: Ref<number>;
@@ -57,7 +56,7 @@ describe("UiSelectMulti Utils", () => {
 
 	describe.concurrent("Selektion", () => {
 		test("Nach der Selektion wird das Dropdown nicht geschlossen", async () => {
-			const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
 
 			const { combobox, dropdown } = getElements(wrapper);
 
@@ -72,7 +71,7 @@ describe("UiSelectMulti Utils", () => {
 		});
 
 		test("Wenn die Option noch nicht selektiert ist, wird sie durch Klick selektiert", async () => {
-			const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, modelValue: singleSelection } });
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, modelValue: singleSelection } });
 
 			const { combobox, dropdown } = getElements(wrapper);
 
@@ -88,7 +87,7 @@ describe("UiSelectMulti Utils", () => {
 		});
 
 		test("Wenn die Option schon selektiert ist und removable = true, wird sie durch Klick deselektiert", async () => {
-			const wrapper = mount(UiSelectMulti<cars, BasicValidator>, {
+			const wrapper = mount(UiSelectMulti<cars>, {
 				props: { manager: manager, removable: true, modelValue: multiSelection },
 			});
 
@@ -106,7 +105,7 @@ describe("UiSelectMulti Utils", () => {
 		});
 
 		test("Wenn nur eine Option schon selektiert ist und removable = false, wird sie durch Klick nicht deselektiert", async () => {
-			const wrapper = mount(UiSelectMulti<cars, BasicValidator>, {
+			const wrapper = mount(UiSelectMulti<cars>, {
 				props: { manager: manager, removable: false, modelValue: singleSelection },
 			});
 
@@ -123,7 +122,7 @@ describe("UiSelectMulti Utils", () => {
 		});
 
 		test("Wenn mehrere Optionen schon selektiert sind und removable = false, wird die geklickte Option deselektiert", async () => {
-			const wrapper = mount(UiSelectMulti<cars, BasicValidator>, {
+			const wrapper = mount(UiSelectMulti<cars>, {
 				props: { manager: manager, removable: false, modelValue: multiSelection },
 			});
 
@@ -141,7 +140,7 @@ describe("UiSelectMulti Utils", () => {
 		});
 
 		test("Wenn eine Option geklickt wird, wird der Suchbegriff zurückgesetzt", async () => {
-			const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, searchable: true } });
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, searchable: true } });
 
 			const { combobox, dropdown, input, vm } = getElements(wrapper);
 
@@ -178,7 +177,7 @@ describe("UiSelectMulti Utils", () => {
 			mockBounding.right.value = 200;
 			mockBounding.bottom.value = 90;
 
-			const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
 			const { combobox, vm } = getElements(wrapper);
 
 			// Dropdown öffnen
@@ -204,7 +203,7 @@ describe("UiSelectMulti Utils", () => {
 
 			scrollHeightSpy = vi.spyOn(HTMLElement.prototype, 'scrollHeight', 'get').mockReturnValue(800);
 
-			const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
 
 			// Dropdown öffnen
 			const { combobox, vm } = getElements(wrapper);
@@ -231,7 +230,7 @@ describe("UiSelectMulti Utils", () => {
 
 			scrollHeightSpy = vi.spyOn(HTMLElement.prototype, 'scrollHeight', 'get').mockReturnValue(800);
 
-			const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
 
 			// Dropdown öffnen
 			const { combobox, vm } = getElements(wrapper);
@@ -256,7 +255,7 @@ describe("UiSelectMulti Utils", () => {
 			mockBounding.bottom.value = 840;
 			scrollHeightSpy = vi.spyOn(HTMLElement.prototype, 'scrollHeight', 'get').mockReturnValue(800);
 
-			const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
 			const { combobox, vm } = getElements(wrapper);
 
 			// Dropdown öffnen
@@ -271,7 +270,7 @@ describe("UiSelectMulti Utils", () => {
 		});
 
 		test("Bei einer Navigation nach unten, wird das Dropdown zur unteren Optionsgrenze gescrollt, falls die Option außerhalb des Sichtbereiches ist", async () => {
-			const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager }, attachTo: document.body });
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager }, attachTo: document.body });
 			const { combobox, dropdown } = getElements(wrapper);
 
 			// Größen und Abstände mocken
@@ -294,7 +293,7 @@ describe("UiSelectMulti Utils", () => {
 		});
 
 		test("Bei einer Navigation nach unten, wird das Dropdown zur unteren Optionsgrenze gescrollt, falls die Option außerhalb des Sichtbereiches ist", async () => {
-			const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager }, attachTo: document.body });
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager }, attachTo: document.body });
 			const { combobox, dropdown } = getElements(wrapper);
 
 			// Größen und Abstände mocken
@@ -316,7 +315,7 @@ describe("UiSelectMulti Utils", () => {
 		});
 
 		test("Das Dropdown wird zurück nach oben gescrollt, wenn kein Element hervorgehoben ist", async () => {
-			const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager }, attachTo: document.body });
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager }, attachTo: document.body });
 			const { combobox, dropdown } = getElements(wrapper);
 
 			// Größen und Abstände mocken
@@ -345,7 +344,7 @@ describe("UiSelectMulti Utils", () => {
 		});
 
 		test("Das Dropdown geht auf und zu, wenn mehrfach darauf geklickt wird", async () => {
-			const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
 			const { combobox, dropdown } = getElements(wrapper);
 
 
@@ -372,7 +371,7 @@ describe("UiSelectMulti Utils", () => {
 			mockBounding.right.value = 200;
 			mockBounding.bottom.value = 90;
 
-			const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
 			const { combobox } = getElements(wrapper);
 
 			const oldPositionStyles = wrapper.findComponent({ name: "UiSelectMulti" }).vm.dropdownPositionStyles;
@@ -387,7 +386,7 @@ describe("UiSelectMulti Utils", () => {
 		});
 
 		test("Beim Öffnen des Dropdowns wird die Scrollposition auf 0 gesetzt, wenn kein Element hervorgehoben ist", async () => {
-			const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
 			const { combobox, dropdown } = getElements(wrapper);
 
 			dropdown.element.scrollTop = 20;
@@ -399,7 +398,7 @@ describe("UiSelectMulti Utils", () => {
 		});
 
 		test("Beim Öffnen des Dropdowns wird ein EventListener auf window resize gesetzt", async () => {
-			const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
 			const { combobox } = getElements(wrapper);
 
 			const eventSpy = vi.spyOn(globalThis, "addEventListener");
@@ -411,7 +410,7 @@ describe("UiSelectMulti Utils", () => {
 		});
 
 		test("Beim Schließen des Dropdowns wird ein EventListener auf window resize entfernt", async () => {
-			const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
 			const { combobox } = getElements(wrapper);
 
 			const eventSpy = vi.spyOn(globalThis, "removeEventListener");
@@ -425,19 +424,19 @@ describe("UiSelectMulti Utils", () => {
 		});
 
 		test("Das Dropdown schließt sich bei einem window resize", async () => {
-			const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
 			const { combobox, dropdown } = getElements(wrapper);
 
 			// Dropdown öffnen
 			await combobox.trigger('click');
 
-			window.dispatchEvent(new Event("resize"));
+			globalThis.dispatchEvent(new Event("resize"));
 
 			expect(dropdown.attributes("data-popover-open")).toBeUndefined();
 		});
 
 		test("Das Dropdown schließt sich nicht, wenn sich die Position verändert, aber das Dropdown gerade geöffnet wurde", async () => {
-			const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
 			const { combobox, dropdown, vm } = getElements(wrapper);
 
 			// Dropdown öffnen
@@ -451,7 +450,7 @@ describe("UiSelectMulti Utils", () => {
 		});
 
 		test("Das Dropdown schließt sich, wenn sich die Position verändert, aber das Dropdown schon offen war", async () => {
-			const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
 			const { combobox, dropdown, vm } = getElements(wrapper);
 			vi.useFakeTimers();
 			// Dropdown öffnen
@@ -467,7 +466,7 @@ describe("UiSelectMulti Utils", () => {
 
 	describe("Fokusfunktionen", () => {
 		test("Beim Öffnen des Dropdowns wird die Combobox fokussiert (searchable = false)", async () => {
-			const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager }, attachTo: document.body });
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager }, attachTo: document.body });
 			const { combobox } = getElements(wrapper);
 
 			// Dropdown öffnen
@@ -478,7 +477,7 @@ describe("UiSelectMulti Utils", () => {
 		});
 
 		test("Beim Öffnen des Dropdowns wird das Input fokussiert (searchable = true)", async () => {
-			const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, searchable: true }, attachTo: document.body });
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, searchable: true }, attachTo: document.body });
 			const { combobox, input } = getElements(wrapper);
 
 			// Dropdown öffnen
@@ -492,7 +491,7 @@ describe("UiSelectMulti Utils", () => {
 			["disabled = true", { disabled: true }],
 			["readonly = true", { readonly: true }],
 		])("%s: Combobox ist nicht fokussierbar", async (_, props) => {
-			const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, ...props }, attachTo: document.body });
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, ...props }, attachTo: document.body });
 			const { combobox } = getElements(wrapper);
 
 			await combobox.trigger("focus");
@@ -502,7 +501,7 @@ describe("UiSelectMulti Utils", () => {
 		});
 
 		test("Klicke außerhalb der Komponente deaktiviert diese", async () => {
-			const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, searchable: true }, attackTo: document.body });
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, searchable: true }, attackTo: document.body });
 			const { combobox, dropdown, input, vm } = getElements(wrapper);
 			const eventSpy = vi.spyOn(document, "removeEventListener");
 
@@ -522,7 +521,7 @@ describe("UiSelectMulti Utils", () => {
 		});
 
 		test("Focus out deaktiviert das Select", async () => {
-			const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, searchable: true } });
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, searchable: true } });
 			const { combobox, dropdown, input, vm } = getElements(wrapper);
 			const eventSpy = vi.spyOn(document, "removeEventListener");
 			vi.useFakeTimers();
@@ -544,7 +543,7 @@ describe("UiSelectMulti Utils", () => {
 		});
 
 		test("Wenn eine Option selektiert wird, wird der Fokus wieder auf die Combobox gesetzt (searchable = false)", async () => {
-			const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, searchable: false }, attachTo: document.body });
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, searchable: false }, attachTo: document.body });
 
 			const { combobox, dropdown } = getElements(wrapper);
 			vi.useFakeTimers();
@@ -561,7 +560,7 @@ describe("UiSelectMulti Utils", () => {
 		});
 
 		test("Wenn eine Option selektiert wird, wird der Fokus wieder auf das Search-Input gesetzt (searchable = true)", async () => {
-			const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, searchable: true }, attachTo: document.body });
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, searchable: true }, attachTo: document.body });
 
 			const { input, combobox, dropdown } = getElements(wrapper);
 			vi.useFakeTimers();
@@ -581,7 +580,7 @@ describe("UiSelectMulti Utils", () => {
 
 	describe.concurrent("Styles", () => {
 		test("Von außen gesetzte Attribute werden an den Root-Knoten gesetzt", () => {
-			const wrapper = mount(UiSelectMulti<cars, BasicValidator>, {
+			const wrapper = mount(UiSelectMulti<cars>, {
 				props: { manager: manager },
 				attrs: { class: "my-class another-class" },
 			});
@@ -593,7 +592,7 @@ describe("UiSelectMulti Utils", () => {
 		});
 
 		test("Mit headless = true wird für Padding py-0 genutzt", () => {
-			const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, headless: true } });
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, headless: true } });
 
 			const { combobox } = getElements(wrapper);
 
@@ -601,7 +600,7 @@ describe("UiSelectMulti Utils", () => {
 		});
 
 		test("Mit headless = false wird für Padding py-1 genutzt", () => {
-			const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, headless: false } });
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, headless: false } });
 
 			const { combobox } = getElements(wrapper);
 
@@ -610,7 +609,7 @@ describe("UiSelectMulti Utils", () => {
 
 		describe("Icon-Farben", () => {
 			test("Alle Icons sind bei disabled = true auf 'icon-ui-disabled' gesetzt", async () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, {
+				const wrapper = mount(UiSelectMulti<cars>, {
 					props: { manager: manager, disabled: true },
 					attrs: { class: "icon-ui-success" },
 				});
@@ -625,7 +624,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Von außen gesetzte CSS-Klassen werden nicht an Root-Knoten gesetzt, sondern an bestimmte Icons", async () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, {
+				const wrapper = mount(UiSelectMulti<cars>, {
 					props: { manager: manager, statistics: true, modelValue: multiSelection },
 					attrs: { class: "icon-ui-success" },
 				});
@@ -681,7 +680,7 @@ describe("UiSelectMulti Utils", () => {
 				["icon-ui-ondisabled", "icon-ui-ondisabled-secondary"],
 				["icon-ui-unknown", "icon-ui-secondary"], // default case
 			])("Für die Iconfarbe %s wird sie sekundäre Icon-Farbe %s gesetzt", (iconColor, secondaryColor) => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, {
+				const wrapper = mount(UiSelectMulti<cars>, {
 					props: { manager: manager, readonly: true },
 					attrs: { class: iconColor } });
 				const { label } = getElements(wrapper);
@@ -692,7 +691,7 @@ describe("UiSelectMulti Utils", () => {
 
 		describe("Background-Farben", () => {
 			test("Von außen gesetzte CSS-Klassen werden nicht an den Root-Knoten, sondern an die Combobox gesetzt", () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, {
+				const wrapper = mount(UiSelectMulti<cars>, {
 					props: { manager: manager, headless: false },
 					attrs: { class: "bg-ui-success" },
 				});
@@ -704,7 +703,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Bei headless = true hat die Combobox keine Hintergrundfarbe", () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, {
+				const wrapper = mount(UiSelectMulti<cars>, {
 					props: { manager: manager, headless: true },
 				});
 
@@ -714,7 +713,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Bei headless = false hat die Combobox die Hintergrundfarbe 'bg-ui'", () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, {
+				const wrapper = mount(UiSelectMulti<cars>, {
 					props: { manager: manager, headless: false },
 				});
 
@@ -726,7 +725,7 @@ describe("UiSelectMulti Utils", () => {
 
 		describe("Text-Farben", () => {
 			test("Alle Textfarben sind bei disabled = true auf 'text-ui-disabled' gesetzt", async () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, {
+				const wrapper = mount(UiSelectMulti<cars>, {
 					props: { manager: manager, disabled: true },
 					attrs: { class: "text-ui-success" },
 				});
@@ -742,7 +741,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Von außen gesetzte Text-Farbklasse verändert den Label- und Selektionstext", async () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, {
+				const wrapper = mount(UiSelectMulti<cars>, {
 					props: { manager: manager, label: "Mein Label", minOptions: 2, maxOptions: 4, modelValue: multiSelection },
 					attrs: { class: "text-ui-success" },
 				});
@@ -783,7 +782,7 @@ describe("UiSelectMulti Utils", () => {
 			])(
 				"Für die Textfarbe %s wird die sekundäre Textfarbe %s gesetzt",
 				(textColor, secondaryColor) => {
-					const wrapper = mount(UiSelectMulti<cars, BasicValidator>, {
+					const wrapper = mount(UiSelectMulti<cars>, {
 						props: { manager: manager, readonly: true },
 						attrs: { class: textColor },
 					});
@@ -796,7 +795,7 @@ describe("UiSelectMulti Utils", () => {
 
 		describe("Border-Farben", () => {
 			test("Alle Borderfarben sind bei disabled = true auf 'border-ui-disabled' gesetzt", () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, {
+				const wrapper = mount(UiSelectMulti<cars>, {
 					props: { manager: manager, disabled: true },
 					attrs: { class: "border-ui-success" },
 				});
@@ -807,7 +806,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Von außen gesetzte Border-Farbklasse verändert den Rahmen der Combobox", () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, {
+				const wrapper = mount(UiSelectMulti<cars>, {
 					props: { manager: manager },
 					attrs: { class: "border-ui-success" },
 				});
@@ -820,7 +819,7 @@ describe("UiSelectMulti Utils", () => {
 
 		describe("Combobox Styling und Attribute", () => {
 			test("Aria Attribute bei editierbarem Select und searchable = false sind richtig gesetzt.", async () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
 
 				const { combobox, vm } = getElements(wrapper);
 
@@ -842,7 +841,7 @@ describe("UiSelectMulti Utils", () => {
 				["readonly", { readonly: true }],
 				["disabled", { disabled: true }],
 			])("Aria Attribute bei %s = true und searchable = false sind richtig gesetzt.", (_, props) => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, ...props } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, ...props } });
 
 				const { combobox, vm } = getElements(wrapper);
 
@@ -856,7 +855,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Bei searchable = true und editierbarem Select werden keine Attribute gesetzt", async () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
 
 				const { combobox, vm } = getElements(wrapper);
 
@@ -878,7 +877,7 @@ describe("UiSelectMulti Utils", () => {
 				["readonly", { readonly: true }],
 				["disabled", { disabled: true }],
 			])("Bei searchable = true und nicht editierbarem Select werden keine Attribute gesetzt", (_, props) => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, searchable: true, ...props } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, searchable: true, ...props } });
 
 				const { combobox, vm } = getElements(wrapper);
 
@@ -892,7 +891,7 @@ describe("UiSelectMulti Utils", () => {
 				["readonly", { readonly: true }],
 				["disabled", { disabled: true }],
 			])("Aria Attribute bei %s = true und searchable = false sind richtig gesetzt.", (_, props) => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, ...props } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, ...props } });
 
 				const { combobox, vm } = getElements(wrapper);
 
@@ -906,7 +905,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Bei searchable = true werden keine Attribute gesetzt", async () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
 
 				const { combobox, vm } = getElements(wrapper);
 
@@ -929,7 +928,7 @@ describe("UiSelectMulti Utils", () => {
 				["disabled", { disabled: true }],
 				["searchable", { disabled: true }],
 			])("Mit %s = true hat die Combobox den Tabindex -1", (_, props) => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, ...props } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, ...props } });
 
 				const { combobox } = getElements(wrapper);
 
@@ -937,7 +936,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Tabindex ist 0, wenn searchable = disabled = readonly = false", () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, searchable: false, readonly: false, disabled: false } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, searchable: false, readonly: false, disabled: false } });
 
 				const { combobox } = getElements(wrapper);
 
@@ -949,7 +948,7 @@ describe("UiSelectMulti Utils", () => {
 				["disabled = true", { disabled: true }],
 				["searchable = false", { searchable: false }],
 			])("Role wird bei %s auf 'combobox' gesetzt", (_, props) => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, ...props } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, ...props } });
 
 				const { combobox } = getElements(wrapper);
 
@@ -957,7 +956,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Role wird bei disabled = readonly = false und searchable = true auf 'undefined' gesetzt", () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, searchable: true, disabled: false, readonly: false } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, searchable: true, disabled: false, readonly: false } });
 
 				const { combobox } = getElements(wrapper);
 
@@ -965,7 +964,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Bei headless = true hat die Combobox folgende Klassen: pl-1 min-h-6", () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, headless: true } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, headless: true } });
 
 				const { combobox } = getElements(wrapper);
 
@@ -974,7 +973,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Bei headless = false hat die Combobox folgende Klassen: border mt-[0.8em] pl-3 pr-1 min-h-9", () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, headless: false } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, headless: false } });
 
 				const { combobox } = getElements(wrapper);
 
@@ -982,7 +981,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Bei disabled = true hat die Combobox folgende Klassen: pointer-events-none", () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, disabled: true } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, disabled: true } });
 
 				const { combobox } = getElements(wrapper);
 
@@ -990,7 +989,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Bei disabled = false hat die Combobox nicht die Klasse 'pointer-events-none'", () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, disabled: false } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, disabled: false } });
 
 				const { combobox } = getElements(wrapper);
 
@@ -998,7 +997,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Bei readonly = true hat die Combobox die Klasse 'cursor-not-allowed'", () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, readonly: true } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, readonly: true } });
 
 				const { combobox } = getElements(wrapper);
 
@@ -1006,7 +1005,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Bei searchable = true hat die Combobox die Klasse 'cursor-text'", () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, searchable: true } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, searchable: true } });
 
 				const { combobox } = getElements(wrapper);
 
@@ -1014,7 +1013,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Bei readonly = searchable = false hat die Combobox die Klasse 'cursor-pointer'", () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, searchable: false, readonly: false } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, searchable: false, readonly: false } });
 
 				const { combobox } = getElements(wrapper);
 
@@ -1024,7 +1023,7 @@ describe("UiSelectMulti Utils", () => {
 
 		describe("Search-Input Styling und Attribute", () => {
 			test("Aria Attribute bei editierbarem Select und searchable = true sind richtig gesetzt.", async () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, searchable: true } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, searchable: true } });
 
 				const { combobox, input, vm } = getElements(wrapper);
 
@@ -1042,7 +1041,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Tabindex ist 0, wenn searchable = true und disabled = readonly = false", () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, searchable: true, readonly: false, disabled: false } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, searchable: true, readonly: false, disabled: false } });
 
 				const { input } = getElements(wrapper);
 
@@ -1052,7 +1051,7 @@ describe("UiSelectMulti Utils", () => {
 
 		describe("Label Styling", () => {
 			test("Wenn das Label in der Combobox steht und removable = false wird folgende Klasse gesetzt: right-6", () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, removable: false } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, removable: false } });
 
 				const { label } = getElements(wrapper);
 
@@ -1060,7 +1059,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Wenn das Label in der Combobox steht und removable = true wird folgende Klasse gesetzt: right-11", () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, removable: true } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, removable: true } });
 
 				const { label } = getElements(wrapper);
 
@@ -1068,7 +1067,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Wenn das Label über der Combobox steht wird folgende Klasse gesetzt: right-2", () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, modelValue: multiSelection } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, modelValue: multiSelection } });
 
 				const { label } = getElements(wrapper);
 
@@ -1076,7 +1075,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Bei headless = removable = true wird folgende Klasse gesetzt: left-10", () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, headless: true, removable: true } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, headless: true, removable: true } });
 
 				const { label } = getElements(wrapper);
 
@@ -1084,7 +1083,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Bei headless = true und removable = false wird folgende Klasse gesetzt: left-6", () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, headless: true, removable: false } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, headless: true, removable: false } });
 
 				const { label } = getElements(wrapper);
 
@@ -1092,7 +1091,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Bei headless = false wird folgende Klasse gesetzt: left-2", () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, headless: false } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, headless: false } });
 
 				const { label } = getElements(wrapper);
 
@@ -1100,7 +1099,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Wenn das Label in der Combobox steht werden folgende Klasse gesetzt: absolute top-1/2 font-normal", () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
 
 				const { label } = getElements(wrapper);
 
@@ -1108,7 +1107,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Wenn das Label über der Combobox steht werden folgende Klasse gesetzt: absolute -top-0.5 text-xs", () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, modelValue: multiSelection } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, modelValue: multiSelection } });
 
 				const { label } = getElements(wrapper);
 
@@ -1116,7 +1115,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Label wird über der Combobox dargestellt, wenn etwas selektiert ist", () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, modelValue: multiSelection } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, modelValue: multiSelection } });
 
 				const { label } = getElements(wrapper);
 
@@ -1124,7 +1123,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Label wird über der Combobox dargestellt, wenn searchable = true und ein Suchbegriff wurde eingegeben", async () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, searchable: true } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, searchable: true } });
 
 				const { label, input } = getElements(wrapper);
 
@@ -1134,7 +1133,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Label wird in der Combobox dargestellt, wenn searchable = true und kein Suchbegriff wurde eingegeben", () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, searchable: true } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, searchable: true } });
 
 				const { label } = getElements(wrapper);
 
@@ -1142,7 +1141,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Label wird in der Combobox dargestellt, wenn searchable = false nichts ist selektiert", () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, headless: false } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, headless: false } });
 
 				const { label } = getElements(wrapper);
 
@@ -1150,7 +1149,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Label wird angezeigt, wenn headless = false und keine Selektion/Suchbegriff vorhanden ist", () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, headless: false } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, headless: false } });
 
 				const { label } = getElements(wrapper);
 
@@ -1158,7 +1157,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Label wird angezeigt, wenn headless = true und keine Selektion/Suchbegriff vorhanden ist", () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, headless: true } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, headless: true } });
 
 				const { label } = getElements(wrapper);
 
@@ -1166,7 +1165,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Label wird nicht angezeigt, wenn headless = true und eine Selektion/Suchbegriff vorhanden ist", () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, headless: true, modelValue: multiSelection } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, headless: true, modelValue: multiSelection } });
 
 				const { label } = getElements(wrapper);
 
@@ -1176,7 +1175,7 @@ describe("UiSelectMulti Utils", () => {
 
 		describe("Optionen Styling", () => {
 			test("Wenn eine Option selektiert ist, erhält sie folgende Klassen: bg-ui-selected text-ui-onselected font-medium border border-ui-selected", () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, modelValue: multiSelection } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, modelValue: multiSelection } });
 
 				const { dropdown } = getElements(wrapper);
 				const firstDropdownOption = dropdown.find("li");
@@ -1190,7 +1189,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Wenn eine Option nicht selektiert ist, erhält sie folgende Klassen: text-ui", () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
 
 				const { dropdown } = getElements(wrapper);
 				const firstDropdownOption = dropdown.find("li");
@@ -1204,7 +1203,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Wenn eine Option hervorgehoben ist, erhält sie folgende Klassen: bg-ui-hover inset-ring-2 inset-ring-ui-neutral", async () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
 
 				const { dropdown, combobox } = getElements(wrapper);
 
@@ -1219,7 +1218,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Wenn eine Option nicht hervorgehoben ist, erhält sie folgende Klassen nicht: bg-ui-hover inset-ring-2 inset-ring-ui-neutral", () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
 
 				const { dropdown } = getElements(wrapper);
 				const firstDropdownOption = dropdown.find("li");
@@ -1233,7 +1232,7 @@ describe("UiSelectMulti Utils", () => {
 
 		describe("Fokusklassen", () => {
 			test("Fokusklasse 'contentFocusField' wird bei searchable = false an die Combobox gesetzt", () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, {
+				const wrapper = mount(UiSelectMulti<cars>, {
 					props: { manager: manager, searchable: false },
 					attrs: { class: "contentFocusField" },
 				});
@@ -1245,7 +1244,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Fokusklasse 'contentFocusField' wird bei searchable = true an das Input gesetzt", () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, {
+				const wrapper = mount(UiSelectMulti<cars>, {
 					props: { manager: manager, searchable: true },
 					attrs: { class: "contentFocusField" },
 				});
@@ -1257,7 +1256,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Fokusklasse 'subNavigationFocusField' wird bei searchable = false an die Combobox gesetzt", () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, {
+				const wrapper = mount(UiSelectMulti<cars>, {
 					props: { manager: manager, searchable: false },
 					attrs: { class: "subNavigationFocusField" },
 				});
@@ -1269,7 +1268,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Fokusklasse 'subNavigationFocusField' wird bei searchable = true an das Input gesetzt", () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, {
+				const wrapper = mount(UiSelectMulti<cars>, {
 					props: { manager: manager, searchable: true },
 					attrs: { class: "subNavigationFocusField" },
 				});
@@ -1305,7 +1304,7 @@ describe("UiSelectMulti Utils", () => {
 				["disabled = true", { disabled: true }],
 				["readonly = true", { readonly: true }],
 			])("Beliebige Taste (%s): Dropdown wird nicht geöffnet", async (_, props) => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, ...props } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, ...props } });
 				const { combobox, dropdown } = getElements(wrapper);
 
 				for (const key of allKeys) {
@@ -1326,7 +1325,7 @@ describe("UiSelectMulti Utils", () => {
 				["Printable Character", "a"],
 				["Andere Taste", "F1"],
 			])("%s: Dropdown öffnet sich", async (_, key) => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
 				const { combobox, dropdown } = getElements(wrapper);
 
 				expect(dropdown.attributes("data-popover-open")).toBeUndefined();
@@ -1341,7 +1340,7 @@ describe("UiSelectMulti Utils", () => {
 				["End", "End"],
 				["Printable Character", "a"],
 			])("%s (searchable = true): Keine Option wird hervorgehoben", async (_keyName, keyValue) => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager, searchable: true } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager, searchable: true } });
 				const { combobox, dropdown } = getElements(wrapper);
 
 				await combobox.trigger('keydown', { key: keyValue });
@@ -1355,7 +1354,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("ArrowDown: Die erste Option wird hervorgehoben", async () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
 				const { combobox, dropdown } = getElements(wrapper);
 
 				await combobox.trigger('keydown', { key: 'ArrowDown' });
@@ -1366,7 +1365,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("ArrowDown und Alt: Die erste Option wird nicht hervorgehoben", async () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
 				const { combobox, dropdown } = getElements(wrapper);
 
 				await combobox.trigger('click');
@@ -1378,7 +1377,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("ArrowUp: Die letzte Option wird hervorgehoben", async () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
 				const { combobox, dropdown } = getElements(wrapper);
 
 				await combobox.trigger('keydown', { key: 'ArrowUp' });
@@ -1390,7 +1389,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("ArrowUp und Alt: Die letzte Option wird nicht hervorgehoben", async () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
 				const { combobox, dropdown } = getElements(wrapper);
 
 				await combobox.trigger('click');
@@ -1403,7 +1402,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Home (searchable = false): Die erste Option wird hervorgehoben", async () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
 				const { combobox, dropdown } = getElements(wrapper);
 
 				await combobox.trigger('keydown', { key: 'Home' });
@@ -1414,7 +1413,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Home (searchable = true): Keine Option wird hervorgehoben", async () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, searchable: true } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, searchable: true } });
 				const { combobox, dropdown } = getElements(wrapper);
 
 				await combobox.trigger('keydown', { key: 'Home' });
@@ -1428,7 +1427,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("End (searchable = false): Die letzte Option wird hervorgehoben", async () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
 				const { combobox, dropdown } = getElements(wrapper);
 
 				await combobox.trigger('keydown', { key: 'End' });
@@ -1441,7 +1440,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("End (searchable = true): Keine Option wird hervorgehoben", async () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, searchable: true } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, searchable: true } });
 
 				const { combobox, dropdown } = getElements(wrapper);
 
@@ -1456,7 +1455,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Escape (searchable = true): Suchtext wird zurückgesetzt", async () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, searchable: true } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, searchable: true } });
 
 				const vm = wrapper.findComponent({ name: "UiSelectMulti" }).vm;
 				const { combobox, input } = getElements(wrapper);
@@ -1470,7 +1469,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Printable Character (searchable = false): Erste passende Option wird hervorgehoben", async () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, searchable: false } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, searchable: false } });
 				const { combobox, dropdown } = getElements(wrapper);
 				const audiOption = dropdown.findAll("li").find(li => li.text() === "Audi");
 
@@ -1482,7 +1481,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Printable Character (searchable = true): Keine Option wird hervorgehoben", async () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, searchable: true } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, searchable: true } });
 				const { combobox, dropdown } = getElements(wrapper);
 
 				await combobox.trigger('keydown', { key: 'a' });
@@ -1496,7 +1495,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Shift: Nichts passiert", async () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
 				const { combobox, dropdown } = getElements(wrapper);
 
 				await combobox.trigger("keydown", { key: "Shift", shiftKey: true });
@@ -1517,7 +1516,7 @@ describe("UiSelectMulti Utils", () => {
 				["Tab", "Tab"],
 				["Escape", "Escape"],
 			])("%s: Dropdown schließt sich", async (_, key) => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
 				const { combobox, dropdown } = getElements(wrapper);
 
 				await combobox.trigger('click');
@@ -1531,7 +1530,7 @@ describe("UiSelectMulti Utils", () => {
 				["Enter", "Enter"],
 				["Space", " "],
 			])("%s mit hervorgehobener Option: Dropdown schließt sich nicht", async (_, key) => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
 				const { combobox, dropdown } = getElements(wrapper);
 
 				await combobox.trigger('click');
@@ -1547,7 +1546,7 @@ describe("UiSelectMulti Utils", () => {
 				["Enter", "Enter"],
 				["Space", " "],
 			])("%s ohne hervorgehobener Option: Dropdown schließt sich", async (_, key) => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
 				const { combobox, dropdown } = getElements(wrapper);
 
 				await combobox.trigger('click');
@@ -1562,7 +1561,7 @@ describe("UiSelectMulti Utils", () => {
 				["Enter (mit hervorgehobene Option)", "Enter"],
 				["Space (mit hervorgehobene Option)", " "],
 			])("%s: Option wird selektiert", async (_, key) => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
 				const { combobox } = getElements(wrapper);
 
 				await combobox.trigger('click');
@@ -1576,7 +1575,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Tab (mit Shift und mit hervorgehobene Option): Keine Option wird selektiert", async () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
 				const { combobox } = getElements(wrapper);
 
 				await combobox.trigger('click');
@@ -1589,7 +1588,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("ArrowDown: Erste Option wird hervorgehoben", async () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
 				const { combobox, dropdown } = getElements(wrapper);
 
 				await combobox.trigger('click');
@@ -1601,7 +1600,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("ArrowUp: Letzte Option wird hervorgehoben", async () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
 				const { combobox, dropdown } = getElements(wrapper);
 
 				await combobox.trigger('click');
@@ -1615,7 +1614,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("ArrowUp und Alt: Hervorgehobene Option wird selektiert und Dropdown geschlossen", async () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
 				const { combobox, dropdown } = getElements(wrapper);
 
 				await combobox.trigger('click');
@@ -1631,7 +1630,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Home (searchable = false): Erste Option wird hervorgehoben", async () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, searchable: false } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, searchable: false } });
 				const { combobox, dropdown } = getElements(wrapper);
 
 				await combobox.trigger('click');
@@ -1645,7 +1644,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("End (searchable = false): Letzte Option wird hervorgehoben", async () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, searchable: false } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, searchable: false } });
 				const { combobox, dropdown } = getElements(wrapper);
 
 				await combobox.trigger('click');
@@ -1659,7 +1658,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Escape (searchable = true): Suchtext wird zurückgesetzt", async () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, searchable: true } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, searchable: true } });
 				const { combobox, input, vm } = getElements(wrapper);
 
 				await input.setValue('BMW');
@@ -1673,7 +1672,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("PageUp: Die Option 10 Positionen vor der ersten wird hervorgehoben", async () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
 				const { combobox, dropdown } = getElements(wrapper);
 
 				await combobox.trigger('click');
@@ -1686,7 +1685,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("PageDown: Die 10. Option wird hervorgehoben", async () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
 				const { combobox, dropdown } = getElements(wrapper);
 
 				await combobox.trigger('click');
@@ -1699,7 +1698,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Space (searchable = true): Optionsliste enthält passende Einträge mit dem String ' ' und es wird nicht selektiert.", async () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, searchable: true } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, searchable: true } });
 				const { combobox, dropdown, input } = getElements(wrapper);
 
 				await input.setValue(" ");
@@ -1715,7 +1714,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Printable Character (searchable = false, nichts hervorgehoben): Erste passende Option wird hervorgehoben", async () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, searchable: false } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, searchable: false } });
 				const { combobox, dropdown } = getElements(wrapper);
 				const seatOption = dropdown.findAll("li").find(li => li.text() === "Seat");
 
@@ -1729,7 +1728,7 @@ describe("UiSelectMulti Utils", () => {
 
 			test("Printable Character (searchable = false, Option hervorgehoben): Erste passende Option nach der hervorgehobenen wird hervorgehoben",
 				async () => {
-					const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, searchable: false } });
+					const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, searchable: false } });
 					const { combobox, dropdown } = getElements(wrapper);
 					const seatOption = dropdown.findAll("li").find(li => li.text() === "Seat");
 					const skodaOption = dropdown.findAll("li").find(li => li.text() === "Skoda");
@@ -1750,7 +1749,7 @@ describe("UiSelectMulti Utils", () => {
 				});
 
 			test("Printable Character (searchable = false 2x gleicher Buchstabe): Zweite passende Option wird hervorgehoben", async () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, searchable: false } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, searchable: false } });
 				const { combobox, dropdown } = getElements(wrapper);
 				const skodaOption = dropdown.findAll("li").find(li => li.text() === "Skoda");
 
@@ -1777,7 +1776,7 @@ describe("UiSelectMulti Utils", () => {
 
 			test("Printable Character (searchable = false, 2 unterschiedliche Buchstaben im Timer): Erste passende Option mit String wird hervorgehoben",
 				async () => {
-					const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, searchable: false } });
+					const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, searchable: false } });
 					const { combobox, dropdown } = getElements(wrapper);
 					const skodaOption = dropdown.findAll("li").find(li => li.text() === "Skoda");
 
@@ -1804,7 +1803,7 @@ describe("UiSelectMulti Utils", () => {
 
 			test("Printable Character (searchable = false, 2 unterschiedliche Buchstaben außerhalb Timer): Erste passende Option beginnend mit zweitem eingegebenen Buchstaben wird hervorgehoben",
 				async () => {
-					const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, searchable: false } });
+					const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, searchable: false } });
 					const { combobox, dropdown } = getElements(wrapper);
 					const kiaOption = dropdown.findAll("li").find(li => li.text() === "Kia");
 
@@ -1831,7 +1830,7 @@ describe("UiSelectMulti Utils", () => {
 
 			test("Printable Character (searchable = false, 2 unterschiedliche Buchstaben im Timer): Wenn keine passende Option gefunden wird, wird nichts hervorgehoben",
 				async () => {
-					const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, searchable: false } });
+					const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, searchable: false } });
 					const { combobox, dropdown } = getElements(wrapper);
 
 					await combobox.trigger('click');
@@ -1863,7 +1862,7 @@ describe("UiSelectMulti Utils", () => {
 				["End", "End"],
 				["Printable Character", "a"],
 			])("%s (searchable = true): Keine Option wird hervorgehoben", async (_keyName, keyValue) => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager, searchable: true } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager, searchable: true } });
 				const { combobox, dropdown } = getElements(wrapper);
 
 				await combobox.trigger('click');
@@ -1878,7 +1877,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Andere Tasten: Keine Option wird hervorgehoben", async () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
 				const { combobox, dropdown } = getElements(wrapper);
 
 				await combobox.trigger('click');
@@ -1893,7 +1892,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("'ar' (searchable = true): Optionsliste enthält passende Einträge mit dem String 'ar'", async () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, searchable: true } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, searchable: true } });
 				const { dropdown, input } = getElements(wrapper);
 
 				await input.setValue("ar");
@@ -1905,7 +1904,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("'suba' (searchable = true): Optionsliste enthält den Eintrag 'Subaru', auch wenn es groß geschrieben ist", async () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: manager, searchable: true } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, searchable: true } });
 				const { dropdown, input } = getElements(wrapper);
 
 				await input.setValue("suba");
@@ -1916,7 +1915,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("'ar' (searchable = true, deepSearchAttributes = 'color'): Optionsliste enthält passende Einträge mit dem String 'ar'", async () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, {
+				const wrapper = mount(UiSelectMulti<cars>, {
 					props: { manager: manager, searchable: true, deepSearchAttributes: ['color'] },
 				});
 				const { dropdown, input } = getElements(wrapper);
@@ -1934,7 +1933,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("'ar' (searchable = true, deepSearchAttributes = 'ungültig'): Optionsliste enthält passende Einträge mit dem String 'ar'", async () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, {
+				const wrapper = mount(UiSelectMulti<cars>, {
 					props: { manager: manager, searchable: true, deepSearchAttributes: ['ungültig'] },
 				});
 				const { dropdown, input } = getElements(wrapper);
@@ -1948,7 +1947,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Keine Navigation im Dropdown, wenn keine Optionen enthalten sind", async () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: undefined } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: undefined } });
 				const { combobox, dropdown } = getElements(wrapper);
 
 				await combobox.trigger('click');
@@ -1963,7 +1962,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("manager = undefined und Suchbegriff: Das Select enthält keine Optionen", async () => {
-				const wrapper = mount(UiSelectMulti<cars, BasicValidator>, { props: { manager: undefined, searchable: true } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: undefined, searchable: true } });
 				const { dropdown, input } = getElements(wrapper);
 
 				await input.setValue("Testeingabe");

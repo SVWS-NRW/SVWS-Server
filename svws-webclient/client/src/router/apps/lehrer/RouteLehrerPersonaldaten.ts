@@ -6,7 +6,7 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { routeLehrer, type RouteLehrer } from "~/router/apps/lehrer/RouteLehrer";
 
-import type { LehrerPersonaldatenProps } from "~/components/lehrer/personaldaten/SLehrerPersonaldatenProps";
+import type { LehrerPersonaldatenProps } from "~/components/lehrer/personaldaten/LehrerPersonaldatenProps";
 import { routeApp } from "../RouteApp";
 import { routeError } from "~/router/error/RouteError";
 import { api } from "~/router/Api";

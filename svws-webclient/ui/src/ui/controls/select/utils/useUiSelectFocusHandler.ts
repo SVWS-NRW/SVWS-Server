@@ -1,9 +1,8 @@
 import { ref, type ComputedRef, type Ref } from "vue";
 import type { UiSelectDropdown, UiSelectHTMLElements, UiSelectState } from "../manager/UiSelectTypes";
-import type { BasicValidator } from "../../../../../../core/src/asd/validate/BasicValidator";
 
-export function useUiSelectFocusHandler<T, V extends BasicValidator>(
-	state: ComputedRef<UiSelectState<T, V>>,
+export function useUiSelectFocusHandler<T>(
+	state: ComputedRef<UiSelectState<T>>,
 	elements: UiSelectHTMLElements,
 	resetSearch: () => void,
 	dropdown: UiSelectDropdown<T>

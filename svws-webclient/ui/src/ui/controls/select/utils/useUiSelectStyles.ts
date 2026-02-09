@@ -1,10 +1,9 @@
 import { computed, type ComputedRef } from "vue";
 import type { UiSelectDropdown, UiSelectSelectionMethods, UiSelectState } from "../manager/UiSelectTypes";
-import { ValidatorFehlerart } from "../../../../../../core/src/asd/validate/ValidatorFehlerart";
-import type { BasicValidator } from "../../../../../../core/src";
+import { ValidatorFehlerart } from '../../../../../../core/src/asd/validate/ValidatorFehlerart';
 
-export function useUiSelectStyles<T, V extends BasicValidator>(
-	state: ComputedRef<UiSelectState<T, V>>,
+export function useUiSelectStyles<T>(
+	state: ComputedRef<UiSelectState<T>>,
 	attrs: Record<string, any>,
 	selectionMethods: UiSelectSelectionMethods<T>,
 	dropdown: UiSelectDropdown<T>
@@ -24,12 +23,9 @@ export function useUiSelectStyles<T, V extends BasicValidator>(
 	labelTextColorClass: ComputedRef<string>,
 	labelIconClass: ComputedRef<string>,
 	getOptionClasses: (option: T, optionIndex: number) => string[],
-	validatorErrorIcon: ComputedRef<string[] | null>,
 	moveLabel: ComputedRef<boolean>,
 	showLabel: ComputedRef<boolean>,
 	showValidatorError: ComputedRef<boolean>,
-	showValidatorErrorMessage: ComputedRef<boolean>,
-	validatorErrorBgClasses: (fehler: ValidatorFehlerart) => {},
 	focusClass: ComputedRef<"" | "contentFocusField" | "subNavigationFocusField">,
 	getSecondaryTextColor: (color: string) => string,
 } {
@@ -67,18 +63,18 @@ export function useUiSelectStyles<T, V extends BasicValidator>(
 			if (state.value.disabled) {
 				return `${prefix}-ui-disabled`;
 			}
+			switch (state.value.validationResult.fehlerart) {
+				case ValidatorFehlerart.HINWEIS:
+					return `${prefix}-ui-warning`;
+				case ValidatorFehlerart.KANN:
+					return `${prefix}-ui-caution`;
+				case ValidatorFehlerart.MUSS:
+					return `${prefix}-ui-danger`;
+			}
+
+
 			if (!state.value.isValid) {
 				return `${prefix}-ui-danger`;
-			}
-			if (!state.value.isValidatorValid) {
-				switch (state.value.validator!().getFehlerart()) {
-					case ValidatorFehlerart.HINWEIS:
-						return `${prefix}-ui-warning`;
-					case ValidatorFehlerart.KANN:
-						return `${prefix}-ui-caution`;
-					case ValidatorFehlerart.MUSS:
-						return `${prefix}-ui-danger`;
-				}
 			}
 
 			const classString = attrs.class;
@@ -187,24 +183,6 @@ export function useUiSelectStyles<T, V extends BasicValidator>(
 	}
 
 
-	const validatorErrorIcon = computed(() => {
-		if (!state.value.validator) {
-			return null;
-		}
-		const fehlerart = state.value.validator().getFehlerart();
-
-		switch (fehlerart) {
-			case ValidatorFehlerart.MUSS:
-				return ['i-ri-alert-fill', state.value.disabled ? 'icon-ui-disabled' : 'icon-ui-danger'];
-			case ValidatorFehlerart.KANN:
-				return ['i-ri-error-warning-fill', state.value.disabled ? 'icon-ui-disabled' : 'icon-ui-caution'];
-			case ValidatorFehlerart.HINWEIS:
-				return ['i-ri-question-fill', state.value.disabled ? 'icon-ui-disabled' : 'icon-ui-warning'];
-			default:
-				return null;
-		}
-	});
-
 	const moveLabel = computed(() => selectionMethods.hasSelection() || (state.value.search !== '' && state.value.searchable));
 
 	const showLabel = computed((): boolean =>
@@ -214,36 +192,6 @@ export function useUiSelectStyles<T, V extends BasicValidator>(
 	const showValidatorError = computed((): boolean =>
 		!state.value.isValid && (!state.value.required || selectionMethods.hasSelection())
 	);
-
-	const showValidatorErrorMessage = computed(() => {
-		const validator = state.value.validator;
-		if (validator === undefined) {
-			return false;
-		}
-
-		const hasFehler = !validator().getFehler().isEmpty();
-		const fehlerart = validator().getFehlerart();
-
-		return hasFehler && fehlerart !== ValidatorFehlerart.UNGENUTZT;
-	});
-
-
-	function validatorErrorBgClasses(fehler: ValidatorFehlerart): {} {
-		if (state.value.validator === undefined) {
-			return {};
-		}
-
-		switch (fehler) {
-			case ValidatorFehlerart.MUSS:
-				return { 'bg-ui-danger': true };
-			case ValidatorFehlerart.KANN:
-				return { 'bg-ui-caution': true };
-			case ValidatorFehlerart.HINWEIS:
-				return { 'bg-ui-warning': true };
-			default:
-				return {};
-		}
-	}
 
 	const focusClass = computed(() => {
 		const result = { ...attrs };
@@ -274,12 +222,9 @@ export function useUiSelectStyles<T, V extends BasicValidator>(
 		labelTextColorClass,
 		labelIconClass,
 		getOptionClasses,
-		validatorErrorIcon,
 		moveLabel,
 		showLabel,
 		showValidatorError,
-		showValidatorErrorMessage,
-		validatorErrorBgClasses,
 		focusClass,
 		getSecondaryTextColor,
 	};
