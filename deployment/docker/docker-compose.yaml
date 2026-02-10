@@ -15,6 +15,8 @@ services:
     image: mariadb:11.7
     restart: unless-stopped
     command: "--character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --bind-address=0.0.0.0"
+    ports:
+      - "3306:3306"
     environment:
       MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
       MARIADB_DATABASE: ${MARIADB_DATABASE}
