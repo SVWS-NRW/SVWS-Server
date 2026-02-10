@@ -353,7 +353,7 @@ class TestLinkedCollection {
 		assertNotEquals(v2, coll);
 		assertNotEquals(coll2, coll);
 		assertNotEquals(v4, coll);
-		assertTrue(coll2.equals(v2));
+		assertEquals(coll2, v2);
 		assertEquals(coll2, coll2);
 	}
 
