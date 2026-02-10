@@ -53,13 +53,13 @@ public final class DummyMapSub implements NavigableMap<Integer, Integer> {
 
 	@Override
 	public String toString() {
-		String s = "";
+		final @NotNull StringBuilder sb = new StringBuilder();
+		// TODO: Transpiler for-each-Schleife derzeit noch nicht.
 		final Iterator<Entry<Integer, Integer>> iter = entrySet().iterator();
-		while (iter.hasNext())
-			s += (s.isEmpty() ? "" : ", ") + iter.next();
-		// for (Entry<Integer, Integer> e : entrySet())
-		// s += (s.isEmpty() ? "" : ", ") + e;
-		return "Entries = [" + s + "], iv = " + _iv + ", asc = " + _asc;
+		while (iter.hasNext()) {
+			sb.append((sb.isEmpty() ? "" : ", ") + iter.next());
+		}
+		return "Entries = [" + sb.toString() + "], iv = " + _iv + ", asc = " + _asc;
 	}
 
 	@Override

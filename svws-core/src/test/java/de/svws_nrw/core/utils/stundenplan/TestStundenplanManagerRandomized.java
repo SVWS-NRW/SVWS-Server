@@ -36,32 +36,29 @@ class TestStundenplanManagerRandomized {
 
 	@SuppressWarnings("unused")
 	private static String fachListToString(final @NotNull List<@NotNull StundenplanFach> fachList) {
-		String s = "";
-
-		for (final @NotNull StundenplanFach fach : fachList)
-			s = s + ", " + fach.id;
-
-		return s;
+		final @NotNull StringBuilder sb = new StringBuilder();
+		for (final @NotNull StundenplanFach fach : fachList) {
+			sb.append(", " + fach.id);
+		}
+		return sb.toString();
 	}
 
 	@SuppressWarnings("unused")
 	private static String longListToString(final @NotNull List<@NotNull Long> idList) {
-		String s = "";
-
-		for (final @NotNull Long id : idList)
-			s = s + ", " + id;
-
-		return s;
+		final @NotNull StringBuilder sb = new StringBuilder();
+		for (final @NotNull Long id : idList) {
+			sb.append(", " + id);
+		}
+		return sb.toString();
 	}
 
 	@SuppressWarnings("unused")
 	private static String lehrerListToString(final @NotNull List<@NotNull StundenplanLehrer> lehrerList) {
-		String s = "";
-
-		for (final @NotNull StundenplanLehrer lehrer : lehrerList)
-			s = s + ", " + lehrer.id;
-
-		return s;
+		final @NotNull StringBuilder sb = new StringBuilder();
+		for (final @NotNull StundenplanLehrer lehrer : lehrerList) {
+			sb.append(", " + lehrer.id);
+		}
+		return sb.toString();
 	}
 
 	/**

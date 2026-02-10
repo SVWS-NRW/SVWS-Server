@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse implementiert das Funktionale Interface java.util.function.Consumer
- * für Objekt vom Typ LogData. Die über das Interface empfangeben Log-Daten
+ * für Objekt vom Typ LogData. Die über das Interface empfangenen Log-Daten
  * werden in einem Vektor (java.util.ArrayList) gesammelt.
  */
 public class LogConsumerList implements Consumer<LogData> {
@@ -102,19 +102,22 @@ public class LogConsumerList implements Consumer<LogData> {
 	 */
 	public List<String> getStrings(final @NotNull String indent) {
 		final ArrayList<String> result = new ArrayList<>();
-		@NotNull String temp = indent;
+
+		@NotNull StringBuilder sb = new StringBuilder(indent);
 		for (int i = 0; i < logData.size(); i++) {
 			final @NotNull LogData data = logData.get(i);
 			if (data == null)
 				continue;
-			temp += data.getText();
+			sb.append(data.getText());
 			if (data.isNewLine()) {
-				result.add(temp);
-				temp = indent;
+				result.add(sb.toString());
+				sb = new StringBuilder(indent);
 			}
 		}
-		if (!indent.equals(temp))
-			result.add(temp);
+
+		if (!indent.equals(sb.toString()))
+			result.add(sb.toString());
+
 		return result;
 	}
 
@@ -137,7 +140,7 @@ public class LogConsumerList implements Consumer<LogData> {
 	 * Gibt die gesammelten Log-Informationen als Text zurück, bei dem
 	 * die einzelnen Log-Informationen durch Zeilenumbrüche voneinander
 	 * getrennt werden. Dabei werden Informationen ausgelassen,
-	 * die aufgrund des angebenen Log-Levels nicht berücksichtigt werden
+	 * die aufgrund des angegebenen Log-Levels nicht berücksichtigt werden
 	 * sollen.
 	 *
 	 * @param level    das Log-Level, welches mindestens geben sein muss, damit die
@@ -154,7 +157,7 @@ public class LogConsumerList implements Consumer<LogData> {
 	 * Gibt die gesammelten Log-Informationen als Text zurück, bei dem
 	 * die einzelnen Log-Informationen durch Zeilenumbrüche voneinander
 	 * getrennt werden. Dabei werden Informationen ausgelassen,
-	 * die aufgrund des angebenen Log-Levels nicht berücksichtigt werden
+	 * die aufgrund des angegebenen Log-Levels nicht berücksichtigt werden
 	 * sollen.
 	 *
 	 * @param level    das Log-Level, welches mindestens geben sein muss, damit die
