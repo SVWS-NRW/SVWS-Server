@@ -1212,6 +1212,11 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		return ListUtils.getCountFiltered(this._parent.daten().schueler, { test: (schueler: Schueler) => this.getOfSchuelerHatStatusExtern(schueler.id) });
 	}
 
+	private static dividiereUndScheideNachZweiNachkommastellenAb(zaehler: number, nenner: number): number {
+		let hochskaliert: number = Math.trunc((zaehler * 100) / nenner);
+		return hochskaliert / 100.0;
+	}
+
 	/**
 	 * Liefert die Kursfrequenz als String, berechnet als (Summe aller Fachwahlen) / (interne Kurse).
 	 * <br>Hinweis: DummySuS werden ignoriert.
@@ -1224,7 +1229,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		if (nKurse === 0)
 			return "Kursfrequenz = ?";
 		let nFachwahlen: number = this._parent.fachwahlGetAnzahl();
-		let avg1: number = (Math.trunc((nFachwahlen * 100) / nKurse)) / 100.0;
+		let avg1: number = GostBlockungsergebnisManager.dividiereUndScheideNachZweiNachkommastellenAb(nFachwahlen, nKurse);
 		return JavaString.replace(("" + avg1), '.', ',');
 	}
 
@@ -1243,7 +1248,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		for (const gKurs of this._parent.daten().kurse)
 			if (!gKurs.istKoopKurs)
 				nVerteilt += this.getOfKursAnzahlSchueler(gKurs.id);
-		let avg2: number = (Math.trunc((nVerteilt * 100) / nKurse)) / 100.0;
+		let avg2: number = GostBlockungsergebnisManager.dividiereUndScheideNachZweiNachkommastellenAb(nVerteilt, nKurse);
 		return JavaString.replace(("" + avg2), '.', ',');
 	}
 

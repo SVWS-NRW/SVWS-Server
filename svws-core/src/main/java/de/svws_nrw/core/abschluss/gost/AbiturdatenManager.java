@@ -2895,7 +2895,8 @@ public class AbiturdatenManager {
 			}
 			fachbelegung.block1NotenpunkteDurchschnitt = (summeKurseFach == 0.0) ? null : (punktSummeEinfach / summeKurseFach);
 		}
-		final double summeNotenpunkte = abidaten.block1PunktSummeLK + abidaten.block1PunktSummeGK;
+		final int summeNotenpunkteGanzzahl = abidaten.block1PunktSummeLK + abidaten.block1PunktSummeGK;
+		final double summeNotenpunkte = summeNotenpunkteGanzzahl; // Sonar kritisiert die implizite Umwandlung einer Summe zu double.
 		final double anzahlKurse = (abidaten.block1AnzahlKurse + 8.0); // LK-Belegungen doppelt zählen, also + 2*4, da auch die Notenpunkte doppelt gezählt wurden
 		abidaten.block1PunktSummeNormiert = (int) Math.round((40.0 * summeNotenpunkte) / anzahlKurse);
 		abidaten.block1NotenpunkteDurchschnitt = Math.round((summeNotenpunkte / anzahlKurse) * 100.0) / 100.0;
