@@ -108,8 +108,7 @@
 	}
 
 	function bezeichnungZeugnisIsValid() {
-		return optionalInputIsValid(data.value.bezeichnungZeugnis, 50)
-			&& isUniqueInList(data.value.bezeichnungZeugnis, props.manager().liste.list(), 'bezeichnungZeugnis');
+		return optionalInputIsValid(data.value.bezeichnungZeugnis, 50);
 	}
 
 	function sortierungIsValid(sortierung: number): boolean {
