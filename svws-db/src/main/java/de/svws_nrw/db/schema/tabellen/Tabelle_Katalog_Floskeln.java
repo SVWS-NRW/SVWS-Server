@@ -54,6 +54,14 @@ public class Tabelle_Katalog_Floskeln extends SchemaTabelle {
 			.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 			.setJavaComment("Sichbarkeit der Floskel");
 
+	/** Die Definition des Fremdschlüssels EigeneSchule_Faecher_FK */
+	public SchemaTabelleFremdschluessel fk_EigeneSchule_Faecher_FK = addForeignKey(
+			"EigeneSchule_Faecher_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
+			new Pair<>(col_Fach_ID, Schema.tab_EigeneSchule_Faecher.col_ID))
+			.setRevision(SchemaRevisionen.REV_56);
+
 	/** Die Definition des Fremdschlüssels Katalog_Floskeln_Gruppen_FK */
 	public SchemaTabelleFremdschluessel fk_Katalog_Floskeln_Gruppen_FK = addForeignKey(
 			"Katalog_Floskeln_Gruppen_FK",
