@@ -5,6 +5,7 @@ import java.util.List;
 
 import de.svws_nrw.db.schema.tabellen.Tabelle_AllgAdrAnsprechpartner;
 import de.svws_nrw.db.schema.tabellen.Tabelle_AllgemeineMerkmaleKatalog_Keys;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Ankreuzkompetenz_Jahrgang;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Benutzer;
 import de.svws_nrw.db.schema.tabellen.Tabelle_BenutzerAllgemein;
 import de.svws_nrw.db.schema.tabellen.Tabelle_BenutzerEmail;
@@ -1186,6 +1187,9 @@ public final class Schema {
 
 	/** Tabelle Wiedervorlage */
 	public static final Tabelle_Wiedervorlage tab_Wiedervorlage = add(new Tabelle_Wiedervorlage());
+
+	/** Tabelle Katalog_Ankreuzkompetenz_Jahrgang */
+	public static final Tabelle_Ankreuzkompetenz_Jahrgang tab_Ankreuzkompetenz_Jahrgang = add(new Tabelle_Ankreuzkompetenz_Jahrgang());
 
 
 	/**

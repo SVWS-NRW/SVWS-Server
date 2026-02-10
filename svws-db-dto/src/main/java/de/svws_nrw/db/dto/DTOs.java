@@ -34,6 +34,7 @@ import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungSchiene;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnis;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnisKursSchiene;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnisKursSchueler;
+import de.svws_nrw.db.dto.current.katalog.DTOAnkreuzkompetenzJahrgang;
 import de.svws_nrw.db.dto.current.katalog.DTOFloskelgruppen;
 import de.svws_nrw.db.dto.current.katalog.DTOFloskeln;
 import de.svws_nrw.db.dto.current.katalog.DTOFloskelnJahrgaenge;
@@ -331,6 +332,7 @@ public final class DTOs {
              mapDTOName2DTOClass.put(DTOGostBlockungZwischenergebnis.class.getSimpleName(), DTOGostBlockungZwischenergebnis.class);
              mapDTOName2DTOClass.put(DTOGostBlockungZwischenergebnisKursSchiene.class.getSimpleName(), DTOGostBlockungZwischenergebnisKursSchiene.class);
              mapDTOName2DTOClass.put(DTOGostBlockungZwischenergebnisKursSchueler.class.getSimpleName(), DTOGostBlockungZwischenergebnisKursSchueler.class);
+             mapDTOName2DTOClass.put(DTOAnkreuzkompetenzJahrgang.class.getSimpleName(), DTOAnkreuzkompetenzJahrgang.class);
              mapDTOName2DTOClass.put(DTOFloskelgruppen.class.getSimpleName(), DTOFloskelgruppen.class);
              mapDTOName2DTOClass.put(DTOFloskeln.class.getSimpleName(), DTOFloskeln.class);
              mapDTOName2DTOClass.put(DTOFloskelnJahrgaenge.class.getSimpleName(), DTOFloskelnJahrgaenge.class);
@@ -623,6 +625,7 @@ public final class DTOs {
              mapTablename2DTOClass.put("Gost_Blockung_Zwischenergebnisse", DTOGostBlockungZwischenergebnis.class);
              mapTablename2DTOClass.put("Gost_Blockung_Zwischenergebnisse_Kurs_Schienen", DTOGostBlockungZwischenergebnisKursSchiene.class);
              mapTablename2DTOClass.put("Gost_Blockung_Zwischenergebnisse_Kurs_Schueler", DTOGostBlockungZwischenergebnisKursSchueler.class);
+             mapTablename2DTOClass.put("Ankreuzkompetenz_Jahrgang", DTOAnkreuzkompetenzJahrgang.class);
              mapTablename2DTOClass.put("Katalog_Floskeln_Gruppen", DTOFloskelgruppen.class);
              mapTablename2DTOClass.put("Katalog_Floskeln", DTOFloskeln.class);
              mapTablename2DTOClass.put("Katalog_Floskeln_Jahrgaenge", DTOFloskelnJahrgaenge.class);
