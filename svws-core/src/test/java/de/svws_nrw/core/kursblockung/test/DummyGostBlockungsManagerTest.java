@@ -259,6 +259,10 @@ class DummyGostBlockungsManagerTest {
 				case 115 -> _getFaecherAnzahl();
 				case 116 -> _getDebugString();
 				case 117 -> _spezialfall01();
+
+				default -> {
+					// nichts
+				}
 			}
 
 			if (!m1.testMultimap()) {
