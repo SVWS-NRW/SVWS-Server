@@ -6,53 +6,48 @@
 		<div class="flex flex-col gap-y-16 lg:gap-y-20">
 			<svws-ui-content-card title="Allgemein">
 				<svws-ui-input-wrapper :grid="2">
-					<svws-ui-text-input placeholder="Kürzel" :disabled="!hatKompetenzUpdate" :required="true" :max-len="15" :valid="validateKuerzel" :model-value="data().kuerzel"
-						@change="kuerzel => patchPartial({ kuerzel }, validateKuerzel(kuerzel))" type="text" focus />
-					<svws-ui-text-input placeholder="Beschreibung" :disabled="!hatKompetenzUpdate" :max-len="150" :valid="validateBeschreibung" :model-value="data().beschreibung"
-						@change="beschreibung => patchPartial({ beschreibung: beschreibung ?? undefined }, validateBeschreibung(beschreibung))" type="text" />
+					<svws-ui-text-input placeholder="Kürzel" :disabled="!hatKompetenzUpdate" :required="true" :max-len="15" v-model="modelProxy.proxy.kuerzel" @commit="modelProxy.patch"
+						:validation="() => modelProxy.getFehler('kuerzel')" skip-default-validation focus />
+					<svws-ui-text-input placeholder="Beschreibung" :disabled="!hatKompetenzUpdate" :max-len="150" v-model="modelProxy.proxy.beschreibung" @commit="modelProxy.patch"
+						:validation="() => modelProxy.getFehler('beschreibung')" skip-default-validation />
 					<svws-ui-spacing />
-					<svws-ui-select title="Klassen-Jahrgang" :disabled="!hatKompetenzUpdate" v-model="jahrgang" :items="jahrgaenge" :item-text="textJahrgang"
-						:empty-text="() => 'JU - Jahrgangsübergreifend'" removable statistics />
-					<svws-ui-select title="Parallelität" :disabled="!hatKompetenzUpdate" :model-value="data().parallelitaet ?? '---'" statistics
-						@update:model-value="value => patchPartial({ parallelitaet: value === '---' ? null : value })"
-						:items="['---','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']" :item-text="p => p" />
+
+					<svws-ui-select title="Klassen-Jahrgang" v-model="modelProxy.jahrgang.value" :items="modelProxy.jahrgaenge.value" :item-text="getSelectTextJahrgang"
+						:empty-text="() => 'JU - Jahrgangsübergreifend'" :disabled="!hatKompetenzUpdate" removable />
+					<svws-ui-select title="Parallelität" v-model="modelProxy.parallelitaet.value" :item-text="p => p" :disabled="!hatKompetenzUpdate"
+						:items="['---','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']" />
+					<svws-ui-spacing />
+
 					<!-- TODO Select mit der Liste der Teilstandorte für diese Schule (:disabled="!hatKompetenzUpdate" ) -->
-					<svws-ui-text-input placeholder="Teilstandort" disabled :model-value="data().teilstandort" type="text" />
+					<svws-ui-text-input placeholder="Teilstandort" disabled v-model="modelProxy.proxy.teilstandort" @commit="modelProxy.patch" />
 					<div class="flex flex-row">
-						<svws-ui-input-number placeholder="Sortierung" :disabled="!hatKompetenzUpdate" :required="true" :min="0" :model-value="data().sortierung"
-							@change="sortierung => patchPartial({ sortierung: sortierung ?? undefined }, validateSortierung(sortierung))" />
+						<svws-ui-input-number placeholder="Sortierung" :disabled="!hatKompetenzUpdate" :required="true" :min="0"
+							v-model="modelProxy.proxy.sortierung" @commit="modelProxy.patch" />
 					</div>
 					<svws-ui-spacing />
-					<svws-ui-select v-if="zeigeVorgaengerklassen()" title="Vorgängerklasse" :disabled="!hatKompetenzUpdate" v-model="idVorgaengerklasse"
-						:items="listeVorgaengerklassen" :item-text="f => f.kuerzel ?? '---'" removable />
-					<svws-ui-text-input v-else placeholder="Vorgängerklasse" :model-value="data().kuerzelVorgaengerklasse === null ? '&nbsp;' : data().kuerzelVorgaengerklasse" type="text" disabled />
-					<svws-ui-select v-if="zeigeFolgeklassen()" title="Folgeklasse" :disabled="!hatKompetenzUpdate" v-model="idFolgeklasse"
-						:items="listeFolgeklassen" :item-text="f => f.kuerzel ?? '---'" removable />
-					<svws-ui-text-input v-else placeholder="Folgeklasse" :model-value="data().kuerzelFolgeklasse === null ? '&nbsp;' : data().kuerzelFolgeklasse" type="text" disabled />
+
+					<svws-ui-select v-if="zeigeVorgaengerklassen()" title="Vorgängerklasse" v-model="modelProxy.vorgaengerklasse.value" :disabled="!hatKompetenzUpdate"
+						:items="modelProxy.listeVorgaengerklassen.value" :item-text="f => f.kuerzel ?? '---'" removable />
+					<svws-ui-text-input v-else placeholder="Vorgängerklasse" :model-value="modelProxy.proxy.kuerzelVorgaengerklasse ?? '—'" disabled />
+					<svws-ui-select v-if="zeigeFolgeklassen()" title="Folgeklasse" v-model="modelProxy.folgeklasse.value" :items="modelProxy.listeFolgeklassen.value"
+						:item-text="f => f.kuerzel ?? '---'" removable :disabled="!hatKompetenzUpdate" />
+					<svws-ui-text-input v-else placeholder="Folgeklasse" :model-value="modelProxy.proxy.kuerzelFolgeklasse ?? '—'" disabled />
 					<svws-ui-spacing />
-					<svws-ui-select title="Schulgliederung" :disabled="!hatKompetenzUpdate" :model-value="(data().idSchulgliederung < 0) ? undefined : Schulgliederung.data().getWertByID(data().idSchulgliederung)"
-						@update:model-value="value => patchPartial({ idSchulgliederung: value?.daten(schuljahr)?.id ?? -1 })" statistics
-						:items="schulgliederungen" :item-text="f => (f.daten(schuljahr)?.kuerzel ?? '—') + ' - ' + (f.daten(schuljahr)?.text ?? '—')" />
-					<!-- TODO Auswahl der Prüfungsordnungen und :disabled="!hatKompetenzUpdate" -->
-					<svws-ui-text-input placeholder="Prüfungsordnung" disabled :model-value="data().pruefungsordnung" type="text" />
-					<svws-ui-select v-if="schulform.istAllgemeinbildend()" title="Klassenart" :disabled="!hatKompetenzUpdate" :model-value="Klassenart.data().getWertByID(data().idKlassenart)"
-						@update:model-value="value => patchPartial({ idKlassenart: value?.daten(schuljahr)?.id ?? -1 })" statistics
-						:items="Klassenart.data().getWerteBySchuljahr(schuljahr)" :item-text="f => (f.daten(schuljahr)?.kuerzel ?? '—') + ' - ' + (f.daten(schuljahr)?.text ?? '—')" />
-					<svws-ui-select v-if="schulform.istAllgemeinbildend() && (data().idAllgemeinbildendOrganisationsform !== null)"
-						title="Organisationsform" :disabled="!hatKompetenzUpdate" v-model="idAllgemeinbildendOrganisationsform" statistics
-						:items="AllgemeinbildendOrganisationsformen.values()" :item-text="f => (f.daten(schuljahr)?.kuerzel ?? '—') + ' - ' + (f.daten(schuljahr)?.text ?? '—')" />
-					<svws-ui-select v-if="schulform.istBerufsbildend() && (data().idBerufsbildendOrganisationsform !== null)"
-						title="Organisationsform" :disabled="!hatKompetenzUpdate" v-model="idBerufsbildendOrganisationsform"
-						:items="BerufskollegOrganisationsformen.values()" :item-text="f => (f.daten(schuljahr)?.kuerzel ?? '—') + ' - ' + (f.daten(schuljahr)?.text ?? '—')" />
-					<svws-ui-select v-if="schulform.istWeiterbildung() && (data().idWeiterbildungOrganisationsform !== null)"
-						title="Organisationsform" :disabled="!hatKompetenzUpdate" v-model="idWeiterbildungOrganisationsform"
-						:items="WeiterbildungskollegOrganisationsformen.values()" :item-text="f => (f.daten(schuljahr)?.kuerzel ?? '—') + ' - ' + (f.daten(schuljahr)?.text ?? '—')" />
+
+					<svws-ui-select title="Schulgliederung" v-model="modelProxy.schulgliederung.value" :disabled="!hatKompetenzUpdate" :items="modelProxy.schulgliederungen.value" :item-text="getSelectText" />
+					<svws-ui-text-input placeholder="Prüfungsordnung" :model-value="modelProxy.proxy.pruefungsordnung ?? '—'" @commit="modelProxy.patch" disabled />
+					<svws-ui-select v-if="schulform.istAllgemeinbildend()" title="Klassenart" v-model="modelProxy.klassenart.value" :disabled="!hatKompetenzUpdate" :items="modelProxy.klassenarten.value" :item-text="getSelectText" />
+					<svws-ui-select v-if="schulform.istAllgemeinbildend()" title="Organisationsform" v-model="modelProxy.organisationsformAllgemeinbildend.value" :disabled="!hatKompetenzUpdate" :items="modelProxy.organisationsformenAllgemeinbildend.value" :item-text="getSelectText" />
+					<svws-ui-select v-if="schulform.istBerufsbildend()" title="Organisationsform" v-model="modelProxy.organisationsformBerufsbildend.value" :disabled="!hatKompetenzUpdate" :items="modelProxy.organisationsformenBerufsbildend.value" :item-text="getSelectText" />
+					<svws-ui-select v-if="schulform.istWeiterbildung()" title="Organisationsform" v-model="modelProxy.organisationsformWeiterbildend.value" :disabled="!hatKompetenzUpdate" :items="modelProxy.organisationsformenWeiterbildend.value" :item-text="getSelectText" />
 				</svws-ui-input-wrapper>
+
 				<svws-ui-spacing :size="2" />
+
 				<svws-ui-input-wrapper :grid="1">
-					<svws-ui-checkbox :model-value="data().noteneingabeGesperrt" :disabled="!hatKompetenzUpdate" @update:model-value="noteneingabeGesperrt => patchPartial({ noteneingabeGesperrt })"> Noteneingabe gesperrt </svws-ui-checkbox>
-					<svws-ui-checkbox v-if="schulform === Schulform.G" :disabled="!hatKompetenzUpdate" :model-value="data().verwendungAnkreuzkompetenzen" @update:model-value="verwendungAnkreuzkompetenzen => patchPartial({ verwendungAnkreuzkompetenzen })"> In dieser Klasse werden Ankreuzkompetenzen verwendet </svws-ui-checkbox>
-					<svws-ui-checkbox v-if="schulform === Schulform.WB" :disabled="!hatKompetenzUpdate" :model-value="data().beginnSommersemester" @update:model-value="beginnSommersemester => patchPartial({ beginnSommersemester })"> Beginn im Sommersemester </svws-ui-checkbox>
+					<svws-ui-checkbox v-model="modelProxy.proxy.noteneingabeGesperrt" :disabled="!hatKompetenzUpdate"> Noteneingabe gesperrt </svws-ui-checkbox>
+					<svws-ui-checkbox v-if="schulform === Schulform.G" :disabled="!hatKompetenzUpdate" v-model="modelProxy.proxy.verwendungAnkreuzkompetenzen">In dieser Klasse werden Ankreuzkompetenzen verwendet </svws-ui-checkbox>
+					<svws-ui-checkbox v-if="schulform === Schulform.WB" :disabled="!hatKompetenzUpdate" v-model="modelProxy.proxy.beginnSommersemester"> Beginn im Sommersemester </svws-ui-checkbox>
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<svws-ui-content-card title="Klassenleitung">
@@ -119,16 +114,54 @@
 	import { computed, ref, watch } from "vue";
 	import type { DataTableColumn } from "@ui";
 	import type { KlassenDatenProps } from "./SKlassenDatenProps";
-	import type { LehrerListeEintrag, KlassenDaten, JahrgangsDaten, List } from "@core";
-	import { SchuelerStatus, Schulform, Schulgliederung, Klassenart, AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen, WeiterbildungskollegOrganisationsformen, ArrayList, BenutzerKompetenz, Jahrgaenge } from "@core";
+	import type { LehrerListeEintrag, KlassenDaten, Klassenart, Schulgliederung, AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen, WeiterbildungskollegOrganisationsformen, JahrgangsDaten } from "@core";
+	import { SchuelerStatus, Schulform, BenutzerKompetenz, Jahrgaenge } from "@core";
+	import { KlassenModelProxy } from "../KlassenModelProxy";
 
 	const props = defineProps<KlassenDatenProps>();
+
+	const listAndereKlassen = computed(() => {
+		const arr = [];
+		for (const k of props.manager().liste.list()) {
+			if (k.id !== props.manager().auswahlID()) {
+				arr.push(k);
+			}
+		}
+		return arr;
+	});
+
+	const dataNotPatched = () => props.manager().daten();
+	async function patchMethod(data: Partial<KlassenDaten>): Promise<boolean> {
+		await props.patch(data);
+		return true;
+	}
+	const listOfAutopatchProps: Iterable<keyof KlassenDaten> = ["idJahrgang", "parallelitaet", "idVorgaengerklasse",
+		"idFolgeklasse", "idSchulgliederung", "idKlassenart", "idBerufsbildendOrganisationsform", "idAllgemeinbildendOrganisationsform",
+		"idWeiterbildungOrganisationsform", "noteneingabeGesperrt", "verwendungAnkreuzkompetenzen", "beginnSommersemester"];
+	const modelProxy = new KlassenModelProxy(() => dataNotPatched(), () => listAndereKlassen.value, props.manager, props.mapKlassenVorigerAbschnitt, props.mapKlassenFolgenderAbschnitt, listOfAutopatchProps, patchMethod);
 
 	watch(() => props.manager().daten().klassenLeitungen, () => {
 		klassenleitungClicked.value = null;
 	});
 
 	const schuljahr = computed<number>(() => props.manager().getSchuljahr());
+
+	function getSelectText(value: Klassenart | Schulgliederung | AllgemeinbildendOrganisationsformen | BerufskollegOrganisationsformen | WeiterbildungskollegOrganisationsformen) {
+		return value.daten(props.manager().getSchuljahr())?.kuerzel + ' - ' + value.daten(props.manager().getSchuljahr())?.text;
+	}
+
+	function getSelectTextJahrgang(jg: JahrgangsDaten): string {
+		switch (jg.kuerzel) {
+			case null:
+				return 'JU - Jahrgangsübergreifend';
+			case 'E1':
+				return '1E' + ' - ' + jg.bezeichnung;
+			case 'E2':
+				return '2E' + ' - ' + jg.bezeichnung;
+			default:
+				return jg.kuerzel + ' - ' + jg.bezeichnung;
+		}
+	}
 
 	// TODO auch UNTERRICHTSVERTEILUNG_PLANUNG_ANSEHEN verwenden und hier unterscheiden zu UNTERRICHTSVERTEILUNG_ANSEHEN
 	const hatKompetenzAnsehen = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN));
@@ -142,67 +175,12 @@
 		klassenleitungClicked.value = value;
 	}
 
-	const data = () => props.manager().daten();
-
-	const idVorgaengerklasse = computed({
-		get: () => {
-			const id = props.manager().daten().idVorgaengerklasse;
-			return id === null ? null : props.mapKlassenVorigerAbschnitt().get(id);
-		},
-		set: (value) => void patchPartial({ idVorgaengerklasse: value?.id ?? null }),
-	});
-
-	const idFolgeklasse = computed({
-		get: () => {
-			const id = props.manager().daten().idFolgeklasse;
-			return id === null ? null : props.mapKlassenFolgenderAbschnitt().get(id);
-		},
-		set: (value) => void patchPartial({ idFolgeklasse: value?.id ?? null }),
-	});
-
-	const idAllgemeinbildendOrganisationsform = computed({
-		get: () => {
-			const id = props.manager().daten().idAllgemeinbildendOrganisationsform;
-			return id === null ? null : AllgemeinbildendOrganisationsformen.data().getWertByID(id);
-		},
-		set: (value) => void patchPartial({ idAllgemeinbildendOrganisationsform: value?.daten(schuljahr.value)?.id ?? -1 }),
-	});
-
-	const idBerufsbildendOrganisationsform = computed({
-		get: () => {
-			const id = props.manager().daten().idBerufsbildendOrganisationsform;
-			return id === null ? null : BerufskollegOrganisationsformen.data().getWertByID(id);
-		},
-		set: (value) => void patchPartial({ idBerufsbildendOrganisationsform: value?.daten(schuljahr.value)?.id ?? -1 }),
-	});
-
-	const idWeiterbildungOrganisationsform = computed({
-		get: () => {
-			const id = props.manager().daten().idWeiterbildungOrganisationsform;
-			return id === null ? null : WeiterbildungskollegOrganisationsformen.data().getWertByID(id);
-		},
-		set: (value) => void patchPartial({ idWeiterbildungOrganisationsform: value?.daten(schuljahr.value)?.id ?? -1 }),
-	});
-
-	function textJahrgang(jg: JahrgangsDaten): string {
-		if (jg.kuerzel === null) {
-			return 'JU - Jahrgangsübergreifend';
-		}
-		if (jg.kuerzel === 'E1') {
-			return '1E' + ' - ' + jg.bezeichnung;
-		}
-		if (jg.kuerzel === 'E2') {
-			return '2E' + ' - ' + jg.bezeichnung;
-		}
-		return jg.kuerzel + ' - ' + jg.bezeichnung;
-	}
-
 	const ersteKlassenleitungId = computed<number | undefined>(() =>
 		listeKlassenlehrer.value.length > 0 ? listeKlassenlehrer.value[0].id : undefined
 	);
 
 	const letzteKlassenleitungId = computed<number | undefined>(() =>
-		listeKlassenlehrer.value.length > 0 ? listeKlassenlehrer.value[data().klassenLeitungen.size() - 1].id : undefined
+		listeKlassenlehrer.value.length > 0 ? listeKlassenlehrer.value[modelProxy.proxy.klassenLeitungen.size() - 1].id : undefined
 	);
 
 	const showPfeilHoch = computed<boolean>(() => {
@@ -212,7 +190,7 @@
 
 		return (listeKlassenlehrer.value.length > 0)
 			&& (klassenleitungClicked.value.id !== ersteKlassenleitungId.value)
-			&& data().klassenLeitungen.contains(klassenleitungClicked.value.id);
+			&& modelProxy.proxy.klassenLeitungen.contains(klassenleitungClicked.value.id);
 	});
 
 	const showPfeilRunter = computed<boolean>(() => {
@@ -222,7 +200,7 @@
 
 		return (listeKlassenlehrer.value.length > 0)
 			&& (klassenleitungClicked.value.id !== letzteKlassenleitungId.value)
-			&& data().klassenLeitungen.contains(klassenleitungClicked.value.id);
+			&& modelProxy.proxy.klassenLeitungen.contains(klassenleitungClicked.value.id);
 	});
 
 	const jgWBK = new Set<Jahrgaenge>([
@@ -236,7 +214,7 @@
 		if (props.schulform === Schulform.WB) {
 			return true;
 		}
-		const jgdaten = jahrgang.value;
+		const jgdaten = modelProxy.jahrgang.value;
 		if ((jgdaten === null) || (jgdaten.kuerzelStatistik === null)) {
 			return false;
 		}
@@ -248,7 +226,7 @@
 	}
 
 	function zeigeVorgaengerklassen(): boolean {
-		if (listeVorgaengerklassen.value.isEmpty()) {
+		if (modelProxy.listeVorgaengerklassen.value.isEmpty()) {
 			return false;
 		}
 		if (istSemesterBetrieb()) {
@@ -262,7 +240,7 @@
 	}
 
 	function zeigeFolgeklassen(): boolean {
-		if (listeFolgeklassen.value.isEmpty()) {
+		if (modelProxy.listeFolgeklassen.value.isEmpty()) {
 			return false;
 		}
 		if (istSemesterBetrieb()) {
@@ -296,27 +274,6 @@
 		await props.updateReihenfolgeKlassenleitung(klassenleitungClicked.value.id, false);
 	}
 
-	const jahrgang = computed<JahrgangsDaten | null>({
-		get: () => {
-			const id = data().idJahrgang;
-			return (id === null) ? null : props.manager().jahrgaenge.get(id);
-		},
-		set: (value) => void props.patch({ idJahrgang: value?.id ?? null }),
-	});
-
-	const jahrgaenge = computed<List<JahrgangsDaten>>(() => {
-		const result = new ArrayList<JahrgangsDaten>();
-		for (const jg of props.manager().jahrgaenge.list()) {
-			// Das dritte Jahr der Schuleingangsphase sollte nicht für einen Jahrgang einer Klasse verwendet werden, da es Schüler-spezifisch ist
-
-			if (jg.kuerzel !== "E3") {
-				result.add(jg);
-			}
-		}
-		return result;
-	});
-
-
 	const filterSchuelerStatus = computed<SchuelerStatus[]>({
 		get: () => [...props.manager().schuelerstatus.auswahl()],
 		set: (value) => {
@@ -326,86 +283,6 @@
 			}
 			void props.setFilter();
 		},
-	});
-
-	const listeFolgeklassen = computed<List<KlassenDaten>>(() => {
-		const result = new ArrayList<KlassenDaten>();
-		const idJahrgang = data().idJahrgang;
-		if (idJahrgang === null) {
-			for (const kl of props.mapKlassenFolgenderAbschnitt().values()) {
-				result.add(kl);
-			}
-			return result;
-		}
-		const jg = props.manager().jahrgaenge.get(idJahrgang);
-		if (jg === null) {
-			return result;
-		}
-		const tmpJg = (jg.kuerzelStatistik === null) ? null : Jahrgaenge.data().getWertBySchluessel(jg.kuerzelStatistik);
-		if (tmpJg === null) {
-			return result;
-		}
-		let schulgliederung: Schulgliederung | null = null;
-		if (jg.kuerzelSchulgliederung === null) {
-			schulgliederung = Schulgliederung.getDefault(props.manager().schulform());
-		} else {
-			schulgliederung = Schulgliederung.data().getWertBySchluessel(jg.kuerzelSchulgliederung);
-		}
-		for (const kl of props.mapKlassenFolgenderAbschnitt().values()) {
-			if (kl.idJahrgang === null) {
-				result.add(kl); // Jahrgangunabhängige Klassen können als Vorgängerklassen vorkommen
-			} else {
-				const jgKl = props.manager().jahrgaenge.get(kl.idJahrgang);
-				const tmpJgKl = (jgKl === null) || (jgKl.kuerzelStatistik === null) ? null : Jahrgaenge.data().getWertBySchluessel(jgKl.kuerzelStatistik);
-				if (tmpJgKl === null) {
-					continue;
-				}
-				if (tmpJgKl.isNachfolgerVon(props.manager().getSchuljahr(), tmpJg, props.manager().schulform(), schulgliederung)) {
-					result.add(kl);
-				}
-			}
-		}
-		return result;
-	});
-
-	const listeVorgaengerklassen = computed<List<KlassenDaten>>(() => {
-		const result = new ArrayList<KlassenDaten>();
-		const idJahrgang = data().idJahrgang;
-		if (idJahrgang === null) {
-			for (const kl of props.mapKlassenVorigerAbschnitt().values()) {
-				result.add(kl);
-			}
-			return result;
-		}
-		const jg = props.manager().jahrgaenge.get(idJahrgang);
-		if (jg === null) {
-			return result;
-		}
-		const tmpJg = (jg.kuerzelStatistik === null) ? null : Jahrgaenge.data().getWertBySchluessel(jg.kuerzelStatistik);
-		if (tmpJg === null) {
-			return result;
-		}
-		let schulgliederung: Schulgliederung | null = null;
-		if (jg.kuerzelSchulgliederung === null) {
-			schulgliederung = Schulgliederung.getDefault(props.manager().schulform());
-		} else {
-			schulgliederung = Schulgliederung.data().getWertBySchluessel(jg.kuerzelSchulgliederung);
-		}
-		for (const kl of props.mapKlassenVorigerAbschnitt().values()) {
-			if (kl.idJahrgang === null) {
-				result.add(kl); // Jahrgangunabhängige Klassen können als Vorgängerklassen vorkommen
-			} else {
-				const jgKl = props.manager().jahrgaenge.get(kl.idJahrgang);
-				const tmpJgKl = (jgKl === null) || (jgKl.kuerzelStatistik === null) ? null : Jahrgaenge.data().getWertBySchluessel(jgKl.kuerzelStatistik);
-				if (tmpJgKl === null) {
-					continue;
-				}
-				if (tmpJgKl.isVorgaengerVon(props.manager().getSchuljahr(), tmpJg, props.manager().schulform(), schulgliederung)) {
-					result.add(kl);
-				}
-			}
-		}
-		return result;
 	});
 
 	const listeKlassenlehrer = computed<LehrerListeEintrag[]>(() => {
@@ -439,15 +316,5 @@
 		{ key: "vorname", label: "Rufname", span: 1, sortable: true },
 		{ key: "status", label: "Status", sortable: true, span: 0.5 },
 	];
-
-	const validateKuerzel = (kuerzel: string | null): boolean => props.manager().validateKuerzel(kuerzel);
-	const validateBeschreibung = (beschreibung: string | null): boolean => props.manager().validateBeschreibung(beschreibung);
-	const validateSortierung = (sortierung: number | null): boolean => props.manager().validateSortierung(sortierung);
-
-	async function patchPartial(data: Partial<KlassenDaten>, isValid?: boolean) {
-		if (isValid === undefined || isValid) {
-			await props.patch(data);
-		}
-	}
 
 </script>

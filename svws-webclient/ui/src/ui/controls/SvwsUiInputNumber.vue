@@ -100,6 +100,7 @@
 		"update:modelValue": [value: number | null];
 		"change": [value: number | null];
 		"blur": [value: number | null];
+		"commit": [value: number | null];
 	}>();
 
 	const vFocus = {
@@ -161,7 +162,7 @@
 		if (event instanceof FocusEvent && ([input.value, btnPlus.value, btnMinus.value] as Array<HTMLElement>).includes(event.relatedTarget as HTMLElement)) {
 			return;
 		}
-
+		emit("commit", data.value);
 		if (props.modelValue !== data.value) {
 			emit("change", data.value);
 		}
@@ -169,6 +170,7 @@
 	}
 
 	function onKeyEnter(event: Event) {
+		emit("commit", data.value);
 		if (props.modelValue !== data.value) {
 			emit("change", data.value);
 		}

@@ -150,7 +150,7 @@ export class ModelProxy<T extends object> {
 	 * @returns true, wenn keine Patch-Methode vorhanden ist, der Pending-State leer ist oder die Patch-Methode erfolgreich ausgeführt wurde
 	 *          false, wenn eine erfolgreiche Validierung für den Patch gefordert ist, diese jedoch fehlschlägt, oder der Patch selber fehlschlägt
 	 */
-	public async patch(): Promise<boolean> {
+	public patch = async (): Promise<boolean> => {
 		if (this._config.patch === undefined) {
 			return true;
 		}
@@ -164,7 +164,7 @@ export class ModelProxy<T extends object> {
 		const result = await this._config.patch(pending);
 		this._pending.value = {};
 		return result;
-	}
+	};
 
 
 	/**

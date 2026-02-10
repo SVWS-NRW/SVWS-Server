@@ -149,6 +149,7 @@
 		"update:modelValue": [value: string | null];
 		"change": [value: string | null];
 		"blur": [value: string | null];
+		"commit": [value: string | null];
 		"methods": [ methods: { focus: () => void } | undefined ];
 	}>();
 
@@ -252,6 +253,7 @@
 	}
 
 	function onBlur(event: Event) {
+		emit("commit", data.value);
 		if (props.modelValue !== data.value) {
 			emit("change", data.value);
 		}
@@ -259,6 +261,7 @@
 	}
 
 	function onKeyEnter(event: Event) {
+		emit("commit", data.value);
 		if (props.modelValue !== data.value) {
 			emit("change", data.value);
 		}

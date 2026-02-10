@@ -31,7 +31,8 @@ export class LehrerPersonalabschnittsdatenModelProxy extends ModelProxy<LehrerPe
 			pseudo.idSchuljahresabschnitt = manager().getSchuljahresabschnittAuswahl()?.id ?? -1;
 			return pseudo;
 		};
-		super({ data: daten, patch });
+		const listOfAutopatchProps: Iterable<keyof LehrerPersonalabschnittsdaten> = ["rechtsverhaeltnis", "beschaeftigungsart", "einsatzstatus", "stammschulnummer"];
+		super({ data: daten, patch, listOfAutopatchProps });
 
 		this.manager = manager;
 
